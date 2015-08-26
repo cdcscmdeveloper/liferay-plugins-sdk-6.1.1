@@ -702,118 +702,118 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						Collections.sort(getManagedBean().getCtItemList(), new CtContractItem());
 					}
 				}
-				// Retrieve Zone
-				if (getManagedBean().getContractVer().getCtContractZones() != null 
-						&& getManagedBean().getContractVer().getCtContractZones().size() > 0) {
-					Collections.sort(getManagedBean().getContractVer().getCtContractZones(), new CtContractZone());
-					retriveZonesByContractVer();
-				}
-			    
-			    // Get performance bond rule amount
-			    IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IRuleSO.class);
-			    RuleReqDTO ruleReqDTO = new RuleReqDTO();
-			    ruleReqDTO.setRuleType(RuleTypeConst.BOND);
-			    RuleResDTO roleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
-			    if (roleResDTO.isSuccessful() && roleResDTO.getRuleValueList() != null 
-			    		&& roleResDTO.getRuleValueList().size() > 0) {
-			    	getManagedBean().setPerformanceBondRuleAmt(Double.parseDouble(roleResDTO.getRuleValueList().get(0).getRuleValue()));
-			    }
-			    // Retrieve approver list
-			    // Skip during supplier acknowledgment
-			    if (getManagedBean().getTaskName() == null || !getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)){
-				    getManagedBean().getApproverModel().setSource(
-							getAvailableApproverList(getManagedBean().getCtContract().getContractType().getParameterCode(),
-									getManagedBean().getUserMap()));
-				    if (resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0) {
-				    	getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-				    	for (PmUser approverUser : resDTO.getApproverList())  {
-							Iterator<PmUser> sourceIt = getManagedBean().getApproverModel().getSource().iterator();				
-							while (sourceIt.hasNext()) {
-								PmUser user = sourceIt.next();
-								if (user.getUserId() == approverUser.getUserId()) {
-									sourceIt.remove();
-								}
+			}
+			// Retrieve Zone
+			if (getManagedBean().getContractVer().getCtContractZones() != null 
+					&& getManagedBean().getContractVer().getCtContractZones().size() > 0) {
+				Collections.sort(getManagedBean().getContractVer().getCtContractZones(), new CtContractZone());
+				retriveZonesByContractVer();
+			}
+		    
+		    // Get performance bond rule amount
+		    IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IRuleSO.class);
+		    RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		    ruleReqDTO.setRuleType(RuleTypeConst.BOND);
+		    RuleResDTO roleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
+		    if (roleResDTO.isSuccessful() && roleResDTO.getRuleValueList() != null 
+		    		&& roleResDTO.getRuleValueList().size() > 0) {
+		    	getManagedBean().setPerformanceBondRuleAmt(Double.parseDouble(roleResDTO.getRuleValueList().get(0).getRuleValue()));
+		    }
+		    // Retrieve approver list
+		    // Skip during supplier acknowledgment
+		    if (getManagedBean().getTaskName() == null || !getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)){
+			    getManagedBean().getApproverModel().setSource(
+						getAvailableApproverList(getManagedBean().getCtContract().getContractType().getParameterCode(),
+								getManagedBean().getUserMap()));
+			    if (resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0) {
+			    	getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+			    	for (PmUser approverUser : resDTO.getApproverList())  {
+						Iterator<PmUser> sourceIt = getManagedBean().getApproverModel().getSource().iterator();				
+						while (sourceIt.hasNext()) {
+							PmUser user = sourceIt.next();
+							if (user.getUserId() == approverUser.getUserId()) {
+								sourceIt.remove();
 							}
 						}
-					} 
-			    }
-				
-			    initializeRemarks();
-			    getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
-			    		ModuleCodeConst.CONTRACT_MANAGEMENT, getManagedBean().getContractVer().getDocType(), getManagedBean().getCtContract().getContractNo()));
-			  
-			    getManagedBean().setRemarkList(resDTO.getCtRemarks());
-			    getManagedBean().setAttachmentList(resDTO.getCtAttachments());	
-			    ctBackingBean = new ContractBackingBean(this.getManagedBean().getFileDirectory());
-			    ctBackingBean.getManagedBean().setViewContract(false);
-			    ctBackingBean.getManagedBean().setUpdateCompanyName(false);
-			    ctBackingBean.getManagedBean().setUpdateSupplierAddress(false);
-			    ctBackingBean.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-			     // Amendment process	  
-			    getManagedBean().setCommitteeType(retrieveCommitteeType());
-			    getManagedBean().setDisableAmendDetails(false);
-			    if (getManagedBean().getTaskName() != null
-			    		&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME)
-			    				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) 
-			    				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)
-			    				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CHAIR_PERSON_SIGN_OFF_HT_NAME)
-			    				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
-			    				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)
-			    				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME))) {
-			    	getManagedBean().setDisableAmendDetails(true);
-			    }
-			    if (getManagedBean().getTaskName() != null 
-			    		&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)) {
-			    	getManagedBean().setDisableEndorseAmendDetails(true);
-			    }
-			    if (getManagedBean().getTaskName() != null 
-			    		&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) {
-			    	getManagedBean().setDisableFinalAmendDetails(true);
-			    }
-			    //Default the secretary
-			    if (getManagedBean().getSecretaryId() == null && getManagedBean().getCommitteeType()!=null			    		
-			    		&& !getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()
-			    		&& !getManagedBean().isDisableAmendDetails()) {
-			    	// QCA or QCB, return secretary list
-			    	if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)
-				    		|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
-				    	SelectItem[] secretaryList = getSecretaryDropdownList(); 
-				    	if (secretaryList != null && secretaryList.length == 2) {
-				    		getManagedBean().setSecretaryId((Long)secretaryList[1].getValue());
-				    	}
-			    	} else {
-			    		// PBA or PBB or FSB or FSW, return from org profile
-			    		UserReqDTO userReqDTO = new UserReqDTO();
-						IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-								ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			    		userReqDTO.setRoleCode(getManagedBean().getCommitteeType() + "_SECRETARY");	
-				   	  	
-				   	  	PmOrgProfile ministryOrgProfile = retrieveMinistryOrgProfile(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-				   	  	if (ministryOrgProfile != null) {
-				   	  		userReqDTO.setOrgProfileId(ministryOrgProfile.getOrgProfileId());
-				   	  	} else {
-				   	  		userReqDTO.setOrgProfileId(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-				   	  	}
-				   	  	List<PmUser> list = userSO.retrieveUserListByRole(userReqDTO).getUserList();
-				   	  	if (list.size() > 0) {
-				   	  		getManagedBean().setSecretaryId(list.get(0).getUserId());
-				   	  		getManagedBean().setSecretaryName(list.get(0).getUserName());
-				   	  	}
+					}
+				} 
+		    }
+			
+		    initializeRemarks();
+		    getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
+		    		ModuleCodeConst.CONTRACT_MANAGEMENT, getManagedBean().getContractVer().getDocType(), getManagedBean().getCtContract().getContractNo()));
+		  
+		    getManagedBean().setRemarkList(resDTO.getCtRemarks());
+		    getManagedBean().setAttachmentList(resDTO.getCtAttachments());	
+		    ctBackingBean = new ContractBackingBean(this.getManagedBean().getFileDirectory());
+		    ctBackingBean.getManagedBean().setViewContract(false);
+		    ctBackingBean.getManagedBean().setUpdateCompanyName(false);
+		    ctBackingBean.getManagedBean().setUpdateSupplierAddress(false);
+		    ctBackingBean.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+		     // Amendment process	  
+		    getManagedBean().setCommitteeType(retrieveCommitteeType());
+		    getManagedBean().setDisableAmendDetails(false);
+		    if (getManagedBean().getTaskName() != null
+		    		&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME)
+		    				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) 
+		    				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)
+		    				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CHAIR_PERSON_SIGN_OFF_HT_NAME)
+		    				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
+		    				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)
+		    				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME))) {
+		    	getManagedBean().setDisableAmendDetails(true);
+		    }
+		    if (getManagedBean().getTaskName() != null 
+		    		&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)) {
+		    	getManagedBean().setDisableEndorseAmendDetails(true);
+		    }
+		    if (getManagedBean().getTaskName() != null 
+		    		&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) {
+		    	getManagedBean().setDisableFinalAmendDetails(true);
+		    }
+		    //Default the secretary
+		    if (getManagedBean().getSecretaryId() == null && getManagedBean().getCommitteeType()!=null			    		
+		    		&& !getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()
+		    		&& !getManagedBean().isDisableAmendDetails()) {
+		    	// QCA or QCB, return secretary list
+		    	if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)
+			    		|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
+			    	SelectItem[] secretaryList = getSecretaryDropdownList(); 
+			    	if (secretaryList != null && secretaryList.length == 2) {
+			    		getManagedBean().setSecretaryId((Long)secretaryList[1].getValue());
 			    	}
-			    }
-			    //secretary exist
-			    if (!getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()
-			    		&& (getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_APPROVAL)
-			  				|| getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_REVISION_APPROVAL))) {
-			    	if (getManagedBean().getSecretaryId() != null) {
-			    		getManagedBean().setSecretaryExist(true);
-				    	getManagedBean().getContractVer().getCtAmendment().setRouteToBPK(false);
-			    	} else {
-			    		getManagedBean().setSecretaryExist(false);
-				    	getManagedBean().getContractVer().getCtAmendment().setRouteToBPK(true);
-			    	}
-			    }
-			}
+		    	} else {
+		    		// PBA or PBB or FSB or FSW, return from org profile
+		    		UserReqDTO userReqDTO = new UserReqDTO();
+					IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		    		userReqDTO.setRoleCode(getManagedBean().getCommitteeType() + "_SECRETARY");	
+			   	  	
+			   	  	PmOrgProfile ministryOrgProfile = retrieveMinistryOrgProfile(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+			   	  	if (ministryOrgProfile != null) {
+			   	  		userReqDTO.setOrgProfileId(ministryOrgProfile.getOrgProfileId());
+			   	  	} else {
+			   	  		userReqDTO.setOrgProfileId(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+			   	  	}
+			   	  	List<PmUser> list = userSO.retrieveUserListByRole(userReqDTO).getUserList();
+			   	  	if (list.size() > 0) {
+			   	  		getManagedBean().setSecretaryId(list.get(0).getUserId());
+			   	  		getManagedBean().setSecretaryName(list.get(0).getUserName());
+			   	  	}
+		    	}
+		    }
+		    //secretary exist
+		    if (!getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()
+		    		&& (getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_APPROVAL)
+		  				|| getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_REVISION_APPROVAL))) {
+		    	if (getManagedBean().getSecretaryId() != null) {
+		    		getManagedBean().setSecretaryExist(true);
+			    	getManagedBean().getContractVer().getCtAmendment().setRouteToBPK(false);
+		    	} else {
+		    		getManagedBean().setSecretaryExist(false);
+			    	getManagedBean().getContractVer().getCtAmendment().setRouteToBPK(true);
+		    	}
+		    }			
 	  	} finally {
 	  		contractSO = null;
 			reqDTO = null;
