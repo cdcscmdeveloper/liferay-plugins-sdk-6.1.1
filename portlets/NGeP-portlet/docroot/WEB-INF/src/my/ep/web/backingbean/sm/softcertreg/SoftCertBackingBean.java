@@ -80,6 +80,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		getManagedBean().setSoftcertDocNo(
 				SmCommonUtil.getSoftcertDocNo(getManagedBean()
 						.getLoginUserPersonnelInfo().getSmAppl()));
+		getManagedBean().setSoftCertFreeList(new ArrayList<SmPersonnel>());
 		SmCommonUtil.redirectToPage("softCertBasePage.xhtml", "");
 	}
 
@@ -267,7 +268,10 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				personnel.setFreeSoftCert(true);
 				getManagedBean().setFreeSoftCertPersonnel(personnel);
 			} else {
-				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
+				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
+					personnel.setFreeSoftCert(true);
+					getManagedBean().getSoftCertFreeList().add(personnel);
+				} else if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
 					softcertRequest = SmApplicationUtil
 							.getPersonnelSoftcertRequest(getManagedBean()
 									.getLoginUserPersonnelInfo().getSmAppl()
@@ -275,7 +279,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 									.getPmUser().getUserId());
 					if (softcertRequest != null && softcertRequest.isFree()) {
 						personnel.setFreeSoftCert(true);
-						getManagedBean().setFreeSoftCertPersonnel(personnel);
+						getManagedBean().getSoftCertFreeList().add(personnel);
 					}
 				} else {
 					amountPerPersonnel = SmRuleHelper.getInstance()
@@ -368,6 +372,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				SmPersonnel personnel = iterator.next();
 				if (personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_PENDING_REQ
 						&& personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_REJECTED
+						&& personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_REQ_FAILED
 						&& personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL) {
 					iterator.remove();
 				} else {
@@ -389,10 +394,22 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 */
 	public String getPersonnelSoftCertPrice(SmPersonnel smPersonnel) {
 		if (smPersonnel.isFreeSoftCert()) {
-			return "0.00 ("
-					+ SmCommonUtil
-							.getMessage("lbl.sm.softcert.firstfree", null)
-					+ ")";
+			if(smPersonnel.getSoftcertFlg()==SupplierManagementConst.SOFT_CERT_REJECTED){
+				return "0.00 ("
+						+ SmCommonUtil
+								.getMessage("lbl.sm.softcert.rejectfree", null)
+						+ ")";
+			}else if(smPersonnel.getSoftcertFlg()==SupplierManagementConst.SOFT_CERT_REQ_FAILED){
+				return "0.00 ("
+						+ SmCommonUtil
+								.getMessage("lbl.sm.softcert.failedfree", null)
+						+ ")";
+			}else{
+				return "0.00 ("
+						+ SmCommonUtil
+								.getMessage("lbl.sm.softcert.firstfree", null)
+						+ ")";
+			}
 		} else {
 			return SmRuleHelper.getInstance().getSoftCertFee()
 					.setScale(2, BigDecimal.ROUND_UP).toString();
@@ -599,14 +616,16 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		getManagedBean().setAlreadyHadFreeSoftcert(false);
 		for (SmPersonnel personnel : personnels) {
 			if (personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_PENDING_REQ
-					&& personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_REJECTED) {
+					&& personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_REJECTED
+					&& personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
 				personnel.setDisableRowSelection(true);
 				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
 						|| personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED) {
 					getManagedBean().setAlreadyHadFreeSoftcert(true);
 				}
 			} else {
-				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
+				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED
+						|| personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
 					getManagedBean().setAlreadyHadFreeSoftcert(true);
 				}
 				if (StringUtils.isBlank(personnel.getSmAppl().getApplNo())) {
