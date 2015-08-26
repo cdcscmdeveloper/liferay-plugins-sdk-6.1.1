@@ -41,7 +41,7 @@
 						</th>
 						<td>
 							<p:selectOneMenu styleClass="ppDropDownWidthL" id="somSalutation" 
-								required="#{!empty param['disableValidation']}"
+								required="#{!empty param['disableValidation']}" valueChangeListener="#{profilePersonalizationBackingBean.saluationChanged}"
 								label="#{lbl['lbl.pm.profiles.userdetails.salutation']}"
 								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.salutationCode.salutationId}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
