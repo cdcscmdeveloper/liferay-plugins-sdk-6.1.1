@@ -1,0 +1,24 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<cc:interface>
+		<cc:attribute name="softcertFlg" required="true" />
+	</cc:interface>
+
+	<cc:implementation>
+		<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.composition.request.failed']}" rendered="#{cc.attrs.softcertFlg eq '9'}" />
+		<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.composition.ready.renewal']}" rendered="#{cc.attrs.softcertFlg eq '7'}" />
+		<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.composition.rejected']}" rendered="#{cc.attrs.softcertFlg eq '6'}" />
+		<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.composition.pending.request']}" rendered="#{cc.attrs.softcertFlg eq '4'}" />
+		<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.composition.processing']}" rendered="#{cc.attrs.softcertFlg eq '3'}" />
+		<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.composition.requested']}" rendered="#{cc.attrs.softcertFlg eq '2'}" />
+		<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.composition.issued']}" rendered="#{cc.attrs.softcertFlg eq '1'}" />
+		<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.composition.notapplied']}" rendered="#{cc.attrs.softcertFlg eq '0'}" />
+	</cc:implementation>
+</ui:component>
