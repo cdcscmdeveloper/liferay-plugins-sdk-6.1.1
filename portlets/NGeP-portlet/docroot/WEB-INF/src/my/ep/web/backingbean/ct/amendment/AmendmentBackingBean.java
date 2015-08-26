@@ -4660,7 +4660,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 *         false, if the contract is without gst
      */
 	public boolean contractWithGst(){
-		if (isContractWithGst(getManagedBean().getCtContract().getSmSupplier().getSupplierId(), getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode())
+		if (isContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())
 	    		|| (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null 
 	    		&& getManagedBean().getContractVer().getCtContractAmount().getGstAmount().doubleValue() != 0)) {
 	    	return true;
