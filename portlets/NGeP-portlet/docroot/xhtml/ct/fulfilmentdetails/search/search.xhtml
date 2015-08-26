@@ -45,7 +45,7 @@
            <p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
            <p:inputText value="#{contractDetailsBackingBean.managedBean.ctCircularNo}" maxlength="50" style="width:170px;" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
            <p:outputLabel value="#{lbl['lbl.ct.circular.name']}" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
-           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctCircularName}" maxlength="200" style="width:170px;" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
+           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctCircularName}" maxlength="500" style="width:170px;" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
            <p:outputLabel value="#{lbl['lbl.ct.supplier.id']}" rendered="#{!contractDetailsBackingBean.isSupplierRole()}"/>
            <p:inputText value="#{contractDetailsBackingBean.managedBean.ctSupplierId}" maxlength="20" style="width:170px;" rendered="#{!contractDetailsBackingBean.isSupplierRole()}"/>
            <p:outputLabel value="#{lbl['lbl.ct.supplier.name']}" rendered="#{!contractDetailsBackingBean.isSupplierRole()}"/>
