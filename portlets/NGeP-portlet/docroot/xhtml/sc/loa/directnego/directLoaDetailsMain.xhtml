@@ -181,6 +181,15 @@
 				update="@form" oncomplete="loiSuppAttmPopupDlg.hide()">
 			</p:fileUpload>
 		</p:dialog>
+		
+		<p:confirmDialog widgetVar="gstSignerConfirmPopupWin"
+			id="gstSignerConfirmPopup" width="500px"
+			message="#{lbl['lbl.sc.gst.signers.alert.msg']}">
+			<div align="center">
+				<p:commandButton value="#{lbl['lbl.btn.ok']}"
+					oncomplete="gstSignerConfirmPopupWin.hide()" process="@this"></p:commandButton>
+			</div>
 
+		</p:confirmDialog>
 	</ui:define>
 </ui:composition>
