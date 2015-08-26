@@ -774,6 +774,7 @@ public class ReportConst {
 	public static final String RPT_EIFON = " - ";
 	public static final String ENG_LANG = "en";
 	public static final String MALAY_LANG = "ms";
+	public static final String LABEL_LANG = "lbl.rpt.language";
 	public static final String APPROVER_NAIK_TARAF = "APPROVER_NAIK_TARAF";
 	public static final String APPROVER = "APPROVER";
 	public static final String RN_APPROVER = "RN_APPROVER";

@@ -758,7 +758,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)61745;//219490;//240790;//183931;//20854;//243371;//20854;//168887;//221747;//219490;//243394;//243371;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
+	//private Long lngUserId = (long)243371;//61745;//219490;//240790;//183931;//20854;//243371;//20854;//168887;//221747;//219490;//243394;//243371;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -2640,7 +2640,7 @@ public class ReportBackingBean extends
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IPMReportSO.class);
-					String language = ResourceBundleUtils.getMessage("lbl.rpt.language", 
+					String language = ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG, 
 				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 					List<String> serviceTypeLst = reportSO.retrievePMServiceType(language);			
 					for (int i = 0; i < serviceTypeLst.size(); i++) {
@@ -2776,7 +2776,7 @@ public class ReportBackingBean extends
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IPMReportSO.class);
-					String language = ResourceBundleUtils.getMessage("lbl.rpt.language", 
+					String language = ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG, 
 				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 					//String language = "ms";
 					List<Object[]> moduleLst = reportSO.retrieveModuleList(language,lngUserId);			
@@ -3394,13 +3394,13 @@ public class ReportBackingBean extends
 		this.setReportCategory(null);
 		this.setReportValue(null);
 		List<Object[]> reportModList = null;
-		String language = ResourceBundleUtils.getMessage("lbl.rpt.language", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		String language = ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		//String language = "ms";
 		reportList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {			
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
-					if((this.getModuleValue()!=null)&&(this.getModuleValue().equalsIgnoreCase("FL"))){
+					if((this.getModuleValue()!=null)&&(this.getModuleValue().equalsIgnoreCase(ReportConst.FL_MOD_VAL))){
 						rptGenBean.setReportCategoryView(true);
 						retrieveSubModuleReportCategoryList(language);
 					}else{						
@@ -3484,7 +3484,7 @@ public class ReportBackingBean extends
 		this.setReportName(ReportConst.EMPTY_VAL);
 		getManagedBean().setRptGenBean(rptGenBean);
 		resetReportForm();
-		String language = ResourceBundleUtils.getMessage("lbl.rpt.language", 
+		String language = ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG, 
 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		//String language = "ms";
 		List<Object[]> reportModList = null;
@@ -4339,6 +4339,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				&& (this.getCmUnspscCode() != ReportConst.EMPTY_VAL)) {
 			if ((this.getCmUnspscCode().length() == 8)) {
 				unspid = retrieveCMUnspcIdbyCode(this.getCmUnspscCode());
+				//unspid = (long) 11606;
 				if (null != unspid) {
 					retrieveBrand();
 					retrieveExtType();
@@ -4589,7 +4590,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			reqDTO.setReportCode(getManagedBean().getReportValue());
 			PMReportResDTO rptResDTO = reportSO.retriveReportByrptId(reqDTO);
 			PMReport pmReport = rptResDTO.getPmReportDtls();
-			String language = ResourceBundleUtils.getMessage("lbl.rpt.language", 
+			String language = ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG, 
  			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 			//String language = "ms";
 			if (null != pmReport) {
@@ -6353,6 +6354,15 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((this.getCmBusinessRegNo() != null) && (this.getCmBusinessRegNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmIcNumber() != null) && (this.getCmIcNumber() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmMofNumber() != null) && (this.getCmMofNumber() != ReportConst.EMPTY_VAL))) {
+			
+			if((this.getCmUnspscCode() != null) && (this.getCmUnspscCode() != ReportConst.EMPTY_VAL)){
+				if(((this.getCmExtentionType() == null) || (this.getCmExtentionType()== ReportConst.EMPTY_VAL))
+						&& ((this.getCmExtentionBrand() == null) || (this.getCmExtentionBrand()== ReportConst.EMPTY_VAL))
+						&& ((this.getCmExtentionMeasurment() == null) || (this.getCmExtentionMeasurment()== ReportConst.EMPTY_VAL))
+						&& ((this.getCmExtentionColour() == null) || (this.getCmExtentionColour()== ReportConst.EMPTY_VAL))){
+					throw new EpException(MessageConst.ERROR_REPORT_780024);
+				}
+			}
 			if ((this.getCmItemName() != null)
 					&& (this.getCmItemName() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setItemNameTotVar(ReportConst.CM_AMP_ITM_NAME_EQ
