@@ -432,7 +432,7 @@ public class TemplateSpecBackingBean extends
 	 * @param questionType
 	 *            the question type
 	 */
-	public TplSpecQuestion addQuestion(TplSpecMaster tplSpecMaster,
+	public TplSpecQuestion addQuestion(TemplateSpecBean templateSpecBean, TplSpecMaster tplSpecMaster,
 			List<TplSpecQuestion> questionList, Integer row, String questionType) {
 		TplSpecQuestion newQuestion = new TplSpecQuestion();
 		boolean isQuestionTypeItem = TemplateSpecConst.QUESTION_TYPE_ITEM
@@ -468,6 +468,8 @@ public class TemplateSpecBackingBean extends
 							ParameterConst.PRICE_TYPE_STANDARD);
 					newQuestion.setClPriceTypeCode(pmParameter);
 				}
+				
+				createNewSpecAnswer(templateSpecBean, newQuestion);
 			} else {
 				newQuestion.setClPriceTypeCode(new PmParameter());
 			}
@@ -784,26 +786,33 @@ public class TemplateSpecBackingBean extends
 			TemplateSpecHelper specHelper = TemplateSpecHelper.getInstance();
 			specHelper.resetPriceTypeDtl(specQuestion);
 
-			if (TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER
-					.equals(templateSpecBean.getContentType())) {
-				List<TplSpecAnswer> specAnswers = null;
-
-				if (specHelper.isPriceTypeStandard(specQuestion
-						.getClPriceTypeCode().getParameterCode())) {
-					TplSpecAnswer specAnswer = specHelper.createNewSpecAnswer(
-							templateSpecBean, specQuestion, null, null);
-
-					specAnswers = new ArrayList<TplSpecAnswer>();
-					specAnswers.add(specAnswer);
-				}
-
-				addToBeRemovedSpecAnswers(templateSpecBean,
-						specQuestion.getTplSpecAnswers());
-
-				specQuestion.setTplSpecAnswers(specAnswers);
-			}
+			createNewSpecAnswer(templateSpecBean, specQuestion);
 		} finally {
 			parameterSO = null;
+		}
+	}
+	
+	private void createNewSpecAnswer(TemplateSpecBean templateSpecBean,
+			TplSpecQuestion specQuestion) {
+		TemplateSpecHelper specHelper = TemplateSpecHelper.getInstance();
+		
+		if (TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER
+				.equals(templateSpecBean.getContentType())) {
+			List<TplSpecAnswer> specAnswers = null;
+
+			if (specHelper.isPriceTypeStandard(specQuestion
+					.getClPriceTypeCode().getParameterCode())) {
+				TplSpecAnswer specAnswer = specHelper.createNewSpecAnswer(
+						templateSpecBean, specQuestion, null, null);
+
+				specAnswers = new ArrayList<TplSpecAnswer>();
+				specAnswers.add(specAnswer);
+			}
+
+			addToBeRemovedSpecAnswers(templateSpecBean,
+					specQuestion.getTplSpecAnswers());
+
+			specQuestion.setTplSpecAnswers(specAnswers);
 		}
 	}
 
