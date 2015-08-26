@@ -3301,6 +3301,12 @@ table.rptTbl {
 	display: none;
 }
 
+#flDataTableScroll {
+	width: 1000px;
+	overflow: auto !important;
+	border: 1px solid #d1d1d1;
+}
+
 table.taxableGuidelineTable {
     border-width: 1px !important;
     border-style: outset !important;
