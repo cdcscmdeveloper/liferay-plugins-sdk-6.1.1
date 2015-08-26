@@ -1139,7 +1139,7 @@ public class TemplateSpecBackingBean extends
 			specEstimations = new ArrayList<TplSpecEstimation>();
 
 			for (int zoneRow = 0; zoneRow < (specZoneDtls == null
-					|| specZoneDtls.size() == 0 ? 1 : specZoneDtls.size()); zoneRow++) {
+					|| specZoneDtls.size() == 0 ? 0 : specZoneDtls.size()); zoneRow++) {
 				if (specZoneDtls != null && specZoneDtls.size() > 0) {
 					TplSpecEstimation specEstimation = new TplSpecEstimation();
 					specEstimation.setTplSpecQuestion(tplSpecQuestion);
