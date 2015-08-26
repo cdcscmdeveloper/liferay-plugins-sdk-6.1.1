@@ -45,7 +45,7 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	private List<ChallengeQAList> challengeQAList;
 	private SelectItem[] challengeQADDList;
 	private String currentPassword;
-	
+	private boolean profileChanged = false;
 	
 /**
 	 * @return the addressEntered
@@ -63,6 +63,14 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	
 	
 	
+
+public boolean isProfileChanged() {
+		return profileChanged;
+	}
+
+	public void setProfileChanged(boolean profileChanged) {
+		this.profileChanged = profileChanged;
+	}
 
 /**
 	 * @return the currentUserOrg
