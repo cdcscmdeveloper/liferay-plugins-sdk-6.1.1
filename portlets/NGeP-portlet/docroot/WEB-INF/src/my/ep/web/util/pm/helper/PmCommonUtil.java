@@ -638,6 +638,7 @@ public class PmCommonUtil {
 			userSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			if (ignoreStatus) {
+				reqDTO.setFetchAddress(true);
 				resDTO = userSO
 						.retrieveUserByLoginIdOrUserIdIgnoreStatus(reqDTO);
 			} else {
