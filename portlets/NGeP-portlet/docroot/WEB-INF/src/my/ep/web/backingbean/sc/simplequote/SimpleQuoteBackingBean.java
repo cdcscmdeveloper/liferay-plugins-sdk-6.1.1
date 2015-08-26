@@ -734,7 +734,8 @@ public class SimpleQuoteBackingBean extends
 				if (isSpecificOrGenOrNonCtItem) {
 					if (itemCode >= 70 && itemCode <= 94) { // for service
 															// between 70 and 94
-						templateSpecBackingBean.addQuestion(serviceTpl,
+						templateSpecBackingBean.addQuestion(serviceTemplateSpecBean, 
+								serviceTpl,
 								tplSpecQuestions, tplSpecQuestions.size() - 1,
 								TemplateSpecConst.QUESTION_TYPE_ITEM);
 						TplSpecQuestion specQuestion = tplSpecQuestions
@@ -774,7 +775,8 @@ public class SimpleQuoteBackingBean extends
 						if (itemCode < 70 || itemCode > 94) { // for product <
 																// 70 and > 94
 
-							templateSpecBackingBean.addQuestion(prodTpl,
+							templateSpecBackingBean.addQuestion(productTemplateSpecBean,
+									prodTpl,
 									productQuestions,
 									productQuestions.size() - 1,
 									TemplateSpecConst.QUESTION_TYPE_ITEM);
