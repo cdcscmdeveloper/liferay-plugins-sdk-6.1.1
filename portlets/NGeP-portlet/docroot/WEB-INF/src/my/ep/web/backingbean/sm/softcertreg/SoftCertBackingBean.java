@@ -80,7 +80,6 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		getManagedBean().setSoftcertDocNo(
 				SmCommonUtil.getSoftcertDocNo(getManagedBean()
 						.getLoginUserPersonnelInfo().getSmAppl()));
-		getManagedBean().setSoftCertFreeList(new ArrayList<SmPersonnel>());
 		SmCommonUtil.redirectToPage("softCertBasePage.xhtml", "");
 	}
 
@@ -262,15 +261,17 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		BigDecimal amountPerPersonnel = BigDecimal.ZERO;
 		int i = 0;
 		SmSoftcertRequest softcertRequest = null;
-		getManagedBean().setFreeSoftCertPersonnel(null);
 		for (SmPersonnel personnel : this.getManagedBean().getSoftCertPayList()) {
 			if (i == 0 && !getManagedBean().isAlreadyHadFreeSoftcert()) {
 				personnel.setFreeSoftCert(true);
-				getManagedBean().setFreeSoftCertPersonnel(personnel);
+				if (StringUtils.isNotBlank(personnel.getEpRole())
+						&& personnel.getEpRole().equals(
+								RoleCode.SUPPLIER_TEMP.value())) {
+					getManagedBean().setSupplierTmpPersonnel(personnel);
+				}
 			} else {
 				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
 					personnel.setFreeSoftCert(true);
-					getManagedBean().getSoftCertFreeList().add(personnel);
 				} else if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
 					softcertRequest = SmApplicationUtil
 							.getPersonnelSoftcertRequest(getManagedBean()
@@ -279,7 +280,6 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 									.getPmUser().getUserId());
 					if (softcertRequest != null && softcertRequest.isFree()) {
 						personnel.setFreeSoftCert(true);
-						getManagedBean().getSoftCertFreeList().add(personnel);
 					}
 				} else {
 					amountPerPersonnel = SmRuleHelper.getInstance()
@@ -308,8 +308,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 */
 	public void makePayment() {
 		if ((getManagedBean().getSoftCertPayList() != null && getManagedBean()
-				.getSoftCertPayList().size() > 0)
-				|| getManagedBean().getFreeSoftCertPersonnel() != null) {
+				.getSoftCertPayList().size() > 0)) {
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			List<String> userList = new ArrayList<String>();
 			userList.add(pmUser.getLoginId());
@@ -324,7 +323,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				}
 			}
 			reqDTO.setSmPersonnelList(getFinalPaidPersonnels());
-			reqDTO.setSmPersonnel(getManagedBean().getFreeSoftCertPersonnel());
+			reqDTO.setSmPersonnel(getManagedBean().getSupplierTmpPersonnel());
 			reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
 			reqDTO.setToken(getManagedBean().getToken());
 			reqDTO.setUserList(userList);
@@ -340,8 +339,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			reqDTO.setSoftcertDocList(getUploadedSoftcertDocs());
 			reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 			reqDTO.setSoftcertDocNo(getManagedBean().getSoftcertDocNo());
-			reqDTO.setFreeSofcertPersonnelList(getManagedBean()
-					.getSoftCertFreeList());
+			reqDTO.setFreeSofcertPersonnelList(getFinalFreePersonnels());
 
 			PersonnelResDTO resDTO = new PersonnelResDTO();
 			resDTO = SmServiceLookup.getPersonnelSO()
@@ -690,23 +688,43 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	}
 
 	/**
-	 * Get list of personnel that selected to request soft certificate
+	 * Get list of personnel that selected to request for pay soft certificate
 	 * 
 	 * @return List<SmPersonnel>
 	 */
 	private List<SmPersonnel> getFinalPaidPersonnels() {
 		List<SmPersonnel> finalPayPersonnels = new ArrayList<SmPersonnel>();
-		if (getManagedBean().getFreeSoftCertPersonnel() != null) {
+		if (getManagedBean().getSoftCertPayList() != null) {
 			for (SmPersonnel payPersonnel : getManagedBean()
 					.getSoftCertPayList()) {
 				if (!payPersonnel.isFreeSoftCert()) {
 					finalPayPersonnels.add(payPersonnel);
 				}
 			}
-		} else {
-			finalPayPersonnels.addAll(getManagedBean().getSoftCertPayList());
 		}
 		return finalPayPersonnels;
+	}
+
+	/**
+	 * Get list of personnel that selected to request for free certificate
+	 * 
+	 * @return List<SmPersonnel>
+	 */
+	private List<SmPersonnel> getFinalFreePersonnels() {
+		List<SmPersonnel> finalFreePersonnels = new ArrayList<SmPersonnel>();
+		if (getManagedBean().getSoftCertPayList() != null) {
+			for (SmPersonnel payPersonnel : getManagedBean()
+					.getSoftCertPayList()) {
+				// add free softcert personnel (exclude SUPPLIER_TEMP)
+				if (payPersonnel.isFreeSoftCert()
+						&& StringUtils.isNotBlank(payPersonnel.getEpRole())
+						&& !payPersonnel.getEpRole().equals(
+								RoleCode.SUPPLIER_TEMP.value())) {
+					finalFreePersonnels.add(payPersonnel);
+				}
+			}
+		}
+		return finalFreePersonnels;
 	}
 
 	/**
@@ -1021,16 +1039,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 * Validate personnel to request softcert
 	 */
 	private void validateRequestSoftcert() {
-		if (getManagedBean().getFreeSoftCertPersonnel() != null) {
-			if (getManagedBean().getFreeSoftCertPersonnel()
-					.getSmPersonnelAddresses() == null
-					|| getManagedBean().getFreeSoftCertPersonnel()
-							.getSmPersonnelAddresses().isEmpty()) {
-				throw new EpException(MessageConst.ERROR_722614,
-						new String[] { getManagedBean()
-								.getFreeSoftCertPersonnel().getName() });
-			}
-		} else if (getManagedBean().getSoftCertPayList() != null) {
+		if (getManagedBean().getSoftCertPayList() != null) {
 			for (SmPersonnel personnel : getManagedBean().getSoftCertPayList()) {
 				if (personnel.getSmPersonnelAddresses() == null
 						|| personnel.getSmPersonnelAddresses().isEmpty()) {
@@ -1041,6 +1050,9 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		}
 	}
 
+	/**
+	 * Check whether softcert apply on behalf others
+	 */
 	private void setSoftcertApplyFor() {
 		boolean applyForOthers = false;
 		if (getManagedBean().getSoftCertPayList() != null) {

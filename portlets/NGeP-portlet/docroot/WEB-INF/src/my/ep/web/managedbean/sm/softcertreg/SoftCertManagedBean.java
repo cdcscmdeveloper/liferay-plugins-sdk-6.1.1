@@ -38,7 +38,6 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private BigDecimal totalGstAmount;
 	private BigDecimal gstRate;
 	private SmPersonnel loginUserPersonnelInfo;
-	private SmPersonnel freeSoftCertPersonnel;
 	private SmPersonnel supplierTmpPersonnel;
 	private SoftcertUploadSuppDocVO selectedSuppDoc;
 	private String loginRoleName;
@@ -168,14 +167,6 @@ public class SoftCertManagedBean extends BaseManagedBean {
 
 	public void setAlreadyHadFreeSoftcert(boolean alreadyHadFreeSoftcert) {
 		this.alreadyHadFreeSoftcert = alreadyHadFreeSoftcert;
-	}
-
-	public SmPersonnel getFreeSoftCertPersonnel() {
-		return freeSoftCertPersonnel;
-	}
-
-	public void setFreeSoftCertPersonnel(SmPersonnel freeSoftCertPersonnel) {
-		this.freeSoftCertPersonnel = freeSoftCertPersonnel;
 	}
 
 	public BigDecimal getTotalAmountBeforeGst() {
