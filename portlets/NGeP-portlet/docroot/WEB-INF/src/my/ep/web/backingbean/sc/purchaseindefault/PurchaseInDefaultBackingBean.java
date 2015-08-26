@@ -918,29 +918,6 @@ public class PurchaseInDefaultBackingBean extends
 	}
 
 	/**
-	 * to get Ptj drop down Listing in purchase in default.
-	 */
-	private void populatePtjDropDownList() {
-		debugLogger("populatePtjDropDownList");
-		PmUser user = new FacesScopes().getUserSessionBean();
-		if (user != null) {
-			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			reqDTO.setUserId(user.getUserId());
-			reqDTO.setOrgType(OrganizationType.DIVISION.value());
-
-			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IOrgProfileSO.class);
-			OrgProfileResDTO resDTO = orgProfileSO
-					.retrieveOrgProfileListByOrgType(reqDTO);
-
-			List<PmOrgProfile> ptjList = resDTO.getOrgProfileList();
-			System.out.println("userDivisionList" + ptjList.size());
-			// getManagedBean().setPtjDropdown(ptjList);
-		}
-	}
-
-	/**
 	 * Pre render page navigation to purchase in default based on task id
 	 * 
 	 * @return void
