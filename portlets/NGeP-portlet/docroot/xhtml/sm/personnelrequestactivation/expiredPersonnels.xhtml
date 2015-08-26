@@ -49,17 +49,7 @@
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.person.composition.certStatus']}">
-							<h:outputText
-								value="#{lbl['lbl.sm.person.composition.processing']}"
-								rendered="#{person.softcertFlg eq '3' and person.smAppl.supplierType ne 'J'}" />
-							<h:outputText
-								value="#{lbl['lbl.sm.person.composition.requested']}"
-								rendered="#{person.softcertFlg eq '2' and person.smAppl.supplierType ne 'J'}" />
-							<h:outputText value="#{lbl['lbl.sm.person.composition.issued']}"
-								rendered="#{person.softcertFlg eq '1' and person.smAppl.supplierType ne 'J'}" />
-							<h:outputText
-								value="#{lbl['lbl.sm.person.composition.notapplied']}"
-								rendered="#{person.softcertFlg eq '0' or person.smAppl.supplierType eq 'J'}" />
+							<ac:smSoftcertStatus softcertFlg="#{person.softcertFlg}"  />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.composition.eprole']}"
 							style="white-space: normal;">

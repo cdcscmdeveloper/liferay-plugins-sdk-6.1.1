@@ -66,26 +66,7 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.person.composition.certStatus']}" disabledSelection="#{personnel.disableRowSelection}">
-					<h:outputText
-						value="#{lbl['lbl.sm.person.composition.ready.renewal']}"
-						rendered="#{personnel.softcertFlg eq '7'}" />
-					<h:outputText
-						value="#{lbl['lbl.sm.person.composition.rejected']}"
-						rendered="#{personnel.softcertFlg eq '6'}" />
-					<h:outputText
-						value="#{lbl['lbl.sm.person.composition.pending.request']}"
-						rendered="#{personnel.softcertFlg eq '4'}" />
-					<h:outputText
-						value="#{lbl['lbl.sm.person.composition.processing']}"
-						rendered="#{personnel.softcertFlg eq '3'}" />
-					<h:outputText
-						value="#{lbl['lbl.sm.person.composition.requested']}"
-						rendered="#{personnel.softcertFlg eq '2'}" />
-					<h:outputText value="#{lbl['lbl.sm.person.composition.issued']}"
-						rendered="#{personnel.softcertFlg eq '1'}" />
-					<h:outputText
-						value="#{lbl['lbl.sm.person.composition.notapplied']}"
-						rendered="#{personnel.softcertFlg eq '0'}" />
+					<ac:smSoftcertStatus softcertFlg="#{personnel.softcertFlg}" />
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.userprofile.accountstatus']}" disabledSelection="#{personnel.disableRowSelection}">
