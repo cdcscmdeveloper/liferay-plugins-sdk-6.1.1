@@ -628,62 +628,28 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		reqDTO.setFlRequestId(getManagedBean().getInvoice().getFlRequest().getFulfilmentReqId());
 		FulfilmentResDTO frnNoteRes = receivedNoteSO.retrieveReceivedNoteByReqId(reqDTO);
-		Map<Long, FlInvoiceItemSummary> itemMapLv1 = null;
+		Map<Long, FlInvoiceItemSummary> itemMapLv1 = new HashMap<Long, FlInvoiceItemSummary>();;
 		FlInvoiceItemSummary invItemSummary = null;
 		for(FlFulfilmentNote fulfilmentNote : frnNoteRes.getFulfilmentNoteList()){
 			for(FlFulfilmentNoteItem noteItem : fulfilmentNote.getFlFulfilmentNoteItem()){
 				if(noteItem.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
 					String key = noteItem.getGstUnitPrice().toString()+noteItem.getGstFlag().getParameterCode();
-					if(itemMapLv1 != null){
-						if(itemMapLv1.containsKey(noteItem.getFlItem().getFulfilmentItemId())){
-							FlInvoiceItemSummary extItemSumm = itemMapLv1.get(noteItem.getFlItem().getFulfilmentItemId());
-							List<FlInvoiceItem> invItemList = null;
-							for(FlInvoiceItem invItem : extItemSumm.getFlInvoiceItem()){
-								if(key.contains(invItem.getGstUnitPrice().toString()+invItem.getGstFlag().getParameterCode())){
-									invItem.setReceivedQty(invItem.getReceivedQty().add(noteItem.getReceivedQty()));
-									invItem.setReceivedAmt(invItem.getReceivedAmt().add(noteItem.getReceivedAmt()));
-									invItem.setInvAmt(invItem.getReceivedAmt());
-									invItem.setDeliveryAmt(invItem.getDeliveryAmt().add(noteItem.getFlDelOrderItem().getDeliveredAmt()));
-									invItem.setDeliveryQty(invItem.getDeliveryQty().add(noteItem.getFlDelOrderItem().getDeliveredQty()));
-								}else{
-									invItem = new FlInvoiceItem();
-									invItem.setReceivedQty(noteItem.getReceivedQty());
-									invItem.setReceivedAmt(noteItem.getReceivedAmt());
-									invItem.setInvAmt(noteItem.getReceivedAmt());
-									invItem.setGstAmount(noteItem.getGstAmount());
-									invItem.setGstUnitPrice(noteItem.getGstUnitPrice());
-									invItem.setDeliveryAmt(noteItem.getFlDelOrderItem().getDeliveredAmt());
-									invItem.setDeliveryQty(noteItem.getFlDelOrderItem().getDeliveredQty());
-									invItem.setGstFlag(noteItem.getGstFlag());
-									invItem.setFlInvoiceItemSummary(extItemSumm);
-
-									invItemList = new ArrayList<FlInvoiceItem>();
-									invItemList.add(invItem);
-								}
+					if(itemMapLv1.containsKey(noteItem.getFlItem().getFulfilmentItemId())){
+						FlInvoiceItemSummary extItemSumm = itemMapLv1.get(noteItem.getFlItem().getFulfilmentItemId());
+						boolean keyMatch = false;
+						for(FlInvoiceItem invItem : extItemSumm.getFlInvoiceItem()){
+							if(key.contains(invItem.getGstUnitPrice().toString()+invItem.getGstFlag().getParameterCode())){
+								invItem.setReceivedQty(invItem.getReceivedQty().add(noteItem.getReceivedQty()));
+								invItem.setReceivedAmt(invItem.getReceivedAmt().add(noteItem.getReceivedAmt()));
+								invItem.setInvAmt(invItem.getReceivedAmt());
+								invItem.setDeliveryAmt(invItem.getDeliveryAmt().add(noteItem.getFlDelOrderItem().getDeliveredAmt()));
+								invItem.setDeliveryQty(invItem.getDeliveryQty().add(noteItem.getFlDelOrderItem().getDeliveredQty()));
+								keyMatch = true;
+								break;
 							}
-							if(invItemList!=null) {
-								extItemSumm.getFlInvoiceItem().addAll(invItemList);
-							}
-						}else{
-							FulfilmentReqDTO siReqDTO = new FulfilmentReqDTO();
-							invItemSummary = new FlInvoiceItemSummary();
-							invItemSummary.setOrderedAmt(BigDecimal.ZERO);
-							invItemSummary.setOrderedQty(BigDecimal.ZERO);
-							invItemSummary.setFlInvoice(getManagedBean().getInvoice());
-							for(FlFulfilmentItemAddr itemAddr : noteItem.getFlItem().getFlFulfilmentItemAddr()){
-								invItemSummary.setOrderedQty(invItemSummary.getOrderedQty().add(itemAddr.getOrderedQty()));
-								invItemSummary.setOrderedAmt(invItemSummary.getOrderedAmt().add(itemAddr.getOrderedAmt()));
-							}
-							siReqDTO.setItemId(noteItem.getFlItem().getFulfilmentItemId());
-							siReqDTO.setFulfilmentOrderId(getManagedBean().getInvoice().getFlRequest().getFlFulfilmentOrder().getFulfilmentOrderId());
-							FulfilmentResDTO siResDTO = orderSO.retrieveStopInstrTotalRecallByOrderId(siReqDTO);
-							invItemSummary.setRecalledQty(siResDTO.getTotalRecallQty());
-							invItemSummary.setRecalledAmt(siResDTO.getTotalRecallAmt());
-							invItemSummary.setFlFulfilmentItem(noteItem.getFlItem());
-							
-
+						}
+						if(!keyMatch){
 							FlInvoiceItem invItem = new FlInvoiceItem();
-							invItem.setFlInvoiceItemSummary(invItemSummary);
 							invItem.setReceivedQty(noteItem.getReceivedQty());
 							invItem.setReceivedAmt(noteItem.getReceivedAmt());
 							invItem.setInvAmt(noteItem.getReceivedAmt());
@@ -692,9 +658,9 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 							invItem.setDeliveryAmt(noteItem.getFlDelOrderItem().getDeliveredAmt());
 							invItem.setDeliveryQty(noteItem.getFlDelOrderItem().getDeliveredQty());
 							invItem.setGstFlag(noteItem.getGstFlag());
-							invItemSummary.setFlInvoiceItem(new ArrayList<FlInvoiceItem>());
-							invItemSummary.getFlInvoiceItem().add(invItem);
-							itemMapLv1.put(noteItem.getFlItem().getFulfilmentItemId(), invItemSummary);
+							invItem.setFlInvoiceItemSummary(extItemSumm);
+
+							extItemSumm.getFlInvoiceItem().add(invItem);
 						}
 					}else{
 						FulfilmentReqDTO siReqDTO = new FulfilmentReqDTO();
@@ -725,7 +691,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 						invItem.setGstFlag(noteItem.getGstFlag());
 						invItemSummary.setFlInvoiceItem(new ArrayList<FlInvoiceItem>());
 						invItemSummary.getFlInvoiceItem().add(invItem);
-						itemMapLv1 = new HashMap<Long, FlInvoiceItemSummary>();
 						itemMapLv1.put(noteItem.getFlItem().getFulfilmentItemId(), invItemSummary);
 					}
 				}
