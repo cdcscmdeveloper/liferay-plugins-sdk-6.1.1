@@ -2177,6 +2177,14 @@ public class SpecificationBackingBean extends
 						districtLocCriteria.setPmDivision(districtLoc
 								.getPmDivision());
 						results.add(districtLocCriteria);
+						for (TreeNode divisionCode : districtNode.getChildren()) {
+							TplSpecLoc divisionLoc = (TplSpecLoc) divisionCode
+									.getData();
+							ScQtLocCriteria divisionLocCriteria = new ScQtLocCriteria();
+							divisionLocCriteria.setPmDistrict(divisionLoc
+									.getPmDistrict());
+							results.add(divisionLocCriteria);
+						}
 					}
 				}
 			}
@@ -2360,8 +2368,7 @@ public class SpecificationBackingBean extends
 			setUserDetails(specMaster);
 			List<TplSpecQuestion> questionsList = new ArrayList<TplSpecQuestion>();
 			new TemplateSpecBackingBean().addQuestion(new TemplateSpecBean(),
-					specMaster,
-					questionsList, questionsList.size() - 1,
+					specMaster, questionsList, questionsList.size() - 1,
 					TemplateSpecConst.QUESTION_TYPE_ITEM);
 			TplSpecQuestion tplSpecQuestion = questionsList.get(0);
 
@@ -2394,9 +2401,9 @@ public class SpecificationBackingBean extends
 			if (null != panelItem.getCtPanelItemSpecs()
 					&& !panelItem.getCtPanelItemSpecs().isEmpty()) {
 				for (int i = 0; i < panelItem.getCtPanelItemSpecs().size(); i++) {
-					new TemplateSpecBackingBean().addQuestion(new TemplateSpecBean(),
-							specMaster,
-							questionsList, questionsList.size() - 1,
+					new TemplateSpecBackingBean().addQuestion(
+							new TemplateSpecBean(), specMaster, questionsList,
+							questionsList.size() - 1,
 							TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC);
 					CtPanelItemSpec itemSpec = panelItem.getCtPanelItemSpecs()
 							.get(i);
@@ -13383,7 +13390,7 @@ public class SpecificationBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 		ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
 		if (null != checkList.getQtChecklistId()) {
-			//checkList.setDeleted(true);
+			// checkList.setDeleted(true);
 			List<ScQtCheckList> toBeRemoveCheckLists = new ArrayList<ScQtCheckList>();
 			// toBeRemoveCheckLists.add(checkList);
 			List<ScQtCheckList> technicalCheckLIsts = this.getManagedBean()
