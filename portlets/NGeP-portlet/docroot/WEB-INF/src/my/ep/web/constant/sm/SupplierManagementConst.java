@@ -224,6 +224,7 @@ public class SupplierManagementConst {
 	public static final int SOFT_CERT_REVOKED = 5;
 	public static final int SOFT_CERT_REJECTED = 6;
 	public static final int SOFT_CERT_READY_FOR_RENEWAL = 7;
+	public static final int SOFT_CERT_REQ_FAILED = 9;
 	
 	//GST rule value constant
 	public static String GST_RULE_VALUE = "GST";
