@@ -100,12 +100,21 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.branch.information']}" />
 				</td>
-				<td><h:outputText
-						value="#{lOADetailBackingBean.managedBean.branchInfoReport.scLoaReportAttachment.fileName}" />
+				<td>
 					<p:commandButton oncomplete="attachmentPopupDlg.show();"
 						value="#{lbl['lbl.txt.attachment']}" partialSubmit="true"
 						process="@this" update="@([id$=attachmentPopup])">
-					</p:commandButton> <ac:iconTooltip value="#{lbl['lbl.sc.gst.branch.attachment.tooltip']}" /> </td>
+					</p:commandButton>
+					<ui:param name="branchInfoReport"
+						value="#{lOADetailBackingBean.managedBean.branchInfoReport}"></ui:param>
+					<h:commandLink
+						value="#{branchInfoReport.scLoaReportAttachment.fileName}"
+						styleClass="blue_font" immediate="true"
+						action="#{lOADetailBackingBean.downloadReport(branchInfoReport)}"
+						rendered="#{branchInfoReport ne null}" />
+					<ac:iconTooltip
+						value="#{lbl['lbl.sc.gst.branch.attachment.tooltip']}" />
+				</td>
 			</tr>
 		</table>
 	</p:panel>
