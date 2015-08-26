@@ -1790,6 +1790,11 @@ public class QTDetailBackingBean extends
 		if (null == this.getManagedBean().getQt().getProcurementMode()) {
 			this.getManagedBean().getQt().setProcurementMode(new PmParameter());
 		}
+		
+		if (SCProcessNameConst.REVISE_PCB.equalsIgnoreCase(this
+				.getManagedBean().getTaskName())) {
+			this.getManagedBean().setPcbProcess(true);
+		}
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
@@ -1819,6 +1824,11 @@ public class QTDetailBackingBean extends
 		}
 
 		QuationTenderReqDTO qtReqDTO = prepareQTInfo();
+		
+		
+		if(this.getManagedBean().isPcbProcess()) {
+			qtReqDTO.setPcbProcess(true);
+		}
 
 		FacesScopes facesScopes = new FacesScopes();
 		Object ctxToken = facesScopes.getBPMAuthenticationCtxToken();
@@ -4159,6 +4169,7 @@ public class QTDetailBackingBean extends
 				scQt.setScQtBriefings(null);
 				quationTenderReqDTO.setQtdetail(scQt);
 				quationTenderReqDTO.setPublished(false);
+				quationTenderReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 				QuationTenderResDTO resDTO = detailSO
 						.cancleQT(quationTenderReqDTO);
 				if (resDTO.isSuccessful()) {
@@ -4313,6 +4324,8 @@ public class QTDetailBackingBean extends
 			qt.setScQtApprovals(scQtApprovals);
 			quationTenderReqDTO.setQtdetail(qt);
 			quationTenderReqDTO.setPublished(true);
+			quationTenderReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			quationTenderReqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.cancleQT(quationTenderReqDTO);
 
