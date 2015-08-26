@@ -6,6 +6,8 @@ package my.ep.web.constant.sm;
 import java.util.Arrays;
 import java.util.List;
 
+import my.ep.constants.SMProcessNameConst;
+
 public class SupplierManagementConst {
 
 	// Navigation
@@ -414,11 +416,11 @@ public class SupplierManagementConst {
 	public static final long SUPPLIER_EDU_LEVEL_MIN_FOR_SEMIPRF = 80;
 
 	// PO BPM Task names
-	public static final String BPM_TASK_REVIEW_APPL_ESCALATED = "Review Application (Escalated)";
-	public static final String BPM_TASK_REVIEW_APPL = "Review Application";
-	public static final String BPM_TASK_REVIEW_APPL_SPLCAT = "Review Application (Special Category)";
-	public static final String BPM_TASK_VERIFY_APPL = "Verify Application";
-	public static final String BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE = "Review Site Visit After Approve";
+	public static final String BPM_TASK_REVIEW_APPL_ESCALATED = SMProcessNameConst.REVIEW_APPL_ESCALATED;
+	public static final String BPM_TASK_REVIEW_APPL = SMProcessNameConst.REVIEW_APPL;
+	public static final String BPM_TASK_REVIEW_APPL_SPLCAT = SMProcessNameConst.REVIEW_APPL_SPLCAT;
+	public static final String BPM_TASK_VERIFY_APPL = SMProcessNameConst.VERIFY_APPL;
+	public static final String BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE = SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE;
 
 	public static final double MIN_AMT_RANGE = 0.01;
 	public static final double MAX_AMT_RANGE = 99999999999999.99;
