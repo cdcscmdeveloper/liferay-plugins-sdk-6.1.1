@@ -674,7 +674,18 @@ public class SPDetailBackingBean extends
 				if (templateSpecBeans != null && templateSpecBeans.size() > 0) {
 					answers = new ArrayList<TplSpecAnswer>();
 					for (TemplateSpecBean templateSpecBean : templateSpecBeans) {
-						answers.addAll(templateSpecBean.getSpecAnswerList());
+						if (templateSpecBean.getSpecAnswerList() != null && templateSpecBean.getSpecAnswerList().size() > 0) {
+							boolean isContainPrice = false;
+							for (TplSpecAnswer specAnswer : templateSpecBean.getSpecAnswerList()) {
+								if (specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.valueOf(0)) > 0) {
+									isContainPrice = true;
+								}
+							}
+							
+							if (isContainPrice) {
+								answers.addAll(templateSpecBean.getSpecAnswerList());	
+							}
+						}
 					}
 				}
 
