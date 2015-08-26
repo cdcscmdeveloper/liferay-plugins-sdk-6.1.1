@@ -270,6 +270,9 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	
 	/** The Proc type category id. */
 	private Long procTypeCategoryId;
+	
+	/** The is exceeded amount alerted. */
+	private boolean isExceededAmountAlerted = Boolean.FALSE;
     
     /**
      * Instantiates a new request note managed bean.
@@ -1614,6 +1617,20 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setItemSearchBackBtn(boolean itemSearchBackBtn) {
 		this.itemSearchBackBtn = itemSearchBackBtn;
+	}
+
+	/**
+	 * @return the isExceededAmountAlerted
+	 */
+	public boolean isExceededAmountAlerted() {
+		return isExceededAmountAlerted;
+	}
+
+	/**
+	 * @param isExceededAmountAlerted the isExceededAmountAlerted to set
+	 */
+	public void setExceededAmountAlerted(boolean isExceededAmountAlerted) {
+		this.isExceededAmountAlerted = isExceededAmountAlerted;
 	}
 	
 	
