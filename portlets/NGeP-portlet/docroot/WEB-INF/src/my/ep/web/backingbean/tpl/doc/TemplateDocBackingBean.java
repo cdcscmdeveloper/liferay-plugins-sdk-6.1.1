@@ -652,9 +652,14 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 
 	public void addSelectedImptNodes() {
 		FacesScopes facesScopes = new FacesScopes();
+		
+		System.out.println("***length***"+this.getManagedBean().getTreenode().length);
+	
 		Timestamp date = new Timestamp(System.currentTimeMillis());
 		TreeNode selectedNode = getManagedBean().getDocSectionMap().get(getManagedBean().getSelectedSection());
-		for (TplDocSection docSection : getManagedBean().getImportedSectionList()) {
+		
+		for(TreeNode selectedNote : this.getManagedBean().getTreenode()){
+			TplDocSection docSection =(TplDocSection)selectedNote.getData();
 			docSection = cloneObj(docSection);
 			docSection.setTplDocMaster(getManagedBean().getSelectedTemplate());
 			docSection.setCreatedBy(1l);
@@ -662,7 +667,7 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 			TreeNode node = new DefaultTreeNode(docSection,selectedNode.getParent());
 			getManagedBean().getDocSectionMap().put((TplDocSection) node.getData(), node);
 					}
-		importRePosition(selectedNode, getManagedBean().getImportedSectionList().size());
+		importRePosition(selectedNode, this.getManagedBean().getTreenode().length);
 	}
 
 	public void initializeImport(ActionEvent e) {
@@ -685,6 +690,25 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 			getManagedBean().getImportedSectionList().add(docSection);
 		}
 	}
+	
+	public void checkChild() {
+		System.out.println("***checkChild***");
+		for(TreeNode selectedNode :this.getManagedBean().getTreenode()){		
+			selectedNode.setExpanded(true);
+			if(selectedNode.getChildCount()>0){
+				for(TreeNode child1 : selectedNode.getChildren()){
+					child1.setExpanded(true);
+					if(child1.getChildCount()>0){
+						for(TreeNode child2 : child1.getChildren()){
+							child2.setExpanded(true);
+						}		
+					}	
+				}
+			}
+		}		
+	}
+	
+	
 
 	public boolean isUncheck() {
 		return uncheck;
