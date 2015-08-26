@@ -1214,6 +1214,7 @@ public class FileUtility {
 				writer.write(line.toString());
 			}
 			
+			writer.close();
 			//upload the txt file to sftp server
 			
 			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
@@ -1227,7 +1228,7 @@ public class FileUtility {
 			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+			 osbUtility.osbServiceCallOutBound(ServiceCode.EPE04.value(),fileName);
 
 		} catch (IOException e) {
 
@@ -1321,6 +1322,7 @@ public class FileUtility {
 				writer.write(line.toString());
 			}
 			
+			writer.close();
 			//upload the txt file to sftp server
 			
 			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
@@ -1377,6 +1379,8 @@ public class FileUtility {
 				writer.write(line.toString());
 			}
 			
+			writer.close();
+			
 			//upload the txt file to sftp server
 			
 			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
@@ -1390,7 +1394,7 @@ public class FileUtility {
 			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+			osbUtility.osbServiceCallOutBound(ServiceCode.EPE07.value(),fileName);
 
 		} catch (IOException e) {
 
@@ -1461,6 +1465,7 @@ public class FileUtility {
 				writer.write(line.toString());
 			}
 			
+			writer.close();
 			//upload the txt file to sftp server
 			
 			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
@@ -1474,7 +1479,7 @@ public class FileUtility {
 			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+			osbUtility.osbServiceCallOutBound(ServiceCode.EPE06.value(),fileName);
 
 		} catch (IOException e) {
 
@@ -1539,7 +1544,7 @@ public class FileUtility {
 				line.append(String.format("%s", bDirector.getExpertise().getCategoryClassification()));
 				writer.write(line.toString());
 			}
-			
+			writer.close();
 			//upload the txt file to sftp server
 			
 			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
@@ -1553,7 +1558,7 @@ public class FileUtility {
 			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+			osbUtility.osbServiceCallOutBound(ServiceCode.EPE05.value(),fileName);
 
 		} catch (IOException e) {
 
@@ -1602,6 +1607,8 @@ public class FileUtility {
 
 				writer.write(line.toString());
 			}
+			
+			writer.close();
 			//upload the txt file to sftp server
 			
 			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
@@ -1615,7 +1622,7 @@ public class FileUtility {
 			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+			osbUtility.osbServiceCallOutBound(ServiceCode.EPE08.value(),fileName);
 
 		} catch (IOException e) {
 
@@ -1658,6 +1665,8 @@ public class FileUtility {
 
 				writer.write(line.toString());
 			}
+			
+			writer.close();
 			//upload the txt file to sftp server
 			
 			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
@@ -1671,7 +1680,8 @@ public class FileUtility {
 			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+			osbUtility.osbServiceCallOutBound(ServiceCode.EPE09.value(),fileName);
+
 
 		} catch (IOException e) {
 
@@ -1722,6 +1732,8 @@ public class FileUtility {
 				writer.write(line.toString());
 			}
 			
+			writer.close();
+			
 			//upload the txt file to sftp server
 			
 			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
@@ -1735,7 +1747,7 @@ public class FileUtility {
 			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+			osbUtility.osbServiceCallOutBound(ServiceCode.EPE10.value(),fileName);
 
 		} catch (IOException e) {
 
@@ -1773,9 +1785,10 @@ public class FileUtility {
 				line.append(formatDateEperunding(deletedCompany.getDateDeleted(),true));
 
 				writer.write(line.toString());
-				writer.flush();
 			}
 			//upload the txt file to sftp server
+			
+			writer.close();
 			
 			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
 			reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPERUNDING);
@@ -1788,7 +1801,7 @@ public class FileUtility {
 			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+			osbUtility.osbServiceCallOutBound(ServiceCode.EPE11.value(),fileName);
 
 		} catch (IOException e) {
 
@@ -1847,6 +1860,8 @@ public class FileUtility {
 				writer.write(line.toString());
 			}
 			
+			writer.close();
+			
 			//upload the txt file to sftp server
 			
 			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
@@ -1860,7 +1875,7 @@ public class FileUtility {
 			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+			osbUtility.osbServiceCallOutBound(ServiceCode.EPE03.value(),fileName);
 
 		} catch (IOException e) {
 
@@ -1918,6 +1933,8 @@ public class FileUtility {
 				writer.write(line.toString());
 			}
 			
+			writer.close();
+			
 			//upload the txt file to sftp server
 			
 			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
@@ -1931,7 +1948,7 @@ public class FileUtility {
 			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+			osbUtility.osbServiceCallOutBound(ServiceCode.EPE02.value(),fileName);
 
 		} catch (IOException e) {
 
