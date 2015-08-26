@@ -12,7 +12,8 @@
 	<p:panel header="#{lbl['lbl.fl.menu.items']}" toggleable="true" id="itemPnl">
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.frn.item']}" escape="false"/>
 		<br />
-	<p:dataTable id="frnItemDt" var="item" width="100%"
+	<div id="flDataTableScroll">	
+	<p:dataTable id="frnItemDt" var="item" 
 			value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flFulfilmentNoteItem}"	
 			selection="#{receivedNoteBackingBean.managedBean.selectedItem}"
 			rowIndexVar="index" selectionMode="single" rowKey="#{item}" >
@@ -177,6 +178,7 @@
 			</p:column>	
        
 		</p:dataTable>
+		</div>
 		<p:spacer height="50"/>
 		<h:panelGroup styleClass="selectedItemSection" id="selectedItemSection">
 			<table>
