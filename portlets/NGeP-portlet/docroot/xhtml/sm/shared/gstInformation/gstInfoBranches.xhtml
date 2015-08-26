@@ -195,16 +195,4 @@
 			fileUploadListener="#{smUpdateGstInfoBackingBean.handleBranchSupDocFileAttachment}"
 			update="@form" oncomplete="branchUploadDialog.hide();" />
 	</p:dialog>
-	
-	<p:confirmDialog id="alertBranch" closable="true"
-		message="#{lbl['lbl.sm.gst.seteffdate.to.first.of.mnth.msg']}"
-		header="#{lbl['lbl.sm.notification']}" severity="alert"
-		widgetVar="alertBranch">
-		<div align="right">
-			<p:commandButton id="okBranchBtn" update="@form"
-				value="#{lbl['lbl.btn.ok']}" onclick="alertBranch.hide()" 
-				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-				action="#{smUpdateGstInfoBackingBean.resetBranchEffectiveDate}" />
-		</div>
-	</p:confirmDialog>
 </ui:composition>
