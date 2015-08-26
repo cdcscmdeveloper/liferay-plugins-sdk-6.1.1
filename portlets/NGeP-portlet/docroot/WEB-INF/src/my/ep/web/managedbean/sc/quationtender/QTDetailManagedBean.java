@@ -1017,6 +1017,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
     
     /** The clauses title. */
 	private String clausesTitle;
+	
+	private boolean isPcbProcess;
     
 	/**
 	 * Sets the panel suppliers.
@@ -6445,6 +6447,20 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setSelectedCommitteeTabIndex(int selectedCommitteeTabIndex) {
 		this.selectedCommitteeTabIndex = selectedCommitteeTabIndex;
+	}
+
+	/**
+	 * @return the isPcbProcess
+	 */
+	public boolean isPcbProcess() {
+		return isPcbProcess;
+	}
+
+	/**
+	 * @param isPcbProcess the isPcbProcess to set
+	 */
+	public void setPcbProcess(boolean isPcbProcess) {
+		this.isPcbProcess = isPcbProcess;
 	}
 
 }
