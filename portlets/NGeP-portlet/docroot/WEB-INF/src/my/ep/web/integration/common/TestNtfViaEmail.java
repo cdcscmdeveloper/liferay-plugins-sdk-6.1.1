@@ -2,7 +2,9 @@ package my.ep.web.integration.common;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import my.ep.ntf.dto.Attachment;
@@ -107,6 +109,7 @@ public class TestNtfViaEmail {
 		try {
 			FileInputStream fileInputStream = new FileInputStream(file);
 			fileInputStream.read(b);
+			fileInputStream.close();
 		} catch (Exception e1) {
 			log.info("Error Reading The File.");
 			e1.printStackTrace();
@@ -115,6 +118,17 @@ public class TestNtfViaEmail {
 	}
 	
 	public void sendFilestoMail(INtfSO ntfSO){
+		
+		Date curDate = new Date();
+
+		SimpleDateFormat format = null;
+		String DateToStr1,DateToStr2;
+
+		format = new SimpleDateFormat("dd/MM/yyyy");
+		DateToStr1 = format.format(curDate);
+
+		format = new SimpleDateFormat("ddMMyyyy");
+		DateToStr2 = format.format(curDate)+"/";
 		
 		log.info("sendFilestoMail");
 //		INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance()
@@ -125,13 +139,11 @@ public class TestNtfViaEmail {
 
 		List<String> subParaLst = new ArrayList<String>();
 		subParaLst.add("None");
-		subParaLst.add("12/06/2015");
+		subParaLst.add(DateToStr1);
 		reqDTO.setSubParaArr(subParaLst.toArray(new String[subParaLst.size()]));
 		List<String> cntParaLst = new ArrayList<String>();
-//		cntParaLst.add("<a href=http://ngepdevwps01.ngep.com:8888/web/guest/supplier-user-activation?pr=9333&sp=d14bf0eeb496b177efb56111bbc0bdf7ee03d8761fd23648bcd5cfe36f47db26&kp=5519343f26ccbe1c65af6ef4df4c9adca62e62234732cff0ddfacb764f240727>Click to activate</a>");
 		cntParaLst.add("None");
-		cntParaLst.add("12/06/2015");
-//		cntParaLst.add("1402477123009");
+		cntParaLst.add(DateToStr1);
 		reqDTO.setCntParaArr(cntParaLst.toArray(new String[cntParaLst.size()]));
 
 		List<String> emailLst = new ArrayList<String>();
@@ -145,22 +157,21 @@ public class TestNtfViaEmail {
 		reqDTO.setEmailToArr(emailLst.toArray(new String[emailLst.size()]));
 
 //		 Attachments
-		 String filePath = IntegrationConstants.FILE_PATH+"12062015/";//"C:/Integration/Upload/10062015/";
+		 String filePath = IntegrationConstants.FILE_PATH+DateToStr2;
 		 
 		 File folder = new File(filePath);
 		 File[] listOfFiles = folder.listFiles();
 		 
 		 Attachment[] attArr = new Attachment[listOfFiles.length];
+		 Attachment attachment = null;
 		 for (int i = 0; i < listOfFiles.length; i++) {
-			
 		      if (listOfFiles[i].isFile()) {
-		    	  attArr[i] = new Attachment();
-		 		  attArr[i].setData(processToByte(filePath+listOfFiles[i].getName()));
-		 		  attArr[i].setFilename(listOfFiles[i].getName());
-		 		  log.info("File " + listOfFiles[i].getName());
+		    	  attachment = new Attachment();
+		    	  attachment.setData(processToByte(filePath+listOfFiles[i].getName()));
+		    	  attachment.setFilename(listOfFiles[i].getName());
+		    	  attArr[i] = attachment;
 		      } 
 		    }
-		
 		
 		reqDTO.setAttachmentArr(attArr);
 		ntfSO.processAndPublishViaEmail(reqDTO);
