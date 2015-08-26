@@ -9660,7 +9660,9 @@ public class SmApplicationBackingBean extends
 		SmFacility hq = getHqFacility();
 		if (!isFacilityExistInList(hq, getManagedBean()
 				.getSelectedFactoryFacilities())) {
-			if (getManagedBean().getSelectedFactoryFacilities().isEmpty()) {
+			if (getManagedBean().getSelectedFactoryFacilities() == null
+					|| getManagedBean().getSelectedFactoryFacilities()
+							.isEmpty()) {
 				getManagedBean().setSelectedFactoryFacilities(
 						new ArrayList<SmFacility>());
 
@@ -9674,7 +9676,10 @@ public class SmApplicationBackingBean extends
 		boolean retVal = false;
 		if (facParamList != null && !facParamList.isEmpty()) {
 			for (SmFacility facTmp : facParamList) {
-				if (facParam.getFacilityId().compareTo(facTmp.getFacilityId()) == 0) {
+				if (facParam.getFacilityId() != null
+						&& facTmp.getFacilityId() != null
+						&& facParam.getFacilityId().compareTo(
+								facTmp.getFacilityId()) == 0) {
 					retVal = true;
 				}
 			}
