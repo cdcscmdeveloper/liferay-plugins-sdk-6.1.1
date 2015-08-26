@@ -1172,18 +1172,16 @@ public class FileUtility {
 	//===============================Eperunding files creation===========================
 	
 	
-	public void equityOwnerOutPutStream(List<EquityOwner> content,String filePath) {
+	public void equityOwnerOutPutStream(BatchReqDTO<EquityOwner> reqDTO) {
 		String fileName = "EquityOwner.txt";
-		String SERVICE_CODE = "EPE04";
 
 		Writer writer = null;
 
 		try {
-			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath + fileName), "utf-8"));
-			if (content.size() != 0) {
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(reqDTO.getFilePath() + fileName), "utf-8"));
 				StringBuffer line;
-				writer.write("         " + content.size() + " Rows Selected");
-				for (EquityOwner eOwner : content) {
+				writer.write("         " + reqDTO.getBatchContent().size() + " Rows Selected");
+				for (EquityOwner eOwner : reqDTO.getBatchContent()) {
 					line = new StringBuffer();
 					line.append(System.getProperty("line.separator"));
 					line.append(formatString(eOwner.getMOFNo(),20));
@@ -1215,11 +1213,18 @@ public class FileUtility {
 					line.append(String.format("%s", eOwner.getExpertise().getCategoryClassification()));
 				writer.write(line.toString());
 			}
-			}
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName, null, null, null);
+			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
+			reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPERUNDING);
+			reqDTO.setFileName(fileName);
+			reqDTO.setProcessId(ProcessCode.EPE04.value());
+			reqDTO.setServiceCode(ServiceCode.EPE04.value());
+			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+			
+			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
@@ -1238,21 +1243,20 @@ public class FileUtility {
 		}
 	}
 	
-	public void consultantProfileFileOutPutStream(List<ConsultantProfile> content, String filePath) {
+	public void consultantProfileFileOutPutStream(BatchReqDTO<ConsultantProfile> reqDTO) {
 
 		String fileName = "ConsultantProfiles.txt";
-		String SERVICE_CODE = "EPE01";
 		Writer writer = null;
 
 		try {
 
 			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(filePath + fileName), "utf-8"));
+					new FileOutputStream(reqDTO.getFilePath() + fileName), "utf-8"));
 
 			StringBuffer line;
 		
-			writer.write("         " + content.size() + " Rows Selected");
-			for (ConsultantProfile cProfile : content) {
+			writer.write("         " + reqDTO.getBatchContent().size() + " Rows Selected");
+			for (ConsultantProfile cProfile : reqDTO.getBatchContent()) {
 
 				line = new StringBuffer();
 				line.append(System.getProperty("line.separator"));
@@ -1319,7 +1323,15 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName, null, null, null);
+			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
+			reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPERUNDING);
+			reqDTO.setFileName(fileName);
+			reqDTO.setProcessId(ProcessCode.EPE01.value());
+			reqDTO.setServiceCode(ServiceCode.EPE01.value());
+			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+			
+			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
@@ -1338,21 +1350,20 @@ public class FileUtility {
 		}
 	}
 
-	public void signatoryFileOutPutStream(List<Signatory> content,
-			String filePath) {
+	public void signatoryFileOutPutStream(BatchReqDTO<Signatory> reqDTO) {
+		
 		String fileName = "Signatory.txt";
-		String SERVICE_CODE = "EPE07";
 
 		Writer writer = null;
 
 		try {
 
 			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(filePath + fileName), "utf-8"));
+					new FileOutputStream(reqDTO.getFilePath() + fileName), "utf-8"));
 
 			StringBuffer line = null;
-			writer.write("         " + content.size() + " Rows Selected");
-			for (Signatory signatory : content) {
+			writer.write("         " + reqDTO.getBatchContent().size() + " Rows Selected");
+			for (Signatory signatory : reqDTO.getBatchContent()) {
 				line = new StringBuffer();
 				line.append(System.getProperty("line.separator"));
 				line.append(formatString(signatory.getMOFNo(),20));
@@ -1368,7 +1379,15 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName, null, null, null);
+			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
+			reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPERUNDING);
+			reqDTO.setFileName(fileName);
+			reqDTO.setProcessId(ProcessCode.EPE07.value());
+			reqDTO.setServiceCode(ServiceCode.EPE07.value());
+			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+			
+			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
@@ -1387,22 +1406,21 @@ public class FileUtility {
 		}
 	}
 
-	public void managementProfileFileOutPutStream(
-			List<ManagementPersonnel> content, String filePath) {
+	
+	public void managementProfileFileOutPutStream(BatchReqDTO<ManagementPersonnel> reqDTO) {
 
 		String fileName = "ManagementPersonnel.txt";
-		String SERVICE_CODE = "EPE06";
 
 		Writer writer = null;
 
 		try {
 
 			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(filePath + fileName), "utf-8"));
+					new FileOutputStream(reqDTO.getFilePath() + fileName), "utf-8"));
 
 			StringBuffer line;
-			writer.write("         " + content.size() + " Rows Selected");
-			for (ManagementPersonnel mPersonnel : content) {
+			writer.write("         " + reqDTO.getBatchContent().size() + " Rows Selected");
+			for (ManagementPersonnel mPersonnel : reqDTO.getBatchContent()) {
 				line = new StringBuffer();
 				line.append(System.getProperty("line.separator"));
 
@@ -1445,7 +1463,15 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName, null, null, null);
+			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
+			reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPERUNDING);
+			reqDTO.setFileName(fileName);
+			reqDTO.setProcessId(ProcessCode.EPE06.value());
+			reqDTO.setServiceCode(ServiceCode.EPE06.value());
+			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+			
+			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
@@ -1464,21 +1490,19 @@ public class FileUtility {
 		}
 	}
 
-	public void boardOfDirectorOutPutStream(List<BoardOfDirector> content,
-			String filePath) {
+	public void boardOfDirectorOutPutStream(BatchReqDTO<BoardOfDirector> reqDTO) {
 
 		String fileName = "BoardOfDirector.txt";
-		String SERVICE_CODE = "EPE05";
 
 		Writer writer = null;
 
 		try {
 			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(filePath + fileName), "utf-8"));
+					new FileOutputStream(reqDTO.getFilePath() + fileName), "utf-8"));
 
 			StringBuffer line;
-			writer.write("         " + content.size() + " Rows Selected");
-			for (BoardOfDirector bDirector : content) {
+			writer.write("         " + reqDTO.getBatchContent().size() + " Rows Selected");
+			for (BoardOfDirector bDirector : reqDTO.getBatchContent()) {
 				line = new StringBuffer();
 
 				line.append(System.getProperty("line.separator"));
@@ -1518,7 +1542,15 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName, null, null, null);
+			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
+			reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPERUNDING);
+			reqDTO.setFileName(fileName);
+			reqDTO.setProcessId(ProcessCode.EPE05.value());
+			reqDTO.setServiceCode(ServiceCode.EPE05.value());
+			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+			
+			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
@@ -1538,22 +1570,20 @@ public class FileUtility {
 	}
 	
 	
-	public void branchCompanyOutPutStream(List<BranchCompany> content,
-			String filePath) {
+	public void branchCompanyOutPutStream(BatchReqDTO<BranchCompany> reqDTO) {
 
 		String fileName = "BranchCompany.txt";
-		String SERVICE_CODE = "EPE08";
 
 		Writer writer = null;
 
 		try {
 
 			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(filePath + fileName), "utf-8"));
+					new FileOutputStream(reqDTO.getFilePath() + fileName), "utf-8"));
 
 			StringBuffer line;
-			writer.write("         " + content.size() + " Rows Selected");
-			for (BranchCompany branchCompany : content) {
+			writer.write("         " + reqDTO.getBatchContent().size() + " Rows Selected");
+			for (BranchCompany branchCompany : reqDTO.getBatchContent()) {
 				line = new StringBuffer();
 
 				line.append(System.getProperty("line.separator"));
@@ -1574,7 +1604,15 @@ public class FileUtility {
 			}
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName, null, null, null);
+			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
+			reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPERUNDING);
+			reqDTO.setFileName(fileName);
+			reqDTO.setProcessId(ProcessCode.EPE08.value());
+			reqDTO.setServiceCode(ServiceCode.EPE08.value());
+			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+			
+			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
@@ -1593,22 +1631,20 @@ public class FileUtility {
 		}
 	}
 	
-	public void registeredCategoryOutPutStream(List<RegisteredCategory> content,
-			String filePath) {
+	public void registeredCategoryOutPutStream(BatchReqDTO<RegisteredCategory> reqDTO) {
 
 		String fileName = "RegisteredCategory.txt";
-		String SERVICE_CODE = "EPE09";
 
 		Writer writer = null;
 
 		try {
 
 			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(filePath + fileName), "utf-8"));
+					new FileOutputStream(reqDTO.getFilePath() + fileName), "utf-8"));
 
 			StringBuffer line;
-			writer.write("         " + content.size() + " Rows Selected");
-			for (RegisteredCategory registeredCategory : content) {
+			writer.write("         " + reqDTO.getBatchContent().size() + " Rows Selected");
+			for (RegisteredCategory registeredCategory : reqDTO.getBatchContent()) {
 				line = new StringBuffer();
 
 				line.append(System.getProperty("line.separator"));
@@ -1624,7 +1660,15 @@ public class FileUtility {
 			}
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName, null, null, null);
+			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
+			reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPERUNDING);
+			reqDTO.setFileName(fileName);
+			reqDTO.setProcessId(ProcessCode.EPE09.value());
+			reqDTO.setServiceCode(ServiceCode.EPE09.value());
+			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+			
+			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
@@ -1643,22 +1687,20 @@ public class FileUtility {
 		}
 	}
 	
-	public void governmentProjectOutPutStream(List<GovernmentProject> content,
-			String filePath) {
+	public void governmentProjectOutPutStream(BatchReqDTO<GovernmentProject> reqDTO) {
 
 		String fileName = "GovernmentProject.txt";
-		String SERVICE_CODE = "EPE10";
 
 		Writer writer = null;
 
 		try {
 
 			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(filePath + fileName), "utf-8"));
+					new FileOutputStream(reqDTO.getFilePath() + fileName), "utf-8"));
 
 			StringBuffer line;
-			writer.write("         " + content.size() + " Rows Selected");
-			for (GovernmentProject governmentProject : content) {
+			writer.write("         " + reqDTO.getBatchContent().size() + " Rows Selected");
+			for (GovernmentProject governmentProject : reqDTO.getBatchContent()) {
 				line = new StringBuffer();
 
 				line.append(System.getProperty("line.separator"));
@@ -1682,7 +1724,15 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName, null, null, null);
+			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
+			reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPERUNDING);
+			reqDTO.setFileName(fileName);
+			reqDTO.setProcessId(ProcessCode.EPE10.value());
+			reqDTO.setServiceCode(ServiceCode.EPE10.value());
+			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+			
+			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
@@ -1701,22 +1751,20 @@ public class FileUtility {
 		}
 	}
 	
-	public void deletedCompanyOutPutStream(List<DeletedCompany> content,
-			String filePath) {
+	public void deletedCompanyOutPutStream(BatchReqDTO<DeletedCompany> reqDTO) {
 		
 		String fileName = "DeletedCompany.txt";
-		String SERVICE_CODE = "EPE11";
 
 		Writer writer = null;
 
 		try {
 
 			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(filePath + fileName), "utf-8"));
+					new FileOutputStream(reqDTO.getFilePath() + fileName), "utf-8"));
 
 			StringBuffer line;
-			writer.write("         " + content.size() + " Rows Selected");
-			for (DeletedCompany deletedCompany : content) {
+			writer.write("         " + reqDTO.getBatchContent().size() + " Rows Selected");
+			for (DeletedCompany deletedCompany : reqDTO.getBatchContent()) {
 				line = new StringBuffer();
 
 				line.append(System.getProperty("line.separator"));
@@ -1729,7 +1777,15 @@ public class FileUtility {
 			}
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName, null, null, null);
+			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
+			reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPERUNDING);
+			reqDTO.setFileName(fileName);
+			reqDTO.setProcessId(ProcessCode.EPE11.value());
+			reqDTO.setServiceCode(ServiceCode.EPE11.value());
+			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+			
+			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
@@ -1748,22 +1804,20 @@ public class FileUtility {
 		}
 	}
 	
-	public void companyOwnerOutPutStream(
-			List<CompanyOwner> content, String filePath) {
+	public void companyOwnerOutPutStream(BatchReqDTO<CompanyOwner> reqDTO) {
 
 		String fileName = "CompanyOwner.txt";
-		String SERVICE_CODE = "EPE03";
 		Writer writer = null;
 
 		try {
 
 			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(filePath + fileName), "utf-8"));
+					new FileOutputStream(reqDTO.getFilePath() + fileName), "utf-8"));
 
 			StringBuffer line;
 		
-			writer.write("         " + content.size() + " Rows Selected");
-			for (CompanyOwner companyOwner : content) {
+			writer.write("         " + reqDTO.getBatchContent().size() + " Rows Selected");
+			for (CompanyOwner companyOwner : reqDTO.getBatchContent()) {
 
 				line = new StringBuffer();
 				line.append(System.getProperty("line.separator"));
@@ -1795,7 +1849,15 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName, null, null, null);
+			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
+			reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPERUNDING);
+			reqDTO.setFileName(fileName);
+			reqDTO.setProcessId(ProcessCode.EPE03.value());
+			reqDTO.setServiceCode(ServiceCode.EPE03.value());
+			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+			
+			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
@@ -1814,22 +1876,20 @@ public class FileUtility {
 		}
 	}
 	
-	public void AssociatedCompanyOutPutStream(
-			List<AssociatedCompany> content, String filePath) {
+	public void AssociatedCompanyOutPutStream(BatchReqDTO<AssociatedCompany> reqDTO) {
 
 		String fileName = "AssociatedCompany.txt";
-		String SERVICE_CODE = "EPE02";
 		Writer writer = null;
 
 		try {
 
 			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(filePath + fileName), "utf-8"));
+					new FileOutputStream(reqDTO.getFilePath() + fileName), "utf-8"));
 
 			StringBuffer line;
 		
-			writer.write("         " + content.size() + " Rows Selected");
-			for (AssociatedCompany associatedCompany : content) {
+			writer.write("         " + reqDTO.getBatchContent().size() + " Rows Selected");
+			for (AssociatedCompany associatedCompany : reqDTO.getBatchContent()) {
 
 				line = new StringBuffer();
 				line.append(System.getProperty("line.separator"));
@@ -1860,7 +1920,15 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName, null, null, null);
+			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
+			reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPERUNDING);
+			reqDTO.setFileName(fileName);
+			reqDTO.setProcessId(ProcessCode.EPE02.value());
+			reqDTO.setServiceCode(ServiceCode.EPE02.value());
+			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+			
+			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
@@ -1878,9 +1946,6 @@ public class FileUtility {
 			}
 		}
 	}
-	
-	
-	
 	
 	// PHIS PM Modules
 	public void votFundFileOutPutStream(List<PhisVotFund> content, String filePath) {
