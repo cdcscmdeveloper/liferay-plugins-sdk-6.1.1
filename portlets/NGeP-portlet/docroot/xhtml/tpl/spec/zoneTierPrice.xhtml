@@ -49,7 +49,7 @@
 				label="#{lbl['lbl.tpl.spec.content.unit.price']}"
 				disabled="#{!editable}">
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
-				<p:ajax partialSubmit="true" process="@this" update="@this, ratePerUomAnsMsg, totalAmount" />
+				<p:ajax partialSubmit="true" process="@this" update="@this, ratePerUomAnsMsg, totalAmount" listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, tplSpecAnswer, isItemTypeService)}" />
 			</p:inputText>
 			<p:message id="ratePerUomAnsMsg" for="ratePerUomAns" display="icon" />
 		</p:column>
