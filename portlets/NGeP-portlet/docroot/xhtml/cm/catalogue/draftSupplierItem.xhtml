@@ -56,13 +56,13 @@
 					value="#{catalogueBackingBean.managedBean.supplierItemcheckBoxAll}">
 					<p:ajax event="change"
 						listener="#{catalogueBackingBean.cloneAllSupplierItemSelection()}"
-						update=":form:downloadLink, :form:submitLink, :form:draftSupplierItemID"></p:ajax>
+						update=":form:downloadLink, :form:submitLink, @(.ui-chkbox[id$=singleCheckBoxID])"></p:ajax>
 				</p:selectBooleanCheckbox>
 			</f:facet>
 			<p:selectBooleanCheckbox id="singleCheckBoxID" value="#{selectedSuppCat.selected}">
 				<p:ajax event="change"
 					listener="#{catalogueBackingBean.cloneItemSelection(rowIndex)}"
-					update=":form:downloadLink, :form:submitLink"></p:ajax>
+					update=":form:downloadLink, :form:submitLink,  @(.ui-chkbox[id$=selectAllCheckBoxId])  "></p:ajax>
 			</p:selectBooleanCheckbox>
 		</p:column>
 
