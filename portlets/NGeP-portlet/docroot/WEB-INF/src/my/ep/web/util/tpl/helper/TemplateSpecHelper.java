@@ -694,4 +694,32 @@ public class TemplateSpecHelper {
 		
 		return newSpecAnswer;
 	}
+	
+	/**
+	 * Add Spec Answer into to be removed list.
+	 * 
+	 * @param templateSpecBean
+	 * 		the template specification bean
+	 * @param specAnswers
+	 * 		the list of TplSpecAnswer instance
+	 */
+	public void addToBeRemovedSpecAnswers(TemplateSpecBean templateSpecBean,
+			List<TplSpecAnswer> specAnswers) {
+		if (specAnswers != null && specAnswers.size() > 0) {
+			List<TplSpecAnswer> specAnswersToDelete = templateSpecBean
+					.getSpecAnswersToDelete();
+			if (specAnswersToDelete == null) {
+				specAnswersToDelete = new ArrayList<TplSpecAnswer>();
+				templateSpecBean.setSpecAnswersToDelete(specAnswersToDelete);
+			}
+
+			for (TplSpecAnswer specAnswer : specAnswers) {
+				specAnswer.setDeleted(true);
+
+				if (!specAnswer.isBrandNew()) {
+					specAnswersToDelete.add(specAnswer);
+				}
+			}
+		}
+	}
 }
