@@ -300,6 +300,9 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	private List<ScLoaSupportingDoc>  selectedScLoaSuppDocs;
 
 	private ScLoaSupportingDoc selectedScLoaSuppDoc;
+	
+	private ScLoaReport branchInfoReport;
+	
 	/**
 	 * Gets the spki backing bean.
 	 * 
@@ -1635,6 +1638,20 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 
 	public void setServicescQtDoc(ScQtDoc servicescQtDoc) {
 		this.servicescQtDoc = servicescQtDoc;
+	}
+
+	/**
+	 * @return the branchInfoReport
+	 */
+	public ScLoaReport getBranchInfoReport() {
+		return branchInfoReport;
+	}
+
+	/**
+	 * @param branchInfoReport the branchInfoReport to set
+	 */
+	public void setBranchInfoReport(ScLoaReport branchInfoReport) {
+		this.branchInfoReport = branchInfoReport;
 	}
 
 }
