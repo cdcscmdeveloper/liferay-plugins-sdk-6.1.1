@@ -543,8 +543,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 * @return
 	 */
 	private String prepareOriginalText() {
-		String softcertDocNo = this.getManagedBean()
-				.getLoginUserPersonnelInfo().getSmAppl().getApplNo();
+		String softcertDocNo = this.getManagedBean().getSoftcertDocNo();
 		String userIdentificationNo = new FacesScopes().getUserSessionBean()
 				.getIdentificationNo();
 		String epNo = this.getManagedBean().getLoginUserPersonnelInfo()
