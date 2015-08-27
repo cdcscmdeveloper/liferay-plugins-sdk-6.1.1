@@ -4,6 +4,8 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import my.ep.factory.EpLogger;
+
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemOptions;
@@ -22,7 +24,7 @@ import org.apache.log4j.Logger;
  */
 public class SFTPUtility {
 	
-	private static Logger log = BatchLogger.getLogger(SFTPUtility.class);
+	private static Logger log = EpLogger.getLogger(SFTPUtility.class);
 
 	static String hostName = IntegrationConstants.SFTP_HOST.trim();
 	static String username = IntegrationConstants.SFTP_USER.trim();
