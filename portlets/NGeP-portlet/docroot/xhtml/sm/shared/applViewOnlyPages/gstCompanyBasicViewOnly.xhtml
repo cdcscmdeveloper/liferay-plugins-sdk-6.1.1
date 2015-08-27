@@ -42,7 +42,7 @@
 		<table style="width: 100%;table-layout:fixed">
 			<tr>
 				<td>
-					<p:dataTable var="table" id="hqSuppDocDtId" value="#{viewSmApplBackingBean.managedBean.hqGst.smGstSupplierDocs}" rowIndexVar="index">
+					<p:dataTable var="tableHq" id="hqSuppDocDtId" value="#{viewSmApplBackingBean.managedBean.hqGst.smGstSupplierDocs}" rowIndexVar="index">
 			
 						<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
 							style="width : 5%;">
@@ -52,18 +52,18 @@
 			
 						<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}"
 							style="width : 65%;">
-							<h:outputText value="#{table.pmDocument.docName}"
+							<h:outputText value="#{tableHq.pmDocument.docName}"
 								style="float: left;white-space: normal;" />
 						</p:column>
 			
 						<p:column headerText="#{lbl['lbl.pm.document.name']}"
 							style="width : 30%;">
-							<h:outputText value="#{table.fileName}" rendered="#{not empty table.fileName}"
+							<h:outputText value="#{tableHq.fileName}" rendered="#{not empty tableHq.fileName}"
 								style="float: left;white-space: normal;" />
-							<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty table.fileName}" />
+							<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty tableHq.fileName}" />
 							&#160;&#160;
-							<p:commandLink rendered="#{not empty table.fileName}"
-								action="#{viewSmApplBackingBean.downloadSelectedSuppDoc(table.fileName,table.filePath)}"
+							<p:commandLink rendered="#{not empty tableHq.fileName}"
+								action="#{viewSmApplBackingBean.downloadSelectedSuppDoc(tableHq.fileName,tableHq.filePath)}"
 								update="@form" ajax="false">
 								<p:fileDownload value="#{viewSmApplBackingBean.file}" />
 								<p:graphicImage value="/css/images/design/download.png"
