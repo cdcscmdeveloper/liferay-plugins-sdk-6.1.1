@@ -169,6 +169,8 @@ public class ReportBackingBean extends
 	private List<SelectItem> registrationStatusList = new ArrayList<SelectItem>();
 	private List<String> simpleQuoteNoList = new ArrayList<String>();
 	private List<String> serviceTypeList = new ArrayList<String>();
+	private List<String> paymentMethodList = new ArrayList<String>();
+	private List<SelectItem> paymentTypeList = new ArrayList<SelectItem>();
 	
 	SCReportBackingBean scReportBackingBean;
 	CMReportBackingBean cmReportBackingBean;
@@ -203,6 +205,22 @@ public class ReportBackingBean extends
 	private List<PmCategoryL2> supplierChildCatList;
 	private List<PmCategoryL3> supplierSubChildCatList;
 		
+
+	public List<String> getPaymentMethodList() {
+		return paymentMethodList;
+	}
+
+	public void setPaymentMethodList(List<String> paymentMethodList) {
+		this.paymentMethodList = paymentMethodList;
+	}
+
+	public List<SelectItem> getPaymentTypeList() {
+		return paymentTypeList;
+	}
+
+	public void setPaymentTypeList(List<SelectItem> paymentTypeList) {
+		this.paymentTypeList = paymentTypeList;
+	}
 
 	public List<String> getServiceTypeList() {
 		return serviceTypeList;
@@ -759,6 +777,7 @@ public class ReportBackingBean extends
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
 	//private Long lngUserId = (long)243371;//61745;//219490;//240790;//183931;//20854;//243371;//20854;//168887;//221747;//219490;//243394;//243371;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
+	private String strLanguage = ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG,	ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -930,6 +949,7 @@ public class ReportBackingBean extends
 	private String smProfileStatus;
 	private String smGSTRegistrationNo;
 	private String smGSTRegisteredStatus;
+	private String smPaymentTo;
 	// CT
 	private String ctContractNo;
 	private String ctAgreement;
@@ -960,6 +980,22 @@ public class ReportBackingBean extends
 	private String pmBusinessRegNo;
 	
 	
+	public String getSmPaymentTo() {
+		return smPaymentTo;
+	}
+
+	public void setSmPaymentTo(String smPaymentTo) {
+		this.smPaymentTo = smPaymentTo;
+	}
+
+	public String getStrLanguage() {
+		return strLanguage;
+	}
+
+	public void setStrLanguage(String strLanguage) {
+		this.strLanguage = strLanguage;
+	}
+
 	public String getPmStatus() {
 		return pmStatus;
 	}
@@ -2632,6 +2668,36 @@ public class ReportBackingBean extends
 
 	public void setEnableValue(boolean enableValue) {
 		this.enableValue = enableValue;
+	}
+	
+	public List<SelectItem> retrievePaymentTypeList(){
+		paymentTypeList = new ArrayList<SelectItem>();		
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+									IPMReportSO.class);			
+					List<Object[]> regStatusList = reportSO.retrievePaymentTypeList(strLanguage);			
+					for (Object[] object : regStatusList) {
+						SelectItem selectItem = new SelectItem();						
+						selectItem.setValue(object[1].toString());
+						selectItem.setLabel(object[0].toString());
+						paymentTypeList.add(selectItem);
+					}
+		}
+		return paymentTypeList;
+	}
+	public List<String> retrievePaymentMethod(){
+		paymentMethodList = new ArrayList<String>();
+        if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+									IPMReportSO.class);					
+					List<String> payMethodLst = reportSO.retrievePaymentMethod();			
+					for (int i = 0; i < payMethodLst.size(); i++) {
+						paymentMethodList.add(payMethodLst.get(i));
+					}        	    
+        }
+		return paymentMethodList;
 	}
 	
 	public List<String> retrievePMServiceType(){
@@ -4662,6 +4728,8 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				retrieveIdentificationType();
 				retrieveAccumulatedPaidUpCptl();
 				retrieveRegStatusList();
+				retrievePaymentTypeList();
+				retrievePaymentMethod();
 				smReportBackingBean.enableCriteriaVariablesByReportBySM(
 						rptGenBean, authoriztionList);
 				
@@ -5528,6 +5596,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((this.getSmApplicationType() != null) && (this.getSmApplicationType() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmMonthlyRptByYear() != null) && (this.getSmMonthlyRptByYear() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmPaymentType() != null) && (this.getSmPaymentType() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmPaymentTo() != null) && (this.getSmPaymentTo() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmCompanyName() != null) && (this.getSmCompanyName() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmRegistrationType() != null) && (this.getSmRegistrationType() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmApplicationNo() != null) && (this.getSmApplicationNo() != ReportConst.EMPTY_VAL))
@@ -5691,6 +5760,11 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				rptGenBean
 						.setApplicationStatusTotVar(ReportConst.AMP_SM_APPL_STATUS_EQ
 								+ this.getSmApplicationStatus());
+			}
+			if ((this.getSmPaymentTo() != null)
+					&& (this.getSmPaymentTo() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setSmPaymentToVar(ReportConst.AMP_SM_PAYMENT_TO_EQ
+						+ this.getSmPaymentTo());
 			}
 			if ((this.getSmCompanyName() != null)
 					&& (this.getSmCompanyName() != ReportConst.EMPTY_VAL)) {
@@ -5923,6 +5997,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getExtentionMeasurmentTotVar()
 						+ rptGenBean.getExtentionColourTotVar()
 						+ rptGenBean.getCompanyNameTotVar()
+						+ rptGenBean.getSmPaymentToVar()
 						+ rptGenBean.getRegistrationTypeTotVar()
 						+ rptGenBean.getItemCategoryTotVar()
 						+ rptGenBean.getEpNumberTotVar()
@@ -6659,7 +6734,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}
 			if ((this.getFlDocumentType() != null)
 					&& (this.getFlDocumentType() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setDocumentTypeTotVar(ReportConst.AMP_DOC_TYPE_EQ
+				rptGenBean.setDocumentTypeTotVar(ReportConst.FL_AMP_DOC_TYPE_EQ
 						+ this.getFlDocumentType());
 			}
 			if ((this.getFlCriteria() != null)
@@ -7231,6 +7306,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.setSmFromMonth(null);
 		this.setSmToMonth(null);
 		this.setSmCompanyName(null);
+		this.setSmPaymentTo(null);
 		this.setSmRegistrationType(null);
 		this.setSmCreatedFromYear(null);
 		this.setSmCreatedToYear(null);

@@ -403,8 +403,11 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 		 case ReportConst.SM_DAILY_EARNING_RECEIPT: 				
 			    rptGenBean.setFromDateView(true);
 			    rptGenBean.setSmPaymentMethodView(true);
-			    rptGenBean.setSmProcessingTypeView(true);
+			    //rptGenBean.setSmProcessingTypeView(true);
 			    rptGenBean.setSmReceiptNoView(true);
+			    rptGenBean.setSmCompanyNameView(true);
+			    rptGenBean.setSmPaymentTypeThreeView(true);
+			    rptGenBean.setSmPaymentToView(true);
 	            break;
 		 case ReportConst.SM_DELETE_PENDING_APPL: 				
 			    rptGenBean.setFromDateView(true);
