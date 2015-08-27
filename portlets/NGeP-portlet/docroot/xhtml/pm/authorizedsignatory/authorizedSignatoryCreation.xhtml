@@ -95,7 +95,7 @@
 
 		</p:dataTable>
 		<br />
-		<p:panel id="pSignatoryInfo">
+		<p:outputPanel id="pSignatoryInfo">
 			<div class="ppRightBtn">
 
 				<p:commandButton id="lovSignatory" value="#{lbl['lbl.btn.add']}"
@@ -104,6 +104,6 @@
 					action="#{authorizedsignatoryBackingBean.addAuthorizer}"
 					update="searchSignatoryResults" />
 			</div>
-		</p:panel>
+		</p:outputPanel>
 	</p:panel>		
 </ui:composition>
