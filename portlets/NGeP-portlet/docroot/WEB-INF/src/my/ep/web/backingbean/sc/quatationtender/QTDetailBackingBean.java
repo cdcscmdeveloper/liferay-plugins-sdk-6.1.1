@@ -1816,10 +1816,7 @@ public class QTDetailBackingBean extends
 
 		// Code will be called if user didn't visit the supplier qualification
 		// tab.
-		ScQtSupplierCriteria supplierCriteria = this.getManagedBean().getQt()
-				.getScQtSupplierCriteria();
-		if (null == supplierCriteria.getScQtLocCriteria()
-				|| supplierCriteria.getScQtLocCriteria().isEmpty()) {
+		if (null == this.getManagedBean().getSupplierCriteria()) {
 			retrieveSuppQualificationTabDtl();
 		}
 
