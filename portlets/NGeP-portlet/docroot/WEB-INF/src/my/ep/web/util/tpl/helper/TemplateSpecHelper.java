@@ -667,6 +667,37 @@ public class TemplateSpecHelper {
 	}
 	
 	/**
+	 * Reset Specification Answers
+	 * 
+	 * @param templateSpecBean
+	 * 		the template specification bean
+	 * @param specQuestion
+	 * 		the template specification question
+	 */
+	public void resetSpecAnswers(TemplateSpecBean templateSpecBean,
+			TplSpecQuestion specQuestion) {
+		
+		if (TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER
+				.equals(templateSpecBean.getContentType())) {
+			List<TplSpecAnswer> specAnswers = null;
+
+			if (isPriceTypeStandard(specQuestion
+					.getClPriceTypeCode().getParameterCode())) {
+				TplSpecAnswer specAnswer = createNewSpecAnswer(
+						templateSpecBean, specQuestion, null, null);
+
+				specAnswers = new ArrayList<TplSpecAnswer>();
+				specAnswers.add(specAnswer);
+			}
+
+			addToBeRemovedSpecAnswers(templateSpecBean,
+					specQuestion.getTplSpecAnswers());
+
+			specQuestion.setTplSpecAnswers(specAnswers);
+		}
+	}
+	
+	/**
 	 * Create new specification answer
 	 * 
 	 * @param templateSpecBean
