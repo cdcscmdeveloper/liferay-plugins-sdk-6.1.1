@@ -21,6 +21,6 @@
 		<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.composition.issued']}" rendered="#{cc.attrs.personnel.softcertFlg eq '1'}" />
 		<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.composition.notapplied']}" rendered="#{cc.attrs.personnel.softcertFlg eq '0'}" />
 		&#160;
-		<p:outputLabel styleClass="outputLabel-view" value="#{cc.attrs.personnel.softcertRejectReason}" rendered="#{ not empty cc.attrs.personnel.softcertRejectReason}" />
+		<p:outputLabel styleClass="outputLabel-view" value="#{cc.attrs.personnel.softcertRejectReason}" rendered="#{not empty cc.attrs.personnel.softcertRejectReason}" />
 	</cc:implementation>
 </ui:component>
