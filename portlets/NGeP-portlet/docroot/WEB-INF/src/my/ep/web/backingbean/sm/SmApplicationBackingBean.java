@@ -949,6 +949,9 @@ public class SmApplicationBackingBean extends
 
 			// init GST information
 			initGst();
+			
+			//set softcert reject reason
+			setPersonnelSoftcertRejectReason();
 
 			return SmApplicationUtil.setNavigationForAppl(applicationType);
 		} finally {
@@ -9687,6 +9690,9 @@ public class SmApplicationBackingBean extends
 		return retVal;
 	}
 
+	/**
+	 * Initialized latest gst information for HQ and branch
+	 */
 	private void initGst() {
 		// init GST information
 		getManagedBean().setCompanyBasicGst(
@@ -9696,6 +9702,23 @@ public class SmApplicationBackingBean extends
 				.getCompanyBasicGst(), getManagedBean().getSmAppl());
 		if (getManagedBean().getSelectedBranch() != null) {
 			getManagedBean().getSelectedBranch().setGst(null);
+		}
+	}
+
+	/**
+	 * Set softcert rejection reason for each personnels
+	 */
+	private void setPersonnelSoftcertRejectReason() {
+		if (getManagedBean().getSmAppl() != null
+				&& getManagedBean().getSmAppl().getSmSupplier() != null
+				&& getManagedBean().getSmAppl().getSmPersonnels() != null
+				&& !getManagedBean().getSmAppl().getSmPersonnels().isEmpty()) {
+			for (SmPersonnel personnel : getManagedBean().getSmAppl()
+					.getSmPersonnels()) {
+				SmCommonUtil.setRejectedPersonnelSoftcert(personnel,
+						getManagedBean().getSmAppl().getSmSupplier()
+								.getSupplierId());
+			}
 		}
 	}
 }

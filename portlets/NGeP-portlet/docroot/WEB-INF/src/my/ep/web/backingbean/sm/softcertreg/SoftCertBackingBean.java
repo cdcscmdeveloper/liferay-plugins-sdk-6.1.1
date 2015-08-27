@@ -260,7 +260,6 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		BigDecimal amount = BigDecimal.ZERO;
 		BigDecimal amountPerPersonnel = BigDecimal.ZERO;
 		int i = 0;
-		SmSoftcertRequest softcertRequest = null;
 		for (SmPersonnel personnel : this.getManagedBean().getSoftCertPayList()) {
 			if (i == 0 && !getManagedBean().isAlreadyHadFreeSoftcert()) {
 				personnel.setFreeSoftCert(true);
@@ -273,14 +272,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
 					personnel.setFreeSoftCert(true);
 				} else if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
-					softcertRequest = SmApplicationUtil
-							.getPersonnelSoftcertRequest(getManagedBean()
-									.getLoginUserPersonnelInfo().getSmAppl()
-									.getSmSupplier().getSupplierId(), personnel
-									.getPmUser().getUserId());
-					if (softcertRequest != null && softcertRequest.isFree()) {
-						personnel.setFreeSoftCert(true);
-					}
+					personnel.setFreeSoftCert(true);
 				} else {
 					amountPerPersonnel = SmRuleHelper.getInstance()
 							.getSoftCertFee();
@@ -376,7 +368,20 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 						&& personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL) {
 					iterator.remove();
 				} else {
-					if (personnel.getPmUser() == null) {
+					if (StringUtils.isNotBlank(personnel
+							.getSoftcertRejectReason())
+							&& (personnel
+									.getSoftcertRejectReason()
+									.equals(SmCommonUtil
+											.getMessage(
+													"lbl.sm.softcert.rejected.blacklist",
+													null)) || personnel
+									.getSoftcertRejectReason()
+									.equals(SmCommonUtil.getMessage(
+											"lbl.sm.softcert.rejected.fraud",
+											null)))) {
+						iterator.remove();
+					} else if (personnel.getPmUser() == null) {
 						iterator.remove();
 					}
 				}
@@ -506,6 +511,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	}
 
 	/**
+	 * Set SPKI information
 	 * 
 	 * @param PmDigiSign
 	 *            pmDigiSign
@@ -610,6 +616,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 *            <SmPersonnel> personnels
 	 */
 	private void setPersonnelRowSelection(List<SmPersonnel> personnels) {
+		Long supplierId = getManagedBean().getLoginUserPersonnelInfo()
+				.getSmAppl().getSmSupplier().getSupplierId();
 		getManagedBean().setAlreadyHadFreeSoftcert(false);
 		for (SmPersonnel personnel : personnels) {
 			if (personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_PENDING_REQ
@@ -624,6 +632,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED
 						|| personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
 					getManagedBean().setAlreadyHadFreeSoftcert(true);
+					SmCommonUtil.setRejectedPersonnelSoftcert(personnel,
+							supplierId);
 				}
 				if (StringUtils.isBlank(personnel.getSmAppl().getApplNo())) {
 					if (personnel.getPmUser() == null) {
