@@ -155,7 +155,6 @@ public class SupplierManagementConst {
 	public static final String LOGIN_URL = "";
 	public static final String ORG_TYPE_SUPPLIER = "SUP";
 	public static final String SUPPLIER_BUSINESS_TYPE = "SBT";
-	
 
 	// SDO BPM Action
 	public static final String BPM_INQUIRY = "INQUIRY";
@@ -165,7 +164,7 @@ public class SupplierManagementConst {
 	// Supporting Doc Type
 	public static final String SUPPORTING_DOC_ONLINE = "S";
 	public static final String SUPPORTING_DOC_OFFLINE = "H";
-	
+
 	// Site Visit Assignment
 	public static final String SVO_HQ = "UPS_SVO_HQ";
 	public static final String SVO_SA = "UPS_SVO_SA";
@@ -225,8 +224,14 @@ public class SupplierManagementConst {
 	public static final int SOFT_CERT_REJECTED = 6;
 	public static final int SOFT_CERT_READY_FOR_RENEWAL = 7;
 	public static final int SOFT_CERT_REQ_FAILED = 9;
-	
-	//GST rule value constant
+
+	// rejected soft cert reason code
+	public static final String REJECTED_WITH_FRAUD = "R";
+	public static final String REJECTED_WITH_BLACKLIST = "B";
+	public static final String REJECTED_WITH_INCOMPLETE_SUPPDOC = "I";
+	public static final String REJECTED_WITH_NO_CONFIG_CHALLENGE_RESPONSE = "N";
+
+	// GST rule value constant
 	public static String GST_RULE_VALUE = "GST";
 
 	public static final long PM_STAT_PENDING_PAYMENT = 20401;
@@ -408,8 +413,8 @@ public class SupplierManagementConst {
 	public static final String SUPPLIER_EDU_DIPLOMA = "4";
 	public static final String SUPPLIER_EDU_CERTIFIED = "5";
 	public static final String SUPPLIER_EDU_NOTDEFINED = "6";
-	
-	//Pm Edu Level Codes 
+
+	// Pm Edu Level Codes
 	public static final String SUPPLIER_EDU_LEVEL_CERT = "60";
 	public static final String SUPPLIER_EDU_LEVEL_DIPLOMA = "80";
 	public static final long SUPPLIER_EDU_LEVEL_MIN_FOR_STF = 30;
@@ -460,7 +465,7 @@ public class SupplierManagementConst {
 	public static final String SUPP_SEND_INQUIRY_SDO = "Pembekal hantar respon kepada pembekal";
 	public static final String SVC_ASSIGN_SITEVISIT = "SVC beri tugasan lawatan tapak kepada SVO";
 	public static final String SVO_SUBMIT_REPORT = "SVO hantar laporan lawatan tapak";
-	
+
 	public static final String APPROVER_SUBMIT_SUPPLIER_DATA_MAINTENANCE = "Pelulus hantar data pembekal yang telah diselenggara";
 	public static final String APPROVER_SUBMIT_CANCEL_SUPPLIER_MOF_ACCOUNT = "Pelulus hantar untuk batalkan akaun MOF pembekal";
 	public static final String APPROVER_SUBMIT_RESEND_EXPIRED_SDO_INQUIRY = "Pelulus hantar permohonan yang telah luput pertanyaan SDO";
@@ -474,9 +479,9 @@ public class SupplierManagementConst {
 
 	public static final Integer SM_SUPPORTDOCS_FILE_SIZE_LIMIT = 20000000;
 	public static final String GST_ATTACHMENT_DOC_TYPE = "GST";
-	public static final String SM_REASON_CODE_OTHERS ="OTHERS";
-	public static final String SM_REASON_CODE_OTHER ="OTHER";
-	
+	public static final String SM_REASON_CODE_OTHERS = "OTHERS";
+	public static final String SM_REASON_CODE_OTHER = "OTHER";
+
 	public static final String GST_FILE_PATH = "/SM/GST/";
 
 	// Getters for panel info
@@ -656,7 +661,7 @@ public class SupplierManagementConst {
 	public String getSM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN() {
 		return SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN;
 	}
-	
+
 	public String getSM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2() {
 		return SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2;
 	}
