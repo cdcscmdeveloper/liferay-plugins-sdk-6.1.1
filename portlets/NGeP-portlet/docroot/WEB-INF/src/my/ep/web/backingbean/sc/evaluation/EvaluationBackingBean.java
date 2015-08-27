@@ -9529,15 +9529,14 @@ public class EvaluationBackingBean extends
 							IQTDetailSO.class);
 
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			reqDTO.setScQtEvaluationReport(scQtEvaluationReport);
+			reqDTO.setScReport(scQtEvaluationReport);
 			reqDTO.setDocCategory(scQtEvaluationReport.getDocCategory());
 			reqDTO.setDocDefKey(SourcingConstants.DOC_DEF_KEY_QT_INFO);
-			reqDTO.setScQtEvaluationReport(scQtEvaluationReport);
 
 			QuationTenderResDTO resDTO = qTDetailSO
 					.retriveScQtReportByDefKey(reqDTO);
-			ScQtEvaluationReport qtEvaluationReport = resDTO
-					.getScQtEvaluationReport();
+			ScQtEvaluationReport qtEvaluationReport = (ScQtEvaluationReport)resDTO
+					.getScReport();
 			return qtEvaluationReport;
 		} finally {
 			qTDetailSO = null;
