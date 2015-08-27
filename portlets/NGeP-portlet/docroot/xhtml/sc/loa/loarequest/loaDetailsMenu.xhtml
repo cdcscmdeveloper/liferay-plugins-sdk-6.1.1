@@ -428,7 +428,7 @@
 				<c:if test="#{isEditableStatus}">
 					<p:selectOneMenu id="contractAdmin"
 						value="#{lOADetailBackingBean.managedBean.scLoa.contractAdmin.userId}"
-						style="width: 185px;"
+						style="width: 215px;"
 						required="true"
 						label="#{lbl['lbl.sc.loiloa.loa.cont.admin']}">
 						
@@ -446,7 +446,7 @@
 				<c:if test="#{!isEditableStatus}">
 					<p:inputText 
 						value="#{lOADetailBackingBean.managedBean.scLoa.contractAdmin.userName}"
-						disabled="true" size="27" />
+						disabled="true" size="30" />
 				</c:if>
 			</td>
 		</tr>
