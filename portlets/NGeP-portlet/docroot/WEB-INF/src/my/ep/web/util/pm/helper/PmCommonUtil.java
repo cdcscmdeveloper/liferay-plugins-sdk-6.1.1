@@ -1280,7 +1280,7 @@ public class PmCommonUtil {
 		trckVO.setActionedByRole(getUserRoleValue());
 		trckVO.setDocId(pmcertSignatory.getPmZone().getZoneId());
 		trckVO.setDocType(ParameterConst.VIRTUAL_CERTIFICATE_PARAM_CODE);
-		trckVO.setDocNo(pmcertSignatory.getSinnatoryName());
+		trckVO.setDocNo(pmcertSignatory.getPmZone().getZoneId().toString());
 		trckVO.setGroupId(null);
 		trckVO.setStatus(status);
 		trckVO.setGroupDocType(null);
