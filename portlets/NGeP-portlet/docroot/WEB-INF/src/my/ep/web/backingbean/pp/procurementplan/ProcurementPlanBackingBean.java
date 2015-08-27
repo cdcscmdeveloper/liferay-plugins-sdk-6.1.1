@@ -3148,8 +3148,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 											"orgProfile.orgProfileId", 
 											SearchOperator.OPERATOR_EQUALS.value(), 
 											this.getManagedBean().getCurrentActiveOrg().getOrgProfileId()),
-									new SearchFilterBean(
-											"orgProfile.parentOrgProfile.orgProfileId", 
+									new SearchFilterBean("orgProfile."+
+											OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()), 
 											SearchOperator.OPERATOR_EQUALS.value(), 
 											this.getManagedBean().getCurrentActiveOrg().getOrgProfileId(), 
 											SearchCondition.CONDITION_OR.value())));
