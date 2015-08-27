@@ -749,6 +749,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		    ctBackingBean.getManagedBean().setViewContract(false);
 		    ctBackingBean.getManagedBean().setUpdateCompanyName(false);
 		    ctBackingBean.getManagedBean().setUpdateSupplierAddress(false);
+		    ctBackingBean.retrieveBranchInfo();
 		    ctBackingBean.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 		     // Amendment process	  
 		    getManagedBean().setCommitteeType(retrieveCommitteeType());
@@ -1084,6 +1085,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			throw new EpException(MessageConst.ERROR_100022, 
 					new String[]{ResourceBundleUtils.getMessage("lbl.ct.amendment.desc", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		}
+		// Validation for amendment effective date
+		if (!getManagedBean().getContractVer().getCtAmendment().isContractExtend()
+				&& getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate() != null
+				&& getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate().getTime() > getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime()) {
+			 throw new EpException(MessageConst.ERROR_750035);
 		}
 		// Validation for contract signer
 		if ((!action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)

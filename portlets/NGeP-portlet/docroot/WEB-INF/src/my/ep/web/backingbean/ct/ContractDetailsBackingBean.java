@@ -754,7 +754,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		renderUpdateCheckbox(getManagedBean().getContractVer());
 		ctBB.getManagedBean().setSupplierCompanyName(getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 		ctBB.getManagedBean().setSupplierBranchName(this.getManagedBean().getContractVer().getCtContractValue().getSupplierBranch());
-		
+		ctBB.retrieveBranchInfo();
 		getManagedBean().getApproverModel().setSource(
 				getAvailableApproverList(getManagedBean().getCtContract().getContractType().getParameterCode(),
 						getManagedBean().getUserMap()));
