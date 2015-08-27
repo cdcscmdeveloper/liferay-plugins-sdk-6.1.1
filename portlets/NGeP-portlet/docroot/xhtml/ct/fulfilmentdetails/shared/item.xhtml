@@ -62,8 +62,10 @@
 	               	</f:facet>
 	             	<h:outputText rendered="#{ctItemVar.itemOrigin.parameterCode == 'L'}" 
 	                 	value="#{contractDetailsBackingBean.getParameterDesc(ctItemVar.itemOrigin)}" style="float:left;"/>
-	             	<p:commandLink rendered="#{ctItemVar.itemOrigin.parameterCode == 'I'}" styleClass="blue_font" 
-	                  	value="#{contractDetailsBackingBean.getParameterDesc(ctItemVar.itemOrigin)}" onclick="importedDlg.show();return false;" />	
+	               <h:outputText rendered="#{ctItemVar.itemOrigin.parameterCode == 'I'}" 
+	                 	value="#{contractDetailsBackingBean.getParameterDesc(ctItemVar.itemOrigin)}" style="float:left;"/>
+	             	<!-- <p:commandLink rendered="#{ctItemVar.itemOrigin.parameterCode == 'I'}" styleClass="blue_font" 
+	                  	value="#{contractDetailsBackingBean.getParameterDesc(ctItemVar.itemOrigin)}" onclick="importedDlg.show();return false;" />	 -->
 		          </p:column> 
 		    
 		          <p:column headerText="#{lbl['lbl.ct.status']}" style="width:6%; white-space:normal;">
