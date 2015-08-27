@@ -37,7 +37,7 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtProcurementModeView(true);
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	rptGenBean.setCtUserTypeView(true);
-	        	rptGenBean.setCtSubTypeView(true);
+	        	//rptGenBean.setCtSubTypeView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);			
 	            break;
@@ -55,8 +55,8 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtProcurementModeView(true);
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	rptGenBean.setCtUserTypeView(true);
-	        	rptGenBean.setCtSubTypeView(true);
-	        	rptGenBean.setCtSubTypeOnlyView(true);
+	        	//rptGenBean.setCtSubTypeView(true);
+	        	//rptGenBean.setCtSubTypeOnlyView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 	            break;
@@ -74,7 +74,7 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtProcurementModeView(true);
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	rptGenBean.setCtUserTypeView(true);
-	        	rptGenBean.setCtSubTypeView(true);
+	        	//rptGenBean.setCtSubTypeView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 	            break;
@@ -92,7 +92,7 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtProcurementModeView(true);
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	rptGenBean.setCtUserTypeView(true);
-	        	rptGenBean.setCtSubTypeView(true);
+	        	//rptGenBean.setCtSubTypeView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 	            break;
@@ -110,7 +110,7 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtProcurementModeView(true);
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	rptGenBean.setCtUserTypeView(true);
-	        	rptGenBean.setCtSubTypeView(true);
+	        	//rptGenBean.setCtSubTypeView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);	
 	            break;
@@ -127,7 +127,7 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtProcurementModeView(true);
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	rptGenBean.setCtUserTypeView(true);
-	        	rptGenBean.setCtSubTypeView(true);
+	        	//rptGenBean.setCtSubTypeView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);	
 	            break;
@@ -144,7 +144,7 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtProcurementModeView(true);
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	rptGenBean.setCtUserTypeView(true);
-	        	rptGenBean.setCtSubTypeView(true);
+	        	//rptGenBean.setCtSubTypeView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);	
 	            break;
@@ -161,7 +161,7 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtProcurementModeView(true);
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	rptGenBean.setCtUserTypeView(true);
-	        	rptGenBean.setCtSubTypeView(true);
+	        	//rptGenBean.setCtSubTypeView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);	
 	            break;
@@ -178,7 +178,7 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtProcurementModeView(true);
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	rptGenBean.setCtUserTypeView(true);
-	        	rptGenBean.setCtSubTypeView(true);
+	        	//rptGenBean.setCtSubTypeView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);	
 	            break;
@@ -196,7 +196,7 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtProcurementModeView(true);
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	rptGenBean.setCtUserTypeView(true);
-	        	rptGenBean.setCtSubTypeView(true);
+	        	//rptGenBean.setCtSubTypeView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 	            break;
@@ -214,7 +214,7 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtProcurementModeView(true);
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	rptGenBean.setCtUserTypeView(true);
-	        	rptGenBean.setCtSubTypeView(true);
+	        	//rptGenBean.setCtSubTypeView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 	            break;
@@ -231,7 +231,7 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtProcurementModeView(true);
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	rptGenBean.setCtUserTypeView(true);
-	        	rptGenBean.setCtSubTypeView(true);
+	        	//rptGenBean.setCtSubTypeView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 	            break;
@@ -254,7 +254,7 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtProcurementModeView(true);
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	rptGenBean.setCtUserTypeView(true);
-	        	rptGenBean.setCtSubTypeView(true);
+	        	//rptGenBean.setCtSubTypeView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 	            break;
@@ -270,7 +270,7 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtProcurementModeView(true);
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	rptGenBean.setCtUserTypeView(true);
-	        	rptGenBean.setCtSubTypeView(true);
+	        	//rptGenBean.setCtSubTypeView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 	            break;
@@ -286,7 +286,7 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtProcurementModeView(true);
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	rptGenBean.setCtUserTypeView(true);
-	        	rptGenBean.setCtSubTypeView(true);
+	        	//rptGenBean.setCtSubTypeView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 	            break;
@@ -302,7 +302,7 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtProcurementModeView(true);
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	rptGenBean.setCtUserTypeView(true);
-	        	rptGenBean.setCtSubTypeView(true);
+	        	//rptGenBean.setCtSubTypeView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 	            break;
@@ -318,7 +318,7 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtProcurementModeView(true);
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	rptGenBean.setCtUserTypeView(true);
-	        	rptGenBean.setCtSubTypeView(true);
+	        	//rptGenBean.setCtSubTypeView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 	            break;

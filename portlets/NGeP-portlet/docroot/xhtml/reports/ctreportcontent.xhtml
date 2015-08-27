@@ -188,9 +188,9 @@
 									</p:selectOneMenu>
 								  </c:if>
 								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctSubTypeView}">
-									<c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctSubTypeOnlyView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.ctsubtype']}" style="margin-top:5px;width:160px;" />
-									</c:if>
+									
+									
+									
 									<c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctSubTypeMCAView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.minsitrycontractadminscreen']}" style="margin-top:5px;width:160px;" />
 									</c:if>
@@ -202,6 +202,7 @@
 										<f:selectItems value="#{reportBackingBean.ctSubTypeList}"></f:selectItems>
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 									</p:selectOneMenu>
+									
 								  </c:if>
 								  
 								   <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctProductServiceView}">

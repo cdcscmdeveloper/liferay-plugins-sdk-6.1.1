@@ -3035,7 +3035,7 @@ public class ReportBackingBean extends
     }
 	public List<SelectItem> retrieveSubTypeList(){
 		ctSubTypeList = new ArrayList<SelectItem>();
-		getManagedBean().getRptGenBean().setCtSubTypeOnlyView(true);
+		getManagedBean().getRptGenBean().setCtSubTypeView(false);
 		getManagedBean().getRptGenBean().setCtSubTypeApproverView(false);
 		getManagedBean().getRptGenBean().setCtSubTypeMCAView(false);
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -3043,12 +3043,12 @@ public class ReportBackingBean extends
         		String userTypeRoleCode = null;        		
         		if (this.getCtUserType().equalsIgnoreCase(ReportConst.MINISTRY_CONTRACT_ADMIN)) {
         			userTypeRoleCode=ReportConst.MIN_CONTRACT_ADMIN;
-        			getManagedBean().getRptGenBean().setCtSubTypeOnlyView(false);
+        			getManagedBean().getRptGenBean().setCtSubTypeView(true);
         			getManagedBean().getRptGenBean().setCtSubTypeApproverView(false);
         			getManagedBean().getRptGenBean().setCtSubTypeMCAView(true);
         		}else if(this.getCtUserType().equalsIgnoreCase(ReportConst.APPROVER_LBL)) {
         			userTypeRoleCode=ReportConst.ROLE_CODE_CT_APPROVER;
-        			getManagedBean().getRptGenBean().setCtSubTypeOnlyView(false);
+        			getManagedBean().getRptGenBean().setCtSubTypeView(true);
         			getManagedBean().getRptGenBean().setCtSubTypeMCAView(false);
         			getManagedBean().getRptGenBean().setCtSubTypeApproverView(true);
         		}
