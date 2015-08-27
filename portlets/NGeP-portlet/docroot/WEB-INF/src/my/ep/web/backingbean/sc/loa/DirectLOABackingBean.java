@@ -38,6 +38,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.clause.IClauseSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
+import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDirectAwardSO;
@@ -62,6 +63,8 @@ import my.ep.dto.pm.common.clause.ClauseReqDTO;
 import my.ep.dto.pm.common.clause.ClauseResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
+import my.ep.dto.pm.common.document.DocumentReqDTO;
+import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
@@ -85,6 +88,7 @@ import my.ep.persistence.entity.pm.common.PmClause;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
+import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -190,7 +194,9 @@ public class DirectLOABackingBean extends
 
 	/** The text before sign. */
 	private String textBeforeSign;
-
+	
+	private static final String  BRANCH_INFO_TITLE = "Branch Information";
+	
 	/**
 	 * Instantiates a new LOA detail backing bean.
 	 */
@@ -411,7 +417,11 @@ public class DirectLOABackingBean extends
 			this.getManagedBean().setScQt(scLoa.getScQt());
 			// Supplier Bank Account
 			getManagedBean().setBankList(resDTO.getSmSupplierBanks());
-
+			
+			// Supplier ct amount
+			getManagedBean().setOverallContractAmt(
+					overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt()));
+			
 			// Supplier Witness
 			ScLoaWitness loaSupplierWitness = null;
 			List<ScLoaWitness> scLoaWitnesses = scLoa.getScLoaWitnesses();
@@ -442,12 +452,6 @@ public class DirectLOABackingBean extends
 			if (scLoa.getBondAmt() != null) {
 				getManagedBean().setBondAmountWord(
 						NumberWordUtil.convert(scLoa.getBondAmt().toString()));
-			}
-
-			// loa signer
-			if (scLoa.getContractSigner() != null) {
-				getManagedBean().setContractSignerUser(
-						scLoa.getContractSigner());
 			}
 
 			generateDeclarationFromVelocity(scLoa, scLoa.getScQt());
@@ -4286,7 +4290,22 @@ public class DirectLOABackingBean extends
 		}
 		scLoa.setScLoaRemarks(initializeRemarks(scLoa, null,
 				scLoa.getScLoaRemarks(), ScLoaRemark.class));
+		// bond calculation
+		scLoa = calcBondAmount(scLoa);
+		
+		// procurement type category 
+		if(scLoa.getProcurementTypeCatId() == null){
+			scLoa.setProcurementTypeCatId(new PmParameter());
+		}
+		
+		// contract Signer info
+		if (scLoa.getContractSigner() == null) {
+			scLoa.setContractSigner(new PmUser());
+		}
+		
 		this.getManagedBean().setScLoa(scLoa);
+		
+		
 		this.getManagedBean().setContractSignerList(
 				awardResDTO.getApproverList());
 		this.getManagedBean().setSupplierHQPersonnel(
@@ -6059,21 +6078,22 @@ public class DirectLOABackingBean extends
 	 * @param gstAmount
 	 */
 	public void calculateOverallAmount(BigDecimal gstAmount) {
+		
+        BigDecimal loaAmount = this.getManagedBean().getOverallContractAmt();
+		if (loaAmount != null) {
+			this.getManagedBean().setOverallContractAmt(
+					overallCtAmount(loaAmount, gstAmount));
+			ScLoa scLoa = getManagedBean().getScLoa();
+			if (null != scLoa.getContractSigner()
+					&& scLoa.getContractSigner().getUserId() != null) {
 
-		getManagedBean().setOverallContractAmt(
-				overallCtAmount(getManagedBean().getScLoa().getLoaAmt(),gstAmount));
-						
-		if (null != getManagedBean().getContractSignerUser()
-				&& getManagedBean().getContractSignerUser().getUserId() != null) {
-
-			getManagedBean().getScLoa().setLoaSignerDesig(null);
-			getManagedBean().setContractSignerUser(null);
-			getManagedBean().getScLoa().setContractSigner(null);
-			prepareSignerInfo();
-			RequestContext.getCurrentInstance().execute(
-					"gstSignerConfirmPopupWin.show()");
+				scLoa.setLoaSignerDesig(null);
+				scLoa.setContractSigner(null);
+				prepareSignerInfo();
+				RequestContext.getCurrentInstance().execute(
+						"gstSignerConfirmPopupWin.show()");
+			}
 		}
-
 	}
 
 	public boolean isGSTRegActive() {
@@ -6244,34 +6264,137 @@ public class DirectLOABackingBean extends
 			scLoa.setGstDeclaredDate(null);
 			scLoa.setGstEffDate(null);
 		}
+		if(scLoa.getGstAmt() != null){
+			BigDecimal ctAmount = getManagedBean().getOverallContractAmt();
+			if ((ctAmount != null && scLoa.getLoaAmt() != null)
+					&& !scLoa.getLoaAmt().equals(ctAmount)) {
+				ctAmount = ctAmount.subtract(scLoa.getGstAmt());
+				this.getManagedBean().setOverallContractAmt(ctAmount);
+			}
+		}
 		scLoa.setGstAmt(null);
 	}
 	
 	/**
+	 * Needs to change once 
+	 * 
 	 * @param scLoa
 	 */
 	private void prepareSignerInfo() {
 		
 		ScLoa scLoa = getManagedBean().getScLoa();
-		
-			// Contract Signer
-			PmUser contractSignerUser = scLoa.getContractSigner();
-			if (contractSignerUser == null) {
-				contractSignerUser = new PmUser();
-			}
-
-			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());
-			if (scLoa.getLoaAmt() != null) {
-				userReqDTO.setApprovalLimit(overallCtAmount(scLoa.getLoaAmt(),
-						scLoa.getGstAmt()));
-			}
-			userReqDTO.setOrgProfileId(scLoa.getScLoiLoa().getPmOrgProfile()
-					.getOrgProfileId());
-			UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
-			getManagedBean().setContractSignerList(userResDTO.getUserList());
-			getManagedBean().setContractSignerUser(contractSignerUser);
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());
+		if (scLoa.getLoaAmt() != null) {
+			userReqDTO.setApprovalLimit(overallCtAmount(scLoa.getLoaAmt(),
+					scLoa.getGstAmt()));
 		}
+		userReqDTO.setOrgProfileId(scLoa.getScLoiLoa().getPmOrgProfile()
+				.getOrgProfileId());
+		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+		getManagedBean().setContractSignerList(userResDTO.getUserList());
+		scLoa.setContractSigner(new PmUser());
+		}
+	
+	/**
+	 * @param event
+	 */
+	public void uploadBranchInfo(FileUploadEvent event) {
+		
+		ScLoa scLoa = this.getManagedBean().getScLoa();
+		List<ScLoaReport> scLoaReports = scLoa.getScLoaReports();
+		ScAttachment scAttachment = null;
+		boolean isBIReport = false;
+		if(scLoaReports == null){
+			scLoaReports = new ArrayList<ScLoaReport>();
+			scLoa.setScLoaReports(scLoaReports);
+		}
+		for(ScLoaReport report:scLoaReports){
+			PmDocument document = report.getPmDocument();
+			// Check whether Branch Info attachment is existed or not
+			if (null != document && SourcingConstants.DOC_DEF_KEY_BRANCH_INFORMATION
+					.equalsIgnoreCase(report.getPmDocument().getDocDefinitionKey())) {
+				ScLoaReportAttachment scLoaReportAttachment = new ScLoaReportAttachment();
+				report.setScLoaReportAttachment(scLoaReportAttachment);
+				scLoaReportAttachment.setDocNo(scLoa.getLoaNo());
+				scLoaReportAttachment.setScLoaReport(report);
+				report.setScLoaReportAttachment(scLoaReportAttachment);
+				scAttachment = scLoaReportAttachment;
+				isBIReport = true;
+				getManagedBean().setBranchInfoReport(report);
+				break;
+			}
+		}
+		if(!isBIReport){
+			ScLoaReport scLoaReport = new ScLoaReport();
+			scLoaReport.setScLoa(scLoa);
+			scLoaReport.setTitle(BRANCH_INFO_TITLE);
+			IParameterSO parameterSO = null;
+			try {
+				parameterSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+
+				ParameterReqDTO reqDTO = new ParameterReqDTO();
+				reqDTO.setParameterType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
+				reqDTO.setParameterCode(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
+				ParameterResDTO resDTO = parameterSO
+						.retrieveParameterByTypeAndCode(reqDTO);
+				scLoaReport.setDefinationType(resDTO.getPmParameter());
+				String docCategory = ParameterConst.DOCUMENT_CATEGORY_DIRECT_LOA_FOR_QUOTATION_TENDER; // DL
+				scLoaReport.setDocCategory(docCategory); 
+				scLoaReport.setPmDocument(getDocumentDtls(docCategory)); // PM document
+				
+			} finally {
+				parameterSO = null;
+			}
+			ScLoaReportAttachment scLoaReportAttachment = new ScLoaReportAttachment();
+			scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
+			scLoaReportAttachment.setDocNo(scLoa.getLoaNo());
+			scLoaReportAttachment.setScLoaReport(scLoaReport);
+			scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
+			scAttachment = scLoaReportAttachment;
+			getManagedBean().setBranchInfoReport(scLoaReport);
+			scLoaReports.add(scLoaReport);
+		}
+		
+		try {
+			uploadAttachment(event.getFile(), scAttachment);
+		} catch (FileNotFoundException e) {
+			log.error("Exceptionn occured while uploading the file"+e.getMessage());
+		} catch (IOException e) {
+			log.error("Exceptionn occured while uploading the file"+e.getMessage());
+		}
+	}
+
+	private PmDocument getDocumentDtls(String docCategoryCode) {
+
+		IDocumentSO documentSO = null;
+		PmDocument document = null;
+		try {
+			documentSO = (IDocumentSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IDocumentSO.class);
+			DocumentReqDTO reqDTO = new DocumentReqDTO();
+			reqDTO.setDocCategoryCode(docCategoryCode);
+			DocumentResDTO resDTO = documentSO
+					.retrieveDocumentCheckList(reqDTO);
+
+			for (PmDocument pmDocument : resDTO.getDocumentList()) {
+				if (SourcingConstants.DOC_DEF_KEY_BRANCH_INFORMATION
+						.equalsIgnoreCase(pmDocument.getDocDefinitionKey())) {
+					document = pmDocument;
+					break;
+				}
+			}
+			return document;
+		} finally {
+			documentSO = null;
+		}
+	}
+	
+	public void setOverallCtAmount(BigDecimal loaAmount){
+		this.getManagedBean().setOverallContractAmt(loaAmount);
+	}
 }
