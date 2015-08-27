@@ -201,7 +201,9 @@
 				</p:column>	
 				<p:column headerText="#{lbl['lbl.fl.gst']}">
 					<p:selectBooleanCheckbox value="#{item.gst}"
-					disabled="#{(empty contractRequestBackingBean.managedBean.selectedDelAddr or contractRequestBackingBean.managedBean.buttonVal=='View')}">
+						disabled="#{(empty contractRequestBackingBean.managedBean.selectedDelAddr or 
+							contractRequestBackingBean.managedBean.buttonVal=='View' or 
+							item.orderedQty == 0)}">
 						<p:ajax process="@this" listener="#{contractRequestBackingBean.retrieveOrderAmount(item)}"
 						update="subTotalTxt,unitPrice,orderedQty,itemDataTable"/>
 					</p:selectBooleanCheckbox>
