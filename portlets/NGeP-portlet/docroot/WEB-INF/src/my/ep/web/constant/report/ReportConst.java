@@ -475,6 +475,7 @@ public class ReportConst {
 	public static final String AMP_SM_PRFL_STS_EQ = "&PPRSTAT=";
 	public static final String AMP_SM_GST_REGNO_EQ = "&PGSTREGNO=";
 	public static final String AMP_SM_GST_STS_EQ = "&PGSTSTAT=";
+	public static final String AMP_SM_PAYMENT_TO_EQ = "&PPAYMENTTO=";
 	public static final String PEND_PRPR_SITE_VISIT = "Pending Prepare Site Visit Report";
 	public static final String SITE_VISIT_COMPLTD = "Site Visit Report Completed";
 	public static final String KAMA = ",";
@@ -652,6 +653,7 @@ public class ReportConst {
 	public static final String FL_AMP_SUPPL_INV_NO_EQ = "&PSUPPINVNO=";
 	public static final String FL_AMP_PAYMENT_ADV_NO_EQ = "&PPANO=";
 	public static final String FL_AMP_ITM_NAME_EQ = "&PITEM=";
+	public static final String FL_AMP_DOC_TYPE_EQ = "&PDOCTYPE=";
 	//CT
 	public static final String CT_AMP_CONTRACT_NO_EQ = "&PCONTRACTNO=";
 	public static final String CT_AMP_PHYSICALCONTRACT_NO_EQ = "&PPHYSICALCONTRACTNO=";

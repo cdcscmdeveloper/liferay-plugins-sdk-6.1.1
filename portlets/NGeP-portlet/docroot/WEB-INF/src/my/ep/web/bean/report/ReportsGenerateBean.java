@@ -242,6 +242,8 @@ public class ReportsGenerateBean {
 		private boolean smGSTRegistrationNoView = false;
 		private boolean smGSTRegisteredStatusView = false;
 		private boolean smMandatoryGSTRegisteredStatusView = false;
+		private boolean smPaymentTypeThreeView = false;
+		private boolean smPaymentToView = false;
 		// FL module
 		private boolean flPtjView = false;
 		private boolean flContractNoView = false;
@@ -380,6 +382,18 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isSmPaymentToView() {
+			return smPaymentToView;
+		}
+		public void setSmPaymentToView(boolean smPaymentToView) {
+			this.smPaymentToView = smPaymentToView;
+		}
+		public boolean isSmPaymentTypeThreeView() {
+			return smPaymentTypeThreeView;
+		}
+		public void setSmPaymentTypeThreeView(boolean smPaymentTypeThreeView) {
+			this.smPaymentTypeThreeView = smPaymentTypeThreeView;
+		}
 		public boolean isSmPaidUpCptlDateView() {
 			return smPaidUpCptlDateView;
 		}
@@ -996,6 +1010,7 @@ public class ReportsGenerateBean {
 		private String smProfileStatusVar=ReportConst.EMPTY_VAL;
 		private String smGSTRegistrationNoVar=ReportConst.EMPTY_VAL;
 		private String smGSTRegisteredStatusVar=ReportConst.EMPTY_VAL;
+		private String smPaymentToVar=ReportConst.EMPTY_VAL;
 		
 		private String reportValueIdVar=ReportConst.EMPTY_VAL;
 		private String userIdVar=ReportConst.EMPTY_VAL;
@@ -1086,6 +1101,12 @@ public class ReportsGenerateBean {
 		private String pmBusinessRegNoVar=ReportConst.EMPTY_VAL;
 		
 		
+		public String getSmPaymentToVar() {
+			return smPaymentToVar;
+		}
+		public void setSmPaymentToVar(String smPaymentToVar) {
+			this.smPaymentToVar = smPaymentToVar;
+		}
 		public boolean isCtSubTypeOnlyView() {
 			return ctSubTypeOnlyView;
 		}
