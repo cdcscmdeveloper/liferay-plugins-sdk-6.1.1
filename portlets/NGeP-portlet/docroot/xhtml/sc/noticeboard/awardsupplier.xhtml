@@ -54,11 +54,15 @@
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.closingDate}"
 					readonly="true">
-					<f:convertDateTime pattern="dd/MM/yyyy" />
+					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 
 				<h:outputLabel value="#{lbl['lbl.sc.notice.board.openingdate']} " />
-				<h:outputText value="" readonly="true" />
+				<h:outputText
+					value="#{noticeBoardBackingBean.managedBean.scQt.openingDate}"
+					readonly="true">
+					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>
 
 				<h:outputLabel value="#{lbl['lbl.sc.title']}" />
 				
