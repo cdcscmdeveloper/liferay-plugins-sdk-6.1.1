@@ -5,13 +5,14 @@ import java.util.UUID;
 
 import org.apache.log4j.Logger;
 
+import my.ep.factory.EpLogger;
 import my.ep.web.integration.osb.BatchPortTypeProxy;
 
 /*
 * @author P.Ganga prasad
 */
 public class OsbUtility {
-	private static Logger log = BatchLogger.getLogger(OsbUtility.class);
+	private static Logger log = EpLogger.getLogger(OsbUtility.class);
 
 	public void osbServiceCallOutBound(String processId,String fileName) {
 		log.info("osb service outbound...");
@@ -23,9 +24,9 @@ public class OsbUtility {
 //			header_Type.setOrgUnit(processId);
 //			header_Type.setSegment(IntegrationConstants.SEQUENCE_NO);
 
-			my.ep.web.integration.osb.RqUID_Type rqUID_Type = new my.ep.web.integration.osb.RqUID_Type(
-					UUID.randomUUID().toString(),
-					IntegrationConstants.EMPTY_TRING);
+			my.ep.web.integration.osb.RqUID_Type rqUID_Type = new my.ep.web.integration.osb.RqUID_Type();
+			
+			rqUID_Type.setRqUID(UUID.randomUUID().toString());
 			header_Type.setUID(rqUID_Type);
 
 			my.ep.web.integration.osb.BatchOutboundRq_Type batchOutboundRq_Type = new my.ep.web.integration.osb.BatchOutboundRq_Type();
