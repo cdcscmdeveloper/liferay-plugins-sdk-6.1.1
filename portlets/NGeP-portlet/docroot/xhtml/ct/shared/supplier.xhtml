@@ -46,7 +46,7 @@
                              </td>
                              <td>
                                 <h:panelGrid columns="3">
-	                   	           <p:inputText disabled="true" style="width:255px;" id="supplierCompanyName"
+	                   	           <p:inputText disabled="true" style="width:265px;" id="supplierCompanyName"
 	             	                   value="#{ctBackingBean.managedBean.supplierCompanyName}" />
                                    <p:spacer width="5"/>
                                    <h:panelGrid columns="4" rendered="#{!ctBackingBean.managedBean.viewContract 
@@ -78,11 +78,18 @@
                         <p:outputLabel value="#{lbl['lbl.ct.branch.name']}" />
                     </td>
                     <td>
-                <h:panelGrid columns="3">
-	                <p:inputText id="supplierBranchName" disabled="true" style="width:255px;" 
+                <h:panelGrid columns="6">
+	                <p:inputText id="supplierBranchName" disabled="true" style="width:265px;" 
 	                   value="#{ctBackingBean.managedBean.supplierBranchName}" />
 	           	  	<p:spacer width="1"/>
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.supplier.branch']}" />
+					<p:spacer width="5"/>
+					<h:commandLink for="branchInfo" styleClass="blue_font" style="width:80px;"
+						rendered="#{ctBackingBean.managedBean.branchInfoFilePath != null}"
+						title="#{lbl['lbl.ct.branch.info']}"
+						value="#{lbl['lbl.ct.branch.info']}"
+						action="#{ctBackingBean.downloadFile(ctBackingBean.managedBean.branchInfoFilePath)}" />
+               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.branch.info']}" rendered="#{ctBackingBean.managedBean.branchInfoFilePath != null}"/>
 				</h:panelGrid>
 				</td>
 				<td width="100">
@@ -105,7 +112,7 @@
                 <td>
                 <h:panelGrid columns="3">
                     <p:inputTextarea id="supplierAddress" disabled="true" rows="5"   maxlength="200"   autoResize="false"
-                        value="#{ctBackingBean.managedBean.supplierAddress}"  style="width:170px; margin-bottom: 5px;" />
+                        value="#{ctBackingBean.managedBean.supplierAddress}"  style="width:265px; margin-bottom: 5px;" />
                      <p:spacer width="5"/>
                      <h:panelGrid columns="4" rendered="#{!ctBackingBean.managedBean.viewContract 
                                           and ctBackingBean.managedBean.updateSupplierAddress}">
@@ -123,7 +130,7 @@
                  <tr>
                  <td>
                     <p:outputLabel value="#{lbl['lbl.ct.contact.person']}"/>  </td>
-                <td>  <p:inputText disabled="true" style="width:260px;margin-bottom: 5px;" 
+                <td>  <p:inputText disabled="true" style="width:265px;margin-bottom: 5px;" 
                       value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.supplierContact}" />
                 </td>
                  </tr>
@@ -131,18 +138,18 @@
                       <td>
                        <p:outputLabel  value="#{lbl['lbl.ct.tel']}"/>  
                       </td>
-                      <td>
+                      <td style="width:450px;">
                           <table>
                                  <tr>
                                     <td>
                                            <p:inputText  value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.supplierPhoneNo}"  
-                                             disabled="true" style="width:95px;" />
+                                             disabled="true" style="width:98px;" />
                              </td> <td><p:spacer width="4"></p:spacer>
                                
                                <p:outputLabel  value="#{lbl['lbl.ct.fax']}"/>
                 </td>
                  <td>
-                <p:inputText  disabled="true" style="width:95px;"  
+                <p:inputText  disabled="true" style="width:98px;"  
                    value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.supplierFaxNo}"/>  
                  </td>
                  </tr>
@@ -156,7 +163,7 @@
                  <p:outputLabel  value="#{lbl['lbl.ct.email']}"/>  
                  </td>
                  <td>
-                 <p:inputText disabled="true" style="width:260px;" 
+                 <p:inputText disabled="true" style="width:265px;" 
                        value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.supplierEmail}"/>
                        </td>
                        </tr>
@@ -197,7 +204,7 @@
                           </h:panelGroup>
                           <td>
 	                      <h:panelGrid>
-                                <p:inputTextarea id="bankAddress" disabled="true" rows="5"  autoResize="false" style="width:170px; margin-bottom: 5px;"
+                                <p:inputTextarea id="bankAddress" disabled="true" rows="5"  autoResize="false" style="width:265px; margin-bottom: 5px;"
                                  value="#{ctBackingBean.getFullAddress(ctBackingBean.managedBean.ctContractVer.ctContractValue.bankAddress)}" />
 	                      </h:panelGrid>
 	                       </td>
