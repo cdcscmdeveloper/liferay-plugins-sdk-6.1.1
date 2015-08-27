@@ -420,6 +420,7 @@ public class TemplateSpecBackingBean extends
 				.equals(questionType);
 		boolean isFinancialSpec = ParameterConst.SPECIFICATION_TYPE_FINANCIAL
 				.equals(tplSpecMaster.getSpecTypeCode().getParameterCode());
+		TemplateSpecHelper specHelper = TemplateSpecHelper.getInstance();
 
 		if (questionList == null) {
 			questionList = new ArrayList<TplSpecQuestion>();
@@ -450,11 +451,11 @@ public class TemplateSpecBackingBean extends
 					newQuestion.setClPriceTypeCode(pmParameter);
 				}
 				
-				createNewSpecAnswer(templateSpecBean, newQuestion);
+				specHelper.resetSpecAnswers(templateSpecBean, newQuestion);
 			} else {
 				newQuestion.setClPriceTypeCode(new PmParameter());
 			}
-			TemplateSpecHelper.getInstance().resetPriceTypeDtl(newQuestion);
+			specHelper.resetPriceTypeDtl(newQuestion);
 			
 			pmParameter = getParameterByTypeAndCode(
 					ParameterTypeConst.DELIVERY_TERM, ParameterConst.SQ_DURATION_DAY);
@@ -767,33 +768,9 @@ public class TemplateSpecBackingBean extends
 			TemplateSpecHelper specHelper = TemplateSpecHelper.getInstance();
 			specHelper.resetPriceTypeDtl(specQuestion);
 
-			createNewSpecAnswer(templateSpecBean, specQuestion);
+			specHelper.resetSpecAnswers(templateSpecBean, specQuestion);
 		} finally {
 			parameterSO = null;
-		}
-	}
-	
-	private void createNewSpecAnswer(TemplateSpecBean templateSpecBean,
-			TplSpecQuestion specQuestion) {
-		TemplateSpecHelper specHelper = TemplateSpecHelper.getInstance();
-		
-		if (TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER
-				.equals(templateSpecBean.getContentType())) {
-			List<TplSpecAnswer> specAnswers = null;
-
-			if (specHelper.isPriceTypeStandard(specQuestion
-					.getClPriceTypeCode().getParameterCode())) {
-				TplSpecAnswer specAnswer = specHelper.createNewSpecAnswer(
-						templateSpecBean, specQuestion, null, null);
-
-				specAnswers = new ArrayList<TplSpecAnswer>();
-				specAnswers.add(specAnswer);
-			}
-
-			specHelper.addToBeRemovedSpecAnswers(templateSpecBean,
-					specQuestion.getTplSpecAnswers());
-
-			specQuestion.setTplSpecAnswers(specAnswers);
 		}
 	}
 
