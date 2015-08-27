@@ -1447,7 +1447,7 @@ public class DirectLOABackingBean extends
 	 */
 	public void contractSignerEvent() {
 		debugLogger("contractSignerEvent");
-		PmUser contractSigner = getManagedBean().getContractSignerUser();
+		PmUser contractSigner = getManagedBean().getScLoa().getContractSigner();
 		if (contractSigner != null) {
 			if (getManagedBean().getContractSignerList() != null
 					&& getManagedBean().getContractSignerList().size() > 0) {
