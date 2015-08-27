@@ -195,15 +195,32 @@
 		
 		<tr>
 			<td width="21%">
-				<p:outputLabel value="#{lbl['lbl.sc.procurment.type.category']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.procurment.type.category']}" rendered="#{!isDocTypeQuotation}"/>
 			</td>
 				<td colspan="3"><p:inputText id="procurmentTypeCatId"
 						value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.procurementTypeCatId)}"
 						size="40" label="#{lbl['lbl.sc.procurment.type.category']}"
-						disabled="true" /></td>
+						disabled="true" rendered="#{!isDocTypeQuotation}"/></td>
 			</tr>
-		
-		<tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.procurment.type.category']}"
+						rendered="#{isDocTypeQuotation}" /> <p:outputLabel value="*"
+						styleClass="mandatory"
+						rendered="#{isDocTypeQuotation and isEditableStatus}" /></td>
+				<td><p:selectOneMenu id="procTypeBoCategory" required="true"
+						value="#{lOADetailBackingBean.managedBean.scLoa.procurementTypeCatId.parameterId}"
+						style="margin-bottom:5px;width:209px;"
+						label="#{lbl['lbl.sc.procurment.type.category']}"
+						rendered="#{isDocTypeQuotation}" disabled="#{!isEditableStatus}">
+						<f:selectItems
+							value="#{lOADetailBackingBean.getDropdownValues(ParameterTypeConst.procurementTypeCategory)}" />
+						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
+					</p:selectOneMenu> <p:message id="procuremnttitleMsg" for="procTypeBoCategory"
+						display="icon" /></td>
+
+			</tr>
+			<tr>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.qt.fileno']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
