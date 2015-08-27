@@ -224,10 +224,15 @@
 				    label="#{lbl['lbl.ct.effective.date']}" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}"
 				    maxdate="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.expDate}" 
 				    mindate="#{amendmentBackingBean.managedBean.newAmendmentEffDate}"
-				    disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}">
+				    rendered="#{!amendmentBackingBean.managedBean.disableAmendDetails}">
 				        <p:ajax event="dateSelect" process="@this" onstart="blockWidget.show();"  oncomplete="blockWidget.hide();"
 				            listener="#{amendmentBackingBean.changeAmendmentEffDate}"  update=":form:itemId,:form:serviceId"/> 
 				</p:calendar>
+				<p:inputText disabled="true" style="width:100px;"
+					rendered="#{amendmentBackingBean.managedBean.disableAmendDetails}"
+					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}">
+					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+	  			</p:inputText>
 				<p:spacer width="1"/>
 			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.new.effective.date']}" />
 			    <p:spacer width="1"/>
