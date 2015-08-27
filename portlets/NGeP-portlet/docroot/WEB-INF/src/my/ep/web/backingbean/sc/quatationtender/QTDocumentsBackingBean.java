@@ -646,14 +646,13 @@ public class QTDocumentsBackingBean extends
 							IQTDetailSO.class);
 
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			reqDTO.setScQtDocReport(scQtDocReport);
+			reqDTO.setScReport(scQtDocReport);
 			reqDTO.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_QUOTATION_TENDER_DOCUMENTS);
 			reqDTO.setDocDefKey(SourcingConstants.DOC_DEF_KEY_RULES_REGULATION);
-			reqDTO.setScQtDocReport(scQtDocReport);
 
 			QuationTenderResDTO resDTO = qTDetailSO
 					.retriveScQtReportByDefKey(reqDTO);
-			ScQtDocReport qtDocReport = resDTO.getScQtDocReport();
+			ScQtDocReport qtDocReport = (ScQtDocReport)resDTO.getScReport();
 			return qtDocReport;
 		} finally {
 			qTDetailSO = null;
