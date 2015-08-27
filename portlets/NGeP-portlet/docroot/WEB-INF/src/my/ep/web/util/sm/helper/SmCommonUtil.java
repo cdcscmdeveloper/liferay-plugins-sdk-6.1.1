@@ -2589,12 +2589,66 @@ public class SmCommonUtil {
 	 * @return String
 	 */
 	public static String getSoftcertDocNo(SmAppl latestAppl) {
-		if(latestAppl==null){
+		if (latestAppl == null) {
 			throw new EpException("Not valid login user!!");
 		}
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setAppl(latestAppl);
 		return SmServiceLookup.getPersonnelSO().getSoftcertDocNo(reqDTO)
 				.getSoftcertDocNo();
+	}
+
+	/**
+	 * Set rejected softcert reason
+	 * 
+	 * @param SmPersonnel
+	 *            personnel
+	 * @param Long
+	 *            supplierId
+	 */
+	public static void setRejectedPersonnelSoftcert(SmPersonnel personnel,
+			Long supplierId) {
+		if (supplierId != null
+				&& personnel != null
+				&& personnel.getPmUser() != null
+				&& personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
+			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			reqDTO.setSmSupplierId(supplierId);
+			reqDTO.setUserId(personnel.getPmUser().getUserId());
+			SmSoftcertRequest softcertRequest = SmServiceLookup
+					.getPersonnelSO()
+					.retrievePersonnelSoftcertRequestBySupplierIdAndUserId(
+							reqDTO).getSoftcertRequest();
+			if (softcertRequest != null
+					&& StringUtils.isNotBlank(softcertRequest.getReasonCode())) {
+				if (softcertRequest.getReasonCode().equals(
+						SupplierManagementConst.REJECTED_WITH_BLACKLIST)) {
+					personnel.setDisableRowSelection(true);
+					personnel.setSoftcertRejectReason(SmCommonUtil.getMessage(
+							"lbl.sm.softcert.rejected.blacklist", null));
+				} else if (softcertRequest.getReasonCode().equals(
+						SupplierManagementConst.REJECTED_WITH_FRAUD)) {
+					personnel.setDisableRowSelection(true);
+					personnel.setSoftcertRejectReason(SmCommonUtil.getMessage(
+							"lbl.sm.softcert.rejected.fraud", null));
+				} else if (softcertRequest
+						.getReasonCode()
+						.equals(SupplierManagementConst.REJECTED_WITH_INCOMPLETE_SUPPDOC)) {
+					personnel
+							.setSoftcertRejectReason(SmCommonUtil
+									.getMessage(
+											"lbl.sm.softcert.rejected.incomplete.suppdoc",
+											null));
+				} else if (softcertRequest
+						.getReasonCode()
+						.equals(SupplierManagementConst.REJECTED_WITH_NO_CONFIG_CHALLENGE_RESPONSE)) {
+					personnel
+							.setSoftcertRejectReason(SmCommonUtil
+									.getMessage(
+											"lbl.sm.softcert.rejected.noconfig.challresp",
+											null));
+				}
+			}
+		}
 	}
 }
