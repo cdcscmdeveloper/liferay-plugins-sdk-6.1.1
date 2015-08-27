@@ -97,7 +97,8 @@
 										itemValue="#{smSupplierBranch.branchName}" itemLabel="#{smSupplierBranch.branchName}" />
 									<p:ajax event="change"
 										listener="#{lOADetailBackingBean.handleBranchDetailsChanged}"
-										partialSubmit="true" process="@this" update="suppAddr, suppPhoneNo, suppFaxNo, suppMobNo, suppContact, suppEmail, gstDeclaredDateId, gstEffDateId, gstRegNoId , gstAmtId" />
+										partialSubmit="true" process="@this" 
+										update="suppAddr, suppPhoneNo, suppFaxNo, suppMobNo, suppContact, suppEmail, gstDeclaredDateId, gstEffDateId, gstRegNoId , gstAmtId, ContractAmtId" />
 								</p:selectOneMenu>
 								<p:message id="branchMsg" for="branch" display="icon" />
 							</td>
