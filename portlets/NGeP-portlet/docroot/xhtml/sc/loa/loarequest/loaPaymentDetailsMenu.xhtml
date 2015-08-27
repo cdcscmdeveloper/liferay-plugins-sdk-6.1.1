@@ -17,7 +17,7 @@
 				<c:if test="#{isSupplierAckStatus}">
 					<p:selectOneMenu
 						value="#{lOADetailBackingBean.managedBean.selectedBankId}"
-						style="width: 280px;margin-bottom: 5px;"
+						style="width: 336px;margin-bottom: 5px;"
 						required="true"
 						label="#{lbl['lbl.sc.account.no']}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -68,7 +68,7 @@
 			</td>
 				<td><p:inputText 
 						value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.procurementTypeCatId)}"
-						size="30" label="#{lbl['lbl.sc.procurment.type.category']}"
+						size="50" label="#{lbl['lbl.sc.procurment.type.category']}"
 						disabled="true" /></td>
 			</tr>
 		
@@ -79,7 +79,7 @@
 			<td>
 				<p:inputText styleClass="ppNumericAlign"
 					value="#{lOADetailBackingBean.managedBean.scLoa.loaAmt}"
-					disabled="true" size="30">
+					disabled="true" size="50">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 			</td>
@@ -91,7 +91,7 @@
 			</td>
 			<td>
 				<p:inputText styleClass="ppNumericAlign"
-						value="#{lOADetailBackingBean.managedBean.scLoa.gstAmt}" disabled="true" size="30">
+						value="#{lOADetailBackingBean.managedBean.scLoa.gstAmt}" disabled="true" size="50">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText>
@@ -105,7 +105,7 @@
 			<td>
 				<p:inputText styleClass="ppNumericAlign"
 					value="#{lOADetailBackingBean.managedBean.overallContractAmt}"
-					 size="30" disabled="true">
+					 size="50" disabled="true">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 			</td>
