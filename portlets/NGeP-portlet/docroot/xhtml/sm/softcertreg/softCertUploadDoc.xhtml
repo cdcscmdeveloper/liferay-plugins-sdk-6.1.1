@@ -87,17 +87,17 @@
 					<table width="100%">
 						<ui:repeat var="suppDoc" value="#{upload.suppDocList}">
 							<tr>
-								<td width="40%">
+								<td width="40%" style="border-style: none !important;">
 									<h:outputText value="#{suppDoc.pmDocument.docName}" style="float: left;white-space: normal;" />
 								</td>
-								<td width="20%">
+								<td width="20%" style="border-style: none !important;">
 									<p:commandLink oncomplete="uploadDialog.show();return false;" update="@([id$=uploadDialog])"
 										action="#{softCertBackingBean.assignSelectedSupportDoc(upload.personnel,suppDoc)}">
 										<p:graphicImage value="/css/images/design/upload.png"
 											style="margin-right:2px;" />
 									</p:commandLink>
 								</td>
-								<td width="40%">
+								<td width="40%" style="border-style: none !important;">
 									<h:outputText value="#{suppDoc.smSofcertDocFiles[0].fileName}"
 										style="float: left;white-space: normal;" rendered="#{not empty suppDoc.smSofcertDocFiles}"/>
 								</td>
