@@ -4815,6 +4815,15 @@ public class LOADetailBackingBean extends
 			scLoa.setGstDeclaredDate(null);
 			scLoa.setGstEffDate(null);
 		}
+		if(scLoa.getGstAmt() != null){
+			BigDecimal ctAmount = getManagedBean().getOverallContractAmt();
+			if ((ctAmount != null && scLoa.getLoaAmt() != null)
+					&& !scLoa.getLoaAmt().equals(ctAmount)) {
+				ctAmount = ctAmount.subtract(scLoa.getGstAmt());
+				ctAmount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+				this.getManagedBean().setOverallContractAmt(ctAmount);
+			}
+		}
 		scLoa.setGstAmt(null);
 	}
 	
