@@ -158,7 +158,7 @@ public class SOABatchRetryBackingBean extends
 				if (resDTO.isAllRemoved()) {
 					FacesContext.getCurrentInstance().addMessage(
 							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							new FacesMessage(FacesMessage.SEVERITY_INFO,
 									MessageUtils.getMessage(MessageConst.ERROR_990002,
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())
