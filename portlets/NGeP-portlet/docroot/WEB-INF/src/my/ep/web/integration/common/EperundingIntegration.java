@@ -16,6 +16,7 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
+import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
@@ -60,7 +61,7 @@ import org.apache.log4j.Logger;
  */
 public class EperundingIntegration {
 	
-	private static Logger log = BatchLogger.getLogger(EperundingIntegration.class);
+	private static Logger log = EpLogger.getLogger(EperundingIntegration.class);
 
 	OsbUtility osbUtility = new OsbUtility();
 	FileUtility fileUtility = new FileUtility();
@@ -112,6 +113,8 @@ public class EperundingIntegration {
 	}
 
 	public void createEquiytyOwner(SupplierSearchResDTO resDTO) {
+		
+		log.info("createEquiytyOwner start");
 
 		List<EquityOwner> equityOwnerList = new ArrayList<EquityOwner>();
 		EquityOwner equityOwner = null;
@@ -267,6 +270,8 @@ public class EperundingIntegration {
 	}
 
 	public void createBoardOfDirector(SupplierSearchResDTO resDTO) {
+		
+		log.info("createBoardOfDirector start");
 
 		List<BoardOfDirector> boardOfDirectorsList = new ArrayList<BoardOfDirector>();
 		BoardOfDirector boardOfDirector = null;
@@ -418,6 +423,8 @@ public class EperundingIntegration {
 	}
 
 	public void createManagementPersonnel(SupplierSearchResDTO resDTO) {
+		
+		log.info("createManagementPersonnel start");
 
 		List<ManagementPersonnel> managementPersonnelsList = new ArrayList<ManagementPersonnel>();
 		ManagementPersonnel managementPersonnel = null;
@@ -593,6 +600,8 @@ public class EperundingIntegration {
 	}
 
 	public void createAuthorizedSignatory(SupplierSearchResDTO resDTO) {
+		
+		log.info("createAuthorizedSignatory start");
 
 		List<Signatory> signatoryList = new ArrayList<Signatory>();
 		Signatory signatory = null;
@@ -642,6 +651,8 @@ public class EperundingIntegration {
 	}
 
 	public void createConsultantProfile(SupplierSearchResDTO resDTO) {
+		
+		log.info("createConsultantProfile start");
 
 		List<ConsultantProfile> consultantProfileList = new ArrayList<ConsultantProfile>();
 		ConsultantProfile profile = null;
@@ -842,6 +853,8 @@ public class EperundingIntegration {
 	}
 
 	public void createDeletedCompany(SupplierSearchResDTO resDTO) {
+		
+		log.info("createDeletedCompany start");
 
 		List<DeletedCompany> deletedCompanyList = new ArrayList<DeletedCompany>();
 		DeletedCompany deletedCompany = null;
@@ -894,6 +907,8 @@ public class EperundingIntegration {
 	}
 
 	public void createGovernmentProject(SupplierSearchResDTO resDTO) {
+		
+		log.info("createGovernmentProject start");
 
 		List<GovernmentProject> governmentProjectList = new ArrayList<GovernmentProject>();
 		GovernmentProject governmentProject = null;
@@ -949,6 +964,8 @@ public class EperundingIntegration {
 	}
 
 	public void createRegisteredCategory(SupplierSearchResDTO resDTO) {
+		
+		log.info("createRegisteredCategory start");
 
 		List<RegisteredCategory> registeredCategoryList = new ArrayList<RegisteredCategory>();
 		RegisteredCategory registeredCategory = null;
@@ -989,6 +1006,8 @@ public class EperundingIntegration {
 	}
 
 	public void createBranchCompany(SupplierSearchResDTO resDTO) {
+		
+		log.info("createBranchCompany start");
 
 		List<BranchCompany> branchCompanyList = new ArrayList<BranchCompany>();
 		BranchCompany branchCompany = null;
@@ -1060,6 +1079,8 @@ public class EperundingIntegration {
 	}
 
 	public void createCompanyOwner(SupplierSearchResDTO resDTO) {
+		
+		log.info("createCompanyOwner start");
 
 		List<CompanyOwner> companyOwnerList = new ArrayList<CompanyOwner>();
 		CompanyOwner companyOwner = null;
@@ -1175,6 +1196,8 @@ public class EperundingIntegration {
 	}
 
 	public void createAssociatedCompany(SupplierSearchResDTO resDTO) {
+		
+		log.info("createAssociatedCompany start");
 
 		List<AssociatedCompany> associatedCompanyList = new ArrayList<AssociatedCompany>();
 		AssociatedCompany associatedCompany = null;
