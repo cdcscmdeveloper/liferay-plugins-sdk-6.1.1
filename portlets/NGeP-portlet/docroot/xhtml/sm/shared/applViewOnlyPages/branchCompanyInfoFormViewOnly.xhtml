@@ -91,7 +91,8 @@
 		
 		<p:scrollPanel mode="native" style="max-height:400px;width:550px;border:none">
 			<ui:fragment
-				rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'K' or viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'J'}">
+				rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'K' 
+				or viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'J'}">
 				<ui:include src="branchDetailsTablePageViewOnly.xhtml" />
 				<ui:include src="gstBranchInfoFormViewOnly.xhtml" />
 			</ui:fragment>
