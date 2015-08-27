@@ -168,7 +168,7 @@ public class SOABatchRetryBackingBean extends
 					
 					FacesContext.getCurrentInstance().addMessage(
 							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							new FacesMessage(FacesMessage.SEVERITY_INFO,
 									MessageUtils.getMessage(MessageConst.ERROR_990003,
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())
