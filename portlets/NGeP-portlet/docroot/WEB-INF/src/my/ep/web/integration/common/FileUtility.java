@@ -324,7 +324,7 @@ public class FileUtility {
 				StringBuffer branchLine;
 				StringBuffer subLine;
 				
-				System.out.println("content :"+content.size());
+				log.info("content :"+content.size());
 				for (MasterDataVendor mDataVendor : content) {
 					
 					line = new StringBuffer();
@@ -435,7 +435,7 @@ public class FileUtility {
 			}
 		} catch (IOException e) {
 			
-			System.out.println("Failed in creating file creation");
+			log.info("Failed in creating file creation");
 			
 
 		} finally {
@@ -1095,7 +1095,7 @@ public class FileUtility {
 			if (seqNos != null && !seqNos.isEmpty()) {
 				seqNo =  seqNos.get(seqNos.size()-1);
 				}else{
-					System.out.println("seqNos :"+seqNos);
+					log.info("seqNos :"+seqNos);
 				}
 			sequenceNo = formatIntegerField(seqNo + 1, 3, "R");
 
@@ -1230,6 +1230,8 @@ public class FileUtility {
 			
 			//once upload is done cal web service osb integration to transfer file.
 			 osbUtility.osbServiceCallOutBound(ServiceCode.EPE04.value(),fileName);
+			 
+			 log.info("createEquiytyOwner end");
 
 		} catch (IOException e) {
 
@@ -1338,6 +1340,8 @@ public class FileUtility {
 			
 			//once upload is done cal web service osb integration to transfer file.
 			osbUtility.osbServiceCallOutBound(ServiceCode.EPE01.value(),fileName);
+			
+			log.info("createConsultantProfile end");
 
 		} catch (IOException e) {
 
@@ -1396,6 +1400,8 @@ public class FileUtility {
 			
 			//once upload is done cal web service osb integration to transfer file.
 			osbUtility.osbServiceCallOutBound(ServiceCode.EPE07.value(),fileName);
+			
+			log.info("createAuthorizedSignatory end");
 
 		} catch (IOException e) {
 
@@ -1481,6 +1487,8 @@ public class FileUtility {
 			
 			//once upload is done cal web service osb integration to transfer file.
 			osbUtility.osbServiceCallOutBound(ServiceCode.EPE06.value(),fileName);
+			
+			log.info("createManagementPersonnel end");
 
 		} catch (IOException e) {
 
@@ -1560,6 +1568,8 @@ public class FileUtility {
 			
 			//once upload is done cal web service osb integration to transfer file.
 			osbUtility.osbServiceCallOutBound(ServiceCode.EPE05.value(),fileName);
+			
+			log.info("createBoardOfDirector end");
 
 		} catch (IOException e) {
 
@@ -1624,6 +1634,8 @@ public class FileUtility {
 			
 			//once upload is done cal web service osb integration to transfer file.
 			osbUtility.osbServiceCallOutBound(ServiceCode.EPE08.value(),fileName);
+			
+			log.info("createBranchCompany end");
 
 		} catch (IOException e) {
 
@@ -1682,6 +1694,8 @@ public class FileUtility {
 			
 			//once upload is done cal web service osb integration to transfer file.
 			osbUtility.osbServiceCallOutBound(ServiceCode.EPE09.value(),fileName);
+			
+			log.info("createRegisteredCategory end");
 
 
 		} catch (IOException e) {
@@ -1749,6 +1763,8 @@ public class FileUtility {
 			
 			//once upload is done cal web service osb integration to transfer file.
 			osbUtility.osbServiceCallOutBound(ServiceCode.EPE10.value(),fileName);
+			log.info("createGovernmentProject end");
+			
 
 		} catch (IOException e) {
 
@@ -1803,6 +1819,8 @@ public class FileUtility {
 			
 			//once upload is done cal web service osb integration to transfer file.
 			osbUtility.osbServiceCallOutBound(ServiceCode.EPE11.value(),fileName);
+			
+			log.info("createDeletedCompany end");
 
 		} catch (IOException e) {
 
@@ -1877,6 +1895,8 @@ public class FileUtility {
 			
 			//once upload is done cal web service osb integration to transfer file.
 			osbUtility.osbServiceCallOutBound(ServiceCode.EPE03.value(),fileName);
+			
+			log.info("createCompanyOwner end");
 
 		} catch (IOException e) {
 
@@ -1950,6 +1970,8 @@ public class FileUtility {
 			
 			//once upload is done cal web service osb integration to transfer file.
 			osbUtility.osbServiceCallOutBound(ServiceCode.EPE02.value(),fileName);
+			
+			log.info("createAssociatedCompany end");
 
 		} catch (IOException e) {
 
@@ -2465,7 +2487,7 @@ public class FileUtility {
 				}
 			if (null!=receiptInformation.getReceiptDetailsList() && receiptInformation.getReceiptDetailsList().size() > 0) {
 				
-				System.out.println("receiptInformation.getReceiptDetailsList().size() :"+receiptInformation.getReceiptDetailsList().size());
+				log.info("receiptInformation.getReceiptDetailsList().size() :"+receiptInformation.getReceiptDetailsList().size());
 				for (ReceiptDetails receiptDetails  : receiptInformation.getReceiptDetailsList()) {
 					receiptDetailsLine = new StringBuffer();
 					receiptDetailsLine.append(formatIntegerField(receiptDetails.getRecordType(),1,"R"));
@@ -2488,13 +2510,13 @@ public class FileUtility {
 					receiptDetailsLine.append(System.getProperty("line.separator"));
 					line.append(receiptDetailsLine.toString());
 //					writer.write(receiptDetailsLine.toString());
-//					System.out.println("receiptDetailsLine.toString() :"+receiptDetailsLine.toString());
+//					log.info("receiptDetailsLine.toString() :"+receiptDetailsLine.toString());
 //					writer.flush();
 					}
 				}
 			if (null!=receiptInformation.getBillingInformationLineList() && receiptInformation.getBillingInformationLineList().size() > 0) {
 				
-				System.out.println("receiptInformation.getBillingInformationLineList().size() :"+receiptInformation.getBillingInformationLineList().size());
+				log.info("receiptInformation.getBillingInformationLineList().size() :"+receiptInformation.getBillingInformationLineList().size());
 				for (BillingInformationLine billingInformationLine  : receiptInformation.getBillingInformationLineList()) {
 					billInfoLine = new StringBuffer();
 					billInfoLine.append(formatIntegerField(billingInformationLine.getRecordType(),1,"R"));
@@ -2511,7 +2533,7 @@ public class FileUtility {
 					billInfoLine.append(System.getProperty("line.separator"));
 					line.append(billInfoLine.toString());
 //					writer.write(billInfoLine.toString());
-//					System.out.println("billInfoLine.toString() :"+billInfoLine.toString());
+//					log.info("billInfoLine.toString() :"+billInfoLine.toString());
 //					writer.flush();
 				}
 			}
