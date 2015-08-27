@@ -447,7 +447,7 @@
 							headerText="#{lbl['lbl.sm.person.composition.certStatus']}"
 							disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
 							or (person.prevApprovedDirector or person.prevApprovedEquityOwner)}">
-							<ac:smSoftcertStatus softcertFlg="#{person.softcertFlg}"  />
+							<ac:smSoftcertStatus personnel="#{person}"  />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.composition.role']}"
 							style="white-space: normal;"
