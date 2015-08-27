@@ -324,31 +324,12 @@ public class TemplateSpecBackingBean extends
 
 		if (TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER
 				.equals(templateSpecBean.getContentType())) {
-			addToBeRemovedSpecAnswers(templateSpecBean,
+			TemplateSpecHelper.getInstance().addToBeRemovedSpecAnswers(
+					templateSpecBean,
 					questionToDelete.getTplSpecAnswers());
 		}
 
 		templateSpecBean.setSelectedSpecQuestion(null);
-	}
-
-	private void addToBeRemovedSpecAnswers(TemplateSpecBean templateSpecBean,
-			List<TplSpecAnswer> specAnswers) {
-		if (specAnswers != null && specAnswers.size() > 0) {
-			List<TplSpecAnswer> specAnswersToDelete = templateSpecBean
-					.getSpecAnswersToDelete();
-			if (specAnswersToDelete == null) {
-				specAnswersToDelete = new ArrayList<TplSpecAnswer>();
-				templateSpecBean.setSpecAnswersToDelete(specAnswersToDelete);
-			}
-
-			for (TplSpecAnswer specAnswer : specAnswers) {
-				specAnswer.setDeleted(true);
-
-				if (!specAnswer.isBrandNew()) {
-					specAnswersToDelete.add(specAnswer);
-				}
-			}
-		}
 	}
 
 	/**
@@ -809,7 +790,7 @@ public class TemplateSpecBackingBean extends
 				specAnswers.add(specAnswer);
 			}
 
-			addToBeRemovedSpecAnswers(templateSpecBean,
+			specHelper.addToBeRemovedSpecAnswers(templateSpecBean,
 					specQuestion.getTplSpecAnswers());
 
 			specQuestion.setTplSpecAnswers(specAnswers);
@@ -1333,7 +1314,7 @@ public class TemplateSpecBackingBean extends
 
 			if (TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER
 					.equals(templateSpecBean.getContentType())) {
-				addToBeRemovedSpecAnswers(templateSpecBean,
+				TemplateSpecHelper.getInstance().addToBeRemovedSpecAnswers(templateSpecBean,
 						selectedSpecQuestion.getTplSpecAnswers());
 
 				selectedSpecQuestion.setTplSpecAnswers(null);
