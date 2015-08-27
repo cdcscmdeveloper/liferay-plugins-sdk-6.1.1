@@ -25,6 +25,7 @@ import my.ep.biz.service.pm.common.batch.IPmInterfaceSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.sc.requestitem.RequestItemResDTO;
+import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.common.PmInterfaceLog;
@@ -82,7 +83,7 @@ import org.apache.log4j.Logger;
 */
 public class FileUtility {
 	
-	private static Logger log = BatchLogger.getLogger(FileUtility.class);
+	private static Logger log = EpLogger.getLogger(FileUtility.class);
 	
 	private static final String valuestar =".*";
 	
@@ -1336,7 +1337,7 @@ public class FileUtility {
 			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+			osbUtility.osbServiceCallOutBound(ServiceCode.EPE01.value(),fileName);
 
 		} catch (IOException e) {
 
