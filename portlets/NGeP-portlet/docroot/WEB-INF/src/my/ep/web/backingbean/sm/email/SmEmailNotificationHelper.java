@@ -149,7 +149,7 @@ public class SmEmailNotificationHelper {
 			// PROCEED_BUMI_APPLN;
 			break;
 		case "U":
-			s = "Updae MOF Profile";
+			s = "Update MOF Profile";
 			// PROCEED_UPDATE_MOF_APPLN;
 			break;
 		case "R":
