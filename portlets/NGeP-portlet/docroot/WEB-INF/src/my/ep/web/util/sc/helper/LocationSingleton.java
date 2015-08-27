@@ -1448,7 +1448,7 @@ public class LocationSingleton {
 				PmState pmState = locCriteria.getPmState();
 
 				if (null != pmState && !states.contains(pmState)) {
-
+					divisonNode = null;
 					TreeNode root = new DefaultTreeNode(QTConstants.NODE_ROOT,
 							null);
 					stateNode = new DefaultTreeNode(QTConstants.NODE_STATE,
