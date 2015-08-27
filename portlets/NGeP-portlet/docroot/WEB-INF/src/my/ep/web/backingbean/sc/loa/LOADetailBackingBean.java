@@ -633,6 +633,11 @@ public class LOADetailBackingBean extends
 		// Supplier Branch
 		getManagedBean().setSelectedSupplierBranchName(
 				scLoa.getSupplierBranch());
+		
+		// Procurement Type Category Id
+		 if(null == scLoa.getProcurementTypeCatId()){
+			 scLoa.setProcurementTypeCatId(new PmParameter());
+		 }
 
 		SmPersonnel supplierHQPersonnel = resDTO.getSupplierHQPersonnel();
 		if(null == supplierHQPersonnel){
