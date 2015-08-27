@@ -23,16 +23,23 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.CtWorkflowStatus;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.type.pm.AddressType;
@@ -333,9 +340,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 	}
 	
-	public boolean chkProcurementTypeService() {
- 	   
-		
+	/**
+     * The method used to check whether contract is services with LOA signed 
+     * before 01/04/2015.
+	 * 
+	 * @return true, if contract is services and LOA is signed before 01/04/2015
+	 *         false, if contract is not services or LOA is not signed before 01/04/2015
+     */
+	public boolean chkProcurementTypeService() {		
 		try {
 			if(getManagedBean().getCtContractVer().getCtContractValue().getProcurementTypeCategory() != null &&
 					getManagedBean().getCtContractVer().getCtContractValue().getProcurementTypeCategory().getParameterCode() != null) {
@@ -364,5 +376,45 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
     	FacesScopes facesScopes = new FacesScopes();
 		return (facesScopes.hasRoleUser(RoleCode.CT_APPROVER.value()) 
 				|| facesScopes.hasRoleUser(RoleCode.BPK_APPROVER.value()));
+	}
+    
+    /**
+	 * The method used to retrieve the branch info file path
+     */
+    public void retrieveBranchInfo() {
+    	IQTDetailSO qtDetailSO = (IQTDetailSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+    	QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+    	
+    	String docCategory = ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_QUOTATION_TENDER; // AQ
+		if (getManagedBean().getCtContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+	    		ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+			docCategory = ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_DIRECT_PURCHASE; // AD
+		}
+		reqDTO.setDocCategory(docCategory);
+		reqDTO.setDocDefKey(SourcingConstants.DOC_DEF_KEY_BRANCH_INFORMATION);
+		ScLoaReport scLoaReport = new ScLoaReport();
+		scLoaReport.setScLoa(new ScLoa());
+		scLoaReport.getScLoa().setLoaId(getManagedBean().getCtContractVer().getCtContract().getLoa().getLoaId());
+		reqDTO.setScReport(scLoaReport);
+
+		QuationTenderResDTO resDTO = qtDetailSO.retriveScQtReportByDefKey(reqDTO);
+		scLoaReport = (ScLoaReport)resDTO.getScReport();
+		
+		String filePath = (scLoaReport != null && scLoaReport.getScLoaReportAttachment() != null) ? scLoaReport.getScLoaReportAttachment().getFilePath() : null;
+		getManagedBean().setBranchInfoFilePath(filePath);
+    }
+    
+    /**
+   	 * The method used to download file
+   	 * 
+   	 * @param filePath  the filePath
+   	 */
+    public void downloadFile(String filePath) throws IOException {
+		StringBuilder downloadPath = new StringBuilder();
+		downloadPath.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append(
+				ContractConst.SPACE_SLASH).append(filePath);
+		
+		super.downloadFile(downloadPath.toString());
 	}
 }
