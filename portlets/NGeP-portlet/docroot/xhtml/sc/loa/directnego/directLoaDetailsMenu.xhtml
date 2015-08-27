@@ -37,7 +37,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.gst.register.num']}" />
 				</td>
 				<td><p:inputText size="34"
-						value="#{lOADetailBackingBean.managedBean.scLoa.gstRegNo}"
+						value="#{directLOABackingBean.managedBean.scLoa.gstRegNo eq null ? lbl['lbl.txt.na']:directLOABackingBean.managedBean.scLoa.gstRegNo}"
 						disabled="true" /> <ac:iconTooltip
 						value="#{lbl['lbl.sc.gst.registartion.number.tooltip']}" /></td>
 			</tr>
@@ -45,7 +45,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.gst.effective.date']}" />
 				</td>
 				<td><p:inputText size="34"
-						value="#{lOADetailBackingBean.managedBean.scLoa.gstEffDate}"
+						value="#{directLOABackingBean.managedBean.scLoa.gstEffDate eq null ? lbl['lbl.txt.na']:directLOABackingBean.managedBean.scLoa.gstEffDate}"
 						disabled="true">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -56,7 +56,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.gst.declared.date']}" />
 				</td>
 				<td><p:inputText size="34"
-						value="#{lOADetailBackingBean.managedBean.scLoa.gstDeclaredDate}"
+						value="#{directLOABackingBean.managedBean.scLoa.gstDeclaredDate eq null ? lbl['lbl.txt.na']:directLOABackingBean.managedBean.scLoa.gstDeclaredDate}"
 						disabled="true">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -189,6 +189,21 @@
 						id="titleMsg" for="title" display="icon" /></td>
 			</tr>
 			<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.procurment.type.category']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu id="procTypeBoCategory" required="true"
+							value="#{directLOABackingBean.managedBean.scLoa.procurementTypeCatId.parameterId}"
+							style="margin-bottom:5px;width:209px;"
+							label="#{lbl['lbl.sc.procurment.type.category']}">
+							<f:selectItems
+								value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.procurementTypeCategory)}" />
+							<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
+						</p:selectOneMenu> <p:message id="procuremnttitleMsg" for="procTypeBoCategory"
+							display="icon" /></td>
+
+				</tr>
+			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.qt.fileno']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td colspan="3"><p:inputText disabled="#{!isEditableStatus}"
@@ -238,6 +253,9 @@
 				<td><p:inputText styleClass="ppNumericAlign" required="true"
 						value="#{directLOABackingBean.managedBean.scLoa.loaAmt}" size="30"
 						label="#{lbl['lbl.sc.loiloa.loa.off.price']}">
+						<p:ajax event="blur"
+							listener="#{directLOABackingBean.setOverallCtAmount(directLOABackingBean.managedBean.scLoa.loaAmt)}"
+							update="@this,ContractAmtId"></p:ajax>
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText></td>
@@ -269,7 +287,7 @@
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						<p:ajax event="blur"
-							listener="#{directLOABackingBean.calculateOverallAmount(lOADetailBackingBean.managedBean.scLoa.gstAmt)}"
+							listener="#{directLOABackingBean.calculateOverallAmount(directLOABackingBean.managedBean.scLoa.gstAmt)}"
 							update="@this,ContractAmtId"></p:ajax>
 					</p:inputText></td>
 			</tr>
@@ -560,5 +578,16 @@
 			</tr>
 		</table>
 	</p:panel>
-
+	
+   <br />
+	<div>
+	<h:outputText value="Remainder 1 :" style="font-weight:bold;"></h:outputText>
+	<h:outputText styleClass="instruction"
+						value=" #{lbl['lbl.sc.gst.remainder.one.instruction']}"
+						escape="false" /> <br/>
+						<h:outputText value="Remainder 2 :" style="font-weight:bold;" rendered="#{directLOABackingBean.managedBean.renderRemainder}"></h:outputText>
+						<h:outputText styleClass="instruction"
+						value="#{lbl['lbl.sc.gst.remainder.two.instruction']}"
+						escape="false"
+						rendered="#{directLOABackingBean.managedBean.renderRemainder}" /></div>
 </ui:composition>
