@@ -603,6 +603,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlSupplierView(true);
 			rptGenBean.setFlMinistryView(true);
 			rptGenBean.setFlStatusView(true);
+			rptGenBean.setFlDocumentTypeView(true);
 			rptGenBean.setFromDateView(true);
 			rptGenBean.setFlGroupNineView(true);
 			break;
