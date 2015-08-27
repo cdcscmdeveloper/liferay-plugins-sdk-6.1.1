@@ -95,7 +95,9 @@
 						</p:menuitem>
 
 					</p:tabMenu></td>
-				<td width="80%" valign="top"><c:if
+				<td width="80%" valign="top">
+				<h:panelGroup id="menuContent">
+				<c:if
 						test="#{directLOABackingBean.managedBean.selectedTabIndex == 0}">
 						<ui:include src="directLoaDetailsSupplierMenu.xhtml" />
 					</c:if> <c:if
@@ -124,8 +126,25 @@
 					</c:if> <h:panelGroup
 						rendered="#{directLOABackingBean.managedBean.selectedTabIndex == 7}">
 						<ui:include src="directLoaIntegrityPactMenu.xhtml" />
-					</h:panelGroup></td>
+					</h:panelGroup>
+					</h:panelGroup>
+					</td>
 			</tr>
 		</table>
+		
+		<p:dialog id="attachmentPopup" widgetVar="attachmentPopupDlg"
+			modal="true" resizable="false" width="700px" height="200"
+			styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
+			<p:ajax event="close" />
+			<p:fileUpload style="display:inline;"
+				fileUploadListener="#{directLOABackingBean.uploadBranchInfo}"
+				mode="advanced" id="uploadattachment"
+				sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+				update="menuContent" oncomplete="attachmentPopupDlg.hide()">
+			</p:fileUpload>
+		</p:dialog>
+		
 	</ui:define>
 </ui:composition>
