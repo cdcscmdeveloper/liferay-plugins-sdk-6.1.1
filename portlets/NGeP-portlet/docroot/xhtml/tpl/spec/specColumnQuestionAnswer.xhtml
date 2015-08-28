@@ -6,7 +6,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
-	<p:column style="width:97px;">
+	<p:column style="width:97px; white-space:normal;">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.unit.price']}"/>
@@ -49,7 +49,7 @@
 			</h:outputText>
 		</h:panelGroup>
 	</p:column>
-	<p:column style="width:115px; text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.total.amount']}">
+	<p:column style="width:115px; text-align:right; white-space:normal;" headerText="#{lbl['lbl.tpl.spec.content.total.amount']}">
 		<f:facet name="footer">
 			<h:outputText id="totalAmount" 
 				styleClass="calcAmount" 
