@@ -967,6 +967,7 @@ public class ReportBackingBean extends
 	private String ctLOAPhysicalNo;	
 	private String ctUserType;
 	private String ctSubType;
+	private String ctTerminationType;
 	// PP
 	private String ppYear;
 	private String ppMinistry;
@@ -980,6 +981,14 @@ public class ReportBackingBean extends
 	private String pmBusinessRegNo;
 	
 	
+	public String getCtTerminationType() {
+		return ctTerminationType;
+	}
+
+	public void setCtTerminationType(String ctTerminationType) {
+		this.ctTerminationType = ctTerminationType;
+	}
+
 	public String getSmPaymentTo() {
 		return smPaymentTo;
 	}
@@ -2669,6 +2678,20 @@ public class ReportBackingBean extends
 	public void setEnableValue(boolean enableValue) {
 		this.enableValue = enableValue;
 	}
+	
+	public void changeTerminate(){
+		this.setCtTerminationType(null);
+		getManagedBean().getRptGenBean().setCtTerminationTypeView(false);
+		if ((null != this.getCtStatusTwo())&& (ReportConst.EMPTY_VAL != this.getCtStatusTwo())) {
+			if(this.getCtStatusTwo().trim().equalsIgnoreCase("TERMINATE")){
+				getManagedBean().getRptGenBean().setCtTerminationTypeView(true);
+			}else {
+				getManagedBean().getRptGenBean().setCtTerminationTypeView(false);
+			}
+		}else{
+			getManagedBean().getRptGenBean().setCtTerminationTypeView(false);
+		}		
+	}
 	public void changePaymentType(){
 		this.setSmPaymentType(null);
 		paymentTypeList = new ArrayList<SelectItem>();
@@ -2682,8 +2705,7 @@ public class ReportBackingBean extends
 			}
 		}else{
 			retrievePaymentTypeList();
-		}
-		
+		}		
 	}
 	
 	public List<SelectItem> retrievePaymentTypeList(){
@@ -5394,7 +5416,8 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((this.getCtPhysicalContractNo() != null) && (this.getCtPhysicalContractNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtAgreement() != null) && (this.getCtAgreement() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtStatus() != null) && (this.getCtStatus() != ReportConst.EMPTY_VAL))
-				|| ((this.getCtStatusTwo() != null) && (this.getCtStatusTwo() != ReportConst.EMPTY_VAL))			
+				|| ((this.getCtStatusTwo() != null) && (this.getCtStatusTwo() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtTerminationType() != null) && (this.getCtTerminationType() != ReportConst.EMPTY_VAL))
 				/*|| ((this.getCtAgreement() != null) && (!this.getCtAgreement().equals(ReportConst.CT_GROUP_VAL_ALL)))
 				|| ((this.getCtStatus() != null) && (!this.getCtStatus().equals(ReportConst.CT_GROUP_VAL_ALL)))
 				|| ((this.getCtStatusTwo() != null) && (!this.getCtStatusTwo().equals(ReportConst.CT_GROUP_VAL_ALL)))*/
@@ -5405,7 +5428,11 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			    || ((this.getCtProcurementMode() != null) && (this.getCtProcurementMode().toString() != ReportConst.EMPTY_VAL)))
 			    /*|| ((this.getCtProcurementMode() != null) && (!this.getCtProcurementMode().toString().equals(ReportConst.CT_GROUP_VAL_ALL))))*/
 		       {
-			
+			if ((this.getCtTerminationType() != null)
+					&& (this.getCtTerminationType() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setCtTerminationTypeVar(ReportConst.CT_AMP_STATUS_EQ
+						+ this.getCtTerminationType());
+			}
 			if ((this.getCtStatus() != null)
 					&& (this.getCtStatus() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setCtStatusVar(ReportConst.CT_AMP_STATUS_EQ
@@ -5523,6 +5550,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getCtContractNoVar()
 						+ rptGenBean.getCtPhysicalContractNoVar()
 						+ rptGenBean.getCtStatusTwoVar()
+						+ rptGenBean.getCtTerminationTypeVar()
 						+ rptGenBean.getCtAgreementVar()
 						+ rptGenBean.getCtStatusVar()
 						+ rptGenBean.getCtCompleteVar()
@@ -7422,6 +7450,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.setCtAgreement(null);
 		this.setCtStatus(null);
 		this.setCtStatusTwo(null);
+		this.setCtTerminationType(null);
 		this.setCtComplete(null);
 		this.setCtGroupOne(null);
 		this.setCtGroupTwo(null);
