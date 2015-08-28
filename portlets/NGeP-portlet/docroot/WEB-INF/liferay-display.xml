@@ -249,6 +249,7 @@
 		<portlet id="supplierBusinessNature"></portlet>
 		<portlet id="postsupplierregistration"></portlet>
 		<portlet id="supplierRegistrationCont"></portlet>
+		<portlet id="smBulkApplication"></portlet>
 		
 		<portlet id="SmApplRevisionView"></portlet>
 		<portlet id="SoftCertPayment"></portlet>
