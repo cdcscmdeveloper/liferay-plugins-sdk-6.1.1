@@ -810,6 +810,16 @@
 		</footer-portlet-javascript>
 		<css-class-wrapper>smdelpendingappln-portlet</css-class-wrapper>
 	</portlet>
+	<portlet>
+		<portlet-name>smBulkApplication</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>smbulkapplication-portlet</css-class-wrapper>
+	</portlet>
 	<!-- Supplier Management End venkat -->
 	
 	<!-- Supplier Management Syazwan -->
