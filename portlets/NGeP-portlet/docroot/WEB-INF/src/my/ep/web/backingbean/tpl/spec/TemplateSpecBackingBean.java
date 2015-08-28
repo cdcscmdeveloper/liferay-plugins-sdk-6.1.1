@@ -72,6 +72,7 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -325,8 +326,7 @@ public class TemplateSpecBackingBean extends
 		if (TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER
 				.equals(templateSpecBean.getContentType())) {
 			TemplateSpecHelper.getInstance().addToBeRemovedSpecAnswers(
-					templateSpecBean,
-					questionToDelete.getTplSpecAnswers());
+					templateSpecBean, questionToDelete.getTplSpecAnswers());
 		}
 
 		templateSpecBean.setSelectedSpecQuestion(null);
@@ -413,8 +413,9 @@ public class TemplateSpecBackingBean extends
 	 * @param questionType
 	 *            the question type
 	 */
-	public TplSpecQuestion addQuestion(TemplateSpecBean templateSpecBean, TplSpecMaster tplSpecMaster,
-			List<TplSpecQuestion> questionList, Integer row, String questionType) {
+	public TplSpecQuestion addQuestion(TemplateSpecBean templateSpecBean,
+			TplSpecMaster tplSpecMaster, List<TplSpecQuestion> questionList,
+			Integer row, String questionType) {
 		TplSpecQuestion newQuestion = new TplSpecQuestion();
 		boolean isQuestionTypeItem = TemplateSpecConst.QUESTION_TYPE_ITEM
 				.equals(questionType);
@@ -450,15 +451,16 @@ public class TemplateSpecBackingBean extends
 							ParameterConst.PRICE_TYPE_STANDARD);
 					newQuestion.setClPriceTypeCode(pmParameter);
 				}
-				
+
 				specHelper.resetSpecAnswers(templateSpecBean, newQuestion);
 			} else {
 				newQuestion.setClPriceTypeCode(new PmParameter());
 			}
 			specHelper.resetPriceTypeDtl(newQuestion);
-			
+
 			pmParameter = getParameterByTypeAndCode(
-					ParameterTypeConst.DELIVERY_TERM, ParameterConst.SQ_DURATION_DAY);
+					ParameterTypeConst.DELIVERY_TERM,
+					ParameterConst.SQ_DURATION_DAY);
 			newQuestion.setClDeliveryTermTypeCode(pmParameter);
 
 			PmUom uom = new PmUom();
@@ -1122,7 +1124,7 @@ public class TemplateSpecBackingBean extends
 		TplSpecQuestion specQuestion = templateSpecBean
 				.getSelectedSpecQuestion();
 
-		if (specQuestion.getTplSpecAnswers() == null) {
+		if (CollectionUtils.isEmpty(specQuestion.getTplSpecAnswers())) {
 			String priceType = specQuestion.getClPriceTypeCode()
 					.getParameterCode();
 			TplSpecZone specZone = specQuestion.getTplSpecMaster()
@@ -1291,7 +1293,8 @@ public class TemplateSpecBackingBean extends
 
 			if (TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER
 					.equals(templateSpecBean.getContentType())) {
-				TemplateSpecHelper.getInstance().addToBeRemovedSpecAnswers(templateSpecBean,
+				TemplateSpecHelper.getInstance().addToBeRemovedSpecAnswers(
+						templateSpecBean,
 						selectedSpecQuestion.getTplSpecAnswers());
 
 				selectedSpecQuestion.setTplSpecAnswers(null);
@@ -1846,7 +1849,7 @@ public class TemplateSpecBackingBean extends
 									SearchOperator.OPERATOR_LIKE.value(),
 									getManagedBean().getSearchSpecName()));
 				}
-				
+
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("specName",
 								SearchOperator.OPERATOR_NOT_EQUALS.value(),
