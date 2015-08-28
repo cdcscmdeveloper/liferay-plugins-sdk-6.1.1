@@ -10,6 +10,8 @@
 		<cc:attribute name="action" method-signature="void action()" />
 		<cc:attribute name="dataTable" />
 		<cc:attribute name="showBackButton" default="true" />
+		<cc:attribute name="id"/>
+		<cc:attribute name="pannelHeaderTitle" default="#{lbl['lbl.td.doc.trackingDiaryDetails']}"/>
 	</cc:interface>
 
 	<cc:implementation>
@@ -18,7 +20,8 @@
 				<p:commandButton value="#{lbl['lbl.btn.back']}" action="#{cc.attrs.action}" rendered="#{cc.attrs.showBackButton}" />
 			</div>
 		</div>
-	<p:panel header="#{lbl['lbl.td.doc.trackingDiaryDetails']}" toggleable="true" >
+	<p:panel header="#{cc.attrs.pannelHeaderTitle}" id="#{cc.attrs.id}" toggleable="true" >
+
 		<p:dataTable id="trackingDiaryTableID" lazy="true"  value="#{cc.attrs.dataTable}" 
 			var="trackingDiaryObj" width="100%" rows="10" styleClass="fixed-size" >
 
@@ -56,6 +59,7 @@
 				</p:column>
 
 		</p:dataTable>
+	
 	</p:panel>			
 
 	</cc:implementation>
