@@ -1038,7 +1038,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 											getManagedBean().getCommitteeEndorsementList())) {
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 		} else {
-			signOff();
+			if (getManagedBean().getScQtCommittee() != null &&
+					ParameterConst.ONLINE_BIDDING_MEETING.equals(
+							getManagedBean().getScQtFinalization().getOnlineBiddingEndorse())) {			
+				signOff();
+			}
 			updateBPMTask(outcome, null);
 		}	
 	}
