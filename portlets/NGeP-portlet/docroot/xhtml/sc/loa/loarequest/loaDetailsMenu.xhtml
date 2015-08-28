@@ -87,18 +87,15 @@
 						<tr>
 							<td>
 								<p:selectOneMenu id="branch"
-									value="#{lOADetailBackingBean.managedBean.selectedSupplierBranchName}"
+									value="#{lOADetailBackingBean.managedBean.scLoa.supplierBranch}"
 									style="width: 276px;margin-bottom: 5px;"
 									label="#{lbl['lbl.sc.branch']}">
-									<f:selectItem itemLabel="HQ" itemValue="#{null}" />
+									
 									<f:selectItems
-										value="#{lOADetailBackingBean.managedBean.branchsList}"
-										var="smSupplierBranch" 
-										itemValue="#{smSupplierBranch.branchName}" itemLabel="#{smSupplierBranch.branchName}" />
+										value="#{lOADetailBackingBean.supplierBranches}" />
 									<p:ajax event="change"
 										listener="#{lOADetailBackingBean.handleBranchDetailsChanged}"
-										partialSubmit="true" process="@this" 
-										update="suppAddr, suppPhoneNo, suppFaxNo, suppMobNo, suppContact, suppEmail, gstDeclaredDateId, gstEffDateId, gstRegNoId , gstAmtId, ContractAmtId" />
+										partialSubmit="true" process="@this" update="suppAddr, suppPhoneNo, suppFaxNo, suppMobNo, suppContact, suppEmail, gstDeclaredDateId, gstEffDateId, gstRegNoId , gstAmtId, ContractAmtId" />
 								</p:selectOneMenu>
 								<p:message id="branchMsg" for="branch" display="icon" />
 							</td>
@@ -211,7 +208,7 @@
 						rendered="#{isDocTypeQuotation and isEditableStatus}" /></td>
 				<td><p:selectOneMenu id="procTypeBoCategory" required="true"
 						value="#{lOADetailBackingBean.managedBean.scLoa.procurementTypeCatId.parameterId}"
-						style="margin-bottom:5px;width:209px;"
+						style="margin-bottom:5px;width:276px;"
 						label="#{lbl['lbl.sc.procurment.type.category']}"
 						rendered="#{isDocTypeQuotation}" disabled="#{!isEditableStatus}">
 						<f:selectItems
