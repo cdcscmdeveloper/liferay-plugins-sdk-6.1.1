@@ -594,15 +594,15 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	}
 	
 	/**
-	 * Received amount validation.
+	 * Received amount validation. Remove this checking as GST implemented.
 	 * <p>Received Amount must be less than or equal to Delivery Amount.
 	 * @param item the item
 	 */
 	public void receivedAmtValidation(FlFulfilmentNoteItem item) {
-		if(item.getReceivedAmt().doubleValue() > item.getFlDelOrderItem().getDeliveredAmt().doubleValue()) {
-			item.setReceivedAmt(new BigDecimal(0));
-			throw new EpException(MessageConst.ERROR_100032, new String[]{ResourceBundleUtils.getMessage("lbl.fl.do.received.amount",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),ResourceBundleUtils.getMessage("lbl.fl.delivery.amount",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
-		}
+//		if(item.getReceivedAmt().doubleValue() > item.getFlDelOrderItem().getDeliveredAmt().doubleValue()) {
+//			item.setReceivedAmt(new BigDecimal(0));
+//			throw new EpException(MessageConst.ERROR_100032, new String[]{ResourceBundleUtils.getMessage("lbl.fl.do.received.amount",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),ResourceBundleUtils.getMessage("lbl.fl.delivery.amount",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+//		}
 //		if(item.getFlDelOrderItem().getFlFulfilmentItemAddr().getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)){
 //			if(item.getReceivedAmt().doubleValue() <= 0){
 //				throw new EpException(MessageConst.ERROR_100033, new String[]{"Received Amount","Delivery Amount"});
