@@ -58,7 +58,7 @@
 				  <p:outputLabel value="*" styleClass="mandatory"/></td>
 				<td><p:selectOneMenu id="loiApprover"
 						value="#{lOIDetailBackingBean.managedBean.approverUser.userId}"
-						disabled="#{!(isPendingSubmissionStatus or isPendingRevisionStatus)}"
+						disabled="#{!isPendingSubmissionStatus}"
 						required="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}"
 						label="#{lbl['lbl.sc.approver']}"
 						style="width: 240px;margin-bottom: 5px;">
