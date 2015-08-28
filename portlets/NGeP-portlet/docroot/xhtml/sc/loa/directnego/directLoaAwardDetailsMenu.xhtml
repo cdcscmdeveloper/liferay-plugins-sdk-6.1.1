@@ -15,9 +15,9 @@
 				<td valign="top" width="18%"><h:outputLabel
 						value="#{lbl['lbl.sc.document.title']}"></h:outputLabel> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td colspan="3"><p:inputText size="30" required="true" immediate="true"
-						disabled="#{!isEditableStatus}" style="margin-bottom:5px;"
-						label="#{lbl['lbl.sc.document.title']}"
+				<td colspan="3"><p:inputText size="30" required="true"
+						immediate="true" disabled="#{!isEditableStatus}"
+						style="margin-bottom:5px;" label="#{lbl['lbl.sc.document.title']}"
 						value="#{directLOABackingBean.managedBean.prodscQtDoc.tplSpecMaster.specName}" /></td>
 			</tr>
 			<tr>
@@ -37,43 +37,34 @@
 					</p:selectOneRadio></td>
 			</tr>
 
+			<tr>
+				<td valign="top" width="18%"><h:outputLabel
+						value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
+				<td colspan="3"><p:selectOneRadio
+						value="#{directLOABackingBean.managedBean.scQt.zonal}"
+						disabled="#{!isEditableStatus}">
+						<f:selectItems
+							value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 
+						<p:ajax event="change" partialSubmit="true" process="@this"
+							update="@this,generalLocationList,productAndServiceId"
+							listener="#{directLOABackingBean.zoneRadioChange}"></p:ajax>
+					</p:selectOneRadio></td>
+			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="Zone / Location Details" toggleable="false">
-
-		<h:panelGroup id="generalLocationList">
-			<table>
-				<tr>
-					<td valign="top" width="52%"><h:outputLabel
-							value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
-					<td colspan="3"><p:selectOneRadio
-							value="#{directLOABackingBean.managedBean.scQt.zonal}"
-							disabled="#{!isEditableStatus}">
-							<f:selectItems
-								value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-
-							<p:ajax event="change" partialSubmit="true" process="@this"
-								update="@this,generalLocationList"
-								listener="#{directLOABackingBean.zoneRadioChange}"></p:ajax>
-						</p:selectOneRadio></td>
-					<td style="margin-top: -3px"><ac:iconTooltip
-							value="#{lbl['lbl.sc.qt.zone.location.tooltip']}" /></td>
-				</tr>
 
 
-			</table>
+	<h:panelGroup id="generalLocationList">
+
+		<ui:fragment rendered="#{directLOABackingBean.managedBean.scQt.zonal}">
+			<ui:include src="zonelocdetails.xhtml"></ui:include>
+		</ui:fragment>
 
 
-
-			<ui:fragment rendered="#{directLOABackingBean.managedBean.scQt.zonal}">
-				<ui:include src="zonelocdetails.xhtml"></ui:include>
-			</ui:fragment>
+	</h:panelGroup>
 
 
-		</h:panelGroup>
-
-	</p:panel>
 
 	<p:panel header="Specification Content" toggleable="true"
 		id="productAndServiceId">

@@ -159,25 +159,20 @@
 							var="pmOrgProfile"
 							itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
 							itemValue="#{pmOrgProfile.orgProfileId}" />
-						<p:ajax event="change" update="ptjselect" />
+						<p:ajax event="change" update="ptjProfile" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
-				<td width="21%"><h:outputLabel value="#{lbl['lbl.sc.ptj']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td colspan="3"><p:selectOneMenu
-						style="margin-bottom: 5px; width:300px" id="ptjselect"
-						required="true" label="#{lbl['lbl.sc.select.ptj']}"
-						value="#{directLOABackingBean.managedBean.scQt.pmOrgProfile.orgProfileId}"
-						disabled="#{!isEditableStatus}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems value="#{directLOABackingBean.ptjDropdownList()}"
-							var="pmOrgProfile"
-							itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
-							itemValue="#{pmOrgProfile.orgProfileId}" />
-						<p:ajax event="change" update="@form"
-							listener="#{directLOABackingBean.ptjChangeListener()}" />
-					</p:selectOneMenu></td>
+
+
+				<td><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
+				<td colspan="3"><ac:lov id="ptjProfile" lovId="PM_ORG_PROFILE"
+						headerText="Supplier Lov" selectionMode="single"
+						saveObject="directLOABackingBean.managedBean.scQt.pmOrgProfile"
+						readonly="true" size="34"
+						value="#{directLOABackingBean.managedBean.scQt.pmOrgProfile.orgName}"
+						update="@form"
+						conditionField="#{directLOABackingBean.constuctConditionFields()}" /></td>
 			</tr>
 			<tr>
 				<td width="18%"><p:outputLabel value="#{lbl['lbl.sc.title']}" />
@@ -189,20 +184,20 @@
 						id="titleMsg" for="title" display="icon" /></td>
 			</tr>
 			<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.sc.procurment.type.category']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu id="procTypeBoCategory" required="true"
-							value="#{directLOABackingBean.managedBean.scLoa.procurementTypeCatId.parameterId}"
-							style="margin-bottom:5px;width:209px;"
-							label="#{lbl['lbl.sc.procurment.type.category']}">
-							<f:selectItems
-								value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.procurementTypeCategory)}" />
-							<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
-						</p:selectOneMenu> <p:message id="procuremnttitleMsg" for="procTypeBoCategory"
-							display="icon" /></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.procurment.type.category']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu id="procTypeBoCategory" required="true"
+						value="#{directLOABackingBean.managedBean.scLoa.procurementTypeCatId.parameterId}"
+						style="margin-bottom:5px;width:209px;"
+						label="#{lbl['lbl.sc.procurment.type.category']}">
+						<f:selectItems
+							value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.procurementTypeCategory)}" />
+						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
+					</p:selectOneMenu> <p:message id="procuremnttitleMsg" for="procTypeBoCategory"
+						display="icon" /></td>
 
-				</tr>
+			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.qt.fileno']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
@@ -578,16 +573,18 @@
 			</tr>
 		</table>
 	</p:panel>
-	
-   <br />
+
+	<br />
 	<div>
-	<h:outputText value="Remainder 1 :" style="font-weight:bold;"></h:outputText>
-	<h:outputText styleClass="instruction"
-						value=" #{lbl['lbl.sc.gst.remainder.one.instruction']}"
-						escape="false" /> <br/>
-						<h:outputText value="Remainder 2 :" style="font-weight:bold;" rendered="#{directLOABackingBean.managedBean.renderRemainder}"></h:outputText>
-						<h:outputText styleClass="instruction"
-						value="#{lbl['lbl.sc.gst.remainder.two.instruction']}"
-						escape="false"
-						rendered="#{directLOABackingBean.managedBean.renderRemainder}" /></div>
+		<h:outputText value="Remainder 1 :" style="font-weight:bold;"></h:outputText>
+		<h:outputText styleClass="instruction"
+			value=" #{lbl['lbl.sc.gst.remainder.one.instruction']}"
+			escape="false" />
+		<br />
+		<h:outputText value="Remainder 2 :" style="font-weight:bold;"
+			rendered="#{directLOABackingBean.managedBean.renderRemainder}"></h:outputText>
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.gst.remainder.two.instruction']}" escape="false"
+			rendered="#{directLOABackingBean.managedBean.renderRemainder}" />
+	</div>
 </ui:composition>
