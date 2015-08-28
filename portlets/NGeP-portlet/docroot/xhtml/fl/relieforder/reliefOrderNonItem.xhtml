@@ -8,7 +8,7 @@
 
 	<p:panel header="#{lbl['lbl.fl.non.relief.item.details']}" toggleable="true" styleClass="nonReliefOrderItemPnlClass">
 
-		<p:dataTable id="nonReliefItemDataTable" var="nonReliefItem"
+		<p:dataTable id="nonReliefItemDataTable" var="nonReliefItem" rows="10"
 			value="#{reliefOrderBB.managedBean.nonReliefItems}" rowIndexVar="index"
 			rowKey="#{nonReliefItem}">
 			<ac:paginator for="nonReliefItemDataTable" />
