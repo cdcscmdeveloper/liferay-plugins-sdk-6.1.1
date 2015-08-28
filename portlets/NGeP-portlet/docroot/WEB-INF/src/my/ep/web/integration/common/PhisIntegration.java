@@ -1,6 +1,5 @@
 package my.ep.web.integration.common;
 
-import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,6 +31,7 @@ import my.ep.dto.pm.common.projectsetia.ProjectSetiaReqDTO;
 import my.ep.dto.pm.common.projectsetia.ProjectSetiaResDTO;
 import my.ep.dto.pm.common.votfund.VotFundReqDTO;
 import my.ep.dto.pm.common.votfund.VotFundResDTO;
+import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.cm.catalog.CmBrand;
 import my.ep.persistence.entity.cm.catalog.CmColor;
 import my.ep.persistence.entity.cm.catalog.CmMeasurement;
@@ -72,7 +72,7 @@ import org.apache.log4j.Logger;
 */
 public class PhisIntegration {
 	
-	private static Logger log = BatchLogger.getLogger(PhisIntegration.class);
+	private static Logger log = EpLogger.getLogger(PhisIntegration.class);
 	
 //	public static void main(String[] args) throws IOException {
 //		PhisIntegration test = new PhisIntegration();
@@ -125,6 +125,8 @@ public class PhisIntegration {
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 
 		reqDTO.setCreateDate(currentDate);
+		reqDTO.setOrgprofileIdList(getPHISSupplier());
+		
 		CodificationResDTO resDTO = codificationSO.searchItemByCreateDate(reqDTO);
 
 		if (resDTO.isSuccessful()) {
@@ -300,7 +302,6 @@ public class PhisIntegration {
 	
 	public void deliveryAddress() {
 		{
-			
 			System.out.println("inside deliveryAddress");
 			AddressReqDTO reqDTO = new AddressReqDTO();
 			reqDTO.setAddressType(AddressType.DELIVERY_ADDRESS.value());
@@ -487,6 +488,19 @@ public class PhisIntegration {
 				listId.add(pmOrgProfile.getOrgProfileId());
 			}
 		}
+		return listId;
+	}
+	
+	public List<Long> getPHISSupplier() {
+		ConfigGeneralResDTO configResDTO = configGeneralSO.getConfigGeneral(null);
+		
+		Long phisSupplierId = null;
+		if(null!=configResDTO.getPmConfigGeneral()){
+			phisSupplierId = configResDTO.getPmConfigGeneral().getPhisSupplier().getSupplierId();
+		}
+		
+		List<Long> listId = new ArrayList<Long>();
+		listId.add(phisSupplierId);
 		return listId;
 	}
 
