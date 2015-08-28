@@ -1765,7 +1765,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		
 		private void getSupplierGst(FlInvoice invoice) {
 			ISupplierGstSO supplierGstSO = (ISupplierGstSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);
-			
+
 			SupplierGstReqDTO reqDTO = new SupplierGstReqDTO();
 			reqDTO.setBranchCode(invoice.getFlRequest().getFlSupplierDtl().getBranchCode());
 			reqDTO.setSupplierId(invoice.getFlRequest().getSmSupplier().getSupplierId());
@@ -1774,8 +1774,11 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				invoice.setGstEffectiveDate(resDTO.getSmGstSupplier().getGstEffDate());
 				invoice.setGstDeclaredDate(resDTO.getSmGstSupplier().getGstDeclaredDate());
 				invoice.setGstRegNo(resDTO.getSmGstSupplier().getGstRegNo());
+			} else {
+				invoice.setGstEffectiveDate(null);
+				invoice.setGstDeclaredDate(null);
+				invoice.setGstRegNo(null);
 			}
-			
 		}
 		
 		/**
