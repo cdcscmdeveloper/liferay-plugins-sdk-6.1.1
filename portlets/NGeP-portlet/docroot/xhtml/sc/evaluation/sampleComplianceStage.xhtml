@@ -19,6 +19,7 @@
 			closable="true" severity="error,info" showSummary="false" />
 		<div>
 			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+				immediate="true"
 				action="#{evaluationBackingBean.evaluationBackaction}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
@@ -64,8 +65,8 @@
 				rowIndexVar="index" style="width:100%" rowKey="#{sampleItem}">
 				<ac:paginator for="sampleItemId" />
 				<p:ajax event="page"
-						listener="#{evaluationBackingBean.saveComplianceSampleItemsDM}"
-						update="sampleItemId" />
+					listener="#{evaluationBackingBean.saveComplianceSampleItemsDM}"
+					update="sampleItemId" />
 
 				<p:ajax event="rowSelect" process="@this" partialSubmit="true"
 					update="@form"
@@ -110,7 +111,9 @@
 				<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:35%">
 					<p:inputTextarea rows="2" cols="40" maxlength="100"
 						disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
-						value="#{sampleItem.remark}"></p:inputTextarea>
+						value="#{sampleItem.remark}">
+						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
+						</p:inputTextarea>
 				</p:column>
 			</p:dataTable>
 
