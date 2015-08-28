@@ -9066,11 +9066,13 @@ public class SpecificationBackingBean extends
 				for (int i = 0; i < checklistRemoveList.size(); i++) {
 					if (null == checklistRemoveList.get(i).getQtChecklistId()) {
 						checklistRemoveList.remove(i);
-					} else {
+					}
+					else {
 						checklistRemoveList.get(i).setDeleted(true);
 					}
 				}
-				log.info("backing bean saveCheckListScores toBeremoveCheckLists  size=="+checklistRemoveList.size());
+				log.info("backing bean saveCheckListScores toBeremoveCheckLists  size=="
+						+ checklistRemoveList.size());
 			}
 			if (null != checkList && null != checkList.getScQtCheckListValue()) {
 				int year = Calendar.getInstance().get(Calendar.YEAR);
@@ -9331,7 +9333,8 @@ public class SpecificationBackingBean extends
 						checklistRemoveList.get(i).setDeleted(true);
 					}
 				}
-				log.info("backing bean saveBankCheckListScores toBeremoveCheckLists  size=="+checklistRemoveList.size());
+				log.info("backing bean saveBankCheckListScores toBeremoveCheckLists  size=="
+						+ checklistRemoveList.size());
 			}
 
 			List<ScQtCheckListScore> noOfContractScore = new ArrayList<ScQtCheckListScore>();
@@ -15806,9 +15809,17 @@ public class SpecificationBackingBean extends
 				}
 			}
 		}
-		markDeleteSelectedRowsActionById(this.getManagedBean()
-				.getScQtCheckSt2techProposal(), this.getManagedBean()
-				.getMarkDeletedTechChecklist());
+		List<ScQtCheckList> deleteTechCheckList = markDeleteSelectedRowsActionById(
+				this.getManagedBean().getScQtCheckSt2techProposal(), null);
+		List<ScQtCheckList> technical = this.getManagedBean()
+				.getMarkDeletedTechChecklist();
+		if (null == technical) {
+			technical = new ArrayList<ScQtCheckList>();
+		}
+		if (null != deleteTechCheckList && !deleteTechCheckList.isEmpty()) {
+			technical.addAll(deleteTechCheckList);
+			this.getManagedBean().setMarkDeletedTechChecklist(technical);
+		}
 	}
 
 	// delete Financial Checklist List
@@ -15855,9 +15866,17 @@ public class SpecificationBackingBean extends
 				}
 			}
 		}
-		markDeleteSelectedRowsActionById(this.getManagedBean()
-				.getScQtCheckSt2financeProposalList(), this.getManagedBean()
-				.getMarkDeletedFinChecklist());
+		List<ScQtCheckList> deletefinCheckList = markDeleteSelectedRowsActionById(
+				this.getManagedBean().getScQtCheckSt2financeProposalList(), null);
+		List<ScQtCheckList> financial = this.getManagedBean()
+				.getMarkDeletedFinChecklist();
+		if (null == financial) {
+			financial = new ArrayList<ScQtCheckList>();
+		}
+		if (null != deletefinCheckList && !deletefinCheckList.isEmpty()) {
+			financial.addAll(deletefinCheckList);
+			this.getManagedBean().setMarkDeletedFinChecklist(financial);
+		}
 
 	}
 
