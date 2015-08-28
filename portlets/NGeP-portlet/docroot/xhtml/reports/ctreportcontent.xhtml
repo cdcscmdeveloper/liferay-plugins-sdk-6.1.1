@@ -49,9 +49,9 @@
 									<p:outputLabel value="#{lbl['lbl.rpt.status']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.ctStatus}" style="margin-top:5px;width:300px;">
 										
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.allall']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.acve']}" itemValue="#{lbl['lbl.rpt.acve']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.inacve']}" itemValue="#{lbl['lbl.rpt.inacve']}"></f:selectItem>	
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue="#{null}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.active']}" itemValue="#{lbl['lbl.rpt.acve']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.inactive']}" itemValue="#{lbl['lbl.rpt.inacve']}"></f:selectItem>	
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />									
 									</p:selectOneMenu>
 								  </c:if>
@@ -59,24 +59,33 @@
 									<p:outputLabel value="#{lbl['lbl.rpt.status']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.ctStatusTwo}" style="margin-top:5px;width:300px;">
 										
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.allall']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.acve']}" itemValue="#{lbl['lbl.rpt.acve']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.inacve']}" itemValue="#{lbl['lbl.rpt.inacve']}"></f:selectItem>	
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.capsterminate']}" itemValue="#{lbl['lbl.rpt.capsterminate']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.capsremedy']}" itemValue="#{lbl['lbl.rpt.capsremedy']}"></f:selectItem>	
-										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																		
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue="#{null}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.active']}" itemValue="#{lbl['lbl.rpt.acve']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.inactive']}" itemValue="#{lbl['lbl.rpt.inacve']}"></f:selectItem>	
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.terminateLabel']}" itemValue="#{lbl['lbl.rpt.capsterminate']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.remedyLabel']}" itemValue="#{lbl['lbl.rpt.capsremedy']}"></f:selectItem>	
+										<p:ajax event="change" listener="#{reportBackingBean.changeTerminate}" process="@this" partialSubmit="true" update="@all" />																		
 									</p:selectOneMenu>
 								  </c:if>
 								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctStatusThreeView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.status']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.ctStatusTwo}" style="margin-top:5px;width:300px;">
 										
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.allall']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.acve']}" itemValue="#{lbl['lbl.rpt.acve']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.inacve']}" itemValue="#{lbl['lbl.rpt.inacve']}"></f:selectItem>	
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.capsterminate']}" itemValue="#{lbl['lbl.rpt.capsterminate']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.capsremedy']}" itemValue="#{lbl['lbl.rpt.capsremedy']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.capmutualtermination']}" itemValue="#{lbl['lbl.rpt.drpdown.capmutualtermination']}"></f:selectItem>		
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue="#{null}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.active']}" itemValue="#{lbl['lbl.rpt.acve']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.inactive']}" itemValue="#{lbl['lbl.rpt.inacve']}"></f:selectItem>	
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.terminateLabel']}" itemValue="#{lbl['lbl.rpt.capsterminate']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.remedyLabel']}" itemValue="#{lbl['lbl.rpt.capsremedy']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.mutualtermination']}" itemValue="#{lbl['lbl.rpt.drpdown.capmutualtermination']}"></f:selectItem>		
+										<p:ajax event="change" listener="#{reportBackingBean.changeTerminate}" process="@this" partialSubmit="true" update="@form" />																																														
+									</p:selectOneMenu>
+								  </c:if>
+								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctTerminationTypeView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.terminationtypelabel']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu value="#{reportBackingBean.ctTerminationType}" style="margin-top:5px;width:300px;">							
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.terminateLabel']}" itemValue="#{lbl['lbl.rpt.drpdown.terminatevalue']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.mutualterminateLabel']}" itemValue="#{lbl['lbl.rpt.drpdown.mutualterminatevalue']}"></f:selectItem>	
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.remedynoticeLabel']}" itemValue="#{lbl['lbl.rpt.drpdown.remedynoticevalue']}"></f:selectItem>										
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																		
 									</p:selectOneMenu>
 								  </c:if>
@@ -84,7 +93,7 @@
 									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.ctGroupOne}" style="margin-top:5px;width:300px;">
 									
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.allall']}" itemValue="#{null}"></f:selectItem>										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}" itemValue="#{null}"></f:selectItem>										
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.crclrno']}" itemValue="#{lbl['lbl.rpt.crclrno']}"></f:selectItem>	
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.capsstatus']}" itemValue="#{lbl['lbl.rpt.capsstatus']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.capsprocurementmode']}" itemValue="#{lbl['lbl.rpt.capsprocurementmode']}"></f:selectItem>
@@ -97,28 +106,28 @@
 									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.ctGroupThree}" style="margin-top:5px;width:300px;">
 									
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.allall']}" itemValue="#{null}"></f:selectItem>										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}" itemValue="#{null}"></f:selectItem>										
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.cntrctno']}" itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>	
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.capsstatus']}" itemValue="#{lbl['lbl.rpt.capsstatus']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.capsprocurementmode']}" itemValue="#{lbl['lbl.rpt.capsprocurementmode']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.capsuser']}" itemValue="#{lbl['lbl.rpt.capsuser']}"></f:selectItem>	
+										
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																	
 									</p:selectOneMenu>
 								  </c:if>
 								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctGroupFourView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.ctGroupThree}" style="margin-top:5px;width:300px;">								
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.allall']}" itemValue="#{null}"></f:selectItem>									
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}" itemValue="#{null}"></f:selectItem>									
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.capsstatus']}" itemValue="#{lbl['lbl.rpt.capsstatus']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.capsprocurementmode']}" itemValue="#{lbl['lbl.rpt.capsprocurementmode']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.capsuser']}" itemValue="#{lbl['lbl.rpt.capsuser']}"></f:selectItem>	
+										
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																	
 									</p:selectOneMenu>
 								  </c:if>
 								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctGroupFiveView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.ctGroupThree}" style="margin-top:5px;width:300px;">								
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.allall']}" itemValue="#{null}"></f:selectItem>									
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}" itemValue="#{null}"></f:selectItem>									
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.capsupplier']}" itemValue="#{lbl['lbl.rpt.drpdown.capsupplier']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.capsprocurementmode']}" itemValue="#{lbl['lbl.rpt.capsprocurementmode']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.capitem']}" itemValue="#{lbl['lbl.rpt.drpdown.capitem']}"></f:selectItem>	
@@ -129,7 +138,7 @@
 									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.ctGroupTwo}" style="margin-top:5px;width:300px;">
 									
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.allall']}" itemValue="#{null}"></f:selectItem>										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}" itemValue="#{null}"></f:selectItem>										
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.acve']}" itemValue="#{lbl['lbl.rpt.acve']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.inacve']}" itemValue="#{lbl['lbl.rpt.inacve']}"></f:selectItem>
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																				
@@ -232,5 +241,30 @@
 						  </tr>							  
 					</table>
 		       </div>
-		      
+		      <div>
+						<c:if test="#{reportBackingBean.managedBean.rptGenBean.ctContractEffectiveFromDateView}">
+						<TABLE style="margin-top:10px;width:50%;">
+							<TR>
+								<TD>
+									<p:outputLabel  value="#{lbl['lbl.rpt.contracteffectivedatelabel']}" style="width:158px;"/>
+								</TD>
+								<TD>
+									<p:calendar showOn="button" navigator="true" display="inline" readonlyInput="true" value="#{reportBackingBean.fromDate}" 
+									
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"  partialSubmit="true" process="@form">																				
+									</p:calendar>
+								</TD>
+								<TD>
+									<p:outputLabel  value="#{lbl['lbl.rpt.dtRangeTo']}" style="width:50px;"/>
+								</TD>				
+								<TD>
+									<p:calendar  showOn="button" navigator="true" display="inline" readonlyInput="true" value="#{reportBackingBean.toDate}"
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"   partialSubmit="true" process="@form">	
+																							
+									</p:calendar> 
+								</TD>
+							</TR>
+						</TABLE>
+						</c:if>							
+		            </div>
   </ui:composition>

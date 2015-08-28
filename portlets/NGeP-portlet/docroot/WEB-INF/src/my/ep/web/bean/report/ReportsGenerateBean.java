@@ -379,9 +379,16 @@ public class ReportsGenerateBean {
 		private boolean flGroupTwentySevenView = false;
 		private boolean flGroupTwentySevenWithoutSupplView = false;
 		private boolean flGroupTwentySevenWithSupplView = false;
+		private boolean ctContractEffectiveFromDateView = false;
+		private boolean ctTerminationTypeView = false;
 		
-		
-		
+		public boolean isCtContractEffectiveFromDateView() {
+			return ctContractEffectiveFromDateView;
+		}
+		public void setCtContractEffectiveFromDateView(
+				boolean ctContractEffectiveFromDateView) {
+			this.ctContractEffectiveFromDateView = ctContractEffectiveFromDateView;
+		}
 		public boolean isSmPaymentToView() {
 			return smPaymentToView;
 		}
@@ -1099,8 +1106,21 @@ public class ReportsGenerateBean {
 		private String pmStatusVar=ReportConst.EMPTY_VAL;
 		private String pmFinancialOrgNameVar=ReportConst.EMPTY_VAL;
 		private String pmBusinessRegNoVar=ReportConst.EMPTY_VAL;
+		private String ctTerminationTypeVar=ReportConst.EMPTY_VAL;
 		
 		
+		public boolean isCtTerminationTypeView() {
+			return ctTerminationTypeView;
+		}
+		public void setCtTerminationTypeView(boolean ctTerminationTypeView) {
+			this.ctTerminationTypeView = ctTerminationTypeView;
+		}
+		public String getCtTerminationTypeVar() {
+			return ctTerminationTypeVar;
+		}
+		public void setCtTerminationTypeVar(String ctTerminationTypeVar) {
+			this.ctTerminationTypeVar = ctTerminationTypeVar;
+		}
 		public String getSmPaymentToVar() {
 			return smPaymentToVar;
 		}
