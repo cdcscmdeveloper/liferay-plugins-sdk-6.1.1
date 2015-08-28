@@ -122,6 +122,8 @@
 						mindate="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flDeliveryOrder.createdDate}"
 						maxdate="#{receivedNoteBackingBean.getCurrentDate()}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+						<p:ajax event="dateSelect" listener="#{receivedNoteBackingBean.reCalculateGstUnitPrice(receivedNoteBackingBean.managedBean.fulfilmentNote)}" 
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form" />
 					</p:calendar><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.frn.actul.recv.date']}"/>
 				</td>
 				<td><p:message for="receivedDate" display="icon" /></td>
