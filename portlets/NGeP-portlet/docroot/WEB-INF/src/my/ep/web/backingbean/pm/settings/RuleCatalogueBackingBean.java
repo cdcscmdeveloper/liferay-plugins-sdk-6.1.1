@@ -26,6 +26,7 @@ import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.confgeneral.IConfigGeneralSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
 import my.ep.biz.service.pm.general.settings.designatedarea.IDesignatedAreaSO;
 import my.ep.biz.service.pm.general.settings.gstitem.IGstItemSO;
@@ -49,6 +50,8 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.PmTrackingDairyVO;
 import my.ep.dto.pm.common.confgeneral.ConfigGeneralReqDTO;
 import my.ep.dto.pm.common.confgeneral.ConfigGeneralResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionReqDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionResDTO;
 import my.ep.dto.pm.general.settings.designatedarea.DesignatedAreaReqDTO;
@@ -75,6 +78,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmLanguage;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
 import my.ep.persistence.entity.pm.general.settings.gst.PmDaGst;
 import my.ep.persistence.entity.pm.general.settings.gst.PmDesignatedArea;
@@ -1115,6 +1119,9 @@ public class RuleCatalogueBackingBean extends
 					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 			RuleReqDTO reqDTO = new RuleReqDTO();
 			reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
+			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
+					.getServiceObject("pm", IStatusSO.class);
+			StatusReqDTO statusReqDTO = null;
 			for (PmConfigRule ruleType : this.getManagedBean()
 					.getConfigRuleList()) {
 
@@ -1124,8 +1131,6 @@ public class RuleCatalogueBackingBean extends
 					String[] msgParam = null;
 					if (ruleTypeValue.isBrandNew()) {
 						log.info("Tracking diary for System Parameter: add new value :saveRuleCatalog");
-						log.info(".............ruleTypeValue.getRuleType().getRuleTypeDesc()="
-								+ ruleTypeValue.getRuleType().getRuleTypeDesc());
 						messageId = MessageConst.TD_80015;
 						if (ruleType.getRuleDataTypeId().getParameterCode()
 								.equals("C")) {
@@ -1158,13 +1163,19 @@ public class RuleCatalogueBackingBean extends
 							}
 						}
 					}
+					statusReqDTO = new StatusReqDTO();
+					statusReqDTO.setStatusId(ruleTypeValue.getRecordStatusFlg()
+							.longValue());
+					StatusResDTO statusResDTO = statusSO
+							.retrieveStatusByStatusId(statusReqDTO);
 					if (messageId != null & msgParam != null) {
 						reqDTO.setTrackingStatus(true);
 						reqDTO.getTrackDairyVOs().add(
 								PmCommonUtil.assignTrackingDairyForRuleConfig(
 										ruleType,
 										getActionDesc(messageId, msgParam),
-										null));
+										statusResDTO.getPmStatus() != null ? statusResDTO
+												.getPmStatus() : new PmStatus()));
 					}
 
 				}
@@ -1358,6 +1369,9 @@ public class RuleCatalogueBackingBean extends
 		IFeeExemptionSO exemptionSO = null;
 		FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
 		// /////////////////////////////////////////add to Tracking Dairy
+		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", IStatusSO.class);
+		StatusReqDTO statusReqDTO = null;
 		for (PmFeeExemption fee : exemptionList) {
 			String messageId = null;
 			String[] msgParam = null;
@@ -1382,15 +1396,25 @@ public class RuleCatalogueBackingBean extends
 							fee.getItemId().getItemName() };
 				}
 			}
-
+		    statusReqDTO = new StatusReqDTO();
+			statusReqDTO.setStatusId(fee.getRecordStatusFlg()
+					.longValue());
+			StatusResDTO statusResDTO = statusSO
+					.retrieveStatusByStatusId(statusReqDTO);
 			if (messageId != null & msgParam != null) {
 				reqDTO.setTrackingStatus(true);
 				reqDTO.getTrackDairyVOs().add(
 						PmCommonUtil.assignTrackingDairyForFeeExemption(fee,
-								getActionDesc(messageId, msgParam), null));
+								getActionDesc(messageId, msgParam), statusResDTO.getPmStatus() != null ? statusResDTO
+										.getPmStatus() : new PmStatus()));
 			}
 
 		}
+		statusReqDTO = new StatusReqDTO();
+		statusReqDTO.setStatusId(Long.valueOf(DbValueConst.RECORD_STATUS_ACTIVE));//1
+		StatusResDTO statusResDTO = statusSO
+				.retrieveStatusByStatusId(statusReqDTO);
+		reqDTO.setStatus( statusResDTO.getPmStatus() != null ? statusResDTO.getPmStatus() : new PmStatus());
 		reqDTO.setUser(new FacesScopes().getUserSessionBean());
 		reqDTO.setUserRole(PmCommonUtil.getUserRoleValue());
 		// ////////////////
@@ -1558,6 +1582,9 @@ public class RuleCatalogueBackingBean extends
 		}
 		IFeeExemptionSO exemptionSO = null;
 		FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
+		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", IStatusSO.class);
+		StatusReqDTO statusReqDTO = null;
 		for (PmFeeExemption fee : exemptionList) {
 			String messageId = null;
 			String[] msgParam = null;
@@ -1580,15 +1607,25 @@ public class RuleCatalogueBackingBean extends
 							fee.getRequestItemId().getItemName() };
 				}
 			}
-
+			statusReqDTO = new StatusReqDTO();
+			statusReqDTO.setStatusId(fee.getRecordStatusFlg()
+					.longValue());
+			StatusResDTO statusResDTO = statusSO
+					.retrieveStatusByStatusId(statusReqDTO);
 			if (messageId != null & msgParam != null) {
 				reqDTO.setTrackingStatus(true);
 				reqDTO.getTrackDairyVOs().add(
 						PmCommonUtil.assignTrackingDairyForFeeExemption(fee,
-								getActionDesc(messageId, msgParam), null));
+								getActionDesc(messageId, msgParam), statusResDTO.getPmStatus() != null ? statusResDTO
+										.getPmStatus() : new PmStatus()));
 			}
 
 		}
+		statusReqDTO = new StatusReqDTO();
+		statusReqDTO.setStatusId(Long.valueOf(DbValueConst.RECORD_STATUS_ACTIVE));//1
+		StatusResDTO statusResDTO = statusSO
+				.retrieveStatusByStatusId(statusReqDTO);
+		reqDTO.setStatus( statusResDTO.getPmStatus() != null ? statusResDTO.getPmStatus() : new PmStatus());
 		reqDTO.setUser(new FacesScopes().getUserSessionBean());
 		reqDTO.setUserRole(PmCommonUtil.getUserRoleValue());
 		// ///////////////////////////
@@ -1713,6 +1750,9 @@ public class RuleCatalogueBackingBean extends
 		}
 		IFeeExemptionSO exemptionSO = null;
 		FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
+		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", IStatusSO.class);
+		StatusReqDTO statusReqDTO = null;
 		for (PmFeeExemption fee : exemptionList) {
 			String messageId = null;
 			String[] msgParam = null;
@@ -1731,15 +1771,25 @@ public class RuleCatalogueBackingBean extends
 							fee.getTypeId().getTypeName() };
 				}
 			}
-
+		    statusReqDTO = new StatusReqDTO();
+			statusReqDTO.setStatusId(fee.getRecordStatusFlg()
+					.longValue());
+			StatusResDTO statusResDTO = statusSO
+					.retrieveStatusByStatusId(statusReqDTO);
 			if (messageId != null & msgParam != null) {
 				reqDTO.setTrackingStatus(true);
 				reqDTO.getTrackDairyVOs().add(
 						PmCommonUtil.assignTrackingDairyForFeeExemption(fee,
-								getActionDesc(messageId, msgParam), null));
+								getActionDesc(messageId, msgParam), statusResDTO.getPmStatus() != null ? statusResDTO
+										.getPmStatus() : new PmStatus()));
 			}
 
 		}
+		statusReqDTO = new StatusReqDTO();
+		statusReqDTO.setStatusId(Long.valueOf(DbValueConst.RECORD_STATUS_ACTIVE));//1
+		StatusResDTO statusResDTO = statusSO
+				.retrieveStatusByStatusId(statusReqDTO);
+		reqDTO.setStatus( statusResDTO.getPmStatus() != null ? statusResDTO.getPmStatus() : new PmStatus());
 		reqDTO.setUser(new FacesScopes().getUserSessionBean());
 		reqDTO.setUserRole(PmCommonUtil.getUserRoleValue());
 		// //////////////////
@@ -2115,6 +2165,9 @@ public class RuleCatalogueBackingBean extends
 		 log.info("this.getManagedBean().getThresholdIdToS2UnplannedMap().get(this.getManagedBean().getThreshold().getThresholdId())="+this.getManagedBean().getThresholdIdToS2UnplannedMap().get(this.getManagedBean().getThreshold().getThresholdId()));
 		// 1 - unplanned
 		// 2 - budget
+			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
+					.getServiceObject("pm", IStatusSO.class);
+			StatusReqDTO statusReqDTO = null;
 		if(type == 1){
 			
 			if(centralizedLevelThreshold.isModified()){
@@ -2126,10 +2179,16 @@ public class RuleCatalogueBackingBean extends
 							originalUnplanndthreshold.toString(),
 							centralizedLevelThreshold.getS2Unplanned().toString()};
 					reqDTO.setTrackingStatus(true);
+					statusReqDTO = new StatusReqDTO();
+					statusReqDTO.setStatusId(centralizedLevelThreshold.getRecordStatusFlg()
+							.longValue());
+					StatusResDTO statusResDTO = statusSO
+							.retrieveStatusByStatusId(statusReqDTO);
 					reqDTO.getTrackDairyVOs().add(
 							PmCommonUtil.assignTrackingDairyForUnplannedThreshold(centralizedLevelThreshold,
 									getActionDesc(messageId, msgParam),
-									null));
+									statusResDTO.getPmStatus() != null ? statusResDTO
+											.getPmStatus() : new PmStatus()));
 			  }
 			}
 			for(PmThreshold threshold: this.getManagedBean().getUnplannedThresholdList()){
@@ -2143,10 +2202,16 @@ public class RuleCatalogueBackingBean extends
 									originalUnplanndthreshold.toString(),
 									threshold.getS2Unplanned().toString()};
 							reqDTO.setTrackingStatus(true);
+							statusReqDTO = new StatusReqDTO();
+							statusReqDTO.setStatusId(threshold.getRecordStatusFlg()
+									.longValue());
+							StatusResDTO statusResDTO = statusSO
+									.retrieveStatusByStatusId(statusReqDTO);
 							reqDTO.getTrackDairyVOs().add(
 									PmCommonUtil.assignTrackingDairyForUnplannedThreshold(threshold,
 											getActionDesc(messageId, msgParam),
-											null));
+											statusResDTO.getPmStatus() != null ? statusResDTO
+													.getPmStatus() : new PmStatus()));
 					  }
 					}
 			}
@@ -2160,10 +2225,16 @@ public class RuleCatalogueBackingBean extends
 								originalBudgetThreshold.toString(),
 								centralizedLevelThreshold.getBudgetSpent().toString()};
 						reqDTO.setTrackingStatus(true);
+						statusReqDTO = new StatusReqDTO();
+						statusReqDTO.setStatusId(centralizedLevelThreshold.getRecordStatusFlg()
+								.longValue());
+						StatusResDTO statusResDTO = statusSO
+								.retrieveStatusByStatusId(statusReqDTO);
 						reqDTO.getTrackDairyVOs().add(
 								PmCommonUtil.assignTrackingDairyForBudgetThreshold(centralizedLevelThreshold,
 										getActionDesc(messageId, msgParam),
-										null));
+										statusResDTO.getPmStatus() != null ? statusResDTO
+												.getPmStatus() : new PmStatus()));
 				  }
 				}
 			for(PmThreshold threshold: this.getManagedBean().getBudgetThresholdList()){
@@ -2177,10 +2248,16 @@ public class RuleCatalogueBackingBean extends
 									originalUnplanndthreshold.toString(),
 									threshold.getBudgetSpent().toString()};
 							reqDTO.setTrackingStatus(true);
+							statusReqDTO = new StatusReqDTO();
+							statusReqDTO.setStatusId(threshold.getRecordStatusFlg()
+									.longValue());
+							StatusResDTO statusResDTO = statusSO
+									.retrieveStatusByStatusId(statusReqDTO);
 							reqDTO.getTrackDairyVOs().add(
 									PmCommonUtil.assignTrackingDairyForBudgetThreshold(threshold,
 											getActionDesc(messageId, msgParam),
-											null));
+											statusResDTO.getPmStatus() != null ? statusResDTO
+													.getPmStatus() : new PmStatus()));
 					  }
 					}
 			}
@@ -3096,6 +3173,63 @@ public class RuleCatalogueBackingBean extends
 			designatedAreaList.addAll(this.getManagedBean()
 					.getDeletedDesignatedAreaList());
 			reqDTO.setDesignatedAreaList(designatedAreaList);
+			// /////////////////////////////////////////add to Tracking Dairy
+			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
+					.getServiceObject("pm", IStatusSO.class);
+			StatusReqDTO statusReqDTO = new StatusReqDTO();
+			
+			for (PmDesignatedArea da : designatedAreaList) {
+				String messageId = null;
+				String[] msgParam = null;
+				statusReqDTO.setStatusId(da.getRecordStatusFlg()
+						.longValue());
+				StatusResDTO statusResDTO = statusSO
+						.retrieveStatusByStatusId(statusReqDTO);
+				System.out.println("statusResDTO.getPmStatus().getStatusId():"
+						+ statusResDTO.getPmStatus().getStatusId());
+				log.info("statusResDTO.getPmStatus().getStatusId():"
+						+ statusResDTO.getPmStatus().getStatusId());
+
+				if (!da.isBrandNew()
+						&& da.isModified()){
+				if(da.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+					log.info("Tracking diary for Designated-Area: de-activating designatedArea:saveDesignatedArea");
+					messageId = MessageConst.TD_80032;
+					msgParam = new String[]{da.getvPmLocation().getLocationName() };
+					
+				}else{//da.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+					log.info("Tracking diary for Designated-Area: re-activating designatedArea:saveDesignatedArea");
+					messageId = MessageConst.TD_80031;
+					msgParam = new String[]{ da.getvPmLocation().getLocationName() };
+				}
+				}
+				if (!da.isBrandNew()
+						&& da.isDeleted()){
+					log.info("Tracking diary for Designated-Area: deleted designatedArea:saveDesignatedArea");
+					messageId = MessageConst.TD_80033;
+					msgParam = new String[]{ da.getvPmLocation().getLocationName() };
+				}
+				
+				if (messageId != null & msgParam != null) {
+					reqDTO.setTrackingStatus(true);
+					reqDTO.getTrackDairyVOs().add(
+							PmCommonUtil.assignTrackingDairyForDesignatedArea(da,
+									getActionDesc(messageId, msgParam), statusResDTO.getPmStatus() != null ? statusResDTO
+											.getPmStatus() : new PmStatus()));
+				}
+
+			}
+			statusReqDTO.setStatusId(Long.valueOf(DbValueConst.RECORD_STATUS_ACTIVE));//1
+			StatusResDTO statusResDTO = statusSO
+					.retrieveStatusByStatusId(statusReqDTO);
+			System.out.println("statusResDTO.getPmStatus().getStatusId():"
+					+ statusResDTO.getPmStatus().getStatusId());
+			log.info("statusResDTO.getPmStatus().getStatusId():"
+					+ statusResDTO.getPmStatus().getStatusId());
+			reqDTO.setStatus( statusResDTO.getPmStatus() != null ? statusResDTO.getPmStatus() : new PmStatus());
+			reqDTO.setUser(new FacesScopes().getUserSessionBean());
+			reqDTO.setUserRole(PmCommonUtil.getUserRoleValue());
+			///////////////////////////
 			DesignatedAreaResDTO resDTO = designatedAreaSO
 					.updateDesignatedAreaList(reqDTO);
 			if (resDTO.isSuccessful()) {
@@ -3570,5 +3704,19 @@ public class RuleCatalogueBackingBean extends
 		}
 
 	}
+	/**
+	 * Track Designated Area status
+	 * 
+	 * @param designatedArea
+	 */
+	public void gstStatusChange(PmDesignatedArea designatedArea) {
+		log.info("gstStatusChange");
 
+		if (!designatedArea.isModified()) {
+			designatedArea.setModified(true);
+		} else {
+			designatedArea.setModified(false);
+		}
+
+	}
 }
