@@ -1047,39 +1047,37 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		return false;
 	}
-	
+
 	/**
 	 * To check Digisining Required
 	 * 
 	 * @param roleCode
-	 * @param List<ScQtCommitteeActivity> committeeActivities
+	 * @param List
+	 *            <ScQtCommitteeActivity> committeeActivities
 	 * 
 	 * @return boolean flag
 	 */
-	protected boolean isDigiSigningRequired(String roleCode, 
-								List<ScQtCommitteeActivity> committeeActivities) {
+	protected boolean isDigiSigningRequired(String roleCode,
+			List<ScQtCommitteeActivity> committeeActivities) {
 		boolean hasRequiredRole = isDigiSigningRequired(roleCode);
-		
-		if (hasRequiredRole && 
-				CollectionUtils.isNotEmpty(
-							committeeActivities)) {
+
+		if (hasRequiredRole && CollectionUtils.isNotEmpty(committeeActivities)) {
 			Long currentUsersId = new FacesScopes().getUserSessionBean()
-										.getUserId();
-			for (ScQtCommitteeActivity commActivity 
-									: committeeActivities) {
-				ScCommitteeMember commMember = commActivity.getScCommitteeMember();
-				if (ParameterConst.COMMITTEE_ROLE_CHAIRPERSON
-						.equals(commMember.getMemberRole()
-									.getParameterCode()) && 
-								commMember.getPmUser().getUserId()
-									.equals(currentUsersId)) {
+					.getUserId();
+			for (ScQtCommitteeActivity commActivity : committeeActivities) {
+				ScCommitteeMember commMember = commActivity
+						.getScCommitteeMember();
+				if (ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equals(commMember
+						.getMemberRole().getParameterCode())
+						&& commMember.getPmUser().getUserId()
+								.equals(currentUsersId)) {
 					return true;
 				}
 			}
 		}
-		
+
 		return false;
-	}	
+	}
 
 	/**
 	 * To update categoryCodel1..to scqtCategory..
@@ -1300,18 +1298,18 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param list
 	 * @param markDeletedList
 	 */
-	public <ENTITY_CLASS extends BaseEntity> void markDeleteSelectedRowsActionById(
+	public List<ScQtCheckList> markDeleteSelectedRowsActionById(
 			List<ScQtCheckList> list, List<ScQtCheckList> markDeletedList) {
 		// List<Integer> toBeRemoveIndx = new ArrayList<Integer>();
 		if (log.isDebugEnabled()) {
 			log.debug("markDeleteSelectedRowsAction");
 		}
 		try {
+			if (markDeletedList == null) {
+				markDeletedList = new ArrayList<ScQtCheckList>();
+			}
 			if (list != null) {
 
-				if (markDeletedList == null) {
-					markDeletedList = new ArrayList<ScQtCheckList>();
-				}
 				for (int i = 0; i < list.size(); i++) {
 					if (list.get(i).isSelected()) {
 						list.get(i).setDeleted(true);
@@ -1336,6 +1334,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		} finally {
 
 		}
+		return markDeletedList;
 	}
 
 	/**
@@ -1647,7 +1646,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return mofAccount;
 
 	}
-	
+
 	/**
 	 * Convert tree nodes to zone criteria.convert General treenode list to
 	 * TplSpecZoneLoc objects.
@@ -1776,7 +1775,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return zoneList;
 	}
-	
+
 	/**
 	 * Convert tree nodes to location criteria.convert supplier location tree
 	 * node list to supplier location objects
@@ -1841,17 +1840,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return locCriterias;
 	}
+
 	/**
 	 * Generate bond letter from velocity to pdf.
-	 *
-	 * @param attachment the attachment
-	 * @param scLoa the sc loa
-	 * @throws Exception the exception
+	 * 
+	 * @param attachment
+	 *            the attachment
+	 * @param scLoa
+	 *            the sc loa
+	 * @throws Exception
+	 *             the exception
 	 */
-	public void generateBondLetterFromVelocityToPdf(ScAttachment attachment,ScLoa scLoa)
-			throws Exception {
+	public void generateBondLetterFromVelocityToPdf(ScAttachment attachment,
+			ScLoa scLoa) throws Exception {
 		CommonUtils commonUtils = new CommonUtils();
-		SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+		SimpleDateFormat dateFormat = new SimpleDateFormat(
+				CommonConstants.DEFAULT_DATE_FORMAT);
 		DecimalFormat amountDF = new DecimalFormat(
 				commonUtils
 						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
@@ -1862,27 +1866,32 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		String supplierName = null;
 		String sourcingTitle = null;
 		String bondAmount = null;
-		String bondAmountWord = null; 
+		String bondAmountWord = null;
 		String expiryPeriod = null;
 		int type = 0;
-		
-		if(scLoa != null){
+
+		if (scLoa != null) {
 			type = 1;
-			supplierName = scLoa.getScLoiLoa() != null ? scLoa.getScLoiLoa().getSupplierName() : " ";
-			sourcingTitle = scLoa.getScLoiLoa() != null? scLoa.getScLoiLoa().getTitle() : " ";
-			bondAmount = scLoa.getBondAmt() !=null ? amountDF.format(scLoa.getBondAmt()): " ";	
-			expiryPeriod = scLoa.getBondResDueDate() != null ? dateFormat.format(scLoa.getBondResDueDate()) : " ";
-			bondAmountWord = scLoa.getBondAmt() !=null ?  NumberWordUtil.convert(scLoa.getBondAmt().longValue()) : " ";
-			
-		}else{
+			supplierName = scLoa.getScLoiLoa() != null ? scLoa.getScLoiLoa()
+					.getSupplierName() : " ";
+			sourcingTitle = scLoa.getScLoiLoa() != null ? scLoa.getScLoiLoa()
+					.getTitle() : " ";
+			bondAmount = scLoa.getBondAmt() != null ? amountDF.format(scLoa
+					.getBondAmt()) : " ";
+			expiryPeriod = scLoa.getBondResDueDate() != null ? dateFormat
+					.format(scLoa.getBondResDueDate()) : " ";
+			bondAmountWord = scLoa.getBondAmt() != null ? NumberWordUtil
+					.convert(scLoa.getBondAmt().longValue()) : " ";
+
+		} else {
 			type = 0;
-			supplierName ="Supplier Name";
-			sourcingTitle ="Sourcing Title";
-			bondAmount ="Bond Amount";
+			supplierName = "Supplier Name";
+			sourcingTitle = "Sourcing Title";
+			bondAmount = "Bond Amount";
 			expiryPeriod = "Expiry Period";
-			bondAmountWord = "Bond Amount Word"; 
+			bondAmountWord = "Bond Amount Word";
 		}
-		
+
 		context.put("type", type);
 		context.put("contractNo", contractNo);
 		context.put("supplierName", supplierName);
@@ -1890,66 +1899,72 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		context.put("bondAmount", bondAmount);
 		context.put("bondAmountWord", bondAmountWord);
 		context.put("expiryPeriod", expiryPeriod);
-		
+
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.LOA_BOND_LETTER, context,
 				new FileOutputStream(getActualFilePath(attachment)));
 	}
-	
+
 	/**
 	 * Calculate bond amount.
-	 *
-	 * @param scLoa the sc loa
+	 * 
+	 * @param scLoa
+	 *            the sc loa
 	 * @return the big decimal
 	 */
-	public ScLoa  calcBondAmount(ScLoa scLoa){
-		
-		BigDecimal loaAmt  = BigDecimal.ZERO;
-		BigDecimal bondAmt  = BigDecimal.ZERO; 
+	public ScLoa calcBondAmount(ScLoa scLoa) {
+
+		BigDecimal loaAmt = BigDecimal.ZERO;
+		BigDecimal bondAmt = BigDecimal.ZERO;
 		double totalDuration = 0;
 		double loaAmtForBondPercentage = 0;
-		double bondPercentage =0;
-		if(scLoa.getLoaAmt() != null){
-			BigDecimal  overallCtAmount  = overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt());
-			double ctAmount =  overallCtAmount.doubleValue();
+		double bondPercentage = 0;
+		if (scLoa.getLoaAmt() != null) {
+			BigDecimal overallCtAmount = overallCtAmount(scLoa.getLoaAmt(),
+					scLoa.getGstAmt());
+			double ctAmount = overallCtAmount.doubleValue();
 
-			if(scLoa.getContractDuration() != null){
-				BigDecimal  duration  = scLoa.getContractDuration();
+			if (scLoa.getContractDuration() != null) {
+				BigDecimal duration = scLoa.getContractDuration();
 				duration = duration.setScale(4, BigDecimal.ROUND_HALF_EVEN);
-				double cduration =  duration.doubleValue();
-				if(cduration >0){
-					totalDuration = cduration/12;
+				double cduration = duration.doubleValue();
+				if (cduration > 0) {
+					totalDuration = cduration / 12;
 				}
 
-				if(totalDuration >0){
-					loaAmtForBondPercentage = ctAmount/totalDuration;
+				if (totalDuration > 0) {
+					loaAmtForBondPercentage = ctAmount / totalDuration;
 				}
 
-				if(loaAmtForBondPercentage >0){
-					loaAmt  = new BigDecimal(String.valueOf(loaAmtForBondPercentage));
-					loaAmt =  loaAmt.setScale(4, BigDecimal.ROUND_HALF_EVEN);
+				if (loaAmtForBondPercentage > 0) {
+					loaAmt = new BigDecimal(
+							String.valueOf(loaAmtForBondPercentage));
+					loaAmt = loaAmt.setScale(4, BigDecimal.ROUND_HALF_EVEN);
 				}
 			}
 
 			// Get performance bond rule percentage
-			IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+			IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IRuleSO.class);
 			RuleReqDTO ruleReqDTO = new RuleReqDTO();
 			ruleReqDTO.setRuleType(RuleTypeConst.BOND_PERCENTAGE);
 			ruleReqDTO.setCompareValue(loaAmt.toString());
-			RuleResDTO roleResDTO = ruleSO.getRuleValuesByTypeAndCurrentDateRange(ruleReqDTO);
+			RuleResDTO roleResDTO = ruleSO
+					.getRuleValuesByTypeAndCurrentDateRange(ruleReqDTO);
 
-			if (roleResDTO.isSuccessful() && roleResDTO.getRuleValueStrList() != null 
+			if (roleResDTO.isSuccessful()
+					&& roleResDTO.getRuleValueStrList() != null
 					&& roleResDTO.getRuleValueStrList().size() > 0) {
 				String percentage = roleResDTO.getRuleValueStrList().get(0);
 				double res = Double.valueOf(percentage);
-				bondPercentage = res/100;
+				bondPercentage = res / 100;
 				scLoa.setBondPercentage(new BigDecimal(percentage));
 			}
-			if(bondPercentage >0 && loaAmtForBondPercentage >0){
-				double total  = loaAmtForBondPercentage * bondPercentage;
-				bondAmt  = new BigDecimal(String.valueOf(total));
-				bondAmt  = bondAmt.setScale(4, BigDecimal.ROUND_HALF_EVEN);
+			if (bondPercentage > 0 && loaAmtForBondPercentage > 0) {
+				double total = loaAmtForBondPercentage * bondPercentage;
+				bondAmt = new BigDecimal(String.valueOf(total));
+				bondAmt = bondAmt.setScale(4, BigDecimal.ROUND_HALF_EVEN);
 				scLoa.setBondAmt(bondAmt);
 			}
 		}
@@ -1969,10 +1984,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			overallCtAmount = overallCtAmount.add(gstAmount);
 			overallCtAmount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		}
-		
+
 		return overallCtAmount;
 
 	}
-	
 
 }
