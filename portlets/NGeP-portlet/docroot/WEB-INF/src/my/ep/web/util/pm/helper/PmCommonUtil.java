@@ -89,6 +89,7 @@ import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
+import my.ep.persistence.entity.pm.general.settings.gst.PmDesignatedArea;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRule;
 import my.ep.persistence.entity.pm.general.settings.threshold.PmThreshold;
 import my.ep.type.aut.SearchOperator;
@@ -1478,7 +1479,21 @@ public class PmCommonUtil {
 		trckVO.setGroupDocType(null);
 		return trckVO;
 	}
-
+	public static PmTrackingDairyVO assignTrackingDairyForDesignatedArea(
+			PmDesignatedArea da, String actionDesc, PmStatus status) {
+		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
+		PmUser user = new FacesScopes().getUserSessionBean();
+		trckVO.setActionDesc(actionDesc);
+		trckVO.setActionedBy(user != null ? user.getUserId() : null);
+		trckVO.setActionedByRole(getUserRoleValue());
+		trckVO.setDocId(da.getDesignatedAreaId());
+		trckVO.setDocType(ParameterConst.GST_PARAM_CODE);
+		trckVO.setDocNo(da.getDesignatedAreaId() != null ? da.getDesignatedAreaId().toString() : null);
+		trckVO.setGroupId(null);
+		trckVO.setStatus(status);
+		trckVO.setGroupDocType(null);
+		return trckVO;
+	}
 	public static String getUserRoleValue() {
 		FacesScopes sc = new FacesScopes();
 		if (sc.hasRoleUser(RoleCode.EP_ADMIN.value())) {
