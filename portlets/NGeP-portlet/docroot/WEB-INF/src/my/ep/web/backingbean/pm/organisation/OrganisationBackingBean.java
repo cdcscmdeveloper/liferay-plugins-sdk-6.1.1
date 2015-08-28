@@ -630,14 +630,29 @@ public class OrganisationBackingBean extends
 						+ orgProfile.getSmSupplier().getSmAppl()
 								.getSmPersonnels().size());
 				
-				if(orgProfile.getSmSupplier().getSmGstSuppliers() != null 
-						&& !orgProfile.getSmSupplier().getSmGstSuppliers().isEmpty()){
-					for(SmGstSupplier gstSupplier : orgProfile.getSmSupplier().getSmGstSuppliers()){
-						if(gstSupplier.getIsCurrent()){
-							getManagedBean().setGstSupplier(gstSupplier);
-							break;
-						}
+//				if(orgProfile.getSmSupplier().getSmGstSuppliers() != null 
+//						&& !orgProfile.getSmSupplier().getSmGstSuppliers().isEmpty()){
+//					for(SmGstSupplier gstSupplier : orgProfile.getSmSupplier().getSmGstSuppliers()){
+//						if(gstSupplier.getIsCurrent()){
+//							getManagedBean().setGstSupplier(gstSupplier);
+//							break;
+//						}
+//					}
+//				}
+				ISupplierGstSO supplierGstSO = null;
+				try{
+					supplierGstSO = (ISupplierGstSO) BusinessDelegate.getInstance()
+								.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+									ISupplierGstSO.class);
+					SupplierGstReqDTO gstReqDTO = new SupplierGstReqDTO();
+					gstReqDTO.setSupplierId(orgProfile.getSmSupplier().getSupplierId());
+					SupplierGstResDTO gstResDTO = supplierGstSO.retrieveGstInfoBySupplierIdAndBranchCode(gstReqDTO);
+					if(gstResDTO.isSuccessful() && gstResDTO.getSmGstSupplier() != null){
+						getManagedBean().setGstSupplier(gstResDTO.getSmGstSupplier());
 					}
+					
+				}finally{ 
+					supplierGstSO = null;
 				}
 			}
 
