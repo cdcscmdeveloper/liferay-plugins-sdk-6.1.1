@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -21,7 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -110,7 +108,6 @@ import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
-import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
@@ -158,7 +155,6 @@ import my.ep.web.util.sc.helper.SourcingLocationHelper;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
@@ -219,7 +215,7 @@ public class DirectLOABackingBean extends
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 
 			parseLOADetails(scLoa, BpmOutcomeConst.BPM_SAVE, reqDTO);
-			//validateLOADetails(scLoa, BpmOutcomeConst.BPM_DRAFT);
+			// validateLOADetails(scLoa, BpmOutcomeConst.BPM_DRAFT);
 
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setScLoa(scLoa);
@@ -228,19 +224,7 @@ public class DirectLOABackingBean extends
 			reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 			reqDTO.setRoleCode(getUserRoleCode());
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
-			List<TplSpecAnswer> specAnswers = new ArrayList<TplSpecAnswer>();
-			List<TplSpecAnswer> tobeDeletedSpecAnswers = this.getManagedBean()
-					.getProdTemplateSpecBean().getSpecAnswersToDelete();
-			List<TplSpecAnswer> tobeDeleteSpecAnswers = this.getManagedBean()
-					.getSpecTemplateSpecBean().getSpecAnswersToDelete();
-			if (CollectionUtils.isNotEmpty(tobeDeletedSpecAnswers)) {
-				specAnswers.addAll(tobeDeletedSpecAnswers);
-			}
-			if (CollectionUtils.isNotEmpty(tobeDeleteSpecAnswers)) {
-				specAnswers.addAll(tobeDeleteSpecAnswers);
-			}
-
-			reqDTO.setTobeDeletedList(specAnswers);
+			updateToBeDeleteSpecAnswersTOReq(reqDTO);
 			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 			DirectAwardResDTO resDTO = getQtDirectAwardSO()
 					.saveDirectAwardDetails(reqDTO);
@@ -327,6 +311,7 @@ public class DirectLOABackingBean extends
 			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setScQtDoc(this.getManagedBean().getProdscQtDoc());
 			reqDTO.setServiceQtDoc(this.getManagedBean().getServicescQtDoc());
+			updateToBeDeleteSpecAnswersTOReq(reqDTO);
 			DirectAwardResDTO resDTO = getQtDirectAwardSO()
 					.submitDirectAwardDetails(reqDTO);
 
@@ -429,8 +414,12 @@ public class DirectLOABackingBean extends
 			ScLoa scLoa = resDTO.getLoa();
 			getManagedBean().setScLoa(scLoa);
 			this.getManagedBean().setScQt(scLoa.getScQt());
+
 			// Supplier Bank Account
 			getManagedBean().setBankList(resDTO.getSmSupplierBanks());
+
+			this.getManagedBean().setSelectedBankId(
+					getBankByAccountNo(scLoa.getBankAccNo()));
 
 			// Supplier ct amount
 			getManagedBean().setOverallContractAmt(
@@ -535,6 +524,25 @@ public class DirectLOABackingBean extends
 		} finally {
 			// qtAwardSO = null;
 		}
+	}
+
+	/**
+	 * @param bankAccNo
+	 * @return
+	 */
+	private Long getBankByAccountNo(String bankAccNo) {
+		if (StringUtils.isNotEmpty(bankAccNo)) {
+			List<SmSupplierBank> bankAccounts = this.getManagedBean()
+					.getBankList();
+			if (CollectionUtils.isNotEmpty(bankAccounts)) {
+				for (SmSupplierBank bank : bankAccounts) {
+					if (bankAccNo.equalsIgnoreCase(bank.getAccountNo())) {
+						return bank.getSupplierBankId();
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -3185,9 +3193,8 @@ public class DirectLOABackingBean extends
 			userReqDTO.setWithProfileGroup(true);
 			UserResDTO userResDTO = userSo
 					.retrieveUserListWithProfileGroupUserByRole(userReqDTO);
-			// TODO Need to remove this..
-			this.getManagedBean().setContractSignerList(
-					userResDTO.getUserList());
+			
+			
 			this.getManagedBean().setApproverList(userResDTO.getUserList());
 		}
 	}
@@ -3875,7 +3882,7 @@ public class DirectLOABackingBean extends
 		this.getManagedBean().setScLoa(scLoa);
 
 		this.getManagedBean().setContractSignerList(
-				awardResDTO.getApproverList());
+				awardResDTO.getContractSignerList());
 		this.getManagedBean().setSupplierHQPersonnel(
 				awardResDTO.getSupplierHQPersonnel());
 		this.getManagedBean()
@@ -4109,8 +4116,9 @@ public class DirectLOABackingBean extends
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setDigiSignData(digiSign);
 			reqDTO.setRoleCode(getUserRoleCode());
-			reqDTO.setScQtDoc(this.getManagedBean().getServicescQtDoc());
-			reqDTO.setServiceQtDoc(this.getManagedBean().getProdscQtDoc());
+			reqDTO.setScQtDoc(this.getManagedBean().getProdscQtDoc());
+			reqDTO.setServiceQtDoc(this.getManagedBean().getServicescQtDoc());
+			updateToBeDeleteSpecAnswersTOReq(reqDTO);
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			resDTO = getQtDirectAwardSO().updateBpmTask(reqDTO);
 
@@ -5803,6 +5811,11 @@ public class DirectLOABackingBean extends
 	public void resetContractDates() {
 		this.getManagedBean().getScLoa().setContractEffDate(null);
 		this.getManagedBean().getScLoa().setContractExpDate(null);
+		this.getManagedBean()
+				.getSpecTemplateSpecBean()
+				.getSpecMaster()
+				.setDurationMonth(
+						this.getManagedBean().getScLoa().getContractDuration());
 
 	}
 
@@ -6009,5 +6022,21 @@ public class DirectLOABackingBean extends
 
 	public void setOverallCtAmount(BigDecimal loaAmount) {
 		this.getManagedBean().setOverallContractAmt(loaAmount);
+	}
+
+	private void updateToBeDeleteSpecAnswersTOReq(DirectAwardReqDTO awardReqDTO) {
+		List<TplSpecAnswer> specAnswers = new ArrayList<TplSpecAnswer>();
+		List<TplSpecAnswer> tobeDeletedSpecAnswers = this.getManagedBean()
+				.getProdTemplateSpecBean().getSpecAnswersToDelete();
+		List<TplSpecAnswer> tobeDeleteSpecAnswers = this.getManagedBean()
+				.getSpecTemplateSpecBean().getSpecAnswersToDelete();
+		if (CollectionUtils.isNotEmpty(tobeDeletedSpecAnswers)) {
+			specAnswers.addAll(tobeDeletedSpecAnswers);
+		}
+		if (CollectionUtils.isNotEmpty(tobeDeleteSpecAnswers)) {
+			specAnswers.addAll(tobeDeleteSpecAnswers);
+		}
+
+		awardReqDTO.setTobeDeletedList(specAnswers);
 	}
 }
