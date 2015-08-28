@@ -71,7 +71,7 @@
 				</td>
 				<td><p:selectOneMenu id="loaApprover"
 						value="#{lOADetailBackingBean.managedBean.approverUser.userId}"
-						disabled="#{!(isPendingSubmissionStatus or isPendingRevisionStatus)}"
+						disabled="#{!isPendingSubmissionStatus}"
 						required="#{lOADetailBackingBean.managedBean.scLoa.approvalReq}"
 						label="#{lbl['lbl.sc.approver']}"
 						style="width: 240px;margin-bottom: 5px;">
