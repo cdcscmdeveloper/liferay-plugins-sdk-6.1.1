@@ -1,7 +1,10 @@
 package my.ep.web.backingbean.fl.relieforder;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
@@ -49,6 +52,7 @@ import my.ep.web.managedbean.fl.relieforder.ReliefOrderManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -147,7 +151,9 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 					getManagedBean().getReliefItems().add(flReliefOrderItem);
 				}
 			}
-			//getManagedBean().setPmUser(reqDTO.getPmUser());
+			sortReliefOrderItems(getManagedBean().getNonReliefItems());
+			sortReliefOrderItems(getManagedBean().getReliefItems());
+			
 			IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
 			ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
 			if(getManagedBean().getFlRequest().getCtContract() != null){
@@ -363,20 +369,43 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 	}
 	
 	
-		/**
-		 * Page navigation to FLDoc search page in Order.
-		 *
-		 * @return the string
-		 */
-		public String backToPervious() {
-			return "flDocSearch";
-		}
+	/**
+	* Page navigation to FLDoc search page in Order.
+	*
+	* @return the string
+	*/
+	public String backToPervious() {
+		return "flDocSearch";
+	}
 				
-		/**
-		 * Enable auto update.
-		 */
-		public void enableAutoUpdate(){
-			getManagedBean().setAutoUpdate(Boolean.TRUE);
-			RequestContext.getCurrentInstance().update("@form");
+	/**
+	* Enable auto update.
+	*/
+	public void enableAutoUpdate(){
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		RequestContext.getCurrentInstance().update("@form");
+	}
+	
+	/**
+	 * sorting all the relief and non relief items showing in Relief and Non relief Item Tab
+	 *
+	 * @param flReliefOrderList 
+	 */
+	
+	public void sortReliefOrderItems(List<FlReliefOrderItem> itemsList) {
+		// Creating Comparator
+		if (null == itemsList || itemsList.isEmpty()) {
+			return;
 		}
+		Comparator<FlReliefOrderItem> comparator = new Comparator<FlReliefOrderItem>() {
+			@Override
+			public int compare(FlReliefOrderItem o1, FlReliefOrderItem o2) {
+				return new CompareToBuilder().append(
+						o1.getFlFulfilmentItem().getItemCode(),
+						o2.getFlFulfilmentItem().getItemCode())
+						.toComparison();
+			}
+		};
+		Collections.sort(itemsList, comparator);
+	}
 }
