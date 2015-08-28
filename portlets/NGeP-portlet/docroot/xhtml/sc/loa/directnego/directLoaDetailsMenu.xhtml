@@ -16,7 +16,7 @@
 						lovId="SM_SUPPLIER_MOFNO"
 						postUpdateListener="directLOABackingBean.mofNoListener(directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier.smMofAccount)"
 						headerText="Supplier MOF No Lov" selectionMode="single"
-						readonly="true" size="34"
+						readonly="true" size="35"
 						saveObject="directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier.smMofAccount"
 						value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
 						update="@form" /></td>
@@ -27,7 +27,7 @@
 						postUpdateListener="directLOABackingBean.supplierListener(directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier)"
 						headerText="Supplier Lov" selectionMode="single"
 						saveObject="directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier"
-						readonly="true" size="34"
+						readonly="true" size="35"
 						value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.supplierName}"
 						update="@form" /></td>
 			</tr>
@@ -36,7 +36,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.gst.register.num']}" />
 				</td>
-				<td><p:inputText size="34"
+				<td><p:inputText size="35"
 						value="#{directLOABackingBean.managedBean.scLoa.gstRegNo eq null ? lbl['lbl.txt.na']:directLOABackingBean.managedBean.scLoa.gstRegNo}"
 						disabled="true" /> <ac:iconTooltip
 						value="#{lbl['lbl.sc.gst.registartion.number.tooltip']}" /></td>
@@ -44,7 +44,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.gst.effective.date']}" />
 				</td>
-				<td><p:inputText size="34"
+				<td><p:inputText size="35"
 						value="#{directLOABackingBean.managedBean.scLoa.gstEffDate eq null ? lbl['lbl.txt.na']:directLOABackingBean.managedBean.scLoa.gstEffDate}"
 						disabled="true">
 						<f:convertDateTime
@@ -55,7 +55,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.gst.declared.date']}" />
 				</td>
-				<td><p:inputText size="34"
+				<td><p:inputText size="35"
 						value="#{directLOABackingBean.managedBean.scLoa.gstDeclaredDate eq null ? lbl['lbl.txt.na']:directLOABackingBean.managedBean.scLoa.gstDeclaredDate}"
 						disabled="true">
 						<f:convertDateTime
@@ -71,7 +71,7 @@
 							<tr>
 								<td><p:selectOneMenu id="branch"
 										value="#{directLOABackingBean.managedBean.selectedSupplierBranchName}"
-										style="width: 248px;margin-bottom: 5px;"
+										style="width: 260px;margin-bottom: 5px;"
 										label="#{lbl['lbl.sc.branch']}">
 										<f:selectItem itemLabel="HQ" itemValue="#{null}" />
 										<f:selectItems
@@ -89,7 +89,7 @@
 							</tr>
 						</table>
 					</c:if> <c:if test="#{!isEditableStatus}">
-						<p:inputText size="50"
+						<p:inputText size="35"
 							value="#{directLOABackingBean.managedBean.scLoa.supplierBranch}"
 							disabled="true" />
 					</c:if></td>
@@ -100,7 +100,7 @@
 				<td width="32%"><p:inputTextarea id="suppAddr" cols="36"
 						disabled="true" rows="5"
 						value="#{directLOABackingBean.getFullAddress(directLOABackingBean.managedBean.scLoa.supplierAddress)}"
-						style=" margin-bottom:5px;" /></td>
+						style=" margin-bottom:5px; width: 251px" maxlength="200" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.contact.person']}" />
@@ -169,7 +169,7 @@
 				<td colspan="3"><ac:lov id="ptjProfile" lovId="PM_ORG_PROFILE"
 						headerText="Supplier Lov" selectionMode="single"
 						saveObject="directLOABackingBean.managedBean.scQt.pmOrgProfile"
-						readonly="true" size="34"
+						readonly="true" size="41"
 						value="#{directLOABackingBean.managedBean.scQt.pmOrgProfile.orgName}"
 						update="@form"
 						conditionField="#{directLOABackingBean.constuctConditionFields()}" /></td>
@@ -189,7 +189,7 @@
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="procTypeBoCategory" required="true"
 						value="#{directLOABackingBean.managedBean.scLoa.procurementTypeCatId.parameterId}"
-						style="margin-bottom:5px;width:209px;"
+						style="margin-bottom:5px;width:229px;"
 						label="#{lbl['lbl.sc.procurment.type.category']}">
 						<f:selectItems
 							value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.procurementTypeCategory)}" />
@@ -203,9 +203,10 @@
 						value="*" styleClass="mandatory" /></td>
 				<td colspan="3"><p:inputText disabled="#{!isEditableStatus}"
 						required="true"
-						value="#{directLOABackingBean.managedBean.scLoa.scQt.fileNo}" label="#{lbl['lbl.sc.qt.fileno']}"
-						size="23" /> <p:spacer width="1px"></p:spacer> <p:inputText
-						required="true" id="fileExtNo" styleClass="ppNumericAlign"
+						value="#{directLOABackingBean.managedBean.scLoa.scQt.fileNo}"
+						label="#{lbl['lbl.sc.qt.fileno']}" size="23" /> <p:spacer
+						width="1px"></p:spacer> <p:inputText required="true"
+						id="fileExtNo" styleClass="ppNumericAlign"
 						value="#{directLOABackingBean.managedBean.scLoa.fileExtNo}"
 						size="1" label="#{lbl['lbl.sc.loiloa.file.extension.no']}"
 						maxlength="3" disabled="#{!isEditableStatus}" /> <p:message
