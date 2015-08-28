@@ -715,6 +715,8 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 					reliefOrderBB.getManagedBean().getReliefItems().add(flReliefOrderItem);
 				}
 			}
+			reliefOrderBB.sortReliefOrderItems(reliefOrderBB.getManagedBean().getNonReliefItems());
+			reliefOrderBB.sortReliefOrderItems(reliefOrderBB.getManagedBean().getReliefItems());
 			reliefOrderBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
 			ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
