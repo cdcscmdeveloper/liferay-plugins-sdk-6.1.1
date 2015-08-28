@@ -219,7 +219,7 @@ public class DirectLOABackingBean extends
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 
 			parseLOADetails(scLoa, BpmOutcomeConst.BPM_SAVE, reqDTO);
-			validateLOADetails(scLoa, BpmOutcomeConst.BPM_DRAFT);
+			//validateLOADetails(scLoa, BpmOutcomeConst.BPM_DRAFT);
 
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setScLoa(scLoa);
