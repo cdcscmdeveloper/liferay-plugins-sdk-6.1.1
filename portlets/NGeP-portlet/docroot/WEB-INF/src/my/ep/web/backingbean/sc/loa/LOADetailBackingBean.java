@@ -429,9 +429,6 @@ public class LOADetailBackingBean extends
 			
 			generateDeclarationFromVelocity(scLoa,scQt);
 			
-			getManagedBean().setSelectedSupplierBranchName(
-					scLoa.getSupplierBranch());
-			
 			// Filter skop kerja dan perkhidmatan repo.
 			filterSkopKerjaDanPerkhidmatanRepo(scLoa);
 
@@ -630,10 +627,6 @@ public class LOADetailBackingBean extends
 				overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt()));
 		
 		
-		// Supplier Branch
-		getManagedBean().setSelectedSupplierBranchName(
-				scLoa.getSupplierBranch());
-		
 		// Procurement Type Category Id
 		 if(null == scLoa.getProcurementTypeCatId()){
 			 scLoa.setProcurementTypeCatId(new PmParameter());
@@ -647,6 +640,11 @@ public class LOADetailBackingBean extends
 		}
 		
 		getManagedBean().setBranchsList(resDTO.getSmSupplierBranchs());
+		
+		if(scLoa.getSupplierBranch() != null && !scLoa.getSupplierBranch().isEmpty()){
+			scLoa.getSupplierBranch().trim();
+		}
+		
 		if (scLoa.isBrandNew()) {
 			handleBranchDetailsChanged();
 		}
@@ -1972,13 +1970,10 @@ public class LOADetailBackingBean extends
 	 */
 	public void handleBranchDetailsChanged() {
 		debugLogger("handleBranchDetailsChanged");
-
 		ScLoa scLoa = this.getManagedBean().getScLoa();
-		String selectedSupplierBranchName = this.getManagedBean()
-				.getSelectedSupplierBranchName();
-
-		if (selectedSupplierBranchName == null
-				|| "HQ".equals(selectedSupplierBranchName)) {
+		String selectedSupplierBranch = scLoa.getSupplierBranch();
+		
+		if (null == selectedSupplierBranch || "HQ".equals(selectedSupplierBranch)) {
 			SmPersonnel supplierHQPersonnel = this.getManagedBean()
 					.getSupplierHQPersonnel();
 			SmCompanyBasic smCompanyBasic = supplierHQPersonnel.getSmAppl()
@@ -2009,8 +2004,8 @@ public class LOADetailBackingBean extends
 					.getBranchsList();
 
 			for (SmSupplierBranch supplierBranch : supplierBranchs) {
-				if (selectedSupplierBranchName.equals(supplierBranch
-						.getBranchName())) {
+				if (selectedSupplierBranch.equals(supplierBranch
+						.getBranchName().replaceAll("\\s+", " ").trim())) {
 					log.info("found branch address");
 
 					scLoa.setSupplierBranch(supplierBranch.getBranchName());
@@ -4554,7 +4549,34 @@ public class LOADetailBackingBean extends
 			}
 	    }
 	}
-	
+
+	/**
+	 * Gets the supplier branches.
+	 *
+	 * @return the supplier branches
+	 */
+	public SelectItem[]  getSupplierBranches(){
+		SelectItem[] items = null;
+        boolean isBranch = Boolean.FALSE;
+		if(getManagedBean().getBranchsList() != null && getManagedBean().getBranchsList().size()>0){
+			items = new SelectItem[getManagedBean().getBranchsList().size()+1];
+			isBranch = Boolean.TRUE;
+		} else{
+			items = new SelectItem[1];
+		}
+
+		int i = 1;
+		items[0] = new SelectItem("HQ", "HQ");
+		if(isBranch){
+			for(SmSupplierBranch smSupplierBranch : getManagedBean().getBranchsList()) {
+				items[i] = new SelectItem(smSupplierBranch.getBranchName().replaceAll("\\s+", " ").trim(), smSupplierBranch.getBranchName().trim().replaceAll("\\s+", " ").trim());
+				i++;
+			}	
+		}
+
+		return items;
+	}
+
 	/**
 	 * Success message.
 	 *
