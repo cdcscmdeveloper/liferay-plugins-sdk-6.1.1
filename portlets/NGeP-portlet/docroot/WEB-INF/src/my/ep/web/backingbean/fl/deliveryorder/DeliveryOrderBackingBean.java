@@ -1198,6 +1198,10 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			getManagedBean().setGstEffDate(suppGstResDTO.getSmGstSupplier().getGstEffDate());
 			getManagedBean().setGstDeclareDate(suppGstResDTO.getSmGstSupplier().getGstDeclaredDate());
 			getManagedBean().setGstRegNo(suppGstResDTO.getSmGstSupplier().getGstRegNo());
+		} else {
+			getManagedBean().setGstEffDate(null);
+			getManagedBean().setGstDeclareDate(null);
+			getManagedBean().setGstRegNo(null);
 		}
 		
 		boolean amtChanged = reCalculateGstUnitPrice(suppGstResDTO.getSmGstSupplier(),flRequest);
@@ -1213,6 +1217,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		}
 		
 		BigDecimal gstAmt = BigDecimal.ZERO;
+		BigDecimal deliveredAmt = BigDecimal.ZERO;
 		for(FlDeliveryAddress deliveryAddress : flRequest.getFlDeliveryAddresses()){
 			for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()){
 				if(!isDoGST || !itemAddr.isGst()) {
@@ -1223,6 +1228,8 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 					itemAddr.setDoGstAmt(gstAmt.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, BigDecimal.ROUND_HALF_UP));
 					itemAddr.setDoGstUnitPrice(itemAddr.getUnitPrice().add(itemAddr.getDoGstAmt()));
 				}
+				deliveredAmt = itemAddr.getDeliveredQty().multiply(itemAddr.getDoGstUnitPrice());
+				itemAddr.setDeliveredAmt(deliveredAmt.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, BigDecimal.ROUND_HALF_UP));
 				if(!amtChanged && itemAddr.getGstAmount().compareTo(itemAddr.getDoGstAmt())!=0) {
 					amtChanged = true;
 				}
