@@ -29,6 +29,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
+import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -276,9 +277,7 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	private TreeNode rootZoanlTree;
 	/** The existing supplier location list. */
 	private List<ScQtLocCriteria> existingLocationList;
-	/** The supplier location list. */
-	private List<ScQtLocCriteria> locationList;
-
+	
 	/** The selected nodes. */
 	private TreeNode[] selectedNodes;
 
@@ -301,9 +300,10 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 
 	private ScLoaSupportingDoc selectedScLoaSuppDoc;
 	
-	private ScLoaReport branchInfoReport;
+	private ScQtZoneCriteria toBedeletedSupplierZone;
+
 	
-	/**
+	private ScLoaReport branchInfoReport;/**
 	 * Gets the spki backing bean.
 	 * 
 	 * @return the spki backing bean
@@ -1509,14 +1509,7 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 		this.existingLocationList = existingLocationList;
 	}
 
-	public List<ScQtLocCriteria> getLocationList() {
-		return locationList;
-	}
-
-	public void setLocationList(List<ScQtLocCriteria> locationList) {
-		this.locationList = locationList;
-	}
-
+	
 	public TreeNode[] getSelectedNodes() {
 		return selectedNodes;
 	}
@@ -1640,6 +1633,15 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 		this.servicescQtDoc = servicescQtDoc;
 	}
 
+	public ScQtZoneCriteria getToBedeletedSupplierZone() {
+		return toBedeletedSupplierZone;
+	}
+
+	public void setToBedeletedSupplierZone(ScQtZoneCriteria toBedeletedSupplierZone) {
+		this.toBedeletedSupplierZone = toBedeletedSupplierZone;
+	}
+
+	
 	/**
 	 * @return the branchInfoReport
 	 */
@@ -1653,5 +1655,4 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	public void setBranchInfoReport(ScLoaReport branchInfoReport) {
 		this.branchInfoReport = branchInfoReport;
 	}
-
 }

@@ -42,6 +42,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -483,11 +484,12 @@ public class TemplateSpecHelper {
 	 */
 	public void updateZoneDtl(TplSpecMaster specMaster, TplSpecZone specZone) {
 		specMaster.setTplSpecZone(specZone);
-		
+		if(CollectionUtils.isNotEmpty(specMaster.getTplSpecQuestions())){
 		for (TplSpecQuestion specQuestion : specMaster.getTplSpecQuestions()) {
 			if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(specQuestion.getQuestionType())) {
 				resetPriceType(specMaster, specQuestion);
 			}
+		}
 		}
 	}
 	

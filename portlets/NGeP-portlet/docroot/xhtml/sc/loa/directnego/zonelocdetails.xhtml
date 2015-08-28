@@ -13,7 +13,8 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.location.level']}" />
 					<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
-				<td><p:selectOneMenu id="locationLevels"  disabled="#{!isEditableStatus}" required="true"
+				<td><p:selectOneMenu id="locationLevels"
+						disabled="#{!isEditableStatus}" required="true"
 						label="#{lbl['lbl.sc.zone.location.level']}"
 						value="#{directLOABackingBean.managedBean.scQt.zoneLocationLevel.parameterId}"
 						style="width: 209px;">
@@ -70,12 +71,13 @@
 		</h:panelGrid>
 		<div align="right" style="width: 100%">
 
-			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all" rendered="#{isEditableStatus}"
-				update="@([id$=zonePopupGeneral])"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
+				rendered="#{isEditableStatus}" update="@([id$=zonePopupGeneral])"
 				actionListener="#{directLOABackingBean.showGeneralZonesPopup}" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
 				partialSubmit="true" oncomplete="zonesNonpanelDeletePopUp.show();"
-				update="@([id$=#{zonesNonpanelDeleteId}])"  rendered="#{isEditableStatus}" />
+				update="@([id$=#{zonesNonpanelDeleteId}])"
+				rendered="#{isEditableStatus}" />
 		</div>
 		<ui:param name="zonesNonpanelDeleteId" value="zonesNonpanelDeleteId"></ui:param>
 		<ac:confirmationPopup id="#{zonesNonpanelDeleteId}"
@@ -83,7 +85,7 @@
 			okAction="directLOABackingBean.deleteTreeNode" width="400"
 			height="200" title="#{lbl['lbl.sc.qt.zone.location.info']}"
 			content="#{lbl['lbl.sc.dialog.confirm.zones.delete']}"
-			update="@([id$=zoneGeneralDataTable])" />
+			update="@([id$=zoneGeneralDataTable],[id$=#{productAndServiceId}])" />
 
 		<p:dialog id="dlgId" header="#{lbl['lbl.sc.add.location']}"
 			widgetVar="ZoneGeneral" modal="true" width="490" position="top"
