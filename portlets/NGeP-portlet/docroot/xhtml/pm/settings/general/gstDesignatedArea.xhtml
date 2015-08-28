@@ -74,9 +74,13 @@
 				<h:outputText value="#{lbl['lbl.pm.status']}" />
 			</f:facet>
 			<p:selectOneMenu value="#{daObj.recordStatusFlg}"
-				disabled="#{daObj.brandNew or daObj.recordStatusFlg == 0}" style="width:90px;">
+				disabled="#{daObj.brandNew}" style="width:90px;">
 				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
-				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />				
+				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
+				<p:ajax event="change" immediate="true"
+								listener="#{ruleCatalogueBackingBean.gstStatusChange(daObj)}"
+								partialSubmit="true" process="@this"
+								update="@this" />				
 			</p:selectOneMenu>
 		</p:column>
 		
