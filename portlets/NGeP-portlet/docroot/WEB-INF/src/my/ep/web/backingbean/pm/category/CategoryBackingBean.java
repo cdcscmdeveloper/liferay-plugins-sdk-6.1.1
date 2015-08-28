@@ -595,9 +595,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				// ArrayList<PmBasicCategory>());
 				// this.getManagedBean().setPmBasicCategoryList(null);
 				this.getManagedBean().setCatLevel("3");
-				this.getManagedBean().setNewCategory(true);
+				this.getManagedBean().setNewCategory(true);				
 				reloadSelectionPmCategoryL3();
 				updateSpecialCategory();
+				this.getManagedBean().getBasicCategoryList().clear();
+				this.getManagedBean().getPmMachineCategoryList().clear();
+				this.getManagedBean().getCategoryRestrList().clear();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -949,7 +952,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 				reloadSelectionPmCategoryL3();
 				updateSpecialCategory();
-
+             
 				for (PmBasicCategory pmBasicCategory : this.getManagedBean()
 						.getPmCategoryL3().getPmBasicCategory()) {
 					
@@ -1039,6 +1042,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						}
 					}
 				}
+			
 				this.getManagedBean().setPmCategoryL2(
 						resDTO.getCategoryL3().getPmCategoryL2());
 				this.getManagedBean().setPmCategoryL3(resDTO.getCategoryL3());
@@ -1818,24 +1822,6 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 		List<PmMachineCategory> pmMachineCategoryList = this.getManagedBean()
 				.getPmCategoryL3().getPmMachineCategory();
-		boolean isActive = false;
-
-		if(!this.getManagedBean().isNewCategory()){
-		if (CollectionUtils.isNotEmpty(pmMachineCategoryList)) {
-			for (PmMachineCategory mechineCat : pmMachineCategoryList) {
-				if (DbValueConst.RECORD_STATUS_ACTIVE == mechineCat
-						.getRecordStatusFlg()) {
-					isActive = true;
-					break;
-				}
-			}
-		}
-		}else{			
-			this.getManagedBean().getPmCategoryL3().setPmMachineCategory(this.getManagedBean().getPmMachineCategoryList());			
-		}
-		/*if (CollectionUtils.isEmpty(pmMachineCategoryList) && !isActive) {
-			throw new EpException(MessageConst.ERROR_775008);
-		}*/
 
 		List<PmMachineCategory> tobeAddedPmMachineCategory = this
 				.getManagedBean().getTobeAddedPmMachineCategoryList();
@@ -1850,7 +1836,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				pmMachineCategoryList.addAll(tobeAddedPmMachineCategory);
 				tobeAddedPmMachineCategory.clear();
 			}
-		} else if (!isActive) {
+		} else if (this.getManagedBean().getPmMachineCategory() == null
+				&& tobeAddedPmMachineCategory == null
+				&& this.getManagedBean().isCheckSpecialCategory()) {
 			throw new EpException(MessageConst.ERROR_775008);
 		}
 	}
