@@ -29,14 +29,16 @@
 			</p:dataTable>
 
 		</h:panelGroup>
-		<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-			actionListener="#{specificationBackingBean.cancelPopup}" style="float:right;"
-			onclick="stageTwoTech.hide();"></p:commandButton>
-		<p:commandButton value="#{lbl['lbl.btn.ok']}" style="float:right;"
-			process="@all" partialSubmit="true"
-			action="#{specificationBackingBean.addTechnicalComplianceList}"
-			update="stageTwotechProposal"></p:commandButton>
-
+		<p:spacer height="10"></p:spacer>
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+				actionListener="#{specificationBackingBean.cancelPopup}"
+				style="float:right;" onclick="stageTwoTech.hide();"></p:commandButton>
+			<p:commandButton value="#{lbl['lbl.btn.ok']}" style="float:right;"
+				process="@all" partialSubmit="true"
+				action="#{specificationBackingBean.addTechnicalComplianceList}"
+				update="stageTwotechProposal"></p:commandButton>
+		</div>
 		<p:ajax event="close"
 			listener="#{specificationBackingBean.closeListener}" />
 	</p:dialog>
