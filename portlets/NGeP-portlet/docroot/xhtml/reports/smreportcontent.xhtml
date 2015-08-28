@@ -663,6 +663,22 @@
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
+							test="#{smReportBackingBean.managedBean.rptGenBean.smPaymentToView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.paymentToscreen']}"
+								style="margin-top:5px;width:160px;" />
+							
+							<p:selectOneMenu value="#{reportBackingBean.smPaymentTo}"
+								style="margin-top:5px;width:300px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.government']}"
+									itemValue="#{lbl['lbl.rpt.drpdown.government']}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cdc']}"
+									itemValue="#{lbl['lbl.rpt.drpdown.cdc']}"></f:selectItem>
+									<p:ajax event="change" listener="#{reportBackingBean.changePaymentType}" partialSubmit="true"	update="@all" />
+							</p:selectOneMenu>
+						</c:if>
+						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smPaymentTypeView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.paymentType']}"
 								style="margin-top:5px;width:160px;" />
@@ -739,18 +755,11 @@
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 									itemValue="#{null}"></f:selectItem>
 								<f:selectItems value="#{reportBackingBean.paymentTypeList}"></f:selectItems>
+									
 									<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 							</p:selectOneMenu>
 						</c:if>
-						<c:if
-							test="#{smReportBackingBean.managedBean.rptGenBean.smPaymentToView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.paymentToscreen']}"
-								style="margin-top:5px;width:160px;" />
-							<p:inputText 
-								value="#{reportBackingBean.smPaymentTo}"
-								style="margin-top:5px;width:290px;">
-							</p:inputText>
-						</c:if>
+						
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smApplicationTypeView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.applicationType']}"

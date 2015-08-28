@@ -2669,6 +2669,22 @@ public class ReportBackingBean extends
 	public void setEnableValue(boolean enableValue) {
 		this.enableValue = enableValue;
 	}
+	public void changePaymentType(){
+		this.setSmPaymentType(null);
+		paymentTypeList = new ArrayList<SelectItem>();
+		if ((null != this.getSmPaymentTo())&& (ReportConst.EMPTY_VAL != this.getSmPaymentTo())) {
+			if(this.getSmPaymentTo().trim().equalsIgnoreCase("Government")){
+				retrieveGovtPaymentTypeList();
+			}else if(this.getSmPaymentTo().trim().equalsIgnoreCase("CDC")){
+				retrieveCDCPaymentTypeList();
+			}else {
+				retrievePaymentTypeList();
+			}
+		}else{
+			retrievePaymentTypeList();
+		}
+		
+	}
 	
 	public List<SelectItem> retrievePaymentTypeList(){
 		paymentTypeList = new ArrayList<SelectItem>();		
@@ -2677,6 +2693,38 @@ public class ReportBackingBean extends
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IPMReportSO.class);			
 					List<Object[]> regStatusList = reportSO.retrievePaymentTypeList(strLanguage);			
+					for (Object[] object : regStatusList) {
+						SelectItem selectItem = new SelectItem();						
+						selectItem.setValue(object[1].toString());
+						selectItem.setLabel(object[0].toString());
+						paymentTypeList.add(selectItem);
+					}
+		}
+		return paymentTypeList;
+	}
+	public List<SelectItem> retrieveGovtPaymentTypeList(){
+		paymentTypeList = new ArrayList<SelectItem>();		
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+									IPMReportSO.class);			
+					List<Object[]> regStatusList = reportSO.retrieveGovtPaymentTypeList(strLanguage);			
+					for (Object[] object : regStatusList) {
+						SelectItem selectItem = new SelectItem();						
+						selectItem.setValue(object[1].toString());
+						selectItem.setLabel(object[0].toString());
+						paymentTypeList.add(selectItem);
+					}
+		}
+		return paymentTypeList;
+	}
+	public List<SelectItem> retrieveCDCPaymentTypeList(){
+		paymentTypeList = new ArrayList<SelectItem>();		
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+									IPMReportSO.class);			
+					List<Object[]> regStatusList = reportSO.retrieveCDCPaymentTypeList(strLanguage);			
 					for (Object[] object : regStatusList) {
 						SelectItem selectItem = new SelectItem();						
 						selectItem.setValue(object[1].toString());
