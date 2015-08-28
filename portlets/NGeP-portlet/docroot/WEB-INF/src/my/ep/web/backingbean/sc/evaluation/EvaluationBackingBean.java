@@ -5759,7 +5759,7 @@ public class EvaluationBackingBean extends
 								if (this.getManagedBean()
 										.getCurrentStatusId()
 										.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)) {
-									// checkSampleComplianceCompleted();
+									checkSampleComplianceCompleted();
 								}
 							}
 
@@ -6025,7 +6025,7 @@ public class EvaluationBackingBean extends
 								if (this.getManagedBean()
 										.getCurrentStatusId()
 										.equals(QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL)) {
-									// checkSampleComplianceCompleted();
+									 checkSampleComplianceCompleted();
 								}
 							}
 							if (this.getManagedBean()
@@ -6166,33 +6166,20 @@ public class EvaluationBackingBean extends
 
 	// check sample compliance completed or not
 	private void checkSampleComplianceCompleted() {
+		IQTEvaluationSO evaluationSO=null;
 		try {
-			List<ScQtSampleLable> sampleLabelList = this.getManagedBean()
-					.getComplianceSampleLblsupplier();
-			if (null == sampleLabelList || sampleLabelList.isEmpty()) {
-				retriveComplianceSample();
-				sampleLabelList = this.getManagedBean()
-						.getComplianceSampleLblsupplier();
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			EvaluationReqDTO sampleReqDto=new EvaluationReqDTO();
+			sampleReqDto.setQtId(this.getManagedBean().getScQt().getQtId());
+			EvaluationResDTO sampleResDto=new EvaluationResDTO();
+			sampleResDto=evaluationSO.checkSampleSubmissionStatus(sampleReqDto);
+			if(sampleResDto.getSampleSubmissionPendingCount()>0){
+				this.getManagedBean().setComplianceActiveIndex(1);
+				throw new EpException(MessageConst.ERROR_760262);
 			}
-			if (null != sampleLabelList && !sampleLabelList.isEmpty()) {
-				for (ScQtSampleLable scqtSampleLabel : sampleLabelList) {
-					complianceSampleItems(scqtSampleLabel);
-					List<ScQtSampleItem> sampleItemList = this.getManagedBean()
-							.getComplianceSampleItemList();
-					if (null != sampleItemList && !sampleItemList.isEmpty()) {
-						for (ScQtSampleItem sampleItem : sampleItemList) {
-							if (null == sampleItem.getSubmissionStatus()
-									|| null == sampleItem.getSubmissionStatus()
-											.getParameterId()) {
-								throw new EpException(MessageConst.ERROR_760262);
-							}
-
-						}
-
-					}
-				}
-
-			}
+			
+			
 		} finally {
 
 		}
