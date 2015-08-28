@@ -205,6 +205,7 @@ public class FinancialOrgBackingBean extends
 		financialOrg.setPmCountry(defaultCountry);
 		financialOrg.setPmFinancialAccs(new ArrayList<PmFinancialAcc>());
 		financialOrg.setPmFinancialSvcs(new ArrayList<PmFinancialSvc>());
+		getManagedBean().setServiceTypes(new ArrayList<String>());
 		getManagedBean().setFinancialOrg(financialOrg);
 		
 		//Financial Org Address
@@ -249,6 +250,7 @@ public class FinancialOrgBackingBean extends
 		log.info("maintainFinancialOrg");
 		
 		this.getManagedBean().setFinancialOrg(retrievePmFinancialOrg(id));
+		getManagedBean().setServiceTypes(new ArrayList<String>());
 
 		for (PmFinancialSvc financialSvc : this.getManagedBean().getFinancialOrg().getPmFinancialSvcs()) {
 			PmParameter pmParameter = (PmParameter) serviceTypeMapper.get(financialSvc.getServiceTypeCode().getParameterId());
@@ -964,15 +966,19 @@ public class FinancialOrgBackingBean extends
 		log.info("updateService");
 		validateFinancialService();
 		
-		Long finServiceId = (Long) e.getComponent().getAttributes().get("value");
-		System.out.println("finServiceId :" + finServiceId);
-
-		PmParameter pmParameter = (PmParameter) serviceTypeMapper.get(finServiceId);
-
-		if (getManagedBean().getServiceTypes() == null) {
-			getManagedBean().setServiceTypes(new ArrayList<String>());
+//		Long finServiceId = (Long) e.getComponent().getAttributes().get("value");
+//		System.out.println("finServiceId :" + finServiceId);
+//
+//		PmParameter pmParameter = (PmParameter) serviceTypeMapper.get(finServiceId);
+		PmParameter pmParameter = null;
+		getManagedBean().setServiceTypes(new ArrayList<String>());
+		Set<String> serviceTypeSet= new HashSet<String>();
+		for(PmFinancialSvc finSev :getManagedBean().getFinancialOrg().getPmFinancialSvcs()){
+			pmParameter = (PmParameter) serviceTypeMapper.get(finSev.getServiceTypeCode().getParameterId());
+			serviceTypeSet.add(pmParameter.getParameterCode());
 		}
-		getManagedBean().getServiceTypes().add(pmParameter.getParameterCode());
+		
+		getManagedBean().getServiceTypes().addAll(serviceTypeSet);
 	}
 	
 	/**
