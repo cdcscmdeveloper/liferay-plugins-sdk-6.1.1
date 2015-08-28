@@ -640,11 +640,6 @@ public class LOADetailBackingBean extends
 		}
 		
 		getManagedBean().setBranchsList(resDTO.getSmSupplierBranchs());
-		
-		if(scLoa.getSupplierBranch() != null && !scLoa.getSupplierBranch().isEmpty()){
-			scLoa.getSupplierBranch().trim();
-		}
-		
 		if (scLoa.isBrandNew()) {
 			handleBranchDetailsChanged();
 		}
