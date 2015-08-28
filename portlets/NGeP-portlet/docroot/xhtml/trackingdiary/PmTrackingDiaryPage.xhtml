@@ -63,15 +63,16 @@
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.search']}"
 						action="#{pmTrackingDiaryBackingBean.searchTrackingDiaryByDocType(pmTrackingDiaryBackingBean.managedBean.transactionType)}"
-						partialSubmit="true" process="@this" update="searchPanel" />
+						partialSubmit="true" process="@this" update="@form" />
 				</div>
 
-				<ac:trackingDiaryDetail
+				</p:panel>
+				<ac:trackingDiaryDetail id="resultPanel"
+				    pannelHeaderTitle ="#{lbl['lbl.td.result']}"
 					action="#{pmTrackingDiaryBackingBean.backToPrev}"
 					showBackButton="false"
 					dataTable="#{pmTrackingDiaryBackingBean.managedBean.searchTrackingDiaryDataModel}" />
 
-				</p:panel>
 				</h:panelGroup>
 
 				</ui:composition>
