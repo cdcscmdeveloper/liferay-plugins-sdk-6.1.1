@@ -1,6 +1,8 @@
 package my.ep.web.managedbean.trackingdiary;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -1010,10 +1012,17 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 				isSearchBeanEmpty = false;
 			}
 			if(getToDate() != null){
+				Calendar calendar = Calendar.getInstance();
+			    calendar.setTime(getToDate());
+			    calendar.set(Calendar.HOUR_OF_DAY, 23);
+			    calendar.set(Calendar.MINUTE, 59);
+			    calendar.set(Calendar.SECOND, 0);
+			    
+			    Date toDate = new Timestamp(calendar.getTime().getTime());
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("actionedDate",
 								SearchOperator.OPERATOR_LESS_EQUAL.value(),
-								getToDate()));		
+								toDate));		
 				isSearchBeanEmpty = false;
 			}
 			System.out.println("TrackingDiaryReqDTO-docType"
