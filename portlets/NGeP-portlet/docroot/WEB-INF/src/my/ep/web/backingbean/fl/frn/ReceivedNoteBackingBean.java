@@ -59,7 +59,6 @@ import my.ep.persistence.entity.pm.common.PmCriteria;
 import my.ep.persistence.entity.pm.common.PmCriteriaDesc;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -869,25 +868,34 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			fulfilmentNote.setGstEffectiveDate(resDTO.getSmGstSupplier().getGstEffDate());
 			fulfilmentNote.setGstDeclaredDate(resDTO.getSmGstSupplier().getGstDeclaredDate());
 			fulfilmentNote.setGstRegNo(resDTO.getSmGstSupplier().getGstRegNo());
+		} else {
+			fulfilmentNote.setGstEffectiveDate(null);
+			fulfilmentNote.setGstDeclaredDate(null);
+			fulfilmentNote.setGstRegNo(null);
 		}
 
-		boolean amtChanged = reCalculateGstUnitPrice(resDTO.getSmGstSupplier(), fulfilmentNote);
+		boolean amtChanged = reCalculateGstUnitPrice(fulfilmentNote);
 		if(amtChanged == true){
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 					MessageUtils.getMessage(MessageConst.INFO_745009, new String[]{getManagedBean().getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getDocNo()}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 		}
 	}
 	
-	private boolean reCalculateGstUnitPrice(SmGstSupplier smGstSupplier, FlFulfilmentNote fulfilmentNote){
+	public boolean reCalculateGstUnitPrice(FlFulfilmentNote fulfilmentNote){
 		boolean amtChanged = false;
 		if(fulfilmentNote.getFlRequest().getGstRate() == null){
 			fulfilmentNote.getFlRequest().setGstRate(BigDecimal.ZERO);
 		}
 		
-		boolean isFrnGST = smGstSupplier!=null && smGstSupplier.getGstEffDate()!=null && smGstSupplier.getGstEffDate().getTime() <= getManagedBean().getFulfilmentNote().getReceivedDate().getTime();
+		boolean isFrnGST = fulfilmentNote.getGstEffectiveDate()!=null && fulfilmentNote.getGstEffectiveDate().getTime() <= getManagedBean().getFulfilmentNote().getReceivedDate().getTime();
 		BigDecimal gstAmt = BigDecimal.ZERO;
+		BigDecimal frnGstAmt = BigDecimal.ZERO;
+		BigDecimal receivedAmt = BigDecimal.ZERO;
 		
 		for(FlFulfilmentNoteItem noteItem : fulfilmentNote.getFlFulfilmentNoteItem()){
+			if(!fulfilmentNote.isBrandNew()) {
+				frnGstAmt = noteItem.getGstAmount();
+			}
 			if(isFrnGST && noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().isGst()){
 				gstAmt = noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice().multiply(fulfilmentNote.getFlRequest().getGstRate().divide(new BigDecimal(100)));
 				noteItem.setGstAmount(gstAmt.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, BigDecimal.ROUND_HALF_UP));
@@ -896,7 +904,12 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				noteItem.setGstAmount(BigDecimal.ZERO);
 				noteItem.setGstUnitPrice(noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice());
 			}
-			if(!amtChanged && noteItem.getFlDelOrderItem().getGstAmount().compareTo(noteItem.getGstAmount())!=0) {
+			receivedAmt = noteItem.getReceivedQty().multiply(noteItem.getGstUnitPrice());
+			noteItem.setReceivedAmt(receivedAmt.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, BigDecimal.ROUND_HALF_UP));
+			if(!amtChanged && fulfilmentNote.isBrandNew() && noteItem.getFlDelOrderItem().getGstAmount().compareTo(noteItem.getGstAmount())!=0) {
+				amtChanged = true;
+			}
+			if(!amtChanged && !fulfilmentNote.isBrandNew() && noteItem.getGstAmount().compareTo(frnGstAmt)!=0) {
 				amtChanged = true;
 			}
 		}
