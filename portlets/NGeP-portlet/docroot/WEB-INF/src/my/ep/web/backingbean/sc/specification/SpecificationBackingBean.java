@@ -9070,7 +9070,7 @@ public class SpecificationBackingBean extends
 						checklistRemoveList.get(i).setDeleted(true);
 					}
 				}
-
+				log.info("backing bean saveCheckListScores toBeremoveCheckLists  size=="+checklistRemoveList.size());
 			}
 			if (null != checkList && null != checkList.getScQtCheckListValue()) {
 				int year = Calendar.getInstance().get(Calendar.YEAR);
@@ -9331,7 +9331,7 @@ public class SpecificationBackingBean extends
 						checklistRemoveList.get(i).setDeleted(true);
 					}
 				}
-
+				log.info("backing bean saveBankCheckListScores toBeremoveCheckLists  size=="+checklistRemoveList.size());
 			}
 
 			List<ScQtCheckListScore> noOfContractScore = new ArrayList<ScQtCheckListScore>();
