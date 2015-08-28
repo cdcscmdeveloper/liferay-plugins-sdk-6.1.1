@@ -65,9 +65,6 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	/** The terms conditions. */
 	private String termsConditions;
 	
-	/** The selected supplier branch name. */
-	private String selectedSupplierBranchName;
-	
 	/** The selected contract agency. */
 	private String selectedContractAgency;
 	
@@ -372,24 +369,6 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 */
 	public void setTermsConditions(String termsConditions) {
 		this.termsConditions = termsConditions;
-	}
-
-	/**
-	 * Gets the selected supplier branch name.
-	 *
-	 * @return the selectedSupplierBranchName
-	 */
-	public String getSelectedSupplierBranchName() {
-		return selectedSupplierBranchName;
-	}
-
-	/**
-	 * Sets the selected supplier branch name.
-	 *
-	 * @param selectedSupplierBranchName the selectedSupplierBranchName to set
-	 */
-	public void setSelectedSupplierBranchName(String selectedSupplierBranchName) {
-		this.selectedSupplierBranchName = selectedSupplierBranchName;
 	}
 
 	/**
