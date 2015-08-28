@@ -2623,12 +2623,10 @@ public class SmCommonUtil {
 					&& StringUtils.isNotBlank(softcertRequest.getReasonCode())) {
 				if (softcertRequest.getReasonCode().equals(
 						SupplierManagementConst.REJECTED_WITH_BLACKLIST)) {
-					personnel.setDisableRowSelection(true);
 					personnel.setSoftcertRejectReason(SmCommonUtil.getMessage(
 							"lbl.sm.softcert.rejected.blacklist", null));
 				} else if (softcertRequest.getReasonCode().equals(
 						SupplierManagementConst.REJECTED_WITH_FRAUD)) {
-					personnel.setDisableRowSelection(true);
 					personnel.setSoftcertRejectReason(SmCommonUtil.getMessage(
 							"lbl.sm.softcert.rejected.fraud", null));
 				} else if (softcertRequest

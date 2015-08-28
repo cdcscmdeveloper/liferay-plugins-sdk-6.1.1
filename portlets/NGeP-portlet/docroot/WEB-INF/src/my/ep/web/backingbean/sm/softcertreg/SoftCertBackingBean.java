@@ -368,20 +368,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 						&& personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL) {
 					iterator.remove();
 				} else {
-					if (StringUtils.isNotBlank(personnel
-							.getSoftcertRejectReason())
-							&& (personnel
-									.getSoftcertRejectReason()
-									.equals(SmCommonUtil
-											.getMessage(
-													"lbl.sm.softcert.rejected.blacklist",
-													null)) || personnel
-									.getSoftcertRejectReason()
-									.equals(SmCommonUtil.getMessage(
-											"lbl.sm.softcert.rejected.fraud",
-											null)))) {
-						iterator.remove();
-					} else if (personnel.getPmUser() == null) {
+					if (personnel.getPmUser() == null) {
 						iterator.remove();
 					}
 				}
