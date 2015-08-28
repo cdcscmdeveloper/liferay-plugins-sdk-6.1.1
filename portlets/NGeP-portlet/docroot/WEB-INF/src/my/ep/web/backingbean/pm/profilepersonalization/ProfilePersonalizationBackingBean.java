@@ -16,6 +16,7 @@ import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -24,6 +25,8 @@ import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.PmTrackingDairyVO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
@@ -41,6 +44,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -716,13 +720,23 @@ public class ProfilePersonalizationBackingBean extends
 			if(!user.isBrandNew()){
 				//track changes for tracking Diary
 				if(user.isModified()){
+					IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
+							.getServiceObject("pm", IStatusSO.class);
+					StatusReqDTO statusReqDTO = new StatusReqDTO();
+					statusReqDTO.setStatusId(user.getRecordStatusFlg()
+							.longValue());
+					StatusResDTO statusResDTO = statusSO
+							.retrieveStatusByStatusId(statusReqDTO);
+					
 				logger.info("Tracking diary for my profile :saveUserProfile");
 				String messageId = MessageConst.TD_80023;
 				String[] msgParam = new String[] {user.getUserName()};
 				reqDTO.setTrackingStatus(true);
 				reqDTO.getTrackDairyVOs().add(
 						PmCommonUtil.assignTrackingDairyValues(user,
-								getActionDesc(messageId, msgParam), null));
+								getActionDesc(messageId, msgParam),statusResDTO.getPmStatus() != null ? statusResDTO
+										.getPmStatus() : new PmStatus()));
+				
 				}
 			}
 			reqDTO.setPmUser(user);
@@ -739,9 +753,9 @@ public class ProfilePersonalizationBackingBean extends
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								MessageUtils.getMessage(
-										MessageConst.INFO_770049,
+										MessageConst.INFO_770051,
 										new String[] { resDTO.getPmUser()
-												.getLoginId() },
+												.getUserName() },
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 
@@ -958,13 +972,21 @@ public class ProfilePersonalizationBackingBean extends
 			reqDTO.setPmUser(this.getManagedBean().getSelectedUser());
 			PmUser user = this.getManagedBean().getSelectedUser();
             reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
+        	IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
+					.getServiceObject("pm", IStatusSO.class);
+			StatusReqDTO statusReqDTO = new StatusReqDTO();
+        	statusReqDTO.setStatusId(user.getRecordStatusFlg()
+					.longValue());
+			StatusResDTO statusResDTO = statusSO
+					.retrieveStatusByStatusId(statusReqDTO);
 			logger.info("Tracking diary for my profile: change password :changePassword");
 			String messageId = MessageConst.TD_80024;
 			String[] msgParam = new String[] {user.getUserName()};
 			reqDTO.setTrackingStatus(true);
 			reqDTO.getTrackDairyVOs().add(
 						PmCommonUtil.assignTrackingDairyValues(user,
-								getActionDesc(messageId, msgParam), null));
+								getActionDesc(messageId, msgParam),statusResDTO.getPmStatus() != null ? statusResDTO
+										.getPmStatus() : new PmStatus()));
 			
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
@@ -981,7 +1003,7 @@ public class ProfilePersonalizationBackingBean extends
 										null,
 										MessageUtils
 												.getMessage(
-														MessageConst.INFO_770124,
+														MessageConst.INFO_770125,
 														new String[] { this
 																.getManagedBean()
 																.getSelectedUser()
@@ -1078,13 +1100,21 @@ public class ProfilePersonalizationBackingBean extends
 			 reqDTO = new UserReqDTO();
 			 reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
 			 PmUser user = getManagedBean().getSelectedUser();
+				IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
+						.getServiceObject("pm", IStatusSO.class);
+				StatusReqDTO statusReqDTO = new StatusReqDTO();
+				statusReqDTO.setStatusId(user.getRecordStatusFlg()
+						.longValue());
+				StatusResDTO statusResDTO = statusSO
+						.retrieveStatusByStatusId(statusReqDTO);
 				logger.info("Tracking diary for my profile: change challenge Questions :changeChallengeQuestions");
 				String messageId = MessageConst.TD_80029;
 				String[] msgParam = new String[] {user.getUserName()};
 				reqDTO.setTrackingStatus(true);
 				reqDTO.getTrackDairyVOs().add(
 							PmCommonUtil.assignTrackingDairyValues(user,
-									getActionDesc(messageId, msgParam), null));
+									getActionDesc(messageId, msgParam), statusResDTO.getPmStatus() != null ? statusResDTO
+											.getPmStatus() : new PmStatus()));
 			 reqDTO.setLoginId(getManagedBean().getSelectedUser()
 					.getLoginId());
 			 reqDTO.setUserOimPassword(getManagedBean().getCurrentPassword());
