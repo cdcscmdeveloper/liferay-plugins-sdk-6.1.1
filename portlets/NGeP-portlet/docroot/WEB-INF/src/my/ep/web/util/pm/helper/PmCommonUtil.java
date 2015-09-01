@@ -232,7 +232,32 @@ public class PmCommonUtil {
 
 		return roleDesc;
 	}
+	
+	/**
+	 * Get Role description by role code and Language code.
+	 * 
+	 * @param roleCode
+	 *            the role code.
+	 * @param languageCode
+	 *            the language code.
+	 * @return role description
+	 */
+	public static String getRoleDescByRoleCodeAndLanguage(String roleCode, String languageCode) {
+		String roleDesc = null;
 
+		if (roleCode != null) {
+			// Get the role description.
+			PmRoleDesc pmRoleDesc = RoleHelper.getInstance().getRoleDescByCodeAndLanguage(
+					roleCode, languageCode);
+
+			if (pmRoleDesc != null) {
+				roleDesc = pmRoleDesc.getRoleName();
+			}
+		}
+
+		return roleDesc;
+	}
+	
 	/**
 	 * initialize a complete Pm Address
 	 */

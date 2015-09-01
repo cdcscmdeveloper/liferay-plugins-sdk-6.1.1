@@ -219,14 +219,14 @@ public class CalendarBackingBean extends
 			getManagedBean().loadSchedule(this.getManagedBean().getSelectedState().getStateId());
 		}
 		
-			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext.addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(
-									"tsssssstt msggggg",
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
+//			FacesContext facesContext = FacesContext.getCurrentInstance();
+//			facesContext.addMessage(
+//					null,
+//					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+//							MessageUtils.getMessage(
+//									"test",
+//									MessageUtils.BUNDLE_COMMON_MESSAGES,
+//									new FacesScopes().getUserLocale())));
 	}
 
 	public void fillHolidayModelByEvent(PmHoliday holiday) {

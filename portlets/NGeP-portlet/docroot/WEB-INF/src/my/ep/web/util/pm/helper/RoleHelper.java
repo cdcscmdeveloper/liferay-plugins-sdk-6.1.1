@@ -147,6 +147,53 @@ public class RoleHelper {
 		return roleDesc;
 	}
 	
+	/**
+	 * Get role description by role code and language code.
+	 * 
+	 * @param roleCode
+	 * 			the role code.
+	 * @param languageCode
+	 * 			the language Code.
+	 * @return PmRoleDesc instance
+	 */
+	public PmRoleDesc getRoleDescByCodeAndLanguage(String roleCode, String languageCode) {
+		debugLogger("getRoleDescByCode.roleCode: " + roleCode);
+		
+		String key = getRoleKey(roleCode, languageCode)
+		.toString();
+		
+		// Get the role description list from map.
+		PmRoleDesc roleDesc = roleMap.get(key);
+		
+		if (roleDesc == null) {
+			IRoleSO roleSO;
+			
+			try {
+				roleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRoleSO.class);
+				
+				RoleReqDTO reqDTO = new RoleReqDTO();
+				reqDTO.setRoleCode(roleCode);
+				reqDTO.setLanguage(languageCode);
+				
+				// Get role description from db.
+				RoleResDTO resDTO = roleSO.retrieveRoleDescByRoleCode(reqDTO);
+				
+				roleDesc = resDTO.getPmRoleDesc();
+			    
+			    // Put status description into map.
+			    roleMap.put(key, roleDesc);
+				
+				debugLogger("put into list: " + roleDesc);
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new EpException(e.getMessage());
+			} finally {
+				roleSO = null;
+			}
+		}
+		
+		return roleDesc;
+	}
 	private void debugLogger(Object message) {
         if(log.isDebugEnabled()) {
             log.debug(message);
