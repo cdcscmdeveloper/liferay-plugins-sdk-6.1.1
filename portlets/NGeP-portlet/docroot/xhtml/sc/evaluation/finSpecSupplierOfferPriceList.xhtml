@@ -12,97 +12,99 @@
 
 
 
-	<h:panelGroup>
-		<ui:include src="financialspecSupplierList.xhtml"></ui:include>
 
-		<h:panelGroup>
-			<p:panel header="#{lbl['lbl.sc.spec.scoring.offered.price']}">
-				<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.spec.scoring.offered.price.instruction']}" escape="false" />
-				<table>
-					<tr>
-						<td><h:outputLabel value="#{lbl['lbl.sc.spec.est.price']}"></h:outputLabel></td>
-						<td><p:inputText disabled="true" style="text-align:right"
-								value="#{evaluationBackingBean.managedBean.finSpecZoneEstimatedPrice}">
-								<f:convertNumber
-									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-							</p:inputText></td>
-					</tr>
-				</table>
-				<p:panelGrid style="margin-top:5px;width:100%;"
-					styleClass="panelGridBorders tr, panelGridBorders td">
-					<f:facet name="header">
-						<p:row>
-							<p:column styleClass="panelGridHeaders" colspan="1">#{lbl['lbl.sc.offered.price']}</p:column>
-							<p:column styleClass="panelGridHeaders" colspan="1">#{lbl['lbl.tpl.spec.content.scoring.scoring.from.variance']}</p:column>
-							<p:column styleClass="panelGridHeaders" colspan="1">#{lbl['lbl.tpl.spec.content.scoring.scoring.to.variance']}</p:column>
-							<p:column styleClass="panelGridHeaders">#{lbl['lbl.sc.eva.from.varience.ringgit']}</p:column>
-							<p:column styleClass="panelGridHeaders">#{lbl['lbl.sc.eva.to.varience.ringgit']}</p:column>
-							<p:column styleClass="panelGridHeaders">#{lbl['lbl.tpl.spec.content.scoring.scoring.below.score']}</p:column>
-							<p:column styleClass="panelGridHeaders">#{lbl['lbl.tpl.spec.content.scoring.scoring.within.score']}</p:column>
-							<p:column styleClass="panelGridHeaders">#{lbl['lbl.tpl.spec.content.scoring.scoring.above.score']}</p:column>
+	<ui:include src="financialspecSupplierList.xhtml"></ui:include>
 
 
-						</p:row>
-					</f:facet>
-					<p:row>
-						<p:column style="font-weight: bold;">
-							<h:outputText value="#{lbl['lbl.sc.by.package']}" />
-							<ac:iconTooltip value="#{lbl['lbl.sc.by.package.evaluation.tooltip']}" />
-						</p:column>
-						<p:column style="font-weight: bold;">
+	<p:panel header="#{lbl['lbl.sc.spec.scoring.offered.price']}">
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.spec.scoring.offered.price.instruction']}"
+			escape="false" />
+		<table>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.sc.spec.est.price']}"></h:outputLabel></td>
+				<td><p:inputText disabled="true" style="text-align:right"
+						value="#{evaluationBackingBean.managedBean.finSpecZoneEstimatedPrice}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText></td>
+			</tr>
+		</table>
+		<p:panelGrid style="margin-top:5px;width:100%;"
+			styleClass="panelGridBorders tr, panelGridBorders td">
+			<f:facet name="header">
+				<p:row>
+					<p:column styleClass="panelGridHeaders" colspan="1">#{lbl['lbl.sc.offered.price']}</p:column>
+					<p:column styleClass="panelGridHeaders" colspan="1">#{lbl['lbl.tpl.spec.content.scoring.scoring.from.variance']}</p:column>
+					<p:column styleClass="panelGridHeaders" colspan="1">#{lbl['lbl.tpl.spec.content.scoring.scoring.to.variance']}</p:column>
+					<p:column styleClass="panelGridHeaders">#{lbl['lbl.sc.eva.from.varience.ringgit']}</p:column>
+					<p:column styleClass="panelGridHeaders">#{lbl['lbl.sc.eva.to.varience.ringgit']}</p:column>
+					<p:column styleClass="panelGridHeaders">#{lbl['lbl.tpl.spec.content.scoring.scoring.below.score']}</p:column>
+					<p:column styleClass="panelGridHeaders">#{lbl['lbl.tpl.spec.content.scoring.scoring.within.score']}</p:column>
+					<p:column styleClass="panelGridHeaders">#{lbl['lbl.tpl.spec.content.scoring.scoring.above.score']}</p:column>
 
-							<h:outputLabel value="#{finSpecofferPrice.fromVariance}"
-								style="text-align:right"></h:outputLabel>
-						</p:column>
 
+				</p:row>
+			</f:facet>
+			<p:row>
+				<p:column style="font-weight: bold;">
+					<h:outputText value="#{lbl['lbl.sc.by.package']}" />
+					<ac:iconTooltip
+						value="#{lbl['lbl.sc.by.package.evaluation.tooltip']}" />
+				</p:column>
+				<p:column style="font-weight: bold;">
 
-
-						<p:column colspan="1" style="font-weight: bold;">
-							<h:outputLabel value="#{finSpecofferPrice.toVariance}"
-								style="text-align:right"></h:outputLabel>
-						</p:column>
-
-						<p:column colspan="1" style="font-weight: bold;">
-							<h:outputLabel
-								value="#{evaluationBackingBean.managedBean.packageFromVarieance}"
-								style="text-align:right">
-								<f:convertNumber
-									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-							</h:outputLabel>
-						</p:column>
-
-						<p:column colspan="1" style="font-weight: bold;">
-							<h:outputLabel
-								value="#{evaluationBackingBean.managedBean.packageToVarieance}"
-								style="text-align:right">
-								<f:convertNumber
-									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-							</h:outputLabel>
-						</p:column>
-						<p:column colspan="1" style="font-weight: bold;">
-							<h:outputLabel value="#{finSpecofferPrice.belowScore}"
-								style="text-align:right"></h:outputLabel>
-						</p:column>
-						<p:column colspan="1" style="font-weight: bold;">
-							<h:outputLabel
-								value="#{evaluationBackingBean.managedBean.withInVarieance}"
-								style="text-align:right"></h:outputLabel>
-						</p:column>
-						<p:column colspan="1" style="font-weight: bold;">
-							<h:outputLabel value="#{finSpecofferPrice.aboveScore}"
-								style="text-align:right"></h:outputLabel>
-						</p:column>
+					<h:outputLabel value="#{finSpecofferPrice.fromVariance}"
+						style="text-align:right"></h:outputLabel>
+				</p:column>
 
 
 
-					</p:row>
+				<p:column colspan="1" style="font-weight: bold;">
+					<h:outputLabel value="#{finSpecofferPrice.toVariance}"
+						style="text-align:right"></h:outputLabel>
+				</p:column>
+
+				<p:column colspan="1" style="font-weight: bold;">
+					<h:outputLabel
+						value="#{evaluationBackingBean.managedBean.packageFromVarieance}"
+						style="text-align:right">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputLabel>
+				</p:column>
+
+				<p:column colspan="1" style="font-weight: bold;">
+					<h:outputLabel
+						value="#{evaluationBackingBean.managedBean.packageToVarieance}"
+						style="text-align:right">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputLabel>
+				</p:column>
+				<p:column colspan="1" style="font-weight: bold;">
+					<h:outputLabel value="#{finSpecofferPrice.belowScore}"
+						style="text-align:right"></h:outputLabel>
+				</p:column>
+				<p:column colspan="1" style="font-weight: bold;">
+					<h:outputLabel
+						value="#{evaluationBackingBean.managedBean.withInVarieance}"
+						style="text-align:right"></h:outputLabel>
+				</p:column>
+				<p:column colspan="1" style="font-weight: bold;">
+					<h:outputLabel value="#{finSpecofferPrice.aboveScore}"
+						style="text-align:right"></h:outputLabel>
+				</p:column>
 
 
-				</p:panelGrid>
+
+			</p:row>
 
 
-			</p:panel>
-		</h:panelGroup>
-	</h:panelGroup>
+		</p:panelGrid>
+
+
+	</p:panel>
+
 
 </ui:composition>
