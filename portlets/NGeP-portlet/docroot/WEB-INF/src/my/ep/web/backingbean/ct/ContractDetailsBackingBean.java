@@ -269,7 +269,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	public BigDecimal getPaidPercentage() {
 			paidPercentage = (this.getManagedBean().getPaidInvoiceAmt().multiply(
 				BigDecimal.valueOf(100)).divide(
-						this.getManagedBean().getContractVer().getCtContractAmount().getContractAmount(), 2, RoundingMode.HALF_UP));
+						this.getManagedBean().getGstTotalAmount(), 2, RoundingMode.HALF_UP));
 		return paidPercentage;
 	}
 

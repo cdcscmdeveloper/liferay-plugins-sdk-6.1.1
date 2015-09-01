@@ -5,8 +5,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel id="advancePayment" header="#{lbl['lbl.ct.panel.adv.payment.tracking']}"    toggleable="true"  toggleSpeed="500">     
-        <!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.advance.payment.dtls']}"/> -->
+	<p:panel id="advancePayment" toggleable="true"  toggleSpeed="500"
+		rendered="#{contractDetailsBackingBean.managedBean.flgPaymentTracking}">
+        <f:facet name="header">
+			<h:outputText value="#{lbl['lbl.ct.panel.adv.payment.tracking']}"/>
+			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.advance.payment.dtls']}"/>
+	   	</f:facet>  
         <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth250" >  
            	 <p:outputLabel  value="#{lbl['lbl.ct.advance.payment.amt']}"/>
            	 <h:panelGrid columns="3">	            
@@ -51,12 +55,15 @@
         </h:panelGrid>
 	  </p:panel>
 	  
-	  <p:panel id="contractCompletion" header="#{lbl['lbl.ct.panel.contract.utilization']}"    toggleable="true"  toggleSpeed="500">     
-	       <!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.utilization.dtls']}"/> -->
+	  <p:panel id="contractCompletion" toggleable="true"  toggleSpeed="500">     
+	       <f:facet name="header">
+				<h:outputText value="#{lbl['lbl.ct.panel.contract.utilization']}"/>
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.utilization.dtls']}"/>
+	   	   </f:facet>
 	       <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth250" >  
                 <p:outputLabel  value="#{lbl['lbl.ct.contract.amount']}" />  
                 <p:inputText style="width:170px;" styleClass="ppRightBtn" disabled="true"
-                    value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractAmount.contractAmount}">
+                    value="#{contractDetailsBackingBean.managedBean.gstTotalAmount}">
                     <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
                 </p:inputText>
        			
