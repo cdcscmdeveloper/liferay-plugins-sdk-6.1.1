@@ -18,7 +18,10 @@
 				<td colspan="3"><p:inputText size="30" required="true"
 						immediate="true" disabled="#{!isEditableStatus}"
 						style="margin-bottom:5px;" label="#{lbl['lbl.sc.document.title']}"
-						value="#{directLOABackingBean.managedBean.prodscQtDoc.tplSpecMaster.specName}" /></td>
+						value="#{directLOABackingBean.managedBean.prodscQtDoc.tplSpecMaster.specName}">
+						<p:ajax event="blur" process="@this" update="@this">
+						</p:ajax>
+					</p:inputText></td>
 			</tr>
 			<tr>
 

@@ -4,246 +4,202 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc" >
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}"
+		toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
-		<c:if test="#{!isDocTypeQuotation}">
-		<tr>
-			<td width="18%">
-				<p:outputLabel value="#{lbl['lbl.sc.ep.no']}" />
-			</td>
-			<td width="82%">
-				<p:inputText size="50"
-					value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.epNo}"
-					disabled="true" />
-			</td>
-		</tr>
-		</c:if>
-		<tr>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.mof.no']}" />
-			</td>
-			<td>
-				<p:inputText size="50"
-					value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
-					disabled="true" />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" />
-			</td>
-			<td>
-				<p:inputText size="50"
-					value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.supplierName}"
-					disabled="true" />
-				<p:spacer width="5" />
-				<p:commandLink oncomplete="suppDetailsPopup.show();return false;" process="@this" 
-					update="@([id$=suppDetailsPopup])">
-					
-					<p:graphicImage value="/css/images/design/evaluate.png"  title="#{lbl['lbl.sc.view.companyinfo']}" style="vertical-align:middle" />
-					
-					<f:setPropertyActionListener value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier}" 
-						target="#{supplierDetailBackingBean.smSupplier}" />
-				</p:commandLink>
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.gst.register.num']}" />
-			</td>
-			<td>
-				<p:inputText size="50"
-					value="#{directLOABackingBean.managedBean.scLoa.gstRegNo eq null ? lbl['lbl.txt.na']:directLOABackingBean.managedBean.scLoa.gstRegNo}"
-					disabled="true" /><ac:iconTooltip value="#{lbl['lbl.sc.gst.registartion.number.tooltip']}" />
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.gst.effective.date']}" />
-			</td>
-			<td>
-				<p:inputText size="50"
-					value="#{directLOABackingBean.managedBean.scLoa.gstEffDate eq null ? lbl['lbl.txt.na']:directLOABackingBean.managedBean.scLoa.gstEffDate}"
-					disabled="true" >
-					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText><ac:iconTooltip value="#{lbl['lb.sc.gst.effective.date.tooltip']}" />
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.gst.declared.date']}" />
-			</td>
-			<td>
-				<p:inputText size="50"
-					value="#{directLOABackingBean.managedBean.scLoa.gstDeclaredDate eq null ? lbl['lbl.txt.na'] : directLOABackingBean.managedBean.scLoa.gstDeclaredDate}"
-					disabled="true" >
-					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText><ac:iconTooltip value="#{lbl['lbl.sc.gst.declartive.date.tooltip']}" />
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.branch']}" />
-			</td>
-			<td>
-				<p:inputText id="branch" size="50"
-					value="#{directLOABackingBean.managedBean.selectedSupplierBranchName}"
-					disabled="true" />
-			</td>
-		</tr>
-		
-		<tr>
+			<c:if test="#{!isDocTypeQuotation}">
+				<tr>
+					<td width="18%"><p:outputLabel value="#{lbl['lbl.sc.ep.no']}" />
+					</td>
+					<td width="82%"><p:inputText size="50"
+							value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.epNo}"
+							disabled="true" /></td>
+				</tr>
+			</c:if>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.mof.no']}" /></td>
+				<td><p:inputText size="50"
+						value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" /></td>
+				<td><p:inputText size="50"
+						value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.supplierName}"
+						disabled="true" /> <p:spacer width="5" /> <p:commandLink
+						oncomplete="suppDetailsPopup.show();return false;" process="@this"
+						update="@([id$=suppDetailsPopup])">
+
+						<p:graphicImage value="/css/images/design/evaluate.png"
+							title="#{lbl['lbl.sc.view.companyinfo']}"
+							style="vertical-align:middle" />
+
+						<f:setPropertyActionListener
+							value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier}"
+							target="#{supplierDetailBackingBean.smSupplier}" />
+					</p:commandLink></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.gst.register.num']}" />
+				</td>
+				<td><p:inputText size="50"
+						value="#{directLOABackingBean.managedBean.scLoa.gstRegNo eq null ? lbl['lbl.txt.na']:directLOABackingBean.managedBean.scLoa.gstRegNo}"
+						disabled="true" />
+					<ac:iconTooltip
+						value="#{lbl['lbl.sc.gst.registartion.number.tooltip']}" /></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.gst.effective.date']}" />
+				</td>
+				<td><p:inputText size="50"
+						value="#{directLOABackingBean.managedBean.scLoa.gstEffDate eq null ? lbl['lbl.txt.na']:directLOABackingBean.managedBean.scLoa.gstEffDate}"
+						disabled="true">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText>
+					<ac:iconTooltip value="#{lbl['lb.sc.gst.effective.date.tooltip']}" />
+				</td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.gst.declared.date']}" />
+				</td>
+				<td><p:inputText size="50"
+						value="#{directLOABackingBean.managedBean.scLoa.gstDeclaredDate eq null ? lbl['lbl.txt.na'] : directLOABackingBean.managedBean.scLoa.gstDeclaredDate}"
+						disabled="true">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText>
+					<ac:iconTooltip
+						value="#{lbl['lbl.sc.gst.declartive.date.tooltip']}" /></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.branch']}" /></td>
+				<td><p:inputText id="branch" size="50"
+						value="#{directLOABackingBean.managedBean.selectedSupplierBranchName}"
+						disabled="true" /></td>
+			</tr>
+
+			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.branch.information']}" />
 				</td>
-				<td>
-					<p:commandButton oncomplete="attachmentPopupDlg.show();"
+				<td><p:commandButton oncomplete="attachmentPopupDlg.show();"
 						value="#{lbl['lbl.txt.attachment']}" partialSubmit="true"
 						process="@this" update="@([id$=attachmentPopup])">
-					</p:commandButton>
-					<ui:param name="branchInfoReport"
+					</p:commandButton> <ui:param name="branchInfoReport"
 						value="#{directLOABackingBean.managedBean.branchInfoReport}"></ui:param>
 					<h:commandLink
 						value="#{branchInfoReport.scLoaReportAttachment.fileName}"
 						styleClass="blue_font" immediate="true"
 						action="#{directLOABackingBean.downloadReport(branchInfoReport)}"
-						rendered="#{branchInfoReport ne null}" />
-					<ac:iconTooltip
-						value="#{lbl['lbl.sc.gst.branch.attachment.tooltip']}" />
-				</td>
+						rendered="#{branchInfoReport ne null}" /> <ac:iconTooltip
+						value="#{lbl['lbl.sc.gst.branch.attachment.tooltip']}" /></td>
 			</tr>
 		</table>
 	</p:panel>
 
-	<ui:include src="/xhtml/sc/loa/directnego/directawardloaPaymentDetailsMenu.xhtml" />
-	
-	<p:panel header="#{lbl['lbl.sc.loiloa.supplier.witness.detail']}" toggleable="true">
+	<ui:include
+		src="/xhtml/sc/loa/directnego/directawardloaPaymentDetailsMenu.xhtml" />
+
+	<p:panel header="#{lbl['lbl.sc.loiloa.supplier.witness.detail']}"
+		toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
-		<tr>
-			<td width="18%">
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.witness.full.name']}" />
-				<p:outputLabel value="*" styleClass="mandatory" />
-			</td>
-			<td colspan="3">
-				<p:inputText id="witnessName" size="50"
-					value="#{directLOABackingBean.managedBean.loaSupplierWitness.witnessName}"
-					label="#{lbl['lbl.sc.loiloa.witness.full.name']}"
-					maxlength="50" />
-				<p:message id="witnessNameMsg" for="witnessName" display="icon" />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.identification.no']}" />
-				<p:outputLabel value="*" styleClass="mandatory" />
-			</td>
-			<td colspan="3">
-				<p:inputText id="identificationNo" size="50"
-					value="#{directLOABackingBean.managedBean.loaSupplierWitness.identificationNo}"
-					label="#{lbl['lbl.sc.identification.no']}"
-					maxlength="15" />
-				<p:message id="identificationNoMsg" for="identificationNo" display="icon" />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.designation']}" />
-				<p:outputLabel value="*" styleClass="mandatory" />
-			</td>
-			<td colspan="3">
-				<p:inputText id="designation" size="50"
-					value="#{directLOABackingBean.managedBean.loaSupplierWitness.designation}"
-					maxlength="30"
-					label="#{lbl['lbl.sc.designation']}" />
-				<p:message id="designationMsg" for="designation" display="icon" />
-			</td>
-		</tr>
-		<tr>
-			<td rowspan="3" valign="top" width="18%">
-				<p:outputLabel value="#{lbl['lbl.sc.address']}" />
-				<p:outputLabel value="*" styleClass="mandatory" />
-			</td>
-			<td rowspan="3" width="32%">
-				<p:inputTextarea id="address"
-					cols="50" rows="5"
-					value="#{directLOABackingBean.managedBean.loaSupplierWitness.address}"
-					style=" margin-bottom:5px; width: 325px;"
-					maxlength="200"
-					label="#{lbl['lbl.sc.address']}" />
-				<p:message id="addressMsg" for="address" display="icon" />
-			</td>
-			<td width="18%">
-				<p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
-				<p:outputLabel value="*" styleClass="mandatory" />
-			</td>
-			<td width="32%">
-				<p:inputText id="phoneNo" size="30"
-					value="#{directLOABackingBean.managedBean.loaSupplierWitness.phoneNo}"
-					maxlength="20"
-					validator="#{webappBean.checkPhoneNumber}"
-					label="#{lbl['lbl.sc.tel.no']}" />
-				<p:message id="phoneNoMsg" for="phoneNo" display="icon" />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.fax.no']}" />
-				<p:outputLabel value="*" styleClass="mandatory" />
-			</td>
-			<td>
-				<p:inputText id="faxNo" size="30"
-					value="#{directLOABackingBean.managedBean.loaSupplierWitness.faxNo}"
-					maxlength="20"
-					validator="#{webappBean.checkPhoneNumber}"
-					label="#{lbl['lbl.sc.fax.no']}" />
-				<p:message id="faxNoMsg" for="faxNo" display="icon" />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.mobile.no']}" />
-			</td>
-			<td>
-				<p:inputText id="mobileNo" size="30"
-					value="#{directLOABackingBean.managedBean.loaSupplierWitness.mobileNo}"
-					maxlength="20"
-					validator="#{webappBean.checkPhoneNumber}"
-					label="#{lbl['lbl.sc.mobile.no']}" />
-				<p:message id="mobileNoMsg" for="mobileNo" display="icon" />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.email']}" />
-			</td>
-			<td colspan="3">
-				<p:inputText id="email" size="50" style=" margin-bottom:5px;"
-					value="#{directLOABackingBean.managedBean.loaSupplierWitness.email}"				
-					maxlength="80"
-					validator="#{webappBean.checkEmail}"
-					label="#{lbl['lbl.sc.email']}" />
-				<p:message id="emailMsg" for="email" display="icon" />
-			</td>
-		</tr>
+			<tr>
+				<td width="18%"><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.witness.full.name']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td colspan="3"><p:inputText id="witnessName" size="50"
+						required="true"
+						value="#{directLOABackingBean.managedBean.loaSupplierWitness.witnessName}"
+						label="#{lbl['lbl.sc.loiloa.witness.full.name']}" maxlength="50" />
+					<p:message id="witnessNameMsg" for="witnessName" display="icon" />
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.identification.no']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td colspan="3"><p:inputText id="identificationNo" size="50"
+						required="true"
+						value="#{directLOABackingBean.managedBean.loaSupplierWitness.identificationNo}"
+						label="#{lbl['lbl.sc.identification.no']}" maxlength="15" /> <p:message
+						id="identificationNoMsg" for="identificationNo" display="icon" />
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.designation']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td colspan="3"><p:inputText id="designation" size="50"
+						required="true"
+						value="#{directLOABackingBean.managedBean.loaSupplierWitness.designation}"
+						maxlength="30" label="#{lbl['lbl.sc.designation']}" /> <p:message
+						id="designationMsg" for="designation" display="icon" /></td>
+			</tr>
+			<tr>
+				<td rowspan="3" valign="top" width="18%"><p:outputLabel
+						value="#{lbl['lbl.sc.address']}" /> <p:outputLabel value="*"
+						styleClass="mandatory" /></td>
+				<td rowspan="3" width="32%"><p:inputTextarea id="address"
+						required="true" cols="50" rows="5"
+						value="#{directLOABackingBean.managedBean.loaSupplierWitness.address}"
+						style=" margin-bottom:5px; width: 325px;" maxlength="200"
+						label="#{lbl['lbl.sc.address']}" /> <p:message id="addressMsg"
+						for="address" display="icon" /></td>
+				<td width="18%"><p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td width="32%"><p:inputText id="phoneNo" size="30"
+						required="true"
+						value="#{directLOABackingBean.managedBean.loaSupplierWitness.phoneNo}"
+						maxlength="20" validator="#{webappBean.checkPhoneNumber}"
+						label="#{lbl['lbl.sc.tel.no']}" /> <p:message id="phoneNoMsg"
+						for="phoneNo" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.fax.no']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText id="faxNo" size="30" required="true"
+						value="#{directLOABackingBean.managedBean.loaSupplierWitness.faxNo}"
+						maxlength="20" validator="#{webappBean.checkPhoneNumber}"
+						label="#{lbl['lbl.sc.fax.no']}" /> <p:message id="faxNoMsg"
+						for="faxNo" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.mobile.no']}" /></td>
+				<td><p:inputText id="mobileNo" size="30"
+						value="#{directLOABackingBean.managedBean.loaSupplierWitness.mobileNo}"
+						maxlength="20" validator="#{webappBean.checkPhoneNumber}"
+						label="#{lbl['lbl.sc.mobile.no']}" /> <p:message id="mobileNoMsg"
+						for="mobileNo" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.email']}" /></td>
+				<td colspan="3"><p:inputText id="email" size="50"
+						style=" margin-bottom:5px;"
+						value="#{directLOABackingBean.managedBean.loaSupplierWitness.email}"
+						maxlength="80" validator="#{webappBean.checkEmail}"
+						label="#{lbl['lbl.sc.email']}" /> <p:message id="emailMsg"
+						for="email" display="icon" /></td>
+			</tr>
 		</table>
 	</p:panel>
-	
+
 	<br />
 	<div>
-	<h:outputText value="Remainder 1 :" style="font-weight:bold;"></h:outputText>
-	<h:outputText styleClass="instruction"
-						value=" #{lbl['lbl.sc.gst.remainder.one.instruction']}"
-						escape="false" /> <br/>
-						<h:outputText value="Remainder 2 :" style="font-weight:bold;" rendered="#{lOADetailBackingBean.managedBean.renderRemainder}"></h:outputText>
-						<h:outputText styleClass="instruction"
-						value="#{lbl['lbl.sc.gst.remainder.two.instruction']}"
-						escape="false"
-						rendered="#{lOADetailBackingBean.managedBean.renderRemainder}" /></div>
+		<h:outputText value="Remainder 1 :" style="font-weight:bold;"></h:outputText>
+		<h:outputText styleClass="instruction"
+			value=" #{lbl['lbl.sc.gst.remainder.one.instruction']}"
+			escape="false" />
+		<br />
+		<h:outputText value="Remainder 2 :" style="font-weight:bold;"
+			rendered="#{lOADetailBackingBean.managedBean.renderRemainder}"></h:outputText>
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.gst.remainder.two.instruction']}" escape="false"
+			rendered="#{lOADetailBackingBean.managedBean.renderRemainder}" />
+	</div>
 	<ui:include src="/xhtml/sc/common/supplierDetailsPopup.xhtml" />
-	
+
 </ui:composition>
