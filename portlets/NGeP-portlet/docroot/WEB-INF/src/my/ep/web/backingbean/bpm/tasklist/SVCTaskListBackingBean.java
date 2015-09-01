@@ -36,14 +36,19 @@ public class SVCTaskListBackingBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(SVCTaskListBackingBean.class);
 	private List<SmAppl> resultList = new ArrayList<SmAppl>(); 
+	private String applNo;
 
 	public void searchAction() {
 		ISiteAssignSO siteAssignSO = null;
 		try {
+			System.out.println("**************getApplNo*************"+this.getApplNo());
 			siteAssignSO = (ISiteAssignSO) BusinessDelegate.getInstance().getServiceObject("sm", ISiteAssignSO.class);
 			
 			SiteAssignReqDTO reqDTO = new SiteAssignReqDTO();
+			reqDTO.setApplNo(this.getApplNo());
 			SiteAssignResDTO resDTO = siteAssignSO.retrievesSiteVisitTasks(reqDTO);
+			
+		
 			this.setResultList(resDTO.getSmAppls());
 		} finally {
 			siteAssignSO = null;
@@ -108,4 +113,14 @@ public class SVCTaskListBackingBean implements Serializable {
 	public void setResultList(List<SmAppl> resultList) {
 		this.resultList = resultList;
 	}
+
+	public String getApplNo() {
+		return applNo;
+	}
+
+	public void setApplNo(String applNo) {
+		this.applNo = applNo;
+	}
+	
+	
 }
