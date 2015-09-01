@@ -41,12 +41,13 @@
 
 					<ui:include src="complianceTechnical.xhtml"></ui:include>
 
-				</c:if> <ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.scQt.sampleReq eq 'true'}">
+				</c:if> <c:if
+					test="#{evaluationBackingBean.managedBean.scQt.sampleReq eq 'true'}">
 					<c:if
 						test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '1'}">
 
 						<ui:include src="complianceSample.xhtml"></ui:include>
+						
 
 					</c:if>
 					<c:if
@@ -59,8 +60,8 @@
 
 						<ui:include src="complianceSummary.xhtml"></ui:include>
 					</c:if>
-				</ui:fragment> <ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.scQt.sampleReq eq 'false'}">
+				</c:if> <c:if
+					test="#{evaluationBackingBean.managedBean.scQt.sampleReq eq 'false'}">
 
 					<c:if
 						test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '1'}">
@@ -72,7 +73,7 @@
 
 						<ui:include src="complianceSummary.xhtml"></ui:include>
 					</c:if>
-				</ui:fragment></td>
+				</c:if></td>
 		</tr>
 	</table>
 
