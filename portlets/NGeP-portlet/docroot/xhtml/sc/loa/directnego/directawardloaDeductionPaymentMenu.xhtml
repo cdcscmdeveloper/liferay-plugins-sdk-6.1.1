@@ -16,9 +16,9 @@
 			rowKey="#{scQtDeduction}" rowIndexVar="rowIndex"
 			selectionMode="single">
 
-			<p:ajax event="rowSelect" partialSubmit="true"
+			<p:ajax event="rowSelect" 
 				update=":form:deductionPayId" />
-			<p:ajax event="rowUnselect" partialSubmit="true"
+			<p:ajax event="rowUnselect" 
 				update=":form:deductionPayId" />
 
 			<ac:paginator for="deductTbl" />
