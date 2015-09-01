@@ -85,7 +85,7 @@
 							<f:selectItems value="#{directLOABackingBean.yearDetails}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								update="scheduleDetails,scheduleendMonth"
-								listener="#{directLOABackingBean.calculateStartMonth(frequency)}"></p:ajax>
+								listener="#{directLOABackingBean.calculateScheduleMonths(frequency,'true')}"></p:ajax>
 						</p:selectOneMenu>
 						<!-- <p:calendar value="#{frequency.fromDate}" showOn="button"
 						pattern="MM/yyyy"></p:calendar> -->
@@ -97,7 +97,7 @@
 							<f:selectItems value="#{directLOABackingBean.yearsDisplayDtls}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								update="scheduleDetails"
-								listener="#{directLOABackingBean.calculateStartMonth(frequency)}"></p:ajax>
+								listener="#{directLOABackingBean.calculateScheduleMonths(frequency,'false')}"></p:ajax>
 						</p:selectOneMenu>
 
 
@@ -110,7 +110,7 @@
 							<f:selectItems value="#{directLOABackingBean.yearDetails}"></f:selectItems>
 							<p:ajax event="change" update="scheduleDetails" process="@this"
 								partialSubmit="true"
-								listener="#{directLOABackingBean.calculateSchedulePercentage(frequency)}"></p:ajax>
+								listener="#{directLOABackingBean.calculateScheduleMonths(frequency,'true')}"></p:ajax>
 						</p:selectOneMenu>
 
 					</p:column>
@@ -119,7 +119,7 @@
 							<f:selectItems value="#{directLOABackingBean.yearsDisplayDtls}"></f:selectItems>
 							<p:ajax event="change" update="scheduleDetails" process="@this"
 								partialSubmit="true"
-								listener="#{directLOABackingBean.calculateSchedulePercentage(frequency)}"></p:ajax>
+								listener="#{directLOABackingBean.calculateScheduleMonths(frequency,'false')}"></p:ajax>
 						</p:selectOneMenu>
 
 
