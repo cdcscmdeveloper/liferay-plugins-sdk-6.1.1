@@ -9,6 +9,7 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmMachineDtl;
@@ -101,6 +102,10 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private SmSvAdtMachine selectedAdtMachine;
 	
 	private SmGstSupplier smGstSupplier;
+	private SmSvTemplate selectedAttachmentTemplate;
+	private SmAttachment selectedUploadAttachment;
+	private String selectedAttachmentTemplType;
+	private String attachmentDeleteMsg;
 
 	
 	public SMSiteVisitDataType getBpmPojo() {
@@ -556,6 +561,39 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 
 	public void setSmGstSupplier(SmGstSupplier smGstSupplier) {
 		this.smGstSupplier = smGstSupplier;
+	}
+
+	public SmSvTemplate getSelectedAttachmentTemplate() {
+		return selectedAttachmentTemplate;
+	}
+
+	public void setSelectedAttachmentTemplate(
+			SmSvTemplate selectedAttachmentTemplate) {
+		this.selectedAttachmentTemplate = selectedAttachmentTemplate;
+	}
+
+	public SmAttachment getSelectedUploadAttachment() {
+		return selectedUploadAttachment;
+	}
+
+	public void setSelectedUploadAttachment(SmAttachment selectedUploadAttachment) {
+		this.selectedUploadAttachment = selectedUploadAttachment;
+	}
+
+	public String getSelectedAttachmentTemplType() {
+		return selectedAttachmentTemplType;
+	}
+
+	public void setSelectedAttachmentTemplType(String selectedAttachmentTemplType) {
+		this.selectedAttachmentTemplType = selectedAttachmentTemplType;
+	}
+
+	public String getAttachmentDeleteMsg() {
+		return attachmentDeleteMsg;
+	}
+
+	public void setAttachmentDeleteMsg(String attachmentDeleteMsg) {
+		this.attachmentDeleteMsg = attachmentDeleteMsg;
 	}
 
 }
