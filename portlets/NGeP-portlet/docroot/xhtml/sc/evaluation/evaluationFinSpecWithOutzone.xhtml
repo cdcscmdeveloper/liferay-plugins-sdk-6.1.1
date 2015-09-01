@@ -13,13 +13,14 @@
 
 	<ui:define name="contentSection">
 
-		<h:panelGroup>
-			<div>
-				<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-					action="#{evaluationBackingBean.evaluationBackaction}" />
 
-			</div>
-		</h:panelGroup>
+		<div>
+			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+				immediate="true"
+				action="#{evaluationBackingBean.evaluationBackaction}" />
+
+		</div>
+
 		<p:spacer height="25" />
 		<br />
 		<br />
