@@ -10,10 +10,13 @@
 	width: 80px;
 }
 </style>
-	<p:panel id="bondId" header="#{lbl['lbl.ct.panel.performance.bond']}" toggleable="true" toggleSpeed="500"
+	<p:panel id="bondId" toggleable="true" toggleSpeed="500"
 		rendered="#{contractDetailsBackingBean.managedBean.ctContractAmount.bondReq and 
 		!contractDetailsBackingBean.managedBean.directPurchase}">
-		 <!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.performance.bond.dtls']}"/> -->
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.ct.panel.performance.bond']}"/>
+			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.performance.bond.dtls']}"/>
+	   	</f:facet>
 		 <p:dataTable id="tableBond" var="varBond" rowIndexVar="index"
 			  value="#{contractDetailsBackingBean.managedBean.ctContractAmount.ctPerformanceBonds}"
 			  rowKey="#{rowKeyObj}"

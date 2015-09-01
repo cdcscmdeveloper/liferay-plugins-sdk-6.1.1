@@ -10,8 +10,11 @@
 			vertical-align:top;
 		}
 	</style>
-   <p:panel id="qtnTenderPnl" header="#{lbl['lbl.ct.panel.procurement']}" toggleable="true"  toggleSpeed="500">
-	    <!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.procurement.dtls']}"/> -->
+   <p:panel id="qtnTenderPnl" toggleable="true"  toggleSpeed="500">
+	    <f:facet name="header">
+			<h:outputText value="#{lbl['lbl.ct.panel.procurement']}"/>
+        	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.procurement.dtls']}"/>
+  	 	</f:facet>
 	    <h:panelGrid columns="4" style="width:100%;" styleClass="columnTop" columnClasses="columnWidth150,columnWidth250,columnWidth250,columnWidth200">
 		
 			<p:outputLabel value="#{lbl['lbl.ct.proc.mode']}" />
