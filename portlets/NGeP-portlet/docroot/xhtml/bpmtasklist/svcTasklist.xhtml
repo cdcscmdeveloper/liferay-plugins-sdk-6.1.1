@@ -8,15 +8,19 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
- 
-         #{i18n['SvcTasklist-hello-world']} in view mode.
+	
+		
+		<table>
+			<tr>
+				<td><p:outputLabel value="Application No"></p:outputLabel></td>
+				<td><p:inputText value="#{svcTasklistBackingBean.applNo}" /></td>
+			</tr>
+		</table>
+         	<div style="text-align: right;">
+         <p:commandButton id="schBtn" action="#{svcTasklistBackingBean.searchAction}" value="Search" update="rspl" />
          
-         <p:commandButton id="schBtn" action="#{svcTasklistBackingBean.searchAction}" value="Search" update="rspl">
-         </p:commandButton>
+         </div>
          
-		<p:commandLink id="navL" value="KA-26082015-0002" action="#{svcTasklistBackingBean.navigateToSiteVisitAssignment}" >
-   			<f:param name="selApplNo" value="KA-26082015-0002"></f:param>
-   		</p:commandLink>
          
          <p:panel id="rspl">
 	         <p:dataTable id="rsDt"
@@ -26,9 +30,18 @@
 	         	
 	         		<p:commandLink id="navL" value="#{appl.applNo}" action="#{svcTasklistBackingBean.navigateToSiteVisitAssignment}" >
 	         			<f:param name="selApplNo" value="#{appl.applNo}"></f:param>
-	         		</p:commandLink> bbbbbbbbb
+	         		</p:commandLink> 
 
 	         	</p:column>
+	         	
+	         		<p:column headerText="Supplier Name">
+	         	
+	         		<h:outputText value="#{appl.smSupplier.companyName}"></h:outputText>
+
+	         	</p:column>
+	         	
+	         	
+	         	
 	         	
 	         	<p:column headerText="test">
 	         		<h:outputText value="#{appl.applId}"></h:outputText>
