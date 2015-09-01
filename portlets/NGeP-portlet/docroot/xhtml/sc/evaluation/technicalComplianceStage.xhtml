@@ -13,106 +13,39 @@
 
 	<ui:define name="contentSection">
 		<h:panelGroup>
-			<h:panelGroup>
-				<p:blockUI block=":form" widgetVar="blockWidget">
-					<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
-				</p:blockUI>
-				<p:messages id="technicalCompliance" showDetail="true"
-					autoUpdate="true" closable="true" severity="error,info"
-					showSummary="false" />
 
-				<div>
-					<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-						action="#{evaluationBackingBean.evaluationBackaction}" />
+			<p:blockUI block=":form" widgetVar="blockWidget">
+				<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
+			</p:blockUI>
+			<p:messages id="technicalCompliance" showDetail="true"
+				autoUpdate="true" closable="true" severity="error,info"
+				showSummary="false" />
 
-					<p:commandButton value="#{lbl['lbl.btn.save']}"
-						disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
-						style="float:right;" update="@all" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();"
-						action="#{evaluationBackingBean.saveComplianceUploadCheckList}" />
-				</div>
-				<p:spacer height="25" />
-				<br />
-				<br />
-				<ui:include src="evaluationHeader.xhtml" />
-				<br />
-				<p:panel header="#{lbl['lbl.sc.eva.technical.proposal.compliance']}">
-					<ui:include src="checklistHeader.xhtml" />
-				</p:panel>
-				<br />
-			</h:panelGroup>
+			<div>
+				<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+					immediate="true"
+					action="#{evaluationBackingBean.evaluationBackaction}" />
 
-			<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
-				<h:outputText styleClass="instruction"
-					value="#{lbl['lbl.sc.eva.compliance.stage.document.instruction']}"
-					escape="false" />
-
-				<p:dataTable var="complianceTechnicalSupplier" rows="10" lazy="true"
-					value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckListDM}"
-					id="complianceTechnicalSupplier" editable="true"
-					rowIndexVar="index" style="width:100%"
-					rowKey="#{complianceTechnicalSupplier}">
-					<ac:paginator for="complianceTechnicalSupplier" />
-
-					<p:ajax event="page"
-						listener="#{evaluationBackingBean.complianceProposalSubmitSuppliers}"
-						update="complianceTechnicalSupplier" />
-					<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
-						style="width:20%">
-
-						<h:outputText
-							value="#{complianceTechnicalSupplier.scQtProposal.supplierNo}"></h:outputText>
-
-
-					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.document']}" style="width:10%">
-						<ui:fragment
-							rendered="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'true'}">
-							<p:commandLink ajax="false"
-								disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
-								actionListener="#{evaluationBackingBean.downloadEncryptedFile(complianceTechnicalSupplier.scQtProposalChecklistAttachment)}"
-								process="@this" partialSubmit="true">
-								<h:graphicImage value="/css/images/design/icon_txt.png" />
-
-							</p:commandLink>
-						</ui:fragment>
-
-					</p:column>
-
-					<p:column headerText="#{lbl['lbl.sc.submission.status']}"
-						style="width:20%">
-						<h:outputText
-							value="#{complianceTechnicalSupplier.scQtProposal.submitted ? lbl['lbl.txt.submitted']:lbl['lbl.txt.not.submitted']}"></h:outputText>
-					</p:column>
-
-					<p:column headerText="#{lbl['lbl.sc.compliance.status']}"
-						style="width:15%">
-						<p:selectOneMenu
-							disabled="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'false' or evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
-							value="#{complianceTechnicalSupplier.compliance}">
-
-							<f:selectItems
-								value="#{evaluationBackingBean.getDropdownCodeValues(ParameterTypeConst.complianceStatus)}"></f:selectItems>
-
-						</p:selectOneMenu>
-					</p:column>
-
-					<p:column headerText="#{lbl['lbl.sc.remarks']}"
-						style="width:35%;white-space: normal;">
-						<ui:fragment
-							rendered="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'true'}">
-							<p:inputTextarea rows="2" cols="40" maxlength="200"
-								disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
-								id="complianceRemarksid"
-								value="#{complianceTechnicalSupplier.remark}"></p:inputTextarea>
-							<p:message id="complianceRemarksidEvaluation"
-								for="complianceRemarksid" display="icon"></p:message>
-
-
-						</ui:fragment>
-					</p:column>
-				</p:dataTable>
+				<p:commandButton value="#{lbl['lbl.btn.save']}"
+					disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
+					style="float:right;" update="@all" onstart="blockWidget.show();"
+					oncomplete="blockWidget.hide();"
+					action="#{evaluationBackingBean.saveComplianceUploadCheckList}" />
+			</div>
+			<p:spacer height="30" />
+			<br />
+			<br />
+			<ui:include src="evaluationHeader.xhtml" />
+			<br />
+			<p:panel header="#{lbl['lbl.sc.eva.technical.proposal.compliance']}">
+				<ui:include src="checklistHeader.xhtml" />
 			</p:panel>
+			<p:spacer height="15" />
+			<br />
+			<br />
+			<h:panelGroup>
+				<ui:include src="technicalComplianceSupplierList.xhtml" />
+			</h:panelGroup>
 		</h:panelGroup>
 	</ui:define>
 </ui:composition>
