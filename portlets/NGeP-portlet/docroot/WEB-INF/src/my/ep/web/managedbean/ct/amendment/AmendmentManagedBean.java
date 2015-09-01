@@ -93,6 +93,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean disableEndorseAmendDetails;
 	private boolean disableFinalAmendDetails;
 	private boolean secretaryExist = false;
+	private boolean disableGstRadio;
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	private List<CtContractVer> amendHistoryList;
@@ -1126,5 +1127,13 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	 */
 	public void setSpkiBackingBean(SpkiBackingBean spkiBackingBean) {
 		this.spkiBackingBean = spkiBackingBean;
+	}
+
+	public boolean isDisableGstRadio() {
+		return disableGstRadio;
+	}
+
+	public void setDisableGstRadio(boolean disableGstRadio) {
+		this.disableGstRadio = disableGstRadio;
 	}
 }
