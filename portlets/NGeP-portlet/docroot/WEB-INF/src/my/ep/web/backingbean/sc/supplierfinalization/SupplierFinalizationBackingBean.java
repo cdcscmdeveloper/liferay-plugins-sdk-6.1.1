@@ -2781,8 +2781,8 @@ public class SupplierFinalizationBackingBean extends
 		context.put("publishDate", publishDate);
 		context.put("publishPeriod", scQt.getPublishPeriod());
 		String closingDate = "";
-		if (scQt.getChangedDate() != null) {
-			closingDate = dateSDF.format(scQt.getChangedDate());
+		if (scQt.getClosingDate() != null) {
+			closingDate = dateSDF.format(scQt.getClosingDate());
 		}
 		context.put("closingDate", closingDate);
 		context.put("validityDays", scQt.getQtValidityPeriod());
