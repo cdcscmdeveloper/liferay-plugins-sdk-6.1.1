@@ -12,117 +12,39 @@
 
 
 	<ui:define name="contentSection">
-		<h:panelGroup>
-			<p:blockUI block=":form" widgetVar="blockWidget">
-				<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
-			</p:blockUI>
-			<p:messages id="technicalEvaluationUploadDtlsId" autoUpdate="true"
-				closable="true" showDetail="true" showSummary="false"
-				severity="error,info"></p:messages>
-			<div>
-				<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-					action="#{evaluationBackingBean.evaluationBackaction}" immediate="true"/>
 
-				<p:commandButton value="#{lbl['lbl.btn.save']}" style="float:right;"
-					update="@all" onstart="blockWidget.show();"
-					oncomplete="blockWidget.hide();"
-					action="#{evaluationBackingBean.saveEvalutionStageUploadDtls}" />
-			</div>
-			<p:spacer height="25" />
-			<br />
-			<br />
-			<ui:include src="evaluationHeader.xhtml" />
-			<br />
-			<p:panel header="#{lbl['lbl.sc.eva.technical.proposal.evaluation']}">
-				<ui:include src="checklistHeader.xhtml" />
-			</p:panel>
-			<br />
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
+		</p:blockUI>
+		<p:messages id="technicalEvaluationUploadDtlsId" autoUpdate="true"
+			closable="true" showDetail="true" showSummary="false"
+			severity="error,info"></p:messages>
+		<div>
+			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+				action="#{evaluationBackingBean.evaluationBackaction}"
+				immediate="true" />
 
-
-
-			<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
-				<h:outputText styleClass="instruction"
-					value="1. #{lbl['lbl.sc.eva.evaluation.stage.document.instruction']}"
-					escape="false" />
-				<br />
-				<h:outputText styleClass="instruction"
-					value="2. #{lbl['lbl.sc.eva.evaluation.stage.document.score.instruction']}"
-					escape="false" />
-
-				<p:dataTable var="complianceTechnicalSupplier" rows="10" lazy="true"
-					value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckListDM}"
-					id="complianceTechnicalSupplier" editable="true"
-					rowIndexVar="index" style="width:100%"
-					rowKey="#{complianceTechnicalSupplier}">
-					<ac:paginator for="complianceTechnicalSupplier" />
-					<p:ajax event="page"
-						listener="#{evaluationBackingBean.SaveUploadCheckListSuppliersDM}"
-						update="complianceTechnicalSupplier" />
-
-					<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
-						style="width:20%">
-
-						<h:outputText
-							value="#{complianceTechnicalSupplier.scQtProposal.supplierNo}"></h:outputText>
+			<p:commandButton value="#{lbl['lbl.btn.save']}" style="float:right;"
+				update="@all" onstart="blockWidget.show();"
+				oncomplete="blockWidget.hide();"
+				action="#{evaluationBackingBean.saveEvalutionStageUploadDtls}" />
+		</div>
+		<p:spacer height="25" />
+		<br />
+		<br />
+		<ui:include src="evaluationHeader.xhtml" />
+		<br />
+		<p:panel header="#{lbl['lbl.sc.eva.technical.proposal.evaluation']}">
+			<ui:include src="checklistHeader.xhtml" />
+		</p:panel>
+		<br />
 
 
-					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.document']}" style="width:10%">
-						<ui:fragment
-							rendered="#{complianceTechnicalSupplier.submitted eq 'true'}">
-							<p:commandLink ajax="false"
-								actionListener="#{evaluationBackingBean.downloadEncryptedFile(complianceTechnicalSupplier.scQtProposalChecklistAttachment)}"
-								process="@this" partialSubmit="true">
-								<h:graphicImage value="/css/images/design/icon_txt.png" />
-							</p:commandLink>
-						</ui:fragment>
+		<ui:include
+			src="technicalEvaluationStageUploadScoringSupplierList.xhtml" />
 
-					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.submission.status']}"
-						style="width:15%">
-						<h:outputText
-							value="#{complianceTechnicalSupplier.submitted ? lbl['lbl.txt.submitted']: lbl['lbl.txt.not.submitted']}"></h:outputText>
-					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.compliance.status']}"
-						style="width:15%">
-						<h:outputText
-							value="#{complianceTechnicalSupplier.compliance ? lbl['lbl.sc.compliance']:lbl['lbl.sc.not.compliance']}"></h:outputText>
-					</p:column>
 
-					<p:column headerText="#{lbl['lbl.tpl.spec.content.user.score']}"
-						style="width:15%">
-						<p:inputText value="#{complianceTechnicalSupplier.totalUserScore}"
-							id="technicaluploadNoActionUserScoreId"
-							label="#{lbl['lbl.tpl.spec.content.user.score']}"
-							style="text-align:right;" size="40" maxlength="18"
-							required="true"
-							disabled="#{evaluationBackingBean.managedBean.readOnly}">
-							<ac:validateNumber
-								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
-								maxIntegerDigits="14" integerOnly="true" />
-							<f:attribute name="min" value="0" />
-							<f:attribute name="max"
-								value="#{evaluationBackingBean.managedBean.userScores}" />
-						</p:inputText>
-						<p:spacer width="5"></p:spacer>
-						<h:outputText
-							value="/#{evaluationBackingBean.managedBean.userScores}" />
-						<p:message id="technicaluploadNoActionUserScoreMessage"
-							for="technicaluploadNoActionUserScoreId" display="icon"></p:message>
-					</p:column>
-
-					<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:25%">
-						<ui:fragment
-							rendered="#{complianceTechnicalSupplier.submitted eq 'true'}">
-							<p:inputTextarea rows="2" cols="40" maxlength="200"
-								disabled="#{evaluationBackingBean.managedBean.readOnly}"
-								value="#{complianceTechnicalSupplier.remark}"></p:inputTextarea>
-						</ui:fragment>
-					</p:column>
-				</p:dataTable>
-			</p:panel>
-		</h:panelGroup>
 	</ui:define>
 </ui:composition>

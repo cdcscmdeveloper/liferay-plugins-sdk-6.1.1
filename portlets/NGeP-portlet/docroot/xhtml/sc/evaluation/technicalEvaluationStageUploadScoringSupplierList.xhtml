@@ -1,0 +1,94 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
+		<h:outputText styleClass="instruction"
+			value="1. #{lbl['lbl.sc.eva.evaluation.stage.document.instruction']}"
+			escape="false" />
+		<br />
+		<h:outputText styleClass="instruction"
+			value="2. #{lbl['lbl.sc.eva.evaluation.stage.document.score.instruction']}"
+			escape="false" />
+
+		<p:dataTable var="complianceTechnicalSupplier" rows="10" lazy="true"
+			value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckListDM}"
+			id="complianceTechnicalSupplier" editable="true" rowIndexVar="index"
+			style="width:100%" rowKey="#{complianceTechnicalSupplier}">
+			<ac:paginator for="complianceTechnicalSupplier" />
+			<p:ajax event="page"
+				listener="#{evaluationBackingBean.SaveUploadCheckListSuppliersDM}"
+				update="complianceTechnicalSupplier" />
+
+			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
+				style="width:20%">
+
+				<h:outputText
+					value="#{complianceTechnicalSupplier.scQtProposal.supplierNo}"></h:outputText>
+
+
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.document']}" style="width:10%">
+				<ui:fragment
+					rendered="#{complianceTechnicalSupplier.submitted eq 'true'}">
+					<p:commandLink ajax="false"
+						actionListener="#{evaluationBackingBean.downloadEncryptedFile(complianceTechnicalSupplier.scQtProposalChecklistAttachment)}"
+						process="@this" partialSubmit="true">
+						<h:graphicImage value="/css/images/design/icon_txt.png" />
+					</p:commandLink>
+				</ui:fragment>
+
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.submission.status']}"
+				style="width:15%">
+				<h:outputText
+					value="#{complianceTechnicalSupplier.submitted ? lbl['lbl.txt.submitted']: lbl['lbl.txt.not.submitted']}"></h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.compliance.status']}"
+				style="width:15%">
+				<h:outputText
+					value="#{complianceTechnicalSupplier.compliance ? lbl['lbl.sc.compliance']:lbl['lbl.sc.not.compliance']}"></h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.tpl.spec.content.user.score']}"
+				style="width:15%">
+				<p:inputText value="#{complianceTechnicalSupplier.totalUserScore}"
+					id="technicaluploadNoActionUserScoreId"
+					label="#{lbl['lbl.tpl.spec.content.user.score']}"
+					style="text-align:right;" size="40" maxlength="18" required="true"
+					disabled="#{evaluationBackingBean.managedBean.readOnly}">
+					<ac:validateNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+						maxIntegerDigits="14" integerOnly="true" />
+					<f:attribute name="min" value="0" />
+					<f:attribute name="max"
+						value="#{evaluationBackingBean.managedBean.userScores}" />
+					<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
+				</p:inputText>
+				<p:spacer width="5"></p:spacer>
+				<h:outputText
+					value="/#{evaluationBackingBean.managedBean.userScores}" />
+				<p:message id="technicaluploadNoActionUserScoreMessage"
+					for="technicaluploadNoActionUserScoreId" display="icon"></p:message>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:25%">
+				<ui:fragment
+					rendered="#{complianceTechnicalSupplier.submitted eq 'true'}">
+					<p:inputTextarea rows="2" cols="40" maxlength="200"
+						disabled="#{evaluationBackingBean.managedBean.readOnly}"
+						value="#{complianceTechnicalSupplier.remark}">
+						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
+					</p:inputTextarea>
+				</ui:fragment>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+</ui:composition>
