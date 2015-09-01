@@ -248,9 +248,18 @@ public class DirectLOABackingBean extends
 				this.getManagedBean().setOutComes(outComes);
 				this.getManagedBean().setSelectedTabIndex(selectedTabIndx);
 				this.getManagedBean().setPayLoad(awardSupplierDataType);
-				retriveLoaDetails(scLoa.getLoaId());
-				contractTypeChanged();
-				constructStartNEndMonth();
+				if (!QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
+						.equals(scLoa.getPmStatus().getStatusId())) {
+					retriveLoaDetails(scLoa.getLoaId());
+
+					contractTypeChanged();
+					constructStartNEndMonth();
+				}
+				if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
+						.equals(scLoa.getPmStatus().getStatusId())) {
+					getSupplierDeatilsByLoaId(scLoa.getLoaId());
+
+				}
 				successMessage(MessageConst.INFO_700025,
 						ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_LETTER_OF_AWARD,
@@ -513,6 +522,7 @@ public class DirectLOABackingBean extends
 								this.getManagedBean().getSpecTemplateSpecBean()
 										.getSpecMaster());
 			}
+			constructStartNEndMonth();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
 					.getNavigationHandler()
@@ -781,7 +791,7 @@ public class DirectLOABackingBean extends
 		scQtDeduction.setScLoa(scLoa);
 		scQtDeduction.setScQt(this.getManagedBean().getScQt());
 		scQtDeduction.setDeductionType(new PmParameter());
-
+		setUserDetails(scQtDeduction);
 		scQtDeductions.add(scQtDeduction);
 	}
 
@@ -805,6 +815,7 @@ public class DirectLOABackingBean extends
 		ScQtDeductionClause scQtDeductionClause = new ScQtDeductionClause();
 		scQtDeductionClause.setScQtDeduction(selectedScQtDeduction);
 		scQtDeductionClauses.add(scQtDeductionClause);
+		setUserDetails(scQtDeductionClause);
 	}
 
 	/**
@@ -1801,7 +1812,7 @@ public class DirectLOABackingBean extends
 					debugLogger("Parce Exception");
 				}
 				getManagedBean().getScLoa().getScQtProgPayments();
-
+				setUserDetails(payment);
 				paymentList.add(payment);
 			}
 			getManagedBean().getScLoa().setScQtProgPayments(paymentList);
@@ -3155,6 +3166,7 @@ public class DirectLOABackingBean extends
 			}
 			zoneCriteria.setTplSpecZoneDtls(new ArrayList<TplSpecZoneDtl>());
 			supplierCriteria.setScQtLocCriteria(null);
+			setUserDetails(zoneCriteria);
 
 			this.getManagedBean().getProdscQtDoc().getTplSpecMaster()
 					.setTplSpecZone(zoneCriteria);
@@ -3193,8 +3205,7 @@ public class DirectLOABackingBean extends
 			userReqDTO.setWithProfileGroup(true);
 			UserResDTO userResDTO = userSo
 					.retrieveUserListWithProfileGroupUserByRole(userReqDTO);
-			
-			
+
 			this.getManagedBean().setApproverList(userResDTO.getUserList());
 		}
 	}
@@ -3796,9 +3807,11 @@ public class DirectLOABackingBean extends
 		DirectAwardResDTO awardResDTO = directAwardSO
 				.retriveDirectAwardDetails(awardReqDTO);
 		ScLoa scLoa = awardResDTO.getLoa();
+		setUserDetails(scLoa);
+		setUserDetails(scLoa.getScLoiLoa());
 		this.getManagedBean().setScLoa(scLoa);
 		ScQt scQt = scLoa.getScQt();
-
+		setUserDetails(scQt);
 		this.getManagedBean().setScQt(scLoa.getScQt());
 		this.getManagedBean().setApproverUser(new PmUser());
 		getManagedBean().setLoaAgencyWitness(scLoa.getScLoaWitnesses().get(0));
@@ -3813,6 +3826,7 @@ public class DirectLOABackingBean extends
 		// award details
 
 		this.getManagedBean().setProdscQtDoc(awardResDTO.getProductDoc());
+		setUserDetails(awardResDTO.getProductDoc());
 		// overall ct amount
 		this.getManagedBean().setOverallContractAmt(
 				overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt()));
@@ -3839,7 +3853,7 @@ public class DirectLOABackingBean extends
 		}
 
 		this.getManagedBean().setServicescQtDoc(awardResDTO.getServiceDoc());
-
+		setUserDetails(awardResDTO.getServiceDoc());
 		TemplateSpecBean serviceBean = new TemplateSpecBean(
 				TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER);
 		serviceBean.setSpecMaster(this.getManagedBean().getServicescQtDoc()
