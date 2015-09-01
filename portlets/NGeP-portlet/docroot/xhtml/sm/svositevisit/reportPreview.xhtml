@@ -17,22 +17,59 @@
 		</div>
 	</p:dialog>
 	
+	<p:dialog widgetVar="attachmentDeleteDlg" id="attachmentDeleteDlg" modal="true" height="100" width="500">
+   			 #{svoSiteVisitBackingBean.managedBean.attachmentDeleteMsg}
+   			<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" oncomplete="attachmentDeleteDlg.hide()"
+				action="#{svoSiteVisitBackingBean.removeUploadedSvFile}" update="@([id$=dtlTemplate])"></p:commandButton>
+			<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="attachmentDeleteDlg.hide();"></p:commandButton>
+		</div>
+	</p:dialog>
+	
 	
 <!-- 	<ui:include src="/xhtml/sm/svositevisit/categoryApplicable.xhtml" /> -->
-	<p:panel header="#{lbl['lbl.sm.rptpreview.by.category']}">
-		<p:dataTable emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
+	<p:panel header="#{lbl['lbl.sm.rptpreview.by.category']}" toggleable="true">
+		<p:dataTable emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" id="dtlTemplate"
 		value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplates}" var="template">
-			<ui:param name="lblCategoryType" value="lbl.sm.sitevisit.category.categorycode_#{template.pmParameter.parameterCode}" />
-
 			<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}">
-				#{lbl[lblCategoryType]}
+				#{svoSiteVisitBackingBean.getParameterDesc(template.pmParameter)}
 			</p:column>
 	
 			<p:column headerText="#{lbl['lbl.sm.rptpreview.template']}">
 				<p:commandButton value="#{lbl['lbl.sm.button.preview']}" update=":form:rptDialogId" oncomplete="rptDlg.show();" id="btnPreview" action="#{svoSiteVisitBackingBean.rptPreview(template.pmParameter.parameterCode)}" />
 			</p:column>
+			
+			<p:column>
+				<p:commandButton value="#{lbl['lbl.btn.upload']}" onclick="uploadDlg.show();" actionListener="#{svoSiteVisitBackingBean.setReportUploadTemplate(template)}"></p:commandButton>
+			</p:column>
+			
+			<p:column>
+				<table>
+					<ui:repeat var="attch" value="#{svoSiteVisitBackingBean.managedBean.smSvTemplateMap[template.pmParameter.parameterCode].smAttachments}">
+					<p:outputPanel rendered="#{attch.recordStatusFlg == svoSiteVisitBackingBean.getRecordStatusActive()}">
+					<tr>
+						<td><h:outputText value="#{attch.fileName}" /></td>
+						<td><p:commandLink oncomplete="attachmentDeleteDlg.show()" action="#{svoSiteVisitBackingBean.showDeleteDialog(template.pmParameter.parameterCode,attch)}" 
+						update="@([id$=attachmentDeleteDlg])">
+							<p:graphicImage value="/css/images/design/delete.png" title="#{lbl['lbl.btn.delete']}" />
+						</p:commandLink></td>
+					</tr>
+					</p:outputPanel>
+					</ui:repeat>
+				</table>
+			</p:column>
 		</p:dataTable>
 	</p:panel>
+	
+	<p:dialog id="uploadDlg" widgetVar="uploadDlg" appendToBody="false" resizable="false" width="700px"
+		height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+		<p:fileUpload style="display:inline;" multiple="true" fileUploadListener="#{svoSiteVisitBackingBean.siteVisiteReportUpload}"
+			mode="basic" id="upload" sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" 
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" update="dtlTemplate" 
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+			oncomplete="uploadDlg.hide();return false;">
+		</p:fileUpload>
+	</p:dialog>
 	
 	<p:dialog id="rptDialogId"  header="#{lbl['lbl.sm.rptpreview']}" widgetVar="rptDlg" modal="true" width="1158" height="500">
 		<c:if test="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD}">
