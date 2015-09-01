@@ -6,9 +6,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-    <p:panel id="itemId" header="#{lbl['lbl.ct.panel.product']}" toggleable="true"  
+    <p:panel id="itemId" toggleable="true"  
        rendered="#{contractDetailsBackingBean.managedBean.ctItemList.size() > 0}"  toggleSpeed="500">
-       <!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.product.dtls']}"/> -->
+       <f:facet name="header">
+			<h:outputText value="#{lbl['lbl.ct.panel.product']}"/>
+			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.product.dtls']}"/>
+   	   </f:facet>
        <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.select.item']}" escape="false"/><br/><br/>
        <h:panelGrid  style="width:100%;">
              
@@ -508,9 +511,12 @@
 		</p:dialog>
   	 </p:panel>
   	 <p:spacer rendered="#{contractDetailsBackingBean.managedBean.ctItemList.size() > 0}" height="50"/>
-  	 <p:panel id="serviceId" header="#{lbl['lbl.ct.panel.service']}"
+  	 <p:panel id="serviceId"
          rendered="#{contractDetailsBackingBean.managedBean.ctItemServiceList.size() > 0 }"  toggleable="true"  toggleSpeed="500">
-  	     <!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.service.dtls']}"/> -->
+  	     <f:facet name="header">
+			<h:outputText value="#{lbl['lbl.ct.panel.service']}"/>
+			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.service.dtls']}"/>
+   	     </f:facet>
   	     <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.select.service.item']}" escape="false"/><br/><br/>
              <h:panelGrid  style="width:100%;">  
   	        <p:dataTable id="serviceTable" var="data"  widgetVar="serviceItemObj" 
