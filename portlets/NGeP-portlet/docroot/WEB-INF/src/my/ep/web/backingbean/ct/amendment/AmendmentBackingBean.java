@@ -140,6 +140,7 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.amendment.AmendmentManagedBean;
+import my.ep.web.util.AddressUtils;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
@@ -751,6 +752,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		    ctBackingBean.getManagedBean().setViewContract(false);
 		    ctBackingBean.getManagedBean().setUpdateCompanyName(false);
 		    ctBackingBean.getManagedBean().setUpdateSupplierAddress(false);
+		    ctBackingBean.getManagedBean().setSmAddress(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
+		    ctBackingBean.getManagedBean().setSupplierAddress(AddressUtils.getFullAddress(ctBackingBean.getManagedBean().getSmAddress()));
+		    ctBackingBean.getManagedBean().setSupplierCompanyName(getManagedBean().getContractVer().getCtContractValue().getSupplierName());
+		    ctBackingBean.getManagedBean().setSupplierBranchName(this.getManagedBean().getContractVer().getCtContractValue().getSupplierBranch());
 		    ctBackingBean.retrieveBranchInfo();
 		    ctBackingBean.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 		     // Amendment process	  
