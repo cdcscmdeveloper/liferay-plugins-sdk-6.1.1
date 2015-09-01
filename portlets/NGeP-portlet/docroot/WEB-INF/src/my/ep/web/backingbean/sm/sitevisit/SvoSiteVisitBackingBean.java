@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -23,6 +24,7 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
+import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.siteVisit.ISiteVisitSO;
@@ -33,6 +35,8 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
+import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
+import my.ep.dto.sm.attachment.SmAttachmentResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.siteVisit.SiteVisitReqDTO;
@@ -40,11 +44,13 @@ import my.ep.dto.sm.siteVisit.SiteVisitResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmMachineCategory;
 import my.ep.persistence.entity.pm.common.PmMachineSection;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -87,6 +93,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.VmUtil;
 import my.ep.web.util.template.DocumentGenerator;
 
@@ -94,6 +101,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
 
 import com.lowagie.text.Document;
@@ -114,6 +122,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	private String templateDesc;
 	private Locale locale = new Locale("en");
 	private final String templateLangCode = "en";
+	private final String attachmentType = "SVD";
 	
 	private StreamedContent file;
 	
@@ -420,7 +429,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		this.getManagedBean().setActiveIndex(index);
 		//log.info("*******Category pass********" + this.getManagedBean().getSmSvTask().getSmSvCategories().get(0).getPassed()+"****"+ this.getManagedBean().getSmSvTask().getSmSvCategories().get(0).getPmCategoryL3().getCategoryL3Code());
 		//log.info("*******changeActiveIndex CatType********" + catType.length());
-		if(catType.length() > 0){
+		if(catType.trim().length() > 0){
 			this.getManagedBean().setSelectedSvTemplate(this.getManagedBean().getSmSvTemplateMap().get(catType));
 			SmSvTemplate svTemplate = this.getManagedBean().getSmSvTemplateMap().get(catType);
 			
@@ -483,6 +492,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				setSelectedSmSvFacility(svTemplate.getPmParameter().getParameterCode());
 			}
 			
+		}else{
+			if(index == this.getManagedBean().getLastIndex()){
+				retrievUploadedSiteVisitReport(getManagedBean().getSmSvTask().getSmSvTemplates());
+			}
 		}
 
 	}
@@ -1228,7 +1241,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
         	file = commonDownload(tmpFolder+fileName, fileName);
         	
         } catch (IOException e) {
-        	// TODO Auto-generated catch block
         	e.printStackTrace();
         }
         
@@ -2316,5 +2328,98 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		CategoryCodeResDTO resDTO = reqSO.retrievePmMachineSectionByCategoryTypeAndSection(reqDTO);
 		
 		return resDTO.getPmMachineSections();
+	}
+	
+	/**
+	 * Sitevisit report upload
+	 */
+	public void siteVisiteReportUpload(FileUploadEvent event) throws Exception {
+		if (event.getFile() != null) {
+			log.info("******siteVisiteReportUpload******");
+			SmSvTemplate svTemplate = getManagedBean().getSelectedAttachmentTemplate();
+			String subFolder = svTemplate.getSvTemplateId().toString();
+			String filePath = SmCommonUtil.getUploadFilePath(SupplierManagementConst.SITE_VISIT_REPORT_PATH) + subFolder + "/";
+			String fileName = String.valueOf((new Date()).getTime()) + "_" + event.getFile().getFileName();
+			
+			if(svTemplate.getSmAttachments() == null){
+				svTemplate.setSmAttachments(new ArrayList<SmAttachment>());
+			}
+			
+			SmAttachment attachment = new SmAttachment();
+			attachment.setFileName(fileName);
+			attachment.setFilePath(filePath);
+			attachment.setDocId(svTemplate.getSvTemplateId());
+			attachment.setDocType(attachmentType);
+			svTemplate.getSmAttachments().add(attachment);
+			
+			commonUploadFile(event, filePath);
+		}
+	}
+	
+	/**
+	 * set Selected Template for upload
+	 * @param svTemplate
+	 */
+	public void setReportUploadTemplate(SmSvTemplate svTemplate){
+		getManagedBean().setSelectedAttachmentTemplate(svTemplate);
+		log.info("setTemplateUpload>>>>>" + getManagedBean().getSelectedAttachmentTemplate().getSvTemplateId());
+	}
+	
+	/**
+	 * get RecordStatusActive
+	 * @return
+	 */
+	public int getRecordStatusActive(){
+		return DbValueConst.RECORD_STATUS_ACTIVE;
+	}
+	
+	
+	/**
+	 * remove uploaded site visit attachment
+	 * @param templateType
+	 * @param attachment
+	 */
+	public void removeUploadedSvFile(){
+		String templateType = getManagedBean().getSelectedAttachmentTemplType();
+		SmAttachment attachment = getManagedBean().getSelectedUploadAttachment();
+		
+		if(templateType != null && attachment != null){
+			if(getManagedBean().getSmSvTemplateMap().get(templateType) != null){
+				SmSvTemplate svTemplate = getManagedBean().getSmSvTemplateMap().get(templateType);
+				if(svTemplate.getSmAttachments() != null && !svTemplate.getSmAttachments().isEmpty()){
+					int index = svTemplate.getSmAttachments().indexOf(attachment);
+					SmAttachment attach = svTemplate.getSmAttachments().get(index);
+					if(attach.getAttachmentId() != null){
+						attach.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+					}else{
+						svTemplate.getSmAttachments().remove(attachment);
+					}
+				}
+			}
+		}
+	}
+	
+	public void retrievUploadedSiteVisitReport(List<SmSvTemplate> templateLs){
+		if(templateLs.size() > 0){
+			for(SmSvTemplate template : templateLs){
+				if(template.getSmAttachments() == null){
+						ISmAttachmentSO reqSO = SmServiceLookup.getSmAttachmentSO();
+						SmAttachmentReqDTO reqDTO = new SmAttachmentReqDTO();
+						reqDTO.setDocType(attachmentType);
+						reqDTO.setDocId(template.getSvTemplateId());
+						SmAttachmentResDTO resDTO = reqSO.retrieveSmAttachmentListByDocIdAndType(reqDTO);
+						
+						template.setSmAttachments(resDTO.getAttachmentLs());
+				}
+			}
+		}
+	}
+	
+	public void showDeleteDialog(String templateType, SmAttachment attachment){
+		String msg = SmCommonUtil.getMessage("lbl.sm.sitevisit.upload.delete.confirm", new String[]{attachment.getFileName()});
+		
+		getManagedBean().setAttachmentDeleteMsg(msg);
+		getManagedBean().setSelectedAttachmentTemplType(templateType);
+		getManagedBean().setSelectedUploadAttachment(attachment);
 	}
 }
