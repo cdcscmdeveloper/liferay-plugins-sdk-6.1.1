@@ -364,6 +364,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public void preRenderView() throws UnsupportedEncodingException {
 		IContractSO contractSO = null;
+		IContractAmendmentSO contractAmendmentSO;
 		ContractResDTO resDTO = null;
 	
 		try {
@@ -416,8 +417,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ctReqDTO.setContractId(new Long(dataType.getContractId()));
 			ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
 			ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
-			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
-			resDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
+			contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
+			resDTO = contractAmendmentSO.retrieveContractAmendVerDtls(ctReqDTO);
 			setAmendmentContractVer(resDTO);
 			getManagedBean().setSelectedItem(null);
 			getManagedBean().setSelectedServiceItem(null);			     
@@ -457,6 +458,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	        	}
 	        	if (getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() == null) {
 	        		ctReqDTO.setCtContractVer(this.getManagedBean().getContractVer());
+	        		contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 	        		ContractResDTO resDTO1 = contractSO.setScLoa(ctReqDTO);
 	        		getManagedBean().getContractVer().getCtAmendment().setAmendmentLoa(resDTO1.getAmendmentScLoa());
 	        		if (getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractAdmin() == null) {
@@ -573,7 +575,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @param resDTO  the response data transfer object for contract
 	 */
 	public void setAmendmentContractVer(ContractResDTO resDTO) {		
-		IContractSO contractSO = null;
+		IContractAmendmentSO contractAmendmentSO = null;
 		ContractReqDTO reqDTO = null;
 		ContractResDTO extResDTO = null;
 		Date currentDate = DateUtils.getCurrentDateWithoutTime();
@@ -587,12 +589,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			retrieveContractVerOfAgreement();
 			
 		 	reqDTO = new ContractReqDTO();
-		 	contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
-		 			ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+		 	contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(
+		 			ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
 		 	reqDTO.setContractVerId(resDTO.getCtContractVer().getContractVerId());
 	    	reqDTO.setContractId(resDTO.getCtContractVer().getCtContract().getContractId());
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
-			extResDTO = contractSO.retrieveExtensionHistory(reqDTO);
+			extResDTO = contractAmendmentSO.retrieveExtensionHistory(reqDTO);
 			getManagedBean().setAmendHistoryList(extResDTO.getExtensionHistoryList());
 			getManagedBean().setNewAmendmentEffDate(retrieveNewEffDate());
 			// Initialize new amendment details
@@ -816,7 +818,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		    	}
 		    }			
 	  	} finally {
-	  		contractSO = null;
+	  		contractAmendmentSO = null;
 			reqDTO = null;
 			extResDTO =  null;
 			resDTO = null;
@@ -838,7 +840,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @see    Exception
 	 */
 	public String saveContractAmendment(String action) throws Exception {
-		IContractSO contractSO = null;
+		IContractAmendmentSO contractAmendmentSO = null;
 		ContractReqDTO reqDTO = null;
 		
 		try {
@@ -851,8 +853,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 	        	
-			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
+			
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			       
 			if (getManagedBean().getContractVer().getCtContractItems().size() > 0) {
@@ -931,7 +933,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (getManagedBean().getPmDigiSign() != null) {
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}
-			ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
+			ContractResDTO resDTO = contractAmendmentSO.saveContractAmendmentVerDtls(reqDTO);
 			if (resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
 				String messageId = MessageConst.INFO_700005;
@@ -988,7 +990,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					ctReqDTO.setContractVerId(resDTO.getCtContractVer().getContractVerId());
 					ctReqDTO.setDocType(resDTO.getCtContractVer().getDocType());
 			    
-					ContractResDTO ctResDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
+					ContractResDTO ctResDTO = contractAmendmentSO.retrieveContractAmendVerDtls(ctReqDTO);
 					setAmendmentContractVer(ctResDTO);
 					ConstructTabSideMenu();
 				}
@@ -996,7 +998,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				throw new EpException("Failed.");
 			}
 		} finally {
-			contractSO = null;
+			contractAmendmentSO = null;
 		}
 		return null;		
 	}
@@ -1612,12 +1614,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
      */
 	private String retrieveCommitteeType() {	    
 		
-		IContractSO contractSO = null;
-		contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-		 if(contractSO.getCommitteeType(getManagedBean().getContractVer())== null) {
+		IContractAmendmentSO contractAmendmentSO = null;
+		contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
+		 if(contractAmendmentSO.getCommitteeType(getManagedBean().getContractVer())== null) {
 			 throw new EpException(MessageConst.WARN_755018);
 		 }
-	    return contractSO.getCommitteeType(getManagedBean().getContractVer());
+	    return contractAmendmentSO.getCommitteeType(getManagedBean().getContractVer());
 	}
 	
 	/**

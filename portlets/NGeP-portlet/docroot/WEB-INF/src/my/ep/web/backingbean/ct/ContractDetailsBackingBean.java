@@ -1684,7 +1684,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @return the navigate URL 
 	 */
 	public String gotoAmendPage() {
-		IContractSO contractSO = null;
+		IContractAmendmentSO contractAmendmentSO = null;
+		IContractSO contractSO;
 		AmendmentBackingBean amendBB = null;
 		
 		try {
@@ -1695,18 +1696,19 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			reqDTO.setContractId(contractId);
 			Long contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
-				
 			reqDTO.setContractVerId(contractVerId);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
 			if (action.equalsIgnoreCase("update")) {
 				reqDTO.setUpdateAction(true);
 			}
-			ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
+			contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
+			ContractResDTO resDTO = contractAmendmentSO.retrieveContractAmendVerDtls(reqDTO);
 			amendBB = new AmendmentBackingBean();
 			amendBB.getManagedBean().setSelectedTabIndex(0);
 			amendBB.getManagedBean().setShowItem(null);
 			amendBB.getManagedBean().setSelectedItem(null);
 			amendBB.getManagedBean().setSelectedServiceItem(null);
+			amendBB.getManagedBean().setDisableGstRadio(true);
 			amendBB.setAmendmentContractVer(resDTO);
 		} finally {
 			contractSO = null;
