@@ -40,34 +40,16 @@
 					</c:if>
 
 				</p:tabMenu></td>
-			<td width="80%;" valign="top"><ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq}">
-					<c:if
-						test="#{evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '0'}">
-
-						<ui:include src="financialEvaluation.xhtml"></ui:include>
-
-					</c:if>
-				</ui:fragment> <ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq}">
-					<c:if
-						test="#{evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '1'}">
-
-						<ui:include src="financialEvaluationRecommendationSummary.xhtml" />
-
-					</c:if>
-				</ui:fragment> <ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq}">
-					<c:if
-						test="#{evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '2'}">
-
-
-
-						<ui:include src="FinancialEvaluationCommitteeSummary.xhtml" />
-
-
-					</c:if>
-				</ui:fragment></td>
+			<td width="80%;" valign="top"><c:if
+					test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq and evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '0'}">
+					<ui:include src="financialEvaluation.xhtml"></ui:include>
+				</c:if> <c:if
+					test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq and evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '1'}">
+					<ui:include src="financialEvaluationRecommendationSummary.xhtml" />
+				</c:if> <c:if
+					test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq and evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '2'}">
+					<ui:include src="FinancialEvaluationCommitteeSummary.xhtml" />
+				</c:if></td>
 		</tr>
 	</table>
 
