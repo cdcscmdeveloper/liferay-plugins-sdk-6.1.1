@@ -1510,6 +1510,19 @@ public class ProfileManagementBackingBean extends
 		logger.info("getRoleDescByRoleCode");
 		return PmCommonUtil.getRoleDescByRoleCode(roleCode);
 	}
+	/**
+	 * Get Role description by role code and language.
+	 * 
+	 * @param roleCode
+	 *            the role code.
+	 * @param languageCode
+	 *            the role code.
+	 * @return role description
+	 */
+	public String getRoleDescByRoleCode(String roleCode, String languageCode) {
+		logger.info("getRoleDescByRoleCode");
+		return PmCommonUtil.getRoleDescByRoleCodeAndLanguage(roleCode, languageCode);
+	}
 
 	/**
 	 * check unique role from the ui list or from DB
@@ -3308,6 +3321,7 @@ public class ProfileManagementBackingBean extends
 		List<String> uniqueRoles = new ArrayList<String>(
 				Arrays.asList(ProfileManagementConst.UNIQUE_ORG_ROLES));
 		boolean activeRole = false;
+		String languageCode = new FacesScopes().getUserLocale().getLanguage();
 		if (userOrg != null) {
 			// for (PmUserOrg userOrg : user.getPmUserOrgs()) {
 			if (userOrg.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
@@ -3320,7 +3334,7 @@ public class ProfileManagementBackingBean extends
 										BigDecimal.ZERO) != 1) {
 							throw new EpException(
 									MessageConst.ERROR_770148,
-									new String[] { getRoleDescByRoleCode(roleCode) });
+									new String[] { getRoleDescByRoleCode(roleCode, languageCode) });
 						}
 					}
 
@@ -3554,76 +3568,51 @@ public class ProfileManagementBackingBean extends
 		}
 
 		if (userOrg.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {// ????
-			StringBuffer addedRoleNames = new StringBuffer();
-			StringBuffer deActivatedRoleNames = new StringBuffer();
-			StringBuffer reActivatedRoleNames = new StringBuffer();
 
 			for (PmUserRole userRole : reqDTO.getNewRoleList()) {
 				//
 				if (userRole.isBrandNew()) {
-					addedRoleNames.append(getRoleDescByRoleCode(userRole
-							.getPmRole().getRoleCode()));
-					addedRoleNames.append(",");
+
+					logger.info("Tracking diary for user profile: add new Role :saveUserProfile");
+					String messageId = MessageConst.TD_80002;
+					String[] msgParam = new String[] { user.getUserName() , getRoleDescByRoleCode(userRole
+							.getPmRole().getRoleCode(), "ms") };
+					logger.info("......msgParam[1]"+msgParam[1]);
+					reqDTO.setTrackingStatus(true);
+					reqDTO.getTrackDairyVOs().add(
+							PmCommonUtil.assignTrackingDairyValues(user,
+									getActionDesc(messageId, msgParam), statusResDTO.getPmStatus() != null ? statusResDTO
+											.getPmStatus() : new PmStatus()));
+
 				} else if (userRole.isModified()) {// the role's activated
-					reActivatedRoleNames.append(getRoleDescByRoleCode(userRole
-							.getPmRole().getRoleCode()));
-					reActivatedRoleNames.append(",");
+					logger.info("Tracking diary for user profile: Role is re-activated :saveUserProfile");
+					String messageId = MessageConst.TD_80004;
+					String[] msgParam = new String[] { user.getUserName() ,getRoleDescByRoleCode(userRole
+							.getPmRole().getRoleCode(), "ms")};
+					logger.info("..222....msgParam[1]"+msgParam[1]);
+					reqDTO.setTrackingStatus(true);
+					reqDTO.getTrackDairyVOs().add(
+							PmCommonUtil.assignTrackingDairyValues(user,
+									getActionDesc(messageId, msgParam), statusResDTO.getPmStatus() != null ? statusResDTO
+											.getPmStatus() : new PmStatus()));
 				}
 			}
 			for (PmUserRole userRole : reqDTO.getRemoveRoleList()) {
 				if (!userRole.isBrandNew()) {// the role's de-activated
-					deActivatedRoleNames.append(getRoleDescByRoleCode(userRole
-							.getPmRole().getRoleCode()));
-					deActivatedRoleNames.append(",");
+					logger.info("Tracking diary for user profile: Role is de-activated :saveUserProfile");
+					
+					String messageId = MessageConst.TD_80003;
+					String[] msgParam = new String[] {user.getUserName() ,getRoleDescByRoleCode(userRole
+							.getPmRole().getRoleCode(), "ms")};
+					logger.info("..333....msgParam[1]"+msgParam[1]);
+					reqDTO.setTrackingStatus(true);
+					reqDTO.getTrackDairyVOs().add(
+							PmCommonUtil.assignTrackingDairyValues(user,
+									getActionDesc(messageId, msgParam), statusResDTO.getPmStatus() != null ? statusResDTO
+											.getPmStatus() : new PmStatus()));
 				}
 			}
 
-			if (addedRoleNames.length() > 0) {
-				logger.info("......addedRoleNames.lenght:"
-						+ addedRoleNames.length());
-
-				addedRoleNames.replace(addedRoleNames.length() - 2,
-						addedRoleNames.length() - 1, "");// remove the last
-															// comma
-				logger.info("......addedRoleNames.toString:"
-						+ addedRoleNames.toString());
-				logger.info("Tracking diary for user profile: add new Role :saveUserProfile");
-				String messageId = MessageConst.TD_80002;
-				String[] msgParam = new String[] { user.getUserName() , addedRoleNames.toString() };
-				reqDTO.setTrackingStatus(true);
-				reqDTO.getTrackDairyVOs().add(
-						PmCommonUtil.assignTrackingDairyValues(user,
-								getActionDesc(messageId, msgParam), statusResDTO.getPmStatus() != null ? statusResDTO
-										.getPmStatus() : new PmStatus()));
-			}
-			if (reActivatedRoleNames.length() > 0) {
-				logger.info("Tracking diary for user profile: Role is re-activated :saveUserProfile");
-				reActivatedRoleNames.replace(reActivatedRoleNames.length() - 2,
-						reActivatedRoleNames.length() - 1, "");// remove the
-																// last comma
-				String messageId = MessageConst.TD_80004;
-				String[] msgParam = new String[] { user.getUserName() ,reActivatedRoleNames
-						.toString() };
-				reqDTO.setTrackingStatus(true);
-				reqDTO.getTrackDairyVOs().add(
-						PmCommonUtil.assignTrackingDairyValues(user,
-								getActionDesc(messageId, msgParam), statusResDTO.getPmStatus() != null ? statusResDTO
-										.getPmStatus() : new PmStatus()));
-			}
-			if (deActivatedRoleNames.length() > 0) {
-				logger.info("Tracking diary for user profile: Role is de-activated :saveUserProfile");
-				deActivatedRoleNames.replace(deActivatedRoleNames.length() - 2,
-						deActivatedRoleNames.length() - 1, "");// remove the
-																// last comma
-				String messageId = MessageConst.TD_80003;
-				String[] msgParam = new String[] { user.getUserName() ,deActivatedRoleNames
-						.toString() };
-				reqDTO.setTrackingStatus(true);
-				reqDTO.getTrackDairyVOs().add(
-						PmCommonUtil.assignTrackingDairyValues(user,
-								getActionDesc(messageId, msgParam), statusResDTO.getPmStatus() != null ? statusResDTO
-										.getPmStatus() : new PmStatus()));
-			}
 			for (PmUserRole userRole : userOrg.getPmUserRoles()) {
 				if (userRole.getPmRole().getRoleCode().equals("FL_APPROVER")) {
 					// getFromMap
