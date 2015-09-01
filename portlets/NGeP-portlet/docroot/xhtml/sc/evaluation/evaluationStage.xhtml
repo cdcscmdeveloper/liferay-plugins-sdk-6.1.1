@@ -47,67 +47,41 @@
 					</c:if>
 
 				</p:tabMenu></td>
-			<td width="80%;" valign="top"><ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' or evaluationBackingBean.managedBean.committeeType eq 'TEC'}">
+			<td width="80%;" valign="top"><c:if
+					test="#{((evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '0') or (evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '0'))}">
 					<c:if
 						test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '0'}">
 
 						<ui:include src="technicalEvaluation.xhtml"></ui:include>
 
 					</c:if>
-				</ui:fragment> <ui:fragment
-					rendered="#{((evaluationBackingBean.managedBean.committeeType eq 'EC' and !evaluationBackingBean.managedBean.scQt.techEvaluationReq and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1') or (evaluationBackingBean.managedBean.committeeType eq 'FEC' and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '0'))}">
+				</c:if> <c:if
+					test="#{((evaluationBackingBean.managedBean.committeeType eq 'EC' and !evaluationBackingBean.managedBean.scQt.techEvaluationReq and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1') or (evaluationBackingBean.managedBean.committeeType eq 'FEC' and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '0'))}">
 
 
 					<ui:include src="financialEvaluation.xhtml"></ui:include>
 
-				</ui:fragment> <ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and !evaluationBackingBean.managedBean.scQt.techEvaluationReq}">
-					<c:if
-						test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '2'}">
-
-						<ui:fragment
-							rendered="#{evaluationBackingBean.managedBean.committeeType ne 'TEC'}">
-
-							<ui:include src="financialEvaluationRecommendationSummary.xhtml" />
-						</ui:fragment>
-					</c:if>
-				</ui:fragment> <ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and !evaluationBackingBean.managedBean.scQt.techEvaluationReq}">
-					<c:if
-						test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '3'}">
-
-						<ui:fragment
-							rendered="#{evaluationBackingBean.managedBean.committeeType ne 'TEC'}">
-
-							<ui:include src="FinancialEvaluationCommitteeSummary.xhtml" />
-
-						</ui:fragment>
-					</c:if>
-				</ui:fragment> <ui:fragment
-					rendered="#{((evaluationBackingBean.managedBean.committeeType eq 'TEC') or (evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'))}">
-					<c:if
-						test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}">
-						<ui:fragment
-							rendered="#{((evaluationBackingBean.managedBean.committeeType eq 'TEC') or(evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'))}">
-							<ui:param name="passingScore"
-								value="#{evaluationBackingBean.managedBean.passingScore}"></ui:param>
-							<ui:include src="TECSummary.xhtml" />
-						</ui:fragment>
-					</c:if>
-				</ui:fragment> <ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'FEC'}">
-					<c:if
-						test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}">
+				</c:if> <c:if
+					test="#{((evaluationBackingBean.managedBean.committeeType eq 'EC' and !evaluationBackingBean.managedBean.scQt.techEvaluationReq and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '2') or (evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1' and evaluationBackingBean.managedBean.committeeType eq 'FEC'))}">
 
 
+					<ui:include src="financialEvaluationRecommendationSummary.xhtml" />
+
+				</c:if> <c:if
+					test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and !evaluationBackingBean.managedBean.scQt.techEvaluationReq and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '3'}">
 
 
-						<ui:include src="financialEvaluationRecommendationSummary.xhtml" />
+					<ui:include src="FinancialEvaluationCommitteeSummary.xhtml" />
 
 
-					</c:if>
-				</ui:fragment></td>
+				</c:if> <c:if
+					test="#{((evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1') or (evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true' and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'))}">
+
+					<ui:param name="passingScore"
+						value="#{evaluationBackingBean.managedBean.passingScore}"></ui:param>
+					<ui:include src="TECSummary.xhtml" />
+
+				</c:if> </td>
 		</tr>
 	</table>
 
