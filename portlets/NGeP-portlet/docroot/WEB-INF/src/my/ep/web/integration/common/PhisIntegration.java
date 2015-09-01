@@ -743,7 +743,8 @@ public class PhisIntegration {
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 
 		reqDTO.setCreateDate(currentDate);
-//		reqDTO.setCompanyName("PHARMANIAGA LOGISTICS SDN BHD");
+		
+		reqDTO.setOrgprofileIdList(getPHISSupplier());
 		CodificationResDTO resDTO = codificationSO.searchItemByCreateDate(reqDTO);
 		
 		List<MasterDataMaterialInfo> materilInfoList = null;
