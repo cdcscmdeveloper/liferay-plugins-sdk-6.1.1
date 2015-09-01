@@ -16,10 +16,8 @@
 			rowKey="#{scQtDeduction}" rowIndexVar="rowIndex"
 			selectionMode="single">
 
-			<p:ajax event="rowSelect" 
-				update=":form:deductionPayId" />
-			<p:ajax event="rowUnselect" 
-				update=":form:deductionPayId" />
+			<p:ajax event="rowSelect" update=":form:deductionPayId" />
+			<p:ajax event="rowUnselect" update=":form:deductionPayId" />
 
 			<ac:paginator for="deductTbl" />
 
@@ -34,7 +32,7 @@
 				<c:if test="#{isEditableStatus}">
 					<p:selectOneMenu id="deductionType"
 						label="#{lbl['lbl.sc.deduction.type']}"
-						value="#{scQtDeduction.deductionType.parameterId}" required="true">
+						value="#{scQtDeduction.deductionType.parameterId}">
 						<f:selectItems
 							value="#{directLOABackingBean.getDeductionItemTypeDropdownList()}" />
 						<p:ajax event="change" partialSubmit="true" process="@this"

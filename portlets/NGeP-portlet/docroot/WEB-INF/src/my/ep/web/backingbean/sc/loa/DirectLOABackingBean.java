@@ -215,8 +215,9 @@ public class DirectLOABackingBean extends
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 
 			parseLOADetails(scLoa, BpmOutcomeConst.BPM_SAVE, reqDTO);
-			// validateLOADetails(scLoa, BpmOutcomeConst.BPM_DRAFT);
 
+			// validateLOADetails(scLoa, BpmOutcomeConst.BPM_DRAFT);
+			validateDeductionPaymentDtls(scLoa);
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setScQtDoc(this.getManagedBean().getProdscQtDoc());
@@ -697,7 +698,6 @@ public class DirectLOABackingBean extends
 	 */
 	public void deductionTypeChange(ScQtDeduction scQtDeduction) {
 		debugLogger("deductionTypeChange");
-
 		IParameterSO parameterSO = null;
 		IClauseSO clauseSO = null;
 		try {
@@ -713,6 +713,7 @@ public class DirectLOABackingBean extends
 			reqDTO.setParameterId(parameterId);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			scQtDeduction.setDeductionType(resDTO.getPmParameter());
+			validateDeductionPayment(scQtDeduction);
 			getClausesTitle(scQtDeduction);
 			ScQtDeductionClause deductionClause = null;
 			List<ScQtDeductionClause> deductionClauseList = new ArrayList<ScQtDeductionClause>();
@@ -741,10 +742,36 @@ public class DirectLOABackingBean extends
 			} else {
 				scQtDeduction.setScQtDeductionClauses(null);
 			}
-
 			getManagedBean().setSelectedScQtDeduction(scQtDeduction);
+
 		} finally {
 			parameterSO = null;
+		}
+	}
+
+	/**
+	 * Validate deduction payment.
+	 * 
+	 * @param scQtDeduction
+	 *            the sc qt deduction
+	 */
+	private void validateDeductionPayment(ScQtDeduction scQtDeduction) {
+		List<ScQtDeduction> scQtDeductions = getManagedBean().getScLoa()
+				.getScQtDeductions();
+		if (scQtDeductions != null && scQtDeductions.size() > 1) {
+			for (ScQtDeduction qtDeduction : scQtDeductions) {
+
+				if (qtDeduction.getDeductionType().getParameterId() == scQtDeduction
+						.getDeductionType().getParameterId()) {
+					throw new EpException(MessageConst.ERROR_700027,
+							new String[] { ResourceBundleUtils.getMessage(
+									getParameterDesc(scQtDeduction
+											.getDeductionType()),
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale()) });
+				}
+			}
+
 		}
 	}
 
@@ -1079,6 +1106,9 @@ public class DirectLOABackingBean extends
 							.getScQtDeductionClauses())) {
 						throw new EpException(MessageConst.ERROR_760324);
 					}
+				}
+				if (null == deduction.getDeductionType().getParameterId()) {
+					throw new EpException(MessageConst.ERROR_740035);
 				}
 			}
 		}
@@ -1562,29 +1592,31 @@ public class DirectLOABackingBean extends
 	 * @return the year details
 	 */
 	public List<SelectItem> getYearDetails() {
-		List<SelectItem> selectItems = new ArrayList<SelectItem>();
-		FacesScopes face = new FacesScopes();
-		try {
-			selectItems.add(new SelectItem(null, ResourceBundleUtils
-					.getMessage("lbl.txt.select",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							face.getUserLocale())));
-			selectItems.add(new SelectItem(1, getMonth(1)));
-			selectItems.add(new SelectItem(2, getMonth(2)));
-			selectItems.add(new SelectItem(3, getMonth(3)));
-			selectItems.add(new SelectItem(4, getMonth(4)));
-			selectItems.add(new SelectItem(5, getMonth(5)));
-			selectItems.add(new SelectItem(6, getMonth(6)));
-			selectItems.add(new SelectItem(7, getMonth(7)));
-			selectItems.add(new SelectItem(8, getMonth(8)));
-			selectItems.add(new SelectItem(9, getMonth(9)));
-			selectItems.add(new SelectItem(10, getMonth(10)));
-			selectItems.add(new SelectItem(11, getMonth(11)));
-			selectItems.add(new SelectItem(12, getMonth(12)));
+		if (null == getManagedBean().getYearList()) {
+			List<SelectItem> selectItems = new ArrayList<SelectItem>();
+			FacesScopes face = new FacesScopes();
+			try {
+				selectItems.add(new SelectItem(null, ResourceBundleUtils
+						.getMessage("lbl.txt.select",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								face.getUserLocale())));
+				selectItems.add(new SelectItem(1, getMonth(1)));
+				selectItems.add(new SelectItem(2, getMonth(2)));
+				selectItems.add(new SelectItem(3, getMonth(3)));
+				selectItems.add(new SelectItem(4, getMonth(4)));
+				selectItems.add(new SelectItem(5, getMonth(5)));
+				selectItems.add(new SelectItem(6, getMonth(6)));
+				selectItems.add(new SelectItem(7, getMonth(7)));
+				selectItems.add(new SelectItem(8, getMonth(8)));
+				selectItems.add(new SelectItem(9, getMonth(9)));
+				selectItems.add(new SelectItem(10, getMonth(10)));
+				selectItems.add(new SelectItem(11, getMonth(11)));
+				selectItems.add(new SelectItem(12, getMonth(12)));
 
-			this.getManagedBean().setYearList(selectItems);
-		} finally {
+				this.getManagedBean().setYearList(selectItems);
+			} finally {
 
+			}
 		}
 		return getManagedBean().getYearList();
 	}
@@ -1676,16 +1708,12 @@ public class DirectLOABackingBean extends
 	}
 
 	/**
-	 * Calculate schedule months. Calculating start month , start year , end
-	 * month and end year to display total months.
-	 * 
-	 * @param schedule
-	 *            the schedule
-	 * @param startMonthAction
-	 *            the start month action
+	 * Calculate schedule months.
+	 * Calculating start month , start year , end month and end year to display total months.
+	 * @param schedule the schedule
+	 * @param startMonthAction the start month action
 	 */
-	public void calculateScheduleMonths(ScQtSchedule schedule,
-			Boolean startMonthAction) {
+	public void calculateScheduleMonths(ScQtSchedule schedule, Boolean startMonthAction) {
 
 		List<ScQtSchedule> freqSchedule = this.getManagedBean().getScLoa()
 				.getScQtSchedules();
@@ -1703,14 +1731,14 @@ public class DirectLOABackingBean extends
 		endYear = schedule.getEndYear() != null ? Integer.parseInt(schedule
 				.getEndYear()) : null;
 
-		if (startMonthAction != null && startMonthAction && startMonth != null) {
+		if (startMonthAction !=null && startMonthAction && startMonth != null) {
 			endMonth = startMonth;
 			endYear = startYear;
 			schedule.setEndMonth(endMonth.toString());
-			if (endYear != null) {
+			if(endYear != null){
 				schedule.setEndYear(endYear.toString());
 			}
-
+			
 		}
 
 		if (startMonth != null && endMonth != null && startYear != null
@@ -1730,6 +1758,7 @@ public class DirectLOABackingBean extends
 		freqSchedule.set(index, schedule);
 		this.getManagedBean().getScLoa().setScQtSchedules(freqSchedule);
 	}
+
 
 	/**
 	 * Gets the deduction item type dropdown list.
@@ -3296,76 +3325,7 @@ public class DirectLOABackingBean extends
 
 	}
 
-	/**
-	 * Calculate start month.change start month dropdown in frequency schedule
-	 * menu.
-	 * 
-	 * @param schedule
-	 *            (ScQtSchedule schedule).
-	 */
-	public void calculateStartMonth(ScQtSchedule schedule) {
-		// event.getComponent().getAttributes().get("value");
-		List<ScQtSchedule> freqSchedule = this.getManagedBean().getScLoa()
-				.getScQtSchedules();
-		if (null == freqSchedule) {
-			freqSchedule = new ArrayList<ScQtSchedule>();
-
-		}
-		if (null != schedule.getStartMonth() && null != schedule.getEndMonth()) {
-			int start = Integer.parseInt(schedule.getStartMonth());
-			String fromMonth = getMonth(start);
-			schedule.setEndMonth(schedule.getStartMonth());
-			int end = Integer.parseInt(schedule.getEndMonth());
-			String toMonth = getMonth(end);
-
-			SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-			String fromdate = null;
-			String toDate = null;
-			if (null != schedule.getStartYear()
-					&& null != schedule.getEndYear()) {
-				fromdate = 01 + "/" + fromMonth + "/" + schedule.getStartYear();
-				toDate = 31 + "/" + toMonth + "/" + schedule.getEndYear();
-			}
-
-			// schedule.setScheduleNo(schedule.getScheduleNo());
-
-			try {
-
-				Date date1;
-				Date date2;
-				try {
-					if (null != fromdate && null != toDate) {
-						date1 = format.parse(fromdate);
-						date2 = format.parse(toDate);
-						long days = DateUtils.getDaysDifference(date1, date2);
-						int day = (int) days;
-						int months = day / 30;
-						schedule.setTotalMonths(new BigDecimal(months));
-					}
-				} catch (ParseException e) {
-					log.debug(e.getMessage());
-				}
-
-				// schedule.setFromDate(df.parse(fromdate));
-				// schedule.setToDate(df.parse(toDate));
-
-				int index = freqSchedule.indexOf(schedule);
-				freqSchedule.set(index, schedule);
-
-				this.getManagedBean().getScLoa().setScQtSchedules(freqSchedule);
-
-			} finally {
-
-			}
-		} else {
-			int index = freqSchedule.indexOf(schedule);
-			if (null != schedule.getStartMonth()) {
-				schedule.setEndMonth(schedule.getStartMonth());
-			}
-			freqSchedule.set(index, schedule);
-		}
-
-	}
+	
 
 	/**
 	 * Calculate progressive start month.change start month in progessive
@@ -3425,69 +3385,7 @@ public class DirectLOABackingBean extends
 
 	}
 
-	/**
-	 * Calculate schedule percentage.calculate months difference in Frequency
-	 * schedule.
-	 * 
-	 * @param schedule
-	 *            (ScQtSchedule schedule).
-	 */
-	public void calculateSchedulePercentage(ScQtSchedule schedule) {
-		List<ScQtSchedule> freqSchedule = this.getManagedBean().getScLoa()
-				.getScQtSchedules();
-
-		if (null == freqSchedule) {
-			freqSchedule = new ArrayList<ScQtSchedule>();
-
-		}
-		if (null != schedule.getStartMonth() && null != schedule.getEndMonth()) {
-			int start = Integer.parseInt(schedule.getStartMonth());
-			String fromMonth = getMonth(start);
-			int end = Integer.parseInt(schedule.getEndMonth());
-			String toMonth = getMonth(end);
-
-			SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-			String fromdate = null;
-			String toDate = null;
-			if (null != schedule.getStartYear()
-					&& null != schedule.getEndYear()) {
-				fromdate = 01 + "/" + fromMonth + "/" + schedule.getStartYear();
-				toDate = 31 + "/" + toMonth + "/" + schedule.getEndYear();
-			}
-
-			// schedule.setScheduleNo(schedule.getScheduleNo());
-
-			try {
-
-				Date date1;
-				Date date2;
-				try {
-					if (null != fromdate && null != toDate) {
-						date1 = format.parse(fromdate);
-						date2 = format.parse(toDate);
-						long days = DateUtils.getDaysDifference(date1, date2);
-						int day = (int) days;
-						int months = day / 30;
-						schedule.setTotalMonths(new BigDecimal(months));
-					}
-				} catch (ParseException e) {
-					log.error(e.getMessage());
-				}
-
-				// schedule.setFromDate(df.parse(fromdate));
-				// schedule.setToDate(df.parse(toDate));
-
-				int index = freqSchedule.indexOf(schedule);
-				freqSchedule.set(index, schedule);
-
-				this.getManagedBean().getScLoa().setScQtSchedules(freqSchedule);
-
-			} finally {
-
-			}
-		}
-
-	}
+	
 
 	private void getLoaReports() {
 		if (CollectionUtils.isEmpty(this.getManagedBean().getScLoa()
