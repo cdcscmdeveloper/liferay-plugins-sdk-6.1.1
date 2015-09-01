@@ -483,6 +483,7 @@ public class SupplierManagementConst {
 	public static final String SM_REASON_CODE_OTHER = "OTHER";
 
 	public static final String GST_FILE_PATH = "/SM/GST/";
+	public static final String SITE_VISIT_REPORT_PATH = "/SM/SITE_VISIT/";
 
 	// Getters for panel info
 	public String getSM_BASIC_INFO_PANEL() {
