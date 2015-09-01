@@ -150,9 +150,9 @@ public class TestNtfViaEmail {
 		emailLst.add("gangaprasad21@gmail.com");
 		emailLst.add("integration-test@commercedc.com.my");
 //	
-//		emailLst.add("ahmadfaizul@commerce.com.my");
-//		emailLst.add("mohdyusri@commerce.com.my");
-//		emailLst.add("ahmadasyraf@commerce.com.my");
+//		emailLst.add("ahmadfaizul@commercedc.com.my");
+		emailLst.add("mohdyusri@commercedc.com.my");
+//		emailLst.add("ahmadasyraf@commercedc.com.my");
 //		emailLst.add("sharudin@commercedc.com.my");
 		reqDTO.setEmailToArr(emailLst.toArray(new String[emailLst.size()]));
 
