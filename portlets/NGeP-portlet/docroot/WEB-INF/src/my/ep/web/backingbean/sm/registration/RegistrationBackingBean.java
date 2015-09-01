@@ -1322,17 +1322,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					}
 				}
 			}
-
-			// sort
-			if(CollectionUtils.isNotEmpty(itemList)){
-				Collections.sort(itemList, new Comparator<SelectItem>() {
-					@Override
-					public int compare(final SelectItem s1, final SelectItem s2) {
-						return StringUtil.upperCase(s1.getLabel()).compareTo(
-								StringUtil.upperCase(s2.getLabel()));
-					}
-				});
-			}
+			
 			log.info("------------->" + itemList.size());
 		} catch (Exception e) {
 			e.printStackTrace();
