@@ -5496,6 +5496,19 @@ public class SmApplicationUtil {
 					gst.setGstRegNo(gstCurrent.getGstRegNo());
 					gst.setGstEffDate(gstCurrent.getGstEffDate());
 					gst.setGstEndDate(gstCurrent.getGstEndDate());
+					if (gstCurrent.getSmGstSupplierDocs() != null
+							&& !gstCurrent.getSmGstSupplierDocs().isEmpty()) {
+						gst.setSmGstSupplierDocs(new ArrayList<SmGstSupplierDoc>());
+						SmGstSupplierDoc doc = null;
+						for (SmGstSupplierDoc docCurr : gstCurrent
+								.getSmGstSupplierDocs()) {
+							doc = new SmGstSupplierDoc();
+							doc.setPmDocument(docCurr.getPmDocument());
+							doc.setFileName(docCurr.getFileName());
+							doc.setFilePath(docCurr.getFilePath());
+							gst.getSmGstSupplierDocs().add(doc);
+						}
+					}
 				}
 			} else {
 				gst = new SmGstSupplier();
@@ -5550,6 +5563,20 @@ public class SmApplicationUtil {
 							br.getGst().setGstEndDate(brCurr.getGstEndDate());
 							br.setSameAsHq(SmApplicationUtil
 									.isBranchGstSameAsHq(hqGst, br.getGst()));
+							if (brCurr.getSmGstSupplierDocs() != null
+									&& !brCurr.getSmGstSupplierDocs().isEmpty()) {
+								br.getGst().setSmGstSupplierDocs(
+										new ArrayList<SmGstSupplierDoc>());
+								SmGstSupplierDoc doc = null;
+								for (SmGstSupplierDoc docCurr : brCurr
+										.getSmGstSupplierDocs()) {
+									doc = new SmGstSupplierDoc();
+									doc.setPmDocument(docCurr.getPmDocument());
+									doc.setFileName(docCurr.getFileName());
+									doc.setFilePath(docCurr.getFilePath());
+									br.getGst().getSmGstSupplierDocs().add(doc);
+								}
+							}
 						}
 					} else {
 						br.setGst(new SmGstSupplier());
