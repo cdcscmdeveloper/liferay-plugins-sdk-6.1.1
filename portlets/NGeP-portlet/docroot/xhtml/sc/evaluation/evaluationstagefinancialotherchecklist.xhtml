@@ -8,75 +8,28 @@
 
 
 
+
+
+	<div>
+		<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+			immediate="true"
+			action="#{evaluationBackingBean.evaluationBackaction}" />
+
+	</div>
+
+	<p:spacer height="25" />
+	<br />
+	<br />
+	<ui:include src="evaluationHeader.xhtml" />
+	<br />
+	<p:panel header="#{lbl['lbl.sc.eva.financial.proposal.evaluation']}">
+		<ui:include src="checklistHeader.xhtml" />
+	</p:panel>
+	<br />
+
 	<h:panelGroup>
-		<h:panelGroup>
-			<div>
-				<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-					action="#{evaluationBackingBean.evaluationBackaction}" />
-
-			</div>
-		</h:panelGroup>
-		<p:spacer height="25" />
-		<br />
-		<br />
-		<ui:include src="evaluationHeader.xhtml" />
-		<br />
-		<p:panel header="#{lbl['lbl.sc.eva.financial.proposal.evaluation']}">
-			<ui:include src="checklistHeader.xhtml" />
-		</p:panel>
-		<br />
-
-		<h:panelGroup>
-			<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
-				<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.eva.evaluation.supplier.list.instruction']}" escape="false" />
-
-				<p:dataTable var="othersFinList" id="othersFinListId"
-					editable="true" rows="10" lazy="true"
-					value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckListDM}"
-					rowIndexVar="index" style="width:100%" rowKey="#{othersFinList}">
-					<ac:paginator for="othersFinListId" />
-
-
-					<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
-						style="width:40%">
-
-						<h:outputText value="#{othersFinList.scQtProposal.supplierNo}"></h:outputText>
-
-
-					</p:column>
-
-
-					<p:column headerText="#{lbl['lbl.sc.total.score']}"
-						style="width:40%">
-						<h:outputText value="#{othersFinList.totalScore}"></h:outputText>
-					</p:column>
-
-					<p:column headerText="#{lbl['lbl.sc.evalvation.status']}"
-						style="width:15%">
-
-
-						<h:outputText
-							value="#{evaluationBackingBean.getStatusDescById(othersFinList.evaluationStatus.statusId)}"></h:outputText>
-
-					</p:column>
-
-					<p:column style="width:20%">
-						<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.sc.action']}" />
-							<ac:iconTooltip  id="action#{row}FOC" value="#{lbl['lbl.sc.action.evaluation.tooltip']}" />
-						</f:facet>
-
-						<p:commandButton value="#{lbl['lbl.btn.evaluate']}"
-							rendered="#{othersFinList.evaluationStatus.statusId eq '61600'}"
-							process="@this" partialSubmit="true"
-							action="#{evaluationBackingBean.financialSupplierEvaluate(othersFinList,'F')}" />
-						<p:commandButton value="#{lbl['lbl.btn.view']}"
-							rendered="#{othersFinList.evaluationStatus.statusId eq '61601'}"
-							process="@this" partialSubmit="true"
-							action="#{evaluationBackingBean.financialSupplierEvaluate(othersFinList,'F')}" />
-					</p:column>
-				</p:dataTable>
-			</p:panel>
-		</h:panelGroup>
+		<ui:include
+			src="financialEvaluationStgaeOtherchecklistSupplierList.xhtml" />
 	</h:panelGroup>
+
 </ui:composition>

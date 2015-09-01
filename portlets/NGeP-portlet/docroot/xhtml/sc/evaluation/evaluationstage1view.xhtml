@@ -81,14 +81,14 @@
 
 
 		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 3}">
-			<ui:fragment
-				rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'}">
+			<c:if
+				test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'}">
 				<ui:include src="oneTierFinancialEvaluation.xhtml" />
-			</ui:fragment>
-			<ui:fragment
-				rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
+			</c:if>
+			<c:if
+				test="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
 				<ui:include src="presentationDemoStage.xhtml" />
-			</ui:fragment>
+			</c:if>
 		</c:if>
 
 
