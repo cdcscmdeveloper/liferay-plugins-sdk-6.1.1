@@ -71,7 +71,7 @@
 							<tr>
 								<td><p:selectOneMenu id="branch"
 										value="#{directLOABackingBean.managedBean.selectedSupplierBranchName}"
-										style="width: 260px;margin-bottom: 5px;"
+										style="width: 247px;margin-bottom: 5px;"
 										label="#{lbl['lbl.sc.branch']}">
 										<f:selectItem itemLabel="HQ" itemValue="#{null}" />
 										<f:selectItems
@@ -100,7 +100,7 @@
 				<td width="32%"><p:inputTextarea id="suppAddr" cols="36"
 						disabled="true" rows="5"
 						value="#{directLOABackingBean.getFullAddress(directLOABackingBean.managedBean.scLoa.supplierAddress)}"
-						style=" margin-bottom:5px; width: 251px" maxlength="200" /></td>
+						style=" margin-bottom:5px; width: 238px" maxlength="200" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.contact.person']}" />
@@ -189,7 +189,7 @@
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="procTypeBoCategory" required="true"
 						value="#{directLOABackingBean.managedBean.scLoa.procurementTypeCatId.parameterId}"
-						style="margin-bottom:5px;width:229px;"
+						style="margin-bottom:5px;width:218px;"
 						label="#{lbl['lbl.sc.procurment.type.category']}">
 						<f:selectItems
 							value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.procurementTypeCategory)}" />
@@ -204,7 +204,7 @@
 				<td colspan="3"><p:inputText disabled="#{!isEditableStatus}"
 						required="true"
 						value="#{directLOABackingBean.managedBean.scLoa.scQt.fileNo}"
-						label="#{lbl['lbl.sc.qt.fileno']}" size="23" /> <p:spacer
+						label="#{lbl['lbl.sc.qt.fileno']}" size="22" /> <p:spacer
 						width="1px"></p:spacer> <p:inputText required="true"
 						id="fileExtNo" styleClass="ppNumericAlign"
 						value="#{directLOABackingBean.managedBean.scLoa.fileExtNo}"
@@ -224,7 +224,7 @@
 					</p:inputText> <p:spacer width="8px" /> <p:inputText styleClass="ppNumericAlign"
 						disabled="true"
 						value="#{!empty directLOABackingBean.managedBean.scLoa.ackDueDate ? DateUtils.getDaysDifference(DateUtils.getCurrentDateWithoutTime(), directLOABackingBean.managedBean.scLoa.ackDueDate) : ''}"
-						size="9" /> #{lbl['lbl.sc.days']}</td>
+						size="8" /> #{lbl['lbl.sc.days']}</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" />
@@ -263,7 +263,7 @@
 						disabled="#{!isEditableStatus}" required="true"
 						label="#{lbl['lbl.sc.fullfillent.type']}"
 						value="#{directLOABackingBean.managedBean.scLoa.scQt.fulfilmentType.parameterId}"
-						style="width: 229px;margin-bottom: 5px;">
+						style="width: 218px;margin-bottom: 5px;">
 
 						<f:selectItems
 							value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
@@ -302,7 +302,7 @@
 						value="#{lbl['lbl.sc.loiloa.loa.req.ins.war']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 				</td>
-				<td width="39%"><p:selectOneRadio id="insWarranty"
+				<td width="26%"><p:selectOneRadio id="insWarranty"
 						value="#{directLOABackingBean.managedBean.scLoa.insWarrantyReq}"
 						required="true" label="#{lbl['lbl.sc.loiloa.loa.req.ins.war']}"
 						disabled="#{!isEditableStatus}">
@@ -310,11 +310,11 @@
 							value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 					</p:selectOneRadio> <p:message id="insWarrantyMsg" for="insWarranty" display="icon" />
 				</td>
-				<td width="20%"><p:outputLabel
+				<td width="21%"><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 				</td>
-				<td width="20%"><p:selectOneRadio id="bondReq"
+				<td width="11%"><p:selectOneRadio id="bondReq"
 						value="#{directLOABackingBean.managedBean.scLoa.bondReq}"
 						required="true"
 						label="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}"
@@ -439,7 +439,7 @@
 				<td colspan="3"><p:inputText styleClass="ppNumericAlign"
 						id="contractDuration" disabled="#{!isEditableStatus}"
 						value="#{directLOABackingBean.managedBean.scLoa.contractDuration}"
-						size="28">
+						size="29">
 						<p:ajax event="blur" update="effdate,expdate"
 							listener="#{directLOABackingBean.resetContractDates()}"></p:ajax>
 					</p:inputText></td>
