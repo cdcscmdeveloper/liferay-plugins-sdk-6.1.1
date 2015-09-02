@@ -5994,8 +5994,8 @@ public class SupplierFinalizationBackingBean extends
 						BigDecimal offeredPrice = TemplateSpecHelper
 								.getInstance().calculateTotalAmount(
 										requestItem.getTplSpecQuestion(),
-										new BigDecimal(proposalItem
-												.getOfferPrice()),
+										proposalItem
+										.getOfferPrice(),
 										recommendDtl.getAwardQty());
 						evalResultDtl.getQtEvaluationResult()
 									 .setOfferedPrice(offeredPrice);
@@ -6596,8 +6596,8 @@ public class SupplierFinalizationBackingBean extends
 		if (proposalItem != null) {
 			BigDecimal offeredPrice = TemplateSpecHelper.getInstance()
 					.calculateTotalAmount(requestItem.getTplSpecQuestion(),
-							new BigDecimal(proposalItem.getOfferPrice()),
-							new BigDecimal(proposalItem.getOfferQuantity()));
+							proposalItem.getOfferPrice(),
+							proposalItem.getOfferQuantity());
 			evalResultDtl.getQtEvaluationResult().setOfferedPrice(offeredPrice);
 		}
 	}
