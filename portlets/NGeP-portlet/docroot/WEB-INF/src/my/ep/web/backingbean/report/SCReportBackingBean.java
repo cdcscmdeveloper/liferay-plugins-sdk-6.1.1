@@ -3,6 +3,7 @@ package my.ep.web.backingbean.report;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -518,7 +519,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	    		rptGenBean.setScProcurementTypeView(true);
 	    		rptGenBean.setScSimpleQuoteStatusView(true);	
 	    		rptGenBean.setScProcessRptQuotationNoView(true);
-	    		rptGenBean.setScSimpleQuoteDtlGroupView(true);
+	    		//rptGenBean.setScSimpleQuoteDtlGroupView(true);
 	            break;
 	        case ReportConst.SC_LAPORAN_PERICIAN_SQ_DTL_ITM_EST_PRICE_STS_S1_RPT_VAL:
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
@@ -567,26 +568,81 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));	            
 		}		
 	}
-	public List<SelectItem> generateMonthList(){
-		monthList = new ArrayList<SelectItem>();		
-		String month = ReportConst.EMPTY_VAL;
-		int monthNoInt;
-		String monthNoStr= ReportConst.EMPTY_VAL;
-        DateFormatSymbols dfs = new DateFormatSymbols();
-        String[] months = dfs.getMonths();        
-       for (int i = 0; i <= 11; i++) {
-    	   monthNoInt= i+1;
-    	   if(monthNoInt<10){
-    		   monthNoStr=ReportConst.ZERO_VAL+monthNoInt;
-    	   }else{
-    		   monthNoStr=monthNoInt+ReportConst.EMPTY_VAL;
-    	   }
-            month = months[i];            
-            SelectItem selectItem= new SelectItem();
-            selectItem.setLabel(month);
-            selectItem.setValue(monthNoStr);
+	public List<SelectItem> generateMonthList(String language){
+		monthList = new ArrayList<SelectItem>();
+		if((language!=null)&&(language.equalsIgnoreCase("en"))){
+				
+			String month = ReportConst.EMPTY_VAL;
+			int monthNoInt;
+			String monthNoStr= ReportConst.EMPTY_VAL;
+	        DateFormatSymbols dfs = new DateFormatSymbols();
+	        String[] months = dfs.getMonths();        
+	       for (int i = 0; i <= 11; i++) {
+	    	   monthNoInt= i+1;
+	    	   if(monthNoInt<10){
+	    		   monthNoStr=ReportConst.ZERO_VAL+monthNoInt;
+	    	   }else{
+	    		   monthNoStr=monthNoInt+ReportConst.EMPTY_VAL;
+	    	   }
+	            month = months[i];            
+	            SelectItem selectItem= new SelectItem();
+	            selectItem.setLabel(month);
+	            selectItem.setValue(monthNoStr);
+	            monthList.add(selectItem);
+	        } 
+		}else if((language!=null)&&(language.equalsIgnoreCase("ms"))){
+			SelectItem selectItem= new SelectItem();
+            selectItem.setLabel("Januari");
+            selectItem.setValue("01");
             monthList.add(selectItem);
-        }      
+            SelectItem selectItem1= new SelectItem();
+            selectItem.setLabel("Februari");
+            selectItem.setValue("02");
+            monthList.add(selectItem1);
+            SelectItem selectItem2= new SelectItem();
+            selectItem.setLabel("Mac");
+            selectItem.setValue("03");
+            monthList.add(selectItem2);
+            SelectItem selectItem3= new SelectItem();
+            selectItem.setLabel("April");
+            selectItem.setValue("04");
+            monthList.add(selectItem3);
+            SelectItem selectItem4= new SelectItem();
+            selectItem.setLabel("Mei");
+            selectItem.setValue("05");
+            monthList.add(selectItem4);
+            SelectItem selectItem5= new SelectItem();
+            selectItem.setLabel("Jun");
+            selectItem.setValue("06");
+            monthList.add(selectItem5);
+            SelectItem selectItem6= new SelectItem();
+            selectItem.setLabel("Julai");
+            selectItem.setValue("07");
+            monthList.add(selectItem6);
+            SelectItem selectItem7= new SelectItem();
+            selectItem.setLabel("Ogos");
+            selectItem.setValue("08");
+            monthList.add(selectItem7);
+            SelectItem selectItem8= new SelectItem();
+            selectItem.setLabel("September");
+            selectItem.setValue("09");
+            monthList.add(selectItem8);
+            SelectItem selectItem9= new SelectItem();
+            selectItem.setLabel("Oktober");
+            selectItem.setValue("10");
+            monthList.add(selectItem9);
+            SelectItem selectItem10= new SelectItem();
+            selectItem.setLabel("November");
+            selectItem.setValue("11");
+            monthList.add(selectItem10);
+            SelectItem selectItem11= new SelectItem();
+            selectItem.setLabel("Disember");
+            selectItem.setValue("12");
+            monthList.add(selectItem11);
+           
+            
+			
+		}
         return monthList;
 	}
 	public List<String> generateYearList(){

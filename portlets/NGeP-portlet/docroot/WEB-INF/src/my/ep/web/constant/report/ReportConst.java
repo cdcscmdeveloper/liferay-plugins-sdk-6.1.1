@@ -616,7 +616,7 @@ public class ReportConst {
 	public static final String SC_AMP_PID_NO_EQ = "&PIDNO=";
 	public static final String SC_AMP_CON_TYPE_EQ = "&CONTYPE=";
 	public static final String SC_AMP_CON_NO_EQ = "&CONNO=";
-	public static final String SC_AMP_CON_M_EQ = "&CONM=";
+	public static final String SC_AMP_CON_M_EQ = "&CONNM=";
 	public static final String SC_AMP_RQ_NO_EQ = "&RQNO=";
 	public static final String SC_AMP_APPROVER_NAIK_TARAF_EQ = "&APPROVER_NAIK_TARAF=";
 	public static final String SC_AMP_APPROVERNT_EQ = "&APPROVERNT=";

@@ -123,13 +123,13 @@
 									<p:selectOneMenu value="#{reportBackingBean.scPurchaseInDefaultStatus}" style="margin-top:5px;width:300px;">
 									<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 									
-									<f:selectItem itemLabel="#{lbl['lbl.rpt.Completed']}" itemValue="#{lbl['lbl.rpt.Completed']}"></f:selectItem>
-									<f:selectItem itemLabel="#{lbl['lbl.rpt.scPendingApproval']}" itemValue="#{lbl['lbl.rpt.scPendingApproval']}"></f:selectItem>											
-									<f:selectItem itemLabel="#{lbl['lbl.rpt.pendingsubmission']}" itemValue="#{lbl['lbl.rpt.pendingsubmission']}"></f:selectItem>																	
-									<f:selectItem itemLabel="#{lbl['lbl.rpt.PendingRNCreation']}" itemValue="#{lbl['lbl.rpt.PendingRNCreation']}"></f:selectItem>
-									<f:selectItem itemLabel="#{lbl['lbl.rpt.PendingSQCreation']}" itemValue="#{lbl['lbl.rpt.PendingSQCreation']}"></f:selectItem>
-									<f:selectItem itemLabel="#{lbl['lbl.rpt.PendingVerification']}" itemValue="#{lbl['lbl.rpt.PendingVerification']}"></f:selectItem>	
-									<f:selectItem itemLabel="#{lbl['lbl.rpt.rejected']}" itemValue="#{lbl['lbl.rpt.rejected']}"></f:selectItem>	
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.completedLabel']}" itemValue="#{lbl['lbl.rpt.Completed']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.pendingApprovalLabel']}" itemValue="#{lbl['lbl.rpt.scPendingApproval']}"></f:selectItem>											
+																								
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.pendingRNCreationLabel']}" itemValue="#{lbl['lbl.rpt.PendingRNCreation']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.pendingSQCreationLabel']}" itemValue="#{lbl['lbl.rpt.PendingSQCreation']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.pendingVerificationLabel']}" itemValue="#{lbl['lbl.rpt.PendingVerification']}"></f:selectItem>	
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.rejectedLabel']}" itemValue="#{lbl['lbl.rpt.rejected']}"></f:selectItem>	
 									<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																																																																		
 									</p:selectOneMenu>
 								  </c:if>							  
@@ -137,12 +137,12 @@
 									<p:outputLabel value="#{lbl['lbl.rpt.status']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scCommonStatus}" style="margin-top:5px;width:300px;">
 									<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-									<f:selectItem itemLabel="#{lbl['lbl.rpt.expired']}" itemValue="#{lbl['lbl.rpt.expired']}"></f:selectItem>										
-									<f:selectItem itemLabel="#{lbl['lbl.rpt.Completed']}" itemValue="#{lbl['lbl.rpt.Completed']}"></f:selectItem>	
-									<f:selectItem itemLabel="#{lbl['lbl.rpt.pendingsubmission']}" itemValue="#{lbl['lbl.rpt.pendingsubmission']}"></f:selectItem>																	
-									<f:selectItem itemLabel="#{lbl['lbl.rpt.PendingRNCreation']}" itemValue="#{lbl['lbl.rpt.PendingRNCreation']}"></f:selectItem>	
-									<f:selectItem itemLabel="#{lbl['lbl.rpt.Cancelled']}" itemValue="#{lbl['lbl.rpt.Cancelled']}"></f:selectItem>
-									<f:selectItem itemLabel="#{lbl['lbl.rpt.PendingSupplierResponse']}" itemValue="#{lbl['lbl.rpt.PendingSupplierResponse']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.expiredLabel']}" itemValue="#{lbl['lbl.rpt.expired']}"></f:selectItem>										
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.completedLabel']}" itemValue="#{lbl['lbl.rpt.Completed']}"></f:selectItem>	
+									
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.pendingRNCreationLabel']}" itemValue="#{lbl['lbl.rpt.PendingRNCreation']}"></f:selectItem>	
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cancelledLabel']}" itemValue="#{lbl['lbl.rpt.Cancelled']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.pendingSupplierResponseLabel']}" itemValue="#{lbl['lbl.rpt.PendingSupplierResponse']}"></f:selectItem>
 									<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																																		
 									</p:selectOneMenu>
 								  </c:if>
@@ -150,11 +150,11 @@
 									<p:outputLabel value="#{lbl['lbl.rpt.status']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scSimpleQuoteStatus}" style="margin-top:5px;width:300px;">
 									<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>									
-									<f:selectItem itemLabel="#{lbl['lbl.rpt.Completed']}" itemValue="#{lbl['lbl.rpt.Completed']}"></f:selectItem>	
-									<f:selectItem itemLabel="#{lbl['lbl.rpt.pendingsubmission']}" itemValue="#{lbl['lbl.rpt.pendingsubmission']}"></f:selectItem>																	
-									<f:selectItem itemLabel="#{lbl['lbl.rpt.PendingRNCreation']}" itemValue="#{lbl['lbl.rpt.PendingRNCreation']}"></f:selectItem>	
-									<f:selectItem itemLabel="#{lbl['lbl.rpt.Cancelled']}" itemValue="#{lbl['lbl.rpt.Cancelled']}"></f:selectItem>
-									<f:selectItem itemLabel="#{lbl['lbl.rpt.PendingSupplierResponse']}" itemValue="#{lbl['lbl.rpt.PendingSupplierResponse']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.completedLabel']}" itemValue="#{lbl['lbl.rpt.Completed']}"></f:selectItem>	
+									
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.pendingRNCreationLabel']}" itemValue="#{lbl['lbl.rpt.PendingRNCreation']}"></f:selectItem>	
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cancelledLabel']}" itemValue="#{lbl['lbl.rpt.Cancelled']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.pendingSupplierResponseLabel']}" itemValue="#{lbl['lbl.rpt.PendingSupplierResponse']}"></f:selectItem>
 									<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																																		
 									</p:selectOneMenu>
 								  </c:if>
@@ -162,12 +162,12 @@
 									<p:outputLabel value="#{lbl['lbl.rpt.status']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scRequestNoteStatus}" style="margin-top:5px;width:300px;">
 									<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-									<f:selectItem itemLabel="#{lbl['lbl.rpt.approved']}" itemValue="#{lbl['lbl.rpt.approved']}"></f:selectItem>	
-									<f:selectItem itemLabel="#{lbl['lbl.rpt.Cancelled']}" itemValue="#{lbl['lbl.rpt.Cancelled']}"></f:selectItem>									
-									<f:selectItem itemLabel="#{lbl['lbl.rpt.scPendingApproval']}" itemValue="#{lbl['lbl.rpt.scPendingApproval']}"></f:selectItem>	
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.approvedLabel']}" itemValue="#{lbl['lbl.rpt.approved']}"></f:selectItem>	
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cancelledLabel']}" itemValue="#{lbl['lbl.rpt.Cancelled']}"></f:selectItem>									
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.pendingApprovalLabel']}" itemValue="#{lbl['lbl.rpt.scPendingApproval']}"></f:selectItem>	
 									<f:selectItem itemLabel="#{lbl['lbl.rpt.scPendingRevision']}" itemValue="#{lbl['lbl.rpt.scPendingRevision']}"></f:selectItem>	
-									<f:selectItem itemLabel="#{lbl['lbl.rpt.pendingsubmission']}" itemValue="#{lbl['lbl.rpt.pendingsubmission']}"></f:selectItem>																									
-									<f:selectItem itemLabel="#{lbl['lbl.rpt.rejected']}" itemValue="#{lbl['lbl.rpt.rejected']}"></f:selectItem>	
+									
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.rejectedLabel']}" itemValue="#{lbl['lbl.rpt.rejected']}"></f:selectItem>	
 									<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																																	
 									</p:selectOneMenu>
 								  </c:if>
@@ -183,7 +183,7 @@
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.pendingSupplierFinalization']}" itemValue="#{5}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.pendingLOInLOA']}" itemValue="#{6}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.loaCompleted']}" itemValue="#{7}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.cancelled']}" itemValue="#{8}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cancelledLabel']}" itemValue="#{8}"></f:selectItem>
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																								
 									</p:selectOneMenu>
 								  </c:if>	
@@ -194,8 +194,8 @@
 									<p:selectOneMenu value="#{reportBackingBean.scSoneStatus}" style="margin-top:5px;width:300px;">
 									    <f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue="#{lbl['lbl.rpt.all']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.cancelled']}" itemValue="#{lbl['lbl.rpt.cancelled']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.approved']}" itemValue="#{lbl['lbl.rpt.approved']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cancelledLabel']}" itemValue="#{lbl['lbl.rpt.cancelled']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.approvedLabel']}" itemValue="#{lbl['lbl.rpt.approved']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.acknowledge']}" itemValue="#{lbl['lbl.rpt.acknowledge']}"></f:selectItem>	
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.others']}" itemValue="#{lbl['lbl.rpt.others']}"></f:selectItem>	
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																															
@@ -254,9 +254,9 @@
 									<p:selectOneMenu value="#{reportBackingBean.scProcurementType}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.gtog']}" itemValue="#{lbl['lbl.rpt.gtog']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.emergency']}" itemValue="#{lbl['lbl.rpt.emergency']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.adhoc']}" itemValue="#{lbl['lbl.rpt.adhoc']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.normal']}" itemValue="#{lbl['lbl.rpt.normal']}"></f:selectItem>	
+										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.adhocLabel']}" itemValue="#{lbl['lbl.rpt.adhoc']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.normalLabel']}" itemValue="#{lbl['lbl.rpt.normal']}"></f:selectItem>	
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																																									
 									</p:selectOneMenu>
 								  </c:if>
@@ -266,7 +266,7 @@
 									 
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}" itemValue="#{lbl['lbl.rpt.capsstatus']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.purchaseinquiryno']}" itemValue="#{lbl['lbl.rpt.PINumber']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.supplerNm']}" itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																																										
 									</p:selectOneMenu>
 								  </c:if>
@@ -274,10 +274,20 @@
 									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scSimpleQuoteDtlGroup}" style="margin-top:5px;width:300px;">
 
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.requisitioner']}" itemValue="#{lbl['lbl.rpt.REQUISI']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.supplier']}" itemValue="#{lbl['lbl.rpt.SUPPL']}"></f:selectItem>																																										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.requisitionerScreen']}" itemValue="#{lbl['lbl.rpt.REQUISI']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" itemValue="#{lbl['lbl.rpt.SUPPL']}"></f:selectItem>																																										
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}" itemValue="#{lbl['lbl.rpt.capsstatus']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.procurementtype']}" itemValue="#{lbl['lbl.rpt.prcmnttype']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.procurementtypeScreen']}" itemValue="#{lbl['lbl.rpt.prcmnttype']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.scsimplequoteno']}" itemValue="#{lbl['lbl.rpt.capsscsimplequoteno']}"></f:selectItem>
+										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
+									</p:selectOneMenu>
+								  </c:if>
+								  <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scSimpleQuoteDtlWithoutRequiGroupView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu value="#{reportBackingBean.scSimpleQuoteDtlGroup}" style="margin-top:5px;width:300px;">										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" itemValue="#{lbl['lbl.rpt.SUPPL']}"></f:selectItem>																																										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}" itemValue="#{lbl['lbl.rpt.capsstatus']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.procurementtypeScreen']}" itemValue="#{lbl['lbl.rpt.prcmnttype']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.scsimplequoteno']}" itemValue="#{lbl['lbl.rpt.capsscsimplequoteno']}"></f:selectItem>
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 									</p:selectOneMenu>
@@ -286,16 +296,16 @@
 									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scLAPRNPURCHDEFAULTGroup}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.contractpkpno']}" itemValue="#{lbl['lbl.rpt.contractpkpno']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.contractType']}" itemValue="#{lbl['lbl.rpt.capscontracttype']}"></f:selectItem>																																										
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.approver']}" itemValue="#{lbl['lbl.rpt.capsapprover']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.contractType']}" itemValue="#{lbl['lbl.rpt.capscontracttype']}"></f:selectItem>																																										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.approverscreen']}" itemValue="#{lbl['lbl.rpt.capsapprover']}"></f:selectItem>
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />										
 									</p:selectOneMenu>
 								  </c:if>
 								  <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scREQUESTNOTESUMMARYGroupView}">
 								     <p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
 								     <p:selectOneMenu value="#{reportBackingBean.scREQUESTNOTESUMMARYGroup}" style="margin-top:5px;width:300px;">
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.supplier']}" itemValue="#{lbl['lbl.rpt.SUPPL']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.procurementtype']}" itemValue="#{lbl['lbl.rpt.prcmnttype']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" itemValue="#{lbl['lbl.rpt.SUPPL']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.procurementtypeScreen']}" itemValue="#{lbl['lbl.rpt.prcmnttype']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}" itemValue="#{lbl['lbl.rpt.capsstatus']}"></f:selectItem>	
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																																									
 									</p:selectOneMenu>
@@ -304,9 +314,9 @@
 									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scPrcRptGroup}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.requisitioner']}" itemValue="#{lbl['lbl.rpt.requisitioner']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.supplier']}" itemValue="#{lbl['lbl.rpt.supplier']}"></f:selectItem>																																										
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.procurementtype']}" itemValue="#{lbl['lbl.rpt.procurementtype']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.requisitionerScreen']}" itemValue="#{lbl['lbl.rpt.requisitioner']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" itemValue="#{lbl['lbl.rpt.supplier']}"></f:selectItem>																																										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.procurementtypeScreen']}" itemValue="#{lbl['lbl.rpt.procurementtype']}"></f:selectItem>
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 									</p:selectOneMenu>
 								  </c:if>					 			

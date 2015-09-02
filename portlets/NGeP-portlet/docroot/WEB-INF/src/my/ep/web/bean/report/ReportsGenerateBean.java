@@ -91,6 +91,7 @@ public class ReportsGenerateBean {
 		private boolean scSimpleQuoteStatusView = false;
 		private boolean scSimpleQuoteDtlGroupView = false;
 		private boolean scPurchaseInDefaultStatusView = false;
+		private boolean scSimpleQuoteDtlWithoutRequiGroupView = false;
 		//cm module
 		private boolean cmItemTypeView = false;
 		private boolean cmItemStatusView = false;
@@ -1109,6 +1110,13 @@ public class ReportsGenerateBean {
 		private String ctTerminationTypeVar=ReportConst.EMPTY_VAL;
 		
 		
+		public boolean isScSimpleQuoteDtlWithoutRequiGroupView() {
+			return scSimpleQuoteDtlWithoutRequiGroupView;
+		}
+		public void setScSimpleQuoteDtlWithoutRequiGroupView(
+				boolean scSimpleQuoteDtlWithoutRequiGroupView) {
+			this.scSimpleQuoteDtlWithoutRequiGroupView = scSimpleQuoteDtlWithoutRequiGroupView;
+		}
 		public boolean isCtTerminationTypeView() {
 			return ctTerminationTypeView;
 		}
