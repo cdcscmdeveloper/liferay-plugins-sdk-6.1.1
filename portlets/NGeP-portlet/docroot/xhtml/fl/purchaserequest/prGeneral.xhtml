@@ -212,13 +212,15 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.gst.reg.no']}" /></td>
 				<td><p:inputText size="15" disabled="true"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.gstRegNo ==null ? lbl['lbl.fl.supp.na'] : purchaseRequestBackingBean.managedBean.fulfilmentRequest.gstRegNo}" /></td>
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.gstRegNo ==null ? lbl['lbl.fl.supp.na'] : purchaseRequestBackingBean.managedBean.fulfilmentRequest.gstRegNo}" />
+						<ac:iconTooltip value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.gstRegNo ==null ? lbl['lbl.fl.tooltip.gst.reg.no.na'] : lbl['lbl.fl.tooltip.gst.reg.no']}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ep.declared.date']}" /></td>
 				<td><p:inputText size="15" disabled="true"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.gstDeclaredDate ==null ? lbl['lbl.fl.supp.na'] : purchaseRequestBackingBean.managedBean.fulfilmentRequest.gstDeclaredDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText></td>
+					</p:inputText>
+					<ac:iconTooltip value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.gstDeclaredDate ==null ? lbl['lbl.fl.tooltip.ep.declared.date.na'] : lbl['lbl.fl.tooltip.ep.declared.date']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.gst.effective.date']}" /></td>
@@ -226,7 +228,8 @@
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.gstEffectiveDate ==null ? lbl['lbl.fl.supp.na'] : purchaseRequestBackingBean.managedBean.fulfilmentRequest.gstEffectiveDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText></td>
+					</p:inputText>
+					<ac:iconTooltip value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.gstEffectiveDate ==null ? lbl['lbl.fl.tooltip.gst.effect.date.na'] : lbl['lbl.fl.tooltip.gst.effect.date']}"/></td>
 
 			</tr>
 			<tr>
