@@ -8,14 +8,20 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 
+import my.ep.factory.EpLogger;
+
+import org.apache.log4j.Logger;
+
 public class Encryption {
+	
+	private static Logger log = EpLogger.getLogger(EperundingIntegration.class);
 
 	SFTPUtility sftpUtility = new SFTPUtility();
 	OsbUtility osbUtility = new OsbUtility();
 
 	public void encryptGmas(String inFilePath,String outFilePath,String fileName,String serviceCode,String processId) {
 		
-		System.out.println("inside encryptGmas....");
+		log.info("inside encryptGmas....");
 	
 	//	FileUtility fileUtility = new FileUtility();
 		File inFile = new File(inFilePath + fileName);
@@ -24,7 +30,7 @@ public class Encryption {
 		URL resource = getClass().getResource(".");
 		String path = resource.getPath();
 	
-		System.out.println("path value with (.) :" + path);
+		log.info("path value with (.) :" + path);
 	
 		// String substring =
 		// path.substring(0,path.indexOf("NGeP-portlet.war"));
@@ -33,7 +39,7 @@ public class Encryption {
 	
 		String encryptKey = substring
 				+ IntegrationConstants.GMAS_PUBLIC_KEY_PATH;
-		System.out.println("encryptKey :" + encryptKey);
+		log.info("encryptKey :" + encryptKey);
 	
 		// encript the content
 		String encrypted;
@@ -42,10 +48,10 @@ public class Encryption {
 					encryptKey);
 	
 			createFile(outFile, encrypted);
-			System.out.println("encryption successful..");
+			log.info("encryption successful..");
 		} catch (Exception e) {
 			
-			System.out.println("Error Creating Encryption File");
+			log.info("Error Creating Encryption File");
 	
 			e.printStackTrace();
 		}
@@ -61,7 +67,7 @@ public class Encryption {
 	
 	
 	public void encryptGmas(BatchReqDTO reqDTO) {
-		System.out.println("inside encryptGmas....");
+		log.info("inside encryptGmas....");
 	
 //		FileUtility fileUtility = new FileUtility();
 		File inFile = new File(reqDTO.getFilePath() + reqDTO.getFileName());
@@ -70,7 +76,7 @@ public class Encryption {
 		URL resource = getClass().getResource(".");
 		String path = resource.getPath();
 	
-		System.out.println("path value with (.) :" + path);
+		log.info("path value with (.) :" + path);
 	
 		// String substring =
 		// path.substring(0,path.indexOf("NGeP-portlet.war"));
@@ -79,7 +85,7 @@ public class Encryption {
 	
 		String encryptKey = substring
 				+ IntegrationConstants.GMAS_PUBLIC_KEY_PATH;
-		System.out.println("encryptKey :" + encryptKey);
+		log.info("encryptKey :" + encryptKey);
 	
 		// encript the content
 		String encrypted;
@@ -88,10 +94,10 @@ public class Encryption {
 					encryptKey);
 	
 			createFile(outFile, encrypted);
-			System.out.println("encryption successful..");
+			log.info("encryption successful..");
 		} catch (Exception e) {
 			
-			System.out.println("Error Creating Encryption File");
+			log.info("Error Creating Encryption File");
 			e.printStackTrace();
 		}
 		// upload the encripted file to sftp server
@@ -113,9 +119,9 @@ public class Encryption {
 
 	// decrypt gmass
 	public void decryptGmas(String inFilePath, String outFilePath) {
-		System.out.println("inside decryptGmas");
-		System.out.println("inFilePath :" + inFilePath);
-		System.out.println("outFilePath :" + outFilePath);
+		log.info("inside decryptGmas");
+		log.info("inFilePath :" + inFilePath);
+		log.info("outFilePath :" + outFilePath);
 
 		File inFile = new File(inFilePath);
 		File outFile = new File(outFilePath);
@@ -123,14 +129,14 @@ public class Encryption {
 		URL resource = getClass().getResource(".");
 		String path = resource.getPath();
 
-		System.out.println("path value with (.) :" + path);
+		log.info("path value with (.) :" + path);
 
 		String substring = path.substring(0, path.indexOf("NGeP-portlet.war"));
 
 		String encryptKey = substring
 				+ IntegrationConstants.GMAS_PRIVATE_KEY_PATH;
 
-		System.out.println("decrpt :" + encryptKey);
+		log.info("decrpt :" + encryptKey);
 
 		try {
 			String decrypted = PGPProcessor.decryptContent(
@@ -148,7 +154,7 @@ public class Encryption {
 	public void encryptPhis(String inFilePath, String outFilePath,
 			String fileName, String processId) {
 
-		System.out.println("inside encryptPhis");
+		log.info("inside encryptPhis");
 		File inFile = new File(inFilePath + fileName);
 		File outFile = new File(outFilePath + fileName);
 
@@ -183,7 +189,7 @@ public class Encryption {
 	
 	public void encryptPhis(BatchReqDTO reqDTO) {
 
-		System.out.println("inside encryptPhis");
+		log.info("inside encryptPhis");
 		File inFile = new File(reqDTO.getFilePath() + reqDTO.getFileName());
 		File outFile = new File(reqDTO.getEncryptFilePath() + reqDTO.getFileName());
 
@@ -214,11 +220,9 @@ public class Encryption {
 		reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_PHIS);
 		reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
 		sftpUtility.upload(reqDTO);
-//		sftpUtility.upload(reqDTO.getEncryptFilePath() + reqDTO.getFileName(),
-//				IntegrationConstants.PHIS_UPLOAD_DIR + reqDTO.getFileName(), null, null, null);
 
 		// once upload is done cal web service osb integration to transfer file.
-//		osbUtility.osbServiceCallOutBound(processId, fileName);
+		osbUtility.osbServiceCallOutBound(reqDTO.getServiceCode(), reqDTO.getFileName());
 
 	}
 
@@ -240,12 +244,12 @@ public class Encryption {
 		StringBuffer sb = new StringBuffer();
 		try {
 
-			System.out.println("getAbsolutePath  :"
+			log.info("getAbsolutePath  :"
 					+ inFilePath.getAbsolutePath());
-			System.out.println("length  :" + inFilePath.length());
+			log.info("length  :" + inFilePath.length());
 			br = new BufferedReader(new FileReader(inFilePath));
 			String line = br.readLine();
-			System.out.println("line :" + line);
+			log.info("line :" + line);
 
 			while (line != null) {
 
