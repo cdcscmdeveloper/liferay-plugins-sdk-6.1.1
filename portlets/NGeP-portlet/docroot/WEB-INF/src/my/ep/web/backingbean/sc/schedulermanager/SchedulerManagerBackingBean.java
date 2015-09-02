@@ -135,6 +135,7 @@ public class SchedulerManagerBackingBean extends
 		if (epJobVO.getStatus().equals(ScSchedulerConstants.JOB_WAIT)) {
 			// schedule the job
 			EpSchedulerHelper.runBuildJobNow(epJobVO.getJobKey());
+			initAllJobs();
 		}
 
 	}
