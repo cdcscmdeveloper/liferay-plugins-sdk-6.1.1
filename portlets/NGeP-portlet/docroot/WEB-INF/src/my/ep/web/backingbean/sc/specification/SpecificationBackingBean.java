@@ -9066,8 +9066,7 @@ public class SpecificationBackingBean extends
 				for (int i = 0; i < checklistRemoveList.size(); i++) {
 					if (null == checklistRemoveList.get(i).getQtChecklistId()) {
 						checklistRemoveList.remove(i);
-					}
-					else {
+					} else {
 						checklistRemoveList.get(i).setDeleted(true);
 					}
 				}
@@ -9135,7 +9134,7 @@ public class SpecificationBackingBean extends
 						}
 
 					}
-
+					isOverlappingScore(checkListScore);
 					for (int i = 0; i < checkListScore.size() - 1; i++) {
 						ScQtCheckListScore Score = checkListScore.get(i);
 						localScore.add(Score);
@@ -9173,12 +9172,10 @@ public class SpecificationBackingBean extends
 						if (null == scoreYears) {
 							scoreYears = new ArrayList<ScQtCheckListScore>();
 						}
-						if (scoreYears.size() >= 1) {
-
-							if (scoreYears.size() < 2) {
-								throw new EpException(MessageConst.ERROR_760140);
-							}
+						if (scoreYears.size() < 2) {
+							throw new EpException(MessageConst.ERROR_760140);
 						}
+						
 
 						for (int i = 0; i < scoreYears.size(); i++) {
 							ScQtCheckListScore Score = scoreYears.get(i);
@@ -9193,7 +9190,7 @@ public class SpecificationBackingBean extends
 							 * EpException(MessageConst.ERROR_760170); }
 							 */
 						}
-
+						isOverlappingScore(scoreYears);
 						List<ScQtCheckListScore> localScore = new ArrayList<ScQtCheckListScore>();
 						for (int i = 0; i < scoreYears.size() - 1; i++) {
 							ScQtCheckListScore Score = scoreYears.get(i);
@@ -9375,6 +9372,7 @@ public class SpecificationBackingBean extends
 						 */
 
 					}
+					isOverlappingScore(checkListScore);
 					List<ScQtCheckListScore> localScore = new ArrayList<ScQtCheckListScore>();
 					for (int i = 0; i < checkListScore.size() - 1; i++) {
 						ScQtCheckListScore Score = checkListScore.get(i);
@@ -15867,7 +15865,8 @@ public class SpecificationBackingBean extends
 			}
 		}
 		List<ScQtCheckList> deletefinCheckList = markDeleteSelectedRowsActionById(
-				this.getManagedBean().getScQtCheckSt2financeProposalList(), null);
+				this.getManagedBean().getScQtCheckSt2financeProposalList(),
+				null);
 		List<ScQtCheckList> financial = this.getManagedBean()
 				.getMarkDeletedFinChecklist();
 		if (null == financial) {
@@ -16225,6 +16224,85 @@ public class SpecificationBackingBean extends
 		}
 
 		return false;
+	}
+
+	private void isOverlappingScore(List<ScQtCheckListScore> checkListScorings) {
+		Collections.sort(checkListScorings);
+
+		ScQtCheckListScore prevScore = null;
+		ScQtCheckListScore lastObject = null;
+		String criteriaType = null;
+		for (int row = 0; row < checkListScorings.size(); row++) {
+			ScQtCheckListScore currScoring = checkListScorings.get(row);
+			if (null == lastObject) {
+				lastObject = checkListScorings
+						.get(checkListScorings.size() - 1);
+			}
+
+			if (currScoring.getRangeFrom() != null
+					&& currScoring.getRangeTo() != null
+					&& currScoring.getRangeFrom().compareTo(
+							currScoring.getRangeTo()) >= 0) {
+				throw new EpException(MessageConst.ERROR_100033, new String[] {
+						"To", "From at row " + (row + 1) });
+			}
+
+			if (prevScore != null) {
+
+				if (currScoring.getRangeFrom() != null
+						&& currScoring.getRangeTo() != null
+						&& prevScore.getRangeFrom() != null
+						&& prevScore.getRangeTo() != null) {
+					if (null == criteriaType) {
+						criteriaType = String.valueOf(prevScore
+								.getCriteriaType());
+					}
+
+					if ("50".equalsIgnoreCase(criteriaType)
+							|| "60".equalsIgnoreCase(criteriaType)) {
+						if (prevScore.getRangeTo()
+								.add(BigDecimal.valueOf(0.01d))
+								.compareTo(currScoring.getRangeFrom()) != 0) {
+							throw new EpException(MessageConst.ERROR_100055,
+									new String[] { "From", "To", row + 1 + "" });
+						}
+					} else {
+						if (prevScore.getRangeTo().add(BigDecimal.valueOf(1))
+								.compareTo(currScoring.getRangeFrom()) != 0) {
+							throw new EpException(MessageConst.ERROR_100055,
+									new String[] { "From", "To", row + 1 + "" });
+						}
+					}
+				} else {
+					if (null != lastObject && null != prevScore.getRangeTo()
+							&& null != lastObject.getRangeFrom()) {
+						if ("50".equalsIgnoreCase(criteriaType)
+								|| "60".equalsIgnoreCase(criteriaType)) {
+							if (prevScore.getRangeTo()
+									.add(BigDecimal.valueOf(0.01d))
+									.compareTo(lastObject.getRangeFrom()) != 0) {
+								throw new EpException(
+										MessageConst.ERROR_100055,
+										new String[] { "From", "To",
+												row + 1 + "" });
+							}
+						} else {
+							if (prevScore.getRangeTo()
+									.add(BigDecimal.valueOf(1))
+									.compareTo(lastObject.getRangeFrom()) != 0) {
+								throw new EpException(
+										MessageConst.ERROR_100055,
+										new String[] { "From", "To",
+												row + 1 + "" });
+							}
+						}
+
+					}
+				}
+			}
+
+			prevScore = currScoring;
+		}
 	}
 
 }
