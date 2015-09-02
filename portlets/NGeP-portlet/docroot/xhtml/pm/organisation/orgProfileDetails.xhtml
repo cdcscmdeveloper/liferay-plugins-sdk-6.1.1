@@ -94,7 +94,7 @@
 						</p:selectBooleanCheckbox></td>
 				</ui:fragment>
 				<ui:fragment
-					rendered="#{!organisationBackingBean.managedBean.orgProfile.brandNew and (organisationBackingBean.managedBean.orgType eq 'STG' or organisationBackingBean.managedBean.orgType eq 'GLC' or organisationBackingBean.managedBean.orgType eq 'FPJ' or organisationBackingBean.managedBean.orgType eq 'STB' or organisationBackingBean.managedBean.orgType eq 'LAT')}">
+					rendered="#{!organisationBackingBean.managedBean.orgProfile.brandNew and (organisationBackingBean.managedBean.orgType eq 'FPJ' )}">
 					<td><h:outputText
 							value="#{lbl['lbl.pm.organisation.govSeller']}" /></td>
 					<td><p:selectBooleanCheckbox id="isGovtSellerCheckBoxId"
