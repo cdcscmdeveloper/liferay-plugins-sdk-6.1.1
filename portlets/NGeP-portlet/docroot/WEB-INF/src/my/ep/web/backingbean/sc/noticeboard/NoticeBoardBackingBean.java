@@ -2654,7 +2654,7 @@ public class NoticeBoardBackingBean extends
 					if(null != scQtRecommendDtl && null != scQtRecommendDtl.getScQtProposalItem()){
 						BigDecimal totalPrice = TemplateSpecHelper.getInstance()
 						.calcTotalAmount(reqItem.getTplSpecQuestion(),
-									new BigDecimal(scQtRecommendDtl.getScQtProposalItem().getOfferPrice()), 
+								scQtRecommendDtl.getScQtProposalItem().getOfferPrice(), 
 									scLoiLoaItem.getQty());
 						awardedItem.setPriceByProposal(totalPrice);
 					}
