@@ -14,6 +14,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
+import my.ep.biz.service.sm.bulkApplication.ISmBulkApplicationSO;
 import my.ep.biz.service.sm.businessnature.ISupplierBusinessNatureSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
@@ -351,42 +352,60 @@ public class SmServiceLookup {
 				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 						ISupportingDocInquirySO.class);
 	}
-	
+
 	/**
 	 * Get ISupplierBusinessNatureSO
+	 * 
 	 * @return ISupplierBusinessNatureSO
 	 */
-	public static ISupplierBusinessNatureSO  getSupplierBusinessNatureSO(){
-		return (ISupplierBusinessNatureSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierBusinessNatureSO.class);
+	public static ISupplierBusinessNatureSO getSupplierBusinessNatureSO() {
+		return (ISupplierBusinessNatureSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						ISupplierBusinessNatureSO.class);
 	}
 
 	/**
 	 * Get IVirtualCertSO
+	 * 
 	 * @return IVirtualCertSO
 	 */
-	public static IVirtualCertSO getVirtualCertSO(){
-		return (IVirtualCertSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_MANAGEMENT, IVirtualCertSO.class);
+	public static IVirtualCertSO getVirtualCertSO() {
+		return (IVirtualCertSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						IVirtualCertSO.class);
 	}
-	
-	
+
 	/**
 	 * Get ISmSchedulerSO
+	 * 
 	 * @return ISmSchedulerSO
 	 */
-	public static ISmSchedulerSO getSmSchedulerSO(){
-		return (ISmSchedulerSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmSchedulerSO.class);
+	public static ISmSchedulerSO getSmSchedulerSO() {
+		return (ISmSchedulerSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						ISmSchedulerSO.class);
 	}
-	
+
 	/**
 	 * Get ISupplierGstSO
+	 * 
 	 * @return ISupplierGstSO
 	 */
-	public static ISupplierGstSO getSupplierGstSO(){
-		return (ISupplierGstSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);
+	public static ISupplierGstSO getSupplierGstSO() {
+		return (ISupplierGstSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						ISupplierGstSO.class);
 	}
-	
+
+	/**
+	 * Get ISmBulkApplicationSO
+	 * 
+	 * @return ISmBulkApplicationSO
+	 */
+	public static ISmBulkApplicationSO getSmBulkApplicationSO() {
+		return (ISmBulkApplicationSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						ISmBulkApplicationSO.class);
+	}
+
 }
