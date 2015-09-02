@@ -59,7 +59,7 @@
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							update="@form"  
 							action="#{createDOBackingBean.createDeliveryOrder('SAVE')}" /> 
-						<p:commandButton update="spkiPopUp"
+						<p:commandButton update="spkiPopUp, @form"
 							styleClass="ui-button"  value="#{lbl['lbl.btn.submit']}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							action="#{createDOBackingBean.signingAction('SUBMIT')}" />
