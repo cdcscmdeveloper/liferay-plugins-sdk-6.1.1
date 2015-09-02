@@ -125,7 +125,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	public String redirectToMaintainReason(Long id)throws Exception{
 		log.info("redirectToMaintainReason - Start");
 //		try{
-		renewSesionObject();
+	
 			this.loadReasonCategoryMapper();
 			if(id!=null && id>0){
 				loadRejectReason(id);
