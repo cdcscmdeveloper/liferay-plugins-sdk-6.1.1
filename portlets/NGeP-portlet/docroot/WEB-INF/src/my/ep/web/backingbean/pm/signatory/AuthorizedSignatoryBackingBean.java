@@ -163,8 +163,9 @@ public class AuthorizedSignatoryBackingBean extends
 					ISignatorySO.class);
 			SignatoryReqDTO reqDTO = new SignatoryReqDTO();
 			reqDTO.setZoneId(zoneId);
-			SignatoryResDTO resDTO = iSignatorySO.retrieveCertSignatoryByZone(reqDTO);
+			SignatoryResDTO resDTO = iSignatorySO.retrieveCertSignatoryByZone(reqDTO);			
 			this.getManagedBean().setCertSignatories(resDTO.getCertSignatories());
+			
 		}else{
 			this.getManagedBean().setCertSignatories(null);
 		}
@@ -373,7 +374,7 @@ public class AuthorizedSignatoryBackingBean extends
 				log.info(".............pmcertSignatory.getSinnatoryName()="
 						+ pmcertSignatory.getSinnatoryName());
 				messageId = MessageConst.TD_80025;
-				msgParam = new String[] {pmcertSignatory.getSinnatoryName()};
+				msgParam = new String[] {this.getManagedBean().getCertSignatories().get(0).getPmZone().getZoneName(),pmcertSignatory.getSinnatoryName()};
 
 			} else {
 				//TODO: check previous value 
