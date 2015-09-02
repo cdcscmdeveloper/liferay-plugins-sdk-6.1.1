@@ -1,13 +1,17 @@
 package my.ep.web.backingbean.soa.batchretry;
 
+import java.util.List;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.service.soa.batchretry.ISOABatchRetrySO;
+import my.ep.biz.service.soa.serviceretry.ISOAServiceRetrySO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.soa.batchretry.SOABatchRetryReqDTO;
@@ -50,13 +54,6 @@ public class SOABatchRetryBackingBean extends
 			super("batchRetryTable");
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
-		 * .biz.bean.search.ISearchBean)
-		 */
 		@Override
 		public ISearchResultBean<OsbBatchRetryDtl> pageChangeListener(
 				ISearchBean<OsbBatchRetryDtl> searchBean) {
@@ -65,16 +62,25 @@ public class SOABatchRetryBackingBean extends
 			}
 
 			ISOABatchRetrySO logSO;
+		
 			try {
 				logSO = (ISOABatchRetrySO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SOABATCH,
 								ISOABatchRetrySO.class);
 				
 				SOABatchRetryReqDTO reqDTO = new SOABatchRetryReqDTO();
+				
+				reqDTO.setISearchBean(searchBean);
+				reqDTO.setIbOb(getManagedBean().getIbob());
+				reqDTO.setSourceSystem(getManagedBean().getSourceSystem());
+				reqDTO.setTargetSystem(getManagedBean().getTargetSystem());
+				
 				SOABatchRetryResDTO resDTO = logSO.searchSOABatchRetryList(reqDTO);
+				
 				if (resDTO.isSuccessful()) {
 					return resDTO.getSearchResultBean();
 				}
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
@@ -109,15 +115,15 @@ public class SOABatchRetryBackingBean extends
 	private void submitOrRemoveBatchRetryList(boolean isSubmit) {
 
 		if (isSubmit) {
-			debugLogger("submitRetryLogList");
+			debugLogger("submitBatchRetryList");
 		} else {
-			debugLogger("removeRetryLogList");
+			debugLogger("removeBatchRetryList");
 		}
 
 		SOABatchRetryReqDTO reqDTO = new SOABatchRetryReqDTO();
 
 		for (OsbBatchRetryDtl retryDtl : this.getManagedBean()
-				.getSelectedRetryLogs()) {
+				.getSelectedBatchRetries()) {
 			debugLogger("RetryDtlId : " + retryDtl.getRetryDtlId());
 			reqDTO.getOsbBatchRetryDtl().add(retryDtl);
 		}
@@ -168,7 +174,7 @@ public class SOABatchRetryBackingBean extends
 					
 					FacesContext.getCurrentInstance().addMessage(
 							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR,
 									MessageUtils.getMessage(MessageConst.ERROR_990003,
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())
@@ -217,8 +223,98 @@ public class SOABatchRetryBackingBean extends
 		return batchRetryDataModel;
 	}
 
-	public void setRetryLogDataModel(
+	public void setServiceBatchRetryDataModel(
 			IPagingDataModel<OsbBatchRetryDtl> batchRetryDataModel) {
 		this.batchRetryDataModel = batchRetryDataModel;
+	}
+	
+	public SelectItem[] getInboundOutboundDropdown() {
+		
+		ISOABatchRetrySO batchRetrySO = null;
+		SelectItem[] items = null;
+		
+		try {
+			batchRetrySO = (ISOABatchRetrySO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SOABATCH,ISOABatchRetrySO.class);
+			List<String> inboundOutboundList =  batchRetrySO.getAllInboundOutboundValues();
+		    
+			if(inboundOutboundList != null){
+			 
+				items = new SelectItem[inboundOutboundList.size() + 0];
+			      
+				for(int i = 0; i<inboundOutboundList.size(); i++) {
+					String inboundOutboundValue = inboundOutboundList.get(i);
+					items[i] = new SelectItem(inboundOutboundValue, inboundOutboundValue);
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+
+		} finally {
+			batchRetrySO = null;
+		}
+		
+	    return items;
+	}
+	
+	public SelectItem[] getSourceSystemStatusDropdown() {
+		
+		ISOABatchRetrySO batchRetrySO = null;
+		SelectItem[] items = null;
+		
+		try {
+			batchRetrySO = (ISOABatchRetrySO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SOABATCH,ISOABatchRetrySO.class);
+			List<String> sourceSystemList =  batchRetrySO.getAllSourceSystems();
+		    
+			if(sourceSystemList != null){
+			 
+				items = new SelectItem[sourceSystemList.size() + 0];
+			      
+				for(int i = 0; i<sourceSystemList.size(); i++) {
+					String sourceSystem = sourceSystemList.get(i);
+					items[i] = new SelectItem(sourceSystem, sourceSystem);
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+
+		} finally {
+			batchRetrySO = null;
+		}
+		
+	    return items;
+	}
+
+	public SelectItem[] getTargetSystemStatusDropdown() {
+		
+		ISOABatchRetrySO batchRetrySO = null;
+		SelectItem[] items = null;
+		
+		try {
+			batchRetrySO = (ISOABatchRetrySO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SOABATCH,ISOABatchRetrySO.class);
+			List<String> targetSystemList =  batchRetrySO.getAllTargetSystems();
+		    
+			if(targetSystemList != null){
+			
+			    items = new SelectItem[targetSystemList.size()];
+			      
+				for(int i = 0; i<targetSystemList.size(); i++) {
+					String targetSystem = targetSystemList.get(i);
+					items[i] = new SelectItem(targetSystem, targetSystem);
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+
+		} finally {
+			batchRetrySO = null;
+		}
+		
+	    return items;
 	}
 }
