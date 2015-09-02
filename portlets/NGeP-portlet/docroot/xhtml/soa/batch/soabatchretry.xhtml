@@ -9,21 +9,52 @@
 
 	<ui:define name="resourceSection">
 	</ui:define>
+	
 	<ui:define name="contentSection">
+		
 		<p:messages id="messages" autoUpdate="true" />
+			
 		<table width="100%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td width="100%" valign="top">
 					<table width="100%">
 						<tr>
-							<td style="text-align: left; vertical-align: middle;"></td>
-							<td style="text-align: right;"><p:commandButton
+							<td colspan="2">
+								<div style="text-align: left; float: right;">
+									
+									#{lbl['lbl.portal.soa.ibob']} :
+									
+									<p:selectOneMenu id="ibObId" value="#{soaBatchRetryBackingBean.managedBean.ibob}">
+										<f:selectItem itemLabel="#{lbl['lbl.portal.soa.all']}" itemValue=""></f:selectItem>
+										 <f:selectItems value="#{soaBatchRetryBackingBean.sourceSystemStatusDropdown}" />
+									</p:selectOneMenu>
+									
+									#{lbl['lbl.portal.soa.sourceSystem']} :
+									
+									<p:selectOneMenu id="sourceSystemId" value="#{soaBatchRetryBackingBean.managedBean.sourceSystem}">
+										<f:selectItem itemLabel="#{lbl['lbl.portal.soa.all']}" itemValue=""></f:selectItem>
+										 <f:selectItems value="#{soaBatchRetryBackingBean.sourceSystemStatusDropdown}" />
+									</p:selectOneMenu>
+									
+									#{lbl['lbl.portal.soa.targetSystem']} :
+									
+									<p:selectOneMenu id="targetSystemId" value="#{soaBatchRetryBackingBean.managedBean.targetSystem}">
+										<f:selectItem itemLabel="#{lbl['lbl.portal.soa.all']}" itemValue=""></f:selectItem>
+										 <f:selectItems value="#{soaBatchRetryBackingBean.targetSystemStatusDropdown}" />
+									</p:selectOneMenu>
+									
+									<p:commandButton
 									value="#{lbl['lbl.portal.soa.btn.submit']}" id="submit"
 									action="#{soaBatchRetryBackingBean.submitBatchRetryList}"
 									update=":form:batchRetryTable" /> <p:commandButton
 									value="#{lbl['lbl.portal.soa.btn.refresh']}" id="refresh"
 									action="#{soaBatchRetryBackingBean.refreshBatchRetryList}"
-									update=":form:batchRetryTable" /> </td>
+									update=":form:batchRetryTable" /> 
+									
+									
+								</div>
+							
+							</td>
 						</tr>
 						<tr>
 							<td colspan="2" width="100%" valign="top"><p:dataTable
@@ -31,7 +62,7 @@
 									var="batchRetry" id="batchRetryTable" rows="10"
 									rowIndexVar="index" width="100%" rowKey="#{batchRetry}"
 									lazy="true"
-									selection="#{soaBatchRetryBackingBean.managedBean.selectedRetryLogs}">
+									selection="#{soaBatchRetryBackingBean.managedBean.selectedBatchRetries}">
 
 									<ac:paginator for="batchRetryTable" />
 

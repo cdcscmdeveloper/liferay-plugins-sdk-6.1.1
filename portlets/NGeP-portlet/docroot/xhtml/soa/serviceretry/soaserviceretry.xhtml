@@ -9,48 +9,64 @@
 
 	<ui:define name="resourceSection">
 	</ui:define>
+	
 	<ui:define name="contentSection">
+		
 		<p:messages id="messages" autoUpdate="true" />
+	
 		<table width="100%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td width="100%" valign="top">
 					<table width="100%">
 						<tr>
-							<td style="text-align: left; vertical-align: middle;"></td>
-							<td style="text-align: right;"><p:commandButton
+							<td colspan="2">
+								
+								<div style="text-align: left; float: right;">
+									
+									#{lbl['lbl.portal.soa.targetSystem']} :
+									
+									<p:selectOneMenu id="targetSystemId" value="#{soaServiceRetryBackingBean.managedBean.targetSystem}">
+										<f:selectItem itemLabel="#{lbl['lbl.portal.soa.all']}" itemValue=""></f:selectItem>
+										 <f:selectItems value="#{soaServiceRetryBackingBean.statusDropdown}" />
+									</p:selectOneMenu>
+									
+									<p:commandButton
 									value="#{lbl['lbl.portal.soa.btn.submit']}"
-									action="#{soaRetryLogBackingBean.submitRetryLogList}"
-									update=":form:retryLogTable" /> <p:commandButton
+									action="#{soaServiceRetryBackingBean.submitServiceRetryList}"
+									update=":form:serviceRetryTable" /> <p:commandButton
 									value="#{lbl['lbl.portal.soa.btn.refresh']}"
-									action="#{soaRetryLogBackingBean.refreshRetryLogList}"
-									update=":form:retryLogTable" /></td>
+									action="#{soaServiceRetryBackingBean.refreshServiceRetryList}"
+									update=":form:serviceRetryTable" />
+									
+								</div>
+							</td>
 						</tr>
 						<tr>
 							<td colspan="2" width="100%" valign="top"><p:dataTable
-									value="#{soaRetryLogBackingBean.retryLogDataModel}"
-									var="retrylog" id="retryLogTable" rows="10" rowIndexVar="index"
-									width="100%" rowKey="#{retrylog}" lazy="true"
-									selection="#{soaRetryLogBackingBean.managedBean.selectedRetryLogs}">
+									value="#{soaServiceRetryBackingBean.serviceRetryDataModel}"
+									var="serviceretry" id="serviceRetryTable" rows="10" rowIndexVar="index"
+									width="100%" rowKey="#{serviceretry}" lazy="true"
+									selection="#{soaServiceRetryBackingBean.managedBean.selectedServiceRetries}">
 
-									<ac:paginator for="retryLogTable" />
+									<ac:paginator for="serviceRetryTable" />
 
 									<p:column selectionMode="multiple" style="width:2%;text-align:center"/>
 
 									<p:column headerText="#{lbl['lbl.portal.soa.transId']}">
-							#{retrylog.transId}
+							#{serviceretry.transId}
 									</p:column>
-									<p:column headerText="#{lbl['lbl.portal.soa.targetsystem']}">
-							#{retrylog.targetSystem}
+									<p:column headerText="#{lbl['lbl.portal.soa.targetSystem']}">
+							#{serviceretry.targetSystem}
 									</p:column>
 									<p:column headerText="#{lbl['lbl.portal.soa.version']}">
-							#{retrylog.serviceVersion}
+							#{serviceretry.serviceVersion}
 									</p:column>
 									<p:column headerText="#{lbl['lbl.portal.soa.servicename']}">
-							#{retrylog.serviceName}
+							#{serviceretry.serviceName}
 									</p:column>
 									<p:column headerText="#{lbl['lbl.portal.soa.dateTime']}"
 										style="text-align: right;width:2%;">
-										<h:outputText value="#{retrylog.createdDate}">
+										<h:outputText value="#{serviceretry.createdDate}">
 											<f:convertDateTime pattern="dd-MM-yyyy hh:mm:ss a" />
 										</h:outputText>
 									</p:column>

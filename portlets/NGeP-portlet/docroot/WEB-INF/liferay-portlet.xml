@@ -2037,7 +2037,7 @@
 		<css-class-wrapper>taskstatussearch-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>soaRetryLog</portlet-name>
+		<portlet-name>soaServiceRetry</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
@@ -2045,7 +2045,7 @@
 			/js/main.js
 		</footer-portlet-javascript>
 		<css-class-wrapper>
-			soaRetryLog-portlet
+			soaServiceRetry-portlet
 		</css-class-wrapper>
 	</portlet>
 	<portlet>

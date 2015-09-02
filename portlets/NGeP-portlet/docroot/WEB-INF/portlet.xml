@@ -6546,15 +6546,15 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>soaRetryLog</portlet-name>
-		<display-name>RetryLog</display-name>
+		<portlet-name>soaServiceRetry</portlet-name>
+		<display-name>ServiceRetry</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>
-				/xhtml/soa/retrylog/soaretrylog.xhtml
+				/xhtml/soa/serviceretry/soaserviceretry.xhtml
 			</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>

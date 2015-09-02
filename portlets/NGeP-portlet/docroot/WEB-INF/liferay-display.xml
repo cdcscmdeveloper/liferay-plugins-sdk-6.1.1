@@ -282,7 +282,7 @@
 		
 		<!-- SOA - START -->
 		<category name="category.ep.soa">
-			<portlet id="soaRetryLog"></portlet>
+			<portlet id="soaServiceRetry"></portlet>
 			<portlet id="soaBatchRetry"></portlet>
 		</category>
 		<!-- SOA - END -->		
