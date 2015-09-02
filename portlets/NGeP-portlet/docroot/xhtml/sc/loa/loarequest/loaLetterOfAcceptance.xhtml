@@ -13,12 +13,7 @@
 			value="#{lOADetailBackingBean.managedBean.scLoa.scLoaReports}"
 			rows="10" rowKey="#{scLoaReport}">
 			<ac:paginator for="contentsTbl" />
-        <!-- 
-			<p:column selectionMode="multiple" style="width:2%"
-				disabledSelection="#{!empty scLoaReport.pmDocument}"
-				rendered="#{isEditableStatus}" /> -->
-
-
+   
 			<p:column style="width:2%" >
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selectAllNegoLoc"
