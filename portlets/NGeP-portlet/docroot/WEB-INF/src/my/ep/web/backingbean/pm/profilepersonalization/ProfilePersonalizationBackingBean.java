@@ -708,6 +708,7 @@ public class ProfilePersonalizationBackingBean extends
 		// =validateUserAddress(this.getManagedBean().getUserAddress());
 		// 19Nov2014
 		validatePreference(user);
+		fillUserOrgInfoFromUser(user);
 
 		// loadUserAddress(user, addressEntered); 19Nov2014
 
@@ -1165,6 +1166,19 @@ public class ProfilePersonalizationBackingBean extends
 		challengeQAList.add(new ChallengeQAList(null,null));
 		challengeQAList.add(new ChallengeQAList(null,null));			
 		getManagedBean().setChallengeQAList(challengeQAList);
+	}
+	
+	
+	private void fillUserOrgInfoFromUser(PmUser user) {
+		for(PmUserOrg activeOrg: user.getPmUserOrgs()){
+			if(DbValueConst.RECORD_STATUS_ACTIVE == activeOrg.getRecordStatusFlg()){
+				activeOrg.setEmail(user.getEmail());
+				activeOrg.setPhoneNo(user.getPhoneNo());
+				activeOrg.setFaxNo(user.getFaxNo());
+				activeOrg.setMobileNo(user.getMobileNo());
+				break;
+			}
+		}
 	}
 
 	// //TODO: testing
