@@ -9,7 +9,11 @@
 		div[id$="itEmailMsg"],div[id$="itTelNoMsg"],div[id$="itMobileNoMsg"],div[id$="itFaxNoMsg"] {
     			display:inline-block;
     			vertical-align:middle;
-			}
+		}
+			
+		div[id$="tfno"] > br ,div[id$="tfaxno"] > br ,div[id$="mbno"] > br {
+   		  display: none;
+		}
 	</style>
 
 	<!-- User Profile -->
@@ -191,7 +195,7 @@
 							value="/css/images/design/tooltips.png" /> 
 							<p:tooltip
 							id="tfno" for="teleno">
-							<p:outputLabel escape="false"
+							<h:outputText escape="false"
 								value="#{lbl['tt.sm.registration.user.telephoneno']}" />
 						</p:tooltip>&#160; <p:message id="itTelNoMsg" for="itTelNo" display="icon" />
 						</td>
@@ -210,7 +214,7 @@
 							&#160;&#160; <p:graphicImage id="faxno"
 							value="/css/images/design/tooltips.png" /> <p:tooltip
 							id="tfaxno" for="faxno">
-							<p:outputLabel escape="false"
+							<h:outputText escape="false"
 								value="#{lbl['tt.sm.registration.user.telephoneno']}" />
 						</p:tooltip>&#160; <p:message id="itFaxNoMsg" for="itFaxNo" display="icon" />
 						</td>
@@ -228,7 +232,7 @@
 							</p:inputText> &#160;&#160; <p:graphicImage id="mobileno"
 						value="/css/images/design/tooltips.png" /> <p:tooltip
 						id="mbno" for="mobileno">
-						<p:outputLabel escape="false"
+						<h:outputText escape="false"
 							value="#{lbl['tt.sm.registration.user.mobileno']}" />
 					</p:tooltip>&#160;  <p:message id="itMobileNoMsg" for="itMobileNo" display="icon" />
 						</td>
