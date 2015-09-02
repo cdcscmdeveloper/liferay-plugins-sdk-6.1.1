@@ -381,20 +381,20 @@ public class AuthorizedSignatoryBackingBean extends
 						&& pmcertSignatory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 					log.info("Tracking diary for virtual certificate: de-activating status :saveRuleCatalog");
 					messageId = MessageConst.TD_80027;
-					msgParam = new String[] {pmcertSignatory.getSinnatoryName()};
+					msgParam = new String[] {pmcertSignatory.getPmZone().getZoneName(),pmcertSignatory.getSinnatoryName()};
 
 					
 				}else if (pmcertSignatory.isModified()
 						&& pmcertSignatory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 					log.info("Tracking diary for virtual certificate: re-activating status :saveRuleCatalog");
 					messageId = MessageConst.TD_80028;
-					msgParam = new String[] {pmcertSignatory.getSinnatoryName()};
+					msgParam = new String[] {pmcertSignatory.getPmZone().getZoneName(),pmcertSignatory.getSinnatoryName()};
 				}
 				Date originalExpDate = this.getManagedBean().getIdToCertSignMapForChangedRecs().get(pmcertSignatory.getCertSignatoryId());
 				if(originalExpDate != null && pmcertSignatory.getExpDate() != originalExpDate){
 					log.info("Tracking diary for virtual certificate: updating Expire Date :saveRuleCatalog");
 					messageId = MessageConst.TD_80026;
-					msgParam = new String[] {pmcertSignatory.getSinnatoryName()};
+					msgParam = new String[] {pmcertSignatory.getPmZone().getZoneName(),pmcertSignatory.getSinnatoryName()};
 				}
 			}
 			if (messageId != null & msgParam != null) {
