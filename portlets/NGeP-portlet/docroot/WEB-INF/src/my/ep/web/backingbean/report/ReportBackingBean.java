@@ -3175,6 +3175,17 @@ public class ReportBackingBean extends
         }
 		return highRoleCodeList;
 	}
+	public void  directPurchaseWithRequisitioner(){
+		if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_SUPPL_S1_RPT_VAL))){
+			rptGenBean.setScSimpleQuoteDtlWithoutRequiGroupView(false);
+			rptGenBean.setScSimpleQuoteDtlGroupView(false);
+			 if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_REQUISITIONER))){
+				 rptGenBean.setScSimpleQuoteDtlWithoutRequiGroupView(true);
+			 }else{
+				 rptGenBean.setScSimpleQuoteDtlGroupView(true);
+			 }
+		}
+	}
 	public void  roleCodeUsersSetupOnload(Long lngPtjId){
 		rolecodeRquisitionerList = new ArrayList<SelectItem>();
 		rolecodeApproverList = new ArrayList<SelectItem>();
@@ -4766,10 +4777,12 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			
 			roleCodeUsersSetup();
 			
+			
 			if ((this.getModuleValue()
 					.equalsIgnoreCase(ReportConst.DP_MOD_VAL))) {
 				retrieveApprovarNaikTarafDPS1();
 				retrievePTJS1();
+				 directPurchaseWithRequisitioner();
 			}
 			if ((this.getModuleValue()
 							.equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION))) {
@@ -5059,7 +5072,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	}
 
 	public List<SelectItem> generateMonthList() {
-		scMonthList = scReportBackingBean.generateMonthList();
+		scMonthList = scReportBackingBean.generateMonthList(strLanguage);
 		return scMonthList;
 	}
 
