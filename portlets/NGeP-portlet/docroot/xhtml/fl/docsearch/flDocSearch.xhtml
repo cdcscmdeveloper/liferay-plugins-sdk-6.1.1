@@ -153,37 +153,7 @@
 					</p:calendar>
 				</h:panelGrid>
 			</h:panelGroup>
-			<h:panelGroup id="orgSearch">
-			<table>
-				<tr>
-					<td style="width: 190px;">
-						<p:outputLabel value="#{lbl['lbl.fl.ministry']}"	/>
-					</td>
-					<td>
-						<ac:lov id="searchMinistry" lovId="PM_ORG_PROFILE_MINSTRY" size="46" readonly="true" style="width:314px"
-							disabled="#{flDocumentBackingBean.isFlFulfilmentRequisitioner() or flDocumentBackingBean.isFlFulfilmentApprover() or flDocumentBackingBean.isFlFulfilmentRecevingOfficer() or flDocumentBackingBean.isFlFulfilmentPaymentOfficer()}"
-							headerText="#{lbl['lbl.fl.ministry']}" 
-							value="#{flDocumentBackingBean.managedBean.ministry.pmOrgValidity.orgName}"
-							postUpdateListener="flDocumentBackingBean.resetPtjProfile()"
-							update=":form:searchPtj,:form:orgSearch"
-							saveObject="flDocumentBackingBean.managedBean.ministry">
-						</ac:lov>
-					</td>
-				</tr>
-				<tr>
-					<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.ptj']}"	/></td>
-					<td>
-						<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" size="46" readonly="true" style="width:314px"
-							disabled="#{flDocumentBackingBean.isFlFulfilmentRequisitioner() or flDocumentBackingBean.isFlFulfilmentApprover() or flDocumentBackingBean.isFlFulfilmentRecevingOfficer() or flDocumentBackingBean.isFlFulfilmentPaymentOfficer() or flDocumentBackingBean.managedBean.ministry==null}"
-							headerText="#{lbl['lbl.fl.ptj']}"
-							value="#{flDocumentBackingBean.managedBean.ptj.pmOrgValidity.orgName}"
-							saveObject="flDocumentBackingBean.managedBean.ptj"	
-							conditionField="#{flDocumentBackingBean.getPTJCondition()}">			
-						</ac:lov>
-					</td>
-				</tr>
-			</table>
-			</h:panelGroup>
+			
 			<p:outputPanel id="advanceSearchID" style="width:100%">
 			</p:outputPanel>
 
