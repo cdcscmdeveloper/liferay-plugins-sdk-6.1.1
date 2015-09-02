@@ -89,7 +89,7 @@
       <div><br/></div>	  
       <div>Nama<span class="Apple-tab-span" style="white-space:pre">	</span><span class="Apple-tab-span" style="white-space:pre">	</span>: $approverName</div>
       <div>Jawatan<span class="Apple-tab-span" style="white-space:pre">	</span><span class="Apple-tab-span" style="white-space:pre">	</span>: $approverDesignation</div>
-      <div>Kementerian<span class="Apple-tab-span" style="white-space:pre">	</span>: $jabatanMinistry</div>      
+      <div>Kementerian<span class="Apple-tab-span" style="white-space:pre">	</span>: $ministryName</div>      
       <div>PTJ<span class="Apple-tab-span" style="white-space:pre">	</span><span class="Apple-tab-span" style="white-space:pre">	</span><span class="Apple-tab-span" style="white-space:pre">	</span>: $ptjName</div>
 	  <hr>
 	  <table>
