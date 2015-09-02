@@ -11,14 +11,28 @@
 		<p:dataTable id="contentsTbl" widgetVar="contentsTblWidget"
 			var="scLoaReport"
 			value="#{lOADetailBackingBean.managedBean.scLoa.scLoaReports}"
-			rows="10" rowKey="#{scLoaReport}"
-			selection="#{lOADetailBackingBean.managedBean.selectedScLoaReports}">
-
+			rows="10" rowKey="#{scLoaReport}">
 			<ac:paginator for="contentsTbl" />
-
+        <!-- 
 			<p:column selectionMode="multiple" style="width:2%"
 				disabledSelection="#{!empty scLoaReport.pmDocument}"
-				rendered="#{isEditableStatus}" />
+				rendered="#{isEditableStatus}" /> -->
+
+
+			<p:column style="width:2%" >
+				<f:facet name="header">
+					<p:selectBooleanCheckbox id="selectAllNegoLoc"
+						value="#{lOIDetailBackingBean.flag}"
+						rendered="#{isEditableStatus}">
+						<p:ajax partialSubmit="true" process="@this" update="contentsTbl"
+							listener="#{lOADetailBackingBean.selectAllDocuments}"></p:ajax>
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox value="#{scLoaReport.selected}" disabled="#{!empty scLoaReport.pmDocument}">
+					<p:ajax partialSubmit="true" process="@this" update="contentsTbl" />
+				</p:selectBooleanCheckbox>
+			</p:column>
+
 
 			<p:column headerText="#{lbl['lbl.sc.content']}">
 				<h:inputText style="width:96%" value="#{scLoaReport.title}"
@@ -92,7 +106,7 @@
 		</div>
 		<ac:confirmationPopup id="loaReportDeleteId"
 			widget="loaReportDeletePopUp"
-			okAction="lOADetailBackingBean.deleteLoaContentAction" width="400"
+			okAction="lOADetailBackingBean.deleteLoaDocument" width="400"
 			height="100" title="#{lbl['lbl.msg.confirm.delete.header']}"
 			content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
 
