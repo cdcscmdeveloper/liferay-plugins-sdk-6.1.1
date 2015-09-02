@@ -1,11 +1,24 @@
 package my.ep.web.integration.phis;
 
+/*
+ * @author P Ganga prasad
+ */
+
 public class MaterialMeasurement {
 
+	private String unspscCode;
 	private String measurementCode;
 	private String measurementDescription;
 	private String measurementAction;
 	private String measurementOldCode;
+
+	public String getUnspscCode() {
+		return unspscCode;
+	}
+
+	public void setUnspscCode(String unspscCode) {
+		this.unspscCode = unspscCode;
+	}
 
 	public String getMeasurementCode() {
 		return measurementCode;
@@ -38,22 +51,25 @@ public class MaterialMeasurement {
 	public void setMeasurementOldCode(String measurementOldCode) {
 		this.measurementOldCode = measurementOldCode;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-	    if(obj instanceof MaterialMeasurement)
-	    {
-	    	MaterialMeasurement temp = (MaterialMeasurement) obj;
-	        if(this.measurementCode.equalsIgnoreCase(temp.measurementCode) && this.measurementDescription.equalsIgnoreCase(temp.measurementDescription))
-	            return true;
-	    }
-	    return false;
+		if (obj instanceof MaterialMeasurement) {
+			MaterialMeasurement temp = (MaterialMeasurement) obj;
+			if (this.measurementCode.equalsIgnoreCase(temp.measurementCode)
+					&& this.measurementDescription
+							.equalsIgnoreCase(temp.measurementDescription))
+				return true;
+		}
+		return false;
 
 	}
+
 	@Override
 	public int hashCode() {
 
-	    return (this.measurementCode.hashCode()+this.measurementDescription.hashCode());        
+		return (this.measurementCode.hashCode() + this.measurementDescription
+				.hashCode());
 	}
 
 }
