@@ -168,7 +168,7 @@ public class ReportBackingBean extends
 	private List<SelectItem> accumulatedPaidUpCptlList = new ArrayList<SelectItem>();
 	private List<SelectItem> registrationStatusList = new ArrayList<SelectItem>();
 	private List<String> simpleQuoteNoList = new ArrayList<String>();
-	private List<String> serviceTypeList = new ArrayList<String>();
+	private List<SelectItem> serviceTypeList = new ArrayList<SelectItem>();
 	private List<String> paymentMethodList = new ArrayList<String>();
 	private List<SelectItem> paymentTypeList = new ArrayList<SelectItem>();
 	
@@ -222,11 +222,13 @@ public class ReportBackingBean extends
 		this.paymentTypeList = paymentTypeList;
 	}
 
-	public List<String> getServiceTypeList() {
+	
+
+	public List<SelectItem> getServiceTypeList() {
 		return serviceTypeList;
 	}
 
-	public void setServiceTypeList(List<String> serviceTypeList) {
+	public void setServiceTypeList(List<SelectItem> serviceTypeList) {
 		this.serviceTypeList = serviceTypeList;
 	}
 
@@ -2770,18 +2772,21 @@ public class ReportBackingBean extends
 		return paymentMethodList;
 	}
 	
-	public List<String> retrievePMServiceType(){
-		serviceTypeList = new ArrayList<String>();
+	public List<SelectItem> retrievePMServiceType(){
+		serviceTypeList = new ArrayList<SelectItem>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IPMReportSO.class);
-					String language = ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG, 
-				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-					List<String> serviceTypeLst = reportSO.retrievePMServiceType(language);			
-					for (int i = 0; i < serviceTypeLst.size(); i++) {
-						serviceTypeList.add(serviceTypeLst.get(i));
-					}        	    
+					
+					List<Object[]> serviceTypeLst = reportSO.retrievePMServiceType(strLanguage);			
+					
+					for (Object[] object : serviceTypeLst) {
+						SelectItem selectItem = new SelectItem();						
+						selectItem.setValue(object[1].toString());
+						selectItem.setLabel(object[0].toString());
+						serviceTypeList.add(selectItem);
+					}
         }
 		return serviceTypeList;
 	}
