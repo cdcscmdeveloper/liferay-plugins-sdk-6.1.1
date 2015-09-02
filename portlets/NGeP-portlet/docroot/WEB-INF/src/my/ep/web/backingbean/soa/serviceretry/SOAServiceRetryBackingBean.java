@@ -1,39 +1,43 @@
-package my.ep.web.backingbean.soa.retrylog;
+package my.ep.web.backingbean.soa.serviceretry;
+
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.service.soa.retrylog.ISOARetryLogSO;
+import my.ep.biz.service.soa.serviceretry.ISOAServiceRetrySO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.dto.soa.retrylog.SOARetryLogReqDTO;
-import my.ep.dto.soa.retrylog.SOARetryLogResDTO;
+import my.ep.dto.soa.serviceretry.SOAServiceRetryReqDTO;
+import my.ep.dto.soa.serviceretry.SOAServiceRetryResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.osb.OsbRetryDtl;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
-import my.ep.web.managedbean.soa.retrylog.SOARetryLogManagedBean;
+import my.ep.web.managedbean.soa.serviceretry.SOAServiceRetryManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 
-@ManagedBean(name = "soaRetryLogBackingBean")
+
+@ManagedBean(name = "soaServiceRetryBackingBean")
 @ViewScoped
-public class SOARetryLogBackingBean extends
-		BaseBackingBean<SOARetryLogManagedBean> {
+public class SOAServiceRetryBackingBean extends
+		BaseBackingBean<SOAServiceRetryManagedBean> {
 	private static final Logger logger = EpLogger
-			.getLogger(SOARetryLogBackingBean.class);
+			.getLogger(SOAServiceRetryBackingBean.class);
 
-	private IPagingDataModel<OsbRetryDtl> retryLogDataModel = new SOARetryLogDataModel();
+	private IPagingDataModel<OsbRetryDtl> serviceRetryDataModel = new SOAServiceRetryDataModel();
 
-	public SOARetryLogBackingBean() {
+	public SOAServiceRetryBackingBean() {
 	}
 
 	/**
@@ -41,38 +45,37 @@ public class SOARetryLogBackingBean extends
 	 * 
 	 * @author MD
 	 */
-	private class SOARetryLogDataModel extends PagingDataModel<OsbRetryDtl> {
+	private class SOAServiceRetryDataModel extends PagingDataModel<OsbRetryDtl> {
 
 		private static final long serialVersionUID = 1L;
 
-		public SOARetryLogDataModel() {
-			super("retryLogTable");
+		public SOAServiceRetryDataModel() {
+			super("serviceRetryTable");
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
-		 * .biz.bean.search.ISearchBean)
-		 */
 		@Override
 		public ISearchResultBean<OsbRetryDtl> pageChangeListener(
-				ISearchBean<OsbRetryDtl> searchBean) {
+				ISearchBean<OsbRetryDtl> iSearchBean) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("pageChangeListener");
 			}
 
-			ISOARetryLogSO logSO;			try {
-				logSO = (ISOARetryLogSO) BusinessDelegate.getInstance()
+			ISOAServiceRetrySO logSO;			try {
+				logSO = (ISOAServiceRetrySO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SOA,
-								ISOARetryLogSO.class);
+								ISOAServiceRetrySO.class);
 
-				SOARetryLogReqDTO reqDTO = new SOARetryLogReqDTO();
-				SOARetryLogResDTO resDTO = logSO.searchSOARetryLogList(reqDTO);
+				SOAServiceRetryReqDTO reqDTO = new SOAServiceRetryReqDTO();
+				
+				reqDTO.setISearchBean(iSearchBean);
+				reqDTO.setTargetSystem(getManagedBean().getTargetSystem());
+				
+				SOAServiceRetryResDTO resDTO = logSO.searchSOAServiceRetryList(reqDTO);
+				
 				if (resDTO.isSuccessful()) {
 					return resDTO.getSearchResultBean();
 				}
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
@@ -87,8 +90,8 @@ public class SOARetryLogBackingBean extends
 	 * Functional methods.
 	 */
 
-	public void refreshRetryLogList() {
-		debugLogger("refreshRetryLogList");
+	public void refreshServiceRetryList() {
+		debugLogger("refreshServiceRetryList");
 //		FacesContext.getCurrentInstance().addMessage(
 //				null,
 //				new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -96,30 +99,31 @@ public class SOARetryLogBackingBean extends
 		resetAndReloadData();
 	}
 
-	public void submitRetryLogList() {
-		submitOrRemoveRetryLogList(true);
+	public void submitServiceRetryList() {
+		submitOrRemoveServiceRetryList(true);
 	}
 
-	public void removeRetryLogList() {
-		submitOrRemoveRetryLogList(false);
+	public void removeServiceRetryList() {
+		submitOrRemoveServiceRetryList(false);
 	}
 	
 	/**
 	 * Private methods.
 	 */
 
-	private void submitOrRemoveRetryLogList(boolean isSubmit) {
+	private void submitOrRemoveServiceRetryList(boolean isSubmit) {
 
 		if (isSubmit) {
-			debugLogger("submitRetryLogList");
+			debugLogger("submitServiceRetryList");
 		} else {
-			debugLogger("removeRetryLogList");
+			debugLogger("removeServiceRetryList");
 		}
 
-		SOARetryLogReqDTO reqDTO = new SOARetryLogReqDTO();
-
-		for (OsbRetryDtl retryDtl : this.getManagedBean()
-				.getSelectedRetryLogs()) {
+		SOAServiceRetryReqDTO reqDTO = new SOAServiceRetryReqDTO();
+		
+		reqDTO.setTargetSystem(getManagedBean().getTargetSystem());
+		
+		for (OsbRetryDtl retryDtl : this.getManagedBean().getSelectedServiceRetries()){
 			debugLogger("RetryDtlId : " + retryDtl.getRetryDtlId());
 			reqDTO.getOsbRetryDtl().add(retryDtl);
 		}
@@ -136,18 +140,18 @@ public class SOARetryLogBackingBean extends
 			return;
 		}
 		
-		ISOARetryLogSO logSO = (ISOARetryLogSO) BusinessDelegate
+		ISOAServiceRetrySO logSO = (ISOAServiceRetrySO) BusinessDelegate
 				.getInstance().getServiceObject(ModuleCodeConst.SOA,
-						ISOARetryLogSO.class);
+						ISOAServiceRetrySO.class);
 
-		SOARetryLogResDTO resDTO = null;
+		SOAServiceRetryResDTO resDTO = null;
 
 		try{
 		
 			if (isSubmit) {
-				resDTO = logSO.submitSOARetryLogList(reqDTO);
+				resDTO = logSO.submitSOAServiceRetryList(reqDTO);
 			} else {
-				resDTO = logSO.removeSOARetryLogList(reqDTO);
+				resDTO = logSO.removeSOAServiceRetryList(reqDTO);
 			}
 
 			debugLogger("NotifyResDTO : at least one record isSuccessful[" + resDTO.isSuccessful()+ "]");
@@ -169,7 +173,7 @@ public class SOARetryLogBackingBean extends
 					
 					FacesContext.getCurrentInstance().addMessage(
 							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR,
 									MessageUtils.getMessage(MessageConst.ERROR_990003,
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())
@@ -199,8 +203,8 @@ public class SOARetryLogBackingBean extends
 	}
 
 	private void resetAndReloadData(){
-		retryLogDataModel.resetData();
-		retryLogDataModel.reloadData();
+		serviceRetryDataModel.resetData();
+		serviceRetryDataModel.reloadData();
 	}
 	
 	private void debugLogger(Object message) {
@@ -214,12 +218,39 @@ public class SOARetryLogBackingBean extends
 	 * Setters & getters.
 	 */
 
-	public IPagingDataModel<OsbRetryDtl> getRetryLogDataModel() {
-		return retryLogDataModel;
+	public IPagingDataModel<OsbRetryDtl> getServiceRetryDataModel() {
+		return serviceRetryDataModel;
 	}
 
-	public void setRetryLogDataModel(
-			IPagingDataModel<OsbRetryDtl> retryLogDataModel) {
-		this.retryLogDataModel = retryLogDataModel;
+	public void setServiceRetryDataModel(
+			IPagingDataModel<OsbRetryDtl> serviceRetryDataModel) {
+		this.serviceRetryDataModel = serviceRetryDataModel;
+	}
+	
+	public SelectItem[] getStatusDropdown() {
+		
+		ISOAServiceRetrySO serviceRetrySO = null;
+		SelectItem[] items = null;
+		
+		try {
+			serviceRetrySO = (ISOAServiceRetrySO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SOA,ISOAServiceRetrySO.class);
+			List<String> targetSystemList =  serviceRetrySO.getAllTargetSystems();
+		    
+		    items = new SelectItem[targetSystemList.size()];
+		      
+			for(int i = 0; i<targetSystemList.size(); i++) {
+				String targetSystem = targetSystemList.get(i);
+				items[i] = new SelectItem(targetSystem, targetSystem);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+
+		} finally {
+			serviceRetrySO = null;
+		}
+		
+	    return items;
 	}
 }

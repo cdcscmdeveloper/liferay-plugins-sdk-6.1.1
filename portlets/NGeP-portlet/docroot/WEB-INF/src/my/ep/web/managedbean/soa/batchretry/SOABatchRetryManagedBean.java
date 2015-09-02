@@ -9,30 +9,49 @@ import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
 
-/**
- * @author MD
- * 
- */
 @ManagedBean(name = "SOABatchRetryManagedBean")
 @SessionScoped
 public class SOABatchRetryManagedBean extends BaseManagedBean {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger log = EpLogger
 			.getLogger(SOABatchRetryManagedBean.class);
 	
-	private OsbBatchRetryDtl[] selectedRetryLogs;
+	private OsbBatchRetryDtl[] selectedBatchRetries;
+	private String ibob;
+	private String sourceSystem;
+	private String targetSystem;
 
-	public OsbBatchRetryDtl[] getSelectedRetryLogs() {
-		return selectedRetryLogs;
+	public String getIbob() {
+		return ibob;
 	}
 
-	public void setSelectedRetryLogs(OsbBatchRetryDtl[] selectedRetryLogs) {
-		this.selectedRetryLogs = selectedRetryLogs;
+	public void setIbob(String ibob) {
+		this.ibob = ibob;
 	}
 	
+	public OsbBatchRetryDtl[] getSelectedBatchRetries() {
+		return selectedBatchRetries;
+	}
+
+	public void setSelectedBatchRetries(OsbBatchRetryDtl[] selectedBatchRetries) {
+		this.selectedBatchRetries = selectedBatchRetries;
+	}
+
+	public String getSourceSystem() {
+		return sourceSystem;
+	}
+
+	public void setSourceSystem(String sourceSystem) {
+		this.sourceSystem = sourceSystem;
+	}
+
+	public String getTargetSystem() {
+		return targetSystem;
+	}
+
+	public void setTargetSystem(String targetSystem) {
+		this.targetSystem = targetSystem;
+	}
 }
