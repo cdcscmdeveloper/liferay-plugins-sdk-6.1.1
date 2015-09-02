@@ -173,8 +173,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	
 	private String editorValue;
 	private BigDecimal paidAdvancePercentage = new BigDecimal(0);
-	private BigDecimal balanceToPaid;
-	private BigDecimal paidPercentage;	
+	private BigDecimal balanceToPaid = new BigDecimal(0);
+	private BigDecimal paidPercentage = new BigDecimal(0);	
 	private ContractBackingBean ctBB = null;
 	private CtSchedule[] selectedSchedule;
 	private CtProgressivePayment[] selectedProgressive;
@@ -232,7 +232,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @return the paidAdvancePercentage
 	 */
 	public BigDecimal getPaidAdvancePercentage() {
-		if (getManagedBean().getPaidAdvancePaymentAmt().doubleValue() != 0) {
+	
+		if (getManagedBean().getPaidAdvancePaymentAmt() != null && 
+				getManagedBean().getPaidAdvancePaymentAmt().doubleValue() != 0) {
 		    paidAdvancePercentage = (getManagedBean().getPaidAdvancePaymentAmt().multiply(
 		    		BigDecimal.valueOf(100)).divide(
 		    				BigDecimal.valueOf(getManagedBean().getAdvancePaymentAmt()), 2, RoundingMode.HALF_UP));
@@ -267,9 +269,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @return the paidPercentage
 	 */
 	public BigDecimal getPaidPercentage() {
-			paidPercentage = (this.getManagedBean().getPaidInvoiceAmt().multiply(
+		if(getManagedBean().getPaidInvoiceAmt() != null) {
+			paidPercentage = (getManagedBean().getPaidInvoiceAmt().multiply(
 				BigDecimal.valueOf(100)).divide(
-						this.getManagedBean().getGstTotalAmount(), 2, RoundingMode.HALF_UP));
+						getManagedBean().getContractVer().getCtContractAmount().getContractAmount(), 2, RoundingMode.HALF_UP));
+		}
 		return paidPercentage;
 	}
 
@@ -1311,43 +1315,77 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		
 		if (outputTab.equalsIgnoreCase(ContractConst.FULFILMENT_DETAIL)) {
 			getManagedBean().setSelectedTabIndex(0);
-		}
-		if (!getManagedBean().getCtContract().isZonalPricing() && outputTab.equalsIgnoreCase(ContractConst.ITEM_DETAIL)) {
+	
+		} else if (!getManagedBean().getCtContract().isZonalPricing() && outputTab.equalsIgnoreCase(ContractConst.ITEM_DETAIL)) {
 			getManagedBean().setSelectedTabIndex(1);
 			getManagedBean().setItemIndex(1);
-	   	}
-		if (getManagedBean().getCtContract().isZonalPricing() && outputTab.equalsIgnoreCase(ContractConst.ZONAL_DETAIL)) {
+	  
+		}else if (getManagedBean().getCtContract().isZonalPricing() && outputTab.equalsIgnoreCase(ContractConst.ZONAL_DETAIL)) {
 			getManagedBean().setSelectedTabIndex(1);
-     	}
-		if (getManagedBean().getCtContract().isZonalPricing() && outputTab.equalsIgnoreCase(ContractConst.ITEM_DETAIL)) {
+     	
+		}else if (getManagedBean().getCtContract().isZonalPricing() && outputTab.equalsIgnoreCase(ContractConst.ITEM_DETAIL)) {
 			getManagedBean().setSelectedTabIndex(2);
 			getManagedBean().setItemIndex(2);
-     	}
-		if (getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate() && outputTab.equalsIgnoreCase(ContractConst.FACTORING_DETAIL)) {
-			if (getManagedBean().getCtContract().isZonalPricing()) {
-				getManagedBean().setSelectedTabIndex(3);
-  	    	} else{
-  	    		getManagedBean().setSelectedTabIndex(2);
-  	     	}
-  	  		getManagedBean().setFactoring( getManagedBean().getSelectedTabIndex());
-      	}
-		if (outputTab.equalsIgnoreCase(ContractConst.SETTING_DETAIL)) {
-			if (getManagedBean().getCtContract().isZonalPricing()) {  
-				if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()) {
-					getManagedBean().setSelectedTabIndex(4);
-				} else {
-					getManagedBean().setSelectedTabIndex(3);
-				}
-       	  	} else {
-       	  		if (getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()) {
-       	  			getManagedBean().setSelectedTabIndex(3);
-       	  		} else {
-       	  			getManagedBean().setSelectedTabIndex(2);
-       	  		}
-       	  	}
+     
+		} else if (getManagedBean().getCtContract().isFactored() 
+				&& checkFactoringExpiryDate() && outputTab.equalsIgnoreCase(ContractConst.FACTORING_DETAIL)) {
+			 
+			   if (getManagedBean().getCtContract().isZonalPricing()) {
+				  getManagedBean().setSelectedTabIndex(3);
+  	    	
+			  } else{
+  	    		  getManagedBean().setSelectedTabIndex(2);
+  	     	  }
+  	  		 getManagedBean().setFactoring( getManagedBean().getSelectedTabIndex());
+      
+		} else if (getManagedBean().getContractVer().getCtContractValue().isFollowLoaAmt() 
+				&& outputTab.equalsIgnoreCase(ContractConst.PAYMENT_DETAIL)) {
+			
+			    if (getManagedBean().getCtContract().isZonalPricing()) {
+				      if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()){
+				             getManagedBean().setSelectedTabIndex(4);
+				      }else {
+					        getManagedBean().setSelectedTabIndex(3);
+				     }
+  	    	     } else if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()){
+  	    		        getManagedBean().setSelectedTabIndex(3);
+  	    	     } else {
+  	    			 getManagedBean().setSelectedTabIndex(2);
+  	    	     }
+  	     	   getManagedBean().setFactoring( getManagedBean().getSelectedTabIndex());
+    
+		}else if (outputTab.equalsIgnoreCase(ContractConst.SETTING_DETAIL)) {
+			  
+			   if (getManagedBean().getCtContract().isZonalPricing()) {  
+				     if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()) {
+					       if(getManagedBean().getContractVer().getCtContractValue().isFollowLoaAmt()){
+					             getManagedBean().setSelectedTabIndex(5);
+					       }else {
+						       getManagedBean().setSelectedTabIndex(4);
+					       }
+					} else if(getManagedBean().getContractVer().getCtContractValue().isFollowLoaAmt()){
+					     getManagedBean().setSelectedTabIndex(4);
+					 } else {
+						 getManagedBean().setSelectedTabIndex(3);
+					 }
+				
+			   } else if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()) {
+       	  		       if(getManagedBean().getContractVer().getCtContractValue().isFollowLoaAmt()){
+       	  			          getManagedBean().setSelectedTabIndex(4);
+       	  		    
+       	  		       }else {
+      	  			            getManagedBean().setSelectedTabIndex(3);
+       	  		       }
+       	  	
+		       } else if(getManagedBean().getContractVer().getCtContractValue().isFollowLoaAmt()) {
+       	  			         getManagedBean().setSelectedTabIndex(3);
+       	  	   
+		       } else {
+       	  			 getManagedBean().setSelectedTabIndex(2);
+       	  	   }
 			getManagedBean().setSettingIndex(getManagedBean().getSelectedTabIndex());
+		  }
 		} 
-	}
 	
     /**
 	 * The method used for controlling the tab menu
@@ -1435,7 +1473,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	       	}
 	        getManagedBean().setFactoring(getManagedBean().getSelectedTabIndex());
 	  	}
-	  	if (getManagedBean().isFlgPaymentTracking() && outputTab.equalsIgnoreCase(ContractConst.PAYMENT_DETAIL)) {
+	  	if (outputTab.equalsIgnoreCase(ContractConst.PAYMENT_DETAIL)) {
 	  		if (getManagedBean().getCtContract().isZonalPricing()) { 
 	  			getManagedBean().setSelectedTabIndex(4);
 	  			if (!getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
@@ -1484,86 +1522,57 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	  	}
 	  	if (outputTab.equalsIgnoreCase(ContractConst.SETTING_DETAIL)) {
 	  		if (getManagedBean().getCtContract().isZonalPricing()) { 
-	  			getManagedBean().setSelectedTabIndex(4);
+	  			getManagedBean().setSelectedTabIndex(5);
 	  			if (!getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
-	  				getManagedBean().setSelectedTabIndex(5);
+	  				getManagedBean().setSelectedTabIndex(6);
 	  				if (getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
 	  						ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
-	  					getManagedBean().setSelectedTabIndex(6);
+	  					getManagedBean().setSelectedTabIndex(7);
 	  					if (getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()) {
-	  						getManagedBean().setSelectedTabIndex(7);
-	  						if (getManagedBean().isFlgPaymentTracking()) {
-	        	    	        	     getManagedBean().setSelectedTabIndex(8);
-	  						}
-	  					} else if (getManagedBean().isFlgPaymentTracking()) {
-	  						getManagedBean().setSelectedTabIndex(7);
-	  					}
+	  						getManagedBean().setSelectedTabIndex(8);
+	  					} 
 	  				} else if (getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()) {
-	  					getManagedBean().setSelectedTabIndex(6);
-	  					if (getManagedBean().isFlgPaymentTracking()) {
-	  						getManagedBean().setSelectedTabIndex(7);
-	  					}
-	  				} else if (getManagedBean().isFlgPaymentTracking()) {
-	  					getManagedBean().setSelectedTabIndex(6);
+	  					getManagedBean().setSelectedTabIndex(8);
+	  				} else {
+	  					getManagedBean().setSelectedTabIndex(7);
 	  				}
 	  			} else if (getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
 	  					ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
-	  				getManagedBean().setSelectedTabIndex(5);
+	  				getManagedBean().setSelectedTabIndex(6);
 	  				if (getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()) {
-	  					getManagedBean().setSelectedTabIndex(6);
-	  				}
-	  				if (getManagedBean().isFlgPaymentTracking()) {
 	  					getManagedBean().setSelectedTabIndex(7);
 	  				}
 	  			} else if (getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()) {
-	  				getManagedBean().setSelectedTabIndex(5);
-	  				if (getManagedBean().isFlgPaymentTracking()) {
-	  					getManagedBean().setSelectedTabIndex(6);
-	  				}
-	  			} else if (getManagedBean().isFlgPaymentTracking()) {
+	  				getManagedBean().setSelectedTabIndex(6);
+	  			} else {
 	  				getManagedBean().setSelectedTabIndex(5);
 	  			}
 	  		} else if (!getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
-	  			getManagedBean().setSelectedTabIndex(4);
+	  			getManagedBean().setSelectedTabIndex(5);
 	  			if (getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
 	  					ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
-	  				getManagedBean().setSelectedTabIndex(5);	   
+	  				getManagedBean().setSelectedTabIndex(6);	   
 	  				if (getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()) {
-	  					getManagedBean().setSelectedTabIndex(6);
-	  					if (getManagedBean().isFlgPaymentTracking()) {
-    	    	          	    	    	 getManagedBean().setSelectedTabIndex(7);
-	  					}
-	  				} else if (getManagedBean().isFlgPaymentTracking()) {
-	  					getManagedBean().setSelectedTabIndex(6);
-	  				}
+	  					getManagedBean().setSelectedTabIndex(7);
+	  				} 
 	  			} else if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()) {
-	  				getManagedBean().setSelectedTabIndex(5);
-	  				if (getManagedBean().isFlgPaymentTracking()) {
-	  					getManagedBean().setSelectedTabIndex(6);
-	  				}
-	  			} else if (getManagedBean().isFlgPaymentTracking()) {
+	  				getManagedBean().setSelectedTabIndex(6);
+	  			} else {
 	  				getManagedBean().setSelectedTabIndex(5);
 	  			}
 	  		} else if (getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
 	  				ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
-	  			getManagedBean().setSelectedTabIndex(4);
+	  			getManagedBean().setSelectedTabIndex(5);
 	  			if (getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()) {
-	  				getManagedBean().setSelectedTabIndex(5);
-	  				if (getManagedBean().isFlgPaymentTracking()) {
-	  					getManagedBean().setSelectedTabIndex(6);
-	  				}
-	  			} else if (getManagedBean().isFlgPaymentTracking()) {
+	  				getManagedBean().setSelectedTabIndex(6);
+	  			} else {
 	  				getManagedBean().setSelectedTabIndex(5);
 	  			}
 	  		} else if (getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()) {
-	  			getManagedBean().setSelectedTabIndex(4);
-	  			if (getManagedBean().isFlgPaymentTracking()) {
-     	    	    	 getManagedBean().setSelectedTabIndex(5);
-	  			}
-	  		} else if (getManagedBean().isFlgPaymentTracking()) {
-	  			getManagedBean().setSelectedTabIndex(4);
+	  			getManagedBean().setSelectedTabIndex(5);
+	
 	  		} else {
-	  			getManagedBean().setSelectedTabIndex(3);
+	  			getManagedBean().setSelectedTabIndex(4);
 	  		}
 	  		getManagedBean().setSettingIndex(getManagedBean().getSelectedTabIndex());
 	  	}
@@ -1930,9 +1939,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		
 		BigDecimal paidAdvancePaymentAmt = (resDTO.getPaidAdvancePaymentAmt() == null) ? BigDecimal.valueOf(0) : resDTO.getPaidAdvancePaymentAmt();
 		BigDecimal paidInvoiceAmt = (resDTO.getPaidInvoiceAmt() == null) ? BigDecimal.valueOf(0) : resDTO.getPaidInvoiceAmt();
-		
-		this.getManagedBean().setPaidAdvancePaymentAmt(paidAdvancePaymentAmt);
-		this.getManagedBean().setPaidInvoiceAmt(paidInvoiceAmt);
+	
+	    getManagedBean().setPaidAdvancePaymentAmt(paidAdvancePaymentAmt);
+		 getManagedBean().setPaidInvoiceAmt(paidInvoiceAmt);
 	}
 	
 	/**
