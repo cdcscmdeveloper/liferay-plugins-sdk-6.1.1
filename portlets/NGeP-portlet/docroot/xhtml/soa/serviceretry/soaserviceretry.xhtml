@@ -53,7 +53,12 @@
 									<p:column selectionMode="multiple" style="width:2%;text-align:center"/>
 
 									<p:column headerText="#{lbl['lbl.portal.soa.transId']}">
-							#{serviceretry.transId}
+							
+									<p:commandLink action="#{soaServiceRetryBackingBean.managedBean.setPayload(serviceretry.payload)}"
+										oncomplete="payloadPopUp.show()" update="@form">
+										#{serviceretry.transId}			
+									</p:commandLink>
+							
 									</p:column>
 									<p:column headerText="#{lbl['lbl.portal.soa.targetSystem']}">
 							#{serviceretry.targetSystem}
@@ -76,5 +81,12 @@
 				</td>
 			</tr>
 		</table>
+		
+		<p:dialog id="payloadPopUp" widgetVar="payloadPopUp"
+			header="Payload" styleClass="screen-title"
+			resizable="false" modal="true" width="800" height="700">
+			<h:outputText value="#{soaServiceRetryBackingBean.managedBean.payload}" />
+		</p:dialog>
+		
 	</ui:define>
 </ui:composition>
