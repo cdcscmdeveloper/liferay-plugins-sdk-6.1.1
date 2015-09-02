@@ -48,6 +48,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.role.RoleReqDTO;
 import my.ep.dto.pm.authorization.role.RoleResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -3576,7 +3577,7 @@ public class ProfileManagementBackingBean extends
 					logger.info("Tracking diary for user profile: add new Role :saveUserProfile");
 					String messageId = MessageConst.TD_80002;
 					String[] msgParam = new String[] { user.getUserName() , getRoleDescByRoleCode(userRole
-							.getPmRole().getRoleCode(), "ms") };
+							.getPmRole().getRoleCode(), CommonConstants.LANGUAGE_CODE_MALAY) };
 					logger.info("......msgParam[1]"+msgParam[1]);
 					reqDTO.setTrackingStatus(true);
 					reqDTO.getTrackDairyVOs().add(
@@ -3588,7 +3589,7 @@ public class ProfileManagementBackingBean extends
 					logger.info("Tracking diary for user profile: Role is re-activated :saveUserProfile");
 					String messageId = MessageConst.TD_80004;
 					String[] msgParam = new String[] { user.getUserName() ,getRoleDescByRoleCode(userRole
-							.getPmRole().getRoleCode(), "ms")};
+							.getPmRole().getRoleCode(), CommonConstants.LANGUAGE_CODE_MALAY)};
 					logger.info("..222....msgParam[1]"+msgParam[1]);
 					reqDTO.setTrackingStatus(true);
 					reqDTO.getTrackDairyVOs().add(
@@ -3603,7 +3604,7 @@ public class ProfileManagementBackingBean extends
 					
 					String messageId = MessageConst.TD_80003;
 					String[] msgParam = new String[] {user.getUserName() ,getRoleDescByRoleCode(userRole
-							.getPmRole().getRoleCode(), "ms")};
+							.getPmRole().getRoleCode(), CommonConstants.LANGUAGE_CODE_MALAY)};
 					logger.info("..333....msgParam[1]"+msgParam[1]);
 					reqDTO.setTrackingStatus(true);
 					reqDTO.getTrackDairyVOs().add(
