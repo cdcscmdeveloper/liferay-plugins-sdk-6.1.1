@@ -25,6 +25,7 @@ public class SOAServiceRetryManagedBean extends BaseManagedBean {
 	private OsbRetryDtl[] selectedServiceRetries;
 
 	private String targetSystem;
+	private String payload;
 	
 	public OsbRetryDtl[] getSelectedServiceRetries() {
 		return selectedServiceRetries;
@@ -40,5 +41,13 @@ public class SOAServiceRetryManagedBean extends BaseManagedBean {
 	
 	public void setTargetSystem(String targetSystem) {
 		this.targetSystem = targetSystem;
+	}
+
+	public String getPayload() {
+		return payload;
+	}
+
+	public void setPayload(String payload) {
+		this.payload = payload;
 	}
 }
