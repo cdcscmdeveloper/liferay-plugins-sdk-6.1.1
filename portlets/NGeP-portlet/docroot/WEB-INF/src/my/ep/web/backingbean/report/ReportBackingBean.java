@@ -4782,7 +4782,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					.equalsIgnoreCase(ReportConst.DP_MOD_VAL))) {
 				retrieveApprovarNaikTarafDPS1();
 				retrievePTJS1();
-				 directPurchaseWithRequisitioner();
+				 
 			}
 			if ((this.getModuleValue()
 							.equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION))) {
@@ -4847,6 +4847,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			zoneByRolecode();
 			retrieveProcessingOfficerList();
 			retrievePMServiceType();
+			directPurchaseWithRequisitioner();
 		}
 	}
 	
