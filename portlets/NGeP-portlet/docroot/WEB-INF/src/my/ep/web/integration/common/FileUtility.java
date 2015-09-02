@@ -714,34 +714,73 @@ public class FileUtility {
 			return glAccountList;
 		}
 
-		public List<PtjGroup> kumpulanPTJ(String filePath) {
+		public List<PtjGroup> kumpulanPTJ(String filePath, String fileName) {
 			Path path = Paths.get(filePath);
 			String line;
 			List<PtjGroup> ptjGroupList = new ArrayList<PtjGroup>();
 			PtjGroup ptjGroup = null;
+			
+			// Error Respose to 1GFMAS
+			EPErrorResponse epErrorResponse = new EPErrorResponse();
+			epErrorResponse.setRecordType("H");
+			epErrorResponse.setTahunKewangan(2005);
+			epErrorResponse.setNamaFailAsal(fileName);
+			ErrorDetail errorDetail = null;
+			List<ErrorDetail> errorDetailsList = new ArrayList<ErrorDetail>();
 
-			try (Scanner scanner = new Scanner(path,
-					IntegrationConstants.ENCODING.name())) {
+			try (Scanner scanner = new Scanner(path, IntegrationConstants.ENCODING.name())) {
+				
+				int lineCount = 1;
 
-				FileUtility fileUtility = new FileUtility();
 				while (scanner.hasNextLine()) {
 					line = scanner.nextLine();
-
-					ptjGroup = new PtjGroup();
-
-					ptjGroup.setYear(fileUtility.getValue(line,0 ,4 ));
-					ptjGroup.setCode(fileUtility.getValue(line,4, 2));
-					ptjGroup.setDescription(fileUtility.getValue(line,6, 255));
-					ptjGroup.setEffectiveDate(formatStringToDate(fileUtility.getValue(line, 261, 8)));
-					ptjGroup.setExpiryDate(formatStringToDate(fileUtility.getValue(line, 269, 8)));
-					ptjGroup.setStatus(fileUtility.getValue(line, 277, 1));
-					ptjGroupList.add(ptjGroup);
-
+					if (line.length()==278) {
+						ptjGroup = new PtjGroup();
+						ptjGroup.setYear(getValue(line, 0, 4));
+						ptjGroup.setCode(getValue(line, 4, 2));
+						ptjGroup.setDescription(getValue(line, 6, 255));
+						try{
+							ptjGroup.setEffectiveDate(formatStringToDate(getValue(line, 261, 8)));
+						}catch(Exception e){
+							errorDetail = new ErrorDetail();
+							errorDetail.setRecordType("L");
+							errorDetail.setLineNo(lineCount);
+							errorDetail.setErrorDescription("Error converting effective date");
+							if(!errorDetailsList.contains(errorDetail))
+								errorDetailsList.add(errorDetail);
+						}
+						try{
+							ptjGroup.setExpiryDate(formatStringToDate(getValue(line, 269, 8)));
+						}catch(Exception e){
+							errorDetail = new ErrorDetail();
+							errorDetail.setRecordType("L");
+							errorDetail.setLineNo(lineCount);
+							errorDetail.setErrorDescription("Error converting expiry date");
+							if(!errorDetailsList.contains(errorDetail))
+								errorDetailsList.add(errorDetail);
+						}
+						
+						ptjGroup.setStatus(getValue(line, 277, 1));
+						ptjGroupList.add(ptjGroup);
+						lineCount++;
+					}else{
+						errorDetail = new ErrorDetail();
+						errorDetail.setRecordType("L");
+						errorDetail.setLineNo(lineCount);
+						errorDetail.setErrorDescription("Lenght of the record is not matching");
+						if(!errorDetailsList.contains(errorDetail))
+							errorDetailsList.add(errorDetail);
+					}
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			return ptjGroupList;
+			
+			//If ErrorDetail size is greater than zero cal ErrorResponse
+			if(errorDetailsList.size()>0){
+				errorFileOutPutStream(epErrorResponse,IntegrationConstants.FILE_PATH);
+			}
+				return ptjGroupList;
 		}
 
 		public List<OrgProfile> masterDatePTJ(String filePath) {
@@ -949,44 +988,43 @@ public class FileUtility {
 		List<my.ep.web.integration.phis.MasterDataMaterialInfo> masterDataMaterialInfoList = new ArrayList<my.ep.web.integration.phis.MasterDataMaterialInfo>();
 		my.ep.web.integration.phis.MasterDataMaterialInfo masterDataMaterialInfo = null;
 		
-		if(resDTO.getItemList().size()>0){
-			
-			for(CmItem cmItem :resDTO.getItemList()){
+		for (CmSupplierItem supplierItem : resDTO.getCmSupplierItemsList()) {
+			CmItem cmItem = supplierItem.getCmItem();
+			if (cmItem!= null) {
 				masterDataMaterialInfo = new my.ep.web.integration.phis.MasterDataMaterialInfo();
-				
+
 				cmItem.getCmSupplierItems();
-	
+
 				masterDataMaterialInfo.setProductCode(cmItem.getExtensionCode());
 				masterDataMaterialInfo.setCodeType("P");
 				masterDataMaterialInfo.setOldProductCode("NA");
 				masterDataMaterialInfo.setItemDescription(cmItem.getItemName());
-				masterDataMaterialInfo.setKodTindakan(checkAction(cmItem.getCreatedDate(), cmItem.getChangedDate()));
-		
+				masterDataMaterialInfo.setKodTindakan(checkAction(
+						cmItem.getCreatedDate(), cmItem.getChangedDate()));
+
 				//expiry date will be 3 years from current date
-				Calendar c = Calendar.getInstance();    
+				Calendar c = Calendar.getInstance();
 				c.setTime(new Date());
 				c.add(Calendar.YEAR, 3);
-				
+
 				masterDataMaterialInfo.setStartEffectiveDate(new Date());
 				masterDataMaterialInfo.setEndEffectiveDate(c.getTime());
 				masterDataMaterialInfo.setCommodityName(cmItem.getCmUnspsc().getUnspscTitle());
 				masterDataMaterialInfo.setBaseUnitOfMeasure("UN");
 				masterDataMaterialInfo.setSegment(getValue(cmItem.getCmUnspsc().getUnspscCode(), 0, 2));
 				masterDataMaterialInfo.setFamily(getValue(cmItem.getCmUnspsc().getUnspscCode(), 0, 4));
-				if(null!=findUomCode(cmItem.getItemId(),resDTO.getCmSupplierItemsList())){
-					masterDataMaterialInfo.setAltUnitOfMeasurement(findUomCode(cmItem.getItemId(),resDTO.getCmSupplierItemsList()));
-				}else{
+				String uomCode = findUomCode(cmItem.getItemId(),resDTO.getCmSupplierItemsList());
+				if (null != uomCode) {
+					masterDataMaterialInfo.setAltUnitOfMeasurement(uomCode);
+				} else {
 					masterDataMaterialInfo.setAltUnitOfMeasurement("UN");
 				}
-				
 				masterDataMaterialInfoList.add(masterDataMaterialInfo);
 			}
 		}
-		
 		return masterDataMaterialInfoList;
 	
 		}
-	
 	
 
 	public String formatStringField(String input, int length, String align) {
@@ -1988,7 +2026,7 @@ public class FileUtility {
 	}
 	
 	// PHIS PM Modules
-	public void votFundFileOutPutStream(List<PhisVotFund> content, String filePath) {
+	/*public void votFundFileOutPutStream(List<PhisVotFund> content, String filePath) {
 		log.info("inside votFundFileOutPutStream");
 		String SERVICE_CODE = "PHS-090";
 
@@ -2218,7 +2256,7 @@ public class FileUtility {
 				}
 			}
 		}
-	}
+	}*/
 	//End of PHIS PM
 	
 	public String formatString(String input,int length) {
@@ -2560,8 +2598,7 @@ public class FileUtility {
 	
 	// Error file
 	
-	public void errorFileOutPutStream(List<EPErrorResponse> content,
-			String filePath) {
+	public void errorFileOutPutStream(EPErrorResponse epErrorResponse, String filePath) {
 		String SERVICE_CODE = "GLMDE";
 
 		String fileName = createFileNamePhis(SERVICE_CODE);
@@ -2572,31 +2609,29 @@ public class FileUtility {
 			writer = new BufferedWriter(new OutputStreamWriter(
 					new FileOutputStream(filePath + fileName), "utf-8"));
 
-			if (content.size() != 0) {
-				StringBuffer errResLine;
-				StringBuffer errDtlLine;
-				for (EPErrorResponse epErrorResponse : content) {
-					errResLine = new StringBuffer();
-					errResLine.append(formatStringField(epErrorResponse.getRecordType(), 1, "L"));
-					errResLine.append(formatIntegerField(epErrorResponse.getTahunKewangan(), 4, "R"));
-					errResLine.append(formatStringField(epErrorResponse.getNamaFailAsal(), 30,"L"));
-					errResLine.append(System.getProperty("line.separator"));
-					
-					if(null!=epErrorResponse.getErrorDetailList()){
-						for(ErrorDetail errorDetail:epErrorResponse.getErrorDetailList()){
-							errDtlLine = new StringBuffer();
-							errDtlLine.append(formatStringField(errorDetail.getRecordType(),1, "L"));
-							errDtlLine.append(formatIntegerField(errorDetail.getLineNo(), 10, "R"));
-							errDtlLine.append(formatStringField(errorDetail.getErrorDescription(), 255, "L"));
-							errDtlLine.append(System.getProperty("line.separator"));
-							errResLine.append(errDtlLine.toString());
-						}
+			StringBuffer errResLine = null;
+			StringBuffer errDtlLine = null;
+			if (epErrorResponse != null) {
+				
+				errResLine = new StringBuffer();
+				errResLine.append(formatStringField(epErrorResponse.getRecordType(), 1, "L"));
+				errResLine.append(formatIntegerField(epErrorResponse.getTahunKewangan(), 4, "R"));
+				errResLine.append(formatStringField(epErrorResponse.getNamaFailAsal(), 30,"L"));
+				errResLine.append(System.getProperty("line.separator"));
+				
+				if(null!=epErrorResponse.getErrorDetailList()){
+					for(ErrorDetail errorDetail:epErrorResponse.getErrorDetailList()){
+						errDtlLine = new StringBuffer();
+						errDtlLine.append(formatStringField(errorDetail.getRecordType(),1, "L"));
+						errDtlLine.append(formatIntegerField(errorDetail.getLineNo(), 10, "R"));
+						errDtlLine.append(formatStringField(errorDetail.getErrorDescription(), 255, "L"));
+						errDtlLine.append(System.getProperty("line.separator"));
+						errResLine.append(errDtlLine.toString());
 					}
-					writer.write(errResLine.toString());
-					writer.flush();
 				}
-
-//				Encryption encryption = new Encryption();
+				writer.write(errResLine.toString());
+				writer.close();
+				
 				encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
 
 			}
@@ -2818,8 +2853,6 @@ public class FileUtility {
 				reqDTO.setEncryptFilePath(IntegrationConstants.ENCRYPTED_FILE_PATH);
 				
 				encryption.encryptPhis(reqDTO);
-//				Encryption method
-//				encryption.encryptPhis(reqDTO.getFilePath(),IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
 
 			}
 		} catch (IOException e) {
@@ -2869,8 +2902,6 @@ public class FileUtility {
 				reqDTO.setServiceCode(SERVICE_CODE);
 				reqDTO.setEncryptFilePath(IntegrationConstants.ENCRYPTED_FILE_PATH);
 				encryption.encryptPhis(reqDTO);
-//              Encryption method
-//				encryption.encryptPhis(reqDTO.getFilePath(),IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
 
 			}
 		} catch (IOException e) {
@@ -2921,8 +2952,6 @@ public class FileUtility {
 				reqDTO.setEncryptFilePath(IntegrationConstants.ENCRYPTED_FILE_PATH);
 				encryption.encryptPhis(reqDTO);
 				
-//				Encryption method
-//				encryption.encryptPhis(reqDTO.getFilePath(),IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
 
 			}
 		} catch (IOException e) {
@@ -2970,8 +2999,6 @@ public class FileUtility {
 			reqDTO.setEncryptFilePath(IntegrationConstants.ENCRYPTED_FILE_PATH);
 			encryption.encryptPhis(reqDTO);
 			
-		//  Encryption method 
-//			encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName, SERVICE_CODE);
 		} catch (IOException e) {
 			e.printStackTrace();
 
@@ -3002,7 +3029,8 @@ public class FileUtility {
 				StringBuffer line;
 				for (MaterialBrand mbrand : reqDTO.getBatchContent()) {
 					line = new StringBuffer();
-					line.append(formatStringField(mbrand.getMaterialBrandCode(), 3, "L"));
+					line.append(formatStringField(mbrand.getUnspscCode(), 8,"L"));
+					line.append(formatStringField(mbrand.getMaterialBrandCode(), 2, "L"));  
 					line.append(formatStringField(mbrand.getMaterialBrandDescription(), 150, "L"));
 					line.append(formatStringField(mbrand.getMaterialBrandAction(), 3, "L"));
 					line.append(formatStringField(mbrand.getMaterialOldBrandCode(), 3, "L"));
@@ -3018,8 +3046,6 @@ public class FileUtility {
 			reqDTO.setEncryptFilePath(IntegrationConstants.ENCRYPTED_FILE_PATH);
 			encryption.encryptPhis(reqDTO);
 			
-		//  Encryption method 
-//			encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName, SERVICE_CODE);
 		} catch (IOException e) {
 
 		} finally {
@@ -3064,8 +3090,6 @@ public class FileUtility {
 			reqDTO.setServiceCode(SERVICE_CODE);
 			reqDTO.setEncryptFilePath(IntegrationConstants.ENCRYPTED_FILE_PATH);
 			encryption.encryptPhis(reqDTO);
-			// Encryption method
-//			encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName, SERVICE_CODE);
 		} catch (IOException e) {
 
 		} finally {
@@ -3095,6 +3119,7 @@ public class FileUtility {
 				StringBuffer line;
 				for (MaterialMeasurement mMeasurement : reqDTO.getBatchContent()) {
 					line = new StringBuffer();
+					line.append(formatStringField(mMeasurement.getUnspscCode(), 8,"L"));
 					line.append(formatStringField(mMeasurement.getMeasurementCode(), 3, "L"));
 					line.append(formatStringField(mMeasurement.getMeasurementDescription(), 150, "L"));
 					line.append(formatStringField(mMeasurement.getMeasurementAction(), 3, "L"));
@@ -3110,8 +3135,6 @@ public class FileUtility {
 			reqDTO.setServiceCode(SERVICE_CODE);
 			reqDTO.setEncryptFilePath(IntegrationConstants.ENCRYPTED_FILE_PATH);
 			encryption.encryptPhis(reqDTO);
-//			Encryption method
-//			encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName, SERVICE_CODE);
 		} catch (IOException e) {
 
 		} finally {
@@ -3141,7 +3164,8 @@ public class FileUtility {
 				StringBuffer line;
 				for (ItemType itemType : reqDTO.getBatchContent()) {
 					line = new StringBuffer();
-					line.append(formatStringField(itemType.getItemCode(), 2,"L"));
+					line.append(formatStringField(itemType.getUnspscCode(), 8,"L"));
+					line.append(formatStringField(itemType.getItemCode(), 3,"L"));
 					line.append(formatStringField(itemType.getItemDescription(), 150, "L"));
 					line.append(formatStringField(itemType.getItemAction(), 3,"L"));
 					line.append(formatStringField(itemType.getItemOldcode(), 3,	"L"));
@@ -3156,8 +3180,6 @@ public class FileUtility {
 			reqDTO.setServiceCode(SERVICE_CODE);
 			reqDTO.setEncryptFilePath(IntegrationConstants.ENCRYPTED_FILE_PATH);
 			encryption.encryptPhis(reqDTO);
-			// Encryption method
-//			encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName, SERVICE_CODE);
 
 		} catch (IOException e) {
 
