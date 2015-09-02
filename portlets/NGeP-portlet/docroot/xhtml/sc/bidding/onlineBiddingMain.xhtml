@@ -214,7 +214,10 @@
 						<p:column>
 							<f:facet name="footer">
 								<h:outputText id="footerStartPriceTotalOB" style="float : right"
-									value="#{onlineBiddingBB.itemStartPriceTotal}" />
+									value="#{onlineBiddingBB.itemStartPriceTotal}">
+									<f:convertNumber
+										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								</h:outputText>
 							</f:facet>
 						</p:column>
 						<p:column
@@ -228,7 +231,10 @@
 							rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId ne onlineBiddingBB.pendingBidding}">
 							<f:facet name="footer">
 								<h:outputText style="float : right" styleClass="calcTotal"
-									value="#{onlineBiddingBB.itemLastBidPriceTotal}" />
+									value="#{onlineBiddingBB.itemLastBidPriceTotal}">
+									<f:convertNumber
+										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								</h:outputText>
 							</f:facet>
 						</p:column>
 						<p:column colspan="2"
@@ -242,7 +248,10 @@
 							rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidInProgress}">
 							<f:facet name="footer">
 								<h:outputText style="float : right" styleClass="calcTotal"
-									value="#{onlineBiddingBB.itemNewBidPriceTotal}" />
+									value="#{onlineBiddingBB.itemNewBidPriceTotal}">
+									<f:convertNumber
+										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								</h:outputText>
 							</f:facet>
 						</p:column>
 						<p:column
@@ -251,7 +260,7 @@
 				</p:columnGroup>
 			</p:dataTable>
 			<p:remoteCommand name="rc" update="itemWiseBidListOB" />
-			
+
 		</p:panel>
 
 		<p:confirmDialog id="newBidPriceConfirm" width="300px"
@@ -259,10 +268,12 @@
 			widgetVar="newBidPriceConfirm">
 			<div align="right">
 				<p:commandButton id="confSubmit" value="#{lbl['lbl.btn.yes']}"
-					action="#{onlineBiddingBB.updateBidPriceAndCalculateRank}" process="@this"
-					oncomplete="newBidPriceConfirm.hide()" update=":form:itemWiseBidListOB"/>
+					action="#{onlineBiddingBB.updateBidPriceAndCalculateRank}"
+					process="@this" oncomplete="newBidPriceConfirm.hide()"
+					update=":form:itemWiseBidListOB" />
 				<p:commandButton id="confNotSubmit" value="#{lbl['lbl.btn.no']}"
-					process="@this" onclick="newBidPriceConfirm.hide()" oncomplete="rc();"/>
+					process="@this" onclick="newBidPriceConfirm.hide()"
+					oncomplete="rc();" />
 			</div>
 		</p:confirmDialog>
 
