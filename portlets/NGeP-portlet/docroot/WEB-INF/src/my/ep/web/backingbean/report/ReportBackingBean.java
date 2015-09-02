@@ -3177,12 +3177,12 @@ public class ReportBackingBean extends
 	}
 	public void  directPurchaseWithRequisitioner(){
 		if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_SUPPL_S1_RPT_VAL))){
-			rptGenBean.setScSimpleQuoteDtlWithoutRequiGroupView(false);
-			rptGenBean.setScSimpleQuoteDtlGroupView(false);
+			getManagedBean().getRptGenBean().setScSimpleQuoteDtlWithoutRequiGroupView(false);
+			getManagedBean().getRptGenBean().setScSimpleQuoteDtlGroupView(false);
 			 if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_REQUISITIONER))){
-				 rptGenBean.setScSimpleQuoteDtlWithoutRequiGroupView(true);
+				 getManagedBean().getRptGenBean().setScSimpleQuoteDtlWithoutRequiGroupView(true);
 			 }else{
-				 rptGenBean.setScSimpleQuoteDtlGroupView(true);
+				 getManagedBean().getRptGenBean().setScSimpleQuoteDtlGroupView(true);
 			 }
 		}
 	}
