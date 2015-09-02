@@ -153,6 +153,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.velocity.VelocityContext;
+import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
@@ -178,6 +179,9 @@ public class LOADetailBackingBean extends
 	
 	/** The text before sign. */
 	private String textBeforeSign;
+
+	/** The flag. */
+	private boolean flag;
 
 	private static final String  BRANCH_INFO_TITLE = "Branch Information";
 	/**
@@ -1027,22 +1031,49 @@ public class LOADetailBackingBean extends
 		scLoaReports.add(scLoaReport);
 	}
 	
-	
 	/**
-	 * Delete loa content action.
+	 * Delete loa document.
 	 */
-	public void deleteLoaContentAction() {
-		debugLogger("deleteLoaContentAction");
+	public void deleteLoaDocument() {
+		List<ScLoaReport> result = new ArrayList<ScLoaReport>();
 		ScLoa scLoa = getManagedBean().getScLoa();
-		List<ScLoaReport> selectedScLoaReports = getManagedBean().getSelectedScLoaReports();
-
-		if(selectedScLoaReports != null && selectedScLoaReports.size()>0){
-			deleteRowsAction(scLoa.getScLoaReports(), selectedScLoaReports);
-		} else {
+		boolean flag = true;
+		List<ScLoaReport> selectedScLoaReports = scLoa.getScLoaReports();
+		if (selectedScLoaReports != null && selectedScLoaReports.size() > 0) {
+			for (ScLoaReport scLoaReport : selectedScLoaReports) {
+				if (!scLoaReport.isSelected()) {
+					result.add(scLoaReport);
+				} else {
+					flag = false;
+				}
+			}
+		}
+		if (flag) {
 			throw new EpException("Please select At least one Item");
 		}
+		scLoa.setScLoaReports(result);
 	}
-
+	
+	/**
+	 * Select all documents.
+	 *
+	 * @param event the event
+	 */
+	public void selectAllDocuments(AjaxBehaviorEvent event) {
+		boolean isSelectAll = ((SelectBooleanCheckbox) event.getSource()).isSelected();
+		ScLoa scLoa = this.getManagedBean().getScLoa();
+		List<ScLoaReport> scLoaReports = scLoa.getScLoaReports();
+		if (scLoaReports != null && scLoaReports.size() > 0) {
+			for (ScLoaReport scLoaReport : scLoaReports) {
+				if (isSelectAll && null == scLoaReport.getPmDocument()) {
+					scLoaReport.setSelected(true);
+				} else {
+					scLoaReport.setSelected(false);
+				}
+			}
+		}
+	}
+	
 
 	/**
 	 * Handle file upload.
@@ -1916,20 +1947,16 @@ public class LOADetailBackingBean extends
 
 				if(isCalculateMaxPriceItem){
 					if (scLoiLoaItem.getScQtProposalItem() != null) {
-						offerPrice = new BigDecimal(Float.toString(scLoiLoaItem
-								.getScQtProposalItem()
-								.getOfferPrice()));
+						offerPrice = scLoiLoaItem.getScQtProposalItem().getOfferPrice();
 						offerPrice = offerPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-						scLoiLoaItem.getScQtProposalItem().setOfferPrice(offerPrice.floatValue());
+						scLoiLoaItem.getScQtProposalItem().setOfferPrice(offerPrice);
 
 						offeredPriceSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(
 								scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), offerPrice, quantity);
 
-						finalPrice = new BigDecimal(Float.toString(scLoiLoaItem
-								.getScQtProposalItem()
-								.getFinalPrice()));
+						finalPrice = scLoiLoaItem.getScQtProposalItem().getFinalPrice();
 						finalPrice = finalPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-						scLoiLoaItem.getScQtProposalItem().setFinalPrice(finalPrice.floatValue());					
+						scLoiLoaItem.getScQtProposalItem().setFinalPrice(finalPrice);					
 
 						// offered price sub total and total
 						offeredPriceAmount = offeredPriceAmount.add(offeredPriceSubTotal);
@@ -4881,31 +4908,39 @@ public class LOADetailBackingBean extends
 	}
  
 	/**
-	 * @param scLoa
+	 * Prepare signer info.
 	 */
 	private void prepareSignerInfo() {
-		
-		ScLoa scLoa = getManagedBean().getScLoa();
-		
-			// Contract Signer
-			PmUser contractSignerUser = scLoa.getContractSigner();
-			if (contractSignerUser == null) {
-				contractSignerUser = new PmUser();
-			}
 
-			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());
-			if (scLoa.getLoaAmt() != null) {
-				userReqDTO.setApprovalLimit(overallCtAmount(scLoa.getLoaAmt(),
-						scLoa.getGstAmt()));
-			}
-			userReqDTO.setOrgProfileId(scLoa.getScLoiLoa().getPmOrgProfile()
-					.getOrgProfileId());
-			UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
-			getManagedBean().setContractSignerList(userResDTO.getUserList());
-			getManagedBean().setContractSignerUser(contractSignerUser);
+		ScLoa scLoa = getManagedBean().getScLoa();
+
+		// Contract Signer
+		PmUser contractSignerUser = scLoa.getContractSigner();
+		if (contractSignerUser == null) {
+			contractSignerUser = new PmUser();
 		}
+
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());
+		if (scLoa.getLoaAmt() != null) {
+			userReqDTO.setApprovalLimit(overallCtAmount(scLoa.getLoaAmt(),
+					scLoa.getGstAmt()));
+		}
+		userReqDTO.setOrgProfileId(scLoa.getScLoiLoa().getPmOrgProfile()
+				.getOrgProfileId());
+		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+		getManagedBean().setContractSignerList(userResDTO.getUserList());
+		getManagedBean().setContractSignerUser(contractSignerUser);
+	}
+
+	public boolean isFlag() {
+		return flag;
+	}
+
+	public void setFlag(boolean flag) {
+		this.flag = flag;
+	}
 	
 }
