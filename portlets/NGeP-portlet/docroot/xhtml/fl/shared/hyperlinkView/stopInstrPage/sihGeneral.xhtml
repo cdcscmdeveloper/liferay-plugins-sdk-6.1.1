@@ -85,13 +85,15 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.gst.reg.no']}" /></td>
 				<td><p:inputText size="15" disabled="true"
-						value="#{stopInstrBB.managedBean.stopInstr.flRequest.gstRegNo ==null ? lbl['lbl.fl.supp.na'] : stopInstrBB.managedBean.stopInstr.flRequest.gstRegNo}" /></td>
+						value="#{stopInstrBB.managedBean.stopInstr.flRequest.gstRegNo ==null ? lbl['lbl.fl.supp.na'] : stopInstrBB.managedBean.stopInstr.flRequest.gstRegNo}" />
+						<ac:iconTooltip value="#{stopInstrBB.managedBean.stopInstr.flRequest.gstRegNo ==null ? lbl['lbl.fl.tooltip.gst.reg.no.na'] : lbl['lbl.fl.tooltip.gst.reg.no']}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ep.declared.date']}" /></td>
 				<td><p:inputText size="15" disabled="true"
 						value="#{stopInstrBB.managedBean.stopInstr.flRequest.gstDeclaredDate ==null ? lbl['lbl.fl.supp.na'] : stopInstrBB.managedBean.stopInstr.flRequest.gstDeclaredDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText></td>
+					</p:inputText>
+					<ac:iconTooltip value="#{stopInstrBB.managedBean.stopInstr.flRequest.gstDeclaredDate ==null ? lbl['lbl.fl.tooltip.ep.declared.date.na'] : lbl['lbl.fl.tooltip.ep.declared.date']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.gst.effective.date']}" /></td>
@@ -99,7 +101,8 @@
 						value="#{stopInstrBB.managedBean.stopInstr.flRequest.gstEffectiveDate ==null ? lbl['lbl.fl.supp.na'] : stopInstrBB.managedBean.stopInstr.flRequest.gstEffectiveDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText></td>
+					</p:inputText>
+					<ac:iconTooltip value="#{stopInstrBB.managedBean.stopInstr.flRequest.gstEffectiveDate ==null ? lbl['lbl.fl.tooltip.gst.effect.date.na'] : lbl['lbl.fl.tooltip.gst.effect.date']}"/></td>
 
 			</tr>
 			<tr>
