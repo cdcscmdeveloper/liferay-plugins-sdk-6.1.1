@@ -495,7 +495,28 @@ public class PmCommonUtil {
 		}
 		return resultList;
 	}
-
+	/**
+	 * retrieve state list from Pm State by country id
+	 * 
+	 * @param countryId
+	 * @return List<PmState>
+	 */
+	public static List<PmState> retrievePmStateListForCalendar(Long countryId) {
+		IStateSO reqSO = null;
+		List<PmState> resultList = null;
+		try {
+			StateReqDTO reqDTO = new StateReqDTO();
+			reqDTO.setCountryId(countryId);
+			reqDTO.setCalendarOnFlag(DbValueConst.IS_CALENDAR_ON);
+			reqSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
+			StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
+			resultList = resDTO.getStateList();
+		} finally {
+			reqSO = null;
+		}
+		return resultList;
+	}
 	/**
 	 * retrieve division list from Pm Division by state id
 	 * 

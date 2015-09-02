@@ -298,7 +298,7 @@ public class CalendarBackingBean extends
     }
 
 	public List<PmState> getStateListOfMalaysia() {
-		return PmCommonUtil.retrievePmStateList(131L);
+		return PmCommonUtil.retrievePmStateListForCalendar(131L);
 	}
 	
 	public PmCountry getDefaultCountry(){
