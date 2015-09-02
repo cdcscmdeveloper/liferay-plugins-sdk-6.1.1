@@ -581,22 +581,23 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		paramReq.setParameterId(getManagedBean().getSelectedReason().getReasonCategoryCode().getParameterId());
 		ParameterResDTO paramRes = parameterSO.retrieveParameterById(paramReq);	
 		
-		if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_PLAN_CANCELATION)){
-			reasonCode = ProfileManagementConst.PROCUREMENT_PLAN_CANCELATION;
-		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_PLAN_REJECTION)){
-			reasonCode = ProfileManagementConst.PROCUREMENT_PLAN_REJECTION;
-		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.REASON_CATEGORY_SUPPLIER)){
-			reasonCode = ProfileManagementConst.REASON_CATEGORY_SUPPLIER;
-		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.STOP_INSTRUCTION)){
-			reasonCode = ProfileManagementConst.STOP_INSTRUCTION;
-		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TERMINATION)){
-			reasonCode = ProfileManagementConst.CONTRACT_TERMINATION;
-		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.FWD_HIGHER_AUTH)){
-			reasonCode = ProfileManagementConst.FWD_HIGHER_AUTH;
-		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.PURCHASE_IN_DEFAULT)){
-			reasonCode = ProfileManagementConst.PURCHASE_IN_DEFAULT;
-		}
-		reqDTO.setReasonCode(reasonCode);
+//		if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_PLAN_CANCELATION)){
+//			reasonCode = ProfileManagementConst.PROCUREMENT_PLAN_CANCELATION;
+//		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_PLAN_REJECTION)){
+//			reasonCode = ProfileManagementConst.PROCUREMENT_PLAN_REJECTION;
+//		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.REASON_CATEGORY_SUPPLIER)){
+//			reasonCode = ProfileManagementConst.REASON_CATEGORY_SUPPLIER;
+//		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.STOP_INSTRUCTION)){
+//			reasonCode = ProfileManagementConst.STOP_INSTRUCTION;
+//		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TERMINATION)){
+//			reasonCode = ProfileManagementConst.CONTRACT_TERMINATION;
+//		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.FWD_HIGHER_AUTH)){
+//			reasonCode = ProfileManagementConst.FWD_HIGHER_AUTH;
+//		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.PURCHASE_IN_DEFAULT)){
+//			reasonCode = ProfileManagementConst.PURCHASE_IN_DEFAULT;
+//		}
+//		reqDTO.setReasonCode(reasonCode);
+		reqDTO.setReasonCode(paramRes.getPmParameter().getParameterCode());
 		
 		ReasonResDTO resDTO = reasonSO.generateReasonCode(reqDTO);
 		getManagedBean().getSelectedReason().setReasonCode(resDTO.getReasonCode());
