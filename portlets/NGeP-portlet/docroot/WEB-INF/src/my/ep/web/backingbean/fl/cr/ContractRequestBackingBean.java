@@ -1016,6 +1016,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	 * 
 	 */
 	public void preRenderView() {
+		IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
@@ -1143,6 +1144,17 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			ContractAmendmentResDTO amendRes = ctAmendmentSO.checkAgencyAddressExist(amendReq);
 			getManagedBean().setAgencyAddress(amendRes.isAgencyAddressExist());
 			
+			if(getManagedBean().getFlRequest().getScPurchaseInDefault() != null){
+				ContractItemReqDTO ctItemReqDTO = new ContractItemReqDTO();
+				ctItemReqDTO.setContractItemId(getManagedBean().getFlRequest().getScPurchaseInDefault().getContractedItem().getContractItemId());
+				ContractItemResDTO ctItemResDTO = contractItemSO.getContractItem(ctItemReqDTO);
+				FlTempItem flTempItem = new FlTempItem();
+				flTempItem.setFlRequest(getManagedBean().getFlRequest());
+				flTempItem.setScRequestItem(ctItemResDTO.getCtContractItem().getScRequestItem());
+				getManagedBean().getFlRequest().getFlTempItems().add(flTempItem);
+				setFulfilmentItemAddr(getManagedBean().getFlRequest());
+			}
+				
 		}else if(contractId != null){
 			renewSesionObject();
 			ContractRequestBackingBean crBB = new ContractRequestBackingBean();
@@ -1180,7 +1192,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			List<VCmSupplierItem> vCmSupplierItemList = (List<VCmSupplierItem>) externalContext.getApplicationMap().get(facesScopes.getUserSessionBean().getUserId().toString()+contractId.toString());
 			FlTempItem flTempItem = null;
 			if(!getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF) && vCmSupplierItemList != null){
-				IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
 				for(VCmSupplierItem supplierItem : vCmSupplierItemList) {
 					ContractItemReqDTO ctItemReqDTO = new ContractItemReqDTO();
 					ctItemReqDTO.setContractItemId(supplierItem.getDocId());
@@ -2434,6 +2445,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 			sortAddress(getManagedBean().getFlRequest().getFlDeliveryAddresses());
 			getManagedBean().setEmailValidate(true);
+			hideItemAddButtons();
 		} else if(selectedTabIndex==2){
 			if(!getManagedBean().isFlRequestLink()){
 				validatePreparedOrgAndAgencies();
@@ -3878,7 +3890,12 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					throw new EpException(MessageConst.ERROR_100023, new String[]{ResourceBundleUtils.getMessage("lbl.fl.delivery.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}				
 				validateOrderQuantity();
-				checkMinimumQtyItem(getManagedBean().getFlRequest());
+				if(getManagedBean().getFlRequest().getScPurchaseInDefault() != null){
+					checkPidMinQtyItem(getManagedBean().getFlRequest());
+				}else{
+					checkMinimumQtyItem(getManagedBean().getFlRequest());
+				}
+				
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					if(getManagedBean().getFlRequest().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
 						IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
@@ -3970,6 +3987,19 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			fulfilmentRequestSO = null;
 		}
 	}
+	private void checkPidMinQtyItem(FlFulfilmentRequest flRequest) {
+		BigDecimal sumOrderQty = BigDecimal.ZERO;
+		for(FlDeliveryAddress deliveryAddress : flRequest.getFlDeliveryAddresses()){
+			for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()){
+				sumOrderQty = sumOrderQty.add(itemAddr.getOrderedQty());
+			}
+		}
+		if(flRequest.getScPurchaseInDefault().getContractedItem().getMinimumOrderQty() < sumOrderQty.doubleValue()){
+			throw new EpException(MessageConst.ERROR_100032, new String[]{flRequest.getScPurchaseInDefault().getContractedItem().getScRequestItem().getItemName(),Double.toString(flRequest.getScPurchaseInDefault().getContractedItem().getMinimumOrderQty())});
+		}
+		
+	}
+
 	private void chargeLineValidationBeforeApproverList(){
 		if(getManagedBean().getChargeLineItemRoot()!=null) {
 			FlFulfilmentItemAddr itemAddress = null;
@@ -4281,5 +4311,13 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 	}
 	
+	public void hideItemAddButtons(){
+		if(getManagedBean().getFlRequest().getScPurchaseInDefault() == null){
+			getManagedBean().setItemAddButtonShow(true);
+		}
+		if(getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)){
+			getManagedBean().setItemAddButtonShow(true);
+		}
+	}
 	
 }

@@ -270,12 +270,12 @@
 			<div style="width: 100%; text-align: right">
 				<p:commandButton id="addItems" value="#{lbl['lbl.btn.add']}" 
 					action="#{contractRequestBackingBean.addContractedItems}"
-					rendered="#{(contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType.parameterCode != ParameterConst.fulfilmentTypeOneOff) }"
+					rendered="#{contractRequestBackingBean.managedBean.itemAddButtonShow}"
 					process="@this" update="resultPanel,searchPanel"
 					disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
 					oncomplete="addItems.show();" />
 				<p:commandButton value="#{lbl['lbl.fl.btn.delete']}" id="deleteItemBtn"
-					rendered="#{(contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType.parameterCode != ParameterConst.fulfilmentTypeOneOff)}"
+					rendered="#{contractRequestBackingBean.managedBean.itemAddButtonShow}"
 					onsuccess="delItemDlg.show()" title="#{lbl['lbl.fl.tooltip.delete']}"
 					disabled="#{contractRequestBackingBean.managedBean.itemDeleteButtonShow or contractRequestBackingBean.managedBean.buttonVal=='View'}"
 					update="itemDataTable" partialSubmit="true" />
