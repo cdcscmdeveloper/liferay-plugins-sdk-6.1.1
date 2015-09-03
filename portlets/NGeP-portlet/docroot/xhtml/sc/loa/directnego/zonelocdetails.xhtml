@@ -39,7 +39,8 @@
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.zone.location']}" />
 					</f:facet>
-					<p:tree value="#{zoneTree}" var="location" selectionMode="checkbox">
+					<p:tree value="#{zoneTree}" var="location" selectionMode="checkbox"
+						style="width:80%;">
 						<p:ajax event="select"
 							listener="#{directLOABackingBean.selectZoneTreeNode}" />
 						<p:ajax event="unselect"
