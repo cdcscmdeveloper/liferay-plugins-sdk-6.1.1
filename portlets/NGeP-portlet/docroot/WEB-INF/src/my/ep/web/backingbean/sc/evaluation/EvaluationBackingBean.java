@@ -6025,7 +6025,7 @@ public class EvaluationBackingBean extends
 								if (this.getManagedBean()
 										.getCurrentStatusId()
 										.equals(QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL)) {
-									 checkSampleComplianceCompleted();
+									checkSampleComplianceCompleted();
 								}
 							}
 							if (this.getManagedBean()
@@ -6166,20 +6166,20 @@ public class EvaluationBackingBean extends
 
 	// check sample compliance completed or not
 	private void checkSampleComplianceCompleted() {
-		IQTEvaluationSO evaluationSO=null;
+		IQTEvaluationSO evaluationSO = null;
 		try {
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-			EvaluationReqDTO sampleReqDto=new EvaluationReqDTO();
+			EvaluationReqDTO sampleReqDto = new EvaluationReqDTO();
 			sampleReqDto.setQtId(this.getManagedBean().getScQt().getQtId());
-			EvaluationResDTO sampleResDto=new EvaluationResDTO();
-			sampleResDto=evaluationSO.checkSampleSubmissionStatus(sampleReqDto);
-			if(sampleResDto.getSampleSubmissionPendingCount()>0){
+			EvaluationResDTO sampleResDto = new EvaluationResDTO();
+			sampleResDto = evaluationSO
+					.checkSampleSubmissionStatus(sampleReqDto);
+			if (sampleResDto.getSampleSubmissionPendingCount() > 0) {
 				this.getManagedBean().setComplianceActiveIndex(1);
 				throw new EpException(MessageConst.ERROR_760262);
 			}
-			
-			
+
 		} finally {
 
 		}
@@ -6862,6 +6862,8 @@ public class EvaluationBackingBean extends
 					.getPresentationDemoSupplierList();
 			int countDays = this.getManagedBean().getCountDays();
 			String QtNum = this.getManagedBean().getScQt().getQtNo();
+			String proposalValiditydate = this.getManagedBean()
+					.getProposalValidityUntil();
 			if (!this.getManagedBean().isDemo()) {
 				if (tabindex == 0) {
 					evaluationSO.saveQTDtl(reqDtO);
@@ -6890,6 +6892,8 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setScAttachment(attachemnt);
 			this.getManagedBean().setReportDownloadFileName(reportFileName);
 			this.getManagedBean().setCountDays(countDays);
+			this.getManagedBean()
+					.setProposalValidityUntil(proposalValiditydate);
 			retriveMeetingDtls(qtId, committeeType, index);
 			// getStatusDropdownValues("SC", "MS");
 			if (save == true) {
@@ -9522,7 +9526,7 @@ public class EvaluationBackingBean extends
 
 			QuationTenderResDTO resDTO = qTDetailSO
 					.retriveScQtReportByDefKey(reqDTO);
-			ScQtEvaluationReport qtEvaluationReport = (ScQtEvaluationReport)resDTO
+			ScQtEvaluationReport qtEvaluationReport = (ScQtEvaluationReport) resDTO
 					.getScReport();
 			return qtEvaluationReport;
 		} finally {
@@ -10847,7 +10851,7 @@ public class EvaluationBackingBean extends
 				&& this.getManagedBean().getScQt().isDemoRequired()
 				&& null != getManagedBean().getScQt()
 						.getDemoNotificationCheck()
-						&& !this.getManagedBean().isReadOnly()) {
+				&& !this.getManagedBean().isReadOnly()) {
 			if (null != getManagedBean().getScQt().getDemoNotificationCheck()
 					&& 1 == getManagedBean().getScQt()
 							.getDemoNotificationCheck()) {
@@ -10907,7 +10911,7 @@ public class EvaluationBackingBean extends
 					&& this.getManagedBean().getScQt().isTechEvaluationReq()
 					&& null != this.getManagedBean().getScQt()
 							.getFecEvaluationCheck()
-							&& !this.getManagedBean().isReadOnly()) {
+					&& !this.getManagedBean().isReadOnly()) {
 				if (null != this.getManagedBean().getScQt()
 						.getFecEvaluationCheck()) {
 					evaluationSo = BusinessDelegate.getInstance()
@@ -10934,4 +10938,28 @@ public class EvaluationBackingBean extends
 		}
 
 	}
+
+	public boolean handleProposalValidityDays(ScQt scQt) {
+		Date validityDate = null;
+		if (null != scQt.getClosingDate()) {
+			validityDate = DateUtils.addDays(scQt.getClosingDate(),
+					scQt.getQtValidityPeriod());
+		}
+		boolean isDate = false;
+		Date d1 = new Date();
+		if (null != validityDate) {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
+			this.getManagedBean().setProposalValidityUntil(
+					sdf.format(validityDate));
+			long days = DateUtils.getDaysDifference(d1,validityDate);
+			int day = (int) days;
+			if (day > 0) {
+				isDate = true;
+			}
+		}
+
+		return isDate;
+
+	}
+
 }
