@@ -309,7 +309,6 @@ public class DirectLOABackingBean extends
 			parseLOADetails(scLoa, outcome, reqDTO);
 			scLoa.setScLoaWorkFlowStatuses(null);
 			scLoa.setIssueDate(DateUtils.getCurrentDateWithoutTime());
-			scLoa.setAckDueDate(DateUtils.addDays(scLoa.getIssueDate(), 14));
 
 			validateLOADetails(scLoa, outcome);
 
@@ -1228,9 +1227,10 @@ public class DirectLOABackingBean extends
 	 */
 	private void parseLOADetails(ScLoa scLoa, String outcome,
 			DirectAwardReqDTO awardReqDTO) {
-		if (scLoa.isBrandNew()) {
-			scLoa.setIssueDate(new Date());
-		}
+		
+		scLoa.setIssueDate(scLoa.getContractEffDate());
+		// Acknowledge Date
+		scLoa.setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), 14));
 
 		Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 
