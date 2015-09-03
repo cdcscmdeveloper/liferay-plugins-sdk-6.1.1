@@ -127,6 +127,10 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 //		try{
 	
 			this.loadReasonCategoryMapper();
+			this.getManagedBean().setSuppAppCheck(Boolean.FALSE);
+			this.getManagedBean().setSuppComCheck(Boolean.FALSE);
+			this.getManagedBean().setSuppTypeCheck(Boolean.FALSE);
+	
 			if(id!=null && id>0){
 				loadRejectReason(id);
 			}else{
