@@ -970,6 +970,12 @@ public class ReportBackingBean extends
 	private String ctUserType;
 	private String ctSubType;
 	private String ctTerminationType;
+	private String ctCircularNo;
+	private String ctCircularName;
+	private String ctCircularType;
+	private Date ctCircularEffectiveFromDate;
+	private Date ctCircularEffectiveToDate;
+	private String ctSupplierName;
 	// PP
 	private String ppYear;
 	private String ppMinistry;
@@ -983,6 +989,56 @@ public class ReportBackingBean extends
 	private String pmBusinessRegNo;
 	
 	
+	
+
+	public String getCtSupplierName() {
+		return ctSupplierName;
+	}
+
+	public void setCtSupplierName(String ctSupplierName) {
+		this.ctSupplierName = ctSupplierName;
+	}
+
+	public Date getCtCircularEffectiveFromDate() {
+		return ctCircularEffectiveFromDate;
+	}
+
+	public void setCtCircularEffectiveFromDate(Date ctCircularEffectiveFromDate) {
+		this.ctCircularEffectiveFromDate = ctCircularEffectiveFromDate;
+	}
+
+	public Date getCtCircularEffectiveToDate() {
+		return ctCircularEffectiveToDate;
+	}
+
+	public void setCtCircularEffectiveToDate(Date ctCircularEffectiveToDate) {
+		this.ctCircularEffectiveToDate = ctCircularEffectiveToDate;
+	}
+
+	public String getCtCircularNo() {
+		return ctCircularNo;
+	}
+
+	public void setCtCircularNo(String ctCircularNo) {
+		this.ctCircularNo = ctCircularNo;
+	}
+
+	public String getCtCircularName() {
+		return ctCircularName;
+	}
+
+	public void setCtCircularName(String ctCircularName) {
+		this.ctCircularName = ctCircularName;
+	}
+
+	public String getCtCircularType() {
+		return ctCircularType;
+	}
+
+	public void setCtCircularType(String ctCircularType) {
+		this.ctCircularType = ctCircularType;
+	}
+
 	public String getCtTerminationType() {
 		return ctTerminationType;
 	}
@@ -5183,6 +5239,16 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					checkOneYearDefference(this.getFromDate(),this.getToDate());
 				}
 			}
+			if ((this.getCtCircularEffectiveFromDate() != null) && (this.getCtCircularEffectiveToDate() != null)) {
+				if (this.getCtCircularEffectiveFromDate().after(this.getCtCircularEffectiveToDate())) {
+					throw new EpException(MessageConst.ERROR_REPORT_780008);
+				}
+			}
+			if ((this.getCtCircularEffectiveFromDate() != null) && (this.getCtCircularEffectiveToDate() != null)) {
+				if (this.getCtCircularEffectiveFromDate().after(this.getCtCircularEffectiveToDate())) {
+					checkOneYearDefference(this.getCtCircularEffectiveFromDate(),this.getCtCircularEffectiveToDate());
+				}
+			}
 			
 			if ((this.getScSoneCrtdFromDate() != null)
 					&& (this.getScSoneCrtdToDate() != null)) {
@@ -5441,12 +5507,38 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((this.getCtStatus() != null) && (!this.getCtStatus().equals(ReportConst.CT_GROUP_VAL_ALL)))
 				|| ((this.getCtStatusTwo() != null) && (!this.getCtStatusTwo().equals(ReportConst.CT_GROUP_VAL_ALL)))*/
 				|| ((this.getCtComplete() != null) && (this.getCtComplete() != ReportConst.EMPTY_VAL))
-				/*|| ((this.getCtComplete() != null) && (!this.getCtComplete().equals(ReportConst.CT_GROUP_VAL_ALL)))*/
+				|| ((this.getCtCircularNo() != null) && (this.getCtCircularNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtCircularName() != null) && (this.getCtCircularName() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtCircularType() != null) && (this.getCtCircularType() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtSupplierName() != null) && (!this.getCtSupplierName().equals(ReportConst.CT_GROUP_VAL_ALL)))
 				|| ((getFromDate() != null) && (getFromDate().toString() != ReportConst.EMPTY_VAL))
-				|| ((getToDate() != null) && (getToDate().toString() != ReportConst.EMPTY_VAL)) 
+				|| ((getToDate() != null) && (getToDate().toString() != ReportConst.EMPTY_VAL))
+				|| ((getCtCircularEffectiveFromDate() != null) && (getCtCircularEffectiveFromDate().toString() != ReportConst.EMPTY_VAL))
+				|| ((getCtCircularEffectiveToDate() != null) && (getCtCircularEffectiveToDate().toString() != ReportConst.EMPTY_VAL)) 
 			    || ((this.getCtProcurementMode() != null) && (this.getCtProcurementMode().toString() != ReportConst.EMPTY_VAL)))
 			    /*|| ((this.getCtProcurementMode() != null) && (!this.getCtProcurementMode().toString().equals(ReportConst.CT_GROUP_VAL_ALL))))*/
 		       {
+			
+			if ((this.getCtSupplierName() != null)
+					&& (this.getCtSupplierName() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setCtSupplierNameVar(ReportConst.CT_AMP_SUPPLIER_NAME_EQ
+						+ this.getCtSupplierName());
+			}
+			if ((this.getCtCircularNo() != null)
+					&& (this.getCtCircularNo() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setCtCircularNoVar(ReportConst.CT_AMP_CIRCULAR_NO_EQ
+						+ this.getCtCircularNo());
+			}
+			if ((this.getCtCircularName() != null)
+					&& (this.getCtCircularName() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setCtCircularNameVar(ReportConst.CT_AMP_CIRCULAR_NAME_EQ
+						+ this.getCtCircularName());
+			}
+			if ((this.getCtCircularType() != null)
+					&& (this.getCtCircularType() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setCtCircularTypeVar(ReportConst.CT_AMP_CIRCULAR_TYPE_EQ
+						+ this.getCtCircularType());
+			}
 			if ((this.getCtTerminationType() != null)
 					&& (this.getCtTerminationType() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setCtTerminationTypeVar(ReportConst.CT_AMP_STATUS_EQ
@@ -5500,6 +5592,16 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					&& (this.getToDate().toString() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setToDateVar(ReportConst.FL_AMP_TO_DATE_EQ
 						+ outputDateFormat.format(this.getToDate()));
+			}
+			if ((this.getCtCircularEffectiveFromDate() != null)
+					&& (this.getCtCircularEffectiveFromDate().toString() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setCtCircularEffectiveFromDateVar(ReportConst.CT_AMP_CIRCULAR_FROM_DATE_EQ
+						+ outputDateFormat.format(this.getCtCircularEffectiveFromDate()));
+			}
+			if ((this.getCtCircularEffectiveToDate() != null)
+					&& (this.getCtCircularEffectiveToDate().toString() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setCtCircularEffectiveToDateVar(ReportConst.CT_AMP_CIRCULAR_TO_DATE_EQ
+						+ outputDateFormat.format(this.getCtCircularEffectiveToDate()));
 			}
 			if ((this.getCtProcurementMode() != null)
 					&& (this.getCtProcurementMode() != ReportConst.EMPTY_VAL)) {
@@ -5569,6 +5671,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getCtContractNoVar()
 						+ rptGenBean.getCtPhysicalContractNoVar()
 						+ rptGenBean.getCtStatusTwoVar()
+						+ rptGenBean.getCtSupplierNameVar()
 						+ rptGenBean.getCtTerminationTypeVar()
 						+ rptGenBean.getCtAgreementVar()
 						+ rptGenBean.getCtStatusVar()
@@ -5585,6 +5688,11 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getCtUserTypeVar()
 						+ rptGenBean.getCtSubTypeVar()
 						+ rptGenBean.getCtProcurementModeVar()
+						+ rptGenBean.getCtCircularNoVar()
+						+ rptGenBean.getCtCircularNameVar()
+						+ rptGenBean.getCtCircularTypeVar()
+						+ rptGenBean.getCtCircularEffectiveFromDateVar()
+						+ rptGenBean.getCtCircularEffectiveToDateVar()
 						+ rptGenBean.getFromDateVar()
 						+ rptGenBean.getToDateVar()
 						+ rptGenBean.getReportValueIdVar()
@@ -7480,6 +7588,12 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.setCtSubType(null);
 		this.setCtUserType(null);		
 		this.setCtProcurementMode(null);
+		this.setCtCircularNo(null);
+		this.setCtCircularName(null);
+		this.setCtCircularType(null);
+		this.setCtCircularEffectiveFromDate(null);
+		this.setCtCircularEffectiveToDate(null);
+		this.setCtSupplierName(null);
 		ctSubTypeList = new ArrayList<SelectItem>();
 		this.setFlGroupOne(null);
 		this.setFlGroupTwo(null);

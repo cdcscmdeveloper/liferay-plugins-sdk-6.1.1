@@ -380,15 +380,35 @@ public class ReportsGenerateBean {
 		private boolean flGroupTwentySevenView = false;
 		private boolean flGroupTwentySevenWithoutSupplView = false;
 		private boolean flGroupTwentySevenWithSupplView = false;
-		private boolean ctContractEffectiveFromDateView = false;
+		private boolean ctContractFromDateView = false;
 		private boolean ctTerminationTypeView = false;
+		private boolean ctCircularNoView = false;
+		private boolean ctCircularNameView = false;
+		private boolean ctCircularTypeView = false;
+		private boolean ctContractEffectiveFromDateLabelView = false;
+		private boolean ctContractOrderFromDateLabelView = false;
+		private boolean ctSupplierNameView = false;
 		
-		public boolean isCtContractEffectiveFromDateView() {
-			return ctContractEffectiveFromDateView;
+		
+		public boolean isCtContractFromDateView() {
+			return ctContractFromDateView;
 		}
-		public void setCtContractEffectiveFromDateView(
-				boolean ctContractEffectiveFromDateView) {
-			this.ctContractEffectiveFromDateView = ctContractEffectiveFromDateView;
+		public void setCtContractFromDateView(boolean ctContractFromDateView) {
+			this.ctContractFromDateView = ctContractFromDateView;
+		}
+		public boolean isCtContractEffectiveFromDateLabelView() {
+			return ctContractEffectiveFromDateLabelView;
+		}
+		public void setCtContractEffectiveFromDateLabelView(
+				boolean ctContractEffectiveFromDateLabelView) {
+			this.ctContractEffectiveFromDateLabelView = ctContractEffectiveFromDateLabelView;
+		}
+		public boolean isCtContractOrderFromDateLabelView() {
+			return ctContractOrderFromDateLabelView;
+		}
+		public void setCtContractOrderFromDateLabelView(
+				boolean ctContractOrderFromDateLabelView) {
+			this.ctContractOrderFromDateLabelView = ctContractOrderFromDateLabelView;
 		}
 		public boolean isSmPaymentToView() {
 			return smPaymentToView;
@@ -898,6 +918,8 @@ public class ReportsGenerateBean {
 		private boolean ctSubTypeOnlyView = false;
 		private boolean ctSubTypeMCAView = false;
 		private boolean ctSubTypeApproverView = false;
+		private boolean ctCircularEffectiveFromDateView = false;
+		private boolean ctCircularEffectiveToDateView = false;
 		//PP
 		private boolean ppYearView = false;
 		private boolean ppMinistryView = false;
@@ -1074,6 +1096,12 @@ public class ReportsGenerateBean {
 		private String ctLOAPhysicalNoVar=ReportConst.EMPTY_VAL;
 		private String ctUserTypeVar=ReportConst.EMPTY_VAL;
 		private String ctSubTypeVar=ReportConst.EMPTY_VAL;
+		private String ctCircularNoVar=ReportConst.EMPTY_VAL;
+		private String ctCircularNameVar=ReportConst.EMPTY_VAL;
+		private String ctCircularTypeVar=ReportConst.EMPTY_VAL;
+		private String ctCircularEffectiveFromDateVar=ReportConst.EMPTY_VAL;
+		private String ctCircularEffectiveToDateVar=ReportConst.EMPTY_VAL;
+		private String ctSupplierNameVar=ReportConst.EMPTY_VAL;
 		//ct
 		private String flContractOrderVar=ReportConst.EMPTY_VAL;		
 		private String flContractRequestVar=ReportConst.EMPTY_VAL;
@@ -1110,6 +1138,81 @@ public class ReportsGenerateBean {
 		private String ctTerminationTypeVar=ReportConst.EMPTY_VAL;
 		
 		
+		public boolean isCtSupplierNameView() {
+			return ctSupplierNameView;
+		}
+		public void setCtSupplierNameView(boolean ctSupplierNameView) {
+			this.ctSupplierNameView = ctSupplierNameView;
+		}
+		public String getCtSupplierNameVar() {
+			return ctSupplierNameVar;
+		}
+		public void setCtSupplierNameVar(String ctSupplierNameVar) {
+			this.ctSupplierNameVar = ctSupplierNameVar;
+		}
+		public boolean isCtCircularEffectiveFromDateView() {
+			return ctCircularEffectiveFromDateView;
+		}
+		public void setCtCircularEffectiveFromDateView(
+				boolean ctCircularEffectiveFromDateView) {
+			this.ctCircularEffectiveFromDateView = ctCircularEffectiveFromDateView;
+		}
+		public boolean isCtCircularEffectiveToDateView() {
+			return ctCircularEffectiveToDateView;
+		}
+		public void setCtCircularEffectiveToDateView(
+				boolean ctCircularEffectiveToDateView) {
+			this.ctCircularEffectiveToDateView = ctCircularEffectiveToDateView;
+		}
+		public String getCtCircularEffectiveFromDateVar() {
+			return ctCircularEffectiveFromDateVar;
+		}
+		public void setCtCircularEffectiveFromDateVar(
+				String ctCircularEffectiveFromDateVar) {
+			this.ctCircularEffectiveFromDateVar = ctCircularEffectiveFromDateVar;
+		}
+		public String getCtCircularEffectiveToDateVar() {
+			return ctCircularEffectiveToDateVar;
+		}
+		public void setCtCircularEffectiveToDateVar(String ctCircularEffectiveToDateVar) {
+			this.ctCircularEffectiveToDateVar = ctCircularEffectiveToDateVar;
+		}
+		public boolean isCtCircularNoView() {
+			return ctCircularNoView;
+		}
+		public void setCtCircularNoView(boolean ctCircularNoView) {
+			this.ctCircularNoView = ctCircularNoView;
+		}
+		public boolean isCtCircularNameView() {
+			return ctCircularNameView;
+		}
+		public void setCtCircularNameView(boolean ctCircularNameView) {
+			this.ctCircularNameView = ctCircularNameView;
+		}
+		public boolean isCtCircularTypeView() {
+			return ctCircularTypeView;
+		}
+		public void setCtCircularTypeView(boolean ctCircularTypeView) {
+			this.ctCircularTypeView = ctCircularTypeView;
+		}
+		public String getCtCircularNoVar() {
+			return ctCircularNoVar;
+		}
+		public void setCtCircularNoVar(String ctCircularNoVar) {
+			this.ctCircularNoVar = ctCircularNoVar;
+		}
+		public String getCtCircularNameVar() {
+			return ctCircularNameVar;
+		}
+		public void setCtCircularNameVar(String ctCircularNameVar) {
+			this.ctCircularNameVar = ctCircularNameVar;
+		}
+		public String getCtCircularTypeVar() {
+			return ctCircularTypeVar;
+		}
+		public void setCtCircularTypeVar(String ctCircularTypeVar) {
+			this.ctCircularTypeVar = ctCircularTypeVar;
+		}
 		public boolean isScSimpleQuoteDtlWithoutRequiGroupView() {
 			return scSimpleQuoteDtlWithoutRequiGroupView;
 		}
