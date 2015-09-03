@@ -16,8 +16,19 @@
 
 			<ac:paginator for="contentsTbl" />
 
-			<p:column selectionMode="multiple" style="width:2%"
-				disabledSelection="#{!empty scLoaReport.pmDocument}" />
+			<p:column style="width:2%" >
+				<f:facet name="header">
+					<p:selectBooleanCheckbox id="selectAllNegoLoc"
+						value="#{directLOABackingBean.flag}"
+						rendered="#{isEditableStatus}">
+						<p:ajax partialSubmit="true" process="@this" update="contentsTbl"
+							listener="#{directLOABackingBean.selectAllDocuments}"></p:ajax>
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox value="#{scLoaReport.selected}" disabled="#{!empty scLoaReport.pmDocument}">
+					<p:ajax partialSubmit="true" process="@this" update="contentsTbl" />
+				</p:selectBooleanCheckbox>
+			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.content']}">
 				<h:inputText style="width:96%" value="#{scLoaReport.title}"
@@ -92,7 +103,7 @@
 		</div>
 		<ac:confirmationPopup id="loaReportDeleteId"
 			widget="loaReportDeletePopUp"
-			okAction="directLOABackingBean.deleteLoaContentAction" width="400"
+			okAction="directLOABackingBean.deleteLoaDocument" width="400"
 			height="100" title="#{lbl['lbl.msg.confirm.delete.header']}"
 			content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
 
@@ -108,9 +119,22 @@
 
 			<ac:paginator for="suppDocTbl" />
 
-			<p:column selectionMode="multiple" style="width:2%"
-				rendered="#{isEditableStatus}" />
-
+			
+				<p:column style="width:2%" >
+				<f:facet name="header">
+					<p:selectBooleanCheckbox id="selectAllNegoLoc"
+						value="#{directLOABackingBean.suppDocFlag}"
+						rendered="#{isEditableStatus}">
+						<p:ajax partialSubmit="true" process="@this" update="suppDocTbl"
+							listener="#{directLOABackingBean.selectAllSuppDocuments}"></p:ajax>
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox value="#{scLoaSuppDoc.selected}" disabled="#{!isEditableStatus}">
+					<p:ajax partialSubmit="true" process="@this" update="suppDocTbl" />
+				</p:selectBooleanCheckbox>
+			</p:column>
+				
+			
 			<p:column headerText="#{lbl['lbl.sc.document.title']}">
 				<p:inputText style="width:85%" value="#{scLoaSuppDoc.title}">
 					<p:ajax event="keyup" />
@@ -157,7 +181,7 @@
 		</div>
 		<ac:confirmationPopup id="supporingDocDeleteId"
 			widget="supporingDocDeletePopUp"
-			okAction="directLOABackingBean.deleteSupporingDocs" width="400"
+			okAction="directLOABackingBean.deleteLoaSuppDocument" width="400"
 			height="100" title="#{lbl['lbl.msg.confirm.delete.header']}"
 			content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
 	</p:panel>

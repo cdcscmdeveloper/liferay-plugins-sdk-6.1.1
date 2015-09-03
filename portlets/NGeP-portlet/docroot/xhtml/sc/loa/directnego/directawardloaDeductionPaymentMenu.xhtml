@@ -85,11 +85,13 @@
 		</c:if>
 
 		<br />
-		<h:outputText value="#{lbl['lbl.sc.deduction.payment']} >" />
-		<h:outputText value="#{lbl['lbl.sc.deduction.clauses']} " />
-		<h:outputText style="margin-left: 140px;"
-			value="#{directLOABackingBean.managedBean.clausesTitle}" />
 		<h:panelGroup id="clausePnl">
+			<h:outputText value="#{lbl['lbl.sc.deduction.payment']} (" />
+			<h:outputText
+				value="#{directLOABackingBean.getParameterDesc(directLOABackingBean.managedBean.selectedScQtDeduction.deductionType)} )>" />
+			<h:outputText value="#{lbl['lbl.sc.deduction.clauses']} " />
+
+
 			<p:dataTable id="deductClauseTbl" widgetVar="deductClauseTblWidget"
 				var="scQtDeductionClause"
 				value="#{directLOABackingBean.managedBean.selectedScQtDeduction.scQtDeductionClauses}"
@@ -110,8 +112,7 @@
 
 					<h:panelGroup rendered="#{empty scQtDeductionClause.pmClause}">
 						<p:inputTextarea value="#{scQtDeductionClause.clauseDesc}"
-							required="true" id="clauseId"
-							label="#{lbl['lbl.sc.deduction.clause']}" rows="2"
+							id="clauseId" label="#{lbl['lbl.sc.deduction.clause']}" rows="2"
 							maxlength="500" style=" margin-bottom:5px; width:790px"
 							rendered="#{isEditableStatus}">
 							<p:ajax event="keyup" />

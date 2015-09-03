@@ -12,10 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -158,13 +155,13 @@ import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
-import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.velocity.VelocityContext;
+import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.NodeSelectEvent;
@@ -193,6 +190,11 @@ public class DirectLOABackingBean extends
 
 	/** The text before sign. */
 	private String textBeforeSign;
+
+	/** The flag. */
+	private boolean flag;
+
+	private boolean suppDocFlag;
 
 	private static final String BRANCH_INFO_TITLE = "Branch Information";
 
@@ -760,15 +762,17 @@ public class DirectLOABackingBean extends
 				.getScQtDeductions();
 		if (scQtDeductions != null && scQtDeductions.size() > 1) {
 			for (ScQtDeduction qtDeduction : scQtDeductions) {
-
-				if (qtDeduction.getDeductionType().getParameterId() == scQtDeduction
-						.getDeductionType().getParameterId()) {
-					throw new EpException(MessageConst.ERROR_700027,
-							new String[] { ResourceBundleUtils.getMessage(
-									getParameterDesc(scQtDeduction
-											.getDeductionType()),
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-									new FacesScopes().getUserLocale()) });
+				if (!qtDeduction.equals(scQtDeduction)) {
+					if (qtDeduction.getDeductionType().getParameterId() == scQtDeduction
+							.getDeductionType().getParameterId()) {
+						throw new EpException(
+								MessageConst.ERROR_700027,
+								new String[] { ResourceBundleUtils.getMessage(
+										getParameterDesc(scQtDeduction
+												.getDeductionType()),
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										new FacesScopes().getUserLocale()) });
+					}
 				}
 			}
 
@@ -1708,12 +1712,16 @@ public class DirectLOABackingBean extends
 	}
 
 	/**
-	 * Calculate schedule months.
-	 * Calculating start month , start year , end month and end year to display total months.
-	 * @param schedule the schedule
-	 * @param startMonthAction the start month action
+	 * Calculate schedule months. Calculating start month , start year , end
+	 * month and end year to display total months.
+	 * 
+	 * @param schedule
+	 *            the schedule
+	 * @param startMonthAction
+	 *            the start month action
 	 */
-	public void calculateScheduleMonths(ScQtSchedule schedule, Boolean startMonthAction) {
+	public void calculateScheduleMonths(ScQtSchedule schedule,
+			Boolean startMonthAction) {
 
 		List<ScQtSchedule> freqSchedule = this.getManagedBean().getScLoa()
 				.getScQtSchedules();
@@ -1731,14 +1739,14 @@ public class DirectLOABackingBean extends
 		endYear = schedule.getEndYear() != null ? Integer.parseInt(schedule
 				.getEndYear()) : null;
 
-		if (startMonthAction !=null && startMonthAction && startMonth != null) {
+		if (startMonthAction != null && startMonthAction && startMonth != null) {
 			endMonth = startMonth;
 			endYear = startYear;
 			schedule.setEndMonth(endMonth.toString());
-			if(endYear != null){
+			if (endYear != null) {
 				schedule.setEndYear(endYear.toString());
 			}
-			
+
 		}
 
 		if (startMonth != null && endMonth != null && startYear != null
@@ -1758,7 +1766,6 @@ public class DirectLOABackingBean extends
 		freqSchedule.set(index, schedule);
 		this.getManagedBean().getScLoa().setScQtSchedules(freqSchedule);
 	}
-
 
 	/**
 	 * Gets the deduction item type dropdown list.
@@ -1909,8 +1916,7 @@ public class DirectLOABackingBean extends
 				.getScLoiLoa()
 				.setPmOrgProfile(
 						this.getManagedBean().getScQt().getPmOrgProfile());
-		this.getManagedBean().getScQt()
-				.setMinistryOrgProfile(getMinistryOrgProfile());
+		populateMinistryBasedOnLoginUser();
 		getApprovalUsers();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication()
@@ -1934,6 +1940,8 @@ public class DirectLOABackingBean extends
 				.setMofNo(mofAccount.getMofNo());
 		getManagedBean().getScLoa().getScLoiLoa()
 				.setSupplierName(mofAccount.getSmSupplier().getCompanyName());
+		getManagedBean().getScLoa().getScLoiLoa()
+				.setEpNo(mofAccount.getSmSupplier().getEpNo());
 		this.getManagedBean().getProdTemplateSpecBean()
 				.setSupplier(mofAccount.getSmSupplier());
 
@@ -2025,11 +2033,10 @@ public class DirectLOABackingBean extends
 	 * 
 	 * @return the list
 	 */
-	public PmOrgProfile getMinistryOrgProfile() {
+	public PmOrgProfile getMinistryOrgProfile(PmOrgProfile orgProfile) {
 		debugLogger("ministry drop downs");
 
-		if (null != this.getManagedBean().getScQt().getPmOrgProfile()
-				.getOrgProfileId()) {
+		if (null != orgProfile) {
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 
 			reqDTO.setOrgProfileId(this.getManagedBean().getScQt()
@@ -2052,17 +2059,22 @@ public class DirectLOABackingBean extends
 	 */
 	public String constuctConditionFields() {
 
-		String parentOrgProfile = null;
-		Long ministryOrgProfileId = this.getManagedBean().getScQt()
-				.getMinistryOrgProfile().getOrgProfileId();
-		if (null != ministryOrgProfileId) {
-			parentOrgProfile = OrgProfileUtil
-					.getSearchBeanParentString(ParameterConst.ORG_TYPE_MINISTRY)
-					+ "^" + ministryOrgProfileId;
-		} else {
-			parentOrgProfile = "";
+		String conditionField = null;
+		PmOrgProfile ministryOrg = this.getManagedBean().getScQt()
+				.getPmOrgProfile();
+		if (null != ministryOrg) {
+			Long ministryOrgProfileId = ministryOrg.getOrgProfileId();
+			if (ParameterConst.ORG_TYPE_MINISTRY.equalsIgnoreCase(ministryOrg
+					.getOrgTypeCode().getParameterCode())) {
+
+				conditionField = OrgProfileUtil
+						.getSearchBeanParentString(ParameterConst.ORG_TYPE_MINISTRY)
+						+ "^" + ministryOrgProfileId;
+			} else {
+				conditionField = "orgProfileId" + "^" + ministryOrgProfileId;
+			}
 		}
-		return parentOrgProfile;
+		return conditionField;
 	}
 
 	/**
@@ -3240,6 +3252,7 @@ public class DirectLOABackingBean extends
 	}
 
 	public void getContractSigners() {
+
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());
 		if (this.getManagedBean().getScLoa().getLoaAmt() != null) {
@@ -3252,6 +3265,7 @@ public class DirectLOABackingBean extends
 				.getPmOrgProfile().getOrgProfileId());
 		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 		this.getManagedBean().setContractSignerList(userResDTO.getUserList());
+
 	}
 
 	/**
@@ -3325,8 +3339,6 @@ public class DirectLOABackingBean extends
 
 	}
 
-	
-
 	/**
 	 * Calculate progressive start month.change start month in progessive
 	 * payment.
@@ -3384,8 +3396,6 @@ public class DirectLOABackingBean extends
 		}
 
 	}
-
-	
 
 	private void getLoaReports() {
 		if (CollectionUtils.isEmpty(this.getManagedBean().getScLoa()
@@ -5296,12 +5306,6 @@ public class DirectLOABackingBean extends
 			}
 		}
 
-		if (lois != null && lois.size() > 0) {
-			for (ScLoi scLoi : lois) {
-				calculateOfferedAndFinalPriceByItem(scLoi);
-			}
-		}
-
 		VelocityContext context = new VelocityContext();
 
 		context.put("isZonal", getManagedBean().getScQt().isZonal());
@@ -5311,256 +5315,6 @@ public class DirectLOABackingBean extends
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.LOI_NEGOTIONATION_RESULT, context,
 				new FileOutputStream(getActualFilePath(attachment)));
-	}
-
-	/**
-	 * Calculate offered and final price by item.
-	 * 
-	 * @param scLoi
-	 *            the sc loi
-	 */
-	private void calculateOfferedAndFinalPriceByItem(ScLoi scLoi) {
-		boolean isCalculateMaxPriceItem = Boolean.FALSE;// calculate max price
-														// items only.
-		boolean isZonal = Boolean.FALSE;
-		// calc total items in award details
-		if (scLoi.getScLoiLoaItems() != null
-				&& scLoi.getScLoiLoaItems().size() > 0) {
-			BigDecimal offerPrice = BigDecimal.valueOf(0d);
-			BigDecimal finalPrice = BigDecimal.valueOf(0d);
-			BigDecimal offeredPriceSubTotal = BigDecimal.valueOf(0d);
-			BigDecimal offeredPriceAmount = BigDecimal.valueOf(0d);
-
-			BigDecimal afterNegoSubTotal = BigDecimal.valueOf(0d);
-			BigDecimal afterNegoTotalAmount = BigDecimal.valueOf(0d);
-			BigDecimal quantity = BigDecimal.valueOf(0d);
-
-			List<ScLoiLoaItem> scLoiLoaItems = scLoi.getScLoiLoaItems();
-			for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
-
-				if (scLoiLoaItem.getTplSpecZoneDtl() != null) {
-					isZonal = Boolean.TRUE;
-				}
-
-				if (null == scLoiLoaItem.getTplSpecTierQty()) {
-					// without Tier quantity
-					quantity = scLoiLoaItem.getQty();
-					isCalculateMaxPriceItem = Boolean.TRUE;
-				} else {
-
-					// Tier - max quantity.
-					quantity = scLoiLoaItem.getScRequestItem()
-							.getTplSpecQuestion().getClQuantity();
-
-					// filter zone tier price items to calculate
-					if (null != scLoiLoaItem.getTplSpecZoneDtl()) {
-						Map<TplSpecZoneDtl, ScLoiLoaItem> maxZoneTierPriceItemMap = new HashMap<TplSpecZoneDtl, ScLoiLoaItem>();
-						maxZoneTierPriceItemMap = filterZoneTierPriceItemsByItem(
-								scLoiLoaItem, maxZoneTierPriceItemMap, scLoi);
-						if (maxZoneTierPriceItemMap != null
-								&& !maxZoneTierPriceItemMap.isEmpty()
-								&& maxZoneTierPriceItemMap
-										.containsValue(scLoiLoaItem)) {
-							isCalculateMaxPriceItem = Boolean.TRUE;
-						} else {
-							isCalculateMaxPriceItem = Boolean.FALSE;
-						}
-
-					} else {
-						// filter tier price items to calc
-						Map<Long, ScLoiLoaItem> maxPriceItemMap = new HashMap<Long, ScLoiLoaItem>();
-						maxPriceItemMap = filterTierPriceItemsByItem(
-								scLoiLoaItem, maxPriceItemMap, scLoi);
-						if (maxPriceItemMap != null
-								&& !maxPriceItemMap.isEmpty()
-								&& maxPriceItemMap.containsValue(scLoiLoaItem)) {
-							isCalculateMaxPriceItem = Boolean.TRUE;
-						} else {
-							isCalculateMaxPriceItem = Boolean.FALSE;
-						}
-					}
-				}
-
-				if (isCalculateMaxPriceItem) {
-					if (scLoiLoaItem.getScQtProposalItem() != null) {
-						offerPrice = new BigDecimal(Float.toString(scLoiLoaItem
-								.getScQtProposalItem().getOfferPrice()));
-						offerPrice = offerPrice.setScale(2,
-								BigDecimal.ROUND_HALF_EVEN);
-						scLoiLoaItem.getScQtProposalItem().setOfferPrice(
-								offerPrice.floatValue());
-
-						offeredPriceSubTotal = TemplateSpecHelper.getInstance()
-								.calculateTotalAmount(
-										scLoiLoaItem.getScRequestItem()
-												.getTplSpecQuestion(),
-										offerPrice, quantity);
-
-						finalPrice = new BigDecimal(Float.toString(scLoiLoaItem
-								.getScQtProposalItem().getFinalPrice()));
-						finalPrice = finalPrice.setScale(2,
-								BigDecimal.ROUND_HALF_EVEN);
-						scLoiLoaItem.getScQtProposalItem().setFinalPrice(
-								finalPrice.floatValue());
-
-						// offered price sub total and total
-						offeredPriceAmount = offeredPriceAmount
-								.add(offeredPriceSubTotal);
-						offeredPriceSubTotal = offeredPriceSubTotal.setScale(2,
-								BigDecimal.ROUND_HALF_EVEN);
-						scLoiLoaItem
-								.setOfferedPriceSubTotal(offeredPriceSubTotal);
-						offeredPriceAmount = offeredPriceAmount.setScale(2,
-								BigDecimal.ROUND_HALF_EVEN);
-					}
-
-					afterNegoSubTotal = TemplateSpecHelper.getInstance()
-							.calculateTotalAmount(
-									scLoiLoaItem.getScRequestItem()
-											.getTplSpecQuestion(), finalPrice,
-									quantity);
-					afterNegoSubTotal = afterNegoSubTotal.setScale(2,
-							BigDecimal.ROUND_HALF_EVEN);
-
-					// after nego price sub total and total
-					afterNegoTotalAmount = afterNegoTotalAmount
-							.add(afterNegoSubTotal);
-					afterNegoTotalAmount = afterNegoTotalAmount.setScale(2,
-							BigDecimal.ROUND_HALF_EVEN);
-
-					scLoiLoaItem.setAfterNegoSubTotal(afterNegoSubTotal);
-					// scLoiLoaItem.setSubTotal(afterNegoSubTotal);
-				}
-			}
-
-			scLoi.setScLoiLoaItems(scLoiLoaItems);
-			scLoi.setOfferedPriceTotal(offeredPriceAmount); // offered price
-															// total
-			scLoi.setLoiAmt(afterNegoTotalAmount); // unit price total
-			scLoi.setAfterNegoTotal(afterNegoTotalAmount); // after nego total
-
-		}
-	}
-
-	/**
-	 * Filter tier price items by item.
-	 * 
-	 * @param scLoiLoaItem
-	 *            the sc loi loa item
-	 * @param map
-	 *            the map
-	 * @return the map
-	 */
-	private Map<Long, ScLoiLoaItem> filterTierPriceItemsByItem(
-			ScLoiLoaItem scLoiLoaItem, Map<Long, ScLoiLoaItem> map, ScLoi loi) {
-		boolean isFindMaxPriceItem = Boolean.FALSE;
-		List<ScLoiLoaItem> sameItems = new ArrayList<ScLoiLoaItem>();
-		if (null == map || map.isEmpty()) {
-			isFindMaxPriceItem = Boolean.TRUE;
-
-		} else {
-			if (!map.containsKey(scLoiLoaItem.getScRequestItem()
-					.getRequestNoteItemId())) {
-				isFindMaxPriceItem = Boolean.TRUE;
-			} else {
-				isFindMaxPriceItem = Boolean.FALSE;
-			}
-		}
-
-		if (isFindMaxPriceItem) {
-			List<ScLoiLoaItem> scLoiLoaItems = null;
-			if (loi != null) {
-				scLoiLoaItems = loi.getScLoiLoaItems();
-			} else {
-				scLoiLoaItems = getManagedBean().getScLoa().getScLoiLoaItems();
-			}
-			for (ScLoiLoaItem loiLoaItem : scLoiLoaItems) {
-				if (loiLoaItem
-						.getScRequestItem()
-						.getRequestNoteItemId()
-						.equals(scLoiLoaItem.getScRequestItem()
-								.getRequestNoteItemId())) {
-					sameItems.add(loiLoaItem);
-				}
-			}
-			ScLoiLoaItem maxPriceItem = findMaxPriceItem(sameItems);
-			map.put(maxPriceItem.getScRequestItem().getRequestNoteItemId(),
-					maxPriceItem);
-		}
-		return map;
-	}
-
-	/**
-	 * Filter zone tier price items by item.
-	 * 
-	 * @param scLoiLoaItem
-	 *            the sc loi loa item
-	 * @param map
-	 *            the map
-	 * @return the map
-	 */
-	private Map<TplSpecZoneDtl, ScLoiLoaItem> filterZoneTierPriceItemsByItem(
-			ScLoiLoaItem scLoiLoaItem, Map<TplSpecZoneDtl, ScLoiLoaItem> map,
-			ScLoi loi) {
-		boolean isMaxZoneTierPriceItem = Boolean.FALSE;
-		List<ScLoiLoaItem> sortGroupItems = new ArrayList<ScLoiLoaItem>();
-		if (null == map || map.isEmpty()) {
-			isMaxZoneTierPriceItem = Boolean.TRUE;
-
-		} else {
-			if (!map.containsKey(scLoiLoaItem.getTplSpecZoneDtl())) {
-				isMaxZoneTierPriceItem = Boolean.TRUE;
-			} else {
-				isMaxZoneTierPriceItem = Boolean.FALSE;
-			}
-		}
-
-		if (isMaxZoneTierPriceItem) {
-			List<ScLoiLoaItem> scLoiLoaItems = null;
-			if (loi != null) {
-				scLoiLoaItems = loi.getScLoiLoaItems();
-			} else {
-				scLoiLoaItems = getManagedBean().getScLoa().getScLoiLoaItems();
-			}
-			for (ScLoiLoaItem loiLoaItem : scLoiLoaItems) {
-				if (loiLoaItem
-						.getScRequestItem()
-						.getRequestNoteItemId()
-						.equals(scLoiLoaItem.getScRequestItem()
-								.getRequestNoteItemId())
-						&& loiLoaItem
-								.getTplSpecZoneDtl()
-								.getZoneName()
-								.equals(scLoiLoaItem.getTplSpecZoneDtl()
-										.getZoneName())) {
-					sortGroupItems.add(loiLoaItem);
-				}
-			}
-			ScLoiLoaItem maxPriceItem = findMaxPriceItem(sortGroupItems);
-			map.put(maxPriceItem.getTplSpecZoneDtl(), maxPriceItem);
-		}
-		return map;
-	}
-
-	/**
-	 * Find max price item.
-	 * 
-	 * @param items
-	 *            the items
-	 * @return the sc loi loa item
-	 */
-	private ScLoiLoaItem findMaxPriceItem(List<ScLoiLoaItem> items) {
-		Comparator<ScLoiLoaItem> comparator = new Comparator<ScLoiLoaItem>() {
-			@Override
-			public int compare(ScLoiLoaItem o1, ScLoiLoaItem o2) {
-				return new CompareToBuilder().append(
-						o1.getScQtProposalItem().getOfferPrice(),
-						o2.getScQtProposalItem().getOfferPrice())
-						.toComparison();
-			}
-		};
-		ScLoiLoaItem scLoiLoaItem = Collections.max(items, comparator);
-		return scLoiLoaItem;
 	}
 
 	/**
@@ -5933,7 +5687,11 @@ public class DirectLOABackingBean extends
 	}
 
 	public void setOverallCtAmount(BigDecimal loaAmount) {
+		this.getManagedBean().getScLoa().setContractSigner(new PmUser());
+		this.getManagedBean().getScLoa().setLoaSignerDesig(null);
+
 		this.getManagedBean().setOverallContractAmt(loaAmount);
+		getContractSigners();
 	}
 
 	private void updateToBeDeleteSpecAnswersTOReq(DirectAwardReqDTO awardReqDTO) {
@@ -5951,4 +5709,120 @@ public class DirectLOABackingBean extends
 
 		awardReqDTO.setTobeDeletedList(specAnswers);
 	}
+
+	public void populateMinistryBasedOnLoginUser() {
+		PmOrgProfile orgProfile = this.getManagedBean().getScQt()
+				.getPmOrgProfile();
+
+		if (!ParameterConst.ORG_TYPE_MINISTRY.equalsIgnoreCase(orgProfile
+				.getOrgTypeCode().getParameterCode())) {
+
+			orgProfile = getMinistryOrgProfile(orgProfile);
+
+		}
+		this.getManagedBean().getScQt().setMinistryOrgProfile(orgProfile);
+
+	}
+
+	/**
+	 * Select all documents.
+	 * 
+	 * @param event
+	 *            the event
+	 */
+	public void selectAllDocuments(AjaxBehaviorEvent event) {
+		boolean isSelectAll = ((SelectBooleanCheckbox) event.getSource())
+				.isSelected();
+		ScLoa scLoa = this.getManagedBean().getScLoa();
+		List<ScLoaReport> scLoaReports = scLoa.getScLoaReports();
+		if (scLoaReports != null && scLoaReports.size() > 0) {
+			for (ScLoaReport scLoaReport : scLoaReports) {
+				if (isSelectAll && null == scLoaReport.getPmDocument()) {
+					scLoaReport.setSelected(true);
+				} else {
+					scLoaReport.setSelected(false);
+				}
+			}
+		}
+	}
+
+	public void selectAllSuppDocuments(AjaxBehaviorEvent event) {
+		boolean isSelectAll = ((SelectBooleanCheckbox) event.getSource())
+				.isSelected();
+		ScLoa scLoa = this.getManagedBean().getScLoa();
+		List<ScLoaSupportingDoc> supportDocs = scLoa.getScLoaSupportingDocs();
+		if (CollectionUtils.isNotEmpty(supportDocs)) {
+			for (ScLoaSupportingDoc suppDoc : supportDocs) {
+				if (isSelectAll) {
+					suppDoc.setSelected(true);
+				} else {
+					suppDoc.setSelected(false);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Delete loa document.
+	 */
+	public void deleteLoaSuppDocument() {
+		List<ScLoaSupportingDoc> result = new ArrayList<ScLoaSupportingDoc>();
+		ScLoa scLoa = getManagedBean().getScLoa();
+		boolean flag = true;
+		List<ScLoaSupportingDoc> selectedScLoaReports = scLoa
+				.getScLoaSupportingDocs();
+		if (selectedScLoaReports != null && selectedScLoaReports.size() > 0) {
+			for (ScLoaSupportingDoc scLoaReport : selectedScLoaReports) {
+				if (!scLoaReport.isSelected()) {
+					result.add(scLoaReport);
+				} else {
+					flag = false;
+				}
+			}
+		}
+		if (flag) {
+			throw new EpException("Please select At least one Item");
+		}
+		scLoa.setScLoiSupportingDocs(result);
+	}
+
+	/**
+	 * Delete loa document.
+	 */
+	public void deleteLoaDocument() {
+		List<ScLoaReport> result = new ArrayList<ScLoaReport>();
+		ScLoa scLoa = getManagedBean().getScLoa();
+		boolean flag = true;
+		List<ScLoaReport> selectedScLoaReports = scLoa.getScLoaReports();
+		if (selectedScLoaReports != null && selectedScLoaReports.size() > 0) {
+			for (ScLoaReport scLoaReport : selectedScLoaReports) {
+				if (!scLoaReport.isSelected()) {
+					result.add(scLoaReport);
+				} else {
+					flag = false;
+				}
+			}
+		}
+		if (flag) {
+			throw new EpException("Please select At least one Item");
+		}
+		scLoa.setScLoaReports(result);
+	}
+
+	public boolean isFlag() {
+		return flag;
+	}
+
+	public void setFlag(boolean flag) {
+		this.flag = flag;
+	}
+
+	public boolean isSuppDocFlag() {
+		return suppDocFlag;
+	}
+
+	public void setSuppDocFlag(boolean suppDocFlag) {
+		this.suppDocFlag = suppDocFlag;
+	}
+
 }
