@@ -873,7 +873,7 @@ public class DirectLOABackingBean extends
 		if (clauses != null && clauses.size() > 0) {
 			deleteRowsAction(scQtDeduction.getScQtDeductionClauses(), clauses);
 		} else {
-			throw new EpException("Please select At least one Item");
+			throw new EpException(MessageConst.ERROR_760158);
 		}
 	}
 
@@ -1719,17 +1719,16 @@ public class DirectLOABackingBean extends
 	 *            the schedule
 	 * @param startMonthAction
 	 *            the start month action
+	 * @throws ParseException 
 	 */
 	public void calculateScheduleMonths(ScQtSchedule schedule,
-			Boolean startMonthAction) {
-
+			Boolean startMonthAction) throws ParseException {
 		List<ScQtSchedule> freqSchedule = this.getManagedBean().getScLoa()
 				.getScQtSchedules();
 		if (null == freqSchedule) {
 			freqSchedule = new ArrayList<ScQtSchedule>();
-
 		}
-		Integer startMonth = 0, endMonth = 0, startYear = 0, endYear = 0, diffYear = 0, count = 0;
+		Integer startMonth = 0, endMonth = 0, startYear = 0, endYear = 0,  months = 0;
 		startMonth = schedule.getStartMonth() != null ? Integer
 				.parseInt(schedule.getStartMonth()) : null;
 		endMonth = schedule.getEndMonth() != null ? Integer.parseInt(schedule
@@ -1739,25 +1738,28 @@ public class DirectLOABackingBean extends
 		endYear = schedule.getEndYear() != null ? Integer.parseInt(schedule
 				.getEndYear()) : null;
 
-		if (startMonthAction != null && startMonthAction && startMonth != null) {
+		if (startMonthAction !=null && startMonthAction && startMonth != null) {
 			endMonth = startMonth;
 			endYear = startYear;
 			schedule.setEndMonth(endMonth.toString());
-			if (endYear != null) {
+			if(endYear != null){
 				schedule.setEndYear(endYear.toString());
 			}
-
 		}
 
 		if (startMonth != null && endMonth != null && startYear != null
-				&& endYear != null && endYear >= startYear) {
-			if (!endYear.equals(startYear)) {
-				diffYear = endYear - startYear;
-			}
-			for (int i = startMonth + 1; i <= endMonth + 1 + (diffYear * 12); i++) {
-				count++;
-			}
-			schedule.setTotalMonths(new BigDecimal(count));
+				&& endYear != null) {
+			Date currentDate = new Date();
+			SimpleDateFormat sdf = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+			String localDate = sdf.format(currentDate);
+			String day = localDate.substring(0, 2);
+			String fromDate = day + "/" + startMonth + "/" + startYear;
+			String toDate = day + "/" + endMonth + "/" + endYear;
+			Date startDate  = sdf.parse(fromDate);
+			Date endDate  = sdf.parse(toDate);
+
+			months  = DateUtils.getMonths(startDate, endDate);
+			schedule.setTotalMonths(new BigDecimal(months));
 		} else {
 			schedule.setTotalMonths(BigDecimal.ZERO);
 		}
@@ -3464,7 +3466,7 @@ public class DirectLOABackingBean extends
 		if (selectedScLoaReports != null && selectedScLoaReports.size() > 0) {
 			deleteRowsAction(scLoa.getScLoaReports(), selectedScLoaReports);
 		} else {
-			throw new EpException("Please select At least one Item");
+			throw new EpException(MessageConst.ERROR_760158);
 		}
 	}
 
@@ -5412,7 +5414,7 @@ public class DirectLOABackingBean extends
 			deleteRowsAction(scLoa.getScLoaSupportingDocs(),
 					selectedScLoiSuppDocs);
 		} else {
-			throw new EpException("Please select At least one Item");
+			throw new EpException(MessageConst.ERROR_760158);
 		}
 	}
 
@@ -5781,7 +5783,7 @@ public class DirectLOABackingBean extends
 			}
 		}
 		if (flag) {
-			throw new EpException("Please select At least one Item");
+			throw new EpException(MessageConst.ERROR_760158);
 		}
 		scLoa.setScLoiSupportingDocs(result);
 	}
@@ -5804,7 +5806,7 @@ public class DirectLOABackingBean extends
 			}
 		}
 		if (flag) {
-			throw new EpException("Please select At least one Item");
+			throw new EpException(MessageConst.ERROR_760158);
 		}
 		scLoa.setScLoaReports(result);
 	}
