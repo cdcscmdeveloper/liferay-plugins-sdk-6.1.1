@@ -40,7 +40,7 @@ public class CmSchedulerConstants {
 	public static final String GFMAS_SC_CONTINUOUS_JOB_DESC ="Job run once daily 8 AM";
 	//FL
 	public static final String GFMAS_FL_IN_JOB_GROUP ="GFMAS JOB GROUP";
-	public static final String GFMAS_FL_IN_CONTINUOUS_JOB ="GFMAS OUT FL JOB";
+	public static final String GFMAS_FL_IN_CONTINUOUS_JOB ="GFMAS IN FL JOB";
 	public static final String GFMAS_FL_CONTINUOUS_JOB_DESC ="Job run every 1 hour";
 	
 	//GFMS OUT BOUND
