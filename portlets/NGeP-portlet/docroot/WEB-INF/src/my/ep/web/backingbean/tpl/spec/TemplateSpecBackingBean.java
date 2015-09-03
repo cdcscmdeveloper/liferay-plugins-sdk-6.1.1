@@ -884,32 +884,35 @@ public class TemplateSpecBackingBean extends
 	 */
 	public void calcTotalAmount(TemplateSpecBean templateSpecBean,
 			TplSpecAnswer specAnswer, boolean isItemTypeService) {
-		TplSpecQuestion specQuestion = specAnswer.getTplSpecQuestion();
-		BigDecimal totalPrice = TemplateSpecHelper.getInstance()
-				.calcTotalAmount(specQuestion, specAnswer.getRatePerUom(),
-						specQuestion.getClQuantity());
+		if (null != specAnswer) {
+			TplSpecQuestion specQuestion = specAnswer.getTplSpecQuestion();
+			BigDecimal totalPrice = TemplateSpecHelper.getInstance()
+					.calcTotalAmount(specQuestion, specAnswer.getRatePerUom(),
+							specQuestion.getClQuantity());
 
-		if (totalPrice != null && isItemTypeService) {
-			TplSpecMaster specMaster = specQuestion.getTplSpecMaster();
-			BigDecimal amountPerYear = BigDecimal.valueOf(totalPrice
-					.doubleValue());
-			BigDecimal itemDurationMonth = specQuestion.getClDurationMonth();
+			if (totalPrice != null && isItemTypeService) {
+				TplSpecMaster specMaster = specQuestion.getTplSpecMaster();
+				BigDecimal amountPerYear = BigDecimal.valueOf(totalPrice
+						.doubleValue());
+				BigDecimal itemDurationMonth = specQuestion
+						.getClDurationMonth();
 
-			if (itemDurationMonth != null) {
-				amountPerYear = amountPerYear.divide(itemDurationMonth);
-			} else {
-				BigDecimal durationMonth = specMaster.getDurationMonth();
+				if (itemDurationMonth != null) {
+					amountPerYear = amountPerYear.divide(itemDurationMonth);
+				} else {
+					BigDecimal durationMonth = specMaster.getDurationMonth();
 
-				if (durationMonth != null) {
-					amountPerYear = amountPerYear.divide(durationMonth);
+					if (durationMonth != null) {
+						amountPerYear = amountPerYear.divide(durationMonth);
+					}
 				}
+
+				specAnswer.setAmountPerYear(amountPerYear.multiply(BigDecimal
+						.valueOf(12)));
 			}
 
-			specAnswer.setAmountPerYear(amountPerYear.multiply(BigDecimal
-					.valueOf(12)));
+			specAnswer.setAnswerNumeric(totalPrice);
 		}
-
-		specAnswer.setAnswerNumeric(totalPrice);
 	}
 
 	/**
