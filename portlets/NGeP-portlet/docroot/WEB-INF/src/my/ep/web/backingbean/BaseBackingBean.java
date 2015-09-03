@@ -64,6 +64,7 @@ import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
@@ -126,6 +127,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		if (log.isDebugEnabled()) {
 			log.debug("managedBeanName:" + managedBeanName);
 		}
+		
+		// extend Liferay session
+		log.info("extending liferay session");
+		RequestContext.getCurrentInstance().execute("extendLiferaySession();");
 	}
 
 	/**
