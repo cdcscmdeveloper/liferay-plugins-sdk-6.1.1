@@ -4275,17 +4275,30 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			if(flRequest.getGstRate()!=null) {
 				gstRate = flRequest.getGstRate();
 			}
+			BigDecimal originalGSTAmt = BigDecimal.ZERO;
+			boolean amtChanged = false;
 			for(FlDeliveryAddress flDeliveryAddress : flRequest.getFlDeliveryAddresses()) {
 				for(FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()) {
+					originalGSTAmt = itemAddr.getGstAmount();
+					if(originalGSTAmt==null) {
+						originalGSTAmt = BigDecimal.ZERO;
+					}
 					if(newFrGstEnabled && itemAddr.isGst()) {
 						itemAddr.setGstAmount(itemAddr.getUnitPrice().multiply(gstRate).divide(new BigDecimal(100), CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, BigDecimal.ROUND_HALF_UP));
 					} else {
 						itemAddr.setGstAmount(BigDecimal.ZERO);
 					}
+					if(!amtChanged && originalGSTAmt.compareTo(itemAddr.getGstAmount())!=0) {
+						amtChanged = true;
+					}
 					itemAddr.setGstUnitPrice(itemAddr.getUnitPrice().add(itemAddr.getGstAmount()));
 					orderAmt = itemAddr.getGstUnitPrice().multiply(itemAddr.getOrderedQty());
 					itemAddr.setOrderedAmt(orderAmt.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, BigDecimal.ROUND_HALF_UP));
 				}
+			}
+			if(amtChanged == true){
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+						MessageUtils.getMessage(MessageConst.INFO_745009, new String[]{flRequest.getDocNo()}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 			}
 		}
 	}
