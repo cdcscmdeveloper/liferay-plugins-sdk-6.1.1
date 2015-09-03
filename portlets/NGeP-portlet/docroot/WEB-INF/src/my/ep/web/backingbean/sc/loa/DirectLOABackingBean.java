@@ -1920,6 +1920,7 @@ public class DirectLOABackingBean extends
 						this.getManagedBean().getScQt().getPmOrgProfile());
 		populateMinistryBasedOnLoginUser();
 		getApprovalUsers();
+		prepareSignerInfo();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication()
 				.getNavigationHandler()
@@ -3253,22 +3254,7 @@ public class DirectLOABackingBean extends
 		}
 	}
 
-	public void getContractSigners() {
-
-		UserReqDTO userReqDTO = new UserReqDTO();
-		userReqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());
-		if (this.getManagedBean().getScLoa().getLoaAmt() != null) {
-			userReqDTO.setApprovalLimit(this.getManagedBean().getScLoa()
-					.getLoaAmt());
-		}
-		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IUserSO.class);
-		userReqDTO.setOrgProfileId(this.getManagedBean().getScQt()
-				.getPmOrgProfile().getOrgProfileId());
-		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
-		this.getManagedBean().setContractSignerList(userResDTO.getUserList());
-
-	}
+	
 
 	/**
 	 * Schedule type change.Event handle change Schedule
@@ -5693,7 +5679,7 @@ public class DirectLOABackingBean extends
 		this.getManagedBean().getScLoa().setLoaSignerDesig(null);
 
 		this.getManagedBean().setOverallContractAmt(loaAmount);
-		getContractSigners();
+		prepareSignerInfo();
 	}
 
 	private void updateToBeDeleteSpecAnswersTOReq(DirectAwardReqDTO awardReqDTO) {

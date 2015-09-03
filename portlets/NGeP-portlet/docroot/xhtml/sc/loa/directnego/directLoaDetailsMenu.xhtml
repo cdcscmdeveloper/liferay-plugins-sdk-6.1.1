@@ -218,7 +218,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" />
 				</td>
-				<td><p:inputText styleClass="ppNumericAlign"
+				<td><p:inputText style="text-align: right;"
 						disabled="#{!isEditableStatus}"
 						value="#{directLOABackingBean.managedBean.scLoa.scQt.estimatedAmount}"
 						size="30">
@@ -236,11 +236,11 @@
 
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</p:outputLabel></td>
-				<td><p:inputText styleClass="ppNumericAlign" required="true"
+				<td><p:inputText style="text-align: right;" required="true"
 						value="#{directLOABackingBean.managedBean.scLoa.loaAmt}" size="30"
 						label="#{lbl['lbl.sc.loiloa.loa.off.price']}">
 						<p:ajax event="blur"
-							listener="#{directLOABackingBean.calculateOverallAmount(directLOABackingBean.managedBean.scLoa.loaAmt)}"
+							listener="#{directLOABackingBean.setOverallCtAmount(directLOABackingBean.managedBean.scLoa.loaAmt)}"
 							update="@this,ContractAmtId"></p:ajax>
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -266,7 +266,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.gst.amount']}" /></td>
-				<td><p:inputText styleClass="ppNumericAlign"
+				<td><p:inputText style="text-align: right;"
 						value="#{directLOABackingBean.managedBean.scLoa.gstAmt}"
 						disabled="#{directLOABackingBean.isGSTRegActive() or !isPendingSubmissionStatus}"
 						size="30">
@@ -280,7 +280,7 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.gst.overall.contract.amount']}" /></td>
-				<td><p:inputText styleClass="ppNumericAlign"
+				<td><p:inputText style="text-align: right;"
 						value="#{directLOABackingBean.managedBean.overallContractAmt}"
 						size="30" id="ContractAmtId" readonly="true">
 						<f:convertNumber
@@ -426,7 +426,7 @@
 				<td><p:outputLabel
 						value="#{lbl[directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.period' : 'lbl.sc.loiloa.loa.cont.period']}" />
 				</td>
-				<td colspan="3"><p:inputText styleClass="ppNumericAlign"
+				<td colspan="3"><p:inputText style="text-align: right;"
 						id="contractDuration" disabled="#{!isEditableStatus}"
 						value="#{directLOABackingBean.managedBean.scLoa.contractDuration}"
 						size="29">
