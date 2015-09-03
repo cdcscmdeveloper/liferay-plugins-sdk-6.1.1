@@ -85,11 +85,13 @@
 		</c:if>
 
 		<br />
-		<h:outputText value="#{lbl['lbl.sc.deduction.payment']} >" />
-		<h:outputText value="#{lbl['lbl.sc.deduction.clauses']} " />
-		<h:outputText style="margin-left: 140px;"
-			value="#{lOADetailBackingBean.managedBean.clausesTitle}" />
+
 		<h:panelGroup id="clausePnl">
+			<h:outputText value="#{lbl['lbl.sc.deduction.payment']} (" />
+			<h:outputText
+				value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.selectedScQtDeduction.deductionType)} )>" />
+			<h:outputText value="#{lbl['lbl.sc.deduction.clauses']} " />
+
 			<p:dataTable id="deductClauseTbl" widgetVar="deductClauseTblWidget"
 				var="scQtDeductionClause"
 				value="#{lOADetailBackingBean.managedBean.selectedScQtDeduction.scQtDeductionClauses}"
@@ -110,13 +112,13 @@
 
 					<h:panelGroup rendered="#{empty scQtDeductionClause.pmClause}">
 						<p:inputTextarea value="#{scQtDeductionClause.clauseDesc}"
-						    required="true" id="clauseId"
-						    label="#{lbl['lbl.sc.deduction.clause']}"
-							rows="2" maxlength="500" style=" margin-bottom:5px; width:790px"
+							required="true" id="clauseId"
+							label="#{lbl['lbl.sc.deduction.clause']}" rows="2"
+							maxlength="500" style=" margin-bottom:5px; width:790px"
 							rendered="#{isEditableStatus}">
 							<p:ajax event="keyup" />
 						</p:inputTextarea>
-                        <p:message id="clauseIdMsg" for="clauseId" display="icon" />
+						<p:message id="clauseIdMsg" for="clauseId" display="icon" />
 						<h:outputText value="#{scQtDeductionClause.clauseDesc}"
 							rendered="#{!isEditableStatus}" />
 					</h:panelGroup>
@@ -141,15 +143,15 @@
 						process="@this, deductClauseTbl" partialSubmit="true"
 						oncomplete="deductionClauseDeletePopUp.show();"
 						update="@([id$=#{deductionClauseDeleteId}])" />
-				
-				</h:panelGroup>	
+
+				</h:panelGroup>
 			</div>
 			<ac:confirmationPopup id="deductionClauseDeleteId"
 				widget="deductionClauseDeletePopUp"
 				okAction="lOADetailBackingBean.deleteDeductionClause" width="400"
 				height="100" title="#{lbl['lbl.msg.confirm.delete.header']}"
 				content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
-			
+
 		</h:panelGroup>
 	</p:panel>
 </ui:composition>
