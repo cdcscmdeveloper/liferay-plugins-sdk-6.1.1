@@ -457,7 +457,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private int passingScore;
 
 	private String financialSummaryView;
-	
+
 	private String roleCode;
 
 	private int oneTierFinancialActiveIndex;
@@ -477,7 +477,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private IPagingDataModel<ScQtSampleLable> complianceSampleLblsupplierDM;
 	private IPagingDataModel<ScQtProposalChecklist> presentationDemoSupplierListDM;
 	private int demoPassingScore;
-	private boolean isProfileHide=false;
+	private boolean isProfileHide = false;
+	private String proposalValidityUntil;
 
 	/**
 	 * Gets the today.
@@ -2986,7 +2987,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param roleCode the roleCode to set
+	 * @param roleCode
+	 *            the roleCode to set
 	 */
 	public void setRoleCode(String roleCode) {
 		this.roleCode = roleCode;
@@ -3235,7 +3237,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param demoPassingScore the demoPassingScore to set
+	 * @param demoPassingScore
+	 *            the demoPassingScore to set
 	 */
 	public void setDemoPassingScore(int demoPassingScore) {
 		this.demoPassingScore = demoPassingScore;
@@ -3249,11 +3252,28 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isProfileHide the isProfileHide to set
+	 * @param isProfileHide
+	 *            the isProfileHide to set
 	 */
 	public void setProfileHide(boolean isProfileHide) {
 		this.isProfileHide = isProfileHide;
 	}
+
+	/**
+	 * @return the proposalValidityUntil
+	 */
+	public String getProposalValidityUntil() {
+		return proposalValidityUntil;
+	}
+
+	/**
+	 * @param proposalValidityUntil the proposalValidityUntil to set
+	 */
+	public void setProposalValidityUntil(String proposalValidityUntil) {
+		this.proposalValidityUntil = proposalValidityUntil;
+	}
+
+	
 
 	
 
