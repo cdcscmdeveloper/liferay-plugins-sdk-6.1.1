@@ -5,6 +5,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import my.ep.constants.CommonConstants;
@@ -438,4 +439,26 @@ public class DateUtils {
 
 		return false;
 	}
+	
+	
+	/**
+	 * Gets the months.
+	 *
+	 * @param startDate the start date
+	 * @param endDate the end date
+	 * @return the months
+	 */
+	public static Integer getMonths(Date startDate, Date endDate) {
+		if (startDate == null || endDate == null) {
+			return 0;
+		}
+		Calendar startCal = new GregorianCalendar();
+		startCal.setTime(startDate);
+		Calendar endCal = new GregorianCalendar();
+		endCal.setTime(endDate);
+
+		int diffYear = endCal.get(Calendar.YEAR) - startCal.get(Calendar.YEAR);
+		return  diffYear * 12 + endCal.get(Calendar.MONTH) - startCal.get(Calendar.MONTH)+1;
+	}
+
 }
