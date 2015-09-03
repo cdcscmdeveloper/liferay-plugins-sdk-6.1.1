@@ -799,6 +799,9 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 					if(getManagedBean().getContractVer().getApprover()!=null) {
 						context.put("approverName", getManagedBean().getContractVer().getApprover().getUserName());
 						context.put("approverDesignation", getManagedBean().getContractVer().getApprover().getDesignation());
+					} else {
+						context.put("approverName", "");
+						context.put("approverDesignation", "");
 					}
 					// Extra For Termination Notice
 					context.put("contractAmount", getManagedBean().getContractVer().getCtContractAmount().getContractAmount().toString());
