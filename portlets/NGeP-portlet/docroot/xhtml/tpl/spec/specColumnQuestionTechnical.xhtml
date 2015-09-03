@@ -6,6 +6,30 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
+	<p:column style="width:#{isItemTypeService ? '52px' : '85px'};">
+		<f:facet name="header">
+			<h:outputText value="* " styleClass="mandatory" />
+			<h:outputText value="#{lbl['lbl.tpl.spec.content.quantity']}"/>
+		</f:facet>
+		<h:panelGroup id="qtyPG" rendered="#{isQuestionTypeItem}">
+			<p:inputText id="qty" style="min-width:0px !important;width:35px; text-align:right;"
+				value="#{question.clQuantity}" 
+				required="#{!question.selected}" maxlength="14"
+				label="#{lbl['lbl.tpl.spec.content.quantity']}">
+				<p:ajax partialSubmit="true" process="@this" update="@this, qtyMsg, @(.calcAmount)" />
+				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" maxIntegerDigits="10" />
+			</p:inputText>
+			<p:commandButton id="tierQtyBtn" icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
+				action="#{templateSpecBackingBean.tierQtyPopupAction(templateSpecBean)}"
+				oncomplete="#{tierQtyPopup}.show();"
+				partialSubmit="true" process="@this" update="@([id$=tierQtyPopup])"
+				rendered="#{!isPriceTypeAllStandard and !empty question.clPriceTypeCode.parameterId}"
+				title="#{lbl['lbl.tpl.spec.content.tier.dtls.tooltip']}">
+				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
+			</p:commandButton>
+			<p:message id="qtyMsg" for="qty" display="icon" />
+		</h:panelGroup>
+	</p:column>
 	<p:column style="width:125px;" rendered="#{isSpecificationReq}">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
@@ -93,30 +117,7 @@
 			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion.selected}" value="#{true}" />
 		</p:commandButton>
 	</p:column>
-	<p:column style="width:#{isItemTypeService ? '52px' : '85px'};">
-		<f:facet name="header">
-			<h:outputText value="* " styleClass="mandatory" />
-			<h:outputText value="#{lbl['lbl.tpl.spec.content.quantity']}"/>
-		</f:facet>
-		<h:panelGroup id="qtyPG" rendered="#{isQuestionTypeItem}">
-			<p:inputText id="qty" style="min-width:0px !important;width:35px; text-align:right;"
-				value="#{question.clQuantity}" 
-				required="#{!question.selected}" maxlength="14"
-				label="#{lbl['lbl.tpl.spec.content.quantity']}">
-				<p:ajax partialSubmit="true" process="@this" update="@this, qtyMsg, @(.calcAmount)" />
-				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" maxIntegerDigits="10" />
-			</p:inputText>
-			<p:commandButton id="tierQtyBtn" icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
-				action="#{templateSpecBackingBean.tierQtyPopupAction(templateSpecBean)}"
-				oncomplete="#{tierQtyPopup}.show();"
-				partialSubmit="true" process="@this" update="@([id$=tierQtyPopup])"
-				rendered="#{!isPriceTypeAllStandard and !empty question.clPriceTypeCode.parameterId}"
-				title="#{lbl['lbl.tpl.spec.content.tier.dtls.tooltip']}">
-				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
-			</p:commandButton>
-			<p:message id="qtyMsg" for="qty" display="icon" />
-		</h:panelGroup>
-	</p:column>
+	
 	<p:column style="width:67px; white-space: normal;" rendered="#{!isItemTypeService and isDeliveryTermReq}">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
