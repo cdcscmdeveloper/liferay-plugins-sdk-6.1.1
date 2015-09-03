@@ -120,7 +120,6 @@
 		  	  
 		  <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.adv.payment.tracking']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			rendered="#{contractDetailsBackingBean.managedBean.flgPaymentTracking}"
 			actionListener="#{contractDetailsBackingBean.setTabValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'PY')}" update=":form" />
 		  	 
 		 <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.setting']}"
@@ -151,6 +150,11 @@
 			    rendered="#{contractDetailsBackingBean.managedBean.ctContract.factored and contractDetailsBackingBean.checkFactoringExpiryDate()}"
 			    actionListener="#{contractDetailsBackingBean.setTabCentralValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'FT')}" update=":form" />
 		
+		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.adv.payment.tracking']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.followLoaAmt}"
+			actionListener="#{contractDetailsBackingBean.setTabCentralValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'PY')}" update=":form" />
+		 
 	      <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.setting']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			actionListener="#{contractDetailsBackingBean.setTabCentralValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'SE')}" update=":form" />
@@ -206,9 +210,12 @@
 					<ui:include src="factoring.xhtml"/>
 				</p:outputPanel>
 	
-				<p:outputPanel id="ctMenuId11" rendered="#{contractDetailsBackingBean.managedBean.flgPaymentTracking
-				  and contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.paymentTracking}">
-				             	<ui:include src="paymentTracking.xhtml"/>
+				<p:outputPanel id="ctMenuId11" 
+				rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.paymentTracking 
+				  and (contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry or 
+				  (contractDetailsBackingBean.managedBean.contractVer.ctContractValue.followLoaAmt and 
+				  contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral ))}">
+				             	<ui:include src="/xhtml/ct/fulfilmentdetails/shared/paymentTracking.xhtml"/>
 				   </p:outputPanel>
 				
 				<p:outputPanel id="ctMenuId12" rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.settingIndex}">

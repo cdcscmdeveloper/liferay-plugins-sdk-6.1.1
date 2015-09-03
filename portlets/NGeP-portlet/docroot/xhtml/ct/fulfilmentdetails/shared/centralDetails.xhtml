@@ -47,7 +47,7 @@
 						<p:outputLabel id="centralEfDate" value="#{lbl['lbl.ct.effective.date']}" />
 					</td>
 					<td>
-						<p:inputText for="centralEfDate" disabled="true" style="width:130px;"
+						<p:inputText for="centralEfDate" disabled="true" style="width:80px;"
 							value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate}">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			  			</p:inputText>
@@ -75,7 +75,7 @@
 						<p:outputLabel id="centralExpDate" value="#{lbl['lbl.ct.expiry.date']}" />
 					</td> 
 					<td>
-						<p:inputText for="centralExpDate" disabled="true" style="width:130px;"
+						<p:inputText for="centralExpDate" disabled="true" style="width:80px;"
 							value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.expDate}">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			  			</p:inputText>
@@ -151,7 +151,7 @@
 						<p:outputLabel id="centralSignDate" value="#{lbl['lbl.ct.signed.date']}" />
 					</td> 
 					<td>
-						<p:inputText for="centralSignDate" disabled="true" style="width:130px;"
+						<p:inputText for="centralSignDate" disabled="true" style="width:80px;"
 							value="#{contractDetailsBackingBean.managedBean.contractVer.signedDate}">
 			   				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</p:inputText>
