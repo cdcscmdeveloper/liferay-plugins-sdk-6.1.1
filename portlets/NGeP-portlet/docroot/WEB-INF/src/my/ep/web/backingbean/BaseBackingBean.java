@@ -129,8 +129,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 		
 		// extend Liferay session
-		log.info("extending liferay session");
-		RequestContext.getCurrentInstance().execute("extendLiferaySession();");
+		if(RequestContext.getCurrentInstance() != null) {
+			log.info("extending liferay session");
+			RequestContext.getCurrentInstance().execute("extendLiferaySession();");	
+		}
 	}
 
 	/**
