@@ -9,15 +9,37 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
+		<p:panel header="#{lbl['lbl.cm.define.search']}" toggleable="true">
+
+			<table style="width: 100%;">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.cm.doc.no']}"></p:outputLabel></td>
+					<td><p:inputText value="#{codificationBackingBean.managedBean.docNo}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.cm.doc.title']}"></p:outputLabel></td>
+					<td><p:inputText value="#{codificationBackingBean.managedBean.docTitle}" /></td>
+				</tr>
+
+			</table>
+			
+				<div style="text-align: right;">
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
+					action="#{codificationBackingBean.pendingCodifiedItem}"
+					update="documentTableID" />
+			</div>
+
+		</p:panel>
 
 
-		<p:panel header="#{lbl['lbl.cm.codification.pending']}" style="width: 100%;">
+		<p:panel header="#{lbl['lbl.cm.codification.pending']}"
+			toggleable="true" style="width: 100%;">
 
-			<p:dataTable id="documentTableID" lazy="true" rows="15" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			<p:dataTable id="documentTableID" lazy="true" rows="15"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{codificationBackingBean.managedBean.vPendingCodifiedItemSearchDataModel}"
-				rowKey="#{vPendingCodifiedItem}" var="vPendingCodifiedItem" width="100%" rowIndexVar="rowIndex">
-		     	<ac:paginator for="documentTableID"></ac:paginator>		
-		
+				rowKey="#{vPendingCodifiedItem}" var="vPendingCodifiedItem"
+				width="100%" rowIndexVar="rowIndex">
+				<ac:paginator for="documentTableID"></ac:paginator>
+
 				<p:column width="15%">
 					<f:facet name="header">
 					#{lbl['lbl.cm.doc.no']}
@@ -25,8 +47,9 @@
 
 					<p:commandLink
 						action="#{codificationBackingBean.goToAssignUnspsc(vPendingCodifiedItem)}">
-							<h:outputText value="#{vPendingCodifiedItem.docNo}" style="white-space: normal!important;" />
-							</p:commandLink>
+						<h:outputText value="#{vPendingCodifiedItem.docNo}"
+							style="white-space: normal!important;" />
+					</p:commandLink>
 				</p:column>
 
 				<p:column>
@@ -40,16 +63,19 @@
 					<f:facet name="header">
 					#{lbl['lbl.cm.doc.title']}
 				   </f:facet>
-					<h:outputText value="#{vPendingCodifiedItem.title}" style="white-space: normal!important;" />
-			   </p:column>
+					<h:outputText value="#{vPendingCodifiedItem.title}"
+						style="white-space: normal!important;" />
+				</p:column>
 
 				<p:column>
 					<f:facet name="header">
 					#{lbl['lbl.cm.doc.ptj']}
 				   </f:facet>
-				   <h:outputText value="#{vPendingCodifiedItem.pmOrgProfile.parentOrgProfile.orgName}" style="white-space: normal!important;" />
-					
-			   </p:column>
+					<h:outputText
+						value="#{vPendingCodifiedItem.pmOrgProfile.parentOrgProfile.orgName}"
+						style="white-space: normal!important;" />
+
+				</p:column>
 
 				<p:column>
 					<f:facet name="header">

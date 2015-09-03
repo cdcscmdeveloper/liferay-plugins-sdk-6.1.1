@@ -271,6 +271,11 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		extensionSearchItemDataModel.reloadData();
 
 	}
+	
+	
+	public void pendingCodifiedItem(){
+		this.getManagedBean().getvPendingCodifiedItemSearchDataModel().reloadData();
+	}
 
 	public void extensionCodeSearch() {
 		this.getManagedBean().setExtensionSearchcheckBoxAll(false);
@@ -1296,24 +1301,24 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 					break;
 				}
 			}
+			
+			// update status of pendingCodifiedItem
+			PendingCodifiedItemReqDTO codifiedItemReqDTO = new PendingCodifiedItemReqDTO();
+			codifiedItemReqDTO.setPendingCodifiedItemId(this
+					.getManagedBean().getSelectedVPendingCodifiedItem()
+					.getPendingCodifiedItemId());
+			log.info("........getPendingCodifiedItemId()"
+					+ this.getManagedBean()
+					.getSelectedVPendingCodifiedItem()
+					.getPendingCodifiedItemId());
+			PendingCodifiedItemResDTO codifiedItemResDTO = codifiedItemSO
+					.retrievePendingCodifiedItemById(codifiedItemReqDTO);
+			CmPendingCodifiedItem codifiedItem = codifiedItemResDTO
+					.getPendingCodifiedItem();
 
 			if (allCodeItemsAssigned) {
 				// update status of PendingCodifiedItem to Completed and
 
-
-				// update status of pendingCodifiedItem
-				PendingCodifiedItemReqDTO codifiedItemReqDTO = new PendingCodifiedItemReqDTO();
-				codifiedItemReqDTO.setPendingCodifiedItemId(this
-						.getManagedBean().getSelectedVPendingCodifiedItem()
-						.getPendingCodifiedItemId());
-				log.info("........getPendingCodifiedItemId()"
-						+ this.getManagedBean()
-						.getSelectedVPendingCodifiedItem()
-						.getPendingCodifiedItemId());
-				PendingCodifiedItemResDTO codifiedItemResDTO = codifiedItemSO
-						.retrievePendingCodifiedItemById(codifiedItemReqDTO);
-				CmPendingCodifiedItem codifiedItem = codifiedItemResDTO
-						.getPendingCodifiedItem();
 				codifiedItem.setStatusId(CmConst.COMPLETED); // status set
 				// to
 				// Completed
@@ -1334,6 +1339,15 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				.println("***************RequestItem List and status have been updated*****************");
 
 			} else {
+				
+				
+				codifiedItem.setStatusId(CmConst.IN_PROGRESS); // status set
+				// to
+				// In Progress
+
+				codifiedItemReqDTO.setPendingCodifiedItem(codifiedItem);
+				codifiedItemResDTO = codifiedItemSO.updatePendingCodifiedItem(codifiedItemReqDTO);
+				
 				facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(
 						null,
