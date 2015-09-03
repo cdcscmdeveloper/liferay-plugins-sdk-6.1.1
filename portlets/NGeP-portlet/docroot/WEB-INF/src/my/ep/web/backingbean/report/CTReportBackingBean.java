@@ -38,8 +38,8 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	////rptGenBean.setCtUserTypeView(true);
 	        	//rptGenBean.setCtSubTypeView(true);
-				rptGenBean.setCtContractEffectiveFromDateView(true);
-				//rptGenBean.setToDateView(true);			
+	        	//rptGenBean.setCtContractEffectiveFromDateView(true);
+				rptGenBean.setToDateView(true);			
 	            break;
 	        
 	        case ReportConst.CT_LST_OF_CONTRACT_ALL_RPT_VAL:
@@ -57,7 +57,8 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	//rptGenBean.setCtUserTypeView(true);
 	        	//rptGenBean.setCtSubTypeView(true);
 	        	//rptGenBean.setCtSubTypeOnlyView(true);
-				rptGenBean.setCtContractEffectiveFromDateView(true);
+				rptGenBean.setCtContractFromDateView(true);
+				rptGenBean.setCtContractEffectiveFromDateLabelView(true);
 				//rptGenBean.setToDateView(true);
 	            break;
 	       
@@ -75,8 +76,8 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	//rptGenBean.setCtUserTypeView(true);
 	        	//rptGenBean.setCtSubTypeView(true);
-				rptGenBean.setCtContractEffectiveFromDateView(true);
-				//rptGenBean.setToDateView(true);
+	        	//rptGenBean.setCtContractEffectiveFromDateView(true);
+				rptGenBean.setToDateView(true);
 	            break;
 	        case ReportConst.CT_LST_OF_ITEM_PRODUCT_RPT_VAL:
 	        	
@@ -93,8 +94,8 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	//rptGenBean.setCtUserTypeView(true);
 	        	//rptGenBean.setCtSubTypeView(true);
-				rptGenBean.setCtContractEffectiveFromDateView(true);
-				//rptGenBean.setToDateView(true);
+	        	//rptGenBean.setCtContractEffectiveFromDateView(true);
+				rptGenBean.setToDateView(true);
 	            break;
 	       
 	        case ReportConst.CT_LST_OF_AMENDMENT_RPT_VAL:
@@ -111,8 +112,8 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	//rptGenBean.setCtUserTypeView(true);
 	        	//rptGenBean.setCtSubTypeView(true);
-				rptGenBean.setCtContractEffectiveFromDateView(true);
-				//rptGenBean.setToDateView(true);	
+	        	//rptGenBean.setCtContractEffectiveFromDateView(true);
+				rptGenBean.setToDateView(true);	
 	            break;
 	        case ReportConst.CT_LST_OF_UPDATE_RPT_VAL:
 	        	
@@ -128,8 +129,8 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	//rptGenBean.setCtUserTypeView(true);
 	        	//rptGenBean.setCtSubTypeView(true);
-				rptGenBean.setCtContractEffectiveFromDateView(true);
-				//rptGenBean.setToDateView(true);	
+	        	//rptGenBean.setCtContractEffectiveFromDateView(true);
+				rptGenBean.setToDateView(true);	
 	            break;
 	        case ReportConst.CT_LST_OF_SUSPENSION_RPT_VAL:
 	        		
@@ -145,8 +146,8 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	//rptGenBean.setCtUserTypeView(true);
 	        	//rptGenBean.setCtSubTypeView(true);
-				rptGenBean.setCtContractEffectiveFromDateView(true);
-				//rptGenBean.setToDateView(true);	
+	        	//rptGenBean.setCtContractEffectiveFromDateView(true);
+				rptGenBean.setToDateView(true);	
 	            break;
 	        case ReportConst.CT_LST_OF_TERMINATION_RPT_VAL:
 	        		
@@ -162,8 +163,8 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	//rptGenBean.setCtUserTypeView(true);
 	        	//rptGenBean.setCtSubTypeView(true);
-				rptGenBean.setCtContractEffectiveFromDateView(true);
-				//rptGenBean.setToDateView(true);	
+	        	//rptGenBean.setCtContractEffectiveFromDateView(true);
+				rptGenBean.setToDateView(true);	
 	            break;
 	        case ReportConst.CT_LST_OF_SUPPLIER_RPT_VAL:
 	        		
@@ -179,8 +180,8 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	//rptGenBean.setCtUserTypeView(true);
 	        	//rptGenBean.setCtSubTypeView(true);
-				rptGenBean.setCtContractEffectiveFromDateView(true);
-				//rptGenBean.setToDateView(true);	
+	        	//rptGenBean.setCtContractEffectiveFromDateView(true);
+				rptGenBean.setToDateView(true);	
 	            break;
 	        case ReportConst.CT_LST_OF_AGREEMENT_RPT_VAL:
 	        		
@@ -197,8 +198,8 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	//rptGenBean.setCtUserTypeView(true);
 	        	//rptGenBean.setCtSubTypeView(true);
-				rptGenBean.setCtContractEffectiveFromDateView(true);
-				//rptGenBean.setToDateView(true);
+	        	//rptGenBean.setCtContractEffectiveFromDateView(true);
+				rptGenBean.setToDateView(true);
 	            break;
 	        case ReportConst.CT_LST_OF_SUPPLAGREEMENT_RPT_VAL:
 	        		
@@ -215,8 +216,8 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	//rptGenBean.setCtUserTypeView(true);
 	        	//rptGenBean.setCtSubTypeView(true);
-				rptGenBean.setCtContractEffectiveFromDateView(true);
-				//rptGenBean.setToDateView(true);
+	        	//rptGenBean.setCtContractEffectiveFromDateView(true);
+				rptGenBean.setToDateView(true);
 	            break;
 	        case ReportConst.CT_LST_OF_CIRCULAR_RPT_VAL:
 	        	
@@ -232,13 +233,19 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	//rptGenBean.setCtUserTypeView(true);
 	        	//rptGenBean.setCtSubTypeView(true);
-				rptGenBean.setCtContractEffectiveFromDateView(true);
+	        	rptGenBean.setCtCircularNoView(true);
+	        	rptGenBean.setCtCircularNameView(true);
+	        	rptGenBean.setCtCircularTypeView(true);
+	        	rptGenBean.setCtContractFromDateView(true);
+				rptGenBean.setCtContractEffectiveFromDateLabelView(true);
+				rptGenBean.setCtCircularEffectiveFromDateView(true);
 				//rptGenBean.setToDateView(true);
+				
 	            break;
 	        case ReportConst.CT_LST_OF_PANEL_CIRCULAR_NO_RPT_VAL:
 	        	rptGenBean.setCtContractNoView(true);
 	        	rptGenBean.setCtStatusView(true);
-				rptGenBean.setCtContractEffectiveFromDateView(true);
+				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				rptGenBean.setCtGroupOneView(true);
 	            break;
@@ -255,8 +262,8 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	//rptGenBean.setCtUserTypeView(true);
 	        	//rptGenBean.setCtSubTypeView(true);				
-				//rptGenBean.setToDateView(true);
-				rptGenBean.setCtContractEffectiveFromDateView(true);
+				rptGenBean.setToDateView(true);
+				//rptGenBean.setCtContractEffectiveFromDateView(true);
 	            break;
            case ReportConst.CT_CONTRACT_TRANSACTION_MONITORING_CC_RPT_VAL:	        	
 	        	rptGenBean.setCtContractNoView(true);
@@ -271,8 +278,8 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	//rptGenBean.setCtUserTypeView(true);
 	        	//rptGenBean.setCtSubTypeView(true);
-				rptGenBean.setCtContractEffectiveFromDateView(true);
-				//rptGenBean.setToDateView(true);
+	        	//rptGenBean.setCtContractEffectiveFromDateView(true);
+				rptGenBean.setToDateView(true);
 	            break;
            case ReportConst.CT_CONTRACT_UTILIZATION_MONITORING_CC_RPT_VAL:	        	
 	        	rptGenBean.setCtContractNoView(true);
@@ -287,8 +294,8 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	//rptGenBean.setCtUserTypeView(true);
 	        	//rptGenBean.setCtSubTypeView(true);
-				rptGenBean.setCtContractEffectiveFromDateView(true);
-				//rptGenBean.setToDateView(true);
+	        	//rptGenBean.setCtContractEffectiveFromDateView(true);
+				rptGenBean.setToDateView(true);
 	            break;
            case ReportConst.CT_STATEMENT_OF_ORDER_REPORT_CC_PANEL_RPT_VAL:	        	
 	        	rptGenBean.setCtContractNoView(true);
@@ -303,8 +310,9 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	//rptGenBean.setCtUserTypeView(true);
 	        	//rptGenBean.setCtSubTypeView(true);
-				rptGenBean.setCtContractEffectiveFromDateView(true);
-				//rptGenBean.setToDateView(true);
+	        	rptGenBean.setCtContractFromDateView(true);
+				rptGenBean.setCtContractOrderFromDateLabelView(true);
+				
 	            break;
            case ReportConst.CT_LIST_OF_CONTRACT_CC_RPT_VAL:	        	
 	        	rptGenBean.setCtContractNoView(true);
@@ -319,7 +327,8 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	//rptGenBean.setCtUserTypeView(true);
 	        	//rptGenBean.setCtSubTypeView(true);
-				rptGenBean.setCtContractEffectiveFromDateView(true);
+	        	rptGenBean.setCtContractFromDateView(true);
+				rptGenBean.setCtContractEffectiveFromDateLabelView(true);
 				//rptGenBean.setToDateView(true);
 	            break;
 	        
