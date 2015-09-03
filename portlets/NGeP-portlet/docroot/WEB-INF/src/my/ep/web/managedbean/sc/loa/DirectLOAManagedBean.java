@@ -75,8 +75,6 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	/** The selected supplier branch name. */
 	private String selectedSupplierBranchName;
 
-
-
 	/** The attachment doc type. */
 	private String attachmentDocType;
 
@@ -187,8 +185,6 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	/** The total frequency. */
 	private int totalFrequency;
 
-
-
 	/** The year list. */
 	private List<SelectItem> yearList;
 
@@ -198,7 +194,6 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	/** The total progressive payment. */
 	private int totalProgressivePayment;
 
-	
 	/** The bond amount word. */
 	private String bondAmountWord;
 
@@ -220,8 +215,6 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	/** The ptj dropdown list. */
 	private List<PmOrgProfile> ptjDropdownList; // direct nego
 
-	
-
 	/** The map supp scloiloa list */
 	private Map<Long, List<ScLoiLoa>> suppLoiLoaMap;
 
@@ -229,7 +222,7 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	private long itemTypeId = 1;// Item type Id
 
 	private ScQtDoc prodscQtDoc;
-	
+
 	private ScQtDoc servicescQtDoc;
 
 	/** The agreement Required Flag */
@@ -242,10 +235,10 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	private String clausesTitle;
 
 	/** The template spec bean. */
-	private TemplateSpecBean prodTemplateSpecBean ;
-	
+	private TemplateSpecBean prodTemplateSpecBean;
+
 	/** The template spec bean. */
-	private TemplateSpecBean specTemplateSpecBean ;
+	private TemplateSpecBean specTemplateSpecBean;
 
 	/** The spki backing bean. */
 	@ManagedProperty(value = "#{spkiBackingBean}")
@@ -277,7 +270,7 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	private TreeNode rootZoanlTree;
 	/** The existing supplier location list. */
 	private List<ScQtLocCriteria> existingLocationList;
-	
+
 	/** The selected nodes. */
 	private TreeNode[] selectedNodes;
 
@@ -291,19 +284,20 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 
 	private List<ScQtSchedule> toBeRemoveSchedules;
 	private List<ScQtProgressivePayment> toBeRemoveProgPayments;
-	
+
 	private BigDecimal overallContractAmt;
-	
+
 	private boolean renderRemainder;
-	
-	private List<ScLoaSupportingDoc>  selectedScLoaSuppDocs;
+
+	private List<ScLoaSupportingDoc> selectedScLoaSuppDocs;
 
 	private ScLoaSupportingDoc selectedScLoaSuppDoc;
-	
+
 	private ScQtZoneCriteria toBedeletedSupplierZone;
 
-	
-	private ScLoaReport branchInfoReport;/**
+	private ScLoaReport branchInfoReport;
+
+	/**
 	 * Gets the spki backing bean.
 	 * 
 	 * @return the spki backing bean
@@ -441,8 +435,6 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	public void setSelectedSupplierBranchName(String selectedSupplierBranchName) {
 		this.selectedSupplierBranchName = selectedSupplierBranchName;
 	}
-
-	
 
 	/**
 	 * Gets the attachment doc type.
@@ -1092,8 +1084,6 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 		this.totalFrequency = totalFrequency;
 	}
 
-	
-
 	/**
 	 * Gets the year list.
 	 * 
@@ -1151,7 +1141,6 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 		this.scQt = scQt;
 	}
 
-	
 	/**
 	 * Gets the total progressive payment.
 	 * 
@@ -1323,7 +1312,6 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 		this.ptjDropdownList = ptjDropdownList;
 	}
 
-	
 	/**
 	 * Gets the item type id.
 	 * 
@@ -1410,7 +1398,6 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	public void setClausesTitle(String clausesTitle) {
 		this.clausesTitle = clausesTitle;
 	}
-
 
 	public List<TreeNode> getLocationTreeNodes() {
 		return locationTreeNodes;
@@ -1509,7 +1496,6 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 		this.existingLocationList = existingLocationList;
 	}
 
-	
 	public TreeNode[] getSelectedNodes() {
 		return selectedNodes;
 	}
@@ -1566,7 +1552,6 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 			List<ScQtProgressivePayment> toBeRemoveProgPayments) {
 		this.toBeRemoveProgPayments = toBeRemoveProgPayments;
 	}
-
 
 	public BigDecimal getOverallContractAmt() {
 		return overallContractAmt;
@@ -1637,11 +1622,11 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 		return toBedeletedSupplierZone;
 	}
 
-	public void setToBedeletedSupplierZone(ScQtZoneCriteria toBedeletedSupplierZone) {
+	public void setToBedeletedSupplierZone(
+			ScQtZoneCriteria toBedeletedSupplierZone) {
 		this.toBedeletedSupplierZone = toBedeletedSupplierZone;
 	}
 
-	
 	/**
 	 * @return the branchInfoReport
 	 */
@@ -1650,7 +1635,8 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param branchInfoReport the branchInfoReport to set
+	 * @param branchInfoReport
+	 *            the branchInfoReport to set
 	 */
 	public void setBranchInfoReport(ScLoaReport branchInfoReport) {
 		this.branchInfoReport = branchInfoReport;
