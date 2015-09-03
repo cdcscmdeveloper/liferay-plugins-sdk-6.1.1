@@ -391,9 +391,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 		@Override
 		protected ISearchResultBean<CmUnspsc> pageChangeListener(
 				ISearchBean<CmUnspsc> searchBean) {
-			System.out
-			.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>titleFilterBean.getSearchValue()="
-					+ titleFilterBean.getSearchValue());
+
 			if (getAutoCompleteUnspscCode().getUnspscCode() != null
 					&& getAutoCompleteUnspscCode()
 					.getUnspscCode().trim().length() > 0) {
@@ -459,8 +457,6 @@ public class CodificationManagedBean extends BaseManagedBean {
 				}
 
 
-
-				System.out.println("this.getSortField():"+this.getSortField());
 				if(this.getSortField()==null){
 					SearchOrderBean orderBean = new SearchOrderBean("unspscCode", true);
 
