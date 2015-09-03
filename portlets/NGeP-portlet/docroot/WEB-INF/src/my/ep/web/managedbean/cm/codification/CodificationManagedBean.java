@@ -170,6 +170,10 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private List<ExtensionCodeVO> cloneExtensionVOs;
 
 	private boolean extensionSearchcheckBoxAll = false;
+	
+	
+	private String docNo;
+	private String docTitle;
 
 
 	public IPagingDataModel<Object[]> getExtensionSearchItemDataModel() {
@@ -1092,8 +1096,18 @@ public class CodificationManagedBean extends BaseManagedBean {
 						.getInstance().getServiceObject("cm",
 								IPendingCodifiedItemSO.class);
 
-
+				CodificationBackingBean bb = new CodificationBackingBean(); 	
 				PendingCodifiedItemReqDTO reqDTO = new PendingCodifiedItemReqDTO();
+				
+				if(bb.getManagedBean().getDocNo()!=null &&bb.getManagedBean().getDocNo().trim().length()>0){
+					reqDTO.setDocNo(bb.getManagedBean().getDocNo());
+				}
+				if(bb.getManagedBean().getDocTitle()!=null &&bb.getManagedBean().getDocTitle().trim().length()>0){
+					reqDTO.setDocTitle(bb.getManagedBean().getDocTitle());
+				}
+				
+				
+				
 				reqDTO.setViewSearchBean(searchBean);
 				FacesScopes facesScopes = new FacesScopes();
 				Long userId = facesScopes.getUserSessionBean().getUserId();
@@ -1297,6 +1311,24 @@ public class CodificationManagedBean extends BaseManagedBean {
 	public void setSpkiBackingBean(SpkiBackingBean spkiBackingBean) {
 		this.spkiBackingBean = spkiBackingBean;
 	}
+
+	public String getDocNo() {
+		return docNo;
+	}
+
+	public void setDocNo(String docNo) {
+		this.docNo = docNo;
+	}
+
+	public String getDocTitle() {
+		return docTitle;
+	}
+
+	public void setDocTitle(String docTitle) {
+		this.docTitle = docTitle;
+	}
+	
+	
 	
 	
 	
