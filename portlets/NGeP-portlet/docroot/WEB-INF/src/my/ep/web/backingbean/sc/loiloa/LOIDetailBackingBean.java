@@ -1375,7 +1375,7 @@ public class LOIDetailBackingBean extends
 			}
 		}
 		if (flag) {
-			throw new EpException("Please select At least one Item");
+			throw new EpException(MessageConst.ERROR_760158);
 		}
 		getManagedBean().getScLoi().setScNegoTerms(negoTermsList);
 	}
@@ -1390,7 +1390,7 @@ public class LOIDetailBackingBean extends
 		if (scLoiTerms != null && scLoiTerms.size() > 0) {
 			deleteRowsAction(scLoi.getScNegoTerms(), scLoiTerms);
 		} else {
-			throw new EpException("Please select At least one Item");
+			throw new EpException(MessageConst.ERROR_760158);
 		}
 	}
 
@@ -1413,7 +1413,7 @@ public class LOIDetailBackingBean extends
 			}
 		}
 		if (flag) {
-			throw new EpException("Please select At least one Item");
+			throw new EpException(MessageConst.ERROR_760158);
 		}
 		getManagedBean().getScLoi().setScNegoLocations(result);
 	}
@@ -1757,93 +1757,6 @@ public class LOIDetailBackingBean extends
 		 * (("F").equals(getManagedBean().getScQt() .getScheduleType())) { //
 		 * Fulfilment Schedule formFulfilmentSchedule(scLoi); } } }
 		 */
-	}
-	
-	/**
-	 * Form fulfilment schedule after save.
-	 *
-	 * @param scLoi the sc loi
-	 */
-	private void formFulfilmentSchedule(ScLoi scLoi){
-		if(null != scLoi.getScQtSchedules() && scLoi.getScQtSchedules().size()>0){
-			this.getManagedBean().setTotalFrequency(scLoi.getScQtSchedules().size());
-			for (ScQtSchedule scQtSchedule : scLoi.getScQtSchedules()) {
-				SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-				String fromdate = dateFormat.format(scQtSchedule
-						.getFromDate());
-				String todate = dateFormat.format(scQtSchedule.getToDate());
-				
-				String startMonth = fromdate.substring(3, 5);
-				String startYear = fromdate.substring(6, fromdate.length());
-				String endMonth = todate.substring(3, 5);
-				String endYear = todate.substring(6, todate.length());
-
-				int sMonth = Integer.parseInt(startMonth);
-				int eMonth = Integer.parseInt(endMonth);
-				int sYear = Integer.parseInt(startYear);
-				int eYear = Integer.parseInt(endYear);
-				int diffYear = 0;
-				int count = 0;
-
-				if (eYear >= sYear) {
-					if (!endYear.equals(startYear)) {
-						diffYear = eYear - sYear;
-					}
-					for (int i = sMonth + 1; i <= eMonth + 1; i++) {
-						count++;
-					}
-					count = count + (diffYear * 12);
-					scQtSchedule.setTotalMonths(new BigDecimal(count));
-				} else {
-					scQtSchedule.setTotalMonths(BigDecimal.ZERO);
-				}
-				scQtSchedule.setStartMonth(String.valueOf(sMonth));
-				scQtSchedule.setEndMonth(String.valueOf(eMonth));
-				scQtSchedule.setStartYear(startYear);
-				scQtSchedule.setEndYear(endYear);
-			}
-			this.sortFrequentScheduleList(scLoi.getScQtSchedules());
-		} else{
-			this.getManagedBean().setTotalFrequency(0);
-		}
-	}
-	
-	/**
-	 * Form progressive payment.
-	 *
-	 * @param scLoi the sc loi
-	 */
-	private void formProgressivePayment(ScLoi scLoi){
-		List<ScQtProgressivePayment>  progressivePayment = new ArrayList<ScQtProgressivePayment>();
-		if (null != scLoi.getScQtProgPayments() && scLoi.getScQtProgPayments().size()>0) {
-			this.getManagedBean().setTotalProgressivePayment(
-					scLoi.getScQtProgPayments().size());
-			for (ScQtProgressivePayment scQtProgressivePayment : scLoi
-					.getScQtProgPayments()) {
-				SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-
-				String fromdate = dateFormat.format(scQtProgressivePayment.getFromDate());
-				String todate = dateFormat.format(scQtProgressivePayment.getToDate());
-
-				String startMonth = fromdate.substring(3, 5);
-				String startYear = fromdate.substring(6, fromdate.length());
-				String endMonth = todate.substring(3, 5);
-				String endYear = todate.substring(6, todate.length());
-
-				int sMonth = Integer.parseInt(startMonth);
-				int eMonth = Integer.parseInt(endMonth);
-
-				scQtProgressivePayment.setStartMonth(String.valueOf(sMonth));
-				scQtProgressivePayment.setEndMonth(String.valueOf(eMonth));
-				scQtProgressivePayment.setStartYear(startYear);
-				scQtProgressivePayment.setEndYear(endYear);
-				progressivePayment.add(scQtProgressivePayment);
-
-			}
-			this.sortProgressivePaymentList(progressivePayment);
-			this.getManagedBean().setProgressivePaymentList(
-					progressivePayment);
-		}
 	}
 
 	/**
@@ -2456,17 +2369,6 @@ public class LOIDetailBackingBean extends
 			reqDTO.setPayLoad(evaluationDataType);
 			reqDTO.setDigiSignData(digiSign);
 			
-			 // Prepare Fulfilment Schedule or Progressive payment
-			/*
-			 * Long statusId = getManagedBean().getCurrentStatusId(); if
-			 * (QTStatusConst.MLI_PENDING_NEGOTIATION.equals(statusId)) { if
-			 * (getManagedBean().getScQt() != null) { if
-			 * (("P").equals(getManagedBean().getScQt().getScheduleType())) {
-			 * this.saveProgressivePaymntList(); } else if
-			 * (("F").equals(getManagedBean().getScQt() .getScheduleType())) {
-			 * this.saveScheduleList(); } } }
-			 */
-			
 			reqDTO.setStatusId(getManagedBean().getCurrentStatusId());
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveMultipleLOIDtl(
 					reqDTO);
@@ -2543,15 +2445,6 @@ public class LOIDetailBackingBean extends
 					}
 				}				
 			}
-			
-			// prepare fulfillment schedule
-			/*
-			 * if (getManagedBean().getScQt() != null) { if
-			 * (("P").equals(getManagedBean().getScQt().getScheduleType())) {
-			 * this.saveProgressivePaymntList(); } else if
-			 * (("F").equals(getManagedBean().getScQt() .getScheduleType())) {
-			 * this.saveScheduleList(); } }
-			 */
 		}
 		
 		ScQtFinalization scQtFinalization = getManagedBean()
@@ -3071,15 +2964,6 @@ public class LOIDetailBackingBean extends
 				scLoi.setScNegoTerms(selectedTerms);
 			}
 		}
-
-		/*
-		 * if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) { if
-		 * (getManagedBean().getScQt() != null) { if
-		 * (("P").equals(getManagedBean().getScQt().getScheduleType())) {
-		 * this.saveProgressivePaymntList(); } else if
-		 * (("F").equals(getManagedBean().getScQt() .getScheduleType())) {
-		 * this.saveScheduleList(); } } }
-		 */
 	}
 	
 	/**
@@ -3395,7 +3279,7 @@ public class LOIDetailBackingBean extends
 			deleteRowAction(scLoi.getScQtDeductions(), qtDeduction);
 			getManagedBean().setSelectedScQtDeduction(null);
 		} else {
-			throw new EpException("Please select At least one Item");
+			throw new EpException(MessageConst.ERROR_760158);
 		}
 	}
 
@@ -3432,7 +3316,7 @@ public class LOIDetailBackingBean extends
 		if (clauses != null && clauses.size() > 0) {
 			deleteRowsAction(scQtDeduction.getScQtDeductionClauses(), clauses);
 		} else {
-			throw new EpException("Please select At least one Item");
+			throw new EpException(MessageConst.ERROR_760158);
 		}
 	}
 
@@ -3481,101 +3365,6 @@ public class LOIDetailBackingBean extends
 	}
 
 	/**
-	 * Adds the schedule details.
-	 */
-	public void addScheduleDetails() {
-
-		try {
-
-			int year = Calendar.getInstance().get(Calendar.YEAR);
-			List<ScQtSchedule> freqSchedule = this.getManagedBean().getScLoi()
-					.getScQtSchedules();
-			if (null == freqSchedule) {
-				freqSchedule = new ArrayList<ScQtSchedule>();
-			}
-
-			if (freqSchedule.size() > this.getManagedBean().getTotalFrequency()) {
-
-				List<ScQtSchedule> localSchedule = new ArrayList<ScQtSchedule>();
-				for (int j = 0; j < this.getManagedBean().getTotalFrequency(); j++) {
-					localSchedule.add(freqSchedule.get(j));
-
-				}
-				this.getManagedBean().getScLoi()
-						.setScQtSchedules(localSchedule);
-			} else {
-				for (int i = freqSchedule.size(); i < this.getManagedBean()
-						.getTotalFrequency(); i++) {
-					ScQtSchedule schedule = new ScQtSchedule();
-					schedule.setStartYear(String.valueOf(year));
-					schedule.setEndYear(String.valueOf(year));
-					schedule.setScheduleNo(BigDecimal.valueOf(i + 1));
-					PmParameter parameter = this.getParameterByTypeAndCode(
-							ParameterTypeConst.SCHEDULE_TYPE,
-							ParameterConst.SCHEDULE_TYPE_PERIODIC);
-					schedule.setScheduleType(parameter);
-					setUserDetails(schedule);
-					freqSchedule.add(schedule);
-				}
-				this.getManagedBean().getScLoi().setScQtSchedules(freqSchedule);
-			}
-
-		} finally {
-
-		}
-	}
-
-	/**
-	 * Gets the year details.
-	 * 
-	 * @return the year details
-	 */
-	public List<SelectItem> getYearDetails() {
-		List<SelectItem> selectItems = new ArrayList<SelectItem>();
-		FacesScopes face = new FacesScopes();
-		try {
-
-			selectItems.add(new SelectItem(null, ResourceBundleUtils
-					.getMessage("lbl.txt.select",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							face.getUserLocale())));
-			selectItems.add(new SelectItem(1, getMonth(1)));
-			selectItems.add(new SelectItem(2, getMonth(2)));
-			selectItems.add(new SelectItem(3, getMonth(3)));
-			selectItems.add(new SelectItem(4, getMonth(4)));
-			selectItems.add(new SelectItem(5, getMonth(5)));
-			selectItems.add(new SelectItem(6, getMonth(6)));
-			selectItems.add(new SelectItem(7, getMonth(7)));
-			selectItems.add(new SelectItem(8, getMonth(8)));
-			selectItems.add(new SelectItem(9, getMonth(9)));
-			selectItems.add(new SelectItem(10, getMonth(10)));
-			selectItems.add(new SelectItem(11, getMonth(11)));
-			selectItems.add(new SelectItem(12, getMonth(12)));
-
-			this.getManagedBean().setYearList(selectItems);
-		} finally {
-
-		}
-		return getManagedBean().getYearList();
-	}
-
-	/**
-	 * Gets the month.
-	 * 
-	 * @param monthId
-	 *            the month id
-	 * @return the month
-	 */
-	private String getMonth(int monthId) {
-		Calendar fullMonth = Calendar.getInstance();
-		fullMonth.set(00, monthId, 0000);
-
-		Format formatter = new SimpleDateFormat("MMMM");
-		String month = formatter.format(fullMonth.getTime());
-		return month;
-	}
-
-	/**
 	 * Calculate start month.
 	 * 
 	 * @param event
@@ -3584,249 +3373,6 @@ public class LOIDetailBackingBean extends
 	public void calculateStartMonth(AjaxBehaviorEvent event) {
 		event.getComponent().getAttributes().get("value");
 
-	}
-
-	/**
-	 * Gets the years display dtls.
-	 * 
-	 * @return the years display dtls
-	 */
-	public List<SelectItem> getYearsDisplayDtls() {
-
-		List<SelectItem> selectItems = new ArrayList<SelectItem>();
-
-		try {
-			int year = Calendar.getInstance().get(Calendar.YEAR);
-
-			selectItems.add(new SelectItem(null, ResourceBundleUtils
-					.getMessage("lbl.txt.select",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale())));
-			selectItems.add(new SelectItem(year, String.valueOf(year)));
-			for (int i = 0; i < 20; i++) {
-				year = year + 1;
-				selectItems.add(new SelectItem(year, String.valueOf(year)));
-			}
-
-			this.getManagedBean().setYearsDisplayList(selectItems);
-		} finally {
-
-		}
-		return getManagedBean().getYearsDisplayList();
-	}
-
-	/**
-	 * Calculate schedule months.
-	 * 
-	 * @param schedule
-	 *            the schedule
-	 * @param startMonthAndYearFlag
-	 *            the start month and year flag
-	 */
-	public void calculateScheduleMonths(ScQtSchedule schedule,
-			Boolean startMonthAndYearFlag) {
-
-		List<ScQtSchedule> freqSchedule = this.getManagedBean().getScLoi()
-				.getScQtSchedules();
-		if (null == freqSchedule) {
-			freqSchedule = new ArrayList<ScQtSchedule>();
-
-		}
-		Integer startMonth = 0, endMonth = 0, startYear = 0, endYear = 0, diffYear = 0, count = 0;
-		startMonth = schedule.getStartMonth() != null ? Integer
-				.parseInt(schedule.getStartMonth()) : null;
-		endMonth = schedule.getEndMonth() != null ? Integer.parseInt(schedule
-				.getEndMonth()) : null;
-		startYear = schedule.getStartYear() != null ? Integer.parseInt(schedule
-				.getStartYear()) : null;
-		endYear = schedule.getEndYear() != null ? Integer.parseInt(schedule
-				.getEndYear()) : null;
-
-		if (startMonthAndYearFlag && startMonth != null) {
-			endMonth = startMonth;
-			endYear = startYear;
-			schedule.setEndMonth(endMonth.toString());
-			if (endYear != null) {
-				schedule.setEndYear(endYear.toString());
-			}
-		}
-
-		if (startMonth != null && endMonth != null && startYear != null
-				&& endYear != null && endYear >= startYear) {
-			if (!endYear.equals(startYear)) {
-				diffYear = endYear - startYear;
-			}
-			for (int i = startMonth + 1; i <= endMonth + 1 + (diffYear * 12); i++) {
-				count++;
-			}
-			schedule.setTotalMonths(new BigDecimal(count));
-		} else {
-			schedule.setTotalMonths(BigDecimal.ZERO);
-		}
-
-		int index = freqSchedule.indexOf(schedule);
-		freqSchedule.set(index, schedule);
-
-		this.getManagedBean().setScheduleList(freqSchedule);
-	}
-
-	/**
-	 * Save schedule list.
-	 */
-	private void saveScheduleList() {
-		List<ScQtSchedule> freqschedule = this.getManagedBean().getScLoi()
-				.getScQtSchedules();
-		List<ScQtSchedule> localScheduleList = new ArrayList<ScQtSchedule>();
-		if (freqschedule != null && !freqschedule.isEmpty()) {
-			for (ScQtSchedule schedule : freqschedule) {
-				
-				Date currentDate = new Date();
-				SimpleDateFormat format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-				String localDate = format.format(currentDate);
-				String day = localDate.substring(0, 2);
-				String fromdate = day + "/" + schedule.getStartMonth() + "/"
-						+ schedule.getStartYear();
-				String toDate = day + "/" + schedule.getEndMonth() + "/"
-						+ schedule.getEndYear();
-
-				schedule.setScheduleNo(schedule.getScheduleNo());
-
-				try {
-					if (format.parse(fromdate).after(format.parse(toDate))) {
-						throw new EpException(MessageConst.ERROR_715011);
-					} else {
-						schedule.setFromDate(format.parse(fromdate));
-						schedule.setToDate(format.parse(toDate));
-					}
-				} catch (ParseException e) {
-					throw new EpException(e.toString());
-				}
-				if (null == schedule.getScLoi()) {
-					schedule.setScLoi(this.getManagedBean().getScLoi());
-				}
-				localScheduleList.add(schedule);
-			}
-			getManagedBean().getScLoi().setScQtSchedules(localScheduleList);
-		} else {
-			getManagedBean().getScLoi().setScQtSchedules(null);
-		}
-	}
-
-	/**
-	 * Adds the progressive details.
-	 */
-	public void addProgressiveDetails() {
-		int year = Calendar.getInstance().get(Calendar.YEAR);
-		List<ScQtProgressivePayment> progressive = this.getManagedBean()
-				.getProgressivePaymentList();
-		if (null == progressive) {
-			progressive = new ArrayList<ScQtProgressivePayment>();
-
-		}
-
-		if (progressive.size() > this.getManagedBean()
-				.getTotalProgressivePayment()) {
-
-			List<ScQtProgressivePayment> progressiveList = new ArrayList<ScQtProgressivePayment>();
-			for (int j = 0; j < this.getManagedBean()
-					.getTotalProgressivePayment(); j++) {
-				progressiveList.add(progressive.get(j));
-
-			}
-			this.getManagedBean().setProgressivePaymentList(progressiveList);
-		} else {
-			for (int i = progressive.size(); i < this.getManagedBean()
-					.getTotalProgressivePayment(); i++) {
-
-				ScQtProgressivePayment payment = new ScQtProgressivePayment();
-				payment.setStartYear(String.valueOf(year));
-				payment.setEndYear(String.valueOf(year));
-				payment.setPhaseNo(BigDecimal.valueOf(i + 1));
-				// payment.setScheduleType(new BigDecimal(1));
-
-				setUserDetails(payment);
-				progressive.add(payment);
-			}
-			this.getManagedBean().setProgressivePaymentList(progressive);
-		}
-	}
-
-	/**
-	 * Save progressive paymnt list.
-	 */
-	private void saveProgressivePaymntList() {
-		List<ScQtProgressivePayment> progressivePayemnt = this.getManagedBean()
-				.getProgressivePaymentList();
-		List<ScQtProgressivePayment> paymentList = new ArrayList<ScQtProgressivePayment>();
-		if (progressivePayemnt != null && !progressivePayemnt.isEmpty()) {
-			for (ScQtProgressivePayment payment : progressivePayemnt) {
-				Date currentDate = new Date();
-				SimpleDateFormat format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-				String localDate = format.format(currentDate);
-				String day = localDate.substring(0, 2);
-				String fromdate = day + "/" + payment.getStartMonth() + "/"
-						+ payment.getStartYear();
-				String toDate = day + "/" + payment.getEndMonth() + "/"
-						+ payment.getEndYear();
-
-				try {
-					if (format.parse(fromdate).after(format.parse(toDate))) {
-						throw new EpException(MessageConst.ERROR_715011);
-					} else {
-						payment.setFromDate(format.parse(fromdate));
-						payment.setToDate(format.parse(toDate));
-					}
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				if (null == payment.getScLoi()) {
-					payment.setScLoi(this.getManagedBean().getScLoi());
-				}
-				paymentList.add(payment);
-			}
-			getManagedBean().getScLoi().setScQtProgPayments(paymentList);
-
-		} else {
-			getManagedBean().getScLoi().setScQtProgPayments(null);
-		}
-	}
-
-	/**
-	 * Sort frequent schedule list.
-	 * 
-	 * @param scQtScheduleList
-	 *            the sc qt schedule list
-	 */
-	private void sortFrequentScheduleList(List<ScQtSchedule> scQtScheduleList) {
-		Comparator<ScQtSchedule> comparator = new Comparator<ScQtSchedule>() {
-			@Override
-			public int compare(ScQtSchedule o1, ScQtSchedule o2) {
-				return new CompareToBuilder().append(o1.getScheduleNo(),
-						o2.getScheduleNo()).toComparison();
-			}
-		};
-		Collections.sort(scQtScheduleList, comparator);
-		
-	}
-
-	/**
-	 * Sort progressive payment list.
-	 * 
-	 * @param progressivePaymentList
-	 *            the progressive payment list
-	 */
-	private void sortProgressivePaymentList(
-			List<ScQtProgressivePayment> progressivePaymentList) {
-		Comparator<ScQtProgressivePayment> comparator = new Comparator<ScQtProgressivePayment>() {
-			@Override
-			public int compare(ScQtProgressivePayment o1,
-					ScQtProgressivePayment o2) {
-				return new CompareToBuilder().append(o1.getPhaseNo(),
-						o2.getPhaseNo()).toComparison();
-			}
-		};
-		Collections.sort(progressivePaymentList, comparator);
 	}
 
 	/**
@@ -3912,7 +3458,7 @@ public class LOIDetailBackingBean extends
 		if (selectedScLoiReports != null && selectedScLoiReports.size() > 0) {
 			deleteRowsAction(scLoi.getScLoiReports(), selectedScLoiReports);
 		} else {
-			throw new EpException("Please select At least one Item");
+			throw new EpException(MessageConst.ERROR_760158);
 		}
 	}
 
@@ -4012,7 +3558,7 @@ public class LOIDetailBackingBean extends
 			deleteRowsAction(scLoi.getScLoiSupportingDocs(),
 					selectedScLoiSuppDocs);
 		} else {
-			throw new EpException("Please select At least one Item");
+			throw new EpException(MessageConst.ERROR_760158);
 		}
 	}
 
@@ -5225,31 +4771,6 @@ public class LOIDetailBackingBean extends
 		this.flag = flag;
 	}
 	
-	/**
-	 * Gets the role code.
-	 *
-	 * @return the role code
-	 */
-	private String getRoleCode(){
-		String roleCode="";
-		FacesScopes facesScopes = new FacesScopes();
-		PmUser curLogedInUser = facesScopes.getUserSessionBean();
-		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						ICommitteSO.class);
-		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
-		committeReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-		committeReqDTO.setUser(curLogedInUser);
-		committeReqDTO.setCommitteeType(this.getManagedBean()
-				.getCommitteeType());
-		CommitteResDTO CommitteeresDTO = committeSO
-				.retrieveCommitteMemberByUserId(committeReqDTO);
-		ScCommitteeMember member = CommitteeresDTO.getCommMember();
-		if(member != null){
-			roleCode =  member.getMemberRole().getParameterCode();
-		}
-		return roleCode;
-	}
 	
 	/**
 	 * Success message.
