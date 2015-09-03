@@ -146,21 +146,10 @@
 		<table width="100%">
 			<tr>
 				<td width="21%"><h:outputLabel
-						value="#{lbl['lbl.sc.minsistry']}" /> <p:outputLabel value="*"
-						styleClass="mandatory" /></td>
-				<td colspan="3"><p:selectOneMenu
-						style="margin-bottom: 5px; width:300px" id="minstryselect"
-						required="true" label="#{lbl['lbl.sc.select.ministry']}"
-						value="#{directLOABackingBean.managedBean.scQt.ministryOrgProfile.orgProfileId}"
-						disabled="#{!isEditableStatus}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems
-							value="#{directLOABackingBean.ministryDropdownList()}"
-							var="pmOrgProfile"
-							itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
-							itemValue="#{pmOrgProfile.orgProfileId}" />
-						<p:ajax event="change" update="ptjProfile" />
-					</p:selectOneMenu></td>
+						value="#{lbl['lbl.sc.minsistry']}" /></td>
+				<td colspan="3"><p:inputText disabled="#{!isEditableStatus}"
+						value="#{directLOABackingBean.managedBean.scQt.ministryOrgProfile.orgName}"
+						size="44" maxlength="100" /></td>
 			</tr>
 			<tr>
 
@@ -233,6 +222,7 @@
 						disabled="#{!isEditableStatus}"
 						value="#{directLOABackingBean.managedBean.scLoa.scQt.estimatedAmount}"
 						size="30">
+						<p:ajax event="blur" process="@this" update="@this"></p:ajax>
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText></td>
@@ -250,7 +240,7 @@
 						value="#{directLOABackingBean.managedBean.scLoa.loaAmt}" size="30"
 						label="#{lbl['lbl.sc.loiloa.loa.off.price']}">
 						<p:ajax event="blur"
-							listener="#{directLOABackingBean.setOverallCtAmount(directLOABackingBean.managedBean.scLoa.loaAmt)}"
+							listener="#{directLOABackingBean.calculateOverallAmount(directLOABackingBean.managedBean.scLoa.loaAmt)}"
 							update="@this,ContractAmtId"></p:ajax>
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -376,7 +366,7 @@
 							value="#{directLOABackingBean.managedBean.scLoa.contractAgency.orgProfileId}"
 							style="width: 212px;margin-bottom: 5px;"
 							label="#{lbl['lbl.sc.loiloa.loa.agency']}"
-							rendered="#{directLOABackingBean.managedBean.scLoa.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+							rendered="#{directLOABackingBean.managedBean.scLoa.contractType.parameterCode eq ParameterConst.contractTypeMinistry}">
 
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
@@ -396,7 +386,7 @@
 							value="#{directLOABackingBean.managedBean.scLoa.contractAgency.orgTypeCode.parameterCode}"
 							style="width: 212px;margin-bottom: 5px;"
 							label="#{lbl['lbl.sc.loiloa.loa.agency']}"
-							rendered="#{directLOABackingBean.managedBean.scLoa.contractType.parameterCode != ParameterConst.contractTypeMinistry}">
+							rendered="#{directLOABackingBean.managedBean.scLoa.contractType.parameterCode ne ParameterConst.contractTypeMinistry}">
 
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
@@ -434,7 +424,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel
-						value="#{lbl[directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.period' : 'lbl.sc.loiloa.loa.cont.period']}" />
+						value="#{lbl[directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.period' : 'lbl.sc.loiloa.loa.cont.period']}" />
 				</td>
 				<td colspan="3"><p:inputText styleClass="ppNumericAlign"
 						id="contractDuration" disabled="#{!isEditableStatus}"
@@ -445,9 +435,9 @@
 					</p:inputText></td>
 			</tr>
 			<ui:param name="lbleffDate"
-				value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.eff.date' : 'lbl.sc.loiloa.loa.cont.eff.date'}" />
+				value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.eff.date' : 'lbl.sc.loiloa.loa.cont.eff.date'}" />
 			<ui:param name="lblexpDate"
-				value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.exp.date' : 'lbl.sc.loiloa.loa.cont.exp.date'}" />
+				value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.exp.date' : 'lbl.sc.loiloa.loa.cont.exp.date'}" />
 			<tr>
 				<td><p:outputLabel value="#{lbl[lbleffDate]}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
