@@ -701,11 +701,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    	for (CtDeduction deduct : this.getManagedBean().getContractVer().getCtDeductions()) {
 	    		if (deduct.getDeductionType().getParameterCode().equalsIgnoreCase(ContractConst.AP_DEDUCTION_TYPE)) {
 	    			getManagedBean().setFlgPaymentTracking(true);
-	    			getManagedBean().setAdvancePaymentAmt(deduct.getAmount());
-	    			calAdvancePaymentTracking(this.getManagedBean().getCtContract().getContractId());
+	    			getManagedBean().setAdvancePaymentAmt(deduct.getAmount());	    			
 	    		}
 	    	}
 	    }
+	    //Retrieve Payment Tracking	    
+	    calPaymentTracking(this.getManagedBean().getCtContract().getContractId());
+	    
 	    // Retrieve Schedules
 	    if (getManagedBean().getContractVer().getCtSchedules() != null 
 	    		&& !getManagedBean().getContractVer().getCtSchedules().isEmpty()) {
@@ -1927,11 +1929,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	}
 	
 	/**
-	 * The method used to retrieve the advance payment tracking information.
+	 * The method used to retrieve the payment tracking information.
 	 * 
 	 * @param  contractId  the contract id
      */
-	private void calAdvancePaymentTracking(Long contractId) {
+	private void calPaymentTracking(Long contractId) {
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 		ContractResDTO resDTO = new ContractResDTO();
