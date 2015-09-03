@@ -21,7 +21,7 @@
 
 			<ac:paginator for="deductTbl" />
 
-			<p:column>
+			<p:column width="60%">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory"
 						rendered="#{isEditableStatus}" />
@@ -47,7 +47,7 @@
 				</c:if>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.deduction.amount']}">
+			<p:column headerText="#{lbl['lbl.sc.deduction.amount']}" width="40%">
 				<h:panelGroup id="deductionPayAmtId">
 					<p:inputText id="amtid" size="30" maxlength="18" required="true"
 						label="#{lbl['lbl.sc.deduction.amount']}"
