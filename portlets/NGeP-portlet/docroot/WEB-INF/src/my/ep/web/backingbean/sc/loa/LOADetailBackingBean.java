@@ -567,26 +567,23 @@ public class LOADetailBackingBean extends
 	    
 	    if(startDate != null && endDate != null){
 	    	if (startDate.after(endDate)) {
-	    		throw new EpException("Start date must be before end date in Fulfilment Schedule.");
+	    		throw new EpException(MessageConst.ERROR_760345);
 	    	}
 
 	    	if (endDate.before(startDate)) {
-	    		throw new EpException("End date must be after start date in Fulfilment Schedule.");
+	    		throw new EpException(MessageConst.ERROR_760346);
 	    	}
 
 	    	if (!(startDate.getTime().after(contractEffDate)
 					&& (startDate.getTime().before(contractExpDate)) || contractEffDate.equals(startDate.getTime()))) {
-				throw new EpException(
-						"Start date should be in contract validity period in Fulfilment Schedule.");
+				throw new EpException(MessageConst.ERROR_760347);
 			}
 
 			if (!(endDate.getTime().after(contractEffDate)
 					&& (endDate.getTime().before(contractExpDate)) || contractExpDate.equals(endDate.getTime()))) {
-				throw new EpException(
-						"End date should be in contract validity period in Fulfilment Schedule.");
+				throw new EpException(MessageConst.ERROR_760348);
 			}
 	    }
-
 	}
 	
 	/**
@@ -2532,16 +2529,21 @@ public class LOADetailBackingBean extends
 				&& BpmOutcomeConst.BPM_SUBMIT.equals(outcome)) {
 			if(scLoa.isApprovalReq()){
 				if(null == getManagedBean().getApproverUser() || null == getManagedBean().getApproverUser().getUserId()){
-					throw new EpException("Approver is required.");
+					throw new EpException(
+							MessageConst.ERROR_760315,
+							new String[] {ResourceBundleUtils.getMessage("lbl.sc.approver",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 			}
 
 			if(null  == scLoa.getContractEffDate()){
-				throw new EpException("Contract Effective Date is required.");
+				throw new EpException(
+						MessageConst.ERROR_760349);
 			}
 
 			if(null  == scLoa.getContractExpDate()){
-				throw new EpException("Contract Expiry Date is required.");
+				throw new EpException(
+						MessageConst.ERROR_760350);
 			}
 		}
        // validation for fulfillment schedule and progressivepayment
@@ -4559,23 +4561,21 @@ public class LOADetailBackingBean extends
 	    
 	    if(startDate != null && endDate != null){
 	    	if (startDate.after(endDate)) {
-	    		throw new EpException("Start date must be before end date in Progressive Payment.");
+	    		throw new EpException(MessageConst.ERROR_760345);
 	    	}
 
 	    	if (endDate.before(startDate)) {
-	    		throw new EpException("End date must be after start date in Progressive Payment.");
+	    		throw new EpException(MessageConst.ERROR_760346);
 	    	}
 
 	    	if (!(startDate.getTime().after(contractEffDate)
 					&& (startDate.getTime().before(contractExpDate)) || contractEffDate.equals(startDate.getTime()))) {
-				throw new EpException(
-						"Start date should be in contract validity period in Progressive Payment.");
+				throw new EpException(MessageConst.ERROR_760347);
 			}
 
 			if (!(endDate.getTime().after(contractEffDate)
 					&& (endDate.getTime().before(contractExpDate)) || contractExpDate.equals(endDate.getTime()))) {
-				throw new EpException(
-						"End date should be in contract validity period in Progressive Payment.");
+				throw new EpException(MessageConst.ERROR_760348);
 			}
 	    }
 	}
