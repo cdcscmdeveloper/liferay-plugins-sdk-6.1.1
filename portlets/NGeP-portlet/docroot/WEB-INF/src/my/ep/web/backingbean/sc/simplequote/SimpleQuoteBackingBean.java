@@ -4233,6 +4233,10 @@ public class SimpleQuoteBackingBean extends
 				getManagedBean().setLocationLevel(
 						scQuote.getZoneLocatonLevel().getParameterCode());
 			}
+			// procurement  type category
+			if(null == scQuote.getProcurementTypeCategory()){
+				scQuote.setProcurementTypeCategory(new PmParameter());
+			}
 
 			// supplier location level by default - district
 			if (scQuote.getSupplierLocationLevel() != null) {
