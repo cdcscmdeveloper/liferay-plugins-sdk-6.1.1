@@ -23,9 +23,8 @@
 						size="14" disabled="true" readonly="true">
 						<f:convertDateTime pattern="dd/MM/yyyy" />
 					</p:inputText> <p:spacer width="10px" /> <p:inputText
-						styleClass="ppNumericAlign"
 						value="#{!empty lOADetailBackingBean.managedBean.scLoa.bondResDueDate ? DateUtils.getDaysDifference(DateUtils.getCurrentDateWithoutTime(), lOADetailBackingBean.managedBean.scLoa.bondResDueDate) : ''}"
-						disabled="true" size="8" /></td>
+						disabled="true" size="8"  style="text-align:right;"/></td>
 
 			</tr>
 			<tr>

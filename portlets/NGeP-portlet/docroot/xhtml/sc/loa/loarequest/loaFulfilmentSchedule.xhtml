@@ -25,7 +25,7 @@
 						<p:inputText disabled="#{!isEditableStatus}" 
 							label ="#{lbl['lbl.sc.spec.total.frequency']}"
 							value="#{lOADetailBackingBean.managedBean.totalFrequency}"
-							styleClass="ppNumericAlign">
+							style="text-align:right;">
 							<p:ajax event="blur" update="frequencySchedule"
 								partialSubmit="true" process="@this"
 								listener="#{lOADetailBackingBean.addScheduleDetails}" />
@@ -118,9 +118,9 @@
 						<h:outputLabel value="#{lbl['lbl.sc.spec.total.phase']}"></h:outputLabel>
 					</h:column>
 					<h:column>
-						<p:inputText styleClass="ppNumericAlign"
+						<p:inputText 
 							value="#{lOADetailBackingBean.managedBean.totalProgressivePayment}"
-							disabled="#{!isEditableStatus}">
+							disabled="#{!isEditableStatus}" style="text-align:right;">
 							<p:ajax event="blur" update="progressivePayment"
 								partialSubmit="true" process="@this"
 								listener="#{lOADetailBackingBean.addProgressiveDetails}" />
@@ -200,9 +200,9 @@
 							<h:outputText value="#{lbl['lbl.sc.percentage']}" />
 							<ac:iconTooltip value="#{lbl['lbl.sc.spec.percentage.tooltip']}" />
 						</f:facet>
-						<p:inputText value="#{payment.percentage}" required="true" style="width:80px;"
-							id="progressivePercentage" styleClass="ppNumericAlign"
-							label="#{lbl['lbl.sc.percentage']}" maxlength="18">
+						<p:inputText value="#{payment.percentage}" required="true" style="width:80px; text-align:right;"
+							id="progressivePercentage" 
+							label="#{lbl['lbl.sc.percentage']}" maxlength="18" >
 							<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 							<p:ajax event="blur" partialSubmit="true" process="@this" />
 						</p:inputText>
