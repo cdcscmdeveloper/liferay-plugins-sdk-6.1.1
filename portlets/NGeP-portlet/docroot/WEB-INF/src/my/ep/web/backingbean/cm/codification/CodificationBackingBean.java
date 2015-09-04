@@ -187,6 +187,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		codeFilterBean = new SearchFilterBean(
 				SearchOperator.OPERATOR_LIKE.value());
 		this.setSearchDataModel(new SearchPagingDataModel());
+
 		this.getManagedBean().setAutoCompleteUnspscCode(null);
 		log.info("after reset.........................");
 		return null;
@@ -950,16 +951,19 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	}
 
 	public void clearContractedCodePopUp() {
-		resetAction();
-		// this.getManagedBean().setSelectedLovUnspscSegment(null);
-		// this.getManagedBean().setSelectedLovUnspscFamily(null);
-		// this.getManagedBean().setSelectedLovUnspscClass(null);
-		// this.getManagedBean().setSelectedUNSPSCObj(null);
+		
+
+
+		titleFilterBean = new SearchFilterBean(
+				SearchOperator.OPERATOR_LIKE.value());
+		this.getManagedBean().setTitleFilterBean(titleFilterBean);
+		this.getManagedBean().setSearchDataModel(new SearchPagingDataModel());
+
+		this.getManagedBean().setAutoCompleteUnspscCode(null);
+		
+		
 		this.getManagedBean().setRequestExtCode(null);
-		// this.getManagedBean().setTypeDisable(true);
-		// this.getManagedBean().setBrandDisable(true);
-		// this.getManagedBean().setMeasurementDisable(true);
-		// this.getManagedBean().setColorDisable(true);
+		
 	}
 
 	public void filterFamily() {
@@ -1347,7 +1351,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 				codifiedItemReqDTO.setPendingCodifiedItem(codifiedItem);
 				codifiedItemResDTO = codifiedItemSO.updatePendingCodifiedItem(codifiedItemReqDTO);
-				
+				this.getManagedBean().getSelectedVPendingCodifiedItem().setStatusId(codifiedItemResDTO.getPendingCodifiedItem().getStatusId());
 				facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(
 						null,
