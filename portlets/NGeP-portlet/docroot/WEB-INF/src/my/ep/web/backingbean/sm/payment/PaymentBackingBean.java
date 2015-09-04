@@ -348,8 +348,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 				pymDtlList.add(paymentDtl);
 				totalAmount = totalAmount.add(newBillDtl.getItemPrice());
 			}
-
-			totalAmount = totalAmount.setScale(2, BigDecimal.ROUND_UP);
+			
+			totalAmount = totalAmount.add(getManagedBean().getGstAmount())
+					.setScale(2, BigDecimal.ROUND_UP);
 			payment.setSmPaymentDtls(pymDtlList);
 			payment.setSmBill(smBill);
 			payment.setPaymentAmt(totalAmount);
