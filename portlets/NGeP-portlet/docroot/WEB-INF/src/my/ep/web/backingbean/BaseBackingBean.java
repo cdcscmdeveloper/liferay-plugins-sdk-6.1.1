@@ -129,10 +129,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 		
 		// extend Liferay session
-		/*if(RequestContext.getCurrentInstance() != null) {
-			log.info("extending liferay session");
-			RequestContext.getCurrentInstance().execute("extendLiferaySession();");	
-		}*/
+		new FacesScopes().extendLiferaySession();
 	}
 
 	/**

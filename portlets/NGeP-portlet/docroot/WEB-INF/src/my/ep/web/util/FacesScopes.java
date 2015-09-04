@@ -385,5 +385,10 @@ public class FacesScopes {
 		
 	}
 
+	public void extendLiferaySession() {
+		if(this.getUserSessionBean() != null) {
+			this.getRequest().setAttribute(WebKeys.EXTEND_SESSION, Boolean.TRUE);
+		}
+	}
 }
 
