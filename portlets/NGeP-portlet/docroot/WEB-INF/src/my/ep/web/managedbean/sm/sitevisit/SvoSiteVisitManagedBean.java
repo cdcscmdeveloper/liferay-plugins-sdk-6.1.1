@@ -94,7 +94,7 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	
 	private List<SmSupplierCategory> svTaskCategories;
 	
-	private int lastIndex;
+	private Integer lastIndex;
 
 	private List<String> higherManagementNames = new ArrayList<String>();
 	private List<String> managementNames = new ArrayList<String>();
@@ -106,6 +106,7 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private SmAttachment selectedUploadAttachment;
 	private String selectedAttachmentTemplType;
 	private String attachmentDeleteMsg;
+	private boolean viewMode;
 
 	
 	public SMSiteVisitDataType getBpmPojo() {
@@ -483,11 +484,11 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 		this.contactPerson = contactPerson;
 	}
 
-	public int getLastIndex() {
+	public Integer getLastIndex() {
 		return lastIndex;
 	}
 
-	public void setLastIndex(int lastIndex) {
+	public void setLastIndex(Integer lastIndex) {
 		this.lastIndex = lastIndex;
 	}
 
@@ -594,6 +595,14 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 
 	public void setAttachmentDeleteMsg(String attachmentDeleteMsg) {
 		this.attachmentDeleteMsg = attachmentDeleteMsg;
+	}
+
+	public boolean isViewMode() {
+		return viewMode;
+	}
+
+	public void setViewMode(boolean viewMode) {
+		this.viewMode = viewMode;
 	}
 
 }
