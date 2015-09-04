@@ -14,11 +14,6 @@
 			.value {
 				width: 1000px;
 			}
-			
-			div[id$="titleMsg"] {
-    			display:inline-block;
-    			vertical-align:middle;
-			}
 		</style>
 
 		<script type="text/javascript">	
@@ -144,13 +139,13 @@
 
 								<p:ajax event="dateSelect"
 									listener="#{calendarBackingBean.onDateSelect}"
-									update="eventDetails, calendarMsg"
+									update="eventDetails, calendarMsg"									
 									/>
 
 								<p:ajax event="eventSelect"
 									listener="#{calendarBackingBean.onEventSelect}"
 									update="eventDetails, calendarMsg"
-									oncomplete="eventDialog.show();"
+									oncomplete="eventDialog.show();"								
 									/>
 								<p:ajax event="eventMove"
 									listener="#{calendarBackingBean.onEventMove}"
@@ -160,9 +155,10 @@
 							</p:schedule></td>
 					</tr>
 				</table>
-			</h:panelGroup>
+			</h:panelGroup>		
 
-			<p:dialog widgetVar="eventDialog" id="calEventDlg" modal="true"
+		</p:panel>
+		<p:dialog widgetVar="eventDialog" id="calEventDlg" modal="true"
 				header="#{lbl['lbl.pm.cal.public.haliday.details']}" width="500"
 				height="200" showEffect="clip" hideEffect="clip">
 				<p:outputPanel>				
@@ -178,21 +174,25 @@
 									value="#{calendarBackingBean.managedBean.event.title}"
 									required="true" >		
 									</p:inputText>
+									</td>
+									<td>
 									<p:message id="titleMsg" for="title" display="icon" />
 							</td>
 						</tr>
 						<tr>
 
 							<td><p:outputLabel value="#{lbl['lbl.pm.cal.frmdate']}" /></td>
-							<td><p:calendar showOn="button" id="fromDateId"
+							<td><p:calendar showOn="button" id="fromDateId" required="true"
 									label="#{lbl['lbl.pm.cal.frmdate']}" readonlyInput="true"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 									value="#{calendarBackingBean.managedBean.event.startDate}">
 								</p:calendar></td>
+								<td>
+								<p:message id="fromDateMsg" for="fromDateId" display="icon" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.pm.cal.todate']}" /></td>
-							<td><p:calendar showOn="button" id="toDateId"
+							<td><p:calendar showOn="button" id="toDateId" required="true"
 									label="#{lbl['lbl.pm.cal.todate']}" readonlyInput="true"
 									validatorMessage="To Date should be greater than from Date"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -202,23 +202,23 @@
 									<f:validator validatorId="primeDateRangeValidator" />
 								</p:calendar>
 								</td>
-						</tr>
-						<br />
-						<tr>
-							<td />
-							<td>
-								<div style="float: right;">
-									<p:commandButton id="addButton" value="#{lbl['lbl.btn.save']}"
-										actionListener="#{calendarBackingBean.addOrUpdateEvent}"
-										update="schedule,titleMsg" process="eventDetails"/>
-									<p:commandButton value="#{lbl['lbl.btn.delete']}"
-										actionListener="#{calendarBackingBean.deleteEvent}"
-										oncomplete="myschedule.update();eventDialog.hide();changeWeekEndColor()"
-										update="ruleConfigId" />
-								</div>
-							</td>
+								<td>
+									<p:message id="toDateMsg" for="toDateId" display="icon" />
+								
+								</td>
 						</tr>
 					</table>
+					<br />
+					<br />
+					<div style="float: right;">
+							<p:commandButton id="addButton" value="#{lbl['lbl.btn.save']}"
+										actionListener="#{calendarBackingBean.addOrUpdateEvent}"
+										update="schedule,eventDetails" process="eventDetails"/>
+							<p:commandButton value="#{lbl['lbl.btn.delete']}"
+										actionListener="#{calendarBackingBean.deleteEvent}"
+										update="schedule,eventDetails" process="eventDetails"
+										rendered="#{not calendarBackingBean.managedBean.newEvent}" />
+					</div>
 				</h:panelGroup>
 				</p:outputPanel>
 			</p:dialog>
@@ -232,13 +232,11 @@
 					<br />
 					<div style="float: right;">
 						<p:commandButton value="#{lbl['lbl.btn.ok']}"
-							oncomplete="errDialog.hide()" update="ruleConfigId" />
+							oncomplete="errDialog.hide()" update="calErrDlg" />
 					</div>
 
 				</h:panelGroup>
 			</p:dialog>
-
-		</p:panel>
 		
 	</ui:define>
 </ui:composition>

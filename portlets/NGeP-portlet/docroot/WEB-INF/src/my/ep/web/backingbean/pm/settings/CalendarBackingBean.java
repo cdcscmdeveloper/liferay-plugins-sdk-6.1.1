@@ -19,6 +19,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.general.settings.calendar.CalendarReqDTO;
 import my.ep.dto.pm.general.settings.calendar.CalendarResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.setting.calendar.PmHoliday;
@@ -30,6 +31,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.ScheduleEntryMoveEvent;
@@ -96,6 +98,7 @@ public class CalendarBackingBean extends
 			CalendarReqDTO reqDTO = new CalendarReqDTO();
 			PmHoliday holiday = new PmHoliday();
 			fillHolidayModelByEvent(holiday);
+			validateCalendar(holiday);
 			String id = getManagedBean().getEvent().getId();
 			
 			if (id == null) {
@@ -194,6 +197,12 @@ public class CalendarBackingBean extends
 				if (resDTO.isSuccessful()) {
 					this.getManagedBean().getEventModel()
 							.deleteEvent(getManagedBean().getEvent());
+					RequestContext.getCurrentInstance()
+					.execute("myschedule.update();");
+					RequestContext.getCurrentInstance()
+					.execute("eventDialog.hide();");
+					RequestContext.getCurrentInstance()
+					.execute("changeWeekEndColor();");
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -254,8 +263,9 @@ public class CalendarBackingBean extends
 	public void onEventSelect(SelectEvent selectEvent) {
 //		log.info("......getObject()).getStartDate()="+((ScheduleEvent) selectEvent.getObject()).getStartDate());
 //		log.info("......(ScheduleEvent) selectEvent.getObject()).getTitle()="+((ScheduleEvent) selectEvent.getObject()).getTitle());
-		
+		RequestContext.getCurrentInstance().reset(":form:eventDetails");
 		getManagedBean().setEvent((ScheduleEvent) selectEvent.getObject());
+		getManagedBean().setNewEvent(false);
 //		 RequestContext.getCurrentInstance().execute("eventDialog.show()");
     }
 	     
@@ -266,13 +276,14 @@ public class CalendarBackingBean extends
     		RequestContext.getCurrentInstance().execute("errDialog.show()");
     		return;
     	}
+    	RequestContext.getCurrentInstance().reset(":form:eventDetails");
     	
 //    	renewSesionObject();
 
-        getManagedBean().setEvent(new DefaultScheduleEvent("", (Date) selectEvent.getObject(), (Date) selectEvent.getObject()));
-    	log.info("(Date) selectEvent.getObject()="+((Date) selectEvent.getObject()));
-    	 
-    	    RequestContext.getCurrentInstance().execute("eventDialog.show()");
+	        getManagedBean().setEvent(new DefaultScheduleEvent("", (Date) selectEvent.getObject(), (Date) selectEvent.getObject()));
+	    	log.info("(Date) selectEvent.getObject()="+((Date) selectEvent.getObject()));
+	    	getManagedBean().setNewEvent(true);
+	    	RequestContext.getCurrentInstance().execute("eventDialog.show()");
     	}catch(Exception e){
     		e.printStackTrace();
     	}
@@ -299,5 +310,15 @@ public class CalendarBackingBean extends
 	
 	public PmCountry getDefaultCountry(){
 		return PmCommonUtil.retrieveCountryByCountryCode("MY");
+	}
+	
+	private void validateCalendar(PmHoliday holiday){
+		if(StringUtils.isBlank(holiday.getHolidayName())){
+			throw new EpException("Title is mandatory.");
+		}
+		
+		if(holiday.getEndDate().before(holiday.getStartDate())){
+			throw new EpException("End Date entered must after Start Date.");
+		}
 	}
 }
