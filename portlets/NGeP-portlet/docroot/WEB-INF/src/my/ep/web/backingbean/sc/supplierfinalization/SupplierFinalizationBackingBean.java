@@ -7177,14 +7177,29 @@ public class SupplierFinalizationBackingBean extends
 				.retrieveCommitteMemberByUserId(committeReqDTO);
 		ScCommitteeMember member = CommitteeresDTO.getCommMember();
 		String roleCodeChar = member.getMemberRole().getParameterCode();
-		if(roleCodeChar.equals(SourcingConstants.MEMBER_ROLE_SECRATARY)) {
-			if(committeeType.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
+		
+		if (roleCodeChar.equals(SourcingConstants.MEMBER_ROLE_SECRATARY)) {
+			if (committeeType.equals(
+						ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
 				committeeRoleCode = RoleCode.QCA_SECRETARY.value();
-			}
-			else if(committeeType.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
+			} else if (committeeType.equals(
+						ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
 				committeeRoleCode = RoleCode.QCB_SECRETARY.value();
+			} else if (committeeType.equals(
+						ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)) {
+				committeeRoleCode = RoleCode.PBA_SECRETARY.value();
+			} else if (committeeType.equals(
+						ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)) {
+				committeeRoleCode = RoleCode.PBB_SECRETARY.value();
+			} else if (committeeType.equals(
+						ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)) {
+				committeeRoleCode = RoleCode.FPB_SECRETARY.value();
+			} else if (committeeType.equals(
+						ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+				committeeRoleCode = RoleCode.FPB_SECRETARY.value();
 			}
 		} 
+		
 		return committeeRoleCode;
 	}
 
