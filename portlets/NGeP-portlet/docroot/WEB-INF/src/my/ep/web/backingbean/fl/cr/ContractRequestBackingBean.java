@@ -1145,14 +1145,17 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().setAgencyAddress(amendRes.isAgencyAddressExist());
 			
 			if(getManagedBean().getFlRequest().getScPurchaseInDefault() != null){
-				ContractItemReqDTO ctItemReqDTO = new ContractItemReqDTO();
-				ctItemReqDTO.setContractItemId(getManagedBean().getFlRequest().getScPurchaseInDefault().getContractedItem().getContractItemId());
-				ContractItemResDTO ctItemResDTO = contractItemSO.getContractItem(ctItemReqDTO);
-				FlTempItem flTempItem = new FlTempItem();
-				flTempItem.setFlRequest(getManagedBean().getFlRequest());
-				flTempItem.setScRequestItem(ctItemResDTO.getCtContractItem().getScRequestItem());
-				getManagedBean().getFlRequest().getFlTempItems().add(flTempItem);
-				setFulfilmentItemAddr(getManagedBean().getFlRequest());
+				if(getManagedBean().getFlRequest().isBrandNew()){
+					ContractItemReqDTO ctItemReqDTO = new ContractItemReqDTO();
+					ctItemReqDTO.setContractItemId(getManagedBean().getFlRequest().getScPurchaseInDefault().getContractedItem().getContractItemId());
+					ContractItemResDTO ctItemResDTO = contractItemSO.getContractItem(ctItemReqDTO);
+					FlTempItem flTempItem = new FlTempItem();
+					flTempItem.setFlRequest(getManagedBean().getFlRequest());
+					flTempItem.setScRequestItem(ctItemResDTO.getCtContractItem().getScRequestItem());
+					getManagedBean().getFlRequest().getFlTempItems().add(flTempItem);
+					setFulfilmentItemAddr(getManagedBean().getFlRequest());
+				}
+				
 			}
 				
 		}else if(contractId != null){
