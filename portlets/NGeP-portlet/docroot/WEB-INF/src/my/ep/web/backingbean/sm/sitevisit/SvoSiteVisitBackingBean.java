@@ -363,9 +363,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				i++;
 			}
 			
-			if(!viewMode.equalsIgnoreCase("V")){
-				this.getManagedBean().setLastIndex(i);
+			if(viewMode.equalsIgnoreCase("V")){
+				this.getManagedBean().setViewMode(true);
 			}
+
+			this.getManagedBean().setLastIndex(i);
 			
 			getTotalBODMgmtWorkerEquityOwner();
 			chequeSignatoryInfo();
@@ -1099,6 +1101,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			}
 			
 			log.info("---------------viewActiveIndex End-----------");
+		}else{
+			if(index == this.getManagedBean().getLastIndex()){
+				retrievUploadedSiteVisitReport(getManagedBean().getSmSvTask().getSmSvTemplates());
+			}
 		}
 	}
 	
@@ -2351,8 +2357,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			attachment.setDocId(svTemplate.getSvTemplateId());
 			attachment.setDocType(attachmentType);
 			svTemplate.getSmAttachments().add(attachment);
-			
-			commonUploadFile(event, filePath);
+			SmCommonUtil.processUpload(filePath, event, fileName);
 		}
 	}
 	
@@ -2422,4 +2427,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		getManagedBean().setSelectedAttachmentTemplType(templateType);
 		getManagedBean().setSelectedUploadAttachment(attachment);
 	}
+	
+	public void attachmentDownload(SmAttachment attachment) throws IOException{
+		if(attachment != null){
+			String file = attachment.getFilePath() + "/" + attachment.getFileName();
+			commonDownload(file,attachment.getFileName());
+		}
+	}
+
 }
