@@ -94,14 +94,14 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.gst.reg.no']}" /></td>
 				<td><p:inputText size="15" disabled="true"
 						value="#{createDOBackingBean.managedBean.gstRegNo ==null ? lbl['lbl.fl.supp.na'] : createDOBackingBean.managedBean.gstRegNo}" />
-						<ac:iconTooltip value="#{createDOBackingBean.managedBean.gstRegNo ==null ? lbl['lbl.fl.tooltip.gst.reg.no.na'] : lbl['lbl.fl.tooltip.gst.reg.no']}"/></td>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gst.reg.no']}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ep.declared.date']}" /></td>
 				<td><p:inputText size="15" disabled="true"
 						value="#{createDOBackingBean.managedBean.gstDeclareDate ==null ? lbl['lbl.fl.supp.na'] : createDOBackingBean.managedBean.gstDeclareDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText>
-					<ac:iconTooltip value="#{createDOBackingBean.managedBean.gstDeclareDate ==null ? lbl['lbl.fl.tooltip.ep.declared.date.na'] : lbl['lbl.fl.tooltip.ep.declared.date']}"/></td>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ep.declared.date']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.gst.effective.date']}" /></td>
@@ -110,7 +110,7 @@
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText>
-					<ac:iconTooltip value="#{createDOBackingBean.managedBean.gstEffDate ==null ? lbl['lbl.fl.tooltip.gst.effect.date.na'] : lbl['lbl.fl.tooltip.gst.effect.date']}"/></td>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gst.effect.date']}"/></td>
 
 			</tr>
 			<tr>
