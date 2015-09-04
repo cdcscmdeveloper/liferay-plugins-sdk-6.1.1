@@ -15,11 +15,15 @@
 
 		<p:messages id="contractRequestViewId" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
 
-		<table style="width: 100%;">
+		<table>
 			<tr>
-				<td style="text-align: left;"><p:commandButton value="#{lbl['lbl.cm.back']}"						
+				<td style="text-align: left;width:60%"><p:commandButton value="#{lbl['lbl.cm.back']}"						
 						action="#{catalogueBackingBean.backTocatalogueSearch}" /></td>
-				<td style="text-align: right;"><p:commandButton id="navigateCR" disabled="#{empty catalogueBackingBean.managedBean.ctRequestList}"
+				<td style="width:10%"><p:outputLabel value="#{lbl['lbl.fl.fs.no']}"/></td>
+				<td style="text-align: right; width: 5%"><p:selectOneMenu id="schedule" value="#{catalogueBackingBean.managedBean.scheduleNo}">
+						<f:selectItems value="#{catalogueBackingBean.managedBean.availableNoList}"/>
+					</p:selectOneMenu></td>
+				<td style="text-align: right;width:12%"><p:commandButton id="navigateCR" disabled="#{empty catalogueBackingBean.managedBean.ctRequestList}"
 						value="#{lbl['lbl.cm.contract.request']}" action="#{catalogueBackingBean.navigateToCR}"/></td>
 			</tr>
 		</table>
