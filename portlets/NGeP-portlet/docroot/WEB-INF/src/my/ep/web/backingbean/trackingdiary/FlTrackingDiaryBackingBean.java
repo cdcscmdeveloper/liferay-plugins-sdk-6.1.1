@@ -18,19 +18,27 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.fl.VFlDocument;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -173,6 +181,8 @@ public class FlTrackingDiaryBackingBean extends BaseBackingBean<FlTrackingDiaryM
 		getManagedBean().setSearchOrderNo(null);
 		getManagedBean().setSearchPhysContractNo(null);
 		getManagedBean().setSearchPhysLoaNo(null);
+		defaultPtjAndMinistryValues();
+		
 	}
 	
 	public void reset(){
@@ -314,7 +324,7 @@ public class FlTrackingDiaryBackingBean extends BaseBackingBean<FlTrackingDiaryM
 	}
 
 	public String backToPrev() {
-
+		
 		return NAV_TO_FL_SEARCH + "?faces-redirect=true";
 	}
 
@@ -354,6 +364,7 @@ public class FlTrackingDiaryBackingBean extends BaseBackingBean<FlTrackingDiaryM
 		 * 
 		 */
 		public SelectItem[] getOrgTypeDropdownValues() {
+			defaultPtjAndMinistryValues();
 			ISearchBean<PmParameterDesc> searchBean = null;
 			if(getManagedBean().getSearchOrderType() != null){
 				if (getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
@@ -397,5 +408,90 @@ public class FlTrackingDiaryBackingBean extends BaseBackingBean<FlTrackingDiaryM
 			
 			userOrgTypeSearchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode",SearchOperator.OPERATOR_IN.value(),flDocTypes));
 			return userOrgTypeSearchBean;
+		}
+		
+		/**
+		 * Gets the default ptj and ministry search values based on user role.
+		 *
+		 */
+		private void defaultPtjAndMinistryValues() {
+			if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+				this.getManagedBean().setMinistry(null);
+				this.getManagedBean().setPtj(null);
+
+			} else {
+				IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+				UserReqDTO userReqDTO = new UserReqDTO();
+				userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+				UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+				PmOrgProfile orgProfile = null;
+				if (userResDTO.getUserOrgList() != null	&& userResDTO.getUserOrgList().size() > 0) {
+					orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+				}
+				if (getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
+						|| getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())
+						|| getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())
+						|| getFacesScopes().hasRoleUser(RoleCode.PAY_OFFICER.value())) {
+					this.getManagedBean().setPtj(orgProfile);
+					this.getManagedBean().setMinistry(orgProfile);
+				} else if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+					this.getManagedBean().setPtj(null);
+					this.getManagedBean().setMinistry(orgProfile);
+				}
+
+			}
+		}
+		 /**
+			 * Get PTJ condition for construct the LOV listing
+			 * @return String
+			 */
+		public String getPTJCondition() {
+			String condition = OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value())+"^"+
+					this.getManagedBean().getMinistry().getOrgProfileId();
+				//this.getManagedBean().setPtjLovEnabled(true);
+			return condition;
+		}
+			
+		/**
+			* The method used reset PTJ profile value once select the Ministry
+		*/
+		public void resetPtjProfile() {
+			getManagedBean().setPtj(null);
+			//this.getManagedBean().setPtjLovEnabled(true);
+		}
+			
+		/**
+		  * The method used to disable the ministry Lov
+		  * if login user is FL User
+		  * or internal auditor.
+		  * 
+		  * @return true, if login user is FL User/internal auditor
+		  *         false, if login user is not User/internal auditor
+		*/	
+		public boolean disableMinistryLov() {
+			return (this.getManagedBean().isFlFulfilmentRequisitioner() || this.getManagedBean().isFlFulfilmentApprover()
+					|| this.getManagedBean().isFlFulfilmentRecevingOfficer()
+					|| this.getManagedBean().isFlFulfilmentPaymentOfficer() || getFacesScopes()
+					.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()));
+		}
+		
+		/**
+		  * The method used to disable the ptj Lov
+		  * if login user is FL User
+		  * or ministry is null.
+		  * 
+		  * @return true, if login user is FL User/ministry is null
+		  *         false, if login user is not User/ministry is null
+		*/	
+		
+		
+		public boolean disablePtjLov() {
+			return (this.getManagedBean().isFlFulfilmentRequisitioner() || this.getManagedBean().isFlFulfilmentApprover()
+					|| this.getManagedBean().isFlFulfilmentRecevingOfficer()
+					|| this.getManagedBean().isFlFulfilmentPaymentOfficer() || getManagedBean().getMinistry()==null);
 		}
 }

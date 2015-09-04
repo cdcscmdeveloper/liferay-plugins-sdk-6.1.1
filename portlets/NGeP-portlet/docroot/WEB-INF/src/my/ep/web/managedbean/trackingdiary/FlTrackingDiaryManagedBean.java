@@ -22,6 +22,7 @@ import my.ep.dto.fl.FlDocumentResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.persistence.entity.fl.VFlDocument;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -64,6 +65,9 @@ public class FlTrackingDiaryManagedBean extends BaseManagedBean {
 	private Long statusDescId;
 	private Long searchProcurementTypeId;
 	private int searchFinancialYear;
+	
+	private PmOrgProfile ptj;
+	private PmOrgProfile ministry;
 	
 	private VFlDocument vFlDocument;
 
@@ -789,6 +793,30 @@ public class FlTrackingDiaryManagedBean extends BaseManagedBean {
 			return RoleCode.FACTORING_USER.value();	
 		else
 			return null;
+	}
+	/**
+	 * @return the ptj
+	 */
+	public PmOrgProfile getPtj() {
+		return ptj;
+	}
+	/**
+	 * @param ptj the ptj to set
+	 */
+	public void setPtj(PmOrgProfile ptj) {
+		this.ptj = ptj;
+	}
+	/**
+	 * @return the ministry
+	 */
+	public PmOrgProfile getMinistry() {
+		return ministry;
+	}
+	/**
+	 * @param ministry the ministry to set
+	 */
+	public void setMinistry(PmOrgProfile ministry) {
+		this.ministry = ministry;
 	}
 
 }
