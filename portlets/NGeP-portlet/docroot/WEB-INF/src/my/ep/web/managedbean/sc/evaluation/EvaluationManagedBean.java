@@ -478,7 +478,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private IPagingDataModel<ScQtProposalChecklist> presentationDemoSupplierListDM;
 	private int demoPassingScore;
 	private boolean isProfileHide = false;
-	private String proposalValidityUntil;
+	
 
 	/**
 	 * Gets the today.
@@ -3259,19 +3259,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.isProfileHide = isProfileHide;
 	}
 
-	/**
-	 * @return the proposalValidityUntil
-	 */
-	public String getProposalValidityUntil() {
-		return proposalValidityUntil;
-	}
-
-	/**
-	 * @param proposalValidityUntil the proposalValidityUntil to set
-	 */
-	public void setProposalValidityUntil(String proposalValidityUntil) {
-		this.proposalValidityUntil = proposalValidityUntil;
-	}
+	
 
 	
 
