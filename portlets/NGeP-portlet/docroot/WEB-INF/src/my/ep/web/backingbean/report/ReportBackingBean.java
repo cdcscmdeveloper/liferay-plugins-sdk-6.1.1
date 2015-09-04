@@ -4133,6 +4133,8 @@ public class ReportBackingBean extends
 			//if((highRoleCodeList!=null)&&((highRoleCodeList.contains(RoleCode.BPK_PCA.value())||highRoleCodeList.contains(RoleCode.BPK_CCA.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_USER.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_USER.value()))))  {	
 					 getLtstMinistryList();
 					 getParameterCodeTypeString();
+					 getManagedBean().getRptGenBean().setFlSupplierDropdownView(false);
+					 getManagedBean().getRptGenBean().setFlSupplierTextView(false);
 					 if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))){
 							retrieveSupplierCompName();	
 							if((this.getSupplCompanyList().size()>0)&&(getManagedBean().getRptGenBean().isFlSupplierView())){
@@ -4149,6 +4151,34 @@ public class ReportBackingBean extends
 			}else{
 				retrieveParameterCodeType();
 			}
+		}
+		if ((this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.CONTRACT_MANAGEMENT))) {
+			getManagedBean().getRptGenBean().setCtSupplierTextView(false);
+			getManagedBean().getRptGenBean().setCtSupplierDefaultView(false);
+			getManagedBean().getRptGenBean().setCtGroupFiveWithoutSupplView(false);
+			getManagedBean().getRptGenBean().setCtGroupFiveWithSupplView(false);
+			if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.CT_STATEMENT_OF_ORDER_REPORT_CC_PANEL_RPT_VAL))){
+				getParameterCodeTypeString();
+				 if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))){
+						retrieveSupplierCompName();	
+						if((this.getSupplCompanyList().size()>0)&&(getManagedBean().getRptGenBean().isCtSupplierNameView())){
+							getManagedBean().getRptGenBean().setCtSupplierDefaultView(true);
+						}else if((this.getSupplCompanyList().size()==0)&&(getManagedBean().getRptGenBean().isFlSupplierView())){
+							getManagedBean().getRptGenBean().setCtSupplierTextView(true);
+						}
+						if(getManagedBean().getRptGenBean().isCtGroupFiveView()){
+							getManagedBean().getRptGenBean().setCtGroupFiveWithoutSupplView(true);
+						}
+					}else{
+						if(getManagedBean().getRptGenBean().isCtSupplierNameView()){
+							getManagedBean().getRptGenBean().setCtSupplierTextView(true);
+						}
+						if(getManagedBean().getRptGenBean().isCtGroupFiveView()){
+							getManagedBean().getRptGenBean().setCtGroupFiveWithSupplView(true);
+						}
+					}					
+			}
+			
 		}
 	}
 	
@@ -5541,7 +5571,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}
 			if ((this.getCtTerminationType() != null)
 					&& (this.getCtTerminationType() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setCtTerminationTypeVar(ReportConst.CT_AMP_STATUS_EQ
+				rptGenBean.setCtTerminationTypeVar(ReportConst.CT_AMP_TERMINATION_TYPE_EQ
 						+ this.getCtTerminationType());
 			}
 			if ((this.getCtStatus() != null)
