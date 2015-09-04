@@ -128,8 +128,9 @@
 				<p:inputText style="text-align : right" id="decrementAmtByZone" immediate="true"
 					maxlength="19" value="#{item.decrementAmt}">
 					<p:ajax event="change" process="@this" partialSubmit="true" />
-					<f:convertNumber for="decrementAmt"
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					<ac:validateNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
+						maxIntegerDigits="14" />
 				</p:inputText>
 			</p:column>
 		</p:dataTable>
