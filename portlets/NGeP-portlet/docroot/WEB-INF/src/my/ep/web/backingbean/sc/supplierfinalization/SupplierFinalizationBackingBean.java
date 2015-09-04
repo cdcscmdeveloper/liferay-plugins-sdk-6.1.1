@@ -7192,10 +7192,9 @@ public class SupplierFinalizationBackingBean extends
 						ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)) {
 				committeeRoleCode = RoleCode.PBB_SECRETARY.value();
 			} else if (committeeType.equals(
-						ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)) {
-				committeeRoleCode = RoleCode.FPB_SECRETARY.value();
-			} else if (committeeType.equals(
-						ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+						ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) || 
+							committeeType.equals(
+								ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
 				committeeRoleCode = RoleCode.FPB_SECRETARY.value();
 			}
 		} 
