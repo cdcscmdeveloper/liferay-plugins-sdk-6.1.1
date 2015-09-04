@@ -10455,7 +10455,7 @@ public class EvaluationBackingBean extends
 				reqDTO.setQtId(qtId);
 				reqDTO.setEvalStage(evalStage);
 				reqDTO.setProposalChecklistSearchBean(searchBean);
-				return evaluationSO.retrieveFinSpecDetailsByCheckListId(reqDTO)
+				return evaluationSO.retrievProposalCheckListByCheckListNZone(reqDTO)
 						.getComplianceResultBean();
 
 			} finally {
