@@ -384,11 +384,5 @@ public class FacesScopes {
 		.handleNavigation(fc, null, "/xhtml/cm/catalogue/preRenderErrorPage.xhtml");
 		
 	}
-
-	public void extendLiferaySession() {
-		if(this.getUserSessionBean() != null) {
-			this.getRequest().setAttribute(WebKeys.EXTEND_SESSION, Boolean.TRUE);
-		}
-	}
 }
 
