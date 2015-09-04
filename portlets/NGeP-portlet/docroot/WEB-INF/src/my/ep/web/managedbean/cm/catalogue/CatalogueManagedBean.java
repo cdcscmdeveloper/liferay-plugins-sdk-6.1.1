@@ -472,6 +472,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	private int zonalRowIndex;
 	private SmGstSupplier smGstSupplier;
+	private List<String> availableNoList;
+	private String scheduleNo;
 
 	private class ExpiredSearchPagingDataModel extends
 			PagingDataModel<CmSupplierItem> {
@@ -3674,6 +3676,34 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 */
 	public void setSmGstSupplier(SmGstSupplier smGstSupplier) {
 		this.smGstSupplier = smGstSupplier;
+	}
+
+	/**
+	 * @return the availableNoList
+	 */
+	public List<String> getAvailableNoList() {
+		return availableNoList;
+	}
+
+	/**
+	 * @param availableNoList the availableNoList to set
+	 */
+	public void setAvailableNoList(List<String> availableNoList) {
+		this.availableNoList = availableNoList;
+	}
+
+	/**
+	 * @return the scheduleNo
+	 */
+	public String getScheduleNo() {
+		return scheduleNo;
+	}
+
+	/**
+	 * @param scheduleNo the scheduleNo to set
+	 */
+	public void setScheduleNo(String scheduleNo) {
+		this.scheduleNo = scheduleNo;
 	}
 
 }
