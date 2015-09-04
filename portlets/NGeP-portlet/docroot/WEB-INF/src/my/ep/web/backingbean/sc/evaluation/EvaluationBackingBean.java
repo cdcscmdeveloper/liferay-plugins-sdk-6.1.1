@@ -6862,8 +6862,7 @@ public class EvaluationBackingBean extends
 					.getPresentationDemoSupplierList();
 			int countDays = this.getManagedBean().getCountDays();
 			String QtNum = this.getManagedBean().getScQt().getQtNo();
-			String proposalValiditydate = this.getManagedBean()
-					.getProposalValidityUntil();
+			
 			if (!this.getManagedBean().isDemo()) {
 				if (tabindex == 0) {
 					evaluationSO.saveQTDtl(reqDtO);
@@ -6892,8 +6891,7 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setScAttachment(attachemnt);
 			this.getManagedBean().setReportDownloadFileName(reportFileName);
 			this.getManagedBean().setCountDays(countDays);
-			this.getManagedBean()
-					.setProposalValidityUntil(proposalValiditydate);
+			
 			retriveMeetingDtls(qtId, committeeType, index);
 			// getStatusDropdownValues("SC", "MS");
 			if (save == true) {
@@ -10938,28 +10936,6 @@ public class EvaluationBackingBean extends
 		}
 
 	}
-/*this method to set the proposal validity date for scqt*/
-	public boolean handleProposalValidityDays(ScQt scQt) {
-		Date validityDate = null;
-		if (null != scQt.getClosingDate()) {
-			validityDate = DateUtils.addDays(scQt.getClosingDate(),
-					scQt.getQtValidityPeriod());
-		}
-		boolean isDate = false;
-		Date d1 = new Date();
-		if (null != validityDate) {
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
-			this.getManagedBean().setProposalValidityUntil(
-					sdf.format(validityDate));
-			long days = DateUtils.getDaysDifference(d1,validityDate);
-			int day = (int) days;
-			if (day > 0) {
-				isDate = true;
-			}
-		}
 
-		return isDate;
-
-	}
 
 }
