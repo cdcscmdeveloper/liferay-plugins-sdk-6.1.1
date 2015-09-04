@@ -173,7 +173,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private int reportTabIndex;
 	private int finalizationTabIndex;
 	private int commEndorsementTabIndex;
-	private String proposalValidityUntil;
+	
 
 	/**
 	 * @return the activeIndex
@@ -1562,18 +1562,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.commEndorsementTabIndex = commEndorsementTabIndex;
 	}
 
-	/**
-	 * @return the proposalValidityUntil
-	 */
-	public String getProposalValidityUntil() {
-		return proposalValidityUntil;
-	}
-
-	/**
-	 * @param proposalValidityUntil the proposalValidityUntil to set
-	 */
-	public void setProposalValidityUntil(String proposalValidityUntil) {
-		this.proposalValidityUntil = proposalValidityUntil;
-	}
+	
 
 }
