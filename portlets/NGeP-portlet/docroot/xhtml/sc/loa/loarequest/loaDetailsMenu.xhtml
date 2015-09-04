@@ -226,7 +226,7 @@
 			<td colspan="3">
 				<p:inputText disabled="#{isDocTypeQuotation || !isEditableStatus}"
 					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fileNo}" size="33" />
-				<p:inputText id="fileExtNo" styleClass="ppNumericAlign" style="margin-left: 2px;width: 28px;"
+				<p:inputText id="fileExtNo"  style="margin-left: 2px;width: 28px; text-align:right;"
 					value="#{lOADetailBackingBean.managedBean.scLoa.fileExtNo}" size="6"
 					required="true"
 					label="#{lbl['lbl.sc.loiloa.file.extension.no']}"
@@ -244,9 +244,9 @@
 					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</p:inputText>	
 				<p:spacer width="8px" />
-				<p:inputText styleClass="ppNumericAlign"
+				<p:inputText 
 					value="#{!empty lOADetailBackingBean.managedBean.scLoa.ackDueDate ? DateUtils.getDaysDifference(DateUtils.getCurrentDateWithoutTime(), lOADetailBackingBean.managedBean.scLoa.ackDueDate) : ''}"
-					disabled="true" size="6" />
+					disabled="true" size="6" style="text-align:right;"/>
 				#{lbl['lbl.sc.days']}
 			</td>
 		</tr>
@@ -255,9 +255,9 @@
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.off.price']}" />
 			</td>
 			<td>
-				<p:inputText styleClass="ppNumericAlign"
+				<p:inputText 
 					value="#{lOADetailBackingBean.managedBean.scLoa.loaAmt}"
-					disabled="true" size="40">
+					disabled="true" size="40" style="text-align:right;">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 			</td>
@@ -267,9 +267,9 @@
 				<p:outputLabel value="#{lbl['lbl.sc.gst.amount']}" />
 			</td>
 			<td>
-				<p:inputText styleClass="ppNumericAlign"
+				<p:inputText 
 						value="#{lOADetailBackingBean.managedBean.scLoa.gstAmt}"
-						disabled="#{lOADetailBackingBean.isGSTRegActive() or !isPendingSubmissionStatus}" size="40" id="gstAmtId">
+						disabled="#{lOADetailBackingBean.isGSTRegActive() or !isPendingSubmissionStatus}" size="40" id="gstAmtId" style="text-align:right;">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						<p:ajax event="blur"
@@ -283,9 +283,9 @@
 				<p:outputLabel value="#{lbl['lbl.sc.gst.overall.contract.amount']}" />
 			</td>
 			<td>
-				<p:inputText styleClass="ppNumericAlign"
+				<p:inputText 
 					value="#{lOADetailBackingBean.managedBean.overallContractAmt}"
-					 size="40" id="ContractAmtId" readonly="true">
+					 size="40" id="ContractAmtId" style="text-align:right;" disabled="true">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 			</td>
@@ -470,9 +470,9 @@
 				<p:outputLabel value="#{lbl[lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.period' : 'lbl.sc.loiloa.loa.cont.period']}" />
 			</td>
 			<td colspan="3">
-				<p:inputText styleClass="ppNumericAlign"
+				<p:inputText 
 					value="#{lOADetailBackingBean.managedBean.scLoa.contractDuration}"
-					disabled="true" size="40" />
+					disabled="true" size="40" style="text-align:right;"/>
 			</td>
 		</tr>
 		<ui:param name="lbleffDate" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.eff.date' : 'lbl.sc.loiloa.loa.cont.eff.date'}" />

@@ -77,9 +77,9 @@
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.off.price']}" />
 			</td>
 			<td>
-				<p:inputText styleClass="ppNumericAlign"
+				<p:inputText 
 					value="#{lOADetailBackingBean.managedBean.scLoa.loaAmt}"
-					disabled="true" size="50">
+					disabled="true" size="50" style="text-align:right;">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 			</td>
@@ -90,8 +90,8 @@
 				<p:outputLabel value="#{lbl['lbl.sc.gst.amount']}" />
 			</td>
 			<td>
-				<p:inputText styleClass="ppNumericAlign"
-						value="#{lOADetailBackingBean.managedBean.scLoa.gstAmt}" disabled="true" size="50">
+				<p:inputText 
+						value="#{lOADetailBackingBean.managedBean.scLoa.gstAmt}" disabled="true" size="50" style="text-align:right;">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText>
@@ -103,9 +103,9 @@
 				<p:outputLabel value="#{lbl['lbl.sc.gst.overall.contract.amount']}" />
 			</td>
 			<td>
-				<p:inputText styleClass="ppNumericAlign"
+				<p:inputText 
 					value="#{lOADetailBackingBean.managedBean.overallContractAmt}"
-					 size="50" disabled="true">
+					 size="50" disabled="true" style="text-align:right;">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 			</td>
