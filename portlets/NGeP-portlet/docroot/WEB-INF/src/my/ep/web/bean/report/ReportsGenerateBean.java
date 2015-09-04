@@ -388,8 +388,22 @@ public class ReportsGenerateBean {
 		private boolean ctContractEffectiveFromDateLabelView = false;
 		private boolean ctContractOrderFromDateLabelView = false;
 		private boolean ctSupplierNameView = false;
+		private boolean ctSupplierDefaultView = false;
+		private boolean ctSupplierTextView = false;
 		
 		
+		public boolean isCtSupplierDefaultView() {
+			return ctSupplierDefaultView;
+		}
+		public void setCtSupplierDefaultView(boolean ctSupplierDefaultView) {
+			this.ctSupplierDefaultView = ctSupplierDefaultView;
+		}
+		public boolean isCtSupplierTextView() {
+			return ctSupplierTextView;
+		}
+		public void setCtSupplierTextView(boolean ctSupplierTextView) {
+			this.ctSupplierTextView = ctSupplierTextView;
+		}
 		public boolean isCtContractFromDateView() {
 			return ctContractFromDateView;
 		}
@@ -920,6 +934,8 @@ public class ReportsGenerateBean {
 		private boolean ctSubTypeApproverView = false;
 		private boolean ctCircularEffectiveFromDateView = false;
 		private boolean ctCircularEffectiveToDateView = false;
+		private boolean ctGroupFiveWithoutSupplView = false;
+		private boolean ctGroupFiveWithSupplView = false;
 		//PP
 		private boolean ppYearView = false;
 		private boolean ppMinistryView = false;
@@ -1138,6 +1154,18 @@ public class ReportsGenerateBean {
 		private String ctTerminationTypeVar=ReportConst.EMPTY_VAL;
 		
 		
+		public boolean isCtGroupFiveWithoutSupplView() {
+			return ctGroupFiveWithoutSupplView;
+		}
+		public void setCtGroupFiveWithoutSupplView(boolean ctGroupFiveWithoutSupplView) {
+			this.ctGroupFiveWithoutSupplView = ctGroupFiveWithoutSupplView;
+		}
+		public boolean isCtGroupFiveWithSupplView() {
+			return ctGroupFiveWithSupplView;
+		}
+		public void setCtGroupFiveWithSupplView(boolean ctGroupFiveWithSupplView) {
+			this.ctGroupFiveWithSupplView = ctGroupFiveWithSupplView;
+		}
 		public boolean isCtSupplierNameView() {
 			return ctSupplierNameView;
 		}

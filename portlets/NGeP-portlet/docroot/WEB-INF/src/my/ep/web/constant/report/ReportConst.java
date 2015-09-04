@@ -679,6 +679,7 @@ public class ReportConst {
 	public static final String CT_AMP_CIRCULAR_FROM_DATE_EQ = "&PCIRCEFFFROMDATE=";
 	public static final String CT_AMP_CIRCULAR_TO_DATE_EQ = "&PCIRCEFFTODATE=";
 	public static final String CT_AMP_SUPPLIER_NAME_EQ = "&PSUPPLIERNAME=";
+	public static final String CT_AMP_TERMINATION_TYPE_EQ = "&PTERMINATIONTYPE=";
 	//PM
 	public static final String PM_AMP_SERVICE_TYPE_EQ = "&SERVICETYPEID=";
 	public static final String PM_AMP_FINORG_NAME_EQ = "&FINORGNAME=";
