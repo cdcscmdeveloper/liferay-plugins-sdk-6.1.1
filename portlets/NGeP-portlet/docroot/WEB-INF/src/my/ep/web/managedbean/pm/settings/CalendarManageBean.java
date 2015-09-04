@@ -1,8 +1,5 @@
 package my.ep.web.managedbean.pm.settings;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,15 +13,12 @@ import org.primefaces.model.DefaultScheduleModel;
 import org.primefaces.model.ScheduleEvent;
 import org.primefaces.model.ScheduleModel;
 
-import sun.util.logging.resources.logging;
-
 import my.ep.biz.service.pm.general.settings.calendar.ICalendarSO;
 import my.ep.dto.pm.general.settings.calendar.CalendarReqDTO;
 import my.ep.dto.pm.general.settings.calendar.CalendarResDTO;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.setting.calendar.PmHoliday;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
@@ -32,11 +26,17 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 @SessionScoped
 public class CalendarManageBean extends BaseManagedBean {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private ScheduleModel eventModel;
 	private Long selectedStateId;
 	private PmState selectedState;
 	private ScheduleEvent event;
 	private Map<String, String> eventToExTitleValueMap = new HashMap<String, String>();
+	private boolean isNewEvent;
+	
 	@PostConstruct
 	public void init() {
 		//loadSchedule(2);
@@ -147,5 +147,19 @@ public class CalendarManageBean extends BaseManagedBean {
 
 	public void setSelectedState(PmState selectedState) {
 		this.selectedState = selectedState;
+	}
+
+	/**
+	 * @return the isNewEvent
+	 */
+	public boolean isNewEvent() {
+		return isNewEvent;
+	}
+
+	/**
+	 * @param isNewEvent the isNewEvent to set
+	 */
+	public void setNewEvent(boolean isNewEvent) {
+		this.isNewEvent = isNewEvent;
 	}
 }
