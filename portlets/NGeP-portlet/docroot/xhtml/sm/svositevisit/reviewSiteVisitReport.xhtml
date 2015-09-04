@@ -16,6 +16,8 @@
 					update="tabIndex,outPnlSiteVisitReport" 
 					actionListener="#{svoSiteVisitBackingBean.viewActiveIndex(entry.key,entry.value)}" />
 		</c:forEach>
+		
+		<p:menuitem value="#{lbl['lbl.sm.sitevist.report.recommendation']}" update="tabIndex,outPnlSiteVisitReport" actionListener="#{svoSiteVisitBackingBean.viewActiveIndex(svoSiteVisitBackingBean.managedBean.lastIndex,'')}" />
 	</p:tabMenu>
 
 
@@ -60,6 +62,11 @@
 
 			<c:if test="#{category == SupplierManagementConst.CAT_TYPE_BUMIPUTERA}">
 				<ui:include src="/xhtml/sm/svositevisit/bumiputera.xhtml" />
+			</c:if>
+			
+			<c:if test="#{svoSiteVisitBackingBean.managedBean.activeIndex == svoSiteVisitBackingBean.managedBean.lastIndex}">
+				<ui:include src="/xhtml/sm/shared/sitevisit/view_uploadedSiteVisitReport.xhtml" />
+				<ui:include src="/xhtml/sm/shared/sitevisit/recommendation.xhtml" />
 			</c:if>
 	</p:outputPanel>
 </ui:composition>
