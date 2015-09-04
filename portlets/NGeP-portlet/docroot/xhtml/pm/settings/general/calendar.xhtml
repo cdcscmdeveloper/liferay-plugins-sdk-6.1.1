@@ -1,6 +1,3 @@
-
-<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition
 	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:p="http://primefaces.org/ui" xmlns="http://www.w3.org/1999/xhtml"
@@ -14,10 +11,15 @@
 	<ui:define name="contentSection">
 				
 		<style type="text/css">
-.value {
-	width: 1000px;
-}
-</style>
+			.value {
+				width: 1000px;
+			}
+			
+			div[id$="titleMsg"] {
+    			display:inline-block;
+    			vertical-align:middle;
+			}
+		</style>
 
 		<script type="text/javascript">	
 	
@@ -100,10 +102,8 @@
 			td[6].style.background=color;
 		}
 	</script>
-         
-         <p:growl id="calendarMsg" showDetail="true" />
-		<p:panel id="ruleConfigId">
-
+		 <p:growl id="calendarMsg" showDetail="true" />
+		<p:panel id="ruleConfigId">			
 			<h:panelGroup id="calendarId">
 				<table width="100%">
 					<tr>
@@ -162,17 +162,24 @@
 				</table>
 			</h:panelGroup>
 
-			<p:dialog widgetVar="eventDialog"
-				header="#{lbl['lbl.pm.cal.public.haliday.details']}" width="400"
-				height="150" showEffect="clip" hideEffect="clip">
+			<p:dialog widgetVar="eventDialog" id="calEventDlg" modal="true"
+				header="#{lbl['lbl.pm.cal.public.haliday.details']}" width="500"
+				height="200" showEffect="clip" hideEffect="clip">
+				<p:outputPanel>				
 				<h:panelGroup id="eventDetails">
 					<table width="100%">
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.pm.cal.title']}" /></td>
-							<td><p:inputText id="title" size="30" maxlength="30" valueChangeListener="#{calendarBackingBean.holidayTitleValChange}"
-									value="#{calendarBackingBean.managedBean.event.title}" >		
+							<td><h:outputLabel
+								value="#{lbl['lbl.pm.cal.title']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+							<td><p:inputText id="title" size="30" maxlength="30" 
+									label="#{lbl['lbl.pm.cal.title']}"
+									valueChangeListener="#{calendarBackingBean.holidayTitleValChange}"
+									value="#{calendarBackingBean.managedBean.event.title}"
+									required="true" >		
 									</p:inputText>
-									</td>
+									<p:message id="titleMsg" for="title" display="icon" />
+							</td>
 						</tr>
 						<tr>
 
@@ -203,8 +210,7 @@
 								<div style="float: right;">
 									<p:commandButton id="addButton" value="#{lbl['lbl.btn.save']}"
 										actionListener="#{calendarBackingBean.addOrUpdateEvent}"
-								    	oncomplete="myschedule.update();eventDialog.hide();changeWeekEndColor();"
-										update="schedule ,calendarMsg"/>
+										update="schedule,titleMsg" process="eventDetails"/>
 									<p:commandButton value="#{lbl['lbl.btn.delete']}"
 										actionListener="#{calendarBackingBean.deleteEvent}"
 										oncomplete="myschedule.update();eventDialog.hide();changeWeekEndColor()"
@@ -214,8 +220,9 @@
 						</tr>
 					</table>
 				</h:panelGroup>
+				</p:outputPanel>
 			</p:dialog>
-			<p:dialog widgetVar="errDialog"
+			<p:dialog widgetVar="errDialog" id="calErrDlg" modal="true"
 				header="#{lbl['lbl.pm.cal.warning']}" width="260" 
 				height="80" showEffect="clip" hideEffect="clip">
 				<h:panelGroup id="errDetails">
