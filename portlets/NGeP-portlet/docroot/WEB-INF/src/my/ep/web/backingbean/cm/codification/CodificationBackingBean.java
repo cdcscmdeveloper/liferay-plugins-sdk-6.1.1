@@ -1116,10 +1116,10 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			}
 		} else {
 			extCodeVO = new ExtensionCodeVO();
-			CmUnspsc selectedCommodity = this.getManagedBean()
+/*			CmUnspsc selectedCommodity = this.getManagedBean()
 					.getSelectedUNSPSCObj();
 			log.info("..................selectedCommodity.getUnspscCode()="
-					+ selectedCommodity.getUnspscCode());
+					+ selectedCommodity.getUnspscCode());*/
 			// to search service in cmItem no need to extensions
 			extCodeVO.setTypeId(null);
 			extCodeVO.setBrandId(null);
@@ -2118,6 +2118,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		this.getManagedBean().setSegmentTitle(
 				segmentDTO.getUnspscObj().getUnspscTitle());
 
+		this.getManagedBean().getSelectedUNSPSCObj().setUnspscId(unspscObj.getUnspscId());
 		this.getManagedBean().getSelectedUNSPSCObj()
 		.setUnspscCode(unspscObj.getUnspscCode());
 		this.getManagedBean().getSelectedUNSPSCObj()
