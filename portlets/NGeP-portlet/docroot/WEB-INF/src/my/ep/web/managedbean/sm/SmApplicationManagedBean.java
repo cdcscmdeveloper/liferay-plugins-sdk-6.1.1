@@ -76,6 +76,7 @@ import com.liferay.portal.model.Role;
 @SessionScoped
 public class SmApplicationManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
+	private SmAppl latestAppl;
 	private SmAppl smAppl;
 	private SmSupplier smSupplier;
 	private int tabActiveIndex;
@@ -2835,6 +2836,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setBranchSameAsHq(boolean branchSameAsHq) {
 		this.branchSameAsHq = branchSameAsHq;
+	}
+
+	public SmAppl getLatestAppl() {
+		return latestAppl;
+	}
+
+	public void setLatestAppl(SmAppl latestAppl) {
+		this.latestAppl = latestAppl;
 	}
 
 }

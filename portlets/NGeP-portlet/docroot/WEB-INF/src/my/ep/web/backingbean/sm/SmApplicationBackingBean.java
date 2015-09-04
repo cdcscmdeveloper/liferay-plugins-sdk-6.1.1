@@ -10,6 +10,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -115,6 +116,7 @@ import my.ep.persistence.entity.sm.SmRelatedCompany;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
+import my.ep.persistence.entity.sm.SmStaffTotal;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -808,6 +810,14 @@ public class SmApplicationBackingBean extends
 			if (fromBpm
 					&& (getManagedBean().isPoUser() || getManagedBean()
 							.isApproverUser())) {
+				MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+				mofReqDTO.setSupplierId(getManagedBean().getSmSupplier()
+						.getSupplierId());
+				getManagedBean().setLatestAppl(
+						SmServiceLookup
+								.getMofRegistrationSO()
+								.retrieveLatestSmApplWithChildBySupplierId(
+										mofReqDTO).getSmAppl());
 				setRevUrl();
 				getManagedBean().setMaxReviewCount(
 						assignMaxReviewCount(applicationType, getManagedBean()
@@ -949,8 +959,8 @@ public class SmApplicationBackingBean extends
 
 			// init GST information
 			initGst();
-			
-			//set softcert reject reason
+
+			// set softcert reject reason
 			setPersonnelSoftcertRejectReason();
 
 			return SmApplicationUtil.setNavigationForAppl(applicationType);
@@ -1251,6 +1261,115 @@ public class SmApplicationBackingBean extends
 			this.getManagedBean().setPmDigiSign(pmDigiSign);
 		}
 		updateSmAppl(applType, currentPageType, outputPageType);
+	}
+
+	public String getCountryLabelById(Long countryId) {
+		String name = "";
+		for (PmCountry country : getManagedBean().getCountryLs()) {
+			if (country.getCountryId().compareTo(countryId) == 0) {
+				name = country.getCountryName();
+				break;
+			}
+		}
+		return name;
+	}
+
+	public String getStateLabelById(Long stateId) {
+		String name = "";
+		for (PmState state : getManagedBean().getBasicCompanyStates()) {
+			if (state.getStateId().compareTo(stateId) == 0) {
+				name = state.getStateName();
+				break;
+			}
+		}
+		return name;
+	}
+
+	public String getDistrictLabelById(Long districtId) {
+		String name = "";
+		for (PmDistrict district : getManagedBean().getBasicCompanyDistricts()) {
+			if (district.getDistrictId().compareTo(districtId) == 0) {
+				name = district.getDistrictName();
+				break;
+			}
+		}
+		return name;
+	}
+
+	public String getCityLabelById(Long cityId) {
+		String name = "";
+		for (PmCity city : getManagedBean().getBasicCompanyCities()) {
+			if (city.getCityId().compareTo(cityId) == 0) {
+				name = city.getCityName();
+				break;
+			}
+		}
+		return name;
+	}
+
+	public String getAnnualRevById(Long annualRevenueId) {
+		String name = "";
+		if (annualRevenueId != null) {
+			for (SelectItem item : Arrays.asList(getDropdownValues("SAR"))) {
+				if (item.getValue().toString()
+						.equals(annualRevenueId.toString())) {
+					name = item.getLabel();
+					break;
+				}
+			}
+		}
+		return name;
+	}
+
+	public SmStaffTotal getStaffTotalByCategory(String staffCategory) {
+		SmStaffTotal staffTotal = new SmStaffTotal();
+		if (getManagedBean().getLatestAppl().getSmStaffTotals() != null
+				&& !getManagedBean().getLatestAppl().getSmStaffTotals()
+						.isEmpty()) {
+			for (SmStaffTotal staffTotalTmp : getManagedBean().getLatestAppl()
+					.getSmStaffTotals()) {
+				if (staffTotalTmp.getStaffCategory().equals(staffCategory)) {
+					staffTotal = staffTotalTmp;
+					break;
+				}
+			}
+		}
+		return staffTotal;
+	}
+
+	public SmFacility getBasicCompanyFacilityByType() {
+		SmFacility basicCompFac = new SmFacility();
+		for (SmFacility smFac : getManagedBean().getLatestAppl()
+				.getSmFacilities()) {
+			if ((smFac.getFacilityType().equalsIgnoreCase(
+					SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE) || smFac
+					.getFacilityType()
+					.equalsIgnoreCase(
+							SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE))
+					&& smFac.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
+				basicCompFac = smFac;
+				break;
+			}
+		}
+		return basicCompFac;
+	}
+
+	public String getOwnershipTypeLabel(String ownershipType) {
+		if (ownershipType.equalsIgnoreCase("O")) {
+			return SmCommonUtil.getMessage("lbl.sm.facility.own", null);
+		} else {
+			return SmCommonUtil.getMessage("lbl.sm.facility.rent", null);
+		}
+	}
+
+	public String getFacTypeLabel(String facType) {
+		if (facType.equalsIgnoreCase("H")) {
+			return SmCommonUtil.getMessage(
+					"lbl.sm.facility.facilityType.home.office", null);
+		} else {
+			return SmCommonUtil.getMessage(
+					"lbl.sm.facility.facilityType.business.office", null);
+		}
 	}
 
 	private void updateSpkiDigiSignData(PmDigiSign pmDigiSign, String docType,
