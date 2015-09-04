@@ -8376,6 +8376,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			reqDTO.setContractId(supplierItemView.getContractId());
 			log.info("supplierItemView.getContractId():"+ supplierItemView.getContractId());
 			ContractResDTO resDTO = contractSO.retrieveContract(reqDTO);
+			
 			if (resDTO.getContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
 				log.info("*************FULFILMENT_TYPE_ONE_OFF**************");
 				FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -8389,6 +8390,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			} else {
 				log.info("*************not one off**************");
 
+			}
+			resDTO = contractSO.retrieveAvailableSchedulePhaseNo(reqDTO);
+			if(resDTO.getAvailableNoList() != null){
+				getManagedBean().setAvailableNoList(resDTO.getAvailableNoList());
 			}
 
 		}
@@ -8447,14 +8452,27 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		externalContext.getApplicationMap().put(facesScope.getUserSessionBean().getUserId().toString()+getManagedBean().getCtRequestList().get(0)
 				.getContractId().toString(), getManagedBean().getCtRequestList());
 		String url = "contract-request-from-catalogue";
-
+		
 		try {
-			externalContext.redirect(commonUrl
-					+ "/"
-					+ url
-					+ "?contractId="
-					+ this.getManagedBean().getCtRequestList().get(0)
-					.getContractId());
+			if(getManagedBean().getScheduleNo() != null){
+				externalContext.redirect(commonUrl
+						+ "/"
+						+ url
+						+ "?contractId="
+						+ this.getManagedBean().getCtRequestList().get(0)
+						.getContractId()
+						+ "&scheduleNo="
+						+ this.getManagedBean().getScheduleNo());
+			}else{
+				externalContext.redirect(commonUrl
+						+ "/"
+						+ url
+						+ "?contractId="
+						+ this.getManagedBean().getCtRequestList().get(0)
+						.getContractId());
+			}
+			
+					
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
