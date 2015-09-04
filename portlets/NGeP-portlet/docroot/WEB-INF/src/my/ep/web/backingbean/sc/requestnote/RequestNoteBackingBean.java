@@ -94,7 +94,6 @@ import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScRequestItemAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationDistrictCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationDivisionCriteria;
-import my.ep.persistence.entity.sc.directpurchase.ScLocationStateCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScPIReportAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScPRIRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
@@ -513,6 +512,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}	
 
+			//procurement title limit  - 500 
 			if(!sb.toString().isEmpty() && sb.toString().length() >= SourcingConstants.PROCUREMENT_TITLE_LIMIT){
 				String procTitle = sb.substring(0, SourcingConstants.PROCUREMENT_TITLE_LIMIT);
 				requestNote.setTitle(procTitle);
@@ -987,7 +987,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * in Item Details in RN
 	 */
 	public void applyForRequestNote() {
-		log.info("applyForRequestNote");
+		debugLogger("applyForRequestNote");
 		int counter = 0;
 		List<ScRequestNoteDtl>	requestNoteDtls	= new ArrayList<ScRequestNoteDtl>();
 
@@ -1091,7 +1091,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param compareSupplierItems the compare supplier items
 	 */
 	public void addToCart(Long cmSupplierItemId , boolean cart , List<CmSupplierItem> compareSupplierItems) {
-		log.info("addToCart");
+		debugLogger("addToCart");
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICatalogueSO.class);
 		CatalogueReqDTO catReqDTO = new CatalogueReqDTO();
 		catReqDTO.setSupplierItemId(cmSupplierItemId);
@@ -1461,7 +1461,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * Page navigation to catalogue search page in Request Note.
 	 */
 	public void backToPrevious() {
-		log.info("backToPrevious");
+		debugLogger("backToPrevious");
 		getManagedBean().setProcurementType(ParameterConst.PROC_TYPE_NORMAL);
 		ScRequestSupplierItem requestSupplierItem = new ScRequestSupplierItem();
 		ScRequestItem requestItem = new ScRequestItem();
@@ -1486,7 +1486,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param cartFlag the cart flag
 	 */
 	public void addToRequestNote(boolean cartFlag) {
-		log.info("addToRequestNote");
+		debugLogger("addToRequestNote");
 		List<ScRequestNoteDtl>	requestNoteDtls = getManagedBean().getRequestNoteDtls();
 		ScRequestSupplierItem requestSupplierItem = getManagedBean().getRequestSupplierItem();
 		ScRequestNoteDtl scRequestNoteDtl = new ScRequestNoteDtl();
@@ -1810,7 +1810,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 *  to show justification drop down and justification remark based on procurement type.
 	 */
 	public void procurementTypeEvent() {
-		log.info("procurementTypeEvent"); 
+		debugLogger("procurementTypeEvent"); 
 		if (getManagedBean().getProcurementType()
 				.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL) || getManagedBean().getProcurementType().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
 			getManagedBean().setProcTypeOption(Boolean.FALSE);
@@ -1837,7 +1837,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param scRequestNoteDtl the sc request note dtl
 	 */
 	public void showReqNotePopUps(ScRequestNoteDtl scRequestNoteDtl){
-		log.info("showReqNotePopUps");
+		debugLogger("showReqNotePopUps");
 		if(scRequestNoteDtl.getScRequestSupplierItem() != null){
 			ScRequestSupplierItem  scRequestSupplierItem = scRequestNoteDtl.getScRequestSupplierItem();
 
@@ -1912,7 +1912,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * can edit order quantity after added item to request note in item details Popup
 	 */
 	public void editQuantity(){
-		log.info("editQuantity");
+		debugLogger("editQuantity");
 
 		if(getManagedBean().getRequestNoteDtl() != null){
 			List<ScRequestNoteDtl>	requestNoteDtls	= new ArrayList<ScRequestNoteDtl>();
@@ -1942,7 +1942,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param scRequestNoteDtl the sc request note dtl
 	 */
 	public void showPricing(ScRequestNoteDtl scRequestNoteDtl){
-		log.info("showPricing");
+		debugLogger("showPricing");
 		List<ScSupplierItemPrice>	supplierItemPrices = new ArrayList<ScSupplierItemPrice>();
 		if(scRequestNoteDtl.getScRequestSupplierItem() != null){
 			ScRequestSupplierItem  scRequestSupplierItem = scRequestNoteDtl.getScRequestSupplierItem();
@@ -1968,7 +1968,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param requestNoteDtl the request note dtl
 	 */
 	private void pricingHideAndShow(ScRequestNoteDtl requestNoteDtl) {
-		log.info("pricingHideAndShow");
+		debugLogger("pricingHideAndShow");
 		if(requestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice() != null){
 			String priceTypeCode = requestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice().getPriceType().getParameterCode();
 
@@ -2000,7 +2000,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @return true, if successful
 	 */
 	public boolean showPurchaseInqIcon(ScRequestNoteDtl requestNoteDtl) {
-		log.info("showPurchaseInqIcon");
+		debugLogger("showPurchaseInqIcon");
 		Boolean isPurchaseInq= Boolean.FALSE;
 		if(requestNoteDtl != null && requestNoteDtl.getScRequestSupplierItem().getScPrInquiy() != null ){
 			if(requestNoteDtl.getRequestItem() != null){
@@ -2025,7 +2025,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param requestNoteDtl the request note dtl
 	 */
 	public void fulfilmentTypeEvent(ScRequestNoteDtl requestNoteDtl) {
-		log.info("fulfilmentTypeEvent"); 
+		debugLogger("fulfilmentTypeEvent"); 
 		if(getManagedBean().getFulfillmentType() != null){
 			//requestNoteDtl.setFulfillmentType(getManagedBean().getFulfillmentType());
 		}
@@ -2072,7 +2072,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @return the list
 	 */
 	public List<PmUser> userListByRole(String roleCode){
-		log.info("userListByRole - Start");
+		debugLogger("userListByRole - Start");
 		List<PmUser> options = new ArrayList<PmUser>();
 		try{
 			UserReqDTO reqDTO = new UserReqDTO();
@@ -2096,7 +2096,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @return void
 	 */
 	public void deleteRequestNoteDtl() {
-		log.info("deleteRequestNoteDtl");
+		debugLogger("deleteRequestNoteDtl");
 		int counter = 0;
 		List<ScRequestNoteDtl>	deleteRequestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
 		List<ScRequestNoteDtl>	mainRequestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
@@ -2518,13 +2518,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 					// by locality
 					List<PmState> states = new ArrayList<PmState>();
-					if(scQuote.getLocationStateCriterias() != null) {
-						if(scQuote.getLocationStateCriterias().size() >0){
-							for (ScLocationStateCriteria locationStateCriteria : scQuote.getLocationStateCriterias() ) {
-								//states.add(locationStateCriteria.getPmState());
-							}
-						}
-					}
+					/*
+					 * if(scQuote.getLocationStateCriterias() != null) {
+					 * if(scQuote.getLocationStateCriterias().size() >0){ for
+					 * (ScLocationStateCriteria locationStateCriteria :
+					 * scQuote.getLocationStateCriterias() ) {
+					 * //states.add(locationStateCriteria.getPmState()); } } }
+					 */
 					List<PmDivision> divisions = new ArrayList<PmDivision>();
 					if(scQuote.getLocationDivisionCriterias() != null) {
 						if(scQuote.getLocationDivisionCriterias().size() >0){
@@ -2642,7 +2642,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * to close add to cart popup window.
 	 */
 	public void closeListener() {
-		log.info("closeListener");
+		debugLogger("closeListener");
 		// add to cart validation
 		RequestContext.getCurrentInstance().execute("addToCartPopup.hide()");
 		getManagedBean().setRequired(Boolean.FALSE);
@@ -2759,7 +2759,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param requestNoteDtl the request note dtl
 	 */
 	public void beforeSavePostListener(ScRequestNoteDtl requestNoteDtl) {
-		log.info("beforeSavePostLister");
+		debugLogger("beforeSavePostLister");
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICatalogueSO.class);
 		CatalogueReqDTO catReqDTO = new CatalogueReqDTO();
 		if(requestNoteDtl.getvCmSupplierItem() != null && requestNoteDtl.getvCmSupplierItem().getDocId() >0) {
@@ -2792,7 +2792,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param requestNoteDtl the request note dtl
 	 */
 	public void afterSavePostListener(ScRequestNoteDtl requestNoteDtl) {
-		log.info("afterSavePostLister");
+		debugLogger("afterSavePostLister");
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 
 		if(requestNoteDtl.getScRequestSupplierItem() != null && requestNoteDtl.getScRequestSupplierItem().getRequestSupplierItemId() != null){
@@ -2818,7 +2818,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
   * @param assignedUserId the assigned user id
   */
 	public void applyPrepareByForSupplierRecs(ScRequestNoteDtl selectedReqDtl  , Long assignedUserId){ 
-		log.info("applyPrepareByForSupplierRecs");
+		debugLogger("applyPrepareByForSupplierRecs");
 		List<ScRequestNoteDtl>	requestNoteDtls	= new ArrayList<ScRequestNoteDtl>();
 		if(getManagedBean().getSupplierRecList() != null && getManagedBean().getSupplierRecList().size() >0) {
 			for(ScRequestNoteDtl requestNoteDtl : getManagedBean().getSupplierRecList()) {
@@ -2838,21 +2838,21 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param supplierId the supplier id
 	 */
 	public void applyRecSupplierForSupplierRecList(Long supplierId){ 
-		log.info("applyRecSupplierForSupplierRecList");
+		debugLogger("applyRecSupplierForSupplierRecList");
 		List<ScRequestNoteDtl>	requestNoteDtls	= new ArrayList<ScRequestNoteDtl>();
 		List<Long> selectedRequestNoteDtlIds  = new ArrayList<Long>();
 		if(getManagedBean().getSelectedRequestNoteDtls() != null && getManagedBean().getSelectedRequestNoteDtls().size() >0) {
 			for (ScRequestNoteDtl selectedReqNoteDtl : getManagedBean().getSelectedRequestNoteDtls()) {
 				selectedRequestNoteDtlIds.add(selectedReqNoteDtl.getRequestNoteDtlId());
 			}
-			
+
 		} else {
 			throw new EpException(MessageConst.ERROR_760158);
 		}
-		
+
 		if(getManagedBean().getSupplierRecList() != null && getManagedBean().getSupplierRecList().size() >0) {
 			for(ScRequestNoteDtl requestNoteDtl : getManagedBean().getSupplierRecList()) {
-               
+
 				if(selectedRequestNoteDtlIds.contains(requestNoteDtl.getRequestNoteDtlId())){
 
 					if(requestNoteDtl.getRequestItem() != null && requestNoteDtl.getRequestItem().getSupplierItems() !=null 
@@ -2917,9 +2917,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		if(scRequestNote.getScRNZone() != null){
 			isZone =  Boolean.TRUE;;
 		}
-		
+
 		retrieveRequestNoteDetails(scRequestNote, DPStatusConstants.RN_PENDING_SUBMISSION, isZone);
-		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
 	}
@@ -3025,7 +3024,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @return the string
 	 */
 	public String cancel() {
-		log.info("cancel");
+		debugLogger("cancel");
 		// clear request note data
 		 super.renewSesionObject();
 		return "catalogueSearch";
@@ -3035,7 +3034,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * Cancel item detail popup.
 	 */
 	public void cancelItemDetailPopup() {
-		log.info("cancelItemDetailPopup");
+		debugLogger("cancelItemDetailPopup");
 		RequestContext.getCurrentInstance().execute("itemDtlPopup.hide()");
 		getManagedBean().setAutoUpdate(true);
 	}
@@ -3057,7 +3056,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * Recommended Supplier icon in request note to view supplier details.
 	 */
 	public void supplierViewAction() {
-		log.info("supplierViewAction");
+		debugLogger("supplierViewAction");
 		RequestContext.getCurrentInstance().execute("suppDetailsPopup.show();");
 	}
 	
@@ -3512,14 +3511,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public void viewRecentPrice() throws IOException {
 		debugLogger("viewRecentPrice");
 		long itemId = 0 ;
-		long supplierId ;
 		long cmSuppItemId = 0;
 		long uomId = 0;
 		FacesScopes facesScopes = new FacesScopes();
 		if (getManagedBean().getCmSupplierItem() != null) {
 			CmSupplierItem cmSupplierItem = getManagedBean().getCmSupplierItem();
 			itemId = cmSupplierItem.getCmItem().getItemId();
-			supplierId = cmSupplierItem.getSmSupplier().getSupplierId();
 			cmSuppItemId = cmSupplierItem.getSupplierItemId();
 			uomId = cmSupplierItem.getPmUom().getUomId();
 		}
@@ -3552,7 +3549,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	public void viewMarketResearch(ScRequestNoteDtl requestNoteDtl) throws IOException {
 		debugLogger("viewMarketResearch");
-		
 		
 		if (requestNoteDtl != null) {
 			FacesScopes facesScopes = new FacesScopes();	
@@ -3599,6 +3595,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			        	 paramMap.put(ReportConst.PARAM_SUPP_ITEM_ID, searchValue);	
 			         }	
 			         paramMap.put(ReportConst.PARAM_ITEM_CODE, itemCode);	
+			         paramMap.put(ReportConst.PARAM_QUANTITY, requestNoteDtl.getRequestItem().getQuantity().toString());	
 			         paramMap.put(ReportConst.PARAM_UOM_ID, uomId + "");	
 			         System.out.println(searchField + "|" + searchValue + "|" + searchCondition);
 			    }
