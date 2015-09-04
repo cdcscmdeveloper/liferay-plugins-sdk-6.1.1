@@ -308,6 +308,7 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtGroupFiveView(true);
 	        	rptGenBean.setCtProcurementModeView(true);
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
+	        	rptGenBean.setCtSupplierNameView(true);
 	        	//rptGenBean.setCtUserTypeView(true);
 	        	//rptGenBean.setCtSubTypeView(true);
 	        	rptGenBean.setCtContractFromDateView(true);
