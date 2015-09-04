@@ -4,7 +4,6 @@
 package my.ep.web.managedbean.fl.doc;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +36,7 @@ import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.fl.VFlDocument;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -197,7 +197,10 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	private IPagingDataModel<VFlDocument> flDocumentDataModel = new FlDocumentPagingDataModel();
 	
 	private int searchFinancialYear;
-
+	
+	private PmOrgProfile ptj;
+	private PmOrgProfile ministry;
+	
 	/**
 	 * Gets the temp login id.
 	 *
@@ -299,6 +302,12 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				if(getSearchFinancialYear()!= 0){
 					reqDTO.setFinancialYear(getSearchFinancialYear());
 				}
+				if( getPtj() != null){
+					reqDTO.setPtj(getPtj());
+				}
+				if(getMinistry() != null){
+					reqDTO.setMinistry(getMinistry());
+				}
 				
 				if(isFlFulfilmentSupplier()){
 					FacesScopes facesScopes = new FacesScopes();
@@ -338,6 +347,10 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 					} else {
 						reqDTO.setUserRole(RoleCode.AUDITOR_INTERNAL.value());
 					}
+				}
+				
+				if(isFlFulfilmentSupplier()){
+					reqDTO.setUserRole(RoleCode.BASIC_SUPPLIER_USER.value());
 				}
 				
 				IFulfilmentDocumentSO flDocumentSO = (IFulfilmentDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentDocumentSO.class);
@@ -1494,6 +1507,34 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	 */
 	public void setSearchFinancialYear(int searchFinancialYear) {
 		this.searchFinancialYear = searchFinancialYear;
+	}
+
+	/**
+	 * @return the ptj
+	 */
+	public PmOrgProfile getPtj() {
+		return ptj;
+	}
+
+	/**
+	 * @param ptj the ptj to set
+	 */
+	public void setPtj(PmOrgProfile ptj) {
+		this.ptj = ptj;
+	}
+
+	/**
+	 * @return the ministry
+	 */
+	public PmOrgProfile getMinistry() {
+		return ministry;
+	}
+
+	/**
+	 * @param ministry the ministry to set
+	 */
+	public void setMinistry(PmOrgProfile ministry) {
+		this.ministry = ministry;
 	}
 
 }
