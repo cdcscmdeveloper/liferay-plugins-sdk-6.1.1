@@ -96,8 +96,41 @@
 						<f:selectItems
 							value="#{flTrackingDiaryBackingBean.getFinancialYearOpt()}" />
 					</p:selectOneMenu></td>	</tr>
+				
+					
 <!-- 			</h:panelGrid> -->
 		</table>
+		<h:panelGroup id="orgSearch" rendered="#{flTrackingDiaryBackingBean.managedBean.searchOrderType != null}">
+			<table>
+				<tr>
+					<td style="width: 480px;">
+						<p:outputLabel value="#{lbl['lbl.fl.ministry']}"	/>
+					</td>
+					<td>
+						<ac:lov id="searchMinistry" lovId="PM_ORG_PROFILE_MINSTRY" size="46" readonly="true" style="width:314px"
+							disabled="#{flTrackingDiaryBackingBean.disableMinistryLov()}"
+							headerText="#{lbl['lbl.fl.ministry']}" 
+							value="#{flTrackingDiaryBackingBean.managedBean.ministry.orgName}"
+							postUpdateListener="flTrackingDiaryBackingBean.resetPtjProfile()"
+							update=":form:searchPtj,:form:orgSearch"
+							saveObject="flTrackingDiaryBackingBean.managedBean.ministry">
+						</ac:lov>
+					</td>
+				</tr>
+				<tr>
+					<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.ptj']}"	/></td>
+					<td>
+						<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" size="46" readonly="true" style="width:314px"
+							disabled="#{flTrackingDiaryBackingBean.disablePtjLov()}"
+							headerText="#{lbl['lbl.fl.ptj']}"
+							value="#{flTrackingDiaryBackingBean.managedBean.ptj.orgName}"
+							saveObject="flTrackingDiaryBackingBean.managedBean.ptj"	
+							conditionField="#{flTrackingDiaryBackingBean.getPTJCondition()}">			
+						</ac:lov>
+					</td>
+				</tr>
+			</table>
+		</h:panelGroup>	
 
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
