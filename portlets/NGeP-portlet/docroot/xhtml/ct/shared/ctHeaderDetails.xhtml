@@ -67,7 +67,7 @@
 			   				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 						<p:inputText styleClass="ppRightBtn" style="width:160px;" disabled="true" 
-			   				  rendered="#{!ctBackingBean.managedBean.gstCheckingGUI}" value="#{lbl['lbl.ct.gst.na']}">
+			   				  rendered="#{!ctBackingBean.managedBean.gstCheckingGUI}" value="#{lbl['lbl.ct.value.na']}">
 						</p:inputText>
 					</td>
 					<td class="columnWidth200">
@@ -178,6 +178,16 @@
 				 <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.concession']}" />
 			 </h:panelGrid>
 		   </h:panelGrid>
+		    <h:panelGrid columns="3" rendered="#{ctBackingBean.managedBean.ctContractVer.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}">
+			  <p:selectBooleanCheckbox id="exemptId" value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.ap201Exempt}" 
+			    disabled="true" style="text-align:top;"> 
+			  </p:selectBooleanCheckbox>
+			  <p:spacer width="2" />	
+			  <h:panelGrid columns="2">
+				  <h:outputText value="#{lbl['lbl.ct.ap201']}" style="text-align:top;" />
+				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap201.exemption']}" />
+			  </h:panelGrid>
+		   </h:panelGrid>
 		   <h:panelGrid columns="3">
 		     <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.feeExampted}" disabled="true"/>
 		     <p:spacer width="2" />	
@@ -214,16 +224,6 @@
 		       		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.fctvalue']}" />
 			   </h:panelGrid>
 		     </h:panelGrid> 
-		   <h:panelGrid columns="3" rendered="#{ctBackingBean.managedBean.ctContractVer.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}">
-			  <p:selectBooleanCheckbox id="exemptId" value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.ap201Exempt}" 
-			    disabled="true" style="text-align:top;"> 
-			  </p:selectBooleanCheckbox>
-			  <p:spacer width="2" />	
-			  <h:panelGrid columns="2">
-				  <h:outputText value="#{lbl['lbl.ct.ap201']}" style="text-align:top;" />
-				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap201.exemption']}" />
-			  </h:panelGrid>
-		   </h:panelGrid>
 		   <h:panelGrid columns="3" 
 		     rendered="#{ctBackingBean.managedBean.ctContractVer.ctContract.loa.loaAmt > ctBackingBean.managedBean.performanceBondRuleAmt
 		     	and ctBackingBean.managedBean.ctContractVer.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase
