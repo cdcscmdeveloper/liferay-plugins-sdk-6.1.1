@@ -29,6 +29,7 @@ import my.ep.biz.service.fl.order.IReliefOrderSO;
 import my.ep.biz.service.fl.payment.IPaymentMatchSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
@@ -43,6 +44,8 @@ import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -62,8 +65,10 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmReason;
+import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.cr.ContractRequestBackingBean;
@@ -164,6 +169,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	 */
 	public void preRenderDocSearch() {
 		renewSesionObject();
+		defaultPtjAndMinistryValues();
 		resetSearchCriteria();
 		FacesContext fc=FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
@@ -777,6 +783,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		getManagedBean().setSearchOrderNo(null);
 		getManagedBean().setSearchPhysContractNo(null);
 		getManagedBean().setSearchPhysLoaNo(null);
+		defaultPtjAndMinistryValues();
 	}
 	
 	/**
@@ -1057,4 +1064,88 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		return resDTO;
 		
 	}
+	
+	/**
+	 * Gets the default ptj and ministry search values based on user role.
+	 *
+	 */
+	private void defaultPtjAndMinistryValues() {
+		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+			this.getManagedBean().setMinistry(null);
+			this.getManagedBean().setPtj(null);
+
+		} else {
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+			PmOrgProfile orgProfile = null;
+			if (userResDTO.getUserOrgList() != null	&& userResDTO.getUserOrgList().size() > 0) {
+				orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+			}
+			if (getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.PAY_OFFICER.value())) {
+				this.getManagedBean().setPtj(orgProfile);
+				this.getManagedBean().setMinistry(orgProfile);
+			} else if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+				this.getManagedBean().setPtj(null);
+				this.getManagedBean().setMinistry(orgProfile);
+			}
+
+		}
+	}
+	 /**
+		 * Get PTJ condition for construct the LOV listing
+		 * @return String
+		 */
+	public String getPTJCondition() {
+		String condition = OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value())+"^"+
+				this.getManagedBean().getMinistry().getOrgProfileId();
+			//this.getManagedBean().setPtjLovEnabled(true);
+		return condition;
+	}
+		
+	/**
+		* The method used reset PTJ profile value once select the Ministry
+	*/
+	public void resetPtjProfile() {
+		getManagedBean().setPtj(null);
+	}
+		
+	/**
+	  * The method used to disable the ministry Lov
+	  * if login user is FL User
+	  * or internal auditor.
+	  * 
+	  * @return true, if login user is FL User/internal auditor
+	  *         false, if login user is not User/internal auditor
+	*/	
+	public boolean disableMinistryLov() {
+		return (isFlFulfilmentRequisitioner() || isFlFulfilmentApprover()
+				|| isFlFulfilmentRecevingOfficer()
+				|| isFlFulfilmentPaymentOfficer() || getFacesScopes()
+				.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()));
+	}
+	
+	/**
+	  * The method used to disable the ptj Lov
+	  * if login user is FL User
+	  * or ministry is null.
+	  * 
+	  * @return true, if login user is FL User/ministry is null
+	  *         false, if login user is not User/ministry is null
+	*/	
+	
+	public boolean disablePtjLov() {
+		return (isFlFulfilmentRequisitioner() || isFlFulfilmentApprover()
+				|| isFlFulfilmentRecevingOfficer()
+				|| isFlFulfilmentPaymentOfficer() || getManagedBean().getMinistry()==null);
+	}
+	
 }
