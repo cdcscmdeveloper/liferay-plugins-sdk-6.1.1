@@ -1515,9 +1515,6 @@ public class EvaluationBackingBean extends
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-			List<String> evalstage = new ArrayList<String>();
-			evalstage.add(QTConstants.COMPLIANCE_CHECK);
-			reqDTO.setResultStages(evalstage);
 			if (this.getManagedBean().getCurrentStatusId()
 					.equals(QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL)
 					|| this.getManagedBean()
@@ -1529,15 +1526,18 @@ public class EvaluationBackingBean extends
 					getManagedBean().setComplianceSummaryGenerated(true);
 				}
 			}
+			
+			List<String> evalstage = new ArrayList<String>();
+			evalstage.add(QTConstants.COMPLIANCE_CHECK);
 
 			this.getManagedBean().setQualifiedSuppliersDM(
 					new SummarySupplierPagingDataModel(
 							"complianceQualifiedSupplier", true, false, null,
-							reqDTO.getResultStages()));
+							evalstage));
 			this.getManagedBean().setDisqualifiedSuppliersDM(
 					new SummarySupplierPagingDataModel(
 							"complianceDisQualifiedSupplier", false, false,
-							null, reqDTO.getResultStages()));
+							null, evalstage));
 
 		} finally {
 
