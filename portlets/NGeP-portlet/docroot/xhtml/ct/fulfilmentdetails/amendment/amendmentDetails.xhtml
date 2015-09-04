@@ -111,7 +111,7 @@
 			</h:panelGrid>			
 				<p:outputLabel value="#{lbl['lbl.ct.amendment.title']}"  styleClass="required"/>
 			<h:panelGrid columns="2">
-				<p:inputTextarea id="txtname" style="width:650px;"  label="#{lbl['lbl.ct.amendment.title']}" rows="2"
+				<p:inputTextarea id="txtname" style="width:650px;margin-bottom:5px;"  label="#{lbl['lbl.ct.amendment.title']}" rows="2"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.title}" maxlength="100"
 					disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}" autoResize="false" />
 				<p:message for="txtname" display="icon" />	
@@ -259,7 +259,7 @@
 				</p:inputText>
 				<p:message for="newGstAmtTxt" display="icon" />
 				<p:inputText styleClass="ppRightBtn" style="width:80px;" disabled="true" 
-	   				 rendered="#{!amendmentBackingBean.contractWithGst()}" value="#{lbl['lbl.ct.gst.na']}">
+	   				 rendered="#{!amendmentBackingBean.contractWithGst()}" value="#{lbl['lbl.ct.value.na']}">
 				</p:inputText>
 			</h:panelGrid>
 			

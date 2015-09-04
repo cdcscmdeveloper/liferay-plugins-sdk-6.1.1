@@ -143,6 +143,17 @@
 				 <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.concession']}" />
 			 </h:panelGrid>
 		   </h:panelGrid>
+		    <h:panelGrid columns="3"
+		       rendered="#{agreementBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}">
+			  <p:selectBooleanCheckbox id="exemptId" value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" 
+			   	disabled="true" style="text-align:top;">
+			  </p:selectBooleanCheckbox>
+			  <p:spacer width="2" />	
+			  <h:panelGrid columns="2">
+				  <h:outputText value="#{lbl['lbl.ct.ap201']}" style="text-align:top;" />
+				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap201.exemption']}" />
+			  </h:panelGrid>
+		   </h:panelGrid>
 		   <h:panelGrid columns="3">
 		     <p:selectBooleanCheckbox value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.feeExampted}" disabled="true"/>
 		     <p:spacer width="2" />	
@@ -180,17 +191,6 @@
 		       		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.fctvalue']}" />
 			   </h:panelGrid>
 		     </h:panelGrid>  
-		   <h:panelGrid columns="3"
-		       rendered="#{agreementBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}">
-			  <p:selectBooleanCheckbox id="exemptId" value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" 
-			   	disabled="true" style="text-align:top;">
-			  </p:selectBooleanCheckbox>
-			  <p:spacer width="2" />	
-			  <h:panelGrid columns="2">
-				  <h:outputText value="#{lbl['lbl.ct.ap201']}" style="text-align:top;" />
-				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap201.exemption']}" />
-			  </h:panelGrid>
-		   </h:panelGrid>
 		   <h:panelGrid columns="3" 
 		     rendered="#{agreementBackingBean.managedBean.ctContract.loa.loaAmt > agreementBackingBean.managedBean.performanceBondRuleAmt
 		     	and agreementBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase

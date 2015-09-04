@@ -68,7 +68,7 @@
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 						<p:inputText styleClass="ppRightBtn" style="width:130px;"
-			   				 disabled="true" value="#{lbl['lbl.ct.gst.na']}"  rendered="#{!contractDetailsBackingBean.contractWithGst()}">
+			   				 disabled="true" value="#{lbl['lbl.ct.value.na']}"  rendered="#{!contractDetailsBackingBean.contractWithGst()}">
 						</p:inputText>
 					</td>
 		    	    <td class="columnWidth150">
@@ -188,6 +188,17 @@
 		</h:panelGroup>
 	  	
 	  	<h:panelGrid style="width:270px; margin-left:5px">
+	  	 <h:panelGrid columns="3" rendered="#{!contractDetailsBackingBean.managedBean.directPurchase}">
+			  <p:selectBooleanCheckbox id="exemptCentralId" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" 
+			    	disabled="#{true or contractDetailsBackingBean.managedBean.chkConceValue or contractDetailsBackingBean.managedBean.viewContract}" style="text-align:top;">
+			     <p:ajax event="change" update=":form:justificationCentralPanel" listener="#{contractDetailsBackingBean.chkJustificationAction}" process="@this"/> 
+			  </p:selectBooleanCheckbox>
+			  <p:spacer width="2" />	
+			  <h:panelGrid columns="2">
+				  <h:outputText value="#{lbl['lbl.ct.ap201']}" style="text-align:left;" />
+				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap201.exemption']}" />
+			  </h:panelGrid>
+		   </h:panelGrid>
 	      <h:panelGrid columns="3">  
 		       <p:selectBooleanCheckbox 
 			       value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.feeExampted}" disabled="true" />
@@ -215,17 +226,6 @@
 		       		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.fctvalue']}" />
 			   </h:panelGrid>
 		     </h:panelGrid> 
-		       <h:panelGrid columns="3" rendered="#{!contractDetailsBackingBean.managedBean.directPurchase}">
-			  <p:selectBooleanCheckbox id="exemptCentralId" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" 
-			    	disabled="#{true or contractDetailsBackingBean.managedBean.chkConceValue or contractDetailsBackingBean.managedBean.viewContract}" style="text-align:top;">
-			     <p:ajax event="change" update=":form:justificationCentralPanel" listener="#{contractDetailsBackingBean.chkJustificationAction}" process="@this"/> 
-			  </p:selectBooleanCheckbox>
-			  <p:spacer width="2" />	
-			  <h:panelGrid columns="2">
-				  <h:outputText value="#{lbl['lbl.ct.ap201']}" style="text-align:left;" />
-				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap201.exemption']}" />
-			  </h:panelGrid>
-		   </h:panelGrid>
 	 	</h:panelGrid>
 	 </h:panelGrid>
 	 <p:outputPanel id="justificationCentralPanel" rendered="false">
