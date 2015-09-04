@@ -1818,6 +1818,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 * 
 	 * @return the machine category data
 	 */
+
 	private void getMachineCategoryData() {
 
 		List<PmMachineCategory> pmMachineCategoryList = this.getManagedBean()
@@ -1836,9 +1837,11 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				pmMachineCategoryList.addAll(tobeAddedPmMachineCategory);
 				tobeAddedPmMachineCategory.clear();
 			}
-		} else if (this.getManagedBean().getPmMachineCategory() == null
-				&& tobeAddedPmMachineCategory == null
+		} else if (CollectionUtils.isEmpty(this.getManagedBean()
+				.getPmMachineCategoryList())
+				&& CollectionUtils.isEmpty(tobeAddedPmMachineCategory)
 				&& this.getManagedBean().isCheckSpecialCategory()) {
+
 			throw new EpException(MessageConst.ERROR_775008);
 		}
 	}
