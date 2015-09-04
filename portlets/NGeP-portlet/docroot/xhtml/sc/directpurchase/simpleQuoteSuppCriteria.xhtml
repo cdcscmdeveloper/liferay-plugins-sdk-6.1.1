@@ -49,7 +49,7 @@
 										value="#{lbl['lbl.sc.location.level']}" /></td>
 								<td><p:selectOneMenu id="locLevels"
 										value="#{simpleQuoteBackingBean.managedBean.supplierLocLevel}"
-										style="width: 90px;" disabled="#{!isPendingSubmissionStatus}">
+										style="width: 150px;" disabled="#{!isPendingSubmissionStatus}">
 										<f:selectItems
 											value="#{simpleQuoteBackingBean.locationLevelDropdown}" />
 										<p:ajax event="change" update="locPanel" partialSubmit="true"
