@@ -116,6 +116,13 @@ public class ReportsGenerateBean {
 		private boolean cmSupplOrAdminView = false;
 		private boolean cmExtentionView = false;
 		private boolean cmGroupOneView = false;
+		private boolean cmPublishedDateView = false;
+		private boolean cmCatelogDateView = false;
+		private boolean cmApprovedDateView = false;
+		private boolean cmSubmittedDateView = false;
+		private boolean cmExpiredDateView = false;
+		private boolean cmItemValidityDateView = false;
+		private boolean cmRequestNumberView = false;
 		
 		//SM module
 		private boolean smCompanyNameView = false;
@@ -392,6 +399,42 @@ public class ReportsGenerateBean {
 		private boolean ctSupplierTextView = false;
 		
 		
+		public boolean isCmItemValidityDateView() {
+			return cmItemValidityDateView;
+		}
+		public void setCmItemValidityDateView(boolean cmItemValidityDateView) {
+			this.cmItemValidityDateView = cmItemValidityDateView;
+		}
+		public boolean isCmExpiredDateView() {
+			return cmExpiredDateView;
+		}
+		public void setCmExpiredDateView(boolean cmExpiredDateView) {
+			this.cmExpiredDateView = cmExpiredDateView;
+		}
+		public boolean isCmSubmittedDateView() {
+			return cmSubmittedDateView;
+		}
+		public void setCmSubmittedDateView(boolean cmSubmittedDateView) {
+			this.cmSubmittedDateView = cmSubmittedDateView;
+		}
+		public boolean isCmCatelogDateView() {
+			return cmCatelogDateView;
+		}
+		public void setCmCatelogDateView(boolean cmCatelogDateView) {
+			this.cmCatelogDateView = cmCatelogDateView;
+		}
+		public boolean isCmApprovedDateView() {
+			return cmApprovedDateView;
+		}
+		public void setCmApprovedDateView(boolean cmApprovedDateView) {
+			this.cmApprovedDateView = cmApprovedDateView;
+		}
+		public boolean isCmPublishedDateView() {
+			return cmPublishedDateView;
+		}
+		public void setCmPublishedDateView(boolean cmPublishedDateView) {
+			this.cmPublishedDateView = cmPublishedDateView;
+		}
 		public boolean isCtSupplierDefaultView() {
 			return ctSupplierDefaultView;
 		}
@@ -1005,6 +1048,7 @@ public class ReportsGenerateBean {
 		private String cmExtentionTypeVar=ReportConst.EMPTY_VAL;
 		private String cmExtentionMeasurmentVar=ReportConst.EMPTY_VAL;
 		private String cmExtentionColourVar=ReportConst.EMPTY_VAL;
+		private String cmRequestNumberVar=ReportConst.EMPTY_VAL;
 		//sm
 		private String paymentTypeTotVar=ReportConst.EMPTY_VAL;	
 		private String reportTypeTotVar=ReportConst.EMPTY_VAL;	
@@ -1154,6 +1198,18 @@ public class ReportsGenerateBean {
 		private String ctTerminationTypeVar=ReportConst.EMPTY_VAL;
 		
 		
+		public boolean isCmRequestNumberView() {
+			return cmRequestNumberView;
+		}
+		public void setCmRequestNumberView(boolean cmRequestNumberView) {
+			this.cmRequestNumberView = cmRequestNumberView;
+		}
+		public String getCmRequestNumberVar() {
+			return cmRequestNumberVar;
+		}
+		public void setCmRequestNumberVar(String cmRequestNumberVar) {
+			this.cmRequestNumberVar = cmRequestNumberVar;
+		}
 		public boolean isCtGroupFiveWithoutSupplView() {
 			return ctGroupFiveWithoutSupplView;
 		}
