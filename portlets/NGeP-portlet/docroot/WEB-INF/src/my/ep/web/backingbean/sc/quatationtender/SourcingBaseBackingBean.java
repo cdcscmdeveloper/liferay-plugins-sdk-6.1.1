@@ -2007,7 +2007,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			scQt.setProposalValidityUntil(sdf.format(validityDate));
 			long days = DateUtils.getDaysDifference(d1, validityDate);
 			int day = (int) days;
-			if (day > 0) {
+			if (day >= 0) {
 				isDate = true;
 			}
 		}
