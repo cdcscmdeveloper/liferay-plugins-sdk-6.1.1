@@ -2649,4 +2649,82 @@ public class SmCommonUtil {
 			}
 		}
 	}
+
+	public static String getOwnershipTypeLabel(String ownershipType) {
+		if (ownershipType.equalsIgnoreCase("O")) {
+			return getMessage("lbl.sm.facility.own", null);
+		} else {
+			return getMessage("lbl.sm.facility.rent", null);
+		}
+	}
+
+	public static String getFacTypeLabel(String facType) {
+		if (facType.equalsIgnoreCase("H")) {
+			return getMessage("lbl.sm.facility.facilityType.home.office", null);
+		} else {
+			return getMessage("lbl.sm.facility.facilityType.business.office",
+					null);
+		}
+	}
+
+	public static String getPriceAmountFormat(BigDecimal priceAmount) {
+		String retVal = "";
+		if (priceAmount != null) {
+			priceAmount = priceAmount.setScale(2, RoundingMode.CEILING);
+			retVal = priceAmount.toString();
+		}
+		return retVal;
+	}
+
+	public static String getDisplayDateFormat(Date date) {
+		String retVal = "";
+		if (date != null) {
+			retVal = DateUtils.dateToString("dd/MM/yyyy", date);
+		}
+		return retVal;
+	}
+
+	public static String getCountryLabelById(Long countryId) {
+		String name = "";
+		if (countryId != null) {
+			CountryReqDTO reqDTO = new CountryReqDTO();
+			reqDTO.setCountryId(countryId);
+			name = SmServiceLookup.getCountrySO().retrieveCountryById(reqDTO)
+					.getPmCountry().getCountryName();
+		}
+		return name;
+	}
+
+	public static String getStateLabelById(Long stateId) {
+		String name = "";
+		if (stateId != null) {
+			StateReqDTO reqDTO = new StateReqDTO();
+			reqDTO.setStateId(stateId);
+			name = SmServiceLookup.getStateSO().retriveStateByID(reqDTO)
+					.getPmState().getStateName();
+		}
+		return name;
+	}
+
+	public static String getDistrictLabelById(Long districtId) {
+		String name = "";
+		if (districtId != null) {
+			DistrictReqDTO reqDTO = new DistrictReqDTO();
+			reqDTO.setDistrictId(districtId);
+			name = SmServiceLookup.getDistrictSO().retriveDistrictByID(reqDTO)
+					.getPmDistrict().getDistrictName();
+		}
+		return name;
+	}
+
+	public static String getCityLabelById(Long cityId) {
+		String name = "";
+		if (cityId != null) {
+			CityReqDTO reqDTO = new CityReqDTO();
+			reqDTO.setCityId(cityId);
+			name = SmServiceLookup.getCitySO().retriveCityById(reqDTO)
+					.getPmCity().getCityName();
+		}
+		return name;
+	}
 }
