@@ -700,6 +700,7 @@ public class DirectLOABackingBean extends
 			Long parameterId = scQtDeduction.getDeductionType()
 					.getParameterId();
 
+			if(null != parameterId){
 			parameterSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			clauseSO = BusinessDelegate.getInstance().getServiceObject(
@@ -739,7 +740,10 @@ public class DirectLOABackingBean extends
 				scQtDeduction.setScQtDeductionClauses(null);
 			}
 			getManagedBean().setSelectedScQtDeduction(scQtDeduction);
-
+			}else{
+				scQtDeduction.setDeductionType(new PmParameter());
+				getManagedBean().setSelectedScQtDeduction(scQtDeduction);
+			}
 		} finally {
 			parameterSO = null;
 		}
