@@ -99,7 +99,7 @@
 			        <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgDeduction.hide();" type="button" />
 		      </div>
         </p:dialog>  
-	    <p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true">
+	    <p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true" rendered="#{!contractDetailsBackingBean.managedBean.viewContract}">
 		  <table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">
