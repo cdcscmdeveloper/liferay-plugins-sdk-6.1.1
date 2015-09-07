@@ -480,7 +480,7 @@
 	</portlet>
 
 	<portlet>
-		<portlet-name>scSpecification BusinessOwner</portlet-name>
+		<portlet-name>scSpecificationBusinessOwner</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
@@ -489,7 +489,7 @@
 	</portlet>
 	
 	<portlet>
-		<portlet-name>scSpecification Committee</portlet-name>
+		<portlet-name>scSpecificationCommittee</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
@@ -672,7 +672,7 @@
 	</portlet>
 
 	<portlet>
-		<portlet-name>scEvaluation Stage2</portlet-name>
+		<portlet-name>scEvaluationStage2</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
@@ -681,7 +681,7 @@
 	</portlet>
 	
 	<portlet>
-		<portlet-name>Proposal Evaluation</portlet-name>
+		<portlet-name>ProposalEvaluation</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
@@ -1233,7 +1233,7 @@
 		<css-class-wrapper>welcome-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>Bidding List</portlet-name>
+		<portlet-name>BiddingList</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
@@ -1257,7 +1257,7 @@
 	
 	
 	<portlet>
-		<portlet-name>scPresentation Demo</portlet-name>
+		<portlet-name>scPresentationDemo</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
@@ -1267,7 +1267,7 @@
 	
 	
 	<portlet>
-		<portlet-name>information-display-portlet</portlet-name>
+		<portlet-name>informationdisplayportlet</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>true</instanceable>
 		<header-portlet-css>/css/ep/wp/if/main.css</header-portlet-css>
@@ -1275,7 +1275,7 @@
 		<css-class-wrapper>information-display-portlet-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>announcement-portlet</portlet-name>
+		<portlet-name>announcementportlet</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>true</instanceable>
 		<header-portlet-css>/css/ep/wp/if/main.css</header-portlet-css>
@@ -1283,7 +1283,7 @@
 		<css-class-wrapper>announcement-portlet-portlet</css-class-wrapper>
 	</portlet>	
 	<portlet>
-		<portlet-name>news-portlet</portlet-name>
+		<portlet-name>newsportlet</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>true</instanceable>
 		<header-portlet-css>/css/ep/wp/if/main.css</header-portlet-css>
@@ -1291,7 +1291,7 @@
 		<css-class-wrapper>news-portlet-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>event-portlet</portlet-name>
+		<portlet-name>eventportlet</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>true</instanceable>
 		<header-portlet-css>/css/ep/wp/if/main.css</header-portlet-css>
@@ -1299,7 +1299,7 @@
 		<css-class-wrapper>event-portlet-portlet</css-class-wrapper>
 	</portlet>	
 	<portlet>
-		<portlet-name>alert-display-portlet</portlet-name>
+		<portlet-name>alertdisplayportlet</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>true</instanceable>
 		<header-portlet-css>/css/ep/wp/al/main.css</header-portlet-css>
@@ -1307,7 +1307,7 @@
 		<css-class-wrapper>alert-display-portlet-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>online-help-display-portlet</portlet-name>
+		<portlet-name>onlinehelpdisplayportlet</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>true</instanceable>
 		<header-portlet-css>/css/ep/wp/oh/main.css</header-portlet-css>
@@ -1345,7 +1345,7 @@
 		<css-class-wrapper>pm-AuthorisationRoleSearch-portlet</css-class-wrapper>
 	</portlet>		
 	<portlet>
-		<portlet-name>Simple Quote</portlet-name>
+		<portlet-name>SimpleQuote</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
@@ -1355,7 +1355,7 @@
 		<css-class-wrapper>simple quote-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>Supplier View</portlet-name>
+		<portlet-name>SupplierView</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
@@ -1385,7 +1385,7 @@
 		<css-class-wrapper>ctrilOfficer search-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>list-accounting-office</portlet-name>
+		<portlet-name>listaccountingoffice</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
@@ -1395,7 +1395,7 @@
 		<css-class-wrapper>accountingOffice search-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>list-vot</portlet-name>
+		<portlet-name>listvot</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
@@ -1405,7 +1405,7 @@
 		<css-class-wrapper>pmVot search-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>list-gl-account</portlet-name>
+		<portlet-name>listglaccount</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
@@ -1415,7 +1415,7 @@
 		<css-class-wrapper>glAccount search-portlet</css-class-wrapper>
 	</portlet>	
 	<portlet>
-		<portlet-name>list-fund</portlet-name>
+		<portlet-name>listfund</portlet-name>
 		<icon>/icon.png</icon>
 		<control-panel-entry-category>apps</control-panel-entry-category>
 		<control-panel-entry-weight>1.5</control-panel-entry-weight> 
@@ -1427,7 +1427,7 @@
 		<css-class-wrapper>fund search-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>list-program-activity</portlet-name>
+		<portlet-name>listprogramactivity</portlet-name>
 		<icon>/icon.png</icon>
 		<control-panel-entry-category>apps</control-panel-entry-category>
 		<control-panel-entry-weight>1.5</control-panel-entry-weight> 
@@ -1439,7 +1439,7 @@
 		<css-class-wrapper>programActivity search-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>list-project</portlet-name>
+		<portlet-name>listproject</portlet-name>
 		<icon>/icon.png</icon>
 		<control-panel-entry-category>apps</control-panel-entry-category>
 		<control-panel-entry-weight>1.5</control-panel-entry-weight> 
@@ -1451,7 +1451,7 @@
 		<css-class-wrapper>project search-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>list-SuppliersReview</portlet-name>
+		<portlet-name>listSuppliersReview</portlet-name>
 		<icon>/icon.png</icon>
 		<control-panel-entry-category>apps</control-panel-entry-category>
 		<control-panel-entry-weight>1.5</control-panel-entry-weight> 
@@ -1524,7 +1524,7 @@
 		</css-class-wrapper>
 	</portlet>
 		<portlet>
-		<portlet-name>Evaluation Meeting</portlet-name>
+		<portlet-name>EvaluationMeeting</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
@@ -1569,7 +1569,7 @@
 		</portlet>
 
 		<portlet>
-			<portlet-name>Review Purchase Inquiry</portlet-name>
+			<portlet-name>ReviewPurchaseInquiry</portlet-name>
 			<icon>/icon.png</icon>
 			<instanceable>false</instanceable>
 			<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
@@ -1581,7 +1581,7 @@
 			</css-class-wrapper>
 		</portlet>
 		<portlet>
-			<portlet-name>Review Purchase In Default</portlet-name>
+			<portlet-name>ReviewPurchaseInDefault</portlet-name>
 			<icon>/icon.png</icon>
 			<instanceable>false</instanceable>
 			<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
@@ -1593,7 +1593,7 @@
 			</css-class-wrapper>
 		</portlet>
 		<portlet>
-			<portlet-name>Review Simple Quote</portlet-name>
+			<portlet-name>ReviewSimpleQuote</portlet-name>
 			<icon>/icon.png</icon>
 			<instanceable>false</instanceable>
 			<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
@@ -1615,7 +1615,7 @@
 			<css-class-wrapper>pmUserProfilePersonalization-portlet</css-class-wrapper>
 		</portlet>		
 		<portlet>
-			<portlet-name>Review Supplier View</portlet-name>
+			<portlet-name>ReviewSupplierView</portlet-name>
 			<icon>/icon.png</icon>
 			<instanceable>false</instanceable>
 			<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
@@ -1911,7 +1911,7 @@
 		<css-class-wrapper>pm-calendar-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>factoring-Companies</portlet-name>
+		<portlet-name>factoringCompanies</portlet-name>
 
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
