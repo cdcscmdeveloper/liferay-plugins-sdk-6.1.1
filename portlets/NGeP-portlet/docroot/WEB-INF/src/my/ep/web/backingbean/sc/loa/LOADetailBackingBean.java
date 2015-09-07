@@ -1570,7 +1570,16 @@ public class LOADetailBackingBean extends
 			bondPercentage = percentageDF.format(scLoa.getBondPercentage());
 		}
 		context.put("bondPercentage", bondPercentage);
-		context.put("bondExpDate", ""); // TODO
+		
+		String bondExpDate = "";
+		//bond exp date should be one year after the end of the contract period
+		if(scLoa.getContractExpDate() != null){
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(scLoa.getContractExpDate());
+			cal.add(Calendar.YEAR, 1); //add one year
+			bondExpDate = DateUtils.getLocalizeDate(cal.getTime(), myLocale);
+		} 
+		context.put("bondExpDate", bondExpDate); 
 
 		/*
 		 * String bondResDueDays = ""; if (scLoa.getBondResDueDate() != null) {
@@ -4519,19 +4528,19 @@ public class LOADetailBackingBean extends
 		
 		if(progressivePayment.getStartYear() == null || progressivePayment.getStartYear().isEmpty()){
 			throw new EpException(MessageConst.ERROR_721110, new String[] {ResourceBundleUtils.getMessage("lbl.sc.start.year",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ""});
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
 		}
 		if(progressivePayment.getStartMonth() == null || progressivePayment.getStartMonth().isEmpty()){
 			throw new EpException(MessageConst.ERROR_721110, new String[] {ResourceBundleUtils.getMessage("lbl.sc.start.month",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ""});
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
 		}
 		if(progressivePayment.getEndYear() == null || progressivePayment.getEndYear().isEmpty()){
 			throw new EpException(MessageConst.ERROR_721110, new String[] {ResourceBundleUtils.getMessage("lbl.sc.end.year",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ""});
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
 		}
 		if(progressivePayment.getEndMonth() == null || progressivePayment.getEndMonth().isEmpty()){
 			throw new EpException(MessageConst.ERROR_721110, new String[] {ResourceBundleUtils.getMessage("lbl.sc.end.month",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ""});
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
 		}
 		
 		ScLoa loa = 	getManagedBean().getScLoa();
