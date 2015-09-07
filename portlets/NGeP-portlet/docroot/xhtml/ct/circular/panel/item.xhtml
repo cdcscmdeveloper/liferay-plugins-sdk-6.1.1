@@ -410,7 +410,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	    </h:panelGroup>	
 	  </p:outputPanel>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true" 
+	    rendered="#{!panelBackingBean.managedBean.viewContract}">
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">
