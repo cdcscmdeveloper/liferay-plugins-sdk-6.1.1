@@ -6330,8 +6330,8 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| (this.getScQuotationList().size() > 0)
 				|| (this.getScTenderList().size() > 0)
 				|| (this.getScRstrctdTndrList().size() > 0)
-				|| ((getScCreatedToMonth() != null) && (getScCreatedToMonth().toString() != ReportConst.EMPTY_VAL))
-				|| ((getScCreatedFromMonth() != null) && (getScCreatedFromMonth().toString() != ReportConst.EMPTY_VAL))
+				|| ((getScCreatedToYear() != null) && (getScCreatedToYear().toString() != ReportConst.EMPTY_VAL))
+				|| ((getScCreatedFromYear() != null) && (getScCreatedFromYear().toString() != ReportConst.EMPTY_VAL))
 				|| ((getScDeskOfficer() != null) && (getScDeskOfficer().toString() != ReportConst.EMPTY_VAL))
 				|| ((getScPtj() != null) && (getScPtj().toString() != ReportConst.EMPTY_VAL))
 				|| ((getScStatus() != null) && (getScStatus().toString() != ReportConst.EMPTY_VAL))
@@ -6357,8 +6357,8 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					&& (this.getScCreatedFromMonth() == null)) {
 				throw new EpException(MessageConst.ERROR_REPORT_780004);
 			}
-			if ((this.getScCreatedToMonth() != null)
-					&& (this.getScCreatedFromMonth() != null)) {
+			/*if ((this.getScCreatedToMonth() != null)
+					&& (this.getScCreatedFromMonth() != null)) {*/
 				if ((this.getScCreatedToYear() != null)
 						&& (this.getScCreatedFromYear() != null)) {
 					if (Integer.parseInt(this.getScCreatedToYear()) < Integer
@@ -6366,11 +6366,16 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						throw new EpException(MessageConst.ERROR_REPORT_780008);
 					} else if (Integer.parseInt(this.getScCreatedToYear()) == Integer
 							.parseInt(this.getScCreatedFromYear())) {
-						if (Integer.parseInt(this.getScCreatedToMonth()) < Integer
-								.parseInt(this.getScCreatedFromMonth())) {
-							throw new EpException(MessageConst.ERROR_REPORT_780008);
+						if ((this.getScCreatedToMonth() != null)
+								&& (this.getScCreatedFromMonth() != null)) {
+							if (Integer.parseInt(this.getScCreatedToMonth()) < Integer
+									.parseInt(this.getScCreatedFromMonth())) {
+								throw new EpException(MessageConst.ERROR_REPORT_780008);
+							}
 						}
 					}
+					if ((this.getScCreatedToMonth() != null)
+							&& (this.getScCreatedFromMonth() != null)) {
 					rptGenBean
 							.setScCreatedFromDtVar(ReportConst.AMP_CREAT_FRM_DT_EQ
 									+ this.getScCreatedFromMonth()
@@ -6379,8 +6384,16 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 							.setScCreatedToDtVar(ReportConst.AMP_CREAT_TO_DT_EQ
 									+ this.getScCreatedToMonth()
 									+ this.getScCreatedToYear());
+					}else {
+						rptGenBean
+						.setScCreatedFromDtVar(ReportConst.AMP_CREAT_FRM_DT_EQ
+								+ this.getScCreatedFromYear());
+						rptGenBean
+						.setScCreatedToDtVar(ReportConst.AMP_CREAT_TO_DT_EQ
+								+ this.getScCreatedToYear());
 				}
-			}
+				}
+			//}
 			if ((this.getScRequestQuoteNo() != null)
 					&& (this.getScRequestQuoteNo() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setScRequestQuoteNoVar(ReportConst.SC_AMP_RQ_NO_EQ
