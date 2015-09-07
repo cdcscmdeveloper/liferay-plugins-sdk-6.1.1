@@ -810,14 +810,7 @@ public class SmApplicationBackingBean extends
 			if (fromBpm
 					&& (getManagedBean().isPoUser() || getManagedBean()
 							.isApproverUser())) {
-				MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
-				mofReqDTO.setSupplierId(getManagedBean().getSmSupplier()
-						.getSupplierId());
-				getManagedBean().setLatestAppl(
-						SmServiceLookup
-								.getMofRegistrationSO()
-								.retrieveLatestSmApplWithChildBySupplierId(
-										mofReqDTO).getSmAppl());
+				initLatestAppl();
 				setRevUrl();
 				getManagedBean().setMaxReviewCount(
 						assignMaxReviewCount(applicationType, getManagedBean()
@@ -1264,47 +1257,19 @@ public class SmApplicationBackingBean extends
 	}
 
 	public String getCountryLabelById(Long countryId) {
-		String name = "";
-		for (PmCountry country : getManagedBean().getCountryLs()) {
-			if (country.getCountryId().compareTo(countryId) == 0) {
-				name = country.getCountryName();
-				break;
-			}
-		}
-		return name;
+		return SmCommonUtil.getCountryLabelById(countryId);
 	}
 
 	public String getStateLabelById(Long stateId) {
-		String name = "";
-		for (PmState state : getManagedBean().getBasicCompanyStates()) {
-			if (state.getStateId().compareTo(stateId) == 0) {
-				name = state.getStateName();
-				break;
-			}
-		}
-		return name;
+		return SmCommonUtil.getStateLabelById(stateId);
 	}
 
 	public String getDistrictLabelById(Long districtId) {
-		String name = "";
-		for (PmDistrict district : getManagedBean().getBasicCompanyDistricts()) {
-			if (district.getDistrictId().compareTo(districtId) == 0) {
-				name = district.getDistrictName();
-				break;
-			}
-		}
-		return name;
+		return SmCommonUtil.getDistrictLabelById(districtId);
 	}
 
 	public String getCityLabelById(Long cityId) {
-		String name = "";
-		for (PmCity city : getManagedBean().getBasicCompanyCities()) {
-			if (city.getCityId().compareTo(cityId) == 0) {
-				name = city.getCityName();
-				break;
-			}
-		}
-		return name;
+		return SmCommonUtil.getCityLabelById(cityId);
 	}
 
 	public String getAnnualRevById(Long annualRevenueId) {
@@ -1337,39 +1302,33 @@ public class SmApplicationBackingBean extends
 		return staffTotal;
 	}
 
-	public SmFacility getBasicCompanyFacilityByType() {
-		SmFacility basicCompFac = new SmFacility();
-		for (SmFacility smFac : getManagedBean().getLatestAppl()
-				.getSmFacilities()) {
-			if ((smFac.getFacilityType().equalsIgnoreCase(
-					SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE) || smFac
-					.getFacilityType()
-					.equalsIgnoreCase(
-							SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE))
-					&& smFac.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
-				basicCompFac = smFac;
-				break;
-			}
-		}
-		return basicCompFac;
-	}
-
 	public String getOwnershipTypeLabel(String ownershipType) {
-		if (ownershipType.equalsIgnoreCase("O")) {
-			return SmCommonUtil.getMessage("lbl.sm.facility.own", null);
-		} else {
-			return SmCommonUtil.getMessage("lbl.sm.facility.rent", null);
-		}
+		return SmCommonUtil.getOwnershipTypeLabel(ownershipType);
 	}
 
 	public String getFacTypeLabel(String facType) {
-		if (facType.equalsIgnoreCase("H")) {
-			return SmCommonUtil.getMessage(
-					"lbl.sm.facility.facilityType.home.office", null);
-		} else {
-			return SmCommonUtil.getMessage(
-					"lbl.sm.facility.facilityType.business.office", null);
-		}
+		return SmCommonUtil.getFacTypeLabel(facType);
+	}
+
+	public String getPriceAmountFormat(BigDecimal priceAmount) {
+		return SmCommonUtil.getPriceAmountFormat(priceAmount);
+	}
+
+	public String getDateFormat(Date date) {
+		return SmCommonUtil.getDisplayDateFormat(date);
+	}
+
+	private void initLatestAppl() {
+		MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+		mofReqDTO.setSupplierId(getManagedBean().getSmSupplier()
+				.getSupplierId());
+		getManagedBean().setLatestAppl(
+				SmServiceLookup.getMofRegistrationSO()
+						.retrieveLatestSmApplWithChildBySupplierId(mofReqDTO)
+						.getSmAppl());
+		getManagedBean().getLatestAppl().setHqFacility(
+				SmApplicationUtil.getHqFacilityByAppl(getManagedBean()
+						.getLatestAppl()));
 	}
 
 	private void updateSpkiDigiSignData(PmDigiSign pmDigiSign, String docType,
