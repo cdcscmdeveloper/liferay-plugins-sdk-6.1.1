@@ -77,6 +77,8 @@ import com.liferay.portal.model.Role;
 public class SmApplicationManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 	private SmAppl latestAppl;
+	private SmAssociateCompany latestAssocCompany;
+	private SmAssociationBody latestProfBody;
 	private SmAppl smAppl;
 	private SmSupplier smSupplier;
 	private int tabActiveIndex;
@@ -577,7 +579,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		System.out.println("*** Date String *** " + df.format(new Date()));
 		myCountryId = SmCommonUtil.getMyCountryId();
 		selectedGst = new SmGstSupplier();
-		companyBasicGst = new SmGstSupplier(); 
+		companyBasicGst = new SmGstSupplier();
 	}
 
 	private SmCompanyExperienceCat setDefaulatExpCatVal() {
@@ -2844,6 +2846,22 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setLatestAppl(SmAppl latestAppl) {
 		this.latestAppl = latestAppl;
+	}
+
+	public SmAssociateCompany getLatestAssocCompany() {
+		return latestAssocCompany;
+	}
+
+	public void setLatestAssocCompany(SmAssociateCompany latestAssocCompany) {
+		this.latestAssocCompany = latestAssocCompany;
+	}
+
+	public SmAssociationBody getLatestProfBody() {
+		return latestProfBody;
+	}
+
+	public void setLatestProfBody(SmAssociationBody latestProfBody) {
+		this.latestProfBody = latestProfBody;
 	}
 
 }

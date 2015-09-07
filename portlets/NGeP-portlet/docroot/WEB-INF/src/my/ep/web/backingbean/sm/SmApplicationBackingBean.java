@@ -142,6 +142,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationNotificationUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmFieldChangeUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
@@ -1287,19 +1288,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	public SmStaffTotal getStaffTotalByCategory(String staffCategory) {
-		SmStaffTotal staffTotal = new SmStaffTotal();
-		if (getManagedBean().getLatestAppl().getSmStaffTotals() != null
-				&& !getManagedBean().getLatestAppl().getSmStaffTotals()
-						.isEmpty()) {
-			for (SmStaffTotal staffTotalTmp : getManagedBean().getLatestAppl()
-					.getSmStaffTotals()) {
-				if (staffTotalTmp.getStaffCategory().equals(staffCategory)) {
-					staffTotal = staffTotalTmp;
-					break;
-				}
-			}
-		}
-		return staffTotal;
+		return SmFieldChangeUtil.getStaffTotalByCategoryFromList(
+				getManagedBean().getLatestAppl(), staffCategory);
 	}
 
 	public String getOwnershipTypeLabel(String ownershipType) {
@@ -1329,6 +1319,8 @@ public class SmApplicationBackingBean extends
 		getManagedBean().getLatestAppl().setHqFacility(
 				SmApplicationUtil.getHqFacilityByAppl(getManagedBean()
 						.getLatestAppl()));
+		SmFieldChangeUtil.setTableListChangeStatus(getManagedBean()
+				.getLatestAppl(), getManagedBean().getSmAppl());
 	}
 
 	private void updateSpkiDigiSignData(PmDigiSign pmDigiSign, String docType,
@@ -1567,6 +1559,11 @@ public class SmApplicationBackingBean extends
 
 				// init GST information
 				initGst();
+
+				// init change fieldStatus
+				SmFieldChangeUtil.setTableListChangeStatus(getManagedBean()
+						.getLatestAppl(), getManagedBean().getSmAppl());
+
 			}
 			assignValReqdToFalse();
 		}
@@ -2579,6 +2576,8 @@ public class SmApplicationBackingBean extends
 		}
 		assignValReqdToFalse();
 		saveOrUpdateAppl();
+		SmFieldChangeUtil.setTableListChangeStatus(getManagedBean()
+				.getLatestAppl(), getManagedBean().getSmAppl());
 		RequestContext.getCurrentInstance().execute("assocDialog.hide()");
 	}
 
@@ -2609,6 +2608,11 @@ public class SmApplicationBackingBean extends
 		getManagedBean().getSelectedAssocCompany().setIsShareholding(
 				new BigDecimal(0));
 		assignValReqdToTrue();
+		getManagedBean()
+				.setLatestAssocCompany(
+						SmFieldChangeUtil.getAssocCompanyByRegNoFromList(
+								getManagedBean().getLatestAppl(),
+								assocBean.getRegNo()));
 		RequestContext.getCurrentInstance().execute("assocDialog.show()");
 	}
 
