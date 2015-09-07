@@ -1989,7 +1989,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	}
 
-	/* this method to set the proposal validity date for scqt */
+
+	/**
+	 * @param scQt
+	 * @return
+	 */
 	public boolean handleProposalValidityDays(ScQt scQt) {
 		Date validityDate = null;
 		if (null != scQt.getClosingDate()) {
