@@ -2737,7 +2737,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						if(scSupplierItemPrice.getPriceType() != null){
 							if(scSupplierItemPrice.getPriceType().getParameterId().equals(priceTypeId)){
 								scRequestSupplierItem.setSupplierItemPrice(scSupplierItemPrice);
-								requestNoteDtl.setPriceType(scSupplierItemPrice.getPriceType());
+								PmParameter priceType = scSupplierItemPrice.getPriceType();
+								requestNoteDtl.setPriceType(priceType);
+								requestNoteDtl.setPriceTypeId(priceType.getParameterId());
 								break;
 							}
 						}

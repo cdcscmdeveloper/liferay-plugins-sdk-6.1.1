@@ -767,7 +767,9 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 						
 						if(null == scRequestNoteDtl.getPriceType()){
 							scRequestNoteDtl.setPriceType(new PmParameter());
-						} 
+						} else{
+							scRequestNoteDtl.setPriceTypeId(scRequestNoteDtl.getPriceType().getParameterId());
+						}
 						
 						if(null == scRequestNoteDtl.getAssignedUser()){
 							scRequestNoteDtl.setAssignedUser(new PmUser());	
@@ -802,7 +804,10 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 						requestNoteBackingBean.getManagedBean().setProcurementType(scRequestNoteDtl.getProcurementType().getParameterCode());
 						requestNoteBackingBean.getManagedBean().setRequestSupplierItem(scRequestNoteDtl.getScRequestSupplierItem());
 						requestNoteBackingBean.supplierListener(scRequestNoteDtl.getScRequestSupplierItem().getSupplierId(),
-								scRequestNoteDtl.getPriceType().getParameterId(), scRequestNoteDtl, scRequestNoteDtl.getAssignedUser().getUserId(), scRequestNoteDtl.getProcurementTypeCategory().getParameterId());
+							scRequestNoteDtl.getPriceType().getParameterId(), scRequestNoteDtl, scRequestNoteDtl.getAssignedUser().getUserId(), scRequestNoteDtl.getProcurementTypeCategory().getParameterId());
+						
+						// update price 
+						requestNoteBackingBean.priceTypeChangeListener(scRequestNoteDtl.getPriceType().getParameterId(), scRequestNoteDtl);
 						
 						// fulfilmentTypeEvent
 						requestNoteBackingBean.getManagedBean().setRequestNote(requestNote);
