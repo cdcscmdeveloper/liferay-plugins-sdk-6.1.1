@@ -58,13 +58,13 @@
 			<portlet id="pmCategory"></portlet>	
 			<portlet id="pmRuleConfigure"></portlet>	
 			<portlet id="pmCtrlOfficer"></portlet>			
-			<portlet id="list-accounting-office"></portlet>	
-			<portlet id="list-vot"></portlet>
-			<portlet id="list-gl-account"></portlet>
-            <portlet id="list-fund"></portlet>
-            <portlet id="list-program-activity"></portlet>
-            <portlet id="list-project"></portlet>
-            <portlet id="list-SuppliersReview"></portlet>			
+			<portlet id="listaccountingoffice"></portlet>	
+			<portlet id="listvot"></portlet>
+			<portlet id="listglaccount"></portlet>
+            <portlet id="listfund"></portlet>
+            <portlet id="listprogramactivity"></portlet>
+            <portlet id="listproject"></portlet>
+            <portlet id="listSuppliersReview"></portlet>			
 			
 		</category>
 		<!-- Profile Management - END -->		
@@ -86,8 +86,8 @@
 			<portlet id="scSupplierReview" />
 			<portlet id="scQuotationTender" />
 			<portlet id="scCommittee" />
-			<portlet id="scSpecification BusinessOwner" />
-			<portlet id="scSpecification Committee" />
+			<portlet id="scSpecificationBusinessOwner" />
+			<portlet id="scSpecificationCommittee" />
 			<portlet id="scNoticeBoard" />
 			<portlet id="scProposal" />
 			<portlet id="scLoiList" />
@@ -99,9 +99,9 @@
 			<portlet id="scLoaReview" />
 			<portlet id="scLoaSupplierResponse" />
 			<portlet id="scSupplierA1Form" />
-			<portlet id="scEvaluation Stage2" />
-			<portlet id="Proposal Evaluation" />
-			<portlet id="Evaluation Meeting" />
+			<portlet id="scEvaluationStage2" />
+			<portlet id="ProposalEvaluation" />
+			<portlet id="EvaluationMeeting" />
 			<portlet id="scBidding" />
 			<portlet id="scTemplateMaint" />
 			<portlet id="scScheduleBidding" />
@@ -116,18 +116,18 @@
             <portlet id="scTemplateDocument" />
             <portlet id="scBriefingSiteVisitAttendance" />
             <portlet id="scAppointFCCommittee" />
-            <portlet id="scPresentation Demo" />
+            <portlet id="scPresentationDemo" />
             <portlet id="scSupplierFinalizationMeetingConfirmation"/>
 			<portlet id="scSupplierFinalization"/>
 			<portlet id="scSupplierFinalizationEndorsement"/>
-            <portlet id="Bidding List" />
+            <portlet id="BiddingList" />
             <portlet id="SpecCommitteMaintanance"></portlet>
             <portlet id="QTApproval"></portlet>
             <portlet id="BusinessOwner"></portlet>
-            <portlet id="Review Purchase Inquiry"></portlet>
-		    <portlet id="Review Purchase In Default"></portlet>
-		    <portlet id="Review Simple Quote"></portlet>
-		    <portlet id="Review Supplier View"></portlet>
+            <portlet id="ReviewPurchaseInquiry"></portlet>
+		    <portlet id="ReviewPurchaseInDefault"></portlet>
+		    <portlet id="ReviewSimpleQuote"></portlet>
+		    <portlet id="ReviewSupplierView"></portlet>
 		    <portlet id="scRequestNoteSearch" />
 		    <portlet id="scCreateManualSourcing"></portlet>
 		     <portlet id="scReviewManualSourcing"></portlet>
@@ -268,16 +268,16 @@
 
 	<category name="category.ep.wp">
 		<category name="category.ep.if">
-			<portlet id="information-display-portlet"></portlet>			
-			<portlet id="announcement-portlet"></portlet>
-			<portlet id="news-portlet"></portlet>
-			<portlet id="event-portlet"></portlet>
+			<portlet id="informationdisplayportlet"></portlet>			
+			<portlet id="announcementportlet"></portlet>
+			<portlet id="newsportlet"></portlet>
+			<portlet id="eventportlet"></portlet>
 		</category>
 		<category name="category.ep.al">
-			<portlet id="alert-display-portlet"></portlet>
+			<portlet id="alertdisplayportlet"></portlet>
 		</category>
 		<category name="category.ep.oh">
-			<portlet id="online-help-display-portlet"></portlet>
+			<portlet id="onlinehelpdisplayportlet"></portlet>
 		</category>
 		
 		<!-- SOA - START -->

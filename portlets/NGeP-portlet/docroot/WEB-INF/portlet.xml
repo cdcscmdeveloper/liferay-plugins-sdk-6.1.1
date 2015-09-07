@@ -1941,7 +1941,7 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>scSpecification BusinessOwner</portlet-name>
+		<portlet-name>scSpecificationBusinessOwner</portlet-name>
 		<display-name>Prepare Specification (BO)</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
@@ -1976,7 +1976,7 @@
 	
 	
 	<portlet>
-		<portlet-name>scSpecification Committee</portlet-name>
+		<portlet-name>scSpecificationCommittee</portlet-name>
 		<display-name>Prepare QT Checklist</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
@@ -2517,7 +2517,7 @@
 	</portlet>
 
 	<portlet>
-		<portlet-name>scEvaluation Stage2</portlet-name>
+		<portlet-name>scEvaluationStage2</portlet-name>
 		<display-name>Evaluation Stage 2</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
@@ -2550,7 +2550,7 @@
 
 
 <portlet>
-		<portlet-name>Proposal Evaluation</portlet-name>
+		<portlet-name>ProposalEvaluation</portlet-name>
 		<display-name>Proposal Evaluation</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
@@ -4234,7 +4234,7 @@
 	
 	
 	<portlet>
-		<portlet-name>scPresentation Demo</portlet-name>
+		<portlet-name>scPresentationDemo</portlet-name>
 		<display-name>Presentation Demo</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
@@ -4267,7 +4267,7 @@
 	
 		    
 	<portlet>
-		<portlet-name>information-display-portlet</portlet-name>
+		<portlet-name>informationdisplayportlet</portlet-name>
 		<display-name>Information Display</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
@@ -4298,7 +4298,7 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>announcement-portlet</portlet-name>
+		<portlet-name>announcementportlet</portlet-name>
 		<display-name>Announcement Portlet</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
@@ -4329,7 +4329,7 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>news-portlet</portlet-name>
+		<portlet-name>newsportlet</portlet-name>
 		<display-name>News Portlet</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
@@ -4360,7 +4360,7 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>event-portlet</portlet-name>
+		<portlet-name>eventportlet</portlet-name>
 		<display-name>Event Portlet</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
@@ -4391,7 +4391,7 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>alert-display-portlet</portlet-name>
+		<portlet-name>alertdisplayportlet</portlet-name>
 		<display-name>Alert Display Portlet</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
@@ -4422,7 +4422,7 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>online-help-display-portlet</portlet-name>
+		<portlet-name>onlinehelpdisplayportlet</portlet-name>
 		<display-name>Online Help Display Portlet</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
@@ -4578,7 +4578,7 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>list-accounting-office</portlet-name>
+		<portlet-name>listaccountingoffice</portlet-name>
 		<display-name>Accounting Office List</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
@@ -4609,7 +4609,7 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>list-vot</portlet-name>
+		<portlet-name>listvot</portlet-name>
 		<display-name>Vot List</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
@@ -4640,7 +4640,7 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>list-gl-account</portlet-name>
+		<portlet-name>listglaccount</portlet-name>
 		<display-name>GL Account List </display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
@@ -4671,7 +4671,7 @@
 		</security-role-ref>
 	</portlet>	
 	<portlet>
-		<portlet-name>list-fund</portlet-name>
+		<portlet-name>listfund</portlet-name>
 		<display-name>Fund List</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
@@ -4703,7 +4703,7 @@
 	</portlet>
 	
 	<portlet>
-		<portlet-name>list-program-activity</portlet-name>
+		<portlet-name>listprogramactivity</portlet-name>
 		<display-name>ProgramActivity List</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
@@ -4735,7 +4735,7 @@
 	</portlet>	
 	
 	<portlet>
-		<portlet-name>list-SuppliersReview</portlet-name>
+		<portlet-name>listSuppliersReview</portlet-name>
 		<display-name>No.Of Suppliers Review</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
@@ -4767,7 +4767,7 @@
 	</portlet>	
 	
 	<portlet>
-		<portlet-name>list-project</portlet-name>
+		<portlet-name>listproject</portlet-name>
 		<display-name>Project List</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
@@ -4965,7 +4965,7 @@
 		</security-role-ref>
 	</portlet>
 		<portlet>
-		<portlet-name>Evaluation Meeting</portlet-name>
+		<portlet-name>EvaluationMeeting</portlet-name>
 		<display-name>Evaluation Meeting</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
@@ -5068,7 +5068,7 @@
 	</portlet>
 	
 		<portlet>
-			<portlet-name>Review Purchase Inquiry</portlet-name>
+			<portlet-name>ReviewPurchaseInquiry</portlet-name>
 			<display-name>Review / Request Purchase Inquiry</display-name>
 			<portlet-class>
 				org.portletfaces.bridge.GenericFacesPortlet
@@ -5103,7 +5103,7 @@
 			</security-role-ref>
 		</portlet>
 		<portlet>
-			<portlet-name>Review Purchase In Default</portlet-name>
+			<portlet-name>ReviewPurchaseInDefault</portlet-name>
 			<display-name>Review Purchase In Default</display-name>
 			<portlet-class>
 				org.portletfaces.bridge.GenericFacesPortlet
@@ -5138,7 +5138,7 @@
 			</security-role-ref>
 		</portlet>
 		<portlet>
-			<portlet-name>Review Simple Quote</portlet-name>
+			<portlet-name>ReviewSimpleQuote</portlet-name>
 			<display-name>Review Simple Quote</display-name>
 			<portlet-class>
 				org.portletfaces.bridge.GenericFacesPortlet
@@ -5173,7 +5173,7 @@
 			</security-role-ref>
 		</portlet>
 		<portlet>
-			<portlet-name>Review Supplier View</portlet-name>
+			<portlet-name>ReviewSupplierView</portlet-name>
 			<display-name>Response Simple Quote</display-name>
 			<portlet-class>
 				org.portletfaces.bridge.GenericFacesPortlet
@@ -5689,7 +5689,7 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>factoring-Companies</portlet-name>
+		<portlet-name>factoringCompanies</portlet-name>
 		<display-name>Factoring Companies</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
