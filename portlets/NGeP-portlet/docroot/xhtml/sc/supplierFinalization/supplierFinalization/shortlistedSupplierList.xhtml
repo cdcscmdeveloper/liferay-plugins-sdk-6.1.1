@@ -9,45 +9,13 @@
 	<p:spacer height="20px" />	
 	<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
 	
-		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
-			columnClasses="columnWidth20"
-			rendered="#{(suppFinalizationBackingBean.managedBean.recommendSupplier or
-						 	suppFinalizationBackingBean.managedBean.forwardToHigherAuthority) and
-								!suppFinalizationBackingBean.managedBean.itemize}">
-			
-			<h:column>
-				<h:outputLabel value="#{lbl['lbl.sc.recommend.by']}" />
-				<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory"/>
-			</h:column>
-			<h:column>
-				<table>
-					<tr>
-						<td>
-							<p:selectOneMenu id="recommendBy" label="#{lbl['lbl.sc.recommend.by']}"
-								value="#{suppFinalizationBackingBean.managedBean.recommendBy}"
-								disabled="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
-												suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK)}">
-								<f:selectItems value="#{suppFinalizationBackingBean.getPackageRecommendByDropDown()}" />
-								<p:ajax event="change" update="@([id$=recommendBy],[id$=onlineBiddingPanel],[id$=supplierListTblPanel])" 
-									listener="#{suppFinalizationBackingBean.packageRecommendByEvent}" process="@this" />
-				   			</p:selectOneMenu>
-						</td>
-						<td style="margin-top: -3px">
-							<ac:iconTooltip value="#{lbl['lbl.sc.recommend.by.package.tooltip']}" />
-						</td>
-					</tr>
-				</table>
-			</h:column>
-		</h:panelGrid>
-		
-		<p:spacer height="20px" />
+		<p:spacer height="20px"/>
 		<p:outputPanel id="supplierListTblPanel">
-			<ui:param name="showSelectionColumn" value="#{empty suppFinalizationBackingBean.managedBean.recommendBy or 
-		               			  			 				!(suppFinalizationBackingBean.managedBean.recommendBy eq 
+			<ui:param name="showSelectionColumn" value="#{empty suppFinalizationBackingBean.managedBean.finalizationMethod or 
+		               			  			 				!(suppFinalizationBackingBean.managedBean.finalizationMethod eq 
 																ParameterConst.recommendByCancel)}" />
 			<p:dataTable id="supplierListTblSingle"
-				var="shortlistedSupp" 
-				widgetVar="shortlistedSuppDtls"
+				var="shortlistedSupp" widgetVar="shortlistedSuppDtls" 
 				value="#{suppFinalizationBackingBean.managedBean.shortlistedSupplierList}"
 				selection="#{suppFinalizationBackingBean.managedBean.recommendedSupplier}"
 				editable="true" rowIndexVar="index" style="width:100%;" rowKey="#{shortlistedSupp}"
@@ -256,7 +224,7 @@
 										suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK) or 
 											shortlistedSupp.suppSelectionDisabled or 
 												suppFinalizationBackingBean.managedBean.disableSupplierSelection}"
-						rendered="#{suppFinalizationBackingBean.managedBean.recommendBy eq 
+						rendered="#{suppFinalizationBackingBean.managedBean.finalizationMethod eq 
 											ParameterConst.recommendByMultipleAward or 
 												suppFinalizationBackingBean.managedBean.selectedItemAlreadyAwarded}">
 						<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=supplierListTblMultiple])" 
@@ -268,9 +236,9 @@
 										suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK) or 
 											shortlistedSupp.suppSelectionDisabled or 
 												suppFinalizationBackingBean.managedBean.disableSupplierSelection}"
-						rendered="#{(suppFinalizationBackingBean.managedBean.recommendBy == ParameterConst.recommendByOnlineBidding or 
-											suppFinalizationBackingBean.managedBean.recommendBy == ParameterConst.recommendByMultipleLoi) and 
-												!suppFinalizationBackingBean.managedBean.selectedItemAlreadyAwarded}">
+						rendered="#{(suppFinalizationBackingBean.managedBean.finalizationMethod == ParameterConst.recommendByOnlineBidding or 
+										suppFinalizationBackingBean.managedBean.finalizationMethod == ParameterConst.recommendByMultipleLoi) and 
+											!suppFinalizationBackingBean.managedBean.selectedItemAlreadyAwarded}">
 						<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=supplierListTblMultiple])" 
 								listener="#{suppFinalizationBackingBean.selectSupplierEvent(shortlistedSupp, false)}"/>
 					</p:selectBooleanCheckbox>

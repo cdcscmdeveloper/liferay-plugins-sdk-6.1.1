@@ -127,6 +127,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 			getManagedBean().setPayLoad(dataType);
 			
 			retrieveOnlineBiddingEndorsement(qtId);
+			navigateToBiddingSummaryTab();
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
@@ -214,10 +215,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 				TplSpecZoneDtl specZoneDtl = null;
 				for (ScQtRecommend scQtRecommend 
 										: scQtFinalization.getScQtRecommends()) {
-					if (!ParameterConst.RECOMMEND_BY_ONLINE_BIDDING.equals(
-							scQtRecommend.getRecommendBy().getParameterCode())) {
-						continue;
-					}
 					specZoneDtl = scQtRecommend.getTplSpecZoneDtl();
 					
 					if (!biddingZoneDetails.contains(specZoneDtl)) {
@@ -248,6 +245,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 					ParameterConst.ONLINE_BIDDING_MEETING.equals(
 							scQtFinalization.getOnlineBiddingEndorse())) {
 				retrieveOnlineEndorsement();
+			} else {
+				retrieveOfflineEndorsement();
 			}
 		} finally {
 			qtSuppFinalizationSO = null;
@@ -302,6 +301,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 					MenuItem zoneItem = new MenuItem();
 					zoneItem.setValue(specZoneDtl.getZoneName().toUpperCase());
 //					zoneItem.setAjax(true);
+					zoneItem.setTransient(true);
 					zoneItem.setPartialSubmit(true);
 					zoneItem.setProcess("@this");
 					zoneItem.setUpdate("@this");
