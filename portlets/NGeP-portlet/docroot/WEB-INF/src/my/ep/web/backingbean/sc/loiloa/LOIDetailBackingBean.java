@@ -678,6 +678,7 @@ public class LOIDetailBackingBean extends
 					MenuItem zoneItem = new MenuItem();
 					zoneItem.setValue(specZoneDtl.getZoneName().toUpperCase());
 //					zoneItem.setAjax(true);
+					zoneItem.setTransient(true);
 					zoneItem.setPartialSubmit(true);
 					zoneItem.setProcess("@this");
 					zoneItem.setUpdate("@this");
@@ -4180,8 +4181,7 @@ public class LOIDetailBackingBean extends
 		boolean isItemTypeService = StringUtils.equals(ParameterConst.ITEM_TYPE_SERVICE,
 										itemType.getParameterCode());
 		
-		if (!ParameterConst.RECOMMEND_BY_MULTIPLE_AWARD
-				.equals(scQtRecommend.getRecommendByStr())) {
+		if (scQtRecommend.getActiveSupplierCount() == 0) {
 			scQtRecommendDtl.setAwardQty(
 					scQtRecommend.getRequestItem().getQuantity());
 		} else {
@@ -4388,9 +4388,6 @@ public class LOIDetailBackingBean extends
 					.getShortListedSupplierList();
 		}
 		if (isSuccessful) {
-			PmParameter recommendBy = scQtRecommend.getRecommendBy();
-			scQtRecommend.setRecommendByStr(recommendBy.getParameterCode());
-	
 			// set the checkbox or radio button of supplier selected
 			// Multiple LOI or Online Bidding
 			Map<Long,ScQtRecommendDtl> recommendDtlsMap = new HashMap<Long,ScQtRecommendDtl>();

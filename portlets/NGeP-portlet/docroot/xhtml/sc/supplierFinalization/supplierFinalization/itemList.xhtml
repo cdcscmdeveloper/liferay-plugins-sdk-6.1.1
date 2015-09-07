@@ -62,26 +62,6 @@
 				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(item.requestItem.tplSpecQuestion.clPriceTypeCode)}" />
 			</p:column>
 
-			<p:column style="width:10%; white-space:normal;">
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
-					<h:outputText value="#{lbl['lbl.sc.recommend.by']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.recommend.by.item.tooltip']}" />
-				</f:facet>
-				<h:selectOneMenu id="recommendByItem" value="#{item.recommendByStr}" 
-						required="false" label="#{lbl['lbl.sc.recommend.by']}" 
-						disabled="#{item.disabled or item.awardedItem or 
-									!(suppFinalizationBackingBean.managedBean.secretaryUser or 
-										suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK)}" 
-						style="width:95%;">
-						<f:selectItems value="#{suppFinalizationBackingBean.getItemRecommendByDropDown(
-														item.requestItem.tplSpecQuestion.clPriceTypeCode, item)}" />
-						<p:ajax event="change" update="@([id$=itemListTbl],[id$=supplierPanel],[id$=onlineBiddingPanel])" 
-								listener="#{suppFinalizationBackingBean.itemRecommendByEvent(item)}"
-								process="@this" partialSubmit="true"/>
-	   			</h:selectOneMenu>
-			</p:column>
-			
 			<p:column style="width:15%;white-space:normal;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.recommended.supplier']}" />
@@ -111,7 +91,7 @@
 				</f:facet>
 				<p:outputPanel id="quantityListTbl"  rendered="#{ (item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard or
 										item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalStandard) and 
-										(item.recommendByStr == ParameterConst.recommendByMultipleAward or 
+										(finalizationMethod == ParameterConst.recommendByMultipleAward or 
 											(item.awardedItem and item.activeSupplierCount gt 1)) }"> 
 					<h:outputText value="#{lbl['lbl.sc.max.quantity']}" style="text-align: right;">
 					</h:outputText>[
@@ -143,7 +123,7 @@
 				<h:outputText value="#{item.requestItem.quantity}" style="text-align: right;"
 					rendered="#{ (item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard or
 									item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalStandard) and
-										(item.recommendByStr != ParameterConst.recommendByMultipleAward or 
+										(finalizationMethod != ParameterConst.recommendByMultipleAward or 
 											(item.awardedItem and item.activeSupplierCount lt 2)) }">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(
 													CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.requestItem.uom.uomCode)}" />		

@@ -92,7 +92,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean reqSpecChanges;
 	private boolean reEvaluateReqForTech;
 	private boolean reEvaluateReqForFin;*/
-	private String recommendBy;
+	private String finalizationMethod;
 	private String selectionMode = QTConstants.SF_SINGLE;
 	private String awardSupplier; 
 	
@@ -130,6 +130,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean isSelectedItemAlreadyAwarded;
 	private boolean hasAwardedLOA;
 	private boolean hasPreviousMeeting;
+	private boolean hasItemWithPriceTypeTier;
 	
 	private ScQtEvaluationResultDtl shortlistedSupplier;
 	private ScQtFinalization scQtFinalization;
@@ -147,7 +148,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<ScQtRecommend> itemList;
 	private List<SmSupplier> awardSupplierList; 
 	
-	private Map<TplSpecZoneDtl, List<ScQtEvaluationResultDtl>> shortlistedSupppliersByZone;
+	private Map<Long, List<ScQtEvaluationResultDtl>> shortlistedSupppliersByZone;
 	private Map<Long, List<ScQtEvaluationResultDtl>> recommendedSupppliersByZone;
 	private Map<Long,String> rejectedScQtRecommendIdMap;
 	
@@ -372,18 +373,18 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the recommendBy
+	 * @return the finalizationMethod
 	 */
-	public String getRecommendBy() {
-		return recommendBy;
+	public String getFinalizationMethod() {
+		return finalizationMethod;
 	}
 
 	/**
-	 * @param recommendBy 
-	 * 				the recommendBy to set
+	 * @param finalizationMethod 
+	 * 				the finalizationMethod to set
 	 */
-	public void setRecommendBy(String recommendBy) {
-		this.recommendBy = recommendBy;
+	public void setFinalizationMethod(String finalizationMethod) {
+		this.finalizationMethod = finalizationMethod;
 	}
 
 	/**
@@ -738,6 +739,22 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the hasItemWithPriceTypeTier
+	 */
+	public boolean isHasItemWithPriceTypeTier() {
+		return hasItemWithPriceTypeTier;
+	}
+
+	/**
+	 * @param hasItemWithPriceTypeTier 
+	 * 				the hasItemWithPriceTypeTier to set
+	 */
+	public void setHasItemWithPriceTypeTier(
+						boolean hasItemWithPriceTypeTier) {
+		this.hasItemWithPriceTypeTier = hasItemWithPriceTypeTier;
+	}
+
+	/**
 	 * @return the shortlistedSupplierList
 	 */
 	public List<ScQtEvaluationResultDtl> getShortlistedSupplierList() {
@@ -832,7 +849,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	/**
 	 * @return the shortlistedSupppliersByZone
 	 */
-	public Map<TplSpecZoneDtl, List<ScQtEvaluationResultDtl>> getShortlistedSupppliersByZone() {
+	public Map<Long, List<ScQtEvaluationResultDtl>> getShortlistedSupppliersByZone() {
 		return shortlistedSupppliersByZone;
 	}
 
@@ -841,7 +858,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 * 								the shortlistedSupppliersByZone to set
 	 */
 	public void setShortlistedSupppliersByZone(
-			Map<TplSpecZoneDtl, List<ScQtEvaluationResultDtl>> shortlistedSupppliersByZone) {
+			Map<Long, List<ScQtEvaluationResultDtl>> shortlistedSupppliersByZone) {
 		this.shortlistedSupppliersByZone = shortlistedSupppliersByZone;
 	}
 
