@@ -605,6 +605,7 @@ public class ReportConst {
 	public static final String CM_AMP_EXTENSION_EQ = "&PEXTENSION=";
 	public static final String CM_AMP_PGROUP_EQ = "&PGROUP=";
 	public static final String CM_AMP_PEXT_EQ = "&PEXT=";
+	public static final String CM_AMP_REQUEST_NO_EQ = "&PREQUESTNO=";
 	//sc
 	public static final String SC_AMP_REQUISENER_EQ = "&REQUIUSRID=";
 	public static final String SC_AMP_SUPPLIER_EQ = "&SUPP=";
