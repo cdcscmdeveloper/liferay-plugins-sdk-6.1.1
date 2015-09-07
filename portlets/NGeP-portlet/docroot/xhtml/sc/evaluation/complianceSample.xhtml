@@ -13,7 +13,7 @@
 
 
 	<ui:fragment
-		rendered="#{evaluationBackingBean.managedBean.countDays gt 0}">
+		rendered="#{evaluationBackingBean.managedBean.countDays ge 0}">
 		<h:panelGroup>
 			<table style="width: 50%">
 
@@ -23,7 +23,8 @@
 					<td><p:inputText
 							value="#{evaluationBackingBean.managedBean.scQt.sampleClosingDate}"
 							readonly="true" disabled="true">
-							<f:convertDateTime pattern="dd/MM/yyyy" />
+							<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</p:inputText></td>
 				</tr>
 
@@ -40,7 +41,7 @@
 
 
 	<ui:fragment
-		rendered="#{evaluationBackingBean.managedBean.countDays le 0}">
+		rendered="#{evaluationBackingBean.managedBean.countDays lt 0}">
 		<p:panel header="#{lbl['lbl.sc.eva.sample.proposal.compliance']}"
 			toggleable="true">
 			
