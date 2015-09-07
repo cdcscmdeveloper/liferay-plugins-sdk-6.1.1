@@ -33,7 +33,7 @@
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.spec.local.goods']}" /></td>
-				<td><p:selectOneRadio id="estimated"
+				<td><p:selectOneRadio id="estimated" disabled="#{!isEditableStatus}"
 						value="#{directLOABackingBean.managedBean.prodscQtDoc.tplSpecMaster.itemOriginCode.parameterId}">
 						<f:selectItems
 							value="#{directLOABackingBean.getLocalGoodsRadioValues(ParameterTypeConst.itemOrigin)}" />
@@ -74,12 +74,14 @@
 
 		<ac:templateSpec
 			templateSpecBean="#{directLOABackingBean.managedBean.prodTemplateSpecBean}"
-			title="#{lbl['lbl.txt.product']}" newable="true" />
+			title="#{lbl['lbl.txt.product']}"
+			newable="#{!isPendingApprovalStatus}" />
 
 
 		<ac:templateSpec
 			templateSpecBean="#{directLOABackingBean.managedBean.specTemplateSpecBean}"
-			title="#{lbl['lbl.txt.service']}" newable="true" />
+			title="#{lbl['lbl.txt.service']}"
+			newable="#{!isPendingApprovalStatus}" />
 
 
 
