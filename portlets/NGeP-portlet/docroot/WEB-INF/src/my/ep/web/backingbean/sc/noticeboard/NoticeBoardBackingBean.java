@@ -306,11 +306,7 @@ public class NoticeBoardBackingBean extends
 						resDTO.getScQtAmend() != null ? commonUtils.getFormattedDate(new Date(resDTO
 								.getScQtAmend().getChangedDate().getTime()),CommonConstants.DEFAULT_12HR_DATETIME_FORMAT)
 								: null);
-				QtAmendMentBean amendMentBean = getAmendMentDtls(resDTO);
 				this.getManagedBean().setQtAmendMentBean(getAmendMentDtls(resDTO));
-				if (amendMentBean != null) {
-					setQtAmendMentData(scQt, amendMentBean);
-				}
 			}
 		} finally {
 			qtNoticeBoardSO = null;
@@ -2603,7 +2599,7 @@ public class NoticeBoardBackingBean extends
 		return isNotRigistered;
 	}
 	
-	private void setQtAmendMentData(ScQt scQt, QtAmendMentBean amendMentBean){
+	/*private void setQtAmendMentData(ScQt scQt, QtAmendMentBean amendMentBean){
 		
 		if (0 != amendMentBean.getNewValidityPeriodDays()) {
 
@@ -2622,7 +2618,7 @@ public class NoticeBoardBackingBean extends
 					.getNewEstmtPrice());
 		}
 	}
-	
+	*/
 	/**
 	 * @param scLoalist
 	 * @param qtId
