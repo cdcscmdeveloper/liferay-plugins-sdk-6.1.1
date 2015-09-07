@@ -51,7 +51,7 @@
 									     <h:outputText value="#{lbl['lbl.txt.attachment']}"/>
 									  </f:facet>
 									</p:column>  
-									<p:column>
+									<p:column style="width:10%; white-space:normal;">
 									  <f:facet name="header">
 									       <h:outputText value="* " styleClass="mandatory" />
 									       <h:outputText value="#{lbl['lbl.ct.file.ref.no']}"/>
@@ -83,7 +83,7 @@
 		    	</p:column>
 		   
 		   	     <p:column>
-			      	<p:calendar id="agencyDateActive" value="#{agencyData.effDate}"  navigator="true" size="8"
+			      	<p:calendar id="agencyDateActive" value="#{agencyData.effDate}"  navigator="true" size="6"
 		               readonlyInput="true" 
 		               mindate="#{(contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate gt DateUtils.getCurrentDateWithoutTime()) ? contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate : DateUtils.getCurrentDateWithoutTime()}" 
 		               maxdate="#{agencyData.expDate}"			             
@@ -273,7 +273,8 @@
 			  </h:panelGrid>
            </h:panelGroup>
 	</p:dialog>
-	<p:panel id="agencyRemarksAttachmentPnl" header="#{lbl['lbl.txt.remarks']}" toggleable="true">
+	<p:panel id="agencyRemarksAttachmentPnl" header="#{lbl['lbl.txt.remarks']}" toggleable="true" 
+	  rendered="#{!contractDetailsBackingBean.managedBean.viewContract}" >
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">

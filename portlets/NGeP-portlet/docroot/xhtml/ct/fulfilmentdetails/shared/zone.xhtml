@@ -55,7 +55,7 @@
       </p:treeTable>
  	 </h:panelGrid>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true" rendered="#{!contractDetailsBackingBean.managedBean.viewContract}">
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">
