@@ -5730,6 +5730,22 @@ public class SmApplicationUtil {
 		return retVal;
 	}
 
+	public static SmFacility getHqFacilityByAppl(SmAppl appl) {
+		SmFacility hqCompFac = new SmFacility();
+		for (SmFacility smFac : appl.getSmFacilities()) {
+			if ((smFac.getFacilityType().equalsIgnoreCase(
+					SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE) || smFac
+					.getFacilityType()
+					.equalsIgnoreCase(
+							SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE))
+					&& smFac.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
+				hqCompFac = smFac;
+				break;
+			}
+		}
+		return hqCompFac;
+	}
+
 	public static SmApplicationUtil getInstance() {
 		if (instance == null) {
 			try {
