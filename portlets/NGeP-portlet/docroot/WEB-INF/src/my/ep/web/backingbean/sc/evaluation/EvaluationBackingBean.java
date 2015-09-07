@@ -5752,10 +5752,10 @@ public class EvaluationBackingBean extends
 							}
 
 						} else {
-							if (this.getManagedBean().getCountDays() > 0) {
+							if (this.getManagedBean().getCountDays() >= 0) {
 								throw new EpException(MessageConst.ERROR_760261);
 							}
-							if (this.getManagedBean().getCountDays() <= 0) {
+							if (this.getManagedBean().getCountDays() < 0) {
 								if (this.getManagedBean()
 										.getCurrentStatusId()
 										.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)) {
@@ -6018,10 +6018,10 @@ public class EvaluationBackingBean extends
 							}
 
 						} else {
-							if (this.getManagedBean().getCountDays() > 0) {
+							if (this.getManagedBean().getCountDays() >= 0) {
 								throw new EpException(MessageConst.ERROR_760261);
 							}
-							if (this.getManagedBean().getCountDays() <= 0) {
+							if (this.getManagedBean().getCountDays() < 0) {
 								if (this.getManagedBean()
 										.getCurrentStatusId()
 										.equals(QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL)) {
