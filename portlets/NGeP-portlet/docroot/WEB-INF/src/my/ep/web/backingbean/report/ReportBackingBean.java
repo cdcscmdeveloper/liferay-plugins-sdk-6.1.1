@@ -845,6 +845,7 @@ public class ReportBackingBean extends
 	private String cmSupplOrAdmin;
 	private String cmExtention;
 	private String cmGroupOne;
+	private String cmRequestNumber;
 	// fl
 	private String flItmType;
 	private String flContractNo;
@@ -990,6 +991,14 @@ public class ReportBackingBean extends
 	
 	
 	
+
+	public String getCmRequestNumber() {
+		return cmRequestNumber;
+	}
+
+	public void setCmRequestNumber(String cmRequestNumber) {
+		this.cmRequestNumber = cmRequestNumber;
+	}
 
 	public String getCtSupplierName() {
 		return ctSupplierName;
@@ -6661,6 +6670,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((this.getCmEpNumber() != null) && (this.getCmEpNumber() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmBusinessRegNo() != null) && (this.getCmBusinessRegNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmIcNumber() != null) && (this.getCmIcNumber() != ReportConst.EMPTY_VAL))
+				|| ((this.getCmRequestNumber() != null) && (this.getCmRequestNumber() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmMofNumber() != null) && (this.getCmMofNumber() != ReportConst.EMPTY_VAL))) {
 			
 			if((this.getCmUnspscCode() != null) && (this.getCmUnspscCode() != ReportConst.EMPTY_VAL)){
@@ -6670,6 +6680,12 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						&& ((this.getCmExtentionColour() == null) || (this.getCmExtentionColour()== ReportConst.EMPTY_VAL))){
 					throw new EpException(MessageConst.ERROR_REPORT_780024);
 				}
+			}
+			
+			if ((this.getCmRequestNumber() != null)
+					&& (this.getCmRequestNumber() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setCmRequestNumberVar(ReportConst.CM_AMP_REQUEST_NO_EQ
+						+ this.getCmRequestNumber());
 			}
 			if ((this.getCmItemName() != null)
 					&& (this.getCmItemName() != ReportConst.EMPTY_VAL)) {
@@ -6807,6 +6823,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getIcNumberTotVar()
 						+ rptGenBean.getCmGroupOneVar()
 						+ rptGenBean.getMofNumberTotVar()
+						+ rptGenBean.getCmRequestNumberVar()
 						+ rptGenBean.getFromDateVar()
 						+ rptGenBean.getToDateVar()
 						+ rptGenBean.getCmExtentionCodeVar()
@@ -7460,6 +7477,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.setCmRegistrationType(null);
 		this.setCmItemCategory(null);
 		this.setCmItemName(null);
+		this.setCmRequestNumber(null);
 		this.setCmEpNumber(null);
 		this.setCmBusinessRegNo(null);
 		this.setCmIcNumber(null);

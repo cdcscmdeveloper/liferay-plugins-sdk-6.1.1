@@ -70,7 +70,12 @@
 									<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />									
 					 				</p:inputText>
 								   </c:if>
-								   
+								   <c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmRequestNumberView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.requestnumberlabel']}"  style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.cmRequestNumber}"  style="margin-top:5px;width:290px;">
+									<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />									
+					 				</p:inputText>
+								   </c:if>
 								   
 								  <c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmSupplOrAdminView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.SUPPORADMIN']}" style="margin-top:5px;width:160px;" />			
@@ -94,7 +99,7 @@
 									<c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmGroupOneView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.cmGroupOne}" style="margin-top:5px;width:300px;">
-									<f:selectItem itemLabel="#{lbl['lbl.rpt.allall']}" itemValue="#{null}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}" itemValue="#{null}"></f:selectItem>										
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.itmtype']}" itemValue="#{lbl['lbl.rpt.itmtype']}"></f:selectItem>										
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.unspsccode']}" itemValue="#{lbl['lbl.rpt.unspsccode']}"></f:selectItem>
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																			
@@ -199,5 +204,52 @@
 						  </tr>
 					</table>
 		</div>			
-		
+		<div>
+						<c:if test="#{reportBackingBean.managedBean.rptGenBean.cmCatelogDateView}">
+						<TABLE style="margin-top:10px;width:50%;">
+							<TR>
+							   <c:if test="#{reportBackingBean.managedBean.rptGenBean.cmPublishedDateView}">
+								<TD>
+									<p:outputLabel  value="#{lbl['lbl.rpt.publisheddatelabel']}" style="width:158px;"/>
+								</TD>
+								</c:if>	
+								<c:if test="#{reportBackingBean.managedBean.rptGenBean.cmApprovedDateView}">
+								<TD>
+									<p:outputLabel  value="#{lbl['lbl.rpt.approveddatelabel']}" style="width:158px;"/>
+								</TD>
+								</c:if>
+								<c:if test="#{reportBackingBean.managedBean.rptGenBean.cmSubmittedDateView}">
+								<TD>
+									<p:outputLabel  value="#{lbl['lbl.rpt.submitteddatelabel']}" style="width:158px;"/>
+								</TD>
+								</c:if>
+								<c:if test="#{reportBackingBean.managedBean.rptGenBean.cmExpiredDateView}">
+								<TD>
+									<p:outputLabel  value="#{lbl['lbl.rpt.expireddatelabel']}" style="width:158px;"/>
+								</TD>
+								</c:if>
+								<c:if test="#{reportBackingBean.managedBean.rptGenBean.cmItemValidityDateView}">
+								<TD>
+									<p:outputLabel  value="#{lbl['lbl.rpt.itemvaliditydatelabel']}" style="width:158px;"/>
+								</TD>
+								</c:if>
+								<TD>
+									<p:calendar showOn="button" navigator="true" display="inline" readonlyInput="true" value="#{reportBackingBean.fromDate}" 
+									
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"  partialSubmit="true" process="@form">																				
+									</p:calendar>
+								</TD>
+								<TD>
+									<p:outputLabel  value="#{lbl['lbl.rpt.dtRangeTo']}" style="width:50px;"/>
+								</TD>				
+								<TD>
+									<p:calendar  showOn="button" navigator="true" display="inline" readonlyInput="true" value="#{reportBackingBean.toDate}"
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"   partialSubmit="true" process="@form">	
+																							
+									</p:calendar> 
+								</TD>
+							</TR>
+						</TABLE>
+						</c:if>							
+		            </div>
   </ui:composition>
