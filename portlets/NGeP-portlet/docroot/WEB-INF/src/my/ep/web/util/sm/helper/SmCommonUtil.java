@@ -18,6 +18,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -2727,4 +2728,12 @@ public class SmCommonUtil {
 		}
 		return name;
 	}
+
+	public static boolean isCollectionEmpty(Collection<?> value) {
+		if (value == null || value.isEmpty()) {
+			return true;
+		}
+		return false;
+	}
+
 }

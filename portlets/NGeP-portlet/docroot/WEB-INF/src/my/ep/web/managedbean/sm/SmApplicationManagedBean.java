@@ -76,9 +76,11 @@ import com.liferay.portal.model.Role;
 @SessionScoped
 public class SmApplicationManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
+	private boolean showFieldChanges;
 	private SmAppl latestAppl;
 	private SmAssociateCompany latestAssocCompany;
 	private SmAssociationBody latestProfBody;
+	private SmPersonnel latestPersonnel;
 	private SmAppl smAppl;
 	private SmSupplier smSupplier;
 	private int tabActiveIndex;
@@ -2862,6 +2864,22 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setLatestProfBody(SmAssociationBody latestProfBody) {
 		this.latestProfBody = latestProfBody;
+	}
+
+	public boolean isShowFieldChanges() {
+		return showFieldChanges;
+	}
+
+	public void setShowFieldChanges(boolean showFieldChanges) {
+		this.showFieldChanges = showFieldChanges;
+	}
+
+	public SmPersonnel getLatestPersonnel() {
+		return latestPersonnel;
+	}
+
+	public void setLatestPersonnel(SmPersonnel latestPersonnel) {
+		this.latestPersonnel = latestPersonnel;
 	}
 
 }
