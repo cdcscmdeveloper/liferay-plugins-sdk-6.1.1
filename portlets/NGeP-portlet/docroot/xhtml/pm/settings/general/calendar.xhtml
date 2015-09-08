@@ -180,7 +180,7 @@
 		</p:panel>
 		<p:dialog widgetVar="eventDialog" id="calEventDlg" modal="true"
 				header="#{lbl['lbl.pm.cal.public.haliday.details']}" width="500"
-				height="200" showEffect="clip" hideEffect="clip">
+				height="300" showEffect="clip" hideEffect="clip">
 				<p:outputPanel>					
 				<h:panelGroup id="eventDetails">
 					<p:messages id="calendarMessages" showDetail="true" showSummary="false" autoUpdate="false"
@@ -190,7 +190,7 @@
 							<td><h:outputLabel
 								value="#{lbl['lbl.pm.cal.title']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
-							<td><p:inputText id="title" size="30" maxlength="30" 
+							<td><p:inputText id="title" size="45" maxlength="30" 
 									label="#{lbl['lbl.pm.cal.title']}"
 									valueChangeListener="#{calendarBackingBean.holidayTitleValChange}"
 									value="#{calendarBackingBean.managedBean.event.title}"
@@ -230,8 +230,6 @@
 								</td>
 						</tr>
 					</table>
-					<br />
-					<br />
 					<div style="float: right;">
 							<p:commandButton id="addButton" value="#{lbl['lbl.btn.save']}"
 										actionListener="#{calendarBackingBean.addOrUpdateEvent}"
@@ -246,7 +244,7 @@
 			</p:dialog>
 			<p:dialog widgetVar="errDialog" id="calErrDlg" modal="true"
 				header="#{lbl['lbl.pm.cal.warning']}" width="260" 
-				height="80" showEffect="clip" hideEffect="clip">
+				height="100" showEffect="clip" hideEffect="clip">
 				<h:panelGroup id="errDetails">
 
 					<h:outputText value="#{lbl['lbl.pm.cal.err.popup.msg1']}" />
