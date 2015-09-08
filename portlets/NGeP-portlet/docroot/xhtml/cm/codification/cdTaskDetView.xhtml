@@ -21,13 +21,26 @@
 								value="#{lbl['lbl.cm.doc.no']}" /></td>
 						<td width="35%"><p:inputText size="50"
 								value="#{requestCodeBackingBean.managedBean.docNo}"></p:inputText></td>
+
+
+						<td width="15%"><p:outputLabel
+								value="#{lbl['lbl.cm.status.name']}"></p:outputLabel></td>
+						<td width="35%"><p:selectOneMenu
+								value="#{requestCodeBackingBean.managedBean.statusID}"
+								style="width:278px;">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
+								<f:selectItems
+									value="#{requestCodeBackingBean.managedBean.statusCriteria}" />
+							</p:selectOneMenu></td>
+
+					</tr>
+					<tr>
 						<td width="15%"><p:outputLabel
 								value="#{lbl['lbl.cm.supplier.name']}"
 								rendered="#{!unspscCodeBackingBean.allSupplier}" /></td>
 						<td width="35%"><p:inputText size="50"
 								value="#{requestCodeBackingBean.managedBean.supplierName}"
 								rendered="#{!unspscCodeBackingBean.allSupplier}"></p:inputText></td>
-
 					</tr>
 
 
@@ -82,12 +95,12 @@
 						<h:outputText value="#{obj[3]}">
 							<f:convertDateTime
 								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
-						
-						
+
+
 						</h:outputText>
 
 					</p:column>
-					
+
 					<p:column>
 						<f:facet name="header">
 							 #{lbl['lbl.cm.status.name']}
