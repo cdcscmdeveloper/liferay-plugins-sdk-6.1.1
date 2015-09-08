@@ -308,7 +308,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 				}else{
 					typeObj = new CmType();
-					typeObj.setTypeCode("00");
+					typeObj.setTypeCode("000");
 					typeObj.setTypeName("N/A");
 					typeObj.setUnspscId(commodity);
 					codeReqDTO.setCmType(typeObj);
@@ -320,7 +320,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					brandObj = commodity.getCmBrand().get(0);
 				else{
 					brandObj = new CmBrand();
-					brandObj.setBrandCode("000");
+					brandObj.setBrandCode("00");
 					brandObj.setBrandName("N/A");
 					brandObj.setUnspscId(commodity);
 					codeReqDTO.setCmBrand(brandObj);
