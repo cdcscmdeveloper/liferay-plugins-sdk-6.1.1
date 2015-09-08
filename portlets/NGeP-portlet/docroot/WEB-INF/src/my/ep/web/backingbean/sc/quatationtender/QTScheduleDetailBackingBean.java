@@ -530,6 +530,7 @@ public class QTScheduleDetailBackingBean extends
 			scQt.setClosingDate(clsDate);
 			getManagedBean().setProposalValidityUntil(
 					DateUtils.addDays(clsDate, scQt.getQtValidityPeriod()));
+			scQt.setProposalValidityEndDate(getManagedBean().getProposalValidityUntil());
 		}
 
 	}
