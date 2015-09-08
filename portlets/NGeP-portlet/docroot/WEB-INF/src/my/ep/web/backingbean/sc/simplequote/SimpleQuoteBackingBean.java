@@ -397,11 +397,7 @@ public class SimpleQuoteBackingBean extends
 		if (null == scQuote.getProcurementTypeCategory()) {
 			scQuote.setProcurementTypeCategory(new PmParameter());
 		}
-
 		scQuote.setMultipleQuote(Boolean.FALSE);
-		if (scQuote.getQuoteNo() == null) {
-			scQuote.setQuoteNo(getQuoteSO().generateQuoteNo());
-		}
 
 		// WorkFlow Status should be set In the save
 		if (scQuote.getCurrentStatus() == null) {
@@ -5085,10 +5081,6 @@ public class SimpleQuoteBackingBean extends
 						IOrgProfileSO.class);
 
 		scQuote.setMultipleQuote(Boolean.FALSE);
-		if (scQuote.getQuoteNo() == null) {
-			scQuote.setQuoteNo(getQuoteSO().generateQuoteNo());
-		}
-
 		IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		// WorkFlow Status should be set In the save

@@ -23,7 +23,6 @@ import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
-import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -41,8 +40,6 @@ import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.ct.dtl.ContractItemResDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
@@ -60,7 +57,6 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmReason;
@@ -76,7 +72,6 @@ import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
-import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
@@ -162,7 +157,7 @@ public class PurchaseInDefaultBackingBean extends
 						IContractItemSO.class);
 		ScPurchaseInDefault scPurchaseInDefault = new ScPurchaseInDefault();
 		getManagedBean().setPurchaseInDefault(scPurchaseInDefault);
-		// TODO check contract item or panel item
+		// check contract item or panel item
 		if (vCmSupplierItem.getContractNo() != null) {
 			// contract item
 			ContractItemReqDTO contractItemReqDTO = new ContractItemReqDTO();
@@ -208,9 +203,7 @@ public class PurchaseInDefaultBackingBean extends
 						.isExceedProcurementAmt());
 			}
 		}
-		scPurchaseInDefault.setPurchaseInDefaultNo(purchaseInDefaultSO
-				.generatePIDNo());
-
+	
 		// WorkFlow Status
 		ScPIDWorkFlowStatus workFlowStatus = new ScPIDWorkFlowStatus();
 		StatusReqDTO statusReqDTO = new StatusReqDTO();
@@ -279,10 +272,7 @@ public class PurchaseInDefaultBackingBean extends
 		// PmReason reason = new PmReason();
 		scPurchaseInDefault.setReasonType(new PmReason());
 		// getManagedBean().getPurchaseInDefault().setReasonType(reason);
-		scPurchaseInDefault.setPidValidDays(ParameterConst.DEFAULT_RESP_DAYS); // by
-																				// default
-																				// days
-
+		scPurchaseInDefault.setPidValidDays(ParameterConst.DEFAULT_RESP_DAYS); // by default days
 		return "purchaseInDefaultMain";
 	}
 
