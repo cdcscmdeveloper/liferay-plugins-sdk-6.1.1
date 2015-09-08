@@ -19,6 +19,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import my.ep.biz.bean.search.ISearchBean;
@@ -120,6 +121,14 @@ public class MarketResearchBackingBean extends
 	}
 
 	public void searchMarketResearch() {
+		
+        log.info("searchMarketResearch");
+		List<ScQtCategory> scQtcategoryList = this.getManagedBean()
+				.getQtCategoryList();
+		if (StringUtils.isBlank(this.getManagedBean().getSelectionType())
+				|| CollectionUtils.isEmpty(scQtcategoryList)) {
+			throw new EpException(MessageConst.ERROR_789001);
+		}
 		searchMarketResearch.reloadData();
 	}
 
@@ -141,7 +150,7 @@ public class MarketResearchBackingBean extends
 			IMarketResearchSO marketResearchSO = null;
 
 			//ISearchBean<Object[]> iSearchBean = getMarketResearchData(searchBean);
-			MarketResearchReqDTO reqDTO = new MarketResearchReqDTO();
+			/*MarketResearchReqDTO reqDTO = new MarketResearchReqDTO();*/
 
 			try {
 				marketResearchSO = (IMarketResearchSO) BusinessDelegate
@@ -280,20 +289,20 @@ public class MarketResearchBackingBean extends
 		MarketResearchReqDTO reqDTO = new MarketResearchReqDTO();
 
 		SimpleDateFormat simpleDateformat = new SimpleDateFormat("YYYY");
+		
+		for (ScQtCategory scQtCategory : scQtcategoryList) {
 
-		if (selectionType != null
-				&& (scQtcategoryList != null && !scQtcategoryList.isEmpty())) {
-
-			for (ScQtCategory scQtCategory : scQtcategoryList) {
-
-				categoryL3L.add(scQtCategory.getPmCategoryL3()
-						.getCategoryL3Id());
-			}
-			debugLogger("Category Code Selection(CategoryL3-Count)===> "
-					+ scQtcategoryList.size());
-		} else {
-			throw new EpException(MessageConst.ERROR_789001);
+			categoryL3L.add(scQtCategory.getPmCategoryL3()
+					.getCategoryL3Id());
 		}
+		debugLogger("Category Code Selection(CategoryL3-Count)===> "
+				+ scQtcategoryList.size());
+		
+		/*if (selectionType != null
+				&& (scQtcategoryList != null && !scQtcategoryList.isEmpty())) {*/			
+		/*//} /*else {
+			throw new EpException(MessageConst.ERROR_789001);
+		}*/
 		
 		reqDTO.setSelectionType(selectionType);
 		reqDTO.setDocType("QPC");
