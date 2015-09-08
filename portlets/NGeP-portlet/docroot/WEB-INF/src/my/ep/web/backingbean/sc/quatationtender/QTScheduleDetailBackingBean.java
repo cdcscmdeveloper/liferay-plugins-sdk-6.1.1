@@ -348,13 +348,12 @@ public class QTScheduleDetailBackingBean extends
 	 */
 	public void addDeskOfficerAdminAssistant() {
 		debugLogger("addDeskOfficerAdminAssistant");
-		
 
 		List<ScQtContactPerson> doaaList = this.getManagedBean()
 				.getPmuserContactpersonList();
 		if (null == doaaList) {
 			doaaList = new ArrayList<ScQtContactPerson>();
-			
+
 		}
 		ScQtContactPerson contactPerson = new ScQtContactPerson();
 		contactPerson.setUser(new PmUser());
@@ -528,9 +527,8 @@ public class QTScheduleDetailBackingBean extends
 		}
 		if (null != clsDate) {
 			scQt.setClosingDate(clsDate);
-			getManagedBean().setProposalValidityUntil(
-					DateUtils.addDays(clsDate, scQt.getQtValidityPeriod()));
-			scQt.setProposalValidityEndDate(getManagedBean().getProposalValidityUntil());
+			scQt.setProposalValidityEndDate(DateUtils.addDays(clsDate,
+					scQt.getQtValidityPeriod()));
 		}
 
 	}
@@ -750,19 +748,21 @@ public class QTScheduleDetailBackingBean extends
 		}
 		return MessageConst.INFO_700008;
 	}
-	
+
 	/**
 	 * Validate postcode.
 	 */
 	public void validatePostcode() {
 		debugLogger("validatePostcode");
-		String postcode = getManagedBean().getScQtSampleSubmission().getAddress().getPostcode();
+		String postcode = getManagedBean().getScQtSampleSubmission()
+				.getAddress().getPostcode();
 		Pattern pattern = Pattern.compile("\\d{5}");
 		Matcher matcher = pattern.matcher(postcode);
 		if (matcher.matches()) {
 			// throw new EpException("Postcode is Valid");
 		} else {
-			throw new EpException("Postcode is not valid, Postcode Should be limited to 5 digits.");
+			throw new EpException(
+					"Postcode is not valid, Postcode Should be limited to 5 digits.");
 		}
 
 	}

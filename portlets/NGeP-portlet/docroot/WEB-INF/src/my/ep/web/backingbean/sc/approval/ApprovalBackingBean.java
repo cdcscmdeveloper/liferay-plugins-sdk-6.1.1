@@ -496,9 +496,9 @@ public class ApprovalBackingBean extends
 						.getPublishPeriod());
 			}
 			this.setDefaultDateTime(this.getManagedBean().getQt());
-			getManagedBean().setProposalValidityUntil(
+			/*getManagedBean().setProposalValidityUntil(
 					DateUtils.addDays(clsDate, this.getManagedBean().getQt()
-							.getQtValidityPeriod()));
+							.getQtValidityPeriod()));*/
 
 		} else if (SCProcessNameConst.APPROVE_PCB.equalsIgnoreCase(taskName)) {
 			paramTypes = getRequestTypes(((SCQuotationTenderDataType) obj)
