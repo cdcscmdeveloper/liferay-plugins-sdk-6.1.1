@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="amend" header="#{lbl['lbl.ct.menu.amendment']}" toggleable="true" toggleSpeed="500">
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.amendment.type']}" escape="false"/><br/><br/>
-		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth225">
+		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth170">
 				<p:outputLabel value="#{lbl['lbl.ct.amendment.type']}"  styleClass="required"/>
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
@@ -98,7 +98,7 @@
 				    </h:panelGrid>
 		  	</h:panelGrid>
 		 </h:panelGrid>
-	    <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth225">
+	    <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth170">
 				<p:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" styleClass="required" />
 			<h:panelGrid columns="5">
 				<p:inputText id="txtfrno" style="width:650px;" label="#{lbl['lbl.ct.file.ref.no']}"
@@ -117,7 +117,7 @@
 				<p:message for="txtname" display="icon" />	
 			</h:panelGrid>
 		</h:panelGrid>
-		<h:panelGrid columns="3" style="width:100%"	columnClasses="columnWidth225">
+		<h:panelGrid columns="3" style="width:100%"	columnClasses="columnWidth170">
 			<h:panelGroup>
 				<div style="float: right; vertical-align: top;">
 						<p:outputLabel value="#{lbl['lbl.ct.amendment.desc']}"  styleClass="required"/>
@@ -133,7 +133,7 @@
 		</h:panelGrid>
 		<h:panelGroup rendered="#{!amendmentBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt and
 				  		        !amendmentBackingBean.managedBean.disableAmendDetails}">
-		  <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth225">
+		  <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth170">
 			<h:panelGrid columns="1" style="float:right;">
 				<p:outputLabel value="#{lbl['lbl.ct.secretary']}" />
 			</h:panelGrid>
@@ -156,7 +156,7 @@
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.extension.period']}" escape="false"
 				rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}"/><br/>
 		</h:panelGrid>
-		<h:panelGrid id="typesOfAmend"  columns="6" style="width:100%" columnClasses="columnWidth225">
+		<h:panelGrid id="typesOfAmend"  columns="6" style="width:100%" columnClasses="columnWidth170">
 			<h:outputLabel value="#{lbl['lbl.ct.extension.period']}"
 				rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" />
 			<h:panelGrid columns="3"
@@ -174,14 +174,14 @@
 			<p:outputLabel value="#{lbl['lbl.ct.extension.start.date']}"
 				rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" />
 			<p:inputText id="extStartDate" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.extendStartDate}" 
-			    disabled="true" style="width:100px;" rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
+			    disabled="true" style="width:90px;" rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
 				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			</p:inputText>
 			
 			<p:outputLabel value="#{lbl['lbl.ct.extension.end.date']}"
 				rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" />
 			<p:inputText id="extEndDate" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.extendEndDate}" 
-			    disabled="true" style="width:100px;" rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
+			    disabled="true" style="width:90px;" rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
 				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			</p:inputText>
 		
@@ -206,7 +206,7 @@
 			
 			<p:outputLabel value="#{lbl['lbl.ct.new.contract.amt']}" rendered="#{amendmentBackingBean.getAmendValue(1)}"/>
 			<h:panelGrid columns="3" rendered="#{amendmentBackingBean.getAmendValue(1)}">
-				<p:inputText id="addValue" styleClass="ppRightBtn" style="width:100px;" disabled="true"
+				<p:inputText id="addValue" styleClass="ppRightBtn" style="width:90px;" disabled="true"
 					value="#{amendmentBackingBean.newContractAmt()}" >
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
@@ -219,7 +219,7 @@
 				<p:outputLabel value="#{lbl['lbl.ct.effective.date']}" style="float:left;" />
 			</h:panelGrid>
 			<h:panelGrid columns="5" rendered="#{amendmentBackingBean.getAmendValue(2)}" >
-				<p:calendar style="float:left;" size="12" id="edateCal1" showOn="button"  readonlyInput="true" navigator="true"
+				<p:calendar styleClass="calanderWidth" size="8" id="edateCal1" showOn="button"  readonlyInput="true" navigator="true"
 			    	required="true" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
 				    label="#{lbl['lbl.ct.effective.date']}" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}"
 				    maxdate="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.expDate}" 
@@ -228,7 +228,7 @@
 				        <p:ajax event="dateSelect" process="@this" onstart="blockWidget.show();"  oncomplete="blockWidget.hide();"
 				            listener="#{amendmentBackingBean.changeAmendmentEffDate}"  update=":form:itemId,:form:serviceId"/> 
 				</p:calendar>
-				<p:inputText disabled="true" style="width:100px;"
+				<p:inputText disabled="true" style="width:90px;"
 					rendered="#{amendmentBackingBean.managedBean.disableAmendDetails}"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}">
 					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -265,14 +265,14 @@
 			
 			<p:outputLabel value="#{lbl['lbl.ct.new.overall.contract.amt']}" rendered="#{amendmentBackingBean.getAmendValue(1)}"/>
 			<h:panelGrid columns="3" rendered="#{amendmentBackingBean.getAmendValue(1)}">
-				<p:inputText id="overallAmt" styleClass="ppRightBtn" style="width:100px;" disabled="true"
+				<p:inputText id="overallAmt" styleClass="ppRightBtn" style="width:90px;" disabled="true"
 					value="#{amendmentBackingBean.newOverallContractAmt()}" >
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 			</h:panelGrid>
 		</h:panelGrid>
 		
-		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth225"
+		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth170"
 			 rendered="#{amendmentBackingBean.managedBean.amendHistoryList != null and 
 			!empty amendmentBackingBean.managedBean.amendHistoryList and amendmentBackingBean.bpkApprover}">
 			<h:panelGroup>
@@ -313,7 +313,7 @@
 		rendered="#{!amendmentBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt
 			and (amendmentBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingApproval
 	  			or amendmentBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingRevisionApproval)}">
-		<h:panelGrid columns="2" style="width:80%" columnClasses="columnWidth225">
+		<h:panelGrid columns="2" style="width:80%" columnClasses="columnWidth170">
 			<p:outputLabel value="#{lbl['lbl.ct.route.to.bpk']}" />			
 			<h:panelGrid columns="4">
 				<p:selectOneRadio id="routeToBPKApprover" disabled="#{!amendmentBackingBean.managedBean.secretaryExist}"
