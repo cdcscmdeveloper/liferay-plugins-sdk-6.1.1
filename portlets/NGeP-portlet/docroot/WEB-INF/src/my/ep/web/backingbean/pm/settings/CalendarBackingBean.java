@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 import javax.faces.application.FacesMessage;
@@ -70,8 +71,7 @@ public class CalendarBackingBean extends
 		}
 		
 		getManagedBean().setSelectedStateId(stateId);
-		RequestContext.getCurrentInstance()
-		.execute("changeWeekEndColor();");
+		changeWeekEndColor();
 	}
 
 	private void loadStateSchedule(long stateId) {
@@ -310,12 +310,12 @@ public class CalendarBackingBean extends
 	     
     public void onDateSelect(SelectEvent selectEvent) {
     	try{
+    	RequestContext.getCurrentInstance().reset(":form:eventDetails");
     	if(this.getManagedBean().getSelectedState() != null && (this.getManagedBean().getSelectedState().getStateId() == null || this.getManagedBean().getSelectedState().getStateId() == -1)){
     		this.getManagedBean().setEvent(new DefaultScheduleEvent());
     		RequestContext.getCurrentInstance().execute("errDialog.show()");
     		return;
     	}
-    	RequestContext.getCurrentInstance().reset(":form:eventDetails");
     	
 //    	renewSesionObject();
 
@@ -379,14 +379,17 @@ public class CalendarBackingBean extends
 	      cal.set(Calendar.SECOND, 0);
 	      cal.add(Calendar.MONTH, moveValue);
 	      this.getManagedBean().setInitialDate(cal.getTime());
-	  	  RequestContext.getCurrentInstance()
-	  		.execute("changeWeekEndColor();");
+	      changeWeekEndColor();
 	   }
 
 	   public void today(ActionEvent event){
 		  Calendar cal = Calendar.getInstance();
 	      this.getManagedBean().setInitialDate(cal.getTime());
-	      RequestContext.getCurrentInstance()
+	      changeWeekEndColor();
+	   }
+	   
+	   public void changeWeekEndColor(){
+		   RequestContext.getCurrentInstance()
 	  		.execute("changeWeekEndColor();");
 	   }
 }
