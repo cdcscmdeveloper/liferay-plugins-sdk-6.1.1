@@ -1145,7 +1145,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().setAgencyAddress(amendRes.isAgencyAddressExist());
 			
 			if(getManagedBean().getFlRequest().getScPurchaseInDefault() != null){
-				if(getManagedBean().getFlRequest().isBrandNew()){
+				if(getManagedBean().getFlRequest().getFlTempItems().isEmpty()){
 					ContractItemReqDTO ctItemReqDTO = new ContractItemReqDTO();
 					ctItemReqDTO.setContractItemId(getManagedBean().getFlRequest().getScPurchaseInDefault().getContractedItem().getContractItemId());
 					ContractItemResDTO ctItemResDTO = contractItemSO.getContractItem(ctItemReqDTO);
