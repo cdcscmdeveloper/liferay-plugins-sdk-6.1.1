@@ -73,7 +73,10 @@
 				updateDayColor(td2, "lightGrey");
 			}
 			
-			document.getElementsByClassName('fc-today')[0].style.background = "#fbf9ee";
+			var hasClass =  document.getElementsByClassName('fc-today');
+			if(hasClass.length > 0){
+				document.getElementsByClassName('fc-today')[0].style.background = "#fbf9ee";
+			}
  		}
 		
 		function clearDayColor(){
@@ -130,11 +133,28 @@
 					</tr>
 					<tr />
 					<tr>
+					<td>
+					<h:panelGrid columns="3">
+				      <p:commandLink update=":form:schedule" actionListener="#{calendarBackingBean.nextPrevious}" process="@this">
+				         <f:attribute name="increment" value="previous"/>
+				          <h:graphicImage value="/css/images/design/ico-previous.png" />
+				      </p:commandLink>
+				      <p:commandLink update=":form:schedule" actionListener="#{calendarBackingBean.nextPrevious}" process="@this">
+				         <f:attribute name="increment" value="next"/>
+				          <h:graphicImage value="/css/images/design/ico-next.png" />
+				      </p:commandLink>
+				      <p:commandButton value="Today" update=":form:schedule" actionListener="#{calendarBackingBean.today}" process="@this"/>
+				   </h:panelGrid>
+					
+					</td>
+					</tr>
+					<tr>
 						<td colspan="3"><p:schedule id="schedule"
 								pattern="dd-MM-yyyy" locale="en" timeZone="GMT+8"
-								leftHeaderTemplate="prev,next, today" rightHeaderTemplate=""
+								leftHeaderTemplate="" rightHeaderTemplate=""
 								style="width : 700px; height : 600px;"
 								value="#{calendarBackingBean.managedBean.eventModel}"
+								initialDate="#{calendarBackingBean.managedBean.initialDate}"
 								widgetVar="myschedule" timeFormat="">
 
 								<p:ajax event="dateSelect"
@@ -161,8 +181,10 @@
 		<p:dialog widgetVar="eventDialog" id="calEventDlg" modal="true"
 				header="#{lbl['lbl.pm.cal.public.haliday.details']}" width="500"
 				height="200" showEffect="clip" hideEffect="clip">
-				<p:outputPanel>				
+				<p:outputPanel>					
 				<h:panelGroup id="eventDetails">
+					<p:messages id="calendarMessages" showDetail="true" showSummary="false" autoUpdate="false"
+					closable="true" severity="error"></p:messages>	
 					<table width="100%">
 						<tr>
 							<td><h:outputLabel
@@ -213,7 +235,7 @@
 					<div style="float: right;">
 							<p:commandButton id="addButton" value="#{lbl['lbl.btn.save']}"
 										actionListener="#{calendarBackingBean.addOrUpdateEvent}"
-										update="schedule,eventDetails" process="eventDetails"/>
+										update="schedule,eventDetails,calendarMessages" process="eventDetails"/>
 							<p:commandButton value="#{lbl['lbl.btn.delete']}"
 										actionListener="#{calendarBackingBean.deleteEvent}"
 										update="schedule,eventDetails" process="eventDetails"
