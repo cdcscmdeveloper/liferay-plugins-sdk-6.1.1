@@ -48,7 +48,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	 *Enable SM module criteria by report name 
 	 */
 	public void enableCriteriaVariablesByReportBySM(ReportsGenerateBean rptGenBean,	List<String> authoriztionList){
-		switch (getManagedBean().getReportValue()) {
+		switch (getManagedBean().getReportValue().trim()) {
 		
 		case ReportConst.SM_REG_COMPANY_IN_MOF_RPT_VAL:		        	
 			    rptGenBean.setSmCommonZoneView(true);
