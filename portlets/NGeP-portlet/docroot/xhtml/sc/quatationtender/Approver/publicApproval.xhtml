@@ -19,8 +19,9 @@
 	<p:panel header="#{lbl['lbl.sc.qt.schedule.dtls']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.publish.date']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
+				<td style="width: 200px;"><p:outputLabel
+						value="#{lbl['lbl.sc.publish.date']}" /> <p:outputLabel value="*"
+						styleClass="mandatory" /></td>
 				<td><p:calendar label="#{lbl['lbl.sc.publish.date']}"
 						mindate="#{approvalBackingBean.managedBean.today}"
 						value="#{approvalBackingBean.managedBean.qt.publishDate}"
@@ -39,15 +40,16 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.qt.bsv.date']}" /></td>
 					<td><p:inputText id="publishBsvDate"
-						value="#{approvalBackingBean.managedBean.qt.latestBsvDate}"
-						readonly="true" disabled="true" style="margin-top:5px" size="14">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText></td>
+							value="#{approvalBackingBean.managedBean.qt.latestBsvDate}"
+							readonly="true" disabled="true" style="margin-top:5px" size="14">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</p:inputText></td>
 				</tr>
 			</c:if>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.qt.publishing.period']}" /></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.qt.publishing.period']}" /></td>
 				<td><p:inputText
 						value="#{approvalBackingBean.managedBean.qt.publishPeriod}"
 						readonly="true" id="publishingperiod" disabled="true" size="30"
@@ -74,14 +76,14 @@
 							id="proposalPreparation" required="true"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button" />
 						<h:inputText value="12:00 PM" disabled="true" size="4"
-							style="width: 52px" />
-						<p:message id="proposalPreparationMsg" for="proposalPreparation"
-							display="icon" /></td>
+							style="width: 52px" /> <p:message id="proposalPreparationMsg"
+							for="proposalPreparation" display="icon" /></td>
 				</tr>
 			</c:if>
-			
+
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity']}" /></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.qt.proposal.validity']}" /></td>
 				<td><p:inputText
 						value="#{approvalBackingBean.managedBean.qt.qtValidityPeriod}"
 						readonly="true" disabled="true" size="30"
@@ -91,7 +93,7 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.proposal.validity.until']}" /></td>
 				<td><p:inputText id="proposalvalidityid"
-						value="#{approvalBackingBean.managedBean.proposalValidityUntil}"
+						value="#{approvalBackingBean.managedBean.qt.proposalValidityEndDate}"
 						readonly="true" disabled="true" style="margin-top:5px;" size="30">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
