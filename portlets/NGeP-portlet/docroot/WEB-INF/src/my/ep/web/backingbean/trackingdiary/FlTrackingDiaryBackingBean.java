@@ -364,7 +364,7 @@ public class FlTrackingDiaryBackingBean extends BaseBackingBean<FlTrackingDiaryM
 		 * 
 		 */
 		public SelectItem[] getOrgTypeDropdownValues() {
-			defaultPtjAndMinistryValues();
+			//defaultPtjAndMinistryValues();
 			ISearchBean<PmParameterDesc> searchBean = null;
 			if(getManagedBean().getSearchOrderType() != null){
 				if (getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
