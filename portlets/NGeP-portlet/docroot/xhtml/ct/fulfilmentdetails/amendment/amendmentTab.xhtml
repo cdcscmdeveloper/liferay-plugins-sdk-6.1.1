@@ -14,7 +14,7 @@
 			text-align: center !important;
 		}
 			 .calanderWidth input {
-	       width:180px;margin-bottom: 5px;
+	       width:75px;margin-bottom: 5px;
 	   }
 		.top-aligned-columns td {
 			vertical-align: top;
@@ -27,15 +27,11 @@
 	        vertical-align: top;
 	        text-align: right;
          }
-          .columnWidth200 {
-	        width: 200px;
+          .columnWidth170 {
+	        width: 170px;
+	         vertical-align: top;
+	        text-align: right;
          }         
-            .columnWidth250 {
-	        width: 250px;
-         }
-         .columnWidth350 {
-	        width: 350px;
-         }
          .columnWidth225 {
 	        width: 225px;
 	        vertical-align: top;
@@ -153,8 +149,6 @@
 			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'SE')}" update=":form" />
 	
 		</p:tabMenu>
-
-		
 		 </td>
 		 <td width="80%">
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.fd'] }">
