@@ -5,30 +5,45 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
-	<ui:param name="scQt" value="#{suppFinalBiddingBackingBean.managedBean.scQt}" />
+
+	<ui:param name="scQt"
+		value="#{suppFinalBiddingBackingBean.managedBean.scQt}" />
+	<ui:param name="validatevalue"
+		value="#{suppFinalBiddingBackingBean.handleProposalValidityDays(scQt)}"></ui:param>
 	<p:spacer height="10px"></p:spacer>
 	<div align="left" class="header-info">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 10%">
-					<h:outputLabel value="#{lbl['lbl.sc.qtn.no']}" />
-				</td>
-				<td style="width: 27%" class="header-info-text">
-					#{scQt.qtNo}
-				</td>
-				<td style="width: 5%">
-					<h:outputLabel value="#{lbl['lbl.sc.ptj']}" />
-				</td>
+				<td style="width: 10%"><h:outputLabel
+						value="#{lbl['lbl.sc.qtn.no']}" /></td>
+				<td style="width: 27%" class="header-info-text">#{scQt.qtNo}</td>
+				<td style="width: 5%"><h:outputLabel
+						value="#{lbl['lbl.sc.ptj']}" /></td>
 				<td style="width: 32%" class="header-info-text">
-					#{scQt.pmOrgProfile.orgName}
-				</td>
-				<td style="width: 5%">
-					<h:outputLabel value="#{lbl['lbl.sc.status']}" />
-				</td>
-				<td style="width: 22%" class="header-info-text">
+					#{scQt.pmOrgProfile.orgName}</td>
+				<td style="width: 5%;"><h:outputLabel
+						value="#{lbl['lbl.sc.qt.proposal.validity']}" /></td>
+				<td style="width: 22%;" class="header-info-text">#{scQt.qtValidityPeriod}</td>
+			</tr>
+			<tr>
+				<td style="width: 10%;"><h:outputLabel
+						value="#{lbl['lbl.sc.status']}" /></td>
+				<td style="width: 27%;" class="header-info-text">
 					#{suppFinalBiddingBackingBean.getStatusDescById(suppFinalBiddingBackingBean.managedBean.currentStatusId)}
 				</td>
+
+				<td style="width: 5%;"></td>
+				<td style="width: 32%;" class="header-info-text"></td>
+
+				<td style="width: 5%;"><h:outputLabel
+						value="#{lbl['lbl.sc.proposal.validity.until']}" /></td>
+				<c:if test="#{validatevalue eq 'true'}">
+					<td style="width: 22%" class="header-info-text">#{scQt.proposalValidityUntil}</td>
+				</c:if>
+				<c:if test="#{validatevalue eq 'false'}">
+					<td style="width: 22%; font-weight: bold; color: red;"
+						class="header-info-text">#{scQt.proposalValidityUntil}</td>
+				</c:if>
 			</tr>
 		</table>
 	</div>
