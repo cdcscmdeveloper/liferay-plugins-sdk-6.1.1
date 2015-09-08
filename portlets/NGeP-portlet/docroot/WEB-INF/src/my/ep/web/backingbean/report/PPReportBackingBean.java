@@ -21,7 +21,7 @@ public class PPReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	 *Enable PP module criteria by report name 
 	 */
 	public void enableCriteriaVariablesByReportByPP(ReportsGenerateBean rptGenBean,	List<String> authoriztionList){
-		switch (getManagedBean().getReportValue()) {
+		switch (getManagedBean().getReportValue().trim()) {
 		
 		case ReportConst.PP_PROCUREMENT_PTJ_LEVEL_RPT_VAL:		        	
 				rptGenBean.setPpYearView(true);

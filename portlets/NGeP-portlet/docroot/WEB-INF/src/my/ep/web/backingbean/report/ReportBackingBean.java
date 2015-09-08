@@ -780,6 +780,7 @@ public class ReportBackingBean extends
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
 	//private Long lngUserId = (long)243371;//61745;//219490;//240790;//183931;//20854;//243371;//20854;//168887;//221747;//219490;//243394;//243371;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
 	private String strLanguage = ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG,	ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+	//private String strLanguage = "ms";
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -2982,10 +2983,10 @@ public class ReportBackingBean extends
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IPMReportSO.class);
-					String language = ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG, 
+					/*String language = ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG, 
 				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-					//String language = "ms";
-					List<Object[]> moduleLst = reportSO.retrieveModuleList(language,lngUserId);			
+					//String language = "ms";*/
+					List<Object[]> moduleLst = reportSO.retrieveModuleList(strLanguage,lngUserId);			
 					for (Object[] object : moduleLst) {
 						SelectItem selectItem = new SelectItem();						
 						selectItem.setValue(object[0].toString());
@@ -3611,19 +3612,19 @@ public class ReportBackingBean extends
 		this.setReportCategory(null);
 		this.setReportValue(null);
 		List<Object[]> reportModList = null;
-		String language = ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		/*String language = ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		//String language = "ms";
-		reportList = new ArrayList<SelectItem>();
+*/		reportList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {			
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
 					if((this.getModuleValue()!=null)&&(this.getModuleValue().equalsIgnoreCase(ReportConst.FL_MOD_VAL))){
 						rptGenBean.setReportCategoryView(true);
-						retrieveSubModuleReportCategoryList(language);
+						retrieveSubModuleReportCategoryList(strLanguage);
 					}else{						
-						if((language!=null)&&(language.equalsIgnoreCase(ReportConst.ENG_LANG))){
+						if((strLanguage!=null)&&(strLanguage.equalsIgnoreCase(ReportConst.ENG_LANG))){
 							reportModList = reportSO.retrieveReportListByModuleNUserAuthorization(lngUserId,this.getModuleValue());
-						}else if((language!=null)&&(language.equalsIgnoreCase(ReportConst.MALAY_LANG))){
+						}else if((strLanguage!=null)&&(strLanguage.equalsIgnoreCase(ReportConst.MALAY_LANG))){
 							reportModList = reportSO.retrieveMalayReportListByModuleNUserAuthorization(lngUserId,this.getModuleValue());
 						}
 						for (Object[] object : reportModList) {
@@ -3701,17 +3702,17 @@ public class ReportBackingBean extends
 		this.setReportName(ReportConst.EMPTY_VAL);
 		getManagedBean().setRptGenBean(rptGenBean);
 		resetReportForm();
-		String language = ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG, 
+		/*String language = ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG, 
 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		//String language = "ms";
+		//String language = "ms";*/
 		List<Object[]> reportModList = null;
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {			
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IPMReportSO.class);
-					if((language!=null)&&(language.equalsIgnoreCase(ReportConst.ENG_LANG))){
+					if((strLanguage!=null)&&(strLanguage.equalsIgnoreCase(ReportConst.ENG_LANG))){
 						reportModList = reportSO.retrieveReportListBySubModule(this.getModuleValue(),this.getReportCategory(),lngUserId);
-					}else if((language!=null)&&(language.equalsIgnoreCase(ReportConst.MALAY_LANG))){
+					}else if((strLanguage!=null)&&(strLanguage.equalsIgnoreCase(ReportConst.MALAY_LANG))){
 						reportModList = reportSO.retrieveMalayReportListBySubModule(this.getModuleValue(),this.getReportCategory(),lngUserId);
 					}
 					//List<Object[]> reportModList = reportSO.retrieveReportListBySubModule(this.getModuleValue(),this.getReportCategory(),lngUserId);
@@ -4837,25 +4838,25 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			reqDTO.setReportCode(getManagedBean().getReportValue());
 			PMReportResDTO rptResDTO = reportSO.retriveReportByrptId(reqDTO);
 			PMReport pmReport = rptResDTO.getPmReportDtls();
-			String language = ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG, 
+			/*String language = ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG, 
  			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-			//String language = "ms";
-			if (null != pmReport) {
+			//String language = "ms";*/	
+		if (null != pmReport) {
 				String label = ReportConst.EMPTY_VAL;
 				if ((null != pmReport.getSubModule())
 						&& (ReportConst.EMPTY_VAL != pmReport.getSubModule())) {
 					/*label = pmReport.getReportTitle() + ReportConst.RPT_EIFON
 							+ pmReport.getSubModule();*/
-					if((language!=null)&&(language.equalsIgnoreCase(ReportConst.ENG_LANG))){
+					if((strLanguage!=null)&&(strLanguage.equalsIgnoreCase(ReportConst.ENG_LANG))){
 						label = pmReport.getReportTitle();
-					}else if((language!=null)&&(language.equalsIgnoreCase(ReportConst.MALAY_LANG))){
+					}else if((strLanguage!=null)&&(strLanguage.equalsIgnoreCase(ReportConst.MALAY_LANG))){
 						label = pmReport.getReportTitleMalay();
 					}					
 					this.setSubModule(pmReport.getSubModule());
 				} else {
-					if((language!=null)&&(language.equalsIgnoreCase(ReportConst.ENG_LANG))){
+					if((strLanguage!=null)&&(strLanguage.equalsIgnoreCase(ReportConst.ENG_LANG))){
 						label = pmReport.getReportTitle();
-					}else if((language!=null)&&(language.equalsIgnoreCase(ReportConst.MALAY_LANG))){
+					}else if((strLanguage!=null)&&(strLanguage.equalsIgnoreCase(ReportConst.MALAY_LANG))){
 						label = pmReport.getReportTitleMalay();
 					}
 				}
