@@ -9203,7 +9203,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				CmType typeObj = null;
 				if(unspsc.getCmType()!=null && unspsc.getCmType().size()>0){
 					for(CmType a : unspsc.getCmType()){
-						if(a.getTypeCode().equals("00")){
+						if(a.getTypeCode().equals("000")){
 							typeObj = a;
 							break;
 						}
@@ -9211,7 +9211,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 				}else{
 					typeObj = new CmType();
-					typeObj.setTypeCode("00");
+					typeObj.setTypeCode("000");
 					typeObj.setTypeName("N/A");
 					typeObj.setUnspscId(unspsc);
 					codeReqDTO.setCmType(typeObj);
@@ -9223,7 +9223,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					brandObj = unspsc.getCmBrand().get(0);
 				else{
 					brandObj = new CmBrand();
-					brandObj.setBrandCode("000");
+					brandObj.setBrandCode("00");
 					brandObj.setBrandName("N/A");
 					brandObj.setUnspscId(unspsc);
 					codeReqDTO.setCmBrand(brandObj);
