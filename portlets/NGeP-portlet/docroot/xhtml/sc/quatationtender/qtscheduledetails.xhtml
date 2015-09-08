@@ -107,7 +107,7 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.proposal.validity.until']}" /></td>
 				<td><p:inputText id="proposalvalidityid"
-						value="#{qTScheduleDetailBackingBean.managedBean.proposalValidityUntil}"
+						value="#{qTScheduleDetailBackingBean.managedBean.qt.proposalValidityEndDate}"
 						readonly="true" disabled="true"
 						style="width: 111px;margin-top:5px;">
 						<f:convertDateTime
@@ -311,10 +311,10 @@
 										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 										label="#{lbl['lbl.sc.post.code']}"
 										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.postcode}"
-										size="30" maxlength="10" >
-											<p:ajax event="blur" partialSubmit="true" process="@this"
-												listener="#{qTScheduleDetailBackingBean.validatePostcode}" />
-										</p:inputText></td>
+										size="30" maxlength="10">
+										<p:ajax event="blur" partialSubmit="true" process="@this"
+											listener="#{qTScheduleDetailBackingBean.validatePostcode}" />
+									</p:inputText></td>
 								<td><p:message id="samplepostpost1Msg" for="samplepost1"
 										display="icon" /></td>
 							</tr>
@@ -403,8 +403,7 @@
 						value="#{qTScheduleDetailBackingBean.managedBean.deskOfficerAdmin}"
 						var="appName" itemLabel="#{appName.userName}"
 						itemValue="#{appName.userId}" />
-					<p:ajax event="change"  process="doaaUserId"
-						update="doaaUserId"
+					<p:ajax event="change" process="doaaUserId" update="doaaUserId"
 						listener="#{qTScheduleDetailBackingBean.retrievePmuserName(deskofficeradmin,rowIndex)}" />
 				</p:selectOneMenu>
 			</p:column>
