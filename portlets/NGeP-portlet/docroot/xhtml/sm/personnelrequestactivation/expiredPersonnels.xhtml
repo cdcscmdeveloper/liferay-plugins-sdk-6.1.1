@@ -70,7 +70,7 @@
 			<p:panel style="border: none;">
 				<table style="width: 100%">
 					<tr><td><p:commandButton value="#{lbl['lbl.sm.button.resend.activation']}" oncomplete="confirmDialog.show();" 
-								style="float:right;" disabled="#{empty bb.expiredActivationPersonnels}"/></td></tr>
+								style="float:right;" disabled="#{empty bb.expiredActivationPersonnels}" update="@form"/></td></tr>
 				</table>
 			</p:panel>
 		</h:panelGrid>
@@ -84,7 +84,7 @@
 					</tr>
 				</table>
 			</p:outputPanel>
-			<div align="center">
+			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();"
 					action="#{bb.resendActivation}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDialog.hide();" />
