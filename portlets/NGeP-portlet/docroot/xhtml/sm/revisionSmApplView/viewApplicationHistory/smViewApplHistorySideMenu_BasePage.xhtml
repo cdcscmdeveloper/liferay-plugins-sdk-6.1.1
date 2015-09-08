@@ -23,11 +23,10 @@
 		<p:outputPanel id="supplierProfilePanelId">
 			<c:if test="#{viewSmApplBackingBean.managedBean.reviewApplicationExist}">
 			
+				<ui:include src="/xhtml/sm/shared/applViewOnlyPages/backButtonAndUrl.xhtml" />
 				<ui:include src="/xhtml/sm/shared/applViewOnlyPages/applicationHistoryHeaderInfo.xhtml" />
 				
 				<ac:smPanel id="tt">
-					
-					<ui:include src="/xhtml/sm/shared/applViewOnlyPages/backButtonAndUrl.xhtml" />
 					
 					<p:messages id="messages" showDetail="true" closable="false" showSummary="false" />
 					
