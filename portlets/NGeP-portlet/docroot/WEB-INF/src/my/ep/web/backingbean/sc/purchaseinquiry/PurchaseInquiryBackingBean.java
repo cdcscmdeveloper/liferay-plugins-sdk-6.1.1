@@ -143,7 +143,6 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
     	List<Long> cmSupplieritemIds = null;
     	ScRequestSupplierItem requestSupplierItem = getManagedBean().getScRequestSupplierItem();
     	ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICatalogueSO.class);
-    	IPrInquirySO prInquirySO = (IPrInquirySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
     	List<ScRequestSupplierItem> supplierItems = new ArrayList<ScRequestSupplierItem>();
 
     	CatalogueReqDTO catReqDTO = new CatalogueReqDTO();
@@ -178,14 +177,13 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
     	scPrInquiry.setCreatedDate(new Timestamp(System.currentTimeMillis()));
     	scPrInquiry.setDayToResponse(ParameterConst.DEFAULT_RESP_DAYS); // by default days
     	scPrInquiry.setDateToResponse(calcDayToResponse(scPrInquiry));
-    	scPrInquiry.setPrInquiryNo(prInquirySO.generatePrInquiryNo());
 
-    	// TODO check supplier is government seller or not 
+    	// check supplier is government seller or not 
     	ScRequestNoteDtl requestNoteDtl =  getManagedBean().getRequestNoteDtl();
     	PmParameter pmParameter = new PmParameter();
     	requestNoteDtl.setJustificationType(pmParameter);
 
-    	// TODO check supplier is government seller or not 
+    	// check supplier is government seller or not 
     	if(isGovtSellerOrNot(cmSupplierItem)){
     		pmParameter.setParameterCode(ParameterConst.PROC_TYPE_G2G);
     		requestNoteDtl.setProcurementType(pmParameter);
@@ -213,7 +211,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
     			}
     			requestSupplierItem.setSupplierItemPrices(createScSupplierItemPrices(requestSupplierItem, cmPricings ,Boolean.FALSE));
     		}
-    		// TODO PriceType drop down list in AddToCart
+    		// PriceType drop down list in AddToCart
     		getManagedBean().setPriceTypes(getPriceTypeDropdownValues(ParameterTypeConst.PRICE_TYPE, priceTypes));
     	}
 
@@ -329,7 +327,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
     			scPrInquiry.getRemarks(), 
     			ScPRIRemark.class));
 
-    	//TODO default value to  price type drop down listing
+    	//default value to  price type drop down listing
     	getManagedBean().setPriceType(ParameterConst.PRICE_TYPE_STANDARD);
     	getManagedBean().setScPrInquiry(scPrInquiry);
     	priceTypeChangeListener();

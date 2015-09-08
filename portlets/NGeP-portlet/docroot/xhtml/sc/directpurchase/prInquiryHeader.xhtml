@@ -9,15 +9,16 @@
 		<div align="left" class="header-info">
 			<table style="width: 100%">
 				<tr>
-					<td style="width: 9%"><h:outputLabel
+					<td style="width: 8%"><h:outputLabel
 							value="#{lbl['lbl.sc.price.inquiry.purchase.inquiry.no']}" /></td>
 					<td class="header-info-text">
-						#{purchaseInquiryBackingBean.managedBean.scPrInquiry.prInquiryNo}</td>
-					<td style="width: 8%"><h:outputLabel
+					  #{purchaseInquiryBackingBean.managedBean.scPrInquiry.prInquiryNo == null ? lbl['lbl.sc.system.generated'] : purchaseInquiryBackingBean.managedBean.scPrInquiry.prInquiryNo}
+					</td>
+					<td style="width: 6%"><h:outputLabel
 							value="#{lbl['lbl.sc.price.inquiry.header.ptj.name']}" /></td>
 					<td class="header-info-text">
 						#{purchaseInquiryBackingBean.managedBean.pmOrgProfile.orgName}</td>
-					<td style="width: 10%"><h:outputLabel
+					<td style="width: 6%"><h:outputLabel
 							value="#{lbl['lbl.sc.price.inquiry.status']}" /></td>
 					<td class="header-info-text">
 						#{purchaseInquiryBackingBean.getStatusDescById(purchaseInquiryBackingBean.managedBean.priStatus.statusId)}

@@ -11,14 +11,15 @@
 					<td style="width:9%"><h:outputLabel
 							value="#{lbl['lbl.sc.request.note.header.rn.no']}" /></td>
 					<td class="header-info-text">
-						#{requestNoteBackingBean.managedBean.requestNote.requestNoteNo}</td>
+						#{requestNoteBackingBean.managedBean.requestNote.requestNoteNo == null ? lbl['lbl.sc.system.generated'] : requestNoteBackingBean.managedBean.requestNote.requestNoteNo}
+				   </td>
 
-					<td style="width:5%"><h:outputLabel
+					<td style="width:3%"><h:outputLabel
 							value="#{lbl['lbl.sc.request.note.header.ptj.name']}" /></td>
 					<td class="header-info-text">
 						#{requestNoteBackingBean.managedBean.requestNote.pmOrgProfile.orgName}
 					</td>
-					<td style="width:7%"><h:outputLabel
+					<td style="width:5%"><h:outputLabel
 							value="#{lbl['lbl.sc.request.note.header.method']}" /></td>
 					<td class="header-info-text">
 					 <h:panelGroup
@@ -37,12 +38,12 @@
 							</p:commandLink>
 						</h:panelGroup></td>
 
-					<td style="width: 9%"><h:outputLabel
+					<td style="width: 5%"><h:outputLabel
 							value="#{lbl['lbl.sc.request.note.created.by']}" /></td>
 					<td class="header-info-text">
 						#{requestNoteBackingBean.managedBean.createdBy}</td>
 
-					<td style="width: 8%"><h:outputLabel
+					<td style="width: 3%"><h:outputLabel
 							value="#{lbl['lbl.sc.request.note.header.status']}" /></td>
 					<td class="header-info-text">
 						#{requestNoteBackingBean.getStatusDescById(requestNoteBackingBean.managedBean.requestNoteStatus.statusId)}
