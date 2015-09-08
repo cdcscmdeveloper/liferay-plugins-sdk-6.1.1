@@ -2206,7 +2206,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 	}
 
 
-	public void preRenderExtensionMaintenanceView() {
+	/*public void preRenderExtensionMaintenanceView() {
 
 		System.out.println("**********preRenderExtensionView**************");
 		BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
@@ -2244,7 +2244,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		this.getManagedBean().setTaskId(taskId);
 
 	}
-
+*/
 	public void preRenderExtensionView() {
 
 		System.out.println("**********preRenderExtensionView**************");
