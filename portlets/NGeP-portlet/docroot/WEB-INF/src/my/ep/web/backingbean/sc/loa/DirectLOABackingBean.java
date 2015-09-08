@@ -2146,40 +2146,7 @@ public class DirectLOABackingBean extends
 		return items;
 	}
 
-	/**
-	 * Success message.
-	 * 
-	 * @param messageCode
-	 *            the message code
-	 * @param docType
-	 *            the doc type
-	 * @param docTypeCode
-	 *            the doc type code
-	 * @param docNo
-	 *            the doc no
-	 * @param isAcknowledgeReq
-	 *            the is acknowledge req
-	 */
-	private void successMessage(String messageCode, String docType,
-			String docTypeCode, String docNo, boolean isAcknowledgeRequired) {
-		FacesContext.getCurrentInstance().addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(
-								messageCode,
-								new String[] {
-										getParameterDesc(docType, docTypeCode),
-										docNo },
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
-
-		if (isAcknowledgeRequired) {
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
-		}
-
-	}
+	
 
 	/**
 	 * Debug logger.
