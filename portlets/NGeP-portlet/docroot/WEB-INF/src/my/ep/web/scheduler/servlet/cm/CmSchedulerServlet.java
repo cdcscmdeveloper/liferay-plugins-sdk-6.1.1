@@ -8,6 +8,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.web.integration.common.BatchLogger;
 import my.ep.web.scheduler.constants.cm.CmSchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
+import my.ep.web.scheduler.job.cm.CmUpdateExpiredItemJob;
 import my.ep.web.scheduler.job.eperunding.EperundingBatchIntegrationJob;
 import my.ep.web.scheduler.job.gfmas.GfmasBatchFlInboundJob;
 import my.ep.web.scheduler.job.gfmas.GfmasBatchPmInboundJob;
@@ -88,5 +89,12 @@ public class CmSchedulerServlet extends HttpServlet {
 						CmSchedulerConstants.NOTIFICATION_INTEGRATION_JOB_GROUP),
 						SmNotificationJob.class, CmSchedulerConstants.NOTIFICATION_INTEGRATION_CONTINUOUS_JOB_DESC,
 						EpPropertiesUtils.getInstance().getProperty("notification.sm.outbound"));*/
+					
+					///CM Expired Item
+						EpSchedulerHelper.scheduleJob(new JobKey(
+								CmSchedulerConstants.CM_EXPIRED_ITEM_TIMER_JOB,
+								CmSchedulerConstants.CM_EXPIRED_ITEM_TIMER_JOB_GROUP),
+								CmUpdateExpiredItemJob.class, CmSchedulerConstants.CM_EXPIRED_ITEM_TIMER_CONTINUOUS_JOB_DESC,
+								CmSchedulerConstants.CM_EXPIRED_ITEM_TIMER);
 	}
 }
