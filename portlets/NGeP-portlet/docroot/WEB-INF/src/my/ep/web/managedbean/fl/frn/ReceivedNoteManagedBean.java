@@ -110,11 +110,13 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private boolean gfmasError=false;
 	private String gfmasErrorContent;
 	private String bpmTaskName;
+	private boolean lastFRNTaxInv;;
 	
 	private boolean acknowledged;
 	
 	/** The from page url. */
 	private String fromPageUrl;
+	
 	
 	/**
 	 * Gets the fl remark.
@@ -614,6 +616,20 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	 */
 	public void setAcknowledged(boolean acknowledged) {
 		this.acknowledged = acknowledged;
+	}
+
+	/**
+	 * @return the lastFRNTaxInv
+	 */
+	public boolean isLastFRNTaxInv() {
+		return lastFRNTaxInv;
+	}
+
+	/**
+	 * @param lastFRNTaxInv the lastFRNTaxInv to set
+	 */
+	public void setLastFRNTaxInv(boolean lastFRNTaxInv) {
+		this.lastFRNTaxInv = lastFRNTaxInv;
 	}
 
 }
