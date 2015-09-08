@@ -15,15 +15,19 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.service.fl.IFulfilmentDocumentSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.fl.FlDocumentReqDTO;
 import my.ep.dto.fl.FlDocumentResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.fl.VFlDocument;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -68,6 +72,7 @@ public class FlTrackingDiaryManagedBean extends BaseManagedBean {
 	
 	private PmOrgProfile ptj;
 	private PmOrgProfile ministry;
+	private PmUser pmUser;
 	
 	private VFlDocument vFlDocument;
 
@@ -130,9 +135,47 @@ public class FlTrackingDiaryManagedBean extends BaseManagedBean {
 				if(getSearchFinancialYear()!= 0){
 					reqDTO.setFinancialYear(getSearchFinancialYear());
 				}
+				if( getPtj() != null){
+					reqDTO.setPtj(getPtj());
+				}
+				if(getMinistry() != null){
+					reqDTO.setMinistry(getMinistry());
+				}
+				if(isFlFulfilmentSupplier()){
+					reqDTO.setUserRole(RoleCode.BASIC_SUPPLIER_USER.value());
+					FacesScopes facesScopes = new FacesScopes();
+					setPmUser(facesScopes.getUserSessionBean());
+					if (getPmUser().getUserId() == null) {
+						throw new IllegalArgumentException("userId cannot be null");
+					}						
+					SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+					supplierSearchReqDTO.setUserId(getPmUser().getUserId());
+					ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+					SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO);
+					List<Long> supplierIdList = new ArrayList<Long>();
+					for(SmSupplier smSupplier : smResDTO.getResultBean().getResultList()) {
+						supplierIdList.add(smSupplier.getSupplierId());
+					}
+					if(supplierIdList.size()>0) {
+						reqDTO.setSupplierIdList(supplierIdList);
+					}
+				} else {
+					IUserSO userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+					FacesScopes facesScopes = new FacesScopes();
+					setPmUser(facesScopes.getUserSessionBean());
+					UserReqDTO userReqDTO = new UserReqDTO();
+					userReqDTO.setUserId(getPmUser().getUserId());
+					UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+					Long orgProfileId = null;
+					if(userResDTO.getUserOrgList()!=null && userResDTO.getUserOrgList().size()>0) {
+						orgProfileId = userResDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId();
+					}
+					reqDTO.setOrgProfileId(orgProfileId);
+				}
+				
 				reqDTO.setUserRole(getUserRole());
 				
-				reqDTO.setOrgProfileId(getOrgProfile());
+				//reqDTO.setOrgProfileId(getOrgProfile());
 				reqDTO.setOrgProfileList(getNaikTarafChild(reqDTO.getOrgProfileId()));
 				IFulfilmentDocumentSO flDocumentSO = (IFulfilmentDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentDocumentSO.class);
 				FlDocumentResDTO resDTO = flDocumentSO.searchFulfilmentDoc(reqDTO);
@@ -148,7 +191,7 @@ public class FlTrackingDiaryManagedBean extends BaseManagedBean {
 			return null;
 		}
 		
-		private Long getOrgProfile() {
+		/*private Long getOrgProfile() {
 			FacesScopes facescope = new FacesScopes();
 			PmUser user = facescope.getUserSessionBean();
 			UserReqDTO uReqDTO = new UserReqDTO();
@@ -159,7 +202,7 @@ public class FlTrackingDiaryManagedBean extends BaseManagedBean {
 				return uResDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId();
 			}
 			return null;
-		}
+		}*/
 		
 		private List<Long> getNaikTarafChild(Long orgProfileId) {
 			IOrgProfileSO orgProfileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
@@ -817,6 +860,18 @@ public class FlTrackingDiaryManagedBean extends BaseManagedBean {
 	 */
 	public void setMinistry(PmOrgProfile ministry) {
 		this.ministry = ministry;
+	}
+	/**
+	 * @return the pmUser
+	 */
+	public PmUser getPmUser() {
+		return pmUser;
+	}
+	/**
+	 * @param pmUser the pmUser to set
+	 */
+	public void setPmUser(PmUser pmUser) {
+		this.pmUser = pmUser;
 	}
 
 }
