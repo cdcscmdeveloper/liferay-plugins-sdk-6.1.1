@@ -181,6 +181,7 @@
 		<p:dialog widgetVar="eventDialog" id="calEventDlg" modal="true"
 				header="#{lbl['lbl.pm.cal.public.haliday.details']}" width="500"
 				height="250" showEffect="clip" hideEffect="clip">
+				<p:ajax event="close" update="schedule" listener="#{calendarBackingBean.changeWeekEndColor}" />
 				<p:outputPanel>					
 				<h:panelGroup id="eventDetails">
 					<p:messages id="calendarMessages" showDetail="true" showSummary="false" autoUpdate="false"
@@ -252,7 +253,7 @@
 					<br />
 					<div style="float: right;">
 						<p:commandButton value="#{lbl['lbl.btn.ok']}"
-							oncomplete="errDialog.hide()" update="calErrDlg" />
+							oncomplete="errDialog.hide()"  process="@this" update="@this" />
 					</div>
 
 				</h:panelGroup>
