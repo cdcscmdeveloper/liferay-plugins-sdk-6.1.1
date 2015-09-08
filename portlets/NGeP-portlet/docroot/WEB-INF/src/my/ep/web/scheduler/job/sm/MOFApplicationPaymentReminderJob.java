@@ -15,37 +15,32 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-public class SoftCertRenewalReminder implements Job {
-	public static Logger log = EpLogger.getLogger(SoftCertRenewalReminder.class);
+public class MOFApplicationPaymentReminderJob implements Job{
+	public static Logger log = EpLogger.getLogger(MOFApplicationPaymentReminderJob.class);
 	
 	@Override
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
-		List<String> statusCodeLs = new ArrayList<String>();
-		statusCodeLs.add(SmSchedulerConstants.CERT_MODE_NEW);
-		statusCodeLs.add(SmSchedulerConstants.CERT_MODE_RENEW);
-		
 		Date d1 = new Date();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(d1);
-		cal.add(Calendar.DATE, SmSchedulerConstants.SOFTCERT_RENEWAL_DAY);
+		cal.add(Calendar.DATE, SmSchedulerConstants.PAYMENT_REMINDER_DAY);
 		d1 = cal.getTime();
-		List<Date> dateLs = new ArrayList<Date>();
-		dateLs.add(d1);
-		
-		log.info("date1>>>>" + d1);
 		
 		SmSchedulerReqDTO reqDTO = new SmSchedulerReqDTO();
-		reqDTO.setStrStatusCodeLs(statusCodeLs);
-		reqDTO.setDateLs(dateLs);
+		List<Long> statusCodeLs = new ArrayList<Long>();
+		statusCodeLs.add(SmSchedulerConstants.STATUS_PROCESSING_PAYMENT); //Processing Fee
+		statusCodeLs.add(SmSchedulerConstants.STATUS_APPLICATION_PAYMENT); //Application Payment
+		reqDTO.setStatusCodeLs(statusCodeLs);
+		reqDTO.setParamDate(d1);
+		
 		
 		try{
-			SmServiceLookup.getSmSchedulerSO().softcertRenewReminder(reqDTO);
+			SmServiceLookup.getSmSchedulerSO().mofApplicationPaymentReminder(reqDTO);
 		}catch(Exception ex){
 			log.info("********SoftCertRenewalReminder Exception**********" + ex.getMessage());
 		}finally{
 			d1 = null;
 		}
-		
 	}
 
 }
