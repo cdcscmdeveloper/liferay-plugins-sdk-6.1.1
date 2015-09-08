@@ -55,6 +55,8 @@ import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.frn.FlSupplierEvaluation;
 import my.ep.persistence.entity.fl.order.FlDelOrderItem;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
+import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
+import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.pm.common.PmCriteria;
 import my.ep.persistence.entity.pm.common.PmCriteriaDesc;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -222,12 +224,22 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 									MessageUtils.BUNDLE_COMMON_MESSAGES, 
 									new FacesScopes().getUserLocale())));
 				} else {
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(messageId, 
-									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_FULFILMENT_NOTE), 
-									ResourceBundleUtils.getMessage("lbl.fl.frn.product.service",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+resDTO.getFulfilmentNoteNo()}, 
-									MessageUtils.BUNDLE_COMMON_MESSAGES, 
-									new FacesScopes().getUserLocale())));
+					if(getManagedBean().isLastFRNTaxInv()){
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(MessageConst.INFO_745010, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, 
+										ParameterConst.DOCTYPE_FULFILMENT_NOTE),
+										ResourceBundleUtils.getMessage("lbl.fl.frn.product.service",
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+resDTO.getFulfilmentNoteNo()},
+												MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					
+					}else{
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(messageId, 
+										new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_FULFILMENT_NOTE), 
+										ResourceBundleUtils.getMessage("lbl.fl.frn.product.service",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+resDTO.getFulfilmentNoteNo()}, 
+										MessageUtils.BUNDLE_COMMON_MESSAGES, 
+										new FacesScopes().getUserLocale())));
+					}
 				}
 
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
@@ -564,6 +576,22 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			PmStatus status = orderSO.retrieveDelOrderStatus(reqDTO).getPmStatus();
 			if(status==null || status.getStatusId().longValue()!=FulfilmentStatusConst.DO_PENDING_ACKNOWLEDGEMENT) {
 				throw new EpException(MessageConst.ERROR_745068, new String[]{getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderNo()});
+			}
+			BigDecimal sumTotalReceivedQty = BigDecimal.ZERO;
+			BigDecimal sumTotalOrderQty = BigDecimal.ZERO;
+			BigDecimal sumTotalOrderReceivedQty = BigDecimal.ZERO;
+			for(FlFulfilmentNoteItem noteItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()){
+				sumTotalReceivedQty = sumTotalReceivedQty.add(noteItem.getReceivedQty());
+			}
+			for(FlDeliveryAddress delAddr : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+				for(FlFulfilmentItemAddr itemAddr : delAddr.getFlFulfilmentItemAddr()){
+					sumTotalOrderQty = sumTotalOrderQty.add(itemAddr.getOrderedQty());
+					sumTotalOrderReceivedQty = sumTotalOrderReceivedQty.add(itemAddr.getReceivedQty());
+				}
+			}
+			sumTotalReceivedQty = sumTotalOrderReceivedQty.add(sumTotalReceivedQty);
+			if(sumTotalReceivedQty.doubleValue() == sumTotalOrderQty.doubleValue()){
+				getManagedBean().setLastFRNTaxInv(true); 
 			}
 		}
 	}

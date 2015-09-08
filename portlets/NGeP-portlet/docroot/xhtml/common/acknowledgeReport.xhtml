@@ -14,7 +14,7 @@
 			}
 		</script>
 		<p:panel id="acknowledge" header="#{lbl['lbl.acknowledgement.title']}">
-			<p:messages id="ackMsg" showDetail="true" autoUpdate="false" severity="info" />
+			<p:messages id="ackMsg" showDetail="true" autoUpdate="false" severity="info" escape="false"/>
 			<h:outputText value="#{lbl['lbl.txt.view']}" />
 			<p:spacer width="5px" />
 			<p:commandLink ajax="false" value="#{commonBackingBean.managedBean.reportDisplayName}" 
