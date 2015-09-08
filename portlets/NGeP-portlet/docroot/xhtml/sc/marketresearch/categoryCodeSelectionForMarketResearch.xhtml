@@ -1,0 +1,119 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+         <p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
+	<table class="ppTwoTable" style="width: 100%">
+		<tr>
+			<td><h:outputText value="*" styleClass="mandatory" /> <h:outputText
+					style="text-align:left;font-weight: bold;"
+					value="#{lbl['lbl.pm.sr.cat.code.selection']}" /> &#160; <p:graphicImage
+					id="bnti" value="/css/images/design/tooltips.png" /> <p:tooltip
+					id="bntt" for="bnti">
+					<p:outputLabel escape="false"  dir="rtl" 
+						value="#{lbl['lbl.sc.mr.loa.tooltip.category']}" />
+				</p:tooltip></td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><p:selectOneRadio
+					value="#{marketResearchBackingBean.managedBean.selectionType}">
+					<f:selectItem itemLabel="#{lbl['lbl.sc.mr.any.cat']}"
+						itemValue="A" />						
+					<f:selectItem itemLabel="#{lbl['lbl.sc.mr.all.cat']}"
+						itemValue="B" />
+					<p:ajax event="change" onstart="blockWidget.show()" update="openPnlId,marketResearchResult"
+						oncomplete="blockWidget.hide()" />
+				</p:selectOneRadio></td>
+		</tr>
+	</table>
+	<p:panelGrid  styleClass="companyHeaderGrid" style="width: 100%">
+		<p:row >
+			<p:column>
+				<!-- category codes -->
+				<p:dataTable id="openPnlId" var="cateGory" widgetVar="openCodes"
+					value="#{marketResearchBackingBean.managedBean.qtCategoryList}"
+					rowIndexVar="index" rows="10"
+					selection="#{marketResearchBackingBean.managedBean.selectedCategoryList}"
+					rowKey="#{cateGory}">
+
+					<p:column selectionMode="multiple" style="width:1%" />
+
+					<p:column headerText="#{lbl['lbl.sc.category.code']}">
+				#{cateGory.pmCategoryL1.categoryL1Code}#{cateGory.pmCategoryL2.categoryL2Code}#{cateGory.pmCategoryL3.categoryL3Code}
+			</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.main.category']}"
+						style="white-space: normal;">
+						<h:outputText value="#{cateGory.pmCategoryL1.categoryName}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.sub.category']}"
+						style="white-space: normal;">
+						<h:outputText value="#{cateGory.pmCategoryL2.categoryName}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.sub.category.division']}"
+						style="white-space: normal;">
+						<h:outputText value="#{cateGory.pmCategoryL3.categoryName}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.category.type']}">
+						<h:outputText
+							value="#{marketResearchBackingBean.getParameterDesc(cateGory.pmCategoryL3.categoryTypeCode)}" />
+					</p:column>
+
+				</p:dataTable>
+				  <p:spacer width="12px"></p:spacer>
+				<h:panelGroup>
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.add']}" style="width: 5%"
+						process="@this, openPnlId" partialSubmit="true"
+						update="@([id$=catCodePopup])" oncomplete="catCodePopup.show();"
+						action="#{categoryCodeSearchBackingBean.renewSesionObject}" />
+						&#160;
+					<p:commandButton value="#{lbl['lbl.btn.delete']}" style="width: 5%"
+						process="@this, openPnlId" partialSubmit="true"
+						oncomplete="supplierOpencategoryDeletePopUp.show();"
+						update="@([id$=#{supplierOpencategoryDeleteId}])" />
+				</div>
+			</h:panelGroup>
+			</p:column>
+		</p:row>
+	</p:panelGrid>
+	<ui:param name="supplierOpencategoryDeleteId"
+		value="supplierOpencategoryDeleteId" />
+	<ac:confirmationPopup id="#{supplierOpencategoryDeleteId}"
+		widget="supplierOpencategoryDeletePopUp"
+		okAction="marketResearchBackingBean.deleteCategoryCodes" width="400"
+		height="200" title="#{lbl['lbl.sc.category.code']}"
+		content="#{lbl['lbl.sc.dialog.confirm.category.codes']}"
+		update="@([id$=openPnlId])" />
+
+	<ac:categoryCodePopup
+		okAction="marketResearchBackingBean.addNewCategoryAction"
+		update="@([id$=openPnlId])" />
+
+
+	<!-- Buttons -->
+    <p:spacer width="12px"></p:spacer>
+    <h:panelGroup>
+	<div class="ppRightBtn" style="width: 100%">
+		<p:commandButton value="#{lbl['lbl.btn.search']}" style="width: 5%"
+			action="#{marketResearchBackingBean.searchMarketResearch}"
+			update="marketResearchPanel,marketResearchResult"	/>
+		&#160;
+		<p:commandButton value="#{lbl['lbl.btn.reset']}" style="width: 5%"
+			action="#{marketResearchBackingBean.resetMarketResearch}"
+			process="@this" partialSubmit="true" update="marketResearchPanel,marketResearchResult" />	
+	</div>
+   </h:panelGroup>
+</ui:composition>

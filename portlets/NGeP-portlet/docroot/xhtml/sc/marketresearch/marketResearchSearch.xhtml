@@ -1,0 +1,72 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel id="marketResearchPanel"
+		header="#{lbl['lbl.sc.market.research.search.location']}"
+		toggleable="false">
+
+		<table cellspacing="100%" style="width: 100%;">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.mr.procurement.type']}"
+						style="width:115px;text-align:left" /> <p:outputLabel value=" *" style="padding-right:4px"
+						styleClass="mandatory" /></td>
+				<td><p:selectOneMenu style="width:290px" required="true"
+						requiredMessage="#{lbl['lbl.sc.mr.val.proc.type.msg']}"
+						value="#{marketResearchBackingBean.managedBean.procurementType}">
+						<f:selectItems
+							value="#{marketResearchBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.scItemType)}" />
+						<p:ajax event="change" update="openPnlId,marketResearchResult"></p:ajax>
+					</p:selectOneMenu></td>
+
+				<td><p:outputLabel value=" *" style="float:left;padding-right:4px;margin-left: -27px"
+						styleClass="mandatory" /> <p:outputLabel
+						value="#{lbl['lbl.sc.mr.procurement.year']}"
+						style="width:99px;float:left;margin-left: -19px"></p:outputLabel></td>
+				<td><p:inputText required="true" maxlength="4"
+						requiredMessage="#{lbl['lbl.sc.mr.val.proc.year.msg']}"
+						value="#{marketResearchBackingBean.managedBean.procurementYear}"
+						converterMessage="#{lbl['lbl.sc.mr.val.date.error.msg']}"
+						size="13">
+						<f:convertDateTime pattern="yyyy" />
+					</p:inputText></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.mr.procurement.title']}"></p:outputLabel></td>
+				<td><p:inputTextarea id="titleId"
+						value="#{marketResearchBackingBean.managedBean.procTitle}"
+						maxlength="1000" rows="5" style="width:281px;" autoResize="false" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.mr.loa.tooltip.title']}" /></td>
+				<td><table>
+						<tr>
+							<td style="padding: 13px"><p:outputLabel
+									value="#{lbl['lbl.sc.mr.item.name']}"></p:outputLabel></td>
+							<td><p:inputTextarea id="itemId"
+									value="#{marketResearchBackingBean.managedBean.itemName}"
+									maxlength="2000" rows="2" autoResize="false"
+									style="width:270px;height:27px;" size="70" /> <ac:iconTooltip
+									value="#{lbl['lbl.sc.mr.loa.tooltip.item']}" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sc.mr.specification']}"></p:outputLabel></td>
+							<td><p:inputTextarea id="speciId"
+									value="#{marketResearchBackingBean.managedBean.specification}"
+									maxlength="1000" rows="2" style="width:270px;height:27px;"
+									autoResize="false" size="70" /> <ac:iconTooltip
+									value="#{lbl['lbl.sc.mr.loa.tooltip.specification']}" /></td>
+
+						</tr>
+					</table></td>
+			</tr>
+		</table>
+		<p:spacer width="12px"></p:spacer>
+		<ui:include
+			src="/xhtml/sc/marketresearch/categoryCodeSelectionForMarketResearch.xhtml" />
+	</p:panel>
+
+</ui:composition>

@@ -1,0 +1,61 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:outputPanel id="marketResearchResult">
+		<p:panel id="researchdetails"
+			header="#{lbl['lbl.sc.mr.search.result']}" toggleable="true">
+			<p:dataTable id="marketdetailsId"
+				rowKey="#{scMarketData.createdDate}" rows="10" lazy="true"
+				value="#{marketResearchBackingBean.searchMarketResearch}"
+				width="100%" var="scMarketData">
+
+				<ac:paginator for="marketdetailsId"></ac:paginator>
+
+				<p:column>
+					<f:facet name="header">
+					#{lbl['lbl.sc.mr.loa.ack.date']}
+				</f:facet>
+					<h:outputText value="#{scMarketData[0]}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+					#{lbl['lbl.sc.mr.loa.sup.tech']}    
+				</f:facet>					
+						<h:outputText value="#{scMarketData[1]}" rendered="#{scMarketData[2] eq 1}" />					
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+					#{lbl['lbl.sc.mr.loa.sup.fin']} 
+				</f:facet>					
+						<h:outputText value="#{scMarketData[1]}" rendered="#{scMarketData[2] eq 2}" />					
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+					#{lbl['lbl.sc.mr.loa.action']}
+				</f:facet>
+				<!-- 	<h:outputText value="#{pmBasicCategory.basicCategoryL3desc}" /> -->
+				</p:column>
+
+				<!-- <p:column width="7%" headerText="#{lbl['lbl.pm.action']}">
+					<p:commandLink partialSubmit="true" process="@this"
+						action="#{categoryBackingBean.deleteBasicCategory(pmBasicCategory)}"
+						update="groupdetailsId">
+						<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+					</p:commandLink>
+				</p:column> -->
+
+			</p:dataTable>
+
+
+		</p:panel>
+	</p:outputPanel>
+
+</ui:composition>
