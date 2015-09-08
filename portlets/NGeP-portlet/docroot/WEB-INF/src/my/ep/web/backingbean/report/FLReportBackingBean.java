@@ -25,7 +25,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	 */
 	public void enableCriteriaVariablesByReportByFL(ReportsGenerateBean rptGenBean,	List<String> authoriztionList){
 		
-	switch (getManagedBean().getReportValue()) {
+	switch (getManagedBean().getReportValue().trim()) {
 		case ReportConst.CON_REQ_RPT_MIN_VAL:			
 			rptGenBean.setFlPtjView(true);
 			rptGenBean.setFlRequisitionerView(true);

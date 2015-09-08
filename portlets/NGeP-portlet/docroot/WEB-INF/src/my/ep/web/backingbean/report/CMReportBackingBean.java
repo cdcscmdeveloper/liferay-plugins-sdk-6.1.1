@@ -24,7 +24,7 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	 */
 	public void criteriaVariablesByReportByCM(ReportsGenerateBean rptGenBean, List<String> authoriztionList,List<String> paramList){
 		
-		switch (getManagedBean().getReportValue()) {		
+		switch (getManagedBean().getReportValue().trim()) {		
 	        case ReportConst.LST_PUB_CAT_ITM_RPT_VAL:
 	        	rptGenBean.setCmItemTypeView(true);
 				rptGenBean.setCmUnspscCodeView(true);

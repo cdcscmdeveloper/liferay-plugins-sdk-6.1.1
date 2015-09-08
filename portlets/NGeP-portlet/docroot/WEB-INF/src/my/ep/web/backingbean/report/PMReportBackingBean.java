@@ -21,7 +21,7 @@ public class PMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	 *Enable PM module criteria by report name 
 	 */
 	public void enableCriteriaVariablesByReportByPM(ReportsGenerateBean rptGenBean,	List<String> authoriztionList){
-		switch (getManagedBean().getReportValue()) {
+		switch (getManagedBean().getReportValue().trim()) {
 		
 		case ReportConst.PM_LIST_OF_FINACIAL_INSTITUTIONS_RPT_VAL:		        	
 				rptGenBean.setPmServiceTypeView(true);

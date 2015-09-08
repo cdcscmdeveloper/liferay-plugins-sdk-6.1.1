@@ -24,7 +24,7 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	 */
 	public void enableCriteriaVariablesByReportByCT(ReportsGenerateBean rptGenBean, List<String> authoriztionList){
 		
-		switch (getManagedBean().getReportValue()) {		
+		switch (getManagedBean().getReportValue().trim()) {		
 	        case ReportConst.CT_LST_OF_CONTRACT_USERS_ALL_RPT_VAL:
 	        	rptGenBean.setCtContractNoView(true);
 	        	rptGenBean.setCtPhysicalContractNoView(true);
