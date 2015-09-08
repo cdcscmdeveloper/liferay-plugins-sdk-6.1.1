@@ -130,7 +130,7 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 				messageId = MessageConst.INFO_700008;
 			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-				messageId = MessageConst.INFO_700007;
+				messageId = MessageConst.INFO_745011;
 			}
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 					FacesMessage.SEVERITY_INFO, null,
