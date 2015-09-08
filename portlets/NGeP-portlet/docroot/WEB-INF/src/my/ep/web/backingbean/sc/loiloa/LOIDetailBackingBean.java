@@ -1859,7 +1859,8 @@ public class LOIDetailBackingBean extends
 			if (resDTO.isSuccessful()) {
 				scLoi = resDTO.getScLoi();
 				reloadLOI(scLoi);
-				successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_INTENT, scLoi.getLoiNo(), Boolean.FALSE);
+				successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES, 
+						ParameterConst.DOCTYPE_LETTER_OF_INTENT, scLoi.getLoiNo(), Boolean.FALSE);
 			}
 
 		} finally {
@@ -2075,7 +2076,7 @@ public class LOIDetailBackingBean extends
 
 				successMessage(MessageConst.INFO_700005,
 						ParameterTypeConst.DOCUMENT_TYPES,
-						ParameterConst.DOCTYPE_LETTER_OF_INTENT, qtNo);
+						ParameterConst.DOCTYPE_LETTER_OF_INTENT, qtNo, Boolean.TRUE);
 			}
 		} finally {
 			// iqtAwardSO = null;
@@ -2186,7 +2187,7 @@ public class LOIDetailBackingBean extends
 
 				successMessage(messageCode, ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_LETTER_OF_INTENT,
-						scLoi.getLoiNo());
+						scLoi.getLoiNo(), Boolean.TRUE);
 			}
 		} finally {
 			// iqtAwardSO = null;
@@ -2380,7 +2381,7 @@ public class LOIDetailBackingBean extends
 				successMessage(MessageConst.INFO_700005,
 						ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_MULTIPLE_LOI, scQtFinalization
-								.getScQt().getQtNo());
+								.getScQt().getQtNo(), Boolean.TRUE);
 			}
 
 		} finally {
@@ -4766,36 +4767,6 @@ public class LOIDetailBackingBean extends
 	 */
 	public void setFlag(boolean flag) {
 		this.flag = flag;
-	}
-	
-	
-	/**
-	 * Success message.
-	 *
-	 * @param messageCode the message code
-	 * @param docType the doc type
-	 * @param docTypeCode the doc type code
-	 * @param docNo the doc no
-	 * @param isAcknowledgeRequired the is acknowledge required
-	 */
-	private void successMessage(String messageCode, String docType,
-			String docTypeCode, String docNo , boolean isAcknowledgeRequired) {
-		FacesContext.getCurrentInstance().addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(
-								messageCode,
-								new String[] {
-										getParameterDesc(docType, docTypeCode),
-										docNo },
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
-		
-		if(isAcknowledgeRequired){
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler()
-			.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
-		}
 	}
 	
 	/**

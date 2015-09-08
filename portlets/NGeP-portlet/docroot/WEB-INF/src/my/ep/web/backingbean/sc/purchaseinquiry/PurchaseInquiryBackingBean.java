@@ -595,7 +595,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 			if (prInquiryResDTO.isSuccessful()) {
 				ScPrInquiry scPrInquiry = prInquiryResDTO.getPrInquiryDetail();
 				successMessage(MessageConst.INFO_700026,ParameterTypeConst.DOCUMENT_TYPES,
-						ParameterConst.DOCTYPE_PURCHASE_INQUIRY,scPrInquiry.getPrInquiryNo());
+						ParameterConst.DOCTYPE_PURCHASE_INQUIRY,scPrInquiry.getPrInquiryNo(), Boolean.TRUE);
 				// clear data
 				super.renewSesionObject();
 
@@ -656,7 +656,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		if(resDTO.isSuccessful()){
 			ScPrInquiry scPrInquiry = resDTO.getPrInquiryDetail();
 			successMessage(MessageConst.INFO_700026,ParameterTypeConst.DOCUMENT_TYPES,
-					ParameterConst.DOCTYPE_PURCHASE_INQUIRY,scPrInquiry.getPrInquiryNo());
+					ParameterConst.DOCTYPE_PURCHASE_INQUIRY,scPrInquiry.getPrInquiryNo(), Boolean.TRUE);
 			// clear data
 			super.renewSesionObject();
 		}else{
@@ -884,7 +884,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 
 			if(resDTO.isSuccessful()){
 				 successMessage(MessageConst.INFO_700010,ParameterTypeConst.DOCUMENT_TYPES,
-							ParameterConst.DOCTYPE_PURCHASE_INQUIRY,getManagedBean().getScPrInquiry().getPrInquiryNo());
+							ParameterConst.DOCTYPE_PURCHASE_INQUIRY,getManagedBean().getScPrInquiry().getPrInquiryNo(), Boolean.TRUE);
 			} else{
 				throw new EpException(MessageConst.ERROR_700020);
 			}
