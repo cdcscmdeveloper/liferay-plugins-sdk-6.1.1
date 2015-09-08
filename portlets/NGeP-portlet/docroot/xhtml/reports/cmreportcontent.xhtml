@@ -18,8 +18,8 @@
 									<p:outputLabel value="#{lbl['lbl.rpt.itemType']}" style="margin-top:5px;width:160px;margin-left:-32px;"/>									
 									<p:selectOneMenu value="#{reportBackingBean.cmItemType}" style="margin-top:5px;width:150px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.itmProduct']}" itemValue="#{lbl['lbl.rpt.itmProduct']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.itmService']}" itemValue="#{lbl['lbl.rpt.itmService']}"></f:selectItem>	
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.productLabel']}" itemValue="#{lbl['lbl.rpt.itmProduct']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.serviceLabel']}" itemValue="#{lbl['lbl.rpt.itmService']}"></f:selectItem>	
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																				
 									</p:selectOneMenu>
 									</c:if>			
@@ -27,8 +27,8 @@
 									<h:outputLabel value="#{lbl['lbl.rpt.itemStatus']}" style="margin-top:5px;width:160px;"/>									
 									<p:selectOneMenu value="#{reportBackingBean.cmItemStatus}" style="margin-top:5px;width:150px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.itmActive']}" itemValue="#{lbl['lbl.rpt.itmActive']}"></f:selectItem>
-										<f:selectItem  itemLabel="#{lbl['lbl.rpt.itmInactive']}" itemValue="#{lbl['lbl.rpt.itmInactive']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.activeLabel']}" itemValue="#{lbl['lbl.rpt.itmActive']}"></f:selectItem>
+										<f:selectItem  itemLabel="#{lbl['lbl.rpt.drpdown.inactiveLabel']}" itemValue="#{lbl['lbl.rpt.itmInactive']}"></f:selectItem>
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																							
 									</p:selectOneMenu>
 									</c:if>			
@@ -81,8 +81,8 @@
 									<p:outputLabel value="#{lbl['lbl.rpt.SUPPORADMIN']}" style="margin-top:5px;width:160px;" />			
 									<p:selectOneMenu value="#{reportBackingBean.cmSupplOrAdmin}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.SUPPLR']}" itemValue="#{lbl['lbl.rpt.SUPPLR']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.CATOLOGUEADMIN']}" itemValue="#{lbl['lbl.rpt.CATOLOGUEADMIN']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.supplierLabel']}" itemValue="#{lbl['lbl.rpt.SUPPLR']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.catalogueadminLabel']}" itemValue="#{lbl['lbl.rpt.CATOLOGUEADMIN']}"></f:selectItem>
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />														
 									</p:selectOneMenu>
 									</c:if>								
@@ -90,8 +90,8 @@
 									<p:outputLabel value="#{lbl['lbl.rpt.rgstType']}" style="margin-top:5px;width:160px;" />			
 									<p:selectOneMenu value="#{reportBackingBean.cmRegistrationType}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.regBasic']}" itemValue="#{lbl['lbl.rpt.regBasic']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.regMOF']}" itemValue="#{lbl['lbl.rpt.regMOF']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.regBasicLabel']}" itemValue="#{lbl['lbl.rpt.regBasic']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.regMOFLabel']}" itemValue="#{lbl['lbl.rpt.regMOF']}"></f:selectItem>
 										<p:ajax event="change" listener="#{reportBackingBean.enableRegistrationType}" process="@this" 
 											 partialSubmit="true"  update="rptCmCriteriaRegtype,@([id$=Msg])"/>			
 									</p:selectOneMenu>
@@ -100,8 +100,8 @@
 									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.cmGroupOne}" style="margin-top:5px;width:300px;">
 									<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}" itemValue="#{null}"></f:selectItem>										
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.itmtype']}" itemValue="#{lbl['lbl.rpt.itmtype']}"></f:selectItem>										
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.unspsccode']}" itemValue="#{lbl['lbl.rpt.unspsccode']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.itemType']}" itemValue="#{lbl['lbl.rpt.itmtype']}"></f:selectItem>										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.unspscCodeScreen']}" itemValue="#{lbl['lbl.rpt.unspsccode']}"></f:selectItem>
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																			
 									</p:selectOneMenu>
 								  </c:if>
@@ -109,10 +109,10 @@
 									<p:outputLabel value="#{lbl['lbl.rpt.extCode']}" style="margin-top:5px;width:160px;" />			
 									<p:selectOneMenu value="#{reportBackingBean.cmExtentionCode}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.extType']}" itemValue="#{lbl['lbl.rpt.extType']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.extBrand']}" itemValue="#{lbl['lbl.rpt.extBrand']}"></f:selectItem>		
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.extMeasurment']}" itemValue="#{lbl['lbl.rpt.extMeasurment']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.extColour']}" itemValue="#{lbl['lbl.rpt.extColour']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.extTypeScreen']}" itemValue="#{lbl['lbl.rpt.extType']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.extBrandScreen']}" itemValue="#{lbl['lbl.rpt.extBrand']}"></f:selectItem>		
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.extMeasurmentScreen']}" itemValue="#{lbl['lbl.rpt.extMeasurment']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.extColourScreen']}" itemValue="#{lbl['lbl.rpt.extColour']}"></f:selectItem>
 										<p:ajax event="change" listener="#{reportBackingBean.retrieveExtention}" process="@this" partialSubmit="true" update="rptCmExtention,@([id$=Msg])"/>											
 									</p:selectOneMenu>
 									</c:if>	
