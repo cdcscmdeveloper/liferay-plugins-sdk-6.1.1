@@ -10,7 +10,7 @@
 
 		<table style="width: 100%" border="0">
 			<tr>
-				<td valign="top" style="width: 250px;"><h:outputLabel
+				<td valign="top" style="width: 270px;"><h:outputLabel
 						value="#{lbl['lbl.sc.title']}" /></td>
 				<td colspan="3"><p:inputTextarea readonly="true" rows="2"
 						cols="143" style="margin-bottom:5px;width: 80%;"
@@ -170,7 +170,7 @@
 				<tr>
 					<ui:fragment
 						rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '1'}">
-						<td style="width: 250px;"><p:outputLabel
+						<td style="width: 270px;"><p:outputLabel
 								value="#{lbl['lbl.sc.spec.requir.tech.eval']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 
@@ -219,6 +219,20 @@
 					</ui:fragment>
 				</tr>
 				<tr>
+					<td style="white-space: nowrap;"><p:outputLabel
+							value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" />
+						<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
+					<td><p:inputMask id="contractBo" required="true" size="32"
+							mask="9?99" placeHolder="" maxlength="3"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
+							label="#{lbl['lbl.sc.spec.complete.period']}"
+							value="#{specificationBackingBean.managedBean.scQt.contractDuration}"
+							style="text-align:right;margin-bottom:5px;">
+							<p:ajax event="change" process="@this" partialSubmit="true" />
+						</p:inputMask> <p:message id="completionBo" for="contractBo" display="icon"></p:message></td>
+				</tr>
+
+				<tr>
 
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.procurement.category']}" /> <p:outputLabel
@@ -265,7 +279,7 @@
 			rendered="#{(specificationBackingBean.managedBean.scQt.qtType eq 'O' and specificationBackingBean.managedBean.scQt.panel eq 'No' and specificationBackingBean.managedBean.scQt.zonal !='false' and specificationBackingBean.managedBean.scQt.estimatedAmount ne null and specificationBackingBean.managedBean.scQt.estimatedAmount gt 0)}">
 			<table style="width: 100%">
 				<tr>
-					<td style="width: 250px"><p:outputLabel
+					<td style="width: 270px"><p:outputLabel
 							value="#{lbl['lbl.sc.zone.location.level']}" /> <p:outputLabel
 							value="*" styleClass="mandatory"></p:outputLabel></td>
 					<td><p:selectOneMenu id="locationLevels"
