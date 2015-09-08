@@ -8,6 +8,9 @@ import my.ep.factory.EpLogger;
 import my.ep.web.scheduler.constants.sm.SmSchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.scheduler.job.sm.DeletePendingActivationJob;
+import my.ep.web.scheduler.job.sm.MOFApplicationPaymentReminderJob;
+import my.ep.web.scheduler.job.sm.SoftCertRenewalReminderJob;
+import my.ep.web.scheduler.job.sm.SupportingDocumentReminderJob;
 
 import org.apache.log4j.Logger;
 import org.quartz.JobKey;
@@ -29,6 +32,30 @@ public class SmSchedulerServlet extends HttpServlet {
 				DeletePendingActivationJob.class,
 				SmSchedulerConstants.SM_DAILY_DEL_PEND_ACTV_PERSONEL_JOB_DESC,
 				SmSchedulerConstants.SM_DAILY_DEL_PEND_ACTV_TIMER);
+
+		// Sm SoftCert Renewal Reminder Job
+		EpSchedulerHelper.scheduleJob(new JobKey(
+				SmSchedulerConstants.SM_APP_SOFTCERT_RENEW_REMINDER_JOB,
+				SmSchedulerConstants.SM_JOB_GROUP),
+				SoftCertRenewalReminderJob.class,
+				SmSchedulerConstants.SM_APP_SOFTCERT_RENEW_REMINDER_JOB_DESC,
+				SmSchedulerConstants.SM_DAILY_SOFTCERT_RENEWAL_TIMER);
+				
+		// Sm Payment Reminder Job
+		EpSchedulerHelper.scheduleJob(new JobKey(
+				SmSchedulerConstants.SM_DAILY_PAYMENT_REMINDER_TIMER,
+				SmSchedulerConstants.SM_JOB_GROUP),
+				MOFApplicationPaymentReminderJob.class,
+				SmSchedulerConstants.SM_PAYMENT_REMINDER_JOB_DESC,
+				SmSchedulerConstants.SM_DAILY_PAYMENT_REMINDER_TIMER);
+		
+		// Sm App Offline Supporting Documents Reminder
+		EpSchedulerHelper.scheduleJob(new JobKey(
+				SmSchedulerConstants.SM_DAILY_SUPPORTING_DOC_REMINDER_TIMER,
+				SmSchedulerConstants.SM_JOB_GROUP),
+				SupportingDocumentReminderJob.class,
+				SmSchedulerConstants.SM_APP_OFFLINE_SUPPORTING_DOC_REMINDER_DESC,
+				SmSchedulerConstants.SM_DAILY_SUPPORTING_DOC_REMINDER_TIMER);
 
 		log.info("end init sm scheduler servlet....");
 
