@@ -585,7 +585,7 @@ public class LOIDetailBackingBean extends
 					List<ScQtCommitteeActivity> fcActivityList
 								= new ArrayList<ScQtCommitteeActivity>();
 					for (ScQtCommitteeActivity commActivity 
-											: fcActivityList) {
+									: scQtCommittee.getCommitteeActivities()) {
 						if (commActivity.isAttended()) {
 							fcActivityList.add(commActivity);
 						}
