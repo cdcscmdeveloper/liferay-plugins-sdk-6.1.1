@@ -300,15 +300,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    		getManagedBean().setTaskId(taskId);
 	    		getManagedBean().setUserList(userList);
 	    		reloadRequestNote(scRequestNote);
-	    		
-	    		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-	    				FacesMessage.SEVERITY_INFO, null, 
-	    				MessageUtils.getMessage(MessageConst.INFO_700025, 
-	    						new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,ParameterConst.DOCTYPE_REQUEST_NOTE), scRequestNote.getRequestNoteNo()}, 
-	    						MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+	    		successMessage(MessageConst.INFO_700025,ParameterTypeConst.DOCUMENT_TYPES,
+	    				ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo(), Boolean.FALSE);
 	    	} else{
 	    		successMessage(MessageConst.INFO_700025,ParameterTypeConst.DOCUMENT_TYPES,
-	    				ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo());
+	    				ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo(), Boolean.TRUE);
 	    		// clear data
 	    		super.renewSesionObject();
 	    	}
@@ -439,11 +435,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			if (requestNoteResDTO.isSuccessful()) {
 				if(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)){
 					successMessage(MessageConst.INFO_700010,ParameterTypeConst.DOCUMENT_TYPES,
-							ParameterConst.DOCTYPE_REQUEST_NOTE,getManagedBean().getRequestNote().getRequestNoteNo());
+							ParameterConst.DOCTYPE_REQUEST_NOTE,getManagedBean().getRequestNote().getRequestNoteNo(), Boolean.TRUE);
 
 				} else if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome) || outcome.isEmpty()){
 					successMessage(MessageConst.INFO_700005,ParameterTypeConst.DOCUMENT_TYPES,
-							ParameterConst.DOCTYPE_REQUEST_NOTE,getManagedBean().getRequestNote().getRequestNoteNo());
+							ParameterConst.DOCTYPE_REQUEST_NOTE,getManagedBean().getRequestNote().getRequestNoteNo(), Boolean.TRUE);
 				}	
 				// clear data
 				super.renewSesionObject();
@@ -882,28 +878,28 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
 				if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
 					successMessage(MessageConst.INFO_700007, ParameterTypeConst.DOCUMENT_TYPES,
-							ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo());
+							ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo(), Boolean.TRUE);
 
 				} else if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)){
 					successMessage(MessageConst.INFO_700026, ParameterTypeConst.DOCUMENT_TYPES,
-							ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo());
+							ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo(), Boolean.TRUE);
 
 				} else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
 					successMessage(MessageConst.INFO_700009, ParameterTypeConst.DOCUMENT_TYPES,
-							ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo());
+							ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo(), Boolean.TRUE);
 
 				} else if(BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)){
 					successMessage(MessageConst.INFO_700011, ParameterTypeConst.DOCUMENT_TYPES,
-							ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo());
+							ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo(), Boolean.TRUE);
 
 				} else if(BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
 					successMessage(MessageConst.INFO_700008, ParameterTypeConst.DOCUMENT_TYPES,
-							ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo());
+							ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo(), Boolean.TRUE);
 
 					
 				} else if(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)){
 					successMessage(MessageConst.INFO_700010, ParameterTypeConst.DOCUMENT_TYPES,
-							ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo());
+							ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo(), Boolean.TRUE);
 				}	  
 			} else{
 				throw new EpException(MessageConst.ERROR_700020);
