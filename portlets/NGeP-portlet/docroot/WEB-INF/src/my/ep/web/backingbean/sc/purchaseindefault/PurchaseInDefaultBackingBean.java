@@ -459,7 +459,7 @@ public class PurchaseInDefaultBackingBean extends
 				successMessage(MessageConst.INFO_700006,
 						ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT,
-						purchaseInDefault.getPurchaseInDefaultNo());
+						purchaseInDefault.getPurchaseInDefaultNo(), Boolean.TRUE);
 				// clear pid data
 				super.renewSesionObject();
 
@@ -566,21 +566,21 @@ public class PurchaseInDefaultBackingBean extends
 								ParameterTypeConst.DOCUMENT_TYPES,
 								ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT,
 								getManagedBean().getPurchaseInDefault()
-										.getPurchaseInDefaultNo());
+										.getPurchaseInDefaultNo(), Boolean.TRUE);
 					} else if (DPStatusConstants.PID_PENDING_APPROVAL
 							.equals(statusId)) {
 						successMessage(MessageConst.INFO_700007,
 								ParameterTypeConst.DOCUMENT_TYPES,
 								ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT,
 								getManagedBean().getPurchaseInDefault()
-										.getPurchaseInDefaultNo());
+										.getPurchaseInDefaultNo(), Boolean.TRUE);
 					}
 				} else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 					successMessage(MessageConst.INFO_700008,
 							ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT,
 							getManagedBean().getPurchaseInDefault()
-									.getPurchaseInDefaultNo());
+									.getPurchaseInDefaultNo(), Boolean.TRUE);
 				}
 
 			} else {

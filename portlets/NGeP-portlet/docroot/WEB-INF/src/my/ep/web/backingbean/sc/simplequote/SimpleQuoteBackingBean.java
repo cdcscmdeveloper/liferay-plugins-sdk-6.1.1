@@ -1107,31 +1107,12 @@ public class SimpleQuoteBackingBean extends
 					getManagedBean().setDefaultCountryId(defaultCountryId);
 					getManagedBean().setAutoUpdate(autoUpdate);
 					reloadSimpleQuote(scQuote);
-
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_INFO,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.INFO_700025,
-															new String[] {
-																	getParameterDesc(
-																			ParameterTypeConst.DOCUMENT_TYPES,
-																			ParameterConst.DOCTYPE_SIMPLE_QUOTE),
-																	scQuote.getQuoteNo() },
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
+					successMessage(MessageConst.INFO_700025, ParameterTypeConst.DOCUMENT_TYPES, 
+							ParameterConst.DOCTYPE_SIMPLE_QUOTE,scQuote.getQuoteNo(), Boolean.FALSE);
 
 				} else {
-					successMessage(MessageConst.INFO_700025,
-							ParameterTypeConst.DOCUMENT_TYPES,
-							ParameterConst.DOCTYPE_SIMPLE_QUOTE,
-							scQuote.getQuoteNo());
+					successMessage(MessageConst.INFO_700025, ParameterTypeConst.DOCUMENT_TYPES,
+							ParameterConst.DOCTYPE_SIMPLE_QUOTE, scQuote.getQuoteNo(), Boolean.TRUE);
 					// clear SQ data
 					super.renewSesionObject();
 				}
@@ -1887,12 +1868,12 @@ public class SimpleQuoteBackingBean extends
 					successMessage(MessageConst.INFO_700026,
 							ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_SIMPLE_QUOTE,
-							scQuote.getQuoteNo());
+							scQuote.getQuoteNo(), Boolean.TRUE);
 				} else if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)) {
 					successMessage(MessageConst.INFO_700010,
 							ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_SIMPLE_QUOTE,
-							scQuote.getQuoteNo());
+							scQuote.getQuoteNo(), Boolean.TRUE);
 				}
 				// clear SQ data
 				super.renewSesionObject();
@@ -1927,25 +1908,25 @@ public class SimpleQuoteBackingBean extends
 					successMessage(MessageConst.INFO_700009,
 							ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_SIMPLE_QUOTE,
-							getManagedBean().getScQuote().getQuoteNo());
+							getManagedBean().getScQuote().getQuoteNo(), Boolean.TRUE);
 
 				} else if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
 					successMessage(MessageConst.INFO_700011,
 							ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_SIMPLE_QUOTE,
-							getManagedBean().getScQuote().getQuoteNo());
+							getManagedBean().getScQuote().getQuoteNo(), Boolean.TRUE);
 
 				} else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 					successMessage(MessageConst.INFO_700008,
 							ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_SIMPLE_QUOTE,
-							getManagedBean().getScQuote().getQuoteNo());
+							getManagedBean().getScQuote().getQuoteNo(), Boolean.TRUE);
 
 				} else if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)) {
 					successMessage(MessageConst.INFO_700010,
 							ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_SIMPLE_QUOTE,
-							getManagedBean().getScQuote().getQuoteNo());
+							getManagedBean().getScQuote().getQuoteNo(), Boolean.TRUE);
 				}
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);

@@ -731,13 +731,16 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	}
 
 	/**
-	 * @param messageCode
-	 * @param docType
-	 * @param docTypeCode
-	 * @param docNo
+	 * Success message.
+	 *
+	 * @param messageCode the message code
+	 * @param docType the doc type
+	 * @param docTypeCode the doc type code
+	 * @param docNo the doc no
+	 * @param isAcknowledgeRequired the is acknowledge required
 	 */
 	public void successMessage(String messageCode, String docType,
-			String docTypeCode, String docNo) {
+			String docTypeCode, String docNo, boolean isAcknowledgeRequired) {
 		FacesContext.getCurrentInstance().addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
@@ -746,13 +749,15 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 								new String[] {
 										getParameterDesc(docType, docTypeCode),
 										docNo },
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+		
+		if(isAcknowledgeRequired){
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+			.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+		}
 	}
-
 	public void genFile(String uploadDir, UploadedFile file) {
 
 		File dir = new File(uploadDir);
