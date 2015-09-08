@@ -72,7 +72,7 @@
 						</ui:fragment></td>
 					<td><ui:fragment
 							rendered="#{specificationBackingBean.managedBean.scQt.panel ne 'No'}">
-							<p:selectOneMenu style="width:230px;"
+							<p:selectOneMenu style="width:230px;margin-bottom:5px;"
 								value="#{specificationBackingBean.managedBean.scQt.qtType}"
 								disabled="true">
 								<f:selectItems
@@ -105,7 +105,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="procTypeBoCategory" required="true"
 							value="#{specificationBackingBean.managedBean.scQt.procurementTypeCatId.parameterId}"
-							style="margin-bottom:5px;width:209px;"
+							style="margin-bottom:5px;width:230px;"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							label="#{lbl['lbl.sc.procurment.type.category']}">
 							<f:selectItems
