@@ -9,13 +9,13 @@
 		<div align="left" class="header-info">
 			<table style="width:100%">
 				<tr>
-					<td width="6%">
+					<td width="5%">
 						<p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.pid.no']}" />  
 					</td>
 					<td class="header-info-text">
-						#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.purchaseInDefaultNo}
+						 #{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.purchaseInDefaultNo == null ? lbl['lbl.sc.system.generated'] : purchaseInDefaultBackingBean.managedBean.purchaseInDefault.purchaseInDefaultNo}
 					</td>
-					<td width="18%">
+					<td width="20%">
 						<p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.pkp.no']}" />
 					</td>
 					<td class="header-info-text">
@@ -26,7 +26,7 @@
 				          #{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.ctCircularVer.circularNo}
 				      </h:panelGroup>
 				   </td>
-					<td width="5%">
+					<td width="8%">
 						<p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.cat.type']}" />  
 					</td>
 					<td class="header-info-text">
@@ -38,7 +38,7 @@
 				     </ui:fragment>
 				  </td>
 
-					<td style="width: 8%"><h:outputLabel
+					<td style="width: 5%"><h:outputLabel
 							value="#{lbl['lbl.sc.purchase.in.default.status']}" /></td>
 					<td class="header-info-text">
 						#{purchaseInDefaultBackingBean.getStatusDescById(purchaseInDefaultBackingBean.managedBean.pidStatus.statusId)}

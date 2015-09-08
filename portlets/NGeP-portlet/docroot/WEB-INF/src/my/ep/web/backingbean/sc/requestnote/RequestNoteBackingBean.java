@@ -1635,10 +1635,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 		
 		requestSupplierItem.setRequestNoteItem(scRequestItem);
-		if(requestNote.getRequestNoteNo() == null || requestNote.getRequestNoteNo().isEmpty()){
-			requestNote.setRequestNoteNo(getDirectPurchaseSO().generateRequestNoteNo());
-		}
-		
 		scRequestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
 		scRequestNoteDtl.setRequestItem(scRequestItem);
 
