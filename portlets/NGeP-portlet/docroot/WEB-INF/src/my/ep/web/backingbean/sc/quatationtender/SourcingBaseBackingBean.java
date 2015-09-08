@@ -1989,16 +1989,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	}
 
-
 	/**
 	 * @param scQt
 	 * @return
 	 */
 	public boolean handleProposalValidityDays(ScQt scQt) {
 		Date validityDate = null;
-		if (null != scQt.getClosingDate()) {
-			validityDate = DateUtils.addDays(scQt.getClosingDate(),
-					scQt.getQtValidityPeriod());
+		if (null != scQt.getProposalValidityEndDate()) {
+			log.info("scQt.getProposalValidityEndDate() not null"
+					+ scQt.getProposalValidityEndDate());
+			validityDate = scQt.getProposalValidityEndDate();
+		} else {
+			log.info("scQt.getProposalValidityEndDate()  null value");
+			if (null != scQt.getClosingDate()) {
+				validityDate = DateUtils.addDays(scQt.getClosingDate(),
+						scQt.getQtValidityPeriod());
+			}
 		}
 		boolean isDate = false;
 		Date d1 = new Date();
