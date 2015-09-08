@@ -57,6 +57,47 @@ public class CalendarBackingBean extends
 		this.endDateTemp = endDateTemp;
 	}
 	
+	private void loadSchedule(long stateId) {
+		log.info("...........loadSchedule............");
+		log.info("...........stateId="+stateId);
+		getManagedBean().setEventModel(new DefaultScheduleModel());
+		getManagedBean().setEvent(new DefaultScheduleEvent());
+	
+		if(stateId==0 || stateId== -1){
+			getManagedBean().setSelectedState(new PmState());
+		}else{
+			this.loadStateSchedule(stateId);
+		}
+		
+		getManagedBean().setSelectedStateId(stateId);
+		RequestContext.getCurrentInstance()
+		.execute("changeWeekEndColor();");
+	}
+
+	private void loadStateSchedule(long stateId) {
+		
+		log.info("...........loadStateSchedule............");
+		PmState state = PmCommonUtil.retrievePmStateByStateId(stateId);
+		getManagedBean().setSelectedState(state);
+		ICalendarSO calendarSO = (ICalendarSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICalendarSO.class);
+		CalendarReqDTO reqDTO = new CalendarReqDTO();
+		reqDTO.setStateId(stateId);
+		CalendarResDTO resDTO = calendarSO.getHolidaysForState(reqDTO);
+		List<PmHoliday> stateHolidayList = resDTO.getHolidayList();
+		log.info("...........resDTO.getHolidayList()="+resDTO.getHolidayList());
+		if (stateHolidayList != null) {
+			for (PmHoliday holiday : stateHolidayList) {
+				ScheduleEvent event = new DefaultScheduleEvent(
+						holiday.getHolidayName(), holiday.getStartDate(),
+						holiday.getEndDate());
+				event.setId(String.valueOf(holiday.getHolidayId()));
+				getManagedBean().getEventModel().addEvent(event);
+			}
+		}
+		
+	}
+	
     public void popUpError(){
     	log.info("......popUpError.......");
     	FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -77,7 +118,6 @@ public class CalendarBackingBean extends
 	public void updateEndDateVariable(){
 		Date endDate = DateUtils.addDays(this.getManagedBean().getEvent().getEndDate(), 1);
 		setEndDateTemp(endDate);
-//	/????can not set event endDate
 		
 	}
 	public void addOrUpdateEvent(ActionEvent actionEvent) {
@@ -115,20 +155,20 @@ public class CalendarBackingBean extends
 			}
 			
 			if (resDTO.isSuccessful()) {
+				getManagedBean().setInitialDate(holiday.getStartDate());
 				getManagedBean().getEventModel()
 						.updateEvent(getManagedBean().getEvent());
 				RequestContext.getCurrentInstance()
 				.execute("myschedule.update();");
 				RequestContext.getCurrentInstance()
 				.execute("eventDialog.hide();");
-				RequestContext.getCurrentInstance()
-				.execute("changeWeekEndColor();");
+			
 //				this.getManagedBean().setEvent(new DefaultScheduleEvent());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			getManagedBean().loadSchedule(stateId);
+			loadSchedule(stateId);
 		}
 		
 	}
@@ -160,7 +200,7 @@ public class CalendarBackingBean extends
 		this.getManagedBean().setSelectedState(new PmState());
 		this.getManagedBean().setEventModel(new DefaultScheduleModel());
 		this.getManagedBean().setEvent(new DefaultScheduleEvent());
-
+		this.getManagedBean().setInitialDate(getTodayDate());
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "calendar");
@@ -195,19 +235,18 @@ public class CalendarBackingBean extends
 				resDTO = calendarSO.removeHoliday(reqDTO);
 				
 				if (resDTO.isSuccessful()) {
+					getManagedBean().setInitialDate(holiday.getStartDate());
 					this.getManagedBean().getEventModel()
 							.deleteEvent(getManagedBean().getEvent());
 					RequestContext.getCurrentInstance()
 					.execute("myschedule.update();");
 					RequestContext.getCurrentInstance()
 					.execute("eventDialog.hide();");
-					RequestContext.getCurrentInstance()
-					.execute("changeWeekEndColor();");
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
-				getManagedBean().loadSchedule(stateId);
+				loadSchedule(stateId);
 			}
 		}
 	}
@@ -221,7 +260,7 @@ public class CalendarBackingBean extends
 		log.info(".......this.getManagedBean().getSelectedState()="+this.getManagedBean().getSelectedState());
 		log.info(".......this.getManagedBean().getSelectedState().getStateId()="+this.getManagedBean().getSelectedState().getStateId());
 		if (this.getManagedBean().getSelectedState() != null && this.getManagedBean().getSelectedState().getStateId() != null) {
-			getManagedBean().loadSchedule(this.getManagedBean().getSelectedState().getStateId());
+			loadSchedule(this.getManagedBean().getSelectedState().getStateId());
 		}
 		
 //			FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -321,4 +360,33 @@ public class CalendarBackingBean extends
 			throw new EpException("End Date entered must after Start Date.");
 		}
 	}
+	
+
+	 private Date getTodayDate() {
+	     Calendar calendar = Calendar.getInstance();
+	     calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), 0, 0, 0);
+	  
+	     return calendar.getTime();
+	}
+	 
+	 public void nextPrevious(ActionEvent event){
+	      String increment = (String) event.getComponent().getAttributes().get("increment");
+	      int moveValue = increment.equals("next")?1:-1;	    
+	      Calendar cal = Calendar.getInstance();
+	      cal.setTime(getManagedBean().getInitialDate());
+	      cal.set(Calendar.HOUR_OF_DAY, 23);
+	      cal.set(Calendar.MINUTE, 59);
+	      cal.set(Calendar.SECOND, 0);
+	      cal.add(Calendar.MONTH, moveValue);
+	      this.getManagedBean().setInitialDate(cal.getTime());
+	  	  RequestContext.getCurrentInstance()
+	  		.execute("changeWeekEndColor();");
+	   }
+
+	   public void today(ActionEvent event){
+		  Calendar cal = Calendar.getInstance();
+	      this.getManagedBean().setInitialDate(cal.getTime());
+	      RequestContext.getCurrentInstance()
+	  		.execute("changeWeekEndColor();");
+	   }
 }
