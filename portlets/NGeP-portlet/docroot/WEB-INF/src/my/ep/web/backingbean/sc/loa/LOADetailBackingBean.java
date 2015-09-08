@@ -47,6 +47,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
@@ -4128,15 +4129,23 @@ public class LOADetailBackingBean extends
 		ScLoa loa = getManagedBean().getScLoa();
 		BigDecimal loaAmt = loa.getLoaAmt();
 		
-		if(loaAmt.compareTo(new BigDecimal(200000)) > 0 && !isbondExceptionCategory(loa)) {
-			isPerformanceBondMandatory = true;
-			getManagedBean().getScLoa().setBondReq(true);
+		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		ruleReqDTO.setRuleType(RuleTypeConst.BOND);
+		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByRuleType(ruleReqDTO).getRuleValueList();
+
+		if (ruleValueList != null && ruleValueList.size() > 0) {
+			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+			if(loaAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) > 0 && !isbondExceptionCategory(loa)) {
+				isPerformanceBondMandatory = true;
+				getManagedBean().getScLoa().setBondReq(true);
+			}
+			else if(loaAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) <= 0) {
+				isPerformanceBondMandatory = true;
+				getManagedBean().getScLoa().setBondReq(false);
+			}
 		}
-		else if(loaAmt.compareTo(new BigDecimal(200000)) <= 0) {
-			isPerformanceBondMandatory = true;
-			getManagedBean().getScLoa().setBondReq(false);
-		}
-		
 		getManagedBean().setPerformanceBondMandatory(isPerformanceBondMandatory);
 	}
 	
