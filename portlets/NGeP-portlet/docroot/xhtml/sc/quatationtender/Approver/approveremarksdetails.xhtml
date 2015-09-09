@@ -5,6 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
+<h:outputText value="#{lbl['lbl.sc.approval.remarks.instruction']}" rendered="#{approvalBackingBean.isReviceOrReject()}"></h:outputText>
 	<p:panel header="#{lbl['lbl.sc.remark.supporting.doc']}" toggleable="true"
 		id="bpkremarksupDtls">
 		<table style="width: 100%" id="bpkremarksupDtlslist">

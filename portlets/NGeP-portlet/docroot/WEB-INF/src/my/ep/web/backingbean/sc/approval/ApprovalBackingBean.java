@@ -801,8 +801,8 @@ public class ApprovalBackingBean extends
 						((SCQuotationTenderDataType) this.getManagedBean()
 								.getQuotationTenderDataType())
 								.setBpkRevise(true);
-					}
-					else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(action)) {
+					} else if (BpmOutcomeConst.BPM_REJECT
+							.equalsIgnoreCase(action)) {
 						qtReqDTO.setRejected(true);
 					}
 				} else if (ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE
@@ -988,10 +988,12 @@ public class ApprovalBackingBean extends
 	 * @param member
 	 *            the member
 	 */
-	public void roleChangeListner(ScCommitteeMember member) {		
-		if (member.getMemberRole() != null && member.getMemberRole().getParameterId() != null) {
-			member.setMemberRole(ParameterHelper.getInstance().getPmParameterById(
-					member.getMemberRole().getParameterId()));
+	public void roleChangeListner(ScCommitteeMember member) {
+		if (member.getMemberRole() != null
+				&& member.getMemberRole().getParameterId() != null) {
+			member.setMemberRole(ParameterHelper
+					.getInstance()
+					.getPmParameterById(member.getMemberRole().getParameterId()));
 		}
 	}
 
@@ -1082,8 +1084,7 @@ public class ApprovalBackingBean extends
 			}
 			if (isRevise) {
 				return BpmOutcomeConst.BPM_REVISE;
-			}
-			else if(isRejected) {
+			} else if (isRejected) {
 				return BpmOutcomeConst.BPM_REJECT;
 			}
 		}
@@ -1279,4 +1280,17 @@ public class ApprovalBackingBean extends
 		return null;
 	}
 
+	public boolean isReviceOrReject() {
+		String[] outComes = this.getManagedBean().getOutComes();
+		if (null != outComes && outComes.length > 0) {
+			for (String outCome : outComes) {
+				if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outCome)) {
+					return true;
+				} else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outCome)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 }
