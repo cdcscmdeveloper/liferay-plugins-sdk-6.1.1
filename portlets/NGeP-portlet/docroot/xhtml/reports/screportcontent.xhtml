@@ -104,8 +104,8 @@
 								  </c:if>
 								  <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scSupplierView}" >			
 									<p:outputLabel value="#{lbl['lbl.rpt.supplierName']}"   style="margin-top:5px;width:160px;"/>
-									<p:inputText maxlength="400"  value="#{reportBackingBean.scSupplier}" style="margin-top:5px;width:290px;">	
-									<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />									
+									<p:inputText maxlength="400"  value="#{reportBackingBean.scSupplier}" style="margin-top:5px;width:290px;">									
+									<p:ajax event="blur" listener="#{reportBackingBean.supplierNameValidate()}" partialSubmit="true" process="@this" update="@all" />									
 									</p:inputText>																					
 									</c:if>	
 									 <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scRequisenerIdView}">

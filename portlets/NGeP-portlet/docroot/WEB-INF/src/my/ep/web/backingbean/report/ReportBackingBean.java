@@ -2747,6 +2747,16 @@ public class ReportBackingBean extends
 		this.enableValue = enableValue;
 	}
 	
+	
+	public void supplierNameValidate(){
+		if ((this.getScSupplier() != null)
+				&& (this.getScSupplier() != ReportConst.EMPTY_VAL)) {
+			if (this.getScSupplier().trim().length()<3) {
+				this.setScSupplier(null);
+				throw new EpException(MessageConst.ERROR_REPORT_780025);
+			}
+		}	
+	}
 	public void changeTerminate(){
 		this.setCtTerminationType(null);
 		getManagedBean().getRptGenBean().setCtTerminationTypeView(false);
@@ -6560,6 +6570,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 
 			if ((this.getScSupplier() != null)
 					&& (this.getScSupplier() != ReportConst.EMPTY_VAL)) {
+				supplierNameValidate();
 				rptGenBean.setScSupplierVar(ReportConst.SC_AMP_SUPPLIER_EQ
 						+ this.getScSupplier());
 			}
