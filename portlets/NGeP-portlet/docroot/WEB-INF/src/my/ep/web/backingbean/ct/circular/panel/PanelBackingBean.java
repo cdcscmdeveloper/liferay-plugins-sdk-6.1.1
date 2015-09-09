@@ -238,7 +238,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().setSelectedTabIndex(0);
 			
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-			Object obj = res.getPojo();			
+			Object obj = res.getPojo();	
+			getManagedBean().setTaskName(res.getTaskName());
 			CTCircularContractDataType dataType = (CTCircularContractDataType) obj;
 			getManagedBean().setCircularAdmin(dataType.getCircularAdmin().getUserName());
 			
@@ -527,6 +528,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(getManagedBean().getTaskId());
+			reqDTO.setTaskName(getManagedBean().getTaskName());
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			PmUser pmUSer = new PmUser();
 			pmUSer.setLoginId(getManagedBean().getCircularAdmin());
@@ -630,6 +632,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(getManagedBean().getTaskId());
+			reqDTO.setTaskName(getManagedBean().getTaskName());
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			PmUser pmUSer = new PmUser();
 			pmUSer.setLoginId(getManagedBean().getCircularAdmin());
