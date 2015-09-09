@@ -163,6 +163,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 							   }/*end if statement*/
 			        	  
 			        	  getManagedBean().setViewOnly(true);
+			        	  getManagedBean().setTaskId(taskId);
 			        	  setSuspensionContractVer(resDTO);
 			        	  return;
 			          }/*End if statement to check  login user */
@@ -171,6 +172,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			          if(taskId==null) 
 			        	  return;
 			          getManagedBean().setTaskId(taskId);
+			          getManagedBean().setViewOnly(false);
 		
 			          FacesScopes face = new FacesScopes();
 			          Object token =face.getBPMAuthenticationCtxToken();
