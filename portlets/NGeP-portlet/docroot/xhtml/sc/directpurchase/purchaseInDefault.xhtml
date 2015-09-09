@@ -472,15 +472,13 @@
 						label="#{lbl['lbl.sc.approve.list']}"
 						disabled="#{!isPendingSubmissionStatus}"
 						value="#{purchaseInDefaultBackingBean.managedBean.approvalUsers}"
-						var="approverUser" showTargetControls="true" required="true"
+						var="approverUser" showTargetControls="true"
 						itemLabel="#{approverUser.userName}" itemValue="#{approverUser}"
 						converter="approverPickListConverter">
 						<f:facet name="sourceCaption">#{lbl['lbl.sc.available.approver']}</f:facet>
 						<f:facet name="targetCaption">#{lbl['lbl.sc.selected.approvers']}</f:facet>
 					</p:pickList></td>
-				<td
-					style="vertical-align: top; padding-right: 1px; text-align: right;"><p:message
-						id="approverMsg" for="approver" display="icon" /></td>
+				<td style="vertical-align: top; padding-right: 1px; text-align: right;"></td>
 			</tr>
 		</table>
 	</p:panel>

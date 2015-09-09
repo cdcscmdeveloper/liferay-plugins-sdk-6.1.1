@@ -18,16 +18,14 @@
 				<td style="width: 250px;"><p:pickList id="approver"
 						label="#{lbl['lbl.sc.approver']}" disabled="#{isPendingApprovalStatus or requestNoteBackingBean.managedBean.viewOnly}"
 						value="#{requestNoteBackingBean.managedBean.approvalUsers}"
-						var="approverUser" required="true" showTargetControls="true"
+						var="approverUser" showTargetControls="true"
 						itemLabel="#{approverUser.userName}" itemValue="#{approverUser}"
 						converter="approverPickListConverter">
 						<f:facet name="sourceCaption">#{lbl['lbl.sc.available.approver']}</f:facet>
 						<f:facet name="targetCaption">#{lbl['lbl.sc.selected.approvers']}</f:facet>
 						<p:ajax event="transfer" partialSubmit="true" process="@this" update="@this" />
 					</p:pickList></td>
-				<td
-					style="vertical-align: top; padding-right: 1px; text-align: right;">
-					<p:message id="approverMsg" for="approver" display="icon" />
+				<td style="vertical-align: top; padding-right: 1px; text-align: right;">
 				</td>
 			</tr>
 		</table>

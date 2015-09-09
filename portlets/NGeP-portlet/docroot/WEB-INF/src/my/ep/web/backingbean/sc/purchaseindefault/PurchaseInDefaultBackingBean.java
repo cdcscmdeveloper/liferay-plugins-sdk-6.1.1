@@ -313,6 +313,7 @@ public class PurchaseInDefaultBackingBean extends
 	public String submitPurchaseInDefault() {
 		debugLogger("submitPurchaseInDefault");
 		IPurchaseInDefaultSO purchaseInDefaultSO = null;
+		FacesScopes facesScopes = new FacesScopes();
 		try {
 			purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate
 					.getInstance().getServiceObject(
@@ -327,15 +328,10 @@ public class PurchaseInDefaultBackingBean extends
 					.getPurchaseInDefault();
 			scPurchaseInDefault.setRecordStatus(Boolean.TRUE);
 			scPurchaseInDefault.setCreatedDate(DateUtils.getCurrentDate());
+			
 			// Target Approver
-			if (scPurchaseInDefault.getApprovalUsers() == null
-					|| scPurchaseInDefault.getApprovalUsers().isEmpty()) {
-				scPurchaseInDefault
-						.setApprovalUsers(createTargetApprover(scPurchaseInDefault));
-			} else {
-				scPurchaseInDefault.getApprovalUsers().addAll(
-						createTargetApprover(scPurchaseInDefault));
-			}
+			formApprover(scPurchaseInDefault);
+			
 			// WorkFlow Status
 			scPurchaseInDefault.setWorkFlowStatuses(null);
 
@@ -363,17 +359,10 @@ public class PurchaseInDefaultBackingBean extends
 					}
 				}
 			}
-
-			FacesScopes facesScopes = new FacesScopes();
-			// validate quantity
-			if (scPurchaseInDefault.getQuantity() != null
-					&& scPurchaseInDefault.getQuantity().intValue() < 0) {
-				throw new EpException(MessageConst.ERROR_100033, new String[] {
-						ResourceBundleUtils.getMessage("lbl.sc.order.qty",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								facesScopes.getUserLocale()), "0" });
-			}
-
+			
+			// validate pid
+			validatePID(scPurchaseInDefault);
+			
 			if (scPurchaseInDefault.getContractedItem() != null) {
 				if (scPurchaseInDefault.getContractedItem().getCtContractVer()
 						.getCtContract().getContractType() != null) {
@@ -471,42 +460,30 @@ public class PurchaseInDefaultBackingBean extends
 		}
 		return null;
 	}
+	
+	
+	private void validatePID(ScPurchaseInDefault scPurchaseInDefault){
+		FacesScopes facesScopes = new FacesScopes();
+		// validate quantity
+		if (scPurchaseInDefault.getQuantity() != null
+				&& scPurchaseInDefault.getQuantity().intValue() < 0) {
+			throw new EpException(MessageConst.ERROR_100033, new String[] {
+					ResourceBundleUtils.getMessage("lbl.sc.order.qty",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							facesScopes.getUserLocale()), "0" });
+		}
 
-	/*
-	 * public void sendNotificationEmail(){
-	 * debugLogger("sendNotificationEmail"); IUserSO userSO = (IUserSO)
-	 * BusinessDelegate
-	 * .getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-	 * IUserSO.class); UserReqDTO userReqDTO = new UserReqDTO();
-	 * userReqDTO.setUserId
-	 * (getManagedBean().getPurchaseInDefault().getCreatedBy()); UserResDTO
-	 * userResDTO = userSO.retrieveUserByUserId(userReqDTO);
-	 * 
-	 * INtfSO ntfSO = (INtfSO)
-	 * EpNtfBusinessDelegate.getInstance().getOSBServiceObject(INtfSO.class);
-	 * FacesScopes facesScopes = new FacesScopes(); NtfRequestDTO reqDTO = new
-	 * NtfRequestDTO(); reqDTO.setTemplateId("400000");
-	 * reqDTO.setSenderId(userResDTO.getPmUser().getUserId().toString());
-	 * 
-	 * List<String> userIdLst = new ArrayList<String>();
-	 * userIdLst.add(getManagedBean
-	 * ().getPurchaseInDefault().getCreatedBy().toString());
-	 * //userIdLst.add("1"); reqDTO.setEmailToArr(userIdLst.toArray(new
-	 * String[userIdLst.size()])); List<String> subParaLst = new
-	 * ArrayList<String>();
-	 * subParaLst.add(getManagedBean().getPurchaseInDefault(
-	 * ).getPurchaseInDefaultNo()); reqDTO.setSubParaArr(subParaLst.toArray(new
-	 * String[subParaLst.size()])); // Template variables List<String>
-	 * cntParaLst = new ArrayList<String>();
-	 * cntParaLst.add(userResDTO.getPmUser().getUserName());
-	 * cntParaLst.add(getManagedBean
-	 * ().getPurchaseInDefault().getPurchaseInDefaultNo());
-	 * cntParaLst.add(facesScopes.getUserSessionBean().getUserName());
-	 * reqDTO.setCntParaArr(cntParaLst.toArray(new String[cntParaLst.size()]));
-	 * try { NtfResponseDTO resDTO = ntfSO.processAndPublishViaEmail(reqDTO);
-	 * debugLogger(resDTO.getStatusCode()); debugLogger(resDTO.getSeverity());
-	 * debugLogger(resDTO.getStatusDesc()); } finally{ } debugLogger("END"); }
-	 */
+		// approver validation
+		if(null == scPurchaseInDefault.getApprovalUsers() || scPurchaseInDefault.getApprovalUsers().isEmpty()){
+			throw new EpException(
+					MessageConst.ERROR_760315,
+					new String[] {ResourceBundleUtils.getMessage("lbl.sc.approver",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		}
+
+	}
+
+
 	/**
 	 * Update data into database and BPM process will route to the next
 	 * respective user
@@ -623,46 +600,30 @@ public class PurchaseInDefaultBackingBean extends
 		}
 	}
 
+	
 	/**
-	 * To get Approver Pick List in Purchase In Default.
-	 * 
-	 * @param purchaseInDefault
-	 *            the purchase in default
-	 * @return the list
+	 * Form approver.
+	 *
+	 * @param purchaseInDefault the purchase in default
 	 */
-	private List<ScPIDApprovalUser> createTargetApprover(
+	private void formApprover(
 			ScPurchaseInDefault purchaseInDefault) {
 		List<ScPIDApprovalUser> results = new ArrayList<ScPIDApprovalUser>();
-		List<Long> userIds = new ArrayList<Long>();
-		if (purchaseInDefault.getApprovalUsers() != null
-				&& purchaseInDefault.getApprovalUsers().size() > 0) {
-			for (ScPIDApprovalUser scRequestNoteApprovalUser : purchaseInDefault
-					.getApprovalUsers()) {
-				userIds.add(scRequestNoteApprovalUser.getPmUser().getUserId());
+		List<PmUser> selectedApprovers = getManagedBean().getApprovalUsers().getTarget();
+		if (selectedApprovers != null && selectedApprovers.size() > 0) {
+			for (PmUser pmUser : selectedApprovers) {
+				ScPIDApprovalUser approver = new ScPIDApprovalUser();
+				approver.setPmUser(pmUser);
+				approver.setPurchaseInDefault(purchaseInDefault);
+				results.add(approver);
 			}
+		}else{
+			purchaseInDefault.setApprovalUsers(null);
 		}
 
-		if (this.getManagedBean().getApprovalUsers().getTarget() != null
-				&& this.getManagedBean().getApprovalUsers().getTarget().size() > 0) {
-			for (PmUser pmUser : getManagedBean().getApprovalUsers()
-					.getTarget()) {
-				if (userIds.isEmpty()) {
-					ScPIDApprovalUser approver = new ScPIDApprovalUser();
-					approver.setPmUser(pmUser);
-					approver.setPurchaseInDefault(purchaseInDefault);
-					results.add(approver);
-				} else {
-					if (!userIds.contains(pmUser.getUserId())) {
-						ScPIDApprovalUser approver = new ScPIDApprovalUser();
-						approver.setPmUser(pmUser);
-						approver.setPurchaseInDefault(purchaseInDefault);
-						purchaseInDefault.getApprovalUsers().add(approver);
-						results.add(approver);
-					}
-				}
-			}
+		if(!results.isEmpty()){
+			purchaseInDefault.setApprovalUsers(results);
 		}
-		return results;
 	}
 
 	/**
