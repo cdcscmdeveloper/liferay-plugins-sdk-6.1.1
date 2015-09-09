@@ -1493,7 +1493,7 @@ public class PmCommonUtil {
 	}
 
 	public static PmTrackingDairyVO assignTrackingDairyForProfessional(
-			Long eduFiledId, String eduFieldCode, PmStatus status,
+			Long certBodyId, String certBodyCode, PmStatus status,
 			String actionDesc) {
 
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
@@ -1501,8 +1501,8 @@ public class PmCommonUtil {
 		trckVO.setActionDesc(actionDesc);
 		trckVO.setActionedBy(user != null ? user.getUserId() : null);
 		trckVO.setActionedByRole(getUserRoleValue());
-		trckVO.setDocId(eduFiledId);
-		trckVO.setDocNo(eduFieldCode);
+		trckVO.setDocId(certBodyId);
+		trckVO.setDocNo(certBodyCode);
 		trckVO.setDocType(ParameterConst.PROFESSIONAL_CERT_BODY);
 		trckVO.setStatus(status);
 		trckVO.setGroupId(null);
