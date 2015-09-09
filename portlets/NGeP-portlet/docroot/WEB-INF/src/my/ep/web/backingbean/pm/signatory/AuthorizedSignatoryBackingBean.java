@@ -16,18 +16,22 @@ import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.pm.common.signatory.ISignatorySO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.PmTrackingDairyVO;
 import my.ep.dto.pm.common.signatory.SignatoryReqDTO;
 import my.ep.dto.pm.common.signatory.SignatoryResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCertSignatory;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.logging.LogKey;
 import my.ep.util.MessageUtils;
@@ -35,6 +39,7 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.pm.signatory.AuthorizedSignatoryManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
@@ -362,6 +367,11 @@ public class AuthorizedSignatoryBackingBean extends
 						ISignatorySO.class);
 		SignatoryReqDTO reqDTO = new SignatoryReqDTO();
 		reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
+		
+		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", IStatusSO.class);
+		StatusReqDTO statusReqDTO = new StatusReqDTO();
+		
 		for(PmCertSignatory pmcertSignatory:certSignatories){
 				
 			if(pmcertSignatory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED){
@@ -398,15 +408,19 @@ public class AuthorizedSignatoryBackingBean extends
 					msgParam = new String[] {pmcertSignatory.getPmZone().getZoneName(),pmcertSignatory.getSinnatoryName()};
 				}
 			}
+			
+			statusReqDTO.setStatusId(pmcertSignatory.getRecordStatusFlg().longValue());
+			StatusResDTO statusResDTO = statusSO
+					.retrieveStatusByStatusId(statusReqDTO);
+			
 			if (messageId != null & msgParam != null) {
 				reqDTO.setTrackingStatus(true);
 				reqDTO.getTrackDairyVOs().add(
 						PmCommonUtil.assignTrackingDairyForSignatory(pmcertSignatory,
 								getActionDesc(messageId, msgParam),
-								null));
-			}
-
-		
+								statusResDTO.getPmStatus() != null ? statusResDTO
+										.getPmStatus() : new PmStatus()));
+			}			
 		}
 		reqDTO.setCertSignatorys(certSignatories);
 		SignatoryResDTO resDTO = iSignatorySO.saveCertSignatoryDtls(reqDTO);
