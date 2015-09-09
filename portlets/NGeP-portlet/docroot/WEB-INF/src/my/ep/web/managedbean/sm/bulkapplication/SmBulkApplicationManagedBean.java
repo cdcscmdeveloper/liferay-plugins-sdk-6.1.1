@@ -20,7 +20,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.PagingConst;
-import my.ep.web.managedbean.sm.applicationView.BaseReviewApplicationManagedBean;
+import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
@@ -28,8 +28,7 @@ import my.ep.web.vo.SmBulkApplicationVO;
 
 @ManagedBean(name = "bulkApplicationMB")
 @SessionScoped
-public class SmBulkApplicationManagedBean extends
-		BaseReviewApplicationManagedBean {
+public class SmBulkApplicationManagedBean extends BaseManagedBean {
 
 	/**
 	 * 
