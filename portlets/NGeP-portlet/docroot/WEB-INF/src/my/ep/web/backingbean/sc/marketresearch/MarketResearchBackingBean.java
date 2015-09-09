@@ -138,6 +138,7 @@ public class MarketResearchBackingBean extends
 				|| CollectionUtils.isEmpty(scQtcategoryList)) {
 			throw new EpException(MessageConst.ERROR_789001);
 		}
+		
 		searchMarketResearch.reloadData();
 	}
 
@@ -188,19 +189,21 @@ public class MarketResearchBackingBean extends
 		}
 	}
 
-	/*public void downloadReport(ScLoaReport scLoaReport) throws IOException {
-		debugLogger("downloadReport");
-		ScLoaReportAttachment scLoaReportAttachment = scLoaReport
-				.getScLoaReportAttachment();
-		scLoaReportAttachment = generateDocumentAttachment(scLoaReport);
-		downloadFile(scLoaReportAttachment);
-	}*/
 
+	/**
+	 * Download report.
+	 * 
+	 * @param filePath
+	 *            the file path
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	public void downloadReport(String filePath) throws IOException {
 		debugLogger("downloadReport");	
-		//for local testing
+		//To download file from local system
 		    //downloadFile(filePath);
-		//Remote testing
+		
+		//To download file from server
 		downloadFile(getActualFilePath(filePath));
 	}
 		
@@ -337,13 +340,7 @@ public class MarketResearchBackingBean extends
 					.getCategoryL3Id());
 		}
 		debugLogger("Category Code Selection(CategoryL3-Count)===> "
-				+ scQtcategoryList.size());
-		
-		/*if (selectionType != null
-				&& (scQtcategoryList != null && !scQtcategoryList.isEmpty())) {*/			
-		/*//} /*else {
-			throw new EpException(MessageConst.ERROR_789001);
-		}*/
+				+ scQtcategoryList.size());	
 		
 		reqDTO.setSelectionType(selectionType);
 		reqDTO.setDocType("QPC");
