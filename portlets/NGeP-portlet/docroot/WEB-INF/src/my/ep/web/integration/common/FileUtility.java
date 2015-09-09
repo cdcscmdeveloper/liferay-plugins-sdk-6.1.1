@@ -70,6 +70,7 @@ import my.ep.web.integration.phis.MaterialBrand;
 import my.ep.web.integration.phis.MaterialClass;
 import my.ep.web.integration.phis.MaterialColor;
 import my.ep.web.integration.phis.MaterialMeasurement;
+import my.ep.web.integration.phis.PaymentEffNotify;
 import my.ep.web.integration.phis.PhisGlAccount;
 import my.ep.web.integration.phis.PhisProgramActivity;
 import my.ep.web.integration.phis.PhisProject;
@@ -308,7 +309,7 @@ public class FileUtility {
 
 	// 1GFMAS
 
-	public void masterDataVendorFileOutPutStream(List<MasterDataVendor> content, String filePath) {
+	public void masterDataVendorFileOutPutStream(BatchReqDTO<MasterDataVendor> batchReqDTO) {
 		log.info("inside masterDataVendorFileOutPutStream");
 		String PROCESS_ID = ProcessCode.APIVE.value();
 		
@@ -317,15 +318,14 @@ public class FileUtility {
 		Writer writer = null;
 
 		try {
-			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath + fileName), "utf-8"));
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(batchReqDTO.getFilePath() + fileName), "utf-8"));
 
-			if (content.size() != 0) {
 				StringBuffer line;
 				StringBuffer branchLine;
 				StringBuffer subLine;
 				
-				log.info("content :"+content.size());
-				for (MasterDataVendor mDataVendor : content) {
+				log.info("content :"+batchReqDTO.getBatchContent().size());
+				for (MasterDataVendor mDataVendor : batchReqDTO.getBatchContent()) {
 					
 					line = new StringBuffer();
 					line.append(formatIntegerField(mDataVendor.getRecordType(),	1, "R"));
@@ -383,11 +383,13 @@ public class FileUtility {
 					}
 				}
 				}
-			}else{
-				log.info("content is null");
-			}
-//			Encryptio method
-			encryption.encryptGmas(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,"GFM-010", PROCESS_ID);
+				batchReqDTO.setFileName(fileName);
+				batchReqDTO.setEncryptFilePath(IntegrationConstants.GMAS_UPLOAD_LOCAL);
+				batchReqDTO.setServiceCode(ServiceCode.APIVE.value());
+				batchReqDTO.setProcessId(ProcessCode.APIVE.value());
+				
+				encryption.encryptGmas(batchReqDTO);
+//			encryption.encryptGmas(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,"GFM-010", PROCESS_ID);
 		} catch (IOException e) {
 
 		} finally {
@@ -428,7 +430,7 @@ public class FileUtility {
 				reqDTO.setProcessId(PROCESS_ID);
 				reqDTO.setFileName(fileName);
 				reqDTO.setServiceCode(ServiceCode.AP516.value());
-				reqDTO.setEncryptFilePath(IntegrationConstants.ENCRYPTED_FILE_PATH);
+				reqDTO.setEncryptFilePath(IntegrationConstants.GMAS_UPLOAD_LOCAL);
 				
 				encryption.encryptGmas(reqDTO);
 
@@ -778,7 +780,7 @@ public class FileUtility {
 			
 			//If ErrorDetail size is greater than zero cal ErrorResponse
 			if(errorDetailsList.size()>0){
-				errorFileOutPutStream(epErrorResponse,IntegrationConstants.FILE_PATH);
+				errorFileOutPutStream(epErrorResponse,IntegrationConstants.FILE_PATH_LOCAL);
 			}
 				return ptjGroupList;
 		}
@@ -1109,12 +1111,12 @@ public class FileUtility {
 			filePattern = IntegrationConstants.AGENSI_ID_ePerolehan;
 		}
 		int seqNo = 0;
-		if (!new File(IntegrationConstants.FILE_PATH + fileName
+		if (!new File(IntegrationConstants.FILE_PATH_LOCAL + fileName
 				+ sequenceNo + fileExtn).exists()) {
 			return sequenceNo;
 		} else {
 
-			File dir = new File(IntegrationConstants.FILE_PATH);
+			File dir = new File(IntegrationConstants.FILE_PATH_LOCAL);
 			String[] filesInPath = dir.list();
 			List<Integer> seqNos = new ArrayList<Integer>();
 			Pattern p = Pattern.compile(valuestar + serviceCode+filePattern+date+valuestar);
@@ -1141,7 +1143,7 @@ public class FileUtility {
 		return sequenceNo;
 	}
 
-	public boolean createPhisFileInLocal(List<ItemType> itemTypes,
+	/*public boolean createPhisFileInLocal(List<ItemType> itemTypes,
 			List<MaterialColor> mColors, List<MaterialMeasurement> mMeasures,
 			List<MaterialBrand> mBrands,List<MaterialClass> mClasses, String localFilePath) {
 
@@ -1154,7 +1156,7 @@ public class FileUtility {
 		 materialClassFileOutPutStream(mClasses, localFilePath);
 
 		return true;
-	}
+	}*/
 	
 	public String checkAction(Date createdDate, Date updatedDate) {
 		/*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -2465,7 +2467,7 @@ public class FileUtility {
 	}*/
 	
 	
-	public void receiptInformationFileOutPutStream(List<ReceiptInformation> content, String filePath) {
+	public void receiptInformationFileOutPutStream(BatchReqDTO<ReceiptInformation> batchReqDTO) {
 		
 	String PROCESS_ID = "AR502";
 	
@@ -2474,14 +2476,13 @@ public class FileUtility {
 	Writer writer = null;
 
 	try {
-		writer = new BufferedWriter(new OutputStreamWriter(	new FileOutputStream(filePath + fileName), "utf-8"));
+		writer = new BufferedWriter(new OutputStreamWriter(	new FileOutputStream(batchReqDTO.getFilePath() + fileName), "utf-8"));
 
-		if (content.size() != 0) {
 			StringBuffer line = null;
 			StringBuffer receiptHeaderLine = null;
 			StringBuffer receiptDetailsLine = null;
 			StringBuffer billInfoLine = null;
-			for (ReceiptInformation receiptInformation : content) {
+			for (ReceiptInformation receiptInformation : batchReqDTO.getBatchContent()) {
 				line = new StringBuffer();
 			
 				line.append(formatIntegerField(receiptInformation.getRecordType(),	1, "L"));
@@ -2577,11 +2578,12 @@ public class FileUtility {
 			}
 			writer.write(line.toString());
 			}
+			batchReqDTO.setFileName(fileName);
+			batchReqDTO.setEncryptFilePath(IntegrationConstants.GMAS_UPLOAD_LOCAL);
+			batchReqDTO.setServiceCode(ServiceCode.AR502.value());
+			batchReqDTO.setProcessId(ProcessCode.AR502.value());
 			// Encryption 
-			encryption.encryptGmas(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,"GFM-380",PROCESS_ID);
-			}else{
-			log.info("content is null");
-		}
+			encryption.encryptGmas(batchReqDTO);
 	} catch (IOException e) {
 
 	} finally {
@@ -2717,8 +2719,8 @@ public class FileUtility {
 	
 	// Changed method for BatchReqDTO changed method signatures
 	public void votFundFileOutPutStream(BatchReqDTO<PhisVotFund> reqDTO) {
-		log.info("inside votFundFileOutPutStream");
-		String SERVICE_CODE = "PHS-090";
+		log.info("inside votFundFileOutPutStream : PHS-090");
+		String SERVICE_CODE = ServiceCode.PHS006.value();
 
 		String fileName = createFileNamePhis(SERVICE_CODE);
 
@@ -2743,11 +2745,11 @@ public class FileUtility {
 					writer.flush();
 				}
 				
-				reqDTO.setProcessId("PHS-001");
+				reqDTO.setProcessId(ProcessCode.PHS006.value());
 				reqDTO.setFileName(fileName);
 				reqDTO.setServiceCode(SERVICE_CODE);
-				reqDTO.setEncryptFilePath(IntegrationConstants.ENCRYPTED_FILE_PATH);
-				reqDTO.setRemoteFilePath(IntegrationConstants.PHIS_UPLOAD_DIR+fileName);
+				reqDTO.setEncryptFilePath(IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL);
+				reqDTO.setRemoteFilePath(IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL+fileName);
 
 				encryption.encryptPhis(reqDTO);
 				//Encryption method
@@ -2770,8 +2772,8 @@ public class FileUtility {
 
 	// Changed method for BatchReqDTO
 	public void votFundDanaFileOutPutStream(BatchReqDTO<PhisVotFund> reqDTO) {
-		log.info("inside votFundDanaFileOutPutStream");
-		String SERVICE_CODE = "PHS-100";
+		log.info("inside votFundDanaFileOutPutStream : PHS-100");
+		String SERVICE_CODE = ServiceCode.PHS007.value();
 
 		String fileName = createFileNamePhis(SERVICE_CODE);
 
@@ -2796,10 +2798,10 @@ public class FileUtility {
 					writer.flush();
 				}
 
-				reqDTO.setProcessId("PHS-001");
+				reqDTO.setProcessId(ProcessCode.PHS007.value());
 				reqDTO.setFileName(fileName);
 				reqDTO.setServiceCode(SERVICE_CODE);
-				reqDTO.setEncryptFilePath(IntegrationConstants.ENCRYPTED_FILE_PATH);
+				reqDTO.setEncryptFilePath(IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL);
 				encryption.encryptPhis(reqDTO);
 //				Encryption method
 //				encryption.encryptPhis(reqDTO.getFilePath(),IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
@@ -2821,8 +2823,8 @@ public class FileUtility {
 	
 	// Changed method for BatchReqDTO
 	public void programActivityFileOutPutStream(BatchReqDTO<PhisProgramActivity> reqDTO) {
-		log.info("inside programActivityFileOutPutStream");
-		String SERVICE_CODE = "PHS-110";
+		log.info("inside programActivityFileOutPutStream : PHS-110");
+		String SERVICE_CODE = ServiceCode.PHS008.value();
 
 		String fileName = createFileNamePhis(SERVICE_CODE);
 
@@ -2847,10 +2849,10 @@ public class FileUtility {
 					writer.flush();
 				}
 
-				reqDTO.setProcessId("PHS-001");
+				reqDTO.setProcessId(ProcessCode.PHS008.value());
 				reqDTO.setFileName(fileName);
 				reqDTO.setServiceCode(SERVICE_CODE);
-				reqDTO.setEncryptFilePath(IntegrationConstants.ENCRYPTED_FILE_PATH);
+				reqDTO.setEncryptFilePath(IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL);
 				
 				encryption.encryptPhis(reqDTO);
 
@@ -2871,8 +2873,8 @@ public class FileUtility {
 
 	// Changed method for BatchReqDTO
 	public void projectFileOutPutStream(BatchReqDTO<PhisProject> reqDTO) {
-		log.info("inside projectFileOutPutStream");
-		String SERVICE_CODE = "PHS-120";
+		log.info("inside projectFileOutPutStream :PHS-120");
+		String SERVICE_CODE = ServiceCode.PHS009.value();
 
 		String fileName = createFileNamePhis(SERVICE_CODE);
 
@@ -2897,10 +2899,10 @@ public class FileUtility {
 					writer.write(line.toString());
 					writer.flush();
 				}
-				reqDTO.setProcessId("PHS-001");
+				reqDTO.setProcessId(ProcessCode.PHS009.value());
 				reqDTO.setFileName(fileName);
 				reqDTO.setServiceCode(SERVICE_CODE);
-				reqDTO.setEncryptFilePath(IntegrationConstants.ENCRYPTED_FILE_PATH);
+				reqDTO.setEncryptFilePath(IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL);
 				encryption.encryptPhis(reqDTO);
 
 			}
@@ -2920,8 +2922,8 @@ public class FileUtility {
 
 	// Changed method for BatchReqDTO
 	public void glAccountFileOutPutStream(BatchReqDTO<PhisGlAccount> reqDTO) {
-		log.info("inside glAccountFileOutPutStream");
-		String SERVICE_CODE = "PHS-140";
+		log.info("inside glAccountFileOutPutStream : PHS-140");
+		String SERVICE_CODE = ServiceCode.PHS010.value();
 
 		String fileName = createFileNamePhis(SERVICE_CODE);
 
@@ -2946,10 +2948,10 @@ public class FileUtility {
 					writer.write(line.toString());
 					writer.flush();
 				}
-				reqDTO.setProcessId("PHS-001");
+				reqDTO.setProcessId(ProcessCode.PHS010.value());
 				reqDTO.setFileName(fileName);
 				reqDTO.setServiceCode(SERVICE_CODE);
-				reqDTO.setEncryptFilePath(IntegrationConstants.ENCRYPTED_FILE_PATH);
+				reqDTO.setEncryptFilePath(IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL);
 				encryption.encryptPhis(reqDTO);
 				
 
@@ -2969,8 +2971,8 @@ public class FileUtility {
 	}
 	
 	public void materialClassFileOutPutStream(BatchReqDTO<MaterialClass> reqDTO) {
-		log.info("inside materialClassFileOutPutStream ");
-		String SERVICE_CODE = "PHS-030";
+		log.info("inside materialClassFileOutPutStream : PHS-030");
+		String SERVICE_CODE = ServiceCode.PHS001.value();
 
 		Writer writer = null;
 		String fileName = createFileNamePhis(SERVICE_CODE);
@@ -2990,13 +2992,13 @@ public class FileUtility {
 					line.append(formatStringField(mclass.getMaterialOldClassCode(), 8, "L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
-					writer.flush();
 				}
 			}
-			reqDTO.setProcessId("PHS-001");
+			writer.close();
+			reqDTO.setProcessId(ProcessCode.PHS001.value());
 			reqDTO.setFileName(fileName);
 			reqDTO.setServiceCode(SERVICE_CODE);
-			reqDTO.setEncryptFilePath(IntegrationConstants.ENCRYPTED_FILE_PATH);
+			reqDTO.setEncryptFilePath(IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL);
 			encryption.encryptPhis(reqDTO);
 			
 		} catch (IOException e) {
@@ -3014,8 +3016,8 @@ public class FileUtility {
 	}
 
 	public void materialBrandFileOutPutStream(BatchReqDTO<MaterialBrand> reqDTO) {
-		log.info("inside materialBrandFileOutPutStream");
-		String SERVICE_CODE = "PHS-040";
+		log.info("inside materialBrandFileOutPutStream :PHS-040");
+		String SERVICE_CODE = ServiceCode.PHS002.value();
 		Writer writer = null;
 
 		String fileName = createFileNamePhis(SERVICE_CODE);
@@ -3036,14 +3038,13 @@ public class FileUtility {
 					line.append(formatStringField(mbrand.getMaterialOldBrandCode(), 3, "L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
-					writer.flush();
 				}
 			}
-			
-			reqDTO.setProcessId("PHS-001");
+			writer.close();
+			reqDTO.setProcessId(ProcessCode.PHS002.value());
 			reqDTO.setFileName(fileName);
 			reqDTO.setServiceCode(SERVICE_CODE);
-			reqDTO.setEncryptFilePath(IntegrationConstants.ENCRYPTED_FILE_PATH);
+			reqDTO.setEncryptFilePath(IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL);
 			encryption.encryptPhis(reqDTO);
 			
 		} catch (IOException e) {
@@ -3061,8 +3062,8 @@ public class FileUtility {
 	}
 
 	public void materialColorFileOutPutStream(BatchReqDTO<MaterialColor> reqDTO) {
-		log.info("inside materialColorFileOutPutStream ");
-		String SERVICE_CODE = "PHS-050";
+		log.info("inside materialColorFileOutPutStream : PHS-050");
+		String SERVICE_CODE = ServiceCode.PHS003.value();
 		Writer writer = null;
 		String fileName = createFileNamePhis(SERVICE_CODE);
 
@@ -3081,14 +3082,13 @@ public class FileUtility {
 					line.append(formatStringField(mcolor.getMaterialOldColorCode(), 2, "L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
-					writer.flush();
 				}
 			}
-			
-			reqDTO.setProcessId("PHS-001");
+			writer.close();
+			reqDTO.setProcessId(ProcessCode.PHS003.value());
 			reqDTO.setFileName(fileName);
 			reqDTO.setServiceCode(SERVICE_CODE);
-			reqDTO.setEncryptFilePath(IntegrationConstants.ENCRYPTED_FILE_PATH);
+			reqDTO.setEncryptFilePath(IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL);
 			encryption.encryptPhis(reqDTO);
 		} catch (IOException e) {
 
@@ -3105,8 +3105,8 @@ public class FileUtility {
 	}
 
 	public void materialMeasurementFileOutPutStream(BatchReqDTO<MaterialMeasurement> reqDTO) {
-		log.info("inside materialMeasurementFileOutPutStream");
-		String SERVICE_CODE = "PHS-060";
+		log.info("inside materialMeasurementFileOutPutStream : PHS-060");
+		String SERVICE_CODE = ServiceCode.PHS004.value();
 		Writer writer = null;
 
 		String fileName = createFileNamePhis(SERVICE_CODE);
@@ -3126,14 +3126,13 @@ public class FileUtility {
 					line.append(formatStringField(mMeasurement.getMeasurementOldCode(), 3, "L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
-					writer.flush();
 				}
 			}
-			
-			reqDTO.setProcessId("PHS-001");
+			writer.close();
+			reqDTO.setProcessId(ProcessCode.PHS004.value());
 			reqDTO.setFileName(fileName);
 			reqDTO.setServiceCode(SERVICE_CODE);
-			reqDTO.setEncryptFilePath(IntegrationConstants.ENCRYPTED_FILE_PATH);
+			reqDTO.setEncryptFilePath(IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL);
 			encryption.encryptPhis(reqDTO);
 		} catch (IOException e) {
 
@@ -3150,8 +3149,8 @@ public class FileUtility {
 	}
 
 	public void itemTypeFileOutPutStream(BatchReqDTO<ItemType> reqDTO) {
-		log.info("inside itemTypeFileOutPutStream");
-		String SERVICE_CODE = "PHS-070";
+		log.info("inside itemTypeFileOutPutStream : PHS-070");
+		String SERVICE_CODE = ServiceCode.PHS005.value();
 		Writer writer = null;
 
 		String fileName = createFileNamePhis(SERVICE_CODE);
@@ -3171,14 +3170,14 @@ public class FileUtility {
 					line.append(formatStringField(itemType.getItemOldcode(), 3,	"L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
-					writer.flush();
 				}
 
 			}
-			reqDTO.setProcessId("PHS-001");
+			writer.close();
+			reqDTO.setProcessId(ProcessCode.PHS005.value());
 			reqDTO.setFileName(fileName);
 			reqDTO.setServiceCode(SERVICE_CODE);
-			reqDTO.setEncryptFilePath(IntegrationConstants.ENCRYPTED_FILE_PATH);
+			reqDTO.setEncryptFilePath(IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL);
 			encryption.encryptPhis(reqDTO);
 
 		} catch (IOException e) {
@@ -3194,17 +3193,70 @@ public class FileUtility {
 			}
 		}
 	}
-	public boolean createPhisFileInLocal(BatchReqDTO<ItemType> itemTypes,
-			BatchReqDTO<MaterialColor> mColors, BatchReqDTO<MaterialMeasurement> mMeasures,
-			BatchReqDTO<MaterialBrand> mBrands,BatchReqDTO<MaterialClass> mClasses) {
+	
+	public void paymentEffNootifyOutPutStream(BatchReqDTO<PaymentEffNotify> reqDTO) {
+		log.info("inside itemTypeFileOutPutStream : PHS-200");
+		String SERVICE_CODE = ServiceCode.PHS011.value();
+		Writer writer = null;
 
-		 itemTypeFileOutPutStream(itemTypes);
-		 materialBrandFileOutPutStream(mBrands);
-		 materialMeasurementFileOutPutStream(mMeasures);
-		 materialColorFileOutPutStream(mColors);
-		 materialClassFileOutPutStream(mClasses);
+		String fileName = createFileNamePhis(SERVICE_CODE);
 
-		return true;
+		try {
+			writer = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(reqDTO.getFilePath() + fileName), "utf-8"));
+
+			if (reqDTO.getBatchContent().size() != 0) {
+				StringBuffer line;
+				for (PaymentEffNotify effNotify : reqDTO.getBatchContent()) {
+					line = new StringBuffer();
+					line.append(formatStringField(effNotify.getContractOrderNo(), 17,"L"));
+					line.append(formatStringField(effNotify.getPaymenyReferenceNo(), 18,"L"));
+					line.append(formatStringField(effNotify.getInvoiceNo(), 30, "L"));
+					line.append(formatStringField(effNotify.getInvoiceRefNo(), 17,"L"));
+					line.append(formatBigDecimalField(effNotify.getAmountPaid(), 13));
+					line.append(formatDate(effNotify.getPaymentDate()));
+					line.append(System.getProperty("line.separator"));
+					writer.write(line.toString());
+				}
+
+			}
+			writer.close();
+			reqDTO.setProcessId(ProcessCode.PHS011.value());
+			reqDTO.setFileName(fileName);
+			reqDTO.setServiceCode(SERVICE_CODE);
+			reqDTO.setEncryptFilePath(IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL);
+			encryption.encryptPhis(reqDTO);
+
+		} catch (IOException e) {
+
+		} finally {
+
+			if (writer != null) {
+				try {
+					writer.close();
+				} catch (Exception e) {
+
+				}
+			}
+		}
+	}
+	
+	public void deleteFilefromAppServer(String fileName){
+		try {
+
+			File file = new File(fileName);
+
+			if (file.delete()) {
+				System.out.println(file.getName() + " is deleted!");
+			} else {
+				System.out.println("Delete operation is failed.");
+			}
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		}
 	}
 	
 }
