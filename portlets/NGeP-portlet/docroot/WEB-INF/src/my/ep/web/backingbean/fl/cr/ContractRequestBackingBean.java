@@ -3997,7 +3997,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				sumOrderQty = sumOrderQty.add(itemAddr.getOrderedQty());
 			}
 		}
-		if(flRequest.getScPurchaseInDefault().getContractedItem().getMinimumOrderQty() == sumOrderQty.doubleValue()){
+		if(flRequest.getScPurchaseInDefault().getContractedItem().getMinimumOrderQty() < sumOrderQty.doubleValue()){
+			throw new EpException(MessageConst.ERROR_745074, new String[]{flRequest.getScPurchaseInDefault().getContractedItem().getScRequestItem().getItemName(),Double.toString(flRequest.getScPurchaseInDefault().getContractedItem().getMinimumOrderQty())});
+		}
+		if(flRequest.getScPurchaseInDefault().getContractedItem().getMinimumOrderQty() > sumOrderQty.doubleValue()){
 			throw new EpException(MessageConst.ERROR_745074, new String[]{flRequest.getScPurchaseInDefault().getContractedItem().getScRequestItem().getItemName(),Double.toString(flRequest.getScPurchaseInDefault().getContractedItem().getMinimumOrderQty())});
 		}
 		
