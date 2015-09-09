@@ -45,7 +45,6 @@ import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
-import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -86,8 +85,6 @@ import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
-import my.ep.dto.sm.gst.SupplierGstReqDTO;
-import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -138,8 +135,8 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
-import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
+import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
@@ -166,7 +163,7 @@ import com.liferay.portal.util.PortalUtil;
  */
 @ManagedBean(name = "purchaseRequestBackingBean")
 @RequestScoped
-public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestManagedBean> {
+public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<PurchaseRequestManagedBean> {
 	private static Logger log = Logger.getLogger(PurchaseRequestBackingBean.class);
 	public static final String NAV_TO_CREATE_PURCHASE_REQUEST = "/xhtml/fl/purchaserequest/prBasePage.xhtml";
 	private boolean checkFlg = false;
@@ -208,16 +205,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	private String queryDesc;
 	
 	private static Map<Long, PmVotFund> votFundCodeMap = new HashMap<Long, PmVotFund>();
-
-	/**
-	 * get faces scopes.
-	 *
-	 * @return FacesScopes
-	 */
-	private FacesScopes getFacesScopes() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes;
-	}
 
 	/**
 	 * Instantiates a new purchase request backing bean.
@@ -1418,7 +1405,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			FulfilmentResDTO resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
 			
 			setFulfilmentRequestField(resDTO);
-			getSupplierGst(getManagedBean().getFulfilmentRequest());
+			BigDecimal gstRate = getGstRate();
+			if(getManagedBean().getFulfilmentRequest().getGstRate()!=null && getManagedBean().getFulfilmentRequest().getGstRate().compareTo(gstRate)!=0) {
+				getManagedBean().setGstRateChange(true);
+			}
+			getManagedBean().getFulfilmentRequest().setGstRate(gstRate);
+						
+			getSupplierGst(getManagedBean().getFulfilmentRequest(), getManagedBean().isGstRateChange());
 		}
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prBasePage.xhtml");
@@ -2521,7 +2514,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				}
 			}
 		}
-		getSupplierGst(getManagedBean().getFulfilmentRequest());
+		getSupplierGst(getManagedBean().getFulfilmentRequest(), false);
 	}
 	
 	/**
@@ -3307,62 +3300,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			flItemAddr.setGstAmount(BigDecimal.ZERO);
 		}
 		flItemAddr.setGstUnitPrice(flItemAddr.getUnitPrice().add(flItemAddr.getGstAmount()));
-	}
-	
-	private void getSupplierGst(FlFulfilmentRequest flRequest) {
-		ISupplierGstSO supplierGstSO = (ISupplierGstSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);
-		
-		Date systemDate = flRequest.getChangedDate()==null?DateUtils.getCurrentDateWithoutTime():flRequest.getChangedDate();
-		boolean dbFrGstEnabled = flRequest.getGstEffectiveDate() != null && flRequest.getGstEffectiveDate().getTime()<=systemDate.getTime();
-		
-		SupplierGstReqDTO reqDTO = new SupplierGstReqDTO();
-		reqDTO.setBranchCode(flRequest.getFlSupplierDtl().getBranchCode());
-		reqDTO.setSupplierId(flRequest.getSmSupplier().getSupplierId());
-		SupplierGstResDTO resDTO = supplierGstSO.retrieveGstInfoBySupplierIdAndBranchCode(reqDTO);
-		if(resDTO.getSmGstSupplier() != null){
-			flRequest.setGstEffectiveDate(resDTO.getSmGstSupplier().getGstEffDate());
-			flRequest.setGstDeclaredDate(resDTO.getSmGstSupplier().getGstDeclaredDate());
-			flRequest.setGstRegNo(resDTO.getSmGstSupplier().getGstRegNo());
-		} else {
-			flRequest.setGstEffectiveDate(null);
-			flRequest.setGstDeclaredDate(null);
-			flRequest.setGstRegNo(null);
-		}
-		
-		boolean newFrGstEnabled = flRequest.getGstEffectiveDate() != null && flRequest.getGstEffectiveDate().getTime()<=DateUtils.getCurrentDateWithoutTime().getTime();
-		// recalculate gst amount/gst unit price/order amount if both flag difference
-		if((dbFrGstEnabled && !newFrGstEnabled) || (!dbFrGstEnabled && newFrGstEnabled)) {
-			BigDecimal orderAmt = BigDecimal.ZERO;
-			BigDecimal gstRate = BigDecimal.ZERO;
-			if(flRequest.getGstRate()!=null) {
-				gstRate = flRequest.getGstRate();
-			}
-			BigDecimal originalGSTAmt = BigDecimal.ZERO;
-			boolean amtChanged = false;
-			for(FlDeliveryAddress flDeliveryAddress : flRequest.getFlDeliveryAddresses()) {
-				for(FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()) {
-					originalGSTAmt = itemAddr.getGstAmount();
-					if(originalGSTAmt==null) {
-						originalGSTAmt = BigDecimal.ZERO;
-					}
-					if(newFrGstEnabled && itemAddr.isGst()) {
-						itemAddr.setGstAmount(itemAddr.getUnitPrice().multiply(gstRate).divide(new BigDecimal(100), CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, BigDecimal.ROUND_HALF_UP));
-					} else {
-						itemAddr.setGstAmount(BigDecimal.ZERO);
-					}
-					if(!amtChanged && originalGSTAmt.compareTo(itemAddr.getGstAmount())!=0) {
-						amtChanged = true;
-					}
-					itemAddr.setGstUnitPrice(itemAddr.getUnitPrice().add(itemAddr.getGstAmount()));
-					orderAmt = itemAddr.getGstUnitPrice().multiply(itemAddr.getOrderedQty());
-					itemAddr.setOrderedAmt(orderAmt.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, BigDecimal.ROUND_HALF_UP));
-				}
-			}
-			if(amtChanged == true){
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-						MessageUtils.getMessage(MessageConst.INFO_745009, new String[]{flRequest.getDocNo()}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
-			}
-		}
 	}
 	
 }
