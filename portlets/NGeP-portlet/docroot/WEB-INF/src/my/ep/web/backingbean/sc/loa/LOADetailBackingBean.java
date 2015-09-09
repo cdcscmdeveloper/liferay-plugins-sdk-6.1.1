@@ -133,7 +133,6 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.ct.amendment.JadualHargaBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
-import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.loa.LOADetailManagedBean;
 import my.ep.web.util.CommonUtils;
@@ -3206,11 +3205,15 @@ public class LOADetailBackingBean extends
 
 		populateAttachmentDetails(attachment);
 		VelocityContext context = new VelocityContext();
-		
+		//For s2
 		String frequencyScheduleType = "";
-		if (scQt.getScheduleType() != null) {
+		if (scQt != null && scQt.getScheduleType() != null) {
 			frequencyScheduleType = scQt.getScheduleType();
+		} else{
+			// For s1
+			frequencyScheduleType = "F";
 		}
+		
 		context.put("frequencyScheduleType", frequencyScheduleType);
 		
 		SimpleDateFormat monthFormat = new SimpleDateFormat("MMM");
