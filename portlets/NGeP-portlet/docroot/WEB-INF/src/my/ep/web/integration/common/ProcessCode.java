@@ -20,7 +20,7 @@ public enum ProcessCode {
 	APIVE("APIVE"), 
 	AP516("AP516"), 
 	AR502("AR502"), 
-	GLBAC("AR502"), 
+	GLBAC("GLBAC"), 
 	GLSEG("GLSEG"), 
 	GLVOT("GLVOT"), 
 	GLDNA("GLDNA"), 
