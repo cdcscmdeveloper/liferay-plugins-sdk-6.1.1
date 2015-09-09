@@ -147,7 +147,8 @@
 			<tr>
 				<td width="21%"><h:outputLabel
 						value="#{lbl['lbl.sc.minsistry']}" /></td>
-				<td colspan="3"><p:inputText disabled="#{!isEditableStatus}" readonly="true"
+				<td colspan="3"><p:inputText disabled="#{!isEditableStatus}"
+						readonly="true"
 						value="#{directLOABackingBean.managedBean.scQt.ministryOrgProfile.orgName}"
 						size="44" maxlength="100" /></td>
 			</tr>
@@ -234,8 +235,7 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.off.price']}">
 
-						<p:outputLabel value="*" styleClass="mandatory" />
-					</p:outputLabel></td>
+					</p:outputLabel> <p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText style="text-align: right;" required="true"
 						value="#{directLOABackingBean.managedBean.scLoa.loaAmt}" size="30"
 						label="#{lbl['lbl.sc.loiloa.loa.off.price']}">
