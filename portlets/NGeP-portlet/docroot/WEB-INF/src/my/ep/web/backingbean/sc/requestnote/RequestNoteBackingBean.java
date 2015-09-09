@@ -18,7 +18,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
@@ -119,7 +118,6 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
@@ -529,13 +527,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 		}
 		requestNote.setRequestNoteDtls(requestNoteDtls);
-		
+
 		// Target Approver
-		if(requestNote.getApprovalUsers() == null || requestNote.getApprovalUsers().isEmpty()){
-			requestNote.setApprovalUsers(createTargetApprover(requestNote));
-		} else{
-			requestNote.getApprovalUsers().addAll(createTargetApprover(requestNote));
-		}
+		formApprover(requestNote);
 
 		if(!(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome))){
 			finalizeRemarks(requestNote.getRemarks());
@@ -564,7 +558,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	private void validateRN(ScRequestNote requestNote,  List<ScRequestNoteDtl>	nonDeletedDtls){
 		boolean isShowMessage = getManagedBean().isExceededAmountAlerted();
 		// show message for first submission skip the message for second time submission
-
 		if(!isShowMessage){
 
 			for (ScRequestNoteDtl rnDtl : nonDeletedDtls) {
@@ -595,6 +588,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}
 		}
+		// approver validation
+		if(null == requestNote.getApprovalUsers() || requestNote.getApprovalUsers().isEmpty()){
+			throw new EpException(
+					MessageConst.ERROR_760315,
+					new String[] {ResourceBundleUtils.getMessage("lbl.sc.approver",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		}
+		
 	}
 
 	/**
@@ -2121,54 +2122,29 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
 	}
 
+	
 	/**
-	 * To get Approver Pick List  in Request Note.
+	 * Creates the target approver.
 	 *
 	 * @param requestNote the request note
-	 * @return the list
 	 */
-	private	List<ScRequestNoteApprovalUser> createTargetApprover(ScRequestNote requestNote){
+	private void formApprover(ScRequestNote requestNote){
 		List<ScRequestNoteApprovalUser> results = new ArrayList<ScRequestNoteApprovalUser>();
-		List<ScRequestNoteApprovalUser> approvers = new ArrayList<ScRequestNoteApprovalUser>();
-		List<Long> userIds = new ArrayList<Long>();
-		if(requestNote.getApprovalUsers() != null && requestNote.getApprovalUsers().size()>0){
-			for (ScRequestNoteApprovalUser scRequestNoteApprovalUser : requestNote.getApprovalUsers() ) {
-				userIds.add(scRequestNoteApprovalUser.getPmUser().getUserId());
+		List<PmUser> selectedApprovers = getManagedBean().getApprovalUsers().getTarget();
+		if (selectedApprovers != null && selectedApprovers.size() > 0) {
+			for (PmUser pmUser :  selectedApprovers) {
+				ScRequestNoteApprovalUser approver = new ScRequestNoteApprovalUser();
+				approver.setPmUser(pmUser);
+				approver.setRequestNote(requestNote);
+				results.add(approver);
 			}
+		} else{
+			requestNote.setApprovalUsers(null);
 		}
 
-		if (this.getManagedBean().getApprovalUsers().getTarget() != null && this.getManagedBean().getApprovalUsers().getTarget().size() > 0) {
-			for (PmUser pmUser :  getManagedBean().getApprovalUsers().getTarget()) {
-				if(userIds.isEmpty()){
-					ScRequestNoteApprovalUser approver = new ScRequestNoteApprovalUser();
-					approver.setPmUser(pmUser);
-					approver.setRequestNote(requestNote);
-					results.add(approver);
-				} else {
-					if(!userIds.contains(pmUser.getUserId())){
-						ScRequestNoteApprovalUser approver = new ScRequestNoteApprovalUser();
-						approver.setPmUser(pmUser);
-						approver.setRequestNote(requestNote);
-						requestNote.getApprovalUsers().add(approver);
-						results.add(approver);
-					} 
-				}
-				
-				if(requestNote.getApprovalUsers() != null && requestNote.getApprovalUsers().size()>0){
-					for (ScRequestNoteApprovalUser approver : requestNote.getApprovalUsers()) {
-						if(approver.getPmUser().equals(pmUser)){
-							approvers.add(approver);
-						}
-					}
-				}
-			}
+		if(!results.isEmpty()){
+			requestNote.setApprovalUsers(results);
 		}
-		
-		if(!approvers.isEmpty()){
-			requestNote.setApprovalUsers(approvers);
-		}
-		
-		return results;
 	}
 
 	/**
