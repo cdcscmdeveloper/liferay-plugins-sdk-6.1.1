@@ -505,6 +505,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private List<String> approverList;
 	
 	private boolean selectChargeLineRow=false;
+	private boolean gstRateChange;
 	
 /**
  * Gets the charge line item root.
@@ -3209,6 +3210,14 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setDeclarationCheck(boolean declarationCheck) {
 		this.declarationCheck = declarationCheck;
+	}
+
+	public boolean isGstRateChange() {
+		return gstRateChange;
+	}
+
+	public void setGstRateChange(boolean gstRateChange) {
+		this.gstRateChange = gstRateChange;
 	}
 
 }
