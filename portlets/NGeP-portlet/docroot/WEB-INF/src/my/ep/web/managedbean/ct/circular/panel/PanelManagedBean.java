@@ -79,6 +79,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	private String searchItemName;
 	private String zoneName;
 	private String gotoPreviewPage;	
+	private String taskName;
 		
 	private Date searchStartDate;
 	private Date searchEndDate;	
@@ -923,6 +924,20 @@ public class PanelManagedBean extends BaseManagedBean {
 	 */
 	public void setGotoPreviewPage(String gotoPreviewPage) {
 		this.gotoPreviewPage = gotoPreviewPage;
+	}	
+
+	/**
+	 * @return the taskName
+	 */
+	public String getTaskName() {
+		return taskName;
+	}
+
+	/**
+	 * @param taskName the taskName to set
+	 */
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
 	}
 
 	/**
