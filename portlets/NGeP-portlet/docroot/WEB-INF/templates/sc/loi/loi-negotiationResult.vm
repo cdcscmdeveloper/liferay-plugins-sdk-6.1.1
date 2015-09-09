@@ -135,105 +135,107 @@
 </table>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
 	#foreach( $scLoi in $scLois )
-	<tbody>
-		<tr>
-			<td>
-				<span style="font-family:'Arial', sans-serif;font-size:12px;text-align:left;color:#333;">
-				  #set( $supplierName = $scLoi.scLoiLoa.supplierName.replaceAll("&", "&#38;") )
-					Nama Pembekal : $supplierName
-				</span>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<table width="100%" border="0" cellpadding="0" cellspacing="0">
-					<tbody>
-						<tr>
-							
-							#if ($isZonal)
-								  	<th colspan="4" bgcolor="#6d839b" class="title border left"></th>
-						      #else
-								  	<th colspan="3" bgcolor="#6d839b" class="title border left"></th>
-						       #end
-						
-							<th colspan="2" bgcolor="#6d839b" class="title border left">Harga Tawaran Asal</th>
-							<th colspan="2" bgcolor="#6d839b" class="title border left-right">Harga Tawaran Selepas Rundingan</th>
-						</tr>
-						<tr>
-						    #if ($isZonal)
-					          <th bgcolor="#6d839b" class="title border left">Zone</th>
-					        #end
-							<th bgcolor="#6d839b" class="title border left">Item</th>
-							<th bgcolor="#6d839b" class="title border left">UOM</th>
-							<th bgcolor="#6d839b" class="title border left-right">Kuantiti</th>
-							<th bgcolor="#6d839b" class="title border left">Per Unit (RM)</th>
-							<th bgcolor="#6d839b" class="title border left">Jumlah Harga (RM)</th>
-							<th bgcolor="#6d839b" class="title border left">Per Unit (RM)</th>
-							<th bgcolor="#6d839b" class="title border left-right">Jumlah Harga (RM)</th>
-						</tr>
-						
-						 #set($String = "formatter")
-                         
-						#foreach( $loiLoaItem in $scLoi.scLoiLoaItems )
-						<tr class="ui-content">
-						 
-						   #if ($isZonal) 
-						       <td class="standard border-bottom left">
-							       #if($!loiLoaItem.tplSpecZoneDtl) 
-								       #set( $zoneName = $loiLoaItem.tplSpecZoneDtl.zoneName.replaceAll("&", "&#38;") )
-                                        $zoneName   #end 
-							     </td> 
-							 #end  
-						 
-							<td class="standard border-bottom left">$loiLoaItem.scRequestItem.itemName</td>
-							<td class="standard border-bottom left">$loiLoaItem.scRequestItem.uom.uomCode</td>
-							<td class="standard border-bottom left alignRight">
-							 #if ($!loiLoaItem.tplSpecTierQty )
-								   $loiLoaItem.tplSpecTierQty.fromQty - $loiLoaItem.tplSpecTierQty.toQty
-							 #else
-								 $loiLoaItem.qty
-						      #end </td>
-							<td class="standard border-bottom left alignRight">
-							#if($!loiLoaItem.scQtProposalItem.offerPrice) 
-	                            $String.format("%.2f", $!loiLoaItem.scQtProposalItem.offerPrice) 
-                             #end
-							</td>
-							<td class="standard border-bottom left alignRight">
-								 #if ($!loiLoaItem.tplSpecTierQty )
-								 #else
-									$!loiLoaItem.offeredPriceSubTotal
-								 #end
-							</td>
-							<td class="standard border-bottom left alignRight">
-							#if($!loiLoaItem.scQtProposalItem.offerPrice) 
-							    $String.format("%.2f", $!loiLoaItem.scQtProposalItem.finalPrice)
-							#end	
-						     </td>
-							<td class="standard border-bottom left-right alignRight">
-								#if ($!loiLoaItem.tplSpecTierQty )
+		#if ($scLoi.scWorkFlowStatus.pmStatus.statusId !=  $status)
+			<tbody>
+				<tr>
+					<td>
+						<span style="font-family:'Arial', sans-serif;font-size:12px;text-align:left;color:#333;">
+						  #set( $supplierName = $scLoi.scLoiLoa.supplierName.replaceAll("&", "&#38;") )
+							Nama Pembekal : $supplierName
+						</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<table width="100%" border="0" cellpadding="0" cellspacing="0">
+							<tbody>
+								<tr>
 									
-								#else
-									$!loiLoaItem.afterNegoSubTotal
+									#if ($isZonal)
+											<th colspan="4" bgcolor="#6d839b" class="title border left"></th>
+									  #else
+											<th colspan="3" bgcolor="#6d839b" class="title border left"></th>
+									   #end
+								
+									<th colspan="2" bgcolor="#6d839b" class="title border left">Harga Tawaran Asal</th>
+									<th colspan="2" bgcolor="#6d839b" class="title border left-right">Harga Tawaran Selepas Rundingan</th>
+								</tr>
+								<tr>
+									#if ($isZonal)
+									  <th bgcolor="#6d839b" class="title border left">Zone</th>
+									#end
+									<th bgcolor="#6d839b" class="title border left">Item</th>
+									<th bgcolor="#6d839b" class="title border left">UOM</th>
+									<th bgcolor="#6d839b" class="title border left-right">Kuantiti</th>
+									<th bgcolor="#6d839b" class="title border left">Per Unit (RM)</th>
+									<th bgcolor="#6d839b" class="title border left">Jumlah Harga (RM)</th>
+									<th bgcolor="#6d839b" class="title border left">Per Unit (RM)</th>
+									<th bgcolor="#6d839b" class="title border left-right">Jumlah Harga (RM)</th>
+								</tr>
+								
+								 #set($String = "formatter")
+								 
+								#foreach( $loiLoaItem in $scLoi.scLoiLoaItems )
+								<tr class="ui-content">
+								 
+								   #if ($isZonal) 
+									   <td class="standard border-bottom left">
+										   #if($!loiLoaItem.tplSpecZoneDtl) 
+											   #set( $zoneName = $loiLoaItem.tplSpecZoneDtl.zoneName.replaceAll("&", "&#38;") )
+												$zoneName   #end 
+										 </td> 
+									 #end  
+								 
+									<td class="standard border-bottom left">$loiLoaItem.scRequestItem.itemName</td>
+									<td class="standard border-bottom left">$loiLoaItem.scRequestItem.uom.uomCode</td>
+									<td class="standard border-bottom left alignRight">
+									 #if ($!loiLoaItem.tplSpecTierQty )
+										   $loiLoaItem.tplSpecTierQty.fromQty - $loiLoaItem.tplSpecTierQty.toQty
+									 #else
+										 $loiLoaItem.qty
+									  #end </td>
+									<td class="standard border-bottom left alignRight">
+									#if($!loiLoaItem.scQtProposalItem.offerPrice) 
+										$String.format("%.2f", $!loiLoaItem.scQtProposalItem.offerPrice) 
+									 #end
+									</td>
+									<td class="standard border-bottom left alignRight">
+										 #if ($!loiLoaItem.tplSpecTierQty )
+										 #else
+											$!loiLoaItem.offeredPriceSubTotal
+										 #end
+									</td>
+									<td class="standard border-bottom left alignRight">
+									#if($!loiLoaItem.scQtProposalItem.offerPrice) 
+										$String.format("%.2f", $!loiLoaItem.scQtProposalItem.finalPrice)
+									#end	
+									 </td>
+									<td class="standard border-bottom left-right alignRight">
+										#if ($!loiLoaItem.tplSpecTierQty )
+											
+										#else
+											$!loiLoaItem.afterNegoSubTotal
+										#end
+									</td>
+								</tr>
 								#end
-							</td>
-						</tr>
-						#end
-						<tr class="ui-content">
-							#if ($isZonal)
-								<th colspan="4" bgcolor="#6d839b" class="title border left"></th>
-							#else
-								<th colspan="3" bgcolor="#6d839b" class="title border left"></th>
-							#end
-							<td bgcolor="#6d839b" class="title border left">Total</td>
-							<td bgcolor="#6d839b" class="title border left alignRight">$scLoi.offeredPriceTotal</td>
-							<td bgcolor="#6d839b" class="title border left">Total</td>
-							<td bgcolor="#6d839b" class="title border left-right alignRight">$scLoi.afterNegoTotal</td>
-						</tr>
-					</tbody>
-				</table>
-			</td>
-		</tr>
-	</tbody>
+								<tr class="ui-content">
+									#if ($isZonal)
+										<th colspan="4" bgcolor="#6d839b" class="title border left"></th>
+									#else
+										<th colspan="3" bgcolor="#6d839b" class="title border left"></th>
+									#end
+									<td bgcolor="#6d839b" class="title border left">Total</td>
+									<td bgcolor="#6d839b" class="title border left alignRight">$scLoi.offeredPriceTotal</td>
+									<td bgcolor="#6d839b" class="title border left">Total</td>
+									<td bgcolor="#6d839b" class="title border left-right alignRight">$scLoi.afterNegoTotal</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+			</tbody>
+		#end
 	#end
 </table>
 </body>
