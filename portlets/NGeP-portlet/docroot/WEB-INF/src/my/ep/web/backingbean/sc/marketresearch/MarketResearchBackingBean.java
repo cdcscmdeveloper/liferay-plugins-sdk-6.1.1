@@ -10,6 +10,8 @@
  */
 package my.ep.web.backingbean.sc.marketresearch;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,11 +29,13 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sc.marketresearch.IMarketResearchSO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.sc.marketresearch.MarketResearchReqDTO;
 import my.ep.dto.sc.marketresearch.MarketResearchResDTO;
 import my.ep.exception.EpException;
@@ -39,10 +43,15 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.sc.common.ScAttachment;
+import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
+import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.sc.marketresearch.MarketResearchManagedBean;
@@ -179,6 +188,38 @@ public class MarketResearchBackingBean extends
 		}
 	}
 
+	/*public void downloadReport(ScLoaReport scLoaReport) throws IOException {
+		debugLogger("downloadReport");
+		ScLoaReportAttachment scLoaReportAttachment = scLoaReport
+				.getScLoaReportAttachment();
+		scLoaReportAttachment = generateDocumentAttachment(scLoaReport);
+		downloadFile(scLoaReportAttachment);
+	}*/
+
+	public void downloadReport(String filePath) throws IOException {
+		debugLogger("downloadReport");	
+		//for local testing
+		    //downloadFile(filePath);
+		//Remote testing
+		downloadFile(getActualFilePath(filePath));
+	}
+		
+	/**
+	 * To get Actual file path for attachement.
+	 * 
+	 * @param attachment
+	 * @return filePath.
+	 */
+	protected String getActualFilePath(String filePath) {
+		String docRepoBaseDir = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		StringBuilder actualFilePath = new StringBuilder(docRepoBaseDir);
+		actualFilePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		actualFilePath.append(filePath);
+
+		return actualFilePath.toString();
+	}
+	
 	/**
 	 * Gets the market research data.
 	 * 
