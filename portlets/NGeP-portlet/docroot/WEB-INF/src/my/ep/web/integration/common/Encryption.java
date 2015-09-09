@@ -19,57 +19,9 @@ public class Encryption {
 	SFTPUtility sftpUtility = new SFTPUtility();
 	OsbUtility osbUtility = new OsbUtility();
 
-	public void encryptGmas(String inFilePath,String outFilePath,String fileName,String serviceCode,String processId) {
-		
-		log.info("inside encryptGmas....");
-	
-	//	FileUtility fileUtility = new FileUtility();
-		File inFile = new File(inFilePath + fileName);
-		File outFile = new File(outFilePath + fileName);
-	
-		URL resource = getClass().getResource(".");
-		String path = resource.getPath();
-	
-		log.info("path value with (.) :" + path);
-	
-		// String substring =
-		// path.substring(0,path.indexOf("NGeP-portlet.war"));
-	
-		String substring = path.substring(0, path.indexOf("NGeP-portlet.war"));
-	
-		String encryptKey = substring
-				+ IntegrationConstants.GMAS_PUBLIC_KEY_PATH;
-		log.info("encryptKey :" + encryptKey);
-	
-		// encript the content
-		String encrypted;
-		try {
-			encrypted = PGPProcessor.encryptContent(readFileContents(inFile),
-					encryptKey);
-	
-			createFile(outFile, encrypted);
-			log.info("encryption successful..");
-		} catch (Exception e) {
-			
-			log.info("Error Creating Encryption File");
-	
-			e.printStackTrace();
-		}
-		// upload the encripted file to sftp server
-		
-	
-		sftpUtility.upload(outFilePath + fileName,IntegrationConstants.GMAS_UPLOAD +fileName,fileName,serviceCode,processId);
-		
-		// call osb service for transfering from host to 1GFMAS
-		 osbUtility.osbServiceCallOutBound(processId,fileName);
-	
-	}
-	
-	
 	public void encryptGmas(BatchReqDTO reqDTO) {
 		log.info("inside encryptGmas....");
 	
-//		FileUtility fileUtility = new FileUtility();
 		File inFile = new File(reqDTO.getFilePath() + reqDTO.getFileName());
 		File outFile = new File(reqDTO.getEncryptFilePath() + reqDTO.getFileName());
 	
@@ -102,26 +54,22 @@ public class Encryption {
 		}
 		// upload the encripted file to sftp server
 		
-//		reqDTO.setLocatFilePath(reqDTO.getEncryptFilePath() + reqDTO.getFileName());
 		reqDTO.setRemoteFilePath(IntegrationConstants.GMAS_UPLOAD + reqDTO.getFileName());
 		
 		reqDTO.setLocatFilePath(reqDTO.getEncryptFilePath() + reqDTO.getFileName());
-//		reqDTO.setRemoteFilePath(IntegrationConstants.GMAS_UPLOAD);
 		reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_1GFMAS);
 		reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
 	
 		sftpUtility.upload(reqDTO);
 		
 		// call osb service for transfering from host to 1GFMAS
-		 osbUtility.osbServiceCallOutBound(reqDTO.getProcessId(),reqDTO.getFileName());
+		 osbUtility.osbServiceCallOutBound(reqDTO.getServiceCode(),reqDTO.getFileName());
 	
 	}
 
 	// decrypt gmass
 	public void decryptGmas(String inFilePath, String outFilePath) {
 		log.info("inside decryptGmas");
-		log.info("inFilePath :" + inFilePath);
-		log.info("outFilePath :" + outFilePath);
 
 		File inFile = new File(inFilePath);
 		File outFile = new File(outFilePath);
@@ -133,10 +81,7 @@ public class Encryption {
 
 		String substring = path.substring(0, path.indexOf("NGeP-portlet.war"));
 
-		String encryptKey = substring
-				+ IntegrationConstants.GMAS_PRIVATE_KEY_PATH;
-
-		log.info("decrpt :" + encryptKey);
+		String encryptKey = substring + IntegrationConstants.GMAS_PRIVATE_KEY_PATH;
 
 		try {
 			String decrypted = PGPProcessor.decryptContent(
@@ -180,10 +125,10 @@ public class Encryption {
 		// upload the encripted file to sftp server
 
 		sftpUtility.upload(outFilePath + fileName,
-				IntegrationConstants.PHIS_UPLOAD_DIR + fileName, null, null, null);
+				IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL + fileName, null, null, null);
 
 		// once upload is done cal web service osb integration to transfer file.
-//		osbUtility.osbServiceCallOutBound(processId, fileName);
+		osbUtility.osbServiceCallOutBound(processId, fileName);
 
 	}
 	
@@ -216,13 +161,13 @@ public class Encryption {
 		// upload the encripted file to sftp server
 
 		reqDTO.setLocatFilePath(reqDTO.getEncryptFilePath() + reqDTO.getFileName());
-		reqDTO.setRemoteFilePath(IntegrationConstants.PHIS_UPLOAD_DIR + reqDTO.getFileName());
+		reqDTO.setRemoteFilePath(IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL + reqDTO.getFileName());
 		reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_PHIS);
 		reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
-		sftpUtility.upload(reqDTO);
+//		sftpUtility.upload(reqDTO);
 
 		// once upload is done cal web service osb integration to transfer file.
-		osbUtility.osbServiceCallOutBound(reqDTO.getServiceCode(), reqDTO.getFileName());
+//		osbUtility.osbServiceCallOutBound(reqDTO.getServiceCode(), reqDTO.getFileName());
 
 	}
 
