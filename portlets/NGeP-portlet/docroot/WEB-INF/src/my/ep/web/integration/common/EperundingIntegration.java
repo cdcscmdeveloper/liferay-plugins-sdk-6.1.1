@@ -65,13 +65,13 @@ public class EperundingIntegration {
 
 	OsbUtility osbUtility = new OsbUtility();
 	FileUtility fileUtility = new FileUtility();
-	String path = fileUtility.createDirectory(new Date(),IntegrationConstants.FILE_PATH);
+	String path = fileUtility.createDirectory(new Date(),IntegrationConstants.EPERUNDING_UPLOAD_DIR_LOCAL);
 
 	IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IParameterSO.class);
 
 	ISmRemarksSO smRemarksSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,ISmRemarksSO.class);
 
-	ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+	ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
 
 	/*public static void main(String args[]) {
 
@@ -663,64 +663,52 @@ public class EperundingIntegration {
 			for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
 
 				// for consultant profiles
-				if (smSupplier
-						.getSmAppl()
-						.getSupplierType()
-						.equalsIgnoreCase(
-								IntegrationConstants.CONSULTANT_PROFILE_CODE)) {
+				if (smSupplier.getSmAppl().getSupplierType().equalsIgnoreCase(IntegrationConstants.CONSULTANT_PROFILE_CODE)) {
 
 					profile = new ConsultantProfile();
 					profile.setCompanyName(smSupplier.getCompanyName());
 					profile.setSSMNo(smSupplier.getRegNo());
-					profile.setMOFNo(smSupplier.getSmMofAccounts().get(0)
-							.getMofNo());
+					profile.setMOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
 
 					// New columns added
-					profile.setGSTNo(smSupplier.getSmGstSuppliers().get(0)
-							.getGstRegNo());
-					profile.setVirtualCertNo(smSupplier.getSmMofAccounts()
-							.get(0).getSmMofCerts().get(0).getCertSerialNo());
-					profile.setGSTEffectiveDate(smSupplier.getSmGstSuppliers()
-							.get(0).getGstEffDate());
-					profile.setFirstTaxablePeriod(smSupplier
-							.getSmGstSuppliers().get(0).getGstDeclaredDate());
+					if(null!=smSupplier.getSmGstSuppliers()){
+						
+						profile.setGSTNo(smSupplier.getSmGstSuppliers().get(0).getGstRegNo());
+						profile.setVirtualCertNo(smSupplier.getSmMofAccounts().get(0).getSmMofCerts().get(0).getCertSerialNo());
+						profile.setGSTEffectiveDate(smSupplier.getSmGstSuppliers().get(0).getGstEffDate());
+						profile.setFirstTaxablePeriod(smSupplier.getSmGstSuppliers().get(0).getGstDeclaredDate());
+					}
+					
 
-					//					profile.setGSTNo(IntegrationConstants.EMPTY_TRING);
-					//					profile.setVirtualCertNo(smSupplier.getSmMofAccounts().get(0).getSmMofCerts().get(0).getCertSerialNo());
-					//					profile.setGSTEffectiveDate(IntegrationConstants.DEFAULT_DATE);
-					//					profile.setFirstTaxablePeriod(IntegrationConstants.DEFAULT_DATE);
+					//	profile.setGSTNo(IntegrationConstants.EMPTY_TRING);
+					//	profile.setVirtualCertNo(smSupplier.getSmMofAccounts().get(0).getSmMofCerts().get(0).getCertSerialNo());
+					//	profile.setGSTEffectiveDate(IntegrationConstants.DEFAULT_DATE);
+					//	profile.setFirstTaxablePeriod(IntegrationConstants.DEFAULT_DATE);
 					// End
-					profile.setCompanyType(getCompanyType(smSupplier
-							.getBusinessType()));
+					profile.setCompanyType(getCompanyType(smSupplier.getBusinessType()));
 
-					String phoneNo = smSupplier.getSmAppl().getSmCompanyBasic()
-							.getPhoneNo();
+					String phoneNo = smSupplier.getSmAppl().getSmCompanyBasic().getPhoneNo();
 					if (null != phoneNo) {
 						if (phoneNo.startsWith("+")) {
 							profile.setTelCountryCode(phoneNo.substring(0, 2));
 							profile.setTelAreaCode(phoneNo.substring(2, 4));
-							profile.setTelNo(phoneNo.substring(4,
-									phoneNo.length()));
+							profile.setTelNo(phoneNo.substring(4,phoneNo.length()));
 						} else {
-							profile.setTelCountryCode("+"
-									+ phoneNo.substring(0, 1));
+							profile.setTelCountryCode("+" + phoneNo.substring(0, 1));
 							profile.setTelAreaCode(phoneNo.substring(1, 3));
-							profile.setTelNo(phoneNo.substring(3,
-									phoneNo.length()));
+							profile.setTelNo(phoneNo.substring(3,phoneNo.length()));
 						}
 
 					}
 
-					String faxNo = smSupplier.getSmAppl().getSmCompanyBasic()
-							.getFaxNo();
+					String faxNo = smSupplier.getSmAppl().getSmCompanyBasic().getFaxNo();
 					if (null != faxNo) {
 						if (phoneNo.startsWith("+")) {
 							profile.setFaxCountryCode(faxNo.substring(0, 2));
 							profile.setFaxAreaCode(faxNo.substring(2, 4));
 							profile.setFaxNo(faxNo.substring(4, faxNo.length()));
 						} else {
-							profile.setFaxCountryCode("+"
-									+ faxNo.substring(0, 1));
+							profile.setFaxCountryCode("+" + faxNo.substring(0, 1));
 							profile.setFaxAreaCode(faxNo.substring(1, 3));
 							profile.setFaxNo(faxNo.substring(3, faxNo.length()));
 						}
@@ -1016,27 +1004,20 @@ public class EperundingIntegration {
 			if (resDTO.isSuccessful()) {
 				for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
 
-					for (SmSupplierBranch smSupplierBranch : smSupplier
-							.getSmAppl().getSmSupplierBranches()) {
+					for (SmSupplierBranch smSupplierBranch : smSupplier.getSmAppl().getSmSupplierBranches()) {
 
 						branchCompany = new BranchCompany();
 						branch = new Branch();
-						branchCompany.setMOFNo(smSupplier.getSmMofAccounts()
-								.get(0).getMofNo());
+						branchCompany.setMOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
 
 						branch.setBranchName(smSupplierBranch.getBranchName());
-						branch.setAddress1(smSupplierBranch.getSmAddress()
-								.getAddress1());
-						branch.setAddress2(smSupplierBranch.getSmAddress()
-								.getAddress2());
-						branch.setAddress3(smSupplierBranch.getSmAddress()
-								.getAddress3());
-						branch.setPostcode(smSupplierBranch.getSmAddress()
-								.getPostcode());
+						branch.setAddress1(smSupplierBranch.getSmAddress().getAddress1());
+						branch.setAddress2(smSupplierBranch.getSmAddress().getAddress2());
+						branch.setAddress3(smSupplierBranch.getSmAddress().getAddress3());
+						branch.setPostcode(smSupplierBranch.getSmAddress().getPostcode());
 
 						if (null != smSupplierBranch.getSmAddress().getPmCity())
-							branch.setCity(smSupplierBranch.getSmAddress()
-									.getPmCity().getCityName());
+							branch.setCity(smSupplierBranch.getSmAddress().getPmCity().getCityName());
 						else
 							branch.setCity(IntegrationConstants.EMPTY_TRING);
 
