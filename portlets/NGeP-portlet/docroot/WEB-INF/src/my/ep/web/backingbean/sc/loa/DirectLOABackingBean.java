@@ -474,6 +474,10 @@ public class DirectLOABackingBean extends
 				List<TplSpecZoneDtl> zoneDetails = resDTO.getSpecZoneDetails();
 				constructTreeNodeForzones(zoneDetails);
 			}
+			if (CollectionUtils.isNotEmpty(scLoa.getScQtDeductions())) {
+				this.getManagedBean().setSelectedScQtDeduction(
+						scLoa.getScQtDeductions().get(0));
+			}
 
 			this.getManagedBean().setProdscQtDoc(resDTO.getProductDoc());
 
@@ -1985,8 +1989,10 @@ public class DirectLOABackingBean extends
 		getManagedBean().getScLoa().getScLoiLoa()
 				.setSupplierName(suSmSupplier.getCompanyName());
 
-	/*	getManagedBean().getScLoa().getScLoiLoa()
-				.setMofNo(suSmSupplier.getSmMofAccount().getMofNo());*/
+		/*
+		 * getManagedBean().getScLoa().getScLoiLoa()
+		 * .setMofNo(suSmSupplier.getSmMofAccount().getMofNo());
+		 */
 
 		getManagedBean().getScLoa().getScLoiLoa()
 				.setEpNo(suSmSupplier.getEpNo());
@@ -2017,7 +2023,6 @@ public class DirectLOABackingBean extends
 						resDTO.getSmSupplier().getSmMofAccounts().get(0)
 								.getMofNo());
 
-		
 	}
 
 	/**
@@ -3235,8 +3240,6 @@ public class DirectLOABackingBean extends
 		}
 	}
 
-	
-
 	/**
 	 * Schedule type change.Event handle change Schedule
 	 * type(Schedule/Progressive payment)in Specification committee.
@@ -3778,8 +3781,9 @@ public class DirectLOABackingBean extends
 				awardResDTO.getSupplierHQPersonnel());
 		this.getManagedBean()
 				.setBranchsList(awardResDTO.getSmSupplierBranchs());
-		if(CollectionUtils.isNotEmpty(scLoa.getScQtDeductions())){
-		this.getManagedBean().setSelectedScQtDeduction(scLoa.getScQtDeductions().get(0));
+		if (CollectionUtils.isNotEmpty(scLoa.getScQtDeductions())) {
+			this.getManagedBean().setSelectedScQtDeduction(
+					scLoa.getScQtDeductions().get(0));
 		}
 
 	}
@@ -4588,7 +4592,7 @@ public class DirectLOABackingBean extends
 		}
 		context.put("gstRegFlag", gstRegFlag);
 		setGstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
-		
+
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.LOA_AGREEMENT_LETTER, context,
 				new FileOutputStream(getActualFilePath(attachment)));
