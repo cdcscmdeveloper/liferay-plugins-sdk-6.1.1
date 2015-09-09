@@ -95,7 +95,9 @@
 				</c:if>
 				
 				<p:dataTable id="questionTbl" var="question" rowIndexVar="row"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{templateSpecBean.specMaster.tplSpecQuestions}"
+					
 					scrollable1="true" scrollWidth1="#{scrollWidth}">
 					
 					<ui:param name="prevSpecQuestion" value="#{row > 0 ? templateSpecBean.specMaster.tplSpecQuestions[row-1] : null}" />
@@ -129,7 +131,7 @@
 					
 			<c:if test="#{isContentTypeAnswer or isContentTypeScore or (isContentTypeUpdateSpec and isUpdateSpecByAnswers)}">
 				<p:dataTable id="questionTbl" var="tplSpecAnswer" rowIndexVar="row"
-					value="#{templateSpecBean.specAnswerList}"
+					value="#{templateSpecBean.specAnswerList}" 	emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					scrollable1="true" scrollWidth1="#{scrollWidth}">
 					
 					<ui:param name="prevSpecQuestion" value="#{row > 0 ? templateSpecBean.specAnswerList[row-1].tplSpecQuestion : null}" />
@@ -187,6 +189,7 @@
 				
 				<p:dataTable id="questionTbl" var="question" rowIndexVar="row"
 					value="#{templateSpecBean.specMaster.tplSpecQuestions}"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					scrollable1="true" scrollWidth1="#{scrollWidth}">
 					
 					<ui:param name="prevSpecQuestion" value="#{row > 0 ? templateSpecBean.specMaster.tplSpecQuestions[row-1] : null}" />
