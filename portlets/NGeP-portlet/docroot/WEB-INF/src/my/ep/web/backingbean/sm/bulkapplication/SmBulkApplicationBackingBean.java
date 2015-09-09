@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
+import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
-import my.ep.web.backingbean.sm.applicationView.BaseReviewApplicationBackingBean;
+import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sm.bulkapplication.SmBulkApplicationManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.StatusHelper;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.vo.SmBulkApplicationVO;
@@ -15,7 +18,7 @@ import my.ep.web.vo.SmBulkApplicationVO;
 @ManagedBean(name = "bulkApplicationBackingBean")
 @RequestScoped
 public class SmBulkApplicationBackingBean extends
-		BaseReviewApplicationBackingBean<SmBulkApplicationManagedBean> {
+		BaseBackingBean<SmBulkApplicationManagedBean> {
 	/**
 	 * Pre-render bulk application screen
 	 */
@@ -28,7 +31,16 @@ public class SmBulkApplicationBackingBean extends
 	}
 
 	public void approveBulkApplication() {
-		if(getManagedBean().get)
+		if (getManagedBean().getSelectedTasks() != null
+				&& !getManagedBean().getSelectedTasks().isEmpty()) {
+			ReviewApplicationReqDTO reqDTO = null;
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			Long pmStatId = null;
+			for (SmBulkApplicationVO bulkAppl : getManagedBean()
+					.getSelectedTasks()) {
+				pmStatId = bulkAppl.getAppl().getPmStatus().getStatusId();
+			}
+		}
 	}
 
 	public void refreshTaskList() {
