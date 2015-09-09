@@ -650,46 +650,6 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 					.getUnspscTitle());
 		}
 
-		/*
-		 * String classCode = getParentCode(new
-		 * Long(unspscObj.getUnspscCode()));
-		 * 
-		 * reqDTO.setUnspscCode(classCode); CodificationResDTO classDTO =
-		 * unspscSO.searchUnspscObj(reqDTO);
-		 * 
-		 * this.getManagedBean().setClassCode(
-		 * classDTO.getUnspscObj().getUnspscCode());
-		 * this.getManagedBean().setClassTitle(
-		 * classDTO.getUnspscObj().getUnspscTitle());
-		 * 
-		 * String familyCode = getParentCode(new Long(classDTO.getUnspscObj()
-		 * .getUnspscCode()));
-		 * 
-		 * reqDTO.setUnspscCode(familyCode); CodificationResDTO familyDTO =
-		 * unspscSO.searchUnspscObj(reqDTO);
-		 * 
-		 * this.getManagedBean().setFamilyCode(
-		 * familyDTO.getUnspscObj().getUnspscCode());
-		 * this.getManagedBean().setFamilyTitle(
-		 * familyDTO.getUnspscObj().getUnspscTitle());
-		 * 
-		 * String segmentCode = getParentCode(new Long(familyDTO.getUnspscObj()
-		 * .getUnspscCode()));
-		 * 
-		 * reqDTO.setUnspscCode(segmentCode); CodificationResDTO segmentDTO =
-		 * unspscSO.searchUnspscObj(reqDTO);
-		 * 
-		 * this.getManagedBean().setSegmentCode(
-		 * segmentDTO.getUnspscObj().getUnspscCode());
-		 * this.getManagedBean().setSegmentTitle(
-		 * segmentDTO.getUnspscObj().getUnspscTitle());
-		 * 
-		 * this.getManagedBean().getSelectedUNSPSCObj()
-		 * .setUnspscCode(unspscObj.getUnspscCode());
-		 * this.getManagedBean().getSelectedUNSPSCObj()
-		 * .setUnspscTitle(unspscObj.getUnspscTitle());
-		 */
-
 		for (CmBrand brand : resDTO.getCommodityObj().getCmBrand()) {
 			if (!StringUtils.isBlank(brand.getBrandName()) && brand.getRecordStatusFlg() ==1) {
 				this.getManagedBean()
@@ -730,6 +690,14 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 						.getColorName()));
 			}
 		}
+		
+		this.getManagedBean().getExtensionSearchItemDataModel().resetData();
+		this.getManagedBean().getColorFilterBean().setSearchValue("");
+		this.getManagedBean().getTypeFilterBean().setSearchValue("");
+		this.getManagedBean().getMeasurementFilterBean().setSearchValue("");
+		this.getManagedBean().getBrandFilterBean().setSearchValue("");
+		
+		
 
 		return NAV_TO_EXTENSION_SEARCH + "?faces-redirect=true";
 	}
