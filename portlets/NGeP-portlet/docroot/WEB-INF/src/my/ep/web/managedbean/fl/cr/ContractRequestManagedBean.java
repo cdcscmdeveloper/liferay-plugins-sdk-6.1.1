@@ -284,6 +284,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	
 	private boolean itemDeleteButtonShow=false;
 	private boolean itemAddButtonShow;
+	private boolean gstRateChange;
 	
 	/** The active contract list document data model. */
 	private IPagingDataModel<VCtActiveContract> activeContractDataModel = new ActiveContractPagingDataModel();
@@ -2669,6 +2670,14 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setItemAddButtonShow(boolean itemAddButtonShow) {
 		this.itemAddButtonShow = itemAddButtonShow;
+	}
+
+	public boolean isGstRateChange() {
+		return gstRateChange;
+	}
+
+	public void setGstRateChange(boolean gstRateChange) {
+		this.gstRateChange = gstRateChange;
 	}
 
 }
