@@ -4568,10 +4568,10 @@ public class DirectLOABackingBean extends
 		if (supplier != null
 				&& supplier.getGstRegisteredFlag() == DbValueConst.RECORD_STATUS_ACTIVE) {
 			gstRegFlag = "true";
-			setGstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
 		}
 		context.put("gstRegFlag", gstRegFlag);
-
+		setGstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
+		
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.LOA_AGREEMENT_LETTER, context,
 				new FileOutputStream(getActualFilePath(attachment)));
