@@ -652,7 +652,7 @@ public class DirectLOABackingBean extends
 					Integer.valueOf(getDays(contractExpDate)), 0, 0, 0);
 		}
 
-		if(startDate != null && endDate != null){
+		if (startDate != null && endDate != null) {
 			if (startDate.after(endDate)) {
 				throw new EpException(MessageConst.ERROR_760345);
 			}
@@ -662,12 +662,14 @@ public class DirectLOABackingBean extends
 			}
 
 			if (!(startDate.getTime().after(contractEffDate)
-					&& (startDate.getTime().before(contractExpDate)) || contractEffDate.equals(startDate.getTime()))) {
+					&& (startDate.getTime().before(contractExpDate)) || contractEffDate
+						.equals(startDate.getTime()))) {
 				throw new EpException(MessageConst.ERROR_760347);
 			}
 
 			if (!(endDate.getTime().after(contractEffDate)
-					&& (endDate.getTime().before(contractExpDate)) || contractExpDate.equals(endDate.getTime()))) {
+					&& (endDate.getTime().before(contractExpDate)) || contractExpDate
+						.equals(endDate.getTime()))) {
 				throw new EpException(MessageConst.ERROR_760348);
 			}
 		}
@@ -700,47 +702,50 @@ public class DirectLOABackingBean extends
 			Long parameterId = scQtDeduction.getDeductionType()
 					.getParameterId();
 
-			if(null != parameterId){
-			parameterSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			clauseSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IClauseSO.class);
+			if (null != parameterId) {
+				parameterSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+				clauseSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IClauseSO.class);
 
-			ParameterReqDTO reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterId(parameterId);
-			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
-			scQtDeduction.setDeductionType(resDTO.getPmParameter());
-			validateDeductionPayment(scQtDeduction);
-			getClausesTitle(scQtDeduction);
-			ScQtDeductionClause deductionClause = null;
-			List<ScQtDeductionClause> deductionClauseList = new ArrayList<ScQtDeductionClause>();
-			if (!ParameterConst.DEDUCTION_TYPE_OTHERS
-					.equalsIgnoreCase(scQtDeduction.getDeductionType()
-							.getParameterCode())) {
-				ClauseReqDTO clauseReqDTO = new ClauseReqDTO();
-				clauseReqDTO.setDeductionType(scQtDeduction.getDeductionType()
-						.getParameterCode());
-				ClauseResDTO clauseResDTO = clauseSO
-						.retrieveClausesByDeductionType(clauseReqDTO);
-				if (clauseResDTO.getResultBean() != null) {
-					List<PmClause> pmClauseList = clauseResDTO.getResultBean()
-							.getResultList();
-					for (PmClause pmClause : pmClauseList) {
-						deductionClause = new ScQtDeductionClause();
-						deductionClause.setPmClause(pmClause);
-						deductionClause.setScQtDeduction(scQtDeduction);
-						deductionClause.setClauseDesc(pmClause.getClauseDesc());
-						deductionClauseList.add(deductionClause);
+				ParameterReqDTO reqDTO = new ParameterReqDTO();
+				reqDTO.setParameterId(parameterId);
+				ParameterResDTO resDTO = parameterSO
+						.retrieveParameterById(reqDTO);
+				scQtDeduction.setDeductionType(resDTO.getPmParameter());
+				validateDeductionPayment(scQtDeduction);
+				getClausesTitle(scQtDeduction);
+				ScQtDeductionClause deductionClause = null;
+				List<ScQtDeductionClause> deductionClauseList = new ArrayList<ScQtDeductionClause>();
+				if (!ParameterConst.DEDUCTION_TYPE_OTHERS
+						.equalsIgnoreCase(scQtDeduction.getDeductionType()
+								.getParameterCode())) {
+					ClauseReqDTO clauseReqDTO = new ClauseReqDTO();
+					clauseReqDTO.setDeductionType(scQtDeduction
+							.getDeductionType().getParameterCode());
+					ClauseResDTO clauseResDTO = clauseSO
+							.retrieveClausesByDeductionType(clauseReqDTO);
+					if (clauseResDTO.getResultBean() != null) {
+						List<PmClause> pmClauseList = clauseResDTO
+								.getResultBean().getResultList();
+						for (PmClause pmClause : pmClauseList) {
+							deductionClause = new ScQtDeductionClause();
+							deductionClause.setPmClause(pmClause);
+							deductionClause.setScQtDeduction(scQtDeduction);
+							deductionClause.setClauseDesc(pmClause
+									.getClauseDesc());
+							deductionClauseList.add(deductionClause);
+						}
+						scQtDeduction
+								.setScQtDeductionClauses(deductionClauseList);
+					} else {
+						scQtDeduction.setScQtDeductionClauses(null);
 					}
-					scQtDeduction.setScQtDeductionClauses(deductionClauseList);
 				} else {
 					scQtDeduction.setScQtDeductionClauses(null);
 				}
+				getManagedBean().setSelectedScQtDeduction(scQtDeduction);
 			} else {
-				scQtDeduction.setScQtDeductionClauses(null);
-			}
-			getManagedBean().setSelectedScQtDeduction(scQtDeduction);
-			}else{
 				scQtDeduction.setDeductionType(new PmParameter());
 				getManagedBean().setSelectedScQtDeduction(scQtDeduction);
 			}
@@ -1050,26 +1055,24 @@ public class DirectLOABackingBean extends
 				if (null == getManagedBean().getApproverUser()
 						|| null == getManagedBean().getApproverUser()
 								.getUserId()) {
-					throw new EpException(
-							MessageConst.ERROR_760315,
-							new String[] {ResourceBundleUtils.getMessage("lbl.sc.approver",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					throw new EpException(MessageConst.ERROR_760315,
+							new String[] { ResourceBundleUtils.getMessage(
+									"lbl.sc.approver",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale()) });
 				}
 			}
 
 			if (null == scLoa.getContractEffDate()) {
-				throw new EpException(
-						MessageConst.ERROR_760349);
+				throw new EpException(MessageConst.ERROR_760349);
 			}
 
 			if (null == scLoa.getContractExpDate()) {
-				throw new EpException(
-						MessageConst.ERROR_760350);
+				throw new EpException(MessageConst.ERROR_760350);
 			}
 			if (null == scLoa.getFileExtNo()) {
-				
-				throw new EpException(
-						MessageConst.ERROR_760351);
+
+				throw new EpException(MessageConst.ERROR_760351);
 			}
 		}
 		// validation for fulfillment schedule and progressivepayment
@@ -1196,7 +1199,7 @@ public class DirectLOABackingBean extends
 					Integer.valueOf(getDays(contractExpDate)), 0, 0, 0);
 		}
 
-		if(startDate != null && endDate != null){
+		if (startDate != null && endDate != null) {
 			if (startDate.after(endDate)) {
 				throw new EpException(MessageConst.ERROR_760345);
 			}
@@ -1206,12 +1209,14 @@ public class DirectLOABackingBean extends
 			}
 
 			if (!(startDate.getTime().after(contractEffDate)
-					&& (startDate.getTime().before(contractExpDate)) || contractEffDate.equals(startDate.getTime()))) {
+					&& (startDate.getTime().before(contractExpDate)) || contractEffDate
+						.equals(startDate.getTime()))) {
 				throw new EpException(MessageConst.ERROR_760347);
 			}
 
 			if (!(endDate.getTime().after(contractEffDate)
-					&& (endDate.getTime().before(contractExpDate)) || contractExpDate.equals(endDate.getTime()))) {
+					&& (endDate.getTime().before(contractExpDate)) || contractExpDate
+						.equals(endDate.getTime()))) {
 				throw new EpException(MessageConst.ERROR_760348);
 			}
 		}
@@ -1227,10 +1232,11 @@ public class DirectLOABackingBean extends
 	 */
 	private void parseLOADetails(ScLoa scLoa, String outcome,
 			DirectAwardReqDTO awardReqDTO) {
-		
+
 		scLoa.setIssueDate(scLoa.getContractEffDate());
 		// Acknowledge Date
-		scLoa.setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), 14));
+		scLoa.setAckDueDate(DateUtils.addDays(
+				DateUtils.getCurrentDateWithoutTime(), 14));
 
 		Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 
@@ -1719,7 +1725,7 @@ public class DirectLOABackingBean extends
 	 *            the schedule
 	 * @param startMonthAction
 	 *            the start month action
-	 * @throws ParseException 
+	 * @throws ParseException
 	 */
 	public void calculateScheduleMonths(ScQtSchedule schedule,
 			Boolean startMonthAction) throws ParseException {
@@ -1728,7 +1734,7 @@ public class DirectLOABackingBean extends
 		if (null == freqSchedule) {
 			freqSchedule = new ArrayList<ScQtSchedule>();
 		}
-		Integer startMonth = 0, endMonth = 0, startYear = 0, endYear = 0,  months = 0;
+		Integer startMonth = 0, endMonth = 0, startYear = 0, endYear = 0, months = 0;
 		startMonth = schedule.getStartMonth() != null ? Integer
 				.parseInt(schedule.getStartMonth()) : null;
 		endMonth = schedule.getEndMonth() != null ? Integer.parseInt(schedule
@@ -1738,11 +1744,11 @@ public class DirectLOABackingBean extends
 		endYear = schedule.getEndYear() != null ? Integer.parseInt(schedule
 				.getEndYear()) : null;
 
-		if (startMonthAction !=null && startMonthAction && startMonth != null) {
+		if (startMonthAction != null && startMonthAction && startMonth != null) {
 			endMonth = startMonth;
 			endYear = startYear;
 			schedule.setEndMonth(endMonth.toString());
-			if(endYear != null){
+			if (endYear != null) {
 				schedule.setEndYear(endYear.toString());
 			}
 		}
@@ -1750,15 +1756,16 @@ public class DirectLOABackingBean extends
 		if (startMonth != null && endMonth != null && startYear != null
 				&& endYear != null) {
 			Date currentDate = new Date();
-			SimpleDateFormat sdf = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+			SimpleDateFormat sdf = new SimpleDateFormat(
+					CommonConstants.DEFAULT_DATE_FORMAT);
 			String localDate = sdf.format(currentDate);
 			String day = localDate.substring(0, 2);
 			String fromDate = day + "/" + startMonth + "/" + startYear;
 			String toDate = day + "/" + endMonth + "/" + endYear;
-			Date startDate  = sdf.parse(fromDate);
-			Date endDate  = sdf.parse(toDate);
+			Date startDate = sdf.parse(fromDate);
+			Date endDate = sdf.parse(toDate);
 
-			months  = DateUtils.getMonths(startDate, endDate);
+			months = DateUtils.getMonths(startDate, endDate);
 			schedule.setTotalMonths(new BigDecimal(months));
 		} else {
 			schedule.setTotalMonths(BigDecimal.ZERO);
@@ -1950,17 +1957,18 @@ public class DirectLOABackingBean extends
 
 		this.getManagedBean().getSpecTemplateSpecBean()
 				.setSupplier(mofAccount.getSmSupplier());
-		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+		DirectAwardReqDTO reqDTO = new DirectAwardReqDTO();
 		reqDTO.setSupplierId(mofAccount.getSmSupplier().getSupplierId());
 
-		AwardSupplierResDTO resDTO = getQtAwardSO()
-				.retrieveSmPersonnelBySupplierId(reqDTO);
+		DirectAwardResDTO resDTO = getQtDirectAwardSO()
+				.retrieveSmPersonnelDtlsBySupplierId(reqDTO);
 
 		// smPersonnel
 		if (resDTO.getSupplierHQPersonnel() != null) {
 			getManagedBean().setSupplierHQPersonnel(
 					resDTO.getSupplierHQPersonnel());
 			getManagedBean().setSelectedSupplierBranchName("HQ");
+			getManagedBean().setBranchsList(resDTO.getSmSupplierBranchs());
 			handleBranchDetailsChanged();
 		}
 	}
@@ -1978,15 +1986,31 @@ public class DirectLOABackingBean extends
 		getManagedBean().getScLoa().getScLoiLoa().setSmSupplier(suSmSupplier);
 		getManagedBean().getScLoa().getScLoiLoa()
 				.setSupplierName(suSmSupplier.getCompanyName());
+
+	/*	getManagedBean().getScLoa().getScLoiLoa()
+				.setMofNo(suSmSupplier.getSmMofAccount().getMofNo());*/
+
+		getManagedBean().getScLoa().getScLoiLoa()
+				.setEpNo(suSmSupplier.getEpNo());
+
 		this.getManagedBean().getProdTemplateSpecBean()
 				.setSupplier(suSmSupplier);
 		this.getManagedBean().getSpecTemplateSpecBean()
 				.setSupplier(suSmSupplier);
-		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+		DirectAwardReqDTO reqDTO = new DirectAwardReqDTO();
 		reqDTO.setSupplierId(suSmSupplier.getSupplierId());
-		AwardSupplierResDTO resDTO = getQtAwardSO()
-				.retrieveSmPersonnelBySupplierId(reqDTO);
 
+		DirectAwardResDTO resDTO = getQtDirectAwardSO()
+				.retrieveSmPersonnelDtlsBySupplierId(reqDTO);
+
+		// smPersonnel
+		if (resDTO.getSupplierHQPersonnel() != null) {
+			getManagedBean().setSupplierHQPersonnel(
+					resDTO.getSupplierHQPersonnel());
+			getManagedBean().setSelectedSupplierBranchName("HQ");
+			getManagedBean().setBranchsList(resDTO.getSmSupplierBranchs());
+			handleBranchDetailsChanged();
+		}
 		// mof nor
 		getManagedBean()
 				.getScLoa()
@@ -1995,13 +2019,7 @@ public class DirectLOABackingBean extends
 						resDTO.getSmSupplier().getSmMofAccounts().get(0)
 								.getMofNo());
 
-		// smPersonnel
-		if (resDTO.getSupplierHQPersonnel() != null) {
-			getManagedBean().setSupplierHQPersonnel(
-					resDTO.getSupplierHQPersonnel());
-			getManagedBean().setSelectedSupplierBranchName("HQ");
-			handleBranchDetailsChanged();
-		}
+		
 	}
 
 	/**
@@ -2145,8 +2163,6 @@ public class DirectLOABackingBean extends
 				ParameterTypeConst.SC_ITEM_TYPE, searchBean);
 		return items;
 	}
-
-	
 
 	/**
 	 * Debug logger.

@@ -34,6 +34,7 @@
 
 		</p:dataTable>
 	</p:panel>
+	<h:outputText value="#{lbl['lbl.sc.approval.remarks.instruction']}" rendered="#{approvalBackingBean.isReviceOrReject()}"></h:outputText>
 	<p:panel header="#{lbl['lbl.sc.remark']}"
 		toggleable="true" id="ptjapprovalRemarks">
 		<table style="width: 100%" id="remarkslist">
