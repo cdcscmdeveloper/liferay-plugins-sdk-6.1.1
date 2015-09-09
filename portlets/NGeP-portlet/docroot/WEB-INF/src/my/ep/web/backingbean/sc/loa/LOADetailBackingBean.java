@@ -120,6 +120,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
+import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
@@ -4644,6 +4645,8 @@ public class LOADetailBackingBean extends
 			prepareSignerInfo();
 			RequestContext.getCurrentInstance().execute(
 					"gstSignerConfirmPopupWin.show()");
+		} else {
+			prepareSignerInfo();
 		}
 	}
 	
@@ -4688,9 +4691,14 @@ public class LOADetailBackingBean extends
 						TplSpecQuestion specQuestion = loiLoaItem
 								.getScRequestItem().getTplSpecQuestion();
 						if (specQuestion != null) {
-							durationMnth = specQuestion.getTplSpecMaster()
-									.getDurationMonth();
-							break;
+							TplSpecMaster specMaster = specQuestion.getTplSpecMaster();
+							if (specMaster.getItemTypeCode().getParameterCode()
+									.compareTo(ParameterConst.ITEM_TYPE_SERVICE) == 0) {
+								durationMnth = specQuestion.getTplSpecMaster()
+										.getDurationMonth();
+								break;
+							}
+
 						}
 					}
 				}
