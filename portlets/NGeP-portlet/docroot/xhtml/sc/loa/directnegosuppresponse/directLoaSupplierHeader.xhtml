@@ -15,23 +15,31 @@
 				<td width="8%"><h:outputLabel value="#{lbl['lbl.sc.ptj']}" />
 				</td>
 				<td class="header-info-text" width="26%">
-					#{directLOABackingBean.managedBean.scQt.pmOrgProfile.orgName}
-				</td>
+					#{directLOABackingBean.managedBean.scQt.pmOrgProfile.orgName}</td>
 				<td width="10%"><h:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.issue']}" /></td>
-				<td class="header-info-text" width="10%">18/06/2015</td>
+				<td class="header-info-text" width="10%"><h:outputText
+						value="#{directLOABackingBean.managedBean.scLoa.issueDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText></td>
 				<td width="13%"><h:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.res.due.date']}" /></td>
-				<td class="header-info-text" width="15%">12</td>
-
-				<td width="13%"><h:outputLabel value="Remaining (Days)" /></td>
-				<td class="header-info-text" width="6%">6</td>
+				<td class="header-info-text" width="15%"><h:outputText
+						value="#{directLOABackingBean.managedBean.scLoa.ackDueDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
+					(#{DateUtils.getDaysDifference(DateUtils.getCurrentDateWithoutTime(),
+					directLOABackingBean.managedBean.scLoa.ackDueDate)}
+					#{lbl['lbl.sc.days']})</td>
 			</tr>
 
 		</table>
-		
-		
+
+
 
 	</div>
-	
+	<p:spacer height="2px"></p:spacer>
+
 </ui:composition>

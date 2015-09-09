@@ -34,9 +34,13 @@
 
 		</p:dataTable>
 	</p:panel>
-	<h:outputText value="#{lbl['lbl.sc.approval.remarks.instruction']}" rendered="#{approvalBackingBean.isReviceOrReject()}"></h:outputText>
-	<p:panel header="#{lbl['lbl.sc.remark']}"
-		toggleable="true" id="ptjapprovalRemarks">
+
+	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true"
+		id="ptjapprovalRemarks">
+		<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.approval.remarks.instruction']}"
+				rendered="#{approvalBackingBean.isReviceOrReject()}"></h:outputText>
+		
 		<table style="width: 100%" id="remarkslist">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
@@ -87,7 +91,9 @@
 									<table>
 										<tr>
 											<td rowspan="2" style="vertical-align: top;" align="left">
-												<h:graphicImage value="/css/images/design/#{approvalBackingBean.determineIcon(attachFile)}" height="30" width="30"/>
+												<h:graphicImage
+													value="/css/images/design/#{approvalBackingBean.determineIcon(attachFile)}"
+													height="30" width="30" />
 											</td>
 											<td><h:outputText
 													value="#{attachFile.createdUser.userName}" />, <h:outputText

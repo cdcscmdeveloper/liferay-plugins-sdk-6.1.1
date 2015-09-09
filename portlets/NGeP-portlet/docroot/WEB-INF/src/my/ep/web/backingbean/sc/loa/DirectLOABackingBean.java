@@ -129,7 +129,6 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.ApprovalAction;
-import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
@@ -138,7 +137,6 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
-import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.loa.DirectLOAManagedBean;
 import my.ep.web.util.CommonUtils;
@@ -3780,6 +3778,9 @@ public class DirectLOABackingBean extends
 				awardResDTO.getSupplierHQPersonnel());
 		this.getManagedBean()
 				.setBranchsList(awardResDTO.getSmSupplierBranchs());
+		if(CollectionUtils.isNotEmpty(scLoa.getScQtDeductions())){
+		this.getManagedBean().setSelectedScQtDeduction(scLoa.getScQtDeductions().get(0));
+		}
 
 	}
 
