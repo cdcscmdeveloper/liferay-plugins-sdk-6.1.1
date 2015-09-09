@@ -1417,8 +1417,6 @@
 	<portlet>
 		<portlet-name>listfund</portlet-name>
 		<icon>/icon.png</icon>
-		<control-panel-entry-category>apps</control-panel-entry-category>
-		<control-panel-entry-weight>1.5</control-panel-entry-weight> 
 		<instanceable>false</instanceable>
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
@@ -1429,8 +1427,6 @@
 	<portlet>
 		<portlet-name>listprogramactivity</portlet-name>
 		<icon>/icon.png</icon>
-		<control-panel-entry-category>apps</control-panel-entry-category>
-		<control-panel-entry-weight>1.5</control-panel-entry-weight> 
 		<instanceable>false</instanceable>
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
@@ -1441,8 +1437,6 @@
 	<portlet>
 		<portlet-name>listproject</portlet-name>
 		<icon>/icon.png</icon>
-		<control-panel-entry-category>apps</control-panel-entry-category>
-		<control-panel-entry-weight>1.5</control-panel-entry-weight> 
 		<instanceable>false</instanceable>
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
@@ -1453,8 +1447,6 @@
 	<portlet>
 		<portlet-name>listSuppliersReview</portlet-name>
 		<icon>/icon.png</icon>
-		<control-panel-entry-category>apps</control-panel-entry-category>
-		<control-panel-entry-weight>1.5</control-panel-entry-weight> 
 		<instanceable>false</instanceable>
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
@@ -1694,8 +1686,6 @@
 		<portlet>
 		  <portlet-name>scMarketResearch</portlet-name>
 		  <icon>/icon.png</icon>
-		  <control-panel-entry-category>apps</control-panel-entry-category>
-		  <control-panel-entry-weight>1.5</control-panel-entry-weight>
 		  <instanceable>false</instanceable>
 		  <footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		  <footer-portlet-javascript>
