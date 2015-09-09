@@ -234,10 +234,10 @@
 					<div style="float: right;">
 							<p:commandButton id="addButton" value="#{lbl['lbl.btn.save']}"
 										actionListener="#{calendarBackingBean.addOrUpdateEvent}"
-										update="schedule,eventDetails,calendarMessages" process="eventDetails"/>
+										update="eventDetails,calendarMessages" process="eventDetails"/>
 							<p:commandButton value="#{lbl['lbl.btn.delete']}"
 										actionListener="#{calendarBackingBean.deleteEvent}"
-										update="schedule,eventDetails" process="eventDetails"
+										update="schedule,eventDetails" process="@this"
 										rendered="#{not calendarBackingBean.managedBean.newEvent}" />
 					</div>
 				</h:panelGroup>
