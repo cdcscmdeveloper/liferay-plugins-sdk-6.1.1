@@ -16,18 +16,27 @@ public class IntegrationConstants {
 	public static final String FILE_EXTENSION_GFMAS = ".GPG";
 	public static final String SEQUENCE_NO = "001";
 
-	public static final String FILE_PATH = "/batch/Upload/";
-//	public static final String FILE_PATH = "C:/Integration/Upload/";
+	public static final String FILE_PATH_LOCAL = "/batch/Temp/";
+	
+	public static final String GMAS_UPLOAD_LOCAL = "/batch/1GFMAS/OUT/";
+	public static final String GMAS_DOWNLOAD_LOCAL = "/batch/1GFMAS/IN/";
+	public static final String GMAS_ARCHIVE_LOCAL = "/batch/1GFMAS/ARCHIVE/";
+	
+	public static final String PHIS_UPLOAD_DIR_LOCAL = "/batch/PHIS/OUT/";
+	public static final String PHIS_ARCHIVE_DIR_LOCAL = "/batch/PHIS/ARCHIVE/OUT/";
 
+	public static final String EPERUNDING_UPLOAD_DIR_LOCAL = "/batch/ePerunding/OUT/";
+	public static final String EPERUNDING_ARCHIVE_DIR_LOCAL = "/batch/ePerunding/ARCHIVE/";
+
+	
 	public static final String GMAS_UPLOAD = "/batch/1GFMAS/OUT/";
 	public static final String GMAS_DOWNLOAD = "/batch/1GFMAS/IN/";
 	public static final String GMAS_ARCHIVE = "/batch/1GFMAS/ARCHIVE/";
-
+	
 	public static final String PHIS_UPLOAD_DIR = "/batch/PHIS/OUT/";
 	public static final String PHIS_ARCHIVE_DIR = "/batch/PHIS/ARCHIVE/";
 
 	public static final String EPERUNDING_UPLOAD_DIR = "/batch/ePerunding/OUT/";
-	public static final String EPERUNDING_DOWNLOAD_DIR = "/batch/ePerunding/IN/";
 	public static final String EPERUNDING_ARCHIVE_DIR = "/batch/ePerunding/ARCHIVE/";
 
 	public static final String ENCRYPTED_FILE_PATH="/batch/Encryption/encrypt/";
