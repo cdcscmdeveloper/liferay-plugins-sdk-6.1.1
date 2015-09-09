@@ -4,7 +4,6 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
 
 import javax.faces.application.FacesMessage;
@@ -88,10 +87,11 @@ public class CalendarBackingBean extends
 		log.info("...........resDTO.getHolidayList()="+resDTO.getHolidayList());
 		if (stateHolidayList != null) {
 			for (PmHoliday holiday : stateHolidayList) {
-				ScheduleEvent event = new DefaultScheduleEvent(
+				DefaultScheduleEvent event = new DefaultScheduleEvent(
 						holiday.getHolidayName(), holiday.getStartDate(),
 						holiday.getEndDate());
 				event.setId(String.valueOf(holiday.getHolidayId()));
+				event.setData(holiday.getHolidayId());
 				getManagedBean().getEventModel().addEvent(event);
 			}
 		}
@@ -162,6 +162,7 @@ public class CalendarBackingBean extends
 				.execute("myschedule.update();");
 				RequestContext.getCurrentInstance()
 				.execute("eventDialog.hide();");
+				RequestContext.getCurrentInstance().update("schedule");				
 			
 //				this.getManagedBean().setEvent(new DefaultScheduleEvent());
 			}
@@ -224,6 +225,7 @@ public class CalendarBackingBean extends
 				holiday.setHolidayName(holidayName);
 				holiday.setStartDate(startDate);
 				holiday.setEndDate(endDate);
+				holiday.setHolidayId((Long)getManagedBean().getEvent().getData());
 				
 				PmState state = new PmState();
 				state.setStateId(stateId);
