@@ -125,7 +125,7 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		if(resDTO.isSuccessful()) {
 			String messageId = MessageConst.INFO_700005;
 			if(reqDTO.isApprover()) {
-				messageId = MessageConst.INFO_700026;
+				messageId = MessageConst.INFO_745011;
 			}
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 				messageId = MessageConst.INFO_700008;
