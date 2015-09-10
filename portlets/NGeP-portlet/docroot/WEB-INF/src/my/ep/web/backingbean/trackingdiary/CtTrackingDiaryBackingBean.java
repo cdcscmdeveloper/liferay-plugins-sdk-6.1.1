@@ -271,7 +271,6 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 		this.getManagedBean().setSearchPhysicalLoaNo(null);
 		this.getManagedBean().setSearchMinistryProfileId(null);
 		this.getManagedBean().setSearchPtjProfile(null);
-		this.getManagedBean().resetCtDocumentDataModel();
 		defaultMinistryPtjSearchValue();
 	}
 	
@@ -280,6 +279,7 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 	 */
 	public void reset() {
 		this.getManagedBean().setSearchTransactionType(null);
+		this.getManagedBean().resetCtDocumentDataModel();
 		resetSearchCriteria();
 	}
 	

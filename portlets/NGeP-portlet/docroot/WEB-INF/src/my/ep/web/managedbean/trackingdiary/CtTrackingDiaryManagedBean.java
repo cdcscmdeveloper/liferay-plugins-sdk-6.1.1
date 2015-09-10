@@ -8,8 +8,6 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.ct.IContractIntegrationSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.ct.ContractIntegrationReqDTO;
