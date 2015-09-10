@@ -299,7 +299,7 @@ public class SmFieldChangeUtil {
 			currPersonnel.setChangedFieldStatus("U");
 			for (SmAssociationBody currBody : currPersonnel
 					.getSmAssociationBodies()) {
-				currBody.setChangedFieldStatus("U");
+				currBody.setChangedFieldStatus("N");
 			}
 		} else {
 			for (SmAssociationBody currBody : currPersonnel
@@ -307,7 +307,7 @@ public class SmFieldChangeUtil {
 				if (!isCurrProfBodyExistInLatestProfBody(currBody,
 						latestPersonnel.getSmAssociationBodies())) {
 					currPersonnel.setChangedFieldStatus("U");
-					currBody.setChangedFieldStatus("U");
+					currBody.setChangedFieldStatus("N");
 				} else {
 					SmAssociationBody latestBody = getProfBodyByRegNoFromList(
 							latestAppl, currBody.getRegNo());
@@ -320,7 +320,7 @@ public class SmFieldChangeUtil {
 						}
 					} else {
 						currPersonnel.setChangedFieldStatus("U");
-						currBody.setChangedFieldStatus("U");
+						currBody.setChangedFieldStatus("N");
 					}
 				}
 			}
@@ -341,7 +341,7 @@ public class SmFieldChangeUtil {
 			currPersonnel.setChangedFieldStatus("U");
 			for (SmRelatedCompany currRelComp : currPersonnel
 					.getSmRelatedCompanies()) {
-				currRelComp.setChangedFieldStatus("U");
+				currRelComp.setChangedFieldStatus("N");
 			}
 		} else {
 			for (SmRelatedCompany currRelComp : currPersonnel
@@ -349,7 +349,7 @@ public class SmFieldChangeUtil {
 				if (!isCurrPersonnelRelatedCompaniesExistInLatest(currRelComp,
 						latestPersonnel.getSmRelatedCompanies())) {
 					currPersonnel.setChangedFieldStatus("U");
-					currRelComp.setChangedFieldStatus("U");
+					currRelComp.setChangedFieldStatus("N");
 				} else {
 					SmRelatedCompany latestRelComp = getRelatedCompanyByRegNoFromList(
 							currRelComp.getRegNo(),
@@ -363,7 +363,7 @@ public class SmFieldChangeUtil {
 						}
 					} else {
 						currPersonnel.setChangedFieldStatus("U");
-						currRelComp.setChangedFieldStatus("U");
+						currRelComp.setChangedFieldStatus("N");
 					}
 				}
 			}
@@ -396,7 +396,7 @@ public class SmFieldChangeUtil {
 			currPersonnel.setChangedFieldStatus("U");
 			for (SmStaffExperience currExp : currPersonnel
 					.getSmStaffExperiences()) {
-				currExp.setChangedFieldStatus("U");
+				currExp.setChangedFieldStatus("N");
 			}
 		} else {
 			for (SmStaffExperience currExp : currPersonnel
@@ -404,7 +404,7 @@ public class SmFieldChangeUtil {
 				if (!isCurrPersonnelStaffExperienceExistInLatest(currExp,
 						latestPersonnel.getSmStaffExperiences())) {
 					currPersonnel.setChangedFieldStatus("U");
-					currExp.setChangedFieldStatus("U");
+					currExp.setChangedFieldStatus("N");
 				} else {
 					SmStaffExperience latestExp = getStaffExperienceByCompNamFromList(
 							currExp.getCompanyName(),
@@ -417,7 +417,7 @@ public class SmFieldChangeUtil {
 						}
 					} else {
 						currPersonnel.setChangedFieldStatus("U");
-						currExp.setChangedFieldStatus("U");
+						currExp.setChangedFieldStatus("N");
 					}
 				}
 			}
@@ -448,14 +448,14 @@ public class SmFieldChangeUtil {
 						.getSmStaffAcademics())) {
 			currPersonnel.setChangedFieldStatus("U");
 			for (SmStaffAcademic currAcad : currPersonnel.getSmStaffAcademics()) {
-				currAcad.setChangedFieldStatus("U");
+				currAcad.setChangedFieldStatus("N");
 			}
 		} else {
 			for (SmStaffAcademic currAcad : currPersonnel.getSmStaffAcademics()) {
 				if (!isCurrPersonnelStaffEducationExistInLatest(currAcad,
 						latestPersonnel.getSmStaffAcademics())) {
 					currPersonnel.setChangedFieldStatus("U");
-					currAcad.setChangedFieldStatus("U");
+					currAcad.setChangedFieldStatus("N");
 				} else {
 					SmStaffAcademic latestAcad = getStaffAcadByPmEdu(
 							currAcad.getPmEduField(), currAcad.getPmEduLevel(),
@@ -469,7 +469,7 @@ public class SmFieldChangeUtil {
 						}
 					} else {
 						currPersonnel.setChangedFieldStatus("U");
-						currAcad.setChangedFieldStatus("U");
+						currAcad.setChangedFieldStatus("N");
 					}
 				}
 			}
