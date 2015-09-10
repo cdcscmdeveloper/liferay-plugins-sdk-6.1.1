@@ -2758,7 +2758,7 @@ public class SmCommonUtil {
 		boolean retVal = false;
 		if (latest != null
 				&& current != null
-				&& (!current.getClass().getName()
+				&& (current.getClass().getName()
 						.equals(latest.getClass().getName()))) {
 			Class<?> object = latest.getClass();
 			List<String> excludeList = new ArrayList<String>();
