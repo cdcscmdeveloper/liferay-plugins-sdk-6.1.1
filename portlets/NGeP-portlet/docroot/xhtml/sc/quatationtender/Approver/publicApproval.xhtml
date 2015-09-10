@@ -110,6 +110,10 @@
 		</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true">
+	<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.approval.remarks.instruction']}"
+				rendered="#{approvalBackingBean.isReviceOrReject()}"></h:outputText>
+	
 		<table style="width: 100%" id="publicremark">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
