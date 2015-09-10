@@ -1648,6 +1648,8 @@ public class SmApplicationBackingBean extends
 		// }
 		finally {
 			mofRegistrationSO = null;
+			SmFieldChangeUtil.setApplTableListChangeStatus(getManagedBean()
+					.getLatestAppl(), getManagedBean().getSmAppl());
 		}
 
 	}
@@ -4415,8 +4417,6 @@ public class SmApplicationBackingBean extends
 		} finally {
 			mofRegistrationSO = null;
 			retriveLatestApplAfterUpdate("", "");
-			SmFieldChangeUtil.setApplTableListChangeStatus(getManagedBean()
-					.getLatestAppl(), getManagedBean().getSmAppl());
 		}
 	}
 
