@@ -9,6 +9,7 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
+import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
@@ -87,6 +88,9 @@ public class SmFieldChangeUtil {
 
 			// Personnel
 			setPersonnelFieldChangeStatus(latestAppl, currAppl);
+
+			// SmEquityCompanies
+			setEquityCompanyFieldChangeStatus(latestAppl, currAppl);
 		}
 	}
 
@@ -133,6 +137,22 @@ public class SmFieldChangeUtil {
 
 		// relatedCompanies
 		setCurrPersonnelRelatedCompanies(currPersonnel, latestPersonnel);
+	}
+
+	public static SmEquityCompany getEquityCompanyByRegNoFromList(SmAppl appl,
+			String regNo) {
+		SmEquityCompany retVal = new SmEquityCompany();
+		if (appl != null && appl.getSmEquityCompanies() != null
+				&& !appl.getSmEquityCompanies().isEmpty()) {
+			for (SmEquityCompany tmp : appl.getSmEquityCompanies()) {
+				if (tmp.getRegNo() != null && regNo != null
+						&& tmp.getRegNo().equals(regNo)) {
+					retVal = tmp;
+					break;
+				}
+			}
+		}
+		return retVal;
 	}
 
 	public static SmAssociateCompany getAssocCompanyByRegNoFromList(
@@ -542,6 +562,7 @@ public class SmFieldChangeUtil {
 		} else {
 			if (!SmCommonUtil.isCollectionEmpty(currAppl
 					.getSmAssociateCompanies())) {
+				SmAssociateCompany latestAssocCompany = null;
 				for (SmAssociateCompany currAssocCompany : currAppl
 						.getSmAssociateCompanies()) {
 					if (!isCurrAssocCompExistInLatestAssocComp(
@@ -549,8 +570,21 @@ public class SmFieldChangeUtil {
 							latestAppl.getSmAssociateCompanies())) {
 						currAssocCompany.setChangedFieldStatus("N");
 					} else {
-						setCurrAssocCompFieldChange(currAssocCompany,
-								latestAppl.getSmAssociateCompanies());
+						latestAssocCompany = getAssocCompanyByRegNoFromList(
+								latestAppl, currAssocCompany.getRegNo());
+						if (latestAssocCompany == null) {
+							currAssocCompany.setChangedFieldStatus("U");
+						} else {
+							if (isAddressHasDifferences(
+									latestAssocCompany.getSmAddress(),
+									currAssocCompany.getSmAddress())
+									|| isHasDifferences(
+											latestAssocCompany,
+											currAssocCompany,
+											new String[] { "associateCompanyId" })) {
+								currAssocCompany.setChangedFieldStatus("U");
+							}
+						}
 					}
 				}
 			}
@@ -571,37 +605,59 @@ public class SmFieldChangeUtil {
 		return retVal;
 	}
 
-	private static void setCurrAssocCompFieldChange(
-			SmAssociateCompany currAssocCompany,
-			List<SmAssociateCompany> latestAssocCompanyList) {
-		for (SmAssociateCompany latestAssocCompany : latestAssocCompanyList) {
-			if (latestAssocCompany.getRegNo().equalsIgnoreCase(
-					currAssocCompany.getRegNo())) {
-				setCurrAssocComp(latestAssocCompany, currAssocCompany);
-				setCurrAssocCompAddress(latestAssocCompany, currAssocCompany);
+	private static void setEquityCompanyFieldChangeStatus(SmAppl latestAppl,
+			SmAppl currAppl) {
+		if (SmCommonUtil.isCollectionEmpty(latestAppl.getSmEquityCompanies())
+				&& !SmCommonUtil.isCollectionEmpty(currAppl
+						.getSmEquityCompanies())) {
+			for (SmEquityCompany currEquityCompany : currAppl
+					.getSmEquityCompanies()) {
+				currEquityCompany.setChangedFieldStatus("N");
+			}
+		} else {
+			if (!SmCommonUtil
+					.isCollectionEmpty(currAppl.getSmEquityCompanies())) {
+				SmEquityCompany latestEquityCompany = null;
+				for (SmEquityCompany currEquityCompany : currAppl
+						.getSmEquityCompanies()) {
+					if (!isCurrEquityCompExistInLatestEquityComp(
+							currEquityCompany,
+							latestAppl.getSmEquityCompanies())) {
+						currEquityCompany.setChangedFieldStatus("N");
+					} else {
+						latestEquityCompany = getEquityCompanyByRegNoFromList(
+								latestAppl, currEquityCompany.getRegNo());
+						if (latestEquityCompany == null) {
+							currEquityCompany.setChangedFieldStatus("U");
+						} else {
+							if (isAddressHasDifferences(
+									latestEquityCompany.getSmAddress(),
+									currEquityCompany.getSmAddress())
+									|| isHasDifferences(
+											latestEquityCompany,
+											currEquityCompany,
+											new String[] { "associateCompanyId" })) {
+								currEquityCompany.setChangedFieldStatus("U");
+							}
+						}
+					}
+				}
 			}
 		}
 	}
 
-	private static void setCurrAssocComp(SmAssociateCompany latestAssocCompany,
-			SmAssociateCompany currAssocCompany) {
-		if (isHasDifferences(latestAssocCompany, currAssocCompany,
-				new String[] { "associateCompanyId" })) {
-			currAssocCompany.setChangedFieldStatus("U");
+	private static boolean isCurrEquityCompExistInLatestEquityComp(
+			SmEquityCompany currEquityCompany,
+			List<SmEquityCompany> latestEquityCompanyList) {
+		boolean retVal = false;
+		for (SmEquityCompany latestEquityCompany : latestEquityCompanyList) {
+			if (latestEquityCompany.getRegNo().equalsIgnoreCase(
+					currEquityCompany.getRegNo())) {
+				retVal = true;
+				break;
+			}
 		}
-	}
-
-	private static void setCurrAssocCompAddress(
-			SmAssociateCompany latestAssocCompany,
-			SmAssociateCompany currAssocCompany) {
-		if ((latestAssocCompany.getSmAddress() == null && currAssocCompany
-				.getSmAddress() != null)
-				|| (latestAssocCompany.getSmAddress() != null && currAssocCompany
-						.getSmAddress() == null)
-				|| (isAddressHasDifferences(latestAssocCompany.getSmAddress(),
-						currAssocCompany.getSmAddress()))) {
-			currAssocCompany.setChangedFieldStatus("U");
-		}
+		return retVal;
 	}
 
 	private static void setProfessionalBodyFieldChangeStatus(SmAppl latestAppl,
@@ -618,14 +674,23 @@ public class SmFieldChangeUtil {
 		} else {
 			if (currAppl.getSmAssociationBodies() != null
 					&& !currAppl.getSmAssociationBodies().isEmpty()) {
+				SmAssociationBody latestBody = null;
 				for (SmAssociationBody currBody : currAppl
 						.getSmAssociationBodies()) {
 					if (!isCurrProfBodyExistInLatestProfBody(currBody,
 							latestAppl.getSmAssociationBodies())) {
 						currBody.setChangedFieldStatus("N");
 					} else {
-						setCurrProfBodyFieldChange(currBody,
-								latestAppl.getSmAssociationBodies());
+						latestBody = getProfBodyByRegNoFromList(latestAppl,
+								currBody.getRegNo());
+						if (latestBody == null) {
+							currBody.setChangedFieldStatus("U");
+						} else {
+							if (isHasDifferences(latestBody, currBody,
+									new String[] { "associationBodyId" })) {
+								currBody.setChangedFieldStatus("U");
+							}
+						}
 					}
 				}
 			}
@@ -643,17 +708,6 @@ public class SmFieldChangeUtil {
 			}
 		}
 		return retVal;
-	}
-
-	private static void setCurrProfBodyFieldChange(SmAssociationBody currBody,
-			List<SmAssociationBody> latestProfBodyList) {
-		for (SmAssociationBody latestBody : latestProfBodyList) {
-			if (latestBody.getRegNo().equalsIgnoreCase(currBody.getRegNo())
-					&& isHasDifferences(latestBody, currBody,
-							new String[] { "associationBodyId" })) {
-				currBody.setChangedFieldStatus("U");
-			}
-		}
 	}
 
 	public static SmPersonnelAddress getPersonnelAddressByTypeFromList(
@@ -720,8 +774,11 @@ public class SmFieldChangeUtil {
 	private static boolean isAddressHasDifferences(SmAddress latest,
 			SmAddress current) {
 		boolean retVal = false;
-		if (isHasDifferences(latest, current, new String[] { "addressId",
-				"pmCountry", "pmState", "pmCity", "pmDistrict" })) {
+		if ((latest == null && current != null)
+				|| (latest != null && current == null)) {
+			retVal = true;
+		} else if (isHasDifferences(latest, current, new String[] {
+				"addressId", "pmCountry", "pmState", "pmCity", "pmDistrict" })) {
 			retVal = true;
 		} else {
 			if ((latest.getPmCountry() != null && current.getPmCountry() == null)
