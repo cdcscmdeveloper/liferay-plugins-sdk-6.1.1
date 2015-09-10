@@ -1313,7 +1313,6 @@ public class SupplierFinalizationBackingBean extends
 		ScQtRecommendDtl selectedRecommendDtl = null;
 		List<ScQtRecommendDtl> removedList 
 									= scQtRecommend.getRemoveSupplierList();
-		List<String> rejectedRecommendDtlIds = getRejectedRecommendDtlIds();
 		
 		if (CollectionUtils.isNotEmpty(scQtRecommend
 					.getRecommendDtls())) {
@@ -1472,7 +1471,7 @@ public class SupplierFinalizationBackingBean extends
 			reqDTO.setScQtProposalAmount(recommendedSupplier.getProposalAmount());
 			reqDTO.setRequestItemId(scQtRecommend.getRequestItem()
 					.getRequestNoteItemId());
-			boolean isPriceTypeTier = isItemPriceTypeTier(scQtRecommend);
+			boolean isPriceTypeTier = isItemPriceTypeTariffOrTier(scQtRecommend);
 			reqDTO.setTierPricing(isPriceTypeTier);			
 			
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.getQtProposalItem(reqDTO);
@@ -1510,15 +1509,12 @@ public class SupplierFinalizationBackingBean extends
 				.equals(decisionTypeCode) ? true : false;			
 		boolean isSubmit = this.getManagedBean().isSubmit();
 		boolean isZonal = this.getManagedBean().getScQt().isZonal();
-		PmParameter finalizationMethod = scQtFinalization.getFinalizationMethod();
 		TplSpecZoneDtl selectedZone = this.getManagedBean().getCurrentZone();
 		List<ScQtRecommend> scQtRecommendList = new ArrayList<ScQtRecommend>();
 		scQtRecommendList.addAll(scQtFinalization.getScQtRecommends());
 		
 		// to set the recommend details for each recommend
 		for (ScQtRecommend scQtRecommend : scQtRecommendList) {
-			boolean isPriceTypeTier = isItemPriceTypeTier(scQtRecommend);
-			
 			if (scQtRecommend.isCancelled()) {
 				++cancelledItemsCount;
 			}
@@ -4396,16 +4392,16 @@ public class SupplierFinalizationBackingBean extends
 	 */
 	public SelectItem[] getFinalizationMethodDropDown() {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-		List<String> recommendList = new ArrayList<String>();
-		recommendList.add(ParameterConst.RECOMMEND_BY_SINGLE_AWARD);
-		recommendList.add(ParameterConst.RECOMMEND_BY_MULTIPLE_AWARD);
-		recommendList.add(ParameterConst.RECOMMEND_BY_CANCEL);
+		List<String> excludedList = new ArrayList<String>();
+		excludedList.add(ParameterConst.RECOMMEND_BY_SINGLE_AWARD);
+		excludedList.add(ParameterConst.RECOMMEND_BY_MULTIPLE_AWARD);
+		excludedList.add(ParameterConst.RECOMMEND_BY_CANCEL);
 		
 		boolean hasItemWithPriceTypeTier 
 						= getManagedBean().isHasItemWithPriceTypeTier();
 		if (hasItemWithPriceTypeTier) {
-			recommendList.add(ParameterConst.RECOMMEND_BY_ONLINE_BIDDING);
-			recommendList.add(ParameterConst.RECOMMEND_BY_BIDDING_NEXT_RANK);
+			excludedList.add(ParameterConst.RECOMMEND_BY_ONLINE_BIDDING);
+			excludedList.add(ParameterConst.RECOMMEND_BY_BIDDING_NEXT_RANK);
 		}
 		
 		boolean previousRecommendTypeIsBidding = false;
@@ -4414,12 +4410,12 @@ public class SupplierFinalizationBackingBean extends
 									getManagedBean().getScQtFinalization());
 		}
 		if (!previousRecommendTypeIsBidding) {
-			recommendList.add(ParameterConst.RECOMMEND_BY_BIDDING_NEXT_RANK);
+			excludedList.add(ParameterConst.RECOMMEND_BY_BIDDING_NEXT_RANK);
 		}
 
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode",
-						SearchOperator.OPERATOR_NOT_IN.value(), recommendList));
+						SearchOperator.OPERATOR_NOT_IN.value(), excludedList));
 
 		SelectItem[] items = getDropdownCodeValuesBySearchBean(
 				ParameterTypeConst.FINALIZATION_RECOMMEND_BY, searchBean);
@@ -4428,78 +4424,14 @@ public class SupplierFinalizationBackingBean extends
 	}
 
 	/**
-	 * Populate values for Recommend By drop down in each item row, when
+	 * Populate values for Item cancellation in each item row, when
 	 * Recommend Type is set to Itemized under Supplier Finalization tab
 	 * 
-	 * @param priceType
-	 *            the priceType
-	 * @param scQtRecommend
-	 *            the scQtRecommend
-	 * @return an array of Recommend By values
+	 * @return an array of Yes/No values
 	 */
-	public SelectItem[] getItemRecommendByDropDown(PmParameter priceType,
-			ScQtRecommend scQtRecommend) {
-		SelectItem[] items = null;
-		String priceTypeCode = priceType.getParameterCode();
-		boolean isPriceTypeTier = isItemPriceTypeTier(scQtRecommend);
-		List<String> recommendList = new ArrayList<String>();
-		if (ParameterConst.PRICE_TYPE_TARIFF.equals(
-						priceTypeCode) || isPriceTypeTier) {
-			recommendList.add(ParameterConst.RECOMMEND_BY_SINGLE_AWARD);
-			recommendList.add(ParameterConst.RECOMMEND_BY_MULTIPLE_AWARD);
-			recommendList.add(ParameterConst.RECOMMEND_BY_ONLINE_BIDDING);
-			recommendList.add(ParameterConst.RECOMMEND_BY_BIDDING_NEXT_RANK);
-			
-			ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmParameter.parameterCode",
-							SearchOperator.OPERATOR_NOT_IN.value(),
-							recommendList));
-			items = getDropdownCodeValuesBySearchBean(
-					ParameterTypeConst.FINALIZATION_RECOMMEND_BY, searchBean);
-		} else {
-			ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-			recommendList.add(ParameterConst.RECOMMEND_BY_AWARD);
-
-			PmParameter itemType = scQtRecommend.getRequestItem()
-					.getTplSpecQuestion().getTplSpecMaster().getItemTypeCode();
-			if (!(StringUtils.equals(
-					ParameterConst.PRICE_TYPE_STANDARD,priceTypeCode) || 
-					StringUtils.equals(
-							ParameterConst.PRICE_TYPE_ZONAL_STANDARD, priceTypeCode))
-					|| StringUtils.equals(ParameterConst.ITEM_TYPE_SERVICE,
-							itemType.getParameterCode())) {
-				recommendList.add(ParameterConst.RECOMMEND_BY_MULTIPLE_AWARD);
-			}
-
-			boolean excludeBidNextRankRecommendType = false;
-			Map<Long,String> rejectedScQtRecommendIdMap 
-						= getManagedBean().getRejectedScQtRecommendIdMap();
-			if (MapUtils.isEmpty(rejectedScQtRecommendIdMap)) {
-				excludeBidNextRankRecommendType = true;
-			} else {
-				if (rejectedScQtRecommendIdMap.containsKey(
-							scQtRecommend.getQtRecommendId())) {
-					String recommendByStr = rejectedScQtRecommendIdMap
-									.get(scQtRecommend.getQtRecommendId());
-					if ( !(ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
-								.equals(recommendByStr) && 
-							ParameterConst.RECOMMEND_BY_BIDDING_NEXT_RANK
-									.equals(recommendByStr)) ) {
-						excludeBidNextRankRecommendType = true;
-					}
-				}
-			}
-			if (excludeBidNextRankRecommendType) {
-				recommendList.add(ParameterConst.RECOMMEND_BY_BIDDING_NEXT_RANK);
-			}
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmParameter.parameterCode",
-							SearchOperator.OPERATOR_NOT_IN.value(),
-							recommendList));
-			items = getDropdownCodeValuesBySearchBean(
-					ParameterTypeConst.FINALIZATION_RECOMMEND_BY, searchBean);
-		}
+	public SelectItem[] getItemCancellationDropDown() {
+		SelectItem[] items = getDropdownCodeValues(
+						ParameterTypeConst.YES_NO_FLAG);
 		return items;
 	}
 
@@ -5133,6 +5065,7 @@ public class SupplierFinalizationBackingBean extends
 							ParameterConst.RECOMMEND_BY_AWARD);
 		getManagedBean().getScQtFinalization()
 			.setFinalizationMethod(finalizationMethodAward);
+		getManagedBean().setSelectionMode(QTConstants.SF_SINGLE);
 	}
 	
 	private void resetRecommendFlag() {
@@ -5222,13 +5155,16 @@ public class SupplierFinalizationBackingBean extends
 		
 		if (CollectionUtils.isNotEmpty(scQtRecommendList)) {
 			boolean isItemized = this.getManagedBean().isItemize();
-			boolean isInitialDecisionFwdToBPK = getManagedBean().isInitialDecisionFwdToBPK();
 			for (ScQtRecommend scQtRecommend 
 									: scQtRecommendList) {
 				if (scQtRecommend.isDisabled() ||
 						scQtRecommend.isAwardedItem()) {
 					continue;
 				}
+				if (isItemized) {
+					scQtRecommend.setCancelled(false);
+				}
+				
 				List<ScQtRecommendDtl> recommendDtls = scQtRecommend
 						.getRecommendDtls();
 				if (CollectionUtils.isNotEmpty(recommendDtls)) {
@@ -5268,7 +5204,6 @@ public class SupplierFinalizationBackingBean extends
 		Set<ScQtRecommendDtl> removedRecommendDtlSet 
 									= new HashSet<ScQtRecommendDtl>();
 		Set<ScQtRecommendDtl> toBeAddedSet = new HashSet<ScQtRecommendDtl>();
-		List<String> rejectedRecommendDtlIds = getRejectedRecommendDtlIds();
 		
 		if (scQtRecommend.getRemoveSupplierList() == null) {
 			scQtRecommend.setRemoveSupplierList(
@@ -5346,7 +5281,6 @@ public class SupplierFinalizationBackingBean extends
 
 		this.getManagedBean().setOnlineBidding(false);
 		this.getManagedBean().setMultipleLoi(false);
-		this.getManagedBean().setItemRecommendByAward(false);
 		this.getManagedBean().setDisableSupplierSelection(false);
 		this.getManagedBean().setRecommendedSupplier(null);
 		this.getManagedBean().setShortlistedSupplierList(
@@ -5379,8 +5313,12 @@ public class SupplierFinalizationBackingBean extends
 		itemized = ParameterConst.RECOMMEND_TYPE_ITEM
 						.equals(recommendType) ? true : false;
 		this.getManagedBean().setItemize(itemized);
+		
+		if (!triggeredFromEvent) {
+			selectionMode = setSelectionMode(finalizationMethod);
+		}
+		
 		if (itemized) {
-			selectionMode = QTConstants.SF_MULTIPLE;
 			
 			// Reset the awarded supplier list (ScQtRecommendDtl) by item,
 			// when recommend type is changed to item
@@ -5401,9 +5339,6 @@ public class SupplierFinalizationBackingBean extends
 				isOnlineBiddingEndorsementRequired();
 			} 
 		} else {
-			if (!triggeredFromEvent) {
-				selectionMode = setSelectionMode(finalizationMethod);
-			}
 			TplSpecZoneDtl currentZone = this.getManagedBean().getCurrentZone();
 			if (isZonal && currentZone != null) {
 				if (triggeredFromEvent) {
@@ -5453,10 +5388,13 @@ public class SupplierFinalizationBackingBean extends
 					this.getManagedBean().getShortlistedPackageList());
 		}
 		
+		scQtFinalization.setOnlineBiddingEndorse(null);
 		this.getManagedBean().setRecommendedSupplier(null);
 		this.getManagedBean().setShortlistedSupplier(null);		
-		scQtFinalization.setOnlineBiddingEndorse(null);
-		resetFlag();
+
+		if (!isQTRefinalized()) {
+			resetFlag();
+		}		
 	}
 	
 	private void resetItemWiseSelectionDetails(boolean isZonal, 
@@ -5479,10 +5417,13 @@ public class SupplierFinalizationBackingBean extends
 			resetItemDetails(scQtFinalization.getScQtRecommends());
 		}
 		scQtFinalization.setOnlineBiddingEndorse(null);
-		resetFlag();
+		
+		if (!isQTRefinalized()) {
+			resetFlag();
+		}
 	}
 	
-	private String  setSelectionMode(String finalizationMethod) {
+	private String setSelectionMode(String finalizationMethod) {
 		this.getManagedBean().setSingleAward(false);
 		this.getManagedBean().setMultipleLoi(false);
 		this.getManagedBean().setOnlineBidding(false);
@@ -5492,8 +5433,6 @@ public class SupplierFinalizationBackingBean extends
 						.equals(finalizationMethod) 
 					|| ParameterConst.RECOMMEND_BY_AWARD
 							.equals(finalizationMethod)) {
-			this.getManagedBean().setFinalizationMethod(
-						ParameterConst.RECOMMEND_BY_AWARD);
 			this.getManagedBean().setSingleAward(true);
 			
 			selectionMode = QTConstants.SF_SINGLE;
@@ -5510,6 +5449,12 @@ public class SupplierFinalizationBackingBean extends
 			
 			selectionMode = QTConstants.SF_MULTIPLE;
 		}		
+		this.getManagedBean().setFinalizationMethod(
+									finalizationMethod);
+		
+		if (isQTRefinalized()) {
+			selectionMode = QTConstants.SF_SINGLE;
+		}
 		
 		return selectionMode;
 	}
@@ -5523,6 +5468,8 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setDisableSupplierSelection(false);
 		
 		String finalizationMethodStr = getManagedBean().getFinalizationMethod();
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+		
 		if (StringUtils.isNotBlank(finalizationMethodStr)) {
 			this.getManagedBean().setSingleAward(false);
 			this.getManagedBean().setOnlineBidding(false);
@@ -5530,6 +5477,7 @@ public class SupplierFinalizationBackingBean extends
 			
 			if (ParameterConst.RECOMMEND_BY_AWARD
 						.equals(finalizationMethodStr)) {
+				scQtFinalization.setOnlineBiddingEndorse(null);
 				this.getManagedBean().setSelectionMode(QTConstants.SF_SINGLE);
 				this.getManagedBean().setSingleAward(true);
 				// this.getManagedBean().setBiddingEndorsement(null);
@@ -5579,6 +5527,7 @@ public class SupplierFinalizationBackingBean extends
 				} else if (ParameterConst.RECOMMEND_BY_MULTIPLE_LOI
 							.equals(finalizationMethodStr)) {
 					this.getManagedBean().setMultipleLoi(true);
+					scQtFinalization.setOnlineBiddingEndorse(null);
 				} else if (ParameterConst.RECOMMEND_BY_CANCEL
 									.equals(finalizationMethodStr)) {
 					if (CollectionUtils.isNotEmpty(
@@ -5590,6 +5539,7 @@ public class SupplierFinalizationBackingBean extends
 					}
 					resetShortlistedSupplierData(
 							this.getManagedBean().getShortlistedSupplierList());
+					scQtFinalization.setOnlineBiddingEndorse(null);
 				}
 			}
 			PmParameter finalizationMethod = getParameterByTypeAndCode(
@@ -5598,20 +5548,19 @@ public class SupplierFinalizationBackingBean extends
 			
 			if (ajaxEvent != null && 
 					getManagedBean().isItemize()) {
-				itemRecommendByEvent();
+				recommendSuppliersByItem();
 			}
 		} else {
 			getManagedBean().setFinalizationMethod(StringUtils.EMPTY);
 		}
+		
+		if (isQTRefinalized()) {
+			getManagedBean().setSelectionMode(QTConstants.SF_SINGLE);
+		}
 	}
 
-	/**
-	 * Event for item Recommend By - Award, Online Bidding, Multiple LOI or
-	 * Multiple Award where Recommend Type is Itemized under Supplier
-	 * Finalization tab
-	 */
-	public void itemRecommendByEvent() {
-		debugLogger("itemRecommendByEvent");
+	private void recommendSuppliersByItem() {
+		debugLogger("recommendSuppliersByItem");
 
 		resetRecommendFlag();
 		this.getManagedBean().setShortlistedSupplierList(null);
@@ -5639,30 +5588,45 @@ public class SupplierFinalizationBackingBean extends
 						scQtRecommend.getShortListedSupplierList());			
 			}
 	
-			List<ScQtRecommend> selectedItemList 
-						= getManagedBean().getSelectedItemList();
-			if (scQtRecommend.isSelected()) {
-				if (CollectionUtils.isEmpty(selectedItemList)) {
-					selectedItemList = new ArrayList<ScQtRecommend>();
-					selectedItemList.add(scQtRecommend);
-				} else if (!selectedItemList.contains(scQtRecommend)) {
-					selectedItemList.add(scQtRecommend);
-				}
-			}
-	
 			if (ParameterConst.RECOMMEND_BY_BIDDING_NEXT_RANK
 					.equals(finalizationMethod.getParameterCode())) {
 				if (CollectionUtils.isEmpty(
 						scQtRecommend.getShortListedSupplierList())) {
 					
 					// Retrieve the suppliers short listed for the selected item
-					SuppFinalizationResDTO resDTO = this.retrieveShortListedSuppliersByItem(scQtRecommend);
-					scQtRecommend.setShortListedSupplierList(resDTO.getQualifiedByItemSuppliers());
+					SuppFinalizationResDTO resDTO 
+									= this.retrieveShortListedSuppliersByItem(scQtRecommend);
+					scQtRecommend.setShortListedSupplierList(
+								resDTO.getQualifiedByItemSuppliers());
 				}
 				awardToNextRankSupplier(scQtRecommend);
 			}
 		}
 		isOnlineBiddingEndorsementRequired();
+	}
+	
+	/**
+	 * Event for item cancellation where Recommend Type is Itemized 
+	 * under Supplier Finalization tab
+	 */
+	public void itemCancellationEvent(ScQtRecommend scQtRecommend) {
+		debugLogger("itemCancellationEvent");
+		
+		resetRecommendFlag();
+		this.getManagedBean().setShortlistedSupplierList(null);
+		this.getManagedBean().setDisableSupplierSelection(false);
+		
+		// clear the RecommendDtl list
+		if (scQtRecommend.getRecommendDtls() != null) {
+			scQtRecommend.setAwardSupplierList(
+					new ArrayList<ScQtEvaluationResultDtl>());
+			
+			prepareToDeleteRecommendDtls(scQtRecommend);
+
+			// reset awarded & short listed flag.
+			resetShortlistedSupplierData(
+					scQtRecommend.getShortListedSupplierList());			
+		}
 	}
 	
 	/**
@@ -5863,7 +5827,8 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setSelectedItemAlreadyAwarded(false);
 		
 		if (scQtRecommend.isDisabled() || 
-				scQtRecommend.isAwardedItem()) {
+				scQtRecommend.isAwardedItem() || 
+					scQtRecommend.isCancelled()) {
 			if (this.getManagedBean().isItemRowSelect()) {
 				this.getManagedBean().setDisableSupplierSelection(true);
 				if (scQtRecommend.isAwardedItem()) {
@@ -5929,15 +5894,6 @@ public class SupplierFinalizationBackingBean extends
 			if (this.getManagedBean().isItemRowSelect()) {
 				this.getManagedBean().setShortlistedSupplierList(
 						shortlistedItemSupplierList);
-				if (ParameterConst.RECOMMEND_BY_AWARD
-						.equals(finalizationMethod.getParameterCode()) || 
-						ParameterConst.RECOMMEND_BY_SINGLE_AWARD
-							.equals(finalizationMethod.getParameterCode())) {
-					this.getManagedBean().setItemRecommendByAward(true);
-				} else {
-					this.getManagedBean().setSelectionMode(QTConstants.SF_MULTIPLE);
-					this.getManagedBean().setItemRecommendByAward(false);
-				}		
 				this.getManagedBean().setRecommendedSupplierByItem(null);
 				this.getManagedBean().setPrevRecommendedSupplierByItem(null);			
 			} else {
@@ -5983,9 +5939,7 @@ public class SupplierFinalizationBackingBean extends
 												evalResultDtl);
 										this.getManagedBean().setPrevRecommendedSupplierByItem(
 												evalResultDtl);										
-									} else {
-										this.getManagedBean().setItemRecommendByAward(false);
-									}	
+									}
 								} else {
 									evalResultDtl.setAwareded(false);
 									evalResultDtl.setShortListed(true);
@@ -6023,12 +5977,20 @@ public class SupplierFinalizationBackingBean extends
 		}
 		if (selectAll) {
 			if (CollectionUtils.isNotEmpty(selectedItemsList)) {
+				List<ScQtRecommend> cancelledItems = new ArrayList<ScQtRecommend>();
 				for (ScQtRecommend scQtRecommend : selectedItemsList) {
+					if (scQtRecommend.isCancelled()) {
+						cancelledItems.add(scQtRecommend);
+						continue;
+					}
 					if (CollectionUtils.isEmpty(scQtRecommend
 							.getShortListedSupplierList())) {
 						scQtRecommend.setSelected(true);
 						addSelectedItem(scQtRecommend);
 					}
+				}
+				if (cancelledItems.size() > 0) {
+					selectedItemsList.removeAll(cancelledItems);
 				}
 			}
 			this.getManagedBean().setSelectedItemList(selectedItemsList);
@@ -6339,7 +6301,7 @@ public class SupplierFinalizationBackingBean extends
 					.getRequestNoteItemId());
 			reqDTO.setRecommendType(SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM);
 			
-			boolean isPriceTypeTier = isItemPriceTypeTier(scQtRecommend);
+			boolean isPriceTypeTier = isItemPriceTypeTariffOrTier(scQtRecommend);
 			reqDTO.setTierPricing(isPriceTypeTier);
 
 			resDTO = qtSuppFinalizationSO
@@ -6459,7 +6421,6 @@ public class SupplierFinalizationBackingBean extends
 					continue;
 				}
 				
-				boolean isPriceTypeTier = isItemPriceTypeTier(scQtRecommend);
 				List<ScQtEvaluationResultDtl> recommendedItemSupplierList 
 								= getManagedBean().getRecommendedSupplierList();
 				if (recommendedItemSupplierList == null) {
@@ -6573,7 +6534,7 @@ public class SupplierFinalizationBackingBean extends
 
 	private void validateAwardOfItem(ScQtRecommend scQtRecommend) {
 		boolean isSubmit = this.getManagedBean().isSubmit();
-		boolean isPriceTypeTier = isItemPriceTypeTier(scQtRecommend);
+		boolean isPriceTypeTier = isItemPriceTypeTariffOrTier(scQtRecommend);
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		PmParameter finalizationMethod = scQtFinalization.getFinalizationMethod();		
 		String defaultRecommendByStr = isPriceTypeTier ? ParameterConst.RECOMMEND_BY_AWARD
@@ -6697,12 +6658,19 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	
-	private boolean isItemPriceTypeTier(ScQtRecommend scQtRecommend) {
+	private boolean isItemPriceTypeTariffOrTier(ScQtRecommend scQtRecommend) {
 		TplSpecQuestion specQuestion = scQtRecommend.getRequestItem().getTplSpecQuestion();
-		boolean isPriceTypeTier = TemplateSpecHelper.getInstance().isPriceTypeTier(
-				specQuestion.getClPriceTypeCode().getParameterCode());
+		boolean isPriceTypeTariffOrTier = false;
 		
-		return isPriceTypeTier;
+		if (ParameterConst.PRICE_TYPE_TARIFF.equals(
+				scQtRecommend.getRequestItem().getTplSpecQuestion().getClPriceTypeCode())) {
+			isPriceTypeTariffOrTier = true;
+		} else {
+			isPriceTypeTariffOrTier = TemplateSpecHelper.getInstance().isPriceTypeTier(
+					specQuestion.getClPriceTypeCode().getParameterCode());
+		}
+		
+		return isPriceTypeTariffOrTier;
 	}
 	
 	private void hasTierPriceInMixtureOfItems(ScQtFinalization scQtFinalization) {
@@ -6712,7 +6680,7 @@ public class SupplierFinalizationBackingBean extends
 				scQtFinalization.getScQtRecommends())) {
 			for (ScQtRecommend scQtRecommend 
 						: scQtFinalization.getScQtRecommends()) {
-				isPriceTypeTier = isItemPriceTypeTier(scQtRecommend);
+				isPriceTypeTier = isItemPriceTypeTariffOrTier(scQtRecommend);
 				
 				if (isPriceTypeTier) {
 					this.getManagedBean().setHasItemWithPriceTypeTier(true);
@@ -6743,7 +6711,7 @@ public class SupplierFinalizationBackingBean extends
 		if (MapUtils.isNotEmpty(rejectedScQtRecommendIdMap)) {
 			if (CollectionUtils.isNotEmpty(scQtRecommends)) {
 				for (ScQtRecommend scQtRecommend : scQtRecommends) {
-					prevRecommendByTpeBidding = isItemPriceTypeTier(scQtRecommend);
+					prevRecommendByTpeBidding = isItemPriceTypeTariffOrTier(scQtRecommend);
 					if (rejectedScQtRecommendIdMap.containsKey(
 								scQtRecommend.getQtRecommendId())) {
 						String recommendByStr = rejectedScQtRecommendIdMap

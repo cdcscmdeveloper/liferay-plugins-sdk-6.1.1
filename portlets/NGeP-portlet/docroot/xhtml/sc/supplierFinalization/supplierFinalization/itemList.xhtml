@@ -39,7 +39,8 @@
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
-				<p:selectBooleanCheckbox id="selectItem" value="#{item.selected}" disabled="#{item.awardedItem or item.disabled}">
+				<p:selectBooleanCheckbox id="selectItem" value="#{item.selected}" 
+							disabled="#{item.awardedItem or item.disabled or item.cancelled}">
 					<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=awardSupplier],[id$=supplierListTblPanel])" 
 							listener="#{suppFinalizationBackingBean.selectItemEvent(item)}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
@@ -62,7 +63,25 @@
 				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(item.requestItem.tplSpecQuestion.clPriceTypeCode)}" />
 			</p:column>
 
-			<p:column style="width:15%;white-space:normal;">
+			<p:column style="width:5%; white-space:normal;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.cancelled']}" />
+				</f:facet>
+				<h:selectOneMenu value="#{item.cancelled}" 
+						required="true" label="#{lbl['lbl.sc.cancelled']}" 
+						disabled="#{item.disabled or item.awardedItem or 
+									!(suppFinalizationBackingBean.managedBean.secretaryUser or 
+										suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK)}" 
+						style="width:95%;">
+						<f:selectItems value="#{suppFinalizationBackingBean.getItemCancellationDropDown(item)}" />
+						<p:ajax event="change" update="@([id$=itemListTbl],[id$=supplierPanel])" 
+								listener="#{suppFinalizationBackingBean.itemCancellationEvent(item)}"
+								process="@this" partialSubmit="true"/>
+	   			</h:selectOneMenu>
+			</p:column>
+			
+			<p:column style="width:20%;white-space:normal;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.recommended.supplier']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.recommended.supplier.tooltip']}" />
@@ -84,7 +103,7 @@
 				</p:outputPanel>	
 			</p:column>
 
-			<p:column style="text-align:right; width:10%;">
+			<p:column style="text-align:right; width:7%;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.quantity']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.sf.awarded.quantity.tooltip']}" />
@@ -132,7 +151,7 @@
 			
 			<p:column headerText="#{lbl['lbl.sc.req.higher.authority']}" 
 					  rendered="#{suppFinalizationBackingBean.managedBean.forwardToHigherAuthority}"
-					  style="width:10%;white-space:normal;">
+					  style="width:1%;white-space:normal;">
 				<p:selectBooleanCheckbox value="#{item.higherAuthReq}" disabled="#{item.disabled or item.awardedItem or 
 						(item.higherAuthReq and suppFinalizationBackingBean.managedBean.scQtFinalization.higherSecretary.userId eq 
 							suppFinalizationBackingBean.managedBean.loggedInUserId)}">
