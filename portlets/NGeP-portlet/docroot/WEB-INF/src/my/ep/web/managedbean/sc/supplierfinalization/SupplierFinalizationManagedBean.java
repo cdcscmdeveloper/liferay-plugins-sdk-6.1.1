@@ -121,7 +121,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean isSecretaryUser;
 	private boolean isProcCategoryMedicine;
 	private boolean isZoneTabChange;
-	private boolean itemRecommendByAward;
 	private boolean disableSupplierSelection;
 	private boolean itemFwdToHighAuthority;
 	private boolean isInitialSelectionItemized;
@@ -595,21 +594,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setZoneTabChange(boolean isZoneTabChange) {
 		this.isZoneTabChange = isZoneTabChange;
-	}
-
-	/**
-	 * @return the itemRecommendByAward
-	 */
-	public boolean isItemRecommendByAward() {
-		return itemRecommendByAward;
-	}
-
-	/**
-	 * @param itemRecommendByAward 
-	 * 				the itemRecommendByAward to set
-	 */
-	public void setItemRecommendByAward(boolean itemRecommendByAward) {
-		this.itemRecommendByAward = itemRecommendByAward;
 	}
 
 	/**

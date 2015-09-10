@@ -109,7 +109,8 @@
 								<p:selectOneMenu id="recommendBy" label="#{lbl['lbl.sc.recommend.by']}"
 									value="#{suppFinalizationBackingBean.managedBean.finalizationMethod}"
 									disabled="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
-													suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK)}">
+													suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK) or 
+														isQTStatusReFinalized}">
 									<f:selectItems value="#{suppFinalizationBackingBean.getFinalizationMethodDropDown()}" />
 									<p:ajax event="change" update="@([id$=recommendSupplierPanel],[id$=itemSupplierPanel])" 
 										listener="#{suppFinalizationBackingBean.finalizationMethodEvent}" process="@this" />
