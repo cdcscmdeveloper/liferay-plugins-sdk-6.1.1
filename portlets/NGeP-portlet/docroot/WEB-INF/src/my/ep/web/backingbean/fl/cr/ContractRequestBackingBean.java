@@ -35,6 +35,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractIntegrationSO;
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.ct.dtl.IContractZoneSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
@@ -72,6 +73,8 @@ import my.ep.dto.ct.ContractIntegrationReqDTO;
 import my.ep.dto.ct.ContractIntegrationResDTO;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.circular.CircularDetailReqDTO;
+import my.ep.dto.ct.circular.CircularDetailResDTO;
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.ct.dtl.ContractItemResDTO;
 import my.ep.dto.ct.dtl.ContractZoneReqDTO;
@@ -3941,6 +3944,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				checkCeilingQty(flRequest);
 				checkMaximumQty(flRequest);
 			}else if(flRequest.getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
+				checkCircularItemMinQtyAndOrderAmt(flRequest);
 				if(flRequest.getCtContract().getLatestContractVer().getCtContractValue().isFollowLoaAmt()){
 					checkContractAmount(flRequest);
 				}
@@ -3972,6 +3976,46 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			fulfilmentRequestSO = null;
 		}
 	}
+	
+	private void checkCircularItemMinQtyAndOrderAmt(FlFulfilmentRequest flRequest) {
+		ICircularDetailSO circularDetailSO = (ICircularDetailSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, ICircularDetailSO.class);
+		CircularDetailReqDTO reqDTO = new CircularDetailReqDTO();
+		reqDTO.setContractId(flRequest.getCtContract().getContractId());
+		
+		Map<Long, List<String>> sumMap = new HashMap<Long, List<String>>();
+		List<String> sum = null;
+		for(FlDeliveryAddress delAddr : flRequest.getFlDeliveryAddresses()){
+			for(FlFulfilmentItemAddr itemAddr : delAddr.getFlFulfilmentItemAddr()){
+				Long key = itemAddr.getScRequestItem().getRequestNoteItemId();
+				if(sumMap.containsKey(key)){
+					sum = sumMap.get(key);
+					sum.set(0, new BigDecimal(sum.get(0)).add(itemAddr.getOrderedQty()).toString());
+					sum.set(1, new BigDecimal(sum.get(1)).add(itemAddr.getOrderedAmt()).toString());
+					sum.add(2,itemAddr.getScRequestItem().getItemName());
+					
+				}else{
+					sum = new ArrayList<String>();
+					sum.add(0,itemAddr.getOrderedQty().toString());
+					sum.add(1,itemAddr.getOrderedAmt().toString());
+					sum.add(2,itemAddr.getScRequestItem().getItemName());
+					sumMap.put(key, sum);
+				}
+			}
+		}
+		
+		for(Entry<Long, List<String>> entryQty : sumMap.entrySet()){
+			reqDTO.setRequestItemId(entryQty.getKey());
+			CircularDetailResDTO resDTO = circularDetailSO.getCircularItemMinQtyAndOrderAmt(reqDTO);
+			
+			if(new Double(entryQty.getValue().get(0)) < resDTO.getMinimumOrderQty().doubleValue()){
+				throw new EpException(MessageConst.ERROR_745075, new String[]{entryQty.getValue().get(0).toString(),entryQty.getValue().get(2),resDTO.getMinimumOrderQty().toString()});
+			}
+			if(new Double(entryQty.getValue().get(1)) < resDTO.getMinimumOrderAmt().doubleValue()){
+				throw new EpException(MessageConst.ERROR_745076, new String[]{entryQty.getValue().get(1).toString(),entryQty.getValue().get(2),resDTO.getMinimumOrderAmt().toString()});
+			}
+		}
+	}
+
 	private void checkPidMinQtyItem(FlFulfilmentRequest flRequest) {
 		BigDecimal sumOrderQty = BigDecimal.ZERO;
 		for(FlDeliveryAddress deliveryAddress : flRequest.getFlDeliveryAddresses()){
