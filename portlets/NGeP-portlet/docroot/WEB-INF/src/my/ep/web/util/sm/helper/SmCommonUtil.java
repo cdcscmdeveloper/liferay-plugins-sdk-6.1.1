@@ -2755,12 +2755,12 @@ public class SmCommonUtil {
 
 	public static boolean isSmObjectPropsDifference(Object latest,
 			Object current, String[] excludeProps) {
+		boolean retVal = false;
 		if (latest != null
 				&& current != null
 				&& (!current.getClass().getName()
 						.equals(latest.getClass().getName()))) {
 			Class<?> object = latest.getClass();
-			boolean retVal = false;
 			List<String> excludeList = new ArrayList<String>();
 			excludeList.add("serialVersionUID");
 			excludeList.add("changedFieldStatus");
