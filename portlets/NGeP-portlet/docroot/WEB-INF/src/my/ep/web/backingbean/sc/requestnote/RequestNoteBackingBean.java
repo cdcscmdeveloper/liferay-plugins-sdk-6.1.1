@@ -431,13 +431,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 
 			if (requestNoteResDTO.isSuccessful()) {
+				ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
 				if(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)){
 					successMessage(MessageConst.INFO_700010,ParameterTypeConst.DOCUMENT_TYPES,
-							ParameterConst.DOCTYPE_REQUEST_NOTE,getManagedBean().getRequestNote().getRequestNoteNo(), Boolean.TRUE);
+							ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo(), Boolean.TRUE);
 
 				} else if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome) || outcome.isEmpty()){
 					successMessage(MessageConst.INFO_700005,ParameterTypeConst.DOCUMENT_TYPES,
-							ParameterConst.DOCTYPE_REQUEST_NOTE,getManagedBean().getRequestNote().getRequestNoteNo(), Boolean.TRUE);
+							ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo(), Boolean.TRUE);
 				}	
 				// clear data
 				super.renewSesionObject();
@@ -460,6 +461,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	private void parseRequestNote(ScRequestNote requestNote, String outcome, boolean isAction) {
 		List<ScRequestNoteDtl>	requestNoteDtls  = this.getManagedBean().getRequestNoteDtls();
 		
+		// Target Approver
+		formApprover(requestNote);
+				
 		// check empty Objects. and concatenation RN title
 		if (requestNoteDtls != null && requestNoteDtls.size() > 0) {
 			List<String> results = new ArrayList<String>();
@@ -527,9 +531,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 		}
 		requestNote.setRequestNoteDtls(requestNoteDtls);
-
-		// Target Approver
-		formApprover(requestNote);
 
 		if(!(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome))){
 			finalizeRemarks(requestNote.getRemarks());
