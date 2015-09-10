@@ -1,28 +1,25 @@
 package my.ep.web.util.sm.helper;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
+import my.ep.persistence.entity.pm.common.PmEduField;
+import my.ep.persistence.entity.pm.common.PmEduLevel;
+import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmPersonnelAddress;
+import my.ep.persistence.entity.sm.SmRelatedCompany;
+import my.ep.persistence.entity.sm.SmStaffAcademic;
+import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmStaffTotal;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 
-import org.apache.commons.beanutils.BeanUtils;
-
 public class SmFieldChangeUtil {
-
-	private static String[] smAddressExcludeProps = { "addressId",
-			"smAssociateCompanies", "smEquityCompanies", "smFacilities",
-			"smPersonnelAddresses", "smSupplierBanks", "smSupplierBranches",
-			"smCompanyAddresses" };
 
 	public static void initLatestAppl(SmApplicationManagedBean bean) {
 		String showFieldChange = EpPropertiesUtils.getInstance().getProperty(
@@ -37,15 +34,42 @@ public class SmFieldChangeUtil {
 					.setHqFacility(
 							SmApplicationUtil.getHqFacilityByAppl(bean
 									.getLatestAppl()));
-			SmFieldChangeUtil.setTableListChangeStatus(bean.getLatestAppl(),
-					bean.getSmAppl());
+			setApplTableListChangeStatus(bean.getLatestAppl(), bean.getSmAppl());
 			bean.setShowFieldChanges(true);
 		} else {
 			bean.setShowFieldChanges(false);
 		}
 	}
 
-	public static void setTableListChangeStatus(SmAppl latestAppl,
+	public static void initPersonnelChangeField(SmApplicationManagedBean bean) {
+		bean.setLatestPersonnel(new SmPersonnel());
+		if (bean.isShowFieldChanges()) {
+			bean.setLatestPersonnel(SmFieldChangeUtil
+					.getPersonnelByIdentificationNoFromList(bean
+							.getLatestAppl(), bean.getSelectedShareHolder()
+							.getIdentificationNo()));
+			bean.setLatestOffAddr(SmFieldChangeUtil
+					.getPersonnelAddressByTypeFromList(
+							SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE,
+							bean.getLatestPersonnel().getSmPersonnelAddresses()));
+			bean.setLatestResdAddr(SmFieldChangeUtil
+					.getPersonnelAddressByTypeFromList(
+							SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES,
+							bean.getLatestPersonnel().getSmPersonnelAddresses()));
+			bean.setLatestMailAddr(SmFieldChangeUtil
+					.getPersonnelAddressByTypeFromList(
+							SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL,
+							bean.getLatestPersonnel().getSmPersonnelAddresses()));
+			bean.setLatestPermAddr(SmFieldChangeUtil
+					.getPersonnelAddressByTypeFromList(
+							SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM,
+							bean.getLatestPersonnel().getSmPersonnelAddresses()));
+
+			setPersonnelTableListChangeStatus(bean);
+		}
+	}
+
+	public static void setApplTableListChangeStatus(SmAppl latestAppl,
 			SmAppl currAppl) {
 		if (currAppl != null && latestAppl != null) {
 
@@ -64,6 +88,51 @@ public class SmFieldChangeUtil {
 			// Personnel
 			setPersonnelFieldChangeStatus(latestAppl, currAppl);
 		}
+	}
+
+	public static void setPersonnelTableListChangeStatus(
+			SmApplicationManagedBean bean) {
+		if (bean.isShowFieldChanges()) {
+			// staffExperiences
+			setCurrPersonnelStaffExperiences(bean.getSelectedShareHolder(),
+					bean.getLatestPersonnel());
+
+			// staffAcademics
+			setCurrPersonnelStaffEducations(bean.getSelectedShareHolder(),
+					bean.getLatestPersonnel());
+
+			// relatedCompanies
+			setCurrPersonnelRelatedCompanies(bean.getSelectedShareHolder(),
+					bean.getLatestPersonnel());
+
+			// professionalBodies
+			setCurrPersonnelAssociationBodies(bean.getLatestAppl(),
+					bean.getSelectedShareHolder(), bean.getLatestPersonnel());
+		}
+	}
+
+	private static void setCurrPersonnelFieldChange(SmPersonnel currPersonnel,
+			SmAppl latestAppl) {
+		SmPersonnel latestPersonnel = getPersonnelByIdentificationNoFromList(
+				latestAppl, currPersonnel.getIdentificationNo());
+		// personnel
+		setCurrPersonnel(currPersonnel, latestPersonnel);
+
+		// smPersonnelAddresses
+		setCurrPersonnelSmPersonnelAddresses(currPersonnel, latestPersonnel);
+
+		// staffAcademics
+		setCurrPersonnelStaffEducations(currPersonnel, latestPersonnel);
+
+		// staffExperiences
+		setCurrPersonnelStaffExperiences(currPersonnel, latestPersonnel);
+
+		// professionalBodies
+		setCurrPersonnelAssociationBodies(latestAppl, currPersonnel,
+				latestPersonnel);
+
+		// relatedCompanies
+		setCurrPersonnelRelatedCompanies(currPersonnel, latestPersonnel);
 	}
 
 	public static SmAssociateCompany getAssocCompanyByRegNoFromList(
@@ -132,24 +201,19 @@ public class SmFieldChangeUtil {
 
 	private static void setPersonnelFieldChangeStatus(SmAppl latestAppl,
 			SmAppl currAppl) {
-		if (latestAppl.getSmPersonnels() == null
-				|| latestAppl.getSmPersonnels().isEmpty()) {
-			if (currAppl.getSmPersonnels() != null
-					&& !currAppl.getSmPersonnels().isEmpty()) {
-				for (SmPersonnel tmp : currAppl.getSmPersonnels()) {
-					tmp.setChangedFieldStatus("N");
-				}
+		if (SmCommonUtil.isCollectionEmpty(latestAppl.getSmPersonnels())
+				&& !SmCommonUtil.isCollectionEmpty(currAppl.getSmPersonnels())) {
+			for (SmPersonnel tmp : currAppl.getSmPersonnels()) {
+				tmp.setChangedFieldStatus("N");
 			}
 		} else {
-			if (currAppl.getSmPersonnels() != null
-					&& !currAppl.getSmPersonnels().isEmpty()) {
+			if (!SmCommonUtil.isCollectionEmpty(currAppl.getSmPersonnels())) {
 				for (SmPersonnel tmp : currAppl.getSmPersonnels()) {
 					if (!isCurrPersonnelExistInLatestPersonnel(tmp,
 							latestAppl.getSmPersonnels())) {
 						tmp.setChangedFieldStatus("N");
 					} else {
-						setCurrPersonnelFieldChange(tmp,
-								latestAppl.getSmPersonnels());
+						setCurrPersonnelFieldChange(tmp, latestAppl);
 					}
 				}
 			}
@@ -169,42 +233,40 @@ public class SmFieldChangeUtil {
 		return retVal;
 	}
 
-	private static void setCurrPersonnelFieldChange(SmPersonnel currPersonnel,
-			List<SmPersonnel> latestPersonnelList) {
-		for (SmPersonnel latestPersonnel : latestPersonnelList) {
-			if (latestPersonnel.getIdentificationNo().equalsIgnoreCase(
-					currPersonnel.getIdentificationNo())) {
-
-				// personnel
-				setCurrPersonnel(currPersonnel, latestPersonnel);
-
-				// staffAcademics
-
-				// staffExperiences
-
-				// professionalBodies
-				setCurrAssociationBodies(currPersonnel, latestPersonnel);
-			}
-		}
-	}
-
 	private static void setCurrPersonnel(SmPersonnel currPersonnel,
 			SmPersonnel latestPersonnel) {
-		if (changeApplied(latestPersonnel, currPersonnel, new String[] {
-				"personnelId", "revNo", "smAssociationBodies",
-				"smChequeSignatories", "smPersonnelAddresses",
-				"smStaffAcademics", "smStaffExperiences", "smRelatedCompanies",
-				"smSupplierBranches", "dirOrHghrMngmt", "roleName",
-				"prevEpRole", "softcertValidityDate", "softcertNo",
-				"disableStaff", "disableSemiProf", "prevApprovedDirector",
-				"prevApprovedEquityOwner", "disableRowSelection",
-				"freeSoftCert", "softcertRejectReason" })) {
+		if (currPersonnel.getPmCountry() != null
+				&& currPersonnel.getPmCountry() != null
+				&& currPersonnel
+						.getPmCountry()
+						.getCountryId()
+						.compareTo(
+								latestPersonnel.getPmCountry().getCountryId()) != 0) {
+			currPersonnel.setChangedFieldStatus("U");
+		} else if ((currPersonnel.getPmRace() != null && latestPersonnel
+				.getPmRace() == null)
+				|| (currPersonnel.getPmRace() == null && latestPersonnel
+						.getPmRace() != null)
+				|| (currPersonnel.getPmRace() != null
+						&& latestPersonnel.getPmRace() != null && currPersonnel
+						.getPmRace().getRaceId()
+						.compareTo(latestPersonnel.getPmRace().getRaceId()) != 0)) {
+			currPersonnel.setChangedFieldStatus("U");
+		} else if (isHasDifferences(latestPersonnel, currPersonnel,
+				new String[] { "personnelId", "dirOrHghrMngmt", "roleName",
+						"prevEpRole", "softcertValidityDate", "softcertNo",
+						"disableStaff", "disableSemiProf",
+						"prevApprovedDirector", "prevApprovedEquityOwner",
+						"disableRowSelection", "freeSoftCert",
+						"softcertRejectReason", "pmCountry", "pmUser",
+						"pmRace", "identificationType", "identityResponseCode",
+						"tempPassword" })) {
 			currPersonnel.setChangedFieldStatus("U");
 		}
 	}
 
-	private static void setCurrAssociationBodies(SmPersonnel currPersonnel,
-			SmPersonnel latestPersonnel) {
+	private static void setCurrPersonnelAssociationBodies(SmAppl latestAppl,
+			SmPersonnel currPersonnel, SmPersonnel latestPersonnel) {
 		if (SmCommonUtil.isCollectionEmpty(currPersonnel
 				.getSmAssociationBodies())
 				&& !SmCommonUtil.isCollectionEmpty(latestPersonnel
@@ -215,14 +277,29 @@ public class SmFieldChangeUtil {
 				&& !SmCommonUtil.isCollectionEmpty(currPersonnel
 						.getSmAssociationBodies())) {
 			currPersonnel.setChangedFieldStatus("U");
+			for (SmAssociationBody currBody : currPersonnel
+					.getSmAssociationBodies()) {
+				currBody.setChangedFieldStatus("U");
+			}
 		} else {
 			for (SmAssociationBody currBody : currPersonnel
 					.getSmAssociationBodies()) {
-				for (SmAssociationBody latestBody : latestPersonnel
-						.getSmAssociationBodies()) {
-					if (latestBody.getRegNo().equals(currBody.getRegNo())
-							&& changeApplied(latestBody, currBody,
-									new String[] { "associationBodyId" })) {
+				if (!isCurrProfBodyExistInLatestProfBody(currBody,
+						latestPersonnel.getSmAssociationBodies())) {
+					currPersonnel.setChangedFieldStatus("U");
+					currBody.setChangedFieldStatus("U");
+				} else {
+					SmAssociationBody latestBody = getProfBodyByRegNoFromList(
+							latestAppl, currBody.getRegNo());
+					if (latestBody != null) {
+						if (isHasDifferences(latestBody, currBody,
+								new String[] { "associationBodyId",
+										"smPersonnel" })) {
+							currPersonnel.setChangedFieldStatus("U");
+							currBody.setChangedFieldStatus("U");
+						}
+					} else {
+						currPersonnel.setChangedFieldStatus("U");
 						currBody.setChangedFieldStatus("U");
 					}
 				}
@@ -230,20 +307,241 @@ public class SmFieldChangeUtil {
 		}
 	}
 
-	private static void setAssocCompanyFieldChangeStatus(SmAppl latestAppl,
-			SmAppl currAppl) {
-		if (latestAppl.getSmAssociateCompanies() == null
-				|| latestAppl.getSmAssociateCompanies().isEmpty()) {
-			if (currAppl.getSmAssociateCompanies() != null
-					&& !currAppl.getSmAssociateCompanies().isEmpty()) {
-				for (SmAssociateCompany currAssocCompany : currAppl
-						.getSmAssociateCompanies()) {
-					currAssocCompany.setChangedFieldStatus("N");
-				}
+	private static void setCurrPersonnelRelatedCompanies(
+			SmPersonnel currPersonnel, SmPersonnel latestPersonnel) {
+		if (SmCommonUtil.isCollectionEmpty(currPersonnel
+				.getSmRelatedCompanies())
+				&& !SmCommonUtil.isCollectionEmpty(latestPersonnel
+						.getSmRelatedCompanies())) {
+			currPersonnel.setChangedFieldStatus("U");
+		} else if (SmCommonUtil.isCollectionEmpty(latestPersonnel
+				.getSmRelatedCompanies())
+				&& !SmCommonUtil.isCollectionEmpty(currPersonnel
+						.getSmRelatedCompanies())) {
+			currPersonnel.setChangedFieldStatus("U");
+			for (SmRelatedCompany currRelComp : currPersonnel
+					.getSmRelatedCompanies()) {
+				currRelComp.setChangedFieldStatus("U");
 			}
 		} else {
-			if (currAppl.getSmAssociateCompanies() != null
-					&& !currAppl.getSmAssociateCompanies().isEmpty()) {
+			for (SmRelatedCompany currRelComp : currPersonnel
+					.getSmRelatedCompanies()) {
+				if (!isCurrPersonnelRelatedCompaniesExistInLatest(currRelComp,
+						latestPersonnel.getSmRelatedCompanies())) {
+					currPersonnel.setChangedFieldStatus("U");
+					currRelComp.setChangedFieldStatus("U");
+				} else {
+					SmRelatedCompany latestRelComp = getRelatedCompanyByRegNoFromList(
+							currRelComp.getRegNo(),
+							latestPersonnel.getSmRelatedCompanies());
+					if (latestRelComp != null) {
+						if (isHasDifferences(latestRelComp, currRelComp,
+								new String[] { "relatedCompanyId",
+										"smPersonnel" })) {
+							currPersonnel.setChangedFieldStatus("U");
+							currRelComp.setChangedFieldStatus("U");
+						}
+					} else {
+						currPersonnel.setChangedFieldStatus("U");
+						currRelComp.setChangedFieldStatus("U");
+					}
+				}
+			}
+		}
+	}
+
+	private static boolean isCurrPersonnelRelatedCompaniesExistInLatest(
+			SmRelatedCompany currRelComp,
+			List<SmRelatedCompany> latestPersonnelRelCompList) {
+		boolean retVal = false;
+		for (SmRelatedCompany latestRelComp : latestPersonnelRelCompList) {
+			if (latestRelComp.getRegNo().equals(currRelComp.getRegNo())) {
+				retVal = true;
+			}
+		}
+		return retVal;
+	}
+
+	private static void setCurrPersonnelStaffExperiences(
+			SmPersonnel currPersonnel, SmPersonnel latestPersonnel) {
+		if (SmCommonUtil.isCollectionEmpty(currPersonnel
+				.getSmStaffExperiences())
+				&& !SmCommonUtil.isCollectionEmpty(latestPersonnel
+						.getSmStaffExperiences())) {
+			currPersonnel.setChangedFieldStatus("U");
+		} else if (SmCommonUtil.isCollectionEmpty(latestPersonnel
+				.getSmStaffExperiences())
+				&& !SmCommonUtil.isCollectionEmpty(currPersonnel
+						.getSmStaffExperiences())) {
+			currPersonnel.setChangedFieldStatus("U");
+			for (SmStaffExperience currExp : currPersonnel
+					.getSmStaffExperiences()) {
+				currExp.setChangedFieldStatus("U");
+			}
+		} else {
+			for (SmStaffExperience currExp : currPersonnel
+					.getSmStaffExperiences()) {
+				if (!isCurrPersonnelStaffExperienceExistInLatest(currExp,
+						latestPersonnel.getSmStaffExperiences())) {
+					currPersonnel.setChangedFieldStatus("U");
+					currExp.setChangedFieldStatus("U");
+				} else {
+					SmStaffExperience latestExp = getStaffExperienceByCompNamFromList(
+							currExp.getCompanyName(),
+							latestPersonnel.getSmStaffExperiences());
+					if (latestExp != null) {
+						if (isHasDifferences(latestExp, currExp, new String[] {
+								"staffExperienceId", "smPersonnel" })) {
+							currPersonnel.setChangedFieldStatus("U");
+							currExp.setChangedFieldStatus("U");
+						}
+					} else {
+						currPersonnel.setChangedFieldStatus("U");
+						currExp.setChangedFieldStatus("U");
+					}
+				}
+			}
+		}
+	}
+
+	private static boolean isCurrPersonnelStaffExperienceExistInLatest(
+			SmStaffExperience currExp,
+			List<SmStaffExperience> latestPersonnelExpList) {
+		boolean retVal = false;
+		for (SmStaffExperience latestExp : latestPersonnelExpList) {
+			if (latestExp.getCompanyName().equals(currExp.getCompanyName())) {
+				retVal = true;
+			}
+		}
+		return retVal;
+	}
+
+	private static void setCurrPersonnelStaffEducations(
+			SmPersonnel currPersonnel, SmPersonnel latestPersonnel) {
+		if (SmCommonUtil.isCollectionEmpty(currPersonnel.getSmStaffAcademics())
+				&& !SmCommonUtil.isCollectionEmpty(latestPersonnel
+						.getSmStaffAcademics())) {
+			currPersonnel.setChangedFieldStatus("U");
+		} else if (SmCommonUtil.isCollectionEmpty(latestPersonnel
+				.getSmStaffAcademics())
+				&& !SmCommonUtil.isCollectionEmpty(currPersonnel
+						.getSmStaffAcademics())) {
+			currPersonnel.setChangedFieldStatus("U");
+			for (SmStaffAcademic currAcad : currPersonnel.getSmStaffAcademics()) {
+				currAcad.setChangedFieldStatus("U");
+			}
+		} else {
+			for (SmStaffAcademic currAcad : currPersonnel.getSmStaffAcademics()) {
+				if (!isCurrPersonnelStaffEducationExistInLatest(currAcad,
+						latestPersonnel.getSmStaffAcademics())) {
+					currPersonnel.setChangedFieldStatus("U");
+					currAcad.setChangedFieldStatus("U");
+				} else {
+					SmStaffAcademic latestAcad = getStaffAcadByPmEdu(
+							currAcad.getPmEduField(), currAcad.getPmEduLevel(),
+							latestPersonnel.getSmStaffAcademics());
+					if (latestAcad != null) {
+						if (isHasDifferences(latestAcad, currAcad,
+								new String[] { "staffAcademicId",
+										"qualificationLevelId", "smPersonnel" })) {
+							currPersonnel.setChangedFieldStatus("U");
+							currAcad.setChangedFieldStatus("U");
+						}
+					} else {
+						currPersonnel.setChangedFieldStatus("U");
+						currAcad.setChangedFieldStatus("U");
+					}
+				}
+			}
+		}
+	}
+
+	private static boolean isCurrPersonnelStaffEducationExistInLatest(
+			SmStaffAcademic currAcad,
+			List<SmStaffAcademic> latestPersonnelAcadList) {
+		boolean retVal = false;
+		for (SmStaffAcademic latestAcad : latestPersonnelAcadList) {
+			if (latestAcad.getPmEduField() != null
+					&& currAcad.getPmEduField() != null
+					&& latestAcad.getPmEduLevel() != null
+					&& currAcad.getPmEduLevel() != null
+					&& latestAcad
+							.getPmEduField()
+							.getEduFieldId()
+							.compareTo(currAcad.getPmEduField().getEduFieldId()) == 0
+					&& latestAcad
+							.getPmEduLevel()
+							.getEduLevelId()
+							.compareTo(currAcad.getPmEduLevel().getEduLevelId()) == 0) {
+				retVal = true;
+			}
+		}
+		return retVal;
+	}
+
+	private static void setCurrPersonnelSmPersonnelAddresses(
+			SmPersonnel currPersonnel, SmPersonnel latestPersonnel) {
+		if (SmCommonUtil.isCollectionEmpty(currPersonnel
+				.getSmPersonnelAddresses())
+				&& !SmCommonUtil.isCollectionEmpty(latestPersonnel
+						.getSmPersonnelAddresses())) {
+			currPersonnel.setChangedFieldStatus("U");
+		} else if (SmCommonUtil.isCollectionEmpty(latestPersonnel
+				.getSmPersonnelAddresses())
+				&& !SmCommonUtil.isCollectionEmpty(currPersonnel
+						.getSmPersonnelAddresses())) {
+			currPersonnel.setChangedFieldStatus("U");
+		} else {
+			for (SmPersonnelAddress currAddr : currPersonnel
+					.getSmPersonnelAddresses()) {
+				if (!isCurrPersonnelAddrExistInLatest(currAddr,
+						latestPersonnel.getSmPersonnelAddresses())) {
+					currPersonnel.setChangedFieldStatus("U");
+				} else {
+					SmPersonnelAddress latestAddr = getPersonnelAddressByTypeFromList(
+							currAddr.getAddressType(),
+							latestPersonnel.getSmPersonnelAddresses());
+					if (latestAddr != null) {
+						if (latestAddr.getSmAddress() != null
+								&& currAddr.getSmAddress() != null
+								&& isAddressHasDifferences(
+										latestAddr.getSmAddress(),
+										currAddr.getSmAddress())) {
+							currPersonnel.setChangedFieldStatus("U");
+						}
+					} else {
+						currPersonnel.setChangedFieldStatus("U");
+					}
+				}
+			}
+		}
+	}
+
+	private static boolean isCurrPersonnelAddrExistInLatest(
+			SmPersonnelAddress currAddr,
+			List<SmPersonnelAddress> latestPersonnelAddrList) {
+		boolean retVal = false;
+		for (SmPersonnelAddress latestAddr : latestPersonnelAddrList) {
+			if (latestAddr.getAddressType().equals(currAddr.getAddressType())) {
+				retVal = true;
+			}
+		}
+		return retVal;
+	}
+
+	private static void setAssocCompanyFieldChangeStatus(SmAppl latestAppl,
+			SmAppl currAppl) {
+		if (SmCommonUtil
+				.isCollectionEmpty(latestAppl.getSmAssociateCompanies())
+				&& !SmCommonUtil.isCollectionEmpty(currAppl
+						.getSmAssociateCompanies())) {
+			for (SmAssociateCompany currAssocCompany : currAppl
+					.getSmAssociateCompanies()) {
+				currAssocCompany.setChangedFieldStatus("N");
+			}
+		} else {
+			if (!SmCommonUtil.isCollectionEmpty(currAppl
+					.getSmAssociateCompanies())) {
 				for (SmAssociateCompany currAssocCompany : currAppl
 						.getSmAssociateCompanies()) {
 					if (!isCurrAssocCompExistInLatestAssocComp(
@@ -287,7 +585,7 @@ public class SmFieldChangeUtil {
 
 	private static void setCurrAssocComp(SmAssociateCompany latestAssocCompany,
 			SmAssociateCompany currAssocCompany) {
-		if (changeApplied(latestAssocCompany, currAssocCompany,
+		if (isHasDifferences(latestAssocCompany, currAssocCompany,
 				new String[] { "associateCompanyId" })) {
 			currAssocCompany.setChangedFieldStatus("U");
 		}
@@ -300,8 +598,8 @@ public class SmFieldChangeUtil {
 				.getSmAddress() != null)
 				|| (latestAssocCompany.getSmAddress() != null && currAssocCompany
 						.getSmAddress() == null)
-				|| (changeApplied(latestAssocCompany.getSmAddress(),
-						currAssocCompany.getSmAddress(), smAddressExcludeProps))) {
+				|| (isAddressHasDifferences(latestAssocCompany.getSmAddress(),
+						currAssocCompany.getSmAddress()))) {
 			currAssocCompany.setChangedFieldStatus("U");
 		}
 	}
@@ -351,58 +649,120 @@ public class SmFieldChangeUtil {
 			List<SmAssociationBody> latestProfBodyList) {
 		for (SmAssociationBody latestBody : latestProfBodyList) {
 			if (latestBody.getRegNo().equalsIgnoreCase(currBody.getRegNo())
-					&& changeApplied(latestBody, currBody,
+					&& isHasDifferences(latestBody, currBody,
 							new String[] { "associationBodyId" })) {
 				currBody.setChangedFieldStatus("U");
 			}
 		}
 	}
 
-	public static boolean changeApplied(Object latest, Object current,
-			String[] excludeProps) {
-		boolean retVal = false;
-		List<String> excludeList = new ArrayList<String>();
-		excludeList.add("changedFieldStatus");
-		excludeList.add("createdDate");
-		excludeList.add("createdBy");
-		excludeList.add("changedDate");
-		excludeList.add("changedBy");
-		excludeList.add("revNo");
-		excludeList.add("smAppl");
-		excludeList.add("smAddress");
-		if (excludeProps != null && excludeProps.length > 0) {
-			excludeList.addAll(Arrays.asList(excludeProps));
+	public static SmPersonnelAddress getPersonnelAddressByTypeFromList(
+			String type, List<SmPersonnelAddress> personnelAddressList) {
+		SmPersonnelAddress addr = null;
+		for (SmPersonnelAddress tmp : personnelAddressList) {
+			if (tmp.getAddressType().equals(type)) {
+				addr = tmp;
+			}
 		}
-		try {
-			Map<String, String> latestMap = BeanUtils.describe(latest);
-			Map<String, String> currMap = BeanUtils.describe(current);
+		return addr;
+	}
 
-			if ((latestMap.keySet().containsAll(currMap.keySet()))) {
-				for (final String key : latestMap.keySet()) {
-					if (!excludeList.contains(key)) {
-						if (latestMap.get(key) == null
-								|| latestMap.get(key).isEmpty()) {
-							if (currMap.get(key) != null
-									&& !currMap.get(key).isEmpty()) {
-								retVal = true;
-								break;
-							}
-						} else {
-							if (!latestMap.get(key).equals(currMap.get(key))) {
-								retVal = true;
-								break;
-							}
-						}
-					}
+	public static SmStaffAcademic getStaffAcadByPmEdu(PmEduField eduField,
+			PmEduLevel eduLevel, List<SmStaffAcademic> staffAcadList) {
+		SmStaffAcademic acad = null;
+		if (!SmCommonUtil.isCollectionEmpty(staffAcadList)) {
+			for (SmStaffAcademic latestAcad : staffAcadList) {
+				if (latestAcad.getPmEduField() != null
+						&& latestAcad.getPmEduField().getEduFieldId() != null
+						&& eduField != null
+						&& eduField.getEduFieldId() != null
+						&& latestAcad.getPmEduLevel() != null
+						&& latestAcad.getPmEduLevel().getEduLevelId() != null
+						&& eduLevel != null
+						&& eduLevel.getEduLevelId() != null
+						&& latestAcad.getPmEduField().getEduFieldId()
+								.compareTo(eduField.getEduFieldId()) == 0
+						&& latestAcad.getPmEduLevel().getEduLevelId()
+								.compareTo(eduLevel.getEduLevelId()) == 0) {
+					acad = latestAcad;
 				}
 			}
-		} catch (IllegalAccessException e) {
+		}
+		return acad;
+	}
 
-		} catch (InvocationTargetException e) {
-
-		} catch (NoSuchMethodException e) {
-
+	public static SmStaffExperience getStaffExperienceByCompNamFromList(
+			String companyName, List<SmStaffExperience> expList) {
+		SmStaffExperience retVal = null;
+		if (!SmCommonUtil.isCollectionEmpty(expList)) {
+			for (SmStaffExperience latestExp : expList) {
+				if (latestExp.getCompanyName().equals(companyName)) {
+					retVal = latestExp;
+				}
+			}
 		}
 		return retVal;
 	}
+
+	public static SmRelatedCompany getRelatedCompanyByRegNoFromList(
+			String regNo, List<SmRelatedCompany> relCompList) {
+		SmRelatedCompany retVal = null;
+		if (SmCommonUtil.isCollectionEmpty(relCompList)) {
+			for (SmRelatedCompany latestRelComp : relCompList) {
+				if (latestRelComp.getRegNo().equals(regNo)) {
+					retVal = latestRelComp;
+				}
+			}
+		}
+		return retVal;
+	}
+
+	private static boolean isAddressHasDifferences(SmAddress latest,
+			SmAddress current) {
+		boolean retVal = false;
+		if (isHasDifferences(latest, current, new String[] { "addressId",
+				"pmCountry", "pmState", "pmCity", "pmDistrict" })) {
+			retVal = true;
+		} else {
+			if ((latest.getPmCountry() != null && current.getPmCountry() == null)
+					|| (latest.getPmCountry() == null && current.getPmCountry() != null)
+					|| (latest.getPmCountry() != null
+							&& current.getPmCountry() != null && latest
+							.getPmCountry().getCountryId()
+							.compareTo(current.getPmCountry().getCountryId()) != 0)) {
+				retVal = true;
+			} else if ((latest.getPmState() != null && current.getPmState() == null)
+					|| (latest.getPmState() == null && current.getPmState() != null)
+					|| (latest.getPmState() != null
+							&& current.getPmState() != null && latest
+							.getPmState().getStateId()
+							.compareTo(current.getPmState().getStateId()) != 0)) {
+				retVal = true;
+			} else if ((latest.getPmCity() != null && current.getPmCity() == null)
+					|| (latest.getPmCity() == null && current.getPmCity() != null)
+					|| (latest.getPmCity() != null
+							&& current.getPmCity() != null && latest
+							.getPmCity().getCityId()
+							.compareTo(current.getPmCity().getCityId()) != 0)) {
+				retVal = true;
+			} else if ((latest.getPmDistrict() != null && current
+					.getPmDistrict() == null)
+					|| (latest.getPmDistrict() == null && current
+							.getPmDistrict() != null)
+					|| (latest.getPmDistrict() != null
+							&& current.getPmDistrict() != null && latest
+							.getPmDistrict().getDistrictId()
+							.compareTo(current.getPmDistrict().getDistrictId()) != 0)) {
+				retVal = true;
+			}
+		}
+		return retVal;
+	}
+
+	private static boolean isHasDifferences(Object latest, Object current,
+			String[] excludeProps) {
+		return SmCommonUtil.isSmObjectPropsDifference(latest, current,
+				excludeProps);
+	}
+
 }

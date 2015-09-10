@@ -9,6 +9,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.HttpURLConnection;
@@ -17,6 +21,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -122,6 +127,7 @@ import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.vo.SmPersonnelSummaryCountVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.id.Hex;
 import org.apache.commons.lang.StringUtils;
@@ -2729,11 +2735,83 @@ public class SmCommonUtil {
 		return name;
 	}
 
+	public static String getRaceByIdFromSelectItems(Long raceId) {
+		String retVal = "";
+		for (SelectItem tmp : SmApplicationUtil.getRaceSelectItems()) {
+			if (tmp.getValue().equals(raceId)) {
+				retVal = tmp.getLabel();
+				break;
+			}
+		}
+		return retVal;
+	}
+
 	public static boolean isCollectionEmpty(Collection<?> value) {
 		if (value == null || value.isEmpty()) {
 			return true;
 		}
 		return false;
+	}
+
+	public static boolean isSmObjectPropsDifference(Object latest,
+			Object current, String[] excludeProps) {
+		if (latest != null
+				&& current != null
+				&& (!current.getClass().getName()
+						.equals(latest.getClass().getName()))) {
+			Class<?> object = latest.getClass();
+			boolean retVal = false;
+			List<String> excludeList = new ArrayList<String>();
+			excludeList.add("serialVersionUID");
+			excludeList.add("changedFieldStatus");
+			excludeList.add("createdDate");
+			excludeList.add("createdBy");
+			excludeList.add("changedDate");
+			excludeList.add("changedBy");
+			excludeList.add("revNo");
+			excludeList.add("smAppl");
+			excludeList.add("smAddress");
+			if (excludeProps != null && excludeProps.length > 0) {
+				excludeList.addAll(Arrays.asList(excludeProps));
+			}
+			Field[] attributes = object.getDeclaredFields();
+			Type type = null;
+			Object latestVal = null;
+			Object currVal = null;
+			for (Field field : attributes) {
+				type = field.getGenericType();
+				if (!excludeList.contains(field.getName())) {
+					if (type instanceof ParameterizedType == false) {
+						try {
+							latestVal = PropertyUtils.getProperty(latest,
+									field.getName());
+							currVal = PropertyUtils.getProperty(current,
+									field.getName());
+							if (latestVal == null
+									|| StringUtils
+											.isBlank(latestVal.toString())) {
+								if (currVal != null
+										&& StringUtils.isNotBlank(currVal
+												.toString())) {
+									retVal = true;
+									break;
+								}
+							} else {
+								if (!latestVal.equals(currVal)) {
+									retVal = true;
+									break;
+								}
+							}
+						} catch (IllegalAccessException
+								| InvocationTargetException
+								| NoSuchMethodException e) {
+							log.info(e.getMessage());
+						}
+					}
+				}
+			}
+		}
+		return retVal;
 	}
 
 }

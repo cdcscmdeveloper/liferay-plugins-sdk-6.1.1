@@ -81,6 +81,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmAssociateCompany latestAssocCompany;
 	private SmAssociationBody latestProfBody;
 	private SmPersonnel latestPersonnel;
+	private SmPersonnelAddress latestPermAddr;
+	private SmPersonnelAddress latestMailAddr;
+	private SmPersonnelAddress latestResdAddr;
+	private SmPersonnelAddress latestOffAddr;
+	private SmStaffExperience latestJobFunction;
+	private SmRelatedCompany latestRelatedCompany;
+	private SmAssociationBody latestStfPrfBdy;
+	private SmStaffAcademic latestStaffAcademic;
 	private SmAppl smAppl;
 	private SmSupplier smSupplier;
 	private int tabActiveIndex;
@@ -2880,6 +2888,70 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setLatestPersonnel(SmPersonnel latestPersonnel) {
 		this.latestPersonnel = latestPersonnel;
+	}
+
+	public SmPersonnelAddress getLatestPermAddr() {
+		return latestPermAddr;
+	}
+
+	public void setLatestPermAddr(SmPersonnelAddress latestPermAddr) {
+		this.latestPermAddr = latestPermAddr;
+	}
+
+	public SmPersonnelAddress getLatestMailAddr() {
+		return latestMailAddr;
+	}
+
+	public void setLatestMailAddr(SmPersonnelAddress latestMailAddr) {
+		this.latestMailAddr = latestMailAddr;
+	}
+
+	public SmPersonnelAddress getLatestResdAddr() {
+		return latestResdAddr;
+	}
+
+	public void setLatestResdAddr(SmPersonnelAddress latestResdAddr) {
+		this.latestResdAddr = latestResdAddr;
+	}
+
+	public SmPersonnelAddress getLatestOffAddr() {
+		return latestOffAddr;
+	}
+
+	public void setLatestOffAddr(SmPersonnelAddress latestOffAddr) {
+		this.latestOffAddr = latestOffAddr;
+	}
+
+	public SmStaffExperience getLatestJobFunction() {
+		return latestJobFunction;
+	}
+
+	public void setLatestJobFunction(SmStaffExperience latestJobFunction) {
+		this.latestJobFunction = latestJobFunction;
+	}
+
+	public SmRelatedCompany getLatestRelatedCompany() {
+		return latestRelatedCompany;
+	}
+
+	public void setLatestRelatedCompany(SmRelatedCompany latestRelatedCompany) {
+		this.latestRelatedCompany = latestRelatedCompany;
+	}
+
+	public SmAssociationBody getLatestStfPrfBdy() {
+		return latestStfPrfBdy;
+	}
+
+	public void setLatestStfPrfBdy(SmAssociationBody latestStfPrfBdy) {
+		this.latestStfPrfBdy = latestStfPrfBdy;
+	}
+
+	public SmStaffAcademic getLatestStaffAcademic() {
+		return latestStaffAcademic;
+	}
+
+	public void setLatestStaffAcademic(SmStaffAcademic latestStaffAcademic) {
+		this.latestStaffAcademic = latestStaffAcademic;
 	}
 
 }
