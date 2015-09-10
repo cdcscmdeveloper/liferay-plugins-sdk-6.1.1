@@ -10,7 +10,7 @@
  */
 package my.ep.web.backingbean.sc.marketresearch;
 
-import java.io.File;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,7 +20,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -34,7 +33,6 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.sc.marketresearch.MarketResearchReqDTO;
 import my.ep.dto.sc.marketresearch.MarketResearchResDTO;
@@ -43,21 +41,23 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.sc.common.ScAttachment;
-import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
-import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.sc.marketresearch.MarketResearchManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MarketResearchBackingBean.
+ */
 @ManagedBean(name = "marketResearchBackingBean")
 @ViewScoped
 public class MarketResearchBackingBean extends
@@ -70,6 +70,7 @@ public class MarketResearchBackingBean extends
 	/** The Constant NAV_TO_MAIN. */
 	public static final String NAV_TO_MAIN = "/xhtml/sc/marketresearch/marketResearchSearchMain";
 
+	/** The search market research. */
 	private IPagingDataModel<Object[]> searchMarketResearch = new SearchMarketResearchPagingDataModel();
 
 	/**
@@ -129,6 +130,9 @@ public class MarketResearchBackingBean extends
 		searchMarketResearch = new SearchMarketResearchPagingDataModel();
 	}
 
+	/**
+	 * Search market research.
+	 */
 	public void searchMarketResearch() {
 		
         log.info("searchMarketResearch");
@@ -142,14 +146,25 @@ public class MarketResearchBackingBean extends
 		searchMarketResearch.reloadData();
 	}
 
+	/**
+	 * The Class SearchMarketResearchPagingDataModel.
+	 */
 	private class SearchMarketResearchPagingDataModel extends
 			PagingDataModel<Object[]> {
+		
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Instantiates a new search market research paging data model.
+		 */
 		public SearchMarketResearchPagingDataModel() {
 			super("marketdetailsId", getManagedBean().isLazy());
 		}
 
+		/* (non-Javadoc)
+		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		 */
 		@Override
 		public ISearchResultBean<Object[]> pageChangeListener(
 				ISearchBean<Object[]> searchBean) {
@@ -205,7 +220,8 @@ public class MarketResearchBackingBean extends
 	/**
 	 * To get Actual file path for attachement.
 	 * 
-	 * @param attachment
+	 * @param filePath
+	 *            the file path
 	 * @return filePath.
 	 */
 	protected String getActualFilePath(String filePath) {
@@ -436,6 +452,8 @@ public class MarketResearchBackingBean extends
 	}
 
 	/**
+	 * Gets the search market research.
+	 * 
 	 * @return the searchMarketResearch
 	 */
 	public IPagingDataModel<Object[]> getSearchMarketResearch() {
@@ -443,6 +461,8 @@ public class MarketResearchBackingBean extends
 	}
 
 	/**
+	 * Sets the search market research.
+	 * 
 	 * @param searchMarketResearch
 	 *            the searchMarketResearch to set
 	 */
