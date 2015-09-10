@@ -126,6 +126,7 @@ import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -811,7 +812,7 @@ public class SmApplicationBackingBean extends
 			if (fromBpm
 					&& (getManagedBean().isPoUser() || getManagedBean()
 							.isApproverUser())) {
-				initLatestAppl();
+				SmFieldChangeUtil.initLatestAppl(getManagedBean());
 				setRevUrl();
 				getManagedBean().setMaxReviewCount(
 						assignMaxReviewCount(applicationType, getManagedBean()
@@ -1300,27 +1301,52 @@ public class SmApplicationBackingBean extends
 		return SmCommonUtil.getFacTypeLabel(facType);
 	}
 
+	public String getRaceLabel(Long raceId) {
+		return SmCommonUtil.getRaceByIdFromSelectItems(raceId);
+	}
+
+	public String getProfBodyByIdFromList(Long profBodyId) {
+		String retVal = "";
+		if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getProfBodyLs())) {
+			for (PmCertBody body : getManagedBean().getProfBodyLs()) {
+				if (body.getCertBodyId().compareTo(profBodyId) == 0) {
+					retVal = body.getBodyName();
+				}
+			}
+		}
+		return retVal;
+	}
+
+	public String getEduLvlByIdFromList(Long eduLvlId) {
+		String retVal = "";
+		if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getEduLevelList())) {
+			for (PmEduLevel eduLvl : getManagedBean().getEduLevelList()) {
+				if (eduLvl.getEduLevelId().compareTo(eduLvlId) == 0) {
+					retVal = eduLvl.getLevelDesc();
+				}
+			}
+		}
+		return retVal;
+	}
+
+	public String getEduFieldByIdFromList(Long eduFieldId) {
+		String retVal = "";
+		if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getEduFieldList())) {
+			for (PmEduField eduField : getManagedBean().getEduFieldList()) {
+				if (eduField.getEduFieldId().compareTo(eduFieldId) == 0) {
+					retVal = eduField.getFieldName();
+				}
+			}
+		}
+		return retVal;
+	}
+
 	public String getPriceAmountFormat(BigDecimal priceAmount) {
 		return SmCommonUtil.getPriceAmountFormat(priceAmount);
 	}
 
 	public String getDateFormat(Date date) {
 		return SmCommonUtil.getDisplayDateFormat(date);
-	}
-
-	private void initLatestAppl() {
-		MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
-		mofReqDTO.setSupplierId(getManagedBean().getSmSupplier()
-				.getSupplierId());
-		getManagedBean().setLatestAppl(
-				SmServiceLookup.getMofRegistrationSO()
-						.retrieveLatestSmApplWithChildBySupplierId(mofReqDTO)
-						.getSmAppl());
-		getManagedBean().getLatestAppl().setHqFacility(
-				SmApplicationUtil.getHqFacilityByAppl(getManagedBean()
-						.getLatestAppl()));
-		SmFieldChangeUtil.setTableListChangeStatus(getManagedBean()
-				.getLatestAppl(), getManagedBean().getSmAppl());
 	}
 
 	private void updateSpkiDigiSignData(PmDigiSign pmDigiSign, String docType,
@@ -1559,10 +1585,6 @@ public class SmApplicationBackingBean extends
 
 				// init GST information
 				initGst();
-
-				// init change fieldStatus
-				SmFieldChangeUtil.setTableListChangeStatus(getManagedBean()
-						.getLatestAppl(), getManagedBean().getSmAppl());
 
 			}
 			assignValReqdToFalse();
@@ -2576,8 +2598,6 @@ public class SmApplicationBackingBean extends
 		}
 		assignValReqdToFalse();
 		saveOrUpdateAppl();
-		SmFieldChangeUtil.setTableListChangeStatus(getManagedBean()
-				.getLatestAppl(), getManagedBean().getSmAppl());
 		RequestContext.getCurrentInstance().execute("assocDialog.hide()");
 	}
 
@@ -3164,6 +3184,9 @@ public class SmApplicationBackingBean extends
 				.getDistrictId(),
 				SupplierManagementConst.SM_EQUI_COMPANY_PANEL, new PmCity());
 		getManagedBean().setSelectedEquityCompany(equiCompBean);
+		getManagedBean().setLatestEquityCompany(
+				SmFieldChangeUtil.getEquityCompanyByRegNoFromList(
+						getManagedBean().getSmAppl(), equiCompBean.getRegNo()));
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("eqiCompDialog.show()");
 	}
@@ -4392,6 +4415,8 @@ public class SmApplicationBackingBean extends
 		} finally {
 			mofRegistrationSO = null;
 			retriveLatestApplAfterUpdate("", "");
+			SmFieldChangeUtil.setApplTableListChangeStatus(getManagedBean()
+					.getLatestAppl(), getManagedBean().getSmAppl());
 		}
 	}
 
@@ -4641,6 +4666,10 @@ public class SmApplicationBackingBean extends
 
 		// disabled justification
 		// disableJustification(shareHolderBean);
+
+		// set personnel field change value
+		SmFieldChangeUtil.initPersonnelChangeField(getManagedBean());
+
 	}
 
 	/**
@@ -4847,6 +4876,9 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setDisabledShareholderPersonnelNameAndNationality(
 				false);
 
+		// set personnel field change value
+		SmFieldChangeUtil.initPersonnelChangeField(getManagedBean());
+
 	}
 
 	/**
@@ -4945,6 +4977,10 @@ public class SmApplicationBackingBean extends
 	public void assignSelShrHldrJobFunc(SmStaffExperience exp) {
 		log.info("*********** Selected value *********" + exp.getDesignation());
 		getManagedBean().setSelectedJobFunction(exp);
+		getManagedBean().setLatestJobFunction(
+				SmFieldChangeUtil.getStaffExperienceByCompNamFromList(exp
+						.getCompanyName(), getManagedBean()
+						.getLatestPersonnel().getSmStaffExperiences()));
 		RequestContext.getCurrentInstance().execute(
 				"equiJobFunctionInfo.show()");
 		if (getManagedBean().isShowPersonnelViewOnly()) {
@@ -4978,6 +5014,7 @@ public class SmApplicationBackingBean extends
 					.add(getManagedBean().getSelectedJobFunction());
 		}
 		assignValReqdToFalse();
+		SmFieldChangeUtil.setPersonnelTableListChangeStatus(getManagedBean());
 
 		RequestContext.getCurrentInstance().execute(
 				"equiJobFunctionInfo.hide()");
@@ -5039,6 +5076,10 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignSelShrHldrRelatedCompany(SmRelatedCompany com) {
 		getManagedBean().setSelectedRelatedCompany(com);
+		getManagedBean().setLatestRelatedCompany(
+				SmFieldChangeUtil.getRelatedCompanyByRegNoFromList(com
+						.getRegNo(), getManagedBean().getLatestPersonnel()
+						.getSmRelatedCompanies()));
 		RequestContext.getCurrentInstance().execute("equiRelCompInfo.show()");
 		if (getManagedBean().isShowPersonnelViewOnly()) {
 			SmCommonUtil.closeBlockUI();
@@ -5063,6 +5104,7 @@ public class SmApplicationBackingBean extends
 					"suppPrsnRelComDtWidVar.paginator.endLink.click()");
 		}
 		assignValReqdToFalse();
+		SmFieldChangeUtil.setPersonnelTableListChangeStatus(getManagedBean());
 		RequestContext.getCurrentInstance().execute("equiRelCompInfo.hide()");
 
 	}
@@ -5125,6 +5167,10 @@ public class SmApplicationBackingBean extends
 			aca.setPmEduLevel(new PmEduLevel());
 		}
 		getManagedBean().setSelectedStaffAcademic(aca);
+		getManagedBean().setLatestStaffAcademic(
+				SmFieldChangeUtil.getStaffAcadByPmEdu(aca.getPmEduField(), aca
+						.getPmEduLevel(), getManagedBean().getLatestPersonnel()
+						.getSmStaffAcademics()));
 		RequestContext.getCurrentInstance().execute("equiAcadInfo.show()");
 		if (getManagedBean().isShowPersonnelViewOnly()) {
 			SmCommonUtil.closeBlockUI();
@@ -5229,6 +5275,7 @@ public class SmApplicationBackingBean extends
 					"suppPrsnAcadDtWidVar.paginator.endLink.click()");
 		}
 		assignValReqdToFalse();
+		SmFieldChangeUtil.setPersonnelTableListChangeStatus(getManagedBean());
 		RequestContext.getCurrentInstance().execute("equiAcadInfo.hide()");
 
 	}
@@ -5258,6 +5305,9 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignSelShrHldrProfBody(SmAssociationBody asb) {
 		getManagedBean().setSelectedStfPrfBdy(asb);
+		getManagedBean().setLatestStfPrfBdy(
+				SmFieldChangeUtil.getProfBodyByRegNoFromList(getManagedBean()
+						.getLatestAppl(), asb.getRegNo()));
 		RequestContext.getCurrentInstance().execute(
 				"equiShrProfBeanInfo.show()");
 		if (getManagedBean().isShowPersonnelViewOnly()) {
@@ -5303,6 +5353,7 @@ public class SmApplicationBackingBean extends
 					"suppPrsnProfBdyDtWidVar.paginator.endLink.click()");
 		}
 		assignValReqdToFalse();
+		SmFieldChangeUtil.setPersonnelTableListChangeStatus(getManagedBean());
 		RequestContext.getCurrentInstance().execute(
 				"equiShrProfBeanInfo.hide()");
 
@@ -9268,6 +9319,17 @@ public class SmApplicationBackingBean extends
 			ePRoleList.remove(roleToRemove);
 		}
 		return ePRoleList;
+	}
+
+	public String getEpRoleLabelByRole(String roleCode) {
+		String retVal = "";
+		for (SelectItem item : getManagedBean().getePRoleList()) {
+			if (item.getValue().equals(roleCode)) {
+				retVal = item.getLabel();
+				break;
+			}
+		}
+		return retVal;
 	}
 
 	/**
