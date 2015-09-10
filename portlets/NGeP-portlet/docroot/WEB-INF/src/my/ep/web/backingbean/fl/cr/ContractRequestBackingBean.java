@@ -3870,6 +3870,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		IUserSO userSO =null;
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
+			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
 			getManagedBean().setAutoUpdate(Boolean.TRUE);
 			validatePreparedOrgAndAgencies();
 			checkContractValidity(getManagedBean().getFlRequest());
@@ -3882,6 +3883,18 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					checkPidMinQtyItem(getManagedBean().getFlRequest());
 				}else{
 					checkMinimumQtyItem(getManagedBean().getFlRequest());
+				}
+				
+				if(flRequest.getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+					checkContractAmount(flRequest);
+					checkCeilingAmount(flRequest);
+					checkCeilingQty(flRequest);
+					checkMaximumQty(flRequest);
+				}else if(flRequest.getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
+					checkCircularItemMinQtyAndOrderAmt(flRequest);
+					if(flRequest.getCtContract().getLatestContractVer().getCtContractValue().isFollowLoaAmt()){
+						checkContractAmount(flRequest);
+					}
 				}
 				
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
@@ -3920,7 +3933,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
+			
 			if(isRequisitioner()) {
 				reqDTO.setRequisitioner(Boolean.TRUE);
 			}
@@ -3938,18 +3951,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}
 			}
 			
-			if(flRequest.getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-				checkContractAmount(flRequest);
-				checkCeilingAmount(flRequest);
-				checkCeilingQty(flRequest);
-				checkMaximumQty(flRequest);
-			}else if(flRequest.getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
-				checkCircularItemMinQtyAndOrderAmt(flRequest);
-				if(flRequest.getCtContract().getLatestContractVer().getCtContractValue().isFollowLoaAmt()){
-					checkContractAmount(flRequest);
-				}
-				
-			}
 			
 			if(isRequisitioner()){
 //				reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
