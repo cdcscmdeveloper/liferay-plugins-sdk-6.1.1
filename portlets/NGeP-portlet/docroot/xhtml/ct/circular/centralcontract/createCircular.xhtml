@@ -8,10 +8,10 @@
 
 	<p:panel id="ccc" header="#{lbl['lbl.ct.panel.central.contract.circular']}" toggleable="true" toggleSpeed="500">
 		<h:panelGroup rendered="#{centralContractBackingBean.managedBean.circular.latestCircularVer == null
-		or panelBackingBean.managedBean.viewContract}">
+		or centralContractBackingBean.managedBean.viewContract}">
 			<ui:include src="createCircularDetail.xhtml" />
 		</h:panelGroup>
-		<h:panelGroup rendered="#{centralContractBackingBean.managedBean.circular.latestCircularVer != null and !panelBackingBean.managedBean.viewContract}">
+		<h:panelGroup rendered="#{centralContractBackingBean.managedBean.circular.latestCircularVer != null and !centralContractBackingBean.managedBean.viewContract}">
 			<ui:include src="updateCircularDetail.xhtml" />
 		</h:panelGroup>		
 	</p:panel>
