@@ -159,16 +159,11 @@ public class MarketResearchBackingBean extends
 
 			IMarketResearchSO marketResearchSO = null;
 
-			//ISearchBean<Object[]> iSearchBean = getMarketResearchData(searchBean);
-			/*MarketResearchReqDTO reqDTO = new MarketResearchReqDTO();*/
-
 			try {
 				marketResearchSO = (IMarketResearchSO) BusinessDelegate
 						.getInstance().getServiceObject(
 								ModuleCodeConst.SUPPLIER_SELECTION,
-								IMarketResearchSO.class);
-
-			/*	reqDTO.setMarketResearchBean(getMarketResearchData(searchBean));*/
+								IMarketResearchSO.class);			
 				
 				MarketResearchResDTO marketResearchResDTO = marketResearchSO
 						.searchMarketResearchData(getMarketResearchData(searchBean));
@@ -230,12 +225,14 @@ public class MarketResearchBackingBean extends
 	 *            the search bean
 	 * @return the market research data
 	 */
-	/*private ISearchBean<Object[]> getMarketResearchData(
+	/*private MarketResearchReqDTO getMarketResearchData(
 			ISearchBean<Object[]> searchBean) {
 
 		debugLogger("searchMarketResearchData");
 
-		SimpleDateFormat simpleDateformat = new SimpleDateFormat("YYYY");
+		MarketResearchReqDTO reqDTO=new MarketResearchReqDTO();
+		SimpleDateFormat simpleDateformat = new SimpleDateFormat("YYYY");	
+		
 
 		if (StringUtils.isNotBlank(getManagedBean().getProcurementType().toString())) {
 			searchBean.getDataFilterBeans().add(
@@ -244,36 +241,48 @@ public class MarketResearchBackingBean extends
 							getManagedBean().getProcurementType()));
 		}
 		if (StringUtils.isNotBlank(getManagedBean().getProcurementYear().toString())) {
+			List<String> procYearlist=new ArrayList<String>();
+			procYearlist.add(simpleDateformat.format(getManagedBean().getProcurementYear()));
+			
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("lo.issue_date",
+					new SearchFilterBean("extract(YEAR FROM lo.ISSUE_DATE)",
 							SearchOperator.OPERATOR_IN.value(),
-							simpleDateformat.format(getManagedBean()
-									.getProcurementYear())));
+							procYearlist));
 		}
 
 		if (StringUtils.isNotBlank(getManagedBean().getProcTitle())) {
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("sq.qt_title",
+					new SearchFilterBean("sq.QT_TITLE",
 							SearchOperator.OPERATOR_EQUALS.value(),
 							getManagedBean().getProcTitle()));
 		}
 		if (StringUtils.isNotBlank(getManagedBean().getItemName())) {
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("itemName",
+					new SearchFilterBean("tqs.CL_ITEM",
 							SearchOperator.OPERATOR_EQUALS.value(),
 							getManagedBean().getItemName()));
 		}
 
 		if (StringUtils.isNotBlank(getManagedBean().getSpecification())) {
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("specification",
+					new SearchFilterBean("tqs.CL_SPEC_DETAIL",
 							SearchOperator.OPERATOR_EQUALS.value(),
 							getManagedBean().getSpecification()));
-		}
+		}		
 
 		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("sa.doc_type",
+				new SearchFilterBean("sa.DOC_TYPE",
 						SearchOperator.OPERATOR_EQUALS.value(), "QPC"));
+		
+		
+		if (StringUtils.isNotBlank(getManagedBean().getSpecification())) {
+			List<Integer> categoryList = new ArrayList<Integer>();
+			categoryList.add(1);
+			categoryList.add(2);
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("sqc.DOC_CATEGORY",
+							SearchOperator.OPERATOR_IN.value(), categoryList));
+		}
 
 		List<ScQtCategory> scQtcategoryList = this.getManagedBean()
 				.getQtCategoryList();
@@ -292,20 +301,19 @@ public class MarketResearchBackingBean extends
 			}
 			debugLogger("Category Code Selection(CategoryL3-Count)----> "
 					+ scQtcategoryList.size());
+			
 
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("selectionType",
-							SearchOperator.OPERATOR_EQUALS.value(),
-							getManagedBean().getSelectionType()));
-
+					new SearchFilterBean("cat.CATEGORY_L3_ID",
+							SearchOperator.OPERATOR_IN.value(),categoryL3L));
+			
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("cat.category_l3_id",
-							SearchOperator.OPERATOR_IN.value(), categoryL3L));
-
+					new SearchFilterBean("GROUP BY lo.ACK_DATE,sa.FILE_NAME,sa.FILE_PATH,sqc.DOC_CATEGORY"));
+			
 			if (selectionType
 					.equals(SourcingConstants.CATEGORY_TYPE_ALL_CATEGORIES)) {
 				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("cat.category_l3_id",
+						new SearchFilterBean("HAVING COUNT(cat.CATEGORY_L3_ID)",
 								SearchOperator.OPERATOR_EQUALS.value(),
 								categoryL3L.size()));
 			}
@@ -313,6 +321,9 @@ public class MarketResearchBackingBean extends
 		} else {
 			throw new EpException(MessageConst.ERROR_789001);
 		}
+		
+		reqDTO.setMarketResearchBean(searchBean);
+		return reqDTO;
 }*/
 			
 	private MarketResearchReqDTO getMarketResearchData(
