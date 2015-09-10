@@ -12,9 +12,8 @@
 
 		<table cellspacing="100%" style="width: 100%;">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.mr.procurement.type']}"
-						style="width:115px;text-align:left" /> <p:outputLabel value=" *" style="padding-right:4px"
-						styleClass="mandatory" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.mr.procurement.type']}" />
+					<p:outputLabel value=" *" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu style="width:290px" required="true"
 						requiredMessage="#{lbl['lbl.sc.mr.val.proc.type.msg']}"
 						value="#{marketResearchBackingBean.managedBean.procurementType}">
@@ -23,17 +22,20 @@
 						<p:ajax event="change" update="openPnlId,marketResearchResult"></p:ajax>
 					</p:selectOneMenu></td>
 
-				<td><p:outputLabel value=" *" style="float:left;padding-right:4px;margin-left: -27px"
-						styleClass="mandatory" /> <p:outputLabel
-						value="#{lbl['lbl.sc.mr.procurement.year']}"
-						style="width:99px;float:left;margin-left: -19px"></p:outputLabel></td>
-				<td><p:inputText required="true" maxlength="4"
-						requiredMessage="#{lbl['lbl.sc.mr.val.proc.year.msg']}"
-						value="#{marketResearchBackingBean.managedBean.procurementYear}"
-						converterMessage="#{lbl['lbl.sc.mr.val.date.error.msg']}"
-						size="13">
-						<f:convertDateTime pattern="yyyy" />
-					</p:inputText></td>
+				<td><table>
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sc.mr.procurement.year']}"></p:outputLabel> <p:outputLabel
+									value=" *" styleClass="mandatory" /></td>
+							<td><p:inputText required="true" maxlength="4"
+									requiredMessage="#{lbl['lbl.sc.mr.val.proc.year.msg']}"
+									value="#{marketResearchBackingBean.managedBean.procurementYear}"
+									converterMessage="#{lbl['lbl.sc.mr.val.date.error.msg']}"
+									size="13">
+									<f:convertDateTime pattern="yyyy" />
+								</p:inputText></td>
+						</tr>
+					</table></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
@@ -42,6 +44,7 @@
 						value="#{marketResearchBackingBean.managedBean.procTitle}"
 						maxlength="1000" rows="5" style="width:281px;" autoResize="false" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.mr.loa.tooltip.title']}" /></td>
+
 				<td><table>
 						<tr>
 							<td style="padding: 13px"><p:outputLabel
