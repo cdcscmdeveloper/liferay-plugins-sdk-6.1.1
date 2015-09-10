@@ -127,8 +127,8 @@
 					value="#{suppFinalizationBackingBean.managedBean.shortlistedSupplierList}"
 					editable="true" rowIndexVar="index" style="width:100%;"
 					rowKey="#{shortlistedSupp}"
-					rendered="#{suppFinalizationBackingBean.managedBean.selectionMode == 'multiple'
-								 and !suppFinalizationBackingBean.managedBean.itemRecommendByAward}">
+					rendered="#{suppFinalizationBackingBean.managedBean.selectionMode == 'multiple' 
+								 and !isQTStatusReFinalized}">
 								
 				<ac:paginator for="supplierListTblMultiple" />
 				
@@ -254,8 +254,8 @@
 					selection="#{suppFinalizationBackingBean.managedBean.recommendedSupplierByItem}"
 					editable="true" rowIndexVar="index" style="width:100%"
 					rowKey="#{shortlistedSupp}"
-					rendered="#{suppFinalizationBackingBean.managedBean.itemize and 
-									suppFinalizationBackingBean.managedBean.itemRecommendByAward}">
+					rendered="#{suppFinalizationBackingBean.managedBean.selectionMode == 'single' and
+									suppFinalizationBackingBean.managedBean.itemize}">
 								
 				<ac:paginator for="itemSupplierListTblSingle" />
 				
