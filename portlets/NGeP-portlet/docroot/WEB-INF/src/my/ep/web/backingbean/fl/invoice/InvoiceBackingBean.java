@@ -50,6 +50,7 @@ import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
@@ -920,7 +921,8 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		}
 		
 		if(gstTotalAmount.doubleValue()>0) {
-			BigDecimal gstAmount = getManagedBean().getInvoice().getFlRequest().getGstRate().multiply(gstTotalAmount).divide(BigDecimal.valueOf(106),2,RoundingMode.HALF_UP);
+			BigDecimal divideRate = getManagedBean().getInvoice().getFlRequest().getGstRate().add(BigDecimal.valueOf(100));
+			BigDecimal gstAmount = getManagedBean().getInvoice().getFlRequest().getGstRate().multiply(gstTotalAmount).divide(divideRate, CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE ,RoundingMode.HALF_UP);
 			getManagedBean().setGstAmount(gstAmount);
 		} else {
 			getManagedBean().setGstAmount(BigDecimal.ZERO);
