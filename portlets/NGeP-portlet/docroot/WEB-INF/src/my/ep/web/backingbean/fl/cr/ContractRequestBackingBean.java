@@ -3982,28 +3982,28 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		CircularDetailReqDTO reqDTO = new CircularDetailReqDTO();
 		reqDTO.setContractId(flRequest.getCtContract().getContractId());
 		
-		Map<Long, List<String>> sumMap = new HashMap<Long, List<String>>();
-		List<String> sum = null;
+		Map<Long, List<String>> itemsMap = new HashMap<Long, List<String>>();
+		List<String> listOfValues = null;
 		for(FlDeliveryAddress delAddr : flRequest.getFlDeliveryAddresses()){
 			for(FlFulfilmentItemAddr itemAddr : delAddr.getFlFulfilmentItemAddr()){
 				Long key = itemAddr.getScRequestItem().getRequestNoteItemId();
-				if(sumMap.containsKey(key)){
-					sum = sumMap.get(key);
-					sum.set(0, new BigDecimal(sum.get(0)).add(itemAddr.getOrderedQty()).toString());
-					sum.set(1, new BigDecimal(sum.get(1)).add(itemAddr.getOrderedAmt()).toString());
-					sum.add(2,itemAddr.getScRequestItem().getItemName());
+				if(itemsMap.containsKey(key)){
+					listOfValues = itemsMap.get(key);
+					listOfValues.set(0, new BigDecimal(listOfValues.get(0)).add(itemAddr.getOrderedQty()).toString());
+					listOfValues.set(1, new BigDecimal(listOfValues.get(1)).add(itemAddr.getOrderedAmt()).toString());
+					listOfValues.add(2,itemAddr.getScRequestItem().getItemName());
 					
 				}else{
-					sum = new ArrayList<String>();
-					sum.add(0,itemAddr.getOrderedQty().toString());
-					sum.add(1,itemAddr.getOrderedAmt().toString());
-					sum.add(2,itemAddr.getScRequestItem().getItemName());
-					sumMap.put(key, sum);
+					listOfValues = new ArrayList<String>();
+					listOfValues.add(0,itemAddr.getOrderedQty().toString());
+					listOfValues.add(1,itemAddr.getOrderedAmt().toString());
+					listOfValues.add(2,itemAddr.getScRequestItem().getItemName());
+					itemsMap.put(key, listOfValues);
 				}
 			}
 		}
 		
-		for(Entry<Long, List<String>> entryQty : sumMap.entrySet()){
+		for(Entry<Long, List<String>> entryQty : itemsMap.entrySet()){
 			reqDTO.setRequestItemId(entryQty.getKey());
 			CircularDetailResDTO resDTO = circularDetailSO.getCircularItemMinQtyAndOrderAmt(reqDTO);
 			
