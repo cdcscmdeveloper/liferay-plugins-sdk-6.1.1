@@ -70,7 +70,7 @@
 						</f:facet>
 						<p:inputText value="#{frequency.scheduleNo}" required="true"
 							maxlength="3" label="#{lbl['lbl.sc.spec.schedule.no']}" size="5"
-							id="scheduleNum">
+							id="scheduleNum" disabled="#{!isEditableStatus}">
 							<p:ajax process="@this" partialSubmit="true"
 								update="@this,frequencySchedule" />
 							<ac:validateNumber integerOnly="true" maxIntegerDigits="3"></ac:validateNumber>
@@ -79,12 +79,12 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.start.month']}"
 						style="width:10%">
-						<p:selectOneMenu style="width:100px;"
+						<p:selectOneMenu style="width:100px;" disabled="#{!isEditableStatus}"
 							value="#{frequency.startMonth}">
 
 							<f:selectItems value="#{directLOABackingBean.yearDetails}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="scheduleDetails,scheduleendMonth"
+								update="frequencySchedule"
 								listener="#{directLOABackingBean.calculateScheduleMonths(frequency,'true')}"></p:ajax>
 						</p:selectOneMenu>
 						<!-- <p:calendar value="#{frequency.fromDate}" showOn="button"
@@ -92,30 +92,30 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.start.year']}"
 						style="width:15%">
-						<p:selectOneMenu value="#{frequency.startYear}"
+						<p:selectOneMenu value="#{frequency.startYear}" disabled="#{!isEditableStatus}"
 							style="width:100px;">
 							<f:selectItems value="#{directLOABackingBean.yearsDisplayDtls}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="scheduleDetails"
-								listener="#{directLOABackingBean.calculateScheduleMonths(frequency,'false')}"></p:ajax>
+								update="frequencySchedule"
+								listener="#{directLOABackingBean.calculateScheduleMonths(frequency,'true')}"></p:ajax>
 						</p:selectOneMenu>
 
 
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.end.month']}" style="width:25%">
-						<p:selectOneMenu style="width:100px;" id="scheduleendMonth"
+						<p:selectOneMenu style="width:100px;" id="scheduleendMonth" disabled="#{!isEditableStatus}"
 							value="#{frequency.endMonth}">
 
 							<f:selectItems value="#{directLOABackingBean.yearDetails}"></f:selectItems>
 							<p:ajax event="change" update="scheduleDetails" process="@this"
 								partialSubmit="true"
-								listener="#{directLOABackingBean.calculateScheduleMonths(frequency,'true')}"></p:ajax>
+								listener="#{directLOABackingBean.calculateScheduleMonths(frequency,'false')}"></p:ajax>
 						</p:selectOneMenu>
 
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.end.year']}" style="width:15%">
-						<p:selectOneMenu value="#{frequency.endYear}" style="width:100px;">
+						<p:selectOneMenu value="#{frequency.endYear}"  disabled="#{!isEditableStatus}" style="width:100px;">
 							<f:selectItems value="#{directLOABackingBean.yearsDisplayDtls}"></f:selectItems>
 							<p:ajax event="change" update="scheduleDetails" process="@this"
 								partialSubmit="true"
