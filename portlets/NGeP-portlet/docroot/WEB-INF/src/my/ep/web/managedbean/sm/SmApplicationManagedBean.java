@@ -91,6 +91,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmStaffAcademic latestStaffAcademic;
 	private SmEquityCompany latestEquityCompany;
 	private SmSupplierBranch latestBranch;
+	private SmSupplierBank latestBank;
 	private SmAppl smAppl;
 	private SmSupplier smSupplier;
 	private int tabActiveIndex;
@@ -2970,6 +2971,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setLatestBranch(SmSupplierBranch latestBranch) {
 		this.latestBranch = latestBranch;
+	}
+
+	public SmSupplierBank getLatestBank() {
+		return latestBank;
+	}
+
+	public void setLatestBank(SmSupplierBank latestBank) {
+		this.latestBank = latestBank;
 	}
 
 }
