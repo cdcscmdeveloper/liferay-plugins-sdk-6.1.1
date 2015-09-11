@@ -92,6 +92,9 @@ public class ReportsGenerateBean {
 		private boolean scSimpleQuoteDtlGroupView = false;
 		private boolean scPurchaseInDefaultStatusView = false;
 		private boolean scSimpleQuoteDtlWithoutRequiGroupView = false;
+		private boolean scSOAStatusView = false;
+		private boolean scSimpleQuoteTypeView = false;
+		private boolean scLOANoView = false;
 		//cm module
 		private boolean cmItemTypeView = false;
 		private boolean cmItemStatusView = false;
@@ -1136,6 +1139,9 @@ public class ReportsGenerateBean {
 		private String scSimpleQuoteStatusVar=ReportConst.EMPTY_VAL;
 		private String scSimpleQuoteDtlGroupVar=ReportConst.EMPTY_VAL;
 		private String scPurchaseInDefaultStatusVar=ReportConst.EMPTY_VAL;
+		private String scSOAStatusVar=ReportConst.EMPTY_VAL;
+		private String scSimpleQuoteTypeVar=ReportConst.EMPTY_VAL;
+		private String scLOANoVar=ReportConst.EMPTY_VAL;
 		//CT
 		private String ctContractNoVar=ReportConst.EMPTY_VAL;
 		private String ctAgreementVar=ReportConst.EMPTY_VAL;
@@ -1198,6 +1204,42 @@ public class ReportsGenerateBean {
 		private String ctTerminationTypeVar=ReportConst.EMPTY_VAL;
 		
 		
+		public boolean isScSOAStatusView() {
+			return scSOAStatusView;
+		}
+		public void setScSOAStatusView(boolean scSOAStatusView) {
+			this.scSOAStatusView = scSOAStatusView;
+		}
+		public boolean isScSimpleQuoteTypeView() {
+			return scSimpleQuoteTypeView;
+		}
+		public void setScSimpleQuoteTypeView(boolean scSimpleQuoteTypeView) {
+			this.scSimpleQuoteTypeView = scSimpleQuoteTypeView;
+		}
+		public boolean isScLOANoView() {
+			return scLOANoView;
+		}
+		public void setScLOANoView(boolean scLOANoView) {
+			this.scLOANoView = scLOANoView;
+		}
+		public String getScSOAStatusVar() {
+			return scSOAStatusVar;
+		}
+		public void setScSOAStatusVar(String scSOAStatusVar) {
+			this.scSOAStatusVar = scSOAStatusVar;
+		}
+		public String getScSimpleQuoteTypeVar() {
+			return scSimpleQuoteTypeVar;
+		}
+		public void setScSimpleQuoteTypeVar(String scSimpleQuoteTypeVar) {
+			this.scSimpleQuoteTypeVar = scSimpleQuoteTypeVar;
+		}
+		public String getScLOANoVar() {
+			return scLOANoVar;
+		}
+		public void setScLOANoVar(String scLOANoVar) {
+			this.scLOANoVar = scLOANoVar;
+		}
 		public boolean isCmRequestNumberView() {
 			return cmRequestNumberView;
 		}
