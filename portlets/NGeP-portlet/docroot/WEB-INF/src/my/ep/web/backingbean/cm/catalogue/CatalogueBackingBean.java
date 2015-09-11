@@ -339,7 +339,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					meaObj = codificationSO.addNewMeasurement(codeReqDTO).getCmMeasurement();
 				}
 
-				CmColor colorObj = bb.searchColorObjByColorId(1L);//first record of table reserved for NA
+				CmColor colorObj = bb.searchColorObjByColorCode("00");//first record of table reserved for NA
 
 				codeReqDTO.setUnspscCode(commodity.getUnspscCode());
 				//				codeResDTO = codificationSO.searchCommodityObj(codeReqDTO);
