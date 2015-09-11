@@ -781,6 +781,15 @@ public class BSVAttendanceBackingBean extends
 
 				List<ScQtBsvRegistration> briefRegList = resDTO
 						.getBriefingRegResultBean().getResultList();
+				
+				if(CollectionUtils.isNotEmpty(briefRegList)){
+					for (ScQtBsvRegistration briefReg :briefRegList){
+						if(briefReg.isRegisteredBySupplier()){
+							retrieveAuthriozesPersonalBySupplierId(briefReg);
+						}
+						
+					}
+				}
 
 				/*
 				 * List<ScQtBsvRegistration> registrationList = new
@@ -1080,4 +1089,40 @@ public class BSVAttendanceBackingBean extends
 		this.slectedHeaderName = slectedHeaderName;
 	}
 
+	
+	private void retrieveAuthriozesPersonalBySupplierId(ScQtBsvRegistration briefingRegistration){
+		
+		    List<ScQtBsvAttendance> attanedList = new ArrayList<ScQtBsvAttendance>();
+			IQTBriefingSO bsvSo = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTBriefingSO.class);
+			BriefingReqDTO reqDTO = new BriefingReqDTO();
+			reqDTO.setSupplierId(briefingRegistration.getSupplier().getSupplierId());
+			BriefingResDTO resDTO = bsvSo
+					.retrieveAuthriozesPersonalBySupplierId(reqDTO);
+			List<SmPersonnel> personals = resDTO.getPersonals();
+
+			for (SmPersonnel personnel : personals) {
+				ScQtBsvAttendance briefingAttendance = new ScQtBsvAttendance();
+				briefingAttendance.setName(personnel.getName());
+				briefingAttendance.setIcPassPort(personnel
+						.getIdentificationNo());
+				briefingAttendance.setContactNo(personnel.getMobileNo());
+				briefingAttendance.setEmail(personnel.getEmail());
+				briefingAttendance.setBsvRegistration(briefingRegistration);
+				briefingAttendance.setAuthorized(true);
+				attanedList.add(briefingAttendance);
+			}
+			
+			List<ScQtBsvAttendance>  existingAttandances = briefingRegistration.getBsvAttendance();
+			if (CollectionUtils.isNotEmpty(briefingRegistration.getBsvAttendance())) {
+				for (ScQtBsvAttendance extAttandance : existingAttandances) {
+					if (attanedList.contains(extAttandance)) {
+						attanedList.remove(extAttandance);
+					}
+					attanedList.add(extAttandance);
+				}
+			}
+			briefingRegistration.setBsvAttendance(attanedList);
+		}
 }
