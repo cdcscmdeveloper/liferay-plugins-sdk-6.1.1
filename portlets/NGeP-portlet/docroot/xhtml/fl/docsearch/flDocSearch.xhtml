@@ -258,6 +258,7 @@
 							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Stop Fulfilment'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
 							        <p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.factory.comp.removal']}"  
 							        	rendered="#{flDocument.isRemoveFactoringAction()}"
+							        	icon="ui-icon-terminate"
 							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Remove Factoring'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
 					</p:menuButton>
 				</p:column>
