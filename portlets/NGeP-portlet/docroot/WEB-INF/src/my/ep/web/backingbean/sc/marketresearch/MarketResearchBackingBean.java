@@ -361,8 +361,8 @@ public class MarketResearchBackingBean extends
 
 		SimpleDateFormat simpleDateformat = new SimpleDateFormat("YYYY");
 		
-		if (StringUtils.isBlank(this.getManagedBean().getSelectionType())
-				|| CollectionUtils.isEmpty(scQtcategoryList)) {
+		if (StringUtils.isNotBlank(this.getManagedBean().getSelectionType())
+				|| CollectionUtils.isNotEmpty(scQtcategoryList)) {
 			
 			for (ScQtCategory scQtCategory : scQtcategoryList) {
 

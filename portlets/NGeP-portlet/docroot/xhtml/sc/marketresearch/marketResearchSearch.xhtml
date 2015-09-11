@@ -24,14 +24,14 @@
 
 				<td><table>
 						<tr>
-							<td><p:outputLabel
+							<td><p:outputLabel  style="width:70px"
 									value="#{lbl['lbl.sc.mr.procurement.year']}"></p:outputLabel> <p:outputLabel
 									value=" *" styleClass="mandatory" /></td>
 							<td><p:inputText required="true" maxlength="4"
 									requiredMessage="#{lbl['lbl.sc.mr.val.proc.year.msg']}"
 									value="#{marketResearchBackingBean.managedBean.procurementYear}"
 									converterMessage="#{lbl['lbl.sc.mr.val.date.error.msg']}"
-									size="13">
+									size="1">
 									<f:convertDateTime pattern="yyyy" />
 								</p:inputText></td>
 						</tr>
