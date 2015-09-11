@@ -1913,34 +1913,19 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @return the big decimal
 	 */
 	public ScLoa calcBondAmount(ScLoa scLoa) {
-
-		BigDecimal loaAmt = BigDecimal.ZERO;
 		BigDecimal bondAmt = BigDecimal.ZERO;
-		double totalDuration = 0;
-		double loaAmtForBondPercentage = 0;
-		double bondPercentage = 0;
+		BigDecimal totalDuration = BigDecimal.ZERO;
+		BigDecimal bondPercentageLoaAmt = BigDecimal.ZERO;
+		BigDecimal bondPercentage = BigDecimal.ZERO;
 		if (scLoa.getLoaAmt() != null) {
 			BigDecimal overallCtAmount = overallCtAmount(scLoa.getLoaAmt(),
 					scLoa.getGstAmt());
-			double ctAmount = overallCtAmount.doubleValue();
 
 			if (scLoa.getContractDuration() != null) {
 				BigDecimal duration = scLoa.getContractDuration();
-				duration = duration.setScale(4, BigDecimal.ROUND_HALF_EVEN);
-				double cduration = duration.doubleValue();
-				if (cduration > 0) {
-					totalDuration = cduration / 12;
-				}
-
-				if (totalDuration > 0) {
-					loaAmtForBondPercentage = ctAmount / totalDuration;
-				}
-
-				if (loaAmtForBondPercentage > 0) {
-					loaAmt = new BigDecimal(
-							String.valueOf(loaAmtForBondPercentage));
-					loaAmt = loaAmt.setScale(4, BigDecimal.ROUND_HALF_EVEN);
-				}
+				duration = duration.setScale(4, BigDecimal.ROUND_HALF_UP);
+				totalDuration = duration.divide(new BigDecimal(12), 4, BigDecimal.ROUND_HALF_UP);
+				bondPercentageLoaAmt = overallCtAmount.divide(totalDuration, 4, BigDecimal.ROUND_HALF_UP);
 			}
 
 			// Get performance bond rule percentage
@@ -1949,7 +1934,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							IRuleSO.class);
 			RuleReqDTO ruleReqDTO = new RuleReqDTO();
 			ruleReqDTO.setRuleType(RuleTypeConst.BOND_PERCENTAGE);
-			ruleReqDTO.setCompareValue(loaAmt.toString());
+			ruleReqDTO.setCompareValue(bondPercentageLoaAmt.toString());
 			RuleResDTO roleResDTO = ruleSO
 					.getRuleValuesByTypeAndCurrentDateRange(ruleReqDTO);
 
@@ -1957,14 +1942,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					&& roleResDTO.getRuleValueStrList() != null
 					&& roleResDTO.getRuleValueStrList().size() > 0) {
 				String percentage = roleResDTO.getRuleValueStrList().get(0);
-				double res = Double.valueOf(percentage);
-				bondPercentage = res / 100;
+				BigDecimal res = new BigDecimal(percentage);
+				bondPercentage = res.divide(new BigDecimal(100), 4, BigDecimal.ROUND_HALF_UP);
 				scLoa.setBondPercentage(new BigDecimal(percentage));
 			}
-			if (bondPercentage > 0 && loaAmtForBondPercentage > 0) {
-				double total = loaAmtForBondPercentage * bondPercentage;
-				bondAmt = new BigDecimal(String.valueOf(total));
-				bondAmt = bondAmt.setScale(4, BigDecimal.ROUND_HALF_EVEN);
+			if (bondPercentage.doubleValue()> 0) {
+			    bondAmt = bondPercentageLoaAmt.multiply(bondPercentage);
+				bondAmt = bondAmt.setScale(2, BigDecimal.ROUND_HALF_UP);
 				scLoa.setBondAmt(bondAmt);
 			}
 		}
