@@ -1307,7 +1307,8 @@ public class SmApplicationBackingBean extends
 
 	public String getProfBodyByIdFromList(Long profBodyId) {
 		String retVal = "";
-		if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getProfBodyLs())) {
+		if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getProfBodyLs())
+				&& profBodyId != null) {
 			for (PmCertBody body : getManagedBean().getProfBodyLs()) {
 				if (body.getCertBodyId().compareTo(profBodyId) == 0) {
 					retVal = body.getBodyName();
@@ -1319,7 +1320,8 @@ public class SmApplicationBackingBean extends
 
 	public String getEduLvlByIdFromList(Long eduLvlId) {
 		String retVal = "";
-		if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getEduLevelList())) {
+		if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getEduLevelList())
+				&& eduLvlId != null) {
 			for (PmEduLevel eduLvl : getManagedBean().getEduLevelList()) {
 				if (eduLvl.getEduLevelId().compareTo(eduLvlId) == 0) {
 					retVal = eduLvl.getLevelDesc();
@@ -1331,7 +1333,8 @@ public class SmApplicationBackingBean extends
 
 	public String getEduFieldByIdFromList(Long eduFieldId) {
 		String retVal = "";
-		if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getEduFieldList())) {
+		if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getEduFieldList())
+				&& eduFieldId != null) {
 			for (PmEduField eduField : getManagedBean().getEduFieldList()) {
 				if (eduField.getEduFieldId().compareTo(eduFieldId) == 0) {
 					retVal = eduField.getFieldName();
@@ -2518,6 +2521,10 @@ public class SmApplicationBackingBean extends
 		}
 		SmApplicationUtil.initGstSuppDocs(branchBean.getGst());
 		getManagedBean().setSelectedBranch(branchBean);
+		getManagedBean().setLatestBranch(
+				SmFieldChangeUtil.getBranchByBranchCodeFromList(
+						getManagedBean().getLatestAppl(),
+						branchBean.getBranchCode()));
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("banchDialog.show()");
 
