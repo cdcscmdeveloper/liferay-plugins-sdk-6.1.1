@@ -40,7 +40,7 @@
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.pmOrgValidity.orgCode} #{createDOBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.procur.type.category']}" /></td>
-				<td><p:inputText size="50" disabled="true"
+				<td><p:inputText size="30" disabled="true"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.procurementTypeCategory ==null ? lbl['lbl.fl.supp.na'] : createDOBackingBean.getParameterDesc(createDOBackingBean.managedBean.fulfilmentRequest.procurementTypeCategory)}" /></td>				
 			</tr>
 			<tr>
