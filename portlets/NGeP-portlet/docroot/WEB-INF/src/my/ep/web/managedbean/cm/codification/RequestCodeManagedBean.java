@@ -1,7 +1,11 @@
 package my.ep.web.managedbean.cm.codification;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -31,6 +35,8 @@ public class RequestCodeManagedBean extends BaseManagedBean {
 
 	private String supplierName;
 	private String docNo;
+	private long statusID;
+	private List<SelectItem> statusCriteria;
 
 	private IPagingDataModel<Object[]> requestCodeSearchDataModel = new RequestCodeSearchDataModel();
 
@@ -87,6 +93,11 @@ public class RequestCodeManagedBean extends BaseManagedBean {
 					reqDTO.setDocNo(bb.getManagedBean().getDocNo());
 
 				}
+				
+				if(bb.getManagedBean().getStatusID()>0){
+					reqDTO.setStatusID(bb.getManagedBean().getStatusID());
+				}
+				
 				
 				String languageCode = new FacesScopes().getUserLocale().getLanguage();
 				reqDTO.setLanguageCode(languageCode);
@@ -148,6 +159,36 @@ public class RequestCodeManagedBean extends BaseManagedBean {
 	public void setDocNo(String docNo) {
 		this.docNo = docNo;
 	}
+
+
+
+	public long getStatusID() {
+		return statusID;
+	}
+
+
+
+	public void setStatusID(long statusID) {
+		this.statusID = statusID;
+	}
+
+
+
+	public List<SelectItem> getStatusCriteria() {
+		if(statusCriteria==null)
+			statusCriteria = new ArrayList<SelectItem>();
+		return statusCriteria;
+	}
+
+
+
+	public void setStatusCriteria(List<SelectItem> statusCriteria) {
+		this.statusCriteria = statusCriteria;
+	}
+	
+	
+	
+	
 
 
 
