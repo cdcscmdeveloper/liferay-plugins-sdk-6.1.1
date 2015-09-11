@@ -65,7 +65,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 /**
@@ -622,8 +622,61 @@ public class FinancialOrgBackingBean extends
 							}
 //						}
 					}
-//				}
-//		 }
+		 
+		 if(StringUtils.isNotBlank(getManagedBean().getFinancialOrg().getFinOrgName())){
+			 String finOrgName = getManagedBean().getFinancialOrg().getFinOrgName();
+			 getManagedBean().getFinancialOrg().setFinOrgName(finOrgName.trim());
+			 IFinancialOrgSO financialOrgSO = null;
+				try{
+					ISearchBean<PmFinancialOrg> searchBean = getFinOrgSearchBean("newOrgTypeFederalList");
+					
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("finOrgName",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									getManagedBean().getFinancialOrg().getFinOrgName(), true));
+					
+					List<String> activeAndInActiveStatus = new ArrayList<String>();
+					activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_INACTIVE);
+					activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_ACTIVE);
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("recordStatusFlg",
+									SearchOperator.OPERATOR_IN.value(), 
+									activeAndInActiveStatus
+									));
+					
+					if(!getManagedBean().getFinancialOrg().isBrandNew() 
+							&& getManagedBean().getFinancialOrg().getFinancialOrgId() != null){
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("financialOrgId",
+										SearchOperator.OPERATOR_NOT_EQUALS.value(),
+										getManagedBean().getFinancialOrg().getFinancialOrgId()));
+					}
+					
+					FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
+					reqDTO.setFinancialSearchBean(searchBean);
+					financialOrgSO = (IFinancialOrgSO) BusinessDelegate
+							.getInstance().getServiceObject(
+									ModuleCodeConst.PROFILE_MANAGEMENT,
+									IFinancialOrgSO.class);
+					FinancialOrgResDTO resDto = financialOrgSO
+							.searchFinancialOrgData(reqDTO);
+					
+					if(resDto.getFinaceialOrgResultBean() != null 
+							&& resDto.getFinaceialOrgResultBean().getResultList() != null 
+							&& !resDto.getFinaceialOrgResultBean().getResultList().isEmpty()){
+						throw new EpException(getManagedBean().getFinancialOrg().getFinOrgName()+
+								" already exists. Please input another financial org. name.");
+					}		
+					
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+					throw e;
+				}finally{
+					financialOrgSO = null;
+				}
+		 }
+
 		
 		
 	}
@@ -1241,4 +1294,11 @@ public class FinancialOrgBackingBean extends
 	}	
 	
 	/* ------------------ SEARCH - END  ------------------  */
+	
+	
+	private ISearchBean<PmFinancialOrg> getFinOrgSearchBean(String componentId) {		
+		ISearchBean<PmFinancialOrg> finOrgSearchBean = super.createSearchBean(
+				PmFinancialOrg.class, componentId);
+		return finOrgSearchBean;
+	}
 }
