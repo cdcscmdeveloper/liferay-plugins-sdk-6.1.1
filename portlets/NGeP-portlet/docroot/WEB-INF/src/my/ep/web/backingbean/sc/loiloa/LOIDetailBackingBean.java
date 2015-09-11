@@ -2937,7 +2937,9 @@ public class LOIDetailBackingBean extends
 			scLoi.setContractSigner(contractSignerUser);
 		}
 
-		scLoi.setScLoiRemarks(finalizeRemarks(scLoi.getScLoiRemarks()));
+		if(!(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome))){
+			scLoi.setScLoiRemarks(finalizeRemarks(scLoi.getScLoiRemarks()));
+		}
 
 		// nego terms
 		if (QTStatusConst.LOI_PENDING_SUBMISSION.equals(statusId)
