@@ -361,10 +361,14 @@ public class MarketResearchBackingBean extends
 
 		SimpleDateFormat simpleDateformat = new SimpleDateFormat("YYYY");
 		
-		for (ScQtCategory scQtCategory : scQtcategoryList) {
+		if (StringUtils.isBlank(this.getManagedBean().getSelectionType())
+				|| CollectionUtils.isEmpty(scQtcategoryList)) {
+			
+			for (ScQtCategory scQtCategory : scQtcategoryList) {
 
-			categoryL3L.add(scQtCategory.getPmCategoryL3()
-					.getCategoryL3Id());
+				categoryL3L.add(scQtCategory.getPmCategoryL3()
+						.getCategoryL3Id());
+			}
 		}
 		debugLogger("Category Code Selection(CategoryL3-Count)===> "
 				+ scQtcategoryList.size());	
