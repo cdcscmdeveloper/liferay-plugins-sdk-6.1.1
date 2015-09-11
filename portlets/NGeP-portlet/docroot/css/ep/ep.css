@@ -2112,6 +2112,30 @@ important;
 important;
 }
 
+.ui-icon-print {
+	background-image: url('../images/design/print.png') !important;
+	background-position: center;
+	border-radius: 0 px;
+	height: 16 px !
+important;
+}
+
+.ui-icon-view {
+	background-image: url('../images/design/ico-view.png') !important;
+	background-position: center;
+	border-radius: 0 px;
+	height: 16 px !
+important;
+}
+
+.ui-icon-stop {
+	background-image: url('../images/design/ico-suspend.png') !important;
+	background-position: center;
+	border-radius: 0 px;
+	height: 16 px !
+important;
+}
+
 .ui-icon-evaluate {
 	background-image: url('../images/design/evaluate.png') !important;
 	background-position: center;
