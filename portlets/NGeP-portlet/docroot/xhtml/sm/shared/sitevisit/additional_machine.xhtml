@@ -116,7 +116,8 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.machine.value']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText maxlength="14" size="18" label="#{lbl['lbl.sm.machine.value']}" required="#{!empty param['disableMsgAutoUpdate']}" value="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.value}">
-						<f:validateDoubleRange minimum="#{SupplierManagementConst.MIN_AMT_RANGE}" maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
+						<f:validateDoubleRange minimum="#{SupplierManagementConst.MIN_AMT_RANGE}" 
+						maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" disabled="#{empty param['disableMsgAutoUpdate']}"/>
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						<p:ajax process="@this" partialSubmit="true" update="@this" />
 					</p:inputText>
