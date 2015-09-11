@@ -779,7 +779,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)116205;//243371;//61745;//219490;//240790;//183931;//20854;//243371;//20854;//168887;//221747;//219490;//243394;//243371;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
+	//private Long lngUserId = (long)243371;//116205;//61745;//219490;//240790;//183931;//20854;//243371;//20854;//168887;//221747;//219490;//243394;//243371;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
 	private String strLanguage = ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG,	ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 	//private String strLanguage = "ms";
 	private String roleCode;
@@ -5661,8 +5661,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}
 			if ((this.getCtStatusTwo() != null)
 					&& (this.getCtStatusTwo() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setCtStatusTwoVar(ReportConst.CT_AMP_STATUS_EQ
-						+ this.getCtStatusTwo());
+				if(!this.getCtStatusTwo().trim().equalsIgnoreCase("TERMINATE")){
+					rptGenBean.setCtStatusTwoVar(ReportConst.CT_AMP_STATUS_EQ
+							+ this.getCtStatusTwo());
+				}
 			}
 			if ((this.getCtContractNo() != null)
 					&& (this.getCtContractNo() != ReportConst.EMPTY_VAL)) {
