@@ -958,7 +958,7 @@ public class SmFieldChangeUtil {
 	public static SmPersonnelAddress getPersonnelAddressByTypeFromList(
 			String type, List<SmPersonnelAddress> personnelAddressList) {
 		SmPersonnelAddress addr = null;
-		if(personnelAddressList!=null){
+		if (personnelAddressList != null) {
 			for (SmPersonnelAddress tmp : personnelAddressList) {
 				if (tmp.getAddressType().equals(type)) {
 					addr = tmp;
