@@ -117,7 +117,29 @@
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																																	
 									</p:selectOneMenu>
 								  </c:if>
-									
+								  <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scLOANoView}" >			
+									<p:outputLabel value="#{lbl['lbl.rpt.sstScreen']}"   style="margin-top:5px;width:160px;"/>
+									<p:inputText  value="#{reportBackingBean.scLOANo}" style="margin-top:5px;width:290px;">
+									<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />										
+									</p:inputText>																					
+									</c:if>
+									<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scSimpleQuoteTypeView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.simplequotetypelabel']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu value="#{reportBackingBean.scSimpleQuoteType}" style="margin-top:5px;width:300px;">
+									    <f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.multipleLabel']}" itemValue="#{1}"></f:selectItem>	
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.singleLabel']}" itemValue="#{0}"></f:selectItem>	
+										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																															
+									</p:selectOneMenu>
+								  </c:if>
+								   <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scSOAStatusView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.status']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu value="#{reportBackingBean.scSOAStatus}" style="margin-top:5px;width:300px;">
+									    <f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+										<f:selectItems value="#{reportBackingBean.retrieveLOAStatusList()}"></f:selectItems>
+										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																															
+									</p:selectOneMenu>
+								  </c:if>
 									<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scPurchaseInDefaultStatusView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.status']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scPurchaseInDefaultStatus}" style="margin-top:5px;width:300px;">
@@ -201,7 +223,7 @@
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																															
 									</p:selectOneMenu>
 								  </c:if>
-								   
+								  
 									 <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scPInoView}" >			
 									<p:outputLabel value="#{lbl['lbl.rpt.PINO']}"   style="margin-top:5px;width:160px;"/>
 									<p:inputText maxlength="40" value="#{reportBackingBean.scPIno}" style="margin-top:5px;width:290px;">

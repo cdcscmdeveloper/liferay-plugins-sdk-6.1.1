@@ -564,6 +564,20 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	    		rptGenBean.setExtraTwoColumnView(true);
 	    		//rptGenBean.setScProcessRptQuotationNoView(true);	    		
 	            break;
+	        case ReportConst.SC_S1_LOA_RPT_VAL:
+	        	rptGenBean.setScSoneCrtdFromDateView(true);
+	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
+	        		rptGenBean.setScRequisenerIdView(true);
+	        	}
+	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
+	        		rptGenBean.setScPtjView(true);
+	        	}
+	    		rptGenBean.setScSupplierView(true);
+	    		rptGenBean.setScLOANoView(true);
+	    		rptGenBean.setScSimpleQuoteTypeView(true);
+	    		rptGenBean.setScSOAStatusView(true);
+	    		rptGenBean.setScProcessRptQuotationNoView(true);
+	            break;
 	        default:
 	        	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));	            
 		}		
