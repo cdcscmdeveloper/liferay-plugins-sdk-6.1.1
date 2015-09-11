@@ -25,6 +25,7 @@ public class BatchReqDTO<T> implements Serializable {
 	private int fileCreationStatus;
 	private int fileFTPStatus;
 	private String batchDirection;
+	private T batchObject;
 
 	public List<T> getBatchContent() {
 		return batchContent;
@@ -136,6 +137,14 @@ public class BatchReqDTO<T> implements Serializable {
 
 	public void setBatchDirection(String batchDirection) {
 		this.batchDirection = batchDirection;
+	}
+
+	public T getBatchObject() {
+		return batchObject;
+	}
+
+	public void setBatchObject(T batchObject) {
+		this.batchObject = batchObject;
 	}
 
 }

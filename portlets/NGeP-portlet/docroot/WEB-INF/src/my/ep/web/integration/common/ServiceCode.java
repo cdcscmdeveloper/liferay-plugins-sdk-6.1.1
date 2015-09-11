@@ -13,6 +13,7 @@ public enum ServiceCode {
 	PHS008("PHS-110"),
 	PHS009("PHS-120"),
 	PHS010("PHS-140"),
+	PHS011("PHS-200"),
 	//1GFMAS
 	GLMDE("GFM-150"),
 	MMINF("MMINF"),

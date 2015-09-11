@@ -9,7 +9,7 @@ import java.util.Date;
 public class VotFund {
 
 	private String year;
-	private String code;
+	private String votCode;
 	private String ptjCode;
 	private String description;
 	private String status; // values will be X<V
@@ -27,12 +27,12 @@ public class VotFund {
 		this.year = year;
 	}
 
-	public String getCode() {
-		return code;
+	public String getVotCode() {
+		return votCode;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public void setVotCode(String code) {
+		this.votCode = code;
 	}
 
 	public String getPtjCode() {

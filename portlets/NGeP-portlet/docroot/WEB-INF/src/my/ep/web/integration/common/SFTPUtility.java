@@ -166,7 +166,6 @@ public class SFTPUtility {
 
 			if (remoteFile.exists()) {
 				remoteFile.moveTo(remoteDestFile);
-				;
 				log.info("Move remote file success");
 				return true;
 			} else {

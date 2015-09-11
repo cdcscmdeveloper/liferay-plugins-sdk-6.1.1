@@ -24,6 +24,10 @@ public class CmSchedulerConstants {
 	public static final String PHIS_CM_OUTBOUND_JOB_GROUP ="PHIS JOB GROUP";
 	public static final String PHIS_CM_OUTBOUND_CONTINUOUS_JOB="PHIS OUTBOUND CM JOB";
 	public static final String PHIS_CM_CONTINUOUS_JOB_DESC ="Job run twice daily 9 AM and 9 PM";
+	//FL
+	public static final String PHIS_FL_OUTBOUND_JOB_GROUP ="PHIS JOB GROUP";
+	public static final String PHIS_FL_OUTBOUND_CONTINUOUS_JOB="PHIS OUTBOUND FL JOB";
+	public static final String PHIS_FL_CONTINUOUS_JOB_DESC ="Job runs every 1 hour";
 	
 	//GFMS IN BOUND
 	//PM
@@ -41,7 +45,7 @@ public class CmSchedulerConstants {
 	//FL
 	public static final String GFMAS_FL_IN_JOB_GROUP ="GFMAS JOB GROUP";
 	public static final String GFMAS_FL_IN_CONTINUOUS_JOB ="GFMAS IN FL JOB";
-	public static final String GFMAS_FL_CONTINUOUS_JOB_DESC ="Job run every 1 hour";
+	public static final String GFMAS_FL_CONTINUOUS_JOB_DESC ="Job runs every 1 hour";
 	
 	//GFMS OUT BOUND
 	//SM
