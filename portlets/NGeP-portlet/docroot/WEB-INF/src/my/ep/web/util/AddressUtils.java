@@ -40,6 +40,10 @@ public class AddressUtils {
 				address.append(smAddress.getAddress4());
 				address.append(separator).append(htmlLineSeparator);
 			}
+			if (smAddress.getPmDistrict() != null && smAddress.getPmDistrict().getDistrictName() !=null && smAddress.getPmDistrict().getDistrictName().length() > 0) {
+				address.append(smAddress.getPmDistrict().getDistrictName());
+				address.append(separator).append(htmlLineSeparator);
+			}
 			if (smAddress.getPostcode() != null && smAddress.getPostcode().length() > 0) {
 				address.append(smAddress.getPostcode());
 				address.append(" ");
@@ -49,10 +53,7 @@ public class AddressUtils {
 				address.append(smAddress.getPmCity().getCityName());
 				address.append(separator).append(htmlLineSeparator);
 			}
-			if (smAddress.getPmDistrict() != null && smAddress.getPmDistrict().getDistrictName() !=null && smAddress.getPmDistrict().getDistrictName().length() > 0) {
-				address.append(smAddress.getPmDistrict().getDistrictName());
-				address.append(separator).append(htmlLineSeparator);
-			}
+
 			if (smAddress.getPmState() != null && smAddress.getPmState().getStateName() !=null && smAddress.getPmState().getStateName().length() > 0) {
 				address.append(smAddress.getPmState().getStateName());
 				address.append(separator);
@@ -91,6 +92,12 @@ public class AddressUtils {
 				address.append(smAddress.getAddress4());
 				address.append(separator);
 			}
+			
+			if (smAddress.getPmDistrict() != null && smAddress.getPmDistrict().getDistrictName() !=null && smAddress.getPmDistrict().getDistrictName().length() > 0) {
+				address.append(smAddress.getPmDistrict().getDistrictName());
+				address.append(separator);
+			}
+			
 			if (smAddress.getPostcode() != null && smAddress.getPostcode().length() > 0) {
 				address.append(System.getProperty("line.separator"));
 				address.append(smAddress.getPostcode());
@@ -100,10 +107,7 @@ public class AddressUtils {
 				address.append(smAddress.getPmCity().getCityName());
 				address.append(separator);
 			}
-			if (smAddress.getPmDistrict() != null && smAddress.getPmDistrict().getDistrictName() !=null && smAddress.getPmDistrict().getDistrictName().length() > 0) {
-				address.append(smAddress.getPmDistrict().getDistrictName());
-				address.append(separator);
-			}
+
 			if (smAddress.getPmState() != null && smAddress.getPmState().getStateName() !=null && smAddress.getPmState().getStateName().length() > 0) {
 				address.append(System.getProperty("line.separator"));
 				address.append(smAddress.getPmState().getStateName());
