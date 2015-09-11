@@ -90,6 +90,7 @@ public class ReportConst {
 	public static final String SC_S1_REQUEST_NOTE_FINAL_RPT_VAL = "SC_066";
 	public static final String SC_S1_PURCHASE_DEFAULT_DTLS_RPT_VAL = "SC_067";
 	public static final String SC_S1_SIMPLE_QUOTE_PROCESS_RPT_VAL = "SC_068";
+	public static final String SC_S1_LOA_RPT_VAL = "SC_069";
 	public static final String PYMT_RCPT_RPT_NAME = "lbl.rpt.sc.PYMT_RCPT_RPT_NAME";
 	public static final String PYMT_RCPT_RPT_VAL = "PymtRcpt";
 	//S1 Report
@@ -623,6 +624,8 @@ public class ReportConst {
 	public static final String SC_AMP_APPROVERNT_EQ = "&APPROVERNT=";
 	public static final String SC_AMP_APPROVER_EQ = "&APPROVER=";
 	public static final String SC_AMP_DESK_OFFICER_EQ = "&DESK_OFFICER=";
+	public static final String SC_AMP_SIMPL_QUOTE_TYPE_EQ = "&SQTYPE=";
+	public static final String SC_AMP_LOA_NO_EQ = "&LOANUM=";
 	public static final String DESKOFFR = "DESKOFFR";
 	public static final String APPROVERNT="APPROVERNT";
 	public static final String REQUISITIONER = "REQUISITIONER";

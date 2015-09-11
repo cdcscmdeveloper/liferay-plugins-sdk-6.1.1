@@ -135,6 +135,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlFromDateView(true);
 			rptGenBean.setFlInvoiceCreatedDateView(true);
 			rptGenBean.setFlGroupThreeView(true);
+			//rptGenBean.setFlGroupThreeWithoutSupplView(true);
 			 break;
 		case ReportConst.PYMT_MATCH_RPT_MIN_VAL:
 			rptGenBean.setFlMinistryView(true);
@@ -340,6 +341,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlFromDateView(true);
 			rptGenBean.setFlInvoiceCreatedDateView(true);
 			rptGenBean.setFlGroupFourteenView(true);
+			//rptGenBean.setFlGroupFourteenWithoutSupplView(true);
 			break;
 		case ReportConst.PYMT_MATCH_RPT_CEN_PEN_VAL:
 			rptGenBean.setFlMinistryView(true);
@@ -531,6 +533,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlSupplierInvoiceNoView(true);
 			rptGenBean.setFromDateView(true);
 			rptGenBean.setFlGroupFourteenView(true);
+			//rptGenBean.setFlGroupFourteenWithoutSupplView(true);
 			break;
 		case ReportConst.PYMT_MATCH_RPT_PO_VAL:
 			rptGenBean.setFlMinistryView(true);

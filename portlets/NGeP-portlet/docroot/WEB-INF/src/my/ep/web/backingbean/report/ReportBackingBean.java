@@ -171,6 +171,7 @@ public class ReportBackingBean extends
 	private List<SelectItem> serviceTypeList = new ArrayList<SelectItem>();
 	private List<String> paymentMethodList = new ArrayList<String>();
 	private List<SelectItem> paymentTypeList = new ArrayList<SelectItem>();
+	private List<SelectItem> scSOAStatusList = new ArrayList<SelectItem>();
 	
 	SCReportBackingBean scReportBackingBean;
 	CMReportBackingBean cmReportBackingBean;
@@ -778,7 +779,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)243371;//61745;//219490;//240790;//183931;//20854;//243371;//20854;//168887;//221747;//219490;//243394;//243371;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
+	//private Long lngUserId = (long)116205;//243371;//61745;//219490;//240790;//183931;//20854;//243371;//20854;//168887;//221747;//219490;//243394;//243371;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
 	private String strLanguage = ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG,	ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 	//private String strLanguage = "ms";
 	private String roleCode;
@@ -824,6 +825,10 @@ public class ReportBackingBean extends
 	private String scSimpleQuoteStatus;
 	private String scSimpleQuoteDtlGroup;
 	private String scPurchaseInDefaultStatus;
+	private String scSOAStatus;
+	private String scSimpleQuoteType;
+	private String scLOANo;
+	
 	// cm
 	private String cmItemType;
 	private String cmItemStatus;
@@ -2745,9 +2750,64 @@ public class ReportBackingBean extends
 
 	public void setEnableValue(boolean enableValue) {
 		this.enableValue = enableValue;
+	}	
+	
+	public List<String> getSimpleQuoteNoList() {
+		return simpleQuoteNoList;
 	}
-	
-	
+
+	public void setSimpleQuoteNoList(List<String> simpleQuoteNoList) {
+		this.simpleQuoteNoList = simpleQuoteNoList;
+	}
+
+	public List<SelectItem> getScSOAStatusList() {
+		return scSOAStatusList;
+	}
+
+	public void setScSOAStatusList(List<SelectItem> scSOAStatusList) {
+		this.scSOAStatusList = scSOAStatusList;
+	}
+
+	public String getScSOAStatus() {
+		return scSOAStatus;
+	}
+
+	public void setScSOAStatus(String scSOAStatus) {
+		this.scSOAStatus = scSOAStatus;
+	}
+
+	public String getScSimpleQuoteType() {
+		return scSimpleQuoteType;
+	}
+
+	public void setScSimpleQuoteType(String scSimpleQuoteType) {
+		this.scSimpleQuoteType = scSimpleQuoteType;
+	}
+
+	public String getScLOANo() {
+		return scLOANo;
+	}
+
+	public void setScLOANo(String scLOANo) {
+		this.scLOANo = scLOANo;
+	}
+	public List<SelectItem> retrieveLOAStatusList(){
+		scSOAStatusList = new ArrayList<SelectItem>();		
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+									IPMReportSO.class);			
+					List<Object[]> soaStatusList = reportSO.retrieveLOAStatusList(strLanguage);			
+					for (Object[] object : soaStatusList) {
+						SelectItem selectItem = new SelectItem();						
+						selectItem.setValue(object[0].toString());
+						selectItem.setLabel(object[1].toString());
+						scSOAStatusList.add(selectItem);
+					}
+		}
+		return scSOAStatusList;
+	}
+
 	public void supplierNameValidate(){
 		if ((this.getScSupplier() != null)
 				&& (this.getScSupplier() != ReportConst.EMPTY_VAL)) {
@@ -6358,6 +6418,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((getScRequestNoteStatus() != null) && (getScRequestNoteStatus() != ReportConst.EMPTY_VAL))
 				|| ((getScLAPRNPURCHDEFAULTGroup() != null) && (getScLAPRNPURCHDEFAULTGroup() != ReportConst.EMPTY_VAL))				
 				|| ((getScPIDNo() != null) && (getScPIDNo() != ReportConst.EMPTY_VAL))
+				|| ((getScSOAStatus() != null) && (getScSOAStatus() != ReportConst.EMPTY_VAL))
+				|| ((getScSimpleQuoteType() != null) && (getScSimpleQuoteType() != ReportConst.EMPTY_VAL))
+				|| ((getScLOANo() != null) && (getScLOANo() != ReportConst.EMPTY_VAL))
 				|| ((getScContractOrPKPType() != null) && (getScContractOrPKPType() != ReportConst.EMPTY_VAL))
 				|| ((getScContractOrPKPNo() != null) && (getScContractOrPKPNo() != ReportConst.EMPTY_VAL))
 				|| ((getScContractOrPKPName() != null) && (getScContractOrPKPName() != ReportConst.EMPTY_VAL))
@@ -6405,6 +6468,22 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				}
 				}
 			//}
+				
+			if ((this.getScSOAStatus() != null)
+						&& (this.getScSOAStatus() != ReportConst.EMPTY_VAL)) {
+					rptGenBean.setScSOAStatusVar(ReportConst.AMP_PROCURE_STATUS_EQ
+							+ this.getScSOAStatus());
+			}	
+			if ((this.getScSimpleQuoteType() != null)
+					&& (this.getScSimpleQuoteType() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setScSimpleQuoteTypeVar(ReportConst.SC_AMP_SIMPL_QUOTE_TYPE_EQ
+						+ this.getScSimpleQuoteType());
+		    }
+			if ((this.getScLOANo() != null)
+					&& (this.getScLOANo() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setScLOANoVar(ReportConst.SC_AMP_LOA_NO_EQ
+						+ this.getScLOANo());
+		    }
 			if ((this.getScRequestQuoteNo() != null)
 					&& (this.getScRequestQuoteNo() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setScRequestQuoteNoVar(ReportConst.SC_AMP_RQ_NO_EQ
@@ -6657,6 +6736,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getScSimpleQuoteDtlGroupVar()
 						+ rptGenBean.getScREQUESTNOTESUMMARYGroupVar()
 						+ rptGenBean.getScPIDNoVar()
+						+ rptGenBean.getScSOAStatusVar()
+						+ rptGenBean.getScSimpleQuoteTypeVar()
+						+ rptGenBean.getScLOANoVar()
 						+ rptGenBean.getScContractOrPKPTypeVar()
 						+ rptGenBean.getScContractOrPKPNoVar()
 						+ rptGenBean.getScContractOrPKPNameVar()
@@ -7641,6 +7723,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.setScContractOrPKPNo(null);
 		this.setScContractOrPKPName(null);
 		this.setScRequestQuoteNo(null);
+		this.setScSOAStatus(null);
+		this.setScSimpleQuoteType(null);
+		this.setScLOANo(null);
 		scProcureAllList = new ArrayList<SelectItem>();
 		scQuotationList = new ArrayList<SelectItem>();
 		scTenderList = new ArrayList<SelectItem>();
