@@ -34,7 +34,7 @@
 						value="#{invoiceBackingBean.retrieveJabatanByOrgProfileId(invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.orgProfileId)}"
 						disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.procur.type.category']}" /></td>
-				<td><p:inputText size="50" disabled="true"
+				<td><p:inputText size="30" disabled="true"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.procurementTypeCategory ==null ? lbl['lbl.fl.supp.na'] : invoiceBackingBean.getParameterDesc(invoiceBackingBean.managedBean.invoice.flRequest.procurementTypeCategory)}" /></td>				
 			</tr>
 			<tr>
