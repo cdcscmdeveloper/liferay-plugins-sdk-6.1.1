@@ -28,7 +28,7 @@
 			toggleable="true">
 			<h:panelGrid border="0" width="100%" columns="3"
 				columnClasses="columnWidth20,columnWidth50,columnWidth30">
-				<h:outputLabel value="#{lbl['lbl.sc.supplier.status']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.supplier.status']}" styleClass="outputLabel-view-label"/>
 				<h:outputText value="#{lbl['lbl.sc.supplier.status.open']}"
 					rendered="#{noticeBoardBackingBean.managedBean.scQt.openFor eq 'A'}" />
 				<h:outputText value="#{lbl['lbl.sc.supplier.status.bumiputra']}"
@@ -37,7 +37,7 @@
 
 				<c:if
 					test="#{null ne noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}">
-					<h:outputLabel value="#{lbl['lbl.sc.paidup']}" />
+					<h:outputLabel value="#{lbl['lbl.sc.paidup']}" styleClass="outputLabel-view-label"/>
 					<h:outputText
 						value="#{noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}" />
 					<h:outputLabel value="" />
@@ -45,7 +45,7 @@
 
 				<c:if
 					test="#{noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.allState}">
-					<h:outputLabel value="#{lbl['lbl.sc.location.level']}" />
+					<h:outputLabel value="#{lbl['lbl.sc.location.level']}" styleClass="outputLabel-view-label"/>
 					<h:outputText value="#{lbl['lbl.sc.all.states']}" />
 					<h:outputLabel value="" />
 				</c:if>

@@ -15,7 +15,7 @@
 		<h:panelGrid border="0" width="100%" columns="4" id="changedTabQTDtls"
 			columnClasses="columnWidth20,columnWidth20,columnWidth20,columnWidth40"
 			rendered="#{isChangesTab}">
-			<h:outputLabel value="#{lbl['lbl.sc.title']}" />
+			<h:outputLabel value="#{lbl['lbl.sc.title']}" styleClass="outputLabel-view-label"/>
 			<h:outputText style="white-space: normal;word-wrap: break-word;"
 				value="#{noticeBoardBackingBean.managedBean.scQt.qtTitle}" />
 			<h:outputText
@@ -26,24 +26,24 @@
 				rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean.newTitle eq null ? 'true':'false'}" />
 			<h:outputLabel value="" />
 
-			<h:outputLabel value="#{lbl['lbl.sc.qtn.no']}" />
+			<h:outputLabel value="#{lbl['lbl.sc.qtn.no']}" styleClass="outputLabel-view-label"/>
 			<h:outputText value="#{noticeBoardBackingBean.managedBean.scQt.qtNo}" />
 			<h:outputLabel value="" />
 			<h:outputLabel value="" />
 
-			<h:outputLabel value="#{lbl['lbl.sc.ministry']}" />
+			<h:outputLabel value="#{lbl['lbl.sc.ministry']}" styleClass="outputLabel-view-label"/>
 			<h:outputText
 				value="#{noticeBoardBackingBean.managedBean.ministryName}" />
 			<h:outputLabel value="" />
 			<h:outputLabel value="" />
 
-			<h:outputLabel value="#{lbl['lbl.sc.ptj']}" />
+			<h:outputLabel value="#{lbl['lbl.sc.ptj']}" styleClass="outputLabel-view-label"/>
 			<h:outputText
 				value="#{noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.orgName}" />
 			<h:outputLabel value="" />
 			<h:outputLabel value="" />
 
-			<h:outputLabel value="#{lbl['lbl.sc.publish.date']}" />
+			<h:outputLabel value="#{lbl['lbl.sc.publish.date']}" styleClass="outputLabel-view-label"/>
 			<h:outputText
 				value="#{noticeBoardBackingBean.managedBean.scQt.publishDate}">
 				<f:convertDateTime
@@ -52,7 +52,7 @@
 			<h:outputLabel value="" />
 			<h:outputLabel value="" />
 
-			<h:outputLabel value="#{lbl['lbl.sc.qt.publishing.period']}" />
+			<h:outputLabel value="#{lbl['lbl.sc.qt.publishing.period']}" styleClass="outputLabel-view-label"/>
 			<h:outputText
 				value="#{noticeBoardBackingBean.managedBean.scQt.publishPeriod}" />
 			<h:outputText
@@ -63,7 +63,7 @@
 				rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean eq null or noticeBoardBackingBean.managedBean.qtAmendMentBean.newPublishPeriodDays eq 0 ? 'true':'false'}" />
 			<h:outputLabel value="" />
 
-			<h:outputLabel value="#{lbl['lbl.sc.closing.date']}" />
+			<h:outputLabel value="#{lbl['lbl.sc.closing.date']}"  styleClass="outputLabel-view-label"/>
 			<h:outputText
 				value="#{noticeBoardBackingBean.managedBean.scQt.closingDate}">
 				<f:convertDateTime
@@ -78,7 +78,7 @@
 			<h:outputLabel value="" />
 
 			<h:outputLabel value="#{lbl['lbl.sc.sample.closingdate']}"
-				rendered="#{sampleClsDate ne null}" />
+				rendered="#{sampleClsDate ne null}" styleClass="outputLabel-view-label"/>
 			<h:outputText value="#{sampleClsDate}"
 				rendered="#{sampleClsDate ne null}">
 				<f:convertDateTime
@@ -87,7 +87,7 @@
 			<h:outputLabel value="" rendered="#{sampleClsDate ne null}" />
 			<h:outputLabel value="" rendered="#{sampleClsDate ne null}" />
 
-			<h:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity']}" />
+			<h:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity']}" styleClass="outputLabel-view-label"/>
 			<h:outputText
 				value="#{noticeBoardBackingBean.managedBean.scQt.qtValidityPeriod}" />
 			<h:outputText
@@ -98,7 +98,7 @@
 				rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean eq null or noticeBoardBackingBean.managedBean.qtAmendMentBean.newValidityPeriodDays eq 0? 'true':'false'}" />
 			<h:outputLabel value="" />
 
-			<h:outputLabel value="#{lbl['lbl.sc.proposal.validity.until']}" />
+			<h:outputLabel value="#{lbl['lbl.sc.proposal.validity.until']}" styleClass="outputLabel-view-label"/>
 			<h:outputText
 				value="#{noticeBoardBackingBean.managedBean.scQt.proposalValidityEndDate}">
 				<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
@@ -106,7 +106,7 @@
 			<h:outputLabel value="" />
 			<h:outputLabel value="" />
 
-			<h:outputLabel value="#{lbl['lbl.sc.evaluation.type']}" />
+			<h:outputLabel value="#{lbl['lbl.sc.evaluation.type']}" styleClass="outputLabel-view-label"/>
 			<h:outputText value="One Tier"
 				rendered="#{noticeBoardBackingBean.managedBean.scQt.evaluationType eq '1'}" />
 			<h:outputText value="Two Tier"
@@ -117,26 +117,26 @@
 		<h:panelGrid border="0" width="100%" columns="3" id="publishTabQTDtls"
 			columnClasses="columnWidth20,columnWidth100,columnWidth30"
 			rendered="#{!isChangesTab}">
-			<h:outputLabel value="#{lbl['lbl.sc.title']}" />
+			<h:outputLabel value="#{lbl['lbl.sc.title']}" styleClass="outputLabel-view-label"/>
 			<h:outputText style="white-space: normal;word-wrap: break-word;"
 				value="#{noticeBoardBackingBean.managedBean.scQt.qtTitle}" />
 			<h:outputLabel value="" />
 
-			<h:outputLabel value="#{lbl['lbl.sc.qtn.no']}" />
+			<h:outputLabel value="#{lbl['lbl.sc.qtn.no']}" styleClass="outputLabel-view-label"/>
 			<h:outputText value="#{noticeBoardBackingBean.managedBean.scQt.qtNo}" />
 			<h:outputLabel value="" />
 
-			<h:outputLabel value="#{lbl['lbl.sc.ministry']}" />
+			<h:outputLabel value="#{lbl['lbl.sc.ministry']}" styleClass="outputLabel-view-label"/>
 			<h:outputText
 				value="#{noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.parentOrgProfile.orgName}" />
 			<h:outputLabel value="" />
 
-			<h:outputLabel value="#{lbl['lbl.sc.ptj']}" />
+			<h:outputLabel value="#{lbl['lbl.sc.ptj']}" styleClass="outputLabel-view-label"/>
 			<h:outputText
 				value="#{noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.orgName}" />
 			<h:outputLabel value="" />
 
-			<h:outputLabel value="#{lbl['lbl.sc.publish.date']}" />
+			<h:outputLabel value="#{lbl['lbl.sc.publish.date']}" styleClass="outputLabel-view-label"/>
 			<h:outputText
 				value="#{noticeBoardBackingBean.managedBean.scQt.publishDate}">
 				<f:convertDateTime
@@ -144,12 +144,12 @@
 			</h:outputText>
 			<h:outputLabel value="" />
 
-			<h:outputLabel value="#{lbl['lbl.sc.qt.publishing.period']}" />
+			<h:outputLabel value="#{lbl['lbl.sc.qt.publishing.period']}" styleClass="outputLabel-view-label"/>
 			<h:outputText
 				value="#{noticeBoardBackingBean.managedBean.scQt.publishPeriod}" />
 			<h:outputLabel value="" />
 
-			<h:outputLabel value="#{lbl['lbl.sc.closing.date']}" />
+			<h:outputLabel value="#{lbl['lbl.sc.closing.date']}" styleClass="outputLabel-view-label"/>
 			<h:outputText
 				value="#{noticeBoardBackingBean.managedBean.scQt.closingDate}">
 				<f:convertDateTime
@@ -158,7 +158,7 @@
 			<h:outputLabel value="" />
 
 			<h:outputLabel value="#{lbl['lbl.sc.sample.closingdate']}"
-				rendered="#{sampleClsDate ne null}" />
+				rendered="#{sampleClsDate ne null}" styleClass="outputLabel-view-label"/>
 			<h:outputText value="#{sampleClsDate}"
 				rendered="#{sampleClsDate ne null}">
 				<f:convertDateTime
@@ -166,19 +166,19 @@
 			</h:outputText>
 			<h:outputLabel value="" rendered="#{sampleClsDate ne null}" />
 
-			<h:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity']}" />
+			<h:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity']}" styleClass="outputLabel-view-label"/>
 			<h:outputText
 				value="#{noticeBoardBackingBean.managedBean.scQt.qtValidityPeriod}" />
 			<h:outputLabel value="" />
 
-			<h:outputLabel value="#{lbl['lbl.sc.proposal.validity.until']}" />
+			<h:outputLabel value="#{lbl['lbl.sc.proposal.validity.until']}" styleClass="outputLabel-view-label"/>
 			<h:outputText
 				value="#{noticeBoardBackingBean.managedBean.scQt.proposalValidityEndDate}">
 				<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 			</h:outputText>
 			<h:outputLabel value="" />
 
-			<h:outputLabel value="#{lbl['lbl.sc.evaluation.type']}" />
+			<h:outputLabel value="#{lbl['lbl.sc.evaluation.type']}" styleClass="outputLabel-view-label" />
 			<h:outputText value="One Tier"
 				rendered="#{noticeBoardBackingBean.managedBean.scQt.evaluationType eq '1'}" />
 			<h:outputText value="Two Tier"
