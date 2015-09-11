@@ -2,6 +2,8 @@ package my.ep.web.util.sm.helper;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmEduLevel;
@@ -9,6 +11,7 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
+import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
@@ -16,6 +19,7 @@ import my.ep.persistence.entity.sm.SmRelatedCompany;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmStaffTotal;
+import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -95,6 +99,9 @@ public class SmFieldChangeUtil {
 
 			// smSupplierBranches
 			setBranchFieldChangeStatus(latestAppl, currAppl);
+
+			// smSupplierBanks
+			setBankFieldChangeStatus(latestAppl, currAppl);
 		}
 	}
 
@@ -234,6 +241,23 @@ public class SmFieldChangeUtil {
 			for (SmSupplierBranch tmp : appl.getSmSupplierBranches()) {
 				if (tmp.getBranchCode() != null && branchCode != null
 						&& tmp.getBranchCode().compareTo(branchCode) == 0) {
+					retVal = tmp;
+					break;
+				}
+			}
+		}
+		return retVal;
+	}
+
+	public static SmSupplierBank getBankByAccNoAndAccPurposeFromList(
+			SmAppl appl, String accNo, String accPurpose) {
+		SmSupplierBank retVal = new SmSupplierBank();
+		if (appl != null
+				&& !SmCommonUtil.isCollectionEmpty(appl.getSmSupplierBanks())) {
+			for (SmSupplierBank tmp : appl.getSmSupplierBanks()) {
+				if (StringUtils.isNotBlank(accNo)
+						&& StringUtils.isNotBlank(tmp.getAccountNo())
+						&& accNo.equals(tmp.getAccountNo())) {
 					retVal = tmp;
 					break;
 				}
@@ -633,6 +657,75 @@ public class SmFieldChangeUtil {
 		return retVal;
 	}
 
+	private static void setBankFieldChangeStatus(SmAppl latestAppl,
+			SmAppl currAppl) {
+		if (SmCommonUtil.isCollectionEmpty(latestAppl.getSmSupplierBanks())
+				&& !SmCommonUtil.isCollectionEmpty(currAppl
+						.getSmSupplierBanks())) {
+			for (SmSupplierBank currBank : currAppl.getSmSupplierBanks()) {
+				currBank.setChangedFieldStatus("N");
+			}
+		} else {
+			if (!SmCommonUtil.isCollectionEmpty(currAppl.getSmSupplierBanks())) {
+				SmSupplierBank latestBank = null;
+				for (SmSupplierBank currBank : currAppl.getSmSupplierBanks()) {
+					if (!isCurrBankExistInLatestBank(currBank,
+							latestAppl.getSmSupplierBanks())) {
+						currBank.setChangedFieldStatus("N");
+					} else {
+						latestBank = getBankByAccNoAndAccPurposeFromList(
+								latestAppl, currBank.getAccountNo(),
+								currBank.getAccountPurpose());
+						if (latestBank == null
+								|| latestBank.getSupplierBankId() == null) {
+							currBank.setChangedFieldStatus("N");
+						} else {
+							if (isAddressHasDifferences(
+									latestBank.getSmAddress(),
+									currBank.getSmAddress())
+									|| isHasDifferences(latestBank, currBank,
+											new String[] { "supplierBankId",
+													"smSupplierBranch",
+													"pmFinancialOrg" })) {
+								currBank.setChangedFieldStatus("U");
+							} else if (latestBank.getPmFinancialOrg() != null
+									&& currBank.getPmFinancialOrg() != null
+									&& currBank
+											.getPmFinancialOrg()
+											.getFinancialOrgId()
+											.compareTo(
+													latestBank
+															.getPmFinancialOrg()
+															.getFinancialOrgId()) != 0) {
+								currBank.setChangedFieldStatus("U");
+							} else {
+								setCurrBankChequeSignatories(currBank,
+										latestBank);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private static boolean isCurrBankExistInLatestBank(SmSupplierBank currBank,
+			List<SmSupplierBank> latestBankList) {
+		boolean retVal = false;
+		for (SmSupplierBank latestBank : latestBankList) {
+			if (StringUtils.isNotBlank(latestBank.getAccountNo())
+					&& StringUtils.isNotBlank(currBank.getAccountNo())
+					&& latestBank.getAccountNo()
+							.equals(currBank.getAccountNo())
+					&& latestBank.getAccountPurpose().equals(
+							currBank.getAccountPurpose())) {
+				retVal = true;
+				break;
+			}
+		}
+		return retVal;
+	}
+
 	private static void setBranchFieldChangeStatus(SmAppl latestAppl,
 			SmAppl currAppl) {
 		if (SmCommonUtil.isCollectionEmpty(latestAppl.getSmSupplierBranches())
@@ -808,12 +901,68 @@ public class SmFieldChangeUtil {
 		return retVal;
 	}
 
+	private static void setCurrBankChequeSignatories(SmSupplierBank currBank,
+			SmSupplierBank latestBank) {
+		if (SmCommonUtil.isCollectionEmpty(currBank.getSmChequeSignatories())
+				&& !SmCommonUtil.isCollectionEmpty(latestBank
+						.getSmChequeSignatories())) {
+			currBank.setChangedFieldStatus("U");
+		} else if (SmCommonUtil.isCollectionEmpty(latestBank
+				.getSmChequeSignatories())
+				&& !SmCommonUtil.isCollectionEmpty(currBank
+						.getSmChequeSignatories())) {
+			currBank.setChangedFieldStatus("U");
+			for (SmChequeSignatory currSign : currBank.getSmChequeSignatories()) {
+				currSign.setChangedFieldStatus("N");
+			}
+		} else {
+			for (SmChequeSignatory currSign : currBank.getSmChequeSignatories()) {
+				if (!isCurrBankChequeSignatoryExistInLatest(currSign,
+						latestBank.getSmChequeSignatories())) {
+					currBank.setChangedFieldStatus("U");
+					currSign.setChangedFieldStatus("N");
+				} else {
+					SmChequeSignatory latestSign = getSignatoryByIdNoAndBankAccNoFromList(
+							currSign.getSmPersonnel() != null ? currSign
+									.getSmPersonnel().getIdentificationNo()
+									: "", currBank.getAccountNo(),
+							latestBank.getSmChequeSignatories());
+					if (latestSign == null
+							|| latestSign.getChequeSignatoryId() == null) {
+						currBank.setChangedFieldStatus("U");
+						currSign.setChangedFieldStatus("N");
+					}
+				}
+			}
+		}
+	}
+
+	private static boolean isCurrBankChequeSignatoryExistInLatest(
+			SmChequeSignatory currSign,
+			List<SmChequeSignatory> latestBankSignList) {
+		boolean retVal = false;
+		for (SmChequeSignatory latestBankSign : latestBankSignList) {
+			if (latestBankSign.getSmPersonnel() != null
+					&& currSign.getSmPersonnel() != null
+					&& latestBankSign
+							.getSmPersonnel()
+							.getIdentificationNo()
+							.equals(currSign.getSmPersonnel()
+									.getIdentificationNo())) {
+				retVal = true;
+			}
+		}
+		return retVal;
+	}
+
 	public static SmPersonnelAddress getPersonnelAddressByTypeFromList(
 			String type, List<SmPersonnelAddress> personnelAddressList) {
 		SmPersonnelAddress addr = null;
-		for (SmPersonnelAddress tmp : personnelAddressList) {
-			if (tmp.getAddressType().equals(type)) {
-				addr = tmp;
+		if(personnelAddressList!=null){
+			for (SmPersonnelAddress tmp : personnelAddressList) {
+				if (tmp.getAddressType().equals(type)) {
+					addr = tmp;
+				}
 			}
 		}
 		return addr;
@@ -863,6 +1012,25 @@ public class SmFieldChangeUtil {
 			for (SmRelatedCompany latestRelComp : relCompList) {
 				if (latestRelComp.getRegNo().equals(regNo)) {
 					retVal = latestRelComp;
+				}
+			}
+		}
+		return retVal;
+	}
+
+	public static SmChequeSignatory getSignatoryByIdNoAndBankAccNoFromList(
+			String identificationNo, String accNo,
+			List<SmChequeSignatory> signList) {
+		SmChequeSignatory retVal = null;
+		if (SmCommonUtil.isCollectionEmpty(signList)) {
+			for (SmChequeSignatory latestSign : signList) {
+				if (latestSign.getSmPersonnel() != null
+						&& latestSign.getSmPersonnel().getIdentificationNo()
+								.equals(identificationNo)
+						&& latestSign.getSmSupplierBank() != null
+						&& latestSign.getSmSupplierBank().getAccountNo()
+								.equals(accNo)) {
+					retVal = latestSign;
 				}
 			}
 		}
