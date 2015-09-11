@@ -10,7 +10,7 @@
 	</cc:interface>
 
 	<cc:implementation>
-
+		<p:ajaxStatus onstart="Liferay.Session.extend();" />
 		<p:outputPanel id="#{cc.attrs.id}" layout="block">
 			<cc:insertChildren />
 
