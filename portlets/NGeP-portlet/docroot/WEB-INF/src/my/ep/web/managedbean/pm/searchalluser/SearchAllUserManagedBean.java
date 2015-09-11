@@ -3,35 +3,25 @@ package my.ep.web.managedbean.pm.searchalluser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.model.SelectItem;
-
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
-import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserGroup;
+import my.ep.persistence.entity.pm.authorization.PmUserAttachment;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
-import my.ep.persistence.entity.pm.common.PmCity;
-import my.ep.persistence.entity.pm.common.PmCountry;
-import my.ep.persistence.entity.pm.common.PmCriteria;
-import my.ep.persistence.entity.pm.common.PmDistrict;
-import my.ep.persistence.entity.pm.common.PmDivision;
-import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.web.bean.pm.AddressList;
-import my.ep.web.bean.pm.PreferenceList;
-import my.ep.web.bean.pm.RoleList;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.web.bean.pm.UserProfilesSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
+import org.primefaces.event.FileUploadEvent;
 
 
 /**
@@ -57,7 +47,20 @@ public class SearchAllUserManagedBean extends BaseManagedBean {
 	private List<String> liferayRoleList;
 	private List<String> oimRoleList;
 	
+	private UserProfilesSearchBean userProfileSearchBean;
+	private PmUser selectedUser;	
+	private PmUserOrg selectedUserOrg;
+	private boolean receivingAddressFlag;
+	private boolean addressEntered;
+	private PmOrgProfile currentActiveOrg;
+	private String additionalOrgFilter;
+	private PmOrgProfile selectedOrgProfile;
+	private PmParameter selectedOrgType;
+	private PmUserOrg activeUserOrg;
+	private boolean isLazy = false;
 	
+	
+	public SearchAllUserManagedBean(){}
 
 	/**
 	 * @return the resultStatus
@@ -131,8 +134,140 @@ public class SearchAllUserManagedBean extends BaseManagedBean {
 	public void setResultLoginId(String resultLoginId) {
 		this.resultLoginId = resultLoginId;
 	}
+	/**
+	 * @return the additionalOrgFilter
+	 */
+	public String getAdditionalOrgFilter() {
+		return additionalOrgFilter;
+	}
+	/**
+	 * @param additionalOrgFilter the additionalOrgFilter to set
+	 */
+	public void setAdditionalOrgFilter(String additionalOrgFilter) {
+		this.additionalOrgFilter = additionalOrgFilter;
+	}
+	/**
+	 * @return the currentActiveOrg
+	 */
+	public PmOrgProfile getCurrentActiveOrg() {
+		return currentActiveOrg;
+	}
+	/**
+	 * @param currentActiveOrg the currentActiveOrg to set
+	 */
+	public void setCurrentActiveOrg(PmOrgProfile currentActiveOrg) {
+		this.currentActiveOrg = currentActiveOrg;
+	}
+	/**
+	 * @return the addressEntered
+	 */
+	public boolean isAddressEntered() {
+		return addressEntered;
+	}
+	/**
+	 * @param addressEntered the addressEntered to set
+	 */
+	public void setAddressEntered(boolean addressEntered) {
+		this.addressEntered = addressEntered;
+	}
+	/**
+	 * @return the receivingAddressFlag
+	 */
+	public boolean isReceivingAddressFlag() {
+		return receivingAddressFlag;
+	}
+	/**
+	 * @param receivingAddressFlag the receivingAddressFlag to set
+	 */
+	public void setReceivingAddressFlag(boolean receivingAddressFlag) {
+		this.receivingAddressFlag = receivingAddressFlag;
+	}
 
+	/**
+	 * @return the selectedUser
+	 */
+	public PmUser getSelectedUser() {
+		return selectedUser;
+	}
+
+
+	/**
+	 * @param selectedUser the selectedUser to set
+	 */
+	public void setSelectedUser(PmUser selectedUser) {
+		this.selectedUser = selectedUser;
+	}
+
+
+
+	/**
+	 * @return the selectedUserOrg
+	 */
+	public PmUserOrg getSelectedUserOrg() {
+		return selectedUserOrg;
+	}
+
+	/**
+	 * @param selectedUserOrg the selectedUserOrg to set
+	 */
+	public void setSelectedUserOrg(PmUserOrg selectedUserOrg) {
+		this.selectedUserOrg = selectedUserOrg;
+	}
+
+	/**
+	 * @return the userProfileSearchBean
+	 */
+	public UserProfilesSearchBean getUserProfileSearchBean() {
+		if(userProfileSearchBean==null)
+			userProfileSearchBean = new UserProfilesSearchBean();
+		return userProfileSearchBean;
+	}
+
+	/**
+	 * @param userProfileSearchBean the userProfileSearchBean to set
+	 */
+	public void setUserProfileSearchBean(
+			UserProfilesSearchBean userProfileSearchBean) {
+		this.userProfileSearchBean = userProfileSearchBean;
+	}
 	
+	
+	public PmOrgProfile getSelectedOrgProfile() {
+		if(selectedOrgProfile == null){
+			this.selectedOrgProfile = new PmOrgProfile();
+		}
+		return selectedOrgProfile;
+	}
+	public void setSelectedOrgProfile(PmOrgProfile selectedOrgProfile) {
+		this.selectedOrgProfile = selectedOrgProfile;
+	}
+	public PmUserOrg getActiveUserOrg() {
+		return activeUserOrg;
+	}
+	public void setActiveUserOrg(PmUserOrg activeUserOrg) {
+		this.activeUserOrg = activeUserOrg;
+	}
+	public PmParameter getSelectedOrgType() {
+		if(this.selectedOrgType == null){
+			this.selectedOrgType = new PmParameter();
+		}
+		return selectedOrgType;
+	}
+	public void setSelectedOrgType(PmParameter selectedOrgType) {
+		this.selectedOrgType = selectedOrgType;
+	}
+	/**
+	 * @return the isLazy
+	 */
+	public boolean isLazy() {
+		return isLazy;
+	}
+	/**
+	 * @param isLazy the isLazy to set
+	 */
+	public void setLazy(boolean isLazy) {
+		this.isLazy = isLazy;
+	}
 	
 	
 }	
