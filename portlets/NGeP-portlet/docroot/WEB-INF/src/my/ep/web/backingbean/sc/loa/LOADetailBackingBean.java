@@ -2659,7 +2659,9 @@ public class LOADetailBackingBean extends
 			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
 			scLoa.setBondResDueDate(new Date());
 		}  else{
-			scLoa.setScLoaRemarks(finalizeRemarks(scLoa.getScLoaRemarks()));
+			if(!(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome))){
+				scLoa.setScLoaRemarks(finalizeRemarks(scLoa.getScLoaRemarks()));
+			}
 		}
 		
 		// check whether loa from s1 or s2.
