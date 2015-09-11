@@ -59,6 +59,6 @@ public class CmSchedulerConstants {
 	public static final String CM_EXPIRED_ITEM_TIMER_CONTINUOUS_JOB_DESC = "Job run 12 AM";
 	public static final String CM_EXPIRED_ITEM_TIMER = "0 01 00 * * ?";
 	
-
+	public static final String CM_DROP_DOC_SEQ_JOB_GROUP  = "DROP DOC SEQUENCE JOB";	
 
 }
