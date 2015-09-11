@@ -1991,7 +1991,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				reqDTO.setCmMeasurement(meaObj);
 				meaObj = unspscSO.addNewMeasurement(reqDTO).getCmMeasurement();
 			}
-			CmColor colorObj = this.searchColorObjByColorId(1L);
+			CmColor colorObj = this.searchColorObjByColorCode("00");
 
 			CmItem newItem = new CmItem();
 
@@ -2315,7 +2315,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		return resDTO.getTypeList().get(0);
 	}
 
-	public CmColor searchColorObjByColorId(Long colorId) {
+	public CmColor searchColorObjByColorId(long colorId) {
 
 		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICodificationSO.class);
@@ -2325,6 +2325,25 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		ISearchBean<CmColor> searchBeanColor = new SearchBean<CmColor>();
 		colorFilterBean.setSearchField("colorId");
 		colorFilterBean.setSearchValue(colorId);
+
+		searchBeanColor.getDataFilterBeans().add(colorFilterBean);
+		reqDTO.setColorSearchBean(searchBeanColor);
+		resDTO = codificationSO.searchColorObj(reqDTO);
+
+		return resDTO.getColorList().get(0);
+
+	}
+	
+	public CmColor searchColorObjByColorCode(String colorCode) {
+
+		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
+				.getInstance().getServiceObject("cm", ICodificationSO.class);
+		CodificationReqDTO reqDTO = new CodificationReqDTO();
+		CodificationResDTO resDTO = null;
+
+		ISearchBean<CmColor> searchBeanColor = new SearchBean<CmColor>();
+		colorFilterBean.setSearchField("colorCode");
+		colorFilterBean.setSearchValue(colorCode);
 
 		searchBeanColor.getDataFilterBeans().add(colorFilterBean);
 		reqDTO.setColorSearchBean(searchBeanColor);
