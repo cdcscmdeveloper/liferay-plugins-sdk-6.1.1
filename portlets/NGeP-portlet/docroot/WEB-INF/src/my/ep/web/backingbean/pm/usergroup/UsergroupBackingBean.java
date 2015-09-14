@@ -16,11 +16,16 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.dto.pm.authorization.role.RoleReqDTO;
+import my.ep.dto.pm.authorization.role.RoleResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
@@ -30,16 +35,19 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -135,10 +143,9 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		 * @param searchBean
 		 */
 		private void populateSearchBean(ISearchBean<PmUserGroup> searchBean) {
-			
-				if (getManagedBean().getUserName() != null
-					&& !"".equalsIgnoreCase(getManagedBean().getUserName())) {
-				SearchFilterBean codesSearchBean = new SearchFilterBean(
+			SearchFilterBean codesSearchBean = null;
+			if (StringUtils.isNotBlank(getManagedBean().getUserName())) {
+				codesSearchBean = new SearchFilterBean(
 						SearchOperator.OPERATOR_LIKE.value());
 				codesSearchBean
 						.setSearchField("pmUserGroupUsers.pmUser.userName");
@@ -146,10 +153,18 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 				codesSearchBean.setCaseInsensitive(true);
 				searchBean.getDataFilterBeans().add(codesSearchBean);
 			}
+			
+			if(StringUtils.isNotBlank(getManagedBean().getRole())){
+				codesSearchBean = new SearchFilterBean(
+						SearchOperator.OPERATOR_EQUALS.value());
+				codesSearchBean
+						.setSearchField("roleCode");
+				codesSearchBean.setSearchValue(getManagedBean().getRole());
+				searchBean.getDataFilterBeans().add(codesSearchBean);
+			}
 
-			if (getManagedBean().getGroupCode() != null
-					&& !"".equalsIgnoreCase(getManagedBean().getGroupCode())) {
-				SearchFilterBean codesSearchBean = new SearchFilterBean(
+			if (StringUtils.isNotBlank(getManagedBean().getGroupCode())) {
+				codesSearchBean = new SearchFilterBean(
 						SearchOperator.OPERATOR_LIKE.value());
 				codesSearchBean.setSearchField("groupCode");
 				codesSearchBean.setSearchValue(getManagedBean().getGroupCode());
@@ -157,9 +172,8 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 				searchBean.getDataFilterBeans().add(codesSearchBean);
 			}
 
-			if (getManagedBean().getGroupName() != null
-					&& !"".equalsIgnoreCase(getManagedBean().getGroupName())) {
-				SearchFilterBean codesSearchBean = new SearchFilterBean(
+			if (StringUtils.isNotBlank(getManagedBean().getGroupName())){
+				codesSearchBean = new SearchFilterBean(
 						SearchOperator.OPERATOR_LIKE.value());
 				codesSearchBean.setSearchField("groupName");
 				codesSearchBean.setSearchValue(getManagedBean().getGroupName());
@@ -167,9 +181,8 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 				searchBean.getDataFilterBeans().add(codesSearchBean);
 			}
 
-			if (getManagedBean().getPtjCode() != null
-					&& !"".equalsIgnoreCase(getManagedBean().getPtjCode())) {
-				SearchFilterBean codesSearchBean = new SearchFilterBean(
+			if (StringUtils.isNotBlank(getManagedBean().getPtjCode())){
+				codesSearchBean = new SearchFilterBean(
 						SearchOperator.OPERATOR_LIKE.value());
 				codesSearchBean.setSearchField("pmOrgProfile.pmOrgValidity.orgCode");
 				codesSearchBean.setSearchValue(getManagedBean().getPtjCode());
@@ -177,9 +190,8 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 				searchBean.getDataFilterBeans().add(codesSearchBean);
 			}
 
-			if (getManagedBean().getPtjName() != null
-					&& !"".equalsIgnoreCase(getManagedBean().getPtjName())) {
-				SearchFilterBean codesSearchBean = new SearchFilterBean(
+			if (StringUtils.isNotBlank(getManagedBean().getPtjName())){
+				codesSearchBean = new SearchFilterBean(
 						SearchOperator.OPERATOR_LIKE.value());
 				codesSearchBean
 						.setSearchField("pmOrgProfile.pmOrgValidity.orgName");
@@ -189,13 +201,13 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 			}
 
 			if (getManagedBean().getStatus() != null) {
-				SearchFilterBean codesSearchBean = new SearchFilterBean(
+				codesSearchBean = new SearchFilterBean(
 						SearchOperator.OPERATOR_EQUALS.value());
 				codesSearchBean.setSearchField("recordStatusFlg");
 				codesSearchBean.setSearchValue(getManagedBean().getStatus());
 				searchBean.getDataFilterBeans().add(codesSearchBean);
 			}else{
-				SearchFilterBean codesSearchBean = new SearchFilterBean(
+				codesSearchBean = new SearchFilterBean(
 						SearchOperator.OPERATOR_IN.value());
 				codesSearchBean.setSearchField("recordStatusFlg");
 				codesSearchBean.setSearchValue(new ArrayList<String>(Arrays.asList(ParameterConst.RECORD_STATUS_INACTIVE, ParameterConst.RECORD_STATUS_ACTIVE)));
@@ -245,13 +257,13 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 //				searchBean.getDataFilterBeans().add(orgProfileSearchBean);
 //			}
 //			
-//			}
-			SearchFilterBean codesSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
-			codesSearchBean.setSearchField("roleCode");
-			codesSearchBean.setSearchValue("FL_APPROVER");
-			codesSearchBean.setCaseInsensitive(true);
-			searchBean.getDataFilterBeans().add(codesSearchBean);
+////			}
+//			codesSearchBean = new SearchFilterBean(
+//					SearchOperator.OPERATOR_EQUALS.value());
+//			codesSearchBean.setSearchField("roleCode");
+//			codesSearchBean.setSearchValue("FL_APPROVER");
+//			codesSearchBean.setCaseInsensitive(true);
+//			searchBean.getDataFilterBeans().add(codesSearchBean);
 		}
 	}
 
@@ -496,7 +508,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	public String saveUserGroup() {
 		debugLogger("saveUserGroup");
 		PmUserGroup userGroup = this.getManagedBean().getUserGroup();
-		userGroup.setRoleCode("FL_APPROVER");
+//		userGroup.setRoleCode("FL_APPROVER");
 		
 		IUserGroupSO userGrpSo = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -690,5 +702,50 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		}
 		
 		return sb.toString();
+	}
+	
+	public SelectItem[] getUserGroupRoles() {
+		ISearchBean<PmRoleDesc> rolesSearchBean = super
+				.createSearchBean(PmRoleDesc.class, "somusergrouproles");
+		SearchFilterBean bean = new SearchFilterBean();
+		bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
+		bean.setSearchField("pmRole.roleCode");
+		bean.setSearchValue(new ArrayList<String>(Arrays
+				.asList(ProfileManagementConst.UG_ROLES_LIST)));
+		rolesSearchBean.getDataFilterBeans().add(bean);
+
+		SelectItem[] items = null;
+		IRoleSO roleSO = null;
+		try{
+			if (rolesSearchBean != null) {
+				rolesSearchBean.getSortColumns();
+				RoleReqDTO roleReqDTO = new RoleReqDTO();
+				roleReqDTO.setSearchRoleBean(rolesSearchBean);
+				roleReqDTO.setLanguage(getFacesScopes().getUserLocale().getLanguage());
+				roleSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IRoleSO.class);
+				RoleResDTO resDto = roleSO
+						.retrieveRoleDecsBySearchBean(roleReqDTO);
+				if(resDto.isSuccessful() && 
+						resDto.getSearchRoleResultBean()!=null 
+						&& !resDto.getSearchRoleResultBean().getResultList().isEmpty()){
+						items = new SelectItem[resDto.getSearchRoleResultBean().getResultList().size() + 1];
+						items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+							"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							getFacesScopes().getUserLocale()));
+						
+						int i = 1;
+						for (PmRoleDesc roleDesc : resDto.getSearchRoleResultBean().getResultList()) {
+							items[i++] = new SelectItem(roleDesc.getPmRole().getRoleCode()
+							, roleDesc.getRoleName());
+						}
+				}
+			}
+		}finally{
+			roleSO = null;
+		}
+
+		return items;
 	}
 }
