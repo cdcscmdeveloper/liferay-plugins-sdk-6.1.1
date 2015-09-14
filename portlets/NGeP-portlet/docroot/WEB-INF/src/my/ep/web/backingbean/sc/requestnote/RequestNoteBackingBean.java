@@ -536,7 +536,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			finalizeRemarks(requestNote.getRemarks());
 		}
 
-		if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
+		if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome) || outcome.isEmpty() && !isAction){
 			if(requestNote.getCurrentStatus() == null){
 				// WorkFlow Status 
 				List<ScRNWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScRNWorkFlowStatus>();
