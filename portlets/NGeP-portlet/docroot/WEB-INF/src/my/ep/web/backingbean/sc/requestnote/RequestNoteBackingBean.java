@@ -580,7 +580,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 						BigDecimal totalAmt = itemSummarySO
 								.retrieveAccumulatedAmount(flReqDTO);
-						if (totalAmt.doubleValue() > 0) {
+						if (totalAmt.doubleValue() > 20000) {
 							getManagedBean().setExceededAmountAlerted(Boolean.TRUE);
 							throw new EpException(MessageConst.ERROR_760036,
 									new String[] {rnDtl.getRequestItem().getItemName()});
