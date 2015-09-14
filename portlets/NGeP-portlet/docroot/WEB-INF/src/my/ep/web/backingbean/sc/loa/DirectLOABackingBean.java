@@ -527,6 +527,9 @@ public class DirectLOABackingBean extends
 										.getSpecMaster());
 			}
 			constructStartNEndMonth();
+			// Display alert pop up if  loa amount is > 5 lacs & supplier not register with gst
+			checkForGSTAlertPopup(this.getManagedBean().getSpecTemplateSpecBean()
+					.getSpecMaster());
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
 					.getNavigationHandler()
@@ -5805,6 +5808,40 @@ public class DirectLOABackingBean extends
 
 	public void setSuppDocFlag(boolean suppDocFlag) {
 		this.suppDocFlag = suppDocFlag;
+	}
+	
+	public void tabChangeAction(int selectedTabIndex) {
+
+		if (selectedTabIndex != 0 && this.getManagedBean().isDisplayAlert()) {
+			this.getManagedBean().setDisplayAlert(false);
+			RequestContext.getCurrentInstance().execute(
+					"gstConfirmPopupWid.show()");
+		}
+
+	}
+	
+	/**
+	 * @param specMaster
+	 */
+	private void checkForGSTAlertPopup(TplSpecMaster specMaster) {
+		
+		if (null != specMaster) {
+			ScLoa scLoa = this.getManagedBean().getScLoa();
+			SmSupplier supplier = scLoa.getScLoiLoa().getSmSupplier();
+			if ((supplier != null && supplier.getGstRegisteredFlag() != DbValueConst.RECORD_STATUS_ACTIVE)) {
+				BigDecimal durationMnth = specMaster.getDurationMonth();
+				if (durationMnth != null) {
+					final BigDecimal noOfMnth = new BigDecimal(12);
+					BigDecimal awardedPrice = (scLoa.getLoaAmt()
+							.divide(durationMnth)).multiply(noOfMnth);
+					awardedPrice = awardedPrice.setScale(2,BigDecimal.ROUND_HALF_EVEN);
+							
+					if (awardedPrice.intValue() > 500000) {
+						getManagedBean().setDisplayAlert(true);
+					}
+				}
+			}
+		}
 	}
 
 }
