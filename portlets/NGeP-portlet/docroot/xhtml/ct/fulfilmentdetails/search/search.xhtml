@@ -133,7 +133,7 @@
 					<p:column headerText="#{lbl['lbl.ct.contract.status']}"  style="width:15%; white-space:normal;">
 						<h:outputText value="#{contractDetailsBackingBean.getStatusDescById(data.ctContractVer.status.statusId)}" />
 					</p:column>
-					 	<p:column headerText="#{lbl['lbl.ct.action']}"  style="width:12%; white-space:normal;" rendered="#{!contractDetailsBackingBean.isSupplierRole()}">
+					 	<p:column headerText="#{lbl['lbl.ct.action']}"  style="width:8%;" rendered="#{!contractDetailsBackingBean.isSupplierRole()}">
 					 	 	
 					 	 	 	<p:menuButton id="menuButtonId" value="#{lbl['lbl.btn.option']}" >
                                  <p:menuitem id="menuItemId" value="#{lbl['lbl.ct.suspend.contract']}"   icon="ui-icon-suspension"
@@ -178,8 +178,7 @@
                        </p:menuButton>
 					</p:column>
 					<!-- Supplier's action -->
-					<p:column headerText="#{lbl['lbl.ct.action']}"  style="width:12%; 
-					    white-space:normal;" rendered="#{contractDetailsBackingBean.isSupplierRole()}">
+					<p:column headerText="#{lbl['lbl.ct.action']}"  style="width:8%;" rendered="#{contractDetailsBackingBean.isSupplierRole()}">
 					    <p:menuButton id="menuButtonId11" value="#{lbl['lbl.btn.option']}" >
 					     <p:menuitem id="menuItemId11" value="#{lbl['lbl.ct.view']}"  
 					   	     icon="ui-icon-supplier-view" 
