@@ -20,6 +20,16 @@
 				<td>&#160;</td>
 			</tr>
 			<tr>
+				<th><p:outputLabel value="#{lbl['lbl.pm.ug.search.role']}" /></th>
+				<td><p:selectOneMenu id="somusergrouproles" style="width:230px;margin-bottom:5px;"
+						value="#{usergroupBackingBean.managedBean.role}">
+						<f:selectItems
+							value="#{usergroupBackingBean.getUserGroupRoles()}"></f:selectItems>
+					</p:selectOneMenu></td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			<tr>
 				<th width="20%"><h:outputLabel
 						value="#{lbl['lbl.pm.ug.result.groupcode']}"></h:outputLabel></th>
 				<td><p:inputText
