@@ -296,7 +296,9 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	private ScQtZoneCriteria toBedeletedSupplierZone;
 
 	private ScLoaReport branchInfoReport;
-
+    
+	private boolean displayAlert;
+	
 	/**
 	 * Gets the spki backing bean.
 	 * 
@@ -1640,5 +1642,19 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	 */
 	public void setBranchInfoReport(ScLoaReport branchInfoReport) {
 		this.branchInfoReport = branchInfoReport;
+	}
+
+	/**
+	 * @return the displayAlert
+	 */
+	public boolean isDisplayAlert() {
+		return displayAlert;
+	}
+
+	/**
+	 * @param displayAlert the displayAlert to set
+	 */
+	public void setDisplayAlert(boolean displayAlert) {
+		this.displayAlert = displayAlert;
 	}
 }
