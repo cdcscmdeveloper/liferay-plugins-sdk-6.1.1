@@ -1208,6 +1208,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 			log.info("---------Supplier Type-----------" + this.getManagedBean().getSmAppl().getSupplierType());
 			if(resDTO.getSmSupp().getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
+				SmPersonnel personnel = getManagedBean().getSmAppl().getSmPersonnels().get(0);
+				getManagedBean().setSmPersonnel(personnel);
+				getManagedBean().setUserBumiFlg(personnel.getBumiFlg());
+				getManagedBean().setUserMuslimFlg(personnel.getMuslimFlg());
 				getIndividualServiceType();
 				this.getManagedBean().setSmPermenantAdd(resDTO.getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress());
 				this.populateStateByAddType("permenant");
@@ -1662,7 +1666,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				}
 			}
 		}catch(Exception ex){
-			throw new EpException("MyIdentity: " + ex.getMessage());
+			String message = MessageUtils.getMessage(ex.getMessage(), MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
+			if(message != null){
+				throw new EpException(ex.getMessage());
+			}else{
+				throw new EpException("MyIdentity: " + ex.getMessage());
+			}
 		}
 	}
 	
