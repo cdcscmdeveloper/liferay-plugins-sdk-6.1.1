@@ -3595,3 +3595,45 @@ table.taxableGuidelineTable td {
 .scNumericAlign {
 	text-align: right !important;
 }
+
+.ui-icon-view{
+	background-image: url('../images/design/document.png') !important;
+	background-position: center;
+	margin-right:5px;
+}
+
+.ui-icon-suspension{
+	background-image: url('../images/design/pause.png') !important;
+	background-position: center;
+	margin-right:5px;
+}
+
+.ui-icon-termination{
+	background-image: url('../images/design/terminate.png') !important;
+	background-position: center;
+	margin-right:5px;
+}
+
+.ui-icon-amendment{
+	background-image: url('../images/design/revise.png') !important;
+	background-position: center;
+	margin-right:5px;
+}
+
+.ui-icon-update{
+	background-image: url('../images/design/edit.png') !important;
+	background-position: center;
+	margin-right:5px;
+}
+
+.ui-icon-termination-history{
+	background-image: url('../images/design/ico-termination-history.png') !important;
+	background-position: center;
+	margin-right:5px;
+}
+
+.ui-icon-supplier-view{
+	background-image: url('../images/design/ico-view.png') !important;
+	background-position: center;
+	margin-right:5px;
+}
