@@ -163,7 +163,11 @@
 					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
-			<p:column  headerText="#{lbl['lbl.fl.received.amount']}" style="white-space:normal;text-align:right;">
+			<p:column  style="white-space:normal;text-align:right;">
+				<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.fl.received.amount']}" />
+							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.del.amt']}" />
+						</f:facet>
 				<p:inputText style="text-align:right;" styleClass="colFloatRight" id="receivedAmtVal" label="#{lbl['lbl.fl.received.amount']}" 
 					disabled="#{receivedNoteBackingBean.managedBean.buttonVal=='Cancel' or  receivedNoteBackingBean.managedBean.buttonVal=='View'}"
 					rendered="#{item.flDelOrderItem.flFulfilmentItemAddr.itemType.parameterCode eq ParameterConst.itemTypeService}" value="#{item.receivedAmt}">
