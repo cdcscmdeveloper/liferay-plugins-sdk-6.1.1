@@ -46,28 +46,29 @@
 								value="0" />
 						</p:menuitem>
 
-						<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}" update="@form">
+						<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}" update="@form" 
+											actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}">
 							<f:setPropertyActionListener
 								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
 								value="1" />
 						</p:menuitem>
 
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.contents']}"
-							update="@form">
+							update="@form" actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}">
 							<f:setPropertyActionListener
 								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
 								value="2" />
 						</p:menuitem>
 
 						<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}"
-							update="@form">
+							update="@form" actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}">
 							<f:setPropertyActionListener
 								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
 								value="3" />
 						</p:menuitem>
 
 						<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
-							update="@form"
+							update="@form" actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}"
 							disabled="#{directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode ne ParameterConst.fulfilmentTypeScheduled}">
 
 							<f:setPropertyActionListener
@@ -75,20 +76,20 @@
 								value="4" />
 						</p:menuitem>
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}"
-							update="@form">
+							update="@form" actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}">
 							<f:setPropertyActionListener
 								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
 								value="5" />
 						</p:menuitem>
 
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.letter.of.acceptance']}"
-							update="@form">
+							update="@form" actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}">
 							<f:setPropertyActionListener
 								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
 								value="6" />
 						</p:menuitem>
 						<p:menuitem value="#{lbl['lbl.sc.declaration']}"
-							update="@form">
+							update="@form" actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}">
 							<f:setPropertyActionListener
 								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
 								value="7" />
@@ -145,6 +146,15 @@
 				update="menuContent" oncomplete="attachmentPopupDlg.hide()">
 			</p:fileUpload>
 		</p:dialog>
+		
+		<p:confirmDialog widgetVar="gstConfirmPopupWid" id="gstConfirmPopup"
+			width="500px" message="#{lbl['lbl.sc.gst.nonreg.supplier.alert.msg']}" >
+			<div align="center">
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" oncomplete="gstConfirmPopupWid.hide()"
+					process="@this"></p:commandButton>
+			</div>
+			
+		</p:confirmDialog>
 		
 	</ui:define>
 </ui:composition>
