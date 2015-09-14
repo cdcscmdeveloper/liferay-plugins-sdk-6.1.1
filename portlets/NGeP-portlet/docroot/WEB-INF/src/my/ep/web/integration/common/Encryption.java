@@ -161,13 +161,13 @@ public class Encryption {
 		// upload the encripted file to sftp server
 
 		reqDTO.setLocatFilePath(reqDTO.getEncryptFilePath() + reqDTO.getFileName());
-		reqDTO.setRemoteFilePath(IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL + reqDTO.getFileName());
+		reqDTO.setRemoteFilePath(IntegrationConstants.PHIS_UPLOAD_DIR + reqDTO.getFileName());
 		reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_PHIS);
 		reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
-//		sftpUtility.upload(reqDTO);
+		sftpUtility.upload(reqDTO);
 
 		// once upload is done cal web service osb integration to transfer file.
-//		osbUtility.osbServiceCallOutBound(reqDTO.getServiceCode(), reqDTO.getFileName());
+		osbUtility.osbServiceCallOutBound(reqDTO.getServiceCode(), reqDTO.getFileName());
 
 	}
 
