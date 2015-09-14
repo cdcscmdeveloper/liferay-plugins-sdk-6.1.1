@@ -1043,7 +1043,7 @@ public class DirectLOABackingBean extends
 		Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 
 		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)
-				&& BpmOutcomeConst.BPM_ACCEPT.equals(outcome)) {
+				&& BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
 
 			if (!getManagedBean().isAgreeWithTermsConditions()) {
 				throw new EpException(MessageConst.ERROR_750002);
@@ -1052,7 +1052,7 @@ public class DirectLOABackingBean extends
 
 		if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)
 				|| QTStatusConst.LOA_PENDING_REVISION.equals(statusId)
-				&& BpmOutcomeConst.BPM_SUBMIT.equals(outcome)) {
+				&& BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
 			if (scLoa.isApprovalReq()) {
 				if (null == getManagedBean().getApproverUser()
 						|| null == getManagedBean().getApproverUser()
@@ -1063,6 +1063,10 @@ public class DirectLOABackingBean extends
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 									new FacesScopes().getUserLocale()) });
 				}
+			}
+			if (null != scLoa.getContractSigner()
+					&& null == scLoa.getContractSigner().getUserId()) {
+				throw new EpException(MessageConst.ERROR_760352);
 			}
 
 			if (null == scLoa.getContractEffDate()) {
@@ -1292,7 +1296,7 @@ public class DirectLOABackingBean extends
 			}
 		}
 
-		if(!(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome))){
+		if (!(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome))) {
 			scLoa.setScLoaRemarks(finalizeRemarks(scLoa.getScLoaRemarks()));
 		}
 
