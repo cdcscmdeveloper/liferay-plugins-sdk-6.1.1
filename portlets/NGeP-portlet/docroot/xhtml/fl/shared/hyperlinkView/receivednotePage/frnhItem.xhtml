@@ -101,8 +101,11 @@
 					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
-			<p:column  headerText="#{lbl['lbl.fl.received.amount']}" style="white-space:normal;text-align:right;">
-				
+			<p:column  style="white-space:normal;text-align:right;">
+				<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.fl.received.amount']}" />
+							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.del.amt']}" />
+						</f:facet>
 				<h:outputText id="receivedAmt" value="#{item.receivedAmt}" styleClass="colFloatRight">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>

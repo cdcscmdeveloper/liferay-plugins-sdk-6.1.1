@@ -12,19 +12,22 @@
 				<td style="width:185px"><p:outputLabel value="#{lbl['lbl.fl.invoice.amount.excl.gst']}" /></td>
 				<td><p:inputText size="35" value="#{invoiceBackingBean.managedBean.invoiceAmountWithoutGST}"  disabled="true" style="text-align:right">
 				<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText></td>			
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText>
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.inv.amt.excl.gst']}"/></td>			
 			</tr>
 			<tr>
 				<td style="width:185px"><p:outputLabel value="#{lbl['lbl.fl.gst.amt']}" /></td>
 				<td><p:inputText size="35" value="#{invoiceBackingBean.managedBean.gstAmount}"  disabled="true" style="text-align:right">
 				<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText></td>			
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText>
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.inv.gst.amt']}"/></td>			
 			</tr>
 			<tr>
 				<td style="width:185px"><p:outputLabel value="#{lbl['lbl.fl.invoice.amount.incl.gst']}" /></td>
 				<td><p:inputText size="35" value="#{invoiceBackingBean.managedBean.invoice.invoiceAmtNew}"  disabled="true" style="text-align:right">
 				<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText></td>			
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText>
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.inv.amt.incl.gst']}"/></td>			
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.inv.service.fee']}" /></td>
@@ -38,13 +41,15 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.invoice.fee.amount']}" /></td>
 				<td><p:inputText size="35" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.feeAmt}"  style="text-align:right">
 				<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText></td>
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText>
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.service.fee.amt']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.invoice.amount.to.supp']}" /></td>
 				<td><p:inputText size="35" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.supplierOrFactorAmt}" style="text-align:right"><f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-							</p:inputText></td>
+							</p:inputText>
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.amt.to.supplier']}"/></td>
 			</tr>
 		</table>
 		<p:spacer height="10px" />
