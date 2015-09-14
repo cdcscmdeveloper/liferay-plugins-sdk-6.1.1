@@ -29,6 +29,16 @@
 						<ac:iconTooltip value="#{lbl['lbl.pm.ug.groupname.tooltips']}" /></td>
 			</tr>
 			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.pm.ug.search.role']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu id="somusergrouproles" style="width:230px;margin-bottom:5px;"
+						value="#{usergroupBackingBean.managedBean.userGroup.roleCode}"
+						disabled="#{not usergroupBackingBean.managedBean.userGroup.brandNew}">
+						<f:selectItems
+							value="#{usergroupBackingBean.getUserGroupRoles()}"></f:selectItems>
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.ug.info.orgunit']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:columnGroup>
