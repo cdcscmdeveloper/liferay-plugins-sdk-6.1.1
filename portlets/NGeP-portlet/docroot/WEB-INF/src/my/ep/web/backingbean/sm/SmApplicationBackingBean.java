@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
@@ -149,6 +150,7 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -855,42 +857,40 @@ public class SmApplicationBackingBean extends
 					.getApplCategoryType())) {
 				getManagedBean().getSmAppl().setApplCategoryType("N");
 			}
-			// TODO uncomment if necessary
-			// updateSmAppl(applicationType, "", "");
-			// saveOrUpdateAppl();
 			getManagedBean().setCurrentPageType(
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
-			if (smAppl.getSmFacilities() != null
-					&& smAppl.getSmFacilities().isEmpty()
+			if (SmCommonUtil.isCollectionEmpty(smAppl.getSmFacilities())
 					&& !smAppl.getApplType().equalsIgnoreCase(
 							ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
-				log.info("*** Empty Facility******");
 				SmFacility fac = new SmFacility();
 				if (smAppl.getApplType().equalsIgnoreCase(
 						ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
-					// fac.setOwnerName("Sample");
 					fac.setFacilityType("H");
 				}
-				// SmAddress addr = new SmAddress();
-				// addr = SmApplicationUtil.setDefaultBaseOfficeAddress(addr,
-				// getManagedBean());
-				SmAddress addr = getHqAddress();
-				if (addr == null) {
-					addr = SmApplicationUtil.setDefaultAddr(null);
+				fac.setSmAddress(new SmAddress());
+				SmApplicationUtil
+						.resetToDefaultEntityValues(fac.getSmAddress());
+				SmApplicationUtil.resetSmAddressChildLists(fac.getSmAddress());
+				SmApplicationUtil.assignClonedAddressValues(fac.getSmAddress(),
+						getHqAddress());
+				if (fac.getSmAddress() == null
+						|| StringUtils
+								.isBlank(fac.getSmAddress().getAddress1())) {
+					fac.setSmAddress(SmApplicationUtil
+							.setDefaultBaseOfficeAddress(new SmAddress(),
+									getManagedBean()));
 				}
 				fac.setFacilityName(getManagedBean().getSmAppl()
 						.getSmCompanyBasic().getCompanyName());
 				fac.setSmAppl(smAppl);
-				fac.setSmAddress(addr);
 				fac.setPurchasePrice(new BigDecimal(0.00));
 				fac.setRentalRate(new BigDecimal(0.00));
 				fac.setRevNo(1);
 				smAppl.getSmFacilities().add(fac);
 				this.getManagedBean().setBasicCompanyFacility(fac);
-				getManagedBean()
-						.setBasicOffFacStates(
-								retrievePmStateList(addr.getPmCountry()
-										.getCountryId()));
+				getManagedBean().setBasicOffFacStates(
+						retrievePmStateList(fac.getSmAddress().getPmCountry()
+								.getCountryId()));
 
 			} else {
 				setApplicationFailities(smAppl.getSmFacilities());
@@ -1278,8 +1278,9 @@ public class SmApplicationBackingBean extends
 		String name = "";
 		if (annualRevenueId != null) {
 			for (SelectItem item : Arrays.asList(getDropdownValues("SAR"))) {
-				if (item.getValue().toString()
-						.equals(annualRevenueId.toString())) {
+				if (item.getValue() != null
+						&& item.getValue().toString()
+								.equals(annualRevenueId.toString())) {
 					name = item.getLabel();
 					break;
 				}
@@ -1340,6 +1341,33 @@ public class SmApplicationBackingBean extends
 					retVal = eduField.getFieldName();
 				}
 			}
+		}
+		return retVal;
+	}
+
+	public String getFinOrgByIdFromList(Long finOrgId) {
+		String retVal = "";
+		if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getFinOrgLs())
+				&& finOrgId != null) {
+			for (PmFinancialOrg finOrg : getManagedBean().getFinOrgLs()) {
+				if (finOrg.getFinancialOrgId().compareTo(finOrgId) == 0) {
+					retVal = finOrg.getFinOrgName();
+				}
+			}
+		}
+		return retVal;
+	}
+
+	public String getBankAccPurposeLabel(String accPurpose) {
+		String retVal = "";
+		if (accPurpose.equals("R")) {
+			retVal = SmCommonUtil.getMessage("lbl.sm.bankDtls.registration",
+					null);
+		} else if (accPurpose.equals("P")) {
+			retVal = SmCommonUtil.getMessage("lbl.sm.paymentLbl", null);
+		} else {
+			retVal = SmCommonUtil.getMessage("lbl.sm.bankDtls.both.regandpay",
+					null);
 		}
 		return retVal;
 	}
@@ -4883,9 +4911,6 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setDisabledShareholderPersonnelNameAndNationality(
 				false);
 
-		// set personnel field change value
-		SmFieldChangeUtil.initPersonnelChangeField(getManagedBean());
-
 	}
 
 	/**
@@ -5821,6 +5846,11 @@ public class SmApplicationBackingBean extends
 					new PmDistrict(), new PmCity());
 		}
 		getManagedBean().setSelectedBank(shareBankBean);
+		getManagedBean().setLatestBank(
+				SmFieldChangeUtil.getBankByAccNoAndAccPurposeFromList(
+						getManagedBean().getLatestAppl(),
+						shareBankBean.getAccountNo(),
+						shareBankBean.getAccountPurpose()));
 		retrieveBankFinOrgListByType();
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("bankDialog.show()");
@@ -8163,7 +8193,6 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setApplDockyardFacilities(new ArrayList<SmFacility>());
 		getManagedBean().setApplWorkShopFacilities(new ArrayList<SmFacility>());
 		getManagedBean().setApplStoreFacilities(new ArrayList<SmFacility>());
-
 		for (SmFacility smFac : smFacilities) {
 			setFacilityDefaultPrices(smFac);
 			if (smFac.getFacilityType().equalsIgnoreCase(
@@ -8173,8 +8202,16 @@ public class SmApplicationBackingBean extends
 									SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
 				if (smFac.getSmAddress() == null
 						|| smFac.getSmAddress().getAddressId() == null) {
-					smFac.setSmAddress(getHqAddress());
-					if (smFac.getSmAddress() == null) {
+					smFac.setSmAddress(new SmAddress());
+					SmApplicationUtil.resetToDefaultEntityValues(smFac
+							.getSmAddress());
+					SmApplicationUtil.resetSmAddressChildLists(smFac
+							.getSmAddress());
+					SmApplicationUtil.assignClonedAddressValues(
+							smFac.getSmAddress(), getHqAddress());
+					if (smFac.getSmAddress() == null
+							|| StringUtils.isBlank(smFac.getSmAddress()
+									.getAddress1())) {
 						smFac.setSmAddress(SmApplicationUtil
 								.setDefaultBaseOfficeAddress(new SmAddress(),
 										getManagedBean()));

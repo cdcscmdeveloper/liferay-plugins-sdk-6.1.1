@@ -3750,7 +3750,7 @@ public class SmApplicationUtil {
 	 *            -SmAddress object
 	 * 
 	 */
-	private static void assignClonedAddressValues(SmAddress desAddr,
+	public static void assignClonedAddressValues(SmAddress desAddr,
 			SmAddress srcAddr) {
 		desAddr.setAddress1(srcAddr.getAddress1());
 		desAddr.setAddress2(srcAddr.getAddress2());
@@ -3771,7 +3771,7 @@ public class SmApplicationUtil {
 	 * @param baseEntity
 	 *            the base entity
 	 */
-	private static void resetToDefaultEntityValues(BaseEntity baseEntity) {
+	public static void resetToDefaultEntityValues(BaseEntity baseEntity) {
 		baseEntity.setBrandNew(true);
 		baseEntity.setModified(false);
 		baseEntity.setDeleted(false);
@@ -3787,7 +3787,7 @@ public class SmApplicationUtil {
 	 * @param smAdd
 	 *            -SmAddress object
 	 */
-	private static void resetSmAddressChildLists(SmAddress smAdd) {
+	public static void resetSmAddressChildLists(SmAddress smAdd) {
 		smAdd.setSmAssociateCompanies(new ArrayList<SmAssociateCompany>());
 		smAdd.setSmCompanyAddresses(new ArrayList<SmCompanyAddress>());
 		smAdd.setSmEquityCompanies(new ArrayList<SmEquityCompany>());
