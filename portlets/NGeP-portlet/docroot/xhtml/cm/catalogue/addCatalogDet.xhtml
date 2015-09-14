@@ -77,8 +77,22 @@
 							rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 }">
 							<div
 								style="display: block; max-width: 95%; width: 250px; padding: 60px; text-align: center; vertical-align: middle; border: 1px solid rgb(204, 204, 204);">#{lbl['lbl.cm.no.image.available']}</div>
-						</h:panelGroup> <h:panelGroup
-							rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 0 }">
+						</h:panelGroup> 
+						
+						<h:panelGroup
+							rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 1 }">
+							<div style="width: 250px;">	
+								<ui:repeat var="cmImage"
+									value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
+									<p:graphicImage styleClass="catImageStyle"
+										value="/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}" />
+								</ui:repeat>
+								</div>
+						</h:panelGroup>
+						
+						
+						<h:panelGroup
+							rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 1 }">
 							<div id="slides" style="width: 250px;">
 								<ui:repeat var="cmImage"
 									value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
