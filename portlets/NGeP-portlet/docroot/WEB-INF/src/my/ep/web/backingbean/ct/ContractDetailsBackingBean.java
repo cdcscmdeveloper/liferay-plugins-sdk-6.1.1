@@ -1601,7 +1601,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * 
 	 * @return the navigate URL 
 	 */
-	public String gotoTerminatePage() {
+	public String gotoTerminatePage(Long contractId ) {
 		IContractSO contractSO = null;
 		ContractResDTO resDTO = null;
 		ContractReqDTO reqDTO = null;
@@ -1609,7 +1609,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		TerminationBackingBean trBB = null;
 		
 		try {
-			Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractId"));
 			reqDTO = new ContractReqDTO();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			reqDTO.setContractId(contractId);
@@ -1643,7 +1642,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * 
 	 * @return the navigate URL 
 	 */
-	public String gotoSuspendPage() {
+	public String gotoSuspendPage(Long contractId) {
 		
 		 long startTime1 = System.currentTimeMillis();
 		  log.info("Start Time >>>>>>>>>>>>>>>>>>>>" +startTime1);
@@ -1655,7 +1654,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		SuspensionBackingBean suspBB = null;
 		
 		try {
-			Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractId"));
+			//Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractId"));
 			
 			reqDTO = new ContractReqDTO();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
@@ -1694,14 +1693,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * 
 	 * @return the navigate URL 
 	 */
-	public String gotoAmendPage() {
+	public String gotoAmendPage(Long contractId, String action) {
 		IContractAmendmentSO contractAmendmentSO = null;
 		IContractSO contractSO;
 		AmendmentBackingBean amendBB = null;
+		long startTime = System.currentTimeMillis();
+		log.info("Start Time >>>>>>>>>>>>>>>>>>>>" +startTime);
 		
 		try {
-			Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractId"));
-			String action = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("action");
 			
 			ContractReqDTO reqDTO = new ContractReqDTO();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
@@ -1721,6 +1720,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			amendBB.getManagedBean().setSelectedServiceItem(null);
 			amendBB.getManagedBean().setDisableGstRadio(true);
 			amendBB.setAmendmentContractVer(resDTO);
+			long endTime1 = System.currentTimeMillis();
+			log.info("End Time >>>>>>>>>>>>>>>>>>>>" +endTime1);
+			log.info("Total Time >>>>>>>>>>>>>>>>>>>>" +(endTime1 - startTime));
+
 		} finally {
 			contractSO = null;
 			ctBB = null;
@@ -1734,9 +1737,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * 
 	 * @return the navigate URL 
 	 */
-	public String gotoViewPage() {
-		Long contractVerId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractVerId"));
-		Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractId"));
+	public String gotoViewPage(Long contractId, Long contractVerId) {
 		
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
@@ -1817,11 +1818,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * 
 	 * @return the navigate URL 
 	 */
-	public String gotoUpdatePage() {
+	public String gotoUpdatePage(Long contractId) {
 		IContractSO contractSO = null;
 		
 		try {
-			Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractId"));
 			
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
@@ -1852,9 +1852,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * 
 	 * @return the navigate URL 
 	 */
-	public String gotoTerminateHistoryPage() {
-		Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractId"));
-		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+	public String gotoTerminateHistoryPage(Long contractId) {
+			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 		
 		ContractReqDTO ctReqDTO = new ContractReqDTO();
