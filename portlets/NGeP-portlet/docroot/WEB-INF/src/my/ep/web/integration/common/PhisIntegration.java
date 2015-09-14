@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 import my.ep.biz.service.cm.codification.ICodificationSO;
+import my.ep.biz.service.fl.payment.IPaymentMatchSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.confgeneral.IConfigGeneralSO;
@@ -18,6 +19,8 @@ import my.ep.biz.service.pm.common.votfund.IVotFundSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
+import my.ep.dto.fl.FulfilmentReqDTO;
+import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
@@ -32,10 +35,8 @@ import my.ep.dto.pm.common.projectsetia.ProjectSetiaResDTO;
 import my.ep.dto.pm.common.votfund.VotFundReqDTO;
 import my.ep.dto.pm.common.votfund.VotFundResDTO;
 import my.ep.factory.EpLogger;
-import my.ep.persistence.entity.cm.catalog.CmBrand;
-import my.ep.persistence.entity.cm.catalog.CmColor;
-import my.ep.persistence.entity.cm.catalog.CmMeasurement;
-import my.ep.persistence.entity.cm.catalog.CmType;
+import my.ep.persistence.entity.cm.catalog.CmItem;
+import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAddressType;
@@ -51,6 +52,7 @@ import my.ep.web.integration.phis.MaterialBrand;
 import my.ep.web.integration.phis.MaterialClass;
 import my.ep.web.integration.phis.MaterialColor;
 import my.ep.web.integration.phis.MaterialMeasurement;
+import my.ep.web.integration.phis.PaymentEffNotify;
 import my.ep.web.integration.phis.PhisGlAccount;
 import my.ep.web.integration.phis.PhisProgramActivity;
 import my.ep.web.integration.phis.PhisProject;
@@ -102,7 +104,7 @@ public class PhisIntegration {
 					IGlAccountSO.class);
 	
 	ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
-			.getInstance().getServiceObject("cm", ICodificationSO.class);
+			.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
 	
 	IAddressSO addressSO = BusinessDelegate
 			.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IAddressSO.class);
@@ -113,8 +115,10 @@ public class PhisIntegration {
 	IConfigGeneralSO configGeneralSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 			IConfigGeneralSO.class);
 	
+	IPaymentMatchSO paymentSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IPaymentMatchSO.class);
+	
 	FileUtility utility = new FileUtility();
-	String filePath = IntegrationConstants.FILE_PATH;
+	String filePath = IntegrationConstants.FILE_PATH_LOCAL;
 	
 	Date currentDate = new Date();
 	
@@ -125,139 +129,158 @@ public class PhisIntegration {
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 
 		reqDTO.setCreateDate(currentDate);
-		reqDTO.setOrgprofileIdList(getPHISSupplier());
+//		reqDTO.setOrgprofileIdList(getPHISSupplier());
 		
 		CodificationResDTO resDTO = codificationSO.searchItemByCreateDate(reqDTO);
 
 		if (resDTO.isSuccessful()) {
 			
 			log.info("createFilesforPHIS : Records available");
-			List<CmType> cmTypeList = resDTO.getTypeList();
-			List<ItemType> itemTypes = new ArrayList<ItemType>();
-			ItemType itemType;
-		
-			for (CmType cmType : cmTypeList) {
-				itemType = new ItemType();
-				itemType.setItemCode(cmType.getTypeCode().trim());
-				itemType.setItemDescription(cmType.getTypeName().trim());
-				itemType.setItemAction(utility.checkAction(cmType.getCreatedDate(),cmType.getChangedDate()).trim());
-				itemType.setItemOldcode(IntegrationConstants.EMPTY_TRING);
-				if(!itemTypes.contains(itemType)){
-					itemTypes.add(itemType);
-				}
-			}
-
-			List<CmBrand> cmBrandList = resDTO.getBrandList();
-			List<MaterialBrand> mBrands = new ArrayList<MaterialBrand>();
-			MaterialBrand mBrand;
+			CmItem cmItem = null;
 			
-			for (CmBrand cmBrand : cmBrandList) {
-				mBrand = new MaterialBrand();
-				mBrand.setMaterialBrandCode(cmBrand.getBrandCode().trim());
-				mBrand.setMaterialBrandDescription(cmBrand.getBrandName().trim());
-				mBrand.setMaterialBrandAction(utility.checkAction(
-						cmBrand.getCreatedDate(), cmBrand.getChangedDate()).trim());
-				mBrand.setMaterialOldBrandCode(IntegrationConstants.EMPTY_TRING);
-				if(!mBrands.contains(mBrand)){
-					mBrands.add(mBrand);
-				}
-			}
-
-			List<CmMeasurement> cmMeasureList = resDTO.getMeasurementList();
-			List<MaterialMeasurement> mMeasures = new ArrayList<MaterialMeasurement>();
-			MaterialMeasurement mMeasure;
-			
-			for (CmMeasurement cmMeasure : cmMeasureList) {
-				mMeasure = new MaterialMeasurement();
-				mMeasure.setMeasurementCode(cmMeasure.getMeasurementCode().trim());
-				mMeasure.setMeasurementDescription(cmMeasure
-						.getMeasurementName().trim());
-				mMeasure.setMeasurementAction(utility.checkAction(
-						cmMeasure.getCreatedDate(), cmMeasure.getChangedDate()).trim());
-				mMeasure.setMeasurementOldCode(IntegrationConstants.EMPTY_TRING);
-				if(!mMeasures.contains(mMeasure)){
-					mMeasures.add(mMeasure);
-				}
-			}
-
-			List<CmColor> cmColorList = resDTO.getColorList();
-			List<MaterialColor> mColors = new ArrayList<MaterialColor>();
-			MaterialColor mColor;
-			
-			for (CmColor cmColor : cmColorList) {
-				mColor = new MaterialColor();
-				mColor.setMaterialColorCode(cmColor.getColorCode().trim());
-				mColor.setMaterialColorDescription(cmColor.getColorName().trim());
-				mColor.setMaterialColorAction(utility.checkAction(
-						cmColor.getCreatedDate(), cmColor.getChangedDate()).trim());
-				mColor.setMaterialOldColorCode(IntegrationConstants.EMPTY_TRING);
-				if(!mColors.contains(mColor)){
-					mColors.add(mColor);
-				}
-			}
-			
-			List<CmUnspsc> cmUnspscList = resDTO.getClassList();
 			List<MaterialClass> mClasses = new ArrayList<MaterialClass>();
-			MaterialClass mClass;
+			List<ItemType> itemTypes = new ArrayList<ItemType>();
+			List<MaterialBrand> mBrands = new ArrayList<MaterialBrand>();
+			List<MaterialMeasurement> mMeasures = new ArrayList<MaterialMeasurement>();
+			List<MaterialColor> mColors = new ArrayList<MaterialColor>();
+			MaterialClass mClass = null;
+			ItemType itemType = null;
+			MaterialBrand mBrand = null;
+			MaterialMeasurement mMeasure = null;
+			MaterialColor mColor = null;
 			
-			
-			for (CmUnspsc cmUnspsc : cmUnspscList) {
-				mClass = new MaterialClass();
-				mClass.setMaterialClassCode(cmUnspsc.getUnspscParentCode().trim());
-				mClass.setMaterialClassAction(utility.checkAction(cmUnspsc.getCreatedDate(), cmUnspsc.getChangedDate()).trim());
-				mClass.setMaterialOldClassCode(IntegrationConstants.EMPTY_TRING);
-				mClass.setMaterialClassDescription(cmUnspsc.getUnspscTitle().trim());
+			for(CmSupplierItem cmSupplierItem:resDTO.getCmSupplierItemsList()){
 				
-				if(cmUnspsc.getUnspscParentCode()==null){
-					mClass.setMaterialClassDescription(cmUnspsc.getUnspscDescription().trim());
-				}else{
-						for(int i= cmUnspsc.getUnspscLevel()+1;i>0;i--){
-							if(cmUnspsc.getUnspscParentCode()!=null){
-							cmUnspsc = codificationSO.retrieveCmUnspscByUnspscCode(cmUnspsc.getUnspscParentCode());
-							if(null!=cmUnspsc.getUnspscDescription()){
-							mClass.setMaterialClassDescription(cmUnspsc.getUnspscDescription().trim());
+				cmItem = cmSupplierItem.getCmItem();
+				
+				if (null!= cmItem.getCmUnspsc()) {
+					mClass = new MaterialClass();
+					mClass.setMaterialClassCode(cmItem.getCmUnspsc().getUnspscParentCode().trim());
+					mClass.setMaterialClassAction(utility.checkAction(cmItem.getCmUnspsc().getCreatedDate(), cmItem.getCmUnspsc().getChangedDate()).trim());
+					mClass.setMaterialOldClassCode(IntegrationConstants.EMPTY_TRING);
+					mClass.setMaterialClassDescription(cmItem.getCmUnspsc().getUnspscTitle().trim());
+					
+					if(cmItem.getCmUnspsc().getUnspscParentCode()==null){
+						mClass.setMaterialClassDescription(cmItem.getCmUnspsc().getUnspscDescription().trim());
+					}else{
+						CmUnspsc unspsc = null;
+						for(int i= cmItem.getCmUnspsc().getUnspscLevel()+1;i>0;i--){
+							if(cmItem.getCmUnspsc().getUnspscParentCode()!=null){
+								unspsc = codificationSO.retrieveCmUnspscByUnspscCode(cmItem.getCmUnspsc().getUnspscParentCode());
+								if(null!=unspsc.getUnspscDescription()){
+								mClass.setMaterialClassDescription(unspsc.getUnspscDescription().trim());
+								}
+								}
 							}
-							}
-						}
+					}
+					if(!mClasses.contains(mClass)){
+						mClasses.add(mClass);
+					}
 				}
-				if(!mClasses.contains(mClass)){
-					mClasses.add(mClass);
+				
+				if (null!= cmItem.getCmType()) {
+					itemType = new ItemType();
+					itemType.setUnspscCode(cmItem.getCmUnspsc().getUnspscCode().trim());
+					itemType.setItemCode(cmItem.getCmType().getTypeCode().trim());
+					itemType.setItemDescription(cmItem.getCmType().getTypeName().trim());
+					itemType.setItemAction(utility.checkAction(cmItem.getCmType().getCreatedDate(),cmItem.getCmType().getChangedDate()).trim());
+					itemType.setItemOldcode(IntegrationConstants.EMPTY_TRING);
+					if(!itemTypes.contains(itemType)){
+						itemTypes.add(itemType);
+					}
+				}
+				
+				if (null!= cmItem.getCmBrand()) {
+					mBrand = new MaterialBrand();
+					mBrand.setUnspscCode(cmItem.getCmUnspsc().getUnspscCode().trim());
+					mBrand.setMaterialBrandCode(cmItem.getCmBrand().getBrandCode().trim());
+					mBrand.setMaterialBrandDescription(cmItem.getCmBrand().getBrandName().trim());
+					mBrand.setMaterialBrandAction(utility.checkAction(
+							cmItem.getCmBrand().getCreatedDate(), cmItem.getCmBrand().getChangedDate()).trim());
+					mBrand.setMaterialOldBrandCode(IntegrationConstants.EMPTY_TRING);
+					if(!mBrands.contains(mBrand)){
+						mBrands.add(mBrand);
+					}
+				}
+				
+				if (null!= cmItem.getCmMeasurement()) {
+					mMeasure = new MaterialMeasurement();
+					mMeasure.setUnspscCode(cmItem.getCmUnspsc().getUnspscCode().trim());
+					mMeasure.setMeasurementCode(cmItem.getCmMeasurement().getMeasurementCode().trim());
+					mMeasure.setMeasurementDescription(cmItem.getCmMeasurement()
+							.getMeasurementName().trim());
+					mMeasure.setMeasurementAction(utility.checkAction(
+							cmItem.getCmMeasurement().getCreatedDate(), cmItem.getCmMeasurement().getChangedDate()).trim());
+					mMeasure.setMeasurementOldCode(IntegrationConstants.EMPTY_TRING);
+					if(!mMeasures.contains(mMeasure)){
+						mMeasures.add(mMeasure);
+					}
+				}
+				
+				if (null!= cmItem.getCmColor()) {
+					mColor = new MaterialColor();
+					mColor.setMaterialColorCode(cmItem.getCmColor().getColorCode().trim());
+					mColor.setMaterialColorDescription(cmItem.getCmColor().getColorName().trim());
+					mColor.setMaterialColorAction(utility.checkAction(
+							cmItem.getCmColor().getCreatedDate(), cmItem.getCmColor().getChangedDate()).trim());
+					mColor.setMaterialOldColorCode(IntegrationConstants.EMPTY_TRING);
+					if(!mColors.contains(mColor)){
+						mColors.add(mColor);
+					}
 				}
 			}
-			BatchReqDTO<MaterialClass> classBatchReqDTO = new BatchReqDTO<MaterialClass>();
-			classBatchReqDTO.setFilePath(filePath);
-			classBatchReqDTO.setBatchContent(mClasses);
-			classBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
-			classBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
 			
-			BatchReqDTO<MaterialBrand> brandBatchReqDTO = new BatchReqDTO<MaterialBrand>();
-			brandBatchReqDTO.setFilePath(filePath);
-			brandBatchReqDTO.setBatchContent(mBrands);
-			brandBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
-			brandBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			if(mClasses.size()>0){
+				BatchReqDTO<MaterialClass> classBatchReqDTO = new BatchReqDTO<MaterialClass>();
+				classBatchReqDTO.setFilePath(filePath);
+				classBatchReqDTO.setBatchContent(mClasses);
+				classBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+				classBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+				
+				utility.materialClassFileOutPutStream(classBatchReqDTO);
+			}
 			
-			BatchReqDTO<MaterialMeasurement> measureBatchReqDTO = new BatchReqDTO<MaterialMeasurement>();
-			measureBatchReqDTO.setFilePath(filePath);
-			measureBatchReqDTO.setBatchContent(mMeasures);
-			measureBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
-			measureBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			if(mBrands.size()>0){
+				BatchReqDTO<MaterialBrand> brandBatchReqDTO = new BatchReqDTO<MaterialBrand>();
+				brandBatchReqDTO.setFilePath(filePath);
+				brandBatchReqDTO.setBatchContent(mBrands);
+				brandBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+				brandBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+				
+				utility.materialBrandFileOutPutStream(brandBatchReqDTO);
+			}
 			
-			BatchReqDTO<MaterialColor> colorBatchReqDTO = new BatchReqDTO<MaterialColor>();
-			colorBatchReqDTO.setFilePath(filePath);
-			colorBatchReqDTO.setBatchContent(mColors);
-			colorBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
-			colorBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			if(mMeasures.size()>0){
+				BatchReqDTO<MaterialMeasurement> measureBatchReqDTO = new BatchReqDTO<MaterialMeasurement>();
+				measureBatchReqDTO.setFilePath(filePath);
+				measureBatchReqDTO.setBatchContent(mMeasures);
+				measureBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+				measureBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+				
+				utility.materialMeasurementFileOutPutStream(measureBatchReqDTO);
+			}
 			
-			BatchReqDTO<ItemType> itemBatchReqDTO = new BatchReqDTO<ItemType>();
-			itemBatchReqDTO.setFilePath(filePath);
-			itemBatchReqDTO.setBatchContent(itemTypes);
-			itemBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
-			itemBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			if(mColors.size()>0){
+				
+				BatchReqDTO<MaterialColor> colorBatchReqDTO = new BatchReqDTO<MaterialColor>();
+				colorBatchReqDTO.setFilePath(filePath);
+				colorBatchReqDTO.setBatchContent(mColors);
+				colorBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+				colorBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+				
+				utility.materialColorFileOutPutStream(colorBatchReqDTO);
+				
+			}
 			
-			utility.createPhisFileInLocal(itemBatchReqDTO, colorBatchReqDTO, measureBatchReqDTO, brandBatchReqDTO, classBatchReqDTO);
-			
-			// calling method to save data in files
-//			utility.createPhisFileInLocal(itemTypes, mColors, mMeasures,mBrands,mClasses, filePath);
+			if(itemTypes.size()>0){
+				BatchReqDTO<ItemType> itemBatchReqDTO = new BatchReqDTO<ItemType>();
+				itemBatchReqDTO.setFilePath(filePath);
+				itemBatchReqDTO.setBatchContent(itemTypes);
+				itemBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+				itemBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+				
+				utility.itemTypeFileOutPutStream(itemBatchReqDTO);
+			}
 			
 		}else{
 			log.info("createFilesforPHIS : Records not available.");
@@ -426,9 +449,6 @@ public class PhisIntegration {
 			batchReqDTO.setBatchContent(votFundList);
 			utility.votFundFileOutPutStream(batchReqDTO);
 			
-			// calling method to save data in files
-//			utility.votFundFileOutPutStream(votFundList, filePath);
-			
 		}else{
 			log.info("votFund : Records not available....");
 			BatchReqDTO batchReqDTO = new BatchReqDTO();
@@ -539,9 +559,6 @@ public class PhisIntegration {
 			batchReqDTO.setBatchContent(votFundList);
 			utility.votFundDanaFileOutPutStream(batchReqDTO);
 			
-			// calling method to save data in files
-//			utility.votFundDanaFileOutPutStream(votFundList, filePath);
-			
 		}else{
 			log.info("votFundDana : Records not available....");
 			BatchReqDTO batchReqDTO = new BatchReqDTO();
@@ -598,9 +615,6 @@ public class PhisIntegration {
 			batchReqDTO.setDataEndTime(resDTO.getDataEndTime());
 			batchReqDTO.setBatchContent(prgActList);
 			utility.programActivityFileOutPutStream(batchReqDTO);
-			
-    		// calling method to save data in files
-//    		utility.programActivityFileOutPutStream(prgActList, filePath);
         	
         }else{
 			log.info("programActivity : Records not available....");
@@ -723,9 +737,6 @@ public class PhisIntegration {
 			batchReqDTO.setBatchContent(glAccountList);
 			utility.glAccountFileOutPutStream(batchReqDTO);
 			
-			// calling method to save data in files
-//			utility.glAccountFileOutPutStream(glAccountList, filePath);
-			
 		}else{
 			log.info("glAccount : Records not available....");
 			BatchReqDTO batchReqDTO = new BatchReqDTO();
@@ -759,13 +770,13 @@ public class PhisIntegration {
 			my.ep.web.integration.phis.masterdatamateriainfo.RqHeader_Type rqHeader_Type = new my.ep.web.integration.phis.masterdatamateriainfo.RqHeader_Type();
 			
 			rqHeader_Type.setConsumerID(IntegrationConstants.CONSUMER_ID);
-			rqHeader_Type.setIpAddress(IntegrationConstants.SERVICE_HOST);
-			rqHeader_Type.setOrgUnit("PHS-020");
-			rqHeader_Type.setSegment(IntegrationConstants.SEQUENCE_NO);
+//			rqHeader_Type.setIpAddress(IntegrationConstants.SERVICE_HOST);
+//			rqHeader_Type.setOrgUnit("PHS-020");
+//			rqHeader_Type.setSegment(IntegrationConstants.SEQUENCE_NO);
 			
 			my.ep.web.integration.phis.masterdatamateriainfo.RqUID_Type rqUID_Type = new my.ep.web.integration.phis.masterdatamateriainfo.RqUID_Type();
-			rqUID_Type.setAsyncRqUID("PHS-020");
-			rqUID_Type.setRqUID(IntegrationConstants.SEQUENCE_NO);
+//			rqUID_Type.setAsyncRqUID("PHS-020");
+			rqUID_Type.setRqUID(UUID.randomUUID().toString());
 		
 			rqHeader_Type.setUID(rqUID_Type);
 		
@@ -805,6 +816,59 @@ public class PhisIntegration {
 		}
 	}
 	
+	//Payment effect Notification
+	
+	public void paymentEffectNotification(){
+		
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		
+		Date fromDate = null,toDate = null;
+		Calendar c1 = Calendar.getInstance();
+		c1.setTime(new Date());
+		
+		Calendar fromCalender = Calendar.getInstance();
+		fromCalender.set(c1.get(Calendar.YEAR), c1.get(Calendar.MONTH),
+				c1.get(Calendar.DAY_OF_MONTH), c1.get(Calendar.HOUR_OF_DAY)-1, 0, 0);
+		fromCalender.set(Calendar.MILLISECOND, 000);
+		fromDate = fromCalender.getTime();
+		
+		Calendar toCalender = Calendar.getInstance();
+		toCalender.set(c1.get(Calendar.YEAR), c1.get(Calendar.MONTH),
+				c1.get(Calendar.DAY_OF_MONTH), c1.get(Calendar.HOUR_OF_DAY), 0, 0);
+		toCalender.set(Calendar.MILLISECOND, 000);
+		toDate = toCalender.getTime();
+			
+		reqDTO.setFromDate(fromDate);
+		reqDTO.setToDate(toDate);
+		System.out.println(reqDTO.getFromDate());
+		System.out.println(reqDTO.getToDate());
+		List<FulfilmentResDTO> resDTOs = paymentSO.retrievePHISPaymentInfo(reqDTO);
+		List<PaymentEffNotify> effNotifies = new ArrayList<PaymentEffNotify>();
+		PaymentEffNotify paymentEffNotify = null;
+		
+		for(FulfilmentResDTO resDTO : resDTOs) {
+			paymentEffNotify = new PaymentEffNotify();
+			paymentEffNotify.setContractOrderNo(resDTO.getOrderNo());
+			paymentEffNotify.setPaymenyReferenceNo(resDTO.getPaymentAdviceNo());
+			paymentEffNotify.setInvoiceNo(resDTO.getInvoiceNo());
+			paymentEffNotify.setInvoiceRefNo(resDTO.getSupplierInvoiceNo());
+			paymentEffNotify.setAmountPaid(resDTO.getPaymentAmt());
+			paymentEffNotify.setPaymentDate(resDTO.getPaymentDate());
+			
+			if(effNotifies.contains(paymentEffNotify))
+				effNotifies.add(paymentEffNotify);
+		}
+		
+		BatchReqDTO<PaymentEffNotify> batchReqDTO = new BatchReqDTO<PaymentEffNotify>();
+		batchReqDTO.setFilePath(filePath);
+//		batchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+//		batchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+		batchReqDTO.setBatchContent(effNotifies);
+		utility.paymentEffNootifyOutPutStream(batchReqDTO);
+	}
+	
+	
+	
 	public String getStatusCode(int status){
 		
 		String recordStatus = null;
@@ -820,13 +884,9 @@ public class PhisIntegration {
 	private void insertRecordforEmptyData(BatchReqDTO reqDTO){
 		
 		reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
-		reqDTO.setDataStartTime(reqDTO.getDataStartTime());
-		reqDTO.setDataEndTime(reqDTO.getDataEndTime());
 		reqDTO.setFileCreationStatus(IntegrationConstants.FILE_CREATION_FAIL);
 		reqDTO.setFileFTPStatus(IntegrationConstants.FTP_STATUS_FAIL);
 		reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_PHIS);
-		reqDTO.setServiceCode(reqDTO.getServiceCode());
-		reqDTO.setProcessId(reqDTO.getProcessId());
 		reqDTO.setFileName(IntegrationConstants.VAVLUE_NA);
 		
 		utility.setValuesToPmInterface(reqDTO);
