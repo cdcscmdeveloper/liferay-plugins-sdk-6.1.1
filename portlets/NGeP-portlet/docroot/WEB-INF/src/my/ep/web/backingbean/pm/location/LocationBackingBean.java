@@ -405,6 +405,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 					.getDistrict().getPmState().setStateId(resDTO.getPmDistrict().getPmState().getStateId());			
 
 			if (resDTO.getPmDistrict().getPmDivision() != null) {
+				getManagedBean().setDivisions(getDivisionList(resDTO.getPmDistrict().getPmState().getStateId()));	
 				getManagedBean()
 						.getDistrict()
 						.getPmDivision()
