@@ -162,7 +162,11 @@
 							</h:outputText>
 						</h:panelGroup>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.delivery.amount']}" style="white-space:normal;text-align:right;">
+					<p:column style="white-space:normal;text-align:right;">
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.fl.delivery.amount']}" />
+							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.del.amt']}" />
+						</f:facet>
 						<h:panelGroup id="delAmountTxt">
 							<h:outputText value="#{doItems.deliveredAmt}" disabled="true" 
 								rendered="#{doItems.itemType.parameterCode eq ParameterConst.itemTypeProduct}">
