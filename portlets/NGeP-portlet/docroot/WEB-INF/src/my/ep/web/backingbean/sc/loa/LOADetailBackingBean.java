@@ -526,21 +526,21 @@ public class LOADetailBackingBean extends
 		
 		if(scQtSchedule.getStartYear() == null || scQtSchedule.getStartYear().isEmpty()){
 			throw new EpException(MessageConst.ERROR_721110, new String[] {ResourceBundleUtils.getMessage("lbl.sc.start.year",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ""});
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
 		}
 		if(scQtSchedule.getStartMonth() == null || scQtSchedule.getStartMonth().isEmpty()){
 			throw new EpException(MessageConst.ERROR_721110, new String[] {ResourceBundleUtils.getMessage("lbl.sc.start.month",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ""});
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
 		}
 		if(scQtSchedule.getEndYear() == null || scQtSchedule.getEndYear().isEmpty()){
 			throw new EpException(MessageConst.ERROR_721110, new String[] {ResourceBundleUtils.getMessage("lbl.sc.end.year",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ""});
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
 		}
 		if(scQtSchedule.getEndMonth() == null || scQtSchedule.getEndMonth().isEmpty()){
 			throw new EpException(MessageConst.ERROR_721110, new String[] {ResourceBundleUtils.getMessage("lbl.sc.end.month",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ""});
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
 		}
-		
+
 		ScLoa loa = 	getManagedBean().getScLoa();
 		Calendar expDate = Calendar.getInstance();
 		expDate.setTime(loa.getContractExpDate());
@@ -2394,6 +2394,10 @@ public class LOADetailBackingBean extends
 					updateSpkiDigiSignData(digiSign, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
 							scLoa.getLoaId(), scLoa.getLoaNo(), originalText);
 				}
+				
+              // Insert reports when supplier accept Loa
+				parseReports(scLoa);
+				
 			} else{
 				// gpki
 				if (null != digiSign) {
@@ -2462,6 +2466,60 @@ public class LOADetailBackingBean extends
 		
 		return resDTO;
 	}
+	
+	/**
+	 * Parses the reports.
+	 * Insert reports when supplier accept Loa
+	 * @param scLoa the sc loa
+	 */
+	private void parseReports(ScLoa scLoa){
+		List<ScLoaReport> scLoaReports = scLoa.getScLoaReports();
+
+		for (ScLoaReport scLoaReport : scLoaReports) {
+			ScLoaReportAttachment scLoaReportAttachment = scLoaReport
+					.getScLoaReportAttachment();
+			scLoaReportAttachment = saveReports(scLoaReport);
+
+			if (scLoaReportAttachment != null
+					&& StringUtils.isNotBlank(scLoaReportAttachment.getFileName())) {
+				scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
+			}
+		}    
+	}
+
+	/**
+	 * Save reports.
+	 *
+	 * @param scLoaReport the sc loa report
+	 * @return the sc loa report attachment
+	 */
+	private ScLoaReportAttachment saveReports(ScLoaReport scLoaReport) {
+		ScLoaReportAttachment scLoaReportAttachment = scLoaReport
+				.getScLoaReportAttachment();
+		String definitionType = scLoaReport.getDefinationType()
+				.getParameterCode();
+		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
+				.equals(definitionType)) {
+			try {
+				StringBuilder filename = new StringBuilder();
+				//replace white space due to firefox 
+				filename.append(scLoaReport.getTitle().replaceAll("\\s",""));
+
+				if (scLoaReportAttachment == null) {
+					scLoaReportAttachment = new ScLoaReportAttachment();
+					scLoaReportAttachment.setScLoaReport(scLoaReport);
+					scLoaReportAttachment.setDocNo(scLoaReport.getScLoa()
+							.getLoaNo());
+					scLoaReportAttachment.setFileName(filename.toString());
+				}
+				populateAttachmentDetails(scLoaReportAttachment);
+			} catch (Exception e) {
+				//e.printStackTrace();
+			}
+		}
+		return scLoaReportAttachment;	
+	}
+
 	
 	/**
 	 * Update bpm task action.
