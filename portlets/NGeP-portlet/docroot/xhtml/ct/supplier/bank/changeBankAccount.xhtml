@@ -264,16 +264,19 @@
 				
 				 <p:outputLabel value="#{lbl['lbl.ct.supplier.gst.reg']}"/> 
                     <p:inputText disabled="true" style="width:200px;margin-bottom: 5px;"  
-                                     value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.gstRegNo}" />
+                                     value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.gstRegNo == null ? lbl['lbl.ct.value.na'] : supplierBackingBean.managedBean.contractVer.ctContractValue.gstRegNo}" />
             
             	<p:outputLabel value="#{lbl['lbl.ct.business.name']}" />
 				<p:inputText disabled="true" style="width:350px;"
 					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierName}" />
 					 <p:outputLabel value="#{lbl['lbl.ct.supplier.gst.eff.date']}" />
                       <p:inputText disabled="true" style="width:200px;margin-bottom: 5px;"  
-                         value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.gstEffDate}">
+                           rendered="#{supplierBackingBean.managedBean.contractVer.ctContractValue.gstEffDate != null}"
+                         value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.gstEffDate}">
                            <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
                          </p:inputText>
+				     <p:inputText disabled="true" style="width:100px;margin-bottom: 5px;"  value="#{lbl['lbl.ct.value.na']}" 
+                          rendered="#{supplierBackingBean.managedBean.contractVer.ctContractValue.gstEffDate == null}"/> 
 				
 				<p:outputLabel value="#{lbl['lbl.ct.branch.name']}" />
 				<h:panelGrid columns="3">
@@ -285,9 +288,13 @@
 				
 				  <p:outputLabel  value="#{lbl['lbl.ct.supplier.ep.date']}"/>  
                    <p:inputText disabled="true" style="width:200px;margin-bottom: 5px;"  
-                       value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.gstDeclaredDate}" > 
+                        rendered="#{supplierBackingBean.managedBean.contractVer.ctContractValue.gstDeclaredDate != null}"
+                       value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.gstDeclaredDate}" > 
                        <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
                        </p:inputText> 
+                       
+                       <p:inputText disabled="true" style="width:100px;margin-bottom: 5px;"  value="#{lbl['lbl.ct.value.na']}" 
+                          rendered="#{supplierBackingBean.managedBean.contractVer.ctContractValue.gstDeclaredDate == null}"/> 
 				
 				<p:outputLabel value="#{lbl['lbl.ct.contact.person']}" />
 				<p:inputText disabled="true" style="width:250px;"
