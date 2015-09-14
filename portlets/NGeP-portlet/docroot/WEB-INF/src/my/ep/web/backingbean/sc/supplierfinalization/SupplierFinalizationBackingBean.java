@@ -3855,6 +3855,14 @@ public class SupplierFinalizationBackingBean extends
 					.retrieveBordOfDirectors(reqDTO);
 			if (resDTO.isSuccessful()) {
 				boardofDirectors = resDTO.getSmPersonnelList();
+				if (CollectionUtils.isNotEmpty(boardofDirectors)) {
+					for (SmPersonnel smPersonnel : boardofDirectors) {
+						SmMofAccount smMofAccount = retriveMofAccountBySupplier(
+								smPersonnel.getSmAppl().getSmSupplier());
+						smPersonnel.getSmAppl().getSmSupplier()
+								   .setSmMofAccount(smMofAccount);
+					}
+				}
 			}
 		} finally {
 			personnelSO = null;
