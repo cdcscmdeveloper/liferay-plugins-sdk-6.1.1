@@ -12,7 +12,7 @@
 			<tr>
 				<td width="21%"><p:outputLabel value="#{lbl['lbl.sc.mof.no']}" />
 				</td>
-				<td colspan="3"><ac:lov id="supplierMofNo"
+				<td colspan="3"><ac:lov id="supplierMofNo" disabled="#{!isEditableStatus}"
 						lovId="SM_SUPPLIER_MOFNO"
 						postUpdateListener="directLOABackingBean.mofNoListener(directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier.smMofAccount)"
 						headerText="Supplier MOF No Lov" selectionMode="single"
@@ -23,7 +23,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" /></td>
-				<td colspan="3"><ac:lov id="supplierId" lovId="SM_SUPPLIER"
+				<td colspan="3"><ac:lov id="supplierId" lovId="SM_SUPPLIER" disabled="#{!isEditableStatus}"
 						postUpdateListener="directLOABackingBean.supplierListener(directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier)"
 						headerText="Supplier Lov" selectionMode="single"
 						saveObject="directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier"
@@ -156,7 +156,7 @@
 
 
 				<td><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
-				<td colspan="3"><ac:lov id="ptjProfile" lovId="PM_ORG_PROFILE"
+				<td colspan="3"><ac:lov id="ptjProfile" lovId="PM_ORG_PROFILE" disabled="#{!isEditableStatus}"
 						headerText="Supplier Lov" selectionMode="single"
 						saveObject="directLOABackingBean.managedBean.scQt.pmOrgProfile"
 						readonly="true" size="44"
