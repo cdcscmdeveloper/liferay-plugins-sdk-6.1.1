@@ -11,6 +11,11 @@
 	<script> $('#portlet_ctContractMaintenance_WAR_NGePportlet').find('.portlet-title-text').html('#{contractDetailsBackingBean.getPortletTitle()}'); </script>
     <style>
       .column-align-center { text-align: center !important;}
+     .ui-menu.ui-menu-dynamic.ui-widget.ui-widget-content.ui-corner-all.ui-helper-clearfix.ui-shadow{  
+              width:250px;
+}   
+       
+       
     </style>
    
     <p:blockUI block=":form" trigger="searchButtonId" widgetVar="blkContractSearchTable">
@@ -129,59 +134,62 @@
 						<h:outputText value="#{contractDetailsBackingBean.getStatusDescById(data.ctContractVer.status.statusId)}" />
 					</p:column>
 					 	<p:column headerText="#{lbl['lbl.ct.action']}"  style="width:12%; white-space:normal;" rendered="#{!contractDetailsBackingBean.isSupplierRole()}">
-					 	<h:panelGroup rendered="#{contractDetailsBackingBean.isContractAdmin()
-					 		and data.fdStatus == 1 and data.ctContract.recordStatusFlg==1}" >
-						 	<p:commandLink
-								onclick="gotoSuspendPage([{name:'contractId',value:'#{data.ctContract.contractId}'}])"
-								onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
-								<p:graphicImage value="/css/images/design/ico-suspend.png" title="#{lbl['lbl.ct.suspend.contract']}" />
-							</p:commandLink>
-						   	<p:spacer width="5" />
-						  	<p:commandLink
-								onclick="gotoTerminatePage([{name:'contractId',value:'#{data.ctContract.contractId}'}])"
-								onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
-								<p:graphicImage value="/css/images/design/ico-termination.png" title="#{lbl['lbl.ct.termination']}" />
-							</p:commandLink>
-						   	<p:spacer width="5" rendered="#{data.ctContract.procurementMode.parameterCode!=ParameterConst.procurementModeDirectPurchase and contractDetailsBackingBean.checkAmendmentAllow(data)}" />
-						   	<p:commandLink rendered="#{data.ctContract.procurementMode.parameterCode!=ParameterConst.procurementModeDirectPurchase and contractDetailsBackingBean.checkAmendmentAllow(data)}"
-								onclick="gotoAmendPage([{name:'contractId',value:'#{data.ctContract.contractId}'}, {name:'action',value:'update'}])"
-								onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
-								<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.amendment']}" />
-							</p:commandLink>
-							<p:spacer width="5" />
-						   	<p:commandLink
-								onclick="gotoUpdatePage([{name:'contractId',value:'#{data.ctContract.contractId}'}])"
-								onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
-								<p:graphicImage value="/css/images/design/ico-edit.png" title="#{lbl['lbl.ct.contract.update']}" />
-							</p:commandLink>
-							<p:spacer width="5" />
-						</h:panelGroup>
-					   	<p:commandLink onclick="gotoViewPage([{name:'contractId',value:'#{data.ctContract.contractId}'}, {name:'contractVerId',value:'#{data.ctContractVer.contractVerId}'}])"
-					   		onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
-							<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.ct.view']}" />
-						</p:commandLink>
-						<p:spacer width="5" rendered="#{data.terminate or data.mutualTerminate or data.remedy}" />
-					   	<p:commandLink rendered="#{data.terminate or data.mutualTerminate or data.remedy}"
-							onclick="gotoTerminateHistoryPage([{name:'contractId',value:'#{data.ctContract.contractId}'}])"
-							onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
-							<p:graphicImage value="/css/images/design/ico-termination-history.png" title="#{lbl['lbl.ct.view.termination.history']}" />
-						</p:commandLink>
+					 	 	
+					 	 	 	<p:menuButton id="menuButtonId" value="#{lbl['lbl.btn.option']}" >
+                                 <p:menuitem id="menuItemId" value="#{lbl['lbl.ct.suspend.contract']}"   icon="ui-icon-suspension"
+                                      rendered="#{contractDetailsBackingBean.isContractAdmin()
+					 		          and data.fdStatus == 1 and data.ctContract.recordStatusFlg==1}"  
+					 		          action="#{contractDetailsBackingBean.gotoSuspendPage(data.ctContract.contractId)}" 
+                                      onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()"></p:menuitem>
+					 		          
+					 		   <p:menuitem id="menuItemId1" value="#{lbl['lbl.ct.termination']}"  icon="ui-icon-termination"
+					 		         rendered="#{contractDetailsBackingBean.isContractAdmin() 
+					 		         and data.fdStatus == 1 and data.ctContract.recordStatusFlg==1}"  
+                             	    action="#{contractDetailsBackingBean.gotoTerminatePage(data.ctContract.contractId)}"
+								     onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+							   </p:menuitem>
+								        
+							  <p:menuitem id="menuItemId2" value="#{lbl['lbl.ct.amendment']}" icon="ui-icon-amendment" 
+							        rendered="#{contractDetailsBackingBean.isContractAdmin() and data.fdStatus == 1 and data.ctContract.recordStatusFlg ==1 and
+					 		             data.ctContract.procurementMode.parameterCode!=ParameterConst.procurementModeDirectPurchase 
+                             	        and contractDetailsBackingBean.checkAmendmentAllow(data)}" 
+								    action="#{contractDetailsBackingBean.gotoAmendPage(data.ctContract.contractId, 'update')}"
+								    onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+							  </p:menuitem>
+					 		 
+					 		<p:menuitem id="menuItemId3" value="#{lbl['lbl.ct.contract.update']}"  icon="ui-icon-update" 
+					 		      rendered="#{contractDetailsBackingBean.isContractAdmin() and data.fdStatus == 1 and data.ctContract.recordStatusFlg==1}"  
+                             	  action="#{contractDetailsBackingBean.gotoUpdatePage(data.ctContract.contractId)}"
+								  onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+					        </p:menuitem>
+							
+							 <p:menuitem id="menuItemId4" value="#{lbl['lbl.ct.view']}"  icon="ui-icon-view"
+						        action="#{contractDetailsBackingBean.gotoViewPage(data.ctContract.contractId, data.ctContractVer.contractVerId)}"
+					   	    	onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+					   	   </p:menuitem>
+				
+					   	 <p:menuitem id="menuItemId5" value="#{lbl['lbl.ct.view.termination.history']}"  
+					   	     icon="ui-icon-termination-history" 
+                             rendered="#{data.terminate or data.mutualTerminate or data.remedy}" 
+                             action="#{contractDetailsBackingBean.gotoTerminateHistoryPage(data.ctContract.contractId)}"
+							 onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+					     </p:menuitem>
+					   		          
+                       </p:menuButton>
 					</p:column>
 					<!-- Supplier's action -->
-					<p:column headerText="#{lbl['lbl.ct.action']}"  style="width:12%; white-space:normal;" rendered="#{contractDetailsBackingBean.isSupplierRole()}">
-						<p:commandLink action="#{contractDetailsBackingBean.gotoCommonViewPage(data.ctContract.contractId)}"
+					<p:column headerText="#{lbl['lbl.ct.action']}"  style="width:12%; 
+					    white-space:normal;" rendered="#{contractDetailsBackingBean.isSupplierRole()}">
+					    <p:menuButton id="menuButtonId11" value="#{lbl['lbl.btn.option']}" >
+					     <p:menuitem id="menuItemId11" value="#{lbl['lbl.ct.view']}"  
+					   	     icon="ui-icon-supplier-view" 
+                            action="#{contractDetailsBackingBean.gotoCommonViewPage(data.ctContract.contractId)}"
 					   		onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
-							<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.ct.view']}" />
-						</p:commandLink>
-					</p:column>
+					     </p:menuitem>
+					</p:menuButton>
+						</p:column>
 				</p:dataTable>			
 				 	
-				<p:remoteCommand name="gotoSuspendPage" action="#{contractDetailsBackingBean.gotoSuspendPage}" />
-				<p:remoteCommand name="gotoTerminatePage" action="#{contractDetailsBackingBean.gotoTerminatePage}" />
-				<p:remoteCommand name="gotoAmendPage" action="#{contractDetailsBackingBean.gotoAmendPage}" />
-				<p:remoteCommand name="gotoUpdatePage" action="#{contractDetailsBackingBean.gotoUpdatePage}" />
-				<p:remoteCommand name="gotoViewPage" action="#{contractDetailsBackingBean.gotoViewPage}" />
-				<p:remoteCommand name="gotoTerminateHistoryPage" action="#{contractDetailsBackingBean.gotoTerminateHistoryPage}" />
 			</div>
 		</p:panel>
 	</ui:define>
