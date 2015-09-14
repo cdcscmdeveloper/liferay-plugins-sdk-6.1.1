@@ -1601,10 +1601,6 @@ public class SmApplicationBackingBean extends
 					break;
 				}
 
-				// to init page whether normal or special category type is
-				// allowed
-				initApplCategoryType();
-
 				// init business premise whether show or hide home office
 				initBusinessPremise();
 
