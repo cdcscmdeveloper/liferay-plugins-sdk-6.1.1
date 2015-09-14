@@ -786,7 +786,7 @@ public class SmFieldChangeUtil {
 			if (currBranch.getBranchCode() != null
 					&& latestBranch.getBranchCode() != null
 					&& currBranch.getBranchCode().compareTo(
-							latestBranch.getBranchCode()) != 0) {
+							latestBranch.getBranchCode()) == 0) {
 				retVal = true;
 				break;
 			}
@@ -1022,7 +1022,7 @@ public class SmFieldChangeUtil {
 			String identificationNo, String accNo,
 			List<SmChequeSignatory> signList) {
 		SmChequeSignatory retVal = null;
-		if (SmCommonUtil.isCollectionEmpty(signList)) {
+		if (!SmCommonUtil.isCollectionEmpty(signList)) {
 			for (SmChequeSignatory latestSign : signList) {
 				if (latestSign.getSmPersonnel() != null
 						&& latestSign.getSmPersonnel().getIdentificationNo()
