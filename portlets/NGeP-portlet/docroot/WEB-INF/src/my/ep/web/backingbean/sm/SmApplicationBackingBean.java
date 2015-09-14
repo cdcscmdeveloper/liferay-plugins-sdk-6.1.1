@@ -867,7 +867,8 @@ public class SmApplicationBackingBean extends
 						ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 					fac.setFacilityType("H");
 				}
-				fac.setSmAddress(new SmAddress());
+				fac.setSmAddress(SmApplicationUtil
+						.setDefaultAddr(getManagedBean().getDefPmCountry()));
 				SmApplicationUtil
 						.resetToDefaultEntityValues(fac.getSmAddress());
 				SmApplicationUtil.resetSmAddressChildLists(fac.getSmAddress());
@@ -8202,7 +8203,8 @@ public class SmApplicationBackingBean extends
 									SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
 				if (smFac.getSmAddress() == null
 						|| smFac.getSmAddress().getAddressId() == null) {
-					smFac.setSmAddress(new SmAddress());
+					smFac.setSmAddress(SmApplicationUtil
+							.setDefaultAddr(getManagedBean().getDefPmCountry()));
 					SmApplicationUtil.resetToDefaultEntityValues(smFac
 							.getSmAddress());
 					SmApplicationUtil.resetSmAddressChildLists(smFac
