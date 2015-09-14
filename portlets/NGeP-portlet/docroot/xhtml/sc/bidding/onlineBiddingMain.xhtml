@@ -151,6 +151,13 @@
 				</p:column>
 				<p:column
 					rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidInProgress}">
+					
+					<!-- <ac:spinner value="#{bidPriceItem.newPrice}" minValue="0"
+						maxlength="10" size="10"
+						methodExpression="onlineBiddingBB.decrementAmountValueChangeListener"
+						stepFactor="bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt"
+						valueHolder="bidPriceItem" editableValueHolder="bidPriceItem" /> -->
+					
 					<p:spinner style="width : 88%" size="8" styleClass="updateSpinner"
 						value="#{bidPriceItem.newPrice}" min="0" id="spinner"
 						label="New Bid Price"

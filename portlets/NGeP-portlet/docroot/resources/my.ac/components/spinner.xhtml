@@ -1,0 +1,60 @@
+<ui:composition xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:p="http://primefaces.org/ui">
+
+	<cc:interface>
+		<cc:attribute name="spinnerId" default="null" />
+		<cc:attribute name="value" default="null" />
+		<cc:attribute name="minValue" default="null" />
+		<cc:attribute name="maxValue" default="null" />
+		<cc:attribute name="stepFactor" default="1" />
+		<cc:attribute name="rendered" default="true" />
+		<cc:attribute name="disabled" default="false" />
+		<cc:attribute name="maxlength" default="null" />
+		// advisory tooltip information
+		<cc:attribute name="title" default="null" />
+		<cc:attribute name="size" default="null" />
+		<cc:attribute name="style" default="null" />
+		<cc:attribute name="readonly" default="false" />
+		<cc:attribute name="listener" default="null" />
+		<cc:attribute name="methodExpression" default="null" />
+		<cc:editableValueHolder name="editableValueHolder"  />
+		<cc:valueHolder name="valueHolder"  />
+	</cc:interface>
+
+	<cc:implementation>
+
+		<h:panelGroup id="spinnerPanel" rendered="#{cc.attrs.rendered}">
+			<table border="0" cellspacing="0" cellpadding="0" width="100%">
+				<tr>
+					<td width="90%" rowspan="2"><p:inputText size="#{cc.attrs.size}" maxlength="#{cc.attrs.maxlength}"
+							id="${cc.attrs.spinnerId}" disabled="#{cc.attrs.disabled}" title="#{cc.attrs.title}" 
+							value="#{cc.attrs.value}" readonly="#{cc.attrs.readonly}" >
+							<cc:insertChildren />
+						</p:inputText>
+						</td>
+					<TD width="10%"><p:commandLink id="spinUp"
+							action="#{spinnerBackingBean.incrementValue(cc.attrs.value,cc.attrs.stepFactor,cc.attrs.listener)}"
+							partialSubmit="true" process="@this" 
+							update="#{cc.attrs.spinnerId}">
+							<p:graphicImage
+								value="#{CommonUIConstant.imagePathUptoDesign}/buttonupup_hover.png" />
+						</p:commandLink></TD>
+				</tr>
+				<tr>
+					<td width="10%"><p:commandLink id="spinDown"
+							action="#{spinnerBackingBean.decrementValue(cc.attrs.value,cc.attrs.stepFactor,cc.attrs.listener)}"
+							process="@this" partialSubmit="true"
+							update="#{cc.attrs.spinnerId}">
+							<p:graphicImage
+								value="#{CommonUIConstant.imagePathUptoDesign}/buttondowndown_hover.png" />
+						</p:commandLink></td>
+				</tr>
+			</table>
+		</h:panelGroup>
+	</cc:implementation>
+</ui:composition>
