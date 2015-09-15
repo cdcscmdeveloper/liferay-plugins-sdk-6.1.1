@@ -19,36 +19,29 @@
 				<td width="21%"><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.contract.signer']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><c:if test="#{isEditableStatus}">
-						<p:selectOneMenu id="contractSigner"
-							value="#{directLOABackingBean.managedBean.scLoa.contractSigner.userId}"
-							style="width: 240px;margin-bottom: 5px;" required="true"
-							label="#{lbl['lbl.sc.loiloa.loa.contract.signer']}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-								itemValue="#{null}" />
-							<f:selectItems
-								value="#{directLOABackingBean.managedBean.contractSignerList}"
-								var="contractUser" itemLabel="#{contractUser.userName}"
-								itemValue="#{contractUser.userId}" />
+				<td><p:selectOneMenu id="contractSigner"
+						value="#{directLOABackingBean.managedBean.scLoa.contractSigner.userId}"
+						style="width: 240px;margin-bottom: 5px;" required="true"
+						label="#{lbl['lbl.sc.loiloa.loa.contract.signer']}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems
+							value="#{directLOABackingBean.managedBean.contractSignerList}"
+							var="contractUser" itemLabel="#{contractUser.userName}"
+							itemValue="#{contractUser.userId}" />
 
-							<p:ajax event="change"
-								listener="#{directLOABackingBean.contractSignerEvent}"
-								partialSubmit="true" process="@this" update="@this loaSignerId" />
-						</p:selectOneMenu>
-						<p:message id="contractSignerMsg" for="contractSigner"
-							display="icon" />
-					</c:if> <c:if test="#{!isEditableStatus}">
-						<p:inputText size="34"
-							value="#{directLOABackingBean.managedBean.scLoa.contractSigner.userName}"
-							disabled="true" />
-					</c:if></td>
+						<p:ajax event="change"
+							listener="#{directLOABackingBean.contractSignerEvent}"
+							partialSubmit="true" process="@this" update="@this loaSignerId" />
+					</p:selectOneMenu> <p:message id="contractSignerMsg" for="contractSigner"
+						display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.signer.desig']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 				</td>
-				<td><p:inputText id="loaSignerDesigId"
+				<td><p:inputText id="loaSignerDesigId" disabled="true"
 						value="#{directLOABackingBean.managedBean.scLoa.loaSignerDesig}"
 						label="#{lbl['lbl.sc.loiloa.loa.signer.desig']}" required="true"
 						size="34">

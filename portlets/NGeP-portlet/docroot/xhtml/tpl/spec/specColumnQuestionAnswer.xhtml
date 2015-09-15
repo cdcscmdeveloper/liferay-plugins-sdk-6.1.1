@@ -16,7 +16,7 @@
 				value="#{question.clQuantity}" required="#{!question.selected}"
 				maxlength="14" label="#{lbl['lbl.tpl.spec.content.quantity']}">
 				<p:ajax partialSubmit="true" process="@this"
-					update="@this, qtyMsg, ansYearPG, ansPG, @(.calcAmount)"
+					update="@this, qtyMsg, ansYearPG, ansPG, @(.calcAmount)" 
 					listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, question.tplSpecAnswers[0], isItemTypeService)}" />
 				<ac:validateNumber
 					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}"
@@ -25,8 +25,8 @@
 			<p:commandButton id="tierQtyBtn" icon="ui-icon-pencil"
 				style="background-color:transparent !important; border:0px none;"
 				action="#{templateSpecBackingBean.tierQtyPopupAction(templateSpecBean)}"
-				oncomplete="#{tierQtyPopup}.show();" partialSubmit="true"
-				process="@this" update="@([id$=tierQtyPopup])"
+				 partialSubmit="true"
+				process="@this,qty" update="@([id$=tierQtyPopup])"
 				rendered="#{!isPriceTypeAllStandard and !empty question.clPriceTypeCode.parameterId}"
 				title="#{lbl['lbl.tpl.spec.content.tier.dtls.tooltip']}">
 				<f:setPropertyActionListener
