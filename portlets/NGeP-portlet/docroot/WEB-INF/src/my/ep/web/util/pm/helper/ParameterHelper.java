@@ -1,6 +1,13 @@
-/**
- *  Copyright © 2013 Archisoft. All rights reserved.
- */
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.util.pm.helper;
 
 import java.util.HashMap;
@@ -26,6 +33,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+// TODO: Auto-generated Javadoc
 /**
  * Singleton Helper For Parameter.
  * 
@@ -34,18 +42,27 @@ import org.apache.log4j.Logger;
  * 
  */
 public class ParameterHelper {
+	
+	/** The log. */
 	private static Logger log = EpLogger.getLogger(ParameterHelper.class);
 	
+	/** The Constant KEY_SEPARATOR. */
 	public static final String KEY_SEPARATOR = "_";
 	
+	/** The Constant MAP_VALUE_PARAMETER_DESC_ID. */
 	public static final int MAP_VALUE_PARAMETER_DESC_ID = 0;
+	
+	/** The Constant MAP_VALUE_PARAMETER_CODE. */
 	public static final int MAP_VALUE_PARAMETER_CODE = 1;
 	
+	/** The instance. */
 	private static ParameterHelper instance;	
+	
+	/** The parameter map. */
 	private static Map<String, String[][]> parameterMap = new HashMap<String, String[][]>();
 	
 	/**
-	 * Get singleton of ParameterHelper
+	 * Get singleton of ParameterHelper.
 	 * 
 	 * @return ParameterHelper singleton
 	 */
@@ -57,10 +74,10 @@ public class ParameterHelper {
 	}
 	
 	/**
-	 * Get a list of parameter description by parameter type
+	 * Get a list of parameter description by parameter type.
 	 * 
 	 * @param parameterType
-	 * 			the parameter type
+	 *            the parameter type
 	 * @return list of PmParameterDesc
 	 */
 	public List<PmParameterDesc> getParameterDescList(String parameterType) {
@@ -150,6 +167,35 @@ public class ParameterHelper {
 		}
 	}
 	
+	
+	/**
+	 * Gets the parameter desc by param type and param code.
+	 * 
+	 * @param parameterType
+	 *            the parameter type
+	 * @param parameterCode
+	 *            the parameter code
+	 * @return the parameter desc by param type and param code
+	 */
+	public PmParameterDesc getParameterDescByParamTypeAndParamCode(
+			String parameterType, String parameterCode) {
+		
+		PmParameterDesc pmParameterDesc = getParameterDescByTypeAndCode(
+				parameterType, parameterCode);
+
+		return pmParameterDesc;
+
+	}
+	
+	/**
+	 * Gets the parameter desc by type and code.
+	 * 
+	 * @param parameterType
+	 *            the parameter type
+	 * @param parameterCode
+	 *            the parameter code
+	 * @return the parameter desc by type and code
+	 */
 	private PmParameterDesc getParameterDescByTypeAndCode(String parameterType, String parameterCode) {
 		
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
@@ -202,6 +248,13 @@ public class ParameterHelper {
 		return null;
 	}
 	
+	/**
+	 * Gets the search bean key.
+	 * 
+	 * @param searchBean
+	 *            the search bean
+	 * @return the search bean key
+	 */
 	private String getSearchBeanKey(ISearchBean<PmParameterDesc> searchBean) {
 		if (searchBean == null)
 			return null;
@@ -238,6 +291,19 @@ public class ParameterHelper {
 		return searchBeanKey.toString();
 	}
 	
+	/**
+	 * Gets the parameter desc from db.
+	 * 
+	 * @param key
+	 *            the key
+	 * @param languageCode
+	 *            the language code
+	 * @param parameterType
+	 *            the parameter type
+	 * @param searchBean
+	 *            the search bean
+	 * @return the parameter desc from db
+	 */
 	private List<PmParameterDesc> getParameterDescFromDB(String key, String languageCode, String parameterType, ISearchBean<PmParameterDesc> searchBean) {
 		IParameterSO parameterSO;
 		List<PmParameterDesc> list = null;
@@ -285,6 +351,13 @@ public class ParameterHelper {
 		return list;
 	}
 	
+	/**
+	 * Gets the parameter desc from cache.
+	 * 
+	 * @param parameterDescIds
+	 *            the parameter desc ids
+	 * @return the parameter desc from cache
+	 */
 	private List<PmParameterDesc> getParameterDescFromCache(String[] parameterDescIds) {
 		IParameterSO parameterSO;
 		List<PmParameterDesc> list = null;
@@ -313,8 +386,10 @@ public class ParameterHelper {
 	
 	/**
 	 * To get PmParameterBy parameter id..
+	 * 
 	 * @param parameterId
-	 * @return
+	 *            the parameter id
+	 * @return the pm parameter by id
 	 */
 	public PmParameter getPmParameterById(Long parameterId) {
 		IParameterSO parameterSO;
@@ -334,6 +409,12 @@ public class ParameterHelper {
 		}
 	}
 	
+	/**
+	 * Debug logger.
+	 * 
+	 * @param message
+	 *            the message
+	 */
 	private void debugLogger(Object message) {
         if(log.isDebugEnabled()) {
             log.debug(message);

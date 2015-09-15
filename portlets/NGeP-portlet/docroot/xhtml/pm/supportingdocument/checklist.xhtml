@@ -42,11 +42,14 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
-					<p:selectOneMenu disabled="true" styleClass="ppDropDownWidthM"  required="true"
-						id="somDocDefinition" label="#{lbl['lbl.pm.document.definition']}"
-						value="#{supportDocBackingBean.managedBean.selectedDocument.docDefinitionTypeCode.parameterId}"
-					>
-						<f:selectItems value="#{supportDocBackingBean.docDefinitionOptions()}" />
+					<p:selectOneMenu  styleClass="ppDropDownWidthM"  required="true"  
+				     	disabled="#{!supportDocBackingBean.managedBean.selectedDocument.brandNew}"
+						id="somDocDefinition" label="#{lbl['lbl.pm.document.definition']}" 
+						value="#{supportDocBackingBean.managedBean.selectedDocument.docDefinitionTypeCode.parameterId}"	>
+						<f:selectItems  value="#{supportDocBackingBean.docDefinitionOptions()}" />						
+						 <p:ajax event="change" process="@this" partialSubmit="true" 
+						 listener="#{supportDocBackingBean.getSupplierActionDetails(supportDocBackingBean.managedBean.selectedDocument.docDefinitionTypeCode.parameterId)}"
+						 update="somSupplierAction" />
 					</p:selectOneMenu>
 					<p:message id="somDocDefinitionMsg" for="somDocDefinition" display="icon" />
 				</td>
@@ -63,12 +66,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
-					<p:selectOneMenu  disabled="true" required="true" id="somSupplierAction"
+					<p:selectOneMenu  required="true"  id="somSupplierAction" 
+				        disabled="#{!supportDocBackingBean.managedBean.selectedDocument.brandNew}"
 						styleClass="ppDropDownWidthM" label="#{lbl['lbl.pm.supplier.action']}"
 						value="#{supportDocBackingBean.managedBean.selectedDocument.checklistActionCode.parameterId}">
-						<f:selectItems value="#{supportDocBackingBean.supplierActionOptions()}" />
+						<f:selectItems value="#{supportDocBackingBean.managedBean.supplierActionItems}" />
 					</p:selectOneMenu>
-					<p:message id="somSupplierActionMsg" for="somSupplierAction" display="icon" />
+					<p:message id="somSupplierActionMsg" for="somSupplierAction" display="icon" />					
 				</td>
 				<th>
 					<p:outputLabel value="#{lbl['lbl.pm.scoring.required']}"/>
