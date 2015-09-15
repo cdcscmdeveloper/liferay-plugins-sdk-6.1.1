@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCertBody;
@@ -43,6 +44,7 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	private List <PmDocumentRestr> deleteCertBodyRestrictions;
 	private List <PmDocumentRestr> deleteCheckListRestrictions;
 	private List <PmDocumentRestr> deleteRestrictions;
+	private SelectItem[] supplierActionItems;
 	
 	private List <PmCategoryL3> selectedCategoryL3s;
 	private List <PmCertBody> selectedCertBodies;
@@ -297,6 +299,20 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 
 	public void setDeleteRestrictions(List <PmDocumentRestr> deleteRestrictions) {
 		this.deleteRestrictions = deleteRestrictions;
+	}
+
+	/**
+	 * @return the supplierActionItems
+	 */
+	public SelectItem[] getSupplierActionItems() {
+		return supplierActionItems;
+	}
+
+	/**
+	 * @param supplierActionItems the supplierActionItems to set
+	 */
+	public void setSupplierActionItems(SelectItem[] supplierActionItems) {
+		this.supplierActionItems = supplierActionItems;
 	}
 	
 	
