@@ -1305,10 +1305,18 @@ public class DirectLOABackingBean extends
 					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
 			this.getManagedBean().getServicescQtDoc().getTplSpecMaster()
 					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
-			int specQuestions = this.getManagedBean().getProdscQtDoc()
-					.getTplSpecMaster().getTplSpecQuestions().size();
-			specQuestions += this.getManagedBean().getServicescQtDoc()
-					.getTplSpecMaster().getTplSpecQuestions().size();
+			int specQuestions = 0;
+			if (CollectionUtils.isNotEmpty(this.getManagedBean()
+					.getProdscQtDoc().getTplSpecMaster().getTplSpecQuestions())) {
+				specQuestions = this.getManagedBean().getProdscQtDoc()
+						.getTplSpecMaster().getTplSpecQuestions().size();
+			}
+			if (CollectionUtils.isNotEmpty(this.getManagedBean()
+					.getServicescQtDoc().getTplSpecMaster()
+					.getTplSpecQuestions())) {
+				specQuestions += this.getManagedBean().getServicescQtDoc()
+						.getTplSpecMaster().getTplSpecQuestions().size();
+			}
 			if (specQuestions < 1) {
 				throw new EpException(MessageConst.ERROR_760354);
 			}
