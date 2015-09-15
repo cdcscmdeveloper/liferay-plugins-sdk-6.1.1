@@ -27,6 +27,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Role;
@@ -383,6 +384,19 @@ public class FacesScopes {
 		fc.getApplication().getNavigationHandler()
 		.handleNavigation(fc, null, "/xhtml/cm/catalogue/preRenderErrorPage.xhtml");
 		
+	}
+
+	/**
+	 * extend Liferay session by calling Liferay.Session.extend() on every request to the backing bean.
+	 */
+	public void extendLiferaySession() {
+		log.info("in extendLiferaySession");
+		if(this.getUserSessionBean() != null && this.getUserSessionBean().getUserId() != null) {
+			if(RequestContext.getCurrentInstance() != null) {
+				log.info("extending liferay session");
+				RequestContext.getCurrentInstance().execute("extendLiferaySession();");	
+			}
+		}
 	}
 }
 
