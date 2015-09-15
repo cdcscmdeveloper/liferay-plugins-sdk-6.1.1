@@ -2691,13 +2691,37 @@ public class SmCommonUtil {
 		return retVal;
 	}
 
+	public static PmCountry getCountryById(Long countryId) {
+		CountryReqDTO reqDTO = new CountryReqDTO();
+		reqDTO.setCountryId(countryId);
+		return SmServiceLookup.getCountrySO().retrieveCountryById(reqDTO)
+				.getPmCountry();
+	}
+
+	public static PmState getStateById(Long stateId) {
+		StateReqDTO reqDTO = new StateReqDTO();
+		reqDTO.setStateId(stateId);
+		return SmServiceLookup.getStateSO().retriveStateByID(reqDTO)
+				.getPmState();
+	}
+
+	public static PmDistrict getDistrictById(Long districtId) {
+		DistrictReqDTO reqDTO = new DistrictReqDTO();
+		reqDTO.setDistrictId(districtId);
+		return SmServiceLookup.getDistrictSO().retriveDistrictByID(reqDTO)
+				.getPmDistrict();
+	}
+
+	public static PmCity getCityById(Long cityId) {
+		CityReqDTO reqDTO = new CityReqDTO();
+		reqDTO.setCityId(cityId);
+		return SmServiceLookup.getCitySO().retriveCityById(reqDTO).getPmCity();
+	}
+
 	public static String getCountryLabelById(Long countryId) {
 		String name = "";
 		if (countryId != null) {
-			CountryReqDTO reqDTO = new CountryReqDTO();
-			reqDTO.setCountryId(countryId);
-			name = SmServiceLookup.getCountrySO().retrieveCountryById(reqDTO)
-					.getPmCountry().getCountryName();
+			name = getCountryById(countryId).getCountryName();
 		}
 		return name;
 	}
@@ -2705,10 +2729,7 @@ public class SmCommonUtil {
 	public static String getStateLabelById(Long stateId) {
 		String name = "";
 		if (stateId != null) {
-			StateReqDTO reqDTO = new StateReqDTO();
-			reqDTO.setStateId(stateId);
-			name = SmServiceLookup.getStateSO().retriveStateByID(reqDTO)
-					.getPmState().getStateName();
+			name = getStateById(stateId).getStateName();
 		}
 		return name;
 	}
@@ -2716,10 +2737,7 @@ public class SmCommonUtil {
 	public static String getDistrictLabelById(Long districtId) {
 		String name = "";
 		if (districtId != null) {
-			DistrictReqDTO reqDTO = new DistrictReqDTO();
-			reqDTO.setDistrictId(districtId);
-			name = SmServiceLookup.getDistrictSO().retriveDistrictByID(reqDTO)
-					.getPmDistrict().getDistrictName();
+			name = getDistrictById(districtId).getDistrictName();
 		}
 		return name;
 	}
@@ -2727,10 +2745,7 @@ public class SmCommonUtil {
 	public static String getCityLabelById(Long cityId) {
 		String name = "";
 		if (cityId != null) {
-			CityReqDTO reqDTO = new CityReqDTO();
-			reqDTO.setCityId(cityId);
-			name = SmServiceLookup.getCitySO().retriveCityById(reqDTO)
-					.getPmCity().getCityName();
+			name = getCityById(cityId).getCityName();
 		}
 		return name;
 	}
@@ -2758,8 +2773,8 @@ public class SmCommonUtil {
 		boolean retVal = false;
 		if (latest != null
 				&& current != null
-				&& (current.getClass().getName()
-						.equals(latest.getClass().getName()))) {
+				&& (current.getClass().getName().equals(latest.getClass()
+						.getName()))) {
 			Class<?> object = latest.getClass();
 			List<String> excludeList = new ArrayList<String>();
 			excludeList.add("serialVersionUID");
