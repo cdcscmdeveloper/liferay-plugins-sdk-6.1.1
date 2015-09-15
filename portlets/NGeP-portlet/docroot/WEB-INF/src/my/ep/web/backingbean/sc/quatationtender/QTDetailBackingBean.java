@@ -2057,7 +2057,7 @@ public class QTDetailBackingBean extends
 			reqDTO.setQtdetail(scQt);
 			reqDTO.setAvaliableApprovals(scQt.getScQtApprovals());
 			reqDTO.setAmendMentBean(this.getManagedBean().getAmendMentBean());
-			reqDTO.setRuleDataBean(this.getManagedBean().getRuleDataBean());
+			//reqDTO.setRuleDataBean(this.getManagedBean().getRuleDataBean());
 			resDTO = detailSO.retriveQTApprovalDetails(reqDTO);
 
 			List<ScQtApproval> requiredApproval = resDTO.getApproval();
@@ -4694,5 +4694,30 @@ public class QTDetailBackingBean extends
 			scQt.setScQtApprovals(approvalList);
 		}
 
+	}
+	
+	public static void main(String arg[]){
+		List<String> datas = new ArrayList<String>();
+		String str = new String("[\"Ramp\"");
+		datas.add(str);
+		String str1 = new String("\"sagar\"]");
+		datas.add(str1);
+		
+		System.out.println(datas);
+		List<String> data= new ArrayList<String>();
+		for(int i=0;i<datas.size();i++){
+			String str2 = datas.get(i);
+			if(i==0){
+				str2 = str2.replace("[", "");
+			
+			}
+			str2 = str2.replace("\"", "");
+			if(i==datas.size()-1){
+				str2 = str2.replace("]", "");
+			}
+			data.add(str2);
+		}
+		System.out.println(data.contains("Ramp"));
+		System.out.println(data);
 	}
 }

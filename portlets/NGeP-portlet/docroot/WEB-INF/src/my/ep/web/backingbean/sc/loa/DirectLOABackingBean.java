@@ -21,6 +21,7 @@ import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
@@ -227,6 +228,10 @@ public class DirectLOABackingBean extends
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			updateToBeDeleteSpecAnswersTOReq(reqDTO);
 			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
+			reqDTO.setTobeDeleteProPayments(this.getManagedBean()
+					.getToBeRemoveProgPayments());
+			reqDTO.setToBeDeleteschedules(this.getManagedBean()
+					.getToBeRemoveSchedules());
 			DirectAwardResDTO resDTO = getQtDirectAwardSO()
 					.saveDirectAwardDetails(reqDTO);
 			scLoa = resDTO.getLoa();
@@ -321,6 +326,10 @@ public class DirectLOABackingBean extends
 			reqDTO.setScQtDoc(this.getManagedBean().getProdscQtDoc());
 			reqDTO.setServiceQtDoc(this.getManagedBean().getServicescQtDoc());
 			updateToBeDeleteSpecAnswersTOReq(reqDTO);
+			reqDTO.setTobeDeleteProPayments(this.getManagedBean()
+					.getToBeRemoveProgPayments());
+			reqDTO.setToBeDeleteschedules(this.getManagedBean()
+					.getToBeRemoveSchedules());
 			DirectAwardResDTO resDTO = getQtDirectAwardSO()
 					.submitDirectAwardDetails(reqDTO);
 
@@ -460,6 +469,9 @@ public class DirectLOABackingBean extends
 			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
 
 			scLoa = calcBondAmount(scLoa);
+			Date issueDate = scLoa.getIssueDate();
+			Date bondRespDueDate = DateUtils.addDays(issueDate, 30);
+			scLoa.setBondResDueDate(bondRespDueDate);
 
 			if (scLoa.getBondAmt() != null) {
 				getManagedBean().setBondAmountWord(
@@ -595,8 +607,8 @@ public class DirectLOABackingBean extends
 	private void freqScheduleValidation(ScQtSchedule scQtSchedule) {
 		debugLogger("frequencyScheduleValidation");
 		FacesScopes facesScopes = new FacesScopes();
-		Calendar startDate = null;
-		Calendar endDate = null;
+		Date startDate = null;
+		Date endDate = null;
 
 		if (scQtSchedule.getStartYear() == null
 				|| scQtSchedule.getStartYear().isEmpty()) {
@@ -642,19 +654,22 @@ public class DirectLOABackingBean extends
 
 		if (scQtSchedule.getStartYear() != null
 				&& scQtSchedule.getStartMonth() != null) {
-			startDate = Calendar.getInstance();
-			startDate.clear();
-			startDate.set(Integer.valueOf(scQtSchedule.getStartYear()),
-					Integer.valueOf(scQtSchedule.getStartMonth()), 1, 0, 0, 0);
+			Calendar strtDate = Calendar.getInstance();
+			strtDate.clear();
+			strtDate.set(Integer.parseInt(scQtSchedule.getStartYear()),
+					Integer.parseInt(scQtSchedule.getStartMonth()) - 1, 1, 0, 0);
+
+			startDate = strtDate.getTime();
+
 		}
 
 		if (scQtSchedule.getEndYear() != null
 				&& scQtSchedule.getEndMonth() != null) {
-			endDate = Calendar.getInstance();
-			endDate.clear();
-			endDate.set(Integer.valueOf(scQtSchedule.getEndYear()),
-					Integer.valueOf(scQtSchedule.getEndMonth()),
-					Integer.valueOf(getDays(contractExpDate)), 0, 0, 0);
+			Calendar enDate = Calendar.getInstance();
+			enDate.clear();
+			enDate.set(Integer.valueOf(scQtSchedule.getEndYear()),
+					Integer.valueOf(scQtSchedule.getEndMonth()), 0, 0, 0);
+			endDate = enDate.getTime();
 		}
 
 		if (startDate != null && endDate != null) {
@@ -666,15 +681,14 @@ public class DirectLOABackingBean extends
 				throw new EpException(MessageConst.ERROR_760346);
 			}
 
-			if (!(startDate.getTime().after(contractEffDate)
-					&& (startDate.getTime().before(contractExpDate)) || contractEffDate
+			if (!(startDate.after(contractEffDate)
+					&& (startDate.before(contractExpDate)) || contractEffDate
 						.equals(startDate.getTime()))) {
 				throw new EpException(MessageConst.ERROR_760347);
 			}
 
-			if (!(endDate.getTime().after(contractEffDate)
-					&& (endDate.getTime().before(contractExpDate)) || contractExpDate
-						.equals(endDate.getTime()))) {
+			if (!(endDate.after(contractEffDate) && (endDate
+					.before(contractExpDate) || contractExpDate.equals(endDate)))) {
 				throw new EpException(MessageConst.ERROR_760348);
 			}
 		}
@@ -1284,10 +1298,31 @@ public class DirectLOABackingBean extends
 			scLoa.setScLoaApproval(scLoaApproval);
 		}
 
+		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)
+				|| QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId)) {
+			this.getManagedBean().getProdscQtDoc().getTplSpecMaster()
+					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
+			this.getManagedBean().getServicescQtDoc().getTplSpecMaster()
+					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
+			int specQuestions = this.getManagedBean().getProdscQtDoc()
+					.getTplSpecMaster().getTplSpecQuestions().size();
+			specQuestions += this.getManagedBean().getServicescQtDoc()
+					.getTplSpecMaster().getTplSpecQuestions().size();
+			if (specQuestions < 1) {
+				throw new EpException(MessageConst.ERROR_760354);
+			}
+		} else {
+			this.getManagedBean().getProdscQtDoc().getTplSpecMaster()
+					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
+			this.getManagedBean().getServicescQtDoc().getTplSpecMaster()
+					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
+		}
+
 		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)) {
 			scLoa.setAckDate(new Date());
 			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
 			scLoa.setBondResDueDate(new Date());
+
 		} else {
 
 			saveProgressivePaymntList();
@@ -1515,6 +1550,7 @@ public class DirectLOABackingBean extends
 		contractExpDate.add(Calendar.DATE, -1);
 
 		scLoa.setContractExpDate(contractExpDate.getTime());
+		scLoa.setIssueDate(contractEffDate);
 	}
 
 	/**
@@ -3177,6 +3213,13 @@ public class DirectLOABackingBean extends
 			}
 
 		}
+		Long parameterId = (Long) ((UIOutput) event.getSource()).getValue();
+		if (null != parameterId)
+			this.getManagedBean()
+					.setLocalLevelCode(
+							ParameterHelper.getInstance()
+									.getPmParameterById(parameterId)
+									.getParameterCode());
 
 	}
 
@@ -3800,7 +3843,7 @@ public class DirectLOABackingBean extends
 	private String getMonth(String month) {
 
 		if (StringUtils.isEmpty(month)) {
-			throw new EpException("");
+			throw new EpException("Month should not be empty");
 		}
 		int mon = Integer.parseInt(month);
 		String finalMonth = null;
@@ -3867,6 +3910,7 @@ public class DirectLOABackingBean extends
 		List<ScQtProgressivePayment> payments = this.getManagedBean()
 				.getScLoa().getScQtProgPayments();
 		if (CollectionUtils.isNotEmpty(payments)) {
+			this.getManagedBean().setTotalProgressivePayment(payments.size());
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
 			for (ScQtProgressivePayment payment : payments) {
@@ -3877,9 +3921,10 @@ public class DirectLOABackingBean extends
 				String startYear = fromdate.substring(6, fromdate.length());
 				String enddate = todate.substring(3, 5);
 				String endYear = todate.substring(6, todate.length());
-
-				payment.setStartMonth(startdate);
-				payment.setEndMonth(enddate);
+				int start = Integer.parseInt(startdate);
+				int end = Integer.parseInt(enddate);
+				payment.setStartMonth(Integer.valueOf(start).toString());
+				payment.setEndMonth(Integer.valueOf(end).toString());
 				payment.setStartYear(startYear);
 				payment.setEndYear(endYear);
 
@@ -4028,7 +4073,10 @@ public class DirectLOABackingBean extends
 			updateToBeDeleteSpecAnswersTOReq(reqDTO);
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			resDTO = getQtDirectAwardSO().updateBpmTask(reqDTO);
-
+			reqDTO.setTobeDeleteProPayments(this.getManagedBean()
+					.getToBeRemoveProgPayments());
+			reqDTO.setToBeDeleteschedules(this.getManagedBean()
+					.getToBeRemoveSchedules());
 			if (resDTO.isSuccessful()) {
 				scLoa = resDTO.getLoa();
 
@@ -5309,19 +5357,23 @@ public class DirectLOABackingBean extends
 	 */
 	public void calculateOverallAmount(BigDecimal gstAmount) {
 		BigDecimal loaAmount = this.getManagedBean().getOverallContractAmt();
+		prepareSignerInfo();
 		if (loaAmount != null) {
 			this.getManagedBean().setOverallContractAmt(
 					overallCtAmount(loaAmount, gstAmount));
 			ScLoa scLoa = getManagedBean().getScLoa();
+
+			calcBondAmount(scLoa);
 			if (null != scLoa.getContractSigner()
 					&& scLoa.getContractSigner().getUserId() != null) {
 
 				scLoa.setLoaSignerDesig(null);
 				scLoa.setContractSigner(null);
-				prepareSignerInfo();
+
 				RequestContext.getCurrentInstance().execute(
 						"gstSignerConfirmPopupWin.show()");
 			}
+
 		}
 
 	}
@@ -5677,6 +5729,7 @@ public class DirectLOABackingBean extends
 
 		this.getManagedBean().setOverallContractAmt(loaAmount);
 		prepareSignerInfo();
+		calcBondAmount(this.getManagedBean().getScLoa());
 	}
 
 	private void updateToBeDeleteSpecAnswersTOReq(DirectAwardReqDTO awardReqDTO) {

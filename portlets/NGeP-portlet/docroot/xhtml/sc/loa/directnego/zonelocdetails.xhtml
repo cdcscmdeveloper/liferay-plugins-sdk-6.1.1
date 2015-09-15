@@ -21,7 +21,7 @@
 
 						<f:selectItems
 							value="#{directLOABackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
-						<p:ajax event="change" update="generalLocationList"
+						<p:ajax event="change" update="generalLocationList" 
 							listener="#{directLOABackingBean.selectZoneLocationLevel}"></p:ajax>
 					</p:selectOneMenu> <ac:iconTooltip
 						value="#{lbl['lbl.sc.zone.location.level.tooltip']}" /> <p:message

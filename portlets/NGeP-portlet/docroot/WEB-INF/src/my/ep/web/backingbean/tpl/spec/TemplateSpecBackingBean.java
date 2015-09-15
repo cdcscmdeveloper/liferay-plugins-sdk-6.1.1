@@ -941,6 +941,8 @@ public class TemplateSpecBackingBean extends
 		templateSpecBean.setOriSpecQuestion(oriSpecQuestion);
 
 		templateSpecBean.setSelectAll(false);
+		RequestContext.getCurrentInstance().execute(
+				templateSpecBean.getSpecComponentId() + "tierQtyPopup.show()");
 	}
 
 	/**
