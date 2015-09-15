@@ -206,6 +206,9 @@ public class CalendarBackingBean extends
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "calendar");
 	}
+	public String getLocale(){
+		return new FacesScopes().getUserLocale().getLanguage();
+	}
 	
 	public void deleteEvent(ActionEvent actionEvent) {
 		
