@@ -5005,10 +5005,10 @@ public class SmApplicationUtil {
 	public static void setPmStateDropdownValuesForBasicInfo(
 			SmApplicationManagedBean managedBean, Long countryId) {
 
-		List<PmState> stateLs = retrievePmStateList(countryId);
+		List<SelectItem> stateLs = SmCommonUtil.getStateList(countryId);
 
 		if (managedBean.getBasicCompanyStates() == null) {
-			managedBean.setBasicCompanyStates(new ArrayList<PmState>());
+			managedBean.setBasicCompanyStates(new ArrayList<SelectItem>());
 		}
 		if (managedBean.getSmSupplier().getBusinessType() != null
 				&& !managedBean.getSmSupplier().getBusinessType()
@@ -5025,7 +5025,7 @@ public class SmApplicationUtil {
 
 				// PmCountry defaultCountry = SmCommonUtil
 				// .retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-				managedBean.setBasicCompanyStates(new ArrayList<PmState>());
+				managedBean.setBasicCompanyStates(new ArrayList<SelectItem>());
 				if (managedBean
 						.getSmSupplier()
 						.getBusinessType()
@@ -5036,8 +5036,8 @@ public class SmApplicationUtil {
 								.getBusinessType()
 								.equalsIgnoreCase(
 										SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)) {
-					for (PmState state : stateLs) {
-						if (state.getStateName().equalsIgnoreCase("SARAWAK")) {
+					for (SelectItem state : stateLs) {
+						if (state.getLabel().equalsIgnoreCase("SARAWAK")) {
 							managedBean.getBasicCompanyStates().add(state);
 						}
 					}
@@ -5051,8 +5051,8 @@ public class SmApplicationUtil {
 								.getBusinessType()
 								.equalsIgnoreCase(
 										SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)) {
-					for (PmState state : stateLs) {
-						if (state.getStateName().equalsIgnoreCase("SABAH")) {
+					for (SelectItem state : stateLs) {
+						if (state.getLabel().equalsIgnoreCase("SABAH")) {
 							managedBean.getBasicCompanyStates().add(state);
 
 						}
@@ -5068,10 +5068,10 @@ public class SmApplicationUtil {
 								.equalsIgnoreCase(
 										SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)) {
 
-					for (PmState state : stateLs) {
-						if (!state.getStateName().equalsIgnoreCase("SABAH")
-								&& !state.getStateName().equalsIgnoreCase(
-										"SARAWAK")) {
+					for (SelectItem state : stateLs) {
+						if (!state.getLabel().equalsIgnoreCase("SABAH")
+								&& !state.getLabel()
+										.equalsIgnoreCase("SARAWAK")) {
 							managedBean.getBasicCompanyStates().add(state);
 						}
 					}
