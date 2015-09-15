@@ -609,7 +609,7 @@
 				<p:outputLabel value="#{lbl['lbl.sc.address']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
-			<td rowspan="3" width="32%">
+			<td rowspan="3">
 				<p:inputTextarea id="address"
 					cols="47" rows="5"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.address}"
@@ -620,11 +620,11 @@
 					disabled="#{!isEditableStatus}" />
 				<p:message id="addressMsg" for="address" display="icon" />
 			</td>
-			<td width="19%">
+			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
-			<td width="32%">
+			<td>
 				<p:inputText id="phoneNo" size="30"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.phoneNo}"
 					required="true"
