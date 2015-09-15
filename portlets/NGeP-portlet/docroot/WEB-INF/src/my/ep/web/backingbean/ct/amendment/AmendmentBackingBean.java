@@ -1194,8 +1194,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			if (!getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()
 					&& !getManagedBean().getContractVer().getCtAmendment().isRouteToBPK()) {
-				// Validation for remark is mandatory if isComplyAP201
-		 		if (getManagedBean().getContractVer().getCtAmendment().isComplyAP201()) {		 			
+				// Validation for remark is mandatory if breach rule
+		 		if (!getManagedBean().getContractVer().getCtAmendment().isComplyAP201()) {		 			
 					if ((getManagedBean().getRemarkList().get(0).getRemark() == null 
 							|| getManagedBean().getRemarkList().get(0).getRemark().length() == 0)) {
 						RequestContext.getCurrentInstance().addCallbackParam("epException",true);
