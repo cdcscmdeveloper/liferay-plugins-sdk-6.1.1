@@ -223,7 +223,7 @@
 				<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;"><u>TERMA PEMBAYARAN</u></span>
 			</div>
 			<div id="u15_rtf" style="text-align:justify;">
-				<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Pembayaran bagi semua perkara dan skop kerja yang ditawarkan mestilah dalam Ringgit Malaysia (RM) sahaja. Harga ini mestilah sah laku dalam tempoh --- $validityPeriod ---- hari daripada tarikh tutup Tawaran.</span>
+				<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Pembayaran bagi semua perkara dan skop kerja yang ditawarkan mestilah dalam Ringgit Malaysia (RM) sahaja. Harga ini mestilah sah laku dalam tempoh $validityPeriod hari daripada tarikh tutup Tawaran.</span>
 				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Pembayaran akan dibuat pada tidak lewat dari 14 hari selepas menerima invois daripada pihak Pembekal.</span></p>
 				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Sebarang tuntutan kenaikan harga dalam jangkamasa sah laku Tawaran tidak akan dilayan.</span></p>
 			</div>
@@ -264,7 +264,7 @@
 				<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">TEMPOH KONTRAK</span>
 			</div>
 			<div id="u15_rtf" style="text-align:justify;">
-				<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Perkhidmatan /bekalan akan berkuatkuasa untuk tempoh ---Contract period--- Namun begitu, pihak Kerajaan berhak meminda tarikh ini jika diperlukan.</span>
+				<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Perkhidmatan /bekalan akan berkuatkuasa untuk tempoh $contractPeriod tahun iaitu bermula daripada --tarikh-- sehingga --tarikh--. Namun begitu, pihak Kerajaan berhak meminda tarikh ini jika diperlukan.</span>
 			</div>
 			<div id="u12_rtf">
 				<br />

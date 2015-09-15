@@ -1245,14 +1245,14 @@ public class QTDocumentsBackingBean extends
 								}
 								break;
 							} else {
-								System.out.println("Testing2");
+								log.info("Testing");
 							}
 						}  else {
-							System.out.println("Testing1");
+							log.info("Testings");
 						}
 					}
 				} else {
-					System.out.println("Testing");
+					log.info("Testingss");
 				}
 			}
 		} finally {
@@ -1410,6 +1410,7 @@ public class QTDocumentsBackingBean extends
 		}
 		context.put("deductionAmount", deductionAmount);
 		context.put("validityPeriod", qt.getQtValidityPeriod());
+		context.put("contractPeriod", qt.getContractDuration());
 		// context.put("deductionTypes", deductionTypes.toString());
 		boolean deductionType = false;
 		if (deductionTypes.contains("Penalty")) {
@@ -1438,7 +1439,6 @@ public class QTDocumentsBackingBean extends
 				.equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
 				|| qt.getFulfilmentType().getParameterCode()
 						.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
-			isOneOff = true;
 			context.put("fulfilmentType", isOneOff);
 		}
 
@@ -2181,33 +2181,6 @@ public class QTDocumentsBackingBean extends
 			context.put("zoneBeans", zoneBeans);
 		}
 
-		/*
-		 * IQTBriefingSO qTBriefingSO = null; ScQtBsv qtBsv = null;
-		 * BriefingZoneBean briefingZoneBean = null; // List<BriefingZoneBean>
-		 * zoneBeans = new ArrayList<BriefingZoneBean>(); try { qTBriefingSO =
-		 * (IQTBriefingSO)
-		 * BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst
-		 * .SUPPLIER_SELECTION, IQTBriefingSO.class); BriefingReqDTO reqDTO =
-		 * new BriefingReqDTO(); //reqDTO.setQtId(getManagedBean().getQt());
-		 * reqDTO.setScQt(this.getManagedBean().getQt()); BriefingResDTO resDTO
-		 * = qTBriefingSO.retrieveBriefingSiteVisitDtl(reqDTO); ScQt scQt =
-		 * resDTO.getScQt(); if (scQt.isZonal()) { List<TplSpecZoneDtl> zones =
-		 * resDTO.getZonesList(); if (null != zones) { isZone = true;
-		 * BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
-		 * briefingReqDTO.setQtId(getManagedBean().getQt().getQtId()); for
-		 * (TplSpecZoneDtl specZoneDtl : zones) {
-		 * briefingReqDTO.setSpecZoneId(specZoneDtl.getSpecZoneId());
-		 * BriefingResDTO briefingResDTO =
-		 * qTBriefingSO.retrieveBriefingSiteVisitDtls(briefingReqDTO); ScQtBsv
-		 * scQtBsv = briefingResDTO.getScQtBsv(); briefingZoneBean = new
-		 * BriefingZoneBean(specZoneDtl, briefingResDTO.getBriefingList(),
-		 * briefingResDTO.getSiteVisitList(), scQtBsv);
-		 * zoneBeans.add(briefingZoneBean); } } } else { qtBsv =
-		 * resDTO.getScQtBsv(); briefingZoneBean = new BriefingZoneBean(null,
-		 * resDTO.getBriefingList(), resDTO.getSiteVisitList(), qtBsv);
-		 * zoneBeans.add(briefingZoneBean); } } finally { qTBriefingSO = null; }
-		 */
-
 		boolean isOneOff = false;
 		if (qt.getFulfilmentType().getParameterCode()
 				.equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
@@ -2217,7 +2190,6 @@ public class QTDocumentsBackingBean extends
 				.equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
 				|| qt.getFulfilmentType().getParameterCode()
 						.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
-			isOneOff = true;
 			context.put("fulfilmentType", isOneOff);
 		}
 
