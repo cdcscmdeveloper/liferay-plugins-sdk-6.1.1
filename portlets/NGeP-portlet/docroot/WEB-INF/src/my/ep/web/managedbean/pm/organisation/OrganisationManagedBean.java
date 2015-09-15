@@ -458,6 +458,9 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	 * @return the supplierUsers
 	 */
 	public List<PmUser> getSupplierUsers() {
+		if(supplierUsers == null){
+			supplierUsers = new ArrayList<PmUser>();
+		}
 		return supplierUsers;
 	}
 
