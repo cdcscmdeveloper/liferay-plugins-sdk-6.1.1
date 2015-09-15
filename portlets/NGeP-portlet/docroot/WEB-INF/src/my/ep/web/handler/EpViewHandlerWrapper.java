@@ -59,9 +59,9 @@ public class EpViewHandlerWrapper extends ViewHandlerWrapper {
 			new LogKey(userId);
 			
 			// append the extend Liferay Session javascript for login session only.
-			if(!FacesContext.getCurrentInstance().getPartialViewContext().isAjaxRequest()) {
+			/*if(!FacesContext.getCurrentInstance().getPartialViewContext().isAjaxRequest()) {
 				appendExtendLiferaySessionJS(viewToRender.getChildren());
-			}
+			}*/
 		}
 		
 //		highlightInputRecursively(viewToRender.getChildren());
