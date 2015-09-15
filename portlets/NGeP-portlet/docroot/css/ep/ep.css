@@ -3580,10 +3580,11 @@ table.taxableGuidelineTable td {
 }
 
 
-.catImageStyle{
-	
-	height: 150px !important; 
-	left: 0px !important;
+.catImageStyle{ 
+   	position: initial !important;
+    max-height: 100% !important;
+    max-width: 100% !important;
+    left: 0px !important; 
 }
 
 
