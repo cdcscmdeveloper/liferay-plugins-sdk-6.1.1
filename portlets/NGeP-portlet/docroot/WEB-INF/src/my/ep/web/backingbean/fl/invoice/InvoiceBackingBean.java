@@ -708,6 +708,20 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			invItemSummMapValue.setInvAmt(sumInvAmt);
 			getManagedBean().getInvoice().getFlInvoiceItemSummary().add(invItemSummMapValue);
 		}
+		
+		//Clause under Invoice  Item page only display if any of the invoice item is 'RS'.
+		
+		getManagedBean().setItemTableClause(false);
+		for(FlInvoiceItemSummary invItemsSummary:getManagedBean().getInvoice().getFlInvoiceItemSummary()){
+			for(FlInvoiceItem invItems:invItemsSummary.getFlInvoiceItem()){
+				
+				if(invItems.getGstFlag().getParameterCode().equalsIgnoreCase(ParameterConst.DOCTYPE_RELIEF_ORDER)){
+					getManagedBean().setItemTableClause(true);
+					break;
+				}
+				
+			}
+		}
 	}
 	
 	
