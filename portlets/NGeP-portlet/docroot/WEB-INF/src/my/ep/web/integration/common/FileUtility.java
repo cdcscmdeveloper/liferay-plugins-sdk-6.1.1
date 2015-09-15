@@ -2349,240 +2349,6 @@ public class FileUtility {
 		}
 	}
 	
-	// PHIS PM Modules
-	/*public void votFundFileOutPutStream(List<PhisVotFund> content, String filePath) {
-		log.info("inside votFundFileOutPutStream");
-		String SERVICE_CODE = "PHS-090";
-
-		String fileName = createFileNamePhis(SERVICE_CODE);
-
-		Writer writer = null;
-
-		try {
-			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(filePath + fileName), "utf-8"));
-
-			if (content.size() != 0) {
-				StringBuffer line;
-				for (PhisVotFund votFund : content) {
-					line = new StringBuffer();
-					line.append(formatIntegerField(votFund.getYear(), 4, "R"));
-					line.append(formatStringField(votFund.getCode()+votFund.getPtjCode() , 5, "L"));
-					line.append(formatStringField(votFund.getDescription(),255, "L"));
-					line.append(formatDate(votFund.getEffDate()));
-					line.append(formatDate(votFund.getExpDate()));
-					line.append(formatStringField(votFund.getStatus(), 1, "L"));
-					line.append(System.getProperty("line.separator"));
-					writer.write(line.toString());
-					writer.flush();
-				}
-
-				//Encryption method
-				//Encryption encryption = new Encryption();
-				encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
-
-			}
-		} catch (IOException e) {
-
-		} finally {
-
-			if (writer != null) {
-				try {
-					writer.close();
-				} catch (Exception e) {
-
-				}
-			}
-		}
-	}
-	
-	public void votFundDanaFileOutPutStream(List<PhisVotFund> content,
-			String filePath) {
-		log.info("inside votFundDanaFileOutPutStream");
-		String SERVICE_CODE = "PHS-100";
-
-		String fileName = createFileNamePhis(SERVICE_CODE);
-
-		Writer writer = null;
-
-		try {
-			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(filePath + fileName), "utf-8"));
-
-			if (content.size() != 0) {
-				StringBuffer line;
-				for (PhisVotFund votFund : content) {
-					line = new StringBuffer();
-					line.append(formatIntegerField(votFund.getYear(), 4, "R"));
-					line.append(formatStringField(votFund.getCode(), 4, "L"));
-					line.append(formatStringField(votFund.getDescription(),255, "L"));
-					line.append(formatDate(votFund.getEffDate()));
-					line.append(formatDate(votFund.getExpDate()));
-					line.append(formatStringField(votFund.getStatus(), 1, "L"));
-					line.append(System.getProperty("line.separator"));
-					writer.write(line.toString());
-					writer.flush();
-				}
-
-//				Encryption method
-//				Encryption encryption = new Encryption();
-				encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
-
-			}
-		} catch (IOException e) {
-
-		} finally {
-
-			if (writer != null) {
-				try {
-					writer.close();
-				} catch (Exception e) {
-
-				}
-			}
-		}
-	}
-
-	public void programActivityFileOutPutStream(List<PhisProgramActivity> content,
-			String filePath) {
-		log.info("inside programActivityFileOutPutStream");
-		String SERVICE_CODE = "PHS-110";
-
-		String fileName = createFileNamePhis(SERVICE_CODE);
-
-		Writer writer = null;
-
-		try {
-			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(filePath + fileName), "utf-8"));
-
-			if (content.size() != 0) {
-				StringBuffer line;
-				for (PhisProgramActivity prgActivity : content) {
-					line = new StringBuffer();
-					line.append(formatIntegerField(prgActivity.getYear(), 4,"R"));
-					line.append(formatStringField(prgActivity.getVotCode()+ prgActivity.getCode(), 9, "L"));
-					line.append(formatStringField(prgActivity.getDescription(),255, "L"));
-					line.append(formatDate(prgActivity.getEffDate()));
-					line.append(formatDate(prgActivity.getExpDate()));
-					line.append(formatStringField(prgActivity.getStatus(), 1,"L"));
-					line.append(System.getProperty("line.separator"));
-					writer.write(line.toString());
-					writer.flush();
-				}
-
-//				Encryption method
-//				Encryption encryption = new Encryption();
-				encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
-
-			}
-		} catch (IOException e) {
-
-		} finally {
-
-			if (writer != null) {
-				try {
-					writer.close();
-				} catch (Exception e) {
-
-				}
-			}
-		}
-	}
-
-	public void projectFileOutPutStream(List<PhisProject> content, String filePath) {
-		log.info("inside projectFileOutPutStream");
-		String SERVICE_CODE = "PHS-120";
-
-		String fileName = createFileNamePhis(SERVICE_CODE);
-
-		Writer writer = null;
-
-		try {
-			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(filePath + fileName), "utf-8"));
-
-			if (content.size() != 0) {
-				StringBuffer line;
-				for (PhisProject project : content) {
-					line = new StringBuffer();
-					line.append(formatIntegerField(project.getYear(), 4, "R"));
-					line.append(formatStringField(project.getVotCode()+ project.getCode() + project.getSetiaCode()
-							+ project.getSubSetiaCode()+project.getCaraPembiayaan(), 16, "L"));
-					line.append(formatStringField(project.getDescription(),255, "L"));
-					line.append(formatDate(project.getEffDate()));
-					line.append(formatDate(project.getExpDate()));
-					line.append(formatStringField(project.getStatus(), 1, "L"));
-					line.append(System.getProperty("line.separator"));
-					writer.write(line.toString());
-					writer.flush();
-				}
-//              Encryption method
-//				Encryption encryption = new Encryption();
-				encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
-
-			}
-		} catch (IOException e) {
-
-		} finally {
-
-			if (writer != null) {
-				try {
-					writer.close();
-				} catch (Exception e) {
-
-				}
-			}
-		}
-	}
-
-	public void glAccountFileOutPutStream(List<PhisGlAccount> content,
-			String filePath) {
-		log.info("inside glAccountFileOutPutStream");
-		String SERVICE_CODE = "PHS-140";
-
-		String fileName = createFileNamePhis(SERVICE_CODE);
-
-		Writer writer = null;
-
-		try {
-			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(filePath + fileName), "utf-8"));
-
-			if (content.size() != 0) {
-				StringBuffer line;
-				for (PhisGlAccount glAccount : content) {
-					line = new StringBuffer();
-					line.append(formatIntegerField(glAccount.getYear(), 4, "R"));
-					line.append(formatStringField(glAccount.getCode(), 8, "L"));
-					line.append(formatStringField(glAccount.getPtjCode(), 2,"L"));
-					line.append(formatStringField(glAccount.getDescription(),255, "L"));
-					line.append(formatDate(glAccount.getEffDate()));
-					line.append(formatDate(glAccount.getExpDate()));
-					line.append(formatStringField(glAccount.getStatus(), 1, "L"));
-					line.append(System.getProperty("line.separator"));
-					writer.write(line.toString());
-					writer.flush();
-				}
-//				Encryption method
-				encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
-
-			}
-		} catch (IOException e) {
-
-		} finally {
-
-			if (writer != null) {
-				try {
-					writer.close();
-				} catch (Exception e) {
-
-				}
-			}
-		}
-	}*/
-	//End of PHIS PM
-	
 	public String formatString(String input,int length) {
 		
 		String checkInput=null;
@@ -3064,7 +2830,7 @@ public class FileUtility {
 					writer.write(line.toString());
 					writer.flush();
 				}
-				
+				writer.close();
 				reqDTO.setProcessId(ProcessCode.PHS006.value());
 				reqDTO.setFileName(fileName);
 				reqDTO.setServiceCode(SERVICE_CODE);
@@ -3072,8 +2838,6 @@ public class FileUtility {
 				reqDTO.setRemoteFilePath(IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL+fileName);
 
 				encryption.encryptPhis(reqDTO);
-				//Encryption method
-//				encryption.encryptPhis(reqDTO.getFilePath(),IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
 
 			}
 		} catch (IOException e) {
@@ -3117,14 +2881,12 @@ public class FileUtility {
 					writer.write(line.toString());
 					writer.flush();
 				}
-
+				writer.close();
 				reqDTO.setProcessId(ProcessCode.PHS007.value());
 				reqDTO.setFileName(fileName);
 				reqDTO.setServiceCode(SERVICE_CODE);
 				reqDTO.setEncryptFilePath(IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL);
 				encryption.encryptPhis(reqDTO);
-//				Encryption method
-//				encryption.encryptPhis(reqDTO.getFilePath(),IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
 
 			}
 		} catch (IOException e) {
@@ -3168,7 +2930,7 @@ public class FileUtility {
 					writer.write(line.toString());
 					writer.flush();
 				}
-
+				writer.close();
 				reqDTO.setProcessId(ProcessCode.PHS008.value());
 				reqDTO.setFileName(fileName);
 				reqDTO.setServiceCode(SERVICE_CODE);
@@ -3219,6 +2981,7 @@ public class FileUtility {
 					writer.write(line.toString());
 					writer.flush();
 				}
+				writer.close();
 				reqDTO.setProcessId(ProcessCode.PHS009.value());
 				reqDTO.setFileName(fileName);
 				reqDTO.setServiceCode(SERVICE_CODE);
@@ -3268,13 +3031,12 @@ public class FileUtility {
 					writer.write(line.toString());
 					writer.flush();
 				}
+				writer.close();
 				reqDTO.setProcessId(ProcessCode.PHS010.value());
 				reqDTO.setFileName(fileName);
 				reqDTO.setServiceCode(SERVICE_CODE);
 				reqDTO.setEncryptFilePath(IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL);
 				encryption.encryptPhis(reqDTO);
-				
-
 			}
 		} catch (IOException e) {
 
@@ -3312,6 +3074,7 @@ public class FileUtility {
 					line.append(formatStringField(mclass.getMaterialOldClassCode(), 8, "L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
+					writer.flush();
 				}
 			}
 			writer.close();
@@ -3358,6 +3121,7 @@ public class FileUtility {
 					line.append(formatStringField(mbrand.getMaterialOldBrandCode(), 3, "L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
+					writer.flush();
 				}
 			}
 			writer.close();
@@ -3402,6 +3166,7 @@ public class FileUtility {
 					line.append(formatStringField(mcolor.getMaterialOldColorCode(), 2, "L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
+					writer.flush();
 				}
 			}
 			writer.close();
@@ -3446,6 +3211,7 @@ public class FileUtility {
 					line.append(formatStringField(mMeasurement.getMeasurementOldCode(), 3, "L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
+					writer.flush();
 				}
 			}
 			writer.close();
@@ -3490,6 +3256,7 @@ public class FileUtility {
 					line.append(formatStringField(itemType.getItemOldcode(), 3,	"L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
+					writer.flush();
 				}
 
 			}
@@ -3537,6 +3304,7 @@ public class FileUtility {
 					line.append(formatDate(effNotify.getPaymentDate()));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
+					writer.flush();
 				}
 
 			}
