@@ -148,6 +148,7 @@
 			</p:column>
 		</p:treeTable>
 		<p:spacer height="2px"></p:spacer>
+		<h:panelGroup rendered="#{invoiceBackingBean.managedBean.itemTableClause=='true'}">
 		<table>
 			<tr>
 				<td><p:outputLabel style="text-align:left"
@@ -158,6 +159,7 @@
 						rendered="#{invoiceBackingBean.managedBean.invoice.flRequest.procurementTypeCategory.parameterCode eq ParameterConst.procurementTypeCodeService}" /></td>
 			</tr>
 		</table>
+		</h:panelGroup>
 		<p:spacer height="5px"></p:spacer>
 		<table>	
 			<tr>
