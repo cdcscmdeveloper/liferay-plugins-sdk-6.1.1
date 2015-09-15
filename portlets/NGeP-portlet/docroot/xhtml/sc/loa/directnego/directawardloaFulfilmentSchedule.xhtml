@@ -199,7 +199,7 @@
 					</f:facet>
 					<p:inputText value="#{payment.phaseNo}" required="true"
 						label="#{lbl['lbl.sc.spec.phase']}" id="progressivePhase"
-						maxlength="3" size="5">
+						maxlength="3" size="5" disabled="#{!isEditableStatus}">
 
 						<p:ajax process="@this" partialSubmit="true"
 							update="@this,progressivePayment" />
@@ -215,7 +215,7 @@
 					</f:facet>
 					<p:inputText value="#{payment.phaseDesc}" maxlength="50"
 						required="true" id="progressivePhasedesc" style="width:100px;"
-						label="#{lbl['lbl.sc.description']}">
+						label="#{lbl['lbl.sc.description']}" disabled="#{!isEditableStatus}">
 						<p:ajax process="@this" partialSubmit="true"
 							update="@this,progressivePayment" />
 					</p:inputText>
@@ -225,7 +225,7 @@
 
 				<p:column headerText="#{lbl['lbl.sc.start.month']}"
 					style="width:15%">
-					<p:selectOneMenu style="width:100px;" value="#{payment.startMonth}">
+					<p:selectOneMenu style="width:100px;" value="#{payment.startMonth}" disabled="#{!isEditableStatus}">
 
 						<f:selectItems value="#{directLOABackingBean.yearDetails}"></f:selectItems>
 						<p:ajax event="change" process="@this" partialSubmit="true"
@@ -236,7 +236,7 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.start.year']}" style="width:15%">
 
-					<p:selectOneMenu value="#{payment.startYear}" style="width:100px;">
+					<p:selectOneMenu value="#{payment.startYear}" style="width:100px;" disabled="#{!isEditableStatus}">
 						<f:selectItems value="#{directLOABackingBean.yearsDisplayDtls}"></f:selectItems>
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							listener="#{directLOABackingBean.calculateProgressiveStartMonth(payment)}"></p:ajax>
@@ -247,7 +247,7 @@
 				<p:column headerText="
 								#{lbl['lbl.sc.end.month']}"
 					style="width:15%">
-					<p:selectOneMenu style="width:100px;" id="paymentEndMonth"
+					<p:selectOneMenu style="width:100px;" id="paymentEndMonth" disabled="#{!isEditableStatus}"
 						value="#{payment.endMonth}">
 
 						<f:selectItems value="#{directLOABackingBean.yearDetails}">
@@ -257,7 +257,7 @@
 					</p:selectOneMenu>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.end.year']}" style="width:15%">
-					<p:selectOneMenu value="#{payment.endYear}" style="width:100px;">
+					<p:selectOneMenu value="#{payment.endYear}" style="width:100px;" disabled="#{!isEditableStatus}">
 						<f:selectItems value="#{directLOABackingBean.yearsDisplayDtls}"></f:selectItems>
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							listener="#{directLOABackingBean.calculateProgressivepayment(payment)}"></p:ajax>
@@ -270,7 +270,7 @@
 						<h:outputText value="#{lbl['lbl.sc.percentage']}" />
 						<ac:iconTooltip value="#{lbl['lbl.sc.spec.percentage.tooltip']}" />
 					</f:facet>
-					<p:inputText value="#{payment.percentage}" required="true"
+					<p:inputText value="#{payment.percentage}" required="true" disabled="#{!isEditableStatus}"
 						id="progressivePercentage" style="width:100px;"
 						label="#{lbl['lbl.sc.percentage']}" maxlength="18">
 						<p:ajax process="@this" partialSubmit="true"

@@ -21,8 +21,8 @@
 			</p:inputText>
 			<p:commandButton id="tierQtyBtn" icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
 				action="#{templateSpecBackingBean.tierQtyPopupAction(templateSpecBean)}"
-				oncomplete="#{tierQtyPopup}.show();"
-				partialSubmit="true" process="@this" update="@([id$=tierQtyPopup])"
+				
+				partialSubmit="true" process="@this,qty" update="@([id$=tierQtyPopup])"
 				rendered="#{!isPriceTypeAllStandard and !empty question.clPriceTypeCode.parameterId}"
 				title="#{lbl['lbl.tpl.spec.content.tier.dtls.tooltip']}">
 				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
