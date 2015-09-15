@@ -763,8 +763,10 @@ public class PurchaseInDefaultBackingBean extends
 			if (getManagedBean().getPurchaseInDefault() != null
 					&& getManagedBean().getPurchaseInDefault().getPanelItem() != null) {
 				for (PmReasonDesc pmReasonDesc : resDTO.getReasonDescList()) {
-					if (!pmReasonDesc.getPmReason().getReasonCode()
-							.equals(ParameterConst.PID_CP)) {
+					 
+ 					if (!pmReasonDesc.getPmReason().getReasonCode()
+							.equals(ParameterConst.PID_CP) && !pmReasonDesc.getPmReason().getReasonCode()
+							.equals(ParameterConst.PID_QR)) {
 						results.add(pmReasonDesc);
 					}
 				}
