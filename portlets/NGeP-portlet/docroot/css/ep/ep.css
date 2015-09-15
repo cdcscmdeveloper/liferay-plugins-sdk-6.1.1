@@ -2123,7 +2123,7 @@ important;
 	border-radius: 0 px;
 	height: 16 px !
 important;
-}
+} 
 
 .ui-icon-stop {
 	background-image: url('../images/design/ico-suspend.png') !important;
@@ -2251,21 +2251,7 @@ important;
 important;
 }
 
-.ui-icon-suspension {
-	background-image: url('../images/design/pause.png') !important;
-	background-position: center;
-	border-radius: 0 px;
-	height: 16 px !
-important;
-}
 
-.ui-icon-terminate {
-	background-image: url('../images/design/terminate.png') !important;
-	background-position: center;
-	border-radius: 0 px;
-	height: 16 px !
-important;
-}
 
 .ui-icon-download {
 	background-image: url('../images/design/download.png') !important;
@@ -3602,44 +3588,51 @@ table.taxableGuidelineTable td {
 	text-align: right !important;
 }
 
-.ui-icon-view{
-	background-image: url('../images/design/document.png') !important;
+.ui-icon-suspension {
+	background-image: url('../images/design/ico-suspend.png') !important;
 	background-position: center;
+	border-radius: 0 px;
+	height: 16 px !important;
 	margin-right:5px;
 }
 
-.ui-icon-suspension{
-	background-image: url('../images/design/pause.png') !important;
+.ui-icon-termination {
+	background-image: url('../images/design/ico-termination.png') !important;
 	background-position: center;
-	margin-right:5px;
-}
-
-.ui-icon-termination{
-	background-image: url('../images/design/terminate.png') !important;
-	background-position: center;
+	border-radius: 0 px;
+	height: 16 px !important;
 	margin-right:5px;
 }
 
 .ui-icon-amendment{
-	background-image: url('../images/design/revise.png') !important;
+	background-image: url('../images/design/ico-viewnedit.png') !important;
 	background-position: center;
+	border-radius: 0 px;
+	height: 16 px !important;
 	margin-right:5px;
 }
 
 .ui-icon-update{
-	background-image: url('../images/design/edit.png') !important;
+	background-image: url('../images/design/ico-edit.png') !important;
 	background-position: center;
+	border-radius: 0 px;
+	height: 16 px !important;
 	margin-right:5px;
 }
 
 .ui-icon-termination-history{
 	background-image: url('../images/design/ico-termination-history.png') !important;
 	background-position: center;
+	border-radius: 0 px;
+	height: 16 px !important;
 	margin-right:5px;
 }
 
 .ui-icon-supplier-view{
 	background-image: url('../images/design/ico-view.png') !important;
 	background-position: center;
+	border-radius: 0 px;
+	height: 16 px !important;
 	margin-right:5px;
+	
 }
