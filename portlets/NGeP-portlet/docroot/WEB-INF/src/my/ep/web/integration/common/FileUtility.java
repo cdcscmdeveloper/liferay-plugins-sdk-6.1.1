@@ -21,9 +21,28 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.common.agoffice.IAgOfficeSO;
 import my.ep.biz.service.pm.common.batch.IPmInterfaceSO;
+import my.ep.biz.service.pm.common.glaccount.IGlAccountSO;
+import my.ep.biz.service.pm.common.programactivity.IProgramActivitySO;
+import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
+import my.ep.biz.service.pm.common.votfund.IVotFundSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.cm.codification.CodificationResDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.common.agoffice.AgOfficeReqDTO;
+import my.ep.dto.pm.common.agoffice.AgOfficeResDTO;
+import my.ep.dto.pm.common.glaccount.GlAccountReqDTO;
+import my.ep.dto.pm.common.glaccount.GlAccountResDTO;
+import my.ep.dto.pm.common.programactivity.ProgramActivityReqDTO;
+import my.ep.dto.pm.common.programactivity.ProgramActivityResDTO;
+import my.ep.dto.pm.common.projectsetia.ProjectSetiaReqDTO;
+import my.ep.dto.pm.common.projectsetia.ProjectSetiaResDTO;
+import my.ep.dto.pm.common.votfund.VotFundReqDTO;
+import my.ep.dto.pm.common.votfund.VotFundResDTO;
 import my.ep.dto.sc.requestitem.RequestItemResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.cm.catalog.CmItem;
@@ -94,6 +113,18 @@ public class FileUtility {
 	
 	IPmInterfaceSO interfaceSO = BusinessDelegate.getInstance().getServiceObject(
 			ModuleCodeConst.PROFILE_MANAGEMENT, IPmInterfaceSO.class);
+	IVotFundSO votFundSO = BusinessDelegate.getInstance().getServiceObject(
+			ModuleCodeConst.PROFILE_MANAGEMENT, IVotFundSO.class);
+	IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
+			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
+	IAgOfficeSO agOfficeSO = BusinessDelegate.getInstance().getServiceObject(
+			ModuleCodeConst.PROFILE_MANAGEMENT, IAgOfficeSO.class);
+	IProgramActivitySO programActivitySO = BusinessDelegate.getInstance()
+			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IProgramActivitySO.class);
+	IGlAccountSO glAccountSO = BusinessDelegate.getInstance().getServiceObject(
+			ModuleCodeConst.PROFILE_MANAGEMENT, IGlAccountSO.class);
+	IProjectSetiaSO projectSetiaSO = BusinessDelegate.getInstance()
+			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IProjectSetiaSO.class);
 
 	/**
 	 * Write character data to a big file - use BufferedWriter
@@ -508,340 +539,640 @@ public class FileUtility {
 		}
 	// GFMAS PM Files Start
 
-		public List<AgOffice> pejabatPerakaunanFileInPutStream(String filePath) {
+		public List<AgOffice> pejabatPerakaunanFileInPutStream(String filePath, String fileName) {
 
 			Path path = Paths.get(filePath);
 			String line;
 			List<AgOffice> agOfficeList = new ArrayList<AgOffice>();
 			AgOffice afOffice = null;
+			EPErrorResponse errorResponse = null;
+			List<ErrorDetail> errorDetailList = null;
 
 			try (Scanner scanner = new Scanner(path,IntegrationConstants.ENCODING.name())) {
-
+				int lineNo = 1;
 				while (scanner.hasNextLine()) {
 					line = scanner.nextLine();
-					afOffice = new AgOffice();
-					afOffice.setYear(getValue(line, 0, 4));
-					afOffice.setCode(getValue(line, 4, 4));
-					afOffice.setDescription(getValue(line, 8, 255));
-					afOffice.setStatus(getValue(line, 263, 1));
-					afOffice.setEffDate(IntegrationConstants.DEFAULT_DATE);
-					agOfficeList.add(afOffice);
-
+					if(line.length()==InterfaceRowLength.GLBAC.value()){
+						afOffice = new AgOffice();
+						afOffice.setYear(getValue(line, 0, 4));
+						afOffice.setCode(getValue(line, 4, 4));
+						afOffice.setDescription(getValue(line, 8, 255));
+						afOffice.setStatus(getValue(line, 263, 1));
+						afOffice.setEffDate(IntegrationConstants.DEFAULT_DATE);
+						agOfficeList.add(afOffice);
+					}else{
+						if(errorResponse==null){
+							errorResponse = new EPErrorResponse();
+							errorResponse.setRecordType(IntegrationConstants.RECORD_TYPE_H);
+							errorResponse.setTahunKewangan(2015);
+							errorResponse.setNamaFailAsal(fileName);
+							errorDetailList = new ArrayList<ErrorDetail>();
+						}
+						errorDetailList.add(ConstructErrorDetailsObject(lineNo,"Error in size of the record length"));
+					}
+					lineNo++;
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
+			}
+			if(errorResponse!=null){
+				errorResponse.setErrorDetailList(errorDetailList);
+				errorFileOutBound(errorResponse);
 			}
 			return agOfficeList;
 		}
 
-		public List<AgCtrlOfficer> pegawaiPengawalInPutStream(String filePath) {
+		public List<AgCtrlOfficer> pegawaiPengawalInPutStream(String filePath, String fileName) {
 			Path path = Paths.get(filePath);
 			String line;
 			List<AgCtrlOfficer> agCtrOfficeList = new ArrayList<AgCtrlOfficer>();
 			AgCtrlOfficer afCtrOffice = null;
-
-			try (Scanner scanner = new Scanner(path,
-					IntegrationConstants.ENCODING.name())) {
-
+			EPErrorResponse errorResponse = null;
+			List<ErrorDetail> errorDetailList = null;
+			try (Scanner scanner = new Scanner(path,IntegrationConstants.ENCODING.name())) {
+				int lineNo = 1;
 				while (scanner.hasNextLine()) {
 					line = scanner.nextLine();
-
-					afCtrOffice = new AgCtrlOfficer();
-
-					afCtrOffice.setYear(getValue(line,0 ,4 ));
-					afCtrOffice.setCode(getValue(line, 4, 2));
-					afCtrOffice.setDescription(getValue(line, 6, 255));
-					afCtrOffice.setStatus(getValue(line,261, 1));
-					agCtrOfficeList.add(afCtrOffice);
-
+					if(line.length()==InterfaceRowLength.GLSEG.value()){
+						afCtrOffice = new AgCtrlOfficer();
+						afCtrOffice.setYear(getValue(line,0 ,4 ));
+						afCtrOffice.setCode(getValue(line, 4, 2));
+						afCtrOffice.setDescription(getValue(line, 6, 255));
+						afCtrOffice.setStatus(getValue(line,261, 1));
+						agCtrOfficeList.add(afCtrOffice);
+					}else{
+						if(errorResponse==null){
+							errorResponse = new EPErrorResponse();
+							errorResponse.setRecordType(IntegrationConstants.RECORD_TYPE_H);
+							errorResponse.setTahunKewangan(2015);
+							errorResponse.setNamaFailAsal(fileName);
+							errorDetailList = new ArrayList<ErrorDetail>();
+						}
+						errorDetailList.add(ConstructErrorDetailsObject(lineNo,"Error in size of the record length"));
+					}
+					lineNo++;
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
+			}
+			if(errorResponse!=null){
+				errorResponse.setErrorDetailList(errorDetailList);
+				errorFileOutBound(errorResponse);
 			}
 			return agCtrOfficeList;
 		}
 
-		public List<VotFund> votInPutStream(String filePath) {
+		public BatchResDTO<VotFund> votInPutStream(String filePath, String fileName) {
 			Path path = Paths.get(filePath);
 			String line;
 			List<VotFund> votList = new ArrayList<VotFund>();
 			VotFund vot = null;
-
-			try (Scanner scanner = new Scanner(path,
-					IntegrationConstants.ENCODING.name())) {
-
-				FileUtility fileUtility = new FileUtility();
-				while (scanner.hasNextLine()) {
-					line = scanner.nextLine();
-
-					vot = new VotFund();
-
-				    vot.setYear(fileUtility.getValue(line,0 ,4 ));
-				    vot.setVotFundType(fileUtility.getValue(line,4 ,1));
-					vot.setCode(fileUtility.getValue(line, 4, 3));
-					vot.setPtjCode(fileUtility.getValue(line,7 ,2));
-					vot.setDescription(fileUtility.getValue(line, 9, 255));  
-					vot.setEffectiveDate(formatStringToDate(fileUtility.getValue(line, 264, 8)));
-					vot.setExpiryDate(formatStringToDate(fileUtility.getValue(line, 272, 8)));
-					vot.setStatus(fileUtility.getValue(line, 280,1));
-					votList.add(vot);
-
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return votList;
-		}
-
-		public List<VotFund> votDanaInPutStream(String filePath) {
-			Path path = Paths.get(filePath);
-			String line;
-			List<VotFund> votList = new ArrayList<VotFund>();
-			VotFund vot = null;
+			EPErrorResponse errorResponse = null;
+			BatchResDTO<VotFund> batchResDTO = new BatchResDTO<VotFund>();
+			boolean recordFlag;
 
 			try (Scanner scanner = new Scanner(path,IntegrationConstants.ENCODING.name())) {
-				FileUtility fileUtility = new FileUtility();
+				int lineNo = 1;
 				while (scanner.hasNextLine()) {
 					line = scanner.nextLine();
-					vot = new VotFund();
-
-				    vot.setYear(fileUtility.getValue(line,0 ,4 ));								
-					vot.setCode(fileUtility.getValue(line,4 ,4));
-					vot.setDescription(fileUtility.getValue(line, 8, 255));
-					vot.setEffectiveDate(formatStringToDate(fileUtility.getValue(line, 263, 8)));
-					vot.setExpiryDate(formatStringToDate(fileUtility.getValue(line, 271, 8)));
-					vot.setStatus(fileUtility.getValue(line, 279, 1));
-					votList.add(vot);
-
+					if(line.length()==InterfaceRowLength.GLVOT.value()){
+						recordFlag = false;
+						vot = new VotFund();
+					    vot.setYear(getValue(line,0 ,4 ));
+					    vot.setVotFundType(getValue(line,4 ,1));
+						vot.setVotCode(getValue(line, 4, 3));
+						
+						//Dupplicate checking
+						VotFundReqDTO reqDTO = new VotFundReqDTO();
+						reqDTO.setVotFundCode(vot.getVotCode());
+						VotFundResDTO votFundResDTO = votFundSO.retrieveValidVotFundByVotCode(reqDTO);
+						
+						if (votFundResDTO.isSuccessful()) {
+							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Duplicate code.available in db"));
+							recordFlag = true;
+						}
+						
+						vot.setPtjCode(getValue(line,7 ,2));
+						
+						//kumpula ptj checking
+						OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+						orgProfileReqDTO = new OrgProfileReqDTO();
+						orgProfileReqDTO.setOrgTypeCode(ParameterConst.ORG_TYPE_PTJ_GROUP);
+						orgProfileReqDTO.setOrgCode(vot.getPtjCode()); 
+						
+						OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileByCodeAndOrgType(orgProfileReqDTO);
+						if(!orgProfileResDTO.isSuccessful()){
+							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in dependency kump ptj"));
+							recordFlag = true;
+						}
+						vot.setDescription(getValue(line, 9, 255));
+						if(formatStringToDate(getValue(line, 264, 8))!=null)
+						{
+							vot.setEffectiveDate(formatStringToDate(getValue(line, 264, 8)));
+						}else{
+							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in converting effective date"));
+							recordFlag = true;
+						}
+						if(formatStringToDate(getValue(line, 272, 8))!=null){
+							vot.setExpiryDate(formatStringToDate(getValue(line, 272, 8)));
+						} else {
+							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in converting expiry date"));
+							recordFlag = true;
+						}
+						vot.setStatus(getValue(line, 280,1));
+						if(!recordFlag)
+							votList.add(vot);
+					}else{
+						errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in size of the record length"));
+					}
+					lineNo++;
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			batchResDTO.setErrorResponse(errorResponse);
+			batchResDTO.setBatchResContent(votList);
+			return batchResDTO;
+		}
+
+		public EPErrorResponse constructErrorResponseObject(String fileName,
+				EPErrorResponse errorResponse) {
+			if(errorResponse==null){
+				errorResponse = new EPErrorResponse();
+				errorResponse.setRecordType(IntegrationConstants.RECORD_TYPE_H);
+				errorResponse.setTahunKewangan(2015);
+				errorResponse.setNamaFailAsal(fileName);
+				List<ErrorDetail> errorDetailList = new ArrayList<ErrorDetail>();
+				errorResponse.setErrorDetailList(errorDetailList);
+			}
+			return errorResponse;
+		}
+
+		public List<VotFund> votDanaInPutStream(String filePath, String fileName) {
+			Path path = Paths.get(filePath);
+			String line;
+			List<VotFund> votList = new ArrayList<VotFund>();
+			VotFund vot = null;
+			EPErrorResponse errorResponse = null;
+			List<ErrorDetail> errorDetailList = null;
+
+			try (Scanner scanner = new Scanner(path,IntegrationConstants.ENCODING.name())) {
+				int lineNo = 1;
+				while (scanner.hasNextLine()) {
+					line = scanner.nextLine();
+					if(line.length()==InterfaceRowLength.GLDNA.value()){
+						vot = new VotFund();
+					    vot.setYear(getValue(line,0 ,4 ));								
+						vot.setVotCode(getValue(line,4 ,4));
+						vot.setDescription(getValue(line, 8, 255));
+						try{
+							vot.setEffectiveDate(formatStringToDate(getValue(line, 263, 8)));
+						}catch(Exception e){
+						errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in converting effective date"));
+						}
+						try {
+							vot.setExpiryDate(formatStringToDate(getValue(line, 271, 8)));
+						} catch (Exception e) {
+							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in converting expiry date"));
+						}
+						vot.setStatus(getValue(line, 279, 1));
+						votList.add(vot);
+					}else{
+						errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in size of the record length"));
+					}
+					lineNo++;
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			if(errorResponse!=null){
+				errorResponse.setErrorDetailList(errorDetailList);
+				errorFileOutBound(errorResponse);
+			}
 			return votList;
 		}
 
-		public List<ProgramActivity> programAktiviti(String filePath) {
+		public BatchResDTO<ProgramActivity> programAktiviti(String filePath, String fileName) {
 			Path path = Paths.get(filePath);
 			String line;
 			List<ProgramActivity> programActivityList = new ArrayList<ProgramActivity>();
 			ProgramActivity programActivity = null;
+			EPErrorResponse errorResponse = null;
+			BatchResDTO<ProgramActivity> batchResDTO = new BatchResDTO<ProgramActivity>();
+			boolean recordFlag;
 
-			try (Scanner scanner = new Scanner(path,
-					IntegrationConstants.ENCODING.name())) {
-
-				FileUtility fileUtility = new FileUtility();
+			try (Scanner scanner = new Scanner(path, IntegrationConstants.ENCODING.name())) {
+				int lineNo = 1;
 				while (scanner.hasNextLine()) {
 					line = scanner.nextLine();
-
-					programActivity = new ProgramActivity();
-
-					programActivity.setYear(fileUtility.getValue(line,0 ,4 ));				
-					programActivity.setVotCode(fileUtility.getValue(line,4 ,3 ));
-					programActivity.setCode(fileUtility.getValue(line, 7, 6));
-					programActivity.setDescription(fileUtility.getValue(line, 13, 255));
-					programActivity.setEffectiveDate(formatStringToDate(fileUtility.getValue(line, 268, 8)));
-					programActivity.setExpiryDate(formatStringToDate(fileUtility.getValue(line, 276, 8)));
-					programActivity.setStatus(fileUtility.getValue(line, 284, 1));
-					programActivityList.add(programActivity);
-
+					if(line.length()==InterfaceRowLength.GLPRG.value()){
+						recordFlag = false;
+						programActivity = new ProgramActivity();
+						programActivity.setYear(getValue(line,0 ,4 ));				
+						programActivity.setVotCode(getValue(line,4 ,3 ));
+						
+						//vot code checking
+						VotFundReqDTO votreqDTO = new VotFundReqDTO();
+						votreqDTO.setVotFundCode(programActivity.getVotCode());
+						VotFundResDTO resDTO = votFundSO.retrieveVotFundByVotCode(votreqDTO);
+						
+						if(resDTO.getPmVotFund()==null){
+							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in dependency vot fund"));
+							recordFlag = true;
+						}
+						
+						programActivity.setCode(getValue(line, 7, 6));
+						//duplicate checking
+						ProgramActivityReqDTO reqDTO = new ProgramActivityReqDTO();
+						reqDTO.setCode(programActivity.getCode());
+						ProgramActivityResDTO prgResDTO = programActivitySO.retrieveValidPrgActivityByPrgActivityCode(reqDTO);	
+						
+						if(prgResDTO.isSuccessful()){
+							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Duplicate code.available in db"));
+							recordFlag = true;
+						}
+						programActivity.setDescription(getValue(line, 13, 255));
+						
+						if(formatStringToDate(getValue(line, 268, 8))!=null)
+						{
+							programActivity.setEffectiveDate(formatStringToDate(getValue(line, 268, 8)));
+						}else{
+							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in converting effective date"));
+							recordFlag = true;
+						}
+						if(formatStringToDate(getValue(line, 276, 8))!=null){
+							programActivity.setExpiryDate(formatStringToDate(getValue(line, 276, 8)));
+						} else {
+							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in converting expiry date"));
+							recordFlag = true;
+						}
+						
+						programActivity.setStatus(getValue(line, 284, 1));
+						if(!recordFlag)
+							programActivityList.add(programActivity);
+					}else{
+						errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in size of the record length"));
+					}
+					lineNo++;
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			return programActivityList;
+			batchResDTO.setErrorResponse(errorResponse);
+			batchResDTO.setBatchResContent(programActivityList);
+			return batchResDTO;
 		}
 
-		public List<Project> project(String filePath) {
+		public BatchResDTO<Project>  project(String filePath, String fileName) {
 			Path path = Paths.get(filePath);
 			String line;
 			List<Project> projectList = new ArrayList<Project>();
+			BatchResDTO<Project> batchResDTO = new BatchResDTO<Project>();
 			Project project = null;
+			EPErrorResponse errorResponse = null;
+			boolean recordFlag;
 
-			try (Scanner scanner = new Scanner(path,
-					IntegrationConstants.ENCODING.name())) {
-
-				FileUtility fileUtility = new FileUtility();
+			try (Scanner scanner = new Scanner(path, IntegrationConstants.ENCODING.name())) {
+				int lineNo = 1;
 				while (scanner.hasNextLine()) {
 					line = scanner.nextLine();
+					if(line.length()==InterfaceRowLength.GLPRJ.value()){
+						recordFlag = false;
+						project = new Project();
+						project.setYear(getValue(line,0 ,4 ));
+						project.setVotCode(getValue(line, 4, 3));
+						//vot code checking
+						
+						VotFundReqDTO votreqDTO = new VotFundReqDTO();
+						votreqDTO.setVotFundCode(project.getVotCode());
+						VotFundResDTO restDTO = votFundSO.retrieveVotFundByVotCode(votreqDTO);
+						if(restDTO.getPmVotFund()==null){
+							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in dependency vot fund"));
+							recordFlag = true;
+						}
+						project.setCode(getValue(line, 7, 5));
+						//Duplicate checking
+						
+						ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
+						reqDTO.setProjectCode(project.getCode());
+						ProjectSetiaResDTO proResDTO = projectSetiaSO.retrieveProjectByProjectCode(reqDTO);							
+						if (proResDTO.isSuccessful()) {
+							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Duplicate code.available in db"));
+							recordFlag = true;
+						}
+						project.setSetiaCode(getValue(line, 12, 3));
+						project.setSubSetiaCode(getValue(line,15, 4));
+						project.setPembiayaan(getValue(line,19, 1));
+						project.setDescription(getValue(line,20, 255));
 
-					project = new Project();
-
-					project.setYear(fileUtility.getValue(line,0 ,4 ));
-					project.setVotCode(fileUtility.getValue(line, 4, 3));
-					project.setCode(fileUtility.getValue(line, 7, 5));
-					project.setSetiaCode(fileUtility.getValue(line, 12, 3));
-					project.setSubSetiaCode(fileUtility.getValue(line,15, 4));
-					project.setPembiayaan(fileUtility.getValue(line,19, 1));
-					project.setDescription(fileUtility.getValue(line,20, 255));
-					project.setEffectiveDate(formatStringToDate(fileUtility.getValue(line, 275, 8)));
-					project.setExpiryDate(formatStringToDate(fileUtility.getValue(line, 283, 8)));
-					project.setStatus(fileUtility.getValue(line,291, 1));
-					projectList.add(project);
-
+						if(formatStringToDate(getValue(line, 275, 8))!=null)
+						{
+							project.setEffectiveDate(formatStringToDate(getValue(line, 275, 8)));
+						}else{
+							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in converting effective date"));
+							recordFlag = true;
+						}
+						if(formatStringToDate(getValue(line, 283, 8))!=null){
+							project.setExpiryDate(formatStringToDate(getValue(line, 283, 8)));
+						} else {
+							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in converting expiry date"));
+							recordFlag = true;
+						}
+						
+						project.setStatus(getValue(line,291, 1));
+						if(!recordFlag)
+							projectList.add(project);
+					}else{
+						errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in size of the record length"));
+					}
+					lineNo++;
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			return projectList;
+			batchResDTO.setErrorResponse(errorResponse);
+			batchResDTO.setBatchResContent(projectList);
+			return batchResDTO;
 		}
 
-		public List<GlAccount> kodAkaun(String filePath) {
+		public BatchResDTO<GlAccount> kodAkaun(String filePath, String fileName) {
 			Path path = Paths.get(filePath);
 			String line;
 			List<GlAccount> glAccountList = new ArrayList<GlAccount>();
+			BatchResDTO<GlAccount> batchResDTO = new BatchResDTO<GlAccount>();
 			GlAccount glAccount = null;
-
-			try (Scanner scanner = new Scanner(path,
-					IntegrationConstants.ENCODING.name())) {
-
-				FileUtility fileUtility = new FileUtility();
+			EPErrorResponse errorResponse = null;
+			boolean recordFlag;
+			
+			try (Scanner scanner = new Scanner(path, IntegrationConstants.ENCODING.name())) {
+				int lineNo = 1;
 				while (scanner.hasNextLine()) {
 					line = scanner.nextLine();
-
-					glAccount = new GlAccount();
-
-					glAccount.setYear(fileUtility.getValue(line,0 ,4 ));
-					glAccount.setCode(fileUtility.getValue(line, 4, 8));
-					glAccount.setPtjCode(fileUtility.getValue(line,12, 2));
-					glAccount.setDescription(fileUtility.getValue(line,14, 255));
-//					glAccount.setEffectiveDate(formatStringToDate(fileUtility.getValue(line, 269, 8)));
-//					glAccount.setExpiryDate(formatStringToDate(fileUtility.getValue(line, 277, 8)));
-					glAccount.setStatus(fileUtility.getValue(line,269, 1));
-					glAccountList.add(glAccount);
-
+					if(line.length()==InterfaceRowLength.GLGLC.value()){
+						recordFlag = false;
+						glAccount = new GlAccount();
+						glAccount.setYear(getValue(line,0 ,4 ));
+						glAccount.setCode(getValue(line, 4, 8));
+						
+						GlAccountReqDTO reqDTO = new GlAccountReqDTO();
+						reqDTO.setGlAccountCode(glAccount.getCode());
+						GlAccountResDTO glResDTO = glAccountSO.retrieveValidGlAccountByglAccountCode(reqDTO);
+						if (glResDTO.isSuccessful()) {
+							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Duplicate code.available in db"));
+							recordFlag = true;
+						}
+						
+						glAccount.setPtjCode(getValue(line,12, 2));
+						glAccount.setDescription(getValue(line,14, 255));
+//						glAccount.setEffectiveDate(formatStringToDate(getValue(line, 269, 8)));
+//						glAccount.setExpiryDate(formatStringToDate(getValue(line, 277, 8)));
+						glAccount.setStatus(getValue(line,269, 1));
+						if(!recordFlag)
+							glAccountList.add(glAccount);
+					}else{
+						errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in size of the record length"));
+					}
+					lineNo++;
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			return glAccountList;
+			batchResDTO.setErrorResponse(errorResponse);
+			batchResDTO.setBatchResContent(glAccountList);
+			return batchResDTO;
 		}
 
-		public List<PtjGroup> kumpulanPTJ(String filePath, String fileName) {
+		public BatchResDTO<PtjGroup> kumpulanPTJ(String filePath, String fileName) {
 			Path path = Paths.get(filePath);
 			String line;
 			List<PtjGroup> ptjGroupList = new ArrayList<PtjGroup>();
 			PtjGroup ptjGroup = null;
+			EPErrorResponse errorResponse = null;
+			boolean recordFlag;
 			
-			// Error Respose to 1GFMAS
-			EPErrorResponse epErrorResponse = new EPErrorResponse();
-			epErrorResponse.setRecordType("H");
-			epErrorResponse.setTahunKewangan(2005);
-			epErrorResponse.setNamaFailAsal(fileName);
-			ErrorDetail errorDetail = null;
-			List<ErrorDetail> errorDetailsList = new ArrayList<ErrorDetail>();
-
 			try (Scanner scanner = new Scanner(path, IntegrationConstants.ENCODING.name())) {
-				
-				int lineCount = 1;
-
+				int lineNo = 1;
 				while (scanner.hasNextLine()) {
 					line = scanner.nextLine();
-					if (line.length()==278) {
+					if(line.length()==InterfaceRowLength.GLPCG.value()){
+						recordFlag = false;
 						ptjGroup = new PtjGroup();
 						ptjGroup.setYear(getValue(line, 0, 4));
 						ptjGroup.setCode(getValue(line, 4, 2));
-						ptjGroup.setDescription(getValue(line, 6, 255));
-						try{
-							ptjGroup.setEffectiveDate(formatStringToDate(getValue(line, 261, 8)));
-						}catch(Exception e){
-							errorDetail = new ErrorDetail();
-							errorDetail.setRecordType("L");
-							errorDetail.setLineNo(lineCount);
-							errorDetail.setErrorDescription("Error converting effective date");
-							if(!errorDetailsList.contains(errorDetail))
-								errorDetailsList.add(errorDetail);
-						}
-						try{
-							ptjGroup.setExpiryDate(formatStringToDate(getValue(line, 269, 8)));
-						}catch(Exception e){
-							errorDetail = new ErrorDetail();
-							errorDetail.setRecordType("L");
-							errorDetail.setLineNo(lineCount);
-							errorDetail.setErrorDescription("Error converting expiry date");
-							if(!errorDetailsList.contains(errorDetail))
-								errorDetailsList.add(errorDetail);
-						}
 						
+						OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+						orgProfileReqDTO.setOrgType(ParameterConst.ORG_TYPE_PTJ_GROUP);
+						orgProfileReqDTO.setOrgCode(ptjGroup.getCode()); 
+						
+						OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileByCodeAndOrgType(orgProfileReqDTO);
+						//Duplicate checking
+						if (orgProfileResDTO.isSuccessful()) {
+							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Duplicate code.available in db"));
+							recordFlag = true;
+						}
+						ptjGroup.setDescription(getValue(line, 6, 255));
+						if(formatStringToDate(getValue(line, 261, 8))!=null)
+						{
+							ptjGroup.setEffectiveDate(formatStringToDate(getValue(line, 264, 8)));
+						}else{
+							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in converting effective date"));
+							recordFlag = true;
+						}
+						if(formatStringToDate(getValue(line, 269, 8))!=null){
+							ptjGroup.setExpiryDate(formatStringToDate(getValue(line, 272, 8)));
+						} else {
+							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in converting expiry date"));
+							recordFlag = true;
+						}
 						ptjGroup.setStatus(getValue(line, 277, 1));
-						ptjGroupList.add(ptjGroup);
-						lineCount++;
+						if(!recordFlag)
+							ptjGroupList.add(ptjGroup);
+						
 					}else{
-						errorDetail = new ErrorDetail();
-						errorDetail.setRecordType("L");
-						errorDetail.setLineNo(lineCount);
-						errorDetail.setErrorDescription("Lenght of the record is not matching");
-						if(!errorDetailsList.contains(errorDetail))
-							errorDetailsList.add(errorDetail);
+						errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in size of the record length"));
 					}
+					lineNo++;
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			
-			//If ErrorDetail size is greater than zero cal ErrorResponse
-			if(errorDetailsList.size()>0){
-				errorFileOutPutStream(epErrorResponse,IntegrationConstants.FILE_PATH_LOCAL);
-			}
-				return ptjGroupList;
+			BatchResDTO<PtjGroup> batchResDTO = new BatchResDTO<PtjGroup>();
+			batchResDTO.setErrorResponse(errorResponse);
+			batchResDTO.setBatchResContent(ptjGroupList);
+			return batchResDTO;
 		}
 
-		public List<OrgProfile> masterDatePTJ(String filePath) {
+		public BatchResDTO<OrgProfile> masterDatePTJ(String filePath, String fileName) {
 			Path path = Paths.get(filePath);
 			String line;
 			List<OrgProfile> orgProfileList = new ArrayList<OrgProfile>();
 			OrgProfile orgProfile = null;
+			EPErrorResponse errorResponse = null;
+			boolean recordFlag;
 
-			try (Scanner scanner = new Scanner(path,
-					IntegrationConstants.ENCODING.name())) {
-
-				FileUtility fileUtility = new FileUtility();
+			try (Scanner scanner = new Scanner(path, IntegrationConstants.ENCODING.name())) {
+				int lineNo = 1;
 				while (scanner.hasNextLine()) {
 					line = scanner.nextLine();
-
-					orgProfile = new OrgProfile();
-
-					orgProfile.setYear(fileUtility.getValue(line,0 ,4 ));
-					orgProfile.setPtjCode(fileUtility.getValue(line, 4, 2));
-					orgProfile.setCode(fileUtility.getValue(line, 6, 6));
-					orgProfile.setDescription(fileUtility.getValue(line, 12, 255));
-					orgProfile.setCtrOfficerCode(fileUtility.getValue(line,267,2));
-					orgProfile.setAgOfficeCode(fileUtility.getValue(line, 269, 4));
-					orgProfile.setEffectiveDate(formatStringToDate(fileUtility.getValue(line, 273, 8)));
-					orgProfile.setExpiryDate(formatStringToDate(fileUtility.getValue(line, 281, 8)));
-					orgProfile.setStatus(fileUtility.getValue(line, 289, 1));
-					orgProfileList.add(orgProfile);
-
+					if(line.length()==InterfaceRowLength.GLPTJ.value()){
+						recordFlag = false;
+						orgProfile = new OrgProfile();
+						orgProfile.setYear(getValue(line,0 ,4 ));
+						orgProfile.setPtjCode(getValue(line, 4, 2));
+						orgProfile.setCode(getValue(line, 6, 6));
+						
+						OrgProfileReqDTO dupPTJReqDTO = new OrgProfileReqDTO();
+						dupPTJReqDTO.setOrgType(ParameterConst.ORG_TYPE_PTJ);
+						dupPTJReqDTO.setOrgCode(orgProfile.getPtjCode()+orgProfile.getCode()); 
+						
+						//Duplicate checking
+						OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileByCodeAndOrgType(dupPTJReqDTO);
+						if (orgProfileResDTO.isSuccessful()) {
+							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Duplicate code.available in db"));
+							recordFlag = true;
+						}
+						
+						//Kumpulan ptj checking
+						OrgProfileReqDTO kumpReqDTO = new OrgProfileReqDTO();
+						kumpReqDTO.setOrgTypeCode(ParameterConst.ORG_TYPE_PTJ_GROUP);
+						kumpReqDTO.setOrgCode(orgProfile.getPtjCode()); 
+						
+						OrgProfileResDTO kumResDTO = orgProfileSO.retrieveOrgProfileByCodeAndOrgType(kumpReqDTO);
+						if(kumResDTO.isSuccessful()){
+							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in dependency kump ptj"));
+							recordFlag = true;
+						}
+						orgProfile.setDescription(getValue(line, 12, 255));
+						
+						
+						//pegawai pengawai checking
+						OrgProfileReqDTO orgReqDTO = new OrgProfileReqDTO();
+						orgReqDTO.setOrgTypeCode(ParameterConst.ORG_TYPE_PEGAWAI_PENGAWAL);
+						orgReqDTO.setOrgCode(orgProfile.getCtrOfficerCode()); 
+						
+						OrgProfileResDTO pegwaiResDTO = orgProfileSO.retrieveOrgProfileByCodeAndOrgType(orgReqDTO);
+						
+						if(!pegwaiResDTO.isSuccessful()){
+							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in dependency pegawai pengawai"));
+							recordFlag = true;
+						}
+						
+						orgProfile.setCtrOfficerCode(getValue(line,267,2));
+						
+						orgProfile.setAgOfficeCode(getValue(line, 269, 4));
+					
+						// pejabat perakuan checking
+						AgOfficeReqDTO reqDTO = new AgOfficeReqDTO();
+						reqDTO.setAgOfficeCode(orgProfile.getAgOfficeCode());
+						AgOfficeResDTO agOfficeDTO = agOfficeSO.retrieveValidAgOfficeByOfficeCode(reqDTO);
+						if(!agOfficeDTO.isSuccessful()){
+							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in dependency pejabat perakuan"));
+							recordFlag = true;
+						}
+//						orgProfile.setEffectiveDate(formatStringToDate(getValue(line, 273, 8)));
+//						orgProfile.setExpiryDate(formatStringToDate(getValue(line, 281, 8)));
+						
+						if(formatStringToDate(getValue(line, 273, 8))!=null)
+						{
+							orgProfile.setEffectiveDate(formatStringToDate(getValue(line, 264, 8)));
+						}else{
+							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in converting effective date"));
+							recordFlag = true;
+						}
+						if(formatStringToDate(getValue(line, 281, 8))!=null){
+							orgProfile.setExpiryDate(formatStringToDate(getValue(line, 272, 8)));
+						} else {
+							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in converting expiry date"));
+							recordFlag = true;
+						}
+						
+						orgProfile.setStatus(getValue(line, 289, 1));
+						if(!recordFlag)
+							orgProfileList.add(orgProfile);
+					}else{
+						errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in size of the record length"));
+					}
+					lineNo++;
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			return orgProfileList;
+			BatchResDTO<OrgProfile> batchResDTO = new BatchResDTO<OrgProfile>();
+			batchResDTO.setErrorResponse(errorResponse);
+			batchResDTO.setBatchResContent(orgProfileList);
+			return batchResDTO;
 		}
 
-		public List<BankAccountInformation> kodBank(String filePath) {
+		public List<BankAccountInformation> kodBank(String filePath, String fileName) {
 			Path path = Paths.get(filePath);
 			String line;
 			List<BankAccountInformation> bankList = new ArrayList<BankAccountInformation>();
 			BankAccountInformation bank = null;
+			EPErrorResponse errorResponse = null;
+			List<ErrorDetail> errorDetailList = null;
 
-			try (Scanner scanner = new Scanner(path,
-					IntegrationConstants.ENCODING.name())) {
-
-				FileUtility fileUtility = new FileUtility();
+			try (Scanner scanner = new Scanner(path, IntegrationConstants.ENCODING.name())) {
+				int lineNo = 1;
 				while (scanner.hasNextLine()) {
 					line = scanner.nextLine();
+					if(line.length()==InterfaceRowLength.CMBNK.value()){
+						bank = new BankAccountInformation();
 
-					bank = new BankAccountInformation();
-
-					bank.setSwiftCode(fileUtility.getValue(line, 0, 11));
-					bank.setBankName(fileUtility.getValue(line, 11, 40));
-					bank.setKodBankIndicator(Integer.valueOf(fileUtility.getValue(line, 51, 1)));
-					bank.setStatus(fileUtility.getValue(line, 52, 1));
-					bankList.add(bank);
-
+						bank.setSwiftCode(getValue(line, 0, 11));
+						bank.setBankName(getValue(line, 11, 40));
+						bank.setKodBankIndicator(Integer.valueOf(getValue(line, 51, 1)));
+						bank.setStatus(getValue(line, 52, 1));
+						bankList.add(bank);
+					}else{
+						if(errorResponse==null){
+							errorResponse = new EPErrorResponse();
+							errorResponse.setRecordType(IntegrationConstants.RECORD_TYPE_H);
+							errorResponse.setTahunKewangan(2015);
+							errorResponse.setNamaFailAsal(fileName);
+							errorDetailList = new ArrayList<ErrorDetail>();
+						}
+						errorDetailList.add(ConstructErrorDetailsObject(lineNo,"Error in size of the record length"));
+					}
+					lineNo++;
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
+			}
+			if(errorResponse!=null){
+				errorResponse.setErrorDetailList(errorDetailList);
+				errorFileOutBound(errorResponse);
 			}
 			return bankList;
 		}
@@ -855,20 +1186,19 @@ public class FileUtility {
 			try (Scanner scanner = new Scanner(path,
 					IntegrationConstants.ENCODING.name())) {
 
-				FileUtility fileUtility = new FileUtility();
 				String[] invoiceArray = null;
 				while (scanner.hasNextLine()) {
 					line = scanner.nextLine();
 					if(line.startsWith(IntegrationConstants.VALUE_ZERO)){
 						paymentInfo = new PaymentInfo();
 						invoiceArray = new String[1];
-						paymentInfo.setPaymentRefNo(fileUtility.getValue(line, 33, 18));
-						paymentInfo.setPaymentDate(fileUtility.getValue(line, 11, 8));
-						log.info("setPaymentRefNo  :"+fileUtility.getValue(line, 33, 18));
-						log.info("setPaymentDate  :"+fileUtility.getValue(line, 11, 8));
+						paymentInfo.setPaymentRefNo(getValue(line, 33, 18));
+						paymentInfo.setPaymentDate(getValue(line, 11, 8));
+						log.info("setPaymentRefNo  :"+getValue(line, 33, 18));
+						log.info("setPaymentDate  :"+getValue(line, 11, 8));
 					}else if(line.startsWith(IntegrationConstants.VALUE_ONE)){
-						invoiceArray[0] =fileUtility.getValue(line, 9, 17);
-						log.info("Invoice No  :"+fileUtility.getValue(line, 9, 17));
+						invoiceArray[0] =getValue(line, 9, 17);
+						log.info("Invoice No  :"+getValue(line, 9, 17));
 						paymentInfo.setInvoiceArray(invoiceArray);
 						paymentList.add(paymentInfo);
 					}
@@ -924,20 +1254,14 @@ public class FileUtility {
 				}else{
 					masterDataMaterialInfo.setAltUnitOfMeasure("UN");
 				}
-
 				masterDataMaterialInfoList.add(masterDataMaterialInfo);
-				
 			}
 		}
 		
-		
 		return masterDataMaterialInfoList;
-	
 		}
 	
-	
 	// set values for temporary masterData material Info 1gfmas
-	
 		public List<MasterDataMaterialInfo> setGfmasTempMasterDataMaterialInfo(RequestItemResDTO resDTO){
 			
 			List<MasterDataMaterialInfo> masterDataMaterialInfoList = new ArrayList<MasterDataMaterialInfo>();
@@ -949,7 +1273,6 @@ public class FileUtility {
 					
 					masterDataMaterialInfo = new MasterDataMaterialInfo();
 					
-					
 					masterDataMaterialInfo.setMaterialCode(scRequestItem.getCmItem().getExtensionCode());
 					masterDataMaterialInfo.setCodeType("T");
 					masterDataMaterialInfo.setActionCode(checkAction(scRequestItem.getCreatedDate(), scRequestItem.getChangedDate()));
@@ -959,7 +1282,6 @@ public class FileUtility {
 					}else{
 						masterDataMaterialInfo.setMaterialDesc(scRequestItem.getItemName());
 					}
-					
 			
 					//expiry date will be 3 years from current date
 					Calendar c = Calendar.getInstance();    
@@ -1206,8 +1528,8 @@ public class FileUtility {
 			return dt1.parse(date);
 		} catch (ParseException e) {
 			e.printStackTrace();
+			return null;
 		}
-		return null;
 	}
 	
 	//===============================Eperunding files creation===========================
@@ -2599,42 +2921,40 @@ public class FileUtility {
 }
 	
 	// Error file
-	
-	public void errorFileOutPutStream(EPErrorResponse epErrorResponse, String filePath) {
-		String SERVICE_CODE = "GLMDE";
-
-		String fileName = createFileNamePhis(SERVICE_CODE);
-
+	public void errorFileOutPutStream(BatchReqDTO<EPErrorResponse> reqDTO) {
+		System.out.println("inside errorFileOutPutStream : GLMDE");
+		String fileName = createFileNameGfmas(ProcessCode.GLMDE.value());
 		Writer writer = null;
-
 		try {
 			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(filePath + fileName), "utf-8"));
+					new FileOutputStream(reqDTO.getFilePath() + fileName), "utf-8"));
 
 			StringBuffer errResLine = null;
 			StringBuffer errDtlLine = null;
-			if (epErrorResponse != null) {
-				
+			if (reqDTO.getBatchObject() != null) {
 				errResLine = new StringBuffer();
-				errResLine.append(formatStringField(epErrorResponse.getRecordType(), 1, "L"));
-				errResLine.append(formatIntegerField(epErrorResponse.getTahunKewangan(), 4, "R"));
-				errResLine.append(formatStringField(epErrorResponse.getNamaFailAsal(), 30,"L"));
+				errResLine.append(formatStringField(reqDTO.getBatchObject().getRecordType(), 1, "L"));
+				errResLine.append(formatIntegerField(reqDTO.getBatchObject().getTahunKewangan(), 4, "R"));
+				errResLine.append(formatStringField(reqDTO.getBatchObject().getNamaFailAsal(), 30,"L"));
 				errResLine.append(System.getProperty("line.separator"));
-				
-				if(null!=epErrorResponse.getErrorDetailList()){
-					for(ErrorDetail errorDetail:epErrorResponse.getErrorDetailList()){
+				writer.write(errResLine.toString());
+				if(null!=reqDTO.getBatchObject().getErrorDetailList()){
+					for(ErrorDetail errorDetail:reqDTO.getBatchObject().getErrorDetailList()){
 						errDtlLine = new StringBuffer();
 						errDtlLine.append(formatStringField(errorDetail.getRecordType(),1, "L"));
 						errDtlLine.append(formatIntegerField(errorDetail.getLineNo(), 10, "R"));
 						errDtlLine.append(formatStringField(errorDetail.getErrorDescription(), 255, "L"));
 						errDtlLine.append(System.getProperty("line.separator"));
-						errResLine.append(errDtlLine.toString());
+						writer.write(errDtlLine.toString());
+						writer.flush();
 					}
 				}
-				writer.write(errResLine.toString());
 				writer.close();
-				
-				encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
+				reqDTO.setEncryptFilePath(IntegrationConstants.GMAS_UPLOAD_LOCAL);
+				reqDTO.setFileName(fileName);
+				reqDTO.setServiceCode(ServiceCode.GLMDE.value());
+				reqDTO.setProcessId(ProcessCode.GLMDE.value());
+				encryption.encryptGmas(reqDTO);
 
 			}
 		} catch (IOException e) {
@@ -3258,5 +3578,25 @@ public class FileUtility {
 
 		}
 	}
+	
+	//Error processing 
+	
+	public ErrorDetail ConstructErrorDetailsObject(int lineNo,String errInfo){
+		ErrorDetail errorDetail = new ErrorDetail();
+		errorDetail.setRecordType(IntegrationConstants.RECORD_TYPE_L);
+		errorDetail.setLineNo(lineNo);
+		errorDetail.setErrorDescription(errInfo);
+		return errorDetail;
+	}
+	
+	public void errorFileOutBound(EPErrorResponse errorResponse) {
+		if(errorResponse!=null){
+			BatchReqDTO<EPErrorResponse> reqDTO = new BatchReqDTO<EPErrorResponse>();
+			reqDTO.setFilePath(IntegrationConstants.FILE_PATH_LOCAL);
+			reqDTO.setBatchObject(errorResponse);
+			errorFileOutPutStream(reqDTO);
+		}
+	}
+	
 	
 }

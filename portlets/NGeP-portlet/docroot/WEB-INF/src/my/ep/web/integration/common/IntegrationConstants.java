@@ -124,6 +124,10 @@ public class IntegrationConstants {
 	
 	public static final int RECORD_TYPE_THREE = 3;
 	
+	public static final String RECORD_TYPE_H = "H";
+	
+	public static final String RECORD_TYPE_L = "L";
+	
 	public static final String HQ_INDICATOR_CODE = "012";
 	
 	public static final String BRANCH_INDICATOR_CODE = "004";
