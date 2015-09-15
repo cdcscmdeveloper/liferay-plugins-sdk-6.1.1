@@ -1,3 +1,13 @@
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.backingbean.pm.common.supportdoc;
 
 import java.util.ArrayList;
@@ -8,19 +18,18 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.constant.MessageConst;
@@ -33,6 +42,8 @@ import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
@@ -60,7 +71,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -113,6 +123,7 @@ public class SupportDocumentBackingBean extends
 		log.info("preLoading");
 		this.resetSupportDocSearchBean();
 		this.getManagedBean().setSelectedTabIndex(0);
+		this.getManagedBean().setSupplierActionItems(supplierActionOptions());
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_SEARCH);
@@ -244,12 +255,12 @@ public class SupportDocumentBackingBean extends
 						this.getManagedBean().getSelectedDocument()
 								.setDocDefinitionTypeCode(new PmParameter());
 					}
-					PmParameter tempParam = PmCommonUtil.retrievePmParameter(
+					/*PmParameter tempParam = PmCommonUtil.retrievePmParameter(
 							ParameterTypeConst.DOCUMENT_DEFINITION_TYPE,
 							ProfileManagementConst.DEFAULT_DOC_DEFINITION);
 					this.getManagedBean().getSelectedDocument()
 							.getDocDefinitionTypeCode()
-							.setParameterId(tempParam.getParameterId());
+							.setParameterId(tempParam.getParameterId());*/
 				}
 				if (this.getManagedBean().getSelectedDocument().isBrandNew()
 						&& this.getManagedBean().getSelectedDocument()
@@ -259,12 +270,13 @@ public class SupportDocumentBackingBean extends
 						this.getManagedBean().getSelectedDocument()
 								.setChecklistActionCode(new PmParameter());
 					}
-					PmParameter tempParam = PmCommonUtil.retrievePmParameter(
+					
+					/*PmParameter tempParam = PmCommonUtil.retrievePmParameter(
 							ParameterTypeConst.SC_SUPPLIER_ACTION,
 							ProfileManagementConst.DEFAULT_SUPPLIER_ACTION);
 					this.getManagedBean().getSelectedDocument()
 							.getChecklistActionCode()
-							.setParameterId(tempParam.getParameterId());
+							.setParameterId(tempParam.getParameterId());*/
 				}
 				if (this.getManagedBean().getSelectedDocument().isBrandNew()) {
 					this.getManagedBean().getSelectedDocument().setPmZone(null);
@@ -482,7 +494,7 @@ public class SupportDocumentBackingBean extends
 	public void addRestriction(int restrictionType) {
 		log.info("addRestriction");
 		log.info("restrictionType = " + restrictionType);
-		
+
 		if (validateUniqueRestrType(restrictionType)) {
 			PmDocumentRestr pmDocumentRestr = new PmDocumentRestr();
 			if (restrictionType == RESTR_APP) {
@@ -650,7 +662,7 @@ public class SupportDocumentBackingBean extends
 
 	public void deleteRestrictions(int restrictionType, int rowIndex) {
 		log.info("deleteRestrictions");
-		PmDocumentRestr pmDocRestr = null;		
+		PmDocumentRestr pmDocRestr = null;
 		if (restrictionType == RESTR_APP) {
 			pmDocRestr = getManagedBean().getAppTypeRestrictions()
 					.get(rowIndex);
@@ -1366,7 +1378,7 @@ public class SupportDocumentBackingBean extends
 		String docRestreMessageId = "";
 		// String[] commonMsgParam =null;
 
-		if (pmDocument.isByAppType() && documentRestr.getAppTypeCode() != null ) {
+		if (pmDocument.isByAppType() && documentRestr.getAppTypeCode() != null) {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80804;
 				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
@@ -1377,7 +1389,8 @@ public class SupportDocumentBackingBean extends
 						docRestreMessageId);
 			}
 		}
-		if (pmDocument.isByCompType() && documentRestr.getCompanyTypeCode()!=null) {
+		if (pmDocument.isByCompType()
+				&& documentRestr.getCompanyTypeCode() != null) {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80806;
 				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
@@ -1389,7 +1402,8 @@ public class SupportDocumentBackingBean extends
 			}
 
 		}
-		if (pmDocument.isBySupplierType() && documentRestr.getSupplierTypeCode() != null) {
+		if (pmDocument.isBySupplierType()
+				&& documentRestr.getSupplierTypeCode() != null) {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80808;
 				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
@@ -1401,7 +1415,8 @@ public class SupportDocumentBackingBean extends
 			}
 		}
 
-		if (pmDocument.isByCategory() && documentRestr.getPmCategoryL3() != null) {
+		if (pmDocument.isByCategory()
+				&& documentRestr.getPmCategoryL3() != null) {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80810;
 				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
@@ -1423,7 +1438,8 @@ public class SupportDocumentBackingBean extends
 						docRestreMessageId);
 			}
 		}
-		if (pmDocument.isByProcureCat() && documentRestr.getProcurementCatCode()!=null) {
+		if (pmDocument.isByProcureCat()
+				&& documentRestr.getProcurementCatCode() != null) {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80802;
 				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
@@ -1441,9 +1457,9 @@ public class SupportDocumentBackingBean extends
 			DocumentReqDTO reqDTO, StatusResDTO statusResDTO,
 			String docRestreMessageId) {
 		String[] commonMsgParam;
-		commonMsgParam = new String[] {pmDocument.getDocName()};
-		trackingDairyData(pmDocument, reqDTO, statusResDTO,
-				docRestreMessageId, commonMsgParam);
+		commonMsgParam = new String[] { pmDocument.getDocName() };
+		trackingDairyData(pmDocument, reqDTO, statusResDTO, docRestreMessageId,
+				commonMsgParam);
 	}
 
 	private void trackingDairyData(PmDocument pmDocument,
@@ -1727,7 +1743,7 @@ public class SupportDocumentBackingBean extends
 		IDocumentSO reqSO = null;
 		try {
 			PmDocument pmDocument = this.getManagedBean().getSelectedDocument();
-			
+
 			reqDTO = new DocumentReqDTO();
 			validateDocument(pmDocument);
 			validateRestrictions(pmDocument);
@@ -1737,7 +1753,7 @@ public class SupportDocumentBackingBean extends
 
 			// this is for tracking diary
 			String messageId = "";
-			String[] msgParam = new String[] {pmDocument.getDocName()};
+			String[] msgParam = new String[] { pmDocument.getDocName() };
 
 			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
 					.getServiceObject("pm", IStatusSO.class);
@@ -2308,5 +2324,92 @@ public class SupportDocumentBackingBean extends
 		}
 
 		return searchDocument(searchBean);
+	}
+	
+	/**
+	 * Gets the supplier action details.
+	 * 
+	 * @param parameterId
+	 *            the parameter id
+	 * @return the supplier action details
+	 */
+	public void getSupplierActionDetails(Long parameterId) {
+
+		log.info("getSupplierActionDetails values");
+
+		IParameterSO parameterSO = null;
+		SelectItem[] supplierActionItems = null;
+		FacesScopes face = new FacesScopes();
+		parameterSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+		ParameterReqDTO reqDTO = new ParameterReqDTO();
+		reqDTO.setParameterId(parameterId);
+		ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+		PmParameter pmParameter = resDTO.getPmParameter();
+
+		List<String> paramCodeList = new ArrayList<String>();
+		List<PmParameterDesc> parameterDescs = null;
+		if (pmParameter != null
+				&& (ParameterTypeConst.DOCUMENT_DEFINITION_PTJ_UPLOAD)
+						.equalsIgnoreCase(pmParameter.getParameterCode())) {
+			// pass select * from pm_parameter where parameter_type='SAT' and
+			// parameter_code in('V','O');
+
+			paramCodeList.add(ParameterTypeConst.SC_SUPPLIER_ACTION_VIEW);
+			paramCodeList
+					.add(ParameterTypeConst.SC_SUPPLIER_ACTION_DOWN_UPLOAD);
+			parameterDescs = getParameterDescByParamTypeAndParamCode(paramCodeList);
+
+		} else if (pmParameter != null
+				&& (ParameterTypeConst.DOCUMENT_DEFINITION_SUPPLIER_UPLOAD)
+						.equalsIgnoreCase(pmParameter.getParameterCode())) {
+			// pass select * from pm_parameter where parameter_type='SAT' and
+			// parameter_code in('U');
+			paramCodeList.add(ParameterTypeConst.SC_SUPPLIER_ACTION_UPLOAD);
+
+			parameterDescs = getParameterDescByParamTypeAndParamCode(paramCodeList);
+
+		} else {
+
+			supplierActionItems = getDropdownValues(ParameterTypeConst.SC_SUPPLIER_ACTION);
+		}
+
+		if (null != parameterDescs && parameterDescs.size() > 0) {
+
+			supplierActionItems = new SelectItem[parameterDescs.size() + 1];
+			supplierActionItems[0] = new SelectItem(null,
+					ResourceBundleUtils.getMessage("lbl.txt.select",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							face.getUserLocale()));
+			int i = 1;
+			for (PmParameterDesc parameterDesc : parameterDescs) {
+				supplierActionItems[i++] = new SelectItem(parameterDesc
+						.getPmParameter().getParameterId(),
+						parameterDesc.getCodeName());
+
+			}
+		}
+		this.getManagedBean().setSupplierActionItems(supplierActionItems);
+
+	}
+
+	/**
+	 * Gets the parameter desc by param type and param code.
+	 * 
+	 * @param paramCodeList
+	 *            the param code list
+	 * @return the parameter desc by param type and param code
+	 */
+	private List<PmParameterDesc> getParameterDescByParamTypeAndParamCode(
+			List<String> paramCodeList) {
+
+		List<PmParameterDesc> parameterDescs = new ArrayList<PmParameterDesc>();
+		for (String parmCode : paramCodeList) {
+			PmParameterDesc pmParameterDesc = ParameterHelper.getInstance()
+					.getParameterDescByParamTypeAndParamCode(
+							ParameterTypeConst.SC_SUPPLIER_ACTION, parmCode);
+			parameterDescs.add(pmParameterDesc);
+		}
+		return parameterDescs;
 	}
 }
