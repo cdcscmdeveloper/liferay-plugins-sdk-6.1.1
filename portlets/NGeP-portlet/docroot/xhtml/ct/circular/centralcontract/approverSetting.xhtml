@@ -8,7 +8,8 @@
 	
 	<p:panel id="settingId" header="#{lbl['lbl.ct.panel.approver.list']}" toggleable="true" toggleSpeed="500">
 		<h:panelGrid columns="1">
-				<p:pickList id="approverpickList" value="#{centralContractBackingBean.managedBean.approverModel}"
+				<p:pickList id="approverpickList" 
+				    value="#{centralContractBackingBean.managedBean.approverModel}"
 					var="data" itemValue="#{data}" itemLabel="#{data.userName}" 
 					disabled="#{centralContractBackingBean.managedBean.viewContract}"
 					showTargetControls="true" filterMatchMode="contains"
