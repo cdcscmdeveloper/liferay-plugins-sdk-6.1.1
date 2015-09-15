@@ -19,6 +19,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
@@ -36,6 +37,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.address.AddressReqDTO;
+import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
 import my.ep.dto.pm.common.city.CityResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
@@ -663,6 +666,8 @@ public class OrganisationBackingBean extends
 
 		boolean addrExist = false;
 		boolean contactExist = false;
+		AddressReqDTO addressReqDTO = null;
+		AddressResDTO addressResDTO = null;
 		if (orgAddressTypes != null && !orgAddressTypes.isEmpty()) {
 			for (PmAddressType pmAddressType : orgAddressTypes) {
 
@@ -671,13 +676,25 @@ public class OrganisationBackingBean extends
 						&& (pmAddressType.getRecordStatusFlg().intValue() == 
 								DbValueConst.RECORD_STATUS_ACTIVE)) {
 					//cater for sarawak if no division
-					if(pmAddressType.getPmAddress().getPmState() != null 
-							&& pmAddressType.getPmAddress().getPmDivision() == null){
-						if(pmAddressType.getPmAddress().getPmState().getStateCode()
-								.equals(ProfileManagementConst.STATE_CODE_SARAWAK)){
-							pmAddressType.getPmAddress().setPmDivision(new PmDivision()); 
+					IAddressSO addressSO = null;
+					try {
+						addressSO = BusinessDelegate.getInstance().getServiceObject(
+									ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+						addressReqDTO = new AddressReqDTO();
+						addressReqDTO.setAddressId(pmAddressType.getPmAddress().getAddressId());
+						addressResDTO = addressSO.retrieveAddressDtlById(addressReqDTO);
+						if(addressResDTO != null && addressResDTO.getPmAddress() != null){
+							if(addressResDTO.getPmAddress().getPmState() != null 
+									&& addressResDTO.getPmAddress().getPmDivision() == null
+									&& addressResDTO.getPmAddress().getPmState().getStateCode()
+									.equals(ProfileManagementConst.STATE_CODE_SARAWAK)){
+								pmAddressType.getPmAddress().setPmDivision(new PmDivision()); 
+							}							
 						}
+					}finally{
+						addressSO = null;
 					}
+					
 					this.getManagedBean().setOfficeAddress(
 							pmAddressType.getPmAddress());
 					addrExist = true;
