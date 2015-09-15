@@ -210,14 +210,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<PmEduField> eduFieldList;
 	private List<PmEduLevel> eduLevelList;
 	private List<PmCountry> countryLs;
-	private List<PmState> basicCompanyStates;
-	private List<PmDistrict> basicCompanyDistricts;
-	private List<PmCity> basicCompanyCities;
+	private List<SelectItem> basicCompanyStates;
+	private List<SelectItem> basicCompanyDistricts;
+	private List<SelectItem> basicCompanyCities;
 	private List<PmRace> racesList;
 
-	private List<PmState> basicOffFacStates;
-	private List<PmDistrict> basicOffFacDistricts;
-	private List<PmCity> basicOffFacCities;
+	private List<SelectItem> basicOffFacStates;
+	private List<SelectItem> basicOffFacDistricts;
+	private List<SelectItem> basicOffFacCities;
 
 	private List<PmState> branchCompanyStates;
 	private List<PmDistrict> branchCompanyDistricts;
@@ -1201,27 +1201,27 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.countryLs = countryLs;
 	}
 
-	public List<PmState> getBasicCompanyStates() {
+	public List<SelectItem> getBasicCompanyStates() {
 		return basicCompanyStates;
 	}
 
-	public void setBasicCompanyStates(List<PmState> basicCompanyStates) {
+	public void setBasicCompanyStates(List<SelectItem> basicCompanyStates) {
 		this.basicCompanyStates = basicCompanyStates;
 	}
 
-	public List<PmDistrict> getBasicCompanyDistricts() {
+	public List<SelectItem> getBasicCompanyDistricts() {
 		return basicCompanyDistricts;
 	}
 
-	public void setBasicCompanyDistricts(List<PmDistrict> basicCompanyDistricts) {
+	public void setBasicCompanyDistricts(List<SelectItem> basicCompanyDistricts) {
 		this.basicCompanyDistricts = basicCompanyDistricts;
 	}
 
-	public List<PmCity> getBasicCompanyCities() {
+	public List<SelectItem> getBasicCompanyCities() {
 		return basicCompanyCities;
 	}
 
-	public void setBasicCompanyCities(List<PmCity> basicCompanyCities) {
+	public void setBasicCompanyCities(List<SelectItem> basicCompanyCities) {
 		this.basicCompanyCities = basicCompanyCities;
 	}
 
@@ -1241,27 +1241,27 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.certBodyLs = certBodyLs;
 	}
 
-	public List<PmState> getBasicOffFacStates() {
+	public List<SelectItem> getBasicOffFacStates() {
 		return basicOffFacStates;
 	}
 
-	public void setBasicOffFacStates(List<PmState> basicOffFacStates) {
+	public void setBasicOffFacStates(List<SelectItem> basicOffFacStates) {
 		this.basicOffFacStates = basicOffFacStates;
 	}
 
-	public List<PmDistrict> getBasicOffFacDistricts() {
+	public List<SelectItem> getBasicOffFacDistricts() {
 		return basicOffFacDistricts;
 	}
 
-	public void setBasicOffFacDistricts(List<PmDistrict> basicOffFacDistricts) {
+	public void setBasicOffFacDistricts(List<SelectItem> basicOffFacDistricts) {
 		this.basicOffFacDistricts = basicOffFacDistricts;
 	}
 
-	public List<PmCity> getBasicOffFacCities() {
+	public List<SelectItem> getBasicOffFacCities() {
 		return basicOffFacCities;
 	}
 
-	public void setBasicOffFacCities(List<PmCity> basicOffFacCities) {
+	public void setBasicOffFacCities(List<SelectItem> basicOffFacCities) {
 		this.basicOffFacCities = basicOffFacCities;
 	}
 

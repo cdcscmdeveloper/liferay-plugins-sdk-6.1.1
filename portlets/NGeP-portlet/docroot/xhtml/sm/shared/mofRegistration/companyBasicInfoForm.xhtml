@@ -83,9 +83,16 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.taxRefNo']}" /></td>
 					<td><p:inputText label="#{lbl['lbl.sm.taxRefNo']}"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.incomeTaxNo}"
-							id="smIncTaxNum" size="35" maxlength="20" /> <p:message
+							id="smIncTaxNum" size="35" maxlength="20" />
+						<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges}"
+								oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.incomeTaxNo}" 
+								currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.incomeTaxNo}" 
+								alertValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.incomeTaxNo}"/>
+						<p:message
 							id="smIncTaxNumMsg" for="smIncTaxNum" showSummary="true"
-							showDetail="false" display="icon" /></td>
+							showDetail="false" display="icon" />
+					</td>
 					<td><p:outputLabel value="#{lbl['lbl.sm.estdate']}" /></td>
 					<td><p:inputText
 							value="#{backingBean.managedBean.smSupplier.establishDate}"
@@ -115,20 +122,43 @@
 								<td><p:inputText size="35" required="true" id="smSupAddr1"
 										maxlength="35" label="#{lbl['lbl.sm.companyaddress']}"
 										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" />
+									<ac:smFieldChangeAlert 
+										isShow="#{backingBean.managedBean.showFieldChanges}"
+										oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" 
+										currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" 
+										alertValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}"/>
 									<p:message id="smSupAddr1Msg" for="smSupAddr1"
 										showSummary="true" showDetail="false" display="icon" /></td>
 							</tr>
 							<tr>
 								<td><p:inputText size="35" maxlength="35"
-										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}" /></td>
+										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}" />
+									<ac:smFieldChangeAlert 
+										isShow="#{backingBean.managedBean.showFieldChanges}"
+										oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}" 
+										currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}" 
+										alertValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}"/>
+								</td>
 							</tr>
 							<tr>
 								<td><p:inputText size="35" maxlength="35"
-										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}" /></td>
+										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}" />
+									<ac:smFieldChangeAlert 
+										isShow="#{backingBean.managedBean.showFieldChanges}"
+										oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}" 
+										currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}" 
+										alertValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}"/>
+								</td>
 							</tr>
 							<tr>
 								<td><p:inputText size="35" maxlength="35"
-										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address4}" /></td>
+										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address4}" />
+									<ac:smFieldChangeAlert 
+										isShow="#{backingBean.managedBean.showFieldChanges}"
+										oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address4}" 
+										currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address4}" 
+										alertValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address4}"/>
+								</td>
 							</tr>
 						</table>
 					</td>
@@ -163,13 +193,19 @@
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="" />
 										<f:selectItems var="basicCountry"
-											value="#{backingBean.managedBean.countryLs}"
-											itemValue="#{basicCountry.countryId}"
-											itemLabel="#{basicCountry.countryName}" />
+											value="#{backingBean.managedBean.countryItems}" />
 										<p:ajax event="change" process="@this"
 											listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry.countryId,SupplierManagementConst.SM_BASIC_INFO_PANEL,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity)}"
 											update="basicComState,basicCompDist,basicCompCity,postCodeCompPanelId" />
-									</p:selectOneMenu> <p:message id="smSupContMsg" for="smSupCont"
+									</p:selectOneMenu> 
+									<ac:smFieldChangeAlert 
+										isShow="#{backingBean.managedBean.showFieldChanges}"
+										oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry.countryId}" 
+										currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry.countryId}" 
+										alertValue="#{(not empty backingBean.managedBean.latestAppl and not empty backingBean.managedBean.latestAppl.smCompanyBasic) ?
+											backingBean.getCountryLabelById(backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry.countryId)
+											: lbl['lbl.txt.na']}"/>
+									<p:message id="smSupContMsg" for="smSupCont"
 										showSummary="true" showDetail="false" display="icon" /></td>
 							</tr>
 							<tr>
@@ -181,16 +217,22 @@
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="" />
 										<f:selectItems var="basicState"
-											value="#{backingBean.managedBean.basicCompanyStates}"
-											itemValue="#{basicState.stateId}"
-											itemLabel="#{basicState.stateName}" />
+											value="#{backingBean.managedBean.basicCompanyStates}" />
 										<p:ajax event="change" process="@this"
 											listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateId, 
 											SupplierManagementConst.SM_BASIC_INFO_PANEL,
 											backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict,
 											backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity)}"
 											update="basicCompDist,basicCompCity" />
-									</p:selectOneMenu> <p:message id="basicComStateMsg" for="basicComState"
+									</p:selectOneMenu> 
+									<ac:smFieldChangeAlert 
+										isShow="#{backingBean.managedBean.showFieldChanges}"
+										oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateId}" 
+										currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateId}" 
+										alertValue="#{(not empty backingBean.managedBean.latestAppl and not empty backingBean.managedBean.latestAppl.smCompanyBasic) ?
+											backingBean.getStateLabelById(backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateId)
+											: lbl['lbl.txt.na']}"/>
+									<p:message id="basicComStateMsg" for="basicComState"
 										showSummary="true" showDetail="false" display="icon" /></td>
 							</tr>
 							<tr>
@@ -201,15 +243,21 @@
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="" />
 										<f:selectItems var="dist"
-											value="#{backingBean.managedBean.basicCompanyDistricts}"
-											itemValue="#{dist.districtId}"
-											itemLabel="#{dist.districtName}" />
+											value="#{backingBean.managedBean.basicCompanyDistricts}" />
 										<p:ajax event="change" process="@this"
 											listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict.districtId,
 								SupplierManagementConst.SM_BASIC_INFO_PANEL,
 								backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity)}"
 											update="basicCompCity" />
-									</p:selectOneMenu> <p:message id="basicCompDistMsg" for="basicCompDist"
+									</p:selectOneMenu> 
+									<ac:smFieldChangeAlert 
+										isShow="#{backingBean.managedBean.showFieldChanges}"
+										oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict.districtId}" 
+										currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict.districtId}" 
+										alertValue="#{(not empty backingBean.managedBean.latestAppl and not empty backingBean.managedBean.latestAppl.smCompanyBasic) ?
+											backingBean.getDistrictLabelById(backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict.districtId)
+											: lbl['lbl.txt.na']}"/>
+									<p:message id="basicCompDistMsg" for="basicCompDist"
 										showSummary="true" showDetail="false" display="icon" /></td>
 
 							</tr>
@@ -221,9 +269,16 @@
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="" />
 										<f:selectItems var="city"
-											value="#{backingBean.managedBean.basicCompanyCities}"
-											itemValue="#{city.cityId}" itemLabel="#{city.cityName}" />
-									</p:selectOneMenu> <p:message id="basicCompCityMsg" for="basicCompCity"
+											value="#{backingBean.managedBean.basicCompanyCities}" />
+									</p:selectOneMenu> 
+									<ac:smFieldChangeAlert 
+										isShow="#{backingBean.managedBean.showFieldChanges}"
+										oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity.cityId}" 
+										currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity.cityId}" 
+										alertValue="#{(not empty backingBean.managedBean.latestAppl and not empty backingBean.managedBean.latestAppl.smCompanyBasic) ?
+											backingBean.getCityLabelById(backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity.cityId)
+											: lbl['lbl.txt.na']}"/>
+									<p:message id="basicCompCityMsg" for="basicCompCity"
 										showSummary="true" showDetail="false" display="icon" /></td>
 							</tr>
 						</TABLE>
@@ -243,6 +298,11 @@
 									size="35">
 									<f:validator validatorId="postcodeValidator" />
 								</p:inputText>
+								<ac:smFieldChangeAlert 
+										isShow="#{backingBean.managedBean.showFieldChanges}"
+										oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}" 
+										currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}" 
+										alertValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}"/>
 								<p:message id="smSupPostCodeMyMsg" for="smSupPostCodeMy"
 									showSummary="true" showDetail="false" display="icon" />
 							</p:outputPanel>
@@ -253,6 +313,11 @@
 									value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}"
 									size="35">
 								</p:inputText>
+								<ac:smFieldChangeAlert 
+										isShow="#{backingBean.managedBean.showFieldChanges}"
+										oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}" 
+										currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}" 
+										alertValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}"/>
 								<p:message id="smSupPostCodeForeignMsg"
 									for="smSupPostCodeForeign" showSummary="true"
 									showDetail="false" display="icon" />
@@ -265,7 +330,13 @@
 							id="smSupAnnRev"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.annualRevenue}">
 							<f:selectItems value="#{backingBean.getDropdownValues('SAR')}" />
-						</p:selectOneMenu> <p:message id="smSupAnnRevMsg" for="smSupAnnRev"
+						</p:selectOneMenu> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges}"
+							oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.annualRevenue}" 
+							currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.annualRevenue}" 
+							alertValue="#{backingBean.getAnnualRevById(backingBean.managedBean.latestAppl.smCompanyBasic.annualRevenue)}"/>
+						<p:message id="smSupAnnRevMsg" for="smSupAnnRev"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
 				<tr>
@@ -276,7 +347,13 @@
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.phoneNo}"
 							maxlength="12">
 							<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-						</p:inputText> <p:message id="basPhnNumMsg" for="basPhnNum" showSummary="true"
+						</p:inputText> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges}"
+							oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.phoneNo}" 
+							currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.phoneNo}" 
+							alertValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.phoneNo}"/>
+						<p:message id="basPhnNumMsg" for="basPhnNum" showSummary="true"
 							showDetail="false" display="icon" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
 					<td><p:inputText size="35" id="basFaxNum"
@@ -285,7 +362,13 @@
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.faxNo}"
 							maxlength="12">
 							<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-						</p:inputText> <p:message id="basFaxNumMsg" for="basFaxNum" showSummary="true"
+						</p:inputText> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges}"
+							oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.faxNo}" 
+							currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.faxNo}" 
+							alertValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.faxNo}"/>
+						<p:message id="basFaxNumMsg" for="basFaxNum" showSummary="true"
 							showDetail="false" display="icon" /></td>
 
 				</tr>
@@ -295,6 +378,11 @@
 							style="float: left;padding: 5px 0 0 0;" /> <p:inputText
 							size="50"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.website}" />
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges}"
+							oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.website}" 
+							currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.website}" 
+							alertValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.website}"/>
 					</td>
 				</tr>
 				
