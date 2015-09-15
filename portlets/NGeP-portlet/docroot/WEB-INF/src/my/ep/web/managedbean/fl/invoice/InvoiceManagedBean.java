@@ -185,6 +185,8 @@ public class InvoiceManagedBean extends BaseManagedBean {
     private boolean reliefDeclarationCheck = false;
     
     private FlInvoiceItemSummary invItemSummary;
+    
+    private boolean itemTableClause = false;
 	
 	private BigDecimal gstAmount;
 	private BigDecimal invoiceAmountWithoutGST;
@@ -1058,5 +1060,19 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	 */
 	public void setTaxInvoiceList(List<TaxInvoiceVO> taxInvoiceList) {
 		this.taxInvoiceList = taxInvoiceList;
+	}
+
+	/**
+	 * @return the itemTableClause
+	 */
+	public boolean isItemTableClause() {
+		return itemTableClause;
+	}
+
+	/**
+	 * @param itemTableClause the itemTableClause to set
+	 */
+	public void setItemTableClause(boolean itemTableClause) {
+		this.itemTableClause = itemTableClause;
 	}
 }
