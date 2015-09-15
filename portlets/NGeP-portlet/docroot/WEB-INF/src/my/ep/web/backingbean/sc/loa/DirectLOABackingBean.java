@@ -5884,10 +5884,11 @@ public class DirectLOABackingBean extends
 			SmSupplier supplier = scLoa.getScLoiLoa().getSmSupplier();
 			if ((supplier != null && supplier.getGstRegisteredFlag() != DbValueConst.RECORD_STATUS_ACTIVE)) {
 				BigDecimal durationMnth = specMaster.getDurationMonth();
-				if (durationMnth != null && durationMnth.intValue() > 0) {
+				if (durationMnth != null) {
 					final BigDecimal noOfMnth = new BigDecimal(12);
-					BigDecimal awardedPrice = (scLoa.getLoaAmt()
-							.divide(durationMnth)).multiply(noOfMnth);
+					BigDecimal awardedPrice = (scLoa.getLoaAmt().divide(
+							durationMnth, 2, BigDecimal.ROUND_HALF_UP))
+							.multiply(noOfMnth);
 					awardedPrice = awardedPrice.setScale(2,
 							BigDecimal.ROUND_HALF_EVEN);
 
