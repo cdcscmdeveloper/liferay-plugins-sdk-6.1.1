@@ -1526,7 +1526,7 @@ public class EvaluationBackingBean extends
 					getManagedBean().setComplianceSummaryGenerated(true);
 				}
 			}
-			
+
 			List<String> evalstage = new ArrayList<String>();
 			evalstage.add(QTConstants.COMPLIANCE_CHECK);
 
@@ -6862,7 +6862,9 @@ public class EvaluationBackingBean extends
 					.getPresentationDemoSupplierList();
 			int countDays = this.getManagedBean().getCountDays();
 			String QtNum = this.getManagedBean().getScQt().getQtNo();
-			
+			SCEvaluationDataType evaluationDataType = (SCEvaluationDataType) this
+					.getManagedBean().getEvaluationPayLoad();
+
 			if (!this.getManagedBean().isDemo()) {
 				if (tabindex == 0) {
 					evaluationSO.saveQTDtl(reqDtO);
@@ -6891,7 +6893,8 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setScAttachment(attachemnt);
 			this.getManagedBean().setReportDownloadFileName(reportFileName);
 			this.getManagedBean().setCountDays(countDays);
-			
+			this.getManagedBean().setEvaluationPayLoad(evaluationDataType);
+
 			retriveMeetingDtls(qtId, committeeType, index);
 			// getStatusDropdownValues("SC", "MS");
 			if (save == true) {
@@ -10453,8 +10456,8 @@ public class EvaluationBackingBean extends
 				reqDTO.setQtId(qtId);
 				reqDTO.setEvalStage(evalStage);
 				reqDTO.setProposalChecklistSearchBean(searchBean);
-				return evaluationSO.retrievProposalCheckListByCheckListNZone(reqDTO)
-						.getComplianceResultBean();
+				return evaluationSO.retrievProposalCheckListByCheckListNZone(
+						reqDTO).getComplianceResultBean();
 
 			} finally {
 				evaluationSO = null;
@@ -10936,6 +10939,5 @@ public class EvaluationBackingBean extends
 		}
 
 	}
-
 
 }
