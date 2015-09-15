@@ -93,10 +93,10 @@ th{
 				<table class="table2" width='100%'>
 					<span class="headerfont">
 					<tr>
-						<td>Category Code</td>
-						<td>Main-Category</td>
-						<td>Sub-Category</td>
-						<td>Sub-Category Division</td>
+						<td>Kod Bidang</td>
+						<td>Bidang</td>
+						<td>Sub Bidang</td>
+						<td>Pecahan Sub Bidang</td>
 					</tr>
 					</span>
 					#foreach( $categoryResults in $categoryResults1 )
