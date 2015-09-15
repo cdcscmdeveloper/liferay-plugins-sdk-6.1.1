@@ -340,7 +340,7 @@ public class SpecificationBackingBean extends
 			String taskName = this.getManagedBean().getTaskName();
 			List<SelectItem> evaluationTypeList = this.getManagedBean()
 					.getEvaluationTypeItem();
-
+			SCQuotationTenderDataType	quotationTenderDataType=(SCQuotationTenderDataType)this.getManagedBean().getSpecificationDataType();
 			CtPanelItem panelItem = null;
 			CtCircularVer circularVer = null;
 			/*
@@ -476,6 +476,7 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setLocalLevelCode(locationLevael);
 			this.getManagedBean().setSpecComplete(isSpecComplete);
 			this.getManagedBean().setTaskName(taskName);
+			this.getManagedBean().setSpecificationDataType(quotationTenderDataType);
 
 		} /*
 		 * catch(Exception e){ e.printStackTrace(); }
@@ -11791,7 +11792,7 @@ public class SpecificationBackingBean extends
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTSpecSO.class);
 			int activeIndex = this.getManagedBean().getActiveIndex();
-
+			SCQuotationTenderDataType	quotationTenderDataType=(SCQuotationTenderDataType)this.getManagedBean().getSpecificationDataType();
 			SpecificationResDTO resDTO = null;
 			String taskId = this.getManagedBean().getTaskId();
 			String[] outComes = this.getManagedBean().getOutComes();
@@ -12274,6 +12275,7 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setCurrentStatusId(statusId);
 			this.getManagedBean().setOutComes(outComes);
 			this.getManagedBean().setReadOnly(readonly);
+			this.getManagedBean().setSpecificationDataType(quotationTenderDataType);
 		} /*
 		 * catch (Exception e) { e.printStackTrace(); }
 		 */
