@@ -202,6 +202,11 @@ a:hover.boldsubLabelgrayText {
 	float: right;
 }
 
+.colFloatLeft {
+	text-align: left;
+	float: left;
+}
+
 .colAlignTop {
 	vertical-align: top;
 	padding: 0px 0px 0px 0px;
