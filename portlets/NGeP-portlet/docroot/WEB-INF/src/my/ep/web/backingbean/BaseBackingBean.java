@@ -127,6 +127,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		if (log.isDebugEnabled()) {
 			log.debug("managedBeanName:" + managedBeanName);
 		}
+		
+		new FacesScopes().extendLiferaySession();
 	}
 
 	/**
