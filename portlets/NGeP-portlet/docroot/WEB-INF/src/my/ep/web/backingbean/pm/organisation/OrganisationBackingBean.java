@@ -1747,6 +1747,9 @@ public class OrganisationBackingBean extends
 		// .add(smPersonnel);// should added to original list before
 		// // save
 		this.getManagedBean().getSmPersonnels().remove(smPersonnel);
+		
+		PmUser user  = getManagedBean().getSupplierUsers().get(index);
+		getManagedBean().getSupplierUsers().remove(user);
 	}
 
 	/**
@@ -1812,7 +1815,7 @@ public class OrganisationBackingBean extends
 			}
 		}
 		this.getManagedBean().getSmPersonnels().addAll(addedPersonnelList);
-		this.getManagedBean().setSupplierUsers(selectedUserList);
+		this.getManagedBean().getSupplierUsers().addAll(selectedUserList);
 
 	}
 
