@@ -82,19 +82,19 @@
 					<h:outputText value="#{(data.status.statusId eq 0)? lbl['lbl.ct.cancelled']  : centralContractBackingBean.getStatusDescById(data.status.statusId)}" />
 				</p:column>				
 				<p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center" style="width:10%;white-space:normal;">
-					<p:commandLink rendered="#{centralContractBackingBean.isCentralContractAdmin() and (data.status.statusId == CtStatusConst.cqApproved or 
+						<p:menuButton id="menuButtonId" value="#{lbl['lbl.btn.option']}" >
+					 <p:menuitem id="menuItemId3" value="#{lbl['lbl.ct.update']}"  icon="ui-icon-update" 
+					 		      rendered="#{centralContractBackingBean.isCentralContractAdmin() and (data.status.statusId == CtStatusConst.cqApproved or 
 						((data.status.statusId == CtStatusConst.cqRejected or data.status.statusId == CtStatusConst.cqCancelled) and data.ctCircular.latestCircularVer != null))}"
-						onclick="gotoPage([{name:'action',value:'update'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
-						<p:graphicImage value="/css/images/design/ico-edit.png" title="#{lbl['lbl.ct.update']}" />
-					</p:commandLink>
-					<p:spacer width="5" />
-					<p:commandLink onclick="gotoPage([{name:'action',value:'view'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
-						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.ct.view']}" />
-					</p:commandLink>
+                             	  action="#{centralContractBackingBean.gotoPage('update', data.circularVerId)}">
+					        </p:menuitem>
+							
+							 <p:menuitem id="menuItemId4" value="#{lbl['lbl.ct.view']}"  icon="ui-icon-supplier-view"
+						        action="#{centralContractBackingBean.gotoPage('view', data.circularVerId)}">
+					   	   </p:menuitem>
+					   	 </p:menuButton>
 				</p:column>
 			</p:dataTable>	
-			
-			<p:remoteCommand name="gotoPage" action="#{centralContractBackingBean.gotoPage}" />
 		</p:panel>           
 	</ui:define>
 </ui:composition>
