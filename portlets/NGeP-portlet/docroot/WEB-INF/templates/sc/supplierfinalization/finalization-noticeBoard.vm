@@ -134,7 +134,7 @@
 		<tr>
 			<td class="standard border-bottom left">9</td>
 			<td class="standard border-bottom left">Proposal Validity Until</td>
-			<td class="standard border-bottom left-right">$!validityDate</td>
+			<td class="standard border-bottom left-right">$!proposalValidityDate</td>
 		</tr>
 		<tr>
 			<td class="standard border-bottom left">10</td>

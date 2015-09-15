@@ -2582,20 +2582,12 @@ public class SupplierFinalizationBackingBean extends
 		Integer validityDays = scQt.getQtValidityPeriod();
 		context.put("validityDays", validityDays);
 		
-		String validityDate = null;
-		if (scQt.getPublishDate() != null) {
-			long publishedDateInMillis = scQt.getPublishDate().getTime();
-			long validityDaysInMillis = 0;
-			if (validityDays != null) {
-				
-				// days * hours * minutes * seconds * milli seconds
-				validityDaysInMillis = validityDays * 24 * 60 * 60 * 1000L; 
-			}
-			Date validity_date = new Date(publishedDateInMillis + 
-									 	validityDaysInMillis);
-			validityDate = dateSDF.format(validity_date);
+		String proposalValidityDate = null;
+		if (scQt.getProposalValidityEndDate() != null) {
+			proposalValidityDate = dateSDF.format(scQt
+					.getProposalValidityEndDate());
 		}
-		context.put("validityDate", validityDate);
+		context.put("proposalValidityDate", proposalValidityDate);
 		
 		StringBuilder openType = new StringBuilder();
 		if (openType != null) {
@@ -2739,21 +2731,12 @@ public class SupplierFinalizationBackingBean extends
 		Integer validityDays = scQt.getQtValidityPeriod();
 		context.put("validityDays", validityDays);
 		
-		String validityDate = null;
-		if (scQt.getPublishDate() != null) {
-			long publishedDateInMillis = scQt.getPublishDate().getTime();
-			long validityDaysInMillis = 0;
-			if (validityDays != null) {
-				
-				// days * hours * minutes * seconds * milli seconds
-				validityDaysInMillis = validityDays * 24 * 60 * 60 * 1000L; 
-			}
-			long totalDaysInMills = publishedDateInMillis + 
-				 					validityDaysInMillis;
-			Date validity_date = new Date(totalDaysInMills);
-			validityDate = dateSDF.format(validity_date);
+		String proposalValidityDate = null;
+		if (scQt.getProposalValidityEndDate() != null) {
+			proposalValidityDate = dateSDF.format(scQt
+					.getProposalValidityEndDate());
 		}
-		context.put("validityDate", validityDate);		
+		context.put("proposalValidityDate", proposalValidityDate);	
 
 		context.put("openFor", scQt.getOpenFor());
 
