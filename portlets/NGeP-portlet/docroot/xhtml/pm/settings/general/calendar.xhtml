@@ -100,6 +100,28 @@
 			td[6].style.background=color;
 		}
 	</script>
+	<script type="text/javascript">
+    PrimeFaces.locales['ms'] = {
+        closeText: 'Tutup',
+        prevText: 'Sebelum',
+        nextText: 'Selepas',
+        currentText: 'Hari Ini',
+        monthNames: ['Januari','Februari','Mac','April','Mei','Jun','Julai','Ogos','September','Oktober','November','Disember'],
+        monthNamesShort: ['Jan', 'Feb', 'Mac', 'Apr', 'Mei', 'Jun', 'Jul', 'Ogs', 'Sep', 'Okt', 'Nov', 'Dis'],
+        dayNames: ['Ahad','Sabtu','Isnin','Selasa','Rabu','Khamis','Jumaat'],
+        dayNamesShort: ['Ahd', 'Sab' , 'Isn' , 'Sel','Rab', 'Kha', 'Jum'],
+        dayNamesMin: ['Ahd', 'Sab' , 'Isn' , 'Sel','Rab', 'Kha', 'Jum'],
+        weekHeader: 'Hf',
+        firstDay: 1,
+        isRTL: false,
+        showMonthAfterYear: false,
+        yearSuffix: '',
+        month: 'Bulan',
+        week: 'Minggu',
+        day: 'Hari',
+        allDayText : 'ffff'
+    };
+</script>
 		 <p:growl id="calendarMsg" showDetail="true" />
 		<p:panel id="ruleConfigId">			
 			<h:panelGroup id="calendarId">
@@ -143,14 +165,14 @@
 				         <f:attribute name="increment" value="next"/>
 				          <h:graphicImage value="/css/images/design/ico-next.png" />
 				      </p:commandLink>
-				      <p:commandButton value="Today" update=":form:schedule" actionListener="#{calendarBackingBean.today}" process="@this"/>
+				      <p:commandButton value="Today" label="#{lbl['lbl.pm.cal.today']}" update=":form:schedule" actionListener="#{calendarBackingBean.today}" process="@this"/>
 				   </h:panelGrid>
 					
 					</td>
 					</tr>
 					<tr>
 						<td colspan="3"><p:schedule id="schedule"
-								pattern="dd-MM-yyyy" locale="en" timeZone="GMT+8"
+								pattern="dd-MM-yyyy" locale="#{calendarBackingBean.getLocale()}" timeZone="GMT+8"
 								leftHeaderTemplate="" rightHeaderTemplate=""
 								style="width : 700px; height : 600px;"
 								value="#{calendarBackingBean.managedBean.eventModel}"
