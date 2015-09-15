@@ -4767,7 +4767,8 @@ public class LOADetailBackingBean extends
 				}
 			}
 			if (durationMnth != null) {
-				BigDecimal awardedPrice = (overallContractAmt.divide(durationMnth)).multiply(noOfMnth);
+				BigDecimal awardedPrice = (overallContractAmt.divide(
+						durationMnth, 2, BigDecimal.ROUND_HALF_UP)).multiply(noOfMnth);
 				awardedPrice = awardedPrice.setScale(2,BigDecimal.ROUND_HALF_EVEN);
 				if (awardedPrice.intValue() > 500000) {
 					getManagedBean().setDisplayAlert(true);
