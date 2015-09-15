@@ -2579,7 +2579,24 @@ public class SupplierFinalizationBackingBean extends
 			qTProposalSO = null;
 		}
 
-		context.put("validityDays", scQt.getQtValidityPeriod());
+		Integer validityDays = scQt.getQtValidityPeriod();
+		context.put("validityDays", validityDays);
+		
+		String validityDate = null;
+		if (scQt.getPublishDate() != null) {
+			long publishedDateInMillis = scQt.getPublishDate().getTime();
+			long validityDaysInMillis = 0;
+			if (validityDays != null) {
+				
+				// days * hours * minutes * seconds * milli seconds
+				validityDaysInMillis = validityDays * 24 * 60 * 60 * 1000L; 
+			}
+			Date validity_date = new Date(publishedDateInMillis + 
+									 	validityDaysInMillis);
+			validityDate = dateSDF.format(validity_date);
+		}
+		context.put("validityDate", validityDate);
+		
 		StringBuilder openType = new StringBuilder();
 		if (openType != null) {
 			openType.append(getParameterDesc(
@@ -2717,8 +2734,26 @@ public class SupplierFinalizationBackingBean extends
 			closingDate = dateSDF.format(scQt.getClosingDate());
 		}
 		context.put("closingDate", closingDate);
-		context.put("validityDays", scQt.getQtValidityPeriod());
 		context.put("tier", scQt.getEvaluationType());
+		
+		Integer validityDays = scQt.getQtValidityPeriod();
+		context.put("validityDays", validityDays);
+		
+		String validityDate = null;
+		if (scQt.getPublishDate() != null) {
+			long publishedDateInMillis = scQt.getPublishDate().getTime();
+			long validityDaysInMillis = 0;
+			if (validityDays != null) {
+				
+				// days * hours * minutes * seconds * milli seconds
+				validityDaysInMillis = validityDays * 24 * 60 * 60 * 1000L; 
+			}
+			long totalDaysInMills = publishedDateInMillis + 
+				 					validityDaysInMillis;
+			Date validity_date = new Date(totalDaysInMills);
+			validityDate = dateSDF.format(validity_date);
+		}
+		context.put("validityDate", validityDate);		
 
 		context.put("openFor", scQt.getOpenFor());
 

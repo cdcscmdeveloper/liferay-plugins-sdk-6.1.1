@@ -128,13 +128,13 @@
 		</tr>
 		<tr>
 			<td class="standard border-bottom left">8</td>
-			<td class="standard border-bottom left">ProposalValidity (Days)</td>
+			<td class="standard border-bottom left">Proposal Validity (Days)</td>
 			<td class="standard border-bottom left-right">$validityDays</td>
 		</tr>
 		<tr>
 			<td class="standard border-bottom left">9</td>
 			<td class="standard border-bottom left">Proposal Validity Until</td>
-			<td class="standard border-bottom left-right">$validityDays</td>
+			<td class="standard border-bottom left-right">$!validityDate</td>
 		</tr>
 		<tr>
 			<td class="standard border-bottom left">10</td>
@@ -381,61 +381,68 @@
 					</tr>
 				</tbody>
 			</table>
-			<table width="100%" border="0" cellpadding="0" cellspacing="0">
-				<tbody>
-					<tr>
-						<th bgcolor="#6d839b" class="title border left">Description</th>
-						<th bgcolor="#6d839b" class="title border left">Date/Time</th>
-						<th bgcolor="#6d839b" class="title border left">Location</th>
-						<th bgcolor="#6d839b" class="title border left">Coordinationg Officer</th>
-						<th bgcolor="#6d839b" class="title border left-right">Max Attendance</th>
-					</tr>
-					#foreach($briefingdtls in $zoneList.briefingList)
-						<tr class="ui-content">
-							<td class="standard border-bottom left">$briefingdtls.bsvDesc</td>
-							<td class="standard border-bottom left">$dateSDF.format($briefingdtls.bsvDate)</td>
-							<td class="standard border-bottom left">$briefingdtls.location</td>
-							<td class="standard border-bottom left">$briefingdtls.coordinatingOfficer</td>
-							<td class="standard border-bottom left-right">$briefingdtls.maxNoOfAttendance</td>
+			
+			#if ( $zoneList.briefingList != "" && $zoneList.briefingList.size() > 0 ) 
+				<table width="100%" border="0" cellpadding="0" cellspacing="0">
+					<tbody>
+						<tr>
+							<th bgcolor="#6d839b" class="title border left">Description</th>
+							<th bgcolor="#6d839b" class="title border left">Date/Time</th>
+							<th bgcolor="#6d839b" class="title border left">Location</th>
+							<th bgcolor="#6d839b" class="title border left">Coordinationg Officer</th>
+							<th bgcolor="#6d839b" class="title border left-right">Max Attendance</th>
 						</tr>
-					#end
-				</tbody>
-			</table>
-			<br />
-			<table width="100%" border="0" cellpadding="0" cellspacing="0">
-				<tbody>
-					<tr>
-						<th bgcolor="#6d839b" class="title border left">Description</th>
-						<th bgcolor="#6d839b" class="title border left">Date/Time</th>
-						<th bgcolor="#6d839b" class="title border left">Location</th>
-						<th bgcolor="#6d839b" class="title border left">Coordinationg Officer</th>
-						<th bgcolor="#6d839b" class="title border left-right">Max Attendance</th>
-					</tr>
-					#foreach( $sitevisitdtls in $zoneList.sitevisitList )
-						<tr class="ui-content">
-							<td class="standard border-bottom left">$sitevisitdtls.bsvDesc</td>
-							<td class="standard border-bottom left">$dateSDF.format($sitevisitdtls.bsvDate)</td>
-							<td class="standard border-bottom left">$sitevisitdtls.location</td>
-							<td class="standard border-bottom left">$sitevisitdtls.coordinatingOfficer</td>
-							<td class="standard border-bottom left-right">$sitevisitdtls.maxNoOfAttendance</td>
+						#foreach($briefingdtls in $zoneList.briefingList)
+							<tr class="ui-content">
+								<td class="standard border-bottom left">$briefingdtls.bsvDesc</td>
+								<td class="standard border-bottom left">$dateSDF.format($briefingdtls.bsvDate)</td>
+								<td class="standard border-bottom left">$briefingdtls.location</td>
+								<td class="standard border-bottom left">$briefingdtls.coordinatingOfficer</td>
+								<td class="standard border-bottom left-right">$briefingdtls.maxNoOfAttendance</td>
+							</tr>
+						#end
+					</tbody>
+				</table>
+				<br />
+			#end
+			
+			#if ( $zoneList.sitevisitList != "" && $zoneList.sitevisitList.size() > 0 ) 
+				<table width="100%" border="0" cellpadding="0" cellspacing="0">
+					<tbody>
+						<tr>
+							<th bgcolor="#6d839b" class="title border left">Description</th>
+							<th bgcolor="#6d839b" class="title border left">Date/Time</th>
+							<th bgcolor="#6d839b" class="title border left">Location</th>
+							<th bgcolor="#6d839b" class="title border left">Coordinating Officer</th>
+							<th bgcolor="#6d839b" class="title border left-right">Max Attendance</th>
 						</tr>
-					#end
-				</tbody>
-			</table>
-			<table width="100%" border="0" cellpadding="0" cellspacing="0">
-				<tbody>
-					<tr>
-						<td width="15%" class="standard"><nobr>Attendance for Site Visit :</nobr></td>
-						<td class="standard">
-							#if ($zoneList.scQtBsv.allSiteVisitReq)
-								Yes
-							#else 
-								No 
-							#end
-						</td>
-					</tr>
-				</tbody>
-			</table>
+						#foreach( $sitevisitdtls in $zoneList.sitevisitList )
+							<tr class="ui-content">
+								<td class="standard border-bottom left">$sitevisitdtls.bsvDesc</td>
+								<td class="standard border-bottom left">$dateSDF.format($sitevisitdtls.bsvDate)</td>
+								<td class="standard border-bottom left">$sitevisitdtls.location</td>
+								<td class="standard border-bottom left">$sitevisitdtls.coordinatingOfficer</td>
+								<td class="standard border-bottom left-right">$sitevisitdtls.maxNoOfAttendance</td>
+							</tr>
+						#end
+					</tbody>
+				</table>
+				<table width="100%" border="0" cellpadding="0" cellspacing="0">
+					<tbody>
+						<tr>
+							<td width="15%" class="standard"><nobr>Attendance for Site Visit :</nobr></td>
+							<td class="standard">
+								#if ($zoneList.scQtBsv.allSiteVisitReq)
+									Yes
+								#else 
+									No 
+								#end
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			#end
+			
 		#end
 	#end
 	#if ($isbsv == "false")
