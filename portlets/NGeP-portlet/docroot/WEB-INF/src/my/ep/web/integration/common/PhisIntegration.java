@@ -282,45 +282,67 @@ public class PhisIntegration {
 				utility.itemTypeFileOutPutStream(itemBatchReqDTO);
 			}
 			
+			//after success insert into pm_interface_log
+			BatchReqDTO masterDataBatchReqDTO = new BatchReqDTO();
+			masterDataBatchReqDTO.setServiceCode(ServiceCode.PHS000.value());
+			masterDataBatchReqDTO.setProcessId(ProcessCode.PHS000.value());
+			masterDataBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+			masterDataBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			insertRecordforEmptyData(masterDataBatchReqDTO);
+			
 		}else{
 			log.info("createFilesforPHIS : Records not available.");
-			BatchReqDTO classBatchReqDTO = new BatchReqDTO();
-			classBatchReqDTO.setServiceCode(ServiceCode.PHS001.value());
-			classBatchReqDTO.setProcessId(ProcessCode.PHS001.value());
-			classBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
-			classBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
-			insertRecordforEmptyData(classBatchReqDTO);
-			
-			BatchReqDTO brandBatchReqDTO = new BatchReqDTO();
-			brandBatchReqDTO.setServiceCode(ServiceCode.PHS002.value());
-			brandBatchReqDTO.setProcessId(ProcessCode.PHS002.value());
-			brandBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
-			brandBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
-			insertRecordforEmptyData(brandBatchReqDTO);
-			
-			BatchReqDTO colorBatchReqDTO = new BatchReqDTO();
-			colorBatchReqDTO.setServiceCode(ServiceCode.PHS003.value());
-			colorBatchReqDTO.setProcessId(ProcessCode.PHS003.value());
-			colorBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
-			colorBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
-			insertRecordforEmptyData(colorBatchReqDTO);
-			
-			BatchReqDTO measureBatchReqDTO = new BatchReqDTO();
-			measureBatchReqDTO.setServiceCode(ServiceCode.PHS004.value());
-			measureBatchReqDTO.setProcessId(ProcessCode.PHS004.value());
-			measureBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
-			measureBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
-			insertRecordforEmptyData(measureBatchReqDTO);
-			
-			BatchReqDTO typeBatchReqDTO = new BatchReqDTO();
-			typeBatchReqDTO.setServiceCode(ServiceCode.PHS005.value());
-			typeBatchReqDTO.setProcessId(ProcessCode.PHS005.value());
-			typeBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
-			typeBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
-			insertRecordforEmptyData(typeBatchReqDTO);
-			
+			masterDatanotavailable(resDTO);
 		}
 
+	}
+
+	/**
+	 * @param resDTO
+	 */
+	public void masterDatanotavailable(CodificationResDTO resDTO) {
+		
+		BatchReqDTO masterDataBatchReqDTO = new BatchReqDTO();
+		masterDataBatchReqDTO.setServiceCode(ServiceCode.PHS000.value());
+		masterDataBatchReqDTO.setProcessId(ProcessCode.PHS000.value());
+		masterDataBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+		masterDataBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+		insertRecordforEmptyData(masterDataBatchReqDTO);
+		
+		BatchReqDTO classBatchReqDTO = new BatchReqDTO();
+		classBatchReqDTO.setServiceCode(ServiceCode.PHS001.value());
+		classBatchReqDTO.setProcessId(ProcessCode.PHS001.value());
+		classBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+		classBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+		insertRecordforEmptyData(classBatchReqDTO);
+		
+		BatchReqDTO brandBatchReqDTO = new BatchReqDTO();
+		brandBatchReqDTO.setServiceCode(ServiceCode.PHS002.value());
+		brandBatchReqDTO.setProcessId(ProcessCode.PHS002.value());
+		brandBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+		brandBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+		insertRecordforEmptyData(brandBatchReqDTO);
+		
+		BatchReqDTO colorBatchReqDTO = new BatchReqDTO();
+		colorBatchReqDTO.setServiceCode(ServiceCode.PHS003.value());
+		colorBatchReqDTO.setProcessId(ProcessCode.PHS003.value());
+		colorBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+		colorBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+		insertRecordforEmptyData(colorBatchReqDTO);
+		
+		BatchReqDTO measureBatchReqDTO = new BatchReqDTO();
+		measureBatchReqDTO.setServiceCode(ServiceCode.PHS004.value());
+		measureBatchReqDTO.setProcessId(ProcessCode.PHS004.value());
+		measureBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+		measureBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+		insertRecordforEmptyData(measureBatchReqDTO);
+		
+		BatchReqDTO typeBatchReqDTO = new BatchReqDTO();
+		typeBatchReqDTO.setServiceCode(ServiceCode.PHS005.value());
+		typeBatchReqDTO.setProcessId(ProcessCode.PHS005.value());
+		typeBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+		typeBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+		insertRecordforEmptyData(typeBatchReqDTO);
 	}
 	
 	public void deliveryAddress() {
