@@ -768,7 +768,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		    				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CHAIR_PERSON_SIGN_OFF_HT_NAME)
 		    				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
 		    				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)
-		    				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME))) {
+		    				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)
+		    				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VIEW_FA_DETAILS_HT_NAME))) {
 		    	getManagedBean().setDisableAmendDetails(true);
 		    }
 		    if (getManagedBean().getTaskName() != null 
@@ -778,6 +779,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		    if (getManagedBean().getTaskName() != null 
 		    		&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) {
 		    	getManagedBean().setDisableFinalAmendDetails(true);
+		    }
+		    if (getManagedBean().getTaskName() != null 
+		    		&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VIEW_FA_DETAILS_HT_NAME)) {
+		    	getManagedBean().setDisableMeetingDetails(true);
+		    	ctBackingBean.getManagedBean().setViewContract(true);
 		    }
 		    //Default the secretary
 		    if (getManagedBean().getSecretaryId() == null && getManagedBean().getCommitteeType()!=null			    		
@@ -891,7 +897,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	     		getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses().add(getManagedBean().getScLoaWitness());
 	     	}
 	     	
-	     	if (isSupplierRole() && action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+	     	if (isSupplierRole() && action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)
+	     			&& !getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)) {
      			// Generate loa document and set into sc_attachment
      			AttachmentFormat attachmentFormat = new AttachmentDateFormat();		
      			String fileName = null;
@@ -1349,7 +1356,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
-		} else if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome) && isSupplierRole()) {
+		} else if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome) && isSupplierRole()
+				&& !getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)) {
 			validateContractAmendment(outcome);	
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);			
