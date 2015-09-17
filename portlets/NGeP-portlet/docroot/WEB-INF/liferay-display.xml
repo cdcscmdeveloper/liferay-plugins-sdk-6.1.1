@@ -64,7 +64,7 @@
             <portlet id="listfund"></portlet>
             <portlet id="listprogramactivity"></portlet>
             <portlet id="listproject"></portlet>
-            <portlet id="listSuppliersReview"></portlet>			
+           			
 			
 		</category>
 		<!-- Profile Management - END -->		
@@ -93,6 +93,8 @@
 			<portlet id="scLoiList" />
 			<portlet id="scLoiReview" />
 			<portlet id="scLoiSupplierResponse" />
+			<portlet id="scMarketResearch"/>
+			<portlet id="listSuppliersReview"/>
 			<portlet id="scMultipleLoi" />
 			<portlet id="scDpLoaList" />
 			<portlet id="scQtLoaList" />
@@ -105,8 +107,7 @@
 			<portlet id="scBidding" />
 			<portlet id="scTemplateMaint" />
 			<portlet id="scScheduleBidding" />
-			<portlet id="scOnlineBidding" />
-						
+			<portlet id="scOnlineBidding" />						
 			<portlet id="scQTMaintenance"/>
 			<portlet id="scQTReview"/>
 			<portlet id="scQTPrepareSpec"/>
@@ -135,7 +136,7 @@
 		    <portlet id="scCreateQuotationTender" />
 		    <portlet id="scManualSourcingSupplierResponse"/>
 		    <portlet id="scBriefingSiteVisitRegistration"/>
-			<portlet id="scMarketResearch"/>
+			
 		    
 		</category>
 

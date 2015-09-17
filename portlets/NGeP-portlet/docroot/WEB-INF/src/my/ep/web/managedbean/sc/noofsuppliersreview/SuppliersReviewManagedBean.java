@@ -8,16 +8,14 @@
  * 
  ****************************************************
 */
-package my.ep.web.managedbean.pm.suppliersreview;
 
-import java.math.BigDecimal;
+package my.ep.web.managedbean.sc.noofsuppliersreview;
+
 import java.util.List;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.model.SelectItem;
 
-import my.ep.dto.pm.common.SuppliersReviewResDTO;
+import my.ep.dto.sc.suppliersreview.SuppliersReviewResDTO;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.web.bean.SuppliersReviewSearchBean;
