@@ -123,7 +123,7 @@ import com.liferay.portal.util.PortalUtil;
  * @author alam
  * @since 9/10/2013
  */
-@ManagedBean
+@ManagedBean (name = "centralContractBackingBean") 
 @RequestScoped
 public class CentralContractBackingBean extends BaseBackingBean<CentralContractManagedBean>{
 	
@@ -147,8 +147,11 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				getManagedBean().getCircularVer().setStatus(status);
 				 /*Initialization of contract details backing bean*/
 				 initializeRemarks();
-				 ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
-			     ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+				if(ctBB == null) {
+				      ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+				      ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+				}
+			    
 			}
 			/*Setting login user id*/
 			if(isCentralContractAdmin()) 
@@ -684,7 +687,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			
 			if((getManagedBean().isUpdateAction() || (getManagedBean().getCircular() != null && getManagedBean().getCircular().getLatestCircularVer() != null)) && 
 					outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
-					throw new EpException(MessageConst.ERROR_750018, new String[]{"central circular update"});
+					throw new EpException(MessageConst.ERROR_750018, new String[]{"Central circular update"});
 			}
 		}
 		 finally {
@@ -775,9 +778,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 * This method used to navigate circular details for view 
 	 * and update during maintenance
 	 */
-	public String gotoPage() {
-		String action = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("action");
-		Long circularVerId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("circularVerId"));
+	public String gotoPage(String action, Long circularVerId) {
+		
 		ICircularSO circularSO = null;
 		try {
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
