@@ -6678,7 +6678,7 @@ public class SpecificationBackingBean extends
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
 					if (null == resDTO.getCheckListScores()
 							|| resDTO.getCheckListScores().isEmpty()) {
-
+						checkList.setScQtCheckListValue(resDTO.getScQtCheckListValue());
 						this.getManagedBean().setChecklistScoreType(null);
 						this.getManagedBean().setCompanyScoreType(null);
 
@@ -7052,7 +7052,7 @@ public class SpecificationBackingBean extends
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
 					if (null == resDTO.getCheckListScores()
 							|| resDTO.getCheckListScores().isEmpty()) {
-
+						checkList.setScQtCheckListValue(resDTO.getScQtCheckListValue());
 						this.getManagedBean().setChecklistScoreType(null);
 
 					} else {
@@ -7108,7 +7108,7 @@ public class SpecificationBackingBean extends
 					reqDTO.setScQtCheckList(checkList);
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
 					if (null == resDTO.getCheckListScores()) {
-
+						checkList.setScQtCheckListValue(resDTO.getScQtCheckListValue());
 						this.getManagedBean().setChecklistScoreType(null);
 
 					} else {
@@ -7250,7 +7250,7 @@ public class SpecificationBackingBean extends
 					reqDTO.setScQtCheckList(checkList);
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
 					if (null == resDTO.getCheckListScores()) {
-
+						checkList.setScQtCheckListValue(resDTO.getScQtCheckListValue());
 						this.getManagedBean().setChecklistScoreType(null);
 
 					} else {
@@ -7305,7 +7305,7 @@ public class SpecificationBackingBean extends
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
 					if (null == resDTO.getCheckListScores()
 							|| resDTO.getCheckListScores().isEmpty()) {
-
+						checkList.setScQtCheckListValue(resDTO.getScQtCheckListValue());
 						this.getManagedBean().setChecklistScoreType(
 								QTConstants.USER_SCORE);
 
