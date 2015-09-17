@@ -1443,17 +1443,7 @@
 			/js/main.js
 		</footer-portlet-javascript>
 		<css-class-wrapper>project search-portlet</css-class-wrapper>
-	</portlet>
-	<portlet>
-		<portlet-name>listSuppliersReview</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
-		<footer-portlet-javascript>
-			/js/main.js
-		</footer-portlet-javascript>
-		<css-class-wrapper>SuppliersReview search-portlet</css-class-wrapper>
-	</portlet>
+	</portlet>	
 	<portlet>
 		<portlet-name>ZoneMaintenancePortlet</portlet-name>
 		<icon>/icon.png</icon>
@@ -1681,8 +1671,7 @@
 			<ajaxable>false</ajaxable>
 			<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 			<css-class-wrapper>sc-requestnote-search-portlet</css-class-wrapper>
-		</portlet>
-		
+		</portlet>		
 		<portlet>
 		  <portlet-name>scMarketResearch</portlet-name>
 		  <icon>/icon.png</icon>
@@ -1692,7 +1681,17 @@
 			/js/main.js
 		</footer-portlet-javascript>
 		<css-class-wrapper>market research-portlet</css-class-wrapper>
-	   </portlet>
+	   </portlet>	  
+	   <portlet>
+		<portlet-name>listSuppliersReview</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>SuppliersReview search-portlet</css-class-wrapper>
+	   </portlet>		
 		
 		<portlet>
 			<portlet-name>pmRejectionReason</portlet-name>

@@ -7,8 +7,8 @@
  * Copyright © 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
-*/
-package my.ep.web.backingbean.pm.suppliersreview;
+ */
+package my.ep.web.backingbean.sc.noofsuppliersreview;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,13 +17,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import my.ep.biz.service.pm.common.state.IStateSO;
-import my.ep.biz.service.pm.common.suppliersreview.ISuppliersReviewSO;
+import my.ep.biz.service.sc.marketresearch.IMarketResearchSO;
+import my.ep.biz.service.sc.suppliersreview.ISuppliersReviewSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.dto.pm.common.SuppliersReviewResDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
-import my.ep.dto.pm.common.suppliersreview.SuppliersReviewReqDTO;
+import my.ep.dto.sc.suppliersreview.SuppliersReviewReqDTO;
+import my.ep.dto.sc.suppliersreview.SuppliersReviewResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -33,11 +34,10 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.logging.LogKey;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.SuppliersReviewSearchBean;
-import my.ep.web.managedbean.pm.suppliersreview.SuppliersReviewManagedBean;
+import my.ep.web.managedbean.sc.noofsuppliersreview.SuppliersReviewManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.log4j.Logger;
-
 
 // TODO: Auto-generated Javadoc
 /**
@@ -46,14 +46,14 @@ import org.apache.log4j.Logger;
 @ManagedBean(name = "suppliersReviewBackingBean")
 @ViewScoped
 public class SuppliersReviewBackingBean extends
-BaseBackingBean<SuppliersReviewManagedBean> {
-	
+		BaseBackingBean<SuppliersReviewManagedBean> {
+
 	/** The log. */
 	private static Logger log = Logger
 			.getLogger(SuppliersReviewBackingBean.class);
 
 	/** The Constant NAV_TO_MAIN. */
-	public static final String NAV_TO_MAIN = "/xhtml/pm/suppliersreview/suppliersReviewSearchMain";	
+	public static final String NAV_TO_MAIN = "/xhtml/sc/supplierreview/noofsuppliersreview/suppliersReviewSearchMain";
 
 	/**
 	 * Instantiates a new suppliers review backing bean.
@@ -72,24 +72,25 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 
 	}
 
-
 	/**
 	 * Select all states.
 	 */
 	public void selectAllStates() {
 		log.info("selectAllStates method");
-		if(this.getManagedBean().isAllStates()){
+		if (this.getManagedBean().isAllStates()) {
 			this.getManagedBean()
-			.getSuppliersReviewSearchBean().setSelectedStatesList(this.getManagedBean()
-					.getSuppliersReviewSearchBean().getStatesList());
+					.getSuppliersReviewSearchBean()
+					.setSelectedStatesList(
+							this.getManagedBean()
+									.getSuppliersReviewSearchBean()
+									.getStatesList());
 			this.getManagedBean().setDisabled(true);
-		}else{
-			this.getManagedBean()
-			.getSuppliersReviewSearchBean().setSelectedStatesList(null);
+		} else {
+			this.getManagedBean().getSuppliersReviewSearchBean()
+					.setSelectedStatesList(null);
 			this.getManagedBean().setDisabled(false);
 		}
-		//RequestContext.getCurrentInstance().execute("selectAll()");
-
+		// RequestContext.getCurrentInstance().execute("selectAll()");
 
 	}
 
@@ -99,10 +100,10 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 	public void preLoadingSuppliersReview() {
 		log.info("preLoadingSuppliersReview method");
 		this.resetSuppliersReviewSearchBean();
-		retrievePmStateList();				
-		FacesContext fc = FacesContext.getCurrentInstance();		
+		retrievePmStateList();
+		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
-		.handleNavigation(fc, null, NAV_TO_MAIN);
+				.handleNavigation(fc, null, NAV_TO_MAIN);
 	}
 
 	/**
@@ -127,8 +128,7 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 		this.getManagedBean().setLazy(false);
 		this.getManagedBean().setStatus(null);
 		this.getManagedBean().setNoOfSuppliers(null);
-		
-		
+
 		this.getManagedBean().setSuppliersReviewSearchBean(
 				new SuppliersReviewSearchBean());
 
@@ -146,9 +146,9 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 	 * @return the list of PmCountry
 	 */
 	public List<PmState> retrievePmStateList() {
-		
+
 		debugLogger("in retrievePmStateList");
-		
+
 		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IStateSO.class);
@@ -160,10 +160,9 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 			}
 		}
 		this.getManagedBean().getSuppliersReviewSearchBean()
-		.setStatesList(stateList);
+				.setStatesList(stateList);
 		return stateList;
 	}
-
 
 	/**
 	 * Search suppliers review details.
@@ -175,57 +174,67 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 
 		SuppliersReviewReqDTO suppliersReviewReqDTO = new SuppliersReviewReqDTO();
 
-
-		List<Long> stateIdList = new ArrayList<Long>();
-		List<Long> categoryL3L = new ArrayList<Long>();
-
-
 		List<ScQtCategory> catList = this.getManagedBean().getQtCategoryList();
 
-		if(this.getManagedBean().getSuppliersReviewSearchBean().getPaidUpCapitalAmtFrom()!=null 
-				&& this.getManagedBean().getSuppliersReviewSearchBean().getPaidUpCapitalAmtTo()!=null){
+		if (this.getManagedBean().getSuppliersReviewSearchBean()
+				.getPaidUpCapitalAmtFrom() != null
+				&& this.getManagedBean().getSuppliersReviewSearchBean()
+						.getPaidUpCapitalAmtTo() != null) {
 
-			suppliersReviewReqDTO.setPaidUpCapitalAmtFrom(this.getManagedBean().getSuppliersReviewSearchBean().getPaidUpCapitalAmtFrom());
-			suppliersReviewReqDTO.setPaidUpCapitalAmtTo(this.getManagedBean().getSuppliersReviewSearchBean().getPaidUpCapitalAmtTo());
-		}
-		else{
+			suppliersReviewReqDTO.setPaidUpCapitalAmtFrom(this.getManagedBean()
+					.getSuppliersReviewSearchBean().getPaidUpCapitalAmtFrom());
+			suppliersReviewReqDTO.setPaidUpCapitalAmtTo(this.getManagedBean()
+					.getSuppliersReviewSearchBean().getPaidUpCapitalAmtTo());
+		} else {
 			throw new EpException(MessageConst.ERROR_790002);
 		}
 
-		if(catList!=null && !catList.isEmpty()){
+		if (catList != null && !catList.isEmpty()) {
 
-			for(ScQtCategory scQtCategory:catList){
+			List<Long> categoryL3L = new ArrayList<Long>();
 
-				categoryL3L.add(scQtCategory.getPmCategoryL3().getCategoryL3Id());
+			for (ScQtCategory scQtCategory : catList) {
+
+				categoryL3L.add(scQtCategory.getPmCategoryL3()
+						.getCategoryL3Id());
 			}
-			this.getManagedBean().getSuppliersReviewSearchBean().setCategoryIdList(categoryL3L);
+			this.getManagedBean().getSuppliersReviewSearchBean()
+					.setCategoryIdList(categoryL3L);
 
+		} else {
+			throw new EpException(MessageConst.ERROR_790001);
 		}
-		else{
-			throw new EpException(MessageConst.ERROR_790001);	
-		}
+		List<Long> stateIdList = new ArrayList<Long>();
 
-		if(this.getManagedBean().isAllStates()){
-			if(this.getManagedBean().getSuppliersReviewSearchBean().getSelectedStatesList()!=null 
-					&&!this.getManagedBean().getSuppliersReviewSearchBean().getSelectedStatesList().isEmpty())
-				for(PmState pmState:this.getManagedBean().getSuppliersReviewSearchBean().getSelectedStatesList()){
+		if (this.getManagedBean().isAllStates()) {
+			if (this.getManagedBean().getSuppliersReviewSearchBean()
+					.getSelectedStatesList() != null
+					&& !this.getManagedBean().getSuppliersReviewSearchBean()
+							.getSelectedStatesList().isEmpty())
+				for (PmState pmState : this.getManagedBean()
+						.getSuppliersReviewSearchBean().getSelectedStatesList()) {
 					stateIdList.add(pmState.getStateId());
 				}
-		}
-		else if(this.getManagedBean().getSuppliersReviewSearchBean().getDropDownStatesIdList()!=null &&
-				this.getManagedBean().getSuppliersReviewSearchBean().getDropDownStatesIdList().length>0){
+		} else if (this.getManagedBean().getSuppliersReviewSearchBean()
+				.getDropDownStatesIdList() != null
+				&& this.getManagedBean().getSuppliersReviewSearchBean()
+						.getDropDownStatesIdList().length > 0) {
 
-			stateIdList.addAll(Arrays.asList(this.getManagedBean().getSuppliersReviewSearchBean().getDropDownStatesIdList()));
+			stateIdList.addAll(Arrays.asList(this.getManagedBean()
+					.getSuppliersReviewSearchBean().getDropDownStatesIdList()));
 
 		}
 		suppliersReviewReqDTO.setStateIdList(stateIdList);
-		suppliersReviewReqDTO.setCategoryIdList(this.getManagedBean().getSuppliersReviewSearchBean().getCategoryIdList());
-		suppliersReviewReqDTO.setCategoriesListSize(this.getManagedBean().getSuppliersReviewSearchBean().getCategoryIdList().size());
+		suppliersReviewReqDTO.setCategoryIdList(this.getManagedBean()
+				.getSuppliersReviewSearchBean().getCategoryIdList());
+		suppliersReviewReqDTO.setCategoriesListSize(this.getManagedBean()
+				.getSuppliersReviewSearchBean().getCategoryIdList().size());
 		try {
 			suppliersReviewSO = (ISuppliersReviewSO) BusinessDelegate
 					.getInstance().getServiceObject(
-							ModuleCodeConst.PROFILE_MANAGEMENT,
+							ModuleCodeConst.SUPPLIER_SELECTION,
 							ISuppliersReviewSO.class);
+
 			SuppliersReviewResDTO suppliersReviewResDTO = suppliersReviewSO
 					.searchSuppliersReviewData(suppliersReviewReqDTO);
 
@@ -235,7 +244,8 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 
 				suppliersReviewResDTO.getCount();
 
-				this.getManagedBean().setNoOfSuppliers(suppliersReviewResDTO.getCount().longValue());			
+				this.getManagedBean().setNoOfSuppliers(
+						suppliersReviewResDTO.getCount().longValue());
 
 			}
 		} catch (Exception e) {
@@ -254,15 +264,13 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 	public void addNewCategoryAction(PmCategoryL3 pmCategoryL3) {
 		debugLogger("addNewCategoryAction");
 		List<ScQtCategory> qtCategoryList = this.getManagedBean()
-				.getQtCategoryList();	
+				.getQtCategoryList();
 		if (qtCategoryList == null) {
 			qtCategoryList = new ArrayList<ScQtCategory>();
 			this.getManagedBean().setQtCategoryList(qtCategoryList);
 		}
-		//validateDuplicateCategoryCode(pmCategoryL3, qtCategoryList);	
 		PmCategoryL2 pmCategoryL2 = pmCategoryL3.getPmCategoryL2();
 		ScQtCategory category = new ScQtCategory();
-		//category.setScQt(this.getManagedBean().getQt());
 		category.setPmCategoryL1(pmCategoryL2.getPmCategoryL1());
 		category.setPmCategoryL2(pmCategoryL2);
 		category.setPmCategoryL3(pmCategoryL3);
