@@ -4682,4 +4682,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    	return false;
 	    }
 	}
+	
+	public boolean uomPerDayMonthYear(){
+		if (isContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())
+	    		|| (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null 
+	    		&& getManagedBean().getContractVer().getCtContractAmount().getGstAmount().doubleValue() != 0)) {
+	    	return true;
+	    } else {
+	    	return false;
+	    }
+	}
 }
