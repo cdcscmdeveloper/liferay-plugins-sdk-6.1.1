@@ -932,8 +932,10 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				noteItem.setGstAmount(BigDecimal.ZERO);
 				noteItem.setGstUnitPrice(noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice());
 			}
-			receivedAmt = noteItem.getReceivedQty().multiply(noteItem.getGstUnitPrice());
-			noteItem.setReceivedAmt(receivedAmt.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, BigDecimal.ROUND_HALF_UP));
+			if(noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)){
+				receivedAmt = noteItem.getReceivedQty().multiply(noteItem.getGstUnitPrice());
+				noteItem.setReceivedAmt(receivedAmt.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, BigDecimal.ROUND_HALF_UP));
+			}
 			if(!amtChanged && fulfilmentNote.isBrandNew() && noteItem.getFlDelOrderItem().getGstAmount().compareTo(noteItem.getGstAmount())!=0) {
 				amtChanged = true;
 			}
