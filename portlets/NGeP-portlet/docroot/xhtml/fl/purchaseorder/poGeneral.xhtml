@@ -100,9 +100,19 @@
 						value="#{flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.procurementTypeCategory ==null ? lbl['lbl.fl.supp.na'] : flOrderBB.getParameterDesc(flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.procurementTypeCategory)}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.period']}" /></td>
-				<td><p:inputText size="12" disabled="true" value="#{flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.deliveryTerm}" /> <p:spacer
-						width="5" /> <p:inputText size="2" value="#{flOrderBB.getParameterDesc(flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.pmUom)}" disabled="true" /></td>
+				<td style="width: 142px;"><p:outputLabel
+						value="#{lbl['lbl.fl.delivery.period']}" /></td>
+				<td><table style="width: 75%">
+						<tr>
+							<td>
+								<p:inputText size="12" style="text-align:right;"
+									disabled="true"
+									value="#{flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.deliveryTerm}" />
+							</td>
+							<td style="width: 211px;"><p:outputLabel styleClass="outputLabel-view"
+									value="#{flOrderBB.getParameterDesc(flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.pmUom)}" /></td>
+						</tr>
+					</table></td>		
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" /></td>

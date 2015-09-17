@@ -118,27 +118,28 @@
 						value="#{contractRequestBackingBean.managedBean.flRequest.procurementTypeCategory ==null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.getParameterDesc(contractRequestBackingBean.managedBean.flRequest.procurementTypeCategory)}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.period']}" /></td>
-				<td><p:inputText size="12" disabled="true" style="text-align:right"
-						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.deliveryTerm}"
-						rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing eq false}" />
-					<p:spacer width="5" /> <p:inputText size="2"
-						value="#{contractRequestBackingBean.getParameterDesc(contractRequestBackingBean.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.deliveryTermUom)}"
-						disabled="true"
-						rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing eq false}" />
-					<p:inputText size="12" disabled="true"
-						value=""
-						rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}" />
-					<p:spacer width="5" /> <p:inputText size="2" value="" disabled="true" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}"/>
-				</td>
-
-				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.submission.date']}" /></td>
-				<td><p:inputText size="25" disabled="true" 	value="#{contractRequestBackingBean.managedBean.flRequest.submissionDate}">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.submission.date']}"/>
-					</td>
+				<td style="width: 142px;"><p:outputLabel rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing =='false'}"
+						value="#{lbl['lbl.fl.delivery.period']}" /></td>
+				<td><table style="width: 100%">
+						<tr>
+							<td>
+								<p:inputText size="12" style="text-align:right;"
+									disabled="true" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing =='false'}"
+									value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.deliveryTerm}" />
+							</td>
+							<td style="width: 211px;"><p:outputLabel styleClass="outputLabel-view" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing =='false'}"
+									value="#{contractRequestBackingBean.getParameterDesc(contractRequestBackingBean.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.deliveryTermUom)}" /></td>
+						</tr>
+					</table></td>
+				<td colspan="2"><p:outputLabel
+						value="#{lbl['lbl.fl.submission.date']}" /></td>
+				<td>	
+				<p:inputText size="25" disabled="true"
+					value="#{contractRequestBackingBean.managedBean.flRequest.submissionDate}">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</p:inputText>
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.pr.submission.date']}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" /></td>

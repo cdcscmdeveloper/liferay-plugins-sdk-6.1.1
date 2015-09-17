@@ -103,21 +103,28 @@
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementTypeCategory ==null ? lbl['lbl.fl.supp.na'] : purchaseRequestBackingBean.getParameterDesc(purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementTypeCategory)}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.period']}" /></td>
-				<td><p:inputText size="12" style="text-align:right;"
-						disabled="true"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.deliveryTerm}" />
-					<p:spacer width="5" /> <p:inputText size="2"
-						value="#{purchaseRequestBackingBean.getParameterDesc(purchaseRequestBackingBean.managedBean.fulfilmentRequest.pmUom)}"
-						disabled="true" /></td>
-				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.submission.date']}" /></td>
-				<td><p:inputText size="25" disabled="true"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.submissionDate}">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.pr.submission.date']}"/>	
-				</td>
+				<td style="width: 142px;"><p:outputLabel
+						value="#{lbl['lbl.fl.delivery.period']}" /></td>
+				<td><table style="width: 100%">
+						<tr>
+							<td>
+								<p:inputText size="12" style="text-align:right;"
+									disabled="true"
+									value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.deliveryTerm}" />
+							</td>
+							<td style="width: 211px;"><p:outputLabel styleClass="outputLabel-view"
+									value="#{purchaseRequestBackingBean.getParameterDesc(purchaseRequestBackingBean.managedBean.fulfilmentRequest.pmUom)}" /></td>
+						</tr>
+					</table></td>
+				<td colspan="2"><p:outputLabel
+						value="#{lbl['lbl.fl.submission.date']}" /></td>
+				<td>	
+				<p:inputText size="25" disabled="true"
+					value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.submissionDate}">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</p:inputText>
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.pr.submission.date']}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" /></td>
