@@ -128,6 +128,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
+import my.ep.type.sc.MemberRole;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -931,8 +932,23 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
     				    scLoaReport.setScLoaReportAttachment(attachment);
      				}
      			}
-     		}	     		       
-	     	reqDTO.setUserRole(getUserRole());
+	     	}
+	     	// Retrieve the proper committee role during sign off process and set the sign off flag to true
+	     	if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)
+	     			&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+	     		List<CtCommitteeMember> committeeMemberList = getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers();
+	    		String role = null;
+	    		for(CtCommitteeMember committeeMember : committeeMemberList) {
+	    			if (committeeMember.getPmUser().getUserId().equals(getFacesScopes().getUserSessionBean().getUserId())) {
+	    				committeeMember.setSignedOff(true);
+	    				role = getManagedBean().getCommitteeType() + "_" + MemberRole.getDisplayName(committeeMember.getMemberRole().getParameterCode());
+	    				reqDTO.setUserRole(role);
+	    				break;
+	    			}
+	    		}	     		
+	     	} else {
+	     		reqDTO.setUserRole(getUserRole());
+	     	}
 	     	reqDTO.setTaskName(getManagedBean().getTaskName());
 	     	reqDTO.setCtContract(getManagedBean().getCtContract());
 	     	reqDTO.setCtContractVer(getManagedBean().getContractVer());
