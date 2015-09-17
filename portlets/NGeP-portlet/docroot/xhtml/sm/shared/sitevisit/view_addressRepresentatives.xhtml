@@ -15,7 +15,9 @@
 			</p:column>
 			</ui:remove>
 			<p:column headerText="#{lbl['lbl.sm.address']}">
-				#{svoSiteVisitBackingBean.displayAddress(svAdd.smAddress)}
+				<h:outputText
+					value="#{svoSiteVisitBackingBean.displayAddress(svAdd.smAddress)}"
+					escape="false" style="float : left" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.postcode']}">
