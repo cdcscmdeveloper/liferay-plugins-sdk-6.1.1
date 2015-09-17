@@ -669,22 +669,22 @@ public class EperundingIntegration {
 					profile.setCompanyName(smSupplier.getCompanyName());
 					profile.setSSMNo(smSupplier.getRegNo());
 					profile.setMOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
+					
+					if(smSupplier.getSmMofAccounts().get(0).getSmMofCerts().size()>0){
+						profile.setVirtualCertNo(smSupplier.getSmMofAccounts().get(0).getSmMofCerts().get(0).getCertSerialNo());
+					}
 
 					// New columns added
 					if(null!=smSupplier.getSmGstSuppliers()){
-						
 						profile.setGSTNo(smSupplier.getSmGstSuppliers().get(0).getGstRegNo());
-						profile.setVirtualCertNo(smSupplier.getSmMofAccounts().get(0).getSmMofCerts().get(0).getCertSerialNo());
 						profile.setGSTEffectiveDate(smSupplier.getSmGstSuppliers().get(0).getGstEffDate());
 						profile.setFirstTaxablePeriod(smSupplier.getSmGstSuppliers().get(0).getGstDeclaredDate());
+					}else{
+						profile.setGSTNo(IntegrationConstants.EMPTY_TRING);
+						profile.setGSTEffectiveDate(IntegrationConstants.DEFAULT_DATE);
+						profile.setFirstTaxablePeriod(IntegrationConstants.DEFAULT_DATE);
 					}
 					
-
-					//	profile.setGSTNo(IntegrationConstants.EMPTY_TRING);
-					//	profile.setVirtualCertNo(smSupplier.getSmMofAccounts().get(0).getSmMofCerts().get(0).getCertSerialNo());
-					//	profile.setGSTEffectiveDate(IntegrationConstants.DEFAULT_DATE);
-					//	profile.setFirstTaxablePeriod(IntegrationConstants.DEFAULT_DATE);
-					// End
 					profile.setCompanyType(getCompanyType(smSupplier.getBusinessType()));
 
 					String phoneNo = smSupplier.getSmAppl().getSmCompanyBasic().getPhoneNo();
