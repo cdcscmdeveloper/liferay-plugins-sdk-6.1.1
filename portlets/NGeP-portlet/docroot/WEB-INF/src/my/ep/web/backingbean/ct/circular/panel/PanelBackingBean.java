@@ -139,7 +139,7 @@ import com.liferay.portal.util.PortalUtil;
  * @author alam
  * @since 9/10/2013
  */
-@ManagedBean
+@ManagedBean (name = "panelBackingBean") 
 @RequestScoped
 public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
@@ -1528,9 +1528,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * User need to make decision on panel circular maintenance page
 	 * Navigate to panel circular page as per user selection for update or view
 	 * */
-	public String gotoPage() {
-		String action = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("action");
-		Long circularVerId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("circularVerId"));
+	public String gotoPage(String action, Long circularVerId) {
+	
 		log.info("Action :"+action+" Id :"+circularVerId);
 		ICircularSO circularSO = null;
 		try {
