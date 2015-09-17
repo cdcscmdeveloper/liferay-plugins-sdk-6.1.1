@@ -1,31 +1,39 @@
-<ui:composition
-	xmlns:f="http://java.sun.com/jsf/core"
+<ui:composition xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
+
 	<p:column style="width:#{isItemTypeService ? '52px' : '85px'};">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
-			<h:outputText value="#{lbl['lbl.tpl.spec.content.quantity']}"/>
+			<h:outputText value="#{lbl['lbl.tpl.spec.content.quantity']}" />
 		</f:facet>
 		<h:panelGroup id="qtyPG" rendered="#{isQuestionTypeItem}">
-			<p:inputText id="qty" style="min-width:0px !important;width:35px; text-align:right;"
-				value="#{question.clQuantity}" 
-				required="#{!question.selected}" maxlength="14"
-				label="#{lbl['lbl.tpl.spec.content.quantity']}">
-				<p:ajax partialSubmit="true" process="@this" update="@this, qtyMsg, @(.calcAmount)" />
-				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" maxIntegerDigits="10" />
+			<p:inputText id="qty"
+				style="min-width:0px !important;width:35px; text-align:right;"
+				value="#{question.clQuantity}" required="#{!question.selected}"
+				maxlength="14" label="#{lbl['lbl.tpl.spec.content.quantity']}">
+				<p:ajax partialSubmit="true" process="@this"
+					update="@this, qtyMsg, @(.calcAmount)" />
+				<ac:validateNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}"
+					maxIntegerDigits="10" />
 			</p:inputText>
-			<p:commandButton id="tierQtyBtn" icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
+			<p:commandButton id="tierQtyBtn" icon="ui-icon-pencil"
+				style="background-color:transparent !important; border:0px none;"
 				action="#{templateSpecBackingBean.tierQtyPopupAction(templateSpecBean)}"
-				
-				partialSubmit="true" process="@this,qty" update="@([id$=tierQtyPopup])"
+				partialSubmit="true" process="@this,qty"
+				update="@([id$=tierQtyPopup])"
 				rendered="#{!isPriceTypeAllStandard and !empty question.clPriceTypeCode.parameterId}"
 				title="#{lbl['lbl.tpl.spec.content.tier.dtls.tooltip']}">
-				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
+				<f:setPropertyActionListener
+					target="#{templateSpecBean.selectedSpecQuestion}"
+					value="#{question}" />
+				<f:setPropertyActionListener
+					target="#{templateSpecBean.specComponentId}"
+					value="#{templateSpecId}" />
 			</p:commandButton>
 			<p:message id="qtyMsg" for="qty" display="icon" />
 		</h:panelGroup>
@@ -33,108 +41,140 @@
 	<p:column style="width:125px;" rendered="#{isSpecificationReq}">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
-			<h:outputText value="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer.schema']}"/>
+			<h:outputText
+				value="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer.schema']}" />
 		</f:facet>
-		<h:selectOneMenu id="answerTypeId" value="#{question.answerTypeCode.parameterId}" style="width:100px;"
+		<h:selectOneMenu id="answerTypeId"
+			value="#{question.answerTypeCode.parameterId}" style="width:100px;"
 			required="#{!question.selected}"
 			label="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer.schema']}"
 			rendered="#{!isQuestionTypeItem}">
-			<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.answerType)}" />
-			<p:ajax event="change" listener="#{templateSpecBackingBean.answerTypeChange(question)}" 
+			<f:selectItems
+				value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.answerType)}" />
+			<p:ajax event="change"
+				listener="#{templateSpecBackingBean.answerTypeChange(question)}"
 				partialSubmit="true" process="@this" update="scoringBtnPG" />
-		</h:selectOneMenu>	
+		</h:selectOneMenu>
 		<h:panelGroup id="scoringBtnPG">
 			<p:commandButton id="scoringBtn"
-				icon="#{empty question.maxScore ? 'ui-icon-pencil' : 'ui-icon-evaluate'}" 
+				icon="#{empty question.maxScore ? 'ui-icon-pencil' : 'ui-icon-evaluate'}"
 				style="background-color:transparent !important; border:0px none;"
 				styleClass="scoringBtn"
 				action="#{templateSpecBackingBean.scoringPopupAction(templateSpecBean)}"
-				oncomplete="#{scoringSetPopup}.show();"
-				partialSubmit="true" process="@this" update="@([id$=scoringSetPopup])"
+				oncomplete="#{scoringSetPopup}.show();" partialSubmit="true"
+				process="@this" update="@([id$=scoringSetPopup])"
 				rendered="#{!isQuestionTypeItem and !empty question.answerTypeCode.parameterId and isScoringReq}">
-				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
+				<f:setPropertyActionListener
+					target="#{templateSpecBean.selectedSpecQuestion}"
+					value="#{question}" />
 			</p:commandButton>
 			<p:message id="answerTypeIdMsg" for="answerTypeId" display="icon" />
 		</h:panelGroup>
 	</p:column>
-	<p:column style="width:56px;white-space:normal;" rendered="#{isEstCostReq and !isSpecificationReq}">
+	<p:column style="width:56px;white-space:normal;"
+		rendered="#{isEstCostReq and !isSpecificationReq}">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
-			<h:outputText value="#{lbl['lbl.tpl.spec.content.estimate.cost']}"/>
+			<h:outputText value="#{lbl['lbl.tpl.spec.content.estimate.cost']}" />
 		</f:facet>
-		<h:panelGroup id="estPG" rendered="#{isQuestionTypeItem}" style="white-space:nowrap;">
+		<h:panelGroup id="estPG" rendered="#{isQuestionTypeItem}"
+			style="white-space:nowrap;">
 			<c:if test="#{!isZonal}">
-				<p:inputText id="estCost" style="min-width:0px !important;width:44px; text-align:right;"
-					value="#{question.tplSpecEstimations[0].estimatedCost}" 
+				<p:inputText id="estCost"
+					style="min-width:0px !important;width:44px; text-align:right;"
+					value="#{question.tplSpecEstimations[0].estimatedCost}"
 					required="#{!question.selected}" maxlength="19"
 					label="#{lbl['lbl.tpl.spec.content.estimate.cost']}">
-					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
-					<p:ajax partialSubmit="true" process="@this" update="@this, estCostMsg" />
+					<ac:validateNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
+						maxIntegerDigits="14" />
+					<p:ajax partialSubmit="true" process="@this"
+						update="@this, estCostMsg" />
 				</p:inputText>
 				<p:message id="estCostMsg" for="estCost" display="icon" />
 			</c:if>
 			<c:if test="#{isZonal}">
-				<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
+				<p:commandButton icon="ui-icon-pencil"
+					style="background-color:transparent !important; border:0px none;"
 					action="#{templateSpecBackingBean.estimationPopupAction(templateSpecBean)}"
-					oncomplete="#{estimationPopup}.show();"
-					partialSubmit="true" process="@this" update="@([id$=estimationPopup])">
-					<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
+					oncomplete="#{estimationPopup}.show();" partialSubmit="true"
+					process="@this" update="@([id$=estimationPopup])">
+					<f:setPropertyActionListener
+						target="#{templateSpecBean.selectedSpecQuestion}"
+						value="#{question}" />
 				</p:commandButton>
 			</c:if>
 		</h:panelGroup>
 	</p:column>
 	<p:column style="width:40px;" rendered="#{newable}">
 		<f:facet name="header">
-			<p:commandButton id="addTopBtn" icon="ui-icon-add" style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
-				action="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,-1,TplSpecConst.questionTypeItem)}"  
+			<p:commandButton id="addTopBtn" icon="ui-icon-add"
+				style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
+				action="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,-1,TplSpecConst.questionTypeItem)}"
 				update="questionTbl" partialSubmit="true" process="questionTbl"
 				title="#{lbl['lbl.tpl.spec.content.btn.add.tooltip']}" />
 		</f:facet>
 		<c:if test="#{isSpecificationReq}">
-			<p:commandButton id="addBtn" icon="ui-icon-add" style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
+			<p:commandButton id="addBtn" icon="ui-icon-add"
+				style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
 				partialSubmit="true" process="@this"
 				title="#{lbl['lbl.tpl.spec.content.btn.add.tooltip']}" />
-			<p:menu overlay="true" trigger="addBtn" my="left top" at="left bottom">
-				<p:menuitem value="#{lbl['lbl.tpl.spec.content.item']}" action="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,row,TplSpecConst.questionTypeItem)}"  
+			<p:menu overlay="true" trigger="addBtn" my="left top"
+				at="left bottom">
+				<p:menuitem value="#{lbl['lbl.tpl.spec.content.item']}"
+					action="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,row,TplSpecConst.questionTypeItem)}"
 					update="questionTbl" partialSubmit="true" process="@this">
 				</p:menuitem>
-				<p:menuitem value="#{lbl['lbl.tpl.spec.content.specification']}" action="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,row,TplSpecConst.questionTypeItemSpec)}" 
+				<p:menuitem value="#{lbl['lbl.tpl.spec.content.specification']}"
+					action="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,row,TplSpecConst.questionTypeItemSpec)}"
 					update="questionTbl" partialSubmit="true" process="@this">
 				</p:menuitem>
 			</p:menu>
 		</c:if>
 		<c:if test="#{!isSpecificationReq}">
-			<p:commandButton id="addBtn" icon="ui-icon-add" style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
-				action="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,row,TplSpecConst.questionTypeItem)}"  
+			<p:commandButton id="addBtn" icon="ui-icon-add"
+				style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
+				action="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,row,TplSpecConst.questionTypeItem)}"
 				update="questionTbl" partialSubmit="true" process="questionTbl"
 				title="#{lbl['lbl.tpl.spec.content.btn.add.tooltip']}" />
 		</c:if>
-		<p:commandButton id="delBtn" icon="ui-icon-delete" style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
-			partialSubmit="true" process="@this" oncomplete="#{delConfirmPopup}.show();"
+		<p:commandButton id="delBtn" icon="ui-icon-delete"
+			style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
+			partialSubmit="true" process="@this"
+			oncomplete="#{delConfirmPopup}.show();"
 			title="#{lbl['lbl.tpl.spec.content.btn.delete.tooltip']}">
-			<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.tplSpecQuestions}" value="#{templateSpecBean.specMaster.tplSpecQuestions}" />
-			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
-			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion.selected}" value="#{true}" />
+			<f:setPropertyActionListener
+				target="#{templateSpecBackingBean.managedBean.tplSpecQuestions}"
+				value="#{templateSpecBean.specMaster.tplSpecQuestions}" />
+			<f:setPropertyActionListener
+				target="#{templateSpecBean.selectedSpecQuestion}"
+				value="#{question}" />
+			<f:setPropertyActionListener
+				target="#{templateSpecBean.selectedSpecQuestion.selected}"
+				value="#{true}" />
 		</p:commandButton>
 	</p:column>
-	
-	<p:column style="width:67px; white-space: normal;" rendered="#{!isItemTypeService and isDeliveryTermReq}">
+
+	<p:column style="width:67px; white-space: normal;"
+		rendered="#{!isItemTypeService and isDeliveryTermReq}">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
-			<h:outputText value="#{lbl['lbl.tpl.spec.content.delivery.term']}"/>
-			<ac:iconTooltip id="deliveryTerm#{row}TP" value="#{lbl['lbl.sc.delivery.term.tooltip']}" />
+			<h:outputText value="#{lbl['lbl.tpl.spec.content.delivery.term']}" />
+			<ac:iconTooltip id="deliveryTerm#{row}TP"
+				value="#{lbl['lbl.sc.delivery.term.tooltip']}" />
 		</f:facet>
-		<p:inputText id="deliveryTerm" style="min-width:0px !important;width:25px; text-align:right;"
-			value="#{question.clDeliveryTerm}" 
-			rendered="#{isQuestionTypeItem}" required="#{!question.selected}" maxlength="4"
+		<p:inputText id="deliveryTerm"
+			style="min-width:0px !important;width:25px; text-align:right;"
+			value="#{question.clDeliveryTerm}" rendered="#{isQuestionTypeItem}"
+			required="#{!question.selected}" maxlength="4"
 			label="#{lbl['lbl.tpl.spec.content.delivery.term']}">
-			<p:ajax partialSubmit="true" process="@this" update="@this, deliveryTermMsg" />
+			<p:ajax partialSubmit="true" process="@this"
+				update="@this, deliveryTermMsg" />
 		</p:inputText>
 		<p:spacer width="2px"></p:spacer>
-		<h:outputText 
-			value="#{templateSpecBackingBean.getParameterDesc(question.clDeliveryTermTypeCode)}"  
-			required = "#{!question.selected}"
-			rendered="#{isQuestionTypeItem}" />
-		 <p:message id="deliveryTermMsg" for="deliveryTerm" display="icon" />
+		<h:outputText
+			value="#{templateSpecBackingBean.getParameterDesc(question.clDeliveryTermTypeCode)}"
+			required="#{!question.selected}" rendered="#{isQuestionTypeItem}" />
+		<p:message id="deliveryTermMsg" for="deliveryTerm" display="icon" />
 	</p:column>
 </ui:composition>

@@ -15,7 +15,7 @@
 					<td width="150px"><h:outputLabel
 							value="#{lbl['lbl.sc.periodic.fullfillent.type']}" /></td>
 					<td><p:selectOneRadio disabled="#{!isEditableStatus}"
-							value="#{directLOABackingBean.managedBean.scQt.scheduleType}">
+							value="#{directLOABackingBean.managedBean.scQt.scheduleType}" >
 							<f:selectItem itemLabel="Frequency Schedule" itemValue="F"></f:selectItem>
 							<f:selectItem itemLabel="Progressive Payment" itemValue="P"></f:selectItem>
 							<p:ajax event="change" update="progressive,schedule"
@@ -141,7 +141,7 @@
 
 						<p:selectOneMenu style="width:120px;" required="true"
 							id="scheduledTypeId" label="#{lbl['lbl.sc.schedule.type']}"
-							value="#{frequency.scheduleType.parameterId}">
+							value="#{frequency.scheduleType.parameterId}" disabled="#{!isEditableStatus}">
 
 							<f:selectItems
 								value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.scheduleType)}" />

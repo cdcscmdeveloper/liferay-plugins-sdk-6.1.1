@@ -500,11 +500,10 @@ public class DirectLOABackingBean extends
 
 			this.getManagedBean().setProdTemplateSpecBean(bean);
 
+			bean.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa()
+					.getSmSupplier());
 			if (!this.getManagedBean().getProdscQtDoc().getTplSpecMaster()
 					.isBrandNew()) {
-
-				bean.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa()
-						.getSmSupplier());
 
 				TemplateSpecBackingBean backingBean = new TemplateSpecBackingBean();
 				backingBean.retrieveTemplateSpecMaster(bean);
@@ -521,14 +520,12 @@ public class DirectLOABackingBean extends
 					TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER);
 			serviceBean.setSpecMaster(this.getManagedBean().getServicescQtDoc()
 					.getTplSpecMaster());
-
+			serviceBean.setSupplier(this.getManagedBean().getScLoa()
+					.getScLoiLoa().getSmSupplier());
 			this.getManagedBean().setSpecTemplateSpecBean(serviceBean);
 
 			if (!this.getManagedBean().getServicescQtDoc().getTplSpecMaster()
 					.isBrandNew()) {
-
-				serviceBean.setSupplier(this.getManagedBean().getScLoa()
-						.getScLoiLoa().getSmSupplier());
 
 				TemplateSpecBackingBean backingBean = new TemplateSpecBackingBean();
 				backingBean.retrieveTemplateSpecMaster(serviceBean);
@@ -1301,10 +1298,11 @@ public class DirectLOABackingBean extends
 
 		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)
 				|| QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId)) {
+			//TODO need to change to final once changes done at spec side
 			this.getManagedBean().getProdscQtDoc().getTplSpecMaster()
-					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
+					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
 			this.getManagedBean().getServicescQtDoc().getTplSpecMaster()
-					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
+					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
 			int specQuestions = 0;
 			if (CollectionUtils.isNotEmpty(this.getManagedBean()
 					.getProdscQtDoc().getTplSpecMaster().getTplSpecQuestions())) {

@@ -19,7 +19,7 @@
 				<td width="21%"><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.contract.signer']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu id="contractSigner"
+				<td><p:selectOneMenu id="contractSigner" disabled="#{isPendingApprovalStatus}"
 						value="#{directLOABackingBean.managedBean.scLoa.contractSigner.userId}"
 						style="width: 240px;margin-bottom: 5px;" required="true"
 						label="#{lbl['lbl.sc.loiloa.loa.contract.signer']}">
