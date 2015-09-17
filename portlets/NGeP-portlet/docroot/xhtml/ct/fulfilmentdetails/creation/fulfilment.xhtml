@@ -154,7 +154,7 @@
 		</p:outputPanel>
 		
 		 </td>
-		 <td width="80%">
+		 <td width="80%" valign="top">
 			 	<p:outputPanel id="ctMenuId1"  rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex eq 0}">
 			 	        <p:outputPanel id="ctMenuId2" rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
 		  				   <p:outputPanel rendered="#{!contractDetailsBackingBean.contractCreationProcess()}">
@@ -171,7 +171,8 @@
 		 	             <ui:include id="ctMenuId4"	src="/xhtml/ct/shared/quotationTender.xhtml" />
 				          <ui:include src="/xhtml/ct/shared/supplier.xhtml" />
 				         <ui:include	src="/xhtml/ct/fulfilmentdetails/shared/performanceBond.xhtml" />
-				        <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
+				    
+				        <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml"  />
 				</p:outputPanel>
 				
 				<p:outputPanel id="ctMenuId5" rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry 
@@ -209,7 +210,6 @@
 				</p:outputPanel>
 	
 				<p:outputPanel id="ctMenuId11" 
-				
 				rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.paymentTracking 
 				  and (contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry or 
 				  (contractDetailsBackingBean.managedBean.contractVer.ctContractValue.followLoaAmt and 
