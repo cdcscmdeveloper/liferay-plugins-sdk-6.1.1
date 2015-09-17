@@ -4458,8 +4458,8 @@ public class SupplierFinalizationBackingBean extends
 	}
 
 	/**
-	 * Populate values for Item cancellation in each item row, when
-	 * Recommend Type is set to Itemized under Supplier Finalization tab
+	 * Populate values for cancellation of items 
+	 * under Supplier Finalization tab
 	 * 
 	 * @return an array of Yes/No values
 	 */
@@ -4643,6 +4643,7 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setRecommendedSupplierList(null);
 		this.getManagedBean().setShortlistedSupplierList(null);
 		this.getManagedBean().setDisableSupplierSelection(false);
+		this.getManagedBean().setZonalPackageItemsCancelled(false);
 
 		this.getManagedBean().setZoneActiveIndex(zoneTabIndex);
 		TplSpecZoneDtl selectedZone = this.getManagedBean().getZoneDetails()
@@ -4842,6 +4843,9 @@ public class SupplierFinalizationBackingBean extends
 							}
 						} 
 						
+						if (scQtRecommend.isCancelled()) {
+							this.getManagedBean().setZonalPackageItemsCancelled(true);
+						}
 						if (scQtRecommend.isAwardedItem()) {
 							this.getManagedBean().setDisableSupplierSelection(true);
 						}
@@ -5654,6 +5658,50 @@ public class SupplierFinalizationBackingBean extends
 			// reset awarded & short listed flag.
 			resetShortlistedSupplierData(
 					scQtRecommend.getShortListedSupplierList());			
+		}
+	}
+	
+	/**
+	 * Event for item cancellation where QT is Zonal and Recommend Type is Package  
+	 * under Supplier Finalization tab
+	 */	
+	public void zonalPackageItemsCancellationEvent() {
+		debugLogger("zonalPackageItemsCancellationEvent");
+		
+		this.getManagedBean().setDisableSupplierSelection(false);
+		boolean zonalPackageItemsCancelled = getManagedBean().isZonalPackageItemsCancelled();
+		
+		Long currentZoneId = getManagedBean().getCurrentZone().getSpecZoneId();
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+		Map<Long,List<ScQtRecommend>> zonalItems = scQtFinalization.getScQtRecommendsByZone();
+		List<ScQtRecommend> scQtRecommends = null;
+		
+		if (MapUtils.isNotEmpty(zonalItems) && 
+				zonalItems.containsKey(currentZoneId)) {
+			scQtRecommends = zonalItems.get(currentZoneId);
+		}		
+		
+		if (CollectionUtils.isNotEmpty(scQtRecommends)) {
+			if (zonalPackageItemsCancelled) {
+				for (ScQtRecommend scQtRecommend : scQtRecommends) {
+					scQtRecommend.setCancelled(true);
+					
+					// clear the RecommendDtl list
+					if (CollectionUtils.isNotEmpty(
+							scQtRecommend.getRecommendDtls())) {
+						scQtRecommend.setAwardSupplierList(null);
+						prepareToDeleteRecommendDtls(scQtRecommend);
+					}					
+				}
+				
+				// reset awarded & short listed flag of current zone.
+				resetShortlistedSupplierData(
+						getManagedBean().getShortlistedSupplierList());	
+			} else {
+				for (ScQtRecommend scQtRecommend : scQtRecommends) {
+					scQtRecommend.setCancelled(false);
+				}			
+			}
 		}
 	}
 	
@@ -6555,6 +6603,8 @@ public class SupplierFinalizationBackingBean extends
 		if (!supplierSelected) {
 			setZoneAndTabIndexOnException(zoneDtl);
 			String recommendByDesc = getParameterDesc(finalizationMethod);
+			setZoneAndTabIndexOnException(zoneDtl);
+			
 			if (!minSuppliersExist) {
 				throw new EpException(MessageConst.ERROR_760243,
 						new String[] { recommendByDesc });
