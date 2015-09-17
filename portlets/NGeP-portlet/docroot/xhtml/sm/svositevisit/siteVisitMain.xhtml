@@ -13,8 +13,12 @@
 			$('#portlet_SiteVisit_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.site.visit']}");
 		</script>
 	</ui:define>
-
+	
 	<ui:define name="contentSection">
+		<!-- Please do not remove, it's used to solve the primefaces's fileupload JS problem -->
+		<p:panel visible="false">
+			<p:fileUpload></p:fileUpload>
+		</p:panel>
 		<ui:param name="supplierName" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.smSupplier.companyName}" />
 		<ui:param name="applNo" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.applNo}" />
 		<ui:param name="applType" value="#{svoSiteVisitBackingBean.getsupplierApplTypeDesc(svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.applType)}" />
