@@ -14410,6 +14410,9 @@ public class SpecificationBackingBean extends
 						istechnicalSpec);
 				boolean weightageType = retriveExistingTemplatespec(technicalCheckList);
 				specMaster.setWeightageReq(weightageType);
+				templateSpecBean.setSpecMaster(specMaster);
+				TemplateSpecBackingBean templateSpecBackingbean=new TemplateSpecBackingBean();
+				templateSpecBackingbean.updateItemWeightageReq(templateSpecBean);
 
 			} else {
 				this.getManagedBean().setSpecItemWeightageRequired(false);
