@@ -215,12 +215,12 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 				messageId = MessageConst.INFO_700004;
 			}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-				messageId = MessageConst.INFO_700007;
+				messageId = MessageConst.INFO_700019;
 			} 
 			
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 					MessageUtils.getMessage(messageId, 
-							new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_RELIEF_ORDER), reliefOrder.getReliefOrderNo()}, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.fl.cogstr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()), reliefOrder.getReliefOrderNo()}, 
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			
 			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
@@ -230,7 +230,7 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 				paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
 				CommonBackingBean commonBackingBean = new CommonBackingBean();
 				commonBackingBean.getManagedBean().setReportName(ReportConst.FL_NGEP_COGSTR);
-				commonBackingBean.getManagedBean().setReportDisplayName(ResourceBundleUtils.getMessage("lbl.fl.cert.gstr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
+				commonBackingBean.getManagedBean().setReportDisplayName(ResourceBundleUtils.getMessage("lbl.fl.cogstr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
 				commonBackingBean.getManagedBean().setParamMap(paramMap);
 				return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
 			}	
