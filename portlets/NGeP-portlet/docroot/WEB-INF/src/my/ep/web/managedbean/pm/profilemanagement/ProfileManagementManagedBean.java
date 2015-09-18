@@ -74,6 +74,7 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private PmUserOrg pmUserOrgOriginal;
 	private Map<String , String> roleCodeToLetterNoMap = new HashMap<String , String>();
 	private Map<String , BigDecimal> roleCodeToApprovalLimitMap = new HashMap<String , BigDecimal>();
+	private boolean isActiveUser;
 	
 	public PmUser getPmUserOriginal() {
 		return pmUserOriginal;
@@ -472,6 +473,18 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	 */
 	public void setIsNewUser(Boolean isNewUser) {
 		this.isNewUser = isNewUser;
+	}
+	/**
+	 * @return the isActiveUser
+	 */
+	public boolean isActiveUser() {
+		return isActiveUser;
+	}
+	/**
+	 * @param isActiveUser the isActiveUser to set
+	 */
+	public void setActiveUser(boolean isActiveUser) {
+		this.isActiveUser = isActiveUser;
 	}
 	
 
