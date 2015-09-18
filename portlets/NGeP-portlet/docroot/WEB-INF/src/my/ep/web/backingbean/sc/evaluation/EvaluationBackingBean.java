@@ -8965,9 +8965,27 @@ public class EvaluationBackingBean extends
 		if (qt.getClosingDate() != null) {
 			closingDate = dateSDF.format(qt.getClosingDate());
 		}
-		String totalSuppliers = "";
+		String totalSuppliers = "0";
 		if (qt.getScQtSuppliers() != null) {
-			totalSuppliers = String.valueOf(qt.getScQtSuppliers().size());
+
+			IQTDetailSO detailsSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTDetailSO.class);
+			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+			QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
+			tenderReqDTO.setQtId(qt.getQtId());
+			tenderResDTO = detailsSO
+					.retriveQualifiedRestrictedSuppliers(tenderReqDTO);
+			if (null != tenderResDTO
+					&& null != tenderResDTO.getSupplierResultBean()
+					&& null != tenderResDTO.getSupplierResultBean()
+							.getResultList()
+					&& !tenderResDTO.getSupplierResultBean().getResultList()
+							.isEmpty()) {
+				totalSuppliers = String.valueOf(tenderResDTO
+						.getSupplierResultBean().getTotalRecord());
+
+			}
 		}
 
 		boolean commType = false;
