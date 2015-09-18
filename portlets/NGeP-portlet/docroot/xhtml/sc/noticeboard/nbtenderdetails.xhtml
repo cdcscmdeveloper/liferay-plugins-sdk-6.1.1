@@ -15,15 +15,17 @@
 		<h:panelGrid border="0" width="100%" columns="4" id="changedTabQTDtls"
 			columnClasses="columnWidth20,columnWidth20,columnWidth20,columnWidth40"
 			rendered="#{isChangesTab}">
+		   <ui:param name="amendedBean" value="#{noticeBoardBackingBean.managedBean.qtAmendMentBean}"></ui:param>
+		   
 			<h:outputLabel value="#{lbl['lbl.sc.title']}" styleClass="outputLabel-view-label"/>
 			<h:outputText style="white-space: normal;word-wrap: break-word;"
 				value="#{noticeBoardBackingBean.managedBean.scQt.qtTitle}" />
 			<h:outputText
 				value="(#{lbl['lbl.sc.updated.on']} #{noticeBoardBackingBean.managedBean.changedDate})"
 				styleClass="lastUpdated"
-				rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean.newTitle ne null ? 'true':'false'}" />
+				rendered="#{amendedBean.newTitle ne null ? 'true':'false'}" />
 			<h:outputLabel value=""
-				rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean.newTitle eq null ? 'true':'false'}" />
+				rendered="#{amendedBean.newTitle eq null ? 'true':'false'}" />
 			<h:outputLabel value="" />
 
 			<h:outputLabel value="#{lbl['lbl.sc.qtn.no']}" styleClass="outputLabel-view-label"/>
@@ -58,9 +60,9 @@
 			<h:outputText
 				value="(#{lbl['lbl.sc.updated.on']} #{noticeBoardBackingBean.managedBean.changedDate})"
 				styleClass="lastUpdated"
-				rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean ne null and noticeBoardBackingBean.managedBean.qtAmendMentBean.newPublishPeriodDays ne 0 ? 'true':'false'}" />
+				rendered="#{amendedBean ne null and amendedBean.newPublishPeriodDays eq noticeBoardBackingBean.managedBean.scQt.publishPeriod}" />
 			<h:outputLabel value=""
-				rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean eq null or noticeBoardBackingBean.managedBean.qtAmendMentBean.newPublishPeriodDays eq 0 ? 'true':'false'}" />
+				rendered="#{amendedBean eq null or amendedBean.newPublishPeriodDays ne noticeBoardBackingBean.managedBean.scQt.publishPeriod}" />
 			<h:outputLabel value="" />
 
 			<h:outputLabel value="#{lbl['lbl.sc.closing.date']}"  styleClass="outputLabel-view-label"/>
@@ -72,9 +74,9 @@
 			<h:outputText
 				value="(#{lbl['lbl.sc.updated.on']} #{noticeBoardBackingBean.managedBean.changedDate})"
 				styleClass="lastUpdated"
-				rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean ne null and noticeBoardBackingBean.managedBean.qtAmendMentBean.newPublishPeriodDays ne 0 ? 'true':'false'}" />
+				rendered="#{amendedBean ne null and amendedBean.newPublishPeriodDays eq noticeBoardBackingBean.managedBean.scQt.publishPeriod}" />
 			<h:outputLabel value=""
-				rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean eq null or noticeBoardBackingBean.managedBean.qtAmendMentBean.newPublishPeriodDays eq 0 ? 'true':'false'}" />
+				rendered="#{amendedBean eq null or amendedBean.newPublishPeriodDays ne noticeBoardBackingBean.managedBean.scQt.publishPeriod}" />
 			<h:outputLabel value="" />
 
 			<h:outputLabel value="#{lbl['lbl.sc.sample.closingdate']}"
@@ -93,9 +95,9 @@
 			<h:outputText
 				value="(#{lbl['lbl.sc.updated.on']} #{noticeBoardBackingBean.managedBean.changedDate})"
 				styleClass="lastUpdated"
-				rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean ne null and noticeBoardBackingBean.managedBean.qtAmendMentBean.newValidityPeriodDays ne 0 ? 'true':'false'}" />
+				rendered="#{amendedBean ne null and amendedBean.newValidityPeriodDays eq noticeBoardBackingBean.managedBean.scQt.qtValidityPeriod}" />
 			<h:outputLabel value=""
-				rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean eq null or noticeBoardBackingBean.managedBean.qtAmendMentBean.newValidityPeriodDays eq 0? 'true':'false'}" />
+				rendered="#{amendedBean eq null or amendedBean.newValidityPeriodDays ne noticeBoardBackingBean.managedBean.scQt.qtValidityPeriod}" />
 			<h:outputLabel value="" />
 
 			<h:outputLabel value="#{lbl['lbl.sc.proposal.validity.until']}" styleClass="outputLabel-view-label"/>
