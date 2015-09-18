@@ -1033,12 +1033,27 @@ public class OrganisationBackingBean extends
 			}
 			if (ParameterConst.SARAK_SK_CODE.equals(pmAddress.getPmState()
 					.getStateCode())) {
-				if (pmAddress.getPmDivision().getDivisionId() == null) {
+				if (pmAddress.getPmDivision() == null || pmAddress.getPmDivision().getDivisionId() == null) {
 					throw new EpException(MessageConst.ERROR_770044);
 				}
 			} else {
 				log.info("set division null");
 				pmAddress.setPmDivision(null);
+			}
+			
+			PmAddressType addressType = null;
+			for(PmUser user : getManagedBean().getSupplierUsers()){
+				addressType = new PmAddressType();
+				addressType.setAddressType(AddressType.CONTACT_ADDRESS.value());
+				addressType.setPmAddress(pmAddress);
+				user.setAddressTypeC(addressType);
+			}
+			
+			for(SmPersonnel personnel : getManagedBean().getSmPersonnels()){
+				addressType = new PmAddressType();
+				addressType.setAddressType(AddressType.CONTACT_ADDRESS.value());
+				addressType.setPmAddress(pmAddress);
+				personnel.getPmUser().setAddressTypeC(addressType);
 			}
 		}
 
@@ -1059,31 +1074,31 @@ public class OrganisationBackingBean extends
 		}
 		if (addressEntered) {
 			if (deliverAddress.getPmCountry().getCountryId() == null) {
-				throw new EpException(MessageConst.ERROR_775107);
+				throw new EpException(MessageConst.ERROR_775121);
 			}
 
 			if (StringUtils.isBlank(deliverAddress.getAddress1())) {
-				throw new EpException(MessageConst.ERROR_775108);
+				throw new EpException(MessageConst.ERROR_775122);
 			}
 
 			if (StringUtils.isBlank(deliverAddress.getPostcode())) {
-				throw new EpException(MessageConst.ERROR_775109);
+				throw new EpException(MessageConst.ERROR_775123);
 			}
 
 			if (deliverAddress.getPmState().getStateId() == null) {
-				throw new EpException(MessageConst.ERROR_775110);
+				throw new EpException(MessageConst.ERROR_775124);
 			}
 
 			if (deliverAddress.getPmDistrict().getDistrictId() == null) {
-				throw new EpException(MessageConst.ERROR_775111);
+				throw new EpException(MessageConst.ERROR_775125);
 			}
 			if (deliverAddress.getPmCity().getCityId() == null) {
-				throw new EpException(MessageConst.ERROR_775112);
+				throw new EpException(MessageConst.ERROR_775126);
 			}
 			if (ParameterConst.SARAK_SK_CODE.equals(deliverAddress.getPmState()
 					.getStateCode())) {
-				if (deliverAddress.getPmDivision().getDivisionId() == null) {
-					throw new EpException(MessageConst.ERROR_770044);
+				if (deliverAddress.getPmDivision() == null || deliverAddress.getPmDivision().getDivisionId() == null) {
+					throw new EpException(MessageConst.ERROR_775127);
 				}
 			} else {
 
@@ -1313,6 +1328,11 @@ public class OrganisationBackingBean extends
 
 			if (address.getAddressType().equalsIgnoreCase(
 					AddressType.DELIVERY_ADDRESS.value())) {
+				if (address.getPmAddress().getPmState() != null &&
+						ParameterConst.SARAK_SK_CODE.equals(address.getPmAddress().getPmState()
+						.getStateCode()) && address.getPmAddress().getPmDivision() == null ) {
+					address.getPmAddress().setPmDivision(new PmDivision());
+				}
 				this.getManagedBean().setDeliveryAddress(address);
 				addrExist = true;
 			}
@@ -1913,6 +1933,11 @@ public class OrganisationBackingBean extends
 				PmState tempState = PmCommonUtil.retrievePmStateByStateId(pmState
 						.getStateId());
 				pmState.setStateCode(tempState.getStateCode());
+				
+				if(tempState.getStateCode()
+						.equals(ProfileManagementConst.STATE_CODE_SARAWAK)){
+					getManagedBean().getOfficeAddress().setPmDivision(new PmDivision()); 
+				}	
 			} else {
 				pmState.setStateCode(null);
 			}
