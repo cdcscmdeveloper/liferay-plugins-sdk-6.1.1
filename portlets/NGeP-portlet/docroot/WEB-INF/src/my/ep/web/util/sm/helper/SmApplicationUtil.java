@@ -5815,9 +5815,9 @@ public class SmApplicationUtil {
 				bean.setWorkShopFacilityCities(new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_STORE_FACILITY_PANEL:
-				bean.setStoreFacilityStates(stateLs);
-				bean.setStoreFacilityDistricts(new ArrayList<PmDistrict>());
-				bean.setStoreFacilityCities(new ArrayList<PmCity>());
+				bean.setStoreFacilityStates(stateItems);
+				bean.setStoreFacilityDistricts(new ArrayList<SelectItem>());
+				bean.setStoreFacilityCities(new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL:
 				bean.setShrHldrPermStates(stateItems);
@@ -5923,8 +5923,8 @@ public class SmApplicationUtil {
 				bean.setWorkShopFacilityCities(new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_STORE_FACILITY_PANEL:
-				bean.setStoreFacilityDistricts(distLs);
-				bean.setStoreFacilityCities(new ArrayList<PmCity>());
+				bean.setStoreFacilityDistricts(distItems);
+				bean.setStoreFacilityCities(new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL:
 				bean.setShrHldrPermDistricts(distItems);
@@ -6011,7 +6011,7 @@ public class SmApplicationUtil {
 				bean.setWorkShopFacilityCities(cityItems);
 				break;
 			case SupplierManagementConst.SM_STORE_FACILITY_PANEL:
-				bean.setStoreFacilityCities(cityLs);
+				bean.setStoreFacilityCities(cityItems);
 			case SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL:
 				bean.setShrHldrPermCities(cityItems);
 				break;
