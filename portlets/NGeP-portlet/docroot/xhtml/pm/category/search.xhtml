@@ -99,7 +99,7 @@
 
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.main.category.code']}" /></td>
-					<td><p:inputText  style="width: 45.5%;"
+					<td><p:inputText 
 							value="#{categoryBackingBean.managedBean.mainCatCode}"
 							maxlength="2" size="27" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.pm.main.category.desc']}" /></td>
@@ -122,7 +122,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.sub.category.code']}"
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2 || categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
-					<td><p:inputText style="width: 45.5%;"
+					<td><p:inputText
 							value="#{categoryBackingBean.managedBean.subCatCode}" size="27"
 							maxlength="2"
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2 || categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
@@ -149,7 +149,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.sub.div.code']}"
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
-					<td><p:inputText style="width: 45.5%;"
+					<td><p:inputText 
 							value="#{categoryBackingBean.managedBean.subDivCode}" size="27"
 							maxlength="2"
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
