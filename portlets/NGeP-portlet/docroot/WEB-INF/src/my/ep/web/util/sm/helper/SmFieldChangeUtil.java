@@ -12,6 +12,7 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
+import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
@@ -90,6 +91,7 @@ public class SmFieldChangeUtil {
 
 			// Company experience (pending cant be done due to dont have id to
 			// compare)
+			setCompanyExpFieldChangeStatus(latestAppl, currAppl);
 
 			// Personnel
 			setPersonnelFieldChangeStatus(latestAppl, currAppl);
@@ -192,6 +194,27 @@ public class SmFieldChangeUtil {
 			for (SmAssociationBody tmp : appl.getSmAssociationBodies()) {
 				if (tmp.getRegNo() != null && regNo != null
 						&& tmp.getRegNo().equals(regNo)) {
+					retVal = tmp;
+					break;
+				}
+			}
+		}
+		return retVal;
+	}
+
+	public static SmCompanyExperience getCompanyExpByClientNameAndTitleFromList(
+			SmAppl appl, String clientName, String title) {
+		SmCompanyExperience retVal = new SmCompanyExperience();
+		if (appl != null
+				&& !SmCommonUtil.isCollectionEmpty(appl
+						.getSmCompanyExperiences())) {
+			for (SmCompanyExperience tmp : appl.getSmCompanyExperiences()) {
+				if (StringUtils.isNotBlank(tmp.getClientName())
+						&& StringUtils.isNotBlank(clientName)
+						&& StringUtils.isNotBlank(tmp.getTitle())
+						&& StringUtils.isNotBlank(title)
+						&& clientName.equalsIgnoreCase(tmp.getClientName())
+						&& title.equalsIgnoreCase(tmp.getTitle())) {
 					retVal = tmp;
 					break;
 				}
@@ -650,6 +673,66 @@ public class SmFieldChangeUtil {
 		for (SmAssociateCompany latestAssocCompany : latestAssocCompanyList) {
 			if (latestAssocCompany.getRegNo().equalsIgnoreCase(
 					currAssocCompany.getRegNo())) {
+				retVal = true;
+				break;
+			}
+		}
+		return retVal;
+	}
+	
+	private static void setCompanyExpFieldChangeStatus(SmAppl latestAppl,
+			SmAppl currAppl) {
+		if (SmCommonUtil
+				.isCollectionEmpty(latestAppl.getSmCompanyExperiences())
+				&& !SmCommonUtil.isCollectionEmpty(currAppl
+						.getSmCompanyExperiences())) {
+			for (SmCompanyExperience currCompExp : currAppl
+					.getSmCompanyExperiences()) {
+				currCompExp.setChangedFieldStatus("N");
+			}
+		} else {
+			if (!SmCommonUtil.isCollectionEmpty(currAppl
+					.getSmCompanyExperiences())) {
+				SmCompanyExperience latestCompExp = null;
+				for (SmCompanyExperience currCompExp : currAppl
+						.getSmCompanyExperiences()) {
+					if (!isCurrCompExpExistInLatestCompExp(
+							currCompExp,
+							latestAppl.getSmCompanyExperiences())) {
+						currCompExp.setChangedFieldStatus("N");
+					} else {
+						latestCompExp = getCompanyExpByClientNameAndTitleFromList(
+								latestAppl, currCompExp.getClientName(),currCompExp.getTitle());
+						if (latestCompExp == null
+								|| latestCompExp.getCompanyExperienceId() == null) {
+							currCompExp.setChangedFieldStatus("N");
+						} else {
+							if (isHasDifferences(
+									latestCompExp,
+									currCompExp,
+											new String[] { "companyExperienceId" })) {
+								currCompExp.setChangedFieldStatus("U");
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private static boolean isCurrCompExpExistInLatestCompExp(
+			SmCompanyExperience currCompanyExp,
+			List<SmCompanyExperience> latestCompExpList) {
+		boolean retVal = false;
+		for (SmCompanyExperience latestCompExp : latestCompExpList) {
+			if (StringUtils.isNotBlank(latestCompExp.getClientName())
+					&& StringUtils.isNotBlank(latestCompExp.getTitle())
+					&& StringUtils.isNotBlank(currCompanyExp.getTitle())
+					&& StringUtils.isNotBlank(currCompanyExp.getClientName())
+					&& currCompanyExp.getClientName().equalsIgnoreCase(
+							latestCompExp.getClientName())
+					&& currCompanyExp.getTitle().equalsIgnoreCase(
+							latestCompExp.getTitle())) {
 				retVal = true;
 				break;
 			}
