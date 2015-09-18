@@ -2,9 +2,9 @@ package my.ep.web.util.sm.helper;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmEduLevel;
 import my.ep.persistence.entity.sm.SmAddress;
@@ -22,16 +22,20 @@ import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmStaffTotal;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class SmFieldChangeUtil {
 
 	public static void initLatestAppl(SmApplicationManagedBean bean) {
 		String showFieldChange = EpPropertiesUtils.getInstance().getProperty(
 				"sm.show.field.changed");
-		if (showFieldChange.equalsIgnoreCase("Y")) {
+		if (showFieldChange.equalsIgnoreCase("Y")
+				&& bean.getSmAppl() != null) {
 			MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
 			mofReqDTO.setSupplierId(bean.getSmSupplier().getSupplierId());
 			bean.setLatestAppl(SmServiceLookup.getMofRegistrationSO()
@@ -89,8 +93,7 @@ public class SmFieldChangeUtil {
 			// Associate Company
 			setAssocCompanyFieldChangeStatus(latestAppl, currAppl);
 
-			// Company experience (pending cant be done due to dont have id to
-			// compare)
+			// Company experience
 			setCompanyExpFieldChangeStatus(latestAppl, currAppl);
 
 			// Personnel
@@ -104,6 +107,9 @@ public class SmFieldChangeUtil {
 
 			// smSupplierBanks
 			setBankFieldChangeStatus(latestAppl, currAppl);
+
+			// smSupplierCategories
+			setCategoryFieldChangeStatus(latestAppl, currAppl);
 		}
 	}
 
@@ -281,6 +287,27 @@ public class SmFieldChangeUtil {
 				if (StringUtils.isNotBlank(accNo)
 						&& StringUtils.isNotBlank(tmp.getAccountNo())
 						&& accNo.equals(tmp.getAccountNo())) {
+					retVal = tmp;
+					break;
+				}
+			}
+		}
+		return retVal;
+	}
+
+	public static SmSupplierCategory getCategoryByCatLvl3IdFromList(
+			SmAppl appl, PmCategoryL3 catL3) {
+		SmSupplierCategory retVal = new SmSupplierCategory();
+		if (appl != null
+				&& !SmCommonUtil.isCollectionEmpty(appl
+						.getSmSupplierCategories())) {
+			for (SmSupplierCategory tmp : appl.getSmSupplierCategories()) {
+				if (catL3 != null
+						&& tmp.getPmCategoryL3() != null
+						&& catL3.getCategoryL3Id() != null
+						&& tmp.getPmCategoryL3().getCategoryL3Id() != null
+						&& catL3.getCategoryL3Id().compareTo(
+								tmp.getPmCategoryL3().getCategoryL3Id()) == 0) {
 					retVal = tmp;
 					break;
 				}
@@ -679,7 +706,7 @@ public class SmFieldChangeUtil {
 		}
 		return retVal;
 	}
-	
+
 	private static void setCompanyExpFieldChangeStatus(SmAppl latestAppl,
 			SmAppl currAppl) {
 		if (SmCommonUtil
@@ -696,21 +723,19 @@ public class SmFieldChangeUtil {
 				SmCompanyExperience latestCompExp = null;
 				for (SmCompanyExperience currCompExp : currAppl
 						.getSmCompanyExperiences()) {
-					if (!isCurrCompExpExistInLatestCompExp(
-							currCompExp,
+					if (!isCurrCompExpExistInLatestCompExp(currCompExp,
 							latestAppl.getSmCompanyExperiences())) {
 						currCompExp.setChangedFieldStatus("N");
 					} else {
 						latestCompExp = getCompanyExpByClientNameAndTitleFromList(
-								latestAppl, currCompExp.getClientName(),currCompExp.getTitle());
+								latestAppl, currCompExp.getClientName(),
+								currCompExp.getTitle());
 						if (latestCompExp == null
 								|| latestCompExp.getCompanyExperienceId() == null) {
 							currCompExp.setChangedFieldStatus("N");
 						} else {
-							if (isHasDifferences(
-									latestCompExp,
-									currCompExp,
-											new String[] { "companyExperienceId" })) {
+							if (isHasDifferences(latestCompExp, currCompExp,
+									new String[] { "companyExperienceId" })) {
 								currCompExp.setChangedFieldStatus("U");
 							}
 						}
@@ -733,6 +758,76 @@ public class SmFieldChangeUtil {
 							latestCompExp.getClientName())
 					&& currCompanyExp.getTitle().equalsIgnoreCase(
 							latestCompExp.getTitle())) {
+				retVal = true;
+				break;
+			}
+		}
+		return retVal;
+	}
+
+	private static void setCategoryFieldChangeStatus(SmAppl latestAppl,
+			SmAppl currAppl) {
+		if (SmCommonUtil
+				.isCollectionEmpty(latestAppl.getSmSupplierCategories())
+				&& !SmCommonUtil.isCollectionEmpty(currAppl
+						.getSmSupplierCategories())) {
+			for (SmSupplierCategory currCategory : currAppl
+					.getSmSupplierCategories()) {
+				currCategory.setChangedFieldStatus("N");
+			}
+		} else {
+			if (!SmCommonUtil.isCollectionEmpty(currAppl
+					.getSmSupplierCategories())) {
+				SmSupplierCategory latestCategory = null;
+				for (SmSupplierCategory currCategory : currAppl
+						.getSmSupplierCategories()) {
+					if (!isCurrCategoryExistInLatestCategory(currCategory,
+							latestAppl.getSmSupplierCategories())) {
+						currCategory.setChangedFieldStatus("N");
+					} else {
+						latestCategory = getCategoryByCatLvl3IdFromList(
+								latestAppl, currCategory.getPmCategoryL3());
+						if (latestCategory == null
+								|| latestCategory.getSupplierCategoryId() == null) {
+							currCategory.setChangedFieldStatus("N");
+						} else {
+							if (currCategory.getPmCategoryL3() != null
+									&& latestCategory.getPmCategoryL3() != null
+									&& currCategory.getPmCategoryL3()
+											.getCategoryL3Id() != null
+									&& latestCategory.getPmCategoryL3()
+											.getCategoryL3Id() != null
+									&& currCategory
+											.getPmCategoryL3()
+											.getCategoryL3Id()
+											.compareTo(
+													latestCategory
+															.getPmCategoryL3()
+															.getCategoryL3Id()) != 0) {
+								currCategory.setChangedFieldStatus("N");
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private static boolean isCurrCategoryExistInLatestCategory(
+			SmSupplierCategory currCategory,
+			List<SmSupplierCategory> latestCategoryList) {
+		boolean retVal = false;
+		for (SmSupplierCategory latestCategory : latestCategoryList) {
+			if (latestCategory.getPmCategoryL3() != null
+					&& currCategory.getPmCategoryL3() != null
+					&& latestCategory.getPmCategoryL3().getCategoryL3Id() != null
+					&& currCategory.getPmCategoryL3().getCategoryL3Id() != null
+					&& latestCategory
+							.getPmCategoryL3()
+							.getCategoryL3Id()
+							.compareTo(
+									currCategory.getPmCategoryL3()
+											.getCategoryL3Id()) == 0) {
 				retVal = true;
 				break;
 			}
