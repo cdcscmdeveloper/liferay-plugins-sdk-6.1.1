@@ -30,6 +30,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -2905,36 +2906,41 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	public void reloadSelectionPmCategoryL3() {
 		IParameterSO parameterSO;
 		try {
+
 			ParameterReqDTO reqDTO = new ParameterReqDTO();
 			parameterSO = (IParameterSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IParameterSO.class);
 			reqDTO.setLanguageCode(new FacesScopes().getUserLocale()
 					.getLanguage());
-			List<PmParameterDesc> listOfPmParameterDesc = new ArrayList<PmParameterDesc>();
+
+			ISearchBean<PmParameterDesc> searchBean = reqDTO
+					.getParameterDescSearchBean();
+
+			if (searchBean == null) {
+				searchBean = new SearchBean<PmParameterDesc>();
+			}
+
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmParameter.parameterCode",
+							SearchOperator.OPERATOR_NOT_EQUALS.value(), "O"));
+
+			reqDTO.setParameterDescSearchBean(searchBean);
 			reqDTO.setParameterType("ST");
 			ParameterResDTO resDTO = parameterSO
 					.retrieveParameterDescListByType(reqDTO);
-			resDTO.getParameterDescList().remove(2);
 			this.getManagedBean()
 					.setSupplierType(resDTO.getParameterDescList());
+
 			reqDTO.setParameterType("CAT");
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmParameter.parameterCode",
+							SearchOperator.OPERATOR_NOT_EQUALS.value(), "-"));
+
 			resDTO = parameterSO.retrieveParameterDescListByType(reqDTO);
-			if (reqDTO.getParameterType().equals("CAT")) {
-				if (resDTO.getParameterDescList() != null
-						&& !resDTO.getParameterDescList().isEmpty()) {
-					for (PmParameterDesc pmParameterDesc : resDTO
-							.getParameterDescList()) {
-						if (!pmParameterDesc
-								.getCodeName()
-								.equalsIgnoreCase(
-										ParameterTypeConst.SPECIAL_CATEGORY_TYPE_NOT_APPLICABLE)) {
-							listOfPmParameterDesc.add(pmParameterDesc);
-						}
-					}
-				}
-			}
-			this.getManagedBean().setSpecialCategory(listOfPmParameterDesc);
+
+			this.getManagedBean().setSpecialCategory(
+					resDTO.getParameterDescList());
 
 			// default value for Special Category
 			if (this.getManagedBean().isNewCategory()) {
