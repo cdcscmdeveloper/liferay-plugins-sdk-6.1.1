@@ -662,6 +662,15 @@ public class ProfileManagementBackingBean extends
 					(PmUser) pmUser.cloneEntity());
 			this.getManagedBean().setPmUserOrgOriginal(
 					(PmUserOrg) pmUserOrg.cloneEntity());
+			
+			if(DbValueConst.RECORD_STATUS_ACTIVE != pmUserOrg.getRecordStatusFlg() ||
+					DbValueConst.RECORD_STATUS_ACTIVE != pmUser.getRecordStatusFlg() ){
+				getManagedBean().setActiveUser(false);
+			}else{
+				getManagedBean().setActiveUser(true);
+			}
+			
+			
 			for (PmUserRole userRole : pmUserOrg.getPmUserRoles()) {// put
 																	// letterNo
 																	// and
