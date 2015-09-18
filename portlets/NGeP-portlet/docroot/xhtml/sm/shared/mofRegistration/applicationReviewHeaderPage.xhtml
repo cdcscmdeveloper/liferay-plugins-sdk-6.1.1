@@ -51,6 +51,12 @@
 			</tr>
 		</table>
 		
+		<p:outputPanel rendered="#{backingBean.managedBean.showFieldChanges}">
+			<br />
+			<p:graphicImage id="alertChangeImgId" style="vertical-align:top"
+				value="/css/images/design/icon_alert.png" />
+			&#160;&#160;<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.supplier.changed.alert.instruction']}"/>
+		</p:outputPanel>
 	</div>
 	
 	<c:if test="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser and !backingBean.managedBean.redirectToPersonPage}">

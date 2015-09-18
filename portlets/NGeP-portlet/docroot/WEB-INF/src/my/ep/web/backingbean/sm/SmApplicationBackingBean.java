@@ -3738,7 +3738,7 @@ public class SmApplicationBackingBean extends
 		getManagedBean().getSelectedFactoryFacility().setFacilityType(
 				SupplierManagementConst.SM_FACILITY_TYPE_FACTORY);
 		getManagedBean().setFactoryFacilityStates(
-				retrievePmStateList(getManagedBean()
+				SmCommonUtil.getStateList(getManagedBean()
 						.getSelectedFactoryFacility().getSmAddress()
 						.getPmCountry().getCountryId()));
 		getManagedBean().setFacilityType(
@@ -3855,7 +3855,7 @@ public class SmApplicationBackingBean extends
 		getManagedBean().getSelectedDockyardFacility().setFacilityType(
 				SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD);
 		getManagedBean().setDockFacilityStates(
-				retrievePmStateList(getManagedBean()
+				SmCommonUtil.getStateList(getManagedBean()
 						.getSelectedFactoryFacility().getSmAddress()
 						.getPmCountry().getCountryId()));
 		getManagedBean().setFacilityType(
@@ -3971,7 +3971,7 @@ public class SmApplicationBackingBean extends
 		getManagedBean().getSelectedWorkShopFacility().setFacilityType(
 				SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP);
 		getManagedBean().setWorkShopFacilityStates(
-				retrievePmStateList(getManagedBean()
+				SmCommonUtil.getStateList(getManagedBean()
 						.getSelectedFactoryFacility().getSmAddress()
 						.getPmCountry().getCountryId()));
 		getManagedBean().setFacilityType(
@@ -4083,8 +4083,7 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmAppl());
 		getManagedBean().getSelectedStoreFacility().setFacilityType(
 				SupplierManagementConst.SM_FACILITY_TYPE_STORE);
-		getManagedBean().setStoreFacilityStates(
-				retrievePmStateList(getManagedBean()
+		getManagedBean().setStoreFacilityStates(SmCommonUtil.getStateList(getManagedBean()
 						.getSelectedFactoryFacility().getSmAddress()
 						.getPmCountry().getCountryId()));
 		getManagedBean().setFacilityType(
@@ -7736,32 +7735,32 @@ public class SmApplicationBackingBean extends
 				this.getManagedBean().setEquiCompanyCities(
 						new ArrayList<SelectItem>());
 			case SupplierManagementConst.SM_FACTORY_FACILITY_PANEL:
-				this.getManagedBean().setFactoryFacilityStates(stateLs);
+				this.getManagedBean().setFactoryFacilityStates(stateItems);
 				this.getManagedBean().setFactoryFacilityDistricts(
-						new ArrayList<PmDistrict>());
+						new ArrayList<SelectItem>());
 				this.getManagedBean().setFactoryFacilityCities(
-						new ArrayList<PmCity>());
+						new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL:
-				this.getManagedBean().setDockFacilityStates(stateLs);
+				this.getManagedBean().setDockFacilityStates(stateItems);
 				this.getManagedBean().setDockFacilityDistricts(
-						new ArrayList<PmDistrict>());
+						new ArrayList<SelectItem>());
 				this.getManagedBean().setDockFacilityCities(
-						new ArrayList<PmCity>());
+						new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL:
-				this.getManagedBean().setWorkShopFacilityStates(stateLs);
+				this.getManagedBean().setWorkShopFacilityStates(stateItems);
 				this.getManagedBean().setWorkShopFacilityDistricts(
-						new ArrayList<PmDistrict>());
+						new ArrayList<SelectItem>());
 				this.getManagedBean().setWorkShopFacilityCities(
-						new ArrayList<PmCity>());
+						new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_STORE_FACILITY_PANEL:
-				this.getManagedBean().setStoreFacilityStates(stateLs);
+				this.getManagedBean().setStoreFacilityStates(stateItems);
 				this.getManagedBean().setStoreFacilityDistricts(
-						new ArrayList<PmDistrict>());
+						new ArrayList<SelectItem>());
 				this.getManagedBean().setStoreFacilityCities(
-						new ArrayList<PmCity>());
+						new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL:
 				this.getManagedBean().setShrHldrPermStates(stateItems);
@@ -7893,24 +7892,24 @@ public class SmApplicationBackingBean extends
 				break;
 
 			case SupplierManagementConst.SM_FACTORY_FACILITY_PANEL:
-				this.getManagedBean().setFactoryFacilityDistricts(distLs);
+				this.getManagedBean().setFactoryFacilityDistricts(distItems);
 				this.getManagedBean().setFactoryFacilityCities(
-						new ArrayList<PmCity>());
+						new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL:
-				this.getManagedBean().setDockFacilityDistricts(distLs);
+				this.getManagedBean().setDockFacilityDistricts(distItems);
 				this.getManagedBean().setDockFacilityCities(
-						new ArrayList<PmCity>());
+						new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL:
-				this.getManagedBean().setWorkShopFacilityDistricts(distLs);
+				this.getManagedBean().setWorkShopFacilityDistricts(distItems);
 				this.getManagedBean().setWorkShopFacilityCities(
-						new ArrayList<PmCity>());
+						new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_STORE_FACILITY_PANEL:
-				this.getManagedBean().setStoreFacilityDistricts(distLs);
+				this.getManagedBean().setStoreFacilityDistricts(distItems);
 				this.getManagedBean().setStoreFacilityCities(
-						new ArrayList<PmCity>());
+						new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL:
 				this.getManagedBean().setShrHldrPermDistricts(distItems);
@@ -8008,16 +8007,16 @@ public class SmApplicationBackingBean extends
 				this.getManagedBean().setEquiCompanyCities(cityItems);
 				break;
 			case SupplierManagementConst.SM_FACTORY_FACILITY_PANEL:
-				this.getManagedBean().setFactoryFacilityCities(cityLs);
+				this.getManagedBean().setFactoryFacilityCities(cityItems);
 				break;
 			case SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL:
-				this.getManagedBean().setDockFacilityCities(cityLs);
+				this.getManagedBean().setDockFacilityCities(cityItems);
 				break;
 			case SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL:
-				this.getManagedBean().setWorkShopFacilityCities(cityLs);
+				this.getManagedBean().setWorkShopFacilityCities(cityItems);
 				break;
 			case SupplierManagementConst.SM_STORE_FACILITY_PANEL:
-				this.getManagedBean().setStoreFacilityCities(cityLs);
+				this.getManagedBean().setStoreFacilityCities(cityItems);
 			case SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL:
 				this.getManagedBean().setShrHldrPermCities(cityItems);
 				break;
