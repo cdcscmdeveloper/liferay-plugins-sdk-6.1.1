@@ -130,7 +130,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean hasAwardedLOA;
 	private boolean hasPreviousMeeting;
 	private boolean hasItemWithPriceTypeTier;
-	private boolean zonalPackageItemsCancelled;
+	private boolean itemCancelled;
 	
 	private ScQtEvaluationResultDtl shortlistedSupplier;
 	private ScQtFinalization scQtFinalization;
@@ -740,19 +740,18 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the zonalPackageItemsCancelled
+	 * @return the itemCancelled
 	 */
-	public boolean isZonalPackageItemsCancelled() {
-		return zonalPackageItemsCancelled;
+	public boolean isItemCancelled() {
+		return itemCancelled;
 	}
 
 	/**
-	 * @param zonalPackageItemsCancelled 
-	 * 				the zonalPackageItemsCancelled to set
+	 * @param itemCancelled 
+	 * 				the itemCancelled to set
 	 */
-	public void setZonalPackageItemsCancelled(
-						boolean zonalPackageItemsCancelled) {
-		this.zonalPackageItemsCancelled = zonalPackageItemsCancelled;
+	public void setItemCancelled(boolean itemCancelled) {
+		this.itemCancelled = itemCancelled;
 	}
 
 	/**
