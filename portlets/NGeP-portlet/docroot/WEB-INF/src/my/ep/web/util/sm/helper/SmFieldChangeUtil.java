@@ -108,6 +108,10 @@ public class SmFieldChangeUtil {
 
 			// smSupplierBanks
 			setBankFieldChangeStatus(latestAppl, currAppl);
+			
+			//smMachineDetails
+			
+			//smManufacturingDtls
 		}
 	}
 
