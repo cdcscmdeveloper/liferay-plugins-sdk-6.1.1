@@ -108,9 +108,8 @@
 							<p:outputPanel rendered="#{!shareBean.prevApprovedEquityOwner}">
 								<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
 							</p:outputPanel>
-
 						</p:commandLink>
-
+						<ac:smFieldChangeTableAlert object="#{shareBean}" />
 					</p:column>
 				</p:dataTable>
 

@@ -10,13 +10,15 @@
 			<td><p:outputLabel value="* #{lbl['lbl.sm.branch.branchName']}" /></td>
 			<td><p:inputText
 					value="#{backingBean.managedBean.selectedBranch.branchName}"
-					size="35" /></td>
+					size="35" />
+			</td>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="* #{lbl['lbl.sm.address']}" /></td>
 			<td><p:inputText
 					value="#{backingBean.managedBean.selectedBranch.smAddress.address1}"
-					size="35" /></td>
+					size="35" />
+			</td>
 		</tr>
 
 		<tr>
@@ -39,40 +41,29 @@
 		</tr>
 		<tr>
 			<td><p:outputLabel value="* #{lbl['lbl.sm.country']}" /></td>
-			<td><p:selectOneMenu
-					value="#{backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryId}"
+			<td><p:selectOneMenu id="branchesCountry"
+					value="#{backingBean.managedBean.selectedBranch.smAddress.countryId}"
 					style="width: 207px;margin-bottom: 5px;">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="branchCountry"
-						value="#{backingBean.managedBean.countryLs}"
-						itemValue="#{branchCountry.countryId}"
-						itemLabel="#{branchCountry.countryName}" />
-					<p:ajax event="change"
-						listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryId, 
-								SupplierManagementConst.SM_BRANCH_PANEL,
-								backingBean.managedBean.selectedBranch.smAddress.pmState,
-								backingBean.managedBean.selectedBranch.smAddress.pmDistrict,
-								backingBean.managedBean.selectedBranch.smAddress.pmCity)}"
-						update="branchesState,branchesDist,branchesCity,postCodeBranchConsPanelId" />
+						value="#{backingBean.managedBean.countryItems}" />
+					<p:ajax event="change" process="@this"
+						listener="#{backingBean.onChangeCountry(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
+						update="branchesCountry,branchesState,branchesDist,branchesCity,postCodeBranchConsPanelId" />
 				</p:selectOneMenu></td>
 		</tr>
 
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
 			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-					value="#{backingBean.managedBean.selectedBranch.smAddress.pmState.stateId}"
+					value="#{backingBean.managedBean.selectedBranch.smAddress.stateId}"
 					id="branchesState">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="brnState"
-						value="#{backingBean.managedBean.branchCompanyStates}"
-						itemValue="#{brnState.stateId}" itemLabel="#{brnState.stateName}" />
-					<p:ajax event="change"
-						listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.selectedBranch.smAddress.pmState.stateId, 
-								SupplierManagementConst.SM_BRANCH_PANEL,
-								backingBean.managedBean.selectedBranch.smAddress.pmDistrict,
-								backingBean.managedBean.selectedBranch.smAddress.pmCity)}"
-						update="branchesDist,branchesCity" />
-
+						value="#{backingBean.managedBean.branchCompanyStates}" />
+					<p:ajax event="change" process="@this"
+						listener="#{backingBean.onChangeState(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
+						update="branchesState,branchesDist,branchesCity" />
 				</p:selectOneMenu></td>
 		</tr>
 
@@ -80,29 +71,23 @@
 			<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
 			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 					id="branchesDist"
-					value="#{backingBean.managedBean.selectedBranch.smAddress.pmDistrict.districtId}">
+					value="#{backingBean.managedBean.selectedBranch.smAddress.districtId}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="brnDist"
-						value="#{backingBean.managedBean.branchCompanyDistricts}"
-						itemValue="#{brnDist.districtId}"
-						itemLabel="#{brnDist.districtName}" />
-					<p:ajax event="change"
-						listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.selectedBranch.smAddress.pmDistrict.districtId, 
-								SupplierManagementConst.SM_BRANCH_PANEL,
-								backingBean.managedBean.selectedBranch.smAddress.pmCity)}"
-						update="branchesCity" />
+						value="#{backingBean.managedBean.branchCompanyDistricts}" />
+					<p:ajax event="change" process="@this"
+						listener="#{backingBean.onChangeDistrict(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
+						update="branchesDist,branchesCity" />
 				</p:selectOneMenu></td>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
 			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 					id="branchesCity"
-					value="#{backingBean.managedBean.selectedBranch.smAddress.pmCity.cityId}">
+					value="#{backingBean.managedBean.selectedBranch.smAddress.cityId}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="branchCity"
-						value="#{backingBean.managedBean.branchCompanyCities}"
-						itemValue="#{branchCity.cityId}"
-						itemLabel="#{branchCity.cityName}" />
+						value="#{backingBean.managedBean.branchCompanyCities}" />
 				</p:selectOneMenu></td>
 		</tr>
 		<tr>

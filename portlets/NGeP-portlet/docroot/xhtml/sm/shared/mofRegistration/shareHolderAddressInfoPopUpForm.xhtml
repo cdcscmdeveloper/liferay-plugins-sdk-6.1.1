@@ -26,7 +26,14 @@
 									size="35">
 									<p:ajax process="@this" partialSubmit="true"
 										update="@this,equiPersPermAddrLineMsg" />
-								</p:inputText> <p:message id="equiPersPermAddrLineMsg"
+								</p:inputText> 
+								<ac:smFieldChangeAlert 
+									isShow="#{backingBean.managedBean.showFieldChanges
+										and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+									oriValue="#{backingBean.managedBean.latestPermAddr.smAddress.address1}" 
+									currValue="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address1}" 
+									alertValue="#{backingBean.managedBean.latestPermAddr.smAddress.address1}"/>
+								<p:message id="equiPersPermAddrLineMsg"
 									for="equiPersPermAddrLine" showSummary="true"
 									showDetail="false" display="icon" /></td>
 						</tr>
@@ -37,7 +44,14 @@
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address2}"
 									size="35">
 									<p:ajax process="@this" partialSubmit="true" update="@this" />
-								</p:inputText></td>
+								</p:inputText>
+								<ac:smFieldChangeAlert 
+									isShow="#{backingBean.managedBean.showFieldChanges
+										and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+									oriValue="#{backingBean.managedBean.latestPermAddr.smAddress.address2}" 
+									currValue="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address2}" 
+									alertValue="#{backingBean.managedBean.latestPermAddr.smAddress.address2}"/>
+							</td>
 						</tr>
 						<tr>
 							<td></td>
@@ -45,7 +59,14 @@
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address3}"
 									size="35">
 									<p:ajax process="@this" partialSubmit="true" update="@this" />
-								</p:inputText></td>
+								</p:inputText>
+								<ac:smFieldChangeAlert 
+									isShow="#{backingBean.managedBean.showFieldChanges
+										and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+									oriValue="#{backingBean.managedBean.latestPermAddr.smAddress.address3}" 
+									currValue="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address3}" 
+									alertValue="#{backingBean.managedBean.latestPermAddr.smAddress.address3}"/>
+							</td>
 						</tr>
 						<tr>
 							<td></td>
@@ -61,19 +82,22 @@
 							<td><p:selectOneMenu
 									label="#{lbl['lbl.sm.person.permAddr']} - #{lbl['lbl.sm.country']}"
 									required="true" id="equiPersPermCntry"
-									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryId}"
+									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.countryId}"
 									style="width: 207px;margin-bottom: 5px;">
 									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="shrPermCountry"
 										value="#{backingBean.managedBean.countryItems}" />
 									<p:ajax event="change" process="@this"
-										listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryId, 
-								SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL,
-								backingBean.managedBean.shareHolderPermAddr.smAddress.pmState,
-								backingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict,
-								backingBean.managedBean.shareHolderPermAddr.smAddress.pmCity)}"
+										listener="#{backingBean.onChangeCountry(backingBean.managedBean.shareHolderPermAddr.smAddress,SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL)}"
 										update="shrPermState,shrPermDist,shrPermCity,postCodePermPanelId" />
-								</p:selectOneMenu> <p:message id="equiPersPermCntryMsg" for="equiPersPermCntry"
+								</p:selectOneMenu> 
+								<ac:smFieldChangeAlert 
+									isShow="#{backingBean.managedBean.showFieldChanges
+										and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+									oriValue="#{backingBean.managedBean.latestPermAddr.smAddress.pmCountry.countryId}" 
+									currValue="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryId}" 
+									alertValue="#{backingBean.getCountryLabelById(backingBean.managedBean.latestPermAddr.smAddress.pmCountry.countryId)}"/>
+								<p:message id="equiPersPermCntryMsg" for="equiPersPermCntry"
 									showSummary="true" showDetail="false" display="icon" /></td>
 						</tr>
 
@@ -83,21 +107,23 @@
 							<td><p:selectOneMenu
 									label="#{lbl['lbl.sm.person.permAddr']} - #{lbl['lbl.sm.state']}"
 									required="true" style="width: 207px;margin-bottom: 5px;"
-									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmState.stateId}"
+									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.stateId}"
 									id="shrPermState">
 									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="shrPermState"
-										value="#{backingBean.managedBean.shrHldrPermStates}"
-										itemValue="#{shrPermState.stateId}"
-										itemLabel="#{shrPermState.stateName}" />
+										value="#{backingBean.managedBean.shrHldrPermStates}" />
 									<p:ajax event="change" process="@this"
-										listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.shareHolderPermAddr.smAddress.pmState.stateId, 
-								SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL,
-								backingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict,
-								backingBean.managedBean.shareHolderPermAddr.smAddress.pmCity)}"
+										listener="#{backingBean.onChangeState(backingBean.managedBean.shareHolderPermAddr.smAddress,SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL)}"
 										update="shrPermDist,shrPermCity" />
 
-								</p:selectOneMenu> <p:message id="shrPermStateMsg" for="shrPermState"
+								</p:selectOneMenu> 
+								<ac:smFieldChangeAlert 
+									isShow="#{backingBean.managedBean.showFieldChanges
+										and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+									oriValue="#{backingBean.managedBean.latestPermAddr.smAddress.pmState.stateId}" 
+									currValue="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmState.stateId}" 
+									alertValue="#{backingBean.getStateLabelById(backingBean.managedBean.latestPermAddr.smAddress.pmState.stateId)}"/>
+								<p:message id="shrPermStateMsg" for="shrPermState"
 									showSummary="true" showDetail="false" display="icon" /></td>
 						</tr>
 
@@ -108,18 +134,21 @@
 									label="#{lbl['lbl.sm.person.permAddr']} - #{lbl['lbl.sm.district']}"
 									required="true" style="width: 207px;margin-bottom: 5px;"
 									id="shrPermDist"
-									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict.districtId}">
+									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.districtId}">
 									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="shrPermDist"
-										value="#{backingBean.managedBean.shrHldrPermDistricts}"
-										itemValue="#{shrPermDist.districtId}"
-										itemLabel="#{shrPermDist.districtName}" />
+										value="#{backingBean.managedBean.shrHldrPermDistricts}" />
 									<p:ajax event="change" process="@this"
-										listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict.districtId, 
-								SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL,
-								backingBean.managedBean.shareHolderPermAddr.smAddress.pmCity)}"
+										listener="#{backingBean.onChangeDistrict(backingBean.managedBean.shareHolderPermAddr.smAddress,SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL)}"
 										update="shrPermCity" />
-								</p:selectOneMenu> <p:message id="shrPermDistMsg" for="shrPermDist"
+								</p:selectOneMenu> 
+								<ac:smFieldChangeAlert 
+									isShow="#{backingBean.managedBean.showFieldChanges
+										and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+									oriValue="#{backingBean.managedBean.latestPermAddr.smAddress.pmDistrict.districtId}" 
+									currValue="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict.districtId}" 
+									alertValue="#{backingBean.getDistrictLabelById(backingBean.managedBean.latestPermAddr.smAddress.pmDistrict.districtId)}"/>
+								<p:message id="shrPermDistMsg" for="shrPermDist"
 									showSummary="true" showDetail="false" display="icon" /></td>
 						</tr>
 						<tr>
@@ -129,15 +158,20 @@
 									label="#{lbl['lbl.sm.person.permAddr']} - #{lbl['lbl.sm.towncity']}"
 									required="true" style="width: 207px;margin-bottom: 5px;"
 									id="shrPermCity"
-									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCity.cityId}">
+									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.cityId}">
 									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="shrPermCity"
-										value="#{backingBean.managedBean.shrHldrPermCities}"
-										itemValue="#{shrPermCity.cityId}"
-										itemLabel="#{shrPermCity.cityName}" />
+										value="#{backingBean.managedBean.shrHldrPermCities}" />
 									<p:ajax event="change" process="@this" update="@this"
 										partialSubmit="true" />
-								</p:selectOneMenu> <p:message id="shrPermCityMsg" for="shrPermCity"
+								</p:selectOneMenu> 
+								<ac:smFieldChangeAlert 
+									isShow="#{backingBean.managedBean.showFieldChanges
+										and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+									oriValue="#{backingBean.managedBean.latestPermAddr.smAddress.pmCity.cityId}" 
+									currValue="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCity.cityId}" 
+									alertValue="#{backingBean.getCityLabelById(backingBean.managedBean.latestPermAddr.smAddress.pmCity.cityId)}"/>
+								<p:message id="shrPermCityMsg" for="shrPermCity"
 									showSummary="true" showDetail="false" display="icon" /></td>
 						</tr>
 						<tr>
@@ -145,7 +179,7 @@
 									value="*" styleClass="mandatory" /></td>
 							<td><p:outputPanel id="postCodePermPanelId">
 									<p:outputPanel
-										rendered="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+										rendered="#{backingBean.managedBean.shareHolderPermAddr.smAddress.countryId==backingBean.managedBean.myCountryId}">
 										<p:inputText maxlength="5" required="true"
 											label="#{lbl['lbl.sm.person.permAddr']} -#{lbl['lbl.sm.postcode']}"
 											id="equiPersPermAddrPostCodeMy"
@@ -156,12 +190,18 @@
 											<p:ajax process="@this" partialSubmit="true"
 												update="@this,equiPersPermAddrPostCodeMyMsg" />
 										</p:inputText>
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											oriValue="#{backingBean.managedBean.latestPermAddr.smAddress.postcode}" 
+											currValue="#{backingBean.managedBean.shareHolderPermAddr.smAddress.postcode}" 
+											alertValue="#{backingBean.managedBean.latestPermAddr.smAddress.postcode}"/>
 										<p:message id="equiPersPermAddrPostCodeMyMsg"
 											for="equiPersPermAddrPostCodeMy" showSummary="true"
 											showDetail="false" display="icon" />
 									</p:outputPanel>
 									<p:outputPanel
-										rendered="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+										rendered="#{backingBean.managedBean.shareHolderPermAddr.smAddress.countryId!=backingBean.managedBean.myCountryId}">
 										<p:inputText maxlength="10" required="true"
 											label="#{lbl['lbl.sm.person.permAddr']} -#{lbl['lbl.sm.postcode']}"
 											id="equiPersPermAddrPostCodeForeign"
@@ -170,6 +210,12 @@
 											<p:ajax process="@this" partialSubmit="true"
 												update="@this,equiPersPermAddrPostCodeForeignMsg" />
 										</p:inputText>
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											oriValue="#{backingBean.managedBean.latestPermAddr.smAddress.postcode}" 
+											currValue="#{backingBean.managedBean.shareHolderPermAddr.smAddress.postcode}" 
+											alertValue="#{backingBean.managedBean.latestPermAddr.smAddress.postcode}"/>
 										<p:message id="equiPersPermAddrPostCodeForeignMsg"
 											for="equiPersPermAddrPostCodeForeign" showSummary="true"
 											showDetail="false" display="icon" />
@@ -216,7 +262,14 @@
 											size="35">
 											<p:ajax process="@this" partialSubmit="true"
 												update="@this,equiPersMailAddrLineMsg" />
-										</p:inputText> <p:message id="equiPersMailAddrLineMsg"
+										</p:inputText> 
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.address1}" 
+											currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address1}" 
+											alertValue="#{backingBean.managedBean.latestMailAddr.smAddress.address1}"/>
+										<p:message id="equiPersMailAddrLineMsg"
 											for="equiPersMailAddrLine" showSummary="true"
 											showDetail="false" display="icon" /></td>
 								</tr>
@@ -229,7 +282,14 @@
 											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address2}"
 											size="35">
 											<p:ajax process="@this" partialSubmit="true" update="@this" />
-										</p:inputText></td>
+										</p:inputText>
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.address2}" 
+											currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address2}" 
+											alertValue="#{backingBean.managedBean.latestMailAddr.smAddress.address2}"/>
+									</td>
 								</tr>
 								<tr>
 									<td></td>
@@ -239,7 +299,14 @@
 											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address3}"
 											size="35">
 											<p:ajax process="@this" partialSubmit="true" update="@this" />
-										</p:inputText></td>
+										</p:inputText>
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.address3}" 
+											currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address3}" 
+											alertValue="#{backingBean.managedBean.latestMailAddr.smAddress.address3}"/>
+									</td>
 								</tr>
 								<tr>
 									<td></td>
@@ -249,7 +316,14 @@
 											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address4}"
 											size="35">
 											<p:ajax process="@this" partialSubmit="true" update="@this" />
-										</p:inputText></td>
+										</p:inputText>
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.address4}" 
+											currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address4}" 
+											alertValue="#{backingBean.managedBean.latestMailAddr.smAddress.address4}"/>
+									</td>
 								</tr>
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
@@ -259,19 +333,22 @@
 											required="#{!backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 											id="equiPerMailCntry"
 											disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
-											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryId}"
+											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.countryId}"
 											style="width: 207px;margin-bottom: 5px;">
 											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 												itemValue="" />
 											<f:selectItems var="shrMailContry" value="#{backingBean.managedBean.countryItems}" />
 											<p:ajax event="change" process="@this"
-												listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryId, 
-								SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL,
-								backingBean.managedBean.shareHolderMailAddr.smAddress.pmState,
-								backingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict,
-								backingBean.managedBean.shareHolderMailAddr.smAddress.pmCity)}"
+												listener="#{backingBean.onChangeCountry(backingBean.managedBean.shareHolderMailAddr.smAddress,SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL)}"
 												update="shrMailState,shrMailDist,shrMailCity,postCodeMailPanelId" />
-										</p:selectOneMenu> <p:message id="equiPerMailCntryMsg" for="equiPerMailCntry"
+										</p:selectOneMenu> 
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.pmCountry.countryId}" 
+											currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryId}" 
+											alertValue="#{backingBean.getCountryLabelById(backingBean.managedBean.latestMailAddr.smAddress.pmCountry.countryId)}"/>
+										<p:message id="equiPerMailCntryMsg" for="equiPerMailCntry"
 											showSummary="true" showDetail="false" display="icon" /></td>
 								</tr>
 
@@ -283,22 +360,24 @@
 											disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 											required="#{!backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 											style="width: 207px;margin-bottom: 5px;"
-											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmState.stateId}"
+											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.stateId}"
 											id="shrMailState">
 											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 												itemValue="" />
 											<f:selectItems var="shrMailState"
-												value="#{backingBean.managedBean.shrHldrMailStates}"
-												itemValue="#{shrMailState.stateId}"
-												itemLabel="#{shrMailState.stateName}" />
+												value="#{backingBean.managedBean.shrHldrMailStates}" />
 											<p:ajax event="change" process="@this"
-												listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.shareHolderMailAddr.smAddress.pmState.stateId, 
-								SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL,
-								backingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict,
-								backingBean.managedBean.shareHolderMailAddr.smAddress.pmCity)}"
+												listener="#{backingBean.onChangeState(backingBean.managedBean.shareHolderMailAddr.smAddress,SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL)}"
 												update="shrMailDist,shrMailCity" />
 
-										</p:selectOneMenu> <p:message id="shrMailStateMsg" for="shrMailState"
+										</p:selectOneMenu> 
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.pmState.stateId}" 
+											currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmState.stateId}" 
+											alertValue="#{backingBean.getStateLabelById(backingBean.managedBean.latestMailAddr.smAddress.pmState.stateId)}"/>
+										<p:message id="shrMailStateMsg" for="shrMailState"
 											showSummary="true" showDetail="false" display="icon" /></td>
 								</tr>
 
@@ -310,19 +389,22 @@
 											disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 											required="#{!backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 											style="width: 207px;margin-bottom: 5px;" id="shrMailDist"
-											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict.districtId}">
+											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.districtId}">
 											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 												itemValue="" />
 											<f:selectItems var="shrMailDist"
-												value="#{backingBean.managedBean.shrHldrMailDistricts}"
-												itemValue="#{shrMailDist.districtId}"
-												itemLabel="#{shrMailDist.districtName}" />
+												value="#{backingBean.managedBean.shrHldrMailDistricts}" />
 											<p:ajax event="change" process="@this"
-												listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict.districtId, 
-								SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL,
-								backingBean.managedBean.shareHolderMailAddr.smAddress.pmCity)}"
+												listener="#{backingBean.onChangeDistrict(backingBean.managedBean.shareHolderMailAddr.smAddress,SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL)}"
 												update="shrMailCity" />
-										</p:selectOneMenu> <p:message id="shrMailDistMsg" for="shrMailDist"
+										</p:selectOneMenu> 
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.pmDistrict.districtId}" 
+											currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict.districtId}" 
+											alertValue="#{backingBean.getDistrictLabelById(backingBean.managedBean.latestMailAddr.smAddress.pmDistrict.districtId)}"/>
+										<p:message id="shrMailDistMsg" for="shrMailDist"
 											showSummary="true" showDetail="false" display="icon" /></td>
 								</tr>
 								<tr>
@@ -333,16 +415,21 @@
 											disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 											required="#{!backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 											style="width: 207px;margin-bottom: 5px;" id="shrMailCity"
-											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCity.cityId}">
+											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.cityId}">
 											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 												itemValue="" />
 											<f:selectItems var="shrMailCity"
-												value="#{backingBean.managedBean.shrHldrMailCities}"
-												itemValue="#{shrMailCity.cityId}"
-												itemLabel="#{shrMailCity.cityName}" />
+												value="#{backingBean.managedBean.shrHldrMailCities}" />
 											<p:ajax event="change" process="@this"
 												update="shrMailCityMsg,@this" partialSubmit="true" />
-										</p:selectOneMenu> <p:message id="shrMailCityMsg" for="shrMailCity"
+										</p:selectOneMenu> 
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.pmCity.cityId}" 
+											currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCity.cityId}" 
+											alertValue="#{backingBean.getCityLabelById(backingBean.managedBean.latestMailAddr.smAddress.pmCity.cityId)}"/>
+										<p:message id="shrMailCityMsg" for="shrMailCity"
 											showSummary="true" showDetail="false" display="icon" /></td>
 								</tr>
 								<tr>
@@ -350,7 +437,7 @@
 											value="*" styleClass="mandatory" /></td>
 									<td><p:outputPanel id="postCodeMailPanelId">
 											<p:outputPanel
-												rendered="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+												rendered="#{backingBean.managedBean.shareHolderMailAddr.smAddress.countryId==backingBean.managedBean.myCountryId}">
 												<p:inputText maxlength="5"
 													required="#{!backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 													disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
@@ -363,12 +450,18 @@
 													<p:ajax process="@this" partialSubmit="true"
 														update="@this,equiPersMailAddrPostCodeMyMsg" />
 												</p:inputText>
+												<ac:smFieldChangeAlert 
+													isShow="#{backingBean.managedBean.showFieldChanges
+														and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+													oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.postcode}" 
+													currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.postcode}" 
+													alertValue="#{backingBean.managedBean.latestMailAddr.smAddress.postcode}"/>
 												<p:message id="equiPersMailAddrPostCodeMyMsg"
 													for="equiPersMailAddrPostCodeMy" showSummary="true"
 													showDetail="false" display="icon" />
 											</p:outputPanel>
 											<p:outputPanel
-												rendered="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+												rendered="#{backingBean.managedBean.shareHolderMailAddr.smAddress.countryId!=backingBean.managedBean.myCountryId}">
 												<p:inputText maxlength="10"
 													required="#{!backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 													disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
@@ -379,6 +472,12 @@
 													<p:ajax process="@this" partialSubmit="true"
 														update="@this,equiPersMailAddrPostCodeForeignMsg" />
 												</p:inputText>
+												<ac:smFieldChangeAlert 
+													isShow="#{backingBean.managedBean.showFieldChanges
+														and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+													oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.postcode}" 
+													currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.postcode}" 
+													alertValue="#{backingBean.managedBean.latestMailAddr.smAddress.postcode}"/>
 												<p:message id="equiPersMailAddrPostCodeForeignMsg"
 													for="equiPersMailAddrPostCodeForeign" showSummary="true"
 													showDetail="false" display="icon" />
@@ -433,7 +532,14 @@
 											size="35">
 											<p:ajax process="@this" partialSubmit="true"
 												update="@this,equiPersResiAddrLineMsg" />
-										</p:inputText> <p:message id="equiPersResiAddrLineMsg"
+										</p:inputText> 
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											oriValue="#{backingBean.managedBean.latestResdAddr.smAddress.address1}" 
+											currValue="#{backingBean.managedBean.shareHolderResdAddr.smAddress.address1}" 
+											alertValue="#{backingBean.managedBean.latestResdAddr.smAddress.address1}"/>
+										<p:message id="equiPersResiAddrLineMsg"
 											for="equiPersResiAddrLine" showSummary="true"
 											showDetail="false" display="icon" /></td>
 								</tr>
@@ -446,7 +552,14 @@
 											value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.address2}"
 											size="35">
 											<p:ajax process="@this" partialSubmit="true" update="@this" />
-										</p:inputText></td>
+										</p:inputText>
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											oriValue="#{backingBean.managedBean.latestResdAddr.smAddress.address2}" 
+											currValue="#{backingBean.managedBean.shareHolderResdAddr.smAddress.address2}" 
+											alertValue="#{backingBean.managedBean.latestResdAddr.smAddress.address2}"/>
+									</td>
 								</tr>
 								<tr>
 									<td></td>
@@ -456,7 +569,14 @@
 											value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.address3}"
 											size="35">
 											<p:ajax process="@this" partialSubmit="true" update="@this" />
-										</p:inputText></td>
+										</p:inputText>
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											oriValue="#{backingBean.managedBean.latestResdAddr.smAddress.address3}" 
+											currValue="#{backingBean.managedBean.shareHolderResdAddr.smAddress.address3}" 
+											alertValue="#{backingBean.managedBean.latestResdAddr.smAddress.address3}"/>
+									</td>
 								</tr>
 								<tr>
 									<td></td>
@@ -466,7 +586,14 @@
 											value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.address4}"
 											size="35">
 											<p:ajax process="@this" partialSubmit="true" update="@this" />
-										</p:inputText></td>
+										</p:inputText>
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											oriValue="#{backingBean.managedBean.latestResdAddr.smAddress.address4}" 
+											currValue="#{backingBean.managedBean.shareHolderResdAddr.smAddress.address4}" 
+											alertValue="#{backingBean.managedBean.latestResdAddr.smAddress.address4}"/>
+									</td>
 								</tr>
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
@@ -476,19 +603,22 @@
 											required="#{!backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 											disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 											id="equiPersResiCntry"
-											value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmCountry.countryId}"
+											value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.countryId}"
 											style="width: 207px;margin-bottom: 5px;">
 											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 												itemValue="" />
 											<f:selectItems var="shrResCountry" value="#{backingBean.managedBean.countryItems}" />
 											<p:ajax event="change" process="@this"
-												listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.shareHolderResdAddr.smAddress.pmCountry.countryId, 
-								SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL,
-								backingBean.managedBean.shareHolderResdAddr.smAddress.pmState,
-								backingBean.managedBean.shareHolderResdAddr.smAddress.pmDistrict,
-								backingBean.managedBean.shareHolderResdAddr.smAddress.pmCity)}"
+												listener="#{backingBean.onChangeCountry(backingBean.managedBean.shareHolderResdAddr.smAddress,SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL)}"
 												update="shrResState,shrResDist,shrResCity,postCodeResdPanelId" />
-										</p:selectOneMenu> <p:message id="equiPersResiCntryMsg" for="equiPersResiCntry"
+										</p:selectOneMenu> 
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											oriValue="#{backingBean.managedBean.latestResdAddr.smAddress.pmCountry.countryId}" 
+											currValue="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmCountry.countryId}" 
+											alertValue="#{backingBean.getCountryLabelById(backingBean.managedBean.latestResdAddr.smAddress.pmCountry.countryId)}"/>
+										<p:message id="equiPersResiCntryMsg" for="equiPersResiCntry"
 											showSummary="true" showDetail="false" display="icon" /></td>
 								</tr>
 
@@ -500,22 +630,24 @@
 											required="#{!backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 											disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 											style="width: 207px;margin-bottom: 5px;"
-											value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmState.stateId}"
+											value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.stateId}"
 											id="shrResState">
 											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 												itemValue="" />
 											<f:selectItems var="shrResState"
-												value="#{backingBean.managedBean.shrHldrResdStates}"
-												itemValue="#{shrResState.stateId}"
-												itemLabel="#{shrResState.stateName}" />
+												value="#{backingBean.managedBean.shrHldrResdStates}" />
 											<p:ajax event="change" process="@this"
-												listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.shareHolderResdAddr.smAddress.pmState.stateId, 
-								SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL,
-								backingBean.managedBean.shareHolderResdAddr.smAddress.pmDistrict,
-								backingBean.managedBean.shareHolderResdAddr.smAddress.pmCity)}"
+												listener="#{backingBean.onChangeState(backingBean.managedBean.shareHolderResdAddr.smAddress,SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL)}"
 												update="shrResDist,shrResCity" />
 
-										</p:selectOneMenu> <p:message id="shrResStateMsg" for="shrResState"
+										</p:selectOneMenu> 
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											oriValue="#{backingBean.managedBean.latestResdAddr.smAddress.pmState.stateId}" 
+											currValue="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmState.stateId}" 
+											alertValue="#{backingBean.getStateLabelById(backingBean.managedBean.latestResdAddr.smAddress.pmState.stateId)}"/>
+										<p:message id="shrResStateMsg" for="shrResState"
 											showSummary="true" showDetail="false" display="icon" /></td>
 								</tr>
 
@@ -527,19 +659,22 @@
 											required="#{!backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 											disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 											style="width: 207px;margin-bottom: 5px;" id="shrResDist"
-											value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmDistrict.districtId}">
+											value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.districtId}">
 											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 												itemValue="" />
 											<f:selectItems var="shrResDist"
-												value="#{backingBean.managedBean.shrHldrResdDistricts}"
-												itemValue="#{shrResDist.districtId}"
-												itemLabel="#{shrResDist.districtName}" />
+												value="#{backingBean.managedBean.shrHldrResdDistricts}" />
 											<p:ajax event="change" process="@this"
-												listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.shareHolderResdAddr.smAddress.pmDistrict.districtId, 
-								SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL,
-								backingBean.managedBean.shareHolderResdAddr.smAddress.pmCity)}"
+												listener="#{backingBean.onChangeDistrict(backingBean.managedBean.shareHolderResdAddr.smAddress,SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL)}"
 												update="shrResCity" />
-										</p:selectOneMenu> <p:message id="shrResDistMsg" for="shrResDist"
+										</p:selectOneMenu> 
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											oriValue="#{backingBean.managedBean.latestResdAddr.smAddress.pmDistrict.districtId}" 
+											currValue="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmDistrict.districtId}" 
+											alertValue="#{backingBean.getDistrictLabelById(backingBean.managedBean.latestResdAddr.smAddress.pmDistrict.districtId)}"/>
+										<p:message id="shrResDistMsg" for="shrResDist"
 											showSummary="true" showDetail="false" display="icon" /></td>
 								</tr>
 								<tr>
@@ -550,16 +685,21 @@
 											required="#{!backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 											disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 											style="width: 207px;margin-bottom: 5px;" id="shrResCity"
-											value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmCity.cityId}">
+											value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.cityId}">
 											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 												itemValue="" />
 											<f:selectItems var="shrResCity"
-												value="#{backingBean.managedBean.shrHldrResdCities}"
-												itemValue="#{shrResCity.cityId}"
-												itemLabel="#{shrResCity.cityName}" />
+												value="#{backingBean.managedBean.shrHldrResdCities}" />
 											<p:ajax event="change" process="@this"
 												update="shrResCityMsg,@this" partialSubmit="true" />
-										</p:selectOneMenu> <p:message id="shrResCityMsg" for="shrResCity"
+										</p:selectOneMenu> 
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											oriValue="#{backingBean.managedBean.latestResdAddr.smAddress.pmCity.cityId}" 
+											currValue="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmCity.cityId}" 
+											alertValue="#{backingBean.getCityLabelById(backingBean.managedBean.latestResdAddr.smAddress.pmCity.cityId)}"/>
+										<p:message id="shrResCityMsg" for="shrResCity"
 											showSummary="true" showDetail="false" display="icon" /></td>
 								</tr>
 								<tr>
@@ -567,7 +707,7 @@
 											value="*" styleClass="mandatory" /></td>
 									<td><p:outputPanel id="postCodeResdPanelId">
 											<p:outputPanel
-												rendered="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+												rendered="#{backingBean.managedBean.shareHolderResdAddr.smAddress.countryId==backingBean.managedBean.myCountryId}">
 												<p:inputText maxlength="5"
 													required="#{!backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 													disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
@@ -580,12 +720,18 @@
 													<p:ajax process="@this" partialSubmit="true"
 														update="@this,equiPersResdAddrPostCodeMyMsg" />
 												</p:inputText>
+												<ac:smFieldChangeAlert 
+													isShow="#{backingBean.managedBean.showFieldChanges
+														and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+													oriValue="#{backingBean.managedBean.latestResdAddr.smAddress.postcode}" 
+													currValue="#{backingBean.managedBean.shareHolderResdAddr.smAddress.postcode}" 
+													alertValue="#{backingBean.managedBean.latestResdAddr.smAddress.postcode}"/>
 												<p:message id="equiPersResdAddrPostCodeMyMsg"
 													for="equiPersResdAddrPostCodeMy" showSummary="true"
 													showDetail="false" display="icon" />
 											</p:outputPanel>
 											<p:outputPanel
-												rendered="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+												rendered="#{backingBean.managedBean.shareHolderResdAddr.smAddress.countryId!=backingBean.managedBean.myCountryId}">
 												<p:inputText maxlength="10"
 													required="#{!backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 													disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
@@ -596,6 +742,12 @@
 													<p:ajax process="@this" partialSubmit="true"
 														update="@this,equiPersResdAddrPostCodeForeignMsg" />
 												</p:inputText>
+												<ac:smFieldChangeAlert 
+													isShow="#{backingBean.managedBean.showFieldChanges
+														and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+													oriValue="#{backingBean.managedBean.latestResdAddr.smAddress.postcode}" 
+													currValue="#{backingBean.managedBean.shareHolderResdAddr.smAddress.postcode}" 
+													alertValue="#{backingBean.managedBean.latestResdAddr.smAddress.postcode}"/>
 												<p:message id="equiPersResdAddrPostCodeForeignMsg"
 													for="equiPersResdAddrPostCodeForeign" showSummary="true"
 													showDetail="false" display="icon" />
@@ -645,7 +797,14 @@
 												update="@this,equiPersOffcAddrLineMsg" />
 										</p:inputText> <p:message id="equiPersOffcAddrLineMsg"
 											for="equiPersOffcAddrLine" showSummary="true"
-											showDetail="false" display="icon" /></td>
+											showDetail="false" display="icon" />
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											oriValue="#{backingBean.managedBean.latestOffAddr.smAddress.address1}" 
+											currValue="#{backingBean.managedBean.shareHolderOffAddr.smAddress.address1}" 
+											alertValue="#{backingBean.managedBean.latestOffAddr.smAddress.address1}"/>	
+										</td>
 								</tr>
 
 								<tr>
@@ -656,7 +815,14 @@
 											value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.address2}"
 											size="35">
 											<p:ajax process="@this" partialSubmit="true" update="@this" />
-										</p:inputText></td>
+										</p:inputText>
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											oriValue="#{backingBean.managedBean.latestOffAddr.smAddress.address2}" 
+											currValue="#{backingBean.managedBean.shareHolderOffAddr.smAddress.address2}" 
+											alertValue="#{backingBean.managedBean.latestOffAddr.smAddress.address2}"/>
+									</td>
 								</tr>
 								<tr>
 									<td></td>
@@ -666,7 +832,14 @@
 											value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.address3}"
 											size="35">
 											<p:ajax process="@this" partialSubmit="true" update="@this" />
-										</p:inputText></td>
+										</p:inputText>
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											oriValue="#{backingBean.managedBean.latestOffAddr.smAddress.address3}" 
+											currValue="#{backingBean.managedBean.shareHolderOffAddr.smAddress.address3}" 
+											alertValue="#{backingBean.managedBean.latestOffAddr.smAddress.address3}"/>
+									</td>
 								</tr>
 								<tr>
 									<td></td>
@@ -676,7 +849,14 @@
 											value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.address4}"
 											size="35">
 											<p:ajax process="@this" partialSubmit="true" update="@this" />
-										</p:inputText></td>
+										</p:inputText>
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											oriValue="#{backingBean.managedBean.latestOffAddr.smAddress.address4}" 
+											currValue="#{backingBean.managedBean.shareHolderOffAddr.smAddress.address4}" 
+											alertValue="#{backingBean.managedBean.latestOffAddr.smAddress.address4}"/>
+									</td>
 								</tr>
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
@@ -685,19 +865,22 @@
 											label="#{lbl['lbl.sm.person.offAddr']} - #{lbl['lbl.sm.country']}"
 											required="#{!backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 											disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
-											value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmCountry.countryId}"
+											value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.countryId}"
 											style="width: 207px;margin-bottom: 5px;">
 											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 												itemValue="" />
 											<f:selectItems var="shrOffCountry" value="#{backingBean.managedBean.countryItems}" />
 											<p:ajax event="change" process="@this"
-												listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.shareHolderOffAddr.smAddress.pmCountry.countryId, 
-								SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL,
-								backingBean.managedBean.shareHolderOffAddr.smAddress.pmState,
-								backingBean.managedBean.shareHolderOffAddr.smAddress.pmDistrict,
-								backingBean.managedBean.shareHolderOffAddr.smAddress.pmCity)}"
+												listener="#{backingBean.onChangeCountry(backingBean.managedBean.shareHolderOffAddr,SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL)}"
 												update="shrOffState,shrOffDist,shrOffCity,postCodeOffAddrPanelId" />
-										</p:selectOneMenu> <p:message id="equiPersOffcCntryMsg" for="equiPersOffcCntry"
+										</p:selectOneMenu> 
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											oriValue="#{backingBean.managedBean.latestOffAddr.smAddress.pmCountry.countryId}" 
+											currValue="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmCountry.countryId}" 
+											alertValue="#{backingBean.getCountryLabelById(backingBean.managedBean.latestOffAddr.smAddress.pmCountry.countryId)}"/>
+										<p:message id="equiPersOffcCntryMsg" for="equiPersOffcCntry"
 											showSummary="true" showDetail="false" display="icon" /></td>
 								</tr>
 
@@ -709,22 +892,23 @@
 											required="#{!backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 											disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 											style="width: 207px;margin-bottom: 5px;"
-											value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmState.stateId}"
+											value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.stateId}"
 											id="shrOffState">
 											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 												itemValue="" />
 											<f:selectItems var="shrOffState"
-												value="#{backingBean.managedBean.shrHldrOffStates}"
-												itemValue="#{shrOffState.stateId}"
-												itemLabel="#{shrOffState.stateName}" />
+												value="#{backingBean.managedBean.shrHldrOffStates}" />
 											<p:ajax event="change" process="@this"
-												listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.shareHolderOffAddr.smAddress.pmState.stateId, 
-								SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL,
-								backingBean.managedBean.shareHolderOffAddr.smAddress.pmDistrict,
-								backingBean.managedBean.shareHolderOffAddr.smAddress.pmCity)}"
+												listener="#{backingBean.onChangeState(backingBean.managedBean.shareHolderOffAddr,SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL)}"
 												update="shrOffDist,shrOffCity" />
-
-										</p:selectOneMenu> <p:message id="shrOffStateMsg" for="shrOffState"
+										</p:selectOneMenu> 
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											oriValue="#{backingBean.managedBean.latestOffAddr.smAddress.pmState.stateId}" 
+											currValue="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmState.stateId}" 
+											alertValue="#{backingBean.getStateLabelById(backingBean.managedBean.latestOffAddr.smAddress.pmState.stateId)}"/>
+										<p:message id="shrOffStateMsg" for="shrOffState"
 											showSummary="true" showDetail="false" display="icon" /></td>
 								</tr>
 
@@ -736,19 +920,22 @@
 											required="#{!backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 											disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 											style="width: 207px;margin-bottom: 5px;" id="shrOffDist"
-											value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmDistrict.districtId}">
+											value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.districtId}">
 											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 												itemValue="" />
 											<f:selectItems var="shrOffDist"
-												value="#{backingBean.managedBean.shrHldrOffDistricts}"
-												itemValue="#{shrOffDist.districtId}"
-												itemLabel="#{shrOffDist.districtName}" />
+												value="#{backingBean.managedBean.shrHldrOffDistricts}" />
 											<p:ajax event="change" process="@this"
-												listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.shareHolderOffAddr.smAddress.pmDistrict.districtId, 
-								SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL,
-								backingBean.managedBean.shareHolderOffAddr.smAddress.pmCity)}"
+												listener="#{backingBean.onChangeDistrict(backingBean.managedBean.shareHolderOffAddr,SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL)}"
 												update="shrOffCity" />
-										</p:selectOneMenu> <p:message id="shrOffDistMsg" for="shrOffDist"
+										</p:selectOneMenu> 
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											oriValue="#{backingBean.managedBean.latestOffAddr.smAddress.pmDistrict.districtId}" 
+											currValue="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmDistrict.districtId}" 
+											alertValue="#{backingBean.getDistrictLabelById(backingBean.managedBean.latestOffAddr.smAddress.pmDistrict.districtId)}"/>
+										<p:message id="shrOffDistMsg" for="shrOffDist"
 											showSummary="true" showDetail="false" display="icon" /></td>
 								</tr>
 								<tr>
@@ -759,16 +946,21 @@
 											required="#{!backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 											disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 											style="width: 207px;margin-bottom: 5px;" id="shrOffCity"
-											value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmCity.cityId}">
+											value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.cityId}">
 											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 												itemValue="" />
 											<f:selectItems var="shrOffCity"
-												value="#{backingBean.managedBean.shrHldrOffCities}"
-												itemValue="#{shrOffCity.cityId}"
-												itemLabel="#{shrOffCity.cityName}" />
+												value="#{backingBean.managedBean.shrHldrOffCities}" />
 											<p:ajax event="change" process="@this"
 												update="shrOffCityMsg,@this" partialSubmit="true" />
-										</p:selectOneMenu> <p:message id="shrOffCityMsg" for="shrOffCity"
+										</p:selectOneMenu> 
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											oriValue="#{backingBean.managedBean.latestOffAddr.smAddress.pmCity.cityId}" 
+											currValue="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmCity.cityId}" 
+											alertValue="#{backingBean.getCityLabelById(backingBean.managedBean.latestOffAddr.smAddress.pmCity.cityId)}"/>
+										<p:message id="shrOffCityMsg" for="shrOffCity"
 											showSummary="true" showDetail="false" display="icon" /></td>
 								</tr>
 								<tr>
@@ -776,7 +968,7 @@
 											value="*" styleClass="mandatory" /></td>
 									<td><p:outputPanel id="postCodeOffAddrPanelId">
 											<p:outputPanel
-												rendered="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+												rendered="#{backingBean.managedBean.shareHolderOffAddr.smAddress.countryId==backingBean.managedBean.myCountryId}">
 												<p:inputText maxlength="5"
 													required="#{!backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 													disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
@@ -789,12 +981,18 @@
 													<p:ajax process="@this" partialSubmit="true"
 														update="@this,equiPersOffcAddrPostCodeMyMsg" />
 												</p:inputText>
+												<ac:smFieldChangeAlert 
+													isShow="#{backingBean.managedBean.showFieldChanges
+														and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+													oriValue="#{backingBean.managedBean.latestOffAddr.smAddress.postcode}" 
+													currValue="#{backingBean.managedBean.shareHolderOffAddr.smAddress.postcode}" 
+													alertValue="#{backingBean.managedBean.latestOffAddr.smAddress.postcode}"/>
 												<p:message id="equiPersOffcAddrPostCodeMyMsg"
 													for="equiPersOffcAddrPostCodeMy" showSummary="true"
 													showDetail="false" display="icon" />
 											</p:outputPanel>
 											<p:outputPanel
-												rendered="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+												rendered="#{backingBean.managedBean.shareHolderOffAddr.smAddress.countryId!=backingBean.managedBean.myCountryId}">
 												<p:inputText maxlength="10"
 													required="#{!backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 													disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
@@ -805,6 +1003,12 @@
 													<p:ajax process="@this" partialSubmit="true"
 														update="@this,equiPersOffcAddrPostCodeForeignMsg" />
 												</p:inputText>
+												<ac:smFieldChangeAlert 
+													isShow="#{backingBean.managedBean.showFieldChanges
+														and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+													oriValue="#{backingBean.managedBean.latestOffAddr.smAddress.postcode}" 
+													currValue="#{backingBean.managedBean.shareHolderOffAddr.smAddress.postcode}" 
+													alertValue="#{backingBean.managedBean.latestOffAddr.smAddress.postcode}"/>
 												<p:message id="equiPersOffcAddrPostCodeForeignMsg"
 													for="equiPersOffcAddrPostCodeForeign" showSummary="true"
 													showDetail="false" display="icon" />

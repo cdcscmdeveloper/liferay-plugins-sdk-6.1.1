@@ -23,7 +23,14 @@
 						label="#{lbl['lbl.sm.person.name']}" required="true"
 						value="#{backingBean.managedBean.selectedShareHolder.name}"
 						disabled="#{backingBean.managedBean.disabledShareholderPersonnelNameAndNationality}"
-						size="35" /> <p:message id="equiPerNamMsg" for="equiPerNam"
+						size="35" /> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges 
+								and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+							oriValue="#{backingBean.managedBean.latestPersonnel.name}" 
+							currValue="#{backingBean.managedBean.selectedShareHolder.name}" 
+							alertValue="#{backingBean.managedBean.latestPersonnel.name}"/>
+						<p:message id="equiPerNamMsg" for="equiPerNam"
 						showSummary="true" showDetail="false" display="icon" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.nationality']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
@@ -40,7 +47,17 @@
 							itemLabel="#{shrOffCountry.countryName}" />
 						<p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{backingBean.assignPersonNationality}" />
-					</p:selectOneMenu> <p:message id="equiPerNationalMsg" for="equiPerNational"
+					</p:selectOneMenu> 
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges 
+							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+						oriValue="#{backingBean.managedBean.latestPersonnel.pmCountry.countryId}" 
+						currValue="#{backingBean.managedBean.selectedShareHolder.pmCountry.countryId}" 
+						alertValue="#{(not empty backingBean.managedBean.latestPersonnel and 
+						 not empty backingBean.managedBean.latestPersonnel.pmCountry) ?
+						 backingBean.getCountryLabelById(backingBean.managedBean.latestPersonnel.pmCountry.countryId) 
+						 : lbl['lbl.txt.na']}"/>
+					<p:message id="equiPerNationalMsg" for="equiPerNational"
 						showSummary="true" showDetail="false" display="icon" /></td>
 
 			</tr>
@@ -114,6 +131,12 @@
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
 						value="#{backingBean.managedBean.selectedShareHolder.birthDate}" />
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges 
+							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+						oriValue="#{backingBean.managedBean.latestPersonnel.birthDate}" 
+						currValue="#{backingBean.managedBean.selectedShareHolder.birthDate}" 
+						alertValue="#{backingBean.getDateFormat(backingBean.managedBean.latestPersonnel.birthDate)}"/>
 					<p:message id="equiPerDobMsg" for="equiPerDob" showSummary="true"
 						showDetail="false" display="icon" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.designation']}" />
@@ -121,7 +144,14 @@
 				<td><p:inputText label="#{lbl['lbl.sm.person.designation']}"
 						id="smPerDesignation" maxlength="30" required="true"
 						value="#{backingBean.managedBean.selectedShareHolder.designation}"
-						size="35" /> <p:message id="smPerDesignationMsg"
+						size="35" /> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges 
+								and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+							oriValue="#{backingBean.managedBean.latestPersonnel.designation}" 
+							currValue="#{backingBean.managedBean.selectedShareHolder.designation}" 
+							alertValue="#{backingBean.managedBean.latestPersonnel.designation}"/>
+						<p:message id="smPerDesignationMsg"
 						for="smPerDesignation" showSummary="true" showDetail="false"
 						display="icon" /></td>
 			</tr>
@@ -139,7 +169,14 @@
 						value="#{backingBean.managedBean.selectedShareHolder.epfNo}"
 						id="equiEpfNo" size="35">
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-					</p:inputText> <p:message id="equiEpfNoMsg" for="equiEpfNo" showSummary="true"
+					</p:inputText> 
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges 
+							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+						oriValue="#{backingBean.managedBean.latestPersonnel.epfNo}" 
+						currValue="#{backingBean.managedBean.selectedShareHolder.epfNo}" 
+						alertValue="#{backingBean.managedBean.latestPersonnel.epfNo}"/>
+					<p:message id="equiEpfNoMsg" for="equiEpfNo" showSummary="true"
 						showDetail="false" display="icon" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.exp']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
@@ -153,7 +190,14 @@
 							maximum="#{SupplierManagementConst.MAX_EXP_RANGE}" />
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:inputText> <p:message id="equiExperMsg" for="equiExper" showSummary="true"
+					</p:inputText> 
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges 
+							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+						oriValue="#{backingBean.managedBean.latestPersonnel.workExperienceYear}" 
+						currValue="#{backingBean.managedBean.selectedShareHolder.workExperienceYear}" 
+						alertValue="#{backingBean.managedBean.latestPersonnel.workExperienceYear}"/>
+					<p:message id="equiExperMsg" for="equiExper" showSummary="true"
 						showDetail="false" display="icon" /></td>
 
 			</tr>
@@ -174,7 +218,14 @@
 						id="toolinfo2" for="tooltip2">
 						<p:outputLabel escape="false"
 							value="#{lbl['tt.sm.registration.equity.owner.email']}" />
-					</p:tooltip>&#160; <p:message id="equiEmailMsg" for="equiEmail"
+					</p:tooltip>&#160; 
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges 
+							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+						oriValue="#{backingBean.managedBean.latestPersonnel.email}" 
+						currValue="#{backingBean.managedBean.selectedShareHolder.email}" 
+						alertValue="#{backingBean.managedBean.latestPersonnel.email}"/>
+					<p:message id="equiEmailMsg" for="equiEmail"
 						showSummary="true" showDetail="false" display="icon" /></td>
 
 				<td><p:outputLabel value="#{lbl['lbl.sm.mobileNo']}" /> <p:outputPanel
@@ -189,7 +240,14 @@
 						validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}"
 						label="#{lbl['lbl.sm.mobileNo']}" id="equiPerMob">
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-					</p:inputText> <p:outputPanel id="equiPerMobMsgOutputPanel">
+					</p:inputText> 
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+						oriValue="#{backingBean.managedBean.latestPersonnel.mobileNo}" 
+						currValue="#{backingBean.managedBean.selectedShareHolder.mobileNo}" 
+						alertValue="#{backingBean.managedBean.latestPersonnel.mobileNo}"/>
+					<p:outputPanel id="equiPerMobMsgOutputPanel">
 						<p:message id="equiPerMobMsg" for="equiPerMob" showSummary="true"
 							showDetail="false" display="icon" />
 					</p:outputPanel></td>
@@ -203,7 +261,14 @@
 						label="#{lbl['lbl.sm.phoneno']}" id="equiPerPhnNo"
 						validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}">
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-					</p:inputText> <p:message id="equiPerPhnNoMsg" for="equiPerPhnNo"
+					</p:inputText> 
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+						oriValue="#{backingBean.managedBean.latestPersonnel.phoneNo}" 
+						currValue="#{backingBean.managedBean.selectedShareHolder.phoneNo}" 
+						alertValue="#{backingBean.managedBean.latestPersonnel.phoneNo}"/>
+					<p:message id="equiPerPhnNoMsg" for="equiPerPhnNo"
 						showSummary="true" showDetail="false" display="icon" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
 				<td><p:inputText size="35" maxlength="12"
@@ -211,7 +276,14 @@
 						value="#{backingBean.managedBean.selectedShareHolder.faxNo}"
 						label="#{lbl['lbl.sm.faxno']}" id="equiPerFaxNo">
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-					</p:inputText> <p:message id="equiPerFaxNoMsg" for="equiPerFaxNo"
+					</p:inputText> 
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+						oriValue="#{backingBean.managedBean.latestPersonnel.faxNo}" 
+						currValue="#{backingBean.managedBean.selectedShareHolder.faxNo}" 
+						alertValue="#{backingBean.managedBean.latestPersonnel.faxNo}"/>
+					<p:message id="equiPerFaxNoMsg" for="equiPerFaxNo"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 
@@ -223,7 +295,14 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 						<p:ajax event="change" partialSubmit="true" process="@this" />
-					</p:selectOneRadio></td>
+					</p:selectOneRadio>
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+						oriValue="#{backingBean.managedBean.latestPersonnel.bumiFlg}" 
+						currValue="#{backingBean.managedBean.selectedShareHolder.bumiFlg}" 
+						alertValue="#{backingBean.managedBean.latestPersonnel.bumiFlg eq '1' ? lbl['lbl.txt.yes'] : lbl['lbl.txt.no']}"/>
+				</td>
 				<td><p:outputLabel value=" #{lbl['lbl.sm.person.religion']}"
 						title="For Malaysian Only" /></td>
 				<td colspan="3"><p:selectOneRadio
@@ -233,7 +312,15 @@
 						<f:selectItem
 							itemLabel="#{lbl['lbl.sm.person.religion.non.muslim']}"
 							itemValue="0" />
-					</p:selectOneRadio></td>
+					</p:selectOneRadio>
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+						oriValue="#{backingBean.managedBean.latestPersonnel.muslimFlg}" 
+						currValue="#{backingBean.managedBean.selectedShareHolder.muslimFlg}" 
+						alertValue="#{backingBean.managedBean.latestPersonnel.muslimFlg eq '1' ? 
+							lbl['lbl.sm.person.religion.muslim'] : lbl['lbl.sm.person.religion.non.muslim']}"/>
+				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.race']}" /> <p:outputLabel
@@ -246,7 +333,14 @@
 						<f:selectItems var="select"
 							value="#{backingBean.managedBean.raceSelectItems}"
 							itemLabel="select.label" itemValue="select.value" />
-					</p:selectOneMenu> <p:message id="equiPerRaceMsg" for="equiPerRace"
+					</p:selectOneMenu> 
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+						oriValue="#{backingBean.managedBean.latestPersonnel.pmRace.raceId}" 
+						currValue="#{backingBean.managedBean.selectedShareHolder.pmRace.raceId}" 
+						alertValue="#{backingBean.getRaceLabel(backingBean.managedBean.latestPersonnel.pmRace.raceId)}"/>
+					<p:message id="equiPerRaceMsg" for="equiPerRace"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 		</table>
@@ -276,7 +370,15 @@
 						for="tooltip3">
 						<p:outputLabel escape="false"
 							value="#{lbl['tt.sm.registration.equity.owner.authorized.personal']}" />
-					</p:tooltip></td>
+					</p:tooltip>
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+						oriValue="#{backingBean.managedBean.latestPersonnel.authorizedFlg}" 
+						currValue="#{backingBean.managedBean.selectedShareHolder.authorizedFlg}" 
+						alertValue="#{backingBean.managedBean.latestPersonnel.authorizedFlg eq '1' ? 
+							lbl['lbl.txt.yes'] : lbl['lbl.txt.no']}"/>
+				</td>
 			</tr>
 		</table>
 		<table>
@@ -297,7 +399,14 @@
 							value="#{backingBean.getAuthorizedPersonnelValidEpRoles()}" />
 						<p:ajax event="change" update="shrPrivPanel"
 							listener="#{backingBean.assignShareHolderPrivilegeByEpRole}" />
-					</p:selectOneMenu> <p:message id="smPersnEpRoleMsg" for="smPersnEpRole"
+					</p:selectOneMenu> 
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+						oriValue="#{backingBean.managedBean.latestPersonnel.epRole}" 
+						currValue="#{backingBean.managedBean.selectedShareHolder.epRole}" 
+						alertValue="#{backingBean.getEpRoleLabelByRole(backingBean.managedBean.latestPersonnel.epRole)}"/>
+					<p:message id="smPersnEpRoleMsg" for="smPersnEpRole"
 						showSummary="true" showDetail="false" display="icon" /></td>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sm.person.justification']}"
@@ -333,7 +442,15 @@
 									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and (backingBean.managedBean.selectedShareHolder.softcertFlg ne '0')}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
-					</p:selectOneRadio></td>
+					</p:selectOneRadio>
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+						oriValue="#{backingBean.managedBean.latestPersonnel.contractSignerFlg}" 
+						currValue="#{backingBean.managedBean.selectedShareHolder.contractSignerFlg}" 
+						alertValue="#{backingBean.managedBean.latestPersonnel.contractSignerFlg eq '1' 
+							? lbl['lbl.txt.yes'] : lbl['lbl.txt.no']}"/>
+				</td>
 				<td><p:graphicImage id="tooltip5"
 						value="/css/images/design/tooltips.png"
 						style="padding-bottom : 7px;"
@@ -376,7 +493,14 @@
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						<p:ajax event="blur" update="shareAmtPanel"
 							listener="#{backingBean.calculateShareHolderPercent}" />
-					</p:inputText> <p:message id="equiShrDetAmtMsg" for="equiShrDetAmt"
+					</p:inputText> 
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+						oriValue="#{backingBean.managedBean.latestPersonnel.shareAmt}" 
+						currValue="#{backingBean.managedBean.selectedShareHolder.shareAmt}" 
+						alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestPersonnel.shareAmt)}"/>
+					<p:message id="equiShrDetAmtMsg" for="equiShrDetAmt"
 						showSummary="true" showDetail="false" display="icon" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.shrPerc']}" /></td>
 				<td><p:inputText title="Auto Populated Value"
@@ -459,7 +583,7 @@
 					<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"
 						style="margin-right:2px;" />
 				</p:commandLink>
-
+				<ac:smFieldChangeTableAlert object="#{jf}" />
 			</p:column>
 
 		</p:dataTable>
@@ -492,6 +616,12 @@
 						label="#{lbl['lbl.sm.assocCmpny.companyName']}"
 						id="equiJbFnInfCmpName" maxlength="100"
 						value="#{backingBean.managedBean.selectedJobFunction.companyName}" />
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedJobFunction.staffExperienceId}"
+						oriValue="#{backingBean.managedBean.latestJobFunction.companyName}" 
+						currValue="#{backingBean.managedBean.selectedJobFunction.companyName}" 
+						alertValue="#{backingBean.managedBean.latestJobFunction.companyName}"/>
 					<p:message id="equiJbFnInfCmpNameMsg"
 						for=":form:tt:equiJbFnInfCmpName" showSummary="true"
 						showDetail="false" display="icon" /></td>
@@ -503,6 +633,12 @@
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.designation']}" id="equiJbFnInfDesg"
 						value="#{backingBean.managedBean.selectedJobFunction.designation}" />
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedJobFunction.staffExperienceId}"
+						oriValue="#{backingBean.managedBean.latestJobFunction.designation}" 
+						currValue="#{backingBean.managedBean.selectedJobFunction.designation}" 
+						alertValue="#{backingBean.managedBean.latestJobFunction.designation}"/>
 					<p:message id="equiJbFnInfDesgMsg" for=":form:tt:equiJbFnInfDesg"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
@@ -515,7 +651,14 @@
 						value="#{backingBean.managedBean.selectedJobFunction.fromYear}"
 						maxlength="4" label="#{lbl['lbl.sm.year.from']}">
 						<f:validateLongRange minimum="1950" maximum="2050" />
-					</p:inputText> <p:message id="equiJbFnInfYrFrmMsg"
+					</p:inputText> 
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedJobFunction.staffExperienceId}"
+						oriValue="#{backingBean.managedBean.latestJobFunction.fromYear}" 
+						currValue="#{backingBean.managedBean.selectedJobFunction.fromYear}" 
+						alertValue="#{backingBean.managedBean.latestJobFunction.fromYear}"/>
+					<p:message id="equiJbFnInfYrFrmMsg"
 						for=":form:tt:equiJbFnInfYrFrm" showSummary="true"
 						showDetail="false" display="icon" /></td>
 			</tr>
@@ -528,7 +671,14 @@
 						value="#{backingBean.managedBean.selectedJobFunction.toYear}"
 						maxlength="4">
 						<f:validateLongRange minimum="1950" maximum="2050" />
-					</p:inputText> <p:message id="equiJbFnInfYrToMsg" for=":form:tt:equiJbFnInfYrTo"
+					</p:inputText> 
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedJobFunction.staffExperienceId}"
+						oriValue="#{backingBean.managedBean.latestJobFunction.toYear}" 
+						currValue="#{backingBean.managedBean.selectedJobFunction.toYear}" 
+						alertValue="#{backingBean.managedBean.latestJobFunction.toYear}"/>
+					<p:message id="equiJbFnInfYrToMsg" for=":form:tt:equiJbFnInfYrTo"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 		</table>
@@ -587,7 +737,7 @@
 						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"
 							style="margin-right:2px;" />
 					</p:commandLink>
-
+					<ac:smFieldChangeTableAlert object="#{relCom}" />
 				</p:column>
 			</p:dataTable>
 			<p:spacer height="2px;" />
@@ -618,7 +768,14 @@
 							label="#{lbl['lbl.sm.assocCmpny.companyName']}"
 							id="equiRlCmpInfCompName"
 							value="#{backingBean.managedBean.selectedRelatedCompany.companyName}"
-							size="35" /> <p:message id="equiRlCmpInfCompNameMsg"
+							size="35" /> 
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges
+									and not empty backingBean.managedBean.selectedRelatedCompany.relatedCompanyId}"
+								oriValue="#{backingBean.managedBean.latestRelatedCompany.companyName}" 
+								currValue="#{backingBean.managedBean.selectedRelatedCompany.companyName}" 
+								alertValue="#{backingBean.managedBean.latestRelatedCompany.companyName}"/>
+							<p:message id="equiRlCmpInfCompNameMsg"
 							for="equiRlCmpInfCompName" showSummary="true" showDetail="false"
 							display="icon" /></td>
 				</tr>
@@ -629,7 +786,14 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.reg.no']}" id="equiRlCmpInfRegNo"
 							value="#{backingBean.managedBean.selectedRelatedCompany.regNo}"
-							maxlength="20" size="35" /> <p:message id="equiRlCmpInfRegNoMsg"
+							maxlength="20" size="35" /> 
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges
+									and not empty backingBean.managedBean.selectedRelatedCompany.relatedCompanyId}"
+								oriValue="#{backingBean.managedBean.latestRelatedCompany.regNo}" 
+								currValue="#{backingBean.managedBean.selectedRelatedCompany.regNo}" 
+								alertValue="#{backingBean.managedBean.latestRelatedCompany.regNo}"/>
+							<p:message id="equiRlCmpInfRegNoMsg"
 							for="equiRlCmpInfRegNo" showSummary="true" showDetail="false"
 							display="icon" /></td>
 				</tr>
@@ -640,7 +804,14 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.designation']}" id="equiRlCmpInfDesg"
 							value="#{backingBean.managedBean.selectedRelatedCompany.designation}"
-							size="35" /> <p:message id="equiRlCmpInfDesgMsg"
+							size="35" /> 
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges
+									and not empty backingBean.managedBean.selectedRelatedCompany.relatedCompanyId}"
+								oriValue="#{backingBean.managedBean.latestRelatedCompany.designation}" 
+								currValue="#{backingBean.managedBean.selectedRelatedCompany.designation}" 
+								alertValue="#{backingBean.managedBean.latestRelatedCompany.designation}"/>
+							<p:message id="equiRlCmpInfDesgMsg"
 							for="equiRlCmpInfDesg" showSummary="true" showDetail="false"
 							display="icon" /></td>
 				</tr>
@@ -654,7 +825,14 @@
 							size="35">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-						</p:inputText> <p:message id="equiRlCmpInfShrAmtMsg" for="equiRlCmpInfShrAmt"
+						</p:inputText> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+									and not empty backingBean.managedBean.selectedRelatedCompany.relatedCompanyId}"
+							oriValue="#{backingBean.managedBean.latestRelatedCompany.shareAmt}" 
+							currValue="#{backingBean.managedBean.selectedRelatedCompany.shareAmt}" 
+							alertValue="#{backingBean.getPriceAmount(backingBean.managedBean.latestRelatedCompany.shareAmt)}" />
+						<p:message id="equiRlCmpInfShrAmtMsg" for="equiRlCmpInfShrAmt"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
 				<tr>
@@ -667,14 +845,28 @@
 							size="35">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-						</p:inputText> <p:message id="equiRlCmpInfShrPercMsg" for="equiRlCmpInfShrPerc"
+						</p:inputText> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+									and not empty backingBean.managedBean.selectedRelatedCompany.relatedCompanyId}"
+							oriValue="#{backingBean.managedBean.latestRelatedCompany.sharePercentage}" 
+							currValue="#{backingBean.managedBean.selectedRelatedCompany.sharePercentage}" 
+							alertValue="#{backingBean.getPriceAmount(backingBean.managedBean.latestRelatedCompany.sharePercentage)}" />
+						<p:message id="equiRlCmpInfShrPercMsg" for="equiRlCmpInfShrPerc"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.mof.reg.no']}" /></td>
 					<td><p:inputText
 							value="#{backingBean.managedBean.selectedRelatedCompany.mofNo}"
-							size="35" maxlength="12" /></td>
+							size="35" maxlength="12" />
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+									and not empty backingBean.managedBean.selectedRelatedCompany.relatedCompanyId}"
+							oriValue="#{backingBean.managedBean.latestRelatedCompany.mofNo}" 
+							currValue="#{backingBean.managedBean.selectedRelatedCompany.mofNo}" 
+							alertValue="#{backingBean.managedBean.latestRelatedCompany.mofNo}" />
+					</td>
 				</tr>
 			</table>
 			<br />
@@ -716,6 +908,7 @@
 						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"
 							style="margin-right:2px;" />
 					</p:commandLink>
+					<ac:smFieldChangeTableAlert object="#{profBean}" />
 				</p:column>
 
 			</p:dataTable>
@@ -752,7 +945,14 @@
 								itemLabel="#{shrProfBody.bodyName}" />
 							<p:ajax event="change" process="@this"
 								update="shrProfBodyOthersAssoc, shrProfBodyOthersAssocMand" />
-						</p:selectOneMenu> <p:message id="equiStfPrdBdyLblMsg" for="equiStfPrdBdyLbl"
+						</p:selectOneMenu> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.selectedStfPrfBdy.associationBodyId}"
+							oriValue="#{backingBean.managedBean.latestStfPrfBdy.pmCertBody.certBodyId}" 
+							currValue="#{backingBean.managedBean.selectedStfPrfBdy.pmCertBody.certBodyId}" 
+							alertValue="#{backingBean.getProfBodyByIdFromList(backingBean.managedBean.latestStfPrfBdy.pmCertBody.certBodyId)}" />
+						<p:message id="equiStfPrdBdyLblMsg" for="equiStfPrdBdyLbl"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
 				<tr>
@@ -766,6 +966,12 @@
 							required="#{backingBean.managedBean.valueReqd and backingBean.managedBean.selectedStfPrfBdy.pmCertBody.certBodyId eq 10}"
 							value="#{backingBean.managedBean.selectedStfPrfBdy.otherAssociation}"
 							disabled="#{backingBean.managedBean.selectedStfPrfBdy.pmCertBody.certBodyId ne 10}" />
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.selectedStfPrfBdy.associationBodyId}"
+							oriValue="#{backingBean.managedBean.latestStfPrfBdy.otherAssociation}" 
+							currValue="#{backingBean.managedBean.selectedStfPrfBdy.otherAssociation}" 
+							alertValue="#{backingBean.managedBean.latestStfPrfBdy.otherAssociation}" />
 						<p:message id="shrProfBodyOthersAssocMsg"
 							for="shrProfBodyOthersAssoc" showSummary="true"
 							showDetail="false" display="icon" /></td>
@@ -777,7 +983,14 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.profBody.regNo']}" id="equiPrfBdyRegNo"
 							value="#{backingBean.managedBean.selectedStfPrfBdy.regNo}"
-							maxlength="20" size="35" /> <p:message id="equiPrfBdyRegNoMsg"
+							maxlength="20" size="35" /> 
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.selectedStfPrfBdy.associationBodyId}"
+								oriValue="#{backingBean.managedBean.latestStfPrfBdy.regNo}" 
+								currValue="#{backingBean.managedBean.selectedStfPrfBdy.regNo}" 
+								alertValue="#{backingBean.managedBean.latestStfPrfBdy.regNo}" />
+							<p:message id="equiPrfBdyRegNoMsg"
 							for="equiPrfBdyRegNo" showSummary="true" showDetail="false"
 							display="icon" /></td>
 				</tr>
@@ -792,6 +1005,12 @@
 							mindate="#{CommonConstants.THREE_MONTHS_LATER_DATE}"
 							yearRange="0:+20"
 							value="#{backingBean.managedBean.selectedStfPrfBdy.expDate}" />
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.selectedStfPrfBdy.associationBodyId}"
+							oriValue="#{backingBean.managedBean.latestStfPrfBdy.expDate}" 
+							currValue="#{backingBean.managedBean.selectedStfPrfBdy.expDate}" 
+							alertValue="#{backingBean.getDateFormat(backingBean.managedBean.latestStfPrfBdy.expDate)}" />
 						<p:message id="equiPrfBdyEndDtMsg" for="equiPrfBdyEndDt"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
@@ -853,6 +1072,7 @@
 					<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"
 						style="margin-right:2px;" />
 				</p:commandLink>
+				<ac:smFieldChangeTableAlert object="#{aq}" />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px;" />
@@ -885,7 +1105,14 @@
 						value="#{backingBean.managedBean.selectedStaffAcademic.year}"
 						size="35">
 						<f:validateLongRange minimum="1950" maximum="2050" />
-					</p:inputText> <p:message id="equiStfAcaYrMsg" for="equiStfAcaYr"
+					</p:inputText> 
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.latestStaffAcademic.staffAcademicId}"
+						oriValue="#{backingBean.managedBean.latestStaffAcademic.year}" 
+						currValue="#{backingBean.managedBean.selectedStaffAcademic.year}" 
+						alertValue="#{backingBean.managedBean.latestStaffAcademic.year}" />
+					<p:message id="equiStfAcaYrMsg" for="equiStfAcaYr"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
@@ -896,7 +1123,14 @@
 						label="#{lbl['lbl.sm.institute']}" id="equiStfAcaInst"
 						maxlength="50"
 						value="#{backingBean.managedBean.selectedStaffAcademic.instituteName}"
-						size="35" /> <p:message id="equiStfAcaInstMsg"
+						size="35" /> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.latestStaffAcademic.staffAcademicId}"
+							oriValue="#{backingBean.managedBean.latestStaffAcademic.instituteName}" 
+							currValue="#{backingBean.managedBean.selectedStaffAcademic.instituteName}" 
+							alertValue="#{backingBean.managedBean.latestStaffAcademic.instituteName}" />
+						<p:message id="equiStfAcaInstMsg"
 						for="equiStfAcaInst" showSummary="true" showDetail="false"
 						display="icon" /></td>
 			</tr>
@@ -909,7 +1143,14 @@
 						label="#{lbl['lbl.sm.qualification.level']}" id="equiStfAcaQl"
 						value="#{backingBean.managedBean.selectedStaffAcademic.pmEduLevel.eduLevelId}">
 						<f:selectItems value="#{backingBean.getAcademicQualifications()}" />
-					</p:selectOneMenu> <p:message id="equiStfAcaQlMsg" for="equiStfAcaQl"
+					</p:selectOneMenu> 
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.latestStaffAcademic.staffAcademicId}"
+						oriValue="#{backingBean.managedBean.latestStaffAcademic.pmEduLevel.eduLevelId}" 
+						currValue="#{backingBean.managedBean.selectedStaffAcademic.pmEduLevel.eduLevelId}" 
+						alertValue="#{backingBean.getEduLvlByIdFromList(backingBean.managedBean.latestStaffAcademic.pmEduLevel.eduLevelId)}" />
+					<p:message id="equiStfAcaQlMsg" for="equiStfAcaQl"
 						showSummary="true" showDetail="false" display="icon" /></td>
 				<td style="width: 20px"><p:graphicImage id="uidti"
 						value="/css/images/design/tooltips.png" /> <p:tooltip id="uidtt"
@@ -931,15 +1172,30 @@
 							value="#{backingBean.managedBean.eduFieldList}"
 							itemValue="#{eduField.eduFieldId}"
 							itemLabel="#{eduField.fieldName}" />
-					</p:selectOneMenu> <p:message id="equiStfAcaEduFldMsg" for="equiStfAcaEduFld"
+					</p:selectOneMenu> 
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.latestStaffAcademic.staffAcademicId}"
+						oriValue="#{backingBean.managedBean.latestStaffAcademic.pmEduField.eduFieldId}" 
+						currValue="#{backingBean.managedBean.selectedStaffAcademic.pmEduField.eduFieldId}" 
+						alertValue="#{backingBean.getEduFieldByIdFromList(backingBean.managedBean.latestStaffAcademic.pmEduField.eduFieldId)}" />
+					<p:message id="equiStfAcaEduFldMsg" for="equiStfAcaEduFld"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.major.in']}" /></td>
-				<td colspan="2"><p:inputText maxlength="50"
+				<td colspan="2">
+					<p:inputText maxlength="50"
 						value="#{backingBean.managedBean.selectedStaffAcademic.fieldMajor}"
-						size="35" /></td>
+						size="35" />
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.latestStaffAcademic.staffAcademicId}"
+						oriValue="#{backingBean.managedBean.latestStaffAcademic.fieldMajor}" 
+						currValue="#{backingBean.managedBean.selectedStaffAcademic.fieldMajor}" 
+						alertValue="#{backingBean.managedBean.latestStaffAcademic.fieldMajor}" />
+				</td>
 			</tr>
 		</table>
 		<br />

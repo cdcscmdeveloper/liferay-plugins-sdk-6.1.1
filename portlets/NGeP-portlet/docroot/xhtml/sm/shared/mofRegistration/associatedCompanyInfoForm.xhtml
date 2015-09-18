@@ -80,7 +80,7 @@
 						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"
 							style="margin-right:2px;" />
 					</p:commandLink>
-
+					<ac:smFieldChangeTableAlert object="#{assocBean}" />
 				</p:column>
 
 
@@ -149,7 +149,13 @@
 						label="#{lbl['lbl.sm.assocCmpny.companyName']}"
 						id="asocCompCmpName"
 						value="#{backingBean.managedBean.selectedAssocCompany.companyName}"
-						size="35" /> <p:message id="asocCompCmpNameMsg"
+						size="35" /> 
+						<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges}"
+								oriValue="#{backingBean.managedBean.latestAssocCompany.companyName}" 
+								currValue="#{backingBean.managedBean.selectedAssocCompany.companyName}" 
+								alertValue="#{backingBean.managedBean.latestAssocCompany.companyName}"/>
+						<p:message id="asocCompCmpNameMsg"
 						for="asocCompCmpName" showSummary="true" showDetail="false"
 						display="icon" /></td>
 			</tr>
@@ -167,22 +173,10 @@
 						<p:inputTextarea escape="false" readonly="true" disabled="true"
 							rows="3" cols="50"
 							value="#{lbl['lbl.sm.assocCmpny.regNoToolTip']}" />
-					</p:tooltip> <p:message id="asocRegNoMsg" for="asocRegNo" showSummary="true"
+					</p:tooltip>
+					<p:message id="asocRegNoMsg" for="asocRegNo" showSummary="true"
 						showDetail="false" display="icon" /></td>
 			</tr>
-			<!-- <tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sm.assocCmpny.shrHolding']} " /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneRadio id="shopt"
-						required="#{backingBean.managedBean.valueReqd}"
-						label=" #{lbl['lbl.sm.assocCmpny.shrHolding']}"
-						value="#{backingBean.managedBean.selectedAssocCompany.isShareholding}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
-						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
-					</p:selectOneRadio> <p:message id="asocCmpShrHdrMsg" for="shopt" showSummary="true"
-						showDetail="false" display="icon" /></td>
-			</tr> -->
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
@@ -190,7 +184,13 @@
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.companyaddress']}" id="assocCompCmpAddr"
 						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address1}"
-						size="35" /> <p:message id="assocCompCmpAddrMsg"
+						size="35" /> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges}"
+							oriValue="#{backingBean.managedBean.latestAssocCompany.smAddress.address1}" 
+							currValue="#{backingBean.managedBean.selectedAssocCompany.smAddress.address1}" 
+							alertValue="#{backingBean.managedBean.latestAssocCompany.smAddress.address1}"/>
+						<p:message id="assocCompCmpAddrMsg"
 						for="assocCompCmpAddr" showSummary="true" showDetail="false"
 						display="icon" /></td>
 			</tr>
@@ -199,19 +199,37 @@
 				<td></td>
 				<td><p:inputText maxlength="35"
 						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address2}"
-						size="35" /></td>
+						size="35" />
+					<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges}"
+							oriValue="#{backingBean.managedBean.latestAssocCompany.smAddress.address2}" 
+							currValue="#{backingBean.managedBean.selectedAssocCompany.smAddress.address2}" 
+							alertValue="#{backingBean.managedBean.latestAssocCompany.smAddress.address2}"/>
+				</td>
 			</tr>
 			<tr>
 				<td></td>
 				<td><p:inputText maxlength="35"
 						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address3}"
-						size="35" /></td>
+						size="35" />
+					<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges}"
+							oriValue="#{backingBean.managedBean.latestAssocCompany.smAddress.address3}" 
+							currValue="#{backingBean.managedBean.selectedAssocCompany.smAddress.address3}" 
+							alertValue="#{backingBean.managedBean.latestAssocCompany.smAddress.address3}"/>
+				</td>
 			</tr>
 			<tr>
 				<td></td>
 				<td><p:inputText maxlength="35"
 						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address4}"
-						size="35" /></td>
+						size="35" />
+					<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges}"
+							oriValue="#{backingBean.managedBean.latestAssocCompany.smAddress.address4}" 
+							currValue="#{backingBean.managedBean.selectedAssocCompany.smAddress.address4}" 
+							alertValue="#{backingBean.managedBean.latestAssocCompany.smAddress.address4}"/>
+				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
@@ -219,44 +237,53 @@
 				<td><p:selectOneMenu
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.country']}" id="asocCompCntrId"
-						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmCountry.countryId}"
+						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.countryId}"
 						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="assCountry"
-							value="#{backingBean.managedBean.countryLs}"
-							itemValue="#{assCountry.countryId}"
-							itemLabel="#{assCountry.countryName}" />
-						<p:ajax event="change"
-							listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.selectedAssocCompany.smAddress.pmCountry.countryId, 
-								SupplierManagementConst.SM_ASSOC_COMPANY_PANEL,
-								backingBean.managedBean.selectedAssocCompany.smAddress.pmState,
-								backingBean.managedBean.selectedAssocCompany.smAddress.pmDistrict,
-								backingBean.managedBean.selectedAssocCompany.smAddress.pmCity)}"
+							value="#{backingBean.managedBean.countryItems}" />
+						<p:ajax event="change" process="@this"
+							listener="#{backingBean.onChangeCountry(backingBean.managedBean.selectedAssocCompany.smAddress,SupplierManagementConst.SM_ASSOC_COMPANY_PANEL)}"
 							update="assocState,assocDist,assocCity,postCodeAssocPanelId" />
-					</p:selectOneMenu> <p:message id="asocCompCntrIdMsg" for="asocCompCntrId"
+					</p:selectOneMenu> 
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges 
+							and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
+						oriValue="#{backingBean.managedBean.latestAssocCompany.smAddress.pmCountry.countryId}" 
+						currValue="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmCountry.countryId}" 
+						alertValue="#{(not empty backingBean.managedBean.latestAssocCompany and 
+						 	not empty backingBean.managedBean.latestAssocCompany.smAddress) ?
+							backingBean.getCountryLabelById(backingBean.managedBean.latestAssocCompany.smAddress.pmCountry.countryId)
+							: lbl['lbl.txt.na']}"/>
+					<p:message id="asocCompCntrIdMsg" for="asocCompCntrId"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+				<td>
+				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.state']}"
-						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmState.stateId}"
+						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.stateId}"
 						id="assocState">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="assState"
-							value="#{backingBean.managedBean.assocCompanyStates}"
-							itemValue="#{assState.stateId}" itemLabel="#{assState.stateName}" />
-						<p:ajax event="change"
-							listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.selectedAssocCompany.smAddress.pmState.stateId, 
-								SupplierManagementConst.SM_ASSOC_COMPANY_PANEL,
-								backingBean.managedBean.selectedAssocCompany.smAddress.pmDistrict,
-								backingBean.managedBean.selectedAssocCompany.smAddress.pmCity)}"
+							value="#{backingBean.managedBean.assocCompanyStates}"/>
+						<p:ajax event="change" process="@this"
+							listener="#{backingBean.onChangeState(backingBean.managedBean.selectedAssocCompany.smAddress,SupplierManagementConst.SM_ASSOC_COMPANY_PANEL)}"
 							update="assocDist,assocCity" />
-
-					</p:selectOneMenu> <p:message id="assocStateMsg" for="assocState" showSummary="true"
+					</p:selectOneMenu> 
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges}"
+						oriValue="#{backingBean.managedBean.latestAssocCompany.smAddress.pmState.stateId}" 
+						currValue="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmState.stateId}" 
+						alertValue="#{(not empty backingBean.managedBean.latestAssocCompany and 
+						 	not empty backingBean.managedBean.latestAssocCompany.smAddress) ?
+							backingBean.getStateLabelById(backingBean.managedBean.latestAssocCompany.smAddress.pmState.stateId)
+							: lbl['lbl.txt.na']}"/>
+					<p:message id="assocStateMsg" for="assocState" showSummary="true"
 						showDetail="false" display="icon" /></td>
 			</tr>
 
@@ -267,18 +294,23 @@
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 						id="assocDist" required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.district']}"
-						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmDistrict.districtId}">
+						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.districtId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="assDist"
-							value="#{backingBean.managedBean.assocCompanyDistricts}"
-							itemValue="#{assDist.districtId}"
-							itemLabel="#{assDist.districtName}" />
-						<p:ajax event="change"
-							listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.selectedAssocCompany.smAddress.pmDistrict.districtId, 
-								SupplierManagementConst.SM_ASSOC_COMPANY_PANEL,
-								backingBean.managedBean.selectedAssocCompany.smAddress.pmCity)}"
+							value="#{backingBean.managedBean.assocCompanyDistricts}" />
+						<p:ajax event="change" process="@this"
+							listener="#{backingBean.onChangeDistrict(backingBean.managedBean.selectedAssocCompany.smAddress,SupplierManagementConst.SM_ASSOC_COMPANY_PANEL)}"
 							update="assocCity" />
-					</p:selectOneMenu> <p:message id="assocDistMsg" for="assocDist" showSummary="true"
+					</p:selectOneMenu> 
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges}"
+						oriValue="#{backingBean.managedBean.latestAssocCompany.smAddress.pmDistrict.districtId}" 
+						currValue="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmDistrict.districtId}" 
+						alertValue="#{(not empty backingBean.managedBean.latestAssocCompany and 
+						 	not empty backingBean.managedBean.latestAssocCompany.smAddress) ?
+							backingBean.getDistrictLabelById(backingBean.managedBean.latestAssocCompany.smAddress.pmDistrict.districtId)
+							: lbl['lbl.txt.na']}"/>
+					<p:message id="assocDistMsg" for="assocDist" showSummary="true"
 						showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
@@ -287,12 +319,20 @@
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 						id="assocCity" required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.towncity']}"
-						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmCity.cityId}">
+						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.cityId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="assCity"
-							value="#{backingBean.managedBean.assocCompanyCities}"
-							itemValue="#{assCity.cityId}" itemLabel="#{assCity.cityName}" />
-					</p:selectOneMenu> <p:message id="assocCityMsg" for="assocCity" showSummary="true"
+							value="#{backingBean.managedBean.assocCompanyCities}" />
+					</p:selectOneMenu> 
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges}"
+						oriValue="#{backingBean.managedBean.latestAssocCompany.smAddress.pmCity.cityId}" 
+						currValue="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmCity.cityId}" 
+						alertValue="#{(not empty backingBean.managedBean.latestAssocCompany and 
+						 not empty backingBean.managedBean.latestAssocCompany.smAddress) ?
+						 backingBean.getCityLabelById(backingBean.managedBean.latestAssocCompany.smAddress.pmCity.cityId) 
+						 : lbl['lbl.txt.na']}"/>
+					<p:message id="assocCityMsg" for="assocCity" showSummary="true"
 						showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
@@ -300,7 +340,7 @@
 						value="*" styleClass="mandatory" /></td>
 				<td><p:outputPanel id="postCodeAssocPanelId">
 						<p:outputPanel
-							rendered="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+							rendered="#{backingBean.managedBean.selectedAssocCompany.smAddress.countryId==backingBean.managedBean.myCountryId}">
 							<p:inputText maxlength="5"
 								required="#{backingBean.managedBean.valueReqd}"
 								label="#{lbl['lbl.sm.postcode']}" id="assocCmpyPostCodeMy"
@@ -309,17 +349,27 @@
 								size="35">
 								<f:validator validatorId="postcodeValidator" />
 							</p:inputText>
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges}"
+								oriValue="#{backingBean.managedBean.latestAssocCompany.smAddress.postcode}" 
+								currValue="#{backingBean.managedBean.selectedAssocCompany.smAddress.postcode}" 
+								alertValue="#{backingBean.managedBean.latestAssocCompany.smAddress.postcode}"/>
 							<p:message id="assocCmpyPostCodeMyMsg" for="assocCmpyPostCodeMy"
 								showSummary="true" showDetail="false" display="icon" />
 						</p:outputPanel>
 						<p:outputPanel
-							rendered="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+							rendered="#{backingBean.managedBean.selectedAssocCompany.smAddress.countryId!=backingBean.managedBean.myCountryId}">
 							<p:inputText maxlength="10"
 								required="#{backingBean.managedBean.valueReqd}"
 								label="#{lbl['lbl.sm.postcode']}" id="assocCmpyPostCodeForeign"
 								value="#{backingBean.managedBean.selectedAssocCompany.smAddress.postcode}"
 								size="35">
 							</p:inputText>
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges}"
+								oriValue="#{backingBean.managedBean.latestAssocCompany.smAddress.postcode}" 
+								currValue="#{backingBean.managedBean.selectedAssocCompany.smAddress.postcode}" 
+								alertValue="#{backingBean.managedBean.latestAssocCompany.smAddress.postcode}"/>
 							<p:message id="assocCmpyPostCodeForeignMsg"
 								for="assocCmpyPostCodeForeign" showSummary="true"
 								showDetail="false" display="icon" />
@@ -334,7 +384,13 @@
 						validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}"
 						size="35" maxlength="12">
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-					</p:inputText> <p:message id="assocCompanyPhnNoMsg" for="assocCompanyPhnNo"
+					</p:inputText> 
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges}"
+						oriValue="#{backingBean.managedBean.latestAssocCompany.phoneNo}" 
+						currValue="#{backingBean.managedBean.selectedAssocCompany.phoneNo}" 
+						alertValue="#{backingBean.managedBean.latestAssocCompany.phoneNo}"/>
+					<p:message id="assocCompanyPhnNoMsg" for="assocCompanyPhnNo"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
@@ -345,7 +401,13 @@
 						validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}"
 						size="35" maxlength="12">
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-					</p:inputText> <p:message id="assocCompanyFaxNoMsg" for="assocCompanyFaxNo"
+					</p:inputText> 
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges}"
+						oriValue="#{backingBean.managedBean.latestAssocCompany.faxNo}" 
+						currValue="#{backingBean.managedBean.selectedAssocCompany.faxNo}" 
+						alertValue="#{backingBean.managedBean.latestAssocCompany.faxNo}"/>
+					<p:message id="assocCompanyFaxNoMsg" for="assocCompanyFaxNo"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 

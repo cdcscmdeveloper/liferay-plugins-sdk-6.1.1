@@ -29,6 +29,12 @@
 					size="35" >
 					<p:ajax process="@this" partialSubmit="true"/>
 					</p:inputText> 
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedBranch.supplierBranchId}"
+						oriValue="#{backingBean.managedBean.latestBranch.smAddress.address1}" 
+						currValue="#{backingBean.managedBean.selectedBranch.smAddress.address1}" 
+						alertValue="#{backingBean.managedBean.latestBranch.smAddress.address1}"/>
 					<p:message id="supBrnAddrMsg" for="supBrnAddr"
 					showSummary="true" showDetail="false" display="icon" /></td>
 		</tr>
@@ -39,7 +45,14 @@
 					value="#{backingBean.managedBean.selectedBranch.smAddress.address2}"
 					size="35" >
 					<p:ajax process="@this" partialSubmit="true"/>
-					</p:inputText></td>
+					</p:inputText>
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedBranch.supplierBranchId}"
+						oriValue="#{backingBean.managedBean.latestBranch.smAddress.address2}" 
+						currValue="#{backingBean.managedBean.selectedBranch.smAddress.address2}" 
+						alertValue="#{backingBean.managedBean.latestBranch.smAddress.address2}"/>
+			</td>
 		</tr>
 		<tr>
 			<td></td>
@@ -47,7 +60,14 @@
 					value="#{backingBean.managedBean.selectedBranch.smAddress.address3}"
 					size="35" >
 					<p:ajax process="@this" partialSubmit="true"/>
-					</p:inputText></td>
+					</p:inputText>
+				<ac:smFieldChangeAlert 
+					isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedBranch.supplierBranchId}"
+					oriValue="#{backingBean.managedBean.latestBranch.smAddress.address3}" 
+					currValue="#{backingBean.managedBean.selectedBranch.smAddress.address3}" 
+					alertValue="#{backingBean.managedBean.latestBranch.smAddress.address3}"/>
+			</td>
 		</tr>
 		<tr>
 			<td></td>
@@ -55,7 +75,14 @@
 					value="#{backingBean.managedBean.selectedBranch.smAddress.address4}"
 					size="35">
 					<p:ajax process="@this" partialSubmit="true"/>
-					</p:inputText></td>
+					</p:inputText>
+				<ac:smFieldChangeAlert 
+					isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedBranch.supplierBranchId}"
+					oriValue="#{backingBean.managedBean.latestBranch.smAddress.address4}" 
+					currValue="#{backingBean.managedBean.selectedBranch.smAddress.address4}" 
+					alertValue="#{backingBean.managedBean.latestBranch.smAddress.address4}"/>
+			</td>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
@@ -63,21 +90,25 @@
 			<td><p:selectOneMenu
 					required="#{backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.country']}" id="supBrnCntry"
-					value="#{backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryId}"
+					value="#{backingBean.managedBean.selectedBranch.smAddress.countryId}"
 					style="width: 207px;margin-bottom: 5px;">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="branchCountry"
-						value="#{backingBean.managedBean.countryLs}"
-						itemValue="#{branchCountry.countryId}"
-						itemLabel="#{branchCountry.countryName}" />
+						value="#{backingBean.managedBean.countryItems}" />
 					<p:ajax event="change" process="@this"
-						listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryId, 
-								SupplierManagementConst.SM_BRANCH_PANEL,
-								backingBean.managedBean.selectedBranch.smAddress.pmState,
-								backingBean.managedBean.selectedBranch.smAddress.pmDistrict,
-								backingBean.managedBean.selectedBranch.smAddress.pmCity)}"
-						update="branchState,branchDist,branchCity,postCodeBranchPanelId" />
-				</p:selectOneMenu> <p:message id="supBrnCntryMsg" for="supBrnCntry" showSummary="true"
+						listener="#{backingBean.onChangeCountry(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
+						update="supBrnCntry,branchState,branchDist,branchCity,postCodeBranchPanelId" />
+				</p:selectOneMenu> 
+				<ac:smFieldChangeAlert 
+					isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedBranch.supplierBranchId}"
+					oriValue="#{backingBean.managedBean.latestBranch.smAddress.pmCountry.countryId}" 
+					currValue="#{backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryId}" 
+					alertValue="#{(not empty backingBean.managedBean.latestBranch and 
+					 	not empty backingBean.managedBean.latestBranch.smAddress) ?
+						backingBean.getCountryLabelById(backingBean.managedBean.latestBranch.smAddress.pmCountry.countryId)
+						: lbl['lbl.txt.na']}"/>
+				<p:message id="supBrnCntryMsg" for="supBrnCntry" showSummary="true"
 					showDetail="false" display="icon" /></td>
 		</tr>
 
@@ -87,20 +118,25 @@
 			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 					required="#{backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.state']}"
-					value="#{backingBean.managedBean.selectedBranch.smAddress.pmState.stateId}"
+					value="#{backingBean.managedBean.selectedBranch.smAddress.stateId}"
 					id="branchState">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="brnState"
-						value="#{backingBean.managedBean.branchCompanyStates}"
-						itemValue="#{brnState.stateId}" itemLabel="#{brnState.stateName}" />
+						value="#{backingBean.managedBean.branchCompanyStates}" />
 					<p:ajax event="change" process="@this"
-						listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.selectedBranch.smAddress.pmState.stateId, 
-								SupplierManagementConst.SM_BRANCH_PANEL,
-								backingBean.managedBean.selectedBranch.smAddress.pmDistrict,
-								backingBean.managedBean.selectedBranch.smAddress.pmCity)}"
-						update="branchDist,branchCity" />
-
-				</p:selectOneMenu> <p:message id="branchStateMsg" for="branchState" showSummary="true"
+						listener="#{backingBean.onChangeState(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
+						update="branchState,branchDist,branchCity" />
+				</p:selectOneMenu> 
+				<ac:smFieldChangeAlert 
+					isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedBranch.supplierBranchId}"
+					oriValue="#{backingBean.managedBean.latestBranch.smAddress.pmState.stateId}" 
+					currValue="#{backingBean.managedBean.selectedBranch.smAddress.pmState.stateId}" 
+					alertValue="#{(not empty backingBean.managedBean.latestBranch and 
+					 	not empty backingBean.managedBean.latestBranch.smAddress) ?
+						backingBean.getStateLabelById(backingBean.managedBean.latestBranch.smAddress.pmState.stateId)
+						: lbl['lbl.txt.na']}"/>
+				<p:message id="branchStateMsg" for="branchState" showSummary="true"
 					showDetail="false" display="icon" /></td>
 		</tr>
 
@@ -110,18 +146,24 @@
 			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 					id="branchDist" required="#{backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.district']}"
-					value="#{backingBean.managedBean.selectedBranch.smAddress.pmDistrict.districtId}">
+					value="#{backingBean.managedBean.selectedBranch.smAddress.districtId}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="brnDist" 
-						value="#{backingBean.managedBean.branchCompanyDistricts}"
-						itemValue="#{brnDist.districtId}"
-						itemLabel="#{brnDist.districtName}" />
+						value="#{backingBean.managedBean.branchCompanyDistricts}" />
 					<p:ajax event="change" process="@this"
-						listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.selectedBranch.smAddress.pmDistrict.districtId, 
-								SupplierManagementConst.SM_BRANCH_PANEL,
-								backingBean.managedBean.selectedBranch.smAddress.pmCity)}"
-						update="branchCity" />
-				</p:selectOneMenu> <p:message id="branchDistMsg" for="branchDist" showSummary="true"
+						listener="#{backingBean.onChangeDistrict(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
+						update="branchDist,branchCity" />
+				</p:selectOneMenu> 
+				<ac:smFieldChangeAlert 
+					isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedBranch.supplierBranchId}"
+					oriValue="#{backingBean.managedBean.latestBranch.smAddress.pmDistrict.districtId}" 
+					currValue="#{backingBean.managedBean.selectedBranch.smAddress.pmDistrict.districtId}" 
+					alertValue="#{(not empty backingBean.managedBean.latestBranch and 
+					 	not empty backingBean.managedBean.latestBranch.smAddress) ?
+						backingBean.getDistrictLabelById(backingBean.managedBean.latestBranch.smAddress.pmDistrict.districtId)
+						: lbl['lbl.txt.na']}"/>
+				<p:message id="branchDistMsg" for="branchDist" showSummary="true"
 					showDetail="false" display="icon" /></td>
 		</tr>
 		<tr>
@@ -130,14 +172,21 @@
 			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 					id="branchCity" required="#{backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.towncity']}"
-					value="#{backingBean.managedBean.selectedBranch.smAddress.pmCity.cityId}">
+					value="#{backingBean.managedBean.selectedBranch.smAddress.cityId}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="branchCity"
-						value="#{backingBean.managedBean.branchCompanyCities}"
-						itemValue="#{branchCity.cityId}"
-						itemLabel="#{branchCity.cityName}" />
-					<p:ajax process="@this" partialSubmit="true"/>
-				</p:selectOneMenu> <p:message id="branchCityMsg" for="branchCity" showSummary="true"
+						value="#{backingBean.managedBean.branchCompanyCities}" />
+				</p:selectOneMenu> 
+				<ac:smFieldChangeAlert 
+					isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedBranch.supplierBranchId}"
+					oriValue="#{backingBean.managedBean.latestBranch.smAddress.pmCity.cityId}" 
+					currValue="#{backingBean.managedBean.selectedBranch.smAddress.pmCity.cityId}" 
+					alertValue="#{(not empty backingBean.managedBean.latestBranch and 
+					 	not empty backingBean.managedBean.latestBranch.smAddress) ?
+						backingBean.getCityLabelById(backingBean.managedBean.latestBranch.smAddress.pmCity.cityId)
+						: lbl['lbl.txt.na']}"/>
+				<p:message id="branchCityMsg" for="branchCity" showSummary="true"
 					showDetail="false" display="icon" /></td>
 		</tr>
 		<tr>
@@ -155,6 +204,12 @@
 							<f:validator validatorId="postcodeValidator" />
 							<p:ajax process="@this" partialSubmit="true"/>
 						</p:inputText>
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedBranch.supplierBranchId}"
+							oriValue="#{backingBean.managedBean.latestBranch.smAddress.postcode}" 
+							currValue="#{backingBean.managedBean.selectedBranch.smAddress.postcode}" 
+							alertValue="#{backingBean.managedBean.latestBranch.smAddress.postcode}"/>
 						<p:message id="branchPostCodeMyMsg" for="branchPostCodeMy"
 							showSummary="true" showDetail="false" display="icon" />
 					</p:outputPanel>
@@ -167,6 +222,12 @@
 							size="35">
 							<p:ajax process="@this" partialSubmit="true"/>
 						</p:inputText>
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedBranch.supplierBranchId}"
+							oriValue="#{backingBean.managedBean.latestBranch.smAddress.postcode}" 
+							currValue="#{backingBean.managedBean.selectedBranch.smAddress.postcode}" 
+							alertValue="#{backingBean.managedBean.latestBranch.smAddress.postcode}"/>
 						<p:message id="branchPostCodeForeignMsg"
 							for="branchPostCodeForeign" showSummary="true" showDetail="false"
 							display="icon" />
@@ -182,7 +243,14 @@
 					maxlength="12">
 					<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 					<p:ajax process="@this" partialSubmit="true"/>
-				</p:inputText> <p:message id="branchPhoneNoMsg" for="branchPhoneNo"
+				</p:inputText> 
+				<ac:smFieldChangeAlert 
+					isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedBranch.supplierBranchId}"
+					oriValue="#{backingBean.managedBean.latestBranch.phoneNo}" 
+					currValue="#{backingBean.managedBean.selectedBranch.phoneNo}" 
+					alertValue="#{backingBean.managedBean.latestBranch.phoneNo}"/>
+				<p:message id="branchPhoneNoMsg" for="branchPhoneNo"
 					showSummary="true" showDetail="false" display="icon" /></td>
 		</tr>
 		<tr>
@@ -193,7 +261,14 @@
 					maxlength="12">
 					<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 					<p:ajax process="@this" partialSubmit="true"/>
-				</p:inputText> <p:message id="branchFaxNoMsg" for="branchFaxNo" showSummary="true"
+				</p:inputText> 
+				<ac:smFieldChangeAlert 
+					isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedBranch.supplierBranchId}"
+					oriValue="#{backingBean.managedBean.latestBranch.faxNo}" 
+					currValue="#{backingBean.managedBean.selectedBranch.faxNo}" 
+					alertValue="#{backingBean.managedBean.latestBranch.faxNo}"/>
+				<p:message id="branchFaxNoMsg" for="branchFaxNo" showSummary="true"
 					showDetail="false" display="icon" /></td>
 		</tr>
 		<tr>
@@ -210,7 +285,14 @@
 						var="brPerBean" itemLabel="#{brPerBean.name}"
 						itemValue="#{brPerBean.personnelId}" />
 					<p:ajax process="@this" partialSubmit="true"/>
-				</p:selectOneMenu> <p:message id="brnPerValMsg" for="brnPerVal" showSummary="true"
+				</p:selectOneMenu> 
+				<ac:smFieldChangeAlert 
+					isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedBranch.supplierBranchId}"
+					oriValue="#{backingBean.managedBean.latestBranch.smPersonnel.identificationNo}" 
+					currValue="#{backingBean.managedBean.selectedBranch.smPersonnel.identificationNo}" 
+					alertValue="#{backingBean.managedBean.latestBranch.smPersonnel.name}"/>
+				<p:message id="brnPerValMsg" for="brnPerVal" showSummary="true"
 					showDetail="false" display="icon" /></td>
 		</tr>
 

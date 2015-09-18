@@ -88,8 +88,7 @@
 						update=":form:tt:bankDialog" style="padding-right :5px;">
 						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
 					</p:commandLink>
-
-					<!-- oncomplete="updateSignatory();" /> -->
+					<ac:smFieldChangeTableAlert object="#{bankBean}" />
 				</p:column>
 			</p:dataTable>
 			<p:spacer height="2px;" />
@@ -129,6 +128,7 @@
 
 					<p:column headerText="#{lbl['lbl.sm.bankDtls.signPos']}">
 						<h:outputText value="#{auth.smPersonnel.designation}" />
+						<ac:smFieldChangeTableAlert object="#{auth}" />
 					</p:column>
 				</p:dataTable>
 			</p:panel>
@@ -196,7 +196,14 @@
 								itemValue="B" />
 							<p:ajax event="change" update="bankDetailsPanel"
 								listener="#{backingBean.retrieveBankFinOrgListByType}" />
-						</p:selectOneMenu> <p:message id="smBankAcctPurposeValMsg"
+						</p:selectOneMenu> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.selectedBank.supplierBankId}"
+							oriValue="#{backingBean.managedBean.latestBank.accountPurpose}" 
+							currValue="#{backingBean.managedBean.selectedBank.accountPurpose}" 
+							alertValue="#{backingBean.getBankAccPurposeLabel(backingBean.managedBean.latestBank.accountPurpose)}"/>
+						<p:message id="smBankAcctPurposeValMsg"
 							for="smBankAcctPurposeVal" showSummary="true" showDetail="false"
 							display="icon" /></td>
 				</tr>
@@ -213,7 +220,14 @@
 								value="#{backingBean.managedBean.finOrgLs}"
 								itemValue="#{finOrg.financialOrgId}"
 								itemLabel="#{finOrg.finOrgName}" />
-						</p:selectOneMenu> <p:message id="smBankNameValMsg" for="smBankNameVal"
+						</p:selectOneMenu> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.selectedBank.supplierBankId}"
+							oriValue="#{backingBean.managedBean.latestBank.pmFinancialOrg.financialOrgId}" 
+							currValue="#{backingBean.managedBean.selectedBank.pmFinancialOrg.financialOrgId}" 
+							alertValue="#{backingBean.getFinOrgByIdFromList(backingBean.managedBean.latestBank.pmFinancialOrg.financialOrgId)}"/>
+						<p:message id="smBankNameValMsg" for="smBankNameVal"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
 				<tr>
@@ -225,7 +239,14 @@
 							label="#{lbl['lbl.sm.bankDtls.bankBranch']}"
 							id="smBankBranchName"
 							value="#{backingBean.managedBean.selectedBank.bankBranch}"
-							size="35" /> <p:message id="smBankBranchNameMsg"
+							size="35" /> 
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.selectedBank.supplierBankId}"
+								oriValue="#{backingBean.managedBean.latestBank.bankBranch}" 
+								currValue="#{backingBean.managedBean.selectedBank.bankBranch}" 
+								alertValue="#{backingBean.managedBean.latestBank.bankBranch}"/>
+							<p:message id="smBankBranchNameMsg"
 							for="smBankBranchName" showSummary="true" showDetail="false"
 							display="icon" /></td>
 				</tr>
@@ -247,7 +268,14 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.address']}" id="suppBankAddrs"
 							value="#{backingBean.managedBean.selectedBank.smAddress.address1}"
-							size="35" /> <p:message id="suppBankAddrsMsg"
+							size="35" /> 
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.selectedBank.supplierBankId}"
+								oriValue="#{backingBean.managedBean.latestBank.smAddress.address1}" 
+								currValue="#{backingBean.managedBean.selectedBank.smAddress.address1}" 
+								alertValue="#{backingBean.managedBean.latestBank.smAddress.address1}"/>
+							<p:message id="suppBankAddrsMsg"
 							for="suppBankAddrs" showSummary="true" showDetail="false"
 							display="icon" /></td>
 				</tr>
@@ -256,19 +284,40 @@
 					<td></td>
 					<td><p:inputText maxlength="35"
 							value="#{backingBean.managedBean.selectedBank.smAddress.address2}"
-							size="35" /></td>
+							size="35" />
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.selectedBank.supplierBankId}"
+							oriValue="#{backingBean.managedBean.latestBank.smAddress.address2}" 
+							currValue="#{backingBean.managedBean.selectedBank.smAddress.address2}" 
+							alertValue="#{backingBean.managedBean.latestBank.smAddress.address2}"/>
+					</td>
 				</tr>
 				<tr>
 					<td></td>
 					<td><p:inputText maxlength="35"
 							value="#{backingBean.managedBean.selectedBank.smAddress.address3}"
-							size="35" /></td>
+							size="35" />
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.selectedBank.supplierBankId}"
+							oriValue="#{backingBean.managedBean.latestBank.smAddress.address3}" 
+							currValue="#{backingBean.managedBean.selectedBank.smAddress.address3}" 
+							alertValue="#{backingBean.managedBean.latestBank.smAddress.address3}"/>
+					</td>
 				</tr>
 				<tr>
 					<td></td>
 					<td><p:inputText
 							value="#{backingBean.managedBean.selectedBank.smAddress.address4}"
-							size="35" /></td>
+							size="35" />
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.selectedBank.supplierBankId}"
+							oriValue="#{backingBean.managedBean.latestBank.smAddress.address4}" 
+							currValue="#{backingBean.managedBean.selectedBank.smAddress.address4}" 
+							alertValue="#{backingBean.managedBean.latestBank.smAddress.address4}"/>
+					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
@@ -276,21 +325,23 @@
 					<td><p:selectOneMenu
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.country']}" id="smBankCntryId"
-							value="#{backingBean.managedBean.selectedBank.smAddress.pmCountry.countryId}"
+							value="#{backingBean.managedBean.selectedBank.smAddress.countryId}"
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="smBankCountry"
-								value="#{backingBean.managedBean.countryLs}"
-								itemValue="#{smBankCountry.countryId}"
-								itemLabel="#{smBankCountry.countryName}" />
-							<p:ajax event="change"
-								listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.selectedBank.smAddress.pmCountry.countryId, 
-								SupplierManagementConst.SM_BANK_INFO_PANEL,
-								backingBean.managedBean.selectedBank.smAddress.pmState,
-								backingBean.managedBean.selectedBank.smAddress.pmDistrict,
-								backingBean.managedBean.selectedBank.smAddress.pmCity)}"
-								update="smBankState,smBankDist,smBankCity,postCodeBankPanelId" />
-						</p:selectOneMenu> <p:message id="smBankCntryIdMsg" for="smBankCntryId"
+								value="#{backingBean.managedBean.countryItems}" />
+							<p:ajax event="change" process="@this"
+								listener="#{backingBean.onChangeCountry(backingBean.managedBean.selectedBank.smAddress,SupplierManagementConst.SM_BANK_INFO_PANEL)}"
+								update="smBankCntryId,smBankState,smBankDist,smBankCity,postCodeBankPanelId" />
+						</p:selectOneMenu> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.selectedBank.supplierBankId}"
+							oriValue="#{backingBean.managedBean.latestBank.smAddress.pmCountry.countryId}" 
+							currValue="#{backingBean.managedBean.selectedBank.smAddress.pmCountry.countryId}" 
+							alertValue="#{(empty backingBean.managedBean.latestBank.smAddress or empty backingBean.managedBean.latestBank.smAddress.pmCountry) ?
+								lbl['lbl.txt.na'] : backingBean.getCountryLabelById(backingBean.managedBean.latestBank.smAddress.pmCountry.countryId)}"/>
+						<p:message id="smBankCntryIdMsg" for="smBankCntryId"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
 
@@ -300,21 +351,23 @@
 					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.state']}"
-							value="#{backingBean.managedBean.selectedBank.smAddress.pmState.stateId}"
+							value="#{backingBean.managedBean.selectedBank.smAddress.stateId}"
 							id="smBankState">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="smBankState"
-								value="#{backingBean.managedBean.bankStates}"
-								itemValue="#{smBankState.stateId}"
-								itemLabel="#{smBankState.stateName}" />
-							<p:ajax event="change"
-								listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.selectedBank.smAddress.pmState.stateId, 
-								SupplierManagementConst.SM_BANK_INFO_PANEL,
-								backingBean.managedBean.selectedBank.smAddress.pmDistrict,
-								backingBean.managedBean.selectedBank.smAddress.pmCity)}"
-								update="smBankDist,smBankCity" />
-
-						</p:selectOneMenu> <p:message id="smBankStateMsg" for="smBankState"
+								value="#{backingBean.managedBean.bankStates}" />
+							<p:ajax event="change" process="@this"
+								listener="#{backingBean.onChangeState(backingBean.managedBean.selectedBank.smAddress,SupplierManagementConst.SM_BANK_INFO_PANEL)}"
+								update="smBankState,smBankDist,smBankCity" />
+						</p:selectOneMenu> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.selectedBank.supplierBankId}"
+							oriValue="#{backingBean.managedBean.latestBank.smAddress.pmState.stateId}" 
+							currValue="#{backingBean.managedBean.selectedBank.smAddress.pmState.stateId}" 
+							alertValue="#{(empty backingBean.managedBean.latestBank.smAddress or empty backingBean.managedBean.latestBank.smAddress.pmState) ?
+								lbl['lbl.txt.na'] : backingBean.getStateLabelById(backingBean.managedBean.latestBank.smAddress.pmState.stateId)}"/>
+						<p:message id="smBankStateMsg" for="smBankState"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
 
@@ -324,18 +377,22 @@
 					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 							id="smBankDist" required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.district']}"
-							value="#{backingBean.managedBean.selectedBank.smAddress.pmDistrict.districtId}">
+							value="#{backingBean.managedBean.selectedBank.smAddress.districtId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="smBankDist"
-								value="#{backingBean.managedBean.bankDistricts}"
-								itemValue="#{smBankDist.districtId}"
-								itemLabel="#{smBankDist.districtName}" />
-							<p:ajax event="change"
-								listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.selectedBank.smAddress.pmDistrict.districtId, 
-								SupplierManagementConst.SM_BANK_INFO_PANEL,
-								backingBean.managedBean.selectedBank.smAddress.pmCity)}"
-								update="smBankCity" />
-						</p:selectOneMenu> <p:message id="smBankDistMsg" for="smBankDist" showSummary="true"
+								value="#{backingBean.managedBean.bankDistricts}" />
+							<p:ajax event="change" process="@this"
+								listener="#{backingBean.onChangeDistrict(backingBean.managedBean.selectedBank.smAddress,SupplierManagementConst.SM_BANK_INFO_PANEL)}"
+								update="smBankDist,smBankCity" />
+						</p:selectOneMenu> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.selectedBank.supplierBankId}"
+							oriValue="#{backingBean.managedBean.latestBank.smAddress.pmDistrict.districtId}" 
+							currValue="#{backingBean.managedBean.selectedBank.smAddress.pmDistrict.districtId}" 
+							alertValue="#{(empty backingBean.managedBean.latestBank.smAddress or empty backingBean.managedBean.latestBank.smAddress.pmDistrict) ?
+								lbl['lbl.txt.na'] : backingBean.getDistrictLabelById(backingBean.managedBean.latestBank.smAddress.pmDistrict.districtId)}"/>
+						<p:message id="smBankDistMsg" for="smBankDist" showSummary="true"
 							showDetail="false" display="icon" /></td>
 				</tr>
 				<tr>
@@ -344,13 +401,19 @@
 					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 							id="smBankCity" required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.towncity']}"
-							value="#{backingBean.managedBean.selectedBank.smAddress.pmCity.cityId}">
+							value="#{backingBean.managedBean.selectedBank.smAddress.cityId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="smBankCity"
-								value="#{backingBean.managedBean.bankCities}"
-								itemValue="#{smBankCity.cityId}"
-								itemLabel="#{smBankCity.cityName}" />
-						</p:selectOneMenu> <p:message id="smBankCityMsg" for="smBankCity" showSummary="true"
+								value="#{backingBean.managedBean.bankCities}" />
+						</p:selectOneMenu>
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.selectedBank.supplierBankId}"
+							oriValue="#{backingBean.managedBean.latestBank.smAddress.pmCity.cityId}" 
+							currValue="#{backingBean.managedBean.selectedBank.smAddress.pmCity.cityId}" 
+							alertValue="#{(empty backingBean.managedBean.latestBank.smAddress or empty backingBean.managedBean.latestBank.smAddress.pmCity) ?
+								lbl['lbl.txt.na'] : backingBean.getCityLabelById(backingBean.managedBean.latestBank.smAddress.pmCity.cityId)}"/>
+						<p:message id="smBankCityMsg" for="smBankCity" showSummary="true"
 							showDetail="false" display="icon" /></td>
 				</tr>
 				<tr>
@@ -358,7 +421,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td><p:outputPanel id="postCodeBankPanelId">
 							<p:outputPanel
-								rendered="#{backingBean.managedBean.selectedBank.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+								rendered="#{backingBean.managedBean.selectedBank.smAddress.countryId==backingBean.managedBean.myCountryId}">
 								<p:inputText maxlength="5"
 									required="#{backingBean.managedBean.valueReqd}"
 									label="#{lbl['lbl.sm.postcode']}" id="suppBankPostCodeMy"
@@ -367,17 +430,29 @@
 									size="35">
 									<f:validator validatorId="postcodeValidator" />
 								</p:inputText>
+								<ac:smFieldChangeAlert 
+									isShow="#{backingBean.managedBean.showFieldChanges
+										and not empty backingBean.managedBean.selectedBank.supplierBankId}"
+									oriValue="#{backingBean.managedBean.latestBank.smAddress.postcode}" 
+									currValue="#{backingBean.managedBean.selectedBank.smAddress.postcode}" 
+									alertValue="#{backingBean.managedBean.latestBank.smAddress.postcode}"/>
 								<p:message id="suppBankPostCodeMsgMy" for="suppBankPostCodeMy"
 									showSummary="true" showDetail="false" display="icon" />
 							</p:outputPanel>
 							<p:outputPanel
-								rendered="#{backingBean.managedBean.selectedBank.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+								rendered="#{backingBean.managedBean.selectedBank.smAddress.countryId!=backingBean.managedBean.myCountryId}">
 								<p:inputText maxlength="10"
 									required="#{backingBean.managedBean.valueReqd}"
 									label="#{lbl['lbl.sm.postcode']}" id="suppBankPostCodeForeign"
 									value="#{backingBean.managedBean.selectedBank.smAddress.postcode}"
 									size="35">
 								</p:inputText>
+								<ac:smFieldChangeAlert 
+									isShow="#{backingBean.managedBean.showFieldChanges
+										and not empty backingBean.managedBean.selectedBank.supplierBankId}"
+									oriValue="#{backingBean.managedBean.latestBank.smAddress.postcode}" 
+									currValue="#{backingBean.managedBean.selectedBank.smAddress.postcode}" 
+									alertValue="#{backingBean.managedBean.latestBank.smAddress.postcode}"/>
 								<p:message id="suppBankPostCodeMsgForeign"
 									for="suppBankPostCodeForeign" showSummary="true"
 									showDetail="false" display="icon" />
@@ -413,7 +488,14 @@
 							validatorMessage="#{lbl['lbl.sm.bankDtls.chequesign.tnc']} - #{lbl['lbl.sm.banktnc.length.validMsg']}"
 							cols="36">
 							<f:validateLength maximum="1000" />
-						</p:inputTextarea> <p:message id="banCqTncMsg" for="banCqTnc" showSummary="true"
+						</p:inputTextarea> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+									and not empty backingBean.managedBean.selectedBank.supplierBankId}"
+							oriValue="#{backingBean.managedBean.latestBank.signatureInstruction}" 
+							currValue="#{backingBean.managedBean.selectedBank.signatureInstruction}" 
+							alertValue="#{backingBean.managedBean.latestBank.signatureInstruction}"/>
+						<p:message id="banCqTncMsg" for="banCqTnc" showSummary="true"
 							showDetail="false" display="icon" /></td>
 				</tr>
 				<tr>

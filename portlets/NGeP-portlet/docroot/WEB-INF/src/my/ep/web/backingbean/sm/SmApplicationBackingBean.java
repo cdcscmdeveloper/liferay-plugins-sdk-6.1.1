@@ -1,7 +1,6 @@
 package my.ep.web.backingbean.sm;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
@@ -127,7 +126,6 @@ import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -150,13 +148,13 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
+import org.springframework.beans.BeanUtils;
 
 import com.liferay.portal.kernel.util.StringUtil;
 
@@ -758,6 +756,8 @@ public class SmApplicationBackingBean extends
 			}
 
 			getManagedBean().setSmAppl(smAppl);
+			SmApplicationUtil.getInstance().setApplAddressTransientValue(
+					getManagedBean().getSmAppl(), false);
 
 			if (fromBpm) {
 				SmApplicationUtil.checkOverLappingCategories(getManagedBean());
@@ -776,7 +776,6 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmAppl().setSmStaffTotals(
 						SmApplicationUtil.getStaffList(smAppl));
 			}
-			// getManagedBean().setSmAppl(smAppl);
 
 			getManagedBean().setTabActiveIndex(0);
 			if (!fromBpm) {
@@ -871,6 +870,7 @@ public class SmApplicationBackingBean extends
 						|| StringUtils
 								.isBlank(fac.getSmAddress().getAddress1())) {
 					fac.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
+					copyHqAddressToAddr(fac.getSmAddress());
 				}
 				fac.setFacilityName(getManagedBean().getSmAppl()
 						.getSmCompanyBasic().getCompanyName());
@@ -1372,6 +1372,20 @@ public class SmApplicationBackingBean extends
 		return SmCommonUtil.getDisplayDateFormat(date);
 	}
 
+	public String getLabelFromSelectItems(Object objId, String paramType) {
+		String retVal = "";
+		List<SelectItem> items = Arrays.asList(getDropdownValues(paramType));
+		if (!SmCommonUtil.isCollectionEmpty(items) && objId != null) {
+			for (SelectItem item : items) {
+				if (item.getValue() != null
+						&& item.getValue().toString().equals(objId.toString())) {
+					retVal = item.getLabel();
+				}
+			}
+		}
+		return retVal;
+	}
+
 	private void updateSpkiDigiSignData(PmDigiSign pmDigiSign, String docType,
 			Long docId, String docNumber, String textBeforeSign) {
 		FacesScopes facesScope = new FacesScopes();
@@ -1667,6 +1681,8 @@ public class SmApplicationBackingBean extends
 		// }
 		finally {
 			mofRegistrationSO = null;
+			SmApplicationUtil.getInstance().setApplAddressTransientValue(
+					getManagedBean().getSmAppl(), false);
 			SmFieldChangeUtil.setApplTableListChangeStatus(getManagedBean()
 					.getLatestAppl(), getManagedBean().getSmAppl());
 		}
@@ -2106,11 +2122,14 @@ public class SmApplicationBackingBean extends
 				.equalsIgnoreCase("O")) {
 			getManagedBean().getBasicCompanyFacility().setSmAddress(
 					SmApplicationUtil.setDefaultAddr(null));
+			copyHqAddressToAddr(getManagedBean().getBasicCompanyFacility()
+					.getSmAddress());
 		} else {
-			SmAddress addr = SmApplicationUtil.setDefaultAddr(getManagedBean()
-					.getDefPmCountry());
+			SmAddress addr = SmApplicationUtil.setDefaultAddr(null);
 			if (getManagedBean().getBasicCompanyFacility().getSmAddress() == null) {
 				getManagedBean().getBasicCompanyFacility().setSmAddress(addr);
+				copyHqAddressToAddr(getManagedBean().getBasicCompanyFacility()
+						.getSmAddress());
 			} else if (getManagedBean().getBasicCompanyFacility()
 					.getSmAddress() != null
 					&& getManagedBean().getBasicCompanyFacility()
@@ -2552,15 +2571,14 @@ public class SmApplicationBackingBean extends
 		br.setBranchName(getManagedBean().getSmAppl().getSmCompanyBasic()
 				.getCompanyName());
 		br.setRevNo(1);
-		br.setSmAddress(SmApplicationUtil.setDefaultAddr(getManagedBean()
-				.getDefPmCountry()));
+		br.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
 		br.setSmAppl(getManagedBean().getSmAppl());
 		br.setSmPersonnel(new SmPersonnel());
 		getManagedBean().setBranchCompanyStates(
-				retrievePmStateList(getManagedBean().getSelectedBranch()
+				SmCommonUtil.getStateList(getManagedBean().getSelectedBranch()
 						.getSmAddress().getPmCountry().getCountryId()));
-		getManagedBean().setBranchCompanyDistricts(new ArrayList<PmDistrict>());
-		getManagedBean().setBranchCompanyCities(new ArrayList<PmCity>());
+		getManagedBean().setBranchCompanyDistricts(new ArrayList<SelectItem>());
+		getManagedBean().setBranchCompanyCities(new ArrayList<SelectItem>());
 		getManagedBean().setSelectedBranch(br);
 		SmApplicationUtil.addNewBranchGst(
 				getManagedBean().getCompanyBasicGst(), getManagedBean()
@@ -2612,7 +2630,7 @@ public class SmApplicationBackingBean extends
 	public void addOrUpdateAssocToSmAppl() {
 		if (getManagedBean().getSmAppl().getSmAssociateCompanies()
 				.contains(getManagedBean().getSelectedAssocCompany())) {
-			// TODO if any validation reqd for assoc companies
+
 		} else {
 			getManagedBean().getSmAppl().getSmAssociateCompanies()
 					.add(getManagedBean().getSelectedAssocCompany());
@@ -2666,15 +2684,15 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setSelectedAssocCompany(new SmAssociateCompany());
 		getManagedBean().getSelectedAssocCompany().setRevNo(1);
 		getManagedBean().getSelectedAssocCompany().setSmAddress(
-				(SmApplicationUtil.setDefaultAddr(getManagedBean()
-						.getDefPmCountry())));
+				(SmApplicationUtil.setDefaultAddr(null)));
 		getManagedBean().getSelectedAssocCompany().setSmAppl(
 				getManagedBean().getSmAppl());
 		getManagedBean().setAssocCompanyStates(
-				retrievePmStateList(getManagedBean().getSelectedAssocCompany()
-						.getSmAddress().getPmCountry().getCountryId()));
-		getManagedBean().setAssocCompanyDistricts(new ArrayList<PmDistrict>());
-		getManagedBean().setAssocCompanyCities(new ArrayList<PmCity>());
+				SmCommonUtil.getStateList(getManagedBean()
+						.getSelectedAssocCompany().getSmAddress()
+						.getPmCountry().getCountryId()));
+		getManagedBean().setAssocCompanyDistricts(new ArrayList<SelectItem>());
+		getManagedBean().setAssocCompanyCities(new ArrayList<SelectItem>());
 		getManagedBean().getSelectedAssocCompany().setIsShareholding(
 				new BigDecimal(0));
 		assignValReqdToTrue();
@@ -3004,6 +3022,11 @@ public class SmApplicationBackingBean extends
 			}
 
 		}
+		getManagedBean().setLatestCompanyExperience(
+				SmFieldChangeUtil.getCompanyExpByClientNameAndTitleFromList(
+						getManagedBean().getLatestAppl(),
+						consultantBean.getClientName(),
+						consultantBean.getTitle()));
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
 			RequestContext.getCurrentInstance().execute("consDialog.show()");
@@ -3229,8 +3252,9 @@ public class SmApplicationBackingBean extends
 		getManagedBean().getSelectedEquityCompany().setSmAppl(
 				getManagedBean().getSmAppl());
 		getManagedBean().setEquiCompanyStates(
-				retrievePmStateList(getManagedBean().getSelectedEquityCompany()
-						.getSmAddress().getPmCountry().getCountryId()));
+				SmCommonUtil.getStateList(getManagedBean()
+						.getSelectedEquityCompany().getSmAddress()
+						.getPmCountry().getCountryId()));
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("eqiCompDialog.show()");
 	}
@@ -4418,6 +4442,8 @@ public class SmApplicationBackingBean extends
 	 * Save or update the latest information of the application i.e. SmAppl .
 	 */
 	private void saveOrUpdateAppl() {
+		SmApplicationUtil.getInstance().setApplAddressTransientValue(
+				getManagedBean().getSmAppl(), true);
 		IMofRegistrationSO mofRegistrationSO = null;
 		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
 				.getCompanyBasicGst());
@@ -5530,25 +5556,25 @@ public class SmApplicationBackingBean extends
 		} else {
 			SmPersonnelAddress perm = new SmPersonnelAddress();
 			perm.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM);
-			perm.setSmAddress(getDefaultNewAddress());
+			perm.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
 			perm.setSmPersonnel(shareHolderBean);
 			perm.setSameAsPerm(false);
 
 			SmPersonnelAddress mail = new SmPersonnelAddress();
 			mail.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL);
-			mail.setSmAddress(getDefaultNewAddress());
+			mail.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
 			mail.setSmPersonnel(shareHolderBean);
 			mail.setSameAsPerm(false);
 
 			SmPersonnelAddress off = new SmPersonnelAddress();
 			off.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE);
-			off.setSmAddress(getDefaultNewAddress());
+			off.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
 			off.setSmPersonnel(shareHolderBean);
 			off.setSameAsPerm(false);
 
 			SmPersonnelAddress res = new SmPersonnelAddress();
 			res.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES);
-			res.setSmAddress(getDefaultNewAddress());
+			res.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
 			res.setSmPersonnel(shareHolderBean);
 			res.setSameAsPerm(false);
 
@@ -5559,25 +5585,31 @@ public class SmApplicationBackingBean extends
 			List<PmState> defStates = new ArrayList<PmState>();
 			defStates = retrievePmStateList(perm.getSmAddress().getPmCountry()
 					.getCountryId());
+			List<SelectItem> defStateItems = SmCommonUtil.getStateList(perm
+					.getSmAddress().getPmCountry().getCountryId());
 			if (shareHolderBean.getSmPersonnelAddresses().isEmpty()) {
 
-				// reset to defualt values for a new record
-				getManagedBean().setShrHldrPermStates(defStates);
+				// reset to default values for a new record
+				getManagedBean().setShrHldrPermStates(defStateItems);
 				getManagedBean().setShrHldrPermDistricts(
-						new ArrayList<PmDistrict>());
-				getManagedBean().setShrHldrPermCities(new ArrayList<PmCity>());
-				getManagedBean().setShrHldrMailStates(defStates);
+						new ArrayList<SelectItem>());
+				getManagedBean().setShrHldrPermCities(
+						new ArrayList<SelectItem>());
+				getManagedBean().setShrHldrMailStates(defStateItems);
 				getManagedBean().setShrHldrMailDistricts(
-						new ArrayList<PmDistrict>());
-				getManagedBean().setShrHldrMailCities(new ArrayList<PmCity>());
-				getManagedBean().setShrHldrResdStates(defStates);
+						new ArrayList<SelectItem>());
+				getManagedBean().setShrHldrMailCities(
+						new ArrayList<SelectItem>());
+				getManagedBean().setShrHldrResdStates(defStateItems);
 				getManagedBean().setShrHldrResdDistricts(
-						new ArrayList<PmDistrict>());
-				getManagedBean().setShrHldrResdCities(new ArrayList<PmCity>());
-				getManagedBean().setShrHldrOffStates(defStates);
+						new ArrayList<SelectItem>());
+				getManagedBean().setShrHldrResdCities(
+						new ArrayList<SelectItem>());
+				getManagedBean().setShrHldrOffStates(defStateItems);
 				getManagedBean().setShrHldrOffDistricts(
-						new ArrayList<PmDistrict>());
-				getManagedBean().setShrHldrOffCities(new ArrayList<PmCity>());
+						new ArrayList<SelectItem>());
+				getManagedBean().setShrHldrOffCities(
+						new ArrayList<SelectItem>());
 
 			} else {
 				for (SmPersonnelAddress addr : shareHolderBean
@@ -5591,17 +5623,21 @@ public class SmApplicationBackingBean extends
 					country.setCountryId(addr.getSmAddress().getPmCountry()
 							.getCountryId());
 					smAddress.setPmCountry(country);
+					smAddress.setCountryId(country.getCountryId());
 					PmState state = new PmState();
 					state.setStateId(addr.getSmAddress().getPmState()
 							.getStateId());
 					smAddress.setPmState(state);
+					smAddress.setStateId(state.getStateId());
 					PmDistrict district = new PmDistrict();
 					district.setDistrictId(addr.getSmAddress().getPmDistrict()
 							.getDistrictId());
 					smAddress.setPmDistrict(district);
+					smAddress.setDistrictId(district.getDistrictId());
 					PmCity city = new PmCity();
 					city.setCityId(addr.getSmAddress().getPmCity().getCityId());
 					smAddress.setPmCity(city);
+					smAddress.setCityId(city.getCityId());
 					smAddress.setPostcode(addr.getSmAddress().getPostcode());
 					addr.setSmAddress(smAddress);
 
@@ -5676,38 +5712,38 @@ public class SmApplicationBackingBean extends
 				if ((getManagedBean().getShrHldrPermStates() == null)
 						|| (getManagedBean().getShrHldrPermStates() != null && getManagedBean()
 								.getShrHldrPermStates().isEmpty())) {
-					getManagedBean().setShrHldrPermStates(defStates);
+					getManagedBean().setShrHldrPermStates(defStateItems);
 					getManagedBean().setShrHldrPermDistricts(
-							new ArrayList<PmDistrict>());
+							new ArrayList<SelectItem>());
 					getManagedBean().setShrHldrPermCities(
-							new ArrayList<PmCity>());
+							new ArrayList<SelectItem>());
 				}
 				if ((getManagedBean().getShrHldrMailStates() == null)
 						|| (getManagedBean().getShrHldrMailStates() != null && getManagedBean()
 								.getShrHldrMailStates().isEmpty())) {
-					getManagedBean().setShrHldrMailStates(defStates);
+					getManagedBean().setShrHldrMailStates(defStateItems);
 					getManagedBean().setShrHldrMailDistricts(
-							new ArrayList<PmDistrict>());
+							new ArrayList<SelectItem>());
 					getManagedBean().setShrHldrMailCities(
-							new ArrayList<PmCity>());
+							new ArrayList<SelectItem>());
 				}
 				if ((getManagedBean().getShrHldrResdStates() == null)
 						|| (getManagedBean().getShrHldrResdStates() != null && getManagedBean()
 								.getShrHldrResdStates().isEmpty())) {
-					getManagedBean().setShrHldrResdStates(defStates);
+					getManagedBean().setShrHldrResdStates(defStateItems);
 					getManagedBean().setShrHldrResdDistricts(
-							new ArrayList<PmDistrict>());
+							new ArrayList<SelectItem>());
 					getManagedBean().setShrHldrResdCities(
-							new ArrayList<PmCity>());
+							new ArrayList<SelectItem>());
 				}
 				if ((getManagedBean().getShrHldrOffStates() == null)
 						|| (getManagedBean().getShrHldrOffStates() != null && getManagedBean()
 								.getShrHldrOffStates().isEmpty())) {
-					getManagedBean().setShrHldrOffStates(defStates);
+					getManagedBean().setShrHldrOffStates(defStateItems);
 					getManagedBean().setShrHldrOffDistricts(
-							new ArrayList<PmDistrict>());
+							new ArrayList<SelectItem>());
 					getManagedBean().setShrHldrOffCities(
-							new ArrayList<PmCity>());
+							new ArrayList<SelectItem>());
 				}
 
 			}
@@ -5715,11 +5751,6 @@ public class SmApplicationBackingBean extends
 
 		getManagedBean().setSelectedShareHolder(shareHolderBean);
 
-	}
-
-	private SmAddress getDefaultNewAddress() {
-		SmAddress addr = SmApplicationUtil.setDefaultAddr(null);
-		return addr;
 	}
 
 	// -- Process Common for both Personnel and Share Holder Start --
@@ -5886,7 +5917,7 @@ public class SmApplicationBackingBean extends
 		bank.setSmChequeSignatories(new ArrayList<SmChequeSignatory>());
 		getManagedBean().setSelectedBank(bank);
 		getManagedBean().setBankStates(
-				retrievePmStateList(getManagedBean().getSelectedBank()
+				SmCommonUtil.getStateList(getManagedBean().getSelectedBank()
 						.getSmAddress().getPmCountry().getCountryId()));
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("bankDialog.show()");
@@ -6380,6 +6411,8 @@ public class SmApplicationBackingBean extends
 		IMofRegistrationSO regSo = null;
 		boolean valid = false;
 		try {
+			SmApplicationUtil.getInstance().setApplAddressTransientValue(
+					getManagedBean().getSmAppl(), true);
 			SmAppl bpmAppl = getManagedBean().getSmAppl();
 			bpmAppl.setApplSaveDate(new Timestamp(System.currentTimeMillis()));
 
@@ -7683,25 +7716,25 @@ public class SmApplicationBackingBean extends
 				break;
 
 			case SupplierManagementConst.SM_BRANCH_PANEL:
-				this.getManagedBean().setBranchCompanyStates(stateLs);
+				this.getManagedBean().setBranchCompanyStates(stateItems);
 				this.getManagedBean().setBranchCompanyDistricts(
-						new ArrayList<PmDistrict>());
+						new ArrayList<SelectItem>());
 				this.getManagedBean().setBranchCompanyCities(
-						new ArrayList<PmCity>());
+						new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
-				this.getManagedBean().setAssocCompanyStates(stateLs);
+				this.getManagedBean().setAssocCompanyStates(stateItems);
 				this.getManagedBean().setAssocCompanyDistricts(
-						new ArrayList<PmDistrict>());
+						new ArrayList<SelectItem>());
 				this.getManagedBean().setAssocCompanyCities(
-						new ArrayList<PmCity>());
+						new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_EQUI_COMPANY_PANEL:
-				this.getManagedBean().setEquiCompanyStates(stateLs);
+				this.getManagedBean().setEquiCompanyStates(stateItems);
 				this.getManagedBean().setEquiCompanyDistricts(
-						new ArrayList<PmDistrict>());
+						new ArrayList<SelectItem>());
 				this.getManagedBean().setEquiCompanyCities(
-						new ArrayList<PmCity>());
+						new ArrayList<SelectItem>());
 			case SupplierManagementConst.SM_FACTORY_FACILITY_PANEL:
 				this.getManagedBean().setFactoryFacilityStates(stateLs);
 				this.getManagedBean().setFactoryFacilityDistricts(
@@ -7731,38 +7764,39 @@ public class SmApplicationBackingBean extends
 						new ArrayList<PmCity>());
 				break;
 			case SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL:
-				this.getManagedBean().setShrHldrPermStates(stateLs);
+				this.getManagedBean().setShrHldrPermStates(stateItems);
 				this.getManagedBean().setShrHldrPermDistricts(
-						new ArrayList<PmDistrict>());
+						new ArrayList<SelectItem>());
 				this.getManagedBean().setShrHldrPermCities(
-						new ArrayList<PmCity>());
+						new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL:
-				this.getManagedBean().setShrHldrResdStates(stateLs);
+				this.getManagedBean().setShrHldrResdStates(stateItems);
 				this.getManagedBean().setShrHldrResdDistricts(
-						new ArrayList<PmDistrict>());
+						new ArrayList<SelectItem>());
 				this.getManagedBean().setShrHldrResdCities(
-						new ArrayList<PmCity>());
+						new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL:
-				this.getManagedBean().setShrHldrOffStates(stateLs);
+				this.getManagedBean().setShrHldrOffStates(stateItems);
 				this.getManagedBean().setShrHldrOffDistricts(
-						new ArrayList<PmDistrict>());
+						new ArrayList<SelectItem>());
 				this.getManagedBean().setShrHldrOffCities(
-						new ArrayList<PmCity>());
+						new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL:
-				this.getManagedBean().setShrHldrMailStates(stateLs);
+				this.getManagedBean().setShrHldrMailStates(stateItems);
 				this.getManagedBean().setShrHldrMailDistricts(
-						new ArrayList<PmDistrict>());
+						new ArrayList<SelectItem>());
 				this.getManagedBean().setShrHldrMailCities(
-						new ArrayList<PmCity>());
+						new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_BANK_INFO_PANEL:
-				this.getManagedBean().setBankStates(stateLs);
+				this.getManagedBean().setBankStates(stateItems);
 				this.getManagedBean().setBankDistricts(
-						new ArrayList<PmDistrict>());
-				this.getManagedBean().setBankCities(new ArrayList<PmCity>());
+						new ArrayList<SelectItem>());
+				this.getManagedBean()
+						.setBankCities(new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_PERSNL_PERM_ADDR_PANEL:
 				this.getManagedBean().setPersnlPermStates(stateLs);
@@ -7805,6 +7839,12 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
+	public void onChangeCountry(SmAddress addr, String panelName) {
+		SmApplicationUtil.getInstance().populateStateByCountry(addr, panelName,
+				getManagedBean());
+		setRoleStaffAddrReqd();
+	}
+
 	/**
 	 * Populate or update districts in selected panel by state id.
 	 * 
@@ -7837,19 +7877,19 @@ public class SmApplicationBackingBean extends
 				break;
 
 			case SupplierManagementConst.SM_BRANCH_PANEL:
-				this.getManagedBean().setBranchCompanyDistricts(distLs);
+				this.getManagedBean().setBranchCompanyDistricts(distItems);
 				this.getManagedBean().setBranchCompanyCities(
-						new ArrayList<PmCity>());
+						new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
-				this.getManagedBean().setAssocCompanyDistricts(distLs);
+				this.getManagedBean().setAssocCompanyDistricts(distItems);
 				this.getManagedBean().setAssocCompanyCities(
-						new ArrayList<PmCity>());
+						new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_EQUI_COMPANY_PANEL:
-				this.getManagedBean().setEquiCompanyDistricts(distLs);
+				this.getManagedBean().setEquiCompanyDistricts(distItems);
 				this.getManagedBean().setEquiCompanyCities(
-						new ArrayList<PmCity>());
+						new ArrayList<SelectItem>());
 				break;
 
 			case SupplierManagementConst.SM_FACTORY_FACILITY_PANEL:
@@ -7873,24 +7913,24 @@ public class SmApplicationBackingBean extends
 						new ArrayList<PmCity>());
 				break;
 			case SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL:
-				this.getManagedBean().setShrHldrPermDistricts(distLs);
+				this.getManagedBean().setShrHldrPermDistricts(distItems);
 				this.getManagedBean().setShrHldrPermCities(
-						new ArrayList<PmCity>());
+						new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL:
-				this.getManagedBean().setShrHldrResdDistricts(distLs);
+				this.getManagedBean().setShrHldrResdDistricts(distItems);
 				this.getManagedBean().setShrHldrResdCities(
-						new ArrayList<PmCity>());
+						new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL:
-				this.getManagedBean().setShrHldrOffDistricts(distLs);
+				this.getManagedBean().setShrHldrOffDistricts(distItems);
 				this.getManagedBean().setShrHldrOffCities(
-						new ArrayList<PmCity>());
+						new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL:
-				this.getManagedBean().setShrHldrMailDistricts(distLs);
+				this.getManagedBean().setShrHldrMailDistricts(distItems);
 				this.getManagedBean().setShrHldrMailCities(
-						new ArrayList<PmCity>());
+						new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_PERSNL_PERM_ADDR_PANEL:
 				this.getManagedBean().setPersnlPermDistricts(distLs);
@@ -7913,8 +7953,9 @@ public class SmApplicationBackingBean extends
 						new ArrayList<PmCity>());
 				break;
 			case SupplierManagementConst.SM_BANK_INFO_PANEL:
-				this.getManagedBean().setBankDistricts(distLs);
-				this.getManagedBean().setBankCities(new ArrayList<PmCity>());
+				this.getManagedBean().setBankDistricts(distItems);
+				this.getManagedBean()
+						.setBankCities(new ArrayList<SelectItem>());
 				break;
 			default:
 				log.info("**** This is an unknown panel ***** ");
@@ -7926,6 +7967,12 @@ public class SmApplicationBackingBean extends
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void onChangeState(SmAddress addr, String panelName) {
+		SmApplicationUtil.getInstance().populateDistrictsByState(addr,
+				panelName, getManagedBean());
+		setRoleStaffAddrReqd();
 	}
 
 	/**
@@ -7952,13 +7999,13 @@ public class SmApplicationBackingBean extends
 				this.getManagedBean().setBasicOffFacCities(cityItems);
 				break;
 			case SupplierManagementConst.SM_BRANCH_PANEL:
-				this.getManagedBean().setBranchCompanyCities(cityLs);
+				this.getManagedBean().setBranchCompanyCities(cityItems);
 				break;
 			case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
-				this.getManagedBean().setAssocCompanyCities(cityLs);
+				this.getManagedBean().setAssocCompanyCities(cityItems);
 				break;
 			case SupplierManagementConst.SM_EQUI_COMPANY_PANEL:
-				this.getManagedBean().setEquiCompanyCities(cityLs);
+				this.getManagedBean().setEquiCompanyCities(cityItems);
 				break;
 			case SupplierManagementConst.SM_FACTORY_FACILITY_PANEL:
 				this.getManagedBean().setFactoryFacilityCities(cityLs);
@@ -7972,16 +8019,16 @@ public class SmApplicationBackingBean extends
 			case SupplierManagementConst.SM_STORE_FACILITY_PANEL:
 				this.getManagedBean().setStoreFacilityCities(cityLs);
 			case SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL:
-				this.getManagedBean().setShrHldrPermCities(cityLs);
+				this.getManagedBean().setShrHldrPermCities(cityItems);
 				break;
 			case SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL:
-				this.getManagedBean().setShrHldrResdCities(cityLs);
+				this.getManagedBean().setShrHldrResdCities(cityItems);
 				break;
 			case SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL:
-				this.getManagedBean().setShrHldrOffCities(cityLs);
+				this.getManagedBean().setShrHldrOffCities(cityItems);
 				break;
 			case SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL:
-				this.getManagedBean().setShrHldrMailCities(cityLs);
+				this.getManagedBean().setShrHldrMailCities(cityItems);
 				break;
 			case SupplierManagementConst.SM_PERSNL_PERM_ADDR_PANEL:
 				this.getManagedBean().setPersnlPermCities(cityLs);
@@ -7996,7 +8043,7 @@ public class SmApplicationBackingBean extends
 				this.getManagedBean().setPersnlMailCities(cityLs);
 				break;
 			case SupplierManagementConst.SM_BANK_INFO_PANEL:
-				this.getManagedBean().setBankCities(cityLs);
+				this.getManagedBean().setBankCities(cityItems);
 				break;
 			default:
 				log.info("**** This is an unknown panel ***** ");
@@ -8007,6 +8054,17 @@ public class SmApplicationBackingBean extends
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void onChangeDistrict(SmAddress addr, String panelName) {
+		SmApplicationUtil.getInstance().populateCitiesByDistrict(addr,
+				panelName, getManagedBean());
+		setRoleStaffAddrReqd();
+	}
+
+	public void onChangeCity(SmAddress addr) {
+		addr.setPmCity(SmCommonUtil.getInstance().getCityById(
+				addr.getPmCity().getCityId()));
 	}
 
 	/**
@@ -8197,6 +8255,7 @@ public class SmApplicationBackingBean extends
 									.getAddress1())) {
 						smFac.setSmAddress(SmApplicationUtil
 								.setDefaultAddr(null));
+						copyHqAddressToAddr(smFac.getSmAddress());
 					}
 				}
 				if (!smFac.getOwnershipType().equalsIgnoreCase("O")) {
@@ -9829,14 +9888,8 @@ public class SmApplicationBackingBean extends
 		return hqAddress;
 	}
 
-	private SmAddress getDefaultHqNewAddress(SmAddress addr) {
-		addr = SmApplicationUtil.setDefaultAddr(getManagedBean()
-				.getDefPmCountry());
-		SmApplicationUtil.resetToDefaultEntityValues(addr);
-		SmApplicationUtil.resetSmAddressChildLists(addr);
-		SmApplicationUtil.assignClonedAddressValues(addr, getHqAddress());
-		return addr;
-
+	private void copyHqAddressToAddr(SmAddress addr) {
+		SmCommonUtil.getInstance().copyAddress(getHqAddress(), addr);
 	}
 
 	private void setHqFacilityInSelectedFacility() {
