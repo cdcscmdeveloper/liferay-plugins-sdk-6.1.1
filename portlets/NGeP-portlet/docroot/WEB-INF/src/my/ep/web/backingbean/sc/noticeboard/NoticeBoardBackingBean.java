@@ -1028,12 +1028,15 @@ public class NoticeBoardBackingBean extends
 				String selectedTab = getManagedBean().getSelectedTab();
 				if (ParameterConst.NOTICE_BOARD_STATUS_CHANGES
 						.equals(selectedTab)) {
-					/*searchBean.getDataFilterBeans().add(
+					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("IS_CHANGED",
-									SearchOperator.OPERATOR_EQUALS.value(), 1));*/
+									SearchOperator.OPERATOR_EQUALS.value(), 1));
 					statusIds.add(QTStatusConst.QT_BRIEFING_SITE_VISIT);
 					statusIds.add(QTStatusConst.QT_PROPOSAL_PREPARATION);
-
+					
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("qtAmend.RECORD_STATUS",
+									SearchOperator.OPERATOR_EQUALS.value(), 1));
 					setDisplayImage(isUser());
 
 				} else if (ParameterConst.NOTICE_BOARD_STATUS_CLOSED
@@ -1050,9 +1053,13 @@ public class NoticeBoardBackingBean extends
 					statusIds.add(QTStatusConst.QT_CANCELLED);
 					
 				} else {
+					
 					statusIds.add(QTStatusConst.QT_BRIEFING_SITE_VISIT);
 					statusIds.add(QTStatusConst.QT_PROPOSAL_PREPARATION);
 					setDisplayImage(isUser());
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("IS_CHANGED",
+									SearchOperator.OPERATOR_EQUALS.value(), 0));
 
 				}
 				
