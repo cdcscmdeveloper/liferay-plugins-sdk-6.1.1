@@ -186,6 +186,7 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 		this.getManagedBean().setFrontPage(false);
 		this.getManagedBean().setCatalogueList(null);
 		this.getManagedBean().setCloneNameFlag(false);
+		this.getManagedBean().setBrandCriteria(null);
 	
 
 		this.getManagedBean().getSearchDataModel().reloadData();
