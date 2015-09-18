@@ -1968,6 +1968,11 @@ public class QTDocumentsBackingBean extends
 			estimatedPrice = amountDF.format(qt.getEstimatedAmount());
 		}
 		context.put("estimatedPrice", estimatedPrice);
+		boolean isEstimate = false;
+		if (qt.getEstimatedAmount().intValue() >= 200000) {
+			isEstimate = true;
+		}
+		context.put("isEstimate", isEstimate);
 
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.DOCPATH_QT_LOA_SAMPLE, context,
@@ -2052,6 +2057,8 @@ public class QTDocumentsBackingBean extends
 					ParameterTypeConst.QUOTATION_TENDER_TYPE, qt.getQtType()));
 		}
 		context.put("qtType", openType);
+		
+		context.put("panel", qt.isPanel());
 
 		List<ScQtCategory> categoryResults1 = new ArrayList<ScQtCategory>();
 		List<ScQtCategory> categoryResults = new ArrayList<ScQtCategory>();
