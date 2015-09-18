@@ -84,38 +84,42 @@ th{
 			#end
 			</td>
 		</tr>
-		<tr>
-			<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">KOD BIDANG :</span> <br />
-			<br /></td>
-		</tr>
-		<tr align='left'>
-			<td>
-				<table class="table2" width='100%'>
-					<span class="headerfont">
-					<tr>
-						<td>Kod Bidang</td>
-						<td>Bidang</td>
-						<td>Sub Bidang</td>
-						<td>Pecahan Sub Bidang</td>
-					</tr>
-					</span>
-					#foreach( $categoryResults in $categoryResults1 )
-						<span class="textfont">
+		#if($panel == "true")
+		#else
+			<tr>
+				<td align="left">
+					<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">KOD BIDANG :</span> <br /><br />
+				</td>
+			</tr>
+			<tr align='left'>
+				<td>
+					<table class="table2" width='100%'>
+						<span class="headerfont">
 						<tr>
-							<td>
-								$categoryResults.pmCategoryL1.categoryL1Code
-								$categoryResults.pmCategoryL2.categoryL2Code
-								$categoryResults.pmCategoryL3.categoryL3Code
-							</td>
-							<td>$categoryResults.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName</td>
-        					<td>$categoryResults.pmCategoryL3.pmCategoryL2.categoryName</td>
-        					<td>$categoryResults.pmCategoryL3.categoryName</td>
+							<td>Kod Bidang</td>
+							<td>Bidang</td>
+							<td>Sub Bidang</td>
+							<td>Pecahan Sub Bidang</td>
 						</tr>
 						</span>
-					#end
-				</table>
-			</td>
-		</tr>
+						#foreach( $categoryResults in $categoryResults1 )
+							<span class="textfont">
+							<tr>
+								<td>
+									$categoryResults.pmCategoryL1.categoryL1Code
+									$categoryResults.pmCategoryL2.categoryL2Code
+									$categoryResults.pmCategoryL3.categoryL3Code
+								</td>
+								<td>$categoryResults.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName</td>
+								<td>$categoryResults.pmCategoryL3.pmCategoryL2.categoryName</td>
+								<td>$categoryResults.pmCategoryL3.categoryName</td>
+							</tr>
+							</span>
+						#end
+					</table>
+				</td>
+			</tr>
+		#end
 		<tr>
 			<td>
 				<br />
@@ -130,78 +134,83 @@ th{
 		<tr>
 			<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">TEMPOH SAH LAKU :</span> $validityPeriod</td>
 		</tr>
-		<tr>
-			<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">LOKALITI :</span> 
-			</td>
-		</tr>
-		<tr>
-			<td>
-				#if ($locLevel == "true")
-					<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Location Level :</span> $locationLevel <br/>
-					<span class="headerfont"> Location </span>
-					<table width='100%' class="table2">
-					<span class="headerfont">
-	            		<tr>
-	            			<td>Zone</td>
-							<td>State</td>
-							#if ($locationLevel == "District")
-								<td>District</td>
-							#end
-	            		</tr>
-	            	</span>
-						#foreach($location in $zoneLocality)
-							#foreach($locCriteria in $location.tplSpecZoneLocs)
-							<span class="textfont">
-							<tr>
-								<td>$location.zoneName</td>
-								<td>
-									$locCriteria.pmState.stateName
-								</td>
-								#if ($locationLevel == "District")
-									<td>
-										$locCriteria.pmDistrict.districtName
-									</td>
-								#end
-							</tr>
-							</span>
-							#end
-						#end
-					</table>
-				#end
-				#if ($locLevel == "false")
-					#if ($subLocLevel == "true")
-						<span class="headerfont"> lokasi </span>
+		#if($panel == "true")
+			
+		#else
+			<tr>
+				<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">LOKALITI :</span> 
+				</td>
+			</tr>
+			<tr>
+				<td>
+					#if ($locLevel == "true")
+						<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Location Level :</span> $locationLevel <br/>
+						<span class="headerfont"> Location </span>
 						<table width='100%' class="table2">
 						<span class="headerfont">
 							<tr>
+								<td>Zone</td>
 								<td>State</td>
 								#if ($locationLevel == "District")
 									<td>District</td>
 								#end
 							</tr>
-							</span>
-							#foreach($tplSpecLoc in $locality)
-							  <span class="textfont">
+						</span>
+							#foreach($location in $zoneLocality)
+								#foreach($locCriteria in $location.tplSpecZoneLocs)
+								<span class="textfont">
 								<tr>
+									<td>$location.zoneName</td>
 									<td>
-										$tplSpecLoc.pmState.stateName
+										$locCriteria.pmState.stateName
 									</td>
 									#if ($locationLevel == "District")
 										<td>
-											$tplSpecLoc.pmDistrict.districtName
+											$locCriteria.pmDistrict.districtName
 										</td>
 									#end
 								</tr>
-							</span>
+								</span>
+								#end
 							#end
 						</table>
 					#end
-					#if ($subLocLevel == "false")
-						<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">T/B</span>
+					#if ($locLevel == "false")
+						#if ($subLocLevel == "true")
+							<span class="headerfont"> lokasi </span>
+							<table width='100%' class="table2">
+							<span class="headerfont">
+								<tr>
+									<td>State</td>
+									#if ($locationLevel == "District")
+										<td>District</td>
+									#end
+								</tr>
+								</span>
+								#foreach($tplSpecLoc in $locality)
+								  <span class="textfont">
+									<tr>
+										<td>
+											$tplSpecLoc.pmState.stateName
+										</td>
+										#if ($locationLevel == "District")
+											<td>
+												$tplSpecLoc.pmDistrict.districtName
+											</td>
+										#end
+									</tr>
+								</span>
+								#end
+							</table>
+						#end
+						#if ($subLocLevel == "false")
+							<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">T/B</span>
+						#end
 					#end
-				#end
-			</td>
-		</tr>
+				</td>
+			</tr>
+		#end
+		
 		<tr align='left'>
 	        <td>
 				#if ( $bsvReq == 'true' )
