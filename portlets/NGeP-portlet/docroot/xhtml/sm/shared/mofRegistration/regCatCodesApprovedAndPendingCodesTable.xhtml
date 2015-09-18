@@ -184,7 +184,6 @@
 					required="#{catBean.poDecFlg == 0 and empty param['disableValidation']}">
 					<f:validateLength maximum="200" />
 				</p:inputTextarea>
-				<p:outputPanel rendered="#{!backingBean.managedBean.smAppl.resubmit}"><ac:smFieldChangeTableAlert object="#{catBean}" /></p:outputPanel>
 				<p:message id="poCatDecisionRmrkMsg" for="poCatDecisionRmrk"
 					rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and backingBean.managedBean.poUser}"
 					showSummary="true" showDetail="false" display="icon" />
@@ -219,7 +218,6 @@
 					required="#{catBean.apprvrDecFlg == 0 and empty param['disableValidation']}">
 					<f:validateLength maximum="200" />
 				</p:inputTextarea>
-				<p:outputPanel rendered="#{!backingBean.managedBean.smAppl.resubmit}"><ac:smFieldChangeTableAlert object="#{catBean}" /></p:outputPanel>
 				<p:message id="apprvCatDecisionRmrkMsg" for="apprvrCatDecisionRmrk"
 					showSummary="true" showDetail="false" display="icon" />
 			</p:column>
@@ -362,7 +360,6 @@
 						<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}" />
 					</p:outputPanel>
 				</p:outputPanel>
-				<ac:smFieldChangeTableAlert object="#{catBean}" />
 			</p:column>
 		</p:dataTable>
 		<c:if
