@@ -8321,6 +8321,18 @@ public class SmApplicationBackingBean extends
 	 */
 	private void assignStateDistAndCityForSelVal(SmAddress addr,
 			String panelName) {
+		if (addr.getPmCountry() != null) {
+			addr.setCountryId(addr.getPmCountry().getCountryId());
+		}
+		if (addr.getPmState() != null) {
+			addr.setStateId(addr.getPmState().getStateId());
+		}
+		if (addr.getPmDistrict() != null) {
+			addr.setDistrictId(addr.getPmDistrict().getDistrictId());
+		}
+		if (addr.getPmCity() != null) {
+			addr.setCityId(addr.getPmCity().getCityId());
+		}
 		SmApplicationUtil.getInstance().populateStateByCountry(addr, panelName,
 				getManagedBean());
 		SmApplicationUtil.getInstance().populateDistrictsByState(addr,
