@@ -273,6 +273,13 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	
 	/** The is exceeded amount alerted. */
 	private boolean isExceededAmountAlerted = Boolean.FALSE;
+	
+	/** The prompt message. */
+	private String promptMessage;
+	
+	/** The selected action. */
+	private String selectedAction;
+
     
     /**
      * Instantiates a new request note managed bean.
@@ -1632,6 +1639,37 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setExceededAmountAlerted(boolean isExceededAmountAlerted) {
 		this.isExceededAmountAlerted = isExceededAmountAlerted;
 	}
+
+	/**
+	 * @return the promptMessage
+	 */
+	public String getPromptMessage() {
+		return promptMessage;
+	}
+
+	/**
+	 * @param promptMessage the promptMessage to set
+	 */
+	public void setPromptMessage(String promptMessage) {
+		this.promptMessage = promptMessage;
+	}
 	
-	
+	/**
+	 * Gets the selected action.
+	 * 
+	 * @return the selectedAction
+	 */
+	public String getSelectedAction() {
+		return selectedAction;
+	}
+
+	/**
+	 * Sets the selected action.
+	 * 
+	 * @param selectedAction
+	 *            the selectedAction to set
+	 */
+	public void setSelectedAction(String selectedAction) {
+		this.selectedAction = selectedAction;
+	}
 }
