@@ -35,7 +35,10 @@ public class SmFieldChangeUtil {
 		String showFieldChange = EpPropertiesUtils.getInstance().getProperty(
 				"sm.show.field.changed");
 		if (showFieldChange.equalsIgnoreCase("Y")
-				&& bean.getSmAppl() != null) {
+				&& bean.getSmAppl() != null
+				&& StringUtils.isNotBlank(bean.getSmAppl().getApplType())
+				&& !bean.getSmAppl().getApplType()
+						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
 			MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
 			mofReqDTO.setSupplierId(bean.getSmSupplier().getSupplierId());
 			bean.setLatestAppl(SmServiceLookup.getMofRegistrationSO()

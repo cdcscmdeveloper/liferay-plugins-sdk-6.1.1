@@ -248,8 +248,9 @@
 										and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
 									oriValue="#{backingBean.managedBean.latestCompanyExperience.clientType}" 
 									currValue="#{backingBean.managedBean.selectedCompanyExperience.clientType}" 
-									alertValue="#{backingBean.managedBean.latestCompanyExperience.clientType eq 'F' 
-									? lbl['lbl.sm.busNtw.fdrGov'] : lbl['lbl.sm.busNtw.others']}"/>
+									alertValue="#{empty backingBean.managedBean.latestCompanyExperience.clientType ?  lbl['lbl.sm.no.available'] :
+									(backingBean.managedBean.latestCompanyExperience.clientType eq 'F' 
+									? lbl['lbl.sm.busNtw.fdrGov'] : lbl['lbl.sm.busNtw.nonfdrGov'])}"/>
 							</td>
 						</tr>
 						<tr>
@@ -316,10 +317,11 @@
 										and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
 									oriValue="#{backingBean.managedBean.latestCompanyExperience.progressStatus}" 
 									currValue="#{backingBean.managedBean.selectedCompanyExperience.progressStatus}" 
-									alertValue="#{backingBean.managedBean.latestCompanyExperience.progressStatus eq 'P' 
+									alertValue="#{empty backingBean.managedBean.latestCompanyExperience.progressStatus ? lbl['lbl.sm.no.available'] :
+									(backingBean.managedBean.latestCompanyExperience.progressStatus eq 'P' 
 									? lbl['lbl.sm.projDtls.inProgress'] : (
 									backingBean.managedBean.latestCompanyExperience.progressStatus eq 'P' ? lbl['lbl.sm.projDtls.success'] 
-									: lbl['lbl.sm.projDtls.fail'])}"/>
+									: lbl['lbl.sm.projDtls.fail']))}"/>
 								<p:message id="supConsExpPrgStMsg" for="supConsExpPrgSt"
 									showSummary="true" showDetail="false" display="icon" /></td>
 						</tr>
