@@ -13,7 +13,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -122,7 +121,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalItem;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleItem;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleLable;
-import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -143,7 +141,6 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.supplierfinalization.SupplierFinalizationManagedBean;
 import my.ep.web.util.CommonUtils;
-import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -2766,14 +2763,14 @@ public class SupplierFinalizationBackingBean extends
 		context.put("panel", isPanel);
 
 		List<ScQtCategory> categoryResults = new ArrayList<ScQtCategory>();
-		IQTDetailSO QtDetailsSO;
+		IQTDetailSO qtDetailsSO;
 		try {
-			QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
+			qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 			tenderReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			tenderReqDTO.setQtdetail(this.getManagedBean().getScQt());
-			QuationTenderResDTO tenderResDTO = QtDetailsSO
+			QuationTenderResDTO tenderResDTO = qtDetailsSO
 					.retriveQTSuppQulCriDetails(tenderReqDTO);
 			categoryResults = tenderResDTO.getCategoryResultBean()
 					.getResultList();
@@ -2781,7 +2778,7 @@ public class SupplierFinalizationBackingBean extends
 				context.put("locality", tenderResDTO.getLocationDetails());
 			}
 		} finally {
-			QtDetailsSO = null;
+			qtDetailsSO = null;
 		}
 
 		String locationLevel = null;
@@ -4643,7 +4640,7 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setRecommendedSupplierList(null);
 		this.getManagedBean().setShortlistedSupplierList(null);
 		this.getManagedBean().setDisableSupplierSelection(false);
-		this.getManagedBean().setZonalPackageItemsCancelled(false);
+		this.getManagedBean().setItemCancelled(false);
 
 		this.getManagedBean().setZoneActiveIndex(zoneTabIndex);
 		TplSpecZoneDtl selectedZone = this.getManagedBean().getZoneDetails()
@@ -4844,7 +4841,7 @@ public class SupplierFinalizationBackingBean extends
 						} 
 						
 						if (scQtRecommend.isCancelled()) {
-							this.getManagedBean().setZonalPackageItemsCancelled(true);
+							this.getManagedBean().setItemCancelled(true);
 						}
 						if (scQtRecommend.isAwardedItem()) {
 							this.getManagedBean().setDisableSupplierSelection(true);
@@ -5311,14 +5308,15 @@ public class SupplierFinalizationBackingBean extends
 	}	
 
 	/**
-	 * Event for Recommendation Type By Item or By Package under Supplier
-	 * Finalization tab
+	 * Event for Recommendation Type By Item or By Package 
+	 * under Supplier Finalization tab
 	 */
 	public void recommendTypeEvent() {
 		debugLogger("recommendTypeEvent");
 
 		this.getManagedBean().setOnlineBidding(false);
 		this.getManagedBean().setMultipleLoi(false);
+		this.getManagedBean().setItemCancelled(false);
 		this.getManagedBean().setDisableSupplierSelection(false);
 		this.getManagedBean().setRecommendedSupplier(null);
 		this.getManagedBean().setShortlistedSupplierList(
@@ -5644,20 +5642,24 @@ public class SupplierFinalizationBackingBean extends
 	public void itemCancellationEvent(ScQtRecommend scQtRecommend) {
 		debugLogger("itemCancellationEvent");
 		
-		resetRecommendFlag();
-		this.getManagedBean().setShortlistedSupplierList(null);
-		this.getManagedBean().setDisableSupplierSelection(false);
-		
-		// clear the RecommendDtl list
-		if (scQtRecommend.getRecommendDtls() != null) {
-			scQtRecommend.setAwardSupplierList(
-					new ArrayList<ScQtEvaluationResultDtl>());
+		if (scQtRecommend.isCancelled()) {
+			this.getManagedBean().setItemCancelled(true);
+			this.getManagedBean().setShortlistedSupplierList(null);
+			this.getManagedBean().setDisableSupplierSelection(false);
 			
-			prepareToDeleteRecommendDtls(scQtRecommend);
-
-			// reset awarded & short listed flag.
-			resetShortlistedSupplierData(
-					scQtRecommend.getShortListedSupplierList());			
+			// clear the RecommendDtl list
+			if (scQtRecommend.getRecommendDtls() != null) {
+				scQtRecommend.setAwardSupplierList(
+						new ArrayList<ScQtEvaluationResultDtl>());
+				
+				prepareToDeleteRecommendDtls(scQtRecommend);
+	
+				// reset awarded & short listed flag.
+				resetShortlistedSupplierData(
+						scQtRecommend.getShortListedSupplierList());			
+			}
+		} else {
+			this.getManagedBean().setItemCancelled(false);
 		}
 	}
 	
@@ -5669,7 +5671,7 @@ public class SupplierFinalizationBackingBean extends
 		debugLogger("zonalPackageItemsCancellationEvent");
 		
 		this.getManagedBean().setDisableSupplierSelection(false);
-		boolean zonalPackageItemsCancelled = getManagedBean().isZonalPackageItemsCancelled();
+		boolean zonalPackageItemsCancelled = getManagedBean().isItemCancelled();
 		
 		Long currentZoneId = getManagedBean().getCurrentZone().getSpecZoneId();
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
@@ -5902,9 +5904,14 @@ public class SupplierFinalizationBackingBean extends
 	private void addSelectedItem(ScQtRecommend scQtRecommend) {
 		this.getManagedBean().setSelectedItemAlreadyAwarded(false);
 		
+		if (scQtRecommend.isCancelled()) {
+			this.getManagedBean().setItemCancelled(true);
+		} else {
+			this.getManagedBean().setItemCancelled(false);
+		}
+		
 		if (scQtRecommend.isDisabled() || 
-				scQtRecommend.isAwardedItem() || 
-					scQtRecommend.isCancelled()) {
+				scQtRecommend.isAwardedItem()) {
 			if (this.getManagedBean().isItemRowSelect()) {
 				this.getManagedBean().setDisableSupplierSelection(true);
 				if (scQtRecommend.isAwardedItem()) {

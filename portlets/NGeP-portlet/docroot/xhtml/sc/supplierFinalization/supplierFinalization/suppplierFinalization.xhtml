@@ -81,7 +81,9 @@
 																suppFinalizationBackingBean.managedBean.itemFwdToHighAuthority or 
 													(isQTStatusReFinalized and 
 														(suppFinalizationBackingBean.managedBean.scQt.zonal or 
-															suppFinalizationBackingBean.managedBean.initialSelectionItemized) )}">
+															suppFinalizationBackingBean.managedBean.initialSelectionItemized or 
+																suppFinalizationBackingBean.managedBean.finalizationMethod eq 
+																	ParameterConst.recommendByOnlineBidding) )}">
 									<f:selectItems value="#{suppFinalizationBackingBean.getRecommendTypeRadioBtn()}" />
 									<p:ajax event="change" update="@([id$=itemSupplierPanel],[id$=recommendSupplierPanel])" 
 										listener="#{suppFinalizationBackingBean.recommendTypeEvent}" process="@this" 

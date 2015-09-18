@@ -26,7 +26,7 @@
 					<tr>
 						<td>
 							<p:selectOneMenu id="cancelItems" label="#{lbl['lbl.sc.cancelled']}" required="true"
-								value="#{suppFinalizationBackingBean.managedBean.zonalPackageItemsCancelled}"
+								value="#{suppFinalizationBackingBean.managedBean.itemCancelled}"
 								disabled="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
 										suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK)}">
 								<f:selectItems value="#{suppFinalizationBackingBean.getItemCancellationDropDown()}" />
@@ -43,7 +43,7 @@
 					
 		<p:outputPanel id="supplierListTblPanel">
 			<ui:param name="showSelectionColumn" value="#{empty suppFinalizationBackingBean.managedBean.finalizationMethod or 
-		               			  			 				!suppFinalizationBackingBean.managedBean.zonalPackageItemsCancelled}" />
+		               			  			 				!suppFinalizationBackingBean.managedBean.itemCancelled}" />
 			<p:dataTable id="supplierListTblSingle"
 				var="shortlistedSupp" widgetVar="shortlistedSuppDtls" 
 				value="#{suppFinalizationBackingBean.managedBean.shortlistedSupplierList}"
