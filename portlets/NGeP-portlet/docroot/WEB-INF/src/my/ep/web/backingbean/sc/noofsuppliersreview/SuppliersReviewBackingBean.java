@@ -210,11 +210,12 @@ public class SuppliersReviewBackingBean extends
 			if (this.getManagedBean().getSuppliersReviewSearchBean()
 					.getSelectedStatesList() != null
 					&& !this.getManagedBean().getSuppliersReviewSearchBean()
-							.getSelectedStatesList().isEmpty())
+							.getSelectedStatesList().isEmpty()) {
 				for (PmState pmState : this.getManagedBean()
 						.getSuppliersReviewSearchBean().getSelectedStatesList()) {
 					stateIdList.add(pmState.getStateId());
 				}
+			}
 		} else if (this.getManagedBean().getSuppliersReviewSearchBean()
 				.getDropDownStatesIdList() != null
 				&& this.getManagedBean().getSuppliersReviewSearchBean()

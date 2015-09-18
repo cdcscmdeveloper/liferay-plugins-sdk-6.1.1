@@ -12,6 +12,7 @@ package my.ep.web.backingbean.sc.marketresearch;
 
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -161,10 +162,7 @@ public class MarketResearchBackingBean extends
 		public SearchMarketResearchPagingDataModel() {
 			super("marketdetailsId", getManagedBean().isLazy());
 		}
-
-		/* (non-Javadoc)
-		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
-		 */
+		
 		@Override
 		public ISearchResultBean<Object[]> pageChangeListener(
 				ISearchBean<Object[]> searchBean) {
@@ -182,9 +180,32 @@ public class MarketResearchBackingBean extends
 				
 				MarketResearchResDTO marketResearchResDTO = marketResearchSO
 						.searchMarketResearchData(getMarketResearchData(searchBean));
+			
 				getManagedBean().setLazy(true);
+				
 				if (marketResearchResDTO.isSuccessful()) {
 
+					ISearchResultBean<Object[]> searchResult = marketResearchResDTO
+							.getMarketResearchResultBean();
+					
+					for (Object[] result : searchResult.getResultList()) {
+						
+						log.info("LOA Acknowledgement Date == > " + result[0]);
+						log.info("File Name == > " + result[2]);
+						log.info("Category == > " + result[3]);
+						
+						if (result[3].equals(new BigDecimal(1))) {
+
+							String loaSupplierTechinical = (String) result[1];
+							log.info("Supplier Uploaded Document (Technical) == > "
+									+ loaSupplierTechinical);
+						} else {
+							String loaSupplierFinancial = (String) result[1];
+							log.info("Supplier Uploaded Document (Financial)  == > "
+									+ loaSupplierFinancial);
+						}
+
+					}					
 					return marketResearchResDTO.getMarketResearchResultBean();
 
 				}
@@ -344,7 +365,7 @@ public class MarketResearchBackingBean extends
 			
 	private MarketResearchReqDTO getMarketResearchData(
 			ISearchBean<Object[]> searchBean) {
-
+        log.info("getMarketResearchData");
 		Integer procurementType = this.getManagedBean().getProcurementType();
 		Date procurementYear = this.getManagedBean().getProcurementYear();
 		String procTitle = this.getManagedBean().getProcTitle();
