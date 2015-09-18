@@ -496,9 +496,11 @@ public class ApprovalBackingBean extends
 						.getPublishPeriod());
 			}
 			this.setDefaultDateTime(this.getManagedBean().getQt());
-			/*getManagedBean().setProposalValidityUntil(
-					DateUtils.addDays(clsDate, this.getManagedBean().getQt()
-							.getQtValidityPeriod()));*/
+			/*
+			 * getManagedBean().setProposalValidityUntil(
+			 * DateUtils.addDays(clsDate, this.getManagedBean().getQt()
+			 * .getQtValidityPeriod()));
+			 */
 
 		} else if (SCProcessNameConst.APPROVE_PCB.equalsIgnoreCase(taskName)) {
 			paramTypes = getRequestTypes(((SCQuotationTenderDataType) obj)
@@ -744,7 +746,8 @@ public class ApprovalBackingBean extends
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								ICommitteSO.class);
 				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
-				committeReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
+				committeReqDTO.setToken(facesScopes
+						.getBPMAuthenticationCtxToken());
 				committeReqDTO.setTaskId(this.getManagedBean().getTaskId());
 				committeReqDTO.setPayLoad(this.getManagedBean()
 						.getQuotationTenderDataType());
@@ -813,6 +816,26 @@ public class ApprovalBackingBean extends
 					if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 						qtReqDTO.setRejected(true);
 						revertToOldValues(approvalRequests, qt);
+					} else {
+						if (CollectionUtils.isNotEmpty(approvalRequests)) {
+
+							for (int i = 0; i < approvalRequests.size(); i++) {
+								ScQtApprovalRequest approvalRequest = approvalRequests
+										.get(i);
+								String approvalType = approvalRequest
+										.getApprovalType().getParameterCode();
+								if (ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD
+										.equalsIgnoreCase(approvalType)
+										|| ParameterConst.APPROVAL_REQUEST_EXTEND_CLOSING_DATE
+												.equalsIgnoreCase(approvalType)) {
+
+									qt.setChanged(true);
+								}
+
+							}
+
+						}
+
 					}
 				}
 				updateApprovalRequest(approvalRequests, outcome);
