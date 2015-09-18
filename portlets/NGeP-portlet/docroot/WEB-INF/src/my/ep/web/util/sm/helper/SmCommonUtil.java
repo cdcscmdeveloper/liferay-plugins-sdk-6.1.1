@@ -135,6 +135,7 @@ import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
+import org.springframework.beans.BeanUtils;
 
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Layout;
@@ -143,6 +144,7 @@ import com.liferay.portal.theme.ThemeDisplay;
 // TODO: Auto-generated Javadoc
 public class SmCommonUtil {
 	private static Logger log = Logger.getLogger(SmCommonUtil.class);
+	private static SmCommonUtil instance;
 
 	/**
 	 * Hash string.
@@ -2691,28 +2693,28 @@ public class SmCommonUtil {
 		return retVal;
 	}
 
-	public static PmCountry getCountryById(Long countryId) {
+	public PmCountry getCountryById(Long countryId) {
 		CountryReqDTO reqDTO = new CountryReqDTO();
 		reqDTO.setCountryId(countryId);
 		return SmServiceLookup.getCountrySO().retrieveCountryById(reqDTO)
 				.getPmCountry();
 	}
 
-	public static PmState getStateById(Long stateId) {
+	public PmState getStateById(Long stateId) {
 		StateReqDTO reqDTO = new StateReqDTO();
 		reqDTO.setStateId(stateId);
 		return SmServiceLookup.getStateSO().retriveStateByID(reqDTO)
 				.getPmState();
 	}
 
-	public static PmDistrict getDistrictById(Long districtId) {
+	public PmDistrict getDistrictById(Long districtId) {
 		DistrictReqDTO reqDTO = new DistrictReqDTO();
 		reqDTO.setDistrictId(districtId);
 		return SmServiceLookup.getDistrictSO().retriveDistrictByID(reqDTO)
 				.getPmDistrict();
 	}
 
-	public static PmCity getCityById(Long cityId) {
+	public PmCity getCityById(Long cityId) {
 		CityReqDTO reqDTO = new CityReqDTO();
 		reqDTO.setCityId(cityId);
 		return SmServiceLookup.getCitySO().retriveCityById(reqDTO).getPmCity();
@@ -2721,7 +2723,7 @@ public class SmCommonUtil {
 	public static String getCountryLabelById(Long countryId) {
 		String name = "";
 		if (countryId != null) {
-			name = getCountryById(countryId).getCountryName();
+			name = getInstance().getCountryById(countryId).getCountryName();
 		}
 		return name;
 	}
@@ -2729,7 +2731,7 @@ public class SmCommonUtil {
 	public static String getStateLabelById(Long stateId) {
 		String name = "";
 		if (stateId != null) {
-			name = getStateById(stateId).getStateName();
+			name = getInstance().getStateById(stateId).getStateName();
 		}
 		return name;
 	}
@@ -2737,7 +2739,7 @@ public class SmCommonUtil {
 	public static String getDistrictLabelById(Long districtId) {
 		String name = "";
 		if (districtId != null) {
-			name = getDistrictById(districtId).getDistrictName();
+			name = getInstance().getDistrictById(districtId).getDistrictName();
 		}
 		return name;
 	}
@@ -2745,7 +2747,7 @@ public class SmCommonUtil {
 	public static String getCityLabelById(Long cityId) {
 		String name = "";
 		if (cityId != null) {
-			name = getCityById(cityId).getCityName();
+			name = getInstance().getCityById(cityId).getCityName();
 		}
 		return name;
 	}
@@ -2827,6 +2829,29 @@ public class SmCommonUtil {
 			}
 		}
 		return retVal;
+	}
+	
+	public void copyAddress(SmAddress srcAddr,SmAddress targetAddr){
+		if (targetAddr == null || targetAddr.getPmCountry() == null
+				|| targetAddr.getPmState() == null) {
+			targetAddr = SmApplicationUtil.setDefaultAddr(null);
+		}
+		BeanUtils.copyProperties(srcAddr, targetAddr, new String[] {
+				"smAssociateCompanies", "smEquityCompanies", "smFacilities",
+				"smPersonnelAddresses", "smSupplierBanks",
+				"smSupplierBranches", "smCompanyAddresses", "addressId" });
+	}
+
+	public static SmCommonUtil getInstance() {
+		if (instance == null) {
+			try {
+				instance = new SmCommonUtil();
+			} catch (Exception e) {
+				log.error(e.getMessage());
+			}
+		}
+		return instance;
+
 	}
 
 }

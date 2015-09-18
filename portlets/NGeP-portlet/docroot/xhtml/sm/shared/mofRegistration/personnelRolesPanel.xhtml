@@ -35,16 +35,31 @@
 												<p:ajax event="change" update=":form:tt:shrRolesPanel, @([id$=shareHolderAddrDialog])"
 													process=":form:tt:shrRolesPanel" partialSubmit="true"
 													listener="#{backingBean.managePersonnelRoles('Y')}" />
-											</p:selectBooleanCheckbox></td>
-										<td><p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.dir']}" /></td>
+											</p:selectBooleanCheckbox>
+										</td>
+										<td>
+											<ac:smCheckBoxChangeAlert 
+												isShow="#{backingBean.managedBean.showFieldChanges
+													and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+												oriValue="#{backingBean.managedBean.latestPersonnel.director}" 
+												currValue="#{backingBean.managedBean.selectedShareHolder.director}" />
+											<p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.dir']}" />
+										</td>
 										<td style="width: 20px"><p:selectBooleanCheckbox
 												value="#{backingBean.managedBean.selectedShareHolder.higherManagement}">
 												<p:ajax event="change" update=":form:tt:shrRolesPanel, @([id$=shareHolderAddrDialog])"
 													process=":form:tt:shrRolesPanel" partialSubmit="true"
 													listener="#{backingBean.managePersonnelRoles('Y')}" />
 											</p:selectBooleanCheckbox></td>
-										<td><p:outputLabel style="float: left"
-												value="#{lbl['lbl.sm.person.hghMngmt']}" /></td>
+										<td>
+											<ac:smCheckBoxChangeAlert 
+												isShow="#{backingBean.managedBean.showFieldChanges
+													and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+												oriValue="#{backingBean.managedBean.latestPersonnel.higherManagement}" 
+												currValue="#{backingBean.managedBean.selectedShareHolder.higherManagement}" />
+											<p:outputLabel style="float: left"
+												value="#{lbl['lbl.sm.person.hghMngmt']}" />
+										</td>
 									</c:if>
 								</c:if>
 							</tr>
@@ -57,7 +72,14 @@
 												process=":form:tt:shrRolesPanel" partialSubmit="true"
 												listener="#{backingBean.managePersonnelRoles('N')}" />
 										</p:selectBooleanCheckbox></td>
-									<td><p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.mngmt']}" /></td>
+									<td>
+										<ac:smCheckBoxChangeAlert 
+												isShow="#{backingBean.managedBean.showFieldChanges
+													and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+												oriValue="#{backingBean.managedBean.latestPersonnel.management}" 
+												currValue="#{backingBean.managedBean.selectedShareHolder.management}" />
+										<p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.mngmt']}" />
+									</td>
 									<td style="width: 20px"><p:selectBooleanCheckbox
 											disabled="#{backingBean.managedBean.selectedShareHolder.disableStaff}"
 											value="#{backingBean.managedBean.selectedShareHolder.clerical}" >
@@ -65,7 +87,14 @@
 												process=":form:tt:shrRolesPanel" partialSubmit="true" listener="#{backingBean.setRoleStaffAddrReqd()}"/>
 										</p:selectBooleanCheckbox>
 									</td>
-									<td><p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.stf']}" /></td>
+									<td>
+										<ac:smCheckBoxChangeAlert 
+												isShow="#{backingBean.managedBean.showFieldChanges
+													and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+												oriValue="#{backingBean.managedBean.latestPersonnel.clerical}" 
+												currValue="#{backingBean.managedBean.selectedShareHolder.clerical}" />
+										<p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.stf']}" />
+									</td>
 								</tr>
 							</c:if>
 						</table>
@@ -88,8 +117,15 @@
 												process=":form:tt:shrRolesPanel" partialSubmit="true"
 												listener="#{backingBean.managePersonnelRoles('Y')}" />
 										</p:selectBooleanCheckbox></td>
-									<td><p:outputLabel style="float: left"
-											value="#{lbl['lbl.sm.person.equiOwner']}" /></td>
+									<td>
+										<ac:smCheckBoxChangeAlert 
+												isShow="#{backingBean.managedBean.showFieldChanges
+													and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+												oriValue="#{backingBean.managedBean.latestPersonnel.equityOwner}" 
+												currValue="#{backingBean.managedBean.selectedShareHolder.equityOwner}" />
+										<p:outputLabel style="float: left"
+											value="#{lbl['lbl.sm.person.equiOwner']}" />
+									</td>
 								</c:if>
 								<c:if
 									test="#{backingBean.managedBean.currentPageType ne SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}">
@@ -102,15 +138,29 @@
 													process=":form:tt:shrRolesPanel" partialSubmit="true"
 													listener="#{backingBean.managePersonnelRoles('Y')}" />
 											</p:selectBooleanCheckbox></td>
-										<td><p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.dir']}" /></td>
+										<td>
+											<ac:smCheckBoxChangeAlert 
+												isShow="#{backingBean.managedBean.showFieldChanges
+													and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+												oriValue="#{backingBean.managedBean.latestPersonnel.director}" 
+												currValue="#{backingBean.managedBean.selectedShareHolder.director}" />
+											<p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.dir']}" />
+										</td>
 										<td style="width: 20px"><p:selectBooleanCheckbox
 												value="#{backingBean.managedBean.selectedShareHolder.higherManagement}">
 												<p:ajax event="change" update=":form:tt:shrRolesPanel, @([id$=shareHolderAddrDialog])"
 													process=":form:tt:shrRolesPanel" partialSubmit="true"
 													listener="#{backingBean.managePersonnelRoles('Y')}" />
 											</p:selectBooleanCheckbox></td>
-										<td><p:outputLabel style="float: left"
-												value="#{lbl['lbl.sm.person.hghMngmt']}" /></td>
+										<td>
+											<ac:smCheckBoxChangeAlert 
+												isShow="#{backingBean.managedBean.showFieldChanges
+													and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+												oriValue="#{backingBean.managedBean.latestPersonnel.higherManagement}" 
+												currValue="#{backingBean.managedBean.selectedShareHolder.higherManagement}" />
+											<p:outputLabel style="float: left"
+												value="#{lbl['lbl.sm.person.hghMngmt']}" />
+										</td>
 									</c:if>
 									<td style="width: 20px"><p:selectBooleanCheckbox
 											value="#{backingBean.managedBean.selectedShareHolder.management}">
@@ -118,7 +168,14 @@
 												process=":form:tt:shrRolesPanel" partialSubmit="true"
 												listener="#{backingBean.managePersonnelRoles('N')}" />
 										</p:selectBooleanCheckbox></td>
-									<td><p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.mngmt']}" /></td>
+									<td>
+										<ac:smCheckBoxChangeAlert 
+												isShow="#{backingBean.managedBean.showFieldChanges
+													and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+												oriValue="#{backingBean.managedBean.latestPersonnel.management}" 
+												currValue="#{backingBean.managedBean.selectedShareHolder.management}" />
+										<p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.mngmt']}" />
+									</td>
 								</c:if>
 							</tr>
 							<c:if
@@ -130,8 +187,15 @@
 												process=":form:tt:shrRolesPanel" partialSubmit="true"
 												listener="#{backingBean.managePersonnelRoles('N')}" />
 										</p:selectBooleanCheckbox></td>
-									<td><p:outputLabel style="float: left"
-											value="#{lbl['lbl.sm.professional']}" /></td>
+									<td>
+										<ac:smCheckBoxChangeAlert 
+												isShow="#{backingBean.managedBean.showFieldChanges
+													and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+												oriValue="#{backingBean.managedBean.latestPersonnel.prof}" 
+												currValue="#{backingBean.managedBean.selectedShareHolder.prof}" />
+										<p:outputLabel style="float: left"
+											value="#{lbl['lbl.sm.professional']}" />
+									</td>
 									<td style="width: 20px"><p:selectBooleanCheckbox
 											disabled="#{backingBean.managedBean.selectedShareHolder.disableSemiProf}"
 											value="#{backingBean.managedBean.selectedShareHolder.semiProf}">
@@ -139,8 +203,15 @@
 												process=":form:tt:shrRolesPanel" partialSubmit="true"
 												listener="#{backingBean.managePersonnelRoles('N')}" />
 										</p:selectBooleanCheckbox></td>
-									<td><p:outputLabel style="float: left"
-											value="#{lbl['lbl.sm.professional.semi']}" /></td>
+									<td>
+										<ac:smCheckBoxChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											oriValue="#{backingBean.managedBean.latestPersonnel.semiProf}" 
+											currValue="#{backingBean.managedBean.selectedShareHolder.semiProf}" />
+										<p:outputLabel style="float: left"
+											value="#{lbl['lbl.sm.professional.semi']}" />
+									</td>
 									<td style="width: 20px"><p:selectBooleanCheckbox
 											disabled="#{backingBean.managedBean.selectedShareHolder.disableStaff}"
 											value="#{backingBean.managedBean.selectedShareHolder.clerical}" >
@@ -148,7 +219,14 @@
 												process=":form:tt:shrRolesPanel" partialSubmit="true" listener="#{backingBean.setRoleStaffAddrReqd()}"/>
 										</p:selectBooleanCheckbox>
 									</td>
-									<td><p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.composition.clrStf']}" /></td>
+									<td>
+										<ac:smCheckBoxChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											oriValue="#{backingBean.managedBean.latestPersonnel.clerical}" 
+											currValue="#{backingBean.managedBean.selectedShareHolder.clerical}" />
+										<p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.composition.clrStf']}" />
+									</td>
 								</tr>
 							</c:if>
 						</table>

@@ -65,8 +65,16 @@
 								label="#{lbl['lbl.sm.staff.bumi']}" required="true">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
-							</p:inputText> <p:message for="bumiStf" showDetail="false" showSummary="true"
+							</p:inputText> 
+							<p:message for="bumiStf" showDetail="false" showSummary="true"
 								display="icon" /></td>
+						<td width="10px">
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges}"
+								oriValue="#{backingBean.getStaffTotalByCategory(staff.staffCategory).totalBumi}" 
+								currValue="#{staff.totalBumi}" 
+								alertValue="#{backingBean.getStaffTotalByCategory(staff.staffCategory).totalBumi}"/>
+						</td>
 						<td width="150px"><p:outputLabel
 								value="#{lbl['lbl.sm.staff.nonBumi']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
@@ -76,8 +84,16 @@
 								value="#{staff.totalNonBumi}" maxlength="4" required="true">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
-							</p:inputText> <p:message for="nonBumStf" showDetail="false" showSummary="true"
+							</p:inputText> 
+							<p:message for="nonBumStf" showDetail="false" showSummary="true"
 								display="icon" /></td>
+						<td width="10px">
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges}"
+								oriValue="#{backingBean.getStaffTotalByCategory(staff.staffCategory).totalNonBumi}" 
+								currValue="#{staff.totalNonBumi}" 
+								alertValue="#{backingBean.getStaffTotalByCategory(staff.staffCategory).totalNonBumi}"/>
+						</td>
 						<td width="250px"><p:outputLabel
 								value="#{lbl['lbl.sm.staff.frgnr']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
@@ -87,8 +103,16 @@
 								style="min-width: 0px !important;" required="true">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
-							</p:inputText> <p:message for="frgStf" showDetail="false" showSummary="true"
+							</p:inputText> 
+							<p:message for="frgStf" showDetail="false" showSummary="true"
 								display="icon" /></td>
+						<td width="10px">
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges}"
+								oriValue="#{backingBean.getStaffTotalByCategory(staff.staffCategory).totalForeigner}" 
+								currValue="#{staff.totalForeigner}" 
+								alertValue="#{backingBean.getStaffTotalByCategory(staff.staffCategory).totalForeigner}"/>
+						</td>
 					</tr>
 
 				</table>

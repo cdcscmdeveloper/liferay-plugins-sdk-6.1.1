@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel toggleable="true">
 		<f:facet name="header">
@@ -66,7 +67,13 @@
 								readonly="true" disabled="true">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-							</p:inputText></td>
+							</p:inputText>
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges}"
+								oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.paidUpCapital}" 
+								currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}" 
+								alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestAppl.smCompanyBasic.paidUpCapital)}"/>
+						</td>
 					</tr>
 				</c:if>
 				<c:if
@@ -89,7 +96,13 @@
 								<p:ajax event="blur"
 									update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
 									listener="#{backingBean.calculateCapital}" />
-							</p:inputText> <p:message id="authCapAmtMsg" for="authCapAmt"
+							</p:inputText> 
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges}"
+								oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.authorizedCapital}" 
+								currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.authorizedCapital}" 
+								alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestAppl.smCompanyBasic.authorizedCapital)}"/>
+							<p:message id="authCapAmtMsg" for="authCapAmt"
 								showSummary="true" showDetail="false" display="icon" /></td>
 
 						<td><p:outputLabel
@@ -100,7 +113,13 @@
 								readonly="true" disabled="true">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-							</p:inputText></td>
+							</p:inputText>
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges}"
+								oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.paidUpCapital}" 
+								currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}" 
+								alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestAppl.smCompanyBasic.paidUpCapital)}"/>
+						</td>
 					</tr>
 				</c:if>
 				<c:if
@@ -123,7 +142,13 @@
 								<p:ajax event="blur"
 									update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
 									listener="#{backingBean.calculateCapital}" />
-							</p:inputText> <p:message id="totalShrAmtMsg" for="totalShrAmt"
+							</p:inputText> 
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges}"
+								oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.totalShare}" 
+								currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.totalShare}" 
+								alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestAppl.smCompanyBasic.totalShare)}"/>
+							<p:message id="totalShrAmtMsg" for="totalShrAmt"
 								showSummary="true" showDetail="false" display="icon" /></td>
 						<td><p:outputLabel
 								value="#{lbl['lbl.sm.equiStatus.accumShr']}" /></td>
@@ -133,7 +158,13 @@
 								readonly="true" disabled="true">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-							</p:inputText></td>
+							</p:inputText>
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges}"
+								oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.paidUpCapital}" 
+								currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}" 
+								alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestAppl.smCompanyBasic.paidUpCapital)}"/>
+						</td>
 
 					</tr>
 					<tr>
@@ -144,7 +175,13 @@
 								value="#{backingBean.managedBean.smAppl.smCompanyBasic.totalMember}">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
-							</p:inputText></td>
+							</p:inputText>
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges}"
+								oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.totalMember}" 
+								currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.totalMember}" 
+								alertValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.totalMember}"/>
+						</td>
 					</tr>
 				</c:if>
 
@@ -174,6 +211,11 @@
 												update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
 												listener="#{backingBean.calculateCapital}" />
 										</p:inputText>
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges}"
+											oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.bumiEquity}" 
+											currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.bumiEquity}" 
+											alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestAppl.smCompanyBasic.bumiEquity)}"/>
 									</p:column>
 									<p:column>
 										<p:inputText readonly="true" id="bumiPerc" size="10"
@@ -200,6 +242,11 @@
 												update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
 												listener="#{backingBean.calculateCapital}" />
 										</p:inputText>
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges}"
+											oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.nonBumiEquity}" 
+											currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.nonBumiEquity}" 
+											alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestAppl.smCompanyBasic.nonBumiEquity)}"/>
 									</p:column>
 									<p:column>
 										<p:inputText readonly="true" id="nonBumPer" size="10"
@@ -226,6 +273,11 @@
 												update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
 												listener="#{backingBean.calculateCapital}" />
 										</p:inputText>
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges}"
+											oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.foreignerEquity}" 
+											currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.foreignerEquity}" 
+											alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestAppl.smCompanyBasic.foreignerEquity)}"/>
 									</p:column>
 									<p:column>
 										<p:inputText disabled="true" readonly="true" size="10"
@@ -256,6 +308,11 @@
 												<f:convertNumber
 													pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 											</p:inputText>
+											<ac:smFieldChangeAlert 
+												isShow="#{backingBean.managedBean.showFieldChanges}"
+												oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.govtUnitrustEquity}" 
+												currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.govtUnitrustEquity}" 
+												alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestAppl.smCompanyBasic.govtUnitrustEquity)}"/>
 										</p:column>
 										<p:column>
 											<p:inputText disabled="true" readonly="true" size="10"
@@ -283,6 +340,11 @@
 													update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
 													listener="#{backingBean.calculateCapital}" />
 											</p:inputText>
+											<ac:smFieldChangeAlert 
+												isShow="#{backingBean.managedBean.showFieldChanges}"
+												oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.govtEquity}" 
+												currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.govtEquity}" 
+												alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestAppl.smCompanyBasic.govtEquity)}"/>
 										</p:column>
 										<p:column>
 											<p:inputText disabled="true" readonly="true" size="10"
@@ -310,6 +372,11 @@
 													update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
 													listener="#{backingBean.calculateCapital}" />
 											</p:inputText>
+											<ac:smFieldChangeAlert 
+												isShow="#{backingBean.managedBean.showFieldChanges}"
+												oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.foreignCompanyEquity}" 
+												currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.foreignCompanyEquity}" 
+												alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestAppl.smCompanyBasic.foreignCompanyEquity)}"/>
 										</p:column>
 										<p:column>
 											<p:inputText disabled="true" readonly="true" size="10"
@@ -337,6 +404,11 @@
 													update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
 													listener="#{backingBean.calculateCapital}" />
 											</p:inputText>
+											<ac:smFieldChangeAlert 
+												isShow="#{backingBean.managedBean.showFieldChanges}"
+												oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.localCompanyEquity}" 
+												currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.localCompanyEquity}" 
+												alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestAppl.smCompanyBasic.localCompanyEquity)}"/>
 										</p:column>
 										<p:column>
 											<p:inputText disabled="true" readonly="true" size="10"

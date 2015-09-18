@@ -2044,6 +2044,7 @@ public class SmApplicationUtil {
 					.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 			// cntry.setCountryId(1l);
 		}
+		addr.setCountryId(cntry.getCountryId());
 		addr.setPmCity(new PmCity());
 		addr.setPmCountry(cntry);
 		addr.setPmState(new PmState());
@@ -3759,10 +3760,14 @@ public class SmApplicationUtil {
 		desAddr.setPostcode(srcAddr.getPostcode());
 		desAddr.getPmCountry().setCountryId(
 				srcAddr.getPmCountry().getCountryId());
+		desAddr.setCountryId(srcAddr.getCountryId());
 		desAddr.getPmState().setStateId(srcAddr.getPmState().getStateId());
+		desAddr.setStateId(srcAddr.getStateId());
 		desAddr.getPmDistrict().setDistrictId(
 				srcAddr.getPmDistrict().getDistrictId());
+		desAddr.setDistrictId(srcAddr.getDistrictId());
 		desAddr.getPmCity().setCityId(srcAddr.getPmCity().getCityId());
+		desAddr.setCityId(srcAddr.getCityId());
 	}
 
 	/**
@@ -5756,5 +5761,422 @@ public class SmApplicationUtil {
 		}
 		return instance;
 
+	}
+
+	public void populateStateByCountry(SmAddress addr, String panelName,
+			SmApplicationManagedBean bean) {
+		try {
+			Long coutryId = addr.getCountryId();
+			List<PmState> stateLs = new ArrayList<PmState>();
+			List<SelectItem> stateItems = SmCommonUtil.getStateList(coutryId);
+			if (!panelName
+					.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL)) {
+				stateLs = this.retrievePmStateList(coutryId);
+			}
+			switch (panelName) {
+			case SupplierManagementConst.SM_BASIC_INFO_PANEL:
+				setPmStateDropdownValuesForBasicInfo(bean, coutryId);
+				bean.setBasicCompanyDistricts(new ArrayList<SelectItem>());
+				bean.setBasicCompanyCities(new ArrayList<SelectItem>());
+				break;
+			case SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL:
+				bean.setBasicOffFacStates(stateItems);
+				bean.setBasicOffFacDistricts(new ArrayList<SelectItem>());
+				bean.setBasicOffFacCities(new ArrayList<SelectItem>());
+				break;
+
+			case SupplierManagementConst.SM_BRANCH_PANEL:
+				bean.setBranchCompanyStates(stateItems);
+				bean.setBranchCompanyDistricts(new ArrayList<SelectItem>());
+				bean.setBranchCompanyCities(new ArrayList<SelectItem>());
+				break;
+			case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
+				bean.setAssocCompanyStates(stateItems);
+				bean.setAssocCompanyDistricts(new ArrayList<SelectItem>());
+				bean.setAssocCompanyCities(new ArrayList<SelectItem>());
+				break;
+			case SupplierManagementConst.SM_EQUI_COMPANY_PANEL:
+				bean.setEquiCompanyStates(stateItems);
+				bean.setEquiCompanyDistricts(new ArrayList<SelectItem>());
+				bean.setEquiCompanyCities(new ArrayList<SelectItem>());
+			case SupplierManagementConst.SM_FACTORY_FACILITY_PANEL:
+				bean.setFactoryFacilityStates(stateLs);
+				bean.setFactoryFacilityDistricts(new ArrayList<PmDistrict>());
+				bean.setFactoryFacilityCities(new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL:
+				bean.setDockFacilityStates(stateLs);
+				bean.setDockFacilityDistricts(new ArrayList<PmDistrict>());
+				bean.setDockFacilityCities(new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL:
+				bean.setWorkShopFacilityStates(stateLs);
+				bean.setWorkShopFacilityDistricts(new ArrayList<PmDistrict>());
+				bean.setWorkShopFacilityCities(new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_STORE_FACILITY_PANEL:
+				bean.setStoreFacilityStates(stateLs);
+				bean.setStoreFacilityDistricts(new ArrayList<PmDistrict>());
+				bean.setStoreFacilityCities(new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL:
+				bean.setShrHldrPermStates(stateItems);
+				bean.setShrHldrPermDistricts(new ArrayList<SelectItem>());
+				bean.setShrHldrPermCities(new ArrayList<SelectItem>());
+				break;
+			case SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL:
+				bean.setShrHldrResdStates(stateItems);
+				bean.setShrHldrResdDistricts(new ArrayList<SelectItem>());
+				bean.setShrHldrResdCities(new ArrayList<SelectItem>());
+				break;
+			case SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL:
+				bean.setShrHldrOffStates(stateItems);
+				bean.setShrHldrOffDistricts(new ArrayList<SelectItem>());
+				bean.setShrHldrOffCities(new ArrayList<SelectItem>());
+				break;
+			case SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL:
+				bean.setShrHldrMailStates(stateItems);
+				bean.setShrHldrMailDistricts(new ArrayList<SelectItem>());
+				bean.setShrHldrMailCities(new ArrayList<SelectItem>());
+				break;
+			case SupplierManagementConst.SM_BANK_INFO_PANEL:
+				bean.setBankStates(stateItems);
+				bean.setBankDistricts(new ArrayList<SelectItem>());
+				bean.setBankCities(new ArrayList<SelectItem>());
+				break;
+			case SupplierManagementConst.SM_PERSNL_PERM_ADDR_PANEL:
+				bean.setPersnlPermStates(stateLs);
+				bean.setPersnlPermDistricts(new ArrayList<PmDistrict>());
+				bean.setPersnlPermCities(new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_PERSNL_RESD_ADDR_PANEL:
+				bean.setPersnlResdStates(stateLs);
+				bean.setPersnlResdDistricts(new ArrayList<PmDistrict>());
+				bean.setPersnlResdCities(new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_PERSNL_OFF_ADDR_PANEL:
+				bean.setPersnlOffStates(stateLs);
+				bean.setPersnlOffDistricts(new ArrayList<PmDistrict>());
+				bean.setPersnlOffCities(new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_PERSNL_MAIL_ADDR_PANEL:
+				bean.setPersnlMailStates(stateLs);
+				bean.setPersnlMailDistricts(new ArrayList<PmDistrict>());
+				bean.setPersnlMailCities(new ArrayList<PmCity>());
+				break;
+			default:
+				log.info("**** This is an unknown panel ***** ");
+				break;
+			}
+			addr.setStateId(null);
+			addr.setDistrictId(null);
+			addr.setCityId(null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void populateDistrictsByState(SmAddress addr, String panelName,
+			SmApplicationManagedBean bean) {
+		try {
+			Long stateId = addr.getStateId();
+			DistrictReqDTO reqDTO = new DistrictReqDTO();
+			reqDTO.setStateId(stateId);
+			IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance()
+					.getServiceObject("pm", IDistrictSO.class);
+			DistrictResDTO resDTO = reqSO.retriveDistrictListByStateID(reqDTO);
+			List<PmDistrict> distLs = resDTO.getDistrictList();
+			List<SelectItem> distItems = SmCommonUtil.getDistrictList(stateId);
+			switch (panelName) {
+			case SupplierManagementConst.SM_BASIC_INFO_PANEL:
+				bean.setBasicCompanyDistricts(distItems);
+				bean.setBasicCompanyCities(new ArrayList<SelectItem>());
+				break;
+			case SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL:
+				bean.setBasicOffFacDistricts(distItems);
+				bean.setBasicOffFacCities(new ArrayList<SelectItem>());
+				break;
+
+			case SupplierManagementConst.SM_BRANCH_PANEL:
+				bean.setBranchCompanyDistricts(distItems);
+				bean.setBranchCompanyCities(new ArrayList<SelectItem>());
+				break;
+			case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
+				bean.setAssocCompanyDistricts(distItems);
+				bean.setAssocCompanyCities(new ArrayList<SelectItem>());
+				break;
+			case SupplierManagementConst.SM_EQUI_COMPANY_PANEL:
+				bean.setEquiCompanyDistricts(distItems);
+				bean.setEquiCompanyCities(new ArrayList<SelectItem>());
+				break;
+
+			case SupplierManagementConst.SM_FACTORY_FACILITY_PANEL:
+				bean.setFactoryFacilityDistricts(distLs);
+				bean.setFactoryFacilityCities(new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL:
+				bean.setDockFacilityDistricts(distLs);
+				bean.setDockFacilityCities(new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL:
+				bean.setWorkShopFacilityDistricts(distLs);
+				bean.setWorkShopFacilityCities(new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_STORE_FACILITY_PANEL:
+				bean.setStoreFacilityDistricts(distLs);
+				bean.setStoreFacilityCities(new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL:
+				bean.setShrHldrPermDistricts(distItems);
+				bean.setShrHldrPermCities(new ArrayList<SelectItem>());
+				break;
+			case SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL:
+				bean.setShrHldrResdDistricts(distItems);
+				bean.setShrHldrResdCities(new ArrayList<SelectItem>());
+				break;
+			case SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL:
+				bean.setShrHldrOffDistricts(distItems);
+				bean.setShrHldrOffCities(new ArrayList<SelectItem>());
+				break;
+			case SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL:
+				bean.setShrHldrMailDistricts(distItems);
+				bean.setShrHldrMailCities(new ArrayList<SelectItem>());
+				break;
+			case SupplierManagementConst.SM_PERSNL_PERM_ADDR_PANEL:
+				bean.setPersnlPermDistricts(distLs);
+				bean.setPersnlPermCities(new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_PERSNL_RESD_ADDR_PANEL:
+				bean.setPersnlResdDistricts(distLs);
+				bean.setPersnlResdCities(new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_PERSNL_OFF_ADDR_PANEL:
+				bean.setPersnlOffDistricts(distLs);
+				bean.setPersnlOffCities(new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_PERSNL_MAIL_ADDR_PANEL:
+				bean.setPersnlMailDistricts(distLs);
+				bean.setPersnlMailCities(new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_BANK_INFO_PANEL:
+				bean.setBankDistricts(distItems);
+				bean.setBankCities(new ArrayList<SelectItem>());
+				break;
+			default:
+				log.info("**** This is an unknown panel ***** ");
+				break;
+			}
+			addr.setDistrictId(null);
+			addr.setCityId(null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void populateCitiesByDistrict(SmAddress addr, String panelName,
+			SmApplicationManagedBean bean) {
+		try {
+			Long districtId = addr.getDistrictId();
+			CityReqDTO reqDTO = new CityReqDTO();
+			reqDTO.setDistrictId(districtId);
+			ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()
+					.getServiceObject("pm", ICitySO.class);
+			CityResDTO resDTO = reqSO.retriveCityListByDistrictId(reqDTO);
+			List<PmCity> cityLs = resDTO.getCityList();
+			List<SelectItem> cityItems = SmCommonUtil.getCityList(districtId);
+
+			switch (panelName) {
+			case SupplierManagementConst.SM_BASIC_INFO_PANEL:
+				bean.setBasicCompanyCities(SmCommonUtil.getCityList(districtId));
+				break;
+			case SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL:
+				bean.setBasicOffFacCities(cityItems);
+				break;
+			case SupplierManagementConst.SM_BRANCH_PANEL:
+				bean.setBranchCompanyCities(cityItems);
+				break;
+			case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
+				bean.setAssocCompanyCities(cityItems);
+				break;
+			case SupplierManagementConst.SM_EQUI_COMPANY_PANEL:
+				bean.setEquiCompanyCities(cityItems);
+				break;
+			case SupplierManagementConst.SM_FACTORY_FACILITY_PANEL:
+				bean.setFactoryFacilityCities(cityLs);
+				break;
+			case SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL:
+				bean.setDockFacilityCities(cityLs);
+				break;
+			case SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL:
+				bean.setWorkShopFacilityCities(cityLs);
+				break;
+			case SupplierManagementConst.SM_STORE_FACILITY_PANEL:
+				bean.setStoreFacilityCities(cityLs);
+			case SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL:
+				bean.setShrHldrPermCities(cityItems);
+				break;
+			case SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL:
+				bean.setShrHldrResdCities(cityItems);
+				break;
+			case SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL:
+				bean.setShrHldrOffCities(cityItems);
+				break;
+			case SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL:
+				bean.setShrHldrMailCities(cityItems);
+				break;
+			case SupplierManagementConst.SM_PERSNL_PERM_ADDR_PANEL:
+				bean.setPersnlPermCities(cityLs);
+				break;
+			case SupplierManagementConst.SM_PERSNL_RESD_ADDR_PANEL:
+				bean.setPersnlResdCities(cityLs);
+				break;
+			case SupplierManagementConst.SM_PERSNL_OFF_ADDR_PANEL:
+				bean.setPersnlOffCities(cityLs);
+				break;
+			case SupplierManagementConst.SM_PERSNL_MAIL_ADDR_PANEL:
+				bean.setPersnlMailCities(cityLs);
+				break;
+			case SupplierManagementConst.SM_BANK_INFO_PANEL:
+				bean.setBankCities(cityItems);
+				break;
+			default:
+				log.info("**** This is an unknown panel ***** ");
+				break;
+			}
+			addr.setCityId(null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void setApplAddressTransientValue(SmAppl appl, boolean isSave) {
+		// company basic
+		if (appl.getSmCompanyBasic() != null
+				&& !SmCommonUtil.isCollectionEmpty(appl.getSmCompanyBasic()
+						.getSmCompanyAddresses())) {
+			if (isSave) {
+				setAddressTransientValueBeforeSave(appl.getSmCompanyBasic()
+						.getSmCompanyAddresses().get(0).getSmAddress());
+			} else {
+				setAddressTransientValueAfterLoad(appl.getSmCompanyBasic()
+						.getSmCompanyAddresses().get(0).getSmAddress());
+			}
+		}
+		// facility
+		if (!SmCommonUtil.isCollectionEmpty(appl.getSmFacilities())) {
+			for (SmFacility smFac : appl.getSmFacilities()) {
+				if (smFac.getFacilityType() != null) {
+					if (isSave) {
+						setAddressTransientValueBeforeSave(smFac
+								.getSmAddress());
+					} else {
+						setAddressTransientValueAfterLoad(smFac
+								.getSmAddress());
+					}
+				}
+			}
+		}
+		// assoc company
+		if (!SmCommonUtil.isCollectionEmpty(appl.getSmAssociateCompanies())) {
+			for (SmAssociateCompany assoc : appl.getSmAssociateCompanies()) {
+				if (isSave) {
+					setAddressTransientValueBeforeSave(assoc.getSmAddress());
+				} else {
+					setAddressTransientValueAfterLoad(assoc.getSmAddress());
+				}
+			}
+		}
+		// branch
+		if (!SmCommonUtil.isCollectionEmpty(appl.getSmSupplierBranches())) {
+			for (SmSupplierBranch branch : appl.getSmSupplierBranches()) {
+				if (isSave) {
+					setAddressTransientValueBeforeSave(branch.getSmAddress());
+				} else {
+					setAddressTransientValueAfterLoad(branch.getSmAddress());
+				}
+			}
+		}
+		// bank
+		if (!SmCommonUtil.isCollectionEmpty(appl.getSmSupplierBanks())) {
+			for (SmSupplierBank bank : appl.getSmSupplierBanks()) {
+				if (isSave) {
+					setAddressTransientValueBeforeSave(bank.getSmAddress());
+				} else {
+					setAddressTransientValueAfterLoad(bank.getSmAddress());
+				}
+			}
+		}
+		// smPersonnel
+		if (!SmCommonUtil.isCollectionEmpty(appl.getSmPersonnels())) {
+			for (SmPersonnel pers : appl.getSmPersonnels()) {
+				if (!SmCommonUtil.isCollectionEmpty(pers
+						.getSmPersonnelAddresses())) {
+					for (SmPersonnelAddress perAddr : pers
+							.getSmPersonnelAddresses()) {
+						if (isSave) {
+							setAddressTransientValueBeforeSave(perAddr
+									.getSmAddress());
+						} else {
+							setAddressTransientValueAfterLoad(perAddr
+									.getSmAddress());
+						}
+					}
+				}
+			}
+		}
+		//smCompanyEquities
+		if(!SmCommonUtil.isCollectionEmpty(appl.getSmEquityCompanies())){
+			for(SmEquityCompany eq:appl.getSmEquityCompanies()){
+				if (isSave) {
+					setAddressTransientValueBeforeSave(eq
+							.getSmAddress());
+				} else {
+					setAddressTransientValueAfterLoad(eq
+							.getSmAddress());
+				}
+			}
+		}
+	}
+
+	public void setAddressTransientValueAfterLoad(SmAddress addr) {
+		if (addr != null) {
+			if (addr.getPmCountry() != null
+					&& addr.getPmCountry().getCountryId() != null) {
+				addr.setCountryId(addr.getPmCountry().getCountryId());
+			}
+			if (addr.getPmState() != null
+					&& addr.getPmState().getStateId() != null) {
+				addr.setStateId(addr.getPmState().getStateId());
+			}
+			if (addr.getPmDistrict() != null
+					&& addr.getPmDistrict().getDistrictId() != null) {
+				addr.setDistrictId(addr.getPmDistrict().getDistrictId());
+			}
+			if (addr.getPmCity() != null
+					&& addr.getPmCity().getCityId() != null) {
+				addr.setCityId(addr.getPmCity().getCityId());
+			}
+		}
+	}
+
+	public void setAddressTransientValueBeforeSave(SmAddress addr) {
+		if (addr != null) {
+			if(addr.getCountryId()!=null){
+				addr.setPmCountry(SmCommonUtil.getInstance().getCountryById(
+						addr.getCountryId()));
+			}
+			if(addr.getStateId()!=null){
+				addr.setPmState(SmCommonUtil.getInstance().getStateById(
+						addr.getStateId()));
+			}
+			if(addr.getDistrictId()!=null){
+				addr.setPmDistrict(SmCommonUtil.getInstance().getDistrictById(
+						addr.getDistrictId()));
+			}
+			if(addr.getCityId()!=null){
+				addr.setPmCity(SmCommonUtil.getInstance().getCityById(
+						addr.getCityId()));
+			}
+		}
 	}
 }

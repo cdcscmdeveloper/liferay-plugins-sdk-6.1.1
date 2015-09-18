@@ -92,6 +92,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmEquityCompany latestEquityCompany;
 	private SmSupplierBranch latestBranch;
 	private SmSupplierBank latestBank;
+	private SmCompanyExperience latestCompanyExperience;
 	private SmAppl smAppl;
 	private SmSupplier smSupplier;
 	private int tabActiveIndex;
@@ -219,17 +220,17 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SelectItem> basicOffFacDistricts;
 	private List<SelectItem> basicOffFacCities;
 
-	private List<PmState> branchCompanyStates;
-	private List<PmDistrict> branchCompanyDistricts;
-	private List<PmCity> branchCompanyCities;
+	private List<SelectItem> branchCompanyStates;
+	private List<SelectItem> branchCompanyDistricts;
+	private List<SelectItem> branchCompanyCities;
 
-	private List<PmState> assocCompanyStates;
-	private List<PmDistrict> assocCompanyDistricts;
-	private List<PmCity> assocCompanyCities;
+	private List<SelectItem> assocCompanyStates;
+	private List<SelectItem> assocCompanyDistricts;
+	private List<SelectItem> assocCompanyCities;
 
-	private List<PmState> equiCompanyStates;
-	private List<PmDistrict> equiCompanyDistricts;
-	private List<PmCity> equiCompanyCities;
+	private List<SelectItem> equiCompanyStates;
+	private List<SelectItem> equiCompanyDistricts;
+	private List<SelectItem> equiCompanyCities;
 
 	private List<PmState> factoryFacilityStates;
 	private List<PmDistrict> factoryFacilityDistricts;
@@ -247,21 +248,21 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<PmDistrict> storeFacilityDistricts;
 	private List<PmCity> storeFacilityCities;
 
-	private List<PmState> shrHldrPermStates;
-	private List<PmDistrict> shrHldrPermDistricts;
-	private List<PmCity> shrHldrPermCities;
+	private List<SelectItem> shrHldrPermStates;
+	private List<SelectItem> shrHldrPermDistricts;
+	private List<SelectItem> shrHldrPermCities;
 
-	private List<PmState> shrHldrOffStates;
-	private List<PmDistrict> shrHldrOffDistricts;
-	private List<PmCity> shrHldrOffCities;
+	private List<SelectItem> shrHldrOffStates;
+	private List<SelectItem> shrHldrOffDistricts;
+	private List<SelectItem> shrHldrOffCities;
 
-	private List<PmState> shrHldrMailStates;
-	private List<PmDistrict> shrHldrMailDistricts;
-	private List<PmCity> shrHldrMailCities;
+	private List<SelectItem> shrHldrMailStates;
+	private List<SelectItem> shrHldrMailDistricts;
+	private List<SelectItem> shrHldrMailCities;
 
-	private List<PmState> shrHldrResdStates;
-	private List<PmDistrict> shrHldrResdDistricts;
-	private List<PmCity> shrHldrResdCities;
+	private List<SelectItem> shrHldrResdStates;
+	private List<SelectItem> shrHldrResdDistricts;
+	private List<SelectItem> shrHldrResdCities;
 
 	private List<PmState> persnlPermStates;
 	private List<PmDistrict> persnlPermDistricts;
@@ -279,9 +280,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<PmDistrict> persnlResdDistricts;
 	private List<PmCity> persnlResdCities;
 
-	private List<PmState> bankStates;
-	private List<PmDistrict> bankDistricts;
-	private List<PmCity> bankCities;
+	private List<SelectItem> bankStates;
+	private List<SelectItem> bankDistricts;
+	private List<SelectItem> bankCities;
 
 	private List<PmCertBody> certBodyLs;
 	private List<PmCertBody> profBodyLs;
@@ -454,14 +455,16 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 		selectedCategories = new ArrayList<SmSupplierCategory>();
 		selectedBranch = new SmSupplierBranch();
-		selectedBranch.setSmAddress(defaultAddr);
+		selectedBranch.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
 		selectedBranch.setSmPersonnel(new SmPersonnel());
 		selectedBranches = new ArrayList<SmSupplierBranch>();
 		selectedAssocCompany = new SmAssociateCompany();
-		selectedAssocCompany.setSmAddress(defaultAddr);
+		selectedAssocCompany.setSmAddress(SmApplicationUtil
+				.setDefaultAddr(null));
 		selectedAssocCompanies = new ArrayList<SmAssociateCompany>();
 		selectedEquityCompany = new SmEquityCompany();
-		selectedEquityCompany.setSmAddress(defaultAddr);
+		selectedEquityCompany.setSmAddress(SmApplicationUtil
+				.setDefaultAddr(null));
 		selectedEquityCompanies = new ArrayList<SmEquityCompany>();
 		selectedCertList = new ArrayList<SmSupplierCert>();
 		selectedCert = new SmSupplierCert();
@@ -479,7 +482,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		// selectedConstProj = new SmProjectExperience();
 		// For share holder personell
 		selectedShareHolder = new SmPersonnel();
-		selectedShareHolder.setPmCountry(defaultAddr.getPmCountry());
+		selectedShareHolder.setPmCountry(SmApplicationUtil.setDefaultAddr(null)
+				.getPmCountry());
 		smapplShareHolders = new ArrayList<SmPersonnel>();
 		selectedShareHolders = new ArrayList<SmPersonnel>();
 		selectedShrHldrAcademics = new ArrayList<SmStaffAcademic>();
@@ -487,13 +491,16 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedShrHldrProfBodies = new ArrayList<SmAssociationBody>();
 		selectedShrHldrRelatedCompanies = new ArrayList<SmRelatedCompany>();
 		shareHolderMailAddr = new SmPersonnelAddress();
-		shareHolderMailAddr.setSmAddress(defaultAddr);
+		shareHolderMailAddr
+				.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
 		shareHolderPermAddr = new SmPersonnelAddress();
-		shareHolderPermAddr.setSmAddress(defaultAddr);
+		shareHolderPermAddr
+				.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
 		shareHolderOffAddr = new SmPersonnelAddress();
-		shareHolderOffAddr.setSmAddress(defaultAddr);
+		shareHolderOffAddr.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
 		shareHolderResdAddr = new SmPersonnelAddress();
-		shareHolderResdAddr.setSmAddress(defaultAddr);
+		shareHolderResdAddr
+				.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
 		selectedShareHolder
 				.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
 		// selectedShareHolder.getSmPersonnelAddresses().add(shareHolderMailAddr);
@@ -505,7 +512,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 		// For share personell
 		selectedPersonnel = new SmPersonnel();
-		selectedPersonnel.setPmCountry(defaultAddr.getPmCountry());
+		selectedPersonnel.setPmCountry(SmApplicationUtil.setDefaultAddr(null)
+				.getPmCountry());
 		// smapplAuthPersonnels = new ArrayList<SmPersonnel>();
 		selectedPersonnels = new ArrayList<SmPersonnel>();
 		selectedPersAcademics = new ArrayList<SmStaffAcademic>();
@@ -517,19 +525,23 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 				.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
 
 		selectedFactoryFacility = new SmFacility();
-		selectedFactoryFacility.setSmAddress(defaultAddr);
+		selectedFactoryFacility.setSmAddress(SmApplicationUtil
+				.setDefaultAddr(null));
 		selectedFactoryFacilities = new ArrayList<SmFacility>();
 		applFactoryFacilities = new ArrayList<SmFacility>();
 		selectedWorkShopFacility = new SmFacility();
-		selectedWorkShopFacility.setSmAddress(defaultAddr);
+		selectedWorkShopFacility.setSmAddress(SmApplicationUtil
+				.setDefaultAddr(null));
 		selectedWorkShopFacilities = new ArrayList<SmFacility>();
 		applWorkShopFacilities = new ArrayList<SmFacility>();
 		selectedDockyardFacility = new SmFacility();
-		selectedDockyardFacility.setSmAddress(defaultAddr);
+		selectedDockyardFacility.setSmAddress(SmApplicationUtil
+				.setDefaultAddr(null));
 		selectedDockyardFacilities = new ArrayList<SmFacility>();
 		applDockyardFacilities = new ArrayList<SmFacility>();
 		selectedStoreFacility = new SmFacility();
-		selectedStoreFacility.setSmAddress(defaultAddr);
+		selectedStoreFacility.setSmAddress(SmApplicationUtil
+				.setDefaultAddr(null));
 		selectedStoreFacilities = new ArrayList<SmFacility>();
 		applStoreFacilities = new ArrayList<SmFacility>();
 		selectedManufacturingList = new ArrayList<SmManufacturingDtl>();
@@ -544,7 +556,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		smAppl.setSmPersonnels(new ArrayList<SmPersonnel>());
 		selectedBank = new SmSupplierBank();
 		// selectedBank.setPmbank(new PmBank());
-		selectedBank.setSmAddress(defaultAddr);
+		selectedBank.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
 		selectedBank.setPmFinancialOrg(new PmFinancialOrg());
 		selectedBank.setSmChequeSignatories(new ArrayList<SmChequeSignatory>());
 		selectedBanks = new ArrayList<SmSupplierBank>();
@@ -583,13 +595,11 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		uomSelectItems = SmApplicationUtil.getUomSelectItems();
 		raceSelectItems = SmApplicationUtil.getRaceSelectItems();
 		svTask = new SmSvTask();
-		System.out.println(" ********* END MANAGED BEAN CREATION ****** ");
 		DateFormat df = new SimpleDateFormat(
 				CommonConstants.DEFAULT_DATE_FORMAT);
 		today = df.format(new Date());
 		currDate = new Date();
 		currYear = Calendar.getInstance().get(Calendar.YEAR);
-		System.out.println("*** Date String *** " + df.format(new Date()));
 		myCountryId = SmCommonUtil.getMyCountryId();
 		selectedGst = new SmGstSupplier();
 		companyBasicGst = new SmGstSupplier();
@@ -1290,76 +1300,76 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.profBodyLs = profBodyLs;
 	}
 
-	public List<PmState> getBranchCompanyStates() {
+	public List<SelectItem> getBranchCompanyStates() {
 		return branchCompanyStates;
 	}
 
-	public void setBranchCompanyStates(List<PmState> branchCompanyStates) {
+	public void setBranchCompanyStates(List<SelectItem> branchCompanyStates) {
 		this.branchCompanyStates = branchCompanyStates;
 	}
 
-	public List<PmDistrict> getBranchCompanyDistricts() {
+	public List<SelectItem> getBranchCompanyDistricts() {
 		return branchCompanyDistricts;
 	}
 
 	public void setBranchCompanyDistricts(
-			List<PmDistrict> branchCompanyDistricts) {
+			List<SelectItem> branchCompanyDistricts) {
 		this.branchCompanyDistricts = branchCompanyDistricts;
 	}
 
-	public List<PmCity> getBranchCompanyCities() {
+	public List<SelectItem> getBranchCompanyCities() {
 		return branchCompanyCities;
 	}
 
-	public void setBranchCompanyCities(List<PmCity> branchCompanyCities) {
+	public void setBranchCompanyCities(List<SelectItem> branchCompanyCities) {
 		this.branchCompanyCities = branchCompanyCities;
 	}
 
-	public List<PmState> getAssocCompanyStates() {
+	public List<SelectItem> getAssocCompanyStates() {
 		return assocCompanyStates;
 	}
 
-	public void setAssocCompanyStates(List<PmState> assocCompanyStates) {
+	public void setAssocCompanyStates(List<SelectItem> assocCompanyStates) {
 		this.assocCompanyStates = assocCompanyStates;
 	}
 
-	public List<PmDistrict> getAssocCompanyDistricts() {
+	public List<SelectItem> getAssocCompanyDistricts() {
 		return assocCompanyDistricts;
 	}
 
-	public void setAssocCompanyDistricts(List<PmDistrict> assocCompanyDistricts) {
+	public void setAssocCompanyDistricts(List<SelectItem> assocCompanyDistricts) {
 		this.assocCompanyDistricts = assocCompanyDistricts;
 	}
 
-	public List<PmCity> getAssocCompanyCities() {
+	public List<SelectItem> getAssocCompanyCities() {
 		return assocCompanyCities;
 	}
 
-	public void setAssocCompanyCities(List<PmCity> assocCompanyCities) {
+	public void setAssocCompanyCities(List<SelectItem> assocCompanyCities) {
 		this.assocCompanyCities = assocCompanyCities;
 	}
 
-	public List<PmState> getEquiCompanyStates() {
+	public List<SelectItem> getEquiCompanyStates() {
 		return equiCompanyStates;
 	}
 
-	public void setEquiCompanyStates(List<PmState> equiCompanyStates) {
+	public void setEquiCompanyStates(List<SelectItem> equiCompanyStates) {
 		this.equiCompanyStates = equiCompanyStates;
 	}
 
-	public List<PmDistrict> getEquiCompanyDistricts() {
+	public List<SelectItem> getEquiCompanyDistricts() {
 		return equiCompanyDistricts;
 	}
 
-	public void setEquiCompanyDistricts(List<PmDistrict> equiCompanyDistricts) {
+	public void setEquiCompanyDistricts(List<SelectItem> equiCompanyDistricts) {
 		this.equiCompanyDistricts = equiCompanyDistricts;
 	}
 
-	public List<PmCity> getEquiCompanyCities() {
+	public List<SelectItem> getEquiCompanyCities() {
 		return equiCompanyCities;
 	}
 
-	public void setEquiCompanyCities(List<PmCity> equiCompanyCities) {
+	public void setEquiCompanyCities(List<SelectItem> equiCompanyCities) {
 		this.equiCompanyCities = equiCompanyCities;
 	}
 
@@ -1548,99 +1558,99 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.shareHolderOffAddr = shareHolderOffAddr;
 	}
 
-	public List<PmState> getShrHldrPermStates() {
+	public List<SelectItem> getShrHldrPermStates() {
 		return shrHldrPermStates;
 	}
 
-	public void setShrHldrPermStates(List<PmState> shrHldrPermStates) {
+	public void setShrHldrPermStates(List<SelectItem> shrHldrPermStates) {
 		this.shrHldrPermStates = shrHldrPermStates;
 	}
 
-	public List<PmDistrict> getShrHldrPermDistricts() {
+	public List<SelectItem> getShrHldrPermDistricts() {
 		return shrHldrPermDistricts;
 	}
 
-	public void setShrHldrPermDistricts(List<PmDistrict> shrHldrPermDistricts) {
+	public void setShrHldrPermDistricts(List<SelectItem> shrHldrPermDistricts) {
 		this.shrHldrPermDistricts = shrHldrPermDistricts;
 	}
 
-	public List<PmCity> getShrHldrPermCities() {
+	public List<SelectItem> getShrHldrPermCities() {
 		return shrHldrPermCities;
 	}
 
-	public void setShrHldrPermCities(List<PmCity> shrHldrPermCities) {
+	public void setShrHldrPermCities(List<SelectItem> shrHldrPermCities) {
 		this.shrHldrPermCities = shrHldrPermCities;
 	}
 
-	public List<PmState> getShrHldrOffStates() {
+	public List<SelectItem> getShrHldrOffStates() {
 		return shrHldrOffStates;
 	}
 
-	public void setShrHldrOffStates(List<PmState> shrHldrOffStates) {
+	public void setShrHldrOffStates(List<SelectItem> shrHldrOffStates) {
 		this.shrHldrOffStates = shrHldrOffStates;
 	}
 
-	public List<PmDistrict> getShrHldrOffDistricts() {
+	public List<SelectItem> getShrHldrOffDistricts() {
 		return shrHldrOffDistricts;
 	}
 
-	public void setShrHldrOffDistricts(List<PmDistrict> shrHldrOffDistricts) {
+	public void setShrHldrOffDistricts(List<SelectItem> shrHldrOffDistricts) {
 		this.shrHldrOffDistricts = shrHldrOffDistricts;
 	}
 
-	public List<PmCity> getShrHldrOffCities() {
+	public List<SelectItem> getShrHldrOffCities() {
 		return shrHldrOffCities;
 	}
 
-	public void setShrHldrOffCities(List<PmCity> shrHldrOffCities) {
+	public void setShrHldrOffCities(List<SelectItem> shrHldrOffCities) {
 		this.shrHldrOffCities = shrHldrOffCities;
 	}
 
-	public List<PmState> getShrHldrMailStates() {
+	public List<SelectItem> getShrHldrMailStates() {
 		return shrHldrMailStates;
 	}
 
-	public void setShrHldrMailStates(List<PmState> shrHldrMailStates) {
+	public void setShrHldrMailStates(List<SelectItem> shrHldrMailStates) {
 		this.shrHldrMailStates = shrHldrMailStates;
 	}
 
-	public List<PmDistrict> getShrHldrMailDistricts() {
+	public List<SelectItem> getShrHldrMailDistricts() {
 		return shrHldrMailDistricts;
 	}
 
-	public void setShrHldrMailDistricts(List<PmDistrict> shrHldrMailDistricts) {
+	public void setShrHldrMailDistricts(List<SelectItem> shrHldrMailDistricts) {
 		this.shrHldrMailDistricts = shrHldrMailDistricts;
 	}
 
-	public List<PmCity> getShrHldrMailCities() {
+	public List<SelectItem> getShrHldrMailCities() {
 		return shrHldrMailCities;
 	}
 
-	public void setShrHldrMailCities(List<PmCity> shrHldrMailCities) {
+	public void setShrHldrMailCities(List<SelectItem> shrHldrMailCities) {
 		this.shrHldrMailCities = shrHldrMailCities;
 	}
 
-	public List<PmState> getShrHldrResdStates() {
+	public List<SelectItem> getShrHldrResdStates() {
 		return shrHldrResdStates;
 	}
 
-	public void setShrHldrResdStates(List<PmState> shrHldrResdStates) {
+	public void setShrHldrResdStates(List<SelectItem> shrHldrResdStates) {
 		this.shrHldrResdStates = shrHldrResdStates;
 	}
 
-	public List<PmDistrict> getShrHldrResdDistricts() {
+	public List<SelectItem> getShrHldrResdDistricts() {
 		return shrHldrResdDistricts;
 	}
 
-	public void setShrHldrResdDistricts(List<PmDistrict> shrHldrResdDistricts) {
+	public void setShrHldrResdDistricts(List<SelectItem> shrHldrResdDistricts) {
 		this.shrHldrResdDistricts = shrHldrResdDistricts;
 	}
 
-	public List<PmCity> getShrHldrResdCities() {
+	public List<SelectItem> getShrHldrResdCities() {
 		return shrHldrResdCities;
 	}
 
-	public void setShrHldrResdCities(List<PmCity> shrHldrResdCities) {
+	public void setShrHldrResdCities(List<SelectItem> shrHldrResdCities) {
 		this.shrHldrResdCities = shrHldrResdCities;
 	}
 
@@ -1660,27 +1670,27 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.selectedBranchIndex = selectedBranchIndex;
 	}
 
-	public List<PmState> getBankStates() {
+	public List<SelectItem> getBankStates() {
 		return bankStates;
 	}
 
-	public void setBankStates(List<PmState> bankStates) {
+	public void setBankStates(List<SelectItem> bankStates) {
 		this.bankStates = bankStates;
 	}
 
-	public List<PmDistrict> getBankDistricts() {
+	public List<SelectItem> getBankDistricts() {
 		return bankDistricts;
 	}
 
-	public void setBankDistricts(List<PmDistrict> bankDistricts) {
+	public void setBankDistricts(List<SelectItem> bankDistricts) {
 		this.bankDistricts = bankDistricts;
 	}
 
-	public List<PmCity> getBankCities() {
+	public List<SelectItem> getBankCities() {
 		return bankCities;
 	}
 
-	public void setBankCities(List<PmCity> bankCities) {
+	public void setBankCities(List<SelectItem> bankCities) {
 		this.bankCities = bankCities;
 	}
 
@@ -2979,6 +2989,15 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setLatestBank(SmSupplierBank latestBank) {
 		this.latestBank = latestBank;
+	}
+
+	public SmCompanyExperience getLatestCompanyExperience() {
+		return latestCompanyExperience;
+	}
+
+	public void setLatestCompanyExperience(
+			SmCompanyExperience latestCompanyExperience) {
+		this.latestCompanyExperience = latestCompanyExperience;
 	}
 
 }

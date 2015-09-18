@@ -85,6 +85,7 @@
 						update=":form:tt:contDialog">
 						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
 					</p:commandLink>
+					<ac:smFieldChangeTableAlert object="#{contrBean}" />
 				</p:column>
 			</p:dataTable>
 			<p:spacer height="2px;" />
@@ -152,7 +153,14 @@
 						label="#{lbl['lbl.sm.projDtls.projTitle']}" id="supCntrPrjTtl"
 						value="#{backingBean.managedBean.selectedCompanyExperience.title}"
 						size="35">
-					</p:inputText> <p:message id="supCntrPrjTtlMsg" for="supCntrPrjTtl"
+					</p:inputText> 
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
+						oriValue="#{backingBean.managedBean.latestCompanyExperience.title}" 
+						currValue="#{backingBean.managedBean.selectedCompanyExperience.title}" 
+						alertValue="#{backingBean.managedBean.latestCompanyExperience.title}"/>
+					<p:message id="supCntrPrjTtlMsg" for="supCntrPrjTtl"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
@@ -174,7 +182,14 @@
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						<p:ajax process="@this" partialSubmit="true"
 							update="@this,contractorContractValMsg" />
-					</p:inputText> <p:message id="contractorContractValMsg"
+					</p:inputText> 
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
+						oriValue="#{backingBean.managedBean.latestCompanyExperience.contractValue}" 
+						currValue="#{backingBean.managedBean.selectedCompanyExperience.contractValue}" 
+						alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestCompanyExperience.contractValue)}"/>
+					<p:message id="contractorContractValMsg"
 						for="contractorContractVal" showSummary="true" showDetail="false"
 						display="icon" /></td>
 			</tr>
@@ -186,7 +201,14 @@
 						value="#{backingBean.managedBean.selectedCompanyExperience.paymentMethodId}"
 						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItems value="#{backingBean.getDropdownValues('PYM')}" />
-					</p:selectOneMenu> <p:message id="supCntrctPayMthdMsg" for="supCntrctPayMthd"
+					</p:selectOneMenu> 
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
+						oriValue="#{backingBean.managedBean.latestCompanyExperience.paymentMethodId}" 
+						currValue="#{backingBean.managedBean.selectedCompanyExperience.paymentMethodId}" 
+						alertValue="#{backingBean.getPaymentMethodLabel(backingBean.managedBean.latestCompanyExperience.paymentMethodId)}"/>
+					<p:message id="supCntrctPayMthdMsg" for="supCntrctPayMthd"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
@@ -198,7 +220,14 @@
 						value="#{backingBean.managedBean.selectedCompanyExperience.procurementModeId}"
 						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItems value="#{backingBean.getDropdownValues('PM')}" />
-					</p:selectOneMenu> <p:message id="supCntrPrcModMsg" for="supCntrPrcMod"
+					</p:selectOneMenu> 
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
+						oriValue="#{backingBean.managedBean.latestCompanyExperience.procurementModeId}" 
+						currValue="#{backingBean.managedBean.selectedCompanyExperience.procurementModeId}" 
+						alertValue="#{backingBean.getLabelFromSelectItems(backingBean.managedBean.latestCompanyExperience.procurementModeId,'PM')}"/>
+					<p:message id="supCntrPrcModMsg" for="supCntrPrcMod"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
@@ -209,7 +238,15 @@
 							itemValue="F" />
 						<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.nonfdrGov']}"
 							itemValue="O" />
-					</p:selectOneRadio></td>
+					</p:selectOneRadio>
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
+						oriValue="#{backingBean.managedBean.latestCompanyExperience.clientType}" 
+						currValue="#{backingBean.managedBean.selectedCompanyExperience.clientType}" 
+						alertValue="#{backingBean.managedBean.latestCompanyExperience.clientType eq 'F' 
+						? lbl['lbl.sm.busNtw.fdrGov'] : lbl['lbl.sm.busNtw.others']}"/>
+				</td>
 				<td>&#160; <p:graphicImage id="tooltip"
 						style="padding-bottom : 7px;" value="/css/images/design/tooltips.png" /> <p:tooltip id="toolinfo" for="tooltip">
 						<p:outputLabel escape="false"
@@ -226,7 +263,14 @@
 						value="#{backingBean.managedBean.selectedCompanyExperience.clientName}"
 						cols="36">
 						<f:validateLength maximum="255" />
-					</p:inputTextarea> <p:message id="supCntrStuBdyMsg" for="supCntrStuBdy"
+					</p:inputTextarea> 
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
+						oriValue="#{backingBean.managedBean.latestCompanyExperience.clientName}" 
+						currValue="#{backingBean.managedBean.selectedCompanyExperience.clientName}" 
+						alertValue="#{backingBean.managedBean.latestCompanyExperience.clientName}"/>
+					<p:message id="supCntrStuBdyMsg" for="supCntrStuBdy"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
@@ -243,7 +287,17 @@
 							itemValue="S" />
 						<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.fail']}"
 							itemValue="F" />
-					</p:selectOneRadio> <p:message id="supCntrPrgStsMsg" for="supCntrPrgSts"
+					</p:selectOneRadio> 
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
+						oriValue="#{backingBean.managedBean.latestCompanyExperience.progressStatus}" 
+						currValue="#{backingBean.managedBean.selectedCompanyExperience.progressStatus}" 
+						alertValue="#{backingBean.managedBean.latestCompanyExperience.progressStatus eq 'P' 
+						? lbl['lbl.sm.projDtls.inProgress'] : (
+						backingBean.managedBean.latestCompanyExperience.progressStatus eq 'P' ? lbl['lbl.sm.projDtls.success'] 
+						: lbl['lbl.sm.projDtls.fail'])}"/>
+					<p:message id="supCntrPrgStsMsg" for="supCntrPrgSts"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
@@ -256,6 +310,12 @@
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						yearRange="-99:+0"
 						value="#{backingBean.managedBean.selectedCompanyExperience.procurementDate}" />
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
+						oriValue="#{backingBean.managedBean.latestCompanyExperience.procurementDate}" 
+						currValue="#{backingBean.managedBean.selectedCompanyExperience.procurementDate}" 
+						alertValue="#{backingBean.getDateFormat(backingBean.managedBean.latestCompanyExperience.procurementDate)}"/>
 					<p:message id="supCntrPrcDateMsg" for="supCntrPrcDate"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
