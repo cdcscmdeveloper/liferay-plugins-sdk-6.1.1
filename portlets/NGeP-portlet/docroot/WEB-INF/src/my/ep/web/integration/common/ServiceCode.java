@@ -3,6 +3,7 @@ package my.ep.web.integration.common;
 public enum ServiceCode {
 
 	//PHIS
+	PHS000("PHS-000"),
 	PHS001("PHS-030"), 
 	PHS002("PHS-040"), 
 	PHS003("PHS-050"), 
