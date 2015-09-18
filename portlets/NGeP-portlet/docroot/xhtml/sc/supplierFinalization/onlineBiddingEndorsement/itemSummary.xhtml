@@ -79,8 +79,9 @@
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.difference.rm']}">
-				<h:outputText style="float: right;" rendered="#{itemSupplier.bumi and !(itemSupplier.startingPrice eq itemSupplier.bidPrice)}" 
-					value="#{suppFinalBiddingBackingBean.getCalculatedTotalAmount(itemSupplier.startingPrice) - 
+				<h:outputText style="float: right;" rendered="#{itemSupplier.bumi and !(itemSupplier.startingPrice eq itemSupplier.bidPrice) 
+																 and suppFinalBiddingBackingBean.managedBean.lowestNonBumiOfferedPrice ne null}" 
+					value="#{suppFinalBiddingBackingBean.managedBean.lowestNonBumiOfferedPrice - 
 										suppFinalBiddingBackingBean.getCalculatedTotalAmount(itemSupplier.bidPrice)}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>

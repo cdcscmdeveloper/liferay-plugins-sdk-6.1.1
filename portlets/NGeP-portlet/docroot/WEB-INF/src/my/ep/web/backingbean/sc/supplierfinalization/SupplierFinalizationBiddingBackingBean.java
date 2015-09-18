@@ -530,6 +530,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 * 			selection event object
 	 */
 	public void selectBiddingItem(SelectEvent event) {
+		getManagedBean().setLowestNonBumiOfferedPrice(null);
+		
 		ScBidItem bidItem = (ScBidItem) event.getObject();
 		this.getManagedBean().setSelectedBiddingItem(bidItem);
 
@@ -547,13 +549,29 @@ public class SupplierFinalizationBiddingBackingBean extends
 			if (resDTO.isSuccessful()) {
 				List<BidItemBean> biddingItemPriceList = resDTO.getBidPriceItems();
 				if (CollectionUtils.isNotEmpty(biddingItemPriceList)) {
+					List<BigDecimal> nonBumiPriceList = new ArrayList<BigDecimal>();
 					for (BidItemBean itemBean : biddingItemPriceList) {
 						String supplierName = getSupplierNameById(
 								itemBean.getSupplier().getSupplierId());
 						itemBean.setSupplierName(supplierName);
+						
+						if (!itemBean.isBumi()) {
+							nonBumiPriceList.add(itemBean.getBidPriceTotal());
+						}						
 					}
+					
+					if (CollectionUtils.isNotEmpty(
+										nonBumiPriceList)) {
+						Collections.sort(nonBumiPriceList);
+						if (nonBumiPriceList.get(0) != null) {
+							getManagedBean().setLowestNonBumiOfferedPrice(
+									nonBumiPriceList.get(0));
+						}
+					}				
 				}
 				getManagedBean().setBidItemSuppliers(biddingItemPriceList);
+				
+			
 			}
 		} finally {
 			biddingSO = null;
