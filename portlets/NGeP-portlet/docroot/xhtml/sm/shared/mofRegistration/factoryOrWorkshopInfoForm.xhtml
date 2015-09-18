@@ -117,21 +117,16 @@
 				<td><p:selectOneMenu id="smFacFactoryCntry"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.country']}"
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmCountry.countryId}"
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.countryId}"
 						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="factoryCountry"
-							value="#{backingBean.managedBean.countryLs}"
-							itemValue="#{factoryCountry.countryId}"
-							itemLabel="#{factoryCountry.countryName}" />
-						<p:ajax event="change"
-							listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.selectedFactoryFacility.smAddress.pmCountry.countryId, 
-								SupplierManagementConst.SM_FACTORY_FACILITY_PANEL,
-								backingBean.managedBean.selectedFactoryFacility.smAddress.pmState,
-								backingBean.managedBean.selectedFactoryFacility.smAddress.pmDistrict,
-								backingBean.managedBean.selectedFactoryFacility.smAddress.pmCity)}"
+							value="#{backingBean.managedBean.countryItems}" />
+						<p:ajax event="change" process="@this"
+							listener="#{backingBean.onChangeCountry(backingBean.managedBean.selectedFactoryFacility.smAddress,SupplierManagementConst.SM_FACTORY_FACILITY_PANEL)}"
 							update="factoryState,factoryDist,factoryCity,postCodeFacFactoryPanelId" />
-					</p:selectOneMenu> <p:message id="smFacFactoryCntryMsg" for="smFacFactoryCntry"
+					</p:selectOneMenu> 
+					<p:message id="smFacFactoryCntryMsg" for="smFacFactoryCntry"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 
@@ -141,17 +136,13 @@
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.state']}"
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmState.stateId}"
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.stateId}"
 						id="factoryState">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="facState"
-							value="#{backingBean.managedBean.factoryFacilityStates}"
-							itemValue="#{facState.stateId}" itemLabel="#{facState.stateName}" />
-						<p:ajax event="change"
-							listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.selectedFactoryFacility.smAddress.pmState.stateId, 
-								SupplierManagementConst.SM_FACTORY_FACILITY_PANEL,
-								backingBean.managedBean.selectedFactoryFacility.smAddress.pmDistrict,
-								backingBean.managedBean.selectedFactoryFacility.smAddress.pmCity)}"
+							value="#{backingBean.managedBean.factoryFacilityStates}" />
+						<p:ajax event="change" process="@this"
+							listener="#{backingBean.onChangeState(backingBean.managedBean.selectedFactoryFacility.smAddress,SupplierManagementConst.SM_FACTORY_FACILITY_PANEL)}"
 							update="factoryDist,factoryCity" />
 
 					</p:selectOneMenu> <p:message id="factoryStateMsg" for="factoryState"
@@ -164,16 +155,12 @@
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 						id="factoryDist" required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.district']}"
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmDistrict.districtId}">
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.districtId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="factoryDist"
-							value="#{backingBean.managedBean.factoryFacilityDistricts}"
-							itemValue="#{factoryDist.districtId}"
-							itemLabel="#{factoryDist.districtName}" />
-						<p:ajax event="change"
-							listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.selectedFactoryFacility.smAddress.pmDistrict.districtId, 
-								SupplierManagementConst.SM_FACTORY_FACILITY_PANEL,
-								backingBean.managedBean.selectedFactoryFacility.smAddress.pmCity)}"
+							value="#{backingBean.managedBean.factoryFacilityDistricts}" />
+						<p:ajax event="change" process="@this"
+							listener="#{backingBean.onChangeDistrict(backingBean.managedBean.selectedFactoryFacility.smAddress,SupplierManagementConst.SM_FACTORY_FACILITY_PANEL)}"
 							update="factoryCity" />
 					</p:selectOneMenu> <p:message id="factoryDistMsg" for="factoryDist"
 						showSummary="true" showDetail="false" display="icon" /></td>
@@ -184,13 +171,12 @@
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 						id="factoryCity" required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.towncity']}"
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmCity.cityId}">
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.cityId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="factoryCity"
-							value="#{backingBean.managedBean.factoryFacilityCities}"
-							itemValue="#{factoryCity.cityId}"
-							itemLabel="#{factoryCity.cityName}" />
-					</p:selectOneMenu> <p:message id="factoryCityMsg" for="factoryCity"
+							value="#{backingBean.managedBean.factoryFacilityCities}" />
+					</p:selectOneMenu> 
+					<p:message id="factoryCityMsg" for="factoryCity"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
@@ -198,7 +184,7 @@
 						value="*" styleClass="mandatory" /></td>
 				<td><p:outputPanel id="postCodeFacFactoryPanelId">
 						<p:outputPanel
-							rendered="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+							rendered="#{backingBean.managedBean.selectedFactoryFacility.smAddress.countryId==backingBean.managedBean.myCountryId}">
 							<p:inputText maxlength="5"
 								required="#{backingBean.managedBean.valueReqd}"
 								label="#{lbl['lbl.sm.postcode']}" id="smFacFactoryPostCodeMy"
@@ -212,7 +198,7 @@
 								showDetail="false" display="icon" />
 						</p:outputPanel>
 						<p:outputPanel
-							rendered="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+							rendered="#{backingBean.managedBean.selectedFactoryFacility.smAddress.countryId!=backingBean.managedBean.myCountryId}">
 							<p:inputText maxlength="10"
 								required="#{backingBean.managedBean.valueReqd}"
 								label="#{lbl['lbl.sm.postcode']}"
