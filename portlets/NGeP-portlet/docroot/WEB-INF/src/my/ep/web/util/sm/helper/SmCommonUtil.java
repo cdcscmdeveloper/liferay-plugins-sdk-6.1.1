@@ -2660,19 +2660,28 @@ public class SmCommonUtil {
 	}
 
 	public static String getOwnershipTypeLabel(String ownershipType) {
-		if (ownershipType.equalsIgnoreCase("O")) {
-			return getMessage("lbl.sm.facility.own", null);
+		if (StringUtils.isBlank(ownershipType)) {
+			return getMessage("lbl.sm.no.available", null);
 		} else {
-			return getMessage("lbl.sm.facility.rent", null);
+			if (ownershipType.equalsIgnoreCase("O")) {
+				return getMessage("lbl.sm.facility.own", null);
+			} else {
+				return getMessage("lbl.sm.facility.rent", null);
+			}
 		}
 	}
 
 	public static String getFacTypeLabel(String facType) {
-		if (facType.equalsIgnoreCase("H")) {
-			return getMessage("lbl.sm.facility.facilityType.home.office", null);
+		if (StringUtils.isBlank(facType)) {
+			return getMessage("lbl.sm.no.available", null);
 		} else {
-			return getMessage("lbl.sm.facility.facilityType.business.office",
-					null);
+			if (facType.equalsIgnoreCase("H")) {
+				return getMessage("lbl.sm.facility.facilityType.home.office",
+						null);
+			} else {
+				return getMessage(
+						"lbl.sm.facility.facilityType.business.office", null);
+			}
 		}
 	}
 
@@ -2723,7 +2732,10 @@ public class SmCommonUtil {
 	public static String getCountryLabelById(Long countryId) {
 		String name = "";
 		if (countryId != null) {
-			name = getInstance().getCountryById(countryId).getCountryName();
+			PmCountry country = getInstance().getCountryById(countryId);
+			if (country != null) {
+				name = country.getCountryName();
+			}
 		}
 		return name;
 	}
@@ -2731,7 +2743,10 @@ public class SmCommonUtil {
 	public static String getStateLabelById(Long stateId) {
 		String name = "";
 		if (stateId != null) {
-			name = getInstance().getStateById(stateId).getStateName();
+			PmState state = getInstance().getStateById(stateId);
+			if (state != null) {
+				name = state.getStateName();
+			}
 		}
 		return name;
 	}
@@ -2739,7 +2754,10 @@ public class SmCommonUtil {
 	public static String getDistrictLabelById(Long districtId) {
 		String name = "";
 		if (districtId != null) {
-			name = getInstance().getDistrictById(districtId).getDistrictName();
+			PmDistrict district = getInstance().getDistrictById(districtId);
+			if (district != null) {
+				name = district.getDistrictName();
+			}
 		}
 		return name;
 	}
@@ -2747,7 +2765,10 @@ public class SmCommonUtil {
 	public static String getCityLabelById(Long cityId) {
 		String name = "";
 		if (cityId != null) {
-			name = getInstance().getCityById(cityId).getCityName();
+			PmCity city = getInstance().getCityById(cityId);
+			if (city != null) {
+				name = city.getCityName();
+			}
 		}
 		return name;
 	}
@@ -2830,8 +2851,8 @@ public class SmCommonUtil {
 		}
 		return retVal;
 	}
-	
-	public void copyAddress(SmAddress srcAddr,SmAddress targetAddr){
+
+	public void copyAddress(SmAddress srcAddr, SmAddress targetAddr) {
 		if (targetAddr == null || targetAddr.getPmCountry() == null
 				|| targetAddr.getPmState() == null) {
 			targetAddr = SmApplicationUtil.setDefaultAddr(null);

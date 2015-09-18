@@ -5800,19 +5800,19 @@ public class SmApplicationUtil {
 				bean.setEquiCompanyDistricts(new ArrayList<SelectItem>());
 				bean.setEquiCompanyCities(new ArrayList<SelectItem>());
 			case SupplierManagementConst.SM_FACTORY_FACILITY_PANEL:
-				bean.setFactoryFacilityStates(stateLs);
-				bean.setFactoryFacilityDistricts(new ArrayList<PmDistrict>());
-				bean.setFactoryFacilityCities(new ArrayList<PmCity>());
+				bean.setFactoryFacilityStates(stateItems);
+				bean.setFactoryFacilityDistricts(new ArrayList<SelectItem>());
+				bean.setFactoryFacilityCities(new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL:
-				bean.setDockFacilityStates(stateLs);
-				bean.setDockFacilityDistricts(new ArrayList<PmDistrict>());
-				bean.setDockFacilityCities(new ArrayList<PmCity>());
+				bean.setDockFacilityStates(stateItems);
+				bean.setDockFacilityDistricts(new ArrayList<SelectItem>());
+				bean.setDockFacilityCities(new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL:
-				bean.setWorkShopFacilityStates(stateLs);
-				bean.setWorkShopFacilityDistricts(new ArrayList<PmDistrict>());
-				bean.setWorkShopFacilityCities(new ArrayList<PmCity>());
+				bean.setWorkShopFacilityStates(stateItems);
+				bean.setWorkShopFacilityDistricts(new ArrayList<SelectItem>());
+				bean.setWorkShopFacilityCities(new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_STORE_FACILITY_PANEL:
 				bean.setStoreFacilityStates(stateLs);
@@ -5911,16 +5911,16 @@ public class SmApplicationUtil {
 				break;
 
 			case SupplierManagementConst.SM_FACTORY_FACILITY_PANEL:
-				bean.setFactoryFacilityDistricts(distLs);
-				bean.setFactoryFacilityCities(new ArrayList<PmCity>());
+				bean.setFactoryFacilityDistricts(distItems);
+				bean.setFactoryFacilityCities(new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL:
-				bean.setDockFacilityDistricts(distLs);
-				bean.setDockFacilityCities(new ArrayList<PmCity>());
+				bean.setDockFacilityDistricts(distItems);
+				bean.setDockFacilityCities(new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL:
-				bean.setWorkShopFacilityDistricts(distLs);
-				bean.setWorkShopFacilityCities(new ArrayList<PmCity>());
+				bean.setWorkShopFacilityDistricts(distItems);
+				bean.setWorkShopFacilityCities(new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_STORE_FACILITY_PANEL:
 				bean.setStoreFacilityDistricts(distLs);
@@ -6002,13 +6002,13 @@ public class SmApplicationUtil {
 				bean.setEquiCompanyCities(cityItems);
 				break;
 			case SupplierManagementConst.SM_FACTORY_FACILITY_PANEL:
-				bean.setFactoryFacilityCities(cityLs);
+				bean.setFactoryFacilityCities(cityItems);
 				break;
 			case SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL:
-				bean.setDockFacilityCities(cityLs);
+				bean.setDockFacilityCities(cityItems);
 				break;
 			case SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL:
-				bean.setWorkShopFacilityCities(cityLs);
+				bean.setWorkShopFacilityCities(cityItems);
 				break;
 			case SupplierManagementConst.SM_STORE_FACILITY_PANEL:
 				bean.setStoreFacilityCities(cityLs);

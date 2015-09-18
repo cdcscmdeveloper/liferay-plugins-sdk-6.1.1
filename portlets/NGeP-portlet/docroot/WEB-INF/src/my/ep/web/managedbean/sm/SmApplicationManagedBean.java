@@ -232,21 +232,21 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SelectItem> equiCompanyDistricts;
 	private List<SelectItem> equiCompanyCities;
 
-	private List<PmState> factoryFacilityStates;
-	private List<PmDistrict> factoryFacilityDistricts;
-	private List<PmCity> factoryFacilityCities;
+	private List<SelectItem> factoryFacilityStates;
+	private List<SelectItem> factoryFacilityDistricts;
+	private List<SelectItem> factoryFacilityCities;
 
-	private List<PmState> dockFacilityStates;
-	private List<PmDistrict> dockFacilityDistricts;
-	private List<PmCity> dockFacilityCities;
+	private List<SelectItem> dockFacilityStates;
+	private List<SelectItem> dockFacilityDistricts;
+	private List<SelectItem> dockFacilityCities;
 
-	private List<PmState> workShopFacilityStates;
-	private List<PmDistrict> workShopFacilityDistricts;
-	private List<PmCity> workShopFacilityCities;
+	private List<SelectItem> workShopFacilityStates;
+	private List<SelectItem> workShopFacilityDistricts;
+	private List<SelectItem> workShopFacilityCities;
 
-	private List<PmState> storeFacilityStates;
-	private List<PmDistrict> storeFacilityDistricts;
-	private List<PmCity> storeFacilityCities;
+	private List<SelectItem> storeFacilityStates;
+	private List<SelectItem> storeFacilityDistricts;
+	private List<SelectItem> storeFacilityCities;
 
 	private List<SelectItem> shrHldrPermStates;
 	private List<SelectItem> shrHldrPermDistricts;
@@ -1399,102 +1399,102 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.supplierSubChildCatList = supplierSubChildCatList;
 	}
 
-	public List<PmState> getFactoryFacilityStates() {
+	public List<SelectItem> getFactoryFacilityStates() {
 		return factoryFacilityStates;
 	}
 
-	public void setFactoryFacilityStates(List<PmState> factoryFacilityStates) {
+	public void setFactoryFacilityStates(List<SelectItem> factoryFacilityStates) {
 		this.factoryFacilityStates = factoryFacilityStates;
 	}
 
-	public List<PmDistrict> getFactoryFacilityDistricts() {
+	public List<SelectItem> getFactoryFacilityDistricts() {
 		return factoryFacilityDistricts;
 	}
 
 	public void setFactoryFacilityDistricts(
-			List<PmDistrict> factoryFacilityDistricts) {
+			List<SelectItem> factoryFacilityDistricts) {
 		this.factoryFacilityDistricts = factoryFacilityDistricts;
 	}
 
-	public List<PmCity> getFactoryFacilityCities() {
+	public List<SelectItem> getFactoryFacilityCities() {
 		return factoryFacilityCities;
 	}
 
-	public void setFactoryFacilityCities(List<PmCity> factoryFacilityCities) {
+	public void setFactoryFacilityCities(List<SelectItem> factoryFacilityCities) {
 		this.factoryFacilityCities = factoryFacilityCities;
 	}
 
-	public List<PmState> getDockFacilityStates() {
+	public List<SelectItem> getDockFacilityStates() {
 		return dockFacilityStates;
 	}
 
-	public void setDockFacilityStates(List<PmState> dockFacilityStates) {
+	public void setDockFacilityStates(List<SelectItem> dockFacilityStates) {
 		this.dockFacilityStates = dockFacilityStates;
 	}
 
-	public List<PmDistrict> getDockFacilityDistricts() {
+	public List<SelectItem> getDockFacilityDistricts() {
 		return dockFacilityDistricts;
 	}
 
-	public void setDockFacilityDistricts(List<PmDistrict> dockFacilityDistricts) {
+	public void setDockFacilityDistricts(List<SelectItem> dockFacilityDistricts) {
 		this.dockFacilityDistricts = dockFacilityDistricts;
 	}
 
-	public List<PmCity> getDockFacilityCities() {
+	public List<SelectItem> getDockFacilityCities() {
 		return dockFacilityCities;
 	}
 
-	public void setDockFacilityCities(List<PmCity> dockFacilityCities) {
+	public void setDockFacilityCities(List<SelectItem> dockFacilityCities) {
 		this.dockFacilityCities = dockFacilityCities;
 	}
 
-	public List<PmState> getWorkShopFacilityStates() {
+	public List<SelectItem> getWorkShopFacilityStates() {
 		return workShopFacilityStates;
 	}
 
-	public void setWorkShopFacilityStates(List<PmState> workShopFacilityStates) {
+	public void setWorkShopFacilityStates(List<SelectItem> workShopFacilityStates) {
 		this.workShopFacilityStates = workShopFacilityStates;
 	}
 
-	public List<PmDistrict> getWorkShopFacilityDistricts() {
+	public List<SelectItem> getWorkShopFacilityDistricts() {
 		return workShopFacilityDistricts;
 	}
 
 	public void setWorkShopFacilityDistricts(
-			List<PmDistrict> workShopFacilityDistricts) {
+			List<SelectItem> workShopFacilityDistricts) {
 		this.workShopFacilityDistricts = workShopFacilityDistricts;
 	}
 
-	public List<PmCity> getWorkShopFacilityCities() {
+	public List<SelectItem> getWorkShopFacilityCities() {
 		return workShopFacilityCities;
 	}
 
-	public void setWorkShopFacilityCities(List<PmCity> workShopFacilityCities) {
+	public void setWorkShopFacilityCities(List<SelectItem> workShopFacilityCities) {
 		this.workShopFacilityCities = workShopFacilityCities;
 	}
 
-	public List<PmState> getStoreFacilityStates() {
+	public List<SelectItem> getStoreFacilityStates() {
 		return storeFacilityStates;
 	}
 
-	public void setStoreFacilityStates(List<PmState> storeFacilityStates) {
+	public void setStoreFacilityStates(List<SelectItem> storeFacilityStates) {
 		this.storeFacilityStates = storeFacilityStates;
 	}
 
-	public List<PmDistrict> getStoreFacilityDistricts() {
+	public List<SelectItem> getStoreFacilityDistricts() {
 		return storeFacilityDistricts;
 	}
 
 	public void setStoreFacilityDistricts(
-			List<PmDistrict> storeFacilityDistricts) {
+			List<SelectItem> storeFacilityDistricts) {
 		this.storeFacilityDistricts = storeFacilityDistricts;
 	}
 
-	public List<PmCity> getStoreFacilityCities() {
+	public List<SelectItem> getStoreFacilityCities() {
 		return storeFacilityCities;
 	}
 
-	public void setStoreFacilityCities(List<PmCity> storeFacilityCities) {
+	public void setStoreFacilityCities(List<SelectItem> storeFacilityCities) {
 		this.storeFacilityCities = storeFacilityCities;
 	}
 
