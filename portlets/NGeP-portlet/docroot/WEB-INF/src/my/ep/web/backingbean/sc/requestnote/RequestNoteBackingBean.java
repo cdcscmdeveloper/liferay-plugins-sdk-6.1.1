@@ -452,6 +452,38 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return null;
 	}
 	
+
+	/**
+	 * Submit prompt action. before submit request note, 
+	 * it shows the prompt(dialogue) that If system checking the different of delivery period, 
+	 * show alert only but allow to proceed with submission of Request note.
+	 */
+	public void deliveryTermPrompt(String outcome) {
+		this.getManagedBean().setAction(outcome);
+		boolean isDeliveryTermPrompt = Boolean.FALSE;
+		List<ScRequestNoteDtl>	requestNoteDtls  = this.getManagedBean().getRequestNoteDtls();
+		ScRequestNote scRequestNote = getManagedBean().getRequestNote();
+
+		if(!scRequestNote.getSourceMethod().equals(ParameterConst.REQUEST_NOTE_SQ) && requestNoteDtls != null && requestNoteDtls.size() > 1){
+			RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+			scRequestNote.setRequestNoteDtls(requestNoteDtls);
+			requestNoteReqDTO.setRequestNote(scRequestNote);
+			isDeliveryTermPrompt  = getDirectPurchaseSO().validateDeliveryTerm(requestNoteReqDTO);
+
+			if(isDeliveryTermPrompt){
+				StringBuilder message = new StringBuilder();
+				message.append("Same delivery term is required for each PR generated.");
+				getManagedBean().setPromptMessage(message.toString());
+				RequestContext.getCurrentInstance().execute("deliveryTermConform.show()");
+
+			}
+		}
+
+		if(!isDeliveryTermPrompt){
+			submitAction(outcome);
+		}
+	}
+
 	/**
 	 * Parses the request note.
 	 *
@@ -489,7 +521,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					if(requestNoteDtls.size() != counter){
 						results.add(spacer);	
 					} 
-					
+
 					sb.append(spacer).append(requestNoteDtl.getProcurementTitle());
 					++counter;
 				} 
