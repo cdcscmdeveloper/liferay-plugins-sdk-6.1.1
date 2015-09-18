@@ -3683,8 +3683,15 @@ public class LOIDetailBackingBean extends
 		List<ScLoi> lois = getManagedBean().getLois();
 		if (CollectionUtils.isNotEmpty(lois)) {
 			for (ScLoi loi : lois) {
-				if (loi.getOfferedPriceTotal() != null) {
-					offeredPriceTotal = amountDF.format(loi.getOfferedPriceTotal());
+				for (ScLoiLoaItem scLoiLoaItem : loi.getScLoiLoaItems()) {
+					for (ScQtRecommend qtRecommend : getManagedBean().getRecommendList()) {
+						for (ScQtRecommendDtl dtl : qtRecommend.getRecommendDtls()) {
+							if (dtl.getRecommendDtlId() == scLoiLoaItem.getScQtRecommendDtl().getRecommendDtlId() 
+									&& dtl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+								offeredPriceTotal = amountDF.format(loi.getOfferedPriceTotal());
+							}
+						}
+					}
 				}
 			}
 			context.put("scLois", lois);
