@@ -713,37 +713,52 @@ public class FileUtility {
 			return errorResponse;
 		}
 
-		public List<VotFund> votDanaInPutStream(String filePath, String fileName) {
+		public BatchResDTO<VotFund> votDanaInPutStream(String filePath, String fileName) {
 			Path path = Paths.get(filePath);
 			String line;
 			List<VotFund> votList = new ArrayList<VotFund>();
 			VotFund vot = null;
 			EPErrorResponse errorResponse = null;
-			List<ErrorDetail> errorDetailList = null;
+			BatchResDTO<VotFund> batchResDTO = new BatchResDTO<VotFund>();
+			boolean recordFlag;
 
 			try (Scanner scanner = new Scanner(path,IntegrationConstants.ENCODING.name())) {
 				int lineNo = 1;
 				while (scanner.hasNextLine()) {
 					line = scanner.nextLine();
 					if(line.length()==InterfaceRowLength.GLDNA.value()){
+						recordFlag = false;
 						vot = new VotFund();
 					    vot.setYear(getValue(line,0 ,4 ));								
 						vot.setVotCode(getValue(line,4 ,4));
+					
+						// Duplicate checking
+						VotFundReqDTO reqDTO = new VotFundReqDTO();
+						reqDTO.setVotFundCode(vot.getVotCode());
+						VotFundResDTO votFundDTO = votFundSO.retrieveValidVotFundDanaByVotCode(reqDTO);
+						if (votFundDTO.isSuccessful()) {
+							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Duplicate code.available in db"));
+							recordFlag = true;
+						}
 						vot.setDescription(getValue(line, 8, 255));
 						try{
 							vot.setEffectiveDate(formatStringToDate(getValue(line, 263, 8)));
 						}catch(Exception e){
-						errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in converting effective date"));
+							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in converting effective date"));
+							recordFlag = true;
 						}
 						try {
 							vot.setExpiryDate(formatStringToDate(getValue(line, 271, 8)));
 						} catch (Exception e) {
 							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
 							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in converting expiry date"));
+							recordFlag = true;
 						}
 						vot.setStatus(getValue(line, 279, 1));
-						votList.add(vot);
+						if(!recordFlag)
+							votList.add(vot);
 					}else{
 						errorResponse = constructErrorResponseObject(fileName,	errorResponse);
 						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in size of the record length"));
@@ -753,11 +768,9 @@ public class FileUtility {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			if(errorResponse!=null){
-				errorResponse.setErrorDetailList(errorDetailList);
-				errorFileOutBound(errorResponse);
-			}
-			return votList;
+			batchResDTO.setErrorResponse(errorResponse);
+			batchResDTO.setBatchResContent(votList);
+			return batchResDTO;
 		}
 
 		public BatchResDTO<ProgramActivity> programAktiviti(String filePath, String fileName) {
