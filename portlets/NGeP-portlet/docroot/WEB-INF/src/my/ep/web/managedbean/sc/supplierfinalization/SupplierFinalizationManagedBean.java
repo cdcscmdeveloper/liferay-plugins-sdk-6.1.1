@@ -131,6 +131,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean hasPreviousMeeting;
 	private boolean hasItemWithPriceTypeTier;
 	private boolean itemCancelled;
+	private Boolean qtRefinalized;
 	
 	private ScQtEvaluationResultDtl shortlistedSupplier;
 	private ScQtFinalization scQtFinalization;
@@ -752,6 +753,21 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setItemCancelled(boolean itemCancelled) {
 		this.itemCancelled = itemCancelled;
+	}
+	
+	/**
+	 * @return the qtRefinalized
+	 */
+	public Boolean getQtRefinalized() {
+		return qtRefinalized;
+	}
+
+	/**
+	 * @param qtRefinalized 
+	 * 				the qtRefinalized to set
+	 */
+	public void setQtRefinalized(Boolean qtRefinalized) {
+		this.qtRefinalized = qtRefinalized;
 	}
 
 	/**
