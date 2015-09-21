@@ -112,13 +112,14 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	// Non-Federal Government
 	private List<ScQtPRPExperience> scQtPRPExperiences;
 	private List<ScQtPRPExperience> selectedPRPExperiences;
-	private List<ScQtPRPExperienceNCheckList> scQtPRPExperienceNCheckLists;
+	private ScQtProposal scQtProposal;
 	private int totalContracts;
 	private int totalYears;
 	private BigDecimal totalContractAmount;
 	private BigDecimal year;
 	private boolean selectedAll;
 	private boolean selected;
+	private boolean finanicialOnlyCheckList;
 
 	// Business rule
 	private Date nonFedEffMinDate;
@@ -409,19 +410,17 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the scQtPRPExperienceNCheckLists
+	 * @return the scQtProposal
 	 */
-	public List<ScQtPRPExperienceNCheckList> getScQtPRPExperienceNCheckLists() {
-		return scQtPRPExperienceNCheckLists;
+	public ScQtProposal getScQtProposal() {
+		return scQtProposal;
 	}
 
 	/**
-	 * @param scQtPRPExperienceNCheckLists
-	 *            the scQtPRPExperienceNCheckLists to set
+	 * @param scQtProposal the scQtProposal to set
 	 */
-	public void setScQtPRPExperienceNCheckLists(
-			List<ScQtPRPExperienceNCheckList> scQtPRPExperienceNCheckLists) {
-		this.scQtPRPExperienceNCheckLists = scQtPRPExperienceNCheckLists;
+	public void setScQtProposal(ScQtProposal scQtProposal) {
+		this.scQtProposal = scQtProposal;
 	}
 
 	/**
@@ -1553,4 +1552,18 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		this.scQtDocReports = scQtDocReports;
 	}
 
+	/**
+	 * @return the finanicialOnlyCheckList
+	 */
+	public boolean isFinanicialOnlyCheckList() {
+		return finanicialOnlyCheckList;
+	}
+
+	/**
+	 * @param finanicialOnlyCheckList the finanicialOnlyCheckList to set
+	 */
+	public void setFinanicialOnlyCheckList(boolean finanicialOnlyCheckList) {
+		this.finanicialOnlyCheckList = finanicialOnlyCheckList;
+	}
+	
 }
