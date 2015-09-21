@@ -1061,7 +1061,7 @@ public class SmFieldChangeUtil {
 		return retVal;
 	}
 
-	private static void setCurrSmCompanyExpCat(SmCompanyExperience currCompExp,
+	public static void setCurrSmCompanyExpCat(SmCompanyExperience currCompExp,
 			SmCompanyExperience latestcurrCompExp) {
 		if (SmCommonUtil.isCollectionEmpty(currCompExp
 				.getSmCompanyExperienceCats())
