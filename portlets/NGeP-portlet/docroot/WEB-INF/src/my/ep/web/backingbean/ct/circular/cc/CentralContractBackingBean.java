@@ -674,9 +674,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				}
 			}
 			
-			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) 
-					&& getManagedBean().getCircularVer().getCtContactPersons() != null
-					&& getManagedBean().getCircularVer().getCtContactPersons().size() > 1) {
+			if (getManagedBean().getCircularVer().getCtContactPersons() != null && getManagedBean().getCircularVer().getCtContactPersons().size() >= 1) {
 				for(CtContactPerson contrartPerson : getManagedBean().getCircularVer().getCtContactPersons()) {	
 					if(contrartPerson.getName().isEmpty() ||contrartPerson.getAddress().isEmpty() 
 							|| contrartPerson.getEmail().isEmpty() || contrartPerson.getPhoneNo().isEmpty()) {
