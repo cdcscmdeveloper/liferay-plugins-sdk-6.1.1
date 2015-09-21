@@ -232,6 +232,7 @@ public class DirectLOABackingBean extends
 					.getToBeRemoveProgPayments());
 			reqDTO.setToBeDeleteschedules(this.getManagedBean()
 					.getToBeRemoveSchedules());
+			reqDTO.setToBeDeltedZoneCriteria(this.getManagedBean().getToBedeletedSupplierZone());
 			DirectAwardResDTO resDTO = getQtDirectAwardSO()
 					.saveDirectAwardDetails(reqDTO);
 			scLoa = resDTO.getLoa();
@@ -330,6 +331,7 @@ public class DirectLOABackingBean extends
 					.getToBeRemoveProgPayments());
 			reqDTO.setToBeDeleteschedules(this.getManagedBean()
 					.getToBeRemoveSchedules());
+			reqDTO.setToBeDeltedZoneCriteria(this.getManagedBean().getToBedeletedSupplierZone());
 			DirectAwardResDTO resDTO = getQtDirectAwardSO()
 					.submitDirectAwardDetails(reqDTO);
 
@@ -680,8 +682,8 @@ public class DirectLOABackingBean extends
 			}
 
 			if (!(startDate.after(contractEffDate)
-					&& (startDate.before(contractExpDate)) || contractEffDate
-						.equals(startDate.getTime()))) {
+					&& (startDate.before(contractEffDate)) || contractEffDate
+						.equals(startDate))) {
 				throw new EpException(MessageConst.ERROR_760347);
 			}
 
@@ -1298,7 +1300,7 @@ public class DirectLOABackingBean extends
 
 		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)
 				|| QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId)) {
-			//TODO need to change to final once changes done at spec side
+			// TODO need to change to final once changes done at spec side
 			this.getManagedBean().getProdscQtDoc().getTplSpecMaster()
 					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
 			this.getManagedBean().getServicescQtDoc().getTplSpecMaster()
@@ -3212,14 +3214,11 @@ public class DirectLOABackingBean extends
 	 */
 	public void selectZoneLocationLevel(AjaxBehaviorEvent event) {
 
-		if (this.getManagedBean().getScQt().isZonal()) {
-			if (CollectionUtils
-					.isNotEmpty(this.getManagedBean().getZoneTrees())) {
-				this.getManagedBean().setZoneTrees(null);
-				this.getManagedBean().setZoneBeans(new ArrayList<ZonesBean>());
-			}
-
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getZoneTrees())) {
+			this.getManagedBean().setZoneTrees(null);
+			this.getManagedBean().setZoneBeans(new ArrayList<ZonesBean>());
 		}
+		this.getManagedBean().setSelectedGeneralTreeNodes(null);
 		Long parameterId = (Long) ((UIOutput) event.getSource()).getValue();
 		if (null != parameterId)
 			this.getManagedBean()
@@ -3228,6 +3227,22 @@ public class DirectLOABackingBean extends
 									.getPmParameterById(parameterId)
 									.getParameterCode());
 
+		this.getManagedBean().getScQt().getScQtSupplierCriteria()
+				.getQtZoneCriterias()
+				.setTplSpecZoneDtls(new ArrayList<TplSpecZoneDtl>());
+		this.getManagedBean()
+				.getServicescQtDoc()
+				.getTplSpecMaster()
+				.setTplSpecZone(
+						this.getManagedBean().getScQt()
+								.getScQtSupplierCriteria().getQtZoneCriterias());
+		this.getManagedBean()
+				.getProdscQtDoc()
+				.getTplSpecMaster()
+				.setTplSpecZone(
+						this.getManagedBean().getScQt()
+								.getScQtSupplierCriteria().getQtZoneCriterias());
+		updateTplSpecMasterNDetails(true);
 	}
 
 	/**
