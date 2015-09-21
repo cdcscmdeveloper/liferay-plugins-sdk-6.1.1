@@ -4,6 +4,7 @@ import java.util.List;
 
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmEduLevel;
 import my.ep.persistence.entity.sm.SmAddress;
@@ -12,6 +13,7 @@ import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
+import my.ep.persistence.entity.sm.SmCompanyExperienceCat;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
@@ -81,6 +83,20 @@ public class SmFieldChangeUtil {
 		}
 	}
 
+	public static void initCompanyExperienceChangeField(
+			SmApplicationManagedBean bean) {
+		bean.setLatestCompanyExperience(new SmCompanyExperience());
+		if (bean.isShowFieldChanges()) {
+			bean.setLatestCompanyExperience(getCompanyExpByClientNameAndTitleFromList(
+					bean.getLatestAppl(), bean.getSelectedCompanyExperience()
+							.getClientName(), bean
+							.getSelectedCompanyExperience().getTitle()));
+			// smCompanyExperienceCat
+			setCurrSmCompanyExpCat(bean.getSelectedCompanyExperience(),
+					bean.getLatestCompanyExperience());
+		}
+	}
+
 	public static void setApplTableListChangeStatus(SmAppl latestAppl,
 			SmAppl currAppl) {
 		if (currAppl != null && latestAppl != null) {
@@ -108,10 +124,10 @@ public class SmFieldChangeUtil {
 
 			// smSupplierBanks
 			setBankFieldChangeStatus(latestAppl, currAppl);
-			
-			//smMachineDetails
-			
-			//smManufacturingDtls
+
+			// smMachineDetails
+
+			// smManufacturingDtls
 		}
 	}
 
@@ -1039,6 +1055,56 @@ public class SmFieldChangeUtil {
 							.equals(currSign.getSmPersonnel()
 									.getIdentificationNo())) {
 				retVal = true;
+			}
+		}
+		return retVal;
+	}
+
+	private static void setCurrSmCompanyExpCat(SmCompanyExperience currCompExp,
+			SmCompanyExperience latestcurrCompExp) {
+		if (SmCommonUtil.isCollectionEmpty(currCompExp
+				.getSmCompanyExperienceCats())
+				&& !SmCommonUtil.isCollectionEmpty(latestcurrCompExp
+						.getSmCompanyExperienceCats())) {
+			currCompExp.setChangedFieldStatus("U");
+		} else if (SmCommonUtil.isCollectionEmpty(latestcurrCompExp
+				.getSmCompanyExperienceCats())
+				&& !SmCommonUtil.isCollectionEmpty(currCompExp
+						.getSmCompanyExperienceCats())) {
+			currCompExp.setChangedFieldStatus("U");
+			for (SmCompanyExperienceCat currExpCat : currCompExp
+					.getSmCompanyExperienceCats()) {
+				currExpCat.setChangedFieldStatus("N");
+			}
+		} else {
+			SmCompanyExperienceCat latestCompExpCat = null;
+			for (SmCompanyExperienceCat currExpCat : currCompExp
+					.getSmCompanyExperienceCats()) {
+				latestCompExpCat = getCompExpCatByCategoryL3FromList(
+						currExpCat.getPmCategoryL3(),
+						latestcurrCompExp.getSmCompanyExperienceCats());
+				if (latestCompExpCat == null) {
+					currCompExp.setChangedFieldStatus("U");
+					currExpCat.setChangedFieldStatus("N");
+				}
+			}
+		}
+	}
+
+	public static SmCompanyExperienceCat getCompExpCatByCategoryL3FromList(
+			PmCategoryL3 l3, List<SmCompanyExperienceCat> compExpCatList) {
+		SmCompanyExperienceCat retVal = null;
+		if (!SmCommonUtil.isCollectionEmpty(compExpCatList)) {
+			for (SmCompanyExperienceCat latestCompExpCat : compExpCatList) {
+				if (latestCompExpCat.getPmCategoryL3() != null
+						&& latestCompExpCat.getPmCategoryL3().getCategoryL3Id() != null
+						&& l3 != null
+						&& l3.getCategoryL3Id() != null
+						&& l3.getCategoryL3Id().compareTo(
+								latestCompExpCat.getPmCategoryL3()
+										.getCategoryL3Id()) == 0) {
+					retVal = latestCompExpCat;
+				}
 			}
 		}
 		return retVal;
