@@ -4992,8 +4992,6 @@ public class SmApplicationUtil {
 							.equalsIgnoreCase(
 									SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)) {
 
-				// PmCountry defaultCountry = SmCommonUtil
-				// .retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 				managedBean.setBasicCompanyStates(new ArrayList<SelectItem>());
 				if (managedBean
 						.getSmSupplier()
