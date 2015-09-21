@@ -12,8 +12,8 @@
 			<tr>
 				<td width="21%"><p:outputLabel value="#{lbl['lbl.sc.mof.no']}" />
 				</td>
-				<td colspan="3"><ac:lov id="supplierMofNo" disabled="#{!isEditableStatus}"
-						lovId="SM_SUPPLIER_MOFNO"
+				<td colspan="3"><ac:lov id="supplierMofNo"
+						disabled="#{!isEditableStatus}" lovId="SM_SUPPLIER_MOFNO"
 						postUpdateListener="directLOABackingBean.mofNoListener(directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier.smMofAccount)"
 						headerText="Supplier MOF No Lov" selectionMode="single"
 						readonly="true" size="35"
@@ -23,7 +23,8 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" /></td>
-				<td colspan="3"><ac:lov id="supplierId" lovId="SM_SUPPLIER" disabled="#{!isEditableStatus}"
+				<td colspan="3"><ac:lov id="supplierId" lovId="SM_SUPPLIER"
+						disabled="#{!isEditableStatus}"
 						postUpdateListener="directLOABackingBean.supplierListener(directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier)"
 						headerText="Supplier Lov" selectionMode="single"
 						saveObject="directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier"
@@ -156,8 +157,9 @@
 
 
 				<td><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
-				<td colspan="3"><ac:lov id="ptjProfile" lovId="PM_ORG_PROFILE" disabled="#{!isEditableStatus}"
-						headerText="Supplier Lov" selectionMode="single"
+				<td colspan="3"><ac:lov id="ptjProfile" lovId="PM_ORG_PROFILE"
+						disabled="#{!isEditableStatus}" headerText="Supplier Lov"
+						selectionMode="single"
 						saveObject="directLOABackingBean.managedBean.scQt.pmOrgProfile"
 						readonly="true" size="44"
 						value="#{directLOABackingBean.managedBean.scQt.pmOrgProfile.orgName}"
@@ -238,7 +240,8 @@
 					</p:outputLabel> <p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText style="text-align: right;" required="true"
 						value="#{directLOABackingBean.managedBean.scLoa.loaAmt}" size="30"
-						label="#{lbl['lbl.sc.loiloa.loa.off.price']}">
+						label="#{lbl['lbl.sc.loiloa.loa.off.price']}"
+						disabled="#{isPendingApprovalStatus}">
 						<p:ajax event="blur"
 							listener="#{directLOABackingBean.setOverallCtAmount(directLOABackingBean.managedBean.scLoa.loaAmt)}"
 							update="@this,ContractAmtId"></p:ajax>
@@ -268,12 +271,12 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.gst.amount']}" /></td>
 				<td><p:inputText style="text-align: right;"
 						value="#{directLOABackingBean.managedBean.scLoa.gstAmt}"
-						disabled="#{directLOABackingBean.isGSTRegActive() or !isPendingSubmissionStatus}"
+						disabled="#{directLOABackingBean.isGSTRegActive() or isPendingApprovalStatus}"
 						size="30">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						<p:ajax event="blur"
-							listener="#{directLOABackingBean.calculateOverallAmount()}"
+							listener="#{directLOABackingBean.calculateOverallAmount(directLOABackingBean.managedBean.scLoa.gstAmt)}"
 							update="@this,ContractAmtId"></p:ajax>
 					</p:inputText></td>
 			</tr>
@@ -282,7 +285,7 @@
 						value="#{lbl['lbl.sc.gst.overall.contract.amount']}" /></td>
 				<td><p:inputText style="text-align: right;"
 						value="#{directLOABackingBean.managedBean.overallContractAmt}"
-						size="30" id="ContractAmtId" readonly="true">
+						size="30" id="ContractAmtId" disabled="true">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText></td>
