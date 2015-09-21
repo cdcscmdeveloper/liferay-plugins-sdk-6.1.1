@@ -22,6 +22,7 @@ import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.payment.IPaymentSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.biz.service.sm.vendorcode.IVendorCodeSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -34,13 +35,10 @@ import my.ep.dto.pm.common.agoffice.AgOfficeReqDTO;
 import my.ep.dto.pm.common.agoffice.AgOfficeResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.glaccount.GlAccountReqDTO;
-import my.ep.dto.pm.common.glaccount.GlAccountResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.programactivity.ProgramActivityReqDTO;
-import my.ep.dto.pm.common.programactivity.ProgramActivityResDTO;
 import my.ep.dto.pm.common.projectsetia.ProjectSetiaReqDTO;
-import my.ep.dto.pm.common.projectsetia.ProjectSetiaResDTO;
 import my.ep.dto.pm.common.votfund.VotFundReqDTO;
 import my.ep.dto.pm.common.votfund.VotFundResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
@@ -66,6 +64,7 @@ import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmPayment;
 import my.ep.persistence.entity.sm.SmPaymentDtl;
 import my.ep.persistence.entity.sm.SmPaymentResponse;
+import my.ep.persistence.entity.sm.SmSapVendorCode;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -168,6 +167,9 @@ public class GfmasIntegration extends BatchTemplate{
 	
 	IPmInterfaceSO interfaceSO = BusinessDelegate.getInstance().getServiceObject(
 			ModuleCodeConst.PROFILE_MANAGEMENT, IPmInterfaceSO.class);
+	
+	IVendorCodeSO iVendorCodeSO = BusinessDelegate.getInstance().getServiceObject(
+			ModuleCodeConst.SUPPLIER_SELECTION, IVendorCodeSO.class);
 	
 
 	// need to change the query for material info
@@ -575,7 +577,6 @@ public class GfmasIntegration extends BatchTemplate{
 				
 			}
 		}
-		
 	public void masterDataVendorGfmasInbound() {
 		log.info("inside masterDataVendorGfmasInbound : APOVE");
 
@@ -599,25 +600,25 @@ public class GfmasIntegration extends BatchTemplate{
 					   batchReqDTO.setServiceCode(ServiceCode.APOVE.value());
 					   
 					   fileUtility.setValuesToPmInterface(batchReqDTO);
-					   
 					
 						List<MasterDataVendor> dataVendors = fileUtility.masterDataVendorFileInPutStream(IntegrationConstants.DECRYPTED_FILE_PATH + fileName);
 						SupplierSearchReqDTO reqDTO = null;
 
+						SmSapVendorCode vendorCode = null;
 						for (MasterDataVendor vendor : dataVendors) {
 							
-							SupplierSearchResDTO resDTO = supplierSearchSO.retrieveActiveSupplierByEpNo(vendor.getVendorIdCode());
+							vendorCode = new SmSapVendorCode();
 							
-							if(resDTO.isSuccessful()){
-								SmSupplier smSupplier = resDTO.getSmSupplier();
-								reqDTO = new SupplierSearchReqDTO();
-								smSupplier.setSapVendorCode(vendor.getSapVendorCode());
-								smSupplier.setChangedBy(IntegrationConstants.BATCH_USER);
-								reqDTO.setSmSupplier(smSupplier);
-								supplierSearchSO.saveOrUpdateSmSupplier(reqDTO);
-							}else{
-								System.out.println("supplier not available");
-							}
+//							if(resDTO.isSuccessful()){
+//								SmSupplier smSupplier = resDTO.getSmSupplier();
+//								reqDTO = new SupplierSearchReqDTO();
+//								smSupplier.setSapVendorCode(vendor.getSapVendorCode());
+//								smSupplier.setChangedBy(IntegrationConstants.BATCH_USER);
+//								reqDTO.setSmSupplier(smSupplier);
+//								iVendorCodeSO.saveOrUpdateSapVendorCode(smSapVendorCode);
+//							}else{
+//								System.out.println("supplier not available");
+//							}
 					}
 				}
 				log.info("masterDataVendorGfmasInbound updated ");
@@ -798,7 +799,6 @@ public class GfmasIntegration extends BatchTemplate{
 	public void votGfmasInbound() {
 		log.info("inside votGfmasInbound :GLVOT");
 		String fileName = null;
-//		String fileName = "1000GLVOT40000120150828001.GPG";
 		if (osbUtility.osbServiceCallInBound(ServiceCode.GLVOT.value(),"")) {
 			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, ProcessCode.GLVOT.value());
 			if(null!=fileName){
@@ -847,15 +847,14 @@ public class GfmasIntegration extends BatchTemplate{
 								pmVot.setCreatedBy(IntegrationConstants.BATCH_USER);
 								pmVot.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 								pmVot.setRecordStatusFlg(IntegrationConstants.RECORD_STATUS_ACTIVE);
-//								reqDTO.setVotFund(pmVot);
 								votFundList.add(pmVot);
-//								votFundSO.saveOrUpdateVotFund(reqDTO);
 								}
 						}
 						if(errorResponse!=null){
 							fileUtility.errorFileOutBound(errorResponse);
 						}
 						//send list of objects for updating or creating 
+						reqDTO = new VotFundReqDTO();
 						reqDTO.setVotFundList(votFundList);
 						votFundSO.saveOrUpdateVotFundList(reqDTO);
 						log.info("votGfmasInbound updated");
@@ -899,18 +898,14 @@ public class GfmasIntegration extends BatchTemplate{
 					   batchReqDTO.setServiceCode(ServiceCode.GLDNA.value());
 					   fileUtility.setValuesToPmInterface(batchReqDTO);
 					   
-						List<VotFund> votList = fileUtility.votDanaInPutStream(IntegrationConstants.GMAS_DOWNLOAD_LOCAL + fileName, fileName);
+						
+						 BatchResDTO<VotFund> batchResDTO = fileUtility.votDanaInPutStream(IntegrationConstants.GMAS_DOWNLOAD_LOCAL + fileName, fileName);
+						 EPErrorResponse errorResponse = batchResDTO.getErrorResponse();
 
-						VotFundReqDTO reqDTO = null;
+						List<PmVotFund> votFundList = new ArrayList<PmVotFund>();
 						PmVotFund pmVot = null;
 
-						for (VotFund vot : votList) {
-							reqDTO = new VotFundReqDTO();
-							reqDTO.setVotFundCode(vot.getVotCode());
-							VotFundResDTO votFundDTO = votFundSO.retrieveValidVotFundDanaByVotCode(reqDTO);							
-							if (votFundDTO.isSuccessful()) {
-								log.info("Vot Dana Duplicate Code");
-							} else {
+						for (VotFund vot : batchResDTO.getBatchResContent()) {
 								pmVot = new PmVotFund();
 								pmVot.setVotFundCode(vot.getVotCode());
 								pmVot.setDescription(vot.getDescription());
@@ -921,10 +916,15 @@ public class GfmasIntegration extends BatchTemplate{
 								pmVot.setCreatedBy(IntegrationConstants.BATCH_USER);
 								pmVot.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 								pmVot.setRecordStatusFlg(IntegrationConstants.RECORD_STATUS_ACTIVE);
-								reqDTO.setVotFund(pmVot);
-								votFundSO.saveOrUpdateVotFund(reqDTO);
-							}
+								votFundList.add(pmVot);
 						}
+						if(errorResponse!=null){
+							fileUtility.errorFileOutBound(errorResponse);
+						}
+						//send list of objects for updating or creating 
+						VotFundReqDTO reqDTO = new VotFundReqDTO();
+						reqDTO.setVotFundList(votFundList);
+						votFundSO.saveOrUpdateVotFundList(reqDTO);
 					}
 					log.info("votDanaGfmasInbound updated");
 				}
@@ -973,12 +973,6 @@ public class GfmasIntegration extends BatchTemplate{
 
 						for (ProgramActivity programActivity : batchResDTO.getBatchResContent()) {
 							prgActivity = new PmPrgActivity();
-//							reqDTO = new ProgramActivityReqDTO();
-//							reqDTO.setCode(programActivity.getCode());
-//							ProgramActivityResDTO prgResDTO = programActivitySO.retrieveValidPrgActivityByPrgActivityCode(reqDTO);							
-//							if (prgResDTO.isSuccessful()) {
-//									log.info(" Prg Duplicate Code");
-//							} else {
 							
 							VotFundReqDTO votreqDTO = new VotFundReqDTO();
 							votreqDTO.setVotFundCode(programActivity.getVotCode());
@@ -992,10 +986,7 @@ public class GfmasIntegration extends BatchTemplate{
 							prgActivity.setCreatedBy(IntegrationConstants.BATCH_USER);
 							prgActivity.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 							prgActivity.setRecordStatusFlg(IntegrationConstants.RECORD_STATUS_ACTIVE);
-//							reqDTO.setPrgActivity(prgActivity);
-							programActivitySO.saveOrUpdatePrgActivity(reqDTO);
 							prgActivitiesList.add(prgActivity);
-//							}
 						}
 						if(errorResponse!=null){
 							fileUtility.errorFileOutBound(errorResponse);
@@ -1049,12 +1040,6 @@ public class GfmasIntegration extends BatchTemplate{
 					   List<PmSubSetia> subSetiaList = new ArrayList<PmSubSetia>();
 
 						for (Project project : batchResDTO.getBatchResContent()) {
-//							reqDTO = new ProjectSetiaReqDTO();
-//							reqDTO.setProjectCode(project.getCode());
-//							ProjectSetiaResDTO proResDTO = projectSetiaSO.retrieveProjectByProjectCode(reqDTO);							
-//							if (proResDTO.isSuccessful()) {
-//								log.info(" Project Duplicate Code");
-//							} else {
 								subSitia = new PmSubSetia();
 							
 								subSitia.setSubSetiaCode(project.getSubSetiaCode());
@@ -1080,14 +1065,13 @@ public class GfmasIntegration extends BatchTemplate{
 								subSitia.setCreatedBy(IntegrationConstants.BATCH_USER);
 
 								subSetiaList.add(subSitia);
-//								reqDTO.setSubSetia(subSitia);
-//								projectSetiaSO.saveOrUpdateSubSetia(reqDTO);
 //						}
 						}
 						
 						if(errorResponse!=null){
 							fileUtility.errorFileOutBound(errorResponse);
 						}
+						reqDTO = new ProjectSetiaReqDTO();
 						reqDTO.setSubSetiaList(subSetiaList);
 						projectSetiaSO.saveOrUpdateSubSetiaList(reqDTO);
 					}
@@ -1137,14 +1121,6 @@ public class GfmasIntegration extends BatchTemplate{
 						List<PmGlAccount> glAccountList = new ArrayList<PmGlAccount>();
 						for (GlAccount account : batchResDTO.getBatchResContent()) {
 							glAccount = new PmGlAccount();
-//							reqDTO = new GlAccountReqDTO();
-//						
-//							reqDTO.setGlAccountCode(account.getCode());
-//							GlAccountResDTO glResDTO = glAccountSO.retrieveValidGlAccountByglAccountCode(reqDTO);
-//								
-//							if (glResDTO.isSuccessful()) {
-//								log.info("Duplicate Code");
-//							} else {
 								glAccount.setGlAccCode(account.getCode());
 								glAccount.setDescription(account.getDescription());
 						
@@ -1158,12 +1134,6 @@ public class GfmasIntegration extends BatchTemplate{
 									OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgWithSupplierByProfileId(orgProfileReqDTO);
 									glAccount.setPmOrgProfile(orgProfileResDTO.getPmOrgProfile());
 								}else{
-									/*OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
-									Long orgProfileId = Long.parseLong(account.getPtjCode());
-							
-									log.info("orgProfileId :"+orgProfileId);
-									orgProfileReqDTO.setOrgProfileId(orgProfileId);
-									OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgWithSupplierByProfileId(orgProfileReqDTO);*/
 									glAccount.setPmOrgProfile(null);
 									
 								}
@@ -1174,9 +1144,6 @@ public class GfmasIntegration extends BatchTemplate{
 								glAccount.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 								glAccount.setCreatedBy(IntegrationConstants.BATCH_USER);
 								glAccountList.add(glAccount);
-//								reqDTO.setGlAccount(glAccount);
-//								glAccountSO.saveOrUpdateGlAccount(reqDTO);
-//						}
 					}
 						if(errorResponse!=null){
 							fileUtility.errorFileOutBound(errorResponse);
@@ -1227,22 +1194,10 @@ public class GfmasIntegration extends BatchTemplate{
 						batchReqDTO.setServiceCode(ServiceCode.GLPCG.value());
 						fileUtility.setValuesToPmInterface(batchReqDTO);
 					
-//						OrgProfileReqDTO orgProfileReqDTO = null;
 						List<PmOrgProfile> pmOrgProfileList = new ArrayList<PmOrgProfile>();
 
 						for (PtjGroup group : batchResDTO.getBatchResContent()) {
 							
-//							orgProfileReqDTO = new OrgProfileReqDTO();
-//							orgProfileReqDTO.setOrgType(ParameterConst.ORG_TYPE_PTJ_GROUP);
-//							orgProfileReqDTO.setOrgCode(group.getCode()); 
-//							
-//							OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileByCodeAndOrgType(orgProfileReqDTO);
-//							
-//							if (orgProfileResDTO.isSuccessful()) {
-//								log.info("Duplicate Code");
-//							} else {
-								
-//								orgProfileReqDTO = new OrgProfileReqDTO();
 								
 								PmOrgProfile pmOrgProfile = new PmOrgProfile();
 								
@@ -1327,21 +1282,10 @@ public class GfmasIntegration extends BatchTemplate{
 						 BatchResDTO<OrgProfile> batchResDTO = fileUtility.masterDatePTJ(IntegrationConstants.GMAS_DOWNLOAD_LOCAL + fileName, fileName);
 						 EPErrorResponse errorResponse = batchResDTO.getErrorResponse();
 						PmOrgProfile pmOrgProfile = null;
-//						OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
 						List<PmOrgProfile> pmOrgProfileList = new ArrayList<PmOrgProfile>();
 
 						for (OrgProfile orgProfile : batchResDTO.getBatchResContent()) {
 							
-//							orgProfileReqDTO = new OrgProfileReqDTO();
-//							orgProfileReqDTO.setOrgType(ParameterConst.ORG_TYPE_PTJ);
-//							orgProfileReqDTO.setOrgCode(orgProfile.getPtjCode()+orgProfile.getCode()); 
-//							
-//							OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileByCodeAndOrgType(orgProfileReqDTO);
-//							
-//							if (orgProfileResDTO.isSuccessful()) {
-//								log.info("Duplicate Code");
-//							} else {
-								
 								pmOrgProfile = new PmOrgProfile();
 
 								PmOrgValidity orgValidity = new PmOrgValidity();
@@ -1358,45 +1302,19 @@ public class GfmasIntegration extends BatchTemplate{
 								pmOrgProfile.setPmOrgValidity(orgValidity);
 								
 								// set Kumpulan ptj
-								
 								OrgProfileReqDTO kumpReqDTO = new OrgProfileReqDTO();
 								kumpReqDTO.setOrgTypeCode(ParameterConst.ORG_TYPE_PTJ_GROUP);
 								kumpReqDTO.setOrgCode(orgProfile.getPtjCode()); 
 								
 								OrgProfileResDTO kumResDTO = orgProfileSO.retrieveOrgProfileByCodeAndOrgType(kumpReqDTO);
-//								if(kumResDTO.isSuccessful())
-									pmOrgProfile.setParentOrgProfile(kumResDTO.getPmOrgProfile());
-//								else
-//									System.out.println("kumpulan ptj not available :"+orgProfile.getPtjCode());
-								
-								// Set pegwai pengawal Officer
-								
-//								OrgProfileReqDTO orgReqDTO = new OrgProfileReqDTO();
-//								orgReqDTO.setOrgTypeCode(ParameterConst.ORG_TYPE_PEGAWAI_PENGAWAL);
-//								orgReqDTO.setOrgCode(orgProfile.getCtrOfficerCode()); 
-//								
-//								OrgProfileResDTO pegwaiResDTO = orgProfileSO.retrieveOrgProfileByCodeAndOrgType(orgReqDTO);
-								
-								// need to update kumpulan ptj parent with pegawai pengawal
-								
-//								if(pegwaiResDTO.isSuccessful()){
-//									if(pegwaiResDTO.getPmOrgProfile().getOrgProfileId()	== kumResDTO.getPmOrgProfile().getParentOrgProfile().getOrgProfileId()){
-//										System.out.println("nothing to do");
-//									}else{
-//										System.out.println("update kump ptj parent with pegawai pengawai record ");
-//									}
-//								}
+								pmOrgProfile.setParentOrgProfile(kumResDTO.getPmOrgProfile());
 
 								// Set AgOffice
 								
 								AgOfficeReqDTO reqDTO = new AgOfficeReqDTO();
 								reqDTO.setAgOfficeCode(orgProfile.getAgOfficeCode());
 								AgOfficeResDTO agOfficeDTO = agOfficeSO.retrieveValidAgOfficeByOfficeCode(reqDTO);
-//								if(agOfficeDTO.isSuccessful())
-									pmOrgProfile.setPmAgOffice(agOfficeDTO.getAgOffice());
-//								else
-//									pmOrgProfile.setPmAgOffice(null);
-								
+								pmOrgProfile.setPmAgOffice(agOfficeDTO.getAgOffice());
 
 								ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 								parameterReqDTO.setParameterType(ParameterTypeConst.ORGANISATION_TYPES);
@@ -1408,8 +1326,6 @@ public class GfmasIntegration extends BatchTemplate{
 								pmOrgProfile.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 								pmOrgProfile.setCreatedBy(IntegrationConstants.BATCH_USER);
 								pmOrgProfile.setBrandNew(true);
-//								orgProfileReqDTO.setPmOrgProfile(pmOrgProfile);
-//								orgProfileSO.saveOrUpdateOrgProfile(orgProfileReqDTO);
 								if(!pmOrgProfileList.contains(pmOrgProfile))
 									pmOrgProfileList.add(pmOrgProfile);
 //							}
