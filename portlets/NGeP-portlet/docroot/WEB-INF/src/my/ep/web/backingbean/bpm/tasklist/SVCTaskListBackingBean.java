@@ -10,6 +10,9 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
@@ -26,17 +29,23 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
+import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.managedbean.bpm.tasklist.SVCTaskListManagedBean;
+import my.ep.web.managedbean.cm.catalogue.CatalogueManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 
 @ManagedBean(name = "svcTasklistBackingBean")
-@SessionScoped
-public class SVCTaskListBackingBean implements Serializable {
+@RequestScoped
+public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBean> implements Serializable {
 
 	/**
 	 * 
@@ -44,84 +53,57 @@ public class SVCTaskListBackingBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(SVCTaskListBackingBean.class);
 	private List<SmAppl> resultList = new ArrayList<SmAppl>(); 
-	private String applNo;
-	private List<PmState> stateList;
-	private List<PmDistrict> districtList;
-	private long stateId;
-	private long districtId;
-	private String supplierName;
-	
-	
+
+
+
+
+
+
 	public SVCTaskListBackingBean(){
-		
+
 		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject("pm", IStateSO.class);
 		try{
 			StateReqDTO reqStateDTO = new StateReqDTO();
 			reqStateDTO.setCountryCode("MY");
 			StateResDTO resStateDTO = stateSO.retriveStatesListByCountryCode(reqStateDTO);
 
-			this.setStateList(resStateDTO.getStateList());
+			this.getManagedBean().setStateList(resStateDTO.getStateList());
 		}finally {
 			stateSO = null;
 		}
 	}
-	
-	
+
+
 
 	public void searchAction() {
-		ISiteAssignSO siteAssignSO = null;
-		try {
-			System.out.println("**************getApplNo*************"+this.getApplNo());
-			System.out.println("******getStateId*****"+this.getStateId());
-			System.out.println("******getDistrictId*****"+this.getDistrictId());
-			siteAssignSO = (ISiteAssignSO) BusinessDelegate.getInstance().getServiceObject("sm", ISiteAssignSO.class);
-			
-			SiteAssignReqDTO reqDTO = new SiteAssignReqDTO();
-			reqDTO.setApplNo(this.getApplNo());
-			reqDTO.setSupplierName(this.getSupplierName());
-			
-			if(this.getDistrictId() >0){
-				reqDTO.setDistrictId(this.getDistrictId());
-			}
-			
-			if(this.getDistrictId() ==0){
-				if(this.getStateId() >0){
-					reqDTO.setStateId(this.getStateId());
-				}
-			}
-
 		
-			SiteAssignResDTO resDTO = siteAssignSO.retrievesSiteVisitTasks(reqDTO);
-			
+		System.out.println("*********searchAction*********");
 		
-			this.setResultList(resDTO.getSmAppls());
-		} finally {
-			siteAssignSO = null;
-		}
+		this.getManagedBean().getSearchDataModel().reloadData();
 	}
 
 	public void testNavigate() {
 		System.out.println("testNavigate.........");
 	}
-	
+
 	public void navigateToSiteVisitAssignment() {
 		System.out.println("nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
 		log.info("In navigateToSiteVisitAssignment");
 		String selectedApplNo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("selApplNo"); 
 		log.info("selectedApplNo: " + selectedApplNo);
-		
+
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 		Object token = bpmSO.authenticate("weblogic");
-		
+
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 		reqDTO.setDocNumber(selectedApplNo);
 		reqDTO.setCtxToken(token);
 		reqDTO.setState("ASSIGNED");
 		BpmResponseDTO resDTO = bpmSO.getTasksByDocNumber(reqDTO);
-		
+
 		if(resDTO.getWorklistVO().getWorklistItem() != null && !resDTO.getWorklistVO().getWorklistItem().isEmpty()) {
 			String taskId = resDTO.getWorklistVO().getWorklistItem().get(0).getTaskId();
-			
+
 			FacesScopes facesScope = new FacesScopes();
 			ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
 					.getRequestScope(WebKeys.THEME_DISPLAY);
@@ -133,53 +115,53 @@ public class SVCTaskListBackingBean implements Serializable {
 						0,
 						themeDisplay.getURLCurrent().indexOf(
 								themeDisplay.getLayout().getGroup()
-										.getFriendlyURL())
+								.getFriendlyURL())
 								+ themeDisplay.getLayout().getGroup()
-										.getFriendlyURL().length());
+								.getFriendlyURL().length());
 				log.info("commonUrl" + commonUrl);
-	
+
 				ExternalContext externalContext = FacesContext.getCurrentInstance()
 						.getExternalContext();
-	
+
 				// externalContext.redirect("/web/guest/" +url +"?taskId="+taskId);
 				log.info("site visit url: " + commonUrl + "/" + "site-visit" + "?taskId=" + taskId);
 				externalContext.redirect(commonUrl + "/" + "site-visit" + "?taskId=" + taskId);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
+
 		}
 	}
-	
+
 	public void findDistrict() {
 
 		log.info("*****************findDistrict***************");
-		log.info("Id:" + this.getStateId());
+		log.info("Id:" + this.getManagedBean().getStateId());
 
-		this.setDistrictList(null);
+		this.getManagedBean().setDistrictList(null);
 		DistrictReqDTO reqDTO = new DistrictReqDTO();
 
 		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", IDistrictSO.class);
 
 		log.info("*********************************");
-		
-			reqDTO.setStateId(this.getStateId());
-			DistrictResDTO resDTO = districtSO
-					.retriveDistrictListByStateID(reqDTO);
 
-			for (PmDistrict district : resDTO.getDistrictList()) {
+		reqDTO.setStateId(this.getManagedBean().getStateId());
+		DistrictResDTO resDTO = districtSO
+				.retriveDistrictListByStateID(reqDTO);
 
-				this.getDistrictList().add(district);
+		for (PmDistrict district : resDTO.getDistrictList()) {
 
-			}
+			this.getManagedBean().getDistrictList().add(district);
+
+		}
 
 
 		log.info("this.getManagedBean().getDistrictList().size():"
-				+ this.getDistrictList().size());
+				+ this.getManagedBean().getDistrictList().size());
 
 	}
-	
+
 	public List<SmAppl> getResultList() {
 		return resultList;
 	}
@@ -188,72 +170,12 @@ public class SVCTaskListBackingBean implements Serializable {
 		this.resultList = resultList;
 	}
 
-	public String getApplNo() {
-		return applNo;
-	}
-
-	public void setApplNo(String applNo) {
-		this.applNo = applNo;
-	}
-
-	public List<PmState> getStateList() {
-		return stateList;
-	}
-
-	public void setStateList(List<PmState> stateList) {
-		this.stateList = stateList;
-	}
-
-	public List<PmDistrict> getDistrictList() {
-		if(districtList==null)
-			districtList = new ArrayList<PmDistrict>();
-		return districtList;
-	}
-
-	public void setDistrictList(List<PmDistrict> districtList) {
-		this.districtList = districtList;
-	}
 
 
 
-	public long getStateId() {
-		return stateId;
-	}
 
 
 
-	public void setStateId(long stateId) {
-		this.stateId = stateId;
-	}
 
 
-
-	public long getDistrictId() {
-		return districtId;
-	}
-
-
-
-	public void setDistrictId(long districtId) {
-		this.districtId = districtId;
-	}
-
-
-
-	public String getSupplierName() {
-		return supplierName;
-	}
-
-
-
-	public void setSupplierName(String supplierName) {
-		this.supplierName = supplierName;
-	}
-	
-	
-	
-	
-	
-	
-	
 }

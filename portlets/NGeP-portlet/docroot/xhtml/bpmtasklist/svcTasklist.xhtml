@@ -5,37 +5,42 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
 
 
-		<table style="width:100%;">
+		<table style="width: 100%;">
 			<tr>
 				<td width="15%"><p:outputLabel value="Application No"></p:outputLabel></td>
-				<td width="35%"><p:inputText style="width:80%;" value="#{svcTasklistBackingBean.applNo}" /></td>
-				<td width="15%"><p:outputLabel value="#{lbl['lbl.cm.supplier.name']}"></p:outputLabel></td>
-				<td width="35%"><p:inputText style="width:80%;" value="#{svcTasklistBackingBean.supplierName}" /></td>
+				<td width="35%"><p:inputText style="width:80%;"
+						value="#{svcTasklistBackingBean.managedBean.applNo}" /></td>
+				<td width="15%"><p:outputLabel
+						value="#{lbl['lbl.cm.supplier.name']}"></p:outputLabel></td>
+				<td width="35%"><p:inputText style="width:80%;"
+						value="#{svcTasklistBackingBean.managedBean.supplierName}" /></td>
 			</tr>
 
 			<tr>
 				<td width="15%"><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
-				<td width="35%"><p:selectOneMenu id="stateIdDD" style="width: 80% !important;"
-						value="#{svcTasklistBackingBean.stateId}">
+				<td width="35%"><p:selectOneMenu id="stateIdDD"
+						style="width: 80% !important;"
+						value="#{svcTasklistBackingBean.managedBean.stateId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
-						<f:selectItems
-							value="#{svcTasklistBackingBean.stateList}" var="state"
-							itemLabel="#{state.stateName}" itemValue="#{state.stateId}"></f:selectItems>
+						<f:selectItems value="#{svcTasklistBackingBean.managedBean.stateList}"
+							var="state" itemLabel="#{state.stateName}"
+							itemValue="#{state.stateId}"></f:selectItems>
 						<p:ajax listener="#{svcTasklistBackingBean.findDistrict}"
 							update="@(.ui-selectonemenu[id$=districtDD])"></p:ajax>
 					</p:selectOneMenu></td>
 				<td width="15%"><p:outputLabel
 						value="#{lbl['lbl.sm.district']}" /></td>
-				<td width="35%"><p:selectOneMenu id="districtDD" style="width: 80% !important;"
-						value="#{svcTasklistBackingBean.districtId}">
+				<td width="35%"><p:selectOneMenu id="districtDD"
+						style="width: 80% !important;"
+						value="#{svcTasklistBackingBean.managedBean.districtId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
-						<f:selectItems
-							value="#{svcTasklistBackingBean.districtList}"
+						<f:selectItems value="#{svcTasklistBackingBean.managedBean.districtList}"
 							var="district" itemLabel="#{district.districtName}"
 							itemValue="#{district.districtId}"></f:selectItems>
 					</p:selectOneMenu></td>
@@ -51,8 +56,10 @@
 
 
 		<p:panel id="rspl">
-			<p:dataTable id="rsDt" value="#{svcTasklistBackingBean.resultList}"
-				var="appl">
+			<p:dataTable id="rsDt" value="#{svcTasklistBackingBean.managedBean.searchDataModel}" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				lazy="true" var="appl">
+
+				<ac:paginator for="rsDt"></ac:paginator>
 
 				<p:column headerText="Application No">
 
