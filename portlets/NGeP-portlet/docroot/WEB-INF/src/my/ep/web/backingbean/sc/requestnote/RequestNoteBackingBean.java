@@ -466,21 +466,22 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		boolean isDeliveryTermPrompt = Boolean.FALSE;
 		List<ScRequestNoteDtl>	requestNoteDtls  = this.getManagedBean().getRequestNoteDtls();
 		ScRequestNote scRequestNote = getManagedBean().getRequestNote();
+        if(outcome.equals(BpmOutcomeConst.BPM_SUBMIT)){
+        	if(!scRequestNote.getSourceMethod().equals(ParameterConst.REQUEST_NOTE_SQ) && requestNoteDtls != null && requestNoteDtls.size() > 1){
+    			RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+    			scRequestNote.setRequestNoteDtls(requestNoteDtls);
+    			requestNoteReqDTO.setRequestNote(scRequestNote);
+    			isDeliveryTermPrompt  = getDirectPurchaseSO().validateDeliveryTerm(requestNoteReqDTO);
 
-		if(!scRequestNote.getSourceMethod().equals(ParameterConst.REQUEST_NOTE_SQ) && requestNoteDtls != null && requestNoteDtls.size() > 1){
-			RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
-			scRequestNote.setRequestNoteDtls(requestNoteDtls);
-			requestNoteReqDTO.setRequestNote(scRequestNote);
-			isDeliveryTermPrompt  = getDirectPurchaseSO().validateDeliveryTerm(requestNoteReqDTO);
+    			if(isDeliveryTermPrompt){
+    				StringBuilder message = new StringBuilder();
+    				message.append("Same delivery term is required for each PR generated.");
+    				getManagedBean().setPromptMessage(message.toString());
+    				RequestContext.getCurrentInstance().execute("deliveryTermConform.show()");
 
-			if(isDeliveryTermPrompt){
-				StringBuilder message = new StringBuilder();
-				message.append("Same delivery term is required for each PR generated.");
-				getManagedBean().setPromptMessage(message.toString());
-				RequestContext.getCurrentInstance().execute("deliveryTermConform.show()");
-
-			}
-		}
+    			}
+    		}
+        }
 
 		if(!isDeliveryTermPrompt){
 			submitAction(outcome);
