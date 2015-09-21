@@ -3866,6 +3866,7 @@ public class LOIDetailBackingBean extends
 		
 		context.put("dateSDF", dateSDF);
 		context.put("loiList", getManagedBean().getLois());
+		context.put("rejectedStatus", "62406");
 
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				"/sc/loi/loi-negotiationLocation.vm", context,

@@ -74,13 +74,15 @@
 			<th bgcolor="#6d839b" class="title border left-right">Tarikh</th>
 		</tr>
 		#foreach( $scLoi in $loiList )
-			<tr class="ui-content">
-				<td class="standard border-bottom left">$scLoi.scLoiLoa.supplierName</td>
-				#foreach( $scNegoLocation in $scLoi.scNegoLocations )
-					<td class="standard border-bottom left">$scNegoLocation.negoLocation</td>
-					<td class="standard border-bottom left-right">$dateSDF.format($scNegoLocation.negoDate)</td>
-				#end
-			</tr>
+			#if($scLoi.scWorkFlowStatus.pmStatus.statusId != $rejectedStatus)
+				<tr class="ui-content">
+					<td class="standard border-bottom left">$scLoi.scLoiLoa.supplierName</td>
+					#foreach( $scNegoLocation in $scLoi.scNegoLocations )
+						<td class="standard border-bottom left">$scNegoLocation.negoLocation</td>
+						<td class="standard border-bottom left-right">$dateSDF.format($scNegoLocation.negoDate)</td>
+					#end
+				</tr>
+			#end
 		#end
 	</tbody>
 </table>
