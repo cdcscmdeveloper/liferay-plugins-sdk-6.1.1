@@ -2988,7 +2988,7 @@ public class SmApplicationBackingBean extends
 				.equals(SupplierManagementConst.STYPE_CONTRACTOR)) {
 			RequestContext.getCurrentInstance().execute("contDialog.hide()");
 		}
-		SmFieldChangeUtil.setCompExpTableListChangeStatus(getManagedBean());
+		SmFieldChangeUtil.initCompanyExperienceChangeField(getManagedBean());
 
 	}
 
