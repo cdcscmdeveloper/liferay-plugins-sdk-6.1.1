@@ -1563,5 +1563,38 @@ public class PmCommonUtil {
 		}
 		return null;
 	}
+	
+	public static PmDistrict retrievePmDistById(Long distId) {
+		IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IDistrictSO.class);
+		DistrictReqDTO reqDTO = new DistrictReqDTO();
+		reqDTO.setDistrictId(distId);
+		DistrictResDTO resDTO = reqSO.retriveDistrictByID(reqDTO);
 
+		return resDTO.getPmDistrict();
+	}
+	
+	public static PmCity retrievePmCityById(Long cityId) {
+		ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						ICitySO.class);
+		CityReqDTO reqDTO = new CityReqDTO();
+		reqDTO.setCityId(cityId);
+		CityResDTO resDTO = reqSO.retriveCityById(reqDTO);
+
+		return resDTO.getPmCity();
+	}
+	
+	public static PmDivision retrievePmDivisionById(Long divisionId) {
+		IDivisionSO reqSO = (IDivisionSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IDivisionSO.class);
+		DivisionReqDTO reqDTO = new DivisionReqDTO();
+		reqDTO.setDivisionId(divisionId);
+		DivisionResDTO resDTO = reqSO.retrieveDivisionById(reqDTO);
+
+		return resDTO.getPmDivision();
+	}
+	
 }

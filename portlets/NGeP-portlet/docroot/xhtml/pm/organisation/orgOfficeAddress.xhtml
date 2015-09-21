@@ -75,13 +75,14 @@
 						required="#{!empty param['disableValidation']
 							and organisationBackingBean.managedBean.officeAddress.pmState.stateCode eq ParameterConst.sarakSkCode}" 
 						styleClass="ppDropDownWidthL"
-						label="#{lbl['lbl.pm.address.state']}"
+						label="#{lbl['lbl.pm.address.division']}"
 						value="#{organisationBackingBean.managedBean.officeAddress.pmDivision.divisionId}"
 						style="width: 275px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 						<f:selectItems
 						  value="#{organisationBackingBean.getDivisionList(organisationBackingBean.managedBean.officeAddress.pmState.stateId)}" 
 						  var="division" itemLabel="#{division.divisionName}" itemValue="#{division.divisionId}"/>
+						  <p:ajax event="change" update="orgDivision" listener="#{organisationBackingBean.retrievePmDivision(organisationBackingBean.managedBean.officeAddress.pmDivision)}"/>
 					</p:selectOneMenu>
 				</td>
 				<td><p:message for="orgDivision" id="orgDivisionMsg" display="icon" /></td>
@@ -105,7 +106,7 @@
 							value="#{organisationBackingBean.getDistrictList(organisationBackingBean.managedBean.officeAddress.pmState.stateId)}"
 							var="district" itemLabel="#{district.districtName}"
 							itemValue="#{district.districtId}"/>
-						<p:ajax event="change" update="orgCity" />
+						<p:ajax event="change" update="orgDistrict,orgCity" listener="#{organisationBackingBean.retrievePmDistrict(organisationBackingBean.managedBean.officeAddress.pmDistrict)}"/>
 					</p:selectOneMenu></td>
 				<td><p:message for="orgDistrict" id="orgDistrictMsg"
 						display="icon" /></td>
@@ -128,7 +129,7 @@
 							value="#{organisationBackingBean.getCityList(organisationBackingBean.managedBean.officeAddress.pmDistrict.districtId)}"
 							var="city" itemLabel="#{city.cityName}"
 							itemValue="#{city.cityId}"/>
-							<p:ajax event="change" update="@this" process="@this" partialSubmit="true"/>
+							<p:ajax event="change" update="orgCity" listener="#{organisationBackingBean.retrievePmCity(organisationBackingBean.managedBean.officeAddress.pmCity)}"/>
 					</p:selectOneMenu></td>
 				<td><p:message id="orgCityMsg" for="orgCity" display="icon" /></td>
 
