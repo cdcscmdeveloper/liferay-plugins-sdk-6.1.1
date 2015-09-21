@@ -12,12 +12,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
@@ -118,6 +120,7 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
@@ -760,6 +763,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						itemSearchBackBtn = Boolean.FALSE;
 					} else if(scRequestNoteDtl.getRequestItem() != null && scRequestNoteDtl.getRequestItem().getPurchaseInDefault() != null){
 						itemSearchBackBtn = Boolean.FALSE;
+						// pid contract validity
+						pidValidity(scRequestNoteDtl.getRequestItem().getPurchaseInDefault(), requestNote);
 					}
 				}
 
@@ -3171,7 +3176,40 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		downloadFile(scPIReportAttachment);
 	}
-	
+
+
+	/**
+	 * Pid validity.
+	 *
+	 * @param purchaseInDefault the purchase in default
+	 * @param scRequestNote the sc request note
+	 */
+	private void pidValidity(ScPurchaseInDefault purchaseInDefault, ScRequestNote scRequestNote) {
+		String[] outComes = new String[1];
+		Date today  = DateUtils.getCurrentDateWithoutTime();
+		Date ExpDate = DateUtils.addDays(scRequestNote.getCreatedDate(), purchaseInDefault.getPidValidDays());
+		if(ExpDate.before(today)){
+			for (String String : getManagedBean().getOutComes()) {
+				if(String.equals(BpmOutcomeConst.BPM_CANCEL)){
+					outComes [0] = String;
+				}
+			}
+			getManagedBean().setOutComes(outComes);
+			getManagedBean().setSaveButton(Boolean.FALSE);
+
+			FacesContext.getCurrentInstance().addMessage(null, 
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+													MessageConst.ERROR_760355,
+													new String[] {purchaseInDefault.getPurchaseInDefaultNo()},
+													MessageUtils.BUNDLE_COMMON_MESSAGES,
+													new FacesScopes()
+															.getUserLocale())));
+			
+		}  else{
+			getManagedBean().setSaveButton(Boolean.TRUE);
+		}
+	}
+
 	/**
 	 * Gets the item code.
 	 *
