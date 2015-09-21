@@ -279,8 +279,10 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	
 	/** The selected action. */
 	private String selectedAction;
-
-    
+	
+	/** The save button. */
+	private boolean saveButton = Boolean.TRUE; 
+	
     /**
      * Instantiates a new request note managed bean.
      */
@@ -1671,5 +1673,19 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setSelectedAction(String selectedAction) {
 		this.selectedAction = selectedAction;
+	}
+
+	/**
+	 * @return the saveButton
+	 */
+	public boolean isSaveButton() {
+		return saveButton;
+	}
+
+	/**
+	 * @param saveButton the saveButton to set
+	 */
+	public void setSaveButton(boolean saveButton) {
+		this.saveButton = saveButton;
 	}
 }
