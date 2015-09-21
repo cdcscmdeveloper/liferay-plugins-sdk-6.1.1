@@ -2205,7 +2205,7 @@ public class OrganisationBackingBean extends
 	
 	public void retrievePmCity(PmCity pmCity) {
 		PmCity tempCity = PmCommonUtil.retrievePmCityById(pmCity.getCityId());			
-		getManagedBean().getDeliveryAddress().getPmAddress().setPmCity(tempCity);
+		getManagedBean().getOfficeAddress().setPmCity(tempCity);
 			
 	}	
 	
