@@ -371,37 +371,6 @@ public class SmApplicationUtil {
 			userReqDTO.setLoginId(pmUser.getLoginId());
 			log.info("************Supplier PmUser Login Id:"
 					+ pmUser.getLoginId());
-			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", IUserSO.class);
-			// UserResDTO userResDTO = userSO.isUserExist(userReqDTO);
-			// if (userResDTO == null) {
-			// throw new EpException(MessageConst.ERROR_721018);
-			// } else {
-			// if (userResDTO.getAllResult() != null
-			// && !userResDTO.getAllResult().isEmpty()) {
-			// if (userResDTO.getAllResult().get(0).length > 2) {
-			// log.debug("******** Pm Profile  : "
-			// + userResDTO.getAllResult().get(0)[0]);
-			// log.debug("******** Liferay Profile  : "
-			// + userResDTO.getAllResult().get(0)[1]);
-			// log.debug("******** LDAP Profile  : "
-			// + userResDTO.getAllResult().get(0)[2]);
-			// }
-			// }
-			// if (!userResDTO.isExist()) {
-			// log.debug("**** User doesn't exist any of the LDAP/PM/Liferay ******");
-			// throw new EpException(MessageConst.ERROR_721018);
-			// } else {
-			// log.debug("**** To Check if user not exists in either of the LDAP/PM/Liferay******");
-			// if (userResDTO.getAllResult().get(0)[0].startsWith("NO")
-			// || userResDTO.getAllResult().get(0)[1]
-			// .startsWith("NO")
-			// || userResDTO.getAllResult().get(0)[2]
-			// .startsWith("NO")) {
-			// log.debug("**** This user is not configured in one or more of the LDAP/PM/Liferay places *****");
-			// }
-			// }
-			// }
 
 			supplierSearchReqDTO.setUserId(pmUser.getUserId());
 			supplierSearchReqDTO.setAllStatuses(true);
@@ -1143,7 +1112,6 @@ public class SmApplicationUtil {
 			}
 			if (!validSave) {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
-				System.out.println("*** Value **** " + sb.toString());
 				throw new EpException(MessageConst.ERROR_722514,
 						new String[] { sb.toString() });
 			}
@@ -2595,8 +2563,6 @@ public class SmApplicationUtil {
 	 */
 	public static void checkEquityOwnerUpdateAllowance(
 			SmApplicationManagedBean managedBean) {
-		System.out
-				.println("******* check EquityOwner Update Allowance *********");
 		if (managedBean.getSmSupplier().getSmMofAccounts() != null) {
 			for (SmMofAccount account : managedBean.getSmSupplier()
 					.getSmMofAccounts()) {
@@ -2618,8 +2584,6 @@ public class SmApplicationUtil {
 		} else {
 			managedBean.setDisAllowOwnerEdit(false);
 		}
-		System.out.println("******* EquityOwner Update Allowance *********"
-				+ managedBean.isDisAllowOwnerEdit());
 	}
 
 	/**
@@ -5771,7 +5735,7 @@ public class SmApplicationUtil {
 			List<SelectItem> stateItems = SmCommonUtil.getStateList(coutryId);
 			if (!panelName
 					.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL)) {
-				stateLs = this.retrievePmStateList(coutryId);
+				stateLs = retrievePmStateList(coutryId);
 			}
 			switch (panelName) {
 			case SupplierManagementConst.SM_BASIC_INFO_PANEL:
@@ -6067,11 +6031,9 @@ public class SmApplicationUtil {
 			for (SmFacility smFac : appl.getSmFacilities()) {
 				if (smFac.getFacilityType() != null) {
 					if (isSave) {
-						setAddressTransientValueBeforeSave(smFac
-								.getSmAddress());
+						setAddressTransientValueBeforeSave(smFac.getSmAddress());
 					} else {
-						setAddressTransientValueAfterLoad(smFac
-								.getSmAddress());
+						setAddressTransientValueAfterLoad(smFac.getSmAddress());
 					}
 				}
 			}
@@ -6124,15 +6086,13 @@ public class SmApplicationUtil {
 				}
 			}
 		}
-		//smCompanyEquities
-		if(!SmCommonUtil.isCollectionEmpty(appl.getSmEquityCompanies())){
-			for(SmEquityCompany eq:appl.getSmEquityCompanies()){
+		// smCompanyEquities
+		if (!SmCommonUtil.isCollectionEmpty(appl.getSmEquityCompanies())) {
+			for (SmEquityCompany eq : appl.getSmEquityCompanies()) {
 				if (isSave) {
-					setAddressTransientValueBeforeSave(eq
-							.getSmAddress());
+					setAddressTransientValueBeforeSave(eq.getSmAddress());
 				} else {
-					setAddressTransientValueAfterLoad(eq
-							.getSmAddress());
+					setAddressTransientValueAfterLoad(eq.getSmAddress());
 				}
 			}
 		}
@@ -6161,19 +6121,19 @@ public class SmApplicationUtil {
 
 	public void setAddressTransientValueBeforeSave(SmAddress addr) {
 		if (addr != null) {
-			if(addr.getCountryId()!=null){
+			if (addr.getCountryId() != null) {
 				addr.setPmCountry(SmCommonUtil.getInstance().getCountryById(
 						addr.getCountryId()));
 			}
-			if(addr.getStateId()!=null){
+			if (addr.getStateId() != null) {
 				addr.setPmState(SmCommonUtil.getInstance().getStateById(
 						addr.getStateId()));
 			}
-			if(addr.getDistrictId()!=null){
+			if (addr.getDistrictId() != null) {
 				addr.setPmDistrict(SmCommonUtil.getInstance().getDistrictById(
 						addr.getDistrictId()));
 			}
-			if(addr.getCityId()!=null){
+			if (addr.getCityId() != null) {
 				addr.setPmCity(SmCommonUtil.getInstance().getCityById(
 						addr.getCityId()));
 			}
