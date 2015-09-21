@@ -98,6 +98,7 @@ import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.sc.bidding.ScBidSupplierItem;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
+import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
@@ -1704,9 +1705,9 @@ public class SupplierFinalizationBackingBean extends
 			throw epException;
 		}
 
-		if ( decisionRecommendSupplier || 
+		if ( !isQTRefinalized() && (decisionRecommendSupplier || 
 					ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY
-						.equals(decisionTypeCode)) {
+						.equals(decisionTypeCode)) ) {
 			boolean supplierSelected = true;
 			boolean minSuppliersExist = true;
 			String recommendTypeCode = scQtFinalization.getRecommendedTypeId()
@@ -1753,11 +1754,10 @@ public class SupplierFinalizationBackingBean extends
 				PmParameter finalizationMethod = getPmParameterByTypeAndCode(
 						ParameterTypeConst.FINALIZATION_RECOMMEND_BY,
 						getManagedBean().getFinalizationMethod());
-				String finalizationMethodDesc = getParameterDesc(finalizationMethod);
 				
 				if (!minSuppliersExist) {
 					throw new EpException(MessageConst.ERROR_760243,
-							new String[] { finalizationMethodDesc });
+							new String[] { getParameterDesc(finalizationMethod) });
 				} else {
 					throw new EpException(MessageConst.ERROR_760206);
 				}
@@ -3402,11 +3402,59 @@ public class SupplierFinalizationBackingBean extends
 	}
 	
 	private boolean isQTRefinalized() {
-		boolean isRefinalized = false;
-		if (QTStatusConst.QT_RE_FINALIZATION.equals(
-				getManagedBean().getScQt().getCurrentWorkFlowStatus()
-						.getPmStatus().getStatusId())) {
-			isRefinalized = true;
+		Boolean isRefinalized = getManagedBean().getQtRefinalized();
+		
+		if (isRefinalized == null) {
+//			if (QTStatusConst.QT_RE_FINALIZATION.equals(
+//					getManagedBean().getScQt().getCurrentWorkFlowStatus()
+//							.getPmStatus().getStatusId())) {
+//				isRefinalized = true;
+//			}
+			
+			IQTDetailSO qtDetailSO = null;
+			try {
+				qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+				tenderReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());	
+				List<Long> statusIds = new ArrayList<Long>();
+				statusIds.add(QTStatusConst.QT_RE_FINALIZATION);
+				statusIds.add(QTStatusConst.QT_RE_EVALUATION);
+				tenderReqDTO.setStatusIds(statusIds);
+				
+				List<ScWorkFlowStatus> statusList = qtDetailSO.retrieveWorkFlowStatus(tenderReqDTO);
+				if (CollectionUtils.isNotEmpty(statusList)) {
+					ScWorkFlowStatus reEvalWrkFlowStatus = null;
+					ScWorkFlowStatus reFinalizationWrkFlowStatus = null;
+					for (ScWorkFlowStatus wrkFlowStatus 
+												: statusList) {
+						if (QTStatusConst.QT_RE_EVALUATION.equals(
+								wrkFlowStatus.getPmStatus().getStatusId())) {
+							reEvalWrkFlowStatus = wrkFlowStatus;
+						} else if (QTStatusConst.QT_RE_FINALIZATION.equals(
+										wrkFlowStatus.getPmStatus().getStatusId())) {
+							reFinalizationWrkFlowStatus = wrkFlowStatus;
+						}
+					}
+					if (reFinalizationWrkFlowStatus == null) {
+						isRefinalized = Boolean.FALSE;
+					} else if (reEvalWrkFlowStatus == null) {
+						isRefinalized = Boolean.TRUE;
+					} else if (reEvalWrkFlowStatus != null && 
+									reFinalizationWrkFlowStatus != null) {
+						if (reEvalWrkFlowStatus.getChangedDate().after(
+								reFinalizationWrkFlowStatus.getChangedDate())) {
+							isRefinalized = Boolean.FALSE; 
+						} else {
+							isRefinalized = Boolean.TRUE;
+						}
+					}
+				} else {
+					isRefinalized = Boolean.FALSE;
+				}
+			} finally {
+				qtDetailSO = null;
+			}
 		}
 		
 		return isRefinalized;
