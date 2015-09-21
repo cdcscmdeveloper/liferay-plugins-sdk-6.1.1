@@ -30,11 +30,8 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
-import my.ep.biz.service.pm.common.city.ICitySO;
-import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
-import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
@@ -45,16 +42,10 @@ import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.dto.pm.common.city.CityReqDTO;
-import my.ep.dto.pm.common.city.CityResDTO;
-import my.ep.dto.pm.common.district.DistrictReqDTO;
-import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
-import my.ep.dto.pm.common.state.StateReqDTO;
-import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
@@ -154,7 +145,6 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
-import org.springframework.beans.BeanUtils;
 
 import com.liferay.portal.kernel.util.StringUtil;
 
@@ -224,8 +214,6 @@ public class SmApplicationBackingBean extends
 				boolean activeExist = false;
 				activeExist = SmApplicationUtil
 						.checkActiveSmApplForSupp(supplierProfile);
-				SmWorkflowStatus sts = SmCommonUtil
-						.getCurrentActiveWokFlowStatus(rejAppl.getApplId());
 				if (rejAppl.getApplSubmitDate() != null) {
 					Timestamp currentDate = new Timestamp(
 							System.currentTimeMillis());
@@ -1433,8 +1421,6 @@ public class SmApplicationBackingBean extends
 	public boolean validateUpdateSmAppl(String applType,
 			String currentPageType, String outputPageType, Boolean isBpmSubmit) {
 		boolean valid = false;
-		// boolean isError = false;
-		IMofRegistrationSO mofRegistrationSO = null;
 		log.info(" ***** Business  Type After hard code *********"
 				+ getManagedBean().getSmAppl().getSmSupplier()
 						.getBusinessType());
@@ -1447,9 +1433,6 @@ public class SmApplicationBackingBean extends
 				setPoOrApprvrSectionReview();
 			}
 
-			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
-					.getInstance().getServiceObject("sm",
-							IMofRegistrationSO.class);
 			log.info("****** Button type value ******** " + buttonType);
 			if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)
@@ -1489,7 +1472,6 @@ public class SmApplicationBackingBean extends
 		}
 
 		finally {
-			mofRegistrationSO = null;
 			if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)
 					&& !valid) {
@@ -5567,9 +5549,6 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setShareHolderMailAddr(mail);
 			getManagedBean().setShareHolderOffAddr(off);
 			getManagedBean().setShareHolderResdAddr(res);
-			List<PmState> defStates = new ArrayList<PmState>();
-			defStates = retrievePmStateList(perm.getSmAddress().getPmCountry()
-					.getCountryId());
 			List<SelectItem> defStateItems = SmCommonUtil.getStateList(perm
 					.getSmAddress().getPmCountry().getCountryId());
 			if (shareHolderBean.getSmPersonnelAddresses().isEmpty()) {
@@ -7522,54 +7501,6 @@ public class SmApplicationBackingBean extends
 	// }
 
 	/**
-	 * Retrieve pm state list by country id.
-	 * 
-	 * @param countryId
-	 *            - the country id
-	 * @return the list PmStates
-	 */
-	private List<PmState> retrievePmStateList(long countryId) {
-		StateReqDTO reqDTO = new StateReqDTO();
-		reqDTO.setCountryId(countryId);
-		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IStateSO.class);
-		StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
-		return resDTO.getStateList();
-	}
-
-	/**
-	 * Retrieve pm district list by state id.
-	 * 
-	 * @param stateId
-	 *            - the state id
-	 * @return the list of Pmdistricts
-	 */
-	private List<PmDistrict> retrievePmDistrictList(long stateId) {
-		DistrictReqDTO reqDTO = new DistrictReqDTO();
-		reqDTO.setStateId(stateId);
-		IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IDistrictSO.class);
-		DistrictResDTO resDTO = reqSO.retriveDistrictListByStateID(reqDTO);
-		return resDTO.getDistrictList();
-	}
-
-	/**
-	 * Retrieve pm city list by district Id.
-	 * 
-	 * @param districtId
-	 *            - the district id
-	 * @return the list of Pmcities
-	 */
-	private List<PmCity> retrievePmCityList(long districtId) {
-		CityReqDTO reqDTO = new CityReqDTO();
-		reqDTO.setDistrictId(districtId);
-		ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", ICitySO.class);
-		CityResDTO resDTO = reqSO.retriveCityListByDistrictId(reqDTO);
-		return resDTO.getCityList();
-	}
-
-	/**
 	 * Clone sm application draft from the stable or prev approved application.
 	 * 
 	 * @param id
@@ -7747,36 +7678,6 @@ public class SmApplicationBackingBean extends
 			e.printStackTrace();
 		}
 
-	}
-
-	/**
-	 * Reset selected district id to null.
-	 * 
-	 * @param dist
-	 *            - PmDistrict object
-	 */
-	private void resetDistrict(PmDistrict dist) {
-		dist.setDistrictId(null);
-	}
-
-	/**
-	 * Reset selected city id to null.
-	 * 
-	 * @param city
-	 *            - PmCity object
-	 */
-	private void resetCity(PmCity city) {
-		city.setCityId(null);
-	}
-
-	/**
-	 * Reset selected state id to null.
-	 * 
-	 * @param state
-	 *            -PmState object
-	 */
-	private void resetState(PmState state) {
-		state.setStateId(null);
 	}
 
 	/**

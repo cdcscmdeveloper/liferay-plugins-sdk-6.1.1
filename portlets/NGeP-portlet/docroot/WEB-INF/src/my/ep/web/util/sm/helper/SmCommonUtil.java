@@ -2291,7 +2291,6 @@ public class SmCommonUtil {
 					connection.getInputStream()));
 			stringBuilder = new StringBuilder();
 
-			System.out.println("***********CURL Response*********");
 			String line = null;
 			while ((line = reader.readLine()) != null) {
 				stringBuilder.append(line + "\n");
