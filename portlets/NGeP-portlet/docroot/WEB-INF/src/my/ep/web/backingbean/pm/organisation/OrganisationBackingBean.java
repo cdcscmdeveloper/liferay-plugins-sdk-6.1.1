@@ -869,7 +869,19 @@ public class OrganisationBackingBean extends
 			}
 			// PTJ
 			if (parameterResDTO.getPmParameter().getParameterCode()
-					.equalsIgnoreCase(OrganizationType.DIVISION.value())) {
+					.equalsIgnoreCase(OrganizationType.DIVISION.value())) {			
+				// Validate the Delivery Address
+				for (PmAddressType deliveryAddress : getManagedBean()
+						.getAddressTypesList()) {
+
+					if (deliveryAddress.getAddressType().equals(
+							AddressType.DELIVERY_ADDRESS.value())) {
+						log.info("Validate Delivery Address"
+								+ deliveryAddress.getPmAddress().getAddress1());
+						validateDeliveryAddress(deliveryAddress.getPmAddress());
+					}
+				}
+				
 				// Billing Address
 				for (PmAddressType addressType : getManagedBean()
 						.getOrgProfile().getPmAddressTypes()) {
@@ -880,17 +892,6 @@ public class OrganisationBackingBean extends
 							&& !getManagedBean().getAddressTypesList()
 									.contains(addressType)) {
 						getManagedBean().getAddressTypesList().add(addressType);
-					}
-				}
-				// Validate the Delivery Address
-				for (PmAddressType deliveryAddress : getManagedBean()
-						.getAddressTypesList()) {
-
-					if (deliveryAddress.getAddressType().equals(
-							AddressType.DELIVERY_ADDRESS.value())) {
-						log.info("Validate Delivery Address"
-								+ deliveryAddress.getPmAddress().getAddress1());
-						validateDeliveryAddress(deliveryAddress.getPmAddress());
 					}
 				}
 
@@ -1930,13 +1931,34 @@ public class OrganisationBackingBean extends
 		if(pmState != null ){
 			if (pmState.getStateId() != null) {
 				log.info("pmState.getStateId() " + pmState.getStateId());
-				PmState tempState = PmCommonUtil.retrievePmStateByStateId(pmState
-						.getStateId());
-				pmState.setStateCode(tempState.getStateCode());
-				
-				if(tempState.getStateCode()
+				pmState = PmCommonUtil.retrievePmStateByStateId(pmState
+						.getStateId());				
+				getManagedBean().getOfficeAddress().setPmState(pmState);
+				getManagedBean().getOfficeAddress().setPmDistrict(new PmDistrict());
+				getManagedBean().getOfficeAddress().setPmCity(new PmCity());
+				if(pmState.getStateCode()
 						.equals(ProfileManagementConst.STATE_CODE_SARAWAK)){
 					getManagedBean().getOfficeAddress().setPmDivision(new PmDivision()); 
+				}	
+			} else {
+				pmState.setStateCode(null);
+			}
+		}
+	}
+		
+	public void retrieveDeliveryPmState(PmState pmState) {
+		log.info("retrievePmState");
+		if(pmState != null ){
+			if (pmState.getStateId() != null) {
+				log.info("pmState.getStateId() " + pmState.getStateId());
+				pmState = PmCommonUtil.retrievePmStateByStateId(pmState
+						.getStateId());				
+				getManagedBean().getDeliveryAddress().getPmAddress().setPmState(pmState);
+				getManagedBean().getDeliveryAddress().getPmAddress().setPmDistrict(new PmDistrict());
+				getManagedBean().getDeliveryAddress().getPmAddress().setPmCity(new PmCity());
+				if(pmState.getStateCode()
+						.equals(ProfileManagementConst.STATE_CODE_SARAWAK)){
+					getManagedBean().getDeliveryAddress().getPmAddress().setPmDivision(new PmDivision()); 
 				}	
 			} else {
 				pmState.setStateCode(null);
@@ -2166,5 +2188,43 @@ public class OrganisationBackingBean extends
 			supplierGstSO = null;
 		}
 		return valid;
+	}
+	
+	public void retrievePmDistrict(PmDistrict pmDistrict) {
+		PmDistrict tempDistrict = PmCommonUtil.retrievePmDistById(pmDistrict.getDistrictId());				
+		getManagedBean().getOfficeAddress().setPmDistrict(tempDistrict);
+		getManagedBean().getOfficeAddress().setPmCity(new PmCity());
+		
+	}
+	
+	public void retrievePmDivision(PmDivision pmDivision) {
+		PmDivision tempDivision = PmCommonUtil.retrievePmDivisionById(pmDivision.getDivisionId());			
+		getManagedBean().getOfficeAddress().setPmDivision(tempDivision);
+			
+	}
+	
+	public void retrievePmCity(PmCity pmCity) {
+		PmCity tempCity = PmCommonUtil.retrievePmCityById(pmCity.getCityId());			
+		getManagedBean().getDeliveryAddress().getPmAddress().setPmCity(tempCity);
+			
+	}	
+	
+	public void retrieveDeliveryPmDistrict(PmDistrict pmDistrict) {
+		PmDistrict tempDistrict = PmCommonUtil.retrievePmDistById(pmDistrict.getDistrictId());				
+		getManagedBean().getDeliveryAddress().getPmAddress().setPmDistrict(tempDistrict);
+		getManagedBean().getDeliveryAddress().getPmAddress().setPmCity(new PmCity());
+		
+	}
+	
+	public void retrieveDeliveryPmDivision(PmDivision pmDivision) {
+		PmDivision tempDivision = PmCommonUtil.retrievePmDivisionById(pmDivision.getDivisionId());			
+		getManagedBean().getDeliveryAddress().getPmAddress().setPmDivision(tempDivision);
+			
+	}
+	
+	public void retrieveDeliveryPmCity(PmCity pmCity) {
+		PmCity tempCity = PmCommonUtil.retrievePmCityById(pmCity.getCityId());			
+		getManagedBean().getDeliveryAddress().getPmAddress().setPmCity(tempCity);
+			
 	}
 }
