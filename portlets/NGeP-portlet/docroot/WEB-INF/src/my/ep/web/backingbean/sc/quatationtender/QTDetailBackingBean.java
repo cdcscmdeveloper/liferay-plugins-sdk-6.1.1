@@ -1622,7 +1622,7 @@ public class QTDetailBackingBean extends
 				// this.getManagedBean().setSelectedTabBean(committeTabs.get(0));
 				this.getManagedBean().setSelectedTabBean(
 						committeTabs.get(this.getManagedBean()
-								.getSelectedTabIndex()));
+								.getSelectedCommitteeTabIndex()));
 			}
 		}
 	}
@@ -2042,7 +2042,7 @@ public class QTDetailBackingBean extends
 		if (CollectionUtils.isEmpty(tabList)) {
 			retrieveCommitteeAppointmentTabDtl(false);
 		}
-
+		this.getManagedBean().setSelectedApprovalTabIndex(0);
 		updateQtDtls();
 		IQTDetailSO detailSO;
 		try {
