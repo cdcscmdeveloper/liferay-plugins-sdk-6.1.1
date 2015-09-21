@@ -2988,6 +2988,7 @@ public class SmApplicationBackingBean extends
 				.equals(SupplierManagementConst.STYPE_CONTRACTOR)) {
 			RequestContext.getCurrentInstance().execute("contDialog.hide()");
 		}
+		SmFieldChangeUtil.setCompExpTableListChangeStatus(getManagedBean());
 
 	}
 
@@ -3041,11 +3042,7 @@ public class SmApplicationBackingBean extends
 			}
 
 		}
-		getManagedBean().setLatestCompanyExperience(
-				SmFieldChangeUtil.getCompanyExpByClientNameAndTitleFromList(
-						getManagedBean().getLatestAppl(),
-						consultantBean.getClientName(),
-						consultantBean.getTitle()));
+		SmFieldChangeUtil.initCompanyExperienceChangeField(getManagedBean());
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
 			RequestContext.getCurrentInstance().execute("consDialog.show()");

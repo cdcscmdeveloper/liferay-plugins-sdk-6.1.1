@@ -89,6 +89,7 @@
 						listener="#{backingBean.checkDuplicateCategoryForProject(expCategoryBean,backingBean.managedBean.selectedCompanyExperience)}"
 						update="conslSubChild" />
 				</p:selectOneMenu>
+				<ac:smFieldChangeTableAlert object="#{expCategoryBean}" />
 				<p:message id="conslSubChildMsg" for="conslSubChild"
 					showSummary="true" showDetail="false" display="icon" />
 			</p:column>

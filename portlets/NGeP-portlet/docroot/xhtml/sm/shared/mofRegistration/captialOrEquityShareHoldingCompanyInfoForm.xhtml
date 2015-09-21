@@ -180,7 +180,8 @@
 							listener="#{backingBean.calculateEquityCompanyPercent}" />
 					</p:inputText> 
 					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges}"
+						isShow="#{backingBean.managedBean.showFieldChanges 
+							and not empty backingBean.managedBean.selectedEquityCompany.equityCompanyId}"
 						oriValue="#{backingBean.managedBean.latestEquityCompany.shareAmt}" 
 						currValue="#{backingBean.managedBean.selectedEquityCompany.shareAmt}" 
 						alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestEquityCompany.shareAmt)}"/>
@@ -272,7 +273,8 @@
 							update="equiState,equiDist,equiCity,postCodeSuppEquiPanelId" />
 					</p:selectOneMenu> 
 					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges}"
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedEquityCompany.equityCompanyId}"
 						oriValue="#{backingBean.managedBean.latestEquityCompany.smAddress.pmCountry.countryId}" 
 						currValue="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmCountry.countryId}" 
 						alertValue="#{(not empty backingBean.managedBean.latestEquityCompany and 
