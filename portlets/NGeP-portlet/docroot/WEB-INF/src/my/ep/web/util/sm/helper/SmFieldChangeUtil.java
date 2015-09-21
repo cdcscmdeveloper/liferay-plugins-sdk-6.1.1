@@ -52,6 +52,7 @@ public class SmFieldChangeUtil {
 			bean.setShowFieldChanges(true);
 		} else {
 			bean.setShowFieldChanges(false);
+			bean.setLatestAppl(null);
 		}
 	}
 
