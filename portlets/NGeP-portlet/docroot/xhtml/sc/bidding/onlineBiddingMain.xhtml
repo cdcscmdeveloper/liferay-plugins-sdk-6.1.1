@@ -152,11 +152,18 @@
 				<p:column
 					rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidInProgress}">
 					
-					<!-- <ac:spinner value="#{bidPriceItem.newPrice}" minValue="0"
-						maxlength="10" size="10"
-						methodExpression="onlineBiddingBB.decrementAmountValueChangeListener"
-						stepFactor="bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt"
-						valueHolder="bidPriceItem" editableValueHolder="bidPriceItem" /> -->
+					<ac:spinner style="width : 70%" maxlength="10"
+						value="#{bidPriceItem.newPrice}" id="spinner2"
+						min="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}" 
+						max="#{bidPriceItem.bidPrice - bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}"
+						label="#{lbl['lbl.sc.new.bid']}"
+						stepFactor="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}"
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
+						update=":form:itemWiseBidListOB"
+						postUpdateListener="onlineBiddingBB.decrementAmountValueChangeListener"
+						rendered="false">
+						<f:attribute name="scBidPrice" value="#{bidPriceItem}" />
+					</ac:spinner>
 					
 					<p:spinner style="width : 88%" size="8" styleClass="updateSpinner"
 						value="#{bidPriceItem.newPrice}" min="0" id="spinner"

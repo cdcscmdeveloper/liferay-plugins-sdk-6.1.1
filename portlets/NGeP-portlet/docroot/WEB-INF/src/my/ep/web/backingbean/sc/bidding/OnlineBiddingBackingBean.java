@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
@@ -375,6 +376,45 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		scBidPrice.setNewBidPrice(newBidPrice);
 		int index = getBidPrices().indexOf(scBidPrice);
 		getBidPrices().set(index, scBidPrice);
+	}
+	
+	/**
+	 * Listener method for spinner component change events
+	 * 
+	 * @param component
+	 * @param newValue
+	 */
+	public void decrementAmountValueChangeListener(UIComponent component, Object newValue) {
+
+		log.info("decrementAmountValueChangeListener");
+		
+		Object scBidPriceObj = component.getNamingContainer().getAttributes().get("scBidPrice");
+		
+		if (scBidPriceObj != null) {
+			ScBidPrice newBidPrice = new ScBidPrice();
+			BigDecimal newPrice = null;
+			ScBidPrice scBidPrice = (ScBidPrice)scBidPriceObj;
+			
+			if (newValue != null && newValue instanceof BigDecimal) {
+				BigDecimal value = (BigDecimal)newValue;
+				
+				if (scBidPrice.getBidPrice() == null
+						&& value != null) {
+					newPrice = scBidPrice.getScBidSupplierItem().getItemStartPrice()
+							.subtract(value);
+				}
+
+				else if (scBidPrice.getBidPrice() != null
+						&& value != null) {
+					newPrice = scBidPrice.getBidPrice().subtract(
+							value);
+				}
+			}
+			
+			newBidPrice.setBidPrice(newPrice);
+			newBidPrice.setScBidSupplierItem(scBidPrice.getScBidSupplierItem());
+			scBidPrice.setNewBidPrice(newBidPrice);	
+		}
 	}
 
 	private Double getBidPriceTotals(ScBidPrice scBidPrice, BigDecimal itemPrice) {
