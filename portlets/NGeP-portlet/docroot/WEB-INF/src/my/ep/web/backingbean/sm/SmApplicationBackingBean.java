@@ -1714,8 +1714,6 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void verifySelectedRejectReasons() {
-		System.out.println("Other description reason id == "
-				+ getManagedBean().getRejectionOtherReasonId());
 		getManagedBean().setRejectReasonReqd(false);
 		for (Long resId : getManagedBean().getReasonId()) {
 			if (resId.compareTo(getManagedBean().getRejectionOtherReasonId()) == 0) {
@@ -1723,8 +1721,6 @@ public class SmApplicationBackingBean extends
 				break;
 			}
 		}
-		System.out.println(" *** Final Out put *********"
-				+ getManagedBean().isRejectReasonReqd());
 		if (!getManagedBean().isRejectReasonReqd()) {
 			getManagedBean().setApplnRejectionRemarks("");
 		}
@@ -1925,8 +1921,6 @@ public class SmApplicationBackingBean extends
 			log.info(" **** Total categories sent to Doc So ***"
 					+ rqDto.getCategoryL3Ids().size());
 		}
-		System.out.println("*** The certs size ********* "
-				+ getManagedBean().getSmAppl().getSmSupplierCerts().size());
 		if (!getManagedBean().getSmAppl().getSmSupplierCerts().isEmpty()) {
 			List<Long> certIds = new ArrayList<>();
 			for (SmSupplierCert cert : getManagedBean().getSmAppl()
@@ -1942,8 +1936,6 @@ public class SmApplicationBackingBean extends
 				}
 			}
 			rqDto.setCertBodyIds(certIds);
-			System.out.println("GLP List size sent ******** "
-					+ rqDto.getCertBodyIds().size());
 		}
 
 		rqDto.setSupplierTypeCode(getManagedBean().getSmAppl()
@@ -1982,19 +1974,10 @@ public class SmApplicationBackingBean extends
 					log.info(" ******* Existing doc list without change in state id  *****");
 					docs.addAll(getManagedBean().getSmAppl()
 							.getSmApplSupportDocs());
-					System.out
-							.println("getManagedBean().getSmAppl().getSmApplSupportDocs(): "
-									+ getManagedBean().getSmAppl()
-											.getSmApplSupportDocs());
 					for (PmDocument doc : rsDTO.getDocumentList()) {
 						boolean recordExists = false;
 						for (SmApplSupportDoc smDocu : getManagedBean()
 								.getSmAppl().getSmApplSupportDocs()) {
-
-							System.out.println("smDocu: " + smDocu + " "
-									+ smDocu.getApplSupportDocId());
-							System.out.println("smDocu.getPmDocument(): "
-									+ smDocu.getPmDocument());
 							if (smDocu.getPmDocument().getDocumentId()
 									.equals(doc.getDocumentId())) {
 								// docs.add(smDocu);
@@ -2280,8 +2263,6 @@ public class SmApplicationBackingBean extends
 
 	public void assignCategoryReApprovalOnOtherDescChange(SmSupplierCategory cat) {
 		if (getManagedBean().isSupplierUser()) {
-			System.out
-					.println("**** This is changed data for the other desc ***** ");
 			if (StringUtils.isNotEmpty(cat.getOtherDesc())
 					&& cat.getApprovedDate() != null) {
 				if (!cat.getOtherDesc().trim()
