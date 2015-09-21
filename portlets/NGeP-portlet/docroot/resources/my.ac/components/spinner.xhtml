@@ -7,54 +7,54 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<cc:interface>
-		<cc:attribute name="spinnerId" default="null" />
-		<cc:attribute name="value" default="null" />
-		<cc:attribute name="minValue" default="null" />
-		<cc:attribute name="maxValue" default="null" />
+		<cc:valueHolder name="spinnerInput"  />
 		<cc:attribute name="stepFactor" default="1" />
-		<cc:attribute name="rendered" default="true" />
+		<cc:attribute name="min" />
+		<cc:attribute name="max" />
 		<cc:attribute name="disabled" default="false" />
-		<cc:attribute name="maxlength" default="null" />
-		// advisory tooltip information
-		<cc:attribute name="title" default="null" />
-		<cc:attribute name="size" default="null" />
-		<cc:attribute name="style" default="null" />
-		<cc:attribute name="readonly" default="false" />
-		<cc:attribute name="listener" default="null" />
-		<cc:attribute name="methodExpression" default="null" />
-		<cc:editableValueHolder name="editableValueHolder"  />
-		<cc:valueHolder name="valueHolder"  />
+		<cc:attribute name="maxlength" type="java.lang.Integer" />
+		<cc:attribute name="size" />
+		<cc:attribute name="label" />
+		<cc:attribute name="style" />
+		<cc:attribute name="pattern" default="0" />
+		<cc:attribute name="update" />
+		<cc:attribute name="postUpdateListener" />
 	</cc:interface>
 
-	<cc:implementation>
-
-		<h:panelGroup id="spinnerPanel" rendered="#{cc.attrs.rendered}">
-			<table border="0" cellspacing="0" cellpadding="0" width="100%">
-				<tr>
-					<td width="90%" rowspan="2"><p:inputText size="#{cc.attrs.size}" maxlength="#{cc.attrs.maxlength}"
-							id="${cc.attrs.spinnerId}" disabled="#{cc.attrs.disabled}" title="#{cc.attrs.title}" 
-							value="#{cc.attrs.value}" readonly="#{cc.attrs.readonly}" >
-							<cc:insertChildren />
-						</p:inputText>
-						</td>
-					<TD width="10%"><p:commandLink id="spinUp"
-							action="#{spinnerBackingBean.incrementValue(cc.attrs.value,cc.attrs.stepFactor,cc.attrs.listener)}"
-							partialSubmit="true" process="@this" 
-							update="#{cc.attrs.spinnerId}">
-							<p:graphicImage
-								value="#{CommonUIConstant.imagePathUptoDesign}/buttonupup_hover.png" />
-						</p:commandLink></TD>
-				</tr>
-				<tr>
-					<td width="10%"><p:commandLink id="spinDown"
-							action="#{spinnerBackingBean.decrementValue(cc.attrs.value,cc.attrs.stepFactor,cc.attrs.listener)}"
-							process="@this" partialSubmit="true"
-							update="#{cc.attrs.spinnerId}">
-							<p:graphicImage
-								value="#{CommonUIConstant.imagePathUptoDesign}/buttondowndown_hover.png" />
-						</p:commandLink></td>
-				</tr>
-			</table>
+	<cc:implementation>	
+		<p:inputText id="spinnerInput" 
+			disabled="#{cc.attrs.disabled}" 
+			value="#{cc.attrs.value}"
+			size="#{cc.attrs.size}"
+			label="#{cc.attrs.label}"
+			style="margin-bottom:0px; text-align:right; #{cc.attrs.style}">
+			<cc:insertChildren />
+			
+			<c:if test="#{!empty cc.attrs.maxlength}">
+				<f:attribute name="maxlength" value="#{cc.attrs.maxlength}" />
+			</c:if>
+			
+			<f:convertNumber pattern="#{cc.attrs.pattern}" />
+			<p:ajax event="blur" process="@this" update="@this #{cc.attrs.update}" listener="#{spinnerBackingBean.valueChangedAction(cc, cc.attrs.value, cc.attrs.stepFactor, cc.attrs.min, cc.attrs.max, cc.attrs.postUpdateListener)}" />
+		</p:inputText>
+		<h:panelGroup layout="block" 
+			style="display:inline-block; vertical-align:top;">
+			<p:commandLink id="#{cc.attrs.id}spinUp"
+				partialSubmit="true" process="@this" 
+				update="spinnerInput #{cc.attrs.update}"
+				disabled="#{cc.attrs.disabled}"
+				styleClass="ui-icon"
+				style="height:10px; background-position:1px -19px; border-top:1px solid #CECECE; border-left:1px solid #CECECE; border-right:1px solid #CECECE;">
+				<f:setPropertyActionListener target="#{cc.attrs.value}" value="#{spinnerBackingBean.getSpinValue(cc, cc.attrs.value, cc.attrs.stepFactor, cc.attrs.min, cc.attrs.max, cc.attrs.postUpdateListener)}" />
+			</p:commandLink>
+			<p:commandLink id="#{cc.attrs.id}spinDown"
+				process="@this" partialSubmit="true"
+				update="spinnerInput #{cc.attrs.update}"
+				disabled="#{cc.attrs.disabled}"
+				styleClass="ui-icon"
+				style="height:10px; background-position:-64px -18px; border:1px solid #CECECE;">
+				<f:setPropertyActionListener target="#{cc.attrs.value}" value="#{spinnerBackingBean.getSpinValue(cc, cc.attrs.value, -1*cc.attrs.stepFactor, cc.attrs.min, cc.attrs.max, cc.attrs.postUpdateListener)}" />
+			</p:commandLink>
 		</h:panelGroup>
 	</cc:implementation>
 </ui:composition>
