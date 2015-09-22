@@ -180,6 +180,7 @@
 						value="#{lbl['lbl.sc.procurment.type.category']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="procTypeBoCategory" required="true"
+						disabled="#{isPendingApprovalStatus}"
 						value="#{directLOABackingBean.managedBean.scLoa.procurementTypeCatId.parameterId}"
 						style="margin-bottom:5px;width:218px;"
 						label="#{lbl['lbl.sc.procurment.type.category']}">
