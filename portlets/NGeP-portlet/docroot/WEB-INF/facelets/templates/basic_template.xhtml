@@ -14,6 +14,16 @@
 		function extendLiferaySession() {
 			Liferay.Session.extend();
 		}
+		
+		 function limitTextArea(element, limit) { 
+       	  var total = 0;
+       	  var value = 0;
+       	  total = element.value.split(/\n[\r\n]*/).length;
+        	  if ( element.value.length > limit-total-1) { 
+                   element.value = element.value.substring(0, limit-total-1); 
+              } 
+         } 
+
 	</script>
 </h:head>
 
