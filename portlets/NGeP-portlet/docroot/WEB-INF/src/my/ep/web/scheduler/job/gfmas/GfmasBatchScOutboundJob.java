@@ -12,10 +12,10 @@ import org.quartz.JobExecutionException;
 
 
 @DisallowConcurrentExecution
-public class GfmasBatchScInboundJob implements Job {
+public class GfmasBatchScOutboundJob implements Job {
 
 	public static Logger log = EpLogger
-			.getLogger(GfmasBatchScInboundJob.class);
+			.getLogger(GfmasBatchScOutboundJob.class);
 
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
