@@ -72,7 +72,7 @@
 
 	</p:panel>
 	<div class="ppRightBtn">
-		<p:commandButton value="#{lbl['lbl.btn.create']}"
+		<p:commandButton value="#{lbl['lbl.btn.create']}" process="@this"
 			action="#{usergroupBackingBean.createUserGroupProfiles()}" />
 	</div>
 </ui:composition>
