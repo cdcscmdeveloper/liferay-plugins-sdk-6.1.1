@@ -3679,7 +3679,7 @@ public class LOIDetailBackingBean extends
 			context.put("recommendSupplierList", getManagedBean().getRecommendedSupplierList());
 			context.put("itemized", getManagedBean().isItemized());
 		}
-		String offeredPriceTotal = "";
+		String afterNegoSubTotal = "";
 		List<ScLoi> lois = getManagedBean().getLois();
 		if (CollectionUtils.isNotEmpty(lois)) {
 			for (ScLoi loi : lois) {
@@ -3688,7 +3688,7 @@ public class LOIDetailBackingBean extends
 						for (ScQtRecommendDtl dtl : qtRecommend.getRecommendDtls()) {
 							if (dtl.getRecommendDtlId() == scLoiLoaItem.getScQtRecommendDtl().getRecommendDtlId() 
 									&& dtl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
-								offeredPriceTotal = amountDF.format(loi.getOfferedPriceTotal());
+								afterNegoSubTotal = amountDF.format(loi.getAfterNegoTotal());
 							}
 						}
 					}
@@ -3696,7 +3696,7 @@ public class LOIDetailBackingBean extends
 			}
 			context.put("scLois", lois);
 		}
-		context.put("offeredPriceTotal", offeredPriceTotal);
+		context.put("afterNegoSubTotal", afterNegoSubTotal);
 		context.put("isZonal", getManagedBean().isZonal());
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				"/sc/loi/loi-negotiationRecommendation.vm", context,
