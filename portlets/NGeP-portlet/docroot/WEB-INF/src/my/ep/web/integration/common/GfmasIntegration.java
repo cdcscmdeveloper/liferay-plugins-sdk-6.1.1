@@ -89,17 +89,6 @@ import org.apache.log4j.Logger;
 public class GfmasIntegration extends InitializeUtilityClz{
 	
 	private static Logger log = EpLogger.getLogger(GfmasIntegration.class);
-	
-//	public static void main(String args[]) {
-//		GfmasIntegration gfmasIntegration = new GfmasIntegration();
-//		gfmasIntegration.masterDataVendorGfmasOutbound(279784L); 
-//		gfmasIntegration.masterDataVendorGfmasInbound();
-//		gfmasIntegration.masterDataVendorGfmasOutbound(48478L);
-//		gfmasIntegration.receiptInformationGfmasOutbound();
-//		gfmasIntegration.masterDataVendorGfmasInbound();
-//	}
-
-	
 
 	// need to change the query for material info
 	public void permanentMasterDataMaterialInfoGfmas() {
