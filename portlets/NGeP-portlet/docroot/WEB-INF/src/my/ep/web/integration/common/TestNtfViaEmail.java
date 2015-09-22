@@ -157,7 +157,7 @@ public class TestNtfViaEmail {
 		reqDTO.setEmailToArr(emailLst.toArray(new String[emailLst.size()]));
 
 //		 Attachments
-		 String filePath = IntegrationConstants.FILE_PATH+DateToStr2;
+		 String filePath = IntegrationConstants.EPERUNDING_UPLOAD_DIR+DateToStr2;
 		 
 		 File folder = new File(filePath);
 		 File[] listOfFiles = folder.listFiles();
