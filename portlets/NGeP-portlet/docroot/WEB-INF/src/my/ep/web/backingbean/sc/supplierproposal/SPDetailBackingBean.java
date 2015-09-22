@@ -84,7 +84,6 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPCashOnHand;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPCreditFacility;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPEmployee;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
-import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperienceNCheckList;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalScore;
 import my.ep.persistence.entity.sc.supplierproposal.ScSlAttachment;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
