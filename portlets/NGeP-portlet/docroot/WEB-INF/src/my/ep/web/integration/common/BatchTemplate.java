@@ -3,7 +3,7 @@ package my.ep.web.integration.common;
 /*
 *@author P Ganga prasad
 */
-public abstract class BatchTemplate {
+public abstract class BatchTemplate extends InitializeSO{
 	
 	//template method, final so subclasses can't override
     public final void gfmasInboundServices(){
@@ -13,8 +13,8 @@ public abstract class BatchTemplate {
 		kumpulanPtjGfmasInbound();
         votGfmasInbound();
 		votDanaGfmasInbound();
-		programAktivitiGfmasInbound();	
-        projectGfmasInbound();
+		programAktivitiGfmasInbound();
+		projectGfmasInbound();
 		kodAkaunGfmasInbound();
 		masterDataPtjGfmasInbound();
 		kodBankGfmasInbound();	

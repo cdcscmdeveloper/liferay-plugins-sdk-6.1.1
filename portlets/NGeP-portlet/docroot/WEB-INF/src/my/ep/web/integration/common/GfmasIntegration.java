@@ -7,23 +7,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import my.ep.biz.service.cm.codification.ICodificationSO;
-import my.ep.biz.service.osb.fl.IFLOsbSO;
-import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.biz.service.pm.common.agoffice.IAgOfficeSO;
-import my.ep.biz.service.pm.common.batch.IPmInterfaceSO;
-import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
-import my.ep.biz.service.pm.common.glaccount.IGlAccountSO;
-import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.pm.common.programactivity.IProgramActivitySO;
-import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
-import my.ep.biz.service.pm.common.votfund.IVotFundSO;
-import my.ep.biz.service.sc.quationtender.IQTAwardSO;
-import my.ep.biz.service.sc.requestitem.IRequestItemSO;
-import my.ep.biz.service.sm.payment.IPaymentSO;
-import my.ep.biz.service.sm.search.ISupplierSearchSO;
-import my.ep.biz.service.sm.vendorcode.IVendorCodeSO;
-import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.cm.codification.CodificationReqDTO;
@@ -96,7 +79,6 @@ import my.ep.web.integration.gfmas.masterdatamateriainfo.MasterDataMaterialInfoP
 import my.ep.web.integration.gfmas.masterdatamateriainfo.MasterDataMaterialInfoRq_Type;
 import my.ep.web.integration.gfmas.masterdatamateriainfo.RqHeader_Type;
 import my.ep.web.integration.gfmas.masterdatamateriainfo.RqUID_Type;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
@@ -125,51 +107,6 @@ public class GfmasIntegration extends BatchTemplate{
 //		gfmasIntegration.masterDataVendorGfmasInbound();
 //	}
 
-	IAgOfficeSO agOfficeSO = BusinessDelegate.getInstance().getServiceObject(
-			ModuleCodeConst.PROFILE_MANAGEMENT, IAgOfficeSO.class);
-	IVotFundSO votFundSO = BusinessDelegate.getInstance().getServiceObject(
-			ModuleCodeConst.PROFILE_MANAGEMENT, IVotFundSO.class);
-	IProgramActivitySO programActivitySO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IProgramActivitySO.class);
-	IProjectSetiaSO projectSetiaSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IProjectSetiaSO.class);
-	IGlAccountSO glAccountSO = BusinessDelegate.getInstance().getServiceObject(
-			ModuleCodeConst.PROFILE_MANAGEMENT, IGlAccountSO.class);
-	IFinancialOrgSO financialOrgSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IFinancialOrgSO.class);
-	IFLOsbSO flOsbSO = BusinessDelegate.getInstance().getServiceObject(
-			ModuleCodeConst.ORDER_FULFILLMENT, IFLOsbSO.class);
-	
-	IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(
-			ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-	
-	IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IOrgProfileSO.class);
-
-	ISupplierSearchSO supplierSearchSO = BusinessDelegate
-			.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
-
-	ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
-			.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
-	
-	IQTAwardSO qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-			ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-	
-	IPaymentSO iPaymentSO = (IPaymentSO) BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IPaymentSO.class);
-	
-	IRequestItemSO reqItemSO = BusinessDelegate.getInstance().
-			getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
-	
-	IPmInterfaceSO interfaceSO = BusinessDelegate.getInstance().getServiceObject(
-			ModuleCodeConst.PROFILE_MANAGEMENT, IPmInterfaceSO.class);
-	
-	IVendorCodeSO iVendorCodeSO = BusinessDelegate.getInstance().getServiceObject(
-			ModuleCodeConst.SUPPLIER_SELECTION, IVendorCodeSO.class);
 	
 
 	// need to change the query for material info
@@ -1391,8 +1328,6 @@ public class GfmasIntegration extends BatchTemplate{
 							
 							PmFinancialSvc financialService = new PmFinancialSvc();
 							financialService.setBankCode(bank.getSwiftCode());
-							IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(
-											ModuleCodeConst.PROFILE_MANAGEMENT,IParameterSO.class);
 							ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 							parameterReqDTO.setParameterType(ParameterTypeConst.BANK_SERVICES);
 							parameterReqDTO.setParameterCode(ParameterConst.BANK_SERVICES_PAYMENT_BANK);
