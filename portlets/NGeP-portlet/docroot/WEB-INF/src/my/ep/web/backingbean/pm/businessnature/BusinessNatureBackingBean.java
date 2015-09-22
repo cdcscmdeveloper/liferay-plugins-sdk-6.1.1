@@ -800,9 +800,7 @@ public class BusinessNatureBackingBean extends
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 								MessageUtils.getMessage(
-										MessageConst.ERROR_738000,
-										new String[] { businessNature
-												.getLevelCode()},
+										MessageConst.ERROR_738000,										
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 
@@ -814,9 +812,7 @@ public class BusinessNatureBackingBean extends
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 								MessageUtils.getMessage(
-										MessageConst.ERROR_738001,
-										new String[] { businessNature
-												.getLevelName()},
+										MessageConst.ERROR_738001,										
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 				return false;
@@ -837,7 +833,7 @@ public class BusinessNatureBackingBean extends
 							.addMessage(
 									null,
 									new FacesMessage(
-											FacesMessage.SEVERITY_INFO,
+											FacesMessage.SEVERITY_ERROR,
 											null,
 											MessageUtils
 													.getMessage(
