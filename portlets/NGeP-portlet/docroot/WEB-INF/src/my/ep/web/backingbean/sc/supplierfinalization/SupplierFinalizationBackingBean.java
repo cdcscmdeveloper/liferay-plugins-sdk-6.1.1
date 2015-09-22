@@ -3532,8 +3532,8 @@ public class SupplierFinalizationBackingBean extends
 				// set the checkbox or radio button of supplier selected
 				if (CollectionUtils.isNotEmpty(
 						scQtRecommend.getRecommendDtls())) {
-					if (finalizationMethod.getParameterCode().equals(
-									ParameterConst.RECOMMEND_BY_AWARD)) {
+					if (isQTRefinalized() || finalizationMethod.getParameterCode()
+							.equals(ParameterConst.RECOMMEND_BY_AWARD)) {
 						
 						ScQtRecommendDtl activeRecommendDtl = null;
 						for (ScQtRecommendDtl recommendDtl 
@@ -4996,7 +4996,7 @@ public class SupplierFinalizationBackingBean extends
 				scQtRecommend.getRecommendDtls()) && 
 					CollectionUtils.isNotEmpty(
 								shortListedSuppliers)) {
-			if (ParameterConst.RECOMMEND_BY_AWARD.equals(
+			if (isQTRefinalized() || ParameterConst.RECOMMEND_BY_AWARD.equals(
 					scQtFinalization.getFinalizationMethod().getParameterCode())) {
 				
 				// If recommend by award, then set the recommended supplier from scQtRecommendDtl 
@@ -5513,7 +5513,7 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setOnlineBidding(false);
 
 		String selectionMode = null;
-		if (ParameterConst.RECOMMEND_BY_AWARD
+		if (isQTRefinalized() || ParameterConst.RECOMMEND_BY_AWARD
 							.equals(finalizationMethod)) {
 			this.getManagedBean().setSingleAward(true);
 			
@@ -5532,10 +5532,6 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setFinalizationMethod(
 									finalizationMethod);
 		
-		if (isQTRefinalized()) {
-			selectionMode = QTConstants.SF_SINGLE;
-		}
-		
 		return selectionMode;
 	}
 
@@ -5547,6 +5543,7 @@ public class SupplierFinalizationBackingBean extends
 
 		this.getManagedBean().setDisableSupplierSelection(false);
 		
+		boolean qtRefinalized = isQTRefinalized();
 		String finalizationMethodStr = getManagedBean().getFinalizationMethod();
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		
@@ -5555,21 +5552,25 @@ public class SupplierFinalizationBackingBean extends
 			this.getManagedBean().setOnlineBidding(false);
 			this.getManagedBean().setMultipleLoi(false);
 			
-			if (ParameterConst.RECOMMEND_BY_AWARD
+			if (qtRefinalized || ParameterConst.RECOMMEND_BY_AWARD
 						.equals(finalizationMethodStr)) {
-				scQtFinalization.setOnlineBiddingEndorse(null);
+				if (!qtRefinalized) {
+					scQtFinalization.setOnlineBiddingEndorse(null);
+				}
 				this.getManagedBean().setSelectionMode(QTConstants.SF_SINGLE);
 				this.getManagedBean().setSingleAward(true);
 				// this.getManagedBean().setBiddingEndorsement(null);
 
-				List<ScQtEvaluationResultDtl> recommendedSupplierList 
-							= this.getManagedBean().getRecommendedSupplierList();
-				if (CollectionUtils.isNotEmpty(
-							recommendedSupplierList)) {
-					for (ScQtEvaluationResultDtl evalResDtl 
-									: recommendedSupplierList) {
-						evalResDtl.setAwareded(false);
-						evalResDtl.setShortListed(false);
+				if (!qtRefinalized) {
+					List<ScQtEvaluationResultDtl> recommendedSupplierList 
+								= this.getManagedBean().getRecommendedSupplierList();
+					if (CollectionUtils.isNotEmpty(
+								recommendedSupplierList)) {
+						for (ScQtEvaluationResultDtl evalResDtl 
+										: recommendedSupplierList) {
+							evalResDtl.setAwareded(false);
+							evalResDtl.setShortListed(false);
+						}
 					}
 				}
 				
@@ -5632,9 +5633,6 @@ public class SupplierFinalizationBackingBean extends
 			getManagedBean().setFinalizationMethod(StringUtils.EMPTY);
 		}
 		
-		if (isQTRefinalized()) {
-			getManagedBean().setSelectionMode(QTConstants.SF_SINGLE);
-		}
 	}
 
 	private void recommendSuppliersByItem() {
