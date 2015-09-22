@@ -317,11 +317,13 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 	private void validationMessage(PmEduField eduField) {
 		debugLogger("validationMessage");
 		if (StringUtils.isBlank(eduField.getFieldCode())) {
-			throw new EpException("Field Code is Mandatory");
+			//throw new EpException("Field Code is Mandatory");
+			throw new EpException(MessageConst.ERROR_759000);
 		}
 
 		if (StringUtils.isBlank(eduField.getFieldName())) {
-			throw new EpException("Field Name is Mandatory");
+			//throw new EpException("Field Name is Mandatory");
+			throw new EpException(MessageConst.ERROR_759001);
 		}
 
 		// if(getManagedBean().getEduRestrList() == null ||
