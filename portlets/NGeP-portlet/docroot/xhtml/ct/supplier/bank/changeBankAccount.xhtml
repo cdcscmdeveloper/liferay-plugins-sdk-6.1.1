@@ -264,7 +264,7 @@
 				
 				 <p:outputLabel value="#{lbl['lbl.ct.supplier.gst.reg']}"/> 
                     <p:inputText disabled="true" style="width:200px;margin-bottom: 5px;"  
-                                     value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.gstRegNo == null ? lbl['lbl.ct.value.na'] : supplierBackingBean.managedBean.contractVer.ctContractValue.gstRegNo}" />
+                                     value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.gstRegNo == null ? lbl['lbl.txt.na'] : supplierBackingBean.managedBean.contractVer.ctContractValue.gstRegNo}" />
             
             	<p:outputLabel value="#{lbl['lbl.ct.business.name']}" />
 				<p:inputText disabled="true" style="width:350px;"
@@ -275,7 +275,7 @@
                          value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.gstEffDate}">
                            <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
                          </p:inputText>
-				     <p:inputText disabled="true" style="width:100px;margin-bottom: 5px;"  value="#{lbl['lbl.ct.value.na']}" 
+				     <p:inputText disabled="true" style="width:100px;margin-bottom: 5px;"  value="#{lbl['lbl.txt.na']}" 
                           rendered="#{supplierBackingBean.managedBean.contractVer.ctContractValue.gstEffDate == null}"/> 
 				
 				<p:outputLabel value="#{lbl['lbl.ct.branch.name']}" />
@@ -293,7 +293,7 @@
                        <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
                        </p:inputText> 
                        
-                       <p:inputText disabled="true" style="width:100px;margin-bottom: 5px;"  value="#{lbl['lbl.ct.value.na']}" 
+                       <p:inputText disabled="true" style="width:100px;margin-bottom: 5px;"  value="#{lbl['lbl.txt.na']}" 
                           rendered="#{supplierBackingBean.managedBean.contractVer.ctContractValue.gstDeclaredDate == null}"/> 
 				
 				<p:outputLabel value="#{lbl['lbl.ct.contact.person']}" />

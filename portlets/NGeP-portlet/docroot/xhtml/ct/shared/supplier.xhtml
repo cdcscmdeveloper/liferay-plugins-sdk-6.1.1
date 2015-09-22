@@ -37,7 +37,7 @@
                              </td>
                              <td> 
                                  <p:inputText disabled="true" style="width:170px;margin-bottom: 5px;"  
-                                     value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.gstRegNo == null ? lbl['lbl.ct.value.na'] : ctBackingBean.managedBean.ctContractVer.ctContractValue.gstRegNo}" />
+                                     value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.gstRegNo == null ? lbl['lbl.txt.na'] : ctBackingBean.managedBean.ctContractVer.ctContractValue.gstRegNo}" />
                              </td>
                         </tr>
                         <tr>
@@ -104,7 +104,7 @@
                        rendered="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.gstDeclaredDate != null}" > 
                        <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
                        </p:inputText> 
-                        <p:inputText disabled="true" style="width:100px;margin-bottom: 5px;"  value="#{lbl['lbl.ct.value.na']}" 
+                        <p:inputText disabled="true" style="width:100px;margin-bottom: 5px;"  value="#{lbl['lbl.txt.na']}" 
                           rendered="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.gstDeclaredDate == null}"/> 
                        
                        </td>
