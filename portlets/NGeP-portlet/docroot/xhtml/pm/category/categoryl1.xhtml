@@ -22,6 +22,8 @@
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}"
 						immediate="true" update=":form" process="@this"
 						action="#{categoryBackingBean.backToSearch}" style="float:left;" /></td>
+				<br />
+		        <br />
 				<td><p:commandButton value="#{lbl['lbl.btn.update']}"
 						action="#{categoryBackingBean.saveCategory}"
 						rendered="#{!categoryBackingBean.managedBean.newCategory}"
@@ -29,7 +31,7 @@
 						value="#{lbl['lbl.btn.create']}"
 						action="#{categoryBackingBean.saveCategory}"
 						rendered="#{categoryBackingBean.managedBean.newCategory}"
-						update="@([id$=Msg])" style="float:right;width: auto;" /></td>
+						update="@([id$=Msg])" style="float:right;width: auto;" /></td>				
 			</tr>
 
 
