@@ -57,8 +57,8 @@
 							style="text-transform: uppercase"
 							value="#{locationBackingBean.managedBean.state.stateCode}"
 							disabled="#{!locationBackingBean.managedBean.state.brandNew}"
-							size="40" required="true"
-							validatorMessage="#{lbl['lbl.pm.location.len.validate']}"
+							size="40" required="true" onchange="this.value = this.value.trim()"
+							validatorMessage="#{lbl['lbl.pm.state.code']}#{lbl['lbl.pm.location.len.validate']}"
 							maxlength="10">
 							<f:validateLength minimum="2" />
 						</p:inputText></td>
@@ -147,6 +147,8 @@
 							label="#{lbl['lbl.pm.division.code']}" size="40"
 							disabled="#{!locationBackingBean.managedBean.division.brandNew}"
 							value="#{locationBackingBean.managedBean.division.divisionCode}"
+							onchange="this.value = this.value.trim()"
+							validatorMessage="#{lbl['lbl.pm.division.code']}#{lbl['lbl.pm.location.len.validate']}"
 							required="true" maxlength="10">
 							<f:validateLength minimum="2" />
 						</p:inputText></td>
@@ -251,7 +253,8 @@
 							label="#{lbl['lbl.pm.district.code']}"
 							disabled="#{!locationBackingBean.managedBean.district.brandNew}"
 							value="#{locationBackingBean.managedBean.district.districtCode}"
-							size="40" required="true" maxlength="10">
+							size="40" required="true" maxlength="10" onchange="this.value = this.value.trim()"
+							validatorMessage="#{lbl['lbl.pm.district.code']}#{lbl['lbl.pm.location.4len.validate']}">
 							<f:validateLength minimum="4" />
 						</p:inputText></td>
 				</tr>
@@ -353,7 +356,8 @@
 							style="text-transform: uppercase"
 							disabled="#{!locationBackingBean.managedBean.city.brandNew}"
 							value="#{locationBackingBean.managedBean.city.cityCode}"
-							size="40" required="true" maxlength="10">
+							size="40" required="true" maxlength="10" onchange="this.value = this.value.trim()"
+							validatorMessage="#{lbl['lbl.pm.city.code']}#{lbl['lbl.pm.location.6len.validate']}">
 							<f:validateLength minimum="6" />
 						</p:inputText></td>
 				</tr>
