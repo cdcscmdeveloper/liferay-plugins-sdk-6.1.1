@@ -852,6 +852,9 @@ public class NoticeBoardBackingBean extends
 			
 			if (resDTO.getScQt().isZonal()) {
 				this.getManagedBean().setZones(resDTO.getZones());
+				reqDTO.setZoneId(resDTO.getZones().get(0).getSpecZoneId());
+				NoticeBoardResDTO resDto = qtNoticeBoardSO.retrieveOfferedPriceDtlsByZone(reqDTO);
+				this.getManagedBean().setQualificationBean(resDto.getQualificationBean());
 			} else {
 				this.getManagedBean().setQualificationBean(
 						resDTO.getQualificationBean());
@@ -1033,10 +1036,6 @@ public class NoticeBoardBackingBean extends
 									SearchOperator.OPERATOR_EQUALS.value(), 1));
 					statusIds.add(QTStatusConst.QT_BRIEFING_SITE_VISIT);
 					statusIds.add(QTStatusConst.QT_PROPOSAL_PREPARATION);
-					
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("qtAmend.RECORD_STATUS",
-									SearchOperator.OPERATOR_EQUALS.value(), 1));
 					setDisplayImage(isUser());
 
 				} else if (ParameterConst.NOTICE_BOARD_STATUS_CLOSED
@@ -1341,7 +1340,7 @@ public class NoticeBoardBackingBean extends
 	public void offeredPriceTabChange(TabChangeEvent changeEvent) {
 
 		TplSpecZoneDtl zoneDtl = (TplSpecZoneDtl) changeEvent.getData();
-		/*NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
+		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 		IQTNoticeBoardSO qtNoticeBoardSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTNoticeBoardSO.class);
@@ -1353,10 +1352,7 @@ public class NoticeBoardBackingBean extends
 		// this.getManagedBean().setScQt(resDTO.getScQt());
 
 		this.getManagedBean().setQualificationBean(
-				resDTO.getQualificationBean());*/
-		Long qtId = this.getManagedBean().getScQt().getQtId();
-		List<ScLoa> scLoaList = retrieveLOA(qtId, zoneDtl.getSpecZoneId());
-		this.getManagedBean().setAwardedItems(getAwardedItemDetails(scLoaList, qtId));
+				resDTO.getQualificationBean());
 
 	}
 
@@ -2662,16 +2658,35 @@ public class NoticeBoardBackingBean extends
 						awardedItem.setPriceByProposal(totalPrice);
 					}
 					// By Bidding
+					String recommendBy = scLoiLoaItem.getScLoa().getScLoiLoa()
+											.getRecommendBy().getParameterCode();
+					if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
+							.equals(recommendBy)) {
 					awardedItem.setPriceByBidding(TemplateSpecHelper.getInstance()
 						.calcTotalAmount(reqItem.getTplSpecQuestion(),
-								getPriceByBidding(qtId,pmParameter.getParameterCode(), scLoiLoaItem), 
+								scQtRecommendDtl.getScQtProposalItem().getFinalPrice(), 
 									scLoiLoaItem.getQty()));
-					
+					}
 					awardedItemList.add(awardedItem);
 				}
 			}
 		}
    return awardedItemList;
 	}
+	
+	/**
+	 * Will be called up on tab change of show Award Details  screen.
+	 * 
+	 * @param changeEvent
+	 *        the instance of TabChangeEvent
+	 */
+	public void awardSupplierTabChange(TabChangeEvent changeEvent) {
 
+		TplSpecZoneDtl zoneDtl = (TplSpecZoneDtl) changeEvent.getData();
+		Long qtId = this.getManagedBean().getScQt().getQtId();
+		List<ScLoa> scLoaList = retrieveLOA(qtId, zoneDtl.getSpecZoneId());
+		this.getManagedBean().setAwardedItems(
+				getAwardedItemDetails(scLoaList, qtId));
+
+	}
 }
