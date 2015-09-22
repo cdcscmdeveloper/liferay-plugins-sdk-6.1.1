@@ -3,7 +3,6 @@ package my.ep.web.integration.common;
 import java.rmi.RemoteException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -87,17 +86,10 @@ import org.apache.log4j.Logger;
 * author @Ganga prasad
 */
 
-public class GfmasIntegration extends BatchTemplate{
+public class GfmasIntegration extends InitializeUtilityClz{
 	
 	private static Logger log = EpLogger.getLogger(GfmasIntegration.class);
 	
-	FileUtility fileUtility = new FileUtility();
-	SFTPUtility sftpUtility = new SFTPUtility();
-	OsbUtility osbUtility = new OsbUtility();
-//	SMSUtility smsUtility = new SMSUtility();
-	Encryption encryption = new Encryption();
-	Date currentDate = new Date();
-
 //	public static void main(String args[]) {
 //		GfmasIntegration gfmasIntegration = new GfmasIntegration();
 //		gfmasIntegration.masterDataVendorGfmasOutbound(279784L); 
