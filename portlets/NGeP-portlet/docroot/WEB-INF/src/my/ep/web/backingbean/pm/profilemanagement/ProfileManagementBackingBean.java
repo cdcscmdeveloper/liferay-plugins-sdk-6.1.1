@@ -301,13 +301,15 @@ public class ProfileManagementBackingBean extends
 	public String constructConditionFieldsForCreate() {
 
 		StringBuilder sb = new StringBuilder();
-		sb.append("orgTypeCode.parameterId^");
+		sb.append("orgTypeCode.parameterCode^");
 		sb.append(getManagedBean().getSelectedUserOrg().getPmOrgProfile()
-				.getOrgTypeCode().getParameterId());
+				.getOrgTypeCode().getParameterCode());
+		sb.append("|orgTypeCode.parameterType^");
+		sb.append(ParameterTypeConst.ORGANISATION_TYPES);
 		sb.append("|recordStatus^1");
-		logger.info("....getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterId()="
+		logger.info("....getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterCode()="
 				+ getManagedBean().getSelectedUserOrg().getPmOrgProfile()
-						.getOrgTypeCode().getParameterId());
+						.getOrgTypeCode().getParameterCode());
 		logger.info("....this.getManagedBean().getCurrentActiveOrg().getOrgProfileId()="
 				+ this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
 		logger.info("....getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()="
@@ -336,7 +338,7 @@ public class ProfileManagementBackingBean extends
 				.getOrgTypeCode().getParameterCode())) {
 			if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
 				sb.append("|");
-				sb.append(OrgProfileUtil.getFromToSearchBeanParentString(OrganizationType.PENGAWAI_PENGAWAL.value(),OrganizationType.MINISTRY.value()));
+				sb.append(OrgProfileUtil.getFromToSearchBeanParentString(OrganizationType.DEPARTMENT.value(),OrganizationType.MINISTRY.value()));
 				sb.append("^");
 				sb.append(this.getManagedBean().getCurrentActiveOrg()
 						.getOrgProfileId());
