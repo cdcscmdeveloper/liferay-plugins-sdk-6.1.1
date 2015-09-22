@@ -934,7 +934,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
      			}
 	     	}
 	     	// Retrieve the proper committee role during sign off process and set the sign off flag to true
-	     	if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)
+	     	if (getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)
 	     			&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
 	     		List<CtCommitteeMember> committeeMemberList = getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers();
 	    		String role = null;
