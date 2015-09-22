@@ -99,6 +99,7 @@
 							<!-- TODO later on should check base on the work flow status instead of check the Pr Inquiry -->
 							<p:commandButton value="#{lbl[buttonLabel]}" process="@form"
 								partialSubmit="true"
+								update="@form"
 								rendered="#{!unspscCodeBackingBean.isRequisitioner()}"
 								styleClass="ui-button" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
