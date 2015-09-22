@@ -4,7 +4,6 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
 	<table style="width: 100%">
 		<tr>
 			<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
@@ -26,8 +25,12 @@
 						<tr>
 							<td></td>
 							<td>
-								<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000"
-									disabled="#{ctBackingBean.managedBean.viewContract}"/>
+							
+								<h:inputTextarea id="textAreaId"    cols="40"  value="#{remarkVar.remark}"    rendered="#{remarkIndex==0}" 
+									disabled="#{ctBackingBean.managedBean.viewContract}"  autoResize="false" 
+									onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);">
+							 </h:inputTextarea>
+									
 								<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.remark']}" rendered="#{remarkIndex==0}" />
 								<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 							</td>
