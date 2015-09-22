@@ -29,12 +29,12 @@
 						update=":form" process="@this"
 						action="#{categoryBackingBean.backToSearch}" style="float:left;" />
 				</td>
+				<br />
+		        <br />
 				<td><p:commandButton value="#{categoryBackingBean.managedBean.newCategory? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}"
 						action="#{categoryBackingBean.saveSubCategory}"
-						update=":form" style="float:right;" /></td>
+						update=":form" style="float:right;" /></td>				
 			</tr>
-
-
 		</table>
 
 		<p:panel header="#{lbl['lbl.pm.category.level']}" toggleable="true"

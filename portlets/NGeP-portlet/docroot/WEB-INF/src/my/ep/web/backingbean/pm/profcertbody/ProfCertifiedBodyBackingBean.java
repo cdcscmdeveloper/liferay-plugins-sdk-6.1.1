@@ -289,7 +289,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		}*/
 		
 		if(StringUtils.isBlank(certBody.getBodyName())){
-			throw new EpException(MessageConst.ERROR_100022,
+			throw new EpException(MessageConst.ERROR_768000,
 					new String[] { ResourceBundleUtils.getMessage(
 							"lbl.pm.search.name",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -297,7 +297,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		}	
 		
 		if(StringUtils.isBlank(certBody.getDescription())){
-			throw new EpException(MessageConst.ERROR_100022,
+			throw new EpException(MessageConst.ERROR_768001,
 					new String[] { ResourceBundleUtils.getMessage(
 							"lbl.pm.search.desc",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -305,7 +305,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		}
 		
 		if(!certBody.isCertifiedBody()&&!certBody.isProfessionalBody()){
-			throw new EpException(MessageConst.ERROR_100022,
+			throw new EpException(MessageConst.ERROR_768002,
 					new String[] { ResourceBundleUtils.getMessage(
 							"lbl.pm.search.profcert",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,

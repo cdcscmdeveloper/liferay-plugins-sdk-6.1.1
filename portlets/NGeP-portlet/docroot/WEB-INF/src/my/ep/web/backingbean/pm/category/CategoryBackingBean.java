@@ -1555,20 +1555,19 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	public String saveSubDivision() {
 
 		ICategoryCodeSO categoryCodeSO;
-		IParameterSO parameterSO;
+		IParameterSO parameterSO;	
+		
 
 		// check the duplicate restriction
 		if (!checkCategoryRestrDuplicateCompanyType()) {
 			throw new EpException(MessageConst.ERROR_775006);
-		}
+		}		
+		
 		//validation for fields
 		if (!validatePmCategoryL3()) {
 			return "/xhtml/pm/category/categoryl3.xhtml";
 		}
-		
-		//machine category data information
-		getMachineCategoryData();
-
+				
 		try {
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 			categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance()
@@ -2227,7 +2226,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 								MessageUtils.getMessage(
-										MessageConst.ERROR_715008,
+										MessageConst.ERROR_775009,										
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 				return false;
@@ -2239,7 +2238,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 								MessageUtils.getMessage(
-										MessageConst.ERROR_715008,
+										MessageConst.ERROR_775010,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 				return false;
@@ -2322,7 +2321,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 								MessageUtils.getMessage(
-										MessageConst.ERROR_715008,
+										MessageConst.ERROR_775009,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 				return false;
@@ -2334,7 +2333,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 								MessageUtils.getMessage(
-										MessageConst.ERROR_715008,
+										MessageConst.ERROR_775010,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 				return false;
@@ -2412,7 +2411,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT,
 						ICategoryCodeSO.class);
-		try {
+		
 			if (this.getManagedBean().getPmCategoryL3().getCategoryL3Code() == null
 					|| this.getManagedBean().getPmCategoryL3()
 							.getCategoryL3Code().isEmpty()) {
@@ -2420,7 +2419,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 								MessageUtils.getMessage(
-										MessageConst.ERROR_715008,
+										MessageConst.ERROR_775009,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 				return false;
@@ -2432,7 +2431,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 								MessageUtils.getMessage(
-										MessageConst.ERROR_715008,
+										MessageConst.ERROR_775010,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 				return false;
@@ -2444,7 +2443,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 								MessageUtils.getMessage(
-										MessageConst.ERROR_715008,
+										MessageConst.ERROR_775011,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 				return false;
@@ -2458,11 +2457,23 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 								MessageUtils.getMessage(
-										MessageConst.ERROR_715008,
+										MessageConst.ERROR_775011,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 				return false;
 			}
+			
+			if (this.getManagedBean().getPmCategoryL3().getPaidUpCapital() == null) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(
+										MessageConst.ERROR_775013,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+				return false;
+			}
+			
 			if (this.getManagedBean().isNewCategory()
 					&& this.getManagedBean().getPmCategoryL3()
 							.getCategoryTypeCodeVal() == 0) {
@@ -2470,7 +2481,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 								MessageUtils.getMessage(
-										MessageConst.ERROR_715008,
+										MessageConst.ERROR_775012,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 				return false;
@@ -2484,21 +2495,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 								MessageUtils.getMessage(
-										MessageConst.ERROR_715008,
+										MessageConst.ERROR_775012,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 				return false;
 			}
-			if (this.getManagedBean().getPmCategoryL3().getPaidUpCapital() == null) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-								MessageUtils.getMessage(
-										MessageConst.ERROR_715008,
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
-				return false;
-			}
+			
 
 			// disabled the bumipercentage: by andrew
 			/*
@@ -2519,12 +2521,30 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 								MessageUtils.getMessage(
-										MessageConst.ERROR_775004,
+										MessageConst.ERROR_775014,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 				return false;
 				// last
 			}
+			
+			// machine category data information
+			getMachineCategoryData();
+			
+			if (this.getManagedBean().getPmCategoryL3().isByCompType()
+					&& (this.getManagedBean().getCategoryRestrList() == null || this
+							.getManagedBean().getCategoryRestrList().size() == 0)) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(
+										MessageConst.ERROR_775015,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+				return false;
+				// last
+			}
+			
 			if (this.getManagedBean().getPmCategoryL3().getCategoryL3Code() != null) {
 				try {
 					Integer.valueOf(this.getManagedBean().getPmCategoryL3()
@@ -2566,6 +2586,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			 * MessageUtils.BUNDLE_COMMON_MESSAGES, new
 			 * FacesScopes().getUserLocale()))); return false; } }
 			 */
+		try {				
 			if (this.getManagedBean().isNewCategory()) {
 				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 				reqDTO.setCategoryL2Id(this.getManagedBean().getPmCategoryL3()
