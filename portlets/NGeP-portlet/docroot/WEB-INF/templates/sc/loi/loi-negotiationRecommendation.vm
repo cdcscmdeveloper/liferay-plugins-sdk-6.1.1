@@ -142,11 +142,12 @@
 				<td width="15%" bgcolor="#6d839b" class="title border left">Supplier Name</td>
 				<td width="15%" bgcolor="#6d839b" class="title border left">Supplier Code</td>
 				<td width="15%" bgcolor="#6d839b" class="title border left">Bumiputra Status</td>
-				<td width="15%" bgcolor="#6d839b" class="title border left">Offered Price (RM)</td>
-				<td width="15%" bgcolor="#6d839b" class="title border left">Total Score</td>
-				<td width="15%" bgcolor="#6d839b" class="title border left">Ranking</td>
+				<td width="23%" bgcolor="#6d839b" class="title border left">After Negotiation Offered Price (RM)</td>
+				<td width="12%" bgcolor="#6d839b" class="title border left">Total Score</td>
+				<td width="10%" bgcolor="#6d839b" class="title border left">Ranking</td>
 			</tr>
 			#foreach($supplierDtl in $recommendSupplierList)
+				#set($String = "formatter")
 				#if($supplierDtl.awareded)
 				<tr class="ui-content">
 					<td width="15%" class="standard border-bottom left" >$supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.companyName</td>
@@ -159,9 +160,9 @@
 							No
 						#end
 					</td>
-					<td width="15%" class="standard border-bottom left" >$supplierDtl.qtEvaluationResult.offeredPrice</td>
-					<td width="15%" class="standard border-bottom left" >$supplierDtl.totalScore</td>
-					<td width="15%" class="standard border-bottom left-right" >$supplierDtl.evalRank</td>
+					<td width="23%" class="standard border-bottom left">$numberFormatter.format($supplierDtl.qtEvaluationResult.offeredPrice)</td>
+					<td width="12%" class="standard border-bottom left">$String.format("%.2f", $supplierDtl.totalScore)</td>
+					<td width="10%" class="standard border-bottom left-right">$supplierDtl.evalRank</td>
 				</tr>
 				#end
 			#end
@@ -203,14 +204,14 @@
 									#end 
 								</td>
 								<td class="standard border-bottom left alignRight">
-									#if($!loiLoaItem.scQtProposalItem.offerPrice) 
-										$String.format("%.2f", $!loiLoaItem.scQtProposalItem.offerPrice) 
+									#if($!loiLoaItem.scQtProposalItem.finalPrice) 
+										$String.format("%.2f", $!loiLoaItem.scQtProposalItem.finalPrice) 
 									 #end
 								</td>
 								<td class="standard border-bottom left-right alignRight">
 									 #if ($!loiLoaItem.tplSpecTierQty )
 									 #else
-										$!loiLoaItem.offeredPriceSubTotal
+										$numberFormatter.format($!loiLoaItem.afterNegoSubTotal)
 									 #end
 								</td>
 							</tr>
@@ -225,7 +226,7 @@
 				#else
 					<th colspan="3" bgcolor="#6d839b" class="title border left alignRight">Total</th>
 				#end
-				<td bgcolor="#6d839b" class="title border left alignRight">$offeredPriceTotal</td>
+				<td bgcolor="#6d839b" class="title border left alignRight">$afterNegoSubTotal</td>
 			</tr>
 		</tbody>
 	</table>
