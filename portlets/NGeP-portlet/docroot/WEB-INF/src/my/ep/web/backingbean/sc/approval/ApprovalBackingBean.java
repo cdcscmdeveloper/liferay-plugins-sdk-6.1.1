@@ -833,7 +833,7 @@ public class ApprovalBackingBean extends
 													.getChangedValue()));
 									break;
 
-								} else if (ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD
+								} else if (ParameterConst.APPROVAL_REQUEST_EXTEND_CLOSING_DATE
 										.equalsIgnoreCase(approvalType)) {
 									qt.setPublishPeriod(Integer
 											.parseInt(approvalRequest
