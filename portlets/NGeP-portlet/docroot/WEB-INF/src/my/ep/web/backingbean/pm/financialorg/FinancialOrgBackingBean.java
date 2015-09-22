@@ -539,18 +539,43 @@ public class FinancialOrgBackingBean extends
 		return PmCommonUtil.getRecordStatusOptions();
 	}
 	
+//	/**
+//	 * retrieve state object
+//	 * @param pmState
+//	 */
+//	public void retrievePmState(PmState pmState){
+//		log.info("retrievePmState");
+//		if(pmState!=null){
+//			if(pmState.getStateId()!=null){
+//				log.info("pmState.getStateId() " + pmState.getStateId());
+//				PmState tempState =  PmCommonUtil.retrievePmStateByStateId(pmState.getStateId());
+//				pmState.setStateCode(tempState.getStateCode());
+//			}else{
+//				pmState.setStateCode(null);
+//			}
+//		}
+//	}
+	
 	/**
 	 * retrieve state object
+	 * 
 	 * @param pmState
 	 */
-	public void retrievePmState(PmState pmState){
+	public void retrievePmState(PmState pmState) {
 		log.info("retrievePmState");
-		if(pmState!=null){
-			if(pmState.getStateId()!=null){
+		if(pmState != null ){
+			if (pmState.getStateId() != null) {
 				log.info("pmState.getStateId() " + pmState.getStateId());
-				PmState tempState =  PmCommonUtil.retrievePmStateByStateId(pmState.getStateId());
-				pmState.setStateCode(tempState.getStateCode());
-			}else{
+				pmState = PmCommonUtil.retrievePmStateByStateId(pmState
+						.getStateId());				
+				getManagedBean().getPmAddress().setPmState(pmState);
+				getManagedBean().getPmAddress().setPmDistrict(new PmDistrict());
+				getManagedBean().getPmAddress().setPmCity(new PmCity());
+				if(pmState.getStateCode()
+						.equals(ProfileManagementConst.STATE_CODE_SARAWAK)){
+					getManagedBean().getPmAddress().setPmDivision(new PmDivision()); 
+				}	
+			} else {
 				pmState.setStateCode(null);
 			}
 		}
@@ -1300,5 +1325,24 @@ public class FinancialOrgBackingBean extends
 		ISearchBean<PmFinancialOrg> finOrgSearchBean = super.createSearchBean(
 				PmFinancialOrg.class, componentId);
 		return finOrgSearchBean;
+	}
+	
+	public void retrievePmDistrict(PmDistrict pmDistrict) {
+		PmDistrict tempDistrict = PmCommonUtil.retrievePmDistById(pmDistrict.getDistrictId());				
+		getManagedBean().getPmAddress().setPmDistrict(tempDistrict);
+		getManagedBean().getPmAddress().setPmCity(new PmCity());
+		
+	}
+	
+	public void retrievePmDivision(PmDivision pmDivision) {
+		PmDivision tempDivision = PmCommonUtil.retrievePmDivisionById(pmDivision.getDivisionId());			
+		getManagedBean().getPmAddress().setPmDivision(tempDivision);
+			
+	}
+	
+	public void retrievePmCity(PmCity pmCity) {
+		PmCity tempCity = PmCommonUtil.retrievePmCityById(pmCity.getCityId());			
+		getManagedBean().getPmAddress().setPmCity(tempCity);
+			
 	}
 }

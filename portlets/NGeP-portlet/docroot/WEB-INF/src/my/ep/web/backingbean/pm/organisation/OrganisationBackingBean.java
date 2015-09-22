@@ -541,6 +541,8 @@ public class OrganisationBackingBean extends
 //			} else {
 //				getManagedBean().setEmptyMinistry(false);
 //			}
+			
+			List<PmAddressType> deliveryAddressList = new ArrayList<PmAddressType>();
 			if (getManagedBean().getOrgProfile().getPmAddressTypes() != null
 					&& !getManagedBean().getOrgProfile().getPmAddressTypes()
 							.isEmpty()) {
@@ -552,8 +554,7 @@ public class OrganisationBackingBean extends
 							(DbValueConst.RECORD_STATUS_ACTIVE == pmAddressType.getRecordStatusFlg() ||
 								DbValueConst.RECORD_STATUS_SUSPENDED == pmAddressType.getRecordStatusFlg())) {
 
-						this.getManagedBean().getAddressTypesList()
-								.add(pmAddressType);
+						deliveryAddressList.add(pmAddressType);
 						// this.getManagedBean().setDeliveryContactPerson(pmAddressType.getPmContacts().get(0));
 					}
 				}
@@ -566,6 +567,11 @@ public class OrganisationBackingBean extends
 //				}
 		
 			}
+			
+			if(!deliveryAddressList.isEmpty()){
+				getManagedBean().setAddressTypesList(deliveryAddressList);
+			}
+			
 			// Profile Groups
 			if (orgProfile.getMainProfileGroups() != null
 					&& !orgProfile.getMainProfileGroups().isEmpty()) {
@@ -658,7 +664,6 @@ public class OrganisationBackingBean extends
 					supplierGstSO = null;
 				}
 			}
-
 		}
 		// Org Address
 		List<PmAddressType> orgAddressTypes = getManagedBean().getOrgProfile()
@@ -670,7 +675,6 @@ public class OrganisationBackingBean extends
 		AddressResDTO addressResDTO = null;
 		if (orgAddressTypes != null && !orgAddressTypes.isEmpty()) {
 			for (PmAddressType pmAddressType : orgAddressTypes) {
-
 				if (pmAddressType.getAddressType().equalsIgnoreCase(
 						AddressType.BILLING_ADDRESS.value())
 						&& (pmAddressType.getRecordStatusFlg().intValue() == 
@@ -697,6 +701,7 @@ public class OrganisationBackingBean extends
 					
 					this.getManagedBean().setOfficeAddress(
 							pmAddressType.getPmAddress());
+					getManagedBean().setSelectedStateId(pmAddressType.getPmAddress().getPmState().getStateId());
 					addrExist = true;
 					log.info("Address Exist");
 
@@ -717,12 +722,12 @@ public class OrganisationBackingBean extends
 						contact.setPmAddressType(pmAddressType);
 						contactLst.add(contact);
 						pmAddressType.setPmContacts(contactLst);
+					}					
+						break;
 					}
-				}
 			}
 		}
 		if (!addrExist) {
-
 			log.info("address not Exist");
 			PmAddressType addressTypet = getManagedBean().getPmAddressType();
 			orgAddressTypes.add(addressTypet);
@@ -740,7 +745,6 @@ public class OrganisationBackingBean extends
 			orgProfile.setPmAddressTypes(orgAddressTypes);
 		}
 		return NAV_TO_SEARCH;
-
 	}
 
 	/**
@@ -1926,13 +1930,12 @@ public class OrganisationBackingBean extends
 	 * 
 	 * @param pmState
 	 */
-	public void retrievePmState(PmState pmState) {
+	public void retrievePmState() {
 		log.info("retrievePmState");
-		if(pmState != null ){
-			if (pmState.getStateId() != null) {
-				log.info("pmState.getStateId() " + pmState.getStateId());
-				pmState = PmCommonUtil.retrievePmStateByStateId(pmState
-						.getStateId());				
+		if(getManagedBean().getSelectedStateId() != null ){
+				log.info("pmState.getStateId() " + getManagedBean().getSelectedStateId());
+				PmState pmState = PmCommonUtil.retrievePmStateByStateId(getManagedBean()
+						.getSelectedStateId());				
 				getManagedBean().getOfficeAddress().setPmState(pmState);
 				getManagedBean().getOfficeAddress().setPmDistrict(new PmDistrict());
 				getManagedBean().getOfficeAddress().setPmCity(new PmCity());
@@ -1940,10 +1943,8 @@ public class OrganisationBackingBean extends
 						.equals(ProfileManagementConst.STATE_CODE_SARAWAK)){
 					getManagedBean().getOfficeAddress().setPmDivision(new PmDivision()); 
 				}	
-			} else {
-				pmState.setStateCode(null);
-			}
-		}
+			} 
+		
 	}
 		
 	public void retrieveDeliveryPmState(PmState pmState) {
