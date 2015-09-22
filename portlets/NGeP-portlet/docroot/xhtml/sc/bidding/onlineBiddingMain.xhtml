@@ -14,12 +14,14 @@
 	<ui:define name="contentSection">
 		<p:messages id="obMessage" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" severity="error, info" />
+
 		<h:panelGroup id="pollPanelGroup"
 			rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.pendingBidding or onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidInProgress}">
 			<p:poll id="pollCOmponent" interval="#{onlineBiddingBB.interval}"
 				listener="#{onlineBiddingBB.pollListener}"
 				update="itemWiseBidListOB,packageRankingPanelOB,onlineBiddingNotification" />
 		</h:panelGroup>
+
 		<ui:include src="/xhtml/sc/bidding/onlineBiddingHeader.xhtml" />
 		<p:panel id="onLineBiddingPanel"
 			header="#{lbl['lbl.sc.bidding.bid.price.details']}" toggleable="true">
@@ -39,7 +41,7 @@
 
 				<p:columnGroup type="header">
 					<p:row>
-						<p:column rowspan="2" width="22%">
+						<p:column rowspan="2" width="20%">
 							<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.sc.item.name']}" />
 								<ac:iconTooltip
@@ -48,7 +50,7 @@
 						</p:column>
 
 						<p:column rowspan="2" headerText="#{lbl['lbl.sc.quantity']}"
-							width="7%" />
+							width="6%" />
 
 						<p:column rowspan="2" style="white-space : normal" width="4%">
 							<f:facet name="header">
@@ -59,15 +61,15 @@
 						</p:column>
 
 						<p:column colspan="2" headerText="#{lbl['lbl.sc.starting']}"
-							width="19%" style="text-align:center" />
+							width="18%" style="text-align:center" />
 
 						<p:column colspan="2" headerText="#{lbl['lbl.sc.last.bid']}"
 							rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId ne onlineBiddingBB.pendingBidding}"
-							width="19%" style=" text-align:center" />
+							width="18%" style=" text-align:center" />
 
 						<p:column colspan="3" headerText="#{lbl['lbl.sc.new.bid']}"
 							rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidInProgress}"
-							width="19%" style=" text-align:center" />
+							width="30%" style=" text-align:center" />
 
 						<p:column rowspan="2"
 							rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidInProgress and onlineBiddingBB.scBidSchedule.scBid.recommendedTypeId.parameterCode eq onlineBiddingBB.recommendTypeItem}"
@@ -75,17 +77,17 @@
 							style="white-space : normal" width="4%" />
 					</p:row>
 					<p:row>
-						<p:column headerText="#{lbl['lbl.sc.unit.price']}" width="9%" />
+						<p:column headerText="#{lbl['lbl.sc.unit.price']}" width="8%" />
 
 						<p:column headerText="#{lbl['lbl.sc.sub.total']}" width="10%" />
 
-						<p:column headerText="#{lbl['lbl.sc.unit.price']}" width="9%"
+						<p:column headerText="#{lbl['lbl.sc.unit.price']}" width="8%"
 							rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId ne onlineBiddingBB.pendingBidding}" />
 
 						<p:column headerText="#{lbl['lbl.sc.sub.total']}" width="10%"
 							rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId ne onlineBiddingBB.pendingBidding}" />
 
-						<p:column width="9%"
+						<p:column width="14%"
 							rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidInProgress}">
 							<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.sc.decrement']}" />
@@ -151,39 +153,26 @@
 				</p:column>
 				<p:column
 					rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidInProgress}">
-					
-					<ac:spinner style="width : 70%" maxlength="10"
-						value="#{bidPriceItem.newPrice}" id="spinner2"
-						min="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}" 
+                   <h:panelGroup id="spinnerPG">
+					<ac:spinner style="width : 65%" maxlength="10"
+						value="#{bidPriceItem.newPrice}" id="spinner"
+						min="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}"
 						max="#{bidPriceItem.bidPrice - bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}"
 						label="#{lbl['lbl.sc.new.bid']}"
 						stepFactor="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}"
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
 						update=":form:itemWiseBidListOB"
-						postUpdateListener="onlineBiddingBB.decrementAmountValueChangeListener"
-						rendered="false">
+						postUpdateListener="onlineBiddingBB.decrementAmountValueChangeListener">
 						<f:attribute name="scBidPrice" value="#{bidPriceItem}" />
 					</ac:spinner>
-					
-					<p:spinner style="width : 88%" size="8" styleClass="updateSpinner"
-						value="#{bidPriceItem.newPrice}" min="0" id="spinner"
-						label="New Bid Price"
-						stepFactor="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}">
-						<p:ajax event="change" process="@this"
-							listener="#{onlineBiddingBB.decrementAmountValueChangeListener(bidPriceItem)}"
-							update=":form:itemWiseBidListOB"></p:ajax>
-						<!-- <f:attribute name="bidPrice" value="#{bidPriceItem}"/>  -->
-						<!-- <f:validator validatorId="my.ep.web.validator.sc.BidPriceValidator" /> -->
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:spinner>
-					<p:spacer width="5"></p:spacer>
-					<h:panelGroup id="submitButton">
+					</h:panelGroup>
+					<p:spacer width="3"></p:spacer>
+					<h:panelGroup id="submitButton" style="width : 35%">
 						<p:commandLink id="submitBidOB"
 							disabled="#{(bidPriceItem.newPrice == null) or (bidPriceItem.newPrice lt bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt)}"
 							action="#{onlineBiddingBB.confirmAndSubmitBIdPrice(bidPriceItem)}"
 							process="@this"
-							update="@this,spinner,lastBidPrice,lastBidPriceSubTotal,newPrice,newPriceSubTotal,newRanking,:form:packageRankingPanelOB,:form:obMessage">
+							update="@this,spinnerPG,lastBidPrice,lastBidPriceSubTotal,newPrice,newPriceSubTotal,newRanking,:form:packageRankingPanelOB,:form:obMessage">
 							<p:graphicImage
 								value="#{CommonUIConstant.imagePathUptoDesign}/ico-submit.png" />
 						</p:commandLink>
