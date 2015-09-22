@@ -38,6 +38,28 @@
 			<p:message id="qtyMsg" for="qty" display="icon" />
 		</h:panelGroup>
 	</p:column>
+	<p:column style="width:67px; white-space: normal;"
+		rendered="#{!isItemTypeService and isDeliveryTermReq}">
+		<f:facet name="header">
+			<h:outputText value="* " styleClass="mandatory" />
+			<h:outputText value="#{lbl['lbl.tpl.spec.content.delivery.term']}" />
+			<ac:iconTooltip id="deliveryTerm#{row}TP"
+				value="#{lbl['lbl.sc.delivery.term.tooltip']}" />
+		</f:facet>
+		<p:inputText id="deliveryTerm"
+			style="min-width:0px !important;width:25px; text-align:right;"
+			value="#{question.clDeliveryTerm}" rendered="#{isQuestionTypeItem}"
+			required="#{!question.selected}" maxlength="4"
+			label="#{lbl['lbl.tpl.spec.content.delivery.term']}">
+			<p:ajax partialSubmit="true" process="@this"
+				update="@this, deliveryTermMsg" />
+		</p:inputText>
+		<p:spacer width="2px"></p:spacer>
+		<h:outputText
+			value="#{templateSpecBackingBean.getParameterDesc(question.clDeliveryTermTypeCode)}"
+			required="#{!question.selected}" rendered="#{isQuestionTypeItem}" />
+		<p:message id="deliveryTermMsg" for="deliveryTerm" display="icon" />
+	</p:column>
 	<p:column style="width:125px;" rendered="#{isSpecificationReq}">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
@@ -153,28 +175,5 @@
 				target="#{templateSpecBean.selectedSpecQuestion.selected}"
 				value="#{true}" />
 		</p:commandButton>
-	</p:column>
-
-	<p:column style="width:67px; white-space: normal;"
-		rendered="#{!isItemTypeService and isDeliveryTermReq}">
-		<f:facet name="header">
-			<h:outputText value="* " styleClass="mandatory" />
-			<h:outputText value="#{lbl['lbl.tpl.spec.content.delivery.term']}" />
-			<ac:iconTooltip id="deliveryTerm#{row}TP"
-				value="#{lbl['lbl.sc.delivery.term.tooltip']}" />
-		</f:facet>
-		<p:inputText id="deliveryTerm"
-			style="min-width:0px !important;width:25px; text-align:right;"
-			value="#{question.clDeliveryTerm}" rendered="#{isQuestionTypeItem}"
-			required="#{!question.selected}" maxlength="4"
-			label="#{lbl['lbl.tpl.spec.content.delivery.term']}">
-			<p:ajax partialSubmit="true" process="@this"
-				update="@this, deliveryTermMsg" />
-		</p:inputText>
-		<p:spacer width="2px"></p:spacer>
-		<h:outputText
-			value="#{templateSpecBackingBean.getParameterDesc(question.clDeliveryTermTypeCode)}"
-			required="#{!question.selected}" rendered="#{isQuestionTypeItem}" />
-		<p:message id="deliveryTermMsg" for="deliveryTerm" display="icon" />
 	</p:column>
 </ui:composition>
