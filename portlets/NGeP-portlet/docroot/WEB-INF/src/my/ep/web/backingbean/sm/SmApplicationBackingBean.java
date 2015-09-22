@@ -2182,43 +2182,46 @@ public class SmApplicationBackingBean extends
 								getManagedBean().getBasicCompanyFacility()
 										.getSmAddress()));
 			}
-			if (getManagedBean().getBasicCompanyFacility().getSmAddress()
-					.getPmCountry() != null
-					&& getManagedBean().getBasicCompanyFacility()
-							.getSmAddress().getPmCountry().getCountryId() != null) {
-				SmApplicationUtil.getInstance().populateStateByCountry(
-						getManagedBean().getBasicCompanyFacility()
-								.getSmAddress(),
-						SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL,
-						getManagedBean());
-			} else {
-				getManagedBean().getBasicCompanyFacility().setSmAddress(addr);
-				SmApplicationUtil.getInstance().populateStateByCountry(
-						getManagedBean().getBasicCompanyFacility()
-								.getSmAddress(),
-						SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL,
-						getManagedBean());
-			}
-			if (getManagedBean().getBasicCompanyFacility().getSmAddress()
-					.getPmState() != null
-					&& getManagedBean().getBasicCompanyFacility()
-							.getSmAddress().getPmState().getStateId() != null) {
-				SmApplicationUtil.getInstance().populateDistrictsByState(
-						getManagedBean().getBasicCompanyFacility()
-								.getSmAddress(),
-						SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL,
-						getManagedBean());
-			}
-			if (getManagedBean().getBasicCompanyFacility().getSmAddress()
-					.getPmDistrict() != null
-					&& getManagedBean().getBasicCompanyFacility()
-							.getSmAddress().getPmDistrict().getDistrictId() != null) {
-				SmApplicationUtil.getInstance().populateCitiesByDistrict(
-						getManagedBean().getBasicCompanyFacility()
-								.getSmAddress(),
-						SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL,
-						getManagedBean());
-			}
+			assignStateDistAndCityForSelVal(getManagedBean()
+					.getBasicCompanyFacility().getSmAddress(),
+					SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
+			// if (getManagedBean().getBasicCompanyFacility().getSmAddress()
+			// .getPmCountry() != null
+			// && getManagedBean().getBasicCompanyFacility()
+			// .getSmAddress().getPmCountry().getCountryId() != null) {
+			// SmApplicationUtil.getInstance().populateStateByCountry(
+			// getManagedBean().getBasicCompanyFacility()
+			// .getSmAddress(),
+			// SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL,
+			// getManagedBean());
+			// } else {
+			// getManagedBean().getBasicCompanyFacility().setSmAddress(addr);
+			// SmApplicationUtil.getInstance().populateStateByCountry(
+			// getManagedBean().getBasicCompanyFacility()
+			// .getSmAddress(),
+			// SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL,
+			// getManagedBean());
+			// }
+			// if (getManagedBean().getBasicCompanyFacility().getSmAddress()
+			// .getPmState() != null
+			// && getManagedBean().getBasicCompanyFacility()
+			// .getSmAddress().getPmState().getStateId() != null) {
+			// SmApplicationUtil.getInstance().populateDistrictsByState(
+			// getManagedBean().getBasicCompanyFacility()
+			// .getSmAddress(),
+			// SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL,
+			// getManagedBean());
+			// }
+			// if (getManagedBean().getBasicCompanyFacility().getSmAddress()
+			// .getPmDistrict() != null
+			// && getManagedBean().getBasicCompanyFacility()
+			// .getSmAddress().getPmDistrict().getDistrictId() != null) {
+			// SmApplicationUtil.getInstance().populateCitiesByDistrict(
+			// getManagedBean().getBasicCompanyFacility()
+			// .getSmAddress(),
+			// SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL,
+			// getManagedBean());
+			// }
 		}
 		setFacilityDefaultPrices(getManagedBean().getBasicCompanyFacility());
 		initBusinessPremise();
@@ -4348,6 +4351,9 @@ public class SmApplicationBackingBean extends
 				.getCompanyBasicGst());
 		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
 				.getSelectedBranch().getGst());
+		SmApplicationUtil.getInstance()
+				.removeFacilitiesNotInTheSameCategoryFacType(
+						getManagedBean().getSmAppl());
 		try {
 			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
 					.getInstance().getServiceObject("sm",
@@ -6270,6 +6276,9 @@ public class SmApplicationBackingBean extends
 					.getCompanyBasicGst());
 			SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
 					.getSelectedBranch().getGst());
+			SmApplicationUtil.getInstance()
+					.removeFacilitiesNotInTheSameCategoryFacType(
+							getManagedBean().getSmAppl());
 			reqDTO.setCompanyBasicGst(getManagedBean().getCompanyBasicGst());
 			reqDTO.setBranchGst(getManagedBean().getSelectedBranch().getGst());
 			reqDTO.setSameAsHq(getManagedBean().getSelectedBranch()

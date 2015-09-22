@@ -4520,6 +4520,40 @@ public class SmApplicationUtil {
 	}
 
 	/**
+	 * Remove facility that dont have selected supplier category facility type
+	 * 
+	 * @param SmAppl
+	 *            appl
+	 */
+	public void removeFacilitiesNotInTheSameCategoryFacType(SmAppl appl) {
+		List<String> facTypeList = new ArrayList<String>();
+		if (!SmCommonUtil.isCollectionEmpty(appl.getSmSupplierCategories())) {
+			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
+				if (StringUtils.isNotBlank(cat.getPmCategoryL3()
+						.getFacilityType())) {
+					facTypeList.add(cat.getPmCategoryL3().getFacilityType());
+				}
+			}
+		}
+		if (!SmCommonUtil.isCollectionEmpty(facTypeList)) {
+			for (String facType : facTypeList) {
+				for (Iterator<SmFacility> facIt = appl.getSmFacilities()
+						.iterator(); facIt.hasNext();) {
+					SmFacility fac = facIt.next();
+					if (StringUtils.isNotBlank(fac.getFacilityType())
+							&& !fac.getFacilityType().equals(facType)
+							&& !fac.getFacilityType()
+									.equals(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE)
+							&& !fac.getFacilityType()
+									.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
+						facIt.remove();
+					}
+				}
+			}
+		}
+	}
+
+	/**
 	 * Checks if personnel is created in basic.
 	 * 
 	 * @param smPersonnel
