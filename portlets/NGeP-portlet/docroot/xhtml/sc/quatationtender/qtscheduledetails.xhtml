@@ -27,7 +27,7 @@
 											listener="#{qTScheduleDetailBackingBean.handlePublishClosingDate()}"
 											update="proposalvalidityid, closingDate, publishId" />
 									</p:calendar> <h:inputText value="12:00 PM" disabled="true" size="4"
-										style="width: 60px;margin-top: 1px;margin-bottom: 0px;" /></td>
+										style="width: 65px;margin-top: 1px;margin-bottom: 0px;" /></td>
 								<td><p:message id="noticePublishMsg" for="noticePublish"
 										display="icon" /></td>
 							</tr>
@@ -43,7 +43,7 @@
 							readonly="true" disabled="true"
 							style="width: 111px;margin-top:5px">
 							<f:convertDateTime
-								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 						</p:inputText></td>
 				</tr>
 			</c:if>
@@ -66,7 +66,7 @@
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<h:inputText
 						value="12:00 PM" disabled="true" size="4"
-						style="width: 60px;margin-top: 5px;margin-bottom: 0px;" /> <ac:iconTooltip
+						style="width: 65px;margin-top: 5px;margin-bottom: 0px;" /> <ac:iconTooltip
 						value="#{lbl['lbl.sc.closing.date.tooltip']}" /></td>
 			</tr>
 			<c:if
@@ -85,7 +85,7 @@
 										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 										showOn="button" /> <h:inputText value="12:00 PM"
 										disabled="true" size="4"
-										style="width: 60px;margin-top: 1px;margin-bottom: 0px;" /></td>
+										style="width: 65px;margin-top: 1px;margin-bottom: 0px;" /></td>
 								<td><p:message id="sampledate" for="sampleclsdate"
 										display="icon" /></td>
 								<td><ac:iconTooltip
