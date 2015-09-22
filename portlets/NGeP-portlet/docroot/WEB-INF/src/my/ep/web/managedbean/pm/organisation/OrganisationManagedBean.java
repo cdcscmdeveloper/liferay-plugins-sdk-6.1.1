@@ -88,6 +88,8 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	private boolean islazy = false;
 	
 	private SmGstSupplier gstSupplier;
+	
+	private Long selectedStateId;
 
 	public OrganisationManagedBean() {
 
@@ -773,5 +775,19 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	 */
 	public void setGstSupplier(SmGstSupplier gstSupplier) {
 		this.gstSupplier = gstSupplier;
+	}
+
+	/**
+	 * @return the selectedStateId
+	 */
+	public Long getSelectedStateId() {
+		return selectedStateId;
+	}
+
+	/**
+	 * @param selectedStateId the selectedStateId to set
+	 */
+	public void setSelectedStateId(Long selectedStateId) {
+		this.selectedStateId = selectedStateId;
 	}
 }

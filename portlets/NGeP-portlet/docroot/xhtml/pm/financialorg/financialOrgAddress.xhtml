@@ -70,13 +70,14 @@
 						required="#{!empty param['disableValidation']
 							and financialOrgBackingBean.managedBean.pmAddress.pmState.stateCode eq ParameterConst.sarakSkCode}" 
 						styleClass="ppDropDownWidthL"
-						label="#{lbl['lbl.pm.address.state']}"
-						value="#{financialOrgBackingBean.managedBean.pmAddress.pmDivision.divisionId}"
-						>
+						label="#{lbl['lbl.pm.address.division']}"
+						value="#{financialOrgBackingBean.managedBean.pmAddress.pmDivision.divisionId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 						<f:selectItems
 						  value="#{financialOrgBackingBean.getDivisionList(financialOrgBackingBean.managedBean.pmAddress.pmState.stateId)}" 
 						  var="division" itemLabel="#{division.divisionName}" itemValue="#{division.divisionId}"/>
+						 <p:ajax event="change" update="facDivision" 
+						 	listener="#{financialOrgBackingBean.retrievePmDivision(financialOrgBackingBean.managedBean.pmAddress.pmDivision)}"/>
 					</p:selectOneMenu>
 				</td>
 				<td><p:message for="facDivision" id="facDivisionMsg" display="icon" /></td>
@@ -100,7 +101,8 @@
 							value="#{financialOrgBackingBean.getDistrictList(financialOrgBackingBean.managedBean.pmAddress.pmState.stateId)}"
 							var="district" itemLabel="#{district.districtName}"
 							itemValue="#{district.districtId}"/>
-						<p:ajax event="change" update="facCity" />
+						 <p:ajax event="change" update="facDistrict,facCity" 
+						 	listener="#{financialOrgBackingBean.retrievePmDistrict(financialOrgBackingBean.managedBean.pmAddress.pmDistrict)}"/>
 					</p:selectOneMenu></td>
 				<td><p:message for="facDistrict" id="facDistrictMsg"
 						display="icon" /></td>
@@ -123,6 +125,8 @@
 							value="#{financialOrgBackingBean.getCityList(financialOrgBackingBean.managedBean.pmAddress.pmDistrict.districtId)}"
 							var="city" itemLabel="#{city.cityName}"
 							itemValue="#{city.cityId}"/>
+						<p:ajax event="change" update="facCity" 
+						 	listener="#{financialOrgBackingBean.retrievePmCity(financialOrgBackingBean.managedBean.pmAddress.pmCity)}"/>
 					</p:selectOneMenu></td>
 				<td><p:message id="facCityMsg" for="facCity" display="icon" /></td>
 

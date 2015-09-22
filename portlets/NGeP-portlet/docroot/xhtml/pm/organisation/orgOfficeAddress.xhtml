@@ -41,7 +41,7 @@
 				<td width="220">
 					<p:selectOneMenu id="orgState" required="#{!empty param['disableValidation']}" styleClass="ppDropDownWidthL"
 						label="#{lbl['lbl.pm.address.state']}"
-						value="#{organisationBackingBean.managedBean.officeAddress.pmState.stateId}"
+						value="#{organisationBackingBean.managedBean.selectedStateId}"
 						style="width: 275px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
@@ -49,8 +49,8 @@
 						  value="#{organisationBackingBean.getStateList(organisationBackingBean.managedBean.officeAddress.pmCountry.countryId)}" 
 						  var="state" itemLabel="#{state.stateName}"
 						  itemValue="#{state.stateId}"/>
-						<p:ajax event="change" update="orgDistrict, orgDivision, orgCity" 
-						 	listener="#{organisationBackingBean.retrievePmState(organisationBackingBean.managedBean.officeAddress.pmState)}"/>
+						<p:ajax event="change" update="orgDistrict, orgDivision, orgCity" process="@this"
+						 	listener="#{organisationBackingBean.retrievePmState()}"/>
 					</p:selectOneMenu></td>
 				<td><p:message for="orgState" id="orgStateMsg" display="icon" /></td>
 			</tr>
