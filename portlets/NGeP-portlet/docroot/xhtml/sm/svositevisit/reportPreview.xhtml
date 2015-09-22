@@ -39,6 +39,7 @@
 				<p:commandButton value="#{lbl['lbl.sm.button.preview']}" update=":form:rptDialogId" oncomplete="rptDlg.show();" id="btnPreview" action="#{svoSiteVisitBackingBean.rptPreview(template.pmParameter.parameterCode)}" />
 			</p:column>
 			
+			<ui:remove>
 			<p:column>
 				<p:commandButton value="#{lbl['lbl.btn.upload']}" onclick="uploadDlg.show();" actionListener="#{svoSiteVisitBackingBean.setReportUploadTemplate(template)}"></p:commandButton>
 			</p:column>
@@ -58,6 +59,7 @@
 					</ui:repeat>
 				</table>
 			</p:column>
+			</ui:remove>
 		</p:dataTable>
 	</p:panel>
 	
