@@ -184,6 +184,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			reqDTO.setToken(token);
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setFrnCancellationProcess(getManagedBean().isFrnCancellationProcess());
+			reqDTO.setLastFRNTaxInv(getManagedBean().isLastFRNTaxInv());
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){	
 				reqDTO.setPmUser(getManagedBean().getPmUser());
 				resDTO = receivedNoteSO.receiveNoteModification(reqDTO);
