@@ -219,7 +219,7 @@
 				<p:outputLabel value="#{lbl['lbl.ct.effective.date']}" style="float:left;" />
 			</h:panelGrid>
 			<h:panelGrid columns="5" rendered="#{amendmentBackingBean.getAmendValue(2)}" >
-				<p:calendar styleClass="calanderWidth" size="8" id="edateCal1" showOn="button"  readonlyInput="true" navigator="true"
+				<p:calendar style="width:80px;" id="edateCal1" showOn="button"  readonlyInput="true" navigator="true"
 			    	required="true" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
 				    label="#{lbl['lbl.ct.effective.date']}" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}"
 				    maxdate="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.expDate}" 
@@ -249,7 +249,7 @@
 			</h:panelGrid>
 			
 			<h:panelGrid columns="5" rendered="#{amendmentBackingBean.getAmendValue(1)}" >
-				<p:inputText id="newGstAmtTxt" styleClass="ppRightBtn" size="22" style="width:80px;" required="true" label="#{lbl['lbl.ct.new.gst.amt']}"  
+				<p:inputText id="newGstAmtTxt" styleClass="ppRightBtn"  maxlength="18" style="width:80px;" required="true" label="#{lbl['lbl.ct.new.gst.amt']}"  
 				   value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.newGstAmount}" 
 				   disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}"
 				   rendered="#{amendmentBackingBean.contractWithGst()}">
@@ -259,7 +259,7 @@
 				</p:inputText>
 				<p:message for="newGstAmtTxt" display="icon" />
 				<p:inputText styleClass="ppRightBtn" style="width:80px;" disabled="true" 
-	   				 rendered="#{!amendmentBackingBean.contractWithGst()}" value="#{lbl['lbl.ct.value.na']}">
+	   				 rendered="#{!amendmentBackingBean.contractWithGst()}" value="#{lbl['lbl.txt.na']}">
 				</p:inputText>
 			</h:panelGrid>
 			

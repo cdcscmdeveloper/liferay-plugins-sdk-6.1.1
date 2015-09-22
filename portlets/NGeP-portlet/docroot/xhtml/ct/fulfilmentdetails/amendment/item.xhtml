@@ -378,16 +378,16 @@
 					<h:outputText value="#{serviceItemVar.scRequestItem.uom.uomName}" style="float:left;" />
 				</p:column>
 		      <p:column headerText="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}" style="width:15%; white-space:normal;">
-		        	<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomFrequency == null ? lbl['lbl.ct.value.na'] : serviceItemVar.scRequestItem.tplSpecQuestion.clUomFrequency}" />
+		        	<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomFrequency == null ? lbl['lbl.txt.na'] : serviceItemVar.scRequestItem.tplSpecQuestion.clUomFrequency}" />
 		      </p:column>				
 		      	<p:column headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}"  style="text-align: right;width:15%; white-space:normal;">
-		          	<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerDay == null ? lbl['lbl.ct.value.na'] : serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerDay}" />
+		          	<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerDay == null ? lbl['lbl.txt.na'] : serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerDay}" />
 		      	</p:column>				
 				<p:column headerText="#{lbl['lbl.ct.uom.per.month']}" style="width:15%; white-space:normal;text-align: right;">
-					<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerMonth == null ? lbl['lbl.ct.value.na'] : serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerMonth}" />
+					<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerMonth == null ? lbl['lbl.txt.na'] : serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerMonth}" />
 				</p:column>
 		      <p:column    headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.year']}" style="text-align: right;width:15%; white-space:normal;"  rendered="false" >
-		          	<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerYear == null ? lbl['lbl.ct.value.na'] : serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerYear}" />
+		          	<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerYear == null ? lbl['lbl.txt.na'] : serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerYear}" />
 		      </p:column>				
 				<p:column headerText="#{lbl['lbl.ct.quantity']}" style="width:15%;white-space:normal;text-align:right;">
 					<h:outputText value="#{serviceItemVar.minimumOrderQty}">
