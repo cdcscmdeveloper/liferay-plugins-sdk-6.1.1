@@ -351,9 +351,12 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		ICertBodySO certBodySO = null;
 		IStatusSO statusSO = null;
 
+		PmCertBody certBody = this.getManagedBean().getCertBody();
+
+		validationMessage(certBody);
+		
 		try {
-			PmCertBody certBody = this.getManagedBean().getCertBody();
-			validationMessage(certBody);
+			
 			// PmCertBody olPmCertBody=this.getManagedBean().getOldPmCertBody();
 			// PmCertBody pmCertBody = this.getManagedBean().getCertBody();
 
