@@ -23,6 +23,10 @@ import my.ep.biz.service.sm.vendorcode.IVendorCodeSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+/*
+ *@author P Ganga prasad
+ */
+
 public class InitializeSO {
 
 	protected IVotFundSO votFundSO = (IVotFundSO) BusinessDelegate

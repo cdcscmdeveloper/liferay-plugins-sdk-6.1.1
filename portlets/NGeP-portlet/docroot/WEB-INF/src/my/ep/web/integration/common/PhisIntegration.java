@@ -7,16 +7,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import my.ep.biz.service.cm.codification.ICodificationSO;
-import my.ep.biz.service.fl.payment.IPaymentMatchSO;
-import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.biz.service.pm.common.address.IAddressSO;
-import my.ep.biz.service.pm.common.confgeneral.IConfigGeneralSO;
-import my.ep.biz.service.pm.common.glaccount.IGlAccountSO;
-import my.ep.biz.service.pm.common.programactivity.IProgramActivitySO;
-import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
-import my.ep.biz.service.pm.common.votfund.IVotFundSO;
-import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
@@ -65,14 +55,13 @@ import my.ep.web.integration.phis.ptj.deliveryaddress.EPMFRs_Type;
 import my.ep.web.integration.phis.ptj.deliveryaddress.PHISMasterDataDeliveryAddressPortTypeProxy;
 import my.ep.web.integration.phis.ptj.deliveryaddress.RqHeader_Type;
 import my.ep.web.integration.phis.ptj.deliveryaddress.RqUID_Type;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 
 /*
 * @author P Ganga prasad
 */
-public class PhisIntegration {
+public class PhisIntegration extends InitializeSO {
 	
 	private static Logger log = EpLogger.getLogger(PhisIntegration.class);
 	
@@ -89,33 +78,6 @@ public class PhisIntegration {
 		
 //		test.masterDataMaterialInfoPHIS();
 //	}
-	
-	IVotFundSO votFundSO = (IVotFundSO) BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IVotFundSO.class);
-	
-	IProgramActivitySO programActivitySO = BusinessDelegate
-			.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IProgramActivitySO.class);
-	IProjectSetiaSO projectSetiaSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IProjectSetiaSO.class);
-	IGlAccountSO glAccountSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IGlAccountSO.class);
-	
-	ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
-			.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
-	
-	IAddressSO addressSO = BusinessDelegate
-			.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IAddressSO.class);
-	
-	IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-											IOrgProfileSO.class);
-	
-	IConfigGeneralSO configGeneralSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-			IConfigGeneralSO.class);
-	
-	IPaymentMatchSO paymentSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IPaymentMatchSO.class);
 	
 	FileUtility utility = new FileUtility();
 	String filePath = IntegrationConstants.FILE_PATH_LOCAL;
@@ -865,28 +827,40 @@ public class PhisIntegration {
 		System.out.println(reqDTO.getFromDate());
 		System.out.println(reqDTO.getToDate());
 		List<FulfilmentResDTO> resDTOs = paymentSO.retrievePHISPaymentInfo(reqDTO);
-		List<PaymentEffNotify> effNotifies = new ArrayList<PaymentEffNotify>();
-		PaymentEffNotify paymentEffNotify = null;
-		
-		for(FulfilmentResDTO resDTO : resDTOs) {
-			paymentEffNotify = new PaymentEffNotify();
-			paymentEffNotify.setContractOrderNo(resDTO.getOrderNo());
-			paymentEffNotify.setPaymenyReferenceNo(resDTO.getPaymentAdviceNo());
-			paymentEffNotify.setInvoiceNo(resDTO.getInvoiceNo());
-			paymentEffNotify.setInvoiceRefNo(resDTO.getSupplierInvoiceNo());
-			paymentEffNotify.setAmountPaid(resDTO.getPaymentAmt());
-			paymentEffNotify.setPaymentDate(resDTO.getPaymentDate());
+		if(resDTOs.size()>0){
+			List<PaymentEffNotify> effNotifies = new ArrayList<PaymentEffNotify>();
+			PaymentEffNotify paymentEffNotify = null;
 			
-			if(effNotifies.contains(paymentEffNotify))
-				effNotifies.add(paymentEffNotify);
+			for(FulfilmentResDTO resDTO : resDTOs) {
+				paymentEffNotify = new PaymentEffNotify();
+				paymentEffNotify.setContractOrderNo(resDTO.getOrderNo());
+				paymentEffNotify.setPaymenyReferenceNo(resDTO.getPaymentAdviceNo());
+				paymentEffNotify.setInvoiceNo(resDTO.getInvoiceNo());
+				paymentEffNotify.setInvoiceRefNo(resDTO.getSupplierInvoiceNo());
+				paymentEffNotify.setAmountPaid(resDTO.getPaymentAmt());
+				paymentEffNotify.setPaymentDate(resDTO.getPaymentDate());
+				
+				if(effNotifies.contains(paymentEffNotify))
+					effNotifies.add(paymentEffNotify);
+			}
+			
+			BatchReqDTO<PaymentEffNotify> batchReqDTO = new BatchReqDTO<PaymentEffNotify>();
+			batchReqDTO.setFilePath(filePath);
+//			batchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+//			batchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			batchReqDTO.setBatchContent(effNotifies);
+			utility.paymentEffNootifyOutPutStream(batchReqDTO);
+		}else{
+			log.info("paymentEffectNotification : Records not available....");
+			BatchReqDTO batchReqDTO = new BatchReqDTO();
+			batchReqDTO.setServiceCode(ServiceCode.PHS000.value());
+			batchReqDTO.setProcessId(ProcessCode.PHS000.value());
+//			batchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+//			batchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			insertRecordforEmptyData(batchReqDTO);
 		}
 		
-		BatchReqDTO<PaymentEffNotify> batchReqDTO = new BatchReqDTO<PaymentEffNotify>();
-		batchReqDTO.setFilePath(filePath);
-//		batchReqDTO.setDataStartTime(resDTO.getDataStartTime());
-//		batchReqDTO.setDataEndTime(resDTO.getDataEndTime());
-		batchReqDTO.setBatchContent(effNotifies);
-		utility.paymentEffNootifyOutPutStream(batchReqDTO);
+		
 	}
 	
 	

@@ -6,10 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.sm.remarks.ISmRemarksSO;
-import my.ep.biz.service.sm.search.ISupplierSearchSO;
-import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -52,26 +48,19 @@ import my.ep.web.integration.eperunding.Qualification;
 import my.ep.web.integration.eperunding.RegisteredCategory;
 import my.ep.web.integration.eperunding.RegistrationHistory;
 import my.ep.web.integration.eperunding.Signatory;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 
 /*
  *  @author Ganga prasad
  */
-public class EperundingIntegration {
+public class EperundingIntegration extends InitializeSO{
 	
 	private static Logger log = EpLogger.getLogger(EperundingIntegration.class);
 
 	OsbUtility osbUtility = new OsbUtility();
 	FileUtility fileUtility = new FileUtility();
 	String path = fileUtility.createDirectory(new Date(),IntegrationConstants.EPERUNDING_UPLOAD_DIR_LOCAL);
-
-	IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IParameterSO.class);
-
-	ISmRemarksSO smRemarksSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,ISmRemarksSO.class);
-
-	ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
 
 	/*public static void main(String args[]) {
 
