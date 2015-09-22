@@ -56,7 +56,6 @@
 
 			<p:commandButton value="#{lbl['lbl.btn.save']}" process="@this"
 				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-				rendered="#{requestNoteBackingBean.managedBean.saveButton}"
 				action="#{requestNoteBackingBean.saveAction('')}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.submit']}"
@@ -89,7 +88,6 @@
 									  or isPendingRevisionStatus}">
 							<p:commandButton value="#{lbl['lbl.btn.save']}"
 								action="#{requestNoteBackingBean.saveAction('Save')}"
-								rendered="#{requestNoteBackingBean.managedBean.saveButton}"
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								process="@this" />
 

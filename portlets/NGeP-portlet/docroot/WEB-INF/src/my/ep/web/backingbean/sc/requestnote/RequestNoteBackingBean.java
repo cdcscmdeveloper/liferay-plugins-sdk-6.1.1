@@ -535,13 +535,19 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					throw new EpException(
 							MessageConst.ERROR_760315,
 							new String[] {ResourceBundleUtils.getMessage("lbl.sc.direct.purchase.title",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()), "in Item Details"});
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 
 				if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome) || isAction){
+					
+					// pid validity
+					if(requestNoteDtl.getRequestItem() != null && requestNoteDtl.getRequestItem().getPurchaseInDefault() != null){
+						pidValidity(requestNoteDtl.getRequestItem().getPurchaseInDefault(), requestNote);
+					}
+					
 					// validate price type
 					if(null == requestNoteDtl.getPriceType() || null == requestNoteDtl.getPriceType().getParameterId()){
-						throw new EpException(MessageConst.ERROR_760343, new String[]{requestNoteDtl.getRequestItem().getCmItem().getItemName(),""});
+						throw new EpException(MessageConst.ERROR_760343, new String[]{requestNoteDtl.getRequestItem().getCmItem().getItemName()});
 					}
 				}
 			}	
@@ -764,8 +770,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						itemSearchBackBtn = Boolean.FALSE;
 					} else if(scRequestNoteDtl.getRequestItem() != null && scRequestNoteDtl.getRequestItem().getPurchaseInDefault() != null){
 						itemSearchBackBtn = Boolean.FALSE;
-						// pid contract validity
-						pidValidity(scRequestNoteDtl.getRequestItem().getPurchaseInDefault(), requestNote);
 					}
 				}
 
@@ -963,11 +967,21 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		this.getManagedBean().setAction(outcome);
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
-		requestNoteReqDTO.setRequestNote(getManagedBean().getRequestNote());
+		ScRequestNote scRequestNote = getManagedBean().getRequestNote();
+		requestNoteReqDTO.setRequestNote(scRequestNote);
 		getDirectPurchaseSO().validateRNBeforeSubmitting(requestNoteReqDTO);
 
 		if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
+            
+			// validate pid expired or not
+			for (ScRequestNoteDtl scRequestNoteDtl : scRequestNote.getRequestNoteDtls()) {
+				ScPurchaseInDefault purchaseInDefault = scRequestNoteDtl.getRequestItem().getPurchaseInDefault();
+				if(purchaseInDefault != null){
+					pidValidity(scRequestNoteDtl.getRequestItem().getPurchaseInDefault(), scRequestNote);
+				}
+			}
+
 			if(isDigiSigningRequired(RoleCode.RN_APPROVER.value())) {
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			}
@@ -3186,30 +3200,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param scRequestNote the sc request note
 	 */
 	private void pidValidity(ScPurchaseInDefault purchaseInDefault, ScRequestNote scRequestNote) {
-		String[] outComes = new String[1];
 		Date today  = DateUtils.getCurrentDateWithoutTime();
 		Date ExpDate = DateUtils.addDays(scRequestNote.getCreatedDate(), purchaseInDefault.getPidValidDays());
 		if(ExpDate.before(today)){
-			for (String String : getManagedBean().getOutComes()) {
-				if(String.equals(BpmOutcomeConst.BPM_CANCEL)){
-					outComes [0] = String;
-				}
-			}
-			getManagedBean().setOutComes(outComes);
-			getManagedBean().setSaveButton(Boolean.FALSE);
 
-			FacesContext.getCurrentInstance().addMessage(null, 
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-													MessageConst.ERROR_760355,
-													new String[] {purchaseInDefault.getPurchaseInDefaultNo()},
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes()
-															.getUserLocale())));
-			
-		}  else{
-			getManagedBean().setSaveButton(Boolean.TRUE);
-		}
+			throw new EpException(
+					MessageConst.ERROR_760355,
+					new String[] {purchaseInDefault.getPurchaseInDefaultNo()});
+		}  
 	}
+
 
 	/**
 	 * Gets the item code.
