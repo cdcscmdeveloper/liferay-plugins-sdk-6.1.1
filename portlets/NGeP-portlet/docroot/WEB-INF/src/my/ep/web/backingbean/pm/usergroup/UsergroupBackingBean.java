@@ -854,4 +854,8 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 			
 		return isValid;
 	}
+	
+	public void resetGroupUsers(){
+		getManagedBean().setUserGroups(new ArrayList<PmUserGroupUser>());
+	}
 }
