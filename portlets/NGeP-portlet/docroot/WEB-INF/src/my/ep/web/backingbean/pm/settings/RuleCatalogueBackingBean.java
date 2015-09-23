@@ -1053,6 +1053,10 @@ public class RuleCatalogueBackingBean extends
 
 				PmConfigRuleValue baseValueToCompare = ruleType
 						.getConfigRuleValues().get(i);
+				log.info(".............ruleType.getRuleType() == "
+						+ ruleType.getRuleType());
+				log.info(".............ruleType.getRuleTypeDesc() == "
+						+ ruleType.getRuleTypeDesc());
 				log.info(".............ruleType.getIsRangeValue() == "
 						+ ruleType.getIsRangeValue());
 				log.info(".............baseValueToCompare.isShowFlag()="
@@ -1085,11 +1089,14 @@ public class RuleCatalogueBackingBean extends
 					}
 					log.info(".........................second.value.getRuleValue()="
 							+ value.getRuleValue());
+					log.info("........................ruleType.getValidationType()="
+							+ ruleType.getValidationType());
 
 					if (!ruleValueValidation(baseValueToCompare, value,
 							ruleType.getRuleDataTypeId(),
 							ruleType.getValidationType())) {
-						log.info("................befor throw exeption for category...................");
+						log.info("...............ruleType.getValidationType()="+ruleType.getValidationType());
+						log.info("................befor throw exeption...................");
 						// hit error and return
 						switch (ruleType.getValidationType()) {
 						case '1':
@@ -1223,6 +1230,8 @@ public class RuleCatalogueBackingBean extends
 	private boolean ruleValueValidation(PmConfigRuleValue firstRuleValue,
 			PmConfigRuleValue secondRuleValue, PmParameter RuleDataTypeId,
 			char validationType) {
+		log.info("........ruleValueValidation........");
+		log.info("........validationType="+validationType);
 		boolean validationResult = false;
 		boolean isValuesEqual = false;
 		if (validationType == '1') {// EffectiveDate validation
@@ -1274,6 +1283,7 @@ public class RuleCatalogueBackingBean extends
 			// validationResult = true;
 			// }
 		}
+		log.info("........validationResult="+validationResult);
 		return validationResult;
 	}
 
@@ -1291,7 +1301,9 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	boolean isDateOverlaped(Date start1, Date end1, Date start2, Date end2) {
-
+		 log.info("..........isDateOverlaped............");
+       log.info("..........start1="+start1+"......end1="+end1+"......");
+       log.info("..........start2="+start2+"......end2="+end2+"......");
 		if (end1 == null && end2 == null) {
 
 			return true;
@@ -1475,10 +1487,10 @@ public class RuleCatalogueBackingBean extends
 					// if record inactive choose next one
 					continue;
 				}
-				if ((ex.getFeeExemptionType().equals("1") && ex
+				if ((ex.getFeeExemptionType().equals("1") && baseExemption.getFeeExemptionType().equals("1") && ex
 						.getOrgProfileId().getOrgProfileId() == baseExemption
 						.getOrgProfileId().getOrgProfileId())
-						|| (ex.getFeeExemptionType().equals("4")
+						|| (ex.getFeeExemptionType().equals("4") && baseExemption.getFeeExemptionType().equals("4")
 								&& ex.getOrgProfileId().getOrgProfileId() == baseExemption
 										.getOrgProfileId().getOrgProfileId() && ex
 								.getItemId().getItemId() == baseExemption
@@ -1488,10 +1500,10 @@ public class RuleCatalogueBackingBean extends
 							baseExemption.getEffDate(),
 							baseExemption.getExpDate());
 
-				} else if ((ex.getFeeExemptionType().equals("6") && ex
+				} else if ((ex.getFeeExemptionType().equals("6") && baseExemption.getFeeExemptionType().equals("6") && ex
 						.getUnspscId().getUnspscCode() == baseExemption
 						.getUnspscId().getUnspscCode())
-						|| (ex.getFeeExemptionType().equals("3")
+						|| (ex.getFeeExemptionType().equals("3") && baseExemption.getFeeExemptionType().equals("3")
 								&& ex.getUnspscId().getUnspscCode() == baseExemption
 										.getUnspscId().getUnspscCode() && ex
 								.getTypeId().getTypeId() == baseExemption
@@ -1500,10 +1512,10 @@ public class RuleCatalogueBackingBean extends
 							baseExemption.getEffDate(),
 							baseExemption.getExpDate());
 
-				} else if ((ex.getFeeExemptionType().equals("2") && ex
+				} else if ((ex.getFeeExemptionType().equals("2") && baseExemption.getFeeExemptionType().equals("2") && ex
 						.getContractId().getContractId() == baseExemption
 						.getContractId().getContractId())
-						|| (ex.getFeeExemptionType().equals("5")
+						|| (ex.getFeeExemptionType().equals("5") && baseExemption.getFeeExemptionType().equals("5")
 								&& ex.getContractId().getContractId() == baseExemption
 										.getContractId().getContractId() && ex
 								.getRequestItemId().getRequestNoteItemId() == baseExemption
@@ -2413,6 +2425,15 @@ public class RuleCatalogueBackingBean extends
 		log.info("................this.getManagedBean().getSelectedRuleType().getConfigRuleValues().size()="
 				+ this.getManagedBean().getSelectedRuleType()
 						.getConfigRuleValues().size());
+		//validation
+		PmConfigRuleValue crulevalue = this.getManagedBean().getSelectedRuleType().getConfigRuleValues().get(index);
+		if(crulevalue.getFromValue().compareTo(crulevalue.getToValue()) == 1){ //if fromValue  > toValue
+			// throw error msg
+			throw new EpException(MessageConst.ERROR_770198,
+					new String[] {});
+
+		}
+		
 		if (index < this.getManagedBean().getSelectedRuleType()
 				.getConfigRuleValues().size() - 1) {
 			PmConfigRuleValue rulevalue = this.getManagedBean()
