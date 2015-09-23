@@ -4140,8 +4140,6 @@ public class SmApplicationUtil {
 									.getPmCountry().getCountryName());
 				}
 				smSupplierBasicInfoVO.setAddressLine(sb.toString());
-				// smSupplierBasicInfoVO
-				// .setPostCodeStateCityCountry(postCodeCityCountry);
 			}
 
 		}
