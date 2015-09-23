@@ -61,7 +61,7 @@
 						</p:treeNode>
 					</p:tree>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%;">
+				<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%;" rendered="#{isEditableStatus}">
 					<p:commandLink
 						actionListener="#{directLOABackingBean.editZones(zoneTree,index)}"
 						process="@this" update="@([id$=dlgId])"
