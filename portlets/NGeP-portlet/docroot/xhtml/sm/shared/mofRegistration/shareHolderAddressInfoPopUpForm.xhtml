@@ -162,8 +162,9 @@
 									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="shrPermCity"
 										value="#{backingBean.managedBean.shrHldrPermCities}" />
-									<p:ajax event="change" process="@this" update="@this"
-										partialSubmit="true" />
+									<p:ajax event="change" process="@this"
+										listener="#{backingBean.onChangeCity(backingBean.managedBean.shareHolderPermAddr.smAddress,SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL)}"
+										update="shrPermCity" />
 								</p:selectOneMenu> 
 								<ac:smFieldChangeAlert 
 									isShow="#{backingBean.managedBean.showFieldChanges
@@ -421,7 +422,8 @@
 											<f:selectItems var="shrMailCity"
 												value="#{backingBean.managedBean.shrHldrMailCities}" />
 											<p:ajax event="change" process="@this"
-												update="shrMailCityMsg,@this" partialSubmit="true" />
+												listener="#{backingBean.onChangeCity(backingBean.managedBean.shareHolderMailAddr.smAddress,SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL)}"
+												update="shrMailCity" />
 										</p:selectOneMenu> 
 										<ac:smFieldChangeAlert 
 											isShow="#{backingBean.managedBean.showFieldChanges
@@ -691,7 +693,8 @@
 											<f:selectItems var="shrResCity"
 												value="#{backingBean.managedBean.shrHldrResdCities}" />
 											<p:ajax event="change" process="@this"
-												update="shrResCityMsg,@this" partialSubmit="true" />
+												listener="#{backingBean.onChangeCity(backingBean.managedBean.shareHolderResdAddr.smAddress,SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL)}"
+												update="shrResCity" />
 										</p:selectOneMenu> 
 										<ac:smFieldChangeAlert 
 											isShow="#{backingBean.managedBean.showFieldChanges
@@ -871,7 +874,7 @@
 												itemValue="" />
 											<f:selectItems var="shrOffCountry" value="#{backingBean.managedBean.countryItems}" />
 											<p:ajax event="change" process="@this"
-												listener="#{backingBean.onChangeCountry(backingBean.managedBean.shareHolderOffAddr,SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL)}"
+												listener="#{backingBean.onChangeCountry(backingBean.managedBean.shareHolderOffAddr.smAddress,SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL)}"
 												update="shrOffState,shrOffDist,shrOffCity,postCodeOffAddrPanelId" />
 										</p:selectOneMenu> 
 										<ac:smFieldChangeAlert 
@@ -899,7 +902,7 @@
 											<f:selectItems var="shrOffState"
 												value="#{backingBean.managedBean.shrHldrOffStates}" />
 											<p:ajax event="change" process="@this"
-												listener="#{backingBean.onChangeState(backingBean.managedBean.shareHolderOffAddr,SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL)}"
+												listener="#{backingBean.onChangeState(backingBean.managedBean.shareHolderOffAddr.smAddress,SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL)}"
 												update="shrOffDist,shrOffCity" />
 										</p:selectOneMenu> 
 										<ac:smFieldChangeAlert 
@@ -926,7 +929,7 @@
 											<f:selectItems var="shrOffDist"
 												value="#{backingBean.managedBean.shrHldrOffDistricts}" />
 											<p:ajax event="change" process="@this"
-												listener="#{backingBean.onChangeDistrict(backingBean.managedBean.shareHolderOffAddr,SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL)}"
+												listener="#{backingBean.onChangeDistrict(backingBean.managedBean.shareHolderOffAddr.smAddress,SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL)}"
 												update="shrOffCity" />
 										</p:selectOneMenu> 
 										<ac:smFieldChangeAlert 
@@ -952,7 +955,8 @@
 											<f:selectItems var="shrOffCity"
 												value="#{backingBean.managedBean.shrHldrOffCities}" />
 											<p:ajax event="change" process="@this"
-												update="shrOffCityMsg,@this" partialSubmit="true" />
+												listener="#{backingBean.onChangeCity(backingBean.managedBean.shareHolderOffAddr.smAddress,SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL)}"
+												update="shrOffCity" />
 										</p:selectOneMenu> 
 										<ac:smFieldChangeAlert 
 											isShow="#{backingBean.managedBean.showFieldChanges

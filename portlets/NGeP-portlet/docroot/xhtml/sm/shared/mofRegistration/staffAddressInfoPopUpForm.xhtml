@@ -166,9 +166,9 @@
 									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="shrPermCity"
 										value="#{backingBean.managedBean.shrHldrPermCities}" />
-									<p:ajax event="change" process="@this" update="staffPermAddrPan,@([id$=Msg])" 
-										listener="#{backingBean.setRoleStaffAddrReqd()}"
-										partialSubmit="true" />
+									<p:ajax event="change" process="@this"
+										listener="#{backingBean.onChangeCity(backingBean.managedBean.shareHolderPermAddr.smAddress,SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL)}"
+										update="staffPermAddrPan,@([id$=Msg])" />
 								</p:selectOneMenu> 
 								<ac:smFieldChangeAlert 
 									isShow="#{backingBean.managedBean.showFieldChanges
@@ -418,7 +418,8 @@
 											<f:selectItems var="shrMailCity"
 												value="#{backingBean.managedBean.shrHldrMailCities}" />
 											<p:ajax event="change" process="@this"
-												update="staffMailAddrPan,@([id$=Msg])" partialSubmit="true" />
+												listener="#{backingBean.onChangeCity(backingBean.managedBean.shareHolderMailAddr.smAddress,SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL)}"
+												update="staffMailAddrPan,@([id$=Msg])" />
 										</p:selectOneMenu> 
 										<ac:smFieldChangeAlert 
 											isShow="#{backingBean.managedBean.showFieldChanges
