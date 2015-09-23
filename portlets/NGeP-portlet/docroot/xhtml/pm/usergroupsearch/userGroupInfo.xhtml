@@ -38,7 +38,8 @@
 						disabled="#{not usergroupBackingBean.managedBean.userGroup.brandNew}">
 						<f:selectItems
 							value="#{usergroupBackingBean.getUserGroupRoles()}"></f:selectItems>
-						<p:ajax event="change" update="userPanelId" process="@this"/>	
+						<p:ajax event="change" update="userPanelId" process="@this" 
+							listener="#{usergroupBackingBean.resetGroupUsers()}"/>	
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
