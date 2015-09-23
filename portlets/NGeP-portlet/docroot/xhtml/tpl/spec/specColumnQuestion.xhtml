@@ -13,7 +13,7 @@
 		</f:facet>
 		<c:if test="#{newable}">
 			<p:inputTextarea id="itemName" style="width:90%" value="#{question.clItem}" 
-				rendered="#{isQuestionTypeItem}" required="#{!question.selected}" rows="1" maxlength="2000"
+				rendered="#{isQuestionTypeItem}" required="#{isValidationReq}" rows="1" maxlength="2000"
 				label="#{lbl['lbl.tpl.spec.content.item']}">
 				<p:ajax partialSubmit="true" process="@this" update="@this" />
 			</p:inputTextarea>
@@ -30,7 +30,7 @@
 		</f:facet>
 		<c:if test="#{newable}">
 			<p:inputTextarea id="specification" style="width:calc(100% - 20px);" value="#{question.clSpecDetail}" 
-				rendered="#{!isQuestionTypeItem or !isSpecificationReq}" required="#{!question.selected}" rows="5" maxlength="1000"
+				rendered="#{!isQuestionTypeItem or !isSpecificationReq}" required="#{isValidationReq}" rows="5" maxlength="1000"
 				label="#{lbl['lbl.tpl.spec.content.specification']}" autoResize="false">
 				<p:ajax partialSubmit="true" process="@this" update="@this" />
 			</p:inputTextarea>
@@ -46,7 +46,7 @@
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.fulfilment.type']}"/>
 		</f:facet>
-		<h:selectOneMenu id="fulfilType" value="#{question.clFulfilmentTypeCode.parameterId}" required="#{!question.selected}" style="width:98px;" 
+		<h:selectOneMenu id="fulfilType" value="#{question.clFulfilmentTypeCode.parameterId}" required="#{isValidationReq}" style="width:98px;" 
 			rendered="#{isQuestionTypeItem}"
 			label="#{lbl['lbl.tpl.spec.content.fulfilment.type']}">
 			<f:selectItems value="#{templateSpecBackingBean.getFulfilmentTypeDropdownList(templateSpecBean.specMaster)}" />
@@ -94,7 +94,7 @@
 			<h:panelGroup id="freqUOMPG" style="white-space:nowrap;">
 				<p:inputText id="freqUOM" style="min-width:0px !important;width:50px; text-align:right;" 
 					value="#{question.clUomFrequency}" 
-					rendered="#{isQuestionTypeItem and isShowService}" required="#{!question.selected}" maxlength="5"
+					rendered="#{isQuestionTypeItem and isShowService}" required="#{isValidationReq}" maxlength="5"
 					label="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}">
 					<ac:validateNumber  maxIntegerDigits="7"  pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					<p:ajax partialSubmit="true" process="@this" update="@this, freqUOMMsg" />
@@ -110,7 +110,7 @@
 			<h:panelGroup id="dayUOMPG" style="white-space:nowrap;">
 				<p:inputText id="dayUOM" style="min-width:0px !important;width:22px; text-align:right;"
 					value="#{question.clUomPerDay}" 
-					rendered="#{isQuestionTypeItem and isUOMHours and isShowService}" required="#{!question.selected}" maxlength="4"
+					rendered="#{isQuestionTypeItem and isUOMHours and isShowService}" required="#{isValidationReq}" maxlength="4"
 					label="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}">
 					<ac:validateNumber pattern="0.0" maxIntegerDigits="3" />
 					<p:ajax partialSubmit="true" process="@this" update="@this, dayUOMMsg" />
@@ -128,7 +128,7 @@
 			<h:panelGroup id="monthUOMPG" style="white-space:nowrap;">
 				<p:inputText id="monthUOM" style="min-width:0px !important;width:22px; text-align:right;"
 					value="#{question.clUomPerMonth}" 
-					rendered="#{isQuestionTypeItem and (isUOMHours or isUOMDays) and isShowService}" required="#{!question.selected}" maxlength="4"
+					rendered="#{isQuestionTypeItem and (isUOMHours or isUOMDays) and isShowService}" required="#{isValidationReq}" maxlength="4"
 					label="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}">
 					<ac:validateNumber pattern="0.0" maxIntegerDigits="3" />
 					<p:ajax partialSubmit="true" process="@this" update="@this, monthUOMMsg" />
@@ -146,7 +146,7 @@
 			<h:panelGroup id="durationPG" style="white-space:nowrap;">
 				<p:inputText id="duration" style="min-width:0px !important;width:30px; text-align:right;"
 					value="#{question.clDurationMonth}" 
-					rendered="#{isQuestionTypeItem and isShowService}" required="#{!question.selected}" maxlength="4"
+					rendered="#{isQuestionTypeItem and isShowService}" required="#{isValidationReq}" maxlength="4"
 					label="#{lbl['lbl.tpl.spec.content.duration.month']}">
 					<ac:validateNumber maxIntegerDigits="4" integerOnly="true" />
 					<p:ajax partialSubmit="true" process="@this" update="@this, durationMsg" />
@@ -162,7 +162,7 @@
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.price.type']}"/>
 			<ac:iconTooltip id="priceType#{row}TP" value="#{lbl['lbl.tpl.spec.content.price.type.tooltip']}" />
 		</f:facet>
-		<h:selectOneMenu id="priceType" value="#{question.clPriceTypeCode.parameterId}" required="#{!question.selected}" style="width:100px;"
+		<h:selectOneMenu id="priceType" value="#{question.clPriceTypeCode.parameterId}" required="#{isValidationReq}" style="width:100px;"
 			rendered="#{isQuestionTypeItem}"
 			label="#{lbl['lbl.tpl.spec.content.price.type']}">
 			<f:selectItems value="#{templateSpecBackingBean.getPriceTypeDropdownList(templateSpecBean.specMaster)}" />
