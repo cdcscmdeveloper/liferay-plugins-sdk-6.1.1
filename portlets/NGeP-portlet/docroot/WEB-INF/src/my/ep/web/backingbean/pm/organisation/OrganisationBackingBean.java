@@ -231,6 +231,7 @@ public class OrganisationBackingBean extends
 		PmOrgProfile orgProifle = new PmOrgProfile();
 		orgProifle.setPmOrgValidity(new PmOrgValidity());
 		getManagedBean().setOfficeAddress(PmCommonUtil.getNewPmAddress());
+		getManagedBean().setSelectedStateId(null);
 		// getManagedBean().setOfficeContactPerson(new PmContact());
 
 		getManagedBean().setOrgType(null);
@@ -598,7 +599,7 @@ public class OrganisationBackingBean extends
 				|| getManagedBean().getOrgType().equalsIgnoreCase(
 						OrganizationType.LOCAL_AUTHORITY.value())) {
 
-			if (orgProfile.getSmSupplier() != null) {
+			if (orgProfile.getSmSupplier() != null && orgProfile.isGovtSeller()) {
 				log.info("Supplier Test");
 				/*
 				 * this.getManagedBean().setSmSupplierBanks(
@@ -769,10 +770,7 @@ public class OrganisationBackingBean extends
 			
 			// check group org
 			if (this.getManagedBean().getOrgProfile().isGroupOrg()) {
-				if (this.getManagedBean().getProfileGroup() == null
-						|| this.getManagedBean().getProfileGroup().isEmpty()) {
-					throw new EpException(MessageConst.ERROR_775103);
-				}
+				validateGroupOrg();				
 			}
 
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
@@ -1046,6 +1044,10 @@ public class OrganisationBackingBean extends
 				pmAddress.setPmDivision(null);
 			}
 			
+			if(StringUtils.isBlank(pmAddress.getPhoneNo())){
+				throw new EpException(MessageConst.ERROR_775128);
+			}
+			
 			PmAddressType addressType = null;
 			for(PmUser user : getManagedBean().getSupplierUsers()){
 				addressType = new PmAddressType();
@@ -1108,6 +1110,10 @@ public class OrganisationBackingBean extends
 			} else {
 
 				deliverAddress.setPmDivision(null);
+			}
+			
+			if(StringUtils.isBlank(deliverAddress.getPhoneNo())){
+				throw new EpException(MessageConst.ERROR_775129);
 			}
 		}
 
@@ -1932,13 +1938,14 @@ public class OrganisationBackingBean extends
 	 */
 	public void retrievePmState() {
 		log.info("retrievePmState");
+		getManagedBean().getOfficeAddress().setPmDistrict(new PmDistrict());
+		getManagedBean().getOfficeAddress().setPmCity(new PmCity());
+		getManagedBean().getOfficeAddress().setPmDivision(null); 
 		if(getManagedBean().getSelectedStateId() != null ){
 				log.info("pmState.getStateId() " + getManagedBean().getSelectedStateId());
 				PmState pmState = PmCommonUtil.retrievePmStateByStateId(getManagedBean()
 						.getSelectedStateId());				
-				getManagedBean().getOfficeAddress().setPmState(pmState);
-				getManagedBean().getOfficeAddress().setPmDistrict(new PmDistrict());
-				getManagedBean().getOfficeAddress().setPmCity(new PmCity());
+				getManagedBean().getOfficeAddress().setPmState(pmState);		
 				if(pmState.getStateCode()
 						.equals(ProfileManagementConst.STATE_CODE_SARAWAK)){
 					getManagedBean().getOfficeAddress().setPmDivision(new PmDivision()); 
@@ -2131,6 +2138,37 @@ public class OrganisationBackingBean extends
 			}
 		}
 	}
+	
+	private void validateGroupOrg(){
+		boolean isValid = false;
+		if (this.getManagedBean().getProfileGroup() == null
+				|| this.getManagedBean().getProfileGroup().isEmpty()) {
+			isValid = false;
+		}
+		
+		if (this.getManagedBean().getProfileGroup() != null
+				&& !this.getManagedBean().getProfileGroup().isEmpty()) {
+			// validate empty profile group
+			for(PmProfileGroup profileGroup : getManagedBean().getProfileGroup()){
+				if(profileGroup.getAuthorizedOrgProfile() == null){
+					throw new EpException(MessageConst.ERROR_775130);
+				}
+			}
+			
+			// at least one active profile group
+			for(PmProfileGroup profileGroup : getManagedBean().getProfileGroup()){
+				if(profileGroup.getAuthorizedOrgProfile() != null && 
+						DbValueConst.RECORD_STATUS_ACTIVE == profileGroup.getRecordStatusFlg()){
+					isValid = true;
+					break;
+				}
+			}
+		}
+		
+		if(!isValid){
+			throw new EpException(MessageConst.ERROR_775103);
+		}
+	}
 
 	/**
      * This method used to retrieve login user information.
@@ -2191,41 +2229,52 @@ public class OrganisationBackingBean extends
 		return valid;
 	}
 	
-	public void retrievePmDistrict(PmDistrict pmDistrict) {
-		PmDistrict tempDistrict = PmCommonUtil.retrievePmDistById(pmDistrict.getDistrictId());				
-		getManagedBean().getOfficeAddress().setPmDistrict(tempDistrict);
-		getManagedBean().getOfficeAddress().setPmCity(new PmCity());
-		
+	public void retrievePmDistrict(PmDistrict pmDistrict) {	
+		if(pmDistrict != null && pmDistrict.getDistrictId() != null){
+			PmDistrict tempDistrict = PmCommonUtil.retrievePmDistById(pmDistrict.getDistrictId());				
+			getManagedBean().getOfficeAddress().setPmDistrict(tempDistrict);			
+		}
+		getManagedBean().getOfficeAddress().setPmCity(new PmCity());		
 	}
 	
 	public void retrievePmDivision(PmDivision pmDivision) {
-		PmDivision tempDivision = PmCommonUtil.retrievePmDivisionById(pmDivision.getDivisionId());			
-		getManagedBean().getOfficeAddress().setPmDivision(tempDivision);
-			
+		if(pmDivision != null && pmDivision.getDivisionId() != null){
+			PmDivision tempDivision = PmCommonUtil.retrievePmDivisionById(pmDivision.getDivisionId());			
+			getManagedBean().getOfficeAddress().setPmDivision(tempDivision);
+		}
+		getManagedBean().getOfficeAddress().setPmDistrict(new PmDistrict());
+		getManagedBean().getOfficeAddress().setPmCity(new PmCity());			
 	}
 	
 	public void retrievePmCity(PmCity pmCity) {
-		PmCity tempCity = PmCommonUtil.retrievePmCityById(pmCity.getCityId());			
-		getManagedBean().getOfficeAddress().setPmCity(tempCity);
-			
+		if(pmCity != null && pmCity.getCityId() !=null){
+			PmCity tempCity = PmCommonUtil.retrievePmCityById(pmCity.getCityId());			
+			getManagedBean().getOfficeAddress().setPmCity(tempCity);
+		}
 	}	
 	
 	public void retrieveDeliveryPmDistrict(PmDistrict pmDistrict) {
-		PmDistrict tempDistrict = PmCommonUtil.retrievePmDistById(pmDistrict.getDistrictId());				
-		getManagedBean().getDeliveryAddress().getPmAddress().setPmDistrict(tempDistrict);
+		if(pmDistrict != null && pmDistrict.getDistrictId() != null){
+			PmDistrict tempDistrict = PmCommonUtil.retrievePmDistById(pmDistrict.getDistrictId());				
+			getManagedBean().getDeliveryAddress().getPmAddress().setPmDistrict(tempDistrict);
+		}		
 		getManagedBean().getDeliveryAddress().getPmAddress().setPmCity(new PmCity());
 		
 	}
 	
 	public void retrieveDeliveryPmDivision(PmDivision pmDivision) {
-		PmDivision tempDivision = PmCommonUtil.retrievePmDivisionById(pmDivision.getDivisionId());			
-		getManagedBean().getDeliveryAddress().getPmAddress().setPmDivision(tempDivision);
-			
+		if(pmDivision != null && pmDivision.getDivisionId() != null){
+			PmDivision tempDivision = PmCommonUtil.retrievePmDivisionById(pmDivision.getDivisionId());			
+			getManagedBean().getDeliveryAddress().getPmAddress().setPmDivision(tempDivision);
+		}
+		getManagedBean().getDeliveryAddress().getPmAddress().setPmDistrict(new PmDistrict());
+		getManagedBean().getDeliveryAddress().getPmAddress().setPmCity(new PmCity());			
 	}
 	
 	public void retrieveDeliveryPmCity(PmCity pmCity) {
-		PmCity tempCity = PmCommonUtil.retrievePmCityById(pmCity.getCityId());			
-		getManagedBean().getDeliveryAddress().getPmAddress().setPmCity(tempCity);
-			
+		if(pmCity != null && pmCity.getCityId() !=null){
+			PmCity tempCity = PmCommonUtil.retrievePmCityById(pmCity.getCityId());			
+			getManagedBean().getDeliveryAddress().getPmAddress().setPmCity(tempCity);
+		}
 	}
 }
