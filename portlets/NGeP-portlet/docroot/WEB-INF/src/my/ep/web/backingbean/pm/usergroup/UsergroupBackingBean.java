@@ -1,6 +1,5 @@
 package my.ep.web.backingbean.pm.usergroup;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -19,7 +18,6 @@ import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
-import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -315,7 +313,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		List<PmUserGroupUser> groupUsers = this.getManagedBean()
 				.getUserGroups();
 		if (null != users) {
-			getManagedBean().setBrandNew(true);
+//			getManagedBean().setBrandNew(true);
 			PmUserGroupUser groupUser = null;
 			for (int i = 0; i < users.size(); i++) {
 				PmUser pmUser = (PmUser) users.get(i);
@@ -446,7 +444,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	public String gotoMaintanance(PmUserGroup userGroup) {
 		debugLogger("gotoMaintanance");
 		this.getManagedBean().setSelectGrp(true);
-		getManagedBean().setBrandNew(false);
+		//getManagedBean().setBrandNew(false);
 		orgProfileId = userGroup.getPmOrgProfile().getOrgProfileId();
 		List<PmUserGroupUser> groupUserList = new ArrayList<PmUserGroupUser>();
 		for (PmUserGroupUser userGroupUser : userGroup.getPmUserGroupUsers()) {
@@ -495,6 +493,19 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		
 		if (null == userGroup.getRecordStatusFlg()) {
 			throw new EpException(MessageConst.ERR_900009);
+		}	
+		
+		if(DbValueConst.RECORD_STATUS_ACTIVE == userGroup.getRecordStatusFlg()){
+			boolean isValid = false;
+			for(PmUserGroupUser groupUser : getManagedBean().getUserGroups()){
+				if(DbValueConst.RECORD_STATUS_ACTIVE == groupUser.getRecordStatusFlg()){
+					isValid = true;
+					break;
+				}
+			}
+			if(!isValid){
+				throw new EpException(MessageConst.ERR_900030);
+			}
 		}
 		
 		//validate duplicate group name (Role and PTJ)
@@ -530,7 +541,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 //		for(PmUserGroupUser groupUser:pmUserGroupUsers){
 //			setUserDetails(userGroup,groupUser);
 //		}
-
+		changeUserGroupStatus(pmUserGroupUsers);
 		userGroup.setPmUserGroupUsers(pmUserGroupUsers);
 		if (userGroup.isBrandNew()) {
 			findDuplicateGroup(userGroup);
@@ -573,7 +584,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 			return NAV_TO_MAIN;
 		}
 		else{
-			goToMaintenanceAction(resDTO.getUserGroup());
+			gotoMaintanance(resDTO.getUserGroup());
 			return "userGroupMaintenance";
 		}
 	}
@@ -659,6 +670,26 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 			}
 		}
 		
+	}
+	
+	public void  changeUserGroupStatus(List<PmUserGroupUser> pmUserGroupUsers){
+		PmUserGroup userGroup = getManagedBean().getUserGroup();
+		if(!userGroup.isBrandNew() && DbValueConst.RECORD_STATUS_SUSPENDED == userGroup.getRecordStatusFlg()){
+			for(PmUserGroupUser groupUser : getManagedBean().getUserGroups()){
+				groupUser.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+			}
+		}
+	}
+	
+	public void changeUserStatus(PmUserGroupUser groupUser){
+		PmUserGroup userGroup = getManagedBean().getUserGroup();
+		if(groupUser.getRecordStatusFlg() != null && DbValueConst.RECORD_STATUS_ACTIVE == groupUser.getRecordStatusFlg()){
+			if(validateUserStatus(userGroup, groupUser.getPmUser())){
+				groupUser.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+			}else{
+				throw new EpException(groupUser.getPmUser().getLoginId() + " , " + groupUser.getPmUser().getUserName() + " is not valid.");
+			}
+		}
 	}
 	
 	/**

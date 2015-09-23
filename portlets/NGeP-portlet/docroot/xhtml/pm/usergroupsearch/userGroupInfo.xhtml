@@ -68,7 +68,7 @@
 						value="#{usergroupBackingBean.managedBean.userGroup.recordStatusFlg}"
 						disabled="#{usergroupBackingBean.managedBean.userGroup.brandNew}">
 						<f:selectItems
-							value="#{usergroupBackingBean.getUserGroupStatus()}"></f:selectItems>
+							value="#{usergroupBackingBean.getUserGroupStatus()}"></f:selectItems>	
 					</p:selectOneMenu></td>
 			</tr>
 		</table>
@@ -97,10 +97,13 @@
 
 			<p:column style="width:10%"
 				headerText="#{lbl['lbl.pm.ug.result.status']}">
-				<p:selectOneMenu style="width:203px"
+				<p:selectOneMenu style="width:203px" 
+					required="true"
+					label="#{lbl['lbl.pm.ug.result.status']}"
 					value="#{groupuser.recordStatusFlg}"
-					disabled="#{groupuser.brandNew or usergroupBackingBean.managedBean.brandNew}">
+					disabled="#{groupuser.brandNew}">
 					<f:selectItems value="#{usergroupBackingBean.getUserGroupStatus()}"></f:selectItems>
+					<p:ajax event="change" update="@this" process="@this" listener="#{usergroupBackingBean.changeUserStatus(groupuser)}"/>	
 				</p:selectOneMenu>
 			</p:column>
 			<p:column style="width:5%">
