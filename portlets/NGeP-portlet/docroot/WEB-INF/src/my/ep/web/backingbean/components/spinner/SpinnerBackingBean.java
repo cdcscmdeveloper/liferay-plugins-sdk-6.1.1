@@ -57,7 +57,6 @@ public class SpinnerBackingBean {
 		BigDecimal stepFactorValue = convertObjectToBigDecimal(stepFactor);
 		BigDecimal minValue = convertObjectToBigDecimal(min);
 		BigDecimal maxValue = convertObjectToBigDecimal(max);
-		UIComponent spinnerInput = (UIComponent)component.findComponent("spinnerInput");
 		
 		if (value == null || !(value instanceof BigDecimal)) {
 			newValue = BigDecimal.valueOf(0);
@@ -77,7 +76,7 @@ public class SpinnerBackingBean {
 			newValue = maxValue;
 		}
 		
-		invokeMethodAction(postUpdateListener, spinnerInput, newValue);
+		valueChangedAction(component, newValue, stepFactor, min, max, postUpdateListener);
 
 		return newValue;
 	}
@@ -109,26 +108,24 @@ public class SpinnerBackingBean {
 			BigDecimal minValue = convertObjectToBigDecimal(min);
 			BigDecimal maxValue = convertObjectToBigDecimal(max);
 			
-			if (stepFactorValue.compareTo(BigDecimal.valueOf(0)) > 0) {
-				// check must be greater or equal to min value.
-				if (minValue != null) {
-					if (currentValue.compareTo(minValue) < 0) {
-						throwExcepion(MessageConst.ERROR_760301, spinnerInput);
-					}
-				}
-				
-				// check must be less than or equal to max value.
-				if (maxValue != null) {
-					if (currentValue.compareTo(maxValue) > 0) {
-						throwExcepion(MessageConst.ERROR_760302, spinnerInput);
-					}
-				}
-				
-				// check value must be multiple by step factor.
-				if (currentValue.remainder(stepFactorValue)
-						.compareTo(BigDecimal.valueOf(0)) != 0) {
+			// check must be greater or equal to min value.
+			if (minValue != null) {
+				if (currentValue.compareTo(minValue) < 0) {
 					throwExcepion(MessageConst.ERROR_760301, spinnerInput);
 				}
+			}
+			
+			// check must be less than or equal to max value.
+			if (maxValue != null) {
+				if (currentValue.compareTo(maxValue) > 0) {
+					throwExcepion(MessageConst.ERROR_760302, spinnerInput);
+				}
+			}
+			
+			// check value must be multiple by step factor.
+			if (currentValue.remainder(stepFactorValue)
+					.compareTo(BigDecimal.valueOf(0)) != 0) {
+				throwExcepion(MessageConst.ERROR_760301, spinnerInput);
 			}
 		}
 		
