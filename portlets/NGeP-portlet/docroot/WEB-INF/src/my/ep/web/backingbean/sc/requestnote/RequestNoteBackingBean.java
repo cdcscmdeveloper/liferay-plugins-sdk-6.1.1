@@ -19,7 +19,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
@@ -120,7 +119,6 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
@@ -466,7 +464,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		boolean isDeliveryTermPrompt = Boolean.FALSE;
 		List<ScRequestNoteDtl>	requestNoteDtls  = this.getManagedBean().getRequestNoteDtls();
 		ScRequestNote scRequestNote = getManagedBean().getRequestNote();
-        if(outcome.equals(BpmOutcomeConst.BPM_SUBMIT)){
+        if(outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.isEmpty()){
         	if(!scRequestNote.getSourceMethod().equals(ParameterConst.REQUEST_NOTE_SQ) && requestNoteDtls != null && requestNoteDtls.size() > 1){
     			RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
     			scRequestNote.setRequestNoteDtls(requestNoteDtls);
