@@ -44,7 +44,7 @@
 				update="spinnerInput #{cc.attrs.update}"
 				disabled="#{cc.attrs.disabled}"
 				styleClass="ui-icon"
-				style="height:10px; background-position:1px -19px; border-top:1px solid #CECECE; border-left:1px solid #CECECE; border-right:1px solid #CECECE;">
+				style="height:10px; background-position:1px -19px; border-top:1px solid #CECECE; border-left:1px solid #CECECE; border-right:1px solid #CECECE; margin-bottom:0px;">
 				<f:setPropertyActionListener target="#{cc.attrs.value}" value="#{spinnerBackingBean.getSpinValue(cc, cc.attrs.value, cc.attrs.stepFactor, cc.attrs.min, cc.attrs.max, cc.attrs.postUpdateListener)}" />
 			</p:commandLink>
 			<p:commandLink id="#{cc.attrs.id}spinDown"
@@ -52,7 +52,7 @@
 				update="spinnerInput #{cc.attrs.update}"
 				disabled="#{cc.attrs.disabled}"
 				styleClass="ui-icon"
-				style="height:10px; background-position:-64px -18px; border:1px solid #CECECE;">
+				style="height:10px; background-position:-64px -18px; border:1px solid #CECECE; margin-bottom:0px;">
 				<f:setPropertyActionListener target="#{cc.attrs.value}" value="#{spinnerBackingBean.getSpinValue(cc, cc.attrs.value, -1*cc.attrs.stepFactor, cc.attrs.min, cc.attrs.max, cc.attrs.postUpdateListener)}" />
 			</p:commandLink>
 		</h:panelGroup>
