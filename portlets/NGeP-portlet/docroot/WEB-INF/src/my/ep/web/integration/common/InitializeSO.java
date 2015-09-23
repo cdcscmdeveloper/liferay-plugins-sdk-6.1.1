@@ -17,6 +17,7 @@ import my.ep.biz.service.pm.common.votfund.IVotFundSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.payment.IPaymentSO;
+import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.vendorcode.IVendorCodeSO;
@@ -98,8 +99,11 @@ public class InitializeSO {
 					IPmInterfaceSO.class);
 
 	protected IVendorCodeSO iVendorCodeSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+			.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 					IVendorCodeSO.class);
+	IRegistrationSO registrationSO = BusinessDelegate.getInstance()
+			.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+					IRegistrationSO.class);
 
 	public InitializeSO() {
 		super();
