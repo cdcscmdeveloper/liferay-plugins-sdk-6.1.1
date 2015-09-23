@@ -4524,31 +4524,40 @@ public class SmApplicationUtil {
 	 *            appl
 	 */
 	public void removeFacilitiesNotInTheSameCategoryFacType(SmAppl appl) {
-		List<String> facTypeList = new ArrayList<String>();
+		List<String> catTypeList = new ArrayList<String>();
 		if (!SmCommonUtil.isCollectionEmpty(appl.getSmSupplierCategories())) {
 			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
 				if (StringUtils.isNotBlank(cat.getPmCategoryL3()
 						.getFacilityType())) {
-					facTypeList.add(cat.getPmCategoryL3().getFacilityType());
+					catTypeList.add(cat.getPmCategoryL3().getFacilityType());
 				}
 			}
 		}
-		if (!SmCommonUtil.isCollectionEmpty(facTypeList)) {
-			for (String facType : facTypeList) {
-				for (Iterator<SmFacility> facIt = appl.getSmFacilities()
-						.iterator(); facIt.hasNext();) {
-					SmFacility fac = facIt.next();
-					if (StringUtils.isNotBlank(fac.getFacilityType())
-							&& !fac.getFacilityType().equals(facType)
-							&& !fac.getFacilityType()
-									.equals(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE)
-							&& !fac.getFacilityType()
-									.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
-						facIt.remove();
-					}
+		if (!SmCommonUtil.isCollectionEmpty(catTypeList)) {
+			for (Iterator<SmFacility> facIt = appl.getSmFacilities().iterator(); facIt
+					.hasNext();) {
+				SmFacility fac = facIt.next();
+				if (StringUtils.isNotBlank(fac.getFacilityType())
+						&& !fac.getFacilityType()
+								.equals(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE)
+						&& !fac.getFacilityType()
+								.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)
+						&& !isFacilityTypeExistInCatType(fac, catTypeList)) {
+					facIt.remove();
 				}
 			}
 		}
+	}
+
+	private boolean isFacilityTypeExistInCatType(SmFacility fac,
+			List<String> catTypeList) {
+		boolean retVal = false;
+		for (String facType : catTypeList) {
+			if (fac.getFacilityType().equals(facType)) {
+				retVal = true;
+			}
+		}
+		return retVal;
 	}
 
 	/**

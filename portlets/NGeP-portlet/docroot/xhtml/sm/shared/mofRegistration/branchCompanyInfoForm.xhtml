@@ -129,7 +129,8 @@
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
 					<p:commandLink id="selectButton" update=":form:tt:banchDialog"
 						partialSubmit="true" process="@this"
-						action="#{backingBean.assignSelBranch(branchBean,index)}">
+						action="#{backingBean.assignSelBranch(branchBean,index)}" 
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" >
 						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"
 							style="margin-right:2px;" />
 					</p:commandLink>
@@ -141,10 +142,12 @@
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
 					action="#{backingBean.assignNewBranchBean}" partialSubmit="true"
-					process="@this" update=":form:tt:banchDialog" />
+					process="@this" update=":form:tt:banchDialog" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					partialSubmit="true" process="brnInfPan"
-					action="#{backingBean.deleteSelectedBranches}" update=":form:tt:dt" />
+					action="#{backingBean.deleteSelectedBranches}" update=":form:tt:dt" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 
 			</div>
 			<br />

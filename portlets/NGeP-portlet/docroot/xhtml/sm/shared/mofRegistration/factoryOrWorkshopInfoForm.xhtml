@@ -28,7 +28,8 @@
 				<p:column headerText="#{lbl['lbl.sm.action']}">
 					<p:commandLink action="#{backingBean.assignSelFactory(fac)}"
 						partialSubmit="true" process="@this"
-						update=":form:tt:factoryDialog" style="padding-right:5px">
+						update=":form:tt:factoryDialog" style="padding-right:5px" 
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" >
 						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
 					</p:commandLink>
 				</p:column>
@@ -39,11 +40,13 @@
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
 					partialSubmit="true" process="@this"
 					action="#{backingBean.assignNewFactoryBean}"
-					update=":form:tt:factoryDialog" />
+					update=":form:tt:factoryDialog" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					partialSubmit="true" process="smFacilityFactoryDtPanel"
 					action="#{backingBean.deleteSelectedFactories}"
-					update=":form:tt:facDt" />
+					update=":form:tt:facDt" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 			</div>
 			<br />
 		</p:outputPanel>
