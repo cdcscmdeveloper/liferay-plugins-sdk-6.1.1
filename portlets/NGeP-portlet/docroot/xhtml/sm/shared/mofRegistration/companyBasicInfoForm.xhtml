@@ -268,6 +268,10 @@
 											itemValue="" />
 										<f:selectItems var="city"
 											value="#{backingBean.managedBean.basicCompanyCities}" />
+										<p:ajax event="change" process="@this"
+											listener="#{backingBean.onChangeCity(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress,
+											SupplierManagementConst.SM_BASIC_INFO_PANEL)}"
+											update="basicCompCity" />
 									</p:selectOneMenu> 
 									<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges}"

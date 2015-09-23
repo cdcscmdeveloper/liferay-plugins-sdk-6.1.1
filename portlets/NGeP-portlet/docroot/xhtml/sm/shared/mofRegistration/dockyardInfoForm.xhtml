@@ -177,6 +177,9 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="dockyardCity"
 							value="#{backingBean.managedBean.dockFacilityCities}" />
+						<p:ajax event="change"
+							listener="#{backingBean.onChangeCity(backingBean.managedBean.selectedDockyardFacility.smAddress,SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL)}"
+							update="dockyardCity" />
 					</p:selectOneMenu> <p:message id="dockyardCityMsg" for="dockyardCity"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>

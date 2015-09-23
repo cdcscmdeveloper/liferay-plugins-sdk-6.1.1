@@ -348,6 +348,9 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="equiCity"
 							value="#{backingBean.managedBean.equiCompanyCities}" />
+						<p:ajax event="change" process="@this"
+							listener="#{backingBean.onChangeCity(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
+							update="equiCity" />
 					</p:selectOneMenu> 
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges}"

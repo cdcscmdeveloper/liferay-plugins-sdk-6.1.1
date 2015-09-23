@@ -177,6 +177,9 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="workShopCity"
 							value="#{backingBean.managedBean.workShopFacilityCities}" />
+						<p:ajax event="change" process="@this"
+							listener="#{backingBean.onChangeCity(backingBean.managedBean.selectedWorkShopFacility.smAddress,SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL)}"
+							update="workShopCity" />
 					</p:selectOneMenu> <p:message id="workShopCityMsg" for="workShopCity"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>

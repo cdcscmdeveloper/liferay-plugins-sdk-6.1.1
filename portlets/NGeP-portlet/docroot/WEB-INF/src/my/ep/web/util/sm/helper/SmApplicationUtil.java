@@ -5761,6 +5761,8 @@ public class SmApplicationUtil {
 			SmApplicationManagedBean bean) {
 		try {
 			Long coutryId = addr.getCountryId();
+			addr.setPmCountry(SmCommonUtil.getInstance().getCountryById(
+					coutryId));
 			List<PmState> stateLs = new ArrayList<PmState>();
 			List<SelectItem> stateItems = SmCommonUtil.getStateList(coutryId);
 			if (!panelName
@@ -5874,6 +5876,10 @@ public class SmApplicationUtil {
 			SmApplicationManagedBean bean) {
 		try {
 			Long stateId = addr.getStateId();
+			if (stateId != null) {
+				addr.setPmState(SmCommonUtil.getInstance()
+						.getStateById(stateId));
+			}
 			DistrictReqDTO reqDTO = new DistrictReqDTO();
 			reqDTO.setStateId(stateId);
 			IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance()
@@ -5971,6 +5977,8 @@ public class SmApplicationUtil {
 			SmApplicationManagedBean bean) {
 		try {
 			Long districtId = addr.getDistrictId();
+			addr.setPmDistrict(SmCommonUtil.getInstance().getDistrictById(
+					districtId));
 			CityReqDTO reqDTO = new CityReqDTO();
 			reqDTO.setDistrictId(districtId);
 			ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()

@@ -7383,9 +7383,10 @@ public class SmApplicationBackingBean extends
 	 * @param SmAddress
 	 *            addr
 	 */
-	public void onChangeCity(SmAddress addr) {
+	public void onChangeCity(SmAddress addr,String panelName) {
 		addr.setPmCity(SmCommonUtil.getInstance().getCityById(
-				addr.getPmCity().getCityId()));
+				addr.getCityId()));
+		setRoleStaffAddrReqd();
 	}
 
 	/**

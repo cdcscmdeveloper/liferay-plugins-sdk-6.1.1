@@ -88,6 +88,9 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="branchCity"
 						value="#{backingBean.managedBean.branchCompanyCities}" />
+					<p:ajax event="change" process="@this"
+						listener="#{backingBean.onChangeCity(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
+						update="branchesCity" />
 				</p:selectOneMenu></td>
 		</tr>
 		<tr>
