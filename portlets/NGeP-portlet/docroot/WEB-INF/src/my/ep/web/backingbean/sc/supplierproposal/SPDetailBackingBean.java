@@ -548,6 +548,7 @@ public class SPDetailBackingBean extends
 				reqDTO.setTobeUpdateTechProposalChecklist(techncalProposalChecklist);
 				reqDTO.setChecklistType(SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV);
 			}else{
+				reqDTO.setChecklistType(SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV);
 				reqDTO.setTobeRemovedExperience(this.getManagedBean().getDeletedPRPExperiences());
 			}
 			reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
@@ -3080,7 +3081,6 @@ public class SPDetailBackingBean extends
 		getManagedBean().setDeletedPRPExperiences(null);
 		getManagedBean().setToBeDeletedCashOnHandList(null);
 		getManagedBean().setToBeDeletedCreditFacilities(null);
-		this.getManagedBean().setPrepareActiveIndex(0);
 		return "/xhtml/sc/supplierproposal/supplierProposalMain.xhtml?faces-redirect=true";
 	}
 
