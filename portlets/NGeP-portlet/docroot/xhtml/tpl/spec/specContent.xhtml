@@ -109,6 +109,8 @@
 					<ui:param name="isAnswerTypeNumeric" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeNumeric}" />
 					<ui:param name="isUOMHours" value="#{question.clUom.uomCode == 'H' or question.clUom.uomCode == 'HUR' or question.clUom.uomCode == 'HR'}" />
 					<ui:param name="isUOMDays" value="#{question.clUom.uomCode == 'D' or question.clUom.uomCode == 'DAY'}" />
+					<ui:param name="delBtnClientId" value="#{templateSpecId}delBtn" />
+					<ui:param name="isValidationReq" value="#{param[p:component(delBtnClientId)]==null}" />
 					
 					<c:if test="#{isContentTypeQuestion and (isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq)) and editable}">
 						<ui:decorate template="specColumnQuestion.xhtml" />
@@ -201,6 +203,8 @@
 					<ui:param name="isAnswerTypeNumeric" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeNumeric}" />
 					<ui:param name="isUOMHours" value="#{question.clUom.uomCode == 'H' or question.clUom.uomCode == 'HUR' or question.clUom.uomCode == 'HR'}" />
 					<ui:param name="isUOMDays" value="#{question.clUom.uomCode == 'D' or question.clUom.uomCode == 'DAY'}" />
+					<ui:param name="delBtnClientId" value="#{templateSpecId}delBtn" />
+					<ui:param name="isValidationReq" value="#{param[p:component(delBtnClientId)]==null}" />
 					
 					<ui:decorate template="specColumnQuestion.xhtml" />
 					<ui:decorate template="specColumnQuestionAnswer.xhtml" />

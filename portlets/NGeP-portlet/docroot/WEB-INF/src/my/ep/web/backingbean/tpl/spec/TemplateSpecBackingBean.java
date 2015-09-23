@@ -914,6 +914,16 @@ public class TemplateSpecBackingBean extends
 			specAnswer.setAnswerNumeric(totalPrice);
 		}
 	}
+	
+	public void deleteConfirmationAction(TemplateSpecBean templateSpecBean, TplSpecQuestion question) {
+		debugLogger("deleteConfirmationAction");
+		
+		question.setSelected(true);
+		templateSpecBean.setSelectedSpecQuestion(question);
+		
+		RequestContext.getCurrentInstance().execute(
+				templateSpecBean.getSpecComponentId() + "delConfirmPopup.show()");
+	}
 
 	/**
 	 * Tier Quantity Popup Action

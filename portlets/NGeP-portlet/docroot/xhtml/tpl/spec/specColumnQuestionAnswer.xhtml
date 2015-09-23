@@ -13,7 +13,7 @@
 		<h:panelGroup id="qtyPG" rendered="#{isQuestionTypeItem}">
 			<p:inputText id="qty"
 				style="min-width:0px !important;width:35px; text-align:right;"
-				value="#{question.clQuantity}" required="#{!question.selected}"
+				value="#{question.clQuantity}" required="#{isValidationReq}"
 				maxlength="14" label="#{lbl['lbl.tpl.spec.content.quantity']}">
 				<p:ajax partialSubmit="true" process="@this"
 					update="@this, qtyMsg, ansYearPG, ansPG, @(.calcAmount)"
@@ -54,7 +54,7 @@
 				style="min-width:0px !important;width:86px; text-align:right;"
 				value="#{question.tplSpecAnswers[0].ratePerUom}"
 				rendered="#{isQuestionTypeItem and isPriceTypeStandard}"
-				required="true" maxlength="19"
+				required="#{isValidationReq}" maxlength="19"
 				label="#{lbl['lbl.tpl.spec.content.unit.price']}">
 				<p:ajax event="blur" partialSubmit="true" process="@this"
 					update="@this, ansYearPG, ansPG, @(.calcAmount)"
@@ -131,27 +131,21 @@
 		<p:menu overlay="true" trigger="addBtn" my="left top" at="left bottom">
 			<p:menuitem value="#{lbl['lbl.tpl.spec.content.item']}"
 				action="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,row,TplSpecConst.questionTypeItem)}"
-				update="questionTbl" partialSubmit="true" process="@this">
+				update="questionTbl" partialSubmit="true" process="questionTbl">
 			</p:menuitem>
 			<p:menuitem value="#{lbl['lbl.tpl.spec.content.specification']}"
 				action="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,row,TplSpecConst.questionTypeItemSpec)}"
-				update="questionTbl" partialSubmit="true" process="@this">
+				update="questionTbl" partialSubmit="true" process="questionTbl">
 			</p:menuitem>
 		</p:menu>
-		<p:commandButton id="delBtn" icon="ui-icon-delete"
+		<p:commandButton id="#{templateSpecId}delBtn" icon="ui-icon-delete"
 			style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
-			partialSubmit="true" process="@this"
-			oncomplete="#{delConfirmPopup}.show();"
+			partialSubmit="true" process="questionTbl" update="questionTbl"
+			action="#{templateSpecBackingBean.deleteConfirmationAction(templateSpecBean, question)}"
 			title="#{lbl['lbl.tpl.spec.content.btn.delete.tooltip']}">
 			<f:setPropertyActionListener
-				target="#{templateSpecBackingBean.managedBean.tplSpecQuestions}"
-				value="#{templateSpecBean.specMaster.tplSpecQuestions}" />
-			<f:setPropertyActionListener
-				target="#{templateSpecBean.selectedSpecQuestion}"
-				value="#{question}" />
-			<f:setPropertyActionListener
-				target="#{templateSpecBean.selectedSpecQuestion.selected}"
-				value="#{true}" />
+					target="#{templateSpecBean.specComponentId}"
+					value="#{templateSpecId}" />
 		</p:commandButton>
 	</p:column>
 
