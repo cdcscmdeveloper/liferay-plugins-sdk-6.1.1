@@ -405,6 +405,9 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="smBankCity"
 								value="#{backingBean.managedBean.bankCities}" />
+							<p:ajax event="change" process="@this"
+								listener="#{backingBean.onChangeCity(backingBean.managedBean.selectedBank.smAddress,SupplierManagementConst.SM_BANK_INFO_PANEL)}"
+								update="smBankCity" />
 						</p:selectOneMenu>
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges
