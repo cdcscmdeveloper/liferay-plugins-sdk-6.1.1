@@ -28,7 +28,8 @@
 				<p:column headerText="#{lbl['lbl.sm.action']}">
 					<p:commandLink partialSubmit="true" process="@this"
 						action="#{backingBean.assignSelWorkshop(work)}"
-						update=":form:tt:workShopDialog" style="padding-right:5px">
+						update=":form:tt:workShopDialog" style="padding-right:5px"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
 						<p:graphicImage value="/css/images/design/edit.png"
 							title="#{lbl['lbl.sm.edit']}" />
 					</p:commandLink>
@@ -40,11 +41,13 @@
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
 					partialSubmit="true" process="@this"
 					action="#{backingBean.assignNewWorkshopBean}"
-					update=":form:tt:workShopDialog" />
+					update=":form:tt:workShopDialog" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					partialSubmit="true" process="smWorkShopDtPanel"
 					action="#{backingBean.deleteSelectedWorkShops}"
-					update=":form:tt:workDt" />
+					update=":form:tt:workDt" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 			</div>
 			<br />
 		</p:outputPanel>

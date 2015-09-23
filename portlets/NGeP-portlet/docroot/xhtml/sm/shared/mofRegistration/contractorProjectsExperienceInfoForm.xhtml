@@ -82,7 +82,8 @@
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
 					<p:commandLink partialSubmit="true" process="@this"
 						action="#{backingBean.assignSelCompanyExperience(contrBean)}"
-						update=":form:tt:contDialog">
+						update=":form:tt:contDialog" 
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
 						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
 					</p:commandLink>
 					<ac:smFieldChangeTableAlert object="#{contrBean}" />
@@ -92,11 +93,13 @@
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
 					action="#{backingBean.assignNewCompanyExperience}"
-					partialSubmit="true" process="@this" update=":form:tt:contDialog" />
+					partialSubmit="true" process="@this" update=":form:tt:contDialog" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']} "
 					partialSubmit="true" process="contrInfPan"
 					action="#{backingBean.deleteSelectedCompanyExperiences}"
-					update=":form:tt:contDt" />
+					update=":form:tt:contDt" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 
 			</div>
 			<br />

@@ -76,7 +76,8 @@
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
 					<p:commandLink update=":form:tt:asDisp"
 						action="#{backingBean.assignSelAssoc(assocBean)}"
-						partialSubmit="true" process="@this">
+						partialSubmit="true" process="@this" 
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
 						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"
 							style="margin-right:2px;" />
 					</p:commandLink>
@@ -89,10 +90,12 @@
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
 					action="#{backingBean.assignNewAssocBean}" partialSubmit="true"
-					process="@this" update=":form:tt:asDisp" />
+					process="@this" update=":form:tt:asDisp" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']} "
 					action="#{backingBean.deleteSelectedAssocCompanies}"
-					partialSubmit="true" process="assocInfPan" update=":form:tt:asoc" />
+					partialSubmit="true" process="assocInfPan" update=":form:tt:asoc" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 
 			</div>
 			<br />
