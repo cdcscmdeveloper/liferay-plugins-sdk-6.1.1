@@ -1019,6 +1019,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String clausesTitle;
 	
 	private boolean isPcbProcess;
+	
+	private boolean pendingRevision;
     
 	/**
 	 * Sets the panel suppliers.
@@ -6461,6 +6463,20 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setPcbProcess(boolean isPcbProcess) {
 		this.isPcbProcess = isPcbProcess;
+	}
+
+	/**
+	 * @return the pendingRevision
+	 */
+	public boolean isPendingRevision() {
+		return pendingRevision;
+	}
+
+	/**
+	 * @param pendingRevision the pendingRevision to set
+	 */
+	public void setPendingRevision(boolean pendingRevision) {
+		this.pendingRevision = pendingRevision;
 	}
 
 }
