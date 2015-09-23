@@ -16,8 +16,12 @@
 		
 		<div align="right">
 			<p:commandButton id="confApplDel" value="#{lbl['lbl.btn.yes']}"
-				oncomplete="mofApplDelConfirm.hide()" partialSubmit="true"
-				process="@this" action="#{backingBean.deleteDraftApplication}" />
+				onclick="mofApplDelConfirm.hide()"
+				onstart="blockWidget.show()"
+				oncomplete="blockWidget.hide()"
+				partialSubmit="true"
+				process="@this" action="#{backingBean.deleteDraftApplication}" 
+				update="@form"/>
 			<p:commandButton id="declineApplnDelete" value="#{lbl['lbl.btn.no']}"
 				onclick="mofApplDelConfirm.hide()" type="button" />
 		</div>
