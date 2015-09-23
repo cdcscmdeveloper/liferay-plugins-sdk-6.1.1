@@ -1762,6 +1762,7 @@ public class QTDetailBackingBean extends
 						committeDataType);
 
 				qtId = committeDataType.getQtId().longValue();
+				this.getManagedBean().setPendingRevision(true);
 			} else {
 
 				SCEvaluationDataType evalDataType = (SCEvaluationDataType) payLoad;
@@ -3607,6 +3608,8 @@ public class QTDetailBackingBean extends
 
 		String zonelocationLevel = this.getManagedBean().getStateCodes();
 		String locationLevel = this.getManagedBean().getLocalLevelCode();
+		
+		boolean pendingRevision = this.getManagedBean().isPendingRevision();
 
 		QuationTenderResDTO resDTO = null;
 		String taskId = this.getManagedBean().getTaskId();
@@ -3748,6 +3751,7 @@ public class QTDetailBackingBean extends
 		this.getManagedBean().setLocalLevelCode(locationLevel);
 		this.getManagedBean().setTemplateSpecZoneDtls(specZoneDtls);
 		this.getManagedBean().setTaskName(taskName);
+		this.getManagedBean().setPendingRevision(pendingRevision);
 	}
 
 	/**
