@@ -820,7 +820,7 @@ public class ApprovalBackingBean extends
 						revertToOldValues(approvalRequests, qt);
 					} else {
 						if (CollectionUtils.isNotEmpty(approvalRequests)) {
-							qt.setChanged(true);
+							
 							for (int i = 0; i < approvalRequests.size(); i++) {
 								ScQtApprovalRequest approvalRequest = approvalRequests
 										.get(i);
@@ -830,6 +830,7 @@ public class ApprovalBackingBean extends
 										.equalsIgnoreCase(approvalType)
 
 								) {
+									qt.setChanged(true);
 									qt.setQtValidityPeriod(Integer
 											.parseInt(approvalRequest
 													.getChangedValue()));
@@ -837,6 +838,7 @@ public class ApprovalBackingBean extends
 
 								} else if (ParameterConst.APPROVAL_REQUEST_EXTEND_CLOSING_DATE
 										.equalsIgnoreCase(approvalType)) {
+									qt.setChanged(true);
 									qt.setPublishPeriod(Integer
 											.parseInt(approvalRequest
 													.getChangedValue()));
