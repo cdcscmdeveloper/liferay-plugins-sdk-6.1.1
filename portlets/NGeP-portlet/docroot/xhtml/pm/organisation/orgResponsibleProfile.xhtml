@@ -24,6 +24,7 @@
 			    </f:facet>
 			    <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="10"			    	
 	            	update=":form:dtOrgUnit" readonly="true"
+	            	required ="true"
 					headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 					value="#{orgUnit.authorizedOrgProfile.pmOrgValidity.orgCode}" 
 					disabled="#{!orgUnit.brandNew}"

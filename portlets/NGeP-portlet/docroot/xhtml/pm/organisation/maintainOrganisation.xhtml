@@ -21,13 +21,15 @@
 				<td><p:commandButton value="#{lbl['lbl.btn.create']}" 
 						action="#{organisationBackingBean.saveOrganization('SAVE')}" 
 						update="@([id$=Msg])"  style="float:right;" 
-						rendered ="#{organisationBackingBean.managedBean.orgProfile.brandNew}"/>
-						<!-- <f:param name="disableValidation" value="true" > -->
+						rendered ="#{organisationBackingBean.managedBean.orgProfile.brandNew}">
+						 <f:param name="disableValidation" value="true" /> 
+					</p:commandButton>
 					<p:commandButton value="#{lbl['lbl.btn.update']}" 
 						action="#{organisationBackingBean.saveOrganization('UPDATE')}" 
 						update="@form"  style="float:right;"
 						rendered ="#{!organisationBackingBean.managedBean.orgProfile.brandNew}"
-					/>
+					> <f:param name="disableValidation" value="true" /> 
+					</p:commandButton>
 				</td>
 			</tr>
 		</table>
