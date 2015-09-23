@@ -30,42 +30,42 @@
 			<h:panelGrid border="0" width="100%" columns="2"
 				columnClasses="columnWidth20">
 
-				<h:outputLabel value="#{lbl['lbl.sc.ministry']}"></h:outputLabel>
+				<h:outputLabel value="#{lbl['lbl.sc.ministry']}" styleClass="outputLabel-view-label"></h:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.ministryName}"
 					readonly="true" />
 
-				<h:outputLabel value="#{lbl['lbl.sc.department']}"></h:outputLabel>
+				<h:outputLabel value="#{lbl['lbl.sc.department']}" styleClass="outputLabel-view-label"></h:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.jabatan}"
 					readonly="true" />
 
-				<h:outputLabel value="#{lbl['lbl.sc.ptj']}"></h:outputLabel>
+				<h:outputLabel value="#{lbl['lbl.sc.ptj']}" styleClass="outputLabel-view-label"></h:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.orgName}"
 					readonly="true" />
 
 
-				<h:outputLabel value="#{lbl['lbl.sc.qtn.no']}"></h:outputLabel>
+				<h:outputLabel value="#{lbl['lbl.sc.qtn.no']}" styleClass="outputLabel-view-label"></h:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.qtNo}"
 					readonly="true" />
 
-				<h:outputLabel value="#{lbl['lbl.sc.closing.date']}"></h:outputLabel>
+				<h:outputLabel value="#{lbl['lbl.sc.closing.date']}" styleClass="outputLabel-view-label"></h:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.closingDate}"
 					readonly="true">
 					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 
-				<h:outputLabel value="#{lbl['lbl.sc.notice.board.openingdate']} " />
+				<h:outputLabel value="#{lbl['lbl.sc.notice.board.openingdate']} " styleClass="outputLabel-view-label"/>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.openingDate}"
 					readonly="true">
 					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 
-				<h:outputLabel value="#{lbl['lbl.sc.title']}">
+				<h:outputLabel value="#{lbl['lbl.sc.title']}" styleClass="outputLabel-view-label">
 				</h:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.qtTitle}"
