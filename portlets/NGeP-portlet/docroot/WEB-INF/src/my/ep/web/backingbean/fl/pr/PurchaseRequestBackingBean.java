@@ -1467,7 +1467,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					}
 				}
 			}
-			if(getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId() == null){
+			if(getManagedBean().getFulfilmentRequest().getPmUserGroup()!=null && getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId() == null){
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 						MessageUtils.getMessage(MessageConst.ERROR_745070, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
