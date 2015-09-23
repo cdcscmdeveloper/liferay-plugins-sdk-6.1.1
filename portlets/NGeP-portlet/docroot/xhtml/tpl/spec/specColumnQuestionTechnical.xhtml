@@ -13,7 +13,7 @@
 		<h:panelGroup id="qtyPG" rendered="#{isQuestionTypeItem}">
 			<p:inputText id="qty"
 				style="min-width:0px !important;width:35px; text-align:right;"
-				value="#{question.clQuantity}" required="#{!question.selected}"
+				value="#{question.clQuantity}" required="#{isValidationReq}"
 				maxlength="14" label="#{lbl['lbl.tpl.spec.content.quantity']}">
 				<p:ajax partialSubmit="true" process="@this"
 					update="@this, qtyMsg, @(.calcAmount)" />
@@ -49,7 +49,7 @@
 		<p:inputText id="deliveryTerm"
 			style="min-width:0px !important;width:25px; text-align:right;"
 			value="#{question.clDeliveryTerm}" rendered="#{isQuestionTypeItem}"
-			required="#{!question.selected}" maxlength="4"
+			required="#{isValidationReq}" maxlength="4"
 			label="#{lbl['lbl.tpl.spec.content.delivery.term']}">
 			<p:ajax partialSubmit="true" process="@this"
 				update="@this, deliveryTermMsg" />
@@ -57,7 +57,7 @@
 		<p:spacer width="2px"></p:spacer>
 		<h:outputText
 			value="#{templateSpecBackingBean.getParameterDesc(question.clDeliveryTermTypeCode)}"
-			required="#{!question.selected}" rendered="#{isQuestionTypeItem}" />
+			rendered="#{isQuestionTypeItem}" />
 		<p:message id="deliveryTermMsg" for="deliveryTerm" display="icon" />
 	</p:column>
 	<p:column style="width:125px;" rendered="#{isSpecificationReq}">
@@ -68,7 +68,7 @@
 		</f:facet>
 		<h:selectOneMenu id="answerTypeId"
 			value="#{question.answerTypeCode.parameterId}" style="width:100px;"
-			required="#{!question.selected}"
+			required="#{isValidationReq}"
 			label="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer.schema']}"
 			rendered="#{!isQuestionTypeItem}">
 			<f:selectItems
@@ -105,7 +105,7 @@
 				<p:inputText id="estCost"
 					style="min-width:0px !important;width:44px; text-align:right;"
 					value="#{question.tplSpecEstimations[0].estimatedCost}"
-					required="#{!question.selected}" maxlength="19"
+					required="#{isValidationReq}" maxlength="19"
 					label="#{lbl['lbl.tpl.spec.content.estimate.cost']}">
 					<ac:validateNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
@@ -145,11 +145,11 @@
 				at="left bottom">
 				<p:menuitem value="#{lbl['lbl.tpl.spec.content.item']}"
 					action="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,row,TplSpecConst.questionTypeItem)}"
-					update="questionTbl" partialSubmit="true" process="@this">
+					update="questionTbl" partialSubmit="true" process="questionTbl">
 				</p:menuitem>
 				<p:menuitem value="#{lbl['lbl.tpl.spec.content.specification']}"
 					action="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,row,TplSpecConst.questionTypeItemSpec)}"
-					update="questionTbl" partialSubmit="true" process="@this">
+					update="questionTbl" partialSubmit="true" process="questionTbl">
 				</p:menuitem>
 			</p:menu>
 		</c:if>
@@ -160,20 +160,14 @@
 				update="questionTbl" partialSubmit="true" process="questionTbl"
 				title="#{lbl['lbl.tpl.spec.content.btn.add.tooltip']}" />
 		</c:if>
-		<p:commandButton id="delBtn" icon="ui-icon-delete"
+		<p:commandButton id="#{templateSpecId}delBtn" icon="ui-icon-delete"
 			style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
-			partialSubmit="true" process="@this"
-			oncomplete="#{delConfirmPopup}.show();"
+			partialSubmit="true" process="questionTbl" update="questionTbl"
+			action="#{templateSpecBackingBean.deleteConfirmationAction(templateSpecBean, question)}"
 			title="#{lbl['lbl.tpl.spec.content.btn.delete.tooltip']}">
 			<f:setPropertyActionListener
-				target="#{templateSpecBackingBean.managedBean.tplSpecQuestions}"
-				value="#{templateSpecBean.specMaster.tplSpecQuestions}" />
-			<f:setPropertyActionListener
-				target="#{templateSpecBean.selectedSpecQuestion}"
-				value="#{question}" />
-			<f:setPropertyActionListener
-				target="#{templateSpecBean.selectedSpecQuestion.selected}"
-				value="#{true}" />
+					target="#{templateSpecBean.specComponentId}"
+					value="#{templateSpecId}" />
 		</p:commandButton>
 	</p:column>
 </ui:composition>
