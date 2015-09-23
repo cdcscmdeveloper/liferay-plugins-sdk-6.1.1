@@ -43,6 +43,7 @@ import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sm.SmBill;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
+import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPayment;
 import my.ep.persistence.entity.sm.SmPaymentDtl;
 import my.ep.persistence.entity.sm.SmPaymentResponse;
@@ -86,6 +87,7 @@ import org.apache.log4j.Logger;
 * author @Ganga prasad
 */
 
+@SuppressWarnings("rawtypes")
 public class GfmasIntegration extends InitializeUtilityClz{
 	
 	private static Logger log = EpLogger.getLogger(GfmasIntegration.class);
@@ -114,7 +116,6 @@ public class GfmasIntegration extends InitializeUtilityClz{
 			for (MasterDataMaterialInfo materialInfo : materilInfoList) {
 
 				materialInformationRq_Type = new MasterDataMaterialInfoRq_Type();
-
 
 				materialInformationRq_Type.setMaterialCode(materialInfo.getMaterialCode());
 				materialInformationRq_Type.setCodeType(materialInfo.getCodeType());
@@ -276,7 +277,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 				dataVendor = new MasterDataVendor();
 				dataVendor.setRecordType(IntegrationConstants.RECORD_TYPE_ZERO);
 				dataVendor.setAgencyId(IntegrationConstants.AGENSI_ID_ePerolehan);  
-				dataVendor.setVendorIdCode(smSupplier.getEpNo());
+				dataVendor.setVendorIdCode(smSupplier.getRegNo());
 				dataVendor.setEntityCode(getEntityType(smSupplier.getBusinessType())); //default set to SSM   
 				
 					// HQ- Branch Information
@@ -305,10 +306,13 @@ public class GfmasIntegration extends InitializeUtilityClz{
 						// Added newly in version 2.9
 						companyBranch.setIndicatorCode(IntegrationConstants.HQ_INDICATOR_CODE);
 						companyBranch.setAccountActionIndicator(IntegrationConstants.ACCOUNT_ACTION_UPDATE);
-						if(smSupplier.getSmGstSuppliers()!=null)
-							companyBranch.setReferenceNoGST(smSupplier.getSmGstSuppliers().get(0).getGstRegNo());
-						else
+						if(smSupplier.getSmGstSuppliers()!=null){
+							 for(SmGstSupplier gstSupplier : smSupplier.getSmGstSuppliers()){
+								 companyBranch.setReferenceNoGST(gstSupplier.getGstRegNo());
+							 }
+						}else{
 							companyBranch.setReferenceNoGST(IntegrationConstants.EMPTY_TRING);
+						}
 								
 						for(SmCompanyAddress companyAddress:smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()){
 							
@@ -495,48 +499,55 @@ public class GfmasIntegration extends InitializeUtilityClz{
 				
 			}
 		}
+	
 	public void masterDataVendorGfmasInbound() {
 		log.info("inside masterDataVendorGfmasInbound : APOVE");
 
 		String fileName = null;   
-
 		if (osbUtility.osbServiceCallInBound(ServiceCode.APOVE.value(),"")) {
-			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD_LOCAL, ProcessCode.APOVE.value());
+			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, ProcessCode.APOVE.value());
 				if(null!=fileName){
-				
-					if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH + fileName, IntegrationConstants.GMAS_DOWNLOAD_LOCAL + fileName)) {
-						sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD_LOCAL + fileName,	IntegrationConstants.GMAS_ARCHIVE_LOCAL + fileName);
-						encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH + fileName, IntegrationConstants.DECRYPTED_FILE_PATH + fileName);
-				        
-					   BatchReqDTO<MasterDataVendor> batchReqDTO = new BatchReqDTO<MasterDataVendor>();
-					   batchReqDTO.setFileFTPStatus(IntegrationConstants.FTP_STATUS_SUCCESS);
-					   batchReqDTO.setFileCreationStatus(IntegrationConstants.FILE_CREATION_SUCCESS);
-					   batchReqDTO.setProcessId(ProcessCode.APOVE.value());
-					   batchReqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_INBOUND);
-					   batchReqDTO.setFileName(fileName);
-					   batchReqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
-					   batchReqDTO.setServiceCode(ServiceCode.APOVE.value());
-					   
-					   fileUtility.setValuesToPmInterface(batchReqDTO);
-					
-						List<MasterDataVendor> dataVendors = fileUtility.masterDataVendorFileInPutStream(IntegrationConstants.DECRYPTED_FILE_PATH + fileName);
-						SupplierSearchReqDTO reqDTO = null;
+					if(interfaceSO.retrieveInterfaceLogByServiceCodeAndFileName(ServiceCode.APOVE.value(), fileName)){
+						sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,	IntegrationConstants.GMAS_ARCHIVE + fileName);
+					}else{
+						if (sftpUtility.download(IntegrationConstants.FILE_PATH_LOCAL + fileName, IntegrationConstants.GMAS_DOWNLOAD + fileName)) {
+							sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,	IntegrationConstants.GMAS_ARCHIVE + fileName);
+							encryption.decryptGmas(IntegrationConstants.FILE_PATH_LOCAL + fileName, IntegrationConstants.GMAS_DOWNLOAD_LOCAL + fileName);
+					        
+						   BatchReqDTO<MasterDataVendor> batchReqDTO = new BatchReqDTO<MasterDataVendor>();
+						   batchReqDTO.setFileFTPStatus(IntegrationConstants.FTP_STATUS_SUCCESS);
+						   batchReqDTO.setFileCreationStatus(IntegrationConstants.FILE_CREATION_SUCCESS);
+						   batchReqDTO.setProcessId(ProcessCode.APOVE.value());
+						   batchReqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_INBOUND);
+						   batchReqDTO.setFileName(fileName);
+						   batchReqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
+						   batchReqDTO.setServiceCode(ServiceCode.APOVE.value());
+						   
+						   fileUtility.setValuesToPmInterface(batchReqDTO);
+						
+							List<MasterDataVendor> dataVendors = fileUtility.masterDataVendorFileInPutStream(IntegrationConstants.GMAS_DOWNLOAD_LOCAL + fileName);
 
-						SmSapVendorCode vendorCode = null;
-						for (MasterDataVendor vendor : dataVendors) {
-							
-							vendorCode = new SmSapVendorCode();
-							
-//							if(resDTO.isSuccessful()){
-//								SmSupplier smSupplier = resDTO.getSmSupplier();
-//								reqDTO = new SupplierSearchReqDTO();
-//								smSupplier.setSapVendorCode(vendor.getSapVendorCode());
-//								smSupplier.setChangedBy(IntegrationConstants.BATCH_USER);
-//								reqDTO.setSmSupplier(smSupplier);
-//								iVendorCodeSO.saveOrUpdateSapVendorCode(smSapVendorCode);
-//							}else{
-//								System.out.println("supplier not available");
-//							}
+							SmSapVendorCode vendorCode = null;
+							for (MasterDataVendor vendor : dataVendors) {
+								
+//								checking Supplier with RegNo
+								
+//								RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+//								reqDTO.setRegNo(vendor.getVendorIdCode());
+//								RegistrationResDTO resDTO = registrationSO.retrieveActiveSupplierByRegNo(reqDTO);
+								
+								vendorCode = new SmSapVendorCode();
+								vendorCode.setRegNo(vendor.getVendorIdCode());
+								vendorCode.setSapVendorCode(vendor.getSapVendorCode());
+								vendorCode.setCreatedBy(IntegrationConstants.BATCH_USER);
+								vendorCode.setCreatedDate(new Timestamp(IntegrationConstants.DEFAULT_DATE.getTime()));
+								vendorCode.setChangedBy(IntegrationConstants.BATCH_USER);
+								vendorCode.setChangedDate(new Timestamp(IntegrationConstants.DEFAULT_DATE.getTime()));
+								
+								System.out.println("getVendorIdCode :"+vendor.getVendorIdCode() +"getSapVendorCode :"+vendor.getSapVendorCode());
+								
+								iVendorCodeSO.saveOrUpdateSapVendorCode(vendorCode);
+						}
 					}
 				}
 				log.info("masterDataVendorGfmasInbound updated ");
@@ -791,7 +802,6 @@ public class GfmasIntegration extends InitializeUtilityClz{
 
 	@Override
 	public void votDanaGfmasInbound() {
-		
 		log.info("inside votDanaGfmasInbound :GLDNA");
 		String fileName = null;
 		if (osbUtility.osbServiceCallInBound(ServiceCode.GLDNA.value(),"")) {
@@ -859,7 +869,6 @@ public class GfmasIntegration extends InitializeUtilityClz{
 	@Override
 	public void programAktivitiGfmasInbound() {
 		log.info("inside programAktivitiGfmasInbound :GLPRG");
-
 		String fileName = null;
 		if (osbUtility.osbServiceCallInBound(ServiceCode.GLPRG.value(),"")) {
 			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, ProcessCode.GLPRG.value());
@@ -927,7 +936,6 @@ public class GfmasIntegration extends InitializeUtilityClz{
 	@Override
 	public void projectGfmasInbound() {
 		log.info("inside projectGfmasInbound :GLPRJ");
-
 		String fileName = null;;
 		if (osbUtility.osbServiceCallInBound("GFM-240","")) {
 			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "GLPRJ");
@@ -983,9 +991,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 								subSitia.setCreatedBy(IntegrationConstants.BATCH_USER);
 
 								subSetiaList.add(subSitia);
-//						}
 						}
-						
 						if(errorResponse!=null){
 							fileUtility.errorFileOutBound(errorResponse);
 						}
@@ -1053,9 +1059,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 									glAccount.setPmOrgProfile(orgProfileResDTO.getPmOrgProfile());
 								}else{
 									glAccount.setPmOrgProfile(null);
-									
 								}
-					
 								glAccount.setEffDate(new Timestamp(System.currentTimeMillis()));
 								glAccount.setExpDate(null);
 								glAccount.setRecordStatusFlg(IntegrationConstants.RECORD_STATUS_ACTIVE);
