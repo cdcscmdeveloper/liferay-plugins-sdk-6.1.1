@@ -75,7 +75,7 @@
 						<f:selectItems
 						  value="#{financialOrgBackingBean.getDivisionList(financialOrgBackingBean.managedBean.pmAddress.pmState.stateId)}" 
 						  var="division" itemLabel="#{division.divisionName}" itemValue="#{division.divisionId}"/>
-						 <p:ajax event="change" update="facDivision" 
+						 <p:ajax event="change" update="facDivision,facDistrict,facCity" 
 						 	listener="#{financialOrgBackingBean.retrievePmDivision(financialOrgBackingBean.managedBean.pmAddress.pmDivision)}"/>
 					</p:selectOneMenu>
 				</td>
