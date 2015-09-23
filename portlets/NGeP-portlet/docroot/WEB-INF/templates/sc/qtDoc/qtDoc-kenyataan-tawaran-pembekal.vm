@@ -225,11 +225,11 @@ th{
 							<table width='100%' class="table2">
 								<span class="headerfont">
 								<tr>
-			            			<td>Description</td>
-			            			<td>Date/Time</td>
-			            			<td>Location</td>
-			            			<td>Coordinationg Officer</td>
-			            			<td>Max Attendance</td>
+			            			<td>Perihal</td>
+			            			<td>Tarikh / Masa</td>
+			            			<td>Lokasi</td>
+			            			<td>Pegawai Penyelaras</td>
+			            			<td>Kehadiran Maksima</td>
 			            		</tr>
 								</span>
 			            		#foreach( $briefingdtls in $zoneList.briefingList )
@@ -250,11 +250,11 @@ th{
 							<table width='100%' class="table2">
 								<span class="headerfont">
 			            		<tr>
-			            			<td>Description</td>
-			            			<td>Date/Time</td>
-			            			<td>Location</td>
-			            			<td>Coordinationg Officer</td>
-			            			<td>Max Attendance</td>
+			            			<td>Perihal</td>
+			            			<td>Tarikh / Masa</td>
+			            			<td>Lokasi</td>
+			            			<td>Pegawai Penyelaras</td>
+			            			<td>Kehadiran Maksima</td>
 			            		</tr>
 								</span>
 			            		#foreach( $sitevisitdtls in $zoneList.sitevisitList )
@@ -270,7 +270,7 @@ th{
 			             		#end
 							</table>
 							<span class="headerfont">
-								Attendance for Site Visit : 
+								Wajib Hadir : 
 								#if ($zoneList.scQtBsv.allSiteVisitReq)
 									Yes
 								#else 
