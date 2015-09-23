@@ -33,10 +33,12 @@
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="somusergrouproles" style="width:230px;margin-bottom:5px;"
 						value="#{usergroupBackingBean.managedBean.userGroup.roleCode}"
+						required="true"
+						label="#{lbl['lbl.pm.ug.search.role']}"
 						disabled="#{not usergroupBackingBean.managedBean.userGroup.brandNew}">
 						<f:selectItems
 							value="#{usergroupBackingBean.getUserGroupRoles()}"></f:selectItems>
-						<p:ajax event="change" update="usergrouping" process="@this"/>	
+						<p:ajax event="change" update="userPanelId" process="@this"/>	
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
