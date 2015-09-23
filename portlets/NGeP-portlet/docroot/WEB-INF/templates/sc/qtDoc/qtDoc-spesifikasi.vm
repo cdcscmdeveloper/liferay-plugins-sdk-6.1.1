@@ -93,12 +93,12 @@
             <th bgcolor="#6d839b" class="title border left">Spesifikasi</th>
             <th bgcolor="#6d839b" class="title border left">UOM</th>
 			#if ($tplspecMaster.itemTypeCode.parameterCode == "2")
-				<td bgcolor="#6d839b" class="title border left>Freq. per UOM</td>
-				<td bgcolor="#6d839b" class="title border left>No. UOM per day</td>
-				<td bgcolor="#6d839b" class="title border left>No. UOM per month</td>
+				<td bgcolor="#6d839b" class="title border left>Kekerapan / Unit Ukuran</td>
+				<td bgcolor="#6d839b" class="title border left>Bil. Unit Ukuran Sehari</td>
+				<td bgcolor="#6d839b" class="title border left>Bil. Unit Ukuran Sebulan</td>
 			#end
-            <th bgcolor="#6d839b" class="title border left">Price Type</th>
-            <th bgcolor="#6d839b" class="title border left-right">Quantity</th>
+            <th bgcolor="#6d839b" class="title border left">Jenis Harga</th>
+            <th bgcolor="#6d839b" class="title border left-right">Kuantiti</th>
 		</tr>
 		#foreach( $tplspecQuestion in $tplspecMaster1.tplSpecQuestions )
 		<tr>
