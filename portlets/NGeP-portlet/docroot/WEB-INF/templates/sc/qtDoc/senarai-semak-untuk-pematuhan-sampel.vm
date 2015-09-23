@@ -69,15 +69,15 @@
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
 	<tbody>
 		<tr>
-			<td width="20%" class="standard"><nobr>PTJ Name :</nobr></td>
+			<td width="20%" class="standard"><nobr>Nama PTJ :</nobr></td>
 			<td class="standard">$ptj</td>
 		</tr>
 		<tr>
-			<td width="20%" class="standard"><nobr>Quotation/Tender No. :</nobr></td>
+			<td width="20%" class="standard"><nobr>No. Sebut harga / Tender :</nobr></td>
 			<td class="standard">$title</td>
 		</tr>
 		<tr>
-			<td width="20%" class="standard"><nobr>Procurement Title :</nobr></td>
+			<td width="20%" class="standard"><nobr>Tajuk Perolehan :</nobr></td>
 			<td class="standard">$qtNo</td>
 		</tr>
 	</tbody>
@@ -88,11 +88,11 @@
 	<tbody>
 		<tr>
             <th bgcolor="#6d839b" class="title border left">No.</th>
-            <th bgcolor="#6d839b" class="title border left">Supplier Code</th>
+            <th bgcolor="#6d839b" class="title border left">Kod Pembekal</th>
             <th bgcolor="#6d839b" class="title border left">Label</th>
 			<th bgcolor="#6d839b" class="title border left">Item Name / Series No. </th>
-			<th bgcolor="#6d839b" class="title border left">Submission Status</th>
-			<th bgcolor="#6d839b" class="title border left-right">Remarks</th>
+			<th bgcolor="#6d839b" class="title border left">Status Penyerahan</th>
+			<th bgcolor="#6d839b" class="title border left-right">Catatan</th>
 		</tr>
 			<tr class="ui-content">
 				<td class="standard border-bottom left">1</td>
