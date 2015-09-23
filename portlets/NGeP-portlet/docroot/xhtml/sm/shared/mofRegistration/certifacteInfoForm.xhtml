@@ -79,7 +79,8 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
 					<p:commandLink action="#{backingBean.assignSelCert(certBean)}"
-						update=":form:tt:certPop" partialSubmit="true" process="@this">
+						update=":form:tt:certPop" partialSubmit="true" process="@this" 
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" >
 						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"
 							style="margin-right:2px;" />
 					</p:commandLink>
@@ -88,11 +89,13 @@
 			<p:spacer height="2px;" />
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}" process="@this"
-					action="#{backingBean.assignNewCert}" update=":form:tt:certPop" />
+					action="#{backingBean.assignNewCert}" update=":form:tt:certPop" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					partialSubmit="true" process="certInfPan"
 					action="#{backingBean.deleteSelectedCerts}"
-					update=":form:tt:certDt" />
+					update=":form:tt:certDt" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 
 			</div>
 			<br />

@@ -79,7 +79,7 @@
 						rendered="#{consBean.progressStatus eq 'F'}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
-					<p:commandLink
+					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
 						action="#{backingBean.assignSelCompanyExperience(consBean)}"
 						update=":form:tt:consDialog" partialSubmit="true" process="@this">
 						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
@@ -92,10 +92,12 @@
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
 					action="#{backingBean.assignNewCompanyExperience}"
-					update=":form:tt:consDialog" partialSubmit="true" process="@this" />
+					update=":form:tt:consDialog" partialSubmit="true" process="@this" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']} "
 					action="#{backingBean.deleteSelectedCompanyExperiences}"
-					update=":form:tt:consDt" partialSubmit="true" process="consInfPan" />
+					update=":form:tt:consDt" partialSubmit="true" process="consInfPan" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 
 			</div>
 			<br />

@@ -28,7 +28,8 @@
 				<p:column headerText="#{lbl['lbl.sm.action']}">
 					<p:commandLink process="@this" partialSubmit="true"
 						action="#{backingBean.assignSelStore(stor)}"
-						update=":form:tt:storeDialog" style="padding-right:5px">
+						update=":form:tt:storeDialog" style="padding-right:5px"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" >
 						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"/>
 					</p:commandLink>
 				</p:column>
@@ -38,11 +39,13 @@
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
 					action="#{backingBean.assignNewStoreBean}"
-					update=":form:tt:storeDialog" partialSubmit="true" process="@this" />
+					update=":form:tt:storeDialog" partialSubmit="true" process="@this" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					process="smStrDtPanel" partialSubmit="true"
 					action="#{backingBean.deleteSelectedStores}"
-					update=":form:tt:storeDt" />
+					update=":form:tt:storeDt" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 			</div>
 			<br />
 		</p:outputPanel>

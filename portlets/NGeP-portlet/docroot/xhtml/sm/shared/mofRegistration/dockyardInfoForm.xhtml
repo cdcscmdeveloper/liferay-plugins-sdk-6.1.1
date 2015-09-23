@@ -29,7 +29,8 @@
 				<p:column headerText="#{lbl['lbl.sm.action']}">
 					<p:commandLink action="#{backingBean.assignSelDockyard(doc)}"
 						process="@this" partialSubmit="true"
-						update=":form:tt:dockYardDialog" style="padding-right:5px">
+						update=":form:tt:dockYardDialog" style="padding-right:5px"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
 						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
 					</p:commandLink>
 				</p:column>
@@ -39,10 +40,12 @@
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}" process="@this"
 					partialSubmit="true" action="#{backingBean.assignNewDockyardBean}"
-					update=":form:tt:dockYardDialog" />
+					update=":form:tt:dockYardDialog" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					process="smDocDtPanel" partialSubmit="true"
-					action="#{backingBean.deleteSelectedDocks}" update=":form:tt:docDt" />
+					action="#{backingBean.deleteSelectedDocks}" update=":form:tt:docDt" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 			</div>
 			<br />
 		</p:outputPanel>
