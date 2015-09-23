@@ -70,6 +70,8 @@ import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.pm.profilemanagement.ProfileManagementBackingBean;
+import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
+import my.ep.web.backingbean.sc.quatationtender.QTDocumentsBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.constant.CommonUIConst;
@@ -838,6 +840,20 @@ public class ApprovalBackingBean extends
 									qt.setPublishPeriod(Integer
 											.parseInt(approvalRequest
 													.getChangedValue()));
+									break;
+								} else if (ParameterConst.APPROVAL_CATEGORY_PTJ
+										.equalsIgnoreCase(approvalType)) {
+									QTDetailBackingBean backingBean = new QTDetailBackingBean();
+									backingBean.retrieveDocumentTabDtl();
+									QTDocumentsBackingBean documentsBackingBean = new QTDocumentsBackingBean();
+									try {
+										documentsBackingBean
+												.createDocumentAttachments();
+									} catch (Exception e) {
+
+									}
+									qt.setScQtDocReports(this.getManagedBean()
+											.getScQtDocReportList());
 									break;
 								}
 

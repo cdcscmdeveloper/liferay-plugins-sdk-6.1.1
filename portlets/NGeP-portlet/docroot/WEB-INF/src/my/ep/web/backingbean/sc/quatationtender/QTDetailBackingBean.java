@@ -1790,7 +1790,7 @@ public class QTDetailBackingBean extends
 		if (null == this.getManagedBean().getQt().getProcurementMode()) {
 			this.getManagedBean().getQt().setProcurementMode(new PmParameter());
 		}
-		
+
 		if (SCProcessNameConst.REVISE_PCB.equalsIgnoreCase(this
 				.getManagedBean().getTaskName())) {
 			this.getManagedBean().setPcbProcess(true);
@@ -1821,9 +1821,8 @@ public class QTDetailBackingBean extends
 		}
 
 		QuationTenderReqDTO qtReqDTO = prepareQTInfo();
-		
-		
-		if(this.getManagedBean().isPcbProcess()) {
+
+		if (this.getManagedBean().isPcbProcess()) {
 			qtReqDTO.setPcbProcess(true);
 		}
 
@@ -1856,6 +1855,7 @@ public class QTDetailBackingBean extends
 				// this part
 				if (null == this.getManagedBean().getScQtDocReportList()) {
 					retrieveDocumentTabDtl();
+					
 					qt.setScQtDocReports(this.getManagedBean()
 							.getScQtDocReportList());
 				}
@@ -2057,7 +2057,7 @@ public class QTDetailBackingBean extends
 			reqDTO.setQtdetail(scQt);
 			reqDTO.setAvaliableApprovals(scQt.getScQtApprovals());
 			reqDTO.setAmendMentBean(this.getManagedBean().getAmendMentBean());
-			//reqDTO.setRuleDataBean(this.getManagedBean().getRuleDataBean());
+			// reqDTO.setRuleDataBean(this.getManagedBean().getRuleDataBean());
 			resDTO = detailSO.retriveQTApprovalDetails(reqDTO);
 
 			List<ScQtApproval> requiredApproval = resDTO.getApproval();
@@ -3564,7 +3564,8 @@ public class QTDetailBackingBean extends
 
 		// this.getManagedBean().setToBeDelCommitteMemebers(null);
 		this.getManagedBean().setSelectedTabIndex(selectedCommitteeTabIndex);
-		this.getManagedBean().setSelectedCommitteeTabIndex(selectedCommitteeTabIndex);
+		this.getManagedBean().setSelectedCommitteeTabIndex(
+				selectedCommitteeTabIndex);
 		TabBean committeTabBean = this.getManagedBean()
 				.getScCommitteeMemberTabList().get(selectedCommitteeTabIndex);
 
@@ -3601,7 +3602,7 @@ public class QTDetailBackingBean extends
 		int activeIndex = this.getManagedBean().getActiveIndex();
 
 		int subTabIndex = this.getManagedBean().getSelectedTabIndex();
-		
+
 		String taskName = this.getManagedBean().getTaskName();
 
 		String zonelocationLevel = this.getManagedBean().getStateCodes();
@@ -4169,7 +4170,8 @@ public class QTDetailBackingBean extends
 				scQt.setScQtBriefings(null);
 				quationTenderReqDTO.setQtdetail(scQt);
 				quationTenderReqDTO.setPublished(false);
-				quationTenderReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+				quationTenderReqDTO.setPmUser(new FacesScopes()
+						.getUserSessionBean());
 				QuationTenderResDTO resDTO = detailSO
 						.cancleQT(quationTenderReqDTO);
 				if (resDTO.isSuccessful()) {
@@ -4324,7 +4326,8 @@ public class QTDetailBackingBean extends
 			qt.setScQtApprovals(scQtApprovals);
 			quationTenderReqDTO.setQtdetail(qt);
 			quationTenderReqDTO.setPublished(true);
-			quationTenderReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			quationTenderReqDTO.setPmUser(new FacesScopes()
+					.getUserSessionBean());
 			quationTenderReqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.cancleQT(quationTenderReqDTO);
@@ -4695,24 +4698,24 @@ public class QTDetailBackingBean extends
 		}
 
 	}
-	
-	public static void main(String arg[]){
+
+	public static void main(String arg[]) {
 		List<String> datas = new ArrayList<String>();
 		String str = new String("[\"Ramp\"");
 		datas.add(str);
 		String str1 = new String("\"sagar\"]");
 		datas.add(str1);
-		
+
 		System.out.println(datas);
-		List<String> data= new ArrayList<String>();
-		for(int i=0;i<datas.size();i++){
+		List<String> data = new ArrayList<String>();
+		for (int i = 0; i < datas.size(); i++) {
 			String str2 = datas.get(i);
-			if(i==0){
+			if (i == 0) {
 				str2 = str2.replace("[", "");
-			
+
 			}
 			str2 = str2.replace("\"", "");
-			if(i==datas.size()-1){
+			if (i == datas.size() - 1) {
 				str2 = str2.replace("]", "");
 			}
 			data.add(str2);
