@@ -2407,6 +2407,44 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						ModuleCodeConst.PROFILE_MANAGEMENT,
 						ICategoryCodeSO.class);
 
+		if (this.getManagedBean().getPmCategoryL3().getPaidUpCapital() == null) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_775013,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			return false;
+		}
+
+		if (this.getManagedBean().getPmCategoryL3().getPaidUpCapital() != null) {
+			try {
+				Integer.valueOf(this.getManagedBean().getPmCategoryL3()
+						.getPaidUpCapital());
+			} catch (NumberFormatException e) {
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_ERROR,
+										null,
+										MessageUtils
+												.getMessage(
+														MessageConst.ERROR_100003,
+														new String[] { ResourceBundleUtils
+																.getMessage(
+																		"lbl.pm.paid.capital",
+																		ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+																		new FacesScopes()
+																				.getUserLocale()) },
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
+				return false;
+			}
+		}
+
 		if (this.getManagedBean().getPmCategoryL3().getCategoryL3Code() == null
 				|| this.getManagedBean().getPmCategoryL3().getCategoryL3Code()
 						.isEmpty()) {
@@ -2450,52 +2488,6 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			}
 		}
 
-		if (this.getManagedBean().getPmCategoryL3().getCategoryName() == null
-				|| this.getManagedBean().getPmCategoryL3().getCategoryName()
-						.isEmpty()) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-							MessageUtils.getMessage(MessageConst.ERROR_775010,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-			return false;
-		}
-		if (this.getManagedBean().isNewCategory()
-				&& this.getManagedBean().getPmCategoryL3()
-						.getSupplierTypeCodeVal() == 0) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-							MessageUtils.getMessage(MessageConst.ERROR_775011,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-			return false;
-		}
-		if (!this.getManagedBean().isNewCategory()
-				&& (this.getManagedBean().getPmCategoryL3()
-						.getSupplierTypeCode() == null || this.getManagedBean()
-						.getPmCategoryL3().getSupplierTypeCode()
-						.getParameterId() == 0)) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-							MessageUtils.getMessage(MessageConst.ERROR_775011,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-			return false;
-		}
-
-		if (this.getManagedBean().getPmCategoryL3().getPaidUpCapital() == null) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-							MessageUtils.getMessage(MessageConst.ERROR_775013,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-			return false;
-		}
-
 		if (this.getManagedBean().isNewCategory()
 				&& this.getManagedBean().getPmCategoryL3()
 						.getCategoryTypeCodeVal() == 0) {
@@ -2516,6 +2508,43 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 							MessageUtils.getMessage(MessageConst.ERROR_775012,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			return false;
+		}
+
+		if (this.getManagedBean().getPmCategoryL3().getCategoryName() == null
+				|| this.getManagedBean().getPmCategoryL3().getCategoryName()
+						.isEmpty()) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_775010,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			return false;
+		}
+
+		if (this.getManagedBean().isNewCategory()
+				&& this.getManagedBean().getPmCategoryL3()
+						.getSupplierTypeCodeVal() == 0) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_775011,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			return false;
+		}
+		if (!this.getManagedBean().isNewCategory()
+				&& (this.getManagedBean().getPmCategoryL3()
+						.getSupplierTypeCode() == null || this.getManagedBean()
+						.getPmCategoryL3().getSupplierTypeCode()
+						.getParameterId() == 0)) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_775011,
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
 			return false;
@@ -2558,34 +2587,6 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 									new FacesScopes().getUserLocale())));
 			return false;
 			// last
-		}
-
-		if (this.getManagedBean().getPmCategoryL3().getPaidUpCapital() != null) {
-			try {
-				Integer.valueOf(this.getManagedBean().getPmCategoryL3()
-						.getPaidUpCapital());
-			} catch (NumberFormatException e) {
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_ERROR,
-										null,
-										MessageUtils
-												.getMessage(
-														MessageConst.ERROR_100003,
-														new String[] { ResourceBundleUtils
-																.getMessage(
-																		"lbl.pm.paid.capital",
-																		ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-																		new FacesScopes()
-																				.getUserLocale()) },
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
-				return false;
-			}
 		}
 
 		try {
@@ -3047,19 +3048,19 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		} else {
 			this.getManagedBean().setDisplayCategoryGrouping(false);
 		}
-		
+
 		if (this.getManagedBean().getPmCategoryL3().isBrandNew()) {
-			if (this.getManagedBean().getPmCategoryL3().isBasicCategoryReqValue()
+			if (this.getManagedBean().getPmCategoryL3()
+					.isBasicCategoryReqValue()
 					|| this.getManagedBean().isBasicCategoryRequired()) {
 				if (CollectionUtils.isNotEmpty(this.getManagedBean()
 						.getBasicCategoryList())) {
 					this.getManagedBean().getBasicCategoryList().clear();
-					
+
 				}
 			}
 		}
-		
-		
+
 	}
 
 	/**
