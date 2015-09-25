@@ -551,7 +551,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 //			throw new EpException(MessageConst.ERROR_770003, new String[]{this.getManagedBean().getSelectedReason().getReasonCode()});
 //
 //		}
-		
+	
 		if(this.getManagedBean().isSuppReason()){
 			validateRestrictions(this.getManagedBean().getSelectedReason());
 			getAllRestrictions();
@@ -923,7 +923,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 */
 	private void validateRestriction(List<PmSupplierReason> restrictList, String restrictType){
 		log.info("validateRestriction");
-		if(restrictList!=null){
+//		if(restrictList!=null){
 			boolean isSelected = true;			
 			boolean isNotEmpty = true;
 			
@@ -937,7 +937,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					}
 				}
 			}
-
+			log.info(".........isNotEmpty="+isNotEmpty);
 			//throw validation message accordingly
 			if(!isSelected){
 				if(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES.equals(restrictType)){
@@ -957,7 +957,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					throw new EpException(MessageConst.ERROR_770074);
 				}
 			}
-		}		
+//		}		
 	}
 
 	/**
