@@ -125,7 +125,7 @@
 				<p:column style=" align : center; width : 15%"
 					headerText="#{lbl['lbl.sc.difference.rm']}">
 					<h:outputText id="differenceVBI" style="float : right"
-						rendered="#{bidPriceItem.bumi and biddingBB.managedBean.nonBumiAvail}"
+						rendered="#{bidPriceItem.bumi and biddingBB.managedBean.nonBumiAvail and (biddingBB.managedBean.lowestNonBumiOfferedPrice lt bidPriceItem.bidPriceTotal)}"
 						value="#{biddingBB.managedBean.lowestNonBumiOfferedPrice - bidPriceItem.bidPriceTotal}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
