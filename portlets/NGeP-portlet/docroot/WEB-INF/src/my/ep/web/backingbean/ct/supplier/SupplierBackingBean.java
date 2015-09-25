@@ -30,10 +30,6 @@ import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import my.ep.biz.bean.search.ISearchBean;
-import my.ep.biz.bean.search.SearchBean;
-import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.bank.IChangeBankAccSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -70,9 +66,7 @@ import my.ep.jaxb.ct.bankaccount.CTBankAccountDataType;
 import my.ep.jaxb.ct.factoring.CTFactoringDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtContract;
-import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
-import my.ep.persistence.entity.ct.dtl.CtContractValue;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -81,7 +75,6 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
-import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -108,6 +101,8 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.UploadedFile;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.util.PortalUtil;
 
 /**
@@ -123,6 +118,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	private static Logger log = Logger.getLogger(SupplierBackingBean.class);
 	private ContractBackingBean ctBB = null;
 	private String editorValue;
+	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 	
 	/**
 	 * The constructor used for initializing the variable.
@@ -157,8 +153,22 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			 List<PmUser> target = new ArrayList<PmUser>();
 			 getManagedBean().setApproverModel(new DualListModel<PmUser>(source, target));
 		}
-	}
+	}	
 	
+	/**
+	 * @return the ctBB
+	 */
+	public ContractBackingBean getCtBB() {
+		return ctBB;
+	}
+
+	/**
+	 * @param ctBB the ctBB to set
+	 */
+	public void setCtBB(ContractBackingBean ctBB) {
+		this.ctBB = ctBB;
+	}
+
 	/**
 	 * @return the editorValue
 	 */
@@ -176,7 +186,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	/**
 	 * The method used to initialize factoring information.
 	 */
-	private void initializeFactoring() {
+	public void initializeFactoring() {
 		getManagedBean().setFactoring(new CtFactoring());
 		PmStatus pmStatus = new PmStatus();
 		pmStatus.setStatusId(ContractStatusConst.RF_PENDING_SUBMISSION);
@@ -504,7 +514,8 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		    reqDTO.setUserMap(getManagedBean().getUserMap());
 	        reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 		    reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
-			 
+		    reqDTO.setRemoveFactoring(getManagedBean().isRemoveFactoring());
+		    
 		    if (getManagedBean().getPmDigiSign() != null) {
 		    	reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
 		    }
@@ -774,92 +785,6 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		return orginalText;
 	}
 	
-	/**
-	 * The method used for searching the available contract
-	 * with contract no. or loa no. for factoring or change bank request.
-	 * 
-	 * @param  docType  the document type to determine it's factoring or change bank request
-	 */
-    public void searchContractLoa(String docType) {
-    	IContractSupplierSO contractSupplierSO = null;
-        ContractSupplierResDTO contractSupplierResDTO = null;
-        ContractSupplierReqDTO contractSupplierReqDTO = null;
-        ISupplierSearchSO supplierSearchSO = null;
-        SupplierSearchReqDTO supplierReqDTO = null;
-        SupplierSearchResDTO supplierResDTO = null;
-        
-        try {
-        	supplierReqDTO = new SupplierSearchReqDTO();
-	        supplierReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-	        supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,ISupplierSearchSO.class);
-	        supplierResDTO = supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
-	        
-	        if (supplierResDTO.getResultBean() != null && supplierResDTO.getResultBean().getResultList() != null 
-	        		&& !supplierResDTO.getResultBean().getResultList().isEmpty()) { 		
-	        	List<Long> supplierIdList = new ArrayList<Long>();
-  		        for (SmSupplier supplier : supplierResDTO.getResultBean().getResultList()) {
-  		        	supplierIdList.add(supplier.getSupplierId());
-  		        }
-  		        contractSupplierReqDTO = new ContractSupplierReqDTO();
-  		        contractSupplierReqDTO.setSupplierIds(supplierIdList);
-  		        
-  		        ISearchBean<CtContract> searchBean = new SearchBean<CtContract>();
-  		        if (getManagedBean().getContractLoa() != null && getManagedBean().getContractLoaSearchValues() != null) {    	        	
-  		        	if (getManagedBean().getContractLoa().equalsIgnoreCase(ContractConst.CONTRACT_TYPES)) {
-						SearchFilterBean filterBean = new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),
-								getManagedBean().getContractLoaSearchValues());
-						filterBean.setCaseInsensitive(true);
-					    searchBean.getDataFilterBeans().add(filterBean);					
-					} else if (getManagedBean().getContractLoa().equalsIgnoreCase(ContractConst.LOA_TYPES)) {
-						SearchFilterBean filterBean = new SearchFilterBean("loa.loaNo",SearchOperator.OPERATOR_LIKE.value(),
-								getManagedBean().getContractLoaSearchValues());
-						filterBean.setCaseInsensitive(true);
-					    searchBean.getDataFilterBeans().add(filterBean);
-					}
-				}  	        
-  		        contractSupplierReqDTO.setContractSearchBean(searchBean);  		        
-  		        contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(
-  		        		ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
-  		        contractSupplierResDTO = contractSupplierSO.retrieveContractBySupplierId(contractSupplierReqDTO);
-                
-  		        List<CtContract> list = contractSupplierResDTO.getContractList();
-  		        if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_REQUEST_FACTORING)) {
-  		        	List<CtContract> contractList = new ArrayList<CtContract>();
-	  		        for (CtContract contractLoa : list) {
-	  		        	ContractSupplierResDTO ctSupplierResDTO = contractSupplierSO.retrieveFactoringByLoaId(contractLoa.getLoa().getLoaId());
-	  		        	if (ctSupplierResDTO.getFactoring() != null && ctSupplierResDTO.getFactoring().getStatus() != null
-	  		        			&& (ctSupplierResDTO.getFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_PENDING_SUBMISSION.longValue()
-	  		        			|| ctSupplierResDTO.getFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_PENDING_ACKNOWLEDGEMENT.longValue()
-	  		        			|| ctSupplierResDTO.getFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_PENDING_ENDORSEMENT.longValue())) {
-	  		        		continue;
-	                	} 
-	  		        	contractList.add(contractLoa);
-	  		        }
-	  		        getManagedBean().setContractList(contractList); 
-  		        }
-  		        else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT)) {
-  		        	getManagedBean().setContractList(list); 
-  		        }
-	        }
-        } finally {
-        	contractSupplierResDTO = null;
-        	contractSupplierSO = null;
-        	contractSupplierReqDTO = null;
-        	supplierSearchSO = null;
-        	supplierReqDTO = null;
-        	supplierResDTO = null;
-        }
-	}
-    
-    /**
-	 * The method used to reset the search criteria.
-	 */
-    public void resetContractLoa() {
-		getManagedBean().setContractLoa(ContractConst.CONTRACT_TYPES);	
-		getManagedBean().setContractLoaSearchValues(null);
-		getManagedBean().setContractList(null);	
-		getManagedBean().setSelectedContract(null);	
-	}
 	
 	/**
 	 * The method used for generating a list of available bank and account no
@@ -961,64 +886,6 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	}
 	
 	/**
-	 * The method used to retrieve and display the contract information
-	 * with the selected contract for change bank request.
-	 */
-	public void changeContractActionListener() {
-		long starttime = Calendar.getInstance().getTimeInMillis();
-	 
-		log.info(" Start time>>>>>" +starttime);
-		IChangeBankAccSO changeBankAccSO = null;
-		ContractReqDTO reqDTO = null;
-		ContractResDTO resDTO = null;
-		
-		try {
-			if (getManagedBean().getSelectedContract() != null) {
-				changeBankAccSO = (IChangeBankAccSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IChangeBankAccSO.class);	
-			   reqDTO = new ContractReqDTO();
-	            reqDTO.setContractVerId(getManagedBean().getSelectedContract().getCurrentContractVer().getContractVerId());
- 	            reqDTO.setDocType(ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT);
-	            reqDTO.setUpdateAction(true);
-				
-				resDTO = changeBankAccSO.retrieveContractVerForChangeAcc(reqDTO);
-	          	if (resDTO.isSuccessful()) {
-					getManagedBean().setContractVer(resDTO.getCtContractVer());
-					getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
-					
-					getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
-			    			ModuleCodeConst.CONTRACT_MANAGEMENT, ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT, getManagedBean().getCtContract().getContractNo()));
-			    	ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
-			    	
-					getManagedBean().setCurentAccNoBankName(null);
-					if(getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankAccountNo() != null && getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankName() != null )
-					    getManagedBean().setCurentAccNoBankName(getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankAccountNo() +" / " + getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankName() );
-					
-					if (getManagedBean().getContractVer().getCtContractValue().getBankAccountNo() != null) {
-						getManagedBean().setOriginalAccountNo(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo());
-						getPopulateBankAccountList();
-					}
-	           }
-			} else {
-				CtContractVer ctContractVer = new CtContractVer();
-				CtContractValue ctContractValue = new CtContractValue();
-				ctContractVer.setCtContractValue(ctContractValue);
-
-				getManagedBean().setContractVer(ctContractVer);
-				getManagedBean().setCtContract(null);
-				getManagedBean().setOriginalAccountNo(null);
-			}
-			long endttime = Calendar.getInstance().getTimeInMillis();
-			 
-			 log.info(" End time>>>>>" +endttime);
-			 log.info(" Diff time>>>>>" +(starttime - endttime));
-				
-		} finally {
-			reqDTO  = null;
-			resDTO   = null;
-		}
-	}
-	
-	/**
 	 * The method used to retrieve and display the bank and account information
 	 * with the selected bank for change bank request.
 	 */
@@ -1032,53 +899,6 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			getManagedBean().getContractVer().getCtContractValue().setBankName(supplierBank.getPmFinancialOrg().getFinOrgName());
 			getManagedBean().getContractVer().getCtContractValue().setBankBranch(supplierBank.getBankBranch());
 			getManagedBean().getContractVer().getCtContractValue().setBankAddress(supplierBank.getSmAddress());
-		}
-	}	
-	
-	/**
-	 * The method used to retrieve and display the contract and loa information
-	 * with the selected contract for factoring request.
-	 */
-	public void changeLoaActionListener() {
-		IContractSO contractSO = null;
-		ContractReqDTO reqDTO = null;
-		ContractResDTO resDTO = null;
-
-		try {
-			if (getManagedBean().getSelectedContract() != null) {
-				reqDTO = new ContractReqDTO();
-				contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-				reqDTO.setLoaId(getManagedBean().getSelectedContract().getLoa().getLoaId());
-				
-				resDTO = contractSO.retrieveFactoringDetailsByLoaId(reqDTO);
-				if (resDTO.isSuccessful()) {
-					getManagedBean().setCtContract(resDTO.getContract());
-					getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
-			        		ModuleCodeConst.CONTRACT_MANAGEMENT, ParameterConst.DOCTYPE_REQUEST_FACTORING, getManagedBean().getCtContract().getContractNo()));
-					 ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
-					
-					if (getManagedBean().getCtContract().getCtFactoring() != null &&  getManagedBean().getCtContract().isFactored()
-							&& (getManagedBean().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_COMPLETE.longValue()
-							|| getManagedBean().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_ACKNOWLEDGEMENT_REJECTED.longValue()
-							|| getManagedBean().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_REJECTED.longValue())) {
-						getManagedBean().setFactoring(resDTO.getContract().getCtFactoring());
-						getManagedBean().getFactoring().setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
-						getManagedBean().setRemoveFactoring(true);
-						PmStatus pmStatus = new PmStatus();
-						pmStatus.setStatusId(ContractStatusConst.RF_PENDING_SUBMISSION);
-						getManagedBean().getFactoring().setStatus(pmStatus);
-						resetFactoringCompany();
-					} else {
-						getManagedBean().setRemoveFactoring(false);
-						initializeFactoring();
-					}
-				}
-			}
-		} catch(Exception ex) {
-			ex.printStackTrace();
-		} finally {
-			contractSO = null;
 		}
 	}	
 	
@@ -1121,6 +941,24 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
  			financialOrgSO = null;
  		}
 	}
+    
+    /**
+	 * This  method used for back button
+	 * @return the string
+	 * @throws PortalException the portal exception
+	 * @throws SystemException the system exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	 public String backAction() throws PortalException, SystemException, IOException {
+		 if (!getManagedBean().isViewOnly()) {
+			return CONTRACT_MAINT_PAGE;
+		 } else { // view suspension from notification
+			String commonUrl = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL);
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+			externalContext.redirect(commonUrl + "notifications");
+			return null;
+		 }
+	 }
     
     /**
 	 * The method used to set the upload index for
@@ -1362,7 +1200,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	}
     
 	/**
-	 * The method used to retrieve proper portal name from property file.
+	 * The method used to retrieve proper portal name for factoring from property file.
 	 * 
 	 * @return portletTitle  the name of the portal
      */
@@ -1371,6 +1209,18 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		if (getManagedBean().isRemoveFactoring()) {
 			portletTitle = ResourceBundleUtils.getMessage("lbl.ct.remove.factoring", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		}
+		return portletTitle;
+	}
+    
+    /**
+	 * The method used to retrieve proper portal name for change bank request from property file.
+	 * 
+	 * @return portletTitle  the name of the portal
+     */
+    public String getChangeBankPortletTitle() {
+		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.request.change.bank.acc", 
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		
 		return portletTitle;
 	}
     
