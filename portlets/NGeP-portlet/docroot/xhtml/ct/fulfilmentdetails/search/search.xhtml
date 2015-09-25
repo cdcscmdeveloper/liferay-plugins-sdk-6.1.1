@@ -51,10 +51,6 @@
            <p:inputText value="#{contractDetailsBackingBean.managedBean.ctCircularNo}" maxlength="50" style="width:170px;" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
            <p:outputLabel value="#{lbl['lbl.ct.circular.name']}" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
            <p:inputText value="#{contractDetailsBackingBean.managedBean.ctCircularName}" maxlength="500" style="width:170px;" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
-           <p:outputLabel value="#{lbl['lbl.ct.supplier.id']}" rendered="#{!contractDetailsBackingBean.isSupplierRole()}"/>
-           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctSupplierId}" maxlength="20" style="width:170px;" rendered="#{!contractDetailsBackingBean.isSupplierRole()}"/>
-           <p:outputLabel value="#{lbl['lbl.ct.supplier.name']}" rendered="#{!contractDetailsBackingBean.isSupplierRole()}"/>
-           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctSupplierName}" maxlength="100" style="width:170px;" rendered="#{!contractDetailsBackingBean.isSupplierRole()}"/> 
            <p:outputLabel value="#{lbl['lbl.ct.contract.start']}"/>
            <p:calendar id="popupButtonCal"   showOn="button" readonlyInput="true"  navigator="true"
                style="width:130px;" value="#{contractDetailsBackingBean.managedBean.ctDateStart}" 
@@ -63,10 +59,14 @@
            <p:calendar id="popupButtonCal1"  style="width:130px;"  readonlyInput="true" 
              value="#{contractDetailsBackingBean.managedBean.ctDateEnd}"  navigator="true"  showOn="button"
              pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
+           <p:outputLabel value="#{lbl['lbl.ct.loa.no']}"/>
+           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctLoaNo}" maxlength="17" style="width:170px;"/>
+           <p:outputLabel value="#{lbl['lbl.ct.supplier.name']}" rendered="#{!contractDetailsBackingBean.isSupplierRole()}"/>
+           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctSupplierName}" maxlength="100" style="width:170px;" rendered="#{!contractDetailsBackingBean.isSupplierRole()}"/> 
            <p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" />
-           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctLOANo}" maxlength="100" style="width:170px;margin-top:3px;"/>                     
+           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctPhysicalLoaNo}" maxlength="100" style="width:170px;margin-top:3px;"/>                     
            <p:outputLabel value="#{lbl['lbl.ct.physical.no']}" />
-           <p:inputText id="productCode" value="#{contractDetailsBackingBean.managedBean.ctPhysicalNo}" maxlength="30" style="width:170px;margin-top:3px;" />
+           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctPhysicalNo}" maxlength="30" style="width:170px;margin-top:3px;" />
 		   <p:outputLabel for="status" value="#{lbl['lbl.ct.status']}" />
 		   <p:selectOneMenu id="status" value="#{contractDetailsBackingBean.managedBean.ctStatus}"	style="width:200px; margin-bottom:5px">
 				<f:selectItems value="#{contractDetailsBackingBean.getSearchStatusDropdown()}" />
