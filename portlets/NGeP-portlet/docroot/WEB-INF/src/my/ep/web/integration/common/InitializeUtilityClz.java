@@ -2,6 +2,10 @@ package my.ep.web.integration.common;
 
 import java.util.Date;
 
+/*
+ * @author P Ganga prasad
+ */
+
 public abstract class InitializeUtilityClz extends BatchTemplate {
 
 	protected FileUtility fileUtility = new FileUtility();

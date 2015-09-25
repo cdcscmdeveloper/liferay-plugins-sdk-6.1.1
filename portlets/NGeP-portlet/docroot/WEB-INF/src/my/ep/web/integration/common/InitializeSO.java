@@ -101,7 +101,7 @@ public class InitializeSO {
 	protected IVendorCodeSO iVendorCodeSO = BusinessDelegate.getInstance()
 			.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 					IVendorCodeSO.class);
-	IRegistrationSO registrationSO = BusinessDelegate.getInstance()
+	protected IRegistrationSO registrationSO = BusinessDelegate.getInstance()
 			.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 					IRegistrationSO.class);
 
