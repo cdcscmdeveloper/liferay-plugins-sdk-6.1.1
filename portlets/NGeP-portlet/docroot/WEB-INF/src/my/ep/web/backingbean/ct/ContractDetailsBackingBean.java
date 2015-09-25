@@ -464,12 +464,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					&& (getManagedBean().getCtName() == null || getManagedBean().getCtName().trim().length() == 0) 
 					&& (getManagedBean().getCtCircularNo() == null || getManagedBean().getCtCircularNo().trim().length() == 0) 
 					&& (getManagedBean().getCtCircularName() == null || getManagedBean().getCtCircularName().trim().length() == 0) 
-					&& (getManagedBean().getCtSupplierId() == null || getManagedBean().getCtSupplierId().trim().length() == 0) 
+					&& (getManagedBean().getCtLoaNo() == null || getManagedBean().getCtLoaNo().trim().length() == 0) 
 					&& (getManagedBean().getCtSupplierName() == null || getManagedBean().getCtSupplierName().trim().length() == 0) 
 					&& getManagedBean().getCtDateStart() == null
 					&& getManagedBean().getCtDateEnd() == null 
 					&& (getManagedBean().getCtPhysicalNo() == null || getManagedBean().getCtPhysicalNo().trim().length() == 0) 
-					&& (getManagedBean().getCtLOANo() == null || getManagedBean().getCtLOANo().trim().length() == 0) 
+					&& (getManagedBean().getCtPhysicalLoaNo() == null || getManagedBean().getCtPhysicalLoaNo().trim().length() == 0) 
 					&& getManagedBean().getCtStatus() == 0 
 					&& getManagedBean().getTerminationTypeId() == null 
 					&& getManagedBean().getCtContractStatus() == null
@@ -496,12 +496,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		this.getManagedBean().setCtName(null);	
 		this.getManagedBean().setCtCircularNo(null);	
 		this.getManagedBean().setCtCircularName(null);	
-		this.getManagedBean().setCtSupplierId(null);	
+		this.getManagedBean().setCtLoaNo(null);	
 		this.getManagedBean().setCtSupplierName(null);	
 		this.getManagedBean().setCtDateStart(null);	
 		this.getManagedBean().setCtDateEnd(null);	
 		this.getManagedBean().setCtPhysicalNo(null);	
-		this.getManagedBean().setCtLOANo(null);
+		this.getManagedBean().setCtPhysicalLoaNo(null);
 		this.getManagedBean().setCtStatus(0);
 		this.getManagedBean().setTerminationTypeId(null);
 		this.getManagedBean().setCtContractStatus(null);

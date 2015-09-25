@@ -83,10 +83,10 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private String showItem;
 	private String popupForImportedItems = "L";
 	private String ctName;
-	private String ctLOANo;
+	private String ctPhysicalLoaNo;
 	private String ctNumber;
 	private String ctCircularNo;
-	private String ctSupplierId;
+	private String ctLoaNo;
 	private String ctPhysicalNo;
 	private String ctCircularName;
 	private String ctSupplierName;
@@ -262,17 +262,17 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the ctLOANo
+	 * @return the ctPhysicalLoaNo
 	 */
-	public String getCtLOANo() {
-		return ctLOANo;
+	public String getCtPhysicalLoaNo() {
+		return ctPhysicalLoaNo;
 	}
 	
 	/**
-	 * @param ctLOANo the ctLOANo to set
+	 * @param ctPhysicalLoaNo the ctPhysicalLoaNo to set
 	 */
-	public void setCtLOANo(String ctLOANo) {
-		this.ctLOANo = ctLOANo;
+	public void setCtPhysicalLoaNo(String ctPhysicalLoaNo) {
+		this.ctPhysicalLoaNo = ctPhysicalLoaNo;
 	}
 
 	/**
@@ -304,17 +304,17 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the ctSupplierId
+	 * @return the ctLoaNo
 	 */
-	public String getCtSupplierId() {
-		return ctSupplierId;
+	public String getCtLoaNo() {
+		return ctLoaNo;
 	}
 
 	/**
-	 * @param ctSupplierId the ctSupplierId to set
+	 * @param ctLoaNo the ctLoaNo to set
 	 */
-	public void setCtSupplierId(String ctSupplierId) {
-		this.ctSupplierId = ctSupplierId;
+	public void setCtLoaNo(String ctLoaNo) {
+		this.ctLoaNo = ctLoaNo;
 	}
 
 	/**
@@ -1625,9 +1625,11 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);				
 				}
-				if (getCtSupplierId() != null && getCtSupplierId().length() > 0) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("smSupplier.supplierId",SearchOperator.OPERATOR_EQUALS.value(),
-							getCtSupplierId()));
+				if (getCtLoaNo() != null && getCtLoaNo().length() > 0) {
+					SearchFilterBean filterBean = new SearchFilterBean("ctContract.loa.loaNo",SearchOperator.OPERATOR_LIKE.value(),
+							getCtLoaNo());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);
 				}
 				if (getCtSupplierName() != null && getCtSupplierName().length() > 0) {
 					SearchFilterBean filterBean = new SearchFilterBean("companyName",SearchOperator.OPERATOR_LIKE.value(),
@@ -1652,9 +1654,9 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);					
 				}
-				if (getCtLOANo() != null && getCtLOANo().length() > 0) {
+				if (getCtPhysicalLoaNo() != null && getCtPhysicalLoaNo().length() > 0) {
 					SearchFilterBean filterBean = new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),
-													getCtLOANo());
+													getCtPhysicalLoaNo());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);					
 				}
