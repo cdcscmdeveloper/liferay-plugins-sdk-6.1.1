@@ -23,14 +23,14 @@
 					</ui:remove> <p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"
 						update=":form" process="@this"
 						action="#{categoryBackingBean.backToSearch}" style="float:left;" />
-				</td>
-				<br />
-		        <br />
+				</td>				
 				<td><p:commandButton
 						value="#{categoryBackingBean.managedBean.newCategory? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}"
 						action="#{categoryBackingBean.saveSubDivision}" update=":form"
 						style="float:right;" /></td>				
 			</tr>
+			<br />
+			<br />
 		</table>
 		<ui:remove>
 			<p:panel header="#{lbl['lbl.pm.category.level']}" toggleable="true"
@@ -182,7 +182,7 @@
 						</h:panelGroup>
 						<p:selectBooleanCheckbox
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.byCompType}">
-							<p:ajax event="change" update="outpnlCatRes" />
+							<p:ajax event="change" update="outpnlCatRes" listener="#{categoryBackingBean.getcategoryRestrList}" />
 						</p:selectBooleanCheckbox>
 					</h:panelGrid>
 

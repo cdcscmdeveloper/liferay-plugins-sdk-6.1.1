@@ -22,8 +22,7 @@
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}"
 						immediate="true" update=":form" process="@this"
 						action="#{categoryBackingBean.backToSearch}" style="float:left;" /></td>
-				<br />
-		        <br />
+				
 				<td><p:commandButton value="#{lbl['lbl.btn.update']}"
 						action="#{categoryBackingBean.saveCategory}"
 						rendered="#{!categoryBackingBean.managedBean.newCategory}"
@@ -33,10 +32,9 @@
 						rendered="#{categoryBackingBean.managedBean.newCategory}"
 						update="@([id$=Msg])" style="float:right;width: auto;" /></td>				
 			</tr>
-
-
+            <br />
+		    <br />
 		</table>
-
 		<p:panel header="#{lbl['lbl.pm.category.level']}" toggleable="true"
 			id="catLevel">
 			<h:panelGrid columns="2" columnClasses="cmWidth1,cmPadding5">
