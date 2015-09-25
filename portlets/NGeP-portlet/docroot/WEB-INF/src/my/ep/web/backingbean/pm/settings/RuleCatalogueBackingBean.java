@@ -1053,14 +1053,14 @@ public class RuleCatalogueBackingBean extends
 
 				PmConfigRuleValue baseValueToCompare = ruleType
 						.getConfigRuleValues().get(i);
-				log.info(".............ruleType.getRuleType() == "
-						+ ruleType.getRuleType());
-				log.info(".............ruleType.getRuleTypeDesc() == "
-						+ ruleType.getRuleTypeDesc());
-				log.info(".............ruleType.getIsRangeValue() == "
-						+ ruleType.getIsRangeValue());
-				log.info(".............baseValueToCompare.isShowFlag()="
-						+ baseValueToCompare.isShowFlag());
+//				log.info(".............ruleType.getRuleType() == "
+//						+ ruleType.getRuleType());
+//				log.info(".............ruleType.getRuleTypeDesc() == "
+//						+ ruleType.getRuleTypeDesc());
+//				log.info(".............ruleType.getIsRangeValue() == "
+//						+ ruleType.getIsRangeValue());
+//				log.info(".............baseValueToCompare.isShowFlag()="
+//						+ baseValueToCompare.isShowFlag());
 				if (baseValueToCompare.getRecordStatusFlg() == 0
 						|| (ruleType.getIsRangeValue() == 1 && !baseValueToCompare
 								.isShowFlag())) {// if is
@@ -1076,10 +1076,10 @@ public class RuleCatalogueBackingBean extends
 				for (int j = i + 1; j <= (ruleType.getConfigRuleValues().size() - 1); j++) {
 					PmConfigRuleValue value = ruleType.getConfigRuleValues()
 							.get(j);
-					log.info(".............ruleType.getIsRangeValue() == "
-							+ ruleType.getIsRangeValue());
-					log.info(".............value.isShowFlag()="
-							+ value.isShowFlag());
+//					log.info(".............ruleType.getIsRangeValue() == "
+//							+ ruleType.getIsRangeValue());
+//					log.info(".............value.isShowFlag()="
+//							+ value.isShowFlag());
 					if (value.getRecordStatusFlg() == 0
 							|| (ruleType.getIsRangeValue() == 1 && !value
 									.isShowFlag())) {// if is inActive one
@@ -1095,16 +1095,21 @@ public class RuleCatalogueBackingBean extends
 					if (!ruleValueValidation(baseValueToCompare, value,
 							ruleType.getRuleDataTypeId(),
 							ruleType.getValidationType())) {
-						log.info("...............ruleType.getValidationType()="+ruleType.getValidationType());
+//						log.info("...............ruleType.getValidationType()="+ruleType.getValidationType());
 						log.info("................befor throw exeption...................");
 						// hit error and return
 						switch (ruleType.getValidationType()) {
 						case '1':
 							throw new EpException(MessageConst.ERROR_770109,
 									new String[] { ruleType.getRuleTypeDesc() });
-						case '2':
-							throw new EpException(MessageConst.ERROR_770110,
-									new String[] { ruleType.getRuleTypeDesc() });
+						case '2': if(ruleType.getRuleDataTypeId().getParameterCode().equalsIgnoreCase("c")){
+							      throw new EpException(MessageConst.ERROR_770199,
+									      new String[] { ruleType.getRuleTypeDesc(), value.getCategoryDisplayValue() });
+					        	}else{
+					        		throw new EpException(MessageConst.ERROR_770110,
+											new String[] { ruleType.getRuleTypeDesc() });
+					        	}
+							
 						case '3':
 							throw new EpException(MessageConst.ERROR_770154,
 									new String[] { ruleType.getRuleTypeDesc() });
@@ -1228,7 +1233,7 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	private boolean ruleValueValidation(PmConfigRuleValue firstRuleValue,
-			PmConfigRuleValue secondRuleValue, PmParameter RuleDataTypeId,
+			PmConfigRuleValue secondRuleValue, PmParameter ruleDataTypeId,
 			char validationType) {
 		log.info("........ruleValueValidation........");
 		log.info("........validationType="+validationType);
@@ -1242,7 +1247,7 @@ public class RuleCatalogueBackingBean extends
 																	// +value
 																	// validation
 
-			if (RuleDataTypeId.getParameterCode().equalsIgnoreCase("c")) {
+			if (ruleDataTypeId.getParameterCode().equalsIgnoreCase("c")) {
 				if (firstRuleValue.getCategoryDisplayValue().equals(
 						secondRuleValue.getCategoryDisplayValue()))
 					isValuesEqual = true;
