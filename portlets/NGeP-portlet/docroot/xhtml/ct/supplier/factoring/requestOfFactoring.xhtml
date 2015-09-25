@@ -10,7 +10,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:define name="contentSection">
 		<script>
-			$('#portlet_ctRequestFactoring_WAR_NGePportlet').find(
+			$('#portlet_ctContractMaintenance_WAR_NGePportlet').find(
 					'.portlet-title-text').html(
 					'#{supplierBackingBean.getPortletTitle()}');
 		</script>
@@ -48,10 +48,14 @@
 			closable="true" severity="error, info" />
 		<table style="width: 100%;">
 			<tr>
-				<td><p:commandButton value="#{lbl['lbl.btn.back']}"
+				<td>
+					<p:commandButton value="#{lbl['lbl.btn.back']}" 
 						immediate="true" 
-						oncomplete="window.history.back();blockWidget.hide();"
-						rendered="#{supplierBackingBean.managedBean.viewOnly}" /></td>
+						rendered="#{supplierBackingBean.managedBean.taskId==null}" 
+						action="#{supplierBackingBean.backAction}"
+						onstart="blockWidget.show();" 
+						oncomplete="blockWidget.hide();"/>
+				</td>
 				<td class="ppRightBtn"><ui:repeat var="outcome"
 						value="#{supplierBackingBean.managedBean.action}">
 						<ui:param name="buttonLabel"
@@ -103,21 +107,13 @@
 			<br />
 			<br />
 			<h:panelGrid columns="4" style="width:100%;"
-				columnClasses="columnWidth200,columnWidth400,columnWidth200,columnWidth300">
-
-					<p:outputLabel value="#{lbl['lbl.ct.loa.no']}"  styleClass="required" />
-				<h:panelGrid id="menuLoaId" columns="5">
-					<p:inputText id="loaNo"
+				columnClasses="columnWidth200,columnWidth400,columnWidth200,columnWidth300">					
+				
+				<p:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
+				<p:inputText id="loaNo"
 					value="#{supplierBackingBean.managedBean.ctContract.loa.loaNo}"
-					style="width:200px;" disabled="true" />					
-					<p:spacer width="1" />
-					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.no']}" />	
-					<p:spacer width="3" />
-					<p:commandLink action="#{supplierBackingBean.resetContractLoa()}" 
-						process="@this"	update=":form:contractLoa" oncomplete="contractLoaDlg.show();" 
-						rendered="#{supplierBackingBean.managedBean.taskId==null and !supplierBackingBean.managedBean.viewOnly}">
-					<p:graphicImage value="/css/images/design/ico-search.png" /></p:commandLink>			
-				</h:panelGrid>
+					style="width:200px;" disabled="true" />
+				
 				<p:outputLabel value="#{lbl['lbl.ct.loa.date']}" />
 				<p:inputText style="width:200px;" disabled="true"
 					value="#{supplierBackingBean.managedBean.ctContract.loa.ackDate}">
@@ -364,59 +360,6 @@
 					value="#{supplierBackingBean.editorValue}" width="800" height="430" />
 			</p:dialog>
 		</p:panel>
-		<p:dialog id="contractLoaDlg"  header="#{lbl['lbl.lov.listing']} - #{lbl['lbl.ct.contract.no']}" widgetVar="contractLoaDlg" 
-			styleClass="pop_up_top" modal="true" width="700" height="500">
-			<h:panelGroup  id="contractLoa">
-			<p:panel header="#{lbl['lbl.btn.search']}" toggleable="true">
-	 			<h:panelGrid columns="3">
-	         		<p:selectOneMenu id="contractLoaSelectMenu"
-	          			value="#{supplierBackingBean.managedBean.contractLoa}"  style="width:150px;">
-	          			<p:ajax event="change" update="contractLoaSelectMenu" />
-	        			<f:selectItem itemLabel="#{lbl['lbl.ct.contract.no']}" itemValue="#{CtConst.contractTypes}"/>
-	     				<f:selectItem itemLabel="#{lbl['lbl.ct.loa.no']}" itemValue="#{CtConst.loaTypes}"/>
-	          		</p:selectOneMenu>
-					<p:spacer height="1"/>
-	             	<p:inputText id="contractLoaValue"  style="width:300px;" 
-	    				value="#{supplierBackingBean.managedBean.contractLoaSearchValues}">
-	    				<p:ajax event="change" update="contractLoaValue" />
-	    			</p:inputText>
-				</h:panelGrid>
-				<div class="ppRightBtn">
-       				<p:commandButton id="contractLoaSearchId" value="#{lbl['lbl.btn.search']}" update=":form:tableContractLoa"  
-       		   			action="#{supplierBackingBean.searchContractLoa(ParameterConst.doctypeRequestFactoring)}" process="@this" /> 
-					<p:commandButton id="resetBtn" value="#{lbl['lbl.ct.reset']}" process="@this"
-						action="#{supplierBackingBean.resetContractLoa}" update=":form:contractLoa"   />
-		  		</div>
-				<p:spacer height="2"/>
-			</p:panel>
-			<p:panel header="#{lbl['lbl.ct.search.result']}" toggleable="true">
-				<p:dataTable id="tableContractLoa" var="contractVar"					
-					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					value="#{supplierBackingBean.managedBean.contractList}"
-					rowKey="#{contractVar}" rows="10"
-					selection="#{supplierBackingBean.managedBean.selectedContract}"
-					rowIndexVar="rowIndex" style="width:100%"
-					selectionMode="single">
-					<p:ajax event="rowSelect" update="@([id$=selectBtn])" />           			
-           			<ac:paginator for="tableContractLoa"/>      
-           			<p:column headerText="#{lbl['lbl.ct.contract.no']}">
-                        #{contractVar.contractNo}
-					</p:column>
-                    <p:column headerText="#{lbl['lbl.ct.loa.no']}" >
-                      	#{contractVar.loa.loaNo}
-					</p:column>
-			 	</p:dataTable>
-			 </p:panel>
-			  	<h:panelGrid columns="1"  style="float:right;height:100px;vertical-align: middle;">
-					<p:commandButton id="selectBtn" value="#{lbl['lbl.btn.select']}" 
-						disabled="#{supplierBackingBean.managedBean.selectedContract == null}"
-						process="@this" update="@form" action="#{supplierBackingBean.changeLoaActionListener()}" 
-						onstart="blockWidget.show();"		
-						oncomplete="blockWidget.hide();" 
-						onclick="contractLoaDlg.hide();"/>
-			  	</h:panelGrid>
-       		</h:panelGroup>
-		</p:dialog>
 		<ui:include src="approverSetting.xhtml" />
 		<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
 	</ui:define>

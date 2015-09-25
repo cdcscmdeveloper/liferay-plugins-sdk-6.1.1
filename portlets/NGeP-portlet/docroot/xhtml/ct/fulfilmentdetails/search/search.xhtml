@@ -163,7 +163,7 @@
 								  onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
 					        </p:menuitem>
 							
-							 <p:menuitem id="menuItemId4" value="#{lbl['lbl.ct.view']}"  icon="ui-icon-supplier-view"
+							 <p:menuitem id="menuItemId4" value="#{lbl['lbl.ct.view']}"  icon="ui-icon-view"
 						        action="#{contractDetailsBackingBean.gotoViewPage(data.ctContract.contractId, data.ctContractVer.contractVerId)}"
 					   	    	onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
 					   	   </p:menuitem>
@@ -180,13 +180,25 @@
 					<!-- Supplier's action -->
 					<p:column headerText="#{lbl['lbl.ct.action']}"  style="width:8%;" rendered="#{contractDetailsBackingBean.isSupplierRole()}">
 					    <p:menuButton id="menuButtonId11" value="#{lbl['lbl.btn.option']}" >
-					     <p:menuitem id="menuItemId11" value="#{lbl['lbl.ct.view']}"  
-					   	     icon="ui-icon-supplier-view" 
-                            action="#{contractDetailsBackingBean.gotoCommonViewPage(data.ctContract.contractId)}"
-					   		onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
-					     </p:menuitem>
-					</p:menuButton>
-						</p:column>
+					     	<p:menuitem id="menuItemId11" value="#{lbl['lbl.ct.view']}"  
+					   	     	icon="ui-icon-view" 
+                            	action="#{contractDetailsBackingBean.gotoCommonViewPage(data.ctContract.contractId)}"
+					   			onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+					     	</p:menuitem>
+					     	<p:menuitem id="menuItemId12" value="#{lbl['lbl.ct.request.change.bank.acc']}"
+					     		icon="ui-icon-change-bank" 
+                            	rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1}"
+					   	     	action="#{contractDetailsBackingBean.gotoChangeBankPage(data.ctContract.contractId)}"
+					   			onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+					     	</p:menuitem>
+					     	<p:menuitem id="menuItemId13" value="#{(data.ctContract.factored) ? lbl['lbl.ct.remove.factoring'] : lbl['lbl.ct.request.factoring']}"
+					   	     	icon="ui-icon-factoring" 
+					   	     	rendered="#{data.isAllowFactoring() and data.ctContract.recordStatusFlg==1}"
+                            	action="#{contractDetailsBackingBean.gotoFactoringPage(data.ctContract.contractId)}"
+					   			onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+					     	</p:menuitem>
+						</p:menuButton>
+					</p:column>
 				</p:dataTable>			
 				 	
 			</div>

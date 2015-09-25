@@ -1566,6 +1566,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 		@Override
 		public ISearchResultBean<VCtContract> pageChangeListener(ISearchBean<VCtContract> searchBean) {
 			IContractSO contractSO = null;
+			boolean isSupplierUser = false;
 			try {
 				FacesScopes fc = new FacesScopes();
 				if (fc.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
@@ -1573,6 +1574,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 						|| fc.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
 						|| fc.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
 					// supplier
+					isSupplierUser = true;
 					SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
 					supplierSearchReqDTO.setUserId(fc.getUserSessionBean().getUserId());
 					ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
@@ -1587,8 +1589,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 		  		        }
 						searchBean.getDataFilterBeans().add(new SearchFilterBean("smSupplier.supplierId",SearchOperator.OPERATOR_IN.value(), 
 								supplierIdList));
-					}					
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("agStatus",SearchOperator.OPERATOR_NOT_EQUALS.value(), 2));		
+					}	
 				}
 				
 				if (getCtNumber() != null && getCtNumber().length() > 0) {
@@ -1700,6 +1701,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 				if (getCtContractStatus() != null) {
 					reqDTO.setStatusId(getCtContractStatus());
 				}
+				reqDTO.setFromSupplier(isSupplierUser);
 				reqDTO.setvCtContractSearchBean(searchBean);
 				ContractResDTO resDTO = contractSO.searchContractDocument(reqDTO);
 				setSelectedTabIndex(0);
