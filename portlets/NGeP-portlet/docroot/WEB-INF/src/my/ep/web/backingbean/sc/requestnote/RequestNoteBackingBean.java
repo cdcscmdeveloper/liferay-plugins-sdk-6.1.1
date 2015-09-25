@@ -323,6 +323,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param requestNote the request note
 	 */
 	private void reloadRequestNote(ScRequestNote requestNote){
+		getManagedBean().setRequestNote(requestNote);
 		boolean itemSearchBackBtn = Boolean.TRUE;	
 		getManagedBean().setAutoUpdate(true);
 		getCurrentStatus(requestNote.getCurrentStatus().getPmStatus());
@@ -366,14 +367,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					itemSearchBackBtn = Boolean.FALSE;
 				}
 			}
-			supplierListener(scRequestNoteDtl.getScRequestSupplierItem().getSupplierId(), scRequestNoteDtl.getPriceType().getParameterId() ,
-					scRequestNoteDtl,scRequestNoteDtl.getAssignedUser().getUserId(), scRequestNoteDtl.getProcurementTypeCategory().getParameterId());
+			if(scRequestNoteDtl.getScRequestSupplierItem() != null && scRequestNoteDtl.getPriceType() != null){
+				supplierListener(scRequestNoteDtl.getScRequestSupplierItem().getSupplierId(), scRequestNoteDtl.getPriceType().getParameterId() ,
+						scRequestNoteDtl,scRequestNoteDtl.getAssignedUser().getUserId(), scRequestNoteDtl.getProcurementTypeCategory().getParameterId());
+			}
+			
 			requestNoteDtls.add(scRequestNoteDtl);
 		}
-		
+
 		// item search back button 
 		getManagedBean().setItemSearchBackBtn(itemSearchBackBtn);
-		
 		getManagedBean().setRequestNoteDtls(requestNoteDtls);
 		getManagedBean().setRequestNoteDtl(requestNoteDtls.get(0));
 
@@ -383,10 +386,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				requestNote.getCurrentStatus(),
 				requestNote.getRemarks(),
 				ScRequestNoteRemark.class));
-
-		getManagedBean().setRequestNote(requestNote);
+		
 		initialInformation(requestNote);
-		getManagedBean().setRequestNote(requestNote);
 	}
 	
 	/**
@@ -545,7 +546,18 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					
 					// validate price type
 					if(null == requestNoteDtl.getPriceType() || null == requestNoteDtl.getPriceType().getParameterId()){
-						throw new EpException(MessageConst.ERROR_760343, new String[]{requestNoteDtl.getRequestItem().getCmItem().getItemName()});
+						throw new EpException(MessageConst.ERROR_760343, new String[]{requestNoteDtl.getRequestItem().getItemName()});
+					}
+					
+					// validate recommended supplier
+					if(null == requestNoteDtl.getScRequestSupplierItem() || null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier() 
+							|| null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId() ){
+						throw new EpException(MessageConst.ERROR_760356, new String[]{requestNoteDtl.getRequestItem().getItemName()});
+					}
+					
+					// validate price type
+					if(null == requestNoteDtl.getPriceType() || null == requestNoteDtl.getPriceType().getParameterId()){
+						throw new EpException(MessageConst.ERROR_760343, new String[]{requestNoteDtl.getRequestItem().getItemName()});
 					}
 				}
 			}	
@@ -733,8 +745,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		// page nav. to common request note
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
 	}
-	
-	
 
 	/**
 	 * Retrieve request note details.
@@ -1237,7 +1247,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		CharSequence charSeq = ItemCode.subSequence(0, 2);
 		Integer itemCode = Integer.valueOf(charSeq.toString());
 		
-		// TODO checking first two digits in itemCode  whether service or product
+		//  checking first two digits in itemCode  whether service or product
 		if (itemCode >= 70 && itemCode <= 94) { // for service  between  70 and 94  
 			scRequestItem.setItemType(getParameterByTypeAndCode(
 					ParameterTypeConst.SC_ITEM_TYPE, ParameterConst.ITEM_TYPE_SERVICE));
@@ -1732,7 +1742,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    requestNoteReqDTO.setCmSupplierItemIds(cmSupplieritemIds);
 	    getDirectPurchaseSO().validateAddToCart(requestNoteReqDTO);
 	    
-		//TODO have to compare duplicate items in request note
+		// have to compare duplicate items in request note
 		if (getManagedBean().getRequestNoteDtls().isEmpty()){
 			getManagedBean().getRequestNoteDtls().add(scRequestNoteDtl);
 			
@@ -1930,7 +1940,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				Integer itemCode = Integer.valueOf(charSeq.toString()); 
 
 				if(ItemCode != null && !ItemCode.isEmpty()){
-					// TODO checking first two digits in itemCode whether service or product 
+					//  checking first two digits in itemCode whether service or product 
 					if (itemCode >= 70 && itemCode <= 94) { // for service  between  70 and 94  
 						prodOrService = false;
 					} else if (itemCode < 70 || itemCode > 94) { // for product  < 70 and  > 94  
@@ -2295,7 +2305,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public void ptjNameEvent() {
 		IPurchaseInDefaultSO purchaseInDefaultSO  = null;
 		try {
-			//TODO Based on ptj selection have to get pid for request note 
+			// Based on ptj selection have to get pid for request note 
 			purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
 			PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
 			// fetch pid item for request note item	
