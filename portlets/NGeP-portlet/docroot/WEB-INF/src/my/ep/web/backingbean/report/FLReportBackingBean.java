@@ -134,8 +134,8 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlSupplierInvoiceNoView(true);
 			rptGenBean.setFlFromDateView(true);
 			rptGenBean.setFlInvoiceCreatedDateView(true);
-			rptGenBean.setFlGroupThreeView(true);
-			//rptGenBean.setFlGroupThreeWithoutSupplView(true);
+			//rptGenBean.setFlGroupThreeView(true);
+			rptGenBean.setFlGroupThreeAllRolecodesWithoutSupplView(true);
 			 break;
 		case ReportConst.PYMT_MATCH_RPT_MIN_VAL:
 			rptGenBean.setFlMinistryView(true);
@@ -160,7 +160,9 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlStatusView(true);
 			rptGenBean.setFlGroupSixView(true);
 			rptGenBean.setFlSupplierView(true);
-			rptGenBean.setFromDateView(true);
+			//rptGenBean.setFromDateView(true);
+			rptGenBean.setFlFromDateView(true);
+			rptGenBean.setFlContractOrderCreatedDateView(true);
 			 break;
 		case ReportConst.CON_REQ_CANC_RPT_MIN_VAL:
 			rptGenBean.setFlGroupSixView(true);
@@ -340,8 +342,8 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlSupplierInvoiceNoView(true);
 			rptGenBean.setFlFromDateView(true);
 			rptGenBean.setFlInvoiceCreatedDateView(true);
-			rptGenBean.setFlGroupFourteenView(true);
-			//rptGenBean.setFlGroupFourteenWithoutSupplView(true);
+			//rptGenBean.setFlGroupFourteenView(true);
+			rptGenBean.setFlGroupFourteenAllRolecodesWithoutSupplView(true);
 			break;
 		case ReportConst.PYMT_MATCH_RPT_CEN_PEN_VAL:
 			rptGenBean.setFlMinistryView(true);
@@ -437,9 +439,11 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFlRequisitionerView(true);
 			rptGenBean.setFlStatusView(true);			
-			rptGenBean.setFromDateView(true);	
+			//rptGenBean.setFromDateView(true);	
 			rptGenBean.setFlGroupSeventeenView(true);
 			rptGenBean.setFlPrNoView(true);
+			rptGenBean.setFlFromDateView(true);
+			rptGenBean.setFlPurchaseOrderCreatedDateView(true);
 			break;
 		case ReportConst.PUR_ORD_RPT_PO_VAL:
 			rptGenBean.setFlPtjView(true);
@@ -449,8 +453,10 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlStatusView(true);
 			rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFlMinistryView(true);		
-			rptGenBean.setFromDateView(true);
+			//rptGenBean.setFromDateView(true);
 			rptGenBean.setFlGroupElevenView(true);
+			rptGenBean.setFlFromDateView(true);
+			rptGenBean.setFlPurchaseOrderCreatedDateView(true);
 			break;
 		case ReportConst.EMR_PROCUR_RPT_PO_VAL:
 			rptGenBean.setFlPtjView(true);
@@ -469,43 +475,55 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlMinistryView(true);
 			rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFlPurchaseOrderNoView(true);
-			rptGenBean.setFromDateView(true);
+			//rptGenBean.setFromDateView(true);
 			rptGenBean.setToDateView(true);
 			rptGenBean.setFlGroupTenView(true);
+			rptGenBean.setFlFromDateView(true);
+			rptGenBean.setFlPurchaseOrderRejectedDateView(true);
 			break;
 		case ReportConst.DEL_ORD_RPT_PO_VAL:
 			rptGenBean.setFlPtjView(true);
 			rptGenBean.setFlMinistryView(true);
 			rptGenBean.setFlDeliveryOrderNoView(true);
-			rptGenBean.setFlDeliveryAddressView(true);
+			//rptGenBean.setFlDeliveryAddressView(true);
+			rptGenBean.setFlStatusView(true);
 			rptGenBean.setFlSupplierView(true);
 			rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFlPurchaseOrderNoView(true);
 			rptGenBean.setFlSupplierDeliveryOrderNoView(true);
-			rptGenBean.setFromDateView(true);
+			//rptGenBean.setFromDateView(true);
 			rptGenBean.setFlGroupTwelveView(true);
+			rptGenBean.setFlFromDateView(true);
+			rptGenBean.setFlDeliveryOrderDateView(true);
 			break;
 		case ReportConst.FL_REC_NOTE_RPT_PO_VAL:
 			rptGenBean.setFlPurchaseOrderNoView(true);
 			rptGenBean.setFlSupplierView(true);
 			rptGenBean.setFlRecievingOfficerView(true);
-			rptGenBean.setFlDeliveryAddressView(true);
+			//rptGenBean.setFlDeliveryAddressView(true);
+			rptGenBean.setFlStatusView(true);
 			rptGenBean.setFlPtjView(true);
 			rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFlMinistryView(true);
-			rptGenBean.setFromDateView(true);	
+			//rptGenBean.setFromDateView(true);	
 			rptGenBean.setFlGroupTwelveView(true);
 			rptGenBean.setFlRecNoteNoView(true);
+			rptGenBean.setFlFromDateView(true);
+			rptGenBean.setFlFRNCreatedDateView(true);
 			break;
 		case ReportConst.LATE_DEL_RPT_PO_VAL:
+			rptGenBean.setFlRecievingOfficerView(true);
+			rptGenBean.setFlSupplierView(true);
 			rptGenBean.setFlPtjView(true);
 			rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFlMinistryView(true);
-			rptGenBean.setFromDateView(true);	
+			//rptGenBean.setFromDateView(true);	
 			rptGenBean.setFlGroupThirteenView(true);
 			rptGenBean.setFlDeliveryOrderNoView(true);
 			rptGenBean.setFlSupplierDeliveryOrderNoView(true);
 			rptGenBean.setFlPurchaseOrderNoView(true);
+			rptGenBean.setFlFromDateView(true);
+			rptGenBean.setFlFRNCreatedDateView(true);
 			break;
 		case ReportConst.STP_INSTR_DEL_RPT_PO_VAL:
 			rptGenBean.setFlSupplierView(true);
@@ -531,9 +549,11 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFlInvoiceNoView(true);
 			rptGenBean.setFlSupplierInvoiceNoView(true);
-			rptGenBean.setFromDateView(true);
-			rptGenBean.setFlGroupFourteenView(true);
-			//rptGenBean.setFlGroupFourteenWithoutSupplView(true);
+			//rptGenBean.setFromDateView(true);
+			//rptGenBean.setFlGroupFourteenView(true);
+			rptGenBean.setFlGroupFourteenAllRolecodesWithoutSupplView(true);
+			rptGenBean.setFlFromDateView(true);
+			rptGenBean.setFlInvoiceCreatedDateView(true);
 			break;
 		case ReportConst.PYMT_MATCH_RPT_PO_VAL:
 			rptGenBean.setFlMinistryView(true);
@@ -544,17 +564,22 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlPurchaseOrderNoView(true);
 			rptGenBean.setFlPaymentAdviceNoView(true);
 			rptGenBean.setFlStatusView(true);
-			rptGenBean.setFromDateView(true);
+			//rptGenBean.setFromDateView(true);
 			rptGenBean.setFlGroupFourteenView(true);
+			rptGenBean.setFlFromDateView(true);
+			rptGenBean.setFlPurchaseOrderCreatedDateView(true);
 			break;
 		case ReportConst.PUR_REQ_CANC_RPT_PO_VAL:
+			rptGenBean.setFlRequisitionerView(true);
 			rptGenBean.setFlMinistryView(true);
 			rptGenBean.setFlPtjView(true);
 			rptGenBean.setFlPkpNoView(true);
-			rptGenBean.setFromDateView(true);
+			//rptGenBean.setFromDateView(true);
 			rptGenBean.setToDateView(true);
 			rptGenBean.setFlGroupTenView(true);
 			rptGenBean.setFlPrNoView(true);
+			rptGenBean.setFlFromDateView(true);
+			rptGenBean.setFlPurchaseRequestRejectionDateView(true);
 			break;
 		case ReportConst.PUR_ORD_CANC_RPT_PO_VAL:
 			rptGenBean.setFlPurchaseOrderNoView(true);
@@ -562,8 +587,10 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlPtjView(true);
 			rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFlMinistryView(true);
-			rptGenBean.setFromDateView(true);	
+			//rptGenBean.setFromDateView(true);	
 			rptGenBean.setFlGroupTwentyThreeView(true);
+			rptGenBean.setFlFromDateView(true);
+			rptGenBean.setFlPurchaseOrderCancellationDateView(true);
 			break;
 		case ReportConst.DEL_ORD_CANC_RPT_PO_VAL:
 			rptGenBean.setFlPurchaseOrderNoView(true);
@@ -573,8 +600,10 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlMinistryView(true);
 			rptGenBean.setFlPtjView(true);
 			rptGenBean.setFlPkpNoView(true);
-			rptGenBean.setFromDateView(true);
+			//rptGenBean.setFromDateView(true);
 			rptGenBean.setFlGroupThirteenView(true);
+			rptGenBean.setFlFromDateView(true);
+			rptGenBean.setFlDeliveryOrderCancellationDateView(true);
 			break;
 		case ReportConst.FL_REC_NOTE_CANC_RPT_PO_VAL:
 			rptGenBean.setFlSupplierView(true);
@@ -586,8 +615,10 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			/*rptGenBean.setFlContractNoView(true);	
 			rptGenBean.setFlSstView(true);*/
 			rptGenBean.setFlMinistryView(true);
-			rptGenBean.setFromDateView(true);	
+			//rptGenBean.setFromDateView(true);	
 			rptGenBean.setFlGroupThirteenView(true);
+			rptGenBean.setFlFromDateView(true);
+			rptGenBean.setFlFRNCancellationDateView(true);
 			break;
 		case ReportConst.INV_CANC_RPT_PO_VAL:
 			rptGenBean.setFlMinistryView(true);
@@ -597,8 +628,10 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlPurchaseOrderNoView(true);
 			rptGenBean.setFlInvoiceNoView(true);
 			rptGenBean.setFlSupplierInvoiceNoView(true);
-			rptGenBean.setFromDateView(true);
+			//rptGenBean.setFromDateView(true);
 			rptGenBean.setFlGroupFifteenView(true);
+			rptGenBean.setFlFromDateView(true);
+			rptGenBean.setFlInvoiceCancellationDateView(true);
 			break;
 		case ReportConst.SUMM_RPT_PAN_ITM_VAL:
 			rptGenBean.setFlPtjView(true);
@@ -642,11 +675,13 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			/*rptGenBean.setFlContractNoView(true);	
 			rptGenBean.setFlSstView(true);*/
 			rptGenBean.setFlMinistryView(true);
-			rptGenBean.setFromDateView(true);
+			//rptGenBean.setFromDateView(true);
 			rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFlPurchaseOrderNoView(true);
 			rptGenBean.setFlStopInstructionNoView(true);
 			rptGenBean.setFlGroupEighteenView(true);
+			rptGenBean.setFlFromDateView(true);
+			rptGenBean.setFlStopInstructionCreatedDateView(true);
 			break;
 		case ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_MIN_VAL:
 			rptGenBean.setFlSupplierView(true);
@@ -680,11 +715,13 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			/*rptGenBean.setFlContractNoView(true);	
 			rptGenBean.setFlSstView(true);*/
 			rptGenBean.setFlMinistryView(true);
-			rptGenBean.setFromDateView(true);
+			//rptGenBean.setFromDateView(true);
 			rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFlPurchaseOrderNoView(true);
 			rptGenBean.setFlStopInstructionNoView(true);
 			rptGenBean.setFlGroupEighteenView(true);
+			rptGenBean.setFlFromDateView(true);
+			rptGenBean.setFlStopInstructionCreatedDateView(true);
 			break;
 		default:
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));           

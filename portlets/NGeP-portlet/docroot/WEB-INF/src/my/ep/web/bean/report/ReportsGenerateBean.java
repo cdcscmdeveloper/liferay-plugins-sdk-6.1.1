@@ -296,6 +296,7 @@ public class ReportsGenerateBean {
 		private boolean flGroupTwoWithSupplView = false;
 		private boolean flGroupThreeView = false;
 		private boolean flGroupThreeWithoutSupplView = false;
+		private boolean flGroupThreeAllRolecodesWithoutSupplView = false;
 		private boolean flGroupThreeWithSupplView = false;
 		private boolean flGroupFourView = false;
 		private boolean flGroupFourWithoutSupplView = false;
@@ -330,6 +331,7 @@ public class ReportsGenerateBean {
 		private boolean flGroupFourteenView = false;
 		private boolean flGroupFourteenWithoutSupplView = false;
 		private boolean flGroupFourteenWithSupplView = false;
+		private boolean flGroupFourteenAllRolecodesWithoutSupplView = false;
 		private boolean flGroupFifteenView = false;
 		private boolean flGroupFifteenWithoutSupplView = false;		
 		private boolean flGroupFifteenWithSupplView = false;
@@ -400,8 +402,62 @@ public class ReportsGenerateBean {
 		private boolean ctSupplierNameView = false;
 		private boolean ctSupplierDefaultView = false;
 		private boolean ctSupplierTextView = false;
+		private boolean flPurchaseOrderCreatedDateView = false;
+		private boolean flPurchaseOrderRejectedDateView = false;
+		private boolean flDeliveryOrderDateView = false;
+		private boolean flPurchaseRequestRejectionDateView = false;
+		private boolean flPurchaseOrderCancellationDateView = false;
 		
 		
+		
+		public boolean isFlPurchaseOrderCancellationDateView() {
+			return flPurchaseOrderCancellationDateView;
+		}
+		public void setFlPurchaseOrderCancellationDateView(
+				boolean flPurchaseOrderCancellationDateView) {
+			this.flPurchaseOrderCancellationDateView = flPurchaseOrderCancellationDateView;
+		}
+		public boolean isFlPurchaseRequestRejectionDateView() {
+			return flPurchaseRequestRejectionDateView;
+		}
+		public void setFlPurchaseRequestRejectionDateView(
+				boolean flPurchaseRequestRejectionDateView) {
+			this.flPurchaseRequestRejectionDateView = flPurchaseRequestRejectionDateView;
+		}
+		public boolean isFlDeliveryOrderDateView() {
+			return flDeliveryOrderDateView;
+		}
+		public void setFlDeliveryOrderDateView(boolean flDeliveryOrderDateView) {
+			this.flDeliveryOrderDateView = flDeliveryOrderDateView;
+		}
+		public boolean isFlPurchaseOrderRejectedDateView() {
+			return flPurchaseOrderRejectedDateView;
+		}
+		public void setFlPurchaseOrderRejectedDateView(
+				boolean flPurchaseOrderRejectedDateView) {
+			this.flPurchaseOrderRejectedDateView = flPurchaseOrderRejectedDateView;
+		}
+		public boolean isFlPurchaseOrderCreatedDateView() {
+			return flPurchaseOrderCreatedDateView;
+		}
+		public void setFlPurchaseOrderCreatedDateView(
+				boolean flPurchaseOrderCreatedDateView) {
+			this.flPurchaseOrderCreatedDateView = flPurchaseOrderCreatedDateView;
+		}
+		public boolean isFlGroupFourteenAllRolecodesWithoutSupplView() {
+			return flGroupFourteenAllRolecodesWithoutSupplView;
+		}
+		public void setFlGroupFourteenAllRolecodesWithoutSupplView(
+				boolean flGroupFourteenAllRolecodesWithoutSupplView) {
+			this.flGroupFourteenAllRolecodesWithoutSupplView = flGroupFourteenAllRolecodesWithoutSupplView;
+		}
+		public boolean isFlGroupThreeAllRolecodesWithoutSupplView() {
+			return flGroupThreeAllRolecodesWithoutSupplView;
+		}
+		public void setFlGroupThreeAllRolecodesWithoutSupplView(
+				boolean flGroupThreeAllRolecodesWithoutSupplView) {
+			this.flGroupThreeAllRolecodesWithoutSupplView = flGroupThreeAllRolecodesWithoutSupplView;
+		}
 		public boolean isCmItemValidityDateView() {
 			return cmItemValidityDateView;
 		}
