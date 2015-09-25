@@ -5663,10 +5663,12 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}
 			if ((this.getCtStatusTwo() != null)
 					&& (this.getCtStatusTwo() != ReportConst.EMPTY_VAL)) {
-				if(!this.getCtStatusTwo().trim().equalsIgnoreCase("TERMINATE")){
+				/*if(!this.getCtStatusTwo().trim().equalsIgnoreCase("TERMINATE")){
 					rptGenBean.setCtStatusTwoVar(ReportConst.CT_AMP_STATUS_EQ
 							+ this.getCtStatusTwo());
-				}
+				}*/
+				rptGenBean.setCtStatusTwoVar(ReportConst.CT_AMP_STATUS_EQ
+						+ this.getCtStatusTwo());
 			}
 			if ((this.getCtContractNo() != null)
 					&& (this.getCtContractNo() != ReportConst.EMPTY_VAL)) {
