@@ -3004,7 +3004,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome) || BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
 				if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().size()==0) {
 					throw new EpException(MessageConst.ERROR_100023, new String[]{ResourceBundleUtils.getMessage("lbl.fl.delivery.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
-				}				
+				}else{
+					checkReceivingOfficerList();
+				}
 				if(getManagedBean().getSelectedApprover() == null){
 					throw new EpException(MessageConst.ERROR_750010);
 				}
@@ -3300,6 +3302,28 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			flItemAddr.setGstAmount(BigDecimal.ZERO);
 		}
 		flItemAddr.setGstUnitPrice(flItemAddr.getUnitPrice().add(flItemAddr.getGstAmount()));
+	}
+	
+	private void checkReceivingOfficerList(){
+		IAddressSO addressSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+		AddressReqDTO reqDTO = new AddressReqDTO();
+		for(FlDeliveryAddress delAddr : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+			Long addressId = delAddr.getPmAddress().getAddressId();
+			if(delAddr.getReceivingGrp()!=null && delAddr.getReceivingGrp().getAddressTypeId()!=null) { // in case of Manual address
+				
+				reqDTO.setAddressTypeId(delAddr.getReceivingGrp().getAddressTypeId());
+				AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+				addressId = resDTO.getAddressTypeList().get(0).getPmAddress().getAddressId();
+			}
+			
+			reqDTO.setAddressId(addressId);
+			reqDTO.setAddressType(AddressType.RECEIVING_OFFICER_ADDRESS.value());
+			AddressResDTO resDTO = addressSO.retrieveReceivingOfficerList(reqDTO);
+			if(resDTO.getAddressTypeList().isEmpty()){//TODO others as well needed to throw if list is empty
+				throw new EpException(MessageConst.ERROR_745077, new String[]{getFullAddress(delAddr.getPmAddress())});
+			}
+		}
+		
 	}
 	
 }
