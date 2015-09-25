@@ -19,12 +19,14 @@ import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidPrice;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
+import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
@@ -109,24 +111,41 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	private Map<Long,List<BidPackageBean>> bidPackageBeansByZone;
 	private Map<Long,List<ScBidItem>> bidItemsByZone;
 	
+	// Bidding Finalization Meeting
+	private boolean secretaryUser;
+	private boolean selectAll;
+	private boolean selectAllMeetings;
+	private int meetingActiveIndex;
+	private String committeeTabLabel;
+	private List<ScQtMeetingAttendance> meetingAttendanceList;
+	private List<ScQtCommitteeActivity> committeeList;
+	private List<ScQtMeeting> deletedMeetingList;
+	private List<ScQtMeetingAttendance> selectedMeetingAttList;
+	private List<ScQtMeetingAttendance> deletedMeetingAttendanceList;
+	private List<ScQtCommitteRemarks> committeeRemarkList;
+	
+	
 	/**
 	 * @return the onlineBiddingActiveIndex
 	 */
 	public int getOnlineBiddingActiveIndex() {
 		return onlineBiddingActiveIndex;
 	}
+	
 	/**
 	 * @param onlineBiddingActiveIndex the onlineBiddingActiveIndex to set
 	 */
 	public void setOnlineBiddingActiveIndex(int onlineBiddingActiveIndex) {
 		this.onlineBiddingActiveIndex = onlineBiddingActiveIndex;
 	}
+	
 	/**
 	 * @return the scQt
 	 */
 	public ScQt getScQt() {
 		return scQt;
 	}
+	
 	/**
 	 * @param scQt 
 	 * 			the scQt to set
@@ -134,12 +153,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setScQt(ScQt scQt) {
 		this.scQt = scQt;
 	}
+	
 	/**
 	 * @return the scQtFinalization
 	 */
 	public ScQtFinalization getScQtFinalization() {
 		return scQtFinalization;
 	}
+	
 	/**
 	 * @param scQtFinalization 
 	 * 					the scQtFinalization to set
@@ -147,36 +168,42 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setScQtFinalization(ScQtFinalization scQtFinalization) {
 		this.scQtFinalization = scQtFinalization;
 	}
+	
 	/**
 	 * @return the scQtCommittee
 	 */
 	public ScQtCommittee getScQtCommittee() {
 		return scQtCommittee;
 	}
+	
 	/**
 	 * @param scQtCommittee the scQtCommittee to set
 	 */
 	public void setScQtCommittee(ScQtCommittee scQtCommittee) {
 		this.scQtCommittee = scQtCommittee;
 	}
+	
 	/**
 	 * @return the meetingList
 	 */
 	public List<ScQtMeeting> getMeetingList() {
 		return meetingList;
 	}
+	
 	/**
 	 * @param meetingList the meetingList to set
 	 */
 	public void setMeetingList(List<ScQtMeeting> meetingList) {
 		this.meetingList = meetingList;
 	}
+	
 	/**
 	 * @return the committeeEndorsementList
 	 */
 	public List<ScQtCommitteeActivity> getCommitteeEndorsementList() {
 		return committeeEndorsementList;
 	}
+	
 	/**
 	 * @param committeeEndorsementList 
 	 * 						the committeeEndorsementList to set
@@ -185,12 +212,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 			List<ScQtCommitteeActivity> committeeEndorsementList) {
 		this.committeeEndorsementList = committeeEndorsementList;
 	}
+	
 	/**
 	 * @return the reminderList
 	 */
 	public List<ScQtCommitteeActivity> getReminderList() {
 		return reminderList;
 	}
+	
 	/**
 	 * @param reminderList 
 	 * 				the reminderList to set
@@ -198,12 +227,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setReminderList(List<ScQtCommitteeActivity> reminderList) {
 		this.reminderList = reminderList;
 	}
+	
 	/**
 	 * @return the subject
 	 */
 	public String getSubject() {
 		return subject;
 	}
+	
 	/**
 	 * @param subject 
 	 * 			the subject to set
@@ -211,12 +242,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setSubject(String subject) {
 		this.subject = subject;
 	}
+	
 	/**
 	 * @return the message
 	 */
 	public String getMessage() {
 		return message;
 	}
+	
 	/**
 	 * @param message 
 	 * 			the message to set
@@ -224,12 +257,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setMessage(String message) {
 		this.message = message;
 	}
+	
 	/**
 	 * @return the pinNo
 	 */
 	public String getPinNo() {
 		return pinNo;
 	}
+	
 	/**
 	 * @param pinNo 
 	 * 			the pinNo to set
@@ -237,12 +272,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setPinNo(String pinNo) {
 		this.pinNo = pinNo;
 	}
+	
 	/**
 	 * @return the biddingItemList
 	 */
 	public List<ScBidItem> getBiddingItemList() {
 		return biddingItemList;
 	}
+	
 	/**
 	 * @param biddingItemList 
 	 * 					the biddingItemList to set
@@ -250,12 +287,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setBiddingItemList(List<ScBidItem> biddingItemList) {
 		this.biddingItemList = biddingItemList;
 	}
+	
 	/**
 	 * @return the scBidding
 	 */
 	public ScBid getScBidding() {
 		return scBidding;
 	}
+	
 	/**
 	 * @param scBidding 
 	 * 				the scBidding to set
@@ -263,12 +302,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setScBidding(ScBid scBidding) {
 		this.scBidding = scBidding;
 	}
+	
 	/**
 	 * @return the biddingItemPriceList
 	 */
 	public List<ScBidPrice> getBiddingItemPriceList() {
 		return biddingItemPriceList;
 	}
+	
 	/**
 	 * @param biddingItemPriceList 
 	 * 						the biddingItemPriceList to set
@@ -276,12 +317,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setBiddingItemPriceList(List<ScBidPrice> biddingItemPriceList) {
 		this.biddingItemPriceList = biddingItemPriceList;
 	}
+	
 	/**
 	 * @return the biddingPackagePriceList
 	 */
 	public List<BidPackageBean> getBiddingPackagePriceList() {
 		return biddingPackagePriceList;
 	}
+	
 	/**
 	 * @param biddingPackagePriceList 
 	 * 					the biddingPackagePriceList to set
@@ -289,12 +332,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setBiddingPackagePriceList(List<BidPackageBean> biddingPackagePriceList) {
 		this.biddingPackagePriceList = biddingPackagePriceList;
 	}
+	
 	/**
 	 * @return the committeeType
 	 */
 	public String getCommitteeType() {
 		return committeeType;
 	}
+	
 	/**
 	 * @param committeeType 
 	 * 				the committeeType to set
@@ -302,12 +347,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setCommitteeType(String committeeType) {
 		this.committeeType = committeeType;
 	}
+	
 	/**
 	 * @return the selectedBiddingItem
 	 */
 	public ScBidItem getSelectedBiddingItem() {
 		return selectedBiddingItem;
 	}
+	
 	/**
 	 * @param selectedBiddingItem 
 	 * 					the selectedBiddingItem to set
@@ -315,12 +362,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setSelectedBiddingItem(ScBidItem selectedBiddingItem) {
 		this.selectedBiddingItem = selectedBiddingItem;
 	}
+	
 	/**
 	 * @return the remarks
 	 */
 	public List<ScQtFinalizationEndorsementRemarks> getRemarks() {
 		return remarks;
 	}
+	
 	/**
 	 * @param remarks 
 	 * 			the remarks to set
@@ -328,12 +377,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setRemarks(List<ScQtFinalizationEndorsementRemarks> remarks) {
 		this.remarks = remarks;
 	}
+	
 	/**
 	 * @return the attachmentDocType
 	 */
 	public String getAttachmentDocType() {
 		return attachmentDocType;
 	}
+	
 	/**
 	 * @param attachmentDocType 
 	 * 					the attachmentDocType to set
@@ -341,12 +392,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setAttachmentDocType(String attachmentDocType) {
 		this.attachmentDocType = attachmentDocType;
 	}
+	
 	/**
 	 * @return the processName
 	 */
 	public String getProcessName() {
 		return processName;
 	}
+	
 	/**
 	 * @param processName 
 	 * 				the processName to set
@@ -354,12 +407,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setProcessName(String processName) {
 		this.processName = processName;
 	}
+	
 	/**
 	 * @return  the payLoad
 	 */
 	public Object getPayLoad() {
 		return payLoad;
 	}
+	
 	/**
 	 * @param payLoad
 	 * 			the payLoad to set
@@ -367,12 +422,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setPayLoad(Object payLoad) {
 		this.payLoad = payLoad;
 	}
+	
 	/**
 	 * @return  the action
 	 */
 	public String getAction() {
 		return action;
 	}
+	
 	/**
 	 * @param action
 	 * 			the action to set
@@ -380,12 +437,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setAction(String action) {
 		this.action = action;
 	}
+	
 	/**
 	 * @return  the supplierCode
 	 */
 	public Long getSupplierCode() {
 		return supplierCode;
 	}
+	
 	/**
 	 * @param supplierCode
 	 * 				the supplierCode to set
@@ -393,12 +452,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setSupplierCode(Long supplierCode) {
 		this.supplierCode = supplierCode;
 	}
+	
 	/**
 	 * @return the scheduledBid
 	 */
 	public ScBidSchedule getScheduledBid() {
 		return scheduledBid;
 	}
+	
 	/**
 	 * @param scheduledBid
 	 * 				the scheduledBid to set
@@ -406,12 +467,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setScheduledBid(ScBidSchedule scheduledBid) {
 		this.scheduledBid = scheduledBid;
 	}
+	
 	/**
 	 * @return  the ScBidPriceList
 	 */
 	public List<ScBidPrice> getScBidPriceList() {
 		return ScBidPriceList;
 	}
+	
 	/**
 	 * @param scBidPriceList
 	 * 				the scBidPriceList to set
@@ -419,12 +482,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setScBidPriceList(List<ScBidPrice> scBidPriceList) {
 		ScBidPriceList = scBidPriceList;
 	}
+	
 	/**
 	 * @return the bidItemSuppliers
 	 */
 	public List<BidItemBean> getBidItemSuppliers() {
 		return bidItemSuppliers;
 	}
+	
 	/**
 	 * @param bidItemSuppliers 
 	 * 				the bidItemSuppliers to set
@@ -432,12 +497,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setBidItemSuppliers(List<BidItemBean> bidItemSuppliers) {
 		this.bidItemSuppliers = bidItemSuppliers;
 	}
+	
 	/**
 	 * @return  the lowestNonBumiOfferedPrice
 	 */
 	public BigDecimal getLowestNonBumiOfferedPrice() {
 		return lowestNonBumiOfferedPrice;
 	}
+	
 	/**
 	 * @param lowestNonBumiOfferedPrice
 	 * 				the lowestNonBumiOfferedPrice to set
@@ -445,12 +512,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setLowestNonBumiOfferedPrice(BigDecimal lowestNonBumiOfferedPrice) {
 		this.lowestNonBumiOfferedPrice = lowestNonBumiOfferedPrice;
 	}
+	
 	/**
 	 * @return  the bumiSuppLowestOfferedPrice
 	 */
 	public BigDecimal getBumiSuppLowestOfferedPrice() {
 		return bumiSuppLowestOfferedPrice;
 	}
+	
 	/**
 	 * @param bumiSuppLowestOfferedPrice
 	 * 				the bumiSuppLowestOfferedPrice to set
@@ -714,5 +783,175 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setBidItemsByZone(Map<Long, List<ScBidItem>> bidItemsByZone) {
 		this.bidItemsByZone = bidItemsByZone;
 	}
+	
+	/**
+	 * @return the secretaryUser
+	 */
+	public boolean isSecretaryUser() {
+		return secretaryUser;
+	}
+
+	/**
+	 * @param secretaryUser 
+	 * 				the secretaryUser to set
+	 */
+	public void setSecretaryUser(boolean secretaryUser) {
+		this.secretaryUser = secretaryUser;
+	}
+
+	/**
+	 * @return the selectAll
+	 */
+	public boolean isSelectAll() {
+		return selectAll;
+	}
+	
+	/**
+	 * @param selectAll 
+	 * 			the selectAll to set
+	 */
+	public void setSelectAll(boolean selectAll) {
+		this.selectAll = selectAll;
+	}
+	
+	/**
+	 * @return the meetingActiveIndex
+	 */
+	public int getMeetingActiveIndex() {
+		return meetingActiveIndex;
+	}
+	
+	/**
+	 * @param meetingActiveIndex 
+	 * 				the meetingActiveIndex to set
+	 */
+	public void setMeetingActiveIndex(int meetingActiveIndex) {
+		this.meetingActiveIndex = meetingActiveIndex;
+	}
+	
+	/**
+	 * @return the committeeTabLabel
+	 */
+	public String getCommitteeTabLabel() {
+		return committeeTabLabel;
+	}
+	
+	/**
+	 * @param committeeTabLabel 
+	 * 				the committeeTabLabel to set
+	 */
+	public void setCommitteeTabLabel(String committeeTabLabel) {
+		this.committeeTabLabel = committeeTabLabel;
+	}
+	
+	/**
+	 * @return the meetingAttendanceList
+	 */
+	public List<ScQtMeetingAttendance> getMeetingAttendanceList() {
+		return meetingAttendanceList;
+	}
+	
+	/**
+	 * @param meetingAttendanceList 
+	 * 				the meetingAttendanceList to set
+	 */
+	public void setMeetingAttendanceList(
+			List<ScQtMeetingAttendance> meetingAttendanceList) {
+		this.meetingAttendanceList = meetingAttendanceList;
+	}
+	
+	/**
+	 * @return the committeeList
+	 */
+	public List<ScQtCommitteeActivity> getCommitteeList() {
+		return committeeList;
+	}
+	
+	/**
+	 * @param committeeList 
+	 * 			the committeeList to set
+	 */
+	public void setCommitteeList(List<ScQtCommitteeActivity> committeeList) {
+		this.committeeList = committeeList;
+	}
+	
+	/**
+	 * @return the selectAllMeetings
+	 */
+	public boolean isSelectAllMeetings() {
+		return selectAllMeetings;
+	}
+
+	/**
+	 * @param selectAllMeetings 
+	 * 				the selectAllMeetings to set
+	 */
+	public void setSelectAllMeetings(boolean selectAllMeetings) {
+		this.selectAllMeetings = selectAllMeetings;
+	}
+
+	/**
+	 * @return the deletedMeetingList
+	 */
+	public List<ScQtMeeting> getDeletedMeetingList() {
+		return deletedMeetingList;
+	}
+	
+	/**
+	 * @param deletedMeetingList 
+	 * 				the deletedMeetingList to set
+	 */
+	public void setDeletedMeetingList(List<ScQtMeeting> deletedMeetingList) {
+		this.deletedMeetingList = deletedMeetingList;
+	}
+	
+	/**
+	 * @return the selectedMeetingAttList
+	 */
+	public List<ScQtMeetingAttendance> getSelectedMeetingAttList() {
+		return selectedMeetingAttList;
+	}
+	
+	/**
+	 * @param selectedMeetingAttList 
+	 * 				the selectedMeetingAttList to set
+	 */
+	public void setSelectedMeetingAttList(
+			List<ScQtMeetingAttendance> selectedMeetingAttList) {
+		this.selectedMeetingAttList = selectedMeetingAttList;
+	}
+
+	/**
+	 * @return the deletedMeetingAttendanceList
+	 */
+	public List<ScQtMeetingAttendance> getDeletedMeetingAttendanceList() {
+		return deletedMeetingAttendanceList;
+	}
+
+	/**
+	 * @param deletedMeetingAttendanceList 
+	 * 				the deletedMeetingAttendanceList to set
+	 */
+	public void setDeletedMeetingAttendanceList(
+			List<ScQtMeetingAttendance> deletedMeetingAttendanceList) {
+		this.deletedMeetingAttendanceList = deletedMeetingAttendanceList;
+	}
+
+	/**
+	 * @return the committeeRemarkList
+	 */
+	public List<ScQtCommitteRemarks> getCommitteeRemarkList() {
+		return committeeRemarkList;
+	}
+
+	/**
+	 * @param committeeRemarkList 
+	 * 				the committeeRemarkList to set
+	 */
+	public void setCommitteeRemarkList(
+					List<ScQtCommitteRemarks> committeeRemarkList) {
+		this.committeeRemarkList = committeeRemarkList;
+	}
 	 
+	
 }
