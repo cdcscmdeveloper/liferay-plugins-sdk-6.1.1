@@ -21,14 +21,6 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.biz.service.pm.common.agoffice.IAgOfficeSO;
-import my.ep.biz.service.pm.common.batch.IPmInterfaceSO;
-import my.ep.biz.service.pm.common.glaccount.IGlAccountSO;
-import my.ep.biz.service.pm.common.programactivity.IProgramActivitySO;
-import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
-import my.ep.biz.service.pm.common.votfund.IVotFundSO;
-import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -94,14 +86,13 @@ import my.ep.web.integration.phis.PhisGlAccount;
 import my.ep.web.integration.phis.PhisProgramActivity;
 import my.ep.web.integration.phis.PhisProject;
 import my.ep.web.integration.phis.PhisVotFund;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 
 /*
 * @ author Ganga prasad
 */
-public class FileUtility {
+public class FileUtility extends InitializeSO{
 	
 	private static Logger log = EpLogger.getLogger(FileUtility.class);
 	
@@ -111,20 +102,6 @@ public class FileUtility {
 	OsbUtility osbUtility = new OsbUtility();
 	Encryption encryption = new Encryption();
 	
-	IPmInterfaceSO interfaceSO = BusinessDelegate.getInstance().getServiceObject(
-			ModuleCodeConst.PROFILE_MANAGEMENT, IPmInterfaceSO.class);
-	IVotFundSO votFundSO = BusinessDelegate.getInstance().getServiceObject(
-			ModuleCodeConst.PROFILE_MANAGEMENT, IVotFundSO.class);
-	IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
-	IAgOfficeSO agOfficeSO = BusinessDelegate.getInstance().getServiceObject(
-			ModuleCodeConst.PROFILE_MANAGEMENT, IAgOfficeSO.class);
-	IProgramActivitySO programActivitySO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IProgramActivitySO.class);
-	IGlAccountSO glAccountSO = BusinessDelegate.getInstance().getServiceObject(
-			ModuleCodeConst.PROFILE_MANAGEMENT, IGlAccountSO.class);
-	IProjectSetiaSO projectSetiaSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IProjectSetiaSO.class);
 
 	/**
 	 * Write character data to a big file - use BufferedWriter
@@ -420,7 +397,6 @@ public class FileUtility {
 				batchReqDTO.setProcessId(ProcessCode.APIVE.value());
 				
 				encryption.encryptGmas(batchReqDTO);
-//			encryption.encryptGmas(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,"GFM-010", PROCESS_ID);
 		} catch (IOException e) {
 
 		} finally {
@@ -484,6 +460,7 @@ public class FileUtility {
 	}
 	
 
+	//two channges done one for mobile no and bank account 15 ,18
 	public List<MasterDataVendor> masterDataVendorFileInPutStream(String filePath) {
 			Path path = Paths.get(filePath);
 		    String line;
@@ -517,15 +494,15 @@ public class FileUtility {
 			    		  masterDataVendor.getCompanyBranch().setEmailAddress(getValue(line,321 ,100 ));
 			    		  masterDataVendor.getCompanyBranch().setCurrency(getValue(line,421 ,5 ));
 			    		  masterDataVendor.getCompanyBranch().setPaymentTerm(getValue(line,426 ,4 ));
-			    		  masterDataVendor.getCompanyBranch().setMobileNo(getValue(line,430 ,15 ));
+			    		  masterDataVendor.getCompanyBranch().setMobileNo(getValue(line,430 ,10 ));
 			    	  }else if(line.startsWith(IntegrationConstants.VALUE_ONE)){
 			    		  bankAccountInformation = new BankAccountInformation();
 			    		  bankAccountInformation.setRecordType(Integer.parseInt(getValue(line,0 ,1 )));
 			    		  bankAccountInformation.setRecordNumber(Integer.parseInt(getValue(line,1 ,3 )));
 			    		  bankAccountInformation.setBankCountry(getValue(line,4 ,2 ));
 			    		  bankAccountInformation.setBankKey(getValue(line,6 ,15 ));
-			    		  bankAccountInformation.setBankAccount(getValue(line,21 ,18 ));
-			    		  bankAccountInformation.setAccountHolderName(getValue(line,39 ,60 ));
+			    		  bankAccountInformation.setBankAccount(getValue(line,21 ,12 ));
+//			    		  bankAccountInformation.setAccountHolderName(getValue(line,39 ,60 ));
 			    		  if(!bankAccountInformationList.contains(bankAccountInformation))
 			    			  bankAccountInformationList.add(bankAccountInformation);
 			    		  masterDataVendor.setBankAccountInfoList(bankAccountInformationList);
