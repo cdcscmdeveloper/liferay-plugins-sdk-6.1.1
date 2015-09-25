@@ -12,7 +12,7 @@
 					<h:outputLabel value="#{lbl['lbl.td.doc.type']} " />
 				</td>
 				<td class="header-info-text">
-					#{trackingDiarySearchBackingBean.managedBean.docType}
+					#{trackingDiarySearchBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentDocumentType, trackingDiarySearchBackingBean.managedBean.docType)}
 				</td>
 				<td>
 					<p:outputLabel value="#{lbl['lbl.td.doc.no']} " />
