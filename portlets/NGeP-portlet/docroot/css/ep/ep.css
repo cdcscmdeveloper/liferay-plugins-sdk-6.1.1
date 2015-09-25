@@ -3629,8 +3629,26 @@ table.taxableGuidelineTable td {
 	margin-right:5px;
 }
 
-.ui-icon-supplier-view{
+.ui-icon-view{
 	background-image: url('../images/design/ico-view.png') !important;
+	background-position: center;
+	border-radius: 0 px;
+	height: 16 px !important;
+	margin-right:5px;
+	
+}
+
+.ui-icon-change-bank{
+	background-image: url('../images/design/ico-request-remove-bank.png') !important;
+	background-position: center;
+	border-radius: 0 px;
+	height: 16 px !important;
+	margin-right:5px;
+	
+}
+
+.ui-icon-factoring{
+	background-image: url('../images/design/ico-bank-account.png') !important;
 	background-position: center;
 	border-radius: 0 px;
 	height: 16 px !important;
