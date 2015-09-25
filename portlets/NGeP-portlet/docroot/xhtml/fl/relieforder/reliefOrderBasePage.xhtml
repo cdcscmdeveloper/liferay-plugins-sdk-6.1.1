@@ -39,6 +39,15 @@
 							action="#{reliefOrderBB.gpkiSignAction(bpmAction)}" />
 					</ui:repeat>
 					</td>
+				<c:if
+					test='#{reliefOrderBB.managedBean.buttonVal eq "View"}'>
+					<td colspan="4" style="text-align: right">	
+					<p:commandLink
+						value="#{lbl['lbl.td.doc.trackingDiary']}"
+						action="#{trackingDiarySearchBackingBean.goToTrackingDiarySearch(ParameterConst.doctypeReliefOrder,reliefOrderBB.managedBean.flReliefOrder.reliefOrderId,reliefOrderBB.managedBean.flReliefOrder.reliefOrderId,reliefOrderBB.managedBean.flReliefOrder.status.statusId)}"
+						immediate="true" />
+					</td>		
+				</c:if>	
 			</tr>
 		</table>
 		<ui:include src="/xhtml/fl/relieforder/reliefOrderHeaderPage.xhtml" />
