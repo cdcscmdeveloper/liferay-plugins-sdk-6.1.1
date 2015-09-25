@@ -60,6 +60,15 @@
 							action="#{stopInstrBB.signingAction('STOP FULFILMENT')}"  update="@form">
 						</p:commandButton>
 					</c:if>
+					<c:if
+					test='#{stopInstrBB.managedBean.buttonVal eq "View"}'>
+					<td colspan="4" style="text-align: right">	
+					<p:commandLink 
+						value="#{lbl['lbl.td.doc.trackingDiary']}"
+						action="#{trackingDiarySearchBackingBean.goToTrackingDiarySearch(ParameterConst.doctypeStopDelivery,stopInstrBB.managedBean.stopInstr.stopInstrNo,stopInstrBB.managedBean.stopInstr.stopInstrId,stopInstrBB.managedBean.stopInstr.pmStatus.statusId)}"
+						immediate="true" />
+					</td>		
+				</c:if>
 				</td>
 			</tr>
 		</table>
