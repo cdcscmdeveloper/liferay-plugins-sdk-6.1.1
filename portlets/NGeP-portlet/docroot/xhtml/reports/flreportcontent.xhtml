@@ -404,6 +404,17 @@
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 									</p:selectOneMenu>
 								  </c:if>
+								  </c:if>
+								  <c:if test="#{flReportBackingBean.managedBean.rptGenBean.flGroupThreeAllRolecodesWithoutSupplView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu value="#{reportBackingBean.flGroupThree}" style="margin-top:5px;width:300px;">
+									    
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}" itemValue="#{null}"></f:selectItem>										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}" itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}" itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}" itemValue="#{lbl['lbl.rpt.sts']}"></f:selectItem>	
+										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
+									</p:selectOneMenu>
 								  </c:if>	
 								   <c:if test="#{flReportBackingBean.managedBean.rptGenBean.flGroupFourView}">
 								   <c:if test="#{flReportBackingBean.managedBean.rptGenBean.flGroupFourWithSupplView}">
@@ -745,6 +756,17 @@
 									</p:selectOneMenu>
 								  </c:if>
 								  </c:if> 
+								  <c:if test="#{flReportBackingBean.managedBean.rptGenBean.flGroupFourteenAllRolecodesWithoutSupplView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu value="#{reportBackingBean.flGroupFourteen}" style="margin-top:5px;width:300px;">
+									    
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}" itemValue="#{null}"></f:selectItem>										
+										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.pkpNoScreen']}" itemValue="#{lbl['lbl.rpt.pkpnumber']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}" itemValue="#{lbl['lbl.rpt.sts']}"></f:selectItem>
+										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																				
+									</p:selectOneMenu>
+								  </c:if>
 								   <c:if test="#{flReportBackingBean.managedBean.rptGenBean.flGroupFifteenView}">
 								   <c:if test="#{flReportBackingBean.managedBean.rptGenBean.flGroupFifteenWithoutSupplView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
@@ -1002,8 +1024,25 @@
 								<c:if test="#{reportBackingBean.managedBean.rptGenBean.flInvoiceCreatedDateView}">								
 									<p:outputLabel  value="#{lbl['lbl.rpt.invoiceCrtdDtFrm']}" style="width:158px;"/>								
 								</c:if>	
+								
 								<c:if test="#{reportBackingBean.managedBean.rptGenBean.flContractOrderCreatedDateView}">								
 									<p:outputLabel  value="#{lbl['lbl.rpt.cntrOrderCrtdDtFrm']}" style="width:158px;"/>								
+								</c:if>
+								<c:if test="#{reportBackingBean.managedBean.rptGenBean.flPurchaseOrderCreatedDateView}">								
+									<p:outputLabel  value="#{lbl['lbl.rpt.purchaseorderCrtdDtFrm']}" style="width:158px;"/>								
+								</c:if>
+								<c:if test="#{reportBackingBean.managedBean.rptGenBean.flPurchaseRequestRejectionDateView}">								
+									<p:outputLabel  value="#{lbl['lbl.rpt.purchaserequestRjctnDtFrm']}" style="width:158px;"/>								
+								</c:if>
+								<c:if test="#{reportBackingBean.managedBean.rptGenBean.flPurchaseOrderCancellationDateView}">								
+									<p:outputLabel  value="#{lbl['lbl.rpt.purchaseordercancellationDtFrm']}" style="width:158px;"/>								
+								</c:if>
+								<c:if test="#{reportBackingBean.managedBean.rptGenBean.flDeliveryOrderDateView}">								
+									<p:outputLabel  value="#{lbl['lbl.rpt.deliveryorderDtFrm']}" style="width:158px;"/>								
+								</c:if>
+								
+								<c:if test="#{reportBackingBean.managedBean.rptGenBean.flPurchaseOrderRejectedDateView}">								
+									<p:outputLabel  value="#{lbl['lbl.rpt.purchaseorderRjctdDtFrm']}" style="width:158px;"/>								
 								</c:if>
 								<c:if test="#{reportBackingBean.managedBean.rptGenBean.flContractRequestRejectionDateView}">								
 									<p:outputLabel  value="#{lbl['lbl.rpt.cntrReqRejectDtFrm']}" style="width:158px;"/>								
