@@ -595,9 +595,19 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				this.getManagedBean().setNewCategory(true);
 				reloadSelectionPmCategoryL3();
 				updateSpecialCategory();
-				this.getManagedBean().getBasicCategoryList().clear();
-				this.getManagedBean().getPmMachineCategoryList().clear();
-				this.getManagedBean().getCategoryRestrList().clear();
+
+				if (CollectionUtils.isNotEmpty(this.getManagedBean()
+						.getBasicCategoryList())) {
+					this.getManagedBean().getBasicCategoryList().clear();
+				}
+				if (CollectionUtils.isNotEmpty(this.getManagedBean()
+						.getPmMachineCategoryList())) {
+					this.getManagedBean().getPmMachineCategoryList().clear();
+				}
+				if (CollectionUtils.isNotEmpty(this.getManagedBean()
+						.getCategoryRestrList())) {
+					this.getManagedBean().getCategoryRestrList().clear();
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
