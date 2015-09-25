@@ -4480,13 +4480,22 @@ public class ReportBackingBean extends
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
-			List<Object[]> ptjLst = reportSO.retrieveFPJPTJList(lngUserId);
-			for (Object[] object : ptjLst) {				
-				SelectItem selectItem = new SelectItem();				
-				selectItem.setLabel(object[0].toString());
-				selectItem.setValue(object[1].toString());
-				ptjList.add(selectItem);
-			}			
+			List<Object[]> ptjLst = reportSO.retrieveFPJPTJList(lngUserId);			
+			if(ptjLst.size()>0){
+				if(ptjLst.size()>2){
+					SelectItem selectItem1 = new SelectItem();
+					selectItem1.setLabel(ResourceBundleUtils.getMessage("lbl.txt.select", 
+				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+					selectItem1.setValue(null);
+					ptjList.add(selectItem1);
+				}
+				for (Object[] object : ptjLst) {				
+					SelectItem selectItem = new SelectItem();				
+					selectItem.setLabel(object[0].toString());
+					selectItem.setValue(object[1].toString());
+					ptjList.add(selectItem);
+				}
+			}
 		}
 		return ptjList;
 	}
@@ -4500,12 +4509,21 @@ public class ReportBackingBean extends
 				IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 						.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 								IPMReportSO.class);
-				List<Object[]> ptjLst = reportSO.retrieveFMIPTJList(lngorgprflid);
-				for (Object[] object : ptjLst) {				
-					SelectItem selectItem = new SelectItem();				
-					selectItem.setLabel(object[0].toString());
-					selectItem.setValue(object[1].toString());
-					ptjList.add(selectItem);
+				List<Object[]> ptjLst = reportSO.retrieveFMIPTJList(lngorgprflid);				
+				if(ptjLst.size()>0){
+					if(ptjLst.size()>2){
+						SelectItem selectItem1 = new SelectItem();
+						selectItem1.setLabel(ResourceBundleUtils.getMessage("lbl.txt.select", 
+					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+						selectItem1.setValue(null);
+						ptjList.add(selectItem1);
+					}
+					for (Object[] object : ptjLst) {				
+						SelectItem selectItem = new SelectItem();				
+						selectItem.setLabel(object[0].toString());
+						selectItem.setValue(object[1].toString());
+						ptjList.add(selectItem);
+					}
 				}
 			}
 		}				
