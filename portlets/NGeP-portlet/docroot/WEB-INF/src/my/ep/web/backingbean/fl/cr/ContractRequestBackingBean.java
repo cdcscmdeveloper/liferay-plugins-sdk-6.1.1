@@ -3877,7 +3877,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
 				if(getManagedBean().getFlRequest().getFlDeliveryAddresses().size()==0) {
 					throw new EpException(MessageConst.ERROR_100023, new String[]{ResourceBundleUtils.getMessage("lbl.fl.delivery.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
-				}				
+				}else{
+					checkReceivingOfficerList();
+				}
 				validateOrderQuantity();
 				if(getManagedBean().getFlRequest().getScPurchaseInDefault() != null){
 					checkPidMinQtyItem(getManagedBean().getFlRequest());
@@ -4303,6 +4305,28 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		if(getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)){
 			getManagedBean().setItemAddButtonShow(true);
 		}
+	}
+	
+	private void checkReceivingOfficerList(){
+		IAddressSO addressSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+		AddressReqDTO reqDTO = new AddressReqDTO();
+		for(FlDeliveryAddress delAddr : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
+			Long addressId = delAddr.getPmAddress().getAddressId();
+			if(delAddr.getReceivingGrp()!=null && delAddr.getReceivingGrp().getAddressTypeId()!=null) { // in case of Manual address
+				
+				reqDTO.setAddressTypeId(delAddr.getReceivingGrp().getAddressTypeId());
+				AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+				addressId = resDTO.getAddressTypeList().get(0).getPmAddress().getAddressId();
+			}
+			
+			reqDTO.setAddressId(addressId);
+			reqDTO.setAddressType(AddressType.RECEIVING_OFFICER_ADDRESS.value());
+			AddressResDTO resDTO = addressSO.retrieveReceivingOfficerList(reqDTO);
+			if(resDTO.getAddressTypeList().isEmpty()){//TODO others as well needed to throw if list is empty
+				throw new EpException(MessageConst.ERROR_745077, new String[]{getFullAddress(delAddr.getPmAddress())});
+			}
+		}
+		
 	}
 	
 }
