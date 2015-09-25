@@ -64,7 +64,16 @@
 								action="#{receivedNoteBackingBean.submitAction('CANCEL')}">
 								<f:param name="actionName" value="CANCEL" />
 							</p:commandButton></td>
-					</c:if>					
+					</c:if>	
+					<c:if
+					test='#{receivedNoteBackingBean.managedBean.buttonVal eq "View"}'>
+					<td colspan="4" style="text-align: right">	
+					<p:commandLink 
+						value="#{lbl['lbl.td.doc.trackingDiary']}"
+						action="#{trackingDiarySearchBackingBean.goToTrackingDiarySearch(ParameterConst.doctypeFulfilmentNote,receivedNoteBackingBean.managedBean.fulfilmentNote.fulfilmentNoteNo,receivedNoteBackingBean.managedBean.fulfilmentNote.fulfilmentNoteId,receivedNoteBackingBean.managedBean.fulfilmentNote.status.statusId)}"
+						immediate="true" />
+					</td>		
+				</c:if>				
 				</td>
 			</tr>
 		</table>
