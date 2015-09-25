@@ -73,6 +73,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<ScQtCommitteRemarks> committeeRemarkList;
 	private List<ScQtMeetingAttendance> meetingAttendanceList;
 	private List<ScQtMeetingAttendance> selectedMeetingAttList;
+	private List<ScQtMeetingAttendance> deletedMeetingAttendanceList;
 	
 	//Briefing Paper/Kertas Taklimat
 	private List<ScQtFinalizationReport> documentList;
@@ -343,6 +344,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 			List<ScQtMeetingAttendance> selectedMeetingAttList) {
 		this.selectedMeetingAttList = selectedMeetingAttList;
 	}
+  	
 //
 //	/**
 //	 * @return the scQtReport
@@ -357,6 +359,22 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 //	public void setScQtReport(ScQtReport scQtReport) {
 //		this.scQtReport = scQtReport;
 //	}
+
+	/**
+	 * @return the deletedMeetingAttendanceList
+	 */
+	public List<ScQtMeetingAttendance> getDeletedMeetingAttendanceList() {
+		return deletedMeetingAttendanceList;
+	}
+
+	/**
+	 * @param deletedMeetingAttendanceList 
+	 * 				the deletedMeetingAttendanceList to set
+	 */
+	public void setDeletedMeetingAttendanceList(
+			List<ScQtMeetingAttendance> deletedMeetingAttendanceList) {
+		this.deletedMeetingAttendanceList = deletedMeetingAttendanceList;
+	}
 
 	/**
 	 * @return the documentList
