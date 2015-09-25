@@ -48,6 +48,15 @@
 					</ui:repeat>
 				
 				</td>
+				<c:if
+					test='#{purchaseRequestBackingBean.managedBean.buttonVal eq "View"}'>
+					<td colspan="4" style="text-align: right">	
+					<p:commandLink
+						value="#{lbl['lbl.td.doc.trackingDiary']}"
+						action="#{trackingDiarySearchBackingBean.goToTrackingDiarySearch(purchaseRequestBackingBean.managedBean.fulfilmentRequest.docType,purchaseRequestBackingBean.managedBean.fulfilmentRequest.docNo,purchaseRequestBackingBean.managedBean.fulfilmentRequest.fulfilmentReqId,purchaseRequestBackingBean.managedBean.fulfilmentRequest.status.statusId)}"
+						immediate="true" />
+					</td>		
+				</c:if>
 			</tr>
 		</table>
 		<table style="width: 100%;">
@@ -68,6 +77,7 @@
 							<f:param name="actionName" value="CANCEL" />
 						</p:commandButton></td>
 				</c:if>
+				
 			</tr>
 		</table>
 		<ui:include src="prReviewHeaderPage.xhtml" />
