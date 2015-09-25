@@ -284,7 +284,7 @@
 							value="#{lbl['lbl.pm.category.company.restriction']}" /></td>
 					<td><p:selectBooleanCheckbox
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.byCompType}">
-							<p:ajax event="change" update="outpnlCatRes" />
+							<p:ajax event="change" listener="#{categoryBackingBean.getCheckCategoryRestrList}" update="outpnlCatRes" />
 						</p:selectBooleanCheckbox></td>
 				</tr>
 				<tr>

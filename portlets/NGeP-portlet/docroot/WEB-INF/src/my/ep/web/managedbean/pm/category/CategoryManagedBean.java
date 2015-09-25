@@ -106,7 +106,7 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	private Long status;
 	
 	/** The new category. */
-	private boolean categoryRestrRequired = true;
+	private boolean categoryRestrRequired = false;
 	
 	/** The new category. */
 	private boolean newCategory = false;
@@ -116,6 +116,9 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	
 	/** The check special category. */
 	private boolean checkSpecialCategory = false;
+	
+	/** The check special category. */
+	private boolean basicCategoryRequired = false;
 	
 	/** The display category grouping. */
 	private boolean displayCategoryGrouping = false;
@@ -1198,6 +1201,20 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	public void setDeletedPmMachineCategoryList(
 			List<PmMachineCategory> deletedPmMachineCategoryList) {
 		this.deletedPmMachineCategoryList = deletedPmMachineCategoryList;
+	}
+
+	/**
+	 * @return the basicCategoryRequired
+	 */
+	public boolean isBasicCategoryRequired() {
+		return basicCategoryRequired;
+	}
+
+	/**
+	 * @param basicCategoryRequired the basicCategoryRequired to set
+	 */
+	public void setBasicCategoryRequired(boolean basicCategoryRequired) {
+		this.basicCategoryRequired = basicCategoryRequired;
 	}
 
 }
