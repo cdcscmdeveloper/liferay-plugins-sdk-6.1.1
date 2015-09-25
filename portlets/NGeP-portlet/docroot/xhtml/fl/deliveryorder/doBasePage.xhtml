@@ -93,6 +93,15 @@
 							<f:param name="actionName" value="CANCEL" />
 						</p:commandButton></td>
 				</h:panelGroup>
+				<c:if
+					test='#{createDOBackingBean.managedBean.buttonVal eq "View"}'>
+					<td colspan="4" style="text-align: right">	
+					<p:commandLink 
+						value="#{lbl['lbl.td.doc.trackingDiary']}"
+						action="#{trackingDiarySearchBackingBean.goToTrackingDiarySearch(ParameterConst.doctypeDeliveryOrder,createDOBackingBean.managedBean.flDeliveryOrder.deliveryOrderNo,createDOBackingBean.managedBean.flDeliveryOrder.deliveryOrderId,createDOBackingBean.managedBean.flDeliveryOrder.status.statusId)}"
+						immediate="true" />
+					</td>		
+				</c:if>
 			</tr>
 		</table>
 		<ui:include src="doReviewHeaderPage.xhtml" />
