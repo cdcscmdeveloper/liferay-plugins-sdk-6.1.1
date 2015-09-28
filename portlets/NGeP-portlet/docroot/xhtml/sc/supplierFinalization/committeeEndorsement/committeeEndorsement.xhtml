@@ -10,7 +10,7 @@
 	<p:panel header="#{lbl['lbl.sc.committee.endorsement']}" toggleable="true">
 		
 		<p:dataTable id="committeeEndorsement" var="endorsement"
-			value="#{suppFinalizationBackingBean.managedBean.committeeList}"
+			value="#{suppFinalizationBackingBean.managedBean.committeeEndorsementList}"
 			rowKey="#{endorsement}" rowIndexVar="index" rows="10">
 			<ac:paginator for="committeeEndorsement" />
 
