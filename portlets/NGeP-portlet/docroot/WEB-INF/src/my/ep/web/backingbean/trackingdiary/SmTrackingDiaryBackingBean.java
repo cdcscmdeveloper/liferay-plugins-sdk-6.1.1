@@ -11,6 +11,7 @@ import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -59,9 +60,9 @@ public class SmTrackingDiaryBackingBean extends
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),"SR"));
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSmSupplier().getSmAppl().getApplId()));
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSmAppl().getApplId()));
 //			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSmSupplier().getSmAppl().getApplNo()));
-			log.info("getSmDocumentDataModel docNo " + getManagedBean().getSmSupplier().getSmAppl().getApplNo());
+			log.info("getSmDocumentDataModel docNo " + getManagedBean().getSmAppl().getApplNo());
 
 			reqDTO.setSearchBean(searchBean);
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
@@ -78,9 +79,10 @@ public class SmTrackingDiaryBackingBean extends
 		}
 	}
 
-	public String goToTrackingDiarySearch(SmSupplier smSupplier) {
+	public String goToTrackingDiarySearch(SmAppl smAppl) {
 //		log.debug("**********goToTrackingDiarySearch************"+ unspscObj.getUnspscCode());
-		getManagedBean().setSmSupplier(smSupplier);
+//		getManagedBean().setSmSupplier(smSupplier);
+		getManagedBean().setSmAppl(smAppl);
 		searchTrackingDiaryDataModel.reloadData();	
 		return NAV_TO_SMSUPPLIER_DETAIL_SEARCH + "?faces-redirect=true";
 	}

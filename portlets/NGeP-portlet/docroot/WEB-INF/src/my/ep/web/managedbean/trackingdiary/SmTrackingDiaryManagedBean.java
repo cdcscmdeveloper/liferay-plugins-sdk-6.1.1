@@ -4,20 +4,24 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
-import org.apache.log4j.Logger;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
+import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
+import my.ep.dto.sm.revision.SmApplRevisionResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
+import org.apache.log4j.Logger;
 
 @ManagedBean(name = "smTrackingDiaryManagedBean")
 @SessionScoped
@@ -34,7 +38,8 @@ public class SmTrackingDiaryManagedBean<PmTrackingDiary> extends BaseManagedBean
 	private String supplierName;
 	private String applicationType;
 	private SmSupplier smSupplier;
-	public IPagingDataModel<SmSupplier> smDocumentDataModel = new SearchPagingDataModel();
+	private SmAppl smAppl;
+	public IPagingDataModel<SmAppl> smDocumentDataModel = new SearchPagingDataModel();
 
 	@ManagedProperty(value="#{spkiBackingBean}")
 	private SpkiBackingBean spkiBackingBean;
@@ -46,7 +51,7 @@ public class SmTrackingDiaryManagedBean<PmTrackingDiary> extends BaseManagedBean
 		this.spkiBackingBean = spkiBackingBean;
 	}
 
-	public class SearchPagingDataModel extends PagingDataModel<SmSupplier> {
+	public class SearchPagingDataModel extends PagingDataModel<SmAppl> {
 
 		private static final long serialVersionUID = 1L;
 
@@ -56,54 +61,48 @@ public class SmTrackingDiaryManagedBean<PmTrackingDiary> extends BaseManagedBean
 		}
 
 		@Override
-		protected ISearchResultBean<SmSupplier> pageChangeListener(
-				ISearchBean<SmSupplier> searchBean) {
-
-			ISupplierSearchSO smSupplierSO = null;
+		protected ISearchResultBean<SmAppl> pageChangeListener(
+				ISearchBean<SmAppl> searchBean) {			
+			
+			ISmApplRevisionSO applRevisionSO = null;
 			try {
-				log.debug("ISearchResultBean<SmSupplier> pageChangeListener");
-				smSupplierSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
-						.getServiceObject("sm", ISupplierSearchSO.class);
-
-				SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
-				reqDTO.setSearchBean(searchBean);
+				applRevisionSO = (ISmApplRevisionSO) BusinessDelegate.getInstance()
+						.getServiceObject("sm", ISmApplRevisionSO.class);
+				
+				SmApplRevisionReqDTO reqDTO2 = new SmApplRevisionReqDTO();
+				reqDTO2.setSearchBean(searchBean);
 				
 				if(getMOFAccountNo()!=null && getMOFAccountNo()!="") {
 					log.debug("getMOFAccountNo");
-					reqDTO.setMofAccountNo(getMOFAccountNo());
+					reqDTO2.setMofAccountNo(getMOFAccountNo());
 				}
 				if(getSupplierName()!=null && getSupplierName()!="") {
 					log.debug("getSupplierName");
-					reqDTO.setCompanyName(getSupplierName());
+					reqDTO2.setCompanyName(getSupplierName());
 				}
 				if(getApplicationNo()!=null && getApplicationNo()!="") {
 					log.info("getApplicationNo"+getApplicationNo());
-					reqDTO.setApplnNo(getApplicationNo());
+					reqDTO2.setApplicationNo(getApplicationNo());
 				}
 				if(getApplicationType()!=null && getApplicationType()!="") {
 					log.debug("getApplicationNo");
-					reqDTO.setApplType(getApplicationType());
+					reqDTO2.setApplicationType(getApplicationType());
 				}
-				// to retrieve all statuses suppliers, including inactive suppliers.
-				reqDTO.setAllStatuses(true);
-				log.debug("*********b4***********");
-				SupplierSearchResDTO res = smSupplierSO.retriveSupplierProfiles(reqDTO);
-
-//				System.out.println("*********after***********"+res.getResultBean().getTotalRecord());
-				return res.getResultBean();
-			} catch (Exception e) {
-				e.printStackTrace();
+				
+				SmApplRevisionResDTO resDTO2 = applRevisionSO.retrieveApplicationHistoryForTrackingDiary(reqDTO2);
+				return resDTO2.getResultBean();
 			} finally {
-				smSupplierSO = null;
+				applRevisionSO = null;
 			}
-			return new SearchResultBean();
+			
+//			return new SearchResultBean();
 		}
 	}
-	public IPagingDataModel<SmSupplier> getSmDocumentDataModel() {
+	public IPagingDataModel<SmAppl> getSmDocumentDataModel() {
 		return smDocumentDataModel;
 	}
 	public void setSmDocumentDataModel(
-			IPagingDataModel<SmSupplier> smDocumentDataModel) {
+			IPagingDataModel<SmAppl> smDocumentDataModel) {
 		this.smDocumentDataModel = smDocumentDataModel;
 	}
 	public String getApplicationType() {
@@ -139,6 +138,14 @@ public class SmTrackingDiaryManagedBean<PmTrackingDiary> extends BaseManagedBean
 
 	public void resetDocumentDataModel() {
 		this.smDocumentDataModel = new SearchPagingDataModel();
+	}
+
+	public SmAppl getSmAppl() {
+		return smAppl;
+	}
+
+	public void setSmAppl(SmAppl smAppl) {
+		this.smAppl = smAppl;
 	}
 
 }

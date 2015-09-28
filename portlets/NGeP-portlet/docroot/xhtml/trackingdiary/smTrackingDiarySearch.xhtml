@@ -60,7 +60,7 @@
 		<p:panel id="resultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
 
 
-			<p:dataTable id="smSupplierTableID" lazy="true" value="#{smTrackingDiaryBackingBean.managedBean.smDocumentDataModel}" var="smSupplier" width="100%" rows="10">
+			<p:dataTable id="smSupplierTableID" lazy="true" value="#{smTrackingDiaryBackingBean.managedBean.smDocumentDataModel}" var="smAppl" width="100%" rows="10">
 
 				<ac:paginator for="smSupplierTableID"></ac:paginator>
 
@@ -68,19 +68,19 @@
 					<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.td.creation.date']}"/>
 					</f:facet>
-				<ac:labelDateTime value="#{smSupplier.createdDate}" /> 
+				<ac:labelDateTime value="#{smAppl.createdDate}" /> 
 				</p:column>
 				<p:column width="15%">
 					<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.application.no']}"/>
 					</f:facet>
-					#{smSupplier.smAppl.applNo}
+					#{smAppl.applNo}
 				</p:column>
 				<p:column width="15%">
 					<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.applicationtype']}"/>
 					</f:facet>
-				#{smTrackingDiaryBackingBean.getParameterDesc(ParameterTypeConst.supplierApplicationTypes,smSupplier.smAppl.applType)}
+				#{smTrackingDiaryBackingBean.getParameterDesc(ParameterTypeConst.supplierApplicationTypes,smAppl.applType)}
 				</p:column>
 <!-- 				<p:column width="15%"> -->
 <!-- 					<f:facet name="header"> -->
@@ -92,14 +92,14 @@
 					<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.assocCmpny.companyName']}"/>
 					</f:facet>
-				#{smSupplier.companyName}
+				#{smAppl.smSupplier.companyName}
 				</p:column>
 				<p:column width="5%">
 					<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.td.action']}"/>
 					</f:facet>
 						<p:commandLink
-							action="#{smTrackingDiaryBackingBean.goToTrackingDiarySearch(smSupplier)}">
+							action="#{smTrackingDiaryBackingBean.goToTrackingDiarySearch(smAppl)}">
 							<p:graphicImage 
 								value="/css/images/design/ico-view.png" />
 						</p:commandLink>
