@@ -12,16 +12,19 @@
 			      <p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}"  styleClass="required" />
 				  <h:panelGrid columns="2">
 				      <p:inputTextarea id="circularNoTxt" style="width:170px;margin-bottom:2px" rows="4"
-					 	required="true" maxlength="60"  disabled="#{centralContractBackingBean.managedBean.viewContract}"
-						value="#{centralContractBackingBean.managedBean.circularVer.circularNo}" label="#{lbl['lbl.ct.physical.circular.no']}"  autoResize="false"/>
+					 	required="true"  disabled="#{centralContractBackingBean.managedBean.viewContract}"
+						value="#{centralContractBackingBean.managedBean.circularVer.circularNo}" label="#{lbl['lbl.ct.physical.circular.no']}"  
+						autoResize="false"
+						onkeyup="limitTextArea(this,60);" onkeydown="limitTextArea(this,60);"/>
 					<p:message for="circularNoTxt" display="icon" />
 				    </h:panelGrid>
 						
 					 <h:outputLabel value="#{lbl['lbl.ct.circular.name']}"   styleClass="required"/>
 				    <h:panelGrid columns="2">
-				       <p:inputTextarea id="circularNameTxt" rows="4" style="width:250px;" maxlength="500" required="true" 
+				       <p:inputTextarea id="circularNameTxt" rows="4" style="width:250px;" required="true" 
 						   disabled="#{centralContractBackingBean.managedBean.viewContract}" autoResize="false"
-						   label="#{lbl['lbl.ct.circular.name']}" value="#{centralContractBackingBean.managedBean.circularVer.name}" />
+						   label="#{lbl['lbl.ct.circular.name']}" value="#{centralContractBackingBean.managedBean.circularVer.name}" 
+						   onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" />
 				         	<p:message for="circularNameTxt" display="icon" />
 				    </h:panelGrid>
 				    

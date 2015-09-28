@@ -26,27 +26,34 @@
 			<p:column headerText="#{lbl['lbl.ct.contact.person.name']}" style="width:20%;">
 				<p:inputText id="cperson" value="#{contactPersonsVar.name}" maxlength="20"
 					disabled="#{centralContractBackingBean.managedBean.viewContract}"
-				   	style="width:95%;" label="#{lbl['lbl.ct.contact.person.name']}" />
+				   	style="width:95%;" label="#{lbl['lbl.ct.contact.person.name']}"
+				   	onkeypress="if (event.keyCode == 13) { return false; }">
+				   	 </p:inputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.address']}" style="width:40%;">
 				<p:inputText value="#{contactPersonsVar.address}" style="width:95%;" maxlength="200"
-					disabled="#{centralContractBackingBean.managedBean.viewContract}"/>
+					disabled="#{centralContractBackingBean.managedBean.viewContract}"
+					onkeypress="if (event.keyCode == 13) { return false; }"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.email']}" style="width:20%;">
 				  <p:inputText id="validateEmail" value="#{contactPersonsVar.email}" maxlength="100"
 				     style="width:95%;" validator="#{webappBean.checkEmail}" label="#{lbl['lbl.ct.email']}"
-				     disabled="#{centralContractBackingBean.managedBean.viewContract}"/>
+				     disabled="#{centralContractBackingBean.managedBean.viewContract}"
+				     onkeypress="if (event.keyCode == 13) { return false; }">
+				     </p:inputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.tel']}" style="width:15%;">
 				<p:inputText id="validPhone" style="width:90%;" label="#{lbl['lbl.ct.tel']}" maxlength="100"
 				   value="#{contactPersonsVar.phoneNo}"  validator="#{webappBean.checkPhoneNumber}"
-				   disabled="#{centralContractBackingBean.managedBean.viewContract}"/>
+				   disabled="#{centralContractBackingBean.managedBean.viewContract}"
+				   onkeypress="if (event.keyCode == 13) {  return false; }"/>
 			</p:column>
 		</p:dataTable>
 		<div class="ppRightBtn"> 
 			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" partialSubmit="true" 
 			   action="#{centralContractBackingBean.addContactPerson()}" update="contactPersonDt"
-				oncomplete="contactPersonObj.paginator.endLink.click();" rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
+			   widgetVar="addContactPersonBtn"
+			 	oncomplete="contactPersonObj.paginator.endLink.click();" rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"  partialSubmit="true" 
 			    onsuccess="delCtPersonDlg.show()" rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>				
 		</div>
@@ -145,6 +152,7 @@
 					<h:outputText value="#{cancelledCircularDlgVar.circularVer.name}" style="width:300px;" />
 				</p:column>									
 			</p:dataTable>
+			<p:spacer height="5"></p:spacer>
 			<div class="ppRightBtn"> 
 				<p:commandButton value="#{lbl['lbl.btn.ok']}"  process="cancelCircularDlg" 
 					action="#{centralContractBackingBean.addCancelledCircular}"
