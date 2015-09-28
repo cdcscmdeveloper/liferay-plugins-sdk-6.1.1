@@ -525,6 +525,7 @@ public class FileUtility extends InitializeSO{
 			List<AgOffice> agOfficeList = new ArrayList<AgOffice>();
 			AgOffice afOffice = null;
 			EPErrorResponse errorResponse = null;
+			boolean recordFlag;
 
 			try (Scanner scanner = new Scanner(path,IntegrationConstants.ENCODING.name())) {
 				int lineNo = 1;
@@ -532,15 +533,25 @@ public class FileUtility extends InitializeSO{
 					line = scanner.nextLine();
 					if(line.length()==InterfaceRowLength.GLBAC.value()){
 						afOffice = new AgOffice();
+						recordFlag = false;
 						afOffice.setYear(getValue(line, 0, 4));
 						afOffice.setCode(getValue(line, 4, 4));
+						AgOfficeReqDTO reqDTO = new AgOfficeReqDTO();
+						reqDTO.setAgOfficeCode(afOffice.getCode());
+						AgOfficeResDTO agOfficeDTO = agOfficeSO.retrieveValidAgOfficeByOfficeCode(reqDTO);
+						if (agOfficeDTO.isSuccessful()) {
+							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.DUPLICATE_RECORD_1));
+							recordFlag = true;
+						}
 						afOffice.setDescription(getValue(line, 8, 255));
 						afOffice.setStatus(getValue(line, 263, 1));
 						afOffice.setEffDate(IntegrationConstants.DEFAULT_DATE);
-						agOfficeList.add(afOffice);
+						if(!recordFlag)
+							agOfficeList.add(afOffice);
 					}else{
 						errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in size of the record length"));
+						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.LENGTH_ERROR));
 					}
 					lineNo++;
 				}
@@ -556,20 +567,33 @@ public class FileUtility extends InitializeSO{
 			List<AgCtrlOfficer> agCtrOfficeList = new ArrayList<AgCtrlOfficer>();
 			AgCtrlOfficer afCtrOffice = null;
 			EPErrorResponse errorResponse = null;
+			boolean recordFlag;
 			try (Scanner scanner = new Scanner(path,IntegrationConstants.ENCODING.name())) {
 				int lineNo = 1;
 				while (scanner.hasNextLine()) {
 					line = scanner.nextLine();
 					if(line.length()==InterfaceRowLength.GLSEG.value()){
 						afCtrOffice = new AgCtrlOfficer();
+						recordFlag = false;
 						afCtrOffice.setYear(getValue(line,0 ,4 ));
 						afCtrOffice.setCode(getValue(line, 4, 2));
+						
+						OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+						orgProfileReqDTO.setOrgTypeCode(ParameterConst.ORG_TYPE_PEGAWAI_PENGAWAL);
+						orgProfileReqDTO.setOrgCode(afCtrOffice.getCode()); 
+						OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileByCodeAndOrgType(orgProfileReqDTO);
+						if (orgProfileResDTO.isSuccessful()) {
+							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.DUPLICATE_RECORD_2));
+							recordFlag = true;
+						} 
 						afCtrOffice.setDescription(getValue(line, 6, 255));
 						afCtrOffice.setStatus(getValue(line,261, 1));
-						agCtrOfficeList.add(afCtrOffice);
+						if(!recordFlag)
+							agCtrOfficeList.add(afCtrOffice);
 					}else{
 						errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in size of the record length"));
+						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.LENGTH_ERROR));
 					}
 					lineNo++;
 				}
