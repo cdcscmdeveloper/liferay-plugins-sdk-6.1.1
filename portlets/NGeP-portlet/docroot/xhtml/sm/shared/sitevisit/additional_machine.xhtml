@@ -112,7 +112,12 @@
 			
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.machine.quantity']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText maxlength="8" size="50" label="#{lbl['lbl.sm.machine.quantity']}" required="#{!empty param['disableMsgAutoUpdate']}" value="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.qty}" /></td>
+				<td>
+					<p:inputText maxlength="8" size="50" label="#{lbl['lbl.sm.machine.quantity']}" required="#{!empty param['disableMsgAutoUpdate']}" 
+					value="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.qty}">
+						<f:validateLongRange minimum="1" maximum="99999999"></f:validateLongRange>
+					</p:inputText>
+				</td>
 			</tr>
 
 			<tr>
@@ -122,6 +127,7 @@
 						maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" disabled="#{empty param['disableMsgAutoUpdate']}"/>
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						<p:ajax process="@this" partialSubmit="true" update="@this" />
+						<f:param name="disableMsgAutoUpdate" value="true" />
 					</p:inputText>
 				</td>
 			</tr>
