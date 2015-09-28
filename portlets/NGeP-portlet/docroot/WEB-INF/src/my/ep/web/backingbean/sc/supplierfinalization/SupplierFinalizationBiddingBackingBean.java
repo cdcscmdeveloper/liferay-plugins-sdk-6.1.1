@@ -16,9 +16,11 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.BidItemBean;
 import my.ep.biz.bean.sc.BidPackageBean;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
@@ -29,7 +31,10 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
 import my.ep.dto.sc.quationtender.MeetingReqDTO;
@@ -45,10 +50,12 @@ import my.ep.dto.sc.schedulebidding.ScheduleBiddingResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.persistence.entity.sc.common.ScAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
@@ -57,6 +64,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
+import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
@@ -99,9 +107,15 @@ public class SupplierFinalizationBiddingBackingBean extends
 	private int currentTab;
 	private String textBeforeSign;
 
-	public static final int ONLINE_BIDDING_ACTIVE_INDEX_SUMMARY = 0;
-	public static final int ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_ENDORSEMENT = 1;
-	public static final int ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_ENDORSEMENT = 1;
+	public static int ONLINE_BIDDING_FINALIZATION_MEETING_ACTIVE_INDEX = 0;
+	public static int ONLINE_BIDDING_ACTIVE_INDEX_SUMMARY = 1;
+	public static int ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_ENDORSEMENT = 2;
+	public static int ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_ENDORSEMENT = 2;
+	
+	// Bidding finalization meeting tab constants
+	public static final int BIDDING_ACTIVE_INDEX_MEETING = 0;
+	public static final int BIDDING_ACTIVE_INDEX_COMMITTEE = 1;
+	public static final int BIDDING_ACTIVE_INDEX_JOIN_IN = 2;
 
 	/**
 	 * Default constructor
@@ -122,13 +136,17 @@ public class SupplierFinalizationBiddingBackingBean extends
 			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class);
 			this.getManagedBean().setPayLoad(dataType);
 			Long qtId = Long.valueOf(dataType.getQtId());
-			String committeeType = String.valueOf(dataType.getCommitteeType());
-			getManagedBean().setCommitteeType(committeeType);
+			String committeeType = null;
+			
+			if (StringUtils.isNotBlank(
+					dataType.getCommitteeType())) {
+				committeeType = String.valueOf(dataType.getCommitteeType());
+				getManagedBean().setCommitteeType(committeeType);
+			}
 			getManagedBean().setPayLoad(dataType);
 			
 			retrieveOnlineBiddingEndorsement(qtId);
-			navigateToBiddingSummaryTab();
-
+			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
 					.getNavigationHandler()
@@ -148,6 +166,27 @@ public class SupplierFinalizationBiddingBackingBean extends
 		retrieveSupplierFinalization(qtId);		
 		generateZoneMenuModel();
 		retrieveBiddingSummary();
+		checkIfLoggedinUserIsSecretary();
+		
+		if (StringUtils.isNotBlank(
+				getManagedBean().getCommitteeType())) {
+			this.getManagedBean().setCommitteeTabLabel(
+				getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE, 
+								 getManagedBean().getCommitteeType()));	
+		}
+		
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+		if (ParameterConst.ONLINE_BIDDING_ESCALATION.equals(
+				scQtFinalization.getOnlineBiddingEndorse())) {		
+			ONLINE_BIDDING_FINALIZATION_MEETING_ACTIVE_INDEX = -1;
+			ONLINE_BIDDING_ACTIVE_INDEX_SUMMARY = 0;
+			ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_ENDORSEMENT = 1;
+			ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_ENDORSEMENT = 1;	
+			
+			navigateToBiddingSummaryTab();
+		} else {
+			navigateToBiddingFinalizationMeetingTab();
+		}		
 	}
 
 	/**
@@ -268,18 +307,27 @@ public class SupplierFinalizationBiddingBackingBean extends
 			if (resDTO.isSuccessful()) {
 				// Meeting Details
 				List<ScQtMeeting> meetingList = resDTO.getMeetingDtls();
+				List<ScQtMeeting> currentMeetingList 
+										= new ArrayList<ScQtMeeting>();
 				if (CollectionUtils.isNotEmpty(meetingList)) {
 					for (ScQtMeeting scQtMeeting : meetingList) {
+						if (DbValueConst.RECORD_STATUS_ACTIVE !=
+									scQtMeeting.getRecordStatusFlg()) {
+							continue;
+						}
+						currentMeetingList.add(scQtMeeting);
 						Long meetingStatusId = scQtMeeting.getMeetingStatus() != null ? scQtMeeting
 								.getMeetingStatus().getStatusId() : null;
 						scQtMeeting.setMeetingStatusStr(meetingStatusId);
 					}
 				}
 
-				this.getManagedBean().setMeetingList(meetingList);
+				this.getManagedBean().setMeetingList(currentMeetingList);
 
 				ScQtCommittee scQtCommittee = resDTO.getQtCommittee();
 				this.getManagedBean().setScQtCommittee(scQtCommittee);
+				this.getManagedBean().setMeetingAttendanceList(
+							scQtCommittee.getMeetingAttendances());				
 			}
 		} finally {
 			meetingSO = null;
@@ -517,6 +565,14 @@ public class SupplierFinalizationBiddingBackingBean extends
 	}
 	
 	/**
+	 * To navigate to Meeting tab
+	 */
+	public void navigateToBiddingFinalizationMeetingTab() {
+		this.getManagedBean().setOnlineBiddingActiveIndex(
+				ONLINE_BIDDING_FINALIZATION_MEETING_ACTIVE_INDEX);
+	}	
+	
+	/**
 	 * To navigate to bidding summary tab
 	 */
 	public void navigateToBiddingSummaryTab() {
@@ -591,14 +647,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 		return totalAmount;
 	}
 
-	/*
-	 * public void retrieveEndorsement() { ScQtFinalization scQtFinalization =
-	 * getManagedBean().getScQtFinalization();
-	 * if(scQtFinalization.getOnlineBiddingEndorse
-	 * ().equals(ParameterConst.ONLINE_BIDDING_MEETING)){
-	 * retrieveOnlineEndorsement(); }else{ retrieveOfflineEndorsement(); } }
-	 */
-
 	/**
 	 * To retrieve the list of Committee for Endorsement (online endorsement)
 	 */
@@ -606,25 +654,275 @@ public class SupplierFinalizationBiddingBackingBean extends
 		this.getManagedBean().setOnlineBiddingActiveIndex(
 				ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_ENDORSEMENT);
 
-		if (CollectionUtils.isEmpty(
-				getManagedBean().getCommitteeEndorsementList())) {
-			ScQtCommittee scQtCommittee = getManagedBean().getScQtCommittee();
-			
-			if (CollectionUtils.isNotEmpty(
-							scQtCommittee.getCommitteeActivities())) {
-				List<ScQtCommitteeActivity> committeeEndorsementList 
-									= new ArrayList<ScQtCommitteeActivity>();
-				for (ScQtCommitteeActivity commActivity 
-							: scQtCommittee.getCommitteeActivities()) {
-					if (commActivity.isAttended()) {
-						committeeEndorsementList.add(commActivity);
-					}
-				}
-				getManagedBean().setCommitteeEndorsementList(
-										committeeEndorsementList);
+		ScQtCommittee scQtCommittee = getManagedBean().getScQtCommittee();
+		List<ScQtCommitteeActivity> committeeActivities = scQtCommittee
+				.getCommitteeActivities();
+		if (CollectionUtils.isEmpty(committeeActivities)
+				&& CollectionUtils.isNotEmpty(
+						scQtCommittee.getScCommittee().getScCommitteeMembers())) {
+			committeeActivities = new ArrayList<ScQtCommitteeActivity>();
+			for (ScCommitteeMember scCommitteeMember : scQtCommittee
+					.getScCommittee().getScCommitteeMembers()) {
+				ScQtCommitteeActivity activity = new ScQtCommitteeActivity();
+				activity.setScQtCommittee(this.getManagedBean()
+						.getScQtCommittee());
+				activity.setScCommitteeMember(scCommitteeMember);
+				setDefaultValueForCommitteeActivityIfNull(activity);
+				committeeActivities.add(activity);
 			}
+			scQtCommittee.setCommitteeActivities(committeeActivities);
+		}
+		
+		if (CollectionUtils.isNotEmpty(committeeActivities)) {
+			this.getManagedBean().setCommitteeList(committeeActivities);
+			List<ScQtCommitteeActivity> committeeEndorsementList 
+							= new ArrayList<ScQtCommitteeActivity>();
+			for (ScQtCommitteeActivity commActivity 
+					: scQtCommittee.getCommitteeActivities()) {
+				if (commActivity.isAttended()) {
+					committeeEndorsementList.add(commActivity);
+				}
+			}
+			getManagedBean().setCommitteeEndorsementList(
+					committeeEndorsementList);
 		}
 	}
+	
+	private void setDefaultValueForCommitteeActivityIfNull(ScQtCommitteeActivity committeeActivity) {
+		if (committeeActivity.getScCommitteeMember() != null) {
+			if (committeeActivity.getScCommitteeMember()
+					.getMemberName() == null) {
+				committeeActivity.getScCommitteeMember()
+						.setMemberName("");
+			}
+		} else {
+			committeeActivity
+					.setScCommitteeMember(new ScCommitteeMember());
+			committeeActivity.getScCommitteeMember()
+					.setMemberName("");
+		}
+		if (committeeActivity.getScCommitteeMember() != null) {
+			if (committeeActivity.getScCommitteeMember()
+					.getDesignation() == null) {
+				committeeActivity.getScCommitteeMember()
+						.setDesignation("");
+			}
+		} else {
+			committeeActivity
+					.setScCommitteeMember(new ScCommitteeMember());
+			committeeActivity.getScCommitteeMember()
+					.setDesignation("");
+		}
+		if (committeeActivity.getScCommitteeMember() != null) {
+			if (committeeActivity.getScCommitteeMember()
+					.getGrade() == null) {
+				committeeActivity.getScCommitteeMember()
+						.setGrade("");
+			}
+		} else {
+			committeeActivity
+					.setScCommitteeMember(new ScCommitteeMember());
+			committeeActivity.getScCommitteeMember().setGrade(
+					"");
+		}
+		if (committeeActivity.getScCommitteeMember() != null) {
+			if (committeeActivity.getScCommitteeMember()
+					.getIcPassport() == null) {
+				committeeActivity.getScCommitteeMember()
+						.setIcPassport("");
+			}
+		} else {
+			committeeActivity
+					.setScCommitteeMember(new ScCommitteeMember());
+			committeeActivity.getScCommitteeMember()
+					.setIcPassport("");
+		}		
+	}	
+	
+	/**
+	 * Navigate to committee details
+	 */
+	public void navigateToMeetingDtls() {
+		this.getManagedBean().setMeetingActiveIndex(
+				BIDDING_ACTIVE_INDEX_MEETING);
+	}
+	
+	/**
+	 * Populate meeting status values in a drop down under Preparation tab
+	 * 
+	 * @return an array of meeting status values
+	 */
+	public SelectItem[] getMeetingStatusDropDown() {
+		SelectItem[] items = getStatusDropdownValues("SC",
+				QTConstants.DOCTYPE_MEETING);
+		return items;
+	}
+
+	/**
+	 * Event to update the status of the selected meeting
+	 * 
+	 * @param scQtMeeting
+	 *            the selected ScQtMeeting entity
+	 */
+	public void changeMeetingStatus(ScQtMeeting scQtMeeting) {
+		IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+		StatusReqDTO statusReqDTO = new StatusReqDTO();
+		statusReqDTO.setStatusId(scQtMeeting.getMeetingStatusStr());
+
+		StatusResDTO statusResDTO = statusSO
+				.retrieveStatusByStatusId(statusReqDTO);
+		scQtMeeting.setMeetingStatus(statusResDTO.getPmStatus());
+	}	
+	
+	/**
+	 * Event to handle addition of bidding finalization committee meeting(s)
+	 */
+	public void addMeetingDtls() {
+		debugLogger("..In addMeetingDtls()..");
+		try {
+			List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();
+			if (null == meetingList) {
+				meetingList = new ArrayList<ScQtMeeting>();
+				this.getManagedBean().setMeetingList(meetingList);				
+			}
+
+			ScQtMeeting meeting = new ScQtMeeting();
+			// meeting.setPmStatus(new PmStatus());
+			meeting.setQtCommittee(this.getManagedBean().getScQtCommittee());
+			setUserDetails(meeting);
+
+			IStatusSO statussO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IStatusSO.class);
+			StatusReqDTO statusreq = new StatusReqDTO();
+			statusreq.setStatusId(QTStatusConst.MS_PENDING);
+			StatusResDTO statusres = statussO
+					.retrieveStatusByStatusId(statusreq);
+			meeting.setMeetingStatus(statusres.getPmStatus());
+
+			meetingList.add(meeting);
+		} finally {
+
+		}
+	}	
+	
+	/**
+	 * Event to handle deletion of selected list of finalization committee
+	 * meetings
+	 * 
+	 * @param selectedMeetingList
+	 *            the selected list of ScQtMeeting entities
+	 */
+	public void deleteMeetingDetails() {
+		try {
+			List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();
+			List<ScQtMeeting> deletedMeetingList = getManagedBean().getDeletedMeetingList();
+			if (deletedMeetingList == null){
+				getManagedBean().setDeletedMeetingList(new ArrayList<ScQtMeeting>());
+			}
+			
+			List<ScQtMeeting> tempDeletedList = new ArrayList<ScQtMeeting>();
+			for (ScQtMeeting meeting : meetingList){
+				if (this.getManagedBean().isSelectAll() || meeting.isSelected()) {
+					tempDeletedList.add(meeting);
+					
+					if (!meeting.isBrandNew()) {
+						meeting.setDeleted(true);
+						getManagedBean().getDeletedMeetingList().add(meeting);
+					}
+				}
+			}
+			if (CollectionUtils.isNotEmpty(tempDeletedList)) {
+				meetingList.removeAll(tempDeletedList);
+				if (CollectionUtils.isNotEmpty(meetingList)) {
+					getManagedBean().getScQtCommittee().getScQtMeetings()
+						.addAll(meetingList);
+				}
+			}			
+		} finally {
+		}		
+	}	
+	
+	/**
+	 * Navigate to committee details
+	 */
+	public void navigateToCommitteeDtls() {
+		this.getManagedBean().setMeetingActiveIndex(
+				BIDDING_ACTIVE_INDEX_COMMITTEE);
+	}
+	
+	/**
+	 * Navigate to Meeting Attendance details
+	 */
+	public void navigateToMeetingAttendanceDtls() {
+		this.getManagedBean().setMeetingActiveIndex(
+				BIDDING_ACTIVE_INDEX_JOIN_IN);
+	}
+
+	/**
+	 * Event to handle addition of committee meeting attendance records
+	 */
+	public void addMeetingAttendance() {
+		debugLogger("..In addMeetingAttendance()..");
+		try {
+			List<ScQtMeetingAttendance> meetingAttendanceList = getManagedBean()
+					.getMeetingAttendanceList();
+			if (null == meetingAttendanceList) {
+				meetingAttendanceList = new ArrayList<ScQtMeetingAttendance>();
+			}
+
+			ScQtMeetingAttendance meeting = new ScQtMeetingAttendance();
+			meeting.setQtCommittee(this.getManagedBean().getScQtCommittee());
+			setUserDetails(meeting);
+			meetingAttendanceList.add(meeting);
+
+			this.getManagedBean().setMeetingAttendanceList(
+					meetingAttendanceList);
+		} finally {
+
+		}
+	}
+	
+	/**
+	 * Event to handle deletion of the selected list of committee meeting
+	 * attendance
+	 * 
+	 * @param selectedMeetingAttendanceList
+	 *            the selected list of ScQtMeetingAttendance entities
+	 */
+	public void deleteMeetingAttendanceDetails() {
+		try {
+			List<ScQtMeetingAttendance> selectedMeetingAttdList 
+					= getManagedBean().getSelectedMeetingAttList();
+			List<ScQtMeetingAttendance> meetingAttendanceList 
+					= getManagedBean().getMeetingAttendanceList();
+			if (CollectionUtils.isNotEmpty(
+					selectedMeetingAttdList)) {
+				List<ScQtMeetingAttendance> deletedMeetingAttendanceList 
+						= this.getManagedBean().getDeletedMeetingAttendanceList();
+				if (deletedMeetingAttendanceList == null) {
+					deletedMeetingAttendanceList 
+							= new ArrayList<ScQtMeetingAttendance>();
+					this.getManagedBean().setDeletedMeetingAttendanceList(
+							deletedMeetingAttendanceList);			
+				}
+				for (ScQtMeetingAttendance meetingAttendance
+									: selectedMeetingAttdList) {
+					if (!meetingAttendance.isBrandNew()) {
+						meetingAttendance.setDeleted(true);
+						deletedMeetingAttendanceList
+								.add(meetingAttendance);
+					}
+				}
+			}			
+			deleteRowsAction(meetingAttendanceList,
+							 selectedMeetingAttdList);
+			this.getManagedBean().setSelectedMeetingAttList(null);
+		} finally {
+			
+		}
+	}	
 	
 	/**
 	 * To show item price in a popup
@@ -977,6 +1275,62 @@ public class SupplierFinalizationBiddingBackingBean extends
 		}
 		return imageFileName;
 	}
+	
+	/**
+	 * To save online endorsement
+	 */
+	public void saveOnlineEndorsement() {
+		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+		try {
+			qtSuppFinalizationSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTSuppFinalizationSO.class);
+
+			String taskId = this.getManagedBean().getTaskId();
+			String[] outComes = this.getManagedBean().getOutComes();
+			String processName = this.getManagedBean().getProcessName();
+			ScQt scQt = getManagedBean().getScQt();
+			String committeeType = getManagedBean().getCommitteeType();
+			Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+			int onlineBiddingActiveIndex = this.getManagedBean().getOnlineBiddingActiveIndex();
+			int meetingActiveIndex = this.getManagedBean().getMeetingActiveIndex();
+			SCEvaluationDataType dataType = (SCEvaluationDataType) this.getManagedBean().getPayLoad();
+			
+			ScQtFinalization scQtFinalization = prepareFinalizationInfo();
+			
+			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+			reqDTO.setScQtFinalization(scQtFinalization);
+			
+			ScQtCommittee scQtCommittee = prepareEndorsementCommitteeInfo();
+			reqDTO.setScQtCommittee(scQtCommittee);
+			reqDTO.setDeletedMeetingAttendanceList(
+					getManagedBean().getDeletedMeetingAttendanceList());
+			
+			qtSuppFinalizationSO.saveEndorsementCommitteeDetails(reqDTO);
+
+			renewSesionObject();
+			setTaskDetails(taskId, dataType, outComes, processName, currentStatusId, committeeType, 
+						   onlineBiddingActiveIndex, meetingActiveIndex);
+
+			Long qtId = scQt.getQtId();
+			retrieveOnlineBiddingEndorsement(qtId);
+
+			String variable1 = getParameterDesc(
+					ParameterTypeConst.DOCUMENT_TYPES,
+					ParameterConst.DOCTYPE_QUOTATION)
+					+ " " + scQt.getQtNo();
+			String variable2 = getMessageCommon("lbl.sc.online.bidding.endorsement");
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.INFO_700004,
+									new String[] { variable1, variable2 },
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+		} finally {
+			qtSuppFinalizationSO = null;
+		}		
+	}
 
 	/**
 	 * To save offline endorsement
@@ -988,33 +1342,19 @@ public class SupplierFinalizationBiddingBackingBean extends
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTSuppFinalizationSO.class);
 
-			int activeIndex = this.getManagedBean()
-					.getOnlineBiddingActiveIndex();
-			String taskId = this.getManagedBean().getTaskId();
-			String[] outComes = this.getManagedBean().getOutComes();
-			String processName = this.getManagedBean().getProcessName();
-			ScQt scQt = getManagedBean().getScQt();
-			String committeeType = getManagedBean().getCommitteeType();
-			Long currentStatusId = this.getManagedBean().getCurrentStatusId();
-			SCEvaluationDataType dataType = (SCEvaluationDataType) this.getManagedBean().getPayLoad();
-			
 			ScQtFinalization scQtFinalization = prepareFinalizationInfo();
 
+			String qtNo = getManagedBean().getScQt().getQtNo();
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 			reqDTO.setScQtFinalization(scQtFinalization);
 			qtSuppFinalizationSO.saveFinalizationOfflineEndorsement(reqDTO);
 
-			renewSesionObject();
-			setTaskDetails(taskId, dataType, outComes, processName, currentStatusId, committeeType);
-
-			Long qtId = scQt.getQtId();
-			retrieveOnlineBiddingEndorsement(qtId);
-			this.getManagedBean().setOnlineBiddingActiveIndex(activeIndex);
+			renewSessionAndRetrieve();
 
 			String variable1 = getParameterDesc(
 					ParameterTypeConst.DOCUMENT_TYPES,
 					ParameterConst.DOCTYPE_QUOTATION)
-					+ " " + scQt.getQtNo();
+					+ " " + qtNo;
 			String variable2 = getMessageCommon("lbl.sc.online.bidding.endorsement");
 			FacesContext.getCurrentInstance().addMessage(
 					null,
@@ -1037,6 +1377,39 @@ public class SupplierFinalizationBiddingBackingBean extends
 		setUserDetails(scQtFinalization);
 
 		return scQtFinalization;
+	}
+	
+	private ScQtCommittee prepareEndorsementCommitteeInfo() {
+		ScQtCommittee scQtCommittee = this.getManagedBean().getScQtCommittee();
+		
+		// Meeting Details
+		List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();
+		if (CollectionUtils.isNotEmpty(meetingList)) {
+			scQtCommittee.getScQtMeetings()
+						 .addAll(meetingList);
+		}		
+		
+		// Meeting Attendance Details
+		List<ScQtMeetingAttendance> meetingAttendanceList 
+					= getManagedBean().getMeetingAttendanceList();
+		if (CollectionUtils.isNotEmpty(meetingAttendanceList)) {
+			if (meetingAttendanceList.size() > 1) {
+				List<String> userIdentificationNos = new ArrayList<String>();
+				for (ScQtMeetingAttendance meetingAttendance 
+								: meetingAttendanceList) {
+					if (userIdentificationNos.contains(
+							meetingAttendance.getIcPassport())) {
+						this.getManagedBean().setOnlineBiddingActiveIndex(0);
+						this.getManagedBean().setMeetingActiveIndex(2);
+						throw new EpException(MessageConst.ERROR_760320);
+					}
+					userIdentificationNos.add(meetingAttendance.getIcPassport());
+				}
+			}
+			scQtCommittee.setMeetingAttendances(meetingAttendanceList);
+		}	
+		
+		return scQtCommittee;
 	}
 	
 	/**
@@ -1076,6 +1449,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 		suppFinalizationReqDTO.setPmUser(facesScope.getUserSessionBean());
 		suppFinalizationReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		suppFinalizationReqDTO.setToken(facesScope.getBPMAuthenticationCtxToken());
+		
 		try {
 			qtSuppFinalizationSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -1088,8 +1462,64 @@ public class SupplierFinalizationBiddingBackingBean extends
 			suppFinalizationReqDTO.setPayLoad(
 					this.getManagedBean().getPayLoad());
 			suppFinalizationReqDTO.setDigiSignData(digiSign);
-			suppFinalizationReqDTO.setScQtCommittee(
-					getManagedBean().getScQtCommittee());
+			
+			ScQtCommittee scQtCommittee = null;
+			if (ParameterConst.ONLINE_BIDDING_MEETING.equals(
+					scQtFinalization.getOnlineBiddingEndorse())) {
+				scQtCommittee = prepareEndorsementCommitteeInfo();
+				suppFinalizationReqDTO.setDeletedMeetingAttendanceList(
+						getManagedBean().getDeletedMeetingAttendanceList());
+				suppFinalizationReqDTO.setScQtCommittee(scQtCommittee);
+				
+				EpException epException = null;
+				List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();
+				if (CollectionUtils.isNotEmpty(meetingList)) {
+					boolean atleastOneMeetingIsDone = false;
+					for (ScQtMeeting meeting : meetingList) {
+						if ((DbValueConst.RECORD_STATUS_ACTIVE
+								== meeting.getRecordStatusFlg()) && 
+										QTConstants.SC_MEETING_DONE_STATUS_ID
+											.equals(meeting.getMeetingStatus()
+													   .getStatusId())) {
+							atleastOneMeetingIsDone = true;
+						}
+					}
+					if (!atleastOneMeetingIsDone) {
+						epException = new EpException(MessageConst.ERROR_760292);
+					}
+				} else {
+					epException = new EpException(MessageConst.ERROR_760291);
+				}
+				
+				if (epException != null) {
+					qtSuppFinalizationSO.saveEndorsementCommitteeDetails(suppFinalizationReqDTO);
+					renewSessionAndRetrieve();
+					navigateToBiddingFinalizationMeetingTab();
+					getManagedBean().setMeetingActiveIndex(0);
+					throw epException;
+				}
+				
+				
+				try {
+					qtSuppFinalizationSO.validatePreparation(suppFinalizationReqDTO);
+				} catch (EpException epExcep) {
+					epException = epExcep;
+				} catch (Exception e) {
+					throw e;
+				} finally {
+					qtSuppFinalizationSO.saveEndorsementCommitteeDetails(suppFinalizationReqDTO);
+					renewSessionAndRetrieve();
+					navigateToBiddingFinalizationMeetingTab();
+					getManagedBean().setMeetingActiveIndex(1);						
+				}	
+				
+				if (epException != null) {
+					throw epException;
+				}
+			} else {
+				scQtCommittee = getManagedBean().getScQtCommittee();
+			}
+			suppFinalizationReqDTO.setScQtCommittee(scQtCommittee);
 			
 			if (ParameterConst.ONLINE_BIDDING_ESCALATION.equals(
 						scQtFinalization.getOnlineBiddingEndorse())) {
@@ -1117,16 +1547,38 @@ public class SupplierFinalizationBiddingBackingBean extends
 			qtSuppFinalizationSO = null;
 		}
 	}
+	
+	private void renewSessionAndRetrieve() {
+		String taskId = this.getManagedBean().getTaskId();
+		String[] outComes = this.getManagedBean().getOutComes();
+		String processName = this.getManagedBean().getProcessName();
+		ScQt scQt = getManagedBean().getScQt();
+		String committeeType = getManagedBean().getCommitteeType();
+		Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+		int onlineBiddingActiveIndex = this.getManagedBean().getOnlineBiddingActiveIndex();
+		int meetingActiveIndex = this.getManagedBean().getMeetingActiveIndex();			
+		SCEvaluationDataType dataType = (SCEvaluationDataType) this.getManagedBean().getPayLoad();	
+		
+		renewSesionObject();
+
+		Long qtId = scQt.getQtId();
+		retrieveOnlineBiddingEndorsement(qtId);	
+		
+		setTaskDetails(taskId, dataType, outComes, processName, currentStatusId, committeeType, 
+				   onlineBiddingActiveIndex, meetingActiveIndex);		
+	}
 
 	private void setTaskDetails(String taskId, SCEvaluationDataType dataType, 
 								String[] outComes, String processName, Long currentStatusId, 
-								String committeeType) {
+								String committeeType, int activeIndex, int meetingActiveIndex) {
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setOutComes(outComes);
 		this.getManagedBean().setProcessName(processName);
 		this.getManagedBean().setPayLoad(dataType);
 		this.getManagedBean().setCurrentStatusId(currentStatusId);
 		this.getManagedBean().setCommitteeType(committeeType);
+		this.getManagedBean().setOnlineBiddingActiveIndex(activeIndex);
+		this.getManagedBean().setMeetingActiveIndex(meetingActiveIndex);
 	}
 
 	private void commonMessageAcknowledmentPage(String messageId,
@@ -1144,6 +1596,29 @@ public class SupplierFinalizationBiddingBackingBean extends
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 	}
+	
+	private void checkIfLoggedinUserIsSecretary() {
+		Long userId = getFacesScopes().getUserSessionBean()
+						.getUserId();
+		List<ScQtCommitteeActivity> committeeMembers = 
+					this.getManagedBean().getCommitteeList();
+		
+		if (CollectionUtils.isNotEmpty(committeeMembers)) {
+			for (ScQtCommitteeActivity committeeActivity 
+							: committeeMembers) {
+				if (userId.equals(committeeActivity.getScCommitteeMember()
+						.getPmUser().getUserId())) {
+					String userRole = committeeActivity.getScCommitteeMember().
+							getMemberRole().getParameterCode();
+					if (StringUtils.equals(userRole, 
+							ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
+						this.getManagedBean().setSecretaryUser(true);
+					}
+					break;
+				}
+			}
+		}
+	}	
 	
 	/**
 	 * To digitally sign using GPK device
@@ -1204,4 +1679,33 @@ public class SupplierFinalizationBiddingBackingBean extends
 		this.currentTab = currentTab;
 	}
 
+	/**
+	 * @return the onlineBiddingFinalizationMeetingActiveIndex
+	 */
+	public static int getOnlineBiddingFinalizationMeetingActiveIndex() {
+		return ONLINE_BIDDING_FINALIZATION_MEETING_ACTIVE_INDEX;
+	}
+
+	/**
+	 * @return the onlineBiddingActiveIndexSummary
+	 */
+	public static int getOnlineBiddingActiveIndexSummary() {
+		return ONLINE_BIDDING_ACTIVE_INDEX_SUMMARY;
+	}
+
+	/**
+	 * @return the onlineBiddingActiveIndexOnlineEndorsement
+	 */
+	public static int getOnlineBiddingActiveIndexOnlineEndorsement() {
+		return ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_ENDORSEMENT;
+	}
+
+	/**
+	 * @return the onlineBiddingActiveIndexOfflineEndorsement
+	 */
+	public static int getOnlineBiddingActiveIndexOfflineEndorsement() {
+		return ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_ENDORSEMENT;
+	}
+	
+	
 }
