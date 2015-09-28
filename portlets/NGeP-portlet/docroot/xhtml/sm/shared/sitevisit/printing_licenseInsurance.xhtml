@@ -21,7 +21,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.sm.sitevisit.printing.closing.date']}
 				</f:facet>
-				<p:calendar id="closingDateCalId" disabled="#{viewFlag || printingLicenseIns.pmParameter.parameterCode == 'C'}"
+				<p:calendar id="closingDateCalId" disabled="#{viewFlag}"
 						navigator="true"  label="Closing Date"
 						value="#{printingLicenseIns.expDate}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
@@ -30,8 +30,8 @@
 						readonlyInput="true" size="30" showOn="button" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}">
-				<p:inputText value="#{printingLicenseIns.pppmmNo}" maxlength="10" disabled="#{viewFlag || printingLicenseIns.pmParameter.parameterCode != 'C'}" />
+			<p:column headerText="#{lbl['lbl.sm.sitevisit.printing.reference.no']}">
+				<p:inputText value="#{printingLicenseIns.pppmmNo}" maxlength="10" disabled="#{viewFlag}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
