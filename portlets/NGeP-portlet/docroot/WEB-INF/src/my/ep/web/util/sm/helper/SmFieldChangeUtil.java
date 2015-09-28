@@ -933,7 +933,7 @@ public class SmFieldChangeUtil {
 									|| isHasDifferences(
 											latestEquityCompany,
 											currEquityCompany,
-											new String[] { "associateCompanyId" })) {
+											new String[] { "equityCompanyId" })) {
 								currEquityCompany.setChangedFieldStatus("U");
 							}
 						}

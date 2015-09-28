@@ -2966,6 +2966,7 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		assignValReqdToFalse();
+		saveOrUpdateAppl();
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
 
