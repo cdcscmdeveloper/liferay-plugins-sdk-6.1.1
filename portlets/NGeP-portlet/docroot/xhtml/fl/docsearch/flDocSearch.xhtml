@@ -238,7 +238,7 @@
 					<p:menuButton value="#{lbl['lbl.btn.option']}">
 									<p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.view']}"  
 							        	rendered="#{flDocument.isViewAction()}"
-							        	icon="ui-icon-supplier-view"
+							        	icon="ui-icon-view"
 							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'View'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
 									<p:menuitem value="#{lbl['lbl.btn.print']}" ajax="false"
 										rendered="#{!(flDocument.docType==ParameterConst.doctypePurchaseRequest || flDocument.docType==ParameterConst.doctypeContractRequest || flDocument.docType==ParameterConst.doctypeShippingInstruction || flDocument.docType==ParameterConst.doctypeStopDelivery )}"
