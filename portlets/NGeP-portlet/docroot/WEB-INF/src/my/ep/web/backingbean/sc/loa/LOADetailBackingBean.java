@@ -2504,14 +2504,45 @@ public class LOADetailBackingBean extends
 				StringBuilder filename = new StringBuilder();
 				//replace white space due to firefox 
 				filename.append(scLoaReport.getTitle().replaceAll("\\s",""));
-
+				String docDefinitionKey = scLoaReport.getPmDocument()
+						.getDocDefinitionKey();
+				
 				if (scLoaReportAttachment == null) {
 					scLoaReportAttachment = new ScLoaReportAttachment();
 					scLoaReportAttachment.setScLoaReport(scLoaReport);
 					scLoaReportAttachment.setDocNo(scLoaReport.getScLoa()
 							.getLoaNo());
-					scLoaReportAttachment.setFileName(filename.toString());
 				}
+				
+				if (SourcingConstants.DOC_DEF_KEY_CONTRACT_SUMMARY
+						.equals(docDefinitionKey)) {
+					filename.append(".pdf");
+				} else if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
+						.equals(docDefinitionKey)) {
+					filename.append(".pdf");
+				} else if (SourcingConstants.DOC_DEF_KEY_INTEGRITY_PACT
+						.equals(docDefinitionKey)) {
+					filename.append(".pdf");
+				} else if (SourcingConstants.DOC_DEF_KEY_FREQUENCY_SCHEDULE
+						.equals(docDefinitionKey)) {
+					filename.append(".pdf");
+				} else if (SourcingConstants.DOC_DEF_KEY_JADUAL_HARGA
+						.equals(docDefinitionKey)) {
+					filename.append(".xlsx");
+				}else if (SourcingConstants.DOC_DEF_KEY_SPECIFICATION
+						.equals(docDefinitionKey)) {
+					filename.append(".xlsx");
+				}else if (SourcingConstants.DOC_DEF_KEY_FORMAT_BOND_EXECUTION
+						.equals(docDefinitionKey)) {
+					filename.append(".pdf");
+				} else if (SourcingConstants.DOC_DEF_KEY_LOI_NEGOTIATIONS_OUTCOME
+						.equals(docDefinitionKey)) {
+					filename.append(".pdf");
+				} else if (SourcingConstants.DOC_DEF_KEY_SCOPE_SERVICES
+						.equals(docDefinitionKey)) {
+					filename.append(".pdf");
+				}
+				scLoaReportAttachment.setFileName(filename.toString());
 				populateAttachmentDetails(scLoaReportAttachment);
 			} catch (Exception e) {
 				//e.printStackTrace();
