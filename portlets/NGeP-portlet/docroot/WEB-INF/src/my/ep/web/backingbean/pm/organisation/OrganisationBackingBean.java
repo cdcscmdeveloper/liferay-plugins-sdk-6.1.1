@@ -928,6 +928,19 @@ public class OrganisationBackingBean extends
 					}
 				}
 			}
+			//For Statutory Body, GLC, State Govt and Local Authority
+			if (getManagedBean().getOrgType().equalsIgnoreCase(
+							OrganizationType.STATE_GOVERNMENT.value())
+					|| getManagedBean().getOrgType().equalsIgnoreCase(
+							OrganizationType.STATUTORY_BODIES.value())
+					|| getManagedBean().getOrgType().equalsIgnoreCase(
+							OrganizationType.LOCAL_AUTHORITY.value())
+					|| getManagedBean().getOrgType().equalsIgnoreCase(
+							OrganizationType.GOVERNMENT_LINK_COMPANIES.value())) {
+				validateUniqueOrgCode(orgProfile,getManagedBean().getOrgType());
+				validateUniqueOrgName(orgProfile,getManagedBean().getOrgType());
+			}
+
 
 			reqDTO.setPmOrgProfile(orgProfile);
 			reqDTO.setRoleCode(PmCommonUtil.getUserRoleValue());
@@ -2275,6 +2288,82 @@ public class OrganisationBackingBean extends
 		if(pmCity != null && pmCity.getCityId() !=null){
 			PmCity tempCity = PmCommonUtil.retrievePmCityById(pmCity.getCityId());			
 			getManagedBean().getDeliveryAddress().getPmAddress().setPmCity(tempCity);
+		}
+	}
+	
+	private void validateUniqueOrgCode(PmOrgProfile orgProfile, String orgType){
+		log.info("validateUniqueOrgCode");
+		IOrgProfileSO orgSO  = null;
+		try{			
+			ISearchBean<PmOrgProfile> searchBean = new SearchBean<PmOrgProfile>();
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("orgTypeCode.parameterCode",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							orgType));
+			
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmOrgValidity.orgCode",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							orgProfile.getOrgCode()));			
+						
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			reqDTO.setOrgProfileSearchBean(searchBean);
+			orgSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT,
+							IOrgProfileSO.class);
+			OrgProfileResDTO resDTO = orgSO.searchOrgProfile(reqDTO);
+			if(resDTO.getOrgProfileResultBean()!=null && resDTO.getOrgProfileResultBean().getResultList()!=null 
+					&& !resDTO.getOrgProfileResultBean().getResultList().isEmpty()){				
+				throw new EpException(MessageConst.ERROR_775131, new
+						 String[]{orgProfile.getOrgCode()});
+			}
+		}finally{
+			orgSO = null;
+		}
+	}
+	
+	private void validateUniqueOrgName(PmOrgProfile orgProfile, String orgType){
+		log.info("validateUniqueOrgName");
+		IOrgProfileSO orgSO  = null;
+		try{			
+			ISearchBean<PmOrgProfile> searchBean = new SearchBean<PmOrgProfile>();			
+			List<String> otherOrgTypes = new ArrayList<String>();
+			otherOrgTypes.add(OrganizationType.STATE_GOVERNMENT.value());
+			otherOrgTypes.add(OrganizationType.LOCAL_AUTHORITY.value());
+			otherOrgTypes.add(OrganizationType.GOVERNMENT_LINK_COMPANIES.value());
+			otherOrgTypes.add(OrganizationType.STATUTORY_BODIES.value());
+			
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("orgTypeCode.parameterCode",
+							SearchOperator.OPERATOR_IN.value(),
+							otherOrgTypes));
+			
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmOrgValidity.orgName",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							orgProfile.getOrgName(), true));
+			
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("recordStatusFlg",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							DbValueConst.RECORD_STATUS_ACTIVE));
+			
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			reqDTO.setOrgProfileSearchBean(searchBean);
+			orgSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT,
+							IOrgProfileSO.class);
+			OrgProfileResDTO resDTO = orgSO.searchOrgProfile(reqDTO);
+			if(resDTO.getOrgProfileResultBean()!=null && resDTO.getOrgProfileResultBean().getResultList()!=null 
+					&& !resDTO.getOrgProfileResultBean().getResultList().isEmpty()){
+				String orgTypeDesc = getParameterDesc(
+						ParameterTypeConst.ORGANISATION_TYPES,
+						resDTO.getOrgProfileResultBean().getResultList().get(0).getOrgTypeCode().getParameterCode());
+				throw new EpException(MessageConst.ERROR_775132, new
+						 String[]{orgProfile.getOrgName(),orgTypeDesc,orgTypeDesc});
+			}
+		}finally{
+			orgSO = null;
 		}
 	}
 }
