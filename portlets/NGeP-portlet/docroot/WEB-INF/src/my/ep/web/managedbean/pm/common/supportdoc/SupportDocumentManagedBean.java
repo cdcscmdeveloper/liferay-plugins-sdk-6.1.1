@@ -45,7 +45,7 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	private List <PmDocumentRestr> deleteCheckListRestrictions;
 	private List <PmDocumentRestr> deleteRestrictions;
 	private SelectItem[] supplierActionItems;
-	
+	private SelectItem[] docDefinitionOptions;
 	private List <PmCategoryL3> selectedCategoryL3s;
 	private List <PmCertBody> selectedCertBodies;
 	private int selectedTabIndex;
@@ -314,6 +314,20 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	public void setSupplierActionItems(SelectItem[] supplierActionItems) {
 		this.supplierActionItems = supplierActionItems;
 	}
-	
+
+	/**
+	 * @return the docDefinitionOptions
+	 */
+	public SelectItem[] getDocDefinitionOptions() {
+		return docDefinitionOptions;
+	}
+
+	/**
+	 * @param docDefinitionOptions the docDefinitionOptions to set
+	 */
+	public void setDocDefinitionOptions(SelectItem[] docDefinitionOptions) {
+		this.docDefinitionOptions = docDefinitionOptions;
+	}
+
 	
 }

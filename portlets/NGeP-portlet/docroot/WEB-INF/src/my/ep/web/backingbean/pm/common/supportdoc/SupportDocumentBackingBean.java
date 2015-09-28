@@ -122,8 +122,7 @@ public class SupportDocumentBackingBean extends
 	public void preLoading() {
 		log.info("preLoading");
 		this.resetSupportDocSearchBean();
-		this.getManagedBean().setSelectedTabIndex(0);
-		this.getManagedBean().setSupplierActionItems(supplierActionOptions());
+		this.getManagedBean().setSelectedTabIndex(0);		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_SEARCH);
@@ -154,6 +153,8 @@ public class SupportDocumentBackingBean extends
 			} else {
 				initialSupportDoc();
 			}
+			docDefinitionOptions();
+			initialSupplierActionItems();
 		} catch (Exception e) {
 			e.printStackTrace();
 
@@ -247,22 +248,44 @@ public class SupportDocumentBackingBean extends
 					.equals(pmParameter.getParameterCode())) {
 				this.getManagedBean().setCheckList(true);
 				// load default value for checklist
-				if (this.getManagedBean().getSelectedDocument().isBrandNew()
+				
+				if (this.getManagedBean().getSelectedDocument().isBrandNew()) {
+
+					if (this.getManagedBean().getSelectedDocument()
+							.getDocDefinitionTypeCode()!=null && this.getManagedBean().getSelectedDocument()
+							.getDocDefinitionTypeCode().getParameterId() != null) {
+						this.getManagedBean().setSupplierActionItems(
+								initialSupplierActionItems());
+					}else{
+						this.getManagedBean().getSelectedDocument()
+						.setChecklistActionCode(new PmParameter());
+					}
+					
+					this.getManagedBean().getSelectedDocument()
+							.setDocDefinitionTypeCode(new PmParameter());			
+					
+				}
+				
+				/*if (this.getManagedBean().getSelectedDocument().isBrandNew()
 						&& this.getManagedBean().getSelectedDocument()
 								.getDocDefinitionTypeCode() == null) {
 					if (this.getManagedBean().getSelectedDocument()
 							.getDocDefinitionTypeCode() == null) {
 						this.getManagedBean().getSelectedDocument()
 								.setDocDefinitionTypeCode(new PmParameter());
+
 					}
-					/*PmParameter tempParam = PmCommonUtil.retrievePmParameter(
-							ParameterTypeConst.DOCUMENT_DEFINITION_TYPE,
-							ProfileManagementConst.DEFAULT_DOC_DEFINITION);
-					this.getManagedBean().getSelectedDocument()
-							.getDocDefinitionTypeCode()
-							.setParameterId(tempParam.getParameterId());*/
-				}
-				if (this.getManagedBean().getSelectedDocument().isBrandNew()
+					
+					
+					 * PmParameter tempParam = PmCommonUtil.retrievePmParameter(
+					 * ParameterTypeConst.DOCUMENT_DEFINITION_TYPE,
+					 * ProfileManagementConst.DEFAULT_DOC_DEFINITION);
+					 * this.getManagedBean().getSelectedDocument()
+					 * .getDocDefinitionTypeCode()
+					 * .setParameterId(tempParam.getParameterId());
+					 
+				}*/
+				/*if (this.getManagedBean().getSelectedDocument().isBrandNew()
 						&& this.getManagedBean().getSelectedDocument()
 								.getChecklistActionCode() == null) {
 					if (this.getManagedBean().getSelectedDocument()
@@ -270,18 +293,21 @@ public class SupportDocumentBackingBean extends
 						this.getManagedBean().getSelectedDocument()
 								.setChecklistActionCode(new PmParameter());
 					}
+
 					
-					/*PmParameter tempParam = PmCommonUtil.retrievePmParameter(
-							ParameterTypeConst.SC_SUPPLIER_ACTION,
-							ProfileManagementConst.DEFAULT_SUPPLIER_ACTION);
-					this.getManagedBean().getSelectedDocument()
-							.getChecklistActionCode()
-							.setParameterId(tempParam.getParameterId());*/
-				}
+					 * PmParameter tempParam = PmCommonUtil.retrievePmParameter(
+					 * ParameterTypeConst.SC_SUPPLIER_ACTION,
+					 * ProfileManagementConst.DEFAULT_SUPPLIER_ACTION);
+					 * this.getManagedBean().getSelectedDocument()
+					 * .getChecklistActionCode()
+					 * .setParameterId(tempParam.getParameterId());
+					 
+				}*/				
+	             
 				if (this.getManagedBean().getSelectedDocument().isBrandNew()) {
 					this.getManagedBean().getSelectedDocument().setPmZone(null);
 				}
-
+				
 			} else {
 				if (this.getManagedBean().getSelectedDocument().isBrandNew()) {
 					this.getManagedBean().setCheckList(false);
@@ -294,7 +320,7 @@ public class SupportDocumentBackingBean extends
 					this.getManagedBean().getSelectedDocument()
 							.setChecklistActionCode(null);
 				}
-
+   
 			}
 		} else {
 			if (this.getManagedBean().getSelectedDocument().isBrandNew()) {
@@ -331,6 +357,8 @@ public class SupportDocumentBackingBean extends
 		this.getManagedBean().setSelectedDocument(pmDocument);
 		this.getManagedBean().setCheckList(false);
 		this.getManagedBean().setSelectedTabIndex(0);
+		this.getManagedBean().setSupplierActionItems(null);
+		
 		log.info("initialSupportDoc - End");
 	}
 
@@ -947,7 +975,53 @@ public class SupportDocumentBackingBean extends
 	 */
 	public SelectItem[] docDefinitionOptions() {
 		log.info("docDefinitionOptions");
-		return getDropdownValues(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
+		// return
+		// getDropdownValues(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
+		SelectItem[]  selectdocTypeOptions=getDropdownValuesBySearchBeanNew(
+				ParameterTypeConst.DOCUMENT_DEFINITION_TYPE, null);
+		this.getManagedBean().setDocDefinitionOptions(selectdocTypeOptions);
+		return selectdocTypeOptions;
+	}
+
+	/**
+	 * Get parameter code select items by parameter type and search bean for
+	 * dropdown.
+	 * 
+	 * @param parameterType
+	 *            the parameter type
+	 * @param searchBean
+	 *            the search bean instance
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getDropdownValuesBySearchBeanNew(String parameterType,
+			ISearchBean<PmParameterDesc> searchBean) {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+			List<PmParameterDesc> parameterDescs = ParameterHelper
+					.getInstance().getParameterDescListBySearchBeanNew(
+							parameterType, searchBean);
+
+			items = new SelectItem[parameterDescs.size() + 1];
+
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			int i = 1;
+			for (PmParameterDesc parameterDesc : parameterDescs) {
+				items[i++] = new SelectItem(parameterDesc.getPmParameter()
+						.getParameterId(), parameterDesc.getCodeName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
 	}
 
 	/**
@@ -967,7 +1041,9 @@ public class SupportDocumentBackingBean extends
 	 */
 	public SelectItem[] supplierActionOptions() {
 		log.info("supplierActionOptions");
-		return getDropdownValues(ParameterTypeConst.SC_SUPPLIER_ACTION);
+		// return
+		// getDropdownValuesBySearchBeanNew(ParameterTypeConst.SC_SUPPLIER_ACTION,null);
+		return this.getManagedBean().getSupplierActionItems();
 	}
 
 	/**
@@ -2325,7 +2401,7 @@ public class SupportDocumentBackingBean extends
 
 		return searchDocument(searchBean);
 	}
-	
+
 	/**
 	 * Gets the supplier action details.
 	 * 
@@ -2366,12 +2442,7 @@ public class SupportDocumentBackingBean extends
 			// pass select * from pm_parameter where parameter_type='SAT' and
 			// parameter_code in('U');
 			paramCodeList.add(ParameterTypeConst.SC_SUPPLIER_ACTION_UPLOAD);
-
 			parameterDescs = getParameterDescByParamTypeAndParamCode(paramCodeList);
-
-		} else {
-
-			supplierActionItems = getDropdownValues(ParameterTypeConst.SC_SUPPLIER_ACTION);
 		}
 
 		if (null != parameterDescs && parameterDescs.size() > 0) {
@@ -2393,6 +2464,37 @@ public class SupportDocumentBackingBean extends
 
 	}
 
+	private SelectItem[] initialSupplierActionItems() {
+		List<PmParameterDesc> parameterDescs;
+		List<String> paramCodeList = new ArrayList<String>();
+		SelectItem[] supplierActionItems = null;
+		FacesScopes face = new FacesScopes();
+		// pass select * from pm_parameter where parameter_type='SAT' and
+		// parameter_code in('V','O','U');
+		paramCodeList.add(ParameterTypeConst.SC_SUPPLIER_ACTION_VIEW);
+		paramCodeList.add(ParameterTypeConst.SC_SUPPLIER_ACTION_DOWN_UPLOAD);
+		paramCodeList.add(ParameterTypeConst.SC_SUPPLIER_ACTION_UPLOAD);
+		parameterDescs = getParameterDescByParamTypeAndParamCode(paramCodeList);
+
+		if (null != parameterDescs && parameterDescs.size() > 0) {
+
+			supplierActionItems = new SelectItem[parameterDescs.size() + 1];
+			supplierActionItems[0] = new SelectItem(null,
+					ResourceBundleUtils.getMessage("lbl.txt.select",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							face.getUserLocale()));
+			int i = 1;
+			for (PmParameterDesc parameterDesc : parameterDescs) {
+				supplierActionItems[i++] = new SelectItem(parameterDesc
+						.getPmParameter().getParameterId(),
+						parameterDesc.getCodeName());
+
+			}
+		}
+        this.getManagedBean().setSupplierActionItems(supplierActionItems);
+		return supplierActionItems;
+	}
+
 	/**
 	 * Gets the parameter desc by param type and param code.
 	 * 
@@ -2404,10 +2506,10 @@ public class SupportDocumentBackingBean extends
 			List<String> paramCodeList) {
 
 		List<PmParameterDesc> parameterDescs = new ArrayList<PmParameterDesc>();
-		for (String parmCode : paramCodeList) {
+		for (String paramCode : paramCodeList) {
 			PmParameterDesc pmParameterDesc = ParameterHelper.getInstance()
 					.getParameterDescByParamTypeAndParamCode(
-							ParameterTypeConst.SC_SUPPLIER_ACTION, parmCode);
+							ParameterTypeConst.SC_SUPPLIER_ACTION, paramCode);
 			parameterDescs.add(pmParameterDesc);
 		}
 		return parameterDescs;

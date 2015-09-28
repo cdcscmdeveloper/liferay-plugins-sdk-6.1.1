@@ -13,7 +13,6 @@ package my.ep.web.util.pm.helper;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -29,7 +28,6 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -119,6 +117,50 @@ public class ParameterHelper {
 		if (paramDescArry == null) {
 			// Get parameter description list from db directly.
 			list = getParameterDescFromDB(key.toString(), languageCode, parameterType, searchBean);
+		} else {				
+			// Get parameter description list from jpa cache.
+			list = getParameterDescFromCache(paramDescArry[MAP_VALUE_PARAMETER_DESC_ID]);
+		}
+		
+		return list;
+	}
+	
+	
+	/**
+	 * Get a list of parameter description by parameter type and search bean.
+	 * 
+	 * @param parameterType
+	 * 			the parameter type
+	 * @param searchBean
+	 * 			the searchBean instance
+	 * @return list of PmParameterDesc
+	 */
+	public List<PmParameterDesc> getParameterDescListBySearchBeanNew(String parameterType, ISearchBean<PmParameterDesc> searchBean) {
+		debugLogger("getParameterDescList.parameterType: " + parameterType);
+		
+		String languageCode = new FacesScopes().getUserLocale().getLanguage();
+		StringBuilder key = new StringBuilder()
+			.append(parameterType)
+			.append(KEY_SEPARATOR)
+			.append(languageCode);
+		String searchBeanKey = getSearchBeanKey(searchBean);
+		
+		if (StringUtils.isNotBlank(searchBeanKey)) {
+			key.append(KEY_SEPARATOR);
+			key.append(searchBeanKey);
+		}
+		
+		debugLogger("key: " + key);
+		
+		// Get the parameter description list from map.
+		String[][] paramDescArry = parameterMap.get(key.toString());
+		List<PmParameterDesc> list = null;
+		
+		debugLogger("paramDescArry: " + paramDescArry);
+		
+		if (paramDescArry == null) {
+			// Get parameter description list from db directly.
+			list = getParameterDescFromDBNew(key.toString(), languageCode, parameterType, searchBean);
 		} else {				
 			// Get parameter description list from jpa cache.
 			list = getParameterDescFromCache(paramDescArry[MAP_VALUE_PARAMETER_DESC_ID]);
@@ -319,6 +361,68 @@ public class ParameterHelper {
 			
 			// Get parameter description list from db.
 			ParameterResDTO resDTO = parameterSO.retrieveParameterDescListByType(reqDTO);
+			
+		    list = resDTO.getParameterDescList();
+		    
+		    // Only cache the parameter description without data filter.
+		    if (searchBean == null || searchBean.getDataFilterMetadatas().size() == 0) {
+		    	int i = 0;
+		    	
+		    	String[][] paramDescArry = new String[MAP_VALUE_PARAMETER_CODE+1][list.size()];
+		    	
+		    	for (PmParameterDesc parameterDesc : list) {
+		    		paramDescArry[MAP_VALUE_PARAMETER_DESC_ID][i] = parameterDesc.getParameterDescId().toString();
+		    		paramDescArry[MAP_VALUE_PARAMETER_CODE][i] = parameterDesc.getPmParameter().getParameterCode();
+		    		
+		    		i++;
+		    	}
+		    	
+		    	// Put parameter description list into map.			   
+				parameterMap.put(key, paramDescArry);	
+		    }
+		    
+		    debugLogger("put into list: " + list);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		} finally {
+			parameterSO = null;
+		}
+		
+		return list;
+	}
+	
+	
+	
+	/**
+	 * Gets the parameter desc from db.
+	 * 
+	 * @param key
+	 *            the key
+	 * @param languageCode
+	 *            the language code
+	 * @param parameterType
+	 *            the parameter type
+	 * @param searchBean
+	 *            the search bean
+	 * @return the parameter desc from db
+	 */
+	private List<PmParameterDesc> getParameterDescFromDBNew(String key, String languageCode, String parameterType, ISearchBean<PmParameterDesc> searchBean) {
+		IParameterSO parameterSO;
+		List<PmParameterDesc> list = null;
+		
+		try {
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			
+			reqDTO.setParameterDescSearchBean(searchBean);
+			reqDTO.setParameterType(parameterType);
+			reqDTO.setLanguageCode(languageCode);
+			
+			// Get parameter description list from db.
+			ParameterResDTO resDTO = parameterSO.retrieveParameterDescListByTypeAndParamCodes(reqDTO);
 			
 		    list = resDTO.getParameterDescList();
 		    
