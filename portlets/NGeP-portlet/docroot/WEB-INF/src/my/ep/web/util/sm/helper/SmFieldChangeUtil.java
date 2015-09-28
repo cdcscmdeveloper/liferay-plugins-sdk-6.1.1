@@ -1200,7 +1200,8 @@ public class SmFieldChangeUtil {
 				|| (latest != null && current == null)) {
 			retVal = true;
 		} else if (isHasDifferences(latest, current, new String[] {
-				"addressId", "pmCountry", "pmState", "pmCity", "pmDistrict" })) {
+				"countryId", "stateId", "districtId", "cityId", "addressId",
+				"pmCountry", "pmState", "pmCity", "pmDistrict" })) {
 			retVal = true;
 		} else {
 			if ((latest.getPmCountry() != null && current.getPmCountry() == null)
