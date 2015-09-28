@@ -704,117 +704,75 @@ public class EperundingIntegration extends InitializeSO{
 
 					}
 
-					if (smSupplier.getSmAppl().getSmCompanyBasic()
-							.getSmCompanyAddresses().size() > 0) {
+					if (smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().size() > 0) {
 
-						for (SmCompanyAddress companyAddress : smSupplier
-								.getSmAppl().getSmCompanyBasic()
-								.getSmCompanyAddresses()) {
+						for (SmCompanyAddress companyAddress : smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()) {
 							if (null != companyAddress.getSmAddress()) {
-								profile.setAddress1(companyAddress
-										.getSmAddress().getAddress1());
-								profile.setAddress2(companyAddress
-										.getSmAddress().getAddress2());
-								profile.setAddress3(companyAddress
-										.getSmAddress().getAddress3());
-								profile.setPostcode(companyAddress
-										.getSmAddress().getPostcode());
-								profile.setCity(companyAddress.getSmAddress()
-										.getPmCity().getCityName());
-								profile.setDistrict(companyAddress
-										.getSmAddress().getPmDistrict()
-										.getDistrictCode());
-								profile.setState(companyAddress.getSmAddress()
-										.getPmState().getStateCode());
+								profile.setAddress1(companyAddress.getSmAddress().getAddress1());
+								profile.setAddress2(companyAddress.getSmAddress().getAddress2());
+								profile.setAddress3(companyAddress.getSmAddress().getAddress3());
+								profile.setPostcode(companyAddress.getSmAddress().getPostcode());
+								profile.setCity(companyAddress.getSmAddress().getPmCity().getCityName());
+								profile.setDistrict(companyAddress.getSmAddress().getPmDistrict().getDistrictCode());
+								profile.setState(companyAddress.getSmAddress().getPmState().getStateCode());
 								profile.setCountry(IntegrationConstants.COUNTRY_CODE_MY);
 
 							}
 						}
 					}
 
-					profile.setAccumulatedCapital(smSupplier.getSmAppl()
-							.getSmCompanyBasic().getAuthorizedCapital()); // accumulated
+					profile.setAccumulatedCapital(smSupplier.getSmAppl().getSmCompanyBasic().getAuthorizedCapital()); // accumulated
 					// capital not availabele in ng
-					profile.setAuthorisedCapital(smSupplier.getSmAppl()
-							.getSmCompanyBasic().getAuthorizedCapital());
-					profile.setPaidUpCapital(smSupplier.getSmAppl()
-							.getSmCompanyBasic().getPaidUpCapital());
-					profile.setAccumulatedShare(smSupplier.getSmAppl()
-							.getSmCompanyBasic().getAuthorizedCapital()); // accumulated
+					profile.setAuthorisedCapital(smSupplier.getSmAppl().getSmCompanyBasic().getAuthorizedCapital());
+					profile.setPaidUpCapital(smSupplier.getSmAppl().getSmCompanyBasic().getPaidUpCapital());
+					profile.setAccumulatedShare(smSupplier.getSmAppl().getSmCompanyBasic().getAuthorizedCapital()); // accumulated
 					// share not available in ng
-					profile.setBumiputeraPercentage(smSupplier.getSmAppl()
-							.getSmCompanyBasic().getBumiPercentage());
-					profile.setNonBumiPercentage(smSupplier.getSmAppl()
-							.getSmCompanyBasic().getNonBumiPercentage());
+					profile.setBumiputeraPercentage(smSupplier.getSmAppl().getSmCompanyBasic().getBumiPercentage());
+					profile.setNonBumiPercentage(smSupplier.getSmAppl().getSmCompanyBasic().getNonBumiPercentage());
 
-					profile.setRegStatus(smSupplier.getSmAppl()
-							.getPmRegStatus().getRegStatusId()
-							+ ""); // pm_reg_status
-					profile.setEffectDateTo(smSupplier.getSmMofAccounts()
-							.get(0).getExpDate());
+					profile.setRegStatus(smSupplier.getSmAppl().getPmRegStatus().getRegStatusId() + ""); // pm_reg_status
+					profile.setEffectDateTo(smSupplier.getSmMofAccounts().get(0).getExpDate());
 					profile.setEstablishedDate(smSupplier.getEstablishDate());
-					profile.setEffectDateFrom(smSupplier.getSmMofAccounts()
-							.get(0).getEffDate());
+					profile.setEffectDateFrom(smSupplier.getSmMofAccounts().get(0).getEffDate());
 					profile.setDisciplinary(IntegrationConstants.VAVLUE_NO); // sm-complaint
 					profile.setIsAssociatedCompany(IntegrationConstants.VAVLUE_NO);
-					profile.setProfileUpdateDate(smSupplier.getSmAppl()
-							.getApplSubmitDate()); //
+					profile.setProfileUpdateDate(smSupplier.getSmAppl().getApplSubmitDate()); //
 
 					profBodyDetail = new ProfBodyDetail();
 					if (smSupplier.getSmAppl().getSmAssociationBodies().size() != 0) {
-						for (SmAssociationBody associationBody : smSupplier
-								.getSmAppl().getSmAssociationBodies()) {
-							profBodyDetail
-									.setProfBody(associationBody
-											.getPmCertBody().getCertBodyId()
-											.toString()); // changed to cert body id
-							profBodyDetail.setProfBodyNo(associationBody
-									.getRegNo());
-							profBodyDetail.setProfBodyExpiry(associationBody
-									.getExpDate());
+						for (SmAssociationBody associationBody : smSupplier.getSmAppl().getSmAssociationBodies()) {
+							profBodyDetail.setProfBody(associationBody.getPmCertBody().getCertBodyId().toString()); 
+							profBodyDetail.setProfBodyNo(associationBody.getRegNo());
+							profBodyDetail.setProfBodyExpiry(associationBody.getExpDate());
 							profile.setProfBodyDetail(profBodyDetail);
 							break;
 						}
 					} else {
-						profBodyDetail
-								.setProfBody(IntegrationConstants.EMPTY_TRING);
-						profBodyDetail
-								.setProfBodyNo(IntegrationConstants.EMPTY_TRING);
-						profBodyDetail
-								.setProfBodyExpiry(IntegrationConstants.DEFAULT_DATE);
+						profBodyDetail.setProfBody(IntegrationConstants.EMPTY_TRING);
+						profBodyDetail.setProfBodyNo(IntegrationConstants.EMPTY_TRING);
+						profBodyDetail.setProfBodyExpiry(IntegrationConstants.DEFAULT_DATE);
 						profile.setProfBodyDetail(profBodyDetail);
 
 					}
 
-					RegistrationHistory registrationHistory = new RegistrationHistory(); // Changed to mof start
-																							// date and exp date
-					registrationHistory.setDateStart(smSupplier
-							.getSmMofAccounts().get(0).getEffDate());
-					registrationHistory.setDateEnd(smSupplier
-							.getSmMofAccounts().get(0).getExpDate());
+					RegistrationHistory registrationHistory = new RegistrationHistory(); 
+					registrationHistory.setDateStart(smSupplier.getSmMofAccounts().get(0).getEffDate());
+					registrationHistory.setDateEnd(smSupplier.getSmMofAccounts().get(0).getExpDate());
 					profile.setRegistrationHistory(registrationHistory);
 
 					CapitalProportion capitalProportion = new CapitalProportion();
-					capitalProportion.setBumi(smSupplier.getSmAppl()
-							.getSmCompanyBasic().getBumiEquity());
-					capitalProportion.setNonBumi(smSupplier.getSmAppl()
-							.getSmCompanyBasic().getNonBumiEquity());
-					capitalProportion.setNonMalaysian(smSupplier.getSmAppl()
-							.getSmCompanyBasic().getForeignerEquity());
-					capitalProportion.setGovAgency(smSupplier.getSmAppl()
-							.getSmCompanyBasic().getGovtUnitrustEquity());
-					capitalProportion.setGovEquity(smSupplier.getSmAppl()
-							.getSmCompanyBasic().getGovtEquity());
-					capitalProportion.setLocalCo(smSupplier.getSmAppl()
-							.getSmCompanyBasic().getLocalCompanyEquity());
-					capitalProportion.setForeignCo(smSupplier.getSmAppl()
-							.getSmCompanyBasic().getForeignCompanyEquity());
-					capitalProportion.setTotalMember(smSupplier.getSmAppl()
-							.getSmCompanyBasic().getTotalMember());
-					capitalProportion.setTotalShare(smSupplier.getSmAppl()
-							.getSmCompanyBasic().getTotalShare());
+					capitalProportion.setBumi(smSupplier.getSmAppl().getSmCompanyBasic().getBumiEquity());
+					capitalProportion.setNonBumi(smSupplier.getSmAppl().getSmCompanyBasic().getNonBumiEquity());
+					capitalProportion.setNonMalaysian(smSupplier.getSmAppl().getSmCompanyBasic().getForeignerEquity());
+					capitalProportion.setGovAgency(smSupplier.getSmAppl().getSmCompanyBasic().getGovtUnitrustEquity());
+					capitalProportion.setGovEquity(smSupplier.getSmAppl().getSmCompanyBasic().getGovtEquity());
+					capitalProportion.setLocalCo(smSupplier.getSmAppl().getSmCompanyBasic().getLocalCompanyEquity());
+					capitalProportion.setForeignCo(smSupplier.getSmAppl().getSmCompanyBasic().getForeignCompanyEquity());
+					capitalProportion.setTotalMember(smSupplier.getSmAppl().getSmCompanyBasic().getTotalMember());
+					capitalProportion.setTotalShare(smSupplier.getSmAppl().getSmCompanyBasic().getTotalShare());
 					profile.setCapitalProportion(capitalProportion);
-					consultantProfileList.add(profile);
+					if(!consultantProfileList.contains(profile))
+						consultantProfileList.add(profile);
 
 				}
 			}
