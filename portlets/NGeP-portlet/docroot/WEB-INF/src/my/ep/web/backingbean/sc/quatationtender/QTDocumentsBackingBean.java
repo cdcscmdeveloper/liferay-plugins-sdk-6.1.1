@@ -453,6 +453,7 @@ public class QTDocumentsBackingBean extends
 					.getQtNo());
 			scAttachment = scQtDocReportAttachment;
 			uploadAttachment(event.getFile(), scAttachment);
+			selectedScQtDocReport.setScQtDocReportAttachment(scQtDocReportAttachment);
 		}
 	}
 
@@ -955,10 +956,10 @@ public class QTDocumentsBackingBean extends
 		debugLogger("downloadReport");
 		ScQtDocReportAttachment scQtDocReportAttachment = scQtDocReport
 				.getScQtDocReportAttachment();
-		if (scQtDocReportAttachment == null) {
+		/*if (scQtDocReportAttachment == null) {*/
 			scQtDocReportAttachment = generateDocumentAttachment(scQtDocReport);
 			scQtDocReport.setScQtDocReportAttachment(scQtDocReportAttachment);
-		}
+		/*}*/
 		downloadFile(scQtDocReportAttachment);
 	}
 
