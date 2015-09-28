@@ -3,6 +3,9 @@ package my.ep.web.integration.eperunding;
 import java.math.BigDecimal;
 import java.util.Date;
 
+/*
+ *@author P Ganga prasad
+ */
 public class ConsultantProfile {
 
 	private String companyName;
@@ -347,6 +350,24 @@ public class ConsultantProfile {
 
 	public void setCapitalProportion(CapitalProportion capitalProportion) {
 		this.capitalProportion = capitalProportion;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof ConsultantProfile) {
+			ConsultantProfile temp = (ConsultantProfile) obj;
+			if (this.MOFNo.equalsIgnoreCase(temp.MOFNo)
+					&& this.SSMNo.equalsIgnoreCase(temp.SSMNo))
+				return true;
+		}
+		return false;
+
+	}
+
+	@Override
+	public int hashCode() {
+
+		return (this.MOFNo.hashCode() + this.SSMNo.hashCode());
 	}
 
 }
