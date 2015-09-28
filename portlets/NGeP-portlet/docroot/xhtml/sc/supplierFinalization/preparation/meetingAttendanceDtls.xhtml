@@ -75,14 +75,14 @@
 						</h:panelGrid>
 						<div class="ppRightBtn">
 							<p:commandButton value="#{lbl['lbl.btn.yes']}"  update="attdDelBtn, meetingAttDtlTbl" 
-						         process="@this, meetingAttDtlTbl" actionListener="#{suppFinalizationBackingBean.deleteMeetingAttendanceDetails(
-								 suppFinalizationBackingBean.managedBean.selectedMeetingAttList)}" onclick="dlgPerformDel.hide();">
+											 process="@this, meetingAttDtlTbl"
+						          			 actionListener="#{suppFinalizationBackingBean.deleteMeetingAttendanceDetails()}" 
+						        			 onclick="dlgPerformDel.hide();">
 						    </p:commandButton>
 							<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgPerformDel.hide();" type="button" />
 						</div>
 					</p:dialog>					
 				</p:panel> 
-
 			</td>
 		</tr>
 	</table>
