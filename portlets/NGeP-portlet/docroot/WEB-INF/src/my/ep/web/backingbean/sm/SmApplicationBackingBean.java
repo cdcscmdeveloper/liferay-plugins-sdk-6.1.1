@@ -2182,8 +2182,9 @@ public class SmApplicationBackingBean extends
 								getManagedBean().getBasicCompanyFacility()
 										.getSmAddress()));
 			}
-			assignStateDistAndCityForSelVal(getManagedBean()
-					.getBasicCompanyFacility().getSmAddress(),
+			SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
+					getManagedBean(),
+					getManagedBean().getBasicCompanyFacility().getSmAddress(),
 					SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
 		}
 		setFacilityDefaultPrices(getManagedBean().getBasicCompanyFacility());
@@ -2519,7 +2520,8 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignSelBranch(SmSupplierBranch branchBean, int index) {
 
-		assignStateDistAndCityForSelVal(branchBean.getSmAddress(),
+		SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
+				getManagedBean(), branchBean.getSmAddress(),
 				SupplierManagementConst.SM_BRANCH_PANEL);
 		if (branchBean.getSmPersonnel() == null) {
 			branchBean.setSmPersonnel(new SmPersonnel());
@@ -2581,6 +2583,15 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignCancelBranchBean() {
 		if (getManagedBean().getSelectedBranch() != null
+				&& getManagedBean().getSelectedBranch().getSmAddress() != null
+				&& getManagedBean().getSelectedBranch().getSmAddress()
+						.getAddressId() != null) {
+			getManagedBean().getSelectedBranch().setSmAddress(
+					SmCommonUtil.getInstance().getSmAddressById(
+							getManagedBean().getSelectedBranch().getSmAddress()
+									.getAddressId()));
+		}
+		if (getManagedBean().getSelectedBranch() != null
 				&& getManagedBean().getSelectedBranch().getGst() != null) {
 			getManagedBean().getSelectedBranch().setGst(null);
 		}
@@ -2636,6 +2647,15 @@ public class SmApplicationBackingBean extends
 	 */
 	public void cancelAssocCompanyFuntion() {
 		assignValReqdToFalse();
+		if (getManagedBean().getSelectedAssocCompany() != null
+				&& getManagedBean().getSelectedAssocCompany().getSmAddress() != null
+				&& getManagedBean().getSelectedAssocCompany().getSmAddress()
+						.getAddressId() != null) {
+			getManagedBean().getSelectedAssocCompany().setSmAddress(
+					SmCommonUtil.getInstance().getSmAddressById(
+							getManagedBean().getSelectedAssocCompany()
+									.getSmAddress().getAddressId()));
+		}
 		RequestContext.getCurrentInstance().reset(":form:tt:asDisp");
 		RequestContext.getCurrentInstance().execute("assocDialog.hide()");
 	}
@@ -2648,7 +2668,8 @@ public class SmApplicationBackingBean extends
 	 *            -SmAssociateCompany object
 	 */
 	public void assignSelAssoc(SmAssociateCompany assocBean) {
-		assignStateDistAndCityForSelVal(assocBean.getSmAddress(),
+		SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
+				getManagedBean(), assocBean.getSmAddress(),
 				SupplierManagementConst.SM_ASSOC_COMPANY_PANEL);
 		getManagedBean().setSelectedAssocCompany(assocBean);
 		getManagedBean().getSelectedAssocCompany().setIsShareholding(
@@ -3585,6 +3606,15 @@ public class SmApplicationBackingBean extends
 	 * dialog
 	 */
 	public void cancelFactorySaveorUpdate() {
+		if (getManagedBean().getSelectedFactoryFacility() != null
+				&& getManagedBean().getSelectedFactoryFacility().getSmAddress() != null
+				&& getManagedBean().getSelectedFactoryFacility().getSmAddress()
+						.getAddressId() != null) {
+			getManagedBean().getSelectedFactoryFacility().setSmAddress(
+					SmCommonUtil.getInstance().getSmAddressById(
+							getManagedBean().getSelectedFactoryFacility()
+									.getSmAddress().getAddressId()));
+		}
 		assignValReqdToFalse();
 		resetFacilityValues(getManagedBean().getSelectedFactoryFacility());
 		RequestContext.getCurrentInstance().reset(":form:tt:factoryDialog");
@@ -3601,7 +3631,8 @@ public class SmApplicationBackingBean extends
 	public void assignSelFactory(SmFacility facilityBean) {
 		log.info("******** Selected value ******"
 				+ facilityBean.getSmAddress().getAddress1());
-		assignStateDistAndCityForSelVal(facilityBean.getSmAddress(),
+		SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
+				getManagedBean(), facilityBean.getSmAddress(),
 				SupplierManagementConst.SM_FACTORY_FACILITY_PANEL);
 		setFacilityDefaultPrices(facilityBean);
 		setPreviousFacilityValues(facilityBean);
@@ -3701,6 +3732,16 @@ public class SmApplicationBackingBean extends
 	 * dialog
 	 */
 	public void cancelDockyardSaveorUpdate() {
+		if (getManagedBean().getSelectedDockyardFacility() != null
+				&& getManagedBean().getSelectedDockyardFacility()
+						.getSmAddress() != null
+				&& getManagedBean().getSelectedDockyardFacility()
+						.getSmAddress().getAddressId() != null) {
+			getManagedBean().getSelectedDockyardFacility().setSmAddress(
+					SmCommonUtil.getInstance().getSmAddressById(
+							getManagedBean().getSelectedDockyardFacility()
+									.getSmAddress().getAddressId()));
+		}
 		assignValReqdToFalse();
 		resetFacilityValues(getManagedBean().getSelectedDockyardFacility());
 		RequestContext.getCurrentInstance().reset(":form:tt:dockYardDialog");
@@ -3715,7 +3756,8 @@ public class SmApplicationBackingBean extends
 	 *            - SmFacility object
 	 */
 	public void assignSelDockyard(SmFacility facilityBean) {
-		assignStateDistAndCityForSelVal(facilityBean.getSmAddress(),
+		SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
+				getManagedBean(), facilityBean.getSmAddress(),
 				SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL);
 		setFacilityDefaultPrices(facilityBean);
 		setPreviousFacilityValues(facilityBean);
@@ -3814,6 +3856,16 @@ public class SmApplicationBackingBean extends
 	 * dialog
 	 */
 	public void cancelWorkShopSaveorUpdate() {
+		if (getManagedBean().getSelectedWorkShopFacility() != null
+				&& getManagedBean().getSelectedWorkShopFacility()
+						.getSmAddress() != null
+				&& getManagedBean().getSelectedWorkShopFacility()
+						.getSmAddress().getAddressId() != null) {
+			getManagedBean().getSelectedWorkShopFacility().setSmAddress(
+					SmCommonUtil.getInstance().getSmAddressById(
+							getManagedBean().getSelectedWorkShopFacility()
+									.getSmAddress().getAddressId()));
+		}
 		assignValReqdToFalse();
 		resetFacilityValues(getManagedBean().getSelectedWorkShopFacility());
 		RequestContext.getCurrentInstance().reset(":form:tt:workShopDialog");
@@ -3828,7 +3880,8 @@ public class SmApplicationBackingBean extends
 	 *            - SmFacility object
 	 */
 	public void assignSelWorkshop(SmFacility facilityBean) {
-		assignStateDistAndCityForSelVal(facilityBean.getSmAddress(),
+		SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
+				getManagedBean(), facilityBean.getSmAddress(),
 				SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL);
 		setFacilityDefaultPrices(facilityBean);
 		setPreviousFacilityValues(facilityBean);
@@ -3924,6 +3977,15 @@ public class SmApplicationBackingBean extends
 	 * Cancel add or update functionality and close the store information dialog
 	 */
 	public void cancelStoreSaveorUpdate() {
+		if (getManagedBean().getSelectedStoreFacility() != null
+				&& getManagedBean().getSelectedStoreFacility().getSmAddress() != null
+				&& getManagedBean().getSelectedStoreFacility().getSmAddress()
+						.getAddressId() != null) {
+			getManagedBean().getSelectedStoreFacility().setSmAddress(
+					SmCommonUtil.getInstance().getSmAddressById(
+							getManagedBean().getSelectedStoreFacility()
+									.getSmAddress().getAddressId()));
+		}
 		assignValReqdToFalse();
 		resetFacilityValues(getManagedBean().getSelectedStoreFacility());
 		RequestContext.getCurrentInstance().reset(":form:tt:storeDialog");
@@ -3938,7 +4000,8 @@ public class SmApplicationBackingBean extends
 	 *            the facility bean
 	 */
 	public void assignSelStore(SmFacility facilityBean) {
-		assignStateDistAndCityForSelVal(facilityBean.getSmAddress(),
+		SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
+				getManagedBean(), facilityBean.getSmAddress(),
 				SupplierManagementConst.SM_STORE_FACILITY_PANEL);
 		setFacilityDefaultPrices(facilityBean);
 		setPreviousFacilityValues(facilityBean);
@@ -5494,39 +5557,55 @@ public class SmApplicationBackingBean extends
 							.equalsIgnoreCase(
 									SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)) {
 						getManagedBean().setShareHolderPermAddr(addr);
-						assignStateDistAndCityForSelVal(
-								getManagedBean().getShareHolderPermAddr()
-										.getSmAddress(),
-								SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL);
+						SmApplicationUtil
+								.getInstance()
+								.assignStateDistAndCityForSelVal(
+										getManagedBean(),
+										getManagedBean()
+												.getShareHolderPermAddr()
+												.getSmAddress(),
+										SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL);
 
 					}
 					if (addr.getAddressType()
 							.equalsIgnoreCase(
 									SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL)) {
 						getManagedBean().setShareHolderMailAddr(addr);
-						assignStateDistAndCityForSelVal(
-								getManagedBean().getShareHolderMailAddr()
-										.getSmAddress(),
-								SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL);
+						SmApplicationUtil
+								.getInstance()
+								.assignStateDistAndCityForSelVal(
+										getManagedBean(),
+										getManagedBean()
+												.getShareHolderMailAddr()
+												.getSmAddress(),
+										SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL);
 
 					}
 					if (addr.getAddressType().equalsIgnoreCase(
 							SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)) {
 						getManagedBean().setShareHolderResdAddr(addr);
-						assignStateDistAndCityForSelVal(
-								getManagedBean().getShareHolderResdAddr()
-										.getSmAddress(),
-								SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+						SmApplicationUtil
+								.getInstance()
+								.assignStateDistAndCityForSelVal(
+										getManagedBean(),
+										getManagedBean()
+												.getShareHolderResdAddr()
+												.getSmAddress(),
+										SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
 
 					}
 					if (addr.getAddressType()
 							.equalsIgnoreCase(
 									SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE)) {
 						getManagedBean().setShareHolderOffAddr(addr);
-						assignStateDistAndCityForSelVal(
-								getManagedBean().getShareHolderOffAddr()
-										.getSmAddress(),
-								SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL);
+						SmApplicationUtil
+								.getInstance()
+								.assignStateDistAndCityForSelVal(
+										getManagedBean(),
+										getManagedBean()
+												.getShareHolderOffAddr()
+												.getSmAddress(),
+										SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL);
 					}
 				}
 
@@ -5635,6 +5714,15 @@ public class SmApplicationBackingBean extends
 	 * Cancel add or update functionality and close the bank information dialog
 	 */
 	public void cancelSmBankFunctions() {
+		if (getManagedBean().getSelectedBank() != null
+				&& getManagedBean().getSelectedBank().getSmAddress() != null
+				&& getManagedBean().getSelectedBank().getSmAddress()
+						.getAddressId() != null) {
+			getManagedBean().getSelectedBank().setSmAddress(
+					SmCommonUtil.getInstance().getSmAddressById(
+							getManagedBean().getSelectedBank().getSmAddress()
+									.getAddressId()));
+		}
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().reset(":form:tt:bankDialog");
 		RequestContext.getCurrentInstance().execute("bankDialog.hide()");
@@ -5668,7 +5756,8 @@ public class SmApplicationBackingBean extends
 				&& shareBankBean.getSmAddress().getPmCountry().getCountryId() != null
 				&& shareBankBean.getSmAddress().getPmState().getStateId() != null
 				&& shareBankBean.getSmAddress().getPmDistrict().getDistrictId() != null) {
-			assignStateDistAndCityForSelVal(shareBankBean.getSmAddress(),
+			SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
+					getManagedBean(), shareBankBean.getSmAddress(),
 					SupplierManagementConst.SM_BANK_INFO_PANEL);
 		} else {
 			shareBankBean.setSmAddress(SmApplicationUtil
@@ -7383,9 +7472,8 @@ public class SmApplicationBackingBean extends
 	 * @param SmAddress
 	 *            addr
 	 */
-	public void onChangeCity(SmAddress addr,String panelName) {
-		addr.setPmCity(SmCommonUtil.getInstance().getCityById(
-				addr.getCityId()));
+	public void onChangeCity(SmAddress addr, String panelName) {
+		addr.setPmCity(SmCommonUtil.getInstance().getCityById(addr.getCityId()));
 		setRoleStaffAddrReqd();
 	}
 
@@ -7563,9 +7651,12 @@ public class SmApplicationBackingBean extends
 						&& smFac.getSmAddress().getPmCountry() != null
 						&& smFac.getSmAddress().getPmState() != null
 						&& smFac.getSmAddress().getPmCity() != null) {
-					assignStateDistAndCityForSelVal(
-							smFac.getSmAddress(),
-							SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
+					SmApplicationUtil
+							.getInstance()
+							.assignStateDistAndCityForSelVal(
+									getManagedBean(),
+									smFac.getSmAddress(),
+									SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
 				}
 			}
 			if (smFac.getFacilityType().equalsIgnoreCase(
@@ -8003,41 +8094,6 @@ public class SmApplicationBackingBean extends
 	private void assignValReqdToFalse() {
 		getManagedBean().setShowParentMsg(true);
 		getManagedBean().setValueReqd(false);
-	}
-
-	/**
-	 * Assign or populate states, districits and cities in the selected panel
-	 * for sel values.
-	 * 
-	 * @param countryId
-	 *            - Long country id
-	 * @param stateID
-	 *            - Long state id
-	 * @param districtId
-	 *            - Long district id
-	 * @param panelName
-	 *            - String panel name
-	 */
-	private void assignStateDistAndCityForSelVal(SmAddress addr,
-			String panelName) {
-		if (addr.getPmCountry() != null) {
-			addr.setCountryId(addr.getPmCountry().getCountryId());
-		}
-		SmApplicationUtil.getInstance().populateStateByCountry(addr, panelName,
-				getManagedBean());
-		if (addr.getPmState() != null) {
-			addr.setStateId(addr.getPmState().getStateId());
-		}
-		SmApplicationUtil.getInstance().populateDistrictsByState(addr,
-				panelName, getManagedBean());
-		if (addr.getPmDistrict() != null) {
-			addr.setDistrictId(addr.getPmDistrict().getDistrictId());
-		}
-		SmApplicationUtil.getInstance().populateCitiesByDistrict(addr,
-				panelName, getManagedBean());
-		if (addr.getPmCity() != null) {
-			addr.setCityId(addr.getPmCity().getCityId());
-		}
 	}
 
 	/**

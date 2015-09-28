@@ -1493,6 +1493,24 @@ public class SmCommonUtil {
 	}
 
 	/**
+	 * Get SmAddress by addressId
+	 * 
+	 * @param Long
+	 *            smAddressId
+	 * @return SmAddress
+	 */
+	public SmAddress getSmAddressById(Long smAddressId) {
+		SmAddress address = null;
+		if (smAddressId != null) {
+			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+			reqDTO.setSmAddressId(smAddressId);
+			address = SmServiceLookup.getMofRegistrationSO()
+					.retrieveSmAddressById(reqDTO).getSmAddress();
+		}
+		return address;
+	}
+
+	/**
 	 * Set personnel role name for display purposes based on properties.
 	 * 
 	 * @param supplierType

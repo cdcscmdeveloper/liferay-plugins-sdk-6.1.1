@@ -6060,6 +6060,38 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Assign or populate states, districits and cities in the selected panel
+	 * for sel values.
+	 * 
+	 * @param countryId
+	 *            - Long country id
+	 * @param stateID
+	 *            - Long state id
+	 * @param districtId
+	 *            - Long district id
+	 * @param panelName
+	 *            - String panel name
+	 */
+	public void assignStateDistAndCityForSelVal(SmApplicationManagedBean bean,
+			SmAddress addr, String panelName) {
+		if (addr.getPmCountry() != null) {
+			addr.setCountryId(addr.getPmCountry().getCountryId());
+		}
+		getInstance().populateStateByCountry(addr, panelName, bean);
+		if (addr.getPmState() != null) {
+			addr.setStateId(addr.getPmState().getStateId());
+		}
+		getInstance().populateDistrictsByState(addr, panelName, bean);
+		if (addr.getPmDistrict() != null) {
+			addr.setDistrictId(addr.getPmDistrict().getDistrictId());
+		}
+		getInstance().populateCitiesByDistrict(addr, panelName, bean);
+		if (addr.getPmCity() != null) {
+			addr.setCityId(addr.getPmCity().getCityId());
+		}
+	}
+
 	public void setApplAddressTransientValue(SmAppl appl, boolean isSave) {
 		// company basic
 		if (appl.getSmCompanyBasic() != null
