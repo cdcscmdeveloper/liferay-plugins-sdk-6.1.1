@@ -600,13 +600,6 @@ public class GfmasIntegration extends InitializeUtilityClz{
 						PmAgOffice agOffice = null;
 
 						for (AgOffice office : agOfficeList) {
-							reqDTO = new AgOfficeReqDTO();
-							reqDTO.setAgOfficeCode(office.getCode());
-							AgOfficeResDTO agOfficeDTO = agOfficeSO.retrieveValidAgOfficeByOfficeCode(reqDTO);
-							if (agOfficeDTO.isSuccessful()) {
-								log.info("Duplicate Code :");
-								
-							} else {
 								reqDTO = new AgOfficeReqDTO();
 								agOffice = new PmAgOffice();
 								agOffice.setOfficeCode(office.getCode());
@@ -617,7 +610,6 @@ public class GfmasIntegration extends InitializeUtilityClz{
 								agOffice.setRecordStatusFlg(IntegrationConstants.RECORD_STATUS_ACTIVE);
 								reqDTO.setAgOffice(agOffice);
 								agOfficeSO.saveOrUpdateAgOffice(reqDTO);
-							}
 						}
 					}
 					log.info("pejabatPerakaunanGfmasInbound updated ");
@@ -668,16 +660,6 @@ public class GfmasIntegration extends InitializeUtilityClz{
 
 						for (AgCtrlOfficer office : agOfficeList) {
 							
-							orgProfileReqDTO = new OrgProfileReqDTO();
-							orgProfileReqDTO.setOrgTypeCode(ParameterConst.ORG_TYPE_PEGAWAI_PENGAWAL);
-							orgProfileReqDTO.setOrgCode(office.getCode()); 
-							
-							OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileByCodeAndOrgType(orgProfileReqDTO);
-						
-							if (orgProfileResDTO.isSuccessful()) {
-								log.info("Duplicate Code");
-							} else {
-								
 								orgProfileReqDTO = new OrgProfileReqDTO();
 								
 								PmOrgProfile pmOrgProfile = new PmOrgProfile();
@@ -711,7 +693,6 @@ public class GfmasIntegration extends InitializeUtilityClz{
 								
 								orgProfileSO.saveOrUpdateOrgProfile(orgProfileReqDTO);
 							}
-						}
 					}
 					log.info("pegawaiPengawalGfmasInbound updated");
 					}
