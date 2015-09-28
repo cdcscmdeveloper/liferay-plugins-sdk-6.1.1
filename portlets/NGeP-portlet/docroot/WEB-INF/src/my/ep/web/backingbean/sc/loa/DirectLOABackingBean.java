@@ -3696,16 +3696,14 @@ public class DirectLOABackingBean extends
 					}
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 				throw new EpException(e.getMessage());
 			}
-
-			// TODOs
-		}
-		if (null != scLoaReportAttachment
-				&& scLoaReportAttachment.getFileName() != null
-				&& scLoaReportAttachment.getFilePath() != null) {
-			scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
+			if (null != scLoaReportAttachment
+					&& scLoaReportAttachment.getFileName() != null
+					&& scLoaReportAttachment.getFilePath() != null) {
+				scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
+			}
 		}
 
 		return scLoaReportAttachment;
