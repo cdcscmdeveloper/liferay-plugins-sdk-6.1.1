@@ -410,7 +410,7 @@ public class SmFieldChangeUtil {
 							&& latestBody.getAssociationBodyId() != null) {
 						if (isHasDifferences(latestBody, currBody,
 								new String[] { "associationBodyId",
-										"smPersonnel" })) {
+										"smPersonnel" ,"pmCertBody"})) {
 							currPersonnel.setChangedFieldStatus("U");
 							currBody.setChangedFieldStatus("U");
 						}
