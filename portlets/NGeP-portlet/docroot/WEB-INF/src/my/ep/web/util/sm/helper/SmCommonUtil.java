@@ -2830,18 +2830,27 @@ public class SmCommonUtil {
 				excludeList.addAll(Arrays.asList(excludeProps));
 			}
 			Field[] attributes = object.getDeclaredFields();
-			Type type = null;
 			Object latestVal = null;
 			Object currVal = null;
 			for (Field field : attributes) {
-				type = field.getGenericType();
 				if (!excludeList.contains(field.getName())) {
-					if (type instanceof ParameterizedType == false) {
+					if (field.getGenericType() instanceof ParameterizedType == false) {
 						try {
 							latestVal = PropertyUtils.getProperty(latest,
 									field.getName());
 							currVal = PropertyUtils.getProperty(current,
 									field.getName());
+							if (BigDecimal.class.equals(field.getType())) {
+								if (currVal != null) {
+									currVal = new BigDecimal(currVal.toString())
+											.setScale(2, BigDecimal.ROUND_UP);
+								}
+								if (latestVal != null) {
+									latestVal = new BigDecimal(
+											latestVal.toString()).setScale(2,
+											BigDecimal.ROUND_UP);
+								}
+							}
 							if (latestVal == null
 									|| StringUtils
 											.isBlank(latestVal.toString())) {
