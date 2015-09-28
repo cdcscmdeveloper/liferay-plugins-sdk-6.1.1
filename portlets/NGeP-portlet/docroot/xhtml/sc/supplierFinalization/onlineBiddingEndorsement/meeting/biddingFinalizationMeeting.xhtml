@@ -1,0 +1,41 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<table style="border: 0px;width:100%;">
+		<tr>
+			<td width="14%" class="sidemenutd" valign="top">
+				<p:tabMenu styleClass="sidemenu"
+					activeIndex="#{suppFinalBiddingBackingBean.managedBean.meetingActiveIndex}">
+					
+					<p:menuitem value="#{lbl['lbl.sc.meeting.details']}"
+						action="#{suppFinalBiddingBackingBean.navigateToMeetingDtls}"
+						process="@form" update="@form" />
+					<p:menuitem value="#{suppFinalBiddingBackingBean.managedBean.committeeTabLabel}"
+						action="#{suppFinalBiddingBackingBean.navigateToCommitteeDtls}"
+						process="@form" update="@form" />
+					<p:menuitem value="#{lbl['lbl.sc.join.in']}"
+						action="#{suppFinalBiddingBackingBean.navigateToMeetingAttendanceDtls}"
+						process="@form" update="@form" />
+				</p:tabMenu>
+			</td>
+			
+			<td style="width:86%;">
+				<c:if test="#{suppFinalBiddingBackingBean.managedBean.meetingActiveIndex eq '0'}">
+					<ui:include src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/meeting/meetingDtls.xhtml"/>
+				</c:if> 
+				<c:if test="#{suppFinalBiddingBackingBean.managedBean.meetingActiveIndex eq '1'}">
+					<ui:include src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/meeting/committeeDtls.xhtml"/>
+				</c:if> 
+				<c:if test="#{suppFinalBiddingBackingBean.managedBean.meetingActiveIndex eq '2'}">
+					<ui:include src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/meeting/meetingAttendanceDtls.xhtml"/>
+				</c:if> 
+			</td>
+		</tr>
+	</table>
+
+</ui:composition>
