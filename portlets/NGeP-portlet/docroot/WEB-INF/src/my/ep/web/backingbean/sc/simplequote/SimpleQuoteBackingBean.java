@@ -1583,6 +1583,9 @@ public class SimpleQuoteBackingBean extends
 
 		getManagedBean().setScQuote(scQuote);
 		procurementTypeEvent();
+		
+		// to get ptj locality by default
+		ptjLocality(ParameterConst.LOCATION_LEVEL_DISTRICT);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "simpleQuote");
