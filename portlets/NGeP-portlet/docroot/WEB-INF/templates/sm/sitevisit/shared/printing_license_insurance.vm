@@ -3,8 +3,8 @@
 	#if($licenseInsuranceLs.size() > 0)
 		#foreach($licenseIns in $licenseInsuranceLs)
 		<tr>
-			<td class="txtBold"><br /></td>
-			<td width="40%" class="txtBold">
+			<td class="txtBold" width="40%">&#160;</td>
+			<td class="txtBold">
 			$licenseIns.codeName
 			#if($licenseIns.pmParameter.parameterCode != "C")
 				, Closing Date
