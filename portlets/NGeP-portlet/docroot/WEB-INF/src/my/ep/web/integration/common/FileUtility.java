@@ -27,6 +27,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.agoffice.AgOfficeReqDTO;
 import my.ep.dto.pm.common.agoffice.AgOfficeResDTO;
+import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
+import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.glaccount.GlAccountReqDTO;
 import my.ep.dto.pm.common.glaccount.GlAccountResDTO;
 import my.ep.dto.pm.common.programactivity.ProgramActivityReqDTO;
@@ -523,7 +525,6 @@ public class FileUtility extends InitializeSO{
 			List<AgOffice> agOfficeList = new ArrayList<AgOffice>();
 			AgOffice afOffice = null;
 			EPErrorResponse errorResponse = null;
-			List<ErrorDetail> errorDetailList = null;
 
 			try (Scanner scanner = new Scanner(path,IntegrationConstants.ENCODING.name())) {
 				int lineNo = 1;
@@ -538,23 +539,13 @@ public class FileUtility extends InitializeSO{
 						afOffice.setEffDate(IntegrationConstants.DEFAULT_DATE);
 						agOfficeList.add(afOffice);
 					}else{
-						if(errorResponse==null){
-							errorResponse = new EPErrorResponse();
-							errorResponse.setRecordType(IntegrationConstants.RECORD_TYPE_H);
-							errorResponse.setTahunKewangan(2015);
-							errorResponse.setNamaFailAsal(fileName);
-							errorDetailList = new ArrayList<ErrorDetail>();
-						}
-						errorDetailList.add(ConstructErrorDetailsObject(lineNo,"Error in size of the record length"));
+						errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in size of the record length"));
 					}
 					lineNo++;
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
-			}
-			if(errorResponse!=null){
-				errorResponse.setErrorDetailList(errorDetailList);
-				errorFileOutBound(errorResponse);
 			}
 			return agOfficeList;
 		}
@@ -565,7 +556,6 @@ public class FileUtility extends InitializeSO{
 			List<AgCtrlOfficer> agCtrOfficeList = new ArrayList<AgCtrlOfficer>();
 			AgCtrlOfficer afCtrOffice = null;
 			EPErrorResponse errorResponse = null;
-			List<ErrorDetail> errorDetailList = null;
 			try (Scanner scanner = new Scanner(path,IntegrationConstants.ENCODING.name())) {
 				int lineNo = 1;
 				while (scanner.hasNextLine()) {
@@ -578,23 +568,13 @@ public class FileUtility extends InitializeSO{
 						afCtrOffice.setStatus(getValue(line,261, 1));
 						agCtrOfficeList.add(afCtrOffice);
 					}else{
-						if(errorResponse==null){
-							errorResponse = new EPErrorResponse();
-							errorResponse.setRecordType(IntegrationConstants.RECORD_TYPE_H);
-							errorResponse.setTahunKewangan(2015);
-							errorResponse.setNamaFailAsal(fileName);
-							errorDetailList = new ArrayList<ErrorDetail>();
-						}
-						errorDetailList.add(ConstructErrorDetailsObject(lineNo,"Error in size of the record length"));
+						errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in size of the record length"));
 					}
 					lineNo++;
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
-			}
-			if(errorResponse!=null){
-				errorResponse.setErrorDetailList(errorDetailList);
-				errorFileOutBound(errorResponse);
 			}
 			return agCtrOfficeList;
 		}
@@ -626,7 +606,7 @@ public class FileUtility extends InitializeSO{
 						
 						if (votFundResDTO.isSuccessful()) {
 							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Duplicate code.available in db"));
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.DUPLICATE_RECORD_3));
 							recordFlag = true;
 						}
 						
@@ -641,7 +621,7 @@ public class FileUtility extends InitializeSO{
 						OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileByCodeAndOrgType(orgProfileReqDTO);
 						if(!orgProfileResDTO.isSuccessful()){
 							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in dependency kump ptj"));
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.DEPENDENCY_ERROR_1));
 							recordFlag = true;
 						}
 						vot.setDescription(getValue(line, 9, 255));
@@ -650,14 +630,14 @@ public class FileUtility extends InitializeSO{
 							vot.setEffectiveDate(formatStringToDate(getValue(line, 264, 8)));
 						}else{
 							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in converting effective date"));
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.DATE_CONVERSION_ERROR));
 							recordFlag = true;
 						}
 						if(formatStringToDate(getValue(line, 272, 8))!=null){
 							vot.setExpiryDate(formatStringToDate(getValue(line, 272, 8)));
 						} else {
 							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in converting expiry date"));
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.DATE_CONVERSION_ERROR));
 							recordFlag = true;
 						}
 						vot.setStatus(getValue(line, 280,1));
@@ -665,7 +645,7 @@ public class FileUtility extends InitializeSO{
 							votList.add(vot);
 					}else{
 						errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in size of the record length"));
+						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.LENGTH_ERROR));
 					}
 					lineNo++;
 				}
@@ -715,7 +695,7 @@ public class FileUtility extends InitializeSO{
 						VotFundResDTO votFundDTO = votFundSO.retrieveValidVotFundDanaByVotCode(reqDTO);
 						if (votFundDTO.isSuccessful()) {
 							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Duplicate code.available in db"));
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.DUPLICATE_RECORD_4));
 							recordFlag = true;
 						}
 						vot.setDescription(getValue(line, 8, 255));
@@ -723,14 +703,14 @@ public class FileUtility extends InitializeSO{
 							vot.setEffectiveDate(formatStringToDate(getValue(line, 263, 8)));
 						}catch(Exception e){
 							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in converting effective date"));
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.DATE_CONVERSION_ERROR));
 							recordFlag = true;
 						}
 						try {
 							vot.setExpiryDate(formatStringToDate(getValue(line, 271, 8)));
 						} catch (Exception e) {
 							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in converting expiry date"));
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.DATE_CONVERSION_ERROR));
 							recordFlag = true;
 						}
 						vot.setStatus(getValue(line, 279, 1));
@@ -738,7 +718,7 @@ public class FileUtility extends InitializeSO{
 							votList.add(vot);
 					}else{
 						errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in size of the record length"));
+						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.LENGTH_ERROR));
 					}
 					lineNo++;
 				}
@@ -776,7 +756,7 @@ public class FileUtility extends InitializeSO{
 						
 						if(resDTO.getPmVotFund()==null){
 							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in dependency vot fund"));
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.DEPENDENCY_ERROR_2));
 							recordFlag = true;
 						}
 						
@@ -788,7 +768,7 @@ public class FileUtility extends InitializeSO{
 						
 						if(prgResDTO.isSuccessful()){
 							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Duplicate code.available in db"));
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.DUPLICATE_RECORD_5));
 							recordFlag = true;
 						}
 						programActivity.setDescription(getValue(line, 13, 255));
@@ -798,14 +778,14 @@ public class FileUtility extends InitializeSO{
 							programActivity.setEffectiveDate(formatStringToDate(getValue(line, 268, 8)));
 						}else{
 							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in converting effective date"));
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.DATE_CONVERSION_ERROR));
 							recordFlag = true;
 						}
 						if(formatStringToDate(getValue(line, 276, 8))!=null){
 							programActivity.setExpiryDate(formatStringToDate(getValue(line, 276, 8)));
 						} else {
 							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in converting expiry date"));
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.DATE_CONVERSION_ERROR));
 							recordFlag = true;
 						}
 						
@@ -814,7 +794,7 @@ public class FileUtility extends InitializeSO{
 							programActivityList.add(programActivity);
 					}else{
 						errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in size of the record length"));
+						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.LENGTH_ERROR));
 					}
 					lineNo++;
 				}
@@ -851,7 +831,7 @@ public class FileUtility extends InitializeSO{
 						VotFundResDTO restDTO = votFundSO.retrieveVotFundByVotCode(votreqDTO);
 						if(restDTO.getPmVotFund()==null){
 							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in dependency vot fund"));
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.DEPENDENCY_ERROR_2));
 							recordFlag = true;
 						}
 						project.setCode(getValue(line, 7, 5));
@@ -862,7 +842,7 @@ public class FileUtility extends InitializeSO{
 						ProjectSetiaResDTO proResDTO = projectSetiaSO.retrieveProjectByProjectCode(reqDTO);							
 						if (proResDTO.isSuccessful()) {
 							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Duplicate code.available in db"));
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.DUPLICATE_RECORD_6));
 							recordFlag = true;
 						}
 						project.setSetiaCode(getValue(line, 12, 3));
@@ -875,23 +855,22 @@ public class FileUtility extends InitializeSO{
 							project.setEffectiveDate(formatStringToDate(getValue(line, 275, 8)));
 						}else{
 							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in converting effective date"));
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.DATE_CONVERSION_ERROR));
 							recordFlag = true;
 						}
 						if(formatStringToDate(getValue(line, 283, 8))!=null){
 							project.setExpiryDate(formatStringToDate(getValue(line, 283, 8)));
 						} else {
 							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in converting expiry date"));
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.DATE_CONVERSION_ERROR));
 							recordFlag = true;
 						}
-						
 						project.setStatus(getValue(line,291, 1));
 						if(!recordFlag)
 							projectList.add(project);
 					}else{
 						errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in size of the record length"));
+						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.LENGTH_ERROR));
 					}
 					lineNo++;
 				}
@@ -927,7 +906,7 @@ public class FileUtility extends InitializeSO{
 						GlAccountResDTO glResDTO = glAccountSO.retrieveValidGlAccountByglAccountCode(reqDTO);
 						if (glResDTO.isSuccessful()) {
 							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Duplicate code.available in db"));
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.DUPLICATE_RECORD_7));
 							recordFlag = true;
 						}
 						
@@ -940,7 +919,7 @@ public class FileUtility extends InitializeSO{
 							glAccountList.add(glAccount);
 					}else{
 						errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in size of the record length"));
+						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.LENGTH_ERROR));
 					}
 					lineNo++;
 				}
@@ -978,7 +957,7 @@ public class FileUtility extends InitializeSO{
 						//Duplicate checking
 						if (orgProfileResDTO.isSuccessful()) {
 							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Duplicate code.available in db"));
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.DUPLICATE_RECORD_8));
 							recordFlag = true;
 						}
 						ptjGroup.setDescription(getValue(line, 6, 255));
@@ -987,14 +966,14 @@ public class FileUtility extends InitializeSO{
 							ptjGroup.setEffectiveDate(formatStringToDate(getValue(line, 264, 8)));
 						}else{
 							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in converting effective date"));
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.DATE_CONVERSION_ERROR));
 							recordFlag = true;
 						}
 						if(formatStringToDate(getValue(line, 269, 8))!=null){
 							ptjGroup.setExpiryDate(formatStringToDate(getValue(line, 272, 8)));
 						} else {
 							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in converting expiry date"));
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.DATE_CONVERSION_ERROR));
 							recordFlag = true;
 						}
 						ptjGroup.setStatus(getValue(line, 277, 1));
@@ -1003,7 +982,7 @@ public class FileUtility extends InitializeSO{
 						
 					}else{
 						errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in size of the record length"));
+						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.LENGTH_ERROR));
 					}
 					lineNo++;
 				}
@@ -1017,7 +996,7 @@ public class FileUtility extends InitializeSO{
 			return batchResDTO;
 		}
 
-		public BatchResDTO<OrgProfile> masterDatePTJ(String filePath, String fileName) {
+		public BatchResDTO<OrgProfile> masterDataPTJ(String filePath, String fileName) {
 			Path path = Paths.get(filePath);
 			String line;
 			List<OrgProfile> orgProfileList = new ArrayList<OrgProfile>();
@@ -1044,7 +1023,7 @@ public class FileUtility extends InitializeSO{
 						OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileByCodeAndOrgType(dupPTJReqDTO);
 						if (orgProfileResDTO.isSuccessful()) {
 							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Duplicate code.available in db"));
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.DUPLICATE_RECORD_9));
 							recordFlag = true;
 						}
 						
@@ -1056,7 +1035,7 @@ public class FileUtility extends InitializeSO{
 						OrgProfileResDTO kumResDTO = orgProfileSO.retrieveOrgProfileByCodeAndOrgType(kumpReqDTO);
 						if(kumResDTO.isSuccessful()){
 							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in dependency kump ptj"));
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.DEPENDENCY_ERROR_1));
 							recordFlag = true;
 						}
 						orgProfile.setDescription(getValue(line, 12, 255));
@@ -1071,7 +1050,7 @@ public class FileUtility extends InitializeSO{
 						
 						if(!pegwaiResDTO.isSuccessful()){
 							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in dependency pegawai pengawai"));
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.DEPENDENCY_ERROR_4));
 							recordFlag = true;
 						}
 						
@@ -1085,7 +1064,7 @@ public class FileUtility extends InitializeSO{
 						AgOfficeResDTO agOfficeDTO = agOfficeSO.retrieveValidAgOfficeByOfficeCode(reqDTO);
 						if(!agOfficeDTO.isSuccessful()){
 							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in dependency pejabat perakuan"));
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.DEPENDENCY_ERROR_3));
 							recordFlag = true;
 						}
 //						orgProfile.setEffectiveDate(formatStringToDate(getValue(line, 273, 8)));
@@ -1096,14 +1075,14 @@ public class FileUtility extends InitializeSO{
 							orgProfile.setEffectiveDate(formatStringToDate(getValue(line, 264, 8)));
 						}else{
 							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in converting effective date"));
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.DATE_CONVERSION_ERROR));
 							recordFlag = true;
 						}
 						if(formatStringToDate(getValue(line, 281, 8))!=null){
 							orgProfile.setExpiryDate(formatStringToDate(getValue(line, 272, 8)));
 						} else {
 							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in converting expiry date"));
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.DATE_CONVERSION_ERROR));
 							recordFlag = true;
 						}
 						
@@ -1112,7 +1091,7 @@ public class FileUtility extends InitializeSO{
 							orgProfileList.add(orgProfile);
 					}else{
 						errorResponse = constructErrorResponseObject(fileName,	errorResponse);
-						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,"Error in size of the record length"));
+						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.LENGTH_ERROR));
 					}
 					lineNo++;
 				}
@@ -1125,13 +1104,13 @@ public class FileUtility extends InitializeSO{
 			return batchResDTO;
 		}
 
-		public List<BankAccountInformation> kodBank(String filePath, String fileName) {
+		public BatchResDTO<BankAccountInformation> kodBank(String filePath, String fileName) {
 			Path path = Paths.get(filePath);
 			String line;
 			List<BankAccountInformation> bankList = new ArrayList<BankAccountInformation>();
 			BankAccountInformation bank = null;
 			EPErrorResponse errorResponse = null;
-			List<ErrorDetail> errorDetailList = null;
+			boolean recordFlag;
 
 			try (Scanner scanner = new Scanner(path, IntegrationConstants.ENCODING.name())) {
 				int lineNo = 1;
@@ -1139,32 +1118,35 @@ public class FileUtility extends InitializeSO{
 					line = scanner.nextLine();
 					if(line.length()==InterfaceRowLength.CMBNK.value()){
 						bank = new BankAccountInformation();
+						recordFlag = false;
 
 						bank.setSwiftCode(getValue(line, 0, 11));
 						bank.setBankName(getValue(line, 11, 40));
+						FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
+						reqDTO.setFinOrgName(bank.getBankName());
+						FinancialOrgResDTO resDTO =financialOrgSO.retrieveFinancialOrgByName(reqDTO);
+						if(null!=resDTO.getPmFinancialOrg()){
+							errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+							errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.DUPLICATE_RECORD_11));
+							recordFlag = true;
+						}
 						bank.setKodBankIndicator(Integer.valueOf(getValue(line, 51, 1)));
 						bank.setStatus(getValue(line, 52, 1));
-						bankList.add(bank);
+						if(!recordFlag)
+							bankList.add(bank);
 					}else{
-						if(errorResponse==null){
-							errorResponse = new EPErrorResponse();
-							errorResponse.setRecordType(IntegrationConstants.RECORD_TYPE_H);
-							errorResponse.setTahunKewangan(2015);
-							errorResponse.setNamaFailAsal(fileName);
-							errorDetailList = new ArrayList<ErrorDetail>();
-						}
-						errorDetailList.add(ConstructErrorDetailsObject(lineNo,"Error in size of the record length"));
+						errorResponse = constructErrorResponseObject(fileName,	errorResponse);
+						errorResponse.getErrorDetailList().add(ConstructErrorDetailsObject(lineNo,ErrorMessages.LENGTH_ERROR));
 					}
 					lineNo++;
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			if(errorResponse!=null){
-				errorResponse.setErrorDetailList(errorDetailList);
-				errorFileOutBound(errorResponse);
-			}
-			return bankList;
+			BatchResDTO<BankAccountInformation> batchResDTO = new BatchResDTO<BankAccountInformation>();
+			batchResDTO.setErrorResponse(errorResponse);
+			batchResDTO.setBatchResContent(bankList);
+			return batchResDTO;
 		}
 
 		public List<PaymentInfo> paymentInfo(String filePath) {
@@ -1455,33 +1437,7 @@ public class FileUtility extends InitializeSO{
 		return sequenceNo;
 	}
 
-	/*public boolean createPhisFileInLocal(List<ItemType> itemTypes,
-			List<MaterialColor> mColors, List<MaterialMeasurement> mMeasures,
-			List<MaterialBrand> mBrands,List<MaterialClass> mClasses, String localFilePath) {
-
-		 log.info("createPhisFileInLocal .."+localFilePath);
-
-		 itemTypeFileOutPutStream(itemTypes, localFilePath);
-		 materialBrandFileOutPutStream(mBrands, localFilePath);
-		 materialMeasurementFileOutPutStream(mMeasures, localFilePath);
-		 materialColorFileOutPutStream(mColors, localFilePath);
-		 materialClassFileOutPutStream(mClasses, localFilePath);
-
-		return true;
-	}*/
-	
 	public String checkAction(Date createdDate, Date updatedDate) {
-		/*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Date date1 = null, date2 = null;
-		
-		try {
-			date1 = sdf.parse(createdDate.getYear() + "-"
-					+ createdDate.getMonth() + "-" + createdDate.getDate());
-			date2 = sdf.parse(updatedDate.getYear() + "-"
-					+ updatedDate.getMonth() + "-" + updatedDate.getDate());
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}*/
 
 		String action;
 		if (createdDate.after(updatedDate)) {
@@ -2403,8 +2359,8 @@ public class FileUtility extends InitializeSO{
 	}
 	
 	public String getValue(String line,int begin,int size){
-		  String result = line.substring(begin, begin+size);
-		  return result.trim();
+		  String result = line.substring(begin, begin+size).trim();
+		  return result;
 	  }
 	
 	

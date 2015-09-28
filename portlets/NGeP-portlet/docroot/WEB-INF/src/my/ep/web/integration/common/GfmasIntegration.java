@@ -87,7 +87,7 @@ import org.apache.log4j.Logger;
 * author @Ganga prasad
 */
 
-@SuppressWarnings("rawtypes")
+@SuppressWarnings({"rawtypes","unused"})
 public class GfmasIntegration extends InitializeUtilityClz{
 	
 	private static Logger log = EpLogger.getLogger(GfmasIntegration.class);
@@ -1223,10 +1223,10 @@ public class GfmasIntegration extends InitializeUtilityClz{
 						 batchReqDTO.setServiceCode(ServiceCode.GLPTJ.value());
 						 fileUtility.setValuesToPmInterface(batchReqDTO);
 						
-						 BatchResDTO<OrgProfile> batchResDTO = fileUtility.masterDatePTJ(IntegrationConstants.GMAS_DOWNLOAD_LOCAL + fileName, fileName);
+						 BatchResDTO<OrgProfile> batchResDTO = fileUtility.masterDataPTJ(IntegrationConstants.GMAS_DOWNLOAD_LOCAL + fileName, fileName);
 						 EPErrorResponse errorResponse = batchResDTO.getErrorResponse();
-						PmOrgProfile pmOrgProfile = null;
-						List<PmOrgProfile> pmOrgProfileList = new ArrayList<PmOrgProfile>();
+						 PmOrgProfile pmOrgProfile = null;
+						 List<PmOrgProfile> pmOrgProfileList = new ArrayList<PmOrgProfile>();
 
 						for (OrgProfile orgProfile : batchResDTO.getBatchResContent()) {
 							
@@ -1320,11 +1320,12 @@ public class GfmasIntegration extends InitializeUtilityClz{
 						   batchReqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
 						   batchReqDTO.setServiceCode(ServiceCode.CMBNK.value());
 						   fileUtility.setValuesToPmInterface(batchReqDTO);
-						
-						List<BankAccountInformation> bankList = fileUtility.kodBank(IntegrationConstants.GMAS_DOWNLOAD_LOCAL + fileName, fileName);
-
-						for (BankAccountInformation bank : bankList) {
-							FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
+				
+						   BatchResDTO<BankAccountInformation> batchResDTO = fileUtility.kodBank(IntegrationConstants.GMAS_DOWNLOAD_LOCAL + fileName, fileName);
+						   EPErrorResponse errorResponse = batchResDTO.getErrorResponse();
+						   List<PmFinancialOrg> pmFinancialOrgList = new ArrayList<PmFinancialOrg>();
+						   
+						for (BankAccountInformation bank : batchResDTO.getBatchResContent()) {
 							PmCountry defaultCountry = PmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 
 							PmFinancialOrg financialOrg = new PmFinancialOrg();
@@ -1353,9 +1354,14 @@ public class GfmasIntegration extends InitializeUtilityClz{
 							financialOrg.setBrandNew(true);
 							financialOrg.setPmFinancialSvcs(financialServiceList);
 							financialService.setPmFinancialOrg(financialOrg);
-							reqDTO.setPmFinancialOrg(financialOrg);
-							financialOrgSO.saveOrUpdateFinancialOrg(reqDTO);
+							if(!pmFinancialOrgList.contains(financialOrg))
+								pmFinancialOrgList.add(financialOrg);
 						}
+						if(errorResponse!=null){
+							fileUtility.errorFileOutBound(errorResponse);
+						}
+//						send batch update statements to update or insert
+						financialOrgSO.saveOrUpdateFinancialOrgList(pmFinancialOrgList);
 					}
 					log.info("kodBankGfmasInbound updated");
 				}
