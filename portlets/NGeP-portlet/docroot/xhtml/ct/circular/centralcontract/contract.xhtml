@@ -103,11 +103,11 @@
 					<p:column headerText="#{lbl['lbl.ct.min.order.qty']}" style="width:10%;">
 						<p:inputText styleClass="colFloatRight" style="width:120px;"
 							value="#{itemVar.minimumOrderQty}" maxlength="#{itemVar.ctContractItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}"
-							label="#{lbl['lbl.ct.min.order.qty']}"
+							label="#{lbl['lbl.ct.min.order.qty']}" 
 							disabled="#{centralContractBackingBean.managedBean.viewContract}">
 							<f:converter converterId="dynamicNumberConverter" />
 							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, itemVar.ctContractItem.scRequestItem.uom.uomCode)}" />
-							<p:ajax event="blur" update="@this"  />
+							<p:ajax event="blur" update="@this, :form:messages"  />
 						</p:inputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.min.order.amount']}" style="width:15%;white-space:pre-line;">
@@ -117,6 +117,7 @@
 							disabled="#{centralContractBackingBean.managedBean.viewContract}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						 <p:ajax event="blur" update="@this, :form:messages"  />
 						</p:inputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.contract.purchase.limit']}"
@@ -127,6 +128,7 @@
 							disabled="#{centralContractBackingBean.managedBean.viewContract}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						<p:ajax event="blur" update="@this, :form:messages"  />
 						</p:inputText>
 					</p:column>
 				</p:dataTable>
@@ -355,7 +357,7 @@
 			   showDetail="true"   autoUpdate="true" cosable="true" severity="error, info" />
 					<h:panelGrid columns="6">
 					<h:outputText value="#{lbl['lbl.ct.contract.no']}" />
-					<p:inputText id="contractNo" maxlength="17" 
+					<p:inputText id="contractNo" maxlength="17"  validator="#{webappBean.checkIntegerField}"
 						value="#{centralContractBackingBean.managedBean.searchContractNo}"/>
 					<p:spacer width="10" />
 					<h:outputText value="#{lbl['lbl.ct.contract.title']}" />
@@ -423,8 +425,9 @@
 										<tr>
 											<td></td>
 											<td>
-												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000"
-													disabled="#{centralContractBackingBean.managedBean.viewContract}"/> 
+												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" 
+													disabled="#{centralContractBackingBean.managedBean.viewContract}"  autoResize="false" 
+													onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);" /> 
 												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 											</td>
 										</tr>
