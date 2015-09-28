@@ -7,7 +7,7 @@
 			<td class="txtBold">
 			$licenseIns.codeName
 			#if($licenseIns.pmParameter.parameterCode != "C")
-				, Closing Date
+				, Expiry Date
 			#end
 			</td>
 		</tr>
