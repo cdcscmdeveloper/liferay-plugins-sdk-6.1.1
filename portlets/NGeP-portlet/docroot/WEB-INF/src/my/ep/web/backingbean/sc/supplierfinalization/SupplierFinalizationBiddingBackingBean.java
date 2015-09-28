@@ -301,12 +301,13 @@ public class SupplierFinalizationBiddingBackingBean extends
 
 			MeetingReqDTO reqDTO = new MeetingReqDTO();
 			reqDTO.setQtId(qtId);
-			reqDTO.setCommitteType(
-					getManagedBean().getCommitteeType());
+			reqDTO.setCommitteType(getManagedBean().getCommitteeType());
 			MeetingResDTO resDTO = meetingSO.retrieveMeetingDls(reqDTO);
 			if (resDTO.isSuccessful()) {
+				ScQtCommittee scQtCommittee = resDTO.getQtCommittee();
+				
 				// Meeting Details
-				List<ScQtMeeting> meetingList = resDTO.getMeetingDtls();
+				List<ScQtMeeting> meetingList = scQtCommittee.getScQtMeetings();
 				List<ScQtMeeting> currentMeetingList 
 										= new ArrayList<ScQtMeeting>();
 				if (CollectionUtils.isNotEmpty(meetingList)) {
@@ -323,8 +324,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 				}
 
 				this.getManagedBean().setMeetingList(currentMeetingList);
-
-				ScQtCommittee scQtCommittee = resDTO.getQtCommittee();
 				this.getManagedBean().setScQtCommittee(scQtCommittee);
 				this.getManagedBean().setMeetingAttendanceList(
 							scQtCommittee.getMeetingAttendances());				
@@ -816,6 +815,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 */
 	public void deleteMeetingDetails() {
 		try {
+			ScQtCommittee scQtCommittee = getManagedBean().getScQtCommittee();
 			List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();
 			List<ScQtMeeting> deletedMeetingList = getManagedBean().getDeletedMeetingList();
 			if (deletedMeetingList == null){
@@ -824,21 +824,20 @@ public class SupplierFinalizationBiddingBackingBean extends
 			
 			List<ScQtMeeting> tempDeletedList = new ArrayList<ScQtMeeting>();
 			for (ScQtMeeting meeting : meetingList){
-				if (this.getManagedBean().isSelectAll() || meeting.isSelected()) {
+				if (this.getManagedBean().isSelectAll() || 
+						meeting.isSelected()) {
 					tempDeletedList.add(meeting);
 					
 					if (!meeting.isBrandNew()) {
 						meeting.setDeleted(true);
+						scQtCommittee.getScQtMeetings().remove(meeting);
 						getManagedBean().getDeletedMeetingList().add(meeting);
 					}
 				}
 			}
 			if (CollectionUtils.isNotEmpty(tempDeletedList)) {
 				meetingList.removeAll(tempDeletedList);
-				if (CollectionUtils.isNotEmpty(meetingList)) {
-					getManagedBean().getScQtCommittee().getScQtMeetings()
-						.addAll(meetingList);
-				}
+				getManagedBean().setMeetingList(meetingList);
 			}			
 		} finally {
 		}		
@@ -1303,6 +1302,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 			
 			ScQtCommittee scQtCommittee = prepareEndorsementCommitteeInfo();
 			reqDTO.setScQtCommittee(scQtCommittee);
+			reqDTO.setDeletedMeetingsList(
+					getManagedBean().getDeletedMeetingList());
 			reqDTO.setDeletedMeetingAttendanceList(
 					getManagedBean().getDeletedMeetingAttendanceList());
 			
