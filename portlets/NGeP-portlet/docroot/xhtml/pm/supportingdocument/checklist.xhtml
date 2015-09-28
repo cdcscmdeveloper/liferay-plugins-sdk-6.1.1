@@ -46,7 +46,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				     	disabled="#{!supportDocBackingBean.managedBean.selectedDocument.brandNew}"
 						id="somDocDefinition" label="#{lbl['lbl.pm.document.definition']}" 
 						value="#{supportDocBackingBean.managedBean.selectedDocument.docDefinitionTypeCode.parameterId}"	>
-						<f:selectItems  value="#{supportDocBackingBean.docDefinitionOptions()}" />						
+						<f:selectItems  value="#{supportDocBackingBean.managedBean.docDefinitionOptions}" />						
 						 <p:ajax event="change" process="@this" partialSubmit="true" 
 						 listener="#{supportDocBackingBean.getSupplierActionDetails(supportDocBackingBean.managedBean.selectedDocument.docDefinitionTypeCode.parameterId)}"
 						 update="somSupplierAction" />
