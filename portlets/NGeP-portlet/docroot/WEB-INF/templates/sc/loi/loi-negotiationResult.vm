@@ -88,36 +88,36 @@
 							<th bgcolor="#6d839b" class="title border left-right">Hasil Rundingan</th>
 						</tr>
 						#foreach( $scLoi in $scLois )
-						<tr class="ui-content">
-							<td class="standard border-bottom left">
-				                #set( $suppName = $scLoi.scLoiLoa.supplierName.replaceAll("&", "&#38;") )
-					              $suppName
-					          </td>
-							<td class="standard border-bottom left">
-								#foreach( $scLoiTerm in $scLoi.scNegoTerms )
-									#if (! $scLoiTerm.termDesc)
-										<br/>
-									#else
-									 #set( $termDesc = $scLoiTerm.termDesc.replaceAll("&", "&#38;") )
-					                      $termDesc 
-					                     <br/>
-									#end
-								#end
-							</td>
-							<td class="standard border-bottom left-right">
-								#foreach( $scLoiTerm in $scLoi.scNegoTerms )
-									#if (! $scLoiTerm.negoResult )
-										<br/>
-									#else
-									
-									 #set( $negoResult = $scLoiTerm.negoResult.replaceAll("&", "&#38;") )
-					                      $negoResult 
-					                     <br/>
-									#end
-
-								#end
-							</td>
-						</tr>
+							#if($scLoi.scWorkFlowStatus.pmStatus.statusId !=  $status)
+								<tr class="ui-content">
+									<td class="standard border-bottom left">
+										#set( $suppName = $scLoi.scLoiLoa.supplierName.replaceAll("&", "&#38;") )
+										  $suppName
+									</td>
+									<td class="standard border-bottom left">
+										#foreach( $scLoiTerm in $scLoi.scNegoTerms )
+											#if (! $scLoiTerm.termDesc)
+												<br/>
+											#else
+											#set( $termDesc = $scLoiTerm.termDesc.replaceAll("&", "&#38;") )
+												  $termDesc 
+												 <br/>
+											#end
+										#end
+									</td>
+									<td class="standard border-bottom left-right">
+										#foreach( $scLoiTerm in $scLoi.scNegoTerms )
+											#if (! $scLoiTerm.negoResult )
+												<br/>
+											#else
+											#set( $negoResult = $scLoiTerm.negoResult.replaceAll("&", "&#38;") )
+												  $negoResult 
+												 <br/>
+											#end
+										#end
+									</td>
+								</tr>
+							#end
 						#end
 					</tbody>
 				</table>
