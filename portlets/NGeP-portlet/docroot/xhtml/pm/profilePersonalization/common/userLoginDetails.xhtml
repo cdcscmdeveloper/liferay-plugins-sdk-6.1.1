@@ -25,13 +25,17 @@
 						<p:outputLabel value="#{lbl['lbl.pm.profiles.navigation.org.code']}" />  
 					</td>
 					<td class="header-info-text">
-					 	#{profilePersonalizationBackingBean.managedBean.currentProfile.pmOrgValidity.orgCode} 
+					 	#{ParameterConst.orgTypeSupplier eq profilePersonalizationBackingBean.managedBean.currentProfile.orgTypeCode.parameterCode ? 
+					 	profilePersonalizationBackingBean.managedBean.currentProfile.smSupplier.epNo
+					 	: profilePersonalizationBackingBean.managedBean.currentProfile.pmOrgValidity.orgCode} 
 					</td>
 					<td width="8%">
 						<p:outputLabel value="#{lbl['lbl.pm.profiles.navigation.org.name']}" />  
 					</td>
 					<td width="25%" class="header-info-text">
-					 	#{profilePersonalizationBackingBean.managedBean.currentProfile.pmOrgValidity.orgName}
+					 	#{ParameterConst.orgTypeSupplier eq profilePersonalizationBackingBean.managedBean.currentProfile.orgTypeCode.parameterCode ? 
+					 	profilePersonalizationBackingBean.managedBean.currentProfile.smSupplier.companyName
+					 	: profilePersonalizationBackingBean.managedBean.currentProfile.pmOrgValidity.orgName} 
 					</td>
 				</tr>
 			</table>
