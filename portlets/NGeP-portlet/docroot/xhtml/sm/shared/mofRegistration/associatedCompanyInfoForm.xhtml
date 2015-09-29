@@ -154,7 +154,8 @@
 						value="#{backingBean.managedBean.selectedAssocCompany.companyName}"
 						size="35" /> 
 						<ac:smFieldChangeAlert 
-								isShow="#{backingBean.managedBean.showFieldChanges}"
+								isShow="#{backingBean.managedBean.showFieldChanges 
+								and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
 								oriValue="#{backingBean.managedBean.latestAssocCompany.companyName}" 
 								currValue="#{backingBean.managedBean.selectedAssocCompany.companyName}" 
 								alertValue="#{backingBean.managedBean.latestAssocCompany.companyName}"/>
@@ -189,7 +190,8 @@
 						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address1}"
 						size="35" /> 
 						<ac:smFieldChangeAlert 
-							isShow="#{backingBean.managedBean.showFieldChanges}"
+							isShow="#{backingBean.managedBean.showFieldChanges 
+								and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
 							oriValue="#{backingBean.managedBean.latestAssocCompany.smAddress.address1}" 
 							currValue="#{backingBean.managedBean.selectedAssocCompany.smAddress.address1}" 
 							alertValue="#{backingBean.managedBean.latestAssocCompany.smAddress.address1}"/>
@@ -204,7 +206,8 @@
 						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address2}"
 						size="35" />
 					<ac:smFieldChangeAlert 
-							isShow="#{backingBean.managedBean.showFieldChanges}"
+							isShow="#{backingBean.managedBean.showFieldChanges 
+								and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
 							oriValue="#{backingBean.managedBean.latestAssocCompany.smAddress.address2}" 
 							currValue="#{backingBean.managedBean.selectedAssocCompany.smAddress.address2}" 
 							alertValue="#{backingBean.managedBean.latestAssocCompany.smAddress.address2}"/>
@@ -216,7 +219,8 @@
 						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address3}"
 						size="35" />
 					<ac:smFieldChangeAlert 
-							isShow="#{backingBean.managedBean.showFieldChanges}"
+							isShow="#{backingBean.managedBean.showFieldChanges 
+								and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
 							oriValue="#{backingBean.managedBean.latestAssocCompany.smAddress.address3}" 
 							currValue="#{backingBean.managedBean.selectedAssocCompany.smAddress.address3}" 
 							alertValue="#{backingBean.managedBean.latestAssocCompany.smAddress.address3}"/>
@@ -228,7 +232,8 @@
 						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address4}"
 						size="35" />
 					<ac:smFieldChangeAlert 
-							isShow="#{backingBean.managedBean.showFieldChanges}"
+							isShow="#{backingBean.managedBean.showFieldChanges 
+								and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
 							oriValue="#{backingBean.managedBean.latestAssocCompany.smAddress.address4}" 
 							currValue="#{backingBean.managedBean.selectedAssocCompany.smAddress.address4}" 
 							alertValue="#{backingBean.managedBean.latestAssocCompany.smAddress.address4}"/>
@@ -279,7 +284,8 @@
 							update="assocDist,assocCity" />
 					</p:selectOneMenu> 
 					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges}"
+						isShow="#{backingBean.managedBean.showFieldChanges 
+								and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
 						oriValue="#{backingBean.managedBean.latestAssocCompany.smAddress.pmState.stateId}" 
 						currValue="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmState.stateId}" 
 						alertValue="#{(not empty backingBean.managedBean.latestAssocCompany and 
@@ -306,7 +312,8 @@
 							update="assocCity" />
 					</p:selectOneMenu> 
 					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges}"
+						isShow="#{backingBean.managedBean.showFieldChanges 
+								and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
 						oriValue="#{backingBean.managedBean.latestAssocCompany.smAddress.pmDistrict.districtId}" 
 						currValue="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmDistrict.districtId}" 
 						alertValue="#{(not empty backingBean.managedBean.latestAssocCompany and 
@@ -331,7 +338,8 @@
 							update="assocCity" />
 					</p:selectOneMenu> 
 					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges}"
+						isShow="#{backingBean.managedBean.showFieldChanges 
+								and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
 						oriValue="#{backingBean.managedBean.latestAssocCompany.smAddress.pmCity.cityId}" 
 						currValue="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmCity.cityId}" 
 						alertValue="#{(not empty backingBean.managedBean.latestAssocCompany and 
@@ -356,7 +364,8 @@
 								<f:validator validatorId="postcodeValidator" />
 							</p:inputText>
 							<ac:smFieldChangeAlert 
-								isShow="#{backingBean.managedBean.showFieldChanges}"
+								isShow="#{backingBean.managedBean.showFieldChanges 
+								and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
 								oriValue="#{backingBean.managedBean.latestAssocCompany.smAddress.postcode}" 
 								currValue="#{backingBean.managedBean.selectedAssocCompany.smAddress.postcode}" 
 								alertValue="#{backingBean.managedBean.latestAssocCompany.smAddress.postcode}"/>
@@ -372,7 +381,8 @@
 								size="35">
 							</p:inputText>
 							<ac:smFieldChangeAlert 
-								isShow="#{backingBean.managedBean.showFieldChanges}"
+								isShow="#{backingBean.managedBean.showFieldChanges 
+								and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
 								oriValue="#{backingBean.managedBean.latestAssocCompany.smAddress.postcode}" 
 								currValue="#{backingBean.managedBean.selectedAssocCompany.smAddress.postcode}" 
 								alertValue="#{backingBean.managedBean.latestAssocCompany.smAddress.postcode}"/>
@@ -392,7 +402,8 @@
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 					</p:inputText> 
 					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges}"
+						isShow="#{backingBean.managedBean.showFieldChanges 
+								and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
 						oriValue="#{backingBean.managedBean.latestAssocCompany.phoneNo}" 
 						currValue="#{backingBean.managedBean.selectedAssocCompany.phoneNo}" 
 						alertValue="#{backingBean.managedBean.latestAssocCompany.phoneNo}"/>
@@ -409,7 +420,8 @@
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 					</p:inputText> 
 					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges}"
+						isShow="#{backingBean.managedBean.showFieldChanges 
+								and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
 						oriValue="#{backingBean.managedBean.latestAssocCompany.faxNo}" 
 						currValue="#{backingBean.managedBean.selectedAssocCompany.faxNo}" 
 						alertValue="#{backingBean.managedBean.latestAssocCompany.faxNo}"/>

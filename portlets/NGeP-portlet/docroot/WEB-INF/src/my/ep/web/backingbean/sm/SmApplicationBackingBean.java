@@ -4376,9 +4376,16 @@ public class SmApplicationBackingBean extends
 				.getCompanyBasicGst());
 		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
 				.getSelectedBranch().getGst());
-		SmApplicationUtil.getInstance()
-				.removeFacilitiesNotInTheSameCategoryFacType(
-						getManagedBean().getSmAppl());
+		if (getManagedBean().isSupplierUser()) {
+			SmApplicationUtil.getInstance()
+					.removePendingApprovedCategoryIfNotValid(
+							getManagedBean().getSmAppl(),
+							getManagedBean().getBasicCompanyFacility()
+									.getFacilityType());
+			SmApplicationUtil.getInstance()
+					.removeFacilitiesNotInTheSameCategoryFacType(
+							getManagedBean().getSmAppl());
+		}
 		try {
 			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
 					.getInstance().getServiceObject("sm",
@@ -6327,9 +6334,16 @@ public class SmApplicationBackingBean extends
 					.getCompanyBasicGst());
 			SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
 					.getSelectedBranch().getGst());
-			SmApplicationUtil.getInstance()
-					.removeFacilitiesNotInTheSameCategoryFacType(
-							getManagedBean().getSmAppl());
+			if (getManagedBean().isSupplierUser()) {
+				SmApplicationUtil.getInstance()
+						.removePendingApprovedCategoryIfNotValid(
+								getManagedBean().getSmAppl(),
+								getManagedBean().getBasicCompanyFacility()
+										.getFacilityType());
+				SmApplicationUtil.getInstance()
+						.removeFacilitiesNotInTheSameCategoryFacType(
+								getManagedBean().getSmAppl());
+			}
 			reqDTO.setCompanyBasicGst(getManagedBean().getCompanyBasicGst());
 			reqDTO.setBranchGst(getManagedBean().getSelectedBranch().getGst());
 			reqDTO.setSameAsHq(getManagedBean().getSelectedBranch()

@@ -3,6 +3,7 @@ package my.ep.web.util.sm.helper;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
+import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
@@ -406,6 +407,17 @@ public class SmServiceLookup {
 		return (ISmBulkApplicationSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 						ISmBulkApplicationSO.class);
+	}
+
+	/**
+	 * Get ICategoryCodeSO
+	 * 
+	 * @return ICategoryCodeSO
+	 */
+	public static ICategoryCodeSO getCategoryCodeSO() {
+		return (ICategoryCodeSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,
+						ICategoryCodeSO.class);
 	}
 
 }
