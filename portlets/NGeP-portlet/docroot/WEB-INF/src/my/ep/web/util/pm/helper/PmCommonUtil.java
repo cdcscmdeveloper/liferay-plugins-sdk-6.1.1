@@ -7,9 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+import java.util.Locale;
 import javax.faces.model.SelectItem;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -99,7 +98,6 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
@@ -174,6 +172,30 @@ public class PmCommonUtil {
 		return restrictedRole;
 	}
 
+	/**
+	 * Gets the message.
+	 * 
+	 * @param key
+	 *            - String key
+	 * @param params
+	 *            - String[]
+	 * @return the message
+	 */
+	public static String getMessage(String key, String[] params) {
+		Locale locale = new FacesScopes().getUserLocale();
+		String msg = "";
+
+		if (params != null) {
+			msg = ResourceBundleUtils.getMessage(key, params,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		} else {
+			msg = ResourceBundleUtils.getMessage(key,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		}
+
+		return msg;
+	}
+	
 	/**
 	 * get record status options
 	 * 
