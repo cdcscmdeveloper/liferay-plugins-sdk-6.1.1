@@ -3638,7 +3638,14 @@ public class SupplierFinalizationBackingBean extends
 						new ArrayList<ScQtEvaluationResultDtl>());
 			}
 
-			disableItemsNotRecommendedToHigherAuthority();
+			boolean isInitialDecisionFwdToBPK 
+						= this.getManagedBean().isInitialDecisionFwdToBPK();
+			boolean isInitialDecisionFwdToHighAuth 
+						= this.getManagedBean().isInitialDecisionFwdHighAuth();	
+			if (isInitialDecisionFwdToBPK || 
+					isInitialDecisionFwdToHighAuth) {
+				disableItemsNotRecommendedToHigherAuthority();
+			}
 		}
 	}
 	
@@ -6037,15 +6044,15 @@ public class SupplierFinalizationBackingBean extends
 							if (recommendDtl.getRecordStatusFlg().equals(
 												DbValueConst.RECORD_STATUS_ACTIVE)) {
 								String finalizationMethodStr = finalizationMethod.getParameterCode();
-								if (!(ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
+								if (isQTRefinalized() || 
+										!(ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
 										.equals(finalizationMethodStr) || 
-											ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
-												.equals(finalizationMethodStr) ||
-													ParameterConst.RECOMMEND_BY_MULTIPLE_LOI
+											ParameterConst.RECOMMEND_BY_MULTIPLE_LOI
 														.equals(finalizationMethodStr))) {
 									evalResultDtl.setAwareded(true);
 									evalResultDtl.setShortListed(false);
-									if (ParameterConst.RECOMMEND_BY_AWARD
+									if (isQTRefinalized() || 
+											ParameterConst.RECOMMEND_BY_AWARD
 												.equals(finalizationMethodStr)) {
 										this.getManagedBean().setRecommendedSupplierByItem(
 												evalResultDtl);
