@@ -1075,10 +1075,17 @@ public class QTDocumentsBackingBean extends
 						getManagedBean().getQt());
 			} else if (SourcingConstants.DOC_DEF_KEY_SCOPE_SERVICES
 					.equals(docDefinitionKey)) {
-				scQtDocReportAttachment = generateSkopPerkhidmatanPdfFromVelocity(
-						(ScAttachment) scQtDocReportAttachment,
-						getManagedBean().getQt(), docDefinitionKey,
-						scQtDocReport);
+				if (QTConstants.EVALUATION_TWO_TIER
+						.equalsIgnoreCase(getManagedBean().getQt().getEvaluationType())
+						|| (QTConstants.EVALUATION_ONE_TIER
+								.equalsIgnoreCase(getManagedBean().getQt()
+										.getEvaluationType()) && getManagedBean().getQt()
+								.isTechEvaluationReq())) {
+					scQtDocReportAttachment = generateSkopPerkhidmatanPdfFromVelocity(
+							(ScAttachment) scQtDocReportAttachment,
+							getManagedBean().getQt(), docDefinitionKey,
+							scQtDocReport);
+				}
 			} else if (SourcingConstants.DOC_DEF_KEY_FREQUENCY_SCHEDULE
 					.equals(docDefinitionKey)) {
 				// Frequency Schedule - Jadual Kekerapan
@@ -1306,6 +1313,7 @@ public class QTDocumentsBackingBean extends
 								break;
 							} else {
 								log.info("Testing");
+								docReportAttachment = null;
 							}
 						} else {
 							log.info("Testings");
@@ -1314,38 +1322,13 @@ public class QTDocumentsBackingBean extends
 				} else {
 					log.info("Testingss");
 				}
+			} else {
+				docReportAttachment = null;
 			}
 		} finally {
 			specSo = null;
 		}
 		return docReportAttachment;
-		/*
-		 * Timestamp date = new Timestamp(System.currentTimeMillis()); PmUser
-		 * createdUser = new FacesScopes().getUserSessionBean();
-		 * 
-		 * attachment.setCreatedBy(createdUser.getUserId());
-		 * attachment.setCreatedDate(date);
-		 * attachment.setChangedBy(createdUser.getUserId());
-		 * attachment.setCreatedUser(createdUser);
-		 * 
-		 * StringBuilder filePath = new StringBuilder();
-		 * filePath.append(DateUtils.getLast2DigitOfYear());
-		 * filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
-		 * filePath.append(ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase());
-		 * filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
-		 * filePath.append(attachment.getDocNo());
-		 * filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
-		 * filePath.append(attachment.getDocType());
-		 * attachment.setFilePath(filePath.toString());
-		 * 
-		 * AttachmentFormat scFormat = getAttachFormat(attachment); String
-		 * formatedFileName = scFormat.format(attachment.getFileName(),
-		 * attachment.getPrefixFileName());
-		 * 
-		 * filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
-		 * filePath.append(formatedFileName);
-		 * attachment.setFilePath(filePath.toString());
-		 */
 	}
 
 	/**
