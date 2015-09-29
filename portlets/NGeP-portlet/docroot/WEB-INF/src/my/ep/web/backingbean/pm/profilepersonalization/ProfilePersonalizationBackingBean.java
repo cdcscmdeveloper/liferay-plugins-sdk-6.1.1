@@ -160,6 +160,11 @@ public class ProfilePersonalizationBackingBean extends
 		this.getManagedBean().getSelectedUser().setModified(true);	
 	}
 	
+	public void notifySmsChangeListener(ValueChangeEvent event){
+		 System.out.println("...........notifySmsChangeListener............");
+		this.getManagedBean().getSelectedUser().setModified(true);	
+	}
+	
 	// /**
 	// * initial new pmUser object
 	// */

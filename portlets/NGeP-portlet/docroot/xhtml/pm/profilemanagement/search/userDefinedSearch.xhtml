@@ -12,8 +12,7 @@
 			
 		    <tr>
 				<th width="20%"><p:outputLabel
-						value="#{lbl['lbl.pm.org.category']}" /><p:outputLabel
-						value="*" styleClass="mandatory" /></th>
+						value="#{lbl['lbl.pm.org.category']}" /></th>
 				<td><p:selectOneRadio value="#{profileManagementBackingBean.managedBean.searchOrgCategory}">
 						<f:selectItem itemLabel="#{lbl['lbl.pm.org.federal.government']}" itemValue="#{profileManagementBackingBean.federalGovt}"/>
 						<f:selectItem itemLabel="#{lbl['lbl.pm.org.others']}" itemValue="#{profileManagementBackingBean.others}"/>
@@ -23,11 +22,10 @@
 			</tr>
 			<tr>
 				<th width="20%"><p:outputLabel
-						value="#{lbl['lbl.pm.organisation.orgType']}" /><p:outputLabel
-						value="*" styleClass="mandatory" /></th>
+						value="#{lbl['lbl.pm.organisation.orgType']}" /></th>
 				<td><p:outputPanel id="somType"><p:selectOneMenu id="somFederalOrgType"
 						rendered="#{profileManagementBackingBean.managedBean.searchOrgCategory eq profileManagementBackingBean.federalGovt}" 
-						styleClass="ppDropDownWidthL" required="true" label="#{lbl['lbl.pm.organisation.orgType']}" style="margin-bottom: 5px;"
+						styleClass="ppDropDownWidthL" label="#{lbl['lbl.pm.organisation.orgType']}" style="margin-bottom: 5px;"
 						value="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId}">
 						<f:selectItems
 							value="#{profileManagementBackingBean.getOrgTypeDropdownValues()}" />
@@ -36,7 +34,7 @@
 					</p:selectOneMenu>
 					<p:selectOneMenu id="somOtherOrgType" 
 							rendered="#{profileManagementBackingBean.managedBean.searchOrgCategory eq profileManagementBackingBean.others}" 
-							styleClass="ppDropDownWidthL" required="true" label="#{lbl['lbl.pm.organisation.orgType']}" style="margin-bottom: 5px;"
+							styleClass="ppDropDownWidthL" label="#{lbl['lbl.pm.organisation.orgType']}" style="margin-bottom: 5px;"
 							value="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId}">
 						<f:selectItems
 							value="#{profileManagementBackingBean.getOrgTypeDropdownValues()}" />
@@ -48,13 +46,11 @@
 			</tr>
 			<tr>
 					
-				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.search.orgname']}"/><p:outputLabel
-								value="*" styleClass="mandatory" /></th>
+				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.search.orgname']}"/></th>
 							
 				<td>
 				<p:outputPanel id="opFfcOrgCode" rendered="#{ParameterConst.orgTypeFactoring eq profileManagementBackingBean.managedBean.selectedOrgType.parameterCode}">
 				    <ac:lov id="lovFfcOrg" lovId="PM_ORG_PROFILE_FFC" size="29" 
-				    	required="true" 
 		            	update=":form:opDefinedSearch" 
 		            	readonly="true" disabled="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId==null}"
 						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
@@ -65,8 +61,7 @@
 						<p:message id="lovFfcOrgMsg" for="lovFfcOrg" display="icon" />
 				</p:outputPanel>
 				<p:outputPanel id="opSupOrgCode" rendered="#{ParameterConst.orgTypeSupplier eq profileManagementBackingBean.managedBean.selectedOrgType.parameterCode}">
-				    <ac:lov id="lovSupOrg" lovId="PM_ORG_PROFILE_WITH_SUPPLIER" size="29" 
-				    	required="true" 
+				    <ac:lov id="lovSupOrg" lovId="PM_ORG_PROFILE_WITH_SUPPLIER" size="29"
 		            	update=":form:opDefinedSearch" 
 		            	readonly="true" disabled="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId==null}"
 						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
@@ -77,7 +72,7 @@
 						<p:message id="lovSupOrgMsg" for="lovSupOrg" display="icon" />
 				</p:outputPanel>
 				<p:outputPanel id="opOrgCode" rendered="#{ParameterConst.orgTypeFactoring ne profileManagementBackingBean.managedBean.selectedOrgType.parameterCode and ParameterConst.orgTypeSupplier ne profileManagementBackingBean.managedBean.selectedOrgType.parameterCode}">
-				   <ac:lov id="lovMinistry1" lovId="PM_ORG_PROFILE" size="29" required="true"
+				   <ac:lov id="lovMinistry1" lovId="PM_ORG_PROFILE" size="29" 
 			        	disabled="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId==null}"
 		            	update=":form:opDefinedSearch" readonly="true"
 						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
@@ -117,12 +112,13 @@
 				<td>
 				<ac:lov id="lovRoleDesc" lovId="PM_ROLE_DESC" size="29" 
 		            	update=":form:opDefinedSearch" readonly="true" 
-		            	disabled="#{profileManagementBackingBean.managedBean.selectedOrgProfile eq null or (profileManagementBackingBean.managedBean.selectedOrgProfile ne null and profileManagementBackingBean.managedBean.selectedOrgProfile.orgProfileId eq null) }"
+		            	disabled="#{profileManagementBackingBean.managedBean.selectedOrgType eq null or 
+		            	profileManagementBackingBean.managedBean.selectedOrgType.parameterId eq null }"
 						headerText="#{lbl['lbl.pm.profiles.authorisation.role.opt']}"
 						saveObject="profileManagementBackingBean.managedBean.selectedPmRoleDesc"
 						value="#{profileManagementBackingBean.managedBean.selectedPmRoleDesc.roleName}" 
 						postUpdateListener="profileManagementBackingBean.updateSearchCriteriaForRole"
-						conditionField="recordStatus^1|pmRole.pmOrgRoles.orgType.parameterId^#{profileManagementBackingBean.managedBean.selectedOrgProfile.orgTypeCode.parameterId}|#{profileManagementBackingBean.roleDecriptionFilter}" 
+						conditionField="recordStatus^1|pmRole.pmOrgRoles.orgType.parameterId^#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId}|#{profileManagementBackingBean.roleDecriptionFilter}" 
 						/>
 				</td>
 				<th>&#160;</th>

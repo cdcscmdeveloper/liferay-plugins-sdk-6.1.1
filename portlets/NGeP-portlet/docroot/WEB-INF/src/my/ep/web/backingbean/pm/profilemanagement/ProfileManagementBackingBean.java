@@ -34,6 +34,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
@@ -2679,13 +2680,22 @@ public class ProfileManagementBackingBean extends
 	 * search user profiles
 	 */
 	public void searchUserProfile() {
-		if (this.getManagedBean().getUserProfileSearchBean()
-				.getSelectedOrgProfileId() == null) {
-			// hit error and return
-			throw new EpException(MessageConst.ERROR_775116, new String[] {});
-
-		}
-
+//		if (this.getManagedBean().getUserProfileSearchBean()
+//				.getSelectedOrgProfileId() == null) {
+//			// hit error and return
+//			throw new EpException(MessageConst.ERROR_775116, new String[] {});
+//
+//		}
+		
+		if (getManagedBean().getUserProfileSearchBean().getSelectedOrgProfileId() == null
+				&& getManagedBean().getSelectedOrgType().getParameterId() == null
+				&& StringUtils.isBlank(getManagedBean().getUserProfileSearchBean().getIdentificationNo())
+				&& StringUtils.isBlank(getManagedBean().getUserProfileSearchBean().getUserName())
+				&& StringUtils.isBlank(getManagedBean().getUserProfileSearchBean().getUserRole())
+				&& getManagedBean().getUserProfileSearchBean().getUserOrgStatus() == null) {			
+			throw new EpException(MessageConst.ERROR_770049);
+		} 
+	
 		logger.info("searchUserProfile");
 		getManagedBean().setLazy(true);
 		userOrgDataModel.reloadData();
@@ -2756,25 +2766,27 @@ public class ProfileManagementBackingBean extends
 //				new SearchFilterBean("pmOrgProfile.orgTypeCode.parameterCode",
 //						SearchOperator.OPERATOR_NOT_EQUALS.value(),
 //						ParameterConst.ORG_TYPE_SUPPLIER));
-		if (this.getManagedBean().getSelectedOrgType().getParameterId() != null
-				&& upSearchBean.getSelectedOrgProfileId() != null) {
+		if (upSearchBean.getSelectedOrgProfileId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmOrgProfile.orgProfileId",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							upSearchBean.getSelectedOrgProfileId()));
+			isEmpty = false;
+		} 
+		
+		if (this.getManagedBean().getSelectedOrgType().getParameterId() != null) {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean(
 							"pmOrgProfile.orgTypeCode.parameterId",
 							SearchOperator.OPERATOR_EQUALS.value(), this
 									.getManagedBean().getSelectedOrgType()
-									.getParameterId()));
-
-			logger.info("+ userOrganizationName "
-					+ upSearchBean.getSelectedOrgProfileId());
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmOrgProfile.orgProfileId",
-							SearchOperator.OPERATOR_EQUALS.value(),
-							upSearchBean.getSelectedOrgProfileId()));
-
-		} else {
-			throw new EpException(MessageConst.ERROR_770163);
-		}
+									.getParameterId()));			
+			isEmpty = false;
+		} 
+		
+//		else {
+//			throw new EpException(MessageConst.ERROR_770163);
+//		}
 
 		// Login Id
 		// if (upSearchBean.getLoginId() != null
@@ -2867,6 +2879,21 @@ public class ProfileManagementBackingBean extends
 		// bean.setSearchValue(null);
 		// searchBean.getDataFilterBeans().add(bean);
 		// }
+		
+		SearchOrderBean orderBean = null;
+		if(OrganizationType.SUPPLIER.value().equals(getManagedBean().getSelectedOrgType().getParameterCode())){
+			orderBean = new SearchOrderBean("pmOrgProfile.smSupplier.companyName", true);
+		}else if(OrganizationType.FACTORING_COMPANY.value().equals(getManagedBean().getSelectedOrgType().getParameterCode())){
+			orderBean = new SearchOrderBean("pmOrgProfile.pmFinancialOrg.finOrgName", true);
+		}else{
+			orderBean = new SearchOrderBean("pmOrgProfile.pmOrgValidity.orgName", true);
+		}
+		
+		if(orderBean != null){
+			searchBean.getSortColumns().add(orderBean);
+		}
+		
+		
 		logger.info("getSearchBeanData - End");
 		return searchBean;
 	}
@@ -2890,12 +2917,12 @@ public class ProfileManagementBackingBean extends
 		@Override
 		protected ISearchResultBean<PmUserOrg> pageChangeListener(
 				ISearchBean<PmUserOrg> searchBean) {
+			IUserSO userSO = null;
 			try {
 				ISearchBean<PmUserOrg> searchBeanData = getSearchBeanData(searchBean);
-
 				UserOrgReqDTO userOrgReqDTO = new UserOrgReqDTO();
 				userOrgReqDTO.setUserOrgSearchBean(searchBeanData);
-				IUserSO userSO = BusinessDelegate.getInstance()
+				userSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IUserSO.class);
 				UserOrgResDTO resDto = userSO
@@ -2904,8 +2931,8 @@ public class ProfileManagementBackingBean extends
 					markupUserResult(resDto.getUserOrgResultBean());
 					return resDto.getUserOrgResultBean();
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
+			}finally{
+				userSO = null;
 			}
 			return null;
 		}
