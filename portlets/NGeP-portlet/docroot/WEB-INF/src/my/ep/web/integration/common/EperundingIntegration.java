@@ -117,15 +117,13 @@ public class EperundingIntegration extends InitializeSO{
 		if (resDTO.isSuccessful()) {
 			for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
 
-				for (SmPersonnel personnel : smSupplier.getSmAppl()
-						.getSmPersonnels()) {
+				for (SmPersonnel personnel : smSupplier.getSmAppl().getSmPersonnels()) {
 					if (personnel.isEquityOwner()) {
 
 						equityOwner = new EquityOwner();
 						owner = new Owner();
 						expertise = new Expertise();
-						equityOwner.setMOFNo(smSupplier.getSmMofAccounts()
-								.get(0).getMofNo());
+						equityOwner.setMOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
 
 						qualifications = new ArrayList<Qualification>();
 						bodyDetails = new ArrayList<ProfBodyDetail>();
@@ -135,71 +133,47 @@ public class EperundingIntegration extends InitializeSO{
 						owner.setNewICNo(personnel.getIdentificationNo());
 						// not known
 						owner.setPassport(IntegrationConstants.VAVLUE_NA);
-						if (personnel.isBumi())
-							owner.setIsBumi(IntegrationConstants.VAVLUE_YES);
+						if (personnel.isBumi())owner.setIsBumi(IntegrationConstants.VAVLUE_YES);
 						else
 							owner.setIsBumi(IntegrationConstants.VAVLUE_NO);
 						owner.setCitizenOf(131);
 						// owner.setCitizenOf(personnel.getPmCountry().getCountryId().intValue());
 						owner.setEquityValue(personnel.getShareAmt().toString());
-						owner.setEquityPercentage(personnel
-								.getSharePercentage().toString());
+						owner.setEquityPercentage(personnel.getSharePercentage().toString());
 						owner.setRace(personnel.getPmRace().getRaceName());
 						owner.setDesignation(personnel.getDesignation());
 
 						if (personnel.getSmStaffAcademics() != null) {
-							for (SmStaffAcademic smStaffAcademic : personnel
-									.getSmStaffAcademics()) {
+							for (SmStaffAcademic smStaffAcademic : personnel.getSmStaffAcademics()) {
 								qualification = new Qualification();
-								qualification.setMajorIn(smStaffAcademic
-										.getFieldMajor());
-								qualification.setQualification(smStaffAcademic
-										.getPmEduField().getFieldName());
+								qualification.setMajorIn(smStaffAcademic.getFieldMajor());
+								qualification.setQualification(smStaffAcademic.getPmEduField().getFieldName());
 
-								if (null != smStaffAcademic
-										.getQualificationLevelId()) {
+								if (null != smStaffAcademic.getQualificationLevelId()) {
 									ParameterReqDTO reqDTO = new ParameterReqDTO();
-									reqDTO.setParameterId(new Integer(
-											smStaffAcademic
-													.getQualificationLevelId())
-											.longValue());
-									ParameterResDTO paraResDTO = parameterSO
-											.retrieveParameterById(reqDTO);
-									PmParameter pmParameter = paraResDTO
-											.getPmParameter();
+									reqDTO.setParameterId(new Integer(smStaffAcademic.getQualificationLevelId()).longValue());
+									ParameterResDTO paraResDTO = parameterSO.retrieveParameterById(reqDTO);
+									PmParameter pmParameter = paraResDTO.getPmParameter();
 
-									qualification
-											.setQualificationLevel(new Integer(
-													pmParameter
-															.getParameterCode())
-													.intValue());
+									qualification.setQualificationLevel(new Integer(pmParameter.getParameterCode()).intValue());
 								} else {
 									qualification.setQualificationLevel(0);
 								}
 
-								qualification.setInstitute(smStaffAcademic
-										.getInstituteName());
-								qualification.setYear(smStaffAcademic.getYear()
-										.toString());
-								qualification.setEducationField(smStaffAcademic
-										.getPmEduField().getEduFieldId() + "");
+								qualification.setInstitute(smStaffAcademic.getInstituteName());
+								qualification.setYear(smStaffAcademic.getYear().toString());
+								qualification.setEducationField(smStaffAcademic.getPmEduField().getEduFieldId() + "");
 								if (!qualifications.contains(qualifications))
 									qualifications.add(qualification);
 							}
 						} else {
 							qualification = new Qualification();
-							qualification
-									.setMajorIn(IntegrationConstants.EMPTY_TRING);
-							qualification
-									.setQualification(IntegrationConstants.EMPTY_TRING);
-							qualification
-									.setQualificationLevel(IntegrationConstants.DEFAULT_INT);
-							qualification
-									.setInstitute(IntegrationConstants.EMPTY_TRING);
-							qualification
-									.setYear(IntegrationConstants.EMPTY_TRING);
-							qualification
-									.setEducationField(IntegrationConstants.EMPTY_TRING);
+							qualification.setMajorIn(IntegrationConstants.EMPTY_TRING);
+							qualification.setQualification(IntegrationConstants.EMPTY_TRING);
+							qualification.setQualificationLevel(IntegrationConstants.DEFAULT_INT);
+							qualification.setInstitute(IntegrationConstants.EMPTY_TRING);
+							qualification.setYear(IntegrationConstants.EMPTY_TRING);
+							qualification.setEducationField(IntegrationConstants.EMPTY_TRING);
 							qualifications.add(qualification);
 
 						}
@@ -208,37 +182,26 @@ public class EperundingIntegration extends InitializeSO{
 						equityOwner.setOwner(owner);
 
 						if (smSupplier.getSmAppl().getSmAssociationBodies() != null) {
-							for (SmAssociationBody associationBody : smSupplier
-									.getSmAppl().getSmAssociationBodies()) {
+							for (SmAssociationBody associationBody : smSupplier.getSmAppl().getSmAssociationBodies()) {
 								profBodyDetail = new ProfBodyDetail();
-								profBodyDetail.setProfBody(associationBody
-										.getPmCertBody().getCertBodyId()
-										.toString());
-								profBodyDetail.setProfBodyNo(associationBody
-										.getRegNo());
-								profBodyDetail
-										.setProfBodyExpiry(associationBody
-												.getExpDate());
+								profBodyDetail.setProfBody(associationBody.getPmCertBody().getCertBodyId().toString());
+								profBodyDetail.setProfBodyNo(associationBody.getRegNo());
+								profBodyDetail.setProfBodyExpiry(associationBody.getExpDate());
 								if (!bodyDetails.contains(bodyDetails))
 									bodyDetails.add(profBodyDetail);
 							}
 						} else {
 
 							profBodyDetail = new ProfBodyDetail();
-							profBodyDetail
-									.setProfBody(IntegrationConstants.EMPTY_TRING);
-							profBodyDetail
-									.setProfBodyNo(IntegrationConstants.EMPTY_TRING);
-							profBodyDetail
-									.setProfBodyExpiry(IntegrationConstants.DEFAULT_DATE);
+							profBodyDetail.setProfBody(IntegrationConstants.EMPTY_TRING);
+							profBodyDetail.setProfBodyNo(IntegrationConstants.EMPTY_TRING);
+							profBodyDetail.setProfBodyExpiry(IntegrationConstants.DEFAULT_DATE);
 							bodyDetails.add(profBodyDetail);
 
 						}
-
 						equityOwner.setProfBodyDetailList(bodyDetails);
 
-						expertise
-								.setCategoryClassification(IntegrationConstants.VAVLUE_NA);
+						expertise.setCategoryClassification(IntegrationConstants.VAVLUE_NA);
 						equityOwner.setExpertise(expertise);
 
 						equityOwner.setProfBodyDetailList(bodyDetails);
@@ -274,8 +237,7 @@ public class EperundingIntegration extends InitializeSO{
 		if (resDTO.isSuccessful()) {
 			for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
 
-				for (SmPersonnel personnel : smSupplier.getSmAppl()
-						.getSmPersonnels()) {
+				for (SmPersonnel personnel : smSupplier.getSmAppl().getSmPersonnels()) {
 
 					if (personnel.isDirector()) {
 
@@ -286,8 +248,7 @@ public class EperundingIntegration extends InitializeSO{
 						bodyDetails = new ArrayList<ProfBodyDetail>();
 						qualifications = new ArrayList<Qualification>();
 
-						boardOfDirector.setMOFNo(smSupplier.getSmMofAccounts()
-								.get(0).getMofNo());
+						boardOfDirector.setMOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
 
 						director.setIsBOD(IntegrationConstants.VAVLUE_YES);
 						director.setIsCEO(IntegrationConstants.VAVLUE_NO);
@@ -299,65 +260,41 @@ public class EperundingIntegration extends InitializeSO{
 						else
 							director.setIsBumi(IntegrationConstants.VAVLUE_NO);
 						director.setCitizenOf(131);
-						// owner.setCitizenOf(personnel.getPmCountry().getCountryId().intValue());
 						director.setRace(personnel.getPmRace().getRaceName());
 						director.setDesignation(personnel.getDesignation());
-						director.setWorkExperience(personnel
-								.getWorkExperienceYear());
+						director.setWorkExperience(personnel.getWorkExperienceYear());
 
 						if (personnel.getSmStaffAcademics() != null) {
-							for (SmStaffAcademic smStaffAcademic : personnel
-									.getSmStaffAcademics()) {
+							for (SmStaffAcademic smStaffAcademic : personnel.getSmStaffAcademics()) {
 								qualification = new Qualification();
-								qualification.setMajorIn(smStaffAcademic
-										.getFieldMajor());
-								qualification.setQualification(smStaffAcademic
-										.getPmEduField().getFieldName());
+								qualification.setMajorIn(smStaffAcademic.getFieldMajor());
+								qualification.setQualification(smStaffAcademic.getPmEduField().getFieldName());
 
-								if (null != smStaffAcademic
-										.getQualificationLevelId()) {
+								if (null != smStaffAcademic.getQualificationLevelId()) {
 									ParameterReqDTO reqDTO = new ParameterReqDTO();
-									reqDTO.setParameterId(new Integer(
-											smStaffAcademic
-													.getQualificationLevelId())
-											.longValue());
-									ParameterResDTO paraResDTO = parameterSO
-											.retrieveParameterById(reqDTO);
-									PmParameter pmParameter = paraResDTO
-											.getPmParameter();
+									reqDTO.setParameterId(new Integer(smStaffAcademic.getQualificationLevelId()).longValue());
+									ParameterResDTO paraResDTO = parameterSO.retrieveParameterById(reqDTO);
+									PmParameter pmParameter = paraResDTO.getPmParameter();
 
-									qualification
-											.setQualificationLevel(new Integer(
-													pmParameter
-															.getParameterCode())
-													.intValue());
+									qualification.setQualificationLevel(new Integer(pmParameter.getParameterCode()).intValue());
 								} else {
 									qualification.setQualificationLevel(0);
 								}
 
-								qualification.setInstitute(smStaffAcademic
-										.getInstituteName());
-								qualification.setYear(smStaffAcademic.getYear()
-										.toString());
-								qualification.setEducationField(smStaffAcademic
-										.getPmEduField().getEduFieldId() + "");
+								qualification.setInstitute(smStaffAcademic.getInstituteName());
+								qualification.setYear(smStaffAcademic.getYear().toString());
+								qualification.setEducationField(smStaffAcademic.getPmEduField().getEduFieldId() + "");
 								if (!qualifications.contains(qualifications))
 									qualifications.add(qualification);
 							}
 						} else {
 							qualification = new Qualification();
-							qualification
-									.setMajorIn(IntegrationConstants.EMPTY_TRING);
-							qualification
-									.setQualification(IntegrationConstants.EMPTY_TRING);
-							qualification
-									.setQualificationLevel(IntegrationConstants.DEFAULT_INT);
-							qualification
-									.setInstitute(IntegrationConstants.EMPTY_TRING);
-							qualification
-									.setYear(IntegrationConstants.EMPTY_TRING);
-							qualification
-									.setEducationField(IntegrationConstants.EMPTY_TRING);
+							qualification.setMajorIn(IntegrationConstants.EMPTY_TRING);
+							qualification.setQualification(IntegrationConstants.EMPTY_TRING);
+							qualification.setQualificationLevel(IntegrationConstants.DEFAULT_INT);
+							qualification.setInstitute(IntegrationConstants.EMPTY_TRING);
+							qualification.setYear(IntegrationConstants.EMPTY_TRING);
+							qualification.setEducationField(IntegrationConstants.EMPTY_TRING);
 							qualifications.add(qualification);
 
 						}
@@ -366,35 +303,25 @@ public class EperundingIntegration extends InitializeSO{
 						boardOfDirector.setDirector(director);
 
 						if (smSupplier.getSmAppl().getSmAssociationBodies() != null) {
-							for (SmAssociationBody associationBody : smSupplier
-									.getSmAppl().getSmAssociationBodies()) {
+							for (SmAssociationBody associationBody : smSupplier.getSmAppl().getSmAssociationBodies()) {
 								profBodyDetail = new ProfBodyDetail();
-								profBodyDetail.setProfBody(associationBody
-										.getPmCertBody().getCertBodyId()
-										.toString());
-								profBodyDetail.setProfBodyNo(associationBody
-										.getRegNo());
-								profBodyDetail
-										.setProfBodyExpiry(associationBody
-												.getExpDate());
+								profBodyDetail.setProfBody(associationBody.getPmCertBody().getCertBodyId().toString());
+								profBodyDetail.setProfBodyNo(associationBody.getRegNo());
+								profBodyDetail.setProfBodyExpiry(associationBody.getExpDate());
 								if (!bodyDetails.contains(bodyDetails))
 									bodyDetails.add(profBodyDetail);
 							}
 						} else {
 
 							profBodyDetail = new ProfBodyDetail();
-							profBodyDetail
-									.setProfBody(IntegrationConstants.EMPTY_TRING);
-							profBodyDetail
-									.setProfBodyNo(IntegrationConstants.EMPTY_TRING);
-							profBodyDetail
-									.setProfBodyExpiry(IntegrationConstants.DEFAULT_DATE);
+							profBodyDetail.setProfBody(IntegrationConstants.EMPTY_TRING);
+							profBodyDetail.setProfBodyNo(IntegrationConstants.EMPTY_TRING);
+							profBodyDetail.setProfBodyExpiry(IntegrationConstants.DEFAULT_DATE);
 							bodyDetails.add(profBodyDetail);
 
 						}
 						boardOfDirector.setProfBodyDetailList(bodyDetails);
-						expertise
-								.setCategoryClassification(IntegrationConstants.VAVLUE_NA);
+						expertise.setCategoryClassification(IntegrationConstants.VAVLUE_NA);
 						boardOfDirector.setExpertise(expertise);
 
 						if (!boardOfDirectorsList.contains(boardOfDirector))
@@ -439,100 +366,66 @@ public class EperundingIntegration extends InitializeSO{
 						bodyDetails = new ArrayList<ProfBodyDetail>();
 						qualifications = new ArrayList<Qualification>();
 
-						managementPersonnel.setMOFNo(smSupplier
-								.getSmMofAccounts().get(0).getMofNo());
+						managementPersonnel.setMOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
 						if (smPersonnel.isManagement())
-							personnel
-									.setIsManagement(IntegrationConstants.VAVLUE_YES);
+							personnel.setIsManagement(IntegrationConstants.VAVLUE_YES);
 						else
-							personnel
-									.setIsManagement(IntegrationConstants.VAVLUE_NO);
+							personnel.setIsManagement(IntegrationConstants.VAVLUE_NO);
 						if (smPersonnel.isProf())
-							personnel
-									.setIsProfessional(IntegrationConstants.VAVLUE_YES);
+							personnel.setIsProfessional(IntegrationConstants.VAVLUE_YES);
 						else
-							personnel
-									.setIsProfessional(IntegrationConstants.VAVLUE_NO);
+							personnel.setIsProfessional(IntegrationConstants.VAVLUE_NO);
 						if (smPersonnel.isSemiProf())
-							personnel
-									.setIsSemiProf(IntegrationConstants.VAVLUE_YES);
+							personnel.setIsSemiProf(IntegrationConstants.VAVLUE_YES);
 						else
-							personnel
-									.setIsSemiProf(IntegrationConstants.VAVLUE_NO);
+							personnel.setIsSemiProf(IntegrationConstants.VAVLUE_NO);
 						if (smPersonnel.isClerical())
-							personnel
-									.setIsClerical(IntegrationConstants.VAVLUE_YES);
+							personnel.setIsClerical(IntegrationConstants.VAVLUE_YES);
 						else
-							personnel
-									.setIsClerical(IntegrationConstants.VAVLUE_NO);
+							personnel.setIsClerical(IntegrationConstants.VAVLUE_NO);
 						personnel.setName(smPersonnel.getName());
 						personnel.setNewICNo(smPersonnel.getIdentificationNo());
 						personnel.setPassport(IntegrationConstants.VAVLUE_NA);
 						if (smPersonnel.isBumi())
-							personnel
-									.setIsBumi(IntegrationConstants.VAVLUE_YES);
+							personnel.setIsBumi(IntegrationConstants.VAVLUE_YES);
 						else
 							personnel.setIsBumi(IntegrationConstants.VAVLUE_NO);
 						personnel.setCitizenOf(131);
-						personnel
-								.setRace(smPersonnel.getPmRace().getRaceName());
+						personnel.setRace(smPersonnel.getPmRace().getRaceName());
 						personnel.setDesignation(smPersonnel.getDesignation());
-						personnel.setWorkExperience(smPersonnel
-								.getWorkExperienceYear());
+						personnel.setWorkExperience(smPersonnel.getWorkExperienceYear());
 
 						if (smPersonnel.getSmStaffAcademics() != null) {
-							for (SmStaffAcademic smStaffAcademic : smPersonnel
-									.getSmStaffAcademics()) {
+							for (SmStaffAcademic smStaffAcademic : smPersonnel.getSmStaffAcademics()) {
 								qualification = new Qualification();
-								qualification.setMajorIn(smStaffAcademic
-										.getFieldMajor());
-								qualification.setQualification(smStaffAcademic
-										.getPmEduField().getFieldName());
+								qualification.setMajorIn(smStaffAcademic.getFieldMajor());
+								qualification.setQualification(smStaffAcademic.getPmEduField().getFieldName());
 
-								if (null != smStaffAcademic
-										.getQualificationLevelId()) {
+								if (null != smStaffAcademic.getQualificationLevelId()) {
 									ParameterReqDTO reqDTO = new ParameterReqDTO();
-									reqDTO.setParameterId(new Integer(
-											smStaffAcademic
-													.getQualificationLevelId())
-											.longValue());
-									ParameterResDTO paraResDTO = parameterSO
-											.retrieveParameterById(reqDTO);
-									PmParameter pmParameter = paraResDTO
-											.getPmParameter();
+									reqDTO.setParameterId(new Integer(smStaffAcademic.getQualificationLevelId()).longValue());
+									ParameterResDTO paraResDTO = parameterSO.retrieveParameterById(reqDTO);
+									PmParameter pmParameter = paraResDTO.getPmParameter();
 
-									qualification
-											.setQualificationLevel(new Integer(
-													pmParameter
-															.getParameterCode())
-													.intValue());
+									qualification.setQualificationLevel(new Integer(pmParameter.getParameterCode()).intValue());
 								} else {
 									qualification.setQualificationLevel(0);
 								}
 
-								qualification.setInstitute(smStaffAcademic
-										.getInstituteName());
-								qualification.setYear(smStaffAcademic.getYear()
-										.toString());
-								qualification.setEducationField(smStaffAcademic
-										.getPmEduField().getEduFieldId() + "");
+								qualification.setInstitute(smStaffAcademic.getInstituteName());
+								qualification.setYear(smStaffAcademic.getYear().toString());
+								qualification.setEducationField(smStaffAcademic.getPmEduField().getEduFieldId() + "");
 								if (!qualifications.contains(qualifications))
 									qualifications.add(qualification);
 							}
 						} else {
 							qualification = new Qualification();
-							qualification
-									.setMajorIn(IntegrationConstants.EMPTY_TRING);
-							qualification
-									.setQualification(IntegrationConstants.EMPTY_TRING);
-							qualification
-									.setQualificationLevel(IntegrationConstants.DEFAULT_INT);
-							qualification
-									.setInstitute(IntegrationConstants.EMPTY_TRING);
-							qualification
-									.setYear(IntegrationConstants.EMPTY_TRING);
-							qualification
-									.setEducationField(IntegrationConstants.EMPTY_TRING);
+							qualification.setMajorIn(IntegrationConstants.EMPTY_TRING);
+							qualification.setQualification(IntegrationConstants.EMPTY_TRING);
+							qualification.setQualificationLevel(IntegrationConstants.DEFAULT_INT);
+							qualification.setInstitute(IntegrationConstants.EMPTY_TRING);
+							qualification.setYear(IntegrationConstants.EMPTY_TRING);
+							qualification.setEducationField(IntegrationConstants.EMPTY_TRING);
 							qualifications.add(qualification);
 
 						}
@@ -540,39 +433,28 @@ public class EperundingIntegration extends InitializeSO{
 						managementPersonnel.setPersonnel(personnel);
 
 						if (smSupplier.getSmAppl().getSmAssociationBodies() != null) {
-							for (SmAssociationBody associationBody : smSupplier
-									.getSmAppl().getSmAssociationBodies()) {
+							for (SmAssociationBody associationBody : smSupplier.getSmAppl().getSmAssociationBodies()) {
 								profBodyDetail = new ProfBodyDetail();
-								profBodyDetail.setProfBody(associationBody
-										.getPmCertBody().getCertBodyId()
-										.toString());
-								profBodyDetail.setProfBodyNo(associationBody
-										.getRegNo());
-								profBodyDetail
-										.setProfBodyExpiry(associationBody
-												.getExpDate());
+								profBodyDetail.setProfBody(associationBody.getPmCertBody().getCertBodyId().toString());
+								profBodyDetail.setProfBodyNo(associationBody.getRegNo());
+								profBodyDetail.setProfBodyExpiry(associationBody.getExpDate());
 								if (!bodyDetails.contains(bodyDetails))
 									bodyDetails.add(profBodyDetail);
 							}
 
 						} else {
 							profBodyDetail = new ProfBodyDetail();
-							profBodyDetail
-									.setProfBody(IntegrationConstants.EMPTY_TRING);
-							profBodyDetail
-									.setProfBodyNo(IntegrationConstants.EMPTY_TRING);
-							profBodyDetail
-									.setProfBodyExpiry(IntegrationConstants.DEFAULT_DATE);
+							profBodyDetail.setProfBody(IntegrationConstants.EMPTY_TRING);
+							profBodyDetail.setProfBodyNo(IntegrationConstants.EMPTY_TRING);
+							profBodyDetail.setProfBodyExpiry(IntegrationConstants.DEFAULT_DATE);
 							bodyDetails.add(profBodyDetail);
 
 						}
 						managementPersonnel.setProfBodyDetailList(bodyDetails);
 
-						expertise
-								.setCategoryClassification(IntegrationConstants.VAVLUE_NA);
+						expertise.setCategoryClassification(IntegrationConstants.VAVLUE_NA);
 						managementPersonnel.setExpertise(expertise);
-						if (!managementPersonnelsList
-								.contains(managementPersonnel))
+						if (!managementPersonnelsList.contains(managementPersonnel))
 							managementPersonnelsList.add(managementPersonnel);
 
 					}
@@ -599,27 +481,20 @@ public class EperundingIntegration extends InitializeSO{
 		if (resDTO.isSuccessful()) {
 			for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
 
-				for (SmPersonnel smPersonnel : smSupplier.getSmAppl()
-						.getSmPersonnels()) {
+				for (SmPersonnel smPersonnel : smSupplier.getSmAppl().getSmPersonnels()) {
 					if (smPersonnel.isAuthorized()) {
 						signatory = new Signatory();
 						authorizedSignatory = new AuthorizedSignatory();
-						signatory.setMOFNo(smSupplier.getSmMofAccounts().get(0)
-								.getMofNo());
+						signatory.setMOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
 
 						authorizedSignatory.setName(smPersonnel.getName());
-						authorizedSignatory.setNewICNo(smPersonnel
-								.getIdentificationNo());
-						authorizedSignatory
-								.setPassport(IntegrationConstants.VAVLUE_NA);
+						authorizedSignatory.setNewICNo(smPersonnel.getIdentificationNo());
+						authorizedSignatory.setPassport(IntegrationConstants.VAVLUE_NA);
 						if (smPersonnel.isBumi())
-							authorizedSignatory
-									.setIsBumi(IntegrationConstants.VAVLUE_YES);
+							authorizedSignatory.setIsBumi(IntegrationConstants.VAVLUE_YES);
 						else
-							authorizedSignatory
-									.setIsBumi(IntegrationConstants.VAVLUE_NO);
-						authorizedSignatory.setDesignation(smPersonnel
-								.getDesignation());
+							authorizedSignatory.setIsBumi(IntegrationConstants.VAVLUE_NO);
+						authorizedSignatory.setDesignation(smPersonnel.getDesignation());
 
 						signatory.setAuthorizedSignatory(authorizedSignatory);
 
@@ -796,38 +671,24 @@ public class EperundingIntegration extends InitializeSO{
 
 			if (resDTO.isSuccessful()) {
 				for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
-
-					if (smSupplier
-							.getSmAppl()
-							.getApplType()
-							.equalsIgnoreCase(
-									IntegrationConstants.RECORD_DELETED_CODE)) {
-
+					if (smSupplier.getSmAppl().getApplType().equalsIgnoreCase(IntegrationConstants.RECORD_DELETED_CODE)) {
 						deletedCompany = new DeletedCompany();
-						deletedCompany.setmOFNo(smSupplier.getSmMofAccounts()
-								.get(0).getMofNo());
+						deletedCompany.setmOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
 
 						SmRemarksReqDTO remarksReqDTO = new SmRemarksReqDTO();
-						remarksReqDTO
-								.setDocType(IntegrationConstants.RECORD_DELETED_CODE);
-						remarksReqDTO.setDocId(smSupplier.getSmAppl()
-								.getApplId());
+						remarksReqDTO.setDocType(IntegrationConstants.RECORD_DELETED_CODE);
+						remarksReqDTO.setDocId(smSupplier.getSmAppl().getApplId());
 
-						SmRemaksResDTO remaksResDTO = smRemarksSO
-								.retrieveSmRemarksByDocument(remarksReqDTO);
+						SmRemaksResDTO remaksResDTO = smRemarksSO.retrieveSmRemarksByDocument(remarksReqDTO);
 
-						if (!remaksResDTO.getRemarksList().isEmpty()
-								|| remaksResDTO.getRemarksList() != null) {
-							for (SmRemark smRemark : remaksResDTO
-									.getRemarksList()) {
+						if (!remaksResDTO.getRemarksList().isEmpty() || remaksResDTO.getRemarksList() != null) {
+							for (SmRemark smRemark : remaksResDTO.getRemarksList()) {
 								// log.info("smRemark :"+smRemark.getRemark());
 								deletedCompany.setReason(smRemark.getRemark());
-								deletedCompany.setDateDeleted(smRemark
-										.getCreatedDate());
+								deletedCompany.setDateDeleted(smRemark.getCreatedDate());
 							}
 						}
 					}
-
 					deletedCompanyList.add(deletedCompany);
 				}
 			}
@@ -852,33 +713,24 @@ public class EperundingIntegration extends InitializeSO{
 			if (resDTO.isSuccessful()) {
 				for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
 
-					for (SmCompanyExperience smCompanyExperience : smSupplier
-							.getSmAppl().getSmCompanyExperiences()) {
+					for (SmCompanyExperience smCompanyExperience : smSupplier.getSmAppl().getSmCompanyExperiences()) {
 
 						governmentProject = new GovernmentProject();
 						project = new Project();
-						governmentProject.setmOFNo(smSupplier
-								.getSmMofAccounts().get(0).getMofNo());
+						governmentProject.setmOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
 
 						project.setProjectNo(smCompanyExperience.getRefNo());
 						project.setProjectName(smCompanyExperience.getTitle());
-						project.setProjectLocation(smCompanyExperience
-								.getProjectLocation());
+						project.setProjectLocation(smCompanyExperience.getProjectLocation());
 						project.setClient(smCompanyExperience.getClientName());
-						project.setApppointmentDate(smCompanyExperience
-								.getProcurementDate());
-						project.setCost(smCompanyExperience.getContractValue()
-								.toString());
-						project.setServiceDesc(smCompanyExperience
-								.getWorkServiceDesc());
-						project.setWorkProgress(smCompanyExperience
-								.getProgressStatus());
-						project.setWorkProgress(getWorkProgress(smCompanyExperience
-								.getProgressStatus()));
+						project.setApppointmentDate(smCompanyExperience.getProcurementDate());
+						project.setCost(smCompanyExperience.getContractValue().toString());
+						project.setServiceDesc(smCompanyExperience.getWorkServiceDesc());
+						project.setWorkProgress(smCompanyExperience.getProgressStatus());
+						project.setWorkProgress(getWorkProgress(smCompanyExperience.getProgressStatus()));
 						// Need to confirm directly cmng value
 						project.setWorkProgressOthers(IntegrationConstants.EMPTY_TRING); // this is empty
-						project.setConsultantFee(smCompanyExperience
-								.getConsultantFee().toString());
+						project.setConsultantFee(smCompanyExperience.getConsultantFee().toString());
 						// project.setPaymentMethod(smCompanyExperience.getPaymentMethodId().toString());
 						// // this is empty
 						project.setPaymentMethod(IntegrationConstants.EMPTY_TRING); // this is empty
@@ -909,22 +761,16 @@ public class EperundingIntegration extends InitializeSO{
 			if (resDTO.isSuccessful()) {
 				for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
 
-					for (SmSupplierCategory smSupplierCategory : smSupplier
-							.getSmAppl().getSmSupplierCategories()) {
+					for (SmSupplierCategory smSupplierCategory : smSupplier.getSmAppl().getSmSupplierCategories()) {
 
 						registeredCategory = new RegisteredCategory();
 						category = new Category();
-						registeredCategory.setmOFNo(smSupplier
-								.getSmMofAccounts().get(0).getMofNo());
+						registeredCategory.setmOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
 
-						category.setMainCat(smSupplierCategory
-								.getPmCategoryL1().getCategoryL1Code());
-						category.setSubCat(smSupplierCategory.getPmCategoryL2()
-								.getCategoryL2Code());
-						category.setSubCatDivision(smSupplierCategory
-								.getPmCategoryL3().getCategoryL3Code());
-						category.setStatus(getCategoryStatus(smSupplierCategory
-								.getRecordStatusFlg()));
+						category.setMainCat(smSupplierCategory.getPmCategoryL1().getCategoryL1Code());
+						category.setSubCat(smSupplierCategory.getPmCategoryL2().getCategoryL2Code());
+						category.setSubCatDivision(smSupplierCategory.getPmCategoryL3().getCategoryL3Code());
+						category.setStatus(getCategoryStatus(smSupplierCategory.getRecordStatusFlg()));
 						registeredCategory.setCategory(category);
 						registeredCategoryList.add(registeredCategory);
 
@@ -968,24 +814,18 @@ public class EperundingIntegration extends InitializeSO{
 						else
 							branch.setCity(IntegrationConstants.EMPTY_TRING);
 
-						if (null != smSupplierBranch.getSmAddress()
-								.getPmDistrict())
-							branch.setDistrict(smSupplierBranch.getSmAddress()
-									.getPmDistrict().getDistrictCode());
+						if (null != smSupplierBranch.getSmAddress().getPmDistrict())
+							branch.setDistrict(smSupplierBranch.getSmAddress().getPmDistrict().getDistrictCode());
 						else
 							branch.setDistrict(IntegrationConstants.EMPTY_TRING);
 
-						if (null != smSupplierBranch.getSmAddress()
-								.getPmState())
-							branch.setState(smSupplierBranch.getSmAddress()
-									.getPmState().getStateCode());
+						if (null != smSupplierBranch.getSmAddress().getPmState())
+							branch.setState(smSupplierBranch.getSmAddress().getPmState().getStateCode());
 						else
 							branch.setState(IntegrationConstants.EMPTY_TRING);
 
-						if (null != smSupplierBranch.getSmAddress()
-								.getPmCountry())
-							branch.setCountry(smSupplierBranch.getSmAddress()
-									.getPmCountry().getCountryCode());
+						if (null != smSupplierBranch.getSmAddress().getPmCountry())
+							branch.setCountry(smSupplierBranch.getSmAddress().getPmCountry().getCountryCode());
 						else
 							branch.setCountry(IntegrationConstants.EMPTY_TRING);
 						branchCompany.setBranch(branch);
@@ -1016,96 +856,60 @@ public class EperundingIntegration extends InitializeSO{
 			if (resDTO.isSuccessful()) {
 				for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
 
-					for (SmEquityCompany equityCompany : smSupplier.getSmAppl()
-							.getSmEquityCompanies()) {
+					for (SmEquityCompany equityCompany : smSupplier.getSmAppl().getSmEquityCompanies()) {
 
 						companyOwner = new CompanyOwner();
-						companyOwner.setmOFNo(smSupplier.getSmMofAccounts()
-								.get(0).getMofNo());
-						companyOwner.setCompanyName(equityCompany
-								.getCompanyName());
+						companyOwner.setmOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
+						companyOwner.setCompanyName(equityCompany.getCompanyName());
 						companyOwner.setsSMNo(equityCompany.getRegNo());
-						companyOwner
-								.setCompanyOwnerMOFNo(IntegrationConstants.EMPTY_TRING);
-						// Need to confirm whether column is there or not
-						companyOwner.setShareholdingAmount(equityCompany
-								.getShareAmt());
-						companyOwner.setShareholdingPercentage(equityCompany
-								.getSharePercentage());
-						companyOwner.setAddress1(equityCompany.getSmAddress()
-								.getAddress1());
-						companyOwner.setAddress2(equityCompany.getSmAddress()
-								.getAddress2());
-						companyOwner.setAddress3(equityCompany.getSmAddress()
-								.getAddress3());
-						companyOwner.setPostcode(equityCompany.getSmAddress()
-								.getPostcode());
+						companyOwner.setCompanyOwnerMOFNo(IntegrationConstants.EMPTY_TRING);
+						companyOwner.setShareholdingAmount(equityCompany.getShareAmt());
+						companyOwner.setShareholdingPercentage(equityCompany.getSharePercentage());
+						companyOwner.setAddress1(equityCompany.getSmAddress().getAddress1());
+						companyOwner.setAddress2(equityCompany.getSmAddress().getAddress2());
+						companyOwner.setAddress3(equityCompany.getSmAddress().getAddress3());
+						companyOwner.setPostcode(equityCompany.getSmAddress().getPostcode());
 						if (null != equityCompany.getSmAddress().getPmCity())
-							companyOwner.setCity(equityCompany.getSmAddress()
-									.getPmCity().getCityName());
+							companyOwner.setCity(equityCompany.getSmAddress().getPmCity().getCityName());
 						else
-							companyOwner
-									.setCity(IntegrationConstants.EMPTY_TRING);
-						if (null != equityCompany.getSmAddress()
-								.getPmDistrict())
-							companyOwner.setDistrict(equityCompany
-									.getSmAddress().getPmDistrict()
-									.getDistrictCode());
+							companyOwner.setCity(IntegrationConstants.EMPTY_TRING);
+						if (null != equityCompany.getSmAddress().getPmDistrict())
+							companyOwner.setDistrict(equityCompany.getSmAddress().getPmDistrict().getDistrictCode());
 						else
-							companyOwner
-									.setDistrict(IntegrationConstants.EMPTY_TRING);
+							companyOwner.setDistrict(IntegrationConstants.EMPTY_TRING);
 						if (null != equityCompany.getSmAddress().getPmState())
-							companyOwner.setState(equityCompany.getSmAddress()
-									.getPmState().getStateCode());
+							companyOwner.setState(equityCompany.getSmAddress().getPmState().getStateCode());
 						else
-							companyOwner
-									.setState(IntegrationConstants.EMPTY_TRING);
+							companyOwner.setState(IntegrationConstants.EMPTY_TRING);
 						if (null != equityCompany.getSmAddress().getPmCountry())
-							companyOwner.setCountry(equityCompany
-									.getSmAddress().getPmCountry()
-									.getCountryCode());
+							companyOwner.setCountry(equityCompany.getSmAddress().getPmCountry().getCountryCode());
 						else
-							companyOwner
-									.setCountry(IntegrationConstants.EMPTY_TRING);
+							companyOwner.setCountry(IntegrationConstants.EMPTY_TRING);
 
 						String phoneNo = equityCompany.getPhoneNo();
 						if (null != phoneNo) {
 							if (phoneNo.startsWith("+")) {
-								companyOwner.setTelCountryCode(phoneNo
-										.substring(0, 2));
-								companyOwner.setTelAreaCode(phoneNo.substring(
-										2, 4));
-								companyOwner.setTelNo(phoneNo.substring(4,
-										phoneNo.length()));
+								companyOwner.setTelCountryCode(phoneNo.substring(0, 2));
+								companyOwner.setTelAreaCode(phoneNo.substring(2, 4));
+								companyOwner.setTelNo(phoneNo.substring(4, phoneNo.length()));
 							} else {
-								companyOwner.setTelCountryCode("+"
-										+ phoneNo.substring(0, 1));
-								companyOwner.setTelAreaCode(phoneNo.substring(
-										1, 3));
-								companyOwner.setTelNo(phoneNo.substring(3,
-										phoneNo.length()));
+								companyOwner.setTelCountryCode("+" + phoneNo.substring(0, 1));
+								companyOwner.setTelAreaCode(phoneNo.substring(1, 3));
+								companyOwner.setTelNo(phoneNo.substring(3, phoneNo.length()));
 							}
-
 						}
 
 						String faxNo = equityCompany.getFaxNo();
 						if (null != faxNo) {
 							if (phoneNo.startsWith("+")) {
-								companyOwner.setFaxCountryCode(faxNo.substring(
-										0, 2));
-								companyOwner.setFaxAreaCode(faxNo.substring(2,
-										4));
-								companyOwner.setFaxNo(faxNo.substring(4,
-										faxNo.length()));
+								companyOwner.setFaxCountryCode(faxNo.substring(0, 2));
+								companyOwner.setFaxAreaCode(faxNo.substring(2,4));
+								companyOwner.setFaxNo(faxNo.substring(4,faxNo.length()));
 							} else {
-								companyOwner.setFaxCountryCode("+"
-										+ faxNo.substring(0, 1));
-								companyOwner.setFaxAreaCode(faxNo.substring(1,
-										3));
-								companyOwner.setFaxNo(faxNo.substring(3,
-										faxNo.length()));
+								companyOwner.setFaxCountryCode("+" + faxNo.substring(0, 1));
+								companyOwner.setFaxAreaCode(faxNo.substring(1,3));
+								companyOwner.setFaxNo(faxNo.substring(3,faxNo.length()));
 							}
-
 						}
 
 						if (!companyOwnerList.contains(companyOwner))
@@ -1133,110 +937,71 @@ public class EperundingIntegration extends InitializeSO{
 			if (resDTO.isSuccessful()) {
 				for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
 
-					for (SmAssociateCompany associateCompany : smSupplier
-							.getSmAppl().getSmAssociateCompanies()) {
+					for (SmAssociateCompany associateCompany : smSupplier.getSmAppl().getSmAssociateCompanies()) {
 
 						associatedCompany = new AssociatedCompany();
-						associatedCompany.setmOFNo(smSupplier
-								.getSmMofAccounts().get(0).getMofNo());
-						associatedCompany.setCompanyName(associateCompany
-								.getCompanyName());
+						associatedCompany.setmOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
+						associatedCompany.setCompanyName(associateCompany.getCompanyName());
 						associatedCompany.setsSMNO(associateCompany.getRegNo());
-						associatedCompany
-								.setAssociatedCompanyMOFNO(IntegrationConstants.EMPTY_TRING);
+						associatedCompany.setAssociatedCompanyMOFNO(IntegrationConstants.EMPTY_TRING);
 						if (associateCompany.getIsShareholding().intValue() == 1)
-							associatedCompany
-									.setShareholding(IntegrationConstants.VAVLUE_YES);
+							associatedCompany.setShareholding(IntegrationConstants.VAVLUE_YES);
 						else
-							associatedCompany
-									.setShareholding(IntegrationConstants.VAVLUE_NO);
-						associatedCompany.setAddress1(associateCompany
-								.getSmAddress().getAddress1());
-						associatedCompany.setAddress2(associateCompany
-								.getSmAddress().getAddress2());
-						associatedCompany.setAddress3(associateCompany
-								.getSmAddress().getAddress3());
-						associatedCompany.setPostcode(associateCompany
-								.getSmAddress().getPostcode());
+							associatedCompany.setShareholding(IntegrationConstants.VAVLUE_NO);
+						associatedCompany.setAddress1(associateCompany.getSmAddress().getAddress1());
+						associatedCompany.setAddress2(associateCompany.getSmAddress().getAddress2());
+						associatedCompany.setAddress3(associateCompany.getSmAddress().getAddress3());
+						associatedCompany.setPostcode(associateCompany.getSmAddress().getPostcode());
 
 						if (null != associateCompany.getSmAddress().getPmCity()) {
-							associatedCompany.setCity(associateCompany
-									.getSmAddress().getPmCity().getCityName());
+							associatedCompany.setCity(associateCompany.getSmAddress().getPmCity().getCityName());
 						} else {
-							associatedCompany
-									.setCity(IntegrationConstants.EMPTY_TRING);
+							associatedCompany.setCity(IntegrationConstants.EMPTY_TRING);
 						}
-						if (null != associateCompany.getSmAddress()
-								.getPmDistrict()) {
-							associatedCompany.setDistrict(associateCompany
-									.getSmAddress().getPmDistrict()
-									.getDistrictCode());
+						if (null != associateCompany.getSmAddress().getPmDistrict()) {
+							associatedCompany.setDistrict(associateCompany.getSmAddress().getPmDistrict().getDistrictCode());
 						} else {
-							associatedCompany
-									.setDistrict(IntegrationConstants.EMPTY_TRING);
+							associatedCompany.setDistrict(IntegrationConstants.EMPTY_TRING);
 						}
-						if (null != associateCompany.getSmAddress()
-								.getPmState()) {
-							associatedCompany
-									.setState(associateCompany.getSmAddress()
-											.getPmState().getStateCode());
+						if (null != associateCompany.getSmAddress().getPmState()) {
+							associatedCompany.setState(associateCompany.getSmAddress().getPmState().getStateCode());
 						} else {
-							associatedCompany
-									.setState(IntegrationConstants.EMPTY_TRING);
+							associatedCompany.setState(IntegrationConstants.EMPTY_TRING);
 						}
-						if (null != associateCompany.getSmAddress()
-								.getPmCountry()) {
-							associatedCompany.setCountry(associateCompany
-									.getSmAddress().getPmCountry()
-									.getCountryCode());
+						if (null != associateCompany.getSmAddress().getPmCountry()) {
+							associatedCompany.setCountry(associateCompany.getSmAddress().getPmCountry().getCountryCode());
 						} else {
-							associatedCompany
-									.setCountry(IntegrationConstants.EMPTY_TRING);
+							associatedCompany.setCountry(IntegrationConstants.EMPTY_TRING);
 						}
 
 						String phoneNo = associateCompany.getPhoneNo();
 						if (null != phoneNo) {
 							if (phoneNo.startsWith("+")) {
-								associatedCompany.setTelCountryCode(phoneNo
-										.substring(0, 2));
-								associatedCompany.setTelAreaCode(phoneNo
-										.substring(2, 4));
-								associatedCompany.setTelNo(phoneNo.substring(4,
-										phoneNo.length()));
+								associatedCompany.setTelCountryCode(phoneNo.substring(0, 2));
+								associatedCompany.setTelAreaCode(phoneNo.substring(2, 4));
+								associatedCompany.setTelNo(phoneNo.substring(4,phoneNo.length()));
 							} else {
-								associatedCompany.setTelCountryCode("+"
-										+ phoneNo.substring(0, 1));
-								associatedCompany.setTelAreaCode(phoneNo
-										.substring(1, 3));
-								associatedCompany.setTelNo(phoneNo.substring(3,
-										phoneNo.length()));
+								associatedCompany.setTelCountryCode("+" + phoneNo.substring(0, 1));
+								associatedCompany.setTelAreaCode(phoneNo.substring(1, 3));
+								associatedCompany.setTelNo(phoneNo.substring(3,phoneNo.length()));
 							}
-
 						}
 
 						String faxNo = associateCompany.getFaxNo();
 						if (null != faxNo) {
 							if (phoneNo.startsWith("+")) {
-								associatedCompany.setFaxCountryCode(faxNo
-										.substring(0, 2));
-								associatedCompany.setFaxAreaCode(faxNo
-										.substring(2, 4));
-								associatedCompany.setFaxNo(faxNo.substring(4,
-										faxNo.length()));
+								associatedCompany.setFaxCountryCode(faxNo.substring(0, 2));
+								associatedCompany.setFaxAreaCode(faxNo.substring(2, 4));
+								associatedCompany.setFaxNo(faxNo.substring(4,faxNo.length()));
 							} else {
-								associatedCompany.setFaxCountryCode("+"
-										+ faxNo.substring(0, 1));
-								associatedCompany.setFaxAreaCode(faxNo
-										.substring(1, 3));
-								associatedCompany.setFaxNo(faxNo.substring(3,
-										faxNo.length()));
+								associatedCompany.setFaxCountryCode("+" + faxNo.substring(0, 1));
+								associatedCompany.setFaxAreaCode(faxNo.substring(1, 3));
+								associatedCompany.setFaxNo(faxNo.substring(3,faxNo.length()));
 							}
-
 						}
 
 						if (!associatedCompanyList.contains(associatedCompany))
 							associatedCompanyList.add(associatedCompany);
-
 					}
 				}
 			}
