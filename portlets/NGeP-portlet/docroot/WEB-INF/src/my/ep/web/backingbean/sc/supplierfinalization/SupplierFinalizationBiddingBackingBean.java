@@ -1386,8 +1386,13 @@ public class SupplierFinalizationBiddingBackingBean extends
 		// Meeting Details
 		List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();
 		if (CollectionUtils.isNotEmpty(meetingList)) {
-			scQtCommittee.getScQtMeetings()
-						 .addAll(meetingList);
+			for (ScQtMeeting scQtMeeting : meetingList) {
+				if (!scQtCommittee.getScQtMeetings()
+						.contains(scQtMeeting)) {
+					scQtCommittee.getScQtMeetings()
+					 .add(scQtMeeting);
+				}
+			}
 		}		
 		
 		// Meeting Attendance Details
@@ -1443,6 +1448,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 		debugLogger("updateBPMTask");
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		SuppFinalizationReqDTO suppFinalizationReqDTO = new SuppFinalizationReqDTO();
+		suppFinalizationReqDTO.setSubmit(true);
+		
 		SuppFinalizationResDTO suppFinalizationResDTO = null;
 		suppFinalizationReqDTO.setOutcome(outCome);
 		suppFinalizationReqDTO.setRoleCode(getUserRoleCode());
@@ -1467,10 +1474,15 @@ public class SupplierFinalizationBiddingBackingBean extends
 			ScQtCommittee scQtCommittee = null;
 			if (ParameterConst.ONLINE_BIDDING_MEETING.equals(
 					scQtFinalization.getOnlineBiddingEndorse())) {
+				suppFinalizationReqDTO.setCommitteeType(
+								getManagedBean().getCommitteeType());
 				scQtCommittee = prepareEndorsementCommitteeInfo();
+				
+				suppFinalizationReqDTO.setScQtCommittee(scQtCommittee);
+				suppFinalizationReqDTO.setDeletedMeetingsList(
+						getManagedBean().getDeletedMeetingList());				
 				suppFinalizationReqDTO.setDeletedMeetingAttendanceList(
 						getManagedBean().getDeletedMeetingAttendanceList());
-				suppFinalizationReqDTO.setScQtCommittee(scQtCommittee);
 				
 				EpException epException = null;
 				List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();
@@ -1493,29 +1505,21 @@ public class SupplierFinalizationBiddingBackingBean extends
 				}
 				
 				if (epException != null) {
-					qtSuppFinalizationSO.saveEndorsementCommitteeDetails(suppFinalizationReqDTO);
-					renewSessionAndRetrieve();
-					navigateToBiddingFinalizationMeetingTab();
+					saveMeetingDetailsOnException(qtSuppFinalizationSO, suppFinalizationReqDTO);
 					getManagedBean().setMeetingActiveIndex(0);
 					throw epException;
 				}
 				
-				
 				try {
 					qtSuppFinalizationSO.validatePreparation(suppFinalizationReqDTO);
 				} catch (EpException epExcep) {
-					epException = epExcep;
+					saveMeetingDetailsOnException(qtSuppFinalizationSO, suppFinalizationReqDTO);
+					getManagedBean().setMeetingActiveIndex(1);
+					throw epExcep;
 				} catch (Exception e) {
+					saveMeetingDetailsOnException(qtSuppFinalizationSO, suppFinalizationReqDTO);
+					getManagedBean().setMeetingActiveIndex(1);
 					throw e;
-				} finally {
-					qtSuppFinalizationSO.saveEndorsementCommitteeDetails(suppFinalizationReqDTO);
-					renewSessionAndRetrieve();
-					navigateToBiddingFinalizationMeetingTab();
-					getManagedBean().setMeetingActiveIndex(1);						
-				}	
-				
-				if (epException != null) {
-					throw epException;
 				}
 			} else {
 				scQtCommittee = getManagedBean().getScQtCommittee();
@@ -1530,6 +1534,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 			if (null != digiSign) {
 				updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION, 
 						 scQt.getQtId(),  scQt.getQtNo());
+				
+				// Chairperson signing off
 				signOff();
 			}
 			
@@ -1549,6 +1555,13 @@ public class SupplierFinalizationBiddingBackingBean extends
 		}
 	}
 	
+	private void saveMeetingDetailsOnException(IQTSuppFinalizationSO qtSuppFinalizationSO, 
+									 SuppFinalizationReqDTO suppFinalizationReqDTO) {
+		qtSuppFinalizationSO.saveEndorsementCommitteeDetails(suppFinalizationReqDTO);
+		renewSessionAndRetrieve();
+		navigateToBiddingFinalizationMeetingTab();
+	}
+	
 	private void renewSessionAndRetrieve() {
 		String taskId = this.getManagedBean().getTaskId();
 		String[] outComes = this.getManagedBean().getOutComes();
@@ -1563,6 +1576,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 		renewSesionObject();
 
 		Long qtId = scQt.getQtId();
+		getManagedBean().setCommitteeType(committeeType);
 		retrieveOnlineBiddingEndorsement(qtId);	
 		
 		setTaskDetails(taskId, dataType, outComes, processName, currentStatusId, committeeType, 
