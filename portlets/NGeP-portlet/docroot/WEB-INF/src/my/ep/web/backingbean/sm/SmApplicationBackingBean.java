@@ -723,8 +723,6 @@ public class SmApplicationBackingBean extends
 			}
 
 			getManagedBean().setSmAppl(smAppl);
-			SmApplicationUtil.getInstance().setApplAddressTransientValue(
-					getManagedBean().getSmAppl(), false);
 
 			if (fromBpm) {
 				SmApplicationUtil.checkOverLappingCategories(getManagedBean());
@@ -753,6 +751,9 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getSmAppl().getSmCompanyBasic()
 							.setWithFederal(true);
 				}
+
+				SmApplicationUtil.getInstance().setApplAddressTransientValue(
+						getManagedBean().getSmAppl(), false);
 
 			} else {
 				if (!StringUtils.isEmpty(getManagedBean().getCurrentStatus())) {
