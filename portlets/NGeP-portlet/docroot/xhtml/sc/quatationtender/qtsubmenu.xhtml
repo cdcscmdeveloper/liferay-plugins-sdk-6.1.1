@@ -6,6 +6,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
+	<c:if test="#{qTDetailBB.managedBean.pendingRevision eq 'false'}">
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
 			<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
@@ -13,31 +14,28 @@
 					activeIndex="#{qTDetailBB.managedBean.activeIndex}"	>
 					<p:menuitem value="#{lbl['lbl.sc.qt.qtn.details']}"
 						action="#{qTDetailBB.qtDetailsTabChange(0)}" update="@form"
-						process="@form"
-						rendered="#{qTDetailBB.managedBean.pendingRevision eq 'false'}" />
+						process="@form" />
 					<p:menuitem value="#{lbl['lbl.sc.qt.committee.appointment']}"
 						action="#{qTDetailBB.qtDetailsTabChange(1)}" update="@form"
 						process="@form" />
-					<c:if test="#{qTDetailBB.managedBean.pendingRevision eq 'false'}">
-						<p:menuitem value="#{lbl['lbl.sc.supplier.qulification.criteria']}"
-							action="#{qTDetailBB.qtDetailsTabChange(2)}" update="@form"
-							process="@form" />
-						<p:menuitem value="#{lbl['lbl.sc.approval']}"
-							action="#{qTDetailBB.qtDetailsTabChange(3)}" update="@form"
-							process="@form" />
-						<p:menuitem value="#{lbl['lbl.sc.technical.specification']}"
-							action="#{qTDetailBB.qtDetailsTabChange(4)}" update="@form"
-							process="@form"
-							rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_QT_SUBMISSION) or (qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)}" />
-						<p:menuitem value="#{lbl['lbl.sc.financial.specification']}"
-							action="#{qTDetailBB.qtDetailsTabChange(5)}" update="@form"
-							process="@form"
-							rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_QT_SUBMISSION) or (qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)}" />
-						<p:menuitem value="#{lbl['lbl.sc.activities']}"
-							action="#{qTDetailBB.qtDetailsTabChange(6)}" update="@form"
-							process="@form"
-							rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_QT_SUBMISSION) or (qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)}" />
-					</c:if>
+					<p:menuitem value="#{lbl['lbl.sc.supplier.qulification.criteria']}"
+						action="#{qTDetailBB.qtDetailsTabChange(2)}" update="@form"
+						process="@form" />
+					<p:menuitem value="#{lbl['lbl.sc.approval']}"
+						action="#{qTDetailBB.qtDetailsTabChange(3)}" update="@form"
+						process="@form" />
+					<p:menuitem value="#{lbl['lbl.sc.technical.specification']}"
+						action="#{qTDetailBB.qtDetailsTabChange(4)}" update="@form"
+						process="@form"
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_QT_SUBMISSION) or (qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)}" />
+					<p:menuitem value="#{lbl['lbl.sc.financial.specification']}"
+						action="#{qTDetailBB.qtDetailsTabChange(5)}" update="@form"
+						process="@form"
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_QT_SUBMISSION) or (qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)}" />
+					<p:menuitem value="#{lbl['lbl.sc.activities']}"
+						action="#{qTDetailBB.qtDetailsTabChange(6)}" update="@form"
+						process="@form"
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_QT_SUBMISSION) or (qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)}" />
 					<p:menuitem value="#{lbl['lbl.sc.qt.briefing.sv']}"
 						action="#{qTDetailBB.qtDetailsTabChange(4)}" update="@form"
 						process="@form"
@@ -130,4 +128,8 @@
 			update="menuQTContent" oncomplete="attachDlg1.hide()">
 		</p:fileUpload>
 	</p:dialog>
+	</c:if>
+	<c:if test="#{qTDetailBB.managedBean.pendingRevision eq 'true'}">
+		<ui:include src="/xhtml/sc/quatationtender/committeeappointment/qtcommitteeappointment.xhtml" />
+	</c:if>
 </ui:composition>
