@@ -1,0 +1,40 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:dialog id="delConfirmPopup"
+		header="#{lbl['lbl.msg.confirm.delete.header']}"
+		widgetVar="#{delConfirmPopup}" modal="true" height="100" width="350"
+		resizable="false">
+		<p:ajax event="close"
+			listener="#{templateSpecBean.setSelectedSpecQuestion(null)}"
+			update="delConfirmPopup" />
+
+		<h:panelGrid columns="3">
+			<p:graphicImage value="/css/images/design/exclamation.png"
+				styleClass="ui-icon-complain" />
+			<p:spacer width="10" />
+			<div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
+		</h:panelGrid>
+		<p:spacer width="10" />
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}"
+				oncomplete="#{delConfirmPopup}.hide();"
+				action="#{templateSpecBackingBean.deleteQuestion(templateSpecBean)}"
+				partialSubmit="true" process="@this" update="spg" />
+			<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+				process="@this" update="@this"
+				oncomplete="#{delConfirmPopup}.hide();return false">
+				<f:setPropertyActionListener
+					target="#{templateSpecBean.selectedSpecQuestion.selected}"
+					value="#{false}" />
+				<f:setPropertyActionListener
+					target="#{templateSpecBean.selectedSpecQuestion}" value="#{null}" />
+			</p:commandButton>
+		</div>
+	</p:dialog>
+</ui:composition>

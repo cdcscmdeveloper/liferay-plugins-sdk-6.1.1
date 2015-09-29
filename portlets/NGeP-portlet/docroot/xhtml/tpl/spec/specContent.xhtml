@@ -128,6 +128,62 @@
 						<ui:decorate template="specColumnReview.xhtml" />
 					</c:if>
 				</p:dataTable>
+				
+				<ui:include src="deleteConfirmPopup.xhtml" />
+				<ui:include src="tierQtyPopup.xhtml" />
+				
+				<p:dialog id="scoringSetPopup" header="#{lbl['lbl.tpl.spec.content.scoring.settings.title']}" widgetVar="#{scoringSetPopup}" modal="true" 
+				   width="800" height="auto" rendered="#{isScoringReq}" closable="false" position="top">
+					
+					<c:if test="#{!empty templateSpecBean.selectedSpecQuestion}">
+						<h:panelGroup id="scoreSettPnl">
+							<p:messages id="scorePopupMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
+								
+							<ui:include src="scoringSettings.xhtml" />
+						</h:panelGroup>
+						
+						<div class="ppRightBtn">
+							<p:commandButton value="#{lbl['lbl.btn.ok']}" 
+								action="#{templateSpecBackingBean.scoringOkAction(templateSpecBean)}"
+								partialSubmit="true"
+								process="@this, scoreSettPnl"
+								update="scoreSettPnl, @(.scoringBtn)">
+								<f:setPropertyActionListener target="#{templateSpecBean.specComponentId}" value="#{templateSpecId}" />
+							</p:commandButton>
+							<p:commandButton value="#{lbl['lbl.btn.cancel']}" 
+								partialSubmit="true" process="@this" update="@this"
+								action="#{templateSpecBackingBean.scoringCancelAction(templateSpecBean)}"
+								oncomplete="#{scoringSetPopup}.hide()" rendered="#{editable}" />
+						</div>
+					</c:if>
+				</p:dialog>
+				
+				<p:dialog id="estimationPopup" header="#{lbl['lbl.tpl.spec.content.estimation.title']}" widgetVar="#{estimationPopup}" modal="true" width="450" height="290" closable="false">
+					
+					<c:if test="#{!empty templateSpecBean.selectedSpecQuestion}">
+						<div style="height:250px;">
+							<h:panelGroup id="estimationPnl">
+								<p:messages id="estPopupMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
+								
+								<ui:include src="estimationCost.xhtml" />
+							</h:panelGroup>
+						</div>
+						
+						<div class="ppRightBtn">
+							<p:commandButton value="#{lbl['lbl.btn.ok']}" 
+								action="#{templateSpecBackingBean.estCostOkAction(templateSpecBean)}"
+								partialSubmit="true"
+								process="@this, estimationPnl"
+								update="estimationPnl, @(.calcEstAmount)">
+								<f:setPropertyActionListener target="#{templateSpecBean.specComponentId}" value="#{templateSpecId}" />
+							</p:commandButton>
+							<p:commandButton value="#{lbl['lbl.btn.cancel']}" 
+								partialSubmit="true" process="@this" update="@this"
+								action="#{templateSpecBackingBean.estCostCancelAction(templateSpecBean)}"
+								oncomplete="#{estimationPopup}.hide()" rendered="#{editable}" />
+						</div>			
+					</c:if>
+				</p:dialog>
 			</c:if>
 			
 					
@@ -181,6 +237,8 @@
 					</table>
 				</c:if>
 				
+				<ui:include src="tierQtyPopup.xhtml" />
+				
 				<c:if test="#{isSpecTypeFinancial and isZonal}">
 					<ui:include src="/xhtml/tpl/spec/zoneLocPopup.xhtml" />
 				</c:if>
@@ -209,135 +267,36 @@
 					<ui:decorate template="specColumnQuestion.xhtml" />
 					<ui:decorate template="specColumnQuestionAnswer.xhtml" />
 				</p:dataTable>
+				
+				<ui:include src="deleteConfirmPopup.xhtml" />
+				<ui:include src="tierQtyPopup.xhtml" />
+				
+				<p:dialog id="zoneTierPricePopup" header="#{lbl['lbl.sc.offered.price']}" widgetVar="#{zoneTierPricePopup}" modal="true" width="450" height="290" closable="false">
+			
+					<c:if test="#{!empty templateSpecBean.selectedSpecQuestion}">
+						<div style="height:250px;">
+							<h:panelGroup id="zoneTierPricePnl">
+								<p:messages id="zoneTierPricePopupMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
+								
+								<ui:include src="zoneTierPrice.xhtml" />
+							</h:panelGroup>
+						</div>
+						
+						<div class="ppRightBtn">
+							<p:commandButton value="#{lbl['lbl.btn.ok']}" 
+								action="#{templateSpecBackingBean.zoneTierPriceOkAction(templateSpecBean)}"
+								partialSubmit="true"
+								process="@this, zoneTierPricePnl"
+								update="zoneTierPricePnl, @(.calcAmount)">
+								<f:setPropertyActionListener target="#{templateSpecBean.specComponentId}" value="#{templateSpecId}" />
+							</p:commandButton>
+							<p:commandButton value="#{lbl['lbl.btn.cancel']}" 
+								partialSubmit="true" process="@this" update="@this"
+								action="#{templateSpecBackingBean.zoneTierPriceCancelAction(templateSpecBean)}"
+								oncomplete="#{zoneTierPricePopup}.hide()" rendered="#{editable}" />
+						</div>			
+					</c:if>
+				</p:dialog>
 			</c:if>
 		</p:panel>
-		
-		<p:dialog id="delConfirmPopup" header="#{lbl['lbl.msg.confirm.delete.header']}" widgetVar="#{delConfirmPopup}" modal="true" height="100" width="350" resizable="false" >
-			<p:ajax event="close" listener="#{templateSpecBean.setSelectedSpecQuestion(null)}" update="delConfirmPopup"/>
-			
-			<h:panelGrid columns="3">
-                   <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
-			       <p:spacer width="10"/>
-                   <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-            </h:panelGrid>
-            <p:spacer width="10"/>
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
-					oncomplete="#{delConfirmPopup}.hide();" action="#{templateSpecBackingBean.deleteQuestion(templateSpecBean)}"
-					partialSubmit="true" process="@this" update="spg" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" 
-					partialSubmit="true" process="@this" update="@this" 
-					oncomplete="#{delConfirmPopup}.hide();return false">
-					<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion.selected}" value="#{false}" />
-					<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{null}" />
-				</p:commandButton>
-			</div>
-		</p:dialog>
-		
-		<p:dialog id="tierQtyPopup" header="#{lbl['lbl.tpl.spec.content.tier.title']}" widgetVar="#{tierQtyPopup}" modal="true" width="450" height="390" closable="false">
-			
-			<c:if test="#{!empty templateSpecBean.selectedSpecQuestion}">
-				<div style="height:330px;">
-					<h:panelGroup id="tierQtyPnl">
-						<p:messages id="tierPopupMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
-						
-						<ui:include src="tierQty.xhtml" />
-					</h:panelGroup>
-				</div>
-				
-				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.ok']}" 
-						action="#{templateSpecBackingBean.tierQtyOkAction(templateSpecBean)}"
-						partialSubmit="true"
-						process="@this, tierQtyPnl"
-						update="tierQtyPnl">
-						<f:setPropertyActionListener target="#{templateSpecBean.specComponentId}" value="#{templateSpecId}" />
-					</p:commandButton>
-					<p:commandButton value="#{lbl['lbl.btn.cancel']}" 
-						partialSubmit="true" process="@this" update="@this" 
-						action="#{templateSpecBackingBean.tierQtyCancelAction(templateSpecBean)}"
-						oncomplete="#{tierQtyPopup}.hide()" rendered="#{editable}" />
-				</div>			
-			</c:if>
-		</p:dialog>
-
-		<p:dialog id="scoringSetPopup" header="#{lbl['lbl.tpl.spec.content.scoring.settings.title']}" widgetVar="#{scoringSetPopup}" modal="true" 
-		   width="800" height="auto" rendered="#{isScoringReq}" closable="false" position="top">
-			
-			<c:if test="#{!empty templateSpecBean.selectedSpecQuestion}">
-				<h:panelGroup id="scoreSettPnl">
-					<p:messages id="scorePopupMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
-						
-					<ui:include src="scoringSettings.xhtml" />
-				</h:panelGroup>
-				
-				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.ok']}" 
-						action="#{templateSpecBackingBean.scoringOkAction(templateSpecBean)}"
-						partialSubmit="true"
-						process="@this, scoreSettPnl"
-						update="scoreSettPnl, @(.scoringBtn)">
-						<f:setPropertyActionListener target="#{templateSpecBean.specComponentId}" value="#{templateSpecId}" />
-					</p:commandButton>
-					<p:commandButton value="#{lbl['lbl.btn.cancel']}" 
-						partialSubmit="true" process="@this" update="@this"
-						action="#{templateSpecBackingBean.scoringCancelAction(templateSpecBean)}"
-						oncomplete="#{scoringSetPopup}.hide()" rendered="#{editable}" />
-				</div>
-			</c:if>
-		</p:dialog>
-		
-		<p:dialog id="estimationPopup" header="#{lbl['lbl.tpl.spec.content.estimation.title']}" widgetVar="#{estimationPopup}" modal="true" width="450" height="290" closable="false">
-			
-			<c:if test="#{!empty templateSpecBean.selectedSpecQuestion}">
-				<div style="height:250px;">
-					<h:panelGroup id="estimationPnl">
-						<p:messages id="estPopupMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
-						
-						<ui:include src="estimationCost.xhtml" />
-					</h:panelGroup>
-				</div>
-				
-				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.ok']}" 
-						action="#{templateSpecBackingBean.estCostOkAction(templateSpecBean)}"
-						partialSubmit="true"
-						process="@this, estimationPnl"
-						update="estimationPnl, @(.calcEstAmount)">
-						<f:setPropertyActionListener target="#{templateSpecBean.specComponentId}" value="#{templateSpecId}" />
-					</p:commandButton>
-					<p:commandButton value="#{lbl['lbl.btn.cancel']}" 
-						partialSubmit="true" process="@this" update="@this"
-						action="#{templateSpecBackingBean.estCostCancelAction(templateSpecBean)}"
-						oncomplete="#{estimationPopup}.hide()" rendered="#{editable}" />
-				</div>			
-			</c:if>
-		</p:dialog>
-		
-		<p:dialog id="zoneTierPricePopup" header="#{lbl['lbl.sc.offered.price']}" widgetVar="#{zoneTierPricePopup}" modal="true" width="450" height="290" closable="false">
-			
-			<c:if test="#{!empty templateSpecBean.selectedSpecQuestion}">
-				<div style="height:250px;">
-					<h:panelGroup id="zoneTierPricePnl">
-						<p:messages id="zoneTierPricePopupMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
-						
-						<ui:include src="zoneTierPrice.xhtml" />
-					</h:panelGroup>
-				</div>
-				
-				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.ok']}" 
-						action="#{templateSpecBackingBean.zoneTierPriceOkAction(templateSpecBean)}"
-						partialSubmit="true"
-						process="@this, zoneTierPricePnl"
-						update="zoneTierPricePnl, @(.calcAmount)">
-						<f:setPropertyActionListener target="#{templateSpecBean.specComponentId}" value="#{templateSpecId}" />
-					</p:commandButton>
-					<p:commandButton value="#{lbl['lbl.btn.cancel']}" 
-						partialSubmit="true" process="@this" update="@this"
-						action="#{templateSpecBackingBean.zoneTierPriceCancelAction(templateSpecBean)}"
-						oncomplete="#{zoneTierPricePopup}.hide()" rendered="#{editable}" />
-				</div>			
-			</c:if>
-		</p:dialog>
 </ui:composition>
