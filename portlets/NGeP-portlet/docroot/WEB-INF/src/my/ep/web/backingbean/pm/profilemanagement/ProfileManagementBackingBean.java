@@ -3439,6 +3439,29 @@ public class ProfileManagementBackingBean extends
 		if (StringUtils.isBlank(pmUserOrg.getEmail())) {
 			throw new EpException(MessageConst.ERROR_770036);
 		}
+		
+		
+		if(user.getUserId() != null && DbValueConst.RECORD_STATUS_ACTIVE == pmUserOrg.getRecordStatusFlg()){
+			//validate if the user contains any active user orgs (exclude supplier type and own org profile)			
+			 IUserSO userSO = null;
+			 try {
+				UserReqDTO userOrgReqDTO = new UserReqDTO();
+				userOrgReqDTO.setUserId(user.getUserId());
+				userOrgReqDTO.setExcludeOrgType(OrganizationType.SUPPLIER.value());
+				userOrgReqDTO.setExcludeOrgProfileId(pmUserOrg.getPmOrgProfile().getOrgProfileId());
+				userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+						 ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				UserResDTO resDTO = userSO.retrieveAllUserOrgListByUserId(userOrgReqDTO);
+				if(resDTO.getUserOrgList() != null && !resDTO.getUserOrgList().isEmpty()){
+					PmOrgProfile orgProfile = resDTO.getUserOrgList().get(0).getPmOrgProfile();
+					throw new EpException(MessageConst.ERROR_770155,new String[] {
+							orgProfile.getOrgName(),orgProfile.getOrgCode()					
+					});
+				}
+			 }finally{
+				 userSO = null; 
+			 }
+		}
 		// if(StringUtils.isBlank(user.getPreferredLanguage())){
 		// throw new EpException(MessageConst.ERROR_770037);
 		// }
@@ -3452,6 +3475,11 @@ public class ProfileManagementBackingBean extends
 		// StringUtils.isBlank(user.getOldPassword())){
 		// throw new EpException("Old Password is mandatory.");
 		// }
+	}
+	
+	
+	private void validateUserOrg(PmUser user){
+		
 	}
 
 //	/**
