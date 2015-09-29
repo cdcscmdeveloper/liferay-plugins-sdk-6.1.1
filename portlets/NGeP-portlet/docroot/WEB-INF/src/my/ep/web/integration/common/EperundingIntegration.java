@@ -804,8 +804,8 @@ public class EperundingIntegration extends InitializeSO implements EperundingInt
 						category.setSubCatDivision(smSupplierCategory.getPmCategoryL3().getCategoryL3Code());
 						category.setStatus(getCategoryStatus(smSupplierCategory.getRecordStatusFlg()));
 						registeredCategory.setCategory(category);
-						registeredCategoryList.add(registeredCategory);
-
+						if(!registeredCategoryList.contains(registeredCategory))
+							registeredCategoryList.add(registeredCategory);
 					}
 				}
 			}
