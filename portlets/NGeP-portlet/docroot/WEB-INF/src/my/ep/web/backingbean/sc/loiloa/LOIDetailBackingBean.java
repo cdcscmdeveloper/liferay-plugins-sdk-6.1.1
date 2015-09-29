@@ -216,13 +216,13 @@ public class LOIDetailBackingBean extends
 					awardDataType.setDeskOfficer(currentUser);
 				} else {
 					awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_REQUISITIONER);
-					awardDataType.setRequisitioner(currentUser);
+					awardDataType.setSecretary(currentUser);
 				}
 			} else {
 				if(letterCreator.equals(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER)) {
 					awardDataType.setDeskOfficer(currentUser);
 				} else {
-					awardDataType.setRequisitioner(currentUser);
+					awardDataType.setSecretary(currentUser);
 				}
 			} 
 
