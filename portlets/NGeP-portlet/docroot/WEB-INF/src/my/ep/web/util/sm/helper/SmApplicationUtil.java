@@ -152,6 +152,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.web.backingbean.pm.cc.CategoryCodeSearchBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.DateUtils;
@@ -171,6 +172,7 @@ public class SmApplicationUtil {
 	private static Logger log = Logger.getLogger(SmApplicationUtil.class);
 
 	private static SmApplicationUtil instance;
+	private static CategoryCodeSearchBackingBean categoryCodeBbInstance;
 
 	/**
 	 * Validate person limit.Set the max limit of authorizes personnel that can
@@ -4542,22 +4544,40 @@ public class SmApplicationUtil {
 								.equals(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE)
 						&& !fac.getFacilityType()
 								.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)
-						&& !isFacilityTypeExistInCatType(fac, catTypeList)) {
+						&& !catTypeList.contains(fac.getFacilityType())) {
 					facIt.remove();
 				}
 			}
 		}
 	}
 
-	private boolean isFacilityTypeExistInCatType(SmFacility fac,
-			List<String> catTypeList) {
-		boolean retVal = false;
-		for (String facType : catTypeList) {
-			if (fac.getFacilityType().equals(facType)) {
-				retVal = true;
-			}
-		}
-		return retVal;
+	/**
+	 * Remove pending approved category if not valid based on selected bumi
+	 * percentage,paid up capital,business type
+	 * 
+	 * @param SmAppl
+	 *            appl
+	 * @param String
+	 *            facilityType
+	 */
+	public void removePendingApprovedCategoryIfNotValid(SmAppl appl,
+			String facilityType) {
+//		List<SmSupplierCategory> catList = appl.getSmSupplierCategories();
+//		if (!SmCommonUtil.isCollectionEmpty(catList)) {
+//			for (Iterator<SmSupplierCategory> catIt = catList.iterator(); catIt
+//					.hasNext();) {
+//				SmSupplierCategory cat = catIt.next();
+//				if (cat.getRecordStatusFlg().compareTo(
+//						SupplierManagementConst.PENDING_ACT_STATUS) == 0
+//						|| cat.getRecordStatusFlg()
+//								.compareTo(
+//										SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
+//					if (!isCatL3Valid(appl, facilityType, cat)) {
+//						catIt.remove();
+//					}
+//				}
+//			}
+//		}
 	}
 
 	/**
@@ -6218,4 +6238,82 @@ public class SmApplicationUtil {
 			}
 		}
 	}
+
+	private boolean isCatL3Valid(SmAppl appl, String facilityType,
+			SmSupplierCategory cat) {
+		boolean retVal = true;
+		String suppType = StringUtils.isBlank(appl.getSupplierType()) ? ""
+				: appl.getSupplierType();
+		Integer paidUpCapital = (appl.getSmCompanyBasic() != null && appl
+				.getSmCompanyBasic().getPaidUpCapital() != null) ? appl
+				.getSmCompanyBasic().getPaidUpCapital().intValue() : 0;
+		Integer bumiPercentage = (appl.getSmCompanyBasic() != null && appl
+				.getSmCompanyBasic().getBumiPercentage() != null) ? appl
+				.getSmCompanyBasic().getBumiPercentage().intValue() : 0;
+		String applCatType = StringUtils.isNotBlank(appl.getApplCategoryType()) ? appl
+				.getApplCategoryType() : "";
+		String businessType = (appl.getSmSupplier() != null && StringUtils
+				.isNotBlank(appl.getSmSupplier().getBusinessType())) ? appl
+				.getSmSupplier().getBusinessType() : "";
+		Long catL2Id = (cat.getPmCategoryL2() != null && cat.getPmCategoryL2()
+				.getCategoryL2Id() != null) ? cat.getPmCategoryL2()
+				.getCategoryL2Id() : null;
+		Long catL3Id = (cat.getPmCategoryL3() != null && cat.getPmCategoryL3()
+				.getCategoryL3Id() != null) ? cat.getPmCategoryL3()
+				.getCategoryL3Id() : null;
+		if (catL2Id != null && catL3Id != null) {
+			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+			reqDTO.setCategoryL2Id(catL2Id);
+			reqDTO.setSupplierTypeCode(suppType);
+			reqDTO.setBusinessTypeCode(businessType);
+			if (applCatType.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+				reqDTO.setIsSpecialCategory(false);
+			} else {
+				reqDTO.setIsSpecialCategory(true);
+			}
+			if (facilityType.equalsIgnoreCase("H")) {
+				reqDTO.setHomeOperated(1);
+			} else {
+				reqDTO.setHomeOperated(0);
+			}
+			if (paidUpCapital != null) {
+				reqDTO.setPaidUpCapital(paidUpCapital.intValue());
+			}
+			Integer bumiPerc = new Integer(0);
+			if (bumiPercentage != null) {
+				bumiPerc = bumiPercentage.intValue();
+				if (bumiPerc.compareTo(51) >= 0 && bumiPerc.compareTo(100) < 0) {
+					bumiPerc = 99;
+				}
+			}
+			reqDTO.setBumiPercentage(bumiPerc);
+			CategoryCodeResDTO resDTO = SmServiceLookup.getCategoryCodeSO()
+					.retrieveCategoryL3ListByL2Id(reqDTO);
+			if (!SmCommonUtil.isCollectionEmpty(resDTO.getCategoryL3List())) {
+				for (PmCategoryL3 l3 : resDTO.getCategoryL3List()) {
+					if (l3.getCategoryL3Id().compareTo(catL3Id) == 0) {
+						retVal = true;
+						break;
+					}
+				}
+			} else {
+				retVal = false;
+			}
+		} else {
+			retVal = false;
+		}
+		return retVal;
+	}
+
+	public static CategoryCodeSearchBackingBean getCatCodeBbInstance() {
+		if (categoryCodeBbInstance == null) {
+			try {
+				categoryCodeBbInstance = new CategoryCodeSearchBackingBean();
+			} catch (Exception e) {
+				log.error(e.getMessage());
+			}
+		}
+		return categoryCodeBbInstance;
+	}
+
 }
