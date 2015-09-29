@@ -208,6 +208,7 @@
 					<ui:param name="isAnswerTypeText" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeText}" />
 					<ui:param name="isAnswerTypeNumeric" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeNumeric}" />
 					<ui:param name="isScoring" value="#{question.scoreTypeCode.parameterCode == ParameterConst.scoreTypeAuto}" />
+					<ui:param name="isValidationReq" value="#{!empty processValidationId ? param[p:component(processValidationId)]==null : true}" />
 					
 					<c:if test="#{isContentTypeAnswer}">
 						<ui:decorate template="specColumnAnswer.xhtml" />
@@ -237,7 +238,9 @@
 					</table>
 				</c:if>
 				
-				<ui:include src="tierQtyPopup.xhtml" />
+				<c:if test="#{isContentTypeUpdateSpec}">
+					<ui:include src="tierQtyPopup.xhtml" />
+				</c:if>
 				
 				<c:if test="#{isSpecTypeFinancial and isZonal}">
 					<ui:include src="/xhtml/tpl/spec/zoneLocPopup.xhtml" />
