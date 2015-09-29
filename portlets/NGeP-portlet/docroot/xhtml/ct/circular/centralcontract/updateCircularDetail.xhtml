@@ -12,7 +12,9 @@
 				 <h:panelGrid columns="2">
 				     <p:inputTextarea id="circularNoUpTxt" style="width:170px; margin-top:2px;margin-bottom:2px" rows="5"
 					 	required="true" maxlength="60"  disabled="#{centralContractBackingBean.managedBean.viewContract}"
-						value="#{centralContractBackingBean.managedBean.circularVer.circularNo}"  label="#{lbl['lbl.ct.physical.circular.no']}"  autoResize="false"/>
+						value="#{centralContractBackingBean.managedBean.circularVer.circularNo}"  
+						label="#{lbl['lbl.ct.physical.circular.no']}"  autoResize="false"
+						onkeyup="limitTextArea(this,60);" onkeydown="limitTextArea(this,60);"/>
 				      <p:message for="circularNoUpTxt" display="icon"/>
 				  </h:panelGrid>
 				   
@@ -21,7 +23,8 @@
 				        <p:inputTextarea id="circularNameUpTxt" rows="5" style="width:230px;" 
 				              maxlength="500" required="true" 
 						      disabled="#{centralContractBackingBean.managedBean.viewContract}" autoResize="false"
-						      label="#{lbl['lbl.ct.circular.name']}" value="#{centralContractBackingBean.managedBean.circularVer.name}" />
+						      label="#{lbl['lbl.ct.circular.name']}" value="#{centralContractBackingBean.managedBean.circularVer.name}"
+							  onkeyup="limitTextArea(this,60);" onkeydown="limitTextArea(this,500);" />
 						      <p:spacer width="5"/>
 					          <p:message for="circularNameUpTxt" display="icon"/>
 			        </h:panelGrid>
@@ -29,9 +32,10 @@
 			          <h:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" />
 				  <p:inputText  style="width:170px;" maxlength="60"
 						disabled="#{centralContractBackingBean.managedBean.viewContract}"
-						value="#{centralContractBackingBean.managedBean.circularVer.circularFileRefNo}" />
+						value="#{centralContractBackingBean.managedBean.circularVer.circularFileRefNo}"
+						onkeypress="if (event.keyCode == 13) { return false; }"  />
 						
-			      <p:outputLabel value="#{lbl['lbl.ct.start.date']}" />
+			      <p:outputLabel value="#{lbl['lbl.ct.start.date']}"  />
 		          <p:inputText  id="popupButtonCal3" style="width:115px;" disabled="true"
 		              value="#{centralContractBackingBean.managedBean.circularVer.startDate}">
 				    <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText>
@@ -48,7 +52,7 @@
 				        <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText>
 				
 			
-		        <p:outputLabel value="#{lbl['lbl.ct.extension.start.date']}" rendered="#{centralContractBackingBean.managedBean.circularExtension}" />
+		        <p:outputLabel value="#{lbl['lbl.ct.extension.start.date']}" styleClass="required"  rendered="#{centralContractBackingBean.managedBean.circularExtension}" />
 			    <p:calendar  value="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}" readonly="true"
 			         maxdate="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}"
 			         mindate="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}"
@@ -58,7 +62,7 @@
 		       </p:calendar>
 		       
 		       
-		      <p:outputLabel value="#{lbl['lbl.ct.extension.end.date']}"  rendered="#{centralContractBackingBean.managedBean.circularExtension}"  />
+		      <p:outputLabel value="#{lbl['lbl.ct.extension.end.date']}" styleClass="required"   rendered="#{centralContractBackingBean.managedBean.circularExtension}"  />
 		   <p:calendar size="10"  value="#{centralContractBackingBean.managedBean.circularVer.extendEndDate}"  navigator="true"
 		         mindate="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}" readonlyInput="true"  styleClass="calendarDateField" 
 				   disabled="#{centralContractBackingBean.managedBean.viewContract}"

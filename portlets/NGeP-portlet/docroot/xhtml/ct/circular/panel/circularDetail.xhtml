@@ -22,21 +22,25 @@
 				rendered="#{!panelBackingBean.managedBean.viewContract}"/>
 			<p:column headerText="#{lbl['lbl.ct.contact.person.name']}" style="width:20%;">
 				<p:inputText value="#{data.name}" style="width:95%;" maxlength="20" 
-					disabled="#{panelBackingBean.managedBean.viewContract}"/>
+					disabled="#{panelBackingBean.managedBean.viewContract}"
+					onkeypress="if (event.keyCode == 13) { return false; }"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.address']}" style="width:40%;">
 				<p:inputText value="#{data.address}" style="width:95%;" maxlength="200" 
-					disabled="#{panelBackingBean.managedBean.viewContract}"/>
+					disabled="#{panelBackingBean.managedBean.viewContract}"
+					onkeypress="if (event.keyCode == 13) { return false; }" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.email']}"  style="width:20%;">
 				<p:inputText id="email" value="#{data.email}" style="width:95%;" maxlength="100"
 				 validator="#{webappBean.checkEmail}" label="#{lbl['lbl.ct.email']}" 
-				 disabled="#{panelBackingBean.managedBean.viewContract}"/>
+				 disabled="#{panelBackingBean.managedBean.viewContract}"
+				 onkeypress="if (event.keyCode == 13) { return false; }" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.tel']}" style="width:20%;">
 				<p:inputText id="phoneNo" value="#{data.phoneNo}" style="width:95%;" maxlength="100"
 				  validator="#{webappBean.checkPhoneNumber}" label="#{lbl['lbl.ct.tel']}" 
-				  disabled="#{panelBackingBean.managedBean.viewContract}"/>
+				  disabled="#{panelBackingBean.managedBean.viewContract}"
+				  onkeypress="if (event.keyCode == 13) { return false; }"/>
 			</p:column>
 		</p:dataTable>
 		<div class="ppRightBtn"> 
@@ -101,6 +105,7 @@
 					<h:outputText value="#{data.circularVer.name}" style="width:300px;" />
 				</p:column>											
 			</p:dataTable>
+			<p:spacer height="5"/>
 			<div class="ppRightBtn"> 
 				<p:commandButton value="#{lbl['lbl.btn.select']}"  process="cancelCircularDlg" 
 					action="#{panelBackingBean.addCancelledCircular}"
@@ -135,7 +140,8 @@
 											<td></td>
 											<td>
 												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" 
-													disabled="#{panelBackingBean.managedBean.viewContract}"/> 
+													disabled="#{panelBackingBean.managedBean.viewContract}"
+													onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);" /> 
 												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 											</td>
 										</tr>

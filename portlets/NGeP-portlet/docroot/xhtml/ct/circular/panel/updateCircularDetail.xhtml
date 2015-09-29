@@ -57,7 +57,7 @@
 			           
 			           <f:verbatim/> <f:verbatim/>
 			   		
-			    <p:outputLabel value="#{lbl['lbl.ct.extension.start.date']}" rendered="#{panelBackingBean.managedBean.circularExtension}" />
+			    <p:outputLabel value="#{lbl['lbl.ct.extension.start.date']}"  styleClass="required"  rendered="#{panelBackingBean.managedBean.circularExtension}" />
 			    <p:calendar  value="#{panelBackingBean.managedBean.circularVer.extendStartDate}" readonly="true"
 			         maxdate="#{panelBackingBean.managedBean.circularVer.extendStartDate}" 
 			         mindate="#{panelBackingBean.managedBean.circularVer.extendStartDate}"
@@ -67,7 +67,7 @@
 		       </p:calendar>
 		       
 		       
-		      <p:outputLabel value="#{lbl['lbl.ct.extension.end.date']}"  rendered="#{panelBackingBean.managedBean.circularExtension}"  />
+		      <p:outputLabel value="#{lbl['lbl.ct.extension.end.date']}"  styleClass="required"  rendered="#{panelBackingBean.managedBean.circularExtension}"  />
 		   <p:calendar size="10"  value="#{panelBackingBean.managedBean.circularVer.extendEndDate}"  navigator="true"
 		         mindate="#{panelBackingBean.managedBean.circularVer.extendStartDate}" readonlyInput="true"  styleClass="calendarDateField" 
 				   disabled="#{panelBackingBean.managedBean.viewContract}"
