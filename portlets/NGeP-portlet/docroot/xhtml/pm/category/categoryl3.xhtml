@@ -23,12 +23,12 @@
 					</ui:remove> <p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"
 						update=":form" process="@this"
 						action="#{categoryBackingBean.backToSearch}" style="float:left;" />
-				</td>				
+				</td>
 				<td><p:commandButton
 						value="#{categoryBackingBean.managedBean.newCategory? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}"
 						action="#{categoryBackingBean.saveSubDivision}" update=":form"
-						style="float:right;" /></td>				
-			</tr>			
+						style="float:right;" /></td>
+			</tr>
 		</table>
 		<ui:remove>
 			<p:panel header="#{lbl['lbl.pm.category.level']}" toggleable="true"
@@ -180,7 +180,8 @@
 						</h:panelGroup>
 						<p:selectBooleanCheckbox
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.byCompType}">
-							<p:ajax event="change" update="outpnlCatRes" listener="#{categoryBackingBean.getcategoryRestrList}" />
+							<p:ajax event="change" update="outpnlCatRes"
+								listener="#{categoryBackingBean.getcategoryRestrList}" />
 						</p:selectBooleanCheckbox>
 					</h:panelGrid>
 
@@ -210,18 +211,26 @@
 					<td style="width: 12%"><p:outputLabel
 							value="#{lbl['lbl.pm.paid.capital']}" /> <p:outputLabel
 							value="* " styleClass="mandatory" /></td>
-					<td><p:inputText style="width:44%"
+					<td><p:inputText style="width:44%" required="true"
+							label="#{lbl['lbl.pm.paid.capital']}"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.paidUpCapital}"
-							size="33"
-							converterMessage="#{lbl['lbl.pm.paid.capital.invalid']}" /></td>
+							size="33" id="paidUpCapId"
+							converterMessage="#{lbl['lbl.pm.paid.capital.invalid']}">
+						</p:inputText> <p:message id="paidUpCapIdMsg" for="paidUpCapId"
+							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.bn.code']}" /> <p:outputLabel
 							value="* " styleClass="mandatory" /></td>
-					<td><p:inputText style="width:41%"
+					<td><p:inputText style="width:41%" required="true"
+							id="catCodeId" label="#{lbl['lbl.pm.bn.code']}"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryL3Code}"
 							size="33" maxlength="2"
-							rendered="#{categoryBackingBean.managedBean.newCategory}" /> <p:inputText
+							converterMessage="#{lbl['lbl.pm.val.subdiv.cat.code.invalid']}"
+							rendered="#{categoryBackingBean.managedBean.newCategory}">
+							<f:validator validatorId="catCodeValidator" />
+						    </p:inputText> <p:message id="catCodeIdMsg" for="catCodeId" showSummary="true"
+							showDetail="false" display="icon" /> <p:inputText
 							style="width:41%"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryL3Code}"
 							size="33" maxlength="2"
@@ -241,9 +250,11 @@
 								itemValue="#{specialCategory.pmParameter.parameterId}">
 							</f:selectItems>
 						</p:selectOneMenu> <p:selectOneMenu style="width: 46%;margin-bottom: 5px;"
+							id="specialCatCreateId" required="true"
+							label="#{lbl['lbl.pm.special.category']}"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryTypeCodeVal}"
 							rendered="#{categoryBackingBean.managedBean.newCategory}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems
 								value="#{categoryBackingBean.managedBean.specialCategory}"
 								var="specialCategory" itemLabel="#{specialCategory.codeName}"
@@ -251,14 +262,18 @@
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								listener="#{categoryBackingBean.updateSpecialCategory}"
 								update="panelMachineDtls" />
-						</p:selectOneMenu></td>
+						</p:selectOneMenu> <p:message id="specialCatCreateIdMsg" for="specialCatCreateId"
+							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.desc']}" /> <p:outputLabel
 							value="* " styleClass="mandatory" /></td>
-					<td><p:inputText style="width:41%"
+					<td><p:inputText style="width:41%" required="true"
+							id="catCodeDescId" label="#{lbl['lbl.pm.desc']}"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryName}"
-							size="33" /></td>
+							size="33" /> <p:message id="catCodeDescIdMsg"
+							for="catCodeDescId" showSummary="true" showDetail="false"
+							display="icon" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.pm.special.group']}" /></td>
 					<td><p:selectBooleanCheckbox
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.basicCategoryReqValue}">
@@ -269,8 +284,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.bumi.percentage']}" />
-						<p:outputLabel value="*" styleClass="mandatory" /></td>
-
+					</td>
 					<td><p:selectOneMenu style="width: 43%;margin-bottom: 5px;"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.bumiPercentage}">
 							<f:selectItem itemLabel="0%" itemValue="0" />
@@ -282,29 +296,39 @@
 							value="#{lbl['lbl.pm.category.company.restriction']}" /></td>
 					<td><p:selectBooleanCheckbox
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.byCompType}">
-							<p:ajax event="change" listener="#{categoryBackingBean.getCheckCategoryRestrList}" update="outpnlCatRes" />
+							<p:ajax event="change"
+								listener="#{categoryBackingBean.getCheckCategoryRestrList}"
+								update="outpnlCatRes" />
 						</p:selectBooleanCheckbox></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.supplier.type']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu style="width: 43%;margin-bottom: 5px;"
+							required="true" id="supplierTypeUpdateId"
+							label="#{lbl['lbl.pm.supplier.type']}"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.supplierTypeCode.parameterId}"
 							rendered="#{!categoryBackingBean.managedBean.newCategory}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue=""></f:selectItem>
 							<f:selectItems
 								value="#{categoryBackingBean.managedBean.supplierType}"
 								var="supplierType" itemLabel="#{supplierType.codeName}"
 								itemValue="#{supplierType.pmParameter.parameterId}"></f:selectItems>
-						</p:selectOneMenu> <p:selectOneMenu style="width: 43%;margin-bottom: 5px;"
+						</p:selectOneMenu> <p:message id="supplierTypeUpdateIdMsg"
+							for="supplierTypeUpdateId" showSummary="true" showDetail="false"
+							display="icon" /> <p:selectOneMenu
+							style="width: 43%;margin-bottom: 5px;" id="supplierTypeCreateId"
+							required="true" label="#{lbl['lbl.pm.supplier.type']}"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.supplierTypeCodeVal}"
 							rendered="#{categoryBackingBean.managedBean.newCategory}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue=""></f:selectItem>
 							<f:selectItems
 								value="#{categoryBackingBean.managedBean.supplierType}"
 								var="supplierType" itemLabel="#{supplierType.codeName}"
 								itemValue="#{supplierType.pmParameter.parameterId}"></f:selectItems>
-						</p:selectOneMenu></td>
+						</p:selectOneMenu> <p:message id="supplierTypeCreateIdMsg"
+							for="supplierTypeCreateId" showSummary="true" showDetail="false"
+							display="icon" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.pm.operate.from.home']}" /></td>
 					<td><p:selectBooleanCheckbox
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.homeOperatedValue}" /></td>
@@ -404,64 +428,66 @@
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.add']}"
 						action="#{categoryBackingBean.addBasicCategory()}"
-						oncomplete="lovPopupCategory.show();" update="lovPopupCategory" />
+						oncomplete="lovPopupCategory.show();" process="@this"
+						partialSubmit="true" update="lovPopupCategory" />
 				</div>
 			</p:panel>
 		</p:outputPanel>
-	 	<p:outputPanel id="panelMachineDtls">		
-		<p:panel header="#{lbl['lbl.pm.special.equipment']}"
-			id="machineDetails"
-			rendered="#{categoryBackingBean.managedBean.checkSpecialCategory}"
-			toggleable="true">
-			<p:dataTable id="machineDetailsId" rowIndexVar="rowIndex"
-				rowKey="#{pmMachineCategory.createdDate}"
-				value="#{categoryBackingBean.managedBean.pmMachineCategoryList}"
-				width="100%" var="pmMachineCategory">
+		<p:outputPanel id="panelMachineDtls">
+			<p:panel header="#{lbl['lbl.pm.special.equipment']}"
+				id="machineDetails"
+				rendered="#{categoryBackingBean.managedBean.checkSpecialCategory}"
+				toggleable="true">
+				<p:dataTable id="machineDetailsId" rowIndexVar="rowIndex"
+					rowKey="#{pmMachineCategory.createdDate}"
+					value="#{categoryBackingBean.managedBean.pmMachineCategoryList}"
+					width="100%" var="pmMachineCategory">
 
-				<ac:paginator for="machineDetailsId"></ac:paginator>
+					<ac:paginator for="machineDetailsId"></ac:paginator>
 
-				<p:column>
-					<f:facet name="header">
-						<h:outputText value="*" styleClass="mandatory" />
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="*" styleClass="mandatory" />
 					#{lbl['lbl.pm.machine.code']}
 				</f:facet>
-					<h:outputText value="#{pmMachineCategory.pmMachine.machineCode}" />
-				</p:column>
-				<p:column>
-					<f:facet name="header">
-						<h:outputText value="*" styleClass="mandatory" />
+						<h:outputText value="#{pmMachineCategory.pmMachine.machineCode}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="*" styleClass="mandatory" />
 					#{lbl['lbl.pm.machine.desc']}
 				</f:facet>
-					<h:outputText value="#{pmMachineCategory.pmMachine.machineDesc}" />
-				</p:column>
+						<h:outputText value="#{pmMachineCategory.pmMachine.machineDesc}" />
+					</p:column>
 
-				<p:column>
-					<f:facet name="header">
-						<h:outputText value="*" styleClass="mandatory" />
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="*" styleClass="mandatory" />
 					#{lbl['lbl.pm.machine.display.sequence']} 
 				</f:facet>
-					<h:inputText label="#{lbl['lbl.pm.machine.display.sequence']}"
-						maxlength="3" value="#{pmMachineCategory.displaySeq}"
-						requiredMessage="#{lbl['lbl.pm.machine.display.sequence.reqmsg']}"
-						required="true" />
-				</p:column>
+						<h:inputText label="#{lbl['lbl.pm.machine.display.sequence']}"
+							maxlength="3" value="#{pmMachineCategory.displaySeq}"
+							requiredMessage="#{lbl['lbl.pm.machine.display.sequence.reqmsg']}"
+							required="true" />
+					</p:column>
 
-				<p:column width="7%" headerText="#{lbl['lbl.pm.action']}">
-					<p:commandLink partialSubmit="true" process="@this"
-						action="#{categoryBackingBean.deletePmMachine(pmMachineCategory)}"
-						update="machineDetailsId">
-						<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
-					</p:commandLink>
-				</p:column>
-			</p:dataTable>
+					<p:column width="7%" headerText="#{lbl['lbl.pm.action']}">
+						<p:commandLink partialSubmit="true" process="@this"
+							action="#{categoryBackingBean.deletePmMachine(pmMachineCategory)}"
+							update="machineDetailsId">
+							<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
 
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.add']}"
-					action="#{categoryBackingBean.addPmMachine()}"
-					oncomplete="lovPopupPmMachine.show();" update="lovPopupPmMachine" />
-			</div>
-		</p:panel>
-	</p:outputPanel>
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.add']}"
+						action="#{categoryBackingBean.addPmMachine()}" process="@this"
+						partialSubmit="true" oncomplete="lovPopupPmMachine.show();"
+						update="lovPopupPmMachine" />
+				</div>
+			</p:panel>
+		</p:outputPanel>
 		<p:remoteCommand name="updateCategory"
 			update="panelgroupdetails,resultPanel"
 			action="#{categoryBackingBean.populateToSaveLOV}" />
