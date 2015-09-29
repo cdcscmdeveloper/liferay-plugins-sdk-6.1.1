@@ -738,6 +738,7 @@ public class SmFieldChangeUtil {
 								currCompExp.setChangedFieldStatus("U");
 							}
 						}
+						setCurrSmCompanyExpCat(currCompExp, latestCompExp);
 					}
 				}
 			}
@@ -1062,7 +1063,7 @@ public class SmFieldChangeUtil {
 		return retVal;
 	}
 
-	public static void setCurrSmCompanyExpCat(SmCompanyExperience currCompExp,
+	private static void setCurrSmCompanyExpCat(SmCompanyExperience currCompExp,
 			SmCompanyExperience latestcurrCompExp) {
 		if (SmCommonUtil.isCollectionEmpty(currCompExp
 				.getSmCompanyExperienceCats())
