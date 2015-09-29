@@ -54,7 +54,7 @@ import org.apache.log4j.Logger;
 /*
  *  @author Ganga prasad
  */
-public class EperundingIntegration extends InitializeSO{
+public class EperundingIntegration extends InitializeSO implements EperundingInterface{
 	
 	private static Logger log = EpLogger.getLogger(EperundingIntegration.class);
 
@@ -101,6 +101,10 @@ public class EperundingIntegration extends InitializeSO{
 
 	}
 
+	/* (non-Javadoc)
+	 * @see my.ep.web.integration.common.EperundingInterface#createEquiytyOwner(my.ep.dto.sm.search.SupplierSearchResDTO)
+	 */
+	@Override
 	public void createEquiytyOwner(SupplierSearchResDTO resDTO) {
 		
 		log.info("createEquiytyOwner start");
@@ -221,6 +225,10 @@ public class EperundingIntegration extends InitializeSO{
 		fileUtility.equityOwnerOutPutStream(batchReqDTO);
 	}
 
+	/* (non-Javadoc)
+	 * @see my.ep.web.integration.common.EperundingInterface#createBoardOfDirector(my.ep.dto.sm.search.SupplierSearchResDTO)
+	 */
+	@Override
 	public void createBoardOfDirector(SupplierSearchResDTO resDTO) {
 		
 		log.info("createBoardOfDirector start");
@@ -338,6 +346,10 @@ public class EperundingIntegration extends InitializeSO{
 		fileUtility.boardOfDirectorOutPutStream(batchReqDTO);
 	}
 
+	/* (non-Javadoc)
+	 * @see my.ep.web.integration.common.EperundingInterface#createManagementPersonnel(my.ep.dto.sm.search.SupplierSearchResDTO)
+	 */
+	@Override
 	public void createManagementPersonnel(SupplierSearchResDTO resDTO) {
 		
 		log.info("createManagementPersonnel start");
@@ -470,6 +482,10 @@ public class EperundingIntegration extends InitializeSO{
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see my.ep.web.integration.common.EperundingInterface#createAuthorizedSignatory(my.ep.dto.sm.search.SupplierSearchResDTO)
+	 */
+	@Override
 	public void createAuthorizedSignatory(SupplierSearchResDTO resDTO) {
 		
 		log.info("createAuthorizedSignatory start");
@@ -514,6 +530,10 @@ public class EperundingIntegration extends InitializeSO{
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see my.ep.web.integration.common.EperundingInterface#createConsultantProfile(my.ep.dto.sm.search.SupplierSearchResDTO)
+	 */
+	@Override
 	public void createConsultantProfile(SupplierSearchResDTO resDTO) {
 		
 		log.info("createConsultantProfile start");
@@ -662,6 +682,10 @@ public class EperundingIntegration extends InitializeSO{
 			
 	}
 
+	/* (non-Javadoc)
+	 * @see my.ep.web.integration.common.EperundingInterface#createDeletedCompany(my.ep.dto.sm.search.SupplierSearchResDTO)
+	 */
+	@Override
 	public void createDeletedCompany(SupplierSearchResDTO resDTO) {
 		
 		log.info("createDeletedCompany start");
@@ -702,6 +726,10 @@ public class EperundingIntegration extends InitializeSO{
 			
 	}
 
+	/* (non-Javadoc)
+	 * @see my.ep.web.integration.common.EperundingInterface#createGovernmentProject(my.ep.dto.sm.search.SupplierSearchResDTO)
+	 */
+	@Override
 	public void createGovernmentProject(SupplierSearchResDTO resDTO) {
 		
 		log.info("createGovernmentProject start");
@@ -750,6 +778,10 @@ public class EperundingIntegration extends InitializeSO{
 			fileUtility.governmentProjectOutPutStream(batchReqDTO);
 	}
 
+	/* (non-Javadoc)
+	 * @see my.ep.web.integration.common.EperundingInterface#createRegisteredCategory(my.ep.dto.sm.search.SupplierSearchResDTO)
+	 */
+	@Override
 	public void createRegisteredCategory(SupplierSearchResDTO resDTO) {
 		
 		log.info("createRegisteredCategory start");
@@ -786,6 +818,10 @@ public class EperundingIntegration extends InitializeSO{
 			fileUtility.registeredCategoryOutPutStream(batchReqDTO);
 	}
 
+	/* (non-Javadoc)
+	 * @see my.ep.web.integration.common.EperundingInterface#createBranchCompany(my.ep.dto.sm.search.SupplierSearchResDTO)
+	 */
+	@Override
 	public void createBranchCompany(SupplierSearchResDTO resDTO) {
 		
 		log.info("createBranchCompany start");
@@ -846,6 +882,10 @@ public class EperundingIntegration extends InitializeSO{
 			
 	}
 
+	/* (non-Javadoc)
+	 * @see my.ep.web.integration.common.EperundingInterface#createCompanyOwner(my.ep.dto.sm.search.SupplierSearchResDTO)
+	 */
+	@Override
 	public void createCompanyOwner(SupplierSearchResDTO resDTO) {
 		
 		log.info("createCompanyOwner start");
@@ -927,6 +967,10 @@ public class EperundingIntegration extends InitializeSO{
 			fileUtility.companyOwnerOutPutStream(batchReqDTO);
 	}
 
+	/* (non-Javadoc)
+	 * @see my.ep.web.integration.common.EperundingInterface#createAssociatedCompany(my.ep.dto.sm.search.SupplierSearchResDTO)
+	 */
+	@Override
 	public void createAssociatedCompany(SupplierSearchResDTO resDTO) {
 		
 		log.info("createAssociatedCompany start");
