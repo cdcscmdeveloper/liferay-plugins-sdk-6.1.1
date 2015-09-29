@@ -453,7 +453,8 @@ public class QTDocumentsBackingBean extends
 					.getQtNo());
 			scAttachment = scQtDocReportAttachment;
 			uploadAttachment(event.getFile(), scAttachment);
-			selectedScQtDocReport.setScQtDocReportAttachment(scQtDocReportAttachment);
+			selectedScQtDocReport
+					.setScQtDocReportAttachment(scQtDocReportAttachment);
 		}
 	}
 
@@ -956,10 +957,10 @@ public class QTDocumentsBackingBean extends
 		debugLogger("downloadReport");
 		ScQtDocReportAttachment scQtDocReportAttachment = scQtDocReport
 				.getScQtDocReportAttachment();
-		/*if (scQtDocReportAttachment == null) {*/
-			scQtDocReportAttachment = generateDocumentAttachment(scQtDocReport);
-			scQtDocReport.setScQtDocReportAttachment(scQtDocReportAttachment);
-		/*}*/
+		/* if (scQtDocReportAttachment == null) { */
+		scQtDocReportAttachment = generateDocumentAttachment(scQtDocReport);
+		scQtDocReport.setScQtDocReportAttachment(scQtDocReportAttachment);
+		/* } */
 		downloadFile(scQtDocReportAttachment);
 	}
 
@@ -1074,18 +1075,18 @@ public class QTDocumentsBackingBean extends
 						(ScAttachment) scQtDocReportAttachment,
 						getManagedBean().getQt());
 			} else if (SourcingConstants.DOC_DEF_KEY_SCOPE_SERVICES
-					.equals(docDefinitionKey)) {
-				if (QTConstants.EVALUATION_TWO_TIER
-						.equalsIgnoreCase(getManagedBean().getQt().getEvaluationType())
-						|| (QTConstants.EVALUATION_ONE_TIER
-								.equalsIgnoreCase(getManagedBean().getQt()
-										.getEvaluationType()) && getManagedBean().getQt()
-								.isTechEvaluationReq())) {
-					scQtDocReportAttachment = generateSkopPerkhidmatanPdfFromVelocity(
-							(ScAttachment) scQtDocReportAttachment,
-							getManagedBean().getQt(), docDefinitionKey,
-							scQtDocReport);
-				}
+					.equals(docDefinitionKey)
+					&& (QTConstants.EVALUATION_TWO_TIER
+							.equalsIgnoreCase(getManagedBean().getQt()
+									.getEvaluationType()) || (QTConstants.EVALUATION_ONE_TIER
+							.equalsIgnoreCase(getManagedBean().getQt()
+									.getEvaluationType()) && getManagedBean()
+							.getQt().isTechEvaluationReq()))) {
+				scQtDocReportAttachment = generateSkopPerkhidmatanPdfFromVelocity(
+						(ScAttachment) scQtDocReportAttachment,
+						getManagedBean().getQt(), docDefinitionKey,
+						scQtDocReport);
+
 			} else if (SourcingConstants.DOC_DEF_KEY_FREQUENCY_SCHEDULE
 					.equals(docDefinitionKey)) {
 				// Frequency Schedule - Jadual Kekerapan
@@ -2285,7 +2286,7 @@ public class QTDocumentsBackingBean extends
 	public void setSelectAll(boolean selectAll) {
 		this.selectAll = selectAll;
 	}
-	
+
 	/**
 	 * Download all reports.
 	 * 
@@ -2296,7 +2297,7 @@ public class QTDocumentsBackingBean extends
 		debugLogger("createDocumentAttachment");
 		List<ScQtDocReport> scQtDocReports = getManagedBean()
 				.getScQtDocReportList();
-	
+
 		for (int i = 0; i < scQtDocReports.size(); i++) {
 			ScQtDocReportAttachment attachment = scQtDocReports.get(i)
 					.getScQtDocReportAttachment();
@@ -2304,9 +2305,9 @@ public class QTDocumentsBackingBean extends
 				attachment = generateDocumentAttachment(scQtDocReports.get(i));
 				scQtDocReports.get(i).setScQtDocReportAttachment(attachment);
 			}
-			
+
 		}
-		
+
 	}
 
 }
