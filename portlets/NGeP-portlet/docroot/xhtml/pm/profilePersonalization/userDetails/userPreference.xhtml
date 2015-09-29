@@ -31,8 +31,7 @@
 			</tr>
 			<tr>
 				<th width="40%">
-					<p:outputLabel value="#{lbl['lbl.pm.profiles.preferences.preferred']} #{lbl['lbl.pm.profiles.userdetails.email']}"/>
-					<p:outputLabel value="*" styleClass="mandatory" />
+					<p:outputLabel value="#{lbl['lbl.pm.profiles.preferences.preferred']} #{lbl['lbl.pm.profiles.userdetails.email']}"/>					
 				</th>
 				<td>
 					<p:selectBooleanCheckbox id="itPreEmail" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyByEmail}" valueChangeListener="#{profilePersonalizationBackingBean.notifyChangeListener}" /> 
@@ -40,6 +39,18 @@
 					<p:tooltip for="giPreEmail" value="#{lbl['lbl.pm.profiles.preferences.nofificationemail.tooltip']}" showEffect="fade" hideEffect="fade" />
 					<p:message id="itPreEmailMsg" for="itPreEmail" display="icon" />
 				</td>
+			</tr>
+			<tr>
+				<th width="40%">
+					<p:outputLabel value="#{lbl['lbl.pm.profiles.preferences.preferred']} #{lbl['lbl.pm.profiles.preferences.sms']}"/>				
+				</th>
+				<td>
+					<p:selectBooleanCheckbox id="itPreSms" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyBySms}" valueChangeListener="#{profilePersonalizationBackingBean.notifySmsChangeListener}" /> 
+					<p:graphicImage id="giPreSms" value="/css/images/design/tooltips.png" /> 
+					<p:tooltip for="giPreSms" value="#{lbl['lbl.pm.profiles.preferences.nofificationsms.tooltip']}" showEffect="fade" hideEffect="fade" />
+					<p:message id="itPreSmsMsg" for="itPreSms" display="icon" />
+				</td>
+				
 			</tr>
 			<tr>
 				<td colspan="2">
