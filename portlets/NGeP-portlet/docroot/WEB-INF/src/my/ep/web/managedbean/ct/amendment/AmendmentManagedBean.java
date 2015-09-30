@@ -33,6 +33,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -101,6 +102,8 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private List<CtContractItem> ctItemList;
 	private List<CtContractItem> ctServiceItemList;
 	private List<String> finalListOfSideMenu;
+	private List<SmPersonnel> supplierList;
+	private List<PmUser> bpkApproverList;
 	private DualListModel<PmUser> approverModel;
 	private Map<Long, PmUser> userMap;
     private CtContractItem selectedServiceItem;
@@ -851,6 +854,34 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		this.finalListOfSideMenu = finalListOfSideMenu;
 	}
 	
+	/**
+	 * @return the supplierList
+	 */
+	public List<SmPersonnel> getSupplierList() {
+		return supplierList;
+	}
+
+	/**
+	 * @param supplierList the supplierList to set
+	 */
+	public void setSupplierList(List<SmPersonnel> supplierList) {
+		this.supplierList = supplierList;
+	}
+
+	/**
+	 * @return the bpkApproverList
+	 */
+	public List<PmUser> getBpkApproverList() {
+		return bpkApproverList;
+	}
+
+	/**
+	 * @param bpkApproverList the bpkApproverList to set
+	 */
+	public void setBpkApproverList(List<PmUser> bpkApproverList) {
+		this.bpkApproverList = bpkApproverList;
+	}
+
 	/**
 	 * @return the approverModel
 	 */
