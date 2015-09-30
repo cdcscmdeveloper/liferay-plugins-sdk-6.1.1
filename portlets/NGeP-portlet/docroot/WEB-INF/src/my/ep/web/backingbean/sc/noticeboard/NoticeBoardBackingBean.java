@@ -246,21 +246,19 @@ public class NoticeBoardBackingBean extends
 			} else if (scQt.isZonal()) {
 				List<TplSpecZoneDtl> zoneDtls = resDTO.getZones();
 				// Need to construct tab bean for zone
+				
 				List<BriefingZoneBean> bsvZoneBeans = new ArrayList<BriefingZoneBean>();
 
 				if (null != zoneDtls) {
-					if (null == this.getManagedBean().getLocationNodes()) {
-						this.getManagedBean().setLocationNodes(
-								new ArrayList<TreeNode>());
-					}
+					boolean isBsvRequired = scQt.isBsvRequired();
+					List<TreeNode> zoneTree = new ArrayList<TreeNode>();
+					
 					for (TplSpecZoneDtl specZoneDtl : zoneDtls) {
-						this.getManagedBean()
-								.getLocationNodes()
-								.add(LocationSingleton.getInstance()
+						if(!isBsvRequired){
+						 zoneTree.add(LocationSingleton.getInstance()
 										.constuctTreeNode(
-												specZoneDtl,
-												specZoneDtl
-														.getTplSpecZoneLocs()));
+												specZoneDtl,specZoneDtl.getTplSpecZoneLocs()));
+						}
 						BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
 						briefingReqDTO.setQtId(scQt.getQtId());
 						briefingReqDTO.setSpecZoneId(specZoneDtl
@@ -289,7 +287,9 @@ public class NoticeBoardBackingBean extends
 					this.getManagedBean().setLocationNodes(
 							LocationSingleton.getInstance().constuctTreeNode(
 									zoneDtls.get(0).getTplSpecZoneLocs()));
-
+					if(!isBsvRequired){
+						this.getManagedBean().setZoneTree(zoneTree);
+					}
 				}
 
 				this.getManagedBean().setZoneBean(bsvZoneBeans);
