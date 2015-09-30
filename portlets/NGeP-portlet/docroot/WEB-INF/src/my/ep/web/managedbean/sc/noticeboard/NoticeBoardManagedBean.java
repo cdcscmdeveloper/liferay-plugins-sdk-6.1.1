@@ -167,6 +167,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private boolean  renderRegisterBtn = true;
 	private boolean  disableRegisterBtn;
 	private boolean isNavigateFromNoticeBoard = true;
+	private List<TreeNode> zoneTree;
 	
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
@@ -1214,6 +1215,20 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	 */
 	public void setNavigateFromNoticeBoard(boolean isNavigateFromNoticeBoard) {
 		this.isNavigateFromNoticeBoard = isNavigateFromNoticeBoard;
+	}
+
+	/**
+	 * @return the zoneTree
+	 */
+	public List<TreeNode> getZoneTree() {
+		return zoneTree;
+	}
+
+	/**
+	 * @param zoneTree the zoneTree to set
+	 */
+	public void setZoneTree(List<TreeNode> zoneTree) {
+		this.zoneTree = zoneTree;
 	}
 
 
