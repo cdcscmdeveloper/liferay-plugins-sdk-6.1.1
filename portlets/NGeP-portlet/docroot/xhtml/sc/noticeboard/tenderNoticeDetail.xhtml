@@ -23,6 +23,7 @@
 		<ui:param name="isChangesTab"
 			value="#{noticeBoardBackingBean.managedBean.selectedTab == ParameterConst.noticeBoardStatusChanges}" />
 		<ui:include src="/xhtml/sc/noticeboard/nbtenderdetails.xhtml" />
+		<ui:param name="isZonal" value="#{noticeBoardBackingBean.managedBean.scQt.zonal}"></ui:param>
 		
 		<p:panel header="#{lbl['lbl.sc.supplier.qulification.criteria']}"
 			toggleable="true">
@@ -53,7 +54,7 @@
 			<p:spacer height="30px" />
 			<ui:include src="/xhtml/sc/noticeboard/nbcategorycodelist.xhtml" />
 			<c:if
-				test="#{!noticeBoardBackingBean.managedBean.scQt.zonal and !noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.allState}">
+				test="#{!isZonal and !noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.allState}">
 				<br/>
 				<h:outputText value="#{lbl['lbl.sc.notice.board.locality']}"
 					style="font-weight:bold;text-align: left;font-size:14px;" />
@@ -81,8 +82,39 @@
 				</p:dataTable>
 
 			</c:if>
+			<p:spacer height="30px" />
+			<c:if
+				test="#{isZonal and !noticeBoardBackingBean.managedBean.scQt.bsvRequired}">
+				<h:outputText value="#{lbl['lbl.sc.qt.zone.location.info']}"
+					style="font-weight:bold;text-align: left;font-size:14px;" />
+				<p:spacer height="10px"></p:spacer>
+				<p:dataTable
+					value="#{noticeBoardBackingBean.managedBean.zoneTree}"
+					var="zonTree" style="width:100%">
+					<p:column headerText="#{lbl['lbl.sc.zone.name']}">
+
+						<p:tree value="#{zonTree}" var="location">
+							<p:treeNode type="zone">
+								<h:outputText value="#{location.zoneName}" />
+							</p:treeNode>
+
+							<p:treeNode type="state">
+								<h:outputText value="#{location.pmState.stateName}" />
+							</p:treeNode>
+							<p:treeNode type="division">
+								<h:outputText value="#{location.pmDivision.divisionName}" />
+							</p:treeNode>
+							<p:treeNode type="district">
+								<h:outputText value="#{location.pmDistrict.districtName}" />
+							</p:treeNode>
+							<p:treeNode type="city">
+								<h:outputText value="#{location.pmCity.cityName}" />
+							</p:treeNode>
+						</p:tree>
+					</p:column>
+				</p:dataTable>
+			</c:if>
 		</p:panel>
-		<ui:param name="isZonal" value="#{noticeBoardBackingBean.managedBean.scQt.zonal}"></ui:param>
 
 		<c:if test="#{!isZonal}">
 			<ui:param name="bsvDetails"
@@ -97,7 +129,7 @@
 		</c:if>
 
 		<c:if
-			test="#{isZonal}">
+			test="#{isZonal and noticeBoardBackingBean.managedBean.scQt.bsvRequired}">
 			<ui:include src="nbZones.xhtml" />
 		</c:if>
 
