@@ -1667,6 +1667,27 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 * representative is added.
 	 */
 	public void addAgencyWitnes(int temp) {	
+		
+		if(getManagedBean().getCtSignAgencyWitness().size() > 0 ) { 
+		     for(CtAgreementParty agencyWitness : getManagedBean().getCtSignAgencyWitness()) {
+			      if (agencyWitness.getOfficerName() == null || agencyWitness.getOfficerName().isEmpty()) {
+				      throw new EpException(MessageConst.ERROR_100022, 
+						   new String[]{ResourceBundleUtils.getMessage("lbl.ct.name.agency.witness", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			    
+			      } if (agencyWitness.getOfficerIc() == null || agencyWitness.getOfficerIc().isEmpty()) {
+				         throw new EpException(MessageConst.ERROR_100022, 
+						     new String[]{ResourceBundleUtils.getMessage("lbl.ct.ic.agency.witness", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		      
+			      } if (agencyWitness.getOfficerPosition() == null || agencyWitness.getOfficerPosition().isEmpty()) {
+				           throw new EpException(MessageConst.ERROR_100022, 
+						      new String[]{ResourceBundleUtils.getMessage("lbl.ct.position.agency.witness", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			      }
+		     }
+	     }
+		
 		getManagedBean().setValidateWitness(false);
 		getManagedBean().setAgencyOfficerIcNo(new ArrayList<String>());			
 		if (getManagedBean().getCtAgencySigner() != null && !getManagedBean().getCtAgencySigner().isEmpty()) {
@@ -1807,6 +1828,27 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 * representative is added.
 	 */
 	public void addSupplierWitness(int temp) {
+		
+		if(getManagedBean().getCtSupplierWitness().size() > 0) {
+		       for (CtAgreementParty supplierWitness : getManagedBean().getCtSupplierWitness()) {
+			           if (supplierWitness.getOfficerName() == null || supplierWitness.getOfficerName().isEmpty()) {
+				            throw new EpException(MessageConst.ERROR_100022, 
+						        new String[]{ResourceBundleUtils.getMessage("lbl.ct.name.supplier.witness", 
+								    ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			         
+			           } if (supplierWitness.getOfficerIc() == null || supplierWitness.getOfficerIc().isEmpty()) {
+				              throw new EpException(MessageConst.ERROR_100022, 
+						         new String[]{ResourceBundleUtils.getMessage("lbl.ct.ic.supplier.witness", 
+								     ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			         
+			           } if (supplierWitness.getOfficerPosition() == null || supplierWitness.getOfficerPosition().isEmpty()) {
+				            throw new EpException(MessageConst.ERROR_100022, 
+						      new String[]{ResourceBundleUtils.getMessage("lbl.ct.position.supplier.witness", 
+								 ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			           }
+		         }
+		   }
+		
 		getManagedBean().setValidateWitness(false);
 		getManagedBean().setSupplierOfficerIcNo(new ArrayList<String>());
 		if (getManagedBean().getCtSupplierSigner() != null && !getManagedBean().getCtSupplierSigner().isEmpty()) {
