@@ -54,13 +54,9 @@ import org.apache.log4j.Logger;
 /*
  *  @author Ganga prasad
  */
-public class EperundingIntegration extends InitializeSO implements EperundingInterface{
+public class EperundingIntegration extends EperundingTemplate{
 	
 	private static Logger log = EpLogger.getLogger(EperundingIntegration.class);
-
-	OsbUtility osbUtility = new OsbUtility();
-	FileUtility fileUtility = new FileUtility();
-	String path = fileUtility.createDirectory(new Date(),IntegrationConstants.EPERUNDING_UPLOAD_DIR_LOCAL);
 
 	/*public static void main(String args[]) {
 
@@ -705,12 +701,14 @@ public class EperundingIntegration extends InitializeSO implements EperundingInt
 
 						SmRemaksResDTO remaksResDTO = smRemarksSO.retrieveSmRemarksByDocument(remarksReqDTO);
 
-						if (!remaksResDTO.getRemarksList().isEmpty() || remaksResDTO.getRemarksList() != null) {
+						if (remaksResDTO.getRemarksList() != null) {
 							for (SmRemark smRemark : remaksResDTO.getRemarksList()) {
-								// log.info("smRemark :"+smRemark.getRemark());
 								deletedCompany.setReason(smRemark.getRemark());
 								deletedCompany.setDateDeleted(smRemark.getCreatedDate());
 							}
+						}else{
+							deletedCompany.setReason(IntegrationConstants.EMPTY_TRING);
+							deletedCompany.setDateDeleted(IntegrationConstants.DEFAULT_DATE);
 						}
 					}
 					deletedCompanyList.add(deletedCompany);
@@ -1181,8 +1179,6 @@ public class EperundingIntegration extends InitializeSO implements EperundingInt
 
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 		
-		Date currentDate = new Date();
-	
 		reqDTO.setCreateDate(currentDate);
 		reqDTO.setTaskId(taskId);
 
