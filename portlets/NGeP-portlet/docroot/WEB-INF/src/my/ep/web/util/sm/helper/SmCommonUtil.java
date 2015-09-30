@@ -2727,23 +2727,35 @@ public class SmCommonUtil {
 	}
 
 	public PmState getStateById(Long stateId) {
-		StateReqDTO reqDTO = new StateReqDTO();
-		reqDTO.setStateId(stateId);
-		return SmServiceLookup.getStateSO().retriveStateByID(reqDTO)
-				.getPmState();
+		if(stateId!=null){
+			StateReqDTO reqDTO = new StateReqDTO();
+			reqDTO.setStateId(stateId);
+			return SmServiceLookup.getStateSO().retriveStateByID(reqDTO)
+					.getPmState();
+		}else{
+			return null;
+		}
 	}
 
 	public PmDistrict getDistrictById(Long districtId) {
-		DistrictReqDTO reqDTO = new DistrictReqDTO();
-		reqDTO.setDistrictId(districtId);
-		return SmServiceLookup.getDistrictSO().retriveDistrictByID(reqDTO)
-				.getPmDistrict();
+		if(districtId!=null){
+			DistrictReqDTO reqDTO = new DistrictReqDTO();
+			reqDTO.setDistrictId(districtId);
+			return SmServiceLookup.getDistrictSO().retriveDistrictByID(reqDTO)
+					.getPmDistrict();
+		}else{
+			return null;
+		}
 	}
 
 	public PmCity getCityById(Long cityId) {
-		CityReqDTO reqDTO = new CityReqDTO();
-		reqDTO.setCityId(cityId);
-		return SmServiceLookup.getCitySO().retriveCityById(reqDTO).getPmCity();
+		if(cityId!=null){
+			CityReqDTO reqDTO = new CityReqDTO();
+			reqDTO.setCityId(cityId);
+			return SmServiceLookup.getCitySO().retriveCityById(reqDTO).getPmCity();
+		}else{
+			return null;
+		}
 	}
 
 	public static String getCountryLabelById(Long countryId) {
