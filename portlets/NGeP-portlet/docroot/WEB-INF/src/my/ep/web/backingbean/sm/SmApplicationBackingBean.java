@@ -2163,27 +2163,17 @@ public class SmApplicationBackingBean extends
 	 *            -AjaxBehaviorEvent object
 	 */
 	public void officeFacilitySelected(AjaxBehaviorEvent e) {
+		log.info(">>>>>>>>INVOKE FAC TYPE<<<<<<<<");
 		if (getManagedBean().getBasicCompanyFacility().getOwnershipType()
 				.equalsIgnoreCase("O")) {
-			getManagedBean().getBasicCompanyFacility().setSmAddress(
-					SmApplicationUtil.setDefaultAddr(null));
 			copyHqAddressToAddr(getManagedBean().getBasicCompanyFacility()
 					.getSmAddress());
 		} else {
-			SmAddress addr = SmApplicationUtil.setDefaultAddr(null);
-			if (getManagedBean().getBasicCompanyFacility().getSmAddress() == null) {
-				getManagedBean().getBasicCompanyFacility().setSmAddress(addr);
+			if (getManagedBean().getBasicCompanyFacility().getSmAddress() == null
+					|| getManagedBean().getBasicCompanyFacility()
+							.getSmAddress().getAddressId() == null) {
 				copyHqAddressToAddr(getManagedBean().getBasicCompanyFacility()
 						.getSmAddress());
-			} else if (getManagedBean().getBasicCompanyFacility()
-					.getSmAddress() != null
-					&& getManagedBean().getBasicCompanyFacility()
-							.getSmAddress().getAddressId() != null) {
-				getManagedBean().getBasicCompanyFacility().setSmAddress(
-						SmApplicationUtil.setDefaultAddrWithSameId(
-								getManagedBean().getDefPmCountry(),
-								getManagedBean().getBasicCompanyFacility()
-										.getSmAddress()));
 			}
 			SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
 					getManagedBean(),
