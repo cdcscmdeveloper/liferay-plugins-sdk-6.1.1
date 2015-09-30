@@ -73,7 +73,8 @@
 					<h:outputText value=""></h:outputText>			
 				</f:facet>
 				<h:outputText value="#{chargeLineNode.scRequestItem.itemName}"
-					rendered="#{chargeLineNode.parent == 'true'}" />
+					rendered="#{chargeLineNode.parent == 'true'}" id="itemDesc"/>
+				<p:tooltip for="itemDesc" value="#{chargeLineNode.scRequestItem.itemDesc}" rendered="#{chargeLineNode.scRequestItem.itemDesc!=null}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.uom']}"  style="white-space:normal;">
 				<f:facet name="footer">
