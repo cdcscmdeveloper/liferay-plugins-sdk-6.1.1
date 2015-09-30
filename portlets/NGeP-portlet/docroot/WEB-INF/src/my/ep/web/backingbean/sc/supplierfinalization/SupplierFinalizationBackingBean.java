@@ -91,10 +91,12 @@ import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
+import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.bidding.ScBidSupplierItem;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
@@ -104,7 +106,6 @@ import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
-import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
@@ -127,8 +128,10 @@ import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
@@ -973,47 +976,43 @@ public class SupplierFinalizationBackingBean extends
 			}
 
 			// Committee Details
-			List<ScQtCommitteeActivity> committeeList = getManagedBean()
-					.getCommitteeList();
-			if (CollectionUtils.isNotEmpty(committeeList)) {
+			if (CollectionUtils.isNotEmpty(
+					getManagedBean().getCommitteeList())) {
 						
 				// Reset endorsement status by respective finalization method(s)
-				if (isQTRefinalized()) {
-					Map<Long, String> rejectedRecommendIdMap 
-							= getManagedBean().getRejectedScQtRecommendIdMap();
-					
-					if (MapUtils.isNotEmpty(rejectedRecommendIdMap)) {
-						boolean hasAwardType = false;
-						boolean hasBiddingType = false;
-						boolean hasMultiLoiType = false;
-						
-						if (rejectedRecommendIdMap.containsValue(
-									ParameterConst.RECOMMEND_BY_AWARD)) {
-							hasAwardType = true;
-						}
-						if (rejectedRecommendIdMap.containsValue(
-									ParameterConst.RECOMMEND_BY_ONLINE_BIDDING)) {
-							hasBiddingType = true;
-						}
-						if (rejectedRecommendIdMap.containsValue(
-									ParameterConst.RECOMMEND_BY_MULTIPLE_LOI)) {
-							hasMultiLoiType = true;
-						}		
-						
-						for (ScQtCommitteeActivity commActivity : committeeList) {
-							if (hasAwardType) {
-								commActivity.setSignedOff(false);
-							}
-							if (hasBiddingType) {
-								commActivity.setBiddingSignedOff(false);
-							}		
-							if (hasMultiLoiType) {
-								commActivity.setMultiLoiSignedOff(false);
-							}
-						}
-					}
-				}
-				scQtCommittee.setCommitteeActivities(committeeList);
+//				if (isQTRefinalized()) {
+//					Map<Long, String> rejectedRecommendIdMap 
+//							= getManagedBean().getRejectedScQtRecommendIdMap();
+//					
+//					if (MapUtils.isNotEmpty(rejectedRecommendIdMap)) {
+//						boolean hasAwardType = false;
+//						boolean hasBiddingType = false;
+//						boolean hasMultiLoiType = false;
+//						
+//						if (rejectedRecommendIdMap.containsValue(
+//									ParameterConst.RECOMMEND_BY_AWARD)) {
+//							hasAwardType = true;
+//						} else if (rejectedRecommendIdMap.containsValue(
+//									ParameterConst.RECOMMEND_BY_ONLINE_BIDDING)) {
+//							hasBiddingType = true;
+//						} else if (rejectedRecommendIdMap.containsValue(
+//									ParameterConst.RECOMMEND_BY_MULTIPLE_LOI)) {
+//							hasMultiLoiType = true;
+//						}		
+//						
+//						for (ScQtCommitteeActivity commActivity : committeeList) {
+//							if (hasAwardType) {
+//								commActivity.setSignedOff(false);
+//							} else if (hasBiddingType) {
+//								commActivity.setBiddingSignedOff(false);
+//							} else if (hasMultiLoiType) {
+//								commActivity.setMultiLoiSignedOff(false);
+//							}
+//						}
+//					}
+//				}
+				scQtCommittee.setCommitteeActivities(
+						getManagedBean().getCommitteeList());
 			}
 
 			List<ScQtCommitteRemarks> remarksList = finalizeRemarks(this
@@ -1852,7 +1851,8 @@ public class SupplierFinalizationBackingBean extends
 			reqDTO.setDigiSignData(digiSign);
 
 			ScQtCommittee scQtCommittee = null;
-			if (!getManagedBean().isInitialDecisionFwdToBPK()) {
+			if (!getManagedBean().isInitialDecisionFwdToBPK() && 
+					digiSign != null) {
 				scQtCommittee = preparationDtlsInfo();
 				reqDTO.setScQtCommittee(scQtCommittee);
 			}
@@ -2754,6 +2754,7 @@ public class SupplierFinalizationBackingBean extends
 
 		context.put("title", scQt.getQtTitle());
 		context.put("qtNo", scQt.getQtNo());
+		context.put("zonal", scQt.isZonal());
 		
 		String ministryOrgName = null;
 		if (scQt.getMinistryOrgProfile() != null) {
@@ -2822,29 +2823,12 @@ public class SupplierFinalizationBackingBean extends
 		}
 		context.put("panel", isPanel);
 
-		List<ScQtCategory> categoryResults = new ArrayList<ScQtCategory>();
-		IQTDetailSO qtDetailsSO;
-		try {
-			qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-			tenderReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-			tenderReqDTO.setQtdetail(this.getManagedBean().getScQt());
-			QuationTenderResDTO tenderResDTO = qtDetailsSO
-					.retriveQTSuppQulCriDetails(tenderReqDTO);
-			categoryResults = tenderResDTO.getCategoryResultBean()
-					.getResultList();
-			if (null != tenderResDTO.getLocationDetails()) {
-				context.put("locality", tenderResDTO.getLocationDetails());
-			}
-		} finally {
-			qtDetailsSO = null;
-		}
-
+		
+		String locationDistrict = "District";
 		String locationLevel = null;
 		boolean isLocLevel = false;
 		boolean isSubLocLevel = false;
-		if (scQt.getZoneLocationLevel() != null) {
+		if (scQt.isZonal() && scQt.getZoneLocationLevel() != null) {
 			if (ParameterConst.LOCATION_LEVEL_STATE.equals(scQt
 					.getZoneLocationLevel().getParameterCode())) {
 				isLocLevel = true;
@@ -2856,53 +2840,124 @@ public class SupplierFinalizationBackingBean extends
 			} else if (ParameterConst.LOCATION_LEVEL_DISTRICT.equals(scQt
 					.getZoneLocationLevel().getParameterCode())) {
 				isLocLevel = true;
-				locationLevel = "District";
+				locationLevel = locationDistrict;
 			}
-			context.put("locLevel", isLocLevel);
-		} else {
-			boolean isAllState = false;
-			ScQtSupplierCriteria criteria = scQt.getScQtSupplierCriteria();
+			context.put("zoneLocLevel", isLocLevel);
+			context.put("zoneLocationLevel", locationLevel);
 			
-			if (criteria != null) {
-				isAllState = criteria.isAllState();
-				
-				if (criteria.getLocationLevel() != null) {
-					if (ParameterConst.LOCATION_LEVEL_STATE.equals(criteria
-							.getLocationLevel().getParameterCode())) {
-						isSubLocLevel = true;
-						locationLevel = "State";
-					} else if (ParameterConst.LOCATION_LEVEL_DISTRICT
-							.equals(criteria.getLocationLevel()
-									.getParameterCode())) {
-						isSubLocLevel = true;
-						locationLevel = "District";
+			IQTDetailSO qtDtlSO;
+			try {
+				qtDtlSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+				qtReqDTO.setDocType(QTConstants.DOCTYPE_QT);
+				qtReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+				qtReqDTO.setBdgDtlsReq(true);
+				QuationTenderResDTO qtResDTO = new QuationTenderResDTO();
+				qtResDTO = qtDtlSO.retriveQTDetails(qtReqDTO);
+
+				Map<TplSpecZoneDtl, Map<PmState,List<PmDistrict>>> zoneLocationMap = 
+							new HashMap<TplSpecZoneDtl, Map<PmState,List<PmDistrict>>>();
+				if (CollectionUtils.isNotEmpty(
+							qtResDTO.getZoneDetails())) {
+					for (TplSpecZoneDtl zoneDtl 
+								: qtResDTO.getZoneDetails()) {
+						if (CollectionUtils.isNotEmpty(
+								zoneDtl.getTplSpecZoneLocs())) {
+							Map<PmState,List<PmDistrict>> stateAndDistrict
+									= new HashMap<PmState,List<PmDistrict>>();					
+							for (TplSpecZoneLoc specZoneLoc 
+										: zoneDtl.getTplSpecZoneLocs()) {
+								PmState state = specZoneLoc.getPmState();
+								
+								if (locationDistrict.equals(locationLevel)) {
+									List<PmDistrict> districtList 
+										= stateAndDistrict.get(state);
+									if (districtList == null) {
+										districtList = new ArrayList<PmDistrict>();
+									}
+									districtList.add(specZoneLoc.getPmDistrict());
+									stateAndDistrict.put(state, districtList);
+								} else {
+									stateAndDistrict.put(state, null);
+								}
+							}
+							zoneLocationMap.put(zoneDtl, stateAndDistrict);
+						}
+						
 					}
-					context.put("subLocLevel", isSubLocLevel);
-				} else {
-					context.put("subLocLevel", isSubLocLevel);
 				}
-			}
-			context.put("locLevel", isLocLevel);
-			context.put("isAllState", isAllState);
+				context.put("zoneLocality", zoneLocationMap);
+			} finally {
+				qtDtlSO = null;
+			}			
 		}
 		
-		context.put("locationLevel", locationLevel);
-		IQTDetailSO qtDtlSO;
-		try {
-			qtDtlSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
-			qtReqDTO.setDocType(QTConstants.DOCTYPE_QT);
-			qtReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-			qtReqDTO.setBdgDtlsReq(true);
-			QuationTenderResDTO qtResDTO = new QuationTenderResDTO();
-			qtResDTO = qtDtlSO.retriveQTDetails(qtReqDTO);
-			if (this.getManagedBean().getScQt().isZonal()) {
-				context.put("zoneLocality", qtResDTO.getZoneDetails());
+		locationLevel = null;
+		isLocLevel = false;
+		boolean isAllState = false;
+		ScQtSupplierCriteria criteria = scQt.getScQtSupplierCriteria();
+		
+		if (criteria != null) {
+			isAllState = criteria.isAllState();
+			
+			if (criteria.getLocationLevel() != null) {
+				if (ParameterConst.LOCATION_LEVEL_STATE.equals(criteria
+						.getLocationLevel().getParameterCode())) {
+					isSubLocLevel = true;
+					locationLevel = "State";
+				} else if (ParameterConst.LOCATION_LEVEL_DISTRICT
+						.equals(criteria.getLocationLevel()
+								.getParameterCode())) {
+					isSubLocLevel = true;
+					locationLevel = locationDistrict;
+				}
+				context.put("subLocLevel", isSubLocLevel);
+			} else {
+				context.put("subLocLevel", isSubLocLevel);
 			}
-		} finally {
-			qtDtlSO = null;
 		}
+		context.put("locLevel", isLocLevel);
+		context.put("isAllState", isAllState);
+		context.put("locationLevel", locationLevel);	
+		
+//		List<ScQtCategory> categoryResults = new ArrayList<ScQtCategory>();
+		IQTDetailSO qtDetailsSO;
+		try {
+			qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+			tenderReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			tenderReqDTO.setQtdetail(this.getManagedBean().getScQt());
+			QuationTenderResDTO tenderResDTO = qtDetailsSO
+					.retriveQTSuppQulCriDetails(tenderReqDTO);
+//			categoryResults = tenderResDTO.getCategoryResultBean()
+//					.getResultList();
+			Map<PmState,List<PmDistrict>> locationMap = 
+							new HashMap<PmState,List<PmDistrict>>();
+			if (CollectionUtils.isNotEmpty(
+					tenderResDTO.getLocationDetails())) {
+				for (TplSpecLoc specLoc 
+							: tenderResDTO.getLocationDetails()) {
+					PmState state = specLoc.getPmState();
+					List<PmDistrict> districtList = null;
+					
+					if (locationDistrict.equals(locationLevel)) {
+						districtList = locationMap.get(state);
+						
+						if (districtList == null) {
+							districtList = new ArrayList<PmDistrict>();
+						}
+						districtList.add(specLoc.getPmDistrict());
+					}
+					locationMap.put(state, districtList);
+				}
+				context.put("locality", tenderResDTO.getLocationDetails());				
+			}			
+		} finally {
+			qtDetailsSO = null;
+		}		
+
 		boolean isbsv = false;
 		if (scQt.isBsvRequired()) {
 			isbsv = true;
@@ -6696,7 +6751,12 @@ public class SupplierFinalizationBackingBean extends
 				return;
 			}
 		}
-		String finalizationMethodStr = finalizationMethod.getParameterCode();
+		String finalizationMethodStr = null;
+		if (isQTRefinalized()) {
+			finalizationMethodStr = ParameterConst.RECOMMEND_BY_AWARD;
+		} else {
+			finalizationMethodStr = finalizationMethod.getParameterCode();
+		}
 		String recommendByDesc = getParameterDesc(finalizationMethod);
 		String itemName = scQtRecommend.getRequestItem().getItemName();
 		List<ScQtRecommendDtl> recommendDtlList = scQtRecommend
@@ -6714,7 +6774,7 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 		}		
-		if (isQTRefinalized() || (StringUtils.equals(ParameterConst.RECOMMEND_BY_AWARD,
+		if ((StringUtils.equals(ParameterConst.RECOMMEND_BY_AWARD,
 						finalizationMethodStr) && activeSupplCount != 1)) {
 			setZoneAndTabIndexOnException(scQtRecommend.getTplSpecZoneDtl());
 			throw new EpException(MessageConst.ERROR_760213);
