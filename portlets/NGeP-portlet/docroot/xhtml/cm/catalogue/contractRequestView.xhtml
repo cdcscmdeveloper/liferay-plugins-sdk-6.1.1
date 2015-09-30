@@ -19,8 +19,8 @@
 			<tr>
 				<td style="text-align: left;width:60%"><p:commandButton value="#{lbl['lbl.cm.back']}"						
 						action="#{catalogueBackingBean.backTocatalogueSearch}" /></td>
-				<td style="width:10%"><p:outputLabel value="#{lbl['lbl.fl.fs.no']}"/></td>
-				<td style="text-align: right; width: 5%"><p:selectOneMenu id="schedule" value="#{catalogueBackingBean.managedBean.scheduleNo}">
+				<td style="width:10%"><p:outputLabel value="#{lbl['lbl.fl.fs.no']}" rendered="#{not empty catalogueBackingBean.managedBean.availableNoList}"/></td>
+				<td style="text-align: right; width: 5%"><p:selectOneMenu id="schedule" value="#{catalogueBackingBean.managedBean.scheduleNo}" rendered="#{not empty catalogueBackingBean.managedBean.availableNoList}">
 						<f:selectItems value="#{catalogueBackingBean.managedBean.availableNoList}"/>
 					</p:selectOneMenu></td>
 				<td style="text-align: right;width:12%"><p:commandButton id="navigateCR" disabled="#{empty catalogueBackingBean.managedBean.ctRequestList}"
