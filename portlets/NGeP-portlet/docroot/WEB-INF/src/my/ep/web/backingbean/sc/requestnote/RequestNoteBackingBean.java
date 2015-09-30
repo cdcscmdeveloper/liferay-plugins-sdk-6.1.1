@@ -358,6 +358,26 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					scRequestNoteDtl.setAssignedUser(facesScopes.getUserSessionBean());
 				}
 				
+				// set condition field for saved request note
+				if (!scRequestNoteDtl.isReRecommend()) {
+					StringBuilder sb = new StringBuilder();
+					sb.append("requestNoteItem.requestNoteItemId^");
+					sb.append(scRequestNoteDtl.getRequestItem()
+							.getRequestNoteItemId());
+
+					if (scRequestSupplierItem.getScPrInquiy() != null && 
+							scRequestSupplierItem.getScPrInquiy().getIsStockAvailable().equals(
+									ParameterConst.PI_NO_STOCK)) {
+						sb.append("|");
+						sb.append("requestSupplierItemId^");
+						sb.append(scRequestNoteDtl.getScRequestSupplierItem()
+								.getRequestSupplierItemId());
+
+						sb.append("^");
+						sb.append(SearchOperator.OPERATOR_NOT_IN.value());
+					}
+					scRequestNoteDtl.setConditionField(sb.toString());
+				}
 				// get PI and PID id to Request note
 				if(scRequestSupplierItem.getScPrInquiy() != null){
 					getManagedBean().setPrInquiryId(scRequestSupplierItem.getScPrInquiy().getPrInquiryId());
