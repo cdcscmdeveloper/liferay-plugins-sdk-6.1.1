@@ -202,7 +202,6 @@ public class SPDetailBackingBean extends
 	public void retrieveProposalChecklistDtls(Long qtID, Long userId) {
 		debugLogger("retrieveProposalChecklistDtls");
 
-		getManagedBean().setPrepareActiveIndex(0);
 		try {
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setQtId(qtID);
@@ -534,22 +533,23 @@ public class SPDetailBackingBean extends
 
 			List<ScQtPRPExperience> experiences = this.getManagedBean()
 					.getScQtPRPExperiences();
-			ScQtProposal proposal = scQtProposalChecklist.getScQtProposal();
+			ScQtProposal proposal = this.getManagedBean().getQtProposalChecklist().getScQtProposal();
 			proposal.setScQtProposalExperiences(experiences);
 			scQtProposalChecklist.setProposalScore(proposalScores);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			ScQtProposalChecklist techncalProposalChecklist = null;
 			// to update technical non fed govt exp checklist whenever financial
 			// checklist is saved
-			if(!this.getManagedBean().isFinanicialOnlyCheckList()){
-				 techncalProposalChecklist = findProposalChecklistByDocDefKey(
+			if (!this.getManagedBean().isFinanicialOnlyCheckList()) {
+				techncalProposalChecklist = findProposalChecklistByDocDefKey(
 						getManagedBean().getTecCheckDetailsList(),
 						SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV);
 				reqDTO.setTobeUpdateTechProposalChecklist(techncalProposalChecklist);
 				reqDTO.setChecklistType(SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV);
-			}else{
+			} else {
 				reqDTO.setChecklistType(SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV);
-				reqDTO.setTobeRemovedExperience(this.getManagedBean().getDeletedPRPExperiences());
+				reqDTO.setTobeRemovedExperience(this.getManagedBean()
+						.getDeletedPRPExperiences());
 			}
 			reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
 			reqDTO.setScQtProposal(proposal);
@@ -557,6 +557,7 @@ public class SPDetailBackingBean extends
 
 			if (resDTO.isSuccessful()) {
 				getManagedBean().setDeletedPRPExperiences(null);
+				this.getManagedBean().setScQtProposal(resDTO.getScQtProposal());
 				debugLogger("*****save successfull*****"
 						+ resDTO.isSuccessful());
 
@@ -565,13 +566,14 @@ public class SPDetailBackingBean extends
 				getManagedBean().getFinanceCheckDetailsList().set(index,
 						resDTO.getProposalChecklist());
 				// retrieveTechnicalFedNonGovCheklist
-				if(!this.getManagedBean().isFinanicialOnlyCheckList()){
+				if (!this.getManagedBean().isFinanicialOnlyCheckList()) {
 					updateQtFinNdTechProposalCheckList(
 							techncalProposalChecklist,
 							resDTO.getTobeUpdateTechProposalChecklist(),
 							SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV);
 				}
 
+				loadDataFromCache();
 				return navigatePrepareFinProposalCheckList(
 						scQtProposalChecklist, resDTO.getProposalChecklist(),
 						isCompleted);
@@ -936,7 +938,7 @@ public class SPDetailBackingBean extends
 				// previously saved records ignored
 				if (prpExperience.getQtPrpExperienceId() == null
 						|| prpExperience.getQtPrpExperienceId() == 0) {
-					//scQtProposalChecklist.getScQtProposal().setScQtProposalChecklists(scQtProposalChecklists)
+					// scQtProposalChecklist.getScQtProposal().setScQtProposalChecklists(scQtProposalChecklists)
 					experiencesTosave.add(prpExperience);
 				}
 			}
@@ -960,7 +962,7 @@ public class SPDetailBackingBean extends
 			// to delete the deleted experiences from db
 			reqDTO.setTobeRemovedExperience(getManagedBean()
 					.getDeletedPRPExperiences());
-			ScQtProposal qtProposal = this.getManagedBean().getScQtProposal();
+			ScQtProposal qtProposal = this.getManagedBean().getQtProposalChecklist().getScQtProposal();
 			qtProposal.setScQtProposalExperiences(experiencesTosave);
 			reqDTO.setScQtProposal(qtProposal);
 			ScQtProposalChecklist finProposalChecklist = findProposalChecklistByDocDefKey(
@@ -973,6 +975,7 @@ public class SPDetailBackingBean extends
 
 			if (resDTO.isSuccessful()) {
 				getManagedBean().setDeletedPRPExperiences(null);
+				this.getManagedBean().setScQtProposal(resDTO.getScQtProposal());
 
 				updateQtFinNdTechProposalCheckList(
 						finProposalChecklist,
@@ -983,6 +986,7 @@ public class SPDetailBackingBean extends
 						scQtProposalChecklist);
 				getManagedBean().getTecCheckDetailsList().set(index,
 						resDTO.getProposalChecklist());
+				loadDataFromCache();
 				return navigatePrepareTecProposalCheckList(
 						scQtProposalChecklist, resDTO.getProposalChecklist(),
 						isCompleted);
@@ -1558,7 +1562,6 @@ public class SPDetailBackingBean extends
 		mindate.set(getManagedBean().getYear().intValue(), 0, 1);
 		getManagedBean().setNonFedEffMinDate(mindate.getTime());
 		getManagedBean().setNonFedMinDate(mindate.getTime());
-		getManagedBean().setScQtProposal(scQtProposalChecklist.getScQtProposal());
 
 		IQTProposalSO proposalSO = null;
 		try {
@@ -2125,7 +2128,6 @@ public class SPDetailBackingBean extends
 		getManagedBean().setYear(
 				scQtProposalChecklist.getScQtCheckList()
 						.getScQtCheckListValue().getYear());
-		
 
 		IQTProposalSO proposalSO = null;
 		try {
@@ -2150,16 +2152,18 @@ public class SPDetailBackingBean extends
 				mindate.set(getManagedBean().getYear().intValue(), 0, 1);
 				getManagedBean().setNonFedEffMinDate(mindate.getTime());
 				getManagedBean().setNonFedMinDate(mindate.getTime());
-				this.getManagedBean().setScQtProposal(scQtProposalChecklist.getScQtProposal());
+				this.getManagedBean().setScQtProposal(
+						scQtProposalChecklist.getScQtProposal());
 				resDTO = proposalSO.retrieveNonGovCompanyExpDtls(reqDTO);
 			} else {
 
 				if (null != tecProposalCheckList
 						&& tecProposalCheckList.isSubmitted()) {
 					resDTO = proposalSO.retrieveNonGovCompanyExpDtls(reqDTO);
-				}else{
+				} else {
 					// TODO add exception remarks
-					throw new EpException("Please Complete Technical Non Gov Company Experiences first");
+					throw new EpException(
+							"Please Complete Technical Non Gov Company Experiences first");
 				}
 			}
 			if (resDTO != null) {
@@ -2851,7 +2855,8 @@ public class SPDetailBackingBean extends
 				scQtPRPExperience.setBrandNew(false);
 			}
 
-			prpExperience.setScQtProposal(this.getManagedBean().getScQtProposal());
+			prpExperience.setScQtProposal(this.getManagedBean()
+					.getQtProposalChecklist().getScQtProposal());
 			prpExperience.setContractAmt(new BigDecimal(0));
 			experienceList.add(prpExperience);
 			this.getManagedBean().setScQtPRPExperiences(experienceList);
@@ -2910,10 +2915,10 @@ public class SPDetailBackingBean extends
 		getManagedBean().setSelectedPRPExperiences(null);
 
 		totalContractYears();
-		if(this.getManagedBean().isFinanicialOnlyCheckList()){
+		if (this.getManagedBean().isFinanicialOnlyCheckList()) {
 			totalContractAmount();
 		}
-		
+
 	}
 
 	/**
@@ -3103,8 +3108,10 @@ public class SPDetailBackingBean extends
 			getManagedBean().getZoneTplSpecBeanMap().put(
 					getManagedBean().getSelectedZone().getSpecZoneId(),
 					getManagedBean().getTemplateSpecBean());
-			getManagedBean().setTemplateSpecBean(null);
-			getManagedBean().setSelectedZone(null);
+			/*
+			 * getManagedBean().setTemplateSpecBean(null);
+			 * getManagedBean().setSelectedZone(null);
+			 */
 		}
 		getManagedBean().setSelectedZone(specZoneDtl);
 		getManagedBean().setTemplateSpecBean(
@@ -3177,6 +3184,7 @@ public class SPDetailBackingBean extends
 			retrieveProposalChecklistDtls(Long.parseLong(qtId),
 					((PmUser) (new FacesScopes().getUserSessionBean()))
 							.getUserId());
+			getManagedBean().setPrepareActiveIndex(0);
 
 		} catch (EpException e) {
 			String message = e.getMessage();
@@ -3219,6 +3227,12 @@ public class SPDetailBackingBean extends
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_PROPOSAL_MAIN_PAGE);
+	}
+
+	private void loadDataFromCache() {
+
+		retrieveProposalChecklistDtls(this.getManagedBean().getQt().getQtId(),
+				((PmUser) (new FacesScopes().getUserSessionBean())).getUserId());
 	}
 
 	/**
@@ -3796,7 +3810,6 @@ public class SPDetailBackingBean extends
 					zoneItem.setAjax(true);
 					zoneItem.setPartialSubmit(true);
 					zoneItem.setProcess("@this");
-					zoneItem.setUpdate("@this");
 					zoneItem.setOncomplete("zoneTabChange([ {name : 'selectedZoneTabIndex', value : "
 							+ zoneTabIndex + "}]);");
 					zoneMenuModel.addMenuItem(zoneItem);
