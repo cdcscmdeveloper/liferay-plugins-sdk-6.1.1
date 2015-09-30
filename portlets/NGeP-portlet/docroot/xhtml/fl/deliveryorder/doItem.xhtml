@@ -90,10 +90,8 @@
 					rowKey="#{flItem}"
 					styleClass="itemsSelectedPanel show-column-names">
 					<p:column headerText="#{lbl['lbl.fl.item.name']}"   style="white-space:normal;">
-						<h:outputText value="#{doItems.scRequestItem.itemName}"
-							rendered="#{createDOBackingBean.managedBean.docType eq 'PR'}" />
-						<h:outputText value="#{doItems.scRequestItem.itemName}"
-							rendered="#{createDOBackingBean.managedBean.docType eq 'CR'}" />
+						<h:outputText value="#{doItems.scRequestItem.itemName}"	id="itemDesc"/>
+						<p:tooltip for="itemDesc" value="#{doItems.scRequestItem.itemDesc}" rendered="#{doItems.scRequestItem.itemDesc!=null}" />
 					</p:column>
 					<p:column style="white-space:normal;">
 						<f:facet name="header" >
