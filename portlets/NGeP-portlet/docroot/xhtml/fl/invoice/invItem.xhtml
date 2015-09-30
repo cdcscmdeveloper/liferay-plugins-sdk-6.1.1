@@ -25,8 +25,9 @@
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.fl.item.name']}"/>
 				</f:facet>			
-				<h:outputText value="#{chargeLineNode.itemName}"
+				<h:outputText value="#{chargeLineNode.itemName}" id="itemDesc"
 					rendered="#{chargeLineNode.lvl1 == 'true'}" />
+				<p:tooltip for="itemDesc" value="#{chargeLineNode.itemDesc}" rendered="#{chargeLineNode.itemDesc!=null}" />	
 			</p:column>
 			<p:column style="white-space:normal;">
 				<f:facet name="header">

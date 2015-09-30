@@ -23,7 +23,8 @@
 			value="#{createDOBackingBean.managedBean.flDeliveryOrder.flDeliveryAddress.flFulfilmentItemAddr}">
 			<ac:paginator for="doItems" />
 			<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;">
-				<h:outputText value="#{doItems.scRequestItem.itemName}" />
+				<h:outputText value="#{doItems.scRequestItem.itemName}" id="itemDesc"/>
+				<p:tooltip for="itemDesc" value="#{doItems.scRequestItem.itemDesc}" rendered="#{doItems.scRequestItem.itemDesc!=null}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.uom']}">
 				<h:outputText value="#{doItems.scRequestItem.uom.uomName}" />
