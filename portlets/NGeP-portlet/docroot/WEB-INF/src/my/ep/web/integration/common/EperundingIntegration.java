@@ -694,17 +694,18 @@ public class EperundingIntegration extends EperundingTemplate{
 					if (smSupplier.getSmAppl().getApplType().equalsIgnoreCase(IntegrationConstants.RECORD_DELETED_CODE)) {
 						deletedCompany = new DeletedCompany();
 						deletedCompany.setmOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
-
-						SmRemarksReqDTO remarksReqDTO = new SmRemarksReqDTO();
-						remarksReqDTO.setDocType(IntegrationConstants.RECORD_DELETED_CODE);
-						remarksReqDTO.setDocId(smSupplier.getSmAppl().getApplId());
-
-						SmRemaksResDTO remaksResDTO = smRemarksSO.retrieveSmRemarksByDocument(remarksReqDTO);
-
-						if (remaksResDTO.getRemarksList() != null) {
-							for (SmRemark smRemark : remaksResDTO.getRemarksList()) {
-								deletedCompany.setReason(smRemark.getRemark());
-								deletedCompany.setDateDeleted(smRemark.getCreatedDate());
+						
+						if(null!=smSupplier.getSmAppl()){
+							SmRemarksReqDTO remarksReqDTO = new SmRemarksReqDTO();
+							remarksReqDTO.setDocType(IntegrationConstants.RECORD_DELETED_CODE);
+							remarksReqDTO.setDocId(smSupplier.getSmAppl().getApplId());
+							
+							SmRemaksResDTO remaksResDTO = smRemarksSO.retrieveSmRemarksByDocument(remarksReqDTO);
+							if (remaksResDTO.getRemarksList() != null) {
+								for (SmRemark smRemark : remaksResDTO.getRemarksList()) {
+									deletedCompany.setReason(smRemark.getRemark());
+									deletedCompany.setDateDeleted(smRemark.getCreatedDate());
+								}
 							}
 						}else{
 							deletedCompany.setReason(IntegrationConstants.EMPTY_TRING);
