@@ -48,11 +48,10 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 									<c:if
 										test="#{!purchaseInquiryBackingBean.managedBean.rnToPIFlag}">
 										<p:commandButton
-											rendered="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.isStockAvailable eq 1}"
 											value="#{lbl['lbl.btn.proceed']}" partialSubmit="true"
 											process="@form" onstart="blockWidget.show();"
 											oncomplete="blockWidget.hide();"
-											action="#{purchaseInquiryBackingBean.requisitionerAction('Processed')}" />
+											action="#{purchaseInquiryBackingBean.requisitionerAction('PROCESSED')}" />
 
 										<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 											style="float:right;" partialSubmit="true" process="@form"
@@ -89,7 +88,6 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 								</ui:repeat>
 							</c:when>
 						</c:choose>
-
 					</td>
 				</tr>
 			</table>
