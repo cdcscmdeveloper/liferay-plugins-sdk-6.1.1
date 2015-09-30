@@ -2164,22 +2164,16 @@ public class SmApplicationBackingBean extends
 	 */
 	public void officeFacilitySelected(AjaxBehaviorEvent e) {
 		log.info(">>>>>>>>INVOKE FAC TYPE<<<<<<<<");
-		if (getManagedBean().getBasicCompanyFacility().getOwnershipType()
-				.equalsIgnoreCase("O")) {
+		if (getManagedBean().getBasicCompanyFacility().getSmAddress() == null
+				|| getManagedBean().getBasicCompanyFacility().getSmAddress()
+						.getAddressId() == null) {
 			copyHqAddressToAddr(getManagedBean().getBasicCompanyFacility()
 					.getSmAddress());
-		} else {
-			if (getManagedBean().getBasicCompanyFacility().getSmAddress() == null
-					|| getManagedBean().getBasicCompanyFacility()
-							.getSmAddress().getAddressId() == null) {
-				copyHqAddressToAddr(getManagedBean().getBasicCompanyFacility()
-						.getSmAddress());
-			}
-			SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
-					getManagedBean(),
-					getManagedBean().getBasicCompanyFacility().getSmAddress(),
-					SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
 		}
+		SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
+				getManagedBean(),
+				getManagedBean().getBasicCompanyFacility().getSmAddress(),
+				SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
 		setFacilityDefaultPrices(getManagedBean().getBasicCompanyFacility());
 		initBusinessPremise();
 	}
