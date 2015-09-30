@@ -116,7 +116,7 @@ public class OrganisationBackingBean extends
 	private static final String NOT_RECOMMENDED_STATE = "LUAR NEGARA";
 	
 	// Navigation Details
-	public static final String NAV_TO_SEARCH = "organisationMain";
+	public static final String NAV_TO_SEARCH = "organisationMain.xhtml?faces-redirect=true";
 	public static final String NAV_TO_MAINTAIN = "maintainOrganisation";
 
 	// Org Category values
