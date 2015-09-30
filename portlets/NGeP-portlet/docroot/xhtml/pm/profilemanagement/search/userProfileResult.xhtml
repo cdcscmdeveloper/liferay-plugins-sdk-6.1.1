@@ -15,11 +15,7 @@
 			var="userOrg">
 			<ac:paginator for="dtUserResult" />
 			<p:column headerText="#{lbl['lbl.pm.profiles.search.orgname']}" style="width :25%;white-space : normal">			
-				#{ParameterConst.orgTypeSupplier eq profileManagementBackingBean.managedBean.selectedOrgType.parameterCode ?
-				userOrg.pmOrgProfile.smSupplier.companyName : 
-				ParameterConst.orgTypeFactoring eq profileManagementBackingBean.managedBean.selectedOrgType.parameterCode ? 
-				userOrg.pmOrgProfile.pmFinancialOrg.finOrgName : userOrg.pmOrgProfile.pmOrgValidity.orgName
-				}
+				#{profileManagementBackingBean.retrieveOrgName(userOrg.pmOrgProfile)}
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.idno']}" style="width :15%;white-space : normal">
