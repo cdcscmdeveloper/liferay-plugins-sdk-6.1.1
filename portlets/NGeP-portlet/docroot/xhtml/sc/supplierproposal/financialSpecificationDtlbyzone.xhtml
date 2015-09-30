@@ -15,7 +15,7 @@
 	<table style="width: 100%">
 		<tr>
 			<TD style="width: 16%; vertical-align: baseline;" class="sidemenutd">
-				<p:remoteCommand name="zoneTabChange" update="@form" partialSubmit="true" process="@this" action="#{supplierProposalDetailBackingBean.zoneTabChange}" />
+				<p:remoteCommand id="zoneRemote" name="zoneTabChange" update="@form" partialSubmit="true" process="@form" action="#{supplierProposalDetailBackingBean.zoneTabChange}" />
 				
 				<p:tabMenu styleClass="sidemenu"
 					id="zonalMenu"
@@ -24,7 +24,7 @@
 					model="#{supplierProposalDetailBackingBean.managedBean.proposalZonalMenuModel}">
 				</p:tabMenu></TD>
 			<td style="width: 84%;vertical-align: top;"><p:outputPanel id="zoneSpecAnswers">
-					<ac:templateSpec
+					<ac:templateSpec processValidationId="zoneRemote"
 						templateSpecBean="#{supplierProposalDetailBackingBean.managedBean.templateSpecBean}"
 						title="#{lbl['lbl.sc.spec.financial.title']}" />
 				</p:outputPanel></td>
