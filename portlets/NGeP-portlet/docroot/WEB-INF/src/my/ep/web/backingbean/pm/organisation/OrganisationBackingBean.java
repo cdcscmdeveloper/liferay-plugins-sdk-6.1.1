@@ -1141,8 +1141,9 @@ public class OrganisationBackingBean extends
 	public void resetOrgProfile() {
 		getManagedBean().setOrgProfile(new PmOrgProfile());
 		getManagedBean().getOrgProfile().setPmOrgValidity(new PmOrgValidity());
-		getManagedBean().setOfficeAddress(PmCommonUtil.getNewPmAddress());
-		getManagedBean().setOfficeContactPerson(new PmContact());
+//		getManagedBean().setOfficeAddress(PmCommonUtil.getNewPmAddress());
+//		getManagedBean().setSelectedStateId(null);
+//		getManagedBean().setOfficeContactPerson(new PmContact());
 		IParameterSO parameterSO = (IParameterSO) BusinessDelegate
 				.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
