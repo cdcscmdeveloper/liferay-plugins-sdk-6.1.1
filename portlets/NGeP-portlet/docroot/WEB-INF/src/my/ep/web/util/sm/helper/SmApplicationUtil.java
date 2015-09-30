@@ -6246,11 +6246,13 @@ public class SmApplicationUtil {
 	}
 
 	private SmAddress getReMergeAddress(SmAddress srcAddr) {
+		log.info(">>>>>>>>>>>>>>BEFORE REMERGE ADDRESS<<<<<<<<<<");
 		SmAddress targetAddr = srcAddr;
 		if (srcAddr != null && srcAddr.getAddressId() != null) {
 			targetAddr = SmCommonUtil.getInstance().getSmAddressById(
 					srcAddr.getAddressId());
 			SmCommonUtil.getInstance().copyAddress(srcAddr, targetAddr);
+			log.info(">>>>>>>>>>>>>>AFTER REMERGE ADDRESS<<<<<<<<<<");
 		}
 		return targetAddr;
 	}
