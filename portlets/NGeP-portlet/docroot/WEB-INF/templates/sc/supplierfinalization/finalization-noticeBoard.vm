@@ -150,6 +150,88 @@
 	</tbody>
 </table>
 <br/>
+
+#if ($panel == "false" and $zonal == "true")
+	<br/>
+	<table width="100%" border="0" bordercolor="#142396" cellpadding="0" cellspacing="0">
+		<tbody>
+			<tr>
+				<th bgcolor="#a2a2a2" class="header">Zone Information</th>
+			</tr>
+		</tbody>
+	</table>
+	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+		<tbody>
+			<tr>
+				<td>
+					#if ($zoneLocLevel == "true")
+						<table width="100%" border="0" cellpadding="0" cellspacing="0">
+							<tbody>
+								<tr>
+									<td width="15%" class="standard"><nobr>Zone Coverage:</nobr></td>
+									<td class="standard">$zoneLocationLevel</td>
+								</tr>
+							</tbody>
+						</table>
+						<br/>
+						<table width="100%" border="0" bordercolor="#142396" cellpadding="0" cellspacing="0">
+							<tbody>
+								<tr>
+									<th bgcolor="#a2a2a2" class="header">Zone</th>
+								</tr>
+							</tbody>
+						</table>
+						<br/>
+						<table width="100%" border="0" cellpadding="0" cellspacing="0">
+							<tbody>
+								<tr>
+									<th bgcolor="#6d839b" class="title border left">Zone</th>
+									<th bgcolor="#6d839b" class="title border left-right">State</th>
+									#if ($zoneLocationLevel == "District")
+										<th bgcolor="#6d839b" class="title border left-right">District</th>
+									#end
+								</tr>
+								#foreach($location in $zoneLocality.keySet())
+									<tr class="ui-content">
+										#if ($zoneLocationLevel == "District")
+											<td class="standard border-bottom left" colspan="3">$location.zoneName</td>
+										#else 
+											<td class="standard border-bottom left" colspan="2">$location.zoneName</td>
+										#end
+									</tr>								
+									#foreach($locState in $zoneLocality.get($location).keySet())
+										#if ($zoneLocationLevel == "District")
+											<tr class="ui-content">
+												<td class="standard border-bottom left"></td>
+												<td class="standard border-bottom left-right" colspan="2">$locState.stateName</td>
+											</tr>
+											#foreach($locDistrict in $zoneLocality.get($location).get($locState))
+												<tr class="ui-content">
+													<td class="standard border-bottom left"></td>
+													<td class="standard border-bottom left-right"></td>
+													<td class="standard border-bottom left-right">
+														$locDistrict.districtName
+													</td>														
+												</tr>
+											#end											
+										#else
+											<tr class="ui-content">
+												<td class="standard border-bottom left"></td>
+												<td class="standard border-bottom left-right">$locState.stateName</td>
+											</tr>											
+										#end
+									#end
+								#end
+							</tbody>
+						</table>
+					#end
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<br/>
+#end
+
 #if ($panel == "true")
 	<table width="100%" border="0" bordercolor="#142396" cellpadding="0" cellspacing="0">
 		<tbody>
@@ -201,6 +283,7 @@
 		</tbody>
 	</table>
 #end 
+
 #if ($panel == "false")
 	<table width="100%" border="0" bordercolor="#142396" cellpadding="0" cellspacing="0">
 		<tbody>
@@ -264,7 +347,7 @@
 	<table width="100%" border="0" bordercolor="#142396" cellpadding="0" cellspacing="0">
 		<tbody>
 			<tr>
-				<th bgcolor="#a2a2a2" class="header">Location Selection</th>
+				<th bgcolor="#a2a2a2" class="header">Locality</th>
 			</tr>
 		</tbody>
 	</table>
@@ -276,7 +359,7 @@
 						<table width="100%" border="0" cellpadding="0" cellspacing="0">
 							<tbody>
 								<tr>
-									<td width="15%" class="standard"><nobr>Location Level:</nobr></td>
+									<td width="15%" class="standard"><nobr>Locality Coverage:</nobr></td>
 									<td class="standard">$locationLevel</td>
 								</tr>
 							</tbody>
@@ -293,21 +376,30 @@
 						<table width="100%" border="0" cellpadding="0" cellspacing="0">
 							<tbody>
 								<tr>
-									<th bgcolor="#6d839b" class="title border left">Zone</th>
-									<th bgcolor="#6d839b" class="title border left-right">State</th>
 									#if ($locationLevel == "District")
+										<th bgcolor="#6d839b" class="title border left-right" colspan="2">State</th>
 										<th bgcolor="#6d839b" class="title border left-right">District</th>
+									#else
+										<th bgcolor="#6d839b" class="title border left-right">State</th>
 									#end
 								</tr>
-								#foreach($location in $zoneLocality)
-									#foreach($locCriteria in $location.tplSpecZoneLocs)
-									<tr class="ui-content">
-										<td class="standard border-bottom left">$location.zoneName</td>
-										<td class="standard border-bottom left-right">$locCriteria.pmState.stateName</td>
-										#if ($locationLevel == "District")
-											<td class="standard border-bottom left-right">$locCriteria.pmDistrict.districtName</td>
-										#end
-									</tr>
+								#foreach($locState in $locality.keySet())
+									#if ($zoneLocationLevel == "District")
+										<tr class="ui-content">
+											<td class="standard border-bottom left-right" colspan="2">$locState.stateName</td>
+										</tr>
+										#foreach($locDistrict in $locality.get(locState))
+											<tr class="ui-content">
+												<td class="standard border-bottom left-right"></td>
+												<td class="standard border-bottom left-right">
+													$locDistrict.districtName
+												</td>														
+											</tr>
+										#end											
+									#else
+										<tr class="ui-content">
+											<td class="standard border-bottom left-right">$locState.stateName</td>
+										</tr>											
 									#end
 								#end
 							</tbody>
@@ -327,18 +419,31 @@
 								<table width="100%" border="0" cellpadding="0" cellspacing="0">
 									<tbody>
 										<tr>
-											<th bgcolor="#6d839b" class="title border left-right">State</th>
 											#if ($locationLevel == "District")
+												<th bgcolor="#6d839b" class="title border left-right" colspan="2">State</th>
 												<th bgcolor="#6d839b" class="title border left-right">District</th>
+											#else
+												<th bgcolor="#6d839b" class="title border left-right">State</th>
 											#end
 										</tr>
-										#foreach($tplSpecLoc in $locality)
-											<tr class="ui-content">
-												<td class="standard border-bottom left-right">$tplSpecLoc.pmState.stateName</td>
-												#if ($locationLevel == "District")
-													<td class="standard border-bottom left-right">$tplSpecLoc.pmDistrict.districtName</td>
-												#end
-											</tr>
+										#foreach($locState in $locality.keySet())
+											#if ($zoneLocationLevel == "District")
+												<tr class="ui-content">
+													<td class="standard border-bottom left-right" colspan="2">$locState.stateName</td>
+												</tr>
+												#foreach($locDistrict in $locality.get(locState))
+													<tr class="ui-content">
+														<td class="standard border-bottom left-right"></td>
+														<td class="standard border-bottom left-right">
+															$locDistrict.districtName
+														</td>														
+													</tr>
+												#end											
+											#else
+												<tr class="ui-content">
+													<td class="standard border-bottom left-right">$locState.stateName</td>
+												</tr>											
+											#end
 										#end
 									</tbody>
 								</table>
