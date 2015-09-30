@@ -155,7 +155,8 @@
 					<h:outputText rendered="#{item.scRequestItem.cmItem!=null}" value="#{item.scRequestItem.cmItem.extensionCode}" />
 				</p:column>				
 				<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;">
-					<h:outputText value="#{item.scRequestItem.itemName}" />
+					<h:outputText value="#{item.scRequestItem.itemName}" id="itemDesc"/>
+					<p:tooltip for="itemDesc" value="#{item.scRequestItem.itemDesc}" rendered="#{item.scRequestItem.itemDesc!=null}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.uom']}">
 					<h:outputText value="#{item.scRequestItem.uom.uomName}" />
@@ -684,7 +685,8 @@
 					<h:outputText rendered="#{item.scRequestItem.cmItem!=null}" value="#{item.scRequestItem.cmItem.extensionCode}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.item.name']}">
-					<h:outputText value="#{item.itemName}" />
+					<h:outputText value="#{item.itemName}" id="itemDesc"/>
+					<p:tooltip for="itemDesc" value="#{item.itemDesc}" rendered="#{item.itemDesc!=null}" />
 				</p:column>
 			</p:dataTable>
 

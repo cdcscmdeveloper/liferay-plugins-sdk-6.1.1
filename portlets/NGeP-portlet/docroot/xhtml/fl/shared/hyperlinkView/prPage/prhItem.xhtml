@@ -98,7 +98,8 @@
 					<h:outputText rendered="#{flItem.scRequestItem.cmItem!=null}" value="#{flItem.scRequestItem.cmItem.extensionCode}" title="Requested Quantity: #{flItem.scRequestItem.quantity eq null ? lbl['lbl.fl.supp.na'] : flItem.scRequestItem.quantity}"/>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;">
-					<h:outputText value="#{flItem.scRequestItem.itemName}" />
+					<h:outputText value="#{flItem.scRequestItem.itemName}" id="itemDesc"/>
+					<p:tooltip for="itemDesc" value="#{flItem.scRequestItem.itemDesc}" rendered="#{flItem.scRequestItem.itemDesc!=null}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.uom']}">
 					<h:outputText value="#{flItem.scRequestItem.uom.uomName}" />
