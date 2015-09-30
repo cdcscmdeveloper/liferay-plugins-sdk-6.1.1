@@ -6118,9 +6118,8 @@ public class SmApplicationUtil {
 				&& !SmCommonUtil.isCollectionEmpty(appl.getSmCompanyBasic()
 						.getSmCompanyAddresses())) {
 			if (isSave) {
-				setAddressTransientValueBeforeSave(getReMergeAddress(appl
-						.getSmCompanyBasic().getSmCompanyAddresses().get(0)
-						.getSmAddress()));
+				setAddressTransientValueBeforeSave(appl.getSmCompanyBasic()
+						.getSmCompanyAddresses().get(0).getSmAddress());
 			} else {
 				setAddressTransientValueAfterLoad(appl.getSmCompanyBasic()
 						.getSmCompanyAddresses().get(0).getSmAddress());
@@ -6131,8 +6130,7 @@ public class SmApplicationUtil {
 			for (SmFacility smFac : appl.getSmFacilities()) {
 				if (smFac.getFacilityType() != null) {
 					if (isSave) {
-						setAddressTransientValueBeforeSave(getReMergeAddress(smFac
-								.getSmAddress()));
+						setAddressTransientValueBeforeSave(smFac.getSmAddress());
 					} else {
 						setAddressTransientValueAfterLoad(smFac.getSmAddress());
 					}
@@ -6143,8 +6141,7 @@ public class SmApplicationUtil {
 		if (!SmCommonUtil.isCollectionEmpty(appl.getSmAssociateCompanies())) {
 			for (SmAssociateCompany assoc : appl.getSmAssociateCompanies()) {
 				if (isSave) {
-					setAddressTransientValueBeforeSave(getReMergeAddress(assoc
-							.getSmAddress()));
+					setAddressTransientValueBeforeSave(assoc.getSmAddress());
 				} else {
 					setAddressTransientValueAfterLoad(assoc.getSmAddress());
 				}
@@ -6154,8 +6151,7 @@ public class SmApplicationUtil {
 		if (!SmCommonUtil.isCollectionEmpty(appl.getSmSupplierBranches())) {
 			for (SmSupplierBranch branch : appl.getSmSupplierBranches()) {
 				if (isSave) {
-					setAddressTransientValueBeforeSave(getReMergeAddress(branch
-							.getSmAddress()));
+					setAddressTransientValueBeforeSave(branch.getSmAddress());
 				} else {
 					setAddressTransientValueAfterLoad(branch.getSmAddress());
 				}
@@ -6165,8 +6161,7 @@ public class SmApplicationUtil {
 		if (!SmCommonUtil.isCollectionEmpty(appl.getSmSupplierBanks())) {
 			for (SmSupplierBank bank : appl.getSmSupplierBanks()) {
 				if (isSave) {
-					setAddressTransientValueBeforeSave(getReMergeAddress(bank
-							.getSmAddress()));
+					setAddressTransientValueBeforeSave(bank.getSmAddress());
 				} else {
 					setAddressTransientValueAfterLoad(bank.getSmAddress());
 				}
@@ -6180,8 +6175,8 @@ public class SmApplicationUtil {
 					for (SmPersonnelAddress perAddr : pers
 							.getSmPersonnelAddresses()) {
 						if (isSave) {
-							setAddressTransientValueBeforeSave(getReMergeAddress(perAddr
-									.getSmAddress()));
+							setAddressTransientValueBeforeSave(perAddr
+									.getSmAddress());
 						} else {
 							setAddressTransientValueAfterLoad(perAddr
 									.getSmAddress());
@@ -6194,8 +6189,7 @@ public class SmApplicationUtil {
 		if (!SmCommonUtil.isCollectionEmpty(appl.getSmEquityCompanies())) {
 			for (SmEquityCompany eq : appl.getSmEquityCompanies()) {
 				if (isSave) {
-					setAddressTransientValueBeforeSave(getReMergeAddress(eq
-							.getSmAddress()));
+					setAddressTransientValueBeforeSave(eq.getSmAddress());
 				} else {
 					setAddressTransientValueAfterLoad(eq.getSmAddress());
 				}
@@ -6243,18 +6237,6 @@ public class SmApplicationUtil {
 						addr.getCityId()));
 			}
 		}
-	}
-
-	private SmAddress getReMergeAddress(SmAddress srcAddr) {
-		log.info(">>>>>>>>>>>>>>BEFORE REMERGE ADDRESS<<<<<<<<<<");
-		SmAddress targetAddr = srcAddr;
-		if (srcAddr != null && srcAddr.getAddressId() != null) {
-			targetAddr = SmCommonUtil.getInstance().getSmAddressById(
-					srcAddr.getAddressId());
-			SmCommonUtil.getInstance().copyAddress(srcAddr, targetAddr);
-			log.info(">>>>>>>>>>>>>>AFTER REMERGE ADDRESS<<<<<<<<<<");
-		}
-		return targetAddr;
 	}
 
 	private boolean isCatL3Valid(SmAppl appl, String facilityType,
