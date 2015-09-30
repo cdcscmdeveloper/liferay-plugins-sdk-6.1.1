@@ -123,6 +123,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
@@ -889,6 +890,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	     		int contractDuration = getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() 
      					+ getManagedBean().getContractVer().getCtContractValue().getContractPeriod();
      			getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setContractDuration(new BigDecimal(contractDuration));
+     			
+     			getSupplierListForLoaAck();
+     			reqDTO.setSupplierList(getManagedBean().getSupplierList());
+	     	}
+	     	
+	     	if(getManagedBean().getContractVer().getCtAmendment().isRouteToBPK()) {
+	     		getBpkApproverList();
+	     		reqDTO.setBpkApproverList(getManagedBean().getBpkApproverList());
 	     	}
 	     		
 	     	if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
@@ -1215,22 +1224,30 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FA_HT_NAME))
 				&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 			
-			if (!getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()
-					&& !getManagedBean().getContractVer().getCtAmendment().isRouteToBPK()) {
-				// Validation for remark is mandatory if breach rule
-		 		if (!getManagedBean().getContractVer().getCtAmendment().isComplyAP201()) {		 			
-					if ((getManagedBean().getRemarkList().get(0).getRemark() == null 
-							|| getManagedBean().getRemarkList().get(0).getRemark().length() == 0)) {
-						RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-						throw new EpException(MessageConst.ERROR_750034);
+			if (!getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()) {
+				if (!getManagedBean().getContractVer().getCtAmendment().isRouteToBPK()) {
+					// Validation for remark is mandatory if breach rule
+			 		if (!getManagedBean().getContractVer().getCtAmendment().isComplyAP201()) {		 			
+						if ((getManagedBean().getRemarkList().get(0).getRemark() == null 
+								|| getManagedBean().getRemarkList().get(0).getRemark().length() == 0)) {
+							RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+							throw new EpException(MessageConst.ERROR_750034);
+						}
+			 		}				
+					//Validation for committee
+					if (getManagedBean().getContractVer().getCtAmendment().getSecretary() == null) {
+						RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.secretary", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					}
-		 		}				
-				//Validation for committee
-				if (getManagedBean().getContractVer().getCtAmendment().getSecretary() == null) {
-					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.secretary", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				} else {
+					// Validation for valid bpk approver for special approver task assignment
+					getBpkApproverList();
+					if (getManagedBean().getBpkApproverList() == null || getManagedBean().getBpkApproverList().isEmpty()) {
+						RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+						throw new EpException(MessageConst.ERROR_750038);
+					}					
 				}
 			}
 		}
@@ -1329,6 +1346,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				&& getManagedBean().getApproverModel().getTarget().size() == 0) {
 			RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
+		}
+		// Validation for valid supplier for acknowledge loa task assignment
+		if (getManagedBean().isPrepareLOA() 
+				&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
+						|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
+			getSupplierListForLoaAck();
+	    	if (getManagedBean().getSupplierList() == null 
+	    			|| getManagedBean().getSupplierList().isEmpty()) {
+	    		throw new EpException(MessageConst.ERROR_750039);
+	    	}
 		}
 				
 		if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) 
@@ -1671,6 +1698,55 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().getContractVer().getCtAmendment().setSecretary(pmUser);
 			}
 		}
+	}
+	
+	/**
+	 * The method used to retrieve the bpk approver list by the role code.
+     */
+	private void getBpkApproverList() {
+		try{
+			if (getManagedBean().getBpkApproverList() == null) {
+				getManagedBean().setBpkApproverList(new ArrayList<PmUser>());
+				IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				UserReqDTO userReqDTO = new UserReqDTO();
+				userReqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
+				UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+				getManagedBean().setBpkApproverList(userResDTO.getUserList());
+			}
+		} finally {}
+	}
+	
+	/**
+	 * The method used to retrieve the supplier list for LOA acknowledgment.
+     */
+	private void getSupplierListForLoaAck() {		
+		try{
+			if (getManagedBean().getSupplierList() == null) {
+				getManagedBean().setSupplierList(new ArrayList<SmPersonnel>());
+				IContractAmendmentSO amendSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
+				ContractAmendmentReqDTO amendReqDTO = new ContractAmendmentReqDTO();
+				amendReqDTO.setSupplierId(getManagedBean().getContractVer().getCtContract().getSmSupplier().getSupplierId());
+				amendReqDTO.setContractSigner(true);
+				ContractAmendmentResDTO amendResDTO = amendSO.retrieveSupplierListById(amendReqDTO);
+				
+				getManagedBean().setSupplierList(amendResDTO.getSupplierList());
+//				IPersonnelSO personnelSO =  SmServiceLookup.getPersonnelSO();
+//				PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
+//				personnelReqDTO.setSmSupplierId(getManagedBean().getContractVer().getCtContract().getSmSupplier().getSupplierId());
+//				PersonnelResDTO personnelResDTO = personnelSO.retrievePersonnelBySupplierId(personnelReqDTO);
+//				
+//				for (SmPersonnel smPersonel : personnelResDTO.getSmPersonnelList()) {
+//					if (smPersonel.getPmUser() != null && smPersonel.isRecordStatus()
+//							&& smPersonel.isContractSigner()) { //Only supplier with contract signer for acknowledge
+//						if (!smPersonel.getPmUser().isRecordStatus()) { //TODO remove !
+//							getManagedBean().getSupplierList().add(smPersonel);
+//						}
+//					}
+//				}
+			}
+		} finally {}
 	}
 	
 	/**
