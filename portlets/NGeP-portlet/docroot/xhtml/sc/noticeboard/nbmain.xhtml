@@ -47,7 +47,7 @@
 						value="#{lbl['lbl.sc.ministry']}" /></td>
 
 				<td><ac:lov id="minstryPtj" lovId="PM_ORG_PROFILE_MINSTRY"
-						headerText="MinistryOrgProfile Lov" update="@form"
+						headerText="#{lbl['lbl.sc.notice.board.ministry.search']}" update="@form"
 						saveObject="noticeBoardBackingBean.managedBean.ministryProfile"
 						value="#{noticeBoardBackingBean.managedBean.ministryProfile.orgName}"
 						size="25" readonly="true" /></td>
@@ -60,7 +60,7 @@
 						value="#{lbl['lbl.sc.ptj.group']}" /></td>
 
 				<td><ac:lov id="PtjGropup" lovId="PM_ORG_PROFILE_PTJ_GROUP"
-						headerText="PTJGroupOrgProfile Lov" update="@form"
+						headerText="#{lbl['lbl.sc.notice.board.ptj.group.search']}" update="@form"
 						saveObject="noticeBoardBackingBean.managedBean.ptjGroupProfile"
 						value="#{noticeBoardBackingBean.managedBean.ptjGroupProfile.orgName}"
 						size="25" readonly="true" 
@@ -70,7 +70,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
 				<td><ac:lov id="openPtj" lovId="PM_ORG_PROFILE_PTJ"
-						headerText="PTJOrgProfile Lov"
+						headerText="#{lbl['lbl.sc.notice.board.ptj.search']}"
 						saveObject="noticeBoardBackingBean.managedBean.ptjProfile"
 						value="#{noticeBoardBackingBean.managedBean.ptjProfile.orgName}"
 						size="25" readonly="true"
