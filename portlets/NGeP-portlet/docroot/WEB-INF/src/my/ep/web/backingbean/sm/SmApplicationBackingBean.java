@@ -725,6 +725,8 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setSmAppl(smAppl);
 
 			if (fromBpm) {
+				SmApplicationUtil.getInstance().setApplAddressTransientValue(
+						getManagedBean().getSmAppl(), false);
 				SmApplicationUtil.checkOverLappingCategories(getManagedBean());
 				if (!(getManagedBean().isApproverUser() || getManagedBean()
 						.isPoUser())) {
@@ -752,8 +754,8 @@ public class SmApplicationBackingBean extends
 							.setWithFederal(true);
 				}
 
-				SmApplicationUtil.getInstance().setApplAddressTransientValue(
-						getManagedBean().getSmAppl(), false);
+				// SmApplicationUtil.getInstance().setApplAddressTransientValue(
+				// getManagedBean().getSmAppl(), false);
 
 			} else {
 				if (!StringUtils.isEmpty(getManagedBean().getCurrentStatus())) {
@@ -1758,8 +1760,8 @@ public class SmApplicationBackingBean extends
 			return true;
 		} finally {
 			mofRegistrationSO = null;
-			SmApplicationUtil.getInstance().setApplAddressTransientValue(
-					getManagedBean().getSmAppl(), false);
+			// SmApplicationUtil.getInstance().setApplAddressTransientValue(
+			// getManagedBean().getSmAppl(), false);
 			SmFieldChangeUtil.setApplTableListChangeStatus(getManagedBean()
 					.getLatestAppl(), getManagedBean().getSmAppl());
 		}
@@ -4370,8 +4372,8 @@ public class SmApplicationBackingBean extends
 	 * Save or update the latest information of the application i.e. SmAppl .
 	 */
 	private void saveOrUpdateAppl() {
-		SmApplicationUtil.getInstance().setApplAddressTransientValue(
-				getManagedBean().getSmAppl(), true);
+		// SmApplicationUtil.getInstance().setApplAddressTransientValue(
+		// getManagedBean().getSmAppl(), true);
 		IMofRegistrationSO mofRegistrationSO = null;
 		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
 				.getCompanyBasicGst());
@@ -6303,8 +6305,8 @@ public class SmApplicationBackingBean extends
 		IMofRegistrationSO regSo = null;
 		boolean valid = false;
 		try {
-			SmApplicationUtil.getInstance().setApplAddressTransientValue(
-					getManagedBean().getSmAppl(), true);
+			// SmApplicationUtil.getInstance().setApplAddressTransientValue(
+			// getManagedBean().getSmAppl(), true);
 			SmAppl bpmAppl = getManagedBean().getSmAppl();
 			bpmAppl.setApplSaveDate(new Timestamp(System.currentTimeMillis()));
 
