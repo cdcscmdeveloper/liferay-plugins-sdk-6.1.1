@@ -852,6 +852,8 @@ public class ApprovalBackingBean extends
 										documentsBackingBean
 												.createDocumentAttachments();
 									} catch (Exception e) {
+										e.printStackTrace();
+										
 										throw new EpException(e.getMessage());
 									}
 									qt.setScQtDocReports(this.getManagedBean()
