@@ -14,7 +14,7 @@
 			value="#{profileManagementBackingBean.userOrgDataModel}"
 			var="userOrg">
 			<ac:paginator for="dtUserResult" />
-			<p:column headerText="#{lbl['lbl.pm.profiles.search.orgname']}" width="25%">			
+			<p:column headerText="#{lbl['lbl.pm.profiles.search.orgname']}" style="width :25%;white-space : normal">			
 				#{ParameterConst.orgTypeSupplier eq profileManagementBackingBean.managedBean.selectedOrgType.parameterCode ?
 				userOrg.pmOrgProfile.smSupplier.companyName : 
 				ParameterConst.orgTypeFactoring eq profileManagementBackingBean.managedBean.selectedOrgType.parameterCode ? 
@@ -22,13 +22,13 @@
 				}
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.idno']}" width="15%">
+			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.idno']}" style="width :15%;white-space : normal">
 				#{userOrg.pmUser.identificationNo}
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.username']}" width="25%">
+			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.username']}" style="width :25%;white-space : normal">
 				#{userOrg.pmUser.userName}
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.designation']}" width="10%">
+			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.designation']}" style="width :10%;white-space : normal">
 				#{userOrg.designation}
 			</p:column>
 
