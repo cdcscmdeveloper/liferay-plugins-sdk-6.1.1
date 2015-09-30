@@ -841,7 +841,11 @@ public class SmApplicationBackingBean extends
 								.isBlank(fac.getSmAddress().getAddress1())) {
 					log.info(">>>>>>>>>>>>>>INITIATE OFFICE<<<<<<<<<<<<<<<");
 					fac.setSmAddress(new SmAddress());
-					copyHqAddressToAddr(fac.getSmAddress());
+					SmApplicationUtil.getInstance().cloneAddress(
+							fac.getSmAddress(),
+							getManagedBean().getSmAppl().getSmCompanyBasic()
+									.getSmCompanyAddresses().get(0)
+									.getSmAddress());
 				}
 				fac.setFacilityName(getManagedBean().getSmAppl()
 						.getSmCompanyBasic().getCompanyName());
@@ -851,10 +855,13 @@ public class SmApplicationBackingBean extends
 				fac.setRevNo(1);
 				smAppl.getSmFacilities().add(fac);
 				this.getManagedBean().setBasicCompanyFacility(fac);
-				SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
-						getManagedBean(),
-						getManagedBean().getBasicCompanyFacility().getSmAddress(),
-						SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
+				SmApplicationUtil
+						.getInstance()
+						.assignStateDistAndCityForSelVal(
+								getManagedBean(),
+								getManagedBean().getBasicCompanyFacility()
+										.getSmAddress(),
+								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
 
 			} else {
 				setApplicationFailities(smAppl.getSmFacilities());
