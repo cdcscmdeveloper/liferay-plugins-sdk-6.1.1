@@ -26,7 +26,7 @@
 				        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.content']}"/>
 				  	</f:facet>
 					<p:outputLabel value="#{contentsVar.title}" style="float:left;" rendered="#{contentsVar.contentType.parameterCode != ParameterConst.agreementUserUploadDoc}" />
-					<p:inputText value="#{contentsVar.title}" style="width:90%;" rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementUserUploadDoc}"/>
+					<p:inputText value="#{contentsVar.title}"  maxlength="50"  style="width:90%;" rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementUserUploadDoc}"/>
 				</p:column>
 				
 				<p:column style="width:40%px;">
