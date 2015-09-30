@@ -850,9 +850,10 @@ public class SmApplicationBackingBean extends
 				fac.setRevNo(1);
 				smAppl.getSmFacilities().add(fac);
 				this.getManagedBean().setBasicCompanyFacility(fac);
-				getManagedBean().setBasicOffFacStates(
-						SmCommonUtil.getStateList(fac.getSmAddress()
-								.getPmCountry().getCountryId()));
+				SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
+						getManagedBean(),
+						getManagedBean().getBasicCompanyFacility().getSmAddress(),
+						SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
 
 			} else {
 				setApplicationFailities(smAppl.getSmFacilities());
@@ -2163,17 +2164,7 @@ public class SmApplicationBackingBean extends
 	 *            -AjaxBehaviorEvent object
 	 */
 	public void officeFacilitySelected(AjaxBehaviorEvent e) {
-		log.info(">>>>>>>>INVOKE FAC TYPE<<<<<<<<");
-		if (getManagedBean().getBasicCompanyFacility().getSmAddress() == null
-				|| getManagedBean().getBasicCompanyFacility().getSmAddress()
-						.getAddressId() == null) {
-			copyHqAddressToAddr(getManagedBean().getBasicCompanyFacility()
-					.getSmAddress());
-		}
-		SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
-				getManagedBean(),
-				getManagedBean().getBasicCompanyFacility().getSmAddress(),
-				SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
+		log.info(">>>>>>>>INVOKE FAC TYPE2<<<<<<<<");
 		setFacilityDefaultPrices(getManagedBean().getBasicCompanyFacility());
 		initBusinessPremise();
 	}
