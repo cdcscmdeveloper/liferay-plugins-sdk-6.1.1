@@ -486,7 +486,7 @@
 					<tr>
 						<th width="20%"><p:outputLabel
 								value="#{lbl['lbl.pm.profiles.userdetails.status']}" /></th>
-						<td><p:selectOneMenu
+						<td><p:selectOneMenu id="somUserOrgStatus"
 								disabled="#{profileManagementBackingBean.managedBean.selectedUser.brandNew or (!profileManagementBackingBean.managedBean.selectedUser.brandNew and profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or isSupplierOrgType)}"
 								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.recordStatusFlg}"
 								styleClass="ppDropDownWidthL">
