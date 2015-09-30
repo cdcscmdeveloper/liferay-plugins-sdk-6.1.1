@@ -2891,9 +2891,8 @@ public class SmCommonUtil {
 	}
 
 	public void copyAddress(SmAddress srcAddr, SmAddress targetAddr) {
-		if (targetAddr == null || targetAddr.getPmCountry() == null
-				|| targetAddr.getPmState() == null) {
-			targetAddr = SmApplicationUtil.setDefaultAddr(null);
+		if (targetAddr == null) {
+			targetAddr = new SmAddress();
 		}
 		BeanUtils.copyProperties(srcAddr, targetAddr, new String[] {
 				"smAssociateCompanies", "smEquityCompanies", "smFacilities",
