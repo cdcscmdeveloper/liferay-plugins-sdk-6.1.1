@@ -418,7 +418,15 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		if (getManagedBean().getOriginalAccountNo() != null && getManagedBean().getOriginalAccountNo().equalsIgnoreCase(
 				getManagedBean().getContractVer().getCtContractValue().getBankAccountNo())) {
 			throw new EpException(MessageConst.ERROR_750000);
-		}		
+		}
+		// Validation for valid contract admin for next task assignment
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isSupplierRole()) {
+	    	getContractAdminlist();
+	    	if (getManagedBean().getContractAdminlist() == null 
+	    			|| getManagedBean().getContractAdminlist().isEmpty()) {
+	    		throw new EpException(MessageConst.ERROR_750037);
+	    	}
+		}
 		
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
 			 CtRemark remark = getManagedBean().getRemarkList().get(0);
@@ -604,7 +612,15 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 					RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 					throw new EpException(MessageConst.ERROR_750001);
 				}
-			}		
+			}
+			// Validation for valid contract admin for next task assignment
+			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isSupplierRole()) {
+		    	getContractAdminlist();
+		    	if (getManagedBean().getContractAdminlist() == null 
+		    			|| getManagedBean().getContractAdminlist().isEmpty()) {
+		    		throw new EpException(MessageConst.ERROR_750037);
+		    	}
+			}
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) 
 					&& getManagedBean().getApproverModel().getTarget().size() == 0) {
 				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
@@ -621,7 +637,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				sb.append(action);			
 				getManagedBean().setTextBeforeSign(sb.toString());	
 				getManagedBean().setButtonAction(action);
-			}	
+			}
 		}
 	}
 	
@@ -1236,17 +1252,25 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		UserReqDTO userReqDTO = null;
 		
 		try{
-			getManagedBean().setContractAdminlist(new ArrayList<PmUser>());
-			if (!getManagedBean().getCtContract().getLoa().getContractAdmin().isRecordStatus()) {
-				userReqDTO = new UserReqDTO();
-				userReqDTO.setRoleCode(RoleCode.MIN_CONTRACT_ADMIN.value());
-	    		userReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-	    		userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-	    				ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);
-	    		userResDTO = userSO.retrieveUserListByRole(userReqDTO);
-	    		getManagedBean().setContractAdminlist(userResDTO.getUserList());
-			} else {
-				getManagedBean().getContractAdminlist().add(getManagedBean().getCtContract().getLoa().getContractAdmin());
+			if (getManagedBean().getContractAdminlist() == null) {
+				getManagedBean().setContractAdminlist(new ArrayList<PmUser>());				
+				if (getManagedBean().getCtContract().getLoa().getContractAdmin() == null
+						|| !getManagedBean().getCtContract().getLoa().getContractAdmin().isRecordStatus()) {
+					userReqDTO = new UserReqDTO();
+					if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+							ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+						userReqDTO.setRoleCode(RoleCode.MIN_CONTRACT_ADMIN.value());
+					} else {
+						userReqDTO.setRoleCode(RoleCode.BPK_CCA.value());
+					}
+		    		userReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+		    		userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+		    				ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);
+		    		userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+		    		getManagedBean().setContractAdminlist(userResDTO.getUserList());
+				} else {
+					getManagedBean().getContractAdminlist().add(getManagedBean().getCtContract().getLoa().getContractAdmin());
+				}				
 			}
 		} finally {}	
 	}
