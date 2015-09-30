@@ -2177,7 +2177,7 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 
-	private ScQtFinalizationReportAttachment generateDocumentAttachment(
+	public ScQtFinalizationReportAttachment generateDocumentAttachment(
 			ScQtFinalizationReport scQtFinalizationReport) throws Exception {
 		String definitionType = scQtFinalizationReport.getDefinationType()
 				.getParameterCode();
