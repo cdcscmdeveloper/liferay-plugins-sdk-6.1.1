@@ -839,6 +839,7 @@ public class SmApplicationBackingBean extends
 				if (fac.getSmAddress() == null
 						|| StringUtils
 								.isBlank(fac.getSmAddress().getAddress1())) {
+					log.info(">>>>>>>>>>>>>>INITIATE OFFICE<<<<<<<<<<<<<<<");
 					fac.setSmAddress(new SmAddress());
 					copyHqAddressToAddr(fac.getSmAddress());
 				}
