@@ -88,7 +88,8 @@
 						<h:outputText rendered="#{newItems.scRequestItem.cmItem!=null}" value="#{newItems.scRequestItem.cmItem.extensionCode}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;">
-						<h:outputText value="#{newItems.scRequestItem.itemName}" />
+						<h:outputText value="#{newItems.scRequestItem.itemName}" id="itemDesc"/>
+						<p:tooltip for="itemDesc" value="#{newItems.scRequestItem.itemDesc}" rendered="#{newItems.scRequestItem.itemDesc!=null}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.uom']}">
 						<h:outputText value="#{newItems.scRequestItem.uom.uomName}" />
