@@ -954,13 +954,15 @@ public class SpecificationBackingBean extends
 	 */
 	public void businessOwnerTabChange(int activeIndex) {
 		int previousIndex = this.getManagedBean().getActiveIndex();
-
+		IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTSpecSO.class);
 		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 
 		switch (previousIndex) {
 		case 0:
 			specReqDTO.setScQt(prepareSpecReq().getScQt());
-			// specSo.validateBoGeneralInfo(specReqDTO);
+			specSO.validateBoGeneralInfo(specReqDTO);
 			if (this.getManagedBean().isZoneSpecUpdate()) {
 				ZonesUpdateWarningMessage(this.getManagedBean()
 						.isZonesWarnMessageUpdate());
