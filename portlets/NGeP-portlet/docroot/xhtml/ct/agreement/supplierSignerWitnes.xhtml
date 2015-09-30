@@ -93,13 +93,11 @@
                        <p:column selectionMode="multiple" style="width:2%"/> 
                      
                        <p:column style="width:35%;" headerText="#{lbl['lbl.ct.name']}">
-                           <p:inputText value="#{supplierWitnessVar.officerName}" 
-                              style="width:95%;" maxlength="20"/>
+                           <p:inputText value="#{supplierWitnessVar.officerName}"  style="width:95%;" maxlength="20"/>
                         </p:column>
                        
                         <p:column style="width:20%;" headerText="#{lbl['lbl.ct.ic.no']}"> 
-                            <p:inputText value="#{supplierWitnessVar.officerIc}" label="#{lbl['lbl.ct.ic.no']}" 
-                                style="width:95%;" maxlength="12">
+                            <p:inputText value="#{supplierWitnessVar.officerIc}" label="#{lbl['lbl.ct.ic.no']}"  style="width:95%;" maxlength="12">
                               <p:ajax event="blur" listener="#{agreementBackingBean.addSupplierWitness(1)}"
                                   process="@form"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"></p:ajax>
                               </p:inputText>
@@ -164,7 +162,8 @@
 										<tr>
 											<td></td>
 											<td>
-												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" /> 
+												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" 
+												   onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);" /> 
 												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.remark']}" rendered="#{remarkIndex==0}" />
 												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 											</td>

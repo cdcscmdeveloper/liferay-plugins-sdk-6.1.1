@@ -89,7 +89,8 @@
 	  	 </h:panelGrid>
 	  	
          <p:outputLabel value="#{lbl['lbl.ct.amendment.title']}" />  
-         <p:inputText  value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.title}" style="width:520px;" disabled="true" />
+         <p:inputText  value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.title}" 
+              maxlength="100" style="width:520px;" disabled="true" />
 	     <h:panelGroup>
 		   <div style="height: 40px; vertical-align: top;">
 		      <p:outputLabel for="amendmentD" value="#{lbl['lbl.ct.description']}" />
@@ -98,7 +99,8 @@
 		 <h:panelGrid>
 		    <p:inputTextarea id="amendmentD" 
 		    value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.description}"  
-		    disabled="true" rows="3" style="width:520px;"  autoResize="true" />
+		    disabled="true" rows="3" style="width:520px;"  autoResize="true" 
+		     onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"  />
 		 </h:panelGrid>
 	  </h:panelGrid>
 	</p:panel>
