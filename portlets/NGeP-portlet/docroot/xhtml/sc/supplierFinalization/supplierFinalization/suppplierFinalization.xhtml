@@ -140,7 +140,8 @@
 									<p:selectOneRadio id="biddingEndorsement" required="true" label="#{lbl['lbl.sc.online.bidding.endorsement']}"
 										value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse}" 
 										disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser or 
-															!suppFinalizationBackingBean.managedBean.onlineBidding}">
+															!suppFinalizationBackingBean.managedBean.onlineBidding or 
+																isQTStatusReFinalized}">
 										<f:selectItems value="#{suppFinalizationBackingBean.getBiddingEndorsementRadioBtn()}" />
 										<p:ajax partialSubmit="true" process="@this" update="@this"/>
 						   			</p:selectOneRadio>
