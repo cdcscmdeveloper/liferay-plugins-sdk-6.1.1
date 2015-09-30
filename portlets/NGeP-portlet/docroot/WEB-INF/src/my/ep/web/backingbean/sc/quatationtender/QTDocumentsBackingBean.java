@@ -1269,7 +1269,7 @@ public class QTDocumentsBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 			reqDTO.setScQt(qt);
 			reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
-			resDTO = specSo.retrieveCheckLists(reqDTO);
+			resDTO = specSo.retrieveTechnicalService(reqDTO);
 			if (isAtleastOneSeriveReq(resDTO.getTechnicalCheckList())) {
 				if (null != resDTO.getTechnicalCheckList()) {
 					for (ScQtCheckList checklist : resDTO
@@ -1308,16 +1308,17 @@ public class QTDocumentsBackingBean extends
 											.setScQtDocReport(scQtDocReport);
 									docReportAttachment.setFileName(attachment
 											.getFileName());
-									docReportAttachment.setFilePath(attachment
-											.getFilePath());
-									attachment = docReportAttachment;
+									docReportAttachment.setDocNo(qt.getQtNo());
+									populateAttachmentDetails(docReportAttachment);
+									// docReportAttachment.setFilePath(getActualFilePath(docReportAttachment));
+									// attachment = docReportAttachment;
+									new FileOutputStream(getActualFilePath(docReportAttachment));
 									scQtDocReport
 											.setScQtDocReportAttachment(docReportAttachment);
 								}
 								break;
 							} else {
 								log.info("Testing");
-								docReportAttachment = null;
 							}
 						} else {
 							log.info("Testings");
@@ -1326,8 +1327,6 @@ public class QTDocumentsBackingBean extends
 				} else {
 					log.info("Testingss");
 				}
-			} else {
-				docReportAttachment = null;
 			}
 		} finally {
 			specSo = null;
