@@ -73,6 +73,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sc.common.ScAttachment;
+import my.ep.persistence.entity.sc.common.ScReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
@@ -82,6 +83,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
@@ -95,6 +97,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
 import my.ep.web.backingbean.tpl.doc.TemplateDocBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -2299,11 +2302,48 @@ public class QTDocumentsBackingBean extends
 				.getScQtDocReportList();
 
 		for (int i = 0; i < scQtDocReports.size(); i++) {
-			ScQtDocReportAttachment attachment = scQtDocReports.get(i)
-					.getScQtDocReportAttachment();
-			if (attachment == null) {
-				attachment = generateDocumentAttachment(scQtDocReports.get(i));
-				scQtDocReports.get(i).setScQtDocReportAttachment(attachment);
+			ScQtDocReportAttachment attachment = generateDocumentAttachment(scQtDocReports
+					.get(i));
+			scQtDocReports.get(i).setScQtDocReportAttachment(attachment);
+		}
+
+	}
+
+	/**
+	 * Download all reports.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void reGenerateDocuments(Long qtId, Long statusId,
+			boolean isPcbProcess) {
+		debugLogger("reGenerateDocuments");
+		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+		quationTenderReqDTO.setQtId(qtId);
+		quationTenderReqDTO.setStatusId(statusId);
+		quationTenderReqDTO.setPcbProcess(isPcbProcess);
+		List<ScReport> reports = detailSO.retriveRegenerateDocumentsByQt(
+				quationTenderReqDTO).getRegenerateReports();
+
+		SupplierFinalizationBackingBean finalizationBackingBean = new SupplierFinalizationBackingBean();
+		for (int i = 0; i < reports.size(); i++) {
+
+			try {
+				if (ParameterConst.DOCUMENT_CATEGORY_QUOTATION_TENDER_DOCUMENTS
+						.equalsIgnoreCase(reports.get(i).getDocCategory())) {
+					generateDocumentAttachment((ScQtDocReport) reports.get(i));
+				} else if (ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER
+						.equalsIgnoreCase(reports.get(i).getDocCategory())) {
+					finalizationBackingBean
+							.generateDocumentAttachment((ScQtFinalizationReport) reports
+									.get(i));
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new EpException(e.getMessage());
 			}
 
 		}

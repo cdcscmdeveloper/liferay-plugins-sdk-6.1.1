@@ -1928,6 +1928,8 @@ public class QTDetailBackingBean extends
 								.getInstance().getServiceObject(
 										ModuleCodeConst.SUPPLIER_SELECTION,
 										ICommitteSO.class);
+						updateApprovalRequestDtls(qt.getScQtApprovals(),
+								ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT);
 						CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 						committeReqDTO.setToken(ctxToken);
 						committeReqDTO.setTaskId(this.getManagedBean()

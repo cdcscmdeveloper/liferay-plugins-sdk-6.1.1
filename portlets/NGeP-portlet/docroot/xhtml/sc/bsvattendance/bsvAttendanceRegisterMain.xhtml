@@ -14,24 +14,24 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
-		<h:panelGrid border="0" columns="1" cellpadding="0" cellspacing="0"
-			width="100%">
-			<p:column>
-				<div style="float: right;">
-					<ui:repeat var="bpmAction"
-						value="#{bsvAttendanceBackingBean.managedBean.outComes}">
-						<ui:param name="buttonLabel"
-							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-						<p:commandButton value="#{lbl[buttonLabel]}"
-							styleClass="ui-button"
-							action="#{bsvAttendanceBackingBean.submitBsvDetails(bpmAction)}"
-							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
-					</ui:repeat>
-				</div>
-			</p:column>
-			<p:messages id="messages" showDetail="true"
-				autoUpdate="true" closable="true" severity="error, info" />
-		</h:panelGrid>
+		<p:messages id="messages" showDetail="true" autoUpdate="true"
+			closable="true" severity="error, info" />
+		<div class="ppRightBtn">
+			<h:panelGroup id="bsvattandanceBtns">
+
+
+				<ui:repeat var="bpmAction"
+					value="#{bsvAttendanceBackingBean.managedBean.outComes}">
+					<ui:param name="buttonLabel"
+						value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+					<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
+						action="#{bsvAttendanceBackingBean.submitBsvDetails(bpmAction)}"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+				</ui:repeat>
+
+			</h:panelGroup>
+		</div>
+
 
 		<div align="left" class="header-info">
 			<table style="width: 100%">
