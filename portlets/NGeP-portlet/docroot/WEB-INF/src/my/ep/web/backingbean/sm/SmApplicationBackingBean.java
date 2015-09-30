@@ -839,7 +839,7 @@ public class SmApplicationBackingBean extends
 				if (fac.getSmAddress() == null
 						|| StringUtils
 								.isBlank(fac.getSmAddress().getAddress1())) {
-					fac.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
+					fac.setSmAddress(new SmAddress());
 					copyHqAddressToAddr(fac.getSmAddress());
 				}
 				fac.setFacilityName(getManagedBean().getSmAppl()
