@@ -691,10 +691,8 @@ public class EperundingIntegration extends EperundingTemplate{
 
 			if (resDTO.isSuccessful()) {
 				for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
-					if (smSupplier.getSmAppl().getApplType().equalsIgnoreCase(IntegrationConstants.RECORD_DELETED_CODE)) {
 						deletedCompany = new DeletedCompany();
 						deletedCompany.setmOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
-						
 						if(null!=smSupplier.getSmAppl()){
 							SmRemarksReqDTO remarksReqDTO = new SmRemarksReqDTO();
 							remarksReqDTO.setDocType(IntegrationConstants.RECORD_DELETED_CODE);
@@ -711,7 +709,6 @@ public class EperundingIntegration extends EperundingTemplate{
 							deletedCompany.setReason(IntegrationConstants.EMPTY_TRING);
 							deletedCompany.setDateDeleted(IntegrationConstants.DEFAULT_DATE);
 						}
-					}
 					deletedCompanyList.add(deletedCompany);
 				}
 			}
