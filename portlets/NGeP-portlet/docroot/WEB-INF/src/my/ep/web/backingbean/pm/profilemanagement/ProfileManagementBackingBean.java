@@ -69,6 +69,7 @@ import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserAttachment;
+import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmAddress;
@@ -605,7 +606,7 @@ public class ProfileManagementBackingBean extends
 	public String redirectToMaintainUser(Long id, PmUserOrg selectedOrg)
 			throws Exception {
 		logger.info("redirectToMaintainUser");
-
+		getManagedBean().setRoleTabActiveIndex(0);
 		this.setCurrentActiveOrg();
 		this.generateAdditionalFilter();
 		this.retrieveIdentityTypeMap();
@@ -1338,6 +1339,7 @@ public class ProfileManagementBackingBean extends
 			}
 
 		}
+		getManagedBean().setRoleTabActiveIndex(1);
 
 	}
 
@@ -1786,6 +1788,7 @@ public class ProfileManagementBackingBean extends
 	 */
 	private void updateReceivingAddressFlag() {
 		logger.info("updateReceivingAddressFlag");
+		boolean isReceivingOfficer = false;
 		if (this.getManagedBean().getSelectedUserOrg().getPmUserRoles() != null
 				&& !this.getManagedBean().getSelectedUserOrg().getPmUserRoles()
 						.isEmpty()) {
@@ -1794,7 +1797,22 @@ public class ProfileManagementBackingBean extends
 				if (ProfileManagementConst.RECEIVING_OFFICER.equals(userRole
 						.getPmRole().getRoleCode())) {
 					this.getManagedBean().setReceivingAddressFlag(true);
+					isReceivingOfficer = true;
 					break;
+				}
+			}			
+			if(!isReceivingOfficer){
+				if(getManagedBean().getSelectedReceivingAddrTypes() != null &&
+						!getManagedBean().getSelectedReceivingAddrTypes().isEmpty()){
+					List<PmAddressType> removeNewAddressTypes = new ArrayList<PmAddressType>();
+					for(PmAddressType addType : getManagedBean().getSelectedReceivingAddrTypes()){
+						if(addType.isBrandNew()){
+							removeNewAddressTypes.add(addType);
+						}
+					}
+					if(!removeNewAddressTypes.isEmpty()){
+						getManagedBean().getSelectedReceivingAddrTypes().removeAll(removeNewAddressTypes);
+					}					
 				}
 			}
 		} else {
@@ -1930,6 +1948,24 @@ public class ProfileManagementBackingBean extends
 						pmUserRole.setModified(false);
 					}
 				}
+				
+				
+				if(getManagedBean().getSelectedReceivingAddrTypes() != null &&
+						!getManagedBean().getSelectedReceivingAddrTypes().isEmpty()){
+					List<PmAddressType> removeNewAddressTypes = new ArrayList<PmAddressType>();
+					for(PmAddressType addType : getManagedBean().getSelectedReceivingAddrTypes()){
+						if(addType.isBrandNew()){
+							removeNewAddressTypes.add(addType);
+						}else{
+							if(DbValueConst.RECORD_STATUS_ACTIVE == addType.getRecordStatusFlg()){
+								addType.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+							}
+						}
+					}
+					if(!removeNewAddressTypes.isEmpty()){
+						getManagedBean().getSelectedReceivingAddrTypes().removeAll(removeNewAddressTypes);
+					}					
+				}
 			} else if (pmUserRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 				if (!pmUserRole.isModified()) {
 					pmUserRole.setModified(true);
@@ -1954,6 +1990,7 @@ public class ProfileManagementBackingBean extends
 			}
 		}
 		}
+		getManagedBean().setRoleTabActiveIndex(0);
 
 	}
 
@@ -2963,6 +3000,7 @@ public class ProfileManagementBackingBean extends
 		if(orderBean != null){
 			searchBean.getSortColumns().add(orderBean);
 		}
+		searchBean.getSortColumns().add(new SearchOrderBean("pmUser.userName",true));
 		
 		
 		logger.info("getSearchBeanData - End");
@@ -4987,5 +5025,41 @@ public class ProfileManagementBackingBean extends
 		}
 		
 		return orgName;
+	}
+	
+	public void deleteUserRole(int rowIndex) {
+		List<PmUserRole> userRoles = getManagedBean().getSelectedUserOrg().getPmUserRoles();
+		PmUserRole removeUserRole = userRoles.get(rowIndex);
+		userRoles.remove(removeUserRole);
+		getManagedBean().getSelectedUserOrg().setPmUserRoles(userRoles);
+		updateReceivingAddressFlag();
+		getManagedBean().setRoleTabActiveIndex(0);
+	}
+	
+	public void deleteUserReceivingAddr(int rowIndex){
+		List<PmAddressType> addressTypes = getManagedBean().getSelectedReceivingAddrTypes();
+		PmAddressType removeAddressType = addressTypes.get(rowIndex);
+		addressTypes.remove(removeAddressType);
+		getManagedBean().setSelectedReceivingAddrTypes(addressTypes);
+		updateReceivingAddressFlag();
+		getManagedBean().setRoleTabActiveIndex(1);
+	}
+	
+	public boolean checkActiveReceivingOfficerExist() {
+		logger.info("checkReceivingOfficerExist");
+		boolean isReceivingOfficer = false;
+		if (this.getManagedBean().getSelectedUserOrg().getPmUserRoles() != null
+				&& !this.getManagedBean().getSelectedUserOrg().getPmUserRoles()
+						.isEmpty()) {
+			for (PmUserRole userRole : this.getManagedBean()
+					.getSelectedUserOrg().getPmUserRoles()) {
+				if (ProfileManagementConst.RECEIVING_OFFICER.equals(userRole
+						.getPmRole().getRoleCode()) && DbValueConst.RECORD_STATUS_ACTIVE == userRole.getRecordStatusFlg()) {					
+					isReceivingOfficer = true;
+					break;
+				}
+			}
+		} 		
+		return isReceivingOfficer;
 	}
 }
