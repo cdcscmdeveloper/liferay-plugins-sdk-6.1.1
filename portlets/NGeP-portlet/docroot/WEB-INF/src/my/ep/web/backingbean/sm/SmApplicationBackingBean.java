@@ -839,13 +839,7 @@ public class SmApplicationBackingBean extends
 				if (fac.getSmAddress() == null
 						|| StringUtils
 								.isBlank(fac.getSmAddress().getAddress1())) {
-					log.info(">>>>>>>>>>>>>>INITIATE OFFICE<<<<<<<<<<<<<<<");
-					fac.setSmAddress(new SmAddress());
-					SmApplicationUtil.getInstance().cloneAddress(
-							fac.getSmAddress(),
-							getManagedBean().getSmAppl().getSmCompanyBasic()
-									.getSmCompanyAddresses().get(0)
-									.getSmAddress());
+					copyHqAddressToAddr(fac.getSmAddress());
 				}
 				fac.setFacilityName(getManagedBean().getSmAppl()
 						.getSmCompanyBasic().getCompanyName());
@@ -2172,7 +2166,17 @@ public class SmApplicationBackingBean extends
 	 *            -AjaxBehaviorEvent object
 	 */
 	public void officeFacilitySelected(AjaxBehaviorEvent e) {
-		log.info(">>>>>>>>INVOKE FAC TYPE2<<<<<<<<");
+		if (getManagedBean().getBasicCompanyFacility().getSmAddress() == null
+				|| StringUtils
+						.isBlank(getManagedBean().getBasicCompanyFacility()
+								.getSmAddress().getAddress1())) {
+			copyHqAddressToAddr(getManagedBean().getBasicCompanyFacility()
+					.getSmAddress());
+			SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
+					getManagedBean(),
+					getManagedBean().getBasicCompanyFacility().getSmAddress(),
+					SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
+		}
 		setFacilityDefaultPrices(getManagedBean().getBasicCompanyFacility());
 		initBusinessPremise();
 	}
@@ -7629,13 +7633,8 @@ public class SmApplicationBackingBean extends
 									SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
 				if (smFac.getSmAddress() == null
 						|| smFac.getSmAddress().getAddressId() == null) {
-					if (smFac.getSmAddress() == null
-							|| StringUtils.isBlank(smFac.getSmAddress()
-									.getAddress1())) {
-						smFac.setSmAddress(SmApplicationUtil
-								.setDefaultAddr(null));
-						copyHqAddressToAddr(smFac.getSmAddress());
-					}
+					smFac.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
+					copyHqAddressToAddr(smFac.getSmAddress());
 				}
 				if (!smFac.getOwnershipType().equalsIgnoreCase("O")) {
 					getManagedBean().setBasicOffFacStates(
@@ -9238,7 +9237,11 @@ public class SmApplicationBackingBean extends
 	 *            addr
 	 */
 	private void copyHqAddressToAddr(SmAddress addr) {
-		SmCommonUtil.getInstance().copyAddress(getHqAddress(), addr);
+		log.info(">>>>>>>>>>START CLONING ADDRESS FROM HQ<<<<<<<<<<<<<<");
+		if (addr == null) {
+			addr = new SmAddress();
+		}
+		SmApplicationUtil.assignClonedAddressValues(addr, getHqAddress());
 	}
 
 	/**

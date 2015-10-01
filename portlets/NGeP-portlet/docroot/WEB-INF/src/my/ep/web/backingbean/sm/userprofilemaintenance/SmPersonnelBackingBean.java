@@ -707,10 +707,10 @@ public class SmPersonnelBackingBean extends
 	public void setUpdateMailingAddrSameAsPerm() {
 		if (getManagedBean().getUpdateSmPersonnelMailingAddress()
 				.isSameAsPerm()) {
-			SmAddress address = SmCommonUtil.cloneAddress(getManagedBean()
-					.getUpdateSmPersonnelPermanentAddress().getSmAddress());
-			this.getManagedBean().getUpdateSmPersonnelMailingAddress()
-					.setSmAddress(address);
+			SmApplicationUtil.assignClonedAddressValues(getManagedBean()
+					.getUpdateSmPersonnelMailingAddress().getSmAddress(),
+					getManagedBean().getUpdateSmPersonnelPermanentAddress()
+							.getSmAddress());
 			updateMailAddLists(this.getManagedBean()
 					.getUpdateSmPersonnelMailingAddress().getSmAddress()
 					.getPmCountry().getCountryId().toString(), this
@@ -1151,10 +1151,10 @@ public class SmPersonnelBackingBean extends
 			throws Exception {
 		setAuthorizedFlag(smPersonnel);
 		if (getManagedBean().getBasicSmPersonnelMailingAddress().isSameAsPerm()) {
-			SmAddress address = SmCommonUtil.cloneAddress(getManagedBean()
-					.getBasicSmPersonnelPermanentAddress().getSmAddress());
-			this.getManagedBean().getBasicSmPersonnelMailingAddress()
-					.setSmAddress(address);
+			SmApplicationUtil.assignClonedAddressValues(getManagedBean()
+					.getBasicSmPersonnelMailingAddress().getSmAddress(),
+					getManagedBean().getBasicSmPersonnelPermanentAddress()
+							.getSmAddress());
 		}
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		FacesScopes fs = new FacesScopes();
