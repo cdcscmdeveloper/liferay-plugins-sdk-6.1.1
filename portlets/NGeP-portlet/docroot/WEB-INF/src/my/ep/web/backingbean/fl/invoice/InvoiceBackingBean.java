@@ -1829,6 +1829,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				invVOLvl1.setLvl3(false);
 				invVOLvl1.setItemCode(invItemSummObj.getFlFulfilmentItem().getItemCode());
 				invVOLvl1.setItemName(invItemSummObj.getFlFulfilmentItem().getFlFulfilmentItemAddr().get(0).getScRequestItem().getItemName());
+				invVOLvl1.setItemDesc(invItemSummObj.getFlFulfilmentItem().getFlFulfilmentItemAddr().get(0).getScRequestItem().getItemDesc());
 				invVOLvl1.setUom(invItemSummObj.getFlFulfilmentItem().getFlFulfilmentItemAddr().get(0).getScRequestItem().getUom().getUomName());
 				invVOLvl1.setUomCode(invItemSummObj.getFlFulfilmentItem().getFlFulfilmentItemAddr().get(0).getScRequestItem().getUom().getUomCode());
 				TreeNode lv1TreeNode = new DefaultTreeNode(invVOLvl1.getItemCode(), invVOLvl1, getManagedBean().getChargeLineItemRoot());
