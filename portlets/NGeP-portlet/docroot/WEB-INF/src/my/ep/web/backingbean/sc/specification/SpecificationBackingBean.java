@@ -9689,6 +9689,15 @@ public class SpecificationBackingBean extends
 
 		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
 			this.getManagedBean().setLocalOutCome(action);
+			List<ScQtRemark> remarks = this.getManagedBean().getScQtRemarksList();
+			if (null != remarks) {
+				for (int i = 0; i < remarks.size(); i++) {
+					String userRemark = remarks.get(i).getRemark();
+					if (null == userRemark || "".equals(userRemark)) {
+						throw new EpException(MessageConst.ERROR_760359);
+					}
+				}
+			}
 			RequestContext.getCurrentInstance().execute(
 					"reviceApprovalDlgs.show()");
 		} else if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
