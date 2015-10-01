@@ -626,6 +626,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			for(FlInvoiceItem invItemLv3 : invItemSummLv2.getFlInvoiceItem()){
 				grandTotalReceivedAmt = grandTotalReceivedAmt.add(invItemLv3.getReceivedAmt());
 				InvoiceChargeLineVO chargeLineLv3 = new InvoiceChargeLineVO();
+				chargeLineLv3.setFlInvoiceSummary(invItemSummLv2);
 				chargeLineLv3.setLevel(3);
 				chargeLineLv3.setFlInvoiceItem(invItemLv3);
 				new DefaultTreeNode(chargeLineLv3, lv2TreeNode);

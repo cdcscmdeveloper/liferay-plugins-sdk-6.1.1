@@ -105,7 +105,7 @@
 			</f:facet>
 				<h:outputText value="#{chargeLineNode.flInvoiceItem.receivedQty}" rendered="#{chargeLineNode.level == 3}">
 					<f:converter converterId="dynamicNumberConverter" />
-					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.flInvoiceItem.flInvoiceItemSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomCode)}" />
+					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
 			<p:column style="white-space:normal;text-align:right">
