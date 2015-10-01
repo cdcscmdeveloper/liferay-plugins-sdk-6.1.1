@@ -3696,7 +3696,7 @@ public class DirectLOABackingBean extends
 					}
 				}
 			} catch (Exception e) {
-				//e.printStackTrace();
+				e.printStackTrace();
 				throw new EpException(e.getMessage());
 			}
 			if (null != scLoaReportAttachment
@@ -4771,6 +4771,7 @@ public class DirectLOABackingBean extends
 						schedule.setToDate(df.parse(toDate));
 					}
 				} catch (ParseException e) {
+					e.printStackTrace();
 					throw new EpException(e.toString());
 				}
 				if (schedule.getScLoa() == null) {
