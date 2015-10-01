@@ -348,6 +348,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 				resDTO = orderSO.retrieveFulfilmentOrderById(reqDTO);
 				setDeliveryOrder(resDTO);
+				getSupplierGst(resDTO.getFlOrder().getFlFulfilmentRequest());
 			}
 		} finally {
 			deliveryOrderSO = null;
