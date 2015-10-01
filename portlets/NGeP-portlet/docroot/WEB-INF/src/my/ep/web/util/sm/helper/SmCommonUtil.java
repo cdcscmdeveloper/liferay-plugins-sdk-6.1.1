@@ -1720,141 +1720,34 @@ public class SmCommonUtil {
 		mailAddress.setSmPersonnel(smPersonnel);
 		SmAddress permanent = permAddress.getSmAddress();
 
-		PmCity city = permanent.getPmCity();
-		PmDistrict district = permanent.getPmDistrict();
-		PmState state = permanent.getPmState();
-		PmCountry country = permanent.getPmCountry();
-
-		Long cityId = city.getCityId();
-		Long districtId = district.getDistrictId();
-		Long stateId = state.getStateId();
-		Long countryId = country.getCountryId();
-
-		CountryReqDTO reqCountryDTO = new CountryReqDTO();
-		reqCountryDTO.setCountryId(countryId);
-		CountryResDTO resCountryDTO = SmServiceLookup.getCountrySO()
-				.retrieveCountryById(reqCountryDTO);
-		PmCountry newCountry = resCountryDTO.getPmCountry();
-
-		permanent.setPmCountry(newCountry);
-
-		StateReqDTO reqStateDTO = new StateReqDTO();
-		reqStateDTO.setStateId(stateId);
-		StateResDTO resStateDTO = SmServiceLookup.getStateSO()
-				.retriveStateByID(reqStateDTO);
-		PmState newState = resStateDTO.getPmState();
-
-		permanent.setPmState(newState);
-
-		DistrictReqDTO reqDistrictDTO = new DistrictReqDTO();
-		reqDistrictDTO.setDistrictId(districtId);
-		DistrictResDTO resDistrictDTO = SmServiceLookup.getDistrictSO()
-				.retriveDistrictByID(reqDistrictDTO);
-		PmDistrict newDistrict = resDistrictDTO.getPmDistrict();
-
-		permanent.setPmDistrict(newDistrict);
-
-		CityReqDTO reqCityDTO = new CityReqDTO();
-		reqCityDTO.setCityId(cityId);
-		CityResDTO resCityDTO = SmServiceLookup.getCitySO().retriveCityById(
-				reqCityDTO);
-		PmCity newCity = resCityDTO.getPmCity();
-
-		permanent.setPmCity(newCity);
+		permanent.setPmCountry(SmCommonUtil.getInstance().getCountryById(
+				permanent.getPmCountry().getCountryId()));
+		permanent.setPmState(SmCommonUtil.getInstance().getStateById(
+				permanent.getPmState().getStateId()));
+		permanent.setPmDistrict(SmCommonUtil.getInstance().getDistrictById(
+				permanent.getPmDistrict().getDistrictId()));
+		permanent.setPmCity(SmCommonUtil.getInstance().getCityById(
+				permanent.getPmCity().getCityId()));
 
 		if (mailAddress.isSameAsPerm()) {
-			SmAddress address = cloneAddress(permAddress.getSmAddress());
-			mailAddress.setSmAddress(address);
+			SmApplicationUtil.assignClonedAddressValues(
+					mailAddress.getSmAddress(), permAddress.getSmAddress());
 		} else {
 			SmAddress s2 = mailAddress.getSmAddress();
-
-			city = s2.getPmCity();
-			district = s2.getPmDistrict();
-			state = s2.getPmState();
-			country = s2.getPmCountry();
-
-			cityId = city.getCityId();
-			districtId = district.getDistrictId();
-			stateId = state.getStateId();
-			countryId = country.getCountryId();
-
-			reqCountryDTO = new CountryReqDTO();
-			reqCountryDTO.setCountryId(countryId);
-			resCountryDTO = SmServiceLookup.getCountrySO().retrieveCountryById(
-					reqCountryDTO);
-			newCountry = resCountryDTO.getPmCountry();
-
-			s2.setPmCountry(newCountry);
-
-			reqStateDTO = new StateReqDTO();
-			reqStateDTO.setStateId(stateId);
-			resStateDTO = SmServiceLookup.getStateSO().retriveStateByID(
-					reqStateDTO);
-			newState = resStateDTO.getPmState();
-
-			s2.setPmState(newState);
-
-			reqDistrictDTO = new DistrictReqDTO();
-			reqDistrictDTO.setDistrictId(districtId);
-			resDistrictDTO = SmServiceLookup.getDistrictSO()
-					.retriveDistrictByID(reqDistrictDTO);
-			newDistrict = resDistrictDTO.getPmDistrict();
-
-			s2.setPmDistrict(newDistrict);
-
-			reqCityDTO = new CityReqDTO();
-			reqCityDTO.setCityId(cityId);
-			resCityDTO = SmServiceLookup.getCitySO()
-					.retriveCityById(reqCityDTO);
-			newCity = resCityDTO.getPmCity();
-
-			s2.setPmCity(newCity);
+			s2.setPmCountry(SmCommonUtil.getInstance().getCountryById(
+					s2.getPmCountry().getCountryId()));
+			s2.setPmState(SmCommonUtil.getInstance().getStateById(
+					s2.getPmState().getStateId()));
+			s2.setPmDistrict(SmCommonUtil.getInstance().getDistrictById(
+					s2.getPmDistrict().getDistrictId()));
+			s2.setPmCity(SmCommonUtil.getInstance().getCityById(
+					s2.getPmCity().getCityId()));
 		}
 
 		List<SmPersonnelAddress> smPersonnelAddresses = new ArrayList<SmPersonnelAddress>();
 		smPersonnelAddresses.add(permAddress);
 		smPersonnelAddresses.add(mailAddress);
 		smPersonnel.setSmPersonnelAddresses(smPersonnelAddresses);
-	}
-
-	/**
-	 * Copy address to new address object
-	 * 
-	 * @param SmAddress
-	 *            refAddress
-	 * @return SmAddress
-	 */
-	public static SmAddress cloneAddress(SmAddress refAddress) {
-		SmAddress address = new SmAddress();
-		if (refAddress.getAddress1() != null)
-			address.setAddress1(new String(refAddress.getAddress1().toString()));
-		if (refAddress.getAddress2() != null)
-			address.setAddress2(new String(refAddress.getAddress2().toString()));
-		if (refAddress.getAddress3() != null)
-			address.setAddress3(new String(refAddress.getAddress3().toString()));
-		if (refAddress.getAddress4() != null)
-			address.setAddress4(new String(refAddress.getAddress4().toString()));
-		if (refAddress.getPostcode() != null)
-			address.setPostcode(new String(refAddress.getPostcode().toString()));
-
-		PmCountry country = new PmCountry();
-		PmState state = new PmState();
-		PmDistrict district = new PmDistrict();
-		PmCity city = new PmCity();
-
-		country.setCountryId(refAddress.getPmCountry().getCountryId());
-		address.setPmCountry(country);
-
-		state.setStateId(refAddress.getPmState().getStateId());
-		address.setPmState(state);
-
-		district.setDistrictId(refAddress.getPmDistrict().getDistrictId());
-		address.setPmDistrict(district);
-
-		city.setCityId(refAddress.getPmCity().getCityId());
-		address.setPmCity(city);
-
-		return address;
 	}
 
 	public static boolean validateGstRegNo(String value) {
@@ -2727,33 +2620,34 @@ public class SmCommonUtil {
 	}
 
 	public PmState getStateById(Long stateId) {
-		if(stateId!=null){
+		if (stateId != null) {
 			StateReqDTO reqDTO = new StateReqDTO();
 			reqDTO.setStateId(stateId);
 			return SmServiceLookup.getStateSO().retriveStateByID(reqDTO)
 					.getPmState();
-		}else{
+		} else {
 			return null;
 		}
 	}
 
 	public PmDistrict getDistrictById(Long districtId) {
-		if(districtId!=null){
+		if (districtId != null) {
 			DistrictReqDTO reqDTO = new DistrictReqDTO();
 			reqDTO.setDistrictId(districtId);
 			return SmServiceLookup.getDistrictSO().retriveDistrictByID(reqDTO)
 					.getPmDistrict();
-		}else{
+		} else {
 			return null;
 		}
 	}
 
 	public PmCity getCityById(Long cityId) {
-		if(cityId!=null){
+		if (cityId != null) {
 			CityReqDTO reqDTO = new CityReqDTO();
 			reqDTO.setCityId(cityId);
-			return SmServiceLookup.getCitySO().retriveCityById(reqDTO).getPmCity();
-		}else{
+			return SmServiceLookup.getCitySO().retriveCityById(reqDTO)
+					.getPmCity();
+		} else {
 			return null;
 		}
 	}
