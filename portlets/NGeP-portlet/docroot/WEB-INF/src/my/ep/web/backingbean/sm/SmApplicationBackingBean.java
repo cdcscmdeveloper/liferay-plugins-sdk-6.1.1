@@ -857,7 +857,7 @@ public class SmApplicationBackingBean extends
 				SmApplicationUtil
 						.getInstance()
 						.assignStateDistAndCityForSelVal(
- 								getManagedBean(),
+								getManagedBean(),
 								fac.getSmAddress(),
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
 
@@ -2174,12 +2174,12 @@ public class SmApplicationBackingBean extends
 				|| StringUtils
 						.isBlank(getManagedBean().getBasicCompanyFacility()
 								.getSmAddress().getAddress1())) {
-			getManagedBean().getBasicCompanyFacility().setSmAddress(new SmAddress());
+			getManagedBean().getBasicCompanyFacility().setSmAddress(
+					new SmAddress());
 			SmApplicationUtil.getInstance().cloneAddress(
 					getManagedBean().getBasicCompanyFacility().getSmAddress(),
 					getManagedBean().getSmAppl().getSmCompanyBasic()
-							.getSmCompanyAddresses().get(0)
-							.getSmAddress());
+							.getSmCompanyAddresses().get(0).getSmAddress());
 			SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
 					getManagedBean(),
 					getManagedBean().getBasicCompanyFacility().getSmAddress(),
@@ -9237,7 +9237,7 @@ public class SmApplicationBackingBean extends
 		}
 		return hqAddress;
 	}
-	
+
 	/**
 	 * Copy hq address to selected address
 	 * 
