@@ -4412,23 +4412,15 @@ public class SmApplicationBackingBean extends
 			SmSupplier smSupplier) {
 		if (smPersonnels != null && !smPersonnels.isEmpty()) {
 			for (SmPersonnel smPersonnel : smPersonnels) {
-				if (smPersonnel.getAuthorizedFlg() == 0) {
-					smPersonnel.setEpRole(null);
-					smPersonnel.setSoftcertFlg(0);
-					smPersonnel.setContractSignerFlg(0);
+				if (StringUtils.isNotBlank(smPersonnel.getEpRole())
+						&& (smPersonnel.getPmUser() == null || smPersonnel
+								.getPmUser().getUserId() == null)
+						&& smPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					smPersonnel
+							.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+				} else {
 					smPersonnel
 							.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-				} else {
-					if (SmApplicationUtil
-							.isLatestApprovedPersonnelAlreadyAuthorized(
-									smPersonnel.getIdentificationNo(),
-									smSupplier.getSupplierId())) {
-						smPersonnel
-								.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-					} else {
-						smPersonnel
-								.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
-					}
 				}
 			}
 		}
