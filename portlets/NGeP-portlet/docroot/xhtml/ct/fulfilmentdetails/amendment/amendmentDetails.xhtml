@@ -103,7 +103,7 @@
 			<h:panelGrid columns="5">
 				<p:inputText id="txtfrno" style="width:650px;" label="#{lbl['lbl.ct.file.ref.no']}"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.fileRefNo}" 
-					disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}" />
+					disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}" maxlength="100" />
 				<p:spacer width="1"/>
 			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.file.ref.no']}" />
 			    <p:spacer width="1"/>
@@ -127,7 +127,8 @@
 				<p:inputTextarea id="txtdesc" rows="5"  label="#{lbl['lbl.ct.amendment.desc']}"
 					style="width:650px;margin-bottom: 5px;"  autoResize="false" maxlength="200"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.description}"
-					disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}" />
+					disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}"
+					onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"  />
 				<p:message for="txtdesc" display="icon" />	
 			</h:panelGrid>			
 		</h:panelGrid>

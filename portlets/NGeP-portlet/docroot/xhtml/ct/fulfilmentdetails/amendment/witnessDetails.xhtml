@@ -14,17 +14,17 @@
 		<h:panelGrid columns="2"  columnClasses="columnWidth225">
 		   
 		     <p:outputLabel value="#{lbl['lbl.ct.ic.no']}"  styleClass="required"/>
-             <p:inputText id="icNo"  style="width:300px;"  label="#{lbl['lbl.ct.ic.no']}"
+             <p:inputText id="icNo"  style="width:300px;"  label="#{lbl['lbl.ct.ic.no']}" maxlength="15"
 			       value="#{amendmentBackingBean.managedBean.scLoaWitness.identificationNo}"
 			       disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}" />
 			
 		      <p:outputLabel value="#{lbl['lbl.ct.full.name']}"  styleClass="required"/>
-		   <p:inputText id="fullName"  label="#{lbl['lbl.ct.full.name']}" style="width:300px;"
+		   <p:inputText id="fullName"  label="#{lbl['lbl.ct.full.name']}" style="width:300px;" maxlength="80"
 			        disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}"
 			        value="#{amendmentBackingBean.managedBean.scLoaWitness.witnessName}"  />
 		   
 			   <p:outputLabel value="#{lbl['lbl.ct.designation']}" styleClass="required" />
-			   <p:inputText id="designation" style="width:300px;"  
+			   <p:inputText id="designation" style="width:300px;"  maxlength="50"
 			       disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}"
 			        value="#{amendmentBackingBean.managedBean.scLoaWitness.designation}"  label="#{lbl['lbl.ct.designation']}"/>
 			
@@ -35,7 +35,7 @@
 				   		label="#{lbl['lbl.ct.address']}" />
 			
 			        	 <p:outputLabel value="#{lbl['lbl.ct.tel']}" styleClass="required" />
-				        <p:inputText id="tellNo" style="width:150px;"  label="#{lbl['lbl.ct.tel']}"
+				        <p:inputText id="tellNo" style="width:150px;"  label="#{lbl['lbl.ct.tel']}" maxlength="20"
 					             disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}"
 					             value="#{amendmentBackingBean.managedBean.scLoaWitness.phoneNo}"  validator="#{webappBean.checkPhoneNumber}"/>
 			
@@ -44,7 +44,7 @@
 	      </h:panelGrid>
 	     <h:panelGrid columns="3" style="width:420px;" columnClasses="columnWidth30,columnWidth30">
 			           <h:panelGrid columns="2">
-					        <p:inputText id="faxNo" style="width:150px;" label="#{lbl['lbl.ct.fax']}"
+					        <p:inputText id="faxNo" style="width:150px;" label="#{lbl['lbl.ct.fax']}" maxlength="20"
 					            disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}"
 					            value="#{amendmentBackingBean.managedBean.scLoaWitness.faxNo}" validator="#{webappBean.checkFaxNumber}"   />
 					        <p:message for="faxNo" display="icon"/>
@@ -52,7 +52,7 @@
 					    
 				  	      <p:outputLabel value="#{lbl['lbl.ct.mobile']}" />
 				        <h:panelGrid columns="3">
-					       <p:inputText id="mobileNo" style="width:150px;"    label="#{lbl['lbl.ct.mobile']}"
+					       <p:inputText id="mobileNo" style="width:150px;"    label="#{lbl['lbl.ct.mobile']}" maxlength="20"
 					           disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}"
 					           value="#{amendmentBackingBean.managedBean.scLoaWitness.mobileNo}"  validator="#{webappBean.checkMobileNumber}"/>
 					       <p:message for="mobileNo" display="icon"/>
@@ -60,7 +60,7 @@
 				</h:panelGrid>
 			      <p:outputLabel value="#{lbl['lbl.ct.email']}" styleClass="required" />
 			     <h:panelGrid columns="3">
-			     <p:inputText  id="email" style="width:420px;"  label="#{lbl['lbl.ct.email']}"
+			     <p:inputText  id="email" style="width:420px;"  label="#{lbl['lbl.ct.email']}" maxlength="80"
 			        disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}"
 			        value="#{amendmentBackingBean.managedBean.scLoaWitness.email}" validator="#{webappBean.checkEmail}"/>
 			     <p:spacer width="1"/>
