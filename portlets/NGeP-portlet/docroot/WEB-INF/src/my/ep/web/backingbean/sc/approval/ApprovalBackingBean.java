@@ -819,8 +819,9 @@ public class ApprovalBackingBean extends
 						qtReqDTO.setRejected(true);
 						revertToOldValues(approvalRequests, qt);
 					} else {
+						QTDocumentsBackingBean docbackingBean = new QTDocumentsBackingBean();
 						if (CollectionUtils.isNotEmpty(approvalRequests)) {
-							
+
 							for (int i = 0; i < approvalRequests.size(); i++) {
 								ScQtApprovalRequest approvalRequest = approvalRequests
 										.get(i);
@@ -834,6 +835,11 @@ public class ApprovalBackingBean extends
 									qt.setQtValidityPeriod(Integer
 											.parseInt(approvalRequest
 													.getChangedValue()));
+									docbackingBean.reGenerateDocuments(
+											qt.getQtId(), qt
+													.getCurrentWorkFlowStatus()
+													.getPmStatus()
+													.getStatusId(), true);
 									break;
 
 								} else if (ParameterConst.APPROVAL_REQUEST_EXTEND_CLOSING_DATE
@@ -847,9 +853,9 @@ public class ApprovalBackingBean extends
 										.equalsIgnoreCase(approvalType)) {
 									QTDetailBackingBean backingBean = new QTDetailBackingBean();
 									backingBean.retrieveDocumentTabDtl();
-									QTDocumentsBackingBean documentsBackingBean = new QTDocumentsBackingBean();
+
 									try {
-										documentsBackingBean
+										docbackingBean
 												.createDocumentAttachments();
 									} catch (Exception e) {
 										e.printStackTrace();
