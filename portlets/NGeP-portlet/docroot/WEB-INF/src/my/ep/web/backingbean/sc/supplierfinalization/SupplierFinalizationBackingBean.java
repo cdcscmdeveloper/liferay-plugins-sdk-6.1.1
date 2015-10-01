@@ -3486,8 +3486,9 @@ public class SupplierFinalizationBackingBean extends
 										recommendDtl.getLoaAwarded() == null && 
 											recommendDtl.getRecordStatusFlg().equals(
 														DbValueConst.RECORD_STATUS_ACTIVE) && 
-												!rejectedRecommendIdMap.containsKey(
-															recommend.getQtRecommendId())) ||
+												(rejectedRecommendIdMap != null && 
+													!rejectedRecommendIdMap.containsKey(
+															recommend.getQtRecommendId())) ) ||
 											(BooleanUtils.isTrue(
 												recommendDtl.getLoiAwarded()) && 
 													BooleanUtils.isTrue(
