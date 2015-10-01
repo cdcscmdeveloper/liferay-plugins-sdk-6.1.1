@@ -895,6 +895,7 @@ public class LOIDetailBackingBean extends
 			getManagedBean().setSelectedLoiLoaBean(bean);
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new EpException(e.toString());
 		} finally {
 			qtAwardSO = null;
