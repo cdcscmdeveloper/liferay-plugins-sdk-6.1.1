@@ -839,7 +839,12 @@ public class SmApplicationBackingBean extends
 				if (fac.getSmAddress() == null
 						|| StringUtils
 								.isBlank(fac.getSmAddress().getAddress1())) {
-					copyHqAddressToAddr(fac.getSmAddress());
+					fac.setSmAddress(new SmAddress());
+					SmApplicationUtil.getInstance().cloneAddress(
+							fac.getSmAddress(),
+							getManagedBean().getSmAppl().getSmCompanyBasic()
+									.getSmCompanyAddresses().get(0)
+									.getSmAddress());
 				}
 				fac.setFacilityName(getManagedBean().getSmAppl()
 						.getSmCompanyBasic().getCompanyName());
@@ -2169,8 +2174,12 @@ public class SmApplicationBackingBean extends
 				|| StringUtils
 						.isBlank(getManagedBean().getBasicCompanyFacility()
 								.getSmAddress().getAddress1())) {
-			copyHqAddressToAddr(getManagedBean().getBasicCompanyFacility()
-					.getSmAddress());
+			getManagedBean().getBasicCompanyFacility().setSmAddress(new SmAddress());
+			SmApplicationUtil.getInstance().cloneAddress(
+					getManagedBean().getBasicCompanyFacility().getSmAddress(),
+					getManagedBean().getSmAppl().getSmCompanyBasic()
+							.getSmCompanyAddresses().get(0)
+							.getSmAddress());
 			SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
 					getManagedBean(),
 					getManagedBean().getBasicCompanyFacility().getSmAddress(),
@@ -9236,11 +9245,7 @@ public class SmApplicationBackingBean extends
 	 *            addr
 	 */
 	private void copyHqAddressToAddr(SmAddress addr) {
-		log.info(">>>>>>>>>>START CLONING ADDRESS FROM HQ<<<<<<<<<<<<<<");
-		if (addr == null) {
-			addr = new SmAddress();
-		}
-		SmApplicationUtil.assignClonedAddressValues(addr, getHqAddress());
+		SmCommonUtil.getInstance().copyAddress(getHqAddress(), addr);
 	}
 
 	/**
