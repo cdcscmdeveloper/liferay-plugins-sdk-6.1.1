@@ -3752,6 +3752,24 @@ public class SmApplicationUtil {
 			desAddr.setCityId(srcAddr.getCityId());
 		}
 	}
+	
+	public void cloneAddress(SmAddress desAddr,
+			SmAddress srcAddr){
+		log.info(">>>>>>>>>>>>>>CLONE ADDRESS<<<<<<<<<<<<<<<");
+		desAddr.setAddress1(srcAddr.getAddress1());
+		desAddr.setAddress2(srcAddr.getAddress2());
+		desAddr.setAddress3(srcAddr.getAddress3());
+		desAddr.setAddress4(srcAddr.getAddress4());
+		desAddr.setPostcode(srcAddr.getPostcode());
+		desAddr.setPmCountry(SmCommonUtil.getInstance().getCountryById(srcAddr.getPmCountry().getCountryId()));
+		desAddr.setCountryId(srcAddr.getCountryId());
+		desAddr.setPmState(SmCommonUtil.getInstance().getStateById(srcAddr.getStateId()));
+		desAddr.setStateId(srcAddr.getStateId());
+		desAddr.setPmDistrict(SmCommonUtil.getInstance().getDistrictById(srcAddr.getDistrictId()));
+		desAddr.setDistrictId(srcAddr.getDistrictId());
+		desAddr.setPmCity(SmCommonUtil.getInstance().getCityById(srcAddr.getCityId()));
+		desAddr.setCityId(srcAddr.getCityId());
+	}
 
 	/**
 	 * Reset to default entity values.

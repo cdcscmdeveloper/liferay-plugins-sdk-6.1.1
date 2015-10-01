@@ -1730,8 +1730,8 @@ public class SmCommonUtil {
 				permanent.getPmCity().getCityId()));
 
 		if (mailAddress.isSameAsPerm()) {
-			SmApplicationUtil.assignClonedAddressValues(
-					mailAddress.getSmAddress(), permAddress.getSmAddress());
+			SmAddress address = cloneAddress(permAddress.getSmAddress());
+			mailAddress.setSmAddress(address);
 		} else {
 			SmAddress s2 = mailAddress.getSmAddress();
 			s2.setPmCountry(SmCommonUtil.getInstance().getCountryById(
@@ -1748,6 +1748,46 @@ public class SmCommonUtil {
 		smPersonnelAddresses.add(permAddress);
 		smPersonnelAddresses.add(mailAddress);
 		smPersonnel.setSmPersonnelAddresses(smPersonnelAddresses);
+	}
+	
+	/**
+	 * Copy address to new address object
+	 * 
+	 * @param SmAddress
+	 *            refAddress
+	 * @return SmAddress
+	 */
+	public static SmAddress cloneAddress(SmAddress refAddress) {
+		SmAddress address = new SmAddress();
+		if (refAddress.getAddress1() != null)
+			address.setAddress1(new String(refAddress.getAddress1().toString()));
+		if (refAddress.getAddress2() != null)
+			address.setAddress2(new String(refAddress.getAddress2().toString()));
+		if (refAddress.getAddress3() != null)
+			address.setAddress3(new String(refAddress.getAddress3().toString()));
+		if (refAddress.getAddress4() != null)
+			address.setAddress4(new String(refAddress.getAddress4().toString()));
+		if (refAddress.getPostcode() != null)
+			address.setPostcode(new String(refAddress.getPostcode().toString()));
+
+		PmCountry country = new PmCountry();
+		PmState state = new PmState();
+		PmDistrict district = new PmDistrict();
+		PmCity city = new PmCity();
+
+		country.setCountryId(refAddress.getPmCountry().getCountryId());
+		address.setPmCountry(country);
+
+		state.setStateId(refAddress.getPmState().getStateId());
+		address.setPmState(state);
+
+		district.setDistrictId(refAddress.getPmDistrict().getDistrictId());
+		address.setPmDistrict(district);
+
+		city.setCityId(refAddress.getPmCity().getCityId());
+		address.setPmCity(city);
+
+		return address;
 	}
 
 	public static boolean validateGstRegNo(String value) {
