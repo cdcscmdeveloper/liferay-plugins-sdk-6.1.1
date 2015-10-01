@@ -7,6 +7,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
+	<ui:define name="resourceSection">
+		<script>
+			$('#portlet_SiteVisit_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.supportingdoc.inquiry.response']}");
+		</script>
+	</ui:define>
+
 	<ui:define name="contentSection">
 		<ui:param name="supplierName" value="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.smSupplier.companyName}" />
 		<ui:param name="applNo" value="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.applNo}" />
@@ -15,7 +21,7 @@
 		
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.submit']}" onclick="submissionConfirmDlg.show();" />
+			<p:commandButton value="#{lbl['lbl.sm.supportingdoc.submit.response']}" onclick="submissionConfirmDlg.show();" />
 		</div>
 
 		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100" 
@@ -31,7 +37,7 @@
 		<p:panel header="#{lbl['lbl.sm.supportingdoc.panel.supportingdocinquiry']}">
 			<table style="width: 85%;">
 				<tr>
-					<td style="width:15%;" valign="top"><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.subject']}" /></td>
+					<td style="width:15%;" valign="top"><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.sdo.remark']}" /></td>
 					<td><p:inputText size="50" disabled="true"
 							value="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.inquirySubject}" /></td>
 							
@@ -44,7 +50,7 @@
 				</tr>
 				
 				<tr>
-					<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.inquiry']}" /></td>
+					<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.supporting.doc']}" /></td>
 					<td colspan="3"><p:inputTextarea id="inquiryDetailId" rows="20" cols="150" style="width:auto;"
 							disabled="true" autoResize="false"
 							value="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.inquiryText}" /></td>
@@ -59,7 +65,7 @@
 					<td><p:inputTextarea id="inquiryResId" rows="10" cols="100" maxlength="1000" style="width:auto;"
 							value="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.responseText}"
 							autoResize="false" label="#{lbl['lbl.sm.supportingdoc.panel.response']}">
-							<f:validateLength maximum="1000" />	
+							<f:validateLength maximum="1000" />
 						</p:inputTextarea>
 						</td>
 				</tr>
