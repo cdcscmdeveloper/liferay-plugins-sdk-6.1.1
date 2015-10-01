@@ -23,7 +23,7 @@
 		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.qt.committee.appointment.instruction']}" escape="false" />
 		
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.clone']}" disabled="#{qTCommitteBackingBean.isEnableCloneButton()}"
+			<p:commandButton value="#{lbl['lbl.btn.clone']}" rendered="#{!qTCommitteBackingBean.isEnableCloneButton()}"
 				action="#{qTCommitteBackingBean.cloneCommitteePopupAction}"
 				update="@all"
 				title="#{lbl['lbl.sc.qt.committee.btn.clone.tooltip']}" />

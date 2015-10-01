@@ -37,7 +37,7 @@
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this, specificationcommitteeid" partialSubmit="true"
 				oncomplete="committeeAppointmentDeletePopUp.show();"
-				update="@([id$=#{committeeAppointmentDeleteId}])"
+				update="@([id$=#{committeeAppointmentDeleteId}],[id$=#{scmemberInfoDtls}])"
 				rendered="#{!qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode) and qTDetailBB.managedBean.selectedTabBean.tabType ne SourcingConstants.committeTypeFinalization}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.qt.clone.to.tec']}"
@@ -46,7 +46,7 @@
 				rendered="#{qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeSpecificationCommittee and qTDetailBB.managedBean.qt.evaluationType eq 2 and !qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode)}"
 				actionListener="#{qTCommitteBackingBean.addCloneToTecDtl}"
 				title="#{lbl['lbl.sc.qt.clone.to.tec.tooltip']}" />
-				
+
 			<p:commandButton value="#{lbl['lbl.sc.qt.clone.to.ec']}"
 				process="@this, specificationcommitteeid"
 				update="@(.clonetecid),@([id$=committeTabMenu]),@([id$=committeMenus])"
@@ -54,7 +54,8 @@
 				actionListener="#{qTCommitteBackingBean.addCloneToEcDtl}"
 				title="#{lbl['lbl.sc.qt.clone.to.ec.tooltip']}" />
 		</div>
-		<ui:param name="committeeAppointmentDeleteId" value="committeeAppointmentDeleteId" />
+		<ui:param name="committeeAppointmentDeleteId"
+			value="committeeAppointmentDeleteId" />
 		<ac:confirmationPopup id="#{committeeAppointmentDeleteId}"
 			widget="committeeAppointmentDeletePopUp"
 			okAction="qTCommitteBackingBean.deleteSpecificationCommittee"

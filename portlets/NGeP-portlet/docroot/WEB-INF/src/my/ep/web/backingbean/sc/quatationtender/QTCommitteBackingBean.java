@@ -45,6 +45,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
@@ -133,7 +134,6 @@ public class QTCommitteBackingBean extends
 	 */
 	public QTCommitteBackingBean() {
 
-		
 		if (null == this.getManagedBean().getCommitteMember()) {
 			this.getManagedBean().setCommitteMember(new ScCommitteeMember());
 		}
@@ -545,7 +545,7 @@ public class QTCommitteBackingBean extends
 
 	public void addCloneCommitteeMembersApprovalsAction() {
 		debugLogger("addCloneCommitteeMembersApprovalsAction");
-		
+
 		int committeTabIndex = this.getManagedBean().getSelectedTabIndex();
 		TabBean selectedCommitteTabBean = this.getManagedBean()
 				.getScCommitteeMemberTabList().get(committeTabIndex);
@@ -715,7 +715,7 @@ public class QTCommitteBackingBean extends
 										.getParent()));
 					}
 				}
-				
+
 				treeNodes[nodes].setSelected(false);
 			}
 		} else {
@@ -805,7 +805,7 @@ public class QTCommitteBackingBean extends
 						.getMessage(MessageConst.ERROR_760155,
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
-		
+
 		RequestContext.getCurrentInstance().execute("screen2.hide()");
 		this.getManagedBean().setAutoUpdate(true);
 	}
@@ -1236,13 +1236,14 @@ public class QTCommitteBackingBean extends
 			// pmUser.setPmAddressTypes(null);
 
 			// User Notification
-			//List<PmUserNotification> pmUserNotifications = new ArrayList<PmUserNotification>();
-			//PmUserNotification pmUserNotification = new PmUserNotification();
-			//pmUserNotification.setPmUser(user);
-			//pmUserNotification.setNotifyMode("E");
-			//pmUserNotification.setPreferred(true);
-			//pmUserNotifications.add(pmUserNotification);
-			//user.setPmUserNotifications(pmUserNotifications);
+			// List<PmUserNotification> pmUserNotifications = new
+			// ArrayList<PmUserNotification>();
+			// PmUserNotification pmUserNotification = new PmUserNotification();
+			// pmUserNotification.setPmUser(user);
+			// pmUserNotification.setNotifyMode("E");
+			// pmUserNotification.setPreferred(true);
+			// pmUserNotifications.add(pmUserNotification);
+			// user.setPmUserNotifications(pmUserNotifications);
 
 			// User Orgs
 			List<PmUserOrg> pmUserOrgs = new ArrayList<PmUserOrg>();
@@ -1272,21 +1273,21 @@ public class QTCommitteBackingBean extends
 			user.setOrgTypeCode(pmOrgProfile.getOrgTypeCode());
 
 			// User Preference
-			//PmUserPreference pmUserPreference = new PmUserPreference();
-			//pmUserPreference.setPmUser(user);
-			//pmUserPreference.setFormatDate("DD-MMM-YYYY");
-			//pmUserPreference.setFormatTime("HH:mm:ss");
-			//pmUserPreference.setFormatNumber("#,##0");
-			//pmUserPreference.setPreferredLanguage("en");
-			//pmUserPreference.setNotifyRemovalDay(30);
-			//user.setPmUserPreference(pmUserPreference);
+			// PmUserPreference pmUserPreference = new PmUserPreference();
+			// pmUserPreference.setPmUser(user);
+			// pmUserPreference.setFormatDate("DD-MMM-YYYY");
+			// pmUserPreference.setFormatTime("HH:mm:ss");
+			// pmUserPreference.setFormatNumber("#,##0");
+			// pmUserPreference.setPreferredLanguage("en");
+			// pmUserPreference.setNotifyRemovalDay(30);
+			// user.setPmUserPreference(pmUserPreference);
 
 			userReqDTO.setOrgType(OrganizationType.OTHERS.value());
 
 			userReqDTO.setPmUser(user);
 			UserResDTO resDTO = new UserResDTO();
 			try {
-				//No Need to save.. Need to check with kenny..
+				// No Need to save.. Need to check with kenny..
 				resDTO = getUserSO().saveUser(userReqDTO);
 			} catch (Exception e) {
 				debugLogger(e.getMessage());
@@ -1783,7 +1784,7 @@ public class QTCommitteBackingBean extends
 	 */
 	public void deleteSpecificationCommittee() {
 		debugLogger("deleteSelected Committe Mmeners");
-		
+
 		TabBean bean = this.getManagedBean().getSelectedTabBean();
 		List<ScCommitteeMember> selectedList = this.getManagedBean()
 				.getCommittemembers();
@@ -1792,13 +1793,15 @@ public class QTCommitteBackingBean extends
 		}
 
 		List<ScCommitteeMember> committeeMembers = new ArrayList<ScCommitteeMember>();
-		bean.getScQtCommittee().getScCommittee().getScCommitteeMembers()
-				.removeAll(selectedList);
+		ScCommittee scCommitte = bean.getScQtCommittee().getScCommittee();
+		scCommitte.getScCommitteeMembers().removeAll(selectedList);
 		if (!ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
-				.equalsIgnoreCase(bean.getScQtCommittee().getScCommittee()
-						.getCommitteeType().getParameterCode())
-				&& CollectionUtils.isEmpty(bean.getScQtCommittee()
-						.getScCommittee().getScCommitteeMembers())) {
+				.equalsIgnoreCase(scCommitte.getCommitteeType()
+						.getParameterCode())
+				&& CollectionUtils.isEmpty(scCommitte.getScCommitteeMembers())
+				&& !(QTStatusConst.CMT_PENDING_APPROVAL.equals(scCommitte
+						.getCommitteStatus().getStatusId()) || QTStatusConst.CMT_PENDING_REVISION_APPROVAL
+						.equals(scCommitte.getCommitteStatus().getStatusId()))) {
 			bean.getScQtCommittee().getScCommittee().setApprovalReq(false);
 		}
 
@@ -1897,16 +1900,28 @@ public class QTCommitteBackingBean extends
 	 * @return true, if is committe info editable
 	 */
 	public boolean isCommitteInfoEditable(Long committeStatus, String commType) {
-		/*if (QTStatusConst.QT_EVALUATION_PROPOSAL.compareTo(this
-				.getManagedBean().getQt().getQtStatus().getStatusId()) <= 0) {
-			return true;
-		}*/
+		/*
+		 * if (QTStatusConst.QT_EVALUATION_PROPOSAL.compareTo(this
+		 * .getManagedBean().getQt().getQtStatus().getStatusId()) <= 0) { return
+		 * true; }
+		 */
 
 		if (this.getManagedBean().isMaintanceFlow()) {
 			if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this
 					.getManagedBean().getCurrentStatusId())
 					|| QTStatusConst.CMT_PENDING_REVISION
 							.equals(committeStatus)) {
+				return true;
+			}
+		} else {
+			if (QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING
+					.equals(this.getManagedBean().getCurrentStatusId())
+					&& !SCProcessNameConst.REVISE_COMMITTEE
+							.equalsIgnoreCase(this.getManagedBean()
+									.getTaskName())) {
+				return true;
+			} else if (QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT
+					.compareTo(this.getManagedBean().getCurrentStatusId()) < 0) {
 				return true;
 			}
 		}
@@ -1946,6 +1961,17 @@ public class QTCommitteBackingBean extends
 				&& QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this
 						.getManagedBean().getQt().getQtStatus().getStatusId())) {
 			return true;
+		} else {
+			if (QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING
+					.equals(this.getManagedBean().getCurrentStatusId())
+					&& !SCProcessNameConst.REVISE_COMMITTEE
+							.equalsIgnoreCase(this.getManagedBean()
+									.getTaskName())) {
+				return true;
+			} else if (QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT
+					.compareTo(this.getManagedBean().getCurrentStatusId()) < 0) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -2060,7 +2086,7 @@ public class QTCommitteBackingBean extends
 				ParameterTypeConst.SC_PROCUREMENT_MODE, searchBean);
 		return items;
 	}
-	
+
 	/**
 	 * Method will cut the string based on cutOffIndex value.
 	 * 
@@ -2069,7 +2095,7 @@ public class QTCommitteBackingBean extends
 	 * @return formatted string
 	 */
 	public String chopMemberName(String str, int cutOffIndex) {
-		
+
 		if (str.length() > cutOffIndex) {
 			str = StringUtils.substring(str, 0, cutOffIndex) + " ...";
 		}
@@ -2077,8 +2103,8 @@ public class QTCommitteBackingBean extends
 	}
 
 	public String splitEmail(String email) {
-		
-		if (email != null && email.length() > 19 ) {
+
+		if (email != null && email.length() > 19) {
 			String[] splitEmail = email.split("@");
 			if (splitEmail.length > 1) {
 				email = splitEmail[0] + " @ " + splitEmail[1];

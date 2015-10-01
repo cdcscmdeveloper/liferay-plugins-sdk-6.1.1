@@ -811,9 +811,7 @@ public class ApprovalBackingBean extends
 						qtReqDTO.setRejected(true);
 					}
 				} else if (ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE
-						.equalsIgnoreCase(approvalCategoryCode)
-						|| ParameterConst.APPROVAL_CATEGORY_PTJ
-								.equalsIgnoreCase(approvalCategoryCode)) {
+						.equalsIgnoreCase(approvalCategoryCode)) {
 
 					if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 						qtReqDTO.setRejected(true);
@@ -842,7 +840,30 @@ public class ApprovalBackingBean extends
 													.getStatusId(), true);
 									break;
 
-								} else if (ParameterConst.APPROVAL_REQUEST_EXTEND_CLOSING_DATE
+								}
+
+							}
+
+						}
+
+					}
+				} else if (ParameterConst.APPROVAL_CATEGORY_PTJ
+						.equalsIgnoreCase(approvalCategoryCode)) {
+
+					if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
+						qtReqDTO.setRejected(true);
+						revertToOldValues(approvalRequests, qt);
+					} else if (BpmOutcomeConst.BPM_APPROVE
+							.equalsIgnoreCase(outcome)) {
+						QTDocumentsBackingBean docbackingBean = new QTDocumentsBackingBean();
+						if (CollectionUtils.isNotEmpty(approvalRequests)) {
+
+							for (int i = 0; i < approvalRequests.size(); i++) {
+								ScQtApprovalRequest approvalRequest = approvalRequests
+										.get(i);
+								String approvalType = approvalRequest
+										.getApprovalType().getParameterCode();
+								if (ParameterConst.APPROVAL_REQUEST_EXTEND_CLOSING_DATE
 										.equalsIgnoreCase(approvalType)) {
 									qt.setChanged(true);
 									qt.setPublishPeriod(Integer
@@ -859,7 +880,7 @@ public class ApprovalBackingBean extends
 												.createDocumentAttachments();
 									} catch (Exception e) {
 										e.printStackTrace();
-										
+
 										throw new EpException(e.getMessage());
 									}
 									qt.setScQtDocReports(this.getManagedBean()
