@@ -24,9 +24,13 @@ import my.ep.dto.pm.common.projectsetia.ProjectSetiaReqDTO;
 import my.ep.dto.pm.common.projectsetia.ProjectSetiaResDTO;
 import my.ep.dto.pm.common.votfund.VotFundReqDTO;
 import my.ep.dto.pm.common.votfund.VotFundResDTO;
+import my.ep.dto.sc.requestitem.RequestItemReqDTO;
+import my.ep.dto.sc.requestitem.RequestItemResDTO;
 import my.ep.factory.EpLogger;
-import my.ep.persistence.entity.cm.catalog.CmItem;
-import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.cm.catalog.CmBrand;
+import my.ep.persistence.entity.cm.catalog.CmColor;
+import my.ep.persistence.entity.cm.catalog.CmMeasurement;
+import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAddressType;
@@ -61,6 +65,7 @@ import org.apache.log4j.Logger;
 /*
 * @author P Ganga prasad
 */
+@SuppressWarnings("rawtypes")
 public class PhisIntegration extends InitializeSO {
 	
 	private static Logger log = EpLogger.getLogger(PhisIntegration.class);
@@ -91,14 +96,12 @@ public class PhisIntegration extends InitializeSO {
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 
 		reqDTO.setCreateDate(currentDate);
-//		reqDTO.setOrgprofileIdList(getPHISSupplier());
 		
-		CodificationResDTO resDTO = codificationSO.searchItemByCreateDate(reqDTO);
+		CodificationResDTO resDTO = codificationSO.masterDataMaterialPHIS(reqDTO);
 
 		if (resDTO.isSuccessful()) {
 			
 			log.info("createFilesforPHIS : Records available");
-			CmItem cmItem = null;
 			
 			List<MaterialClass> mClasses = new ArrayList<MaterialClass>();
 			List<ItemType> itemTypes = new ArrayList<ItemType>();
@@ -111,24 +114,21 @@ public class PhisIntegration extends InitializeSO {
 			MaterialMeasurement mMeasure = null;
 			MaterialColor mColor = null;
 			
-			for(CmSupplierItem cmSupplierItem:resDTO.getCmSupplierItemsList()){
 				
-				cmItem = cmSupplierItem.getCmItem();
-				
-				if (null!= cmItem.getCmUnspsc()) {
+				for (CmUnspsc cmUnspsc :resDTO.getUnspscList()) {
 					mClass = new MaterialClass();
-					mClass.setMaterialClassCode(cmItem.getCmUnspsc().getUnspscParentCode().trim());
-					mClass.setMaterialClassAction(utility.checkAction(cmItem.getCmUnspsc().getCreatedDate(), cmItem.getCmUnspsc().getChangedDate()).trim());
+					mClass.setMaterialClassCode(cmUnspsc.getUnspscCode());
+					mClass.setMaterialClassAction(utility.checkAction(cmUnspsc.getCreatedDate(), cmUnspsc.getChangedDate()).trim());
 					mClass.setMaterialOldClassCode(IntegrationConstants.EMPTY_TRING);
-					mClass.setMaterialClassDescription(cmItem.getCmUnspsc().getUnspscTitle().trim());
+					mClass.setMaterialClassDescription(cmUnspsc.getUnspscTitle().trim());
 					
-					if(cmItem.getCmUnspsc().getUnspscParentCode()==null){
-						mClass.setMaterialClassDescription(cmItem.getCmUnspsc().getUnspscDescription().trim());
+					if(cmUnspsc.getUnspscParentCode()==null){
+						mClass.setMaterialClassDescription(cmUnspsc.getUnspscDescription().trim());
 					}else{
 						CmUnspsc unspsc = null;
-						for(int i= cmItem.getCmUnspsc().getUnspscLevel()+1;i>0;i--){
-							if(cmItem.getCmUnspsc().getUnspscParentCode()!=null){
-								unspsc = codificationSO.retrieveCmUnspscByUnspscCode(cmItem.getCmUnspsc().getUnspscParentCode());
+						for(int i= cmUnspsc.getUnspscLevel()+1;i>0;i--){
+							if(cmUnspsc.getUnspscParentCode()!=null){
+								unspsc = codificationSO.retrieveCmUnspscByUnspscCode(cmUnspsc.getUnspscParentCode());
 								if(null!=unspsc.getUnspscDescription()){
 								mClass.setMaterialClassDescription(unspsc.getUnspscDescription().trim());
 								}
@@ -140,57 +140,55 @@ public class PhisIntegration extends InitializeSO {
 					}
 				}
 				
-				if (null!= cmItem.getCmType()) {
+				for (CmType cmType : resDTO.getTypeList()) {
 					itemType = new ItemType();
-					itemType.setUnspscCode(cmItem.getCmUnspsc().getUnspscCode().trim());
-					itemType.setItemCode(cmItem.getCmType().getTypeCode().trim());
-					itemType.setItemDescription(cmItem.getCmType().getTypeName().trim());
-					itemType.setItemAction(utility.checkAction(cmItem.getCmType().getCreatedDate(),cmItem.getCmType().getChangedDate()).trim());
+					itemType.setUnspscCode(cmType.getUnspscId().getUnspscCode().trim());
+					itemType.setItemCode(cmType.getTypeCode().trim());
+					itemType.setItemDescription(cmType.getTypeName().trim());
+					itemType.setItemAction(utility.checkAction(cmType.getCreatedDate(),cmType.getChangedDate()).trim());
 					itemType.setItemOldcode(IntegrationConstants.EMPTY_TRING);
 					if(!itemTypes.contains(itemType)){
 						itemTypes.add(itemType);
 					}
 				}
 				
-				if (null!= cmItem.getCmBrand()) {
+				for (CmBrand cmBrand : resDTO.getBrandList()) {
 					mBrand = new MaterialBrand();
-					mBrand.setUnspscCode(cmItem.getCmUnspsc().getUnspscCode().trim());
-					mBrand.setMaterialBrandCode(cmItem.getCmBrand().getBrandCode().trim());
-					mBrand.setMaterialBrandDescription(cmItem.getCmBrand().getBrandName().trim());
+					mBrand.setUnspscCode(cmBrand.getUnspscId().getUnspscCode().trim());
+					mBrand.setMaterialBrandCode(cmBrand.getBrandCode().trim());
+					mBrand.setMaterialBrandDescription(cmBrand.getBrandName().trim());
 					mBrand.setMaterialBrandAction(utility.checkAction(
-							cmItem.getCmBrand().getCreatedDate(), cmItem.getCmBrand().getChangedDate()).trim());
+							cmBrand.getCreatedDate(), cmBrand.getChangedDate()).trim());
 					mBrand.setMaterialOldBrandCode(IntegrationConstants.EMPTY_TRING);
 					if(!mBrands.contains(mBrand)){
 						mBrands.add(mBrand);
 					}
 				}
 				
-				if (null!= cmItem.getCmMeasurement()) {
+				for (CmMeasurement cmMeasurement : resDTO.getMeasurementList()) {
 					mMeasure = new MaterialMeasurement();
-					mMeasure.setUnspscCode(cmItem.getCmUnspsc().getUnspscCode().trim());
-					mMeasure.setMeasurementCode(cmItem.getCmMeasurement().getMeasurementCode().trim());
-					mMeasure.setMeasurementDescription(cmItem.getCmMeasurement()
-							.getMeasurementName().trim());
+					mMeasure.setUnspscCode(cmMeasurement.getUnspscId().getUnspscCode());
+					mMeasure.setMeasurementCode(cmMeasurement.getMeasurementCode().trim());
+					mMeasure.setMeasurementDescription(cmMeasurement.getMeasurementName().trim());
 					mMeasure.setMeasurementAction(utility.checkAction(
-							cmItem.getCmMeasurement().getCreatedDate(), cmItem.getCmMeasurement().getChangedDate()).trim());
+							cmMeasurement.getCreatedDate(), cmMeasurement.getChangedDate()).trim());
 					mMeasure.setMeasurementOldCode(IntegrationConstants.EMPTY_TRING);
 					if(!mMeasures.contains(mMeasure)){
 						mMeasures.add(mMeasure);
 					}
 				}
 				
-				if (null!= cmItem.getCmColor()) {
+				for(CmColor cmColor : resDTO.getColorList()){
 					mColor = new MaterialColor();
-					mColor.setMaterialColorCode(cmItem.getCmColor().getColorCode().trim());
-					mColor.setMaterialColorDescription(cmItem.getCmColor().getColorName().trim());
+					mColor.setMaterialColorCode(cmColor.getColorCode().trim());
+					mColor.setMaterialColorDescription(cmColor.getColorName().trim());
 					mColor.setMaterialColorAction(utility.checkAction(
-							cmItem.getCmColor().getCreatedDate(), cmItem.getCmColor().getChangedDate()).trim());
+							cmColor.getCreatedDate(), cmColor.getChangedDate()).trim());
 					mColor.setMaterialOldColorCode(IntegrationConstants.EMPTY_TRING);
 					if(!mColors.contains(mColor)){
 						mColors.add(mColor);
 					}
 				}
-			}
 			
 			if(mClasses.size()>0){
 				BatchReqDTO<MaterialClass> classBatchReqDTO = new BatchReqDTO<MaterialClass>();
@@ -733,21 +731,18 @@ public class PhisIntegration extends InitializeSO {
 		
 	}
 	
+	//changed from Catalogue to Contract items
+	
 	public void masterDataMaterialInfoPHIS(){
 
-		CodificationReqDTO reqDTO = new CodificationReqDTO();
+		RequestItemReqDTO reqDTO = new RequestItemReqDTO();
+		reqDTO.setContractNo("Z0251010304140061");
+		reqDTO.setSupplierId(35135L);
 
-		reqDTO.setCreateDate(currentDate);
+		RequestItemResDTO resDTO  = reqItemSO.getTempRequestItemByCreateDate(reqDTO);
 		
-		reqDTO.setOrgprofileIdList(getPHISSupplier());
-		CodificationResDTO resDTO = codificationSO.searchItemByCreateDate(reqDTO);
-		
-		List<MasterDataMaterialInfo> materilInfoList = null;
-
 		if (resDTO.isSuccessful()) {
-			
-			materilInfoList = utility.setPHISMasterDataMaterialInfo(resDTO);
-		
+			List<MasterDataMaterialInfo>  materilInfoList = utility.setPHISMasterDataMaterialInfo(resDTO);
 		try{
 			my.ep.web.integration.phis.masterdatamateriainfo.EPMFRq_Type epmfRq_Type = new my.ep.web.integration.phis.masterdatamateriainfo.EPMFRq_Type();
 		

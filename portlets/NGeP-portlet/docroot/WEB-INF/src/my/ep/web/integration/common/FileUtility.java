@@ -1303,24 +1303,21 @@ public class FileUtility extends InitializeSO{
 	
 	// set values for masterData material Info phis
 	
-    public List<my.ep.web.integration.phis.MasterDataMaterialInfo> setPHISMasterDataMaterialInfo(CodificationResDTO resDTO){
+    public List<my.ep.web.integration.phis.MasterDataMaterialInfo> setPHISMasterDataMaterialInfo(RequestItemResDTO resDTO){
 		
 		List<my.ep.web.integration.phis.MasterDataMaterialInfo> masterDataMaterialInfoList = new ArrayList<my.ep.web.integration.phis.MasterDataMaterialInfo>();
 		my.ep.web.integration.phis.MasterDataMaterialInfo masterDataMaterialInfo = null;
 		
-		for (CmSupplierItem supplierItem : resDTO.getCmSupplierItemsList()) {
-			CmItem cmItem = supplierItem.getCmItem();
+		for (ScRequestItem scRequestItem : resDTO.getRequestItems()) {
+			CmItem cmItem = scRequestItem.getCmItem();
 			if (cmItem!= null) {
 				masterDataMaterialInfo = new my.ep.web.integration.phis.MasterDataMaterialInfo();
-
-				cmItem.getCmSupplierItems();
 
 				masterDataMaterialInfo.setProductCode(cmItem.getExtensionCode());
 				masterDataMaterialInfo.setCodeType("P");
 				masterDataMaterialInfo.setOldProductCode("NA");
 				masterDataMaterialInfo.setItemDescription(cmItem.getItemName());
-				masterDataMaterialInfo.setKodTindakan(checkAction(
-						cmItem.getCreatedDate(), cmItem.getChangedDate()));
+				masterDataMaterialInfo.setKodTindakan(checkAction(cmItem.getCreatedDate(), cmItem.getChangedDate()));
 
 				//expiry date will be 3 years from current date
 				Calendar c = Calendar.getInstance();
@@ -1333,7 +1330,8 @@ public class FileUtility extends InitializeSO{
 				masterDataMaterialInfo.setBaseUnitOfMeasure("UN");
 				masterDataMaterialInfo.setSegment(getValue(cmItem.getCmUnspsc().getUnspscCode(), 0, 2));
 				masterDataMaterialInfo.setFamily(getValue(cmItem.getCmUnspsc().getUnspscCode(), 0, 4));
-				String uomCode = findUomCode(cmItem.getItemId(),resDTO.getCmSupplierItemsList());
+				String uomCode = scRequestItem.getUom().getUomCode();
+//				String uomCode = findUomCode(cmItem.getItemId(),resDTO.getCmSupplierItemsList());
 				if (null != uomCode) {
 					masterDataMaterialInfo.setAltUnitOfMeasurement(uomCode);
 				} else {
@@ -2384,6 +2382,9 @@ public class FileUtility extends InitializeSO{
 	
 	public String getValue(String line,int begin,int size){
 		  String result = line.substring(begin, begin+size).trim();
+		  if(result.isEmpty()){
+			  result = IntegrationConstants.EMPTY_TRING;
+		  }
 		  return result;
 	  }
 	
