@@ -3719,7 +3719,7 @@ public class SmApplicationUtil {
 	 */
 	public static void assignClonedAddressValues(SmAddress desAddr,
 			SmAddress srcAddr) {
-		if(desAddr==null){
+		if (desAddr == null) {
 			desAddr = new SmAddress();
 		}
 		desAddr.setAddress1(srcAddr.getAddress1());
@@ -3752,22 +3752,37 @@ public class SmApplicationUtil {
 			desAddr.setCityId(srcAddr.getCityId());
 		}
 	}
-	
-	public void cloneAddress(SmAddress desAddr,
-			SmAddress srcAddr){
+
+	public void cloneAddress(SmAddress desAddr, SmAddress srcAddr) {
 		log.info(">>>>>>>>>>>>>>CLONE ADDRESS<<<<<<<<<<<<<<<");
 		desAddr.setAddress1(srcAddr.getAddress1());
 		desAddr.setAddress2(srcAddr.getAddress2());
 		desAddr.setAddress3(srcAddr.getAddress3());
 		desAddr.setAddress4(srcAddr.getAddress4());
 		desAddr.setPostcode(srcAddr.getPostcode());
-		desAddr.setPmCountry(SmCommonUtil.getInstance().getCountryById(srcAddr.getPmCountry().getCountryId()));
+		if (srcAddr.getPmCountry() != null
+				&& srcAddr.getPmCountry().getCountryId() != null) {
+			desAddr.setPmCountry(SmCommonUtil.getInstance().getCountryById(
+					srcAddr.getPmCountry().getCountryId()));
+		}
 		desAddr.setCountryId(srcAddr.getCountryId());
-		desAddr.setPmState(SmCommonUtil.getInstance().getStateById(srcAddr.getStateId()));
+		if (srcAddr.getPmState() != null
+				&& srcAddr.getPmState().getStateId() != null) {
+			desAddr.setPmState(SmCommonUtil.getInstance().getStateById(
+					srcAddr.getPmState().getStateId()));
+		}
 		desAddr.setStateId(srcAddr.getStateId());
-		desAddr.setPmDistrict(SmCommonUtil.getInstance().getDistrictById(srcAddr.getDistrictId()));
+		if (srcAddr.getPmDistrict() != null
+				&& srcAddr.getPmDistrict().getDistrictId() != null) {
+			desAddr.setPmDistrict(SmCommonUtil.getInstance().getDistrictById(
+					srcAddr.getDistrictId()));
+		}
 		desAddr.setDistrictId(srcAddr.getDistrictId());
-		desAddr.setPmCity(SmCommonUtil.getInstance().getCityById(srcAddr.getCityId()));
+		if (srcAddr.getPmCity() != null
+				&& srcAddr.getPmCity().getCityId() != null) {
+			desAddr.setPmCity(SmCommonUtil.getInstance().getCityById(
+					srcAddr.getCityId()));
+		}
 		desAddr.setCityId(srcAddr.getCityId());
 	}
 
