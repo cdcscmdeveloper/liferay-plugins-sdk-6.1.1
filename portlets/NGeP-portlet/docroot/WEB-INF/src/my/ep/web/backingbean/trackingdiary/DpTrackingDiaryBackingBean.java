@@ -15,6 +15,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -22,6 +23,8 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
+import my.ep.dto.sc.SourcingIntegrationReqDTO;
+import my.ep.dto.sc.SourcingIntegrationResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
@@ -37,6 +40,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.log4j.Logger;
+import org.springframework.util.CollectionUtils;
 
 @ManagedBean(name = "dpTrackingDiaryBackingBean")
 @RequestScoped
@@ -141,19 +145,31 @@ public class DpTrackingDiaryBackingBean extends
 		protected ISearchResultBean<PmTrackingDiary> pageChangeListener(
 				ISearchBean<PmTrackingDiary> searchBean) {
 			Object[] dpObj = getManagedBean().getDpObj();
-
+			String docType = (String) dpObj[3];
+			Long docId = (Long) dpObj[0];
+			
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
 //			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),dpObj[3]));
 //			searchBean.getDataFilterBeans().add(new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),dpObj[0]));
-			SearchFilterBean searchFilterBean1 = new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),dpObj[3]);
-			SearchFilterBean searchFilterBean2 = new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),dpObj[0]);
-			SearchFilterBean searchFilterBean3 = new SearchFilterBean("groupDocType",SearchOperator.OPERATOR_EQUALS.value(),dpObj[3]);
-			SearchFilterBean searchFilterBean4 = new SearchFilterBean("groupId",SearchOperator.OPERATOR_EQUALS.value(),dpObj[0]);
-			
+			SearchFilterBean searchFilterBean1 = new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(), docType);
+			SearchFilterBean searchFilterBean2 = new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(), docId);
+			SearchFilterBean searchFilterBean3 = new SearchFilterBean("groupDocType",SearchOperator.OPERATOR_EQUALS.value(), docType);
+			SearchFilterBean searchFilterBean4 = new SearchFilterBean("groupId",SearchOperator.OPERATOR_EQUALS.value(), docId);
+			List<Object[]> parents = getParentDocument(docType, docId);
+			if(!CollectionUtils.isEmpty(parents)) {
+				for(Object[] parent : parents) {
+					BaseSearchFilterBean multiFilterBean = new SearchMultiFilterBean(
+							new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(), parent[0]), SearchCondition.CONDITION_OR.value(), 
+							new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(), parent[1]));
+					searchBean.getDataFilterBeans().add(multiFilterBean);
+				}
+			}
+				
 			BaseSearchFilterBean multiFilterBean1 = new SearchMultiFilterBean(searchFilterBean1, searchFilterBean2);
 			BaseSearchFilterBean multiFilterBean2 = new SearchMultiFilterBean(searchFilterBean3, SearchCondition.CONDITION_OR.value(), searchFilterBean4);
 			BaseSearchFilterBean multiFilterBean3 = new SearchMultiFilterBean(multiFilterBean1, SearchCondition.CONDITION_OR.value(), multiFilterBean2);
 			searchBean.getDataFilterBeans().add(multiFilterBean3);
+
 			System.out.println("Dp TrackingDiary docNo  " +dpObj[0]+dpObj[3]+ dpObj[1]);
 			reqDTO.setSearchBean(searchBean);
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
@@ -199,6 +215,35 @@ public class DpTrackingDiaryBackingBean extends
 			IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel) {
 		this.searchTrackingDiaryDataModel = searchTrackingDiaryDataModel;
 	}
+	
+	private List<Object[]> getParentDocument(String docType, Long docId) {
+		List<Object[]> docParents = new ArrayList<Object[]>();
+		
+		SourcingIntegrationReqDTO searchReqDTO = new SourcingIntegrationReqDTO();
+		searchReqDTO.setDocType(docType);
+		searchReqDTO.setDocId(Long.valueOf(docId));
+		
+		Long groupDocId = docId;
+		String groupDocType = docType;
+		
+		while(groupDocId != null && groupDocType != null) {
+			SourcingIntegrationResDTO resDTO = getSourcingIntegrationSO().retrieveGroupDocByDocIdAndDocType(searchReqDTO);
+			groupDocId = resDTO.getGroupDocId();
+			groupDocType = resDTO.getGroupDocType();
+			if(resDTO != null) {
+				if(groupDocId != null && groupDocType != null) {
+					docParents.add(new Object[]{groupDocType, groupDocId});
+				}
+			}
+			searchReqDTO.setDocType(groupDocType);
+			searchReqDTO.setDocId(groupDocId);
+		}
+		
+		return docParents;
+	}
 
+	private ISourcingIntegrationSO getSourcingIntegrationSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+	}
 }
 
