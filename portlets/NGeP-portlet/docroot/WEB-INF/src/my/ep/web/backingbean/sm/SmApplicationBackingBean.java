@@ -852,9 +852,7 @@ public class SmApplicationBackingBean extends
 				SmApplicationUtil
 						.getInstance()
 						.assignStateDistAndCityForSelVal(
-								getManagedBean(),
-								getManagedBean().getBasicCompanyFacility()
-										.getSmAddress(),
+								getManagedBean(),fac.getSmAddress(),
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
 
 			} else {
