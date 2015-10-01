@@ -239,249 +239,247 @@
 										<td width="10px"><p:selectBooleanCheckbox
 												value="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}">
 												<p:ajax event="change" partialSubmit="true" process="@this"
-													update="staffMailAddrPan,@([id$=Msg])" />
+													update="staffMailAddrPan,@([id$=Msg])" onstart="blockWidget.show()" 
+													oncomplete="blockWidget.hide()" />
 											</p:selectBooleanCheckbox></td>
 										<td><h:outputText
 												value="#{lbl['lbl.sm.person.duplicateAddr']}" /></td>
 									</tr>
 								</table></td>
 						</tr>
-						<c:choose>
-							<c:when
-								test="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}">
-								<ui:include
+						<p:outputPanel rendered="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}">
+							<ui:include
 									src="/xhtml/sm/shared/mofRegistration/shareHolderDuplicatAddrPanelForm.xhtml" />
-							</c:when>
-							<c:otherwise>
-								<tr>
-									<td><p:outputLabel value="#{lbl['lbl.sm.address']}" /><p:outputLabel
-											value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.roleStaffAndMailAddrReqd}"/></td>
-									<td><p:inputText id="staffEquiPersMailAddrLine" maxlength="35" 
-											label="#{lbl['lbl.sm.person.mailAddr']} - #{lbl['lbl.sm.address']}"
-											readonly="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
-											disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
-											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address1}"
-											size="35">
-											<p:ajax process="@this" partialSubmit="true"
-												update="staffMailAddrPan,@([id$=Msg])" listener="#{backingBean.setRoleStaffAddrReqd()}"/>
-										</p:inputText>
-										<ac:smFieldChangeAlert 
-											isShow="#{backingBean.managedBean.showFieldChanges
-												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
-											oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.address1}" 
-											currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address1}" 
-											alertValue="#{backingBean.managedBean.latestMailAddr.smAddress.address1}"/>
-									</td>
-								</tr>
+						</p:outputPanel>
+						<p:outputPanel rendered="#{!backingBean.managedBean.shareHolderMailAddr.sameAsPerm}">
+							<tr>
+								<td><p:outputLabel value="#{lbl['lbl.sm.address']}" /><p:outputLabel
+										value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.roleStaffAndMailAddrReqd}"/></td>
+								<td><p:inputText id="staffEquiPersMailAddrLine" maxlength="35" 
+										label="#{lbl['lbl.sm.person.mailAddr']} - #{lbl['lbl.sm.address']}"
+										readonly="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+										disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+										value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address1}"
+										size="35">
+										<p:ajax process="@this" partialSubmit="true"
+											update="staffMailAddrPan,@([id$=Msg])" listener="#{backingBean.setRoleStaffAddrReqd()}"/>
+									</p:inputText>
+									<ac:smFieldChangeAlert 
+										isShow="#{backingBean.managedBean.showFieldChanges
+											and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+										oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.address1}" 
+										currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address1}" 
+										alertValue="#{backingBean.managedBean.latestMailAddr.smAddress.address1}"/>
+								</td>
+							</tr>
 
-								<tr>
-									<td></td>
-									<td><p:inputText maxlength="35"
-											readonly="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
-											disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
-											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address2}"
-											size="35">
-											<p:ajax process="@this" partialSubmit="true" update="@this" />
-										</p:inputText>
-										<ac:smFieldChangeAlert 
-											isShow="#{backingBean.managedBean.showFieldChanges
-												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
-											oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.address2}" 
-											currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address2}" 
-											alertValue="#{backingBean.managedBean.latestMailAddr.smAddress.address2}"/>
-									</td>
-								</tr>
-								<tr>
-									<td></td>
-									<td><p:inputText maxlength="35"
-											readonly="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
-											disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
-											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address3}"
-											size="35">
-											<p:ajax process="@this" partialSubmit="true" update="@this" />
-										</p:inputText>
-										<ac:smFieldChangeAlert 
-											isShow="#{backingBean.managedBean.showFieldChanges
-												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
-											oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.address3}" 
-											currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address3}" 
-											alertValue="#{backingBean.managedBean.latestMailAddr.smAddress.address3}"/>
-									</td>
-								</tr>
-								<tr>
-									<td></td>
-									<td><p:inputText maxlength="35"
-											readonly="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
-											disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
-											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address4}"
-											size="35">
-											<p:ajax process="@this" partialSubmit="true" update="@this" />
-										</p:inputText>
-										<ac:smFieldChangeAlert 
-											isShow="#{backingBean.managedBean.showFieldChanges
-												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
-											oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.address4}" 
-											currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address4}" 
-											alertValue="#{backingBean.managedBean.latestMailAddr.smAddress.address4}"/>
-									</td>
-								</tr>
-								<tr>
-									<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
-											value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.roleStaffAndMailAddrReqd}"/></td>
-									<td><p:selectOneMenu
-											label="#{lbl['lbl.sm.person.mailAddr']} - #{lbl['lbl.sm.country']}"
-											id="staffEquiPerMailCntry"
-											disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
-											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.countryId}"
-											style="width: 207px;margin-bottom: 5px;">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-												itemValue="" />
-											<f:selectItems var="shrMailContry"
-												value="#{backingBean.managedBean.countryItems}" />
-											<p:ajax event="change" process="@this"
-												listener="#{backingBean.onChangeCountry(backingBean.managedBean.shareHolderMailAddr.smAddress,SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL)}"
-												update="staffMailAddrPan,@([id$=Msg])" />
-										</p:selectOneMenu> 
-										<ac:smFieldChangeAlert 
-											isShow="#{backingBean.managedBean.showFieldChanges
-												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
-											oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.pmCountry.countryId}" 
-											currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryId}" 
-											alertValue="#{backingBean.getCountryLabelById(backingBean.managedBean.latestMailAddr.smAddress.pmCountry.countryId)}"/>
-										<p:message id="staffEquiPerMailCntryMsg" for="staffEquiPerMailCntry"
-											showSummary="true" showDetail="false" display="icon" /></td>
-								</tr>
+							<tr>
+								<td></td>
+								<td><p:inputText maxlength="35"
+										readonly="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+										disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+										value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address2}"
+										size="35">
+										<p:ajax process="@this" partialSubmit="true" update="@this" />
+									</p:inputText>
+									<ac:smFieldChangeAlert 
+										isShow="#{backingBean.managedBean.showFieldChanges
+											and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+										oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.address2}" 
+										currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address2}" 
+										alertValue="#{backingBean.managedBean.latestMailAddr.smAddress.address2}"/>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td><p:inputText maxlength="35"
+										readonly="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+										disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+										value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address3}"
+										size="35">
+										<p:ajax process="@this" partialSubmit="true" update="@this" />
+									</p:inputText>
+									<ac:smFieldChangeAlert 
+										isShow="#{backingBean.managedBean.showFieldChanges
+											and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+										oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.address3}" 
+										currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address3}" 
+										alertValue="#{backingBean.managedBean.latestMailAddr.smAddress.address3}"/>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td><p:inputText maxlength="35"
+										readonly="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+										disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+										value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address4}"
+										size="35">
+										<p:ajax process="@this" partialSubmit="true" update="@this" />
+									</p:inputText>
+									<ac:smFieldChangeAlert 
+										isShow="#{backingBean.managedBean.showFieldChanges
+											and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+										oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.address4}" 
+										currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address4}" 
+										alertValue="#{backingBean.managedBean.latestMailAddr.smAddress.address4}"/>
+								</td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.roleStaffAndMailAddrReqd}"/></td>
+								<td><p:selectOneMenu
+										label="#{lbl['lbl.sm.person.mailAddr']} - #{lbl['lbl.sm.country']}"
+										id="staffEquiPerMailCntry"
+										disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+										value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.countryId}"
+										style="width: 207px;margin-bottom: 5px;">
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+											itemValue="" />
+										<f:selectItems var="shrMailContry"
+											value="#{backingBean.managedBean.countryItems}" />
+										<p:ajax event="change" process="@this"
+											listener="#{backingBean.onChangeCountry(backingBean.managedBean.shareHolderMailAddr.smAddress,SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL)}"
+											update="staffMailAddrPan,@([id$=Msg])" />
+									</p:selectOneMenu> 
+									<ac:smFieldChangeAlert 
+										isShow="#{backingBean.managedBean.showFieldChanges
+											and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+										oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.pmCountry.countryId}" 
+										currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryId}" 
+										alertValue="#{backingBean.getCountryLabelById(backingBean.managedBean.latestMailAddr.smAddress.pmCountry.countryId)}"/>
+									<p:message id="staffEquiPerMailCntryMsg" for="staffEquiPerMailCntry"
+										showSummary="true" showDetail="false" display="icon" /></td>
+							</tr>
 
-								<tr>
-									<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
-											value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.roleStaffAndMailAddrReqd}"/></td>
-									<td><p:selectOneMenu
-											label="#{lbl['lbl.sm.person.mailAddr']} - #{lbl['lbl.sm.state']}"
-											disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
-											style="width: 207px;margin-bottom: 5px;"
-											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.stateId}"
-											id="staffShrMailState">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-												itemValue="" />
-											<f:selectItems var="shrMailState"
-												value="#{backingBean.managedBean.shrHldrMailStates}" />
-											<p:ajax event="change" process="@this"
-												listener="#{backingBean.onChangeState(backingBean.managedBean.shareHolderMailAddr.smAddress,SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL)}"
-												update="staffMailAddrPan,@([id$=Msg])" />
+							<tr>
+								<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.roleStaffAndMailAddrReqd}"/></td>
+								<td><p:selectOneMenu
+										label="#{lbl['lbl.sm.person.mailAddr']} - #{lbl['lbl.sm.state']}"
+										disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+										style="width: 207px;margin-bottom: 5px;"
+										value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.stateId}"
+										id="staffShrMailState">
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+											itemValue="" />
+										<f:selectItems var="shrMailState"
+											value="#{backingBean.managedBean.shrHldrMailStates}" />
+										<p:ajax event="change" process="@this"
+											listener="#{backingBean.onChangeState(backingBean.managedBean.shareHolderMailAddr.smAddress,SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL)}"
+											update="staffMailAddrPan,@([id$=Msg])" />
 
-										</p:selectOneMenu> 
-										<ac:smFieldChangeAlert 
-											isShow="#{backingBean.managedBean.showFieldChanges
-												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
-											oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.pmState.stateId}" 
-											currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmState.stateId}" 
-											alertValue="#{backingBean.getStateLabelById(backingBean.managedBean.latestMailAddr.smAddress.pmState.stateId)}"/>
-										<p:message id="staffShrMailStateMsg" for="staffShrMailState"
-											showSummary="true" showDetail="false" display="icon" /></td>
-								</tr>
+									</p:selectOneMenu> 
+									<ac:smFieldChangeAlert 
+										isShow="#{backingBean.managedBean.showFieldChanges
+											and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+										oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.pmState.stateId}" 
+										currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmState.stateId}" 
+										alertValue="#{backingBean.getStateLabelById(backingBean.managedBean.latestMailAddr.smAddress.pmState.stateId)}"/>
+									<p:message id="staffShrMailStateMsg" for="staffShrMailState"
+										showSummary="true" showDetail="false" display="icon" /></td>
+							</tr>
 
-								<tr>
-									<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
-											value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.roleStaffAndMailAddrReqd}"/></td>
-									<td><p:selectOneMenu
-											label="#{lbl['lbl.sm.person.mailAddr']} - #{lbl['lbl.sm.district']}"
-											disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
-											style="width: 207px;margin-bottom: 5px;" id="staffShrMailDist"
-											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.districtId}">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-												itemValue="" />
-											<f:selectItems var="shrMailDist"
-												value="#{backingBean.managedBean.shrHldrMailDistricts}" />
-											<p:ajax event="change" process="@this"
-												listener="#{backingBean.onChangeDistrict(backingBean.managedBean.shareHolderMailAddr.smAddress,SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL)}"
-												update="staffMailAddrPan,@([id$=Msg])" />
-										</p:selectOneMenu> 
-										<ac:smFieldChangeAlert 
-											isShow="#{backingBean.managedBean.showFieldChanges
-												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
-											oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.pmDistrict.districtId}" 
-											currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict.districtId}" 
-											alertValue="#{backingBean.getDistrictLabelById(backingBean.managedBean.latestMailAddr.smAddress.pmDistrict.districtId)}"/>
-										<p:message id="staffShrMailDistMsg" for="staffShrMailDist"
-											showSummary="true" showDetail="false" display="icon" /></td>
-								</tr>
-								<tr>
-									<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
-											value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.roleStaffAndMailAddrReqd}"/></td>
-									<td><p:selectOneMenu
-											label="#{lbl['lbl.sm.person.mailAddr']} - #{lbl['lbl.sm.towncity']}"
-											disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
-											style="width: 207px;margin-bottom: 5px;" id="staffShrMailCity"
-											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.cityId}">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-												itemValue="" />
-											<f:selectItems var="shrMailCity"
-												value="#{backingBean.managedBean.shrHldrMailCities}" />
-											<p:ajax event="change" process="@this"
-												listener="#{backingBean.onChangeCity(backingBean.managedBean.shareHolderMailAddr.smAddress,SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL)}"
-												update="staffMailAddrPan,@([id$=Msg])" />
-										</p:selectOneMenu> 
-										<ac:smFieldChangeAlert 
-											isShow="#{backingBean.managedBean.showFieldChanges
-												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
-											oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.pmCity.cityId}" 
-											currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCity.cityId}" 
-											alertValue="#{backingBean.getCityLabelById(backingBean.managedBean.latestMailAddr.smAddress.pmCity.cityId)}"/>
-										<p:message id="staffShrMailCityMsg" for="staffShrMailCity"
-											showSummary="true" showDetail="false" display="icon" /></td>
-								</tr>
-								<tr>
-									<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
-											value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.roleStaffAndMailAddrReqd}"/></td>
-									<td><p:outputPanel id="staffPostCodeMailPanelId">
-											<p:outputPanel
-												rendered="#{backingBean.managedBean.shareHolderMailAddr.smAddress.countryId==backingBean.managedBean.myCountryId}">
-												<p:inputText maxlength="5"
-													disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
-													label="#{lbl['lbl.sm.person.mailAddr']} -#{lbl['lbl.sm.postcode']}"
-													id="staffEquiPersMailAddrPostCodeMy"
-													value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.postcode}"
-													validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
-													size="35">
-													<f:validator validatorId="postcodeValidator" />
-													<p:ajax process="@this" partialSubmit="true" listener="#{backingBean.setRoleStaffAddrReqd()}"
-														update="staffMailAddrPan,@([id$=Msg])" />
-												</p:inputText>
-												<ac:smFieldChangeAlert 
-													isShow="#{backingBean.managedBean.showFieldChanges
-														and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
-													oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.postcode}" 
-													currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.postcode}" 
-													alertValue="#{backingBean.managedBean.latestMailAddr.smAddress.postcode}"/>
-												<p:message id="staffEquiPersMailAddrPostCodeMyMsg"
-													for="staffEquiPersMailAddrPostCodeMy" showSummary="true"
-													showDetail="false" display="icon" />
-											</p:outputPanel>
-											<p:outputPanel
-												rendered="#{backingBean.managedBean.shareHolderMailAddr.smAddress.countryId!=backingBean.managedBean.myCountryId}">
-												<p:inputText maxlength="10"
-													disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
-													label="#{lbl['lbl.sm.person.mailAddr']} -#{lbl['lbl.sm.postcode']}"
-													id="staffEquiPersMailAddrPostCodeForeign"
-													value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.postcode}"
-													size="35">
-													<p:ajax process="@this" partialSubmit="true"
-														update="staffMailAddrPan,@([id$=Msg])" listener="#{backingBean.setRoleStaffAddrReqd()}"/>
-												</p:inputText>
-												<ac:smFieldChangeAlert 
-													isShow="#{backingBean.managedBean.showFieldChanges
-														and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
-													oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.postcode}" 
-													currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.postcode}" 
-													alertValue="#{backingBean.managedBean.latestMailAddr.smAddress.postcode}"/>
-												<p:message id="staffEquiPersMailAddrPostCodeForeignMsg"
-													for="staffEquiPersMailAddrPostCodeForeign" showSummary="true"
-													showDetail="false" display="icon" />
-											</p:outputPanel>
-										</p:outputPanel></td>
-								</tr>
-							</c:otherwise>
-						</c:choose>
+							<tr>
+								<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.roleStaffAndMailAddrReqd}"/></td>
+								<td><p:selectOneMenu
+										label="#{lbl['lbl.sm.person.mailAddr']} - #{lbl['lbl.sm.district']}"
+										disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+										style="width: 207px;margin-bottom: 5px;" id="staffShrMailDist"
+										value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.districtId}">
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+											itemValue="" />
+										<f:selectItems var="shrMailDist"
+											value="#{backingBean.managedBean.shrHldrMailDistricts}" />
+										<p:ajax event="change" process="@this"
+											listener="#{backingBean.onChangeDistrict(backingBean.managedBean.shareHolderMailAddr.smAddress,SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL)}"
+											update="staffMailAddrPan,@([id$=Msg])" />
+									</p:selectOneMenu> 
+									<ac:smFieldChangeAlert 
+										isShow="#{backingBean.managedBean.showFieldChanges
+											and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+										oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.pmDistrict.districtId}" 
+										currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict.districtId}" 
+										alertValue="#{backingBean.getDistrictLabelById(backingBean.managedBean.latestMailAddr.smAddress.pmDistrict.districtId)}"/>
+									<p:message id="staffShrMailDistMsg" for="staffShrMailDist"
+										showSummary="true" showDetail="false" display="icon" /></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.roleStaffAndMailAddrReqd}"/></td>
+								<td><p:selectOneMenu
+										label="#{lbl['lbl.sm.person.mailAddr']} - #{lbl['lbl.sm.towncity']}"
+										disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+										style="width: 207px;margin-bottom: 5px;" id="staffShrMailCity"
+										value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.cityId}">
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+											itemValue="" />
+										<f:selectItems var="shrMailCity"
+											value="#{backingBean.managedBean.shrHldrMailCities}" />
+										<p:ajax event="change" process="@this"
+											listener="#{backingBean.onChangeCity(backingBean.managedBean.shareHolderMailAddr.smAddress,SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL)}"
+											update="staffMailAddrPan,@([id$=Msg])" />
+									</p:selectOneMenu> 
+									<ac:smFieldChangeAlert 
+										isShow="#{backingBean.managedBean.showFieldChanges
+											and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+										oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.pmCity.cityId}" 
+										currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCity.cityId}" 
+										alertValue="#{backingBean.getCityLabelById(backingBean.managedBean.latestMailAddr.smAddress.pmCity.cityId)}"/>
+									<p:message id="staffShrMailCityMsg" for="staffShrMailCity"
+										showSummary="true" showDetail="false" display="icon" /></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.roleStaffAndMailAddrReqd}"/></td>
+								<td><p:outputPanel id="staffPostCodeMailPanelId">
+										<p:outputPanel
+											rendered="#{backingBean.managedBean.shareHolderMailAddr.smAddress.countryId==backingBean.managedBean.myCountryId}">
+											<p:inputText maxlength="5"
+												disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+												label="#{lbl['lbl.sm.person.mailAddr']} -#{lbl['lbl.sm.postcode']}"
+												id="staffEquiPersMailAddrPostCodeMy"
+												value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.postcode}"
+												validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+												size="35">
+												<f:validator validatorId="postcodeValidator" />
+												<p:ajax process="@this" partialSubmit="true" listener="#{backingBean.setRoleStaffAddrReqd()}"
+													update="staffMailAddrPan,@([id$=Msg])" />
+											</p:inputText>
+											<ac:smFieldChangeAlert 
+												isShow="#{backingBean.managedBean.showFieldChanges
+													and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+												oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.postcode}" 
+												currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.postcode}" 
+												alertValue="#{backingBean.managedBean.latestMailAddr.smAddress.postcode}"/>
+											<p:message id="staffEquiPersMailAddrPostCodeMyMsg"
+												for="staffEquiPersMailAddrPostCodeMy" showSummary="true"
+												showDetail="false" display="icon" />
+										</p:outputPanel>
+										<p:outputPanel
+											rendered="#{backingBean.managedBean.shareHolderMailAddr.smAddress.countryId!=backingBean.managedBean.myCountryId}">
+											<p:inputText maxlength="10"
+												disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+												label="#{lbl['lbl.sm.person.mailAddr']} -#{lbl['lbl.sm.postcode']}"
+												id="staffEquiPersMailAddrPostCodeForeign"
+												value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.postcode}"
+												size="35">
+												<p:ajax process="@this" partialSubmit="true"
+													update="staffMailAddrPan,@([id$=Msg])" listener="#{backingBean.setRoleStaffAddrReqd()}"/>
+											</p:inputText>
+											<ac:smFieldChangeAlert 
+												isShow="#{backingBean.managedBean.showFieldChanges
+													and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+												oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.postcode}" 
+												currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.postcode}" 
+												alertValue="#{backingBean.managedBean.latestMailAddr.smAddress.postcode}"/>
+											<p:message id="staffEquiPersMailAddrPostCodeForeignMsg"
+												for="staffEquiPersMailAddrPostCodeForeign" showSummary="true"
+												showDetail="false" display="icon" />
+										</p:outputPanel>
+									</p:outputPanel></td>
+							</tr>
+						</p:outputPanel>
 					</table>
 				</p:outputPanel></td>
 		</tr>
