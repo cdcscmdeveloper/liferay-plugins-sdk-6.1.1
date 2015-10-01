@@ -520,6 +520,8 @@ public class SPDetailBackingBean extends
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 					.getQtProposalChecklist();
+			int index = getManagedBean().getFinanceCheckDetailsList()
+					.indexOf(scQtProposalChecklist);
 
 			CriteriaValue contractAmountVal = new CriteriaValue(
 					SourcingConstants.CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_NON_FED_GOV,
@@ -560,11 +562,10 @@ public class SPDetailBackingBean extends
 				this.getManagedBean().setScQtProposal(resDTO.getScQtProposal());
 				debugLogger("*****save successfull*****"
 						+ resDTO.isSuccessful());
-
-				int index = getManagedBean().getFinanceCheckDetailsList()
-						.indexOf(scQtProposalChecklist);
+				
 				getManagedBean().getFinanceCheckDetailsList().set(index,
 						resDTO.getProposalChecklist());
+				this.getManagedBean().setQtProposalChecklist(resDTO.getProposalChecklist());
 				// retrieveTechnicalFedNonGovCheklist
 				if (!this.getManagedBean().isFinanicialOnlyCheckList()) {
 					updateQtFinNdTechProposalCheckList(
@@ -572,8 +573,9 @@ public class SPDetailBackingBean extends
 							resDTO.getTobeUpdateTechProposalChecklist(),
 							SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV);
 				}
-
-				loadDataFromCache();
+				if(isCompleted == true){
+					loadDataFromCache();
+				}
 				return navigatePrepareFinProposalCheckList(
 						scQtProposalChecklist, resDTO.getProposalChecklist(),
 						isCompleted);
@@ -927,6 +929,9 @@ public class SPDetailBackingBean extends
 
 			ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 					.getQtProposalChecklist();
+			
+			int index = getManagedBean().getTecCheckDetailsList().indexOf(
+					scQtProposalChecklist);
 			List<ScQtPRPExperience> experiences = this.getManagedBean()
 					.getScQtPRPExperiences();
 			scQtProposalChecklist.setSubmitted(isCompleted);
@@ -981,12 +986,13 @@ public class SPDetailBackingBean extends
 						finProposalChecklist,
 						resDTO.getTobeUpdateProposalChecklist(),
 						SourcingConstants.DOC_DEF_KEY_FIN_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV);
-
-				int index = getManagedBean().getTecCheckDetailsList().indexOf(
-						scQtProposalChecklist);
 				getManagedBean().getTecCheckDetailsList().set(index,
 						resDTO.getProposalChecklist());
-				loadDataFromCache();
+				getManagedBean().setQtProposalChecklist(resDTO.getProposalChecklist());
+				if(isCompleted == true){
+					loadDataFromCache();
+				}
+				
 				return navigatePrepareTecProposalCheckList(
 						scQtProposalChecklist, resDTO.getProposalChecklist(),
 						isCompleted);
