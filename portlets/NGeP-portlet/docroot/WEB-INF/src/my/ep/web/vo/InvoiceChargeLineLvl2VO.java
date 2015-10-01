@@ -18,6 +18,7 @@ public class InvoiceChargeLineLvl2VO  {
 	
 	private String itemCode;
     private String itemName;
+    private String itemDesc;
     private String uom;
     private BigDecimal unitPrice = BigDecimal.ZERO;
     private BigDecimal gstAmount = BigDecimal.ZERO;
@@ -306,5 +307,19 @@ public class InvoiceChargeLineLvl2VO  {
 	 */
 	public void setParent(InvoiceChargeLineLvl1VO parent) {
 		this.parent = parent;
+	}
+
+	/**
+	 * @return the itemDesc
+	 */
+	public String getItemDesc() {
+		return itemDesc;
+	}
+
+	/**
+	 * @param itemDesc the itemDesc to set
+	 */
+	public void setItemDesc(String itemDesc) {
+		this.itemDesc = itemDesc;
 	}
 }
