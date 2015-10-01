@@ -782,7 +782,8 @@ public class SupplierFinalizationBackingBean extends
 			
 			reqDTO.setInitialDecisionFwdHighAuth(
 					getManagedBean().isInitialDecisionFwdHighAuth());
-
+			reqDTO.setRefinalize(isQTRefinalized());
+			
 			saveAndReloadFinalizationDetails(qtSuppFinalizationSO, reqDTO);
 
 			String qtNo = getManagedBean().getScQt().getQtNo().toString();
@@ -1667,7 +1668,9 @@ public class SupplierFinalizationBackingBean extends
 		String decisionTypeCode = scQtFinalization.getDecision()
 				.getParameterCode();
 		boolean decisionRecommendSupplier = ParameterConst.DECISION_RECOMMEND_SUPPLIER
-				.equals(decisionTypeCode) ? true : false;		
+				.equals(decisionTypeCode);	
+		boolean decisionFwdToHigherAuth = ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY
+				.equals(decisionTypeCode);		
 		List<ScQtMeeting> meetingList = this.getManagedBean().getMeetingList();
 
 		try {
@@ -1743,9 +1746,9 @@ public class SupplierFinalizationBackingBean extends
 			throw epException;
 		}
 
-		if ( !isQTRefinalized() && (decisionRecommendSupplier || 
-					ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY
-						.equals(decisionTypeCode)) ) {
+		if ( !isQTRefinalized() && 
+				(decisionRecommendSupplier || 
+						decisionFwdToHigherAuth) ) {
 			boolean supplierSelected = true;
 			boolean minSuppliersExist = true;
 			String recommendTypeCode = scQtFinalization.getRecommendedTypeId()
@@ -1834,6 +1837,7 @@ public class SupplierFinalizationBackingBean extends
 			if (reqDTO == null) {
 				reqDTO = validateInfo(activeIndex);
 			}			
+			reqDTO.setRefinalize(isQTRefinalized());
 			reqDTO.setOutcome(outcome);
 			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(taskId);
@@ -1851,8 +1855,9 @@ public class SupplierFinalizationBackingBean extends
 			reqDTO.setDigiSignData(digiSign);
 
 			ScQtCommittee scQtCommittee = null;
-			if (!getManagedBean().isInitialDecisionFwdToBPK() && 
-					digiSign != null) {
+			if (reqDTO.getScQtCommittee() == null && 
+					!getManagedBean().isInitialDecisionFwdToBPK() && 
+						digiSign != null) {
 				scQtCommittee = preparationDtlsInfo();
 				reqDTO.setScQtCommittee(scQtCommittee);
 			}
