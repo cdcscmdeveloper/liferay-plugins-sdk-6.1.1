@@ -781,8 +781,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 			return scRemarks;
 		} catch (InstantiationException ie) {
+			ie.printStackTrace();
 			throw new EpException(ie.getMessage());
 		} catch (IllegalAccessException ia) {
+			ia.printStackTrace();
 			throw new EpException(ia.getMessage());
 		}
 	}

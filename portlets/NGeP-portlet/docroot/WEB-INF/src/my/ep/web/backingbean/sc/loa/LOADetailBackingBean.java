@@ -1279,7 +1279,7 @@ public class LOADetailBackingBean extends
 					
 				}
 			} catch (Exception e) {
-				//e.printStackTrace();
+				e.printStackTrace();
 				throw new EpException(e.getMessage());
 			}
 
@@ -3250,6 +3250,7 @@ public class LOADetailBackingBean extends
 						schedule.setToDate(df.parse(toDate));
 					}
 				} catch (ParseException e) {
+					e.printStackTrace();
 					throw new EpException(e.toString());
 				}
 				if (schedule.getScLoa() == null) {

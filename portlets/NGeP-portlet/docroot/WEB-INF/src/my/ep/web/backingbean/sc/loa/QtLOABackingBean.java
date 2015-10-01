@@ -197,6 +197,7 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 				getLoiLoaListTitle(getManagedBean().getSelectedLoiLoa().getSmSupplier());
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new EpException(e.toString());
 		} finally {
 			qtAwardSO = null;
@@ -233,6 +234,7 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 			}
 			getLoiLoaListTitle(getManagedBean().getSelectedLoiLoa().getSmSupplier());
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new EpException(e.toString());
 		} finally {
 			qtAwardSO = null;
@@ -324,6 +326,7 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 			getManagedBean().setSelectedSuppLoiLoaBean(suppLoiLoaBean);
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new EpException(e.toString());
 		} finally {
 			qtAwardSO = null;
