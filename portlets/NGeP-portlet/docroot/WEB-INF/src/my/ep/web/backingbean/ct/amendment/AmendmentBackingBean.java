@@ -1258,7 +1258,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			validateCommiteeMemberDetails();
 		}
 		// Validation for meeting and committee
-		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getTaskName() != null
+		if (getManagedBean().getTaskName() != null
 				&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
 						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME))) {
 			if (getManagedBean().getContractVer().getCtAmendment().getCtMeetings().size() == 0) {
