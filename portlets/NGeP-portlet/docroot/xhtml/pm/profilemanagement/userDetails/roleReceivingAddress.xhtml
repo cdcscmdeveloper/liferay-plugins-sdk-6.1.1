@@ -77,8 +77,7 @@
 							<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 						</p:commandLink>			
 					</p:column>
-				</p:dataTable>
-				<br />
+				</p:dataTable>				
 				<br />
 				<div class="ppRightBtn">
 					<p:commandButton
@@ -87,6 +86,8 @@
 						disabled="#{profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0 or isSupplierOrgType}"
 						oncomplete="dlRoleOptions.show();" update=":form:opRoleOptions" />
 				</div>
+				<br />
+				<br />
 			</p:tab>
 
 
@@ -100,11 +101,11 @@
 					emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 					var="receivAddrType" rowIndexVar="rAindex" rowKey="#{receivAddrType}">
 					<ac:paginator for="dtReceiveAddr" />
-					<p:column style="white-space: normal!important;"
+					<p:column style="white-space: normal!important;width:80%"
 						headerText="#{lbl['lbl.pm.profiles.authorisation.addname']}"> 
 				    	#{profileManagementBackingBean.getFullAddress(receivAddrType.pmAddress)}
 			        </p:column>
-					<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.status']}">
+					<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.status']}" style="width:15%">
 
 						<p:selectOneMenu value="#{receivAddrType.recordStatusFlg}"
 							disabled="#{receivAddrType.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.recordStatusFlg == 0 or profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0}">
