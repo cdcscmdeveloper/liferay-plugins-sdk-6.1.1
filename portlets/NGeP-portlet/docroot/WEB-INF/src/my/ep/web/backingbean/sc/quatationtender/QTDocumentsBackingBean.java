@@ -1119,19 +1119,26 @@ public class QTDocumentsBackingBean extends
 			}
 			scQtDocReport.setScQtDocReportAttachment(scQtDocReportAttachment);
 		} else {
-			String docDefinitionKey = scQtDocReport.getPmDocument()
-					.getDocDefinitionKey();
-			scQtDocReportAttachment = new ScQtDocReportAttachment();
-			scQtDocReportAttachment.setScQtDocReport(scQtDocReport);
-			scQtDocReportAttachment.setDocNo(scQtDocReport.getScQt().getQtNo());
+			if (null != scQtDocReport.getPmDocument()) {
+				String docDefinitionKey = scQtDocReport.getPmDocument()
+						.getDocDefinitionKey();
+				scQtDocReportAttachment = new ScQtDocReportAttachment();
+				scQtDocReportAttachment.setScQtDocReport(scQtDocReport);
+				scQtDocReportAttachment.setDocNo(scQtDocReport.getScQt()
+						.getQtNo());
 
-			if (SourcingConstants.DOC_DEF_KEY_RULES_REGULATION
-					.equals(docDefinitionKey)) {
-				generateSyaratSyaratAmPdfFromVelocity(
-						(ScAttachment) scQtDocReportAttachment, scQtDocReport);
+				if (SourcingConstants.DOC_DEF_KEY_RULES_REGULATION
+						.equals(docDefinitionKey)) {
+					generateSyaratSyaratAmPdfFromVelocity(
+							(ScAttachment) scQtDocReportAttachment,
+							scQtDocReport);
+				} else {
+					debugLogger("No document type is exists with the key "
+							+ docDefinitionKey);
+					scQtDocReportAttachment = null;
+				}
 			} else {
-				debugLogger("No document type is exists with the key "
-						+ docDefinitionKey);
+
 				scQtDocReportAttachment = null;
 			}
 			scQtDocReport.setScQtDocReportAttachment(scQtDocReportAttachment);
@@ -1312,7 +1319,8 @@ public class QTDocumentsBackingBean extends
 									populateAttachmentDetails(docReportAttachment);
 									// docReportAttachment.setFilePath(getActualFilePath(docReportAttachment));
 									// attachment = docReportAttachment;
-									new FileOutputStream(getActualFilePath(docReportAttachment));
+									new FileOutputStream(
+											getActualFilePath(docReportAttachment));
 									scQtDocReport
 											.setScQtDocReportAttachment(docReportAttachment);
 								}

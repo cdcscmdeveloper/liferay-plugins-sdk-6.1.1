@@ -7,15 +7,16 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:panel styleClass="scMemberDtl">
+	<p:panel styleClass="scMemberDtl" id="scmemberInfoDtls">
 		<table style="width: 50%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
 				<td><p:inputText
 						value="#{qTCommitteBackingBean.getStatusDescById(committe.committeStatus.statusId)}"
 						size="30" readonly="true" disabled="true" /></td>
-				<td style="width: 20px"><p:selectBooleanCheckbox value="#{committe.approvalReq}"
-						disabled="#{qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeSpecificationCommittee}">
+				<td style="width: 20px"><p:selectBooleanCheckbox
+						value="#{committe.approvalReq}"
+						disabled="#{qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeSpecificationCommittee or qTCommitteBackingBean.isEnableCloneButton()}">
 						<p:ajax update="@(.scMemberDtl)"
 							listener="#{qTCommitteBackingBean.checkCommitteFormedOrNot()}" />
 					</p:selectBooleanCheckbox></td>
@@ -36,7 +37,7 @@
 			selection="#{selectedCommittee}">
 
 			<p:column selectionMode="multiple" style="width:2%"
-				disabledSelection="#{qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode)}" />
+				rendered="#{!qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode)}" />
 
 
 
