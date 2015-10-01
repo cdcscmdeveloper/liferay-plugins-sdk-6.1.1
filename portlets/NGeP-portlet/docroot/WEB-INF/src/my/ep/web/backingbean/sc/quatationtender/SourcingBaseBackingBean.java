@@ -25,6 +25,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -267,7 +268,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		attachment.setCreatedUser(createdUser);
 
 		StringBuilder filePath = new StringBuilder();
-		filePath.append(DateUtils.getLast2DigitOfYear());
+		filePath.append(Calendar.getInstance().get(Calendar.YEAR));
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		filePath.append(ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase());
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
