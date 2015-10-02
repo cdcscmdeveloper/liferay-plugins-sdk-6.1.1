@@ -2,6 +2,7 @@ package my.ep.web.backingbean.pm.settings;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -119,13 +121,13 @@ public class RuleCatalogueBackingBean extends
 
 	private static Map<Long, Object> colorMapper;
 	private static Map<Long, Object> designatedAreaMapper;
-
+ 
 	// GST tab index
 	private static final int TAXABLE_ITEM_IDX = 0;
 	private static final int DESIGNATED_AREA_IDX = 1;
 	private static final int TAXABLE_ITEM_DA_IDX = 2;
 	private static final int TAXABLE_ITEM_G2G_IDX = 3;
-
+	private Integer currentIndexVal ;
 	// private List<SortMeta> preSortOrder = new ArrayList<SortMeta>();
 
 	public ISearchBean<PmParameterDesc> getParameterSearchBean() {
@@ -842,7 +844,7 @@ public class RuleCatalogueBackingBean extends
 		log.info("...................newRuleValue.getRuleValue()="
 				+ newRuleValue.getRuleValue());
 		newRuleValue.setRuleType(this.getManagedBean().getSelectedRuleType());
-		newRuleValue.setEffDate(new Date());
+		newRuleValue.setEffDate(tomorrowDate());
 
 		if (this.getManagedBean().getSelectedRuleType().getRuleDataTypeId()
 				.getParameterCode().equals("C")) {
@@ -861,9 +863,25 @@ public class RuleCatalogueBackingBean extends
 
 	}
 
+	public void checkStatus(int index){
+		log.info(".......checkStatus........");
+//		log.info("....index="+index);
+		this.setCurrentIndexVal(index);
+		PmConfigRuleValue selectedValue = this.getManagedBean()
+				.getSelectedRuleType().getConfigRuleValues().get(index);
+//		log.info(".................selectedValue="+selectedValue);
+//		log.info(".................selectedValue.getRecordStatusFlg()="+selectedValue.getRecordStatusFlg());
+		if(selectedValue.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE){//change from active to inactive
+//			log.info(".................selectedValue.getRecordStatusFlg()="+selectedValue.getRecordStatusFlg());
+			//prompt popoup
+			RequestContext.getCurrentInstance().execute("statusConfirmDialog.show();");
+			return;
+		}
+		
+	}
 	public void deleteMoreRuleValue(int rowIndex) {
 		log.info(".................deleteMoreRuleValue...................");
-
+	
 		// PmConfigRuleValue ruleValue =
 		// this.getManagedBean().getSelectedRuleType().getConfigRuleValues().get(rowIndex);
 
@@ -906,7 +924,7 @@ public class RuleCatalogueBackingBean extends
 		log.info(".................addMoreOrgAndItemFee...................");
 		PmFeeExemption newFeeExemption = new PmFeeExemption();
 		newFeeExemption.setFeeExemptionType("1");
-		newFeeExemption.setEffDate(new Date());
+		newFeeExemption.setEffDate(tomorrowDate());// future date
 		newFeeExemption.setItemId(new CmItem());// make sure to delete the new
 												// objs before update if doesn't
 												// selected
@@ -920,7 +938,18 @@ public class RuleCatalogueBackingBean extends
 				"feeByOrgItemTableWidVar.paginator.endLink.click()");
 
 	}
+	public Date tomorrowDate() {
+		log.info(".................tomorrowDate...................");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), 0, 0, 0);
+        Calendar c1 = Calendar.getInstance();
+		c1.add(Calendar.DATE, 1);
+		
+        return c1.getTime();
+    } 
 
+	
 	public void deleteOrgAndItemFee(int rowIndex) {
 		log.info(".................deleteOrgAndItemFee...................");
 		PmFeeExemption deletedExemption = this.getManagedBean()
@@ -954,7 +983,7 @@ public class RuleCatalogueBackingBean extends
 		log.info(".................addMoreComodityFee...................");
 		PmFeeExemption newFeeExemption = new PmFeeExemption();
 		newFeeExemption.setFeeExemptionType("6");
-		newFeeExemption.setEffDate(new Date());// make sure to delete the new
+		newFeeExemption.setEffDate(tomorrowDate());// make sure to delete the new
 												// objs before update if doesn't
 												// selected
 		newFeeExemption.setTypeId(new CmType());
@@ -986,7 +1015,7 @@ public class RuleCatalogueBackingBean extends
 		log.info(".................addMoreContractFee...................");
 		PmFeeExemption newFeeExemption = new PmFeeExemption();
 		newFeeExemption.setFeeExemptionType("2");
-		newFeeExemption.setEffDate(new Date());
+		newFeeExemption.setEffDate(tomorrowDate());
 		newFeeExemption.setRequestItemId(new ScRequestItem());
 		newFeeExemption.setContractId(new CtContract());
 
@@ -2489,7 +2518,7 @@ public class RuleCatalogueBackingBean extends
 		log.debug("*****addNewRuleTypeValue*****");
 		PmConfigRuleValue newRuleValue = new PmConfigRuleValue();
 		newRuleValue.setRuleType(this.getManagedBean().getSelectedRuleType());
-		newRuleValue.setEffDate(new Date());
+		newRuleValue.setEffDate(tomorrowDate());
 
 		if (this.getManagedBean().getSelectedRuleType().getRuleDataTypeId()
 				.getParameterCode().equals("C")) {
@@ -2519,7 +2548,8 @@ public class RuleCatalogueBackingBean extends
 				.getConfigRuleValues().size();
 		this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
 				.add(index, newRuleValue);
-
+//		RequestContext.getCurrentInstance().execute(
+//				"ruleValueTblWidget.paginator.endLink.click()");
 	}
 
 	public int getLastIndexToClone(List<PmConfigRuleValue> pmConfigValues,
@@ -3704,17 +3734,42 @@ public class RuleCatalogueBackingBean extends
 	 * 
 	 * @param ruleValue
 	 */
-	public void ruleValueStatusChange(PmConfigRuleValue ruleValue) {
+	public void ruleValueStatusChange(){
 		log.info("ruleValueStatusChange");
-
-		if (!ruleValue.isModified()) {
-			ruleValue.setModified(true);
+//		log.info("...getCurrentIndexVal="+this.getCurrentIndexVal());
+		if(this.getManagedBean().getCurrentIndex() != null){
+			PmConfigRuleValue selectedValue = this.getManagedBean()
+					.getSelectedRuleType().getConfigRuleValues().get(this.getCurrentIndexVal());
+//		log.info("....selectedValue.getRuleValue()="+selectedValue.getRuleValue());
+//		log.info(".................selectedValue.getRecordStatusFlg()="+selectedValue.getRecordStatusFlg());
+		if(selectedValue != null){
+		
+//			log.info("....selectedValue="+selectedValue);
+			
+		
+		if (!selectedValue.isModified()) {
+			selectedValue.setModified(true);
 		} else {
-			ruleValue.setModified(false);
+			selectedValue.setModified(false);
 		}
-
+		}
+		}
 	}
-
+	public void revertStatusChange(){
+		log.info(".......revertStatusChange........");
+//		log.info("...getCurrentIndexVal="+this.getCurrentIndexVal());
+		if(this.getCurrentIndexVal() != null){
+			PmConfigRuleValue selectedValue = this.getManagedBean()
+					.getSelectedRuleType().getConfigRuleValues().get(this.getCurrentIndexVal());
+//			log.info("....selectedValue.getRuleValue()="+selectedValue.getRuleValue());
+		
+			selectedValue.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);//change from inactive to active
+		}
+		//close popoup
+		RequestContext.getCurrentInstance().execute("statusConfirmDialog.hide();");
+		return;
+		
+	}
 	/**
 	 * Track fee exemption status
 	 * 
@@ -3745,4 +3800,13 @@ public class RuleCatalogueBackingBean extends
 		}
 
 	}
+
+	public Integer getCurrentIndexVal() {
+		return currentIndexVal;
+	}
+
+	public void setCurrentIndexVal(Integer currentIndexVal) {
+		this.currentIndexVal = currentIndexVal;
+	}
+	
 }
