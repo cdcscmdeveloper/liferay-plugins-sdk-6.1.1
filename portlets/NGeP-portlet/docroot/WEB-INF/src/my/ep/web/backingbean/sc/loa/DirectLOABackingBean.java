@@ -39,7 +39,6 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDirectAwardSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
-import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -69,8 +68,6 @@ import my.ep.dto.sc.quationtender.DirectAwardReqDTO;
 import my.ep.dto.sc.quationtender.DirectAwardResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
-import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
-import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
@@ -100,7 +97,6 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaSupportingDocAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
-import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -3647,6 +3643,8 @@ public class DirectLOABackingBean extends
 						|| QTStatusConst.LOA_PENDING_VERIFICATION
 								.equals(statusId)) { // if
 					// pending supplier acknowledgement , always regenerate
+					scLoaReportAttachment.setDocNo(scLoaReport.getScLoa()
+							.getLoaNo());
 
 					if (SourcingConstants.DOC_DEF_KEY_CONTRACT_SUMMARY
 							.equals(docDefinitionKey)) {
@@ -3684,6 +3682,9 @@ public class DirectLOABackingBean extends
 				} else if (scLoaReportAttachment != null
 						&& QTStatusConst.LOA_PENDING_SUBMISSION
 								.equals(statusId)) {
+					scLoaReportAttachment.setDocNo(scLoaReport.getScLoa()
+							.getLoaNo());
+					
 					// if pending submission , always regenerate
 					if (SourcingConstants.DOC_DEF_KEY_FREQUENCY_SCHEDULE
 							.equals(docDefinitionKey)) {
@@ -4878,19 +4879,10 @@ public class DirectLOABackingBean extends
 	public void formJadualHarga(ScAttachment attachment, ScLoa scLoa)
 			throws Exception {
 		populateAttachmentDetails(attachment);
-		List<JadualHargaBean> productJadualHargaList = new ArrayList<>();
-		List<JadualHargaBean> serviceJadualHargaList = new ArrayList<>();
-		JadualHargaBean jadualHarga = null;
-		String itemType = null;
-		for (ScLoiLoaItem item : scLoa.getScLoiLoaItems()) {
-			jadualHarga = mappingJadualHarga(item);
-			itemType = item.getScRequestItem().getItemType().getParameterCode();
-			if (ParameterConst.ITEM_TYPE_PRODUCT.equals(itemType)) {
-				productJadualHargaList.add(jadualHarga);
-			} else if (itemType.equals(ParameterConst.ITEM_TYPE_SERVICE)) {
-				serviceJadualHargaList.add(jadualHarga);
-			}
-		}
+		TplSpecMaster productSpecMaster = getManagedBean().getProdTemplateSpecBean().getSpecMaster();
+		TplSpecMaster serviceSpecMaster = getManagedBean().getSpecTemplateSpecBean().getSpecMaster();
+		List<JadualHargaBean> productJadualHargaList = convertSpecToJadualHargaBean(productSpecMaster);
+		List<JadualHargaBean> serviceJadualHargaList = convertSpecToJadualHargaBean(serviceSpecMaster);
 
 		// check whether loa from s1 or s2.
 		boolean isS1OrS2 = Boolean.TRUE;
@@ -4905,6 +4897,29 @@ public class DirectLOABackingBean extends
 				serviceJadualHargaList, isS1OrS2);
 
 	}
+	
+	private List<JadualHargaBean> convertSpecToJadualHargaBean(TplSpecMaster specMaster) {
+		List<JadualHargaBean> jadualHargaList = new ArrayList<JadualHargaBean>();
+		JadualHargaBean jadualHarga = null;
+		
+		if (specMaster != null && specMaster.getTplSpecQuestions() != null) {
+			List<TplSpecQuestion> specQuestions = specMaster.getTplSpecQuestions();
+			
+			for (TplSpecQuestion specQuestion : specQuestions) {
+				if (specQuestion.getTplSpecAnswers() != null) {
+					for (TplSpecAnswer specAnswer : specQuestion.getTplSpecAnswers()) {
+						if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(specQuestion.getQuestionType())) {
+							jadualHarga = mappingJadualHarga(specAnswer);
+							
+							jadualHargaList.add(jadualHarga);	
+						}
+					}
+				}
+			}
+		}
+		
+		return jadualHargaList;
+	}
 
 	/**
 	 * Mapping jadual harga.
@@ -4913,43 +4928,38 @@ public class DirectLOABackingBean extends
 	 *            the item
 	 * @return the jadual harga bean
 	 */
-	private JadualHargaBean mappingJadualHarga(ScLoiLoaItem item) {
+	private JadualHargaBean mappingJadualHarga(TplSpecAnswer specAnswer) {
 		JadualHargaBean jadualHarga = new JadualHargaBean();
+		TplSpecQuestion specQuestion = specAnswer.getTplSpecQuestion();
+		TplSpecZoneDtl specZoneDtl = specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl();
+		BigDecimal qty = specQuestion.getClQuantity();
 
-		jadualHarga.setZone(item.getTplSpecZoneDtl() != null ? item
-				.getTplSpecZoneDtl().getZoneName() : "");
-		jadualHarga.setItem(item.getScRequestItem().getItemName());
+		jadualHarga.setZone(specZoneDtl != null ? specZoneDtl.getZoneName() : "");
+		jadualHarga.setItem(specQuestion.getClItem());
 
-		BigDecimal unitPrice = item.getUnitPrice().setScale(2,
+		BigDecimal unitPrice = specAnswer.getRatePerUom().setScale(2,
 				BigDecimal.ROUND_HALF_EVEN);
 		jadualHarga.setUnitPrice(unitPrice.toString());
-		jadualHarga.setUom(item.getScRequestItem().getTplSpecQuestion()
-				.getClUom().getUomName());
-		jadualHarga.setFreqUom(null == item.getScRequestItem()
-				.getTplSpecQuestion().getClUomFrequency() ? "" : item
-				.getScRequestItem().getTplSpecQuestion().getClUomFrequency()
+		jadualHarga.setUom(specQuestion.getClUom().getUomName());
+		jadualHarga.setFreqUom(null == specQuestion.getClUomFrequency() ? "" : specQuestion.getClUomFrequency()
 				.toString());
-		jadualHarga.setUomPerDay(null == item.getScRequestItem()
-				.getTplSpecQuestion().getClUomPerDay() ? "" : item
-				.getScRequestItem().getTplSpecQuestion().getClUomPerDay()
+		jadualHarga.setUomPerDay(null == specQuestion.getClUomPerDay() ? "" : specQuestion.getClUomPerDay()
 				.toString());
-		jadualHarga.setUomPerMonth(null == item.getScRequestItem()
-				.getTplSpecQuestion().getClUomPerMonth() ? "" : item
-				.getScRequestItem().getTplSpecQuestion().getClUomPerMonth()
+		jadualHarga.setUomPerMonth(null == specQuestion.getClUomPerMonth() ? "" : specQuestion.getClUomPerMonth()
 				.toString());
-		jadualHarga.setUomPerYear(null == item.getScRequestItem()
-				.getTplSpecQuestion().getClDurationMonth() ? "" : item
-				.getScRequestItem().getTplSpecQuestion().getClDurationMonth()
+		jadualHarga.setUomPerYear(null == specQuestion.getClDurationMonth() ? "" : specQuestion.getClDurationMonth()
 				.toString());
-		jadualHarga.setQuantity(null == item.getQty() ? "" : item.getQty()
+		jadualHarga.setQuantity(null == qty ? "" : qty
 				.toString());
 
 		BigDecimal totalAmount = BigDecimal.valueOf(0d);
 		BigDecimal subTotal = TemplateSpecHelper.getInstance().calcTotalAmount(
-				item.getScRequestItem().getTplSpecQuestion(),
-				item.getUnitPrice(), item.getQty());
-		totalAmount = totalAmount.add(subTotal);
-		totalAmount = totalAmount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+				specQuestion,
+				unitPrice, qty);
+		if (subTotal != null) {
+			totalAmount = totalAmount.add(subTotal);
+			totalAmount = totalAmount.setScale(2, BigDecimal.ROUND_HALF_EVEN);	
+		}
 		jadualHarga.setTotalAmount(totalAmount.toString());
 		return jadualHarga;
 
@@ -4971,123 +4981,121 @@ public class DirectLOABackingBean extends
 			List<JadualHargaBean> productList,
 			List<JadualHargaBean> serviceList, boolean isS1OrS2)
 			throws Exception {
-		if (serviceList.size() > 0 || productList.size() > 0) {
-			try {
-				/*
-				 * FileInputStream inputStream = new FileInputStream(new File(
-				 * FacesContext.getCurrentInstance().getExternalContext()
-				 * .getRealPath("/WEB-INF/templates") +
-				 * "/sc/loa/jadual-harga.xlsx"));
-				 */
+		try {
+			/*
+			 * FileInputStream inputStream = new FileInputStream(new File(
+			 * FacesContext.getCurrentInstance().getExternalContext()
+			 * .getRealPath("/WEB-INF/templates") +
+			 * "/sc/loa/jadual-harga.xlsx"));
+			 */
 
-				final String templatePath = "templates"
-						+ SourcingConstants.DOCPATH_SC_LOA_JADUAL_HARGA;
-				InputStream inputStream = this.getClass().getClassLoader()
-						.getResourceAsStream(templatePath);
-				if (inputStream != null) {
-					XSSFWorkbook wb = new XSSFWorkbook(inputStream); // or new
-																		// HSSFWorkbook();
+			final String templatePath = "templates"
+					+ SourcingConstants.DOCPATH_SC_LOA_JADUAL_HARGA;
+			InputStream inputStream = this.getClass().getClassLoader()
+					.getResourceAsStream(templatePath);
+			if (inputStream != null) {
+				XSSFWorkbook wb = new XSSFWorkbook(inputStream); // or new
+																	// HSSFWorkbook();
 
-					boolean emptyProductList = false;
-					Sheet productSheet = null;
-					Sheet serviceSheet = null;
-					Row row = null;
-					int rowIndex = 0;
-					int cellIndex = 0;
-					if (productList.size() > 0) {
-						rowIndex = 0;
-						productSheet = wb.getSheetAt(0);
-						wb.setSheetName(0, "ProductSheet");
-						for (JadualHargaBean product : productList) {
-							rowIndex++;
-							cellIndex = 0;
-							row = productSheet.createRow(rowIndex);
-							row.createCell(cellIndex++).setCellValue(
-									product.getZone());
-							row.createCell(cellIndex++).setCellValue(
-									product.getItem());
-							row.createCell(cellIndex++).setCellValue(
-									product.getUom());
-							row.createCell(cellIndex++).setCellValue(
-									product.getQuantity());
-							row.createCell(cellIndex++).setCellValue(
-									product.getSubSequence());
-							row.createCell(cellIndex++).setCellValue(
-									product.getUnitPrice());
-							row.createCell(cellIndex++).setCellValue(
-									product.getTotalAmount());
-						}
-						// Auto size all the columns
-						for (int x = 0; x < productSheet.getRow(0)
-								.getPhysicalNumberOfCells(); x++) {
-							productSheet.autoSizeColumn(x);
-						}
-					} else {
-						wb.removeSheetAt(0);
-						emptyProductList = true;
+				boolean emptyProductList = false;
+				Sheet productSheet = null;
+				Sheet serviceSheet = null;
+				Row row = null;
+				int rowIndex = 0;
+				int cellIndex = 0;
+				if (productList.size() > 0 || (productList.size() == 0 && serviceList.size() == 0)) {
+					rowIndex = 0;
+					productSheet = wb.getSheetAt(0);
+					wb.setSheetName(0, "ProductSheet");
+					for (JadualHargaBean product : productList) {
+						rowIndex++;
+						cellIndex = 0;
+						row = productSheet.createRow(rowIndex);
+						row.createCell(cellIndex++).setCellValue(
+								product.getZone());
+						row.createCell(cellIndex++).setCellValue(
+								product.getItem());
+						row.createCell(cellIndex++).setCellValue(
+								product.getUom());
+						row.createCell(cellIndex++).setCellValue(
+								product.getQuantity());
+						row.createCell(cellIndex++).setCellValue(
+								product.getSubSequence());
+						row.createCell(cellIndex++).setCellValue(
+								product.getUnitPrice());
+						row.createCell(cellIndex++).setCellValue(
+								product.getTotalAmount());
 					}
-
-					if (serviceList.size() > 0) {
-						rowIndex = 0;
-						if (emptyProductList) {
-							serviceSheet = wb.getSheetAt(0);
-							wb.setSheetName(0, "ServiceSheet");
-						} else {
-							serviceSheet = wb.getSheetAt(1);
-							wb.setSheetName(1, "ServiceSheet");
-						}
-
-						if (isS1OrS2) {
-							Row row0 = serviceSheet.getRow(0);
-							Cell cell9 = row0.getCell(9);
-							cell9.setCellValue("Total Amount (RM)");
-						}
-
-						for (JadualHargaBean service : serviceList) {
-							rowIndex++;
-							cellIndex = 0;
-							row = serviceSheet.createRow(rowIndex);
-							row.createCell(cellIndex++).setCellValue(
-									service.getZone());
-							row.createCell(cellIndex++).setCellValue(
-									service.getItem());
-							row.createCell(cellIndex++).setCellValue(
-									service.getUom());
-							row.createCell(cellIndex++).setCellValue(
-									service.getFreqUom());
-							row.createCell(cellIndex++).setCellValue(
-									service.getUomPerDay());
-							row.createCell(cellIndex++).setCellValue(
-									service.getUomPerMonth());
-							row.createCell(cellIndex++).setCellValue(
-									service.getUomPerYear());
-							row.createCell(cellIndex++).setCellValue(
-									service.getQuantity());
-							row.createCell(cellIndex++).setCellValue(
-									service.getUnitPrice());
-							row.createCell(cellIndex++).setCellValue(
-									service.getTotalAmount());
-
-						}
-
-						for (int x = 0; x < serviceSheet.getRow(0)
-								.getPhysicalNumberOfCells(); x++) {
-							serviceSheet.autoSizeColumn(x);
-						}
-					} else {
-						wb.removeSheetAt(1);
+					// Auto size all the columns
+					for (int x = 0; x < productSheet.getRow(0)
+							.getPhysicalNumberOfCells(); x++) {
+						productSheet.autoSizeColumn(x);
 					}
-
-					wb.setActiveSheet(0);
-					FileOutputStream os = new FileOutputStream(
-							getActualFilePath(attachment));
-					wb.write(os);
-					os.flush();
-					os.close();
+				} else {
+					wb.removeSheetAt(0);
+					emptyProductList = true;
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
+
+				if (serviceList.size() > 0 || (productList.size() == 0 && serviceList.size() == 0)) {
+					rowIndex = 0;
+					if (emptyProductList) {
+						serviceSheet = wb.getSheetAt(0);
+						wb.setSheetName(0, "ServiceSheet");
+					} else {
+						serviceSheet = wb.getSheetAt(1);
+						wb.setSheetName(1, "ServiceSheet");
+					}
+
+					if (isS1OrS2) {
+						Row row0 = serviceSheet.getRow(0);
+						Cell cell9 = row0.getCell(9);
+						cell9.setCellValue("Total Amount (RM)");
+					}
+
+					for (JadualHargaBean service : serviceList) {
+						rowIndex++;
+						cellIndex = 0;
+						row = serviceSheet.createRow(rowIndex);
+						row.createCell(cellIndex++).setCellValue(
+								service.getZone());
+						row.createCell(cellIndex++).setCellValue(
+								service.getItem());
+						row.createCell(cellIndex++).setCellValue(
+								service.getUom());
+						row.createCell(cellIndex++).setCellValue(
+								service.getFreqUom());
+						row.createCell(cellIndex++).setCellValue(
+								service.getUomPerDay());
+						row.createCell(cellIndex++).setCellValue(
+								service.getUomPerMonth());
+						row.createCell(cellIndex++).setCellValue(
+								service.getUomPerYear());
+						row.createCell(cellIndex++).setCellValue(
+								service.getQuantity());
+						row.createCell(cellIndex++).setCellValue(
+								service.getUnitPrice());
+						row.createCell(cellIndex++).setCellValue(
+								service.getTotalAmount());
+
+					}
+
+					for (int x = 0; x < serviceSheet.getRow(0)
+							.getPhysicalNumberOfCells(); x++) {
+						serviceSheet.autoSizeColumn(x);
+					}
+				} else {
+					wb.removeSheetAt(1);
+				}
+
+				wb.setActiveSheet(0);
+				FileOutputStream os = new FileOutputStream(
+						getActualFilePath(attachment));
+				wb.write(os);
+				os.flush();
+				os.close();
 			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -5104,11 +5112,6 @@ public class DirectLOABackingBean extends
 	public void formSpecification(ScAttachment attachment, ScLoa scLoa)
 			throws Exception {
 		populateAttachmentDetails(attachment);
-		ITemplateSpecSO templateSpecSO = (ITemplateSpecSO) BusinessDelegate
-				.getInstance()
-				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
-						ITemplateSpecSO.class);
-		TemplateSpecReqDTO templateSpecReqDTO = new TemplateSpecReqDTO();
 
 		List<TplSpecQuestion> productQuestions = this.getManagedBean()
 				.getProdscQtDoc().getTplSpecMaster().getTplSpecQuestions();
@@ -5131,33 +5134,33 @@ public class DirectLOABackingBean extends
 				}
 			}
 		}
-		List<TplSpecAnswer> serviceAnswers = new ArrayList<>();
-		List<TplSpecAnswer> productAnswers = new ArrayList<>();
-		if (CollectionUtils.isNotEmpty(itemNames)) {
-			templateSpecReqDTO.setQtId(scLoa.getScLoiLoa().getDocId());
-			templateSpecReqDTO.setSupplier(scLoa.getScLoiLoa().getSmSupplier());
-			templateSpecReqDTO.setItemNameList(itemNames);
-
-			TemplateSpecResDTO templateSpecResDTO = templateSpecSO
-					.retrieveSupplierTechAnswersByItemNames(templateSpecReqDTO);
-			if (templateSpecResDTO.getSpecAnswerList() != null
-					&& templateSpecResDTO.getSpecAnswerList().size() > 0) {
-				for (TplSpecAnswer tplSpecAnswer : templateSpecResDTO
-						.getSpecAnswerList()) {
-					if (ParameterConst.ITEM_TYPE_PRODUCT.equals(tplSpecAnswer
-							.getTplSpecQuestion().getTplSpecMaster()
-							.getItemTypeCode().getParameterCode())) {
-						productAnswers.add(tplSpecAnswer);
-					} else if (ParameterConst.ITEM_TYPE_SERVICE
-							.equals(tplSpecAnswer.getTplSpecQuestion()
-									.getTplSpecMaster().getItemTypeCode()
-									.getParameterCode())) {
-						serviceAnswers.add(tplSpecAnswer);
+		TplSpecMaster productSpecMaster = getManagedBean().getProdTemplateSpecBean().getSpecMaster();
+		TplSpecMaster serviceSpecMaster = getManagedBean().getSpecTemplateSpecBean().getSpecMaster();
+		List<TplSpecAnswer> serviceAnswers = convertSpecQuestionToSpecAnswer(productSpecMaster);
+		List<TplSpecAnswer> productAnswers = convertSpecQuestionToSpecAnswer(serviceSpecMaster);
+		
+		generateSpecification(attachment, productAnswers, serviceAnswers);
+	}
+	
+	private List<TplSpecAnswer> convertSpecQuestionToSpecAnswer(TplSpecMaster specMaster) {
+		List<TplSpecAnswer> specAnswers = new ArrayList<TplSpecAnswer>();
+		
+		if (specMaster != null && specMaster.getTplSpecQuestions() != null) {
+			for (TplSpecQuestion specQuestion : specMaster.getTplSpecQuestions()) {
+				if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(specQuestion.getQuestionType())) {
+					if (specQuestion.getTplSpecAnswers() != null) {
+						specAnswers.addAll(specQuestion.getTplSpecAnswers());	
 					}
+				} else {
+					TplSpecAnswer specAnswer = new TplSpecAnswer();
+					specAnswer.setTplSpecQuestion(specQuestion);
+					
+					specAnswers.add(specAnswer);	
 				}
 			}
-			generateSpecification(attachment, productAnswers, serviceAnswers);
 		}
+		
+		return specAnswers;
 	}
 
 	/**
@@ -5175,152 +5178,150 @@ public class DirectLOABackingBean extends
 	private void generateSpecification(ScAttachment attachment,
 			List<TplSpecAnswer> productList, List<TplSpecAnswer> serviceList)
 			throws Exception {
-		if (serviceList.size() > 0 || productList.size() > 0) {
-			try {
-				/*
-				 * FileInputStream inputStream = new FileInputStream(new File(
-				 * FacesContext.getCurrentInstance().getExternalContext()
-				 * .getRealPath("/WEB-INF/templates") +
-				 * "/sc/loa/specification.xlsx"));
-				 */
+		try {
+			/*
+			 * FileInputStream inputStream = new FileInputStream(new File(
+			 * FacesContext.getCurrentInstance().getExternalContext()
+			 * .getRealPath("/WEB-INF/templates") +
+			 * "/sc/loa/specification.xlsx"));
+			 */
 
-				final String templatePath = "templates"
-						+ SourcingConstants.DOCPATH_SC_LOA_SPECIFICATION;
-				InputStream inputStream = this.getClass().getClassLoader()
-						.getResourceAsStream(templatePath);
-				if (inputStream != null) {
-					XSSFWorkbook wb = new XSSFWorkbook(inputStream); // or new
-																		// HSSFWorkbook();
-					boolean emptyProductList = false;
-					Sheet productSheet = null;
-					Sheet serviceSheet = null;
-					Row row = null;
-					int rowIndex = 0;
-					int cellIndex = 0;
-					if (productList.size() > 0) {
-						rowIndex = 0;
-						productSheet = wb.getSheetAt(0);
-						wb.setSheetName(0, "ProductSheet");
-						for (TplSpecAnswer answer : productList) {
-							rowIndex++;
-							cellIndex = 0;
-							row = productSheet.createRow(rowIndex);
-							row.createCell(cellIndex++).setCellValue(
-									null == answer.getTplSpecQuestion()
-											.getClItem() ? "" : answer
-											.getTplSpecQuestion().getClItem());
+			final String templatePath = "templates"
+					+ SourcingConstants.DOCPATH_SC_LOA_SPECIFICATION;
+			InputStream inputStream = this.getClass().getClassLoader()
+					.getResourceAsStream(templatePath);
+			if (inputStream != null) {
+				XSSFWorkbook wb = new XSSFWorkbook(inputStream); // or new
+																	// HSSFWorkbook();
+				boolean emptyProductList = false;
+				Sheet productSheet = null;
+				Sheet serviceSheet = null;
+				Row row = null;
+				int rowIndex = 0;
+				int cellIndex = 0;
+				if (productList.size() > 0 || (productList.size() == 0 && serviceList.size() == 0)) {
+					rowIndex = 0;
+					productSheet = wb.getSheetAt(0);
+					wb.setSheetName(0, "ProductSheet");
+					for (TplSpecAnswer answer : productList) {
+						rowIndex++;
+						cellIndex = 0;
+						row = productSheet.createRow(rowIndex);
+						row.createCell(cellIndex++).setCellValue(
+								null == answer.getTplSpecQuestion()
+										.getClItem() ? "" : answer
+										.getTplSpecQuestion().getClItem());
 
-							row.createCell(cellIndex++).setCellValue(
-									null == answer.getTplSpecQuestion()
-											.getClSpecDetail() ? "" : answer
-											.getTplSpecQuestion()
-											.getClSpecDetail());
+						row.createCell(cellIndex++).setCellValue(
+								null == answer.getTplSpecQuestion()
+										.getClSpecDetail() ? "" : answer
+										.getTplSpecQuestion()
+										.getClSpecDetail());
 
-							row.createCell(cellIndex++).setCellValue(
-									null == answer.getTplSpecQuestion()
-											.getClUom() ? "" : answer
-											.getTplSpecQuestion().getClUom()
-											.getUomName());
+						row.createCell(cellIndex++).setCellValue(
+								null == answer.getTplSpecQuestion()
+										.getClUom() ? "" : answer
+										.getTplSpecQuestion().getClUom()
+										.getUomName());
 
-							row.createCell(cellIndex++).setCellValue(
-									null == answer.getTplSpecQuestion()
-											.getClPriceTypeCode() ? ""
-											: getParameterDesc(answer
-													.getTplSpecQuestion()
-													.getClPriceTypeCode()));
+						row.createCell(cellIndex++).setCellValue(
+								null == answer.getTplSpecQuestion()
+										.getClPriceTypeCode() ? ""
+										: getParameterDesc(answer
+												.getTplSpecQuestion()
+												.getClPriceTypeCode()));
 
-							row.createCell(cellIndex++).setCellValue(
-									null == answer.getTplSpecQuestion()
-											.getClQuantity() ? "" : answer
-											.getTplSpecQuestion()
-											.getClQuantity().toString());
+						row.createCell(cellIndex++).setCellValue(
+								null == answer.getTplSpecQuestion()
+										.getClQuantity() ? "" : answer
+										.getTplSpecQuestion()
+										.getClQuantity().toString());
 
-						}
-
-						// Auto size all the columns
-						for (int x = 0; x < productSheet.getRow(0)
-								.getPhysicalNumberOfCells(); x++) {
-							productSheet.autoSizeColumn(x);
-						}
-					} else {
-						wb.removeSheetAt(0);
-						emptyProductList = true;
 					}
 
-					if (serviceList.size() > 0) {
-						rowIndex = 0;
-						if (emptyProductList) {
-							serviceSheet = wb.getSheetAt(0);
-							wb.setSheetName(0, "ServiceSheet");
-						} else {
-							serviceSheet = wb.getSheetAt(1);
-							wb.setSheetName(1, "ServiceSheet");
-						}
-
-						for (TplSpecAnswer answer : serviceList) {
-							rowIndex++;
-							cellIndex = 0;
-							row = serviceSheet.createRow(rowIndex);
-							row.createCell(cellIndex++).setCellValue(
-									null == answer.getTplSpecQuestion()
-											.getClItem() ? "" : answer
-											.getTplSpecQuestion().getClItem());
-
-							row.createCell(cellIndex++).setCellValue(
-									null == answer.getTplSpecQuestion()
-											.getClSpecDetail() ? "" : answer
-											.getTplSpecQuestion()
-											.getClSpecDetail());
-
-							row.createCell(cellIndex++).setCellValue(
-									null == answer.getTplSpecQuestion()
-											.getClUom() ? "" : answer
-											.getTplSpecQuestion().getClUom()
-											.getUomName());
-
-							row.createCell(cellIndex++).setCellValue(
-									null == answer.getTplSpecQuestion()
-											.getClUomFrequency() ? "" : answer
-											.getTplSpecQuestion()
-											.getClUomFrequency().toString());
-
-							row.createCell(cellIndex++).setCellValue(
-									null == answer.getTplSpecQuestion()
-											.getClUomPerDay() ? "" : answer
-											.getTplSpecQuestion()
-											.getClUomPerDay().toString());
-
-							row.createCell(cellIndex++).setCellValue(
-									null == answer.getTplSpecQuestion()
-											.getClUomPerMonth() ? "" : answer
-											.getTplSpecQuestion()
-											.getClUomPerMonth().toString());
-
-							row.createCell(cellIndex++).setCellValue(
-									null == answer.getTplSpecQuestion()
-											.getClQuantity() ? "" : answer
-											.getTplSpecQuestion()
-											.getClQuantity().toString());
-						}
-
-						for (int x = 0; x < serviceSheet.getRow(0)
-								.getPhysicalNumberOfCells(); x++) {
-							serviceSheet.autoSizeColumn(x);
-						}
-					} else {
-						wb.removeSheetAt(1);
+					// Auto size all the columns
+					for (int x = 0; x < productSheet.getRow(0)
+							.getPhysicalNumberOfCells(); x++) {
+						productSheet.autoSizeColumn(x);
 					}
-
-					wb.setActiveSheet(0);
-					FileOutputStream os = new FileOutputStream(
-							getActualFilePath(attachment));
-					wb.write(os);
-					os.flush();
-					os.close();
+				} else {
+					wb.removeSheetAt(0);
+					emptyProductList = true;
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
+
+				if (serviceList.size() > 0 || (productList.size() == 0 && serviceList.size() == 0)) {
+					rowIndex = 0;
+					if (emptyProductList) {
+						serviceSheet = wb.getSheetAt(0);
+						wb.setSheetName(0, "ServiceSheet");
+					} else {
+						serviceSheet = wb.getSheetAt(1);
+						wb.setSheetName(1, "ServiceSheet");
+					}
+
+					for (TplSpecAnswer answer : serviceList) {
+						rowIndex++;
+						cellIndex = 0;
+						row = serviceSheet.createRow(rowIndex);
+						row.createCell(cellIndex++).setCellValue(
+								null == answer.getTplSpecQuestion()
+										.getClItem() ? "" : answer
+										.getTplSpecQuestion().getClItem());
+
+						row.createCell(cellIndex++).setCellValue(
+								null == answer.getTplSpecQuestion()
+										.getClSpecDetail() ? "" : answer
+										.getTplSpecQuestion()
+										.getClSpecDetail());
+
+						row.createCell(cellIndex++).setCellValue(
+								null == answer.getTplSpecQuestion()
+										.getClUom() ? "" : answer
+										.getTplSpecQuestion().getClUom()
+										.getUomName());
+
+						row.createCell(cellIndex++).setCellValue(
+								null == answer.getTplSpecQuestion()
+										.getClUomFrequency() ? "" : answer
+										.getTplSpecQuestion()
+										.getClUomFrequency().toString());
+
+						row.createCell(cellIndex++).setCellValue(
+								null == answer.getTplSpecQuestion()
+										.getClUomPerDay() ? "" : answer
+										.getTplSpecQuestion()
+										.getClUomPerDay().toString());
+
+						row.createCell(cellIndex++).setCellValue(
+								null == answer.getTplSpecQuestion()
+										.getClUomPerMonth() ? "" : answer
+										.getTplSpecQuestion()
+										.getClUomPerMonth().toString());
+
+						row.createCell(cellIndex++).setCellValue(
+								null == answer.getTplSpecQuestion()
+										.getClQuantity() ? "" : answer
+										.getTplSpecQuestion()
+										.getClQuantity().toString());
+					}
+
+					for (int x = 0; x < serviceSheet.getRow(0)
+							.getPhysicalNumberOfCells(); x++) {
+						serviceSheet.autoSizeColumn(x);
+					}
+				} else {
+					wb.removeSheetAt(1);
+				}
+
+				wb.setActiveSheet(0);
+				FileOutputStream os = new FileOutputStream(
+						getActualFilePath(attachment));
+				wb.write(os);
+				os.flush();
+				os.close();
 			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
