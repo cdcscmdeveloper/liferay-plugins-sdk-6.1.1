@@ -68,7 +68,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.action']}"
-				style="width:10%; white-space:normal; text-align:right;" rendered="#{noticeBoardBackingBean.managedBean.selectedTab ne ParameterConst.noticeBoardStatusCancelled ?'true':'false'}">
+				style="width:10%; white-space:normal; text-align:center;" rendered="#{noticeBoardBackingBean.managedBean.selectedTab ne ParameterConst.noticeBoardStatusCancelled ?'true':'false'}">
 				<ui:fragment
 					rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges }">
 					<p:commandLink id="chkQualIcon"
