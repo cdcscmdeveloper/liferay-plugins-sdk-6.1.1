@@ -210,6 +210,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 		}
 	}
 
+	@Override
 	public void sstInformationGfmas() {
 
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
@@ -254,6 +255,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 
 	}
 
+	@Override
 	public void masterDataVendorGfmasOutbound() {
 		System.out.println("masterDataVendorGfmasOutbound : APIVE");
 		
@@ -500,6 +502,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 			}
 		}
 	
+	@Override
 	public void masterDataVendorGfmasInbound() {
 		log.info("inside masterDataVendorGfmasInbound : APOVE");
 
@@ -663,7 +666,6 @@ public class GfmasIntegration extends InitializeUtilityClz{
 								orgProfileReqDTO = new OrgProfileReqDTO();
 								
 								PmOrgProfile pmOrgProfile = new PmOrgProfile();
-								
 								PmOrgValidity orgValidity = new PmOrgValidity();
 								orgValidity.setOrgCode(office.getCode());
 								orgValidity.setOrgName(office.getDescription());
@@ -1356,6 +1358,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 		}
 	}
 	
+	@Override
 	public void paymentGfmasInbound() {
 		log.info("inside paymentGfmasInbound :AP511");
 
