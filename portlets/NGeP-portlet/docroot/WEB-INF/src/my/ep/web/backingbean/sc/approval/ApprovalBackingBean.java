@@ -195,6 +195,9 @@ public class ApprovalBackingBean extends
 			ScAttachment scAttachment = null;
 			ScQtApprovalAttachment attachment = new ScQtApprovalAttachment();
 			ScQtApproval scQtApproval = this.getManagedBean().getScQtApproval();
+			if (scQtApproval.getScQt() == null) {
+				scQtApproval.setScQt(this.getManagedBean().getQt());
+			}
 			List<ScQtApprovalAttachment> approvalAttachments = scQtApproval
 					.getScQtApprovalAttachments();
 			if (null == approvalAttachments) {
@@ -259,7 +262,10 @@ public class ApprovalBackingBean extends
 	 * Delete Attachment.
 	 */
 	public void deleteUploadFile() {
-		getManagedBean().getScQtApproval().setScQtApprovalAttachments(null);
+		logger.info("deleteUploadFile - START");
+		// getManagedBean().getScQtApproval().setScQtApprovalAttachments(null);
+		getManagedBean().getAttachments().clear();
+		logger.info("deleteUploadFile - END");
 	}
 
 	/**
