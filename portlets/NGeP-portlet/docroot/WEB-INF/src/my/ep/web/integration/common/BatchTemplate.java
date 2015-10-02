@@ -64,24 +64,4 @@ public abstract class BatchTemplate extends InitializeSO {
 
 	public abstract void paymentGfmasInbound();
 
-	// Eperunding Template
-
-	/*
-	 * public final void eperundingOutboundServices(){
-	 * System.out.println("inside template method...");
-	 * createConsultantProfile(); createDeletedCompany();
-	 * createGovernmentProject(); createRegisteredCategory();
-	 * createCompanyOwner(); createAssociatedCompany(); createBranchCompany();
-	 * createAuthorizedSignatory(); createEquiytyOwner();
-	 * createBoardOfDirector(); createManagementPersonnel(); }
-	 * 
-	 * public abstract void createConsultantProfile(); public abstract void
-	 * createDeletedCompany(); public abstract void createGovernmentProject();
-	 * public abstract void createRegisteredCategory(); public abstract void
-	 * createCompanyOwner(); public abstract void createAssociatedCompany();
-	 * public abstract void createBranchCompany(); public abstract void
-	 * createAuthorizedSignatory(); public abstract void createEquiytyOwner();
-	 * public abstract void createBoardOfDirector(); public abstract void
-	 * createManagementPersonnel();
-	 */
 }
