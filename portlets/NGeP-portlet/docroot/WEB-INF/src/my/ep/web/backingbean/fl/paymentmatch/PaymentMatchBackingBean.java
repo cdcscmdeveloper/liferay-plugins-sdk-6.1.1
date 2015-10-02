@@ -817,7 +817,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 					taxInvVO.setAmountWithoutGst(invItem.getInvAmt());
 					if(invItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.STANDARD.value())){
 						taxInvVO.setGstAmount(getManagedBean().getGstAmount().toString());	
-						taxInvVO.setGstFlag(invItem.getGstFlag().getParameterCode()+" = " +getManagedBean().getPaymentAdvice().getFlInvoice().getFlRequest().getGstRate()+"%");
+						taxInvVO.setGstFlag(invItem.getGstFlag().getParameterCode()+" = " +getManagedBean().getPaymentAdvice().getFlRequest().getGstRate()+"%");
 					}else if(invItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.ZERO_RATED.value())){
 						taxInvVO.setGstAmount(BigDecimal.ZERO.toString());	
 						taxInvVO.setGstFlag(invItem.getGstFlag().getParameterCode()+" = 0%");
