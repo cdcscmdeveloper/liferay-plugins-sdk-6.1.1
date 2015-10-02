@@ -98,7 +98,7 @@
 						value="#{lbl['lbl.sc.supporting.document']}" /></td>
 
 				<td class="TableFieldRight">
-					<table style="width: 150px;">
+					<table style="width: 100%;">
 						<tr>
 							<td colspan="2"><p:commandButton
 									oncomplete="fcAttachDlg.show();return false;"
@@ -116,19 +116,20 @@
 											<td rowspan="2" style="vertical-align: top;" align="left">
 												<h:graphicImage value="/css/images/design/#{approvalBackingBean.determineIcon(attachFile)}" height="30" width="30"/>
 											</td>
-											<td><h:outputText value="#{attachFile.user.userName}" />,
-												<h:outputText value="#{attachFile.changedDate}">
+											<td><h:outputText value="#{attachFile.createdUser.userName}" />,
+												<h:outputText value="#{attachFile.createdDate}">
 													<f:convertDateTime
-														pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+														pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 												</h:outputText></td>
 										</tr>
 										<tr>
 											<td><h:commandLink value="#{attachFile.fileName}"
-													styleClass="blue_font"
+													styleClass="blue_font" immediate="true"
+													action="#{approvalBackingBean.downloadFile(attachFile)}"
 													disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}" />
 												<p:commandLink
 													action="#{approvalBackingBean.deleteUploadFile}"
-													immediate="true" update="fcAttachId"
+													immediate="true" update="@([id$=fcAttachId])"
 													disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}">
 													<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/icon_trash.png" styleClass="tasklist_title1" />
 												</p:commandLink></td>
@@ -141,8 +142,6 @@
 			</tr>
 		</table>
 	</p:panel>
-
-
 
 	<p:dialog id="fcAttachedDlgids" widgetVar="fcAttachDlg" modal="true"
 		dynamic="true" resizable="false" width="700px" height="200"
