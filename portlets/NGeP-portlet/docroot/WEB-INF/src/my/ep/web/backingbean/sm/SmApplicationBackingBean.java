@@ -4339,8 +4339,6 @@ public class SmApplicationBackingBean extends
 						.add(getManagedBean().getSelectedShareHolder());
 
 			}
-			updatePersonnelRecordStatus(getManagedBean().getSmAppl()
-					.getSmPersonnels(), getManagedBean().getSmSupplier());
 			saveOrUpdateAppl();
 			SmApplicationUtil.setPersonnelsPrevApprovedDirectorEquityOwner(
 					getManagedBean().getSmAppl(), getManagedBean()
@@ -4369,6 +4367,8 @@ public class SmApplicationBackingBean extends
 	private void saveOrUpdateAppl() {
 		// SmApplicationUtil.getInstance().setApplAddressTransientValue(
 		// getManagedBean().getSmAppl(), true);
+		updatePersonnelRecordStatus(getManagedBean().getSmAppl()
+				.getSmPersonnels(), getManagedBean().getSmSupplier());
 		IMofRegistrationSO mofRegistrationSO = null;
 		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
 				.getCompanyBasicGst());
@@ -4403,7 +4403,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Update SmPersonnel record status .
+	 * Update SmPersonnel record status just in case after change epRole not
+	 * reflect.
 	 * 
 	 * @param smPersonnels
 	 *            - List of sm personnels
@@ -4412,15 +4413,16 @@ public class SmApplicationBackingBean extends
 			SmSupplier smSupplier) {
 		if (smPersonnels != null && !smPersonnels.isEmpty()) {
 			for (SmPersonnel smPersonnel : smPersonnels) {
-				if (StringUtils.isNotBlank(smPersonnel.getEpRole())
-						&& (smPersonnel.getPmUser() == null || smPersonnel
-								.getPmUser().getUserId() == null)
-						&& smPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-					smPersonnel
-							.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
-				} else {
+				if (smPersonnel.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED
+						&& smPersonnel.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
 					smPersonnel
 							.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+					if (StringUtils.isNotBlank(smPersonnel.getEpRole())
+							&& (smPersonnel.getPmUser() == null || smPersonnel
+									.getPmUser().getUserId() == null)) {
+						smPersonnel
+								.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+					}
 				}
 			}
 		}
