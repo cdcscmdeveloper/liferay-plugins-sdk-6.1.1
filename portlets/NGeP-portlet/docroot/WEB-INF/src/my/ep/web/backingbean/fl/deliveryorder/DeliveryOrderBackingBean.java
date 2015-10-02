@@ -684,8 +684,17 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()!=null && getManagedBean().getButtonVal()==null) {
 				sortAddress(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses());
 				sortOrderSummaryList(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses());
+				for(FlDeliveryAddress deliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
+					for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()) {
+						BigDecimal remainOrderQty=itemAddr.getOrderedQty().subtract(itemAddr.getSumDeliveredQty()).add(itemAddr.getRejectedQty());
+						deliveryAddress.setSuppDelOrdNoEnabled(false);
+						if(remainOrderQty.doubleValue()> 0){
+							deliveryAddress.setSuppDelOrdNoEnabled(true);
+							break;
+						}
+					}
+				}
 			}
-			
 		}
 	}
 	
