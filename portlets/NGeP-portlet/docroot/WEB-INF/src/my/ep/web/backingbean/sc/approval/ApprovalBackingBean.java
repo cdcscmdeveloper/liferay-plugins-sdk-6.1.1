@@ -248,8 +248,7 @@ public class ApprovalBackingBean extends
 				scQtApprovalRequest
 						.setApprovalRequestAttachement(approvalReqAttachement);
 			}
-			approvalReqAttachement.setDocNo(String.valueOf(scQtApprovalRequest
-					.getQtApprovalRequestId()));
+			approvalReqAttachement.setDocNo(scQtApprovalRequest.getScQtApproval().getScQt().getQtNo());
 			scAttachment = approvalReqAttachement;
 			uploadAttachment(event.getFile(), scAttachment);
 		}
