@@ -2054,7 +2054,7 @@ public class SupplierFinalizationBackingBean extends
 			}
 
 			attachment
-					.setDocNo(scQtFinalization.getFinalizationId().toString());
+					.setDocNo(scQtFinalization.getScQt().getQtNo());
 			scAttachment = attachment;
 			uploadAttachment(event.getFile(), scAttachment);
 		}
