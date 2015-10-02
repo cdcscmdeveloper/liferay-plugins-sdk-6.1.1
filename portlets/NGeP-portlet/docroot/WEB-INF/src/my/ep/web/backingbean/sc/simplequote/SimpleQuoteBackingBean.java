@@ -389,15 +389,16 @@ public class SimpleQuoteBackingBean extends
 			}
 		}
 		// for procurement type drop down
-		if (null == scQuote.getProcurementType()) {
-			scQuote = checkGovtSeller(null, scQuote);
-		}
+		scQuote = checkGovtSeller(null, scQuote);
 
 		// proc type category
 		if (null == scQuote.getProcurementTypeCategory()) {
 			scQuote.setProcurementTypeCategory(new PmParameter());
 		}
-		scQuote.setMultipleQuote(Boolean.FALSE);
+		
+		if(scQuote.getMultipleQuote() == null){
+			scQuote.setMultipleQuote(Boolean.FALSE);	
+		}
 
 		// WorkFlow Status should be set In the save
 		if (scQuote.getCurrentStatus() == null) {
@@ -808,14 +809,16 @@ public class SimpleQuoteBackingBean extends
 	 */
 	private ScQuote checkGovtSeller(PmOrgProfile pmOrgProfile, ScQuote scQuote) {
 		PmParameter pmParameter = new PmParameter();
-		// TODO check supplier is government seller or not
-		if (pmOrgProfile != null && pmOrgProfile.isGovtSeller()) {
-			pmParameter.setParameterCode(ParameterConst.PROC_TYPE_G2G);
-			scQuote.setProcurementType(pmParameter);
+		// check supplier is government seller or not
+		if(null == scQuote.getProcurementType()){
+			if (pmOrgProfile != null && pmOrgProfile.isGovtSeller()) {
+				pmParameter.setParameterCode(ParameterConst.PROC_TYPE_G2G);
+				scQuote.setProcurementType(pmParameter);
 
-		} else {
-			pmParameter.setParameterCode(ParameterConst.PROC_TYPE_NORMAL);
-			scQuote.setProcurementType(pmParameter);
+			} else {
+				pmParameter.setParameterCode(ParameterConst.PROC_TYPE_NORMAL);
+				scQuote.setProcurementType(pmParameter);
+			}
 		}
 
 		getManagedBean().setProcurementTypes(
