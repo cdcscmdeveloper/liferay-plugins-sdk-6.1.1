@@ -16,22 +16,24 @@
 			closable="true" showSummary="false" severity="error, info" />
 
 
-		<p:panelGrid style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-			<p:row>
-				<p:column width="100%" style="text-align:right">
-					<ui:repeat var="bpmAction"
-						value="#{approvalBackingBean.managedBean.outComes}">
-						<ui:param name="buttonLabel"
-							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-						<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
-							styleClass="ui-button" onstart="blockWidget.show();"
-							oncomplete="blockWidget.hide();"
-							action="#{approvalBackingBean.supplierAcceptance(bpmAction)}" />
-					</ui:repeat>
-				</p:column>
-			</p:row>
-		</p:panelGrid>
+		<div class="ppRightBtn">
+			<h:panelGroup id="suppBtns">
+
+
+				<ui:repeat var="bpmAction"
+					value="#{approvalBackingBean.managedBean.outComes}">
+					<ui:param name="buttonLabel"
+						value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+					<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
+						styleClass="ui-button" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"
+						action="#{approvalBackingBean.supplierAcceptance(bpmAction)}" />
+				</ui:repeat>
+			</h:panelGroup>
+		</div>
+
+
+
 
 
 
