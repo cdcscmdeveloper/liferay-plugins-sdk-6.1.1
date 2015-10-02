@@ -32,6 +32,7 @@ import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -58,6 +59,8 @@ import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -99,7 +102,6 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
-import my.ep.web.backingbean.sc.quatationtender.QTDocumentsBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -1647,68 +1649,50 @@ public class NoticeBoardBackingBean extends
 	}
 
 	/**
-	 * Method is used to download all documents from repository 
-	 * on click of 'Download all' button.
+	 * Method is used to download all documents from repository by qt ID 
 	 * 
 	 * @param qtId
 	 *        the Long variable.
 	 * @throws Exception
 	 */
 	public void downloadAllQTDocuments(Long qtId) throws Exception {
-		
-		log.info("** Qtn / TenderDetsils **");
-		IQTNoticeBoardSO qtNoticeBoardSO = null;
-		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
-		// QuationTenderResDTO resDTO = null;
-		ScQt scQt = null;
-		NoticeBoardResDTO resDTO = null;
+
+		log.info("downloadAllQTDocuments in Notice Board");
+		IQTDetailSO detailSO;
+		QuationTenderResDTO resDTO = null;
+		List<ScQtDocReport> scQtDocReports = null;
+		boolean isNotReportPresent = true;
 		try {
-			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 			reqDTO.setQtId(qtId);
-			resDTO = qtNoticeBoardSO.retrieveQtNoticeDtl(reqDTO);
-			scQt = resDTO.getScQt();
+			resDTO = detailSO.retriveQTDocDetailsByQtId(reqDTO);
+			scQtDocReports = resDTO.getReports();
 		} finally {
-			qtNoticeBoardSO = null;
+			detailSO = null;
 		}
-
-		/*
-		 * IQTDetailSO detailSO; this.getManagedBean().setScQtDocReports(null);
-		 * 
-		 * QuationTenderResDTO resDTO = null; try { detailSO =
-		 * BusinessDelegate.getInstance().getServiceObject(
-		 * ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-		 * QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-		 * reqDTO.setQtId(qtId);
-		 * reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION); resDTO =
-		 * detailSO.retriveQTDocDetails(reqDTO); if (resDTO.getReports() != null
-		 * && !resDTO.getReports().isEmpty()) {
-		 * this.getManagedBean().setScQtDocReports(resDTO.getReports()); }
-		 * 
-		 * } finally { detailSO = null; }
-		 */
-		QTDocumentsBackingBean qtDocumentsBackingBean = new QTDocumentsBackingBean();
-		qtDocumentsBackingBean.getManagedBean().setQt(null);
-		qtDocumentsBackingBean.getManagedBean().setQt(scQt);
-
-		/*
-		 * List<ScQtDocReport> scQtDocReports = getManagedBean()
-		 * .getScQtDocReports();
-		 */
-		List<ScQtDocReport> scQtDocReports = resDTO.getScQtDocReports();
 		List<ScQtDocReportAttachment> scAttachments = new ArrayList<ScQtDocReportAttachment>();
 		if (null != scQtDocReports && !scQtDocReports.isEmpty()) {
 			for (ScQtDocReport scQtDocReport : scQtDocReports) {
 				ScQtDocReportAttachment attachment = scQtDocReport
 						.getScQtDocReportAttachment();
-				if (attachment == null) {
-					attachment = qtDocumentsBackingBean
-							.generateDocumentAttachment(scQtDocReport);
-					scQtDocReport.setScQtDocReportAttachment(attachment);
-				}
 				scAttachments.add(attachment);
 			}
-			downloadAllFiles("NGeP-QT-Documents", scAttachments);
+			if (!scAttachments.isEmpty()) {
+				isNotReportPresent = false;
+				downloadAllFiles("NGeP-QT-Documents", scAttachments);
+			}
+		}
+		if (isNotReportPresent) {
+			FacesContext.getCurrentInstance()
+			.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							null,"Attachment not found."));
+			String pageUrl = "/xhtml/sc/noticeboard/noticeboardlandingpage";
+			FacesContext context = FacesContext.getCurrentInstance();
+			context.getApplication().getNavigationHandler()
+					.handleNavigation(context, null, pageUrl);
 		}
 	}
 
@@ -1820,43 +1804,8 @@ public class NoticeBoardBackingBean extends
 	 */
 	public void downloadReport(ScQtDocReport scQtDocReport) throws Exception {
 		
-		log.info("** Qtn / TenderDetsils **");
-		ScQt scQt = this.getManagedBean().getScQt();
-
-		/*
-		 * IQTNoticeBoardSO qtNoticeBoardSO = null; NoticeBoardReqDTO reqDTO =
-		 * new NoticeBoardReqDTO(); ScQt scQt = scQtDocReport.getScQt();
-		 * //QuationTenderResDTO resDTO = null; try {
-		 * 
-		 * 
-		 * 
-		 * qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
-		 * ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
-		 * reqDTO.setQtId(scQt.getQtId()); NoticeBoardResDTO resDTO =
-		 * qtNoticeBoardSO .retrieveQtNoticeDtl(reqDTO); ScQt scQt =
-		 * resDTO.getScQt();
-		 * 
-		 * this.getManagedBean().setScQt(resDTO.getScQt());
-		 * 
-		 * detailSO = BusinessDelegate.getInstance().getServiceObject(
-		 * ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-		 * QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-		 * reqDTO.setQtId(scQt.getQtId());
-		 * reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION); resDTO =
-		 * detailSO.retriveQTDocDetails(reqDTO); } finally { qtNoticeBoardSO =
-		 * null; }
-		 */
-		QTDocumentsBackingBean qtDocumentsBackingBean = new QTDocumentsBackingBean();
-		qtDocumentsBackingBean.getManagedBean().setQt(null);
-		qtDocumentsBackingBean.getManagedBean().setQt(scQt);
-		ScQtDocReportAttachment scQtDocReportAttachment = scQtDocReport
-				.getScQtDocReportAttachment();
-		if (scQtDocReportAttachment == null) {
-			scQtDocReportAttachment = qtDocumentsBackingBean
-					.generateDocumentAttachment(scQtDocReport);
-			scQtDocReport.setScQtDocReportAttachment(scQtDocReportAttachment);
-		}
-		downloadFile(scQtDocReportAttachment);
+		log.info("** download Report  in NOtice Board**");
+		downloadFile(scQtDocReport.getScQtDocReportAttachment());
 	}
 
 	/**
@@ -2687,6 +2636,31 @@ public class NoticeBoardBackingBean extends
 		List<ScLoa> scLoaList = retrieveLOA(qtId, zoneDtl.getSpecZoneId());
 		this.getManagedBean().setAwardedItems(
 				getAwardedItemDetails(scLoaList, qtId));
+
+	}
+	
+	/**
+	 * Download the documents from repository on click of download all button
+	 * 
+	 * @throws Exception
+	 */
+	public void downloadAllQTDocuments() throws Exception {
+		
+		List<ScQtDocReport> scQtDocReports = this.getManagedBean()
+				.getScQtDocReports();
+		List<ScQtDocReportAttachment> scAttachments = new ArrayList<ScQtDocReportAttachment>();
+		if (null != scQtDocReports && !scQtDocReports.isEmpty()) {
+			for (ScQtDocReport scQtDocReport : scQtDocReports) {
+				ScQtDocReportAttachment attachment = scQtDocReport
+						.getScQtDocReportAttachment();
+				scAttachments.add(attachment);
+			}
+			if (!scAttachments.isEmpty()) {
+				downloadAllFiles("NGeP-QT-Documents", scAttachments);
+			} else {
+				throw new EpException("Attachment not found.");
+			}
+		}
 
 	}
 }
