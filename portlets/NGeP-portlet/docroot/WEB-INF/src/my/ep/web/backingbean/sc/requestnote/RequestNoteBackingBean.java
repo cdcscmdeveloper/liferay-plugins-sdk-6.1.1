@@ -40,6 +40,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IPrInquirySO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
@@ -52,6 +53,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
@@ -67,6 +69,7 @@ import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.directpurchase.PrInquiryReqDTO;
 import my.ep.dto.sc.directpurchase.PrInquiryResDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
@@ -89,6 +92,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScRequestItemAttachment;
@@ -642,6 +646,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 
+	/**
+	 * Validate rn.
+	 *
+	 * @param requestNote the request note
+	 * @param nonDeletedDtls the non deleted dtls
+	 */
 	private void validateRN(ScRequestNote requestNote,  List<ScRequestNoteDtl>	nonDeletedDtls){
 		boolean isShowMessage = getManagedBean().isExceededAmountAlerted();
 		// show message for first submission skip the message for second time submission
@@ -666,15 +676,28 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 						BigDecimal totalAmt = itemSummarySO
 								.retrieveAccumulatedAmount(flReqDTO);
-						if (totalAmt.doubleValue() > 20000) { //  TODO rule as IT For 20k
-							getManagedBean().setExceededAmountAlerted(Boolean.TRUE);
-							throw new EpException(MessageConst.ERROR_760036,
-									new String[] {rnDtl.getRequestItem().getItemName()});
+
+						IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+						RuleReqDTO ruleReqDTO = new RuleReqDTO();
+						ruleReqDTO.setRuleType(RuleTypeConst.ITEM_THRESHOLD);
+						List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByRuleType(ruleReqDTO).getRuleValueList();
+
+						if (ruleValueList != null && ruleValueList.size() > 0) {
+							PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+							//Rule : ITEM_THRESHOLD For 20k
+							if(totalAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) > 0) {
+								getManagedBean().setExceededAmountAlerted(Boolean.TRUE);
+								throw new EpException(MessageConst.ERROR_760036,
+										new String[] {rnDtl.getRequestItem().getItemName()});
+							}
 						}
+
 					}
 				}
 			}
 		}
+		
 		// approver validation
 		if(null == requestNote.getApprovalUsers() || requestNote.getApprovalUsers().isEmpty()){
 			throw new EpException(
@@ -682,7 +705,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					new String[] {ResourceBundleUtils.getMessage("lbl.sc.approver",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		}
-		
 	}
 
 	/**
