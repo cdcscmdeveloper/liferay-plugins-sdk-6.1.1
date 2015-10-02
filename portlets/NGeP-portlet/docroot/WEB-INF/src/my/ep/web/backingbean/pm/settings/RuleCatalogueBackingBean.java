@@ -3737,7 +3737,7 @@ public class RuleCatalogueBackingBean extends
 	public void ruleValueStatusChange(){
 		log.info("ruleValueStatusChange");
 //		log.info("...getCurrentIndexVal="+this.getCurrentIndexVal());
-		if(this.getManagedBean().getCurrentIndex() != null){
+		if(this.getCurrentIndexVal() != null){
 			PmConfigRuleValue selectedValue = this.getManagedBean()
 					.getSelectedRuleType().getConfigRuleValues().get(this.getCurrentIndexVal());
 //		log.info("....selectedValue.getRuleValue()="+selectedValue.getRuleValue());
