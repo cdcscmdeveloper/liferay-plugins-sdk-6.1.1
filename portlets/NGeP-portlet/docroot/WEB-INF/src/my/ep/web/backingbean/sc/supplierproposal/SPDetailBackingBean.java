@@ -50,6 +50,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
@@ -66,6 +67,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -240,10 +242,13 @@ public class SPDetailBackingBean extends
 						+ resDTO.getFinancialCheckLists().size());
 			}
 
-			if (null != getManagedBean().getQt().getClosingDate()) {
-				// hide the save/submit,add and delete buttons when QT is closed
-				Date closingDate = getManagedBean().getQt().getClosingDate();
-				if (new Date(System.currentTimeMillis()).after(closingDate)) {
+			if (null != scQt.getClosingDate()) {
+				// hide the save/submit,add and delete buttons when QT is closed or Invalid
+				Date closingDate = scQt.getClosingDate();
+				PmStatus qtStatus = scQt.getQtStatus();
+				if (new Date(System.currentTimeMillis()).after(closingDate) || (qtStatus != null
+						&& !QTStatusConst.QT_PROPOSAL_PREPARATION
+						.equals(qtStatus.getStatusId()))) {
 					getManagedBean().setClosed(true);
 					getManagedBean().setClosingTime("0");
 				} else {
