@@ -2079,6 +2079,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			} else {
 				if(ParameterConst.ITEM_TYPE_SERVICE.equals(flItemAddr.getItemType().getParameterCode())){
 					if(flItemAddr.getOrderedQty().doubleValue() != flItemAddr.getScRequestItem().getQuantity().doubleValue()){
+						flItemAddr.setOrderedQty(BigDecimal.ZERO);
+						flItemAddr.setOrderedAmt(BigDecimal.ZERO);
 						throw new EpException(MessageConst.ERROR_745067,new String[]{flItemAddr.getScRequestItem().getItemName(), getManagedBean().getFlRequest().getCtContract().getContractNo()});
 					}
 				}
@@ -2487,27 +2489,22 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 
 	private void validateOrderQuantity() {
 		// validate all item quantity must be at least one
-		boolean itemQuantityNotZero = false;
-		for(FlFulfilmentItemAddr oneOffItemAddr : getManagedBean().getItemAddrList()) {
-			itemQuantityNotZero = false;
+		BigDecimal accumulatedQty = BigDecimal.ZERO;
+		for(FlFulfilmentItemAddr uiItemAddr : getManagedBean().getItemAddrList()) {
+			accumulatedQty = BigDecimal.ZERO;
 			for(FlDeliveryAddress delAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()) {
 				for(FlFulfilmentItemAddr itemAddr : delAddress.getFlFulfilmentItemAddr()) {
-					if(itemAddr.getScRequestItem().getRequestNoteItemId().equals(oneOffItemAddr.getScRequestItem().getRequestNoteItemId())) {
-						itemQuantityNotZero = true;
-						break;
+					if(itemAddr.getScRequestItem().getRequestNoteItemId().equals(uiItemAddr.getScRequestItem().getRequestNoteItemId())) {
+						accumulatedQty = accumulatedQty.add(itemAddr.getOrderedQty());
 					}
 				}
-				if(itemQuantityNotZero) {
-					break;
-				}
 			}
-			if(!itemQuantityNotZero) {
+			if(accumulatedQty.doubleValue()==0) {
 				if(ParameterConst.FULFILMENT_TYPE_ONE_OFF.equalsIgnoreCase(getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode())){
-					throw new EpException(MessageConst.ERROR_740037, new String[]{oneOffItemAddr.getScRequestItem().getItemName(),"0"});
+					throw new EpException(MessageConst.ERROR_740037, new String[]{uiItemAddr.getScRequestItem().getItemName(),"0"});
 				}else{
-					throw new EpException(MessageConst.ERROR_740027, new String[]{oneOffItemAddr.getScRequestItem().getItemName(),"0"});
+					throw new EpException(MessageConst.ERROR_740027, new String[]{uiItemAddr.getScRequestItem().getItemName(),"0"});
 				}
-				
 			}
 		}
 	}
