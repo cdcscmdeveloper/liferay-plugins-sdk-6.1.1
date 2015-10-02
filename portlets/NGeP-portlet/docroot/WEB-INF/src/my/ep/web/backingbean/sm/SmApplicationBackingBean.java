@@ -7634,7 +7634,8 @@ public class SmApplicationBackingBean extends
 				if (smFac.getSmAddress() == null
 						|| smFac.getSmAddress().getAddressId() == null) {
 					smFac.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
-					copyHqAddressToAddr(smFac.getSmAddress());
+					SmApplicationUtil.getInstance().cloneAddress(
+							smFac.getSmAddress(), getHqAddress());
 				}
 				if (!smFac.getOwnershipType().equalsIgnoreCase("O")) {
 					getManagedBean().setBasicOffFacStates(
@@ -9228,16 +9229,6 @@ public class SmApplicationBackingBean extends
 					.getSmCompanyAddresses().get(0).getSmAddress();
 		}
 		return hqAddress;
-	}
-
-	/**
-	 * Copy hq address to selected address
-	 * 
-	 * @param SmAddress
-	 *            addr
-	 */
-	private void copyHqAddressToAddr(SmAddress addr) {
-		SmCommonUtil.getInstance().copyAddress(getHqAddress(), addr);
 	}
 
 	/**
