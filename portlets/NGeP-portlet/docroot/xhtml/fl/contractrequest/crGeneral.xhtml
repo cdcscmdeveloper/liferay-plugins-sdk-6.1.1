@@ -89,7 +89,9 @@
 						value="#{lbl['lbl.fl.title']}" /><p:outputLabel
 						value="*" styleClass="mandatory" /> </td>
 				<td rowspan="3" style="width:290px"><p:inputTextarea cols="50" rows="4" id="title"
-						maxlength="500" style=" margin-bottom:5px;" label="#{lbl['lbl.fl.title']}"
+						onkeyup="limitTextArea(this,500);"
+						onkeydown="limitTextArea(this,500);" 
+						style=" margin-bottom:5px;" label="#{lbl['lbl.fl.title']}"
 						disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
 						value="#{contractRequestBackingBean.managedBean.flRequest.title}" /> 						
 						<ac:iconTooltip value="#{lbl['lbl.fl.cr.tooltip.title']}"/></td>
