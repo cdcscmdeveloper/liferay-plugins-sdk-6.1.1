@@ -508,7 +508,8 @@ public class SimpleQuoteBackingBean extends
 						for (TplSpecQuestion question : serviceSpecMaster
 								.getTplSpecQuestions()) {
 
-							if (cmSupplierItem.getCmItem() != null) {
+							if (cmSupplierItem.getCmItem() != null && 
+									question.getCmItem() != null) {
 								if (cmSupplierItem
 										.getCmItem()
 										.getItemId()
