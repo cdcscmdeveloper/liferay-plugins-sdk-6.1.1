@@ -1238,8 +1238,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 				scQtFinalization
 						.setScQtFinalizationEndorsementAttachment(attachment);
 			}
-			attachment.setDocNo(String.valueOf(scQtFinalization
-					.getFinalizationId()));
+			attachment.setDocNo(getManagedBean().getScQt().getQtNo());
 			scAttachment = attachment;
 			uploadAttachment(event.getFile(), scAttachment);
 			getManagedBean().setScQtFinalization(scQtFinalization);
