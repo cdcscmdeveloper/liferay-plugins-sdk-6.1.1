@@ -31,7 +31,9 @@
             <h:panelGrid>
                <p:inputTextarea id="justificationPbQCC"   rows="4" disabled="#{isPrepareLoa
                or amendmentBackingBean.managedBean.disableFinalAmendDetails}"
-                   style="width:180px;margin-bottom: 4px;"   maxlength="200"  autoResize="false"  required="true" label="#{lbl['lbl.txt.remarks']}"
+                   style="width:180px;margin-bottom: 4px;"   maxlength="200"  autoResize="false" 
+                    required="true" label="#{lbl['lbl.txt.remarks']}"
+                    onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
                    value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.pbqcJustification}"/>
             </h:panelGrid>
            </h:panelGrid>
