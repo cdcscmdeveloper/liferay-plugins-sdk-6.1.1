@@ -2824,36 +2824,6 @@ public class SmCommonUtil {
 		return retVal;
 	}
 
-	public void copyAddress(SmAddress srcAddr, SmAddress targetAddr) {
-		if (targetAddr == null) {
-			targetAddr = SmApplicationUtil.setDefaultAddr(null);
-		}
-		if (srcAddr.getPmCountry() != null
-				&& srcAddr.getPmCountry().getCountryId() != null) {
-			targetAddr.setPmCountry(getCountryById(srcAddr.getPmCountry()
-					.getCountryId()));
-		}
-		if (srcAddr.getPmState() != null
-				&& srcAddr.getPmState().getStateId() != null) {
-			targetAddr.setPmState(getStateById(srcAddr.getPmState()
-					.getStateId()));
-		}
-		if (srcAddr.getPmDistrict() != null
-				&& srcAddr.getPmDistrict().getDistrictId() != null) {
-			targetAddr.setPmDistrict(getDistrictById(srcAddr.getPmDistrict()
-					.getDistrictId()));
-		}
-		if (srcAddr.getPmCity() != null
-				&& srcAddr.getPmCity().getCityId() != null) {
-			targetAddr.setPmCity(getCityById(srcAddr.getPmCity().getCityId()));
-		}
-		BeanUtils.copyProperties(srcAddr, targetAddr, new String[] {
-				"pmCountry", "pmState", "pmDistrict", "pmCity",
-				"smAssociateCompanies", "smEquityCompanies", "smFacilities",
-				"smPersonnelAddresses", "smSupplierBanks",
-				"smSupplierBranches", "smCompanyAddresses", "addressId" });
-	}
-
 	public static SmCommonUtil getInstance() {
 		if (instance == null) {
 			try {
