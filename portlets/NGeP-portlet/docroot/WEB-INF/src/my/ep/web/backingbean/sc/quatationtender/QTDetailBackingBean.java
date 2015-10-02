@@ -1856,7 +1856,7 @@ public class QTDetailBackingBean extends
 				// this part
 				if (null == this.getManagedBean().getScQtDocReportList()) {
 					retrieveDocumentTabDtl();
-					
+
 					qt.setScQtDocReports(this.getManagedBean()
 							.getScQtDocReportList());
 				}
@@ -1928,7 +1928,8 @@ public class QTDetailBackingBean extends
 								.getInstance().getServiceObject(
 										ModuleCodeConst.SUPPLIER_SELECTION,
 										ICommitteSO.class);
-						updateApprovalRequestDtls(qt.getScQtApprovals(),
+						updateApprovalRequestDtls(
+								qt.getScQtApprovals(),
 								ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT);
 						CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 						committeReqDTO.setToken(ctxToken);
@@ -1974,7 +1975,7 @@ public class QTDetailBackingBean extends
 				qtReqDTO.setRoleCode(getUserRoleCode());
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-				String approvalCategory = null;
+				String approvalCategory = ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT;
 				if (SCProcessNameConst.REVISE_BPK.equalsIgnoreCase(taskName)) {
 					approvalCategory = ParameterConst.APPROVAL_CATEGORY_BPK;
 				} else if (SCProcessNameConst.REVISE_PCB
@@ -3610,7 +3611,7 @@ public class QTDetailBackingBean extends
 
 		String zonelocationLevel = this.getManagedBean().getStateCodes();
 		String locationLevel = this.getManagedBean().getLocalLevelCode();
-		
+
 		boolean pendingRevision = this.getManagedBean().isPendingRevision();
 
 		QuationTenderResDTO resDTO = null;
@@ -4705,28 +4706,4 @@ public class QTDetailBackingBean extends
 
 	}
 
-	public static void main(String arg[]) {
-		List<String> datas = new ArrayList<String>();
-		String str = new String("[\"Ramp\"");
-		datas.add(str);
-		String str1 = new String("\"sagar\"]");
-		datas.add(str1);
-
-		System.out.println(datas);
-		List<String> data = new ArrayList<String>();
-		for (int i = 0; i < datas.size(); i++) {
-			String str2 = datas.get(i);
-			if (i == 0) {
-				str2 = str2.replace("[", "");
-
-			}
-			str2 = str2.replace("\"", "");
-			if (i == datas.size() - 1) {
-				str2 = str2.replace("]", "");
-			}
-			data.add(str2);
-		}
-		System.out.println(data.contains("Ramp"));
-		System.out.println(data);
-	}
 }
