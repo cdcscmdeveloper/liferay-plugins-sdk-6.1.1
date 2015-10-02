@@ -20,6 +20,8 @@ import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -109,7 +111,6 @@ import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.CommonUtils;
-import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.template.DocumentGenerator;
@@ -1706,9 +1707,12 @@ public class QTDocumentsBackingBean extends
 
 		VelocityContext context = new VelocityContext();
 		CommonUtils commonUtils = new CommonUtils();
-		context.put("commonUtils", commonUtils);
+		SimpleDateFormat dateSDF = new SimpleDateFormat(
+				commonUtils
+						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
+		context.put("dateSDF", dateSDF);
 
-		String totalMonths = "";
+		BigDecimal totalMonths = new BigDecimal(0);
 		List<ScQtSchedule> scheduleList = new ArrayList<ScQtSchedule>();
 		IQTSpecSO specSo;
 		SpecificationResDTO resDTO = null;
@@ -1721,12 +1725,47 @@ public class QTDocumentsBackingBean extends
 			if (resDTO.getScheduleResults() != null
 					&& !resDTO.getScheduleResults().getResultList().isEmpty()) {
 				scheduleList = resDTO.getScheduleResults().getResultList();
+				String startMonth = "";
+				String endMonth = "";
+				//Sorting
+				Collections.sort(scheduleList, new Comparator<ScQtSchedule>() {
+
+					@Override
+					public int compare(ScQtSchedule qtSchedule1, ScQtSchedule qtSchedule2) {
+						return qtSchedule1.getScheduleNo().compareTo(qtSchedule2.getScheduleNo());
+					}
+					
+				});
 				for (ScQtSchedule qtSchedule : scheduleList) {
-					long days = DateUtils.getDaysDifference(
-							qtSchedule.getFromDate(), qtSchedule.getToDate());
-					int day = (int) days;
-					int months = day / 30;
-					totalMonths = String.valueOf(months);
+					SimpleDateFormat dateFormat = new SimpleDateFormat(
+							"dd/MM/yyyy");
+
+					String fromdate = dateFormat.format(qtSchedule.getFromDate());
+					String todate = dateFormat.format(qtSchedule.getToDate());
+					String startdate = fromdate.substring(3, 5);
+					String startYear = fromdate.substring(6,
+							fromdate.length());
+					String enddate = todate.substring(3, 5);
+					String endYear = todate.substring(6, todate.length());
+					startMonth = fulfilmentMonthlyDtls(startdate);
+					endMonth = fulfilmentMonthlyDtls(enddate);
+					int start = Integer.parseInt(startMonth);
+					int end = Integer.parseInt(endMonth);
+
+					int sYear = Integer.parseInt(startYear);
+					int eYear = Integer.parseInt(endYear);
+					int diffYear = 0;
+					int count = 0;
+					if (eYear >= sYear) {
+						if (!endYear.equals(startYear)) {
+							diffYear = eYear - sYear;
+						}
+						for (int i = start + 1; i <= end + 1; i++) {
+							count++;
+						}
+						count = count + (diffYear * 12);
+						totalMonths = new BigDecimal(count);
+					}
 				}
 			}
 		} finally {
@@ -1746,6 +1785,43 @@ public class QTDocumentsBackingBean extends
 				new FileOutputStream(getActualFilePath(attachment)));
 	}
 
+	private String fulfilmentMonthlyDtls(String startdate) {
+		String startMonth = "";
+		try {
+			if (startdate.equalsIgnoreCase("01")) {
+				startMonth = "0";
+			} else if (startdate.equalsIgnoreCase("02")) {
+				startMonth = "1";
+			} else if (startdate.equalsIgnoreCase("03")) {
+				startMonth = "2";
+			} else if (startdate.equalsIgnoreCase("04")) {
+				startMonth = "3";
+			} else if (startdate.equalsIgnoreCase("05")) {
+				startMonth = "4";
+			} else if (startdate.equalsIgnoreCase("06")) {
+				startMonth = "5";
+			}
+
+			else if (startdate.equalsIgnoreCase("07")) {
+				startMonth = "6";
+			} else if (startdate.equalsIgnoreCase("08")) {
+				startMonth = "7";
+			} else if (startdate.equalsIgnoreCase("09")) {
+				startMonth = "8";
+			} else if (startdate.equalsIgnoreCase("10")) {
+				startMonth = "9";
+			} else if (startdate.equalsIgnoreCase("11")) {
+				startMonth = "10";
+			} else if (startdate.equalsIgnoreCase("12")) {
+				startMonth = "11";
+			}
+
+		} finally {
+
+		}
+		return startMonth;
+	}
+	
 	/**
 	 * Generate progressive payment pdf from velocity.
 	 * 
