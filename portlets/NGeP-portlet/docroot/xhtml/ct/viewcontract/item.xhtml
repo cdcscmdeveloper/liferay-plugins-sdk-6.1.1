@@ -367,6 +367,10 @@
 				     <p:column headerText="#{lbl['lbl.ct.ministry']}" style="white-space:normal;">
 				          <p:outputLabel value="#{contractDetailsBackingBean.retrieveMinistryByOrgProfileId(itemCeilingQtiesVar.ctAgency.orgProfile.orgProfileId)}" style="float:left;" />
 			    	 </p:column>     
+			    	 
+			    	 <p:column headerText="#{lbl['lbl.ct.jabatan']}" style="width:25%; white-space:normal;">
+						<p:outputLabel style="float:left;" value="#{amendmentBackingBean.retrieveJabatanByOrgProfileId(itemCeilingQtiesVar.ctAgency.orgProfile.orgProfileId)}" />
+					</p:column>
 				
 				     <p:column headerText="#{lbl['lbl.ct.ptj']}" style="white-space:normal;">
 				          <p:outputLabel value="#{itemCeilingQtiesVar.ctAgency.orgProfile.orgName}" style="float:left;" />

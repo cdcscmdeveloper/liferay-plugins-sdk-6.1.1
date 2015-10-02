@@ -22,6 +22,7 @@
        			<p:columnGroup type="header"> 
 								<p:row> 
 									<p:column rowspan="2" headerText="#{lbl['lbl.ct.ministry']}" /> 
+									<p:column rowspan="2" headerText="#{lbl['lbl.ct.jabatan']}"/> 	
 									<p:column rowspan="2" headerText="#{lbl['lbl.ct.ptj']}"/> 						
 									<p:column rowspan="2" style="width:10%;white-space:normal;">
 									      <f:facet name="header">
@@ -58,6 +59,10 @@
      
                              <p:column style="width:25%;white-space:normal;" >
 				                    <h:outputText value="#{contractDetailsBackingBean.retrieveMinistryByOrgProfileId(agencyData.orgProfile.orgProfileId)}"/>
+			                 </p:column>
+			                 
+			                  <p:column style="width:25%;white-space:normal;" >
+				                    <h:outputText value="#{contractDetailsBackingBean.retrieveJabatanByOrgProfileId(agencyData.orgProfile.orgProfileId)}"/>
 			                 </p:column>
 			                 
 			                  <p:column style="width:25%;white-space:normal;" >
