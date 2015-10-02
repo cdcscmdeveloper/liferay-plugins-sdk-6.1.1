@@ -681,7 +681,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 								ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 						RuleReqDTO ruleReqDTO = new RuleReqDTO();
 						ruleReqDTO.setRuleType(RuleTypeConst.ITEM_THRESHOLD);
-						List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByRuleType(ruleReqDTO).getRuleValueList();
+						List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
 
 						if (ruleValueList != null && ruleValueList.size() > 0) {
 							PmConfigRuleValue configRuleValue = ruleValueList.get(0);
@@ -689,7 +689,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							if(totalAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) > 0) {
 								getManagedBean().setExceededAmountAlerted(Boolean.TRUE);
 								throw new EpException(MessageConst.ERROR_760036,
-										new String[] {rnDtl.getRequestItem().getItemName()});
+										new String[] {rnDtl.getRequestItem().getItemName(), configRuleValue.getRuleValue()});
 							}
 						}
 
