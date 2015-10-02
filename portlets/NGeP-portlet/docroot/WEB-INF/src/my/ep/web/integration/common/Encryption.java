@@ -12,9 +12,10 @@ import my.ep.factory.EpLogger;
 
 import org.apache.log4j.Logger;
 
+@SuppressWarnings("rawtypes")
 public class Encryption {
 	
-	private static Logger log = EpLogger.getLogger(EperundingIntegration.class);
+	private static Logger log = EpLogger.getLogger(Encryption.class);
 
 	SFTPUtility sftpUtility = new SFTPUtility();
 	OsbUtility osbUtility = new OsbUtility();
@@ -29,9 +30,6 @@ public class Encryption {
 		String path = resource.getPath();
 	
 		log.info("path value with (.) :" + path);
-	
-		// String substring =
-		// path.substring(0,path.indexOf("NGeP-portlet.war"));
 	
 		String substring = path.substring(0, path.indexOf("NGeP-portlet.war"));
 	
@@ -188,14 +186,8 @@ public class Encryption {
 		BufferedReader br = null;
 		StringBuffer sb = new StringBuffer();
 		try {
-
-			log.info("getAbsolutePath  :"
-					+ inFilePath.getAbsolutePath());
-			log.info("length  :" + inFilePath.length());
 			br = new BufferedReader(new FileReader(inFilePath));
 			String line = br.readLine();
-			log.info("line :" + line);
-
 			while (line != null) {
 
 				sb.append(line);
