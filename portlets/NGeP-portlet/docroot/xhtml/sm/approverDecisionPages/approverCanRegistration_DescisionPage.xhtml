@@ -13,6 +13,9 @@
 		<p:messages id="messages" showDetail="true"
 			autoUpdate="#{backingBean.managedBean.showParentMsg}" closable="true"
 			showSummary="false" />
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 
 		<ui:include src="approverCompanyInfo.xhtml" />
 		<ui:include src="approverContactInfo.xhtml" />
