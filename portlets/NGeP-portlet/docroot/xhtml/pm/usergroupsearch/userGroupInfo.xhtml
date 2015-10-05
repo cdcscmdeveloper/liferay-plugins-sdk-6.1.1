@@ -106,7 +106,7 @@
 					value="#{groupuser.recordStatusFlg}"
 					disabled="#{groupuser.brandNew}">
 					<f:selectItems value="#{usergroupBackingBean.getUserGroupStatus()}"></f:selectItems>
-					<p:ajax event="change" update="@this" process="@this" listener="#{usergroupBackingBean.changeUserStatus(groupuser)}"/>	
+					<p:ajax event="change" update="@this" process="@this" partialSubmit="true"/>	
 				</p:selectOneMenu>
 			</p:column>
 			<p:column style="width:5%">
