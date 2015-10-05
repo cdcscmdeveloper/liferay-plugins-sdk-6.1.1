@@ -23,22 +23,22 @@
  		  <p:treeTable id="zoneLocationDataTable"  value="#{contractDetailsBackingBean.managedBean.ctZoneTrees}"
  		    var="zoneTree">
  		    
- 		    <p:column style="width:70%;">
+ 		    <p:column style="width:70%;" styleClass="column-align-center">
             <f:facet name="header">#{lbl['lbl.ct.location.name']}</f:facet>
               <p:treeNode type="zone">
-                  <h:outputText value="#{zoneTree.zone}"/>
+                  <h:outputText value="#{zoneTree.zone}" style="float:left;"/>
               </p:treeNode>
               <p:treeNode type="state">
-               <h:outputText value="#{zoneTree.state.stateName}"  />
+               <h:outputText value="#{zoneTree.state.stateName}"  style="float:left;"/>
               </p:treeNode>
               <p:treeNode type="district">
-               <h:outputText value="#{zoneTree.district.districtName}"  />
+               <h:outputText value="#{zoneTree.district.districtName}"  style="float:left;" />
               </p:treeNode>
                
               
         </p:column>
  
-        <p:column style="width:30%;">
+        <p:column style="width:30%;" styleClass="column-align-center">
             <f:facet name="header"><h:outputText value="*" styleClass="mandatory" />
             	#{lbl['lbl.ct.delivery.term']}
             	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.delivery.term']}"/>
