@@ -1,10 +1,12 @@
 package my.ep.web.managedbean.pm.settings;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -45,6 +47,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private List<PmConfigRule> configRuleList;
 	private String selectedDocumentType;
 	private Date  today = new Date();
+	private Date  tomorrow = tomorrowDate();
 	private List<PmFeeExemption> feeExemptionsForOrgAndItem;
 	private List<PmFeeExemption> feeExemptionsForComodity;
 	private List<PmFeeExemption> feeExemptionsForContract;
@@ -96,9 +99,62 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private List<PmDaGst> deletedDaGstList;
 	private Map<String , Integer> thresholdIdToS2UnplannedMap = new HashMap<String , Integer>();
 	private Map<String , Integer> thresholdIdToBudgetSpentMap = new HashMap<String , Integer>();
+	private boolean error1 = false;
+	private boolean error2 = false;
+	private boolean error3 = false;
+	private boolean error4 = false;
 	
+	public boolean isError1() {
+		return error1;
+	}
+
+
+	public boolean isError2() {
+		return error2;
+	}
+
+
+	public boolean isError3() {
+		return error3;
+	}
+
+
+	public boolean isError4() {
+		return error4;
+	}
+
+
+	public void setError1(boolean error1) {
+		this.error1 = error1;
+	}
+
+
+	public void setError2(boolean error2) {
+		this.error2 = error2;
+	}
+
+
+	public void setError3(boolean error3) {
+		this.error3 = error3;
+	}
+
+
+	public void setError4(boolean error4) {
+		this.error4 = error4;
+	}
+
+
 	public RuleCatalogueManageBean() {
 		
+	}
+
+	public Date getTomorrow() {
+		return tomorrow;
+	}
+
+
+	public void setTomorrow(Date tomorrow) {
+		this.tomorrow = tomorrow;
 	}
 
 
@@ -827,6 +883,14 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setDeletedDaGstList(List<PmDaGst> deletedDaGstList) {
 		this.deletedDaGstList = deletedDaGstList;
 	}
-
+	public Date tomorrowDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), 0, 0, 0);
+        Calendar c1 = Calendar.getInstance();
+		c1.add(Calendar.DATE, 1);
+		
+        return c1.getTime();
+    } 
 
 }
