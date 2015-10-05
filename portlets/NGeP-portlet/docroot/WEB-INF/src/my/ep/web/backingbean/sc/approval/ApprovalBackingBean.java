@@ -417,9 +417,7 @@ public class ApprovalBackingBean extends
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
 
 		} else if (SCProcessNameConst.APPROVE_COMMITTEE
-				.equalsIgnoreCase(taskName)
-				|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
-						.equalsIgnoreCase(taskName)) {
+				.equalsIgnoreCase(taskName)) {
 
 			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT;
 			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
