@@ -152,20 +152,10 @@ public class AuthorizedSignatoryBackingBean extends
 		PmCertSignatory pmCertSignatory = new PmCertSignatory();
 		//pmCertSignatory.setPmUser(pmuser);
 		pmCertSignatory.setPmZone(zone);
-		pmCertSignatory.setEffDate(tomorrowDate());
+		pmCertSignatory.setEffDate(this.getManagedBean().getTomorrow());
 		this.getManagedBean().getCertSignatories().add(pmCertSignatory);
 		this.getManagedBean().setSignatoryUser(null);
 	}
-	public Date tomorrowDate() {
-		log.info(".................tomorrowDate...................");
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), 0, 0, 0);
-        Calendar c1 = Calendar.getInstance();
-		c1.add(Calendar.DATE, 1);
-		
-        return c1.getTime();
-    } 
 	
 	/**
 	 * retrieve cert signatory by zone id
