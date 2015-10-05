@@ -94,48 +94,24 @@
 				</f:facet>
 
 				<h:panelGroup id="technicalChecklisttypes">
-					<ui:fragment rendered="#{stageTwoTechnical.qtChecklistId ne null}">
-						<h:outputText
-							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.definationType)}"></h:outputText>
 
-
-					</ui:fragment>
-
-
-
-
-
-					<ui:fragment rendered="#{stageTwoTechnical.qtChecklistId eq null}">
-
-						<h:outputText
-							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.definationType)}"
-							rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1}"></h:outputText>
-
-
-
-					</ui:fragment>
 
 					<ui:fragment
-						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title ne null and specificationBackingBean.managedBean.techStandaraChecklist and stageTwoTechnical.qtChecklistId eq null and stageTwoTechnical.pmDocument ne null}">
+						rendered="#{((stageTwoTechnical.pmDocument ne null and (stageTwoTechnical.pmDocument.docDefinitionKey eq 'TG' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'TN' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'TL' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'NE')) or (stageTwoTechnical.pmDocument eq null and stageTwoTechnical.definationType.parameterCode eq 'TS'))}">
+
 						<h:outputText
 							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.definationType)}"></h:outputText>
 					</ui:fragment>
 
-					<ui:fragment
-						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1  and specificationBackingBean.managedBean.techStandaraChecklist and stageTwoTechnical.qtChecklistId eq null and  stageTwoTechnical.pmDocument eq null}">
-						<h:outputText
-							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.definationType)}"></h:outputText>
-					</ui:fragment>
 
 					<ui:fragment
-						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title eq null and stageTwoTechnical.qtChecklistId eq null and !specificationBackingBean.managedBean.techStandaraChecklist}">
-
-
+						rendered="#{(stageTwoTechnical.pmDocument ne null and (stageTwoTechnical.pmDocument.docDefinitionKey eq 'UP' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'KP' or stageTwoTechnical.pmDocument.docDefinitionKey  eq null))}">
 						<p:selectOneMenu style="width:100px;" required="true"
 							id="techChecklistTitlenullType" label="#{lbl['lbl.sc.type']}"
+							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							value="#{stageTwoTechnical.definationType.parameterId}">
 							<f:selectItems
-								value="#{specificationBackingBean.getTechnicalChecklistDefTypeValues(ParameterTypeConst.documentDefinitionType)}"></f:selectItems>
+								value="#{specificationBackingBean.getFinancialChecklistDefTypeValues(ParameterTypeConst.documentDefinitionType)}"></f:selectItems>
 							<p:ajax event="change" process="@this"
 								update="technicalChecklistsupplier,scoreView,uploadtech,technicalSpecificationStatus"
 								partialSubmit="true"
@@ -145,14 +121,9 @@
 							for="techChecklistTitlenullType" display="icon"></p:message>
 					</ui:fragment>
 
-
-
-					<ui:fragment
-						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title ne null and stageTwoTechnical.qtChecklistId eq null and !specificationBackingBean.managedBean.techStandaraChecklist }">
-
-
+					<ui:fragment rendered="#{stageTwoTechnical.pmDocument eq null and stageTwoTechnical.definationType.parameterCode ne 'TS'}">
 						<p:selectOneMenu style="width:100px;" required="true"
-							id="techChecklistTitlenotnullType" label="#{lbl['lbl.sc.type']}"
+							id="techChecklistTitletypenotnullType" label="#{lbl['lbl.sc.type']}"
 							value="#{stageTwoTechnical.definationType.parameterId}">
 							<f:selectItems
 								value="#{specificationBackingBean.getTechnicalChecklistDefTypeValues(ParameterTypeConst.documentDefinitionType)}"></f:selectItems>
@@ -161,9 +132,11 @@
 								partialSubmit="true"
 								listener="#{specificationBackingBean.technicalCheckListTypeChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
 						</p:selectOneMenu>
-						<p:message id="techChecklistTitlenotnullType1"
-							for="techChecklistTitlenotnullType" display="icon"></p:message>
+						<p:message id="techChecklistTitletypenotnullType1"
+							for="techChecklistTitletypenotnullType" display="icon"></p:message>
 					</ui:fragment>
+
+
 				</h:panelGroup>
 			</p:column>
 			<p:column style="width:8%;white-space: normal;">
@@ -175,11 +148,20 @@
 				</f:facet>
 
 				<h:panelGroup id="technicalChecklistsupplier">
+
 					<ui:fragment
-						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title eq null and stageTwoTechnical.qtChecklistId eq null and !specificationBackingBean.managedBean.techStandaraChecklist}">
+						rendered="#{((stageTwoTechnical.pmDocument ne null and (stageTwoTechnical.pmDocument.docDefinitionKey eq 'TG' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'TN' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'TL' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'NE')) or (stageTwoTechnical.pmDocument eq null and stageTwoTechnical.definationType.parameterCode eq 'TS'))}">
+
+						<h:outputText
+							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.action)}"></h:outputText>
+					</ui:fragment>
+
+					<ui:fragment
+						rendered="#{((stageTwoTechnical.pmDocument ne null and (stageTwoTechnical.pmDocument.docDefinitionKey eq 'UP' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'KP' or stageTwoTechnical.pmDocument.docDefinitionKey  eq null)) or(stageTwoTechnical.pmDocument eq null and stageTwoTechnical.definationType.parameterCode ne 'TS'))}">
 						<p:selectOneMenu styleClass="sample#{index}" style="width:100px;"
-							rendered="#{stageTwoTechnical.definationType.parameterCode eq 'UP'}"
-							required="true" id="actionTitlenullType"
+							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+							rendered="#{stageTwoTechnical.definationType.parameterCode eq 'UP' and stageTwoTechnical.action.parameterCode eq null}"
+							required="true" id="actionTitleActionnullType"
 							label="#{lbl['lbl.sc.spec.supplier.action']}"
 							value="#{stageTwoTechnical.action.parameterId}">
 							<f:selectItems
@@ -188,63 +170,29 @@
 								update="scoreView,uploadtech,technicalSpecificationStatus"
 								listener="#{specificationBackingBean.technicalChecklistDropDownActionChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
 						</p:selectOneMenu>
-						<p:message id="actionTitlenullType1" for="actionTitlenullType"
-							display="icon"></p:message>
-						<h:outputText
-							rendered="#{stageTwoTechnical.definationType.parameterCode ne 'UP'}"
-							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.action)}"></h:outputText>
+						<p:message id="actionTitleActionnullType1"
+							for="actionTitleActionnullType" display="icon"></p:message>
 
 
-					</ui:fragment>
 
-					<ui:fragment
-						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title ne null and stageTwoTechnical.qtChecklistId eq null and stageTwoTechnical.qtChecklistId eq null and !specificationBackingBean.managedBean.techStandaraChecklist}">
-						<p:selectOneMenu styleClass="sample#{index}" style="width:100px;"
-							rendered="#{stageTwoTechnical.definationType.parameterCode eq 'UP'}"
-							required="true" id="actionTitlenotnullType"
+						<p:selectOneMenu value="#{stageTwoTechnical.action.parameterId}"
+							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+							rendered="#{stageTwoTechnical.definationType.parameterCode eq 'UP' and stageTwoTechnical.action.parameterCode ne null}"
+							required="true" id="actionActionTitlenotnullType"
 							label="#{lbl['lbl.sc.spec.supplier.action']}"
-							value="#{stageTwoTechnical.action.parameterId}">
+							style="width:100px;">
 							<f:selectItems
-								value="#{specificationBackingBean.managedBean.technicalChecklistAction}" />
+								value="#{specificationBackingBean.PTJUploadDropDownActionValues}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								update="scoreView,uploadtech,technicalSpecificationStatus"
 								listener="#{specificationBackingBean.technicalChecklistDropDownActionChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
 						</p:selectOneMenu>
 
-						<p:message id="actionTitlenotnullType1"
-							for="actionTitlenotnullType" display="icon"></p:message>
-
+						<p:message id="actionActionTitlenotnullType1"
+							for="actionActionTitlenotnullType" display="icon"></p:message>
 						<h:outputText
 							rendered="#{stageTwoTechnical.definationType.parameterCode ne 'UP'}"
 							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.action)}"></h:outputText>
-
-					</ui:fragment>
-
-
-					<ui:fragment rendered="#{stageTwoTechnical.qtChecklistId eq null}">
-						<h:outputText
-							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.action)}"
-							rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 }"></h:outputText>
-
-					</ui:fragment>
-					<ui:fragment
-						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title ne null  and specificationBackingBean.managedBean.techStandaraChecklist and stageTwoTechnical.qtChecklistId eq null and  stageTwoTechnical.pmDocument ne null}">
-						<h:outputText
-							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.action)}"></h:outputText>
-					</ui:fragment>
-
-					<ui:fragment
-						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1   and specificationBackingBean.managedBean.techStandaraChecklist and stageTwoTechnical.qtChecklistId eq null and stageTwoTechnical.pmDocument eq null}">
-						<h:outputText
-							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.action)}"></h:outputText>
-					</ui:fragment>
-
-
-					<ui:fragment rendered="#{stageTwoTechnical.qtChecklistId ne null}">
-						<h:outputText
-							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.action)}"></h:outputText>
-
-
 					</ui:fragment>
 				</h:panelGroup>
 			</p:column>
