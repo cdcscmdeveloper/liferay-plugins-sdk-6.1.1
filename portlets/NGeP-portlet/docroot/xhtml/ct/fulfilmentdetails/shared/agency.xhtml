@@ -25,24 +25,24 @@
 					<p:row> 
 						<p:column rowspan="2"
 							 style="width:10px;"  rendered="#{!contractDetailsBackingBean.managedBean.viewContract}" />
-							 <p:column rowspan="2" headerText="#{lbl['lbl.ct.ministry']}" /> 
-							 <p:column rowspan="2" headerText="#{lbl['lbl.ct.jabatan']}"/> 	
-							 <p:column rowspan="2" headerText="#{lbl['lbl.ct.ptj']}"/> 						
+							 <p:column rowspan="2" headerText="#{lbl['lbl.ct.ministry']}" styleClass="column-align-center"/> 
+							 <p:column rowspan="2" headerText="#{lbl['lbl.ct.jabatan']}" styleClass="column-align-center"/> 	
+							 <p:column rowspan="2" headerText="#{lbl['lbl.ct.ptj']}" styleClass="column-align-center"/> 						
 							 <p:column rowspan="2" style="width:10%;white-space:normal;">
-						      <f:facet name="header">
+						      <f:facet name="header" styleClass="column-align-center">
 					               <h:outputText value="#{lbl['lbl.ct.ceiling.amount']}"/>
                		               <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ceiling.amt']}"/>
                	              </f:facet>
 							  </p:column>
-							  <p:column rowspan="2" headerText="#{lbl['lbl.ct.effective.date']}" style="width:8%;" />
-							  <p:column rowspan="2" headerText="#{lbl['lbl.ct.expiry.date']}" style="width:8%;"/>
-							  <p:column colspan="3" headerText="#{lbl['lbl.ct.ap178']}" style="text-align:center; white-space:normal;"> 
+							  <p:column rowspan="2" headerText="#{lbl['lbl.ct.effective.date']}" style="width:8%;" styleClass="column-align-center"/>
+							  <p:column rowspan="2" headerText="#{lbl['lbl.ct.expiry.date']}" style="width:8%;" styleClass="column-align-center"/>
+							  <p:column colspan="3" headerText="#{lbl['lbl.ct.ap178']}" style="text-align:center; white-space:normal;" styleClass="column-align-center"> 
 									 <f:facet name="header">
 					                       <h:outputText value="#{lbl['lbl.ct.ap178']}"/>
                		                      <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap178']}"/>
                	                     </f:facet>
                	               </p:column>						
-							   <p:column rowspan="2" headerText="#{lbl['lbl.ct.status']}" style="width:6%;white-space:normal;"/>
+							   <p:column rowspan="2" headerText="#{lbl['lbl.ct.status']}" style="width:6%;white-space:normal;" styleClass="column-align-center"/>
 							</p:row>							
 								<p:row> 
 									<p:column/>	
@@ -263,7 +263,7 @@
                              <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.popup.chkBox']}"/>
 		               </f:facet>
                     </p:column>       
-                    <p:column headerText="#{lbl['lbl.ct.ptj.code']}">
+                    <p:column headerText="#{lbl['lbl.ct.ptj.code']}" >
                        	#{pmVar.orgCode}
 					</p:column>
                     <p:column headerText="#{lbl['lbl.ct.ptj.name']}" >

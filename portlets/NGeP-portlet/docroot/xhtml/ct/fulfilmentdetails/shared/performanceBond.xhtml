@@ -35,19 +35,19 @@
 				</p:selectBooleanCheckbox>
 		      </p:column>
 			
-			<p:column style="width:10%;" headerText="#{lbl['lbl.ct.ref.no']}">
+			<p:column style="width:10%;" headerText="#{lbl['lbl.ct.ref.no']}" styleClass="column-align-center">
 				<p:inputText value="#{varBond.refNo}" maxlength="50" 
 					disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:85px;" />
 			</p:column>
 		
-			<p:column style="width:23%;" headerText="#{lbl['lbl.ct.financial.inst']}">
+			<p:column style="width:23%;" headerText="#{lbl['lbl.ct.financial.inst']}" styleClass="column-align-center">
 				<p:selectOneMenu id="orgName"  value="#{varBond.financialOrg.financialOrgId}"
 				    style="width:195px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
 					   <f:selectItems value="#{contractDetailsBackingBean.retrieveFinancialOrgList()}" />
 				</p:selectOneMenu>
 			</p:column>
 			
-			<p:column style="width:12%;" headerText="#{lbl['lbl.ct.amount']}" >
+			<p:column style="width:12%;" headerText="#{lbl['lbl.ct.amount']}" styleClass="column-align-center" >
 				<p:inputText value="#{varBond.bondAmount}" styleClass="ppRightBtn" maxlength="18" 
 				    disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:90px;" label="#{lbl['lbl.ct.amount']}">
 					<f:convertNumber
@@ -56,7 +56,7 @@
 				</p:inputText>
 			</p:column>
 			
-			<p:column style="width:8%;" headerText="#{lbl['lbl.ct.effective.date']}">
+			<p:column style="width:8%;" headerText="#{lbl['lbl.ct.effective.date']}" styleClass="column-align-center">
 				<p:calendar id="popupButtonCal4" value="#{varBond.effDate}"  styleClass="calendarDateField" size="9" 
 					disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
 					showOn="button" readonlyInput="true" navigator="true"
@@ -67,7 +67,7 @@
 				</p:calendar>
 			</p:column>
 			
-			<p:column style="width:8%;" headerText="#{lbl['lbl.ct.expiry.date']}">
+			<p:column style="width:8%;" headerText="#{lbl['lbl.ct.expiry.date']}" styleClass="column-align-center">
 				<p:calendar id="bondExpDateCalId"  value="#{varBond.expDate}" styleClass="calendarDateField" showOn="button"
 				    readonlyInput="true" disabled="true"  navigator="true" 
 					size="9"  pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
@@ -76,7 +76,7 @@
 			    </p:calendar>
 			</p:column>
 			
-			<p:column styleClass="column-align-center" style="width:35%;" headerText="#{lbl['lbl.txt.attachment']}" >
+			<p:column styleClass="column-align-center" style="width:35%;" headerText="#{lbl['lbl.txt.attachment']}">
 				<h:panelGroup id="uploadBondPg" columns="2">
 					<p:commandButton oncomplete="uploadBondDlg.show();return false;"  
 							rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"
