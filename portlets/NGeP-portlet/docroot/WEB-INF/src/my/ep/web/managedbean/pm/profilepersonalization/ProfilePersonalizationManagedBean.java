@@ -46,6 +46,7 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	private SelectItem[] challengeQADDList;
 	private String currentPassword;
 	private boolean profileChanged = false;
+	private String passwordPolicy;
 	
 /**
 	 * @return the addressEntered
@@ -223,6 +224,20 @@ public boolean isProfileChanged() {
 	 */
 	public void setCurrentPassword(String currentPassword) {
 		this.currentPassword = currentPassword;
+	}
+
+	/**
+	 * @return the passwordPolicy
+	 */
+	public String getPasswordPolicy() {
+		return passwordPolicy;
+	}
+
+	/**
+	 * @param passwordPolicy the passwordPolicy to set
+	 */
+	public void setPasswordPolicy(String passwordPolicy) {
+		this.passwordPolicy = passwordPolicy;
 	}
 
 	

@@ -1185,6 +1185,34 @@ public class ProfilePersonalizationBackingBean extends
 			}
 		}
 	}
+	
+	public String generatePasswordPolicy(){		
+		if(StringUtils.isBlank(getManagedBean().getPasswordPolicy())){
+			IUserSO userSO = null;
+			try {
+				userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				UserReqDTO reqDTO = new UserReqDTO();
+				reqDTO.setLoginId(getManagedBean().getSelectedUser().getLoginId());		
+				UserResDTO resDTO = userSO.getPasswordPolicyInfo(reqDTO);
+				if(resDTO.isSuccessful() && resDTO.getPolicyInfos() != null){
+					StringBuilder sb = new StringBuilder();
+					sb.append("<b>Password Policy<b> <br/>");
+					for (String policy : resDTO.getPolicyInfos()) {
+						sb.append("&#160;&#8226;&#160; ");
+						sb.append(policy);
+						sb.append("<br/>");
+					}
+					getManagedBean().setPasswordPolicy(sb.toString());
+				}				
+			}finally{
+				userSO = null;
+			}
+		}
+		return getManagedBean().getPasswordPolicy();
+		
+		
+	}
 
 	// //TODO: testing
 	// public void handleFileUpload(FileUploadEvent event) {
