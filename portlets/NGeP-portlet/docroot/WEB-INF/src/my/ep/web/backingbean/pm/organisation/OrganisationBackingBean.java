@@ -2305,7 +2305,15 @@ public class OrganisationBackingBean extends
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmOrgValidity.orgCode",
 							SearchOperator.OPERATOR_EQUALS.value(),
-							orgProfile.getOrgCode()));			
+							orgProfile.getOrgCode()));		
+			
+			if(!orgProfile.isBrandNew()){
+				searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("orgProfileId",
+							SearchOperator.OPERATOR_NOT_EQUALS.value(),
+							orgProfile.getOrgProfileId()));	
+			}
+			
 						
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 			reqDTO.setOrgProfileSearchBean(searchBean);
@@ -2348,6 +2356,13 @@ public class OrganisationBackingBean extends
 					new SearchFilterBean("recordStatusFlg",
 							SearchOperator.OPERATOR_EQUALS.value(),
 							DbValueConst.RECORD_STATUS_ACTIVE));
+			
+			if(!orgProfile.isBrandNew()){
+				searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("orgProfileId",
+							SearchOperator.OPERATOR_NOT_EQUALS.value(),
+							orgProfile.getOrgProfileId()));	
+			}
 			
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 			reqDTO.setOrgProfileSearchBean(searchBean);
