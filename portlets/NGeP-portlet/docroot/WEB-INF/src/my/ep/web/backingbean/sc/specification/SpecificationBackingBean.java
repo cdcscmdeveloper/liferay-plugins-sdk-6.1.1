@@ -7773,7 +7773,8 @@ public class SpecificationBackingBean extends
 					if (null == document.getDisplaySeq()) {
 						scqtlist.setChecklistSeq(new Integer(10));
 					} else {
-						scqtlist.setChecklistSeq(new Integer(document.getDisplaySeq()));
+						scqtlist.setChecklistSeq(new Integer(document
+								.getDisplaySeq()));
 					}
 					scqtlist.setScQt(this.getManagedBean().getScQt());
 
@@ -7931,7 +7932,8 @@ public class SpecificationBackingBean extends
 					if (null == document.getDisplaySeq()) {
 						scqtlist.setChecklistSeq(new Integer(10));
 					} else {
-						scqtlist.setChecklistSeq(new Integer(document.getDisplaySeq()));
+						scqtlist.setChecklistSeq(new Integer(document
+								.getDisplaySeq()));
 					}
 					scqtlist.setScQt(this.getManagedBean().getScQt());
 
@@ -9689,7 +9691,8 @@ public class SpecificationBackingBean extends
 
 		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
 			this.getManagedBean().setLocalOutCome(action);
-			List<ScQtRemark> remarks = this.getManagedBean().getScQtRemarksList();
+			List<ScQtRemark> remarks = this.getManagedBean()
+					.getScQtRemarksList();
 			if (null != remarks) {
 				for (int i = 0; i < remarks.size(); i++) {
 					String userRemark = remarks.get(i).getRemark();
@@ -16444,6 +16447,33 @@ public class SpecificationBackingBean extends
 		StatusReqDTO reqDTO = new StatusReqDTO();
 		reqDTO.setStatusId(statusId);
 		return iStatusSO.retrieveStatusByStatusId(reqDTO).getPmStatus();
+	}
+
+	/**
+	 * Change Supplier Type In technical and Financial CheckList get Supplier
+	 * action dropdownvalues.
+	 * 
+	 * @return SelectItem[]
+	 */
+	public SelectItem[] getPTJUploadDropDownActionValues() {
+
+		SelectItem[] uploaditems = null;
+		try {
+			ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+			List<String> recommendList = new ArrayList<String>();
+			recommendList.add(ParameterConst.CHECKLIST_ACTION_VIEW);
+			recommendList
+					.add(ParameterConst.CHECKLIST_ACTION_ONLINE_SUBMISSION);
+
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmParameter.parameterCode",
+							SearchOperator.OPERATOR_IN.value(), recommendList));
+			uploaditems = getDropdownValuesBySearchBean(
+					ParameterTypeConst.SC_SUPPLIER_ACTION, searchBean);
+		} finally {
+
+		}
+		return uploaditems;
 	}
 
 }
