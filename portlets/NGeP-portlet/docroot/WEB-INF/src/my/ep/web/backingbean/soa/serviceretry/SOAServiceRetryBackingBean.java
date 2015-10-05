@@ -253,4 +253,16 @@ public class SOAServiceRetryBackingBean extends
 		
 	    return items;
 	}
+	
+	public String getRetryCountFieldColor(Integer retryCount){
+		
+		if(retryCount == 2){
+			return "GREEN";
+		} else 
+		if(retryCount == 3){
+			return "RED";
+		} else {
+			return "WHITE";
+		}  
+	}
 }
