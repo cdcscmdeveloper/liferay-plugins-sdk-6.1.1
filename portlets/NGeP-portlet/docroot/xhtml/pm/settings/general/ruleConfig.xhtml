@@ -164,10 +164,11 @@
 			</f:facet>
 				<p:inputText id="fromValueId" value="#{typeValueObj.fromValue}"
 					size="15" required="true" maxlength="18"
+					onchange="#{ruleCatalogueBackingBean.updateErrorDialog(index)}"
 					requiredMessage="#{lbl['lbl.pm.settings.fromvalue.required']}"
 					disabled="#{!(typeValueObj.brandNew) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1 and !typeValueObj.showFlag)}">
 					<p:ajax partialSubmit="true" process="@this"
-						update="@this, @([id$=cloneLink]), fromValueMsg" />
+						update="@this, @([id$=cloneLink]), fromValueMsg, :form:settingTabId:errorDialog" />
 				</p:inputText>
 				<p:message id="fromValueMsg" for="fromValueId" display="icon" />
 			</p:column>
@@ -184,7 +185,7 @@
 						update="@this, @([id$=cloneLink])" />
 					<p:ajax event="change"
 						listener="#{ruleCatalogueBackingBean.updateToValue(index)}"
-						update=":form:settingTabId:ruleTypeValueTableID" />
+						update=":form:settingTabId:ruleTypeValueTableID :form:settingTabId:errorDialog" />
 				</p:inputText>
 				<p:message id="toValueMsg" for="toValueId" display="icon" />
 			</p:column>
@@ -205,8 +206,9 @@
 
 				<p:calendar
 					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1 and typeValueObj.showFlag)}"
+					disabled="#{typeValueObj.effDate le DateUtils.getCurrentDateWithoutTime()}"
 					showOn="button" id="effDate" style="width:100px;"
-					mindate="#{ruleCatalogueBackingBean.managedBean.today}"
+					mindate="#{ruleCatalogueBackingBean.managedBean.tomorrow}"
 					required="true" label="#{lbl['lbl.pm.as.effdate']}"
 					readonlyInput="true"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -231,7 +233,7 @@
 				<p:calendar
 					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1 and typeValueObj.showFlag)}"
 					showOn="button" id="ruleConfigExpDateId" style="width :100px;"
-					mindate="#{ruleCatalogueBackingBean.managedBean.today}"
+					mindate="#{ruleCatalogueBackingBean.managedBean.tomorrow}"
 					label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 					value="#{typeValueObj.expDate}">
@@ -249,18 +251,20 @@
 				<f:facet name="header">
 					                #{lbl['lbl.pm.status']}
 				                </f:facet>
-				                
+
 				<p:selectOneMenu value="#{typeValueObj.recordStatusFlg}"
 					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1 and typeValueObj.showFlag)}"
 					disabled="#{typeValueObj.brandNew}" style="width:100px;">
 					<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 					<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
-					<p:ajax event="change" immediate="true" listener="#{ruleCatalogueBackingBean.checkStatus(index)}" 
-						partialSubmit="true" process="@this"  update=":form:settingTabId:ruleTypeValueTableID" >
-						</p:ajax>
-                    
+					<p:ajax event="change" immediate="true"
+						listener="#{ruleCatalogueBackingBean.checkStatus(index)}"
+						partialSubmit="true" process="@this"
+						update=":form:settingTabId:ruleTypeValueTableID">
+					</p:ajax>
+
 				</p:selectOneMenu>
-	
+
 			</p:column>
 			<p:column width="7%">
 				<f:facet name="header">
@@ -277,18 +281,30 @@
 								update=":form:settingTabId:ruleTypeValueTableID">
 								<p:graphicImage value="/css/images/design/add.png"></p:graphicImage>
 							</p:commandLink>&#160;</td>
-						<td style="text-align: right;"><p:commandLink 
-								id="deleteValue" partialSubmit="true" process="@this" update=":form:settingTabId:ruleTypeValueTableID"
-									action="#{ruleCatalogueBackingBean.deleteMoreRuleValue(index)}">
+						<td style="text-align: right;"><p:commandLink
+								id="deleteValue" partialSubmit="true" process="@this"
+								update=":form:settingTabId:ruleTypeValueTableID"
+								action="#{ruleCatalogueBackingBean.deleteMoreRuleValue(index)}">
 								<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 							</p:commandLink></td>
+						<td><h:panelGroup id="errorLink">
+								<p:commandLink title="#{lbl['lbl.txt.error']}" process="@this"
+									partialSubmit="ture"
+									actionListener="#{ruleCatalogueBackingBean.updateErrorDialog(index)}"
+									update=":form:settingTabId:ruleTypeValueTableID :form:settingTabId:errorDialog"
+									oncomplete="errorDialog.show();"
+									rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1 and (typeValueObj.fromValue >= typeValueObj.toValue)}">
+									<f:param name="index" value="#{index}"></f:param>
+									<p:graphicImage value="/css/images/design/icon_error.png"></p:graphicImage>
+								</p:commandLink>
+							</h:panelGroup></td>
 					</tr>
 
 				</table>
 			</p:column>
-			
+
 		</p:dataTable>
-		
+
 		<div style="text-align: right; min-height: 30px;">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				id="addTypeValueButton" style="float:right;"
@@ -296,23 +312,41 @@
 				partialSubmit="true" process="@this"
 				update=":form:settingTabId:ruleTypeValueTableID"></p:commandButton>
 		</div>
-		  
-		<p:confirmDialog id="statusConfirmDialog" closable="false" severity="alert"
-						header="confirmation popup" widgetVar="statusConfirmDialog"
-						message="Are you sure you want to inactive this setting?">
 
-							<p:commandButton value="Yes" partialSubmit="true" process="@this" update=":form:settingTabId:ruleTypeValueTableID"
-						    	oncomplete="statusConfirmDialog.hide()"
-							   action="#{ruleCatalogueBackingBean.ruleValueStatusChange}">
-				
-							   </p:commandButton>
-							<p:commandButton value="No" partialSubmit="true" process="@this"
-						    	update=":form:settingTabId:ruleTypeValueTableID"
-								action="#{ruleCatalogueBackingBean.revertStatusChange}" >
-					
-							</p:commandButton>
-						
+		<p:confirmDialog id="statusConfirmDialog" closable="false"
+			severity="alert" header="confirmation popup"
+			widgetVar="statusConfirmDialog"
+			message="Are you sure you want to inactive this setting?">
+
+			<p:commandButton value="Yes" partialSubmit="true" process="@this"
+				update=":form:settingTabId:ruleTypeValueTableID"
+				oncomplete="statusConfirmDialog.hide()"
+				action="#{ruleCatalogueBackingBean.ruleValueStatusChange}">
+
+			</p:commandButton>
+			<p:commandButton value="No" partialSubmit="true" process="@this"
+				update=":form:settingTabId:ruleTypeValueTableID"
+				action="#{ruleCatalogueBackingBean.revertStatusChange}">
+
+			</p:commandButton>
+
 		</p:confirmDialog>
+		<p:dialog id="errorDialog" header="#{lbl['lbl.txt.error.list']}"
+			widgetVar="errorDialog" modal="true" width="500" height="100">
+
+			<table>
+				<tr>
+					<td align="center"><h:outputText
+							value="#{lbl['lbl.pm.ruleconfig.error1']}"></h:outputText></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" partialSubmit="true"
+					process="@this" update="@this" style="float:right;"
+					onclick="errorDialog.hide();" />
+			</div>
+		</p:dialog>
 		<div class="clear"></div>
 
 		<br />

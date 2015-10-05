@@ -221,7 +221,8 @@ public class RuleCatalogueBackingBean extends
 		getManagedBean().setThresholdIndex(0);
 		getManagedBean().setGstIndex(TAXABLE_ITEM_IDX);
 		getManagedBean().setAutoUpdate(true);
-
+		resetErrorDialog();
+		
 		IConfigGeneralSO cgeneralSO = null;
 		try {
 			cgeneralSO = (IConfigGeneralSO) BusinessDelegate.getInstance()
@@ -844,7 +845,7 @@ public class RuleCatalogueBackingBean extends
 		log.info("...................newRuleValue.getRuleValue()="
 				+ newRuleValue.getRuleValue());
 		newRuleValue.setRuleType(this.getManagedBean().getSelectedRuleType());
-		newRuleValue.setEffDate(tomorrowDate());
+		newRuleValue.setEffDate(this.getManagedBean().getTomorrow());
 
 		if (this.getManagedBean().getSelectedRuleType().getRuleDataTypeId()
 				.getParameterCode().equals("C")) {
@@ -924,7 +925,7 @@ public class RuleCatalogueBackingBean extends
 		log.info(".................addMoreOrgAndItemFee...................");
 		PmFeeExemption newFeeExemption = new PmFeeExemption();
 		newFeeExemption.setFeeExemptionType("1");
-		newFeeExemption.setEffDate(tomorrowDate());// future date
+		newFeeExemption.setEffDate(this.getManagedBean().getTomorrow());// future date
 		newFeeExemption.setItemId(new CmItem());// make sure to delete the new
 												// objs before update if doesn't
 												// selected
@@ -938,16 +939,7 @@ public class RuleCatalogueBackingBean extends
 				"feeByOrgItemTableWidVar.paginator.endLink.click()");
 
 	}
-	public Date tomorrowDate() {
-		log.info(".................tomorrowDate...................");
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), 0, 0, 0);
-        Calendar c1 = Calendar.getInstance();
-		c1.add(Calendar.DATE, 1);
-		
-        return c1.getTime();
-    } 
+	
 
 	
 	public void deleteOrgAndItemFee(int rowIndex) {
@@ -983,7 +975,7 @@ public class RuleCatalogueBackingBean extends
 		log.info(".................addMoreComodityFee...................");
 		PmFeeExemption newFeeExemption = new PmFeeExemption();
 		newFeeExemption.setFeeExemptionType("6");
-		newFeeExemption.setEffDate(tomorrowDate());// make sure to delete the new
+		newFeeExemption.setEffDate(this.getManagedBean().getTomorrow());// make sure to delete the new
 												// objs before update if doesn't
 												// selected
 		newFeeExemption.setTypeId(new CmType());
@@ -1015,7 +1007,7 @@ public class RuleCatalogueBackingBean extends
 		log.info(".................addMoreContractFee...................");
 		PmFeeExemption newFeeExemption = new PmFeeExemption();
 		newFeeExemption.setFeeExemptionType("2");
-		newFeeExemption.setEffDate(tomorrowDate());
+		newFeeExemption.setEffDate(this.getManagedBean().getTomorrow());
 		newFeeExemption.setRequestItemId(new ScRequestItem());
 		newFeeExemption.setContractId(new CtContract());
 
@@ -2460,13 +2452,13 @@ public class RuleCatalogueBackingBean extends
 				+ this.getManagedBean().getSelectedRuleType()
 						.getConfigRuleValues().size());
 		//validation
-		PmConfigRuleValue crulevalue = this.getManagedBean().getSelectedRuleType().getConfigRuleValues().get(index);
-		if(crulevalue.getFromValue().compareTo(crulevalue.getToValue()) == 1){ //if fromValue  > toValue
-			// throw error msg
-			throw new EpException(MessageConst.ERROR_770198,
-					new String[] {});
-
-		}
+//		PmConfigRuleValue crulevalue = this.getManagedBean().getSelectedRuleType().getConfigRuleValues().get(index);
+//		if(crulevalue.getFromValue().compareTo(crulevalue.getToValue()) == 1){ //if fromValue  > toValue
+//			// throw error msg
+//			throw new EpException(MessageConst.ERROR_770198,
+//					new String[] {});
+//
+//		}
 		
 		if (index < this.getManagedBean().getSelectedRuleType()
 				.getConfigRuleValues().size() - 1) {
@@ -2479,6 +2471,15 @@ public class RuleCatalogueBackingBean extends
 						.getSelectedRuleType().getConfigRuleValues().get(index)
 						.getToValue().add(new BigDecimal(1)));
 			}
+		}
+		PmConfigRuleValue selectedValue = this.getManagedBean()
+				.getSelectedRuleType().getConfigRuleValues().get(index);
+		if (selectedValue.getFromValue() != null
+				&& selectedValue.getToValue() != null
+				&& selectedValue.getFromValue().compareTo(selectedValue.getToValue()) == 1) {
+			this.getManagedBean().setError1(true);
+		} else {
+			this.getManagedBean().setError1(false);
 		}
 	}
 
@@ -2518,7 +2519,7 @@ public class RuleCatalogueBackingBean extends
 		log.debug("*****addNewRuleTypeValue*****");
 		PmConfigRuleValue newRuleValue = new PmConfigRuleValue();
 		newRuleValue.setRuleType(this.getManagedBean().getSelectedRuleType());
-		newRuleValue.setEffDate(tomorrowDate());
+		newRuleValue.setEffDate(this.getManagedBean().getTomorrow());
 
 		if (this.getManagedBean().getSelectedRuleType().getRuleDataTypeId()
 				.getParameterCode().equals("C")) {
@@ -2529,7 +2530,9 @@ public class RuleCatalogueBackingBean extends
 																// if doesn't
 																// selected
 		}
+
 		if (this.getManagedBean().getSelectedRuleType().getIsRangeValue() == 1) {
+		
 			if (this.getManagedBean().getSelectedRuleType()
 					.getConfigRuleValues() != null
 					&& this.getManagedBean().getSelectedRuleType()
@@ -2539,7 +2542,9 @@ public class RuleCatalogueBackingBean extends
 				newRuleValue.setGroupValueId(this.getManagedBean()
 						.getSelectedRuleType().getConfigRuleValues()
 						.get(size - 1).getGroupValueId() + 1);
+				
 			} else {
+			
 				newRuleValue.setGroupValueId(1);
 			}
 			newRuleValue.setFromValue(new BigDecimal(1));
@@ -3808,5 +3813,40 @@ public class RuleCatalogueBackingBean extends
 	public void setCurrentIndexVal(Integer currentIndexVal) {
 		this.currentIndexVal = currentIndexVal;
 	}
+	/**
+	 * reset Error Dialog.
+	 */
+	public void resetErrorDialog() {
+		this.getManagedBean().setError1(false);
+//		this.getManagedBean().setError2(false);
+//		this.getManagedBean().setError3(false);
+//		this.getManagedBean().setError4(false);
+	}
+
+	/**
+	 * update Error Dialog.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
+	public void updateErrorDialog(int index) {
+		log.info("....updateErrorDialog....");
+		PmConfigRuleValue selectedValue = this.getManagedBean()
+				.getSelectedRuleType().getConfigRuleValues().get(index);
+		if (selectedValue.getFromValue() != null
+				&& selectedValue.getToValue() != null
+				&& selectedValue.getFromValue().compareTo(selectedValue.getToValue()) == 1) {
+			this.getManagedBean().setError1(true);
+		} else {
+			this.getManagedBean().setError1(false);
+		}
+//		
+//		if (selectedValue.getRuleValue() == null
+//				|| selectedValue.getFromValue() == null) {
+//			this.getManagedBean().setError2(true);
+//		} else {
+//			this.getManagedBean().setError2(false);
+//		}
 	
+	}
 }
