@@ -3560,13 +3560,31 @@ public class ProfileManagementBackingBean extends
 		// throw new EpException(MessageConst.ERROR_770035);
 		// }
 		
-		if(pmUserOrg.getPmOrgProfile() == null 
-				|| pmUserOrg.getPmOrgProfile().getOrgProfileId() == null 
-				|| pmUserOrg.getPmOrgProfile().getPmOrgValidity() == null
-				|| pmUserOrg.getPmOrgProfile().getPmOrgValidity().getOrgCode() == null
-				|| pmUserOrg.getPmOrgProfile().getPmOrgValidity().getOrgName() == null){
-			throw new EpException(MessageConst.ERROR_770175);	
-		}
+		//Validate if org profile not chosen.
+		if(ParameterConst.ORG_TYPE_FACTORING.equals(pmUserOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())){
+			if(pmUserOrg.getPmOrgProfile() == null 
+					|| pmUserOrg.getPmOrgProfile().getOrgProfileId() == null 
+					|| pmUserOrg.getPmOrgProfile().getPmFinancialOrg() == null
+					|| StringUtils.isBlank(pmUserOrg.getPmOrgProfile().getPmFinancialOrg().getFinOrgName())){
+				throw new EpException(MessageConst.ERROR_770175);	
+			}
+		}else if(ParameterConst.ORG_TYPE_SUPPLIER.equals(pmUserOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())){
+			if(pmUserOrg.getPmOrgProfile() == null 
+					|| pmUserOrg.getPmOrgProfile().getOrgProfileId() == null 
+					|| pmUserOrg.getPmOrgProfile().getSmSupplier() == null
+					|| StringUtils.isBlank(pmUserOrg.getPmOrgProfile().getSmSupplier().getCompanyName())
+					|| StringUtils.isBlank(pmUserOrg.getPmOrgProfile().getSmSupplier().getRegNo())){
+				throw new EpException(MessageConst.ERROR_770175);	
+			}
+		}else{
+			if(pmUserOrg.getPmOrgProfile() == null 
+					|| pmUserOrg.getPmOrgProfile().getOrgProfileId() == null 
+					|| pmUserOrg.getPmOrgProfile().getPmOrgValidity() == null
+					|| StringUtils.isBlank(pmUserOrg.getPmOrgProfile().getPmOrgValidity().getOrgCode())
+					|| StringUtils.isBlank(pmUserOrg.getPmOrgProfile().getPmOrgValidity().getOrgName())){
+				throw new EpException(MessageConst.ERROR_770175);	
+			}
+		}		
 		
 		if(!ParameterConst.ORG_TYPE_SUPPLIER.equals(pmUserOrg.getPmOrgProfile()
 				.getOrgTypeCode().getParameterCode()) && StringUtils.isBlank(pmUserOrg.getDesignation())){			
@@ -4019,11 +4037,24 @@ public class ProfileManagementBackingBean extends
 					.retrieveStatusByStatusId(statusReqDTO);
 			if (isNewUser) {
 				logger.info("Tracking diary for user profile: create new user :saveUserProfile");
+				String orgCode = null;
+				String orgName = null;
+				if(ParameterConst.ORG_TYPE_FACTORING.equals(userOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())){
+					orgCode = userOrg.getPmOrgProfile().getPmFinancialOrg().getBizRegNumber();
+					orgName = userOrg.getPmOrgProfile().getPmFinancialOrg().getFinOrgName();
+				}else if(ParameterConst.ORG_TYPE_SUPPLIER.equals(userOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())){
+					orgCode = userOrg.getPmOrgProfile().getSmSupplier().getRegNo();
+					orgName = userOrg.getPmOrgProfile().getSmSupplier().getCompanyName();
+				}else{
+					orgCode = userOrg.getPmOrgProfile().getOrgCode();
+					orgName = userOrg.getPmOrgProfile().getOrgName();
+				}
+				
 				String messageId = MessageConst.TD_80001;
 				String[] msgParam = new String[] {
 						user.getUserName() ,
-						userOrg.getPmOrgProfile().getOrgCode(),
-						userOrg.getPmOrgProfile().getOrgName() };
+						orgCode,
+						orgName };
 				reqDTO.setTrackingStatus(true);
 				reqDTO.getTrackDairyVOs().add(
 						PmCommonUtil.assignTrackingDairyValues(user,
