@@ -1,10 +1,12 @@
 package my.ep.web.managedbean.pm.signatory;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -37,8 +39,23 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 	private int status;
 	private boolean validationError = false;
 	private Map<Long , Date> idToCertSignMapForChangedRecs = new HashMap<Long , Date>();
-	
+	private Date  tomorrow = tomorrowDate();
 
+	public Date getTomorrow() {
+		return tomorrow;
+	}
+	public void setTomorrow(Date tomorrow) {
+		this.tomorrow = tomorrow;
+	}
+	public Date tomorrowDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), 0, 0, 0);
+        Calendar c1 = Calendar.getInstance();
+		c1.add(Calendar.DATE, 1);
+		
+        return c1.getTime();
+    } 
 	/**
 	 * @return the deletedCertSignatories
 	 */
