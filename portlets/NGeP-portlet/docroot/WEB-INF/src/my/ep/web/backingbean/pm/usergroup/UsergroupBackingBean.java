@@ -15,6 +15,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
@@ -22,6 +23,8 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.role.RoleReqDTO;
 import my.ep.dto.pm.authorization.role.RoleResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -506,10 +509,18 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 			if(!isValid){
 				throw new EpException(MessageConst.ERR_900030);
 			}
+			if(!userGroup.isBrandNew() && !validateOrgProfileStatus(userGroup)){
+				throw new EpException(MessageConst.ERR_900033, 
+						new String[] {
+						userGroup.getPmOrgProfile().getOrgCode(),
+						userGroup.getPmOrgProfile().getOrgName()});
+			}
 		}
 		
 		//validate duplicate group name (Role and PTJ)
 		findDuplicateGroupName();
+		
+		
 	}
 
 	/**
@@ -538,9 +549,9 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		List<PmUserGroupUser> pmUserGroupUsers = this.getManagedBean()
 				.getUserGroups();
 		
-//		for(PmUserGroupUser groupUser:pmUserGroupUsers){
-//			setUserDetails(userGroup,groupUser);
-//		}
+		for(PmUserGroupUser groupUser:pmUserGroupUsers){
+			setUserDetails(userGroup,groupUser);
+		}
 		changeUserGroupStatus(pmUserGroupUsers);
 		userGroup.setPmUserGroupUsers(pmUserGroupUsers);
 		if (userGroup.isBrandNew()) {
@@ -659,14 +670,37 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	/*
 	 *  Setting update user 
 	 */
-	public void setUserDetails(PmUserGroup userGroup, PmUserGroupUser groupUser) {
+	private void setUserDetails(PmUserGroup userGroup, PmUserGroupUser groupUser) {
 		if(!userGroup.isBrandNew() && DbValueConst.RECORD_STATUS_SUSPENDED == userGroup.getRecordStatusFlg()){
 			groupUser.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
-		}else if(!userGroup.isBrandNew() && DbValueConst.RECORD_STATUS_ACTIVE == userGroup.getRecordStatusFlg()){
-			if(validateUserStatus(userGroup, groupUser.getPmUser())){
+		}else if(!userGroup.isBrandNew() && DbValueConst.RECORD_STATUS_ACTIVE == userGroup.getRecordStatusFlg()
+				&& DbValueConst.RECORD_STATUS_ACTIVE == groupUser.getRecordStatusFlg()){
+			boolean isValidOrgProfile = false;
+			boolean isValidRoleStatus = false;
+			if(validateUserOrgProfileStatus(userGroup, groupUser.getPmUser())){
+				isValidOrgProfile = true;
+			}
+			
+			if(validateUserRoleStatus(userGroup, groupUser.getPmUser())){
+				isValidRoleStatus = true;				
+			}
+			
+			if(!isValidOrgProfile){
+				throw new EpException(MessageConst.ERR_900031, 
+						new String[] {groupUser.getPmUser().getUserName(), 
+						userGroup.getPmOrgProfile().getOrgCode(),
+						userGroup.getPmOrgProfile().getOrgName()});
+			}
+			
+			if(!isValidRoleStatus){
+				throw new EpException(MessageConst.ERR_900032, new String[] {
+						PmCommonUtil.getRoleDescByRoleCodeAndLanguage(getManagedBean().getUserGroup().getRoleCode(), 
+								getFacesScopes().getUserLocale().getLanguage()),
+						groupUser.getPmUser().getUserName()});
+			}
+			
+			if(isValidOrgProfile && isValidRoleStatus){
 				groupUser.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-			}else{
-				throw new EpException(groupUser.getPmUser().getLoginId() + " , " + groupUser.getPmUser().getUserName() + " is not valid.");
 			}
 		}
 		
@@ -681,16 +715,16 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		}
 	}
 	
-	public void changeUserStatus(PmUserGroupUser groupUser){
-		PmUserGroup userGroup = getManagedBean().getUserGroup();
-		if(groupUser.getRecordStatusFlg() != null && DbValueConst.RECORD_STATUS_ACTIVE == groupUser.getRecordStatusFlg()){
-			if(validateUserStatus(userGroup, groupUser.getPmUser())){
-				groupUser.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-			}else{
-				throw new EpException(groupUser.getPmUser().getLoginId() + " , " + groupUser.getPmUser().getUserName() + " is not valid.");
-			}
-		}
-	}
+//	public void changeUserStatus(PmUserGroupUser groupUser){
+//		PmUserGroup userGroup = getManagedBean().getUserGroup();
+//		if(groupUser.getRecordStatusFlg() != null && DbValueConst.RECORD_STATUS_ACTIVE == groupUser.getRecordStatusFlg()){
+//			if(validateUserStatus(userGroup, groupUser.getPmUser())){
+//				groupUser.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+//			}else{
+//				throw new EpException(groupUser.getPmUser().getLoginId() + " , " + groupUser.getPmUser().getUserName() + " is not valid.");
+//			}
+//		}
+//	}
 	
 	/**
      * This method used to retrieve login user information.
@@ -791,7 +825,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		}
 	}
 	
-	private boolean validateUserStatus(PmUserGroup userGroup,PmUser user){
+	private boolean validateUserOrgProfileStatus(PmUserGroup userGroup,PmUser user){
 
 		boolean isValid = false;
 		List <PmUser> pmUsers = new ArrayList<PmUser>();
@@ -803,13 +837,6 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		SearchFilterBean bean = new SearchFilterBean();
 		bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 		bean.setSearchField("recordStatusFlg");
-		bean.setSearchValue(DbValueConst.RECORD_STATUS_ACTIVE);
-		searchBean.getDataFilterBeans().add(bean);
-			
-		// only active user role
-		bean = new SearchFilterBean();
-		bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-		bean.setSearchField("pmUserOrgs.pmUserRoles.recordStatusFlg");
 		bean.setSearchValue(DbValueConst.RECORD_STATUS_ACTIVE);
 		searchBean.getDataFilterBeans().add(bean);
 			
@@ -831,9 +858,65 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		bean.setSearchField("pmUserOrgs.pmOrgProfile.recordStatusFlg");
 		bean.setSearchValue(DbValueConst.RECORD_STATUS_ACTIVE);
 		searchBean.getDataFilterBeans().add(bean);
+		
+		Date currentDate = new Date();
+		// Filter By - Org effDate
+		searchBean
+				.getDataFilterBeans()
+				.add(new SearchFilterBean("pmUserOrgs.pmOrgProfile.pmOrgValidity.effDate",
+						SearchOperator.OPERATOR_LESS_EQUAL.value(), currentDate));
+		
+		// Filter By - Org expDate
+		searchBean.getDataFilterBeans().add(
+					new SearchMultiFilterBean(new SearchFilterBean(
+					"pmUserOrgs.pmOrgProfile.pmOrgValidity.expDate",
+					SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+					currentDate), new SearchFilterBean(
+					"pmUserOrgs.pmOrgProfile.pmOrgValidity.expDate",
+					SearchOperator.OPERATOR_IS_NULL.value(), null,
+					SearchCondition.CONDITION_OR.value())));		
+			
 			
 		bean = new SearchFilterBean();
-		bean.setSearchOperator(SearchOperator.OPERATOR_NOT_EQUALS.value());
+		bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+		bean.setSearchField("userId");
+		bean.setSearchValue(user.getUserId());
+		searchBean.getDataFilterBeans().add(bean);
+			
+			//search users
+		pmUsers = PmCommonUtil.searchUsersBySearchBean(searchBean);
+		if(pmUsers != null && !pmUsers.isEmpty()){
+			isValid = true;
+		}		
+			
+		return isValid;
+	}
+	
+	private boolean validateUserRoleStatus(PmUserGroup userGroup,PmUser user){
+
+		boolean isValid = false;
+		List <PmUser> pmUsers = new ArrayList<PmUser>();
+			
+		ISearchBean<PmUser> searchBean = new SearchBean<PmUser>();
+		
+		/* Search Bean Filter - Start */
+		
+		// only active user
+		SearchFilterBean bean = new SearchFilterBean();
+		bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+		bean.setSearchField("recordStatusFlg");
+		bean.setSearchValue(DbValueConst.RECORD_STATUS_ACTIVE);
+		searchBean.getDataFilterBeans().add(bean);
+			
+		// only active user role
+		bean = new SearchFilterBean();
+		bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+		bean.setSearchField("pmUserOrgs.pmUserRoles.recordStatusFlg");
+		bean.setSearchValue(DbValueConst.RECORD_STATUS_ACTIVE);
+		searchBean.getDataFilterBeans().add(bean);			
+					
+		bean = new SearchFilterBean();
+		bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 		bean.setSearchField("userId");
 		bean.setSearchValue(user.getUserId());
 		searchBean.getDataFilterBeans().add(bean);
@@ -852,6 +935,58 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 			isValid = true;
 		}		
 			
+		return isValid;
+	}
+	
+	
+	private boolean validateOrgProfileStatus(PmUserGroup userGroup){
+		boolean isValid = false;
+		IOrgProfileSO orgSO  = null;
+		try{		
+			PmOrgProfile orgProfile = userGroup.getPmOrgProfile();
+			ISearchBean<PmOrgProfile> searchBean = new SearchBean<PmOrgProfile>();
+			Date currentDate = new Date();
+			
+			// Filter By - Active Status Only
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("recordStatusFlg",
+							SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_ACTIVE));			
+
+			// Filter By - Org effDate
+			searchBean
+					.getDataFilterBeans()
+					.add(new SearchFilterBean("pmOrgValidity.effDate",
+							SearchOperator.OPERATOR_LESS_EQUAL.value(), currentDate));
+			
+			// Filter By - Org expDate
+			searchBean.getDataFilterBeans().add(
+						new SearchMultiFilterBean(new SearchFilterBean(
+						"pmOrgValidity.expDate",
+						SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+						currentDate), new SearchFilterBean(
+						"pmOrgValidity.expDate",
+						SearchOperator.OPERATOR_IS_NULL.value(), null,
+						SearchCondition.CONDITION_OR.value())));
+			
+			// Filter By - Org Profile Id
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("orgProfileId",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							orgProfile.getOrgProfileId()));			
+						
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			reqDTO.setOrgProfileSearchBean(searchBean);
+			orgSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT,
+							IOrgProfileSO.class);
+			OrgProfileResDTO resDTO = orgSO.searchOrgProfile(reqDTO);
+			if(resDTO.getOrgProfileResultBean()!=null && resDTO.getOrgProfileResultBean().getResultList()!=null 
+					&& !resDTO.getOrgProfileResultBean().getResultList().isEmpty()){				
+				isValid = true;
+			}
+		}finally{
+			orgSO = null;
+		}
 		return isValid;
 	}
 	
