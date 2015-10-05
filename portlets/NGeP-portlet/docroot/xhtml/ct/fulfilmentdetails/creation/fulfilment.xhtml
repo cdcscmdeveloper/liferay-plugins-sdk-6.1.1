@@ -61,7 +61,7 @@
     	    }
     	  });
     	});
-				</script> 	
+              </script> 	
 	  <p:blockUI id="blockUiId" block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>		
@@ -72,6 +72,9 @@
 	   </h:panelGroup>
 	   	<ui:include src="fulfilmentButtons.xhtml" />
 		<ui:include src="fulfilmentHeader.xhtml" />
+		 <p:outputPanel rendered="#{!contractDetailsBackingBean.contractCreationProcess()}">
+		  		  <ui:include src="asAtDate.xhtml" />
+		  </p:outputPanel>
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		   <tr>
 			<td width="20%;" style="vertical-align: baseline;" class="sidemenutd">
@@ -157,9 +160,6 @@
 		 <td width="80%" valign="top">
 			 	<p:outputPanel id="ctMenuId1"  rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex eq 0}">
 			 	        <p:outputPanel id="ctMenuId2" rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
-		  				   <p:outputPanel rendered="#{!contractDetailsBackingBean.contractCreationProcess()}">
-		  				   		<ui:include src="asAtDate.xhtml" />
-		  				   </p:outputPanel>
 		 	               <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilmentDetails.xhtml"/>
 		 	        </p:outputPanel>
 		 	        <p:outputPanel id="ctMenuId3" rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}">
