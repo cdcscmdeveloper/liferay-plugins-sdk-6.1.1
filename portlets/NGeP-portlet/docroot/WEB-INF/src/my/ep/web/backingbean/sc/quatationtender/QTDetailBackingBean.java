@@ -1745,17 +1745,20 @@ public class QTDetailBackingBean extends
 		renewSesionObject();
 		Long qtId = null;
 		Object payLoad = getBpmTaskDetails(Object.class);
-		if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(this
-				.getManagedBean().getTaskName())
+		String taskName = this.getManagedBean().getTaskName();
+		if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
-						.equalsIgnoreCase(this.getManagedBean().getTaskName())
+						.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.ASSIGN_FC_SECRETARY.equalsIgnoreCase(this
-						.getManagedBean().getTaskName())) {
+						.getManagedBean().getTaskName())
+				|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
+						.equalsIgnoreCase(taskName)) {
 			if (!SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
-					.equalsIgnoreCase(this.getManagedBean().getTaskName())
+					.equalsIgnoreCase(taskName)
 					&& !SCProcessNameConst.ASSIGN_FC_SECRETARY
-							.equalsIgnoreCase(this.getManagedBean()
-									.getTaskName())) {
+							.equalsIgnoreCase(taskName)
+					&& !SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
+							.equalsIgnoreCase(taskName)) {
 
 				SCCommitteeDataType committeDataType = (SCCommitteeDataType) payLoad;
 				this.getManagedBean().setQuotationTenderDataType(
@@ -1773,13 +1776,17 @@ public class QTDetailBackingBean extends
 			this.getManagedBean().setActiveIndex(1);
 			retrieveFinalizationCommitteeType(qtId);
 			retrieveQuationTenderDetails(new Long(qtId), null);
-			if (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE.equalsIgnoreCase(this
-					.getManagedBean().getTaskName())) {
+			if (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
+					.equalsIgnoreCase(taskName)
+					|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
+							.equalsIgnoreCase(taskName)) {
 				retrieveCommitteeAppointmentTabDtl(true);
 			} else {
 				retrieveCommitteeAppointmentTabDtl(false);
 			}
-		} else {
+		}
+		
+		else {
 			// qtId = quotationTenderDataType.getQtId().longValue();
 			SCQuotationTenderDataType quationDataType = (SCQuotationTenderDataType) payLoad;
 			qtId = quationDataType.getQtId().longValue();
