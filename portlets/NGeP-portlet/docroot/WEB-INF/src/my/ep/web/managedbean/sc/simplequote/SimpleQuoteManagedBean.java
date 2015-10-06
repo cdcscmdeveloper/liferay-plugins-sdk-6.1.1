@@ -28,6 +28,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.directpurchase.ScBusinessNatureQuoteCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationDistrictCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationDivisionCriteria;
@@ -224,6 +225,12 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	/** The search to created date. */
 	private Date searchToCreatedDate;
 
+	/** The search statuses. */
+	private List<Long> searchStatuses;
+
+	/** The status descs. */
+	private List<PmStatusDesc> statusDescs;
+
 	// clone item spec
 	/** The selected quote. */
 	private ScQuote selectedQuote = new ScQuote();
@@ -368,7 +375,11 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	/** The scQuoteSupplier response SQ. */
 	private ScQuoteSupplier requestedSupplier;
 
+	/** The sm gst supplier. */
 	private SmGstSupplier smGstSupplier;
+	
+	/** The view quote. */
+	boolean viewQuote = Boolean.FALSE;
 
 	/**
 	 * Gets the spki backing bean.
@@ -403,6 +414,13 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	 * Search clone item spec.
 	 */
 	public void searchCloneItemSpec() {
+		scQuoteDataModel.reloadData();
+	}
+	
+	/**
+	 * Search simple quote.
+	 */
+	public void searchSimpleQuote() {
 		scQuoteDataModel.reloadData();
 	}
 
@@ -456,16 +474,32 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 									getSearchProcType()));
 				}
 
-				// for panel item search
-				if (getScQuote().isPanel()) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("panel",
-									SearchOperator.OPERATOR_EQUALS.value(), 1));
-				} else {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("panel",
-									SearchOperator.OPERATOR_NOT_EQUALS.value(),
-									1));
+				if(getScQuote() != null){
+					// for panel item search
+					if (getScQuote().isPanel()) {
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("panel",
+										SearchOperator.OPERATOR_EQUALS.value(), 1));
+					} else {
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("panel",
+										SearchOperator.OPERATOR_NOT_EQUALS.value(),
+										1));
+					}
+				} else{
+					// for simple quote search
+					List<Long> searchStatuses = getSearchStatuses();
+					if(searchStatuses != null && searchStatuses.size() > 0) {
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("workflowStatuses.pmStatus.statusId",
+										SearchOperator.OPERATOR_IN.value(),
+										searchStatuses));
+						
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("workflowStatuses.current",
+										SearchOperator.OPERATOR_EQUALS.value(),
+										true));
+					}
 				}
 
 				if (getSearchFromCreatedDate() != null
@@ -2392,6 +2426,48 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	 */
 	public void setSmGstSupplier(SmGstSupplier smGstSupplier) {
 		this.smGstSupplier = smGstSupplier;
+	}
+
+	/**
+	 * @return the statusDescs
+	 */
+	public List<PmStatusDesc> getStatusDescs() {
+		return statusDescs;
+	}
+
+	/**
+	 * @param statusDescs the statusDescs to set
+	 */
+	public void setStatusDescs(List<PmStatusDesc> statusDescs) {
+		this.statusDescs = statusDescs;
+	}
+
+	/**
+	 * @return the searchStatuses
+	 */
+	public List<Long> getSearchStatuses() {
+		return searchStatuses;
+	}
+
+	/**
+	 * @param searchStatuses the searchStatuses to set
+	 */
+	public void setSearchStatuses(List<Long> searchStatuses) {
+		this.searchStatuses = searchStatuses;
+	}
+
+	/**
+	 * @return the viewQuote
+	 */
+	public boolean isViewQuote() {
+		return viewQuote;
+	}
+
+	/**
+	 * @param viewQuote the viewQuote to set
+	 */
+	public void setViewQuote(boolean viewQuote) {
+		this.viewQuote = viewQuote;
 	}
 
 }
