@@ -2524,12 +2524,6 @@ public class SmApplicationBackingBean extends
 		if (branchBean.getSmPersonnel() == null) {
 			branchBean.setSmPersonnel(new SmPersonnel());
 		}
-		if (!branchBean.getBranchName().equalsIgnoreCase(
-				(getManagedBean().getSmAppl().getSmCompanyBasic()
-						.getCompanyName()))) {
-			branchBean.setBranchName(getManagedBean().getSmAppl()
-					.getSmCompanyBasic().getCompanyName());
-		}
 		getManagedBean()
 				.setSelectedBranchPrev(
 						getManagedBean().getSmAppl().getSmSupplierBranches()
@@ -2556,8 +2550,6 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignNewBranchBean() {
 		SmSupplierBranch br = new SmSupplierBranch();
-		br.setBranchName(getManagedBean().getSmAppl().getSmCompanyBasic()
-				.getCompanyName());
 		br.setRevNo(1);
 		br.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
 		br.setSmAppl(getManagedBean().getSmAppl());
