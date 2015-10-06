@@ -9,9 +9,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -25,6 +27,7 @@ import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertResDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.util.EpPropertiesUtils;
@@ -34,6 +37,8 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.sm.virtualcert.VirtualCertManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.log4j.Logger;
@@ -46,9 +51,10 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 	private final static String CERT_EXT = ".pdf";
 	
 	public void viewVirtualCert(){
+		FacesContext fc = FacesContext.getCurrentInstance();
 		SmSupplier supp = getSmSupplier(null);
-
 		String xhtml = "/xhtml/sm/virtualcert/virtualCertDet.xhtml";
+		setExpiredMofAccountMessageIfApplicable(fc, supp);
 
 		log.info("viewVirtualCert appl ID>>>>" + supp.getSmAppl().getApplId());
 		log.info("isQuestionnaire>>>>" + supp.getSmAppl().isQuestionnaire());
@@ -75,21 +81,49 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 				quesBackingBean.getManagedBean().setSmAppl(supp.getSmAppl());
 				quesBackingBean.retrieveQuestionnaire();	
 				retrieveCertInfo(supp.getSupplierId());
-
-
-				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/questionnaire/questionnaireView.xhtml");
 			}else{
 				retrieveCertInfo(supp.getSupplierId());
-
-				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, xhtml);
 			}
 		}else{
 			retrieveCertInfo(supp.getSupplierId());
-
-			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, xhtml);
+		}
+	}
+	
+	/**
+	 * Set message for expired MOF account
+	 * 
+	 * @param FacesContext
+	 *            fc
+	 * @param SmSupplier
+	 *            supp
+	 */
+	private void setExpiredMofAccountMessageIfApplicable(FacesContext fc,
+			SmSupplier supp) {
+		if (supp.getSmAppl() != null) {
+			SmMofAccount mofAcc = SmCommonUtil
+					.getMofAccountBySuppIdAndSuppType(supp.getSupplierId(),
+							supp.getSmAppl().getSupplierType());
+			if (mofAcc != null) {
+				Date today = new Date();
+				if (!(today.compareTo(mofAcc.getExpDate()) < 0)) {
+					fc.addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_ERROR,
+									null,
+									SmCommonUtil
+											.getMessage(
+													"lbl.sm.alert.expired.mof.view.virtualcert",
+													null)));
+					fc.getApplication()
+							.getNavigationHandler()
+							.handleNavigation(fc, null,
+									SmApplicationUtil.getApplicationErrorPage());
+				}
+			}
 		}
 	}
 
