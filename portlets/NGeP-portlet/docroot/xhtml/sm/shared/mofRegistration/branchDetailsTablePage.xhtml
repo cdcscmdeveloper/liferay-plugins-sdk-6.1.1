@@ -10,7 +10,7 @@
 			<td><p:outputLabel value="#{lbl['lbl.sm.branch.branchName']}" />
 				<p:outputLabel value="*" styleClass="mandatory" /></td>
 			<td><p:inputText label=" #{lbl['lbl.sm.branch.branchName']}" id="supBranchName"
-					maxlength="100" required="true"
+					maxlength="100" required="#{backingBean.managedBean.valueReqd}"
 					value="#{backingBean.managedBean.selectedBranch.branchName}"
 					size="35" >
 						<p:ajax process="@this" partialSubmit="true"/>
