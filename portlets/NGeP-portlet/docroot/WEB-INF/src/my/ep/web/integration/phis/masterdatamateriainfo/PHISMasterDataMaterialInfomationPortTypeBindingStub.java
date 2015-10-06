@@ -198,6 +198,13 @@ public class PHISMasterDataMaterialInfomationPortTypeBindingStub extends org.apa
             cachedSerFactories.add(org.apache.axis.encoding.ser.BaseSerializerFactory.createFactory(org.apache.axis.encoding.ser.SimpleSerializerFactory.class, cls, qName));
             cachedDeserFactories.add(org.apache.axis.encoding.ser.BaseDeserializerFactory.createFactory(org.apache.axis.encoding.ser.SimpleDeserializerFactory.class, cls, qName));
 
+            qName = new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataMaterialInfomation", ">Conversion");
+            cachedSerQNames.add(qName);
+            cls = int.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(org.apache.axis.encoding.ser.BaseSerializerFactory.createFactory(org.apache.axis.encoding.ser.SimpleSerializerFactory.class, cls, qName));
+            cachedDeserFactories.add(org.apache.axis.encoding.ser.BaseDeserializerFactory.createFactory(org.apache.axis.encoding.ser.SimpleDeserializerFactory.class, cls, qName));
+
             qName = new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataMaterialInfomation", ">Family");
             cachedSerQNames.add(qName);
             cls = java.lang.String.class;
@@ -257,6 +264,20 @@ public class PHISMasterDataMaterialInfomationPortTypeBindingStub extends org.apa
             qName = new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataMaterialInfomation", "MaterialInformationRq_Type");
             cachedSerQNames.add(qName);
             cls = my.ep.web.integration.phis.masterdatamateriainfo.MaterialInformationRq_Type.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataMaterialInfomation", "UomDetails_Type");
+            cachedSerQNames.add(qName);
+            cls = my.ep.web.integration.phis.masterdatamateriainfo.UomDetails_Type.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataMaterialInfomation", "UomDetailsArray_Type");
+            cachedSerQNames.add(qName);
+            cls = my.ep.web.integration.phis.masterdatamateriainfo.UomDetailsArray_Type.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
