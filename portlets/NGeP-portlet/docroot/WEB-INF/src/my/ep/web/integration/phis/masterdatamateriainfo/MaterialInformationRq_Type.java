@@ -30,7 +30,7 @@ public class MaterialInformationRq_Type  implements java.io.Serializable {
 
     private java.lang.String family;
 
-    private java.lang.String altUnitOfMeasurement;
+    private my.ep.web.integration.phis.masterdatamateriainfo.UomDetailsArray_Type uomDetailsArray;
 
     public MaterialInformationRq_Type() {
     }
@@ -47,7 +47,7 @@ public class MaterialInformationRq_Type  implements java.io.Serializable {
            java.lang.String baseUnitOfMeasure,
            java.lang.String segment,
            java.lang.String family,
-           java.lang.String altUnitOfMeasurement) {
+           my.ep.web.integration.phis.masterdatamateriainfo.UomDetailsArray_Type uomDetailsArray) {
            this.productCode = productCode;
            this.codeType = codeType;
            this.kodTindakan = kodTindakan;
@@ -59,7 +59,7 @@ public class MaterialInformationRq_Type  implements java.io.Serializable {
            this.baseUnitOfMeasure = baseUnitOfMeasure;
            this.segment = segment;
            this.family = family;
-           this.altUnitOfMeasurement = altUnitOfMeasurement;
+           this.uomDetailsArray = uomDetailsArray;
     }
 
 
@@ -284,22 +284,22 @@ public class MaterialInformationRq_Type  implements java.io.Serializable {
 
 
     /**
-     * Gets the altUnitOfMeasurement value for this MaterialInformationRq_Type.
+     * Gets the uomDetailsArray value for this MaterialInformationRq_Type.
      * 
-     * @return altUnitOfMeasurement
+     * @return uomDetailsArray
      */
-    public java.lang.String getAltUnitOfMeasurement() {
-        return altUnitOfMeasurement;
+    public my.ep.web.integration.phis.masterdatamateriainfo.UomDetailsArray_Type getUomDetailsArray() {
+        return uomDetailsArray;
     }
 
 
     /**
-     * Sets the altUnitOfMeasurement value for this MaterialInformationRq_Type.
+     * Sets the uomDetailsArray value for this MaterialInformationRq_Type.
      * 
-     * @param altUnitOfMeasurement
+     * @param uomDetailsArray
      */
-    public void setAltUnitOfMeasurement(java.lang.String altUnitOfMeasurement) {
-        this.altUnitOfMeasurement = altUnitOfMeasurement;
+    public void setUomDetailsArray(my.ep.web.integration.phis.masterdatamateriainfo.UomDetailsArray_Type uomDetailsArray) {
+        this.uomDetailsArray = uomDetailsArray;
     }
 
     private java.lang.Object __equalsCalc = null;
@@ -347,9 +347,9 @@ public class MaterialInformationRq_Type  implements java.io.Serializable {
             ((this.family==null && other.getFamily()==null) || 
              (this.family!=null &&
               this.family.equals(other.getFamily()))) &&
-            ((this.altUnitOfMeasurement==null && other.getAltUnitOfMeasurement()==null) || 
-             (this.altUnitOfMeasurement!=null &&
-              this.altUnitOfMeasurement.equals(other.getAltUnitOfMeasurement())));
+            ((this.uomDetailsArray==null && other.getUomDetailsArray()==null) || 
+             (this.uomDetailsArray!=null &&
+              this.uomDetailsArray.equals(other.getUomDetailsArray())));
         __equalsCalc = null;
         return _equals;
     }
@@ -394,8 +394,8 @@ public class MaterialInformationRq_Type  implements java.io.Serializable {
         if (getFamily() != null) {
             _hashCode += getFamily().hashCode();
         }
-        if (getAltUnitOfMeasurement() != null) {
-            _hashCode += getAltUnitOfMeasurement().hashCode();
+        if (getUomDetailsArray() != null) {
+            _hashCode += getUomDetailsArray().hashCode();
         }
         __hashCodeCalc = false;
         return _hashCode;
@@ -476,9 +476,9 @@ public class MaterialInformationRq_Type  implements java.io.Serializable {
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("altUnitOfMeasurement");
-        elemField.setXmlName(new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataMaterialInfomation", "AltUnitOfMeasurement"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataMaterialInfomation", ">AltUnitOfMeasurement"));
+        elemField.setFieldName("uomDetailsArray");
+        elemField.setXmlName(new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataMaterialInfomation", "UomDetailsArray"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataMaterialInfomation", "UomDetailsArray_Type"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
     }

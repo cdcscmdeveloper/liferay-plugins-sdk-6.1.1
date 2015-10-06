@@ -52,6 +52,8 @@ import my.ep.web.integration.phis.PhisProgramActivity;
 import my.ep.web.integration.phis.PhisProject;
 import my.ep.web.integration.phis.PhisVotFund;
 import my.ep.web.integration.phis.masterdatamateriainfo.PHISMasterDataMaterialInfomationPortTypeProxy;
+import my.ep.web.integration.phis.masterdatamateriainfo.UomDetailsArray_Type;
+import my.ep.web.integration.phis.masterdatamateriainfo.UomDetails_Type;
 import my.ep.web.integration.phis.ptj.deliveryaddress.DeliveryAddressRq_Type;
 import my.ep.web.integration.phis.ptj.deliveryaddress.DeliveryAddress_Type;
 import my.ep.web.integration.phis.ptj.deliveryaddress.EPMFRq_Type;
@@ -759,6 +761,9 @@ public class PhisIntegration extends InitializeSO {
 		
 			rqHeader_Type.setUID(rqUID_Type);
 		
+			UomDetailsArray_Type detailsArray_Type = null;
+			UomDetails_Type uomDetails_Type[] = null;
+			UomDetails_Type uomDetailsType = null;
 		for(MasterDataMaterialInfo materialInfo:materilInfoList){
 		
 			my.ep.web.integration.phis.masterdatamateriainfo.MaterialInformationRq_Type materialInformationRq_Type = new my.ep.web.integration.phis.masterdatamateriainfo.MaterialInformationRq_Type();
@@ -775,7 +780,15 @@ public class PhisIntegration extends InitializeSO {
 			materialInformationRq_Type.setBaseUnitOfMeasure(materialInfo.getBaseUnitOfMeasure());
 			materialInformationRq_Type.setSegment(materialInfo.getSegment());       //size 2
 			materialInformationRq_Type.setFamily(materialInfo.getFamily());        //size 4    
-			materialInformationRq_Type.setAltUnitOfMeasurement(materialInfo.getAltUnitOfMeasurement());
+			
+			
+			detailsArray_Type = new UomDetailsArray_Type();
+			uomDetails_Type = new UomDetails_Type[1];
+			uomDetailsType = new UomDetails_Type();
+			uomDetailsType.setAltUnitOfMeasurement(materialInfo.getAltUnitOfMeasurement());
+			uomDetails_Type[0] = uomDetailsType;
+			detailsArray_Type.setUomDetails(uomDetails_Type);
+			materialInformationRq_Type.setUomDetailsArray(detailsArray_Type);
 		
 			epmfRq_Type.setMaterialInformationRq(materialInformationRq_Type);
 			epmfRq_Type.setRqHeader(rqHeader_Type);
@@ -786,6 +799,7 @@ public class PhisIntegration extends InitializeSO {
 			
 				log.info("getStatusCode :"+epmfRs_Type.getRsHeader().getStatus().getStatusCode());
 				log.info("getStatusDesc :"+epmfRs_Type.getRsHeader().getStatus().getStatusDesc());
+				break;
 		}
 		}catch(Exception e){
 			e.printStackTrace();
