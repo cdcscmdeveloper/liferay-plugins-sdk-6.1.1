@@ -655,6 +655,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    		checkAgencyStatus(ctAgency);		        	   
 	    	}
 	    }
+	    getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
+				getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId());
 		// Retrieve Items
 	    if (getManagedBean().getContractVer().getCtContractItems().size() > 0) {	        	   
 	    	getManagedBean().setCtItemList(new ArrayList<CtContractItem>());
