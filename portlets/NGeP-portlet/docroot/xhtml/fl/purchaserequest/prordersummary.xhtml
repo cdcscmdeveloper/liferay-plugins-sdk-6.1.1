@@ -95,12 +95,12 @@
 						<h:outputText value="#{newItems.scRequestItem.uom.uomName}" styleClass="colFloatLeft"/>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="text-align:center;white-space:normal">
-						<h:outputText value="#{newItems.unitPrice}" styleClass="colFloatRight" >
+						<h:outputText value="#{newItems.unitPrice}" style="text-align:right" >
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.gst.amt']}" style="text-align:center;white-space:normal">
-						<h:outputText value="#{newItems.gstAmount}" styleClass="colFloatRight" >
+						<h:outputText value="#{newItems.gstAmount}" style="text-float:right" >
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
