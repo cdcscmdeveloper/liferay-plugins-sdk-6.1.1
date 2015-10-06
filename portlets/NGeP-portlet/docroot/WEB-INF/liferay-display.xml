@@ -136,7 +136,7 @@
 		    <portlet id="scCreateQuotationTender" />
 		    <portlet id="scManualSourcingSupplierResponse"/>
 		    <portlet id="scBriefingSiteVisitRegistration"/>
-			
+			<portlet id="scQuoteSearch"></portlet>
 		    
 		</category>
 
