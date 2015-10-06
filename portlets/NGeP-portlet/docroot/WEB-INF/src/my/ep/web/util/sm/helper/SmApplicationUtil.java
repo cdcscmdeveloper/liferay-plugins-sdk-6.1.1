@@ -1052,6 +1052,10 @@ public class SmApplicationUtil {
 				sb.append(++noSignatoryCount + ".) ");
 				sb.append(bank.getAccountNo());
 			}
+			if(bank.getSmSupplierBranch()==null){
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+				throw new EpException(MessageConst.ERROR_722615);
+			}
 		}
 		if (payAccCnt == 0) {
 			validSave = false;
