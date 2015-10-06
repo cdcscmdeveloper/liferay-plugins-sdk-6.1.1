@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:commandButton value="#{lbl['lbl.btn.back']}"
-		action="#{usergroupBackingBean.backToMainPages}" style="float:left;" />
+		action="#{usergroupBackingBean.backToMainPages}" process="@this" style="float:left;" />
 	<p:commandButton update="@form"
 		value="#{usergroupBackingBean.managedBean.userGroup.brandNew? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}"
 		action="#{usergroupBackingBean.saveUserGroup}" style="float:right;" />
