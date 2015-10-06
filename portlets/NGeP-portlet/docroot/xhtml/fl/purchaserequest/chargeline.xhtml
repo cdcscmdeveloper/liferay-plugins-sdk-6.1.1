@@ -64,14 +64,14 @@
 				<f:facet name="footer">
 					<h:outputText value=""></h:outputText>			
 				</f:facet>
-				<h:outputText rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.scRequestItem.cmItem==null}" value="#{chargeLineNode.scRequestItem.tempUnspscCode}" />
-				<h:outputText rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.scRequestItem.cmItem!=null}" value="#{chargeLineNode.scRequestItem.cmItem.extensionCode}" />			
+				<h:outputText rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.scRequestItem.cmItem==null}" value="#{chargeLineNode.scRequestItem.tempUnspscCode}" style="float:right;"/>
+				<h:outputText rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.scRequestItem.cmItem!=null}" value="#{chargeLineNode.scRequestItem.cmItem.extensionCode}" style="float:right;"/>			
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center">
 				<f:facet name="footer">
 					<h:outputText value=""></h:outputText>			
 				</f:facet>
-				<h:outputText value="#{chargeLineNode.scRequestItem.itemName}" id="itemDesc" styleClass="colFloatLeft"
+				<h:outputText value="#{chargeLineNode.scRequestItem.itemName}" id="itemDesc" style="float:left;"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 				<p:tooltip for="itemDesc" value="#{chargeLineNode.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : chargeLineNode.scRequestItem.itemDesc}"  />	
 			</p:column>
@@ -79,14 +79,14 @@
 			 	<f:facet name="footer">
 					<h:outputText value=""></h:outputText>			
 				</f:facet>
-				<h:outputText value="#{chargeLineNode.scRequestItem.uom.uomName}" styleClass="colFloatLeft"
+				<h:outputText value="#{chargeLineNode.scRequestItem.uom.uomName}" style="float:left;"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="text-align:center;white-space:normal">
 				<f:facet name="footer">
 					<h:outputText value=""></h:outputText>			
 				</f:facet>
-				<h:outputText value="#{chargeLineNode.unitPrice}" styleClass="colFloatRight"
+				<h:outputText value="#{chargeLineNode.unitPrice}" style="float:right;"
 					rendered="#{chargeLineNode.parent == 'false'}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -96,7 +96,7 @@
 				<f:facet name="footer">
 					<h:outputText value=""></h:outputText>			
 				</f:facet>
-				<h:outputText value="#{chargeLineNode.gstAmount}" styleClass="colFloatRight"
+				<h:outputText value="#{chargeLineNode.gstAmount}" style="float:right;"
 					rendered="#{chargeLineNode.parent == 'false'}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -106,7 +106,7 @@
 				<f:facet name="footer">
 					<h:outputText value=""></h:outputText>			
 				</f:facet>
-				<h:outputText value="#{chargeLineNode.gstUnitPrice}" styleClass="colFloatRight"
+				<h:outputText value="#{chargeLineNode.gstUnitPrice}" style="float:right;"
 					rendered="#{chargeLineNode.parent == 'false'}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -116,7 +116,7 @@
 				<f:facet name="footer">
 					<h:outputText value="#{lbl['lbl.fl.charge.line.grandtotal']}"></h:outputText>			
 				</f:facet>
-				<h:outputText value="#{chargeLineNode.chargeOrderedQty}" styleClass="colFloatRight"
+				<h:outputText value="#{chargeLineNode.chargeOrderedQty}" style="float:right;"
 					rendered="#{chargeLineNode.parent == 'false'}" >
 					<f:converter converterId="dynamicNumberConverter" />
 					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.scRequestItem.uom.uomCode)}" />
@@ -129,12 +129,12 @@
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>		
 				</f:facet>
-				<h:outputText value="#{chargeLineNode.chargeOrderedAmt}" styleClass="colFloatRight"
+				<h:outputText value="#{chargeLineNode.chargeOrderedAmt}" style="float:right;"
 					rendered="#{chargeLineNode.parent == 'true'}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
-				<h:outputText value="#{chargeLineNode.chargeOrderedAmt}" styleClass="colFloatRight"
+				<h:outputText value="#{chargeLineNode.chargeOrderedAmt}" style="float:right;"
 					rendered="#{chargeLineNode.parent == 'false'}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
