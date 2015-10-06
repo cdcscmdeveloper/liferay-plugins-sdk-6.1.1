@@ -10,9 +10,8 @@
 	</p:blockUI>
 
 	<p:dialog id="quoteSubmitConform" widgetVar="sqConformDlg"
-		header="#{lbl['lbl.sc.submit.confirmation']}"
-		resizable="false" width="500" height="100" closable="false"
-		modal="true">
+		header="#{lbl['lbl.sc.submit.confirmation']}" resizable="false"
+		width="500" height="100" closable="false" modal="true">
 
 		<table>
 			<tr>
@@ -29,7 +28,7 @@
 					onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();sqConformDlg.hide();"
 					actionListener="#{simpleQuoteBackingBean.submitSimpleQuote(simpleQuoteBackingBean.managedBean.selectedAction)}" />
-					
+
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					rendered="#{simpleQuoteBackingBean.managedBean.conformDlgBtnFlag}"
 					partialSubmit="true" process="@this" onclick="sqConformDlg.hide();"
@@ -43,90 +42,86 @@
 			</div>
 		</h:panelGroup>
 	</p:dialog>
+     <p:spacer height="2px" />
+	<div class="ppLeftBtn">
+		<p:commandButton immediate="true" id="backButton"
+			value="#{lbl['lbl.btn.item.search']}" partialSubmit="true"
+			process="@this" style="float:left;"
+			rendered="#{isPendingSubmissionStatus}"
+			action="#{simpleQuoteBackingBean.backToPrevious}"
+			title="#{lbl['lbl.sc.itemsearch.tooltip']}">
+		</p:commandButton>
+
+		<p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}"
+			partialSubmit="true" process="@this" style="float:left;"
+			rendered="#{!isPendingSubmissionStatus)}"
+			action="#{simpleQuoteBackingBean.backToPrevious}" />
+	</div>
 
 	<c:if test="#{simpleQuoteBackingBean.managedBean.taskId eq null}">
-		<table width="100%">
-			<tr>
-				<td align="right"><p:commandButton immediate="true"
-						id="backButton" value="#{lbl['lbl.btn.item.search']}"
-						partialSubmit="true" process="@this" style="float:left;"
-						rendered="#{isPendingSubmissionStatus}"
-						action="#{simpleQuoteBackingBean.backToPrevious}"
-						title="#{lbl['lbl.sc.itemsearch.tooltip']}">
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.save']}"
+				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+				action="#{simpleQuoteBackingBean.saveSimpleQuote('')}"
+				process="@all" update="@form"
+				rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}" />
+			<p:commandButton value="#{lbl['lbl.btn.submit']}"
+				actionListener="#{simpleQuoteBackingBean.submitPromptAction}"
+				update="@form" process="@all"
+				rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">
 
-					</p:commandButton> <p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}"
-						partialSubmit="true" process="@this" style="float:left;"
-						rendered="#{!isPendingSubmissionStatus}"
-						action="#{simpleQuoteBackingBean.backToPrevious}" /> <p:commandButton
-						value="#{lbl['lbl.btn.save']}" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();"
-						action="#{simpleQuoteBackingBean.saveSimpleQuote('')}"
-						process="@all" update="@form"
-						rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}" /> <p:commandButton
-						value="#{lbl['lbl.btn.submit']}"
-						actionListener="#{simpleQuoteBackingBean.submitPromptAction}"
-						update="@form" process="@all"
-						rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">
-
-						<ui:param name="action" value=""></ui:param>
-						<f:setPropertyActionListener
-							target="#{simpleQuoteBackingBean.managedBean.selectedAction}"
-							value="#{action}" />
-					</p:commandButton> <p:commandButton value="#{lbl['lbl.btn.cancel']}"
-						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						action="#{simpleQuoteBackingBean.cancel}" style="float:right;"
-						process="@this" partialSubmit="true"
-						rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}" /></td>
-			</tr>
-		</table>
+				<ui:param name="action" value=""></ui:param>
+				<f:setPropertyActionListener
+					target="#{simpleQuoteBackingBean.managedBean.selectedAction}"
+					value="#{action}" />
+			</p:commandButton>
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+				action="#{simpleQuoteBackingBean.cancel}" style="float:right;"
+				process="@this" partialSubmit="true"
+				rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}" />
+		</div>
 	</c:if>
 
 	<c:if test="#{simpleQuoteBackingBean.managedBean.taskId ne null}">
-		<table style="width: 100%">
-			<tr>
-				<td align="right"><c:if test="#{isPendingSubmissionStatus}">
-						<p:commandButton immediate="true"
-							value="#{lbl['lbl.btn.item.search']}" partialSubmit="true"
-							process="@this" style="float:left;"
-							action="#{simpleQuoteBackingBean.backToPrevious}" />
-					</c:if> <!-- to view simple Quote from the request note header  Icon    -->
-					<c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">
-						<c:if
-							test="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus.statusId eq DPStatusConstants.rnPendingApproval 
+		<div class="ppRightBtn">
+			<!-- to view simple Quote from the request note header  Icon    -->
+			<c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">
+				<c:if
+					test="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus.statusId eq DPStatusConstants.rnPendingApproval 
 									  or isPendingSubmissionStatus}">
-							<p:commandButton value="#{lbl['lbl.btn.save']}"
-								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-								action="#{simpleQuoteBackingBean.saveSimpleQuote('Save')}"
-								update="@form" process="@all" />
-						</c:if>
+					<p:commandButton value="#{lbl['lbl.btn.save']}"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+						action="#{simpleQuoteBackingBean.saveSimpleQuote('Save')}"
+						update="@form" process="@all" />
+				</c:if>
 
-						<ui:repeat var="bpmAction"
-							value="#{simpleQuoteBackingBean.managedBean.outComes}">
-							<ui:param name="buttonLabel"
-								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+				<ui:repeat var="bpmAction"
+					value="#{simpleQuoteBackingBean.managedBean.outComes}">
+					<ui:param name="buttonLabel"
+						value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 
-							<h:panelGroup rendered="#{bpmAction eq 'SUBMIT'}">
-								<p:commandButton value="#{lbl[buttonLabel]}"
-									rendered="#{isPendingSubmissionStatus}" styleClass="ui-button"
-									partialSubmit="true" process="@form"
-									actionListener="#{simpleQuoteBackingBean.submitPromptAction}"
-									update="@form">
-									<f:setPropertyActionListener
-										target="#{simpleQuoteBackingBean.managedBean.selectedAction}"
-										value="#{bpmAction}" />
-								</p:commandButton>
-							</h:panelGroup>
-							<h:panelGroup rendered="#{bpmAction eq 'CANCEL'}">
-								<p:commandButton value="#{lbl[buttonLabel]}" process="@all"
-									update="@form" rendered="#{isPendingSubmissionStatus}"
-									styleClass="ui-button" onstart="blockWidget.show();"
-									oncomplete="blockWidget.hide();"
-									actionListener="#{simpleQuoteBackingBean.submitSimpleQuote(bpmAction)}" />
-							</h:panelGroup>
-						</ui:repeat>
+					<h:panelGroup rendered="#{bpmAction eq 'SUBMIT'}">
+						<p:commandButton value="#{lbl[buttonLabel]}"
+							rendered="#{isPendingSubmissionStatus}" styleClass="ui-button"
+							partialSubmit="true" process="@form"
+							actionListener="#{simpleQuoteBackingBean.submitPromptAction}"
+							update="@form">
+							<f:setPropertyActionListener
+								target="#{simpleQuoteBackingBean.managedBean.selectedAction}"
+								value="#{bpmAction}" />
+						</p:commandButton>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{bpmAction eq 'CANCEL'}">
+						<p:commandButton value="#{lbl[buttonLabel]}" process="@all"
+							update="@form" rendered="#{isPendingSubmissionStatus}"
+							styleClass="ui-button" onstart="blockWidget.show();"
+							oncomplete="blockWidget.hide();"
+							actionListener="#{simpleQuoteBackingBean.submitSimpleQuote(bpmAction)}" />
+					</h:panelGroup>
+				</ui:repeat>
 
-					</c:if></td>
-			</tr>
-		</table>
+			</c:if>
+		</div>
 	</c:if>
 </ui:composition>
