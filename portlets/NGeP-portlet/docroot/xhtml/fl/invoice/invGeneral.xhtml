@@ -130,10 +130,10 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
 				<td><p:inputText size="45" disabled="true"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.branchName}" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.branch']}"/></td>
-				<td style="width: 72px;"><p:outputLabel
+				<td style="width: 99px;"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.invoice.no']}" /><p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-				<td><p:inputText size="35" maxlength="30" disabled="#{invoiceBackingBean.managedBean.buttonVal=='Cancel' || invoiceBackingBean.managedBean.buttonVal=='ACK' || invoiceBackingBean.managedBean.buttonVal=='View'}" 
+				<td><p:inputText size="30" maxlength="30" disabled="#{invoiceBackingBean.managedBean.buttonVal=='Cancel' || invoiceBackingBean.managedBean.buttonVal=='ACK' || invoiceBackingBean.managedBean.buttonVal=='View'}" 
 						value="#{invoiceBackingBean.managedBean.invoice.supplierInvoiceRef}" id="supplierInvoiceRef" required="true" label="#{lbl['lbl.fl.supp.inv.no']}"/><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.inv.no']}"/><p:message for="supplierInvoiceRef" display="icon" /></td>		
 			</tr>
 			<tr>
