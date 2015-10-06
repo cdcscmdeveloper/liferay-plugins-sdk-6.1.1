@@ -20,23 +20,23 @@
 			<ac:paginator for="contactPersonDt" />
 			<p:column selectionMode="multiple" style="width:3%" 
 				rendered="#{!panelBackingBean.managedBean.viewContract}"/>
-			<p:column headerText="#{lbl['lbl.ct.contact.person.name']}" style="width:20%;">
+			<p:column headerText="#{lbl['lbl.ct.contact.person.name']}" style="width:20%;" styleClass="column-align-center" >
 				<p:inputText value="#{data.name}" style="width:95%;" maxlength="20" 
 					disabled="#{panelBackingBean.managedBean.viewContract}"
 					onkeypress="if (event.keyCode == 13) { return false; }"/>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.address']}" style="width:40%;">
+			<p:column headerText="#{lbl['lbl.ct.address']}" style="width:40%;" styleClass="column-align-center" >
 				<p:inputText value="#{data.address}" style="width:95%;" maxlength="200" 
 					disabled="#{panelBackingBean.managedBean.viewContract}"
 					onkeypress="if (event.keyCode == 13) { return false; }" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.email']}"  style="width:20%;">
+			<p:column headerText="#{lbl['lbl.ct.email']}"  style="width:20%;" styleClass="column-align-center" >
 				<p:inputText id="email" value="#{data.email}" style="width:95%;" maxlength="100"
 				 validator="#{webappBean.checkEmail}" label="#{lbl['lbl.ct.email']}" 
 				 disabled="#{panelBackingBean.managedBean.viewContract}"
 				 onkeypress="if (event.keyCode == 13) { return false; }" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.tel']}" style="width:20%;">
+			<p:column headerText="#{lbl['lbl.ct.tel']}" style="width:20%;" styleClass="column-align-center" >
 				<p:inputText id="phoneNo" value="#{data.phoneNo}" style="width:95%;" maxlength="100"
 				  validator="#{webappBean.checkPhoneNumber}" label="#{lbl['lbl.ct.tel']}" 
 				  disabled="#{panelBackingBean.managedBean.viewContract}"
@@ -74,11 +74,11 @@
 			<ac:paginator for="cancelCircularDt" />		
 			<p:column selectionMode="multiple" style="width:3%" 
 				rendered="#{!panelBackingBean.managedBean.viewContract}"/>
-			<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}">
-				<h:outputText value="#{data.circularVer.circularNo}" />
+			<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" styleClass="column-align-center" >
+				<h:outputText value="#{data.circularVer.circularNo}"  style="float:left;"/>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.circular.name']}" >
-				<h:outputText value="#{data.circularVer.name}" />
+			<p:column headerText="#{lbl['lbl.ct.circular.name']}" styleClass="column-align-center" >
+				<h:outputText value="#{data.circularVer.name}" style="float:left;" />
 			</p:column>	
 		</p:dataTable>
 		<div class="ppRightBtn"> 
@@ -98,11 +98,11 @@
 				selection="#{panelBackingBean.managedBean.selectedCancelledCircularList}" >
 				<ac:paginator for="cancelledCclDt" />
 				<p:column selectionMode="multiple" style="width:3%" />
-				<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}">
-					<h:outputText value="#{data.circularVer.circularNo}" style="width:200px;" />
+				<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" styleClass="column-align-center" >
+					<h:outputText value="#{data.circularVer.circularNo}" style="float:left;width:200px;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.ct.circular.name']}">
-					<h:outputText value="#{data.circularVer.name}" style="width:300px;" />
+				<p:column headerText="#{lbl['lbl.ct.circular.name']}" styleClass="column-align-center" >
+					<h:outputText value="#{data.circularVer.name}" style="float:left;width:300px;" />
 				</p:column>											
 			</p:dataTable>
 			<p:spacer height="5"/>

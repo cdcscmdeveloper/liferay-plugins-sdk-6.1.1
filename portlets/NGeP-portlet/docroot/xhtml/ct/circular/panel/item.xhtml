@@ -22,7 +22,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			       </p:selectBooleanCheckbox>
 		      </p:column>
 			 
-			  <p:column style="white-space:pre-line;width:6%;">
+			  <p:column style="white-space:pre-line;width:6%;" styleClass="column-align-center" >
 			       <f:facet name="header">
 						<h:outputText value="#{lbl['lbl.ct.panel.coverage']}"/>
 	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.panel.coverage']}"/>
@@ -35,7 +35,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			       </p:selectOneMenu>
 	  	      </p:column>
 			 
-			  <p:column headerText="#{lbl['lbl.ct.item.category']}" style="white-space:pre-line;width:6%">
+			  <p:column headerText="#{lbl['lbl.ct.item.category']}" style="white-space:pre-line;width:6%" styleClass="column-align-center" >
 			      <p:selectOneMenu value="#{panelItemsVar.categoryParameterId}" style="width:95%"
 			      		disabled="#{panelBackingBean.managedBean.viewContract}">
 			           <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.itemCategoryType)}"/>
@@ -43,7 +43,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			      </p:selectOneMenu>
 			  </p:column>
 			  
-			  <p:column headerText="#{lbl['lbl.ct.item.group']}" style="width:12%;">
+			  <p:column headerText="#{lbl['lbl.ct.item.group']}" style="width:12%;" styleClass="column-align-center" >
 			       <ac:lov id="itemGroupLovId" lovId="CT_PANEL_ITEM_GROUP" size="6" headerText="#{lbl['lbl.ct.item.group']}" readonly="true" 
 						value="#{panelItemsVar.ctPanelItemGroup.groupName}" conditionField="recordStatus^1" 
 						saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].ctPanelItemGroup"
@@ -51,7 +51,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			       </ac:lov>
 			   </p:column>
 		 	
-              <p:column headerText="#{lbl['lbl.ct.item.name']}" style="width:15%;">
+              <p:column headerText="#{lbl['lbl.ct.item.name']}" style="width:15%;" styleClass="column-align-center" >
                   <p:inputTextarea value="#{panelItemsVar.itemName}" maxlength="100" rows="2" style="width:80%;" autoResize="false"
                   	disabled="#{panelBackingBean.managedBean.viewContract}"/>
                   	<p:spacer width="3" />
@@ -60,9 +60,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 						<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}" />
 					</p:commandLink>
               </p:column>
-			  <p:column>
+			  <p:column styleClass="column-align-center" >
 				  	<f:facet name="header" style="width:8%;">
-						<h:outputText value="#{lbl['lbl.ct.uom']}" style="white-space:pre-line" />
+						<h:outputText value="#{lbl['lbl.ct.uom']}" style="float:left;white-space:pre-line"  />
 	               	</f:facet>
 			       <ac:lov id="uomLovId" lovId="PM_UOM" size="5" headerText="#{lbl['lbl.ct.uom']}" readonly="true" 
 				         value="#{panelItemsVar.pmUom.uomName}" conditionField="recordStatus^1" 
@@ -71,7 +71,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			       </ac:lov>
 			   </p:column>
 			  
-			  <p:column headerText="#{lbl['lbl.ct.min.order.qty']}" style="white-space:pre-line;width:8%;">
+			  <p:column headerText="#{lbl['lbl.ct.min.order.qty']}" style="white-space:pre-line;width:8%;" styleClass="column-align-center" >
 			       <p:inputText value="#{panelItemsVar.minimumOrderQty}" style="width:85%;text-align:right;" label="#{lbl['lbl.ct.min.order.qty']}"
 			       		maxlength="#{panelItemsVar.pmUom.decimalScale == 0 ? 13 : 14}"
 			       		disabled="#{panelBackingBean.managedBean.viewContract}">
@@ -81,7 +81,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			       </p:inputText>
 			  </p:column>
 			 
-			  <p:column headerText="#{lbl['lbl.ct.purchase.limit']}" style="white-space:pre-line;width:7%;">
+			  <p:column headerText="#{lbl['lbl.ct.purchase.limit']}" style="white-space:pre-line;width:7%;" styleClass="column-align-center" >
 			       <p:inputText value="#{panelItemsVar.maxProcureAmt}" style="width:85%;text-align:right;" label="#{lbl['lbl.ct.purchase.limit']}"
 			       		disabled="#{panelBackingBean.managedBean.viewContract}">
 			          <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -184,11 +184,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				<ac:paginator for="itemSpecDt" />
 				<p:column selectionMode="multiple" style="width:3%" 
 					rendered="#{!panelBackingBean.managedBean.viewContract}"/>
-				<p:column headerText="#{lbl['lbl.ct.specification']}" style="width:40%;">
+				<p:column headerText="#{lbl['lbl.ct.specification']}" style="width:40%;" styleClass="column-align-center" >
 					<p:inputTextarea value="#{data.specification}" maxlength="200" rows="3" style="width:98%;" autoResize="false"
 						disabled="#{panelBackingBean.managedBean.viewContract}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.ct.description']}" style="width:40%;">
+				<p:column headerText="#{lbl['lbl.ct.description']}" style="width:40%;" styleClass="column-align-center" >
 					<p:inputTextarea value="#{data.description}" maxlength="200" rows="3" style="width:98%;" autoResize="false"
 						disabled="#{panelBackingBean.managedBean.viewContract}" />
 				</p:column>
@@ -239,17 +239,17 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			    <ac:paginator for="zoneGeneralDataTable" />
 			    <p:ajax event="rowSelect" update="@([id$=itemSupplier])" 
 			        process="@this"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  />	
-					<p:column headerText="#{lbl['lbl.ct.location']}" style="width:60%">
+					<p:column headerText="#{lbl['lbl.ct.location']}" style="width:60%" styleClass="column-align-center" >
 				    	 <h:outputText value="#{panelZoneVar.name}" style="float:left;"/>	
 					</p:column>
-                    <p:column headerText="#{lbl['lbl.ct.status']}" style="width:20%">
+                    <p:column headerText="#{lbl['lbl.ct.status']}" style="width:20%" styleClass="column-align-center" >
                       <p:selectOneMenu  value="#{panelZoneVar.recordStatusFlg}"  
                          disabled="#{!panelBackingBean.managedBean.updateAction or panelBackingBean.managedBean.viewContract}" style="width:100px;">
 				         <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
 			             <f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
 			          </p:selectOneMenu>
                     </p:column>
-					<p:column headerText="#{lbl['lbl.ct.action']}" style="width:20%">
+					<p:column headerText="#{lbl['lbl.ct.action']}" style="width:20%" styleClass="column-align-center" >
 					  <p:commandLink
 						actionListener="#{panelBackingBean.editPanelZoneLocation(panelZoneVar,index)}"
 						process="@this" update="@([id$=zonePopupGeneral])"
@@ -340,23 +340,23 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				      <p:column selectionMode="multiple" style="width:2%" 
 				      		rendered="#{!panelBackingBean.managedBean.viewContract}"/>
 				
-				      <p:column headerText="#{lbl['lbl.ct.supplier.name']}" style="width:25%;white-space:normal;">
-				           <p:commandLink update="@([id$=suppDtlPopUp])"
+				      <p:column headerText="#{lbl['lbl.ct.supplier.name']}" style="width:25%;white-space:normal;" styleClass="column-align-center" >
+				           <p:commandLink update="@([id$=suppDtlPopUp])" style="float:left;"
 									action="#{panelBackingBean.showSupplierDetails(supVar.supplier)}"
 									oncomplete="suppDtlWidgetVar.show();">
 									<h:outputText value="#{supVar.supplier.companyName}" />
 								</p:commandLink>
 			          </p:column>
 				
-				      <p:column headerText="#{lbl['lbl.ct.business.reg.no']}"  style="width:10%;"> 
+				      <p:column headerText="#{lbl['lbl.ct.business.reg.no']}"  style="width:10%;" styleClass="column-align-center" > 
 				          <h:outputText value="#{supVar.supplier.regNo}" style="float:left;"/>
 				      </p:column>
 				     
-				      <p:column headerText="#{lbl['lbl.ct.mof.no']}"  style="width:10%;">
-				          <h:outputText value="#{panelBackingBean.retrieveMofNo(supVar.supplier)}" />
+				      <p:column headerText="#{lbl['lbl.ct.mof.no']}"  style="width:10%;" styleClass="column-align-center" >
+				          <h:outputText value="#{panelBackingBean.retrieveMofNo(supVar.supplier)}" style="float:left;" />
 				      </p:column>
 				      
-				       <p:column headerText="#{lbl['lbl.ct.bank.account.name']}"  style="width:15%;">
+				       <p:column headerText="#{lbl['lbl.ct.bank.account.name']}"  style="width:15%;" styleClass="column-align-center" >
 				               <p:selectOneMenu id="accountId" style="width:250px;margin-bottom: 5px;"
 						           value="#{supVar.bankAccountNo}">
 						          <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
@@ -367,11 +367,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 					         </p:selectOneMenu>
 					     </p:column>
 				        
-				      <p:column headerText="#{lbl['lbl.ct.address']}" style="width:30%;white-space:normal;">
-					     <h:outputText value="#{panelBackingBean.getSupAddress(supVar)}"/>
+				      <p:column headerText="#{lbl['lbl.ct.address']}" style="width:30%;white-space:normal;" styleClass="column-align-center" >
+					     <h:outputText value="#{panelBackingBean.getSupAddress(supVar)}" style="float:left;"/>
 				      </p:column>
 				   
-				      <p:column headerText="#{lbl['lbl.ct.status']}" style="width:8%;">
+				      <p:column headerText="#{lbl['lbl.ct.status']}" style="width:8%;" styleClass="column-align-center" >
 				         <p:selectOneMenu  value="#{supVar.recordStatusFlg}"  
                              disabled="#{!panelBackingBean.managedBean.updateAction or panelBackingBean.managedBean.viewContract}" style="width:70px;">
 				             <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />

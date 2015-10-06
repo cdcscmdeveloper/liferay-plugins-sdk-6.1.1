@@ -39,27 +39,27 @@
 			<p:dataTable id="circularVerDt" value="#{circularBackingBean.managedBean.circularListingPagingDataModel}"
 				var="data" lazy="true" rows="10" rowIndexVar="index" >
 				<ac:paginator for="circularVerDt" />
-				<p:column headerText="#{lbl['lbl.ct.circular.type']}"  style="width:13%;white-space:normal;">
-					<h:outputText value="#{circularBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, data.docType)}" />
+				<p:column headerText="#{lbl['lbl.ct.circular.type']}"  style="width:13%;white-space:normal;" styleClass="column-align-center">
+					<h:outputText value="#{circularBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, data.docType)}" style="float:left;" />
 				</p:column>				
-				<p:column headerText="#{lbl['lbl.ct.circular.no']}"  style="width:12%;white-space:normal;">
-					<h:outputText value="#{data.ctCircular.circularNo}" />
+				<p:column headerText="#{lbl['lbl.ct.circular.no']}"  style="width:12%;white-space:normal;" styleClass="column-align-center">
+					<h:outputText value="#{data.ctCircular.circularNo}" style="float:left;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}"  style="width:12%;white-space:normal;">
-					<h:outputText value="#{data.circularNo}" />
+				<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}"  style="width:12%;white-space:normal;" styleClass="column-align-center">
+					<h:outputText value="#{data.circularNo}" style="float:left;"  />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.ct.circular.name']}"  style="width:50%;white-space:normal;">
+				<p:column headerText="#{lbl['lbl.ct.circular.name']}"  style="width:50%;white-space:normal;" styleClass="column-align-center">
 					<h:commandLink value="#{data.name}"
 						styleClass="blue_font"
 						action="#{circularBackingBean.gotoViewPage(data.circularVerId, data.docType)}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.ct.circular.update.as.of']}"  style="width:10%;white-space:normal;">
-					<h:outputText value="#{data.changedDate}" >
+				<p:column headerText="#{lbl['lbl.ct.circular.update.as.of']}"  style="width:10%;white-space:normal;" styleClass="column-align-center">
+					<h:outputText value="#{data.changedDate}" style="float:left;"  >
 						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.ct.status']}"  style="width:5%;white-space:normal;">
-					<h:outputText value="#{circularBackingBean.getParameterDesc(ParameterTypeConst.recordStatus, data.ctCircular.recordStatusFlg)}" />
+				<p:column headerText="#{lbl['lbl.ct.status']}"  style="width:5%;white-space:normal;" styleClass="column-align-center">
+					<h:outputText value="#{circularBackingBean.getParameterDesc(ParameterTypeConst.recordStatus, data.ctCircular.recordStatusFlg)}" style="float:left;"  />
 				</p:column>								
 			</p:dataTable>		
 		</p:panel>
