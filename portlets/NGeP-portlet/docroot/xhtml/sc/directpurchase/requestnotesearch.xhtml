@@ -11,14 +11,14 @@
 	<ui:define name="contentSection">
 		<p:messages id="rnSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		
-		<p:panel header="#{lbl['lbl.sc.search']}" rendered1="false">
+		<p:panel header="#{lbl['lbl.sc.search']}">
 	     	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 	     	<tr>
 				<td class="TableFieldLeft">
 					<p:outputLabel value="#{lbl['lbl.sc.request.note.req.note.no']}" />
 				</td>
 				<td class="TableFieldRight" colspan="3">
-					<p:inputText value="#{requestNoteBackingBean.managedBean.searchReqNoteNo}" size="30" />
+					<p:inputText value="#{requestNoteBackingBean.managedBean.searchReqNoteNo}" size="25" />
 				</td>
 				<td width="5%" class="TableFieldLeft" rowspan="4">
 					<p:outputLabel value="#{lbl['lbl.sc.status']}" />
@@ -41,7 +41,7 @@
 					<p:outputLabel value="#{lbl['lbl.sc.request.note.header.method']}" />
 				</td>
 				<td class="TableFieldRight" colspan="3">
-					<p:selectOneMenu style="width:180px" value="#{requestNoteBackingBean.managedBean.searchSrcMethod}">
+					<p:selectOneMenu style="width:187px;margin-bottom: 5px;" value="#{requestNoteBackingBean.managedBean.searchSrcMethod}">
 						<f:selectItems value="#{requestNoteBackingBean.getDropdownCodeValues(ParameterTypeConst.sourceMethod)}" />
 					</p:selectOneMenu>
 				</td>
