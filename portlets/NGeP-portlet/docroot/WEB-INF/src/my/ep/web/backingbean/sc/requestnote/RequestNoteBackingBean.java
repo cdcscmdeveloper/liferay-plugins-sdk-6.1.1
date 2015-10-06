@@ -239,6 +239,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			retrieveRequestNoteDetails(requestNote, null, Boolean.FALSE);
 			getCurrentStatus(requestNote.getCurrentStatus().getPmStatus());	
 		}
+		FacesContext fc = FacesContext.getCurrentInstance();
+		getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 		getManagedBean().setViewOnly(Boolean.TRUE);
 		return "commonRequestNote";
 	}
@@ -796,7 +798,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		// title checker
 		getManagedBean().setTitleChecker(Boolean.FALSE);
 		FacesContext fc = FacesContext.getCurrentInstance();
-
 		getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 
 		// page nav. to common request note
