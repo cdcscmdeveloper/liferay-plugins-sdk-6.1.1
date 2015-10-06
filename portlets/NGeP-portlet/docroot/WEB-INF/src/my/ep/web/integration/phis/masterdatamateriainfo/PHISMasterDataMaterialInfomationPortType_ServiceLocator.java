@@ -22,7 +22,7 @@ public class PHISMasterDataMaterialInfomationPortType_ServiceLocator extends org
     }
 
     // Use to get a proxy class for PHISMasterDataMaterialInfomationPortTypePort
-    private java.lang.String PHISMasterDataMaterialInfomationPortTypePort_address = "http://eposb:8011/PHISMasterDataMaterialInformation/v1.1";
+    private java.lang.String PHISMasterDataMaterialInfomationPortTypePort_address = "http://192.168.62.18:8011/PHISMasterDataMaterialInformation/v1.1";
 
     public java.lang.String getPHISMasterDataMaterialInfomationPortTypePortAddress() {
         return PHISMasterDataMaterialInfomationPortTypePort_address;
