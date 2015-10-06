@@ -4517,8 +4517,23 @@ public class DirectLOABackingBean extends
 			supplierEmail = "";
 		}
 		context.put("supplierEmail", supplierEmail);
+		
+		String procurementMode = "";
+		ParameterReqDTO reqDTO = new ParameterReqDTO();
+		reqDTO.setParameterType(ParameterTypeConst.SC_PROCUREMENT_MODE);
+		reqDTO.setLanguageCode(CommonConstants.LANGUAGE_CODE_MALAY);
+		reqDTO.setParameterCode(scQt.getProcurementMode().getParameterCode());
+		 IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+		ParameterResDTO resDTO = parameterSO.retrieveParameterDescListByType(reqDTO);
 
-		context.put("procurementMode", SourcingConstants.DIRECT_NEGO);
+		List<PmParameterDesc> procurementModes = resDTO.getParameterDescList();
+		if(procurementModes != null && procurementModes.size() >0){
+			procurementMode = procurementModes.get(0).getCodeName();
+		}
+		context.put("procurementMode", procurementMode);
+		context.put("s1ors2", procurementMode);
+		
 		context.put("title", scLoiLoa.getTitle().replaceAll("&", "&#38;"));
 
 		context.put("hasLoi", false); // TODO
