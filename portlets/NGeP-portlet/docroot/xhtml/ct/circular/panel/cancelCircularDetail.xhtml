@@ -24,13 +24,15 @@
 			rowKey="#{data}" selection="#{panelBackingBean.managedBean.selectedCancelledCircularList}" >
 			<ac:paginator for="cancelCcrDt" />
 			<p:column selectionMode="multiple" style="width:3%" />
-			<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" style="width:35%; white-space:normal;" >
+			<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" 
+			     styleClass="column-align-center"  style="width:35%; white-space:normal;" >
 				<p:commandLink value="#{data.circularVer.circularNo}"
 					onclick="gotoCancelPage([{name:'action',value:'view'},{name:'circularVerId',value:'#{data.circularVer.circularVerId}'}])">
 				</p:commandLink>	
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.circular.name']}" style="width:60%; white-space:normal;">
-				<h:outputText value="#{data.circularVer.name}" />
+			<p:column headerText="#{lbl['lbl.ct.circular.name']}" 
+			    styleClass="column-align-center"  style="width:60%; white-space:normal;">
+				<h:outputText value="#{data.circularVer.name}" style="float:left" />
 			</p:column>
 		</p:dataTable>
 		<div class="ppRightBtn"> 
@@ -45,11 +47,13 @@
 					value="#{panelBackingBean.managedBean.circularVerList}" >
 					<ac:paginator for="circularVerDt" />
 					<p:column selectionMode="multiple" style="width:3%" />
-					<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}"  style="width:35%; white-space:normal;" >
-						<h:outputText value="#{data.circularNo}" />
+					<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" 
+					    styleClass="column-align-center"  style="width:35%; white-space:normal;" >
+						<h:outputText value="#{data.circularNo}" style="float:left;" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.circular.name']}" style="width:60%; white-space:normal;">
-						<h:outputText value="#{data.name}" />
+					<p:column headerText="#{lbl['lbl.ct.circular.name']}" 
+					   styleClass="column-align-center"  style="width:60%; white-space:normal;">
+						<h:outputText value="#{data.name}" style="float:left;" />
 					</p:column>									
 				</p:dataTable>
 				<f:facet name="footer">

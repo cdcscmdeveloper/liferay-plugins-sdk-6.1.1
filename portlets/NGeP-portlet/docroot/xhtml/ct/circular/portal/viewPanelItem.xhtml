@@ -15,20 +15,20 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
               <p:ajax event="rowSelect"   update=":form:itemId"  process="@this"
                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"   />	
 		  
-			  <p:column headerText="#{lbl['lbl.ct.panel.coverage']}" style="white-space:pre-line;width:6%;">
-			        <h:outputText value="#{panelBackingBean.getParameterDesc(panelItemsVar.panelCoverageId)}" />
+			  <p:column headerText="#{lbl['lbl.ct.panel.coverage']}" style="white-space:pre-line;width:6%;" styleClass="column-align-center" >
+			        <h:outputText value="#{panelBackingBean.getParameterDesc(panelItemsVar.panelCoverageId)}" style="float:left;" />
 			   </p:column>
 			 
-			  <p:column headerText="#{lbl['lbl.ct.item.category']}" style="white-space:pre-line;width:6%">
-			         <h:outputText value="#{panelBackingBean.getParameterDesc(panelItemsVar.itemCategoryId)}"  />
+			  <p:column headerText="#{lbl['lbl.ct.item.category']}" style="white-space:pre-line;width:6%" styleClass="column-align-center" >
+			         <h:outputText value="#{panelBackingBean.getParameterDesc(panelItemsVar.itemCategoryId)}" style="float:left;"  />
 		      </p:column>
 		      
-		      <p:column headerText="#{lbl['lbl.ct.item.group']}" style="white-space:pre-line;width:10%">
-			         <h:outputText value="#{panelItemsVar.ctPanelItemGroup.groupName}" />
+		      <p:column headerText="#{lbl['lbl.ct.item.group']}" style="white-space:pre-line;width:10%" styleClass="column-align-center" >
+			         <h:outputText value="#{panelItemsVar.ctPanelItemGroup.groupName}" style="float:left;" />
 		      </p:column>
 		 	
-              <p:column headerText="#{lbl['lbl.ct.item.name']}" style="width:15%;">
-                  <p:inputTextarea value="#{panelItemsVar.itemName}" maxlength="100" rows="2" style="width:80%;" autoResize="false" disabled="true"/>
+              <p:column headerText="#{lbl['lbl.ct.item.name']}" style="width:15%;" styleClass="column-align-center" >
+                  <p:inputTextarea value="#{panelItemsVar.itemName}" maxlength="100" rows="2" style="float:left;"  autoResize="false" disabled="true"/>
                   <p:spacer width="5" />
    	   			  <p:commandLink id="spec" update=":form:itemSpecDlg" action="#{panelBackingBean.panelItemSpecDlg(panelItemsVar)}" 
              		disabled="#{panelItemsVar.itemCategoryId == null or panelBackingBean.getItemGeneralCode(panelItemsVar.itemCategoryId.parameterId) == ParameterConst.itemCategoryTypeGeneral}">
@@ -36,18 +36,18 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				  </p:commandLink>
               </p:column>
 			
-			  <p:column headerText="#{lbl['lbl.ct.uom']}" style="white-space:pre-line; width:6%;">
-			 		<h:outputText value="#{panelItemsVar.pmUom.uomName}"  />
+			  <p:column headerText="#{lbl['lbl.ct.uom']}" style="white-space:pre-line; width:6%;" styleClass="column-align-center"  >
+			 		<h:outputText value="#{panelItemsVar.pmUom.uomName}" style="float:left;"   />
 		      </p:column>
 			  
-			  <p:column headerText="#{lbl['lbl.ct.min.order.qty']}" style="white-space:pre-line;width:8%;">
-			       <h:outputText value="#{panelItemsVar.minimumOrderQty}">
+			  <p:column headerText="#{lbl['lbl.ct.min.order.qty']}" style="white-space:pre-line;width:8%;" styleClass="column-align-center" >
+			       <h:outputText value="#{panelItemsVar.minimumOrderQty}"  style="float:left;" >
 			           	<f:converter converterId="dynamicNumberConverter" />
 						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, panelItemsVar.pmUom.uomCode)}" />
 			       </h:outputText>
 			  </p:column>
 			 
-			  <p:column headerText="#{lbl['lbl.ct.purchase.limit']}" style="white-space:pre-line;width:7%;">
+			  <p:column headerText="#{lbl['lbl.ct.purchase.limit']}" style="white-space:pre-line;width:7%;" styleClass="column-align-center" >
 			       <h:outputText value="#{panelItemsVar.maxProcureAmt}" style="text-align:right;">
 			          <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			       </h:outputText>
@@ -77,8 +77,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			  	<p:selectBooleanCheckbox value="#{panelItemsVar.qt}" disabled="true"/>
 			  </p:column>
 			  
-			  <p:column headerText="#{lbl['lbl.ct.status']}" style="width:6%;">
-		           <h:outputText  value="#{panelItemsVar.recordStatusFlg == 1 ? 'active' : 'inactive'}"   />
+			  <p:column headerText="#{lbl['lbl.ct.status']}" style="width:6%;" styleClass="column-align-center" >
+		           <h:outputText  value="#{panelItemsVar.recordStatusFlg == 1 ? 'active' : 'inactive'}" style="float:left;"   />
 			  </p:column>												
 		    </p:dataTable>
 		    <p:dialog id="itemSpecDlg" widgetVar="itemSpecDlg" header="#{lbl['lbl.ct.item.specification.list']}" 
@@ -126,13 +126,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			    <ac:paginator for="zoneGeneralDataTable" />
 			    <p:ajax event="rowSelect" update=":form:itemSupplier"   process="@this" 
 			            onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  />	
-					<p:column headerText="#{lbl['lbl.ct.location']}" style="width:60%">
+					<p:column headerText="#{lbl['lbl.ct.location']}" style="width:60%" styleClass="column-align-center" >
 				    	 <h:outputText value="#{panelZoneVar.name}" style="float:left;"/>	
 					</p:column>
-                    <p:column headerText="#{lbl['lbl.ct.status']}" style="width:20%">
-                         <h:outputText  value="#{panelZoneVar.recordStatusFlg == 1 ? 'Active' : 'Inactive'}"  />
+                    <p:column headerText="#{lbl['lbl.ct.status']}" style="width:20%" styleClass="column-align-center" >
+                         <h:outputText  value="#{panelZoneVar.recordStatusFlg == 1 ? 'Active' : 'Inactive'}"  style="float:left;" />
                     </p:column>
-					<p:column headerText="#{lbl['lbl.ct.action']}" style="width:20%">
+					<p:column headerText="#{lbl['lbl.ct.action']}" style="width:20%" styleClass="column-align-center" >
 					  <p:commandLink
 						actionListener="#{panelBackingBean.editPanelZoneLocation(panelZoneVar,index)}"
 						process="@this" update="@([id$=zonePopupGeneral])"
@@ -188,7 +188,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		              selection="#{panelBackingBean.managedBean.selectedPanelSuppliers}" rowKey="#{supVar}" >
 			          <ac:paginator for="itemSupplierDt" />
 				  
-				      <p:column headerText="#{lbl['lbl.ct.supplier.name']}" style="width:27%;white-space:normal;">
+				      <p:column headerText="#{lbl['lbl.ct.supplier.name']}" style="width:27%;white-space:normal;" styleClass="column-align-center" >
 				           <p:commandLink update="@([id$=suppDtlPopUp])" style="float:left;"
 								action="#{panelBackingBean.showSupplierDetails(supVar.supplier)}"
 								oncomplete="suppDtlWidgetVar.show();">
@@ -196,25 +196,25 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 							</p:commandLink>
 			          </p:column>
 				
-				      <p:column headerText="#{lbl['lbl.ct.business.reg.no']}"  style="width:10%;"> 
+				      <p:column headerText="#{lbl['lbl.ct.business.reg.no']}"  style="width:10%;" styleClass="column-align-center" > 
 				          <h:outputText value="#{supVar.supplier.regNo}" style="float:left;"/>
 				      </p:column>
 				     
-				      <p:column headerText="#{lbl['lbl.ct.mof.no']}"  style="width:10%;">
-				          <h:outputText value="#{panelBackingBean.retrieveMofNo(supVar.supplier)}" />
+				      <p:column headerText="#{lbl['lbl.ct.mof.no']}"  style="width:10%;" styleClass="column-align-center" >
+				          <h:outputText value="#{panelBackingBean.retrieveMofNo(supVar.supplier)}" style="float:left;" />
 				      </p:column>
 				   
-				      <p:column headerText="#{lbl['lbl.ct.address']}" style="width:40%;white-space:normal;">
-					     <h:outputText value="#{panelBackingBean.getSupAddress(supVar)}"/>
+				      <p:column headerText="#{lbl['lbl.ct.address']}" style="width:40%;white-space:normal;" styleClass="column-align-center" >
+					     <h:outputText value="#{panelBackingBean.getSupAddress(supVar)}" style="float:left;" />
 				      </p:column>
 				      
-				      <p:column headerText="#{lbl['lbl.ct.bank.account.name']}"  style="width:15%;">
-				           <h:outputText  id="accountId"    value="#{supVar.bankAccountNo}"/>
+				      <p:column headerText="#{lbl['lbl.ct.bank.account.name']}"  style="width:15%;" styleClass="column-align-center" >
+				           <h:outputText  id="accountId"    value="#{supVar.bankAccountNo}" style="float:left;" />
 						          
 					  </p:column>
 				   
-				      <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
-				        <h:outputText  value="#{supVar.recordStatusFlg == 1 ? 'Active' : 'Inactive' }"  />
+				      <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;" styleClass="column-align-center" >
+				        <h:outputText  value="#{supVar.recordStatusFlg == 1 ? 'Active' : 'Inactive' }"  style="float:left;"  />
 				    </p:column>
 		
 			</p:dataTable>

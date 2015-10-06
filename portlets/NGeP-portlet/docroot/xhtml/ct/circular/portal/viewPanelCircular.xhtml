@@ -42,17 +42,17 @@
 		<p:dataTable id="contactPersonDt" var="data" value="#{panelBackingBean.managedBean.circularVer.ctContactPersons}"
 			rowKey="#{data}" rowIndexVar="index">
 			<ac:paginator for="contactPersonDt" />
-			<p:column headerText="#{lbl['lbl.ct.contact.person.name']}" style="width:20%;">
-			     <h:outputText  value="#{data.name}" style="width:95%;" maxlength="20" ></h:outputText>
+			<p:column headerText="#{lbl['lbl.ct.contact.person.name']}" style="width:20%;" styleClass="column-align-center"  >
+			     <h:outputText  value="#{data.name}" style="float:left;"  />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.address']}" style="width:40%;">
-				 <h:outputText  value="#{data.address}"/>
+			<p:column headerText="#{lbl['lbl.ct.address']}" style="width:40%;" styleClass="column-align-center" >
+				 <h:outputText  value="#{data.address}" style="float:left;" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.email']}"  style="width:20%;">
-				<h:outputText   id="email" value="#{data.email}" />
+			<p:column headerText="#{lbl['lbl.ct.email']}"  style="width:20%;" styleClass="column-align-center" >
+				<h:outputText   id="email" value="#{data.email}" style="float:left;"  />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.tel']}" style="width:20%;">
-				<h:outputText  id="phoneNo" value="#{data.phoneNo}" />
+			<p:column headerText="#{lbl['lbl.ct.tel']}" style="width:20%;" styleClass="column-align-center" >
+				<h:outputText  id="phoneNo" value="#{data.phoneNo}" style="float:left;" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
@@ -61,11 +61,11 @@
 		<p:dataTable id="cancelCircularDt" var="data" rowKey="#{data}" rowIndexVar="index" 
 			value="#{panelBackingBean.managedBean.circularVer.ctCancelCircularList}">
 			<ac:paginator for="cancelCircularDt" />		
-			<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}">
-				<h:outputText value="#{data.circularVer.circularNo}" />
+			<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" styleClass="column-align-center" >
+				<h:outputText value="#{data.circularVer.circularNo}" style="float:left;" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.circular.name']}" >
-				<h:outputText value="#{data.circularVer.name}" />
+			<p:column headerText="#{lbl['lbl.ct.circular.name']}" styleClass="column-align-center" >
+				<h:outputText value="#{data.circularVer.name}"  style="float:left;" />
 			</p:column>	
 		</p:dataTable>
 	</p:panel>

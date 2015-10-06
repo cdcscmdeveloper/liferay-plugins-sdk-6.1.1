@@ -23,26 +23,26 @@
 			<ac:paginator for="contactPersonDt" />
 			<p:column selectionMode="multiple" style="width:5%" 
 				rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
-			<p:column headerText="#{lbl['lbl.ct.contact.person.name']}" style="width:20%;">
+			<p:column headerText="#{lbl['lbl.ct.contact.person.name']}" style="width:20%;" styleClass="column-align-center">
 				<p:inputText id="cperson" value="#{contactPersonsVar.name}" maxlength="20"
 					disabled="#{centralContractBackingBean.managedBean.viewContract}"
 				   	style="width:95%;" label="#{lbl['lbl.ct.contact.person.name']}"
 				   	onkeypress="if (event.keyCode == 13) { return false; }">
 				   	 </p:inputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.address']}" style="width:40%;">
+			<p:column headerText="#{lbl['lbl.ct.address']}" style="width:40%;" styleClass="column-align-center">
 				<p:inputText value="#{contactPersonsVar.address}" style="width:95%;" maxlength="200"
 					disabled="#{centralContractBackingBean.managedBean.viewContract}"
 					onkeypress="if (event.keyCode == 13) { return false; }"/>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.email']}" style="width:20%;">
+			<p:column headerText="#{lbl['lbl.ct.email']}" style="width:20%;" styleClass="column-align-center">
 				  <p:inputText id="validateEmail" value="#{contactPersonsVar.email}" maxlength="100"
 				     style="width:95%;" validator="#{webappBean.checkEmail}" label="#{lbl['lbl.ct.email']}"
 				     disabled="#{centralContractBackingBean.managedBean.viewContract}"
 				     onkeypress="if (event.keyCode == 13) { return false; }">
 				     </p:inputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.tel']}" style="width:15%;">
+			<p:column headerText="#{lbl['lbl.ct.tel']}" style="width:15%;" styleClass="column-align-center">
 				<p:inputText id="validPhone" style="width:90%;" label="#{lbl['lbl.ct.tel']}" maxlength="100"
 				   value="#{contactPersonsVar.phoneNo}"  validator="#{webappBean.checkPhoneNumber}"
 				   disabled="#{centralContractBackingBean.managedBean.viewContract}"
@@ -119,13 +119,13 @@
 			value="#{centralContractBackingBean.managedBean.circularVer.ctCancelCircularList}"
 			selection="#{centralContractBackingBean.managedBean.selectedCancelCirculars}" >
 			<ac:paginator for="cancelCircularDt" />
-			<p:column selectionMode="multiple" style="width:3%"
+			<p:column selectionMode="multiple" style="width:3%" 
 				rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
-			<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}">
-				<h:outputText value="#{cancelCircularVar.circularVer.circularNo}" />
+			<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" styleClass="column-align-center">
+				<p:outputLabel value="#{cancelCircularVar.circularVer.circularNo}" style="float:left;"/>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.circular.name']}" >
-				<h:outputText value="#{cancelCircularVar.circularVer.name}" />
+			<p:column headerText="#{lbl['lbl.ct.circular.name']}" styleClass="column-align-center">
+				<p:outputLabel value="#{cancelCircularVar.circularVer.name}" style="float:left;"/>
 			</p:column>
 		</p:dataTable>
 		<div class="ppRightBtn"> 
@@ -145,11 +145,11 @@
 				selection="#{centralContractBackingBean.managedBean.selectedCancelledCircularList}" >
 				<ac:paginator for="cancelledCclDt" />
 				<p:column selectionMode="multiple" style="width:3%" />
-				<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}">
-					<h:outputText value="#{cancelledCircularDlgVar.circularVer.circularNo}" style="width:200px;" />
+				<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" styleClass="column-align-center">
+					<h:outputText value="#{cancelledCircularDlgVar.circularVer.circularNo}" style="float:left;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.ct.circular.name']}">
-					<h:outputText value="#{cancelledCircularDlgVar.circularVer.name}" style="width:300px;" />
+				<p:column headerText="#{lbl['lbl.ct.circular.name']}" styleClass="column-align-center">
+					<h:outputText value="#{cancelledCircularDlgVar.circularVer.name}" style="float:left;" />
 				</p:column>									
 			</p:dataTable>
 			<p:spacer height="5"></p:spacer>
