@@ -245,57 +245,13 @@ public class ProfileManagementBackingBean extends
 		logger.info("....getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()="
 				+ getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()));
 
-		if (OrganizationType.MINISTRY.value().equals(
-				getManagedBean().getSelectedOrgType().getParameterCode())) {
-			if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
-				sb.append("|orgProfileId^"
-						+ this.getManagedBean().getCurrentActiveOrg()
-								.getOrgProfileId());
-			}
-		} else if (OrganizationType.PENGAWAI_PENGAWAL.value().equals(
-				getManagedBean().getSelectedOrgType().getParameterCode())) {
-			if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
-				sb.append("|");
-				sb.append(OrgProfileUtil.getFromToSearchBeanParentString(OrganizationType.PENGAWAI_PENGAWAL.value(),OrganizationType.MINISTRY.value()));
-				sb.append("^");
-				sb.append(this.getManagedBean().getCurrentActiveOrg()
-						.getOrgProfileId());
-			} 
-		}else if (OrganizationType.DEPARTMENT.value().equals(
-				getManagedBean().getSelectedOrgType().getParameterCode())) {
-			if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
-				sb.append("|");
-				sb.append(OrgProfileUtil.getFromToSearchBeanParentString(OrganizationType.DEPARTMENT.value(),OrganizationType.MINISTRY.value()));
-				sb.append("^");
-				sb.append(this.getManagedBean().getCurrentActiveOrg()
-						.getOrgProfileId());
-			} else if (getFacesScopes().hasRoleUser(
-					RoleCode.JABATAN_ADMIN.value())) {
-				sb.append("|orgProfileId^"
-						+ this.getManagedBean().getCurrentActiveOrg()
-								.getOrgProfileId());
-			}
-		} else if (OrganizationType.DIVISION.value().equals(
-				getManagedBean().getSelectedOrgType().getParameterCode())) {
-			if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
-				sb.append("|");				
-				sb.append(OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()));
-				sb.append("^");
-				sb.append(this.getManagedBean().getCurrentActiveOrg()
-						.getOrgProfileId());
-			} else if (getFacesScopes().hasRoleUser(
-					RoleCode.JABATAN_ADMIN.value())) {
-				sb.append("|");				
-				sb.append(OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()));
-				sb.append("^");
-				sb.append(this.getManagedBean().getCurrentActiveOrg()
-						.getOrgProfileId());
-			} else if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())) {
-				sb.append("|orgProfileId^"
-						+ this.getManagedBean().getCurrentActiveOrg()
-								.getOrgProfileId());
-			}
-		}
+		sb.append(OrgProfileUtil.retrieveAuthorizationLovSb(
+				getManagedBean().getSelectedOrgType().getParameterCode(),
+				getManagedBean().getCurrentActiveOrg().getOrgProfileId(),
+				getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()),
+				getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()),
+				getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())
+				));
 
 		return sb.toString();
 	}
@@ -317,62 +273,15 @@ public class ProfileManagementBackingBean extends
 		logger.info("....getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()="
 				+ getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()));
 
-		if (OrganizationType.MINISTRY.value().equals(
+		sb.append(OrgProfileUtil.retrieveAuthorizationLovSb(
 				getManagedBean().getSelectedUserOrg().getPmOrgProfile()
-						.getOrgTypeCode().getParameterCode())) {
-			if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
-				sb.append("|orgProfileId^"
-						+ this.getManagedBean().getCurrentActiveOrg()
-								.getOrgProfileId());
-			}
-		} else if (OrganizationType.PENGAWAI_PENGAWAL.value().equals(
-				getManagedBean().getSelectedUserOrg().getPmOrgProfile()
-				.getOrgTypeCode().getParameterCode())) {
-			if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
-				sb.append("|");
-				sb.append(OrgProfileUtil.getFromToSearchBeanParentString(OrganizationType.PENGAWAI_PENGAWAL.value(),OrganizationType.MINISTRY.value()));
-				sb.append("^");
-				sb.append(this.getManagedBean().getCurrentActiveOrg()
-						.getOrgProfileId());
-			} 
-		}else if (OrganizationType.DEPARTMENT.value().equals(
-				getManagedBean().getSelectedUserOrg().getPmOrgProfile()
-				.getOrgTypeCode().getParameterCode())) {
-			if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
-				sb.append("|");
-				sb.append(OrgProfileUtil.getFromToSearchBeanParentString(OrganizationType.DEPARTMENT.value(),OrganizationType.MINISTRY.value()));
-				sb.append("^");
-				sb.append(this.getManagedBean().getCurrentActiveOrg()
-						.getOrgProfileId());
-			} else if (getFacesScopes().hasRoleUser(
-					RoleCode.JABATAN_ADMIN.value())) {
-				sb.append("|orgProfileId^"
-						+ this.getManagedBean().getCurrentActiveOrg()
-								.getOrgProfileId());
-			}
-		} else if (OrganizationType.DIVISION.value().equals(
-				getManagedBean().getSelectedUserOrg().getPmOrgProfile()
-				.getOrgTypeCode().getParameterCode())) {
-			if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
-				sb.append("|");				
-				sb.append(OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()));
-				sb.append("^");
-				sb.append(this.getManagedBean().getCurrentActiveOrg()
-						.getOrgProfileId());
-			} else if (getFacesScopes().hasRoleUser(
-					RoleCode.JABATAN_ADMIN.value())) {
-				sb.append("|");				
-				sb.append(OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()));
-				sb.append("^");
-				sb.append(this.getManagedBean().getCurrentActiveOrg()
-						.getOrgProfileId());
-			} else if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())) {
-				sb.append("|orgProfileId^"
-						+ this.getManagedBean().getCurrentActiveOrg()
-								.getOrgProfileId());
-			}
-		}
-
+				.getOrgTypeCode().getParameterCode(),
+				getManagedBean().getCurrentActiveOrg().getOrgProfileId(),
+				getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()),
+				getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()),
+				getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())
+		));
+		
 		return sb.toString();
 	}
 
@@ -2919,6 +2828,7 @@ public class ProfileManagementBackingBean extends
 		// searchBean.getDataFilterBeans().add(bean);
 		// }
 		
+		// Authorisation
 		if (upSearchBean.getSelectedOrgProfileId() == null &&
 				getManagedBean().getSelectedOrgType().getParameterId() != null) {			
 			List<PmUserOrg> userOrgList = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId());
@@ -2927,66 +2837,15 @@ public class ProfileManagementBackingBean extends
 				orgProfile = userOrgList.get(0).getPmOrgProfile();
 			}		
 			if(orgProfile != null){
-				if (OrganizationType.MINISTRY.value().equals(
-						getManagedBean().getSelectedOrgType().getParameterCode())) {
-					if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("pmOrgProfile.orgProfileId",
-										SearchOperator.OPERATOR_EQUALS.value(),
-										orgProfile.getOrgProfileId()));
-					}
-     			} else if (OrganizationType.PENGAWAI_PENGAWAL.value().equals(
-						getManagedBean().getSelectedOrgType().getParameterCode())) {
-					if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("pmOrgProfile." + 
-										OrgProfileUtil.getFromToSearchBeanParentString
-										(OrganizationType.PENGAWAI_PENGAWAL.value(),OrganizationType.MINISTRY.value()),
-										SearchOperator.OPERATOR_EQUALS.value(),
-										orgProfile.getOrgProfileId()));
-					} 
-				}else if (OrganizationType.DEPARTMENT.value().equals(
-						getManagedBean().getSelectedOrgType().getParameterCode())) {
-					if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("pmOrgProfile." + 
-										OrgProfileUtil.getFromToSearchBeanParentString
-										(OrganizationType.DEPARTMENT.value(),OrganizationType.MINISTRY.value()),
-										SearchOperator.OPERATOR_EQUALS.value(),
-										orgProfile.getOrgProfileId()));
-					} else if (getFacesScopes().hasRoleUser(
-							RoleCode.JABATAN_ADMIN.value())) {
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("pmOrgProfile.orgProfileId" ,
-										SearchOperator.OPERATOR_EQUALS.value(),
-										orgProfile.getOrgProfileId()));
-					}
-				} else if (OrganizationType.DIVISION.value().equals(
-						getManagedBean().getSelectedOrgType().getParameterCode())) {
-					if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("pmOrgProfile." + 
-										OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
-										SearchOperator.OPERATOR_EQUALS.value(),
-										orgProfile.getOrgProfileId()));
-					} else if (getFacesScopes().hasRoleUser(
-							RoleCode.JABATAN_ADMIN.value())) {
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("pmOrgProfile." + 
-										OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
-										SearchOperator.OPERATOR_EQUALS.value(),
-										orgProfile.getOrgProfileId()));
-					} else if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())) {
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("pmOrgProfile.orgProfileId" ,
-										SearchOperator.OPERATOR_EQUALS.value(),
-										orgProfile.getOrgProfileId()));
-					}
-				}
+				OrgProfileUtil.retrieveOrgProfileAuthorisationSearchBean(
+						getManagedBean().getSelectedOrgType().getParameterCode(),
+						orgProfile.getOrgProfileId(),
+						getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()),
+						getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()),
+						getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value()),
+						searchBean);
 			} 
 		}
-		
-		
 		
 		SearchOrderBean orderBean = null;
 		if(OrganizationType.SUPPLIER.value().equals(getManagedBean().getSelectedOrgType().getParameterCode())){
