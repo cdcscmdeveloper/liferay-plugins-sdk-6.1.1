@@ -421,6 +421,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	 * Search simple quote.
 	 */
 	public void searchSimpleQuote() {
+		 setScQuote(null);
 		scQuoteDataModel.reloadData();
 	}
 
