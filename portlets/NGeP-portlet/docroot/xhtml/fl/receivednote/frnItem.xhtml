@@ -27,7 +27,7 @@
 	     				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.item.code']}"/>
 	    			</f:facet>
     			</p:column>		
-				<p:column rowspan="3" headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;"/>
+				<p:column rowspan="3" headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;"/>
 				<p:column rowspan="3" headerText="#{lbl['lbl.fl.uom']}" />
 				<p:column rowspan="3" headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;"/>
 				<p:column rowspan="3" headerText="#{lbl['lbl.fl.gst.amt']}" style="white-space:normal;"/>
@@ -79,7 +79,7 @@
         	</p:column>
         	<p:column style="white-space:normal;">
 				<h:outputText value="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemName}" id="itemDesc"/>
-				<p:tooltip for="itemDesc" value="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemDesc}" rendered="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemDesc!=null}" />
+				<p:tooltip for="itemDesc" value="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemDesc}"  />
 			</p:column>
 			<p:column >
 				<h:outputText value="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomName}" />
