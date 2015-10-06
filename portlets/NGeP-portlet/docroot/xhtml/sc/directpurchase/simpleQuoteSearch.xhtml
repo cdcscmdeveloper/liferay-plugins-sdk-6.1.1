@@ -6,9 +6,10 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
     <ui:define name="contentSection">
 	<p:panel header="Search" id="sqSearchId">
-		<table style="width: 100%;">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td style="width: 20%;"><p:outputLabel
 						value="#{lbl['lbl.sc.sq.simple.quote.no']}" /></td>
@@ -19,7 +20,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 				<td width="5%" class="TableFieldLeft" rowspan="4"><p:outputLabel
 						value="#{lbl['lbl.sc.status']}" /></td>
 				<td width="25%" class="TableFieldRight" rowspan="4"><p:selectManyMenu
-						id="rnStatus" style="height:125px;width: 200px;"
+						id="rnStatus" style="height:100px;width: 200px;"
 						value="#{simpleQuoteBackingBean.managedBean.searchStatuses}">
 
 						<f:selectItems value="#{simpleQuoteBackingBean.statusDescList}" 
@@ -76,8 +77,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 				partialSubmit="true" process="@this" />
 		</div>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.sc.result']}" toggleable="true"
-		id="citemId">
+	<p:panel header="#{lbl['lbl.sc.result']}" toggleable="true">
 		<p:dataTable id="scQuoteDataModel"
 			value="#{simpleQuoteBackingBean.managedBean.scQuoteDataModel}"
 			var="scQuote"  rows="5"
