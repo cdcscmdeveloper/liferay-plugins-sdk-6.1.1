@@ -1231,7 +1231,8 @@ public class LOADetailBackingBean extends
 						QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId) || QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId)
 						|| QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)){
 					// if pending supplier acknowledgement , always regenerate 
-					
+					scLoaReportAttachment.setDocNo(scLoaReport.getScLoa()
+							.getLoaNo());
 					if (SourcingConstants.DOC_DEF_KEY_CONTRACT_SUMMARY
 							.equals(docDefinitionKey)) {
 						filename.append(".pdf");
@@ -1530,30 +1531,35 @@ public class LOADetailBackingBean extends
 		}
 		context.put("supplierEmail", supplierEmail);
 
-		String procurementMode = null;
-		String s1ors2 ="";
+		String procurementMode = "";
+		String s1ors2 = "";
 		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa()
 				.getDocType())) {
 			 s1ors2 = "tawaran pelawaan";
-			
 			procurementMode = SourcingConstants.PROCUREMENT_MODE_SIMPLE_QUOTE;
+
 		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa()
 				.getDocType())) {
 			s1ors2 = "tender/ sebut";
-			
-			if (scQt != null) {
-				if (ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scQt
-						.getProcurementMode().getParameterCode())) {
-					procurementMode = SourcingConstants.PROCUREMENT_MODE_QUOTATION;
-				} else {
-					procurementMode = SourcingConstants.PROCUREMENT_MODE_TENDER;
+
+			if (scQt != null && scQt.getProcurementMode() != null) {
+				ParameterReqDTO reqDTO = new ParameterReqDTO();
+				reqDTO.setParameterType(ParameterTypeConst.SC_PROCUREMENT_MODE);
+				reqDTO.setLanguageCode(CommonConstants.LANGUAGE_CODE_MALAY);
+				reqDTO.setParameterCode(scQt.getProcurementMode().getParameterCode());
+				IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+				ParameterResDTO resDTO = parameterSO.retrieveParameterDescListByType(reqDTO);
+
+				List<PmParameterDesc> procurementModes = resDTO.getParameterDescList();
+				if(procurementModes != null && procurementModes.size() >0){
+					procurementMode = procurementModes.get(0).getCodeName();
 				}
 			}
 		}
-		
 		context.put("s1ors2", s1ors2); 
-
 		context.put("procurementMode", procurementMode); 
+		
 		context.put("title", scLoiLoa.getTitle().replaceAll("&", "&#38;"));
 		
 		context.put("hasLoi", false); // TODO
@@ -2474,83 +2480,19 @@ public class LOADetailBackingBean extends
 	 */
 	private void parseReports(ScLoa scLoa){
 		List<ScLoaReport> scLoaReports = scLoa.getScLoaReports();
+		List<ScLoaReportAttachment> scAttachments = new ArrayList<ScLoaReportAttachment>();
 
 		for (ScLoaReport scLoaReport : scLoaReports) {
 			ScLoaReportAttachment scLoaReportAttachment = scLoaReport
 					.getScLoaReportAttachment();
-			scLoaReportAttachment = saveReports(scLoaReport);
-
+			scLoaReportAttachment = generateDocumentAttachment(scLoaReport);
 			if (scLoaReportAttachment != null
 					&& StringUtils.isNotBlank(scLoaReportAttachment.getFileName())) {
 				scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
 			}
-		}    
-	}
-
-	/**
-	 * Save reports.
-	 *
-	 * @param scLoaReport the sc loa report
-	 * @return the sc loa report attachment
-	 */
-	private ScLoaReportAttachment saveReports(ScLoaReport scLoaReport) {
-		ScLoaReportAttachment scLoaReportAttachment = scLoaReport
-				.getScLoaReportAttachment();
-		String definitionType = scLoaReport.getDefinationType()
-				.getParameterCode();
-		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
-				.equals(definitionType)) {
-			try {
-				StringBuilder filename = new StringBuilder();
-				//replace white space due to firefox 
-				filename.append(scLoaReport.getTitle().replaceAll("\\s",""));
-				String docDefinitionKey = scLoaReport.getPmDocument()
-						.getDocDefinitionKey();
-				
-				if (scLoaReportAttachment == null) {
-					scLoaReportAttachment = new ScLoaReportAttachment();
-					scLoaReportAttachment.setScLoaReport(scLoaReport);
-					scLoaReportAttachment.setDocNo(scLoaReport.getScLoa()
-							.getLoaNo());
-				}
-				
-				if (SourcingConstants.DOC_DEF_KEY_CONTRACT_SUMMARY
-						.equals(docDefinitionKey)) {
-					filename.append(".pdf");
-				} else if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
-						.equals(docDefinitionKey)) {
-					filename.append(".pdf");
-				} else if (SourcingConstants.DOC_DEF_KEY_INTEGRITY_PACT
-						.equals(docDefinitionKey)) {
-					filename.append(".pdf");
-				} else if (SourcingConstants.DOC_DEF_KEY_FREQUENCY_SCHEDULE
-						.equals(docDefinitionKey)) {
-					filename.append(".pdf");
-				} else if (SourcingConstants.DOC_DEF_KEY_JADUAL_HARGA
-						.equals(docDefinitionKey)) {
-					filename.append(".xlsx");
-				}else if (SourcingConstants.DOC_DEF_KEY_SPECIFICATION
-						.equals(docDefinitionKey)) {
-					filename.append(".xlsx");
-				}else if (SourcingConstants.DOC_DEF_KEY_FORMAT_BOND_EXECUTION
-						.equals(docDefinitionKey)) {
-					filename.append(".pdf");
-				} else if (SourcingConstants.DOC_DEF_KEY_LOI_NEGOTIATIONS_OUTCOME
-						.equals(docDefinitionKey)) {
-					filename.append(".pdf");
-				} else if (SourcingConstants.DOC_DEF_KEY_SCOPE_SERVICES
-						.equals(docDefinitionKey)) {
-					filename.append(".pdf");
-				}
-				scLoaReportAttachment.setFileName(filename.toString());
-				populateAttachmentDetails(scLoaReportAttachment);
-			} catch (Exception e) {
-				//e.printStackTrace();
-			}
+			scAttachments.add(scLoaReportAttachment);
 		}
-		return scLoaReportAttachment;	
 	}
-
 	
 	/**
 	 * Update bpm task action.
