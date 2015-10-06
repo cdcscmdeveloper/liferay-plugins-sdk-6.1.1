@@ -799,7 +799,7 @@ public class PhisIntegration extends InitializeSO {
 			
 				log.info("getStatusCode :"+epmfRs_Type.getRsHeader().getStatus().getStatusCode());
 				log.info("getStatusDesc :"+epmfRs_Type.getRsHeader().getStatus().getStatusDesc());
-				break;
+//				break;
 		}
 		}catch(Exception e){
 			e.printStackTrace();
