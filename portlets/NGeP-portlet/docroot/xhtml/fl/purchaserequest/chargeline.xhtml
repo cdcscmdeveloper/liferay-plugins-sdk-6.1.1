@@ -67,13 +67,13 @@
 				<h:outputText rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.scRequestItem.cmItem==null}" value="#{chargeLineNode.scRequestItem.tempUnspscCode}" />
 				<h:outputText rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.scRequestItem.cmItem!=null}" value="#{chargeLineNode.scRequestItem.cmItem.extensionCode}" />			
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;text-align:center">
+			<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center">
 				<f:facet name="footer">
 					<h:outputText value=""></h:outputText>			
 				</f:facet>
 				<h:outputText value="#{chargeLineNode.scRequestItem.itemName}" id="itemDesc" styleClass="colFloatLeft"
 					rendered="#{chargeLineNode.parent == 'true'}" />
-				<p:tooltip for="itemDesc" value="#{chargeLineNode.scRequestItem.itemDesc}" rendered="#{chargeLineNode.scRequestItem.itemDesc!=null}" />
+				<p:tooltip for="itemDesc" value="#{chargeLineNode.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : chargeLineNode.scRequestItem.itemDesc}"  />	
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.uom']}" style="white-space:normal;text-align:center">
 			 	<f:facet name="footer">

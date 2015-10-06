@@ -87,20 +87,20 @@
 						<h:outputText rendered="#{newItems.scRequestItem.cmItem==null}" value="#{newItems.scRequestItem.tempUnspscCode}" styleClass="colFloatRight"/>
 						<h:outputText rendered="#{newItems.scRequestItem.cmItem!=null}" value="#{newItems.scRequestItem.cmItem.extensionCode}" styleClass="colFloatRight"/>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;text-align:center">
+					<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center">
 						<h:outputText value="#{newItems.scRequestItem.itemName}" id="itemDesc" styleClass="colFloatLeft"/>
-						<p:tooltip for="itemDesc" value="#{newItems.scRequestItem.itemDesc}" rendered="#{newItems.scRequestItem.itemDesc!=null}" />
+						<p:tooltip for="itemDesc" value="#{newItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : newItems.scRequestItem.itemDesc}"  />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.uom']}" style="text-align:center">
 						<h:outputText value="#{newItems.scRequestItem.uom.uomName}" styleClass="colFloatLeft"/>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="text-align:center;white-space:normal">
-						<h:outputText value="#{newItems.unitPrice}" style="text-align:right" >
+						<h:outputText value="#{newItems.unitPrice}" styleClass="colFloatRight" >
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.gst.amt']}" style="text-align:center;white-space:normal">
-						<h:outputText value="#{newItems.gstAmount}" style="text-float:right" >
+						<h:outputText value="#{newItems.gstAmount}" styleClass="colFloatRight" >
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
