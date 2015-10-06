@@ -8,6 +8,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
 	<ui:define name="contentSection">
+		<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" escape="false" closable="false"/> 
+		
 		<p:panel header="#{lbl['lbl.sm.virtual.cert']}">
 			<p:dataTable id="vcDt" 
 				value="#{virtualCertBackingBean.managedBean.mofCertLs}"

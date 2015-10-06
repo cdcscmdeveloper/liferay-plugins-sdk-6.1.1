@@ -118,10 +118,6 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 											.getMessage(
 													"lbl.sm.alert.expired.mof.view.virtualcert",
 													null)));
-					fc.getApplication()
-							.getNavigationHandler()
-							.handleNavigation(fc, null,
-									SmApplicationUtil.getApplicationErrorPage());
 				}
 			}
 		}
