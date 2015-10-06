@@ -203,17 +203,25 @@
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.person.email']} " /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText label="#{lbl['lbl.sm.person.email']}"
-						id="equiEmail" required="true" maxlength="80"
-						disabled="#{backingBean.managedBean.disableIcEmail}"
-						validatorMessage="#{lbl['lbl.sm.person.email']} - #{lbl['lbl.sm.invalidEmail']}"
-						value="#{backingBean.managedBean.selectedShareHolder.email}"
-						size="35">
-						<f:validateRegex
-							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
-					</p:inputText> &#160; <p:graphicImage id="tooltip2"
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.person.email']} " /> 
+					<p:outputPanel id="emailOutPanelId" >
+						<p:outputLabel value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}"/>
+					</p:outputPanel>
+				</td>
+				<td>
+					<p:outputPanel id="emailInputPanelId" >
+						<p:inputText label="#{lbl['lbl.sm.person.email']}"
+							id="equiEmail" required="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}" maxlength="80"
+							disabled="#{backingBean.managedBean.disableIcEmail}"
+							validatorMessage="#{lbl['lbl.sm.person.email']} - #{lbl['lbl.sm.invalidEmail']}"
+							value="#{backingBean.managedBean.selectedShareHolder.email}"
+							size="35">
+							<f:validateRegex disabled="#{empty backingBean.managedBean.selectedShareHolder.email}" 
+								pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+						</p:inputText> 
+					</p:outputPanel>
+					&#160; <p:graphicImage id="tooltip2"
 						value="/css/images/design/tooltips.png" /> <p:tooltip
 						id="toolinfo2" for="tooltip2">
 						<p:outputLabel escape="false"
@@ -361,7 +369,7 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 						<p:ajax event="change" process="@this"
-							update=":form:tt:shareHolderAddrDialog,:form:tt:equiPerMobMsgOutputPanel,shrPrivPanel, @([id$=mobileOutputPanel]),tooltip5"
+							update=":form:tt:shareHolderAddrDialog,:form:tt:equiPerMobMsgOutputPanel,shrPrivPanel, @([id$=mobileOutputPanel]),tooltip5,:#{p:component('emailOutPanelId')},:#{p:component('emailInputPanelId')}"
 							listener="#{backingBean.assignShareHolderPrivilege}" />
 					</p:selectOneRadio></td>
 				<td><p:graphicImage id="tooltip3"
