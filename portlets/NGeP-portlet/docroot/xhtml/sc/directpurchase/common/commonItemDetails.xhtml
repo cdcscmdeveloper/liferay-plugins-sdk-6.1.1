@@ -198,7 +198,7 @@
 					<p:inputText style="width:21px;margin-top: 8px;margin-right: 1px;" 
 					   label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.delivery.term']}"
 					   size="6" maxlength="4"
-					   disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.prodAndServiceFlag}"
+					   disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.prodAndServiceFlag or requestNoteBackingBean.managedBean.viewOnly}"
 					   id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}" required="#{!requestNoteDtl.selected}">
 					   	<p:ajax partialSubmit="true" process="@this" update="@this" />
 					   </p:inputText>
@@ -216,6 +216,7 @@
 					<h:selectOneMenu id="procTypeCategory"
 						value="#{requestNoteDtl.procTypeCategoryId}"
 						style="width:120px;margin-top: 8px;" required="true"
+						disabled="#{requestNoteBackingBean.managedBean.viewOnly}"
 						label="#{lbl['lbl.sc.procurment.type.category']}">
 
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -238,7 +239,9 @@
 						<h:outputText value="#{lbl['lbl.sc.direct.purchase.title']}" />
 					</f:facet>
 					 <p:inputTextarea id="procTypeCatTitle" rows="2" 
-					     label="#{lbl['lbl.sc.direct.purchase.title']}"  maxlength="100" 
+					     label="#{lbl['lbl.sc.direct.purchase.title']}"  
+					     maxlength="100" 
+					     disabled="#{requestNoteBackingBean.managedBean.viewOnly}"
 					     value="#{requestNoteDtl.procurementTitle}" 
 					     autoResize="false" style="width:140px;">
 					    <p:ajax event="blur" partialSubmit="true" 
