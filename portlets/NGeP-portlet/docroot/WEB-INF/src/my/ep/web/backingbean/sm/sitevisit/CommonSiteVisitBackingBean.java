@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
 import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.constants.SMProcessNameConst;
 import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
 import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -46,7 +47,7 @@ public class CommonSiteVisitBackingBean extends BaseBackingBean<CommonSiteVisitM
 		this.getManagedBean().setTaskName(resDTO.getTaskName());
 		
 		log.info("----------Common SIte Visit--------" + resDTO.getTaskName());
-		if(resDTO.getTaskName().equalsIgnoreCase("Assign Site Visit")){
+		if(resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.ASSIGN_SITE_VISIT)){
 			SvcSiteAssignBackingBean svcBB = new SvcSiteAssignBackingBean();
 			svcBB.renewSesionObject();
 			
@@ -60,7 +61,7 @@ public class CommonSiteVisitBackingBean extends BaseBackingBean<CommonSiteVisitM
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sm/svcassignment/assignSiteVisitView");
-		}else if(resDTO.getTaskName().equalsIgnoreCase("Complete Site Visit Report")){
+		}else if(resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.COMPLETE_SV_REPORT)){
 			log.info("------Complete Site Visit Report-------------" + svObj.getDocumentId());
 			SvoSiteVisitBackingBean svoBB = new SvoSiteVisitBackingBean();
 			svoBB.renewSesionObject();
