@@ -3204,19 +3204,19 @@ public class ReportBackingBean extends
 		docTypeStatusItemsList=new ArrayList<SelectItem>();
 		if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.CON_REQ_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.CON_REQ_RPT_CEN_PEN_VAL))){
 			doctype =ReportConst.DOC_TYPE_CR;
-		} else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.CON_ORD_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.CON_ORD_RPT_CEN_PEN_VAL))){
+		} else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.CON_ORD_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.CON_ORD_RPT_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.INV_RPT_VIEW_PTJ_MIN_VAL)||this.getReportValue().equals(ReportConst.INV_RPT_VIEW_PTJ_CEN_PEN_VAL))){
 			doctype =ReportConst.DOC_TYPE_CO;
 		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.DEL_ORD_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.DEL_ORD_RPT_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.DEL_ORD_RPT_PO_VAL))){
 			doctype =ReportConst.DOC_TYPE_DO;
 		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.FL_REC_NOTE_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.FL_REC_NOTE_RPT_CEN_PEN_VAL))||(this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.FL_REC_NOTE_RPT_PO_VAL))){
 			doctype =ReportConst.DOC_TYPE_FN;
-		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.INV_RPT_VIEW_SUPL_MIN_VAL)||this.getReportValue().equals(ReportConst.INV_RPT_VIEW_PTJ_MIN_VAL)||this.getReportValue().equals(ReportConst.INV_RPT_VIEW_SUPL_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.INV_RPT_VIEW_PTJ_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.INV_RPT_VIEW_SUPL_PO_VAL)||this.getReportValue().equals(ReportConst.INV_RPT_VIEW_PTJ_PO_VAL))){
+		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.INV_RPT_VIEW_SUPL_MIN_VAL)||this.getReportValue().equals(ReportConst.INV_RPT_VIEW_SUPL_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.INV_RPT_VIEW_SUPL_PO_VAL))){
 			doctype =ReportConst.DOC_TYPE_IN;
 		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.PYMT_MATCH_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.PYMT_MATCH_RPT_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.PYMT_MATCH_RPT_PO_VAL))){
 			doctype =ReportConst.DOC_TYPE_PA;
 		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.DED_RPT_MIN_VAL))){
 			doctype =ReportConst.DOC_TYPE_DN;
-		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SUMM_RPT_PAN_ITM_VAL)||this.getReportValue().equals(ReportConst.PUR_ORD_RPT_PO_VAL))){
+		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SUMM_RPT_PAN_ITM_VAL)||this.getReportValue().equals(ReportConst.PUR_ORD_RPT_PO_VAL)||this.getReportValue().equals(ReportConst.INV_RPT_VIEW_PTJ_PO_VAL))){
 			doctype =ReportConst.DOC_TYPE_PO;
 		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.PUR_REQ_RPT_PO_VAL))){
 			doctype =ReportConst.DOC_TYPE_PR;
