@@ -471,7 +471,7 @@
 							id="banBranchLbl"
 							rendered="#{backingBean.managedBean.selectedBank.accountPurpose eq 'P' or backingBean.managedBean.selectedBank.accountPurpose eq 'B'}" />
 					</td>
-					<td><p:selectOneMenu showCheckbox="true"
+					<td><p:selectOneMenu showCheckbox="true" required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.bankDtls.assocBran']}"
 							style="width: 207px;margin-bottom: 5px;" id="banBranchVal"
 							rendered="#{backingBean.managedBean.selectedBank.accountPurpose eq 'P' or backingBean.managedBean.selectedBank.accountPurpose eq 'B'}"
