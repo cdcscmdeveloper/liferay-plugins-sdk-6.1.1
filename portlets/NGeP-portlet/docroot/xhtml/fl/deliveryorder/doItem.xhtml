@@ -89,9 +89,9 @@
 					value="#{doDelAddress.flFulfilmentItemAddr}" rowIndexVar="index"
 					rowKey="#{flItem}"
 					styleClass="itemsSelectedPanel show-column-names">
-					<p:column headerText="#{lbl['lbl.fl.item.name']}"   style="white-space:normal;">
+					<p:column headerText="#{lbl['lbl.fl.item']}"   style="white-space:normal;">
 						<h:outputText value="#{doItems.scRequestItem.itemName}"	id="itemDesc"/>
-						<p:tooltip for="itemDesc" value="#{doItems.scRequestItem.itemDesc}" rendered="#{doItems.scRequestItem.itemDesc!=null}" />
+						<p:tooltip for="itemDesc" value="#{doItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : doItems.scRequestItem.itemDesc}"  />
 					</p:column>
 					<p:column style="white-space:normal;">
 						<f:facet name="header" >
