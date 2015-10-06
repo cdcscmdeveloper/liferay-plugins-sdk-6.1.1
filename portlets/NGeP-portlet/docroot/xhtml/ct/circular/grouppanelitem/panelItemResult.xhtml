@@ -11,15 +11,15 @@
 			value="#{panelGroupItemBackingBean.panelGroupItemDataModel}"  var="panelGroupItemObj">
 			<ac:paginator for="panelGroupItemTabel" />
 
-			<p:column headerText="#{lbl['lbl.ct.panel.group.name']}" style="width:60%">
-				<h:outputText value="#{panelGroupItemObj.groupName}" />
+			<p:column headerText="#{lbl['lbl.ct.panel.group.name']}" style="width:60%" styleClass="column-align-center" >
+				<h:outputText value="#{panelGroupItemObj.groupName}" style="float:left;" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.ct.panel.group.status']}" style="width:20%"> 
+			<p:column headerText="#{lbl['lbl.ct.panel.group.status']}" style="width:20%" styleClass="column-align-center" > 
    	              #{(panelGroupItemObj.recordStatusFlg==1)? lbl['lbl.ct.active'] : lbl['lbl.ct.inactive']}              
             </p:column>
  
-			<p:column headerText="#{lbl['lbl.ct.action']}" style="width:5%">
+			<p:column headerText="#{lbl['lbl.ct.action']}" style="width:5%" styleClass="column-align-center" >
 				<p:commandLink action="#{panelGroupItemBackingBean.goToMaintaincePage(panelGroupItemObj)}" process="@this">
 					<p:graphicImage library="ep/images/design"  value="/css/images/design/edit.png" />						
 				</p:commandLink>

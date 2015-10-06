@@ -12,16 +12,16 @@
 			widgetVar="ctItemsTable" filteredValue="#{suspensionBackingBean.managedBean.ctItemFilter}">
 			   <ac:paginator for="itemTable" />
 			  
-			   <p:column style="width:20%;" headerText="#{lbl['lbl.ct.item.type']}">
+			   <p:column style="width:20%;" headerText="#{lbl['lbl.ct.item.type']}"  styleClass="column-align-center" >
 				    <p:outputLabel style="float:left;" value="#{suspensionBackingBean.getParameterDesc(itemData.itemType)}" />
 			   </p:column>
 			
-			   <p:column id="modelColumn" headerText="#{lbl['lbl.ct.item.desc']}" 
+			   <p:column id="modelColumn" headerText="#{lbl['lbl.ct.item.desc']}"  styleClass="column-align-center" 
 			        style="width:40%;white-space:normal;"  filterBy="#{itemData.scRequestItem.itemName}"   filterMatchMode="contains"> 
-			        <h:outputText value="#{itemData.scRequestItem.itemName}" />
+			        <h:outputText value="#{itemData.scRequestItem.itemName}" style="float:left;"/>
 			   </p:column>
 			
-			   <p:column style="width:15%;">
+			   <p:column style="width:15%;" styleClass="column-align-center" >
 			      <f:facet name="header">
 						<h:outputText value="#{lbl['lbl.ct.effective.date']}"/>
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.effective.date']}"/>
@@ -35,7 +35,7 @@
 			    </p:calendar>
 			  </p:column>
 			
-		       <p:column style="width:15%;">
+		       <p:column style="width:15%;" styleClass="column-align-center" >
 			      <f:facet name="header">
 						<h:outputText value="#{lbl['lbl.ct.expiry.date']}"/>
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.expiry.date']}"/>
@@ -49,7 +49,7 @@
 			      </p:calendar>
 			  </p:column>
 		   	  
-		   	  <p:column style="width:10%;">
+		   	  <p:column style="width:10%;" styleClass="column-align-center" >
 		   	  	   <f:facet name="header">
 						<h:outputText value="#{lbl['lbl.ct.status']}"/>
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.status']}"/>

@@ -20,7 +20,7 @@
 				selectionMode="single" selection="#{agreementBackingBean.managedBean.selectedAgreementContent}" rowKey="#{contentsVar}">
 				<p:ajax event="rowSelect" update=":form:delContentBtn" />
 				
-				<p:column style="width:50%;">
+				<p:column style="width:50%;" styleClass="column-align-center">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.ct.contents']}"/>
 				        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.content']}"/>
@@ -29,7 +29,7 @@
 					<p:inputText value="#{contentsVar.title}"  maxlength="50"  style="width:90%;" rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementUserUploadDoc}"/>
 				</p:column>
 				
-				<p:column style="width:40%px;">
+				<p:column style="width:40%px;" styleClass="column-align-center">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.ct.type']}"/>
 				        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.content.type']}"/>

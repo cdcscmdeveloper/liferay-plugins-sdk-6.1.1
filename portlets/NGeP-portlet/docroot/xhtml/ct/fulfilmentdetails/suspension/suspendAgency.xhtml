@@ -14,19 +14,19 @@
              value="#{suspensionBackingBean.managedBean.contractVer.ctAgencies}">
 		     <ac:paginator for="agencyDetailsTable"/>
 		
-		      <p:column headerText="#{lbl['lbl.ct.ministry']}" style="width:20%;white-space:normal;">
-		             <h:outputText value="#{suspensionBackingBean.retrieveMinistryByOrgProfileId(data.orgProfile.orgProfileId)}"/>
+		      <p:column headerText="#{lbl['lbl.ct.ministry']}" style="width:20%;white-space:normal;" styleClass="column-align-center" >
+		             <h:outputText value="#{suspensionBackingBean.retrieveMinistryByOrgProfileId(data.orgProfile.orgProfileId)}" style="float:left;"/>
 	           </p:column>
 	           
-	            <p:column headerText="#{lbl['lbl.ct.jabatan']}" style="width:25%; white-space:normal;">
-						<p:outputLabel style="float:left;" value="#{suspensionBackingBean.retrieveJabatanByOrgProfileId(data.orgProfile.orgProfileId)}" />
+	            <p:column headerText="#{lbl['lbl.ct.jabatan']}" style="width:25%; white-space:normal;" styleClass="column-align-center" >
+						<p:outputLabel style="float:left;" value="#{suspensionBackingBean.retrieveJabatanByOrgProfileId(data.orgProfile.orgProfileId)}"  />
 					</p:column>
 	  
-	           <p:column headerText="#{lbl['lbl.ct.ptj']}" style="width:40%;white-space:normal;">
-			         <h:outputText  value="#{data.orgProfile.orgName}"/>
+	           <p:column headerText="#{lbl['lbl.ct.ptj']}" style="width:40%;white-space:normal;" styleClass="column-align-center" >
+			         <h:outputText  value="#{data.orgProfile.orgName}" style="float:left;"/>
 		       </p:column>
 		
-		       <p:column style="width:15%;">
+		       <p:column style="width:15%;" styleClass="column-align-center" >
 		           <f:facet name="header">
 						<h:outputText value="#{lbl['lbl.ct.effective.date']}"/>
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.effective.date']}"/>
@@ -41,7 +41,7 @@
 			       </p:calendar>
 		       </p:column> 	
 	    
-	           <p:column style="width:15%;">
+	           <p:column style="width:15%;" styleClass="column-align-center" >
 		            <f:facet name="header">
 						<h:outputText value="#{lbl['lbl.ct.expiry.date']}"/>
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.expiry.date']}"/>
@@ -56,7 +56,7 @@
 			      </p:calendar>
 	           </p:column> 	
 		      
-		       <p:column style="width:10%;">
+		       <p:column style="width:10%;" styleClass="column-align-center">
 			         <f:facet name="header">
 						<h:outputText value="#{lbl['lbl.ct.status']}"/>
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.status']}"/>

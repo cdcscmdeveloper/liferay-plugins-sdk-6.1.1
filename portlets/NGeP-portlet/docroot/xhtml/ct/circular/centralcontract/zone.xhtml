@@ -17,11 +17,12 @@
 						<ac:paginator for="circularZoneDt" />
 						<p:ajax event="rowSelect" update=":form:tabview:circularZoneDtlPnl,:form:tabview:deleteZoneBtn" 
 							listener="#{centralContractBackingBean.selectZoneEvent()}" />
-						<p:column headerText="#{lbl['lbl.ct.zone.name']}" style="width:250px;" >
-							<p:inputText value="#{circularZoneVar.name}" style="width:250px;" maxlength="100" />
+						<p:column headerText="#{lbl['lbl.ct.zone.name']}" style="width:250px;" styleClass="column-align-center" >
+							<p:inputText value="#{circularZoneVar.name}" style="width:250px;" maxlength="100"  size="float:left"/>
 						</p:column>
-						<p:column headerText="#{lbl['lbl.ct.delivery.term']}" style="width:150px;" >
-							<p:inputText value="#{circularZoneVar.deliveryTerm}" maxlength="4" label="#{lbl['lbl.ct.delivery.term']}" />
+						<p:column headerText="#{lbl['lbl.ct.delivery.term']}" style="width:150px;" styleClass="column-align-center" >
+							<p:inputText value="#{circularZoneVar.deliveryTerm}"
+							    size="float:left" maxlength="4" label="#{lbl['lbl.ct.delivery.term']}" />
 						</p:column>						
 					</p:dataTable>
 					<div class="ppRightBtn"> 
@@ -47,7 +48,7 @@
 							selection="#{centralContractBackingBean.managedBean.selectedCircularZoneDtl}" >
 							<ac:paginator for="circularZoneDtlDt" />
 							<p:ajax event="rowSelect" update=":form:tabview:deleteZoneDtlBtn" />
-							<p:column headerText="#{lbl['lbl.ct.location']}" style="width:450px;">
+							<p:column headerText="#{lbl['lbl.ct.location']}" style="width:450px;" >
 								<p:selectOneMenu value="#{circularZoneDtlsVar.state.stateId}" rendered="#{centralContractBackingBean.managedBean.circularVer.zonalLevel.parameterCode == ParameterConst.locationLevelState}">
 									<p:ajax event="change" process="@this" />
 									<f:selectItems value="#{centralContractBackingBean.getStateDropdownValues()}" />

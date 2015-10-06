@@ -21,12 +21,12 @@
                    <ac:paginator for="agSupplierSigner"/>
 			       <p:column selectionMode="multiple" style="width:5%"/> 
                   
-                   <p:column style="width:25%;" headerText="#{lbl['lbl.ct.business.name']}">
+                   <p:column style="width:25%;" headerText="#{lbl['lbl.ct.business.name']}" styleClass="column-align-center">
                         <h:outputText style="float:left;"
                             value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.supplierName}" />
                    </p:column> 
                  
-                   <p:column style="width:25%;">
+                   <p:column style="width:25%;" styleClass="column-align-center">
                         <f:facet name="header">
 					         <h:outputText value="#{lbl['lbl.ct.contract.signer']}"/>
 					        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.signer']}"/>
@@ -40,11 +40,11 @@
                        </p:selectOneMenu>
                      </p:column>  
              
-                     <p:column style="width:15%;" headerText="#{lbl['lbl.ct.ic.no']}"> 
+                     <p:column style="width:15%;" headerText="#{lbl['lbl.ct.ic.no']}" styleClass="column-align-center"> 
                           <h:outputText id="suOfId" value="#{signSupplierVar.officerIc}" style="float:left;"/>
                      </p:column> 	
                
-                      <p:column style="width:30%;" headerText="#{lbl['lbl.ct.designation']}" >
+                      <p:column style="width:30%;" headerText="#{lbl['lbl.ct.designation']}" styleClass="column-align-center">
                            <h:outputText id="suOfPosition" value="#{signSupplierVar.officerPosition}" style="float:left;"/>
                       </p:column>  	
                 </p:dataTable>
@@ -92,18 +92,18 @@
                        <ac:paginator for="witnessSign"/>
                        <p:column selectionMode="multiple" style="width:2%"/> 
                      
-                       <p:column style="width:35%;" headerText="#{lbl['lbl.ct.name']}">
+                       <p:column style="width:35%;" headerText="#{lbl['lbl.ct.name']}" styleClass="column-align-center">
                            <p:inputText value="#{supplierWitnessVar.officerName}"  style="width:95%;" maxlength="20"/>
                         </p:column>
                        
-                        <p:column style="width:20%;" headerText="#{lbl['lbl.ct.ic.no']}"> 
+                        <p:column style="width:20%;" headerText="#{lbl['lbl.ct.ic.no']}" styleClass="column-align-center"> 
                             <p:inputText value="#{supplierWitnessVar.officerIc}" label="#{lbl['lbl.ct.ic.no']}"  style="width:95%;" maxlength="12">
                               <p:ajax event="blur" listener="#{agreementBackingBean.addSupplierWitness(1)}"
                                   process="@form"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"></p:ajax>
                               </p:inputText>
                         </p:column> 	       
           
-                         <p:column style="width:45%;" headerText="#{lbl['lbl.ct.designation']}" >
+                         <p:column style="width:45%;" headerText="#{lbl['lbl.ct.designation']}"  styleClass="column-align-center">
                              <p:inputText value="#{supplierWitnessVar.officerPosition}" style="width:95%;" maxlength="255"/>
                          </p:column>  
                    </p:dataTable>

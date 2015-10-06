@@ -81,17 +81,17 @@
 			<ac:paginator for="contactPersonDt" />
 			<p:column selectionMode="multiple" style="width:5%" 
 				rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
-			<p:column headerText="#{lbl['lbl.ct.contact.person.name']}" style="width:20%;white-space:normal;">
-				<h:outputText id="cperson" value="#{contactPersonsVar.name}"  />
+			<p:column headerText="#{lbl['lbl.ct.contact.person.name']}" style="width:20%;white-space:normal;"  styleClass="column-align-center" >
+				<h:outputText id="cperson" value="#{contactPersonsVar.name}"  style="float:left;"  />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.address']}" style="width:40%;white-space:normal;">
-				<h:outputText value="#{contactPersonsVar.address}" />
+			<p:column headerText="#{lbl['lbl.ct.address']}" style="width:40%;white-space:normal;" styleClass="column-align-center" >
+				<h:outputText value="#{contactPersonsVar.address}" style="float:left;"  />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.email']}" style="width:20%;white-space:normal;">
-				  <h:outputText id="validateEmail" value="#{contactPersonsVar.email}"   />
+			<p:column headerText="#{lbl['lbl.ct.email']}" style="width:20%;white-space:normal;" styleClass="column-align-center" >
+				  <h:outputText id="validateEmail" value="#{contactPersonsVar.email}"  style="float:left;"  />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.tel']}" style="width:15%;white-space:normal;">
-				<h:outputText id="validPhone"   value="#{contactPersonsVar.phoneNo}"  />
+			<p:column headerText="#{lbl['lbl.ct.tel']}" style="width:15%;white-space:normal;" styleClass="column-align-center" >
+				<h:outputText id="validPhone"   value="#{contactPersonsVar.phoneNo}" style="float:left;"   />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2" />
@@ -117,13 +117,13 @@
 			value="#{centralContractBackingBean.managedBean.circularVer.ctCancelCircularList}"
 			selection="#{centralContractBackingBean.managedBean.selectedCancelCirculars}" >
 			<ac:paginator for="cancelCircularDt" />
-			<p:column selectionMode="multiple" style="width:3%"
+			<p:column selectionMode="multiple" style="width:3%" 
 				rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
-			<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}">
-				<h:outputText value="#{cancelCircularVar.circularVer.circularNo}" />
+			<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" styleClass="column-align-center" >
+				<h:outputText value="#{cancelCircularVar.circularVer.circularNo}"  style="float:left;" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.circular.name']}" >
-				<h:outputText value="#{cancelCircularVar.circularVer.name}" />
+			<p:column headerText="#{lbl['lbl.ct.circular.name']}"  styleClass="column-align-center" >
+				<h:outputText value="#{cancelCircularVar.circularVer.name}" style="float:left;"  />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2" />
