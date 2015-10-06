@@ -15,7 +15,7 @@
 				<p:rowToggler />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.delivery.address']}" style="white-space:normal;">
-				<h:outputText rendered="#{delAddressSummary.addressType != null}"
+				<h:outputText rendered="#{delAddressSummary.addressType != null}" 
 					value="#{purchaseRequestBackingBean.getFullAddress(delAddressSummary.addressType.pmAddress)}" />
 				<h:outputText rendered="#{delAddressSummary.addressType eq null}"
 					value="#{purchaseRequestBackingBean.getFullAddress(delAddressSummary.pmAddress)}" />
@@ -79,43 +79,43 @@
 				<p:dataTable id="newItems" var="newItems"
 					styleClass="show-column-names"
 					value="#{delAddressSummary.flFulfilmentItemAddr}" >
-					<p:column>
-						<f:facet name="header" style="width:8%;">
+					<p:column style="text-align:center">
+						<f:facet name="header" style="width:8%;text-align:center">
 							<h:outputText value="#{lbl['lbl.fl.item.code']}" />
 							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.code']}" />
 						</f:facet>
-						<h:outputText rendered="#{newItems.scRequestItem.cmItem==null}" value="#{newItems.scRequestItem.tempUnspscCode}" />
-						<h:outputText rendered="#{newItems.scRequestItem.cmItem!=null}" value="#{newItems.scRequestItem.cmItem.extensionCode}" />
+						<h:outputText rendered="#{newItems.scRequestItem.cmItem==null}" value="#{newItems.scRequestItem.tempUnspscCode}" styleClass="colFloatRight"/>
+						<h:outputText rendered="#{newItems.scRequestItem.cmItem!=null}" value="#{newItems.scRequestItem.cmItem.extensionCode}" styleClass="colFloatRight"/>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;">
-						<h:outputText value="#{newItems.scRequestItem.itemName}" id="itemDesc"/>
+					<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;text-align:center">
+						<h:outputText value="#{newItems.scRequestItem.itemName}" id="itemDesc" styleClass="colFloatLeft"/>
 						<p:tooltip for="itemDesc" value="#{newItems.scRequestItem.itemDesc}" rendered="#{newItems.scRequestItem.itemDesc!=null}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.uom']}">
-						<h:outputText value="#{newItems.scRequestItem.uom.uomName}" />
+					<p:column headerText="#{lbl['lbl.fl.uom']}" style="text-align:center">
+						<h:outputText value="#{newItems.scRequestItem.uom.uomName}" styleClass="colFloatLeft"/>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="text-align:right;white-space:normal">
+					<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="text-align:center;white-space:normal">
 						<h:outputText value="#{newItems.unitPrice}" styleClass="colFloatRight" >
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.gst.amt']}" style="text-align:right;white-space:normal">
+					<p:column headerText="#{lbl['lbl.fl.gst.amt']}" style="text-align:center;white-space:normal">
 						<h:outputText value="#{newItems.gstAmount}" styleClass="colFloatRight" >
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.unit.price.w.gst']}" style="text-align:right;white-space:normal">
+					<p:column headerText="#{lbl['lbl.fl.unit.price.w.gst']}" style="text-align:center;white-space:normal">
 						<h:outputText value="#{newItems.gstUnitPrice}" styleClass="colFloatRight" >
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="text-align:right">
+					<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="text-align:center">
 						<h:outputText value="#{newItems.orderedQty}" styleClass="colFloatRight">
 							<f:converter converterId="dynamicNumberConverter" />
 							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, newItems.scRequestItem.uom.uomCode)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.ordered.amount']}" style="text-align:right">
+					<p:column headerText="#{lbl['lbl.fl.ordered.amount']}" style="text-align:center">
 						<h:outputText value="#{newItems.orderedAmt}" styleClass="colFloatRight">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
