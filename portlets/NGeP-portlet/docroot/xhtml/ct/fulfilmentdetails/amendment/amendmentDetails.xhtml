@@ -288,21 +288,21 @@
 	                <ac:paginator for="dataTableHistory" />
 					<p:columnGroup type="header">
 						<p:row>
-							<p:column headerText="#{lbl['lbl.ct.file.ref.no']}" style="width:35%;white-space:normal;"/>
-							<p:column headerText="#{lbl['lbl.ct.extension.period.month']}" style="width:20%;white-space:normal;"/>
-							<p:column headerText="#{lbl['lbl.ct.extension.start.date']}" style="width:25%;white-space:normal;"/>
-							<p:column headerText="#{lbl['lbl.ct.extension.end.date']}" style="width:25%;white-space:normal;"/>
+							<p:column headerText="#{lbl['lbl.ct.file.ref.no']}" styleClass="column-align-center" style="width:35%;white-space:normal;"/>
+							<p:column headerText="#{lbl['lbl.ct.extension.period.month']}" styleClass="column-align-center" style="width:20%;white-space:normal;"/>
+							<p:column headerText="#{lbl['lbl.ct.extension.start.date']}" styleClass="column-align-center" style="width:25%;white-space:normal;"/>
+							<p:column headerText="#{lbl['lbl.ct.extension.end.date']}" styleClass="column-align-center" style="width:25%;white-space:normal;"/>
 						</p:row>
 					</p:columnGroup>
-						<p:column> <h:outputText value="#{data.ctAmendment.fileRefNo}"/></p:column>
-						<p:column> <h:outputText value="#{data.ctAmendment.extendPeriod}"/></p:column>
+						<p:column> <h:outputText value="#{data.ctAmendment.fileRefNo}" style="float:left;"/></p:column>
+						<p:column> <h:outputText value="#{data.ctAmendment.extendPeriod}" style="float:left;"/></p:column>
 						<p:column>
-							<h:outputText value="#{data.ctAmendment.extendStartDate}">
+							<h:outputText value="#{data.ctAmendment.extendStartDate}" style="float:left;">
 								<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 							</h:outputText>
 						</p:column>
 						<p:column>
-							<h:outputText value="#{data.ctAmendment.extendEndDate}">
+							<h:outputText value="#{data.ctAmendment.extendEndDate}" style="float:left;">
 								<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />								
 							</h:outputText>
 						</p:column>
