@@ -1111,6 +1111,8 @@ public class QTDetailBackingBean extends
 			}
 		}
 		quationTenderReqDTO.setTobeRemoveCategoryCodes(removeCategoryCodes);
+		quationTenderReqDTO.setMaintanceFlow(this.getManagedBean()
+				.isMaintanceFlow());
 		return quationTenderReqDTO;
 	}
 
@@ -1784,9 +1786,25 @@ public class QTDetailBackingBean extends
 			} else {
 				retrieveCommitteeAppointmentTabDtl(false);
 			}
-		}
-		
-		else {
+			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
+				List<ScQtApproval> approvals = this.getManagedBean().getQt()
+						.getScQtApprovals();
+
+				for (ScQtApproval scQtApproval : approvals) {
+					if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT
+							.equalsIgnoreCase(scQtApproval
+									.getApprovalCategory().getParameterCode())) {
+						initializeRemarks(scQtApproval, this.getManagedBean()
+								.getQt().getCurrentWorkFlowStatus(),
+								scQtApproval.getScQtApprovalRemarks(),
+								ScQtApprovalRemark.class);
+						this.getManagedBean().setScQtApproval(scQtApproval);
+
+						break;
+					}
+				}
+			}
+		} else {
 			// qtId = quotationTenderDataType.getQtId().longValue();
 			SCQuotationTenderDataType quationDataType = (SCQuotationTenderDataType) payLoad;
 			qtId = quationDataType.getQtId().longValue();
@@ -3106,6 +3124,8 @@ public class QTDetailBackingBean extends
 			QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+			tenderReqDTO.setMaintanceFlow(this.getManagedBean()
+					.isMaintanceFlow());
 			if (null == docType || "".equalsIgnoreCase(docType)) {
 				tenderReqDTO.setDocType(QTConstants.DOCTYPE_QT);
 			} else {
@@ -3178,6 +3198,8 @@ public class QTDetailBackingBean extends
 					}
 
 				}
+				this.getManagedBean().setAmendMentBean(
+						tenderResDTO.getAmendMentBean());
 				if (this.getManagedBean().getGosodos() == null) {
 					this.getManagedBean().setGosodos(
 							tenderResDTO.getBudgetDtls());
@@ -3637,6 +3659,9 @@ public class QTDetailBackingBean extends
 			detailSO.validateateQTDetails(reqDTO);
 			resDTO = detailSO.saveQTDtl(reqDTO);
 			renewSesionObject();
+			
+			this.getManagedBean().setMaintanceFlow(
+					this.getManagedBean().getTaskName() == null ? true : false);
 			retrieveQuationTenderDetails(resDTO.getQtDetail().getQtId(), null);
 			setAmmendMentBean(resDTO.getAmendMentBean());
 			// this.getManagedBean().setQt(resDTO.getQtDetail());
@@ -4661,6 +4686,7 @@ public class QTDetailBackingBean extends
 
 				if (approvalCategory.equalsIgnoreCase(approval.get(i)
 						.getApprovalCategory().getParameterCode())) {
+					finalizeRemarks(approval.get(i).getScQtApprovalRemarks());
 					List<ScQtApprovalRequest> approvalRequests = approval
 							.get(i).getScQtApprovalDtls();
 					if (CollectionUtils.isNotEmpty(approvalRequests)) {
