@@ -995,6 +995,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		if(getManagedBean().getSelectedDelAddr()!=null) {
 			populateItemsForSelectedAddress();
 		}
+		getManagedBean().setSelectedContractedItemList(new ArrayList<CtContractItem>());
 	}
 
 	/**
