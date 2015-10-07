@@ -1439,6 +1439,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			doBB.getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
 			doBB.getManagedBean().setFulfilmentOrder(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder());
 			doBB.getManagedBean().setFromPageUrl(fc.getViewRoot().getViewId());
+			doBB.getManagedBean().setButtonVal("Review");
 			return NAV_DELIVERYORDER_PAGE;
 	}
 	
