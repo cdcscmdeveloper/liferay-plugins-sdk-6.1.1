@@ -89,63 +89,63 @@
 					value="#{doDelAddress.flFulfilmentItemAddr}" rowIndexVar="index"
 					rowKey="#{flItem}"
 					styleClass="itemsSelectedPanel show-column-names">
-					<p:column headerText="#{lbl['lbl.fl.item']}"   style="white-space:normal;">
-						<h:outputText value="#{doItems.scRequestItem.itemName}"	id="itemDesc"/>
+					<p:column headerText="#{lbl['lbl.fl.item']}"   style="white-space:normal;text-align:center">
+						<h:outputText value="#{doItems.scRequestItem.itemName}"	id="itemDesc" style="float:left;"/>
 						<p:tooltip for="itemDesc" value="#{doItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : doItems.scRequestItem.itemDesc}"  />
 					</p:column>
-					<p:column style="white-space:normal;">
+					<p:column style="white-space:normal;text-align:center">
 						<f:facet name="header" >
-    				 <h:outputText value="#{lbl['lbl.fl.uom']}"/>
+    				 <h:outputText value="#{lbl['lbl.fl.uom']}" style="float:left;"/>
     				</f:facet>
 						<h:outputText value="#{doItems.scRequestItem.uom.uomName}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;text-align:right;">
-						<h:outputText disabled="true" value="#{doItems.unitPrice}">
+					<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;text-align:center">
+						<h:outputText disabled="true" value="#{doItems.unitPrice}" style="float:right;">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.gst.amt']}" style="white-space:normal;text-align:right;">
-						<h:outputText disabled="true" value="#{doItems.doGstAmt}">
+					<p:column headerText="#{lbl['lbl.fl.gst.amt']}" style="white-space:normal;text-align:center">
+						<h:outputText disabled="true" value="#{doItems.doGstAmt}" style="float:right;">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.unit.price.w.gst']}" style="white-space:normal;text-align:right;">
-						<h:outputText disabled="true" value="#{doItems.doGstUnitPrice}">
+					<p:column headerText="#{lbl['lbl.fl.unit.price.w.gst']}" style="white-space:normal;text-align:center">
+						<h:outputText disabled="true" value="#{doItems.doGstUnitPrice}" style="float:right;">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
-					<p:column style="white-space:normal;text-align:right;"> 
+					<p:column style="white-space:normal;text-align:center"> 
 						<f:facet name="header" >
-    				 <h:outputText value="#{lbl['lbl.fl.ordered.qty']}"/>
+    				 <h:outputText value="#{lbl['lbl.fl.ordered.qty']}" style="float:right;"/>
      					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.order.qty']}"/>
     				</f:facet>
-						<h:outputText value="#{doItems.orderedQty}">
+						<h:outputText value="#{doItems.orderedQty}" style="float:right;">
 							<f:converter converterId="dynamicNumberConverter" />
 							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />	
 						</h:outputText>
 					</p:column>
-					<p:column  style="white-space:normal;text-align:right;">
+					<p:column  style="white-space:normal;text-align:center">
 						<f:facet name="header" >
-    				 <h:outputText value="#{lbl['lbl.fl.do.remaining.qty']}"/>
+    				 <h:outputText value="#{lbl['lbl.fl.do.remaining.qty']}" style="float:right;"/>
      					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.remain.qty']}"/>
     				</f:facet>
 						<h:outputText id="remaingQtyTxt"
-							value="#{doItems.orderedQty - doItems.sumDeliveredQty - doItems.deliveredQty + doItems.rejectedQty}">
+							value="#{doItems.orderedQty - doItems.sumDeliveredQty - doItems.deliveredQty + doItems.rejectedQty}" style="float:right;">
 							<f:converter converterId="dynamicNumberConverter" />
 							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />	
 						</h:outputText>
 					</p:column>
-					<p:column style="white-space:normal;text-align:right;">
+					<p:column style="white-space:normal;text-align:center">
 						<f:facet name="header" >
-    				 <h:outputText value="#{lbl['lbl.fl.do.delivery.qty']}"/>
+    				 <h:outputText value="#{lbl['lbl.fl.do.delivery.qty']}" style="float:right;"/>
      					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.del.qty']}"/>
     				</f:facet>
 						<h:panelGroup id="delQtyTxt">
 							<p:inputText value="#{doItems.deliveredQty}" size="5" id="delOrderedQty" label="#{lbl['lbl.fl.do.delivery.qty']}" styleClass="colFloatRight" maxlength="14"	disabled="#{doItems.delQtyDisabled}"
-								rendered="#{createDOBackingBean.managedBean.docProcess ne 'DO'}"  style="text-align:right;" 
+								rendered="#{createDOBackingBean.managedBean.docProcess ne 'DO'}"  style="float:right;"
 								onkeypress="if (event.keyCode == 13) { delQty.jq.click(); return false; }" widgetVar="delQty">
 								<p:ajax event="blur" update="delQtyTxt,delAmountTxt,remaingQtyTxt" process="@this"
 									listener="#{createDOBackingBean.retrieveDelAmount(doItems)}" />
@@ -153,27 +153,27 @@
 									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
 							</p:inputText>
 							<p:message for="delOrderedQty" display="icon" />
-							<h:outputText value="#{doItems.deliveredQty}" size="5"
+							<h:outputText value="#{doItems.deliveredQty}" size="5" style="float:right;"
 								rendered="#{createDOBackingBean.managedBean.docProcess eq 'DO'}">
 								<f:converter converterId="dynamicNumberConverter" />
 								<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
 							</h:outputText>
 						</h:panelGroup>
 					</p:column>
-					<p:column style="white-space:normal;text-align:right;">
+					<p:column style="white-space:normal;text-align:center">
 						<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.fl.delivery.amount']}" />
+							<h:outputText value="#{lbl['lbl.fl.delivery.amount']}" style="float:right;"/>
 							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.del.amt']}" />
 						</f:facet>
 						<h:panelGroup id="delAmountTxt">
-							<h:outputText value="#{doItems.deliveredAmt}" disabled="true" 
+							<h:outputText value="#{doItems.deliveredAmt}" disabled="true" style="float:right;"
 								rendered="#{doItems.itemType.parameterCode eq ParameterConst.itemTypeProduct}">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</h:outputText>
 							<p:inputText value="#{doItems.deliveredAmt}" size="17"
 								disabled="#{doItems.delQtyDisabled}"
-								maxlength="15" styleClass="colFloatRight" style="text-align:right;"
+								maxlength="15" styleClass="colFloatRight" style="float:right;"
 								rendered="#{doItems.itemType.parameterCode eq ParameterConst.itemTypeService}">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -181,35 +181,35 @@
 							</p:inputText>
 						</h:panelGroup>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.ordered.amount']}" style="white-space:normal;text-align:right;">
-						<h:outputText value="#{doItems.orderedAmt}">
+					<p:column headerText="#{lbl['lbl.fl.ordered.amount']}" style="white-space:normal;text-align:center">
+						<h:outputText value="#{doItems.orderedAmt}" style="float:right;">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
-					<p:column style="white-space:normal;text-align:right;">
+					<p:column style="white-space:normal;text-align:center;">
 						<f:facet name="header" >
-    				 <h:outputText value="#{lbl['lbl.fl.received.qty']}"/>
+    				 <h:outputText value="#{lbl['lbl.fl.received.qty']}" style="float:right;"/>
      					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.received.qty']}"/>
     				</f:facet>
-						<h:outputText value="#{doItems.chargeReceivedQty}">
+						<h:outputText value="#{doItems.chargeReceivedQty}" style="float:right;">
 							<f:converter converterId="dynamicNumberConverter" />
 							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
 						</h:outputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.do.received.amount']}"
-						style="white-space:normal;text-align:right;">
-						<h:outputText value="#{doItems.chargeReceivedAmt}">
+						style="white-space:normal;text-align:center;">
+						<h:outputText value="#{doItems.chargeReceivedAmt}" style="float:right;">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
-					<p:column style="white-space:normal;text-align:right;">
+					<p:column style="white-space:normal;text-align:center;">
 						<f:facet name="header" >
-    				 <h:outputText value="#{lbl['lbl.fl.do.rejected.qty']}"/>
+    				 <h:outputText value="#{lbl['lbl.fl.do.rejected.qty']}" style="float:right;"/>
      					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.rejected.qty']}"/>
     				</f:facet>
-						<h:outputText value="#{doItems.rejectedQty}">
+						<h:outputText value="#{doItems.rejectedQty}" style="float:right;">
 							<f:converter converterId="dynamicNumberConverter" />
 									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />	
 						</h:outputText>

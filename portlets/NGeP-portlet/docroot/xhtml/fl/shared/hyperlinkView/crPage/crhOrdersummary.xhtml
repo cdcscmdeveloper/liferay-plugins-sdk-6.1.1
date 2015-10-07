@@ -78,47 +78,47 @@
 				<p:dataTable id="newItems" var="newItems"
 					styleClass="show-column-names"
 					value="#{delAddressSummary.flFulfilmentItemAddr}">
-					<p:column>
+					<p:column style="text-align:center;">
 						<f:facet name="header" style="width:8%;">
 							<h:outputText value="#{lbl['lbl.fl.item.code']}" />
 							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.code']}" />
 						</f:facet>
-						<h:outputText value="#{newItems.cmItem.extensionCode}" rendered="#{newItems.cmItem!=null}" />
-						<h:outputText value="#{newItems.scRequestItem.tempUnspscCode}" rendered="#{newItems.cmItem==null}" />	
+						<h:outputText value="#{newItems.cmItem.extensionCode}" rendered="#{newItems.cmItem!=null}" style="float:right;"/>
+						<h:outputText value="#{newItems.scRequestItem.tempUnspscCode}" rendered="#{newItems.cmItem==null}" style="float:right;"/>	
 					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;">
-						<h:outputText value="#{newItems.scRequestItem.itemName}" id="itemDesc"/>
+					<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center;">
+						<h:outputText value="#{newItems.scRequestItem.itemName}" id="itemDesc" style="float:left;"/>
 						<p:tooltip for="itemDesc" value="#{newItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : newItems.scRequestItem.itemDesc}"  />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.uom']}">
-						<h:outputText value="#{newItems.scRequestItem.uom.uomName}" />
+					<p:column headerText="#{lbl['lbl.fl.uom']}" style="text-align:center;">
+						<h:outputText value="#{newItems.scRequestItem.uom.uomName}" style="float:left;"/>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="text-align:right;white-space:normal">
-						<h:outputText value="#{newItems.unitPrice}"
-							styleClass="colFloatRight" >
+					<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="text-align:center;white-space:normal">
+						<h:outputText value="#{newItems.unitPrice}" 
+							style="float:right;" >
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.gst.amt']}" style="text-align:right;white-space:normal">
+					<p:column headerText="#{lbl['lbl.fl.gst.amt']}" style="text-align:center;white-space:normal">
 						<h:outputText value="#{newItems.gstAmount}"
-							styleClass="colFloatRight" >
+							style="float:right;" >
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.unit.price.w.gst']}" style="text-align:right;white-space:normal">
+					<p:column headerText="#{lbl['lbl.fl.unit.price.w.gst']}" style="text-align:center;white-space:normal">
 						<h:outputText value="#{newItems.gstUnitPrice}"
-							styleClass="colFloatRight" >
+							style="float:right;" >
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="text-align:right">
-						<h:outputText value="#{newItems.orderedQty}" styleClass="colFloatRight" >
+					<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="text-align:center;">
+						<h:outputText value="#{newItems.orderedQty}" style="float:right;" >
 						<f:converter converterId="dynamicNumberConverter" />
 						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, newItems.scRequestItem.uom.uomCode)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.ordered.amount']}" style="text-align:right">
-						<h:outputText value="#{newItems.orderedAmt}" styleClass="colFloatRight" >
+					<p:column headerText="#{lbl['lbl.fl.ordered.amount']}" style="text-align:center;">
+						<h:outputText value="#{newItems.orderedAmt}" style="float:right;" >
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
