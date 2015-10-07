@@ -31,8 +31,8 @@ public class EperundingBatchIntegrationJob implements Job {
 		
 	  log.info("EperundingBatchIntegrationJob start");
 	  EperundingIntegration eperundingIntegration = new EperundingIntegration();	
-	  eperundingIntegration.createFilesforEperunding();
 	  eperundingIntegration.createFilesAuthMgtEqtBODforEperunding();
+	  eperundingIntegration.createFilesforEperunding();
 	  
 	  INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance()
 				.getOSBServiceObject(INtfSO.class);
