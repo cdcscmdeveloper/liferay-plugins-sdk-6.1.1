@@ -73,7 +73,6 @@ public class EperundingIntegration extends EperundingTemplate{
 
 	public void createFilesforEperunding() {
 
-		 createConsultantProfile(retriveSmSupplierBycreationDate("6", ""));
 		 createDeletedCompany(retriveSmSupplierBycreationDate("1",""));
 		 createGovernmentProject(retriveSmSupplierBycreationDate("4",""));
 		 createRegisteredCategory(retriveSmSupplierBycreationDate("2",""));
@@ -81,6 +80,7 @@ public class EperundingIntegration extends EperundingTemplate{
 		 createCompanyOwner(retriveSmSupplierBycreationDate("5","1"));
 		 createAssociatedCompany(retriveSmSupplierBycreationDate("5","3"));
 		 createBranchCompany(retriveSmSupplierBycreationDate("5","2"));
+		 createConsultantProfile(retriveSmSupplierBycreationDate("6", ""));
 
 	}
 
