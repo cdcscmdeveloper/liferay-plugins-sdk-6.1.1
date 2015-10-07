@@ -103,12 +103,14 @@
 							<td colspan="2"><p:commandButton
 									oncomplete="fcAttachDlg.show();return false;"
 									icon="iconAttachment" update="fcuploads" value="#{lbl['lbl.btn.attach.files']}" disabled="#{qTDetailBB.approvalDtlsEditable(fcaApprovalTab.scQtApproval)}" >
+									<f:setPropertyActionListener value="#{fcaApprovalTab.scQtApproval}"
+										target="#{approvalBackingBean.managedBean.scQtApproval}" />
 								</p:commandButton></td>
 						</tr>
 						<tr>
 							<td />
 							<td><p:dataGrid id="fcAttachId"
-									value="#{approvalBackingBean.managedBean.attachments}"
+									value="#{fcaApprovalTab.scQtApproval.scQtApprovalAttachments}"
 									var="attachFile" rowIndexVar="attachFileIndex" columns="1"
 									style="width:100%">
 									<table>
@@ -128,7 +130,7 @@
 													action="#{approvalBackingBean.downloadFile(attachFile)}"
 													disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}" />
 												<p:commandLink
-													action="#{approvalBackingBean.deleteUploadFile}"
+													action="#{approvalBackingBean.deleteFile}"
 													immediate="true" update="@([id$=fcAttachId])"
 													disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}">
 													<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/icon_trash.png" styleClass="tasklist_title1" />
