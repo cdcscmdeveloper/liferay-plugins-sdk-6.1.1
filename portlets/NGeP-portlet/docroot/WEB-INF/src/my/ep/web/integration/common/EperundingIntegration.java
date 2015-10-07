@@ -552,6 +552,8 @@ public class EperundingIntegration extends EperundingTemplate{
 					
 					if(!smSupplier.getSmMofAccounts().get(0).getSmMofCerts().isEmpty()){
 						profile.setVirtualCertNo(smSupplier.getSmMofAccounts().get(0).getSmMofCerts().get(0).getCertSerialNo());
+					}else{
+						profile.setVirtualCertNo(IntegrationConstants.EMPTY_TRING);
 					}
 
 					// New columns added
