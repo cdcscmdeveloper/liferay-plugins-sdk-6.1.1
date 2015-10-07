@@ -14,43 +14,43 @@
 		<p:panel header="#{lbl['lbl.sc.search']}">
 	     	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 	     	<tr>
-				<td class="TableFieldLeft">
+				<td class="TableFieldLeft" width="20%">
 					<p:outputLabel value="#{lbl['lbl.sc.request.note.req.note.no']}" />
 				</td>
-				<td class="TableFieldRight" colspan="3">
+				<td class="TableFieldRight">
 					<p:inputText value="#{requestNoteBackingBean.managedBean.searchReqNoteNo}" size="25" />
 				</td>
-				<td width="5%" class="TableFieldLeft" rowspan="4">
+				<td>
 					<p:outputLabel value="#{lbl['lbl.sc.status']}" />
 				</td>
-				<td width="25%" class="TableFieldRight" rowspan="4">
-					<p:selectManyMenu id="rnStatus"
-						style="height:125px;width: 200px;"
-						value="#{requestNoteBackingBean.managedBean.searchStatuses}" > 
-						
+				<td>
+					<p:selectOneMenu id="rnStatus"
+						style="width: 187px;"
+						value="#{requestNoteBackingBean.managedBean.searchStatus}" > 
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 						<f:selectItems
 							value="#{requestNoteBackingBean.statusDescList}"
 							var="pmStatusDesc" itemLabel="#{pmStatusDesc.statusName}"
 							itemValue="#{pmStatusDesc.pmStatus.statusId}">
 						</f:selectItems>
-					</p:selectManyMenu>
+					</p:selectOneMenu>
 				</td>
 			</tr>
 			<tr>
-				<td class="TableFieldLeft">
+				<td>
 					<p:outputLabel value="#{lbl['lbl.sc.request.note.header.method']}" />
 				</td>
-				<td class="TableFieldRight" colspan="3">
+				<td>
 					<p:selectOneMenu style="width:187px;margin-bottom: 5px;" value="#{requestNoteBackingBean.managedBean.searchSrcMethod}">
 						<f:selectItems value="#{requestNoteBackingBean.getDropdownCodeValues(ParameterTypeConst.sourceMethod)}" />
 					</p:selectOneMenu>
 				</td>
 			</tr>
 			<tr>
-				<td width="20%">
+				<td>
 					<h:outputLabel value="#{lbl['lbl.sc.created.date.from']}" />
 				</td>
-				<td width="20%">
+				<td>
 					<p:calendar
 						value="#{requestNoteBackingBean.managedBean.searchCreatedDateFrom}"
 						id="crdateFrom" showOn="button" size="25" readonlyInput="true"
@@ -58,10 +58,10 @@
 						<p:ajax event="dateSelect" update="crdateTo" />
 					</p:calendar>
 				</td>
-				<td width="10%">
+				<td>
 					<h:outputLabel value="#{lbl['lbl.sc.created.date.to']}" />
 				</td>
-				<td width="20%">
+				<td>
 					<p:calendar id="crdateTo" showOn="button"
 						value="#{requestNoteBackingBean.managedBean.searchCreatedDateTo}"
 						mindate="#{requestNoteBackingBean.managedBean.searchCreatedDateFrom}"
@@ -69,13 +69,9 @@
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</td>
 			</tr>
-			<tr height="65px" valign="top">
-				<td colspan="4">
-				</td>
-			</tr>
 		    </table>
 		    
-		    <br />
+		<p:spacer height="4px"></p:spacer>
 		    
 		    <div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.search']}" 
@@ -121,7 +117,7 @@
 				<p:column style="width:10%" headerText="#{lbl['lbl.sc.action']}">
 					<p:commandLink action="#{requestNoteBackingBean.editRequestNote(scRequestNote)}"
 						partialSubmit="true" process="@this">
-						<p:graphicImage value="/css/images/design/edit.png" />
+						<p:graphicImage value="/css/images/design/document.png" />
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>
