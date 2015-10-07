@@ -550,7 +550,7 @@ public class EperundingIntegration extends EperundingTemplate{
 					profile.setSSMNo(smSupplier.getRegNo());
 					profile.setMOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
 					
-					if(smSupplier.getSmMofAccounts().get(0).getSmMofCerts().size()>0){
+					if(!smSupplier.getSmMofAccounts().get(0).getSmMofCerts().isEmpty()){
 						profile.setVirtualCertNo(smSupplier.getSmMofAccounts().get(0).getSmMofCerts().get(0).getCertSerialNo());
 					}
 
