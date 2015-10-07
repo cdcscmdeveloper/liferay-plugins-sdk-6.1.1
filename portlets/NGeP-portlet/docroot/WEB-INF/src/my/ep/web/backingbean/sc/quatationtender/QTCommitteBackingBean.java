@@ -1908,9 +1908,7 @@ public class QTCommitteBackingBean extends
 
 		if (this.getManagedBean().isMaintanceFlow()) {
 			if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this
-					.getManagedBean().getCurrentStatusId())
-					|| QTStatusConst.CMT_PENDING_REVISION
-							.equals(committeStatus)) {
+					.getManagedBean().getCurrentStatusId())) {
 				return true;
 			}
 		} else {
@@ -1921,7 +1919,10 @@ public class QTCommitteBackingBean extends
 									.getTaskName())) {
 				return true;
 			} else if (QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT
-					.compareTo(this.getManagedBean().getCurrentStatusId()) < 0) {
+					.compareTo(this.getManagedBean().getCurrentStatusId()) < 0
+					&& !SCProcessNameConst.REVISE_COMMITTEE
+							.equalsIgnoreCase(this.getManagedBean()
+									.getTaskName())) {
 				return true;
 			}
 		}
@@ -1969,7 +1970,10 @@ public class QTCommitteBackingBean extends
 									.getTaskName())) {
 				return true;
 			} else if (QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT
-					.compareTo(this.getManagedBean().getCurrentStatusId()) < 0) {
+					.compareTo(this.getManagedBean().getCurrentStatusId()) < 0
+					&& !SCProcessNameConst.REVISE_COMMITTEE
+							.equalsIgnoreCase(this.getManagedBean()
+									.getTaskName())) {
 				return true;
 			}
 		}

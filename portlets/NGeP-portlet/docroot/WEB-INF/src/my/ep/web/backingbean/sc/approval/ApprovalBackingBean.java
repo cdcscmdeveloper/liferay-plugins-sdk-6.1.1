@@ -836,6 +836,10 @@ public class ApprovalBackingBean extends
 									qt.setQtValidityPeriod(Integer
 											.parseInt(approvalRequest
 													.getChangedValue()));
+
+									qt.setProposalValidityEndDate(DateUtils
+											.addDays(qt.getClosingDate(),
+													qt.getQtValidityPeriod()));
 									docbackingBean.reGenerateDocuments(
 											qt.getQtId(), qt
 													.getCurrentWorkFlowStatus()
@@ -872,6 +876,14 @@ public class ApprovalBackingBean extends
 									qt.setPublishPeriod(Integer
 											.parseInt(approvalRequest
 													.getChangedValue()));
+									int days = (Integer
+											.parseInt(approvalRequest
+													.getChangedValue()))
+
+											- (Integer.parseInt(approvalRequest
+													.getOriginalValue()));
+									qt.setClosingDate(DateUtils.addDays(
+											qt.getClosingDate(), days));
 									break;
 								} else if (ParameterConst.APPROVAL_CATEGORY_PTJ
 										.equalsIgnoreCase(approvalType)) {
