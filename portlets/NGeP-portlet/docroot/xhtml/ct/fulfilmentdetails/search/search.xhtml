@@ -96,44 +96,48 @@
 					var="data" lazy="true" rowIndexVar="index" rowKey="#{data}" rows="10">
 					<ac:paginator for="contractTbl" />
 					<p:column headerText="#{lbl['lbl.ct.contract.no']}" style="width:10%;"  styleClass="column-align-center">
-						<h:outputText value="#{data.contractNo}" />
+						<h:outputText value="#{data.contractNo}" style="float:left;" />
 					</p:column>					
 					<p:column headerText="#{lbl['lbl.ct.contract.title']}" styleClass="column-align-center"  style="width:21%; white-space:normal;">
-						<h:outputText value="#{data.contractName}" />
+						<h:outputText value="#{data.contractName}"  style="float:left;" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}"  styleClass="column-align-center" style="width:8%; white-space:normal;" rendered="#{contractDetailsBackingBean.isBPKCCA()}">
-						<h:outputText value="#{data.ctCircularVer.circularNo}"  rendered="#{data.ctCircularVer != null and data.ctCircularVer.status.statusId != CtStatusConst.cqRejected}" />
+					<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}"  
+					      styleClass="column-align-center" style="width:8%; white-space:normal;" rendered="#{contractDetailsBackingBean.isBPKCCA()}">
+						<h:outputText value="#{data.ctCircularVer.circularNo}" style="float:left;" rendered="#{data.ctCircularVer != null and data.ctCircularVer.status.statusId != CtStatusConst.cqRejected}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.circular.status']}" styleClass="column-align-center"  style="width:8%; white-space:normal;" rendered="#{contractDetailsBackingBean.isBPKCCA()}">
-						<h:outputText value="#{contractDetailsBackingBean.getStatusDescById(data.ctCircularVer.status.statusId)}" rendered="#{data.ctCircularVer != null and data.ctCircularVer.status.statusId != CtStatusConst.cqRejected}"    />
+					<p:column headerText="#{lbl['lbl.ct.circular.status']}" 
+					     styleClass="column-align-center"  style="width:8%; white-space:normal;" rendered="#{contractDetailsBackingBean.isBPKCCA()}">
+						<h:outputText value="#{contractDetailsBackingBean.getStatusDescById(data.ctCircularVer.status.statusId)}" 
+						      style="float:left;" rendered="#{data.ctCircularVer != null and data.ctCircularVer.status.statusId != CtStatusConst.cqRejected}"    />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.supplier.name']}" styleClass="column-align-center" style="width:8%; white-space:normal;" rendered="#{!contractDetailsBackingBean.isSupplierRole()}">
-						<h:outputText value="#{data.companyName}" />
+						<h:outputText value="#{data.companyName}" style="float:left;"/>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.contract.start']}" styleClass="column-align-center"  style="width:5%; white-space:normal;">
-						<h:outputText value="#{data.effDate}">
+						<h:outputText value="#{data.effDate}" style="float:left;">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.contract.end']}"  styleClass="column-align-center" style="width:5%; white-space:normal;">
-						<h:outputText value="#{data.expDate}">
+						<h:outputText value="#{data.expDate}" style="float:left;">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.loa.physical.no']}" styleClass="column-align-center"  style="width:8%; white-space:normal;">
-						<h:outputText value="#{data.loaPhysicalNo}" />
+						<h:outputText value="#{data.loaPhysicalNo}" style="float:left;"/>
 					</p:column>
 					<p:column style="width:6%; white-space:normal;" styleClass="column-align-center">
 						<f:facet name="header" >
 					   		<h:outputText value="#{lbl['lbl.ct.status']}"/>
                		   		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.status.contract']}" />
                	    	</f:facet>
-						<h:outputText value="#{contractDetailsBackingBean.chkContractStatusType(data.status)}" />						
+						<h:outputText value="#{contractDetailsBackingBean.chkContractStatusType(data.status)}" style="float:left;" />						
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.contract.status']}" styleClass="column-align-center" style="width:15%; white-space:normal;">
-						<h:outputText value="#{contractDetailsBackingBean.getStatusDescById(data.ctContractVer.status.statusId)}" />
+						<h:outputText value="#{contractDetailsBackingBean.getStatusDescById(data.ctContractVer.status.statusId)}" style="float:left;" />
 					</p:column>
-					 	<p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center"  style="width:7%;" rendered="#{!contractDetailsBackingBean.isSupplierRole()}">
+					 	<p:column headerText="#{lbl['lbl.ct.action']}" 
+					 	    styleClass="column-align-center"  style="width:7%;" rendered="#{!contractDetailsBackingBean.isSupplierRole()}">
 					 	 	
 					 	 	 	<p:menuButton id="menuButtonId" value="#{lbl['lbl.btn.option']}" >
                                  <p:menuitem id="menuItemId" value="#{lbl['lbl.ct.suspend.contract']}"   icon="ui-icon-suspension"
@@ -178,7 +182,8 @@
                        </p:menuButton>
 					</p:column>
 					<!-- Supplier's action -->
-					<p:column headerText="#{lbl['lbl.ct.action']}"  styleClass="column-align-center" style="width:8%;" rendered="#{contractDetailsBackingBean.isSupplierRole()}">
+					<p:column headerText="#{lbl['lbl.ct.action']}"  styleClass="column-align-center" 
+					   style="width:8%;" rendered="#{contractDetailsBackingBean.isSupplierRole()}">
 					    <p:menuButton id="menuButtonId11" value="#{lbl['lbl.btn.option']}" >
 					     	<p:menuitem id="menuItemId11" value="#{lbl['lbl.ct.view']}"  
 					   	     	icon="ui-icon-view" 

@@ -25,11 +25,11 @@
 	                
 	                   <ac:paginator for="payScheduleTableId" />
 	                 
-		               <p:column style="width:9%;" headerText="#{lbl['lbl.ct.schedule.no']}" >
+		               <p:column style="width:9%;" headerText="#{lbl['lbl.ct.schedule.no']}" styleClass="column-align-center">
 		                   <p:outputLabel value="#{payScheduleObj.scheduleNo}" styleClass="ppRightBtn"  maxlength="4"  style="width:60px;" />
 		               </p:column> 
 		      
-		               <p:column style="width:28%;" headerText="#{lbl['lbl.ct.start.period']}">
+		               <p:column style="width:28%;" headerText="#{lbl['lbl.ct.start.period']}" styleClass="column-align-center">
 		                   <p:selectOneMenu id="fromMonth" value="#{payScheduleObj.startMonth}" disabled="true" style="width:110px;">
                                <f:selectItems value="#{contractDetailsBackingBean.retrieveStartMonthList(payScheduleObj.startYear)}"/> 
                            </p:selectOneMenu> 
@@ -39,7 +39,7 @@
                            </p:selectOneMenu> 
 		               </p:column> 	
 		       
-		                <p:column style="width:32%;" headerText="#{lbl['lbl.ct.end.period']}">
+		                <p:column style="width:32%;" headerText="#{lbl['lbl.ct.end.period']}" styleClass="column-align-center">
 		                    <h:panelGroup>
 		                        <p:selectOneMenu id="toMonth" value="#{payScheduleObj.endMonth}" disabled="true" style="width:110px;" >
                                    <f:selectItems value="#{contractDetailsBackingBean.retrieveEndMonthList(payScheduleObj.endYear)}" />
@@ -51,13 +51,13 @@
 		                     </h:panelGroup>
 		                 </p:column> 
 		            
-		                 <p:column headerText="#{lbl['lbl.ct.total.month']}" style="width:10%;">
+		                 <p:column headerText="#{lbl['lbl.ct.total.month']}" style="width:10%;" styleClass="column-align-center">
 		                     <h:outputText id="totalMonth" style="float:right;"
 		                         value="#{contractDetailsBackingBean.calculateTotalMonth(payScheduleObj, 'S')}">
 		                      </h:outputText>
 		                  </p:column>
 		           
-		                  <p:column style="width:15%;white-space:normal;">
+		                  <p:column style="width:15%;white-space:normal;" styleClass="column-align-center">
 		                      <f:facet name="header">
 						     	<h:outputText value="#{lbl['lbl.ct.schedule.type']}"/>
 				               	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.schedule.type']}"/>
@@ -72,17 +72,15 @@
 	                  value="#{contractDetailsBackingBean.managedBean.contractVer.ctProgressivePayments}">
 		              <ac:paginator for="progPaymentTableId" />
 		          
-                      <p:column style="width:4%;" headerText="#{lbl['lbl.ct.phase']}">
-                           <p:outputLabel value="#{progPaymentObj.phaseNo}" 
-                                 maxlength="4" style="width:25px;" styleClass="ppRightBtn"   disabled="true" />
+                      <p:column style="width:4%;" headerText="#{lbl['lbl.ct.phase']}" styleClass="column-align-center">
+                           <p:outputLabel value="#{progPaymentObj.phaseNo}" style="float:left;"/>
                           </p:column>
 		      
-		               <p:column style="width:25%;" headerText="#{lbl['lbl.ct.description']}">
-		                    <p:outputLabel  maxlength="50"
-		                        value="#{progPaymentObj.phaseDesc}"  style="width:200px;"  disabled="true"/>
+		               <p:column style="width:25%;" headerText="#{lbl['lbl.ct.description']}" styleClass="column-align-center">
+		                    <p:outputLabel  value="#{progPaymentObj.phaseDesc}" style="float:left;" />
 		                    </p:column>
               
-                        <p:column style="width:20%;" headerText="#{lbl['lbl.ct.start.period']}" >
+                        <p:column style="width:20%;" headerText="#{lbl['lbl.ct.start.period']}" styleClass="column-align-center" >
 		                    <p:selectOneMenu id="fromProMonth" value="#{progPaymentObj.startMonth}"  style="width:110px;" disabled="true">
                                 <f:selectItems value="#{contractDetailsBackingBean.retrieveStartMonthList(progPaymentObj.startYear)}" />
                              </p:selectOneMenu> 
@@ -93,7 +91,7 @@
                               </p:selectOneMenu> 
 		                  </p:column> 	
 		        
-		                  <p:column style="width:28%;" headerText="#{lbl['lbl.ct.end.period']}">
+		                  <p:column style="width:28%;" headerText="#{lbl['lbl.ct.end.period']}" styleClass="column-align-center">
 		                      <h:panelGroup columns="5">
 		                          <p:selectOneMenu id="toProMonth" value="#{progPaymentObj.endMonth}"   style="width:110px;" disabled="true">
                                       <f:selectItems value="#{contractDetailsBackingBean.retrieveEndMonthList(progPaymentObj.endYear)}"  />
@@ -106,15 +104,15 @@
 		                        </h:panelGroup>
 		                     </p:column>       
 		         
-		                     <p:column headerText="#{lbl['lbl.ct.total.month']}" style="width:7%;white-space:normal;">
+		                     <p:column headerText="#{lbl['lbl.ct.total.month']}" style="width:7%;white-space:normal;" styleClass="column-align-center">
 		                           <h:outputText id="totalMonth" style="float:right;"
 		                               value="#{contractDetailsBackingBean.calculateTotalMonth(progPaymentObj,'P')}">
 		                           </h:outputText>
 		                      </p:column>
                
-                              <p:column style="width:14%;" headerText="#{lbl['lbl.ct.percentage']}">
+                              <p:column style="width:14%;" headerText="#{lbl['lbl.ct.percentage']}" styleClass="column-align-center">
                                  <h:panelGroup>
-                                     <h:outputText value="#{progPaymentObj.percentage}" style="width:50px;" styleClass="ppRightBtn"  disabled="true">
+                                     <h:outputText id="percentValidationId" value="#{progPaymentObj.percentage}" styleClass="ppRightBtn" >
                                         <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
                                       </h:outputText>
                                      <p:spacer width="5"/>

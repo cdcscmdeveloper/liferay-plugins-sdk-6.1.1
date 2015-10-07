@@ -23,7 +23,8 @@
 				 <p:ajax event="rowSelect" update=":form:itemId" listener="#{amendmentBackingBean.onSelectProductItem()}"
 				     process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 			
-				  <p:column style="width:30%; white-space:normal;" filterBy="#{ctItemVar.scRequestItem.itemName}" filterMatchMode="contains">
+				  <p:column style="width:30%; white-space:normal;" styleClass="column-align-center"
+				     filterBy="#{ctItemVar.scRequestItem.itemName}" filterMatchMode="contains">
 				  <f:facet name="header">
 		                    <h:outputText id="productItemDesc"  value="#{lbl['lbl.ct.item.desc']}"/>
 		                        &#160;<p:graphicImage id="amendProductItemId" value="/css/images/design/tooltips.png" /> <p:tooltip
@@ -34,28 +35,31 @@
 					    <h:outputText value="#{ctItemVar.scRequestItem.itemName}" style="float:left;" />
 			   	  </p:column>
 			
-				  <p:column style="width:15%; white-space:normal;" headerText="#{lbl['lbl.ct.type.of.goods']}">
+				  <p:column style="width:15%; white-space:normal;" 
+				      styleClass="column-align-center" headerText="#{lbl['lbl.ct.type.of.goods']}">
 					   <h:outputText  style="float:left;" 
 					     value="#{amendmentBackingBean.getParameterDesc(ctItemVar.itemOrigin)}"  />
 				  </p:column>				
 			
-				  <p:column headerText="#{lbl['lbl.ct.uom']}" style="width:10%; white-space:normal;">
+				  <p:column headerText="#{lbl['lbl.ct.uom']}" 
+				     styleClass="column-align-center" style="width:10%; white-space:normal;">
 					    <h:outputText value="#{ctItemVar.scRequestItem.uom.uomName}" style="float:left;" />
 				  </p:column>
 			
-				  <p:column style="width:10%; white-space:normal;text-align: right;">
+				  <p:column style="width:10%;white-space:normal;text-align: right;"
+				    styleClass="column-align-center">
 				 	  <f:facet name="header">
 			            <h:outputText value="#{lbl['lbl.ct.min.order.qty']}"/>
 	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.min.order.qty']}"/>
 	                  </f:facet>
-					 <h:outputText value="#{ctItemVar.minimumOrderQty}" >
+					 <h:outputText value="#{ctItemVar.minimumOrderQty}" style="float:right;">
 						<f:converter converterId="dynamicNumberConverter" />
 						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.scRequestItem.uom.uomCode)}" />		
 					  </h:outputText>
 				   </p:column>
 				
-				<p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%; white-space:normal;">
-		             <h:outputText value="#{ctItemVar.chkStatus ? lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }"/>
+				<p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%; white-space:normal;" styleClass="column-align-center">
+		             <h:outputText value="#{ctItemVar.chkStatus ? lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
 		        </p:column> 
 				
 			</p:dataTable>
@@ -87,7 +91,7 @@
 					             value="#{amendmentBackingBean.managedBean.selectedItem.ctItemPrices}" >
 					             <ac:paginator for="itemPriceTable" />
 					 
-					             <p:column headerText="#{lbl['lbl.ct.zone']}" style="width:40%; white-space:normal;"
+					             <p:column headerText="#{lbl['lbl.ct.zone']}" style="width:40%; white-space:normal;" styleClass="column-align-center"
 						             rendered="#{amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalStandard or 
 					  		         amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTier or 
 					  		         amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTariff}">
@@ -96,7 +100,7 @@
 			             
 					             </p:column>
 					
-					            <p:column style="width:10%; white-space:normal;"
+					            <p:column style="width:10%; white-space:normal;" styleClass="column-align-center"
 						            rendered="#{amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeTier or 
 					  		        amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTier or
 					  		        amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeTariff or 
@@ -111,7 +115,7 @@
 						            </h:outputText>
 					           </p:column>
 				
-								<p:column style="width:10%; white-space:normal;"
+								<p:column style="width:10%; white-space:normal;" styleClass="column-align-center"
 									rendered="#{amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeTier or 
 								  		amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTier or
 								  		amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeTariff or 
@@ -126,7 +130,7 @@
 						            </h:outputText>
 								</p:column>
 							
-								<p:column style="width:10%; white-space:normal;"
+								<p:column style="width:10%; white-space:normal;" styleClass="column-align-center"
 									rendered="#{amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeTariff or 
 								  		amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTariff}">
 									<f:facet name="header">
@@ -139,7 +143,7 @@
 						            </h:outputText>
 								</p:column>
 								
-								<p:column headerText="#{lbl['lbl.ct.price']}" style="width:10%; white-space:normal;">
+								<p:column headerText="#{lbl['lbl.ct.price']}" style="width:10%; white-space:normal;" styleClass="column-align-center">
 								  <h:panelGroup style="float:right;" rendered="#{itemPriceVar.changePrice}">
 								   	<p:inputText value="#{itemPriceVar.unitPrice}" styleClass="ppRightBtn" style="width:100px;" label="#{lbl['lbl.ct.price']}"
 								   		disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}">
@@ -152,19 +156,19 @@
 									</h:outputText>
 								</p:column>
 							
-								<p:column headerText="#{lbl['lbl.ct.effective.date']}" style="width:10%; white-space:normal;">
-									<h:outputText value="#{itemPriceVar.effDate}">
+								<p:column headerText="#{lbl['lbl.ct.effective.date']}" style="width:10%; white-space:normal;" styleClass="column-align-center">
+									<h:outputText value="#{itemPriceVar.effDate}" style="float:left;">
 										<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 									</h:outputText>
 								</p:column>
 								
-								<p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="width:10%; white-space:normal;">
-									<h:outputText value="#{itemPriceVar.expDate}">
+								<p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="width:10%; white-space:normal;" styleClass="column-align-center">
+									<h:outputText value="#{itemPriceVar.expDate}" style="float:left;">
 										<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 									</h:outputText>
 								</p:column>
 								
-								<p:column headerText="#{lbl['lbl.ct.action']}" 
+								<p:column headerText="#{lbl['lbl.ct.action']}"  styleClass="column-align-center"
 									rendered="#{!amendmentBackingBean.managedBean.disableAmendDetails and 
 						           		amendmentBackingBean.managedBean.selectedItem.chkStatus}"
 								    styleClass="column-align-center" style="width:10%; white-space:normal;">
@@ -204,16 +208,16 @@
 				<p:dataTable id="ceilingTable" var="itemCeilingQtiesVar"
 					value="#{amendmentBackingBean.getActiveItemCeilingQty()}" >
 					<ac:paginator for="ceilingTable" />
-					<p:column headerText="#{lbl['lbl.ct.ministry']}" style="width:25%; white-space:normal;">
+					<p:column headerText="#{lbl['lbl.ct.ministry']}" style="width:25%; white-space:normal;" styleClass="column-align-center">
 						<p:outputLabel style="float:left;" value="#{amendmentBackingBean.retrieveMinistryByOrgProfileId(itemCeilingQtiesVar.ctAgency.orgProfile.orgProfileId)}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.jabatan']}" style="width:25%; white-space:normal;">
+					<p:column headerText="#{lbl['lbl.ct.jabatan']}" style="width:25%; white-space:normal;" styleClass="column-align-center">
 						<p:outputLabel style="float:left;" value="#{amendmentBackingBean.retrieveJabatanByOrgProfileId(itemCeilingQtiesVar.ctAgency.orgProfile.orgProfileId)}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.ptj']}"	style="width:30%; white-space:normal;">
+					<p:column headerText="#{lbl['lbl.ct.ptj']}"	style="width:30%; white-space:normal;" styleClass="column-align-center">
 						<p:outputLabel style="float:left;" value="#{itemCeilingQtiesVar.ctAgency.orgProfile.orgName}" />
 					</p:column>
-					<p:column style="width:10%; white-space:normal;">
+					<p:column style="width:10%; white-space:normal;" styleClass="column-align-center">
 						 <f:facet name="header">
 							<h:outputText value="#{lbl['lbl.ct.ceiling.qty']}"/>
 		               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ceiling.qty']}"/>
@@ -232,13 +236,13 @@
 							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
 						</h:outputText>
 					</p:column>
-					<p:column rendered="false" headerText="#{lbl['lbl.ct.effective.date']}" style="width:10%; white-space:normal;">
-						<h:outputText value="#{itemCeilingQtiesVar.effDate}">
+					<p:column rendered="false" headerText="#{lbl['lbl.ct.effective.date']}" style="width:10%; white-space:normal;" styleClass="column-align-center">
+						<h:outputText value="#{itemCeilingQtiesVar.effDate}" style="float:left;">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
-					<p:column rendered="false" headerText="#{lbl['lbl.ct.expiry.date']}" style="width:10%; white-space:normal;">
-						<h:outputText value="#{itemCeilingQtiesVar.expDate}">
+					<p:column rendered="false" headerText="#{lbl['lbl.ct.expiry.date']}" style="width:10%; white-space:normal;" styleClass="column-align-center">
+						<h:outputText value="#{itemCeilingQtiesVar.expDate}" style="float:left;">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
@@ -281,7 +285,7 @@
 				             value="#{amendmentBackingBean.managedBean.selectedItem.ctItemMaxQties}" >
 				             <ac:paginator for="itemMaxQtyTable" />
 				 
-				             <p:column headerText="#{lbl['lbl.ct.zone']}" style="width:40%; white-space:normal;"
+				             <p:column headerText="#{lbl['lbl.ct.zone']}" style="width:40%; white-space:normal;" styleClass="column-align-center"
 					             rendered="#{amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalStandard or 
 				  		         amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTier or 
 				  		         amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTariff}">
@@ -292,7 +296,7 @@
 				
 				            
 							
-							<p:column headerText="#{lbl['lbl.ct.max.order.qty']}">							  								
+							<p:column headerText="#{lbl['lbl.ct.max.order.qty']}" styleClass="column-align-center">							  								
 								<p:inputText value="#{itemMaxQtyVar.maxQuantity}" styleClass="ppRightBtn" style="float:right;" rendered="#{itemMaxQtyVar.changeQuantity}" label="#{lbl['lbl.ct.max.order.qty']}"
 					        		maxlength="#{amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}">
 									<f:converter converterId="dynamicNumberConverter" />
@@ -306,19 +310,19 @@
 								
 							</p:column>
 						
-							<p:column headerText="#{lbl['lbl.ct.effective.date']}">
-								<h:outputText value="#{itemMaxQtyVar.effDate}">
+							<p:column headerText="#{lbl['lbl.ct.effective.date']}" styleClass="column-align-center">
+								<h:outputText value="#{itemMaxQtyVar.effDate}"  style="float:left;">
 									<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 								</h:outputText>
 							</p:column>
 							
-							<p:column headerText="#{lbl['lbl.ct.expiry.date']}">
-								<h:outputText value="#{itemMaxQtyVar.expDate}">
+							<p:column headerText="#{lbl['lbl.ct.expiry.date']}" styleClass="column-align-center">
+								<h:outputText value="#{itemMaxQtyVar.expDate}" style="float:left;">
 									<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 								</h:outputText>
 							</p:column>
 							
-							<p:column headerText="#{lbl['lbl.ct.action']}" 
+							<p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center"
 								rendered="#{!amendmentBackingBean.managedBean.disableAmendDetails and 
 					           		amendmentBackingBean.managedBean.selectedItem.chkStatus}"
 							    styleClass="column-align-center" style="width:10%; white-space:normal;">
@@ -374,32 +378,35 @@
 		               </f:facet>
 					<h:outputText value="#{serviceItemVar.scRequestItem.itemName}" style="float:left;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.ct.specification']}" style="width:20%; white-space:normal;">
+				<p:column headerText="#{lbl['lbl.ct.specification']}" style="width:20%; white-space:normal;" styleClass="column-align-center">
 					<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clSpecDetail}" style="float:left;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.ct.uom']}"  style="width:15%;white-space:normal;">
+				<p:column headerText="#{lbl['lbl.ct.uom']}"  style="width:15%;white-space:normal;" styleClass="column-align-center">
 					<h:outputText value="#{serviceItemVar.scRequestItem.uom.uomName}" style="float:left;" />
 				</p:column>
-		      <p:column headerText="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}" style="width:15%; white-space:normal;">
-		        	<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomFrequency == null ? lbl['lbl.txt.na'] : serviceItemVar.scRequestItem.tplSpecQuestion.clUomFrequency}" />
+		      <p:column headerText="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}" style="width:15%; white-space:normal;" styleClass="column-align-center">
+		        	<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomFrequency == null ? lbl['lbl.txt.na'] : serviceItemVar.scRequestItem.tplSpecQuestion.clUomFrequency}" style="float:left;" />
 		      </p:column>				
-		      	<p:column headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}"  style="text-align: right;width:15%; white-space:normal;">
-		          	<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerDay == null ? lbl['lbl.txt.na'] : serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerDay}" />
+		      	<p:column headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}" 
+		      	     style="width:15%; white-space:normal;" styleClass="column-align-center">
+		          	<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerDay == null ? lbl['lbl.txt.na'] : serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerDay}" style="float:left;" />
 		      	</p:column>				
-				<p:column headerText="#{lbl['lbl.ct.uom.per.month']}" style="width:15%; white-space:normal;text-align: right;">
-					<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerMonth == null ? lbl['lbl.txt.na'] : serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerMonth}" />
+				<p:column headerText="#{lbl['lbl.ct.uom.per.month']}" 
+				    style="width:15%; white-space:normal;" styleClass="column-align-center">
+					<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerMonth == null ? lbl['lbl.txt.na'] : serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerMonth}" style="float:left;" />
 				</p:column>
-		      <p:column    headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.year']}" style="text-align: right;width:15%; white-space:normal;"  rendered="false" >
-		          	<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerYear == null ? lbl['lbl.txt.na'] : serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerYear}" />
+		      <p:column    headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.year']}" 
+		          styleClass="column-align-center" style="width:15%; white-space:normal;"  rendered="false" >
+		          	<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerYear == null ? lbl['lbl.txt.na'] : serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerYear}" style="float:left;" />
 		      </p:column>				
-				<p:column headerText="#{lbl['lbl.ct.quantity']}" style="width:15%;white-space:normal;text-align:right;">
-					<h:outputText value="#{serviceItemVar.minimumOrderQty}">
+				<p:column headerText="#{lbl['lbl.ct.quantity']}" style="width:15%;white-space:normal;" styleClass="column-align-center">
+					<h:outputText value="#{serviceItemVar.minimumOrderQty}" style="float:left;">
 						<f:converter converterId="dynamicNumberConverter" />
 						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, serviceItemVar.scRequestItem.uom.uomCode)}" />
 					</h:outputText>
 				</p:column>				
-				<p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;white-space:normal;">
-		            <h:outputText value="#{serviceItemVar.chkStatus ? lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }"/>
+				<p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;white-space:normal;" styleClass="column-align-center">
+		            <h:outputText value="#{serviceItemVar.chkStatus ? lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
 		        </p:column> 
 			</p:dataTable>
 		</h:panelGrid>
@@ -410,12 +417,12 @@
 				<p:dataTable id="servicePriceTable" var="ItemPricesVar"
 					value="#{amendmentBackingBean.managedBean.selectedServiceItem.ctItemPrices}" >
 					<ac:paginator for="servicePriceTable" />
-					<p:column headerText="#{lbl['lbl.ct.zone']}" style="width:40%; white-space:normal;"
+					<p:column headerText="#{lbl['lbl.ct.zone']}" style="width:40%; white-space:normal;" styleClass="column-align-center"
 						rendered="#{amendmentBackingBean.managedBean.selectedServiceItem.priceType.parameterCode eq ParameterConst.priceTypeZonalStandard}">
 						        <p:outputLabel value="#{ItemPricesVar.ctContractZone.zoneName}" style="float:left;" rendered="#{!ItemPricesVar.changeZoneLabel}" />
 						        <p:outputLabel value="#{ItemPricesVar.ctContractZone.zoneName} (#{lbl['lbl.ct.new']})" style="float:left;" rendered="#{ItemPricesVar.changeZoneLabel}" />
 			       	</p:column>
-					<p:column headerText="#{lbl['lbl.ct.price']}" style="width:10%; white-space:normal;">
+					<p:column headerText="#{lbl['lbl.ct.price']}" style="width:10%; white-space:normal;" styleClass="column-align-center">
 					     <h:panelGroup style="float:right;"  rendered="#{ItemPricesVar.changePrice}">
 					    	<p:inputText value="#{ItemPricesVar.unitPrice}" styleClass="ppRightBtn" style="width:100px;" label="#{lbl['lbl.ct.price']}"
 					    		disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}" >
@@ -427,13 +434,13 @@
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.effective.date']}" style="width:10%;white-space:normal;">
-						<h:outputText value="#{ItemPricesVar.effDate}">
+					<p:column headerText="#{lbl['lbl.ct.effective.date']}" style="width:10%;white-space:normal;" styleClass="column-align-center">
+						<h:outputText value="#{ItemPricesVar.effDate}" style="float:left">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="width:10%;white-space:normal;">
-						<h:outputText value="#{ItemPricesVar.expDate}">
+					<p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="width:10%;white-space:normal;" styleClass="column-align-center">
+						<h:outputText value="#{ItemPricesVar.expDate}" style="float:left;">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
