@@ -58,9 +58,9 @@
 				</f:facet>
 				<h:outputText rendered="#{danItem.level == 1}" value="#{danItem.flAdjustmentItem.flItem.itemCode}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;">
+			<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;">
 				<h:outputText rendered="#{danItem.level == 1}" value="#{danItem.flAdjustmentItem.flItem.flFulfilmentItemAddr[0].scRequestItem.itemName}"  id="itemDesc"/>
-				<p:tooltip for="itemDesc" value="#{danItem.flAdjustmentItem.flItem.flFulfilmentItemAddr[0].scRequestItem.itemDesc}" rendered="#{danItem.flAdjustmentItem.flItem.flFulfilmentItemAddr[0].scRequestItem.itemDesc!=null}" />
+				<p:tooltip for="itemDesc" value="#{danItem.flAdjustmentItem.flItem.flFulfilmentItemAddr[0].scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : danItem.flAdjustmentItem.flItem.flFulfilmentItemAddr[0].scRequestItem.itemDesc}"  />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.uom']}">
 				<h:outputText rendered="#{danItem.level == 1}" value="#{danItem.flAdjustmentItem.flItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomName}" />
