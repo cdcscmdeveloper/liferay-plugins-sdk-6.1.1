@@ -4455,10 +4455,8 @@ public class SupplierFinalizationBackingBean extends
 			committeSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 
-			Long qtId = getManagedBean().getScQt().getQtId();
-
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
-			reqDTO.setQtId(qtId);
+			reqDTO.setPmOrgProfile(getManagedBean().getScQt().getPmOrgProfile());
 			reqDTO.setCommitteeType(commType);
 
 			CommitteResDTO resDTO = committeSO
