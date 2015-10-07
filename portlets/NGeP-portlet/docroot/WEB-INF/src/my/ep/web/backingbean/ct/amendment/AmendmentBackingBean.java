@@ -803,8 +803,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		    		UserReqDTO userReqDTO = new UserReqDTO();
 					IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-		    		userReqDTO.setRoleCode(getManagedBean().getCommitteeType() + "_SECRETARY");	
-			   	  	
+					if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
+				   			|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+						userReqDTO.setRoleCode(RoleCode.FPB_SECRETARY.value());
+					} else {
+						userReqDTO.setRoleCode(getManagedBean().getCommitteeType() + "_SECRETARY");
+					}
 			   	  	PmOrgProfile ministryOrgProfile = retrieveMinistryOrgProfile(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 			   	  	if (ministryOrgProfile != null) {
 			   	  		userReqDTO.setOrgProfileId(ministryOrgProfile.getOrgProfileId());
@@ -950,7 +954,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    		for(CtCommitteeMember committeeMember : committeeMemberList) {
 	    			if (committeeMember.getPmUser().getUserId().equals(getFacesScopes().getUserSessionBean().getUserId())) {
 	    				committeeMember.setSignedOff(true);
-	    				role = getManagedBean().getCommitteeType() + "_" + MemberRole.getDisplayName(committeeMember.getMemberRole().getParameterCode());
+	    				if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
+	    			   			|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) { 
+	    					role = "FPB_" + MemberRole.getDisplayName(committeeMember.getMemberRole().getParameterCode());
+	    				} else {
+	    					role = getManagedBean().getCommitteeType() + "_" + MemberRole.getDisplayName(committeeMember.getMemberRole().getParameterCode());
+	    				}
 	    				reqDTO.setUserRole(role);
 	    				break;
 	    			}
@@ -3369,7 +3378,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		   	}
 		   	
 		   	UserReqDTO reqDTO = new UserReqDTO();
-		   	reqDTO.setRoleCode(getManagedBean().getCommitteeType()+"_SECRETARY");
+		   	if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
+		   			|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+				reqDTO.setRoleCode(RoleCode.FPB_SECRETARY.value());
+			} else {
+				reqDTO.setRoleCode(getManagedBean().getCommitteeType()+"_SECRETARY");
+			}
 			orgProfileIds.add(ownerOrgProfileId);
 		   	reqDTO.setOrgProfileIds(orgProfileIds);		   	
 		   	UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
@@ -4691,6 +4705,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			return RoleCode.PBB_MEMBER.value();
 		} else if (getFacesScopes().hasRoleUser(RoleCode.PBB_SECRETARY.value())) {
 			return RoleCode.PBB_SECRETARY.value();
+		} else if (getFacesScopes().hasRoleUser(RoleCode.FPB_CHAIRPERSON.value())) {
+			return RoleCode.FPB_CHAIRPERSON.value();
+		} else if (getFacesScopes().hasRoleUser(RoleCode.FPB_MEMBER.value())) {
+			return RoleCode.FPB_MEMBER.value();
+		} else if (getFacesScopes().hasRoleUser(RoleCode.FPB_SECRETARY.value())) {
+			return RoleCode.FPB_SECRETARY.value();
 		} else if (getFacesScopes().hasRoleUser(RoleCode.QCA_CHAIRPERSON.value())) {
 			return RoleCode.QCA_CHAIRPERSON.value();
 		} else if (getFacesScopes().hasRoleUser(RoleCode.QCA_MEMBER.value())) {
