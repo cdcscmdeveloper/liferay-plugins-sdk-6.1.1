@@ -312,25 +312,26 @@
 				partialSubmit="true" process="@this"
 				update=":form:settingTabId:ruleTypeValueTableID"></p:commandButton>
 		</div>
-
-		<p:confirmDialog id="statusConfirmDialog" closable="false"
-			severity="alert" header="confirmation popup"
+			
+        <p:confirmDialog id="statusConfirmDialog" closable="false"
+			severity="alert" header="#{lbl['lbl.pm.inactive.popUp.header']}"
 			widgetVar="statusConfirmDialog"
-			message="Are you sure you want to inactive this setting?">
-
-			<p:commandButton value="Yes" partialSubmit="true" process="@this"
-				update=":form:settingTabId:ruleTypeValueTableID"
-				oncomplete="statusConfirmDialog.hide()"
-				action="#{ruleCatalogueBackingBean.ruleValueStatusChange}">
-
-			</p:commandButton>
-			<p:commandButton value="No" partialSubmit="true" process="@this"
-				update=":form:settingTabId:ruleTypeValueTableID"
-				action="#{ruleCatalogueBackingBean.revertStatusChange}">
-
-			</p:commandButton>
-
+			message="#{ruleCatalogueBackingBean.inactivePopUpMsg}"
+			appendToBody="true">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					partialSubmit="true" process="@this"
+					update=":form:settingTabId:ruleTypeValueTableID"
+				    action="#{ruleCatalogueBackingBean.ruleValueStatusChange}"
+					onstart="statusConfirmDialog.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"  action="#{ruleCatalogueBackingBean.revertStatusChange}"
+					partialSubmit="true" process="@this"
+				    update=":form:settingTabId:ruleTypeValueTableID"
+				     />
+			</div>
 		</p:confirmDialog>
+		
 		<p:dialog id="errorDialog" header="#{lbl['lbl.txt.error.list']}"
 			widgetVar="errorDialog" modal="true" width="500" height="100">
 
