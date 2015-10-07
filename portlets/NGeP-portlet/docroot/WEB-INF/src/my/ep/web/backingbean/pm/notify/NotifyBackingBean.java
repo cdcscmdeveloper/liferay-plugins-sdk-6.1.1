@@ -54,14 +54,34 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 	}
 
 	public void removeNotifys() {
+		
 		debugLogger("removeNotifys");
 		NotifyReqDTO reqDTO = new NotifyReqDTO();
+		
 		if (this.getManagedBean().getSelectedNotifys() != null) {
+			
 			debugLogger("getSelectedNotifys length["
 					+ this.getManagedBean().getSelectedNotifys().length + "]");
+			
 			INotifySO reqSO = (INotifySO) BusinessDelegate.getInstance()
 					.getServiceObject("pm", INotifySO.class);
+			
+			PmNotifyUser[] pmNotifyUserArr = this.getManagedBean().getSelectedNotifys();
+			
+			//reload the same object from db
+			
+			long[] pmNotifyUserIds = new long[pmNotifyUserArr.length];
+			
+			for(int i = 0; i<pmNotifyUserArr.length; i++){
+				pmNotifyUserIds[i] = pmNotifyUserArr[i].getNotifyUserId();
+			}
 
+			pmNotifyUserArr = reqSO.getPmNotifyUser(pmNotifyUserIds);
+
+			//end
+			
+			this.getManagedBean().setSelectedNotifys(pmNotifyUserArr);
+			
 			for (PmNotifyUser notifyUser : this.getManagedBean()
 					.getSelectedNotifys()) {
 				reqDTO.getPmNotifyUserList().add(notifyUser);
