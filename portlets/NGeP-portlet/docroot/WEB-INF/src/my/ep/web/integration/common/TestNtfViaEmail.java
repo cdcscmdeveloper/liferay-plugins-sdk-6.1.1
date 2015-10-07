@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import my.ep.factory.EpLogger;
 import my.ep.ntf.dto.Attachment;
 import my.ep.ntf.dto.NtfRequestDTO;
 import my.ep.ntf.service.INtfSO;
@@ -22,7 +23,7 @@ import org.apache.log4j.Logger;
  * 
  */
 public class TestNtfViaEmail {
-	private static Logger log = BatchLogger.getLogger(TestNtfViaEmail.class);
+	private static Logger log = EpLogger.getLogger(TestNtfViaEmail.class);
 	
 //	public static void main(String args[]) {
 //		TestNtfViaEmail testNtfViaEmail = new TestNtfViaEmail();
@@ -157,7 +158,7 @@ public class TestNtfViaEmail {
 		reqDTO.setEmailToArr(emailLst.toArray(new String[emailLst.size()]));
 
 //		 Attachments
-		 String filePath = IntegrationConstants.EPERUNDING_UPLOAD_DIR+DateToStr2;
+		 String filePath = IntegrationConstants.EPERUNDING_UPLOAD_DIR_LOCAL+DateToStr2;
 		 
 		 File folder = new File(filePath);
 		 File[] listOfFiles = folder.listFiles();
