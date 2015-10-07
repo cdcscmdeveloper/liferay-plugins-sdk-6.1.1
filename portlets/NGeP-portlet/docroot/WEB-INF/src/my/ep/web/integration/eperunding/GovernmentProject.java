@@ -30,9 +30,8 @@ public class GovernmentProject {
 			GovernmentProject temp = (GovernmentProject) obj;
 			if (this.mOFNo.equalsIgnoreCase(temp.mOFNo)
 					&& this.project.getProjectName().equalsIgnoreCase(
-							temp.project.getProjectName())
-					&& this.project.getProjectNo().equalsIgnoreCase(
-							temp.project.getProjectNo()))
+							temp.project.getProjectName()))
+
 				return true;
 		}
 		return false;
@@ -42,9 +41,8 @@ public class GovernmentProject {
 	@Override
 	public int hashCode() {
 
-		return (this.mOFNo.hashCode()
-				+ this.project.getProjectName().hashCode() + this.project
-				.getProjectNo().hashCode());
+		return (this.mOFNo.hashCode() + this.project.getProjectName()
+				.hashCode());
 	}
 
 }

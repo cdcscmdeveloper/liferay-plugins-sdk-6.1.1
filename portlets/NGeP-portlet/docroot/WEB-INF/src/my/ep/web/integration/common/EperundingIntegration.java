@@ -555,7 +555,7 @@ public class EperundingIntegration extends EperundingTemplate{
 					}
 
 					// New columns added
-					if(null!=smSupplier.getSmGstSuppliers()){
+					if(!smSupplier.getSmGstSuppliers().isEmpty()){
 						profile.setGSTNo(smSupplier.getSmGstSuppliers().get(0).getGstRegNo());
 						profile.setGSTEffectiveDate(smSupplier.getSmGstSuppliers().get(0).getGstEffDate());
 						profile.setFirstTaxablePeriod(smSupplier.getSmGstSuppliers().get(0).getGstDeclaredDate());
@@ -752,11 +752,11 @@ public class EperundingIntegration extends EperundingTemplate{
 						project.setServiceDesc(smCompanyExperience.getWorkServiceDesc());
 						project.setWorkProgress(smCompanyExperience.getProgressStatus());
 						project.setWorkProgress(getWorkProgress(smCompanyExperience.getProgressStatus()));
-						// Need to confirm directly cmng value
 						project.setWorkProgressOthers(IntegrationConstants.EMPTY_TRING); // this is empty
-						project.setConsultantFee(smCompanyExperience.getConsultantFee().toString());
-						// project.setPaymentMethod(smCompanyExperience.getPaymentMethodId().toString());
-						// // this is empty
+						if(null!=smCompanyExperience.getConsultantFee())
+							project.setConsultantFee(smCompanyExperience.getConsultantFee().toString());
+						else
+							project.setConsultantFee(IntegrationConstants.EMPTY_TRING);
 						project.setPaymentMethod(IntegrationConstants.EMPTY_TRING); // this is empty
 						governmentProject.setProject(project);
 
