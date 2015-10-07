@@ -196,7 +196,8 @@
 					<p:selectOneMenu id="committeeSecretary"
 						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.higherSecretary.userId}"
 						style="width: 178px;" required="true"
-						label="#{lbl['lbl.sc.sf.higher.authority']}">
+						label="#{lbl['lbl.sc.sf.higher.authority']}" 
+						disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
 						<f:selectItems var="usersSecretary"
