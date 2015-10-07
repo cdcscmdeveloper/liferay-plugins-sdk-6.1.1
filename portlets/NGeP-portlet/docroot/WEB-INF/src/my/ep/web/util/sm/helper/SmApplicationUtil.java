@@ -1052,9 +1052,13 @@ public class SmApplicationUtil {
 				sb.append(++noSignatoryCount + ".) ");
 				sb.append(bank.getAccountNo());
 			}
-			if(bank.getSmSupplierBranch()==null){
+			if (bank.getSmSupplierBranch() == null) {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
-				throw new EpException(MessageConst.ERROR_722615);
+				throw new EpException(
+						MessageConst.ERROR_722615,
+						new String[] { bank.getPmFinancialOrg() != null
+								&& bank.getPmFinancialOrg().getFinancialOrgId() != null ? bank
+								.getPmFinancialOrg().getFinOrgName() : "" });
 			}
 		}
 		if (payAccCnt == 0) {
