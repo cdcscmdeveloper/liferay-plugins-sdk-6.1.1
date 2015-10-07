@@ -215,20 +215,12 @@ public class SupplierFinalizationBackingBean extends
 		try {
 			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class);
 			Long qtId = Long.valueOf(dataType.getQtId());
-			String committeeType = String.valueOf(dataType.getCommitteeType());
-			getManagedBean().setCommitteeType(committeeType);
 			getManagedBean().setPayLoad(dataType);
 			getManagedBean().setActiveIndex(0);
 			
 			Long loggedInUserId = getFacesScopes().getUserSessionBean()
 									.getUserId();
 			getManagedBean().setLoggedInUserId(loggedInUserId);
-
-			// Long qtId = 2923L;
-			// String committeeType =
-			// ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A;
-
-			// renewSesionObject();
 
 			loadInitialData(qtId);
 			checkIfLoggedinUserIsSecretary();
@@ -246,14 +238,22 @@ public class SupplierFinalizationBackingBean extends
 	private void loadInitialData(Long qtId) {
 		SCEvaluationDataType dataType = (SCEvaluationDataType) 
 				this.getManagedBean().getPayLoad();
+		
 		if (ParameterConst.DECISION_FORWARD_TO_HIGHER_COMMITTEES
 				.equals(dataType.getFcDecision())) {
 			this.getManagedBean().setInitialDecisionFwdHighAuth(true);
 		} else if (ParameterConst.DECISION_FORWARD_TO_BPK
-					.equals(dataType.getFcDecision())) {
+					.equals(dataType.getFcDecision()) && 
+						QTStatusConst.SF_ESCALATION_TO_BPK
+							.equals(getManagedBean().getCurrentStatusId())) {
+			
+			// If the decision type is forward to BPK, 
+			// then set the committee type as Empty
+			dataType.setCommitteeType(StringUtils.EMPTY);
 			this.getManagedBean().setInitialDecisionFwdToBPK(true);
 		}
 		
+		getManagedBean().setCommitteeType(dataType.getCommitteeType());
 		retrieveQTDetails(qtId);
 		
 		String committeeType = getManagedBean().getCommitteeType();
@@ -1667,6 +1667,7 @@ public class SupplierFinalizationBackingBean extends
 				.getScQtFinalization();
 		String decisionTypeCode = scQtFinalization.getDecision()
 				.getParameterCode();
+		String finalizationMethod = getManagedBean().getFinalizationMethod();
 		boolean decisionRecommendSupplier = ParameterConst.DECISION_RECOMMEND_SUPPLIER
 				.equals(decisionTypeCode);	
 		boolean decisionFwdToHigherAuth = ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY
@@ -1746,9 +1747,8 @@ public class SupplierFinalizationBackingBean extends
 			throw epException;
 		}
 
-		if ( !isQTRefinalized() && 
-				(decisionRecommendSupplier || 
-						decisionFwdToHigherAuth) ) {
+		if (decisionRecommendSupplier || 
+						decisionFwdToHigherAuth) {
 			boolean supplierSelected = true;
 			boolean minSuppliersExist = true;
 			String recommendTypeCode = scQtFinalization.getRecommendedTypeId()
@@ -1766,8 +1766,8 @@ public class SupplierFinalizationBackingBean extends
 					decisionRecommendSupplier && 
 					!this.getManagedBean().isDisableSupplierSelection()) {
 				TplSpecZoneDtl zoneDtl = this.getManagedBean().getCurrentZone();
-				if (StringUtils.isBlank(
-						getManagedBean().getFinalizationMethod())) {
+				
+				if (StringUtils.isBlank(finalizationMethod)) {
 					setZoneAndTabIndexOnException(zoneDtl);
 					throw new EpException(MessageConst.ERROR_760211);
 				}
@@ -1792,13 +1792,13 @@ public class SupplierFinalizationBackingBean extends
 			if (!supplierSelected) {
 				setZoneAndTabIndexOnException(getManagedBean().getCurrentZone());
 				qtSuppFinalizationSO = null;
-				PmParameter finalizationMethod = getPmParameterByTypeAndCode(
+				PmParameter _finalizationMethod = getPmParameterByTypeAndCode(
 						ParameterTypeConst.FINALIZATION_RECOMMEND_BY,
-						getManagedBean().getFinalizationMethod());
+						finalizationMethod);
 				
 				if (!minSuppliersExist) {
 					throw new EpException(MessageConst.ERROR_760243,
-							new String[] { getParameterDesc(finalizationMethod) });
+							new String[] { getParameterDesc(_finalizationMethod) });
 				} else {
 					throw new EpException(MessageConst.ERROR_760206);
 				}
@@ -1837,6 +1837,7 @@ public class SupplierFinalizationBackingBean extends
 			if (reqDTO == null) {
 				reqDTO = validateInfo(activeIndex);
 			}			
+			reqDTO.setScQt(getManagedBean().getScQt());
 			reqDTO.setRefinalize(isQTRefinalized());
 			reqDTO.setOutcome(outcome);
 			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
@@ -5898,11 +5899,11 @@ public class SupplierFinalizationBackingBean extends
 						|| ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK
 								.equals(committeeType)) {
 				getManagedBean().setForwardToBpk(true);
-			} else {
+			} else if (getManagedBean().isSecretaryUser()) {
 				getFinalizationCommitteeDropDown();
 			}
 		} else if (!this.getManagedBean().isInitialDecisionFwdHighAuth()) {
-				resetForwardToHigherAuthority(scQtFinalization);
+			resetForwardToHigherAuthority(scQtFinalization);
 		}
 	}
 
