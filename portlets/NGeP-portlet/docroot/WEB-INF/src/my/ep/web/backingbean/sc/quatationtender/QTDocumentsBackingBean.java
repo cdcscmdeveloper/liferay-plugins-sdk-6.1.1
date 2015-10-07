@@ -1712,7 +1712,6 @@ public class QTDocumentsBackingBean extends
 						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
 		context.put("dateSDF", dateSDF);
 
-		BigDecimal totalMonths = new BigDecimal(0);
 		List<ScQtSchedule> scheduleList = new ArrayList<ScQtSchedule>();
 		IQTSpecSO specSo;
 		SpecificationResDTO resDTO = null;
@@ -1764,7 +1763,7 @@ public class QTDocumentsBackingBean extends
 							count++;
 						}
 						count = count + (diffYear * 12);
-						totalMonths = new BigDecimal(count);
+						qtSchedule.setTotalMonths(new BigDecimal(count));
 					}
 				}
 			}
@@ -1777,7 +1776,6 @@ public class QTDocumentsBackingBean extends
 		}
 		context.put("totalFrequency", totalFrequency);
 		context.put("scheduleList", scheduleList);
-		context.put("totalMonths", totalMonths);
 		context.put("bean", this);
 
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
