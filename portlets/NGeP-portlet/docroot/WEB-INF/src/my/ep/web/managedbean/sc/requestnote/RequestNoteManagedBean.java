@@ -189,8 +189,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     /** The search created date to. */
     private Date searchCreatedDateTo;
     
-    /** The search statuses. */
-    private List<Long> searchStatuses;
+    /** The search status. */
+    private Long searchStatus;
     
     /** The status descs. */
     private List<PmStatusDesc> statusDescs;
@@ -967,23 +967,19 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 	
 	/**
-	 * Gets the search statuses.
-	 *
-	 * @return the searchStatuses
+	 * @return the searchStatus
 	 */
-	public List<Long> getSearchStatuses() {
-		return searchStatuses;
+	public Long getSearchStatus() {
+		return searchStatus;
 	}
-	
+
 	/**
-	 * Sets the search statuses.
-	 *
-	 * @param searchStatuses the searchStatuses to set
+	 * @param searchStatus the searchStatus to set
 	 */
-	public void setSearchStatuses(List<Long> searchStatuses) {
-		this.searchStatuses = searchStatuses;
+	public void setSearchStatus(Long searchStatus) {
+		this.searchStatus = searchStatus;
 	}
-	
+
 	/**
 	 * Gets the status descs.
 	 *
@@ -1059,12 +1055,11 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 									getSearchSrcMethod()));
 				}
 				
-				List<Long> searchStatuses = getSearchStatuses();
-				if(searchStatuses != null && searchStatuses.size() > 0) {
+				if(getSearchStatus() != null) {
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("workFlowStatuses.pmStatus.statusId",
-									SearchOperator.OPERATOR_IN.value(),
-									searchStatuses));
+									SearchOperator.OPERATOR_EQUALS.value(),
+									getSearchStatus()));
 					
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("workFlowStatuses.current",

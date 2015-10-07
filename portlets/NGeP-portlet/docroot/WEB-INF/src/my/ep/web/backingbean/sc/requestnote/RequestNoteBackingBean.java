@@ -220,7 +220,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setSearchSrcMethod(null);
 		getManagedBean().setSearchCreatedDateFrom(null);
 		getManagedBean().setSearchCreatedDateTo(null);
-		getManagedBean().setSearchStatuses(null);
+		getManagedBean().setSearchStatus(null);
 		getManagedBean().getReqNoteDataModel().resetData();
 	}
 	
