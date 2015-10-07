@@ -27,9 +27,9 @@
     				</f:facet>
 				<h:outputText value="#{item.flDelOrderItem.flFulfilmentItemAddr.itemCode}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;">
+			<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;">
 				<h:outputText value="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemName}" id="itemDesc"/>
-				<p:tooltip for="itemDesc" value="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemDesc}" rendered="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemDesc!=null}" />
+				<p:tooltip for="itemDesc" value="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemDesc}"  />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.uom']}">
 				<h:outputText value="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomName}" />
