@@ -419,10 +419,10 @@ public class LOADetailBackingBean extends
 							// Fulfilment Schedule
 							formFulfilmentSchedule(scLoa);
 						}
-					} else{
-						// for s1
-						formFulfilmentSchedule(scLoa);
-					}
+					} 
+				} else{
+					// for s1
+					formFulfilmentSchedule(scLoa);
 				}
 			}
 			
@@ -2647,10 +2647,11 @@ public class LOADetailBackingBean extends
 		scLoa.setIssueDate(scLoa.getContractEffDate());
 		
 		// Acknowledge Date
-		scLoa.setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), 14));
+		if(BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_SUBMIT.equals(outcome)){
+			scLoa.setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), 14));
+		}
 
 		Long statusId = scLoa.getPmStatus().getStatusId().longValue();
-
 		if (scLoa.isApprovalReq()
 				&& QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)) {
 			PmUser approverUser = getManagedBean().getApproverUser();
