@@ -336,6 +336,9 @@ public class SimpleQuoteBackingBean extends
 			// title checker
 			getManagedBean().setTitleChecker(Boolean.FALSE);
 
+			// procurement type event
+			procurementTypeEvent();
+
 			// current page url for page navigation from sq to request note
 			getManagedBean().setRnToSQFlag(Boolean.FALSE);
 			getManagedBean().setNewableFlag(Boolean.FALSE);
@@ -3640,7 +3643,7 @@ public class SimpleQuoteBackingBean extends
 		this.getManagedBean().setSearchProcType(null);
 		this.getManagedBean().setSearchFromCreatedDate(null);
 		this.getManagedBean().setSearchToCreatedDate(null);
-		getManagedBean().setSearchStatuses(null);
+		getManagedBean().setSearchStatus(null);
 	}
 
 	/**

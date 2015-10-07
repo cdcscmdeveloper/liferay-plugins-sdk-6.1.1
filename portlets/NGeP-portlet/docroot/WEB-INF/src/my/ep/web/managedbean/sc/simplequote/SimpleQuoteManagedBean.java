@@ -225,8 +225,8 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	/** The search to created date. */
 	private Date searchToCreatedDate;
 
-	/** The search statuses. */
-	private List<Long> searchStatuses;
+	/** The search status. */
+	private Long searchStatus;
 
 	/** The status descs. */
 	private List<PmStatusDesc> statusDescs;
@@ -489,12 +489,12 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 					}
 				} else{
 					// for simple quote search
-					List<Long> searchStatuses = getSearchStatuses();
-					if(searchStatuses != null && searchStatuses.size() > 0) {
+					
+					if(getSearchStatus() != null) {
 						searchBean.getDataFilterBeans().add(
 								new SearchFilterBean("workflowStatuses.pmStatus.statusId",
-										SearchOperator.OPERATOR_IN.value(),
-										searchStatuses));
+										SearchOperator.OPERATOR_EQUALS.value(),
+										getSearchStatus()));
 						
 						searchBean.getDataFilterBeans().add(
 								new SearchFilterBean("workflowStatuses.current",
@@ -2444,17 +2444,17 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the searchStatuses
+	 * @return the searchStatus
 	 */
-	public List<Long> getSearchStatuses() {
-		return searchStatuses;
+	public Long getSearchStatus() {
+		return searchStatus;
 	}
 
 	/**
-	 * @param searchStatuses the searchStatuses to set
+	 * @param searchStatus the searchStatus to set
 	 */
-	public void setSearchStatuses(List<Long> searchStatuses) {
-		this.searchStatuses = searchStatuses;
+	public void setSearchStatus(Long searchStatus) {
+		this.searchStatus = searchStatus;
 	}
 
 	/**
