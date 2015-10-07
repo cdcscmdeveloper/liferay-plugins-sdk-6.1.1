@@ -88,7 +88,7 @@
 				<td class="standard border-bottom left">$schedule.scheduleNo</td>
 				<td class="standard border-bottom left">$dateSDF.format($schedule.fromDate)</td>
 				<td class="standard border-bottom left">$dateSDF.format($schedule.toDate)</td>
-				<td class="standard border-bottom left">$totalMonths</td>
+				<td class="standard border-bottom left">$schedule.totalMonths</td>
 				<td class="standard border-bottom left-right">$bean.getParameterDesc($schedule.scheduleType)</td>
 			</tr>
 		#end
