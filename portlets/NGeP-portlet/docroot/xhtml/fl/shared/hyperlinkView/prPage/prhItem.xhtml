@@ -28,7 +28,7 @@
 
 				</p:selectBooleanCheckbox>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.delivery.address']}" style="white-space:normal;">
+			<p:column headerText="#{lbl['lbl.fl.delivery.address']}" style="white-space:normal;text-align:center;">
 				<p:commandLink oncomplete="addManualDeliveryAddr.show();"
 					action="#{purchaseRequestBackingBean.editManualAddress(address)}"
 					update=":form:addManualDelAddrDialog,@(.orderSummaryChange)"
@@ -36,25 +36,25 @@
 					style="padding-right:5px" rendered="#{address.receivingGrp!=null}">
 					<p:graphicImage value="/css/images/design/ico-view-edit.png" />
 				</p:commandLink>
-				<h:outputText rendered="#{address.addressType != null}"
+				<h:outputText rendered="#{address.addressType != null}" style="float:left;"
 					value="#{purchaseRequestBackingBean.getFullAddress(address.addressType.pmAddress)}" />
-				<h:outputText rendered="#{address.addressType eq null}"
+				<h:outputText rendered="#{address.addressType eq null}" style="float:left;"
 					value="#{purchaseRequestBackingBean.getFullAddress(address.pmAddress)}" />
 			</p:column>
 			
 
-			<p:column headerText="#{lbl['lbl.fl.delivery.period']}" style="white-space:normal;">
-				<p:outputLabel style="text-align:right"
+			<p:column headerText="#{lbl['lbl.fl.delivery.period']}" style="white-space:normal;text-align:center;">
+				<p:outputLabel style="float:right;"
 					value="#{address.deliveryTerm} #{purchaseRequestBackingBean.getParameterDesc(address.pmUom)}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.delivery.start']}" style="white-space:normal;">
-				<h:outputText value="#{address.startDate}" style="text-align:right">
+			<p:column headerText="#{lbl['lbl.fl.delivery.start']}" style="white-space:normal;text-align:center;">
+				<h:outputText value="#{address.startDate}" style="float:right;">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.delivery.end']}" style="white-space:normal;">
-				<h:outputText value="#{address.endDate}" style="text-align:right">
+			<p:column headerText="#{lbl['lbl.fl.delivery.end']}" style="white-space:normal;text-align:center;">
+				<h:outputText value="#{address.endDate}" style="float:right;">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
@@ -89,40 +89,40 @@
 				rowKey="#{flItem}">
 				<ac:paginator for="itemDataTable" />
 
-				<p:column>
+				<p:column style="text-align:center;">
 				<f:facet name="header" style="width:8%;">
 					<h:outputText value="#{lbl['lbl.fl.item.code']}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.code']}"/>
 				</f:facet>
-					<h:outputText rendered="#{flItem.scRequestItem.cmItem==null}" value="#{flItem.scRequestItem.tempUnspscCode}" title="Requested Quantity: #{flItem.scRequestItem.quantity eq null ? lbl['lbl.fl.supp.na'] : flItem.scRequestItem.quantity}"/>
-					<h:outputText rendered="#{flItem.scRequestItem.cmItem!=null}" value="#{flItem.scRequestItem.cmItem.extensionCode}" title="Requested Quantity: #{flItem.scRequestItem.quantity eq null ? lbl['lbl.fl.supp.na'] : flItem.scRequestItem.quantity}"/>
+					<h:outputText rendered="#{flItem.scRequestItem.cmItem==null}" value="#{flItem.scRequestItem.tempUnspscCode}" title="Requested Quantity: #{flItem.scRequestItem.quantity eq null ? lbl['lbl.fl.supp.na'] : flItem.scRequestItem.quantity}" style="float:right;"/>
+					<h:outputText rendered="#{flItem.scRequestItem.cmItem!=null}" value="#{flItem.scRequestItem.cmItem.extensionCode}" title="Requested Quantity: #{flItem.scRequestItem.quantity eq null ? lbl['lbl.fl.supp.na'] : flItem.scRequestItem.quantity}" style="float:right;"/>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;">
-					<h:outputText value="#{flItem.scRequestItem.itemName}" id="itemDesc"/>
+				<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center;">
+					<h:outputText value="#{flItem.scRequestItem.itemName}" id="itemDesc" style="float:left;"/>
 					<p:tooltip for="itemDesc" value="#{flItem.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : flItem.scRequestItem.itemDesc}"  />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.fl.uom']}">
-					<h:outputText value="#{flItem.scRequestItem.uom.uomName}" />
+				<p:column headerText="#{lbl['lbl.fl.uom']}" style="text-align:center;">
+					<h:outputText value="#{flItem.scRequestItem.uom.uomName}" style="float:left;"/>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="text-align:right;white-space:normal">
-					<h:outputText disabled="true" size="6" value="#{flItem.unitPrice}" id="unitPrice">
+				<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="text-align:center;white-space:normal">
+					<h:outputText disabled="true" size="6" value="#{flItem.unitPrice}" id="unitPrice" style="float:right;">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.fl.gst.amt']}" style="text-align:right;white-space:normal">
-					<h:outputText disabled="true" size="6" value="#{flItem.gstAmount}" id="gstAmt">
+				<p:column headerText="#{lbl['lbl.fl.gst.amt']}" style="text-align:center;white-space:normal">
+					<h:outputText disabled="true" size="6" value="#{flItem.gstAmount}" id="gstAmt" style="float:right;">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.fl.unit.price.w.gst']}" style="text-align:right;white-space:normal">
-					<h:outputText disabled="true" size="6" value="#{flItem.gstUnitPrice}" id="gstUnitPrice">
+				<p:column headerText="#{lbl['lbl.fl.unit.price.w.gst']}" style="text-align:center;white-space:normal">
+					<h:outputText disabled="true" size="6" value="#{flItem.gstUnitPrice}" id="gstUnitPrice" style="float:right;">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="width:124px;text-align:right">
+				<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="width:124px;text-align:center;">
 					<p:commandLink oncomplete="reqItemInfo.show();" process="@this" 
 					action="#{purchaseRequestBackingBean.reqItemInfoList(flItem)}"
 					update=":form:reqItemInfoDialog,@(.orderSummaryChange)">
@@ -143,8 +143,8 @@
 					</p:inputText>
 					<p:message for="orderedQty" display="icon" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.fl.ordered.amount']}" style="text-align:right">
-					<h:outputText id="subTotalTxt" size="5"
+				<p:column headerText="#{lbl['lbl.fl.ordered.amount']}" style="text-align:center;">
+					<h:outputText id="subTotalTxt" size="5" style="float:right;"
 						value="#{flItem.orderedAmt}" disabled="true">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -162,14 +162,14 @@
 			value="#{purchaseRequestBackingBean.managedBean.receivingOffList}"
 			rowKey="#{purchasedItem}">
 			<ac:paginator for="receivingOfficerDt" />
-			<p:column headerText="#{lbl['lbl.fl.receiving.officer.name']}">
-				<h:outputText value="#{receivingOfficer.pmUser.userName}" />
+			<p:column headerText="#{lbl['lbl.fl.receiving.officer.name']}" style="text-align:center;">
+				<h:outputText value="#{receivingOfficer.pmUser.userName}" style="float:left;"/>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.telno']}">
-				<h:outputText value="#{receivingOfficer.pmUser.phoneNo}" />
+			<p:column headerText="#{lbl['lbl.fl.telno']}" style="text-align:center;">
+				<h:outputText value="#{receivingOfficer.pmUser.phoneNo}" style="float:right;"/>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.email']}">
-				<h:outputText value="#{receivingOfficer.pmUser.email}" />
+			<p:column headerText="#{lbl['lbl.fl.email']}" style="text-align:center;">
+				<h:outputText value="#{receivingOfficer.pmUser.email}" style="float:left;"/>
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
