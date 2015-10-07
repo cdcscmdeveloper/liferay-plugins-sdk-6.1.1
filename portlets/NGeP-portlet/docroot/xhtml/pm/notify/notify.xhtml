@@ -32,7 +32,7 @@
 									action="#{notifyBackingBean.retrieveNotifyList}"
 									update=":form:pnldetail,:form:notifyTable" /> <p:commandButton
 									value="#{lbl['lbl.portal.notify.btn.delete']}"
-									action="#{notifyBackingBean.removeNotifys}"
+									oncomplete="confirmation.show();"
 									update=":form:notifyTable,:form:pnldetail" /></td>
 						</tr>
 						<tr>
@@ -52,7 +52,7 @@
 									</p:column>
 									<p:column
 										headerText="#{lbl['lbl.portal.notify.sender']}/#{lbl['lbl.portal.notify.subject']}">
-							#{notify.recipient.userName} <br />
+							#{notify.sender.userName} <br />
 										<p:commandLink id="btnNotifyLink"
 											action="#{notifyBackingBean.selectedNotify}"
 											update=":form:pnldetail,:form:notifyTable">
@@ -95,7 +95,7 @@
 											style="font-weight:bold;text-align: left"
 											value="#{lbl['lbl.portal.notify.sender']}"> : </h:outputText></td>
 									<td style="text-align: left"><h:outputText
-											value="#{notifyBackingBean.managedBean.selectedNotify.recipient.userName}"></h:outputText>
+											value="#{notifyBackingBean.managedBean.selectedNotify.sender.userName}"></h:outputText>
 									</td>
 									<td align="right"
 										style="width: 200px; text-align: right; font-size: 12px;"><h:outputText
@@ -127,5 +127,15 @@
 					</p:panel></td>
 			</tr>
 		</table>
+		
+		<p:confirmDialog message="#{lbl['lbl.btn.dialog.cofirm.delete.msg']}" header="#{lbl['lbl.btn.dialog.cofirm.header']}" widgetVar="confirmation">
+			<p:commandButton id="conf" value="#{lbl['lbl.btn.dialog.cofirm.yes']}"
+				actionListener="#{notifyBackingBean.removeNotifys}" 
+				update=":form:notifyTable,:form:pnldetail"
+				oncomplete="confirmation.hide()" />
+			<p:commandButton id="decline" value="#{lbl['lbl.btn.dialog.cofirm.no']}"
+				onclick="confirmation.hide()" />
+				<h:inputHidden id="rowIndex"></h:inputHidden>
+		</p:confirmDialog>
 	</ui:define>
 </ui:composition>
