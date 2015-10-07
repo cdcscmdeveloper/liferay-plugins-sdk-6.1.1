@@ -99,9 +99,9 @@
 				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
 				<p:ajax event="change" immediate="true"
-								listener="#{ruleCatalogueBackingBean.feeExemptionStatusChange(feeObj)}"
+								listener="#{ruleCatalogueBackingBean.checkFeeStatusForOrg(rowIndex)}"
 								partialSubmit="true" process="@this"
-								update="@this" />
+								update=":form:settingTabId:feeSettingId:feeByOrgItemTableID :form:settingTabId:feeSettingId:feeOrgStatusConfirmDialog" />
 					
 			</p:selectOneMenu>
 		</p:column>
@@ -127,5 +127,22 @@
 			action="#{ruleCatalogueBackingBean.addMoreOrgAndItemFee()}"></p:commandButton>
 
 	</div>
-
+    <p:confirmDialog id="feeOrgStatusConfirmDialog" closable="false"
+			severity="alert" header="#{lbl['lbl.pm.inactive.popUp.header']}"
+			widgetVar="feeOrgStatusConfirmDialog"
+			message="#{ruleCatalogueBackingBean.inactiveFeeOrgPopUpMsg}"
+			appendToBody="true">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					partialSubmit="true" process="@this"
+					update=":form:settingTabId:feeSettingId:feeByOrgItemTableID"
+				    action="#{ruleCatalogueBackingBean.feeExemptionStatusChangeForOrg}"
+					onstart="feeOrgStatusConfirmDialog.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" action="#{ruleCatalogueBackingBean.revertFeeStatusChangeForOrg}"
+					partialSubmit="true" process="@this"
+				    update=":form:settingTabId:feeSettingId:feeByOrgItemTableID"
+				     />
+			</div>
+		</p:confirmDialog>
 </ui:composition>
