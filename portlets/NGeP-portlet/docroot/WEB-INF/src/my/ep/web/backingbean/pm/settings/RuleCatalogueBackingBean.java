@@ -89,6 +89,7 @@ import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRule;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.pm.general.settings.threshold.PmThreshold;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -128,6 +129,7 @@ public class RuleCatalogueBackingBean extends
 	private static final int TAXABLE_ITEM_DA_IDX = 2;
 	private static final int TAXABLE_ITEM_G2G_IDX = 3;
 	private Integer currentIndexVal ;
+	private String inactivePopUpMsg;
 	// private List<SortMeta> preSortOrder = new ArrayList<SortMeta>();
 
 	public ISearchBean<PmParameterDesc> getParameterSearchBean() {
@@ -188,7 +190,17 @@ public class RuleCatalogueBackingBean extends
 		}
 		return true;
 	}
+	
+	public void setInactivePopUpMsg(String inactivePopUpMsg) {
+		this.inactivePopUpMsg = inactivePopUpMsg;
+	}
 
+	public String getInactivePopUpMsg() {
+		log.info(".........getInactivePopUpMsg.........");
+		return PmCommonUtil.getMessage(
+				"lbl.pm.inactive.popUp.msg", new String[] {
+						this.getManagedBean().getSelectedRuleType().getRuleTypeDesc()});
+	}
 	/*
 	 * method to build initial sort order for multisort
 	 */
@@ -1035,6 +1047,11 @@ public class RuleCatalogueBackingBean extends
 
 	public void saveRuleCatalog() {
 		log.info("...........saveRuleCatalog............");
+		if(this.getManagedBean().isError1()){
+			// throw error msg
+			throw new EpException(MessageConst.ERROR_770198,
+					new String[] {});
+		}
 		// make sure to delete the new obj before update if doesn't selected
 		for (PmConfigRule ruleType : this.getManagedBean().getConfigRuleList()) {
 

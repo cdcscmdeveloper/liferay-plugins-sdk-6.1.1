@@ -74,7 +74,7 @@
 			                	</f:facet>
 
 			<p:calendar showOn="button" id="contractFeeexpDateId"  disabled = "#{feeObj.recordStatusFlg == 0 or (feeObj.expDate lt DateUtils.getCurrentDateWithoutTime())}"
-				mindate="#{ruleCatalogueBackingBean.managedBean.today}" style="width :45px;"
+				mindate="#{ruleCatalogueBackingBean.managedBean.tomorrow}" style="width :45px;"
 				label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 				value="#{feeObj.expDate}">
