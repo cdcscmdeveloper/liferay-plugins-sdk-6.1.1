@@ -18,28 +18,28 @@
 			  value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractAmount.ctPerformanceBonds}">
 			  <ac:paginator for="tableBond" />
 			
-			<p:column style="width:10%;" headerText="#{lbl['lbl.ct.ref.no']}">
-				<p:outputLabel value="#{varBond.refNo}"  style="width:85px;" />
+			<p:column style="width:10%;" headerText="#{lbl['lbl.ct.ref.no']}" styleClass="column-align-center">
+				<p:outputLabel value="#{varBond.refNo}" style="float:left;"/>
 			</p:column>
 		
-			<p:column style="width:30%;" headerText="#{lbl['lbl.ct.financial.inst']}">
-			    <p:outputLabel value="#{varBond.financialOrg.finOrgName}"    style="width:230px;" />
+			<p:column style="width:30%;" headerText="#{lbl['lbl.ct.financial.inst']}" styleClass="column-align-center">
+			    <p:outputLabel value="#{varBond.financialOrg.finOrgName}"  style="float:left;"/>
 			</p:column>
 			
-			<p:column style="width:12%;" headerText="#{lbl['lbl.ct.amount']}" >
-				<h:outputText value="#{varBond.bondAmount}" styleClass="ppRightBtn"  style="width:90px;" disabled="true">
+			<p:column style="width:12%;" headerText="#{lbl['lbl.ct.amount']}" styleClass="column-align-center" >
+				<h:outputText value="#{varBond.bondAmount}" styleClass="ppRightBtn">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
 			
-			<p:column style="width:8%;" headerText="#{lbl['lbl.ct.effective.date']}">
+			<p:column style="width:8%;" headerText="#{lbl['lbl.ct.effective.date']}" styleClass="column-align-center">
 				<p:calendar id="popupButtonCal4" value="#{varBond.effDate}"  styleClass="calendarDateField" size="9" 
 					  disabled="true"  pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
 		        </p:calendar>
 			</p:column>
 			
-			<p:column style="width:8%;" headerText="#{lbl['lbl.ct.expiry.date']}">
+			<p:column style="width:8%;" headerText="#{lbl['lbl.ct.expiry.date']}" styleClass="column-align-center">
 				<p:calendar id="bondExpDateCalId"  value="#{varBond.expDate}" styleClass="calendarDateField" disabled="true"
 					size="9"  pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 			    </p:calendar>

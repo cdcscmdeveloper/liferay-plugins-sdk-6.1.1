@@ -21,18 +21,18 @@
        			<p:ajax event="rowSelect"   update=":form:agencyDeliveryAddress"  process="@this" />	
        			<p:columnGroup type="header"> 
 								<p:row> 
-									<p:column rowspan="2" headerText="#{lbl['lbl.ct.ministry']}" /> 
-									<p:column rowspan="2" headerText="#{lbl['lbl.ct.jabatan']}"/> 	
-									<p:column rowspan="2" headerText="#{lbl['lbl.ct.ptj']}"/> 						
-									<p:column rowspan="2" style="width:10%;white-space:normal;">
+									<p:column rowspan="2" headerText="#{lbl['lbl.ct.ministry']}" styleClass="column-align-center"/> 
+									<p:column rowspan="2" headerText="#{lbl['lbl.ct.jabatan']}" styleClass="column-align-center"/> 	
+									<p:column rowspan="2" headerText="#{lbl['lbl.ct.ptj']}" styleClass="column-align-center"/> 						
+									<p:column rowspan="2" style="width:10%;white-space:normal;" styleClass="column-align-center">
 									      <f:facet name="header">
 					                          <h:outputText value="#{lbl['lbl.ct.ceiling.amount']}"/>
                		                          <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ceiling.amt']}"/>
                	                           </f:facet>
 									</p:column>
-									 <p:column rowspan="2" headerText="#{lbl['lbl.ct.effective.date']}" style="width:8%;" />
-									 <p:column rowspan="2" headerText="#{lbl['lbl.ct.expiry.date']}" style="width:8%;"/>
-									<p:column colspan="3" headerText="#{lbl['lbl.ct.ap178']}" style="text-align:center; white-space:normal;"> 
+									 <p:column rowspan="2" headerText="#{lbl['lbl.ct.effective.date']}" style="width:8%;" styleClass="column-align-center" />
+									 <p:column rowspan="2" headerText="#{lbl['lbl.ct.expiry.date']}" style="width:8%;" styleClass="column-align-center"/>
+									<p:column colspan="3" headerText="#{lbl['lbl.ct.ap178']}" style="white-space:normal;" styleClass="column-align-center"> 
 									 <f:facet name="header">
 					                       <h:outputText value="#{lbl['lbl.ct.ap178']}"/>
                		                      <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap178']}"/>
@@ -58,39 +58,41 @@
 							</p:columnGroup>
      
                              <p:column style="width:25%;white-space:normal;" >
-				                    <h:outputText value="#{contractDetailsBackingBean.retrieveMinistryByOrgProfileId(agencyData.orgProfile.orgProfileId)}"/>
+				                    <h:outputText style="float:left;"
+				                       value="#{contractDetailsBackingBean.retrieveMinistryByOrgProfileId(agencyData.orgProfile.orgProfileId)}"/>
 			                 </p:column>
 			                 
 			                  <p:column style="width:25%;white-space:normal;" >
-				                    <h:outputText value="#{contractDetailsBackingBean.retrieveJabatanByOrgProfileId(agencyData.orgProfile.orgProfileId)}"/>
+				                    <h:outputText style="float:left;"
+				                       value="#{contractDetailsBackingBean.retrieveJabatanByOrgProfileId(agencyData.orgProfile.orgProfileId)}"/>
 			                 </p:column>
 			                 
-			                  <p:column style="width:25%;white-space:normal;" >
-				                     <h:outputText  value="#{agencyData.orgProfile.orgName}"/>
+			                  <p:column styleClass="column-align-center" style="width:25%;white-space:normal;" >
+				                     <h:outputText  value="#{agencyData.orgProfile.orgName}" style="float:left;"/>
 			                  </p:column>
 			
-			    <p:column style="width:10%;white-space:normal;">
+			    <p:column style="width:10%;white-space:normal;" styleClass="column-align-center">
 			  	    <f:facet name="header">
 					   <h:outputText value="#{lbl['lbl.ct.ceiling.amount']}"/>
                		   <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ceiling.amt']}"/>
                	    </f:facet>
-           		   <h:outputText  value="#{agencyData.ceilingAmount}"  style="width:100px;" maxlength="23"  styleClass="ppRightBtn">
+           		   <h:outputText  value="#{agencyData.ceilingAmount}"  styleClass="ppRightBtn">
 			 		    <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			 	    </h:outputText>
 		    	</p:column>
 		   
-		   	     <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="width:8%;">
+		   	     <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="width:8%;" styleClass="column-align-center">
 			      	<p:calendar id="agencyDateActive" value="#{agencyData.effDate}"   size="8"  disabled="true"
 		               pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 		            </p:calendar>
 		          </p:column>
 		   	
-		   	      <p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="width:8%;">
-				  <h:outputText value="#{agencyData.expDate}">
+		   	      <p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="width:8%;" styleClass="column-align-center">
+				  <h:outputText value="#{agencyData.expDate}" style="float:left;">
 				      <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText>
 		   	   </p:column>
 		   	
-		   	   <p:column style="width:8%;white-space:normal;">
+		   	   <p:column style="width:8%;white-space:normal;" styleClass="column-align-center">
 		   	 	   <f:facet name="header">
 					  <h:outputText value="#{lbl['lbl.ct.ap178']}"/>
                		  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap178']}"/>
@@ -101,7 +103,7 @@
 		   	          	contractDetailsBackingBean.retrieveMinistryOrgProfile(agencyData.orgProfile.orgProfileId).getOrgProfileId()}"/>
 		       </p:column>
 		       
-		       <p:column style="white-space:normal;">
+		       <p:column style="white-space:normal;" styleClass="column-align-center">
 		      <h:commandLink
 						title="#{agencyData.fileName}"
 						value="#{contractDetailsBackingBean.getShortFileName(agencyData.fileName)}"						
@@ -109,13 +111,13 @@
 						action="#{contractDetailsBackingBean.downloadFile(agencyData.filePath, agencyData.fileName)}" />
 			 	 				
 		       </p:column>
-		       <p:column style="white-space:normal;">
+		       <p:column style="white-space:normal;" styleClass="column-align-center">
 		           <p:inputText id="uploadRefNoDoc"  value="#{agencyData.refNo}" style="width:80px;"  disabled="true"
 		              rendered="#{agencyData.ap178}"> </p:inputText>
 		       </p:column>
 		        
-		        <p:column headerText="#{lbl['lbl.ct.status']}" style="width:6%;white-space:normal;">
-		   	         <h:outputText id="agenyStatus" value="#{agencyData.chkStatus ? lbl['lbl.ct.active']:lbl['lbl.ct.inactive']}" style="float:none" />
+		        <p:column headerText="#{lbl['lbl.ct.status']}" style="width:6%;white-space:normal;" styleClass="column-align-center">
+		   	         <h:outputText id="agenyStatus" value="#{agencyData.chkStatus ? lbl['lbl.ct.active']:lbl['lbl.ct.inactive']}" style="float:left" />
 		       </p:column>
 			</p:dataTable> 
 	  	
