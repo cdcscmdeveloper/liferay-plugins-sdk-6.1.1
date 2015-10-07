@@ -403,6 +403,7 @@ public class SPDetailBackingBean extends
 			setUserDetails(scQtProposal);
 			scQtProposal.setLastSubmitDate(new Date());
 			scQtProposal.setSubmitted(true);
+			scQtProposal.setProposalSubmitBy(new FacesScopes().getUserSessionBean().getUserId());
 
 			scQtProposalChecklists.addAll(technicalChecklist);
 			scQtProposalChecklists.addAll(financialChecklist);
