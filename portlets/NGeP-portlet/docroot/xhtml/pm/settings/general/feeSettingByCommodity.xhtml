@@ -134,13 +134,19 @@
 			action="#{ruleCatalogueBackingBean.addMoreComodityFee()}"></p:commandButton>
 
 	</div>
-    <p:confirmDialog id="feeCommodityStatusConfirmDialog" closable="false"
-			severity="alert" header="#{lbl['lbl.pm.inactive.popUp.header']}"
-			widgetVar="feeCommodityStatusConfirmDialog"
-			message="#{ruleCatalogueBackingBean.inactiveFeeComoPopUpMsg}"
-			appendToBody="true">
+   
+		<p:dialog id="feeCommodityStatusConfirmDialog" widgetVar="feeCommodityStatusConfirmDialog" closable="false"
+			header="#{lbl['lbl.pm.inactive.popUp.header']}" styleClass="screen-title"
+			resizable="false" modal="true" width="400" height="100">
+			<h:panelGrid columns="3">
+				<p:graphicImage styleClass="ui-icon-complain" />
+				<p:spacer width="10" />
+				<p:inputTextarea disabled="true" autoResize="true" 
+					value="#{ruleCatalogueBackingBean.inactiveFeeComoPopUpMsg}" rows="3"
+					cols="50" styleClass="ui-inputtextarea" />
+			</h:panelGrid>
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					<p:commandButton value="#{lbl['lbl.btn.yes']}"
 					partialSubmit="true" process="@this"
 					update=":form:settingTabId:feeSettingId:feeByComodityTableID"
 				    action="#{ruleCatalogueBackingBean.feeExemptionStatusChangeForCommodity}"
@@ -151,5 +157,6 @@
 				    update=":form:settingTabId:feeSettingId:feeByComodityTableID"
 				     />
 			</div>
-		</p:confirmDialog>
+		</p:dialog>
+   
 </ui:composition>

@@ -119,11 +119,16 @@
 			action="#{ruleCatalogueBackingBean.addMoreContractFee()}"></p:commandButton>
 
 	</div>
- <p:confirmDialog id="feeContractStatusConfirmDialog" closable="false"
-			severity="alert" header="#{lbl['lbl.pm.inactive.popUp.header']}"
-			widgetVar="feeContractStatusConfirmDialog"
-			message="#{ruleCatalogueBackingBean.inactiveFeeContPopUpMsg}"
-			appendToBody="true">
+	<p:dialog id="feeContractStatusConfirmDialog" widgetVar="feeContractStatusConfirmDialog" closable="false"
+			header="#{lbl['lbl.pm.inactive.popUp.header']}" styleClass="screen-title"
+			resizable="false" modal="true" width="400" height="100">
+			<h:panelGrid columns="3">
+				<p:graphicImage styleClass="ui-icon-complain" />
+				<p:spacer width="10" />
+				<p:inputTextarea disabled="true" autoResize="true" 
+					value="#{ruleCatalogueBackingBean.inactiveFeeContPopUpMsg}" rows="3"
+					cols="50" styleClass="ui-inputtextarea" />
+			</h:panelGrid>
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}"
 					partialSubmit="true" process="@this"
@@ -136,6 +141,6 @@
 				    update=":form:settingTabId:feeSettingId:feeByContractTableID"
 				     />
 			</div>
-		</p:confirmDialog>
+		</p:dialog>
 
 </ui:composition>
