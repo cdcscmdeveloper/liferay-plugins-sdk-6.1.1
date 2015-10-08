@@ -1443,6 +1443,10 @@ public class SupplierFinalizationMeetingBackingBean extends
 			scQtCommittee.setMeetingAttendances(null);
 			setUserDetails(scQtCommittee);
 			
+			if (QTStatusConst.BI_PENDING_CONFIRMATION_COMMITTEE
+					.equals(getManagedBean().getCurrentStatusId())) {
+				reqDTO.setBiddingMeeting(true);
+			}
 			reqDTO.setScQtCommitte(scQtCommittee);
 			
 			return reqDTO;
