@@ -45,15 +45,18 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        case ReportConst.LST_APPR_CAT_ITM_RPT_VAL:	        		
 				rptGenBean.setCmUnspscCodeView(true);
 				rptGenBean.setCmUnspscTitleView(true);		
-				rptGenBean.setCmCatelogDateView(true);
-				rptGenBean.setCmApprovedDateView(true);
+				
 					rptGenBean.setCmItemTypeView(true);
 					if((paramList!=null)&&(paramList.contains(ReportConst.ROLE_CODE_SUP))){
 					rptGenBean.setCmCompanyNameView(false);
 					rptGenBean.setCmRegistrationTypeView(false);
+					rptGenBean.setCmCatelogDateView(true);					
+					rptGenBean.setCmSubmittedDateView(true);
 					}else {
 						rptGenBean.setCmCompanyNameView(true);
 						rptGenBean.setCmRegistrationTypeView(true);	
+						rptGenBean.setCmCatelogDateView(true);		
+						rptGenBean.setCmApprovedDateView(true);
 					}
 					rptGenBean.setCmGroupOneView(true);					
 	            break;
