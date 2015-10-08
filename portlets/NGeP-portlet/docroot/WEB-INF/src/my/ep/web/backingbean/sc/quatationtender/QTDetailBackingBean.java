@@ -1414,7 +1414,9 @@ public class QTDetailBackingBean extends
 					ScQtBsv qtBsv = resDTO.getScQtBsv();
 					if (null != qtBsv.getScQtBsvDtls()) {
 						for (ScQtBsvDtl bsvDtl : qtBsv.getScQtBsvDtls()) {
-							if (bsvDtl.getBsvType().equalsIgnoreCase("S")) {
+							if (QTConstants.BSV_TYPE_SITEVISIT
+									.equalsIgnoreCase(bsvDtl
+											.getBsvType())) {
 								if (qtBsv.getQtBsvId() == null) {
 									qtBsv.setAllSiteVisitReq(true);
 								}
@@ -1429,7 +1431,6 @@ public class QTDetailBackingBean extends
 							null, resDTO.getBriefingList(),
 							resDTO.getSiteVisitList(), qtBsv);
 					this.getManagedBean().setBsvDtlBean(briefingZoneBean);
-
 				}
 				QTBriefingSiteVisitBackingBean backingBean = new QTBriefingSiteVisitBackingBean();
 				backingBean.retrievePmStateList();
@@ -2475,22 +2476,7 @@ public class QTDetailBackingBean extends
 				if (null != this.getManagedBean().getZoneGeneralTrees()
 						&& this.getManagedBean().getZoneGeneralTrees()
 								.isEmpty()) {
-
-					/*
-					 * if (null != tenderResDTO.getZoneDetails() &&
-					 * !tenderResDTO.getZoneDetails().isEmpty()) {
-					 * this.getManagedBean().setZoneGeneralTrees( new
-					 * ArrayList<TreeNode>()); for (TplSpecZoneDtl zoneDtl :
-					 * tenderResDTO .getZoneDetails()) { getManagedBean()
-					 * .getZoneGeneralTrees() .add(LocationSingleton
-					 * .getInstance() .constuctTreeNode( zoneDtl,
-					 * zoneDtl.getTplSpecZoneLocs()));
-					 * this.getManagedBean().setCtzones(true); }
-					 * 
-					 * }
-					 */
 					retriveZonesByCircularNo();
-
 				}
 			}
 		} finally {
@@ -2550,12 +2536,6 @@ public class QTDetailBackingBean extends
 													tplSpecZoneDtl, states,
 													districts, null, null,
 													true, TplSpecZoneLoc.class));
-							/*
-							 * getManagedBean() .getZoneGeneralTrees()
-							 * .add(LocationSingleton .getInstance()
-							 * .constuctPanelTreeNodes( panelZones, panelZones
-							 * .getPanelZoneDtls()));
-							 */
 						}
 					}
 				}
@@ -2566,15 +2546,6 @@ public class QTDetailBackingBean extends
 					getManagedBean().setZoneGeneralTrees(
 							new ArrayList<TreeNode>());
 					this.getManagedBean().setCtzones(false);
-					/*
-					 * PanelSupplierReqDTO supplierreqDTO = new
-					 * PanelSupplierReqDTO();
-					 * supplierreqDTO.setPanelItemId(this.getManagedBean()
-					 * .getCtPanelItem().getPanelItemId());
-					 * supplierreqDTO.setFetchSubEntity(true);
-					 * PanelSupplierResDTO panelSupplierResDTO = panelSupplierSO
-					 * .retrievePanelItem(supplierreqDTO);
-					 */
 					IQTSupplierSO supplierSo = (IQTSupplierSO) BusinessDelegate
 							.getInstance().getServiceObject(
 									ModuleCodeConst.SUPPLIER_SELECTION,
@@ -2589,16 +2560,10 @@ public class QTDetailBackingBean extends
 					this.getManagedBean().setCtZoneSupplierList(
 							new ArrayList<CtPanelSupplier>());
 					if (null != supplierResDTO.getCtPanelSuppliers()) {
-						/*
-						 * CtPanelItem panelItem = supplierResDTO
-						 * .getCtPanelItem();
-						 */
-						/* if (null != panelItem.getCtPanelSuppliers()) { */
 						this.getManagedBean().setTotalSuppliers(
 								supplierResDTO.getCtPanelSuppliers().size());
 						this.getManagedBean().setCtZoneSupplierList(
 								supplierResDTO.getCtPanelSuppliers());
-						/* } */
 					}
 				}
 			}
@@ -2611,7 +2576,6 @@ public class QTDetailBackingBean extends
 		}
 	}
 
-	// To get the schedule tab details from so..
 	/**
 	 * Retrieve schedule tab dtl.
 	 */
@@ -2814,7 +2778,6 @@ public class QTDetailBackingBean extends
 		debugLogger("retrieveDocumentTabDtl");
 		IQTDetailSO detailSO;
 		if (getManagedBean().getScQtDocReportList() == null) {
-
 			QuationTenderResDTO resDTO = null;
 			try {
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
@@ -2822,14 +2785,12 @@ public class QTDetailBackingBean extends
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtdetail(getManagedBean().getQt());
 				reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
-
 				resDTO = detailSO.retriveQTDocDetails(reqDTO);
 				if (resDTO.getReports() != null
 						&& !resDTO.getReports().isEmpty()) {
 					this.getManagedBean().setScQtDocReportList(
 							resDTO.getReports());
 				}
-
 			} finally {
 				detailSO = null;
 			}
@@ -2841,7 +2802,6 @@ public class QTDetailBackingBean extends
 	 */
 	public void retrieveActivitiesTabDtl() {
 		debugLogger("retrieveActivitiesTabDtl");
-
 		IQTDetailSO detailSO;
 		try {
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
