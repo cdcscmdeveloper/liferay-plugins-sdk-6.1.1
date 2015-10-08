@@ -63,7 +63,7 @@
 					</td>
 					<td>
 						<p:inputText for="gstAmount" styleClass="ppRightBtn"  
-						    validator="#{webappBean.validateDecimalNumber}" maxlength="18" style="width:130px;"
+						     maxlength="18" style="width:130px;"
 			   				 disabled="#{!contractDetailsBackingBean.managedBean.disableGstAmount}" 
 			   				 rendered="#{contractDetailsBackingBean.contractWithGst()}" 
 			   				 value="#{contractDetailsBackingBean.managedBean.ctContractAmount.gstAmount}" label="#{lbl['lbl.ct.gst.amt']}" >
