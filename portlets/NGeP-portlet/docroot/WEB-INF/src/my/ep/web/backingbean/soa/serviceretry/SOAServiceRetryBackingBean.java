@@ -259,7 +259,7 @@ public class SOAServiceRetryBackingBean extends
 		if(retryCount > 1 && retryCount < 5){
 			return "LIGHTORANGE";
 		} else 
-		if(retryCount >= 5){
+		if(retryCount > 5){
 			return "RED";
 		} else {
 			return "WHITE";
