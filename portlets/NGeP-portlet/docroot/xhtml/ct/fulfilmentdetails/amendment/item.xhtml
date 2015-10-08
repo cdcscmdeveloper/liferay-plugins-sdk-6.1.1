@@ -171,7 +171,7 @@
 								<p:column headerText="#{lbl['lbl.ct.action']}"  styleClass="column-align-center"
 									rendered="#{!amendmentBackingBean.managedBean.disableAmendDetails and 
 						           		amendmentBackingBean.managedBean.selectedItem.chkStatus}"
-								    styleClass="column-align-center" style="width:10%; white-space:normal;">
+								     style="width:10%; white-space:normal;">
 									<p:commandLink update=":form:itemId" process="@form" 
 										disabled="#{itemPriceVar.chkIndexOfRow}"
 									   	rendered="#{!itemPriceVar.changePrice and itemPriceVar.editable}" action="#{amendmentBackingBean.editItemPriceOnIndexs()}">
