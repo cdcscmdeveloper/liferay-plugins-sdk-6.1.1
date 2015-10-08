@@ -597,7 +597,7 @@ public class EperundingIntegration extends EperundingTemplate{
 
 					}
 
-					if (smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().size() > 0) {
+					if (!smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().isEmpty()) {
 
 						for (SmCompanyAddress companyAddress : smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()) {
 							if (null != companyAddress.getSmAddress()) {
@@ -632,7 +632,7 @@ public class EperundingIntegration extends EperundingTemplate{
 					profile.setProfileUpdateDate(smSupplier.getSmAppl().getApplSubmitDate()); //
 
 					profBodyDetail = new ProfBodyDetail();
-					if (smSupplier.getSmAppl().getSmAssociationBodies().size() != 0) {
+					if (!smSupplier.getSmAppl().getSmAssociationBodies().isEmpty()) {
 						for (SmAssociationBody associationBody : smSupplier.getSmAppl().getSmAssociationBodies()) {
 							profBodyDetail.setProfBody(associationBody.getPmCertBody().getCertBodyId().toString()); 
 							profBodyDetail.setProfBodyNo(associationBody.getRegNo());
@@ -1089,6 +1089,8 @@ public class EperundingIntegration extends EperundingTemplate{
 			categoryStatus = "662";
 		} else if (statusFlg == IntegrationConstants.RECORD_STATUS_EXPIRED) {
 			categoryStatus = "663";
+		}else{
+			categoryStatus = "661";
 		}
 
 		return categoryStatus;
