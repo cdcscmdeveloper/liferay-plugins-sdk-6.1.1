@@ -256,7 +256,7 @@ public class SOAServiceRetryBackingBean extends
 	
 	public String getRetryCountFieldColor(Integer retryCount){
 		
-		if(retryCount >= 1 && retryCount < 5){
+		if(retryCount > 2 && retryCount < 5){
 			return "LIGHTORANGE";
 		} else 
 		if(retryCount >= 5){
