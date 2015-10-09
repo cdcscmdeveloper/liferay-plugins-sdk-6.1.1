@@ -4907,9 +4907,9 @@ public class ProfileManagementBackingBean extends
 	public String retrieveOrgName(PmOrgProfile orgProfile){
 		String orgName = null;
 		if(orgProfile != null){
-			if(ParameterConst.ORG_TYPE_SUPPLIER.equals(getManagedBean().getSelectedOrgType().getParameterCode())){
+			if(ParameterConst.ORG_TYPE_SUPPLIER.equals(orgProfile.getOrgTypeCode().getParameterCode())){
 				orgName = orgProfile.getSmSupplier().getCompanyName();
-			}else if(ParameterConst.ORG_TYPE_FACTORING.equals(getManagedBean().getSelectedOrgType().getParameterCode())){
+			}else if(ParameterConst.ORG_TYPE_FACTORING.equals(orgProfile.getOrgTypeCode().getParameterCode())){
 				orgName = orgProfile.getPmFinancialOrg().getFinOrgName();
 			}else{
 				orgName = orgProfile.getPmOrgValidity().getOrgName();
