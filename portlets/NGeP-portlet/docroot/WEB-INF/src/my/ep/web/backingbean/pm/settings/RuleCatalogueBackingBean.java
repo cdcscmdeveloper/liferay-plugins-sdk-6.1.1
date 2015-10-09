@@ -1271,22 +1271,12 @@ public class RuleCatalogueBackingBean extends
 
 				PmConfigRuleValue baseValueToCompare = ruleType
 						.getConfigRuleValues().get(i);
-				// log.info(".............ruleType.getRuleType() == "
-				// + ruleType.getRuleType());
-				// log.info(".............ruleType.getRuleTypeDesc() == "
-				// + ruleType.getRuleTypeDesc());
-				// log.info(".............ruleType.getIsRangeValue() == "
-				// + ruleType.getIsRangeValue());
-				// log.info(".............baseValueToCompare.isShowFlag()="
-				// + baseValueToCompare.isShowFlag());
-				if (baseValueToCompare.getRecordStatusFlg() == 0
-						|| (ruleType.getIsRangeValue() == 1 && !baseValueToCompare
-								.isShowFlag())) {// if is
+
+				if (baseValueToCompare.getRecordStatusFlg() == 0) {// if is
 					// inActive
 					// one go to
 					// next
 					// record\
-
 					continue;
 				}
 				log.info(".........................baseValueToCompare.getRuleValue()="
@@ -1294,15 +1284,9 @@ public class RuleCatalogueBackingBean extends
 				for (int j = i + 1; j <= (ruleType.getConfigRuleValues().size() - 1); j++) {
 					PmConfigRuleValue value = ruleType.getConfigRuleValues()
 							.get(j);
-					// log.info(".............ruleType.getIsRangeValue() == "
-					// + ruleType.getIsRangeValue());
-					// log.info(".............value.isShowFlag()="
-					// + value.isShowFlag());
-					if (value.getRecordStatusFlg() == 0
-							|| (ruleType.getIsRangeValue() == 1 && !value
-									.isShowFlag())) {// if is inActive one
-						// go to next record
 
+					if (value.getRecordStatusFlg() == 0) {// if is inActive one
+						// go to next record
 						continue;
 					}
 					log.info(".........................second.value.getRuleValue()="
@@ -1311,15 +1295,22 @@ public class RuleCatalogueBackingBean extends
 							+ ruleType.getValidationType());
 
 					if (!ruleValueValidation(baseValueToCompare, value,
-							ruleType.getRuleDataTypeId(),
-							ruleType.getValidationType())) {
+							ruleType)) {
 						// log.info("...............ruleType.getValidationType()="+ruleType.getValidationType());
 						log.info("................befor throw exeption...................");
 						// hit error and return
 						switch (ruleType.getValidationType()) {
-						case '1':
-							throw new EpException(MessageConst.ERROR_770109,
+						case '1': if(ruleType.getIsRangeValue() ==1 && baseValueToCompare.getGroupValueId().equals(value.getGroupValueId())){
+							
+							throw new EpException(
+									MessageConst.ERROR_770110,
+									new String[] { ruleType
+											.getRuleTypeDesc() });
+					    	}else{
+					    		
+						      	throw new EpException(MessageConst.ERROR_770109,
 									new String[] { ruleType.getRuleTypeDesc() });
+						    }
 						case '2':
 							if (ruleType.getRuleDataTypeId().getParameterCode()
 									.equalsIgnoreCase("c")) {
@@ -1335,9 +1326,10 @@ public class RuleCatalogueBackingBean extends
 												.getRuleTypeDesc() });
 							}
 
-						case '3':
+						case '3': 
 							throw new EpException(MessageConst.ERROR_770154,
 									new String[] { ruleType.getRuleTypeDesc() });
+					
 						}
 
 					}
@@ -1458,21 +1450,36 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	private boolean ruleValueValidation(PmConfigRuleValue firstRuleValue,
-			PmConfigRuleValue secondRuleValue, PmParameter ruleDataTypeId,
-			char validationType) {
+			PmConfigRuleValue secondRuleValue, PmConfigRule ruleType) {
 		log.info("........ruleValueValidation........");
-		log.info("........validationType=" + validationType);
 		boolean validationResult = false;
 		boolean isValuesEqual = false;
-		if (validationType == '1') {// EffectiveDate validation
+		if (ruleType.getValidationType() == '1'
+				&& !(ruleType.getIsRangeValue() == 1 && firstRuleValue
+						.getGroupValueId().equals(
+								secondRuleValue.getGroupValueId()))) {// EffectiveDate
+																		// validation
+																		// //
+																		// don't
+																		// validate
+																		// date
+																		// for
+																		// values
+																		// in a
+																		// group
+		
 			validationResult = !isDateOverlaped(firstRuleValue.getEffDate(),
 					firstRuleValue.getExpDate(), secondRuleValue.getEffDate(),
 					secondRuleValue.getExpDate());
-		} else if (validationType == '2' || validationType == '3') {// EffectiveDate
-																	// +value
-																	// validation
-
-			if (ruleDataTypeId.getParameterCode().equalsIgnoreCase("c")) {
+		} else if (ruleType.getValidationType() == '2'
+				|| ruleType.getValidationType() == '3' && !(ruleType.getIsRangeValue() == 1 && firstRuleValue
+						.getGroupValueId().equals(
+								secondRuleValue.getGroupValueId()))) {// EffectiveDate
+			// +value
+			// validation
+		
+			if (ruleType.getRuleDataTypeId().getParameterCode()
+					.equalsIgnoreCase("c")) {
 				if (firstRuleValue.getCategoryDisplayValue().equals(
 						secondRuleValue.getCategoryDisplayValue()))
 					isValuesEqual = true;
@@ -1482,36 +1489,35 @@ public class RuleCatalogueBackingBean extends
 					isValuesEqual = true;
 
 			}
-			if (isValuesEqual) {
+			if (isValuesEqual) {// don't
+																	// validate
+																			// date
+																			// for
+																			// values
+																			// in
+																			// a
+																			// group
 				validationResult = !isDateOverlaped(
 						firstRuleValue.getEffDate(),
 						firstRuleValue.getExpDate(),
 						secondRuleValue.getEffDate(),
 						secondRuleValue.getExpDate());
 			} else {
+						
 				validationResult = true;
 			}
 
-			// } else {// validationType == '3' , //EffectiveDate + value +
-			// Range
-			// // validation
-			// if (firstRuleValue.getRuleValue().equals(
-			// secondRuleValue.getRuleValue())) {
-			// isValuesEqual = true;
-			// }
-			// if (isValuesEqual) {
-			// validationResult = !(isRangeOverlaped(
-			// firstRuleValue.getFromValue(),
-			// firstRuleValue.getToValue(),
-			// secondRuleValue.getFromValue(),
-			// secondRuleValue.getToValue()) && isDateOverlaped(
-			// firstRuleValue.getEffDate(),
-			// firstRuleValue.getExpDate(),
-			// secondRuleValue.getEffDate(),
-			// secondRuleValue.getExpDate()));
-			// } else {
-			// validationResult = true;
-			// }
+		}else if (ruleType.getIsRangeValue() == 1
+				&& firstRuleValue.getGroupValueId().equals(
+						secondRuleValue.getGroupValueId())){// step-2 validation : validate values in a group
+					
+		  if(ruleType.getRuleDataTypeId().getParameterCode().equalsIgnoreCase("c")){// category Code
+			  validationResult = !(firstRuleValue.getCategoryDisplayValue().equals(secondRuleValue.getCategoryDisplayValue()));
+		  }else if(ruleType.getRuleDataTypeId().getParameterCode().equalsIgnoreCase("m")) {// parameter code
+              validationResult = !(firstRuleValue.getRuleValue().equals(secondRuleValue.getRuleValue()));	  
+	      }else{
+	    	  validationResult = true;
+	      }
 		}
 		log.info("........validationResult=" + validationResult);
 		return validationResult;
