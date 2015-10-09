@@ -15,15 +15,18 @@
 			          onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{centralContractBackingBean.setContractListner()}" />
 		   
 		             <p:column headerText="#{lbl['lbl.ct.contract.title']}" style="width:32%;white-space:normal;" styleClass="column-align-center">
-				        <h:outputText value="#{circularContractsVar.ctContract.contractName}" style="float:left;" />
+				         <div align="left">
+				        <h:outputText value="#{circularContractsVar.ctContract.contractName}" /></div>
 			         </p:column>
 		
 		          	<p:column headerText="#{lbl['lbl.ct.loa.physical.no']}" style="width:12%;white-space:normal;" styleClass="column-align-center">
-				        <h:outputText value="#{circularContractsVar.ctContract.loaPhysicalNo}" style="float:left;"/>
+				        <div align="left">
+				        <h:outputText value="#{circularContractsVar.ctContract.loaPhysicalNo}" /></div>
 			        </p:column>
 			
 			        <p:column headerText="#{lbl['lbl.ct.physical.no']}" style="width:10%;white-space:normal;" styleClass="column-align-center">
-				        <h:outputText value="#{circularContractsVar.ctContract.latestContractVer.contractPhysicalNo}" style="float:left;"/>
+				        <div align="left">
+				        <h:outputText value="#{circularContractsVar.ctContract.latestContractVer.contractPhysicalNo}" /></div>
 			        </p:column>
 			
 			        <p:column headerText="#{lbl['lbl.ct.contract.start']}" style="width:8%;" styleClass="column-align-center">
@@ -39,7 +42,9 @@
 			          </p:column>
 			
 			          <p:column headerText="#{lbl['lbl.ct.supplier.name']}" style="width:20%;white-space:normal;" styleClass="column-align-center">
-				          <h:outputText value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.supplierName}" style="float:left;" />
+				         <div align="left">
+				          <h:outputText value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.supplierName}" />
+			          </div>
 			          </p:column>
 		
 			          <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;" styleClass="column-align-center">
