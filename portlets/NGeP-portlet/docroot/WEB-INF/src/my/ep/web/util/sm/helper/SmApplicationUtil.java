@@ -1052,20 +1052,6 @@ public class SmApplicationUtil {
 				sb.append(++noSignatoryCount + ".) ");
 				sb.append(bank.getAccountNo());
 			}
-			if (!SmCommonUtil.isCollectionEmpty(appl.getSmSupplierBranches())
-					&& (bank.getAccountPurpose().equals("P") || bank
-							.getAccountPurpose().equals("B"))) {
-				if (bank.getSmSupplierBranch() == null
-						|| bank.getSmSupplierBranch().getSupplierBranchId() == null) {
-					validSave = false;
-					setNavigationBackToCurrentPage(currentTab, managedBean);
-					throw new EpException(MessageConst.ERROR_722615,
-							new String[] { bank.getPmFinancialOrg() != null
-									&& bank.getPmFinancialOrg()
-											.getFinancialOrgId() != null ? bank
-									.getPmFinancialOrg().getFinOrgName() : "" });
-				}
-			}
 		}
 		if (payAccCnt == 0) {
 			validSave = false;
