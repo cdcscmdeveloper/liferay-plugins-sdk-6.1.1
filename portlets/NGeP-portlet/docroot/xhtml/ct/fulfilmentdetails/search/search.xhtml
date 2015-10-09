@@ -13,7 +13,7 @@
       .column-align-center { text-align: center !important;}
      .ui-menu.ui-menu-dynamic.ui-widget.ui-widget-content.ui-corner-all.ui-helper-clearfix.ui-shadow{  
               width:250px;
-}   
+   }   
        
        
     </style>
@@ -111,7 +111,8 @@
 						      style="float:left;" rendered="#{data.ctCircularVer != null and data.ctCircularVer.status.statusId != CtStatusConst.cqRejected}"    />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.supplier.name']}" styleClass="column-align-center" style="width:8%; white-space:normal;" rendered="#{!contractDetailsBackingBean.isSupplierRole()}">
-						<h:outputText value="#{data.companyName}" style="float:left;"/>
+						<div align="left">
+						<h:outputText value="#{data.companyName}"/></div>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.contract.start']}" styleClass="column-align-center"  style="width:5%; white-space:normal;">
 						<h:outputText value="#{data.effDate}" style="float:left;">
@@ -131,10 +132,12 @@
 					   		<h:outputText value="#{lbl['lbl.ct.status']}"/>
                		   		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.status.contract']}" />
                	    	</f:facet>
-						<h:outputText value="#{contractDetailsBackingBean.chkContractStatusType(data.status)}" style="float:left;" />						
+               	    	<div align="left">
+						<h:outputText value="#{contractDetailsBackingBean.chkContractStatusType(data.status)}" /></div>						
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.contract.status']}" styleClass="column-align-center" style="width:15%; white-space:normal;">
-						<h:outputText value="#{contractDetailsBackingBean.getStatusDescById(data.ctContractVer.status.statusId)}" style="float:left;" />
+					<div align="left">
+						<h:outputText value="#{contractDetailsBackingBean.getStatusDescById(data.ctContractVer.status.statusId)}" /></div>
 					</p:column>
 					 	<p:column headerText="#{lbl['lbl.ct.action']}" 
 					 	    styleClass="column-align-center"  style="width:7%;" rendered="#{!contractDetailsBackingBean.isSupplierRole()}">
