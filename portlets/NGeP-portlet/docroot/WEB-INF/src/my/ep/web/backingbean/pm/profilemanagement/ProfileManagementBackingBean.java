@@ -2848,12 +2848,14 @@ public class ProfileManagementBackingBean extends
 		}
 		
 		SearchOrderBean orderBean = null;
-		if(OrganizationType.SUPPLIER.value().equals(getManagedBean().getSelectedOrgType().getParameterCode())){
-			orderBean = new SearchOrderBean("pmOrgProfile.smSupplier.companyName", true);
-		}else if(OrganizationType.FACTORING_COMPANY.value().equals(getManagedBean().getSelectedOrgType().getParameterCode())){
-			orderBean = new SearchOrderBean("pmOrgProfile.pmFinancialOrg.finOrgName", true);
-		}else{
-			orderBean = new SearchOrderBean("pmOrgProfile.pmOrgValidity.orgName", true);
+		if(getManagedBean().getSelectedOrgType() !=null && getManagedBean().getSelectedOrgType().getParameterCode() !=null){
+			if(OrganizationType.SUPPLIER.value().equals(getManagedBean().getSelectedOrgType().getParameterCode())){
+				orderBean = new SearchOrderBean("pmOrgProfile.smSupplier.companyName", true);
+			}else if(OrganizationType.FACTORING_COMPANY.value().equals(getManagedBean().getSelectedOrgType().getParameterCode())){
+				orderBean = new SearchOrderBean("pmOrgProfile.pmFinancialOrg.finOrgName", true);
+			}else{
+				orderBean = new SearchOrderBean("pmOrgProfile.pmOrgValidity.orgName", true);
+			}
 		}
 		
 		if(orderBean != null){
