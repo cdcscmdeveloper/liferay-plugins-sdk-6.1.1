@@ -32,7 +32,6 @@
 				update=":form:settingTabId:ruleTypeValueTableID" />
 
 
-
 			<p:column>
 				<f:facet name="header">
 					               #{lbl['lbl.pm.rule.type']}
@@ -40,7 +39,7 @@
 				
 			                    #{ruleTypeObj.ruleTypeDesc}
 				
-			            	</p:column>
+			</p:column>
 			<p:column>
 				<f:facet name="header">
 				                	#{lbl['lbl.pm.rule.data.type']}
@@ -48,8 +47,7 @@
                                 #{ruleCatalogueBackingBean.getParameterDesc(ParameterTypeConst.ruleDataType,ruleTypeObj.ruleDataTypeId.parameterCode)}
 						       
 							
-			              	</p:column>
-
+			</p:column>
 		</p:dataTable>
 		<br />
 		<h:outputText value="#{lbl['lbl.pm.rule.type.value']}"
@@ -72,8 +70,7 @@
 					maxlength="20" id="amountValueId"
 					disabled="#{!(typeValueObj.brandNew)}" required="true"
 					requiredMessage="#{lbl['lbl.pm.settings.value.required']}"
-					validator="#{webappBean.checkIntegerField}"
-					validatorMessage="Value Of Amount Type should be a Digit!">
+					validator="#{webappBean.validateDecimalNumber}">
 					<p:ajax partialSubmit="true" process="@this"
 						update="@this, amountValueMsg" />
 
@@ -91,8 +88,7 @@
 					maxlength="20" id="numberValueId"
 					disabled="#{!(typeValueObj.brandNew)}" required="true"
 					requiredMessage="#{lbl['lbl.pm.settings.value.required']}"
-					validator="#{webappBean.checkIntegerField}"
-					validatorMessage="Value Of Number Type should be a Digit!">
+					validator="#{webappBean.validateNonDecimalNumber}">
 					<p:ajax partialSubmit="true" process="@this"
 						update="@this, numberValueMsg" />
 				</p:inputText>
@@ -232,11 +228,14 @@
 
 				<p:calendar
 					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1 and typeValueObj.showFlag)}"
+					disabled="#{typeValueObj.expDate lt DateUtils.getCurrentDateWithoutTime()}"
 					showOn="button" id="ruleConfigExpDateId" style="width :100px;"
-					mindate="#{ruleCatalogueBackingBean.managedBean.tomorrow}"
+					mindate="#{ruleCatalogueBackingBean.managedBean.today}"
 					label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-					value="#{typeValueObj.expDate}">
+					value="#{typeValueObj.expDate}" validatorMessage="#{lbl['lbl.pm.as.expdate']} #{lbl['lbl.pm.date.range.validation']} #{lbl['lbl.pm.as.effdate']}">
+					<f:attribute name="startDate" value="#{typeValueObj.effDate}" />
+				    <f:validator validatorId="primeDateRangeValidator" />
 					<p:ajax event="dateSelect"
 						listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}"
 						update="@([id$=cloneLink])" />
@@ -281,7 +280,7 @@
 								update=":form:settingTabId:ruleTypeValueTableID">
 								<p:graphicImage value="/css/images/design/add.png"></p:graphicImage>
 							</p:commandLink>&#160;</td>
-						<td style="text-align: right;"><p:commandLink
+						<td style="text-align: right;"><p:commandLink disabled="#{typeValueObj.effDate le DateUtils.getCurrentDateWithoutTime()}" rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1 and typeValueObj.showFlag)}"
 								id="deleteValue" partialSubmit="true" process="@this"
 								update=":form:settingTabId:ruleTypeValueTableID"
 								action="#{ruleCatalogueBackingBean.deleteMoreRuleValue(index)}">
