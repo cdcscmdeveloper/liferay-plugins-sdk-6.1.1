@@ -67,12 +67,12 @@
 		</div>
 
 		<p:dataTable id="bidScheduleByPackage" var="bidItem" rows="10"
-			selectionMode="single" rowKey="#{bidItem}" rowIndexVar="index"
+			selectionMode="single" rowKey="#{bidItem}" rowIndexVar="index"  
 			selection="#{scheduleBiddingBB.managedBean.selectedBidItem}"
 			value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].scBidItems}">
-			<p:ajax event="rowSelect"
-				listener="#{scheduleBiddingBB.retrieveParticipantsListAction}"
-				process="@this" partialSubmit="true" update="@([id$=participantList])" />
+			<p:ajax event="rowSelect" 
+				listener="#{scheduleBiddingBB.retrieveParticipantsListAction}" 
+				  update="@([id$=participantList])" />
 			<ac:paginator for="bidScheduleByPackage"></ac:paginator>
 
 			<p:column style="white-space : normal; width : 25%;">
@@ -111,7 +111,7 @@
 						value="#{lbl['lbl.sc.min.decrement.block.tooltip']}" />
 				</f:facet>
 				<p:inputText id="decrementAmtByPackage" style="text-align : right"
-					maxlength="19" required="true" value="#{bidItem.decrementAmt }">
+					maxlength="19"  value="#{bidItem.decrementAmt }">
 					<p:ajax event="change" process="@this" partialSubmit="true" />
 					<ac:validateNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
