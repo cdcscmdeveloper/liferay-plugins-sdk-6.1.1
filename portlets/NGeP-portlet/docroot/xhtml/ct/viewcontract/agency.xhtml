@@ -58,17 +58,23 @@
 							</p:columnGroup>
      
                              <p:column style="width:25%;white-space:normal;" >
-				                    <h:outputText style="float:left;"
+				                   <div align="left">
+				                    <h:outputText 
 				                       value="#{contractDetailsBackingBean.retrieveMinistryByOrgProfileId(agencyData.orgProfile.orgProfileId)}"/>
+			                      </div>
 			                 </p:column>
 			                 
 			                  <p:column style="width:25%;white-space:normal;" >
-				                    <h:outputText style="float:left;"
+				                <div align="left">
+				                    <h:outputText 
 				                       value="#{contractDetailsBackingBean.retrieveJabatanByOrgProfileId(agencyData.orgProfile.orgProfileId)}"/>
+			                    </div>
 			                 </p:column>
 			                 
 			                  <p:column styleClass="column-align-center" style="width:25%;white-space:normal;" >
+				                   <div align="left">
 				                     <h:outputText  value="#{agencyData.orgProfile.orgName}" style="float:left;"/>
+			                       </div>
 			                  </p:column>
 			
 			    <p:column style="width:10%;white-space:normal;" styleClass="column-align-center">
