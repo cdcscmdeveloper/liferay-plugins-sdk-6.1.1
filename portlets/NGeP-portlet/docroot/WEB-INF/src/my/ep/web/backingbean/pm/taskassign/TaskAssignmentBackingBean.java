@@ -859,10 +859,35 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			throw new EpException(MessageConst.ERROR_770097);
 		}
 		
+		//populate assignee user id list
+		List<String> assigneeUsers = new ArrayList<String>();
+		if(StringUtils.isNotBlank(task.getAssigneeUsers())){
+			String[] array = task.getAssigneeUsers().split(",");
+			for (int i = 0; i < array.length; i++){
+				if(array[i].endsWith("(U)") ||  array[i].endsWith("(G)")){
+					assigneeUsers.add(array[i].substring(0,array[i].length() - 3));
+				}
+			}
+		}
+		
+		if(!assigneeUsers.isEmpty()){
+			if(assigneeUsers.contains(pmUser.getLoginId())){
+				throw new EpException("the task already exist under the user:" + pmUser.getUserName());
+			}else{
+				//remove the current user, replace with the new assignee.
+				if(assigneeUsers.contains(getManagedBean().getTaskAssignmentSearchBean().getUser().getLoginId())){
+					assigneeUsers.remove(getManagedBean().getTaskAssignmentSearchBean().getUser().getLoginId());		
+				}
+			}			
+		}
+		
+		assigneeUsers.add(pmUser.getLoginId());	
+		
 		try{
 			TaskAssignmentReqDTO reqDTO = new TaskAssignmentReqDTO();
 			reqDTO.setTaskId(task.getTaskId());
 			reqDTO.setUser(pmUser);
+			reqDTO.setUserIdList(assigneeUsers);
 			reqDTO.setDocNumber(task.getDocNumber());
 			reqDTO.setDocId(task.getDocId());
 			reqDTO.setDocType(task.getDocType());
