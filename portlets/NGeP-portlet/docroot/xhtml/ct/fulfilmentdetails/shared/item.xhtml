@@ -367,15 +367,21 @@
 				     <ac:paginator for="ceilingTable"/>
 				
 				     <p:column headerText="#{lbl['lbl.ct.ministry']}" style="white-space:normal;" styleClass="column-align-center">
-				          <h:outputLabel value="#{contractDetailsBackingBean.retrieveMinistryByOrgProfileId(itemCeilingQtiesVar.ctAgency.orgProfile.orgProfileId)}" style="float:left;" />
+				         <div align="left">
+				          <h:outputText value="#{contractDetailsBackingBean.retrieveMinistryByOrgProfileId(itemCeilingQtiesVar.ctAgency.orgProfile.orgProfileId)}"  />
+			    	     </div>
 			    	 </p:column>  
 			    	 
 			    	  <p:column headerText="#{lbl['lbl.ct.jabatan']}" style="white-space:normal;" styleClass="column-align-center">
-				          <h:outputLabel value="#{contractDetailsBackingBean.retrieveJabatanByOrgProfileId(itemCeilingQtiesVar.ctAgency.orgProfile.orgProfileId)}" style="float:left;" />
+				         <div align="left">
+				         <h:outputText value="#{contractDetailsBackingBean.retrieveJabatanByOrgProfileId(itemCeilingQtiesVar.ctAgency.orgProfile.orgProfileId)}"  />
+			    	</div>
 			    	 </p:column>     
 				
 				     <p:column headerText="#{lbl['lbl.ct.ptj']}" style="white-space:normal;" styleClass="column-align-center">
-				          <h:outputLabel value="#{itemCeilingQtiesVar.ctAgency.orgProfile.orgName}" style="float:left;" />
+				     <div align="left">
+				          <h:outputText  value="#{itemCeilingQtiesVar.ctAgency.orgProfile.orgName}" />
+				     </div>
 				      </p:column>              
 			
 			  	      <p:column style="text-align: right;" styleClass="column-align-center">
