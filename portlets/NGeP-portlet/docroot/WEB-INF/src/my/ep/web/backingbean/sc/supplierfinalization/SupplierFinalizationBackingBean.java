@@ -1803,6 +1803,13 @@ public class SupplierFinalizationBackingBean extends
 					throw new EpException(MessageConst.ERROR_760206);
 				}
 			}
+		} else if (ParameterConst.DECISION_CANCEL
+							.equals(decisionTypeCode) && 
+						CollectionUtils.isEmpty(
+								scQtCommittee.getQtCommitteRemarks())) {
+			
+			// Remarks are mandatory for QT cancellation
+			throw new EpException(MessageConst.ERROR_760360);
 		}
 		
 		return reqDTO;
@@ -3724,10 +3731,11 @@ public class SupplierFinalizationBackingBean extends
 						!(scQtRecommend.getCreatedBy().equals(loggedInUserId))) {
 					this.getManagedBean().setItemFwdToHighAuthority(true);
 				}
-				if (scQtRecommend.isHigherAuthReq() && 
+				if ( scQtRecommend.isHigherAuthReq() && 
 						(getManagedBean().isInitialDecisionFwdToBPK() || 
-							scQtFinalization.getHigherSecretary().getUserId()
-								.equals(loggedInUserId))) {
+							(scQtFinalization.getHigherSecretary() != null &&
+								scQtFinalization.getHigherSecretary().getUserId()
+									.equals(loggedInUserId))) ) {
 					scQtRecommend.setDisabled(false);
 				} else if (scQtRecommend.getCreatedBy()
 										.equals(loggedInUserId)) {
@@ -4770,17 +4778,16 @@ public class SupplierFinalizationBackingBean extends
 		}		
 	}
 
-	private void prepareRecommendedSuppliers(
-			TplSpecZoneDtl specZoneDtl,
-			Map<Long, List<ScQtEvaluationResultDtl>> recommendedSuppliersByZone,
+	private void prepareRecommendedSuppliers(TplSpecZoneDtl specZoneDtl,
+			Map<Long, List<ScQtEvaluationResultDtl>> recommendedSuppliersByZoneMap,
 			List<ScQtEvaluationResultDtl> currentZoneRecommendedSupplierList) {
 		boolean isAward = this.getManagedBean().isSingleAward();
 
 		if (!isAward) {
 			if (CollectionUtils.isEmpty(currentZoneRecommendedSupplierList)) {
-				recommendedSuppliersByZone.remove(specZoneDtl.getSpecZoneId());
+				recommendedSuppliersByZoneMap.remove(specZoneDtl.getSpecZoneId());
 			} else {
-				recommendedSuppliersByZone.put(specZoneDtl.getSpecZoneId(),
+				recommendedSuppliersByZoneMap.put(specZoneDtl.getSpecZoneId(),
 						currentZoneRecommendedSupplierList);
 				this.getManagedBean().getResetSupplierList()
 									 .removeAll(currentZoneRecommendedSupplierList);
@@ -4793,12 +4800,12 @@ public class SupplierFinalizationBackingBean extends
 							= this.getManagedBean().getRecommendedSupplier();
 				recommendedSupplier.setAwareded(true);
 				recommendedSupplierList.add(recommendedSupplier);
-				recommendedSuppliersByZone.put(
+				recommendedSuppliersByZoneMap.put(
 						specZoneDtl.getSpecZoneId(),recommendedSupplierList);
 				this.getManagedBean().getResetSupplierList()
 									 .remove(recommendedSupplier);
 			} else {
-				recommendedSuppliersByZone.remove(specZoneDtl.getSpecZoneId());
+				recommendedSuppliersByZoneMap.remove(specZoneDtl.getSpecZoneId());
 			}
 		}
 	}	
@@ -4921,7 +4928,7 @@ public class SupplierFinalizationBackingBean extends
 							if (CollectionUtils.isNotEmpty(zoneDtls)) {
 								for (TplSpecZoneDtl zoneDtl : zoneDtls) {
 									List<ScQtRecommend> itemListByZone = scQtFinalization
-															.getScQtRecommendsByZone().get(zoneDtl);
+															.getScQtRecommendsByZone().get(zoneDtl.getSpecZoneId());
 									if (CollectionUtils.isNotEmpty(itemListByZone)) {
 										ScQtRecommend qtRecommend = itemListByZone.get(0);
 										List<ScQtEvaluationResultDtl> shortListedSupplierList = 
@@ -5391,7 +5398,7 @@ public class SupplierFinalizationBackingBean extends
 				specZoneId = zoneDtl.getSpecZoneId();
 			}
 			
-			if (recommendedSuppliersByZone.keySet().contains(specZoneId)) {
+			if (recommendedSuppliersByZone.containsKey(specZoneId)) {
 				List<ScQtEvaluationResultDtl> recommendedSuppList = 
 													recommendedSuppliersByZone.get(specZoneId);
 				if (!this.getManagedBean().isSingleAward()) {
@@ -5641,20 +5648,6 @@ public class SupplierFinalizationBackingBean extends
 				if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
 						.equals(finalizationMethodStr)) {
 					setOnlineBiddingFlag();
-					
-//					if (ParameterConst.RECOMMEND_BY_BIDDING_NEXT_RANK
-//							.equals(finalizationMethodStr)) {
-//						List<ScQtEvaluationResultDtl> shortlistedSuppliers
-//									= getManagedBean().getShortlistedSupplierList();
-//						if (CollectionUtils.isNotEmpty(shortlistedSuppliers)) {
-//							if (this.getManagedBean().getItemList() != null) {
-//								ScQtRecommend scQtRecommend = this.getManagedBean()
-//																  .getItemList().get(0);
-//								scQtRecommend.setShortListedSupplierList(shortlistedSuppliers);
-//								awardToNextRankSupplier(scQtRecommend);
-//							}
-//						}
-//					}
 				} else if (ParameterConst.RECOMMEND_BY_MULTIPLE_LOI
 							.equals(finalizationMethodStr)) {
 					this.getManagedBean().setMultipleLoi(true);
@@ -5677,9 +5670,28 @@ public class SupplierFinalizationBackingBean extends
 					ParameterTypeConst.FINALIZATION_RECOMMEND_BY, finalizationMethodStr);
 			getManagedBean().getScQtFinalization().setFinalizationMethod(finalizationMethod);
 			
-			if (ajaxEvent != null && 
-					getManagedBean().isItemize()) {
-				recommendSuppliersByItem();
+			if (ajaxEvent != null) { 
+				if (getManagedBean().isItemize()) {	
+					recommendSuppliersByItem();
+				} else {
+					if (getManagedBean().getRecommendedSupppliersByZone() != null) {
+						Map<Long,List<ScQtEvaluationResultDtl>> recommendedSupppliersByZoneMap 
+									= getManagedBean().getRecommendedSupppliersByZone();
+						if (MapUtils.isNotEmpty(recommendedSupppliersByZoneMap)) {
+							for (Long specZoneId : recommendedSupppliersByZoneMap.keySet()) {
+								if (CollectionUtils.isNotEmpty(
+										recommendedSupppliersByZoneMap.get(specZoneId))) {
+									for (ScQtEvaluationResultDtl evalResultDtl
+												: recommendedSupppliersByZoneMap.get(specZoneId)) {
+										evalResultDtl.setAwareded(false);
+										evalResultDtl.setShortListed(false);
+									}
+								}
+							}
+							recommendedSupppliersByZoneMap.clear();
+						}
+					}					
+				}
 			}
 		} else {
 			getManagedBean().setFinalizationMethod(StringUtils.EMPTY);
@@ -6262,19 +6274,19 @@ public class SupplierFinalizationBackingBean extends
 					addSelectedSupplier();
 				} else if (isZonal) {
 					TplSpecZoneDtl currentZone = this.getManagedBean().getCurrentZone();
-					Map<Long, List<ScQtEvaluationResultDtl>> recommendedSuppliersByZone =
+					Map<Long, List<ScQtEvaluationResultDtl>> recommendedSuppliersByZoneMap =
 							this.getManagedBean().getRecommendedSupppliersByZone();
 					
-					if (recommendedSuppliersByZone == null) {
-						recommendedSuppliersByZone =
+					if (recommendedSuppliersByZoneMap == null) {
+						recommendedSuppliersByZoneMap =
 								new LinkedHashMap<Long, List<ScQtEvaluationResultDtl>>();
 						this.getManagedBean().setRecommendedSupppliersByZone(
-								recommendedSuppliersByZone);
+								recommendedSuppliersByZoneMap);
 					}
 					
 					// Add the recommended suppliers to recommended suppliers zonal map 
 					// when the supplier is selected
-					prepareRecommendedSuppliers(currentZone, recommendedSuppliersByZone, 
+					prepareRecommendedSuppliers(currentZone, recommendedSuppliersByZoneMap, 
 							recommendedSupplierList);
 				}
 			} else {
