@@ -189,11 +189,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			          <ac:paginator for="itemSupplierDt" />
 				  
 				      <p:column headerText="#{lbl['lbl.ct.supplier.name']}" style="width:27%;white-space:normal;" styleClass="column-align-center" >
-				           <p:commandLink update="@([id$=suppDtlPopUp])" style="float:left;"
+				          <div align="left">
+				           <p:commandLink update="@([id$=suppDtlPopUp])" 
 								action="#{panelBackingBean.showSupplierDetails(supVar.supplier)}"
 								oncomplete="suppDtlWidgetVar.show();">
 								<h:outputText value="#{supVar.supplier.companyName}" />
-							</p:commandLink>
+							</p:commandLink> </div>
 			          </p:column>
 				
 				      <p:column headerText="#{lbl['lbl.ct.business.reg.no']}"  style="width:10%;" styleClass="column-align-center" > 
@@ -205,7 +206,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				      </p:column>
 				   
 				      <p:column headerText="#{lbl['lbl.ct.address']}" style="width:40%;white-space:normal;" styleClass="column-align-center" >
-					     <h:outputText value="#{panelBackingBean.getSupAddress(supVar)}" style="float:left;" />
+					    <div align="left">
+					     <h:outputText value="#{panelBackingBean.getSupAddress(supVar)}"  /></div>
 				      </p:column>
 				      
 				      <p:column headerText="#{lbl['lbl.ct.bank.account.name']}"  style="width:15%;" styleClass="column-align-center" >
