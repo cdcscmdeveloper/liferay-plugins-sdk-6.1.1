@@ -684,6 +684,11 @@ public class LOADetailBackingBean extends
 				formFulfilmentSchedule(scLoa);
 			}
 		}
+		
+		// show default clause
+		if(scLoa.getScQtDeductions() != null && scLoa.getScQtDeductions().size()>0){
+			getManagedBean().setSelectedScQtDeduction(scLoa.getScQtDeductions().get(0));
+		}
 
 		// contract agency
 		if(scLoa.getContractAgency() != null){
