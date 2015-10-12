@@ -50,10 +50,12 @@
 					<h:outputText value="#{data.ctCircular.circularNo}" style="float:left;"/>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}"  style="width:15%;white-space:normal;" styleClass="column-align-center" >
-					<h:outputText value="#{data.circularNo}" style="float:left;" />
+					 <div align="left">
+					<h:outputText value="#{data.circularNo}" /></div>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.circular.name']}"  style="width:25%;white-space:normal;" styleClass="column-align-center" >
-					<h:outputText value="#{data.name}"  style="float:left;"/>
+				<div align="left">
+					<h:outputText value="#{data.name}"  /> </div>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.circular.start.date']}"  style="width:10%;white-space:normal;" styleClass="column-align-center" >
 					<h:outputText value="#{data.startDate}"  style="float:left;">
@@ -66,7 +68,9 @@
 					</h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.status']}"  style="width:15%;white-space:normal;" styleClass="column-align-center">
-					<h:outputText value="#{(data.status.statusId eq 0)? lbl['lbl.ct.cancelled'] : panelBackingBean.getStatusDescById(data.status.statusId)}" style="float:left;"/>
+					<div align="left">
+					   <h:outputText value="#{(data.status.statusId eq 0)? lbl['lbl.ct.cancelled'] : panelBackingBean.getStatusDescById(data.status.statusId)}" />
+				    </div>
 				</p:column>				
 				<p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center"  style="width:10%;white-space:normal;">
 					
