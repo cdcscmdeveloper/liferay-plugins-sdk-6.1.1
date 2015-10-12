@@ -22,8 +22,9 @@
 			       <p:column selectionMode="multiple" style="width:5%"/> 
                   
                    <p:column style="width:25%;" headerText="#{lbl['lbl.ct.business.name']}" styleClass="column-align-center">
-                        <h:outputText style="float:left;"
-                            value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.supplierName}" />
+                       <div align="left">
+                        <h:outputText 
+                            value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.supplierName}" /></div>
                    </p:column> 
                  
                    <p:column style="width:25%;" styleClass="column-align-center">
@@ -45,7 +46,8 @@
                      </p:column> 	
                
                       <p:column style="width:30%;" headerText="#{lbl['lbl.ct.designation']}" styleClass="column-align-center">
-                           <h:outputText id="suOfPosition" value="#{signSupplierVar.officerPosition}" style="float:left;"/>
+                           <div align="left">
+                           <h:outputText id="suOfPosition" value="#{signSupplierVar.officerPosition}" /></div>
                       </p:column>  	
                 </p:dataTable>
 		    </h:panelGrid>
