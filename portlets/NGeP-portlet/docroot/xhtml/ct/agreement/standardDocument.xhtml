@@ -25,7 +25,9 @@
 						<h:outputText value="#{lbl['lbl.ct.contents']}"/>
 				        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.content']}"/>
 				  	</f:facet>
-					<p:outputLabel value="#{contentsVar.title}" style="float:left;" rendered="#{contentsVar.contentType.parameterCode != ParameterConst.agreementUserUploadDoc}" />
+				  	<div align="left">
+					    <h:outputText value="#{contentsVar.title}" style="float:left;" rendered="#{contentsVar.contentType.parameterCode != ParameterConst.agreementUserUploadDoc}" />
+					</div>
 					<p:inputText value="#{contentsVar.title}"  maxlength="50"  style="width:90%;" rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementUserUploadDoc}"/>
 				</p:column>
 				
@@ -34,8 +36,10 @@
 						<h:outputText value="#{lbl['lbl.ct.type']}"/>
 				        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.content.type']}"/>
 				  	</f:facet>
-					<p:outputLabel style="float:left;"
+				  	<div align="left">
+					<h:outputText
 						value="#{agreementBackingBean.getParameterDesc(contentsVar.contentType.parameterType,contentsVar.contentType.parameterCode)}" />
+				</div>
 				</p:column>
 				
 				<p:column style="width:10%;" styleClass="column-align-center">
