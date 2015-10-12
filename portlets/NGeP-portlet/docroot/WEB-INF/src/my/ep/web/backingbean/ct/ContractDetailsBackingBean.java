@@ -655,8 +655,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    		checkAgencyStatus(ctAgency);		        	   
 	    	}
 	    }
-	    getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
-				getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId());
+	    if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+		    getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
+					getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId());
+	    }
 		// Retrieve Items
 	    if (getManagedBean().getContractVer().getCtContractItems().size() > 0) {	        	   
 	    	getManagedBean().setCtItemList(new ArrayList<CtContractItem>());
