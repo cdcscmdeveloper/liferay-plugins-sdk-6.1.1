@@ -110,6 +110,9 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 		
 		PmNotifyUser selectedNotify = this.getManagedBean().getSelectedNotify();
 		
+		//Timestamp timestamp = new Timestamp(new Date().getTime());
+		//selectedNotify.setChangedDate(timestamp);
+		
 		debugLogger("IsRead[" + selectedNotify.isReadFlag() + "]");
 		
 		if (!selectedNotify.isReadFlag()) {
@@ -120,16 +123,12 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 			NotifyReqDTO reqDTO = new NotifyReqDTO();
 			reqDTO.setPmNotifyUser(selectedNotify);
 			
-			Timestamp timestamp = new Timestamp(new Date().getTime());
-			reqDTO.setTimestamp(timestamp);
-			
 			NotifyResDTO resDTO = reqSO.updateIsReadNotify(reqDTO);
 			debugLogger("NotifyResDTO updateIsReadNotify["
 					+ resDTO.isSuccessful() + "]");
 			
 			if (resDTO.isSuccessful()) {
 				selectedNotify.setReadFlag(true);
-				selectedNotify.setChangedDate(timestamp);
 			}
 		}
 	}
