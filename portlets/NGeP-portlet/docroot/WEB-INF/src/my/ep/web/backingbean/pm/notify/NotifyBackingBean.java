@@ -1,5 +1,8 @@
 package my.ep.web.backingbean.pm.notify;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -102,23 +105,33 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 	}
 
 	public void selectedNotify() {
+		
 		debugLogger("=== selectedNotify ===");
+		
 		PmNotifyUser selectedNotify = this.getManagedBean().getSelectedNotify();
+		
 		debugLogger("IsRead[" + selectedNotify.isReadFlag() + "]");
+		
 		if (!selectedNotify.isReadFlag()) {
+		
 			INotifySO reqSO = (INotifySO) BusinessDelegate.getInstance()
 					.getServiceObject("pm", INotifySO.class);
+			
 			NotifyReqDTO reqDTO = new NotifyReqDTO();
 			reqDTO.setPmNotifyUser(selectedNotify);
+			
+			Timestamp timestamp = new Timestamp(new Date().getTime());
+			reqDTO.setTimestamp(timestamp);
+			
 			NotifyResDTO resDTO = reqSO.updateIsReadNotify(reqDTO);
 			debugLogger("NotifyResDTO updateIsReadNotify["
 					+ resDTO.isSuccessful() + "]");
+			
 			if (resDTO.isSuccessful()) {
 				selectedNotify.setReadFlag(true);
+				selectedNotify.setChangedDate(timestamp);
 			}
 		}
-		
-		//notifyDataModel.reloadData();
 	}
 
 	/**
