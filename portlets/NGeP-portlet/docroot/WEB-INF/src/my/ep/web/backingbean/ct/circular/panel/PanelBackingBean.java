@@ -789,6 +789,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 												new String[]{ResourceBundleUtils.getMessage("lbl.ct.supplier", 
 														ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 									}
+									
+									if(panelZone.getPanelZoneDtls().size() == 0){
+										throw new EpException(MessageConst.ERROR_100022, 
+												new String[]{ResourceBundleUtils.getMessage("lbl.ct.zone.location", 
+														ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+									} 
 								}
 							}
 						}
