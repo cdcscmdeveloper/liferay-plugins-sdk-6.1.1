@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:cc="http://java.sun.com/jsf/composite"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+   	xmlns:p="http://primefaces.org/ui"
+   	xmlns:c="http://java.sun.com/jsp/jstl/core"
+   	xmlns:ac="http://ac.my/jsf/composite/cc" >
+    
+<cc:interface>
+	<cc:attribute name="id" />
+	<cc:attribute name="latitude" required="true" />
+	<cc:attribute name="longitude" required="true" />
+</cc:interface>
+
+<cc:implementation>
+	<h:panelGroup id="#{cc.attrs.id}">
+	<ac:gmapScript />
+
+	<p:inputText id="plat" value="#{cc.attrs.latitude}" />
+	
+	<p:inputText id="plng" value="#{cc.attrs.longitude}" />
+	
+	<p:commandButton id="gmId" 
+		value="View Map" 
+		onclick="codeAddress(getAddress());">
+		<f:setPropertyActionListener 
+			target="#{gmapBackingBean.renderMap}" 
+			value="#{true}" />
+	</p:commandButton>
+	
+	<p:remoteCommand 
+		name="updateGmap" 
+		process="plat, plng" 
+		update=":form:tt:acgmap:gmapDialog:mapPanel" 
+		oncomplete="dlg.show();" />
+	
+	<ac:gmapDialog id="gmapDialog" latitude="#{cc.attrs.latitude}" longitude="#{cc.attrs.longitude}" />
+
+
+
+	</h:panelGroup>
+</cc:implementation>
+</ui:composition>
