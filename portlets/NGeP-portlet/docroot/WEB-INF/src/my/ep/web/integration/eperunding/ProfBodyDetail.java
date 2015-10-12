@@ -2,6 +2,9 @@ package my.ep.web.integration.eperunding;
 
 import java.util.Date;
 
+/*
+ *@author P Ganga prasad
+ */
 public class ProfBodyDetail {
 	private String profBody;
 	private String profBodyNo;
@@ -30,22 +33,25 @@ public class ProfBodyDetail {
 	public void setProfBodyExpiry(Date profBodyExpiry) {
 		this.profBodyExpiry = profBodyExpiry;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-	    if(obj instanceof ProfBodyDetail)
-	    {
-	    	ProfBodyDetail temp = (ProfBodyDetail) obj;
-	        if(this.profBody.equalsIgnoreCase(temp.profBody)&& this.profBodyNo.equalsIgnoreCase(temp.profBodyNo)&& this.profBodyExpiry.equals(temp.profBodyExpiry))
-	            return true;
-	    }
-	    return false;
+		if (obj instanceof ProfBodyDetail) {
+			ProfBodyDetail temp = (ProfBodyDetail) obj;
+			if (this.profBody.equalsIgnoreCase(temp.profBody)
+					&& this.profBodyNo.equalsIgnoreCase(temp.profBodyNo)
+					&& this.profBodyExpiry.equals(temp.profBodyExpiry))
+				return true;
+		}
+		return false;
 
 	}
+
 	@Override
 	public int hashCode() {
 
-	    return (this.profBody.hashCode()+this.profBodyNo.hashCode()+this.profBodyExpiry.hashCode());        
+		return (this.profBody.hashCode() + this.profBodyNo.hashCode() + this.profBodyExpiry
+				.hashCode());
 	}
 
 }
