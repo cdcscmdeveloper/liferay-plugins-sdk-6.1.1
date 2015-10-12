@@ -30,7 +30,7 @@
 	<p:remoteCommand 
 		name="updateGmap" 
 		process="plat, plng" 
-		update=":form:tt:acgmap:gmapDialog:mapPanel" 
+		update="@([id$=mapPanel])" 
 		oncomplete="dlg.show();" />
 
 		
