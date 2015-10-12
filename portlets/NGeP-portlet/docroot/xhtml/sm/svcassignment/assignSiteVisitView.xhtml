@@ -40,6 +40,48 @@
 			<p:commandButton id="btnSubmit" value="#{lbl['lbl.btn.submit']}"
 				action="#{svcSiteAssignBackingBean.validateForm}" />
 		</div>
+		
+		<table>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.siteassign.processing.officer']}" /></td>
+				<td><h:outputText value="#{svcSiteAssignBackingBean.managedBean.processingOfficerName}" /></td>
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.siteassign.business.company.regno']}" /></td>
+				<td><h:outputText value="#{svcSiteAssignBackingBean.managedBean.smSvTask.smAppl.smSupplier.regNo}" /></td>
+			</tr>
+			
+			<tr>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.siteassign.company.address']}" /></td>
+				<td>
+				<h:outputText escape="false"
+				value="#{svcSiteAssignBackingBean.getSMFullAddress(svcSiteAssignBackingBean.managedBean.smSvTask.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress)}" />
+				</td>
+			</tr>
+		
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.siteassign.site.visit.status']}" /></td>
+				<td><h:outputText value="#{svcSiteAssignBackingBean.managedBean.siteVisitStatus}" /></td>
+			</tr>
+		</table>
+		
+		<p:panel header="#{lbl['lbl.sm.siteassign.catcode.req.site.visit']}">
+			<p:dataTable value="#{svcSiteAssignBackingBean.managedBean.smSvTask.smSvCategories}" var="catApp" rowIndexVar="index">
+				<ui:param name="catCode" value="#{catApp.pmCategoryL1.categoryL1Code}#{catApp.pmCategoryL2.categoryL2Code}#{catApp.pmCategoryL3.categoryL3Code}" />
+				<p:column headerText="No.">
+					#{index + 1}
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}">
+					#{catCode}
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.category.description']}">
+					#{catApp.pmCategoryL3.categoryName}
+				</p:column>
+			</p:dataTable>
+		</p:panel>
 
 		<p:panel header="#{lbl['lbl.sm.siteassign.pnl.siteassign']}">
 			<p:dataTable var="svc"
