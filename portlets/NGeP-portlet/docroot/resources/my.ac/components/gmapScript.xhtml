@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:cc="http://java.sun.com/jsf/composite"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+   	xmlns:p="http://primefaces.org/ui"
+   	xmlns:c="http://java.sun.com/jsp/jstl/core"
+   	xmlns:ac="http://ac.my/jsf/composite/cc" >
+    
+<cc:interface>
+
+</cc:interface>
+
+<cc:implementation>
+
+	<link href="https://developers.google.com/maps/documentation/javascript/examples/default.css" rel="stylesheet" />
+	<script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+    <script>
+      var geocoder;
+      var marker;
+      function initialize() {
+        geocoder = new google.maps.Geocoder();
+      }
+      	      
+      function codeAddress(address) {
+    	  //var address = document.getElementById('address').value;
+    	  //var address = getAddress();
+        //alert("map_canvas: " + document.getElementById('map'));
+        geocoder.geocode( { 'address': address}, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+            //map.setCenter(results[0].geometry.location);
+            //alert('map: ' + map);
+            if(marker)
+              marker.setMap(null);
+            marker = new google.maps.Marker({
+                position: results[0].geometry.location,
+                draggable: true
+            });
+            google.maps.event.addListener(marker, "dragend", function() {
+	            document.getElementById('#{p:component(&quot;plat&quot;)}').value = marker.getPosition().lat();
+	            document.getElementById('#{p:component(&quot;plng&quot;)}').value = marker.getPosition().lng();
+            });
+
+            document.getElementById('#{p:component(&quot;plat&quot;)}').value = marker.getPosition().lat();
+            document.getElementById('#{p:component(&quot;plng&quot;)}').value = marker.getPosition().lng();
+
+            updateGmap();
+          } else {
+            alert('Geocode was not successful for the following reason: ' + status);
+          }
+        });
+      }
+      
+    </script>
+	<p:remoteCommand name="initializeGmap" autoRun="true" onstart="initialize()" />
+
+</cc:implementation>
+</ui:composition>
