@@ -11,6 +11,7 @@
 	<cc:attribute name="id" />
 	<cc:attribute name="latitude" required="true" />
 	<cc:attribute name="longitude" required="true" />
+	<cc:attribute name="address" required="true" />
 </cc:interface>
 
 <cc:implementation>
@@ -18,7 +19,7 @@
 
 	<ac:gmapScript />
 
-	<ac:gmapInput id="gmapInput" latitude="#{cc.attrs.latitude}" longitude="#{cc.attrs.longitude}" />
+	<ac:gmapInput id="gmapInput" latitude="#{cc.attrs.latitude}" longitude="#{cc.attrs.longitude}" address="#{cc.attrs.address}" />
 	
 	<ac:gmapDialog id="gmapDialog" latitude="#{cc.attrs.latitude}" longitude="#{cc.attrs.longitude}" />
 
