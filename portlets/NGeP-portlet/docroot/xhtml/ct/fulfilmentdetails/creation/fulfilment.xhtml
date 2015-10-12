@@ -163,9 +163,6 @@
 		 	               <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilmentDetails.xhtml"/>
 		 	        </p:outputPanel>
 		 	        <p:outputPanel id="ctMenuId3" rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}">
-		 	              <p:outputPanel rendered="#{!contractDetailsBackingBean.contractCreationProcess()}">
-		  				   		<ui:include src="asAtDate.xhtml" />
-		  				   </p:outputPanel>
 		 	             <ui:include src="/xhtml/ct/fulfilmentdetails/shared/centralDetails.xhtml"/>
 		 	        </p:outputPanel>
 		 	             <ui:include id="ctMenuId4"	src="/xhtml/ct/shared/quotationTender.xhtml" />
