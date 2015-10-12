@@ -262,7 +262,7 @@
 							label="#{lbl['lbl.sm.bankDtls.acctNo']}" id="smBankAcctNo"
 							value="#{backingBean.managedBean.selectedBank.accountNo}"
 							size="35">
-							<f:validateRegex pattern="[0-9]*" />
+							<f:validateRegex pattern="[0-9]*" disabled="#{!backingBean.managedBean.valueReqd}"/>
 						</p:inputText> <p:message id="smBankAcctNoMsg" for="smBankAcctNo"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
