@@ -15,13 +15,13 @@
 
 <cc:implementation>
 	<h:panelGroup id="#{cc.attrs.id}">
-		<p:outputLabel id="gmapdialoglabel" value="gmap dialog" />
 		
 		<p:remoteCommand name="disableMap" action="#{gmapBackingBean.setRenderMap(false)}" />
+		
 		<p:dialog id="gmapDialogId" widgetVar="dlg" width="625" height="400" modal="true" onHide="disableMap();">
+		
 			<p:panel id="mapPanel">
-				<p:outputLabel id="abcde" value="abcde" />
-				#{gmapBackingBean.renderMap}
+				
 			 	<p:gmap id="geomap" 
 			 		center="#{cc.attrs.latitude}, #{cc.attrs.longitude}" 
 			 		zoom="15" 
@@ -29,7 +29,9 @@
 			 		style="width:100%;height:400px"
 					rendered="#{gmapBackingBean.renderMap}"
 			 		model="#{gmapBackingBean.retSimpleModel(cc.attrs.latitude, cc.attrs.longitude)}" />
+			 		
 			</p:panel>
+			
 		</p:dialog>
 		
 	</h:panelGroup>

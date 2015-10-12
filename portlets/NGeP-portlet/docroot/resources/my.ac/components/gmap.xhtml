@@ -15,29 +15,12 @@
 
 <cc:implementation>
 	<h:panelGroup id="#{cc.attrs.id}">
+
 	<ac:gmapScript />
 
-	<p:inputText id="plat" value="#{cc.attrs.latitude}" />
-	
-	<p:inputText id="plng" value="#{cc.attrs.longitude}" />
-	
-	<p:commandButton id="gmId" 
-		value="View Map" 
-		onclick="codeAddress(getAddress());">
-		<f:setPropertyActionListener 
-			target="#{gmapBackingBean.renderMap}" 
-			value="#{true}" />
-	</p:commandButton>
-	
-	<p:remoteCommand 
-		name="updateGmap" 
-		process="plat, plng" 
-		update=":form:tt:acgmap:gmapDialog:mapPanel" 
-		oncomplete="dlg.show();" />
+	<ac:gmapInput id="gmapInput" latitude="#{cc.attrs.latitude}" longitude="#{cc.attrs.longitude}" />
 	
 	<ac:gmapDialog id="gmapDialog" latitude="#{cc.attrs.latitude}" longitude="#{cc.attrs.longitude}" />
-
-
 
 	</h:panelGroup>
 </cc:implementation>
