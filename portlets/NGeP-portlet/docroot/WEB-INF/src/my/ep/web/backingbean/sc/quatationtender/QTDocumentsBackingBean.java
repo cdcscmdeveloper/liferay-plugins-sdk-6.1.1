@@ -961,10 +961,10 @@ public class QTDocumentsBackingBean extends
 		debugLogger("downloadReport");
 		ScQtDocReportAttachment scQtDocReportAttachment = scQtDocReport
 				.getScQtDocReportAttachment();
-		/* if (scQtDocReportAttachment == null) { */
-		scQtDocReportAttachment = generateDocumentAttachment(scQtDocReport);
-		scQtDocReport.setScQtDocReportAttachment(scQtDocReportAttachment);
-		/* } */
+		if (scQtDocReportAttachment == null) {
+			scQtDocReportAttachment = generateDocumentAttachment(scQtDocReport);
+			scQtDocReport.setScQtDocReportAttachment(scQtDocReportAttachment);
+		} 
 		downloadFile(scQtDocReportAttachment);
 	}
 
