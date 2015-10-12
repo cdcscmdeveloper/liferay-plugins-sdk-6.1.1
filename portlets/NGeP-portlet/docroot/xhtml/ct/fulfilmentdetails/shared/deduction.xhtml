@@ -47,7 +47,8 @@
                        <ac:paginator for="tableClause" />   
                             <p:column selectionMode="multiple" style="width:2%;" 
                                rendered="#{contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterCode ==
-        	                         ParameterConst.deductionTypeAdvancePayment}"/>
+        	                         ParameterConst.deductionTypeAdvancePayment and
+        	                    !contractDetailsBackingBean.managedBean.viewContract}"/>
                            
                             <p:column style="white-space:normal;width:98%;">
 			                   	<f:facet name="header">
@@ -69,7 +70,8 @@
                       <div class="ppRightBtn"> 
                           <c:if test="#{contractDetailsBackingBean.managedBean.selectedDeduction != null and 
                                 contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterCode eq 
-        	                    ParameterConst.deductionTypeAdvancePayment}">
+        	                    ParameterConst.deductionTypeAdvancePayment and
+        	                    !contractDetailsBackingBean.managedBean.viewContract}">
         	                <p:commandButton id="addDeductionBtn" value="#{lbl['lbl.btn.add']}" process="@form" 
         	                    action="#{contractDetailsBackingBean.addDeductionClause()}" update=":form:tableClause">
         	                  	<p:tooltip for="addDeductionBtn">
