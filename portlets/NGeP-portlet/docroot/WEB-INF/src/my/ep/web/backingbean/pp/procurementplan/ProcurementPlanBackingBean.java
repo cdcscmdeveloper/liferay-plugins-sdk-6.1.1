@@ -1270,8 +1270,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if(ppPlan.getPpPlanActors()!=null && !ppPlan.getPpPlanActors().isEmpty()){ //!ppPlan.isBrandNew() && 
 			log.info("syncPlanActors");
 			//Existing Plan Actors
-			List <Long> existingVerifiers = new ArrayList<>();
-			List <Long> existingApprovers = new ArrayList<>();
+			List <Long> existingVerifiers = new ArrayList<Long>();
+			List <Long> existingApprovers = new ArrayList<Long>();
 			for(PpPlanActor actor:ppPlan.getPpPlanActors()){
 				if(RoleCode.PLAN_VERFICATION_OFFICER.value().equals(actor.getRoleCode().getRoleCode())){
 					existingVerifiers.add(actor.getPmUser().getUserId());
@@ -1282,8 +1282,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}
 			
 			//New Plan Actors
-			List <Long> newVerifiers = new ArrayList<>();
-			List <Long> newApprovers = new ArrayList<>();
+			List <Long> newVerifiers = new ArrayList<Long>();
+			List <Long> newApprovers = new ArrayList<Long>();
 			
 			//Verifier
 			if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){
