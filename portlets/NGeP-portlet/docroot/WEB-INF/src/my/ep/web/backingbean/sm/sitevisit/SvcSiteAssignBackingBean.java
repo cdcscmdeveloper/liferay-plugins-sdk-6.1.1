@@ -13,9 +13,11 @@ import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
 import my.ep.constant.MessageConst;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignReqDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignResDTO;
 import my.ep.dto.sm.siteVisit.SiteVisitReqDTO;
+import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAppl;
@@ -25,6 +27,7 @@ import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSvAddress;
 import my.ep.persistence.entity.sm.SmSvOfficer;
 import my.ep.persistence.entity.sm.SmSvTask;
+import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -45,6 +48,9 @@ import org.primefaces.model.DualListModel;
 public class SvcSiteAssignBackingBean extends
 		BaseBackingBean<SvcSiteAssignManagedBean> {
 	public static Logger log = Logger.getLogger(SvcSiteAssignBackingBean.class);
+	
+	private final Long SV_BEFORE_APPROVE = 20110L;
+	private final Long SV_AFTER_APPROVE = 20117L;
 	
 	public SvcSiteAssignBackingBean() {
 
@@ -70,7 +76,9 @@ public class SvcSiteAssignBackingBean extends
 		}
 		this.getManagedBean().setSmSvTask(resDTO.getSmSvTask());
 		this.getManagedBean().setSmRemark(new SmRemark());
+		
 		setSiteVisitAddressesFacilityName();
+		getWorkFlowInfo(getManagedBean().getAppId());
 	}
 	
 	/**
@@ -284,5 +292,32 @@ public class SvcSiteAssignBackingBean extends
 				}
 			 });
 		}
+	}
+	
+	private void getWorkFlowInfo(Long applId){
+		SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
+		reqDTO.setApplId(applId);
+		
+		SmWorkflowStatus workFlowStatus = SmServiceLookup.getSmWorkFlowStatusSO().retrieveCurrentWorkFlowStatusByDocId(reqDTO).getWorkflowStatus();
+//		log.info("workFlowStatus>>>>" + workFlowStatus.getWorkflowStatusId());
+//		log.info("workFlow status id >>>>" + workFlowStatus.getPmStatus().getStatusId());
+		if(workFlowStatus != null){
+			if(workFlowStatus.getPmStatus().getStatusId().equals(SV_BEFORE_APPROVE)){
+				log.info("<<<< 20110 >>>>");
+				getManagedBean().setSiteVisitStatus(SmCommonUtil.getMessage("lbl.sm.sitevist.to.be.performed.before.approval", null));
+			}else if(workFlowStatus.getPmStatus().getStatusId().equals(SV_AFTER_APPROVE)){
+				log.info("<<<< 20117 >>>>");
+				getManagedBean().setSiteVisitStatus(SmCommonUtil.getMessage("lbl.sm.sitevist.to.be.performed.after.approval", null));
+			}
+			
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(workFlowStatus.getCreatedBy());
+			PmUser processingOfficer = SmServiceLookup.getUserSO().retrieveUserByUserId(userReqDTO).getPmUser();
+			
+			if(processingOfficer != null){
+				getManagedBean().setProcessingOfficerName(processingOfficer.getUserName());
+			}
+		}
+
 	}
 }

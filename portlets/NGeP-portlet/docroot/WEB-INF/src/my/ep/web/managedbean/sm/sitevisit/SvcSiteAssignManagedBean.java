@@ -34,6 +34,10 @@ public class SvcSiteAssignManagedBean extends BaseManagedBean {
 	private SmRemark smRemark;
 	private String poRmrkToSvc;
 	
+	private String processingOfficerName;
+	private String businessRegNo;
+	private String siteVisitStatus;
+	
 
 	public String getPoRmrkToSvc() {
 		return poRmrkToSvc;
@@ -125,6 +129,30 @@ public class SvcSiteAssignManagedBean extends BaseManagedBean {
 
 	public void setSmRemark(SmRemark smRemark) {
 		this.smRemark = smRemark;
+	}
+
+	public String getProcessingOfficerName() {
+		return processingOfficerName;
+	}
+
+	public void setProcessingOfficerName(String processingOfficerName) {
+		this.processingOfficerName = processingOfficerName;
+	}
+
+	public String getBusinessRegNo() {
+		return businessRegNo;
+	}
+
+	public void setBusinessRegNo(String businessRegNo) {
+		this.businessRegNo = businessRegNo;
+	}
+
+	public String getSiteVisitStatus() {
+		return siteVisitStatus;
+	}
+
+	public void setSiteVisitStatus(String siteVisitStatus) {
+		this.siteVisitStatus = siteVisitStatus;
 	}
 
 }
