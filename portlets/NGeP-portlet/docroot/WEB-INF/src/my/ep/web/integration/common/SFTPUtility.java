@@ -103,6 +103,7 @@ public class SFTPUtility {
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void upload(BatchReqDTO reqDTO) {
 		log.info("inside file upload...");
 		FileUtility fileUtility = new FileUtility();
