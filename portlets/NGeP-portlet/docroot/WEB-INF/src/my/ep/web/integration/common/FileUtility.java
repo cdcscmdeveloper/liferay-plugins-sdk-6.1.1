@@ -55,6 +55,7 @@ import my.ep.web.integration.eperunding.ManagementPersonnel;
 import my.ep.web.integration.eperunding.ProfBodyDetail;
 import my.ep.web.integration.eperunding.Qualification;
 import my.ep.web.integration.eperunding.RegisteredCategory;
+import my.ep.web.integration.eperunding.RegistrationHistory;
 import my.ep.web.integration.eperunding.Signatory;
 import my.ep.web.integration.eterimaan.BillingInformationLine;
 import my.ep.web.integration.eterimaan.ReceiptDetails;
@@ -103,219 +104,6 @@ public class FileUtility extends InitializeSO{
 	SFTPUtility sftpUtility = new SFTPUtility();
 	OsbUtility osbUtility = new OsbUtility();
 	Encryption encryption = new Encryption();
-	
-
-	/**
-	 * Write character data to a big file - use BufferedWriter
-	 */
-	public void materialClassFileOutPutStream(List<MaterialClass> content,
-			String filePath) {
-		log.info("inside materialClassFileOutPutStream ");
-		String SERVICE_CODE = "PHS-030";
-
-		Writer writer = null;
-		String fileName = createFileNamePhis(SERVICE_CODE);
-
-		try {
-			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(filePath + fileName), "utf-8"));
-
-			if (content.size() != 0) {
-				log.info("content no equal to zero....");
-				StringBuffer line;
-				for (MaterialClass mclass : content) {
-					line = new StringBuffer();
-					line.append(formatStringField(mclass.getMaterialClassCode(), 8, "L"));
-					line.append(formatStringField(mclass.getMaterialClassDescription(), 200, "L"));
-					line.append(formatStringField(mclass.getMaterialClassAction(), 3, "L"));
-					line.append(formatStringField(mclass.getMaterialOldClassCode(), 8, "L"));
-					line.append(System.getProperty("line.separator"));
-					writer.write(line.toString());
-					writer.flush();
-				}
-			}
-		//  Encryption method 
-			encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName, SERVICE_CODE);
-		} catch (IOException e) {
-			e.printStackTrace();
-
-		} finally {
-			if (writer != null) {
-				try {
-					writer.close();
-				} catch (Exception e) {
-
-				}
-			}
-		}
-	}
-
-	public void materialBrandFileOutPutStream(List<MaterialBrand> content,
-			String filePath) {
-		log.info("inside materialBrandFileOutPutStream");
-		String SERVICE_CODE = "PHS-040";
-		Writer writer = null;
-
-		String fileName = createFileNamePhis(SERVICE_CODE);
-
-		try {
-			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(filePath + fileName), "utf-8"));
-
-			if (content.size() != 0) {
-				log.info("content no equal to zero....");
-				StringBuffer line;
-				for (MaterialBrand mbrand : content) {
-					line = new StringBuffer();
-					line.append(formatStringField(mbrand.getMaterialBrandCode(), 3, "L"));
-					line.append(formatStringField(mbrand.getMaterialBrandDescription(), 150, "L"));
-					line.append(formatStringField(mbrand.getMaterialBrandAction(), 3, "L"));
-					line.append(formatStringField(mbrand.getMaterialOldBrandCode(), 3, "L"));
-					line.append(System.getProperty("line.separator"));
-					writer.write(line.toString());
-					writer.flush();
-				}
-			}
-		//  Encryption method 
-			encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName, SERVICE_CODE);
-		} catch (IOException e) {
-
-		} finally {
-
-			if (writer != null) {
-				try {
-					writer.close();
-				} catch (Exception e) {
-
-				}
-			}
-		}
-	}
-
-	public void materialColorFileOutPutStream(List<MaterialColor> content,
-			String filePath) {
-		log.info("inside materialColorFileOutPutStream ");
-		String SERVICE_CODE = "PHS-050";
-		Writer writer = null;
-		String fileName = createFileNamePhis(SERVICE_CODE);
-
-		try {
-			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(filePath + fileName), "utf-8"));
-
-			if (content.size() != 0) {
-				
-				StringBuffer line;
-				for (MaterialColor mcolor : content) {
-					line = new StringBuffer();
-					line.append(formatStringField(mcolor.getMaterialColorCode(), 2, "L"));
-					line.append(formatStringField(mcolor.getMaterialColorDescription(), 150, "L"));
-					line.append(formatStringField(mcolor.getMaterialColorAction(), 3, "L"));
-					line.append(formatStringField(mcolor.getMaterialOldColorCode(), 2, "L"));
-					line.append(System.getProperty("line.separator"));
-					writer.write(line.toString());
-					writer.flush();
-				}
-			}
-			// Encryption method
-			encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName, SERVICE_CODE);
-		} catch (IOException e) {
-
-		} finally {
-
-			if (writer != null) {
-				try {
-					writer.close();
-				} catch (Exception e) {
-
-				}
-			}
-		}
-	}
-
-	public void materialMeasurementFileOutPutStream(
-			List<MaterialMeasurement> content, String filePath) {
-		log.info("inside materialMeasurementFileOutPutStream");
-		String SERVICE_CODE = "PHS-060";
-		Writer writer = null;
-
-		String fileName = createFileNamePhis(SERVICE_CODE);
-
-		try {
-			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(filePath + fileName), "utf-8"));
-
-			if (content.size() != 0) {
-				StringBuffer line;
-				for (MaterialMeasurement mMeasurement : content) {
-					line = new StringBuffer();
-					line.append(formatStringField(mMeasurement.getMeasurementCode(), 3, "L"));
-					line.append(formatStringField(mMeasurement.getMeasurementDescription(), 150, "L"));
-					line.append(formatStringField(mMeasurement.getMeasurementAction(), 3, "L"));
-					line.append(formatStringField(mMeasurement.getMeasurementOldCode(), 3, "L"));
-					line.append(System.getProperty("line.separator"));
-					writer.write(line.toString());
-					writer.flush();
-				}
-			}
-//			Encryption method
-			encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName, SERVICE_CODE);
-		} catch (IOException e) {
-
-		} finally {
-
-			if (writer != null) {
-				try {
-					writer.close();
-				} catch (Exception e) {
-
-				}
-			}
-		}
-	}
-
-	public void itemTypeFileOutPutStream(List<ItemType> content, String filePath) {
-		log.info("inside itemTypeFileOutPutStream");
-		String SERVICE_CODE = "PHS-070";
-		Writer writer = null;
-
-		String fileName = createFileNamePhis(SERVICE_CODE);
-
-		try {
-			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(filePath + fileName), "utf-8"));
-
-			if (content.size() != 0) {
-				StringBuffer line;
-				for (ItemType itemType : content) {
-					line = new StringBuffer();
-					line.append(formatStringField(itemType.getItemCode(), 2,"L"));
-					line.append(formatStringField(itemType.getItemDescription(), 150, "L"));
-					line.append(formatStringField(itemType.getItemAction(), 3,"L"));
-					line.append(formatStringField(itemType.getItemOldcode(), 3,	"L"));
-					line.append(System.getProperty("line.separator"));
-					writer.write(line.toString());
-					writer.flush();
-				}
-
-			}
-	
-			// Encryption method
-			encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName, SERVICE_CODE);
-
-		} catch (IOException e) {
-
-		} finally {
-
-			if (writer != null) {
-				try {
-					writer.close();
-				} catch (Exception e) {
-
-				}
-			}
-		}
-	}
 
 	// 1GFMAS
 
@@ -1599,12 +1387,10 @@ public class FileUtility extends InitializeSO{
 				line.append(formatString(cProfile.getSSMNo(),20));
 				line.append(formatString(cProfile.getMOFNo(),20));
 				
-//				Newly added columns -start
 				line.append(formatString(cProfile.getGSTNo(),12));
 				line.append(formatString(cProfile.getVirtualCertNo(),30));
 				line.append(formatDateEperunding(cProfile.getGSTEffectiveDate(),false));
 				line.append(formatDateEperunding(cProfile.getFirstTaxablePeriod(),false));
-//				Newly added columns -end
 				
 				line.append(formatString(cProfile.getCompanyType(),5));
 				line.append(formatString(cProfile.getAddress1(),100));
@@ -1627,7 +1413,7 @@ public class FileUtility extends InitializeSO{
 				line.append(formatBigDecimal(cProfile.getAccumulatedShare()));
 				line.append(formatBigDecimal(cProfile.getBumiputeraPercentage()));
 				line.append(formatBigDecimal(cProfile.getNonBumiPercentage()));
-				line.append(formatString(cProfile.getRegStatus(),5));
+				line.append(formatLong(cProfile.getRegStatus()));
 				line.append(formatDateEperunding(cProfile.getEffectDateTo(),false));
 				line.append(formatDateEperunding(cProfile.getEstablishedDate(),false));
 				line.append(formatDateEperunding(cProfile.getEffectDateFrom(),false));
@@ -1635,13 +1421,15 @@ public class FileUtility extends InitializeSO{
 				line.append(formatString(cProfile.getIsAssociatedCompany(),1));
 				line.append(formatDateEperunding(cProfile.getProfileUpdateDate(),false));
 
-				line.append(formatString(cProfile.getProfBodyDetail().getProfBody(),12));
-				line.append(formatString(cProfile.getProfBodyDetail().getProfBodyNo(),30));
-				line.append(formatDateEperunding(cProfile.getProfBodyDetail().getProfBodyExpiry(),false));
-
-				line.append(formatDateEperunding(cProfile.getRegistrationHistory().getDateStart(),false));
-				line.append(formatDateEperunding(cProfile.getRegistrationHistory().getDateEnd(),false));
-
+				for(ProfBodyDetail bodyDetail:cProfile.getProfBodyDetailList()){
+					line.append(formatString(bodyDetail.getProfBody(),12));
+					line.append(formatString(bodyDetail.getProfBodyNo(),30));
+					line.append(formatDateEperunding(bodyDetail.getProfBodyExpiry(),false));
+				}
+				for(RegistrationHistory history:cProfile.getRegistrationHistoryList()){
+					line.append(formatDateEperunding(history.getDateStart(),false));
+					line.append(formatDateEperunding(history.getDateEnd(),false));
+				}
 				line.append(formatBigDecimal(cProfile.getCapitalProportion().getBumi()));
 				line.append(formatBigDecimal(cProfile.getCapitalProportion().getNonBumi()));
 				line.append(formatBigDecimal(cProfile.getCapitalProportion().getNonMalaysian()));
@@ -2356,6 +2144,14 @@ public class FileUtility extends InitializeSO{
 	}
 	
 	public String formatBigDecimal(BigDecimal value) {
+
+		if(null!=value)
+			return value.toString()+"|";
+		else
+			return "|";
+	}
+	
+	public String formatLong(Long value) {
 
 		if(null!=value)
 			return value.toString()+"|";

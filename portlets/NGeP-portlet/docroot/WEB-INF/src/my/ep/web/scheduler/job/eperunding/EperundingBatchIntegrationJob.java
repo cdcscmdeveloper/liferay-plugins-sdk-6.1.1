@@ -4,6 +4,7 @@ import my.ep.factory.EpLogger;
 import my.ep.ntf.service.INtfSO;
 import my.ep.util.lookupservice.EpNtfBusinessDelegate;
 import my.ep.web.integration.common.EperundingIntegration;
+import my.ep.web.integration.common.EperundingTemplate;
 import my.ep.web.integration.common.TestNtfViaEmail;
 
 import org.apache.log4j.Logger;
@@ -30,15 +31,23 @@ public class EperundingBatchIntegrationJob implements Job {
 			throws JobExecutionException {
 		
 	  log.info("EperundingBatchIntegrationJob start");
-	  EperundingIntegration eperundingIntegration = new EperundingIntegration();	
-	  eperundingIntegration.createFilesAuthMgtEqtBODforEperunding();
-	  eperundingIntegration.createFilesforEperunding();
+	  EperundingTemplate eperundingTemplate = new EperundingIntegration();
+	  eperundingTemplate.createConsultantProfile();
+	  eperundingTemplate.createDeletedCompany();
+	  eperundingTemplate.createRegisteredCategory();
+	  eperundingTemplate.createGovernmentProject();
 	  
-	  INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance()
-				.getOSBServiceObject(INtfSO.class);
-		
-		TestNtfViaEmail testNtfViaEmail = new TestNtfViaEmail();
-		testNtfViaEmail.sendFilestoMail(ntfSO);
+	  eperundingTemplate.createFilesAuthMgtEqtBODforEperunding();
+	  
+	  eperundingTemplate.createBranchCompany();
+	  eperundingTemplate.createCompanyOwner();
+	  eperundingTemplate.createAssociatedCompany();
+	  
+//	  INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance()
+//				.getOSBServiceObject(INtfSO.class);
+//		
+//		TestNtfViaEmail testNtfViaEmail = new TestNtfViaEmail();
+//		testNtfViaEmail.sendFilestoMail(ntfSO);
 	  log.info("EperundingBatchIntegrationJob end");
        
 		

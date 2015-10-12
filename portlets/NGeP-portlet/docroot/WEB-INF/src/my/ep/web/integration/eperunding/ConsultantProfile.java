@@ -2,6 +2,7 @@ package my.ep.web.integration.eperunding;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /*
  *@author P Ganga prasad
@@ -36,7 +37,7 @@ public class ConsultantProfile {
 	private BigDecimal accumulatedShare;
 	private BigDecimal bumiputeraPercentage;
 	private BigDecimal nonBumiPercentage;
-	private String regStatus;
+	private Long regStatus;
 	private Date effectDateTo;
 	private Date establishedDate;
 	private Date effectDateFrom;
@@ -44,8 +45,8 @@ public class ConsultantProfile {
 	private String isAssociatedCompany;
 	private Date profileUpdateDate;
 
-	private ProfBodyDetail profBodyDetail;
-	private RegistrationHistory registrationHistory;
+	private List<ProfBodyDetail> profBodyDetailList;
+	private List<RegistrationHistory> registrationHistoryList;
 	private CapitalProportion capitalProportion;
 
 	public String getCompanyName() {
@@ -272,11 +273,11 @@ public class ConsultantProfile {
 		this.nonBumiPercentage = nonBumiPercentage;
 	}
 
-	public String getRegStatus() {
+	public Long getRegStatus() {
 		return regStatus;
 	}
 
-	public void setRegStatus(String regStatus) {
+	public void setRegStatus(Long regStatus) {
 		this.regStatus = regStatus;
 	}
 
@@ -328,20 +329,21 @@ public class ConsultantProfile {
 		this.profileUpdateDate = profileUpdateDate;
 	}
 
-	public ProfBodyDetail getProfBodyDetail() {
-		return profBodyDetail;
+	public List<ProfBodyDetail> getProfBodyDetailList() {
+		return profBodyDetailList;
 	}
 
-	public void setProfBodyDetail(ProfBodyDetail profBodyDetail) {
-		this.profBodyDetail = profBodyDetail;
+	public void setProfBodyDetailList(List<ProfBodyDetail> profBodyDetailList) {
+		this.profBodyDetailList = profBodyDetailList;
 	}
 
-	public RegistrationHistory getRegistrationHistory() {
-		return registrationHistory;
+	public List<RegistrationHistory> getRegistrationHistoryList() {
+		return registrationHistoryList;
 	}
 
-	public void setRegistrationHistory(RegistrationHistory registrationHistory) {
-		this.registrationHistory = registrationHistory;
+	public void setRegistrationHistoryList(
+			List<RegistrationHistory> registrationHistoryList) {
+		this.registrationHistoryList = registrationHistoryList;
 	}
 
 	public CapitalProportion getCapitalProportion() {

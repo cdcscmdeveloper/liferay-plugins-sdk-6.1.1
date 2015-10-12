@@ -19,6 +19,7 @@ import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmEquityCompany;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
@@ -57,36 +58,17 @@ import org.apache.log4j.Logger;
 public class EperundingIntegration extends EperundingTemplate{
 	
 	private static Logger log = EpLogger.getLogger(EperundingIntegration.class);
+	SupplierSearchReqDTO reqDTO = null;
 
-	/*public static void main(String args[]) {
-
-		EperundingIntegration eperundingIntegration = new EperundingIntegration();
-//		 eperundingIntegration.createFilesforEperunding();
-		eperundingIntegration.createFilesAuthMgtEqtBODforEperunding();
-
-		// INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance()
-		// .getOSBServiceObject(INtfSO.class);
-		//
-		// TestNtfViaEmail testNtfViaEmail = new TestNtfViaEmail();
-		// testNtfViaEmail.sendFilestoMail(ntfSO);
-	}*/
-
-	public void createFilesforEperunding() {
-
-		 createDeletedCompany(retriveSmSupplierBycreationDate("1",""));
-		 createGovernmentProject(retriveSmSupplierBycreationDate("4",""));
-		 createRegisteredCategory(retriveSmSupplierBycreationDate("2",""));
-		
-		 createCompanyOwner(retriveSmSupplierBycreationDate("5","1"));
-		 createAssociatedCompany(retriveSmSupplierBycreationDate("5","3"));
-		 createBranchCompany(retriveSmSupplierBycreationDate("5","2"));
-		 createConsultantProfile(retriveSmSupplierBycreationDate("6", ""));
-
-	}
-
+	@Override
 	public void createFilesAuthMgtEqtBODforEperunding() {
-
-		SupplierSearchResDTO resDTO = retriveSmSupplierBycreationDate("3", "");
+		
+		reqDTO = new SupplierSearchReqDTO();
+		
+		reqDTO.setCreateDate(currentDate);
+		reqDTO.setSuppType(IntegrationConstants.CONSULTANT_PROFILE_CODE);
+		
+		SupplierSearchResDTO resDTO = supplierSearchSO.getEquityBodMgtAuthEperunding(reqDTO);
 
 		if (resDTO.isSuccessful()) {
 			createAuthorizedSignatory(resDTO);
@@ -100,7 +82,6 @@ public class EperundingIntegration extends EperundingTemplate{
 	/* (non-Javadoc)
 	 * @see my.ep.web.integration.common.EperundingInterface#createEquiytyOwner(my.ep.dto.sm.search.SupplierSearchResDTO)
 	 */
-	@Override
 	public void createEquiytyOwner(SupplierSearchResDTO resDTO) {
 		
 		log.info("createEquiytyOwner start");
@@ -224,7 +205,6 @@ public class EperundingIntegration extends EperundingTemplate{
 	/* (non-Javadoc)
 	 * @see my.ep.web.integration.common.EperundingInterface#createBoardOfDirector(my.ep.dto.sm.search.SupplierSearchResDTO)
 	 */
-	@Override
 	public void createBoardOfDirector(SupplierSearchResDTO resDTO) {
 		
 		log.info("createBoardOfDirector start");
@@ -345,7 +325,6 @@ public class EperundingIntegration extends EperundingTemplate{
 	/* (non-Javadoc)
 	 * @see my.ep.web.integration.common.EperundingInterface#createManagementPersonnel(my.ep.dto.sm.search.SupplierSearchResDTO)
 	 */
-	@Override
 	public void createManagementPersonnel(SupplierSearchResDTO resDTO) {
 		
 		log.info("createManagementPersonnel start");
@@ -481,7 +460,6 @@ public class EperundingIntegration extends EperundingTemplate{
 	/* (non-Javadoc)
 	 * @see my.ep.web.integration.common.EperundingInterface#createAuthorizedSignatory(my.ep.dto.sm.search.SupplierSearchResDTO)
 	 */
-	@Override
 	public void createAuthorizedSignatory(SupplierSearchResDTO resDTO) {
 		
 		log.info("createAuthorizedSignatory start");
@@ -530,144 +508,151 @@ public class EperundingIntegration extends EperundingTemplate{
 	 * @see my.ep.web.integration.common.EperundingInterface#createConsultantProfile(my.ep.dto.sm.search.SupplierSearchResDTO)
 	 */
 	@Override
-	public void createConsultantProfile(SupplierSearchResDTO resDTO) {
+	public void createConsultantProfile() {
 		
 		log.info("createConsultantProfile start");
+		
+		reqDTO = new SupplierSearchReqDTO();
+		
+		reqDTO.setCreateDate(currentDate);
+		reqDTO.setSuppType(IntegrationConstants.CONSULTANT_PROFILE_CODE);
+		SupplierSearchResDTO resDTO = supplierSearchSO.getConsultantProfileEperunding(reqDTO); 
 
 		List<ConsultantProfile> consultantProfileList = new ArrayList<ConsultantProfile>();
 		ConsultantProfile profile = null;
+		List<ProfBodyDetail> profBodyDetails = null;
 		ProfBodyDetail profBodyDetail = null;
-		
+		List<RegistrationHistory> registrationHistories = null;
+		RegistrationHistory registrationHistory = null; 
 		
 		if (resDTO.isSuccessful()) {
 			for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
+				
+				profile = new ConsultantProfile();
+				profBodyDetails = new ArrayList<ProfBodyDetail>();
+				registrationHistories = new ArrayList<RegistrationHistory>();
+				
+				profile.setCompanyName(smSupplier.getCompanyName());
+				profile.setSSMNo(smSupplier.getRegNo());
+				profile.setMOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
+				
+				if(!smSupplier.getSmMofAccounts().get(0).getSmMofCerts().isEmpty()){
+					profile.setVirtualCertNo(smSupplier.getSmMofAccounts().get(0).getSmMofCerts().get(0).getCertSerialNo());
+				}else{
+					profile.setVirtualCertNo(IntegrationConstants.EMPTY_TRING);
+				}
 
-				// for consultant profiles
-				if (smSupplier.getSmAppl().getSupplierType().equalsIgnoreCase(IntegrationConstants.CONSULTANT_PROFILE_CODE)) {
+				if(!smSupplier.getSmGstSuppliers().isEmpty()){
+					profile.setGSTNo(smSupplier.getSmGstSuppliers().get(0).getGstRegNo());
+					profile.setGSTEffectiveDate(smSupplier.getSmGstSuppliers().get(0).getGstEffDate());
+					profile.setFirstTaxablePeriod(smSupplier.getSmGstSuppliers().get(0).getGstDeclaredDate());
+				}else{
+					profile.setGSTNo(IntegrationConstants.EMPTY_TRING);
+					profile.setGSTEffectiveDate(IntegrationConstants.DEFAULT_DATE);
+					profile.setFirstTaxablePeriod(IntegrationConstants.DEFAULT_DATE);
+				}
+				
+				profile.setCompanyType(getCompanyType(smSupplier.getBusinessType()));
 
-					profile = new ConsultantProfile();
-					profile.setCompanyName(smSupplier.getCompanyName());
-					profile.setSSMNo(smSupplier.getRegNo());
-					profile.setMOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
-					
-					if(!smSupplier.getSmMofAccounts().get(0).getSmMofCerts().isEmpty()){
-						profile.setVirtualCertNo(smSupplier.getSmMofAccounts().get(0).getSmMofCerts().get(0).getCertSerialNo());
-					}else{
-						profile.setVirtualCertNo(IntegrationConstants.EMPTY_TRING);
-					}
-
-					// New columns added
-					if(!smSupplier.getSmGstSuppliers().isEmpty()){
-						profile.setGSTNo(smSupplier.getSmGstSuppliers().get(0).getGstRegNo());
-						profile.setGSTEffectiveDate(smSupplier.getSmGstSuppliers().get(0).getGstEffDate());
-						profile.setFirstTaxablePeriod(smSupplier.getSmGstSuppliers().get(0).getGstDeclaredDate());
-					}else{
-						profile.setGSTNo(IntegrationConstants.EMPTY_TRING);
-						profile.setGSTEffectiveDate(IntegrationConstants.DEFAULT_DATE);
-						profile.setFirstTaxablePeriod(IntegrationConstants.DEFAULT_DATE);
-					}
-					
-					profile.setCompanyType(getCompanyType(smSupplier.getBusinessType()));
-
-					String phoneNo = smSupplier.getSmAppl().getSmCompanyBasic().getPhoneNo();
-					if (null != phoneNo) {
-						if (phoneNo.startsWith("+")) {
-							profile.setTelCountryCode(phoneNo.substring(0, 2));
-							profile.setTelAreaCode(phoneNo.substring(2, 4));
-							profile.setTelNo(phoneNo.substring(4,phoneNo.length()));
-						} else {
-							profile.setTelCountryCode("+" + phoneNo.substring(0, 1));
-							profile.setTelAreaCode(phoneNo.substring(1, 3));
-							profile.setTelNo(phoneNo.substring(3,phoneNo.length()));
-						}
-
-					}
-
-					String faxNo = smSupplier.getSmAppl().getSmCompanyBasic().getFaxNo();
-					if (null != faxNo) {
-						if (phoneNo.startsWith("+")) {
-							profile.setFaxCountryCode(faxNo.substring(0, 2));
-							profile.setFaxAreaCode(faxNo.substring(2, 4));
-							profile.setFaxNo(faxNo.substring(4, faxNo.length()));
-						} else {
-							profile.setFaxCountryCode("+" + faxNo.substring(0, 1));
-							profile.setFaxAreaCode(faxNo.substring(1, 3));
-							profile.setFaxNo(faxNo.substring(3, faxNo.length()));
-						}
-
-					}
-
-					if (!smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().isEmpty()) {
-
-						for (SmCompanyAddress companyAddress : smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()) {
-							if (null != companyAddress.getSmAddress()) {
-								profile.setAddress1(companyAddress.getSmAddress().getAddress1());
-								profile.setAddress2(companyAddress.getSmAddress().getAddress2());
-								profile.setAddress3(companyAddress.getSmAddress().getAddress3());
-								profile.setPostcode(companyAddress.getSmAddress().getPostcode());
-								profile.setCity(companyAddress.getSmAddress().getPmCity().getCityName());
-								profile.setDistrict(companyAddress.getSmAddress().getPmDistrict().getDistrictCode());
-								profile.setState(companyAddress.getSmAddress().getPmState().getStateCode());
-								profile.setCountry(IntegrationConstants.COUNTRY_CODE_MY);
-
-							}
-						}
-					}
-
-					profile.setAccumulatedCapital(smSupplier.getSmAppl().getSmCompanyBasic().getAuthorizedCapital()); // accumulated
-					// capital not availabele in ng
-					profile.setAuthorisedCapital(smSupplier.getSmAppl().getSmCompanyBasic().getAuthorizedCapital());
-					profile.setPaidUpCapital(smSupplier.getSmAppl().getSmCompanyBasic().getPaidUpCapital());
-					profile.setAccumulatedShare(smSupplier.getSmAppl().getSmCompanyBasic().getAuthorizedCapital()); // accumulated
-					// share not available in ng
-					profile.setBumiputeraPercentage(smSupplier.getSmAppl().getSmCompanyBasic().getBumiPercentage());
-					profile.setNonBumiPercentage(smSupplier.getSmAppl().getSmCompanyBasic().getNonBumiPercentage());
-
-					profile.setRegStatus(smSupplier.getSmAppl().getPmRegStatus().getRegStatusId() + ""); // pm_reg_status
-					profile.setEffectDateTo(smSupplier.getSmMofAccounts().get(0).getExpDate());
-					profile.setEstablishedDate(smSupplier.getEstablishDate());
-					profile.setEffectDateFrom(smSupplier.getSmMofAccounts().get(0).getEffDate());
-					profile.setDisciplinary(IntegrationConstants.VAVLUE_NO); // sm-complaint
-					profile.setIsAssociatedCompany(IntegrationConstants.VAVLUE_NO);
-					profile.setProfileUpdateDate(smSupplier.getSmAppl().getApplSubmitDate()); //
-
-					profBodyDetail = new ProfBodyDetail();
-					if (!smSupplier.getSmAppl().getSmAssociationBodies().isEmpty()) {
-						for (SmAssociationBody associationBody : smSupplier.getSmAppl().getSmAssociationBodies()) {
-							profBodyDetail.setProfBody(associationBody.getPmCertBody().getCertBodyId().toString()); 
-							profBodyDetail.setProfBodyNo(associationBody.getRegNo());
-							profBodyDetail.setProfBodyExpiry(associationBody.getExpDate());
-							profile.setProfBodyDetail(profBodyDetail);
-							break;
-						}
+				String phoneNo = smSupplier.getSmAppl().getSmCompanyBasic().getPhoneNo();
+				if (null != phoneNo) {
+					if (phoneNo.startsWith("+")) {
+						profile.setTelCountryCode(phoneNo.substring(0, 2));
+						profile.setTelAreaCode(phoneNo.substring(2, 4));
+						profile.setTelNo(phoneNo.substring(4,phoneNo.length()));
 					} else {
-						profBodyDetail.setProfBody(IntegrationConstants.EMPTY_TRING);
-						profBodyDetail.setProfBodyNo(IntegrationConstants.EMPTY_TRING);
-						profBodyDetail.setProfBodyExpiry(IntegrationConstants.DEFAULT_DATE);
-						profile.setProfBodyDetail(profBodyDetail);
-
+						profile.setTelCountryCode("+" + phoneNo.substring(0, 1));
+						profile.setTelAreaCode(phoneNo.substring(1, 3));
+						profile.setTelNo(phoneNo.substring(3,phoneNo.length()));
 					}
-
-					RegistrationHistory registrationHistory = new RegistrationHistory(); 
-					registrationHistory.setDateStart(smSupplier.getSmMofAccounts().get(0).getEffDate());
-					registrationHistory.setDateEnd(smSupplier.getSmMofAccounts().get(0).getExpDate());
-					profile.setRegistrationHistory(registrationHistory);
-
-					CapitalProportion capitalProportion = new CapitalProportion();
-					capitalProportion.setBumi(smSupplier.getSmAppl().getSmCompanyBasic().getBumiEquity());
-					capitalProportion.setNonBumi(smSupplier.getSmAppl().getSmCompanyBasic().getNonBumiEquity());
-					capitalProportion.setNonMalaysian(smSupplier.getSmAppl().getSmCompanyBasic().getForeignerEquity());
-					capitalProportion.setGovAgency(smSupplier.getSmAppl().getSmCompanyBasic().getGovtUnitrustEquity());
-					capitalProportion.setGovEquity(smSupplier.getSmAppl().getSmCompanyBasic().getGovtEquity());
-					capitalProportion.setLocalCo(smSupplier.getSmAppl().getSmCompanyBasic().getLocalCompanyEquity());
-					capitalProportion.setForeignCo(smSupplier.getSmAppl().getSmCompanyBasic().getForeignCompanyEquity());
-					capitalProportion.setTotalMember(smSupplier.getSmAppl().getSmCompanyBasic().getTotalMember());
-					capitalProportion.setTotalShare(smSupplier.getSmAppl().getSmCompanyBasic().getTotalShare());
-					profile.setCapitalProportion(capitalProportion);
-					if(!consultantProfileList.contains(profile))
-						consultantProfileList.add(profile);
 
 				}
+
+				String faxNo = smSupplier.getSmAppl().getSmCompanyBasic().getFaxNo();
+				
+				if (null != faxNo) {
+					if (phoneNo.startsWith("+")) {
+						profile.setFaxCountryCode(faxNo.substring(0, 2));
+						profile.setFaxAreaCode(faxNo.substring(2, 4));
+						profile.setFaxNo(faxNo.substring(4, faxNo.length()));
+					} else {
+						profile.setFaxCountryCode("+" + faxNo.substring(0, 1));
+						profile.setFaxAreaCode(faxNo.substring(1, 3));
+						profile.setFaxNo(faxNo.substring(3, faxNo.length()));
+					}
+
+				}else{
+					profile.setFaxCountryCode(IntegrationConstants.EMPTY_TRING);
+					profile.setFaxAreaCode(IntegrationConstants.EMPTY_TRING);
+					profile.setFaxNo(IntegrationConstants.EMPTY_TRING);
+				}
+
+				if (!smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().isEmpty()) {
+
+					for (SmCompanyAddress companyAddress : smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()) {
+						if (null != companyAddress.getSmAddress()) {
+							profile.setAddress1(companyAddress.getSmAddress().getAddress1());
+							profile.setAddress2(companyAddress.getSmAddress().getAddress2());
+							profile.setAddress3(companyAddress.getSmAddress().getAddress3());
+							profile.setPostcode(companyAddress.getSmAddress().getPostcode());
+							profile.setCity(companyAddress.getSmAddress().getPmCity().getCityName());
+							profile.setDistrict(companyAddress.getSmAddress().getPmDistrict().getDistrictCode());
+							profile.setState(companyAddress.getSmAddress().getPmState().getStateCode());
+							profile.setCountry(IntegrationConstants.COUNTRY_CODE_MY);
+
+						}
+					}
+				}
+
+				profile.setAccumulatedCapital(smSupplier.getSmAppl().getSmCompanyBasic().getAuthorizedCapital()); 
+				profile.setAuthorisedCapital(smSupplier.getSmAppl().getSmCompanyBasic().getAuthorizedCapital());
+				profile.setPaidUpCapital(smSupplier.getSmAppl().getSmCompanyBasic().getPaidUpCapital());
+				profile.setAccumulatedShare(smSupplier.getSmAppl().getSmCompanyBasic().getAuthorizedCapital()); 
+				profile.setBumiputeraPercentage(smSupplier.getSmAppl().getSmCompanyBasic().getBumiPercentage());
+				profile.setNonBumiPercentage(smSupplier.getSmAppl().getSmCompanyBasic().getNonBumiPercentage());
+
+				profile.setRegStatus(smSupplier.getSmAppl().getPmRegStatus().getRegStatusId()); 
+				profile.setEffectDateTo(smSupplier.getSmMofAccounts().get(0).getExpDate());
+				profile.setEstablishedDate(smSupplier.getEstablishDate());
+				profile.setEffectDateFrom(smSupplier.getSmMofAccounts().get(0).getEffDate());
+				profile.setDisciplinary(IntegrationConstants.VAVLUE_NO); 
+				profile.setIsAssociatedCompany(IntegrationConstants.VAVLUE_NO);
+				profile.setProfileUpdateDate(smSupplier.getSmAppl().getApplSubmitDate()); //
+
+				if (!smSupplier.getSmAppl().getSmAssociationBodies().isEmpty()) {
+					for (SmAssociationBody associationBody : smSupplier.getSmAppl().getSmAssociationBodies()) {
+						profBodyDetail = new ProfBodyDetail();
+						profBodyDetail.setProfBody(associationBody.getPmCertBody().getCertBodyId().toString()); 
+						profBodyDetail.setProfBodyNo(associationBody.getRegNo());
+						profBodyDetail.setProfBodyExpiry(associationBody.getExpDate());
+						if(!profBodyDetails.contains(profBodyDetail))
+							profBodyDetails.add(profBodyDetail);
+					}
+				} 
+				profile.setProfBodyDetailList(profBodyDetails);
+
+				for(SmMofAccount mofAccount:smSupplier.getSmMofAccounts()){
+					registrationHistory = new RegistrationHistory(); 
+					registrationHistory.setDateStart(mofAccount.getEffDate());
+					registrationHistory.setDateEnd(mofAccount.getExpDate());
+					registrationHistories.add(registrationHistory);
+				}
+				profile.setRegistrationHistoryList(registrationHistories);
+
+				CapitalProportion capitalProportion = new CapitalProportion();
+				capitalProportion.setBumi(smSupplier.getSmAppl().getSmCompanyBasic().getBumiEquity());
+				capitalProportion.setNonBumi(smSupplier.getSmAppl().getSmCompanyBasic().getNonBumiEquity());
+				capitalProportion.setNonMalaysian(smSupplier.getSmAppl().getSmCompanyBasic().getForeignerEquity());
+				capitalProportion.setGovAgency(smSupplier.getSmAppl().getSmCompanyBasic().getGovtUnitrustEquity());
+				capitalProportion.setGovEquity(smSupplier.getSmAppl().getSmCompanyBasic().getGovtEquity());
+				capitalProportion.setLocalCo(smSupplier.getSmAppl().getSmCompanyBasic().getLocalCompanyEquity());
+				capitalProportion.setForeignCo(smSupplier.getSmAppl().getSmCompanyBasic().getForeignCompanyEquity());
+				capitalProportion.setTotalMember(smSupplier.getSmAppl().getSmCompanyBasic().getTotalMember());
+				capitalProportion.setTotalShare(smSupplier.getSmAppl().getSmCompanyBasic().getTotalShare());
+				profile.setCapitalProportion(capitalProportion);
+				if(!consultantProfileList.contains(profile))
+					consultantProfileList.add(profile);
+
 			}
 		}
 			BatchReqDTO<ConsultantProfile> batchReqDTO = new BatchReqDTO<ConsultantProfile>();
@@ -684,9 +669,15 @@ public class EperundingIntegration extends EperundingTemplate{
 	 * @see my.ep.web.integration.common.EperundingInterface#createDeletedCompany(my.ep.dto.sm.search.SupplierSearchResDTO)
 	 */
 	@Override
-	public void createDeletedCompany(SupplierSearchResDTO resDTO) {
+	public void createDeletedCompany() {
 		
 		log.info("createDeletedCompany start");
+		
+		reqDTO = new SupplierSearchReqDTO();
+		
+		reqDTO.setCreateDate(currentDate);
+		SupplierSearchResDTO resDTO = supplierSearchSO.getDeletedCompanyEperunding(reqDTO); 
+
 
 		List<DeletedCompany> deletedCompanyList = new ArrayList<DeletedCompany>();
 		DeletedCompany deletedCompany = null;
@@ -728,10 +719,17 @@ public class EperundingIntegration extends EperundingTemplate{
 	 * @see my.ep.web.integration.common.EperundingInterface#createGovernmentProject(my.ep.dto.sm.search.SupplierSearchResDTO)
 	 */
 	@Override
-	public void createGovernmentProject(SupplierSearchResDTO resDTO) {
+	public void createGovernmentProject() {
 		
 		log.info("createGovernmentProject start");
-
+		
+		reqDTO = new SupplierSearchReqDTO();
+		
+		reqDTO.setCreateDate(currentDate);
+		reqDTO.setSuppType(IntegrationConstants.CONSULTANT_PROFILE_CODE);
+		
+		SupplierSearchResDTO resDTO = supplierSearchSO.getGovernProjEperunding(reqDTO); 
+		
 		List<GovernmentProject> governmentProjectList = new ArrayList<GovernmentProject>();
 		GovernmentProject governmentProject = null;
 		Project project = null;
@@ -780,9 +778,14 @@ public class EperundingIntegration extends EperundingTemplate{
 	 * @see my.ep.web.integration.common.EperundingInterface#createRegisteredCategory(my.ep.dto.sm.search.SupplierSearchResDTO)
 	 */
 	@Override
-	public void createRegisteredCategory(SupplierSearchResDTO resDTO) {
+	public void createRegisteredCategory() {
 		
 		log.info("createRegisteredCategory start");
+		
+		reqDTO = new SupplierSearchReqDTO();
+		reqDTO.setCreateDate(currentDate);
+		reqDTO.setSuppType(IntegrationConstants.CONSULTANT_PROFILE_CODE);
+		SupplierSearchResDTO resDTO = supplierSearchSO.getRegisteredCategoryEperunding(reqDTO); 
 
 		List<RegisteredCategory> registeredCategoryList = new ArrayList<RegisteredCategory>();
 		RegisteredCategory registeredCategory = null;
@@ -820,9 +823,14 @@ public class EperundingIntegration extends EperundingTemplate{
 	 * @see my.ep.web.integration.common.EperundingInterface#createBranchCompany(my.ep.dto.sm.search.SupplierSearchResDTO)
 	 */
 	@Override
-	public void createBranchCompany(SupplierSearchResDTO resDTO) {
+	public void createBranchCompany() {
 		
 		log.info("createBranchCompany start");
+		
+		reqDTO = new SupplierSearchReqDTO();
+		reqDTO.setCreateDate(currentDate);
+		reqDTO.setSuppType(IntegrationConstants.CONSULTANT_PROFILE_CODE);
+		SupplierSearchResDTO resDTO = supplierSearchSO.getBranchComapanyEperunding(reqDTO);
 
 		List<BranchCompany> branchCompanyList = new ArrayList<BranchCompany>();
 		BranchCompany branchCompany = null;
@@ -884,9 +892,14 @@ public class EperundingIntegration extends EperundingTemplate{
 	 * @see my.ep.web.integration.common.EperundingInterface#createCompanyOwner(my.ep.dto.sm.search.SupplierSearchResDTO)
 	 */
 	@Override
-	public void createCompanyOwner(SupplierSearchResDTO resDTO) {
+	public void createCompanyOwner( ) {
 		
 		log.info("createCompanyOwner start");
+		
+		reqDTO = new SupplierSearchReqDTO();
+		reqDTO.setCreateDate(currentDate);
+		reqDTO.setSuppType(IntegrationConstants.CONSULTANT_PROFILE_CODE);
+		SupplierSearchResDTO resDTO = supplierSearchSO.getCompanyOwnerEperunding(reqDTO);
 
 		List<CompanyOwner> companyOwnerList = new ArrayList<CompanyOwner>();
 		CompanyOwner companyOwner = null;
@@ -969,9 +982,14 @@ public class EperundingIntegration extends EperundingTemplate{
 	 * @see my.ep.web.integration.common.EperundingInterface#createAssociatedCompany(my.ep.dto.sm.search.SupplierSearchResDTO)
 	 */
 	@Override
-	public void createAssociatedCompany(SupplierSearchResDTO resDTO) {
+	public void createAssociatedCompany() {
 		
 		log.info("createAssociatedCompany start");
+		
+		reqDTO = new SupplierSearchReqDTO();
+		reqDTO.setCreateDate(currentDate);
+		reqDTO.setSuppType(IntegrationConstants.CONSULTANT_PROFILE_CODE);
+		SupplierSearchResDTO resDTO = supplierSearchSO.getAssociatedComapanyEperunding(reqDTO);
 
 		List<AssociatedCompany> associatedCompanyList = new ArrayList<AssociatedCompany>();
 		AssociatedCompany associatedCompany = null;
@@ -1172,33 +1190,6 @@ public class EperundingIntegration extends EperundingTemplate{
 
 		return compType;
 
-	}
-
-	/**
-	 * @return SupplierSearchResDTO
-	 */
-	public SupplierSearchResDTO retriveSmSupplierBycreationDate(String methodName, String taskId) {
-
-		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
-		
-		reqDTO.setCreateDate(currentDate);
-		reqDTO.setTaskId(taskId);
-
-		SupplierSearchResDTO resDTO = null;
-		if (methodName.equals("1"))
-			resDTO = supplierSearchSO.getDeletedCompanyEperunding(reqDTO); // deleted company
-		else if (methodName.equals("2"))
-			resDTO = supplierSearchSO.getRegisteredCategoryEperunding(reqDTO); // registered category
-		else if (methodName.equals("3"))
-			resDTO = supplierSearchSO.getEquityBodMgtAuthEperunding(reqDTO); // equity,mgt,bod,auth
-		else if (methodName.equals("4"))
-			resDTO = supplierSearchSO.getGovernProjEperunding(reqDTO); // governament project
-		else if (methodName.equals("5"))
-			resDTO = supplierSearchSO.getAssociatedBranchComapanyAndCompanyOwnerEperunding(reqDTO); // associate
-		else if (methodName.equals("6"))
-			resDTO = supplierSearchSO.getConsultantProfileEperunding(reqDTO); // consultant profile
-
-		return resDTO;
 	}
 
 }
