@@ -564,6 +564,8 @@ public class CommonApplBackingBean extends
 			suppDocIn.getManagedBean().setBpmAction(resDTO.getAction());
 			suppDocIn.getManagedBean().setTaskId(taskId);
 			suppDocIn.getManagedBean().setBpmPojo(bpmObj);
+			suppDocIn.getManagedBean().setInquiryStartDate(resDTO.getCreateDate()!= null ? resDTO.getCreateDate().getTime() : null);
+			suppDocIn.getManagedBean().setInquiryEndDate(resDTO.getDueDate() != null ? resDTO.getDueDate().getTime() : null);
 			suppDocIn.viewDocInquiry();
 			log.info("*********Respond SDO Inquiry********");
 
