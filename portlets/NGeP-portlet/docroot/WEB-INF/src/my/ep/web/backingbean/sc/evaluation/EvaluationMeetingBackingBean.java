@@ -1283,7 +1283,7 @@ public class EvaluationMeetingBackingBean extends
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
-				dto = detailSO.getQuationTenders(reqDTO);
+				dto = detailSO.retriveQuationTenderDetailsBySearchCriteria(reqDTO);
 
 				if (null != dto && dto.isSuccessful()) {
 

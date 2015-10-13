@@ -344,7 +344,7 @@ public class QTBusinessOwnerBackingBean extends
 				populateCloneQTSearchCriteria(cloneBusinessOwnerSearchBean,
 						searchBean);
 				reqDTO.setQtSearchBean(searchBean);
-				QuationTenderResDTO resDTO = detailSO.getQuationTenders(reqDTO);
+				QuationTenderResDTO resDTO = detailSO.retriveQuationTenderDetailsBySearchCriteria(reqDTO);
 				return resDTO.getQtResultBean();
 			} finally {
 				detailSO = null;
@@ -731,7 +731,7 @@ public class QTBusinessOwnerBackingBean extends
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
-			dto = detailSO.getQuationTenders(reqDTO);
+			dto = detailSO.retriveQuationTenderDetailsBySearchCriteria(reqDTO);
 		} finally {
 			detailSO = null;
 		}
@@ -1129,7 +1129,7 @@ public class QTBusinessOwnerBackingBean extends
 				renewSesionObject();
 				getMinistrySpecificationSecretaryList();
 				QTDetailBackingBean detailBackingBean = new QTDetailBackingBean();
-				detailBackingBean.editAction(qt);
+				detailBackingBean.editQuationTenderDetails(qt);
 				this.getManagedBean().setQt(qt);
 				FacesContext.getCurrentInstance().addMessage(
 						null,
@@ -1155,7 +1155,7 @@ public class QTBusinessOwnerBackingBean extends
 	 */
 	private ScQt prepareBOInfo(boolean isSaveFlow) {
 		ScQt scQt = this.getManagedBean().getQt();
-		if (!scQt.isSpecApprovalReq()) {
+		if (!scQt.getSpecApprovalReq()) {
 			scQt.setMinistrySpecSecrataryId(null);
 		}
 		// No need to set the below fields automatically set by listener
@@ -1390,7 +1390,7 @@ public class QTBusinessOwnerBackingBean extends
 		}
 		QTDetailBackingBean detailBackingBean = new QTDetailBackingBean();
 
-		return detailBackingBean.editAction(resDTO.getQtDetail());
+		return detailBackingBean.editQuationTenderDetails(resDTO.getQtDetail());
 	}
 
 	/**

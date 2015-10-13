@@ -11,23 +11,26 @@
 
 	<ui:define name="contentSection">
 
-
-
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/icon_loadingLarge.gif" />
+		</p:blockUI>
 		<p:messages id="cancelMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" severity="error, info" />
-		<p:panelGrid style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
 
-			<p:row>
 
-				<p:column width="100%" style="text-align:right">
-					<p:commandButton value="#{lbl['lbl.btn.submit']}"
-						action="#{qTDetailBB.submitQtCancelDetails}" process="@form"
-						update="@all" />
+		<div class="ppRightBtn">
+			<h:panelGroup id="cancelBtns">
 
-				</p:column>
-			</p:row>
-		</p:panelGrid>
+				<p:commandButton value="#{lbl['lbl.btn.submit']}"
+					action="#{qTDetailBB.submitQtCancelDetails}" process="@form"
+					update="@all" oncomplete="blockWidget.hide();" />
+
+
+			</h:panelGroup>
+		</div>
+
+
+
 
 
 		<p:panel header="FinalizationCommitteApproval" toggleable="true">

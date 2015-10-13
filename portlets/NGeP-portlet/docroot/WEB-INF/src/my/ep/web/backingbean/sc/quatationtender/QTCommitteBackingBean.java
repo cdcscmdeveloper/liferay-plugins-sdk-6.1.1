@@ -325,7 +325,7 @@ public class QTCommitteBackingBean extends
 						searchBean);
 				reqDTO.setQtSearchBean(searchBean);
 
-				QuationTenderResDTO resDTO = detailSO.getQuationTenders(reqDTO);
+				QuationTenderResDTO resDTO = detailSO.retriveQuationTenderDetailsBySearchCriteria(reqDTO);
 
 				return resDTO.getQtResultBean();
 			} finally {
@@ -1920,9 +1920,11 @@ public class QTCommitteBackingBean extends
 				return true;
 			} else if (QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT
 					.compareTo(this.getManagedBean().getCurrentStatusId()) < 0
-					&& !SCProcessNameConst.REVISE_COMMITTEE
+					&& (!SCProcessNameConst.REVISE_COMMITTEE
 							.equalsIgnoreCase(this.getManagedBean()
-									.getTaskName())) {
+									.getTaskName()) || !SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
+							.equalsIgnoreCase(this.getManagedBean()
+									.getTaskName()))) {
 				return true;
 			}
 		}
