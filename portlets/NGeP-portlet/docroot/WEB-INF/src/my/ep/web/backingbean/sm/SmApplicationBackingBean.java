@@ -8920,6 +8920,15 @@ public class SmApplicationBackingBean extends
 				+ applNo
 				+ "&applicationType=" + applType + "&currentTab=" + currTab);
 	}
+	
+	public void revertToOriginalApplication() {
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSmAppl(getManagedBean().getSmAppl());
+		getManagedBean().setSmAppl(
+				SmServiceLookup.getMofRegistrationSO()
+						.revertToSupplierOriginalApplication(reqDTO)
+						.getSmAppl());
+	}
 
 	/**
 	 * Get previous approved personnel
