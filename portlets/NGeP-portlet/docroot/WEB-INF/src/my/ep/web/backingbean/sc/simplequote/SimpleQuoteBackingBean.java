@@ -214,21 +214,36 @@ public class SimpleQuoteBackingBean extends
 				if(scQuote.getJustificationType() == null){
 					scQuote.setJustificationType(new PmParameter());
 				}
-
 				// service and product
-				if(scQuote.getQuoteDocs() != null){
+				if (scQuote.getQuoteDocs() != null) {
 					for (ScQuoteDoc scQuoteDoc : scQuote.getQuoteDocs()) {
 						TplSpecMaster specMaster = scQuoteDoc.getSpecMaster();
-						if(ParameterConst.SQ_ITEM_LIST_PRODUCT.equalsIgnoreCase(specMaster.getItemTypeCode().getParameterCode())){
+						if (ParameterConst.SQ_ITEM_LIST_PRODUCT
+								.equalsIgnoreCase(specMaster.getItemTypeCode()
+										.getParameterCode())) {
+							if (specMaster.getTplSpecQuestions() == null) {
+								specMaster
+								.setTplSpecQuestions(new ArrayList<TplSpecQuestion>());
+							}
 							productTplSpecBean.setSpecMaster(specMaster);
-							getManagedBean().setProductTemplateSpecBean(productTplSpecBean);
+							getManagedBean().setProductTemplateSpecBean(
+									productTplSpecBean);
 							// service Tpl Spe
-						} else  if(ParameterConst.SQ_ITEM_LIST_SERVICE.equalsIgnoreCase(specMaster.getItemTypeCode().getParameterCode())){
+						} else if (ParameterConst.SQ_ITEM_LIST_SERVICE
+								.equalsIgnoreCase(specMaster.getItemTypeCode()
+										.getParameterCode())) {
+
+							if (specMaster.getTplSpecQuestions() == null) {
+								specMaster
+								.setTplSpecQuestions(new ArrayList<TplSpecQuestion>());
+							}
 							serviceTplSpecBean.setSpecMaster(specMaster);
-							getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
+							getManagedBean().setServiceTemplateSpecBean(
+									serviceTplSpecBean);
 						}
 					}
 				}
+
 				// zone details
 				if(scQuote.getQuoteZone() != null){
 					if(scQuote.getQuoteZone().getTplSpecZoneDtls() != null && scQuote.getQuoteZone().getTplSpecZoneDtls().size() >0){
@@ -241,7 +256,6 @@ public class SimpleQuoteBackingBean extends
 						}
 					}
 				}
-
 				// by locality
 				List<PmState> states = new ArrayList<PmState>();
 				List<PmDivision> divisions = new ArrayList<PmDivision>();
@@ -340,12 +354,10 @@ public class SimpleQuoteBackingBean extends
 			procurementTypeEvent();
 
 			// current page url for page navigation from sq to request note
-			getManagedBean().setRnToSQFlag(Boolean.FALSE);
 			getManagedBean().setNewableFlag(Boolean.FALSE);
 			getManagedBean().setEditableFlag(Boolean.FALSE);
 			getManagedBean().setPageNavToRequestNote(fc.getViewRoot().getViewId());
-			getManagedBean().setViewQuote(Boolean.TRUE);
-
+			
 			// page navigation to simple quote
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "simpleQuote");
 
@@ -1381,13 +1393,12 @@ public class SimpleQuoteBackingBean extends
 				.getProductTemplateSpecBean();
 		TemplateSpecBean serviceTplSpecBean = getManagedBean()
 				.getServiceTemplateSpecBean();
-		getManagedBean().setAutoUpdate(true);
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
 
-		getManagedBean().setTitleChecker(true);
+		getManagedBean().setTitleChecker(Boolean.TRUE);
 		getManagedBean().setTabActiveIndex(0);
-		getManagedBean().setRnToSQFlag(true);
-		getManagedBean().setPanelItemFlag(true);
-		getManagedBean().setEditableFlag(true);
+		getManagedBean().setPanelItemFlag(Boolean.TRUE);
+		getManagedBean().setEditableFlag(Boolean.TRUE);
 		getManagedBean().setActiveIndex(0);
 
 		if (scQuote.getCurrentStatus() == null) {
@@ -3297,7 +3308,7 @@ public class SimpleQuoteBackingBean extends
 	public void backToPrevious() {
 		debugLogger("backToPrevious");
 		FacesContext fc = FacesContext.getCurrentInstance();
-		getManagedBean().setViewQuote(Boolean.FALSE);
+		getManagedBean().setEditableFlag(Boolean.FALSE);
 		if (getManagedBean().getPageNavToRequestNote() != null) {
 			fc.getApplication()
 					.getNavigationHandler()
@@ -4483,16 +4494,9 @@ public class SimpleQuoteBackingBean extends
 					scQuote.getCurrentStatus(), scQuote.getRemarks(),
 					ScSQRemark.class));
 
-			if (scQuote.isZonal()) {
-				// updateZone(scQuote);
-			}
-			if (scQuote.getMultipleQuote()) {
-				// noOfQuoteEvent();
-			}
-
 			getManagedBean().setProcessName(res.getProcessName());
 			getManagedBean().setTitleChecker(Boolean.FALSE);
-			getManagedBean().setRnToSQFlag(Boolean.TRUE);
+			getManagedBean().setEditableFlag(Boolean.TRUE);
 			// page navigation to simple quote
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
