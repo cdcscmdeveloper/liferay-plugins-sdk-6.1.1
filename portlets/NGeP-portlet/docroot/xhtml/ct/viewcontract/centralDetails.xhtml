@@ -59,7 +59,7 @@
 					<td>
 						<p:inputText for="gstAmountCentral" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
 			   				 disabled="true"  rendered="#{contractDetailsBackingBean.contractWithGst()}"
-			   				 value="#{contractDetailsBackingBean.managedBean.ctContractAmount.gstAmount}" >
+			   				 value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractAmount.gstAmount}" >
 			   					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 						
@@ -104,7 +104,7 @@
                 	</tr>
                 	<tr>
                 	
-                	<h:panelGroup rendered="#{!contractDetailsBackingBean.managedBean.ctContractAmount.agreement
+                	<h:panelGroup rendered="#{!contractDetailsBackingBean.managedBean.contractVer.ctContractAmount.agreement
                 		and contractDetailsBackingBean.managedBean.contractVer.docType != ParameterConst.doctypeContractCreation}">
                 	<td class="columnWidth150">
 						<p:outputLabel id="centralSignDate1" value="#{lbl['lbl.ct.signed.date']}" />
