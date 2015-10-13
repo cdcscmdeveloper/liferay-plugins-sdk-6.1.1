@@ -1094,7 +1094,7 @@ public class CommitteBackingBean extends
 						searchBean);
 				reqDTO.setQtSearchBean(searchBean);
 
-				QuationTenderResDTO resDTO = detailSO.getQuationTenders(reqDTO);
+				QuationTenderResDTO resDTO = detailSO.retriveQuationTenderDetailsBySearchCriteria(reqDTO);
 
 				return resDTO.getQtResultBean();
 			} finally {

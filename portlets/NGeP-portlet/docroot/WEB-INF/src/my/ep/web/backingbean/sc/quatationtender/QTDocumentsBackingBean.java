@@ -219,7 +219,7 @@ public class QTDocumentsBackingBean extends
 				populateCloneQTSearchCriteria(cloneDocumentSearchBean,
 						searchBean);
 				reqDTO.setQtSearchBean(searchBean);
-				QuationTenderResDTO resDTO = detailSO.getQuationTenders(reqDTO);
+				QuationTenderResDTO resDTO = detailSO.retriveQuationTenderDetailsBySearchCriteria(reqDTO);
 				return resDTO.getQtResultBean();
 			} finally {
 				detailSO = null;
@@ -961,10 +961,10 @@ public class QTDocumentsBackingBean extends
 		debugLogger("downloadReport");
 		ScQtDocReportAttachment scQtDocReportAttachment = scQtDocReport
 				.getScQtDocReportAttachment();
-		if (scQtDocReportAttachment == null) {
-			scQtDocReportAttachment = generateDocumentAttachment(scQtDocReport);
-			scQtDocReport.setScQtDocReportAttachment(scQtDocReportAttachment);
-		} 
+		 if (scQtDocReportAttachment == null) { 
+		scQtDocReportAttachment = generateDocumentAttachment(scQtDocReport);
+		scQtDocReport.setScQtDocReportAttachment(scQtDocReportAttachment);
+		 } 
 		downloadFile(scQtDocReportAttachment);
 	}
 

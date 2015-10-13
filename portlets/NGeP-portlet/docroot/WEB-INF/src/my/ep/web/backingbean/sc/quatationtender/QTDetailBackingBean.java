@@ -10,6 +10,8 @@
  */
 package my.ep.web.backingbean.sc.quatationtender;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -102,11 +104,13 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtAppRequestRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
@@ -158,6 +162,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.component.menuitem.MenuItem;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.MenuModel;
@@ -636,7 +641,7 @@ public class QTDetailBackingBean extends
 	 *            the sc qt
 	 * @return maintanacepage
 	 */
-	public String editAction(ScQt scQt) {
+	public String editQuationTenderDetails(ScQt scQt) {
 		renewQTDetails();
 		this.getManagedBean().setMaintanceFlow(true);
 		IQTDetailSO detailSO;
@@ -744,7 +749,7 @@ public class QTDetailBackingBean extends
 		if (scQt.isBrandNew()) {
 			scQt.setQtNo(getManagedBean().getQt().getQtNo());
 		}
-		if (!scQt.isSpecApprovalReq()) {
+		if (!scQt.getSpecApprovalReq()) {
 			scQt.setMinistrySpecSecrataryId(null);
 		}
 
@@ -2258,6 +2263,9 @@ public class QTDetailBackingBean extends
 				this.getManagedBean().setSelectedApprovalTabBean(
 						tabBeans.get(this.getManagedBean()
 								.getSelectedApprovalTabIndex()));
+				this.getManagedBean().setScQtApproval(
+						this.getManagedBean().getSelectedApprovalTabBean()
+								.getScQtApproval());
 				this.getManagedBean().setTabList(tabBeans);
 			}
 		} finally {
@@ -2935,7 +2943,8 @@ public class QTDetailBackingBean extends
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				populateQTSearchCriteria(qtnTenderSearchBean, searchBean);
 				reqDTO.setQtSearchBean(searchBean);
-				QuationTenderResDTO resDTO = detailSO.getQuationTenders(reqDTO);
+				QuationTenderResDTO resDTO = detailSO
+						.retriveQuationTenderDetailsBySearchCriteria(reqDTO);
 				return resDTO.getQtResultBean();
 			} finally {
 				detailSO = null;
@@ -3065,7 +3074,7 @@ public class QTDetailBackingBean extends
 	 */
 	public String searchQtBackAction() {
 		debugLogger("searchQtBackAction");
-		return "/xhtml/sc/quatationtender/qtntendermain.xhtml?faces-redirect=true";
+		return "/xhtml/sc/quatationtender/quatationtendersearch.xhtml?faces-redirect=true";
 	}
 
 	/**
@@ -3530,7 +3539,7 @@ public class QTDetailBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
-			reqDTO.setPmOrgProfile(getManagedBean().getQt().getPmOrgProfile());
+			reqDTO.setQtId(getManagedBean().getQt().getQtId());
 			reqDTO.setCommitteeType(committeeType);
 
 			CommitteResDTO resDTO = committeSO
@@ -3583,6 +3592,8 @@ public class QTDetailBackingBean extends
 		this.getManagedBean().setSelectedApprovalTabIndex(
 				selectedApprovalTabIndex);
 		this.getManagedBean().setSelectedApprovalTabBean(approvalTabBean);
+		this.getManagedBean()
+				.setScQtApproval(approvalTabBean.getScQtApproval());
 	}
 
 	/**
@@ -3619,7 +3630,7 @@ public class QTDetailBackingBean extends
 			detailSO.validateateQTDetails(reqDTO);
 			resDTO = detailSO.saveQTDtl(reqDTO);
 			renewSesionObject();
-			
+			this.getManagedBean().setTaskName(taskName);
 			this.getManagedBean().setMaintanceFlow(
 					this.getManagedBean().getTaskName() == null ? true : false);
 			retrieveQuationTenderDetails(resDTO.getQtDetail().getQtId(), null);
@@ -3915,14 +3926,14 @@ public class QTDetailBackingBean extends
 						}
 
 					}
+					List<ScQtApprovalAttachment> approvalAttachements = approvalTab
+							.getScQtApproval().getScQtApprovalAttachments();
+					if (CollectionUtils.isNotEmpty(approvalTab
+							.getScQtApproval().getScQtApprovalAttachments())) {
+						for (ScQtApprovalAttachment approvalAttachment : approvalAttachements) {
 
-					if (null != approvalTab.getScQtApproval()
-							.getScQtApprovalAttachments()) {
-						/*
-						 * approvalTab.getScQtApproval()
-						 * .getScQtApprovalAttachments()
-						 * .setScQtApproval(qtApproval);
-						 */
+							approvalAttachment.setScQtApproval(qtApproval);
+						}
 						qtApproval
 								.setScQtApprovalAttachments(approvalTab
 										.getScQtApproval()
@@ -4053,7 +4064,7 @@ public class QTDetailBackingBean extends
 	 * 
 	 * @return the string
 	 */
-	public String submitQtDetailsForApproval() {
+	public String submitQtDetailsFormMaintanace() {
 
 		IQTDetailSO detailSO;
 		try {
@@ -4656,7 +4667,7 @@ public class QTDetailBackingBean extends
 							if (null != approvalAction
 									&& "V".equalsIgnoreCase(approvalAction
 											.getParameterCode())) {
-
+								approvalRequests.get(j).setSubmissionDate(null);
 								approvalRequests.get(j).setApproverAction(null);
 							}
 						}
@@ -4699,4 +4710,36 @@ public class QTDetailBackingBean extends
 
 	}
 
+	public void handleFileUpload(FileUploadEvent event)
+			throws FileNotFoundException, IOException {
+		log.info("handleFileUpload - START");
+		List<ScQtApprovalAttachment> attachments = new ArrayList<ScQtApprovalAttachment>();
+		if (event.getFile() != null) {
+			ScAttachment scAttachment = null;
+			ScQtApprovalAttachment attachment = new ScQtApprovalAttachment();
+			ScQtApproval scQtApproval = this.getManagedBean().getScQtApproval();
+			if (scQtApproval.getScQt() == null) {
+				scQtApproval.setScQt(this.getManagedBean().getQt());
+			}
+			List<ScQtApprovalAttachment> approvalAttachments = scQtApproval
+					.getScQtApprovalAttachments();
+			if (null == approvalAttachments) {
+				approvalAttachments = new ArrayList<ScQtApprovalAttachment>();
+			}
+			attachment.setScQtApproval(scQtApproval);
+			attachment.setDocNo(scQtApproval.getScQt().getQtNo());
+			approvalAttachments.add(attachment);
+			scQtApproval.setScQtApprovalAttachments(approvalAttachments);
+			scAttachment = attachment;
+			uploadAttachment(event.getFile(), scAttachment);
+			getManagedBean().setScQtApproval(scQtApproval);
+			attachments.add(attachment);
+			getManagedBean().setAttachments(attachments);
+		}
+		log.info("handleFileUpload - END");
+	}
+
+	private void updateAttachmentWithLatestApproval() {
+
+	}
 }

@@ -1196,7 +1196,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				populateQTSearchCriteria(qtnTenderSearchBean, searchBean);
 				reqDTO.setQtSearchBean(searchBean);
-				QuationTenderResDTO resDTO = detailSO.getQuationTenders(reqDTO);
+				QuationTenderResDTO resDTO = detailSO.retriveQuationTenderDetailsBySearchCriteria(reqDTO);
 				return resDTO.getQtResultBean();
 			} finally {
 				detailSO = null;
