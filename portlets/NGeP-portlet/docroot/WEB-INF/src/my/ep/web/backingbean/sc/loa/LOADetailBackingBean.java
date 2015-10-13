@@ -396,6 +396,11 @@ public class LOADetailBackingBean extends
 						NumberWordUtil.convert(scLoa.getBondAmt().toString()));
 			}
 			
+			// show default clause
+			if(scLoa.getScQtDeductions() != null && scLoa.getScQtDeductions().size()>0){
+				getManagedBean().setSelectedScQtDeduction(scLoa.getScQtDeductions().get(0));
+			}
+			
 			// bond resp due date + 30 days.
 			Date issueDate  = scLoa.getIssueDate();
 			Date bondRespDueDate = DateUtils.addDays(issueDate, 30);
