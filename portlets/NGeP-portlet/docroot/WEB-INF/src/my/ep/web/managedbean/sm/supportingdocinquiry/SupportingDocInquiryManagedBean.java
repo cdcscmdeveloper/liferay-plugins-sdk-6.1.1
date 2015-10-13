@@ -1,5 +1,6 @@
 package my.ep.web.managedbean.sm.supportingdocinquiry;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -22,6 +23,9 @@ public class SupportingDocInquiryManagedBean extends ViewApplHistoryManagedBean 
 	private List<SmAppl> applList;
 	private List<Object[]> expiredSdoVerifySuppDocApplList;
 	private boolean allowedToSubmit;
+	
+	private Date inquiryStartDate;
+	private Date inquiryEndDate;
 
 	public Object getBpmPojo() {
 		return bpmPojo;
@@ -78,6 +82,22 @@ public class SupportingDocInquiryManagedBean extends ViewApplHistoryManagedBean 
 	public void setExpiredSdoVerifySuppDocApplList(
 			List<Object[]> expiredSdoVerifySuppDocApplList) {
 		this.expiredSdoVerifySuppDocApplList = expiredSdoVerifySuppDocApplList;
+	}
+
+	public Date getInquiryEndDate() {
+		return inquiryEndDate;
+	}
+
+	public void setInquiryEndDate(Date inquiryEndDate) {
+		this.inquiryEndDate = inquiryEndDate;
+	}
+
+	public Date getInquiryStartDate() {
+		return inquiryStartDate;
+	}
+
+	public void setInquiryStartDate(Date inquiryStartDate) {
+		this.inquiryStartDate = inquiryStartDate;
 	}
 
 }
