@@ -19,7 +19,7 @@
 				<td style="width: 180px; margin-bottom: 5px;"><p:selectOneMenu
 						id="locLevels"
 						value="#{simpleQuoteBackingBean.managedBean.locationLevel}"
-						disabled="#{!simpleQuoteBackingBean.managedBean.panelItemFlag}"
+						disabled="#{!isEditable}"
 						style="width: 178px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{simpleQuoteBackingBean.locationLevelDropdown}" />
@@ -71,7 +71,7 @@
 						</f:facet>
 						<p:commandLink
 							actionListener="#{simpleQuoteBackingBean.editZone(zoneTree,index)}"
-							rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}"
+							rendered="#{isEditable}"
 							process="@this " update="@([id$=zonePopupPanel])"
 							oncomplete="ZoneLocation.show();">
 							<p:graphicImage value="/css/images/design/edit.png" />
@@ -81,7 +81,7 @@
 				</p:dataTable>
 			</h:panelGrid>
 			<div align="right" style="width: 100%">
-				<c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">
+				<c:if test="#{isEditable}">
 					<p:commandButton value="#{lbl['lbl.btn.add']}"
 						process="@this,locLevels" update="@([id$=zonePopupPanel])"
 						partialSubmit="true" oncomplete="ZoneLocation.show();"
@@ -133,7 +133,7 @@
 				</p:dataTable>
 			</h:panelGrid>
 			<div align="right" style="width: 100%">
-				<c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">
+				<c:if test="#{isEditable}">
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"
 						process="@this, panelzoneDataTable" partialSubmit="true"
 						oncomplete="deliveryZoneDeletePopUp.show();"

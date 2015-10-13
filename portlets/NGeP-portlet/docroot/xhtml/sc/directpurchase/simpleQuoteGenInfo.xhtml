@@ -34,7 +34,7 @@
 						<tr>
 							<td><p:inputText size="84" id="title" required="true" maxlength="100"
 									label="#{lbl['lbl.sc.document.title']}"
-									disabled="#{!isPendingSubmissionStatus}"
+									disabled="#{!isEditable}"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.title}"
 									style="margin-bottom: 5px;" /></td>
 							<td><p:message id="titleMsg" for="title" display="icon" /></td>
@@ -50,7 +50,7 @@
 						<tr>
 							<td><p:selectOneMenu id="procTypeCategory"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.procurementTypeCategory.parameterId}"
-									disabled="#{!isPendingSubmissionStatus}"
+									disabled="#{!isEditable}"
 									style="width:120px;margin-bottom: 5px;" required="true"
 									label="#{lbl['lbl.sc.procurment.type.category']}">
 
@@ -74,7 +74,7 @@
 					<table>
 						<tr>
 							<td><p:selectOneRadio style="margin-bottom: 5px;"
-									disabled="#{!isPendingSubmissionStatus}"
+									disabled="#{!isEditable}"
 									id="procurementType" required="true"
 									label="#{lbl['lbl.sc.procurement.type']}"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode}">
@@ -104,7 +104,7 @@
 						 <td style="width: 85%"> <p:selectOneMenu style="width: 120px;margin-bottom: 5px;" id="justificationId" label="#{lbl['lbl.sc.reason']}"
 						       required="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A' or 
 						             simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'E'}"
-						         disabled="#{!isPendingSubmissionStatus}" 
+						         disabled="#{!isEditable}" 
 								value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationType.parameterCode}">
 							   <f:selectItems
 									value="#{simpleQuoteBackingBean.managedBean.justDropdown}" />
@@ -122,7 +122,7 @@
 					</td>
 					<td colspan="4"><p:inputTextarea value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationRemark}"
 					          id="justificationRmk" label="#{lbl['lbl.sc.justification']}" maxlength="100"
-					           disabled="#{!isPendingSubmissionStatus}"
+					           disabled="#{!isEditable}"
 					          required="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A' or 
 						             simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'E'}"
 							rows="3" cols="58" style="margin-bottom: 5px; width: 305px;" /> <p:message id="justRmksMsg" for="justificationRmk" display="icon" /></td>
@@ -140,7 +140,7 @@
 							<td><p:selectOneRadio id="zonal" required="true"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.zonal}"
 									label="#{lbl['lbl.sc.sq.zonal']}"
-									disabled="#{!isPendingSubmissionStatus or simpleQuoteBackingBean.managedBean.scQuote.panel eq 'true'}">
+									disabled="#{!isEditable or simpleQuoteBackingBean.managedBean.scQuote.panel eq 'true'}">
 									<f:selectItems
 										value="#{simpleQuoteBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 									<p:ajax event="change" update="@([id$=mainTabMenu])"
@@ -162,7 +162,7 @@
 							<p:calendar showOn="button" id="startDate"  
 							        mindate="#{simpleQuoteBackingBean.managedBean.today}"
 							        required="true"
-							        disabled="#{!isPendingSubmissionStatus}"
+							        disabled="#{!isEditable}"
 									label="#{lbl['lbl.sc.start.date']}" 
 									readonlyInput="true"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
@@ -182,7 +182,7 @@
 									label="#{lbl['lbl.sc.end.date']}"
 									mindate="#{!empty simpleQuoteBackingBean.managedBean.scQuote.startDate ? simpleQuoteBackingBean.managedBean.scQuote.startDate : simpleQuoteBackingBean.managedBean.today}"
 									readonlyInput="true" required="true"
-									disabled="#{!isPendingSubmissionStatus}"
+									disabled="#{!isEditable}"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.endDate}">
 									<p:ajax event="dateSelect" update="durationId" process="@this"
@@ -220,7 +220,7 @@
 									<tr>
 										<td><p:selectOneRadio id="noOfQuote"
 												label="#{lbl['lbl.sc.sq.simple.quote.type']}"
-												required="true" disabled="#{!isPendingSubmissionStatus}"
+												required="true" disabled="#{!isEditable}"
 												value="#{simpleQuoteBackingBean.managedBean.scQuote.multipleQuote}">
 												<f:selectItem
 													itemLabel="#{lbl['lbl.sc.sq.single']}"
@@ -268,7 +268,7 @@
 							<td></td>
 							<td>
 								<p:inputTextarea style="width:350px;" id="remarks" label="Remarks" maxlength="1000" value="#{remarkVar.remark}" 
-								  disabled="#{!isPendingSubmissionStatus}"
+								  disabled="#{!isEditable}"
 								 rendered="#{remarkIndex==0}"/>
 								<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}"  style="display: inline-block; width:220px;word-wrap: break-word;" />
 							</td>
