@@ -3600,6 +3600,7 @@ public class QTDetailBackingBean extends
 	 * Validate qt details.
 	 */
 	public void validateQtDetails() {
+		debugLogger("validateQtDetails");
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTDetailSO.class);
@@ -3631,8 +3632,10 @@ public class QTDetailBackingBean extends
 			resDTO = detailSO.saveQTDtl(reqDTO);
 			renewSesionObject();
 			this.getManagedBean().setTaskName(taskName);
+			log.info("Task Name : " + this.getManagedBean().getTaskName());
 			this.getManagedBean().setMaintanceFlow(
 					this.getManagedBean().getTaskName() == null ? true : false);
+			log.info("Maintance Flow : " + this.getManagedBean().isMaintanceFlow());
 			retrieveQuationTenderDetails(resDTO.getQtDetail().getQtId(), null);
 			setAmmendMentBean(resDTO.getAmendMentBean());
 			// this.getManagedBean().setQt(resDTO.getQtDetail());
