@@ -128,7 +128,7 @@
 		styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{approvalBackingBean.handleFileUpload}"
+			fileUploadListener="#{qTDetailBB.handleFileUpload}"
 			mode="advanced" id="dlgsuploadsids"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"

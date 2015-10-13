@@ -101,14 +101,23 @@
 			update="@([id$=businessownerId])" />
 	</p:panel>
 	<p:panel toggleable="true">
-		<h:panelGrid border="0" cellpadding="0" cellspacing="0" columns="2"
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" columns="3"
 			columnClasses="columnWidth10" style="margin-left: 26px;">
-			<p:selectBooleanCheckbox disabled="#{readOnly}"
-				value="#{qTDetailBB.managedBean.qt.specApprovalReq}">
-				<p:ajax update="approvalSpec"
-					listener="#{qTBusinessOwnerBackingBean.processChecked}" />
-			</p:selectBooleanCheckbox>
+			<p:outputLabel value="*" styleClass="mandatory" />
 			<h:outputLabel value="#{lbl['lbl.sc.qt.req.approval.specification']}" />
+
+			<p:selectOneRadio required="true"
+				value="#{qTDetailBB.managedBean.qt.specApprovalReq}"
+				disabled="#{readOnly}"
+				label="#{lbl['lbl.sc.qt.req.approval.specification']}">
+				<f:selectItems
+					value="#{qTBusinessOwnerBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+
+				<p:ajax event="change" process="@this" update="@this,approvalSpec" />
+
+			</p:selectOneRadio>
+
+
 		</h:panelGrid>
 
 		<h:panelGroup id="approvalSpec">
