@@ -258,12 +258,12 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.acctNo']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:inputText maxlength="20"
-							required="#{backingBean.managedBean.valueReqd}" validatorMessage="#{lbl['lbl.sm.bank.acc.invalid.msg']}"
+							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.bankDtls.acctNo']}" id="smBankAcctNo"
 							value="#{backingBean.managedBean.selectedBank.accountNo}"
 							size="35">
-							<f:validateRegex pattern="[0-9]*" disabled="#{!backingBean.managedBean.valueReqd}"/>
-						</p:inputText> <p:message id="smBankAcctNoMsg" for="smBankAcctNo"
+						</p:inputText> 
+						<p:message id="smBankAcctNoMsg" for="smBankAcctNo"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
 				<tr>

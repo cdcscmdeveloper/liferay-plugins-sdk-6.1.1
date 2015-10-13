@@ -5652,6 +5652,9 @@ public class SmApplicationBackingBean extends
 	public void addOrUpdateBankInfoToSmAppl() {
 		getManagedBean().getSelectedBank().getSmChequeSignatories().clear();
 		getManagedBean().setSelectedSignatoryBankAcct(new SmSupplierBank());
+		if(!StringUtils.isNumeric(getManagedBean().getSelectedBank().getAccountNo())){
+			throw new EpException(MessageConst.ERROR_722616);
+		}
 		for (Long perId : getManagedBean().getChequeSingPerId()) {
 			for (SmPersonnel sm : getManagedBean().getSmAppl()
 					.getSmPersonnels()) {
