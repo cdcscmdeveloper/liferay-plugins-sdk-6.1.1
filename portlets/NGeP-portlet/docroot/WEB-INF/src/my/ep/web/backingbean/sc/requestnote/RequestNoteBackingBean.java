@@ -534,7 +534,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param requestNote the request note
 	 * @param outcome the outcome
 	 */
-	private void parseRequestNote(ScRequestNote requestNote, String outcome, boolean isAction) {
+	private void parseRequestNote(ScRequestNote requestNote, String outcome, boolean isSubmitAction) {
 		List<ScRequestNoteDtl>	requestNoteDtls  = this.getManagedBean().getRequestNoteDtls();
 		
 		// Target Approver
@@ -578,7 +578,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 
-				if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome) || isAction){
+				if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome) || isSubmitAction){
 					
 					// pid validity
 					if(requestNoteDtl.getRequestItem() != null && requestNoteDtl.getRequestItem().getPurchaseInDefault() != null){
@@ -613,9 +613,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 
 		// adding request note delete list
-		if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome) || BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
+		if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome) || 
+				BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome) || BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
 			// validate procurement amount
-			if(isAction){
+			if(isSubmitAction){
 				validateRN(requestNote, requestNoteDtls);
 			}
 
@@ -629,7 +630,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			finalizeRemarks(requestNote.getRemarks());
 		}
 
-		if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome) || outcome.isEmpty() && !isAction){
+		if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome) || outcome.isEmpty() && !isSubmitAction){
 			if(requestNote.getCurrentStatus() == null){
 				// WorkFlow Status 
 				List<ScRNWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScRNWorkFlowStatus>();
