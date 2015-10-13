@@ -47,14 +47,14 @@
 		<p:commandButton immediate="true" id="backButton"
 			value="#{lbl['lbl.btn.item.search']}" partialSubmit="true"
 			process="@this" style="float:left;"
-			rendered="#{isPendingSubmissionStatus}"
+			rendered="#{isEditable}"
 			action="#{simpleQuoteBackingBean.backToPrevious}"
 			title="#{lbl['lbl.sc.itemsearch.tooltip']}">
 		</p:commandButton>
 
 		<p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}"
 			partialSubmit="true" process="@this" style="float:left;"
-			rendered="#{!isPendingSubmissionStatus}"
+			rendered="#{!isEditable}"
 			action="#{simpleQuoteBackingBean.backToPrevious}" />
 	</div>
 
@@ -64,11 +64,11 @@
 				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 				action="#{simpleQuoteBackingBean.saveSimpleQuote('')}"
 				process="@all" update="@form"
-				rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}" />
+				rendered="#{simpleQuoteBackingBean.managedBean.editableFlag}" />
 			<p:commandButton value="#{lbl['lbl.btn.submit']}"
 				actionListener="#{simpleQuoteBackingBean.submitPromptAction}"
 				update="@form" process="@all"
-				rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">
+				rendered="#{simpleQuoteBackingBean.managedBean.editableFlag}">
 
 				<ui:param name="action" value=""></ui:param>
 				<f:setPropertyActionListener
@@ -79,17 +79,17 @@
 				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 				action="#{simpleQuoteBackingBean.cancel}" style="float:right;"
 				process="@this" partialSubmit="true"
-				rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}" />
+				rendered="#{simpleQuoteBackingBean.managedBean.editableFlag}" />
 		</div>
 	</c:if>
 
 	<c:if test="#{simpleQuoteBackingBean.managedBean.taskId ne null}">
 		<div class="ppRightBtn">
 			<!-- to view simple Quote from the request note header  Icon    -->
-			<c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">
+			<c:if test="#{simpleQuoteBackingBean.managedBean.editableFlag}">
 				<c:if
 					test="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus.statusId eq DPStatusConstants.rnPendingApproval 
-									  or isPendingSubmissionStatus}">
+									  or isEditable}">
 					<p:commandButton value="#{lbl['lbl.btn.save']}"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 						action="#{simpleQuoteBackingBean.saveSimpleQuote('Save')}"
@@ -103,7 +103,7 @@
 
 					<h:panelGroup rendered="#{bpmAction eq 'SUBMIT'}">
 						<p:commandButton value="#{lbl[buttonLabel]}"
-							rendered="#{isPendingSubmissionStatus}" styleClass="ui-button"
+							rendered="#{isEditable}" styleClass="ui-button"
 							partialSubmit="true" process="@form"
 							actionListener="#{simpleQuoteBackingBean.submitPromptAction}"
 							update="@form">
@@ -114,7 +114,7 @@
 					</h:panelGroup>
 					<h:panelGroup rendered="#{bpmAction eq 'CANCEL'}">
 						<p:commandButton value="#{lbl[buttonLabel]}" process="@all"
-							update="@form" rendered="#{isPendingSubmissionStatus}"
+							update="@form" rendered="#{isEditable}"
 							styleClass="ui-button" onstart="blockWidget.show();"
 							oncomplete="blockWidget.hide();"
 							actionListener="#{simpleQuoteBackingBean.submitSimpleQuote(bpmAction)}" />

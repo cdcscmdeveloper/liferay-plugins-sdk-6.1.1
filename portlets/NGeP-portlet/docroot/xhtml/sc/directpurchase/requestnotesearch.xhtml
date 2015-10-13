@@ -88,7 +88,7 @@
 		<p:panel header="#{lbl['lbl.sc.search.result']}">
 			<p:dataTable id="reqNoteTbl" var="scRequestNote" rowIndexVar="index" 
 				value="#{requestNoteBackingBean.managedBean.reqNoteDataModel}" 
-				lazy="true">
+				lazy="true" rows="10">
 			
 				<ac:paginator for="reqNoteTbl" />
 				
