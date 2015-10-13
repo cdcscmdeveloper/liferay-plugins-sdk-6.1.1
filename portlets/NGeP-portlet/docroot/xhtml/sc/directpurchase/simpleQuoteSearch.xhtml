@@ -16,17 +16,6 @@
 					<td><p:inputText
 							value="#{simpleQuoteBackingBean.managedBean.searchQuoteNo}"
 							size="35" style="margin-bottom: 5px;" /></td>
-
-					<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
-					<td><p:selectOneMenu style="width: 175px;"
-							value="#{simpleQuoteBackingBean.managedBean.searchStatus}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-								itemValue="#{null}" />
-							<f:selectItems value="#{simpleQuoteBackingBean.statusDescList}"
-								var="pmStatusDesc" itemLabel="#{pmStatusDesc.statusName}"
-								itemValue="#{pmStatusDesc.pmStatus.statusId}">
-							</f:selectItems>
-						</p:selectOneMenu></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.document.title']}" /></td>
@@ -41,6 +30,17 @@
 							<f:selectItems
 								value="#{simpleQuoteBackingBean.getDropdownCodeValues(ParameterTypeConst.procurementType)}" />
 						</p:selectOneMenu></td>
+						
+					<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
+					<td><p:selectOneMenu style="width: 176px;"
+							value="#{simpleQuoteBackingBean.managedBean.searchStatus}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+								itemValue="#{null}" />
+							<f:selectItems value="#{simpleQuoteBackingBean.statusDescList}"
+								var="pmStatusDesc" itemLabel="#{pmStatusDesc.statusName}"
+								itemValue="#{pmStatusDesc.pmStatus.statusId}">
+							</f:selectItems>
+						</p:selectOneMenu></td>	
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.created.date.from']}" /></td>

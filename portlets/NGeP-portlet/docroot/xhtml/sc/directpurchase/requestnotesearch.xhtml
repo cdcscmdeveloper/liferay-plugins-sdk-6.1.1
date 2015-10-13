@@ -20,6 +20,16 @@
 				<td class="TableFieldRight">
 					<p:inputText value="#{requestNoteBackingBean.managedBean.searchReqNoteNo}" size="25" />
 				</td>
+			</tr>
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sc.request.note.header.method']}" />
+				</td>
+				<td>
+					<p:selectOneMenu style="width:176px;margin-bottom: 5px;" value="#{requestNoteBackingBean.managedBean.searchSrcMethod}">
+						<f:selectItems value="#{requestNoteBackingBean.getDropdownCodeValues(ParameterTypeConst.sourceMethod)}" />
+					</p:selectOneMenu>
+				</td>
 				<td>
 					<p:outputLabel value="#{lbl['lbl.sc.status']}" />
 				</td>
@@ -33,16 +43,6 @@
 							var="pmStatusDesc" itemLabel="#{pmStatusDesc.statusName}"
 							itemValue="#{pmStatusDesc.pmStatus.statusId}">
 						</f:selectItems>
-					</p:selectOneMenu>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<p:outputLabel value="#{lbl['lbl.sc.request.note.header.method']}" />
-				</td>
-				<td>
-					<p:selectOneMenu style="width:187px;margin-bottom: 5px;" value="#{requestNoteBackingBean.managedBean.searchSrcMethod}">
-						<f:selectItems value="#{requestNoteBackingBean.getDropdownCodeValues(ParameterTypeConst.sourceMethod)}" />
 					</p:selectOneMenu>
 				</td>
 			</tr>
