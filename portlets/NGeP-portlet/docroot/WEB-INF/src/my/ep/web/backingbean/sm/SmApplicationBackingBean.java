@@ -5652,7 +5652,8 @@ public class SmApplicationBackingBean extends
 	public void addOrUpdateBankInfoToSmAppl() {
 		getManagedBean().getSelectedBank().getSmChequeSignatories().clear();
 		getManagedBean().setSelectedSignatoryBankAcct(new SmSupplierBank());
-		if(!StringUtils.isNumeric(getManagedBean().getSelectedBank().getAccountNo())){
+		if (!StringUtils.isNumeric(getManagedBean().getSelectedBank()
+				.getAccountNo())) {
 			throw new EpException(MessageConst.ERROR_722616);
 		}
 		for (Long perId : getManagedBean().getChequeSingPerId()) {
@@ -6001,7 +6002,18 @@ public class SmApplicationBackingBean extends
 																		.getApplType()),
 														getManagedBean()
 																.getSmAppl()
-																.getApplNo() },
+																.getApplNo(),
+														SmRuleHelper
+																.getInstance()
+																.getProcessingFee()
+																.setScale(
+																		2,
+																		BigDecimal.ROUND_UP)
+																.toString(),
+														SmRuleHelper
+																.getInstance()
+																.getApplicationSubmissionDays()
+																+ "" },
 												MessageUtils.BUNDLE_COMMON_MESSAGES,
 												new FacesScopes()
 														.getUserLocale())));
@@ -8920,7 +8932,7 @@ public class SmApplicationBackingBean extends
 				+ applNo
 				+ "&applicationType=" + applType + "&currentTab=" + currTab);
 	}
-	
+
 	public void revertToOriginalApplication() {
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setSmAppl(getManagedBean().getSmAppl());
