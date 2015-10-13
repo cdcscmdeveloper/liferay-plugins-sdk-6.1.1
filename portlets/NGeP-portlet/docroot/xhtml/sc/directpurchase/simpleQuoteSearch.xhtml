@@ -71,9 +71,9 @@
 			</div>
 		</p:panel>
 		<p:panel header="#{lbl['lbl.sc.result']}" toggleable="true">
-			<p:dataTable id="scQuoteDataModel"
+			<p:dataTable id="scQuoteDataModel" 
 				value="#{simpleQuoteBackingBean.managedBean.scQuoteDataModel}"
-				var="scQuote" rows="5" rowIndexVar="index" lazy="true">
+				var="scQuote" rows="10" rowIndexVar="index" lazy="true">
 				<ac:paginator for="scQuoteDataModel" />
 
 				<p:column style="width: 14%;"

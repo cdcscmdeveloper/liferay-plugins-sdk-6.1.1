@@ -14,7 +14,7 @@
 			<h:panelGrid columns="3" style="margin-bottom:10px" cellpadding="5">
 				<p:selectBooleanCheckbox id="byLocId"
 					value="#{simpleQuoteBackingBean.managedBean.byLocality}"
-					disabled="#{!isPendingSubmissionStatus}">
+					disabled="#{!isEditable}">
 					<p:ajax event="change" update="suppCriteria"
 						listener="#{simpleQuoteBackingBean.byLocAndBusinessEvent}"
 						process="@this byLocId" />
@@ -24,7 +24,7 @@
 
 				<p:selectBooleanCheckbox id="byBussNatureId"
 					value="#{simpleQuoteBackingBean.managedBean.byBusinessNature}"
-					disabled="#{!isPendingSubmissionStatus}">
+					disabled="#{!isEditable}">
 					<p:ajax event="change" update="@([id$=suppCriteriasId])"
 						listener="#{simpleQuoteBackingBean.byLocAndBusinessEvent}"
 						process="@this byBussNatureId" />
@@ -49,7 +49,7 @@
 										value="#{lbl['lbl.sc.location.level']}" /></td>
 								<td><p:selectOneMenu id="locLevels"
 										value="#{simpleQuoteBackingBean.managedBean.supplierLocLevel}"
-										style="width: 150px;" disabled="#{!isPendingSubmissionStatus}">
+										style="width: 150px;" disabled="#{!isEditable}">
 										<f:selectItems
 											value="#{simpleQuoteBackingBean.locationLevelDropdown}" />
 										<p:ajax event="change" update="locPanel" partialSubmit="true"
@@ -86,7 +86,7 @@
 							<p:column headerText="#{lbl['lbl.sc.action']}">
 								<p:commandLink
 									actionListener="#{simpleQuoteBackingBean.editLocation(locationTree,index)}"
-									rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}"
+									rendered="#{isEditable}"
 									process="@this" update="@([id$=locPopupPanel])"
 									oncomplete="locationPopup.show();">
 									<p:graphicImage value="/css/images/design/edit.png" />
@@ -96,7 +96,7 @@
 						</p:dataTable>
 						<p:spacer height="2px"></p:spacer>
 						<div align="right" style="width: 100%">
-							<c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">
+							<c:if test="#{isEditable}">
 								<p:commandButton value="#{lbl['lbl.btn.add']}"
 									process="@this ,locLevels" update="@form" partialSubmit="true"
 									oncomplete="locationPopup.show();"
@@ -144,7 +144,7 @@
 					</p:dataTable>
 
 					<div>
-						<c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">
+						<c:if test="#{isEditable}">
 							<table style="width: 100%">
 								<tr>
 									<td class="TableFieldLeft" width="80%"></td>
@@ -204,7 +204,7 @@
 					</p:dataTable>
 
 					<div>
-						<c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">
+						<c:if test="#{isEditable}">
 							<table style="width: 100%">
 								<tr>
 									<td class="TableFieldLeft" width="80%"></td>
@@ -265,7 +265,7 @@
 					</p:dataTable>
 
 					<div>
-						<c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">
+						<c:if test="#{isEditable}">
 							<table style="width: 100%">
 								<tr>
 									<td class="TableFieldLeft" width="80%"></td>
@@ -331,7 +331,7 @@
 					</p:dataTable>
 
 					<div>
-						<c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">
+						<c:if test="#{isEditable}">
 							<table style="width: 100%">
 								<tr>
 									<td class="TableFieldLeft" width="100%"></td>
@@ -340,7 +340,7 @@
 											<tr>
 												<td><p:commandButton value="#{lbl['lbl.btn.delete']}"
 														process="@this,bypanelItemId" partialSubmit="true"
-														rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}"
+														rendered="#{isEditable}"
 														oncomplete="panelSupplierDeletePopUp.show();"
 														update="@([id$=#{panelSupplierDeleteId}])" /> <ac:confirmationPopup
 														id="panelSupplierDeleteId"
