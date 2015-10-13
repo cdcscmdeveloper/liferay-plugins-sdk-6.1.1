@@ -56,7 +56,7 @@
 			value="#{tplSpecAnswer.ratePerUom}"
 			rendered="#{isQuestionTypeItem}" required="#{isSpecificationReq and isValidationReq}" maxlength="19"
 			label="#{lbl['lbl.tpl.spec.content.unit.price']}">
-			<p:ajax event="blur" partialSubmit="true" process="@this" update="@this, ansYearPG, ansPG, @(.calcAmount)" listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, tplSpecAnswer, isItemTypeService)}" />
+			<p:ajax event="change" partialSubmit="true" process="@this" update="@this, ansYearPG, ansPG, @(.calcAmount)" listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, tplSpecAnswer, isItemTypeService)}" />
 			<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
 		</p:inputText>
 		<p:message id="ratePerUomMsg" for="ratePerUom" display="icon" />
@@ -65,7 +65,7 @@
 		<f:facet name="footer">
 			<h:outputText id="totalAmountPerYr" 
 				styleClass="calcAmount" 
-				value="#{templateSpecBean.specMaster.totalAmountPerYear}">
+				value="#{templateSpecBackingBean.calcGrandTotalAmount(templateSpecBean)}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>
 		</f:facet>
@@ -86,7 +86,7 @@
 		<f:facet name="footer">
 			<h:outputText id="totalAmount" 
 				styleClass="calcAmount" 
-				value="#{templateSpecBackingBean.calcGrandTotalAmount(templateSpecBean)}"
+				value="#{templateSpecBean.specMaster.totalAmount}"
 				rendered="#{isSpecTypeFinancial and isAllPriceTypesStandard}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>

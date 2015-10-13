@@ -1625,7 +1625,7 @@ public class TemplateSpecBackingBean extends
 		specMaster.setTotalAmountPerYear(totalAmountPerYear);
 		specMaster.setTotalAmount(totalAmount);
 
-		return totalAmount;
+		return totalAmountPerYear;
 	}
 
 	/**
