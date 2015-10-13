@@ -9,7 +9,7 @@
 
 	<ui:define name="resourceSection">
 		<script>
-			$('#portlet_SiteVisit_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.supportingdoc.inquiry.response']}");
+			$('#portlet_CommonAppl_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.supportingdoc.inquiry.response']}");
 		</script>
 	</ui:define>
 
@@ -34,6 +34,22 @@
 			</div>
 		</p:dialog>
 
+		<table class="customTbl">
+			<tr>
+				<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.inquiry.start.date']}" /></td>
+				<td class="tdContent"><h:outputText value="#{DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT,supportingDocInquiryBackingBean.managedBean.inquiryStartDate)}" /></td>
+				<td>&#160;</td>
+				<td>&#160;</td>
+			</tr>
+			<tr>
+				<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.inquiry.end.date']}" /></td>
+				<td class="tdContent"><h:outputText value="#{DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT,supportingDocInquiryBackingBean.managedBean.inquiryEndDate)}" /></td>
+				<td>&#160;</td>
+				<td>&#160;</td>
+			</tr>
+		</table>
+		<br />
+		
 		<p:panel header="#{lbl['lbl.sm.supportingdoc.panel.supportingdocinquiry']}">
 			<table style="width: 85%;">
 				<tr>
