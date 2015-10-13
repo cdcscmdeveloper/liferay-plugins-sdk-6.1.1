@@ -302,9 +302,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	/** The procurement types. */
 	private SelectItem[] procurementTypes; // for procuremment type dropdown
 
-	/** The rn to sq flag. */
-	private boolean rnToSQFlag = Boolean.TRUE;
-
 	/** The panel item flag. */
 	private boolean panelItemFlag = Boolean.TRUE;
 
@@ -377,9 +374,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 
 	/** The sm gst supplier. */
 	private SmGstSupplier smGstSupplier;
-	
-	/** The view quote. */
-	boolean viewQuote = Boolean.FALSE;
 
 	/**
 	 * Gets the spki backing bean.
@@ -1983,25 +1977,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * Checks if is rn to sq flag.
-	 * 
-	 * @return the rnToSQFlag
-	 */
-	public boolean isRnToSQFlag() {
-		return rnToSQFlag;
-	}
-
-	/**
-	 * Sets the rn to sq flag.
-	 * 
-	 * @param rnToSQFlag
-	 *            the rnToSQFlag to set
-	 */
-	public void setRnToSQFlag(boolean rnToSQFlag) {
-		this.rnToSQFlag = rnToSQFlag;
-	}
-
-	/**
 	 * Checks if is required.
 	 * 
 	 * @return the required
@@ -2456,19 +2431,4 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	public void setSearchStatus(Long searchStatus) {
 		this.searchStatus = searchStatus;
 	}
-
-	/**
-	 * @return the viewQuote
-	 */
-	public boolean isViewQuote() {
-		return viewQuote;
-	}
-
-	/**
-	 * @param viewQuote the viewQuote to set
-	 */
-	public void setViewQuote(boolean viewQuote) {
-		this.viewQuote = viewQuote;
-	}
-
 }
