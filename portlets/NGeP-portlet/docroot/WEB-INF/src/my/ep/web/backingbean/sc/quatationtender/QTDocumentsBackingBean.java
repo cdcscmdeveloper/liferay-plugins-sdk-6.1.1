@@ -961,10 +961,10 @@ public class QTDocumentsBackingBean extends
 		debugLogger("downloadReport");
 		ScQtDocReportAttachment scQtDocReportAttachment = scQtDocReport
 				.getScQtDocReportAttachment();
-		 if (scQtDocReportAttachment == null) { 
-		scQtDocReportAttachment = generateDocumentAttachment(scQtDocReport);
-		scQtDocReport.setScQtDocReportAttachment(scQtDocReportAttachment);
-		 } 
+		if (scQtDocReportAttachment == null) {
+			scQtDocReportAttachment = generateDocumentAttachment(scQtDocReport);
+			scQtDocReport.setScQtDocReportAttachment(scQtDocReportAttachment);
+		} 
 		downloadFile(scQtDocReportAttachment);
 	}
 
@@ -1706,10 +1706,7 @@ public class QTDocumentsBackingBean extends
 		populateAttachmentDetails(attachment);
 
 		VelocityContext context = new VelocityContext();
-		CommonUtils commonUtils = new CommonUtils();
-		SimpleDateFormat dateSDF = new SimpleDateFormat(
-				commonUtils
-						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
+		SimpleDateFormat dateSDF = new SimpleDateFormat("MMM YYYY");
 		context.put("dateSDF", dateSDF);
 
 		List<ScQtSchedule> scheduleList = new ArrayList<ScQtSchedule>();
