@@ -18,7 +18,13 @@
 		
 		<p:remoteCommand name="disableMap" action="#{gmapBackingBean.setRenderMap(false)}" />
 		
-		<p:dialog id="gmapDialogId" widgetVar="dlg" width="625" height="400" modal="true" onHide="disableMap();">
+		<p:dialog id="gmapDialogId" 
+			widgetVar="dlg" 
+			width="625" 
+			height="400" 
+			modal="true" 
+			resizable="false"
+			onHide="disableMap();">
 		
 			<p:panel id="mapPanel">
 				
