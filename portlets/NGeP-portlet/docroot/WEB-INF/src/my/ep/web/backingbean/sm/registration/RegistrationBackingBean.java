@@ -87,6 +87,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -550,13 +551,24 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 		if (resDTO.isSuccessful()) {
 			log.info("****User created Successfully*******");
-			//SmPersonnel resSmPersonnel = resDTO.getSmSupp().getSmAppls().get(0).getSmPersonnels().get(0);
-			
-			//this.sendActivationEmail(resSmPersonnel);
-			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
-					FacesMessage.SEVERITY_INFO,
+			String suppAdminEmail = smPersonnel != null
+					&& StringUtils.isNotBlank(smPersonnel.getEmail()) ? smPersonnel
+					.getEmail() : "";
+			// SmPersonnel resSmPersonnel =
+			// resDTO.getSmSupp().getSmAppls().get(0).getSmPersonnels().get(0);
+
+			// this.sendActivationEmail(resSmPersonnel);
+			FacesContext.getCurrentInstance().addMessage(
 					null,
-					MessageUtils.getMessage(MessageConst.INFO_721012, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.INFO_721012,
+									new String[] {
+											suppAdminEmail,
+											SmRuleHelper.getInstance()
+													.getEmailActivationDays()
+													+ "" },
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
 			renewSesionObject();
 			this.getManagedBean().setSmAppl(null);
 			this.getManagedBean().setSmSupp(null);
