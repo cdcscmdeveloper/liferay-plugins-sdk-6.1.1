@@ -16,25 +16,29 @@
 
 <cc:implementation>
 <h:panelGroup id="#{cc.attrs.id}">
-	x: <p:inputText id="plat" value="#{cc.attrs.latitude}" />
+	<fieldset>
 	
-	y: <p:inputText id="plng" value="#{cc.attrs.longitude}" />
-	
-	<p:commandButton id="gmId" 
-		value="View Map" 
-		onclick="codeAddress(#{cc.attrs.address});">
-		<f:setPropertyActionListener 
-			target="#{gmapBackingBean.renderMap}" 
-			value="#{true}" />
-	</p:commandButton>
-	
-	<p:remoteCommand 
-		name="updateGmap" 
-		process="plat, plng" 
-		update="@([id$=mapPanel])" 
-		oncomplete="dlg.show();" />
-
+  		<legend>Map and Coordinate:</legend>
+  		
+		x: <p:inputText id="plat" value="#{cc.attrs.latitude}" />
 		
+		y: <p:inputText id="plng" value="#{cc.attrs.longitude}" />
+		
+		<p:commandButton id="gmId" 
+			value="View Map" 
+			onclick="codeAddress(#{cc.attrs.address});">
+			<f:setPropertyActionListener 
+				target="#{gmapBackingBean.renderMap}" 
+				value="#{true}" />
+		</p:commandButton>
+		
+		<p:remoteCommand 
+			name="updateGmap" 
+			process="plat, plng" 
+			update="@([id$=mapPanel])" 
+			oncomplete="dlg.show();" />
+			
+	</fieldset>		
 </h:panelGroup>	
 </cc:implementation>
 </ui:composition>
