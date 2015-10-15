@@ -387,6 +387,15 @@ public class SupplierFinalizationBackingBean extends
 			this.getManagedBean().setShortlistedSupplierList(null);
 		}
 
+		initializeRemarks();
+		
+		if (this.getManagedBean().getResetSupplierList() == null) {
+			this.getManagedBean().setResetSupplierList(
+					new HashSet<ScQtEvaluationResultDtl>());
+		}		
+	}
+	
+	private void initializeRemarks() {
 		ScQtCommittee scQtCommittee = this.getManagedBean().getScQtCommittee();
 		if (scQtCommittee != null) {
 			
@@ -398,11 +407,6 @@ public class SupplierFinalizationBackingBean extends
 	
 			// Committee Remarks list
 			this.getManagedBean().setCommitteeRemarkList(remarks);
-		}
-		
-		if (this.getManagedBean().getResetSupplierList() == null) {
-			this.getManagedBean().setResetSupplierList(
-					new HashSet<ScQtEvaluationResultDtl>());
 		}		
 	}
 
@@ -1760,9 +1764,12 @@ public class SupplierFinalizationBackingBean extends
 				scQtFinalization.setHigherCommitteStr(null);
 			}
 
+			boolean zonalPackageItemsCancelled = getManagedBean().isItemCancelled();
+			
 			// Check if supplier has been selected before submission
-			if (ParameterConst.RECOMMEND_TYPE_PACKAGE
-					.equals(recommendTypeCode) && 
+			if (!zonalPackageItemsCancelled && 
+					ParameterConst.RECOMMEND_TYPE_PACKAGE
+						.equals(recommendTypeCode) && 
 					decisionRecommendSupplier && 
 					!this.getManagedBean().isDisableSupplierSelection()) {
 				TplSpecZoneDtl zoneDtl = this.getManagedBean().getCurrentZone();
@@ -1807,6 +1814,8 @@ public class SupplierFinalizationBackingBean extends
 							.equals(decisionTypeCode) && 
 						CollectionUtils.isEmpty(
 								scQtCommittee.getQtCommitteRemarks())) {
+			
+			initializeRemarks();
 			
 			// Remarks are mandatory for QT cancellation
 			throw new EpException(MessageConst.ERROR_760360);
