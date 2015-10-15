@@ -403,6 +403,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			smPersonnel.setPmCountry(indNationality);
 			this.getManagedBean().setSmBusinessAdd(this.getManagedBean().getSmPermenantAdd());
 			
+			//set mobileno to company phone no
+			smAppl.getSmCompanyBasic().setPhoneNo(smPersonnel.getMobileNo());
+			
 			getManagedBean().setGstFlag(false);
 		}
 		
