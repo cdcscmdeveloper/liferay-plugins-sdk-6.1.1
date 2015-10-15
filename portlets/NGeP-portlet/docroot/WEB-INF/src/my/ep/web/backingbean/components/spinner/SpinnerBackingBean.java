@@ -72,9 +72,9 @@ public class SpinnerBackingBean {
 			newValue = minValue;
 		}
 		
-		if (maxValue != null && newValue.compareTo(maxValue) > 0) {
+		/*if (maxValue != null && newValue.compareTo(maxValue) > 0) {
 			newValue = maxValue;
-		}
+		}*/
 		
 		valueChangedAction(component, newValue, stepFactor, min, max, postUpdateListener);
 
