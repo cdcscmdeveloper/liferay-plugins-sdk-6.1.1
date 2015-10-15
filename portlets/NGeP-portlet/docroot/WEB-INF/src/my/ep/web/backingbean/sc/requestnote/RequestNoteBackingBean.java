@@ -497,34 +497,42 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	
 
 	/**
-	 * Submit prompt action. before submit request note, 
+	 * delivery Term Prompt. before submit / Approve request note, 
 	 * it shows the prompt(dialogue) that If system checking the different of delivery period, 
 	 * show alert only but allow to proceed with submission of Request note.
 	 */
 	public void deliveryTermPrompt(String outcome) {
-		this.getManagedBean().setAction(outcome);
+		getManagedBean().setAction(outcome);
 		boolean isDeliveryTermPrompt = Boolean.FALSE;
 		List<ScRequestNoteDtl>	requestNoteDtls  = this.getManagedBean().getRequestNoteDtls();
 		ScRequestNote scRequestNote = getManagedBean().getRequestNote();
-        if(outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.isEmpty()){
-        	if(!scRequestNote.getSourceMethod().equals(ParameterConst.REQUEST_NOTE_SQ) && requestNoteDtls != null && requestNoteDtls.size() > 1){
-    			RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
-    			scRequestNote.setRequestNoteDtls(requestNoteDtls);
-    			requestNoteReqDTO.setRequestNote(scRequestNote);
-    			isDeliveryTermPrompt  = getDirectPurchaseSO().validateDeliveryTerm(requestNoteReqDTO);
+		if(outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || 
+				outcome.isEmpty() || 
+				outcome.equals(BpmOutcomeConst.BPM_APPROVE)){
+			if(!scRequestNote.getSourceMethod().equals(ParameterConst.REQUEST_NOTE_SQ) && 
+					requestNoteDtls != null && requestNoteDtls.size() > 1){
+				RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+				scRequestNote.setRequestNoteDtls(requestNoteDtls);
+				requestNoteReqDTO.setRequestNote(scRequestNote);
+				isDeliveryTermPrompt  = getDirectPurchaseSO().validateDeliveryTerm(requestNoteReqDTO);
 
-    			if(isDeliveryTermPrompt){
-    				StringBuilder message = new StringBuilder();
-    				message.append("Same delivery term is required for each PR generated.");
-    				getManagedBean().setPromptMessage(message.toString());
-    				RequestContext.getCurrentInstance().execute("deliveryTermConform.show()");
-
-    			}
-    		}
-        }
+				if(isDeliveryTermPrompt){
+					StringBuilder message = new StringBuilder();
+					message.append("Same delivery term is required for each PR generated.");
+					getManagedBean().setPromptMessage(message.toString());
+					RequestContext.getCurrentInstance().execute("deliveryTermConform.show()");
+				}
+			}
+		}
 
 		if(!isDeliveryTermPrompt){
-			submitAction(outcome);
+			if(outcome.equals(BpmOutcomeConst.BPM_APPROVE) || 
+					outcome.equals(BpmOutcomeConst.BPM_REVISE) || 
+					outcome.equals(BpmOutcomeConst.BPM_REJECT)){
+				approverAction(outcome);
+			} else{
+				submitAction(outcome);
+			}
 		}
 	}
 
@@ -626,7 +634,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 		requestNote.setRequestNoteDtls(requestNoteDtls);
 
-		if(!(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome))){
+		if(!(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) 
+				|| BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome) 
+				|| BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome))){
 			finalizeRemarks(requestNote.getRemarks());
 		}
 
@@ -981,13 +991,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	private RequestNoteResDTO updateBPMTask(String outcome, PmDigiSign digiSign) {
 		debugLogger("updateBPMTask");
 		RequestNoteResDTO requestNoteResDTO = null;
-		
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
 		try {
-			if(!(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) || BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome))){
-				finalizeRemarks(requestNote.getRemarks());
-			}
+			parseRequestNote(requestNote, outcome, Boolean.TRUE);
 
 			if(getManagedBean().getPrInquiryId() != null){
 				requestNoteReqDTO.setPurchaseInquiryId(getManagedBean().getPrInquiryId());
@@ -1058,25 +1065,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		debugLogger("approverAction");
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		this.getManagedBean().setAction(outcome);
-		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		ScRequestNote scRequestNote = getManagedBean().getRequestNote();
+		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		requestNoteReqDTO.setRequestNote(scRequestNote);
 		getDirectPurchaseSO().validateRNBeforeSubmitting(requestNoteReqDTO);
 
 		if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
-            
-			// validate pid expired or not
-			for (ScRequestNoteDtl scRequestNoteDtl : scRequestNote.getRequestNoteDtls()) {
-				ScPurchaseInDefault purchaseInDefault = scRequestNoteDtl.getRequestItem().getPurchaseInDefault();
-				if(purchaseInDefault != null){
-					pidValidity(scRequestNoteDtl.getRequestItem().getPurchaseInDefault(), scRequestNote);
-				}
-			}
 
 			if(isDigiSigningRequired(RoleCode.RN_APPROVER.value())) {
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-			}
+			}	
 		} else {
 			getManagedBean().setAutoUpdate(Boolean.TRUE);
 			updateBPMTask(outcome, null);
