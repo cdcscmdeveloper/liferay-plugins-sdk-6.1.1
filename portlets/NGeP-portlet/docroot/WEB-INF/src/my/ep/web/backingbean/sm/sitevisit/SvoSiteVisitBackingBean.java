@@ -366,7 +366,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			if(viewMode.equalsIgnoreCase("V")){
 				this.getManagedBean().setViewMode(true);
 			}
-
+		
 			this.getManagedBean().setLastIndex(i);
 			
 			getTotalBODMgmtWorkerEquityOwner();
@@ -499,7 +499,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				retrievUploadedSiteVisitReport(getManagedBean().getSmSvTask().getSmSvTemplates());
 			}
 		}
-
 	}
 	
 	/**
@@ -2150,7 +2149,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			}
 		}catch(Exception ex){
 			RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
-			throw new EpException(ex.getCause().getMessage());
+			throw new EpException(ex.getMessage());
 		}
 		
 		return null;
@@ -2435,4 +2434,17 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 	}
 
+	public void signBoardOnChange(){
+		if(!getManagedBean().getSmSvTask().getSmSvOffice().isSignboardValid()){
+			
+			getManagedBean().getSmSvTask().getSmSvOffice().setSignboardRemark(null);
+		}
+	}
+	
+	public void shareWithOnChange(){
+		if(!getManagedBean().getSmSvTask().getSmSvOffice().isShare()){
+			
+			getManagedBean().getSmSvTask().getSmSvOffice().setShareWithRemark(null);
+		}
+	}
 }
