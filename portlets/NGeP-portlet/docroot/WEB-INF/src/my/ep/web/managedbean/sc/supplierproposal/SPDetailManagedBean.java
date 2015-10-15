@@ -36,6 +36,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.backingbean.sc.supplierproposal.TechnicalStaffBean;
+import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -92,6 +93,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	// MenuModel
 	private MenuModel proposalZonalMenuModel;
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
+	private TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
 
 	private List<ScQtProposalScore> scQtProposalScoreList;
 	private ScQtProposalScore scQtProposalScore;
@@ -1564,5 +1566,14 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	public void setFinanicialOnlyCheckList(boolean finanicialOnlyCheckList) {
 		this.finanicialOnlyCheckList = finanicialOnlyCheckList;
 	}
+
+	/**
+	 * @return the templateSpecBackingBean
+	 */
+	public TemplateSpecBackingBean getTemplateSpecBackingBean() {
+		return templateSpecBackingBean;
+	}
+	
+	
 	
 }

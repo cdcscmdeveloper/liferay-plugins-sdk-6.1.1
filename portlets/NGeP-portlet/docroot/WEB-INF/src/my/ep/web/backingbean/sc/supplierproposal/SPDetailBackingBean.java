@@ -2095,6 +2095,7 @@ public class SPDetailBackingBean extends
 				templateSpecBean.setContentType(reqDTO.getContentType());
 				templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
 				templateSpecBean.setSelectedSpecQuestion(null);
+				this.getManagedBean().getTemplateSpecBackingBean().calcGrandTotalAmount(templateSpecBean);
 				if (getManagedBean().getQt().isZonal()) {
 					getManagedBean().getZoneTplSpecBeanMap().put(
 							getManagedBean().getSelectedZone().getSpecZoneId(),

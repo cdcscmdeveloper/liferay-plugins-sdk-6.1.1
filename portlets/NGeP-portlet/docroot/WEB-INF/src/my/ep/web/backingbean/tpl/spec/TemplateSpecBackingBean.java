@@ -913,6 +913,7 @@ public class TemplateSpecBackingBean extends
 
 			specAnswer.setAnswerNumeric(totalPrice);
 		}
+		calcGrandTotalAmount(templateSpecBean);
 	}
 	
 	public void deleteConfirmationAction(TemplateSpecBean templateSpecBean, TplSpecQuestion question) {
@@ -1625,7 +1626,7 @@ public class TemplateSpecBackingBean extends
 		specMaster.setTotalAmountPerYear(totalAmountPerYear);
 		specMaster.setTotalAmount(totalAmount);
 
-		return totalAmountPerYear;
+		return totalAmount;
 	}
 
 	/**
