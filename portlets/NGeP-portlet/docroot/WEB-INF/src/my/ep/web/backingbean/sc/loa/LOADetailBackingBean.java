@@ -3392,7 +3392,7 @@ public class LOADetailBackingBean extends
 				.toString());
 
 		BigDecimal  totalAmount = BigDecimal.valueOf(0d);
-		BigDecimal subTotal = TemplateSpecHelper.getInstance().calcTotalAmount(item.getScRequestItem().getTplSpecQuestion(), 
+		BigDecimal subTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(item.getScRequestItem().getTplSpecQuestion(), 
 				item.getUnitPrice(), item.getQty());
 		totalAmount = totalAmount.add(subTotal);
 		totalAmount =  totalAmount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
@@ -3905,7 +3905,7 @@ public class LOADetailBackingBean extends
 	 * @return the big decimal
 	 */
 	public BigDecimal calcSubTotalPrice(ScLoiLoaItem scLoiLoaItem) {
-		BigDecimal total = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
+		BigDecimal total = TemplateSpecHelper.getInstance().calculateTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
 				scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
 
 		return total;
