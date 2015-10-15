@@ -1920,9 +1920,9 @@ public class QTCommitteBackingBean extends
 				return true;
 			} else if (QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT
 					.compareTo(this.getManagedBean().getCurrentStatusId()) < 0
-					&& (!SCProcessNameConst.REVISE_COMMITTEE
+					&& !(SCProcessNameConst.REVISE_COMMITTEE
 							.equalsIgnoreCase(this.getManagedBean()
-									.getTaskName()) || !SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
+									.getTaskName()) || SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
 							.equalsIgnoreCase(this.getManagedBean()
 									.getTaskName()))) {
 				return true;
