@@ -20,7 +20,7 @@
 			</tr>
 		</table>
 
-		<p:spacer height="1" />
+		<p:spacer height="1px" />
 		<h:panelGroup id="conformDlgId">
 			<div class="ppRightBtn" style="width: 100%">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
@@ -42,86 +42,85 @@
 			</div>
 		</h:panelGroup>
 	</p:dialog>
-     <p:spacer height="2px" />
+	<p:spacer height="2px" />
 	<div class="ppLeftBtn">
-		<p:commandButton immediate="true" id="backButton"
-			value="#{lbl['lbl.btn.item.search']}" partialSubmit="true"
-			process="@this" style="float:left;"
-			rendered="#{isEditable}"
-			action="#{simpleQuoteBackingBean.backToPrevious}"
-			title="#{lbl['lbl.sc.itemsearch.tooltip']}">
-		</p:commandButton>
-
 		<p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}"
 			partialSubmit="true" process="@this" style="float:left;"
 			rendered="#{!isEditable}"
 			action="#{simpleQuoteBackingBean.backToPrevious}" />
 	</div>
 
-	<c:if test="#{simpleQuoteBackingBean.managedBean.taskId eq null}">
-		<div class="ppRightBtn">
+	<div class="ppRightBtn">
+		<c:if test="#{simpleQuoteBackingBean.managedBean.taskId eq null}">
+			<p:commandButton immediate="true" id="backButton"
+				value="#{lbl['lbl.btn.item.search']}" partialSubmit="true"
+				process="@this" style="float:left;" rendered="#{isEditable}"
+				action="#{simpleQuoteBackingBean.backToPrevious}"
+				title="#{lbl['lbl.sc.itemsearch.tooltip']}">
+			</p:commandButton>
+			
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 				action="#{simpleQuoteBackingBean.saveSimpleQuote('')}"
-				process="@all" update="@form"
-				rendered="#{simpleQuoteBackingBean.managedBean.editableFlag}" />
+				process="@all" update="@form" rendered="#{isEditable}" />
+				
 			<p:commandButton value="#{lbl['lbl.btn.submit']}"
 				actionListener="#{simpleQuoteBackingBean.submitPromptAction}"
-				update="@form" process="@all"
-				rendered="#{simpleQuoteBackingBean.managedBean.editableFlag}">
-
+				update="@form" process="@all" rendered="#{isEditable}">
 				<ui:param name="action" value=""></ui:param>
 				<f:setPropertyActionListener
 					target="#{simpleQuoteBackingBean.managedBean.selectedAction}"
 					value="#{action}" />
 			</p:commandButton>
+			
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 				action="#{simpleQuoteBackingBean.cancel}" style="float:right;"
-				process="@this" partialSubmit="true"
-				rendered="#{simpleQuoteBackingBean.managedBean.editableFlag}" />
-		</div>
-	</c:if>
+				process="@this" partialSubmit="true" rendered="#{isEditable}" />
+		</c:if>
+	</div>
 
-	<c:if test="#{simpleQuoteBackingBean.managedBean.taskId ne null}">
-		<div class="ppRightBtn">
+	<div class="ppRightBtn">
+		<c:if
+			test="#{simpleQuoteBackingBean.managedBean.taskId ne null and isEditable}">
 			<!-- to view simple Quote from the request note header  Icon    -->
-			<c:if test="#{simpleQuoteBackingBean.managedBean.editableFlag}">
-				<c:if
-					test="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus.statusId eq DPStatusConstants.rnPendingApproval 
-									  or isEditable}">
-					<p:commandButton value="#{lbl['lbl.btn.save']}"
+
+			<p:commandButton immediate="true" id="backButton"
+				value="#{lbl['lbl.btn.item.search']}" partialSubmit="true"
+				process="@this" style="float:left;" rendered="#{isEditable}"
+				action="#{simpleQuoteBackingBean.backToPrevious}"
+				title="#{lbl['lbl.sc.itemsearch.tooltip']}">
+			</p:commandButton>
+
+			<p:commandButton value="#{lbl['lbl.btn.save']}"
+				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+				action="#{simpleQuoteBackingBean.saveSimpleQuote('Save')}"
+				update="@form" process="@all" />
+
+			<ui:repeat var="bpmAction"
+				value="#{simpleQuoteBackingBean.managedBean.outComes}">
+				<ui:param name="buttonLabel"
+					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+
+				<h:panelGroup rendered="#{bpmAction eq 'SUBMIT'}">
+					<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
+						partialSubmit="true" process="@form"
+						actionListener="#{simpleQuoteBackingBean.submitPromptAction}"
+						update="@form">
+						<f:setPropertyActionListener
+							target="#{simpleQuoteBackingBean.managedBean.selectedAction}"
+							value="#{bpmAction}" />
+					</p:commandButton>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{bpmAction eq 'CANCEL'}">
+					<p:commandButton value="#{lbl[buttonLabel]}" process="@all"
+						update="@form" styleClass="ui-button"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						action="#{simpleQuoteBackingBean.saveSimpleQuote('Save')}"
-						update="@form" process="@all" />
-				</c:if>
+						actionListener="#{simpleQuoteBackingBean.submitSimpleQuote(bpmAction)}" />
+				</h:panelGroup>
+			</ui:repeat>
 
-				<ui:repeat var="bpmAction"
-					value="#{simpleQuoteBackingBean.managedBean.outComes}">
-					<ui:param name="buttonLabel"
-						value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-
-					<h:panelGroup rendered="#{bpmAction eq 'SUBMIT'}">
-						<p:commandButton value="#{lbl[buttonLabel]}"
-							rendered="#{isEditable}" styleClass="ui-button"
-							partialSubmit="true" process="@form"
-							actionListener="#{simpleQuoteBackingBean.submitPromptAction}"
-							update="@form">
-							<f:setPropertyActionListener
-								target="#{simpleQuoteBackingBean.managedBean.selectedAction}"
-								value="#{bpmAction}" />
-						</p:commandButton>
-					</h:panelGroup>
-					<h:panelGroup rendered="#{bpmAction eq 'CANCEL'}">
-						<p:commandButton value="#{lbl[buttonLabel]}" process="@all"
-							update="@form" rendered="#{isEditable}"
-							styleClass="ui-button" onstart="blockWidget.show();"
-							oncomplete="blockWidget.hide();"
-							actionListener="#{simpleQuoteBackingBean.submitSimpleQuote(bpmAction)}" />
-					</h:panelGroup>
-				</ui:repeat>
-
-			</c:if>
-		</div>
-	</c:if>
+		</c:if>
+	</div>
+		<p:spacer height="2px" />
 </ui:composition>

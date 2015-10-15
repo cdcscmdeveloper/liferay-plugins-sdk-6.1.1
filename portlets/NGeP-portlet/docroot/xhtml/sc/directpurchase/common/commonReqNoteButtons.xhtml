@@ -6,6 +6,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
+	<ui:param name="isSourceMethodSC"
+		value="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC'}" />
+
 	<p:dialog id="deliveryTermConform" widgetVar="deliveryTermConform"
 		header="#{lbl['lbl.sc.submit.confirmation']}" resizable="false"
 		width="500" height="100" closable="false" modal="true">
@@ -21,10 +24,15 @@
 		<h:panelGroup id="conformDlgId">
 			<div class="ppRightBtn" style="width: 100%">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
+					rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}"
 					onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();deliveryTermConform.hide();"
-					actionListener="#{requestNoteBackingBean.submitAction(requestNoteBackingBean.managedBean.selectedAction)}">
-				</p:commandButton>
+					actionListener="#{requestNoteBackingBean.submitAction(requestNoteBackingBean.managedBean.action)}" />
+
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
+					rendered="#{isPendingApprovalStatus}" onstart="blockWidget.show();"
+					oncomplete="blockWidget.hide();deliveryTermConform.hide();"
+					actionListener="#{requestNoteBackingBean.approverAction(requestNoteBackingBean.managedBean.action)}" />
 
 				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
 					process="@this" onclick="deliveryTermConform.hide();" type="button" />
@@ -48,7 +56,7 @@
 					style="float:left;" id="backButton" partialSubmit="true"
 					process="@this" immediate="true"
 					action="#{requestNoteBackingBean.backToPrevious}"
-					rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC' and requestNoteBackingBean.managedBean.itemSearchBackBtn}"
+					rendered="#{isSourceMethodSC and requestNoteBackingBean.managedBean.itemSearchBackBtn}"
 					title="#{lbl['lbl.sc.itemsearch.tooltip']}">
 				</p:commandButton>
 
@@ -63,7 +71,7 @@
 					action="#{requestNoteBackingBean.deliveryTermPrompt('')}"
 					process="@all">
 					<f:setPropertyActionListener
-						target="#{requestNoteBackingBean.managedBean.selectedAction}"
+						target="#{requestNoteBackingBean.managedBean.action}"
 						value="" />
 				</p:commandButton>
 
@@ -81,43 +89,26 @@
 							process="@this" partialSubmit="true" style="float:left;"
 							immediate="true"
 							action="#{requestNoteBackingBean.backToPrevious}"
-							rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC' and requestNoteBackingBean.managedBean.itemSearchBackBtn}" />
+							rendered="#{isSourceMethodSC and requestNoteBackingBean.managedBean.itemSearchBackBtn}" />
 					</c:if>
-					<c:if
-						test="#{isPendingApprovalStatus or isPendingSubmissionStatus 
-									  or isPendingRevisionStatus}">
-						<p:commandButton value="#{lbl['lbl.btn.save']}"
-							action="#{requestNoteBackingBean.saveAction('Save')}"
-							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							process="@this" />
 
-					</c:if>
+					<p:commandButton value="#{lbl['lbl.btn.save']}"
+						action="#{requestNoteBackingBean.saveAction('Save')}"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+						process="@this" />
+
 					<ui:repeat var="bpmAction"
 						value="#{requestNoteBackingBean.managedBean.outComes}">
 						<ui:param name="buttonLabel"
 							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-
-						<!-- TODO later on should check base on the work flow status instead of check the Pr Inquiry -->
-						<p:commandButton value="#{lbl[buttonLabel]}" process="@form"
-							partialSubmit="true" update="@form"
-							rendered="#{!unspscCodeBackingBean.isRequisitioner()}"
+						<ui:param name="isCancel" value="${bpmAction == 'CANCEL'}" />
+						
+						<p:commandButton value="#{lbl[buttonLabel]}" partialSubmit="true"
 							styleClass="ui-button" onstart="blockWidget.show();"
 							oncomplete="blockWidget.hide();"
-							actionListener="#{requestNoteBackingBean.approverAction(bpmAction)}" />
-
-						<ui:param name="isCancel" value="${bpmAction == 'CANCEL'}" />
-
-						<p:commandButton value="#{lbl[buttonLabel]}"
-							rendered="#{unspscCodeBackingBean.isRequisitioner()}"
-							partialSubmit="true" styleClass="ui-button"
-							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							process="#{isCancel ? '@this,  @([id$= remark])' : '@form'}"
 							update="#{isCancel ? '@this,  @([id$= remark])' : '@form'}"
-							actionListener="#{requestNoteBackingBean.deliveryTermPrompt(bpmAction)}">
-							<f:setPropertyActionListener
-								target="#{requestNoteBackingBean.managedBean.selectedAction}"
-								value="#{bpmAction}" />
-						</p:commandButton>
+							actionListener="#{requestNoteBackingBean.deliveryTermPrompt(bpmAction)}"/>
 					</ui:repeat>
 				</div>
 			</c:if>
