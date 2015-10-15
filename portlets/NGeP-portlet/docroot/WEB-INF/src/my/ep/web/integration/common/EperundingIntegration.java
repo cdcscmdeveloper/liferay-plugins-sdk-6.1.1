@@ -59,14 +59,18 @@ public class EperundingIntegration extends EperundingTemplate{
 	
 	private static Logger log = EpLogger.getLogger(EperundingIntegration.class);
 	SupplierSearchReqDTO reqDTO = null;
+	List<Long> SupplierIdList;
+	Date dataStartTime=null,dataEndTime=null;
+	
+	public EperundingIntegration(){
+		SupplierIdList = getConsultantIds();
+	}
 
 	@Override
 	public void createFilesAuthMgtEqtBODforEperunding() {
 		
 		reqDTO = new SupplierSearchReqDTO();
-		
-		reqDTO.setCreateDate(currentDate);
-		reqDTO.setSuppType(IntegrationConstants.CONSULTANT_PROFILE_CODE);
+		reqDTO.setSupplierIdList(SupplierIdList);
 		
 		SupplierSearchResDTO resDTO = supplierSearchSO.getEquityBodMgtAuthEperunding(reqDTO);
 
@@ -196,8 +200,8 @@ public class EperundingIntegration extends EperundingTemplate{
 		}
 		BatchReqDTO<EquityOwner> batchReqDTO = new BatchReqDTO<EquityOwner>();
 		batchReqDTO.setFilePath(path);
-		batchReqDTO.setDataStartTime(resDTO.getDataStartTime());
-		batchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+		batchReqDTO.setDataStartTime(dataStartTime);
+		batchReqDTO.setDataEndTime(dataEndTime);
 		batchReqDTO.setBatchContent(equityOwnerList);
 		fileUtility.equityOwnerOutPutStream(batchReqDTO);
 	}
@@ -316,8 +320,8 @@ public class EperundingIntegration extends EperundingTemplate{
 		}
 		BatchReqDTO<BoardOfDirector> batchReqDTO = new BatchReqDTO<BoardOfDirector>();
 		batchReqDTO.setFilePath(path);
-		batchReqDTO.setDataStartTime(resDTO.getDataStartTime());
-		batchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+		batchReqDTO.setDataStartTime(dataStartTime);
+		batchReqDTO.setDataEndTime(dataEndTime);
 		batchReqDTO.setBatchContent(boardOfDirectorsList);
 		fileUtility.boardOfDirectorOutPutStream(batchReqDTO);
 	}
@@ -450,8 +454,8 @@ public class EperundingIntegration extends EperundingTemplate{
 		}
 		BatchReqDTO<ManagementPersonnel> batchReqDTO = new BatchReqDTO<ManagementPersonnel>();
 		batchReqDTO.setFilePath(path);
-		batchReqDTO.setDataStartTime(resDTO.getDataStartTime());
-		batchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+		batchReqDTO.setDataStartTime(dataStartTime);
+		batchReqDTO.setDataEndTime(dataEndTime);
 		batchReqDTO.setBatchContent(managementPersonnelsList);
 		fileUtility.managementProfileFileOutPutStream(batchReqDTO);
 		
@@ -496,8 +500,8 @@ public class EperundingIntegration extends EperundingTemplate{
 		}
 		BatchReqDTO<Signatory> batchReqDTO = new BatchReqDTO<Signatory>();
 		batchReqDTO.setFilePath(path);
-		batchReqDTO.setDataStartTime(resDTO.getDataStartTime());
-		batchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+		batchReqDTO.setDataStartTime(dataStartTime);
+		batchReqDTO.setDataEndTime(dataEndTime);
 		batchReqDTO.setBatchContent(signatoryList);
 	
 		fileUtility.signatoryFileOutPutStream(batchReqDTO);
@@ -514,8 +518,7 @@ public class EperundingIntegration extends EperundingTemplate{
 		
 		reqDTO = new SupplierSearchReqDTO();
 		
-		reqDTO.setCreateDate(currentDate);
-		reqDTO.setSuppType(IntegrationConstants.CONSULTANT_PROFILE_CODE);
+		reqDTO.setSupplierIdList(SupplierIdList);
 		SupplierSearchResDTO resDTO = supplierSearchSO.getConsultantProfileEperunding(reqDTO); 
 
 		List<ConsultantProfile> consultantProfileList = new ArrayList<ConsultantProfile>();
@@ -657,8 +660,8 @@ public class EperundingIntegration extends EperundingTemplate{
 		}
 			BatchReqDTO<ConsultantProfile> batchReqDTO = new BatchReqDTO<ConsultantProfile>();
 			batchReqDTO.setFilePath(path);
-			batchReqDTO.setDataStartTime(resDTO.getDataStartTime());
-			batchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			batchReqDTO.setDataStartTime(dataStartTime);
+			batchReqDTO.setDataEndTime(dataEndTime);
 			batchReqDTO.setBatchContent(consultantProfileList);
 		
 			fileUtility.consultantProfileFileOutPutStream(batchReqDTO);
@@ -674,7 +677,6 @@ public class EperundingIntegration extends EperundingTemplate{
 		log.info("createDeletedCompany start");
 		
 		reqDTO = new SupplierSearchReqDTO();
-		
 		reqDTO.setCreateDate(currentDate);
 		SupplierSearchResDTO resDTO = supplierSearchSO.getDeletedCompanyEperunding(reqDTO); 
 
@@ -707,8 +709,8 @@ public class EperundingIntegration extends EperundingTemplate{
 			}
 			BatchReqDTO<DeletedCompany> batchReqDTO = new BatchReqDTO<DeletedCompany>();
 			batchReqDTO.setFilePath(path);
-			batchReqDTO.setDataStartTime(resDTO.getDataStartTime());
-			batchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			batchReqDTO.setDataStartTime(dataStartTime);
+			batchReqDTO.setDataEndTime(dataEndTime);
 			batchReqDTO.setBatchContent(deletedCompanyList);
 			
 			fileUtility.deletedCompanyOutPutStream(batchReqDTO);
@@ -724,9 +726,7 @@ public class EperundingIntegration extends EperundingTemplate{
 		log.info("createGovernmentProject start");
 		
 		reqDTO = new SupplierSearchReqDTO();
-		
-		reqDTO.setCreateDate(currentDate);
-		reqDTO.setSuppType(IntegrationConstants.CONSULTANT_PROFILE_CODE);
+		reqDTO.setSupplierIdList(SupplierIdList);
 		
 		SupplierSearchResDTO resDTO = supplierSearchSO.getGovernProjEperunding(reqDTO); 
 		
@@ -767,8 +767,8 @@ public class EperundingIntegration extends EperundingTemplate{
 			}
 			BatchReqDTO<GovernmentProject> batchReqDTO = new BatchReqDTO<GovernmentProject>();
 			batchReqDTO.setFilePath(path);
-			batchReqDTO.setDataStartTime(resDTO.getDataStartTime());
-			batchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			batchReqDTO.setDataStartTime(dataStartTime);
+			batchReqDTO.setDataEndTime(dataEndTime);
 			batchReqDTO.setBatchContent(governmentProjectList);
 			
 			fileUtility.governmentProjectOutPutStream(batchReqDTO);
@@ -783,8 +783,7 @@ public class EperundingIntegration extends EperundingTemplate{
 		log.info("createRegisteredCategory start");
 		
 		reqDTO = new SupplierSearchReqDTO();
-		reqDTO.setCreateDate(currentDate);
-		reqDTO.setSuppType(IntegrationConstants.CONSULTANT_PROFILE_CODE);
+		reqDTO.setSupplierIdList(SupplierIdList);
 		SupplierSearchResDTO resDTO = supplierSearchSO.getRegisteredCategoryEperunding(reqDTO); 
 
 		List<RegisteredCategory> registeredCategoryList = new ArrayList<RegisteredCategory>();
@@ -812,8 +811,8 @@ public class EperundingIntegration extends EperundingTemplate{
 			}
 			BatchReqDTO<RegisteredCategory> batchReqDTO = new BatchReqDTO<RegisteredCategory>();
 			batchReqDTO.setFilePath(path);
-			batchReqDTO.setDataStartTime(resDTO.getDataStartTime());
-			batchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			batchReqDTO.setDataStartTime(dataStartTime);
+			batchReqDTO.setDataEndTime(dataEndTime);
 			batchReqDTO.setBatchContent(registeredCategoryList);
 			
 			fileUtility.registeredCategoryOutPutStream(batchReqDTO);
@@ -828,8 +827,7 @@ public class EperundingIntegration extends EperundingTemplate{
 		log.info("createBranchCompany start");
 		
 		reqDTO = new SupplierSearchReqDTO();
-		reqDTO.setCreateDate(currentDate);
-		reqDTO.setSuppType(IntegrationConstants.CONSULTANT_PROFILE_CODE);
+		reqDTO.setSupplierIdList(SupplierIdList);
 		SupplierSearchResDTO resDTO = supplierSearchSO.getBranchComapanyEperunding(reqDTO);
 
 		List<BranchCompany> branchCompanyList = new ArrayList<BranchCompany>();
@@ -880,8 +878,8 @@ public class EperundingIntegration extends EperundingTemplate{
 			}
 			BatchReqDTO<BranchCompany> batchReqDTO = new BatchReqDTO<BranchCompany>();
 			batchReqDTO.setFilePath(path);
-			batchReqDTO.setDataStartTime(resDTO.getDataStartTime());
-			batchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			batchReqDTO.setDataStartTime(dataStartTime);
+			batchReqDTO.setDataEndTime(dataEndTime);
 			batchReqDTO.setBatchContent(branchCompanyList);
 			
 			fileUtility.branchCompanyOutPutStream(batchReqDTO);
@@ -897,8 +895,7 @@ public class EperundingIntegration extends EperundingTemplate{
 		log.info("createCompanyOwner start");
 		
 		reqDTO = new SupplierSearchReqDTO();
-		reqDTO.setCreateDate(currentDate);
-		reqDTO.setSuppType(IntegrationConstants.CONSULTANT_PROFILE_CODE);
+		reqDTO.setSupplierIdList(SupplierIdList);
 		SupplierSearchResDTO resDTO = supplierSearchSO.getCompanyOwnerEperunding(reqDTO);
 
 		List<CompanyOwner> companyOwnerList = new ArrayList<CompanyOwner>();
@@ -971,8 +968,8 @@ public class EperundingIntegration extends EperundingTemplate{
 			}
 			BatchReqDTO<CompanyOwner> batchReqDTO = new BatchReqDTO<CompanyOwner>();
 			batchReqDTO.setFilePath(path);
-			batchReqDTO.setDataStartTime(resDTO.getDataStartTime());
-			batchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			batchReqDTO.setDataStartTime(dataStartTime);
+			batchReqDTO.setDataEndTime(dataEndTime);
 			batchReqDTO.setBatchContent(companyOwnerList);
 			
 			fileUtility.companyOwnerOutPutStream(batchReqDTO);
@@ -987,8 +984,7 @@ public class EperundingIntegration extends EperundingTemplate{
 		log.info("createAssociatedCompany start");
 		
 		reqDTO = new SupplierSearchReqDTO();
-		reqDTO.setCreateDate(currentDate);
-		reqDTO.setSuppType(IntegrationConstants.CONSULTANT_PROFILE_CODE);
+		reqDTO.setSupplierIdList(SupplierIdList);
 		SupplierSearchResDTO resDTO = supplierSearchSO.getAssociatedComapanyEperunding(reqDTO);
 
 		List<AssociatedCompany> associatedCompanyList = new ArrayList<AssociatedCompany>();
@@ -1067,8 +1063,8 @@ public class EperundingIntegration extends EperundingTemplate{
 			}
 			BatchReqDTO<AssociatedCompany> batchReqDTO = new BatchReqDTO<AssociatedCompany>();
 			batchReqDTO.setFilePath(path);
-			batchReqDTO.setDataStartTime(resDTO.getDataStartTime());
-			batchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			batchReqDTO.setDataStartTime(dataStartTime);
+			batchReqDTO.setDataEndTime(dataEndTime);
 			batchReqDTO.setBatchContent(associatedCompanyList);
 			
 			fileUtility.AssociatedCompanyOutPutStream(batchReqDTO);
@@ -1191,5 +1187,23 @@ public class EperundingIntegration extends EperundingTemplate{
 		return compType;
 
 	}
-
+	
+	public List<Long> getConsultantIds(){
+		
+		List<Long> SupplierIdList = new ArrayList<>();
+		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+		reqDTO.setCreateDate(new Date());
+		reqDTO.setSuppType("J");
+		SupplierSearchResDTO resDTO = supplierSearchSO.getModifiedAndNewConsultants(reqDTO);
+		if(resDTO.isSuccessful()){
+			for(SmSupplier supplier:resDTO.getSmSuppliers()){
+				SupplierIdList.add(supplier.getSupplierId());
+			}
+			dataStartTime = resDTO.getDataStartTime();
+			dataEndTime = resDTO.getDataEndTime();
+		}
+		
+		return SupplierIdList;
+	}
+	
 }

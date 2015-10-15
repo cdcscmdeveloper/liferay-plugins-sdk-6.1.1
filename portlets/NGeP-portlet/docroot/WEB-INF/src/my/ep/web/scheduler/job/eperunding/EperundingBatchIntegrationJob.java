@@ -43,11 +43,11 @@ public class EperundingBatchIntegrationJob implements Job {
 	  eperundingTemplate.createCompanyOwner();
 	  eperundingTemplate.createAssociatedCompany();
 	  
-//	  INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance()
-//				.getOSBServiceObject(INtfSO.class);
-//		
-//		TestNtfViaEmail testNtfViaEmail = new TestNtfViaEmail();
-//		testNtfViaEmail.sendFilestoMail(ntfSO);
+	  INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance()
+				.getOSBServiceObject(INtfSO.class);
+		
+		TestNtfViaEmail testNtfViaEmail = new TestNtfViaEmail();
+		testNtfViaEmail.sendFilestoMail(ntfSO);
 	  log.info("EperundingBatchIntegrationJob end");
        
 		
