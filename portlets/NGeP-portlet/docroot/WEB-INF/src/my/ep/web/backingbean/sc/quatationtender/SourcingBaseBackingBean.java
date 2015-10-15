@@ -1032,7 +1032,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-		reqDTO.setLanguageCode("en");
+		reqDTO.setLanguageCode(CommonConstants.DEFAULT_LANGUAGE_CODE);
 		UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
 		List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
 
