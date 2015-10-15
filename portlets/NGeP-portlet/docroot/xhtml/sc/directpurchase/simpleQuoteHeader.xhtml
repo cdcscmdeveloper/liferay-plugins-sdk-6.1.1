@@ -5,10 +5,10 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:outputPanel id="sqHeader">
-		<div align="left" class="header-info">
+		<div align="left" >
 			<table style="width: 100%">
 				<tr>
-					<td style="width:8%"><h:outputLabel
+					<td style="width:9%"><h:outputLabel
 							value="#{lbl['lbl.sc.sq.simple.quote.no']}" /></td>
 					<td class="header-info-text">
 						#{simpleQuoteBackingBean.managedBean.scQuote.quoteNo == null ? lbl['lbl.sc.system.generated'] : simpleQuoteBackingBean.managedBean.scQuote.quoteNo}
