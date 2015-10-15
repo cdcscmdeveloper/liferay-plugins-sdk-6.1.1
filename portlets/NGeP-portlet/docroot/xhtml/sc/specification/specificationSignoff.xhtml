@@ -81,7 +81,7 @@
 		<ui:include src="reminderpopup.xhtml" /> -->
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true" rendered="#{specificationBackingBean.managedBean.currentStatusId eq '60401'}">
 		<table style="width: 100%" id="remarkslist">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
