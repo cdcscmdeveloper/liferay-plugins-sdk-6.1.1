@@ -65,7 +65,7 @@
 		<f:facet name="footer">
 			<h:outputText id="totalAmountPerYr" 
 				styleClass="calcAmount" 
-				value="#{templateSpecBackingBean.calcGrandTotalAmount(templateSpecBean)}">
+				value="#{templateSpecBean.specMaster.totalAmountPerYear}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>
 		</f:facet>
