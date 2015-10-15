@@ -2262,7 +2262,7 @@ public class NoticeBoardBackingBean extends
 		try {
 			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
-			return qtNoticeBoardSO.retrieveQtNoticeDtl(reqDTO);
+			return qtNoticeBoardSO.retrieveScQt(reqDTO);
 		} finally {
 			qtNoticeBoardSO = null;
 		}
