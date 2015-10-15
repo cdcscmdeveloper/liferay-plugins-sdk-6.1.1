@@ -4480,7 +4480,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		for (CtItemPrice serviceItemPrice : serviceList) {
 			jadualHarga = mappingJadualHarga(serviceItemPrice, ParameterConst.ITEM_TYPE_SERVICE);
 			serviceJadualHargaList.add(jadualHarga);
-		}		
+		}
+		if (!productList.isEmpty() || !serviceList.isEmpty())
 		generateJadualHarga(filePath, productJadualHargaList, serviceJadualHargaList);
 	}
 	
@@ -4794,16 +4795,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 *         false, if the contract is without gst
      */
 	public boolean contractWithGst(){
-		if (isContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())
-	    		|| (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null 
-	    		&& getManagedBean().getContractVer().getCtContractAmount().getGstAmount().doubleValue() != 0)) {
-	    	return true;
-	    } else {
-	    	return false;
-	    }
-	}
-	
-	public boolean uomPerDayMonthYear(){
 		if (isContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())
 	    		|| (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null 
 	    		&& getManagedBean().getContractVer().getCtContractAmount().getGstAmount().doubleValue() != 0)) {
