@@ -4968,7 +4968,7 @@ public class DirectLOABackingBean extends
 				.toString());
 
 		BigDecimal totalAmount = BigDecimal.valueOf(0d);
-		BigDecimal subTotal = TemplateSpecHelper.getInstance().calcTotalAmount(
+		BigDecimal subTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(
 				specQuestion,
 				unitPrice, qty);
 		if (subTotal != null) {

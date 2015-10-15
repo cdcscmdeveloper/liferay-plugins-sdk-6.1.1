@@ -4643,7 +4643,7 @@ public class LOIDetailBackingBean extends
 	 * @return the big decimal
 	 */
 	public BigDecimal calcSubTotalPrice(ScLoiLoaItem scLoiLoaItem) {
-		BigDecimal total = TemplateSpecHelper.getInstance().calcTotalAmount(
+		BigDecimal total = TemplateSpecHelper.getInstance().calculateTotalAmount(
 				scLoiLoaItem.getScRequestItem().getTplSpecQuestion(),
 				scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
 
