@@ -34,11 +34,31 @@
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.officeloc.sign.board']}" /></td>
-				<td><p:selectBooleanCheckbox value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.signboardValid}" /></td>
+				<td>
+					<p:selectBooleanCheckbox value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.signboardValid}">
+						<p:ajax event="change" update="txtSignBoardRmk" listener="#{svoSiteVisitBackingBean.signBoardOnChange}" />
+					</p:selectBooleanCheckbox>
+				</td>
 				<td><p:outputLabel value="#{lbl['lbl.sm.officeloc.share.with']}" /></td>
-				<td><p:selectBooleanCheckbox value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.share}" /></td>
+				<td><p:selectBooleanCheckbox value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.share}">
+						<p:ajax event="change" update="txtShareWithRmk" listener="#{svoSiteVisitBackingBean.shareWithOnChange}" />
+					</p:selectBooleanCheckbox>
+				</td>
 			</tr>
-
+			
+			<tr>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
+				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="255" id="txtSignBoardRmk" 
+					disabled="#{!svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.signboardValid}" 
+					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.signboardRemark}" /></td>
+					
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
+				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="255" id="txtShareWithRmk"
+					disabled="#{!svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.share}" 
+					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.shareWithRemark}" /></td>
+			</tr>
+			
+			<tr><td>&#160;</td></tr>
 			
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.officeloc.office.arrngmnt']}" /></td>
