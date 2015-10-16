@@ -43,14 +43,13 @@
 		<br />
 		<div class="ppRightBtn">
 			<!--  Popup Category Details -->
-			<ac:lov id="lovCategory" lovId="PM_CATEGORY_L3_ALL"
-				styleClass="ppDisplayCalS" readonly="true" selectionMode="multiple"
-				buttonLabel="#{lbl['lbl.btn.add']}"
-				headerText="#{lbl['lbl.pm.search.category']}"
-				update=":form:tvDocRestriction:dtCat"
-				saveObject="supportDocBackingBean.managedBean.selectedCategoryL3s"
-				postUpdateListener="supportDocBackingBean.updateCategoryL3"
-				conditionField="recordStatus^1" />
+		   <p:commandButton value="#{lbl['lbl.btn.add']}"
+						process="@this" partialSubmit="true" update="@([id$=catCodePopup])" style="float:right;"
+						oncomplete="catCodePopup.show();" action="#{categoryCodeSearchBackingBean.renewSesionObject}">								
+			</p:commandButton>
+
+        <ac:categoryCodePopup okAction="supportDocBackingBean.updateCategoryL3"
+						update=":form:tvDocRestriction:dtCat" />
 
 		</div>
 	</p:outputPanel>
