@@ -28,11 +28,11 @@
 					</tr>
 					<tr>
 						<td><p:outputLabel style="width:auto;background-color:whitesmoke;font-size: 12px;font-weight: bold;font-family:Arial;float:right;" value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
-						<td style="word-wrap: break-word"><p:outputLabel styleClass="outputLabel-view" value="#{cc.attrs.poRemark==null?lbl['lbl.sm.remarks.none']:cc.attrs.poRemark}"/></td>
+						<td style="word-wrap: break-word"><p:outputLabel styleClass="outputLabel-view" value="#{empty cc.attrs.poRemark?lbl['lbl.sm.remarks.none']:cc.attrs.poRemark}"/></td>
 					</tr>
 					<tr>
 						<td><p:outputLabel style="width:auto;background-color:whitesmoke;font-size: 12px;font-weight: bold;font-family:Arial;float:right;" value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
-						<td style="word-wrap: break-word"><p:outputLabel styleClass="outputLabel-view" value="#{cc.attrs.approverRemark==null?lbl['lbl.sm.remarks.none']:cc.attrs.approverRemark}"/></td>
+						<td style="word-wrap: break-word"><p:outputLabel styleClass="outputLabel-view" value="#{empty cc.attrs.approverRemark?lbl['lbl.sm.remarks.none']:cc.attrs.approverRemark}"/></td>
 					</tr>
 				</table>
 				
