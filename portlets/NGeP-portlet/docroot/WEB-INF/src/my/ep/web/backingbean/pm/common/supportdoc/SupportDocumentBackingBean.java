@@ -754,25 +754,24 @@ public class SupportDocumentBackingBean extends
 	 * 
 	 * @param pmCategoryL3s
 	 */
-	public void updateCategoryL3(List<BaseEntity> pmCategoryL3s) {
+	public void updateCategoryL3(PmCategoryL3 pmCategoryL3) {
 		log.info("updateCategoryL3");
-		if (pmCategoryL3s != null) {
+		this.getManagedBean().setSelectedCategoryL3(pmCategoryL3);
+		if (pmCategoryL3 != null) {
 			if (this.getManagedBean().getCategoryRestrictions() == null) {
 				this.getManagedBean().setCategoryRestrictions(
 						new ArrayList<PmDocumentRestr>());
 			}
 			if (isUniqueCategoryL3()) {
-				for (int i = 0; i < pmCategoryL3s.size(); i++) {
-					PmCategoryL3 pmCategoryL3 = (PmCategoryL3) pmCategoryL3s
-							.get(i);
+				
 					PmDocumentRestr categoryRestr = new PmDocumentRestr();
-					categoryRestr
-							.setPmCategoryL3(retrieveCategoryL3DtlById(pmCategoryL3
-									.getCategoryL3Id()));
+//					categoryRestr
+//							.setPmCategoryL3(retrieveCategoryL3DtlById(pmCategoryL3
+//									.getCategoryL3Id()));
+					categoryRestr.setPmCategoryL3(pmCategoryL3);
 					this.getManagedBean().getCategoryRestrictions()
 							.add(categoryRestr);
-				}
-				this.getManagedBean().getSelectedCategoryL3s().clear();
+//				this.getManagedBean().setSelectedCategoryL3(null);
 			} else {
 				throw new EpException(MessageConst.ERROR_770064);
 			}
@@ -787,8 +786,7 @@ public class SupportDocumentBackingBean extends
 	private boolean isUniqueCategoryL3() {
 		log.info("isUniqueCategoryL3");
 		boolean isUnique = true;
-		if (this.getManagedBean().getSelectedCategoryL3s() != null
-				&& !this.getManagedBean().getSelectedCategoryL3s().isEmpty()) {
+		if (this.getManagedBean().getSelectedCategoryL3() != null) {
 			if (this.getManagedBean().getCategoryRestrictions() != null
 					&& !this.getManagedBean().getCategoryRestrictions()
 							.isEmpty()) {
@@ -803,13 +801,11 @@ public class SupportDocumentBackingBean extends
 					}
 				}
 
-				for (PmCategoryL3 pmCategoryL3 : this.getManagedBean()
-						.getSelectedCategoryL3s()) {
-					if (categoryL3Id.contains(pmCategoryL3.getCategoryL3Id())) {
+
+					if (categoryL3Id.contains( this.getManagedBean().getSelectedCategoryL3().getCategoryL3Id())) {
 						isUnique = false;
-						break;
 					}
-				}
+
 
 				// Set<Long> tempRestrictIdSet = new
 				// HashSet<Long>(tempRestrictIdList);
