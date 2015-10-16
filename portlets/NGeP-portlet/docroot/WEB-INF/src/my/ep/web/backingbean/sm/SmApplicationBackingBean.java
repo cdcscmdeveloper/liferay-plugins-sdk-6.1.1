@@ -8940,6 +8940,44 @@ public class SmApplicationBackingBean extends
 				SmServiceLookup.getMofRegistrationSO()
 						.revertToSupplierOriginalApplication(reqDTO)
 						.getSmAppl());
+		initSmCompanyBasic(getManagedBean().getSmAppl());
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+						.getMessage(MessageConst.INFO_721033,
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+	}
+
+	private void initSmCompanyBasic(SmAppl smAppl) {
+		if (smAppl.getSmCompanyBasic() != null) {
+			if (smAppl.getSmCompanyBasic().getSmCompanyAddresses() != null
+					&& !smAppl.getSmCompanyBasic().getSmCompanyAddresses()
+							.isEmpty()) {
+				SmCompanyAddress comAdd = smAppl.getSmCompanyBasic()
+						.getSmCompanyAddresses().get(0);
+				SmAddress addr = comAdd.getSmAddress();
+				SmApplicationUtil.setPmStateDropdownValuesForBasicInfo(this
+						.getManagedBean(), addr.getPmCountry().getCountryId());
+				this.getManagedBean().setBasicCompanyDistricts(
+						SmCommonUtil.getDistrictList(addr.getPmState()
+								.getStateId()));
+				getManagedBean().setPrevBasicStateId(
+						addr.getPmState().getStateId());
+				this.getManagedBean().setBasicCompanyCities(
+						SmCommonUtil.getCityList(addr.getPmDistrict()
+								.getDistrictId()));
+			} else {
+				SmCompanyAddress comAdd = new SmCompanyAddress();
+				SmAddress addr = SmApplicationUtil
+						.setDefaultAddr(getManagedBean().getDefPmCountry());
+				comAdd.setSmAddress(addr);
+				List<SmCompanyAddress> addrs = new ArrayList<SmCompanyAddress>();
+				addrs.add(comAdd);
+				smAppl.getSmCompanyBasic().setSmCompanyAddresses(addrs);
+			}
+		}
 	}
 
 	/**
