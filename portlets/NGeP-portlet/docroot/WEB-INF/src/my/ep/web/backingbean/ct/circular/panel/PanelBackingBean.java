@@ -1176,9 +1176,15 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	     supplierReqDTO.setSupplierId(smSupplier.getSupplierId());
 		 supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,ISupplierSearchSO.class);
 	     supplierResDTO = supplierSearchSO.retrieveSmSupplierBankBySupplier(supplierReqDTO);
-    	if (supplierResDTO.getSmSupplierBankList() != null) {
+	     
+	     if (supplierResDTO.getSmSupplierBankList() != null) {
+	    	 
+	    	 if(supplierResDTO.getSmSupplierBankList().size() > 1){
+	    		 populateBankAccountList.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));	
+	    	 }
 				for (SmSupplierBank smSupplierBank : supplierResDTO.getSmSupplierBankList()) {
 					if (smSupplierBank.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					
 						String account = smSupplierBank.getAccountNo();
 						if (smSupplierBank.getPmFinancialOrg() != null 
 								&& smSupplierBank.getPmFinancialOrg().getFinOrgName() != null) {
