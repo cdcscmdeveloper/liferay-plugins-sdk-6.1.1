@@ -222,7 +222,7 @@ public class SupplierUserActivationBackingBean extends
 						this.getManagedBean().setValidActivation(false);
 //							this.getManagedBean().setSmPersonnel(null);
 //							renewSesionObject();
-						return navigateToAck();
+						return navigateToAck(resDTO.getNewEpNo());
 
 					}catch(Exception ex){
 						throw new EpException(ex.getMessage());
@@ -250,7 +250,7 @@ public class SupplierUserActivationBackingBean extends
 							this.getManagedBean().setValidActivation(false);
 							//this.getManagedBean().setSmPersonnel(null);
 							//renewSesionObject();
-							return navigateToAck();
+							return navigateToAck(resDTO.getNewEpNo());
 							
 						}catch(Exception ex){
 							log.info("activateSupplierUser>>>>>>" + ex.getMessage());
@@ -282,20 +282,12 @@ public class SupplierUserActivationBackingBean extends
 				new FacesMessage(FacesMessage.SEVERITY_ERROR,errMsg, errMsg));
 	}
 	
-	public String navigateToAck() {
+	public String navigateToAck(String epNo) {
 		// FacesScopes fs = new FacesScopes();
 		// String server = "http://" + fs.getRequest().getServerName() + ":" +
 		// fs.getRequest().getServerPort();
 		// String loginUrl = "<a href='" + server + "'>" + "login" + "</a>";
-		String epNo = this.getManagedBean().getSmPersonnel() != null
-				&& this.getManagedBean().getSmPersonnel().getSmAppl() != null
-				&& this.getManagedBean().getSmPersonnel().getSmAppl()
-						.getSmSupplier() != null
-				&& StringUtils
-						.isNotBlank(this.getManagedBean().getSmPersonnel()
-								.getSmAppl().getSmSupplier().getEpNo()) ? this
-				.getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier()
-				.getEpNo() : "";
+		
 		FacesContext.getCurrentInstance().addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
