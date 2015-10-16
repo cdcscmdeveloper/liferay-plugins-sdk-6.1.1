@@ -12853,7 +12853,7 @@ public class SpecificationBackingBean extends
 	 * @return navigate to acknowledgement page.
 	 */
 	public String ministrySpecgpkiSignAction(PmDigiSign digiSign) {
-		SpecificationResDTO resDTO = prepareSpecChirPersonRequest(this
+		SpecificationResDTO resDTO = prepareSpecChairPersonRequest(this
 				.getManagedBean().getLocalOutCome(), digiSign);
 		if (resDTO.isSuccessful()) {
 			ScQt qt = resDTO.getScQt();
@@ -12890,7 +12890,7 @@ public class SpecificationBackingBean extends
 	 *            the pm digi sign
 	 * @return the specification res dto
 	 */
-	private SpecificationResDTO prepareSpecChirPersonRequest(String action,
+	private SpecificationResDTO prepareSpecChairPersonRequest(String action,
 			PmDigiSign pmDigiSign) {
 		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 		SpecificationResDTO resDTO = new SpecificationResDTO();
@@ -13355,7 +13355,7 @@ public class SpecificationBackingBean extends
 	 * @return navigate to acknowledgement page.
 	 */
 	public String reviseMinistrySpecApproval() {
-		SpecificationResDTO resDTO = prepareSpecChirPersonRequest(this
+		SpecificationResDTO resDTO = prepareSpecChairPersonRequest(this
 				.getManagedBean().getLocalOutCome(), null);
 		if (resDTO.isSuccessful()) {
 			ScQt qt = resDTO.getScQt();
