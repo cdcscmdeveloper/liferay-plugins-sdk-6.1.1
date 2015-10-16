@@ -982,6 +982,28 @@ public class SmCommonUtil {
 	}
 
 	/**
+	 * Get message from Message Bundle
+	 * 
+	 * @param String
+	 *            msgKeyId
+	 * @param msgKeyId
+	 *            params
+	 * @return String
+	 */
+	public static String getOutputMsgBundle(String msgKeyId, String[] params) {
+		Locale locale = new FacesScopes().getUserLocale();
+		String msg = "";
+		if (params != null) {
+			msg = MessageUtils.getMessage(msgKeyId, params,
+					MessageUtils.BUNDLE_COMMON_MESSAGES, locale);
+		} else {
+			msg = MessageUtils.getMessage(msgKeyId,
+					MessageUtils.BUNDLE_COMMON_MESSAGES, locale);
+		}
+		return msg;
+	}
+
+	/**
 	 * Calculate sm application paid up capital sum.
 	 * 
 	 * @param compBasic
@@ -2364,11 +2386,16 @@ public class SmCommonUtil {
 	 */
 	public static SmMofAccount getMofAccountBySuppIdAndSuppType(
 			Long supplierId, String suppType) {
-		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
-		reqDTO.setSupplierType(suppType);
-		reqDTO.setSupplierId(supplierId);
-		return SmServiceLookup.getMofAccountSO()
-				.retriveMOFAccountBySupplierIdAndType(reqDTO).getMofAccount();
+		SmMofAccount mofAcc = null;
+		if (supplierId != null && StringUtils.isNotBlank(suppType)) {
+			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+			reqDTO.setSupplierType(suppType);
+			reqDTO.setSupplierId(supplierId);
+			mofAcc = SmServiceLookup.getMofAccountSO()
+					.retriveMOFAccountBySupplierIdAndType(reqDTO)
+					.getMofAccount();
+		}
+		return mofAcc;
 	}
 
 	/**

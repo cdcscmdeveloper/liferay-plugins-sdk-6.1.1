@@ -6954,12 +6954,28 @@ public class SmApplicationBackingBean extends
 			if (res.equalsIgnoreCase("Approve")) {
 			}
 			if (validSiteVisit) {
-				String msgConst = "";
+				String successMsg = "";
+				SmMofAccount mofAcc = getManagedBean().getSmSupplier() != null
+						&& getManagedBean().getSmAppl() != null ? SmCommonUtil
+						.getMofAccountBySuppIdAndSuppType(getManagedBean()
+								.getSmSupplier().getSupplierId(),
+								getManagedBean().getSmAppl().getSupplierType())
+						: null;
+				String mofNo = mofAcc != null
+						&& StringUtils.isNotBlank(mofAcc.getMofNo()) ? mofAcc
+						.getMofNo() : "";
+				String applNo = getManagedBean().getSmAppl().getApplNo();
+				String applTypeDesc = getParameterDesc(
+						ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
+						SmApplicationUtil.setParameterConst(getManagedBean()
+								.getSmAppl().getApplType()));
 				if (getManagedBean().isPoUser()
 						|| getManagedBean().isApproverUser()) {
 					log.info(" **** Final Decision from PO ****");
 					if (res.equalsIgnoreCase("Approve")) {
-						msgConst = MessageConst.INFO_700007;
+						successMsg = SmCommonUtil.getOutputMsgBundle(
+								MessageConst.INFO_700007, new String[] {
+										applNo, mofNo });
 					} else if (res.equalsIgnoreCase("Reject")) {
 						if (getManagedBean().getBpmTaskName() != null
 								&& getManagedBean()
@@ -6969,16 +6985,26 @@ public class SmApplicationBackingBean extends
 							reqDTO.setLastApprovedAppl(SmApplicationUtil
 									.getLastApprovedApplictionForSupplier(getManagedBean()));
 						}
-						msgConst = MessageConst.INFO_700008;
+						successMsg = SmCommonUtil.getOutputMsgBundle(
+								MessageConst.INFO_700008, new String[] {
+										applNo, mofNo });
 					} else if (res.equalsIgnoreCase("Escalate")) {
 						actionDesc = SupplierManagementConst.PO_ESCALATE_APPROVER;
-						msgConst = MessageConst.INFO_700014;
+						successMsg = SmCommonUtil.getOutputMsgBundle(
+								MessageConst.INFO_700014, new String[] {
+										applTypeDesc, applNo });
 					} else if (res.equalsIgnoreCase("Inquiry")) {
-						msgConst = MessageConst.INFO_700016;
+						successMsg = SmCommonUtil.getOutputMsgBundle(
+								MessageConst.INFO_700016, new String[] {
+										applTypeDesc, applNo });
 					} else if (res.equalsIgnoreCase("SITE_VISIT")) {
-						msgConst = MessageConst.INFO_700015;
+						successMsg = SmCommonUtil.getOutputMsgBundle(
+								MessageConst.INFO_700015,
+								new String[] { applNo });
 					} else if (res.equalsIgnoreCase("SITE_VISIT_AFTER_APPROVE")) {
-						msgConst = MessageConst.INFO_700017;
+						successMsg = SmCommonUtil.getOutputMsgBundle(
+								MessageConst.INFO_700017,
+								new String[] { applNo });
 					}
 					reqDTO.setPoOrApproverDecision(res);
 					reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
@@ -6992,29 +7018,11 @@ public class SmApplicationBackingBean extends
 					reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 
 					reqSO.submitPOorApproverReviewToBPM(reqDTO);
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_INFO,
-											null,
-											MessageUtils
-													.getMessage(
-															msgConst,
-															new String[] {
-																	getParameterDesc(
-																			ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
-																			SmApplicationUtil
-																					.setParameterConst(getManagedBean()
-																							.getSmAppl()
-																							.getApplType())),
-																	getManagedBean()
-																			.getSmAppl()
-																			.getApplNo() },
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
+
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									successMsg));
 					renewSesionObject();
 					retMsg = CommonUIConst.ACKNOWLEDGE_PAGE;
 
