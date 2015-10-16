@@ -1,3 +1,6 @@
+/*
+ * Copyright 2013 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.backingbean.pp.procurementplan;
 
 import java.math.BigDecimal;
