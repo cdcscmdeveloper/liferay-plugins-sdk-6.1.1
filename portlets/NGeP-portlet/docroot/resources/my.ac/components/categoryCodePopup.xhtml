@@ -150,7 +150,7 @@
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.ok']}"
 				action="#{categoryCodeSearchBackingBean.okAction(cc.attrs.okAction)}"
-				process="@form"
+				process="@this"
 				update="#{cc.attrs.update}" />
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 				partialSubmit="true" process="@this" update="@this"
