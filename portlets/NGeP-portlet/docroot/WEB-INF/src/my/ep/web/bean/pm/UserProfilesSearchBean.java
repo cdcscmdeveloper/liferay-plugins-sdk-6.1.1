@@ -16,6 +16,7 @@ public class UserProfilesSearchBean {
 	private Long userOrgStatus;
 	private Long selectedOrgProfileId;
 	private Long userStatus;
+	private Long userRoleStatus;
 	/**
 	 * @return the userName
 	 */
@@ -105,6 +106,18 @@ public class UserProfilesSearchBean {
 	 */
 	public void setUserStatus(Long userStatus) {
 		this.userStatus = userStatus;
+	}
+	/**
+	 * @return the userRoleStatus
+	 */
+	public Long getUserRoleStatus() {
+		return userRoleStatus;
+	}
+	/**
+	 * @param userRoleStatus the userRoleStatus to set
+	 */
+	public void setUserRoleStatus(Long userRoleStatus) {
+		this.userRoleStatus = userRoleStatus;
 	}
 	
 	
