@@ -221,7 +221,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 					//RequestContext.getCurrentInstance().execute("submissionDlg.hide()");
 					RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
 
-					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_721103,
+					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_721104,
 							new String[] {getManagedBean().getSmAppl().getApplNo()},MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
 					renewSesionObject();
