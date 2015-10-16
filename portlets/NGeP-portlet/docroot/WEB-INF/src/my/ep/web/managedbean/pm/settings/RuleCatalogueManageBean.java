@@ -16,6 +16,7 @@ import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmConfigGeneral;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
 import my.ep.persistence.entity.pm.general.settings.gst.PmDaGst;
@@ -103,6 +104,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private boolean error2 = false;
 	private boolean error3 = false;
 	private boolean error4 = false;
+	private PmCategoryL3 categoryL3;
 	
 	public boolean isError1() {
 		return error1;
@@ -121,6 +123,15 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 
 	public boolean isError4() {
 		return error4;
+	}
+
+	public PmCategoryL3 getCategoryL3() {
+		return categoryL3;
+	}
+
+
+	public void setCategoryL3(PmCategoryL3 categoryL3) {
+		this.categoryL3 = categoryL3;
 	}
 
 
