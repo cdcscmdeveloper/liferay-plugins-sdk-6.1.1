@@ -295,28 +295,23 @@
 
 		</p:dataTable>
 
-		<div style="text-align: right; min-height: 30px;">
-		<c:choose>
-		<c:when test="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'C')}">
-		  <p:commandButton value="#{lbl['lbl.btn.add']}" id="categoryCodeAddBtn" action="#{ruleCatalogueBackingBean.clearCategoryObject()}"
-						process="@this" partialSubmit="true" update="@([id$=catCodePopup])"
-						oncomplete="catCodePopup.show();">								
+		<div style="text-align: right;float : right; min-height: 30px;">
+		
+		  <p:commandButton value="#{lbl['lbl.btn.add']}" rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'C')}" id="categoryCodeAddBtn" 
+						process="@this" partialSubmit="true" update="@([id$=catCodePopup])" style="float:right;"
+						oncomplete="catCodePopup.show();" action="#{categoryCodeSearchBackingBean.renewSesionObject}">								
 			</p:commandButton>
-		  </c:when> 
-		  <c:otherwise>
-			<p:commandButton value="#{lbl['lbl.btn.add']}"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" rendered="#{!(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'C')}"
 				id="addTypeValueButton" style="float:right;"
 				action="#{ruleCatalogueBackingBean.addNewRuleTypeValue}"
 				partialSubmit="true" process="@this"
 				update=":form:settingTabId:ruleTypeValueTableID"></p:commandButton>
-				</c:otherwise>
-			</c:choose>
-					
-			<ac:categoryCodePopup 
-						okAction="ruleCatalogueBackingBean.selectCategoryAction"
-						update=":form:settingTabId:ruleConfigId" />
+				
 		</div>
-	
+	   <ac:categoryCodePopup 
+						okAction="ruleCatalogueBackingBean.selectCategoryAction"
+						update="@form" />
+						
 		<p:dialog id="statusConfirmDialog" widgetVar="statusConfirmDialog" closable="false"
 			header="#{lbl['lbl.pm.inactive.popUp.header']}" styleClass="screen-title"
 			resizable="false" modal="true" width="400" height="100">
