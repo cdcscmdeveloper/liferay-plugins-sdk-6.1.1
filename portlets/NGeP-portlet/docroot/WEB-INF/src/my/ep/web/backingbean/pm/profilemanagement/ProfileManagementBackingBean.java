@@ -326,6 +326,7 @@ public class ProfileManagementBackingBean extends
 
 	public void updateSearchCriteriaForRole(BaseEntity entity) {
 		logger.info("...............updateSearchCriteriaForRole...............");
+		getManagedBean().getUserProfileSearchBean().setUserRoleStatus(null);
 		if (entity != null) {
 			PmRoleDesc pmRoleDesc = (PmRoleDesc) entity;
 			if (pmRoleDesc != null) {
@@ -358,6 +359,10 @@ public class ProfileManagementBackingBean extends
 	public void clearRoleLOV() {
 		logger.info("clearRoleLOV");
 		this.getManagedBean().setSelectedPmRoleDesc(null);
+		if(getManagedBean().getUserProfileSearchBean() !=null){
+			getManagedBean().getUserProfileSearchBean().setUserRoleStatus(null);
+		}
+		
 	}
 
 	public void getListOfAssignedRoles(PmUserOrg org) {
@@ -1430,7 +1435,7 @@ public class ProfileManagementBackingBean extends
 		getManagedBean().setSelectedOrgProfile(null);
 		getManagedBean().setSelectedPmRoleDesc(null);
 		getManagedBean().getUserProfileSearchBean().setSelectedOrgProfileId(null);
-
+		getManagedBean().getUserProfileSearchBean().setUserRoleStatus(null);
 		if (this.getManagedBean().getSelectedOrgType().getParameterId() != null) {
 			PmParameter pmParameter = (PmParameter) orgTypeMapper.get(this
 					.getManagedBean().getSelectedOrgType().getParameterId());
@@ -2800,9 +2805,22 @@ public class ProfileManagementBackingBean extends
 					.setSearchField("pmUserRoles.pmRole.pmRoleDescs.roleName");
 			userSearchBean.setSearchValue(upSearchBean.getUserRole());
 			searchBean.getDataFilterBeans().add(userSearchBean);
-			isEmpty = false;
-		}
+			
+			//Role Status
+			if (upSearchBean.getUserRoleStatus() != null) {
+				logger.info("+ userRole Status " + upSearchBean.getUserRoleStatus());
+				userSearchBean = new SearchFilterBean(
+						SearchOperator.OPERATOR_EQUALS.value());
+				userSearchBean
+						.setSearchField("pmUserRoles.recordStatusFlg");
+				userSearchBean.setSearchValue(upSearchBean.getUserRoleStatus());
+				searchBean.getDataFilterBeans().add(userSearchBean);
+				isEmpty = false;
+			}
 
+		}
+		
+		
 		// Status if non provided then select default (active)
 		if (upSearchBean.getUserOrgStatus() != null) {
 			logger.info("+ status " + upSearchBean.getUserOrgStatus());

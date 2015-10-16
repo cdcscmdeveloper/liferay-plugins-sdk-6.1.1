@@ -124,13 +124,33 @@
 				<th>&#160;</th>
 				<td>&#160;</td>
 			</tr>
-			
 			<tr>
 				<th width="20%">
 					<p:outputLabel value="#{lbl['lbl.pm.profiles.search.user.status']}"/>
 				</th>
 				<td>
-					<p:selectOneMenu styleClass="ppDropDownWidthM" value="#{profileManagementBackingBean.managedBean.userProfileSearchBean.userOrgStatus}">  
+					<p:selectOneMenu styleClass="ppDropDownWidthM" 
+						value="#{profileManagementBackingBean.managedBean.userProfileSearchBean.userOrgStatus}">  
+		                        <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
+		                        <f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />		   
+								<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}"
+									itemValue="0" />
+								
+				   
+	              	</p:selectOneMenu> 
+				</td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			
+			<tr>
+				<th width="20%">
+					<p:outputLabel value="#{lbl['lbl.pm.profiles.authorisation.role.status']}"/>
+				</th>
+				<td>
+					<p:selectOneMenu styleClass="ppDropDownWidthM" value="#{profileManagementBackingBean.managedBean.userProfileSearchBean.userRoleStatus}"
+						disabled="#{profileManagementBackingBean.managedBean.selectedPmRoleDesc eq null or 
+							profileManagementBackingBean.managedBean.selectedPmRoleDesc.roleName eq null}">
 		                        <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
 		                        <f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />		   
 								<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}"
