@@ -50,7 +50,11 @@
 		<p:dataTable var="addr"
 			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvAddresses}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
-
+			
+			<p:column headerText="#{lbl['lbl.sm.facility.facilityType']}">
+				<h:outputText  value="#{svoSiteVisitBackingBean.getParameterDesc(ParameterTypeConst.supplierFacilityType, addr.smAddress.smFacilities[0].facilityType)}" />
+			</p:column>
+			
 			<p:column headerText="#{lbl['lbl.sm.address']}"
 				style="width: 50%;white-space: normal;">
 				<h:outputText
