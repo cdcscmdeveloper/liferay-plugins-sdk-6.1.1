@@ -530,16 +530,6 @@
 	</portlet>
 
 	<portlet>
-		<portlet-name>simpleQuoteSupplier</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
-		<footer-portlet-javascript>
-			/js/main.js
-		</footer-portlet-javascript>
-		<css-class-wrapper>ss-portlet</css-class-wrapper>
-	</portlet>
-	<portlet>
 		<portlet-name>scDirectPurchaseTask</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
