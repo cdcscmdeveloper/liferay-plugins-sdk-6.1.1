@@ -148,7 +148,53 @@ public class RuleCatalogueBackingBean extends
 	public RuleCatalogueBackingBean() {
 
 	}
+	public void clearCategoryObject(){
+		log.info("*****clearCategoryObject****");
+		this.getManagedBean().setCategoryL3(null);
+	}
+	/**
+	 * Category Selection Action
+	 * 
+	 * @param pmCategoryL3
+	 * 		the PmCategoryL3 instance
+	 */
+	public void selectCategoryAction(PmCategoryL3 pmCategoryL3) {
+		log.info("*****addNewRuleTypeValue*$$$****");
+		this.getManagedBean().setCategoryL3(pmCategoryL3);
+		PmConfigRuleValue newRuleValue = new PmConfigRuleValue();
+		newRuleValue.setRuleType(this.getManagedBean().getSelectedRuleType());
+		newRuleValue.setEffDate(this.getManagedBean().getTomorrow());
 
+//		if (this.getManagedBean().getSelectedRuleType().getRuleDataTypeId()
+//				.getParameterCode().equals("C")) {
+			
+			newRuleValue.setCategoryL3Id(this.getManagedBean().getCategoryL3());
+//		}
+
+		if (this.getManagedBean().getSelectedRuleType().getIsRangeValue() == 1) {
+
+			if (this.getManagedBean().getSelectedRuleType()
+					.getConfigRuleValues() != null
+					&& this.getManagedBean().getSelectedRuleType()
+							.getConfigRuleValues().size() > 0) {
+				int size = this.getManagedBean().getSelectedRuleType()
+						.getConfigRuleValues().size();
+				newRuleValue.setGroupValueId(this.getManagedBean()
+						.getSelectedRuleType().getConfigRuleValues()
+						.get(size - 1).getGroupValueId() + 1);
+
+			} else {
+
+				newRuleValue.setGroupValueId(1);
+			}
+			newRuleValue.setFromValue(new BigDecimal(1));
+		}
+		int index = this.getManagedBean().getSelectedRuleType()
+				.getConfigRuleValues().size();
+		this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+				.add(index, newRuleValue);
+	}
+	
 	public void typeValueChgangeListener(PmFeeExemption feeExemption) {
 		log.info("................updateUnspscForFee...............");
 
@@ -2827,21 +2873,17 @@ public class RuleCatalogueBackingBean extends
 	 * Adds the new ruleTypeValue.
 	 */
 	public void addNewRuleTypeValue() {
-
+		log.info("*****addNewRuleTypeValue*****");
 		log.debug("*****addNewRuleTypeValue*****");
 		PmConfigRuleValue newRuleValue = new PmConfigRuleValue();
 		newRuleValue.setRuleType(this.getManagedBean().getSelectedRuleType());
 		newRuleValue.setEffDate(this.getManagedBean().getTomorrow());
 
-		if (this.getManagedBean().getSelectedRuleType().getRuleDataTypeId()
-				.getParameterCode().equals("C")) {
-			newRuleValue.setCategoryL3Id(new PmCategoryL3()); // make sure to
-																// delete the
-																// new obj
-																// before update
-																// if doesn't
-																// selected
-		}
+//		if (this.getManagedBean().getSelectedRuleType().getRuleDataTypeId()
+//				.getParameterCode().equals("C")) {
+//			log.info("*2****addNewRuleTypeValue*****");
+//			newRuleValue.setCategoryL3Id(this.getManagedBean().getCategoryL3());
+//		}
 
 		if (this.getManagedBean().getSelectedRuleType().getIsRangeValue() == 1) {
 
