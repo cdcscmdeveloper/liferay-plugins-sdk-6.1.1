@@ -8941,6 +8941,9 @@ public class SmApplicationBackingBean extends
 				+ "&applicationType=" + applType + "&currentTab=" + currTab);
 	}
 
+	/**
+	 * Revert po application to supplier application data
+	 */
 	public void revertToOriginalApplication() {
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setSmAppl(getManagedBean().getSmAppl());
@@ -8958,6 +8961,10 @@ public class SmApplicationBackingBean extends
 								new FacesScopes().getUserLocale())));
 	}
 
+	/**
+	 * Initialized company basic to ManagedBean
+	 * @param SmAppl smAppl
+	 */
 	private void initSmCompanyBasic(SmAppl smAppl) {
 		if (smAppl.getSmCompanyBasic() != null) {
 			if (smAppl.getSmCompanyBasic().getSmCompanyAddresses() != null
