@@ -27,9 +27,9 @@
 			rowKey="#{ruleTypeObj}" rowIndexVar="rowIndex" selectionMode="single">
 			<ac:paginator for="ruleTypeTableID" />
 			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
-				update=":form:settingTabId:ruleTypeValueTableID" />
+				update=":form:settingTabId:ruleConfigId" />
 			<p:ajax event="rowUnselect" partialSubmit="true" process="@this"
-				update=":form:settingTabId:ruleTypeValueTableID" />
+				update=":form:settingTabId:ruleConfigId" />
 
 
 			<p:column>
@@ -139,16 +139,7 @@
 					<h:outputText value="*" styleClass="mandatory" />
 					                 #{lbl['lbl.pm.value']}
 				                </f:facet>
-
-				<ac:lov id="lovCategory" lovId="PM_CATEGORY_L3_FOR_RULE"
-					disabled="#{!(typeValueObj.brandNew)}"
-					update=":form:settingTabId:ruleTypeValueTableID" size="15"
-					headerText="Category" readonly="true"
-					label="#{lbl['lbl.pm.category']}"
-					saveObject="ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[#{index}].categoryL3Id"
-					value="#{typeValueObj.categoryL3Id.pmCategoryL2.pmCategoryL1.categoryL1Code}#{typeValueObj.categoryL3Id.pmCategoryL2.categoryL2Code}#{typeValueObj.categoryL3Id.categoryL3Code}">
-				</ac:lov>
-				<p:message id="lovCategoryMsg" for="lovCategory" display="icon" />
+			<h:outputText id="categoryCodeLable" value="#{typeValueObj.categoryL3Id.pmCategoryL2.pmCategoryL1.categoryL1Code}#{typeValueObj.categoryL3Id.pmCategoryL2.categoryL2Code}#{typeValueObj.categoryL3Id.categoryL3Code}" />
 
 			</p:column>
 
@@ -305,11 +296,25 @@
 		</p:dataTable>
 
 		<div style="text-align: right; min-height: 30px;">
+		<c:choose>
+		<c:when test="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'C')}">
+		  <p:commandButton value="#{lbl['lbl.btn.add']}" id="categoryCodeAddBtn" action="#{ruleCatalogueBackingBean.clearCategoryObject()}"
+						process="@this" partialSubmit="true" update="@([id$=catCodePopup])"
+						oncomplete="catCodePopup.show();">								
+			</p:commandButton>
+		  </c:when> 
+		  <c:otherwise>
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				id="addTypeValueButton" style="float:right;"
 				action="#{ruleCatalogueBackingBean.addNewRuleTypeValue}"
 				partialSubmit="true" process="@this"
 				update=":form:settingTabId:ruleTypeValueTableID"></p:commandButton>
+				</c:otherwise>
+			</c:choose>
+					
+			<ac:categoryCodePopup 
+						okAction="ruleCatalogueBackingBean.selectCategoryAction"
+						update=":form:settingTabId:ruleConfigId" />
 		</div>
 	
 		<p:dialog id="statusConfirmDialog" widgetVar="statusConfirmDialog" closable="false"
