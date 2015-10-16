@@ -46,7 +46,7 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	private List <PmDocumentRestr> deleteRestrictions;
 	private SelectItem[] supplierActionItems;
 	private SelectItem[] docDefinitionOptions;
-	private List <PmCategoryL3> selectedCategoryL3s;
+	private PmCategoryL3 selectedCategoryL3;
 	private List <PmCertBody> selectedCertBodies;
 	private int selectedTabIndex;
 	
@@ -226,10 +226,10 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the selectedCategoryL3s
+	 * @return the selectedCategoryL3
 	 */
-	public List<PmCategoryL3> getSelectedCategoryL3s() {
-		return selectedCategoryL3s;
+	public PmCategoryL3 getSelectedCategoryL3() {
+		return selectedCategoryL3;
 	}
 
 	/**
@@ -262,10 +262,10 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectedCategoryL3s the selectedCategoryL3s to set
+	 * @param selectedCategoryL3 the selectedCategoryL3 to set
 	 */
-	public void setSelectedCategoryL3s(List<PmCategoryL3> selectedCategoryL3s) {
-		this.selectedCategoryL3s = selectedCategoryL3s;
+	public void setSelectedCategoryL3(PmCategoryL3 selectedCategoryL3) {
+		this.selectedCategoryL3 = selectedCategoryL3;
 	}
 
 	public List <PmDocumentRestr> getCertBodyRestrictions() {
