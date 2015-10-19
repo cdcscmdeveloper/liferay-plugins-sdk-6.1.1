@@ -141,6 +141,11 @@ public class SupplierFinalizationMeetingBackingBean extends
 			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class);
 			Long qtId = Long.valueOf(dataType.getQtId());
 			String committeeType = String.valueOf(dataType.getCommitteeType());
+			if (StringUtils.isBlank(committeeType) && 
+					StringUtils.isNotBlank(dataType.getHigherCommitteeType())) {
+				committeeType = dataType.getHigherCommitteeType();
+				dataType.setCommitteeType(committeeType);
+			}
 			getManagedBean().setCommitteeType(committeeType);
 			getManagedBean().setPayLoad(dataType);
 			
