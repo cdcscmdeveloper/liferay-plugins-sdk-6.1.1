@@ -193,6 +193,8 @@ public class RuleCatalogueBackingBean extends
 				.getConfigRuleValues().size();
 		this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
 				.add(index, newRuleValue);
+		 RequestContext.getCurrentInstance().execute(
+				 "ruleValueTblWidget.paginator.endLink.click()");
 	}
 	
 	public void typeValueChgangeListener(PmFeeExemption feeExemption) {
@@ -1469,7 +1471,7 @@ public class RuleCatalogueBackingBean extends
 			// RuleConfigHelper.getInstance().getRuleTypeList().get(0));
 			List<PmConfigRule> list = retriveConfigRuleFromDB();
 			this.getManagedBean().setConfigRuleList(list);
-			this.getManagedBean().setSelectedRuleType(list.get(0));
+//			this.getManagedBean().setSelectedRuleType(list.get(0));
 
 			if (resDTO.isSuccessful()) {
 				FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -2907,8 +2909,9 @@ public class RuleCatalogueBackingBean extends
 				.getConfigRuleValues().size();
 		this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
 				.add(index, newRuleValue);
-		// RequestContext.getCurrentInstance().execute(
-		// "ruleValueTblWidget.paginator.endLink.click()");
+		 RequestContext.getCurrentInstance().execute(
+		 "ruleValueTblWidget.paginator.endLink.click()");
+		 
 	}
 
 	public int getLastIndexToClone(List<PmConfigRuleValue> pmConfigValues,
