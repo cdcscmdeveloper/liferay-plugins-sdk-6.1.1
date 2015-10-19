@@ -6989,10 +6989,19 @@ public class SmApplicationBackingBean extends
 								MessageConst.INFO_700008, new String[] {
 										applNo, mofNo });
 					} else if (res.equalsIgnoreCase("Escalate")) {
+						String statusDesc = "";
+						if (getManagedBean().getPoSecReview()
+								.getRecommendation().equals("APPROVE")) {
+							statusDesc = SmCommonUtil.getMessage(
+									"lbl.sm.approval.lowercaps", null);
+						} else {
+							statusDesc = SmCommonUtil.getMessage(
+									"lbl.sm.rejected.lowercaps", null);
+						}
 						actionDesc = SupplierManagementConst.PO_ESCALATE_APPROVER;
 						successMsg = SmCommonUtil.getOutputMsgBundle(
 								MessageConst.INFO_700014, new String[] {
-										applTypeDesc, applNo });
+										applNo, statusDesc });
 					} else if (res.equalsIgnoreCase("Inquiry")) {
 						successMsg = SmCommonUtil.getOutputMsgBundle(
 								MessageConst.INFO_700016, new String[] {
@@ -8963,7 +8972,9 @@ public class SmApplicationBackingBean extends
 
 	/**
 	 * Initialized company basic to ManagedBean
-	 * @param SmAppl smAppl
+	 * 
+	 * @param SmAppl
+	 *            smAppl
 	 */
 	private void initSmCompanyBasic(SmAppl smAppl) {
 		if (smAppl.getSmCompanyBasic() != null) {
