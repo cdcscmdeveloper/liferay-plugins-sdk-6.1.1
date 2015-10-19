@@ -219,6 +219,7 @@
 							size="35">
 							<f:validateRegex disabled="#{empty backingBean.managedBean.selectedShareHolder.email}" 
 								pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+							<p:ajax process="@this" partialSubmit="true"/>
 						</p:inputText> 
 					</p:outputPanel>
 					&#160; <p:graphicImage id="tooltip2"
