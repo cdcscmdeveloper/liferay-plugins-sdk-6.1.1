@@ -28,7 +28,9 @@
 		                    <h:outputText id="productItemDesc" value="#{lbl['lbl.ct.item.desc']}"/>
 		                     <ac:iconTooltip value="#{lbl['lbl.ct.instruction.item.search']}"/>
 		               </f:facet>
-		               <h:outputText value="#{ctItemVar.scRequestItem.itemName}" style="float:left;"/>
+		               <h:outputText id="itemNameID" value="#{ctItemVar.scRequestItem.itemName}" style="float:left;"/>
+		                  <p:tooltip id="toolTipItemName" for="itemNameID" value="#{ctItemVar.scRequestItem.itemDesc == null ? lbl['lbl.ct.item.tooltip.desc'] : ctItemVar.scRequestItem.itemDesc}" />
+             
 		         </p:column>       
 		     
 		         <p:column headerText="#{lbl['lbl.ct.uom']}" 
@@ -540,7 +542,9 @@
 		                    <h:outputText id="serviceItemDesc" value="#{lbl['lbl.ct.item.name']}"/>
 		                    <ac:iconTooltip value="#{lbl['lbl.ct.instruction.item.search']}"/>
 		               </f:facet>
-		          <h:outputText value="#{data.scRequestItem.itemName}" style="float:left;"/>
+		          <h:outputText id="serviceNameID" value="#{data.scRequestItem.itemName}" style="float:left;"/>
+		            <p:tooltip id="toolTipServiceName" for="serviceNameID" value="#{data.scRequestItem.itemDesc == null ? lbl['lbl.ct.item.tooltip.desc'] : data.scRequestItem.itemDesc}" />
+             
 		      </p:column>       
 		      
 		      <p:column headerText="#{lbl['lbl.ct.specification']}" 
