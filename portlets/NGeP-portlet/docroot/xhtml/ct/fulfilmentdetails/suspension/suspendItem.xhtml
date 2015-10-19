@@ -18,7 +18,8 @@
 			
 			   <p:column id="modelColumn" headerText="#{lbl['lbl.ct.item.desc']}"  styleClass="column-align-center" 
 			        style="width:40%;white-space:normal;"  filterBy="#{itemData.scRequestItem.itemName}"   filterMatchMode="contains"> 
-			        <h:outputText value="#{itemData.scRequestItem.itemName}" style="float:left;"/>
+			        <h:outputText id="serviceNameID"  value="#{itemData.scRequestItem.itemName}" style="float:left;"/>
+			           <p:tooltip id="toolTipServiceName" for="serviceNameID" value="#{itemData.scRequestItem.itemDesc == null ? lbl['lbl.ct.item.tooltip.desc'] : itemData.scRequestItem.itemDesc}" />
 			   </p:column>
 			
 			   <p:column style="width:15%;" styleClass="column-align-center" >

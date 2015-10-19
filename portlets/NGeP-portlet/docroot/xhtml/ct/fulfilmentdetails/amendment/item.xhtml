@@ -32,7 +32,9 @@
 							<h:outputText id="amendProductInstruction" escape="false" value="#{lbl['lbl.ct.instruction.item.search']}" />
 						</p:tooltip> 
 		               </f:facet>
-					    <h:outputText value="#{ctItemVar.scRequestItem.itemName}" style="float:left;" />
+					    <h:outputText id="itemNameID" value="#{ctItemVar.scRequestItem.itemName}" style="float:left;" />
+					        <p:tooltip id="toolTipItemName" for="itemNameID" value="#{ctItemVar.scRequestItem.itemDesc == null ? lbl['lbl.ct.item.tooltip.desc'] : ctItemVar.scRequestItem.itemDesc}" />
+             
 			   	  </p:column>
 			
 				  <p:column style="width:15%; white-space:normal;" 
@@ -382,7 +384,9 @@
 							<h:outputText id="amendServiceInstruction" escape="false" value="#{lbl['lbl.ct.instruction.item.search']}" />
 						</p:tooltip> 
 		               </f:facet>
-					<h:outputText value="#{serviceItemVar.scRequestItem.itemName}" style="float:left;" />
+					<h:outputText id="serviceNameID" value="#{serviceItemVar.scRequestItem.itemName}" style="float:left;" />
+					  <p:tooltip id="toolTipServiceName" for="serviceNameID" value="#{serviceItemVar.scRequestItem.itemDesc == null ? lbl['lbl.ct.item.tooltip.desc'] : serviceItemVar.scRequestItem.itemDesc}" />
+             
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.specification']}" style="width:20%; white-space:normal;" styleClass="column-align-center">
 					<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clSpecDetail}" style="float:left;" />
