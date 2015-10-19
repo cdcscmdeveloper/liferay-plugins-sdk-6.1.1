@@ -7003,7 +7003,8 @@ public class SmApplicationBackingBean extends
 						actionDesc = SupplierManagementConst.PO_ESCALATE_APPROVER;
 						successMsg = SmCommonUtil.getOutputMsgBundle(
 								MessageConst.INFO_700014, new String[] {
-										applNo, statusDesc,getApproverListForSuccessMsg() });
+										applNo, statusDesc,
+										getApproverListForSuccessMsg() });
 					} else if (res.equalsIgnoreCase("Inquiry")) {
 						successMsg = SmCommonUtil.getOutputMsgBundle(
 								MessageConst.INFO_700016, new String[] {
@@ -7061,27 +7062,29 @@ public class SmApplicationBackingBean extends
 		}
 		return retMsg;
 	}
-	
+
 	private String getApproverListForSuccessMsg() {
 		StringBuffer bf = new StringBuffer();
 		String retVal = "";
-		SmAddress hqAddr = getManagedBean().getSmAppl().getSmCompanyBasic()
-				.getSmCompanyAddresses().get(0).getSmAddress();
-		ZoneReqDTO zoneReqDTO = new ZoneReqDTO();
-		zoneReqDTO.setStateId(hqAddr.getPmState().getStateId());
-		PmZone zone = SmServiceLookup.getZoneSO()
-				.retrieveZoneByStateId(zoneReqDTO).getPmZone();
-		ReviewApplicationReqDTO reviewApplicationReqDTO = new ReviewApplicationReqDTO();
-		reviewApplicationReqDTO.setZoneCode(zone.getZoneCode());
-		List<PmUser> approverList = SmServiceLookup.getReviewApplicationSO()
-				.getApproversByZoneAfterEscalate(reviewApplicationReqDTO)
-				.getUserAssignList();
-		if (!SmCommonUtil.isCollectionEmpty(approverList)) {
-			int i = 0;
-			for (PmUser user : approverList) {
-				i++;
-				bf.append("<tr><td>").append(i).append(")</td><td>")
-						.append(user.getUserName()).append("</td></tr>");
+		SmAddress hqAddr = getHqAddress();
+		if (hqAddr != null) {
+			ZoneReqDTO zoneReqDTO = new ZoneReqDTO();
+			zoneReqDTO.setStateId(hqAddr.getPmState().getStateId());
+			PmZone zone = SmServiceLookup.getZoneSO()
+					.retrieveZoneByStateId(zoneReqDTO).getPmZone();
+			ReviewApplicationReqDTO reviewApplicationReqDTO = new ReviewApplicationReqDTO();
+			reviewApplicationReqDTO.setZoneCode(zone.getZoneCode());
+			List<PmUser> approverList = SmServiceLookup
+					.getReviewApplicationSO()
+					.getApproversByZoneAfterEscalate(reviewApplicationReqDTO)
+					.getUserAssignList();
+			if (!SmCommonUtil.isCollectionEmpty(approverList)) {
+				int i = 0;
+				for (PmUser user : approverList) {
+					i++;
+					bf.append("<tr><td>").append(i).append(")</td><td>")
+							.append(user.getUserName()).append("</td></tr>");
+				}
 			}
 		}
 		if (bf.length() > 0) {
