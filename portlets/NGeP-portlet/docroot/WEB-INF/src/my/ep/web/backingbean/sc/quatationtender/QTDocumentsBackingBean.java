@@ -11,6 +11,7 @@
 package my.ep.web.backingbean.sc.quatationtender;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -1271,6 +1272,8 @@ public class QTDocumentsBackingBean extends
 		ScQtDocReportAttachment docReportAttachment = new ScQtDocReportAttachment();
 		IQTSpecSO specSo = null;
 		SpecificationResDTO resDTO = null;
+		FileInputStream inFile = null;
+		FileOutputStream outFile = null;
 		try {
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			specSo = BusinessDelegate.getInstance().getServiceObject(
@@ -1317,11 +1320,20 @@ public class QTDocumentsBackingBean extends
 									docReportAttachment.setFileName(attachment
 											.getFileName());
 									docReportAttachment.setDocNo(qt.getQtNo());
+									
+								  inFile = new FileInputStream(getActualFilePath(attachment));
+									
 									populateAttachmentDetails(docReportAttachment);
 									// docReportAttachment.setFilePath(getActualFilePath(docReportAttachment));
 									// attachment = docReportAttachment;
-									new FileOutputStream(
+									
+									 outFile = new FileOutputStream(
 											getActualFilePath(docReportAttachment));
+									int i=0;  
+									while((i=inFile.read())!=-1){  
+										outFile.write((byte)i);  
+									} 
+									log.info("Successfully wriiten into file");
 									scQtDocReport
 											.setScQtDocReportAttachment(docReportAttachment);
 								}
@@ -1339,6 +1351,8 @@ public class QTDocumentsBackingBean extends
 			}
 		} finally {
 			specSo = null;
+			 inFile = null;
+			 outFile = null;
 		}
 		return docReportAttachment;
 	}
