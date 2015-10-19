@@ -28,7 +28,7 @@ public class GfmasBatchSmOutboundJob implements Job {
 		log.info("GfmasBatchSmOutboundJob APIVE :start");
 
 		GfmasIntegration gfmasIntegration = new GfmasIntegration();
-		gfmasIntegration.masterDataVendorGfmasOutbound();
+//		gfmasIntegration.masterDataVendorGfmasOutbound();
 		
 		log.info("GfmasBatchSmOutboundJob APIVE :end");
 

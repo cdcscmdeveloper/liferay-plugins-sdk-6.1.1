@@ -27,7 +27,7 @@ public class PhisBatchSmOutboundJob implements Job {
 		log.info("inside PhisBatchSmOutboundJob : Start");
 		PhisIntegration phisIntegration = new PhisIntegration();
 
-		phisIntegration.masterDataMaterialInfoPHIS();
+//		phisIntegration.masterDataMaterialInfoPHIS();
 		log.info("inside PhisBatchSmOutboundJob : End");
 
 	}
