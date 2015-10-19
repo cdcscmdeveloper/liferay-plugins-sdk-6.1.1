@@ -6990,8 +6990,9 @@ public class SmApplicationBackingBean extends
 										applNo, mofNo });
 					} else if (res.equalsIgnoreCase("Escalate")) {
 						String statusDesc = "";
-						if (getManagedBean().getPoSecReview()
-								.getRecommendation().equals("APPROVE")) {
+						if (getManagedBean().getPoSecReview() != null
+								&& getManagedBean().getPoSecReview()
+										.getRecommendation().equals("APPROVE")) {
 							statusDesc = SmCommonUtil.getMessage(
 									"lbl.sm.approval.lowercaps", null);
 						} else {
