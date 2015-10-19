@@ -3845,9 +3845,12 @@ public class SpecificationBackingBean extends
 				if (null == this.getManagedBean().getSpecificationRemarks()) {
 					this.getManagedBean().setSpecificationRemarks(
 							new ArrayList<ScQtSpecificationRemark>());
+					if (null != this.getManagedBean().getCurrentStatusId()
+							&& this.getManagedBean().getCurrentStatusId().equals(60401L)) {
 					initializeRemarks(this.getManagedBean().getScQt(), null,
 							this.getManagedBean().getSpecificationRemarks(),
 							ScQtSpecificationRemark.class);
+					}
 				}
 			}
 
@@ -3863,9 +3866,12 @@ public class SpecificationBackingBean extends
 						|| this.getManagedBean().getSpecificationRemarks()
 								.isEmpty()) {
 					this.getManagedBean().setSpecificationRemarks(remarkList);
+					if (null != this.getManagedBean().getCurrentStatusId()
+							&& this.getManagedBean().getCurrentStatusId().equals(60401L)) {
 					initializeRemarks(this.getManagedBean().getScQt(), null,
 							this.getManagedBean().getSpecificationRemarks(),
 							ScQtSpecificationRemark.class);
+					}
 				}
 			}
 

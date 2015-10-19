@@ -81,7 +81,8 @@
 		<ui:include src="reminderpopup.xhtml" /> -->
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true" rendered="#{specificationBackingBean.managedBean.currentStatusId eq '60401'}">
+	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true"
+		rendered="#{specificationBackingBean.managedBean.currentStatusId eq '60401' or specificationBackingBean.managedBean.currentStatusId eq '60405' or specificationBackingBean.managedBean.currentStatusId eq '60402'}">
 		<table style="width: 100%" id="remarkslist">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
@@ -106,9 +107,9 @@
 								<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
 										maxlength="1000"
 										readonly="#{specificationBackingBean.managedBean.currentStatusId ne '60401'}"
-										rendered="#{remarkVar.remarkId eq null}" /> <h:outputText
-										value="#{remarkVar.remark}"
-										rendered="#{remarkVar.remarkId ne null}"
+										rendered="#{remarkVar.remarkId eq null and specificationBackingBean.managedBean.currentStatusId eq '60401'}" />
+									<h:outputText value="#{remarkVar.remark}"
+										rendered="#{remarkVar.remarkId ne null and (specificationBackingBean.managedBean.currentStatusId eq '60405' or specificationBackingBean.managedBean.currentStatusId eq '60402')}"
 										style="display: inline-block; width:220px;word-wrap: break-word;" />
 								</td>
 							</tr>
