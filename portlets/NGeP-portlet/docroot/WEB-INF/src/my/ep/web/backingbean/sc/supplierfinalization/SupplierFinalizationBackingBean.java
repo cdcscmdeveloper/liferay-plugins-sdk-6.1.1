@@ -5608,8 +5608,6 @@ public class SupplierFinalizationBackingBean extends
 	 */
 	public void finalizationMethodEvent(AjaxBehaviorEvent ajaxEvent) {
 		debugLogger("finalizationMethodEvent ");
-
-		this.getManagedBean().setDisableSupplierSelection(false);
 		
 		boolean qtRefinalized = isQTRefinalized();
 		String finalizationMethodStr = getManagedBean().getFinalizationMethod();
@@ -5680,6 +5678,8 @@ public class SupplierFinalizationBackingBean extends
 			getManagedBean().getScQtFinalization().setFinalizationMethod(finalizationMethod);
 			
 			if (ajaxEvent != null) { 
+				this.getManagedBean().setDisableSupplierSelection(false);
+				
 				if (getManagedBean().isItemize()) {	
 					recommendSuppliersByItem();
 				} else {
