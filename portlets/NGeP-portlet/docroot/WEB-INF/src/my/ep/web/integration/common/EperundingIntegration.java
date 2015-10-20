@@ -1196,13 +1196,15 @@ public class EperundingIntegration extends EperundingTemplate{
 			compType = "7";
 			break;
 		case "N":
-			compType = "?";
+			compType = "0";
 			break;
 		case "O":
 			compType = "6";
+		case "P":
+			compType = "5";	
 			break;
 		default:
-			compType = "?";
+			compType = "0";
 			break;
 		}
 
