@@ -148,10 +148,7 @@ public class RuleCatalogueBackingBean extends
 	public RuleCatalogueBackingBean() {
 
 	}
-	public void clearCategoryObject(){
-		log.info("*****clearCategoryObject****");
-		this.getManagedBean().setCategoryL3(null);
-	}
+	
 	/**
 	 * Category Selection Action
 	 * 
@@ -160,7 +157,7 @@ public class RuleCatalogueBackingBean extends
 	 */
 	public void selectCategoryAction(PmCategoryL3 pmCategoryL3) {
 		log.info("*****addNewRuleTypeValue*$$$****");
-		this.getManagedBean().setCategoryL3(pmCategoryL3);
+		this.getManagedBean().setSelectedCategoryL3(pmCategoryL3);
 		PmConfigRuleValue newRuleValue = new PmConfigRuleValue();
 		newRuleValue.setRuleType(this.getManagedBean().getSelectedRuleType());
 		newRuleValue.setEffDate(this.getManagedBean().getTomorrow());
@@ -168,7 +165,7 @@ public class RuleCatalogueBackingBean extends
 //		if (this.getManagedBean().getSelectedRuleType().getRuleDataTypeId()
 //				.getParameterCode().equals("C")) {
 			
-			newRuleValue.setCategoryL3Id(this.getManagedBean().getCategoryL3());
+			newRuleValue.setCategoryL3Id(this.getManagedBean().getSelectedCategoryL3());
 //		}
 
 		if (this.getManagedBean().getSelectedRuleType().getIsRangeValue() == 1) {
