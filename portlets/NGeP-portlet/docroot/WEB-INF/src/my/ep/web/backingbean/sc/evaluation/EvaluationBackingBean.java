@@ -6871,6 +6871,7 @@ public class EvaluationBackingBean extends
 			List<ScQtProposalChecklist> demoList = this.getManagedBean()
 					.getPresentationDemoSupplierList();
 			int countDays = this.getManagedBean().getCountDays();
+			int currentTime = this.getManagedBean().getCurrentTime();
 			String QtNum = this.getManagedBean().getScQt().getQtNo();
 			SCEvaluationDataType evaluationDataType = (SCEvaluationDataType) this
 					.getManagedBean().getEvaluationPayLoad();
@@ -6904,6 +6905,7 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setReportDownloadFileName(reportFileName);
 			this.getManagedBean().setCountDays(countDays);
 			this.getManagedBean().setEvaluationPayLoad(evaluationDataType);
+			 this.getManagedBean().setCurrentTime(currentTime);
 
 			retriveMeetingDtls(qtId, committeeType, index);
 			// getStatusDropdownValues("SC", "MS");
