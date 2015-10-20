@@ -5754,10 +5754,17 @@ public class EvaluationBackingBean extends
 							}
 
 						} else {
-							if (this.getManagedBean().getCountDays() > 0
-									|| (this.getManagedBean().getCountDays() == 0 && this
-											.getManagedBean().getCurrentTime() < 12)) {
-								throw new EpException(MessageConst.ERROR_760261);
+							if (this.getManagedBean()
+									.getCurrentStatusId()
+									.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)) {
+								if (this.getManagedBean().getCountDays() > 0
+										|| (this.getManagedBean()
+												.getCountDays() == 0 && this
+												.getManagedBean()
+												.getCurrentTime() < 12)) {
+									throw new EpException(
+											MessageConst.ERROR_760261);
+								}
 							}
 							if (this.getManagedBean().getCountDays() < 0
 									|| (this.getManagedBean().getCountDays() == 0 && this
@@ -6024,10 +6031,17 @@ public class EvaluationBackingBean extends
 							}
 
 						} else {
-							if (this.getManagedBean().getCountDays() > 0
-									|| (this.getManagedBean().getCountDays() == 0 && this
-											.getManagedBean().getCurrentTime() < 12)) {
-								throw new EpException(MessageConst.ERROR_760261);
+							if (this.getManagedBean()
+									.getCurrentStatusId()
+									.equals(QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL)) {
+								if (this.getManagedBean().getCountDays() > 0
+										|| (this.getManagedBean()
+												.getCountDays() == 0 && this
+												.getManagedBean()
+												.getCurrentTime() < 12)) {
+									throw new EpException(
+											MessageConst.ERROR_760261);
+								}
 							}
 							if (this.getManagedBean().getCountDays() < 0
 									|| (this.getManagedBean().getCountDays() == 0 && this
@@ -6905,7 +6919,7 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setReportDownloadFileName(reportFileName);
 			this.getManagedBean().setCountDays(countDays);
 			this.getManagedBean().setEvaluationPayLoad(evaluationDataType);
-			 this.getManagedBean().setCurrentTime(currentTime);
+			this.getManagedBean().setCurrentTime(currentTime);
 
 			retriveMeetingDtls(qtId, committeeType, index);
 			// getStatusDropdownValues("SC", "MS");
