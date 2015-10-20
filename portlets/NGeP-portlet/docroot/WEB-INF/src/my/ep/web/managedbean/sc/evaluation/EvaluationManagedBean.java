@@ -478,6 +478,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private IPagingDataModel<ScQtProposalChecklist> presentationDemoSupplierListDM;
 	private int demoPassingScore;
 	private boolean isProfileHide = false;
+	private int currentTime=0;
+	
 	
 
 	/**
@@ -3258,6 +3260,22 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setProfileHide(boolean isProfileHide) {
 		this.isProfileHide = isProfileHide;
 	}
+
+	/**
+	 * @return the currentTime
+	 */
+	public int getCurrentTime() {
+		return currentTime;
+	}
+
+	/**
+	 * @param currentTime the currentTime to set
+	 */
+	public void setCurrentTime(int currentTime) {
+		this.currentTime = currentTime;
+	}
+
+	
 
 	
 
