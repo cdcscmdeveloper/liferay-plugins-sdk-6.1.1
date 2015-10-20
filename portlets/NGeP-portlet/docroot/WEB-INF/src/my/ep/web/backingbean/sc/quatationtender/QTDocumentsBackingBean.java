@@ -11,7 +11,6 @@
 package my.ep.web.backingbean.sc.quatationtender;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -1272,8 +1271,6 @@ public class QTDocumentsBackingBean extends
 		ScQtDocReportAttachment docReportAttachment = new ScQtDocReportAttachment();
 		IQTSpecSO specSo = null;
 		SpecificationResDTO resDTO = null;
-		FileInputStream inFile = null;
-		FileOutputStream outFile = null;
 		try {
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			specSo = BusinessDelegate.getInstance().getServiceObject(
@@ -1321,19 +1318,25 @@ public class QTDocumentsBackingBean extends
 											.getFileName());
 									docReportAttachment.setDocNo(qt.getQtNo());
 									
-								  inFile = new FileInputStream(getActualFilePath(attachment));
-									
+								 /* Copy doc with content from QCL folder to QD folder
+								  * inFile = new FileInputStream(getActualFilePath(attachment));
 									populateAttachmentDetails(docReportAttachment);
-									// docReportAttachment.setFilePath(getActualFilePath(docReportAttachment));
-									// attachment = docReportAttachment;
-									
 									 outFile = new FileOutputStream(
 											getActualFilePath(docReportAttachment));
 									int i=0;  
 									while((i=inFile.read())!=-1){  
 										outFile.write((byte)i);  
 									} 
-									log.info("Successfully wriiten into file");
+									log.info("Successfully wriiten into file");*/
+									
+									docReportAttachment.setFilePath(attachment.getFilePath());
+									Timestamp date = new Timestamp(System.currentTimeMillis());
+									PmUser createdUser = new FacesScopes().getUserSessionBean();
+									docReportAttachment.setCreatedBy(createdUser.getUserId());
+									docReportAttachment.setCreatedDate(date);
+									docReportAttachment.setChangedBy(createdUser.getUserId());
+									docReportAttachment.setCreatedUser(createdUser);
+									
 									scQtDocReport
 											.setScQtDocReportAttachment(docReportAttachment);
 								}
@@ -1351,8 +1354,6 @@ public class QTDocumentsBackingBean extends
 			}
 		} finally {
 			specSo = null;
-			 inFile = null;
-			 outFile = null;
 		}
 		return docReportAttachment;
 	}
