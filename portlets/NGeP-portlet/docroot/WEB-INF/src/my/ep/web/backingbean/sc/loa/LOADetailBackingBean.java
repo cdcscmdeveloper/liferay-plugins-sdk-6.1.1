@@ -4188,11 +4188,11 @@ public class LOADetailBackingBean extends
 			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
 			if(loaAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) > 0 && !isbondExceptionCategory(loa)) {
 				isPerformanceBondMandatory = true;
-				getManagedBean().getScLoa().setBondReq(true);
+				loa.setBondReq(true);
 			}
 			else if(loaAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) <= 0) {
 				isPerformanceBondMandatory = true;
-				getManagedBean().getScLoa().setBondReq(false);
+				loa.setBondReq(false);
 			}
 		}
 		getManagedBean().setPerformanceBondMandatory(isPerformanceBondMandatory);
