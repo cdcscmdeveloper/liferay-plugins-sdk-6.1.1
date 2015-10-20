@@ -33,7 +33,7 @@
 							readonly="true" selectionMode="multiple"
 							buttonLabel="#{lbl['lbl.btn.add']}"
 							headerText="#{lbl['lbl.pm.suppdoc.certbody.search']}"
-							update=":form:tvDocRestriction:dtCertBody"
+							update="@form"
 							saveObject="supportDocBackingBean.managedBean.selectedCertBodies"
 							postUpdateListener="supportDocBackingBean.updateCertBody"
 							conditionField="recordStatus^1|isCertifiedBody^1|isGlp^1" />					
