@@ -104,7 +104,20 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private boolean error2 = false;
 	private boolean error3 = false;
 	private boolean error4 = false;
-	private PmCategoryL3 categoryL3;
+	private PmCategoryL3 selectedCategoryL3;
+	/**
+	 * @return the selectedCategoryL3
+	 */
+	public PmCategoryL3 getSelectedCategoryL3() {
+		return selectedCategoryL3;
+	}
+
+	/**
+	 * @param selectedCategoryL3 the selectedCategoryL3 to set
+	 */
+	public void setSelectedCategoryL3(PmCategoryL3 selectedCategoryL3) {
+		this.selectedCategoryL3 = selectedCategoryL3;
+	}
 	
 	public boolean isError1() {
 		return error1;
@@ -123,15 +136,6 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 
 	public boolean isError4() {
 		return error4;
-	}
-
-	public PmCategoryL3 getCategoryL3() {
-		return categoryL3;
-	}
-
-
-	public void setCategoryL3(PmCategoryL3 categoryL3) {
-		this.categoryL3 = categoryL3;
 	}
 
 
