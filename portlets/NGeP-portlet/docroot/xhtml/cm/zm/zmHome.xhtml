@@ -25,7 +25,8 @@
 
 
 		<h:panelGrid id="zoneTable" width="100%">
-			<p:dataTable id="zoneDetailsDataTable" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			<p:dataTable id="zoneDetailsDataTable"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{zoneMaintenanceBackingBean.managedBean.zoneTrees}"
 				var="zoneTree" rowIndexVar="index">
 				<p:column headerText="#{lbl['lbl.cm.zm.details']}">
@@ -49,17 +50,20 @@
 					<p:commandLink
 						actionListener="#{zoneMaintenanceBackingBean.editZone(zoneTree,index)}"
 						process="@this" update=":form:ZL" oncomplete="ZL.show();">
-						<p:graphicImage style="padding-right:10px;" value="/css/images/design/edit.png" title="#{lbl['lbl.cm.zm.edit']}" />
+						<p:graphicImage style="padding-right:10px;"
+							value="/css/images/design/edit.png"
+							title="#{lbl['lbl.cm.zm.edit']}" />
 					</p:commandLink>
 					<p:commandLink process="@this"
 						update="zoneDetailsDataTable, @([id$=zmMsgs])"
 						actionListener="#{zoneMaintenanceBackingBean.deleteTreeNodes(zoneTree)}">
-						<p:graphicImage value="/css/images/design/trash.png" title="#{lbl['lbl.btn.delete']}" />
+						<p:graphicImage value="/css/images/design/trash.png"
+							title="#{lbl['lbl.btn.delete']}" />
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>
 		</h:panelGrid>
-			
+
 		<div align="right" style="width: 100%">
 			<p:commandButton value="#{lbl['lbl.cm.zm.btn.add']}" process="@this"
 				update=":form:ZL" partialSubmit="true" oncomplete="ZL.show();"
@@ -68,8 +72,7 @@
 
 		<p:dialog id="ZL" widgetVar="ZL"
 			header="#{zoneMaintenanceBackingBean.managedBean.editMode}"
-			modal="true"  height="70%"
-			style="position: absolute !important;">
+			modal="true" height="70%" style="position: absolute !important;">
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.cm.zm.header.add']}"
 					rendered="#{!zoneMaintenanceBackingBean.managedBean.editMode}" />
@@ -98,6 +101,9 @@
 									var="location"
 									selection="#{zoneMaintenanceBackingBean.managedBean.selectedNodes}"
 									selectionMode="checkbox">
+									<p:ajax event="select" update=":form:zoneAddButton"/>
+									<p:ajax event="unselect" update=":form:zoneAddButton" />
+
 									<p:treeNode type="state">
 										<h:outputText value="#{location.locationName}" />
 									</p:treeNode>
@@ -121,7 +127,7 @@
 
 				<p:commandButton id="zoneAddButton" onstart="blockWidget.show();"
 					value="#{lbl['lbl.cm.zm.btn.ok']}"
-					disabled="#{zoneMaintenanceBackingBean.managedBean.selectedSupplierZone.suppZoneName eq null or zoneMaintenanceBackingBean.managedBean.selectedSupplierZone.suppZoneName.length() eq 0}"
+					disabled="#{zoneMaintenanceBackingBean.managedBean.selectedSupplierZone.suppZoneName eq null or zoneMaintenanceBackingBean.managedBean.selectedSupplierZone.suppZoneName.length() eq 0 or fn:length(zoneMaintenanceBackingBean.managedBean.selectedNodes)&lt;1}"
 					style="float:right;" oncomplete="ZL.hide(); blockWidget.hide();"
 					process="@all ,zoneNameId" update="@this, zonePopupPanel"
 					partialSubmit="true"
