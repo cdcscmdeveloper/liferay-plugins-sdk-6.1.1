@@ -5,10 +5,18 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:commandButton value="#{lbl['lbl.btn.back']}"
-		action="#{locationBackingBean.backToSearch}" style="float:left;" process="@this"/>
-	<p:commandButton
-		value="#{!locationBackingBean.managedBean.disabledVal? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}"
-		update="@([id$=Msg])" action="#{locationBackingBean.saveLocation}"
-		style="float:right;" />
+	<p:outputPanel id="pSupportDocHeader">
+
+		<div class="button-wrapper">
+			<p:commandButton value="#{lbl['lbl.btn.back']}"
+				action="#{locationBackingBean.backToSearch}" style="float:left;"
+				process="@this" />
+			<div class="rowBtnRight">
+				<p:commandButton
+					value="#{!locationBackingBean.managedBean.disabledVal? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}"
+					update="@([id$=Msg])" action="#{locationBackingBean.saveLocation}"
+					style="float:right;" />
+			</div>
+		</div>
+		</p:outputPanel>
 </ui:composition>
