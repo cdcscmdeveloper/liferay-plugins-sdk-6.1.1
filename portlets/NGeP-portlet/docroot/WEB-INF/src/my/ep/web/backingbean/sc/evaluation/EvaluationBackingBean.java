@@ -1398,7 +1398,9 @@ public class EvaluationBackingBean extends
 		try {
 
 			Date d1 = new Date();
-
+			SimpleDateFormat sdf = new SimpleDateFormat("hh");
+			this.getManagedBean().setCurrentTime(
+					Integer.valueOf(sdf.format(d1)));
 			long days = DateUtils.getDaysDifference(d1, this.getManagedBean()
 					.getScQt().getSampleClosingDate());
 
@@ -5752,10 +5754,14 @@ public class EvaluationBackingBean extends
 							}
 
 						} else {
-							if (this.getManagedBean().getCountDays() >= 0) {
+							if (this.getManagedBean().getCountDays() > 0
+									|| (this.getManagedBean().getCountDays() == 0 && this
+											.getManagedBean().getCurrentTime() < 12)) {
 								throw new EpException(MessageConst.ERROR_760261);
 							}
-							if (this.getManagedBean().getCountDays() < 0) {
+							if (this.getManagedBean().getCountDays() < 0
+									|| (this.getManagedBean().getCountDays() == 0 && this
+											.getManagedBean().getCurrentTime() >= 12)) {
 								if (this.getManagedBean()
 										.getCurrentStatusId()
 										.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)) {
@@ -6018,10 +6024,14 @@ public class EvaluationBackingBean extends
 							}
 
 						} else {
-							if (this.getManagedBean().getCountDays() >= 0) {
+							if (this.getManagedBean().getCountDays() > 0
+									|| (this.getManagedBean().getCountDays() == 0 && this
+											.getManagedBean().getCurrentTime() < 12)) {
 								throw new EpException(MessageConst.ERROR_760261);
 							}
-							if (this.getManagedBean().getCountDays() < 0) {
+							if (this.getManagedBean().getCountDays() < 0
+									|| (this.getManagedBean().getCountDays() == 0 && this
+											.getManagedBean().getCurrentTime() >= 12)) {
 								if (this.getManagedBean()
 										.getCurrentStatusId()
 										.equals(QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL)) {
