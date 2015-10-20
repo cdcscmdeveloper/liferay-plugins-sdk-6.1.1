@@ -1493,7 +1493,7 @@ public class FileUtility extends InitializeSO{
 				line.append(System.getProperty("line.separator"));
 				line.append(formatString(signatory.getMOFNo(),20));
 				if(null!=signatory.getAuthorizedSignatory()){
-					line.append(formatString(signatory.getAuthorizedSignatory().getName(),20));
+					line.append(formatString(signatory.getAuthorizedSignatory().getName(),50));
 					line.append(formatString(signatory.getAuthorizedSignatory().getNewICNo(),12));
 					line.append(formatString(signatory.getAuthorizedSignatory().getPassport(),20));
 					line.append(formatString(signatory.getAuthorizedSignatory().getIsBumi(),1));
