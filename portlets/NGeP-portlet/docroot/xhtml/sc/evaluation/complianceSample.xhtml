@@ -13,7 +13,7 @@
 
 
 	<ui:fragment
-		rendered="#{evaluationBackingBean.managedBean.countDays ge 0}">
+		rendered="#{evaluationBackingBean.managedBean.countDays gt 0 or(evaluationBackingBean.managedBean.countDays eq 0 and evaluationBackingBean.managedBean.currentTime lt 12)}">
 		<h:panelGroup>
 			<table style="width: 50%">
 
@@ -41,7 +41,7 @@
 
 
 	<ui:fragment
-		rendered="#{evaluationBackingBean.managedBean.countDays lt 0}">
+		rendered="#{evaluationBackingBean.managedBean.countDays lt 0 or(evaluationBackingBean.managedBean.countDays eq 0 and evaluationBackingBean.managedBean.currentTime ge 12)}">
 		<p:panel header="#{lbl['lbl.sc.eva.sample.proposal.compliance']}"
 			toggleable="true">
 			
