@@ -1353,6 +1353,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				 panelItem.setPmUom(new PmUom());
 				 panelItem.setLocationLevelId(new PmParameter());
 				 panelItem.setCtPanelZones(null);
+				 panelItem.setItemType(new PmParameter());
 				 getManagedBean().getCircularVer().getCtPanelItems().add(panelItem);
         	 
 		} catch (Exception e) {

@@ -44,11 +44,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			  </p:column>
 			  
 			  <p:column headerText="#{lbl['lbl.ct.item.group']}" style="width:12%;" styleClass="column-align-center" >
+			     <div  align="left">
 			       <ac:lov id="itemGroupLovId" lovId="CT_PANEL_ITEM_GROUP" size="6" headerText="#{lbl['lbl.ct.item.group']}" readonly="true" 
 						value="#{panelItemsVar.ctPanelItemGroup.groupName}" conditionField="recordStatus^1" 
 						saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].ctPanelItemGroup"
 						disabled="#{panelBackingBean.managedBean.viewContract}">
 			       </ac:lov>
+			       </div>
 			   </p:column>
 		 	
               <p:column headerText="#{lbl['lbl.ct.item.name']}" style="width:15%;" styleClass="column-align-center" >
@@ -59,6 +61,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
                   		disabled="#{panelItemsVar.categoryParameterId == null or panelBackingBean.getItemGeneralCode(panelItemsVar.categoryParameterId) == ParameterConst.itemCategoryTypeGeneral}">
 						<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}" />
 					</p:commandLink>
+              </p:column>
+              <p:column headerText="#{lbl['lbl.ct.item.type']}" style="width:10%;white-space:pre-line" styleClass="column-align-center" >
+                    <p:selectOneMenu value="#{panelItemsVar.itemType.parameterId}" style="width:95%"
+			      		disabled="#{panelBackingBean.managedBean.viewContract}">
+			           <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.scItemType)}"/>
+			    </p:selectOneMenu>
               </p:column>
 			  <p:column styleClass="column-align-center" >
 				  	<f:facet name="header" style="width:8%;">
@@ -361,8 +369,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				       <p:column headerText="#{lbl['lbl.ct.bank.account.name']}"  style="width:15%;" styleClass="column-align-center" >
 				               <p:selectOneMenu id="accountId" style="width:250px;margin-bottom: 5px;"
 						           value="#{supVar.bankAccountNo}">
-						          <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
-						          <f:selectItems value="#{panelBackingBean.populateBankAccountList(supVar.supplier)}" />
+						           <f:selectItems value="#{panelBackingBean.populateBankAccountList(supVar.supplier)}" />
 						          <p:ajax event="change" process="@form"
 							          onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							           listener="#{panelBackingBean.changeAccountActionListener(supVar, index)}" />
