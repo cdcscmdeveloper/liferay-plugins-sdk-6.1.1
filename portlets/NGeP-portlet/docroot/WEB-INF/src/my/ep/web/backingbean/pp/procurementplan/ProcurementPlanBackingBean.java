@@ -1873,7 +1873,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			//Validation
 			validationPlanSubmit(action, ppPlan);
 			if(ppPlan.isBrandNew()){
-				//TODO: comment this for testing purpose only
+				//comment this for testing purpose only
 				validationPlanAvailability(ppPlan);  
 			}
 			
