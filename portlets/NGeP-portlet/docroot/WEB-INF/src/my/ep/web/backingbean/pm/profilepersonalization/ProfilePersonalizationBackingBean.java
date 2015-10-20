@@ -263,6 +263,9 @@ public class ProfilePersonalizationBackingBean extends
 			//load challengeQADropDownList
 			getManagedBean().setChallengeQADDList(PmCommonUtil.retrieveChallengeQAList(pmUser));
 			
+			//clear password policy
+			getManagedBean().setPasswordPolicy(null);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new EpException(MessageConst.ERROR_770016,
@@ -1186,18 +1189,25 @@ public class ProfilePersonalizationBackingBean extends
 		}
 	}
 	
-	public String generatePasswordPolicy(){		
+	public String generatePasswordPolicy(){	
+		IUserSO userSO = null;
 		if(StringUtils.isBlank(getManagedBean().getPasswordPolicy())){
-			IUserSO userSO = null;
 			try {
 				userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+							ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 				UserReqDTO reqDTO = new UserReqDTO();
 				reqDTO.setLoginId(getManagedBean().getSelectedUser().getLoginId());		
+				reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
 				UserResDTO resDTO = userSO.getPasswordPolicyInfo(reqDTO);
 				if(resDTO.isSuccessful() && resDTO.getPolicyInfos() != null){
 					StringBuilder sb = new StringBuilder();
-					sb.append("<b>Password Policy<b> <br/>");
+					
+					sb.append("<b>");
+					sb.append(ResourceBundleUtils.getMessage(
+							"lbl.pm.profiles.cp.tooltip",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()));
+					sb.append("</b><br/>");
 					for (String policy : resDTO.getPolicyInfos()) {
 						sb.append("&#160;&#8226;&#160; ");
 						sb.append(policy);
@@ -1206,7 +1216,7 @@ public class ProfilePersonalizationBackingBean extends
 					getManagedBean().setPasswordPolicy(sb.toString());
 				}				
 			}finally{
-				userSO = null;
+					userSO = null;
 			}
 		}
 		return getManagedBean().getPasswordPolicy();
