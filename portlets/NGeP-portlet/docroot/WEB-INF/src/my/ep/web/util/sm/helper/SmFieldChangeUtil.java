@@ -1,10 +1,12 @@
 package my.ep.web.util.sm.helper;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmEduLevel;
 import my.ep.persistence.entity.sm.SmAddress;
@@ -23,11 +25,12 @@ import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmStaffTotal;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 public class SmFieldChangeUtil {
 
@@ -102,8 +105,8 @@ public class SmFieldChangeUtil {
 			SmAppl currAppl) {
 		if (currAppl != null && latestAppl != null) {
 
-			// Cert of recognition (pending cant be done due to dont have id to
-			// compare)
+			// Cert of recognition
+			setSuppCertFieldChangeStatus(latestAppl, currAppl);
 
 			// Professional Body
 			setProfessionalBodyFieldChangeStatus(latestAppl, currAppl);
@@ -202,6 +205,29 @@ public class SmFieldChangeUtil {
 			for (SmAssociateCompany tmp : appl.getSmAssociateCompanies()) {
 				if (tmp.getRegNo() != null && regNo != null
 						&& tmp.getRegNo().equals(regNo)) {
+					retVal = tmp;
+					break;
+				}
+			}
+		}
+		return retVal;
+	}
+
+	public static SmSupplierCert getCertByNameAndCertTypeAndBodyFromList(
+			SmAppl appl, String name, BigDecimal certTypeId, PmCertBody body) {
+		SmSupplierCert retVal = new SmSupplierCert();
+		if (appl != null
+				&& !SmCommonUtil.isCollectionEmpty(appl.getSmSupplierCerts())) {
+			for (SmSupplierCert tmp : appl.getSmSupplierCerts()) {
+				if (tmp.getPmCertBody() != null
+						&& body != null
+						&& tmp.getPmCertBody().getCertBodyId() != null
+						&& body.getCertBodyId() != null
+						&& tmp.getPmCertBody().getCertBodyId()
+								.compareTo(body.getCertBodyId()) == 0
+						&& tmp.getCertTypeId() != null && certTypeId != null
+						&& tmp.getCertName().equals(name)
+						&& tmp.getCertTypeId().compareTo(certTypeId) == 0) {
 					retVal = tmp;
 					break;
 				}
@@ -410,7 +436,7 @@ public class SmFieldChangeUtil {
 							&& latestBody.getAssociationBodyId() != null) {
 						if (isHasDifferences(latestBody, currBody,
 								new String[] { "associationBodyId",
-										"smPersonnel" ,"pmCertBody"})) {
+										"smPersonnel", "pmCertBody" })) {
 							currPersonnel.setChangedFieldStatus("U");
 							currBody.setChangedFieldStatus("U");
 						}
@@ -931,8 +957,7 @@ public class SmFieldChangeUtil {
 							if (isAddressHasDifferences(
 									latestEquityCompany.getSmAddress(),
 									currEquityCompany.getSmAddress())
-									|| isHasDifferences(
-											latestEquityCompany,
+									|| isHasDifferences(latestEquityCompany,
 											currEquityCompany,
 											new String[] { "equityCompanyId" })) {
 								currEquityCompany.setChangedFieldStatus("U");
@@ -951,6 +976,80 @@ public class SmFieldChangeUtil {
 		for (SmEquityCompany latestEquityCompany : latestEquityCompanyList) {
 			if (latestEquityCompany.getRegNo().equalsIgnoreCase(
 					currEquityCompany.getRegNo())) {
+				retVal = true;
+				break;
+			}
+		}
+		return retVal;
+	}
+
+	private static void setSuppCertFieldChangeStatus(SmAppl latestAppl,
+			SmAppl currAppl) {
+		if (SmCommonUtil.isCollectionEmpty(latestAppl.getSmSupplierCerts())) {
+			if (!SmCommonUtil.isCollectionEmpty(currAppl.getSmSupplierCerts())) {
+				for (SmSupplierCert currCert : currAppl.getSmSupplierCerts()) {
+					currCert.setChangedFieldStatus("N");
+				}
+			}
+		} else {
+			if (currAppl.getSmSupplierCerts() != null
+					&& !currAppl.getSmSupplierCerts().isEmpty()) {
+				SmSupplierCert latestCert = null;
+				for (SmSupplierCert currCert : currAppl.getSmSupplierCerts()) {
+					if (!isCurrCertExistInLatestCert(currCert,
+							latestAppl.getSmSupplierCerts())) {
+						currCert.setChangedFieldStatus("N");
+					} else {
+						latestCert = getCertByNameAndCertTypeAndBodyFromList(
+								latestAppl, currCert.getCertName(),
+								currCert.getCertTypeId(),
+								currCert.getPmCertBody());
+						if (latestCert == null
+								|| latestCert.getSupplierCertId() == null) {
+							currCert.setChangedFieldStatus("N");
+						} else {
+							if (isHasDifferences(latestCert, currCert,
+									new String[] { "supplierCertId",
+											"pmCertBody" })) {
+								currCert.setChangedFieldStatus("U");
+							} else if (latestCert.getPmCertBody() != null
+									&& currCert.getPmCertBody() != null
+									&& latestCert.getPmCertBody()
+											.getCertBodyId() != null
+									&& currCert.getPmCertBody().getCertBodyId() != null
+									&& currCert
+											.getPmCertBody()
+											.getCertBodyId()
+											.compareTo(
+													latestCert.getPmCertBody()
+															.getCertBodyId()) != 0) {
+								currCert.setChangedFieldStatus("U");
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private static boolean isCurrCertExistInLatestCert(SmSupplierCert currCert,
+			List<SmSupplierCert> latestCertList) {
+		boolean retVal = false;
+		for (SmSupplierCert latestCert : latestCertList) {
+			if (latestCert.getPmCertBody() != null
+					&& latestCert.getPmCertBody().getCertBodyId() != null
+					&& currCert.getPmCertBody() != null
+					&& currCert.getPmCertBody().getCertBodyId() != null
+					&& currCert
+							.getPmCertBody()
+							.getCertBodyId()
+							.compareTo(
+									latestCert.getPmCertBody().getCertBodyId()) == 0
+					&& latestCert.getCertTypeId() != null
+					&& currCert.getCertTypeId() != null
+					&& latestCert.getCertTypeId().compareTo(
+							currCert.getCertTypeId()) == 0
+					&& latestCert.getCertName().equals(currCert.getCertName())) {
 				retVal = true;
 				break;
 			}

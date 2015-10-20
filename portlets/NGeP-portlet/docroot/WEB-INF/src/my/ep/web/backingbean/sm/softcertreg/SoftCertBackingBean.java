@@ -30,6 +30,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSoftcertDoc;
 import my.ep.persistence.entity.sm.SmSoftcertDocFile;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
@@ -152,12 +153,22 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 *            usr
 	 */
 	public void getPersonnelByPmUser(PmUser usr) {
+		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-		reqDTO.setUserId(Long.valueOf(usr.getUserId()));
+		reqDTO.setSmSupplierId(supplier.getSupplierId());
 		PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO()
-				.retrievePersonnelByUserId(reqDTO);
-		SmPersonnel smPersonnel = resDTO.getSmPersonnel();
-		this.getManagedBean().setLoginUserPersonnelInfo(smPersonnel);
+				.retrievePersonnelBySupplierId(reqDTO);
+		if (!SmCommonUtil.isCollectionEmpty(resDTO.getSmPersonnelList())) {
+			for (SmPersonnel personnel : resDTO.getSmPersonnelList()) {
+				if (personnel.getPmUser() != null
+						&& personnel.getPmUser().getUserId() != null
+						&& usr.getUserId().compareTo(
+								personnel.getPmUser().getUserId()) == 0) {
+					this.getManagedBean().setLoginUserPersonnelInfo(personnel);
+					break;
+				}
+			}
+		}
 	}
 
 	/**

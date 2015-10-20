@@ -54,6 +54,7 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.dto.sm.revertApplication.RevertApplicationReqDTO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
@@ -1228,6 +1229,28 @@ public class SmApplicationBackingBean extends
 			this.getManagedBean().setPmDigiSign(pmDigiSign);
 		}
 		updateSmAppl(applType, currentPageType, outputPageType);
+	}
+
+	/**
+	 * Get cert type name
+	 * 
+	 * @param Long
+	 *            certTypeId
+	 * @return String
+	 */
+	public String getCertTypeLabelById(Long certTypeId) {
+		String retVal = "";
+		if (certTypeId != null) {
+			for (SelectItem item : Arrays.asList(getDropdownValues("CRT"))) {
+				if (item.getValue() != null
+						&& item.getValue().toString()
+								.equals(certTypeId.toString())) {
+					retVal = item.getLabel();
+					break;
+				}
+			}
+		}
+		return retVal;
 	}
 
 	/**
@@ -2747,6 +2770,7 @@ public class SmApplicationBackingBean extends
 			RequestContext.getCurrentInstance().execute(
 					"suppCertDtWidVar.paginator.endLink.click()");
 		}
+		saveOrUpdateAppl();
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().execute("certDialog.hide()");
 	}
@@ -2762,6 +2786,11 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setSelectedCert(certBean);
 		assignCertBodyList();
 		assignValReqdToTrue();
+		getManagedBean().setLatestCert(
+				SmFieldChangeUtil.getCertByNameAndCertTypeAndBodyFromList(
+						getManagedBean().getLatestAppl(),
+						certBean.getCertName(), certBean.getCertTypeId(),
+						certBean.getPmCertBody()));
 		RequestContext.getCurrentInstance().execute("certDialog.show()");
 	}
 
@@ -8987,10 +9016,10 @@ public class SmApplicationBackingBean extends
 	 * Revert po application to supplier application data
 	 */
 	public void revertToOriginalApplication() {
-		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		RevertApplicationReqDTO reqDTO = new RevertApplicationReqDTO();
 		reqDTO.setSmAppl(getManagedBean().getSmAppl());
 		getManagedBean().setSmAppl(
-				SmServiceLookup.getMofRegistrationSO()
+				SmServiceLookup.getRevertApplicationSO()
 						.revertToSupplierOriginalApplication(reqDTO)
 						.getSmAppl());
 		initSmCompanyBasic(getManagedBean().getSmAppl());

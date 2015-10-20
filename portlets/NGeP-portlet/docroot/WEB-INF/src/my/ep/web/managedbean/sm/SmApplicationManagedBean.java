@@ -93,6 +93,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmSupplierBranch latestBranch;
 	private SmSupplierBank latestBank;
 	private SmCompanyExperience latestCompanyExperience;
+	private SmSupplierCert latestCert;
 	private SmAppl smAppl;
 	private SmSupplier smSupplier;
 	private int tabActiveIndex;
@@ -2998,6 +2999,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setLatestCompanyExperience(
 			SmCompanyExperience latestCompanyExperience) {
 		this.latestCompanyExperience = latestCompanyExperience;
+	}
+
+	public SmSupplierCert getLatestCert() {
+		return latestCert;
+	}
+
+	public void setLatestCert(SmSupplierCert latestCert) {
+		this.latestCert = latestCert;
 	}
 
 }
