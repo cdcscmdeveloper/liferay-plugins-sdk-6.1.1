@@ -547,10 +547,6 @@
 		         <p:tooltip id="toolTipServiceName" for="serviceNameID" value="#{data.scRequestItem.itemDesc == null ? lbl['lbl.ct.item.tooltip.desc'] : data.scRequestItem.itemDesc}" />
                         
 		      </p:column>       
-		      
-		      <p:column headerText="#{lbl['lbl.ct.specification']}" style="width:20%; white-space:normal;" styleClass="column-align-center">
-		        	<h:outputText value="#{data.scRequestItem.tplSpecQuestion.clSpecDetail}" style="float:left;"/>
-		      </p:column>  
 		    
 		      <p:column headerText="#{lbl['lbl.ct.uom']}" style="width:11%; white-space:normal;" styleClass="column-align-center">
 		        <h:outputText value="#{data.scRequestItem.uom.uomName}" style="float:left;"/>
