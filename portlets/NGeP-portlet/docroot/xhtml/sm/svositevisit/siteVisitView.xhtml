@@ -51,11 +51,9 @@
 			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvAddresses}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			
-			<ui:remove>
 			<p:column headerText="#{lbl['lbl.sm.facility.facilityType']}">
 				<h:outputText  value="#{svoSiteVisitBackingBean.getParameterDesc(ParameterTypeConst.supplierFacilityType, addr.smAddress.smFacilities[0].facilityType)}" />
 			</p:column>
-			</ui:remove>
 			
 			<p:column headerText="#{lbl['lbl.sm.address']}"
 				style="width: 50%;white-space: normal;">
