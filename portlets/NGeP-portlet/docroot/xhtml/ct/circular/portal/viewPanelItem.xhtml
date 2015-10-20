@@ -35,6 +35,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 					<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.ct.specification']}" />
 				  </p:commandLink>
               </p:column>
+              
+               <p:column style="width:10%;" headerText="#{lbl['lbl.ct.item.type']}"  styleClass="column-align-center" >
+				    <p:outputLabel style="float:left;" value="#{panelBackingBean.getParameterDesc(panelItemsVar.itemType)}" />
+			   </p:column>
 			
 			  <p:column headerText="#{lbl['lbl.ct.uom']}" style="white-space:pre-line; width:6%;" styleClass="column-align-center"  >
 			 		<h:outputText value="#{panelItemsVar.pmUom.uomName}" style="float:left;"   />
