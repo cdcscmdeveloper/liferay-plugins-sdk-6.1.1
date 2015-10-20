@@ -6,7 +6,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel header="#{lbl['lbl.pm.supplier.zone.dtl']}" toggleable="true">
-
+<br/>
+<br/>
 		<table>
 			<tr>
 				<td class="TableFieldLeft"><h:outputLabel
@@ -45,7 +46,7 @@
 						display="icon" /></td>
 			</tr>
 		</table>
-
+<br/>
 
 	</p:panel>
 
@@ -75,7 +76,7 @@
 			<p:commandButton value="Add" process="@this"
 				action="#{zoneBackingBean.addState}" immediate="true" update="searchStateId"
 				/>
-
+            &#160;
 			<p:commandButton value="Delete"
 				process="@this,selectedStateId" partialSubmit="true"
 				action="#{zoneBackingBean.deleteState}" update="selectedStateId" />
@@ -112,7 +113,7 @@
 				ajax="true" 
 				update="selectedStateId,searchStateId"
 				process="@this, stateSearch"  />
-
+               &#160;
 			<p:commandButton value="Cancel"  process="@this"
 				action="#{zoneBackingBean.cancleZone}" />
 		</div>
