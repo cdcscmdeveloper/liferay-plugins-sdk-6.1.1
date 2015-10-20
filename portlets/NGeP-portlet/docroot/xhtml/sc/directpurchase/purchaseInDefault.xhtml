@@ -294,15 +294,15 @@
 			<table style="width: 100%; margin-top: 8px;">
 				<tr>
 					<td style="width: 22.5%;"><p:outputLabel
-							value="#{lbl['lbl.sc.purchase.in.default.approval.valid.period']}" />
+							value="#{lbl['lbl.sc.purchase.in.default.valid.period']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="pidvalidDays" maxlength="14"
 							required="true"
-							label="#{lbl['lbl.sc.purchase.in.default.approval.valid.period']}"
+							label="#{lbl['lbl.sc.purchase.in.default.valid.period']}"
 							value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.pidValidDays}"
 							size="32" style="text-align:right;margin-right: 5px;"
 							disabled="#{!(isPendingSubmissionStatus or isPendingVerification)}">
-						</p:inputText>#{lbl['lbl.sc.days']} <p:message id="pidvalidDaysMsg"
+						</p:inputText> <p:message id="pidvalidDaysMsg"
 							for="pidvalidDays" display="icon" /></td>
 				</tr>
 
