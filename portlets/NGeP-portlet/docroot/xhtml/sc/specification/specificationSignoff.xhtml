@@ -109,7 +109,7 @@
 										readonly="#{specificationBackingBean.managedBean.currentStatusId ne '60401'}"
 										rendered="#{remarkVar.remarkId eq null and specificationBackingBean.managedBean.currentStatusId eq '60401'}" />
 									<h:outputText value="#{remarkVar.remark}"
-										rendered="#{remarkVar.remarkId ne null and (specificationBackingBean.managedBean.currentStatusId eq '60405' or specificationBackingBean.managedBean.currentStatusId eq '60402')}"
+										rendered="#{remarkVar.remarkId ne null and (specificationBackingBean.managedBean.currentStatusId eq '60405' or specificationBackingBean.managedBean.currentStatusId eq '60402' or specificationBackingBean.managedBean.currentStatusId eq '60401')}"
 										style="display: inline-block; width:220px;word-wrap: break-word;" />
 								</td>
 							</tr>
