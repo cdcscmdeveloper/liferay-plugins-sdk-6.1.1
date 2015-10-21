@@ -95,30 +95,30 @@
 			<p:column style="width:25px">
             	<p:rowToggler rendered="#{not empty vCtActiveContract.activeContractSubList}" />
         	</p:column>
-			<p:column headerText="#{lbl['lbl.fl.contract.no']}" style="width:142px">
-					<p:commandLink value="#{vCtActiveContract.contractNo}" 
+			<p:column headerText="#{lbl['lbl.fl.contract.no']}" style="width:142px;text-align:center">
+					<p:commandLink value="#{vCtActiveContract.contractNo}" style="float:right;"
 				action="#{contractRequestBackingBean.navigateDocument(vCtActiveContract.contractId)}"/>
 				
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.contract.name']}" style="width:142px;white-space:normal">
+			<p:column headerText="#{lbl['lbl.fl.contract.name']}" style="width:142px;white-space:normal;text-align:center">
 				<h:outputText
-					value="#{vCtActiveContract.contractName}" />
+					value="#{vCtActiveContract.contractName}" style="float:left;"/>
 			</p:column>
-			<p:column style="width:80px;white-space:normal;">
+			<p:column style="width:80px;white-space:normal;text-align:center">
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.fl.fs.no']}"/>
+					<h:outputText value="#{lbl['lbl.fl.fs.no']}" style="float:right;"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.crlist.phase.no']}"/>
 				</f:facet>
 				<f:facet name="footer">
 					<h:outputText value=""></h:outputText>			
 				</f:facet>
-				<h:outputText value="#{vCtActiveContract.scheduleNo == null ? vCtActiveContract.phaseNo : vCtActiveContract.scheduleNo}">
+				<h:outputText value="#{vCtActiveContract.scheduleNo == null ? vCtActiveContract.phaseNo : vCtActiveContract.scheduleNo}" style="float:right;">
 				</h:outputText>			
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.physical.treasury.circular']}" style="width:100px;white-space:normal">
-				<h:outputText value="#{vCtActiveContract.circularNo}" />
+			<p:column headerText="#{lbl['lbl.fl.physical.treasury.circular']}" style="width:100px;white-space:normal;text-align:center">
+				<h:outputText value="#{vCtActiveContract.circularNo}" style="float:right;"/>
 			</p:column>
-			<p:column style="width:60px;white-space:normal;">
+			<p:column style="width:60px;white-space:normal;text-align:center">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.fl.period.start']}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.crlist.period.start']}"/>
@@ -131,7 +131,7 @@
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>			
 			</p:column>
-			<p:column style="width:60px;white-space:normal;">
+			<p:column style="width:60px;white-space:normal;text-align:center">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.fl.period.end']}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.crlist.period.end']}"/>
@@ -144,16 +144,16 @@
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>			
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.fulfilment.type']}" style="width:108px;white-space:normal">
-				<h:outputText value="#{contractRequestBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentType, vCtActiveContract.fulfilmentType)}" >
+			<p:column headerText="#{lbl['lbl.fl.fulfilment.type']}" style="width:108px;white-space:normal;text-align:center">
+				<h:outputText value="#{contractRequestBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentType, vCtActiveContract.fulfilmentType)}" style="float:left;">
 				</h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.contract.type']}" style="width:99px">
-				<h:outputText value="#{contractRequestBackingBean.getParameterDesc(ParameterTypeConst.contractType, vCtActiveContract.contractType)}" >
+			<p:column headerText="#{lbl['lbl.fl.contract.type']}" style="width:99px;text-align:center">
+				<h:outputText value="#{contractRequestBackingBean.getParameterDesc(ParameterTypeConst.contractType, vCtActiveContract.contractType)}" style="float:left;">
 				</h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.supp.name']}" style="width:98px;white-space:normal">
-				<h:outputText value="#{vCtActiveContract.supplierName}" >
+			<p:column headerText="#{lbl['lbl.fl.supp.name']}" style="width:98px;white-space:normal;text-align:center">
+				<h:outputText value="#{vCtActiveContract.supplierName}" style="float:left;">
 				</h:outputText>
 			</p:column>
 			
