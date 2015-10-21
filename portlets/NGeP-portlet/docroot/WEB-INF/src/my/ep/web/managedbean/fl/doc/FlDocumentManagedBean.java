@@ -390,7 +390,6 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				if(null == docsearchResult.getStatusId() || ParameterConst.DOCTYPE_PURCHASE_REQUEST.equalsIgnoreCase(docsearchResult.getDocType()) ){
 					docsearchResult.setViewAction(true);
 				}else if(ParameterConst.DOCTYPE_CONTRACT_REQUEST.equalsIgnoreCase(docsearchResult.getDocType()) && FulfilmentStatusConst.CR_PENDING_SUBMISSION.equals(docsearchResult.getStatusId())){
-					docsearchResult.setUpdateAction(true);
 					docsearchResult.setViewAction(true);
 				}else if(ParameterConst.DOCTYPE_CONTRACT_REQUEST.equalsIgnoreCase(docsearchResult.getDocType())){
 					docsearchResult.setViewAction(true);
