@@ -28,7 +28,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		      </p:column>
 		 	
               <p:column headerText="#{lbl['lbl.ct.item.name']}" style="width:15%;" styleClass="column-align-center" >
-                  <p:inputTextarea value="#{panelItemsVar.itemName}" maxlength="100" rows="2" style="float:left;"  autoResize="false" disabled="true"/>
+                  <p:inputTextarea value="#{panelItemsVar.itemName}" maxlength="100" rows="2" cols="15" style="float:left;"  autoResize="false" disabled="true"/>
                   <p:spacer width="5" />
    	   			  <p:commandLink id="spec" update=":form:itemSpecDlg" action="#{panelBackingBean.panelItemSpecDlg(panelItemsVar)}" 
              		disabled="#{panelItemsVar.itemCategoryId == null or panelBackingBean.getItemGeneralCode(panelItemsVar.itemCategoryId.parameterId) == ParameterConst.itemCategoryTypeGeneral}">
