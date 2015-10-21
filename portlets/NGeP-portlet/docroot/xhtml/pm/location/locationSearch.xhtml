@@ -6,7 +6,6 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel id="locationSearchPanel"
 		header="#{lbl['lbl.pm.search.location']}" toggleable="true">
-		<br />
 		<table class="ppTwoTable">
 			<tr>
 				<th width="20%">
@@ -76,7 +75,6 @@
 						<p:commandButton value="#{lbl['lbl.btn.search']}"
 							update="searchLocations" process="locationSearchPanel"
 							 action="#{locationBackingBean.searchLocation}" />
-						&#160;
 						<p:commandButton value="#{lbl['lbl.btn.reset']}"
 							update=":form:locationSearchPanel,:form:searchLocations" process="@this"
 							action="#{locationBackingBean.resetLocationSearchBean}" />
