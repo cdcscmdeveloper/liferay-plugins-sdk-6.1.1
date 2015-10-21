@@ -1764,15 +1764,13 @@ public class LOIDetailBackingBean extends
 	 * Handle branch details changed. shows the supplier address details.
 	 */
 	public void handleBranchDetailsChanged() {
-		log.info("handleBranchDetailsChanged");
 		debugLogger("handleBranchDetailsChanged");
-
 		ScLoi scLoi = this.getManagedBean().getScLoi();
 		String selectedSupplierBranchName = this.getManagedBean()
 				.getBranchName();
-
+		   String supplierBranchAsHQ = QTConstants.SUPPLIER_INFO_HQ;
 		if (selectedSupplierBranchName == null
-				|| "HQ".equals(selectedSupplierBranchName)) {
+				|| supplierBranchAsHQ.equals(selectedSupplierBranchName)) {
 			SmPersonnel supplierHQPersonnel = this.getManagedBean()
 					.getSupplierHQPersonnel();
 			SmCompanyBasic smCompanyBasic = null;
@@ -1788,7 +1786,7 @@ public class LOIDetailBackingBean extends
 							smCompanyAddress.getAddressType())) {
 						log.info("found hq address");
 
-						scLoi.setSupplierBranch("HQ");
+						scLoi.setSupplierBranch(supplierBranchAsHQ);
 						scLoi.setSupplierAddress(smCompanyAddress
 								.getSmAddress());
 						scLoi.setSupplierContact(supplierHQPersonnel.getName());
