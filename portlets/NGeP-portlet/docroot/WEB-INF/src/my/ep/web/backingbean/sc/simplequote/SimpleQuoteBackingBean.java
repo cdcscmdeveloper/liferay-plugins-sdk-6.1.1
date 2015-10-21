@@ -256,6 +256,7 @@ public class SimpleQuoteBackingBean extends
 						}
 					}
 				}
+				
 				// by locality
 				List<PmState> states = new ArrayList<PmState>();
 				List<PmDivision> divisions = new ArrayList<PmDivision>();
@@ -284,6 +285,11 @@ public class SimpleQuoteBackingBean extends
 
 				if(scQuote.getRequestNotes() != null && scQuote.getRequestNotes().size()>0){
 					getManagedBean().getRequestNote().setPmOrgProfile(scRequestNote.getPmOrgProfile());
+				}
+				
+				// procurement  type category
+				if(null == scQuote.getProcurementTypeCategory()){
+					scQuote.setProcurementTypeCategory(new PmParameter());
 				}
 
 				// zone location level by default - district 
@@ -4399,6 +4405,7 @@ public class SimpleQuoteBackingBean extends
 				getManagedBean().setLocationLevel(
 						scQuote.getZoneLocatonLevel().getParameterCode());
 			}
+			
 			// procurement  type category
 			if(null == scQuote.getProcurementTypeCategory()){
 				scQuote.setProcurementTypeCategory(new PmParameter());
