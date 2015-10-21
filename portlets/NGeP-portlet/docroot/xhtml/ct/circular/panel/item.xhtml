@@ -7,10 +7,11 @@ xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core"
 xmlns:ac="http://ac.my/jsf/composite/cc">
 <p:panel id="itemId" header="#{lbl['lbl.ct.panel.item']}" toggleable="true" toggleSpeed="500">
-	 <h:panelGrid style="width:100%">
+	 <div style="overflow-x: scroll;">
+	      <h:panelGrid style="width:100%">
 		  <p:dataTable id="panelItemDt" var="panelItemsVar"  value="#{panelBackingBean.managedBean.circularVer.ctPanelItems}" 
 		      selectionMode="single" rowKey="#{panelItemsVar}" selection="#{panelBackingBean.managedBean.selectedPanelItems}"
-		      rowIndexVar="index" widgetVar="panelItemObj">
+		      rowIndexVar="index" widgetVar="panelItemObj" style="width:1000px;">
 		      <ac:paginator for="panelItemDt" />
               <p:ajax event="rowSelect"  listener="#{panelBackingBean.setPanelListner()}" process="@this" 
                   onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  update="@([id$=itemZone],[id$=itemSupplier],[id$=deleteItemBtn])"  />	
@@ -22,12 +23,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			       </p:selectBooleanCheckbox>
 		      </p:column>
 			 
-			  <p:column style="white-space:pre-line;width:6%;" styleClass="column-align-center" >
+			  <p:column style="white-space:pre-line;width:10%;" styleClass="column-align-center" >
 			       <f:facet name="header">
 						<h:outputText value="#{lbl['lbl.ct.panel.coverage']}"/>
 	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.panel.coverage']}"/>
 	               </f:facet>
-			       <p:selectOneMenu id="panelCoverage" value="#{panelItemsVar.zoneAllParamterId}" style="width:95%;" 
+			       <p:selectOneMenu id="panelCoverage" value="#{panelItemsVar.zoneAllParamterId}" style="width:100px;" 
 			       		disabled="#{panelBackingBean.managedBean.viewContract}">
 			             <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.panelCoverageType)}"/>
 			             <p:ajax event="change"   listener="#{panelBackingBean.setCtPanelZoneListner(panelItemsVar)}" 
@@ -35,17 +36,17 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			       </p:selectOneMenu>
 	  	      </p:column>
 			 
-			  <p:column headerText="#{lbl['lbl.ct.item.category']}" style="white-space:pre-line;width:6%" styleClass="column-align-center" >
-			      <p:selectOneMenu value="#{panelItemsVar.categoryParameterId}" style="width:95%"
+			  <p:column headerText="#{lbl['lbl.ct.item.category']}" style="white-space:pre-line;width:10%" styleClass="column-align-center" >
+			      <p:selectOneMenu value="#{panelItemsVar.categoryParameterId}" style="width:100px"
 			      		disabled="#{panelBackingBean.managedBean.viewContract}">
 			           <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.itemCategoryType)}"/>
 			           <p:ajax event="change" update="spec" process="@this" listener="#{panelBackingBean.changeItemCategoryListner(panelItemsVar)}" /> 
 			      </p:selectOneMenu>
 			  </p:column>
 			  
-			  <p:column headerText="#{lbl['lbl.ct.item.group']}" style="width:12%;" styleClass="column-align-center" >
+			  <p:column headerText="#{lbl['lbl.ct.item.group']}" style="width:15%;" styleClass="column-align-center" >
 			     <div  align="left">
-			       <ac:lov id="itemGroupLovId" lovId="CT_PANEL_ITEM_GROUP" size="6" headerText="#{lbl['lbl.ct.item.group']}" readonly="true" 
+			       <ac:lov id="itemGroupLovId" lovId="CT_PANEL_ITEM_GROUP" size="10" headerText="#{lbl['lbl.ct.item.group']}" readonly="true" 
 						value="#{panelItemsVar.ctPanelItemGroup.groupName}" conditionField="recordStatus^1" 
 						saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].ctPanelItemGroup"
 						disabled="#{panelBackingBean.managedBean.viewContract}">
@@ -53,17 +54,17 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			       </div>
 			   </p:column>
 		 	
-              <p:column headerText="#{lbl['lbl.ct.item.name']}" style="width:15%;" styleClass="column-align-center" >
-                  <p:inputTextarea value="#{panelItemsVar.itemName}" maxlength="100" rows="2" style="width:80%;" autoResize="false"
+              <p:column headerText="#{lbl['lbl.ct.item.name']}" style="width:150px;" styleClass="column-align-center" >
+                  <p:inputTextarea value="#{panelItemsVar.itemName}" maxlength="100" rows="2" style="width:100px;" autoResize="false"
                   	disabled="#{panelBackingBean.managedBean.viewContract}"/>
                   	<p:spacer width="3" />
-                  	<p:commandLink id="spec" update=":form:itemSpecDlg" action="#{panelBackingBean.panelItemSpecDlg(panelItemsVar)}" 
+                  	<p:commandLink id="spec" update=":form:itemSpecDlg" action="#{panelBackingBean.panelItemSpecDlg(panelItemsVar)}" style="width:50px;"
                   		disabled="#{panelItemsVar.categoryParameterId == null or panelBackingBean.getItemGeneralCode(panelItemsVar.categoryParameterId) == ParameterConst.itemCategoryTypeGeneral}">
-						<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}" />
+						<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}"  />
 					</p:commandLink>
               </p:column>
-              <p:column headerText="#{lbl['lbl.ct.item.type']}" style="width:10%;white-space:pre-line" styleClass="column-align-center" >
-                    <p:selectOneMenu value="#{panelItemsVar.itemType.parameterId}" style="width:95%"
+              <p:column headerText="#{lbl['lbl.ct.item.type']}" style="width:8%;white-space:pre-line" styleClass="column-align-center" >
+                    <p:selectOneMenu value="#{panelItemsVar.itemType.parameterId}" style="width:100px;"
 			      		disabled="#{panelBackingBean.managedBean.viewContract}">
 			           <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.scItemType)}"/>
 			    </p:selectOneMenu>
@@ -72,7 +73,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				  	<f:facet name="header" style="width:8%;">
 						<h:outputText value="#{lbl['lbl.ct.uom']}" style="float:left;white-space:pre-line"  />
 	               	</f:facet>
-			       <ac:lov id="uomLovId" lovId="PM_UOM" size="5" headerText="#{lbl['lbl.ct.uom']}" readonly="true" 
+			       <ac:lov id="uomLovId" lovId="PM_UOM" size="10" headerText="#{lbl['lbl.ct.uom']}" readonly="true" 
 				         value="#{panelItemsVar.pmUom.uomName}" conditionField="recordStatus^1" 
 				       saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].pmUom"
 				       disabled="#{panelBackingBean.managedBean.viewContract}">
@@ -130,6 +131,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			  												
 		    </p:dataTable>
 	 </h:panelGrid>	 
+	 </div>
 	 <div class="ppRightBtn">
 	 	 <ac:lov id="loaBulkSupId" lovId="SM_SUPPLIER"
 						postUpdateListener="panelBackingBean.addBulkPanelSupplier"
