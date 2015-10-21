@@ -7004,7 +7004,7 @@ public class SmApplicationBackingBean extends
 					log.info(" **** Final Decision from PO ****");
 					if (res.equalsIgnoreCase("Approve")) {
 						successMsg = SmCommonUtil.getOutputMsgBundle(
-								MessageConst.INFO_700007, new String[] {
+								MessageConst.INFO_700027, new String[] {
 										applNo, mofNo });
 					} else if (res.equalsIgnoreCase("Reject")) {
 						if (getManagedBean().getBpmTaskName() != null
@@ -7016,7 +7016,7 @@ public class SmApplicationBackingBean extends
 									.getLastApprovedApplictionForSupplier(getManagedBean()));
 						}
 						successMsg = SmCommonUtil.getOutputMsgBundle(
-								MessageConst.INFO_700008, new String[] {
+								MessageConst.INFO_700028, new String[] {
 										applNo, mofNo });
 					} else if (res.equalsIgnoreCase("Escalate")) {
 						String statusDesc = "";
