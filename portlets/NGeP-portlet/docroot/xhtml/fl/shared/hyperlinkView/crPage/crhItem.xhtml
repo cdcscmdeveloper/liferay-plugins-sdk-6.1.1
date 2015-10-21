@@ -47,26 +47,18 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.fl.delivery.start']}"  style="white-space:normal;text-align:center;">
-				<p:calendar value="#{address.startDate}" id="calStartDate"   
-					mindate="#{address.startDate}"
-					readonlyInput="true"
-					disabled="true" 
-					size="8" 
-					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-					<p:ajax event="dateSelect"
-						listener="#{contractRequestBackingBean.updateDeliveryAddrDate}"
-						update="calEndDate" />
-				</p:calendar>
+				
+				<h:outputText value="#{address.startDate}" style="float:right;" >
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.fl.delivery.end']}"  style="white-space:normal;text-align:center;">
-				<p:calendar value="#{address.endDate}" id="calEndDate" 
-					mindate="#{address.startDate}"
-					readonlyInput="true"
-					disabled="true" 
-					size="8"
-					maxdate="#{contractRequestBackingBean.managedBean.maxDate}"
-					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				<h:outputText value="#{address.endDate}" style="float:right;" >
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>	
 			</p:column>
 			<p:column style="white-space:normal;">
 				<f:facet name="header" style="white-space:normal;">
