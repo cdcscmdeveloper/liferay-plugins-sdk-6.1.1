@@ -1252,7 +1252,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 			requestSupplierItem.setSupplierId(cmSupplierItem.getSmSupplier().getSupplierId());
 
-			// TODO check supplier is government seller or not 
+			// check supplier is government seller or not 
 			if(cmSupplierItem.getSmSupplier().getPmOrgProfile() != null &&
 					cmSupplierItem.getSmSupplier().getPmOrgProfile().isGovtSeller()){
 				getManagedBean().setProcurementType(ParameterConst.PROC_TYPE_G2G);
@@ -1271,13 +1271,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						priceTypes.add(princing.getPricingType());
 					}
 				}
-				// TODO PriceType drop down list in AddToCart
+				// PriceType drop down list in AddToCart
 				getManagedBean().setPriceTypes(getPriceTypeDropdownValues(ParameterTypeConst.PRICE_TYPE, priceTypes));
 				// required validation
 				getManagedBean().setRequired(Boolean.TRUE);
 			}
 		} else {
-			// TODO - remove after catalogue team had add the filtering in view.
+			// remove after catalogue team had add the filtering in view.
 			throw new EpException(MessageConst.ERROR_760159);
 		}
 		
@@ -2163,28 +2163,34 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	public void fulfilmentTypeEvent(ScRequestNoteDtl requestNoteDtl) {
 		debugLogger("fulfilmentTypeEvent"); 
-		if(getManagedBean().getFulfillmentType() != null){
-			//requestNoteDtl.setFulfillmentType(getManagedBean().getFulfillmentType());
-		}
-
+		
+		UserReqDTO reqDTO = new UserReqDTO();
 		List<PmUser> userlist = new ArrayList<PmUser>();
 		if(requestNoteDtl.getFulfilmentType() != null ){
-			if (requestNoteDtl.getFulfilmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
-				userlist = userListByRole(RoleCode.REQUISITIONER.value());
-				getManagedBean().setUserList(userlist);
+			if (requestNoteDtl.getFulfilmentType().getParameterCode().
+					equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
+				reqDTO.setRoleCode(RoleCode.REQUISITIONER.value());
 
 			} else {
-				List<String> roleList= new ArrayList<String>();
-				roleList.add(RoleCode.DESK_OFFICER.value());
-				roleList.add(RoleCode.REQUISITIONER.value());
-				for (String role : roleList) {
-					userlist.addAll(userListByRole(role));
-				}
-				Collections.sort(userlist, new usersComparator());
-				getManagedBean().setUserList(userlist);
+				List<String> roleCodes= new ArrayList<String>();
+				roleCodes.add(RoleCode.DESK_OFFICER.value());
+				roleCodes.add(RoleCode.REQUISITIONER.value());
+				reqDTO.setRoleCodes(roleCodes);
 			}
+			
+			if(getManagedBean().getRequestNote().getPmOrgProfile()!= null){
+				reqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
+			}
+
+			UserResDTO resDTO = getUserSO().retrieveUserListByRole(reqDTO);
+			userlist = resDTO.getUserList();
+			if(userlist != null && !userlist.isEmpty()){
+				Collections.sort(userlist, new usersComparator());
+			}
+			getManagedBean().setUserList(userlist);
 		}
 	}
+	
 	// sorting prepared by users
     /**
 	 * The Class usersComparator.
@@ -2200,31 +2206,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			sort = pmUser1.getUserName().compareTo(pmUser2.getUserName());
 			return sort;
 		}
-	}
-	
-	/**
-	 * User list by role.
-	 *
-	 * @param roleCode the role code
-	 * @return the list
-	 */
-	public List<PmUser> userListByRole(String roleCode){
-		debugLogger("userListByRole - Start");
-		List<PmUser> options = new ArrayList<PmUser>();
-		try{
-			UserReqDTO reqDTO = new UserReqDTO();
-			reqDTO.setRoleCode(roleCode);
-			if(getManagedBean().getRequestNote().getPmOrgProfile()!= null){
-			  reqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
-			}
-			UserResDTO resDTO = getUserSO().retrieveUserListByRole(reqDTO);
-				options = resDTO.getUserList();
-			log.info("result size: " +options.size());
-		} finally{
-			
-		}
-		log.info("userListByRole - End");
-		return options;
 	}
 	
 	/**
