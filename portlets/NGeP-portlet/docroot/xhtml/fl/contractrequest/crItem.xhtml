@@ -242,7 +242,7 @@
 				<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="text-align:center;width:140px">
 					<p:inputText value="#{item.orderedQty}" size="14" id="orderedQty" label="#{lbl['lbl.fl.ordered.qty']}"
 						disabled="#{(empty contractRequestBackingBean.managedBean.selectedDelAddr or contractRequestBackingBean.managedBean.buttonVal=='View')}"
-						maxlength="#{item.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" styleClass="colFloatRight" style="float:right;" 
+						maxlength="#{item.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" style="text-align:right" styleClass="colFloatRight" 
 						onkeypress="if (event.keyCode == 13) { return false; }">
 						<f:converter converterId="dynamicNumberConverter" />
 						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.scRequestItem.uom.uomCode)}" />
@@ -261,7 +261,7 @@
 					<p:message for="orderedQty" display="icon" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.ordered.amount']}" style="text-align:center">
-					<p:inputText id="subTotalTxt" size="15" style="float:right;"
+					<p:inputText id="subTotalTxt" size="15" style="text-align:right" styleClass="colFloatRight" 
 						value="#{item.orderedAmt}" disabled="true">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
