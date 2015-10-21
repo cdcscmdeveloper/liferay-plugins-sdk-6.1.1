@@ -16,6 +16,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.persistence.criteria.JoinType;
 
+import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -569,13 +570,22 @@ public class SupplierFinalizationMeetingBackingBean extends
 								"identificationCode.parameterCode",
 								SearchOperator.OPERATOR_EQUALS.value(), 
 								idtype, true));
-			}		
+			}
+			
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"pmUserOrgs.recordStatusFlg", 
+							SearchOperator.OPERATOR_EQUALS.value(),
+							DbValueConst.RECORD_STATUS_ACTIVE)					
+					);
+			
 			
 			ScQt scQt = this.getManagedBean().getScQt();
 			if (null != scQt.getPmOrgProfile()) {
 				Long ministryOrgProfile = retrieveMinistryOrgProfile(
 						scQt.getPmOrgProfile().getOrgProfileId()).getOrgProfileId();
 				String committeeType = getManagedBean().getCommitteeType();
+				
 				SearchFilterBean ptjOrgProfileFB = new SearchFilterBean(
 						"pmUserOrgs.pmOrgProfile."
 								+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
