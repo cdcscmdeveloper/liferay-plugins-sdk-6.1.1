@@ -102,7 +102,7 @@
 			
 			<cc:insertChildren />
 			
-			<c:if test="#{cc.attrs.buttonLabel != ''}">
+			<c:if test="#{not empty cc.attrs.buttonLabel}">
 				<f:attribute name="value" value="#{cc.attrs.buttonLabel}" />
 			</c:if>
 					
@@ -130,14 +130,14 @@
 			
 			<cc:insertChildren />
 			
-			<c:if test="#{cc.attrs.buttonLabel != ''}">
+			<c:if test="#{not empty cc.attrs.buttonLabel}">
 				<f:attribute name="value" value="#{cc.attrs.buttonLabel}" />
 			</c:if>
 					
 		</p:commandButton>
 	</h:panelGroup>
 	
-	<c:if test="#{cc.attrs.tooltip != ''}">
+	<c:if test="#{not empty cc.attrs.tooltip}">
 		<ac:iconTooltip id="#{cc.attrs.id}TP" value="#{cc.attrs.tooltip}"/>
 	</c:if>
 	
