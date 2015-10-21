@@ -7,16 +7,26 @@
 
 	<p:outputPanel id="pSupportDocHeader">
 
-		<div class="button-wrapper">
-			<p:commandButton value="#{lbl['lbl.btn.back']}"
-				action="#{locationBackingBean.backToSearch}" style="float:left;"
-				process="@this" />
-			<div class="rowBtnRight">
-				<p:commandButton
-					value="#{!locationBackingBean.managedBean.disabledVal? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}"
-					update="@([id$=Msg])" action="#{locationBackingBean.saveLocation}"
-					style="float:right;" />
-			</div>
-		</div>
-		</p:outputPanel>
+		<table style="width: 100%">
+			<tr>
+				<td>
+					<div align="left" style="width: 100%">
+						<p:commandButton value="#{lbl['lbl.btn.back']}"
+							action="#{locationBackingBean.backToSearch}" style="float:left;"
+							process="@this" />
+					</div>
+				</td>
+				<td>
+					<div align="right" style="width: 100%">
+
+						<p:commandButton
+							value="#{!locationBackingBean.managedBean.disabledVal? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}"
+							update="@([id$=Msg])"
+							action="#{locationBackingBean.saveLocation}" style="float:right;" />
+					</div>
+				</td>
+			</tr>
+		</table>
+
+	</p:outputPanel>
 </ui:composition>
