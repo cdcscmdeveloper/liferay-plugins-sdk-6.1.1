@@ -3154,6 +3154,12 @@ input[type="submit"]:hover,input[type="button"]:hover,input[type="reset"]:hover,
 	font-style: italic;
 }
 
+.instructioninfo {
+	font-size: 10px;
+	font-style: italic;
+	color: #FF0000;
+}	
+
 .ui-treetable {
 	overflow: auto;
 }
