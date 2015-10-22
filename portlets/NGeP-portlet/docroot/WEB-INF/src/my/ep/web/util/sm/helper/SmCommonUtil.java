@@ -2815,13 +2815,16 @@ public class SmCommonUtil {
 					String x = (String) en.next();
 					if (x.endsWith("."))
 						x = x.substring(0, x.length() - 1);
-					log.info("Email domain " + hostNameArr[1]
-							+ " name servers:" + x);
 					res.add(x);
 				}
 
 				if (!isCollectionEmpty(res)) {
+					log.info("Email domain " + hostNameArr[1]
+							+ " name servers:" + res);
 					retVal = true;
+				} else {
+					log.info("Email domain " + hostNameArr[1]
+							+ "dont have any name servers exist!!!");
 				}
 			}
 		} catch (NamingException e) {
