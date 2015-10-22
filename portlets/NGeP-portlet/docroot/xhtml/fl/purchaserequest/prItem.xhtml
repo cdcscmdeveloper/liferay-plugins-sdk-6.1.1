@@ -36,15 +36,15 @@
 					style="padding-right:5px" rendered="#{address.receivingGrp!=null}">
 					<p:graphicImage value="/css/images/design/ico-view-edit.png" />
 				</p:commandLink>
-				<h:outputText rendered="#{address.addressType != null}" style="float:left;"
+				<h:outputText rendered="#{address.addressType != null}" style="text-align:left; float:left;"
 					value="#{purchaseRequestBackingBean.getFullAddress(address.addressType.pmAddress)}" />
-				<h:outputText rendered="#{address.addressType eq null}" style="float:left;"
+				<h:outputText rendered="#{address.addressType eq null}" style="text-align:left; float:left;"
 					value="#{purchaseRequestBackingBean.getFullAddress(address.pmAddress)}" />
 			</p:column>
 			
 
 			<p:column headerText="#{lbl['lbl.fl.delivery.period']}" style="white-space:normal;text-align:center">
-				<p:outputLabel style="float:left;"
+				<h:outputText style="float:left;"
 					value="#{address.deliveryTerm} #{purchaseRequestBackingBean.getParameterDesc(address.pmUom)}" />
 			</p:column>
 			<ui:remove>
@@ -163,7 +163,7 @@
 					<h:outputText rendered="#{flItem.scRequestItem.cmItem!=null}" value="#{flItem.scRequestItem.cmItem.extensionCode}" title="Requested Quantity: #{flItem.scRequestItem.quantity eq null ? lbl['lbl.fl.supp.na'] : flItem.scRequestItem.quantity}" styleClass="colFloatRight"/>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center">
-					<h:outputText value="#{flItem.scRequestItem.itemName}" id="itemDesc" styleClass="colFloatLeft"/>
+					<h:outputText value="#{flItem.scRequestItem.itemName}" id="itemDesc" style="text-align:left; float:left;"/>
 					<p:tooltip for="itemDesc" value="#{flItem.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : flItem.scRequestItem.itemDesc}"  />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.uom']}">
@@ -187,7 +187,7 @@
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="width:124px;text-align:center">
+				<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="width:148px;text-align:center">
 					<p:commandLink oncomplete="reqItemInfo.show();" process="@this" 
 					action="#{purchaseRequestBackingBean.reqItemInfoList(flItem)}"
 					update=":form:reqItemInfoDialog,@(.orderSummaryChange)">
