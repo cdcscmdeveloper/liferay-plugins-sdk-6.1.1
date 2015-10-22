@@ -40,6 +40,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.IContractSO;
@@ -1325,6 +1326,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		getManagedBean().setItemIndex(11);
 		getManagedBean().setFactoring(11);
 		getManagedBean().setSettingIndex(11);		
+		getManagedBean().setPaymentTracking(11);
 		
 		if (outputTab.equalsIgnoreCase(ContractConst.FULFILMENT_DETAIL)) {
 			getManagedBean().setSelectedTabIndex(0);
@@ -1365,7 +1367,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
   	    	     } else {
   	    			 getManagedBean().setSelectedTabIndex(2);
   	    	     }
-  	     	   getManagedBean().setFactoring( getManagedBean().getSelectedTabIndex());
+  	     	   getManagedBean().setPaymentTracking( getManagedBean().getSelectedTabIndex());
     
 		}else if (outputTab.equalsIgnoreCase(ContractConst.SETTING_DETAIL)) {
 			  
@@ -4021,5 +4023,30 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    } else {
 	    	return false;
 	    }
+	}
+	
+	public SelectItem[] retrieveParameterDescListByType() {
+		
+		SelectItem[] items = null;
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>(); ;
+		
+		
+		try {
+			SearchFilterBean filterBean = new SearchFilterBean("pmParameter.parameterCode",SearchOperator.OPERATOR_NOT_EQUALS.value(), "AP");
+	        filterBean.setCaseInsensitive(true);	
+	        searchBean.getDataFilterBeans().add(filterBean);
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(
+					ParameterTypeConst.DEDUCTION_TYPE, searchBean);
+			
+		    items = new SelectItem[parameterDescs.size()];
+		    int i = 0;
+		    for (PmParameterDesc parameterDesc : parameterDescs) {
+		    	items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(), parameterDesc.getCodeName());
+		    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+	    return items;
 	}
 }
