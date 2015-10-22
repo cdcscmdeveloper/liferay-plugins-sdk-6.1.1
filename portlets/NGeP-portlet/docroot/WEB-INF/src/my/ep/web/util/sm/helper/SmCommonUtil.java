@@ -12,7 +12,6 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.HttpURLConnection;
@@ -27,6 +26,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -39,6 +39,11 @@ import javax.faces.application.FacesMessage.Severity;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.InitialDirContext;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
@@ -56,6 +61,7 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -135,7 +141,6 @@ import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
-import org.springframework.beans.BeanUtils;
 
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Layout;
@@ -2779,6 +2784,37 @@ public class SmCommonUtil {
 			return true;
 		}
 		return false;
+	}
+
+	public static void checkEmailDomainWithExceptionMsg(String emailOwner,
+			String email) {
+		if (StringUtils.isNotBlank(email) && !isValidEmailDomain(email)) {
+			throw new EpException(MessageConst.ERROR_721115, new String[] {
+					email, emailOwner });
+		}
+	}
+
+	public static boolean isValidEmailDomain(String email) {
+		boolean retVal = false;
+		String[] hostNameArr = StringUtils.isNotBlank(email) ? email.split("@")
+				: new String[] {};
+		try {
+			if (hostNameArr != null && hostNameArr.length > 1) {
+				Hashtable env = new Hashtable();
+				env.put("java.naming.factory.initial",
+						"com.sun.jndi.dns.DnsContextFactory");
+				DirContext ictx = new InitialDirContext(env);
+				Attributes attrs = ictx.getAttributes(hostNameArr[1],
+						new String[] { "MX" });
+				Attribute attr = attrs.get("MX");
+				if (attr != null && attr.size() > 0) {
+					retVal = true;
+				}
+			}
+		} catch (NamingException e) {
+
+		}
+		return retVal;
 	}
 
 	public static boolean isSmObjectPropsDifference(Object latest,

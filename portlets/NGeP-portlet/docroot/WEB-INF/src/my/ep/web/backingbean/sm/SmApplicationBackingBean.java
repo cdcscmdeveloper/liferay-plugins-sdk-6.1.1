@@ -4326,6 +4326,19 @@ public class SmApplicationBackingBean extends
 		addOrUpdateShareHolderAddress(getManagedBean().getSelectedShareHolder());
 		validShrHldr = SmApplicationUtil.checkValidUser(getManagedBean()
 				.getSelectedShareHolder(), getManagedBean().getSmAppl());
+
+		// validate email domain
+		if (getManagedBean().getSelectedShareHolder() != null) {
+			String email = getManagedBean().getSelectedShareHolder()
+					.getPmUser() != null
+					&& StringUtils.isNotBlank(getManagedBean()
+							.getSelectedShareHolder().getPmUser().getEmail()) ? getManagedBean()
+					.getSelectedShareHolder().getPmUser().getEmail()
+					: getManagedBean().getSelectedShareHolder().getEmail();
+			SmCommonUtil.checkEmailDomainWithExceptionMsg(getManagedBean()
+					.getSelectedShareHolder().getName(), email);
+		}
+
 		getManagedBean().getSelectedShareHolder().setSmAppl(
 				getManagedBean().getSmAppl());
 		if (validShrHldr) {
@@ -5975,6 +5988,7 @@ public class SmApplicationBackingBean extends
 	 * @return the redirect page
 	 */
 	public String submitSmApplToBpm(String applType) {
+
 		// try {
 		if (getManagedBean().getSmAppl().getSupportingDocMode() != null
 				&& getManagedBean().getSmAppl().getSupportingDocMode()
@@ -5990,6 +6004,12 @@ public class SmApplicationBackingBean extends
 				}
 			}
 		}
+
+		// validate personnel email domain
+		SmApplicationUtil
+				.checkPersonnelsEmailDomainWithExceptionMsg(getManagedBean()
+						.getSmAppl().getSmPersonnels());
+
 		if (getManagedBean().getSmAppl().getApplType()
 				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
 				|| getManagedBean().getSmAppl().getApplType()
@@ -6790,6 +6810,10 @@ public class SmApplicationBackingBean extends
 			Long pmStatId = getManagedBean().getSmAppl().getPmStatus()
 					.getStatusId();
 			retriveCurrentAppl();
+			// validate personnels email domain
+			SmApplicationUtil
+					.checkPersonnelsEmailDomainWithExceptionMsg(getManagedBean()
+							.getSmAppl().getSmPersonnels());
 			log.info(" **** After retrieve ***"
 					+ getManagedBean().getSmAppl().getPmStatus().getStatusId());
 			log.info("----------------------Submit PO / Approver Decision For BPM-------------------------"

@@ -1011,6 +1011,11 @@ public class SmPersonnelBackingBean extends
 	 * @throws Exception
 	 */
 	public void save() throws Exception {
+		if (getManagedBean().getBasicSmPersonnel() != null) {
+			SmCommonUtil.checkEmailDomainWithExceptionMsg(getManagedBean()
+					.getBasicSmPersonnel().getName(), getManagedBean()
+					.getBasicSmPersonnel().getEmail());
+		}
 		if (getManagedBean().getBasicSmPersonnel().getPersonnelId() == null) {
 			getManagedBean().setBasicSmPersonnel(
 					saveNewUser(getManagedBean().getBasicSmPersonnel()));
