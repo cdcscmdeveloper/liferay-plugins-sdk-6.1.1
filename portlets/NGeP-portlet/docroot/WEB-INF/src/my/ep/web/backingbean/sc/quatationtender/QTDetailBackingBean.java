@@ -3702,6 +3702,10 @@ public class QTDetailBackingBean extends
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
+				ScQt scQt1 = this.getManagedBean().getQt();
+				if (null == scQt1.getEstimatedAmount()) {
+					setEstimatedPrice(scQt1);
+				}
 				retrieveBriefingSitevisitTabDtl();
 			}
 			break;
@@ -3713,6 +3717,10 @@ public class QTDetailBackingBean extends
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
+				ScQt scQt1 = this.getManagedBean().getQt();
+				if (null == scQt1.getEstimatedAmount()) {
+					setEstimatedPrice(scQt1);
+				}
 				this.getManagedBean().setCurrentStatusId(currentStatus);
 				setAmmendMentBean(resDTO.getAmendMentBean());
 				retrieveScheduleTabDtl();
@@ -3726,6 +3734,10 @@ public class QTDetailBackingBean extends
 				reqDTO.setSaveFlow(true);
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
+				ScQt scQt1 = this.getManagedBean().getQt();
+				if (null == scQt1.getEstimatedAmount()) {
+					setEstimatedPrice(scQt1);
+				}
 				this.getManagedBean().setCurrentStatusId(currentStatus);
 				setAmmendMentBean(resDTO.getAmendMentBean());
 				retrieveDeductionPaymentTabDtl();
@@ -3738,6 +3750,10 @@ public class QTDetailBackingBean extends
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
+				ScQt scQt1 = this.getManagedBean().getQt();
+				if (null == scQt1.getEstimatedAmount()) {
+					setEstimatedPrice(scQt1);
+				}
 				this.getManagedBean().setCurrentStatusId(currentStatus);
 				setAmmendMentBean(resDTO.getAmendMentBean());
 				retrieveDocumentTabDtl();
@@ -3754,6 +3770,10 @@ public class QTDetailBackingBean extends
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
+				ScQt scQt1 = this.getManagedBean().getQt();
+				if (null == scQt1.getEstimatedAmount()) {
+					setEstimatedPrice(scQt1);
+				}
 				this.getManagedBean().setCurrentStatusId(currentStatus);
 				setAmmendMentBean(resDTO.getAmendMentBean());
 				retrievePublicationApprovalTabDtl();
