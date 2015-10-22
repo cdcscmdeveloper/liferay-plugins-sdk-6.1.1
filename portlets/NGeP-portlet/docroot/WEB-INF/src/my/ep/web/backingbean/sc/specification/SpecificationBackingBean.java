@@ -5005,7 +5005,7 @@ public class SpecificationBackingBean extends
 	 */
 	private void retriveSpecdetails(Long qtId, String docType) {
 
-		IQTDetailSO QtDetailsSO;
+		IQTDetailSO qtDetailsSO;
 		try {
 
 			// this.getManagedBean().setActiveIndex(0);
@@ -5015,13 +5015,13 @@ public class SpecificationBackingBean extends
 					&& null != this.getManagedBean().getZoneGeneralTrees() && this
 							.getManagedBean().getZoneGeneralTrees().isEmpty())) {
 
-				QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
+				qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 				tenderReqDTO.setQtId(qtId);
 				tenderReqDTO.setDocType(docType);
 				QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
-				tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
+				tenderResDTO = qtDetailsSO.retriveQTDetails(tenderReqDTO);
 
 				ScQt scQt = tenderResDTO.getQtDetail();
 
@@ -5087,10 +5087,17 @@ public class SpecificationBackingBean extends
 					// setProcurementMode(scQt);
 					setEvaluationType(scQt);
 				}
+			} else {
+				
+				qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				BigDecimal estimatedAmount = qtDetailsSO.getdecryptedEstAmount(qtId);
+				this.getManagedBean().getScQt().setEstimatedAmount(estimatedAmount);
+				this.getManagedBean().getScQt().setDecryptedEstAmt(estimatedAmount);
 			}
 
 		} finally {
-			QtDetailsSO = null;
+			qtDetailsSO = null;
 		}
 
 	}
