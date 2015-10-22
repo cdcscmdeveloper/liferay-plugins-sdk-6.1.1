@@ -2809,13 +2809,15 @@ public class SmCommonUtil {
 						new String[] { "NS" });
 				Attribute attr = attrs.get("NS");
 				ArrayList res = new ArrayList();
-				NamingEnumeration en = attr.getAll();
 
-				while (en.hasMore()) {
-					String x = (String) en.next();
-					if (x.endsWith("."))
-						x = x.substring(0, x.length() - 1);
-					res.add(x);
+				if (attr != null) {
+					NamingEnumeration en = attr.getAll();
+					while (en.hasMore()) {
+						String x = (String) en.next();
+						if (x.endsWith("."))
+							x = x.substring(0, x.length() - 1);
+						res.add(x);
+					}
 				}
 
 				if (!isCollectionEmpty(res)) {
