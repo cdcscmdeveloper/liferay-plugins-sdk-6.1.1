@@ -636,7 +636,7 @@ public class SimpleQuoteBackingBean extends
 		}
 		// to get country id
 		CountryReqDTO reqDTO = new CountryReqDTO();
-		reqDTO.setCountryCode("MY");
+		reqDTO.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
 		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						ICountrySO.class);
@@ -646,7 +646,7 @@ public class SimpleQuoteBackingBean extends
 
 		// to get ptj locality by default
 		ptjLocality(ParameterConst.LOCATION_LEVEL_DISTRICT);
-
+		getManagedBean().setEditableFlag(Boolean.TRUE);
 		CatalogueBackingBean catalogueBackingBean = new CatalogueBackingBean();
 		catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(false);
 		return "simpleQuote";
