@@ -86,6 +86,7 @@ import my.ep.web.bean.tree.TreeNodeBean;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.type.sc.quationtender.SelectionType;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -325,7 +326,8 @@ public class QTCommitteBackingBean extends
 						searchBean);
 				reqDTO.setQtSearchBean(searchBean);
 
-				QuationTenderResDTO resDTO = detailSO.retriveQuationTenderDetailsBySearchCriteria(reqDTO);
+				QuationTenderResDTO resDTO = detailSO
+						.retriveQuationTenderDetailsBySearchCriteria(reqDTO);
 
 				return resDTO.getQtResultBean();
 			} finally {
@@ -1911,20 +1913,28 @@ public class QTCommitteBackingBean extends
 					.getManagedBean().getCurrentStatusId())) {
 				return true;
 			}
+			if (QTStatusConst.QT_PROPOSAL_PREPARATION.equals(this
+					.getManagedBean().getCurrentStatusId())) {
+				if (7 <= DateUtils.getDaysDifference(new Date(), this
+						.getManagedBean().getQt().getClosingDate()))
+
+					return true;
+			}
+
 		} else {
+			String taskName = this.getManagedBean().getTaskName();
 			if (QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING
 					.equals(this.getManagedBean().getCurrentStatusId())
 					&& !SCProcessNameConst.REVISE_COMMITTEE
-							.equalsIgnoreCase(this.getManagedBean()
-									.getTaskName())) {
+							.equalsIgnoreCase(taskName)) {
 				return true;
 			} else if (QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT
 					.compareTo(this.getManagedBean().getCurrentStatusId()) < 0
 					&& !(SCProcessNameConst.REVISE_COMMITTEE
-							.equalsIgnoreCase(this.getManagedBean()
-									.getTaskName()) || SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
-							.equalsIgnoreCase(this.getManagedBean()
-									.getTaskName()))) {
+							.equalsIgnoreCase(taskName)
+							|| SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
+									.equalsIgnoreCase(taskName) || SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
+								.equalsIgnoreCase(taskName))) {
 				return true;
 			}
 		}

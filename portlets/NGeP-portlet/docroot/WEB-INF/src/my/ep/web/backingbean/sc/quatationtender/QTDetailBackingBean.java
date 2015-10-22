@@ -1932,7 +1932,8 @@ public class QTDetailBackingBean extends
 						.getToBeDelCommitteMemebers());
 				committeResDto = committeSO.updateBPMAction(committeReqDTO);
 			} else if (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
-					.equalsIgnoreCase(taskName)) {
+					.equalsIgnoreCase(taskName) || SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
+					.equalsIgnoreCase(taskName) ) {
 
 				// TODO - temporary for FC.
 				if (res.getPojo() instanceof SCEvaluationDataType) {
