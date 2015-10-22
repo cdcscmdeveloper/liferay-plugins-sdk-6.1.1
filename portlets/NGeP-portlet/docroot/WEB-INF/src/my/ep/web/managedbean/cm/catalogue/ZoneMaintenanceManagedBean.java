@@ -430,6 +430,8 @@ public class ZoneMaintenanceManagedBean extends BaseManagedBean {
 	 * @return the deleted cm supplier zone list
 	 */
 	public List<CmSupplierZone> getDeletedCmSupplierZoneList() {
+		if(deletedCmSupplierZoneList==null)
+			deletedCmSupplierZoneList = new ArrayList<CmSupplierZone>();
 		return deletedCmSupplierZoneList;
 	}
 
