@@ -3850,10 +3850,12 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setSpecificationRemarks(
 							new ArrayList<ScQtSpecificationRemark>());
 					if (null != this.getManagedBean().getCurrentStatusId()
-							&& this.getManagedBean().getCurrentStatusId().equals(60401L)) {
-					initializeRemarks(this.getManagedBean().getScQt(), null,
-							this.getManagedBean().getSpecificationRemarks(),
-							ScQtSpecificationRemark.class);
+							&& this.getManagedBean().getCurrentStatusId()
+									.equals(60401L)) {
+						initializeRemarks(this.getManagedBean().getScQt(),
+								null, this.getManagedBean()
+										.getSpecificationRemarks(),
+								ScQtSpecificationRemark.class);
 					}
 				}
 			}
@@ -3871,10 +3873,12 @@ public class SpecificationBackingBean extends
 								.isEmpty()) {
 					this.getManagedBean().setSpecificationRemarks(remarkList);
 					if (null != this.getManagedBean().getCurrentStatusId()
-							&& this.getManagedBean().getCurrentStatusId().equals(60401L)) {
-					initializeRemarks(this.getManagedBean().getScQt(), null,
-							this.getManagedBean().getSpecificationRemarks(),
-							ScQtSpecificationRemark.class);
+							&& this.getManagedBean().getCurrentStatusId()
+									.equals(60401L)) {
+						initializeRemarks(this.getManagedBean().getScQt(),
+								null, this.getManagedBean()
+										.getSpecificationRemarks(),
+								ScQtSpecificationRemark.class);
 					}
 				}
 			}
@@ -5092,12 +5096,15 @@ public class SpecificationBackingBean extends
 					setEvaluationType(scQt);
 				}
 			} else {
-				
+
 				qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-				BigDecimal estimatedAmount = qtDetailsSO.getdecryptedEstAmount(qtId);
-				this.getManagedBean().getScQt().setEstimatedAmount(estimatedAmount);
-				this.getManagedBean().getScQt().setDecryptedEstAmt(estimatedAmount);
+				BigDecimal estimatedAmount = qtDetailsSO
+						.getdecryptedEstAmount(qtId);
+				this.getManagedBean().getScQt()
+						.setEstimatedAmount(estimatedAmount);
+				this.getManagedBean().getScQt()
+						.setDecryptedEstAmt(estimatedAmount);
 			}
 
 		} finally {
@@ -12440,7 +12447,9 @@ public class SpecificationBackingBean extends
 					for (int i = 0; i < remarks.size(); i++) {
 						String userRemark = remarks.get(i).getRemark();
 						if (null == userRemark || "".equals(userRemark)) {
-							throw new EpException(MessageConst.ERROR_760154);
+							if (remarks.size() == 1) {
+								throw new EpException(MessageConst.ERROR_760154);
+							}
 						}
 					}
 				}
@@ -13271,9 +13280,11 @@ public class SpecificationBackingBean extends
 			if (null != remarks) {
 				for (int i = 0; i < remarks.size(); i++) {
 					String userRemark = remarks.get(i).getRemark();
-					if (null == userRemark || "".equals(userRemark)) {
-						// throw new EpException(MessageConst.ERROR_760154);
-					}
+						if (null == userRemark || "".equals(userRemark)) {
+							// throw new EpException(MessageConst.ERROR_760154);
+							remarks.remove(i);
+						}
+					
 				}
 			}
 
