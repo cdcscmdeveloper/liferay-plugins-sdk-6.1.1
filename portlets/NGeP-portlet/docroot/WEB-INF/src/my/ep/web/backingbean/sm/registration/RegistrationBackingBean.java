@@ -1468,8 +1468,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				throw new EpException(MessageConst.ERROR_721008);
 			}
 
-			if(suppBank.getAccountNo() == null || suppBank.getAccountNo() == ""){
+			if(StringUtils.isBlank(suppBank.getAccountNo())){
 				throw new EpException(MessageConst.ERROR_721009);
+			}
+				
+			if (StringUtils.isNotBlank(suppBank.getAccountNo()) && !StringUtils.isNumeric(suppBank.getAccountNo())) {
+				throw new EpException(MessageConst.ERROR_722616);
 			}
 
 			String uniqBank = suppBank.getPmFinancialOrg().getFinancialOrgId().toString() + suppBank.getAccountNo();
