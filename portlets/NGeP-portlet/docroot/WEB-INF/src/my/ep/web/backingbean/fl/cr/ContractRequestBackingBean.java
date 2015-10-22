@@ -472,12 +472,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 		getSupplierBranchesList(resDTO.getFlFulfilmentRequest().getSmSupplier());
 		
-		for(FlFulfilmentItem flItem : getManagedBean().getFlRequest().getFlFulfilmentItems()) { 
-			String key = flItem.getCmItem().getItemId().toString() + flItem.getUnitPrice().doubleValue() + "";
-		    if(!getManagedBean().getFlItemMap().containsKey(key)) {
-			    getManagedBean().getFlItemMap().put(key, flItem);
-		    }
-		}
 		if(!getManagedBean().getFlRequest().getFlDeliveryAddresses().isEmpty()){
 			getManagedBean().setSelectedDelAddr(getManagedBean().getFlRequest().getFlDeliveryAddresses().get(0));
 		}
