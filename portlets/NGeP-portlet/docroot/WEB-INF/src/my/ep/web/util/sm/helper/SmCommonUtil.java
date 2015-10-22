@@ -39,6 +39,7 @@ import javax.faces.application.FacesMessage.Severity;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
@@ -2805,14 +2806,27 @@ public class SmCommonUtil {
 						"com.sun.jndi.dns.DnsContextFactory");
 				DirContext ictx = new InitialDirContext(env);
 				Attributes attrs = ictx.getAttributes(hostNameArr[1],
-						new String[] { "MX" });
-				Attribute attr = attrs.get("MX");
-				if (attr != null && attr.size() > 0) {
+						new String[] { "NS" });
+				Attribute attr = attrs.get("NS");
+				ArrayList res = new ArrayList();
+				NamingEnumeration en = attr.getAll();
+
+				while (en.hasMore()) {
+					String x = (String) en.next();
+					if (x.endsWith("."))
+						x = x.substring(0, x.length() - 1);
+					log.info("Email domain " + hostNameArr[1]
+							+ " name servers:" + x);
+					res.add(x);
+				}
+
+				if (!isCollectionEmpty(res)) {
 					retVal = true;
 				}
 			}
 		} catch (NamingException e) {
-
+			log.info(">>>>>>>>>>>>>>ERROR EMAIL DOMAIN LOOKUP:"
+					+ e.getMessage());
 		}
 		return retVal;
 	}
