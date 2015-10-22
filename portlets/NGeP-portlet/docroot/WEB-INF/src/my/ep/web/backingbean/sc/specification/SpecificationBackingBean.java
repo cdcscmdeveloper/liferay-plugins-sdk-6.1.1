@@ -12007,6 +12007,10 @@ public class SpecificationBackingBean extends
 					resDTO = specSO.saveQTDtl(specReqDTO);
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
+					ScQt scQt1 = this.getManagedBean().getScQt();
+					if (null == scQt1.getEstimatedAmount()) {
+						setEstimatedPrice(scQt1);
+					}
 					getfulfilmentDtls(resDTO.getScQt());
 					retriveFinancialScoring();
 					// retriveTechnicalSpecification();
@@ -12045,6 +12049,10 @@ public class SpecificationBackingBean extends
 					resDTO = specSO.saveQTDtl(specReqDTO);
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
+					ScQt scQt1 = this.getManagedBean().getScQt();
+					if (null == scQt1.getEstimatedAmount()) {
+						setEstimatedPrice(scQt1);
+					}
 					getfulfilmentDtls(resDTO.getScQt());
 					retriveTechnicalScoring();
 					// retriveTechnicalCheckList();
@@ -12085,6 +12093,10 @@ public class SpecificationBackingBean extends
 					resDTO = specSO.saveQTDtl(specReqDTO);
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
+					ScQt scQt1 = this.getManagedBean().getScQt();
+					if (null == scQt1.getEstimatedAmount()) {
+						setEstimatedPrice(scQt1);
+					}
 					getfulfilmentDtls(resDTO.getScQt());
 					retriveRecommendationDetails();
 					// retriveTechnicalSpecification();
@@ -12122,6 +12134,10 @@ public class SpecificationBackingBean extends
 					resDTO = specSO.saveQTDtl(specReqDTO);
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
+					ScQt scQt1 = this.getManagedBean().getScQt();
+					if (null == scQt1.getEstimatedAmount()) {
+						setEstimatedPrice(scQt1);
+					}
 					getfulfilmentDtls(resDTO.getScQt());
 					retriveFinancialScoring();
 					// retriveTechnicalCheckList();
@@ -12154,6 +12170,10 @@ public class SpecificationBackingBean extends
 					resDTO = specSO.saveQTDtl(specReqDTO);
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
+					ScQt scQt1 = this.getManagedBean().getScQt();
+					if (null == scQt1.getEstimatedAmount()) {
+						setEstimatedPrice(scQt1);
+					}
 					getfulfilmentDtls(resDTO.getScQt());
 					retriveDeliveryDetails();
 					// retriveTechnicalSpecification();
@@ -12191,6 +12211,10 @@ public class SpecificationBackingBean extends
 					resDTO = specSO.saveQTDtl(specReqDTO);
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
+					ScQt scQt1 = this.getManagedBean().getScQt();
+					if (null == scQt1.getEstimatedAmount()) {
+						setEstimatedPrice(scQt1);
+					}
 					getfulfilmentDtls(resDTO.getScQt());
 					retriveRecommendationDetails();
 					// retriveTechnicalCheckList();
@@ -12214,6 +12238,10 @@ public class SpecificationBackingBean extends
 						resDTO = specSO.saveQTDtl(specReqDTO);
 						renewSesionObject();
 						this.getManagedBean().setScQt(resDTO.getScQt());
+						ScQt scQt1 = this.getManagedBean().getScQt();
+						if (null == scQt1.getEstimatedAmount()) {
+							setEstimatedPrice(scQt1);
+						}
 						getfulfilmentDtls(resDTO.getScQt());
 						retriveFulfilmentDtls();
 						// retriveCommitteeEndorsment();
@@ -12224,6 +12252,10 @@ public class SpecificationBackingBean extends
 						resDTO = specSO.saveQTDtl(specReqDTO);
 						renewSesionObject();
 						this.getManagedBean().setScQt(resDTO.getScQt());
+						ScQt scQt1 = this.getManagedBean().getScQt();
+						if (null == scQt1.getEstimatedAmount()) {
+							setEstimatedPrice(scQt1);
+						}
 						getfulfilmentDtls(resDTO.getScQt());
 						// retriveFulfilmentDtls();
 						retriveCommitteeEndorsment();
@@ -12258,6 +12290,10 @@ public class SpecificationBackingBean extends
 					resDTO = specSO.saveQTDtl(specReqDTO);
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
+					ScQt scQt1 = this.getManagedBean().getScQt();
+					if (null == scQt1.getEstimatedAmount()) {
+						setEstimatedPrice(scQt1);
+					}
 					getfulfilmentDtls(resDTO.getScQt());
 					retriveDeliveryDetails();
 					// retriveTechnicalCheckList();
@@ -12274,6 +12310,10 @@ public class SpecificationBackingBean extends
 					resDTO = specSO.saveQTDtl(specReqDTO);
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
+					ScQt scQt1 = this.getManagedBean().getScQt();
+					if (null == scQt1.getEstimatedAmount()) {
+						setEstimatedPrice(scQt1);
+					}
 					getfulfilmentDtls(resDTO.getScQt());
 					retriveCommitteeEndorsment();
 					// retriveTechnicalSpecification();
@@ -12296,6 +12336,10 @@ public class SpecificationBackingBean extends
 						resDTO = specSO.saveQTDtl(specReqDTO);
 						renewSesionObject();
 						this.getManagedBean().setScQt(resDTO.getScQt());
+						ScQt scQt1 = this.getManagedBean().getScQt();
+						if (null == scQt1.getEstimatedAmount()) {
+							setEstimatedPrice(scQt1);
+						}
 						getfulfilmentDtls(resDTO.getScQt());
 						retriveFulfilmentDtls();
 						// retriveCommitteeEndorsment();
@@ -12306,6 +12350,10 @@ public class SpecificationBackingBean extends
 						resDTO = specSO.saveQTDtl(specReqDTO);
 						renewSesionObject();
 						this.getManagedBean().setScQt(resDTO.getScQt());
+						ScQt scQt1 = this.getManagedBean().getScQt();
+						if (null == scQt1.getEstimatedAmount()) {
+							setEstimatedPrice(scQt1);
+						}
 						getfulfilmentDtls(resDTO.getScQt());
 						// retriveFulfilmentDtls();
 						retriveCommitteeEndorsment();
@@ -12321,6 +12369,10 @@ public class SpecificationBackingBean extends
 				resDTO = specSO.saveQTDtl(specReqDTO);
 				renewSesionObject();
 				this.getManagedBean().setScQt(resDTO.getScQt());
+				ScQt scQt1 = this.getManagedBean().getScQt();
+				if (null == scQt1.getEstimatedAmount()) {
+					setEstimatedPrice(scQt1);
+				}
 				getfulfilmentDtls(resDTO.getScQt());
 				retriveCommitteeEndorsment();
 				// retriveTechnicalCheckList();
