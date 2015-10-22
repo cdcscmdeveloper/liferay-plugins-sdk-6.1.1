@@ -178,11 +178,11 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 		ZoneMaintenanceResDTO resDTO = new ZoneMaintenanceResDTO(); 
 		if(getManagedBean().getDeletedCmSupplierZoneList().size() > 0)
 			resDTO = zoneMaintenanceSO.delete(reqDTO);
-		else 
-			resDTO.setSuccessful(true);
+
 		getManagedBean().setZoneTrees(CmSupplierZoneSingleton.getInstance().buildZoneSDTree(this.getManagedBean().getCmSupplierZoneList()));
 		if (resDTO.isSuccessful()) {
 			log.info("SuccessMMMMMMMMMMMMMMMMM");
+			this.getManagedBean().setDeletedCmSupplierZoneList(null);
 		} else {
 			log.info("Not SuccessMMMMMMMMMMMMMMMMM");
 			throw new EpException(MessageConst.ERROR_716001);
@@ -194,11 +194,11 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 	 * 
 	 * @return string
 	 */
-	public void saveCmSupplierZones() {
+	public String saveCmSupplierZones() {
 		log.debug("********************ZoneMaintenanceBackingBean saveCmSupplierZones***************");
 		assignValReqdToFalse();
 		/* First delete any records that are to be deleted */
-		if(getManagedBean().getDeletedCmSupplierZoneList() != null)
+		if(getManagedBean().getDeletedCmSupplierZoneList() != null && getManagedBean().getDeletedCmSupplierZoneList().size()>0)
 			deleteCmSupplierZones();
 		IZoneMaintenanceSO zoneMaintenanceSO = null;
 		zoneMaintenanceSO = (IZoneMaintenanceSO) BusinessDelegate
@@ -219,6 +219,9 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 					MessageUtils.getMessage(MessageConst.INFO_711001, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 
 		}
+		
+		System.out.println("*****return*******");
+		return "/xhtml/common/acknowledge.xhtml";
 
 	}
 
