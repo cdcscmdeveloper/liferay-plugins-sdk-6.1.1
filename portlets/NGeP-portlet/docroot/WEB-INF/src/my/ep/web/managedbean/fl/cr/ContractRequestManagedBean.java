@@ -86,7 +86,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<VCtActiveContract> activeContractList; 
 	private FlFulfilmentItem selectedItemRow;
 	private HashMap<String, PmUserGroupUser> approverMap;
-	private HashMap<String, FlFulfilmentItem> flItemMap;
 	private BigDecimal subTotal;
 	private FlFulfilmentItemAddr selectedItemAddr;
 	private FlDeliveryAddress flManualAddress;
@@ -650,26 +649,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setApproverMap(HashMap<String, PmUserGroupUser> approverMap) {
 		this.approverMap = approverMap;
 	}
-
-
-	/**
-	 * @return the flItemMap
-	 */
-	public HashMap<String, FlFulfilmentItem> getFlItemMap() {
-		if(flItemMap == null){
-			setFlItemMap(new HashMap<String, FlFulfilmentItem>());
-		}
-		return flItemMap;
-	}
-
-
-	/**
-	 * @param flItemMap the flItemMap to set
-	 */
-	public void setFlItemMap(HashMap<String, FlFulfilmentItem> flItemMap) {
-		this.flItemMap = flItemMap;
-	}
-
 
 	/**
 	 * @return the goId
