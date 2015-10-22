@@ -7,8 +7,11 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,6 +26,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
@@ -62,6 +66,7 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -76,6 +81,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -205,6 +211,7 @@ public class ReportBackingBean extends
 	private List<PmCategoryL1> supplierParentCatList;
 	private List<PmCategoryL2> supplierChildCatList;
 	private List<PmCategoryL3> supplierSubChildCatList;
+	private CmUnspsc selectedLovUnspsc;
 		
 
 	public List<String> getPaymentMethodList() {
@@ -4637,10 +4644,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		rptGenBean.setCmExtentionTypeView(false);
 		rptGenBean.setCmExtentionMeasurmentView(false);
 		rptGenBean.setCmExtentionColourView(false);
-		if (null != this.getCmUnspscCode()
-				&& (this.getCmUnspscCode() != ReportConst.EMPTY_VAL)) {
-			if ((this.getCmUnspscCode().length() == 8)) {
-				unspid = retrieveCMUnspcIdbyCode(this.getCmUnspscCode());
+		if (null != this.getSelectedLovUnspsc().getUnspscCode()
+				&& (this.getSelectedLovUnspsc().getUnspscCode() != ReportConst.EMPTY_VAL)) {
+			if ((this.getSelectedLovUnspsc().getUnspscCode().length() == 8)) {
+				unspid = retrieveCMUnspcIdbyCode(this.getSelectedLovUnspsc().getUnspscCode());
 				if (null != unspid) {
 					rptGenBean.setCmExtentionCodeView(true);
 				} else {
@@ -4673,10 +4680,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		getManagedBean().getRptGenBean().setCmExtentionTypeView(false);
 		getManagedBean().getRptGenBean().setCmExtentionMeasurmentView(false);
 		getManagedBean().getRptGenBean().setCmExtentionColourView(false);
-		if (null != this.getCmUnspscCode()
-				&& (this.getCmUnspscCode() != ReportConst.EMPTY_VAL)) {
-			if ((this.getCmUnspscCode().length() == 8)) {
-				unspid = retrieveCMUnspcIdbyCode(this.getCmUnspscCode());
+		if (null != this.getSelectedLovUnspsc().getUnspscCode()
+				&& (this.getSelectedLovUnspsc().getUnspscCode() != ReportConst.EMPTY_VAL)) {
+			if ((this.getSelectedLovUnspsc().getUnspscCode().length() == 8)) {
+				unspid = retrieveCMUnspcIdbyCode(this.getSelectedLovUnspsc().getUnspscCode());
 				//unspid = (long) 11606;
 				if (null != unspid) {
 					retrieveBrand();
@@ -4901,6 +4908,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		ctReportBackingBean = new CTReportBackingBean();
 		ppReportBackingBean = new PPReportBackingBean();
 		pmReportBackingBean = new PMReportBackingBean();
+		
 		if(rptGenBean.isReportCategoryView()==true||(this.getModuleValue()
 				.equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT)&&this.getReportCategory()!=null)){
 			rptGenBean = new ReportsGenerateBean();
@@ -4910,6 +4918,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		rptGenBean = new ReportsGenerateBean();
 		//rptGenBean.setReportCategoryView(this.isReportCategoryView());
 		}
+		
 		getManagedBean().setRptGenBean(null);
 		this.setSubModule(null);
 		this.setReportName(ReportConst.EMPTY_VAL);
@@ -4944,12 +4953,15 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					}					
 					this.setSubModule(pmReport.getSubModule());
 				} else {
+					       
 					if((strLanguage!=null)&&(strLanguage.equalsIgnoreCase(ReportConst.ENG_LANG))){
-						label = pmReport.getReportTitle();
+						label = pmReport.getReportTitle();					
+												
 					}else if((strLanguage!=null)&&(strLanguage.equalsIgnoreCase(ReportConst.MALAY_LANG))){
 						label = pmReport.getReportTitleMalay();
 					}
 				}
+				
 				this.setReportName(label);
 				reportFileNameJSP = pmReport.getReportFilename();
 				getManagedBean().setReportJsp(pmReport.getReportFilename());
@@ -5022,7 +5034,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}
 			rptGenBean.isReportCategoryView();
 			getManagedBean().setRptGenBean(rptGenBean);
-			resetReportForm();			
+			resetReportForm();
+			if (pmReport != null) {
+				getDefaultValuesFromAndToDate(pmReport.getReportCode());
+			}
 			retrieveDates();
 			madatoryIndicator();
 			retrieveAllMinistry();
@@ -5036,6 +5051,24 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			directPurchaseWithRequisitioner();
 		}
 	}
+
+	private void getDefaultValuesFromAndToDate(String reportCode) {
+
+		Date currentDate = new Date();
+		Calendar fromDate = Calendar.getInstance();
+		fromDate.set(fromDate.get(Calendar.YEAR), 00, 01, 0, 00, 0);
+
+		List<String> smReportNameList = new ArrayList<String>();
+		smReportNameList.add("SM_042");
+
+		for (String code : smReportNameList)
+			if (code.equalsIgnoreCase(reportCode)) {
+				this.setFromDate(fromDate.getTime());
+				this.setToDate(currentDate);
+
+			}
+	}
+
 	
 	public void retrieveDates() {
 		if ((this.getReportValue() != null) && (this.getReportValue() != ReportConst.EMPTY_VAL)) {
@@ -5912,6 +5945,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getSmFromMonthVar()
 						+ rptGenBean.getSmToMonthVar()
 						+ rptGenBean.getUserIdVar());
+				
 			} else {
 				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
@@ -6362,9 +6396,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getSmIdentificationTypeVar()
 						+ rptGenBean.getSmIdentificationNumberVar()
 						+ rptGenBean.getSmCancellationByVar()
-						+maincategory
-						+subcategory
-						+subcategorydivision
+						+ maincategory
+						+ subcategory
+						+ subcategorydivision
 						+ rptGenBean.getApplicationStatusTotVar()
 						+ rptGenBean.getSmYearTextVar()
 						+ rptGenBean.getSmMonthlyRptByYearVar()
@@ -6787,8 +6821,8 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((this.getCmItemName() != null) && (this.getCmItemName() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmItemType() != null) && (this.getCmItemType() != ReportConst.EMPTY_VAL))
 				/*|| ((this.getCmItemStatus() != null) && (this.getCmItemStatus() != ReportConst.EMPTY_VAL))*/
-				|| ((this.getCmUnspscCode() != null) && (this.getCmUnspscCode() != ReportConst.EMPTY_VAL))
-				|| ((this.getCmUnspscTitle() != null) && (this.getCmUnspscTitle() != ReportConst.EMPTY_VAL))
+				|| ((this.getSelectedLovUnspsc().getUnspscCode() != null) && (this.getSelectedLovUnspsc().getUnspscCode() != ReportConst.EMPTY_VAL))
+				|| ((this.getSelectedLovUnspsc().getUnspscTitle() != null) && (this.getSelectedLovUnspsc().getUnspscTitle() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmExtentionType() != null) && (this.getCmExtentionType() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmExtentionBrand() != null) && (this.getCmExtentionBrand() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmExtentionMeasurment() != null) && (this.getCmExtentionMeasurment() != ReportConst.EMPTY_VAL))
@@ -6805,12 +6839,23 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((this.getCmRequestNumber() != null) && (this.getCmRequestNumber() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmMofNumber() != null) && (this.getCmMofNumber() != ReportConst.EMPTY_VAL))) {
 			
-			if((this.getCmUnspscCode() != null) && (this.getCmUnspscCode() != ReportConst.EMPTY_VAL)){
+			if((this.getSelectedLovUnspsc().getUnspscCode() != null) && (this.getSelectedLovUnspsc().getUnspscCode() != ReportConst.EMPTY_VAL)){
 				if(((this.getCmExtentionType() == null) || (this.getCmExtentionType()== ReportConst.EMPTY_VAL))
 						&& ((this.getCmExtentionBrand() == null) || (this.getCmExtentionBrand()== ReportConst.EMPTY_VAL))
 						&& ((this.getCmExtentionMeasurment() == null) || (this.getCmExtentionMeasurment()== ReportConst.EMPTY_VAL))
 						&& ((this.getCmExtentionColour() == null) || (this.getCmExtentionColour()== ReportConst.EMPTY_VAL))){
 					throw new EpException(MessageConst.ERROR_REPORT_780024);
+					
+					/*FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							null,MessageUtils.getMessage(
+									MessageConst.ERROR_REPORT_780024,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			String pageUrl = "/xhtml/reports/reportsmain.xhtml";
+			//String pageUrl = "/xhtml/reports/reportcontent.xhtml";
+			FacesContext context = FacesContext.getCurrentInstance();
+			context.getApplication().getNavigationHandler()
+					.handleNavigation(context, null, pageUrl);*/
 				}
 			}
 			
@@ -6830,17 +6875,17 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ this.getCmItemType());
 			}
 			
-			if ((this.getCmUnspscCode() != null)
-					&& (this.getCmUnspscCode() != ReportConst.EMPTY_VAL)) {
+			if ((this.getSelectedLovUnspsc().getUnspscCode() != null)
+					&& (this.getSelectedLovUnspsc().getUnspscCode() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
 						.setUnspscCodeTotVar(ReportConst.CM_AMP_UNSPSC_CODE_EQ
-								+ this.getCmUnspscCode());
+								+ this.getSelectedLovUnspsc().getUnspscCode());
 			}
-			if ((this.getCmUnspscTitle() != null)
-					&& (this.getCmUnspscTitle() != ReportConst.EMPTY_VAL)) {
+			if ((this.getSelectedLovUnspsc().getUnspscTitle() != null)
+					&& (this.getSelectedLovUnspsc().getUnspscTitle() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
 						.setUnspscTitleTotVar(ReportConst.CM_AMP_UNSPSC_TITLE_EQ
-								+ this.getCmUnspscTitle());
+								+ this.getSelectedLovUnspsc().getUnspscTitle());
 			}
 			if ((this.getCmExtentionType() != null)
 					&& (this.getCmExtentionType() != ReportConst.EMPTY_VAL)) {
@@ -6966,6 +7011,25 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}
 		} else {
 			throw new EpException(MessageConst.ERROR_REPORT_780003);
+			
+			/*//throw new EpException(MessageConst.ERROR_REPORT_780003);
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(
+									MessageConst.ERROR_REPORT_780003,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							null,MessageUtils.getMessage(
+									MessageConst.ERROR_REPORT_780003,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			String pageUrl = "/xhtml/reports/reportsmain.xhtml";
+			//String pageUrl = "/xhtml/reports/reportcontent.xhtml";
+			FacesContext context = FacesContext.getCurrentInstance();
+			context.getApplication().getNavigationHandler()
+					.handleNavigation(context, null, pageUrl);*/
 		}
 	}
 
@@ -7603,8 +7667,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.setScPaymentId(null);
 		this.setCmItemType(null);
 		this.setCmItemStatus(null);
-		this.setCmUnspscCode(null);
-		this.setCmUnspscTitle(null);
+		this.getSelectedLovUnspsc().setUnspscCode(null);
+		this.getSelectedLovUnspsc().setUnspscTitle(null);
+		//this.setCmUnspscTitle(null);
 		this.setCmCompanyName(null);
 		this.setCmRegistrationType(null);
 		this.setCmItemCategory(null);
@@ -7886,5 +7951,44 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	public void setModuleItemMap(Map<String, List<SelectItem>> moduleItemMap) {
 		this.moduleItemMap = moduleItemMap;
 	}
+
+	/**
+	 * @return the selectedLovUnspsc
+	 */
+	public CmUnspsc getSelectedLovUnspsc() {
+		if(null==selectedLovUnspsc)
+		selectedLovUnspsc=new CmUnspsc();
+		return selectedLovUnspsc;
+	}
+
+	/**
+	 * @param selectedLovUnspsc the selectedLovUnspsc to set
+	 */
+	public void setSelectedLovUnspsc(CmUnspsc selectedLovUnspsc) {
+		this.selectedLovUnspsc = selectedLovUnspsc;
+	}
+	
+	public List<SelectItem> getApplicationStatusData() {
+
+		List<SelectItem> smApplStatusList = new ArrayList<SelectItem>();
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<Object[]> applStatusList = reportSO
+					.retrieveApplicationStatusList(strLanguage);
+			for (Object[] object : applStatusList) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setValue(object[0].toString());
+				selectItem.setLabel(object[1].toString());
+				smApplStatusList.add(selectItem);
+			}
+		}
+		return smApplStatusList;
+
+	}
+	
+	
 	
 }
