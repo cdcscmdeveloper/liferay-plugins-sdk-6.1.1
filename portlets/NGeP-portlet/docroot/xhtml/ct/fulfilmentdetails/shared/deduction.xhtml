@@ -24,8 +24,13 @@
 			            <h:outputText value="#{lbl['lbl.ct.deduction.type']}"/>
 	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.deduction.type']}"/>
 	           		</f:facet>
-	        	    <h:outputText value="#{contractDetailsBackingBean.getParameterDesc(datas.deductionType)}" style="float:left;" />
-	              </p:column> 
+	           		<p:selectOneMenu value="#{datas.deductionType.parameterId}" style="width:100px;"
+			      		disabled="#{contractDetailsBackingBean.managedBean.viewContract}"  rendered="#{datas.deductionType.parameterCode != 'AP'}">
+			           <f:selectItems value="#{contractDetailsBackingBean.retrieveParameterDescListByType()}" />
+			         </p:selectOneMenu>
+			             <h:outputText rendered="#{datas.deductionType.parameterCode == 'AP' }" 
+			                 value="#{contractDetailsBackingBean.getParameterDesc(datas.deductionType)}" style="float:left;" />
+			            </p:column> 
 		       
 		          <p:column headerText="#{lbl['lbl.ct.amount']}" style="width:150px;text-align:right;">
 	                 <h:outputText value="#{datas.amount}" rendered="#{datas.deductionType.parameterCode eq ParameterConst.deductionTypeFixedDeposit
@@ -56,11 +61,11 @@
 				               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.deduction.clause']}"/>
 				               	</f:facet>
                                  <h:outputText escape="false" value="#{data.clauseDescription}" 
-                                   rendered="#{contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterCode !=
+                                   rendered="#{contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterCode ==
         	                       ParameterConst.deductionTypeAdvancePayment}" style="float:left;"/>
-                                 <p:inputTextarea value="#{data.clauseDescription}" maxlength="500" rows="1" style="width:450px;"
+                                 <p:inputTextarea value="#{data.clauseDescription}" maxlength="500" rows="4" style="width:97%;"
                                      disabled="#{!contractDetailsBackingBean.managedBean.flgPaymentTracking or contractDetailsBackingBean.managedBean.viewContract}"
-                                     rendered="#{contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterCode ==
+                                     rendered="#{contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterCode !=
         	                         ParameterConst.deductionTypeAdvancePayment}" styleClass="ui-inputtextarea">
         	                     <p:ajax process="@this"/>
         	                   </p:inputTextarea>
