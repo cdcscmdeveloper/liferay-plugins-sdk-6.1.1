@@ -36,9 +36,9 @@
 					style="padding-right:5px" rendered="#{address.receivingGrp!=null}">
 					<p:graphicImage value="/css/images/design/ico-view-edit.png" />
 				</p:commandLink>
-				<h:outputText rendered="#{address.addressType != null}"
+				<h:outputText rendered="#{address.addressType != null}" style="text-align:left; float:left;"
 					value="#{contractRequestBackingBean.getFullAddress(address.addressType.pmAddress)}" />
-				<h:outputText rendered="#{address.addressType eq null}"
+				<h:outputText rendered="#{address.addressType eq null}" style="text-align:left; float:left;"
 					value="#{contractRequestBackingBean.getFullAddress(address.pmAddress)}" />				
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.delivery.period']}" style="white-space:normal;text-align:center;" >
@@ -147,7 +147,7 @@
 					<h:outputText rendered="#{item.scRequestItem.cmItem!=null}" value="#{item.scRequestItem.cmItem.extensionCode}" style="float:right;"/>
 				</p:column>				
 				<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center;">
-					<h:outputText value="#{item.scRequestItem.itemName}" id="itemDesc" style="float:left;"/>
+					<h:outputText value="#{item.scRequestItem.itemName}" id="itemDesc" style="text-align:left; float:left;"/>
 					<p:tooltip for="itemDesc" value="#{item.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : item.scRequestItem.itemDesc}"  />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.uom']}" style="text-align:center;">
