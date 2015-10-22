@@ -1,5 +1,8 @@
 package my.ep.web.integration.eperunding;
 
+/*
+ * @author P Ganga Prasad
+ */
 
 public class Qualification {
 
@@ -8,7 +11,7 @@ public class Qualification {
 	private int qualificationLevel;
 	private String institute;
 	private String year;
-	private String educationField;
+	private Long educationField;
 
 	public String getMajorIn() {
 		return majorIn;
@@ -50,11 +53,11 @@ public class Qualification {
 		this.year = year;
 	}
 
-	public String getEducationField() {
+	public Long getEducationField() {
 		return educationField;
 	}
 
-	public void setEducationField(String educationField) {
+	public void setEducationField(Long educationField) {
 		this.educationField = educationField;
 	}
 

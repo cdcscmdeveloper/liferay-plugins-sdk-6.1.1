@@ -1321,7 +1321,7 @@ public class FileUtility extends InitializeSO{
 							line.append(formatInt(qualification.getQualificationLevel()));
 							line.append(formatString(qualification.getInstitute(),255));
 							line.append(formatString(qualification.getYear(),30));
-							line.append(formatString(qualification.getEducationField(),12));
+							line.append(formatLong(qualification.getEducationField(),12));
 						}
 					}
 					for(ProfBodyDetail profBodyDetail:eOwner.getProfBodyDetailList()){
@@ -1576,7 +1576,7 @@ public class FileUtility extends InitializeSO{
 						line.append(formatInt(qualification.getQualificationLevel()));
 						line.append(formatString(qualification.getInstitute(),255));
 						line.append(formatString(qualification.getYear(),30));
-						line.append(formatString(qualification.getEducationField(),12));
+						line.append(formatLong(qualification.getEducationField(),12));
 					}
 				}
 				for(ProfBodyDetail profBodyDetail :mPersonnel.getProfBodyDetailList()){
@@ -1659,7 +1659,7 @@ public class FileUtility extends InitializeSO{
 						line.append(formatInt(qualification.getQualificationLevel()));
 						line.append(formatString(qualification.getInstitute(),255));
 						line.append(formatString(qualification.getYear(),30));
-						line.append(formatString(qualification.getEducationField(),12));
+						line.append(formatLong(qualification.getEducationField(),12));
 					}
 				}
 				for(ProfBodyDetail profBodyDetail:bDirector.getProfBodyDetailList()){
@@ -2157,6 +2157,17 @@ public class FileUtility extends InitializeSO{
 			return value.toString()+"|";
 		else
 			return "|";
+	}
+	public String formatLong(Long value,int length) {
+
+		String checkInput = null;
+		if(value!=null){
+			checkInput=value.toString();
+			if(checkInput.length()>length){
+				checkInput = checkInput.substring(0, length);
+			}
+		}
+			return String.format("%s", checkInput);
 	}
 
 	public String createDirectory(Date date,String path) {
