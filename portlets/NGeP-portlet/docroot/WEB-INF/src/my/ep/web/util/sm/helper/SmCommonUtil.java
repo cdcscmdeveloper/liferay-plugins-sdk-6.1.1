@@ -2828,8 +2828,8 @@ public class SmCommonUtil {
 				}
 			}
 		} catch (NamingException e) {
-			log.info(">>>>>>>>>>>>>>ERROR EMAIL DOMAIN LOOKUP:"
-					+ e.getMessage());
+			log.info(">>>>>>>>>>>>>>ERROR EMAIL LOOKUP[" + email + "]"
+					+ e.getMessage() + "<<<<<<<<<<<<<");
 		}
 		return retVal;
 	}
