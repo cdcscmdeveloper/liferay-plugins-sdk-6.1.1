@@ -17,7 +17,7 @@
 			value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flFulfilmentNoteItem}"	
 			selection="#{receivedNoteBackingBean.managedBean.selectedItem}"
 			rowIndexVar="index" selectionMode="single" rowKey="#{item}" >
-			<p:ajax event="rowSelect" update=":form:selectedItemSection" />
+			<p:ajax event="rowSelect" update=":form:selectedItemSection" listener="#{receivedNoteBackingBean.selectedItemRow()}"/>
 			<ac:paginator for="itemDataTable" />
          <p:columnGroup type="header">
 			<p:row>
@@ -32,46 +32,6 @@
 				<p:column rowspan="3" headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;text-align:center;"/>
 				<p:column rowspan="3" headerText="#{lbl['lbl.fl.gst.amt']}" style="white-space:normal;text-align:center;"/>
 				<p:column rowspan="3" headerText="#{lbl['lbl.fl.unit.price.w.gst']}" style="white-space:normal;text-align:center;"/>
-                <p:column colspan="2" headerText="#{lbl['lbl.fl.ordered']}"  style="white-space:normal;text-align:center;"/>
-                <p:column colspan="2" headerText="#{lbl['lbl.fl.delivery']}"  style="white-space:normal;text-align:center;"/>	
-                <p:column rowspan="3">
-					<f:facet name="header" >
-    					<h:outputText value="#{lbl['lbl.fl.frn.remaining.qty']}" style="white-space:normal;text-align:center;"/>
-     					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.remain.qty']}"/>
-    				</f:facet>
-    			</p:column>
-                <p:column colspan="2" headerText="#{lbl['lbl.fl.total.received']}" style="white-space:normal;text-align:center;"/>
-                <p:column colspan="2" headerText="#{lbl['lbl.fl.received']}" style="white-space:normal;text-align:center;"/>
-            </p:row>
-            <p:row>
-                <p:column style="white-space:normal;text-align:center;">
-                	<f:facet name="header" >
-    				 	<h:outputText value="#{lbl['lbl.fl.qty']}" style="white-space:normal;text-align:left;"/>
-    				 		<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.order.qty']}"/>
-    				</f:facet>
-    			</p:column>	
-                <p:column headerText="#{lbl['lbl.fl.amount']}" />
-                <p:column style="white-space:normal;text-align:center;">
-                	<f:facet name="header" >
-    				 	<h:outputText value="#{lbl['lbl.fl.qty']}" style="text-align:center"/>
-     						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.del.qty']}" style="white-space:normal;text-align:center;"/>	
-    				</f:facet>
-    			</p:column>	
-                <p:column headerText="#{lbl['lbl.fl.amount']}" style="text-align:center"/>
-               <p:column >
-                	<f:facet name="header" >
-    				 	<h:outputText value="#{lbl['lbl.fl.qty']}" style="white-space:normal;text-align:center;"/>
-     						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.total.received.qty']}"/>
-    				</f:facet>
-    			</p:column>	
-                <p:column headerText="#{lbl['lbl.fl.amount']}" style="text-align:center"/>
-                 <p:column >
-                	<f:facet name="header" >
-    				 	<h:outputText value="#{lbl['lbl.fl.qty']}" style="text-align:center"/>
-     						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.received.qty']}"/>
-    				</f:facet>
-    			</p:column>	
-                <p:column headerText="#{lbl['lbl.fl.amount']}" style="text-align:center"/>
             </p:row>
           </p:columnGroup>    
              <p:column>
@@ -99,96 +59,112 @@
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			<p:column style="white-space:normal;text-align:right;">
-				<h:outputText styleClass="colFloatRight" value="#{item.flDelOrderItem.flFulfilmentItemAddr.orderedQty}">
-					<f:converter converterId="dynamicNumberConverter" />
-					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
-				</h:outputText>
-			</p:column >
-			<p:column style="white-space:normal;text-align:right;">
-				<h:outputText styleClass="colFloatRight" value="#{item.flDelOrderItem.flFulfilmentItemAddr.orderedAmt}">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</h:outputText>
-			</p:column>
-			<p:column  style="white-space:normal;text-align:right;">
-				<h:outputText styleClass="colFloatRight" value="#{item.flDelOrderItem.deliveredQty}" >
-					<f:converter converterId="dynamicNumberConverter" />
-					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
-				</h:outputText>
-			</p:column>
-			<p:column style="white-space:normal;text-align:right;">
-				<h:panelGroup id="delAmountTxt">
-					<h:outputText  styleClass="colFloatRight" value="#{item.flDelOrderItem.deliveredAmt}">
-						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputText>
-				</h:panelGroup>
-			</p:column>	
-			<p:column>
-				<h:outputText id="remaingQtyTxt" styleClass="colFloatRight" rendered="#{receivedNoteBackingBean.managedBean.isAcknowledged() eq 'false'}"  value="#{receivedNoteBackingBean.getRemainingQuantity(item)}" >
-					<f:converter converterId="dynamicNumberConverter" />
-					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
-				</h:outputText>
-				<h:outputText  styleClass="colFloatRight" 
-					rendered="#{receivedNoteBackingBean.managedBean.isAcknowledged() eq 'true'}" value="#{item.flDelOrderItem.flFulfilmentItemAddr.orderedQty-item.receivedQty}" >
-					<f:converter converterId="dynamicNumberConverter" />
-					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
-				</h:outputText>
-			</p:column>
-			<p:column style="white-space:normal;text-align:right;">
-				<h:outputText
-					value="#{item.totalRecvQty}" styleClass="colFloatRight">
-					<f:converter converterId="dynamicNumberConverter" />
-					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
-				</h:outputText>
-			</p:column>
-			<p:column  headerText="#{lbl['lbl.fl.received.amount']}" style="white-space:normal;text-align:right;">
-				<h:outputText value="#{item.totalRecvAmount}" styleClass="colFloatRight">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</h:outputText>
-			</p:column>
-			<p:column style="white-space:normal;text-align:right;">
-				<f:facet name="header" >
-    				 <h:outputText value="#{lbl['lbl.fl.received.qty']}"/>
-     					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.received.qty']}"/>
-    				</f:facet>
-				<p:inputText id="receivedQty" label="#{lbl['lbl.fl.received.qty']}" style="text-align:right;" styleClass="colFloatRight" value="#{item.receivedQty}" size="8" maxlength="14" disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks()}"
-					rendered="#{item.flDelOrderItem.flFulfilmentItemAddr.itemType.parameterCode eq ParameterConst.itemTypeProduct}">
-					<p:ajax event="blur" update="receivedAmt,receivedQty,remaingQtyTxt" process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{receivedNoteBackingBean.retrieveReceivedAmt(item)}"/>
-					<f:converter converterId="dynamicNumberConverter" />
-					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
-				</p:inputText>
-				<h:outputText
-					rendered="#{item.flDelOrderItem.flFulfilmentItemAddr.itemType.parameterCode eq ParameterConst.itemTypeService}"
-					value="#{item.receivedQty}" styleClass="colFloatRight">
-					<f:converter converterId="dynamicNumberConverter" />
-					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
-				</h:outputText>
-			</p:column>
-			<p:column  style="white-space:normal;text-align:right;">
-				<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.fl.received.amount']}" />
-							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.del.amt']}" />
-						</f:facet>
-				<p:inputText style="text-align:right;" styleClass="colFloatRight" id="receivedAmtVal" label="#{lbl['lbl.fl.received.amount']}" 
-					disabled="#{receivedNoteBackingBean.managedBean.buttonVal=='Cancel' or  receivedNoteBackingBean.managedBean.buttonVal=='View'}"
-					rendered="#{item.flDelOrderItem.flFulfilmentItemAddr.itemType.parameterCode eq ParameterConst.itemTypeService}" value="#{item.receivedAmt}">
-					<p:ajax update="receivedAmtVal" listener="#{receivedNoteBackingBean.receivedAmtValidation(item)}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</p:inputText>
-				<h:outputText id="receivedAmt" value="#{item.receivedAmt}" styleClass="colFloatRight"
-					disabled="#{receivedNoteBackingBean.managedBean.buttonVal=='View'}"
-					rendered="#{item.flDelOrderItem.flFulfilmentItemAddr.itemType.parameterCode eq ParameterConst.itemTypeProduct}">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</h:outputText>
-			</p:column>	
-       
+			
 		</p:dataTable>
 		</div>
-		<p:spacer height="50"/>
+		<p:spacer height="20"/>
 		<h:panelGroup styleClass="selectedItemSection" id="selectedItemSection">
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.fl.ordered.qty']}" /></td>
+					<td><p:inputText styleClass="colFloatRight"
+							value="#{receivedNoteBackingBean.managedBean.orderedQty}"
+							size="15" disabled="true" /></td>
+					<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.order.qty']}"/></td>		
+					<td><p:outputLabel value="#{lbl['lbl.fl.ordered.amount']}" /></td>
+					<td><p:inputText styleClass="colFloatRight"
+							value="#{receivedNoteBackingBean.managedBean.orderedAmt}"
+							size="15" disabled="true">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.fl.do.delivery.qty']}" /></td>
+					<td><p:inputText styleClass="colFloatRight"
+							value="#{receivedNoteBackingBean.managedBean.deliveredQty}"
+							size="15" disabled="true" /></td>
+					<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.del.qty']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.delivery.amount']}" /></td>
+					<td><p:inputText styleClass="colFloatRight"
+							value="#{receivedNoteBackingBean.managedBean.deliveredAmt}"
+							size="15" disabled="true">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText></td>
+				</tr>		
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.fl.frn.remaining.qty']}" /></td>
+					<td><p:inputText id="remaingQtyTxt"
+							value="#{receivedNoteBackingBean.managedBean.remainingQty}"
+							size="15" disabled="true" styleClass="colFloatRight" /></td>
+					<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.remain.qty']}"/></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.total.received.qty']}" /></td>
+					<td><p:inputText
+							value="#{receivedNoteBackingBean.managedBean.totalReceivedQty}"
+							size="15" disabled="true" styleClass="colFloatRight" /></td>
+					<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.total.received.qty']}"/></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.total.received.amt']}" /></td>
+					<td><p:inputText styleClass="colFloatRight"
+							value="#{receivedNoteBackingBean.managedBean.totalReceivedAmt}"
+							size="15" disabled="true">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText></td>
+				</tr>
+				<tr>
+					
+					<td><p:outputLabel value="#{lbl['lbl.fl.received.qty']}" /></td>
+
+					<td><p:inputText id="receivedQty"
+							label="#{lbl['lbl.fl.received.qty']}" style="text-align:right;"
+							styleClass="colFloatRight" value="#{receivedNoteBackingBean.managedBean.selectedItem.receivedQty}" 
+							maxlength="14" size="15"
+							disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks()}"
+							rendered="#{receivedNoteBackingBean.managedBean.isItemTypeProduct()}">
+							<p:ajax event="blur" update="selectedItemSection"
+								process="@this"
+								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+								listener="#{receivedNoteBackingBean.retrieveReceivedAmt()}" />
+							<f:converter converterId="dynamicNumberConverter" />
+							<f:attribute name="pattern"
+								value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, receivedNoteBackingBean.managedBean.selectedItem.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
+						</p:inputText> <p:inputText size="15"
+							rendered="#{!receivedNoteBackingBean.managedBean.isItemTypeProduct()}"
+							disabled="true"
+							value="#{receivedNoteBackingBean.managedBean.selectedItem.receivedQty}" styleClass="colFloatRight">
+							<f:converter converterId="dynamicNumberConverter" />
+							<f:attribute name="pattern"
+								value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
+						</p:inputText></td>
+					<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.received.qty']}"/></td>	
+					<td style="text-align: right"><p:outputLabel value="#{lbl['lbl.fl.received.amount']}" /></td>
+					<td><p:inputText size="15" style="text-align:right;"
+							styleClass="colFloatRight" id="receivedAmtVal"
+							label="#{lbl['lbl.fl.received.amount']}"
+							disabled="#{receivedNoteBackingBean.managedBean.buttonVal=='Cancel' or  receivedNoteBackingBean.managedBean.buttonVal=='View'}"
+							rendered="#{!receivedNoteBackingBean.managedBean.isItemTypeProduct()}"
+							value="#{receivedNoteBackingBean.managedBean.selectedItem.receivedAmt}">
+							<p:ajax update="receivedAmtVal"
+								listener="#{receivedNoteBackingBean.receivedAmtValidation(item)}"
+								onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText> 
+						<p:inputText size="15" id="receivedAmt"
+							value="#{receivedNoteBackingBean.managedBean.selectedItem.receivedAmt}"
+							styleClass="colFloatRight" disabled="true"
+							rendered="#{receivedNoteBackingBean.managedBean.isItemTypeProduct()}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText></td>
+				</tr>
+				
+			</table>
+			<p:spacer height="30"/>	
 			<table>
 				<tr>
-					<td valign="top"><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
+					<td valign="top" style="width:132px;"><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
 					<td>
 						<p:inputTextarea cols="40" maxlength="200" value="#{receivedNoteBackingBean.managedBean.selectedItem.rejectionRemark}" disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks()}">
 							<p:ajax process="@this" />

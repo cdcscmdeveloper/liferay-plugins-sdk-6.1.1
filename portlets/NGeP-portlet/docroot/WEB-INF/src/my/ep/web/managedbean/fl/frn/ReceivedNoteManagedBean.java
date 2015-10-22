@@ -3,10 +3,12 @@
  */
 package my.ep.web.managedbean.fl.frn;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.persistence.Column;
 
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
@@ -116,6 +118,26 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	
 	/** The from page url. */
 	private String fromPageUrl;
+	
+	private BigDecimal orderedAmt;
+
+	private BigDecimal orderedQty;
+
+	private BigDecimal receivedAmt; 
+	
+	private BigDecimal receivedQty;
+	
+	private BigDecimal totalReceivedAmt; 
+	
+	private BigDecimal totalReceivedQty;	
+	
+	private BigDecimal deliveredAmt;
+
+	private BigDecimal deliveredQty;
+	
+	private BigDecimal remainingQty;
+	
+	private boolean itemTypeProduct=false;
 	
 	
 	/**
@@ -630,6 +652,146 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	 */
 	public void setLastFRNTaxInv(boolean lastFRNTaxInv) {
 		this.lastFRNTaxInv = lastFRNTaxInv;
+	}
+
+	/**
+	 * @return the orderedAmt
+	 */
+	public BigDecimal getOrderedAmt() {
+		return orderedAmt;
+	}
+
+	/**
+	 * @param orderedAmt the orderedAmt to set
+	 */
+	public void setOrderedAmt(BigDecimal orderedAmt) {
+		this.orderedAmt = orderedAmt;
+	}
+
+	/**
+	 * @return the orderedQty
+	 */
+	public BigDecimal getOrderedQty() {
+		return orderedQty;
+	}
+
+	/**
+	 * @param orderedQty the orderedQty to set
+	 */
+	public void setOrderedQty(BigDecimal orderedQty) {
+		this.orderedQty = orderedQty;
+	}
+
+	/**
+	 * @return the receivedAmt
+	 */
+	public BigDecimal getReceivedAmt() {
+		return receivedAmt;
+	}
+
+	/**
+	 * @param receivedAmt the receivedAmt to set
+	 */
+	public void setReceivedAmt(BigDecimal receivedAmt) {
+		this.receivedAmt = receivedAmt;
+	}
+
+	/**
+	 * @return the receivedQty
+	 */
+	public BigDecimal getReceivedQty() {
+		return receivedQty;
+	}
+
+	/**
+	 * @param receivedQty the receivedQty to set
+	 */
+	public void setReceivedQty(BigDecimal receivedQty) {
+		this.receivedQty = receivedQty;
+	}
+
+	/**
+	 * @return the deliveredAmt
+	 */
+	public BigDecimal getDeliveredAmt() {
+		return deliveredAmt;
+	}
+
+	/**
+	 * @param deliveredAmt the deliveredAmt to set
+	 */
+	public void setDeliveredAmt(BigDecimal deliveredAmt) {
+		this.deliveredAmt = deliveredAmt;
+	}
+
+	/**
+	 * @return the deliveredQty
+	 */
+	public BigDecimal getDeliveredQty() {
+		return deliveredQty;
+	}
+
+	/**
+	 * @param deliveredQty the deliveredQty to set
+	 */
+	public void setDeliveredQty(BigDecimal deliveredQty) {
+		this.deliveredQty = deliveredQty;
+	}
+
+	/**
+	 * @return the remainingQty
+	 */
+	public BigDecimal getRemainingQty() {
+		return remainingQty;
+	}
+
+	/**
+	 * @param remainingQty the remainingQty to set
+	 */
+	public void setRemainingQty(BigDecimal remainingQty) {
+		this.remainingQty = remainingQty;
+	}
+
+	/**
+	 * @return the totalReceivedAmt
+	 */
+	public BigDecimal getTotalReceivedAmt() {
+		return totalReceivedAmt;
+	}
+
+	/**
+	 * @param totalReceivedAmt the totalReceivedAmt to set
+	 */
+	public void setTotalReceivedAmt(BigDecimal totalReceivedAmt) {
+		this.totalReceivedAmt = totalReceivedAmt;
+	}
+
+	/**
+	 * @return the totalReceivedQty
+	 */
+	public BigDecimal getTotalReceivedQty() {
+		return totalReceivedQty;
+	}
+
+	/**
+	 * @param totalReceivedQty the totalReceivedQty to set
+	 */
+	public void setTotalReceivedQty(BigDecimal totalReceivedQty) {
+		this.totalReceivedQty = totalReceivedQty;
+	}
+
+	/**
+	 * @return the itemTypeProduct
+	 */
+	public boolean isItemTypeProduct() {
+		return itemTypeProduct;
+	}
+
+	/**
+	 * @param itemTypeProduct the itemTypeProduct to set
+	 */
+	public void setItemTypeProduct(boolean itemTypeProduct) {
+		this.itemTypeProduct = itemTypeProduct;
 	}
 
 }

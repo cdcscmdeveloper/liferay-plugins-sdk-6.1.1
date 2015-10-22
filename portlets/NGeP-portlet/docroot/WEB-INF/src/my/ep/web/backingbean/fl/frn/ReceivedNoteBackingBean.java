@@ -448,27 +448,37 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	 *
 	 * @param item the item
 	 */
-	public void retrieveReceivedAmt(FlFulfilmentNoteItem item) {
-		if(item.getReceivedQty()==null) {
-			item.setReceivedQty(BigDecimal.ZERO);
+	public void retrieveReceivedAmt() {
+		if(null != getManagedBean().getSelectedItem()){
+			FlFulfilmentNoteItem item=	getManagedBean().getSelectedItem();
+		
+			if(item.getReceivedQty()==null) {
+				item.setReceivedQty(BigDecimal.ZERO);
+			}
+			if(item.getReceivedQty().doubleValue() > item.getFlDelOrderItem().getDeliveredQty().doubleValue()) {
+				item.setReceivedQty(BigDecimal.ZERO);
+				item.setReceivedAmt(BigDecimal.ZERO);
+				throw new EpException(MessageConst.ERROR_100032, new String[]{
+						ResourceBundleUtils.getMessage("lbl.fl.received.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),
+						ResourceBundleUtils.getMessage("lbl.fl.do.delivery.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});	
+			}
+			if(null != item.getReceivedQty()){
+				BigDecimal formattedReceivedQty = item.getReceivedQty().setScale(
+						item.getFlDelOrderItem().getFlFulfilmentItemAddr().getScRequestItem().getUom().getDecimalScale(),BigDecimal.ROUND_HALF_UP);
+				item.setReceivedQty(formattedReceivedQty);
+			}
+			BigDecimal receivedAmt = item.getReceivedQty().multiply(item.getGstUnitPrice());
+	//		if(item.getReceivedQty().doubleValue() == item.getFlDelOrderItem().getDeliveredQty().doubleValue()) {
+	//			receivedAmt = item.getFlDelOrderItem().getDeliveredAmt();
+	//		}
+			item.setReceivedAmt(receivedAmt.setScale(2, RoundingMode.HALF_UP));
+			if(getManagedBean().isAcknowledged()){
+				getManagedBean().setRemainingQty(item.getFlDelOrderItem().getFlFulfilmentItemAddr().getOrderedQty().subtract(item.getReceivedQty()));
+			}else{
+				BigDecimal remainQty = new BigDecimal(getRemainingQuantity(item));
+				getManagedBean().setRemainingQty(remainQty);
+			}
 		}
-		if(item.getReceivedQty().doubleValue() > item.getFlDelOrderItem().getDeliveredQty().doubleValue()) {
-			item.setReceivedQty(BigDecimal.ZERO);
-			item.setReceivedAmt(BigDecimal.ZERO);
-			throw new EpException(MessageConst.ERROR_100032, new String[]{
-					ResourceBundleUtils.getMessage("lbl.fl.received.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),
-					ResourceBundleUtils.getMessage("lbl.fl.do.delivery.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});	
-		}
-		if(null != item.getReceivedQty()){
-			BigDecimal formattedReceivedQty = item.getReceivedQty().setScale(
-					item.getFlDelOrderItem().getFlFulfilmentItemAddr().getScRequestItem().getUom().getDecimalScale(),BigDecimal.ROUND_HALF_UP);
-			item.setReceivedQty(formattedReceivedQty);
-		}
-		BigDecimal receivedAmt = item.getReceivedQty().multiply(item.getGstUnitPrice());
-//		if(item.getReceivedQty().doubleValue() == item.getFlDelOrderItem().getDeliveredQty().doubleValue()) {
-//			receivedAmt = item.getFlDelOrderItem().getDeliveredAmt();
-//		}
-		item.setReceivedAmt(receivedAmt.setScale(2, RoundingMode.HALF_UP));
 	}
 	 
 	/**
@@ -790,6 +800,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		if(selectedTabIndex==1){
 			sortItems(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem());
 			getManagedBean().setSelectedItem(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().get(0));
+			selectedItemRow();
 		}
 		
 	}
@@ -945,6 +956,30 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			}
 		}
 		return amtChanged;
+	}
+	
+	
+	public void selectedItemRow(){
+		if(null != getManagedBean().getSelectedItem()){
+			getManagedBean().setOrderedAmt(getManagedBean().getSelectedItem().getFlDelOrderItem().getFlFulfilmentItemAddr().getOrderedAmt());
+			getManagedBean().setOrderedQty(getManagedBean().getSelectedItem().getFlDelOrderItem().getFlFulfilmentItemAddr().getOrderedQty());
+			getManagedBean().setDeliveredQty(getManagedBean().getSelectedItem().getFlDelOrderItem().getDeliveredQty());
+			getManagedBean().setDeliveredAmt(getManagedBean().getSelectedItem().getFlDelOrderItem().getDeliveredAmt());
+			getManagedBean().setTotalReceivedAmt(getManagedBean().getSelectedItem().getTotalRecvAmount());
+			getManagedBean().setTotalReceivedQty(getManagedBean().getSelectedItem().getTotalRecvQty());
+			if(getManagedBean().isAcknowledged()){
+				getManagedBean().setRemainingQty(getManagedBean().getSelectedItem().getFlDelOrderItem().getFlFulfilmentItemAddr().getOrderedQty().subtract(getManagedBean().getSelectedItem().getReceivedQty()));
+			}else{
+				BigDecimal remainQty = new BigDecimal(getRemainingQuantity(getManagedBean().getSelectedItem()));
+				getManagedBean().setRemainingQty(remainQty);
+			}
+			getManagedBean().setItemTypeProduct(false);
+			if(getManagedBean().getSelectedItem().getFlDelOrderItem().getFlFulfilmentItemAddr().getItemType().getParameterCode().equals(ParameterConst.ITEM_TYPE_PRODUCT)){
+				getManagedBean().setItemTypeProduct(true);
+			}else if(getManagedBean().getSelectedItem().getFlDelOrderItem().getFlFulfilmentItemAddr().getItemType().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)){
+				getManagedBean().setItemTypeProduct(false);
+			}
+		}
 	}
 	
 }
