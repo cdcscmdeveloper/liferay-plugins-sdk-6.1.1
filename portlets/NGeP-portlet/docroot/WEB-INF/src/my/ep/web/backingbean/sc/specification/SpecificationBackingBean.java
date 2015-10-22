@@ -456,6 +456,10 @@ public class SpecificationBackingBean extends
 				resDTO = specSO.saveQTDtl(specReqDTO);
 				renewSesionObject();
 				this.getManagedBean().setScQt(resDTO.getScQt());
+				ScQt scQt1 = this.getManagedBean().getScQt();
+				if (null == scQt1.getEstimatedAmount()) {
+					setEstimatedPrice(scQt1);
+				}
 				retriveApprovalRemarks();
 				break;
 			}
@@ -16489,4 +16493,19 @@ public class SpecificationBackingBean extends
 		return uploaditems;
 	}
 
+	private void setEstimatedPrice(ScQt scQt) {
+
+		IQTDetailSO qtDetailsSO;
+		try {
+			qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+
+			BigDecimal estimatedAmount = qtDetailsSO.getdecryptedEstAmount(scQt
+					.getQtId());
+			scQt.setEstimatedAmount(estimatedAmount);
+			scQt.setDecryptedEstAmt(estimatedAmount);
+		} finally {
+			qtDetailsSO = null;
+		}
+	}
 }
