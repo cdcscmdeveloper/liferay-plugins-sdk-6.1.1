@@ -1919,6 +1919,9 @@ public class QTCommitteBackingBean extends
 						.getManagedBean().getQt().getClosingDate()))
 
 					return true;
+			}  if (QTStatusConst.QT_EVALUATION_PROPOSAL <= (this.getManagedBean()
+					.getCurrentStatusId())) {
+				return true;
 			}
 
 		} else {
