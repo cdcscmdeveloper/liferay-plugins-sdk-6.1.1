@@ -3180,6 +3180,10 @@ public class QTDetailBackingBean extends
 							new PmParameter());
 				}
 
+			} else {
+				BigDecimal estimatedAmount = QtDetailsSO.getdecryptedEstAmount(qtId);
+				scQt.setEstimatedAmount(estimatedAmount);
+				scQt.setDecryptedEstAmt(estimatedAmount);
 			}
 		} finally {
 			QtDetailsSO = null;
@@ -3683,8 +3687,11 @@ public class QTDetailBackingBean extends
 			this.getManagedBean().setCurrentStatusId(currentStatus);
 			this.getManagedBean().setAmendMentBean(amendMentBean);
 			setAmmendMentBean(resDTO.getAmendMentBean());
+			ScQt scQt = this.getManagedBean().getQt();
+			if (null == scQt.getEstimatedAmount()) {
+				setEstimatedPrice(scQt);
+			}
 			retrieveApprovalTabDtl();
-
 			break;
 		case 4:
 			if (isinvokeValidations(getManagedBean().getQt())) {
@@ -4742,7 +4749,19 @@ public class QTDetailBackingBean extends
 		log.info("handleFileUpload - END");
 	}
 
-	private void updateAttachmentWithLatestApproval() {
+	private void setEstimatedPrice(ScQt scQt) {
+		
+		IQTDetailSO qtDetailsSO;
+		try {
+			qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
+			BigDecimal estimatedAmount = qtDetailsSO.getdecryptedEstAmount(scQt
+					.getQtId());
+			scQt.setEstimatedAmount(estimatedAmount);
+			scQt.setDecryptedEstAmt(estimatedAmount);
+		} finally {
+			qtDetailsSO = null;
+		}
 	}
 }
