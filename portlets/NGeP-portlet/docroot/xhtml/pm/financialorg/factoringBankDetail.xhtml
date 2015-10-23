@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<p:outputPanel id="opFacBankDet">
-		<br/>
+		
 		<p:dataTable id="financialaccid" var="financialacc" resizableColumns="true" style="width: 100% !important;"
 			value="#{financialOrgBackingBean.managedBean.financialOrg.pmFinancialAccs}"
 			rowKey="#{financialacc}" rowIndexVar="rowIndex">
@@ -110,7 +110,7 @@
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
-		<br/>
+		
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				process="@this,financialaccid"

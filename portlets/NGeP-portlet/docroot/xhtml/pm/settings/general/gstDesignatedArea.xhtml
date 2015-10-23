@@ -5,13 +5,19 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<div style="text-align: right; min-height: 40px;">
+	<table style="width: 100%">
+		<tr>
+			<td>
+				<div align="right" style="width: 100%">
 		<p:commandButton value="#{lbl['lbl.btn.update']}" id="daUpdateBtnId" partialSubmit="true"
 			process=":form:settingTabId:gstId"
 			update=":form:settingTabId:gstId"
 			action="#{ruleCatalogueBackingBean.saveDesignatedArea}"></p:commandButton>
 
 	</div>
+	</td>
+	</tr>
+	</table>
 	
 	<p:dataTable id="designatedAreaTbl" var="daObj" rows="10"
 		widgetVar="designatedAreaTblWidVar"
