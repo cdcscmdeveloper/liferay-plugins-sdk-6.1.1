@@ -6,7 +6,6 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<br />
 	<p:outputPanel
 		rendered="#{supportDocBackingBean.managedBean.selectedDocument.byAppType}">
 		<p:dataTable id="dtAppType"
@@ -43,7 +42,7 @@
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
-		<br />
+		
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}" update="dtAppType" process="@this"
 				action="#{supportDocBackingBean.addRestriction(supportDocBackingBean.restrApp)}"

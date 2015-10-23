@@ -9,7 +9,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel id="pSupportDocDet" header="#{lbl['lbl.pm.document.details']}" toggleable="true">
 		<p:outputPanel id="opSupportDocDet" rendered="#{supportDocBackingBean.managedBean.selectedDocument.docCategoryCode.parameterId>0}">
-			<br/>
+			
 			<!-- Document Detail -->
 			<table class="ppTwoTable">
 				<tr>
@@ -123,7 +123,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		</p:outputPanel>	
 	</p:panel>
 	
-	<br/>
+	
 	<!-- Document Restriction -->
 	<ui:include src="restrictionList.xhtml"/>
 	
