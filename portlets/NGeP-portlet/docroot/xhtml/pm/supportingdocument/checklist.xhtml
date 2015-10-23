@@ -8,7 +8,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 xmlns:ac="http://ac.my/jsf/composite/cc"
 >
 	<p:panel id="pSupportDocCheckListDet" header="#{lbl['lbl.pm.document.details']}" toggleable="true">	
-		<br/>
+		
 		<!-- Document Detail -->
 		<table class="ppTwoTable">
 			<tr>
@@ -108,11 +108,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		</table>
 	</p:panel>
 	<p:panel id="pProcureRestrList" header="#{lbl['lbl.pm.document.restriction']}" toggleable="true">	
-		<br/>
+		
 		<p:tabView widgetVar="tvProcureRestr" id="tvDocCheckListRestr" dynamic="false" cache="false" orientation="top">
 			<!-- Application Type -->
 			<p:tab id="tProcureCat" title="#{lbl['lbl.pm.procurement.category']}">  
-				<br/>
+				
 				<p:dataTable id="dtProcureCat" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 					rowKey="#{restrict}" rowIndexVar="rowIndex"
 			 		value="#{supportDocBackingBean.managedBean.checkListRestrictions}" var="restrict" >
@@ -152,7 +152,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					</p:commandLink>
 			</p:column>
 			   	</p:dataTable>
-			   	<br/>
+			   
 		   		<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.add']}"  update="dtProcureCat"
 						action="#{supportDocBackingBean.addRestriction(supportDocBackingBean.checklist)}"

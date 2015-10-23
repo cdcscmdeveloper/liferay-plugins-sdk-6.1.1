@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<br />
+	
 	<p:outputPanel
 		rendered="#{supportDocBackingBean.managedBean.selectedDocument.byCategory}">
 		<p:dataTable id="dtCat" resizableColumns="true"
@@ -40,7 +40,7 @@
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
-		<br />
+		
 		<div class="ppRightBtn">
 			<!--  Popup Category Details -->
 		   <p:commandButton value="#{lbl['lbl.btn.add']}"
