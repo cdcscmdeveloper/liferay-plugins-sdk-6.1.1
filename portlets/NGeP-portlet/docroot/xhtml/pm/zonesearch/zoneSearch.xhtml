@@ -6,7 +6,6 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel id="zoneSearchPanel"
 		header="#{lbl['lbl.pm.search.rejection.reason']}" toggleable="true">
-		<br />
 		<table class="ppTwoTable">
 
 			<tr>
@@ -52,7 +51,7 @@
 						<p:commandButton value="#{lbl['lbl.btn.search']}"
 							update="searchZones" process="zoneSearchPanel" 
 							action="#{zoneBackingBean.searchZone}" />
-						&#160;
+						
 						<p:commandButton value="#{lbl['lbl.btn.reset']}"
 							update=":form:zoneSearchPanel,:form:searchZones" 
 							action="#{zoneBackingBean.resetZoneSearchBean}" />
