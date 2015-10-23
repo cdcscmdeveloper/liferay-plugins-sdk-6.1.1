@@ -768,13 +768,12 @@
 									</p:selectOneMenu>
 								  </c:if>
 								   <c:if test="#{flReportBackingBean.managedBean.rptGenBean.flGroupFifteenView}">
-								   <c:if test="#{flReportBackingBean.managedBean.rptGenBean.flGroupFifteenWithoutSupplView}">
+								   <c:if test="#{flReportBackingBean.managedBean.rptGenBean.flGroupFifteenWithSupplView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.flGroupFifteen}" style="margin-top:5px;width:300px;">
 									   
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}" itemValue="#{null}"></f:selectItem>										
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>										
-										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}" itemValue="#{null}"></f:selectItem>									
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.pkpNoScreen']}" itemValue="#{lbl['lbl.rpt.pkpnumber']}"></f:selectItem>
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																		
 									</p:selectOneMenu>
@@ -783,9 +782,7 @@
 									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.flGroupFifteen}" style="margin-top:5px;width:300px;">
 									   
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}" itemValue="#{null}"></f:selectItem>										
-										
-										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.pkpNoScreen']}" itemValue="#{lbl['lbl.rpt.pkpnumber']}"></f:selectItem>
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																		
 									</p:selectOneMenu>
