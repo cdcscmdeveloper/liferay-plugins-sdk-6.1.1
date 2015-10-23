@@ -195,6 +195,7 @@ public class ReportsGenerateBean {
 		private boolean smScheduleSiteVisitDateView = false;
 		private boolean smActivationDateView = false;
 		private boolean smSubmissionDateView = false;
+		private boolean smPendingSubmissionDateView = false;
 		private boolean smExpiryDateView = false;
 		private boolean smCreatedDateView = false;
 		private boolean smApplicationDateView = false;
@@ -1008,7 +1009,20 @@ public class ReportsGenerateBean {
 		}
 		public void setSmStaticStateView(boolean smStaticStateView) {
 			this.smStaticStateView = smStaticStateView;
+		}		
+		/**
+		 * @return the smPendingSubmissionDateView
+		 */
+		public boolean isSmPendingSubmissionDateView() {
+			return smPendingSubmissionDateView;
 		}
+		/**
+		 * @param smPendingSubmissionDateView the smPendingSubmissionDateView to set
+		 */
+		public void setSmPendingSubmissionDateView(boolean smPendingSubmissionDateView) {
+			this.smPendingSubmissionDateView = smPendingSubmissionDateView;
+		}
+		
 		//CT
 		private boolean ctContractNoView = false;
 		private boolean ctAgreementView = false;
@@ -4491,4 +4505,5 @@ public class ReportsGenerateBean {
 			}
 			 return yearList; 
 		}
+		
 }
