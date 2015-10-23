@@ -294,8 +294,9 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	        	rptGenBean.setSmRegistrationNoView(true);
 	        	rptGenBean.setSmCommonZoneView(true);
 			    rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			    rptGenBean.setSmMandatoryZoneView(true);
 			    rptGenBean.setSmActiveSubmissiveFromDateView(true);
-				rptGenBean.setSmSubmissionDateView(true);	        	
+				rptGenBean.setSmPendingSubmissionDateView(true);	        	
 	            break;
 		 case ReportConst.SM_VIRTUAL_DAY_REPORT_RPT_VAL: 
 	        	rptGenBean.setFromDateView(true);

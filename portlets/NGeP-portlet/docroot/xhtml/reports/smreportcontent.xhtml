@@ -1738,6 +1738,11 @@
 									<p:outputLabel  value="#{lbl['lbl.rpt.submissiondatefrom']}" style="width:175px;"/>
 								</TD>
 								</c:if>
+								<c:if test="#{reportBackingBean.managedBean.rptGenBean.smPendingSubmissionDateView}">
+								<TD>
+									<p:outputLabel  value="#{lbl['lbl.rpt.appl.submissiondatefrom']}" style="width:175px;"/>
+								</TD>
+								</c:if>
 								<c:if test="#{reportBackingBean.managedBean.rptGenBean.smActSubmisAllDateView}">
 								<TD>
 									<p:outputLabel  value="#{lbl['lbl.rpt.subactdatefrom']}" style="width:180px;"/>
