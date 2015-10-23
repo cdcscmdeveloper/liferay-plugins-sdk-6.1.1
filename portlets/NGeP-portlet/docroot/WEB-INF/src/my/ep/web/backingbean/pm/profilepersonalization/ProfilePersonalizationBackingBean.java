@@ -265,6 +265,7 @@ public class ProfilePersonalizationBackingBean extends
 			
 			//clear password policy
 			getManagedBean().setPasswordPolicy(null);
+			generatePasswordPolicy();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1189,7 +1190,7 @@ public class ProfilePersonalizationBackingBean extends
 		}
 	}
 	
-	public String generatePasswordPolicy(){	
+	public void generatePasswordPolicy(){	
 		IUserSO userSO = null;
 		if(StringUtils.isBlank(getManagedBean().getPasswordPolicy())){
 			try {
@@ -1200,8 +1201,7 @@ public class ProfilePersonalizationBackingBean extends
 				reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
 				UserResDTO resDTO = userSO.getPasswordPolicyInfo(reqDTO);
 				if(resDTO.isSuccessful() && resDTO.getPolicyInfos() != null){
-					StringBuilder sb = new StringBuilder();
-					
+					StringBuilder sb = new StringBuilder();					
 					sb.append("<b>");
 					sb.append(ResourceBundleUtils.getMessage(
 							"lbl.pm.profiles.cp.tooltip",
@@ -1219,8 +1219,6 @@ public class ProfilePersonalizationBackingBean extends
 					userSO = null;
 			}
 		}
-		return getManagedBean().getPasswordPolicy();
-		
 		
 	}
 
