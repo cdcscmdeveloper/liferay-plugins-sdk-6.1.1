@@ -2828,7 +2828,7 @@ public class SmCommonUtil {
 							+ "dont have any name servers exist!!!");
 				}
 			}
-		} catch (NamingException e) {
+		} catch (Exception e) {
 			log.info(">>>>>>>>>>>>>>ERROR EMAIL LOOKUP[" + email + "]"
 					+ e.getMessage() + "<<<<<<<<<<<<<");
 		}
