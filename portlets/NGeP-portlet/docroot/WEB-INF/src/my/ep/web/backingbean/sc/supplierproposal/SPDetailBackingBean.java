@@ -3148,8 +3148,7 @@ public class SPDetailBackingBean extends
 		list = new ArrayList<ScQtProposal>();
 		if (getManagedBean().getPrepareProposal() > getManagedBean().getQt()
 				.getMaxProposal()) {
-			throw new EpException(MessageConst.ERROR_760332
-					+ +getManagedBean().getQt().getMaxProposal());
+			throw new EpException(MessageConst.ERROR_760332, new String[]{getManagedBean().getQt().getMaxProposal()+""});
 		} else {
 			for (int i = 0; i < this.getManagedBean().getPrepareProposal(); i++) {
 				ScQtProposal proposal = new ScQtProposal();
