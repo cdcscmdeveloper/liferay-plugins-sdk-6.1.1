@@ -2148,8 +2148,10 @@ public class QTDetailBackingBean extends
 														.getOrgProfileId(),
 												qtApproval)));
 							} else {
-								this.getManagedBean().setPublicationApproval(
-										qtApproval);
+								if (scQt.getQtStatus().getStatusId() <= QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) {
+									this.getManagedBean().setPublicationApproval(
+											qtApproval);
+								}
 							}
 						} else if (ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE
 								.equals(approvalCategoryCode)) {
