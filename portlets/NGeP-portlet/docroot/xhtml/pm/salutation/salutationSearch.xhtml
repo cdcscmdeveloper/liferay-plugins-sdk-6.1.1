@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel id="salPanel" header="#{lbl['lbl.pm.search.location']}" toggleable="true" >
-  <br/>
+  
 		<table class="ppTwoTable">
 			<tr>
 				<th width="20%"><h:outputLabel value="#{lbl['lbl.pm.sa.code']}"></h:outputLabel></th>
@@ -42,7 +42,7 @@
 						<p:commandButton value="#{lbl['lbl.btn.search']}"
 							action="#{salutationBackingBean.retrieveSalutation}"
 							update=":form:salutationSR" />
-                        &#160;
+                       
 						<p:commandButton value="#{lbl['lbl.btn.reset']}"
 							action="#{salutationBackingBean.resetSalSearch}"
 							update=":form:salPanel, :form:salutationSR" />

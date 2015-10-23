@@ -7,7 +7,7 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<p:outputPanel id="addManualDelAddrPnl">
-		<br/>
+	
 		<table style="width: 100%">
 			<tr>
 				<td width="120">
@@ -239,15 +239,13 @@
 				</tr>
 			</table>
 
-			<p:spacer height="15"></p:spacer>
-
 			<div align="right">
 				<p:commandButton value="OK" process="@this, contactPerson"
 					action="#{financialOrgBackingBean.okContacePerson}" ajax="true"
 					update="@([id$=Msg])" >
 					<f:param name="dialogValidation" value="true" />   
 				</p:commandButton>
-				&#160;&#160;
+			
 				<p:commandButton value="Cancel" process="@this"
 					action="#{financialOrgBackingBean.closeContacePerson}"
 					 />
