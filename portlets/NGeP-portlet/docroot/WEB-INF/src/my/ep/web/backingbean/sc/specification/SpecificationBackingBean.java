@@ -11555,16 +11555,8 @@ public class SpecificationBackingBean extends
 				}
 
 			}
-			if (demo) {
-				scQt.setDemoRequired(true);
-			} else if (!demo) {
-				scQt.setDemoRequired(false);
-			}
-			if (sample) {
-				scQt.setSampleReq(true);
-			} else if (!sample) {
-				scQt.setSampleReq(false);
-			}
+			scQt.setDemoRequired(demo);
+			scQt.setSampleReq(sample);
 			localChecklist.addAll(techCheckList);
 			scQt.setScQtChecklists(localChecklist);
 		}
