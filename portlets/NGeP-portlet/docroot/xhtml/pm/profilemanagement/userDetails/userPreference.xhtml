@@ -7,46 +7,58 @@
 
 	<!-- Preferred Language & Notification Days -->
 	<p:panel header="#{lbl['lbl.pm.profiles.preferences']}" toggleable="true">
-	 <br/>
 		<table class="ppTwoTable" style="width:50%">
-			<tr>
-				<th width="40%">
-					<p:outputLabel value="#{lbl['lbl.pm.profiles.preferences.language']}"/>
-					<p:outputLabel value="*" styleClass="mandatory" />
-				</th>
-				<td>	        
-          			<p:selectOneMenu styleClass="ppDropDownWidthM" required="#{!empty param['disableValidation']}" id="somPreLanguage"
-          				label="#{lbl['lbl.pm.profiles.preferences.language']}"
-          				value="#{profileManagementBackingBean.managedBean.selectedUser.preferredLanguage}">
-          				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />  
-	            		<f:selectItems value="#{profileManagementBackingBean.getLanguageList()}" 
-	            			var="language" itemLabel="#{language.languageName}" itemValue="#{language.languageCode}" />    
-                  	</p:selectOneMenu>
-	              	&#160;&#160;   
-	                <p:graphicImage id="giLang" value="/css/images/design/tooltips.png" />
-					<p:tooltip for="giLang" value="#{lbl['lbl.pm.profiles.preferences.notification.tooltip']}" showEffect="fade" hideEffect="fade" /> 
-					<p:message id="somPreLanguageMsg" for="somPreLanguage" display="icon" />                                                       
-				</td>
-			</tr>
+				<tr>
+					<th width="40%">
+						<p:outputLabel value="#{lbl['lbl.pm.profiles.preferences.language']}"/>
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</th>
+					<td>	        
+	          			<p:selectOneMenu styleClass="ppDropDownWidthM" required="#{!empty param['disableValidation']}" id="somPreLanguage"
+	          				label="#{lbl['lbl.pm.profiles.preferences.language']}"
+	          				value="#{profileManagementBackingBean.managedBean.selectedUser.preferredLanguage}">
+	          				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />  
+		            		<f:selectItems value="#{profileManagementBackingBean.getLanguageList()}" 
+		            			var="language" itemLabel="#{language.languageName}" itemValue="#{language.languageCode}" />    
+	                  	</p:selectOneMenu>
+		              	&#160;&#160;   
+		                <p:graphicImage id="giLang" value="/css/images/design/tooltips.png" />
+						<p:tooltip for="giLang" value="#{lbl['lbl.pm.profiles.preferences.notification.tooltip']}" showEffect="fade" hideEffect="fade" /> 
+						<p:message id="somPreLanguageMsg" for="somPreLanguage" display="icon" />                                                       
+					</td>
+				</tr>
+			</table>
+			</p:panel>
 			
-			<tr>
-				<th width="40%">
-					<p:outputLabel value="#{lbl['lbl.pm.profiles.preferences.preferred']} #{lbl['lbl.pm.profiles.userdetails.email']}"/>
-					<p:outputLabel value="*" styleClass="mandatory" />
-				</th>
-				<td>
-					<p:selectBooleanCheckbox id="itPreEmail" value="#{profileManagementBackingBean.managedBean.selectedUser.notifyByEmail}" />
-					<p:graphicImage id="giPreEmail" value="/css/images/design/tooltips.png" /> 
-					<p:tooltip for="giPreEmail" value="#{lbl['lbl.pm.profiles.preferences.nofificationemail.tooltip']}" showEffect="fade" hideEffect="fade" />
-					<p:message id="itPreEmailMsg" for="itPreEmail" display="icon" />
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<h:outputText styleClass="instruction" value="#{lbl['lbl.pm.profiles.preferences.nofification.note']}" />
-				</td>
-			</tr>
-		</table>
-	</p:panel>
-	
+		<p:panel header="#{lbl['lbl.pm.profiles.preferred.notification']}" toggleable="true">
+			<table class="ppTwoTable" style="width:50%">	
+				<tr>
+					<th width="40%">
+						<p:outputLabel value="#{lbl['lbl.pm.profiles.preferences.preferred']} #{lbl['lbl.pm.profiles.userdetails.email']}"/>						
+					</th>
+					<td>
+						<p:selectBooleanCheckbox id="itPreEmail" value="#{profileManagementBackingBean.managedBean.selectedUser.notifyByEmail}" />
+						<p:graphicImage id="giPreEmail" value="/css/images/design/tooltips.png" /> 
+						<p:tooltip for="giPreEmail" value="#{lbl['lbl.pm.profiles.preferences.nofificationemail.tooltip']}" showEffect="fade" hideEffect="fade" />
+						<p:message id="itPreEmailMsg" for="itPreEmail" display="icon" />
+					</td>
+				</tr>
+				<tr>
+					<th width="40%">
+						<p:outputLabel value="#{lbl['lbl.pm.profiles.preferences.preferred']} #{lbl['lbl.pm.profiles.preferences.sms']}"/>				
+					</th>
+					<td>
+						<p:selectBooleanCheckbox id="itPreSms" value="#{profileManagementBackingBean.managedBean.selectedUser.notifyBySms}"  /> 
+						<p:graphicImage id="giPreSms" value="/css/images/design/tooltips.png" /> 
+						<p:tooltip for="giPreSms" value="#{lbl['lbl.pm.profiles.preferences.nofificationsms.tooltip']}" showEffect="fade" hideEffect="fade" />
+						<p:message id="itPreSmsMsg" for="itPreSms" display="icon" />
+					</td>				
+				</tr>
+				<tr>
+					<td colspan="2">
+						<h:outputText styleClass="instruction" value="#{lbl['lbl.pm.profiles.preferences.nofification.note']}" />
+					</td>
+				</tr>
+			</table>
+		</p:panel>	
 </ui:composition>
