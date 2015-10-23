@@ -456,10 +456,6 @@ public class SpecificationBackingBean extends
 				resDTO = specSO.saveQTDtl(specReqDTO);
 				renewSesionObject();
 				this.getManagedBean().setScQt(resDTO.getScQt());
-				ScQt scQt4 = this.getManagedBean().getScQt();
-				if (null == scQt4.getEstimatedAmount()) {
-					setEstimatedPrice(scQt4);
-				}
 				retriveApprovalRemarks();
 				break;
 			}
@@ -5096,15 +5092,16 @@ public class SpecificationBackingBean extends
 					setEvaluationType(scQt);
 				}
 			} else {
-
-				qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-				BigDecimal estimatedAmount = qtDetailsSO
-						.getdecryptedEstAmount(qtId);
-				this.getManagedBean().getScQt()
-						.setEstimatedAmount(estimatedAmount);
-				this.getManagedBean().getScQt()
-						.setDecryptedEstAmt(estimatedAmount);
+				if(this.getManagedBean().getScQt().getEstimatedAmount() == null) {
+					qtDetailsSO = BusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTDetailSO.class);
+					BigDecimal estimatedAmount = qtDetailsSO
+							.getdecryptedEstAmount(qtId);
+					this.getManagedBean().getScQt()
+							.setEstimatedAmount(estimatedAmount);
+					this.getManagedBean().getScQt()
+							.setDecryptedEstAmt(estimatedAmount);
+				}
 			}
 
 		} finally {
@@ -12006,10 +12003,6 @@ public class SpecificationBackingBean extends
 					resDTO = specSO.saveQTDtl(specReqDTO);
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
-					ScQt scQt4 = this.getManagedBean().getScQt();
-					if (null == scQt4.getEstimatedAmount()) {
-						setEstimatedPrice(scQt4);
-					}
 					getfulfilmentDtls(resDTO.getScQt());
 					retriveFinancialScoring();
 					// retriveTechnicalSpecification();
@@ -12048,10 +12041,6 @@ public class SpecificationBackingBean extends
 					resDTO = specSO.saveQTDtl(specReqDTO);
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
-					ScQt scQt4 = this.getManagedBean().getScQt();
-					if (null == scQt4.getEstimatedAmount()) {
-						setEstimatedPrice(scQt4);
-					}
 					getfulfilmentDtls(resDTO.getScQt());
 					retriveTechnicalScoring();
 					// retriveTechnicalCheckList();
@@ -12092,10 +12081,6 @@ public class SpecificationBackingBean extends
 					resDTO = specSO.saveQTDtl(specReqDTO);
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
-					ScQt scQt5 = this.getManagedBean().getScQt();
-					if (null == scQt5.getEstimatedAmount()) {
-						setEstimatedPrice(scQt5);
-					}
 					getfulfilmentDtls(resDTO.getScQt());
 					retriveRecommendationDetails();
 					// retriveTechnicalSpecification();
@@ -12133,10 +12118,6 @@ public class SpecificationBackingBean extends
 					resDTO = specSO.saveQTDtl(specReqDTO);
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
-					ScQt scQt5 = this.getManagedBean().getScQt();
-					if (null == scQt5.getEstimatedAmount()) {
-						setEstimatedPrice(scQt5);
-					}
 					getfulfilmentDtls(resDTO.getScQt());
 					retriveFinancialScoring();
 					// retriveTechnicalCheckList();
@@ -12169,10 +12150,6 @@ public class SpecificationBackingBean extends
 					resDTO = specSO.saveQTDtl(specReqDTO);
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
-					ScQt scQt6 = this.getManagedBean().getScQt();
-					if (null == scQt6.getEstimatedAmount()) {
-						setEstimatedPrice(scQt6);
-					}
 					getfulfilmentDtls(resDTO.getScQt());
 					retriveDeliveryDetails();
 					// retriveTechnicalSpecification();
@@ -12210,10 +12187,6 @@ public class SpecificationBackingBean extends
 					resDTO = specSO.saveQTDtl(specReqDTO);
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
-					ScQt scQt6 = this.getManagedBean().getScQt();
-					if (null == scQt6.getEstimatedAmount()) {
-						setEstimatedPrice(scQt6);
-					}
 					getfulfilmentDtls(resDTO.getScQt());
 					retriveRecommendationDetails();
 					// retriveTechnicalCheckList();
@@ -12237,10 +12210,6 @@ public class SpecificationBackingBean extends
 						resDTO = specSO.saveQTDtl(specReqDTO);
 						renewSesionObject();
 						this.getManagedBean().setScQt(resDTO.getScQt());
-						ScQt scQt7 = this.getManagedBean().getScQt();
-						if (null == scQt7.getEstimatedAmount()) {
-							setEstimatedPrice(scQt7);
-						}
 						getfulfilmentDtls(resDTO.getScQt());
 						retriveFulfilmentDtls();
 						// retriveCommitteeEndorsment();
@@ -12251,10 +12220,6 @@ public class SpecificationBackingBean extends
 						resDTO = specSO.saveQTDtl(specReqDTO);
 						renewSesionObject();
 						this.getManagedBean().setScQt(resDTO.getScQt());
-						ScQt scQt7 = this.getManagedBean().getScQt();
-						if (null == scQt7.getEstimatedAmount()) {
-							setEstimatedPrice(scQt7);
-						}
 						getfulfilmentDtls(resDTO.getScQt());
 						// retriveFulfilmentDtls();
 						retriveCommitteeEndorsment();
@@ -12289,10 +12254,6 @@ public class SpecificationBackingBean extends
 					resDTO = specSO.saveQTDtl(specReqDTO);
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
-					ScQt scQt7 = this.getManagedBean().getScQt();
-					if (null == scQt7.getEstimatedAmount()) {
-						setEstimatedPrice(scQt7);
-					}
 					getfulfilmentDtls(resDTO.getScQt());
 					retriveDeliveryDetails();
 					// retriveTechnicalCheckList();
@@ -12309,10 +12270,6 @@ public class SpecificationBackingBean extends
 					resDTO = specSO.saveQTDtl(specReqDTO);
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
-					ScQt scQt1 = this.getManagedBean().getScQt();
-					if (null == scQt1.getEstimatedAmount()) {
-						setEstimatedPrice(scQt1);
-					}
 					getfulfilmentDtls(resDTO.getScQt());
 					retriveCommitteeEndorsment();
 					// retriveTechnicalSpecification();
@@ -12335,10 +12292,6 @@ public class SpecificationBackingBean extends
 						resDTO = specSO.saveQTDtl(specReqDTO);
 						renewSesionObject();
 						this.getManagedBean().setScQt(resDTO.getScQt());
-						ScQt scQt7 = this.getManagedBean().getScQt();
-						if (null == scQt7.getEstimatedAmount()) {
-							setEstimatedPrice(scQt7);
-						}
 						getfulfilmentDtls(resDTO.getScQt());
 						retriveFulfilmentDtls();
 						// retriveCommitteeEndorsment();
@@ -12349,10 +12302,6 @@ public class SpecificationBackingBean extends
 						resDTO = specSO.saveQTDtl(specReqDTO);
 						renewSesionObject();
 						this.getManagedBean().setScQt(resDTO.getScQt());
-						ScQt scQt1 = this.getManagedBean().getScQt();
-						if (null == scQt1.getEstimatedAmount()) {
-							setEstimatedPrice(scQt1);
-						}
 						getfulfilmentDtls(resDTO.getScQt());
 						// retriveFulfilmentDtls();
 						retriveCommitteeEndorsment();
@@ -12368,10 +12317,6 @@ public class SpecificationBackingBean extends
 				resDTO = specSO.saveQTDtl(specReqDTO);
 				renewSesionObject();
 				this.getManagedBean().setScQt(resDTO.getScQt());
-				ScQt scQt9 = this.getManagedBean().getScQt();
-				if (null == scQt9.getEstimatedAmount()) {
-					setEstimatedPrice(scQt9);
-				}
 				getfulfilmentDtls(resDTO.getScQt());
 				retriveCommitteeEndorsment();
 				// retriveTechnicalCheckList();
@@ -16548,7 +16493,7 @@ public class SpecificationBackingBean extends
 		return uploaditems;
 	}
 
-	private void setEstimatedPrice(ScQt scQt) {
+	/*private void setEstimatedPrice(ScQt scQt) {
 
 		IQTDetailSO qtDetailsSO;
 		try {
@@ -16562,5 +16507,5 @@ public class SpecificationBackingBean extends
 		} finally {
 			qtDetailsSO = null;
 		}
-	}
+	}*/
 }
