@@ -112,7 +112,7 @@
 						</h:outputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="text-align:center">
-						<h:outputText value="#{newItems.orderedQty}" sstyle="float:right;" >
+						<h:outputText value="#{newItems.orderedQty}" style="float:right;" >
 						<f:converter converterId="dynamicNumberConverter" />
 						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, newItems.scRequestItem.uom.uomCode)}" />
 						</h:outputText>
