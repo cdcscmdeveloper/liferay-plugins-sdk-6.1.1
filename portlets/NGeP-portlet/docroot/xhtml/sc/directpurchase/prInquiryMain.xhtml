@@ -1,5 +1,5 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -7,18 +7,22 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
-   <ui:define name="contentSection">
-	<c:if test="#{purchaseInquiryBackingBean.managedBean.titleChecker}">
+	<ui:define name="contentSection">
+		<c:if test="#{purchaseInquiryBackingBean.managedBean.titleChecker}">
 			<ac:title value="#{lbl['lbl.sc.pr.inquiry']}" />
-	</c:if>
+		</c:if>
 
-  <p:blockUI block=":form"  widgetVar="blockWidget">
-				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
- </p:blockUI>
-  <p:messages showDetail="true" autoUpdate="true" closable="true"  showSummary="false" severity="error, info" id="mainMsg"/>
-  <ui:param name="isPendingSubmissionStatus" value="#{purchaseInquiryBackingBean.managedBean.priStatus.statusId eq DPStatusConstants.priPendingSubmission}" />
-  <ui:param name="isPendingSupplierRespStatus" value="#{purchaseInquiryBackingBean.managedBean.priStatus.statusId eq DPStatusConstants.priPendingSupplierResponse}" />
-  <ui:param name="isPendingRnCreationStatus" value="#{purchaseInquiryBackingBean.managedBean.priStatus.statusId eq  DPStatusConstants.priPendingRnCreation}" />
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		<p:messages showDetail="true" autoUpdate="true" closable="true"
+			showSummary="false" severity="error, info" id="mainMsg" />
+		<ui:param name="isPendingSubmissionStatus"
+			value="#{purchaseInquiryBackingBean.managedBean.priStatus.statusId eq DPStatusConstants.priPendingSubmission}" />
+		<ui:param name="isPendingSupplierRespStatus"
+			value="#{purchaseInquiryBackingBean.managedBean.priStatus.statusId eq DPStatusConstants.priPendingSupplierResponse}" />
+		<ui:param name="isPendingRnCreationStatus"
+			value="#{purchaseInquiryBackingBean.managedBean.priStatus.statusId eq  DPStatusConstants.priPendingRnCreation}" />
 
 		<div class="ppRightBtn">
 			<c:if test="#{isPendingSubmissionStatus}">
@@ -47,9 +51,9 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 								<c:if test="#{isPendingRnCreationStatus}">
 									<c:if
 										test="#{!purchaseInquiryBackingBean.managedBean.rnToPIFlag}">
-										<p:commandButton
-											value="#{lbl['lbl.btn.proceed']}" partialSubmit="true"
-											process="@form" onstart="blockWidget.show();"
+										<p:commandButton value="#{lbl['lbl.btn.proceed']}"
+											partialSubmit="true" process="@form"
+											onstart="blockWidget.show();"
 											oncomplete="blockWidget.hide();"
 											action="#{purchaseInquiryBackingBean.requisitionerAction('PROCESSED')}" />
 
@@ -92,14 +96,8 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 				</tr>
 			</table>
 		</div>
-		<table style="border: 0px;align:center;width:100%;">
-			<tr>
-				<td> <td width="100%" align="left" valign="top">
-				   <ui:include src="/xhtml/sc/directpurchase/prInquiryHeader.xhtml" />
-				   <ui:include src="/xhtml/sc/directpurchase/prInquiry.xhtml" />
-				</td></td>
-			</tr>
-		</table>
-  
+		<ui:include src="/xhtml/sc/directpurchase/prInquiryHeader.xhtml" />
+		<ui:include src="/xhtml/sc/directpurchase/prInquiry.xhtml" />
+
 	</ui:define>
-	</ui:composition>
+</ui:composition>
