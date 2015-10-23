@@ -9,17 +9,18 @@
 		<cc:attribute name="isShow" default="false"/>
 		<cc:attribute name="oriValue" required="true" />
 		<cc:attribute name="currValue" required="true" />
-		<cc:attribute name="alertValue" required="true" />
+		<cc:attribute name="alertValue" required="true"  />
 	</cc:interface>
 
 	<cc:implementation>
+		<ui:param name="alertId" value="#{cc.id}"></ui:param>
 		<p:outputPanel rendered="#{cc.attrs.isShow and 
 		((not empty cc.attrs.oriValue and empty cc.attrs.currValue) or (empty cc.attrs.oriValue and not empty cc.attrs.currValue) 
 		or (not empty cc.attrs.oriValue and not empty cc.attrs.currValue and cc.attrs.oriValue ne cc.attrs.currValue))}">
 		&#160;
-		 	<p:graphicImage id="alertChangeImgId" style="vertical-align:top"
+		 	<p:graphicImage id="#{alertId}gi" style="vertical-align:top"
 				value="/css/images/design/icon_alert.png" />
-			<p:tooltip id="alertChangeTtId" for="alertChangeImgId">
+			<p:tooltip id="alertChangeTtId" for="#{alertId}gi">
 				<p:outputLabel escape="false"
 					value="#{not empty cc.attrs.alertValue ? cc.attrs.alertValue : lbl['lbl.txt.na']}" />
 			</p:tooltip>
