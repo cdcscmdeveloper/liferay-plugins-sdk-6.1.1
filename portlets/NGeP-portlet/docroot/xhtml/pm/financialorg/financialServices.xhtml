@@ -5,7 +5,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 	<p:outputPanel id="pFacFinancialService">
-		<br />
+	
 		<p:dataTable id="financialsrvid" var="financialsrv"
 			value="#{financialOrgBackingBean.managedBean.financialOrg.pmFinancialSvcs}"
 			rowKey="#{financialsrv}" rowIndexVar="rowIndex">
@@ -80,7 +80,7 @@
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
-		<br />
+	
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				process="@this,financialsrvid" 
