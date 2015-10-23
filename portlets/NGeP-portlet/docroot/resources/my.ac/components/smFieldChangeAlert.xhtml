@@ -3,7 +3,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<cc:interface>
 		<cc:attribute name="isShow" default="false"/>
@@ -14,17 +15,19 @@
 
 	<cc:implementation>
 		<ui:param name="alertId" value="#{cc.id}"></ui:param>
-		<p:outputPanel rendered="#{cc.attrs.isShow and 
-		((not empty cc.attrs.oriValue and empty cc.attrs.currValue) or (empty cc.attrs.oriValue and not empty cc.attrs.currValue) 
-		or (not empty cc.attrs.oriValue and not empty cc.attrs.currValue and cc.attrs.oriValue ne cc.attrs.currValue))}">
-		&#160;
-		 	<p:graphicImage id="#{alertId}gi" style="vertical-align:top"
-				value="/css/images/design/icon_alert.png" />
-			<p:tooltip id="alertChangeTtId" for="#{alertId}gi">
-				<p:outputLabel escape="false"
-					value="#{not empty cc.attrs.alertValue ? cc.attrs.alertValue : lbl['lbl.txt.na']}" />
-			</p:tooltip>
-		</p:outputPanel>
+		<c:if test="#{cc.attrs.isShow}">
+			<p:outputPanel rendered="#{cc.attrs.isShow and 
+			((not empty cc.attrs.oriValue and empty cc.attrs.currValue) or (empty cc.attrs.oriValue and not empty cc.attrs.currValue) 
+			or (not empty cc.attrs.oriValue and not empty cc.attrs.currValue and cc.attrs.oriValue ne cc.attrs.currValue))}">
+			&#160;
+			 	<p:graphicImage id="#{alertId}gi" style="vertical-align:top"
+					value="/css/images/design/icon_alert.png" />
+				<p:tooltip id="alertChangeTtId" for="#{alertId}gi">
+					<p:outputLabel escape="false"
+						value="#{not empty cc.attrs.alertValue ? cc.attrs.alertValue : lbl['lbl.txt.na']}" />
+				</p:tooltip>
+			</p:outputPanel>
+		</c:if>
 	</cc:implementation>
 
 </ui:component>
