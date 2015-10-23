@@ -2789,10 +2789,10 @@ public class SmCommonUtil {
 
 	public static void checkEmailDomainWithExceptionMsg(String emailOwner,
 			String email) {
-		if (StringUtils.isNotBlank(email) && !isValidEmailDomain(email)) {
-			throw new EpException(MessageConst.ERROR_721115, new String[] {
-					email, emailOwner });
-		}
+		// if (StringUtils.isNotBlank(email) && !isValidEmailDomain(email)) {
+		// throw new EpException(MessageConst.ERROR_721115, new String[] {
+		// email, emailOwner });
+		// }
 	}
 
 	public static boolean isValidEmailDomain(String email) {
@@ -2821,8 +2821,7 @@ public class SmCommonUtil {
 				}
 
 				if (!isCollectionEmpty(res)) {
-					log.info("Email " + email
-							+ " name servers:" + res);
+					log.info("Email " + email + " name servers:" + res);
 					retVal = true;
 				} else {
 					log.info("Email " + email
