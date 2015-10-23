@@ -5059,7 +5059,8 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		fromDate.set(fromDate.get(Calendar.YEAR), 00, 01, 0, 00, 0);
 
 		List<String> smReportNameList = new ArrayList<String>();
-		smReportNameList.add("SM_042");
+		smReportNameList.add(ReportConst.SM_LIST_OF_APPLICATION_RPT_VAL);
+		smReportNameList.add(ReportConst.SM_LIST_OFFLINE_SUPP_DOC_RPT_VAL);
 
 		for (String code : smReportNameList)
 			if (code.equalsIgnoreCase(reportCode)) {
