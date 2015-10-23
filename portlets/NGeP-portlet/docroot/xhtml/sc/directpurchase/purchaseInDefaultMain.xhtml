@@ -1,5 +1,5 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -32,19 +32,16 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 			test="#{purchaseInDefaultBackingBean.managedBean.taskId eq null}">
 			<table style="width: 100%">
 				<tr>
-					<td align="right">
-					   <p:commandButton immediate="true"
+					<td align="right"><p:commandButton immediate="true"
 							partialSubmit="true" process="@this"
 							value="#{lbl['lbl.btn.item.search']}"
 							rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"
 							style="float:left;"
-							action="#{purchaseInDefaultBackingBean.backToPrevious}" /> 
-						<p:commandButton
+							action="#{purchaseInDefaultBackingBean.backToPrevious}" /> <p:commandButton
 							immediate="true" value="#{lbl['lbl.btn.back']}"
 							partialSubmit="true" process="@this" style="float:left;"
 							rendered="#{!purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"
-							action="#{purchaseInDefaultBackingBean.backToPrevious}" /> 
-						<p:commandButton
+							action="#{purchaseInDefaultBackingBean.backToPrevious}" /> <p:commandButton
 							value="#{lbl['lbl.btn.submit']}"
 							action="#{purchaseInDefaultBackingBean.submitPurchaseInDefault()}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
@@ -58,8 +55,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 			test="#{purchaseInDefaultBackingBean.managedBean.taskId ne null}">
 			<table style="width: 100%">
 				<tr>
-					<td align="right">
-					   <ui:repeat var="bpmAction"
+					<td align="right"><ui:repeat var="bpmAction"
 							value="#{purchaseInDefaultBackingBean.managedBean.outComes}">
 							<ui:param name="buttonLabel"
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
@@ -76,14 +72,8 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 				</tr>
 			</table>
 		</c:if>
-		<table style="border: 0px; align: center">
-			<tr>
-				<td>
-				<td width="100%" align="left" valign="top">
-				   <ui:include src="/xhtml/sc/directpurchase/purchaseInDefaultHeader.xhtml" />
-				   <ui:include src="/xhtml/sc/directpurchase/purchaseInDefault.xhtml" /></td>
-				</td>
-			</tr>
-		</table>
+		<ui:include
+			src="/xhtml/sc/directpurchase/purchaseInDefaultHeader.xhtml" />
+		<ui:include src="/xhtml/sc/directpurchase/purchaseInDefault.xhtml" />
 	</ui:define>
 </ui:composition>
