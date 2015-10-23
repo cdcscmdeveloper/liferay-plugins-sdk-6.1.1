@@ -3184,9 +3184,11 @@ public class QTDetailBackingBean extends
 				}
 
 			} else {
-				BigDecimal estimatedAmount = QtDetailsSO.getdecryptedEstAmount(qtId);
-				scQt.setEstimatedAmount(estimatedAmount);
-				scQt.setDecryptedEstAmt(estimatedAmount);
+				if (scQt.getEstimatedAmount() == null) {
+					BigDecimal estimatedAmount = QtDetailsSO.getdecryptedEstAmount(qtId);
+					scQt.setEstimatedAmount(estimatedAmount);
+					scQt.setDecryptedEstAmt(estimatedAmount);
+				}
 			}
 		} finally {
 			QtDetailsSO = null;
@@ -3661,10 +3663,6 @@ public class QTDetailBackingBean extends
 			resDTO = detailSO.saveQTDtl(reqDTO);
 			renewSesionObject();
 			this.getManagedBean().setQt(resDTO.getQtDetail());
-			ScQt scQt1 = this.getManagedBean().getQt();
-			if (null == scQt1.getEstimatedAmount()) {
-				setEstimatedPrice(scQt1);
-			}
 			this.getManagedBean().setSelectedTabIndex(subTabIndex);
 			// this.getManagedBean().setActiveIndex(0);
 			retrieveCommitteeAppointmentTabDtl(false);
@@ -3677,10 +3675,6 @@ public class QTDetailBackingBean extends
 			resDTO = detailSO.saveQTDtl(reqDTO);
 			renewSesionObject();
 			this.getManagedBean().setQt(resDTO.getQtDetail());
-			ScQt scQt2 = this.getManagedBean().getQt();
-			if (null == scQt2.getEstimatedAmount()) {
-				setEstimatedPrice(scQt2);
-			}
 			this.getManagedBean().setCurrentStatusId(currentStatus);
 			retrieveSuppQualificationTabDtl();
 			setAmmendMentBean(resDTO.getAmendMentBean());
@@ -3698,10 +3692,6 @@ public class QTDetailBackingBean extends
 			this.getManagedBean().setCurrentStatusId(currentStatus);
 			this.getManagedBean().setAmendMentBean(amendMentBean);
 			setAmmendMentBean(resDTO.getAmendMentBean());
-			ScQt scQt3 = this.getManagedBean().getQt();
-			if (null == scQt3.getEstimatedAmount()) {
-				setEstimatedPrice(scQt3);
-			}
 			retrieveApprovalTabDtl();
 			break;
 		case 4:
@@ -3712,10 +3702,6 @@ public class QTDetailBackingBean extends
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
-				ScQt scQt4 = this.getManagedBean().getQt();
-				if (null == scQt4.getEstimatedAmount()) {
-					setEstimatedPrice(scQt4);
-				}
 				retrieveBriefingSitevisitTabDtl();
 			}
 			break;
@@ -3727,10 +3713,6 @@ public class QTDetailBackingBean extends
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
-				ScQt scQt5 = this.getManagedBean().getQt();
-				if (null == scQt5.getEstimatedAmount()) {
-					setEstimatedPrice(scQt5);
-				}
 				this.getManagedBean().setCurrentStatusId(currentStatus);
 				setAmmendMentBean(resDTO.getAmendMentBean());
 				retrieveScheduleTabDtl();
@@ -3744,10 +3726,6 @@ public class QTDetailBackingBean extends
 				reqDTO.setSaveFlow(true);
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
-				ScQt scQt6 = this.getManagedBean().getQt();
-				if (null == scQt6.getEstimatedAmount()) {
-					setEstimatedPrice(scQt6);
-				}
 				this.getManagedBean().setCurrentStatusId(currentStatus);
 				setAmmendMentBean(resDTO.getAmendMentBean());
 				retrieveDeductionPaymentTabDtl();
@@ -3760,10 +3738,6 @@ public class QTDetailBackingBean extends
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
-				ScQt scQt7 = this.getManagedBean().getQt();
-				if (null == scQt7.getEstimatedAmount()) {
-					setEstimatedPrice(scQt7);
-				}
 				this.getManagedBean().setCurrentStatusId(currentStatus);
 				setAmmendMentBean(resDTO.getAmendMentBean());
 				retrieveDocumentTabDtl();
@@ -3780,10 +3754,6 @@ public class QTDetailBackingBean extends
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
-				ScQt scQt9 = this.getManagedBean().getQt();
-				if (null == scQt9.getEstimatedAmount()) {
-					setEstimatedPrice(scQt9);
-				}
 				this.getManagedBean().setCurrentStatusId(currentStatus);
 				setAmmendMentBean(resDTO.getAmendMentBean());
 				retrievePublicationApprovalTabDtl();
@@ -4780,7 +4750,7 @@ public class QTDetailBackingBean extends
 		log.info("handleFileUpload - END");
 	}
 
-	private void setEstimatedPrice(ScQt scQt) {
+	/*private void setEstimatedPrice(ScQt scQt) {
 		
 		IQTDetailSO qtDetailsSO;
 		try {
@@ -4794,5 +4764,5 @@ public class QTDetailBackingBean extends
 		} finally {
 			qtDetailsSO = null;
 		}
-	}
+	}*/
 }
