@@ -8,16 +8,19 @@
 
 
 
-	<div style="text-align: right; min-height: 40px;">
 
-
-		<p:commandButton value="#{lbl['lbl.btn.update']}" partialSubmit="true" process=":form:settingTabId:feeSettingId"
-			update=":form:settingTabId:feeSettingId"
-			action="#{ruleCatalogueBackingBean.saveFeeExemptionForOrgItem}"></p:commandButton>
-
-
-
-	</div>
+	<table style="width: 100%">
+		<tr>
+			<td>
+				<div align="right" style="width: 100%">
+					<p:commandButton value="#{lbl['lbl.btn.update']}"
+						partialSubmit="true" process=":form:settingTabId:feeSettingId"
+						update=":form:settingTabId:feeSettingId"
+						action="#{ruleCatalogueBackingBean.saveFeeExemptionForOrgItem}"></p:commandButton>
+				</div>
+			</td>
+		</tr>
+	</table>
 
 
 	<p:dataTable id="feeByOrgItemTableID" var="feeObj" rows="10"
@@ -25,22 +28,21 @@
 		value="#{ruleCatalogueBackingBean.managedBean.feeExemptionsForOrgAndItem}"
 		selection="#{ruleCatalogueBackingBean.managedBean.selectedFeeExemption}"
 		rowKey="#{feeObj}" rowIndexVar="rowIndex" selectionMode="single">
-          <ac:paginator for="feeByOrgItemTableID" />
+		<ac:paginator for="feeByOrgItemTableID" />
 		<p:column style="width:30%">
 			<f:facet name="header">
 				<h:outputText value="*" styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.pm.settings.fee.org.suplier.name']}" />
 			</f:facet>
-			<ac:lov id="lovSupplier" lovId="PM_ORG_PROFILE_WITH_SUPPLIER" size="35"
-				readonly="true"
-				disabled="#{!(feeObj.brandNew)}"
+			<ac:lov id="lovSupplier" lovId="PM_ORG_PROFILE_WITH_SUPPLIER"
+				size="35" readonly="true" disabled="#{!(feeObj.brandNew)}"
 				label="#{lbl['lbl.pm.settings.fee.org.suplier.name']}"
 				headerText="Supplier"
 				update=":form:settingTabId:feeSettingId:feeByOrgItemTableID"
 				saveObject="ruleCatalogueBackingBean.managedBean.feeExemptionsForOrgAndItem[#{rowIndex}].orgProfileId"
 				value="#{feeObj.orgProfileId.smSupplier.companyName}">
 			</ac:lov>
- <p:message id="lovSupplierMsg" for="lovSupplier" display="icon" />
+			<p:message id="lovSupplierMsg" for="lovSupplier" display="icon" />
 
 		</p:column>
 		<p:column style="width:30%">
@@ -49,8 +51,8 @@
 				                </f:facet>
 
 			<ac:lov id="lovItem" lovId="CM_ITEM"
-				disabled="#{feeObj.orgProfileId.smSupplier == null or !(feeObj.brandNew)}" size="40"
-				readonly="true" headerText="Item"
+				disabled="#{feeObj.orgProfileId.smSupplier == null or !(feeObj.brandNew)}"
+				size="40" readonly="true" headerText="Item"
 				saveObject="ruleCatalogueBackingBean.managedBean.feeExemptionsForOrgAndItem[#{rowIndex}].itemId"
 				conditionField="cmSupplierItems.supplierId^#{feeObj.orgProfileId.smSupplier.supplierId}"
 				value="#{feeObj.itemId.itemName}">
@@ -63,7 +65,8 @@
 		                		</f:facet>
 
 			<p:calendar showOn="button" id="FeeOrgeffDateId"
-		    	disabled = "#{feeObj.isG2G == 1 or feeObj.recordStatusFlg == 0 or (!feeObj.brandNew and (feeObj.effDate le DateUtils.getCurrentDateWithoutTime()))}" style="width :40px;"
+				disabled="#{feeObj.isG2G == 1 or feeObj.recordStatusFlg == 0 or (!feeObj.brandNew and (feeObj.effDate le DateUtils.getCurrentDateWithoutTime()))}"
+				style="width :40px;"
 				mindate="#{ruleCatalogueBackingBean.managedBean.tomorrow}"
 				label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -79,7 +82,8 @@
 			 </f:facet>
 
 			<p:calendar showOn="button" id="FeeOrgexpDateId"
-		    	disabled = "#{feeObj.isG2G == 1 or feeObj.recordStatusFlg == 0 or (!feeObj.brandNew and (feeObj.expDate lt DateUtils.getCurrentDateWithoutTime()))}" style="width :40px;"
+				disabled="#{feeObj.isG2G == 1 or feeObj.recordStatusFlg == 0 or (!feeObj.brandNew and (feeObj.expDate lt DateUtils.getCurrentDateWithoutTime()))}"
+				style="width :40px;"
 				mindate="#{ruleCatalogueBackingBean.managedBean.today}"
 				label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
 				validatorMessage="#{lbl['lbl.pm.as.expdate']} #{lbl['lbl.pm.date.range.validation']} #{lbl['lbl.pm.as.effdate']}"
@@ -95,22 +99,23 @@
 					                #{lbl['lbl.pm.status']}
 				                </f:facet>
 			<p:selectOneMenu value="#{feeObj.recordStatusFlg}"
-				disabled="#{typeValueObj.brandNew or (feeObj.isG2G == 1)}" style="width:90px;">
+				disabled="#{typeValueObj.brandNew or (feeObj.isG2G == 1)}"
+				style="width:90px;">
 				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
 				<p:ajax event="change" immediate="true"
-								listener="#{ruleCatalogueBackingBean.checkFeeStatusForOrg(rowIndex)}"
-								partialSubmit="true" process="@this"
-								update=":form:settingTabId:feeSettingId:feeByOrgItemTableID :form:settingTabId:feeSettingId:feeOrgStatusConfirmDialog" />
-					
+					listener="#{ruleCatalogueBackingBean.checkFeeStatusForOrg(rowIndex)}"
+					partialSubmit="true" process="@this"
+					update=":form:settingTabId:feeSettingId:feeByOrgItemTableID :form:settingTabId:feeSettingId:feeOrgStatusConfirmDialog" />
+
 			</p:selectOneMenu>
 		</p:column>
 		<p:column width="5%">
 			<f:facet name="header">
-
+               #{lbl['lbl.cm.action']}
 			</f:facet>
 			<p:commandLink id="orgDeleteFee" partialSubmit="true" process="@this"
-			disabled="#{(feeObj.isG2G == 1) || (!(feeObj.brandNew) and (feeObj.effDate le DateUtils.getCurrentDateWithoutTime()))}"
+				disabled="#{(feeObj.isG2G == 1) || (!(feeObj.brandNew) and (feeObj.effDate le DateUtils.getCurrentDateWithoutTime()))}"
 				action="#{ruleCatalogueBackingBean.deleteOrgAndItemFee(rowIndex)}"
 				update=":form:settingTabId:feeSettingId:feeByOrgItemTableID">
 				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
@@ -119,36 +124,37 @@
 		</p:column>
 	</p:dataTable>
 
-	<br />
 	<div style="text-align: right;">
-		<p:commandButton value="#{lbl['lbl.btn.add']}" 
-			partialSubmit="true" process=":form:settingTabId:feeSettingId"
+		<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="true"
+			process=":form:settingTabId:feeSettingId"
 			update=":form:settingTabId:feeSettingId"
 			action="#{ruleCatalogueBackingBean.addMoreOrgAndItemFee()}"></p:commandButton>
 
 	</div>
-	<p:dialog id="feeOrgStatusConfirmDialog" widgetVar="feeOrgStatusConfirmDialog" closable="false"
-			header="#{lbl['lbl.pm.inactive.popUp.header']}" styleClass="screen-title"
-			resizable="false" modal="true" width="400" height="100">
-			<h:panelGrid columns="3">
-				<p:graphicImage styleClass="ui-icon-complain" />
-				<p:spacer width="10" />
-				<p:inputTextarea disabled="true" autoResize="true" 
-					value="#{ruleCatalogueBackingBean.inactiveFeeOrgPopUpMsg}" rows="3"
-					cols="48" styleClass="ui-inputtextarea" />
-			</h:panelGrid>
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}"
-					partialSubmit="true" process="@this"
-					update=":form:settingTabId:feeSettingId:feeByOrgItemTableID"
-				    action="#{ruleCatalogueBackingBean.feeExemptionStatusChangeForOrg}"
-					onstart="feeOrgStatusConfirmDialog.hide();blockWidget.show();"
-					oncomplete="blockWidget.hide();" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" action="#{ruleCatalogueBackingBean.revertFeeStatusChangeForOrg}"
-					partialSubmit="true" process="@this"
-				    update=":form:settingTabId:feeSettingId:feeByOrgItemTableID"
-				     />
-			</div>
-		</p:dialog>
-   
+	<p:dialog id="feeOrgStatusConfirmDialog"
+		widgetVar="feeOrgStatusConfirmDialog" closable="false"
+		header="#{lbl['lbl.pm.inactive.popUp.header']}"
+		styleClass="screen-title" resizable="false" modal="true" width="400"
+		height="100">
+		<h:panelGrid columns="3">
+			<p:graphicImage styleClass="ui-icon-complain" />
+			<p:spacer width="10" />
+			<p:inputTextarea disabled="true" autoResize="true"
+				value="#{ruleCatalogueBackingBean.inactiveFeeOrgPopUpMsg}" rows="3"
+				cols="48" styleClass="ui-inputtextarea" />
+		</h:panelGrid>
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
+				process="@this"
+				update=":form:settingTabId:feeSettingId:feeByOrgItemTableID"
+				action="#{ruleCatalogueBackingBean.feeExemptionStatusChangeForOrg}"
+				onstart="feeOrgStatusConfirmDialog.hide();blockWidget.show();"
+				oncomplete="blockWidget.hide();" />
+			<p:commandButton value="#{lbl['lbl.btn.no']}"
+				action="#{ruleCatalogueBackingBean.revertFeeStatusChangeForOrg}"
+				partialSubmit="true" process="@this"
+				update=":form:settingTabId:feeSettingId:feeByOrgItemTableID" />
+		</div>
+	</p:dialog>
+
 </ui:composition>

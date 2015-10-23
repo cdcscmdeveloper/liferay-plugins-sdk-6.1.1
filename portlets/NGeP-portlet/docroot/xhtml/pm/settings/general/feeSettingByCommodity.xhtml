@@ -7,18 +7,18 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<div style="text-align: right; min-height: 40px;">
-
-
-		<p:commandButton value="#{lbl['lbl.btn.update']}" partialSubmit="true"
-			process=":form:settingTabId:feeSettingId"
-			update=":form:settingTabId:feeSettingId"
-			action="#{ruleCatalogueBackingBean.saveFeeExemptionForComodity}"></p:commandButton>
-
-
-
-	</div>
-
+	<table style="width: 100%">
+		<tr>
+			<td>
+				<div align="right" style="width: 100%">
+					<p:commandButton value="#{lbl['lbl.btn.update']}"
+						partialSubmit="true" process=":form:settingTabId:feeSettingId"
+						update=":form:settingTabId:feeSettingId"
+						action="#{ruleCatalogueBackingBean.saveFeeExemptionForComodity}"></p:commandButton>
+				</div>
+			</td>
+		</tr>
+	</table>
 	<p:dataTable id="feeByComodityTableID" var="feeObj" rows="10"
 		widgetVar="feeByComodityTableWidVar"
 		value="#{ruleCatalogueBackingBean.managedBean.feeExemptionsForComodity}"
@@ -58,13 +58,12 @@
 				disabled="#{!(feeObj.brandNew) || feeObj.unspscId.unspscCode == null}"
 				style="width:128px;">
 				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-				<f:selectItems value="#{feeObj.types}" itemLabel="#{type.typeName}" 
+				<f:selectItems value="#{feeObj.types}" itemLabel="#{type.typeName}"
 					itemValue="#{type.typeId}" var="type" />
-					<p:ajax event="change"
-								listener="#{ruleCatalogueBackingBean.typeValueChgangeListener(feeObj)}"
-								partialSubmit="true" process="@this"
-								update="@this" />
-		
+				<p:ajax event="change"
+					listener="#{ruleCatalogueBackingBean.typeValueChgangeListener(feeObj)}"
+					partialSubmit="true" process="@this" update="@this" />
+
 			</p:selectOneMenu>
 		</p:column>
 		<p:column width="10%">
@@ -72,9 +71,10 @@
 								#{lbl['lbl.pm.as.effdate']}
 		                		</f:facet>
 
-			<p:calendar showOn="button" id="comodityfeeeffDateId" style="width :100px;"
+			<p:calendar showOn="button" id="comodityfeeeffDateId"
+				style="width :100px;"
 				mindate="#{ruleCatalogueBackingBean.managedBean.tomorrow}"
-				disabled = "#{feeObj.recordStatusFlg == 0 or (feeObj.effDate le DateUtils.getCurrentDateWithoutTime())}"
+				disabled="#{feeObj.recordStatusFlg == 0 or (feeObj.effDate le DateUtils.getCurrentDateWithoutTime())}"
 				label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 				value="#{feeObj.effDate}">
@@ -89,13 +89,15 @@
 			                	</f:facet>
 
 			<p:calendar showOn="button" id="comodityfeeexpDateId"
-				style="width :100px;" disabled ="#{feeObj.recordStatusFlg == 0 or (feeObj.expDate lt DateUtils.getCurrentDateWithoutTime())}"
+				style="width :100px;"
+				disabled="#{feeObj.recordStatusFlg == 0 or (feeObj.expDate lt DateUtils.getCurrentDateWithoutTime())}"
 				mindate="#{ruleCatalogueBackingBean.managedBean.today}"
 				label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-				value="#{feeObj.expDate}" validatorMessage="#{lbl['lbl.pm.as.expdate']} #{lbl['lbl.pm.date.range.validation']} #{lbl['lbl.pm.as.effdate']}">
-					<f:attribute name="startDate" value="#{feeObj.effDate}" />
-				    <f:validator validatorId="primeDateRangeValidator" />
+				value="#{feeObj.expDate}"
+				validatorMessage="#{lbl['lbl.pm.as.expdate']} #{lbl['lbl.pm.date.range.validation']} #{lbl['lbl.pm.as.effdate']}">
+				<f:attribute name="startDate" value="#{feeObj.effDate}" />
+				<f:validator validatorId="primeDateRangeValidator" />
 
 			</p:calendar>
 		</p:column>
@@ -108,16 +110,16 @@
 				disabled="#{typeValueObj.brandNew}" style="width:90px;">
 				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
-							<p:ajax event="change" immediate="true"
-								listener="#{ruleCatalogueBackingBean.checkFeeStatusForCommodity(rowIndex)}"
-								partialSubmit="true" process="@this"
-								update=":form:settingTabId:feeSettingId:feeByComodityTableID :form:settingTabId:feeSettingId:feeCommodityStatusConfirmDialog" />
+				<p:ajax event="change" immediate="true"
+					listener="#{ruleCatalogueBackingBean.checkFeeStatusForCommodity(rowIndex)}"
+					partialSubmit="true" process="@this"
+					update=":form:settingTabId:feeSettingId:feeByComodityTableID :form:settingTabId:feeSettingId:feeCommodityStatusConfirmDialog" />
 
 			</p:selectOneMenu>
 		</p:column>
 		<p:column width="5%">
 			<f:facet name="header">
-
+                #{lbl['lbl.cm.action']}
 			</f:facet>
 			<p:commandLink id="comoditydeleteFee" partialSubmit="true"
 				process="@this"
@@ -128,7 +130,7 @@
 			</p:commandLink>
 		</p:column>
 	</p:dataTable>
-	<br />
+
 	<div style="text-align: right;">
 		<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="true"
 			process=":form:settingTabId:feeSettingId"
@@ -136,29 +138,31 @@
 			action="#{ruleCatalogueBackingBean.addMoreComodityFee()}"></p:commandButton>
 
 	</div>
-   
-		<p:dialog id="feeCommodityStatusConfirmDialog" widgetVar="feeCommodityStatusConfirmDialog" closable="false"
-			header="#{lbl['lbl.pm.inactive.popUp.header']}" styleClass="screen-title"
-			resizable="false" modal="true" width="400" height="100">
-			<h:panelGrid columns="3">
-				<p:graphicImage styleClass="ui-icon-complain" />
-				<p:spacer width="10" />
-				<p:inputTextarea disabled="true" autoResize="true" 
-					value="#{ruleCatalogueBackingBean.inactiveFeeComoPopUpMsg}" rows="3"
-					cols="50" styleClass="ui-inputtextarea" />
-			</h:panelGrid>
-			<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.yes']}"
-					partialSubmit="true" process="@this"
-					update=":form:settingTabId:feeSettingId:feeByComodityTableID"
-				    action="#{ruleCatalogueBackingBean.feeExemptionStatusChangeForCommodity}"
-					onstart="feeCommodityStatusConfirmDialog.hide();blockWidget.show();"
-					oncomplete="blockWidget.hide();" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" action="#{ruleCatalogueBackingBean.revertFeeStatusChangeForComodity}"
-					partialSubmit="true" process="@this"
-				    update=":form:settingTabId:feeSettingId:feeByComodityTableID"
-				     />
-			</div>
-		</p:dialog>
-   
+
+	<p:dialog id="feeCommodityStatusConfirmDialog"
+		widgetVar="feeCommodityStatusConfirmDialog" closable="false"
+		header="#{lbl['lbl.pm.inactive.popUp.header']}"
+		styleClass="screen-title" resizable="false" modal="true" width="400"
+		height="100">
+		<h:panelGrid columns="3">
+			<p:graphicImage styleClass="ui-icon-complain" />
+			<p:spacer width="10" />
+			<p:inputTextarea disabled="true" autoResize="true"
+				value="#{ruleCatalogueBackingBean.inactiveFeeComoPopUpMsg}" rows="3"
+				cols="50" styleClass="ui-inputtextarea" />
+		</h:panelGrid>
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
+				process="@this"
+				update=":form:settingTabId:feeSettingId:feeByComodityTableID"
+				action="#{ruleCatalogueBackingBean.feeExemptionStatusChangeForCommodity}"
+				onstart="feeCommodityStatusConfirmDialog.hide();blockWidget.show();"
+				oncomplete="blockWidget.hide();" />
+			<p:commandButton value="#{lbl['lbl.btn.no']}"
+				action="#{ruleCatalogueBackingBean.revertFeeStatusChangeForComodity}"
+				partialSubmit="true" process="@this"
+				update=":form:settingTabId:feeSettingId:feeByComodityTableID" />
+		</div>
+	</p:dialog>
+
 </ui:composition>

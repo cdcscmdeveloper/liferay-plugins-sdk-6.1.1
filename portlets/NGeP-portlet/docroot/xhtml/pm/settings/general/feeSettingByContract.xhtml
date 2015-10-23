@@ -7,14 +7,18 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<div style="text-align: right; min-height: 40px;">
-
-
+	
+	<table style="width: 100%">
+		<tr>
+			<td>
+				<div align="right" style="width: 100%">
 		<p:commandButton value="#{lbl['lbl.btn.update']}" partialSubmit="true" process=":form:settingTabId:feeSettingId"
 			update=":form:settingTabId:feeSettingId"
 			action="#{ruleCatalogueBackingBean.saveFeeExemptionForContract}"></p:commandButton>
-
-	</div>
+</div>
+</td>
+</tr>
+</table>
 
 	<p:dataTable id="feeByContractTableID" var="feeObj" rows="10"
 		widgetVar="feeByContractTableWidVar"
@@ -101,7 +105,7 @@
 		</p:column>
 		<p:column width="5%">
 			<f:facet name="header">
-
+               #{lbl['lbl.cm.action']}
 			</f:facet>
 			<p:commandLink id="contractdeleteFee" partialSubmit="true" process="@this"
 			disabled="#{!(feeObj.brandNew) and (feeObj.effDate le DateUtils.getCurrentDateWithoutTime())}"
@@ -111,7 +115,6 @@
 			</p:commandLink>
 		</p:column>
 	</p:dataTable>
-	<br />
 	<div style="text-align: right;">
 		<p:commandButton value="#{lbl['lbl.btn.add']}" 
 		partialSubmit="true" process=":form:settingTabId:feeSettingId"
