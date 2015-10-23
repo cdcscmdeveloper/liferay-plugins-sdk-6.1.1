@@ -16,9 +16,7 @@
 
 <cc:implementation>
 <h:panelGroup id="#{cc.attrs.id}">
-	<fieldset>
-	
-  		<legend>Map and Coordinate:</legend>
+	<p:fieldset legend="Map and Coordinate" style="margin-bottom:20px">
   		
 		x: <p:inputText id="plat" value="#{cc.attrs.latitude}" />
 		
@@ -38,7 +36,7 @@
 			update="@([id$=mapPanel])" 
 			oncomplete="dlg.show();" />
 			
-	</fieldset>		
+	</p:fieldset>	
 </h:panelGroup>	
 </cc:implementation>
 </ui:composition>
