@@ -7,17 +7,18 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sc.terms.and.conds']}" toggleable="true">
-	<table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
-		<tr>
-			<td
-				style="vertical-align: top;padding-top: 84px;">
-                <p:selectBooleanCheckbox value="#{lOADetailBackingBean.managedBean.agreeWithTermsConditions}" />
-			</td>
-			<td class="TableFieldRight">
-			   <p:editor controls="" id="loaEditor" value="#{lOADetailBackingBean.managedBean.termsConditions}" disabled="true" width="885" height="400" />
-			</td>
-		</tr>
-	</table>
+		<table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
+			<tr>
+				<td style="vertical-align: top; padding-top: 84px;"><p:selectBooleanCheckbox
+						value="#{lOADetailBackingBean.managedBean.agreeWithTermsConditions}">
+						<p:ajax update="@form" />
+					</p:selectBooleanCheckbox></td>
+				<td class="TableFieldRight"><p:editor controls=""
+						id="loaEditor"
+						value="#{lOADetailBackingBean.managedBean.termsConditions}"
+						disabled="true" width="885" height="400" /></td>
+			</tr>
+		</table>
 	</p:panel>
-		
+
 </ui:composition>
