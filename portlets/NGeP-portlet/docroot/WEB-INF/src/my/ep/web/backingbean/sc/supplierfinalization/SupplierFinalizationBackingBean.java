@@ -983,39 +983,6 @@ public class SupplierFinalizationBackingBean extends
 			// Committee Details
 			if (CollectionUtils.isNotEmpty(
 					getManagedBean().getCommitteeList())) {
-						
-				// Reset endorsement status by respective finalization method(s)
-//				if (isQTRefinalized()) {
-//					Map<Long, String> rejectedRecommendIdMap 
-//							= getManagedBean().getRejectedScQtRecommendIdMap();
-//					
-//					if (MapUtils.isNotEmpty(rejectedRecommendIdMap)) {
-//						boolean hasAwardType = false;
-//						boolean hasBiddingType = false;
-//						boolean hasMultiLoiType = false;
-//						
-//						if (rejectedRecommendIdMap.containsValue(
-//									ParameterConst.RECOMMEND_BY_AWARD)) {
-//							hasAwardType = true;
-//						} else if (rejectedRecommendIdMap.containsValue(
-//									ParameterConst.RECOMMEND_BY_ONLINE_BIDDING)) {
-//							hasBiddingType = true;
-//						} else if (rejectedRecommendIdMap.containsValue(
-//									ParameterConst.RECOMMEND_BY_MULTIPLE_LOI)) {
-//							hasMultiLoiType = true;
-//						}		
-//						
-//						for (ScQtCommitteeActivity commActivity : committeeList) {
-//							if (hasAwardType) {
-//								commActivity.setSignedOff(false);
-//							} else if (hasBiddingType) {
-//								commActivity.setBiddingSignedOff(false);
-//							} else if (hasMultiLoiType) {
-//								commActivity.setMultiLoiSignedOff(false);
-//							}
-//						}
-//					}
-//				}
 				scQtCommittee.setCommitteeActivities(
 						getManagedBean().getCommitteeList());
 			}
@@ -3289,18 +3256,13 @@ public class SupplierFinalizationBackingBean extends
 						if (CollectionUtils.isNotEmpty(scLoiLoaItems)) {
 							for (ScLoiLoaItem scLoiLoaItem 
 												: scLoiLoaItems) {
-								PmParameter recommendBy = null;
 								PmParameter recommendType = null;
 								ScQtRecommend scQtRecommend = null;
 								
 								if (scLoiLoaItem.getScLoi() != null) {
-									recommendBy = scLoiLoaItem.getScLoi().getScLoiLoa()
-														.getRecommendBy();
 									recommendType = scLoiLoaItem.getScLoi().getScLoiLoa()
 														.getRecommendTypeCode();
 								} else if (scLoiLoaItem.getScLoa() != null) {
-									recommendBy = scLoiLoaItem.getScLoa().getScLoiLoa()
-														.getRecommendBy();									
 									recommendType = scLoiLoaItem.getScLoa().getScLoiLoa()
 														.getRecommendTypeCode();
 								}
@@ -3312,19 +3274,18 @@ public class SupplierFinalizationBackingBean extends
 									this.getManagedBean().setInitialSelectionItemized(true);
 								}	
 								
-								Map<Long,String> rejectedScQtRecommendIdMap 
-										= getManagedBean().getRejectedScQtRecommendIdMap(); 
-								if (rejectedScQtRecommendIdMap == null) {
-									rejectedScQtRecommendIdMap = new HashMap<Long,String>();
-									getManagedBean().setRejectedScQtRecommendIdMap(
-											rejectedScQtRecommendIdMap);
+								List<Long> rejectedScQtRecommendIds 
+										= getManagedBean().getRejectedScQtRecommendIds(); 
+								if (rejectedScQtRecommendIds == null) {
+									rejectedScQtRecommendIds = new ArrayList<Long>();
+									getManagedBean().setRejectedScQtRecommendIds(
+											rejectedScQtRecommendIds);
 								}
-								if (scQtRecommend != null && recommendBy != null &&
-										!rejectedScQtRecommendIdMap.containsKey(
+								if (scQtRecommend != null &&
+										!rejectedScQtRecommendIds.contains(
 													scQtRecommend.getQtRecommendId())) {
-									rejectedScQtRecommendIdMap.put(
-											scQtRecommend.getQtRecommendId(), 
-											recommendBy.getParameterCode());
+									rejectedScQtRecommendIds.add(
+											scQtRecommend.getQtRecommendId());
 								}
 							}
 						}
@@ -3486,8 +3447,8 @@ public class SupplierFinalizationBackingBean extends
 	}
 
 	private void disableAwardedItems(List<ScQtRecommend> scQtRecommends) {
-		Map<Long,String> rejectedRecommendIdMap 
-							= getManagedBean().getRejectedScQtRecommendIdMap();
+		List<Long> rejectedRecommendIds 
+							= getManagedBean().getRejectedScQtRecommendIds();
 		
 		if (CollectionUtils.isNotEmpty(
 							scQtRecommends)) {
@@ -3508,8 +3469,8 @@ public class SupplierFinalizationBackingBean extends
 										recommendDtl.getLoaAwarded() == null && 
 											recommendDtl.getRecordStatusFlg().equals(
 														DbValueConst.RECORD_STATUS_ACTIVE) && 
-												(rejectedRecommendIdMap != null && 
-													!rejectedRecommendIdMap.containsKey(
+												(rejectedRecommendIds != null && 
+													!rejectedRecommendIds.contains(
 															recommend.getQtRecommendId())) ) ||
 											(BooleanUtils.isTrue(
 												recommendDtl.getLoiAwarded()) && 
@@ -6905,47 +6866,6 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	
-//	private boolean isPreviousRecommendTypeIsBidding(ScQtFinalization scQtFinalization) {
-//		boolean prevRecommendByTpeBidding = false;
-//		List<ScQtRecommend> scQtRecommends = null;
-//		TplSpecZoneDtl currentZone = getManagedBean().getCurrentZone();
-//		
-//		if (getManagedBean().getScQt().isZonal() && 
-//				currentZone != null) {
-//			if (MapUtils.isNotEmpty(scQtFinalization
-//							.getScQtRecommendsByZone())) {
-//					scQtRecommends = scQtFinalization.getScQtRecommendsByZone()
-//										.get(currentZone.getSpecZoneId());
-//			}
-//		} else {
-//			scQtRecommends = scQtFinalization.getScQtRecommends();
-//		}
-//		
-//		Map<Long,String> rejectedScQtRecommendIdMap 
-//					= getManagedBean().getRejectedScQtRecommendIdMap();
-//		if (MapUtils.isNotEmpty(rejectedScQtRecommendIdMap)) {
-//			if (CollectionUtils.isNotEmpty(scQtRecommends)) {
-//				for (ScQtRecommend scQtRecommend : scQtRecommends) {
-//					prevRecommendByTpeBidding = isItemPriceTypeTariffOrTier(scQtRecommend);
-//					if (rejectedScQtRecommendIdMap.containsKey(
-//								scQtRecommend.getQtRecommendId())) {
-//						String recommendByStr = rejectedScQtRecommendIdMap
-//										.get(scQtRecommend.getQtRecommendId());
-//						if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
-//									.equals(recommendByStr) || 
-//								ParameterConst.RECOMMEND_BY_BIDDING_NEXT_RANK
-//										.equals(recommendByStr)) {
-//							prevRecommendByTpeBidding = true;
-//							break;
-//						}
-//					}
-//				}
-//			}
-//		}
-//		
-//		return prevRecommendByTpeBidding;
-//	}	
-
 	private FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;

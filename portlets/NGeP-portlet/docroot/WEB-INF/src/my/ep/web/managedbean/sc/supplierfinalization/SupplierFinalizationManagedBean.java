@@ -150,10 +150,10 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<ScQtRecommend> selectedItemList; 
 	private List<ScQtRecommend> itemList;
 	private List<SmSupplier> awardSupplierList; 
+	private List<Long> rejectedScQtRecommendIds;
 	
 	private Map<Long, List<ScQtEvaluationResultDtl>> shortlistedSupppliersByZone;
 	private Map<Long, List<ScQtEvaluationResultDtl>> recommendedSupppliersByZone;
-	private Map<Long,String> rejectedScQtRecommendIdMap;
 	
 	//Committee Endorsement
 	private List<ScQtCommitteeActivity> reminderList;
@@ -898,6 +898,21 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the rejectedScQtRecommendIds
+	 */
+	public List<Long> getRejectedScQtRecommendIds() {
+		return rejectedScQtRecommendIds;
+	}
+
+	/**
+	 * @param rejectedScQtRecommendIds 
+	 * 				the rejectedScQtRecommendIds to set
+	 */
+	public void setRejectedScQtRecommendIds(List<Long> rejectedScQtRecommendIds) {
+		this.rejectedScQtRecommendIds = rejectedScQtRecommendIds;
+	}
+
+	/**
 	 * @return the shortlistedSupppliersByZone
 	 */
 	public Map<Long, List<ScQtEvaluationResultDtl>> getShortlistedSupppliersByZone() {
@@ -928,22 +943,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setRecommendedSupppliersByZone(
 			Map<Long, List<ScQtEvaluationResultDtl>> recommendedSupppliersByZone) {
 		this.recommendedSupppliersByZone = recommendedSupppliersByZone;
-	}
-
-	/**
-	 * @return the rejectedScQtRecommendIdMap
-	 */
-	public Map<Long, String> getRejectedScQtRecommendIdMap() {
-		return rejectedScQtRecommendIdMap;
-	}
-
-	/**
-	 * @param rejectedScQtRecommendIdMap 
-	 * 				the rejectedScQtRecommendIdMap to set
-	 */
-	public void setRejectedScQtRecommendIdMap(
-			Map<Long, String> rejectedScQtRecommendIdMap) {
-		this.rejectedScQtRecommendIdMap = rejectedScQtRecommendIdMap;
 	}
 
 	/**
