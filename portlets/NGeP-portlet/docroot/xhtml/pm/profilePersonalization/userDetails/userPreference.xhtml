@@ -27,17 +27,13 @@
 					<p:tooltip for="giLang" value="#{lbl['lbl.pm.profiles.preferences.notification.tooltip']}" showEffect="fade" hideEffect="fade" />
 					<p:message id="somPreLanguageMsg" for="somPreLanguage" display="icon" />                                                                
 				</td>
-			</tr>
-	</table>
-	</p:panel>
-	
-	<p:panel header="#{lbl['lbl.pm.profiles.preferred.notification']}" toggleable="true">
-		<table class="ppTwoTable" style="width:50%">
+			</tr>	
 			<tr>
 				<th width="40%">
-					<p:outputLabel value="#{lbl['lbl.pm.profiles.preferences.preferred']} #{lbl['lbl.pm.profiles.userdetails.email']}"/>					
+					<p:outputLabel value=" #{lbl['lbl.pm.profiles.preferred.notification']}"/>				
 				</th>
 				<td>
+					<p:outputLabel style="float:left" value="#{lbl['lbl.pm.profiles.preferences.preferred']} #{lbl['lbl.pm.profiles.userdetails.email']}"/>	
 					<p:selectBooleanCheckbox id="itPreEmail" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyByEmail}" valueChangeListener="#{profilePersonalizationBackingBean.notifyChangeListener}" /> 
 					<p:graphicImage id="giPreEmail" value="/css/images/design/tooltips.png" /> 
 					<p:tooltip for="giPreEmail" value="#{lbl['lbl.pm.profiles.preferences.nofificationemail.tooltip']}" showEffect="fade" hideEffect="fade" />
@@ -46,9 +42,10 @@
 			</tr>
 			<tr>
 				<th width="40%">
-					<p:outputLabel value="#{lbl['lbl.pm.profiles.preferences.preferred']} #{lbl['lbl.pm.profiles.preferences.sms']}"/>				
+									
 				</th>
 				<td>
+					<p:outputLabel style="float:left" value="#{lbl['lbl.pm.profiles.preferences.preferred']} #{lbl['lbl.pm.profiles.preferences.sms']}"/>
 					<p:selectBooleanCheckbox id="itPreSms" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyBySms}" valueChangeListener="#{profilePersonalizationBackingBean.notifySmsChangeListener}" /> 
 					<p:graphicImage id="giPreSms" value="/css/images/design/tooltips.png" /> 
 					<p:tooltip for="giPreSms" value="#{lbl['lbl.pm.profiles.preferences.nofificationsms.tooltip']}" showEffect="fade" hideEffect="fade" />
