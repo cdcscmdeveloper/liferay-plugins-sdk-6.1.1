@@ -12,6 +12,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.payment.FlInvoice;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItemSummary;
@@ -191,6 +192,8 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private BigDecimal gstAmount;
 	private BigDecimal invoiceAmountWithoutGST;
 	private List<TaxInvoiceVO> taxInvoiceList;
+	
+	private List<FlDeliveryOrder> delOrderList;
 	
 	/**
 	 * Gets the doc type.
@@ -1074,5 +1077,19 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	 */
 	public void setItemTableClause(boolean itemTableClause) {
 		this.itemTableClause = itemTableClause;
+	}
+
+	/**
+	 * @return the delOrderList
+	 */
+	public List<FlDeliveryOrder> getDelOrderList() {
+		return delOrderList;
+	}
+
+	/**
+	 * @param delOrderList the delOrderList to set
+	 */
+	public void setDelOrderList(List<FlDeliveryOrder> delOrderList) {
+		this.delOrderList = delOrderList;
 	}
 }

@@ -31,6 +31,7 @@ import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
+import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
@@ -78,6 +79,7 @@ import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
+import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.payment.FlInvoice;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItemSummary;
@@ -99,6 +101,8 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
+import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
+import my.ep.web.backingbean.fl.frn.ReceivedNoteBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -148,6 +152,9 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	
 	/** The Constant NAV_INVOICE. */
 	private static final String NAV_INVOICE = "/xhtml/fl/shared/hyperlinkView/invoicePage/invoiceHyperlink.xhtml";
+	
+	private static final String NAV_DELIVERYORDER_PAGE = "/xhtml/fl/shared/hyperlinkView/deliveryOrderPage/doHyperlink.xhtml";
+	private static final String NAV_FULFILMENTNOTE_PAGE= "/xhtml/fl/shared/hyperlinkView/receivednotePage/receivednoteHyperlink.xhtml";
 	
 	/**
 	 * get faces scopes.
@@ -342,7 +349,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
-		
 		if(taskId != null){
 			renewSesionObject();
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
@@ -473,7 +479,13 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 							getManagedBean().getInvoice().getFlFulfilmentOrder().setPmFinancialOrg(null);
 						}
 					}	
-				}	
+				}
+				getManagedBean().setDelOrderList(new ArrayList<FlDeliveryOrder>()); 
+				for(FlDeliveryOrder flDeliveryOrder : getManagedBean().getInvoice().getFlFulfilmentOrder().getFlDeliveryOrders()) {
+					if(flDeliveryOrder.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
+						getManagedBean().getDelOrderList().add(flDeliveryOrder);
+					}
+				}			
 				getSupplierGst(getManagedBean().getInvoice());
 			}
 			validateAdvancedPayment();
@@ -1885,5 +1897,63 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			getManagedBean().setOrderedAmtGrandTotal(grandTotalOrderAmt);
 			getManagedBean().setReceivedAmtGrandTotal(grandTotalReceivedAmt);
 			getManagedBean().setInvAmtGrandTotal(grandTotalInvAmt);
+		}
+		
+		/**
+		 * Navigate to other page based on document type.
+		 *
+		 * @param docType the doc type
+		 * @return the string
+		 */
+		
+		public String navigateDelOrder(FlDeliveryOrder delOrder){
+				IDeliveryOrderSO orderSO = (IDeliveryOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
+				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+				reqDTO.setDeliveryOrderId(delOrder.getDeliveryOrderId());
+				reqDTO.setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+				FulfilmentResDTO resDTO = orderSO.retrieveDeliveryOrderById(reqDTO);
+				DeliveryOrderBackingBean doBB = new DeliveryOrderBackingBean();
+				doBB.renewSesionObject();
+				FacesContext fc = FacesContext.getCurrentInstance();
+				doBB.getManagedBean().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
+				doBB.getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
+				doBB.getManagedBean().setFulfilmentOrder(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder());
+				doBB.getManagedBean().setFromPageUrl(fc.getViewRoot().getViewId());
+				doBB.getManagedBean().setButtonVal("Review");
+				return NAV_DELIVERYORDER_PAGE;
+		}
+		
+		/**
+		 * Navigate to other page based on document type.
+		 *
+		 * @param docType the doc type
+		 * @return the string
+		 */
+		
+		public String navigateFulfilmentNote(FlDeliveryOrder delOrder){
+				IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
+				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+				reqDTO.setFulfilmentNoteId(delOrder.getFulfilmentNote().getFulfilmentNoteId());
+				reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+				FulfilmentResDTO resDTO = receivedNoteSO.retrieveReceivedNoteByReceivedNoteId(reqDTO);
+				ReceivedNoteBackingBean recNoteBB = new ReceivedNoteBackingBean();
+				recNoteBB.renewSesionObject();
+				recNoteBB.getManagedBean().setSelectedTabIndex(0);
+				recNoteBB.getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
+				recNoteBB.getManagedBean().setFulfilmentRequest(resDTO.getFulfilmentNote().getFlRequest());
+				recNoteBB.getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFulfilmentNote().getFlRequest());
+				recNoteBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+				reqDTO.setDeliveryOrderId(resDTO.getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
+				recNoteBB.getManagedBean().setPmUser(reqDTO.getPmUser());
+				for(FlFulfilmentNoteItem fulfilmentNoteItem: resDTO.getFulfilmentNote().getFlFulfilmentNoteItem()){
+					recNoteBB.getManagedBean().setSelectedItem(fulfilmentNoteItem);
+				}
+				recNoteBB.getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(resDTO.getFulfilmentNote().getFlFulfilmentNoteItem());
+				recNoteBB.getManagedBean().setAcknowledged(true);
+				FacesContext fc = FacesContext.getCurrentInstance();
+				recNoteBB.getManagedBean().setFromPageUrl(fc.getViewRoot().getViewId());
+				
+				
+			return NAV_FULFILMENTNOTE_PAGE;
 		}
 }

@@ -1406,6 +1406,14 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			FulfilmentResDTO resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
 			InvoiceBackingBean invBB = new InvoiceBackingBean();
 			invBB.getManagedBean().setInvoice(resDTO.getInvoice());
+			
+			invBB.getManagedBean().setDelOrderList(new ArrayList<FlDeliveryOrder>()); 
+			for(FlDeliveryOrder flDeliveryOrder : invBB.getManagedBean().getInvoice().getFlFulfilmentOrder().getFlDeliveryOrders()) {
+				if(flDeliveryOrder.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
+					invBB.getManagedBean().getDelOrderList().add(flDeliveryOrder);
+				}
+			}		
+			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			invBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
 
