@@ -298,7 +298,7 @@
 																		and	!isPendingNegotiationStatus}">
 												<ui:repeat var="awardedSuppl" value="#{item.awardSupplierList}">
 													<p:column rendered="#{awardedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}">
-														<h:outputText value="#{awardedSuppl.scQtRecommendDtl.get(0).fawardQty}" />
+														<h:outputText value="#{awardedSuppl.scQtRecommendDtl.get(0).awardQty}" />
 														<br />
 													</p:column>
 												</ui:repeat>
