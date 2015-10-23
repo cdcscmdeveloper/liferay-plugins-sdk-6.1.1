@@ -21,7 +21,7 @@
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="contractSigner" disabled="#{isPendingApprovalStatus}"
 						value="#{directLOABackingBean.managedBean.scLoa.contractSigner.userId}"
-						style="width: 240px;margin-bottom: 5px;" required="true"
+						style="width: 240px;margin-bottom: 5px; " required="#{!empty param['disableValidation']}" 
 						label="#{lbl['lbl.sc.loiloa.loa.contract.signer']}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />

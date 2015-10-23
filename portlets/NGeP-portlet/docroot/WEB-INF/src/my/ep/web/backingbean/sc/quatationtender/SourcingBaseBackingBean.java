@@ -1916,6 +1916,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @return the big decimal
 	 */
 	public ScLoa calcBondAmount(ScLoa scLoa) {
+		if(scLoa.isBondReq()){
 		BigDecimal bondAmt = BigDecimal.ZERO;
 		BigDecimal totalDuration = BigDecimal.ZERO;
 		BigDecimal bondPercentageLoaAmt = BigDecimal.ZERO;
@@ -1955,6 +1956,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				scLoa.setBondAmt(bondAmt);
 			}
 		}
+		
+	}
 		return scLoa;
 	}
 
@@ -2008,5 +2011,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return isDate;
 
 	}
+	
 
 }
