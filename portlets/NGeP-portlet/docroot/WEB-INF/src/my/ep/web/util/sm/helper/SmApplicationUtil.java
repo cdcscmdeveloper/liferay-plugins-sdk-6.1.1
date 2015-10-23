@@ -6291,30 +6291,30 @@ public class SmApplicationUtil {
 
 	public static void checkPersonnelsEmailDomainWithExceptionMsg(
 			List<SmPersonnel> personnels) {
-		StringBuffer bfFinal = new StringBuffer();
-		if (!SmCommonUtil.isCollectionEmpty(personnels)) {
-			StringBuffer bfTmp = new StringBuffer();
-			int i = 0;
-			String email = "";
-			for (SmPersonnel per : personnels) {
-				email = per.getPmUser() != null
-						&& StringUtils.isNotBlank(per.getPmUser().getEmail()) ? per
-						.getPmUser().getEmail() : per.getEmail();
-				if (!SmCommonUtil.isValidEmailDomain(email)) {
-					i++;
-					bfTmp.append(i + ") ").append(per.getName()).append(" (")
-							.append(per.getPmUser().getEmail()).append(")")
-							.append("<br />");
-				}
-			}
-			if (bfTmp.length() > 0) {
-				bfFinal.append(bfTmp.toString());
-			}
-		}
-		if (bfFinal.length() > 0) {
-			throw new EpException(MessageConst.ERROR_721116,
-					new String[] { bfFinal.toString() });
-		}
+		// StringBuffer bfFinal = new StringBuffer();
+		// if (!SmCommonUtil.isCollectionEmpty(personnels)) {
+		// StringBuffer bfTmp = new StringBuffer();
+		// int i = 0;
+		// String email = "";
+		// for (SmPersonnel per : personnels) {
+		// email = per.getPmUser() != null
+		// && StringUtils.isNotBlank(per.getPmUser().getEmail()) ? per
+		// .getPmUser().getEmail() : per.getEmail();
+		// if (!SmCommonUtil.isValidEmailDomain(email)) {
+		// i++;
+		// bfTmp.append(i + ") ").append(per.getName()).append(" (")
+		// .append(per.getPmUser().getEmail()).append(")")
+		// .append("<br />");
+		// }
+		// }
+		// if (bfTmp.length() > 0) {
+		// bfFinal.append(bfTmp.toString());
+		// }
+		// }
+		// if (bfFinal.length() > 0) {
+		// throw new EpException(MessageConst.ERROR_721116,
+		// new String[] { bfFinal.toString() });
+		// }
 	}
 
 	private boolean isCatL3Valid(SmAppl appl, String facilityType,
