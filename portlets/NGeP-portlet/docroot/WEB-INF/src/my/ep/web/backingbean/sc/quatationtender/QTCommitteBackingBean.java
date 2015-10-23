@@ -1913,14 +1913,15 @@ public class QTCommitteBackingBean extends
 					.getManagedBean().getCurrentStatusId())) {
 				return true;
 			}
-			if (QTStatusConst.QT_PROPOSAL_PREPARATION.equals(this
+			else if (QTStatusConst.QT_PROPOSAL_PREPARATION.equals(this
 					.getManagedBean().getCurrentStatusId())) {
 				if (7 <= DateUtils.getDaysDifference(new Date(), this
 						.getManagedBean().getQt().getClosingDate()))
 
 					return true;
-			}  if (QTStatusConst.QT_EVALUATION_PROPOSAL <= (this.getManagedBean()
-					.getCurrentStatusId())) {
+			}
+			else if (QTStatusConst.QT_EVALUATION_PROPOSAL <= (this
+					.getManagedBean().getCurrentStatusId())) {
 				return true;
 			}
 

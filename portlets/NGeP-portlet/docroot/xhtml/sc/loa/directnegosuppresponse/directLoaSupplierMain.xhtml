@@ -44,95 +44,114 @@
 							<f:setPropertyActionListener
 								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
 								value="0" />
+							<f:param name="disableValidation" value="true" />
 						</p:menuitem>
 
-						<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}" update="@form" 
-											actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}">
+						<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}"
+							update="@form"
+							actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}">
 							<f:setPropertyActionListener
 								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
 								value="1" />
+							<f:param name="disableValidation" value="true" />
 						</p:menuitem>
 
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.contents']}"
-							update="@form" actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}">
+							update="@form"
+							actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}">
 							<f:setPropertyActionListener
 								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
 								value="2" />
+							<f:param name="disableValidation" value="true" />
 						</p:menuitem>
 
 						<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}"
-							update="@form" actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}">
+							update="@form"
+							actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}">
 							<f:setPropertyActionListener
 								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
 								value="3" />
+							<f:param name="disableValidation" value="true" />
 						</p:menuitem>
 
 						<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
-							update="@form" actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}"
+							update="@form"
+							actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}"
 							disabled="#{directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode ne ParameterConst.fulfilmentTypeScheduled}">
 
 							<f:setPropertyActionListener
 								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
 								value="4" />
+							<f:param name="disableValidation" value="true" />
 						</p:menuitem>
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}"
-							update="@form" actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}">
+							update="@form"
+							actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}">
 							<f:setPropertyActionListener
 								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
 								value="5" />
+							<f:param name="disableValidation" value="true" />
 						</p:menuitem>
 
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.letter.of.acceptance']}"
-							update="@form" actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}">
+							update="@form"
+							actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}">
 							<f:setPropertyActionListener
 								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
 								value="6" />
+							<f:param name="disableValidation" value="true" />
 						</p:menuitem>
-						<p:menuitem value="#{lbl['lbl.sc.declaration']}"
-							update="@form" actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}">
+						<p:menuitem value="#{lbl['lbl.sc.declaration']}" update="@form"
+							actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}">
 							<f:setPropertyActionListener
 								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
 								value="7" />
+							<f:param name="disableValidation" value="true" />
 						</p:menuitem>
 
 					</p:tabMenu></td>
-				<td width="80%" valign="top">
-				<h:panelGroup id="menuContent">
-				<c:if
-						test="#{directLOABackingBean.managedBean.selectedTabIndex == 0}">
-						<ui:include src="directLoaDetailsSupplierMenu.xhtml" />
-					</c:if> <c:if
-						test="#{directLOABackingBean.managedBean.selectedTabIndex == 1}">
-						<ui:include
-							src="/xhtml/sc/loa/directnego/directLoaAwardDetailsMenu.xhtml" />
-					</c:if> <c:if
-						test="#{directLOABackingBean.managedBean.selectedTabIndex == 2}">
-						<ui:include
-							src="/xhtml/sc/loa/directnego/directawardloaLetterOfAcceptance.xhtml" />
-					</c:if> <c:if
-						test="#{directLOABackingBean.managedBean.selectedTabIndex == 3}">
-						<ui:include
-							src="/xhtml/sc/loa/directnego/directawardloaDeductionPaymentMenu.xhtml" />
-					</c:if> <c:if
-						test="#{directLOABackingBean.managedBean.selectedTabIndex == 4}">
-						<ui:include
-							src="/xhtml/sc/loa/directnego/directawardloaFulfilmentSchedule.xhtml" />
-					</c:if> <c:if
-						test="#{directLOABackingBean.managedBean.selectedTabIndex == 5}">
-						<ui:include
-							src="/xhtml/sc/loa/directnego/directawardloaPerformanceBondMenu.xhtml" />
-					</c:if> <c:if
-						test="#{directLOABackingBean.managedBean.selectedTabIndex == 6}">
-						<ui:include src="directLoaLetterOfAcceptance.xhtml" />
-					</c:if> <h:panelGroup
-						rendered="#{directLOABackingBean.managedBean.selectedTabIndex == 7}">
-						<ui:include src="directLoaIntegrityPactMenu.xhtml" />
-					</h:panelGroup>
-					</h:panelGroup>
-					</td>
+				<td width="80%" valign="top"><h:panelGroup id="menuContent">
+						<c:if
+							test="#{directLOABackingBean.managedBean.selectedTabIndex == 0}">
+							<ui:include src="directLoaDetailsSupplierMenu.xhtml" />
+						</c:if>
+						<c:if
+							test="#{directLOABackingBean.managedBean.selectedTabIndex == 1}">
+							<ui:include
+								src="/xhtml/sc/loa/directnego/directLoaAwardDetailsMenu.xhtml" />
+						</c:if>
+						<c:if
+							test="#{directLOABackingBean.managedBean.selectedTabIndex == 2}">
+							<ui:include
+								src="/xhtml/sc/loa/directnego/directawardloaLetterOfAcceptance.xhtml" />
+						</c:if>
+						<c:if
+							test="#{directLOABackingBean.managedBean.selectedTabIndex == 3}">
+							<ui:include
+								src="/xhtml/sc/loa/directnego/directawardloaDeductionPaymentMenu.xhtml" />
+						</c:if>
+						<c:if
+							test="#{directLOABackingBean.managedBean.selectedTabIndex == 4}">
+							<ui:include
+								src="/xhtml/sc/loa/directnego/directawardloaFulfilmentSchedule.xhtml" />
+						</c:if>
+						<c:if
+							test="#{directLOABackingBean.managedBean.selectedTabIndex == 5}">
+							<ui:include
+								src="/xhtml/sc/loa/directnego/directawardloaPerformanceBondMenu.xhtml" />
+						</c:if>
+						<c:if
+							test="#{directLOABackingBean.managedBean.selectedTabIndex == 6}">
+							<ui:include src="directLoaLetterOfAcceptance.xhtml" />
+						</c:if>
+						<h:panelGroup
+							rendered="#{directLOABackingBean.managedBean.selectedTabIndex == 7}">
+							<ui:include src="directLoaIntegrityPactMenu.xhtml" />
+						</h:panelGroup>
+					</h:panelGroup></td>
 			</tr>
 		</table>
-		
+
 		<p:dialog id="attachmentPopup" widgetVar="attachmentPopupDlg"
 			modal="true" resizable="false" width="700px" height="200"
 			styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
@@ -146,15 +165,16 @@
 				update="menuContent" oncomplete="attachmentPopupDlg.hide()">
 			</p:fileUpload>
 		</p:dialog>
-		
+
 		<p:confirmDialog widgetVar="gstConfirmPopupWid" id="gstConfirmPopup"
-			width="500px" message="#{lbl['lbl.sc.gst.nonreg.supplier.alert.msg']}" >
+			width="500px"
+			message="#{lbl['lbl.sc.gst.nonreg.supplier.alert.msg']}">
 			<div align="center">
-				<p:commandButton value="#{lbl['lbl.btn.ok']}" oncomplete="gstConfirmPopupWid.hide()"
-					process="@this"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.ok']}"
+					oncomplete="gstConfirmPopupWid.hide()" process="@this"></p:commandButton>
 			</div>
-			
+
 		</p:confirmDialog>
-		
+
 	</ui:define>
 </ui:composition>
