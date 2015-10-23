@@ -22,13 +22,10 @@
 					style="float:right;" action="#{zoneBackingBean.saveZone}"
 					update="@([id$=Msg])" />
 			</div>
-			<br />
 		</ui:remove>
 		<p:messages id="zonesearch" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false"></p:messages>
 		<ui:include src="/xhtml/pm/zonesearch/zonesearchNav.xhtml"></ui:include>
-		<br />
-		<br />
 
 		<ui:include src="/xhtml/pm/zonesearch/zoneMaintenanceDetails.xhtml"></ui:include>
 	</ui:define>
