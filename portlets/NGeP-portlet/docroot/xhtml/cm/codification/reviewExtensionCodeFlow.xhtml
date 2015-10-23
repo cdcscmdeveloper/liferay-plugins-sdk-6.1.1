@@ -57,12 +57,38 @@
 
 					<p:column>
 						<f:facet name="header">
-							#{lbl['lbl.sc.supp.name']}
+							#{lbl['lbl.cm.supplier.input']}
 						</f:facet>
 
 						<div style="width:100%; ">
 								<p:inputText value="#{review.typeName}"
 									disabled="#{!review.requestType}"></p:inputText>
+						</div>
+						<div style="width:100%; ">
+								<p:inputText value="#{review.brandName}"
+									disabled="#{!review.requestBrand}"></p:inputText>
+						</div>
+						<div style="width:100%; ">
+								<p:inputText value="#{review.measurementName}"
+									disabled="#{!review.requestMeasurement}"></p:inputText>
+								
+						</div>
+						<div style="width:100%; ">
+								<p:inputText value="#{review.colorName}"
+									disabled="#{!review.requestColor}"></p:inputText>
+								
+						</div>						
+
+					</p:column>
+					
+					
+					<p:column>
+						<f:facet name="header">
+							#{lbl['lbl.cm.existing.extension']}
+						</f:facet>
+						
+						<div style="width:100%;padding-bottom:5px; ">
+								
 								<p:selectOneMenu rendered="#{review.requestType}"
 									style="width: 128px;" value="#{review.typeNameDD}">
 									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -72,9 +98,8 @@
 										itemValue="#{type.typeId}"></f:selectItems>
 								</p:selectOneMenu>
 						</div>
-						<div style="width:100%; ">
-								<p:inputText value="#{review.brandName}"
-									disabled="#{!review.requestBrand}"></p:inputText>
+						<div style="width:100%;padding-bottom:5px; ">
+								
 								<p:selectOneMenu rendered="#{review.requestBrand}"
 									style="width: 128px;" value="#{review.brandNameDD}">
 									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -84,9 +109,8 @@
 										itemValue="#{brand.brandId}"></f:selectItems>
 								</p:selectOneMenu>
 						</div>
-						<div style="width:100%; ">
-								<p:inputText value="#{review.measurementName}"
-									disabled="#{!review.requestMeasurement}"></p:inputText>
+						<div style="width:100%;padding-bottom:5px; ">
+								
 								<p:selectOneMenu rendered="#{review.requestMeasurement}"
 									style="width: 128px;" value="#{review.measurementNameDD}">
 									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -96,9 +120,8 @@
 										itemValue="#{measurement.measurementId}"></f:selectItems>
 								</p:selectOneMenu>
 						</div>
-						<div style="width:100%; ">
-								<p:inputText value="#{review.colorName}"
-									disabled="#{!review.requestColor}"></p:inputText>
+						<div style="width:100%;padding-bottom:5px; ">
+								
 								<p:selectOneMenu rendered="#{review.requestColor}"
 									style="width: 128px;" value="#{review.colorNameDD}">
 									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -107,8 +130,8 @@
 										var="color" itemLabel="#{color.colorName}"
 										itemValue="#{color.colorId}"></f:selectItems>
 								</p:selectOneMenu>
-						</div>						
-
+						</div>					
+						
 					</p:column>
 
 
