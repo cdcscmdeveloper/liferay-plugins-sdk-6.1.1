@@ -562,6 +562,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		}else if(docType.equals(ParameterConst.DOCTYPE_INVOICE)){
 			invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
 			reqDTO.setInvoiceId(Long.valueOf(flDocId));
+			reqDTO.setDocType(ParameterConst.DOCTYPE_INVOICE);
 			FulfilmentResDTO resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
 			InvoiceBackingBean invBB = new InvoiceBackingBean();
 			invBB.getManagedBean().setSelectedTabIndex(0);
@@ -573,6 +574,12 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			invBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			invBB.getManagedBean().setDocMaintainRemarks(true);
 			invBB.getManagedBean().setChargeLineItemRoot(null);
+			invBB.getManagedBean().setDelOrderList(new ArrayList<FlDeliveryOrder>()); 
+			for(FlDeliveryOrder flDeliveryOrder : invBB.getManagedBean().getInvoice().getFlFulfilmentOrder().getFlDeliveryOrders()) {
+				if(flDeliveryOrder.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
+					invBB.getManagedBean().getDelOrderList().add(flDeliveryOrder);
+				}
+			}			
 			if(invBB.getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
 				invBB.getFactoringDtl(); 
 			}			
