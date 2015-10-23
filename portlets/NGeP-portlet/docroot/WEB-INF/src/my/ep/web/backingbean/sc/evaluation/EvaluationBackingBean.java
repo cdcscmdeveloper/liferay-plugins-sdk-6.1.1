@@ -23,10 +23,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -41,10 +37,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.annotation.PostConstruct;
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.ShortBufferException;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -148,6 +140,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.sc.EvaluationReport;
 import my.ep.util.MessageUtils;
+import my.ep.util.encrypt.BouncyCastleProvider_AES_CBC;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.supplierproposal.SPDetailBackingBean;
@@ -160,7 +153,6 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.evaluation.EvaluationManagedBean;
-import my.ep.web.util.BouncyCastleProvider_AES_CBC;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
@@ -9656,8 +9648,9 @@ public class EvaluationBackingBean extends
 		response.setDateHeader("Expires", 0);
 		// response.setContentType("application/vnd.ms-excel");
 		// response.setHeader("Content-Transfer-Encoding", "binary");
+		String finalFileName = fileName.replaceAll("\\s+","-");
 		response.setHeader("Content-Disposition", "attachment; filename="
-				+ fileName);
+				+ finalFileName);
 		response.setContentType("application/octet-stream");
 		response.flushBuffer();
 
@@ -9682,39 +9675,8 @@ public class EvaluationBackingBean extends
 			// buffer = new byte[4096];
 
 			BouncyCastleProvider_AES_CBC bc = new BouncyCastleProvider_AES_CBC();
-			try {
-				bc.InitCiphers();
-			} catch (InvalidKeyException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NoSuchAlgorithmException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NoSuchProviderException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NoSuchPaddingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvalidAlgorithmParameterException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			// decryption
-			try {
-				bc.CBCDecrypt(input, out);
-			} catch (ShortBufferException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalBlockSizeException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (BadPaddingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
+			bc.InitDecryptCipher();
+			bc.CBCDecryptFile(input, out);
 			input.close();
 		}
 
