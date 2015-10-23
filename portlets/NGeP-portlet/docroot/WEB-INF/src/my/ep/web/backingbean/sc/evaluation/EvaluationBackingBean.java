@@ -10858,10 +10858,8 @@ public class EvaluationBackingBean extends
 
 				resDTO = evaluationSo.checkDemoAndUploadChecklistStatus(reqDTO);
 				if (resDTO.getPendingCount() > 0) {
-					String checklistScoring = "Scoring is not completed";
 					this.getManagedBean().setPresentationDemoActiveIndex(0);
-					throw new EpException(MessageConst.ERROR_760316,
-							new String[] { checklistScoring });
+					throw new EpException(MessageConst.ERROR_760316);
 				}
 			}
 		} finally {
