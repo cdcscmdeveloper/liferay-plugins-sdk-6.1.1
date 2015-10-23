@@ -59,6 +59,7 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.sm.SvcTemplateBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -386,6 +387,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmGstSupplier selectedGst;
 	private SmGstSupplierDoc selectedGstSuppDoc;
 	private boolean branchSameAsHq;
+	
+	private boolean showNewChanges;
 
 	/** The spki backing bean. */
 	@ManagedProperty(value = "#{spkiBackingBean}")
@@ -3008,5 +3011,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setLatestCert(SmSupplierCert latestCert) {
 		this.latestCert = latestCert;
 	}
+	public boolean isShowNewChanges() {
+		String newChanges = EpPropertiesUtils.getInstance().getProperty(
+				"sm.show.new.changes");
+		boolean showNewChanges = Boolean.valueOf(newChanges);
+		return showNewChanges;
+	}
 
+	public void setShowNewChanges(boolean showNewChanges) {
+		this.showNewChanges = showNewChanges;
+	}
 }
