@@ -2821,11 +2821,11 @@ public class SmCommonUtil {
 				}
 
 				if (!isCollectionEmpty(res)) {
-					log.info("Email domain " + hostNameArr[1]
+					log.info("Email " + email
 							+ " name servers:" + res);
 					retVal = true;
 				} else {
-					log.info("Email domain " + hostNameArr[1]
+					log.info("Email " + email
 							+ "dont have any name servers exist!!!");
 				}
 			}
