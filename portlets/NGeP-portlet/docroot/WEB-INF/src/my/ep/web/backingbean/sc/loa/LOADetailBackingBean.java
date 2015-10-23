@@ -14,7 +14,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -122,7 +121,6 @@ import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
-import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
@@ -2003,7 +2001,7 @@ public class LOADetailBackingBean extends
 	private List<ScLoiLoaItem>  filterZoneTierOrTierPriceItems(ScLoi loi) {
 		List<ScLoiLoaItem> scLoiLoaItems = null;
 		List<ScLoiLoaItem> groupItems = new ArrayList<ScLoiLoaItem>();
-		List<ScLoiLoaItem> filteredMaxPriceItemsbyQty = new ArrayList<ScLoiLoaItem>();
+		List<ScLoiLoaItem> filteredMaxPriceItemsByQty = new ArrayList<ScLoiLoaItem>();
 
 		if( null != loi){
 			scLoiLoaItems = loi.getScLoiLoaItems();
@@ -2030,7 +2028,7 @@ public class LOADetailBackingBean extends
 						} else{
 							scLoiLoaItem =  loiLoaItem;
 							ScLoiLoaItem maxPriceItem  = findMaxPriceItem(groupItems);
-							filteredMaxPriceItemsbyQty.add(maxPriceItem);
+							filteredMaxPriceItemsByQty.add(maxPriceItem);
 							groupItems.clear();
 							groupItems.add(loiLoaItem);
 						}
@@ -2041,7 +2039,7 @@ public class LOADetailBackingBean extends
 						} else{
 							scLoiLoaItem =  loiLoaItem;
 							ScLoiLoaItem maxPriceItem  = findMaxPriceItem(groupItems);
-							filteredMaxPriceItemsbyQty.add(maxPriceItem);
+							filteredMaxPriceItemsByQty.add(maxPriceItem);
 							groupItems.clear();
 							groupItems.add(loiLoaItem);
 						}
@@ -2051,12 +2049,12 @@ public class LOADetailBackingBean extends
 
 				if(scLoiLoaItems.size() == lastIndex){
 					ScLoiLoaItem maxPriceItem  = findMaxPriceItem(groupItems);
-					filteredMaxPriceItemsbyQty.add(maxPriceItem);
+					filteredMaxPriceItemsByQty.add(maxPriceItem);
 					groupItems.clear();
 				}
 			}
 		}
-		return filteredMaxPriceItemsbyQty;
+		return filteredMaxPriceItemsByQty;
 	}
 
 	/**
@@ -4009,11 +4007,11 @@ public class LOADetailBackingBean extends
 		Comparator<ScLoiLoaItem> comparator = new Comparator<ScLoiLoaItem>() {
 			@Override
 			public int compare(ScLoiLoaItem o1, ScLoiLoaItem o2) {
-				return new CompareToBuilder().append(o1.getScQtProposalItem().getOfferPrice(),
-						o2.getScQtProposalItem().getOfferPrice()).toComparison();
+				return new CompareToBuilder().append(o1.getTplSpecTierQty().getFromQty(),
+						o2.getTplSpecTierQty().getFromQty()).toComparison();
 			}
 		};
-		 ScLoiLoaItem  scLoiLoaItem = Collections.max(items, comparator);
+		 ScLoiLoaItem  scLoiLoaItem = Collections.min(items, comparator);
 		return scLoiLoaItem;
 	}
 	
