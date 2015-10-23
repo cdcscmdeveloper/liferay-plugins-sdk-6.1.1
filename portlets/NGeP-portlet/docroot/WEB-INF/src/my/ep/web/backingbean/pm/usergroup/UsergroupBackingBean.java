@@ -453,12 +453,14 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		for (PmUserGroupUser userGroupUser : userGroup.getPmUserGroupUsers()) {
 			for (PmUserOrg userOrg : userGroupUser.getPmUser().getPmUserOrgs()) {
 					for (PmUserRole userRole : userOrg.getPmUserRoles()) {
-						if ((RoleCode.FL_APPROVER.value().equals(userRole.getPmRole().getRoleCode()) 
-								&& null != userRole.getApprovalLimit()) 
-								|| RoleCode.RN_APPROVER.value().equals(userRole.getPmRole().getRoleCode())) {
-							if(!groupUserList.contains(userGroupUser)){
-								userGroupUser.setPmUserRole(userRole);
-								groupUserList.add(userGroupUser);
+						if(userGroup.getRoleCode().equals(userRole.getPmRole().getRoleCode())){
+							if ((RoleCode.FL_APPROVER.value().equals(userRole.getPmRole().getRoleCode()) 
+									&& null != userRole.getApprovalLimit()) 
+									|| RoleCode.RN_APPROVER.value().equals(userRole.getPmRole().getRoleCode())) {
+								if(!groupUserList.contains(userGroupUser)){
+									userGroupUser.setPmUserRole(userRole);
+									groupUserList.add(userGroupUser);
+								}
 							}
 						}
 				}
@@ -616,6 +618,12 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 			sb.append("|pmUserOrgs.pmUserRoles.pmRole.roleCode^");
 			sb.append(getManagedBean().getUserGroup().getRoleCode());
 		}
+		
+		//Filter by record status
+		sb.append("|pmUserOrgs.pmUserRoles.recordStatusFlg^");
+		sb.append(DbValueConst.RECORD_STATUS_ACTIVE);
+		sb.append("|pmUserOrgs.recordStatusFlg^");
+		sb.append(DbValueConst.RECORD_STATUS_ACTIVE);
 		
 		StringBuilder selectedUsersIds= new StringBuilder();
 		if(getManagedBean().getUserGroups() != null && !getManagedBean().getUserGroups().isEmpty()){
