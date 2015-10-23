@@ -238,6 +238,7 @@ public class SupplierFinalizationBackingBean extends
 	private void loadInitialData(Long qtId) {
 		SCEvaluationDataType dataType = (SCEvaluationDataType) 
 				this.getManagedBean().getPayLoad();
+		getManagedBean().setCommitteeType(dataType.getCommitteeType());
 		
 		if (ParameterConst.DECISION_FORWARD_TO_HIGHER_COMMITTEES
 				.equals(dataType.getFcDecision())) {
@@ -246,14 +247,11 @@ public class SupplierFinalizationBackingBean extends
 					.equals(dataType.getFcDecision()) && 
 						QTStatusConst.SF_ESCALATION_TO_BPK
 							.equals(getManagedBean().getCurrentStatusId())) {
-			
-			// If the decision type is forward to BPK, 
-			// then set the committee type as Empty
-			dataType.setCommitteeType(StringUtils.EMPTY);
+			getManagedBean().setCommitteeType(StringUtils.EMPTY);
 			this.getManagedBean().setInitialDecisionFwdToBPK(true);
 		}
 		
-		getManagedBean().setCommitteeType(dataType.getCommitteeType());
+		
 		retrieveQTDetails(qtId);
 		
 		String committeeType = getManagedBean().getCommitteeType();
