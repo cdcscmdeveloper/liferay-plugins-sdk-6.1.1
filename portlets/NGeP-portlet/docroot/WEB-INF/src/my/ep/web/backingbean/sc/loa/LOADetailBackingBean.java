@@ -2481,6 +2481,7 @@ public class LOADetailBackingBean extends
 			reqDTO.setDigiSignData(digiSign);
 			reqDTO.setRoleCode(getUserRoleCode());
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			reqDTO.setScQt(this.getManagedBean().getScQt());
 		    resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {
