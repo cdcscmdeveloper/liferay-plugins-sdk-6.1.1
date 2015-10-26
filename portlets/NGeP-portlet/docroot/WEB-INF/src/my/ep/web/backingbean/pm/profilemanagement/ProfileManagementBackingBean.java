@@ -2846,9 +2846,7 @@ public class ProfileManagementBackingBean extends
 		// searchBean.getDataFilterBeans().add(bean);
 		// }
 		
-		// Authorisation
-		if (upSearchBean.getSelectedOrgProfileId() == null &&
-				getManagedBean().getSelectedOrgType().getParameterId() != null) {			
+		// Authorisation		
 			List<PmUserOrg> userOrgList = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId());
 			PmOrgProfile orgProfile = null;
 			if(userOrgList != null && !userOrgList.isEmpty()){
@@ -2856,14 +2854,14 @@ public class ProfileManagementBackingBean extends
 			}		
 			if(orgProfile != null){
 				OrgProfileUtil.retrieveOrgProfileAuthorisationSearchBean(
-						getManagedBean().getSelectedOrgType().getParameterCode(),
+						orgProfile.getOrgTypeCode().getParameterCode(),
 						orgProfile.getOrgProfileId(),
 						getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()),
 						getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()),
 						getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value()),
 						searchBean);
 			} 
-		}
+		
 		
 		SearchOrderBean orderBean = null;
 		if(getManagedBean().getSelectedOrgType() !=null && getManagedBean().getSelectedOrgType().getParameterCode() !=null){
