@@ -1441,7 +1441,9 @@ public class ProfileManagementBackingBean extends
 					.getManagedBean().getSelectedOrgType().getParameterId());
 			this.getManagedBean().getSelectedOrgType()
 					.setParameterCode(pmParameter.getParameterCode());
-
+		}else{
+			this.getManagedBean().getSelectedOrgType()
+			.setParameterCode(null);
 		}
 
 	}
@@ -2846,21 +2848,32 @@ public class ProfileManagementBackingBean extends
 		// searchBean.getDataFilterBeans().add(bean);
 		// }
 		
-		// Authorisation		
-			List<PmUserOrg> userOrgList = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId());
-			PmOrgProfile orgProfile = null;
-			if(userOrgList != null && !userOrgList.isEmpty()){
-				orgProfile = userOrgList.get(0).getPmOrgProfile();
-			}		
-			if(orgProfile != null){
+		
+		// Authorisation	
+			if(upSearchBean.getSelectedOrgProfileId() == null && getManagedBean().getSelectedOrgType() != null 
+				&& StringUtils.isNotBlank(getManagedBean().getSelectedOrgType().getParameterCode())){
+				if (this.getManagedBean().getCurrentActiveOrg() != null){
 				OrgProfileUtil.retrieveOrgProfileAuthorisationSearchBean(
-						orgProfile.getOrgTypeCode().getParameterCode(),
-						orgProfile.getOrgProfileId(),
-						getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()),
-						getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()),
-						getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value()),
-						searchBean);
-			} 
+						getManagedBean().getSelectedOrgType().getParameterCode(),
+							getManagedBean().getCurrentActiveOrg().getOrgProfileId(),
+							getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()),
+							getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()),
+							getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value()),
+							searchBean);
+				}
+				
+		}else if(upSearchBean.getSelectedOrgProfileId() == null && (getManagedBean().getSelectedOrgType() == null 
+				|| StringUtils.isBlank(getManagedBean().getSelectedOrgType().getParameterCode()))){
+			if (this.getManagedBean().getCurrentActiveOrg() != null){
+				OrgProfileUtil.retrieveOrgProfileAuthorisationSearchBean(
+						null,
+							getManagedBean().getCurrentActiveOrg().getOrgProfileId(),
+							getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()),
+							getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()),
+							getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value()),
+							searchBean);
+			}
+		}		
 		
 		
 		SearchOrderBean orderBean = null;
