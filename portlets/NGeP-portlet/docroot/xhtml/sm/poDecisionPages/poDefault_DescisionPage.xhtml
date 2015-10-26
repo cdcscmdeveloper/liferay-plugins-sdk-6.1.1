@@ -30,6 +30,9 @@
 			<td><h:inputHidden
 					value="#{backingBean.managedBean.smAppl.applCategoryType}" />
 				<div style="width: 100%" align="right">
+					<p:outputPanel rendered="#{empty backingBean.managedBean.smAppl.smSvTasks and backingBean.managedBean.showNewChanges}">
+						<ui:include src="/xhtml/sm/shared/mofRegistration/revertToSupplierOriginalApplButton.xhtml" />
+					</p:outputPanel>
 					<c:choose>
 						<c:when
 							test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_VERIFY_APPL}">
