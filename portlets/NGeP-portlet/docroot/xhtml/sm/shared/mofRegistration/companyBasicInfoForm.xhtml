@@ -421,10 +421,9 @@
 								<f:validateLength maximum="200" />
 							</p:inputTextarea> <p:message id="apprvrCompBasicRmrkMsg" for="apprvrCompBasicRmrk"
 								showSummary="true" showDetail="false" display="icon" /></td>
-
 					</tr>
 				</p:outputPanel>
-				<p:outputPanel rendered="#{!backingBean.managedBean.showNewChanges}">
+				<p:outputPanel rendered="#{backingBean.managedBean.showNewChanges}">
 				<tr>
 					<td colspan="4">
 					
@@ -451,6 +450,7 @@
 									
 						<ac:gmap id="acgmap" 
 							address="getAddress2()"
+							locationName="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}"
 							latitude="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLatitude}"
 							longitude="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLongitude}" />					
 					</td>
