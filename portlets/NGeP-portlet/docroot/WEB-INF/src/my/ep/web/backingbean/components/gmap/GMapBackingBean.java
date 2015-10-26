@@ -3,6 +3,7 @@ package my.ep.web.backingbean.components.gmap;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import org.apache.log4j.Logger;
 import org.primefaces.model.map.DefaultMapModel;
 import org.primefaces.model.map.LatLng;
 import org.primefaces.model.map.MapModel;
@@ -12,21 +13,21 @@ import org.primefaces.model.map.Marker;
 @ViewScoped
 public class GMapBackingBean {
 
+	private static Logger log = Logger.getLogger(GMapBackingBean.class);
+	
 	private MapModel simpleModel;
 	private boolean renderMap;
 	
-	public MapModel retSimpleModel(String mapLatitude, String mapLongitude) {
+	public MapModel retSimpleModel(String mapLatitude, String mapLongitude, String locationName) {
 		
 		simpleModel = new DefaultMapModel();
 		double dlat = Double.valueOf(mapLatitude).doubleValue();
 		double dlng = Double.valueOf(mapLongitude).doubleValue();
-		System.out.println("dlat: " + dlat);
-		System.out.println("dlng: " + dlng);
-//		System.out.println("dlat: " + getLat());
-//		System.out.println("dlng: " + getLng());
-		
+		log.info("dlat: " + dlat);
+		log.info("dlng: " + dlng);
+
 		LatLng coord1 = new LatLng(dlat, dlng);
-		simpleModel.addOverlay(new Marker(coord1, "Konyaalti"));
+		simpleModel.addOverlay(new Marker(coord1, locationName));
 		
 		return simpleModel;
 	}
