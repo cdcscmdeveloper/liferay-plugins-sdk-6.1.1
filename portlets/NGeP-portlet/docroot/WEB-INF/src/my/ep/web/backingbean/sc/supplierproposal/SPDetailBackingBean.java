@@ -98,6 +98,7 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sc.supplierproposal.SPDetailManagedBean;
 import my.ep.web.util.DateUtils;
@@ -1233,7 +1234,7 @@ public class SPDetailBackingBean extends
 		response.setDateHeader("Expires", 0);
 		// response.setContentType("application/vnd.ms-excel");
 		// response.setHeader("Content-Transfer-Encoding", "binary");
-		String finalFileName = fileName.replaceAll("\\s","_");
+		String finalFileName = fileName.replaceAll("\\s+",QTConstants.REPLACE_CHAR);
 		response.setHeader("Content-Disposition", "attachment; filename="
 				+ finalFileName);
 		response.setContentType("application/octet-stream");
