@@ -505,7 +505,9 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				currentDeductionAmt = currentDeductionAmt.add(paymentDeduction.getDeductionAmt());	
 			}
 		}
-		ContractResDTO ctRes = contractSO.calAdvancePaymentTracking(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getContractId());
+		ContractReqDTO ctReqDTO = new ContractReqDTO();
+		ctReqDTO.setContractId(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getContractId());
+		ContractResDTO ctRes = contractSO.calAdvancePaymentTracking(ctReqDTO);
 		if(ctRes.getPaidAdvancePaymentAmt() == null){
 			ctRes.setPaidAdvancePaymentAmt(new BigDecimal(0));
 		}
@@ -537,7 +539,9 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				contractReqDTO.setAsAtDate(new Date());
 				BigDecimal contractValue = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount().getContractAmount();
 				
-				resDTO = contractSO.calAdvancePaymentTracking(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getContractId());
+				ContractReqDTO ctReqDTO = new ContractReqDTO();
+				ctReqDTO.setContractId(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getContractId());
+				resDTO = contractSO.calAdvancePaymentTracking(ctReqDTO);
 				if(resDTO.getPaidInvoiceAmt() == null){
 					resDTO.setPaidInvoiceAmt(new BigDecimal(0));
 				}
@@ -1271,7 +1275,9 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 					deductionAmt = deductionAmt.add(new BigDecimal(deduction.getAmount()));
 				}
 			}
-			ContractResDTO ctRes = contractSO.calAdvancePaymentTracking(paymentAdvice.getFlRequest().getCtContract().getContractId());
+			ContractReqDTO ctReqDTO = new ContractReqDTO();
+			ctReqDTO.setContractId(paymentAdvice.getFlRequest().getCtContract().getContractId());
+			ContractResDTO ctRes = contractSO.calAdvancePaymentTracking(ctReqDTO);
 			if(ctRes.getPaidAdvancePaymentAmt() == null){
 				ctRes.setPaidAdvancePaymentAmt(new BigDecimal(0));
 			}
