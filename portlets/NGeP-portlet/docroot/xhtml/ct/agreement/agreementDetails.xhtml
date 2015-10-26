@@ -49,7 +49,7 @@
 					</td> 
 					<td>
 						<p:inputTextarea autoResize="false"  style="width:130px;margin-bottom:5px;" 
-						     disabled="true" rows="2" maxlength="30" value="#{agreementBackingBean.managedBean.ctContract.loa.loaNo}" />
+						     disabled="true" rows="2" maxlength="30" value="#{agreementBackingBean.agreementContractVer.ctContractValue.loaNo}" />
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.no']}" />
 					</td>
 					<td class="columnWidth150">
@@ -58,7 +58,7 @@
 					<td>
 						<p:inputTextarea autoResize="false" maxlength="1000" 
 							disabled="true" rows="2" style="width:130px;margin-bottom:5px;"
-							value="#{agreementBackingBean.managedBean.ctContract.loaPhysicalNo}" />
+							value="#{agreementBackingBean.managedBean.agreementContractVer.ctContractValue.loaPhysicalNo}" />
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.physical.no']}" />
 					</td>					
 				</tr>

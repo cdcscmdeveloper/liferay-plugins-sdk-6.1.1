@@ -72,8 +72,8 @@
 	   </h:panelGroup>
 	   	<ui:include src="fulfilmentButtons.xhtml" />
 		<ui:include src="fulfilmentHeader.xhtml" />
-		 <p:outputPanel rendered="#{!contractDetailsBackingBean.contractCreationProcess()}">
-		  		  <ui:include src="asAtDate.xhtml" />
+		 <p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.viewContract}">
+		  		  <ui:include src="loaPhysicalNoSelection.xhtml" />
 		  </p:outputPanel>
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		   <tr>
