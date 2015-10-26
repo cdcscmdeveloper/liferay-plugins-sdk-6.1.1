@@ -9,7 +9,6 @@
 	<p:panel id="educationSearch" header="#{lbl['lbl.pm.sa.search']}"
 		toggleable="true">
 
-		<br />
 		<table class="ppTwoTable">
 			<tr>
 				<th width="20%"><h:outputLabel value="#{lbl['lbl.pm.ef.code']}"></h:outputLabel></th>
@@ -39,12 +38,12 @@
 				<td>&#160;</td>
 			</tr>
 			<tr>
-				<td colspan="2" width="100%">
+				<td colspan="4">
 					<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.search']}"
 							action="#{educationBackingBean.retrieveEducationField}"
 							update=":form:educationSR" process="educationSearch" />
-						&#160;
+						
 						<p:commandButton value="#{lbl['lbl.btn.reset']}"
 							action="#{educationBackingBean.resetSearchEdu}" process="@this"
 							update=":form:educationResult, :form:educationSR, :form:educationSearch" />
