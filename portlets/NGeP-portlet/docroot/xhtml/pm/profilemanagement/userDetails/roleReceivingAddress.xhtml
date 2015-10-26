@@ -78,7 +78,6 @@
 						</p:commandLink>			
 					</p:column>
 				</p:dataTable>				
-				<br />
 				<div class="ppRightBtn">
 					<p:commandButton
 						action="#{profileManagementBackingBean.getAvailbleUserRole}"
@@ -86,8 +85,6 @@
 						disabled="#{profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0 or isSupplierOrgType}"
 						oncomplete="dlRoleOptions.show();" update=":form:opRoleOptions" />
 				</div>
-				<br />
-				<br />
 			</p:tab>
 
 
@@ -131,8 +128,6 @@
 					</p:column>
 					
 				</p:dataTable>
-				<br />
-			
 				<div class="ppRightBtn">
 					<div style="float: right">
 						<!-- Receiving Address Selection Popup -->
@@ -148,8 +143,7 @@
 					</div>
 
 				</div>
-					<br />
-				<br />
+				
 			</p:tab>
 		</p:tabView>
 		<ac:lovPopup />
