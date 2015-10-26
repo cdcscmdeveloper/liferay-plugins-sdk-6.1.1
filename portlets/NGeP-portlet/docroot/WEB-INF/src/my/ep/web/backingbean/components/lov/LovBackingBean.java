@@ -167,6 +167,11 @@ public class LovBackingBean implements Serializable {
 		}
 	}
 	
+	/**
+	 * this method is to search and populate the actual object from DB when user enter any value in the LoV inputText
+	 * @param event
+	 * @throws Exception
+	 */
 	public void populateObject(ValueChangeEvent event) throws Exception {
 		lovSearchBean.getDataFilterBeans().clear();
 		
@@ -199,6 +204,9 @@ public class LovBackingBean implements Serializable {
 		}
 	}
 	
+	/**
+	 * initialize LoV's properties when user click on the LoV button. 
+	 */
 	public void initLov() {
 
 		FacesScopes facesScopes = new FacesScopes();
@@ -273,6 +281,9 @@ public class LovBackingBean implements Serializable {
 		resetAction();
 	}
 	
+	/**
+	 * method bind to the 'Search' button in the LoV popup
+	 */
 	public void searchAction() {
 
 		validateBeforeSearch();
@@ -280,6 +291,11 @@ public class LovBackingBean implements Serializable {
 		searchDataModel.reloadData();
 	}
 	
+	/** 
+	 * extract the saveObejct string from user's parameter
+	 * @param saveObject
+	 * @return
+	 */
 	private int extractSaveObjectIndex(String saveObject) {
 		int index1 = saveObject.indexOf("[");
 		int index2 = saveObject.indexOf("]");
@@ -293,6 +309,9 @@ public class LovBackingBean implements Serializable {
 		return (saveOjbectIndex == null) ? 0 : Integer.parseInt(saveOjbectIndex);
 	}
 	
+	/**
+	 * validate the search value in the lov popup
+	 */
 	private void validateBeforeSearch() {
 		
 		Object searchValue1 = ((SearchFilterBean)this.getLovSearchBean().getDataFilterBeans().get(0)).getSearchValue();
