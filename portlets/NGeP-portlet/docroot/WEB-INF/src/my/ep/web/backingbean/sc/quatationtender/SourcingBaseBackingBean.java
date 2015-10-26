@@ -423,8 +423,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		response.setDateHeader("Expires", 0);
 		// response.setContentType("application/vnd.ms-excel");
 		// response.setHeader("Content-Transfer-Encoding", "binary");
+		// to fix firefox issue of space
+		String finalFileName = fileName.replaceAll("\\s","_");
+		log.info("finalFileName: " + finalFileName);
 		response.setHeader("Content-Disposition", "attachment; filename="
-				+ fileName);
+				+ finalFileName);
 		response.setContentType("application/octet-stream");
 		response.flushBuffer();
 
