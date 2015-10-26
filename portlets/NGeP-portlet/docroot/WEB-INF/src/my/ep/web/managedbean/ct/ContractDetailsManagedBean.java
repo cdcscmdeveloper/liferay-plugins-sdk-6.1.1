@@ -13,6 +13,7 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -107,11 +108,13 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private Long terminationTypeId;
 	private Long ministryProfileId;
 	private Long jabatanProfileId;
+	private Long loaContractVerId;
     private BigDecimal paidAdvancePaymentAmt;
     private BigDecimal paidInvoiceAmt;
     private BigDecimal gstTotalAmount;
     private Date ctDateStart;
 	private Date ctDateEnd;
+	private Date asAtDate = null;
 	private int selectedTabIndex = 0;
 	private int ctStatus;	
 	private int attachFileIndex;
@@ -143,6 +146,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private List<String> yearList;
 	private List<CtAgencyAddress> selectedListOfAddress;
 	private List<PmAddressType> addressTypeList;
+	private SelectItem[] loaContractVerList;
 	private DualListModel<PmUser> approverModel;
 	private Map<Long, PmUserGroup> userGroupMap;
 	private Map<Long, PmUser> userMap;
@@ -596,8 +600,22 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	 */
 	public void setJabatanProfileId(Long jabatanProfileId) {
 		this.jabatanProfileId = jabatanProfileId;
-	}
+	}	
 	
+	/**
+	 * @return the loaContractVerId
+	 */
+	public Long getLoaContractVerId() {
+		return loaContractVerId;
+	}
+
+	/**
+	 * @param loaContractVerId the loaContractVerId to set
+	 */
+	public void setLoaContractVerId(Long loaContractVerId) {
+		this.loaContractVerId = loaContractVerId;
+	}
+
 	/**
 	 * @return the paidAdvancePaymentAmt
 	 */
@@ -652,6 +670,20 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	 */
 	public void setCtDateEnd(Date ctDateEnd) {
 		this.ctDateEnd = ctDateEnd;
+	}	
+
+	/**
+	 * @return the asAtDate
+	 */
+	public Date getAsAtDate() {
+		return asAtDate;
+	}
+
+	/**
+	 * @param asAtDate the asAtDate to set
+	 */
+	public void setAsAtDate(Date asAtDate) {
+		this.asAtDate = asAtDate;
 	}
 
 	/**
@@ -1084,6 +1116,20 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	 */
 	public void setAddressTypeList(List<PmAddressType> addressTypeList) {
 		this.addressTypeList = addressTypeList;
+	}	
+
+	/**
+	 * @return the loaContractVerList
+	 */
+	public SelectItem[] getLoaContractVerList() {
+		return loaContractVerList;
+	}
+
+	/**
+	 * @param loaContractVerList the loaContractVerList to set
+	 */
+	public void setLoaContractVerList(SelectItem[] loaContractVerList) {
+		this.loaContractVerList = loaContractVerList;
 	}
 
 	/**
@@ -1626,7 +1672,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 					searchBean.getDataFilterBeans().add(filterBean);				
 				}
 				if (getCtLoaNo() != null && getCtLoaNo().length() > 0) {
-					SearchFilterBean filterBean = new SearchFilterBean("ctContract.loa.loaNo",SearchOperator.OPERATOR_LIKE.value(),
+					SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.ctContractValue.loaNo",SearchOperator.OPERATOR_LIKE.value(),
 							getCtLoaNo());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);
@@ -1655,7 +1701,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 					searchBean.getDataFilterBeans().add(filterBean);					
 				}
 				if (getCtPhysicalLoaNo() != null && getCtPhysicalLoaNo().length() > 0) {
-					SearchFilterBean filterBean = new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),
+					SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.ctContractValue.loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),
 													getCtPhysicalLoaNo());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);					

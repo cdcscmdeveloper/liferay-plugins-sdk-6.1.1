@@ -24,7 +24,7 @@
 		<p:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
 			<h:panelGrid columns="3">
 				<p:inputText style="width:170px;" disabled="true" maxlength="30" 
-				   value="#{contractDetailsBackingBean.managedBean.ctContract.loa.loaNo}" />
+				   value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.loaNo}" />
 				<p:spacer width="1"/>
 			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.no']}" />
 			</h:panelGrid>
@@ -36,7 +36,7 @@
 			<p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" />
 			<h:panelGrid columns="3">				
 				<p:inputTextarea id="ctLoaNo" rows="3" style="width:170px;margin-bottom: 5px;" disabled="true" maxlength="30" autoResize="false"
-				   value="#{contractDetailsBackingBean.managedBean.ctContract.loaPhysicalNo}" />
+				   value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.loaPhysicalNo}" />
 				<p:spacer width="1"/>
 			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.physical.no']}" />
 			</h:panelGrid>
@@ -49,7 +49,7 @@
 			
 			<p:outputLabel value="#{lbl['lbl.ct.loa.ack.date']}" />
 			<p:inputText style="width:170px;" disabled="true"
-			  value="#{contractDetailsBackingBean.managedBean.ctContract.ackDate}">
+			  value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ackDate}">
 			  <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			</p:inputText>
 			

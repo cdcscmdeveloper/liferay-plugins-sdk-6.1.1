@@ -449,7 +449,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
         getManagedBean().setCtContract(csResDTO.getFactoring().getCtContract());
         getManagedBean().setRemarkList(csResDTO.getCtRemarks());
         getManagedBean().setAttachmentList(csResDTO.getCtAttachments());
-        getManagedBean().setLoaDate(getManagedBean().getCtContract().getLoa().getAckDate());
+        getManagedBean().setLoaDate(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getAckDate());
         getManagedBean().setContractNo(getManagedBean().getCtContract().getContractNo());
         getManagedBean().setContractName(getManagedBean().getCtContract().getContractName());
         getManagedBean().setEffDate(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getEffDate());
@@ -966,6 +966,8 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	 public String backAction() throws PortalException, SystemException, IOException {
+		 getManagedBean().setPopulateBankAccountList(null);
+		 getManagedBean().setListOfFinancialOrg(null);
 		 if (!getManagedBean().isViewOnly()) {
 			return CONTRACT_MAINT_PAGE;
 		 } else { // view suspension from notification

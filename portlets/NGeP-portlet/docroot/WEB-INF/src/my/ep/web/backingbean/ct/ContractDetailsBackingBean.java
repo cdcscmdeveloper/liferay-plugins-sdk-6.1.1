@@ -718,7 +718,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    	}
 	    }
 	    //Retrieve Payment Tracking	    
-	    calPaymentTracking(this.getManagedBean().getCtContract().getContractId());
+	    calPaymentTracking();
 	    
 	    // Retrieve Schedules
 	    if (getManagedBean().getContractVer().getCtSchedules() != null 
@@ -773,21 +773,24 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		ctBB.getManagedBean().setSupplierCompanyName(getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 		ctBB.getManagedBean().setSupplierBranchName(this.getManagedBean().getContractVer().getCtContractValue().getSupplierBranch());
 		ctBB.retrieveBranchInfo();
-		getManagedBean().getApproverModel().setSource(
-				getAvailableApproverList(getManagedBean().getCtContract().getContractType().getParameterCode(),
-						getManagedBean().getUserMap()));
-		if (resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0) {
-			getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-			for (PmUser approverUser : resDTO.getApproverList())  {
-				Iterator<PmUser> sourceIt = getManagedBean().getApproverModel().getSource().iterator();				
-				while (sourceIt.hasNext()) {
-					PmUser user = sourceIt.next();
-					if (user.getUserId() == approverUser.getUserId()) {
-						sourceIt.remove();
+		if (!getManagedBean().isViewContract()
+				|| (getManagedBean().isViewContract() && this.isContractAdmin())) {
+			getManagedBean().getApproverModel().setSource(
+					getAvailableApproverList(getManagedBean().getCtContract().getContractType().getParameterCode(),
+							getManagedBean().getUserMap()));
+			if (resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0) {
+				getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+				for (PmUser approverUser : resDTO.getApproverList())  {
+					Iterator<PmUser> sourceIt = getManagedBean().getApproverModel().getSource().iterator();				
+					while (sourceIt.hasNext()) {
+						PmUser user = sourceIt.next();
+						if (user.getUserId() == approverUser.getUserId()) {
+							sourceIt.remove();
+						}
 					}
 				}
-			}
-		} 
+			} 
+		}
 	 	getManagedBean().setRemarkList(resDTO.getCtRemarks());
 		getManagedBean().setAttachmentList(resDTO.getCtAttachments());
 			
@@ -809,23 +812,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			getManagedBean().setDisableScheduleRadio(true);
 			getManagedBean().setFrequencySchedule(ContractConst.PROGRESSIVE_SCHEDULE);
 		}
-		
-		// Retrieve contract amount
-		// Default to current date when view/update contract
-		if (getManagedBean().getContractVer().getAsAtDate() == null 
-				|| getManagedBean().isViewContract()
-				|| getManagedBean().isUpdateContract()) {
-			getManagedBean().getContractVer().setAsAtDate(DateUtils.getCurrentDateWithoutTime());
-		}
-		// Default to contract expire date when contract is expired
-		if (getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() < DateUtils.getCurrentDateWithoutTime().getTime()) {
-			getManagedBean().getContractVer().setAsAtDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
-		}
-		// Default to contract effective date if the effective date is future date
-		else if (getManagedBean().getContractVer().getCtContractValue().getEffDate().getTime() > DateUtils.getCurrentDateWithoutTime().getTime()) {
-			getManagedBean().getContractVer().setAsAtDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
-		}
-		updateAsAtDate();
+		retrieveFulfilmentDetails();
 		
 		// Get performance bond rule amount
 		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
@@ -1004,8 +991,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				if (contractVer.getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)) {
 					if (getManagedBean().getCtContract().getLatestContractVer() != null) {
 						for (CtContractAmount contractAmt : getManagedBean().getCtContract().getLatestContractVer().getCtContractAmounts()) {
-				    		if (getManagedBean().getContractVer().getAsAtDate().getTime() >= contractAmt.getEffDate().getTime() 
-				    				&& getManagedBean().getContractVer().getAsAtDate().getTime() <= contractAmt.getExpDate().getTime()) {
+				    		if (getManagedBean().getAsAtDate().getTime() >= contractAmt.getEffDate().getTime() 
+				    				&& getManagedBean().getAsAtDate().getTime() <= contractAmt.getExpDate().getTime()) {
 				    			if (contractAmt.getCtPerformanceBonds().size() > 0 
 				    					&& (getManagedBean().getCtContractAmount().getCtPerformanceBonds() == null 
 				    					|| getManagedBean().getCtContractAmount().getCtPerformanceBonds().isEmpty())) {
@@ -1057,8 +1044,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 							if (resAmendDto.getAmendmentList() != null && !resAmendDto.getAmendmentList().isEmpty()) {
 								for (CtAmendment ctAmendment : resAmendDto.getAmendmentList()){
-									if (getManagedBean().getContractVer().getAsAtDate().getTime() >= ctAmendment.getAmendmentEffDate().getTime() 
-						    				&& getManagedBean().getContractVer().getAsAtDate().getTime() <= ctAmendment.getCtContractVer().getCtContractValue().getExpDate().getTime()){
+									if (getManagedBean().getAsAtDate().getTime() >= ctAmendment.getAmendmentEffDate().getTime() 
+						    				&& getManagedBean().getAsAtDate().getTime() <= ctAmendment.getCtContractVer().getCtContractValue().getExpDate().getTime()){
 						    			if (ctAmendment.getAmendmentLoa() != null && ctAmendment.getAmendmentLoa().isBondReq()) {
 											bondAmendAmount = bondAmendAmount + ctAmendment.getAmendmentLoa().getBondAmt().doubleValue();
 										}				
@@ -1769,6 +1756,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    setValidateContractField(resDTO);
 	    getManagedBean().setSelectedTabIndex(0);
 	    getManagedBean().setExternalPageUrl(null);
+	    getManagedBean().setLoaContractVerId(resDTO.getCtContractVer().getContractVerId());
 	    reqDTO.setCtContractVer(resDTO.getCtContractVer());
 	    String percentage = contractSO.checkAdvancedPaymentProgress(reqDTO).getPercentage();
 	    getManagedBean().setWarningPercentage(percentage);
@@ -1788,18 +1776,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		ContractReqDTO reqDTO = new ContractReqDTO();
 		reqDTO.setContractId(contractId);
 		CtContractVer  latestContractVer = contractSO.getLatestContractVer(reqDTO).getCtContractVer();
-		if (latestContractVer != null) {
-			reqDTO.setContractVerId(latestContractVer.getContractVerId());
-		} else {
-			ContractResDTO resDTO = contractSO.retrieveContractById(reqDTO);
-			reqDTO.setContractVerId(resDTO.getContract().getCurrentContractVer().getContractVerId());
-		}
+		reqDTO.setContractVerId(latestContractVer.getContractVerId());
 		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
 		reqDTO.setViewOnly(true);
+		reqDTO.setCommonView(true);
 	    ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 	    setValidateContractField(resDTO);
 	    getManagedBean().setSelectedTabIndex(0);
 	    getManagedBean().setShowItem(null);
+	    getManagedBean().setAsAtDate(DateUtils.getCurrentDateWithoutTime());
 	    reqDTO.setCtContractVer(resDTO.getCtContractVer());
 	    String percentage = contractSO.checkAdvancedPaymentProgress(reqDTO).getPercentage();
 	    getManagedBean().setWarningPercentage(percentage);
@@ -2016,7 +2001,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @return the navigate URL 
 	 */
 	public String gotoBackPage() {
-		return (getManagedBean().getGotoPreviewPage() != null) ? getManagedBean().getGotoPreviewPage() : CONTRACT_MAINT_PAGE;
+		return getManagedBean().getGotoPreviewPage();
 	}
 	
 	/**
@@ -2028,6 +2013,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	public String backAction() {
 		getManagedBean().setViewContract(false);
+		getManagedBean().setLoaContractVerList(null);
 		return (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl() : CONTRACT_MAINT_PAGE;
 	}
 
@@ -2056,20 +2042,21 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	
 	/**
 	 * The method used to retrieve the payment tracking information.
-	 * 
-	 * @param  contractId  the contract id
      */
-	private void calPaymentTracking(Long contractId) {
+	private void calPaymentTracking() {
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+		ContractReqDTO reqDTO = new ContractReqDTO();
 		ContractResDTO resDTO = new ContractResDTO();
-		resDTO = contractSO.calAdvancePaymentTracking(contractId);
+		reqDTO.setContractId(getManagedBean().getCtContract().getContractId());
+		reqDTO.setAsAtDate(getManagedBean().getAsAtDate());
+		resDTO = contractSO.calAdvancePaymentTracking(reqDTO);
 		
 		BigDecimal paidAdvancePaymentAmt = (resDTO.getPaidAdvancePaymentAmt() == null) ? BigDecimal.valueOf(0) : resDTO.getPaidAdvancePaymentAmt();
 		BigDecimal paidInvoiceAmt = (resDTO.getPaidInvoiceAmt() == null) ? BigDecimal.valueOf(0) : resDTO.getPaidInvoiceAmt();
 	
 	    getManagedBean().setPaidAdvancePaymentAmt(paidAdvancePaymentAmt);
-		 getManagedBean().setPaidInvoiceAmt(paidInvoiceAmt);
+		getManagedBean().setPaidInvoiceAmt(paidInvoiceAmt);
 	}
 	
 	/**
@@ -3746,24 +3733,24 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	}
 	
 	/**
-   	 * The method used to update the as at date and refresh the
-   	 * contract amount and performance bond base on as at date
+   	 * The method used to retrieve the fulfilement details base on contract expire date or current date
    	 */
-	public void updateAsAtDate() {
+	private void retrieveFulfilmentDetails() {
+		// Retrieve fulfilement details base on contract exp date
+		if (getManagedBean().getAsAtDate() == null) {
+			getManagedBean().setAsAtDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+		}
+		
     	for (CtContractAmount contractAmt : getManagedBean().getContractVer().getCtContractAmounts()){
-    		if (getManagedBean().getContractVer().getAsAtDate().getTime() >= contractAmt.getEffDate().getTime() 
-    				&& getManagedBean().getContractVer().getAsAtDate().getTime() <= contractAmt.getExpDate().getTime()){
+    		if (getManagedBean().getAsAtDate().getTime() >= contractAmt.getEffDate().getTime() 
+    				&& getManagedBean().getAsAtDate().getTime() <= contractAmt.getExpDate().getTime()){
     			getManagedBean().setCtContractAmount(contractAmt);
     			break;
     		}
     	}
-    	// Skip for central contract because central contract always is off line agreement
-    	// Thus physical no and signed date always refer to the current contract version
-    	if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-				ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-	    	//Retrieve agreement contract version for physical no & signed date
-			retrieveContractVerOfAgreement();
-    	}
+    	//Retrieve agreement contract version for physical no & signed date
+		retrieveContractVerOfAgreement();
+		
     	// Retrieve overall contract amount
     	if (getManagedBean().getCtContractAmount().getGstAmount() != null) {
     		getManagedBean().setGstTotalAmount(getManagedBean().getCtContractAmount().getGstAmount().add(getManagedBean().getCtContractAmount().getContractAmount()));
@@ -3884,10 +3871,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		if (isContractAdmin() && (getManagedBean().getTaskName() == null
 				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FD_HT_NAME)
 				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FD_HT_NAME)
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FD_HT_NAME)
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FA_HT_NAME)
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FA_HT_NAME)
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FA_HT_NAME))) {
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FD_HT_NAME))) {
 			return true;
 		} else {
 			return false;
@@ -4048,5 +4032,66 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 	    return items;
+	}
+	
+	/**
+	 * The method used for generating a list of available history of
+	 * loa contract version as selection.
+	 * 
+	 * @return loaContractVerList  the selection list
+	 */
+	public SelectItem[] getLoaContractVerList() {
+		if (getManagedBean().getLoaContractVerList() == null ) {
+			SelectItem[] items = null;
+			IContractSO contractSO = null;
+	        ContractReqDTO reqDTO = null;
+	        ContractResDTO resDTO = null;
+	        
+	        try {
+	        	int i = 0;
+	        	if (getManagedBean().getCtContract().getLatestContractVer() != null) {	        		
+	        		contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+	    		    		ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);	
+		            reqDTO = new ContractReqDTO();
+		            resDTO = new ContractResDTO();
+		            
+		            reqDTO.setContractId(getManagedBean().getCtContract().getContractId());
+		           	resDTO = contractSO.retrieveLoaContractVerByContractId(reqDTO);
+		           	
+		           	if (resDTO.getList() != null && resDTO.getList().size() > 0) {
+		           		items = new SelectItem[resDTO.getList().size()];
+		           		for (Object[] object : resDTO.getList()) {
+		           			items[i++] = new SelectItem(Long.parseLong(object[0].toString()), object[1].toString());
+		           		}
+		           	}
+	        	}  else {
+	           		items = new SelectItem[1];
+	           		items[i++] = new SelectItem(getManagedBean().getContractVer().getContractVerId(), getManagedBean().getContractVer().getCtContractValue().getLoaPhysicalNo());
+	           	}
+		        getManagedBean().setLoaContractVerList(items);	        		
+	        } finally {
+	        	contractSO = null;
+	            reqDTO = null;
+	            resDTO = null;
+	        }
+		}
+		return getManagedBean().getLoaContractVerList();
+	}
+	
+	/**
+   	 * The method used to reflect the contract details base on selected loa
+   	 */
+	public void changeLoaContractVer() {
+		if (getManagedBean().getLoaContractVerId() != null) {
+			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			ContractReqDTO reqDTO = new ContractReqDTO();
+			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+			reqDTO.setViewOnly(true);
+			reqDTO.setContractVerId(getManagedBean().getLoaContractVerId());
+		    ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
+		    getManagedBean().setViewContract(true);
+		    setValidateContractField(resDTO);
+		}
 	}
 }

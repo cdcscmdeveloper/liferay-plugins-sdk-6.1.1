@@ -83,7 +83,7 @@
 					<td style="width: 20%"><h:outputLabel
 							value="#{lbl['lbl.ct.loa.no']}" /></td>
 					<td style="width: 13%" class="header-info-text">
-						#{supplierBackingBean.managedBean.ctContract.loa.loaNo}</td>
+						#{supplierBackingBean.managedBean.contractVer.ctContractValue.loaNo}</td>
 					<td style="width: 10%"><h:outputLabel
 							value="#{lbl['lbl.ct.contract.no']}" /></td>
 					<td style="width: 10%" class="header-info-text">
@@ -116,7 +116,7 @@
 					
 				<p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" />
 				<p:inputText style="width:200px;" disabled="true"
-					value="#{supplierBackingBean.managedBean.ctContract.loaPhysicalNo}" />
+					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.loaPhysicalNo}" />
 
 				<p:outputLabel value="#{lbl['lbl.ct.effective.date']}" />
 				<p:inputText id="effDate" disabled="true" style="width:200px;"
@@ -139,7 +139,7 @@
 				
 				<p:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
 					<p:inputText id="loaNo2"
-					value="#{supplierBackingBean.managedBean.ctContract.loa.loaNo}"
+					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.loaNo}"
 					style="width:200px;" disabled="true" />		
 
 				<p:outputLabel value="#{lbl['lbl.ct.ministry.name']}" />

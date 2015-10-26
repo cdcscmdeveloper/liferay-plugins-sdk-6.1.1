@@ -1119,8 +1119,8 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
     	ContractReqDTO ctReqDTO = new ContractReqDTO();
     	ctReqDTO.setContractVerId(contractVerId);
     	ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
-	    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
-	    ContractResDTO resDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
+    	IContractTerminationSO contractTerminationSO = (IContractTerminationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractTerminationSO.class);
+		ContractResDTO resDTO = contractTerminationSO.retrieveTerminationContractVerDtls(ctReqDTO);
 	    getManagedBean().setViewContract(true);
 	    getManagedBean().setExternalPageUrl(TERMINATE_HISTORY_PAGE);
 	    setTerminationContractVer(resDTO);
