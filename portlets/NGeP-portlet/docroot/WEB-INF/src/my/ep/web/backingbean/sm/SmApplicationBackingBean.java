@@ -7027,9 +7027,15 @@ public class SmApplicationBackingBean extends
 						|| getManagedBean().isApproverUser()) {
 					log.info(" **** Final Decision from PO ****");
 					if (res.equalsIgnoreCase("Approve")) {
-						successMsg = SmCommonUtil.getOutputMsgBundle(
-								MessageConst.INFO_700027, new String[] {
-										applNo, mofNo });
+						if(StringUtils.isNotBlank(mofNo)){
+							successMsg = SmCommonUtil.getOutputMsgBundle(
+									MessageConst.INFO_700027, new String[] {
+											applNo, mofNo });
+						}else{
+							successMsg = SmCommonUtil.getOutputMsgBundle(
+									MessageConst.INFO_700030, new String[] {
+											applNo });
+						}
 					} else if (res.equalsIgnoreCase("Reject")) {
 						if (getManagedBean().getBpmTaskName() != null
 								&& getManagedBean()
@@ -7039,9 +7045,15 @@ public class SmApplicationBackingBean extends
 							reqDTO.setLastApprovedAppl(SmApplicationUtil
 									.getLastApprovedApplictionForSupplier(getManagedBean()));
 						}
-						successMsg = SmCommonUtil.getOutputMsgBundle(
-								MessageConst.INFO_700028, new String[] {
-										applNo, mofNo });
+						if(StringUtils.isNotBlank(mofNo)){
+							successMsg = SmCommonUtil.getOutputMsgBundle(
+									MessageConst.INFO_700028, new String[] {
+											applNo, mofNo });
+						}else{
+							successMsg = SmCommonUtil.getOutputMsgBundle(
+									MessageConst.INFO_700029, new String[] {
+											applNo });
+						}
 					} else if (res.equalsIgnoreCase("Escalate")) {
 						String statusDesc = "";
 						if (getManagedBean().getPoSecReview() != null
