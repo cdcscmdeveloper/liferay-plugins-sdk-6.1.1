@@ -32,9 +32,9 @@
 				<th>
 					<p:outputLabel value=" #{lbl['lbl.pm.profiles.preferred.notification']}"/>					
 				</th>
-				<td>
-					<p:outputLabel style="float:left" value="#{lbl['lbl.pm.profiles.preferences.preferred']} #{lbl['lbl.pm.profiles.userdetails.email']}"/>
-					<p:selectBooleanCheckbox id="itPreEmail" value="#{profileManagementBackingBean.managedBean.selectedUser.notifyByEmail}" />
+				<td>					
+					<p:selectBooleanCheckbox style="float:left" id="itPreEmail" value="#{profileManagementBackingBean.managedBean.selectedUser.notifyByEmail}" />
+					<p:outputLabel style="float:left" value="#{lbl['lbl.pm.profiles.userdetails.email']}"/>
 					<p:graphicImage id="giPreEmail" value="/css/images/design/tooltips.png" /> 
 					<p:tooltip for="giPreEmail" value="#{lbl['lbl.pm.profiles.preferences.nofificationemail.tooltip']}" showEffect="fade" hideEffect="fade" />
 					<p:message id="itPreEmailMsg" for="itPreEmail" display="icon" />
@@ -43,9 +43,9 @@
 			<tr>
 				<td>								
 					</td>
-					<td>
-						<p:outputLabel style="float:left" value="#{lbl['lbl.pm.profiles.preferences.preferred']} #{lbl['lbl.pm.profiles.preferences.sms']}"/>	
-						<p:selectBooleanCheckbox id="itPreSms" value="#{profileManagementBackingBean.managedBean.selectedUser.notifyBySms}"  /> 
+					<td>							
+						<p:selectBooleanCheckbox style="float:left" id="itPreSms" value="#{profileManagementBackingBean.managedBean.selectedUser.notifyBySms}"  /> 
+						<p:outputLabel style="float:left" value="#{lbl['lbl.pm.profiles.preferences.sms']}"/>
 						<p:graphicImage id="giPreSms" value="/css/images/design/tooltips.png" /> 
 						<p:tooltip for="giPreSms" value="#{lbl['lbl.pm.profiles.preferences.nofificationsms.tooltip']}" showEffect="fade" hideEffect="fade" />
 						<p:message id="itPreSmsMsg" for="itPreSms" display="icon" />
