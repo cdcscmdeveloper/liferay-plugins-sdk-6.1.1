@@ -175,7 +175,7 @@
 				<f:param name="disableMsgAutoUpdate" value="true" />
 			</p:commandButton>
 			
-			<p:commandButton value="#{lbl['lbl.btn.save']}" update="addlMachineDtTbl" oncomplete="adtMacDlg.hide();" rendered="#{!svoSiteVisitBackingBean.managedBean.selectedAdtMachine.newMachine}"
+			<p:commandButton value="#{lbl['lbl.btn.save']}" update="addlMachineDtTbl" rendered="#{!svoSiteVisitBackingBean.managedBean.selectedAdtMachine.newMachine}"
 				action="#{svoSiteVisitBackingBean.saveAdditionalMachine}" >
 				<f:param name="disableMsgAutoUpdate" value="true" />
 			</p:commandButton>
