@@ -45,7 +45,9 @@
 									
 				</th>
 				<td>					
-					<p:selectBooleanCheckbox style="float:left" id="itPreSms" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyBySms}" valueChangeListener="#{profilePersonalizationBackingBean.notifySmsChangeListener}" />
+					<p:selectBooleanCheckbox style="float:left" id="itPreSms" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyBySms}" >
+						 <p:ajax update="@this,itPreSmsMsg,messages" listener="#{profilePersonalizationBackingBean.notifySmsChangeListener}" />
+					</p:selectBooleanCheckbox>
 					<p:outputLabel style="float:left" value="#{lbl['lbl.pm.profiles.preferences.sms']}"/> 
 					<p:graphicImage id="giPreSms" value="/css/images/design/tooltips.png" /> 
 					<p:tooltip for="giPreSms" value="#{lbl['lbl.pm.profiles.preferences.nofificationsms.tooltip']}" showEffect="fade" hideEffect="fade" />
