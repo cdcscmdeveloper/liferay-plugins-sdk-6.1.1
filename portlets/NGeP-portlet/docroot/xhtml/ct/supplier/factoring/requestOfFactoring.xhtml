@@ -82,7 +82,7 @@
 					<tr>
 						<td style="width: 20%"><h:outputLabel
 								value="#{lbl['lbl.ct.loa.no']}" /></td>
-						<td style="width: 10%" class="header-info-text">#{supplierBackingBean.managedBean.ctContract.loa.loaNo}</td>
+						<td style="width: 10%" class="header-info-text">#{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.loaNo}</td>
 						<td style="width: 10%"><h:outputLabel
 								value="#{lbl['lbl.ct.contract.no']}" /></td>
 						<td style="width: 10%" class="header-info-text">
@@ -111,12 +111,12 @@
 				
 				<p:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
 				<p:inputText id="loaNo"
-					value="#{supplierBackingBean.managedBean.ctContract.loa.loaNo}"
+					value="#{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.loaNo}"
 					style="width:200px;" disabled="true" />
 				
 				<p:outputLabel value="#{lbl['lbl.ct.loa.date']}" />
 				<p:inputText style="width:200px;" disabled="true"
-					value="#{supplierBackingBean.managedBean.ctContract.loa.ackDate}">
+					value="#{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.ackDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</p:inputText>
@@ -132,7 +132,7 @@
 
 				<p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" />
 				<p:inputText style="width:200px;" disabled="true"
-					value="#{supplierBackingBean.managedBean.ctContract.loaPhysicalNo}" />
+					value="#{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.loaPhysicalNo}" />
 
 				<p:outputLabel value="#{lbl['lbl.ct.effective.date']}" />
 				<p:inputText style="width:200px;" disabled="true"

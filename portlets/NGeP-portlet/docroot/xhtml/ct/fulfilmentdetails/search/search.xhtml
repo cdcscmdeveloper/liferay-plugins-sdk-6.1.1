@@ -125,7 +125,7 @@
 						</h:outputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.loa.physical.no']}" styleClass="column-align-center"  style="width:8%; white-space:normal;">
-						<h:outputText value="#{data.loaPhysicalNo}" style="float:left;"/>
+						<h:outputText value="#{data.ctContractVer.ctContractValue.loaPhysicalNo}" style="float:left;"/>
 					</p:column>
 					<p:column style="width:6%; white-space:normal;" styleClass="column-align-center">
 						<f:facet name="header" >
@@ -190,7 +190,7 @@
 					    <p:menuButton id="menuButtonId11" value="#{lbl['lbl.btn.option']}" >
 					     	<p:menuitem id="menuItemId11" value="#{lbl['lbl.ct.view']}"  
 					   	     	icon="ui-icon-view" 
-                            	action="#{contractDetailsBackingBean.gotoCommonViewPage(data.ctContract.contractId)}"
+                            	action="#{contractDetailsBackingBean.gotoViewPage(data.ctContract.contractId, data.ctContractVer.contractVerId)}"
 					   			onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
 					     	</p:menuitem>
 					     	<p:menuitem id="menuItemId12" value="#{lbl['lbl.ct.request.change.bank.acc']}"
