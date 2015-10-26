@@ -70,19 +70,19 @@
 			rowIndexVar="index" rowKey="#{delOrder}">
 			<ac:paginator for="recvNoteListDataTable" />
 			<p:column headerText="#{lbl['lbl.fl.delivery.address']}"
-				style="white-space:normal;width:480px;">
-				<h:outputText
+				style="white-space:normal;width:480px;text-align:center;">
+				<h:outputText style="text-align:left; float:left;"
 					rendered="#{delOrder.flDeliveryAddress.addressType != null}"
 					value="#{invoiceBackingBean.getFullAddress(delOrder.flDeliveryAddress.pmAddress)}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.frn.do.no']}"
-				style="white-space:normal;">
-				<p:commandLink value="#{delOrder.deliveryOrderNo}"
+				style="white-space:normal;text-align:center;">
+				<p:commandLink value="#{delOrder.deliveryOrderNo}" style="float:left;"
 					rendered="#{delOrder.recordStatusFlg==1}" immediate="true"
 					action="#{invoiceBackingBean.navigateDelOrder(delOrder)}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.frn.no']}">
-				<p:commandLink
+			<p:column headerText="#{lbl['lbl.fl.frn.no']}" style="text-align:center;">
+				<p:commandLink style="float:left;"
 					value="#{delOrder.fulfilmentNote.fulfilmentNoteNo}"
 					rendered="#{delOrder.fulfilmentNote.recordStatusFlg==1}"
 					immediate="true"
