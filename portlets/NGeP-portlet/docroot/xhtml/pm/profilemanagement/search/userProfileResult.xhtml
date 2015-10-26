@@ -44,11 +44,9 @@
 		</p:dataTable>
 		
 	</p:panel>
-	<br/>
 	<div class="ppRightBtn">
 		<p:commandButton value="#{lbl['lbl.btn.create']}" action="#{profileManagementBackingBean.redirectToMaintainUser(null,null)}" partialSubmit="true" process="@this"/>
 	</div>
-	<br/>
     <!-- Role list Popup -->
 	<ui:include src="/xhtml/pm/profilemanagement/common/assignedRolesToPopUp.xhtml" />
 </ui:composition>
