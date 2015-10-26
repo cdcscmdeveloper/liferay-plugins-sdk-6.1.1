@@ -2001,7 +2001,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @return the navigate URL 
 	 */
 	public String gotoBackPage() {
-		return getManagedBean().getGotoPreviewPage();
+		String url = getManagedBean().getGotoPreviewPage();
+		renewSesionObject();
+		return url;
 	}
 	
 	/**
