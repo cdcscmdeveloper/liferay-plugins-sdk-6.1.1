@@ -7,8 +7,6 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,8 +23,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
@@ -36,7 +32,6 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.dto.rpt.PMReportReqDTO;
 import my.ep.biz.dto.rpt.PMReportResDTO;
@@ -66,7 +61,6 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -81,7 +75,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.EpPropertiesUtils;
-import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -91,7 +84,6 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.ReportMangedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
@@ -211,7 +203,6 @@ public class ReportBackingBean extends
 	private List<PmCategoryL1> supplierParentCatList;
 	private List<PmCategoryL2> supplierChildCatList;
 	private List<PmCategoryL3> supplierSubChildCatList;
-	private CmUnspsc selectedLovUnspsc;
 		
 
 	public List<String> getPaymentMethodList() {
@@ -4644,10 +4635,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		rptGenBean.setCmExtentionTypeView(false);
 		rptGenBean.setCmExtentionMeasurmentView(false);
 		rptGenBean.setCmExtentionColourView(false);
-		if (null != this.getSelectedLovUnspsc().getUnspscCode()
-				&& (this.getSelectedLovUnspsc().getUnspscCode() != ReportConst.EMPTY_VAL)) {
-			if ((this.getSelectedLovUnspsc().getUnspscCode().length() == 8)) {
-				unspid = retrieveCMUnspcIdbyCode(this.getSelectedLovUnspsc().getUnspscCode());
+		if (null != this.getCmUnspscCode()
+				&& (this.getCmUnspscCode() != ReportConst.EMPTY_VAL)) {
+			if ((this.getCmUnspscCode().length() == 8)) {
+				unspid = retrieveCMUnspcIdbyCode(this.getCmUnspscCode());
 				if (null != unspid) {
 					rptGenBean.setCmExtentionCodeView(true);
 				} else {
@@ -4680,10 +4671,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		getManagedBean().getRptGenBean().setCmExtentionTypeView(false);
 		getManagedBean().getRptGenBean().setCmExtentionMeasurmentView(false);
 		getManagedBean().getRptGenBean().setCmExtentionColourView(false);
-		if (null != this.getSelectedLovUnspsc().getUnspscCode()
-				&& (this.getSelectedLovUnspsc().getUnspscCode() != ReportConst.EMPTY_VAL)) {
-			if ((this.getSelectedLovUnspsc().getUnspscCode().length() == 8)) {
-				unspid = retrieveCMUnspcIdbyCode(this.getSelectedLovUnspsc().getUnspscCode());
+		if (null != this.getCmUnspscCode()
+				&& (this.getCmUnspscCode() != ReportConst.EMPTY_VAL)) {
+			if ((this.getCmUnspscCode().length() == 8)) {
+				unspid = retrieveCMUnspcIdbyCode(this.getCmUnspscCode());
 				//unspid = (long) 11606;
 				if (null != unspid) {
 					retrieveBrand();
@@ -4908,7 +4899,6 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		ctReportBackingBean = new CTReportBackingBean();
 		ppReportBackingBean = new PPReportBackingBean();
 		pmReportBackingBean = new PMReportBackingBean();
-		
 		if(rptGenBean.isReportCategoryView()==true||(this.getModuleValue()
 				.equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT)&&this.getReportCategory()!=null)){
 			rptGenBean = new ReportsGenerateBean();
@@ -4918,7 +4908,6 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		rptGenBean = new ReportsGenerateBean();
 		//rptGenBean.setReportCategoryView(this.isReportCategoryView());
 		}
-		
 		getManagedBean().setRptGenBean(null);
 		this.setSubModule(null);
 		this.setReportName(ReportConst.EMPTY_VAL);
@@ -4953,15 +4942,12 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					}					
 					this.setSubModule(pmReport.getSubModule());
 				} else {
-					       
 					if((strLanguage!=null)&&(strLanguage.equalsIgnoreCase(ReportConst.ENG_LANG))){
-						label = pmReport.getReportTitle();					
-												
+						label = pmReport.getReportTitle();
 					}else if((strLanguage!=null)&&(strLanguage.equalsIgnoreCase(ReportConst.MALAY_LANG))){
 						label = pmReport.getReportTitleMalay();
 					}
 				}
-				
 				this.setReportName(label);
 				reportFileNameJSP = pmReport.getReportFilename();
 				getManagedBean().setReportJsp(pmReport.getReportFilename());
@@ -6822,8 +6808,8 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((this.getCmItemName() != null) && (this.getCmItemName() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmItemType() != null) && (this.getCmItemType() != ReportConst.EMPTY_VAL))
 				/*|| ((this.getCmItemStatus() != null) && (this.getCmItemStatus() != ReportConst.EMPTY_VAL))*/
-				|| ((this.getSelectedLovUnspsc().getUnspscCode() != null) && (this.getSelectedLovUnspsc().getUnspscCode() != ReportConst.EMPTY_VAL))
-				|| ((this.getSelectedLovUnspsc().getUnspscTitle() != null) && (this.getSelectedLovUnspsc().getUnspscTitle() != ReportConst.EMPTY_VAL))
+				|| ((this.getCmUnspscCode() != null) && (this.getCmUnspscCode() != ReportConst.EMPTY_VAL))
+				|| ((this.getCmUnspscTitle() != null) && (this.getCmUnspscTitle() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmExtentionType() != null) && (this.getCmExtentionType() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmExtentionBrand() != null) && (this.getCmExtentionBrand() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmExtentionMeasurment() != null) && (this.getCmExtentionMeasurment() != ReportConst.EMPTY_VAL))
@@ -6840,7 +6826,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((this.getCmRequestNumber() != null) && (this.getCmRequestNumber() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmMofNumber() != null) && (this.getCmMofNumber() != ReportConst.EMPTY_VAL))) {
 			
-			if((this.getSelectedLovUnspsc().getUnspscCode() != null) && (this.getSelectedLovUnspsc().getUnspscCode() != ReportConst.EMPTY_VAL)){
+			if((this.getCmUnspscCode() != null) && (this.getCmUnspscCode() != ReportConst.EMPTY_VAL)){
 				if(((this.getCmExtentionType() == null) || (this.getCmExtentionType()== ReportConst.EMPTY_VAL))
 						&& ((this.getCmExtentionBrand() == null) || (this.getCmExtentionBrand()== ReportConst.EMPTY_VAL))
 						&& ((this.getCmExtentionMeasurment() == null) || (this.getCmExtentionMeasurment()== ReportConst.EMPTY_VAL))
@@ -6876,17 +6862,17 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ this.getCmItemType());
 			}
 			
-			if ((this.getSelectedLovUnspsc().getUnspscCode() != null)
-					&& (this.getSelectedLovUnspsc().getUnspscCode() != ReportConst.EMPTY_VAL)) {
+			if ((this.getCmUnspscCode() != null)
+					&& (this.getCmUnspscCode() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
 						.setUnspscCodeTotVar(ReportConst.CM_AMP_UNSPSC_CODE_EQ
-								+ this.getSelectedLovUnspsc().getUnspscCode());
+								+ this.getCmUnspscCode());
 			}
-			if ((this.getSelectedLovUnspsc().getUnspscTitle() != null)
-					&& (this.getSelectedLovUnspsc().getUnspscTitle() != ReportConst.EMPTY_VAL)) {
+			if ((this.getCmUnspscTitle() != null)
+					&& (this.getCmUnspscTitle() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
 						.setUnspscTitleTotVar(ReportConst.CM_AMP_UNSPSC_TITLE_EQ
-								+ this.getSelectedLovUnspsc().getUnspscTitle());
+								+ this.getCmUnspscTitle());
 			}
 			if ((this.getCmExtentionType() != null)
 					&& (this.getCmExtentionType() != ReportConst.EMPTY_VAL)) {
@@ -7668,8 +7654,8 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.setScPaymentId(null);
 		this.setCmItemType(null);
 		this.setCmItemStatus(null);
-		this.getSelectedLovUnspsc().setUnspscCode(null);
-		this.getSelectedLovUnspsc().setUnspscTitle(null);
+		this.setCmUnspscCode(null);
+		this.setCmUnspscTitle(null);
 		//this.setCmUnspscTitle(null);
 		this.setCmCompanyName(null);
 		this.setCmRegistrationType(null);
@@ -7953,22 +7939,6 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.moduleItemMap = moduleItemMap;
 	}
 
-	/**
-	 * @return the selectedLovUnspsc
-	 */
-	public CmUnspsc getSelectedLovUnspsc() {
-		if(null==selectedLovUnspsc)
-		selectedLovUnspsc=new CmUnspsc();
-		return selectedLovUnspsc;
-	}
-
-	/**
-	 * @param selectedLovUnspsc the selectedLovUnspsc to set
-	 */
-	public void setSelectedLovUnspsc(CmUnspsc selectedLovUnspsc) {
-		this.selectedLovUnspsc = selectedLovUnspsc;
-	}
-	
 	public List<SelectItem> getApplicationStatusData() {
 
 		List<SelectItem> smApplStatusList = new ArrayList<SelectItem>();
@@ -7989,7 +7959,5 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		return smApplStatusList;
 
 	}
-	
-	
 	
 }
