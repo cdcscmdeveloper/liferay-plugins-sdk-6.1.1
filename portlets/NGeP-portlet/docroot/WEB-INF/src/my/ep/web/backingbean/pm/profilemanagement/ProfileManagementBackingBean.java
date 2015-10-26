@@ -2873,6 +2873,12 @@ public class ProfileManagementBackingBean extends
 							getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value()),
 							searchBean);
 			}
+		}else if(upSearchBean.getSelectedOrgProfileId() != null && getManagedBean().getSelectedOrgType() != null 
+				&& StringUtils.isNotBlank(getManagedBean().getSelectedOrgType().getParameterCode())){
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmOrgProfile.recordStatusFlg",
+					SearchOperator.OPERATOR_EQUALS.value(),
+					DbValueConst.RECORD_STATUS_ACTIVE));	
 		}		
 		
 		
