@@ -2620,6 +2620,17 @@ public class SmApplicationBackingBean extends
 	 * application.
 	 */
 	public void deleteSelectedBranches() {
+		// validate if deleted branch been used in bank section
+		if (!SmCommonUtil.isCollectionEmpty(getManagedBean()
+				.getSelectedBranches())) {
+			for (SmSupplierBranch brTmp : getManagedBean()
+					.getSelectedBranches()) {
+				if (SmApplicationUtil.isBranchBankAssoc(brTmp, getManagedBean()
+						.getSmAppl().getSmSupplierBanks())) {
+					throw new EpException(MessageConst.ERROR_722617);
+				}
+			}
+		}
 		if (getManagedBean().getSelectedBranches().size() > 0) {
 			for (SmSupplierBranch brn : getManagedBean().getSelectedBranches()) {
 				getManagedBean().getSmAppl().getSmSupplierBranches()
@@ -2630,7 +2641,7 @@ public class SmApplicationBackingBean extends
 			throw new EpException(MessageConst.ERROR_722534,
 					new String[] { "Company Branch" });
 		}
-
+		saveOrUpdateAppl();
 	}
 
 	// -- Process Branches End
@@ -7027,14 +7038,14 @@ public class SmApplicationBackingBean extends
 						|| getManagedBean().isApproverUser()) {
 					log.info(" **** Final Decision from PO ****");
 					if (res.equalsIgnoreCase("Approve")) {
-						if(StringUtils.isNotBlank(mofNo)){
+						if (StringUtils.isNotBlank(mofNo)) {
 							successMsg = SmCommonUtil.getOutputMsgBundle(
 									MessageConst.INFO_700027, new String[] {
 											applNo, mofNo });
-						}else{
+						} else {
 							successMsg = SmCommonUtil.getOutputMsgBundle(
-									MessageConst.INFO_700030, new String[] {
-											applNo });
+									MessageConst.INFO_700030,
+									new String[] { applNo });
 						}
 					} else if (res.equalsIgnoreCase("Reject")) {
 						if (getManagedBean().getBpmTaskName() != null
@@ -7045,14 +7056,14 @@ public class SmApplicationBackingBean extends
 							reqDTO.setLastApprovedAppl(SmApplicationUtil
 									.getLastApprovedApplictionForSupplier(getManagedBean()));
 						}
-						if(StringUtils.isNotBlank(mofNo)){
+						if (StringUtils.isNotBlank(mofNo)) {
 							successMsg = SmCommonUtil.getOutputMsgBundle(
 									MessageConst.INFO_700028, new String[] {
 											applNo, mofNo });
-						}else{
+						} else {
 							successMsg = SmCommonUtil.getOutputMsgBundle(
-									MessageConst.INFO_700029, new String[] {
-											applNo });
+									MessageConst.INFO_700029,
+									new String[] { applNo });
 						}
 					} else if (res.equalsIgnoreCase("Escalate")) {
 						String statusDesc = "";
