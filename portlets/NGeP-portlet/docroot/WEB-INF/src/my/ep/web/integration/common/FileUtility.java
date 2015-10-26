@@ -89,6 +89,7 @@ import my.ep.web.integration.phis.PhisGlAccount;
 import my.ep.web.integration.phis.PhisProgramActivity;
 import my.ep.web.integration.phis.PhisProject;
 import my.ep.web.integration.phis.PhisVotFund;
+import my.ep.web.util.DateUtils;
 
 import org.apache.log4j.Logger;
 
@@ -1344,10 +1345,10 @@ public class FileUtility extends InitializeSO{
 			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
 			
-			sftpUtility.upload(reqDTO);
+//			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(ServiceCode.EPE04.value(),fileName);
+//			 osbUtility.osbServiceCallOutBound(ServiceCode.EPE04.value(),fileName);
 			 
 			 log.info("createEquiytyOwner end");
 
@@ -1454,10 +1455,10 @@ public class FileUtility extends InitializeSO{
 			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
 			
-			sftpUtility.upload(reqDTO);
+//			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			osbUtility.osbServiceCallOutBound(ServiceCode.EPE01.value(),fileName);
+//			osbUtility.osbServiceCallOutBound(ServiceCode.EPE01.value(),fileName);
 			
 			log.info("createConsultantProfile end");
 
@@ -1514,10 +1515,10 @@ public class FileUtility extends InitializeSO{
 			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
 			
-			sftpUtility.upload(reqDTO);
+//			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			osbUtility.osbServiceCallOutBound(ServiceCode.EPE07.value(),fileName);
+//			osbUtility.osbServiceCallOutBound(ServiceCode.EPE07.value(),fileName);
 			
 			log.info("createAuthorizedSignatory end");
 
@@ -1601,10 +1602,10 @@ public class FileUtility extends InitializeSO{
 			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
 			
-			sftpUtility.upload(reqDTO);
+//			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			osbUtility.osbServiceCallOutBound(ServiceCode.EPE06.value(),fileName);
+//			osbUtility.osbServiceCallOutBound(ServiceCode.EPE06.value(),fileName);
 			
 			log.info("createManagementPersonnel end");
 
@@ -1682,10 +1683,10 @@ public class FileUtility extends InitializeSO{
 			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
 			
-			sftpUtility.upload(reqDTO);
+//			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			osbUtility.osbServiceCallOutBound(ServiceCode.EPE05.value(),fileName);
+//			osbUtility.osbServiceCallOutBound(ServiceCode.EPE05.value(),fileName);
 			
 			log.info("createBoardOfDirector end");
 
@@ -1748,10 +1749,10 @@ public class FileUtility extends InitializeSO{
 			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
 			
-			sftpUtility.upload(reqDTO);
+//			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			osbUtility.osbServiceCallOutBound(ServiceCode.EPE08.value(),fileName);
+//			osbUtility.osbServiceCallOutBound(ServiceCode.EPE08.value(),fileName);
 			
 			log.info("createBranchCompany end");
 
@@ -1808,10 +1809,10 @@ public class FileUtility extends InitializeSO{
 			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
 			
-			sftpUtility.upload(reqDTO);
+//			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			osbUtility.osbServiceCallOutBound(ServiceCode.EPE09.value(),fileName);
+//			osbUtility.osbServiceCallOutBound(ServiceCode.EPE09.value(),fileName);
 			
 			log.info("createRegisteredCategory end");
 
@@ -1877,10 +1878,10 @@ public class FileUtility extends InitializeSO{
 			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
 			
-			sftpUtility.upload(reqDTO);
+//			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			osbUtility.osbServiceCallOutBound(ServiceCode.EPE10.value(),fileName);
+//			osbUtility.osbServiceCallOutBound(ServiceCode.EPE10.value(),fileName);
 			log.info("createGovernmentProject end");
 			
 
@@ -1933,10 +1934,10 @@ public class FileUtility extends InitializeSO{
 			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
 			
-			sftpUtility.upload(reqDTO);
+//			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			osbUtility.osbServiceCallOutBound(ServiceCode.EPE11.value(),fileName);
+//			osbUtility.osbServiceCallOutBound(ServiceCode.EPE11.value(),fileName);
 			
 			log.info("createDeletedCompany end");
 
@@ -2009,10 +2010,10 @@ public class FileUtility extends InitializeSO{
 			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
 			
-			sftpUtility.upload(reqDTO);
+//			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			osbUtility.osbServiceCallOutBound(ServiceCode.EPE03.value(),fileName);
+//			osbUtility.osbServiceCallOutBound(ServiceCode.EPE03.value(),fileName);
 			
 			log.info("createCompanyOwner end");
 
@@ -2084,10 +2085,10 @@ public class FileUtility extends InitializeSO{
 			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
 			
-			sftpUtility.upload(reqDTO);
+//			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			osbUtility.osbServiceCallOutBound(ServiceCode.EPE02.value(),fileName);
+//			osbUtility.osbServiceCallOutBound(ServiceCode.EPE02.value(),fileName);
 			
 			log.info("createAssociatedCompany end");
 
@@ -2174,7 +2175,7 @@ public class FileUtility extends InitializeSO{
 		
 		SimpleDateFormat dt1 = new SimpleDateFormat("ddMMyyyy");
 
-		File file = new File(path+dt1.format(date));
+		File file = new File(path+dt1.format(DateUtils.minusDays(date,1)));
 		if (!file.exists()) {
 			if (file.mkdir()) {
 				log.info("Directory is created!");
