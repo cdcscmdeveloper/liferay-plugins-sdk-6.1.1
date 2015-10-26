@@ -107,8 +107,9 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private String selectedAttachmentTemplType;
 	private String attachmentDeleteMsg;
 	private boolean viewMode;
-
 	
+	private SmSvAdtMachine oriAdtMachine;
+
 	public SMSiteVisitDataType getBpmPojo() {
 		return bpmPojo;
 	}
@@ -603,6 +604,14 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 
 	public void setViewMode(boolean viewMode) {
 		this.viewMode = viewMode;
+	}
+
+	public SmSvAdtMachine getOriAdtMachine() {
+		return oriAdtMachine;
+	}
+
+	public void setOriAdtMachine(SmSvAdtMachine oriAdtMachine) {
+		this.oriAdtMachine = oriAdtMachine;
 	}
 
 }
