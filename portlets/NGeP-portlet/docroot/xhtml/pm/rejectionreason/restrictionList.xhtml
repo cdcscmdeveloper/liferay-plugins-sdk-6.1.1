@@ -14,7 +14,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				activeIndex="#{rejectionReasonBackingBean.managedBean.selectedTabIndex}">
 				<!-- Application Type -->
 				<p:tab id="tAppType" title="#{lbl['lbl.pm.application.type']}" disabled="#{!rejectionReasonBackingBean.managedBean.suppAppCheck}">  
-					<br/>
+					
 						<p:outputPanel
 							rendered="#{rejectionReasonBackingBean.managedBean.suppAppCheck}">
 						<p:dataTable id="dtAppType" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
@@ -44,7 +44,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 								</p:commandLink>
 							</p:column>
 					   	</p:dataTable>
-					   	<br/>
+					   	
 				   		<div class="ppRightBtn">
 							<p:commandButton value="#{lbl['lbl.btn.add']}"  update="dtAppType"
 								action="#{rejectionReasonBackingBean.addRestriction(ParameterTypeConst.supplierApplicationTypes)}"
@@ -55,7 +55,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				</p:tab>
 				<!-- Company Type -->
 				<p:tab id="tComType" title="#{lbl['lbl.pm.company.type']}" disabled="#{!rejectionReasonBackingBean.managedBean.suppComCheck}">  
-					<br/>
+					
 					<p:outputPanel
 						rendered="#{rejectionReasonBackingBean.managedBean.suppComCheck}">
 						<p:dataTable id="dtComType" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
@@ -85,7 +85,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 								</p:commandLink>
 							</p:column>
 					   	</p:dataTable>
-				   		<br/>
+				   		
 				   		<div class="ppRightBtn">
 							<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"  update="dtComType"
 								action="#{rejectionReasonBackingBean.addRestriction(ParameterTypeConst.financialOrgRegType)}"
@@ -96,7 +96,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				</p:tab>
 				<!-- Supplier Type -->
 				<p:tab id="tSuppType" title="#{lbl['lbl.pm.supplier.type']}" disabled="#{!rejectionReasonBackingBean.managedBean.suppTypeCheck}">  
-					<br/>
+					
 					<p:outputPanel
 							rendered="#{rejectionReasonBackingBean.managedBean.suppTypeCheck}">
 						<p:dataTable id="dtSuppType" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
@@ -126,7 +126,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 								</p:commandLink>
 							</p:column> 
 					   	</p:dataTable>
-					   	<br/>
+					   
 				   		<div class="ppRightBtn">
 							<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"  update="dtSuppType"
 								action="#{rejectionReasonBackingBean.addRestriction(ParameterTypeConst.supplierTypes)}"
@@ -136,7 +136,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					</p:outputPanel>
 				</p:tab>
 			</p:tabView>
-			<br/>
+			
 			
 		</p:panel>
 	</p:outputPanel>
