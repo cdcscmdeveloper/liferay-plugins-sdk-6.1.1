@@ -205,5 +205,7 @@ public interface QTConstants {
 	public static final String QT_OPEN = "Open";
 	
 	public static final String CHAIRPERSON = "_CHAIRPERSON";
+	
+	public static final String REPLACE_CHAR = "_";
 
 }
