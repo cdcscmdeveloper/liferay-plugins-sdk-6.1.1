@@ -9,8 +9,9 @@
     
 <cc:interface>
 	<cc:attribute name="id" />
-	<cc:attribute name="latitude" required="true" />
-	<cc:attribute name="longitude" required="true" />
+	<cc:attribute name="latitude" 		required="true" />
+	<cc:attribute name="longitude" 		required="true" />
+	<cc:attribute name="locationName" 	required="false" default="" />
 </cc:interface>
 
 <cc:implementation>
@@ -19,6 +20,7 @@
 		<p:remoteCommand name="disableMap" action="#{gmapBackingBean.setRenderMap(false)}" />
 		
 		<p:dialog id="gmapDialogId" 
+			header="#{lbl['lbl.gmap.dialog.title']}"
 			widgetVar="dlg" 
 			width="625" 
 			height="400" 
@@ -34,7 +36,7 @@
 			 		type="HYBRID" 
 			 		style="width:100%;height:400px"
 					rendered="#{gmapBackingBean.renderMap}"
-			 		model="#{gmapBackingBean.retSimpleModel(cc.attrs.latitude, cc.attrs.longitude)}" />
+			 		model="#{gmapBackingBean.retSimpleModel(cc.attrs.latitude, cc.attrs.longitude, cc.attrs.locationName)}" />
 			 		
 			</p:panel>
 			
