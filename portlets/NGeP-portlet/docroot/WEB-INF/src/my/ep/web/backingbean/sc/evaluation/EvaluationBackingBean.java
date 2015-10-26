@@ -9648,7 +9648,8 @@ public class EvaluationBackingBean extends
 		response.setDateHeader("Expires", 0);
 		// response.setContentType("application/vnd.ms-excel");
 		// response.setHeader("Content-Transfer-Encoding", "binary");
-		String finalFileName = fileName.replaceAll("\\s+","-");
+		// fire fox issue regarding space
+		String finalFileName = fileName.replaceAll("\\s+",QTConstants.REPLACE_CHAR);
 		response.setHeader("Content-Disposition", "attachment; filename="
 				+ finalFileName);
 		response.setContentType("application/octet-stream");

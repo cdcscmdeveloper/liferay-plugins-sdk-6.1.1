@@ -119,6 +119,7 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sc.supplierproposal.SPDetailBackingBean;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
@@ -424,7 +425,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		// response.setContentType("application/vnd.ms-excel");
 		// response.setHeader("Content-Transfer-Encoding", "binary");
 		// to fix firefox issue of space
-		String finalFileName = fileName.replaceAll("\\s","_");
+		String finalFileName = fileName.replaceAll("\\s+",QTConstants.REPLACE_CHAR);
 		log.info("finalFileName: " + finalFileName);
 		response.setHeader("Content-Disposition", "attachment; filename="
 				+ finalFileName);
