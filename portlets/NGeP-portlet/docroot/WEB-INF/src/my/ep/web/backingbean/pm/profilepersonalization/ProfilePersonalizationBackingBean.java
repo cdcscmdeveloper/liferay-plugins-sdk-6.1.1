@@ -160,8 +160,13 @@ public class ProfilePersonalizationBackingBean extends
 		this.getManagedBean().getSelectedUser().setModified(true);	
 	}
 	
-	public void notifySmsChangeListener(ValueChangeEvent event){
+	public void notifySmsChangeListener(){
 		 System.out.println("...........notifySmsChangeListener............");
+		 if(getManagedBean().getSelectedUser().isNotifyBySms() 
+				 && StringUtils.isBlank(getManagedBean().getSelectedUser().getMobileNo())){
+			 getManagedBean().getSelectedUser().setNotifyBySms(false); 
+			 throw new EpException(MessageConst.ERROR_770090);
+		 }
 		this.getManagedBean().getSelectedUser().setModified(true);	
 	}
 	
@@ -619,6 +624,11 @@ public class ProfilePersonalizationBackingBean extends
 			if (StringUtils.isBlank(pmUser.getPreferredLanguage())) {
 				throw new EpException(MessageConst.ERROR_770046);
 			}
+			
+			 if(getManagedBean().getSelectedUser().isNotifyBySms() 
+					 && StringUtils.isBlank(getManagedBean().getSelectedUser().getMobileNo())){
+				 throw new EpException(MessageConst.ERROR_770090);
+			 }
 
 //			if (pmUser.getNotifyRemovalDay() == null
 //					|| pmUser.getNotifyRemovalDay() <= 0) {
