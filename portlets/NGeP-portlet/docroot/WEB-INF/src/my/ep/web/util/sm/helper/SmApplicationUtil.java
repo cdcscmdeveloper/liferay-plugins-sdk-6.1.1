@@ -4723,6 +4723,34 @@ public class SmApplicationUtil {
 	}
 
 	/**
+	 * Check if supplier branches exist as bank associated branch
+	 * 
+	 * @param SmSupplierBranch
+	 *            branch
+	 * @param List
+	 *            <SmSupplierBank> smSupplierBanks
+	 * @return boolean
+	 */
+	public static boolean isBranchBankAssoc(SmSupplierBranch branch,
+			List<SmSupplierBank> smSupplierBanks) {
+		boolean retVal = false;
+		if (!SmCommonUtil.isCollectionEmpty(smSupplierBanks) && branch != null
+				&& branch.getSupplierBranchId() != null) {
+			for (SmSupplierBank smSupplierBank : smSupplierBanks) {
+				if (smSupplierBank.getSmSupplierBranch() != null
+						&& smSupplierBank.getSmSupplierBranch()
+								.getSupplierBranchId() != null
+						&& branch.getSupplierBranchId().compareTo(
+								smSupplierBank.getSmSupplierBranch()
+										.getSupplierBranchId()) == 0) {
+					retVal = true;
+				}
+			}
+		}
+		return retVal;
+	}
+
+	/**
 	 * Checks if selected personnel is point of contact for any of the listed
 	 * branches.
 	 * 
