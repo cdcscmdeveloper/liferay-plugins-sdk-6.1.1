@@ -32,7 +32,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					</td>
 				</tr>
 			</table>
-			<br/>
 			<p:dataTable id="dtTaskReassign" emptyMessage="#{lbl['lbl.pp.no.record.found']}"			
 				value="#{taskAssignBackingBean.managedBean.availableUsers}"
 				selection="#{taskAssignBackingBean.managedBean.selectedUser}"
@@ -51,7 +50,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<p:commandButton value="#{lbl['lbl.pm.ta.btn.assign']}" oncomplete="dlTaskReassignment.hide()"
 					action="#{taskAssignBackingBean.confirmReassignTask()}" update=":form:dtTaskAssignResult"
 					immediate="true"/>
-				&#160;
+				
 				<p:commandButton id="cbCancel" 
 					value="#{lbl['lbl.btn.cancel']}" oncomplete="dlTaskReassignment.hide()"
 					immediate="true" />
