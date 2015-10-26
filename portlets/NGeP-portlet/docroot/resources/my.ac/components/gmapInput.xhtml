@@ -12,22 +12,26 @@
 	<cc:attribute name="latitude" required="true" />
 	<cc:attribute name="longitude" required="true" />
 	<cc:attribute name="address" required="true" />
+	<cc:attribute name="showButton" 	default="true" />
 </cc:interface>
 
 <cc:implementation>
 <h:panelGroup id="#{cc.attrs.id}">
-	<p:fieldset legend="Map and Coordinate" style="margin-bottom:20px">
+	<p:fieldset legend="#{lbl['lbl.gmap.panel.title']}" style="margin-bottom:20px">
   		
 		x: <p:inputText id="plat" value="#{cc.attrs.latitude}" />
 		
 		y: <p:inputText id="plng" value="#{cc.attrs.longitude}" />
 		
 		<p:commandButton id="gmId" 
-			value="View Map" 
-			onclick="codeAddress(#{cc.attrs.address});">
+			value="#{lbl['lbl.gmap.viewmap']}" 
+			onclick="codeAddress(#{cc.attrs.address});"
+			rendered="#{cc.attrs.showButton}">
+			
 			<f:setPropertyActionListener 
 				target="#{gmapBackingBean.renderMap}" 
 				value="#{true}" />
+				
 		</p:commandButton>
 		
 		<p:remoteCommand 
