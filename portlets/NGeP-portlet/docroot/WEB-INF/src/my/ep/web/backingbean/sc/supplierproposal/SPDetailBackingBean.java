@@ -1233,7 +1233,7 @@ public class SPDetailBackingBean extends
 		response.setDateHeader("Expires", 0);
 		// response.setContentType("application/vnd.ms-excel");
 		// response.setHeader("Content-Transfer-Encoding", "binary");
-		String finalFileName = fileName.replaceAll("\\s+","-");
+		String finalFileName = fileName.replaceAll("\\s","_");
 		response.setHeader("Content-Disposition", "attachment; filename="
 				+ finalFileName);
 		response.setContentType("application/octet-stream");
