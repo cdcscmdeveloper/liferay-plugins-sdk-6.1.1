@@ -129,10 +129,10 @@ public class RuleCatalogueBackingBean extends
 	private static final int TAXABLE_ITEM_DA_IDX = 2;
 	private static final int TAXABLE_ITEM_G2G_IDX = 3;
 	private Integer currentIndexVal;
-	private String inactivePopUpMsg;
-	private String inactiveFeeOrgPopUpMsg;
-	private String inactiveFeeComoPopUpMsg;
-	private String inactiveFeeContPopUpMsg;
+	private String inactivePopUpMsg = "";
+	private String inactiveFeeOrgPopUpMsg ="";
+	private String inactiveFeeComoPopUpMsg ="";
+	private String inactiveFeeContPopUpMsg ="";
 
 	// private List<SortMeta> preSortOrder = new ArrayList<SortMeta>();
 
@@ -1272,7 +1272,7 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	public void saveRuleCatalog() {
-		log.info("...........saveRuleCatalog............");
+		
 		if (this.getManagedBean().isError1()) {
 			// throw error msg
 			throw new EpException(MessageConst.ERROR_770198, new String[] {});
@@ -1324,8 +1324,7 @@ public class RuleCatalogueBackingBean extends
 					// record\
 					continue;
 				}
-				log.info(".........................baseValueToCompare.getRuleValue()="
-						+ baseValueToCompare.getRuleValue());
+				
 				for (int j = i + 1; j <= (ruleType.getConfigRuleValues().size() - 1); j++) {
 					PmConfigRuleValue value = ruleType.getConfigRuleValues()
 							.get(j);
@@ -1334,15 +1333,12 @@ public class RuleCatalogueBackingBean extends
 						// go to next record
 						continue;
 					}
-					log.info(".........................second.value.getRuleValue()="
-							+ value.getRuleValue());
-					log.info("........................ruleType.getValidationType()="
-							+ ruleType.getValidationType());
+					
 
 					if (!ruleValueValidation(baseValueToCompare, value,
 							ruleType)) {
 						// log.info("...............ruleType.getValidationType()="+ruleType.getValidationType());
-						log.info("................befor throw exeption...................");
+						
 						// hit error and return
 						switch (ruleType.getValidationType()) {
 						case '1': if(ruleType.getIsRangeValue() ==1 && baseValueToCompare.getGroupValueId().equals(value.getGroupValueId())){
@@ -1404,7 +1400,7 @@ public class RuleCatalogueBackingBean extends
 					String messageId = null;
 					String[] msgParam = null;
 					if (ruleTypeValue.isBrandNew()) {
-						log.info("Tracking diary for System Parameter: add new value :saveRuleCatalog");
+					
 						messageId = MessageConst.TD_80015;
 						if (ruleType.getRuleDataTypeId().getParameterCode()
 								.equals("C")) {
@@ -1421,7 +1417,7 @@ public class RuleCatalogueBackingBean extends
 					} else {
 						if (ruleTypeValue.isModified()
 								&& ruleTypeValue.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
-							log.info("Tracking diary for System Parameter: de-activating status :saveRuleCatalog");
+						
 							messageId = MessageConst.TD_80016;
 							if (ruleType.getRuleDataTypeId().getParameterCode()
 									.equals("C")) {
@@ -1479,8 +1475,7 @@ public class RuleCatalogueBackingBean extends
 										MessageConst.INFO_770009,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
-				System.out
-						.println("***************rule type values have been updated*****************");
+			
 
 			}
 		} catch (Exception e) {
@@ -1602,13 +1597,10 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	public void saveFeeExemptionForOrgItem() {
-		log.info("..............saveFeeExemptionForOrgItem..............");
+
 		List<PmFeeExemption> exemptionList = new ArrayList<PmFeeExemption>();
 		exemptionList.addAll(this.getManagedBean()
 				.getFeeExemptionsForOrgAndItem());
-
-		log.info("............................exemptionList.size="
-				+ exemptionList.size());
 
 		for (PmFeeExemption exemption : exemptionList) {
 			if (exemption.getOrgProfileId() != null
@@ -1668,14 +1660,11 @@ public class RuleCatalogueBackingBean extends
 		for (PmFeeExemption fee : exemptionList) {
 			String messageId = null;
 			String[] msgParam = null;
-			log.info("..............!fee.isBrandNew()=" + !fee.isBrandNew());
-			log.info("..............fee.isModified()=" + fee.isModified());
-			log.info("..............fee.getRecordStatusFlg() ="
-					+ fee.getRecordStatusFlg());
+	
 			if (!fee.isBrandNew()
 					&& fee.isModified()
 					&& fee.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
-				log.info("Tracking diary for System Parameter: de-activating feeExemption(Fee by SupplierAndItem):saveFeeExemptionForOrgItem");
+				
 				messageId = MessageConst.TD_80022;
 				if (fee.getFeeExemptionType().equals("1")) {
 					msgParam = new String[] {
@@ -1746,8 +1735,7 @@ public class RuleCatalogueBackingBean extends
 										MessageConst.INFO_770010,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
-				System.out
-						.println("***************fee Exemption list have been updated*****************");
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1831,7 +1819,7 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	public void saveFeeExemptionForContract() {
-		log.info("...........saveFeeExemptionForContract..................");
+		
 		List<PmFeeExemption> exemptionList = new ArrayList<PmFeeExemption>();
 		exemptionList.addAll(this.getManagedBean()
 				.getFeeExemptionsForContract());
@@ -1894,14 +1882,10 @@ public class RuleCatalogueBackingBean extends
 		for (PmFeeExemption fee : exemptionList) {
 			String messageId = null;
 			String[] msgParam = null;
-			log.info("..............!fee.isBrandNew()=" + !fee.isBrandNew());
-			log.info("..............fee.isModified()=" + fee.isModified());
-			log.info("..............fee.getRecordStatusFlg() ="
-					+ fee.getRecordStatusFlg());
+			
 			if (!fee.isBrandNew()
 					&& fee.isModified()
 					&& fee.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
-				log.info("Tracking diary for System Parameter: de-activating feeExemption(Fee by contractAndItem):saveFeeExemptionForContract");
 				messageId = MessageConst.TD_80022;
 				if (fee.getFeeExemptionType().equals("2")) {
 					msgParam = new String[] {
@@ -1975,8 +1959,7 @@ public class RuleCatalogueBackingBean extends
 										MessageConst.INFO_770010,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
-				System.out
-						.println("***************fee Exemption list have been updated*****************");
+			
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2028,12 +2011,7 @@ public class RuleCatalogueBackingBean extends
 					exemption1.setFeeExemptionType("6");
 				} else {
 					exemption1.setFeeExemptionType("3");
-					log.info("..............exemption1.getTypeId()="
-							+ exemption1.getTypeId());
-					log.info("..............exemption1.getTypeId().getTypeName()="
-							+ exemption1.getTypeId().getTypeName());
-					log.info("..............exemption1.getTypeId().getTypeId()="
-							+ exemption1.getTypeId().getTypeId());
+					
 				}
 			} else if (exemption1.getFeeExemptionType().equals("6")
 					&& exemption1.getTypeId() != null) {
@@ -2069,7 +2047,6 @@ public class RuleCatalogueBackingBean extends
 			if (!fee.isBrandNew()
 					&& fee.isModified()
 					&& fee.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
-				log.info("Tracking diary for System Parameter: de-activating feeExemption(Fee by Commodity):saveFeeExemptionForComodity");
 				messageId = MessageConst.TD_80022;
 				if (fee.getFeeExemptionType().equals("6")) {
 					msgParam = new String[] {
@@ -2155,8 +2132,7 @@ public class RuleCatalogueBackingBean extends
 										MessageConst.INFO_770010,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
-				System.out
-						.println("***************fee Exemption list have been updated*****************");
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2186,8 +2162,7 @@ public class RuleCatalogueBackingBean extends
 										MessageConst.INFO_770008,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
-				System.out
-						.println("***************general configure have been updated*****************");
+			
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -4251,12 +4226,12 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	public void feeExemptionStatusChangeForCommodity() {
-		log.info("feeExemptionStatusChangeForCommodity");
+
 		if (this.getCurrentIndexVal() != null) {
 			PmFeeExemption selectedFee = this.getManagedBean()
 					.getFeeExemptionsForComodity()
 					.get(this.getCurrentIndexVal());
-			log.info(".............selectedFee=" + selectedFee);
+
 			if (selectedFee != null) {
 				if (!selectedFee.isModified()) {
 					selectedFee.setModified(true);
@@ -4269,12 +4244,12 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	public void feeExemptionStatusChangeForContract() {
-		log.info("feeExemptionStatusChangeForContract");
+		
 		if (this.getCurrentIndexVal() != null) {
 			PmFeeExemption selectedFee = this.getManagedBean()
 					.getFeeExemptionsForContract()
 					.get(this.getCurrentIndexVal());
-			log.info(".............selectedFee=" + selectedFee);
+//			log.info(".............selectedFee=" + selectedFee);
 			if (selectedFee != null) {
 				if (!selectedFee.isModified()) {
 					selectedFee.setModified(true);
