@@ -50,6 +50,7 @@ import my.ep.web.integration.eperunding.RegisteredCategory;
 import my.ep.web.integration.eperunding.RegistrationHistory;
 import my.ep.web.integration.eperunding.Signatory;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 /*
@@ -156,7 +157,7 @@ public class EperundingIntegration extends EperundingTemplate{
 
 								qualification.setInstitute(smStaffAcademic.getInstituteName());
 								qualification.setYear(smStaffAcademic.getYear().toString());
-								qualification.setEducationField(smStaffAcademic.getPmEduField().getEduFieldId() + "");
+								qualification.setEducationField(smStaffAcademic.getPmEduField().getEduFieldId());
 								if (!qualifications.contains(qualifications))
 									qualifications.add(qualification);
 							}
@@ -167,7 +168,7 @@ public class EperundingIntegration extends EperundingTemplate{
 							qualification.setQualificationLevel(IntegrationConstants.DEFAULT_INT);
 							qualification.setInstitute(IntegrationConstants.EMPTY_TRING);
 							qualification.setYear(IntegrationConstants.EMPTY_TRING);
-							qualification.setEducationField(IntegrationConstants.EMPTY_TRING);
+							qualification.setEducationField(null);
 							qualifications.add(qualification);
 
 						}
@@ -280,7 +281,7 @@ public class EperundingIntegration extends EperundingTemplate{
 
 								qualification.setInstitute(smStaffAcademic.getInstituteName());
 								qualification.setYear(smStaffAcademic.getYear().toString());
-								qualification.setEducationField(smStaffAcademic.getPmEduField().getEduFieldId() + "");
+								qualification.setEducationField(smStaffAcademic.getPmEduField().getEduFieldId());
 								if (!qualifications.contains(qualifications))
 									qualifications.add(qualification);
 							}
@@ -291,7 +292,7 @@ public class EperundingIntegration extends EperundingTemplate{
 							qualification.setQualificationLevel(IntegrationConstants.DEFAULT_INT);
 							qualification.setInstitute(IntegrationConstants.EMPTY_TRING);
 							qualification.setYear(IntegrationConstants.EMPTY_TRING);
-							qualification.setEducationField(IntegrationConstants.EMPTY_TRING);
+							qualification.setEducationField(null);
 							qualifications.add(qualification);
 
 						}
@@ -414,7 +415,7 @@ public class EperundingIntegration extends EperundingTemplate{
 
 								qualification.setInstitute(smStaffAcademic.getInstituteName());
 								qualification.setYear(smStaffAcademic.getYear().toString());
-								qualification.setEducationField(smStaffAcademic.getPmEduField().getEduFieldId() + "");
+								qualification.setEducationField(smStaffAcademic.getPmEduField().getEduFieldId());
 								if (!qualifications.contains(qualifications))
 									qualifications.add(qualification);
 							}
@@ -425,7 +426,7 @@ public class EperundingIntegration extends EperundingTemplate{
 							qualification.setQualificationLevel(IntegrationConstants.DEFAULT_INT);
 							qualification.setInstitute(IntegrationConstants.EMPTY_TRING);
 							qualification.setYear(IntegrationConstants.EMPTY_TRING);
-							qualification.setEducationField(IntegrationConstants.EMPTY_TRING);
+							qualification.setEducationField(null);
 							qualifications.add(qualification);
 
 						}
@@ -567,7 +568,8 @@ public class EperundingIntegration extends EperundingTemplate{
 					profile.setCompanyType(getCompanyType(smSupplier.getBusinessType()));
 
 					String phoneNo = smSupplier.getSmAppl().getSmCompanyBasic().getPhoneNo();
-					if (null != phoneNo) {
+					
+					if (!StringUtils.isBlank(phoneNo)) {
 						if (phoneNo.startsWith("+")) {
 							profile.setTelCountryCode(phoneNo.substring(0, 2));
 							profile.setTelAreaCode(phoneNo.substring(2, 4));
@@ -582,7 +584,7 @@ public class EperundingIntegration extends EperundingTemplate{
 
 					String faxNo = smSupplier.getSmAppl().getSmCompanyBasic().getFaxNo();
 					
-					if (null != faxNo) {
+					if (!StringUtils.isBlank(faxNo)) {
 						if (phoneNo.startsWith("+")) {
 							profile.setFaxCountryCode(faxNo.substring(0, 2));
 							profile.setFaxAreaCode(faxNo.substring(2, 4));
@@ -954,7 +956,7 @@ public class EperundingIntegration extends EperundingTemplate{
 								companyOwner.setCountry(IntegrationConstants.EMPTY_TRING);
 
 							String phoneNo = equityCompany.getPhoneNo();
-							if (null != phoneNo) {
+							if (!StringUtils.isBlank(phoneNo)) {
 								if (phoneNo.startsWith("+")) {
 									companyOwner.setTelCountryCode(phoneNo.substring(0, 2));
 									companyOwner.setTelAreaCode(phoneNo.substring(2, 4));
@@ -967,7 +969,7 @@ public class EperundingIntegration extends EperundingTemplate{
 							}
 
 							String faxNo = equityCompany.getFaxNo();
-							if (null != faxNo) {
+							if (!StringUtils.isBlank(faxNo)) {
 								if (phoneNo.startsWith("+")) {
 									companyOwner.setFaxCountryCode(faxNo.substring(0, 2));
 									companyOwner.setFaxAreaCode(faxNo.substring(2,4));
@@ -1052,7 +1054,7 @@ public class EperundingIntegration extends EperundingTemplate{
 							}
 
 							String phoneNo = associateCompany.getPhoneNo();
-							if (null != phoneNo) {
+							if (!StringUtils.isBlank(phoneNo)) {
 								if (phoneNo.startsWith("+")) {
 									associatedCompany.setTelCountryCode(phoneNo.substring(0, 2));
 									associatedCompany.setTelAreaCode(phoneNo.substring(2, 4));
@@ -1065,7 +1067,7 @@ public class EperundingIntegration extends EperundingTemplate{
 							}
 
 							String faxNo = associateCompany.getFaxNo();
-							if (null != faxNo) {
+							if (!StringUtils.isBlank(faxNo)) {
 								if (phoneNo.startsWith("+")) {
 									associatedCompany.setFaxCountryCode(faxNo.substring(0, 2));
 									associatedCompany.setFaxAreaCode(faxNo.substring(2, 4));
