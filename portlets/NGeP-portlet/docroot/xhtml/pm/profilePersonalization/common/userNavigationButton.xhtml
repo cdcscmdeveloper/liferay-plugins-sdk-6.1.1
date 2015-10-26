@@ -10,9 +10,10 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
 		
-		<div class="button-wrapper">
-			  
-			  <div class="rowBtnRight">
+		<table style="width: 100%">
+		<tr>
+			<td>
+				<div align="right" style="width: 100%">
 				   <c:choose>
 				  		<c:when test="#{profilePersonalizationBackingBean.managedBean.selectedUser.brandNew}">
 				  			<p:commandButton value="#{lbl['lbl.btn.save']}" update="@form"
@@ -29,10 +30,11 @@
 			  				</p:commandButton>
 				  		</c:otherwise>
 					</c:choose>
-			  </div>			  			
+			 			  			
 			  <!-- <p:commandButton value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" style="float:right;"/> -->			  		  
-		</div>
-		<br/>
-		<br/>		
+				</div>
+				</td>
+				</tr>
+				</table>
 	</p:outputPanel>
 </ui:composition>

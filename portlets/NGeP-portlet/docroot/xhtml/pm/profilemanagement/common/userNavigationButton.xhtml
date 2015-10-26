@@ -9,10 +9,16 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
-		<div class="button-wrapper">
+		<table style="width: 100%">
+		<tr>
+			<td>
+				<div align="left" style="width: 100%">
 			  <p:commandButton value="#{lbl['lbl.btn.back']}" action="#{profileManagementBackingBean.redirectToMainPage}" immediate="true"
 			  	widgetVar="cbBackProfile" id="cbBackProfile" />
-			  <div class="rowBtnRight">
+			 </div>
+			 </td>
+			 <td>
+			 <div align="right" style="width: 100%">
 				   <c:choose>
 				  		<c:when test="#{profileManagementBackingBean.managedBean.isNewUser}">
 				  			<p:commandButton value="#{lbl['lbl.btn.create']}" update="@form" 
@@ -30,9 +36,12 @@
 			  				</p:commandButton>
 				  		</c:otherwise>
 					</c:choose>
-			  </div>			  			
+			 			  			
 			  <!-- <p:commandButton value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" style="float:right;"/> -->			  		  
 		</div>
-		<br/>		
+		</td>
+		</tr>
+		</table>
+				
 	</p:outputPanel>
 </ui:composition>
