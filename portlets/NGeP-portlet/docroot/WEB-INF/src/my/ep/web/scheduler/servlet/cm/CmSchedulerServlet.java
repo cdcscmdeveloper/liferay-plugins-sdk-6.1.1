@@ -13,7 +13,7 @@ import my.ep.web.scheduler.job.cm.CmUpdateExpiredItemJob;
 import my.ep.web.scheduler.job.eperunding.EperundingBatchIntegrationJob;
 import my.ep.web.scheduler.job.gfmas.GfmasBatchFlInboundJob;
 import my.ep.web.scheduler.job.gfmas.GfmasBatchPmInboundJob;
-import my.ep.web.scheduler.job.gfmas.GfmasBatchScInboundJob;
+import my.ep.web.scheduler.job.gfmas.GfmasBatchScOutboundJob;
 import my.ep.web.scheduler.job.gfmas.GfmasBatchSmInboundJob;
 import my.ep.web.scheduler.job.gfmas.GfmasBatchSmOutboundJob;
 import my.ep.web.scheduler.job.phis.PhisBatchCmOutboundJob;
@@ -64,7 +64,7 @@ public class CmSchedulerServlet extends HttpServlet {
 		EpSchedulerHelper.scheduleJob(new JobKey(
 				CmSchedulerConstants.GFMAS_SC_OUT_CONTINUOUS_JOB,
 				CmSchedulerConstants.GFMAS_SC_OUT_JOB_GROUP),
-				GfmasBatchScInboundJob.class, CmSchedulerConstants.GFMAS_SC_CONTINUOUS_JOB_DESC,
+				GfmasBatchScOutboundJob.class, CmSchedulerConstants.GFMAS_SC_CONTINUOUS_JOB_DESC,
 				EpPropertiesUtils.getInstance().getProperty("1gfmas.sc.outbound"));  
 		//GFMAS SM IN bound Continuous job				
 		EpSchedulerHelper.scheduleJob(new JobKey(
