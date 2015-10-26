@@ -773,8 +773,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 
 	}
 	
-/*	//Local testing
-	public void preRenderView(){
+	//Local testing
+/*	public void preRenderView(){
 		if(this.getManagedBean().getSmSvTask() == null){
 			retrieveSiteVisitInfo("");
 		}
@@ -1916,7 +1916,22 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 */
 	public void saveAdditionalMachine(){
 		log.info("-------saveAdditionalMachine--------");
-		this.getManagedBean().setSelectedAdtMachine(new SmSvAdtMachine());
+		
+		SmSvAdtMachine adtMachine = getManagedBean().getSelectedAdtMachine();
+		SmSvAdtMachine oriAdtMachine = getManagedBean().getOriAdtMachine();
+		
+		oriAdtMachine.setBrandName(adtMachine.getBrandName());
+		oriAdtMachine.setGuarantorName(adtMachine.getGuarantorName());
+		oriAdtMachine.setMachineFunction(adtMachine.getMachineFunction());
+		oriAdtMachine.setMachineType(adtMachine.getMachineType());
+		oriAdtMachine.setPurchaseMethod(adtMachine.getPurchaseMethod());
+		oriAdtMachine.setPurchaseMethodRemark(adtMachine.getPurchaseMethodRemark());
+		oriAdtMachine.setPurchaseYear(adtMachine.getPurchaseYear());
+		oriAdtMachine.setQty(adtMachine.getQty());
+		oriAdtMachine.setValue(adtMachine.getValue());
+		
+		RequestContext.getCurrentInstance().execute("adtMacDlg.hide()");
+		//this.getManagedBean().setSelectedAdtMachine(new SmSvAdtMachine());
 	}
 	
 	/**
@@ -1924,7 +1939,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @param SmSvAdtMachine adtMachine
 	 */
 	public void editAdditionalMachine(SmSvAdtMachine adtMachine){
-		this.getManagedBean().setSelectedAdtMachine(adtMachine);
+		getManagedBean().setOriAdtMachine(adtMachine);
+		
+		SmSvAdtMachine svAdtMachine = (SmSvAdtMachine) adtMachine.cloneEntity();
+		this.getManagedBean().setSelectedAdtMachine(svAdtMachine);
 		this.getManagedBean().getSelectedAdtMachine().setNewMachine(false);
 	}
 
