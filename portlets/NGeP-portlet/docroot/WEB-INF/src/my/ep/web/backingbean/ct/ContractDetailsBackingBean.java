@@ -4091,6 +4091,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			reqDTO.setContractVerId(getManagedBean().getLoaContractVerId());
 		    ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 		    getManagedBean().setViewContract(true);
+		    getManagedBean().setAsAtDate(null);
 		    setValidateContractField(resDTO);
 		}
 	}
