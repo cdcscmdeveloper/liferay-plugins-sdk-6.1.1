@@ -1219,7 +1219,7 @@ public class EperundingIntegration extends EperundingTemplate{
 		List<Long> SupplierIdList = null;
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 		reqDTO.setCreateDate(new Date());
-		reqDTO.setSuppType("J");
+		reqDTO.setSuppType(IntegrationConstants.CONSULTANT_PROFILE_CODE);
 		SupplierSearchResDTO resDTO = supplierSearchSO.getModifiedAndNewConsultants(reqDTO);
 		if(resDTO.isSuccessful()){
 			SupplierIdList = new ArrayList<>();
