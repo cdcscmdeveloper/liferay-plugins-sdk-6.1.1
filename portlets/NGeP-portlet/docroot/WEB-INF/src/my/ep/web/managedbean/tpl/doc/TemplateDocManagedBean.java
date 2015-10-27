@@ -76,6 +76,7 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 	private Map<TplDocSection, TreeNode> docSectionMap;
 	
 	private TreeNode [] treenode;
+	private boolean createNew = false;
 	
 	
 
@@ -383,6 +384,16 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 	public void setDocMasterDataModel(IPagingDataModel<TplDocMaster> docMasterDataModel) {
 		this.docMasterDataModel = docMasterDataModel;
 	}
+
+	public boolean isCreateNew() {
+		return createNew;
+	}
+
+	public void setCreateNew(boolean createNew) {
+		this.createNew = createNew;
+	}
+	
+	
 	
 	
 	
