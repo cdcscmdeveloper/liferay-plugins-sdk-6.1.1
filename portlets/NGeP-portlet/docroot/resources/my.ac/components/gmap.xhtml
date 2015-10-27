@@ -14,6 +14,7 @@
 	<cc:attribute name="address" 		required="true" />
 	<cc:attribute name="locationName" 	required="false" />
 	<cc:attribute name="showButton" 	default="true" />
+	<cc:attribute name="disabled" 		default="false" />
 </cc:interface>
 
 <cc:implementation>
@@ -25,7 +26,8 @@
 		latitude="#{cc.attrs.latitude}" 
 		longitude="#{cc.attrs.longitude}" 
 		address="#{cc.attrs.address}"
-		showButton="#{cc.attrs.showButton}" />
+		showButton="#{cc.attrs.showButton}"
+		disabled="#{cc.attrs.disabled}" />
 	
 	<ac:gmapDialog id="gmapDialog" 
 		latitude="#{cc.attrs.latitude}" 
