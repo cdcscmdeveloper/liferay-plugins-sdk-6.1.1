@@ -625,8 +625,8 @@ public class ProfilePersonalizationBackingBean extends
 				throw new EpException(MessageConst.ERROR_770046);
 			}
 			
-			 if(getManagedBean().getSelectedUser().isNotifyBySms() 
-					 && StringUtils.isBlank(getManagedBean().getSelectedUser().getMobileNo())){
+			 if(pmUser.isNotifyBySms() 
+					 && StringUtils.isBlank(pmUser.getMobileNo())){
 				 throw new EpException(MessageConst.ERROR_770090);
 			 }
 

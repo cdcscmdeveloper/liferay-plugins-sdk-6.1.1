@@ -69,7 +69,6 @@ import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserAttachment;
-import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmAddress;
@@ -3593,6 +3592,11 @@ public class ProfileManagementBackingBean extends
 			if (StringUtils.isBlank(pmUser.getPreferredLanguage())) {
 				throw new EpException(MessageConst.ERROR_770046);
 			}
+			
+			 if(pmUser.isNotifyBySms() 
+					 && StringUtils.isBlank(pmUser.getMobileNo())){
+				 throw new EpException(MessageConst.ERROR_770090);
+			 }
 
 			// if (pmUser.getNotifyRemovalDay() == null
 			// || pmUser.getNotifyRemovalDay() <= 0) {
@@ -4887,6 +4891,19 @@ public class ProfileManagementBackingBean extends
 		} else if (getManagedBean().getSearchOrgCategory() == OTHERS) {
 			searchBean = getUserOrgTypeSearchBean("somOtherOrgType");			
 		}
+		
+		if (getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())) {
+			if (this.getManagedBean().getCurrentActiveOrg() != null) {
+				SearchFilterBean orgTypeBean = new SearchFilterBean();
+				orgTypeBean
+						.setSearchOperator(SearchOperator.OPERATOR_EQUALS
+								.value());
+				orgTypeBean.setSearchField("pmParameter.parameterCode");
+				orgTypeBean.setSearchValue(this.getManagedBean()
+						.getCurrentActiveOrg().getOrgCode());
+				searchBean.getDataFilterBeans().add(orgTypeBean);
+			}
+		}
 
 		SelectItem[] items = null;
 		if (searchBean != null) {
@@ -4918,6 +4935,19 @@ public class ProfileManagementBackingBean extends
 				bean.setSearchValue(new ArrayList<String>(Arrays
 						.asList(ProfileManagementConst.ORG_TYPE_EXCLUDE)));
 				searchBean.getDataFilterBeans().add(bean);
+			}
+		}
+		
+		if (getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.PROCUREMENT_ADMIN.value())) {
+			if (this.getManagedBean().getCurrentActiveOrg() != null) {
+				SearchFilterBean orgTypeBean = new SearchFilterBean();
+				orgTypeBean
+						.setSearchOperator(SearchOperator.OPERATOR_EQUALS
+								.value());
+				orgTypeBean.setSearchField("pmParameter.parameterCode");
+				orgTypeBean.setSearchValue(this.getManagedBean()
+						.getCurrentActiveOrg().getOrgCode());
+				searchBean.getDataFilterBeans().add(orgTypeBean);
 			}
 		}
 
@@ -4988,5 +5018,15 @@ public class ProfileManagementBackingBean extends
 			}
 		} 		
 		return isReceivingOfficer;
+	}
+	
+	public void notifySmsChangeListener(){
+		 System.out.println("...........notifySmsChangeListener............");
+		 if(getManagedBean().getSelectedUser().isNotifyBySms() 
+				 && StringUtils.isBlank(getManagedBean().getSelectedUser().getMobileNo())){
+			 getManagedBean().getSelectedUser().setNotifyBySms(false); 
+			 throw new EpException(MessageConst.ERROR_770090);
+		 }
+		this.getManagedBean().getSelectedUser().setModified(true);	
 	}
 }
