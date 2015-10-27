@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<table style="width: 100%">
+		<tr>
+			<td class="TableFieldLeft" style="width: 30%"></td>
+			<td class="TableFieldRight"><p:dataGrid id="catatan"
+					value="#{simpleQuoteBackingBean.managedBean.scQuote.remarks}"
+					var="remarkVar" rowIndexVar="remarkIndex" columns="1">
+					<table>
+						<tr>
+							<td rowspan="2" style="vertical-align: top;" align="left"><h:graphicImage
+									value="#{simpleQuoteBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
+									height="30" width="30" /></td>
+							<td width="5"></td>
+							<td><h:outputText value="#{remarkVar.createdUser.userName}" />,
+								<h:outputText id="remarkDate" value="#{remarkVar.createdDate}">
+									<f:convertDateTime
+										pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+								</h:outputText></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><p:inputTextarea style="width:250px;" id="remarks"
+									label="Remarks" maxlength="1000" value="#{remarkVar.remark}"
+									disabled="#{!isEditable}" rendered="#{remarkIndex==0}" /> <h:outputText
+									value="#{remarkVar.remark}" rendered="#{remarkIndex>0}"
+									style="display: inline-block; width:220px;word-wrap: break-word;" />
+							</td>
+							<td
+								style="vertical-align: top; padding-right: 1px; text-align: right;">
+								<p:message id="remarksMsg" for="remarks" display="icon" />
+							</td>
+						</tr>
+					</table>
+				</p:dataGrid></td>
+		</tr>
+	</table>
+
+</ui:composition>
