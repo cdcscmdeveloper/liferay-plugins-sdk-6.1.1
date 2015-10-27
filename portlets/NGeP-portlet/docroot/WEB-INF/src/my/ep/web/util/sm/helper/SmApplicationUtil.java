@@ -2575,7 +2575,9 @@ public class SmApplicationUtil {
 								DbValueConst.RECORD_STATUS_ACTIVE) == 0) {
 					Calendar sixMonthAftEffDate = new GregorianCalendar();
 					sixMonthAftEffDate.setTime(account.getEffDate());
-					sixMonthAftEffDate.add(Calendar.MONTH, 6);
+					sixMonthAftEffDate.add(Calendar.MONTH, SmRuleHelper
+							.getInstance()
+							.getPersonnelNoneEditableDurationMonths());
 					if (new Date().compareTo(sixMonthAftEffDate.getTime()) < 0) {
 						managedBean.setDisAllowOwnerEdit(true);
 					} else {
@@ -4813,7 +4815,7 @@ public class SmApplicationUtil {
 	}
 
 	/**
-	 * Sets the personnels previously approved director or equity owner.
+	 * Sets the personnels previously approved edit restricted.
 	 * 
 	 * @param smAppl
 	 *            - SmAppl object
@@ -4822,8 +4824,8 @@ public class SmApplicationUtil {
 	 * @param disallowedOwnerEdit
 	 *            - boolean
 	 */
-	public static void setPersonnelsPrevApprovedDirectorEquityOwner(
-			SmAppl smAppl, List<SmPersonnel> prevApprovedPersonnels,
+	public static void setPrevApprovedPersonnelNoneEditable(SmAppl smAppl,
+			List<SmPersonnel> prevApprovedPersonnels,
 			boolean disallowedOwnerEdit) {
 		if (!smAppl.getApplType().equalsIgnoreCase(
 				ParameterConst.NEW_SM_APPLN_FOR_CANCEL)
@@ -4833,7 +4835,7 @@ public class SmApplicationUtil {
 						ParameterConst.NEW_SM_APPLN_FOR_RENEW)
 				&& disallowedOwnerEdit) {
 			for (SmPersonnel currPersonnel : smAppl.getSmPersonnels()) {
-				setPrevDirectorEquityOwner(prevApprovedPersonnels,
+				setPrevApprovedPersonnelNoneEditable(prevApprovedPersonnels,
 						currPersonnel);
 			}
 		}
@@ -4899,17 +4901,15 @@ public class SmApplicationUtil {
 	 * @param personnelParam
 	 *            - SmPersonnel object
 	 */
-	private static void setPrevDirectorEquityOwner(
+	private static void setPrevApprovedPersonnelNoneEditable(
 			List<SmPersonnel> personnels, SmPersonnel personnelParam) {
 		personnelParam.setPrevApprovedDirector(false);
 		personnelParam.setPrevApprovedEquityOwner(false);
 		for (SmPersonnel personnelTmp : personnels) {
 			if (personnelParam.getIdentificationNo().equals(
 					personnelTmp.getIdentificationNo())) {
-				personnelParam.setPrevApprovedDirector(personnelTmp
-						.isDirector());
-				personnelParam.setPrevApprovedEquityOwner(personnelTmp
-						.isEquityOwner());
+				personnelParam.setPrevApprovedDirector(true);
+				personnelParam.setPrevApprovedEquityOwner(true);
 			}
 		}
 	}

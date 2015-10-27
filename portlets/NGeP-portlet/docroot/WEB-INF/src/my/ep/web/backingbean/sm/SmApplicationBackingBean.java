@@ -1624,7 +1624,7 @@ public class SmApplicationBackingBean extends
 					&& !valid) {
 				saveOrUpdateAppl();
 				calculateCapital();
-				SmApplicationUtil.setPersonnelsPrevApprovedDirectorEquityOwner(
+				SmApplicationUtil.setPrevApprovedPersonnelNoneEditable(
 						getManagedBean().getSmAppl(), getManagedBean()
 								.getPrevApprovedPersonnels(), getManagedBean()
 								.isDisAllowOwnerEdit());
@@ -1655,12 +1655,10 @@ public class SmApplicationBackingBean extends
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
 					calcPersonnelListCount();
-					SmApplicationUtil
-							.setPersonnelsPrevApprovedDirectorEquityOwner(
-									getManagedBean().getSmAppl(),
-									getManagedBean()
-											.getPrevApprovedPersonnels(),
-									getManagedBean().isDisAllowOwnerEdit());
+					SmApplicationUtil.setPrevApprovedPersonnelNoneEditable(
+							getManagedBean().getSmAppl(), getManagedBean()
+									.getPrevApprovedPersonnels(),
+							getManagedBean().isDisAllowOwnerEdit());
 					SmApplicationUtil.setPersonnelSoftcertRenewalStatus(this
 							.getManagedBean().getSmSupplier(), this
 							.getManagedBean().getSmAppl().getSmPersonnels());
@@ -1693,12 +1691,10 @@ public class SmApplicationBackingBean extends
 					if (valid) {
 						log.info("*********OUPUT IS CAPITAL PAGE Values is capital *******");
 						calculateCapital();
-						SmApplicationUtil
-								.setPersonnelsPrevApprovedDirectorEquityOwner(
-										getManagedBean().getSmAppl(),
-										getManagedBean()
-												.getPrevApprovedPersonnels(),
-										getManagedBean().isDisAllowOwnerEdit());
+						SmApplicationUtil.setPrevApprovedPersonnelNoneEditable(
+								getManagedBean().getSmAppl(), getManagedBean()
+										.getPrevApprovedPersonnels(),
+								getManagedBean().isDisAllowOwnerEdit());
 						break;
 					}
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC:
@@ -4386,7 +4382,7 @@ public class SmApplicationBackingBean extends
 
 			}
 			saveOrUpdateAppl();
-			SmApplicationUtil.setPersonnelsPrevApprovedDirectorEquityOwner(
+			SmApplicationUtil.setPrevApprovedPersonnelNoneEditable(
 					getManagedBean().getSmAppl(), getManagedBean()
 							.getPrevApprovedPersonnels(), getManagedBean()
 							.isDisAllowOwnerEdit());
@@ -4937,7 +4933,7 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmapplShareHolders().remove(shr);
 			}
 			saveOrUpdateAppl();
-			SmApplicationUtil.setPersonnelsPrevApprovedDirectorEquityOwner(
+			SmApplicationUtil.setPrevApprovedPersonnelNoneEditable(
 					getManagedBean().getSmAppl(), getManagedBean()
 							.getPrevApprovedPersonnels(), getManagedBean()
 							.isDisAllowOwnerEdit());
