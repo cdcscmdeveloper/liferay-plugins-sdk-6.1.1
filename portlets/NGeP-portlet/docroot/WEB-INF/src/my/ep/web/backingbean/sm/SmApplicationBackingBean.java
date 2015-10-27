@@ -4399,6 +4399,7 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getSmAppl(), getManagedBean()
 							.getPrevApprovedPersonnels(), getManagedBean()
 							.isDisAllowOwnerEdit());
+			initGst();
 			if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
 				calculateCapital();
