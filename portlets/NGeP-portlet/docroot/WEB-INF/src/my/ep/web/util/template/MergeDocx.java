@@ -111,6 +111,8 @@ public class MergeDocx {
     	if(log.isDebugEnabled()){
 			log.debug("End mergePreviewAction");
 		}
+    	
+    	System.out.println("==============combinedContentHtml================="+combinedContentHtml);
 		return combinedContentHtml;
 
 	}
