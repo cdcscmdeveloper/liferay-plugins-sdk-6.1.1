@@ -59,13 +59,13 @@
 							<p:ajax update="ofp" event="change" process="@this"
 								listener="#{backingBean.officeFacilitySelected}" />
 						</p:selectOneRadio>
-						<ui:remove>
-							<ac:smFieldChangeAlert 
-								isShow="#{backingBean.managedBean.showFieldChanges}"
-								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.ownershipType}" 
-								currValue="#{backingBean.managedBean.basicCompanyFacility.ownershipType}" 
-								alertValue="#{backingBean.getOwnershipTypeLabel(backingBean.managedBean.latestAppl.hqFacility.ownershipType)}"/>
-						</ui:remove>
+						
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges}"
+							oriValue="#{backingBean.managedBean.latestAppl.hqFacility.ownershipType}" 
+							currValue="#{backingBean.managedBean.basicCompanyFacility.ownershipType}" 
+							alertValue="#{backingBean.getOwnershipTypeLabel(backingBean.managedBean.latestAppl.hqFacility.ownershipType)}"/>
+						
 						<p:message for="ownTypeId" showDetail="false" showSummary="true"
 							display="icon" /></td>
 					<td colspan='2'>&#160;</td>
@@ -90,13 +90,13 @@
 									itemValue="B" />
 
 							</p:selectOneRadio> 
-							<ui:remove>
+							
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
 								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.facilityType}" 
 								currValue="#{backingBean.managedBean.basicCompanyFacility.facilityType}" 
 								alertValue="#{backingBean.getFacTypeLabel(backingBean.managedBean.latestAppl.hqFacility.facilityType)}"/>
-							</ui:remove>
+							
 							<p:message id="rentedFacTypeIdMsg" for="rentedFacTypeId"
 								showSummary="true" showDetail="false" display="icon" /></td>
 					</p:outputPanel>
@@ -116,13 +116,13 @@
 							label="#{lbl['lbl.sm.facility.ownerName']}" maxlength="50"
 							value="#{backingBean.managedBean.basicCompanyFacility.ownerName}"
 							size="35" required="true" /> 
-							<ui:remove>
+							
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
 								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.ownerName}" 
 								currValue="#{backingBean.managedBean.basicCompanyFacility.ownerName}" 
 								alertValue="#{backingBean.managedBean.latestAppl.hqFacility.ownerName}"/>
-							</ui:remove>
+							
 							<p:message id="fcltyOwnerNameMsg"
 							for="fcltyOwnerName" showSummary="true" showDetail="false"
 							display="icon" /></td>
@@ -138,13 +138,13 @@
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 								required="true" yearRange="-99:+0">
 							</p:calendar> 
-							<ui:remove>
+							
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
 								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.purchaseDate}" 
 								currValue="#{backingBean.managedBean.basicCompanyFacility.purchaseDate}" 
 								alertValue="#{backingBean.getDateFormat(backingBean.managedBean.latestAppl.hqFacility.purchaseDate)}"/>
-							</ui:remove>
+							
 							<p:message id="purchaseDateMsg" for="purchaseDate"
 								showSummary="true" showDetail="false" display="icon" />
 						</td>
@@ -165,13 +165,13 @@
 								<p:ajax process="@this" partialSubmit="true"
 									update="@this,rentalMsg" />
 							</p:inputText> 
-							<ui:remove>
+							
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
 								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.rentalRate}" 
 								currValue="#{backingBean.managedBean.basicCompanyFacility.rentalRate}" 
 								alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestAppl.hqFacility.rentalRate)}"/>
-							</ui:remove>
+							
 							<p:message id="rentalMsg" for="rental" showSummary="true"
 								showDetail="false" display="icon" />
 						</td>
@@ -196,13 +196,13 @@
 								<p:ajax process="@this" partialSubmit="true"
 									update="@this,purchasePriceMsg" />
 							</p:inputText> 
-							<ui:remove>
+							
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
 								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.purchasePrice}" 
 								currValue="#{backingBean.managedBean.basicCompanyFacility.purchasePrice}" 
 								alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestAppl.hqFacility.purchasePrice)}"/>
-							</ui:remove>
+							
 							<p:message id="purchasePriceMsg" for="purchasePrice"
 								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
@@ -215,13 +215,13 @@
 						<td><p:inputText id="companyAdd1" size="35" maxlength="35"
 								required="true" label="#{lbl['lbl.sm.companyaddress']}"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address1}" />
-							<ui:remove>
-								<ac:smFieldChangeAlert 
-									isShow="#{backingBean.managedBean.showFieldChanges}"
-									oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.address1}" 
-									currValue="#{backingBean.managedBean.basicCompanyFacility.smAddress.address1}" 
-									alertValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.address1}"/>
-							</ui:remove>
+							
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges}"
+								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.address1}" 
+								currValue="#{backingBean.managedBean.basicCompanyFacility.smAddress.address1}" 
+								alertValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.address1}"/>
+							
 							<p:message id="companyAdd1Msg" for="companyAdd1"
 								showSummary="true" showDetail="false" display="icon" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
@@ -238,13 +238,13 @@
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
 									update="basicOffFacState,basicOffFacDist,basicOffFacCity,postCodeOffFacPanelId" />
 							</p:selectOneMenu> 
-							<ui:remove>
-								<ac:smFieldChangeAlert 
-									isShow="#{backingBean.managedBean.showFieldChanges}"
-									oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.pmCountry.countryId}" 
-									currValue="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryId}" 
-									alertValue="#{backingBean.getCountryLabelById(backingBean.managedBean.latestAppl.hqFacility.smAddress.pmCountry.countryId)}"/>
-							</ui:remove>
+							
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges}"
+								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.pmCountry.countryId}" 
+								currValue="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryId}" 
+								alertValue="#{backingBean.getCountryLabelById(backingBean.managedBean.latestAppl.hqFacility.smAddress.pmCountry.countryId)}"/>
+							
 							<p:message id="cmpnyCntryNameMsg" for="companyCntry"
 								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
@@ -252,13 +252,13 @@
 						<td></td>
 						<td><p:inputText size="35" maxlength="35"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address2}" />
-							<ui:remove>
+							
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
 								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.address2}" 
 								currValue="#{backingBean.managedBean.basicCompanyFacility.smAddress.address2}" 
 								alertValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.address2}"/>
-							</ui:remove>
+							
 						</td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
@@ -275,13 +275,13 @@
 									update="basicOffFacDist,basicOffFacCity" />
 
 							</p:selectOneMenu> 
-							<ui:remove>
+							
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
 								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.pmState.stateId}" 
 								currValue="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmState.stateId}" 
 								alertValue="#{backingBean.getStateLabelById(backingBean.managedBean.latestAppl.hqFacility.smAddress.pmState.stateId)}"/>
-							</ui:remove>
+							
 							<p:message id="basicOffFacStateMsg" for="basicOffFacState"
 								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
@@ -289,13 +289,13 @@
 						<td></td>
 						<td><p:inputText size="35" maxlength="35"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address3}" />
-							<ui:remove>
+							
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
 								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.address3}" 
 								currValue="#{backingBean.managedBean.basicCompanyFacility.smAddress.address3}" 
 								alertValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.address3}"/>
-							</ui:remove>
+							
 						</td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
@@ -311,13 +311,13 @@
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
 									update="basicOffFacCity" />
 							</p:selectOneMenu> 
-							<ui:remove>
+							
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
 								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.pmDistrict.districtId}" 
 								currValue="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict.districtId}" 
 								alertValue="#{backingBean.getDistrictLabelById(backingBean.managedBean.latestAppl.hqFacility.smAddress.pmDistrict.districtId)}"/>
-							</ui:remove>
+							
 							<p:message id="basicOffFacDistMsg" for="basicOffFacDist"
 								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
@@ -325,13 +325,13 @@
 						<td></td>
 						<td><p:inputText size="35" maxlength="35"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address4}" />
-							<ui:remove>
+							
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
 								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.address4}" 
 								currValue="#{backingBean.managedBean.basicCompanyFacility.smAddress.address4}" 
 								alertValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.address4}"/>
-							</ui:remove>
+							
 						</td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
@@ -347,13 +347,13 @@
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
 									update="basicOffFacCity" />
 							</p:selectOneMenu> 
-							<ui:remove>
+							
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
 								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.pmCity.cityId}" 
 								currValue="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmCity.cityId}" 
 								alertValue="#{backingBean.getCityLabelById(backingBean.managedBean.latestAppl.hqFacility.smAddress.pmCity.cityId)}"/>
-							</ui:remove>
+							
 							<p:message id="basicOffFacCityMsg" for="basicOffFacCity"
 								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
@@ -370,13 +370,13 @@
 										size="35">
 										<f:validator validatorId="postcodeValidator" />
 									</p:inputText>
-									<ui:remove>
+									
 									<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges}"
 										oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.postcode}" 
 										currValue="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}" 
 										alertValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.postcode}"/>
-									</ui:remove>
+									
 									<p:message id="companyPostMyCodeMsg" for="companyPostMyCode"
 										showSummary="true" showDetail="false" display="icon" />
 								</p:outputPanel>
@@ -387,13 +387,13 @@
 										value="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}"
 										size="35">
 									</p:inputText>
-									<ui:remove>
+									
 									<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges}"
 										oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.postcode}" 
 										currValue="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}" 
 										alertValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.postcode}"/>
-									</ui:remove>
+									
 									<p:message id="companyPostForeignCodeMsg"
 										for="companyPostForeignCode" showSummary="true"
 										showDetail="false" display="icon" />
