@@ -3,7 +3,10 @@
  */
 package my.ep.web.backingbean.sc.simplequote;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -98,6 +101,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScLocationDivisionCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationStateCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
+import my.ep.persistence.entity.sc.directpurchase.ScQuoteAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScQuoteDoc;
 import my.ep.persistence.entity.sc.directpurchase.ScQuoteSupplier;
 import my.ep.persistence.entity.sc.directpurchase.ScQuoteZone;
@@ -139,6 +143,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.event.TabChangeEvent;
@@ -3322,32 +3327,31 @@ public class SimpleQuoteBackingBean extends
 							getManagedBean().getPageNavToRequestNote());
 		} else {
 			CatalogueBackingBean catalogueBackingBean = new CatalogueBackingBean();
-			TemplateSpecBean productTplSpecBean = getManagedBean()
-					.getProductTemplateSpecBean();
-			TemplateSpecBean serviceTplSpecBean = getManagedBean()
-					.getServiceTemplateSpecBean();
-
-			if (getManagedBean().getScQuote().getPanelItem() != null) {
-				catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(false);
-			} else {
-
-				if (productTplSpecBean.getSpecMaster() != null
-						&& productTplSpecBean.getSpecMaster()
-								.getTplSpecQuestions() != null
-						&& productTplSpecBean.getSpecMaster()
-								.getTplSpecQuestions().size() > 0
-						|| serviceTplSpecBean.getSpecMaster() != null
-						&& serviceTplSpecBean.getSpecMaster()
-								.getTplSpecQuestions() != null
-						&& serviceTplSpecBean.getSpecMaster()
-								.getTplSpecQuestions().size() > 0) {
-					catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(
-							false);
-				} else {
-					catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(
-							true);
-				}
-			}
+			/*
+			 * TemplateSpecBean productTplSpecBean = getManagedBean()
+			 * .getProductTemplateSpecBean(); TemplateSpecBean
+			 * serviceTplSpecBean = getManagedBean()
+			 * .getServiceTemplateSpecBean();
+			 * 
+			 * if (getManagedBean().getScQuote().getPanelItem() != null) {
+			 * catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(false);
+			 * } else {
+			 * 
+			 * if (productTplSpecBean.getSpecMaster() != null &&
+			 * productTplSpecBean.getSpecMaster() .getTplSpecQuestions() != null
+			 * && productTplSpecBean.getSpecMaster()
+			 * .getTplSpecQuestions().size() > 0 ||
+			 * serviceTplSpecBean.getSpecMaster() != null &&
+			 * serviceTplSpecBean.getSpecMaster() .getTplSpecQuestions() != null
+			 * && serviceTplSpecBean.getSpecMaster()
+			 * .getTplSpecQuestions().size() > 0) {
+			 * catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(false);
+			 * } else {
+			 * catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(true);
+			 * } }
+			 */
+			
+			catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(Boolean.FALSE);
 
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, "catalogueSearch");
@@ -5969,6 +5973,84 @@ public class SimpleQuoteBackingBean extends
 
 		}
 		return gstDate;
+	}
+	
+	
+	/**
+	 * handleFileUpload event for file upload in pid.
+	 * 
+	 * @param event
+	 *            the event
+	 * @throws FileNotFoundException
+	 *             the file not found exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public void handleFileUpload(FileUploadEvent event)
+			throws FileNotFoundException, IOException {
+		debugLogger("handleFileUpload");
+		FacesScopes facesScopes = new FacesScopes();
+		if (event.getFile() != null) {
+			ScQuote scQuote = getManagedBean().getScQuote();
+			ScQuoteAttachment attachment = scQuote.getScQuoteAttachment();
+			if (null == attachment) {
+				attachment = new ScQuoteAttachment();
+				attachment.setScQuote(scQuote);
+			}
+
+			attachment.setDocNo(scQuote.getQuoteNo());
+			attachment
+					.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			attachment.setCreatedUser(facesScopes.getUserSessionBean());
+
+			uploadAttachment(event.getFile(), attachment);
+			scQuote.setScQuoteAttachment(attachment);
+		}
+	}
+
+	/**
+	 * show the attached icon based on attached type file
+	 * 
+	 * @param attachment
+	 *            the attachment
+	 * @return the string
+	 */
+	public String determineIcon(ScQuoteAttachment attachment) {
+		debugLogger("determineIcon");
+		String imageFileName = "icon_file_default.png";
+		String ext = "";
+
+		if (attachment != null) {
+			String fileName = attachment.getFileName();
+
+			if (fileName != null) {
+				int mid = fileName.lastIndexOf(".");
+				ext = fileName.substring(mid + 1, fileName.length());
+			}
+
+			if ("doc".equals(ext) || "docx".equals(ext)) {
+				imageFileName = "icon_doc.png";
+			} else if ("pdf".equals(ext)) {
+				imageFileName = "icon_pdf.png";
+			} else if ("xls".equals(ext) || "xlsx".equals(ext)
+					|| "csv".equals(ext)) {
+				imageFileName = "icon_exel.png";
+			} else if ("jpg".equals(ext) || "bmp".equals(ext)
+					|| "png".equals(ext) || "gif".equals(ext)) {
+				imageFileName = "icon_image.png";
+			} else if ("txt".equals(ext)) {
+				imageFileName = "icon_txt.png";
+			}
+		}
+		return imageFileName;
+	}
+
+	/**
+	 * delete uploaded file in purchase in default
+	 */
+	public void deleteUploadFile() {
+		debugLogger("deleteUploadFile");
+		getManagedBean().getScQuote().setScQuoteAttachment(null);
 	}
 
 	/**
