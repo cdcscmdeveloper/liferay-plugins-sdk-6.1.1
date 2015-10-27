@@ -247,14 +247,18 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	public String getInactivePopUpMsg() {
-		log.info(".........getInactivePopUpMsg.........");
-		return PmCommonUtil.getMessage("lbl.pm.inactive.popUp.msg",
+//		log.info(".........getInactivePopUpMsg.........");
+		if(this.getManagedBean().getSelectedRuleType() != null){
+			return PmCommonUtil.getMessage("lbl.pm.inactive.popUp.msg",
 				new String[] { this.getManagedBean().getSelectedRuleType()
 						.getRuleTypeDesc() });
+		}
+		
+		return "";
 	}
 
 	public String getInactiveFeeOrgPopUpMsg() {
-		log.info(".........getInactiveFeeOrgPopUpMsg.........");
+//		log.info(".........getInactiveFeeOrgPopUpMsg.........");
 		if (this.getCurrentIndexVal() != null) {
 			PmFeeExemption selectedFee = this.getManagedBean()
 					.getFeeExemptionsForOrgAndItem()
