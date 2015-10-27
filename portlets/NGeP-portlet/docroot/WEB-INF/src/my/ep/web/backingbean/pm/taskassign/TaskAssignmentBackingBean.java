@@ -160,7 +160,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			bean.setSearchValue(new ArrayList(Arrays.asList(ProfileManagementConst.TASK_ASSIGNMENT_ORG_TYPE_INCLUDE)));
 			orgTypeSearchBean.getDataFilterBeans().add(bean);
 			
-			if(getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())){
+			if(getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.PROCUREMENT_ADMIN.value())){
 				if(this.getManagedBean().getCurrentActiveOrg()!=null){
 					SearchFilterBean orgTypeBean = new SearchFilterBean();
 					orgTypeBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
