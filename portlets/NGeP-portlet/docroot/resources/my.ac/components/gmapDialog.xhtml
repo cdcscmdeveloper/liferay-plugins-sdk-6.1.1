@@ -22,8 +22,8 @@
 		<p:dialog id="gmapDialogId" 
 			header="#{lbl['lbl.gmap.dialog.title']}"
 			widgetVar="dlg" 
-			width="625" 
-			height="400" 
+			width="800" 
+			height="500" 
 			modal="true" 
 			resizable="false"
 			onHide="disableMap();">
@@ -34,7 +34,7 @@
 			 		center="#{cc.attrs.latitude}, #{cc.attrs.longitude}" 
 			 		zoom="15" 
 			 		type="HYBRID" 
-			 		style="width:100%;height:400px"
+			 		style="width:100%;height:490px"
 					rendered="#{gmapBackingBean.renderMap}"
 			 		model="#{gmapBackingBean.retSimpleModel(cc.attrs.latitude, cc.attrs.longitude, cc.attrs.locationName)}" />
 			 		
