@@ -5193,7 +5193,8 @@ public class SupplierFinalizationBackingBean extends
 		List<TplSpecZoneDtl> zoneDtls 
 					= this.getManagedBean().getZoneDetails();
 		if (CollectionUtils.isNotEmpty(zoneDtls)) {
-
+			Map<Long,TplSpecZoneDtl> zoneMap = new HashMap<Long,TplSpecZoneDtl>();
+			
 			// Dynamically generating the tabs
 			MenuModel zoneMenuModel = new DefaultMenuModel();
 			if (CollectionUtils.isNotEmpty(zoneDtls)) {
@@ -5213,7 +5214,10 @@ public class SupplierFinalizationBackingBean extends
 							+ zoneTabIndex + "}]); blockWidget.hide();");
 					zoneMenuModel.addMenuItem(zoneItem);
 					++zoneTabIndex;
+					zoneMap.put(specZoneDtl.getSpecZoneId(), specZoneDtl);
 				}
+				this.getManagedBean().setZoneMap(zoneMap);
+				
 				List<ScQtEvaluationResultDtl> shortlistedSuppliers 
 							= getShortlistedSuppliersByZone(this.getManagedBean().getCurrentZone());
 				this.getManagedBean().setShortlistedSupplierList(shortlistedSuppliers);
@@ -6686,7 +6690,6 @@ public class SupplierFinalizationBackingBean extends
 		}	
 		
 		if (!supplierSelected) {
-			setZoneAndTabIndexOnException(zoneDtl);
 			String recommendByDesc = getParameterDesc(finalizationMethod);
 			setZoneAndTabIndexOnException(zoneDtl);
 			
@@ -6826,6 +6829,7 @@ public class SupplierFinalizationBackingBean extends
 					= this.getManagedBean().getZoneDetails();
 		if (zoneDtl != null && 
 				CollectionUtils.isNotEmpty(specZoneDtls)) {
+			zoneDtl = getManagedBean().getZoneMap().get(zoneDtl.getSpecZoneId());
 			this.getManagedBean().setZoneActiveIndex(
 					zoneDtl.getZoneTabIndex());
 			onZoneTabChangeAction(zoneDtl.getZoneTabIndex());
