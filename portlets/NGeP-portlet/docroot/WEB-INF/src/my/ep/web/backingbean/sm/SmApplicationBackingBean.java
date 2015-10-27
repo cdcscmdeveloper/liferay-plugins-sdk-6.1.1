@@ -3467,6 +3467,19 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
+	 * Action to Approve all supporting document by PO or Approver.
+	 */
+	public void approveAllSuppDocByPOorApprover() {
+		if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getSmAppl()
+				.getSmApplSupportDocs())) {
+			for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
+					.getSmApplSupportDocs()) {
+				doc.setVerifiedFlg(1);
+			}
+		}
+	}
+
+	/**
 	 * Delete selected category codes from the SmSupplierCategory list of the
 	 * application.
 	 */

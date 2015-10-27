@@ -35,7 +35,13 @@
 						<td><h:outputText value="#{lbl['lbl.sm.suppDoc.reviewNote']}"
 								style="float :left" escape="false" /> <h:inputHidden
 								value="#{backingBean.managedBean.smAppl.applCategoryType}" /> <p:spacer
-								height="10px" /></td>
+								height="10px" />
+							<p:commandButton value="#{lbl['lbl.sm.valid.all']}" style="float:right;" 
+								rendered="#{not empty backingBean.managedBean.smAppl.smApplSupportDocs}"
+								update="@form" process="@this" partialSubmit="true"
+				    			onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+				    			action="#{backingBean.approveAllSuppDocByPOorApprover}"/>
+						</td>
 					</tr>
 					<tr>
 						<td><c:if
