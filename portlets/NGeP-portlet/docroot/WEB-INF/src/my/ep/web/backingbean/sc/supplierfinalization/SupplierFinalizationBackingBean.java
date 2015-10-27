@@ -3295,11 +3295,11 @@ public class SupplierFinalizationBackingBean extends
 							shortlistedSupppliersByZone = resDTO.getQualifiedByPackageMap();
 					
 					// disabled supplier selection by zone.
-					for (List<ScQtEvaluationResultDtl> shortlistedPackageList 
-											: shortlistedSupppliersByZone.values()) {
+					for (Long specZoneId : shortlistedSupppliersByZone.keySet()) {
 						disableRejectedSupplierByPackage(
-								scQtFinalization.getScQtRecommends(), shortlistedPackageList);
-					}
+								scQtFinalization.getScQtRecommendsByZone().get(specZoneId), 
+								shortlistedSupppliersByZone.get(specZoneId));
+					}					
 
 					this.getManagedBean().setShortlistedSupppliersByZone(
 							shortlistedSupppliersByZone);
