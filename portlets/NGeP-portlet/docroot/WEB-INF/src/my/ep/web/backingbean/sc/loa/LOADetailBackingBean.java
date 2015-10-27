@@ -4684,23 +4684,18 @@ public class LOADetailBackingBean extends
 
 			BigDecimal durationMnth = null;
 			BigDecimal noOfMnth = new BigDecimal(12);
-			ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
-			if (scLoiLoa.getScLois() != null) {
-				for (ScLoi scLoi : scLoiLoa.getScLois()) {
-					for (ScLoiLoaItem loiLoaItem : scLoi.getScLoiLoaItems()) {
-						TplSpecQuestion specQuestion = loiLoaItem
-								.getScRequestItem().getTplSpecQuestion();
-						if (specQuestion != null) {
-							TplSpecMaster specMaster = specQuestion.getTplSpecMaster();
-							if (specMaster.getItemTypeCode().getParameterCode()
-									.compareTo(ParameterConst.ITEM_TYPE_SERVICE) == 0) {
-								durationMnth = specQuestion.getTplSpecMaster()
-										.getDurationMonth();
-								break;
-							}
-
-						}
+			for (ScLoiLoaItem loiLoaItem : scLoa.getScLoiLoaItems()) {
+				TplSpecQuestion specQuestion = loiLoaItem.getScRequestItem()
+						.getTplSpecQuestion();
+				if (specQuestion != null) {
+					TplSpecMaster specMaster = specQuestion.getTplSpecMaster();
+					if (specMaster.getItemTypeCode().getParameterCode()
+							.compareTo(ParameterConst.ITEM_TYPE_SERVICE) == 0) {
+						durationMnth = specQuestion.getTplSpecMaster()
+								.getDurationMonth();
+						break;
 					}
+
 				}
 			}
 			if (durationMnth != null) {
