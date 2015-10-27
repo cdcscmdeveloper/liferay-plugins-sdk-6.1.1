@@ -7,11 +7,11 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 		
 	<ui:param name="isZonal" value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.zonal}" />
-	<ui:param name="isBiddingAward" value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.recommendBy.parameterCode eq ParameterConst.recommendByOnlineBidding}" />
-	<ui:param name="isAwardMultiple" value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.recommendBy.parameterCode eq ParameterConst.recommendByMultipleAward}" />
-	<ui:param name="isAwardSingle" value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.recommendBy.parameterCode eq ParameterConst.recommendBySingleAward}" />
-   	<ui:param name="isMultipleLOI" value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.recommendBy.parameterCode eq ParameterConst.recommendByMultipleLoi}" />
-   	<ui:param name="isAward" value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.recommendBy.parameterCode eq ParameterConst.recommendByAward}" />
+	<ui:param name="isBiddingAward" value="#{lOIDetailBackingBean.managedBean.scLoi.recommendBy.parameterCode eq ParameterConst.recommendByOnlineBidding}" />
+	<ui:param name="isAwardMultiple" value="#{lOIDetailBackingBean.managedBean.scLoi.recommendBy.parameterCode eq ParameterConst.recommendByMultipleAward}" />
+	<ui:param name="isAwardSingle" value="#{lOIDetailBackingBean.managedBean.scLoi.recommendBy.parameterCode eq ParameterConst.recommendBySingleAward}" />
+   	<ui:param name="isMultipleLOI" value="#{lOIDetailBackingBean.managedBean.scLoi.recommendBy.parameterCode eq ParameterConst.recommendByMultipleLoi}" />
+   	<ui:param name="isAward" value="#{lOIDetailBackingBean.managedBean.scLoi.recommendBy.parameterCode eq ParameterConst.recommendByAward}" />
 	<ui:param name="lblAfterNegoOrBidding" value="#{isBiddingAward ? 'lbl.sc.loiloa.loi.after.bidding.offer.price' : 'lbl.sc.loiloa.after.nego.offer.price'}" />
 		
 	<p:panel header="#{lbl['lbl.sc.loiloa.award.details']}"
@@ -29,14 +29,8 @@
 				<td style="width: 250px;"><p:outputLabel
 						value="#{lbl['lbl.sc.recommend.by']}" /></td>
 				<td><p:inputText disabled="true"
-						rendered="#{isBiddingAward or isMultipleLOI}"
-						value="#{lOIDetailBackingBean.getParameterDesc(lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.recommendBy)}"
-						size="30" /> 
-						
-					<p:inputText disabled="true"
-						rendered="#{isAwardMultiple or isAwardSingle or isAward}"
-						value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.directAward)}"
-						size="30" /></td>
+						value="#{lOIDetailBackingBean.getParameterDesc(lOIDetailBackingBean.managedBean.scLoi.recommendBy)}"
+						size="30" /> </td>
 			</tr>
 		</table>
 	</p:panel>
