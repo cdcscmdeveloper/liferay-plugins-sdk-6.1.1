@@ -794,6 +794,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			try {
 				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 				reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+				searchBean.setUseEntityClass(true);
 				reqDTO.setPendingDoSearchBean(searchBean);
 				IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 				FulfilmentResDTO resDTO = orderSO.searchPendingDoList(reqDTO);
