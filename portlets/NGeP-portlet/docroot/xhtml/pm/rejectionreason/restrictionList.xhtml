@@ -87,7 +87,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					   	</p:dataTable>
 				   		
 				   		<div class="ppRightBtn">
-							<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"  update="dtComType"
+							<p:commandButton value="#{lbl['lbl.btn.add']}" update="dtComType"
 								action="#{rejectionReasonBackingBean.addRestriction(ParameterTypeConst.financialOrgRegType)}"
 								partialSubmit="true" process="@this"/>
 							
@@ -128,7 +128,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					   	</p:dataTable>
 					   
 				   		<div class="ppRightBtn">
-							<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"  update="dtSuppType"
+							<p:commandButton value="#{lbl['lbl.btn.add']}" update="dtSuppType"
 								action="#{rejectionReasonBackingBean.addRestriction(ParameterTypeConst.supplierTypes)}"
 								partialSubmit="true" process="@this"/>
 						
