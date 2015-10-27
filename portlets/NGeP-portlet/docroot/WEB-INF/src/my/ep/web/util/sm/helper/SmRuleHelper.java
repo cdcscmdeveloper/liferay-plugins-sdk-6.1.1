@@ -55,13 +55,12 @@ public class SmRuleHelper {
 	}
 
 	/**
-	 * Duration restrict to maintain Directors/Shareholders after new MOF
-	 * registration. 6 Months
+	 * Duration restriction to maintain Personnel after approved (6 Months)
 	 * 
 	 * @return
 	 */
-	public int getMaintainRestrictedDays() {
-		return 180;
+	public int getPersonnelNoneEditableDurationMonths() {
+		return 6;
 	}
 
 	public int getRenewalNotificationDays() {
