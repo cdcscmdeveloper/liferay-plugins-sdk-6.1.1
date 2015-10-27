@@ -17,8 +17,13 @@
 
 <cc:implementation>
 <h:panelGroup id="#{cc.attrs.id}">
-	<p:fieldset legend="#{lbl['lbl.gmap.panel.title']}" style="margin-bottom:20px">
-  		
+	<fieldset style="margin-bottom:20px; border: 1px solid #E8E8E8; padding: 0.6em 1em;">
+	
+		<legend style="background: rgb(220, 220, 220); width: auto; padding: 0.6em 1em; border: 1px solid #E8E8E8; font-weight: bold; margin-bottom: 0px; font-size: 12px;">
+			#{lbl['lbl.gmap.panel.title']}
+		</legend>
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.gmap.instruction']}" escape="false" />
+  		<div class="ui-fieldset-content">
 		x: <p:inputText id="plat" value="#{cc.attrs.latitude}" />
 		
 		y: <p:inputText id="plng" value="#{cc.attrs.longitude}" />
@@ -39,8 +44,9 @@
 			process="plat, plng" 
 			update="@([id$=mapPanel])" 
 			oncomplete="dlg.show();" />
+		</div>
 			
-	</p:fieldset>	
+	</fieldset>	
 </h:panelGroup>	
 </cc:implementation>
 </ui:composition>
