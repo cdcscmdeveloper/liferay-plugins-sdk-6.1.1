@@ -68,72 +68,91 @@
 						</ui:remove>
 						<p:message for="ownTypeId" showDetail="false" showSummary="true"
 							display="icon" /></td>
-					<td>&#160;</td>
-					<td>&#160;</td>
-
+					<td colspan='2'>&#160;</td>
 				</tr>
-				<c:if
-					test="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
-					<tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sm.facility.facilityType']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+
+					<p:outputPanel
+						rendered="#{!backingBean.managedBean.disabledHomeOffice}">
+						<td style="padding-bottom: 4px;"><p:selectOneRadio
+								id="rentedFacTypeId"
+								value="#{backingBean.managedBean.basicCompanyFacility.facilityType}"
+								required="true" label="#{lbl['lbl.sm.facility.facilityType']}">
+								<f:selectItem
+									itemLabel="#{lbl['lbl.sm.facility.facilityType.home.office']}"
+									itemValue="H" />
+
+								<f:selectItem
+									itemLabel="#{lbl['lbl.sm.facility.facilityType.business.office']}"
+									itemValue="B" />
+
+							</p:selectOneRadio> 
+							<ui:remove>
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges}"
+								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.facilityType}" 
+								currValue="#{backingBean.managedBean.basicCompanyFacility.facilityType}" 
+								alertValue="#{backingBean.getFacTypeLabel(backingBean.managedBean.latestAppl.hqFacility.facilityType)}"/>
+							</ui:remove>
+							<p:message id="rentedFacTypeIdMsg" for="rentedFacTypeId"
+								showSummary="true" showDetail="false" display="icon" /></td>
+					</p:outputPanel>
+					<p:outputPanel
+						rendered="#{backingBean.managedBean.disabledHomeOffice}">
+						<td><p:outputLabel styleClass="outputLabel-view"
+								value="#{lbl['lbl.sm.facility.facilityType.business.office']}"></p:outputLabel>
+						</td>
+					</p:outputPanel>
+					<td colspan='2'>&#160;</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'?
+							lbl['lbl.sm.facility.landLordName']:lbl['lbl.sm.facility.ownerName']}" /> 
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:inputText id="fcltyOwnerName"
+							label="#{lbl['lbl.sm.facility.ownerName']}" maxlength="50"
+							value="#{backingBean.managedBean.basicCompanyFacility.ownerName}"
+							size="35" required="true" /> 
+							<ui:remove>
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges}"
+								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.ownerName}" 
+								currValue="#{backingBean.managedBean.basicCompanyFacility.ownerName}" 
+								alertValue="#{backingBean.managedBean.latestAppl.hqFacility.ownerName}"/>
+							</ui:remove>
+							<p:message id="fcltyOwnerNameMsg"
+							for="fcltyOwnerName" showSummary="true" showDetail="false"
+							display="icon" /></td>
+					<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'O'}">
 						<td><p:outputLabel
-								value="#{lbl['lbl.sm.facility.facilityType']}" /> <p:outputLabel
+								value="#{lbl['lbl.sm.facility.purchaseDate']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
-
-						<p:outputPanel
-							rendered="#{!backingBean.managedBean.disabledHomeOffice}">
-							<td colspan="3" style="padding-bottom: 4px;"><p:selectOneRadio
-									id="rentedFacTypeId"
-									value="#{backingBean.managedBean.basicCompanyFacility.facilityType}"
-									required="true" label="#{lbl['lbl.sm.facility.facilityType']}">
-									<f:selectItem
-										itemLabel="#{lbl['lbl.sm.facility.facilityType.home.office']}"
-										itemValue="H" />
-
-									<f:selectItem
-										itemLabel="#{lbl['lbl.sm.facility.facilityType.business.office']}"
-										itemValue="B" />
-
-								</p:selectOneRadio> 
-								<ui:remove>
-									<ac:smFieldChangeAlert 
-										isShow="#{backingBean.managedBean.showFieldChanges}"
-										oriValue="#{backingBean.managedBean.latestAppl.hqFacility.facilityType}" 
-										currValue="#{backingBean.managedBean.basicCompanyFacility.facilityType}" 
-										alertValue="#{backingBean.getFacTypeLabel(backingBean.managedBean.latestAppl.hqFacility.facilityType)}"/>
-								</ui:remove>
-								<p:message id="rentedFacTypeIdMsg" for="rentedFacTypeId"
-									showSummary="true" showDetail="false" display="icon" /></td>
-						</p:outputPanel>
-						<p:outputPanel
-							rendered="#{backingBean.managedBean.disabledHomeOffice}">
-							<td colspan="3"><p:outputLabel styleClass="outputLabel-view"
-									value="#{lbl['lbl.sm.facility.facilityType.business.office']}"></p:outputLabel>
-							</td>
-						</p:outputPanel>
-
-					</tr>
-					<tr>
+						<td style="padding-bottom: 3px;"><p:calendar showOn="button"
+								id="purchaseDate" navigator="true" readonlyInput="true"
+								display="inline" maxdate="#{CommonConstants.CURRENT_DATE}"
+								label="#{lbl['lbl.sm.facility.purchaseDate']}"
+								value="#{backingBean.managedBean.basicCompanyFacility.purchaseDate}"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								required="true" yearRange="-99:+0">
+							</p:calendar> 
+							<ui:remove>
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges}"
+								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.purchaseDate}" 
+								currValue="#{backingBean.managedBean.basicCompanyFacility.purchaseDate}" 
+								alertValue="#{backingBean.getDateFormat(backingBean.managedBean.latestAppl.hqFacility.purchaseDate)}"/>
+							</ui:remove>
+							<p:message id="purchaseDateMsg" for="purchaseDate"
+								showSummary="true" showDetail="false" display="icon" />
+						</td>
+					</p:outputPanel>
+					<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
 						<td><p:outputLabel
-								value="#{lbl['lbl.sm.facility.landLordName']}" /> <p:outputLabel
-								value="*" styleClass="mandatory" /></td>
-						<td><p:inputText id="landlordName"
-								value="#{backingBean.managedBean.basicCompanyFacility.ownerName}"
-								size="35" required="true" maxlength="50"
-								label="#{lbl['lbl.sm.facility.landLordName']}" /> 
-								<ui:remove>
-									<ac:smFieldChangeAlert 
-										isShow="#{backingBean.managedBean.showFieldChanges}"
-										oriValue="#{backingBean.managedBean.latestAppl.hqFacility.ownerName}" 
-										currValue="#{backingBean.managedBean.basicCompanyFacility.ownerName}" 
-										alertValue="#{backingBean.managedBean.latestAppl.hqFacility.ownerName}"/>
-								</ui:remove>
-								<p:message
-								id="landlordNameMsg" for="landlordName" showSummary="true"
-								showDetail="false" display="icon" /></td>
-						<td><p:outputLabel
-								value="#{lbl['lbl.sm.facility.monthRent']}" /> <p:outputLabel
-								value="*" styleClass="mandatory" /></td>
-						<td><p:inputText id="rental"
+									value="#{lbl['lbl.sm.facility.monthRent']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
+						<td><p:inputText id="rental" rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}"
 								value="#{backingBean.managedBean.basicCompanyFacility.rentalRate}"
 								size="35" required="true" maxlength="17"
 								validatorMessage="#{lbl['lbl.sm.facility.monthRent']} - #{lbl['lbl.sm.minAmt.validMsg']}"
@@ -154,8 +173,41 @@
 								alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestAppl.hqFacility.rentalRate)}"/>
 							</ui:remove>
 							<p:message id="rentalMsg" for="rental" showSummary="true"
-								showDetail="false" display="icon" /></td>
+								showDetail="false" display="icon" />
+						</td>
+					</p:outputPanel>
+				</tr>
+				<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'O'}">
+					<tr>
+						<td colspan='2'>&#160;</td>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sm.facility.purchasePrice']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:inputText size="35" id="purchasePrice" maxlength="17"
+								label="#{lbl['lbl.sm.facility.purchasePrice']}"
+								validatorMessage="#{lbl['lbl.sm.facility.purchasePrice']} - #{lbl['lbl.sm.minAmt.validMsg']}"
+								value="#{backingBean.managedBean.basicCompanyFacility.purchasePrice}"
+								required="true">
+								<f:validateDoubleRange
+									minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
+									maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								<p:ajax process="@this" partialSubmit="true"
+									update="@this,purchasePriceMsg" />
+							</p:inputText> 
+							<ui:remove>
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges}"
+								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.purchasePrice}" 
+								currValue="#{backingBean.managedBean.basicCompanyFacility.purchasePrice}" 
+								alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestAppl.hqFacility.purchasePrice)}"/>
+							</ui:remove>
+							<p:message id="purchasePriceMsg" for="purchasePrice"
+								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
+				</p:outputPanel>
+				<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}"
 								style="padding-top :5px;" /> <p:outputLabel value="*"
@@ -349,127 +401,9 @@
 							</p:outputPanel></td>
 						<td colspan="2"></td>
 					</tr>
-
-				</c:if>
-				<c:if
-					test="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'O'}">
-					<tr>
-						<td><p:outputLabel
-								value="#{lbl['lbl.sm.facility.facilityType']}" /> <p:outputLabel
-								value="*" styleClass="mandatory" /></td>
-
-						<p:outputPanel
-							rendered="#{!backingBean.managedBean.disabledHomeOffice}">
-							<td style="padding-bottom: 4px;"><p:selectOneRadio
-									id="rentedFacTypeId"
-									value="#{backingBean.managedBean.basicCompanyFacility.facilityType}"
-									required="true" label="#{lbl['lbl.sm.facility.facilityType']}">
-									<f:selectItem
-										itemLabel="#{lbl['lbl.sm.facility.facilityType.home.office']}"
-										itemValue="H" />
-
-									<f:selectItem
-										itemLabel="#{lbl['lbl.sm.facility.facilityType.business.office']}"
-										itemValue="B" />
-
-								</p:selectOneRadio> 
-								<ui:remove>
-								<ac:smFieldChangeAlert 
-									isShow="#{backingBean.managedBean.showFieldChanges}"
-									oriValue="#{backingBean.managedBean.latestAppl.hqFacility.facilityType}" 
-									currValue="#{backingBean.managedBean.basicCompanyFacility.facilityType}" 
-									alertValue="#{backingBean.getFacTypeLabel(backingBean.managedBean.latestAppl.hqFacility.facilityType)}"/>
-								</ui:remove>
-								<p:message id="rentedFacTypeIdMsg" for="rentedFacTypeId"
-									showSummary="true" showDetail="false" display="icon" /></td>
-						</p:outputPanel>
-						<p:outputPanel
-							rendered="#{backingBean.managedBean.disabledHomeOffice}">
-							<td><p:outputLabel styleClass="outputLabel-view"
-									value="#{lbl['lbl.sm.facility.facilityType.business.office']}"></p:outputLabel>
-							</td>
-						</p:outputPanel>
-						<td>&#160;</td>
-						<td>&#160;</td>
-					</tr>
-					<tr>
-						<td><p:outputLabel
-								value="#{lbl['lbl.sm.facility.ownerName']}" /> <p:outputLabel
-								value="*" styleClass="mandatory" /></td>
-						<td><p:inputText id="fcltyOwnerName"
-								label="#{lbl['lbl.sm.facility.ownerName']}" maxlength="50"
-								value="#{backingBean.managedBean.basicCompanyFacility.ownerName}"
-								size="35" required="true" /> 
-								<ui:remove>
-								<ac:smFieldChangeAlert 
-									isShow="#{backingBean.managedBean.showFieldChanges}"
-									oriValue="#{backingBean.managedBean.latestAppl.hqFacility.ownerName}" 
-									currValue="#{backingBean.managedBean.basicCompanyFacility.ownerName}" 
-									alertValue="#{backingBean.managedBean.latestAppl.hqFacility.ownerName}"/>
-								</ui:remove>
-								<p:message id="fcltyOwnerNameMsg"
-								for="fcltyOwnerName" showSummary="true" showDetail="false"
-								display="icon" /></td>
-						<td>&#160;</td>
-						<td>&#160;</td>
-					</tr>
-					<tr>
-						<td><p:outputLabel
-								value="#{lbl['lbl.sm.facility.purchaseDate']}" /> <p:outputLabel
-								value="*" styleClass="mandatory" /></td>
-						<td style="padding-bottom: 3px;"><p:calendar showOn="button"
-								id="purchaseDate" navigator="true" readonlyInput="true"
-								display="inline" maxdate="#{CommonConstants.CURRENT_DATE}"
-								label="#{lbl['lbl.sm.facility.purchaseDate']}"
-								value="#{backingBean.managedBean.basicCompanyFacility.purchaseDate}"
-								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-								required="true" yearRange="-99:+0">
-							</p:calendar> 
-							<ui:remove>
-							<ac:smFieldChangeAlert 
-								isShow="#{backingBean.managedBean.showFieldChanges}"
-								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.purchaseDate}" 
-								currValue="#{backingBean.managedBean.basicCompanyFacility.purchaseDate}" 
-								alertValue="#{backingBean.getDateFormat(backingBean.managedBean.latestAppl.hqFacility.purchaseDate)}"/>
-							</ui:remove>
-							<p:message id="purchaseDateMsg" for="purchaseDate"
-								showSummary="true" showDetail="false" display="icon" /></td>
-						<td>&#160;</td>
-						<td>&#160;</td>
-					</tr>
-					<tr>
-						<td><p:outputLabel
-								value="#{lbl['lbl.sm.facility.purchasePrice']}" /> <p:outputLabel
-								value="*" styleClass="mandatory" /></td>
-						<td><p:inputText size="35" id="purchasePrice" maxlength="17"
-								label="#{lbl['lbl.sm.facility.purchasePrice']}"
-								validatorMessage="#{lbl['lbl.sm.facility.purchasePrice']} - #{lbl['lbl.sm.minAmt.validMsg']}"
-								value="#{backingBean.managedBean.basicCompanyFacility.purchasePrice}"
-								required="true">
-								<f:validateDoubleRange
-									minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
-									maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
-								<f:convertNumber
-									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-								<p:ajax process="@this" partialSubmit="true"
-									update="@this,purchasePriceMsg" />
-							</p:inputText> 
-							<ui:remove>
-							<ac:smFieldChangeAlert 
-								isShow="#{backingBean.managedBean.showFieldChanges}"
-								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.purchasePrice}" 
-								currValue="#{backingBean.managedBean.basicCompanyFacility.purchasePrice}" 
-								alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestAppl.hqFacility.purchasePrice)}"/>
-							</ui:remove>
-							<p:message id="purchasePriceMsg" for="purchasePrice"
-								showSummary="true" showDetail="false" display="icon" /></td>
-						<td>&#160;</td>
-						<td>&#160;</td>
-					</tr>
-
-				</c:if>
+				</p:outputPanel>
+				
 				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
-
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td colspan="3"><p:inputTextarea autoResize="false" cols="41"
