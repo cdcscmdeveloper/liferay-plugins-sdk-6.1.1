@@ -118,7 +118,7 @@
 								test="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}">
 								<td>
 									<div align="right" style="width: 99%">
-										<p:commandButton value="Approve All"
+										<p:commandButton value="#{lbl['lbl.sm.approve.all']}"
 											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											action="#{backingBean.approveAllCategoryCodesByPOorApprover}"
 											update=":form">
