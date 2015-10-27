@@ -185,6 +185,7 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 		getManagedBean().setSelectedTemplate(tplDocMaster);
 		getManagedBean().setDeletedList(new ArrayList<TplDocSection>());
 		getTemplateDatatableList(templateSectionList);
+		this.getManagedBean().setCreateNew(false);
 		return NAV_TO_MAINT;
 	}
 
@@ -301,6 +302,7 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 		try {
 			String outputFileName = "Document" + "_"+ DateUtils.dateToString("yyMMddHHmmssZ", new Date());
 			String combinedContentHtml = MergeDocx.mergePreviewAction(getManagedBean().getDocSectionTN(), outputFileName, "P");
+			System.out.println("**********combinedContentHtml***********"+combinedContentHtml);
 			getManagedBean().setPreviewValue(combinedContentHtml);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -398,6 +400,8 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 
 	public String save(String ind) {
 		FacesScopes facesScopes = new FacesScopes();
+		ITemplateDocSO templateSO = (ITemplateDocSO) BusinessDelegate.getInstance().getServiceObject("cc", ITemplateDocSO.class);
+		TemplateDocReqDTO reqDTO = new TemplateDocReqDTO();
 		try {
 			TplDocMaster tplDocMasterE = getManagedBean().getSelectedTemplate();
 			TplDocMaster tplDocMaster = null;
@@ -423,6 +427,36 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 				tplDocMaster.setProcurementCategory(tplDocMasterE.getProcurementCategory());				
 				tplDocMaster.setDocName(tplDocMaster.getDocTitle());
 			}
+			
+			System.out.println("tplDocMaster brandNew:"+this.getManagedBean().isCreateNew());
+			
+			if(this.getManagedBean().isCreateNew()){
+				SearchBean<TplDocMaster> searchBean = new SearchBean<TplDocMaster>();
+				
+				
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("docTitle",SearchOperator.OPERATOR_EQUALS.value(), tplDocMasterE.getDocTitle(), true));
+				
+				
+				reqDTO.setSearchBean(searchBean);
+				TemplateDocResDTO resDTO = templateSO.searchTemplateDoc(reqDTO);
+				
+				
+				if(resDTO.getDocMasterResultBean()!=null && resDTO.getDocMasterResultBean().getResultList().size() > 0){
+					
+					FacesContext facesContext = FacesContext.getCurrentInstance();
+					facesContext.addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									MessageUtils.getMessage(MessageConst.INFO_780099,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+				}
+				
+				return "templateDocMaint.xhtml";
+			}
+			
+			
+			
 			
 			tplDocMaster.setProcurementCategory(tplDocMasterE.getProcurementCategory());
 			tplDocMaster.setProcessType(tplDocMasterE.getProcessType());
@@ -450,8 +484,7 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 			}
 			tplDocMaster.setDeletedCollection(deletedSectionList);
 
-			ITemplateDocSO templateSO = (ITemplateDocSO) BusinessDelegate.getInstance().getServiceObject("cc", ITemplateDocSO.class);
-			TemplateDocReqDTO reqDTO = new TemplateDocReqDTO();
+			
 			reqDTO.setTplDocMaster(tplDocMaster);
 
 			TemplateDocResDTO resDTO = templateSO.save(reqDTO);
@@ -584,6 +617,8 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 				getManagedBean().getDocSectionMap().put((TplDocSection) node.getData(), node);
 			}
 		}
+		
+		this.getManagedBean().setCreateNew(true);
 		return NAV_TO_MAINT;
 	}
 
@@ -852,6 +887,7 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 		html = html.replaceAll("&#160;","");
 		html = html.replaceAll("&lt;","(");
 		html = html.replaceAll("&gt;",")");
+		System.out.println("********************* html******************"+ html);
 		DocumentGenerator.getInstance().generatePdf(new FileOutputStream(filePath), html);
 		downloadFile(filePath);
 	}
