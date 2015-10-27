@@ -425,28 +425,29 @@
 				</p:outputPanel>
 				<p:outputPanel rendered="#{backingBean.managedBean.showNewChanges}">
 				<tr>
-					<td colspan="4">
+					<td/>
+					<td colspan="3">
 					
-									<script>
-									
-								      function getAddress2() {
-								    	  
-								    	  var addr1 = document.getElementById('#{p:component(&quot;smSupAddr1&quot;)}').value + ',';
-								    	  var addr2 = document.getElementById('#{p:component(&quot;smSupAddr2&quot;)}').value + ',';
-								    	  var addr3 = document.getElementById('#{p:component(&quot;smSupAddr3&quot;)}').value + ',';
-								    	  var addr4 = document.getElementById('#{p:component(&quot;smSupAddr4&quot;)}').value + ',';
-								    	  
-								    	  var cityName = document.getElementById('#{p:component(&quot;basicCompCity&quot;)}_input').options[document.getElementById('#{p:component(&quot;basicCompCity&quot;)}_input').selectedIndex].text;
-								    	  var districtName = document.getElementById('#{p:component(&quot;basicCompDist&quot;)}_input').options[document.getElementById('#{p:component(&quot;basicCompDist&quot;)}_input').selectedIndex].text;
-								    	  var stateName = document.getElementById('#{p:component(&quot;basicComState&quot;)}_input').options[document.getElementById('#{p:component(&quot;basicComState&quot;)}_input').selectedIndex].text;
-								    	  var countryName = document.getElementById('#{p:component(&quot;smSupCont&quot;)}_input').options[document.getElementById('#{p:component(&quot;smSupCont&quot;)}_input').selectedIndex].text;
-								    	  
-								    	  var address = addr1 + addr2 + addr3 + addr4 + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
+						<script>
+						
+					      function getAddress2() {
+					    	  
+					    	  var addr1 = document.getElementById('#{p:component(&quot;smSupAddr1&quot;)}').value + ',';
+					    	  var addr2 = document.getElementById('#{p:component(&quot;smSupAddr2&quot;)}').value + ',';
+					    	  var addr3 = document.getElementById('#{p:component(&quot;smSupAddr3&quot;)}').value + ',';
+					    	  var addr4 = document.getElementById('#{p:component(&quot;smSupAddr4&quot;)}').value + ',';
+					    	  
+					    	  var cityName = document.getElementById('#{p:component(&quot;basicCompCity&quot;)}_input').options[document.getElementById('#{p:component(&quot;basicCompCity&quot;)}_input').selectedIndex].text;
+					    	  var districtName = document.getElementById('#{p:component(&quot;basicCompDist&quot;)}_input').options[document.getElementById('#{p:component(&quot;basicCompDist&quot;)}_input').selectedIndex].text;
+					    	  var stateName = document.getElementById('#{p:component(&quot;basicComState&quot;)}_input').options[document.getElementById('#{p:component(&quot;basicComState&quot;)}_input').selectedIndex].text;
+					    	  var countryName = document.getElementById('#{p:component(&quot;smSupCont&quot;)}_input').options[document.getElementById('#{p:component(&quot;smSupCont&quot;)}_input').selectedIndex].text;
+					    	  
+					    	  var address = addr1 + addr2 + addr3 + addr4 + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
 
-								      	return address;
-								      }
-									
-									</script>
+					      	return address;
+					      }
+						
+						</script>
 									
 						<ac:gmap id="acgmap" 
 							address="getAddress2()"
