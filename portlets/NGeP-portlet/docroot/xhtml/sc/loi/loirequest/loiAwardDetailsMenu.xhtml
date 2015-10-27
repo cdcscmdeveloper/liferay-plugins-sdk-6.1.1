@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
     <ui:param name="isZonal" value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.zonal}" />
-	<ui:param name="isBiddingAward" value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.recommendBy.parameterCode eq ParameterConst.recommendByOnlineBidding}" />
+	<ui:param name="isBiddingAward" value="#{lOIDetailBackingBean.managedBean.scLoi.recommendBy.parameterCode eq ParameterConst.recommendByOnlineBidding}" />
 
 	<p:panel header="#{lbl['lbl.sc.loiloa.award.details']}"
 		id="afterNegoAwardDetails" toggleable="true">
@@ -22,13 +22,8 @@
 			<tr>
 				<td style="width: 250px;"><p:outputLabel
 						value="#{lbl['lbl.sc.recommend.by']}" /></td>
-				<td><p:inputText disabled="true" rendered="#{lOIDetailBackingBean.managedBean.docType ne ParameterConst.directAward}"
-						value="#{lOIDetailBackingBean.getParameterDesc(lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.recommendBy)}"
-						size="30" />
-						
-					<p:inputText disabled="true" rendered="#{lOIDetailBackingBean.managedBean.docType eq ParameterConst.directAward}"
-						value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.documentTypes,
-					lOIDetailBackingBean.managedBean.docType)}"
+				<td><p:inputText disabled="true" 
+						value="#{lOIDetailBackingBean.getParameterDesc(lOIDetailBackingBean.managedBean.scLoi.recommendBy)}"
 						size="30" /></td>
 			</tr>
 		</table>

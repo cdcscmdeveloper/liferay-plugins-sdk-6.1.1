@@ -749,6 +749,8 @@ public class LOIDetailBackingBean extends
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setQtId(qtId);
 			reqDTO.setRecommendDtlIdList(getManagedBean().getRecommendDtlIds());
+			reqDTO.setAwardType(getManagedBean().getDocType());
+			
 			AwardSupplierResDTO resDTO = getQtAwardSO().retrievePendingLoiList(
 					reqDTO);
 
@@ -1407,6 +1409,7 @@ public class LOIDetailBackingBean extends
 			ScLoi loi = new ScLoi();
 			loi.setScLoiLoa(scLoiLoa);
 			reqDTO.setScLoi(loi);
+			reqDTO.setAwardType(getManagedBean().getDocType());
 			reqDTO.setRecommendDtlIdList(getManagedBean()
 					.getRecommendDtlIds());
 			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOIDtl(
@@ -1518,8 +1521,8 @@ public class LOIDetailBackingBean extends
 		getManagedBean().setScLoi(scLoi);
 
 		// online bidding
-		if (scLoi.getScLoiLoa().getRecommendBy() != null) {
-			PmParameter recommendedBy = scLoi.getScLoiLoa().getRecommendBy();
+		if (scLoi.getRecommendBy() != null) {
+			PmParameter recommendedBy = scLoi.getRecommendBy();
 			if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
 					.equals(recommendedBy.getParameterCode())) {
 				isBiddingAward = Boolean.TRUE;
@@ -1921,6 +1924,7 @@ public class LOIDetailBackingBean extends
 		try {
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setQtId(qtId);
+			reqDTO.setAwardType(getManagedBean().getDocType());
 			reqDTO.setRecommendDtlIdList(getManagedBean().getRecommendDtlIds());
 			AwardSupplierResDTO resDTO = getQtAwardSO().retrievePendingLoiList(
 					reqDTO);

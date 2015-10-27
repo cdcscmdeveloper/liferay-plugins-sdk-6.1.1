@@ -11,7 +11,7 @@
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
 		
-	<ui:param name="isMultipleLOI" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.recommendBy.parameterCode eq ParameterConst.recommendByMultipleLoi}" />
+	<ui:param name="isMultipleLOI" value="#{lOADetailBackingBean.managedBean.scLoa.finalizationMethod eq ParameterConst.recommendByMultipleLoi}" />
 
 	<div class="ppRightBtn">
 		<p:commandButton value="#{lbl['lbl.btn.save']}" process="@form" partialSubmit="true"
