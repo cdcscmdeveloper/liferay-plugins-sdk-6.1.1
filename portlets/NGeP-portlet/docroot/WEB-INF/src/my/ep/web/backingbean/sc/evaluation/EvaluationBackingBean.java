@@ -1007,6 +1007,7 @@ public class EvaluationBackingBean extends
 				presentationDemoSummaryGenerated);
 		getManagedBean()
 				.setFinancialSummaryGenerated(financialSummaryGenerated);
+		this.getManagedBean().setScQtEvaluationReportList(null);
 	}
 
 	/**
