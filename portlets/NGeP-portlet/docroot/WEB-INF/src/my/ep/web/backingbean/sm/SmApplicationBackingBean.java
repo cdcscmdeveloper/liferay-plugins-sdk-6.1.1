@@ -4494,6 +4494,8 @@ public class SmApplicationBackingBean extends
 				&& (smPersonnel.getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ || smPersonnel
 						.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING)) {
 			retVal = true;
+		} else if (!retVal) {
+			retVal = isAllowedDowngradeRole(smPersonnel);
 		}
 		return retVal;
 	}
@@ -8811,6 +8813,33 @@ public class SmApplicationBackingBean extends
 		if (smPersonnel.isPrevApprovedDirector()
 				|| smPersonnel.isPrevApprovedEquityOwner()) {
 			retVal = true;
+		}
+		return retVal;
+	}
+
+	/**
+	 * Checks if personnel cannot downgrade role.
+	 * 
+	 * @param smPersonnel
+	 *            - SmPersonnel object to check
+	 * @return true, if is personnel view only
+	 */
+	private boolean isAllowedDowngradeRole(SmPersonnel smPersonnel) {
+		boolean retVal = true;
+		if (smPersonnel != null
+				&& smPersonnel.getPersonnelId() != null
+				&& !SmCommonUtil.isCollectionEmpty(getManagedBean()
+						.getPrevApprovedPersonnels())) {
+			for (SmPersonnel per : getManagedBean().getPrevApprovedPersonnels()) {
+				if (StringUtils.isNotBlank(per.getIdentificationNo())
+						&& StringUtils.isNotBlank(per.getEpRole())
+						&& StringUtils.isNotBlank(smPersonnel.getEpRole())
+						&& per.getIdentificationNo().equals(
+								smPersonnel.getIdentificationNo())) {
+					retVal = false;
+					break;
+				}
+			}
 		}
 		return retVal;
 	}
