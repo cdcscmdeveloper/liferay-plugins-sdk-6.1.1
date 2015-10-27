@@ -246,44 +246,13 @@ public class RuleCatalogueBackingBean extends
 		this.inactivePopUpMsg = inactivePopUpMsg;
 	}
 
-	public String getInactivePopUpMsg() {
-//		log.info(".........getInactivePopUpMsg.........");
-		if(this.getManagedBean().getSelectedRuleType() != null){
-			return PmCommonUtil.getMessage("lbl.pm.inactive.popUp.msg",
-				new String[] { this.getManagedBean().getSelectedRuleType()
-						.getRuleTypeDesc() });
-		}
-		
-		return "";
+	public String getInactivePopUpMsg() {		
+		return inactivePopUpMsg;
 	}
 
 	public String getInactiveFeeOrgPopUpMsg() {
 //		log.info(".........getInactiveFeeOrgPopUpMsg.........");
-		if (this.getCurrentIndexVal() != null) {
-			PmFeeExemption selectedFee = this.getManagedBean()
-					.getFeeExemptionsForOrgAndItem()
-					.get(this.getCurrentIndexVal());
-			if (selectedFee != null) {
-				if (selectedFee.getFeeExemptionType().equals("1")
-						&& selectedFee.getItemId().getItemId() == null) {
-					return PmCommonUtil.getMessage(
-							"lbl.pm.inactive.fee.popUp.msg",
-							new String[] { selectedFee.getOrgProfileId()
-									.getSmSupplier().getCompanyName() });
-
-				} else if (selectedFee.getFeeExemptionType().equals("4")
-						|| (selectedFee.getFeeExemptionType().equals("1") && selectedFee
-								.getItemId().getItemId() != null)) {
-					return PmCommonUtil.getMessage(
-							"lbl.pm.inactive.fee.popUp.msg",
-							new String[] { selectedFee.getOrgProfileId()
-									.getSmSupplier().getCompanyName()
-									+ ", "
-									+ selectedFee.getItemId().getItemName() });
-				}
-			}
-		}
-		return "Are you sure you want to inactive?";
+       return inactiveFeeOrgPopUpMsg;
 	}
 
 	public void setInactiveFeeOrgPopUpMsg(String inactiveFeeOrgPopUpMsg) {
@@ -316,61 +285,13 @@ public class RuleCatalogueBackingBean extends
 	// }
 
 	public String getInactiveFeeComoPopUpMsg() {
-		log.info(".........getInactiveFeeComoPopUpMsg.........");
-		if (this.getCurrentIndexVal() != null) {
-			PmFeeExemption selectedFee = this.getManagedBean()
-					.getFeeExemptionsForComodity()
-					.get(this.getCurrentIndexVal());
-			if (selectedFee != null) {
-				if (selectedFee.getFeeExemptionType().equals("6")
-						&& selectedFee.getTypeId().getTypeId() == null) {
-					return PmCommonUtil.getMessage(
-							"lbl.pm.inactive.fee.popUp.msg",
-							new String[] { selectedFee.getUnspscId()
-									.getUnspscTitle() });
-				} else if (selectedFee.getFeeExemptionType().equals("3")
-						|| (selectedFee.getFeeExemptionType().equals("6") && selectedFee
-								.getTypeId().getTypeId() != null)) {
-					return PmCommonUtil.getMessage(
-							"lbl.pm.inactive.fee.popUp.msg",
-							new String[] { selectedFee.getUnspscId()
-									.getUnspscTitle()
-									+ ", "
-									+ selectedFee.getTypeId().getTypeName() });
-				}
-			}
-		}
-		return "Are you sure you want to inactive?";
+		
+		return inactiveFeeComoPopUpMsg;
 	}
 
 	public String getInactiveFeeContPopUpMsg() {
-		log.info(".........getInactiveFeeContPopUpMsg.........");
-		if (this.getCurrentIndexVal() != null) {
-			PmFeeExemption selectedFee = this.getManagedBean()
-					.getFeeExemptionsForContract()
-					.get(this.getCurrentIndexVal());
-			if (selectedFee != null) {
-				if (selectedFee.getFeeExemptionType().equals("2")
-						&& selectedFee.getRequestItemId()
-								.getRequestNoteItemId() == null) {
-					return PmCommonUtil.getMessage(
-							"lbl.pm.inactive.fee.popUp.msg",
-							new String[] { selectedFee.getContractId()
-									.getContractNo() });
-				} else if (selectedFee.getFeeExemptionType().equals("5")
-						|| (selectedFee.getFeeExemptionType().equals("2") && selectedFee
-								.getRequestItemId().getRequestNoteItemId() != null)) {
-					return PmCommonUtil.getMessage(
-							"lbl.pm.inactive.fee.popUp.msg",
-							new String[] { selectedFee.getContractId()
-									.getContractNo()
-									+ ", "
-									+ selectedFee.getRequestItemId()
-											.getItemName() });
-				}
-			}
-		}
-		return "Are you sure you want to inactive?";
+		
+		return inactiveFeeContPopUpMsg;
 	}
 
 	public void setInactiveFeeComoPopUpMsg(String inactiveFeeComoPopUpMsg) {
@@ -1048,6 +969,11 @@ public class RuleCatalogueBackingBean extends
 																									// inactive
 			// log.info(".................selectedValue.getRecordStatusFlg()="+selectedValue.getRecordStatusFlg());
 			// prompt popoup
+			//prepare popup msg
+				setInactivePopUpMsg(PmCommonUtil.getMessage("lbl.pm.inactive.popUp.msg",
+					new String[] { this.getManagedBean().getSelectedRuleType()
+							.getRuleTypeDesc() }));
+			
 			RequestContext.getCurrentInstance().execute(
 					"statusConfirmDialog.show();");
 			return;
@@ -1068,6 +994,27 @@ public class RuleCatalogueBackingBean extends
 																							// inactive
 				// log.info(".................selectedValue.getRecordStatusFlg()="+selectedValue.getRecordStatusFlg());
 				// prompt popoup
+				//prepare popup Msg
+
+						if (fee.getFeeExemptionType().equals("1")
+								&& fee.getItemId().getItemId() == null) {
+							setInactiveFeeOrgPopUpMsg(PmCommonUtil.getMessage(
+									"lbl.pm.inactive.fee.popUp.msg",
+									new String[] { fee.getOrgProfileId()
+											.getSmSupplier().getCompanyName() }));
+
+						} else if (fee.getFeeExemptionType().equals("4")
+								|| (fee.getFeeExemptionType().equals("1") && fee
+										.getItemId().getItemId() != null)) {
+							setInactiveFeeOrgPopUpMsg(PmCommonUtil.getMessage(
+									"lbl.pm.inactive.fee.popUp.msg",
+									new String[] { fee.getOrgProfileId()
+											.getSmSupplier().getCompanyName()
+											+ ", "
+											+ fee.getItemId().getItemName() }));
+						}
+					
+				
 				RequestContext.getCurrentInstance().execute(
 						"feeOrgStatusConfirmDialog.show();");
 			}
@@ -1089,6 +1036,25 @@ public class RuleCatalogueBackingBean extends
 																							// inactive
 				// log.info(".................selectedValue.getRecordStatusFlg()="+selectedValue.getRecordStatusFlg());
 				// prompt popoup
+				//prepare popup msg
+	
+						if (fee.getFeeExemptionType().equals("6")
+								&& fee.getTypeId().getTypeId() == null) {
+							setInactiveFeeComoPopUpMsg(PmCommonUtil.getMessage(
+									"lbl.pm.inactive.fee.popUp.msg",
+									new String[] { fee.getUnspscId()
+											.getUnspscTitle() }));
+						} else if (fee.getFeeExemptionType().equals("3")
+								|| (fee.getFeeExemptionType().equals("6") && fee
+										.getTypeId().getTypeId() != null)) {
+							setInactiveFeeComoPopUpMsg(PmCommonUtil.getMessage(
+									"lbl.pm.inactive.fee.popUp.msg",
+									new String[] { fee.getUnspscId()
+											.getUnspscTitle()
+											+ ", "
+											+ fee.getTypeId().getTypeName() }));
+						}
+				
 				RequestContext.getCurrentInstance().execute(
 						"feeCommodityStatusConfirmDialog.show();");
 			}
@@ -1110,6 +1076,27 @@ public class RuleCatalogueBackingBean extends
 																							// inactive
 				// log.info(".................selectedValue.getRecordStatusFlg()="+selectedValue.getRecordStatusFlg());
 				// prompt popoup
+				//prepare popup msg
+			
+						if (fee.getFeeExemptionType().equals("2")
+								&& fee.getRequestItemId()
+										.getRequestNoteItemId() == null) {
+							setInactiveFeeContPopUpMsg(PmCommonUtil.getMessage(
+									"lbl.pm.inactive.fee.popUp.msg",
+									new String[] { fee.getContractId()
+											.getContractNo() }));
+						} else if (fee.getFeeExemptionType().equals("5")
+								|| (fee.getFeeExemptionType().equals("2") && fee
+										.getRequestItemId().getRequestNoteItemId() != null)) {
+							setInactiveFeeContPopUpMsg(PmCommonUtil.getMessage(
+									"lbl.pm.inactive.fee.popUp.msg",
+									new String[] { fee.getContractId()
+											.getContractNo()
+											+ ", "
+											+ fee.getRequestItemId()
+													.getItemName() }));
+						}
+				
 				RequestContext.getCurrentInstance().execute(
 						"feeContractStatusConfirmDialog.show();");
 			}
