@@ -2580,6 +2580,14 @@ public class NoticeBoardBackingBean extends
 		
 		PmParameter pmParameter = this.getManagedBean().getScQt()
 				.getFinalization().getRecommendedTypeId();
+		
+		PmParameter finalizationMethod = this.getManagedBean().getScQt()
+				.getFinalization().getFinalizationMethod();
+		
+		AwardSupplierReqDTO awardReqDTO = new AwardSupplierReqDTO();
+		awardReqDTO.setQtId(qtId);
+		boolean isRefinalized = getQTAwardSO().isQtRefinalized(awardReqDTO).isRefinalized();
+		
 		List<AwardedItemsBean> awardedItemList = new ArrayList<>();
 		for (ScLoa scLoa : scLoalist) {
 			if (ParameterConst.RECOMMEND_TYPE_PACKAGE
@@ -2607,10 +2615,8 @@ public class NoticeBoardBackingBean extends
 						awardedItem.setPriceByProposal(totalPrice);
 					}
 					// By Bidding
-					String recommendBy = scLoiLoaItem.getScLoa().getScLoiLoa()
-											.getRecommendBy().getParameterCode();
-					if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
-							.equals(recommendBy)) {
+					if (finalizationMethod != null && ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
+							.equals(finalizationMethod.getParameterCode()) && !isRefinalized) {
 					awardedItem.setPriceByBidding(TemplateSpecHelper.getInstance()
 						.calcTotalAmount(reqItem.getTplSpecQuestion(),
 								scQtRecommendDtl.getScQtProposalItem().getFinalPrice(), 
