@@ -13,17 +13,21 @@
 		header="#{lbl['lbl.sc.submit.confirmation']}" resizable="false"
 		width="500" height="100" closable="false" modal="true">
 
-		<table>
-			<tr>
-				<td><h:graphicImage value="/css/images/design/exclamation.png" />
-					#{simpleQuoteBackingBean.managedBean.promptMessage}</td>
-			</tr>
-		</table>
+		<p:blockUI block="conformDlgId" trigger="yesButton">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		<p:panel id="conformDlgId">
+			<table>
+				<tr>
+					<td><h:graphicImage value="/css/images/design/exclamation.png" />
+						#{simpleQuoteBackingBean.managedBean.promptMessage}</td>
+				</tr>
+			</table>
 
-		<p:spacer height="1px" />
-		<h:panelGroup id="conformDlgId">
+			<p:spacer height="1px" />
 			<div class="ppRightBtn" style="width: 100%">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
+					id="yesButton"
 					rendered="#{simpleQuoteBackingBean.managedBean.conformDlgBtnFlag}"
 					onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();sqConformDlg.hide();"
@@ -38,9 +42,8 @@
 					rendered="#{!simpleQuoteBackingBean.managedBean.conformDlgBtnFlag}"
 					partialSubmit="true" process="@this" onclick="sqConformDlg.hide();"
 					type="button" />
-
 			</div>
-		</h:panelGroup>
+		</p:panel>
 	</p:dialog>
 	<div class="ppLeftBtn">
 		<p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}"
