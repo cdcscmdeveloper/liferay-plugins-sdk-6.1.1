@@ -355,6 +355,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			throw new EpException(MessageConst.ERROR_721020);
 		}
 		
+		SmCommonUtil.checkEmailDomainWithExceptionMsg(smPersonnel.getName(), smPersonnel.getEmail());
+		
 		if(!smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
 			if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
 				throw new EpException(MessageConst.ERROR_721011);
