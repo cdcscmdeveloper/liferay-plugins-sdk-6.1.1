@@ -1388,6 +1388,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			meetingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
 			 
 			MeetingReqDTO reqDTO = meetingDtlsInfo();
+			reqDTO.setSubmit(true);
 			boolean isValidationSuccessful = validateMeetingDtlsInfo(reqDTO);
 			if (!isValidationSuccessful) {
 				return;
@@ -1517,6 +1518,26 @@ public class SupplierFinalizationMeetingBackingBean extends
 	private boolean validateMeetingDtlsInfo(MeetingReqDTO reqDTO) {
 		boolean isValidationSuccessful = false;
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+		List<ScQtMeeting> meetingList = getManagedBean().getScQtMeetings();
+		
+		if (reqDTO.isSubmit()) {
+			if (CollectionUtils.isNotEmpty(meetingList)) {
+				boolean hasAtleastOneActiveMeeting = false;
+				for (ScQtMeeting meeting : meetingList) {
+					if (DbValueConst.RECORD_STATUS_ACTIVE
+							== meeting.getRecordStatusFlg()) {
+						hasAtleastOneActiveMeeting = true;
+						break;
+					}
+				}
+				if (!hasAtleastOneActiveMeeting) {
+					throw new EpException(MessageConst.ERROR_760291);
+				}
+			} else {
+				throw new EpException(MessageConst.ERROR_760291);
+			}
+		}
+		
 		try {
 			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
 											ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
