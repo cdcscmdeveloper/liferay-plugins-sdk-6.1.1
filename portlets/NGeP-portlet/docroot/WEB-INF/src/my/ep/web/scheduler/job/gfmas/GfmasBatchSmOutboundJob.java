@@ -1,6 +1,7 @@
 package my.ep.web.scheduler.job.gfmas;
 
 import my.ep.factory.EpLogger;
+import my.ep.web.integration.common.BatchTemplate;
 import my.ep.web.integration.common.GfmasIntegration;
 
 import org.apache.log4j.Logger;
@@ -27,8 +28,8 @@ public class GfmasBatchSmOutboundJob implements Job {
 
 		log.info("GfmasBatchSmOutboundJob APIVE :start");
 
-		GfmasIntegration gfmasIntegration = new GfmasIntegration();
-//		gfmasIntegration.masterDataVendorGfmasOutbound();
+		BatchTemplate batchTemplate = new GfmasIntegration();
+		batchTemplate.masterDataVendorGfmasOutbound();
 		
 		log.info("GfmasBatchSmOutboundJob APIVE :end");
 

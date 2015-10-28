@@ -61,7 +61,7 @@ public class Encryption {
 		sftpUtility.upload(reqDTO);
 		
 		// call osb service for transfering from host to 1GFMAS
-		 osbUtility.osbServiceCallOutBound(reqDTO.getServiceCode(),reqDTO.getFileName());
+		osbUtility.osbServiceCallOutBound(reqDTO.getServiceCode(),reqDTO.getFileName());
 	
 	}
 
@@ -90,43 +90,6 @@ public class Encryption {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-	}
-
-	// encrypt phis
-	public void encryptPhis(String inFilePath, String outFilePath,
-			String fileName, String processId) {
-
-		log.info("inside encryptPhis");
-		File inFile = new File(inFilePath + fileName);
-		File outFile = new File(outFilePath + fileName);
-
-		URL resource = getClass().getResource(".");
-		String path = resource.getPath();
-
-		String substring = path.substring(0, path.indexOf("NGeP-portlet.war"));
-
-		String encryptKey = substring
-				+ IntegrationConstants.PHIS_PUBLIC_KEY_PATH;
-
-		// encript the content
-		String encrypted;
-		try {
-			encrypted = PGPProcessor.encryptContent(readFileContents(inFile),
-					encryptKey);
-
-			createFile(outFile, encrypted);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		// upload the encripted file to sftp server
-
-		sftpUtility.upload(outFilePath + fileName,
-				IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL + fileName, null, null, null);
-
-		// once upload is done cal web service osb integration to transfer file.
-		osbUtility.osbServiceCallOutBound(processId, fileName);
 
 	}
 	

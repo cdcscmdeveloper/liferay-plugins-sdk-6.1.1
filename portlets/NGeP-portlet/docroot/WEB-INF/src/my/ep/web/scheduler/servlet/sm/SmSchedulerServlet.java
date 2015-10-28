@@ -5,8 +5,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
 import my.ep.factory.EpLogger;
+import my.ep.util.EpPropertiesUtils;
+import my.ep.web.scheduler.constants.cm.CmSchedulerConstants;
 import my.ep.web.scheduler.constants.sm.SmSchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
+import my.ep.web.scheduler.job.gfmas.GfmasBatchSmOutboundJob;
 import my.ep.web.scheduler.job.sm.DeletePendingActivationJob;
 import my.ep.web.scheduler.job.sm.MOFApplicationPaymentReminderJob;
 import my.ep.web.scheduler.job.sm.SoftCertRenewalReminderJob;
@@ -56,6 +59,13 @@ public class SmSchedulerServlet extends HttpServlet {
 				SupportingDocumentReminderJob.class,
 				SmSchedulerConstants.SM_APP_OFFLINE_SUPPORTING_DOC_REMINDER_DESC,
 				SmSchedulerConstants.SM_DAILY_SUPPORTING_DOC_REMINDER_TIMER);
+		
+		//GFMAS SM OUT bound Continuous job				
+		EpSchedulerHelper.scheduleJob(new JobKey(
+				CmSchedulerConstants.GFMAS_SM_OUT_CONTINUOUS_JOB,
+				CmSchedulerConstants.GFMAS_SM_OUT_JOB_GROUP),
+				GfmasBatchSmOutboundJob.class, CmSchedulerConstants.GFMAS_SM_OUT_CONTINUOUS_JOB_DESC,
+				EpPropertiesUtils.getInstance().getProperty("1gfmas.sm.outbound"));
 
 		log.info("end init sm scheduler servlet....");
 
