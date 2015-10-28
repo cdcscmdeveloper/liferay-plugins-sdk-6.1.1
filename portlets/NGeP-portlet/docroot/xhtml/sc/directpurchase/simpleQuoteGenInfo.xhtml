@@ -102,8 +102,7 @@
 						     <p:outputLabel value="*" styleClass="mandatory" />
 						 </td>
 						 <td style="width: 85%"> <p:selectOneMenu style="width: 120px;margin-bottom: 5px;" id="justificationId" label="#{lbl['lbl.sc.reason']}"
-						       required="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A' or 
-						             simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'E'}"
+						       required="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A'}"
 						         disabled="#{!isEditable}" 
 								value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationType.parameterCode}">
 							   <f:selectItems
@@ -123,9 +122,8 @@
 					<td colspan="4"><p:inputTextarea value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationRemark}"
 					          id="justificationRmk" label="#{lbl['lbl.sc.justification']}" maxlength="100"
 					           disabled="#{!isEditable}"
-					          required="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A' or 
-						             simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'E'}"
-							rows="3" cols="58" style="margin-bottom: 5px; width: 305px;" /> <p:message id="justRmksMsg" for="justificationRmk" display="icon" /></td>
+					          required="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A'}"
+							rows="3" cols="58" style="margin-bottom: 5px; width: 210px;" /> <p:message id="justRmksMsg" for="justificationRmk" display="icon" /></td>
 				 </ui:fragment>
 			    </tr>
 				</table>

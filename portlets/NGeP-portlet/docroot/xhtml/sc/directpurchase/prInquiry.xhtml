@@ -179,8 +179,7 @@
 							     <p:outputLabel value="*" styleClass="mandatory" />
 							 </td>
 							 <td> <p:selectOneMenu style="width: 185px; margin-bottom: 5px;" id="justificationId" label="#{lbl['lbl.sc.reason']}"
-							         required="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'A' or 
-						              purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'E'}"
+							         required="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'A'}"
 									  value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.justificationType.parameterCode}">
 								   <f:selectItems
 										value="#{purchaseInquiryBackingBean.managedBean.justDropdown}" />
@@ -198,8 +197,7 @@
 						 <td colspan="4">
 						    <p:inputTextarea value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.justification}"
 						        id="justificationRmk" label="#{lbl['lbl.sc.price.inquiry.just.rmks']}"
-						        required="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'A' or 
-						             purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'E'}"   
+						        required="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'A'}"   
 								rows="2" cols="122" style="margin-bottom: 5px; width: 300px;" /><p:message id="justRmksMsg" for="justificationRmk" display="icon" /></td>
 						</ui:fragment>
 					   </tr>
