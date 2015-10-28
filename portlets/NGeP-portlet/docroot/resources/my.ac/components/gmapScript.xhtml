@@ -13,7 +13,6 @@
 
 <cc:implementation>
 
-	<link href="https://developers.google.com/maps/documentation/javascript/examples/default.css" rel="stylesheet" />
 	<script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
     <script>
       var geocoder;
@@ -24,7 +23,7 @@
 		}
       }
       	      
-      function codeAddress(address) {
+      function codeAddress(address, inputX, inputY) {
     	  //var address = document.getElementById('address').value;
     	  //var address = getAddress();
         //alert("map_canvas: " + document.getElementById('map'));
@@ -40,12 +39,12 @@
                 draggable: true
             });
             google.maps.event.addListener(marker, "dragend", function() {
-	            document.getElementById('#{p:component(&quot;plat&quot;)}').value = marker.getPosition().lat();
-	            document.getElementById('#{p:component(&quot;plng&quot;)}').value = marker.getPosition().lng();
+            	inputX.value = marker.getPosition().lat();
+            	inputY.value = marker.getPosition().lng();
             });
 
-            document.getElementById('#{p:component(&quot;plat&quot;)}').value = marker.getPosition().lat();
-            document.getElementById('#{p:component(&quot;plng&quot;)}').value = marker.getPosition().lng();
+            inputX.value = marker.getPosition().lat();
+            inputY.value = marker.getPosition().lng();
 
             updateGmap();
           } else {

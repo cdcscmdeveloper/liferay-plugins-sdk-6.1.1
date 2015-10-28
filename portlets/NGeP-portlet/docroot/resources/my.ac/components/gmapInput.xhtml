@@ -36,7 +36,7 @@
 		
 		<p:commandButton id="gmId" 
 			value="#{lbl['lbl.gmap.viewmap']}" 
-			onclick="codeAddress(#{cc.attrs.address});"
+			onclick="codeAddress(#{cc.attrs.address}, this.previousSibling.previousSibling.previousSibling, this.previousSibling);"
 			rendered="#{cc.attrs.showButton}"
 			disabled="#{cc.attrs.disabled}">
 			
