@@ -28,6 +28,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IPrInquirySO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -44,6 +45,7 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.directpurchase.PrInquiryReqDTO;
 import my.ep.dto.sc.directpurchase.PrInquiryResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
@@ -59,6 +61,7 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScPIZone;
 import my.ep.persistence.entity.sc.directpurchase.ScPRIRemark;
@@ -192,11 +195,19 @@ public class PurchaseInquiryBackingBean extends
 			requestSupplierItem.setRequestNoteItem(requestItem);
 		}
 		scPrInquiry.setWorkflowStatuses(null);
-
 		scPrInquiry.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		scPrInquiry.setDayToResponse(ParameterConst.DEFAULT_RESP_DAYS); // by
-																		// default
-																		// days
+		
+		
+		// by default days - 7
+		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		ruleReqDTO.setRuleType(ParameterConst.ITEM_INQUIRY);
+		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
+		if (ruleValueList != null && ruleValueList.size() > 0) {
+			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+			scPrInquiry.setDayToResponse(Integer.valueOf(configRuleValue.getRuleValue()));
+		}
 		scPrInquiry.setDateToResponse(calcDayToResponse(scPrInquiry));
 
 		// check supplier is government seller or not
@@ -649,7 +660,7 @@ public class PurchaseInquiryBackingBean extends
 				throw new EpException(MessageConst.ERROR_100033, new String[] {
 						ResourceBundleUtils.getMessage("lbl.sc.order.qty",
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale()), "0" });
+								new FacesScopes().getUserLocale())});
 			}
 			// Add selected supplier item.
 			scRequestSupplierItem.setScRequestNoteDtl(requestNoteDtls);
