@@ -31,7 +31,7 @@ public class CmSchedulerServlet extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 
 		// PHIS PM Out bound Continuous job
-		EpSchedulerHelper.scheduleJob(new JobKey(
+			EpSchedulerHelper.scheduleJob(new JobKey(
 				CmSchedulerConstants.PHIS_PM_OUTBOUND_CONTINUOUS_JOB,
 				CmSchedulerConstants.PHIS_PM_OUTBOUND_JOB_GROUP),
 				PhisBatchPmOutboundJob.class, CmSchedulerConstants.PHIS_PM_CONTINUOUS_JOB_DESC,
@@ -73,11 +73,11 @@ public class CmSchedulerServlet extends HttpServlet {
 				GfmasBatchSmInboundJob.class, CmSchedulerConstants.GFMAS_SM_CONTINUOUS_JOB_DESC,
 				EpPropertiesUtils.getInstance().getProperty("1gfmas.sm.inbound"));
 		//GFMAS SM OUT bound Continuous job				
-		EpSchedulerHelper.scheduleJob(new JobKey(
+	/*	EpSchedulerHelper.scheduleJob(new JobKey(
 				CmSchedulerConstants.GFMAS_SM_OUT_CONTINUOUS_JOB,
 				CmSchedulerConstants.GFMAS_SM_OUT_JOB_GROUP),
 				GfmasBatchSmOutboundJob.class, CmSchedulerConstants.GFMAS_SM_OUT_CONTINUOUS_JOB_DESC,
-				EpPropertiesUtils.getInstance().getProperty("1gfmas.sm.outbound"));
+				EpPropertiesUtils.getInstance().getProperty("1gfmas.sm.outbound"));*/
 		//Eperunding SM Integration Continuous job
 		EpSchedulerHelper.scheduleJob(new JobKey(
 				CmSchedulerConstants.EPERUNDING_INTEGRATION_CONTINUOUS_JOB,
@@ -85,7 +85,7 @@ public class CmSchedulerServlet extends HttpServlet {
 				EperundingBatchIntegrationJob.class, CmSchedulerConstants.EPERUNDING_INTEGRATION_CONTINUOUS_JOB_DESC,
 				EpPropertiesUtils.getInstance().getProperty("eperunding.sm.outbound"));
 		//Notification Integration Continuous job
-		/*EpSchedulerHelper.scheduleJob(new JobKey(
+	/*	EpSchedulerHelper.scheduleJob(new JobKey(
 						CmSchedulerConstants.NOTIFICATION_INTEGRATION_CONTINUOUS_JOB,
 						CmSchedulerConstants.NOTIFICATION_INTEGRATION_JOB_GROUP),
 						SmNotificationJob.class, CmSchedulerConstants.NOTIFICATION_INTEGRATION_CONTINUOUS_JOB_DESC,
