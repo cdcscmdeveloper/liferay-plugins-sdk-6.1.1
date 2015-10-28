@@ -764,6 +764,7 @@ a:visited.menuItemLink-selected {
 
 .comparePanelLabel>div>label {
 	font-weight: bold;
+	padding-bottom: 24px;
 }
 
 .datagridfloat {
