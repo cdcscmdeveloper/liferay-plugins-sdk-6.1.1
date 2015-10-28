@@ -11,7 +11,10 @@
  */
 package my.ep.web.backingbean.cm.catalogue;
 
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -40,6 +43,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.imageio.ImageIO;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -58,6 +62,7 @@ import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
@@ -66,6 +71,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.cm.CmConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.RuleTypeConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.cm.catalogue.CmTrackingDairyVO;
@@ -88,6 +94,8 @@ import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -2361,8 +2369,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 * 
 	 * @param event
 	 *            (FileUploadEvent event(mandatory))
+	 * @throws IOException 
 	 */
-	public void imageUpload(FileUploadEvent event)  {
+	public void imageUpload(FileUploadEvent event) throws IOException  {
 
 		// String tempDir = System.getenv("windir");
 
@@ -2375,8 +2384,30 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		log.info("uploadDir***"+uploadDir);
 
 		UploadedFile item = event.getFile();
+		System.out.println("image size******"+item.getSize());
 		CmImage catImage = new CmImage();
-		catImage.setImage(item.getContents());
+		
+		if(item.getSize() > 61440){
+			
+			//BufferedImage originalImage = ImageIO.read(new File("c:\\image\\mkyong.jpg"));
+			BufferedImage originalImage = ImageIO.read(item.getInputstream());
+			int type = originalImage.getType() == 0? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
+			
+			
+			BufferedImage resizeImageJpg = resizeImage(originalImage, type);
+			
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ImageIO.write( resizeImageJpg, "jpg", baos );
+			baos.flush();
+			byte[] imageInByte = baos.toByteArray();
+			baos.close();
+	
+			//ImageIO.write(resizeImageJpg, "jpg", new File("c:\\image\\mkyong_jpg.jpg")); 
+			System.out.println("image Byte*****"+imageInByte.length);
+			catImage.setImage(imageInByte);
+		}else{
+			catImage.setImage(item.getContents());
+		}	
 		catImage.setImageName(item.getFileName());
 		catImage.setImageDesc(item.getFileName());
 		catImage.setImageType("jpg");
@@ -2387,11 +2418,22 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		// render for display
 		this.getManagedBean().getSelectedMaintainItem().getCmImages().add(catImage);
 		// getCatalogImages().add(this.getManagedBean().getImageObj());
-
 		genImage(catImage);
 		log.info("size:"+ this.getManagedBean().getSelectedMaintainItem().getCmImages().size());
 
 	}
+	
+	private static final int IMG_WIDTH = 710;
+	private static final int IMG_HEIGHT = 410;
+	
+	 private static BufferedImage resizeImage(BufferedImage originalImage, int type){
+			BufferedImage resizedImage = new BufferedImage(IMG_WIDTH, IMG_HEIGHT, type);
+			Graphics2D g = resizedImage.createGraphics();
+			g.drawImage(originalImage, 0, 0, IMG_WIDTH, IMG_HEIGHT, null);
+			g.dispose();
+				
+			return resizedImage;
+		    }
 
 	/**
 	 * Gen image.
@@ -9288,18 +9330,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	public Integer getImageSize(){
 
-		Integer size = 1024 * 60;
+			
+		Integer size = 1024 * getMaxCategoryAllowed();
 
 		return size;
 	}
 
 
-	public String getInvalidFileSize(String params){
+	public String getInvalidFileSize(){
 
 		String msg = "";
 		Locale locale = new FacesScopes().getUserLocale();
 
-		msg = ResourceBundleUtils.getMessage("lbl.cm.invalid.file.size", new String[] { ""+params} ,
+		msg = ResourceBundleUtils.getMessage("lbl.cm.invalid.file.size", new String[] { ""+getMaxCategoryAllowed()} ,
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 
 		return msg;
@@ -9514,6 +9557,37 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 		
 	}
+	
+	
+	public int getMaxCategoryAllowed() {
+		RuleResDTO ruleResDTO = getRuleValueByRuleType(RuleTypeConst.CM_IMAGE_LIMIT);
+		if (ruleResDTO != null && ruleResDTO.isSuccessful()
+				&& ruleResDTO.getRuleValueList() != null
+				&& ruleResDTO.getRuleValueList().size() > 0) {
+			return (Integer.parseInt(ruleResDTO.getRuleValueList().get(0)
+					.getRuleValue()));
+		} else {
+			return 2048;
+		}
+	}
+	
+	private RuleResDTO getRuleValueByRuleType(String ruleType) {
+		IRuleSO ruleSO = null;
+		try {
+			ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+			RuleReqDTO ruleReqDTO = new RuleReqDTO();
+			ruleReqDTO.setRuleType(ruleType);
+			RuleResDTO ruleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
+			return ruleResDTO;
+		} finally {
+			ruleSO = null;
+		}
+	}
+	
+	
+	
+	
 
 
 }
