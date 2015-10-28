@@ -309,7 +309,7 @@ public class RuleCatalogueBackingBean extends
 		getManagedBean().setThresholdIndex(0);
 		getManagedBean().setGstIndex(TAXABLE_ITEM_IDX);
 		getManagedBean().setAutoUpdate(true);
-		resetErrorDialog();
+//		resetErrorDialog();
 
 		IConfigGeneralSO cgeneralSO = null;
 		try {
@@ -1264,10 +1264,7 @@ public class RuleCatalogueBackingBean extends
 
 	public void saveRuleCatalog() {
 		
-		if (this.getManagedBean().isError1()) {
-			// throw error msg
-			throw new EpException(MessageConst.ERROR_770198, new String[] {});
-		}
+		
 		// make sure to delete the new obj before update if doesn't selected
 		for (PmConfigRule ruleType : this.getManagedBean().getConfigRuleList()) {
 
@@ -1314,6 +1311,8 @@ public class RuleCatalogueBackingBean extends
 					// next
 					// record\
 					continue;
+				}else if(ruleType.getIsRangeValue() == 1 && baseValueToCompare.isError()){// to value can not be less than from value
+					throw new EpException(MessageConst.ERROR_770210, new String[] {ruleType.getRuleTypeDesc()});
 				}
 				
 				for (int j = i + 1; j <= (ruleType.getConfigRuleValues().size() - 1); j++) {
@@ -1323,6 +1322,8 @@ public class RuleCatalogueBackingBean extends
 					if (value.getRecordStatusFlg() == 0) {// if is inActive one
 						// go to next record
 						continue;
+					}else if(ruleType.getIsRangeValue() == 1 && value.isError()){ // to value can not be less than from value
+						throw new EpException(MessageConst.ERROR_770210, new String[] {ruleType.getRuleTypeDesc()});
 					}
 					
 
@@ -2800,9 +2801,9 @@ public class RuleCatalogueBackingBean extends
 				&& selectedValue.getToValue() != null
 				&& selectedValue.getFromValue().compareTo(
 						selectedValue.getToValue()) == 1) {
-			this.getManagedBean().setError1(true);
+			selectedValue.setError(true);
 		} else {
-			this.getManagedBean().setError1(false);
+			selectedValue.setError(false);
 		}
 	}
 
@@ -4280,7 +4281,7 @@ public class RuleCatalogueBackingBean extends
 	 * reset Error Dialog.
 	 */
 	public void resetErrorDialog() {
-		this.getManagedBean().setError1(false);
+//		this.getManagedBean().setError1(false);
 		// this.getManagedBean().setError2(false);
 		// this.getManagedBean().setError3(false);
 		// this.getManagedBean().setError4(false);
@@ -4300,9 +4301,9 @@ public class RuleCatalogueBackingBean extends
 				&& selectedValue.getToValue() != null
 				&& selectedValue.getFromValue().compareTo(
 						selectedValue.getToValue()) == 1) {
-			this.getManagedBean().setError1(true);
+			selectedValue.setError(true);
 		} else {
-			this.getManagedBean().setError1(false);
+			selectedValue.setError(false);
 		}
 		//
 		// if (selectedValue.getRuleValue() == null
