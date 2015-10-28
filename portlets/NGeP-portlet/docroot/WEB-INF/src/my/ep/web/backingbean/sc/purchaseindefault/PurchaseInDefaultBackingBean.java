@@ -26,6 +26,7 @@ import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -46,6 +47,7 @@ import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
@@ -62,6 +64,7 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScPIDApprovalUser;
 import my.ep.persistence.entity.sc.directpurchase.ScPIDRemark;
@@ -269,10 +272,19 @@ public class PurchaseInDefaultBackingBean extends
 		scPurchaseInDefault.setCreatedBy(user.getUserId());
 
 		// by default value as cheaper price
-		// PmReason reason = new PmReason();
 		scPurchaseInDefault.setReasonType(new PmReason());
-		// getManagedBean().getPurchaseInDefault().setReasonType(reason);
-		scPurchaseInDefault.setPidValidDays(ParameterConst.DEFAULT_RESP_DAYS); // by default days
+		
+		// by default days
+		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		ruleReqDTO.setRuleType(ParameterConst.PURCHASE_IN_DEFAULT);
+		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
+		if (ruleValueList != null && ruleValueList.size() > 0) {
+			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+			scPurchaseInDefault.setPidValidDays(Integer.valueOf(configRuleValue.getRuleValue()));
+		}
+		
 		return "purchaseInDefaultMain";
 	}
 
@@ -334,12 +346,6 @@ public class PurchaseInDefaultBackingBean extends
 			
 			// WorkFlow Status
 			scPurchaseInDefault.setWorkFlowStatuses(null);
-
-			if (getManagedBean().getAttachments() != null) {
-				scPurchaseInDefault
-						.setScPurchaseInDefaultAttachment(getManagedBean()
-								.getAttachments().get(0));
-			}
 
 			// justification
 			if (scPurchaseInDefault.getReasonType().getReasonCode() != null) {
@@ -682,7 +688,6 @@ public class PurchaseInDefaultBackingBean extends
 			throws FileNotFoundException, IOException {
 		debugLogger("handleFileUpload");
 		FacesScopes facesScopes = new FacesScopes();
-		List<ScPurchaseInDefaultAttachment> attachments = new ArrayList<ScPurchaseInDefaultAttachment>();
 		if (event.getFile() != null) {
 			ScPurchaseInDefault purchaseInDefault = getManagedBean()
 					.getPurchaseInDefault();
@@ -699,9 +704,7 @@ public class PurchaseInDefaultBackingBean extends
 			attachment.setCreatedUser(facesScopes.getUserSessionBean());
 
 			uploadAttachment(event.getFile(), attachment);
-			attachments.add(attachment);
-			getManagedBean().setAttachments(attachments);
-
+			purchaseInDefault.setScPurchaseInDefaultAttachment(attachment);
 		}
 	}
 
@@ -932,15 +935,10 @@ public class PurchaseInDefaultBackingBean extends
 				getManagedBean().setCheckContractItem(Boolean.FALSE);
 			}
 
-			List<ScPurchaseInDefaultAttachment> attachments = new ArrayList<ScPurchaseInDefaultAttachment>();
-			ScPurchaseInDefaultAttachment attachment = purchaseInDefault
-					.getScPurchaseInDefaultAttachment();
-			attachments.add(attachment);
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setProcessName(res.getProcessName());
 			getManagedBean().setOutComes(res.getAction());
 			getManagedBean().setPurchaseInDefault(purchaseInDefault);
-			getManagedBean().setAttachments(attachments);
 
 			IStatusSO statusSO = null;
 			try {
@@ -981,7 +979,7 @@ public class PurchaseInDefaultBackingBean extends
 	 */
 	public void deleteUploadFile() {
 		debugLogger("deleteUploadFile");
-		getManagedBean().getAttachments().clear();
+		getManagedBean().getPurchaseInDefault().setScPurchaseInDefaultAttachment(null);
 	}
 
 	/**

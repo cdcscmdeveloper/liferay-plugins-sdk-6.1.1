@@ -41,8 +41,7 @@
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.scRequestItem.cmItem.extensionCode}"
 						size="46" /></td>
 
-				<td><p:outputLabel
-						value="#{lbl['lbl.sc.gst.effective.date']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.gst.effective.date']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{purchaseInDefaultBackingBean.managedBean.smGstSupplier.gstEffDate}"
 						size="35">
@@ -60,8 +59,7 @@
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText></td>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sc.gst.declared.date']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.gst.declared.date']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{purchaseInDefaultBackingBean.managedBean.smGstSupplier.gstDeclaredDate}"
 						size="35">
@@ -182,7 +180,8 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.purchase.in.default.min.qty']}" /></td>
-				<td><p:inputText disabled="true" style="text-align:right;" size="46"
+				<td><p:inputText disabled="true" style="text-align:right;"
+						size="46"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.minimumOrderQty}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -206,7 +205,8 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.purchase.in.default.max.proc.amt']}" /></td>
-				<td><p:inputText disabled="true" style="text-align:right;" size="46"
+				<td><p:inputText disabled="true" style="text-align:right;"
+						size="46"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.maxProcureAmt}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -249,7 +249,8 @@
 			<p:column style="width:14%">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.gst.register.num']}" />
-					<ac:iconTooltip id="gstRegNo#{index}" value="#{lbl['lbl.sc.gst.register.num.tooltip']}" />
+					<ac:iconTooltip id="gstRegNo#{index}"
+						value="#{lbl['lbl.sc.gst.register.num.tooltip']}" />
 				</f:facet>
 				<h:outputText value="#{smGstSupplier.gstRegNo}"></h:outputText>
 
@@ -258,7 +259,8 @@
 			<p:column style="width:14%">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.gst.effective.date']}" />
-					<ac:iconTooltip id="gstEffDate#{index}" value="#{lbl['lbl.sc.gst.effective.date.tooltip']}" />
+					<ac:iconTooltip id="gstEffDate#{index}"
+						value="#{lbl['lbl.sc.gst.effective.date.tooltip']}" />
 				</f:facet>
 				<h:outputText value="#{smGstSupplier.gstEffDate}">
 					<f:convertDateTime
@@ -269,7 +271,8 @@
 			<p:column style="width:14%">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.gst.declared.date']}" />
-					<ac:iconTooltip id="gstDecDate#{index}" value="#{lbl['lbl.sc.gst.declared.date.tooltip']}" />
+					<ac:iconTooltip id="gstDecDate#{index}"
+						value="#{lbl['lbl.sc.gst.declared.date.tooltip']}" />
 				</f:facet>
 				<h:outputText value="#{smGstSupplier.gstDeclaredDate}">
 					<f:convertDateTime
@@ -279,7 +282,7 @@
 		</p:dataTable>
 	</p:panel>
 
-  <p:panel toggleable="true" id="reqDtlId">
+	<p:panel toggleable="true" id="reqDtlId">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText
@@ -293,16 +296,15 @@
 			<table style="width: 100%; margin-top: 8px;">
 				<tr>
 					<td style="width: 23%;"><p:outputLabel
-							value="#{lbl['lbl.sc.purchase.in.default.valid.period']}" />
-						<p:outputLabel value="*" styleClass="mandatory" /></td>
+							value="#{lbl['lbl.sc.purchase.in.default.valid.period']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="pidvalidDays" maxlength="14"
 							required="true"
 							label="#{lbl['lbl.sc.purchase.in.default.valid.period']}"
 							value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.pidValidDays}"
 							size="32" style="text-align:right;margin-right: 5px;"
 							disabled="#{!(isPendingSubmissionStatus or isPendingVerification)}">
-						</p:inputText> <p:message id="pidvalidDaysMsg"
-							for="pidvalidDays" display="icon" /></td>
+						</p:inputText> <p:message id="pidvalidDaysMsg" for="pidvalidDays" display="icon" /></td>
 				</tr>
 
 				<tr>
@@ -340,7 +342,7 @@
 
 		<h:panelGroup id="orderQty"
 			rendered="#{purchaseInDefaultBackingBean.managedBean.visibleOrderQty}">
-		<table style="width: 100%">
+			<table style="width: 100%">
 				<tr>
 					<td style="width: 23%;"><p:outputLabel
 							value="#{lbl['lbl.sc.purchase.in.default.order.qty']}" /> <p:outputLabel
@@ -405,7 +407,7 @@
 		<h:panelGroup id="attachmentId">
 			<table style="width: 100%">
 				<tr>
-					<td width="22%" style="padding-right: 0px; text-align: right;">
+					<td width="7%" style="padding-right: 0px; text-align: right;">
 						<p:outputLabel
 							value="#{lbl['lbl.sc.purchase.in.default.attachment']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" />
@@ -417,10 +419,10 @@
 				</tr>
 				<tr>
 					<td />
-					<td><p:dataGrid id="attachId"
-							value="#{purchaseInDefaultBackingBean.managedBean.attachments}"
-							var="attachFile" rowIndexVar="attachFileIndex" columns="1"
-							style="width:100%">
+					<td style="width: 23%"><ui:param name="attachFile"
+							value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.scPurchaseInDefaultAttachment}" />
+
+						<c:if test="#{!empty attachFile}">
 							<table>
 								<tr>
 									<td rowspan="2" style="vertical-align: top;" align="left">
@@ -443,19 +445,17 @@
 											action="#{purchaseInDefaultBackingBean.downloadFile(attachFile)}" />
 										<p:commandLink
 											action="#{purchaseInDefaultBackingBean.deleteUploadFile}"
-											immediate="true" update="attachId"
+											immediate="true" update="attachmentId"
 											disabled="#{!isPendingSubmissionStatus}">
 											<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 										</p:commandLink></td>
 								</tr>
 							</table>
-						</p:dataGrid></td>
-					<td><p:message id="attachIdMsg" for="attachId" display="icon" /></td>
+						</c:if></td>
 				</tr>
 			</table>
 		</h:panelGroup>
 	</p:panel>
-
 	<p:panel id="approversId" toggleable="true" toggleSpeed="500">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
@@ -465,8 +465,7 @@
 
 		<table>
 			<tr>
-				<td><p:pickList id="approver"
-						label="#{lbl['lbl.sc.approver']}"
+				<td><p:pickList id="approver" label="#{lbl['lbl.sc.approver']}"
 						disabled="#{!isPendingSubmissionStatus}"
 						value="#{purchaseInDefaultBackingBean.managedBean.approvalUsers}"
 						var="approverUser" showTargetControls="true"
