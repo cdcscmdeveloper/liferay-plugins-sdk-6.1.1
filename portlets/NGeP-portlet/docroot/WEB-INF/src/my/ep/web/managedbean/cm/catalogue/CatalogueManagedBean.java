@@ -1578,6 +1578,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.normal.price",
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.uom",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.supplier.name",
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.sku",
