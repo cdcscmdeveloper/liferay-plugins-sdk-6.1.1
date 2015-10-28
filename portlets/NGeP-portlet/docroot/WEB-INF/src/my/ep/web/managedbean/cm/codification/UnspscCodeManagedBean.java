@@ -106,6 +106,8 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	private boolean typeDisable = true;
 	private boolean colorDisable = true;
 	private boolean measurementDisable = true;
+	
+	private String extensionConfirmationMsg;
 
 	public CmBrand getSelectedBrand() {
 		return selectedBrand;
@@ -682,5 +684,15 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	public void setColorRedundancy(boolean colorRedundancy) {
 		this.colorRedundancy = colorRedundancy;
 	}
+
+	public String getExtensionConfirmationMsg() {
+		return extensionConfirmationMsg;
+	}
+
+	public void setExtensionConfirmationMsg(String extensionConfirmationMsg) {
+		this.extensionConfirmationMsg = extensionConfirmationMsg;
+	}
+	
+	
 
 }
