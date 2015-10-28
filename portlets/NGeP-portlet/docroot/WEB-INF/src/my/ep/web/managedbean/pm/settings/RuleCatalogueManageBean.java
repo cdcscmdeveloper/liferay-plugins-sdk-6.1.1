@@ -100,10 +100,10 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private List<PmDaGst> deletedDaGstList;
 	private Map<String , Integer> thresholdIdToS2UnplannedMap = new HashMap<String , Integer>();
 	private Map<String , Integer> thresholdIdToBudgetSpentMap = new HashMap<String , Integer>();
-	private boolean error1 = false;
-	private boolean error2 = false;
-	private boolean error3 = false;
-	private boolean error4 = false;
+//	private boolean error1 = false;
+//	private boolean error2 = false;
+//	private boolean error3 = false;
+//	private boolean error4 = false;
 	private PmCategoryL3 selectedCategoryL3;
 	/**
 	 * @return the selectedCategoryL3
@@ -118,46 +118,6 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setSelectedCategoryL3(PmCategoryL3 selectedCategoryL3) {
 		this.selectedCategoryL3 = selectedCategoryL3;
 	}
-	
-	public boolean isError1() {
-		return error1;
-	}
-
-
-	public boolean isError2() {
-		return error2;
-	}
-
-
-	public boolean isError3() {
-		return error3;
-	}
-
-
-	public boolean isError4() {
-		return error4;
-	}
-
-
-	public void setError1(boolean error1) {
-		this.error1 = error1;
-	}
-
-
-	public void setError2(boolean error2) {
-		this.error2 = error2;
-	}
-
-
-	public void setError3(boolean error3) {
-		this.error3 = error3;
-	}
-
-
-	public void setError4(boolean error4) {
-		this.error4 = error4;
-	}
-
 
 	public RuleCatalogueManageBean() {
 		
