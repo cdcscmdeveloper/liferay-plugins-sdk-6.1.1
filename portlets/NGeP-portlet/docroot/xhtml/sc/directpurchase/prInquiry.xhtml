@@ -8,7 +8,7 @@
 	<p:panel header="#{lbl['lbl.sc.price.inquiry.header.inquiry.detail']}" toggleable="true" id="addToCartId">
 		<table>
 			<tr>
-				<td style="width: 21%;"><p:outputLabel value="#{lbl['lbl.sc.direct.purchase.title']}" /> <p:outputLabel
+				<td style="width: 19%;"><p:outputLabel value="#{lbl['lbl.sc.direct.purchase.title']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText size="46" id="title" required="true"
 						maxlength="100" label="#{lbl['lbl.sc.direct.purchase.title']}" disabled="#{!isPendingSubmissionStatus}"
@@ -17,20 +17,20 @@
 						<p:message id="titleMsg" for="title" display="icon" /></td>
 			</tr>
 			<tr>
-				<td style="width: 18%;"><p:outputLabel
+				<td><p:outputLabel
 						value="#{lbl['lbl.sc.price.inquiry.supp.name']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.smSupplier.companyName}"
 						size="46" /></td>
 			</tr>
 			<tr>
-				<td style="width: 18%;"><p:outputLabel
+				<td><p:outputLabel
 						value="#{lbl['lbl.sc.price.inquiry.product.code']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.cmItem.extensionCode}"
 						size="46" /></td>
 
-				<td style="width: 150px;"><p:outputLabel
+				<td style="width: 225px;"><p:outputLabel
 						value="#{lbl['lbl.sc.price.inquiry.item.name']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.cmItem.itemName}"
@@ -44,14 +44,14 @@
 						rows="2" cols="122" style="margin-bottom: 5px; width: 300px;" /></td>
 			</tr>
 			<tr>
-				<td style="width: 18%;"><p:outputLabel
+				<td><p:outputLabel
 						value="#{lbl['lbl.sc.price.inquiry.uom']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.uom.uomName}"
 						size="25" /></td>
 			</tr>
 			<tr>
-				<td style="width: 18%;"><p:outputLabel
+				<td><p:outputLabel
 						value="#{lbl['lbl.sc.price.inquiry.min.qty']}" /></td>
 				<td><p:inputText disabled="true"  styleClass="ppRightBtn"
 						value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.minOrder}"
@@ -61,7 +61,7 @@
 				 </td>
 			</tr>
 			<tr>
-				<td style="width: 18%;">
+				<td>
 				<p:outputLabel
 						value="#{lbl['lbl.sc.price.inquiry.order.qty']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td ><p:inputText disabled="#{!isPendingSubmissionStatus}"  style="text-align: right;"
@@ -75,7 +75,7 @@
 										display="icon" /></td>
 			</tr>
 			<tr>
-				<td style="width: 18%;">
+				<td>
 				   <p:outputLabel value="#{lbl['lbl.sc.price.inquiry.price.type']}" /> 
 				   <p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td>
@@ -107,13 +107,13 @@
 					</td>
 			</tr>
 			<tr>
-				<td style="width: 18%;"><p:outputLabel 
+				<td><p:outputLabel 
 						value="#{lbl['lbl.sc.delivery.term']}" /></td>
 				<td><p:inputText disabled="true" value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.leadTime}" style="text-align:right;"
 						size="25"> </p:inputText></td>
 			</tr>
 			<tr>
-				<td style="width: 18%;"><p:outputLabel
+				<td><p:outputLabel
 						value="#{lbl['lbl.sc.price.inquiry.inquiry.date']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.createdDate}"
@@ -122,7 +122,7 @@
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<td style="width: 18%;">
+				<td>
 				   <p:outputLabel value="#{lbl['lbl.sc.price.inquiry.day.to.resp']}" /> 
 				   <p:outputLabel value="*" styleClass="mandatory" /></td>
 						
@@ -148,7 +148,7 @@
 			    
 					<table style="width: 100%">
 					  <tr>
-						 <td style="width: 20%">
+						 <td style="width: 19%">
 						     <p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" />  
 						     <p:outputLabel value="*" styleClass="mandatory" /></td>
 						 <td>
@@ -174,7 +174,7 @@
 					      
 					    <tr>
 						   <ui:fragment rendered="#{purchaseInquiryBackingBean.managedBean.procTypeOption}">
-							 <td style="width: 18%">
+							 <td style="width: 19%">
 							     <p:outputLabel value="#{lbl['lbl.sc.reason']}" />
 							     <p:outputLabel value="*" styleClass="mandatory" />
 							 </td>
