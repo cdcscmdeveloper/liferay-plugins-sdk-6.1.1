@@ -19,7 +19,6 @@ import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
-import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefaultAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -79,9 +78,6 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 
 	/** The justifications. */
 	private SelectItem[] justifications; // justification drop down
-
-	/** The attachments. */
-	private List<ScPurchaseInDefaultAttachment> attachments;
 
 	/** The process name. */
 	private String processName;
@@ -347,25 +343,6 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 	 */
 	public void setJustifications(SelectItem[] justifications) {
 		this.justifications = justifications;
-	}
-
-	/**
-	 * Gets the attachments.
-	 * 
-	 * @return the attachments
-	 */
-	public List<ScPurchaseInDefaultAttachment> getAttachments() {
-		return attachments;
-	}
-
-	/**
-	 * Sets the attachments.
-	 * 
-	 * @param attachments
-	 *            the attachments to set
-	 */
-	public void setAttachments(List<ScPurchaseInDefaultAttachment> attachments) {
-		this.attachments = attachments;
 	}
 
 	/**
