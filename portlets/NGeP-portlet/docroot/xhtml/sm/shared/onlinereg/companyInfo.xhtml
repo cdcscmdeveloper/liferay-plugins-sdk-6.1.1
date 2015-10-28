@@ -3,7 +3,6 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
 	<h:outputScript library="js" name="smGstCalendar.js" />
@@ -211,8 +210,7 @@
 				<td class="tdContent" ><p:inputText size="40"
 						id="compAdd1" required="#{!empty param['disableValidation']}" maxlength="35"
 						label="#{lbl['lbl.sm.companyaddress']}"
-						value="#{registrationBackingBean.managedBean.smBusinessAdd.address1}"
-						onblur="enableGMap();" />
+						value="#{registrationBackingBean.managedBean.smBusinessAdd.address1}" />
 					<p:message id="compAdd1Msg" for="compAdd1" display="icon" /></td>
 
 				<td class="tdTitle">
@@ -221,8 +219,7 @@
 				</td>
 				<td class="tdContent"><p:selectOneMenu id="compCountryId" disabled="#{registrationBackingBean.managedBean.sabahSarawakType}"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.country']}"  style="width:80%"
-						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmCountry.countryId}"
-						onchange="enableGMap();">
+						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmCountry.countryId}">
 						<f:selectItems var="counLs"
 							value="#{registrationBackingBean.managedBean.countryLs}"
 							itemLabel="#{counLs.countryName}" itemValue="#{counLs.countryId}" />
@@ -247,8 +244,7 @@
 				<td class="tdContent"><p:selectOneMenu id="busState" disabled="#{registrationBackingBean.managedBean.sabahSarawakType}"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.state']}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmState.stateId}"
-						style="width:80%"
-						onchange="enableGMap();">
+						style="width:80%">
 						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 						<f:selectItems var="state"
 							value="#{registrationBackingBean.managedBean.businessStateLs}"
@@ -272,8 +268,7 @@
 				<td class="tdContent"><p:selectOneMenu id="busDistrict"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.district']}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmDistrict.districtId}"
-						style="width:80%"
-						onchange="enableGMap();">
+						style="width:80%">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="dist"
 							value="#{registrationBackingBean.managedBean.businessDistrictLs}"
@@ -297,8 +292,7 @@
 				<td class="tdContent"><p:selectOneMenu id="busCity"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.towncity']}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmCity.cityId}"
-						style="width:80%"
-						onchange="enableGMap();">
+						style="width:80%">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="pcity"
 							value="#{registrationBackingBean.managedBean.businessCityLs}"
@@ -339,49 +333,7 @@
 					</p:outputPanel>
 				</td>
 			</tr>
-			
-			<tr>
-				<td></td>
-				<td colspan="3">
-					<SCRIPT type="text/javascript">
-				      function getAddress() {
-				    	  
-				    	  var addr1 = document.getElementById('#{p:component(&quot;compAdd1&quot;)}').value + ',';
-				    	  var addr2 = document.getElementById('#{p:component(&quot;compAdd2&quot;)}').value + ',';
-				    	  var addr3 = document.getElementById('#{p:component(&quot;compAdd3&quot;)}').value + ',';
-				    	  var addr4 = document.getElementById('#{p:component(&quot;compAdd4&quot;)}').value + ',';
 
-				    	  var cityName = document.getElementById('#{p:component(&quot;busCity&quot;)}_input').options[document.getElementById('#{p:component(&quot;busCity&quot;)}_input').selectedIndex].text;
-				    	  var districtName = document.getElementById('#{p:component(&quot;busDistrict&quot;)}_input').options[document.getElementById('#{p:component(&quot;busDistrict&quot;)}_input').selectedIndex].text;
-				    	  var stateName = document.getElementById('#{p:component(&quot;busState&quot;)}_input').options[document.getElementById('#{p:component(&quot;busState&quot;)}_input').selectedIndex].text;
-				    	  var countryName = document.getElementById('#{p:component(&quot;compCountryId&quot;)}_input').options[document.getElementById('#{p:component(&quot;compCountryId&quot;)}_input').selectedIndex].text;
-				    	  
-				    	  /*var cityName = '';
-				    	  var districtName = '';
-				    	  var stateName = '';
-				    	  var countryName = '';
-				    	  */
-				    	  var address = addr1 + addr2 + addr3 + addr4 + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
-
-				      	return address;
-				      }
-				      </SCRIPT>
-				      
-					<p:remoteCommand 
-						id="enableGMap" 
-						name="enableGMap"
-						process="compAdd1 compCountryId busState busDistrict busCity" 
-						update=":form:acgmap:gmapInput:gmapInput" />
-						
-					<ac:gmap id="acgmap" 
-						address="getAddress()"
-						locationName="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.companyName}"
-						latitude="#{registrationBackingBean.managedBean.smBusinessAdd.mapLatitude}"
-						longitude="#{registrationBackingBean.managedBean.smBusinessAdd.mapLongitude}"
-						disabled="#{registrationBackingBean.gmapDisabled}" />				
-				</td>
-			</tr>
-			
 			<tr>
 				<td class="tdTitle">
 					<p:outputLabel value="#{lbl['lbl.sm.telno']}" />
