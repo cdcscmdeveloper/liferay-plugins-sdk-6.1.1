@@ -76,6 +76,7 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private Map<String , BigDecimal> roleCodeToApprovalLimitMap = new HashMap<String , BigDecimal>();
 	private boolean isActiveUser;
 	private Integer roleTabActiveIndex = 0;
+	private boolean isDisabledOrgFields = false;
 	
 	public PmUser getPmUserOriginal() {
 		return pmUserOriginal;
@@ -498,6 +499,18 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	 */
 	public void setRoleTabActiveIndex(Integer roleTabActiveIndex) {
 		this.roleTabActiveIndex = roleTabActiveIndex;
+	}
+	/**
+	 * @return the isDisabledOrgFields
+	 */
+	public boolean isDisabledOrgFields() {
+		return isDisabledOrgFields;
+	}
+	/**
+	 * @param isDisabledOrgFields the isDisabledOrgFields to set
+	 */
+	public void setDisabledOrgFields(boolean isDisabledOrgFields) {
+		this.isDisabledOrgFields = isDisabledOrgFields;
 	}
 	
 

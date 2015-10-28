@@ -223,9 +223,8 @@ public class ProfileManagementBackingBean extends
 		return this.orgTypeSearchBean;
 	}
 
-	public boolean isNotEpOrSupportAdmin() {
-		if (getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.SUPPORT_ADMIN.value())) {
+	public boolean isNotEpAdmin() {
+		if (getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())) {
 			return true;
 		}
 		return false;
@@ -454,6 +453,7 @@ public class ProfileManagementBackingBean extends
 		this.resetUserProfileSearchBean();
 		this.retrieveOrgTypeMap();
 		this.getManagedBean().setSelectedTabIndex(TAB_USER_PROFILE);
+		retrieveOrgTypeAndOrgName();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_SEARCH);
@@ -771,6 +771,16 @@ public class ProfileManagementBackingBean extends
 		pmUserOrg.setPmOrgProfile(pmOrgProfile);
 		pmUserOrg.setEffDate(new Timestamp(System.currentTimeMillis()));
 		pmUserOrg.setPmUser(pmUser);
+		
+		if(getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value()) || 
+				getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value()) ||
+				getFacesScopes().hasRoleUser(RoleCode.PROCUREMENT_ADMIN.value()) ||
+				getFacesScopes().hasRoleUser(RoleCode.SUPPORT_ADMIN.value()) ){
+			if(getManagedBean().getCurrentActiveOrg() != null){
+				pmUserOrg.setPmOrgProfile(getManagedBean().getCurrentActiveOrg());
+			}
+		}
+		
 		pmUser.getPmUserOrgs().add(pmUserOrg);
 		this.getManagedBean().setSelectedUserOrg(pmUserOrg);
 		logger.info(".........this.getManagedBean().getSelectedUserOrg()="
@@ -792,7 +802,11 @@ public class ProfileManagementBackingBean extends
 		pmUser.setConfirmPassword(null);
 		pmUser.setPmUserAttachments(new ArrayList<PmUserAttachment>());
 
-		getManagedBean().setOrgCategory(FEDERAL_GOVT);
+		if(getFacesScopes().hasRoleUser(RoleCode.SUPPORT_ADMIN.value())){
+			getManagedBean().setOrgCategory(OTHERS);
+		}else{
+			getManagedBean().setOrgCategory(FEDERAL_GOVT);
+		}
 		this.getManagedBean().setAddressEntered(false);
 		this.getManagedBean().setSelectedUser(pmUser);
 		this.getManagedBean().setSelectedRoles(null);
@@ -4895,19 +4909,19 @@ public class ProfileManagementBackingBean extends
 			searchBean = getUserOrgTypeSearchBean("somOtherOrgType");			
 		}
 		
-		if (getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.PROCUREMENT_ADMIN.value())) {
-			if (this.getManagedBean().getCurrentActiveOrg() != null) {
-				SearchFilterBean orgTypeBean = new SearchFilterBean();
-				orgTypeBean
-						.setSearchOperator(SearchOperator.OPERATOR_EQUALS
-								.value());
-				orgTypeBean.setSearchField("pmParameter.parameterCode");
-				orgTypeBean.setSearchValue(this.getManagedBean()
-						.getCurrentActiveOrg().getOrgCode());
-				searchBean.getDataFilterBeans().add(orgTypeBean);
-			}
-		}
+//		if (getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())
+//				|| getFacesScopes().hasRoleUser(RoleCode.PROCUREMENT_ADMIN.value())) {
+//			if (this.getManagedBean().getCurrentActiveOrg() != null) {
+//				SearchFilterBean orgTypeBean = new SearchFilterBean();
+//				orgTypeBean
+//						.setSearchOperator(SearchOperator.OPERATOR_EQUALS
+//								.value());
+//				orgTypeBean.setSearchField("pmParameter.parameterCode");
+//				orgTypeBean.setSearchValue(this.getManagedBean()
+//						.getCurrentActiveOrg().getOrgCode());
+//				searchBean.getDataFilterBeans().add(orgTypeBean);
+//			}
+//		}
 
 		SelectItem[] items = null;
 		if (searchBean != null) {
@@ -4942,19 +4956,19 @@ public class ProfileManagementBackingBean extends
 			}
 		}
 		
-		if (getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value()) 
-				|| getFacesScopes().hasRoleUser(RoleCode.PROCUREMENT_ADMIN.value())) {
-			if (this.getManagedBean().getCurrentActiveOrg() != null) {
-				SearchFilterBean orgTypeBean = new SearchFilterBean();
-				orgTypeBean
-						.setSearchOperator(SearchOperator.OPERATOR_EQUALS
-								.value());
-				orgTypeBean.setSearchField("pmParameter.parameterCode");
-				orgTypeBean.setSearchValue(this.getManagedBean()
-						.getCurrentActiveOrg().getOrgCode());
-				searchBean.getDataFilterBeans().add(orgTypeBean);
-			}
-		}
+//		if (getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value()) 
+//				|| getFacesScopes().hasRoleUser(RoleCode.PROCUREMENT_ADMIN.value())) {
+//			if (this.getManagedBean().getCurrentActiveOrg() != null) {
+//				SearchFilterBean orgTypeBean = new SearchFilterBean();
+//				orgTypeBean
+//						.setSearchOperator(SearchOperator.OPERATOR_EQUALS
+//								.value());
+//				orgTypeBean.setSearchField("pmParameter.parameterCode");
+//				orgTypeBean.setSearchValue(this.getManagedBean()
+//						.getCurrentActiveOrg().getOrgCode());
+//				searchBean.getDataFilterBeans().add(orgTypeBean);
+//			}
+//		}
 
 		SelectItem[] items = null;
 		if (searchBean != null) {
@@ -5057,5 +5071,25 @@ public class ProfileManagementBackingBean extends
 		}
 		
 		return roleCode;
+	}
+	
+	// Org Type and Org Name will be defaulted to the admin's organisation
+	// Only applicable for Procurement Admin,PTJ Admin,UPS Admin and Support Admin
+	private void retrieveOrgTypeAndOrgName(){
+		if(getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value()) || 
+				getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value()) ||
+				getFacesScopes().hasRoleUser(RoleCode.PROCUREMENT_ADMIN.value()) ||
+				getFacesScopes().hasRoleUser(RoleCode.SUPPORT_ADMIN.value()) ){
+			if(getManagedBean().getCurrentActiveOrg() != null){
+				getManagedBean().setSelectedOrgType(getManagedBean().getCurrentActiveOrg().getOrgTypeCode());
+				getManagedBean().setSelectedOrgProfile(getManagedBean().getCurrentActiveOrg());
+				getManagedBean().setDisabledOrgFields(true);
+				if(getFacesScopes().hasRoleUser(RoleCode.SUPPORT_ADMIN.value())){
+					this.getManagedBean().setSearchOrgCategory(OTHERS);
+				}
+			}			
+		}else{
+			getManagedBean().setDisabledOrgFields(false);
+		}
 	}
 }

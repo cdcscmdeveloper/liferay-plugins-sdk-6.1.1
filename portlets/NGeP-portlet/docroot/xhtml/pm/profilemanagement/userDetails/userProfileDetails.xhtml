@@ -26,7 +26,7 @@
 								
 						<td ><p:selectOneRadio id="sorOrgTypeId"
 								value="#{profileManagementBackingBean.managedBean.orgCategory}"
-								disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or !profileManagementBackingBean.isNotEpOrSupportAdmin()}">
+								disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or !profileManagementBackingBean.isNotEpAdmin()}">
 								<f:selectItem
 									itemLabel="#{lbl['lbl.pm.org.federal.government']}"
 									itemValue="#{profileManagementBackingBean.federalGovt}" />
@@ -48,7 +48,7 @@
 								value="*" styleClass="mandatory" /></th>
 						<td width="20%"><p:selectOneMenu id="orgTypeFederalList"
 								rendered="#{profileManagementBackingBean.managedBean.orgCategory eq profileManagementBackingBean.federalGovt}"
-								disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew}"
+								disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.disabledOrgFields}"
 								styleClass="ppDropDownWidthL" required="true"
 								label="#{lbl['lbl.pm.organisation.orgType']}"
 								style="margin-bottom: 5px;"
@@ -62,7 +62,7 @@
 			     			" />
 							</p:selectOneMenu>  <p:selectOneMenu id="orgTypeOthersList"
 								rendered="#{profileManagementBackingBean.managedBean.orgCategory eq profileManagementBackingBean.others}"
-								disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew}"
+								disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.disabledOrgFields}"
 								styleClass="ppDropDownWidthL" required="true"
 								label="#{lbl['lbl.pm.organisation.orgType']}"
 								style="margin-bottom: 5px;"
@@ -89,8 +89,8 @@
 							    	required="true" 
 					            	update=":form:lovResOrg:lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
 						     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr"
-					            	readonly="true" disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null}"
-									headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
+					            	readonly="true" disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null or profileManagementBackingBean.managedBean.disabledOrgFields}"
+									headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"									
 									value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmFinancialOrg.finOrgName}" 
 									saveObject="profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile"
 									conditionField="#{profileManagementBackingBean.constructConditionFieldsForCreate()}" 
@@ -102,7 +102,7 @@
 							    	required="true" 
 					            	update=":form:lovResOrg:lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
 						     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr"
-					            	readonly="true" disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null}"
+					            	readonly="true" disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null or profileManagementBackingBean.managedBean.disabledOrgFields}"
 									headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 									value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.smSupplier.companyName}" 
 									saveObject="profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile"
@@ -116,7 +116,7 @@
 												update=":form:lovResOrg:lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
 						     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr"
 												readonly="true"
-												disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null}"
+												disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null or profileManagementBackingBean.managedBean.disabledOrgFields}"
 												headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 												value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgName}"
 												saveObject="profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile"
