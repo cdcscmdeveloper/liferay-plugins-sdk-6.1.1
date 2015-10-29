@@ -785,7 +785,6 @@ public class SmApplicationBackingBean extends
 			if (fromBpm
 					&& (getManagedBean().isPoUser() || getManagedBean()
 							.isApproverUser())) {
-				SmFieldChangeUtil.initLatestAppl(getManagedBean());
 				setRevUrl();
 				getManagedBean().setMaxReviewCount(
 						assignMaxReviewCount(applicationType, getManagedBean()
@@ -925,6 +924,9 @@ public class SmApplicationBackingBean extends
 
 			// init GST information
 			initGst();
+
+			// init to show change value compare to previous application
+			SmFieldChangeUtil.initLatestAppl(getManagedBean());
 
 			// set softcert reject reason
 			setPersonnelSoftcertRejectReason();
