@@ -20,6 +20,8 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.fl.FlDocumentReqDTO;
 import my.ep.dto.fl.FlDocumentResDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -206,7 +208,14 @@ public class FlTrackingDiaryManagedBean extends BaseManagedBean {
 		
 		private List<Long> getNaikTarafChild(Long orgProfileId) {
 			IOrgProfileSO orgProfileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-			return orgProfileSO.retrieveProfileGroupByMainOrgProfileId(orgProfileId);
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			reqDTO.setOrgProfileId(orgProfileId);
+			OrgProfileResDTO resDTO = orgProfileSO.retrieveProfileGroupByMainOrgProfileId(reqDTO);			
+			if(resDTO.isSuccessful()){
+				return resDTO.getOrgProfileIdList();
+			}else{
+				return new ArrayList<Long>();
+			}
 		}
 	}
 	public boolean isFlFulfilmentRequisitioner() {
