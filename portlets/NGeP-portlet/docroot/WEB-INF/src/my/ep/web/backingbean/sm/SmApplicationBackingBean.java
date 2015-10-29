@@ -2558,10 +2558,14 @@ public class SmApplicationBackingBean extends
 		}
 		SmApplicationUtil.initGstSuppDocs(branchBean.getGst());
 		getManagedBean().setSelectedBranch(branchBean);
-		getManagedBean().setLatestBranch(
-				SmFieldChangeUtil.getBranchByBranchCodeFromList(
-						getManagedBean().getLatestAppl(),
-						branchBean.getBranchCode()));
+		if (getManagedBean().getLatestAppl() != null) {
+			getManagedBean().setLatestBranch(
+					(SmSupplierBranch) SmCommonUtil
+							.getObjectByPropertiesFromList(branchBean,
+									getManagedBean().getLatestAppl()
+											.getSmSupplierBranches(),
+									new String[] { "branchCode" }, null));
+		}
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("banchDialog.show()");
 
@@ -5847,11 +5851,15 @@ public class SmApplicationBackingBean extends
 					getManagedBean());
 		}
 		getManagedBean().setSelectedBank(shareBankBean);
-		getManagedBean().setLatestBank(
-				SmFieldChangeUtil.getBankByAccNoAndAccPurposeFromList(
-						getManagedBean().getLatestAppl(),
-						shareBankBean.getAccountNo(),
-						shareBankBean.getAccountPurpose()));
+		if (getManagedBean().getLatestAppl() != null) {
+			getManagedBean().setLatestBank(
+					(SmSupplierBank) SmCommonUtil
+							.getObjectByPropertiesFromList(shareBankBean,
+									getManagedBean().getLatestAppl()
+											.getSmSupplierBanks(),
+									new String[] { "accountNo",
+											"accountPurpose" }, null));
+		}
 		retrieveBankFinOrgListByType();
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("bankDialog.show()");
