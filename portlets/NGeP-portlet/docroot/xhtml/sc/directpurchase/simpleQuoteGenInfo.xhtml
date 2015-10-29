@@ -27,20 +27,65 @@
 				</td>
 			</tr>
 			<tr>
-				<td>
-				<p:outputLabel value="#{lbl['lbl.sc.direct.purchase.title']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.direct.purchase.title']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td colspan="3">
 					<table>
 						<tr>
-							<td><p:inputText size="84" id="title" required="true" maxlength="100"
-									label="#{lbl['lbl.sc.document.title']}"
+							<td><p:inputText size="84" id="title" required="true"
+									maxlength="100" label="#{lbl['lbl.sc.document.title']}"
 									disabled="#{!isEditable}"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.title}"
 									style="margin-bottom: 5px;" /></td>
 							<td><p:message id="titleMsg" for="title" display="icon" /></td>
 						</tr>
-					</table></td>
-			  </tr>
+					</table>
+				</td>
+			</tr>
+				<tr>
+					<td style="padding-right: 0px; text-align: right; width: 7%"><p:outputLabel
+							value="#{lbl['lbl.sc.quote.scope.of.work.and.services']}" /></td>
+					<td class="TableFieldRight"><p:commandButton
+							oncomplete="uploadDlg.show();return false;" icon="iconAttachment"
+							update="sqinfoId" disabled="#{!isEditable}"
+							value="#{lbl['lbl.txt.choose.files']}" /></td>
+				</tr>
+			<tr>
+				<td />
+				<td style="width: 23%"><ui:param name="attachFile"
+						value="#{simpleQuoteBackingBean.managedBean.scQuote.scQuoteAttachment}" />
+
+					<c:if test="#{!empty attachFile}">
+						<table style="width: 100%">
+							<tr>
+								<td rowspan="2" style="vertical-align: top;" align="left">
+									<ui:param name="icon"
+										value="#{simpleQuoteBackingBean.determineIcon(attachFile)}"></ui:param>
+									<p:graphicImage value="/css/images/design/#{icon}" height="30"
+										width="30">
+									</p:graphicImage>
+								</td>
+								<td><h:outputText
+										value="#{attachFile.createdUser.userName}" />, <h:outputText
+										value="#{attachFile.createdDate}">
+										<f:convertDateTime
+											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+									</h:outputText></td>
+							</tr>
+							<tr>
+								<td><h:commandLink value="#{attachFile.fileName}"
+										styleClass="blue_font" immediate="true"
+										action="#{simpleQuoteBackingBean.downloadFile(attachFile)}" />
+									<p:commandLink
+										action="#{simpleQuoteBackingBean.deleteUploadFile}"
+										immediate="true" update="sqinfoId" disabled="#{!isEditable}">
+										<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+									</p:commandLink></td>
+							</tr>
+						</table>
+					</c:if></td>
+			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.procurment.type.category']}" /> <p:outputLabel
@@ -51,7 +96,7 @@
 							<td><p:selectOneMenu id="procTypeCategory"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.procurementTypeCategory.parameterId}"
 									disabled="#{!isEditable}"
-									style="width:120px;margin-bottom: 5px;" required="true"
+									style="width:120px;margin-bottom: 5px;margin-top: 5px;" required="true"
 									label="#{lbl['lbl.sc.procurment.type.category']}">
 
 									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -60,7 +105,7 @@
 										value="#{simpleQuoteBackingBean.procTypeCategories}"
 										var="pmParameterDesc" itemLabel="#{pmParameterDesc.codeName}"
 										itemValue="#{pmParameterDesc.pmParameter.parameterId}" />
-								    </p:selectOneMenu> <p:message id="procTypeCategoryMsg" for="procTypeCategory"
+								</p:selectOneMenu> <p:message id="procTypeCategoryMsg" for="procTypeCategory"
 									display="icon" /></td>
 						</tr>
 					</table>
@@ -242,16 +287,23 @@
 					</table>
 	  </p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.remarks.attachment']}"
-		toggleable="true">
-		<table style="width: 100%">
-			<tr>
-				<td width="50%" valign="top"><ui:include
-						src="simpleQuoteRemark.xhtml" /></td>
-				<td width="50%" valign="top"><ui:include
-						src="simpleQuoteAttachment.xhtml" /></td>
-			</tr>
-		</table>
+	<p:panel header="#{lbl['lbl.sc.simple.quote.remark']}" toggleable="true">
+		<ui:include src="simpleQuoteRemark.xhtml" />
 	</p:panel>
+
+	<p:dialog id="uploadDlg" widgetVar="uploadDlg" modal="true"
+		dynamic="true" hideEffect="explode" resizable="false" width="700px"
+		height="200" styleClass="pop_up_top"
+		header="#{lbl['lbl.txt.choose.files']}">
+		<p:ajax event="close" oncomplete="uploadDlg.hide()" />
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{simpleQuoteBackingBean.handleFileUpload}"
+			mode="advanced" id="upload"
+			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+			update="@form" oncomplete="uploadDlg.hide()">
+		</p:fileUpload>
+	</p:dialog>
 
 </ui:composition>
