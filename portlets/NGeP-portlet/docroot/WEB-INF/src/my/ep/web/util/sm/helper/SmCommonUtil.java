@@ -3002,10 +3002,10 @@ public class SmCommonUtil {
 		if (!(target instanceof Object))
 			return target.getClass().getDeclaredFields();
 
-		List<Field> campos = new ArrayList<Field>();
-		loadFields(target.getClass(), campos, findInSuperClasses,
+		List<Field> fields = new ArrayList<Field>();
+		loadFields(target.getClass(), fields, findInSuperClasses,
 				setFieldsAsAccessible);
-		return campos.toArray(new Field[campos.size()]);
+		return fields.toArray(new Field[fields.size()]);
 	}
 
 	private static void loadFields(Class<?> clazz, List<Field> fieldList,
