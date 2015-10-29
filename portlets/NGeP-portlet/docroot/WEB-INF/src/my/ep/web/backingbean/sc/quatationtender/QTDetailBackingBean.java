@@ -1511,6 +1511,7 @@ public class QTDetailBackingBean extends
 						tabType, qtId);
 				if (isApprovalReq) {
 					evalCommitte.getScCommittee().setApprovalReq(isApprovalReq);
+					evalCommitte.getScCommittee().setModified(true);
 				}
 				committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
 						parameterType, tabType), tabType, evalCommitte));
@@ -1523,6 +1524,7 @@ public class QTDetailBackingBean extends
 				if (isApprovalReq) {
 					openingCommitte.getScCommittee().setApprovalReq(
 							isApprovalReq);
+					openingCommitte.getScCommittee().setModified(true);
 				}
 				committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
 						parameterType, tabType), tabType, openingCommitte));
@@ -1532,6 +1534,7 @@ public class QTDetailBackingBean extends
 						tabType, qtId);
 				if (isApprovalReq) {
 					tecCommitte.getScCommittee().setApprovalReq(isApprovalReq);
+					tecCommitte.getScCommittee().setModified(true);
 				}
 				committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
 						parameterType, tabType), tabType, tecCommitte));
@@ -1541,6 +1544,7 @@ public class QTDetailBackingBean extends
 						tabType, qtId);
 				if (isApprovalReq) {
 					fecCommitte.getScCommittee().setApprovalReq(isApprovalReq);
+					fecCommitte.getScCommittee().setModified(true);
 				}
 				committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
 						parameterType, tabType), tabType, fecCommitte));
