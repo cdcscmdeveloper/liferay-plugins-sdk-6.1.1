@@ -2698,11 +2698,14 @@ public class SmApplicationBackingBean extends
 		getManagedBean().getSelectedAssocCompany().setIsShareholding(
 				new BigDecimal(0));
 		assignValReqdToTrue();
-		getManagedBean()
-				.setLatestAssocCompany(
-						SmFieldChangeUtil.getAssocCompanyByRegNoFromList(
-								getManagedBean().getLatestAppl(),
-								assocBean.getRegNo()));
+		if (getManagedBean().getLatestAppl() != null) {
+			getManagedBean().setLatestAssocCompany(
+					(SmAssociateCompany) SmCommonUtil
+							.getObjectByPropertiesFromList(assocBean,
+									getManagedBean().getLatestAppl()
+											.getSmAssociateCompanies(),
+									new String[] { "regNo" }, null));
+		}
 		RequestContext.getCurrentInstance().execute("assocDialog.show()");
 	}
 
@@ -2795,11 +2798,15 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setSelectedCert(certBean);
 		assignCertBodyList();
 		assignValReqdToTrue();
-		getManagedBean().setLatestCert(
-				SmFieldChangeUtil.getCertByNameAndCertTypeAndBodyFromList(
-						getManagedBean().getLatestAppl(),
-						certBean.getCertName(), certBean.getCertTypeId(),
-						certBean.getPmCertBody()));
+		if (getManagedBean().getLatestAppl() != null) {
+			getManagedBean().setLatestCert(
+					(SmSupplierCert) SmCommonUtil
+							.getObjectByPropertiesFromList(certBean,
+									getManagedBean().getLatestAppl()
+											.getSmSupplierCerts(),
+									new String[] { "certTypeId", "certName" },
+									new String[] { "pmCertBody" }));
+		}
 		RequestContext.getCurrentInstance().execute("certDialog.show()");
 	}
 
