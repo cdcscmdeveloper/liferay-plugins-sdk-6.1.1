@@ -971,10 +971,8 @@ public class LOIDetailBackingBean extends
 	private void calculateOfferedAndFinalPriceByItem(ScLoi scLoi) {
 		getManagedBean().setScLoi(scLoi);
 		List<ScLoiLoaItem> filteredMaxPriceItems  = getManagedBean().getScLoiLoaItems();
-		if(null == filteredMaxPriceItems){
-			filteredMaxPriceItems  = filterZoneTierOrTierPriceItems(scLoi);
-			getManagedBean().setScLoiLoaItems(filteredMaxPriceItems);
-		}
+		filteredMaxPriceItems  = filterZoneTierOrTierPriceItems(scLoi);
+		getManagedBean().setScLoiLoaItems(filteredMaxPriceItems);
 
 		// calculate max price items only.
 		boolean isCalculateMaxPriceItem = Boolean.FALSE;
