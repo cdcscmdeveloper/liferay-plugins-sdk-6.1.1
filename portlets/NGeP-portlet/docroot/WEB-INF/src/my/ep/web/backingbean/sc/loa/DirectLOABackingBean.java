@@ -313,6 +313,8 @@ public class DirectLOABackingBean extends
 
 			validateLOADetails(scLoa, outcome);
 
+			validateContractAmount(scLoa.getLoaAmt());
+
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setOutcome(outcome);
@@ -485,7 +487,7 @@ public class DirectLOABackingBean extends
 
 			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
 
-			scLoa = calcBondAmount(scLoa);
+			scLoa = calcBondAmount(scLoa, true);
 			Date issueDate = scLoa.getIssueDate();
 			Date bondRespDueDate = DateUtils.addDays(issueDate, 30);
 			scLoa.setBondResDueDate(bondRespDueDate);
@@ -1316,7 +1318,7 @@ public class DirectLOABackingBean extends
 
 		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)
 				|| QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId)) {
-			// TODO need to change to final once changes done at spec side
+
 			this.getManagedBean().getProdscQtDoc().getTplSpecMaster()
 					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
 			this.getManagedBean().getServicescQtDoc().getTplSpecMaster()
@@ -3176,6 +3178,7 @@ public class DirectLOABackingBean extends
 		removefullfillmentDetails(SourcingConstants.PROGRESSIVE_PAYMENT);
 		removefullfillmentDetails(SourcingConstants.FREQUENCY_SCHEDULE);
 		getLoaReports();
+		checkAgreementMandatory();
 
 	}
 
@@ -3862,7 +3865,7 @@ public class DirectLOABackingBean extends
 		scLoa.setScLoaRemarks(initializeRemarks(scLoa, null,
 				scLoa.getScLoaRemarks(), ScLoaRemark.class));
 		// bond calculation
-		scLoa = calcBondAmount(scLoa);
+		scLoa = calcBondAmount(scLoa, true);
 
 		// procurement type category
 		if (scLoa.getProcurementTypeCatId() == null) {
@@ -4070,6 +4073,7 @@ public class DirectLOABackingBean extends
 
 			parseLOADetails(scLoa, outcome, reqDTO);
 			validateLOADetails(scLoa, outcome);
+			validateContractAmount(scLoa.getLoaAmt());
 			// if reject, remove the new witness
 			if (BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
 				ScLoaWitness scLoaWitness = null;
@@ -4523,7 +4527,7 @@ public class DirectLOABackingBean extends
 			supplierEmail = "";
 		}
 		context.put("supplierEmail", supplierEmail);
-		
+
 		String procurementMode = "";
 		ParameterReqDTO reqDTO = new ParameterReqDTO();
 		reqDTO.setParameterType(ParameterTypeConst.SC_PROCUREMENT_MODE);
@@ -5438,9 +5442,8 @@ public class DirectLOABackingBean extends
 					overallCtAmount(loaAmount, gstAmount));
 			ScLoa scLoa = getManagedBean().getScLoa();
 
-			
-			calcBondAmount(scLoa);
-			
+			calcBondAmount(scLoa, true);
+
 			if (null != scLoa.getContractSigner()
 					&& scLoa.getContractSigner().getUserId() != null) {
 
@@ -5806,7 +5809,7 @@ public class DirectLOABackingBean extends
 
 		this.getManagedBean().setOverallContractAmt(loaAmount);
 		prepareSignerInfo();
-		calcBondAmount(this.getManagedBean().getScLoa());
+		calcBondAmount(this.getManagedBean().getScLoa(), true);
 	}
 
 	private void updateToBeDeleteSpecAnswersTOReq(DirectAwardReqDTO awardReqDTO) {
@@ -5974,6 +5977,48 @@ public class DirectLOABackingBean extends
 				}
 			}
 		}
+	}
+
+	private void validateContractAmount(BigDecimal contractAmt) {
+
+		TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
+		BigDecimal prodAmount = templateSpecBackingBean
+				.calcGrandTotalAmount(this.getManagedBean()
+						.getProdTemplateSpecBean());
+		BigDecimal servAmount = templateSpecBackingBean
+				.calcGrandTotalAmount(this.getManagedBean()
+						.getSpecTemplateSpecBean());
+		BigDecimal totalSpecEstimatedAmt = prodAmount.add(servAmount);
+		if (contractAmt.compareTo(totalSpecEstimatedAmt) < 0) {
+			throw new EpException(MessageConst.ERROR_700115, new String[] {
+					totalSpecEstimatedAmt.toString(), contractAmt.toString() });
+		}
+	}
+
+	/**
+	 * To check is agreement required
+	 * 
+	 * @return boolean isRequirementRequired
+	 */
+	public boolean checkAgreementMandatory() {
+		boolean isAgreementMandatory = false;
+		ScLoa loa = getManagedBean().getScLoa();
+		BigDecimal loaAmt = loa.getLoaAmt();
+		if (null != loa.getScLoiLoa().getFulfilmentTypeCode()) {
+			String fulfilmentType = loa.getScLoiLoa().getFulfilmentTypeCode()
+					.getParameterCode();
+
+			boolean isOneOffFulfilment = ParameterConst.FULFILMENT_TYPE_ONE_OFF
+					.equals(fulfilmentType);
+			if (!isOneOffFulfilment) {
+				isAgreementMandatory = true;
+			} else if (isOneOffFulfilment && !isQuotationThresHold(loaAmt)) {
+				isAgreementMandatory = true;
+			}
+		}
+		loa.setAgreementReq(isAgreementMandatory);
+
+		return isAgreementMandatory;
 	}
 
 }
