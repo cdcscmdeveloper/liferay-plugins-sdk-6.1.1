@@ -8824,11 +8824,12 @@ public class SpecificationBackingBean extends
 		endYear = schedule.getEndYear() != null ? Integer.parseInt(schedule
 				.getEndYear()) : null;
 
-		if (null!=startMonthAndYearFlag && startMonthAndYearFlag && startMonth != null) {
+		if (null != startMonthAndYearFlag && startMonthAndYearFlag
+				&& startMonth != null) {
 			endMonth = startMonth;
 			endYear = startYear;
 			schedule.setEndMonth(endMonth.toString());
-			if(endYear != null){
+			if (endYear != null) {
 				schedule.setEndYear(endYear.toString());
 			}
 		}
@@ -9734,9 +9735,23 @@ public class SpecificationBackingBean extends
 						throw new EpException(MessageConst.ERROR_760359);
 					}
 				}
+				if (remarks.size() == 1) {
+					ScQtRemark userRemark = remarks.get(0);
+					if (null == userRemark.getRemarkId()) {
+						RequestContext.getCurrentInstance().execute(
+								"reviceApprovalDlgs.show()");
+					} else {
+						reviseMinistrySpecApproval();
+						return CommonUIConst.ACKNOWLEDGE_PAGE;
+					}
+				} else {
+					if (remarks.size() > 1) {
+						reviseMinistrySpecApproval();
+						return CommonUIConst.ACKNOWLEDGE_PAGE;
+					}
+				}
 			}
-			RequestContext.getCurrentInstance().execute(
-					"reviceApprovalDlgs.show()");
+
 		} else if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
 			this.getManagedBean().setLocalOutCome(action);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
