@@ -89,7 +89,8 @@
 									<f:selectItem
 										itemLabel="#{lbl['lbl.sm.facility.facilityType.business.office']}"
 										itemValue="B" />
-	
+										
+									<p:ajax event="change" process="@this" partialSubmit="true"/>
 								</p:selectOneRadio> 
 								
 								<ac:smFieldChangeAlert 
@@ -113,10 +114,13 @@
 						<td><p:outputLabel value="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'?
 								lbl['lbl.sm.facility.landLordName']:lbl['lbl.sm.facility.ownerName']}" /> 
 							<p:outputLabel value="*" styleClass="mandatory" /></td>
-						<td><p:inputText id="fcltyOwnerName"
+						<td>
+							<p:inputText id="fcltyOwnerName"
 								label="#{lbl['lbl.sm.facility.ownerName']}" maxlength="50"
 								value="#{backingBean.managedBean.basicCompanyFacility.ownerName}"
-								size="35" required="true" /> 
+								size="35" required="true"> 
+								<p:ajax partialSubmit="true" process="@this" />
+							</p:inputText>
 								
 								<ac:smFieldChangeAlert 
 									isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -131,13 +135,15 @@
 							<td><p:outputLabel
 									value="#{lbl['lbl.sm.facility.purchaseDate']}" /> <p:outputLabel
 									value="*" styleClass="mandatory" /></td>
-							<td style="padding-bottom: 3px;"><p:calendar showOn="button"
+							<td style="padding-bottom: 3px;">
+								<p:calendar showOn="button"
 									id="purchaseDate" navigator="true" readonlyInput="true"
 									display="inline" maxdate="#{CommonConstants.CURRENT_DATE}"
 									label="#{lbl['lbl.sm.facility.purchaseDate']}"
 									value="#{backingBean.managedBean.basicCompanyFacility.purchaseDate}"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 									required="true" yearRange="-99:+0">
+									<p:ajax event="dateSelect" process="@this" partialSubmit="true"/>
 								</p:calendar> 
 								
 								<ac:smFieldChangeAlert 
@@ -216,7 +222,9 @@
 								styleClass="mandatory" /></td>
 						<td><p:inputText id="companyAdd1" size="35" maxlength="35"
 								required="true" label="#{lbl['lbl.sm.companyaddress']}"
-								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address1}" />
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address1}" >
+								<p:ajax partialSubmit="true" process="@this" />
+							</p:inputText>
 							
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -235,7 +243,7 @@
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems var="basicCountry"
 									value="#{backingBean.managedBean.countryItems}" />
-								<p:ajax event="change"
+								<p:ajax event="change" process="@this"
 									listener="#{backingBean.onChangeCountry(backingBean.managedBean.basicCompanyFacility.smAddress, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
 									update="basicOffFacState,basicOffFacDist,basicOffFacCity,postCodeOffFacPanelId" />
@@ -253,7 +261,9 @@
 					<tr>
 						<td></td>
 						<td><p:inputText size="35" maxlength="35"
-								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address2}" />
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address2}" >
+								<p:ajax partialSubmit="true" process="@this" />
+							</p:inputText>
 							
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -271,7 +281,7 @@
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems var="offState"
 									value="#{backingBean.managedBean.basicOffFacStates}" />
-								<p:ajax event="change"
+								<p:ajax event="change" process="@this"
 									listener="#{backingBean.onChangeState(backingBean.managedBean.basicCompanyFacility.smAddress, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
 									update="basicOffFacDist,basicOffFacCity" />
@@ -308,7 +318,7 @@
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems var="offDist"
 									value="#{backingBean.managedBean.basicOffFacDistricts}" />
-								<p:ajax event="change"
+								<p:ajax event="change" process="@this"
 									listener="#{backingBean.onChangeDistrict(backingBean.managedBean.basicCompanyFacility.smAddress, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
 									update="basicOffFacCity" />
@@ -344,7 +354,7 @@
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems var="offCity"
 									value="#{backingBean.managedBean.basicOffFacCities}" />
-								<p:ajax event="change"
+								<p:ajax event="change" process="@this"
 									listener="#{backingBean.onChangeCity(backingBean.managedBean.basicCompanyFacility.smAddress, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
 									update="basicOffFacCity" />
@@ -371,6 +381,7 @@
 										validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 										size="35">
 										<f:validator validatorId="postcodeValidator" />
+										<p:ajax partialSubmit="true" process="@this" />
 									</p:inputText>
 									
 									<ac:smFieldChangeAlert 
@@ -388,6 +399,7 @@
 										label="#{lbl['lbl.sm.postcode']}" id="companyPostForeignCode"
 										value="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}"
 										size="35">
+										<p:ajax partialSubmit="true" process="@this" />
 									</p:inputText>
 									
 									<ac:smFieldChangeAlert 
