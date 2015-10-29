@@ -32,7 +32,7 @@
 	</p:panel>
 	<br />
 	<h:panelGroup id="ItemDetAndNegoTerm">
-	 <ui:param name="isBiddingAward" value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.recommendBy.parameterCode eq ParameterConst.recommendByOnlineBidding}" />
+	 <ui:param name="isBiddingAward" value="#{lOIDetailBackingBean.managedBean.scLoi.recommendBy.parameterCode eq ParameterConst.recommendByOnlineBidding}" />
 		
 		<p:panel header="#{lbl['lbl.sc.item.details']}" id="itemDetailsId" toggleable="true"
 			rendered="#{lOIDetailBackingBean.managedBean.itemDetailsFlag}">
