@@ -1051,6 +1051,8 @@
 			<p:column selectionMode="multiple" style="width:2%" />
 			<p:column>
 				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory" 
+					rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J'}"/>
 					<h:outputText value="#{lbl['lbl.sc.spec.contrat.year']}" />
 				</f:facet>
 				<h:outputText value="#{aq.year}" />
