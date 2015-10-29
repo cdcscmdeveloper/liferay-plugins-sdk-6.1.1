@@ -26,11 +26,13 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,11 +42,11 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
+import javax.persistence.Id;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
@@ -2903,6 +2905,149 @@ public class SmCommonUtil {
 			}
 		}
 		return retVal;
+	}
+
+	public static Object getObjectByPropertiesFromList(Object objCompare,
+			List<? extends Object> list, String[] comparePrimitivePropArr,
+			String[] compareNonePrimitivePropArr) {
+		Object retVal = null;
+		if (objCompare != null && !isCollectionEmpty(list)) {
+			List<String> comparePrimitivePropsList = new ArrayList<String>();
+			List<String> compareNonePrimitivePropsList = new ArrayList<String>();
+			if (comparePrimitivePropArr != null
+					&& comparePrimitivePropArr.length > 0) {
+				comparePrimitivePropsList = Arrays
+						.asList(comparePrimitivePropArr);
+			}
+			if (compareNonePrimitivePropArr != null
+					&& compareNonePrimitivePropArr.length > 0) {
+				compareNonePrimitivePropsList = Arrays
+						.asList(compareNonePrimitivePropArr);
+			}
+			int propsSize = comparePrimitivePropsList.size()
+					+ compareNonePrimitivePropsList.size();
+
+			for (Object obj : list) {
+				Object objVal;
+				Object objCompareVal;
+				Class<?> propType;
+				try {
+					int count = 0;
+					if (!isCollectionEmpty(comparePrimitivePropsList)) {
+						for (String compareNativeProp : comparePrimitivePropsList) {
+							propType = PropertyUtils.getPropertyType(obj,
+									compareNativeProp);
+							if (isPrimitiveOrWrapperType(propType)) {
+								objVal = PropertyUtils.getProperty(obj,
+										compareNativeProp);
+								objCompareVal = PropertyUtils.getProperty(
+										objCompare, compareNativeProp);
+								if (objVal != null && objCompareVal != null
+										&& objVal.equals(objCompareVal)) {
+									count = count + 1;
+								}
+							}
+						}
+					}
+					if (!isCollectionEmpty(compareNonePrimitivePropsList)) {
+						for (String compareNoneNativeProp : compareNonePrimitivePropsList) {
+							propType = PropertyUtils.getPropertyType(obj,
+									compareNoneNativeProp);
+							if (!isPrimitiveOrWrapperType(propType)) {
+								objVal = getObjectIdVal(PropertyUtils
+										.getProperty(obj, compareNoneNativeProp));
+								objCompareVal = getObjectIdVal(PropertyUtils
+										.getProperty(objCompare,
+												compareNoneNativeProp));
+								if (objVal != null && objCompareVal != null
+										&& objVal.equals(objCompareVal)) {
+									count = count + 1;
+								}
+							}
+						}
+					}
+					if (count == propsSize) {
+						retVal = obj;
+						break;
+					}
+				} catch (IllegalAccessException | InvocationTargetException
+						| NoSuchMethodException e) {
+					throw new EpException(e.getMessage());
+				}
+			}
+		}
+		return retVal;
+	}
+
+	public static Object getObjectIdVal(Object obj) {
+		Object retVal = null;
+		Field[] fields = getFields(obj, true, true);
+		for (Field entityField : fields) {
+			if (entityField.isAnnotationPresent(Id.class)) {
+				try {
+					retVal = PropertyUtils.getProperty(obj,
+							entityField.getName());
+					break;
+				} catch (IllegalAccessException | InvocationTargetException
+						| NoSuchMethodException e) {
+					throw new EpException(e.getMessage());
+				}
+			}
+		}
+		return retVal;
+	}
+
+	private static Field[] getFields(Object target, boolean findInSuperClasses,
+			boolean setFieldsAsAccessible) {
+		if (!(target instanceof Object))
+			return target.getClass().getDeclaredFields();
+
+		List<Field> campos = new ArrayList<Field>();
+		loadFields(target.getClass(), campos, findInSuperClasses,
+				setFieldsAsAccessible);
+		return campos.toArray(new Field[campos.size()]);
+	}
+
+	private static void loadFields(Class<?> clazz, List<Field> fieldList,
+			boolean findInSuperClasses, boolean setFieldsAsAccessible) {
+		if (clazz.equals(Object.class))
+			return;
+
+		for (Field field : clazz.getDeclaredFields()) {
+			if (setFieldsAsAccessible)
+				makeAttributesAccessible(field);
+			fieldList.add(field);
+		}
+
+		if (findInSuperClasses)
+			loadFields(clazz.getSuperclass(), fieldList, findInSuperClasses,
+					setFieldsAsAccessible);
+	}
+
+	private static void makeAttributesAccessible(Field... fields) {
+		for (Field field : fields)
+			field.setAccessible(true);
+	}
+
+	private static final Set<Class<?>> WRAPPER_TYPES = getPrimitiveOrWrapperType();
+
+	private static boolean isPrimitiveOrWrapperType(Class<?> clazz) {
+		return WRAPPER_TYPES.contains(clazz);
+	}
+
+	private static Set<Class<?>> getPrimitiveOrWrapperType() {
+		Set<Class<?>> ret = new HashSet<Class<?>>();
+		ret.add(String.class);
+		ret.add(Boolean.class);
+		ret.add(Character.class);
+		ret.add(Byte.class);
+		ret.add(Short.class);
+		ret.add(Integer.class);
+		ret.add(Long.class);
+		ret.add(Float.class);
+		ret.add(Double.class);
+		ret.add(Void.class);
+		return ret;
 	}
 
 	public static SmCommonUtil getInstance() {

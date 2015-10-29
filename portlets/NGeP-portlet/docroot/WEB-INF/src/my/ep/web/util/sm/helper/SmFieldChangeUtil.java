@@ -26,7 +26,6 @@ import my.ep.persistence.entity.sm.SmStaffTotal;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCert;
-import my.ep.util.EpPropertiesUtils;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 
@@ -35,10 +34,7 @@ import org.apache.commons.lang.StringUtils;
 public class SmFieldChangeUtil {
 
 	public static void initLatestAppl(SmApplicationManagedBean bean) {
-		String showFieldChange = EpPropertiesUtils.getInstance().getProperty(
-				"sm.show.new.changes");
-		boolean showNewChanges = Boolean.valueOf(showFieldChange);
-		if (showNewChanges
+		if (bean.isShowNewChanges() && bean.isPoUser()
 				&& bean.getSmAppl() != null
 				&& StringUtils.isNotBlank(bean.getSmAppl().getApplType())
 				&& !bean.getSmAppl().getApplType()
