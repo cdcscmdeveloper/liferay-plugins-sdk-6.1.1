@@ -1,12 +1,10 @@
 package my.ep.web.util.sm.helper;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
-import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmEduLevel;
 import my.ep.persistence.entity.sm.SmAddress;
@@ -34,7 +32,8 @@ import org.apache.commons.lang.StringUtils;
 public class SmFieldChangeUtil {
 
 	public static void initLatestAppl(SmApplicationManagedBean bean) {
-		if (bean.isShowNewChanges() && bean.isPoUser()
+		if (bean.isShowNewChanges()
+				&& bean.isPoUser()
 				&& bean.getSmAppl() != null
 				&& StringUtils.isNotBlank(bean.getSmAppl().getApplType())
 				&& !bean.getSmAppl().getApplType()
@@ -185,46 +184,6 @@ public class SmFieldChangeUtil {
 			for (SmEquityCompany tmp : appl.getSmEquityCompanies()) {
 				if (tmp.getRegNo() != null && regNo != null
 						&& tmp.getRegNo().equals(regNo)) {
-					retVal = tmp;
-					break;
-				}
-			}
-		}
-		return retVal;
-	}
-
-	public static SmAssociateCompany getAssocCompanyByRegNoFromList(
-			SmAppl appl, String regNo) {
-		SmAssociateCompany retVal = new SmAssociateCompany();
-		if (appl != null
-				&& !SmCommonUtil.isCollectionEmpty(appl
-						.getSmAssociateCompanies())) {
-			for (SmAssociateCompany tmp : appl.getSmAssociateCompanies()) {
-				if (tmp.getRegNo() != null && regNo != null
-						&& tmp.getRegNo().equals(regNo)) {
-					retVal = tmp;
-					break;
-				}
-			}
-		}
-		return retVal;
-	}
-
-	public static SmSupplierCert getCertByNameAndCertTypeAndBodyFromList(
-			SmAppl appl, String name, BigDecimal certTypeId, PmCertBody body) {
-		SmSupplierCert retVal = new SmSupplierCert();
-		if (appl != null
-				&& !SmCommonUtil.isCollectionEmpty(appl.getSmSupplierCerts())) {
-			for (SmSupplierCert tmp : appl.getSmSupplierCerts()) {
-				if (tmp.getPmCertBody() != null
-						&& body != null
-						&& tmp.getPmCertBody().getCertBodyId() != null
-						&& body.getCertBodyId() != null
-						&& tmp.getPmCertBody().getCertBodyId()
-								.compareTo(body.getCertBodyId()) == 0
-						&& tmp.getCertTypeId() != null && certTypeId != null
-						&& tmp.getCertName().equals(name)
-						&& tmp.getCertTypeId().compareTo(certTypeId) == 0) {
 					retVal = tmp;
 					break;
 				}
@@ -785,13 +744,16 @@ public class SmFieldChangeUtil {
 				SmAssociateCompany latestAssocCompany = null;
 				for (SmAssociateCompany currAssocCompany : currAppl
 						.getSmAssociateCompanies()) {
-					if (!isCurrAssocCompExistInLatestAssocComp(
-							currAssocCompany,
-							latestAppl.getSmAssociateCompanies())) {
+					if (!isCurrExistInLatest(currAssocCompany,
+							latestAppl.getSmAssociateCompanies(),
+							new String[] { "regNo" }, null)) {
 						currAssocCompany.setChangedFieldStatus("N");
 					} else {
-						latestAssocCompany = getAssocCompanyByRegNoFromList(
-								latestAppl, currAssocCompany.getRegNo());
+						latestAssocCompany = (SmAssociateCompany) SmCommonUtil
+								.getObjectByPropertiesFromList(
+										currAssocCompany,
+										latestAppl.getSmAssociateCompanies(),
+										new String[] { "regNo" }, null);
 						if (latestAssocCompany == null
 								|| latestAssocCompany.getAssociateCompanyId() == null) {
 							currAssocCompany.setChangedFieldStatus("N");
@@ -810,20 +772,6 @@ public class SmFieldChangeUtil {
 				}
 			}
 		}
-	}
-
-	private static boolean isCurrAssocCompExistInLatestAssocComp(
-			SmAssociateCompany currAssocCompany,
-			List<SmAssociateCompany> latestAssocCompanyList) {
-		boolean retVal = false;
-		for (SmAssociateCompany latestAssocCompany : latestAssocCompanyList) {
-			if (latestAssocCompany.getRegNo().equalsIgnoreCase(
-					currAssocCompany.getRegNo())) {
-				retVal = true;
-				break;
-			}
-		}
-		return retVal;
 	}
 
 	private static void setCompanyExpFieldChangeStatus(SmAppl latestAppl,
@@ -1090,14 +1038,18 @@ public class SmFieldChangeUtil {
 					&& !currAppl.getSmSupplierCerts().isEmpty()) {
 				SmSupplierCert latestCert = null;
 				for (SmSupplierCert currCert : currAppl.getSmSupplierCerts()) {
-					if (!isCurrCertExistInLatestCert(currCert,
-							latestAppl.getSmSupplierCerts())) {
+					if (!isCurrExistInLatest(currCert,
+							latestAppl.getSmSupplierCerts(), new String[] {
+									"certTypeId", "certName" },
+							new String[] { "pmCertBody" })) {
 						currCert.setChangedFieldStatus("N");
 					} else {
-						latestCert = getCertByNameAndCertTypeAndBodyFromList(
-								latestAppl, currCert.getCertName(),
-								currCert.getCertTypeId(),
-								currCert.getPmCertBody());
+						latestCert = (SmSupplierCert) SmCommonUtil
+								.getObjectByPropertiesFromList(
+										currCert,
+										latestAppl.getSmSupplierCerts(),
+										new String[] { "certTypeId", "certName" },
+										new String[] { "pmCertBody" });
 						if (latestCert == null
 								|| latestCert.getSupplierCertId() == null) {
 							currCert.setChangedFieldStatus("N");
@@ -1124,31 +1076,6 @@ public class SmFieldChangeUtil {
 				}
 			}
 		}
-	}
-
-	private static boolean isCurrCertExistInLatestCert(SmSupplierCert currCert,
-			List<SmSupplierCert> latestCertList) {
-		boolean retVal = false;
-		for (SmSupplierCert latestCert : latestCertList) {
-			if (latestCert.getPmCertBody() != null
-					&& latestCert.getPmCertBody().getCertBodyId() != null
-					&& currCert.getPmCertBody() != null
-					&& currCert.getPmCertBody().getCertBodyId() != null
-					&& currCert
-							.getPmCertBody()
-							.getCertBodyId()
-							.compareTo(
-									latestCert.getPmCertBody().getCertBodyId()) == 0
-					&& latestCert.getCertTypeId() != null
-					&& currCert.getCertTypeId() != null
-					&& latestCert.getCertTypeId().compareTo(
-							currCert.getCertTypeId()) == 0
-					&& latestCert.getCertName().equals(currCert.getCertName())) {
-				retVal = true;
-				break;
-			}
-		}
-		return retVal;
 	}
 
 	private static void setProfessionalBodyFieldChangeStatus(SmAppl latestAppl,
@@ -1438,6 +1365,16 @@ public class SmFieldChangeUtil {
 			String[] excludeProps) {
 		return SmCommonUtil.isSmObjectPropsDifference(latest, current,
 				excludeProps);
+	}
+
+	private static boolean isCurrExistInLatest(Object currObj,
+			List<? extends Object> latestList, String[] primitiveProps,
+			String[] nonePrimitiveProps) {
+		boolean retVal = false;
+		Object objRetVal = SmCommonUtil.getObjectByPropertiesFromList(currObj,
+				latestList, primitiveProps, nonePrimitiveProps);
+		retVal = objRetVal != null ? true : false;
+		return retVal;
 	}
 
 }
