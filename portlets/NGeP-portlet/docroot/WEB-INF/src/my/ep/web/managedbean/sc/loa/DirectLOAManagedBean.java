@@ -225,12 +225,7 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 
 	private ScQtDoc servicescQtDoc;
 
-	/** The agreement Required Flag */
-	private boolean agreementMandatory = false;
-
-	/** The performance bond required flag */
-	private boolean performanceBondMandatory = false;
-
+	
 	/** The clauses title. */
 	private String clausesTitle;
 
@@ -1352,36 +1347,7 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 		this.suppLoiLoaMap = suppLoiLoaMap;
 	}
 
-	/**
-	 * @return the agreementMandatory
-	 */
-	public boolean isAgreementMandatory() {
-		return agreementMandatory;
-	}
-
-	/**
-	 * @param agreementMandatory
-	 *            the agreementMandatory to set
-	 */
-	public void setAgreementMandatory(boolean agreementMandatory) {
-		this.agreementMandatory = agreementMandatory;
-	}
-
-	/**
-	 * @return the performanceBondMandatory
-	 */
-	public boolean isPerformanceBondMandatory() {
-		return performanceBondMandatory;
-	}
-
-	/**
-	 * @param performanceBondMandatory
-	 *            the performanceBondMandatory to set
-	 */
-	public void setPerformanceBondMandatory(boolean performanceBondMandatory) {
-		this.performanceBondMandatory = performanceBondMandatory;
-	}
-
+	
 	/**
 	 * Gets the clauses title.
 	 * 

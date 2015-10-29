@@ -1912,15 +1912,17 @@ public class QTCommitteBackingBean extends
 			if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this
 					.getManagedBean().getCurrentStatusId())) {
 				return true;
-			}
-			else if (QTStatusConst.QT_PROPOSAL_PREPARATION.equals(this
+			} else if (QTStatusConst.QT_PROPOSAL_PREPARATION.equals(this
 					.getManagedBean().getCurrentStatusId())) {
-				if (7 <= DateUtils.getDaysDifference(new Date(), this
-						.getManagedBean().getQt().getClosingDate()))
+				if (DateUtils.getDaysDifference(new Date(), this
+						.getManagedBean().getQt().getClosingDate()) <= 7
+						&& (QTStatusConst.CMT_PENDING_SUBMISSION
+								.equals(committeStatus) || QTStatusConst.CMT_PENDING_REVISION
+								.equals(committeStatus))) {
 
 					return true;
-			}
-			else if (QTStatusConst.QT_EVALUATION_PROPOSAL <= (this
+				}
+			} else if (QTStatusConst.QT_EVALUATION_PROPOSAL <= (this
 					.getManagedBean().getCurrentStatusId())) {
 				return true;
 			}
