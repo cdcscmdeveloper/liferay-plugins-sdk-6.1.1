@@ -3288,52 +3288,58 @@ public class SpecificationBackingBean extends
 
 					this.getManagedBean().setTotalFrequency(
 							resDTO.getScheduleResults().getResultList().size());
-					String startMonth = "";
-					String endMonth = "";
-					for (ScQtSchedule scQtSchedule : resDTO
-							.getScheduleResults().getResultList()) {
-						SimpleDateFormat dateFormat = new SimpleDateFormat(
-								"dd/MM/yyyy");
+					try {
 
-						String fromdate = dateFormat.format(scQtSchedule
-								.getFromDate());
-						String todate = dateFormat.format(scQtSchedule
-								.getToDate());
-						String startdate = fromdate.substring(3, 5);
-						String startYear = fromdate.substring(6,
-								fromdate.length());
-						String enddate = todate.substring(3, 5);
-						String endYear = todate.substring(6, todate.length());
-						startMonth = fulfilmentMonthlyDtls(startdate);
-						endMonth = fulfilmentMonthlyDtls(enddate);
-						int start = Integer.parseInt(startMonth);
-						int end = Integer.parseInt(endMonth);
+						for (ScQtSchedule scQtSchedule : resDTO
+								.getScheduleResults().getResultList()) {
+							String startMonth = "";
+							String endMonth = "";
+							SimpleDateFormat dateFormat = new SimpleDateFormat(
+									CommonConstants.DEFAULT_DATE_FORMAT);
+							int months;
+							Date startDate = null;
+							Date endDate = null;
+							String fromdate = dateFormat.format(scQtSchedule
+									.getFromDate());
+							String todate = dateFormat.format(scQtSchedule
+									.getToDate());
+							String startdate = fromdate.substring(3, 5);
+							String startYear = fromdate.substring(6,
+									fromdate.length());
+							String fromDay = fromdate.substring(0, 2);
 
-						int sYear = Integer.parseInt(startYear);
-						int eYear = Integer.parseInt(endYear);
-						int diffYear = 0;
-						int count = 0;
+							String enddate = todate.substring(3, 5);
+							String endYear = todate.substring(6,
+									todate.length());
+							String toDay = todate.substring(0, 2);
 
-						if (eYear >= sYear) {
-							if (!endYear.equals(startYear)) {
-								diffYear = eYear - sYear;
-							}
-							for (int i = start + 1; i <= end + 1; i++) {
-								count++;
-							}
-							count = count + (diffYear * 12);
-							scQtSchedule.setTotalMonths(new BigDecimal(count));
-						} else {
-							scQtSchedule.setTotalMonths(BigDecimal.ZERO);
+							startMonth = fulfilmentMonthlyDtls(startdate);
+							endMonth = fulfilmentMonthlyDtls(enddate);
+
+							int sYear = Integer.parseInt(startYear);
+							int eYear = Integer.parseInt(endYear);
+
+							String fromDate = fromDay + "/" + startdate + "/"
+									+ sYear;
+							String toDate = toDay + "/" + enddate + "/" + eYear;
+
+							startDate = dateFormat.parse(fromDate);
+							endDate = dateFormat.parse(toDate);
+
+							months = DateUtils.getMonths(startDate, endDate);
+							scQtSchedule.setTotalMonths(new BigDecimal(months));
+							// scQtSchedule.setTotalMonths(new
+							// BigDecimal(months));
+
+							scQtSchedule.setStartMonth(startMonth);
+							scQtSchedule.setEndMonth(endMonth);
+							scQtSchedule.setStartYear(startYear);
+							scQtSchedule.setEndYear(endYear);
+
+							scheduleList.add(scQtSchedule);
+
 						}
-						// scQtSchedule.setTotalMonths(new BigDecimal(months));
-
-						scQtSchedule.setStartMonth(startMonth);
-						scQtSchedule.setEndMonth(endMonth);
-						scQtSchedule.setStartYear(startYear);
-						scQtSchedule.setEndYear(endYear);
-
-						scheduleList.add(scQtSchedule);
+					} catch (ParseException e) {
 
 					}
 				}
@@ -5092,9 +5098,11 @@ public class SpecificationBackingBean extends
 					setEvaluationType(scQt);
 				}
 			} else {
-				if(this.getManagedBean().getScQt().getEstimatedAmount() == null) {
+				if (this.getManagedBean().getScQt().getEstimatedAmount() == null) {
 					qtDetailsSO = BusinessDelegate.getInstance()
-							.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTDetailSO.class);
+							.getServiceObject(
+									ModuleCodeConst.SUPPLIER_SELECTION,
+									IQTDetailSO.class);
 					BigDecimal estimatedAmount = qtDetailsSO
 							.getdecryptedEstAmount(qtId);
 					this.getManagedBean().getScQt()
@@ -8794,7 +8802,7 @@ public class SpecificationBackingBean extends
 	 *            (ScQtSchedule schedule).
 	 */
 	public void calculateSchedulePercentage(ScQtSchedule schedule,
-			Boolean startMonthAndYearFlag) {
+			Boolean startMonthAndYearFlag) throws ParseException {
 		/*
 		 * String endMonth = (String) event.getComponent().getAttributes()
 		 * .get("value");
@@ -8806,7 +8814,7 @@ public class SpecificationBackingBean extends
 			freqSchedule = new ArrayList<ScQtSchedule>();
 
 		}
-		Integer startMonth = 0, endMonth = 0, startYear = 0, endYear = 0, diffYear = 0, count = 0;
+		Integer startMonth = 0, endMonth = 0, startYear = 0, endYear = 0, months = 0;
 		startMonth = schedule.getStartMonth() != null ? Integer
 				.parseInt(schedule.getStartMonth()) : null;
 		endMonth = schedule.getEndMonth() != null ? Integer.parseInt(schedule
@@ -8816,24 +8824,29 @@ public class SpecificationBackingBean extends
 		endYear = schedule.getEndYear() != null ? Integer.parseInt(schedule
 				.getEndYear()) : null;
 
-		if (startMonthAndYearFlag && startMonth != null) {
+		if (null!=startMonthAndYearFlag && startMonthAndYearFlag && startMonth != null) {
 			endMonth = startMonth;
 			endYear = startYear;
 			schedule.setEndMonth(endMonth.toString());
-			if (endYear != null) {
+			if(endYear != null){
 				schedule.setEndYear(endYear.toString());
 			}
 		}
 
 		if (startMonth != null && endMonth != null && startYear != null
-				&& endYear != null && endYear >= startYear) {
-			if (!endYear.equals(startYear)) {
-				diffYear = endYear - startYear;
-			}
-			for (int i = startMonth + 1; i <= endMonth + 1 + (diffYear * 12); i++) {
-				count++;
-			}
-			schedule.setTotalMonths(new BigDecimal(count));
+				&& endYear != null) {
+			Date currentDate = new Date();
+			SimpleDateFormat sdf = new SimpleDateFormat(
+					CommonConstants.DEFAULT_DATE_FORMAT);
+			String localDate = sdf.format(currentDate);
+			String day = localDate.substring(0, 2);
+			String fromDate = day + "/" + startMonth + "/" + startYear;
+			String toDate = day + "/" + endMonth + "/" + endYear;
+			Date startDate = sdf.parse(fromDate);
+			Date endDate = sdf.parse(toDate);
+
+			months = DateUtils.getMonths(startDate, endDate);
+			schedule.setTotalMonths(new BigDecimal(months));
 		} else {
 			schedule.setTotalMonths(BigDecimal.ZERO);
 		}
@@ -11588,9 +11601,10 @@ public class SpecificationBackingBean extends
 					.getScheduleList();
 			List<ScQtSchedule> localScheduleList = new ArrayList<ScQtSchedule>();
 			if (freqschedule != null && !freqschedule.isEmpty()) {
-				String Startmonth = "";
-				String endmonth = "";
+
 				for (ScQtSchedule schedule : freqschedule) {
+					String Startmonth = "";
+					String endmonth = "";
 					if (StringUtils.isNotBlank(schedule.getStartMonth())) {
 						Startmonth = retriveMonthDtls(new Integer(
 								schedule.getStartMonth()));
@@ -11601,14 +11615,14 @@ public class SpecificationBackingBean extends
 								schedule.getEndMonth()));
 					}
 
-					Date d1 = new Date();
-					SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-					DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-					String localDate = format.format(d1);
-					String date = localDate.substring(0, 2);
-					String fromdate = date + "/" + Startmonth + "/"
+					Date currentDate = new Date();
+					SimpleDateFormat df = new SimpleDateFormat(
+							CommonConstants.DEFAULT_DATE_FORMAT);
+					String localDate = df.format(currentDate);
+					String day = localDate.substring(0, 2);
+					String fromdate = day + "/" + Startmonth + "/"
 							+ schedule.getStartYear();
-					String toDate = date + "/" + endmonth + "/"
+					String toDate = day + "/" + endmonth + "/"
 							+ schedule.getEndYear();
 
 					schedule.setScheduleNo(schedule.getScheduleNo());
@@ -13217,11 +13231,11 @@ public class SpecificationBackingBean extends
 			if (null != remarks) {
 				for (int i = 0; i < remarks.size(); i++) {
 					String userRemark = remarks.get(i).getRemark();
-						if (null == userRemark || "".equals(userRemark)) {
-							// throw new EpException(MessageConst.ERROR_760154);
-							remarks.remove(i);
-						}
-					
+					if (null == userRemark || "".equals(userRemark)) {
+						// throw new EpException(MessageConst.ERROR_760154);
+						remarks.remove(i);
+					}
+
 				}
 			}
 
@@ -16493,19 +16507,16 @@ public class SpecificationBackingBean extends
 		return uploaditems;
 	}
 
-	/*private void setEstimatedPrice(ScQt scQt) {
-
-		IQTDetailSO qtDetailsSO;
-		try {
-			qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-
-			BigDecimal estimatedAmount = qtDetailsSO.getdecryptedEstAmount(scQt
-					.getQtId());
-			scQt.setEstimatedAmount(estimatedAmount);
-			scQt.setDecryptedEstAmt(estimatedAmount);
-		} finally {
-			qtDetailsSO = null;
-		}
-	}*/
+	/*
+	 * private void setEstimatedPrice(ScQt scQt) {
+	 * 
+	 * IQTDetailSO qtDetailsSO; try { qtDetailsSO =
+	 * BusinessDelegate.getInstance().getServiceObject(
+	 * ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+	 * 
+	 * BigDecimal estimatedAmount = qtDetailsSO.getdecryptedEstAmount(scQt
+	 * .getQtId()); scQt.setEstimatedAmount(estimatedAmount);
+	 * scQt.setDecryptedEstAmt(estimatedAmount); } finally { qtDetailsSO = null;
+	 * } }
+	 */
 }
