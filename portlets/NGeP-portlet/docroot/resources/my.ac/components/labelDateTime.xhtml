@@ -12,10 +12,10 @@
 	</cc:interface>
 
 	<cc:implementation>
-		<h:outputLabel value="#{cc.attrs.value}" rendered="#{cc.attrs.rendered}" styleClass="#{cc.attrs.styleClass}">
+		<h:outputText value="#{cc.attrs.value}" rendered="#{cc.attrs.rendered}" styleClass="#{cc.attrs.styleClass}">
 			<f:convertDateTime
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
-		</h:outputLabel>
+		</h:outputText>
 	</cc:implementation>
 
 </ui:component>
