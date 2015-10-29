@@ -4,7 +4,6 @@ import java.util.List;
 
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
-import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmEduLevel;
 import my.ep.persistence.entity.sm.SmAddress;
@@ -87,10 +86,11 @@ public class SmFieldChangeUtil {
 			SmApplicationManagedBean bean) {
 		bean.setLatestCompanyExperience(new SmCompanyExperience());
 		if (bean.isShowFieldChanges()) {
-			bean.setLatestCompanyExperience(getCompanyExpByClientNameAndTitleFromList(
-					bean.getLatestAppl(), bean.getSelectedCompanyExperience()
-							.getClientName(), bean
-							.getSelectedCompanyExperience().getTitle()));
+			bean.setLatestCompanyExperience((SmCompanyExperience) SmCommonUtil
+					.getObjectByPropertiesFromList(bean
+							.getSelectedCompanyExperience(), bean
+							.getLatestAppl().getSmCompanyExperiences(),
+							new String[] { "clientName", "title" }, null));
 			// smCompanyExperienceCat
 			setCurrSmCompanyExpCat(bean.getSelectedCompanyExperience(),
 					bean.getLatestCompanyExperience());
@@ -174,60 +174,6 @@ public class SmFieldChangeUtil {
 
 		// relatedCompanies
 		setCurrPersonnelRelatedCompanies(currPersonnel, latestPersonnel);
-	}
-
-	public static SmEquityCompany getEquityCompanyByRegNoFromList(SmAppl appl,
-			String regNo) {
-		SmEquityCompany retVal = new SmEquityCompany();
-		if (appl != null
-				&& !SmCommonUtil.isCollectionEmpty(appl.getSmEquityCompanies())) {
-			for (SmEquityCompany tmp : appl.getSmEquityCompanies()) {
-				if (tmp.getRegNo() != null && regNo != null
-						&& tmp.getRegNo().equals(regNo)) {
-					retVal = tmp;
-					break;
-				}
-			}
-		}
-		return retVal;
-	}
-
-	public static SmAssociationBody getProfBodyByRegNoFromList(SmAppl appl,
-			String regNo) {
-		SmAssociationBody retVal = new SmAssociationBody();
-		if (appl != null
-				&& !SmCommonUtil.isCollectionEmpty(appl
-						.getSmAssociationBodies())) {
-			for (SmAssociationBody tmp : appl.getSmAssociationBodies()) {
-				if (tmp.getRegNo() != null && regNo != null
-						&& tmp.getRegNo().equals(regNo)) {
-					retVal = tmp;
-					break;
-				}
-			}
-		}
-		return retVal;
-	}
-
-	public static SmCompanyExperience getCompanyExpByClientNameAndTitleFromList(
-			SmAppl appl, String clientName, String title) {
-		SmCompanyExperience retVal = new SmCompanyExperience();
-		if (appl != null
-				&& !SmCommonUtil.isCollectionEmpty(appl
-						.getSmCompanyExperiences())) {
-			for (SmCompanyExperience tmp : appl.getSmCompanyExperiences()) {
-				if (StringUtils.isNotBlank(tmp.getClientName())
-						&& StringUtils.isNotBlank(clientName)
-						&& StringUtils.isNotBlank(tmp.getTitle())
-						&& StringUtils.isNotBlank(title)
-						&& clientName.equalsIgnoreCase(tmp.getClientName())
-						&& title.equalsIgnoreCase(tmp.getTitle())) {
-					retVal = tmp;
-					break;
-				}
-			}
-		}
-		return retVal;
 	}
 
 	public static SmPersonnel getPersonnelByIdentificationNoFromList(
@@ -396,16 +342,19 @@ public class SmFieldChangeUtil {
 		} else {
 			for (SmAssociationBody currBody : currPersonnel
 					.getSmAssociationBodies()) {
-				if (!isCurrProfBodyExistInLatestProfBody(currBody,
-						latestPersonnel.getSmAssociationBodies())) {
+				if (isCurrExistInLatest(currBody,
+						latestPersonnel.getSmAssociationBodies(),
+						new String[] { "regNo" }, null)) {
 					if (StringUtils.isBlank(currPersonnel
 							.getChangedFieldStatus())) {
 						currPersonnel.setChangedFieldStatus("U");
 					}
 					currBody.setChangedFieldStatus("N");
 				} else {
-					SmAssociationBody latestBody = getProfBodyByRegNoFromList(
-							latestAppl, currBody.getRegNo());
+					SmAssociationBody latestBody = (SmAssociationBody) SmCommonUtil
+							.getObjectByPropertiesFromList(currBody,
+									latestAppl.getSmAssociationBodies(),
+									new String[] { "regNo" }, null);
 					if (latestBody != null
 							&& latestBody.getAssociationBodyId() != null) {
 						if (isHasDifferences(latestBody, currBody,
@@ -790,13 +739,16 @@ public class SmFieldChangeUtil {
 				SmCompanyExperience latestCompExp = null;
 				for (SmCompanyExperience currCompExp : currAppl
 						.getSmCompanyExperiences()) {
-					if (!isCurrCompExpExistInLatestCompExp(currCompExp,
-							latestAppl.getSmCompanyExperiences())) {
+					if (!isCurrExistInLatest(currCompExp,
+							latestAppl.getSmCompanyExperiences(), new String[] {
+									"clientName", "title" }, null)) {
 						currCompExp.setChangedFieldStatus("N");
 					} else {
-						latestCompExp = getCompanyExpByClientNameAndTitleFromList(
-								latestAppl, currCompExp.getClientName(),
-								currCompExp.getTitle());
+						latestCompExp = (SmCompanyExperience) SmCommonUtil
+								.getObjectByPropertiesFromList(currCompExp,
+										latestAppl.getSmCompanyExperiences(),
+										new String[] { "clientName", "title" },
+										null);
 						if (latestCompExp == null
 								|| latestCompExp.getCompanyExperienceId() == null) {
 							currCompExp.setChangedFieldStatus("N");
@@ -811,26 +763,6 @@ public class SmFieldChangeUtil {
 				}
 			}
 		}
-	}
-
-	private static boolean isCurrCompExpExistInLatestCompExp(
-			SmCompanyExperience currCompanyExp,
-			List<SmCompanyExperience> latestCompExpList) {
-		boolean retVal = false;
-		for (SmCompanyExperience latestCompExp : latestCompExpList) {
-			if (StringUtils.isNotBlank(latestCompExp.getClientName())
-					&& StringUtils.isNotBlank(latestCompExp.getTitle())
-					&& StringUtils.isNotBlank(currCompanyExp.getTitle())
-					&& StringUtils.isNotBlank(currCompanyExp.getClientName())
-					&& currCompanyExp.getClientName().equalsIgnoreCase(
-							latestCompExp.getClientName())
-					&& currCompanyExp.getTitle().equalsIgnoreCase(
-							latestCompExp.getTitle())) {
-				retVal = true;
-				break;
-			}
-		}
-		return retVal;
 	}
 
 	private static void setBankFieldChangeStatus(SmAppl latestAppl,
@@ -916,8 +848,9 @@ public class SmFieldChangeUtil {
 				SmSupplierBranch latestBranch = null;
 				for (SmSupplierBranch currBranch : currAppl
 						.getSmSupplierBranches()) {
-					if (!isCurrBranchExistInLatestBranch(currBranch,
-							latestAppl.getSmSupplierBranches())) {
+					if (!isCurrExistInLatest(currBranch,
+							latestAppl.getSmSupplierBranches(),
+							new String[] { "branchCode" }, null)) {
 						currBranch.setChangedFieldStatus("N");
 					} else {
 						latestBranch = getBranchByBranchCodeFromList(
@@ -985,13 +918,16 @@ public class SmFieldChangeUtil {
 				SmEquityCompany latestEquityCompany = null;
 				for (SmEquityCompany currEquityCompany : currAppl
 						.getSmEquityCompanies()) {
-					if (!isCurrEquityCompExistInLatestEquityComp(
-							currEquityCompany,
-							latestAppl.getSmEquityCompanies())) {
+					if (!isCurrExistInLatest(currEquityCompany,
+							latestAppl.getSmEquityCompanies(),
+							new String[] { "regNo" }, null)) {
 						currEquityCompany.setChangedFieldStatus("N");
 					} else {
-						latestEquityCompany = getEquityCompanyByRegNoFromList(
-								latestAppl, currEquityCompany.getRegNo());
+						latestEquityCompany = (SmEquityCompany) SmCommonUtil
+								.getObjectByPropertiesFromList(
+										currEquityCompany,
+										latestAppl.getSmEquityCompanies(),
+										new String[] { "regNo" }, null);
 						if (latestEquityCompany == null
 								|| latestEquityCompany.getEquityCompanyId() == null) {
 							currEquityCompany.setChangedFieldStatus("N");
@@ -1009,20 +945,6 @@ public class SmFieldChangeUtil {
 				}
 			}
 		}
-	}
-
-	private static boolean isCurrEquityCompExistInLatestEquityComp(
-			SmEquityCompany currEquityCompany,
-			List<SmEquityCompany> latestEquityCompanyList) {
-		boolean retVal = false;
-		for (SmEquityCompany latestEquityCompany : latestEquityCompanyList) {
-			if (latestEquityCompany.getRegNo().equalsIgnoreCase(
-					currEquityCompany.getRegNo())) {
-				retVal = true;
-				break;
-			}
-		}
-		return retVal;
 	}
 
 	private static void setSuppCertFieldChangeStatus(SmAppl latestAppl,
@@ -1095,12 +1017,15 @@ public class SmFieldChangeUtil {
 				SmAssociationBody latestBody = null;
 				for (SmAssociationBody currBody : currAppl
 						.getSmAssociationBodies()) {
-					if (!isCurrProfBodyExistInLatestProfBody(currBody,
-							latestAppl.getSmAssociationBodies())) {
+					if (!isCurrExistInLatest(currBody,
+							latestAppl.getSmAssociationBodies(),
+							new String[] { "regNo" }, null)) {
 						currBody.setChangedFieldStatus("N");
 					} else {
-						latestBody = getProfBodyByRegNoFromList(latestAppl,
-								currBody.getRegNo());
+						latestBody = (SmAssociationBody) SmCommonUtil
+								.getObjectByPropertiesFromList(currBody,
+										latestAppl.getSmAssociationBodies(),
+										new String[] { "regNo" }, null);
 						if (latestBody == null
 								|| latestBody.getAssociationBodyId() == null) {
 							currBody.setChangedFieldStatus("N");
@@ -1114,19 +1039,6 @@ public class SmFieldChangeUtil {
 				}
 			}
 		}
-	}
-
-	private static boolean isCurrProfBodyExistInLatestProfBody(
-			SmAssociationBody currBody,
-			List<SmAssociationBody> latestProfBodyList) {
-		boolean retVal = false;
-		for (SmAssociationBody latestBody : latestProfBodyList) {
-			if (latestBody.getRegNo().equalsIgnoreCase(currBody.getRegNo())) {
-				retVal = true;
-				break;
-			}
-		}
-		return retVal;
 	}
 
 	private static void setCurrBankChequeSignatories(SmSupplierBank currBank,
@@ -1203,34 +1115,16 @@ public class SmFieldChangeUtil {
 			SmCompanyExperienceCat latestCompExpCat = null;
 			for (SmCompanyExperienceCat currExpCat : currCompExp
 					.getSmCompanyExperienceCats()) {
-				latestCompExpCat = getCompExpCatByCategoryL3FromList(
-						currExpCat.getPmCategoryL3(),
-						latestcurrCompExp.getSmCompanyExperienceCats());
+				latestCompExpCat = (SmCompanyExperienceCat) SmCommonUtil
+						.getObjectByPropertiesFromList(currExpCat,
+								latestcurrCompExp.getSmCompanyExperienceCats(),
+								null, new String[] { "pmCategoryL3" });
 				if (latestCompExpCat == null) {
 					currCompExp.setChangedFieldStatus("U");
 					currExpCat.setChangedFieldStatus("N");
 				}
 			}
 		}
-	}
-
-	public static SmCompanyExperienceCat getCompExpCatByCategoryL3FromList(
-			PmCategoryL3 l3, List<SmCompanyExperienceCat> compExpCatList) {
-		SmCompanyExperienceCat retVal = null;
-		if (!SmCommonUtil.isCollectionEmpty(compExpCatList)) {
-			for (SmCompanyExperienceCat latestCompExpCat : compExpCatList) {
-				if (latestCompExpCat.getPmCategoryL3() != null
-						&& latestCompExpCat.getPmCategoryL3().getCategoryL3Id() != null
-						&& l3 != null
-						&& l3.getCategoryL3Id() != null
-						&& l3.getCategoryL3Id().compareTo(
-								latestCompExpCat.getPmCategoryL3()
-										.getCategoryL3Id()) == 0) {
-					retVal = latestCompExpCat;
-				}
-			}
-		}
-		return retVal;
 	}
 
 	public static SmPersonnelAddress getPersonnelAddressByTypeFromList(

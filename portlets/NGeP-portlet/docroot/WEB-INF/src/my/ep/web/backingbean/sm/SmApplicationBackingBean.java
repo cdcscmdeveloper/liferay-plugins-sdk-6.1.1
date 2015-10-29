@@ -3271,9 +3271,14 @@ public class SmApplicationBackingBean extends
 						SupplierManagementConst.SM_EQUI_COMPANY_PANEL,
 						getManagedBean());
 		getManagedBean().setSelectedEquityCompany(equiCompBean);
-		getManagedBean().setLatestEquityCompany(
-				SmFieldChangeUtil.getEquityCompanyByRegNoFromList(
-						getManagedBean().getSmAppl(), equiCompBean.getRegNo()));
+		if (getManagedBean().getLatestAppl() != null) {
+			getManagedBean().setLatestEquityCompany(
+					(SmEquityCompany) SmCommonUtil
+							.getObjectByPropertiesFromList(equiCompBean,
+									getManagedBean().getLatestAppl()
+											.getSmEquityCompanies(),
+									new String[] { "regNo" }, null));
+		}
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("eqiCompDialog.show()");
 	}
@@ -5329,9 +5334,14 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignSelShrHldrProfBody(SmAssociationBody asb) {
 		getManagedBean().setSelectedStfPrfBdy(asb);
-		getManagedBean().setLatestStfPrfBdy(
-				SmFieldChangeUtil.getProfBodyByRegNoFromList(getManagedBean()
-						.getLatestAppl(), asb.getRegNo()));
+		if (getManagedBean().getLatestAppl() != null) {
+			getManagedBean().setLatestStfPrfBdy(
+					(SmAssociationBody) SmCommonUtil
+							.getObjectByPropertiesFromList(asb,
+									getManagedBean().getLatestAppl()
+											.getSmAssociationBodies(),
+									new String[] { "regNo" }, null));
+		}
 		RequestContext.getCurrentInstance().execute(
 				"equiShrProfBeanInfo.show()");
 		if (getManagedBean().isShowPersonnelViewOnly()) {
