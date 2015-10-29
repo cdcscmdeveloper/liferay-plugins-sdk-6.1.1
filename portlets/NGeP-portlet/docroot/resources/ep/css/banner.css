@@ -67,7 +67,7 @@ a.bannerlink:hover {
 
 
 .banner3{
-	color: #fff !important;
+	color: #000 !important;
 	border-radius:8px;
 	border: 1px solid #d1d3d4;
 	background-image:url(#{resource['ep/images/supplierregistration/upgrade-mof-bg.png']}) !important;
@@ -76,7 +76,7 @@ a.bannerlink:hover {
 	height: 80px;
 	}
 .banner3-text{
-	color: #fff !important;
+	color: #000 !important;
 	padding-left: 100px !important;
 	padding-top: 28px;
 	padding-bottom: 28px;
