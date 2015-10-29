@@ -89,6 +89,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
@@ -425,7 +426,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		// response.setContentType("application/vnd.ms-excel");
 		// response.setHeader("Content-Transfer-Encoding", "binary");
 		// to fix firefox issue of space
-		String finalFileName = fileName.replaceAll("\\s+",QTConstants.REPLACE_CHAR);
+		String finalFileName = fileName.replaceAll("\\s+",
+				QTConstants.REPLACE_CHAR);
 		log.info("finalFileName: " + finalFileName);
 		response.setHeader("Content-Disposition", "attachment; filename="
 				+ finalFileName);
@@ -1919,49 +1921,55 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 *            the sc loa
 	 * @return the big decimal
 	 */
-	public ScLoa calcBondAmount(ScLoa scLoa) {
-		if(scLoa.isBondReq()){
-		BigDecimal bondAmt = BigDecimal.ZERO;
-		BigDecimal totalDuration = BigDecimal.ZERO;
-		BigDecimal bondPercentageLoaAmt = BigDecimal.ZERO;
-		BigDecimal bondPercentage = BigDecimal.ZERO;
-		if (scLoa.getLoaAmt() != null) {
-			BigDecimal overallCtAmount = overallCtAmount(scLoa.getLoaAmt(),
-					scLoa.getGstAmt());
-
-			if (scLoa.getContractDuration() != null) {
-				BigDecimal duration = scLoa.getContractDuration();
-				duration = duration.setScale(4, BigDecimal.ROUND_HALF_UP);
-				totalDuration = duration.divide(new BigDecimal(12), 4, BigDecimal.ROUND_HALF_UP);
-				bondPercentageLoaAmt = overallCtAmount.divide(totalDuration, 4, BigDecimal.ROUND_HALF_UP);
-			}
-
-			// Get performance bond rule percentage
-			IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IRuleSO.class);
-			RuleReqDTO ruleReqDTO = new RuleReqDTO();
-			ruleReqDTO.setRuleType(RuleTypeConst.BOND_PERCENTAGE);
-			ruleReqDTO.setCompareValue(bondPercentageLoaAmt.toString());
-			RuleResDTO roleResDTO = ruleSO
-					.getRuleValuesByTypeAndCurrentDateRange(ruleReqDTO);
-
-			if (roleResDTO.isSuccessful()
-					&& roleResDTO.getRuleValueStrList() != null
-					&& roleResDTO.getRuleValueStrList().size() > 0) {
-				String percentage = roleResDTO.getRuleValueStrList().get(0);
-				BigDecimal res = new BigDecimal(percentage);
-				bondPercentage = res.divide(new BigDecimal(100), 4, BigDecimal.ROUND_HALF_UP);
-				scLoa.setBondPercentage(new BigDecimal(percentage));
-			}
-			if (bondPercentage.doubleValue()> 0) {
-			    bondAmt = bondPercentageLoaAmt.multiply(bondPercentage);
-				bondAmt = bondAmt.setScale(2, BigDecimal.ROUND_HALF_UP);
-				scLoa.setBondAmt(bondAmt);
-			}
+	public ScLoa calcBondAmount(ScLoa scLoa,boolean isDirectLoa) {
+		if(isDirectLoa){
+		scLoa.setBondReq(checkPerformanceBondMandatory(scLoa.getLoaAmt()));
 		}
-		
-	}
+		if (scLoa.isBondReq()) {
+			BigDecimal bondAmt = BigDecimal.ZERO;
+			BigDecimal totalDuration = BigDecimal.ZERO;
+			BigDecimal bondPercentageLoaAmt = BigDecimal.ZERO;
+			BigDecimal bondPercentage = BigDecimal.ZERO;
+			if (scLoa.getLoaAmt() != null) {
+				BigDecimal overallCtAmount = overallCtAmount(scLoa.getLoaAmt(),
+						scLoa.getGstAmt());
+
+				if (scLoa.getContractDuration() != null) {
+					BigDecimal duration = scLoa.getContractDuration();
+					duration = duration.setScale(4, BigDecimal.ROUND_HALF_UP);
+					totalDuration = duration.divide(new BigDecimal(12), 4,
+							BigDecimal.ROUND_HALF_UP);
+					bondPercentageLoaAmt = overallCtAmount.divide(
+							totalDuration, 4, BigDecimal.ROUND_HALF_UP);
+				}
+
+				// Get performance bond rule percentage
+				IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IRuleSO.class);
+				RuleReqDTO ruleReqDTO = new RuleReqDTO();
+				ruleReqDTO.setRuleType(RuleTypeConst.BOND_PERCENTAGE);
+				ruleReqDTO.setCompareValue(bondPercentageLoaAmt.toString());
+				RuleResDTO roleResDTO = ruleSO
+						.getRuleValuesByTypeAndCurrentDateRange(ruleReqDTO);
+
+				if (roleResDTO.isSuccessful()
+						&& roleResDTO.getRuleValueStrList() != null
+						&& roleResDTO.getRuleValueStrList().size() > 0) {
+					String percentage = roleResDTO.getRuleValueStrList().get(0);
+					BigDecimal res = new BigDecimal(percentage);
+					bondPercentage = res.divide(new BigDecimal(100), 4,
+							BigDecimal.ROUND_HALF_UP);
+					scLoa.setBondPercentage(new BigDecimal(percentage));
+				}
+				if (bondPercentage.doubleValue() > 0) {
+					bondAmt = bondPercentageLoaAmt.multiply(bondPercentage);
+					bondAmt = bondAmt.setScale(2, BigDecimal.ROUND_HALF_UP);
+					scLoa.setBondAmt(bondAmt);
+				}
+			}
+
+		}
 		return scLoa;
 	}
 
@@ -2015,6 +2023,35 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return isDate;
 
 	}
-	
+
+	/**
+	 * To check is performance bond required
+	 * 
+	 * @return boolean isPerformanceBondRequired
+	 */
+	public boolean checkPerformanceBondMandatory(BigDecimal loaAmount) {
+
+		if (null != loaAmount) {
+			IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IRuleSO.class);
+			RuleReqDTO ruleReqDTO = new RuleReqDTO();
+			ruleReqDTO.setRuleType(RuleTypeConst.BOND);
+			List<PmConfigRuleValue> ruleValueList = ruleSO
+					.getRuleValuesByRuleType(ruleReqDTO).getRuleValueList();
+
+			if (ruleValueList != null && ruleValueList.size() > 0) {
+				PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+				if (loaAmount.compareTo(new BigDecimal(configRuleValue
+						.getRuleValue())) > 0) {
+
+					return true;
+				}
+
+			}
+
+		}
+		return false;
+	}
 
 }

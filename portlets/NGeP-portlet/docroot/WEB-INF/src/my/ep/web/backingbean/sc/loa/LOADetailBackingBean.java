@@ -388,7 +388,7 @@ public class LOADetailBackingBean extends
 			}
 			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
 			
-			scLoa = calcBondAmount(scLoa);
+			scLoa = calcBondAmount(scLoa,false);
 			if (scLoa.getBondAmt() != null) {
 				getManagedBean().setBondAmountWord(
 						NumberWordUtil.convert(scLoa.getBondAmt().toString()));
@@ -618,7 +618,7 @@ public class LOADetailBackingBean extends
 
 		// calculate performance bond amt for S2
 		if (!ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())) {
-			scLoa = calcBondAmount(scLoa);
+			scLoa = calcBondAmount(scLoa,false);
 		}
 		
 		// loa contract type - central
