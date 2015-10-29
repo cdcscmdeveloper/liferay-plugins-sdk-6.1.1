@@ -4522,8 +4522,8 @@ public class SmApplicationBackingBean extends
 				&& (smPersonnel.getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ || smPersonnel
 						.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING)) {
 			retVal = true;
-		} else if (!retVal) {
-			retVal = isAllowedDowngradeRole(smPersonnel);
+		} else if (!retVal && !isAllowedDowngradeRole(smPersonnel)) {
+			retVal = true;
 		}
 		return retVal;
 	}
@@ -8871,8 +8871,12 @@ public class SmApplicationBackingBean extends
 				if (StringUtils.isNotBlank(per.getIdentificationNo())
 						&& StringUtils.isNotBlank(per.getEpRole())
 						&& StringUtils.isNotBlank(smPersonnel.getEpRole())
+						&& StringUtils.isNotBlank(smPersonnel
+								.getIdentificationNo())
 						&& per.getIdentificationNo().equals(
-								smPersonnel.getIdentificationNo())) {
+								smPersonnel.getIdentificationNo())
+						&& !smPersonnel.getEpRole().equals(
+								RoleCode.CM_USER.value())) {
 					retVal = false;
 					break;
 				}
