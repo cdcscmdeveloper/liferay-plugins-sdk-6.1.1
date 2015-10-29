@@ -208,40 +208,6 @@ public class SmFieldChangeUtil {
 		return staffTotal;
 	}
 
-	public static SmSupplierBranch getBranchByBranchCodeFromList(SmAppl appl,
-			Long branchCode) {
-		SmSupplierBranch retVal = new SmSupplierBranch();
-		if (appl != null
-				&& !SmCommonUtil
-						.isCollectionEmpty(appl.getSmSupplierBranches())) {
-			for (SmSupplierBranch tmp : appl.getSmSupplierBranches()) {
-				if (tmp.getBranchCode() != null && branchCode != null
-						&& tmp.getBranchCode().compareTo(branchCode) == 0) {
-					retVal = tmp;
-					break;
-				}
-			}
-		}
-		return retVal;
-	}
-
-	public static SmSupplierBank getBankByAccNoAndAccPurposeFromList(
-			SmAppl appl, String accNo, String accPurpose) {
-		SmSupplierBank retVal = new SmSupplierBank();
-		if (appl != null
-				&& !SmCommonUtil.isCollectionEmpty(appl.getSmSupplierBanks())) {
-			for (SmSupplierBank tmp : appl.getSmSupplierBanks()) {
-				if (StringUtils.isNotBlank(accNo)
-						&& StringUtils.isNotBlank(tmp.getAccountNo())
-						&& accNo.equals(tmp.getAccountNo())) {
-					retVal = tmp;
-					break;
-				}
-			}
-		}
-		return retVal;
-	}
-
 	private static void setPersonnelFieldChangeStatus(SmAppl latestAppl,
 			SmAppl currAppl) {
 		if (SmCommonUtil.isCollectionEmpty(latestAppl.getSmPersonnels())
@@ -777,13 +743,16 @@ public class SmFieldChangeUtil {
 			if (!SmCommonUtil.isCollectionEmpty(currAppl.getSmSupplierBanks())) {
 				SmSupplierBank latestBank = null;
 				for (SmSupplierBank currBank : currAppl.getSmSupplierBanks()) {
-					if (!isCurrBankExistInLatestBank(currBank,
-							latestAppl.getSmSupplierBanks())) {
+					if (!isCurrExistInLatest(currBank,
+							latestAppl.getSmSupplierBanks(), new String[] {
+									"accountNo", "accountPurpose" }, null)) {
 						currBank.setChangedFieldStatus("N");
 					} else {
-						latestBank = getBankByAccNoAndAccPurposeFromList(
-								latestAppl, currBank.getAccountNo(),
-								currBank.getAccountPurpose());
+						latestBank = (SmSupplierBank) SmCommonUtil
+								.getObjectByPropertiesFromList(currBank,
+										latestAppl.getSmSupplierBanks(),
+										new String[] { "accountNo",
+												"accountPurpose" }, null);
 						if (latestBank == null
 								|| latestBank.getSupplierBankId() == null) {
 							currBank.setChangedFieldStatus("N");
@@ -817,23 +786,6 @@ public class SmFieldChangeUtil {
 		}
 	}
 
-	private static boolean isCurrBankExistInLatestBank(SmSupplierBank currBank,
-			List<SmSupplierBank> latestBankList) {
-		boolean retVal = false;
-		for (SmSupplierBank latestBank : latestBankList) {
-			if (StringUtils.isNotBlank(latestBank.getAccountNo())
-					&& StringUtils.isNotBlank(currBank.getAccountNo())
-					&& latestBank.getAccountNo()
-							.equals(currBank.getAccountNo())
-					&& latestBank.getAccountPurpose().equals(
-							currBank.getAccountPurpose())) {
-				retVal = true;
-				break;
-			}
-		}
-		return retVal;
-	}
-
 	private static void setBranchFieldChangeStatus(SmAppl latestAppl,
 			SmAppl currAppl) {
 		if (SmCommonUtil.isCollectionEmpty(latestAppl.getSmSupplierBranches())
@@ -853,8 +805,10 @@ public class SmFieldChangeUtil {
 							new String[] { "branchCode" }, null)) {
 						currBranch.setChangedFieldStatus("N");
 					} else {
-						latestBranch = getBranchByBranchCodeFromList(
-								latestAppl, currBranch.getBranchCode());
+						latestBranch = (SmSupplierBranch) SmCommonUtil
+								.getObjectByPropertiesFromList(currBranch,
+										latestAppl.getSmSupplierBranches(),
+										new String[] { "branchCode" }, null);
 						if (latestBranch == null
 								|| latestBranch.getSupplierBranchId() == null) {
 							currBranch.setChangedFieldStatus("N");
@@ -886,21 +840,6 @@ public class SmFieldChangeUtil {
 				}
 			}
 		}
-	}
-
-	private static boolean isCurrBranchExistInLatestBranch(
-			SmSupplierBranch currBranch, List<SmSupplierBranch> latestBranchList) {
-		boolean retVal = false;
-		for (SmSupplierBranch latestBranch : latestBranchList) {
-			if (currBranch.getBranchCode() != null
-					&& latestBranch.getBranchCode() != null
-					&& currBranch.getBranchCode().compareTo(
-							latestBranch.getBranchCode()) == 0) {
-				retVal = true;
-				break;
-			}
-		}
-		return retVal;
 	}
 
 	private static void setEquityCompanyFieldChangeStatus(SmAppl latestAppl,
