@@ -12411,17 +12411,21 @@ public class SpecificationBackingBean extends
 						.getSpecificationRemarks();
 				if (null != remarks) {
 					for (int i = 0; i < remarks.size(); i++) {
+						ScQtSpecificationRemark Remark = remarks.get(0);
 						String userRemark = remarks.get(i).getRemark();
 						if (null == userRemark || "".equals(userRemark)) {
-							if (remarks.size() == 1) {
-								throw new EpException(MessageConst.ERROR_760154);
-							}
+							throw new EpException(MessageConst.ERROR_760154);
+						} else if (null == Remark.getRemarkId()) {
+							RequestContext.getCurrentInstance().execute(
+									"reviceApprovalDlgs.show()");
+						} else {
+							reviseSpecificationCommittee();
+							return CommonUIConst.ACKNOWLEDGE_PAGE;
 						}
 					}
+
 				}
 
-				RequestContext.getCurrentInstance().execute(
-						"reviceApprovalDlgs.show()");
 			} else if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)
 					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACCEPT)) {
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
