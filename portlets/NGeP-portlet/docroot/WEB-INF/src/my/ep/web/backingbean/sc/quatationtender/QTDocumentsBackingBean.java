@@ -961,7 +961,7 @@ public class QTDocumentsBackingBean extends
 		debugLogger("downloadReport");
 		ScQtDocReportAttachment scQtDocReportAttachment = scQtDocReport
 				.getScQtDocReportAttachment();
-		if (scQtDocReportAttachment == null) {
+		if (!scQtDocReport.getDefinationType().getParameterCode().equalsIgnoreCase(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)) {
 			scQtDocReportAttachment = generateDocumentAttachment(scQtDocReport);
 			scQtDocReport.setScQtDocReportAttachment(scQtDocReportAttachment);
 		} 
