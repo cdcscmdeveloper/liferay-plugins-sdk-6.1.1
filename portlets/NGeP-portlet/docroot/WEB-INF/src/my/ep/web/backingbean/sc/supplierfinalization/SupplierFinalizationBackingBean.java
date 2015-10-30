@@ -4712,7 +4712,6 @@ public class SupplierFinalizationBackingBean extends
 							supplier.getSupplierId())) {
 					continue;
 				}
-				commonSupplierList.add(supplier);
 				items[i++] = new SelectItem(supplier.getSupplierId().toString(),
 						supplier.getCompanyName());
 			}			
