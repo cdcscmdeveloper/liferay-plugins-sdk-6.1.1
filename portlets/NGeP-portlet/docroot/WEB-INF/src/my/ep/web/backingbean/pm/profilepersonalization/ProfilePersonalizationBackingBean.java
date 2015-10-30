@@ -1007,7 +1007,7 @@ public class ProfilePersonalizationBackingBean extends
 						PmCommonUtil.assignTrackingDairyValues(user,
 								getActionDesc(messageId, msgParam),statusResDTO.getPmStatus() != null ? statusResDTO
 										.getPmStatus() : new PmStatus()));
-			
+			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 
