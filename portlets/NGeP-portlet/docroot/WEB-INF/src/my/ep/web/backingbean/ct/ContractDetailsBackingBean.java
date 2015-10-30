@@ -148,6 +148,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -461,19 +462,20 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	public void searchContract() throws Exception {
 		try { 
-			if ((getManagedBean().getCtNumber() == null || getManagedBean().getCtNumber().trim().length() == 0)
-					&& (getManagedBean().getCtName() == null || getManagedBean().getCtName().trim().length() == 0) 
-					&& (getManagedBean().getCtCircularNo() == null || getManagedBean().getCtCircularNo().trim().length() == 0) 
-					&& (getManagedBean().getCtCircularName() == null || getManagedBean().getCtCircularName().trim().length() == 0) 
-					&& (getManagedBean().getCtLoaNo() == null || getManagedBean().getCtLoaNo().trim().length() == 0) 
-					&& (getManagedBean().getCtSupplierName() == null || getManagedBean().getCtSupplierName().trim().length() == 0) 
-					&& getManagedBean().getCtDateStart() == null
-					&& getManagedBean().getCtDateEnd() == null 
-					&& (getManagedBean().getCtPhysicalNo() == null || getManagedBean().getCtPhysicalNo().trim().length() == 0) 
-					&& (getManagedBean().getCtPhysicalLoaNo() == null || getManagedBean().getCtPhysicalLoaNo().trim().length() == 0) 
-					&& getManagedBean().getCtStatus() == 0 
-					&& getManagedBean().getTerminationTypeId() == null 
-					&& getManagedBean().getCtContractStatus() == null
+			if (StringUtils.isBlank(getManagedBean().getSearchContractNo())
+					&& StringUtils.isBlank(getManagedBean().getSearchContractName()) 
+					&& StringUtils.isBlank(getManagedBean().getSearchCircularNo()) 
+					&& StringUtils.isBlank(getManagedBean().getSearchCircularName()) 
+					&& StringUtils.isBlank(getManagedBean().getSearchLoaNo()) 
+					&& StringUtils.isBlank(getManagedBean().getSearchSupplierName()) 
+					&& getManagedBean().getSearchCtStartDate() == null
+					&& getManagedBean().getSearchCtEndDate() == null 
+					&& StringUtils.isBlank(getManagedBean().getSearchCtPhysicalNo()) 
+					&& StringUtils.isBlank(getManagedBean().getSearchLoaPhysicalNo()) 
+					&& getManagedBean().getSearchStatus() == 0 
+					&& getManagedBean().getSearchTerminationType() == null 
+					&& getManagedBean().getSearchFulfilmentStatus() == null
+					&& getManagedBean().getSearchContractStatus() == 0
 					&& getManagedBean().getSearchMinistryProfileId() == null
 					&& getManagedBean().getSearchPtjProfile() == null) {
 					FacesContext.getCurrentInstance().addMessage(null,
@@ -493,19 +495,20 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * The method used to reset the search criteria for contract.
 	 */
 	public void searchReset() {
-		this.getManagedBean().setCtNumber(null);
-		this.getManagedBean().setCtName(null);	
-		this.getManagedBean().setCtCircularNo(null);	
-		this.getManagedBean().setCtCircularName(null);	
-		this.getManagedBean().setCtLoaNo(null);	
-		this.getManagedBean().setCtSupplierName(null);	
-		this.getManagedBean().setCtDateStart(null);	
-		this.getManagedBean().setCtDateEnd(null);	
-		this.getManagedBean().setCtPhysicalNo(null);	
-		this.getManagedBean().setCtPhysicalLoaNo(null);
-		this.getManagedBean().setCtStatus(0);
-		this.getManagedBean().setTerminationTypeId(null);
-		this.getManagedBean().setCtContractStatus(null);
+		this.getManagedBean().setSearchContractNo(null);
+		this.getManagedBean().setSearchContractName(null);	
+		this.getManagedBean().setSearchCircularNo(null);	
+		this.getManagedBean().setSearchCircularName(null);	
+		this.getManagedBean().setSearchLoaNo(null);	
+		this.getManagedBean().setSearchSupplierName(null);	
+		this.getManagedBean().setSearchCtStartDate(null);	
+		this.getManagedBean().setSearchCtEndDate(null);	
+		this.getManagedBean().setSearchCtPhysicalNo(null);	
+		this.getManagedBean().setSearchLoaPhysicalNo(null);
+		this.getManagedBean().setSearchStatus(0);
+		this.getManagedBean().setSearchTerminationType(null);
+		this.getManagedBean().setSearchFulfilmentStatus(null);
+		this.getManagedBean().setSearchContractStatus(0);
 		defaultMinistryPtjSearchValue();
 	}
 	
@@ -2361,12 +2364,41 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	}
 	
 	/**
-	 * The method used for generating a list of contract status 
+	 * The method used for generating a list of status 
 	 * for searching contract as selection.
 	 * 
-	 * @return the selection list of contract status
+	 * @return the selection list of status
 	 */
 	public SelectItem[] getSearchContractStatusDropdown() {
+		SelectItem[] items = null;
+		
+		try {
+			items = new SelectItem[5];
+			int i = 0;
+			items[i++] = new SelectItem(0, ResourceBundleUtils.getMessage("lbl.txt.select", 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			items[i++] = new SelectItem(ContractConst.CONTRACT_STATUS_EFFECTIVE,  
+					ResourceBundleUtils.getMessage("lbl.ct.effective", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			items[i++] = new SelectItem(ContractConst.CONTRACT_STATUS_INACTIVE,  
+					ResourceBundleUtils.getMessage("lbl.ct.inactive", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			items[i++] = new SelectItem(ContractConst.CONTRACT_STATUS_EXPIRED,  
+					ResourceBundleUtils.getMessage("lbl.ct.expired", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			items[i++] = new SelectItem(ContractConst.CONTRACT_STATUS_TERMINATED,  
+					ResourceBundleUtils.getMessage("lbl.ct.terminated", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+		return items;
+	}
+	
+	/**
+	 * The method used for generating a list of fulfilment status 
+	 * for searching contract as selection.
+	 * 
+	 * @return the selection list of fulfilment status
+	 */
+	public SelectItem[] getSearchFulfilmentStatusDropdown() {
 		IStatusSO statusSO = null;
 		SelectItem[] items = null;
 		
@@ -2446,6 +2478,25 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			return ResourceBundleUtils.getMessage("lbl.ct.complete", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		} else {
 			return ResourceBundleUtils.getMessage("lbl.ct.incomplete", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		}
+	}
+	
+	/**
+	 * The method used to retrieve the contract status of the contract.
+	 * 
+	 * @return Effective, Terminated, Expired, Inactive
+     */
+	public String getContractStatusDesc(int contractStatus) {
+		if (contractStatus == ContractConst.CONTRACT_STATUS_EFFECTIVE) {
+			return ResourceBundleUtils.getMessage("lbl.ct.effective", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else if (contractStatus == ContractConst.CONTRACT_STATUS_INACTIVE	) {
+			return ResourceBundleUtils.getMessage("lbl.ct.inactive", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else if (contractStatus == ContractConst.CONTRACT_STATUS_EXPIRED	) {
+			return ResourceBundleUtils.getMessage("lbl.ct.expired", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else if (contractStatus == ContractConst.CONTRACT_STATUS_TERMINATED	) {
+			return ResourceBundleUtils.getMessage("lbl.ct.terminated", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else {
+			return "";
 		}
 	}
 	
