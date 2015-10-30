@@ -182,9 +182,7 @@
 			        <f:facet name="header">
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.request.note.delivery.term']}" />
-						<h:panelGroup rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SQ'}">
-							<ac:iconTooltip id="deliveryTermId#{rowIndex}" value="#{lbl['lbl.sc.delivery.term.tooltip']}" />
-						</h:panelGroup>
+						<ac:iconTooltip id="deliveryTermId#{rowIndex}" value="#{lbl['lbl.sc.delivery.term.tooltip']}" />
 						
 					</f:facet>
 					<p:inputText style="width:21px;margin-top: 8px;margin-right: 1px;" 
