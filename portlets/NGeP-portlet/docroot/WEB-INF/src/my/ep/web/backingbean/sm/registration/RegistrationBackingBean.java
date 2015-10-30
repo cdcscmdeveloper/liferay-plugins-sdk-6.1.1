@@ -549,11 +549,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		reqDTO.setServerName(fs.getRequest().getServerName());
 		reqDTO.setServerPort(fs.getRequest().getServerPort());
 		reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
+		reqDTO.setLanguage(fs.getUserLocale().getLanguage());
 		
 		reqDTO.setSmSupp(this.getManagedBean().getSmSupp());
 		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
 		RegistrationResDTO resDTO = reqSO.createSupplier(reqDTO);
-
+		
 		if (resDTO.isSuccessful()) {
 			log.info("****User created Successfully*******");
 			String suppAdminEmail = smPersonnel != null
