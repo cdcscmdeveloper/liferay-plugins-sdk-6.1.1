@@ -36,11 +36,10 @@
 			<p:column headerText="#{lbl['lbl.sc.document']}" style="width:10%">
 				<ui:fragment
 					rendered="#{complianceTechnicalSupplier.submitted eq 'true'}">
-					<p:commandLink ajax="false"
-						actionListener="#{evaluationBackingBean.downloadEncryptedFile(complianceTechnicalSupplier.scQtProposalChecklistAttachment)}"
-						process="@this" partialSubmit="true">
+					<h:commandLink immediate="true"
+						action="#{evaluationBackingBean.downloadEncryptedFile(complianceTechnicalSupplier.scQtProposalChecklistAttachment)}" >
 						<h:graphicImage value="/css/images/design/icon_txt.png" />
-					</p:commandLink>
+					</h:commandLink>
 				</ui:fragment>
 
 			</p:column>
