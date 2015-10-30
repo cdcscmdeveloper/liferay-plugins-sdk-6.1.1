@@ -5114,10 +5114,14 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignSelShrHldrRelatedCompany(SmRelatedCompany com) {
 		getManagedBean().setSelectedRelatedCompany(com);
-		getManagedBean().setLatestRelatedCompany(
-				SmFieldChangeUtil.getRelatedCompanyByRegNoFromList(com
-						.getRegNo(), getManagedBean().getLatestPersonnel()
-						.getSmRelatedCompanies()));
+		if (getManagedBean().getLatestPersonnel() != null) {
+			getManagedBean().setLatestRelatedCompany(
+					(SmRelatedCompany) SmCommonUtil
+							.getObjectByPropertiesFromList(com,
+									getManagedBean().getLatestPersonnel()
+											.getSmRelatedCompanies(),
+									new String[] { "regNo" }, null));
+		}
 		RequestContext.getCurrentInstance().execute("equiRelCompInfo.show()");
 		if (getManagedBean().isShowPersonnelViewOnly()) {
 			SmCommonUtil.closeBlockUI();
