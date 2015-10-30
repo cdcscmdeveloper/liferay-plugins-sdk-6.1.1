@@ -49,7 +49,7 @@
 							
 				<td>
 				<p:outputPanel id="opFfcOrgCode" rendered="#{ParameterConst.orgTypeFactoring eq profileManagementBackingBean.managedBean.selectedOrgType.parameterCode}">
-				    <ac:lov id="lovFfcOrg" lovId="PM_ORG_PROFILE_FFC" size="29" 
+				    <ac:lov id="lovFfcOrg" lovId="PM_ORG_PROFILE_FFC" size="60" 
 		            	update=":form:opDefinedSearch" 
 		            	readonly="true" disabled="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId==null or profileManagementBackingBean.managedBean.disabledOrgFields}"
 						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
@@ -60,7 +60,7 @@
 						<p:message id="lovFfcOrgMsg" for="lovFfcOrg" display="icon" />
 				</p:outputPanel>
 				<p:outputPanel id="opSupOrgCode" rendered="#{ParameterConst.orgTypeSupplier eq profileManagementBackingBean.managedBean.selectedOrgType.parameterCode}">
-				    <ac:lov id="lovSupOrg" lovId="PM_ORG_PROFILE_WITH_SUPPLIER" size="29"
+				    <ac:lov id="lovSupOrg" lovId="PM_ORG_PROFILE_WITH_SUPPLIER" size="60"
 		            	update=":form:opDefinedSearch" 
 		            	readonly="true" disabled="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId==null or profileManagementBackingBean.managedBean.disabledOrgFields}"
 						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
@@ -71,7 +71,7 @@
 						<p:message id="lovSupOrgMsg" for="lovSupOrg" display="icon" />
 				</p:outputPanel>
 				<p:outputPanel id="opOrgCode" rendered="#{ParameterConst.orgTypeFactoring ne profileManagementBackingBean.managedBean.selectedOrgType.parameterCode and ParameterConst.orgTypeSupplier ne profileManagementBackingBean.managedBean.selectedOrgType.parameterCode}">
-				   <ac:lov id="lovMinistry1" lovId="PM_ORG_PROFILE" size="29" 
+				   <ac:lov id="lovMinistry1" lovId="PM_ORG_PROFILE" size="60" 
 			        	disabled="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId==null or profileManagementBackingBean.managedBean.disabledOrgFields}"
 		            	update=":form:opDefinedSearch" readonly="true"
 						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
@@ -89,7 +89,7 @@
 					<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.idno']}"/>
 				</th>
 				<td>
-					<p:inputText styleClass="ppDisplayTextM"  maxlength="12" value="#{profileManagementBackingBean.managedBean.userProfileSearchBean.identificationNo}"/>
+					<p:inputText styleClass="ppDisplayTextM"  size="27" maxlength="12" value="#{profileManagementBackingBean.managedBean.userProfileSearchBean.identificationNo}"/>
 				</td>
 				<th>&#160;</th>
 				<td>&#160;</td>
@@ -99,7 +99,7 @@
 					<p:outputLabel value="#{lbl['lbl.pm.profiles.search.name']}"/>
 				</th>
 				<td>
-					<p:inputText styleClass="ppDisplayTextM" value="#{profileManagementBackingBean.managedBean.userProfileSearchBean.userName}" maxlength="100"/>
+					<p:inputText styleClass="ppDisplayTextM" size="27" value="#{profileManagementBackingBean.managedBean.userProfileSearchBean.userName}" maxlength="100"/>
 				</td>
 				<th>&#160;</th>
 				<td>&#160;</td>
@@ -109,7 +109,7 @@
 					<p:outputLabel value="#{lbl['lbl.pm.profiles.search.role']}"/>
 				</th>
 				<td>
-				<ac:lov id="lovRoleDesc" lovId="PM_ROLE_DESC" size="29" 
+				<ac:lov id="lovRoleDesc" lovId="PM_ROLE_DESC" size="27" 
 		            	update=":form:opDefinedSearch" readonly="true" 
 		            	disabled="#{profileManagementBackingBean.managedBean.selectedOrgType eq null or 
 		            	profileManagementBackingBean.managedBean.selectedOrgType.parameterId eq null }"

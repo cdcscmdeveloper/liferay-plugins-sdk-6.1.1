@@ -61,14 +61,14 @@
 			var="typeValueObj" rowKey="#{typeValueObj}" rowIndexVar="index">
 
 			<ac:paginator for="ruleTypeValueTableID" />
-			<p:column width="20%"
+			<p:column
 				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'A')}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
 					                 #{lbl['lbl.pm.value']}
 				           </f:facet>
 
-				<p:inputText value="#{typeValueObj.ruleValue}" size="20"
+				<p:inputText value="#{typeValueObj.ruleValue}" size="30"
 					maxlength="20" id="amountValueId"
 					disabled="#{!(typeValueObj.brandNew)}" required="true"
 					requiredMessage="#{lbl['lbl.pm.settings.value.required']}"
@@ -79,14 +79,14 @@
 				</p:inputText>
 				<p:message id="amountValueMsg" for="amountValueId" display="icon" />
 			</p:column>
-			<p:column width="20%"
+			<p:column
 				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'N')}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
 					                 #{lbl['lbl.pm.value']}
 				           </f:facet>
 
-				<p:inputText value="#{typeValueObj.ruleValue}" size="20"
+				<p:inputText value="#{typeValueObj.ruleValue}" size="30"
 					maxlength="20" id="numberValueId"
 					disabled="#{!(typeValueObj.brandNew)}" required="true"
 					requiredMessage="#{lbl['lbl.pm.settings.value.required']}"
@@ -96,7 +96,7 @@
 				</p:inputText>
 				<p:message id="numberValueMsg" for="numberValueId" display="icon" />
 			</p:column>
-			<p:column width="20%"
+			<p:column
 				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'M'}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
@@ -116,7 +116,7 @@
 				<p:message id="parameterCodeValueMsg" for="parameterCodeValueId"
 					display="icon" />
 			</p:column>
-			<p:column width="20%"
+			<p:column
 				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'P'}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
@@ -124,7 +124,7 @@
 				           </f:facet>
 
 				<p:inputText value="#{typeValueObj.ruleValue}" size="20"
-					maxlength="20" id="percentageValueId"
+					maxlength="30" id="percentageValueId"
 					disabled="#{!(typeValueObj.brandNew)}" required="true"
 					requiredMessage="#{lbl['lbl.pm.settings.value.required']}"
 					validator="#{webappBean.validatePercentageNumber}">
@@ -135,7 +135,7 @@
 					display="icon" />
 			</p:column>
 
-			<p:column width="15%"
+			<p:column
 				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'C'}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
@@ -180,7 +180,7 @@
 				<p:message id="toValueMsg" for="toValueId" display="icon" />
 			</p:column>
 
-			<p:column width="30%"
+			<p:column width="35%"
 				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'C')}">
 				<f:facet name="header">
 	             	#{lbl['lbl.pm.desc']}
@@ -188,22 +188,22 @@
 		      	#{typeValueObj.categoryL3Id.categoryName}
 		</p:column>
 
-			<p:column width="15%" id="effDateColumnId">
+			<p:column width="13%" id="effDateColumnId">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
 					<h:outputText value=" #{lbl['lbl.pm.as.effdate']}" />
 				</f:facet>
 
-				<p:calendar
+				<p:calendar 
 					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1 and typeValueObj.showFlag)}"
 					disabled="#{typeValueObj.effDate le DateUtils.getCurrentDateWithoutTime()}"
-					showOn="button" id="effDate" style="width:100px;"
+					showOn="button" id="effDateId" style="width:100px;"
 					mindate="#{ruleCatalogueBackingBean.managedBean.tomorrow}"
 					required="true" label="#{lbl['lbl.pm.as.effdate']}"
 					readonlyInput="true"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 					value="#{typeValueObj.effDate}">
-					<p:ajax event="dateSelect" update="@([id$=ruleConfigExpDateId])"
+					<p:ajax event="dateSelect" update="@([id$=ruleConfigexpDateId])"
 						process="@this" />
 					<p:ajax event="dateSelect"
 						listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}"
@@ -215,15 +215,15 @@
 				</p:calendar>
 			</p:column>
 
-			<p:column width="15%">
+			<p:column width="13%">
 				<f:facet name="header">
 						#{lbl['lbl.pm.as.expdate']}
 			                	</f:facet>
 
-				<p:calendar
+				<p:calendar 
 					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1 and typeValueObj.showFlag)}"
 					disabled="#{typeValueObj.expDate lt DateUtils.getCurrentDateWithoutTime()}"
-					showOn="button" id="ruleConfigExpDateId" style="width :100px;"
+					showOn="button" id="ruleConfigexpDateId" style="width :100px;"
 					mindate="#{ruleCatalogueBackingBean.managedBean.today}"
 					label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -241,7 +241,7 @@
 				</p:calendar>
 			</p:column>
 
-			<p:column width="7%">
+			<p:column width="10%">
 				<f:facet name="header">
 					                #{lbl['lbl.pm.status']}
 				                </f:facet>
@@ -260,7 +260,7 @@
 				</p:selectOneMenu>
 
 			</p:column>
-			<p:column>
+			<p:column width="7%">
 				<f:facet name="header">
                      #{lbl['lbl.cm.action']}
 				</f:facet>
