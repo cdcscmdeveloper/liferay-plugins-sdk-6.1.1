@@ -60,24 +60,31 @@ public class SmFieldChangeUtil {
 							.getSelectedShareHolder(), bean.getLatestAppl()
 							.getSmPersonnels(),
 							new String[] { "identificationNo" }, null));
-			bean.setLatestOffAddr(SmFieldChangeUtil
-					.getPersonnelAddressByTypeFromList(
-							SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE,
-							bean.getLatestPersonnel().getSmPersonnelAddresses()));
-			bean.setLatestResdAddr(SmFieldChangeUtil
-					.getPersonnelAddressByTypeFromList(
-							SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES,
-							bean.getLatestPersonnel().getSmPersonnelAddresses()));
-			bean.setLatestMailAddr(SmFieldChangeUtil
-					.getPersonnelAddressByTypeFromList(
-							SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL,
-							bean.getLatestPersonnel().getSmPersonnelAddresses()));
-			bean.setLatestPermAddr(SmFieldChangeUtil
-					.getPersonnelAddressByTypeFromList(
-							SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM,
-							bean.getLatestPersonnel().getSmPersonnelAddresses()));
+			if (bean.getLatestPersonnel() != null
+					&& bean.getLatestPersonnel().getPersonnelId() != null) {
+				bean.setLatestOffAddr(SmFieldChangeUtil
+						.getPersonnelAddressByTypeFromList(
+								SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE,
+								bean.getLatestPersonnel()
+										.getSmPersonnelAddresses()));
+				bean.setLatestResdAddr(SmFieldChangeUtil
+						.getPersonnelAddressByTypeFromList(
+								SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES,
+								bean.getLatestPersonnel()
+										.getSmPersonnelAddresses()));
+				bean.setLatestMailAddr(SmFieldChangeUtil
+						.getPersonnelAddressByTypeFromList(
+								SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL,
+								bean.getLatestPersonnel()
+										.getSmPersonnelAddresses()));
+				bean.setLatestPermAddr(SmFieldChangeUtil
+						.getPersonnelAddressByTypeFromList(
+								SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM,
+								bean.getLatestPersonnel()
+										.getSmPersonnelAddresses()));
 
-			setPersonnelTableListChangeStatus(bean);
+				setPersonnelTableListChangeStatus(bean);
+			}
 		}
 	}
 
@@ -132,7 +139,8 @@ public class SmFieldChangeUtil {
 
 	public static void setPersonnelTableListChangeStatus(
 			SmApplicationManagedBean bean) {
-		if (bean.isShowFieldChanges()) {
+		if (bean.isShowFieldChanges() && bean.getLatestPersonnel() != null
+				&& bean.getLatestPersonnel().getPersonnelId() != null) {
 			// staffExperiences
 			setCurrPersonnelStaffExperiences(bean.getSelectedShareHolder(),
 					bean.getLatestPersonnel());

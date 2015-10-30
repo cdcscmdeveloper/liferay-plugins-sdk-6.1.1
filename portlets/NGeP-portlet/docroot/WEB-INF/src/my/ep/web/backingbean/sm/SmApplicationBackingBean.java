@@ -4911,6 +4911,9 @@ public class SmApplicationBackingBean extends
 		// reset personnel name and nationality to false for add new
 		getManagedBean().setDisabledShareholderPersonnelNameAndNationality(
 				false);
+		
+		//reset previous approved personnel because not exist for new personnel
+		getManagedBean().setLatestPersonnel(null);
 
 	}
 

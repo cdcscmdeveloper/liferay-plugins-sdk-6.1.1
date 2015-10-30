@@ -28,7 +28,7 @@
 								</p:inputText>
 								<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges
-											and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											and not empty backingBean.managedBean.latestPersonnel}"
 										oriValue="#{backingBean.managedBean.latestPermAddr.smAddress.address1}" 
 										currValue="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address1}" 
 										alertValue="#{backingBean.managedBean.latestPermAddr.smAddress.address1}"/>
@@ -44,7 +44,7 @@
 								</p:inputText>
 								<ac:smFieldChangeAlert 
 									isShow="#{backingBean.managedBean.showFieldChanges
-										and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+										and not empty backingBean.managedBean.latestPersonnel}"
 									oriValue="#{backingBean.managedBean.latestPermAddr.smAddress.address2}" 
 									currValue="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address2}" 
 									alertValue="#{backingBean.managedBean.latestPermAddr.smAddress.address2}"/>
@@ -59,7 +59,7 @@
 								</p:inputText>
 								<ac:smFieldChangeAlert 
 									isShow="#{backingBean.managedBean.showFieldChanges
-										and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+										and not empty backingBean.managedBean.latestPersonnel}"
 									oriValue="#{backingBean.managedBean.latestPermAddr.smAddress.address3}" 
 									currValue="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address3}" 
 									alertValue="#{backingBean.managedBean.latestPermAddr.smAddress.address3}"/>
@@ -74,7 +74,7 @@
 								</p:inputText>
 								<ac:smFieldChangeAlert 
 									isShow="#{backingBean.managedBean.showFieldChanges
-										and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+										and not empty backingBean.managedBean.latestPersonnel}"
 									oriValue="#{backingBean.managedBean.latestPermAddr.smAddress.address4}" 
 									currValue="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address4}" 
 									alertValue="#{backingBean.managedBean.latestPermAddr.smAddress.address4}"/>
@@ -97,7 +97,7 @@
 								</p:selectOneMenu> 
 								<ac:smFieldChangeAlert 
 									isShow="#{backingBean.managedBean.showFieldChanges
-										and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+										and not empty backingBean.managedBean.latestPersonnel}"
 									oriValue="#{backingBean.managedBean.latestPermAddr.smAddress.pmCountry.countryId}" 
 									currValue="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryId}" 
 									alertValue="#{backingBean.getCountryLabelById(backingBean.managedBean.latestPermAddr.smAddress.pmCountry.countryId)}"/>
@@ -124,7 +124,7 @@
 								</p:selectOneMenu> 
 								<ac:smFieldChangeAlert 
 									isShow="#{backingBean.managedBean.showFieldChanges
-										and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+										and not empty backingBean.managedBean.latestPersonnel}"
 									oriValue="#{backingBean.managedBean.latestPermAddr.smAddress.pmState.stateId}" 
 									currValue="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmState.stateId}" 
 									alertValue="#{backingBean.getStateLabelById(backingBean.managedBean.latestPermAddr.smAddress.pmState.stateId)}"/>
@@ -149,7 +149,7 @@
 								</p:selectOneMenu> 
 								<ac:smFieldChangeAlert 
 									isShow="#{backingBean.managedBean.showFieldChanges
-										and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+										and not empty backingBean.managedBean.latestPersonnel}"
 									oriValue="#{backingBean.managedBean.latestPermAddr.smAddress.pmDistrict.districtId}" 
 									currValue="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict.districtId}" 
 									alertValue="#{backingBean.getDistrictLabelById(backingBean.managedBean.latestPermAddr.smAddress.pmDistrict.districtId)}"/>
@@ -172,7 +172,7 @@
 								</p:selectOneMenu> 
 								<ac:smFieldChangeAlert 
 									isShow="#{backingBean.managedBean.showFieldChanges
-										and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+										and not empty backingBean.managedBean.latestPersonnel}"
 									oriValue="#{backingBean.managedBean.latestPermAddr.smAddress.pmCity.cityId}" 
 									currValue="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCity.cityId}" 
 									alertValue="#{backingBean.getCityLabelById(backingBean.managedBean.latestPermAddr.smAddress.pmCity.cityId)}"/>
@@ -196,7 +196,7 @@
 										</p:inputText>
 										<ac:smFieldChangeAlert 
 											isShow="#{backingBean.managedBean.showFieldChanges
-												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+												and not empty backingBean.managedBean.latestPersonnel}"
 											oriValue="#{backingBean.managedBean.latestPermAddr.smAddress.postcode}" 
 											currValue="#{backingBean.managedBean.shareHolderPermAddr.smAddress.postcode}" 
 											alertValue="#{backingBean.managedBean.latestPermAddr.smAddress.postcode}"/>
@@ -215,7 +215,7 @@
 										</p:inputText>
 										<ac:smFieldChangeAlert 
 											isShow="#{backingBean.managedBean.showFieldChanges
-												and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+												and not empty backingBean.managedBean.latestPersonnel}"
 											oriValue="#{backingBean.managedBean.latestPermAddr.smAddress.postcode}" 
 											currValue="#{backingBean.managedBean.shareHolderPermAddr.smAddress.postcode}" 
 											alertValue="#{backingBean.managedBean.latestPermAddr.smAddress.postcode}"/>
@@ -266,7 +266,7 @@
 									</p:inputText>
 									<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges
-											and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											and not empty backingBean.managedBean.latestPersonnel}"
 										oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.address1}" 
 										currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address1}" 
 										alertValue="#{backingBean.managedBean.latestMailAddr.smAddress.address1}"/>
@@ -284,7 +284,7 @@
 									</p:inputText>
 									<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges
-											and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											and not empty backingBean.managedBean.latestPersonnel}"
 										oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.address2}" 
 										currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address2}" 
 										alertValue="#{backingBean.managedBean.latestMailAddr.smAddress.address2}"/>
@@ -301,7 +301,7 @@
 									</p:inputText>
 									<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges
-											and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											and not empty backingBean.managedBean.latestPersonnel}"
 										oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.address3}" 
 										currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address3}" 
 										alertValue="#{backingBean.managedBean.latestMailAddr.smAddress.address3}"/>
@@ -318,7 +318,7 @@
 									</p:inputText>
 									<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges
-											and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											and not empty backingBean.managedBean.latestPersonnel}"
 										oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.address4}" 
 										currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address4}" 
 										alertValue="#{backingBean.managedBean.latestMailAddr.smAddress.address4}"/>
@@ -343,7 +343,7 @@
 									</p:selectOneMenu> 
 									<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges
-											and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											and not empty backingBean.managedBean.latestPersonnel}"
 										oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.pmCountry.countryId}" 
 										currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryId}" 
 										alertValue="#{backingBean.getCountryLabelById(backingBean.managedBean.latestMailAddr.smAddress.pmCountry.countryId)}"/>
@@ -371,7 +371,7 @@
 									</p:selectOneMenu> 
 									<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges
-											and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											and not empty backingBean.managedBean.latestPersonnel}"
 										oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.pmState.stateId}" 
 										currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmState.stateId}" 
 										alertValue="#{backingBean.getStateLabelById(backingBean.managedBean.latestMailAddr.smAddress.pmState.stateId)}"/>
@@ -397,7 +397,7 @@
 									</p:selectOneMenu> 
 									<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges
-											and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											and not empty backingBean.managedBean.latestPersonnel}"
 										oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.pmDistrict.districtId}" 
 										currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict.districtId}" 
 										alertValue="#{backingBean.getDistrictLabelById(backingBean.managedBean.latestMailAddr.smAddress.pmDistrict.districtId)}"/>
@@ -422,7 +422,7 @@
 									</p:selectOneMenu> 
 									<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges
-											and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+											and not empty backingBean.managedBean.latestPersonnel}"
 										oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.pmCity.cityId}" 
 										currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCity.cityId}" 
 										alertValue="#{backingBean.getCityLabelById(backingBean.managedBean.latestMailAddr.smAddress.pmCity.cityId)}"/>
@@ -448,7 +448,7 @@
 											</p:inputText>
 											<ac:smFieldChangeAlert 
 												isShow="#{backingBean.managedBean.showFieldChanges
-													and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+													and not empty backingBean.managedBean.latestPersonnel}"
 												oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.postcode}" 
 												currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.postcode}" 
 												alertValue="#{backingBean.managedBean.latestMailAddr.smAddress.postcode}"/>
@@ -469,7 +469,7 @@
 											</p:inputText>
 											<ac:smFieldChangeAlert 
 												isShow="#{backingBean.managedBean.showFieldChanges
-													and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+													and not empty backingBean.managedBean.latestPersonnel}"
 												oriValue="#{backingBean.managedBean.latestMailAddr.smAddress.postcode}" 
 												currValue="#{backingBean.managedBean.shareHolderMailAddr.smAddress.postcode}" 
 												alertValue="#{backingBean.managedBean.latestMailAddr.smAddress.postcode}"/>
