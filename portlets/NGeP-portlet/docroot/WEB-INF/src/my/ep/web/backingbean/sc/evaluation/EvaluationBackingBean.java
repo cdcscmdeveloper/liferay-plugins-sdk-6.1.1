@@ -1390,16 +1390,7 @@ public class EvaluationBackingBean extends
 		this.getManagedBean().setComplianceActiveIndex(1);
 		try {
 
-			Date d1 = new Date();
-			SimpleDateFormat sdf = new SimpleDateFormat("HH");
-			this.getManagedBean().setCurrentTime(
-					Integer.valueOf(sdf.format(d1)));
-			long days = DateUtils.getDaysDifference(d1, this.getManagedBean()
-					.getScQt().getSampleClosingDate());
-
-			int day = (int) days;
-
-			this.getManagedBean().setCountDays(day);
+			int day = sampleClosingDateCountDays();
 			if (day <= 0) {
 
 				this.getManagedBean().setComplianceSampleLblsupplierDM(
@@ -5747,9 +5738,11 @@ public class EvaluationBackingBean extends
 							}
 
 						} else {
+							sampleClosingDateCountDays();
 							if (this.getManagedBean()
 									.getCurrentStatusId()
 									.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)) {
+
 								if (this.getManagedBean().getCountDays() > 0
 										|| (this.getManagedBean()
 												.getCountDays() == 0 && this
@@ -6024,6 +6017,7 @@ public class EvaluationBackingBean extends
 							}
 
 						} else {
+							sampleClosingDateCountDays();
 							if (this.getManagedBean()
 									.getCurrentStatusId()
 									.equals(QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL)) {
@@ -9650,7 +9644,8 @@ public class EvaluationBackingBean extends
 		// response.setContentType("application/vnd.ms-excel");
 		// response.setHeader("Content-Transfer-Encoding", "binary");
 		// fire fox issue regarding space
-		String finalFileName = fileName.replaceAll("\\s+",QTConstants.REPLACE_CHAR);
+		String finalFileName = fileName.replaceAll("\\s+",
+				QTConstants.REPLACE_CHAR);
 		response.setHeader("Content-Disposition", "attachment; filename="
 				+ finalFileName);
 		response.setContentType("application/octet-stream");
@@ -10944,6 +10939,39 @@ public class EvaluationBackingBean extends
 
 		}
 
+	}
+
+	private int sampleClosingDateCountDays() {
+		try {
+
+			Date d1 = new Date();
+			SimpleDateFormat sdf = new SimpleDateFormat("HH");
+			this.getManagedBean().setCurrentTime(
+					Integer.valueOf(sdf.format(d1)));
+			long days = DateUtils.getDaysDifference(d1, this.getManagedBean()
+					.getScQt().getSampleClosingDate());
+			SimpleDateFormat currendate = new SimpleDateFormat("dd");
+			String currentDate = currendate.format(d1);
+			int day = (int) days;
+			if (day > 0 || day < 0) {
+				this.getManagedBean().setCountDays(day);
+			}
+			if (day == 0
+					&& !currentDate
+							.equals(currendate.format(this.getManagedBean()
+									.getScQt().getSampleClosingDate()))) {
+				this.getManagedBean().setCountDays(1);
+			}
+			if (day == 0
+					&& currentDate
+							.equals(currendate.format(this.getManagedBean()
+									.getScQt().getSampleClosingDate()))) {
+				this.getManagedBean().setCountDays(0);
+			}
+		} finally {
+
+		}
+		return this.getManagedBean().getCountDays();
 	}
 
 }
