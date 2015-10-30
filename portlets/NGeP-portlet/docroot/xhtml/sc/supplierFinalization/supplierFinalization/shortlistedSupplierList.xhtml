@@ -6,6 +6,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
+	<ui:param name="isRefinalizedAndBiddingAward" 
+			  value="#{suppFinalizationBackingBean.managedBean.refinalizedAndBiddingAward}"/>
+	
 	<p:spacer height="20px" />	
 	<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
 	
@@ -100,9 +103,14 @@
 				</p:column>
 				
 				<p:column style="text-align:right;">
-					<h:outputText value="#{shortlistedSupp.proposalAmount.proposalAmt}" rendered="#{shortlistedSupp.proposalAmount ne null}">
+					<h:outputText value="#{shortlistedSupp.proposalAmount.proposalAmt}" 
+								  rendered="#{shortlistedSupp.proposalAmount ne null and !isRefinalizedAndBiddingAward}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
+					<h:outputText value="#{shortlistedSupp.qtEvaluationResult.bidPrice}" 
+								  rendered="#{isRefinalizedAndBiddingAward}">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>					
 				</p:column>
 	
 				<p:column style="text-align:right;">
@@ -112,9 +120,16 @@
 				</p:column>
 	
 				<p:column style="text-align:right;">
-					<h:outputText value="#{shortlistedSupp.evalRank}">
-						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
-					</h:outputText>
+					<c:if test="#{isRefinalizedAndBiddingAward}">
+						<h:outputText value="#{shortlistedSupp.bidRank}">
+							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+						</h:outputText>
+					</c:if>
+					<c:if test="#{!isRefinalizedAndBiddingAward}">
+						<h:outputText value="#{shortlistedSupp.evalRank}">
+							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+						</h:outputText>
+					</c:if>					
 				</p:column>
 				
 				<p:column rendered="#{!empty shortlistedSupp.smMofAccount and shortlistedSupp.smMofAccount.recordStatusFlg
@@ -203,13 +218,18 @@
 				
 				<p:column style="text-align:right;">
 					<h:outputText value="#{shortlistedSupp.proposalAmount.proposalAmt}"
-						rendered="#{!suppFinalizationBackingBean.managedBean.itemize and shortlistedSupp.proposalAmount ne null}">
+						rendered="#{!suppFinalizationBackingBean.managedBean.itemize and shortlistedSupp.proposalAmount ne null and 
+									!isRefinalizedAndBiddingAward}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 					<h:outputText value="#{shortlistedSupp.qtEvaluationResult.offeredPrice}"
-						rendered="#{suppFinalizationBackingBean.managedBean.itemize}">
+						rendered="#{suppFinalizationBackingBean.managedBean.itemize and !isRefinalizedAndBiddingAward}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputText>
+					</h:outputText> 
+					<h:outputText value="#{shortlistedSupp.qtEvaluationResult.bidPrice}"
+						rendered="#{isRefinalizedAndBiddingAward}">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText> 					
 				</p:column>
 	
 				<p:column style="text-align:right;">
@@ -219,7 +239,16 @@
 				</p:column>
 	
 				<p:column style="text-align:right;">
-					<h:outputText value="#{shortlistedSupp.evalRank}" />
+					<c:if test="#{isRefinalizedAndBiddingAward}">
+						<h:outputText value="#{shortlistedSupp.bidRank}">
+							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+						</h:outputText>
+					</c:if>
+					<c:if test="#{!isRefinalizedAndBiddingAward}">
+						<h:outputText value="#{shortlistedSupp.evalRank}">
+							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+						</h:outputText>
+					</c:if>	
 				</p:column>
 				
 				<p:column rendered="#{!empty shortlistedSupp.smMofAccount and shortlistedSupp.smMofAccount.recordStatusFlg
@@ -333,13 +362,18 @@
 				
 				<p:column style="text-align:right;">
 					<h:outputText value="#{shortlistedSupp.proposalAmount.proposalAmt}"
-						rendered="#{!suppFinalizationBackingBean.managedBean.itemize and shortlistedSupp.proposalAmount ne null}">
+						rendered="#{!suppFinalizationBackingBean.managedBean.itemize and shortlistedSupp.proposalAmount ne null and 
+									!isRefinalizedAndBiddingAward}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 					<h:outputText value="#{shortlistedSupp.qtEvaluationResult.offeredPrice}"
-						rendered="#{suppFinalizationBackingBean.managedBean.itemize}">
+						rendered="#{suppFinalizationBackingBean.managedBean.itemize and !isRefinalizedAndBiddingAward}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputText>
+					</h:outputText> 
+					<h:outputText value="#{shortlistedSupp.qtEvaluationResult.bidPrice}"
+						rendered="#{isRefinalizedAndBiddingAward}">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText> 					
 				</p:column>
 	
 				<p:column style="text-align:right;">
@@ -349,7 +383,16 @@
 				</p:column>
 	
 				<p:column style="text-align:right;">
-					<h:outputText value="#{shortlistedSupp.evalRank}" />
+					<c:if test="#{isRefinalizedAndBiddingAward}">
+						<h:outputText value="#{shortlistedSupp.bidRank}">
+							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+						</h:outputText>
+					</c:if>
+					<c:if test="#{!isRefinalizedAndBiddingAward}">
+						<h:outputText value="#{shortlistedSupp.evalRank}">
+							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+						</h:outputText>
+					</c:if>						
 				</p:column>
 				
 				<p:column rendered="#{!empty shortlistedSupp.smMofAccount and shortlistedSupp.smMofAccount.recordStatusFlg
