@@ -4,8 +4,6 @@ import java.util.List;
 
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
-import my.ep.persistence.entity.pm.common.PmEduField;
-import my.ep.persistence.entity.pm.common.PmEduLevel;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
@@ -57,10 +55,11 @@ public class SmFieldChangeUtil {
 	public static void initPersonnelChangeField(SmApplicationManagedBean bean) {
 		bean.setLatestPersonnel(new SmPersonnel());
 		if (bean.isShowFieldChanges()) {
-			bean.setLatestPersonnel(SmFieldChangeUtil
-					.getPersonnelByIdentificationNoFromList(bean
-							.getLatestAppl(), bean.getSelectedShareHolder()
-							.getIdentificationNo()));
+			bean.setLatestPersonnel((SmPersonnel) SmCommonUtil
+					.getObjectByPropertiesFromList(bean
+							.getSelectedShareHolder(), bean.getLatestAppl()
+							.getSmPersonnels(),
+							new String[] { "identificationNo" }, null));
 			bean.setLatestOffAddr(SmFieldChangeUtil
 					.getPersonnelAddressByTypeFromList(
 							SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE,
@@ -154,8 +153,10 @@ public class SmFieldChangeUtil {
 
 	private static void setCurrPersonnelFieldChange(SmPersonnel currPersonnel,
 			SmAppl latestAppl) {
-		SmPersonnel latestPersonnel = getPersonnelByIdentificationNoFromList(
-				latestAppl, currPersonnel.getIdentificationNo());
+		SmPersonnel latestPersonnel = (SmPersonnel) SmCommonUtil
+				.getObjectByPropertiesFromList(currPersonnel,
+						latestAppl.getSmPersonnels(),
+						new String[] { "identificationNo" }, null);
 		// personnel
 		setCurrPersonnel(currPersonnel, latestPersonnel);
 
@@ -174,23 +175,6 @@ public class SmFieldChangeUtil {
 
 		// relatedCompanies
 		setCurrPersonnelRelatedCompanies(currPersonnel, latestPersonnel);
-	}
-
-	public static SmPersonnel getPersonnelByIdentificationNoFromList(
-			SmAppl appl, String identificationNo) {
-		SmPersonnel retVal = new SmPersonnel();
-		if (appl != null
-				&& !SmCommonUtil.isCollectionEmpty(appl.getSmPersonnels())) {
-			for (SmPersonnel tmp : appl.getSmPersonnels()) {
-				if (tmp.getIdentificationNo() != null
-						&& identificationNo != null
-						&& tmp.getIdentificationNo().equals(identificationNo)) {
-					retVal = tmp;
-					break;
-				}
-			}
-		}
-		return retVal;
 	}
 
 	public static SmStaffTotal getStaffTotalByCategoryFromList(SmAppl appl,
@@ -218,8 +202,8 @@ public class SmFieldChangeUtil {
 		} else {
 			if (!SmCommonUtil.isCollectionEmpty(currAppl.getSmPersonnels())) {
 				for (SmPersonnel tmp : currAppl.getSmPersonnels()) {
-					if (!isCurrPersonnelExistInLatestPersonnel(tmp,
-							latestAppl.getSmPersonnels())) {
+					if (!isCurrExistInLatest(tmp, latestAppl.getSmPersonnels(),
+							new String[] { "identificationNo" }, null)) {
 						tmp.setChangedFieldStatus("N");
 					} else {
 						setCurrPersonnelFieldChange(tmp, latestAppl);
@@ -227,19 +211,6 @@ public class SmFieldChangeUtil {
 				}
 			}
 		}
-	}
-
-	private static boolean isCurrPersonnelExistInLatestPersonnel(
-			SmPersonnel currPersonnel, List<SmPersonnel> latestPersonnelList) {
-		boolean retVal = false;
-		for (SmPersonnel latestPersonnel : latestPersonnelList) {
-			if (latestPersonnel.getIdentificationNo().equalsIgnoreCase(
-					currPersonnel.getIdentificationNo())) {
-				retVal = true;
-				break;
-			}
-		}
-		return retVal;
 	}
 
 	private static void setCurrPersonnel(SmPersonnel currPersonnel,
@@ -378,17 +349,19 @@ public class SmFieldChangeUtil {
 		} else {
 			for (SmRelatedCompany currRelComp : currPersonnel
 					.getSmRelatedCompanies()) {
-				if (!isCurrPersonnelRelatedCompaniesExistInLatest(currRelComp,
-						latestPersonnel.getSmRelatedCompanies())) {
+				if (!isCurrExistInLatest(currRelComp,
+						latestPersonnel.getSmRelatedCompanies(),
+						new String[] { "regNo" }, null)) {
 					if (StringUtils.isBlank(currPersonnel
 							.getChangedFieldStatus())) {
 						currPersonnel.setChangedFieldStatus("U");
 					}
 					currRelComp.setChangedFieldStatus("N");
 				} else {
-					SmRelatedCompany latestRelComp = getRelatedCompanyByRegNoFromList(
-							currRelComp.getRegNo(),
-							latestPersonnel.getSmRelatedCompanies());
+					SmRelatedCompany latestRelComp = (SmRelatedCompany) SmCommonUtil
+							.getObjectByPropertiesFromList(currRelComp,
+									latestPersonnel.getSmRelatedCompanies(),
+									new String[] { "regNo" }, null);
 					if (latestRelComp != null
 							&& latestRelComp.getRelatedCompanyId() != null) {
 						if (isHasDifferences(latestRelComp, currRelComp,
@@ -410,18 +383,6 @@ public class SmFieldChangeUtil {
 				}
 			}
 		}
-	}
-
-	private static boolean isCurrPersonnelRelatedCompaniesExistInLatest(
-			SmRelatedCompany currRelComp,
-			List<SmRelatedCompany> latestPersonnelRelCompList) {
-		boolean retVal = false;
-		for (SmRelatedCompany latestRelComp : latestPersonnelRelCompList) {
-			if (latestRelComp.getRegNo().equals(currRelComp.getRegNo())) {
-				retVal = true;
-			}
-		}
-		return retVal;
 	}
 
 	private static void setCurrPersonnelStaffExperiences(
@@ -579,13 +540,15 @@ public class SmFieldChangeUtil {
 		} else {
 			for (SmPersonnelAddress currAddr : currPersonnel
 					.getSmPersonnelAddresses()) {
-				if (!isCurrPersonnelAddrExistInLatest(currAddr,
-						latestPersonnel.getSmPersonnelAddresses())) {
+				if (!isCurrExistInLatest(currAddr,
+						latestPersonnel.getSmPersonnelAddresses(),
+						new String[] { "addressType" }, null)) {
 					currPersonnel.setChangedFieldStatus("U");
 				} else {
-					SmPersonnelAddress latestAddr = getPersonnelAddressByTypeFromList(
-							currAddr.getAddressType(),
-							latestPersonnel.getSmPersonnelAddresses());
+					SmPersonnelAddress latestAddr = (SmPersonnelAddress) SmCommonUtil
+							.getObjectByPropertiesFromList(currAddr,
+									latestPersonnel.getSmPersonnelAddresses(),
+									new String[] { "addressType" }, null);
 					if (latestAddr != null) {
 						if (latestAddr.getSmAddress() != null
 								&& currAddr.getSmAddress() != null
@@ -600,18 +563,6 @@ public class SmFieldChangeUtil {
 				}
 			}
 		}
-	}
-
-	private static boolean isCurrPersonnelAddrExistInLatest(
-			SmPersonnelAddress currAddr,
-			List<SmPersonnelAddress> latestPersonnelAddrList) {
-		boolean retVal = false;
-		for (SmPersonnelAddress latestAddr : latestPersonnelAddrList) {
-			if (latestAddr.getAddressType().equals(currAddr.getAddressType())) {
-				retVal = true;
-			}
-		}
-		return retVal;
 	}
 
 	private static void setAssocCompanyFieldChangeStatus(SmAppl latestAppl,
@@ -1048,19 +999,6 @@ public class SmFieldChangeUtil {
 			}
 		}
 		return addr;
-	}
-
-	public static SmRelatedCompany getRelatedCompanyByRegNoFromList(
-			String regNo, List<SmRelatedCompany> relCompList) {
-		SmRelatedCompany retVal = null;
-		if (SmCommonUtil.isCollectionEmpty(relCompList)) {
-			for (SmRelatedCompany latestRelComp : relCompList) {
-				if (latestRelComp.getRegNo().equals(regNo)) {
-					retVal = latestRelComp;
-				}
-			}
-		}
-		return retVal;
 	}
 
 	public static SmChequeSignatory getSignatoryByIdNoAndBankAccNoFromList(
