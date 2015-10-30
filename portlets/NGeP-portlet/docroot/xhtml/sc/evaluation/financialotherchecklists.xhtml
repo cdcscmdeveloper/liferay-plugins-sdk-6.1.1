@@ -61,12 +61,10 @@
 						<h:outputText value="#{cashHand.scQtCheckList.title}"></h:outputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.document']}" style="width:10%">
-						<p:commandLink ajax="false"
-							actionListener="#{evaluationBackingBean.downloadEncryptedFile(cashHand.scQtProposalChecklistAttachment)}"
-							process="@this" partialSubmit="true">
+						<h:commandLink immediate="true"
+							action="#{evaluationBackingBean.downloadEncryptedFile(cashHand.scQtProposalChecklistAttachment)}" >
 							<h:graphicImage value="/css/images/design/icon_txt.png" />
-
-						</p:commandLink>
+						</h:commandLink>
 
 					</p:column>
 

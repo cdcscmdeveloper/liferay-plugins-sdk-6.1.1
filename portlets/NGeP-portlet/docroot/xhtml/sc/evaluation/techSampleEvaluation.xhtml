@@ -41,12 +41,10 @@
 							<h:outputText value="#{techComplianceList.scQtCheckList.title}"></h:outputText>
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sc.document']}" style="width:10%">
-							<p:commandLink ajax="false"
-								actionListener="#{evaluationBackingBean.downloadEncryptedFile(techComplianceList.scQtProposalChecklistAttachment)}"
-								process="@this" partialSubmit="true">
+							<h:commandLink immediate="true"
+								action="#{evaluationBackingBean.downloadEncryptedFile(techComplianceList.scQtProposalChecklistAttachment)}" >
 								<h:graphicImage value="/css/images/design/icon_txt.png" />
-
-							</p:commandLink>
+							</h:commandLink>
 						</p:column>
 
 					</p:dataTable>
