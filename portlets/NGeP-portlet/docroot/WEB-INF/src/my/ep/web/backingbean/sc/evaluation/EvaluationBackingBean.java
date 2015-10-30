@@ -1391,7 +1391,7 @@ public class EvaluationBackingBean extends
 		try {
 
 			Date d1 = new Date();
-			SimpleDateFormat sdf = new SimpleDateFormat("hh");
+			SimpleDateFormat sdf = new SimpleDateFormat("HH");
 			this.getManagedBean().setCurrentTime(
 					Integer.valueOf(sdf.format(d1)));
 			long days = DateUtils.getDaysDifference(d1, this.getManagedBean()
