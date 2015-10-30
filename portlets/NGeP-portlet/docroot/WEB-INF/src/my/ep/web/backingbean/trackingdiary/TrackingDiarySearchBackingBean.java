@@ -50,7 +50,7 @@ public class TrackingDiarySearchBackingBean extends BaseBackingBean<TrackingDiar
 		FacesContext fc = FacesContext.getCurrentInstance();
 		getManagedBean().setFromPageUrl(fc.getViewRoot().getViewId());
 		searchTrackingDiaryDataModel.reloadData();	
-		return NAV_TO_DETAIL_SEARCH + "?faces-redirect=true";
+		return NAV_TO_DETAIL_SEARCH;
 	}
 
 	
