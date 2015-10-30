@@ -86,15 +86,15 @@
 				</p:column>				
 				<p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center" style="width:10%;white-space:normal;">
 						<p:menuButton id="menuButtonId" value="#{lbl['lbl.btn.option']}" >
-					 <p:menuitem id="menuItemId3" value="#{lbl['lbl.ct.update']}"  icon="ui-icon-update" 
+					 		<p:menuitem id="menuItemId3" value="#{lbl['lbl.ct.view']}"  icon="ui-icon-view"
+						        action="#{centralContractBackingBean.gotoPage('view', data.circularVerId)}">
+					   	   </p:menuitem>
+					 <p:menuitem id="menuItemId4" value="#{lbl['lbl.ct.update']}"  icon="ui-icon-update" 
 					 		      rendered="#{centralContractBackingBean.isCentralContractAdmin() and (data.status.statusId == CtStatusConst.cqApproved or 
 						((data.status.statusId == CtStatusConst.cqRejected or data.status.statusId == CtStatusConst.cqCancelled) and data.ctCircular.latestCircularVer != null))}"
                              	  action="#{centralContractBackingBean.gotoPage('update', data.circularVerId)}">
-					        </p:menuitem>
-							
-							 <p:menuitem id="menuItemId4" value="#{lbl['lbl.ct.view']}"  icon="ui-icon-view"
-						        action="#{centralContractBackingBean.gotoPage('view', data.circularVerId)}">
-					   	   </p:menuitem>
+					        </p:menuitem>						
+							 
 					   	 </p:menuButton>
 				</p:column>
 			</p:dataTable>	
