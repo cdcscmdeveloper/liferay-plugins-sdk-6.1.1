@@ -26,7 +26,7 @@
 						size="35" /> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges 
-								and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+								and not empty backingBean.managedBean.latestPersonnel}"
 							oriValue="#{backingBean.managedBean.latestPersonnel.name}" 
 							currValue="#{backingBean.managedBean.selectedShareHolder.name}" 
 							alertValue="#{backingBean.managedBean.latestPersonnel.name}"/>
@@ -50,7 +50,7 @@
 					</p:selectOneMenu> 
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges 
-							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+							and not empty backingBean.managedBean.latestPersonnel}"
 						oriValue="#{backingBean.managedBean.latestPersonnel.pmCountry.countryId}" 
 						currValue="#{backingBean.managedBean.selectedShareHolder.pmCountry.countryId}" 
 						alertValue="#{(not empty backingBean.managedBean.latestPersonnel and 
@@ -133,7 +133,7 @@
 						value="#{backingBean.managedBean.selectedShareHolder.birthDate}" />
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges 
-							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+							and not empty backingBean.managedBean.latestPersonnel}"
 						oriValue="#{backingBean.managedBean.latestPersonnel.birthDate}" 
 						currValue="#{backingBean.managedBean.selectedShareHolder.birthDate}" 
 						alertValue="#{backingBean.getDateFormat(backingBean.managedBean.latestPersonnel.birthDate)}"/>
@@ -147,7 +147,7 @@
 						size="35" /> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges 
-								and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+								and not empty backingBean.managedBean.latestPersonnel}"
 							oriValue="#{backingBean.managedBean.latestPersonnel.designation}" 
 							currValue="#{backingBean.managedBean.selectedShareHolder.designation}" 
 							alertValue="#{backingBean.managedBean.latestPersonnel.designation}"/>
@@ -172,7 +172,7 @@
 					</p:inputText> 
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges 
-							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+							and not empty backingBean.managedBean.latestPersonnel}"
 						oriValue="#{backingBean.managedBean.latestPersonnel.epfNo}" 
 						currValue="#{backingBean.managedBean.selectedShareHolder.epfNo}" 
 						alertValue="#{backingBean.managedBean.latestPersonnel.epfNo}"/>
@@ -193,7 +193,7 @@
 					</p:inputText> 
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges 
-							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+							and not empty backingBean.managedBean.latestPersonnel}"
 						oriValue="#{backingBean.managedBean.latestPersonnel.workExperienceYear}" 
 						currValue="#{backingBean.managedBean.selectedShareHolder.workExperienceYear}" 
 						alertValue="#{backingBean.managedBean.latestPersonnel.workExperienceYear}"/>
@@ -230,7 +230,7 @@
 					</p:tooltip>&#160; 
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges 
-							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+							and not empty backingBean.managedBean.latestPersonnel}"
 						oriValue="#{backingBean.managedBean.latestPersonnel.email}" 
 						currValue="#{backingBean.managedBean.selectedShareHolder.email}" 
 						alertValue="#{backingBean.managedBean.latestPersonnel.email}"/>
@@ -252,7 +252,7 @@
 					</p:inputText> 
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+							and not empty backingBean.managedBean.latestPersonnel}"
 						oriValue="#{backingBean.managedBean.latestPersonnel.mobileNo}" 
 						currValue="#{backingBean.managedBean.selectedShareHolder.mobileNo}" 
 						alertValue="#{backingBean.managedBean.latestPersonnel.mobileNo}"/>
@@ -273,7 +273,7 @@
 					</p:inputText> 
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+							and not empty backingBean.managedBean.latestPersonnel}"
 						oriValue="#{backingBean.managedBean.latestPersonnel.phoneNo}" 
 						currValue="#{backingBean.managedBean.selectedShareHolder.phoneNo}" 
 						alertValue="#{backingBean.managedBean.latestPersonnel.phoneNo}"/>
@@ -288,7 +288,7 @@
 					</p:inputText> 
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+							and not empty backingBean.managedBean.latestPersonnel}"
 						oriValue="#{backingBean.managedBean.latestPersonnel.faxNo}" 
 						currValue="#{backingBean.managedBean.selectedShareHolder.faxNo}" 
 						alertValue="#{backingBean.managedBean.latestPersonnel.faxNo}"/>
@@ -307,7 +307,7 @@
 					</p:selectOneRadio>
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+							and not empty backingBean.managedBean.latestPersonnel}"
 						oriValue="#{backingBean.managedBean.latestPersonnel.bumiFlg}" 
 						currValue="#{backingBean.managedBean.selectedShareHolder.bumiFlg}" 
 						alertValue="#{backingBean.managedBean.latestPersonnel.bumiFlg eq '1' ? lbl['lbl.txt.yes'] : lbl['lbl.txt.no']}"/>
@@ -324,7 +324,7 @@
 					</p:selectOneRadio>
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+							and not empty backingBean.managedBean.latestPersonnel}"
 						oriValue="#{backingBean.managedBean.latestPersonnel.muslimFlg}" 
 						currValue="#{backingBean.managedBean.selectedShareHolder.muslimFlg}" 
 						alertValue="#{backingBean.managedBean.latestPersonnel.muslimFlg eq '1' ? 
@@ -345,7 +345,7 @@
 					</p:selectOneMenu> 
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+							and not empty backingBean.managedBean.latestPersonnel}"
 						oriValue="#{backingBean.managedBean.latestPersonnel.pmRace.raceId}" 
 						currValue="#{backingBean.managedBean.selectedShareHolder.pmRace.raceId}" 
 						alertValue="#{backingBean.getRaceLabel(backingBean.managedBean.latestPersonnel.pmRace.raceId)}"/>
@@ -382,7 +382,7 @@
 					</p:tooltip>
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+							and not empty backingBean.managedBean.latestPersonnel}"
 						oriValue="#{backingBean.managedBean.latestPersonnel.authorizedFlg}" 
 						currValue="#{backingBean.managedBean.selectedShareHolder.authorizedFlg}" 
 						alertValue="#{backingBean.managedBean.latestPersonnel.authorizedFlg eq '1' ? 
@@ -411,7 +411,7 @@
 					</p:selectOneMenu> 
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+							and not empty backingBean.managedBean.latestPersonnel}"
 						oriValue="#{backingBean.managedBean.latestPersonnel.epRole}" 
 						currValue="#{backingBean.managedBean.selectedShareHolder.epRole}" 
 						alertValue="#{backingBean.getEpRoleLabelByRole(backingBean.managedBean.latestPersonnel.epRole)}"/>
@@ -454,7 +454,7 @@
 					</p:selectOneRadio>
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+							and not empty backingBean.managedBean.latestPersonnel}"
 						oriValue="#{backingBean.managedBean.latestPersonnel.contractSignerFlg}" 
 						currValue="#{backingBean.managedBean.selectedShareHolder.contractSignerFlg}" 
 						alertValue="#{backingBean.managedBean.latestPersonnel.contractSignerFlg eq '1' 
@@ -505,7 +505,7 @@
 					</p:inputText> 
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.selectedShareHolder.personnelId}"
+							and not empty backingBean.managedBean.latestPersonnel}"
 						oriValue="#{backingBean.managedBean.latestPersonnel.shareAmt}" 
 						currValue="#{backingBean.managedBean.selectedShareHolder.shareAmt}" 
 						alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestPersonnel.shareAmt)}"/>
@@ -627,7 +627,8 @@
 						value="#{backingBean.managedBean.selectedJobFunction.companyName}" />
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.selectedJobFunction.staffExperienceId}"
+							and not empty backingBean.managedBean.selectedJobFunction.staffExperienceId 
+							and not empty backingBean.managedBean.latestPersonnel}"
 						oriValue="#{backingBean.managedBean.latestJobFunction.companyName}" 
 						currValue="#{backingBean.managedBean.selectedJobFunction.companyName}" 
 						alertValue="#{backingBean.managedBean.latestJobFunction.companyName}"/>
@@ -644,7 +645,8 @@
 						value="#{backingBean.managedBean.selectedJobFunction.designation}" />
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.selectedJobFunction.staffExperienceId}"
+							and not empty backingBean.managedBean.selectedJobFunction.staffExperienceId 
+							and not empty backingBean.managedBean.latestPersonnel}"
 						oriValue="#{backingBean.managedBean.latestJobFunction.designation}" 
 						currValue="#{backingBean.managedBean.selectedJobFunction.designation}" 
 						alertValue="#{backingBean.managedBean.latestJobFunction.designation}"/>
@@ -663,7 +665,8 @@
 					</p:inputText> 
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.selectedJobFunction.staffExperienceId}"
+							and not empty backingBean.managedBean.selectedJobFunction.staffExperienceId
+							and not empty backingBean.managedBean.latestPersonnel}"
 						oriValue="#{backingBean.managedBean.latestJobFunction.fromYear}" 
 						currValue="#{backingBean.managedBean.selectedJobFunction.fromYear}" 
 						alertValue="#{backingBean.managedBean.latestJobFunction.fromYear}"/>
@@ -683,7 +686,8 @@
 					</p:inputText> 
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.selectedJobFunction.staffExperienceId}"
+							and not empty backingBean.managedBean.selectedJobFunction.staffExperienceId
+							and not empty backingBean.managedBean.latestPersonnel}"
 						oriValue="#{backingBean.managedBean.latestJobFunction.toYear}" 
 						currValue="#{backingBean.managedBean.selectedJobFunction.toYear}" 
 						alertValue="#{backingBean.managedBean.latestJobFunction.toYear}"/>
@@ -780,7 +784,8 @@
 							size="35" /> 
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges
-									and not empty backingBean.managedBean.selectedRelatedCompany.relatedCompanyId}"
+									and not empty backingBean.managedBean.selectedRelatedCompany.relatedCompanyId
+									and not empty backingBean.managedBean.latestPersonnel}"
 								oriValue="#{backingBean.managedBean.latestRelatedCompany.companyName}" 
 								currValue="#{backingBean.managedBean.selectedRelatedCompany.companyName}" 
 								alertValue="#{backingBean.managedBean.latestRelatedCompany.companyName}"/>
@@ -798,7 +803,8 @@
 							maxlength="20" size="35" /> 
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges
-									and not empty backingBean.managedBean.selectedRelatedCompany.relatedCompanyId}"
+									and not empty backingBean.managedBean.selectedRelatedCompany.relatedCompanyId
+									and not empty backingBean.managedBean.latestPersonnel}"
 								oriValue="#{backingBean.managedBean.latestRelatedCompany.regNo}" 
 								currValue="#{backingBean.managedBean.selectedRelatedCompany.regNo}" 
 								alertValue="#{backingBean.managedBean.latestRelatedCompany.regNo}"/>
@@ -816,7 +822,8 @@
 							size="35" /> 
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges
-									and not empty backingBean.managedBean.selectedRelatedCompany.relatedCompanyId}"
+									and not empty backingBean.managedBean.selectedRelatedCompany.relatedCompanyId
+									and not empty backingBean.managedBean.latestPersonnel}"
 								oriValue="#{backingBean.managedBean.latestRelatedCompany.designation}" 
 								currValue="#{backingBean.managedBean.selectedRelatedCompany.designation}" 
 								alertValue="#{backingBean.managedBean.latestRelatedCompany.designation}"/>
@@ -837,7 +844,8 @@
 						</p:inputText> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges
-									and not empty backingBean.managedBean.selectedRelatedCompany.relatedCompanyId}"
+									and not empty backingBean.managedBean.selectedRelatedCompany.relatedCompanyId
+									and not empty backingBean.managedBean.latestPersonnel}"
 							oriValue="#{backingBean.managedBean.latestRelatedCompany.shareAmt}" 
 							currValue="#{backingBean.managedBean.selectedRelatedCompany.shareAmt}" 
 							alertValue="#{backingBean.getPriceAmount(backingBean.managedBean.latestRelatedCompany.shareAmt)}" />
@@ -857,7 +865,8 @@
 						</p:inputText> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges
-									and not empty backingBean.managedBean.selectedRelatedCompany.relatedCompanyId}"
+									and not empty backingBean.managedBean.selectedRelatedCompany.relatedCompanyId
+									and not empty backingBean.managedBean.latestPersonnel}"
 							oriValue="#{backingBean.managedBean.latestRelatedCompany.sharePercentage}" 
 							currValue="#{backingBean.managedBean.selectedRelatedCompany.sharePercentage}" 
 							alertValue="#{backingBean.getPriceAmount(backingBean.managedBean.latestRelatedCompany.sharePercentage)}" />
@@ -871,7 +880,8 @@
 							size="35" maxlength="12" />
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges
-									and not empty backingBean.managedBean.selectedRelatedCompany.relatedCompanyId}"
+									and not empty backingBean.managedBean.selectedRelatedCompany.relatedCompanyId
+									and not empty backingBean.managedBean.latestPersonnel}"
 							oriValue="#{backingBean.managedBean.latestRelatedCompany.mofNo}" 
 							currValue="#{backingBean.managedBean.selectedRelatedCompany.mofNo}" 
 							alertValue="#{backingBean.managedBean.latestRelatedCompany.mofNo}" />
@@ -957,7 +967,8 @@
 						</p:selectOneMenu> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges
-								and not empty backingBean.managedBean.selectedStfPrfBdy.associationBodyId}"
+								and not empty backingBean.managedBean.selectedStfPrfBdy.associationBodyId
+								and not empty backingBean.managedBean.latestPersonnel}"
 							oriValue="#{backingBean.managedBean.latestStfPrfBdy.pmCertBody.certBodyId}" 
 							currValue="#{backingBean.managedBean.selectedStfPrfBdy.pmCertBody.certBodyId}" 
 							alertValue="#{backingBean.getProfBodyByIdFromList(backingBean.managedBean.latestStfPrfBdy.pmCertBody.certBodyId)}" />
@@ -977,7 +988,8 @@
 							disabled="#{backingBean.managedBean.selectedStfPrfBdy.pmCertBody.certBodyId ne 10}" />
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges
-								and not empty backingBean.managedBean.selectedStfPrfBdy.associationBodyId}"
+								and not empty backingBean.managedBean.selectedStfPrfBdy.associationBodyId
+								and not empty backingBean.managedBean.latestPersonnel}"
 							oriValue="#{backingBean.managedBean.latestStfPrfBdy.otherAssociation}" 
 							currValue="#{backingBean.managedBean.selectedStfPrfBdy.otherAssociation}" 
 							alertValue="#{backingBean.managedBean.latestStfPrfBdy.otherAssociation}" />
@@ -995,7 +1007,8 @@
 							maxlength="20" size="35" /> 
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges
-								and not empty backingBean.managedBean.selectedStfPrfBdy.associationBodyId}"
+								and not empty backingBean.managedBean.selectedStfPrfBdy.associationBodyId
+								and not empty backingBean.managedBean.latestPersonnel}"
 								oriValue="#{backingBean.managedBean.latestStfPrfBdy.regNo}" 
 								currValue="#{backingBean.managedBean.selectedStfPrfBdy.regNo}" 
 								alertValue="#{backingBean.managedBean.latestStfPrfBdy.regNo}" />
@@ -1016,7 +1029,8 @@
 							value="#{backingBean.managedBean.selectedStfPrfBdy.expDate}" />
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges
-								and not empty backingBean.managedBean.selectedStfPrfBdy.associationBodyId}"
+								and not empty backingBean.managedBean.selectedStfPrfBdy.associationBodyId
+								and not empty backingBean.managedBean.latestPersonnel}"
 							oriValue="#{backingBean.managedBean.latestStfPrfBdy.expDate}" 
 							currValue="#{backingBean.managedBean.selectedStfPrfBdy.expDate}" 
 							alertValue="#{backingBean.getDateFormat(backingBean.managedBean.latestStfPrfBdy.expDate)}" />
@@ -1119,7 +1133,8 @@
 					</p:inputText> 
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.latestStaffAcademic.staffAcademicId}"
+							and not empty backingBean.managedBean.latestStaffAcademic.staffAcademicId
+							and not empty backingBean.managedBean.latestPersonnel}"
 						oriValue="#{backingBean.managedBean.latestStaffAcademic.year}" 
 						currValue="#{backingBean.managedBean.selectedStaffAcademic.year}" 
 						alertValue="#{backingBean.managedBean.latestStaffAcademic.year}" />
@@ -1137,7 +1152,8 @@
 						size="35" /> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.latestStaffAcademic.staffAcademicId}"
+							and not empty backingBean.managedBean.latestStaffAcademic.staffAcademicId
+							and not empty backingBean.managedBean.latestPersonnel}"
 							oriValue="#{backingBean.managedBean.latestStaffAcademic.instituteName}" 
 							currValue="#{backingBean.managedBean.selectedStaffAcademic.instituteName}" 
 							alertValue="#{backingBean.managedBean.latestStaffAcademic.instituteName}" />
@@ -1157,7 +1173,8 @@
 					</p:selectOneMenu> 
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.latestStaffAcademic.staffAcademicId}"
+							and not empty backingBean.managedBean.latestStaffAcademic.staffAcademicId
+							and not empty backingBean.managedBean.latestPersonnel}"
 						oriValue="#{backingBean.managedBean.latestStaffAcademic.pmEduLevel.eduLevelId}" 
 						currValue="#{backingBean.managedBean.selectedStaffAcademic.pmEduLevel.eduLevelId}" 
 						alertValue="#{backingBean.getEduLvlByIdFromList(backingBean.managedBean.latestStaffAcademic.pmEduLevel.eduLevelId)}" />
@@ -1186,7 +1203,8 @@
 					</p:selectOneMenu> 
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.latestStaffAcademic.staffAcademicId}"
+							and not empty backingBean.managedBean.latestStaffAcademic.staffAcademicId
+							and not empty backingBean.managedBean.latestPersonnel}"
 						oriValue="#{backingBean.managedBean.latestStaffAcademic.pmEduField.eduFieldId}" 
 						currValue="#{backingBean.managedBean.selectedStaffAcademic.pmEduField.eduFieldId}" 
 						alertValue="#{backingBean.getEduFieldByIdFromList(backingBean.managedBean.latestStaffAcademic.pmEduField.eduFieldId)}" />
@@ -1202,7 +1220,8 @@
 						size="35" />
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.latestStaffAcademic.staffAcademicId}"
+							and not empty backingBean.managedBean.latestStaffAcademic.staffAcademicId
+							and not empty backingBean.managedBean.latestPersonnel}"
 						oriValue="#{backingBean.managedBean.latestStaffAcademic.fieldMajor}" 
 						currValue="#{backingBean.managedBean.selectedStaffAcademic.fieldMajor}" 
 						alertValue="#{backingBean.managedBean.latestStaffAcademic.fieldMajor}" />
