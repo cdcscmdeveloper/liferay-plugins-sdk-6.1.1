@@ -5010,10 +5010,15 @@ public class SmApplicationBackingBean extends
 	public void assignSelShrHldrJobFunc(SmStaffExperience exp) {
 		log.info("*********** Selected value *********" + exp.getDesignation());
 		getManagedBean().setSelectedJobFunction(exp);
-		getManagedBean().setLatestJobFunction(
-				SmFieldChangeUtil.getStaffExperienceByCompNamFromList(exp
-						.getCompanyName(), getManagedBean()
-						.getLatestPersonnel().getSmStaffExperiences()));
+		if (getManagedBean().getLatestPersonnel() != null) {
+			getManagedBean().setLatestJobFunction(
+					(SmStaffExperience) SmCommonUtil
+							.getObjectByPropertiesFromList(exp,
+									getManagedBean().getLatestPersonnel()
+											.getSmStaffExperiences(),
+									new String[] { "companyName", "toYear" },
+									null));
+		}
 		RequestContext.getCurrentInstance().execute(
 				"equiJobFunctionInfo.show()");
 		if (getManagedBean().isShowPersonnelViewOnly()) {
@@ -5200,10 +5205,17 @@ public class SmApplicationBackingBean extends
 			aca.setPmEduLevel(new PmEduLevel());
 		}
 		getManagedBean().setSelectedStaffAcademic(aca);
-		getManagedBean().setLatestStaffAcademic(
-				SmFieldChangeUtil.getStaffAcadByPmEdu(aca.getPmEduField(), aca
-						.getPmEduLevel(), getManagedBean().getLatestPersonnel()
-						.getSmStaffAcademics()));
+		if (getManagedBean().getLatestPersonnel() != null) {
+			getManagedBean()
+					.setLatestStaffAcademic(
+							(SmStaffAcademic) SmCommonUtil
+									.getObjectByPropertiesFromList(aca,
+											getManagedBean()
+													.getLatestPersonnel()
+													.getSmStaffAcademics(),
+											null, new String[] { "pmEduField",
+													"pmEduLevel" }));
+		}
 		RequestContext.getCurrentInstance().execute("equiAcadInfo.show()");
 		if (getManagedBean().isShowPersonnelViewOnly()) {
 			SmCommonUtil.closeBlockUI();
