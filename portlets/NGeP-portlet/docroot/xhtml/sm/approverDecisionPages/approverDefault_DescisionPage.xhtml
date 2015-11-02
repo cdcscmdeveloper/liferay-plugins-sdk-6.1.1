@@ -136,7 +136,8 @@
 		<ui:include
 			src="/xhtml/sm/shared/poDecisionSharedPages/approvedRemarksPopUpForm.xhtml" />
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.submit']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			<p:commandButton value="#{lbl['lbl.btn.submit']}" onclick="approverAppDialog.hide();"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"
 				action="#{backingBean.finalDecisionApproveOrRejectAppln('approverAppDialog','APPROVE')}"
 				partialSubmit="true" process="approverAppDialog" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
@@ -151,7 +152,8 @@
 		<ui:include
 			src="/xhtml/sm/shared/poDecisionSharedPages/rejectedRemarksPopUpForm.xhtml" />
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.submit']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			<p:commandButton value="#{lbl['lbl.btn.submit']}" onclick="approverRejDialog.hide();"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"
 				partialSubmit="true" process="approverRejDialog"
 				action="#{backingBean.finalDecisionApproveOrRejectAppln('approverRejDialog','REJECT')}" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
