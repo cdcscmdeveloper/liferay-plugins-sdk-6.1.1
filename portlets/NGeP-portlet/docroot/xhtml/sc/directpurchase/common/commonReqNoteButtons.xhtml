@@ -16,7 +16,8 @@
 		<table>
 			<tr>
 				<td><h:graphicImage value="/css/images/design/exclamation.png" />
-					#{requestNoteBackingBean.managedBean.promptMessage}</td>
+					<h:outputText escape="false" value="#{lbl['lbl.sc.dialog.confirm.delivery.term']}" />
+				</td>
 			</tr>
 		</table>
 
