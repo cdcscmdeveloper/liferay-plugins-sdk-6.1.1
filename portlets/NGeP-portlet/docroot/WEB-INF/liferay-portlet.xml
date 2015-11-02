@@ -178,6 +178,14 @@
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
+	<portlet>
+		<portlet-name>ctCircularMaintenance</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+		<css-class-wrapper>ct-portlet</css-class-wrapper>
+	</portlet>	
 	<!-- Contract - END -->
 
 	<!-- Procurement Plan - START -->
@@ -412,6 +420,13 @@
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>flReliefOrder-portlet</css-class-wrapper>
 	</portlet>
+	<portlet>
+		<portlet-name>flDocumentSearch</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+		<css-class-wrapper>fldocseach-portlet</css-class-wrapper>
+	</portlet>	
 	<!-- Fulfilment End Added by Giri -->
 
 	<portlet>
@@ -2213,13 +2228,7 @@
 		</footer-portlet-javascript>
 		<css-class-wrapper>scquotesearch-portlet</css-class-wrapper>
 	</portlet>
-	<portlet>
-		<portlet-name>flDocumentSearch</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
-		<css-class-wrapper>fldocseach-portlet</css-class-wrapper>
-	</portlet>
+
 	<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>
