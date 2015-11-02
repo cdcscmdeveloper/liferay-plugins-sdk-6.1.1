@@ -945,6 +945,14 @@ public class EvaluationBackingBean extends
 					.getComplianceSampleItemListDM().getList();
 			ScQtSampleLable sampleLabel = null;
 			if (null != sampleCompliance && !sampleCompliance.isEmpty()) {
+				for (ScQtSampleItem sampleItem : sampleCompliance) {
+					if (null == sampleItem.getSubmissionStatus()
+							|| null == sampleItem.getSubmissionStatus()
+									.getParameterId()) {
+						throw new EpException(MessageConst.ERROR_760363);
+
+					}
+				}
 				sampleLabel = sampleCompliance.get(0).getScQtSampleLable();
 				reqDTO.setSampleComplianceList(sampleCompliance);
 			}
@@ -10782,6 +10790,14 @@ public class EvaluationBackingBean extends
 					.getComplianceSampleItemListDM().getList();
 
 			if (null != sampleCompliance && !sampleCompliance.isEmpty()) {
+				for (ScQtSampleItem sampleItem : sampleCompliance) {
+					if (null == sampleItem.getSubmissionStatus()
+							|| null == sampleItem.getSubmissionStatus()
+									.getParameterId()) {
+						throw new EpException(MessageConst.ERROR_760363);
+
+					}
+				}
 
 				reqDTO.setSampleComplianceList(sampleCompliance);
 			}
