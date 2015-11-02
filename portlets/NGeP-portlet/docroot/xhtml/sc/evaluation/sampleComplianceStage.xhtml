@@ -94,7 +94,7 @@
 					</f:facet>
 					<p:selectOneMenu id="sampleSubmissionId"
 						disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
-						label="#{lbl['lbl.sc.submission.status']}" required="true"
+						label="#{lbl['lbl.sc.submission.status']}"
 						value="#{sampleItem. submissionStatus.parameterId}">
 
 						<f:selectItems
@@ -104,8 +104,7 @@
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							listener="#{evaluationBackingBean.changeSampleStatus(sampleItem,evaluationBackingBean.managedBean.complianceSampleItemListDM)}"></p:ajax>
 					</p:selectOneMenu>
-					<p:message id="sampleSubmissionMsg" for="sampleSubmissionId"
-						display="icon"></p:message>
+
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:35%">
@@ -113,7 +112,7 @@
 						disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
 						value="#{sampleItem.remark}">
 						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
-						</p:inputTextarea>
+					</p:inputTextarea>
 				</p:column>
 			</p:dataTable>
 
