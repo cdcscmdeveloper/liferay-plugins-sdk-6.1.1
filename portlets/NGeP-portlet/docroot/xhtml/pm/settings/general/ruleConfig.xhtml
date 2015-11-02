@@ -69,7 +69,7 @@
 				           </f:facet>
 
 				<p:inputText value="#{typeValueObj.ruleValue}" size="30"
-					maxlength="20" id="amountValueId"
+					maxlength="20" id="amountValueId" style="text-align:right"
 					disabled="#{!(typeValueObj.brandNew)}" required="true"
 					requiredMessage="#{lbl['lbl.pm.settings.value.required']}"
 					validator="#{webappBean.validateDecimalNumber}">
@@ -87,7 +87,7 @@
 				           </f:facet>
 
 				<p:inputText value="#{typeValueObj.ruleValue}" size="30"
-					maxlength="20" id="numberValueId"
+					maxlength="20" id="numberValueId" style="text-align:right"
 					disabled="#{!(typeValueObj.brandNew)}" required="true"
 					requiredMessage="#{lbl['lbl.pm.settings.value.required']}"
 					validator="#{webappBean.validateNonDecimalNumber}">
@@ -124,7 +124,7 @@
 				           </f:facet>
 
 				<p:inputText value="#{typeValueObj.ruleValue}" size="20"
-					maxlength="30" id="percentageValueId"
+					maxlength="30" id="percentageValueId" style="text-align:right"
 					disabled="#{!(typeValueObj.brandNew)}" required="true"
 					requiredMessage="#{lbl['lbl.pm.settings.value.required']}"
 					validator="#{webappBean.validatePercentageNumber}">
@@ -153,7 +153,7 @@
 				                 	#{lbl['lbl.pm.rule.from.value']}
 			</f:facet>
 				<p:inputText id="fromValueId" value="#{typeValueObj.fromValue}"
-					size="15" required="true" maxlength="18"
+					size="15" required="true" maxlength="18" style="text-align:right"
 					onchange="#{ruleCatalogueBackingBean.updateErrorDialog(index)}"
 					requiredMessage="#{lbl['lbl.pm.settings.fromvalue.required']}"
 					disabled="#{!(typeValueObj.brandNew) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1 and !typeValueObj.showFlag)}">
@@ -169,7 +169,7 @@
 				                	#{lbl['lbl.pm.rule.to.value']}
 			                	</f:facet>
 				<p:inputText value="#{typeValueObj.toValue}" size="15"
-					maxlength="18" id="toValueId"
+					maxlength="18" id="toValueId" style="text-align:right"
 					disabled="#{!(typeValueObj.brandNew)}">
 					<p:ajax partialSubmit="true" process="@this"
 						update="@this, @([id$=cloneLink])" />
