@@ -2422,64 +2422,55 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public void showPurchaseInDefault(ScRequestNoteDtl requestNoteDtl){
 		debugLogger("showPurchaseInDefault");
 		IPurchaseInDefaultSO purchaseInDefaultSO  = null;
-		FacesScopes facesScopes = new FacesScopes();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		PurchaseInDefaultBackingBean purchaseInDefaultBackingBean = new PurchaseInDefaultBackingBean();
-	 try{
-		if(requestNoteDtl.getRequestItem().getPurchaseInDefault() != null){
-			// Purchase In Default	
-		     purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
-			PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
-			purchaseInDefaultReqDTO.setPurchaseInDefaultId(requestNoteDtl.getRequestItem().getPurchaseInDefault().getPurchaseInDefaultId());
-			purchaseInDefaultReqDTO.setFetchSubEntity(true);
-			PurchaseInDefaultResDTO purchaseInDefaultResDTO = purchaseInDefaultSO.getPurchaseInDefault(purchaseInDefaultReqDTO);
-			ScPurchaseInDefault purchaseInDefault = purchaseInDefaultResDTO.getPurchaseInDefaultDtl();
-			
-			if(purchaseInDefault != null){
-				// contract item 
-				if(purchaseInDefault.getContractedItem() != null){
-					purchaseInDefaultBackingBean.getManagedBean().setCheckContractItem(Boolean.TRUE);
-					
-				} else{ //panel item
-					purchaseInDefaultBackingBean.getManagedBean().setCheckContractItem(Boolean.FALSE);
-				}
-				
-				purchaseInDefaultBackingBean.getManagedBean().setPurchaseInDefault(purchaseInDefault);
-				purchaseInDefaultBackingBean.initialInformation(purchaseInDefault);
-				purchaseInDefaultBackingBean.retrieveReasonDescListByCategory(true);
-				purchaseInDefaultBackingBean.justificationTypeEvent();
-				
-				try {
-					StatusReqDTO statusReqDTO = new StatusReqDTO();
-					statusReqDTO.setStatusId(DPStatusConstants.PID_COMPLETED);
-					
-					StatusResDTO statusResDTO = getStatusSO().retrieveStatusByStatusId(statusReqDTO);
-					
-					purchaseInDefaultBackingBean.getCurrentStatus(statusResDTO.getPmStatus());
-					
-				} finally {
-					//statusSO = null;
-				}
-				
-				List<ScPurchaseInDefaultAttachment> attachments = new ArrayList<ScPurchaseInDefaultAttachment>();
-				ScPurchaseInDefaultAttachment attachment =purchaseInDefault.getScPurchaseInDefaultAttachment();
-				attachment.setUser(facesScopes.getUserSessionBean());
-				attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-				attachments.add(attachment);
-				purchaseInDefaultBackingBean.getManagedBean().setAttachments(attachments);
-				
-				// disable all for pid view
-				purchaseInDefaultBackingBean.getManagedBean().setPidBtnFlag(Boolean.FALSE);
-				
-				// current page url for page navigation from pid to request note
-				purchaseInDefaultBackingBean.getManagedBean().setPageNavToRequestNote(fc.getViewRoot().getViewId());
-			} 
-		}
+		try{
+			if(requestNoteDtl.getRequestItem().getPurchaseInDefault() != null){
+				// Purchase In Default	
+				purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
+				PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
+				purchaseInDefaultReqDTO.setPurchaseInDefaultId(requestNoteDtl.getRequestItem().getPurchaseInDefault().getPurchaseInDefaultId());
+				purchaseInDefaultReqDTO.setFetchSubEntity(true);
+				PurchaseInDefaultResDTO purchaseInDefaultResDTO = purchaseInDefaultSO.getPurchaseInDefault(purchaseInDefaultReqDTO);
+				ScPurchaseInDefault purchaseInDefault = purchaseInDefaultResDTO.getPurchaseInDefaultDtl();
 
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "purchaseInDefaultMain");
-	 } finally {
-		 purchaseInDefaultSO = null;
-	 }
+				if(purchaseInDefault != null){
+					// contract item 
+					if(purchaseInDefault.getContractedItem() != null){
+						purchaseInDefaultBackingBean.getManagedBean().setCheckContractItem(Boolean.TRUE);
+
+					} else{ //panel item
+						purchaseInDefaultBackingBean.getManagedBean().setCheckContractItem(Boolean.FALSE);
+					}
+
+					purchaseInDefaultBackingBean.getManagedBean().setPurchaseInDefault(purchaseInDefault);
+					purchaseInDefaultBackingBean.initialInformation(purchaseInDefault);
+					purchaseInDefaultBackingBean.retrieveReasonDescListByCategory(true);
+					purchaseInDefaultBackingBean.justificationTypeEvent();
+
+					try {
+						StatusReqDTO statusReqDTO = new StatusReqDTO();
+						statusReqDTO.setStatusId(DPStatusConstants.PID_COMPLETED);
+
+						StatusResDTO statusResDTO = getStatusSO().retrieveStatusByStatusId(statusReqDTO);
+
+						purchaseInDefaultBackingBean.getCurrentStatus(statusResDTO.getPmStatus());
+
+					} finally {
+						//statusSO = null;
+					}
+					// disable all for pid view
+					purchaseInDefaultBackingBean.getManagedBean().setPidBtnFlag(Boolean.FALSE);
+
+					// current page url for page navigation from pid to request note
+					purchaseInDefaultBackingBean.getManagedBean().setPageNavToRequestNote(fc.getViewRoot().getViewId());
+				} 
+			}
+
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "purchaseInDefaultMain");
+		} finally {
+			purchaseInDefaultSO = null;
+		}
 	}
 
 	/**
