@@ -73,7 +73,7 @@
 									<tr>
 										<td style="width: 84%"><p:selectOneMenu
 												label="#{lbl['lbl.rpt.zone']}" id="Zone"
-												value="#{reportBackingBean.smZone}" required="true"
+												value="#{reportBackingBean.smZone}" 
 												style="margin-top:5px;width:300px;">
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}"
 													itemValue="#{null}"></f:selectItem>
@@ -204,9 +204,9 @@
 									<tr>
 										<td style="width: 84%"><p:selectOneMenu
 												label="#{lbl['lbl.rpt.supplierType']}" id="SupplierType"
-												value="#{reportBackingBean.smSupplierType}" required="true"
+												value="#{reportBackingBean.smSupplierType}" 
 												style="margin-top:5px;width:300px;">
-												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}"
 													itemValue="#{null}"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.consultant']}"
 													itemValue="J"></f:selectItem>
@@ -573,7 +573,7 @@
 								<table style="width: 182px;">
 									<tr style="width: 100%;">
 										<td style="width:160px;"><p:outputLabel value="#{lbl['lbl.rpt.applStatus']}"
-												/><p:outputLabel value="*" styleClass="mandatory"
+												/><p:outputLabel value="*" styleClass="mandatory" rendered="false"
 												/></td>
 
 									</tr>
@@ -586,17 +586,13 @@
 										<td style="width: 84%"><p:selectOneMenu
 												label="#{lbl['lbl.rpt.applStatus']}" id="ApplicationStatus"
 												value="#{reportBackingBean.smApplicationStatus}"
-												required="true" style="margin-top:5px;width:300px;">
-												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+												style="margin-top:5px;width:300px;">
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}"
 													itemValue="#{null}"></f:selectItem>
-												<f:selectItem itemLabel="#{lbl['lbl.rpt.pendEnqAppl']}"
-													itemValue="#{lbl['lbl.rpt.pendEnqAppl']}"></f:selectItem>
-												<f:selectItem itemLabel="#{lbl['lbl.rpt.pendPayAppl']}"
-													itemValue="#{lbl['lbl.rpt.pendPayAppl']}"></f:selectItem>
-													<f:selectItem itemLabel="#{lbl['lbl.rpt.pendSuppDocAppl']}"
-													itemValue="#{lbl['lbl.rpt.pendSuppDocAppl']}"></f:selectItem>
-												<f:selectItem itemLabel="#{lbl['lbl.rpt.pendDeclAppl']}"
-													itemValue="#{lbl['lbl.rpt.pendDeclAppl']}"></f:selectItem>
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.approve']}"
+													itemValue="A"></f:selectItem>											
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.reject']}"
+													itemValue="R"></f:selectItem>
 													<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 											</p:selectOneMenu></td>
 										<td><p:message id="appStatusMsg" for="ApplicationStatus"
@@ -1566,7 +1562,7 @@
 							 /><p:outputLabel value="*" styleClass="mandatory"/></TD>
 					</c:if>
 					<c:if test="#{reportBackingBean.managedBean.rptGenBean.smApplicationDateView}">
-					<TD style="width:175px;" ><p:outputLabel value="#{lbl['lbl.rpt.applicationdatefrom']}"
+					<TD style="width:175px;" ><p:outputLabel value="#{lbl['lbl.rpt.application.submissiondatefrom']}"
 							/><p:outputLabel value="*" styleClass="mandatory"/></TD>
 					</c:if>	
 					<c:if test="#{reportBackingBean.managedBean.rptGenBean.smActivationDateView}">
