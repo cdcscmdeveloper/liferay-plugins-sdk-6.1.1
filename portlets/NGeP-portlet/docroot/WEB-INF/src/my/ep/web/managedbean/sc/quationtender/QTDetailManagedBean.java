@@ -1030,6 +1030,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
 	}
+	
+	private ScQtApprovalRequest scQtApprovalDtls;
+	
 
 	/**
 	 * Instantiates a new QT detail managed bean.
@@ -6477,6 +6480,20 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setPendingRevision(boolean pendingRevision) {
 		this.pendingRevision = pendingRevision;
+	}
+
+	/**
+	 * @return the scQtApprovalDtls
+	 */
+	public ScQtApprovalRequest getScQtApprovalDtls() {
+		return scQtApprovalDtls;
+	}
+
+	/**
+	 * @param scQtApprovalDtls the scQtApprovalDtls to set
+	 */
+	public void setScQtApprovalDtls(ScQtApprovalRequest scQtApprovalDtls) {
+		this.scQtApprovalDtls = scQtApprovalDtls;
 	}
 
 }
