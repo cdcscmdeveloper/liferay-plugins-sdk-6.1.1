@@ -310,19 +310,4 @@
 			</h:panelGrid>
 		</h:panelGrid>
 	</p:panel>
-	<p:panel id="mofApprover" header="#{lbl['lbl.ct.panel.to.mof.approver']}" toggleable="true" toggleSpeed="500"
-		rendered="#{!amendmentBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt
-			and (amendmentBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingApproval
-	  			or amendmentBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingRevisionApproval)}">
-		<h:panelGrid columns="2" style="width:80%" columnClasses="columnWidth170">
-			<p:outputLabel value="#{lbl['lbl.ct.route.to.bpk']}" />			
-			<h:panelGrid columns="4">
-				<p:selectOneRadio id="routeToBPKApprover" disabled="#{!amendmentBackingBean.managedBean.secretaryExist}"
-					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.routeToBPK}">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="true" />
-					<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="false" />
-				</p:selectOneRadio>
-			</h:panelGrid>			
-		</h:panelGrid>
-	</p:panel>
 </ui:composition>
