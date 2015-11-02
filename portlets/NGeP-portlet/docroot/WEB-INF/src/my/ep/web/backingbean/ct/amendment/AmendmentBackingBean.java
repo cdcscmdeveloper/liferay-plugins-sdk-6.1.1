@@ -821,18 +821,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			   	  		getManagedBean().setSecretaryName(list.get(0).getUserName());
 			   	  	}
 		    	}
-		    }
-		    //secretary exist
-		    if (!getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()
-		    		&& (getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_APPROVAL)
-		  				|| getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_REVISION_APPROVAL))) {
-		    	if (getManagedBean().getSecretaryId() != null) {
-		    		getManagedBean().setSecretaryExist(true);
-			    	getManagedBean().getContractVer().getCtAmendment().setRouteToBPK(false);
-		    	} else {
-		    		getManagedBean().setSecretaryExist(false);
-			    	getManagedBean().getContractVer().getCtAmendment().setRouteToBPK(true);
-		    	}
 		    }			
 	  	} finally {
 	  		contractAmendmentSO = null;
@@ -899,7 +887,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
      			reqDTO.setSupplierList(getManagedBean().getSupplierList());
 	     	}
 	     	
-	     	if(getManagedBean().getContractVer().getCtAmendment().isRouteToBPK()) {
+	     	if(!getManagedBean().getContractVer().getCtAmendment().isComplyAP201()) {
 	     		getBpkApproverList();
 	     		reqDTO.setBpkApproverList(getManagedBean().getBpkApproverList());
 	     	}
@@ -1001,8 +989,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						if (getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()) {
 							messageId = MessageConst.INFO_700007; 
 						} else {
-							messageId = getManagedBean().getContractVer().getCtAmendment().isRouteToBPK() 
-									? MessageConst.INFO_700050 : MessageConst.INFO_700051;
+							messageId = getManagedBean().getContractVer().getCtAmendment().isComplyAP201() 
+									? MessageConst.INFO_700051 : MessageConst.INFO_700050;
 						}
 					}
 				} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
@@ -1234,15 +1222,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 			
 			if (!getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()) {
-				if (!getManagedBean().getContractVer().getCtAmendment().isRouteToBPK()) {
-					// Validation for remark is mandatory if breach rule
-			 		if (!getManagedBean().getContractVer().getCtAmendment().isComplyAP201()) {		 			
-						if ((getManagedBean().getRemarkList().get(0).getRemark() == null 
-								|| getManagedBean().getRemarkList().get(0).getRemark().length() == 0)) {
-							RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-							throw new EpException(MessageConst.ERROR_750034);
-						}
-			 		}				
+				if (getManagedBean().getContractVer().getCtAmendment().isComplyAP201()) {			
 					//Validation for committee
 					if (getManagedBean().getContractVer().getCtAmendment().getSecretary() == null) {
 						RequestContext.getCurrentInstance().addCallbackParam("epException", true);
@@ -1693,7 +1673,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	private void setSecretary() {
 		if (getManagedBean().getContractVer().getCtAmendment().getSecretary() == null) {
 			if (!getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()
-					&& !getManagedBean().getContractVer().getCtAmendment().isRouteToBPK()) {
+					&& getManagedBean().getContractVer().getCtAmendment().isComplyAP201()) {
 				
 				PmUser pmUser = null;
 				UserReqDTO userReqDTO = new UserReqDTO();
