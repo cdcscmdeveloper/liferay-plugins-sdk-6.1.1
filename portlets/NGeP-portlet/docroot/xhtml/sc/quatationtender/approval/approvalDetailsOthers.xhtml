@@ -43,8 +43,8 @@
 					disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}"
 					update="otherreqdtlsid">
 					<f:setPropertyActionListener
-						value="#{otherrequestdetails.approvalRequestAttachement}"
-						target="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalDtls}" />
+						value="#{otherrequestdetails}"
+						target="#{approvalBackingBean.managedBean.scQtApprovalDtls}" />
 				</p:commandButton>
 				<h:panelGroup id="otheruploadId">
 					<table>
