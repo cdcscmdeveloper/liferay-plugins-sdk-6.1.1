@@ -12,7 +12,7 @@
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.item']}"/>
 		</f:facet>
 		<c:if test="#{newable}">
-			<p:inputTextarea id="itemName" style="width:90%" value="#{question.clItem}" 
+			<p:inputTextarea id="itemName" style="width:150px" value="#{question.clItem}" 
 				rendered="#{isQuestionTypeItem}" required="#{isValidationReq}" rows="1" maxlength="2000"
 				label="#{lbl['lbl.tpl.spec.content.item']}">
 				<p:ajax partialSubmit="true" process="@this" update="@this" />
@@ -55,14 +55,14 @@
 		</h:selectOneMenu>
 		<p:message id="fulfilTypeMsg" for="fulfilType" display="icon" />
 	</p:column>
-	<p:column style="width:120px;">
+	<p:column style="width:110px;">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.uom']}"/>
 		</f:facet>
 		
 		<c:if test="#{newable}">
-			<h:panelGroup layout="block" style="width:120px;">
+			<h:panelGroup layout="block" style="width:110px;">
 				<ac:lov id="#{templateSpecId}uomLovId" lovId="PM_UOM" 
 					headerText="UOM Lov"
 					saveObject="templateSpecBackingBean.managedBean.tplSpecQuestions[#{row}].clUom"
