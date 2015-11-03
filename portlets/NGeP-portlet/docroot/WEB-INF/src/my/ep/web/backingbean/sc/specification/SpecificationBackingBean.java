@@ -344,6 +344,8 @@ public class SpecificationBackingBean extends
 					.getManagedBean().getSpecificationDataType();
 			CtPanelItem panelItem = null;
 			CtCircularVer circularVer = null;
+			int ministryRemarksSize = this.getManagedBean()
+					.getMinistryRemarksSize();
 			/*
 			 * List<CtPanelItem> panelList = this.getManagedBean()
 			 * .getSelectpanelItem();
@@ -479,6 +481,7 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setTaskName(taskName);
 			this.getManagedBean().setSpecificationDataType(
 					quotationTenderDataType);
+			this.getManagedBean().setMinistryRemarksSize(ministryRemarksSize);
 
 		} /*
 		 * catch(Exception e){ e.printStackTrace(); }
@@ -2595,10 +2598,16 @@ public class SpecificationBackingBean extends
 					remarkList.add(qtRemark);
 
 				}
+				this.getManagedBean().setMinistryRemarksSize(remarkList.size());
 				this.getManagedBean().setScQtRemarksList(remarkList);
 			}
-			initializeRemarks(this.getManagedBean().getScQt(), null, this
-					.getManagedBean().getScQtRemarksList(), ScQtRemark.class);
+			if (SCProcessNameConst.SPECIFICATION_APPROVAL.equalsIgnoreCase(this
+					.getManagedBean().getTaskName())) {
+				initializeRemarks(this.getManagedBean().getScQt(), this
+						.getManagedBean().getScQt().getCurrentWorkFlowStatus(),
+						this.getManagedBean().getScQtRemarksList(),
+						ScQtRemark.class);
+			}
 
 		} finally {
 			qtDetailSO = null;
@@ -9730,26 +9739,26 @@ public class SpecificationBackingBean extends
 					.getScQtRemarksList();
 			if (null != remarks) {
 				for (int i = 0; i < remarks.size(); i++) {
+					ScQtRemark Remark = remarks.get(i);
 					String userRemark = remarks.get(i).getRemark();
 					if (null == userRemark || "".equals(userRemark)) {
 						throw new EpException(MessageConst.ERROR_760359);
 					}
-				}
-				if (remarks.size() == 1) {
-					ScQtRemark userRemark = remarks.get(0);
-					if (null == userRemark.getRemarkId()) {
+					if (null == Remark.getRemarkId()) {
 						RequestContext.getCurrentInstance().execute(
 								"reviceApprovalDlgs.show()");
-					} else {
-						reviseMinistrySpecApproval();
-						return CommonUIConst.ACKNOWLEDGE_PAGE;
-					}
-				} else {
-					if (remarks.size() > 1) {
-						reviseMinistrySpecApproval();
-						return CommonUIConst.ACKNOWLEDGE_PAGE;
 					}
 				}
+				/*
+				 * if (remarks.size() == 1) { ScQtRemark userRemark =
+				 * remarks.get(0); if (null == userRemark.getRemarkId()) {
+				 * RequestContext.getCurrentInstance().execute(
+				 * "reviceApprovalDlgs.show()"); } else {
+				 * reviseMinistrySpecApproval(); return
+				 * CommonUIConst.ACKNOWLEDGE_PAGE; } } else { if (remarks.size()
+				 * > 1) { reviseMinistrySpecApproval(); return
+				 * CommonUIConst.ACKNOWLEDGE_PAGE; } }
+				 */
 			}
 
 		} else if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
@@ -11329,7 +11338,6 @@ public class SpecificationBackingBean extends
 	public void preRenderView() {
 
 		SCQuotationTenderDataType quotationTenderDataType = getBpmTaskDetails(SCQuotationTenderDataType.class);
-
 		this.getManagedBean().setSpecificationDataType(quotationTenderDataType);
 		FacesScopes facesScopes = new FacesScopes();
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -11379,6 +11387,17 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setActiveIndex(4);
 			}
 			ScQt scQt = this.getManagedBean().getScQt();
+			if (SCProcessNameConst.PREPARE_SPECIFICATION.equalsIgnoreCase(this
+					.getManagedBean().getTaskName())
+					|| SCProcessNameConst.CONSOLIDATE_SPECIFICATION
+							.equalsIgnoreCase(this.getManagedBean()
+									.getTaskName())) {
+				if (null != scQt.getSpecApprovalReq()
+						&& scQt.getSpecApprovalReq() == true) {
+					retriveApprovalRemarks();
+				}
+
+			}
 			if (null == scQt.getEstimatedAmount()) {
 				this.getManagedBean().getScQt().setPanel(true);
 				this.getManagedBean().getScQt().setOpenFor("A");
