@@ -245,7 +245,7 @@
 						disabled="#{isPendingApprovalStatus}">
 						<p:ajax event="blur"
 							listener="#{directLOABackingBean.setOverallCtAmount(directLOABackingBean.managedBean.scLoa.loaAmt)}"
-							update="@this,ContractAmtId"></p:ajax>
+							update="@this,ContractAmtId,bondReq"></p:ajax>
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText></td>
@@ -262,7 +262,7 @@
 						<f:selectItems
 							value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
 						<p:ajax event="change" process="@this" partialSubmit="true"
-							update="@this, menuItems"
+							update="@this, menuItems,agreementReq"
 							listener="#{directLOABackingBean.fulfilmentChange}"></p:ajax>
 					</p:selectOneMenu> <p:message id="fulfilType" for="fulfilId" display="icon" /></td>
 				<!-- <td style="margin-top: -3px"><ac:iconTooltip
@@ -312,7 +312,7 @@
 						value="#{directLOABackingBean.managedBean.scLoa.bondReq}"
 						required="true"
 						label="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}"
-						disabled="#{!isEditableStatus }">
+						disabled="#{directLOABackingBean.checkPerformanceBondMandatory(directLOABackingBean.managedBean.scLoa.loaAmt)}">
 
 						<f:selectItems
 							value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
@@ -472,7 +472,7 @@
 					<table>
 						<tr>
 							<td><p:selectOneRadio id="agreementReq"
-									disabled="#{!isEditableStatus}"
+									disabled="#{directLOABackingBean.checkAgreementMandatory()}"
 									value="#{directLOABackingBean.managedBean.scLoa.agreementReq}"
 									label="#{lbl['lbl.sc.loiloa.loa.req.agree']}">
 									<f:selectItems
