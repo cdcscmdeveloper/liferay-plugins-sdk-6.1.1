@@ -34,7 +34,6 @@ import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.cm.codification.RequestCodeReqDTO;
 import my.ep.dto.cm.codification.RequestCodeResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -46,11 +45,9 @@ import my.ep.persistence.entity.cm.catalog.CmColor;
 import my.ep.persistence.entity.cm.catalog.CmMeasurement;
 import my.ep.persistence.entity.cm.catalog.CmRecommendCode;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
-import my.ep.persistence.entity.cm.catalog.CmRequestRemark;
 import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
@@ -2551,7 +2548,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			.getNavigationHandler()
 			.handleNavigation(fc, null,
 					"reviewApproveExtensionCodeII.xhtml");
-		} else if (res.getTaskName().equalsIgnoreCase("Result Notification")) {
+		} else if (res.getTaskName().equalsIgnoreCase("Extension Result Notification")) {
 			FacesContext fc = FacesContext.getCurrentInstance();
 
 			// boolean isPublished;
@@ -2682,7 +2679,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			.getNavigationHandler()
 			.handleNavigation(fc, null,
 					"reviewApproveExtensionCodeII.xhtml");
-		} else if (res.getTaskName().equalsIgnoreCase("Result Notification")) {
+		} else if (res.getTaskName().equalsIgnoreCase("Extension Result Notification")) {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
 			.getNavigationHandler()
