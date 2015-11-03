@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import my.ep.factory.EpLogger;
-import my.ep.ntf.dto.Attachment;
+import my.ep.ntf.vo.AttachmentVO;
 import my.ep.ntf.dto.NtfRequestDTO;
 import my.ep.ntf.service.INtfSO;
 
@@ -73,9 +73,9 @@ public class TestNtfViaEmail {
 //		 File folder = new File("C:/Integration/Upload/20042015/");
 //		 File[] listOfFiles = folder.listFiles();
 //		 
-//		 Attachment[] attArr = new Attachment[1];
+//		 AttachmentVO[] attArr = new AttachmentVO[1];
 ////		 for (int i = 0; i < listOfFiles.length; i++) {
-////			 attArr[i] = new Attachment();
+////			 attArr[i] = new AttachmentVO();
 //////		      if (listOfFiles[i].isFile()) {
 ////		    	  
 ////		 		  attArr[i].setData(processToByte(path+listOfFiles[i].getName()));
@@ -86,16 +86,16 @@ public class TestNtfViaEmail {
 //		
 ////		log.info("attArr :"+reqDTO.getAttachmentArr().length);
 //		 
-//		 attArr[0] = new Attachment();
+//		 attArr[0] = new AttachmentVO();
 //		 attArr[0].setData(processToByte(path+filename1));
 ////		 attArr[0].setFilename(filename1);
-////		 attArr[1] = new Attachment();
+////		 attArr[1] = new AttachmentVO();
 ////		 attArr[1].setData(processToByte(path+filename2));
 ////		 attArr[1].setFilename(filename2);
-////		 attArr[2] = new Attachment();
+////		 attArr[2] = new AttachmentVO();
 ////		 attArr[2].setData(processToByte(path+filename3));
 ////		 attArr[2].setFilename(filename3);
-////		 attArr[3] = new Attachment();
+////		 attArr[3] = new AttachmentVO();
 //////		 attArr[3].setData(processToByte(path+filename4));
 //////		 attArr[3].setFilename(filename4);
 //		
@@ -163,11 +163,11 @@ public class TestNtfViaEmail {
 		 File folder = new File(filePath);
 		 File[] listOfFiles = folder.listFiles();
 		 
-		 Attachment[] attArr = new Attachment[listOfFiles.length];
-		 Attachment attachment = null;
+		 AttachmentVO[] attArr = new AttachmentVO[listOfFiles.length];
+		 AttachmentVO attachment = null;
 		 for (int i = 0; i < listOfFiles.length; i++) {
 		      if (listOfFiles[i].isFile()) {
-		    	  attachment = new Attachment();
+		    	  attachment = new AttachmentVO();
 		    	  attachment.setData(processToByte(filePath+listOfFiles[i].getName()));
 		    	  attachment.setFilename(listOfFiles[i].getName());
 		    	  attArr[i] = attachment;
