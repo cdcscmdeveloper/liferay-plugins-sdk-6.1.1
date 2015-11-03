@@ -175,7 +175,7 @@ public class PurchaseInDefaultBackingBean extends
 						.getContractedItem());
 				getManagedBean().setCheckContractItem(Boolean.TRUE);
 			}
-			retrieveReasonDescListByCategory(true);
+			retrieveReasonDescListByCategory(Boolean.TRUE);
 		} else if (vCmSupplierItem.getCircularNo() != null) {
 			// panel item
 			PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
@@ -351,7 +351,7 @@ public class PurchaseInDefaultBackingBean extends
 			if (scPurchaseInDefault.getReasonType().getReasonCode() != null) {
 				reasonReqDTO.setReasonCategory(ReasonCategory.PID_JUSTIFICATION
 						.value());
-				reasonReqDTO.setLanguage("BM");
+				reasonReqDTO.setLanguage(getFacesScopes().getUserLocale().getLanguage());
 				ReasonResDTO resDTO = reasonSO
 						.retrieveReasonDescListByCategory(reasonReqDTO);
 				for (PmReasonDesc reasonDesc : resDTO.getReasonDescList()) {
@@ -605,7 +605,6 @@ public class PurchaseInDefaultBackingBean extends
 			updateBPMTask(outcome, null);
 		}
 	}
-
 	
 	/**
 	 * Form approver.
@@ -754,7 +753,7 @@ public class PurchaseInDefaultBackingBean extends
 	public void retrieveReasonDescListByCategory(boolean isExceedProcAmt) {
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
 		reqDTO.setReasonCategory(ReasonCategory.PID_JUSTIFICATION.value());
-		reqDTO.setLanguage("BM");
+		reqDTO.setLanguage(getFacesScopes().getUserLocale().getLanguage());
 		IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IReasonSO.class);
@@ -799,7 +798,6 @@ public class PurchaseInDefaultBackingBean extends
 				}
 			}
 		}
-		// getManagedBean().setPmReason(resDTO.getReasonDescList().get(0).getPmReason());
 	}
 
 	/**
@@ -964,7 +962,7 @@ public class PurchaseInDefaultBackingBean extends
 					purchaseInDefault.getRemarks(), ScPIDRemark.class));
 
 			initialInformation(purchaseInDefault);
-			retrieveReasonDescListByCategory(true);
+			retrieveReasonDescListByCategory(Boolean.TRUE);
 			justificationTypeEvent();
 			// title checker
 			getManagedBean().setTitleChecker(Boolean.FALSE);
@@ -1209,6 +1207,12 @@ public class PurchaseInDefaultBackingBean extends
 
 	}
 
+	/**
+	 * Retrive panel supplier gst infomation.
+	 *
+	 * @param supplier the supplier
+	 * @return the sm gst supplier
+	 */
 	public SmGstSupplier retrivePanelSupplierGstInfomation(SmSupplier supplier) {
 		ISupplierGstSO supplierGstSo = null;
 		try {
@@ -1238,5 +1242,15 @@ public class PurchaseInDefaultBackingBean extends
 			supplierGstSo = null;
 		}
 		return this.getManagedBean().getSmGstSupplier();
+	}
+	
+	/**
+	 * Gets the faces scopes.
+	 *
+	 * @return the faces scopes
+	 */
+	private FacesScopes getFacesScopes(){
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
 	}
 }
