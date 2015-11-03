@@ -1057,7 +1057,7 @@ public class LOIDetailBackingBean extends
 	private List<ScLoiLoaItem>  filterZoneTierOrTierPriceItems(ScLoi loi) {
 		List<ScLoiLoaItem> scLoiLoaItems = loi.getScLoiLoaItems();
 		List<ScLoiLoaItem> groupItems = new ArrayList<ScLoiLoaItem>();
-		List<ScLoiLoaItem> filteredMaxPriceItemsbyQty = new ArrayList<ScLoiLoaItem>();
+		List<ScLoiLoaItem> filteredMaxPriceItems = new ArrayList<ScLoiLoaItem>();
 		
 		if(loi.getScLoiLoaItems() != null && loi.getScLoiLoaItems().size()>0){
 			ScLoiLoaItem scLoiLoaItem  = null;
@@ -1078,7 +1078,7 @@ public class LOIDetailBackingBean extends
 						} else{
 							scLoiLoaItem =  loiLoaItem;
 							ScLoiLoaItem maxPriceItem  = findMaxPriceItem(groupItems);
-							filteredMaxPriceItemsbyQty.add(maxPriceItem);
+							filteredMaxPriceItems.add(maxPriceItem);
 							groupItems.clear();
 							groupItems.add(loiLoaItem);
 						}
@@ -1089,7 +1089,7 @@ public class LOIDetailBackingBean extends
 						} else{
 							scLoiLoaItem =  loiLoaItem;
 							ScLoiLoaItem maxPriceItem  = findMaxPriceItem(groupItems);
-							filteredMaxPriceItemsbyQty.add(maxPriceItem);
+							filteredMaxPriceItems.add(maxPriceItem);
 							groupItems.clear();
 							groupItems.add(loiLoaItem);
 						}
@@ -1099,74 +1099,61 @@ public class LOIDetailBackingBean extends
 
 				if(scLoiLoaItems.size() == counter){
 					ScLoiLoaItem maxPriceItem  = findMaxPriceItem(groupItems);
-					filteredMaxPriceItemsbyQty.add(maxPriceItem);
+					filteredMaxPriceItems.add(maxPriceItem);
 					groupItems.clear();
 				}
 			}
 		}
-		return filteredMaxPriceItemsbyQty;
+		return filteredMaxPriceItems;
 	}
 	
 	
+
 	/**
 	 * Validate item tier price by item.
 	 *
 	 * @param scLoiLoaItem the sc loi loa item
-	 * @param map the map
+	 * @param filteredMaxPriceItems the filtered max price items
 	 */
-	private void validateItemTierPriceByItem(ScLoiLoaItem scLoiLoaItem, Map<Long, ScLoiLoaItem> map) {
-		boolean isItemFound = Boolean.FALSE;
+	private void validateItemTierPriceByItem(ScLoiLoaItem scLoiLoaItem, List<ScLoiLoaItem> filteredMaxPriceItems) {
+		debugLogger("validateItemTierPriceByItem");
 		ScLoiLoaItem currentItem = null;
 		ScLoiLoaItem prevItem = null;
 		List<ScLoiLoaItem> groupByItems = new ArrayList<ScLoiLoaItem>();
-		if (null == map || map.isEmpty()){
-			isItemFound = Boolean.TRUE;
+		List<ScLoiLoaItem> scLoiLoaItems = getManagedBean().getScLoi().getScLoiLoaItems();
+		for (ScLoiLoaItem loiLoaItem : scLoiLoaItems) {
 
-		} else {
-			if(!map.containsKey(scLoiLoaItem.getScRequestItem().getRequestNoteItemId())){
-				isItemFound = Boolean.TRUE;
+			// zone tier group items
+			if(null !=  loiLoaItem.getTplSpecZoneDtl()){
+				if(loiLoaItem.getScRequestItem().getRequestNoteItemId().equals(scLoiLoaItem.getScRequestItem().getRequestNoteItemId()) && 
+						loiLoaItem.getTplSpecZoneDtl().getZoneName().equals(scLoiLoaItem.getTplSpecZoneDtl().getZoneName())){
+					groupByItems.add(loiLoaItem);
+				}
 			} else{
-				isItemFound = Boolean.FALSE;
+				// tier group items
+				if(loiLoaItem.getScRequestItem().getRequestNoteItemId().equals(scLoiLoaItem.getScRequestItem().getRequestNoteItemId())){
+					groupByItems.add(loiLoaItem);
+				}
 			}
+
 		}
+		findLowestIterPriceItem(groupByItems); 
 
-		if(isItemFound){
-			List<ScLoiLoaItem> scLoiLoaItems = getManagedBean().getScLoi().getScLoiLoaItems();
-			for (ScLoiLoaItem loiLoaItem : scLoiLoaItems) {
-				
-				// zone tier group items
-				if(null !=  loiLoaItem.getTplSpecZoneDtl()){
-					if(loiLoaItem.getScRequestItem().getRequestNoteItemId().equals(scLoiLoaItem.getScRequestItem().getRequestNoteItemId()) && 
-							loiLoaItem.getTplSpecZoneDtl().getZoneName().equals(scLoiLoaItem.getTplSpecZoneDtl().getZoneName())){
-						groupByItems.add(loiLoaItem);
-					}
-				} else{
-					// tier group items
-					if(loiLoaItem.getScRequestItem().getRequestNoteItemId().equals(scLoiLoaItem.getScRequestItem().getRequestNoteItemId())){
-						groupByItems.add(loiLoaItem);
-					}
+		//validate tier price items
+		for (ScLoiLoaItem item : groupByItems) {
+			currentItem = item;
+
+			if(prevItem != null && currentItem != null){
+				if(prevItem.getUnitPrice().doubleValue() < currentItem.getUnitPrice().doubleValue()){
+					throw new EpException(MessageConst.ERROR_700102, 
+							new String[]{
+							currentItem.getTplSpecTierQty().getFromQty().toString(), 
+							currentItem.getTplSpecTierQty().getToQty().toString(),
+							prevItem.getUnitPrice().toString()}); 
 				}
-				
 			}
-			findLowestIterPriceItem(groupByItems); 
-			map.put(scLoiLoaItem.getScRequestItem().getRequestNoteItemId(), scLoiLoaItem);
 
-			//validate tier price items
-			for (ScLoiLoaItem item : groupByItems) {
-				currentItem = item;
-				
-				if(prevItem != null && currentItem != null){
-					if(prevItem.getUnitPrice().doubleValue() < currentItem.getUnitPrice().doubleValue()){
-						throw new EpException(MessageConst.ERROR_700102, 
-								new String[]{
-								currentItem.getTplSpecTierQty().getFromQty().toString(), 
-								currentItem.getTplSpecTierQty().getToQty().toString(),
-								prevItem.getUnitPrice().toString()}); 
-					}
-				}
-
-				prevItem = currentItem;
-			}
+			prevItem = currentItem;
 		}
 	}
 
@@ -2982,11 +2969,18 @@ public class LOIDetailBackingBean extends
 		}
 
 		if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {
-			// validate tier pricing
-			Map<Long, ScLoiLoaItem> groupByItemMap = new HashMap<Long, ScLoiLoaItem>();
+			// validate zone tier and tier pricing
 			for (ScLoiLoaItem  scLoiLoaItem : scLoi.getScLoiLoaItems()) {
 				if(null != scLoiLoaItem.getTplSpecTierQty()){
-					validateItemTierPriceByItem(scLoiLoaItem, groupByItemMap);
+					List<ScLoiLoaItem> filteredMaxPriceItems  = getManagedBean().getScLoiLoaItems();
+					if(null == filteredMaxPriceItems){
+						filteredMaxPriceItems  = filterZoneTierOrTierPriceItems(scLoi);
+						getManagedBean().setScLoiLoaItems(filteredMaxPriceItems);
+					}
+
+					if(filteredMaxPriceItems != null && filteredMaxPriceItems.contains(scLoiLoaItem)){
+						validateItemTierPriceByItem(scLoiLoaItem, filteredMaxPriceItems);
+					}
 				}
 			}
 
