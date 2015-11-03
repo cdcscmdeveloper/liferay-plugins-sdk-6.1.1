@@ -779,6 +779,7 @@ public class ProfileManagementBackingBean extends
 			if(getManagedBean().getCurrentActiveOrg() != null){
 				pmUserOrg.setPmOrgProfile(getManagedBean().getCurrentActiveOrg());
 			}
+			pmUserOrg.setPmUserRoles(new ArrayList<PmUserRole>());
 		}
 		
 		pmUser.getPmUserOrgs().add(pmUserOrg);
