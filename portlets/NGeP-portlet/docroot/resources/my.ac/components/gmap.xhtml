@@ -20,20 +20,20 @@
 <cc:implementation>
 	<h:panelGroup id="#{cc.attrs.id}">
 
-	<ac:gmapScript />
-
-	<ac:gmapInput id="gmapInput" 
-		latitude="#{cc.attrs.latitude}" 
-		longitude="#{cc.attrs.longitude}" 
-		address="#{cc.attrs.address}"
-		showButton="#{cc.attrs.showButton}"
-		disabled="#{cc.attrs.disabled}" />
+		<ac:gmapInput id="gmapInput" 
+			latitude="#{cc.attrs.latitude}" 
+			longitude="#{cc.attrs.longitude}" 
+			address="#{cc.attrs.address}"
+			showButton="#{cc.attrs.showButton}"
+			disabled="#{cc.attrs.disabled}" />
+		
+		<ac:gmapDialog id="gmapDialog" 
+			latitude="#{cc.attrs.latitude}" 
+			longitude="#{cc.attrs.longitude}" 
+			locationName="#{cc.attrs.locationName}" />
 	
-	<ac:gmapDialog id="gmapDialog" 
-		latitude="#{cc.attrs.latitude}" 
-		longitude="#{cc.attrs.longitude}" 
-		locationName="#{cc.attrs.locationName}" />
-
+		<ac:gmapScript />
+	
 	</h:panelGroup>
 </cc:implementation>
 </ui:composition>
