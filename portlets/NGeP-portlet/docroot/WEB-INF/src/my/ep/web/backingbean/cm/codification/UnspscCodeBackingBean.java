@@ -2487,7 +2487,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			code.setRemarkRequired(false);
 			code.setRemarkRequiredII(false);
 			code.setAddedRemark(false);
-			for (CmRequestRemark remark : code.getCmRequestRemarks()) {
+			/*for (CmRequestRemark remark : code.getCmRequestRemarks()) {
 
 				userReqDTO.setUserId(remark.getChangedBy());
 				System.out.println("remark.getChangedBy()"
@@ -2496,7 +2496,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				System.out.println("userResDTO.getPmUser().getUserName():"
 						+ userResDTO.getPmUser().getUserName());
 				remark.setCreatedUser(userResDTO.getPmUser().getUserName());
-			}
+			}*/
 
 		}
 
@@ -2829,7 +2829,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 	}
 
-	public void addNewBpmRemark() {
+	/*public void addNewBpmRemark() {
 
 		CmRequestRemark remark = new CmRequestRemark();
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
@@ -2851,7 +2851,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			code.setAddedRemark(true);
 		}
 
-	}
+	}*/
 
 	/*public void selectRecommendCode() {
 
