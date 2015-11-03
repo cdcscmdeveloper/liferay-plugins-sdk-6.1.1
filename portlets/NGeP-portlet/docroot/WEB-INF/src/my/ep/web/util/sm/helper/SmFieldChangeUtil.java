@@ -825,8 +825,7 @@ public class SmFieldChangeUtil {
 				}
 			}
 		} else {
-			if (currAppl.getSmSupplierCerts() != null
-					&& !currAppl.getSmSupplierCerts().isEmpty()) {
+			if (!SmCommonUtil.isCollectionEmpty(currAppl.getSmSupplierCerts())) {
 				SmSupplierCert latestCert = null;
 				for (SmSupplierCert currCert : currAppl.getSmSupplierCerts()) {
 					if (!isCurrExistInLatest(currCert,

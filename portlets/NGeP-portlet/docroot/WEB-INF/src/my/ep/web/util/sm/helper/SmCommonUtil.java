@@ -3046,6 +3046,8 @@ public class SmCommonUtil {
 		ret.add(Long.class);
 		ret.add(Float.class);
 		ret.add(Double.class);
+		ret.add(BigDecimal.class);
+		ret.add(Date.class);
 		ret.add(Void.class);
 		return ret;
 	}
