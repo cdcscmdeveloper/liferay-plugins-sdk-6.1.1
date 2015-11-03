@@ -36,13 +36,14 @@
 
 			<p:panel header="#{lbl['lbl.cm.request.info']}" toggleable="true">
 
-
+			<p:remoteCommand id="updateForm" name="updateForm" update="@form"></p:remoteCommand>
+			
 				<table style="width: 100%;">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.cm.item.table.type']}"></p:outputLabel></td>
 						<td><p:selectOneMenu
-								value="#{unspscCodeBackingBean.managedBean.requestCode.itemType}"
-								style="width:228px;" disabled="true">
+								value="#{unspscCodeBackingBean.managedBean.requestCode.itemType}" onchange="updateForm();"
+								style="width:228px;">
 								<f:selectItem itemValue="P"
 									itemLabel="#{lbl['lbl.txt.product']}" />
 								<f:selectItem itemValue="S"
@@ -98,7 +99,7 @@
 			<p:panel header="#{lbl['lbl.cm.search.recommend']}" toggleable="true">
 
 				<div style="text-align: right;">
-					<p:commandButton value="#{lbl['lbl.cm.search']}"
+					<p:commandButton value="#{lbl['lbl.cm.search']}" disabled="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1}"
 						action="#{unspscCodeBackingBean.navigateCodeAdminToSearch}"></p:commandButton>
 				</div>
 
