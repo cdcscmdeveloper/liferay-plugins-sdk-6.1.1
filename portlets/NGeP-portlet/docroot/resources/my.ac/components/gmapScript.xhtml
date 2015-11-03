@@ -12,8 +12,7 @@
 </cc:interface>
 
 <cc:implementation>
-
-	<script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+	
     <script>
       var geocoder;
       var marker;
@@ -24,34 +23,44 @@
       }
       	      
       function codeAddress(address, inputX, inputY) {
+    	  
     	  //var address = document.getElementById('address').value;
     	  //var address = getAddress();
-        //alert("map_canvas: " + document.getElementById('map'));
 		initialize();
         geocoder.geocode( { 'address': address}, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
             //map.setCenter(results[0].geometry.location);
-            //alert('map: ' + map);
-            if(marker)
+           /* if(marker)
               marker.setMap(null);
             marker = new google.maps.Marker({
                 position: results[0].geometry.location,
                 draggable: true
             });
-            google.maps.event.addListener(marker, "dragend", function() {
+            */
+            /*google.maps.event.addListener(marker, "dragend", function() {
             	inputX.value = marker.getPosition().lat();
             	inputY.value = marker.getPosition().lng();
-            });
-
-            inputX.value = marker.getPosition().lat();
-            inputY.value = marker.getPosition().lng();
+            });*/
+            //alert(4 + ": " + results[0].geometry.location.lat() + ", " + results[0].geometry.location.lng() + ": " + results[0].formatted_address);
+            inputX.value = results[0].geometry.location.lat();
+            inputY.value = results[0].geometry.location.lng();
 
             updateGmap();
+
           } else {
             alert('Geocode was not successful for the following reason: ' + status);
           }
         });
       }
+      
+      function loadScript() {
+    	    var script = document.createElement('script');
+    	    script.type = 'text/javascript';
+    	    script.src = '//maps.googleapis.com/maps/api/js?sensor=false';
+    	    document.body.appendChild(script);
+    	}
+
+    	$(document).ready(loadScript());
       
     </script>
 	<!--<p:remoteCommand name="initializeGmap" autoRun="true" onstart="initialize()" />-->

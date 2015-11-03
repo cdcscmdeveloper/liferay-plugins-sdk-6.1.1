@@ -17,7 +17,9 @@
 </cc:interface>
 
 <cc:implementation>
+
 <h:panelGroup id="#{cc.attrs.id}">
+
 	<fieldset>
 	
 		<legend>
@@ -38,14 +40,16 @@
 			value="#{lbl['lbl.gmap.viewmap']}" 
 			onclick="codeAddress(#{cc.attrs.address}, this.previousSibling.previousSibling.previousSibling, this.previousSibling);"
 			rendered="#{cc.attrs.showButton}"
-			disabled="#{cc.attrs.disabled}">
+			disabled="#{cc.attrs.disabled}"
+			partialSubmit="true"
+			process="@this">
 			
 			<f:setPropertyActionListener 
 				target="#{gmapBackingBean.renderMap}" 
 				value="#{true}" />
 				
-		</p:commandButton>
-		
+		</p:commandButton>		
+
 		<p:remoteCommand 
 			name="updateGmap" 
 			process="plat, plng" 
@@ -53,7 +57,10 @@
 			oncomplete="dlg.show();" />
 		</div>
 			
-	</fieldset>	
-</h:panelGroup>	
+	</fieldset>
+	
+</h:panelGroup>
+	
 </cc:implementation>
+
 </ui:composition>
