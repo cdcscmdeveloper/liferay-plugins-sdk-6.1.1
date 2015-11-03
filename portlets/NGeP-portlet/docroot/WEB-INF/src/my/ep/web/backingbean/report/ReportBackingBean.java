@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package my.ep.web.backingbean.report;
 
 import java.io.BufferedInputStream;
@@ -90,2705 +93,6367 @@ import org.primefaces.model.StreamedContent;
 
 import com.liferay.portal.util.PortalUtil;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class ReportBackingBean.
+ *
  * @Author Jangari Kondal Reddy
  */
 @ManagedBean(name = "reportBackingBean")
 @ViewScoped
 public class ReportBackingBean extends
 		SourcingBaseBackingBean<ReportMangedBean> {
+	
+	/** The Constant log. */
 	private static final Logger log = EpLogger
 			.getLogger(ReportBackingBean.class);
 
+	/**
+	 * Instantiates a new report backing bean.
+	 */
 	public ReportBackingBean() {
 	}
 
+	/** The module value. */
 	private String moduleValue;
+	
+	/** The report name. */
 	private String reportName;
+	
+	/** The report value. */
 	private String reportValue;
+	
+	/** The report category. */
 	private String reportCategory;
+	
+	/** The string zone. */
 	private String stringZone;
+	
+	/** The scqt. */
 	private ScQt scqt;
+	
+	/** The enable value. */
 	private boolean enableValue = false;
+	
+	/** The parameter code type. */
 	String parameterCodeType = new String();
+	
+	/** The report list. */
 	private List<SelectItem> reportList = new ArrayList<SelectItem>();
+	
+	/** The report category list. */
 	private List<SelectItem> reportCategoryList = new ArrayList<SelectItem>();
+	
+	/** The module list. */
 	private List<SelectItem> moduleList;
+	
+	/** The reg type list. */
 	private List<SelectItem> regTypeList;
+	
+	/** The rpt gen bean. */
 	ReportsGenerateBean rptGenBean = new ReportsGenerateBean();
+	
+	/** The authoriztion list. */
 	private List<String> authoriztionList = new ArrayList<String>();
+	
+	/** The org profile list. */
 	private List<String> orgProfileList = new ArrayList<String>();
+	
+	/** The sc year list. */
 	private List<String> scYearList = new ArrayList<String>();
+	
+	/** The org profile id name list. */
 	private List<SelectItem> orgProfileIdNameList = new ArrayList<SelectItem>();
+	
+	/** The user listbyprofile role. */
 	private List<SelectItem> userListbyprofileRole = new ArrayList<SelectItem>();
+	
+	/** The state lst. */
 	private List<SelectItem> stateLst = new ArrayList<SelectItem>();
+	
+	/** The sm state list. */
 	private List<SelectItem> smStateList  = new ArrayList<SelectItem>();
+	
+	/** The district lst. */
 	private List<SelectItem> districtLst = new ArrayList<SelectItem>();
+	
+	/** The lev one cat lst. */
 	private List<SelectItem> levOneCatLst = new ArrayList<SelectItem>();
+	
+	/** The lev two cat lst. */
 	private List<SelectItem> levTwoCatLst = new ArrayList<SelectItem>();
+	
+	/** The lev three cat lst. */
 	private List<SelectItem> levThreeCatLst = new ArrayList<SelectItem>();
+	
+	/** The procurement list. */
 	private List<SelectItem> procurementList = new ArrayList<SelectItem>();
+	
+	/** The sc procure all list. */
 	private List<SelectItem> scProcureAllList = new ArrayList<SelectItem>();
+	
+	/** The sc quotation list. */
 	private List<SelectItem> scQuotationList = new ArrayList<SelectItem>();
+	
+	/** The sc tender list. */
 	private List<SelectItem> scTenderList = new ArrayList<SelectItem>();
+	
+	/** The sc rstrctd tndr list. */
 	private List<SelectItem> scRstrctdTndrList = new ArrayList<SelectItem>();
+	
+	/** The sc month list. */
 	private List<SelectItem> scMonthList = new ArrayList<SelectItem>();
 
+	/** The requisitioner list. */
 	private List<SelectItem> requisitionerList = new ArrayList<SelectItem>();
+	
+	/** The status list. */
 	private List<SelectItem> statusList = new ArrayList<SelectItem>();
+	
+	/** The ministry list. */
 	private List<SelectItem> ministryList = new ArrayList<SelectItem>();
+	
+	/** The ptj list. */
 	private List<SelectItem> ptjList = new ArrayList<SelectItem>();
+	
+	/** The pm ministry list. */
 	private List<SelectItem> pmMinistryList = new ArrayList<SelectItem>();
+	
+	/** The pm ptj list. */
 	private List<String> pmPtjList = new ArrayList<String>();
+	
+	/** The processing officer list. */
 	private List<SelectItem> processingOfficerList = new ArrayList<SelectItem>();
 	// private List<PmOrgProfile> ptjList;
+	/** The loan list. */
 	private List<String> loanList = new ArrayList<String>();
+	
+	/** The unspc list. */
 	private List<SelectItem> unspcList = new ArrayList<SelectItem>();
+	
+	/** The brand list. */
 	private List<SelectItem> brandList = new ArrayList<SelectItem>();
+	
+	/** The ext type list. */
 	private List<SelectItem> extTypeList = new ArrayList<SelectItem>();
+	
+	/** The measurment list. */
 	private List<SelectItem> measurmentList = new ArrayList<SelectItem>();
+	
+	/** The color list. */
 	private List<SelectItem> colorList = new ArrayList<SelectItem>();
+	
+	/** The approver nayak taraf list. */
 	private List<SelectItem> approverNayakTarafList = new ArrayList<SelectItem>();
+	
+	/** The sc ptj list. */
 	private List<SelectItem> scPtjList = new ArrayList<SelectItem>();
+	
+	/** The sc requisitioner list. */
 	private List<SelectItem> scRequisitionerList = new ArrayList<SelectItem>();
+	
+	/** The sc desc officer list. */
 	private List<SelectItem> scDescOfficerList = new ArrayList<SelectItem>();
+	
+	/** The sm upssvo user list. */
 	private List<SelectItem> smUPSSVOUserList = new ArrayList<SelectItem>();
+	
+	/** The ct sub type list. */
 	private List<SelectItem> ctSubTypeList = new ArrayList<SelectItem>();
+	
+	/** The zone list. */
 	private List<SelectItem> zoneList = new ArrayList<SelectItem>();
+	
+	/** The param list. */
 	private List<String> paramList = new ArrayList<String>();
+	
+	/** The high role code list. */
 	private List<String> highRoleCodeList = new ArrayList<String>();
+	
+	/** The all role codes list. */
 	private List<String> allRoleCodesList = new ArrayList<String>();
+	
+	/** The param table role code list. */
 	private List<String> paramTableRoleCodeList = new ArrayList<String>();
+	
+	/** The rolecode rquisitioner list. */
 	private List<SelectItem> rolecodeRquisitionerList = new ArrayList<SelectItem>();
+	
+	/** The rolecode approver list. */
 	private List<SelectItem> rolecodeApproverList = new ArrayList<SelectItem>();
+	
+	/** The rolecode recieving officer list. */
 	private List<SelectItem> rolecodeRecievingOfficerList = new ArrayList<SelectItem>();
+	
+	/** The identification type list. */
 	private List<SelectItem> identificationTypeList = new ArrayList<SelectItem>();
+	
+	/** The accumulated paid up cptl list. */
 	private List<SelectItem> accumulatedPaidUpCptlList = new ArrayList<SelectItem>();
+	
+	/** The registration status list. */
 	private List<SelectItem> registrationStatusList = new ArrayList<SelectItem>();
+	
+	/** The simple quote no list. */
 	private List<String> simpleQuoteNoList = new ArrayList<String>();
+	
+	/** The service type list. */
 	private List<SelectItem> serviceTypeList = new ArrayList<SelectItem>();
+	
+	/** The payment method list. */
 	private List<String> paymentMethodList = new ArrayList<String>();
+	
+	/** The payment type list. */
 	private List<SelectItem> paymentTypeList = new ArrayList<SelectItem>();
+	
+	/** The sc soa status list. */
 	private List<SelectItem> scSOAStatusList = new ArrayList<SelectItem>();
 	
+	/** The sc report backing bean. */
 	SCReportBackingBean scReportBackingBean;
+	
+	/** The cm report backing bean. */
 	CMReportBackingBean cmReportBackingBean;
+	
+	/** The fl report backing bean. */
 	FLReportBackingBean flReportBackingBean;
+	
+	/** The sm report backing bean. */
 	SMReportBackingBean smReportBackingBean;
+	
+	/** The ct report backing bean. */
 	CTReportBackingBean ctReportBackingBean;
+	
+	/** The pp report backing bean. */
 	PPReportBackingBean ppReportBackingBean;
+	
+	/** The pm report backing bean. */
 	PMReportBackingBean pmReportBackingBean;
+	
+	/** The unspid. */
 	Long unspid = null;
+	
+	/** The ministry id. */
 	Long ministryId= null;
 	
+	/** The role code list. */
 	private List<String> roleCodeList = new ArrayList<String>();
+	
+	/** The suppl company list. */
 	private List<String> supplCompanyList = new ArrayList<String>();
+	
+	/** The value reqd. */
 	private boolean valueReqd;
+	
+	/** The show parent msg. */
 	private boolean showParentMsg;
+	
+	/** The selected cat list. */
 	private List<SmSupplierCategory> selectedCatList;
+	
+	/** The select cat deletion list. */
 	private List<SmSupplierCategory> selectCatDeletionList;	
+	
+	/** The module item map. */
 	private Map<String, List<SelectItem>> moduleItemMap=new HashMap<String, List<SelectItem>>();
+	
+	/**
+	 * Gets the select cat deletion list.
+	 *
+	 * @return the select cat deletion list
+	 */
 	public List<SmSupplierCategory> getSelectCatDeletionList() {
 		return selectCatDeletionList;
 	}
+	
+	/** The items. */
 	SelectItem[] items = null;
+	
+	/** The doc type status items. */
 	SelectItem[] docTypeStatusItems = null;
+	
+	/** The doc type status items list. */
 	List<SelectItem> docTypeStatusItemsList=new ArrayList<SelectItem>();	
+	
+	/**
+	 * Sets the select cat deletion list.
+	 *
+	 * @param selectCatDeletionList the new select cat deletion list
+	 */
 	public void setSelectCatDeletionList(
 			List<SmSupplierCategory> selectCatDeletionList) {
 		this.selectCatDeletionList = selectCatDeletionList;
 	}
+	
+	/** The selected all. */
 	private boolean selectedAll;
+	
+	/** The selected. */
 	private boolean selected;
+	
+	/** The supplier parent cat list. */
 	private List<PmCategoryL1> supplierParentCatList;
+	
+	/** The supplier child cat list. */
 	private List<PmCategoryL2> supplierChildCatList;
+	
+	/** The supplier sub child cat list. */
 	private List<PmCategoryL3> supplierSubChildCatList;
 		
 
+	/**
+	 * Gets the payment method list.
+	 *
+	 * @return the payment method list
+	 */
 	public List<String> getPaymentMethodList() {
 		return paymentMethodList;
 	}
 
+	/**
+	 * Sets the payment method list.
+	 *
+	 * @param paymentMethodList the new payment method list
+	 */
 	public void setPaymentMethodList(List<String> paymentMethodList) {
 		this.paymentMethodList = paymentMethodList;
 	}
 
+	/**
+	 * Gets the payment type list.
+	 *
+	 * @return the payment type list
+	 */
 	public List<SelectItem> getPaymentTypeList() {
 		return paymentTypeList;
 	}
 
+	/**
+	 * Sets the payment type list.
+	 *
+	 * @param paymentTypeList the new payment type list
+	 */
 	public void setPaymentTypeList(List<SelectItem> paymentTypeList) {
 		this.paymentTypeList = paymentTypeList;
 	}
 
 	
 
+	/**
+	 * Gets the service type list.
+	 *
+	 * @return the service type list
+	 */
 	public List<SelectItem> getServiceTypeList() {
 		return serviceTypeList;
 	}
 
+	/**
+	 * Sets the service type list.
+	 *
+	 * @param serviceTypeList the new service type list
+	 */
 	public void setServiceTypeList(List<SelectItem> serviceTypeList) {
 		this.serviceTypeList = serviceTypeList;
 	}
 
+	/**
+	 * Gets the report category.
+	 *
+	 * @return the report category
+	 */
 	public String getReportCategory() {
 		return reportCategory;
 	}
 
+	/**
+	 * Sets the report category.
+	 *
+	 * @param reportCategory the new report category
+	 */
 	public void setReportCategory(String reportCategory) {
 		this.reportCategory = reportCategory;
 	}	
 
+	/**
+	 * Gets the processing officer list.
+	 *
+	 * @return the processing officer list
+	 */
 	public List<SelectItem> getProcessingOfficerList() {
 		return processingOfficerList;
 	}
 
+	/**
+	 * Sets the processing officer list.
+	 *
+	 * @param processingOfficerList the new processing officer list
+	 */
 	public void setProcessingOfficerList(List<SelectItem> processingOfficerList) {
 		this.processingOfficerList = processingOfficerList;
 	}
 
+	/**
+	 * Gets the zone list.
+	 *
+	 * @return the zone list
+	 */
 	public List<SelectItem> getZoneList() {
 		return zoneList;
 	}
 
+	/**
+	 * Sets the zone list.
+	 *
+	 * @param zoneList the new zone list
+	 */
 	public void setZoneList(List<SelectItem> zoneList) {
 		this.zoneList = zoneList;
 	}
 
 	
 
+	/**
+	 * Gets the report category list.
+	 *
+	 * @return the report category list
+	 */
 	public List<SelectItem> getReportCategoryList() {
 		return reportCategoryList;
 	}
 
+	/**
+	 * Sets the report category list.
+	 *
+	 * @param reportCategoryList the new report category list
+	 */
 	public void setReportCategoryList(List<SelectItem> reportCategoryList) {
 		this.reportCategoryList = reportCategoryList;
 	}
 
+	/**
+	 * Gets the param table role code list.
+	 *
+	 * @return the param table role code list
+	 */
 	public List<String> getParamTableRoleCodeList() {
 		return paramTableRoleCodeList;
 	}
 
+	/**
+	 * Sets the param table role code list.
+	 *
+	 * @param paramTableRoleCodeList the new param table role code list
+	 */
 	public void setParamTableRoleCodeList(List<String> paramTableRoleCodeList) {
 		this.paramTableRoleCodeList = paramTableRoleCodeList;
 	}
 
+	/**
+	 * Gets the identification type list.
+	 *
+	 * @return the identification type list
+	 */
 	public List<SelectItem> getIdentificationTypeList() {
 		return identificationTypeList;
 	}
 
+	/**
+	 * Sets the identification type list.
+	 *
+	 * @param identificationTypeList the new identification type list
+	 */
 	public void setIdentificationTypeList(List<SelectItem> identificationTypeList) {
 		this.identificationTypeList = identificationTypeList;
 	}
 
+	/**
+	 * Gets the accumulated paid up cptl list.
+	 *
+	 * @return the accumulated paid up cptl list
+	 */
 	public List<SelectItem> getAccumulatedPaidUpCptlList() {
 		return accumulatedPaidUpCptlList;
 	}
 
+	/**
+	 * Sets the accumulated paid up cptl list.
+	 *
+	 * @param accumulatedPaidUpCptlList the new accumulated paid up cptl list
+	 */
 	public void setAccumulatedPaidUpCptlList(
 			List<SelectItem> accumulatedPaidUpCptlList) {
 		this.accumulatedPaidUpCptlList = accumulatedPaidUpCptlList;
 	}
 
+	/**
+	 * Gets the sm state list.
+	 *
+	 * @return the sm state list
+	 */
 	public List<SelectItem> getSmStateList() {
 		return smStateList;
 	}
 
+	/**
+	 * Sets the sm state list.
+	 *
+	 * @param smStateList the new sm state list
+	 */
 	public void setSmStateList(List<SelectItem> smStateList) {
 		this.smStateList = smStateList;
 	}
 
+	/**
+	 * Gets the ministry id.
+	 *
+	 * @return the ministry id
+	 */
 	public Long getMinistryId() {
 		return ministryId;
 	}
 
+	/**
+	 * Sets the ministry id.
+	 *
+	 * @param ministryId the new ministry id
+	 */
 	public void setMinistryId(Long ministryId) {
 		this.ministryId = ministryId;
 	}
 
+	/**
+	 * Gets the pm ministry list.
+	 *
+	 * @return the pm ministry list
+	 */
 	public List<SelectItem> getPmMinistryList() {
 		return pmMinistryList;
 	}
 
+	/**
+	 * Sets the pm ministry list.
+	 *
+	 * @param pmMinistryList the new pm ministry list
+	 */
 	public void setPmMinistryList(List<SelectItem> pmMinistryList) {
 		this.pmMinistryList = pmMinistryList;
 	}
 
+	/**
+	 * Gets the pm ptj list.
+	 *
+	 * @return the pm ptj list
+	 */
 	public List<String> getPmPtjList() {
 		return pmPtjList;
 	}
 
+	/**
+	 * Sets the pm ptj list.
+	 *
+	 * @param pmPtjList the new pm ptj list
+	 */
 	public void setPmPtjList(List<String> pmPtjList) {
 		this.pmPtjList = pmPtjList;
 	}
 
+	/**
+	 * Gets the doc type status items list.
+	 *
+	 * @return the doc type status items list
+	 */
 	public List<SelectItem> getDocTypeStatusItemsList() {
 		return docTypeStatusItemsList;
 	}
 
+	/**
+	 * Sets the doc type status items list.
+	 *
+	 * @param docTypeStatusItemsList the new doc type status items list
+	 */
 	public void setDocTypeStatusItemsList(List<SelectItem> docTypeStatusItemsList) {
 		this.docTypeStatusItemsList = docTypeStatusItemsList;
 	}
 
+	/**
+	 * Gets the doc type status items.
+	 *
+	 * @return the doc type status items
+	 */
 	public SelectItem[] getDocTypeStatusItems() {
 		return docTypeStatusItems;
 	}
 
+	/**
+	 * Sets the doc type status items.
+	 *
+	 * @param docTypeStatusItems the new doc type status items
+	 */
 	public void setDocTypeStatusItems(SelectItem[] docTypeStatusItems) {
 		this.docTypeStatusItems = docTypeStatusItems;
 	}
 
+	/**
+	 * Gets the rolecode rquisitioner list.
+	 *
+	 * @return the rolecode rquisitioner list
+	 */
 	public List<SelectItem> getRolecodeRquisitionerList() {
 		return rolecodeRquisitionerList;
 	}
 
+	/**
+	 * Sets the rolecode rquisitioner list.
+	 *
+	 * @param rolecodeRquisitionerList the new rolecode rquisitioner list
+	 */
 	public void setRolecodeRquisitionerList(
 			List<SelectItem> rolecodeRquisitionerList) {
 		this.rolecodeRquisitionerList = rolecodeRquisitionerList;
 	}
 
+	/**
+	 * Gets the rolecode approver list.
+	 *
+	 * @return the rolecode approver list
+	 */
 	public List<SelectItem> getRolecodeApproverList() {
 		return rolecodeApproverList;
 	}
 
+	/**
+	 * Sets the rolecode approver list.
+	 *
+	 * @param rolecodeApproverList the new rolecode approver list
+	 */
 	public void setRolecodeApproverList(List<SelectItem> rolecodeApproverList) {
 		this.rolecodeApproverList = rolecodeApproverList;
 	}
 
+	/**
+	 * Gets the rolecode recieving officer list.
+	 *
+	 * @return the rolecode recieving officer list
+	 */
 	public List<SelectItem> getRolecodeRecievingOfficerList() {
 		return rolecodeRecievingOfficerList;
 	}
 
+	/**
+	 * Sets the rolecode recieving officer list.
+	 *
+	 * @param rolecodeRecievingOfficerList the new rolecode recieving officer list
+	 */
 	public void setRolecodeRecievingOfficerList(
 			List<SelectItem> rolecodeRecievingOfficerList) {
 		this.rolecodeRecievingOfficerList = rolecodeRecievingOfficerList;
 	}
 
+	/**
+	 * Gets the high role code list.
+	 *
+	 * @return the high role code list
+	 */
 	public List<String> getHighRoleCodeList() {
 		return highRoleCodeList;
 	}
 
+	/**
+	 * Sets the high role code list.
+	 *
+	 * @param highRoleCodeList the new high role code list
+	 */
 	public void setHighRoleCodeList(List<String> highRoleCodeList) {
 		this.highRoleCodeList = highRoleCodeList;
 	}
 
+	/**
+	 * Gets the all role codes list.
+	 *
+	 * @return the all role codes list
+	 */
 	public List<String> getAllRoleCodesList() {
 		return allRoleCodesList;
 	}
 
+	/**
+	 * Sets the all role codes list.
+	 *
+	 * @param allRoleCodesList the new all role codes list
+	 */
 	public void setAllRoleCodesList(List<String> allRoleCodesList) {
 		this.allRoleCodesList = allRoleCodesList;
 	}
 
+	/**
+	 * Gets the param list.
+	 *
+	 * @return the param list
+	 */
 	public List<String> getParamList() {
 		return paramList;
 	}
 
+	/**
+	 * Sets the param list.
+	 *
+	 * @param paramList the new param list
+	 */
 	public void setParamList(List<String> paramList) {
 		this.paramList = paramList;
 	}
 
+	/**
+	 * Gets the ct sub type list.
+	 *
+	 * @return the ct sub type list
+	 */
 	public List<SelectItem> getCtSubTypeList() {
 		return ctSubTypeList;
 	}
 
+	/**
+	 * Sets the ct sub type list.
+	 *
+	 * @param ctSubTypeList the new ct sub type list
+	 */
 	public void setCtSubTypeList(List<SelectItem> ctSubTypeList) {
 		this.ctSubTypeList = ctSubTypeList;
 	}
 
+	/**
+	 * Gets the sm upssvo user list.
+	 *
+	 * @return the sm upssvo user list
+	 */
 	public List<SelectItem> getSmUPSSVOUserList() {
 		return smUPSSVOUserList;
 	}
 
+	/**
+	 * Sets the sm upssvo user list.
+	 *
+	 * @param smUPSSVOUserList the new sm upssvo user list
+	 */
 	public void setSmUPSSVOUserList(List<SelectItem> smUPSSVOUserList) {
 		this.smUPSSVOUserList = smUPSSVOUserList;
 	}
 
+	/**
+	 * Gets the sc desc officer list.
+	 *
+	 * @return the sc desc officer list
+	 */
 	public List<SelectItem> getScDescOfficerList() {
 		return scDescOfficerList;
 	}
 
+	/**
+	 * Sets the sc desc officer list.
+	 *
+	 * @param scDescOfficerList the new sc desc officer list
+	 */
 	public void setScDescOfficerList(List<SelectItem> scDescOfficerList) {
 		this.scDescOfficerList = scDescOfficerList;
 	}
 
+	/**
+	 * Gets the sc ptj list.
+	 *
+	 * @return the sc ptj list
+	 */
 	public List<SelectItem> getScPtjList() {
 		return scPtjList;
 	}
 
+	/**
+	 * Sets the sc ptj list.
+	 *
+	 * @param scPtjList the new sc ptj list
+	 */
 	public void setScPtjList(List<SelectItem> scPtjList) {
 		this.scPtjList = scPtjList;
 	}
 
+	/**
+	 * Gets the sc requisitioner list.
+	 *
+	 * @return the sc requisitioner list
+	 */
 	public List<SelectItem> getScRequisitionerList() {
 		return scRequisitionerList;
 	}
 
+	/**
+	 * Sets the sc requisitioner list.
+	 *
+	 * @param scRequisitionerList the new sc requisitioner list
+	 */
 	public void setScRequisitionerList(List<SelectItem> scRequisitionerList) {
 		this.scRequisitionerList = scRequisitionerList;
 	}
 
+	/**
+	 * Gets the approver nayak taraf list.
+	 *
+	 * @return the approver nayak taraf list
+	 */
 	public List<SelectItem> getApproverNayakTarafList() {
 		return approverNayakTarafList;
 	}
 
+	/**
+	 * Sets the approver nayak taraf list.
+	 *
+	 * @param approverNayakTarafList the new approver nayak taraf list
+	 */
 	public void setApproverNayakTarafList(List<SelectItem> approverNayakTarafList) {
 		this.approverNayakTarafList = approverNayakTarafList;
 	}
 
+	/**
+	 * Gets the role code list.
+	 *
+	 * @return the role code list
+	 */
 	public List<String> getRoleCodeList() {
 		return roleCodeList;
 	}
 
+	/**
+	 * Sets the role code list.
+	 *
+	 * @param roleCodeList the new role code list
+	 */
 	public void setRoleCodeList(List<String> roleCodeList) {
 		this.roleCodeList = roleCodeList;
 	}
 
+	/**
+	 * Gets the suppl company list.
+	 *
+	 * @return the suppl company list
+	 */
 	public List<String> getSupplCompanyList() {
 		return supplCompanyList;
 	}
 
+	/**
+	 * Sets the suppl company list.
+	 *
+	 * @param supplCompanyList the new suppl company list
+	 */
 	public void setSupplCompanyList(List<String> supplCompanyList) {
 		this.supplCompanyList = supplCompanyList;
 	}
 
+	/**
+	 * Checks if is show parent msg.
+	 *
+	 * @return true, if is show parent msg
+	 */
 	public boolean isShowParentMsg() {
 		return showParentMsg;
 	}
 
+	/**
+	 * Sets the show parent msg.
+	 *
+	 * @param showParentMsg the new show parent msg
+	 */
 	public void setShowParentMsg(boolean showParentMsg) {
 		this.showParentMsg = showParentMsg;
 	}
 
+	/**
+	 * Gets the supplier child cat list.
+	 *
+	 * @return the supplier child cat list
+	 */
 	public List<PmCategoryL2> getSupplierChildCatList() {
 		return supplierChildCatList;
 	}
 
+	/**
+	 * Sets the supplier child cat list.
+	 *
+	 * @param supplierChildCatList the new supplier child cat list
+	 */
 	public void setSupplierChildCatList(List<PmCategoryL2> supplierChildCatList) {
 		this.supplierChildCatList = supplierChildCatList;
 	}
 
+	/**
+	 * Gets the supplier sub child cat list.
+	 *
+	 * @return the supplier sub child cat list
+	 */
 	public List<PmCategoryL3> getSupplierSubChildCatList() {
 		return supplierSubChildCatList;
 	}
 
+	/**
+	 * Sets the supplier sub child cat list.
+	 *
+	 * @param supplierSubChildCatList the new supplier sub child cat list
+	 */
 	public void setSupplierSubChildCatList(
 			List<PmCategoryL3> supplierSubChildCatList) {
 		this.supplierSubChildCatList = supplierSubChildCatList;
 	}
 
+	/**
+	 * Gets the supplier parent cat list.
+	 *
+	 * @return the supplier parent cat list
+	 */
 	public List<PmCategoryL1> getSupplierParentCatList() {
 		return supplierParentCatList;
 	}
 
+	/**
+	 * Sets the supplier parent cat list.
+	 *
+	 * @param supplierParentCatList the new supplier parent cat list
+	 */
 	public void setSupplierParentCatList(
 			List<PmCategoryL1> supplierParentCatList) {
 		this.supplierParentCatList = supplierParentCatList;
 	}
 
+	/**
+	 * Checks if is selected all.
+	 *
+	 * @return true, if is selected all
+	 */
 	public boolean isSelectedAll() {
 		return selectedAll;
 	}
 
+	/**
+	 * Sets the selected all.
+	 *
+	 * @param selectedAll the new selected all
+	 */
 	public void setSelectedAll(boolean selectedAll) {
 		this.selectedAll = selectedAll;
 	}
 
+	/**
+	 * Checks if is selected.
+	 *
+	 * @return true, if is selected
+	 */
 	public boolean isSelected() {
 		return selected;
 	}
 
+	/**
+	 * Sets the selected.
+	 *
+	 * @param selected the new selected
+	 */
 	public void setSelected(boolean selected) {
 		this.selected = selected;
 	}
 
+	/**
+	 * Gets the selected cat list.
+	 *
+	 * @return the selected cat list
+	 */
 	public List<SmSupplierCategory> getSelectedCatList() {
 		return selectedCatList;
 	}
 
+	/**
+	 * Sets the selected cat list.
+	 *
+	 * @param selectedCatList the new selected cat list
+	 */
 	public void setSelectedCatList(List<SmSupplierCategory> selectedCatList) {
 		this.selectedCatList = selectedCatList;
 	}
 
+	/**
+	 * Gets the registration status list.
+	 *
+	 * @return the registration status list
+	 */
 	public List<SelectItem> getRegistrationStatusList() {
 		return registrationStatusList;
 	}
 
+	/**
+	 * Sets the registration status list.
+	 *
+	 * @param registrationStatusList the new registration status list
+	 */
 	public void setRegistrationStatusList(List<SelectItem> registrationStatusList) {
 		this.registrationStatusList = registrationStatusList;
 	}
  
 	
+	/**
+	 * Gets the string zone.
+	 *
+	 * @return the string zone
+	 */
 	public String getStringZone() {
 		return stringZone;
 	}
 
+	/**
+	 * Sets the string zone.
+	 *
+	 * @param stringZone the new string zone
+	 */
 	public void setStringZone(String stringZone) {
 		this.stringZone = stringZone;
 	}
 
+	/**
+	 * Checks if is value reqd.
+	 *
+	 * @return true, if is value reqd
+	 */
 	public boolean isValueReqd() {
 		return valueReqd;
 	}
 
+	/**
+	 * Sets the value reqd.
+	 *
+	 * @param valueReqd the new value reqd
+	 */
 	public void setValueReqd(boolean valueReqd) {
 		this.valueReqd = valueReqd;
 	}
 
+	/**
+	 * Gets the brand list.
+	 *
+	 * @return the brand list
+	 */
 	public List<SelectItem> getBrandList() {
 		return brandList;
 	}
 
+	/**
+	 * Sets the brand list.
+	 *
+	 * @param brandList the new brand list
+	 */
 	public void setBrandList(List<SelectItem> brandList) {
 		this.brandList = brandList;
 	}
 
+	/**
+	 * Gets the ext type list.
+	 *
+	 * @return the ext type list
+	 */
 	public List<SelectItem> getExtTypeList() {
 		return extTypeList;
 	}
 
+	/**
+	 * Sets the ext type list.
+	 *
+	 * @param extTypeList the new ext type list
+	 */
 	public void setExtTypeList(List<SelectItem> extTypeList) {
 		this.extTypeList = extTypeList;
 	}
 
+	/**
+	 * Gets the measurment list.
+	 *
+	 * @return the measurment list
+	 */
 	public List<SelectItem> getMeasurmentList() {
 		return measurmentList;
 	}
 
+	/**
+	 * Sets the measurment list.
+	 *
+	 * @param measurmentList the new measurment list
+	 */
 	public void setMeasurmentList(List<SelectItem> measurmentList) {
 		this.measurmentList = measurmentList;
 	}
 
+	/**
+	 * Gets the color list.
+	 *
+	 * @return the color list
+	 */
 	public List<SelectItem> getColorList() {
 		return colorList;
 	}
 
+	/**
+	 * Sets the color list.
+	 *
+	 * @param colorList the new color list
+	 */
 	public void setColorList(List<SelectItem> colorList) {
 		this.colorList = colorList;
 	}
 
+	/**
+	 * Gets the unspid.
+	 *
+	 * @return the unspid
+	 */
 	public Long getUnspid() {
 		return unspid;
 	}
 
+	/**
+	 * Sets the unspid.
+	 *
+	 * @param unspid the new unspid
+	 */
 	public void setUnspid(Long unspid) {
 		this.unspid = unspid;
 	}
 
+	/**
+	 * Gets the unspc list.
+	 *
+	 * @return the unspc list
+	 */
 	public List<SelectItem> getUnspcList() {
 		return unspcList;
 	}
 
+	/**
+	 * Sets the unspc list.
+	 *
+	 * @param unspcList the new unspc list
+	 */
 	public void setUnspcList(List<SelectItem> unspcList) {
 		this.unspcList = unspcList;
 	}
 
+	/**
+	 * Gets the report value.
+	 *
+	 * @return the report value
+	 */
 	public String getReportValue() {
 		return reportValue;
 	}
 
+	/**
+	 * Sets the report value.
+	 *
+	 * @param reportValue the new report value
+	 */
 	public void setReportValue(String reportValue) {
 		this.reportValue = reportValue;
 	}
 
+	/**
+	 * Gets the report name.
+	 *
+	 * @return the report name
+	 */
 	public String getReportName() {
 		return reportName;
 	}
 
+	/**
+	 * Sets the report name.
+	 *
+	 * @param reportName the new report name
+	 */
 	public void setReportName(String reportName) {
 		this.reportName = reportName;
 	}
 
+	/**
+	 * Gets the module value.
+	 *
+	 * @return the module value
+	 */
 	public String getModuleValue() {
 		return moduleValue;
 	}
 
+	/**
+	 * Sets the module value.
+	 *
+	 * @param moduleValue the new module value
+	 */
 	public void setModuleValue(String moduleValue) {
 		this.moduleValue = moduleValue;
 	}
 
+	/**
+	 * Gets the ct report backing bean.
+	 *
+	 * @return the ct report backing bean
+	 */
 	public CTReportBackingBean getCtReportBackingBean() {
 		return ctReportBackingBean;
 	}
 
+	/**
+	 * Sets the ct report backing bean.
+	 *
+	 * @param ctReportBackingBean the new ct report backing bean
+	 */
 	public void setCtReportBackingBean(CTReportBackingBean ctReportBackingBean) {
 		this.ctReportBackingBean = ctReportBackingBean;
 	}
 
+	/**
+	 * Gets the sc report backing bean.
+	 *
+	 * @return the sc report backing bean
+	 */
 	public SCReportBackingBean getScReportBackingBean() {
 		return scReportBackingBean;
 	}
 
+	/**
+	 * Sets the sc report backing bean.
+	 *
+	 * @param scReportBackingBean the new sc report backing bean
+	 */
 	public void setScReportBackingBean(SCReportBackingBean scReportBackingBean) {
 		this.scReportBackingBean = scReportBackingBean;
 	}
 
+	/**
+	 * Gets the cm report backing bean.
+	 *
+	 * @return the cm report backing bean
+	 */
 	public CMReportBackingBean getCmReportBackingBean() {
 		return cmReportBackingBean;
 	}
 
+	/**
+	 * Sets the cm report backing bean.
+	 *
+	 * @param cmReportBackingBean the new cm report backing bean
+	 */
 	public void setCmReportBackingBean(CMReportBackingBean cmReportBackingBean) {
 		this.cmReportBackingBean = cmReportBackingBean;
 	}
 
+	/**
+	 * Gets the fl report backing bean.
+	 *
+	 * @return the fl report backing bean
+	 */
 	public FLReportBackingBean getFlReportBackingBean() {
 		return flReportBackingBean;
 	}
 
+	/**
+	 * Sets the fl report backing bean.
+	 *
+	 * @param flReportBackingBean the new fl report backing bean
+	 */
 	public void setFlReportBackingBean(FLReportBackingBean flReportBackingBean) {
 		this.flReportBackingBean = flReportBackingBean;
 	}
 
+	/**
+	 * Gets the sm report backing bean.
+	 *
+	 * @return the sm report backing bean
+	 */
 	public SMReportBackingBean getSmReportBackingBean() {
 		return smReportBackingBean;
 	}
 
+	/**
+	 * Sets the sm report backing bean.
+	 *
+	 * @param smReportBackingBean the new sm report backing bean
+	 */
 	public void setSmReportBackingBean(SMReportBackingBean smReportBackingBean) {
 		this.smReportBackingBean = smReportBackingBean;
 	}
 	
 
+	/**
+	 * Gets the pm report backing bean.
+	 *
+	 * @return the pm report backing bean
+	 */
 	public PMReportBackingBean getPmReportBackingBean() {
 		return pmReportBackingBean;
 	}
 
+	/**
+	 * Sets the pm report backing bean.
+	 *
+	 * @param pmReportBackingBean the new pm report backing bean
+	 */
 	public void setPmReportBackingBean(PMReportBackingBean pmReportBackingBean) {
 		this.pmReportBackingBean = pmReportBackingBean;
 	}
 
+	/**
+	 * Gets the pp report backing bean.
+	 *
+	 * @return the pp report backing bean
+	 */
 	public PPReportBackingBean getPpReportBackingBean() {
 		return ppReportBackingBean;
 	}
 
+	/**
+	 * Sets the pp report backing bean.
+	 *
+	 * @param ppReportBackingBean the new pp report backing bean
+	 */
 	public void setPpReportBackingBean(PPReportBackingBean ppReportBackingBean) {
 		this.ppReportBackingBean = ppReportBackingBean;
 	}
 
+	/**
+	 * Gets the org profile id name list.
+	 *
+	 * @return the org profile id name list
+	 */
 	public List<SelectItem> getOrgProfileIdNameList() {
 		return orgProfileIdNameList;
 	}
 
+	/**
+	 * Sets the org profile id name list.
+	 *
+	 * @param orgProfileIdNameList the new org profile id name list
+	 */
 	public void setOrgProfileIdNameList(List<SelectItem> orgProfileIdNameList) {
 		this.orgProfileIdNameList = orgProfileIdNameList;
 	}
 
+	/**
+	 * Gets the sc month list.
+	 *
+	 * @return the sc month list
+	 */
 	public List<SelectItem> getScMonthList() {
 		return scMonthList;
 	}
 
+	/**
+	 * Sets the sc month list.
+	 *
+	 * @param scMonthList the new sc month list
+	 */
 	public void setScMonthList(List<SelectItem> scMonthList) {
 		this.scMonthList = scMonthList;
 	}
 
+	/**
+	 * Gets the sc year list.
+	 *
+	 * @return the sc year list
+	 */
 	public List<String> getScYearList() {
 		return scYearList;
 	}
 
+	/**
+	 * Sets the sc year list.
+	 *
+	 * @param scYearList the new sc year list
+	 */
 	public void setScYearList(List<String> scYearList) {
 		this.scYearList = scYearList;
 	}
 
+	/**
+	 * Gets the user listbyprofile role.
+	 *
+	 * @return the user listbyprofile role
+	 */
 	public List<SelectItem> getUserListbyprofileRole() {
 		return userListbyprofileRole;
 	}
 
+	/**
+	 * Sets the user listbyprofile role.
+	 *
+	 * @param userListbyprofileRole the new user listbyprofile role
+	 */
 	public void setUserListbyprofileRole(List<SelectItem> userListbyprofileRole) {
 		this.userListbyprofileRole = userListbyprofileRole;
 	}
 
+	/**
+	 * Gets the org profile list.
+	 *
+	 * @return the org profile list
+	 */
 	public List<String> getOrgProfileList() {
 		return orgProfileList;
 	}
 
+	/**
+	 * Sets the org profile list.
+	 *
+	 * @param orgProfileList the new org profile list
+	 */
 	public void setOrgProfileList(List<String> orgProfileList) {
 		this.orgProfileList = orgProfileList;
 	}
 
+	/**
+	 * Gets the loan list.
+	 *
+	 * @return the loan list
+	 */
 	public List<String> getLoanList() {
 		return loanList;
 	}
 
+	/**
+	 * Sets the loan list.
+	 *
+	 * @param loanList the new loan list
+	 */
 	public void setLoanList(List<String> loanList) {
 		this.loanList = loanList;
 	}
 
+	/**
+	 * Gets the requisitioner list.
+	 *
+	 * @return the requisitioner list
+	 */
 	public List<SelectItem> getRequisitionerList() {
 		return requisitionerList;
 	}
 
+	/**
+	 * Sets the requisitioner list.
+	 *
+	 * @param requisitionerList the new requisitioner list
+	 */
 	public void setRequisitionerList(List<SelectItem> requisitionerList) {
 		this.requisitionerList = requisitionerList;
 	}
 
+	/**
+	 * Gets the status list.
+	 *
+	 * @return the status list
+	 */
 	public List<SelectItem> getStatusList() {
 		return statusList;
 	}
 
+	/**
+	 * Sets the status list.
+	 *
+	 * @param statusList the new status list
+	 */
 	public void setStatusList(List<SelectItem> statusList) {
 		this.statusList = statusList;
 	}
 	
+	/**
+	 * Gets the parameter code type.
+	 *
+	 * @return the parameter code type
+	 */
 	public String getParameterCodeType() {
 		return parameterCodeType;
 	}
 
+	/**
+	 * Sets the parameter code type.
+	 *
+	 * @param parameterCodeType the new parameter code type
+	 */
 	public void setParameterCodeType(String parameterCodeType) {
 		this.parameterCodeType = parameterCodeType;
 	}
 
+	/**
+	 * Gets the ministry list.
+	 *
+	 * @return the ministry list
+	 */
 	public List<SelectItem> getMinistryList() {
 		return ministryList;
 	}
 
+	/**
+	 * Sets the ministry list.
+	 *
+	 * @param ministryList the new ministry list
+	 */
 	public void setMinistryList(List<SelectItem> ministryList) {
 		this.ministryList = ministryList;
 	}
 
 	
+	/**
+	 * Gets the ptj list.
+	 *
+	 * @return the ptj list
+	 */
 	public List<SelectItem> getPtjList() {
 		return ptjList;
 	}
 
+	/**
+	 * Sets the ptj list.
+	 *
+	 * @param ptjList the new ptj list
+	 */
 	public void setPtjList(List<SelectItem> ptjList) {
 		this.ptjList = ptjList;
 	}
 
+	/** The adding state list. */
 	private List<String> addingStateList = new ArrayList<String>();
+	
+	/** The adding district list. */
 	private List<String> addingDistrictList = new ArrayList<String>();
 	
 	
+	/**
+	 * Gets the adding state list.
+	 *
+	 * @return the adding state list
+	 */
 	public List<String> getAddingStateList() {
 		return addingStateList;
 	}
 
+	/**
+	 * Sets the adding state list.
+	 *
+	 * @param addingStateList the new adding state list
+	 */
 	public void setAddingStateList(List<String> addingStateList) {
 		this.addingStateList = addingStateList;
 	}
 
+	/**
+	 * Gets the adding district list.
+	 *
+	 * @return the adding district list
+	 */
 	public List<String> getAddingDistrictList() {
 		return addingDistrictList;
 	}
 
+	/**
+	 * Sets the adding district list.
+	 *
+	 * @param addingDistrictList the new adding district list
+	 */
 	public void setAddingDistrictList(List<String> addingDistrictList) {
 		this.addingDistrictList = addingDistrictList;
 	}
 
+	/** The local to date var. */
 	private String localToDateVar;
 
+	/** The user id. */
 	private String userId;	
+	
+	/** The lng user id. */
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
 	//private Long lngUserId = (long)243371;//116205;//243371;//61745;//219490;//240790;//183931;//20854;//243371;//20854;//168887;//221747;//219490;//243394;//243371;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
+	/** The str language. */
 	private String strLanguage = ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG,	ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 	//private String strLanguage = "ms";
+	/** The role code. */
 	private String roleCode;
+	
+	/** The from date. */
 	private Date fromDate;
+	
+	/** The to date. */
 	private Date toDate;
+	
+	/** The sub module. */
 	private String subModule;
+	
+	/** The common ptj. */
 	private String commonPtj;
+	
+	/** The common ministry. */
 	private String commonMinistry;
+	
+	/** The ministry name. */
 	private String ministryName;
 	// sc
+	/** The sc quotation id. */
 	private String scQuotationId;
+	
+	/** The sc quotation no. */
 	private String scQuotationNo;
+	
+	/** The sc payment id. */
 	private String scPaymentId;
+	
+	/** The sc created to year. */
 	private String scCreatedToYear;
+	
+	/** The sc created to month. */
 	private String scCreatedToMonth;
+	
+	/** The sc created from year. */
 	private String scCreatedFromYear;
+	
+	/** The sc created from month. */
 	private String scCreatedFromMonth;
+	
+	/** The sc desk officer. */
 	private String scDeskOfficer;
+	
+	/** The sc ptj. */
 	private String scPtj;
+	
+	/** The sc status. */
 	private String scStatus;
+	
+	/** The sc publish from date. */
 	private Date scPublishFromDate;
+	
+	/** The sc publish to date. */
 	private Date scPublishToDate;
+	
+	/** The sc sone crtd from date. */
 	private Date scSoneCrtdFromDate;
+	
+	/** The sc sone crtd to date. */
 	private Date scSoneCrtdToDate;
+	
+	/** The sc requisener id. */
 	private String scRequisenerId;
+	
+	/** The sc supplier. */
 	private String scSupplier;
+	
+	/** The sc login. */
 	private String scLogin;
+	
+	/** The sc p ino. */
 	private String scPIno;
+	
+	/** The sc sone status. */
 	private String scSoneStatus;
+	
+	/** The sc prc rpt group. */
 	private String scPrcRptGroup;
+	
+	/** The sc pi dtls prc rpt group. */
 	private String scPIDtlsPrcRptGroup;
+	
+	/** The sc procurement type. */
 	private String scProcurementType;
+	
+	/** The sc process rpt quotation no. */
 	private String scProcessRptQuotationNo;
+	
+	/** The sc common status. */
 	private String scCommonStatus;
+	
+	/** The sc laprnpurchdefault group. */
 	private String scLAPRNPURCHDEFAULTGroup;
+	
+	/** The sc requestnotesummary group. */
 	private String scREQUESTNOTESUMMARYGroup;
+	
+	/** The sc pid no. */
 	private String scPIDNo;
+	
+	/** The sc contract or pkp type. */
 	private String scContractOrPKPType;
+	
+	/** The sc contract or pkp no. */
 	private String scContractOrPKPNo;
+	
+	/** The sc contract or pkp name. */
 	private String scContractOrPKPName;
+	
+	/** The sc request quote no. */
 	private String scRequestQuoteNo;
+	
+	/** The sc request note status. */
 	private String scRequestNoteStatus;
+	
+	/** The sc simple quote status. */
 	private String scSimpleQuoteStatus;
+	
+	/** The sc simple quote dtl group. */
 	private String scSimpleQuoteDtlGroup;
+	
+	/** The sc purchase in default status. */
 	private String scPurchaseInDefaultStatus;
+	
+	/** The sc soa status. */
 	private String scSOAStatus;
+	
+	/** The sc simple quote type. */
 	private String scSimpleQuoteType;
+	
+	/** The sc loa no. */
 	private String scLOANo;
 	
 	// cm
+	/** The cm item type. */
 	private String cmItemType;
+	
+	/** The cm item status. */
 	private String cmItemStatus;
+	
+	/** The cm unspsc code. */
 	private String cmUnspscCode;
+	
+	/** The cm unspsc title. */
 	private String cmUnspscTitle;
+	
+	/** The cm company name. */
 	private String cmCompanyName;
+	
+	/** The cm registration type. */
 	private String cmRegistrationType;
+	
+	/** The cm item category. */
 	private String cmItemCategory;
+	
+	/** The cm item name. */
 	private String cmItemName;
+	
+	/** The cm ep number. */
 	private String cmEpNumber;
+	
+	/** The cm business reg no. */
 	private String cmBusinessRegNo;
+	
+	/** The cm ic number. */
 	private String cmIcNumber;
+	
+	/** The cm mof number. */
 	private String cmMofNumber;
+	
+	/** The cm extention code. */
 	private String cmExtentionCode;
+	
+	/** The cm extention type. */
 	private String cmExtentionType;
+	
+	/** The cm extention brand. */
 	private String cmExtentionBrand;
+	
+	/** The cm extention measurment. */
 	private String cmExtentionMeasurment;
+	
+	/** The cm extention colour. */
 	private String cmExtentionColour;
+	
+	/** The cm proof identity. */
 	private String cmProofIdentity;
+	
+	/** The cm suppl or admin. */
 	private String cmSupplOrAdmin;
+	
+	/** The cm extention. */
 	private String cmExtention;
+	
+	/** The cm group one. */
 	private String cmGroupOne;
+	
+	/** The cm request number. */
 	private String cmRequestNumber;
 	// fl
+	/** The fl itm type. */
 	private String flItmType;
+	
+	/** The fl contract no. */
 	private String flContractNo;
+	
+	/** The fl sst. */
 	private String flSst;
+	
+	/** The fl jabatan. */
 	private String flJabatan;	
+	
+	/** The fl supplier. */
 	private String flSupplier;
+	
+	/** The fl status. */
 	private String flStatus;
+	
+	/** The fl duration. */
 	private String flDuration;
+	
+	/** The fl recieving officer. */
 	private String flRecievingOfficer;
+	
+	/** The fl delivery address. */
 	private String flDeliveryAddress;
+	
+	/** The fl rec note no. */
 	private String flRecNoteNo;
+	
+	/** The fl contract type. */
 	private String flContractType;
+	
+	/** The fl requisitioner. */
 	private String flRequisitioner;
+	
+	/** The fl mto contract. */
 	private String flMtoContract;
+	
+	/** The fl invoice no. */
 	private String flInvoiceNo;
+	
+	/** The fl supplier invoice no. */
 	private String flSupplierInvoiceNo;
+	
+	/** The fl deduction type. */
 	private String flDeductionType;
+	
+	/** The fl cr no. */
 	private String flCrNo;
+	
+	/** The fl approver name. */
 	private String flApproverName;
+	
+	/** The fl document type. */
 	private String flDocumentType;
+	
+	/** The fl criteria. */
 	private String flCriteria;
+	
+	/** The fl scoring. */
 	private String flScoring;
+	
+	/** The fl pkp no. */
 	private String flPkpNo;
+	
+	/** The fl delivery order no. */
 	private String flDeliveryOrderNo;
+	
+	/** The fl supplier delivery order no. */
 	private String flSupplierDeliveryOrderNo;
+	
+	/** The fl item code. */
 	private String flItemCode;
+	
+	/** The fl po amount. */
 	private String flPoAmount;
+	
+	/** The fl pr no. */
 	private String flPrNo;
+	
+	/** The fl pmo. */
 	private String flPmo;
+	
+	/** The fl item name. */
 	private String flItemName;
+	
+	/** The fl contract order. */
 	private String flContractOrder;
+	
+	/** The fl contract request. */
 	private String flContractRequest;
+	
+	/** The fl purchase order no. */
 	private String flPurchaseOrderNo;
+	
+	/** The fl group one. */
 	private String flGroupOne;
+	
+	/** The fl group two. */
 	private String flGroupTwo;
+	
+	/** The fl group three. */
 	private String flGroupThree;
+	
+	/** The fl group four. */
 	private String flGroupFour;
+	
+	/** The fl group five. */
 	private String flGroupFive;
+	
+	/** The fl group six. */
 	private String flGroupSix;
+	
+	/** The fl group seven. */
 	private String flGroupSeven;
+	
+	/** The fl group eight. */
 	private String flGroupEight;
+	
+	/** The fl group nine. */
 	private String flGroupNine;
+	
+	/** The fl group ten. */
 	private String flGroupTen;
+	
+	/** The fl group eleven. */
 	private String flGroupEleven;
+	
+	/** The fl group twelve. */
 	private String flGroupTwelve;
+	
+	/** The fl group thirteen. */
 	private String flGroupThirteen;
+	
+	/** The fl group fourteen. */
 	private String flGroupFourteen;
+	
+	/** The fl group fifteen. */
 	private String flGroupFifteen;
+	
+	/** The fl group sixteen. */
 	private String flGroupSixteen;
+	
+	/** The fl group seventeen. */
 	private String flGroupSeventeen;
+	
+	/** The report category view. */
 	private boolean reportCategoryView = false;
+	
+	/** The fl stop instruction no. */
 	private String flStopInstructionNo;
+	
+	/** The fl payment advice no. */
 	private String flPaymentAdviceNo;
 	// sm
+	/** The sm threshold from year. */
 	private String smThresholdFromYear;
+	
+	/** The sm threshold to year. */
 	private String smThresholdToYear;
+	
+	/** The sm created from year. */
 	private String smCreatedFromYear;
+	
+	/** The sm created to year. */
 	private String smCreatedToYear;
+	
+	/** The sm monthly rpt by year. */
 	private String smMonthlyRptByYear;
+	
+	/** The sm svo user. */
 	private String smSVOUser;
+	
+	/** The sm application no. */
 	private String smApplicationNo;
+	
+	/** The sm zone. */
 	private String smZone;
+	
+	/** The sm supplier type. */
 	private String smSupplierType;
+	
+	/** The sm mof reg no. */
 	private String smMofRegNo;
+	
+	/** The sm registration status. */
 	private String smRegistrationStatus;
+	
+	/** The smcategory. */
 	private String smcategory;
+	
+	/** The sm main category. */
 	private String smMainCategory;
+	
+	/** The sm sub category. */
 	private String smSubCategory;
+	
+	/** The sm sub category division. */
 	private String smSubCategoryDivision;
+	
+	/** The sm application status. */
 	private String smApplicationStatus;
+	
+	/** The sm payment type. */
 	private String smPaymentType;
+	
+	/** The sm application type. */
 	private String smApplicationType;
+	
+	/** The sm state. */
 	private String smState;
+	
+	/** The sm district. */
 	private String smDistrict;
 	
+	/** The sm company name. */
 	private String smCompanyName;
+	
+	/** The sm registration type. */
 	private String smRegistrationType;
+	
+	/** The sm year text. */
 	private String smYearText;
 	
+	/** The sm mof reg no from. */
 	private String smMofRegNoFrom;
+	
+	/** The sm mof reg no to. */
 	private String smMofRegNoTo;
+	
+	/** The sm paid up capital frm. */
 	private String smPaidUpCapitalFrm;
+	
+	/** The sm paid up capital to. */
 	private String smPaidUpCapitalTo;
+	
+	/** The sm paid up capital naccum. */
 	private String smPaidUpCapitalNaccum;
+	
+	/** The sm payment method. */
 	private String smPaymentMethod;
+	
+	/** The sm processing type. */
 	private String smProcessingType;
+	
+	/** The sm receipt no. */
 	private String smReceiptNo;
+	
+	/** The sm report type. */
 	private String smReportType;
+	
+	/** The sm processing officer name. */
 	private String smProcessingOfficerName;
 	
+	/** The sm role. */
 	private String smRole;
+	
+	/** The sm ep no. */
 	private String smEpNo;
+	
+	/** The sm registration no. */
 	private String smRegistrationNo;
+	
+	/** The sm supporting document mode. */
 	private String smSupportingDocumentMode;
+	
+	/** The sm supporting document status. */
 	private String smSupportingDocumentStatus;
+	
+	/** The sm personnel role. */
 	private String smPersonnelRole;
+	
+	/** The sm identification type. */
 	private String smIdentificationType;
+	
+	/** The sm identification number. */
 	private String smIdentificationNumber;
+	
+	/** The sm cancellation by. */
 	private String smCancellationBy;
+	
+	/** The sm from month. */
 	private String smFromMonth;
+	
+	/** The sm to month. */
 	private String smToMonth;
+	
+	/** The sm user name. */
 	private String smUserName;
+	
+	/** The sm request expiry date. */
 	private String smRequestExpiryDate;
+	
+	/** The sm profile status. */
 	private String smProfileStatus;
+	
+	/** The sm gst registration no. */
 	private String smGSTRegistrationNo;
+	
+	/** The sm gst registered status. */
 	private String smGSTRegisteredStatus;
+	
+	/** The sm payment to. */
 	private String smPaymentTo;
 	// CT
+	/** The ct contract no. */
 	private String ctContractNo;
+	
+	/** The ct agreement. */
 	private String ctAgreement;
+	
+	/** The ct status. */
 	private String ctStatus;
+	
+	/** The ct contr montr status. */
 	private String ctContrMontrStatus;
+	
+	/** The ct complete. */
 	private String ctComplete;
+	
+	/** The ct group one. */
 	private String ctGroupOne;
+	
+	/** The ct group two. */
 	private String ctGroupTwo;
+	
+	/** The ct product service. */
 	private String ctProductService;
+	
+	/** The ct loan no. */
 	private String ctLoanNo;		
+	
+	/** The ct procurement mode. */
 	private String ctProcurementMode;	
+	
+	/** The ct physical contract no. */
 	private String ctPhysicalContractNo;
+	
+	/** The ct group three. */
 	private String ctGroupThree;
+	
+	/** The ct status two. */
 	private String ctStatusTwo;
+	
+	/** The ct loa physical no. */
 	private String ctLOAPhysicalNo;	
+	
+	/** The ct user type. */
 	private String ctUserType;
+	
+	/** The ct sub type. */
 	private String ctSubType;
+	
+	/** The ct termination type. */
 	private String ctTerminationType;
+	
+	/** The ct circular no. */
 	private String ctCircularNo;
+	
+	/** The ct circular name. */
 	private String ctCircularName;
+	
+	/** The ct circular type. */
 	private String ctCircularType;
+	
+	/** The ct circular effective from date. */
 	private Date ctCircularEffectiveFromDate;
+	
+	/** The ct circular effective to date. */
 	private Date ctCircularEffectiveToDate;
+	
+	/** The ct supplier name. */
 	private String ctSupplierName;
 	// PP
+	/** The pp year. */
 	private String ppYear;
+	
+	/** The pp ministry. */
 	private String ppMinistry;
+	
+	/** The pp ptj. */
 	private String ppPTJ;	
+	
+	/** The lng state id. */
 	private long[] lngStateId;
+	
+	/** The lng district id. */
 	private long[] lngDistrictId;
 	//PM
+	/** The pm service type. */
 	private String pmServiceType;
+	
+	/** The pm status. */
 	private String pmStatus;
+	
+	/** The pm financial org name. */
 	private String pmFinancialOrgName;
+	
+	/** The pm business reg no. */
 	private String pmBusinessRegNo;
 	
 	
 	
 
+	/**
+	 * Gets the cm request number.
+	 *
+	 * @return the cm request number
+	 */
 	public String getCmRequestNumber() {
 		return cmRequestNumber;
 	}
 
+	/**
+	 * Sets the cm request number.
+	 *
+	 * @param cmRequestNumber the new cm request number
+	 */
 	public void setCmRequestNumber(String cmRequestNumber) {
 		this.cmRequestNumber = cmRequestNumber;
 	}
 
+	/**
+	 * Gets the ct supplier name.
+	 *
+	 * @return the ct supplier name
+	 */
 	public String getCtSupplierName() {
 		return ctSupplierName;
 	}
 
+	/**
+	 * Sets the ct supplier name.
+	 *
+	 * @param ctSupplierName the new ct supplier name
+	 */
 	public void setCtSupplierName(String ctSupplierName) {
 		this.ctSupplierName = ctSupplierName;
 	}
 
+	/**
+	 * Gets the ct circular effective from date.
+	 *
+	 * @return the ct circular effective from date
+	 */
 	public Date getCtCircularEffectiveFromDate() {
 		return ctCircularEffectiveFromDate;
 	}
 
+	/**
+	 * Sets the ct circular effective from date.
+	 *
+	 * @param ctCircularEffectiveFromDate the new ct circular effective from date
+	 */
 	public void setCtCircularEffectiveFromDate(Date ctCircularEffectiveFromDate) {
 		this.ctCircularEffectiveFromDate = ctCircularEffectiveFromDate;
 	}
 
+	/**
+	 * Gets the ct circular effective to date.
+	 *
+	 * @return the ct circular effective to date
+	 */
 	public Date getCtCircularEffectiveToDate() {
 		return ctCircularEffectiveToDate;
 	}
 
+	/**
+	 * Sets the ct circular effective to date.
+	 *
+	 * @param ctCircularEffectiveToDate the new ct circular effective to date
+	 */
 	public void setCtCircularEffectiveToDate(Date ctCircularEffectiveToDate) {
 		this.ctCircularEffectiveToDate = ctCircularEffectiveToDate;
 	}
 
+	/**
+	 * Gets the ct circular no.
+	 *
+	 * @return the ct circular no
+	 */
 	public String getCtCircularNo() {
 		return ctCircularNo;
 	}
 
+	/**
+	 * Sets the ct circular no.
+	 *
+	 * @param ctCircularNo the new ct circular no
+	 */
 	public void setCtCircularNo(String ctCircularNo) {
 		this.ctCircularNo = ctCircularNo;
 	}
 
+	/**
+	 * Gets the ct circular name.
+	 *
+	 * @return the ct circular name
+	 */
 	public String getCtCircularName() {
 		return ctCircularName;
 	}
 
+	/**
+	 * Sets the ct circular name.
+	 *
+	 * @param ctCircularName the new ct circular name
+	 */
 	public void setCtCircularName(String ctCircularName) {
 		this.ctCircularName = ctCircularName;
 	}
 
+	/**
+	 * Gets the ct circular type.
+	 *
+	 * @return the ct circular type
+	 */
 	public String getCtCircularType() {
 		return ctCircularType;
 	}
 
+	/**
+	 * Sets the ct circular type.
+	 *
+	 * @param ctCircularType the new ct circular type
+	 */
 	public void setCtCircularType(String ctCircularType) {
 		this.ctCircularType = ctCircularType;
 	}
 
+	/**
+	 * Gets the ct termination type.
+	 *
+	 * @return the ct termination type
+	 */
 	public String getCtTerminationType() {
 		return ctTerminationType;
 	}
 
+	/**
+	 * Sets the ct termination type.
+	 *
+	 * @param ctTerminationType the new ct termination type
+	 */
 	public void setCtTerminationType(String ctTerminationType) {
 		this.ctTerminationType = ctTerminationType;
 	}
 
+	/**
+	 * Gets the sm payment to.
+	 *
+	 * @return the sm payment to
+	 */
 	public String getSmPaymentTo() {
 		return smPaymentTo;
 	}
 
+	/**
+	 * Sets the sm payment to.
+	 *
+	 * @param smPaymentTo the new sm payment to
+	 */
 	public void setSmPaymentTo(String smPaymentTo) {
 		this.smPaymentTo = smPaymentTo;
 	}
 
+	/**
+	 * Gets the str language.
+	 *
+	 * @return the str language
+	 */
 	public String getStrLanguage() {
 		return strLanguage;
 	}
 
+	/**
+	 * Sets the str language.
+	 *
+	 * @param strLanguage the new str language
+	 */
 	public void setStrLanguage(String strLanguage) {
 		this.strLanguage = strLanguage;
 	}
 
+	/**
+	 * Gets the pm status.
+	 *
+	 * @return the pm status
+	 */
 	public String getPmStatus() {
 		return pmStatus;
 	}
 
+	/**
+	 * Sets the pm status.
+	 *
+	 * @param pmStatus the new pm status
+	 */
 	public void setPmStatus(String pmStatus) {
 		this.pmStatus = pmStatus;
 	}
 
+	/**
+	 * Gets the pm financial org name.
+	 *
+	 * @return the pm financial org name
+	 */
 	public String getPmFinancialOrgName() {
 		return pmFinancialOrgName;
 	}
 
+	/**
+	 * Sets the pm financial org name.
+	 *
+	 * @param pmFinancialOrgName the new pm financial org name
+	 */
 	public void setPmFinancialOrgName(String pmFinancialOrgName) {
 		this.pmFinancialOrgName = pmFinancialOrgName;
 	}
 
+	/**
+	 * Gets the pm business reg no.
+	 *
+	 * @return the pm business reg no
+	 */
 	public String getPmBusinessRegNo() {
 		return pmBusinessRegNo;
 	}
 
+	/**
+	 * Sets the pm business reg no.
+	 *
+	 * @param pmBusinessRegNo the new pm business reg no
+	 */
 	public void setPmBusinessRegNo(String pmBusinessRegNo) {
 		this.pmBusinessRegNo = pmBusinessRegNo;
 	}
 
+	/**
+	 * Gets the pm service type.
+	 *
+	 * @return the pm service type
+	 */
 	public String getPmServiceType() {
 		return pmServiceType;
 	}
+	
+	/**
+	 * Sets the pm service type.
+	 *
+	 * @param pmServiceType the new pm service type
+	 */
 	public void setPmServiceType(String pmServiceType) {
 		this.pmServiceType = pmServiceType;
 	}
 
+	/**
+	 * Gets the fl payment advice no.
+	 *
+	 * @return the fl payment advice no
+	 */
 	public String getFlPaymentAdviceNo() {
 		return flPaymentAdviceNo;
 	}
+	
+	/**
+	 * Sets the fl payment advice no.
+	 *
+	 * @param flPaymentAdviceNo the new fl payment advice no
+	 */
 	public void setFlPaymentAdviceNo(String flPaymentAdviceNo) {
 		this.flPaymentAdviceNo = flPaymentAdviceNo;
 	}
+	
+	/**
+	 * Gets the fl supplier delivery order no.
+	 *
+	 * @return the fl supplier delivery order no
+	 */
 	public String getFlSupplierDeliveryOrderNo() {
 		return flSupplierDeliveryOrderNo;
 	}
+	
+	/**
+	 * Sets the fl supplier delivery order no.
+	 *
+	 * @param flSupplierDeliveryOrderNo the new fl supplier delivery order no
+	 */
 	public void setFlSupplierDeliveryOrderNo(String flSupplierDeliveryOrderNo) {
 		this.flSupplierDeliveryOrderNo = flSupplierDeliveryOrderNo;
 	}
+	
+	/**
+	 * Gets the sm gst registration no.
+	 *
+	 * @return the sm gst registration no
+	 */
 	public String getSmGSTRegistrationNo() {
 		return smGSTRegistrationNo;
 	}
+	
+	/**
+	 * Sets the sm gst registration no.
+	 *
+	 * @param smGSTRegistrationNo the new sm gst registration no
+	 */
 	public void setSmGSTRegistrationNo(String smGSTRegistrationNo) {
 		this.smGSTRegistrationNo = smGSTRegistrationNo;
 	}
+	
+	/**
+	 * Gets the sm gst registered status.
+	 *
+	 * @return the sm gst registered status
+	 */
 	public String getSmGSTRegisteredStatus() {
 		return smGSTRegisteredStatus;
 	}
+	
+	/**
+	 * Sets the sm gst registered status.
+	 *
+	 * @param smGSTRegisteredStatus the new sm gst registered status
+	 */
 	public void setSmGSTRegisteredStatus(String smGSTRegisteredStatus) {
 		this.smGSTRegisteredStatus = smGSTRegisteredStatus;
 	}
+	
+	/**
+	 * Gets the sm profile status.
+	 *
+	 * @return the sm profile status
+	 */
 	public String getSmProfileStatus() {
 		return smProfileStatus;
 	}
+	
+	/**
+	 * Sets the sm profile status.
+	 *
+	 * @param smProfileStatus the new sm profile status
+	 */
 	public void setSmProfileStatus(String smProfileStatus) {
 		this.smProfileStatus = smProfileStatus;
 	}
+	
+	/**
+	 * Gets the fl supplier invoice no.
+	 *
+	 * @return the fl supplier invoice no
+	 */
 	public String getFlSupplierInvoiceNo() {
 		return flSupplierInvoiceNo;
 	}
+	
+	/**
+	 * Sets the fl supplier invoice no.
+	 *
+	 * @param flSupplierInvoiceNo the new fl supplier invoice no
+	 */
 	public void setFlSupplierInvoiceNo(String flSupplierInvoiceNo) {
 		this.flSupplierInvoiceNo = flSupplierInvoiceNo;
 	}
+	
+	/**
+	 * Gets the fl stop instruction no.
+	 *
+	 * @return the fl stop instruction no
+	 */
 	public String getFlStopInstructionNo() {
 		return flStopInstructionNo;
 	}
+	
+	/**
+	 * Sets the fl stop instruction no.
+	 *
+	 * @param flStopInstructionNo the new fl stop instruction no
+	 */
 	public void setFlStopInstructionNo(String flStopInstructionNo) {
 		this.flStopInstructionNo = flStopInstructionNo;
 	}
+	
+	/**
+	 * Gets the sm request expiry date.
+	 *
+	 * @return the sm request expiry date
+	 */
 	public String getSmRequestExpiryDate() {
 		return smRequestExpiryDate;
 	}
+	
+	/**
+	 * Sets the sm request expiry date.
+	 *
+	 * @param smRequestExpiryDate the new sm request expiry date
+	 */
 	public void setSmRequestExpiryDate(String smRequestExpiryDate) {
 		this.smRequestExpiryDate = smRequestExpiryDate;
 	}
+	
+	/**
+	 * Gets the sm user name.
+	 *
+	 * @return the sm user name
+	 */
 	public String getSmUserName() {
 		return smUserName;
 	}
+	
+	/**
+	 * Sets the sm user name.
+	 *
+	 * @param smUserName the new sm user name
+	 */
 	public void setSmUserName(String smUserName) {
 		this.smUserName = smUserName;
 	}
+	
+	/**
+	 * Gets the sm threshold from year.
+	 *
+	 * @return the sm threshold from year
+	 */
 	public String getSmThresholdFromYear() {
 		return smThresholdFromYear;
 	}
+	
+	/**
+	 * Sets the sm threshold from year.
+	 *
+	 * @param smThresholdFromYear the new sm threshold from year
+	 */
 	public void setSmThresholdFromYear(String smThresholdFromYear) {
 		this.smThresholdFromYear = smThresholdFromYear;
 	}
+	
+	/**
+	 * Gets the sm threshold to year.
+	 *
+	 * @return the sm threshold to year
+	 */
 	public String getSmThresholdToYear() {
 		return smThresholdToYear;
 	}
+	
+	/**
+	 * Sets the sm threshold to year.
+	 *
+	 * @param smThresholdToYear the new sm threshold to year
+	 */
 	public void setSmThresholdToYear(String smThresholdToYear) {
 		this.smThresholdToYear = smThresholdToYear;
 	}
+	
+	/**
+	 * Gets the sm from month.
+	 *
+	 * @return the sm from month
+	 */
 	public String getSmFromMonth() {
 		return smFromMonth;
 	}
+	
+	/**
+	 * Sets the sm from month.
+	 *
+	 * @param smFromMonth the new sm from month
+	 */
 	public void setSmFromMonth(String smFromMonth) {
 		this.smFromMonth = smFromMonth;
 	}
+	
+	/**
+	 * Gets the sm to month.
+	 *
+	 * @return the sm to month
+	 */
 	public String getSmToMonth() {
 		return smToMonth;
 	}
+	
+	/**
+	 * Sets the sm to month.
+	 *
+	 * @param smToMonth the new sm to month
+	 */
 	public void setSmToMonth(String smToMonth) {
 		this.smToMonth = smToMonth;
 	}
+	
+	/**
+	 * Checks if is report category view.
+	 *
+	 * @return true, if is report category view
+	 */
 	public boolean isReportCategoryView() {
 		return reportCategoryView;
 	}
+	
+	/**
+	 * Sets the report category view.
+	 *
+	 * @param reportCategoryView the new report category view
+	 */
 	public void setReportCategoryView(boolean reportCategoryView) {
 		this.reportCategoryView = reportCategoryView;
 	}
+	
+	/**
+	 * Gets the ministry name.
+	 *
+	 * @return the ministry name
+	 */
 	public String getMinistryName() {
 		return ministryName;
 	}
+	
+	/**
+	 * Sets the ministry name.
+	 *
+	 * @param ministryName the new ministry name
+	 */
 	public void setMinistryName(String ministryName) {
 		this.ministryName = ministryName;
 	}
+	
+	/**
+	 * Gets the sm payment method.
+	 *
+	 * @return the sm payment method
+	 */
 	public String getSmPaymentMethod() {
 		return smPaymentMethod;
 	}
+	
+	/**
+	 * Sets the sm payment method.
+	 *
+	 * @param smPaymentMethod the new sm payment method
+	 */
 	public void setSmPaymentMethod(String smPaymentMethod) {
 		this.smPaymentMethod = smPaymentMethod;
 	}
+	
+	/**
+	 * Gets the sm processing type.
+	 *
+	 * @return the sm processing type
+	 */
 	public String getSmProcessingType() {
 		return smProcessingType;
 	}
+	
+	/**
+	 * Sets the sm processing type.
+	 *
+	 * @param smProcessingType the new sm processing type
+	 */
 	public void setSmProcessingType(String smProcessingType) {
 		this.smProcessingType = smProcessingType;
 	}
+	
+	/**
+	 * Gets the sm receipt no.
+	 *
+	 * @return the sm receipt no
+	 */
 	public String getSmReceiptNo() {
 		return smReceiptNo;
 	}
+	
+	/**
+	 * Sets the sm receipt no.
+	 *
+	 * @param smReceiptNo the new sm receipt no
+	 */
 	public void setSmReceiptNo(String smReceiptNo) {
 		this.smReceiptNo = smReceiptNo;
 	}
+	
+	/**
+	 * Gets the sm processing officer name.
+	 *
+	 * @return the sm processing officer name
+	 */
 	public String getSmProcessingOfficerName() {
 		return smProcessingOfficerName;
 	}
+	
+	/**
+	 * Sets the sm processing officer name.
+	 *
+	 * @param smProcessingOfficerName the new sm processing officer name
+	 */
 	public void setSmProcessingOfficerName(String smProcessingOfficerName) {
 		this.smProcessingOfficerName = smProcessingOfficerName;
 	}
+	
+	/**
+	 * Gets the sm identification type.
+	 *
+	 * @return the sm identification type
+	 */
 	public String getSmIdentificationType() {
 		return smIdentificationType;
 	}
+	
+	/**
+	 * Sets the sm identification type.
+	 *
+	 * @param smIdentificationType the new sm identification type
+	 */
 	public void setSmIdentificationType(String smIdentificationType) {
 		this.smIdentificationType = smIdentificationType;
 	}
+	
+	/**
+	 * Gets the sm identification number.
+	 *
+	 * @return the sm identification number
+	 */
 	public String getSmIdentificationNumber() {
 		return smIdentificationNumber;
 	}
+	
+	/**
+	 * Sets the sm identification number.
+	 *
+	 * @param smIdentificationNumber the new sm identification number
+	 */
 	public void setSmIdentificationNumber(String smIdentificationNumber) {
 		this.smIdentificationNumber = smIdentificationNumber;
 	}
+	
+	/**
+	 * Gets the sm cancellation by.
+	 *
+	 * @return the sm cancellation by
+	 */
 	public String getSmCancellationBy() {
 		return smCancellationBy;
 	}
+	
+	/**
+	 * Sets the sm cancellation by.
+	 *
+	 * @param smCancellationBy the new sm cancellation by
+	 */
 	public void setSmCancellationBy(String smCancellationBy) {
 		this.smCancellationBy = smCancellationBy;
 	}
+	
+	/**
+	 * Gets the sm personnel role.
+	 *
+	 * @return the sm personnel role
+	 */
 	public String getSmPersonnelRole() {
 		return smPersonnelRole;
 	}
+	
+	/**
+	 * Sets the sm personnel role.
+	 *
+	 * @param smPersonnelRole the new sm personnel role
+	 */
 	public void setSmPersonnelRole(String smPersonnelRole) {
 		this.smPersonnelRole = smPersonnelRole;
 	}
+	
+	/**
+	 * Gets the sm mof reg no from.
+	 *
+	 * @return the sm mof reg no from
+	 */
 	public String getSmMofRegNoFrom() {
 		return smMofRegNoFrom;
 	}
+	
+	/**
+	 * Sets the sm mof reg no from.
+	 *
+	 * @param smMofRegNoFrom the new sm mof reg no from
+	 */
 	public void setSmMofRegNoFrom(String smMofRegNoFrom) {
 		this.smMofRegNoFrom = smMofRegNoFrom;
 	}
+	
+	/**
+	 * Gets the sm mof reg no to.
+	 *
+	 * @return the sm mof reg no to
+	 */
 	public String getSmMofRegNoTo() {
 		return smMofRegNoTo;
 	}
+	
+	/**
+	 * Sets the sm mof reg no to.
+	 *
+	 * @param smMofRegNoTo the new sm mof reg no to
+	 */
 	public void setSmMofRegNoTo(String smMofRegNoTo) {
 		this.smMofRegNoTo = smMofRegNoTo;
 	}
+	
+	/**
+	 * Gets the sm paid up capital frm.
+	 *
+	 * @return the sm paid up capital frm
+	 */
 	public String getSmPaidUpCapitalFrm() {
 		return smPaidUpCapitalFrm;
 	}
+	
+	/**
+	 * Sets the sm paid up capital frm.
+	 *
+	 * @param smPaidUpCapitalFrm the new sm paid up capital frm
+	 */
 	public void setSmPaidUpCapitalFrm(String smPaidUpCapitalFrm) {
 		this.smPaidUpCapitalFrm = smPaidUpCapitalFrm;
 	}
 
+	/**
+	 * Gets the sm paid up capital to.
+	 *
+	 * @return the sm paid up capital to
+	 */
 	public String getSmPaidUpCapitalTo() {
 		return smPaidUpCapitalTo;
 	}
 
+	/**
+	 * Sets the sm paid up capital to.
+	 *
+	 * @param smPaidUpCapitalTo the new sm paid up capital to
+	 */
 	public void setSmPaidUpCapitalTo(String smPaidUpCapitalTo) {
 		this.smPaidUpCapitalTo = smPaidUpCapitalTo;
 	}
 
+	/**
+	 * Gets the sm paid up capital naccum.
+	 *
+	 * @return the sm paid up capital naccum
+	 */
 	public String getSmPaidUpCapitalNaccum() {
 		return smPaidUpCapitalNaccum;
 	}
 
+	/**
+	 * Sets the sm paid up capital naccum.
+	 *
+	 * @param smPaidUpCapitalNaccum the new sm paid up capital naccum
+	 */
 	public void setSmPaidUpCapitalNaccum(String smPaidUpCapitalNaccum) {
 		this.smPaidUpCapitalNaccum = smPaidUpCapitalNaccum;
 	}
 
+	/**
+	 * Gets the sm role.
+	 *
+	 * @return the sm role
+	 */
 	public String getSmRole() {
 		return smRole;
 	}
 
+	/**
+	 * Sets the sm role.
+	 *
+	 * @param smRole the new sm role
+	 */
 	public void setSmRole(String smRole) {
 		this.smRole = smRole;
 	}
 
+	/**
+	 * Gets the sm ep no.
+	 *
+	 * @return the sm ep no
+	 */
 	public String getSmEpNo() {
 		return smEpNo;
 	}
 
+	/**
+	 * Sets the sm ep no.
+	 *
+	 * @param smEpNo the new sm ep no
+	 */
 	public void setSmEpNo(String smEpNo) {
 		this.smEpNo = smEpNo;
 	}
 
+	/**
+	 * Gets the sm registration no.
+	 *
+	 * @return the sm registration no
+	 */
 	public String getSmRegistrationNo() {
 		return smRegistrationNo;
 	}
 
+	/**
+	 * Sets the sm registration no.
+	 *
+	 * @param smRegistrationNo the new sm registration no
+	 */
 	public void setSmRegistrationNo(String smRegistrationNo) {
 		this.smRegistrationNo = smRegistrationNo;
 	}
 
+	/**
+	 * Gets the sm supporting document mode.
+	 *
+	 * @return the sm supporting document mode
+	 */
 	public String getSmSupportingDocumentMode() {
 		return smSupportingDocumentMode;
 	}
 
+	/**
+	 * Sets the sm supporting document mode.
+	 *
+	 * @param smSupportingDocumentMode the new sm supporting document mode
+	 */
 	public void setSmSupportingDocumentMode(String smSupportingDocumentMode) {
 		this.smSupportingDocumentMode = smSupportingDocumentMode;
 	}
 
+	/**
+	 * Gets the sm supporting document status.
+	 *
+	 * @return the sm supporting document status
+	 */
 	public String getSmSupportingDocumentStatus() {
 		return smSupportingDocumentStatus;
 	}
 
+	/**
+	 * Sets the sm supporting document status.
+	 *
+	 * @param smSupportingDocumentStatus the new sm supporting document status
+	 */
 	public void setSmSupportingDocumentStatus(String smSupportingDocumentStatus) {
 		this.smSupportingDocumentStatus = smSupportingDocumentStatus;
 	}
 
+	/**
+	 * Gets the lng district id.
+	 *
+	 * @return the lng district id
+	 */
 	public long[] getLngDistrictId() {
 		return lngDistrictId;
 	}
 
+	/**
+	 * Sets the lng district id.
+	 *
+	 * @param lngDistrictId the new lng district id
+	 */
 	public void setLngDistrictId(long[] lngDistrictId) {
 		this.lngDistrictId = lngDistrictId;
 	}
 
+	/**
+	 * Gets the lng state id.
+	 *
+	 * @return the lng state id
+	 */
 	public long[] getLngStateId() {
 		return lngStateId;
 	}
 
+	/**
+	 * Sets the lng state id.
+	 *
+	 * @param lngStateId the new lng state id
+	 */
 	public void setLngStateId(long[] lngStateId) {
 		this.lngStateId = lngStateId;
 	}
 
+	/**
+	 * Gets the pp year.
+	 *
+	 * @return the pp year
+	 */
 	public String getPpYear() {
 		return ppYear;
 	}
 
+	/**
+	 * Sets the pp year.
+	 *
+	 * @param ppYear the new pp year
+	 */
 	public void setPpYear(String ppYear) {
 		this.ppYear = ppYear;
 	}
 
+	/**
+	 * Gets the pp ministry.
+	 *
+	 * @return the pp ministry
+	 */
 	public String getPpMinistry() {
 		return ppMinistry;
 	}
 
+	/**
+	 * Sets the pp ministry.
+	 *
+	 * @param ppMinistry the new pp ministry
+	 */
 	public void setPpMinistry(String ppMinistry) {
 		this.ppMinistry = ppMinistry;
 	}
 
+	/**
+	 * Gets the pp ptj.
+	 *
+	 * @return the pp ptj
+	 */
 	public String getPpPTJ() {
 		return ppPTJ;
 	}
 
+	/**
+	 * Sets the pp ptj.
+	 *
+	 * @param ppPTJ the new pp ptj
+	 */
 	public void setPpPTJ(String ppPTJ) {
 		this.ppPTJ = ppPTJ;
 	}
 
+	/**
+	 * Gets the sc purchase in default status.
+	 *
+	 * @return the sc purchase in default status
+	 */
 	public String getScPurchaseInDefaultStatus() {
 		return scPurchaseInDefaultStatus;
 	}
 
+	/**
+	 * Sets the sc purchase in default status.
+	 *
+	 * @param scPurchaseInDefaultStatus the new sc purchase in default status
+	 */
 	public void setScPurchaseInDefaultStatus(String scPurchaseInDefaultStatus) {
 		this.scPurchaseInDefaultStatus = scPurchaseInDefaultStatus;
 	}
 
+	/**
+	 * Gets the sc simple quote dtl group.
+	 *
+	 * @return the sc simple quote dtl group
+	 */
 	public String getScSimpleQuoteDtlGroup() {
 		return scSimpleQuoteDtlGroup;
 	}
 
+	/**
+	 * Sets the sc simple quote dtl group.
+	 *
+	 * @param scSimpleQuoteDtlGroup the new sc simple quote dtl group
+	 */
 	public void setScSimpleQuoteDtlGroup(String scSimpleQuoteDtlGroup) {
 		this.scSimpleQuoteDtlGroup = scSimpleQuoteDtlGroup;
 	}
 
+	/**
+	 * Gets the sc simple quote status.
+	 *
+	 * @return the sc simple quote status
+	 */
 	public String getScSimpleQuoteStatus() {
 		return scSimpleQuoteStatus;
 	}
 
+	/**
+	 * Sets the sc simple quote status.
+	 *
+	 * @param scSimpleQuoteStatus the new sc simple quote status
+	 */
 	public void setScSimpleQuoteStatus(String scSimpleQuoteStatus) {
 		this.scSimpleQuoteStatus = scSimpleQuoteStatus;
 	}
 
+	/**
+	 * Gets the items.
+	 *
+	 * @return the items
+	 */
 	public SelectItem[] getItems() {
 		return items;
 	}
 
+	/**
+	 * Sets the items.
+	 *
+	 * @param items the new items
+	 */
 	public void setItems(SelectItem[] items) {
 		this.items = items;
 	}
 
+	/**
+	 * Gets the sc request note status.
+	 *
+	 * @return the sc request note status
+	 */
 	public String getScRequestNoteStatus() {
 		return scRequestNoteStatus;
 	}
 
+	/**
+	 * Sets the sc request note status.
+	 *
+	 * @param scRequestNoteStatus the new sc request note status
+	 */
 	public void setScRequestNoteStatus(String scRequestNoteStatus) {
 		this.scRequestNoteStatus = scRequestNoteStatus;
 	}
 
+	/**
+	 * Gets the ct sub type.
+	 *
+	 * @return the ct sub type
+	 */
 	public String getCtSubType() {
 		return ctSubType;
 	}
 
+	/**
+	 * Sets the ct sub type.
+	 *
+	 * @param ctSubType the new ct sub type
+	 */
 	public void setCtSubType(String ctSubType) {
 		this.ctSubType = ctSubType;
 	}
 
+	/**
+	 * Gets the ct user type.
+	 *
+	 * @return the ct user type
+	 */
 	public String getCtUserType() {
 		return ctUserType;
 	}
 
+	/**
+	 * Sets the ct user type.
+	 *
+	 * @param ctUserType the new ct user type
+	 */
 	public void setCtUserType(String ctUserType) {
 		this.ctUserType = ctUserType;
 	}
 
+	/**
+	 * Gets the ct loa physical no.
+	 *
+	 * @return the ct loa physical no
+	 */
 	public String getCtLOAPhysicalNo() {
 		return ctLOAPhysicalNo;
 	}
 
+	/**
+	 * Sets the ct loa physical no.
+	 *
+	 * @param ctLOAPhysicalNo the new ct loa physical no
+	 */
 	public void setCtLOAPhysicalNo(String ctLOAPhysicalNo) {
 		this.ctLOAPhysicalNo = ctLOAPhysicalNo;
 	}
 
+	/**
+	 * Gets the ct status two.
+	 *
+	 * @return the ct status two
+	 */
 	public String getCtStatusTwo() {
 		return ctStatusTwo;
 	}
 
+	/**
+	 * Sets the ct status two.
+	 *
+	 * @param ctStatusTwo the new ct status two
+	 */
 	public void setCtStatusTwo(String ctStatusTwo) {
 		this.ctStatusTwo = ctStatusTwo;
 	}
 
+	/**
+	 * Gets the ct group three.
+	 *
+	 * @return the ct group three
+	 */
 	public String getCtGroupThree() {
 		return ctGroupThree;
 	}
 
+	/**
+	 * Sets the ct group three.
+	 *
+	 * @param ctGroupThree the new ct group three
+	 */
 	public void setCtGroupThree(String ctGroupThree) {
 		this.ctGroupThree = ctGroupThree;
 	}
 
+	/**
+	 * Gets the ct physical contract no.
+	 *
+	 * @return the ct physical contract no
+	 */
 	public String getCtPhysicalContractNo() {
 		return ctPhysicalContractNo;
 	}
 
+	/**
+	 * Sets the ct physical contract no.
+	 *
+	 * @param ctPhysicalContractNo the new ct physical contract no
+	 */
 	public void setCtPhysicalContractNo(String ctPhysicalContractNo) {
 		this.ctPhysicalContractNo = ctPhysicalContractNo;
 	}
 
+	/**
+	 * Gets the fl group seventeen.
+	 *
+	 * @return the fl group seventeen
+	 */
 	public String getFlGroupSeventeen() {
 		return flGroupSeventeen;
 	}
 
+	/**
+	 * Sets the fl group seventeen.
+	 *
+	 * @param flGroupSeventeen the new fl group seventeen
+	 */
 	public void setFlGroupSeventeen(String flGroupSeventeen) {
 		this.flGroupSeventeen = flGroupSeventeen;
 	}
 
+	/**
+	 * Gets the ct procurement mode.
+	 *
+	 * @return the ct procurement mode
+	 */
 	public String getCtProcurementMode() {
 		return ctProcurementMode;
 	}
 
+	/**
+	 * Sets the ct procurement mode.
+	 *
+	 * @param ctProcurementMode the new ct procurement mode
+	 */
 	public void setCtProcurementMode(String ctProcurementMode) {
 		this.ctProcurementMode = ctProcurementMode;
 	}
 	
+	/**
+	 * Gets the sm year text.
+	 *
+	 * @return the sm year text
+	 */
 	public String getSmYearText() {
 		return smYearText;
 	}
 
+	/**
+	 * Sets the sm year text.
+	 *
+	 * @param smYearText the new sm year text
+	 */
 	public void setSmYearText(String smYearText) {
 		this.smYearText = smYearText;
 	}
 
+	/**
+	 * Gets the cm group one.
+	 *
+	 * @return the cm group one
+	 */
 	public String getCmGroupOne() {
 		return cmGroupOne;
 	}
 
+	/**
+	 * Sets the cm group one.
+	 *
+	 * @param cmGroupOne the new cm group one
+	 */
 	public void setCmGroupOne(String cmGroupOne) {
 		this.cmGroupOne = cmGroupOne;
 	}
 
+	/**
+	 * Gets the ct loan no.
+	 *
+	 * @return the ct loan no
+	 */
 	public String getCtLoanNo() {
 		return ctLoanNo;
 	}
 
+	/**
+	 * Sets the ct loan no.
+	 *
+	 * @param ctLoanNo the new ct loan no
+	 */
 	public void setCtLoanNo(String ctLoanNo) {
 		this.ctLoanNo = ctLoanNo;
 	}
 
+	/**
+	 * Gets the ct product service.
+	 *
+	 * @return the ct product service
+	 */
 	public String getCtProductService() {
 		return ctProductService;
 	}
 
+	/**
+	 * Sets the ct product service.
+	 *
+	 * @param ctProductService the new ct product service
+	 */
 	public void setCtProductService(String ctProductService) {
 		this.ctProductService = ctProductService;
 	}
 
+	/**
+	 * Gets the ct group one.
+	 *
+	 * @return the ct group one
+	 */
 	public String getCtGroupOne() {
 		return ctGroupOne;
 	}
 
+	/**
+	 * Sets the ct group one.
+	 *
+	 * @param ctGroupOne the new ct group one
+	 */
 	public void setCtGroupOne(String ctGroupOne) {
 		this.ctGroupOne = ctGroupOne;
 	}
 
+	/**
+	 * Gets the ct group two.
+	 *
+	 * @return the ct group two
+	 */
 	public String getCtGroupTwo() {
 		return ctGroupTwo;
 	}
 
+	/**
+	 * Sets the ct group two.
+	 *
+	 * @param ctGroupTwo the new ct group two
+	 */
 	public void setCtGroupTwo(String ctGroupTwo) {
 		this.ctGroupTwo = ctGroupTwo;
 	}
 
+	/**
+	 * Gets the cm extention.
+	 *
+	 * @return the cm extention
+	 */
 	public String getCmExtention() {
 		return cmExtention;
 	}
 
+	/**
+	 * Sets the cm extention.
+	 *
+	 * @param cmExtention the new cm extention
+	 */
 	public void setCmExtention(String cmExtention) {
 		this.cmExtention = cmExtention;
 	}
 
+	/**
+	 * Gets the local to date var.
+	 *
+	 * @return the local to date var
+	 */
 	public String getLocalToDateVar() {
 		return localToDateVar;
 	}
 
+	/**
+	 * Sets the local to date var.
+	 *
+	 * @param localToDateVar the new local to date var
+	 */
 	public void setLocalToDateVar(String localToDateVar) {
 		this.localToDateVar = localToDateVar;
 	}
 
 	
 
+	/**
+	 * Gets the lng user id.
+	 *
+	 * @return the lng user id
+	 */
 	public Long getLngUserId() {
 		return lngUserId;
 	}
 
+	/**
+	 * Sets the lng user id.
+	 *
+	 * @param lngUserId the new lng user id
+	 */
 	public void setLngUserId(Long lngUserId) {
 		this.lngUserId = lngUserId;
 	}
 
+	/**
+	 * Gets the cm suppl or admin.
+	 *
+	 * @return the cm suppl or admin
+	 */
 	public String getCmSupplOrAdmin() {
 		return cmSupplOrAdmin;
 	}
 
+	/**
+	 * Sets the cm suppl or admin.
+	 *
+	 * @param cmSupplOrAdmin the new cm suppl or admin
+	 */
 	public void setCmSupplOrAdmin(String cmSupplOrAdmin) {
 		this.cmSupplOrAdmin = cmSupplOrAdmin;
 	}
 
+	/**
+	 * Gets the sm svo user.
+	 *
+	 * @return the sm svo user
+	 */
 	public String getSmSVOUser() {
 		return smSVOUser;
 	}
 
+	/**
+	 * Sets the sm svo user.
+	 *
+	 * @param smSVOUser the new sm svo user
+	 */
 	public void setSmSVOUser(String smSVOUser) {
 		this.smSVOUser = smSVOUser;
 	}
 
+	/**
+	 * Gets the sm monthly rpt by year.
+	 *
+	 * @return the sm monthly rpt by year
+	 */
 	public String getSmMonthlyRptByYear() {
 		return smMonthlyRptByYear;
 	}
 
+	/**
+	 * Sets the sm monthly rpt by year.
+	 *
+	 * @param smMonthlyRptByYear the new sm monthly rpt by year
+	 */
 	public void setSmMonthlyRptByYear(String smMonthlyRptByYear) {
 		this.smMonthlyRptByYear = smMonthlyRptByYear;
 	}
 
+	/**
+	 * Gets the sm created from year.
+	 *
+	 * @return the sm created from year
+	 */
 	public String getSmCreatedFromYear() {
 		return smCreatedFromYear;
 	}
 
+	/**
+	 * Sets the sm created from year.
+	 *
+	 * @param smCreatedFromYear the new sm created from year
+	 */
 	public void setSmCreatedFromYear(String smCreatedFromYear) {
 		this.smCreatedFromYear = smCreatedFromYear;
 	}
 
+	/**
+	 * Gets the sm created to year.
+	 *
+	 * @return the sm created to year
+	 */
 	public String getSmCreatedToYear() {
 		return smCreatedToYear;
 	}
 
+	/**
+	 * Sets the sm created to year.
+	 *
+	 * @param smCreatedToYear the new sm created to year
+	 */
 	public void setSmCreatedToYear(String smCreatedToYear) {
 		this.smCreatedToYear = smCreatedToYear;
 	}
 
+	/**
+	 * Gets the sc request quote no.
+	 *
+	 * @return the sc request quote no
+	 */
 	public String getScRequestQuoteNo() {
 		return scRequestQuoteNo;
 	}
 
+	/**
+	 * Sets the sc request quote no.
+	 *
+	 * @param scRequestQuoteNo the new sc request quote no
+	 */
 	public void setScRequestQuoteNo(String scRequestQuoteNo) {
 		this.scRequestQuoteNo = scRequestQuoteNo;
 	}
 
+	/**
+	 * Gets the sc pid no.
+	 *
+	 * @return the sc pid no
+	 */
 	public String getScPIDNo() {
 		return scPIDNo;
 	}
 
+	/**
+	 * Sets the sc pid no.
+	 *
+	 * @param scPIDNo the new sc pid no
+	 */
 	public void setScPIDNo(String scPIDNo) {
 		this.scPIDNo = scPIDNo;
 	}
 
+	/**
+	 * Gets the sc contract or pkp type.
+	 *
+	 * @return the sc contract or pkp type
+	 */
 	public String getScContractOrPKPType() {
 		return scContractOrPKPType;
 	}
 
+	/**
+	 * Sets the sc contract or pkp type.
+	 *
+	 * @param scContractOrPKPType the new sc contract or pkp type
+	 */
 	public void setScContractOrPKPType(String scContractOrPKPType) {
 		this.scContractOrPKPType = scContractOrPKPType;
 	}
 
+	/**
+	 * Gets the sc contract or pkp no.
+	 *
+	 * @return the sc contract or pkp no
+	 */
 	public String getScContractOrPKPNo() {
 		return scContractOrPKPNo;
 	}
 
+	/**
+	 * Sets the sc contract or pkp no.
+	 *
+	 * @param scContractOrPKPNo the new sc contract or pkp no
+	 */
 	public void setScContractOrPKPNo(String scContractOrPKPNo) {
 		this.scContractOrPKPNo = scContractOrPKPNo;
 	}
 
+	/**
+	 * Gets the sc contract or pkp name.
+	 *
+	 * @return the sc contract or pkp name
+	 */
 	public String getScContractOrPKPName() {
 		return scContractOrPKPName;
 	}
 
+	/**
+	 * Sets the sc contract or pkp name.
+	 *
+	 * @param scContractOrPKPName the new sc contract or pkp name
+	 */
 	public void setScContractOrPKPName(String scContractOrPKPName) {
 		this.scContractOrPKPName = scContractOrPKPName;
 	}
 
+	/**
+	 * Gets the sc laprnpurchdefault group.
+	 *
+	 * @return the sc laprnpurchdefault group
+	 */
 	public String getScLAPRNPURCHDEFAULTGroup() {
 		return scLAPRNPURCHDEFAULTGroup;
 	}
 
+	/**
+	 * Sets the sc laprnpurchdefault group.
+	 *
+	 * @param scLAPRNPURCHDEFAULTGroup the new sc laprnpurchdefault group
+	 */
 	public void setScLAPRNPURCHDEFAULTGroup(String scLAPRNPURCHDEFAULTGroup) {
 		this.scLAPRNPURCHDEFAULTGroup = scLAPRNPURCHDEFAULTGroup;
 	}
 
+	/**
+	 * Gets the sc requestnotesummary group.
+	 *
+	 * @return the sc requestnotesummary group
+	 */
 	public String getScREQUESTNOTESUMMARYGroup() {
 		return scREQUESTNOTESUMMARYGroup;
 	}
 
+	/**
+	 * Sets the sc requestnotesummary group.
+	 *
+	 * @param scREQUESTNOTESUMMARYGroup the new sc requestnotesummary group
+	 */
 	public void setScREQUESTNOTESUMMARYGroup(String scREQUESTNOTESUMMARYGroup) {
 		this.scREQUESTNOTESUMMARYGroup = scREQUESTNOTESUMMARYGroup;
 	}
 
+	/**
+	 * Gets the sc common status.
+	 *
+	 * @return the sc common status
+	 */
 	public String getScCommonStatus() {
 		return scCommonStatus;
 	}
 
+	/**
+	 * Sets the sc common status.
+	 *
+	 * @param scCommonStatus the new sc common status
+	 */
 	public void setScCommonStatus(String scCommonStatus) {
 		this.scCommonStatus = scCommonStatus;
 	}
 
+	/**
+	 * Gets the fl group one.
+	 *
+	 * @return the fl group one
+	 */
 	public String getFlGroupOne() {
 		return flGroupOne;
 	}
 
+	/**
+	 * Sets the fl group one.
+	 *
+	 * @param flGroupOne the new fl group one
+	 */
 	public void setFlGroupOne(String flGroupOne) {
 		this.flGroupOne = flGroupOne;
 	}
 
+	/**
+	 * Gets the fl group two.
+	 *
+	 * @return the fl group two
+	 */
 	public String getFlGroupTwo() {
 		return flGroupTwo;
 	}
 
+	/**
+	 * Sets the fl group two.
+	 *
+	 * @param flGroupTwo the new fl group two
+	 */
 	public void setFlGroupTwo(String flGroupTwo) {
 		this.flGroupTwo = flGroupTwo;
 	}
 
+	/**
+	 * Gets the fl group three.
+	 *
+	 * @return the fl group three
+	 */
 	public String getFlGroupThree() {
 		return flGroupThree;
 	}
 
+	/**
+	 * Sets the fl group three.
+	 *
+	 * @param flGroupThree the new fl group three
+	 */
 	public void setFlGroupThree(String flGroupThree) {
 		this.flGroupThree = flGroupThree;
 	}
 
+	/**
+	 * Gets the fl group four.
+	 *
+	 * @return the fl group four
+	 */
 	public String getFlGroupFour() {
 		return flGroupFour;
 	}
 
+	/**
+	 * Sets the fl group four.
+	 *
+	 * @param flGroupFour the new fl group four
+	 */
 	public void setFlGroupFour(String flGroupFour) {
 		this.flGroupFour = flGroupFour;
 	}
 
+	/**
+	 * Gets the fl group five.
+	 *
+	 * @return the fl group five
+	 */
 	public String getFlGroupFive() {
 		return flGroupFive;
 	}
 
+	/**
+	 * Sets the fl group five.
+	 *
+	 * @param flGroupFive the new fl group five
+	 */
 	public void setFlGroupFive(String flGroupFive) {
 		this.flGroupFive = flGroupFive;
 	}
 
+	/**
+	 * Gets the fl group six.
+	 *
+	 * @return the fl group six
+	 */
 	public String getFlGroupSix() {
 		return flGroupSix;
 	}
 
+	/**
+	 * Sets the fl group six.
+	 *
+	 * @param flGroupSix the new fl group six
+	 */
 	public void setFlGroupSix(String flGroupSix) {
 		this.flGroupSix = flGroupSix;
 	}
 
+	/**
+	 * Gets the fl group seven.
+	 *
+	 * @return the fl group seven
+	 */
 	public String getFlGroupSeven() {
 		return flGroupSeven;
 	}
 
+	/**
+	 * Sets the fl group seven.
+	 *
+	 * @param flGroupSeven the new fl group seven
+	 */
 	public void setFlGroupSeven(String flGroupSeven) {
 		this.flGroupSeven = flGroupSeven;
 	}
 
+	/**
+	 * Gets the fl group eight.
+	 *
+	 * @return the fl group eight
+	 */
 	public String getFlGroupEight() {
 		return flGroupEight;
 	}
 
+	/**
+	 * Sets the fl group eight.
+	 *
+	 * @param flGroupEight the new fl group eight
+	 */
 	public void setFlGroupEight(String flGroupEight) {
 		this.flGroupEight = flGroupEight;
 	}
 
+	/**
+	 * Gets the fl group nine.
+	 *
+	 * @return the fl group nine
+	 */
 	public String getFlGroupNine() {
 		return flGroupNine;
 	}
 
+	/**
+	 * Sets the fl group nine.
+	 *
+	 * @param flGroupNine the new fl group nine
+	 */
 	public void setFlGroupNine(String flGroupNine) {
 		this.flGroupNine = flGroupNine;
 	}
 
+	/**
+	 * Gets the fl group ten.
+	 *
+	 * @return the fl group ten
+	 */
 	public String getFlGroupTen() {
 		return flGroupTen;
 	}
 
+	/**
+	 * Sets the fl group ten.
+	 *
+	 * @param flGroupTen the new fl group ten
+	 */
 	public void setFlGroupTen(String flGroupTen) {
 		this.flGroupTen = flGroupTen;
 	}
 
+	/**
+	 * Gets the fl group eleven.
+	 *
+	 * @return the fl group eleven
+	 */
 	public String getFlGroupEleven() {
 		return flGroupEleven;
 	}
 
+	/**
+	 * Sets the fl group eleven.
+	 *
+	 * @param flGroupEleven the new fl group eleven
+	 */
 	public void setFlGroupEleven(String flGroupEleven) {
 		this.flGroupEleven = flGroupEleven;
 	}
 
+	/**
+	 * Gets the fl group twelve.
+	 *
+	 * @return the fl group twelve
+	 */
 	public String getFlGroupTwelve() {
 		return flGroupTwelve;
 	}
 
+	/**
+	 * Sets the fl group twelve.
+	 *
+	 * @param flGroupTwelve the new fl group twelve
+	 */
 	public void setFlGroupTwelve(String flGroupTwelve) {
 		this.flGroupTwelve = flGroupTwelve;
 	}
 
+	/**
+	 * Gets the fl group thirteen.
+	 *
+	 * @return the fl group thirteen
+	 */
 	public String getFlGroupThirteen() {
 		return flGroupThirteen;
 	}
 
+	/**
+	 * Sets the fl group thirteen.
+	 *
+	 * @param flGroupThirteen the new fl group thirteen
+	 */
 	public void setFlGroupThirteen(String flGroupThirteen) {
 		this.flGroupThirteen = flGroupThirteen;
 	}
 
+	/**
+	 * Gets the fl group fourteen.
+	 *
+	 * @return the fl group fourteen
+	 */
 	public String getFlGroupFourteen() {
 		return flGroupFourteen;
 	}
 
+	/**
+	 * Sets the fl group fourteen.
+	 *
+	 * @param flGroupFourteen the new fl group fourteen
+	 */
 	public void setFlGroupFourteen(String flGroupFourteen) {
 		this.flGroupFourteen = flGroupFourteen;
 	}
 
+	/**
+	 * Gets the fl group fifteen.
+	 *
+	 * @return the fl group fifteen
+	 */
 	public String getFlGroupFifteen() {
 		return flGroupFifteen;
 	}
 
+	/**
+	 * Sets the fl group fifteen.
+	 *
+	 * @param flGroupFifteen the new fl group fifteen
+	 */
 	public void setFlGroupFifteen(String flGroupFifteen) {
 		this.flGroupFifteen = flGroupFifteen;
 	}
 
+	/**
+	 * Gets the fl group sixteen.
+	 *
+	 * @return the fl group sixteen
+	 */
 	public String getFlGroupSixteen() {
 		return flGroupSixteen;
 	}
 
+	/**
+	 * Sets the fl group sixteen.
+	 *
+	 * @param flGroupSixteen the new fl group sixteen
+	 */
 	public void setFlGroupSixteen(String flGroupSixteen) {
 		this.flGroupSixteen = flGroupSixteen;
 	}
 
+	/**
+	 * Gets the ct complete.
+	 *
+	 * @return the ct complete
+	 */
 	public String getCtComplete() {
 		return ctComplete;
 	}
 
+	/**
+	 * Sets the ct complete.
+	 *
+	 * @param ctComplete the new ct complete
+	 */
 	public void setCtComplete(String ctComplete) {
 		this.ctComplete = ctComplete;
 	}
 
+	/**
+	 * Gets the ct contr montr status.
+	 *
+	 * @return the ct contr montr status
+	 */
 	public String getCtContrMontrStatus() {
 		return ctContrMontrStatus;
 	}
 
+	/**
+	 * Sets the ct contr montr status.
+	 *
+	 * @param ctContrMontrStatus the new ct contr montr status
+	 */
 	public void setCtContrMontrStatus(String ctContrMontrStatus) {
 		this.ctContrMontrStatus = ctContrMontrStatus;
 	}
+	
+	/** The generated url. */
 	private String generatedURL;
+	
+	/** The report url. */
 	private String reportURL;
+	
+	/** The pdf file. */
 	private StreamedContent pdfFile;
+	
+	/** The constructed param string. */
 	private String constructedParamString;
+	
+	/** The report file name jsp. */
 	private String reportFileNameJSP;
 
+	/**
+	 * Gets the ct contract no.
+	 *
+	 * @return the ct contract no
+	 */
 	public String getCtContractNo() {
 		return ctContractNo;
 	}
 
+	/**
+	 * Sets the ct contract no.
+	 *
+	 * @param ctContractNo the new ct contract no
+	 */
 	public void setCtContractNo(String ctContractNo) {
 		this.ctContractNo = ctContractNo;
 	}
 
+	/**
+	 * Gets the ct agreement.
+	 *
+	 * @return the ct agreement
+	 */
 	public String getCtAgreement() {
 		return ctAgreement;
 	}
 
+	/**
+	 * Sets the ct agreement.
+	 *
+	 * @param ctAgreement the new ct agreement
+	 */
 	public void setCtAgreement(String ctAgreement) {
 		this.ctAgreement = ctAgreement;
 	}
 
+	/**
+	 * Gets the ct status.
+	 *
+	 * @return the ct status
+	 */
 	public String getCtStatus() {
 		return ctStatus;
 	}
 
+	/**
+	 * Sets the ct status.
+	 *
+	 * @param ctStatus the new ct status
+	 */
 	public void setCtStatus(String ctStatus) {
 		this.ctStatus = ctStatus;
 	}
 
+	/**
+	 * Gets the sub module.
+	 *
+	 * @return the sub module
+	 */
 	public String getSubModule() {
 		return subModule;
 	}
 
+	/**
+	 * Sets the sub module.
+	 *
+	 * @param subModule the new sub module
+	 */
 	public void setSubModule(String subModule) {
 		this.subModule = subModule;
 	}
 
+	/**
+	 * Gets the sc prc rpt group.
+	 *
+	 * @return the sc prc rpt group
+	 */
 	public String getScPrcRptGroup() {
 		return scPrcRptGroup;
 	}
 
+	/**
+	 * Sets the sc prc rpt group.
+	 *
+	 * @param scPrcRptGroup the new sc prc rpt group
+	 */
 	public void setScPrcRptGroup(String scPrcRptGroup) {
 		this.scPrcRptGroup = scPrcRptGroup;
 	}
 
+	/**
+	 * Gets the sc pi dtls prc rpt group.
+	 *
+	 * @return the sc pi dtls prc rpt group
+	 */
 	public String getScPIDtlsPrcRptGroup() {
 		return scPIDtlsPrcRptGroup;
 	}
 
+	/**
+	 * Sets the sc pi dtls prc rpt group.
+	 *
+	 * @param scPIDtlsPrcRptGroup the new sc pi dtls prc rpt group
+	 */
 	public void setScPIDtlsPrcRptGroup(String scPIDtlsPrcRptGroup) {
 		this.scPIDtlsPrcRptGroup = scPIDtlsPrcRptGroup;
 	}
 
+	/**
+	 * Gets the sc procurement type.
+	 *
+	 * @return the sc procurement type
+	 */
 	public String getScProcurementType() {
 		return scProcurementType;
 	}
 
+	/**
+	 * Sets the sc procurement type.
+	 *
+	 * @param scProcurementType the new sc procurement type
+	 */
 	public void setScProcurementType(String scProcurementType) {
 		this.scProcurementType = scProcurementType;
 	}
 
+	/**
+	 * Gets the sc process rpt quotation no.
+	 *
+	 * @return the sc process rpt quotation no
+	 */
 	public String getScProcessRptQuotationNo() {
 		return scProcessRptQuotationNo;
 	}
 
+	/**
+	 * Sets the sc process rpt quotation no.
+	 *
+	 * @param scProcessRptQuotationNo the new sc process rpt quotation no
+	 */
 	public void setScProcessRptQuotationNo(String scProcessRptQuotationNo) {
 		this.scProcessRptQuotationNo = scProcessRptQuotationNo;
 	}
 
+	/**
+	 * Gets the sc sone status.
+	 *
+	 * @return the sc sone status
+	 */
 	public String getScSoneStatus() {
 		return scSoneStatus;
 	}
 
+	/**
+	 * Sets the sc sone status.
+	 *
+	 * @param scSoneStatus the new sc sone status
+	 */
 	public void setScSoneStatus(String scSoneStatus) {
 		this.scSoneStatus = scSoneStatus;
 	}
 
+	/**
+	 * Gets the sc sone crtd from date.
+	 *
+	 * @return the sc sone crtd from date
+	 */
 	public Date getScSoneCrtdFromDate() {
 		return scSoneCrtdFromDate;
 	}
 
+	/**
+	 * Sets the sc sone crtd from date.
+	 *
+	 * @param scSoneCrtdFromDate the new sc sone crtd from date
+	 */
 	public void setScSoneCrtdFromDate(Date scSoneCrtdFromDate) {
 		this.scSoneCrtdFromDate = scSoneCrtdFromDate;
 	}
 
+	/**
+	 * Gets the sc sone crtd to date.
+	 *
+	 * @return the sc sone crtd to date
+	 */
 	public Date getScSoneCrtdToDate() {
 		return scSoneCrtdToDate;
 	}
 
+	/**
+	 * Sets the sc sone crtd to date.
+	 *
+	 * @param scSoneCrtdToDate the new sc sone crtd to date
+	 */
 	public void setScSoneCrtdToDate(Date scSoneCrtdToDate) {
 		this.scSoneCrtdToDate = scSoneCrtdToDate;
 	}
 
+	/**
+	 * Gets the sc requisener id.
+	 *
+	 * @return the sc requisener id
+	 */
 	public String getScRequisenerId() {
 		return scRequisenerId;
 	}
 
+	/**
+	 * Sets the sc requisener id.
+	 *
+	 * @param scRequisenerId the new sc requisener id
+	 */
 	public void setScRequisenerId(String scRequisenerId) {
 		this.scRequisenerId = scRequisenerId;
 	}
 
+	/**
+	 * Gets the sc supplier.
+	 *
+	 * @return the sc supplier
+	 */
 	public String getScSupplier() {
 		return scSupplier;
 	}
 
+	/**
+	 * Sets the sc supplier.
+	 *
+	 * @param scSupplier the new sc supplier
+	 */
 	public void setScSupplier(String scSupplier) {
 		this.scSupplier = scSupplier;
 	}
 
+	/**
+	 * Gets the sc login.
+	 *
+	 * @return the sc login
+	 */
 	public String getScLogin() {
 		return scLogin;
 	}
 
+	/**
+	 * Sets the sc login.
+	 *
+	 * @param scLogin the new sc login
+	 */
 	public void setScLogin(String scLogin) {
 		this.scLogin = scLogin;
 	}
 
+	/**
+	 * Gets the sc p ino.
+	 *
+	 * @return the sc p ino
+	 */
 	public String getScPIno() {
 		return scPIno;
 	}
 
+	/**
+	 * Sets the sc p ino.
+	 *
+	 * @param scPIno the new sc p ino
+	 */
 	public void setScPIno(String scPIno) {
 		this.scPIno = scPIno;
 	}
 
+	/**
+	 * Gets the sc publish from date.
+	 *
+	 * @return the sc publish from date
+	 */
 	public Date getScPublishFromDate() {
 		return scPublishFromDate;
 	}
 
+	/**
+	 * Sets the sc publish from date.
+	 *
+	 * @param scPublishFromDate the new sc publish from date
+	 */
 	public void setScPublishFromDate(Date scPublishFromDate) {
 		this.scPublishFromDate = scPublishFromDate;
 	}
 
+	/**
+	 * Gets the sc publish to date.
+	 *
+	 * @return the sc publish to date
+	 */
 	public Date getScPublishToDate() {
 		return scPublishToDate;
 	}
 
+	/**
+	 * Sets the sc publish to date.
+	 *
+	 * @param scPublishToDate the new sc publish to date
+	 */
 	public void setScPublishToDate(Date scPublishToDate) {
 		this.scPublishToDate = scPublishToDate;
 	}
 
+	/**
+	 * Gets the sc procure all list.
+	 *
+	 * @return the sc procure all list
+	 */
 	public List<SelectItem> getScProcureAllList() {
 		return scProcureAllList;
 	}
 
+	/**
+	 * Sets the sc procure all list.
+	 *
+	 * @param scProcureAllList the new sc procure all list
+	 */
 	public void setScProcureAllList(List<SelectItem> scProcureAllList) {
 		this.scProcureAllList = scProcureAllList;
 	}
 
+	/**
+	 * Gets the sc quotation list.
+	 *
+	 * @return the sc quotation list
+	 */
 	public List<SelectItem> getScQuotationList() {
 		return scQuotationList;
 	}
 
+	/**
+	 * Sets the sc quotation list.
+	 *
+	 * @param scQuotationList the new sc quotation list
+	 */
 	public void setScQuotationList(List<SelectItem> scQuotationList) {
 		this.scQuotationList = scQuotationList;
 	}
 
+	/**
+	 * Gets the sc tender list.
+	 *
+	 * @return the sc tender list
+	 */
 	public List<SelectItem> getScTenderList() {
 		return scTenderList;
 	}
 
+	/**
+	 * Sets the sc tender list.
+	 *
+	 * @param scTenderList the new sc tender list
+	 */
 	public void setScTenderList(List<SelectItem> scTenderList) {
 		this.scTenderList = scTenderList;
 	}
 
+	/**
+	 * Gets the sc rstrctd tndr list.
+	 *
+	 * @return the sc rstrctd tndr list
+	 */
 	public List<SelectItem> getScRstrctdTndrList() {
 		return scRstrctdTndrList;
 	}
 
+	/**
+	 * Sets the sc rstrctd tndr list.
+	 *
+	 * @param scRstrctdTndrList the new sc rstrctd tndr list
+	 */
 	public void setScRstrctdTndrList(List<SelectItem> scRstrctdTndrList) {
 		this.scRstrctdTndrList = scRstrctdTndrList;
 	}
 
+	/**
+	 * Gets the sc created to year.
+	 *
+	 * @return the sc created to year
+	 */
 	public String getScCreatedToYear() {
 		return scCreatedToYear;
 	}
 
+	/**
+	 * Sets the sc created to year.
+	 *
+	 * @param scCreatedToYear the new sc created to year
+	 */
 	public void setScCreatedToYear(String scCreatedToYear) {
 		this.scCreatedToYear = scCreatedToYear;
 	}
 
+	/**
+	 * Gets the sc created to month.
+	 *
+	 * @return the sc created to month
+	 */
 	public String getScCreatedToMonth() {
 		return scCreatedToMonth;
 	}
 
+	/**
+	 * Sets the sc created to month.
+	 *
+	 * @param scCreatedToMonth the new sc created to month
+	 */
 	public void setScCreatedToMonth(String scCreatedToMonth) {
 		this.scCreatedToMonth = scCreatedToMonth;
 	}
 
+	/**
+	 * Gets the sc created from year.
+	 *
+	 * @return the sc created from year
+	 */
 	public String getScCreatedFromYear() {
 		return scCreatedFromYear;
 	}
 
+	/**
+	 * Sets the sc created from year.
+	 *
+	 * @param scCreatedFromYear the new sc created from year
+	 */
 	public void setScCreatedFromYear(String scCreatedFromYear) {
 		this.scCreatedFromYear = scCreatedFromYear;
 	}
 
+	/**
+	 * Gets the sc created from month.
+	 *
+	 * @return the sc created from month
+	 */
 	public String getScCreatedFromMonth() {
 		return scCreatedFromMonth;
 	}
 
+	/**
+	 * Sets the sc created from month.
+	 *
+	 * @param scCreatedFromMonth the new sc created from month
+	 */
 	public void setScCreatedFromMonth(String scCreatedFromMonth) {
 		this.scCreatedFromMonth = scCreatedFromMonth;
 	}
 
+	/**
+	 * Gets the sc desk officer.
+	 *
+	 * @return the sc desk officer
+	 */
 	public String getScDeskOfficer() {
 		return scDeskOfficer;
 	}
 
+	/**
+	 * Sets the sc desk officer.
+	 *
+	 * @param scDeskOfficer the new sc desk officer
+	 */
 	public void setScDeskOfficer(String scDeskOfficer) {
 		this.scDeskOfficer = scDeskOfficer;
 	}
 
+	/**
+	 * Gets the sc ptj.
+	 *
+	 * @return the sc ptj
+	 */
 	public String getScPtj() {
 		return scPtj;
 	}
 
+	/**
+	 * Sets the sc ptj.
+	 *
+	 * @param scPtj the new sc ptj
+	 */
 	public void setScPtj(String scPtj) {
 		this.scPtj = scPtj;
 	}
 
+	/**
+	 * Gets the sc status.
+	 *
+	 * @return the sc status
+	 */
 	public String getScStatus() {
 		return scStatus;
 	}
 
+	/**
+	 * Sets the sc status.
+	 *
+	 * @param scStatus the new sc status
+	 */
 	public void setScStatus(String scStatus) {
 		this.scStatus = scStatus;
 	}
 
+	/**
+	 * Gets the procurement list.
+	 *
+	 * @return the procurement list
+	 */
 	public List<SelectItem> getProcurementList() {
 		return procurementList;
 	}
 
+	/**
+	 * Sets the procurement list.
+	 *
+	 * @param procurementList the new procurement list
+	 */
 	public void setProcurementList(List<SelectItem> procurementList) {
 		this.procurementList = procurementList;
 	}
 
+	/**
+	 * Gets the fl contract order.
+	 *
+	 * @return the fl contract order
+	 */
 	public String getFlContractOrder() {
 		return flContractOrder;
 	}
 
+	/**
+	 * Sets the fl contract order.
+	 *
+	 * @param flContractOrder the new fl contract order
+	 */
 	public void setFlContractOrder(String flContractOrder) {
 		this.flContractOrder = flContractOrder;
 	}
 
+	/**
+	 * Gets the fl contract request.
+	 *
+	 * @return the fl contract request
+	 */
 	public String getFlContractRequest() {
 		return flContractRequest;
 	}
 
+	/**
+	 * Sets the fl contract request.
+	 *
+	 * @param flContractRequest the new fl contract request
+	 */
 	public void setFlContractRequest(String flContractRequest) {
 		this.flContractRequest = flContractRequest;
 	}
 
+	/**
+	 * Gets the fl purchase order no.
+	 *
+	 * @return the fl purchase order no
+	 */
 	public String getFlPurchaseOrderNo() {
 		return flPurchaseOrderNo;
 	}
 
+	/**
+	 * Sets the fl purchase order no.
+	 *
+	 * @param flPurchaseOrderNo the new fl purchase order no
+	 */
 	public void setFlPurchaseOrderNo(String flPurchaseOrderNo) {
 		this.flPurchaseOrderNo = flPurchaseOrderNo;
 	}
 
+	/**
+	 * Gets the report file name jsp.
+	 *
+	 * @return the report file name jsp
+	 */
 	public String getReportFileNameJSP() {
 		return reportFileNameJSP;
 	}
 
+	/**
+	 * Sets the report file name jsp.
+	 *
+	 * @param reportFileNameJSP the new report file name jsp
+	 */
 	public void setReportFileNameJSP(String reportFileNameJSP) {
 		this.reportFileNameJSP = reportFileNameJSP;
 	}
 
+	/**
+	 * Gets the pdf file.
+	 *
+	 * @return the pdf file
+	 */
 	public StreamedContent getPdfFile() {
 		return pdfFile;
 	}
 
+	/**
+	 * Gets the fl itm type.
+	 *
+	 * @return the fl itm type
+	 */
 	public String getFlItmType() {
 		return flItmType;
 	}
 
+	/**
+	 * Sets the fl itm type.
+	 *
+	 * @param flItmType the new fl itm type
+	 */
 	public void setFlItmType(String flItmType) {
 		this.flItmType = flItmType;
 	}
 
+	/**
+	 * Gets the fl contract no.
+	 *
+	 * @return the fl contract no
+	 */
 	public String getFlContractNo() {
 		return flContractNo;
 	}
 
+	/**
+	 * Sets the fl contract no.
+	 *
+	 * @param flContractNo the new fl contract no
+	 */
 	public void setFlContractNo(String flContractNo) {
 		this.flContractNo = flContractNo;
 	}
 
+	/**
+	 * Gets the fl sst.
+	 *
+	 * @return the fl sst
+	 */
 	public String getFlSst() {
 		return flSst;
 	}
 
+	/**
+	 * Sets the fl sst.
+	 *
+	 * @param flSst the new fl sst
+	 */
 	public void setFlSst(String flSst) {
 		this.flSst = flSst;
 	}
 
+	/**
+	 * Gets the fl jabatan.
+	 *
+	 * @return the fl jabatan
+	 */
 	public String getFlJabatan() {
 		return flJabatan;
 	}
 
+	/**
+	 * Sets the fl jabatan.
+	 *
+	 * @param flJabatan the new fl jabatan
+	 */
 	public void setFlJabatan(String flJabatan) {
 		this.flJabatan = flJabatan;
 	}
 	
 
+	/**
+	 * Gets the common ptj.
+	 *
+	 * @return the common ptj
+	 */
 	public String getCommonPtj() {
 		return commonPtj;
 	}
 
+	/**
+	 * Sets the common ptj.
+	 *
+	 * @param commonPtj the new common ptj
+	 */
 	public void setCommonPtj(String commonPtj) {
 		this.commonPtj = commonPtj;
 	}
 
+	/**
+	 * Gets the common ministry.
+	 *
+	 * @return the common ministry
+	 */
 	public String getCommonMinistry() {
 		return commonMinistry;
 	}
 
+	/**
+	 * Sets the common ministry.
+	 *
+	 * @param commonMinistry the new common ministry
+	 */
 	public void setCommonMinistry(String commonMinistry) {
 		this.commonMinistry = commonMinistry;
 	}
 
+	/**
+	 * Gets the fl supplier.
+	 *
+	 * @return the fl supplier
+	 */
 	public String getFlSupplier() {
 		return flSupplier;
 	}
 
+	/**
+	 * Sets the fl supplier.
+	 *
+	 * @param flSupplier the new fl supplier
+	 */
 	public void setFlSupplier(String flSupplier) {
 		this.flSupplier = flSupplier;
 	}
 
+	/**
+	 * Gets the fl status.
+	 *
+	 * @return the fl status
+	 */
 	public String getFlStatus() {
 		return flStatus;
 	}
 
+	/**
+	 * Sets the fl status.
+	 *
+	 * @param flStatus the new fl status
+	 */
 	public void setFlStatus(String flStatus) {
 		this.flStatus = flStatus;
 	}
 
+	/**
+	 * Gets the fl duration.
+	 *
+	 * @return the fl duration
+	 */
 	public String getFlDuration() {
 		return flDuration;
 	}
 
+	/**
+	 * Sets the fl duration.
+	 *
+	 * @param flDuration the new fl duration
+	 */
 	public void setFlDuration(String flDuration) {
 		this.flDuration = flDuration;
 	}
 
+	/**
+	 * Gets the fl recieving officer.
+	 *
+	 * @return the fl recieving officer
+	 */
 	public String getFlRecievingOfficer() {
 		return flRecievingOfficer;
 	}
 
+	/**
+	 * Sets the fl recieving officer.
+	 *
+	 * @param flRecievingOfficer the new fl recieving officer
+	 */
 	public void setFlRecievingOfficer(String flRecievingOfficer) {
 		this.flRecievingOfficer = flRecievingOfficer;
 	}
 
+	/**
+	 * Gets the fl delivery address.
+	 *
+	 * @return the fl delivery address
+	 */
 	public String getFlDeliveryAddress() {
 		return flDeliveryAddress;
 	}
 
+	/**
+	 * Sets the fl delivery address.
+	 *
+	 * @param flDeliveryAddress the new fl delivery address
+	 */
 	public void setFlDeliveryAddress(String flDeliveryAddress) {
 		this.flDeliveryAddress = flDeliveryAddress;
 	}
 
+	/**
+	 * Gets the fl contract type.
+	 *
+	 * @return the fl contract type
+	 */
 	public String getFlContractType() {
 		return flContractType;
 	}
 
+	/**
+	 * Sets the fl contract type.
+	 *
+	 * @param flContractType the new fl contract type
+	 */
 	public void setFlContractType(String flContractType) {
 		this.flContractType = flContractType;
 	}
 
+	/**
+	 * Gets the fl requisitioner.
+	 *
+	 * @return the fl requisitioner
+	 */
 	public String getFlRequisitioner() {
 		return flRequisitioner;
 	}
 
+	/**
+	 * Sets the fl requisitioner.
+	 *
+	 * @param flRequisitioner the new fl requisitioner
+	 */
 	public void setFlRequisitioner(String flRequisitioner) {
 		this.flRequisitioner = flRequisitioner;
 	}
 
+	/**
+	 * Gets the fl mto contract.
+	 *
+	 * @return the fl mto contract
+	 */
 	public String getFlMtoContract() {
 		return flMtoContract;
 	}
 
+	/**
+	 * Sets the fl mto contract.
+	 *
+	 * @param flMtoContract the new fl mto contract
+	 */
 	public void setFlMtoContract(String flMtoContract) {
 		this.flMtoContract = flMtoContract;
 	}
 
+	/**
+	 * Gets the fl invoice no.
+	 *
+	 * @return the fl invoice no
+	 */
 	public String getFlInvoiceNo() {
 		return flInvoiceNo;
 	}
 
+	/**
+	 * Sets the fl invoice no.
+	 *
+	 * @param flInvoiceNo the new fl invoice no
+	 */
 	public void setFlInvoiceNo(String flInvoiceNo) {
 		this.flInvoiceNo = flInvoiceNo;
 	}
 
+	/**
+	 * Gets the fl deduction type.
+	 *
+	 * @return the fl deduction type
+	 */
 	public String getFlDeductionType() {
 		return flDeductionType;
 	}
 
+	/**
+	 * Sets the fl deduction type.
+	 *
+	 * @param flDeductionType the new fl deduction type
+	 */
 	public void setFlDeductionType(String flDeductionType) {
 		this.flDeductionType = flDeductionType;
 	}
 
+	/**
+	 * Gets the fl cr no.
+	 *
+	 * @return the fl cr no
+	 */
 	public String getFlCrNo() {
 		return flCrNo;
 	}
 
+	/**
+	 * Sets the fl cr no.
+	 *
+	 * @param flCrNo the new fl cr no
+	 */
 	public void setFlCrNo(String flCrNo) {
 		this.flCrNo = flCrNo;
 	}
 
+	/**
+	 * Gets the fl approver name.
+	 *
+	 * @return the fl approver name
+	 */
 	public String getFlApproverName() {
 		return flApproverName;
 	}
 
+	/**
+	 * Sets the fl approver name.
+	 *
+	 * @param flApproverName the new fl approver name
+	 */
 	public void setFlApproverName(String flApproverName) {
 		this.flApproverName = flApproverName;
 	}
 
+	/**
+	 * Gets the fl document type.
+	 *
+	 * @return the fl document type
+	 */
 	public String getFlDocumentType() {
 		return flDocumentType;
 	}
 
+	/**
+	 * Sets the fl document type.
+	 *
+	 * @param flDocumentType the new fl document type
+	 */
 	public void setFlDocumentType(String flDocumentType) {
 		this.flDocumentType = flDocumentType;
 	}
 
+	/**
+	 * Gets the fl criteria.
+	 *
+	 * @return the fl criteria
+	 */
 	public String getFlCriteria() {
 		return flCriteria;
 	}
 
+	/**
+	 * Sets the fl criteria.
+	 *
+	 * @param flCriteria the new fl criteria
+	 */
 	public void setFlCriteria(String flCriteria) {
 		this.flCriteria = flCriteria;
 	}
 
+	/**
+	 * Gets the fl scoring.
+	 *
+	 * @return the fl scoring
+	 */
 	public String getFlScoring() {
 		return flScoring;
 	}
 
+	/**
+	 * Sets the fl scoring.
+	 *
+	 * @param flScoring the new fl scoring
+	 */
 	public void setFlScoring(String flScoring) {
 		this.flScoring = flScoring;
 	}
 
+	/**
+	 * Gets the fl pkp no.
+	 *
+	 * @return the fl pkp no
+	 */
 	public String getFlPkpNo() {
 		return flPkpNo;
 	}
 
+	/**
+	 * Sets the fl pkp no.
+	 *
+	 * @param flPkpNo the new fl pkp no
+	 */
 	public void setFlPkpNo(String flPkpNo) {
 		this.flPkpNo = flPkpNo;
 	}
 
+	/**
+	 * Gets the fl delivery order no.
+	 *
+	 * @return the fl delivery order no
+	 */
 	public String getFlDeliveryOrderNo() {
 		return flDeliveryOrderNo;
 	}
 
+	/**
+	 * Sets the fl delivery order no.
+	 *
+	 * @param flDeliveryOrderNo the new fl delivery order no
+	 */
 	public void setFlDeliveryOrderNo(String flDeliveryOrderNo) {
 		this.flDeliveryOrderNo = flDeliveryOrderNo;
 	}
 
+	/**
+	 * Gets the fl item code.
+	 *
+	 * @return the fl item code
+	 */
 	public String getFlItemCode() {
 		return flItemCode;
 	}
 
+	/**
+	 * Sets the fl item code.
+	 *
+	 * @param flItemCode the new fl item code
+	 */
 	public void setFlItemCode(String flItemCode) {
 		this.flItemCode = flItemCode;
 	}
 
+	/**
+	 * Gets the fl po amount.
+	 *
+	 * @return the fl po amount
+	 */
 	public String getFlPoAmount() {
 		return flPoAmount;
 	}
 
+	/**
+	 * Sets the fl po amount.
+	 *
+	 * @param flPoAmount the new fl po amount
+	 */
 	public void setFlPoAmount(String flPoAmount) {
 		this.flPoAmount = flPoAmount;
 	}
 
+	/**
+	 * Gets the fl pr no.
+	 *
+	 * @return the fl pr no
+	 */
 	public String getFlPrNo() {
 		return flPrNo;
 	}
 
+	/**
+	 * Sets the fl pr no.
+	 *
+	 * @param flPrNo the new fl pr no
+	 */
 	public void setFlPrNo(String flPrNo) {
 		this.flPrNo = flPrNo;
 	}
 
+	/**
+	 * Gets the fl pmo.
+	 *
+	 * @return the fl pmo
+	 */
 	public String getFlPmo() {
 		return flPmo;
 	}
 
+	/**
+	 * Sets the fl pmo.
+	 *
+	 * @param flPmo the new fl pmo
+	 */
 	public void setFlPmo(String flPmo) {
 		this.flPmo = flPmo;
 	}
 
+	/**
+	 * Gets the fl item name.
+	 *
+	 * @return the fl item name
+	 */
 	public String getFlItemName() {
 		return flItemName;
 	}
 
+	/**
+	 * Sets the fl item name.
+	 *
+	 * @param flItemName the new fl item name
+	 */
 	public void setFlItemName(String flItemName) {
 		this.flItemName = flItemName;
 	}
 
 	
+	/**
+	 * Gets the sm application no.
+	 *
+	 * @return the sm application no
+	 */
 	public String getSmApplicationNo() {
 		return smApplicationNo;
 	}
 
+	/**
+	 * Sets the sm application no.
+	 *
+	 * @param smApplicationNo the new sm application no
+	 */
 	public void setSmApplicationNo(String smApplicationNo) {
 		this.smApplicationNo = smApplicationNo;
 	}
 
+	/**
+	 * Gets the sm zone.
+	 *
+	 * @return the sm zone
+	 */
 	public String getSmZone() {
 		return smZone;
 	}
 
+	/**
+	 * Sets the sm zone.
+	 *
+	 * @param smZone the new sm zone
+	 */
 	public void setSmZone(String smZone) {
 		this.smZone = smZone;
 	}
 
+	/**
+	 * Gets the sm supplier type.
+	 *
+	 * @return the sm supplier type
+	 */
 	public String getSmSupplierType() {
 		return smSupplierType;
 	}
 
+	/**
+	 * Sets the sm supplier type.
+	 *
+	 * @param smSupplierType the new sm supplier type
+	 */
 	public void setSmSupplierType(String smSupplierType) {
 		this.smSupplierType = smSupplierType;
 	}
 
+	/**
+	 * Gets the sm mof reg no.
+	 *
+	 * @return the sm mof reg no
+	 */
 	public String getSmMofRegNo() {
 		return smMofRegNo;
 	}
 
+	/**
+	 * Sets the sm mof reg no.
+	 *
+	 * @param smMofRegNo the new sm mof reg no
+	 */
 	public void setSmMofRegNo(String smMofRegNo) {
 		this.smMofRegNo = smMofRegNo;
 	}
+	
+	/**
+	 * Gets the sm registration status.
+	 *
+	 * @return the sm registration status
+	 */
 	public String getSmRegistrationStatus() {
 		return smRegistrationStatus;
 	}
 
+	/**
+	 * Sets the sm registration status.
+	 *
+	 * @param smRegistrationStatus the new sm registration status
+	 */
 	public void setSmRegistrationStatus(String smRegistrationStatus) {
 		this.smRegistrationStatus = smRegistrationStatus;
 	}
 
+	/**
+	 * Gets the smcategory.
+	 *
+	 * @return the smcategory
+	 */
 	public String getSmcategory() {
 		return smcategory;
 	}
 
+	/**
+	 * Sets the smcategory.
+	 *
+	 * @param smcategory the new smcategory
+	 */
 	public void setSmcategory(String smcategory) {
 		this.smcategory = smcategory;
 	}
 
+	/**
+	 * Gets the sm main category.
+	 *
+	 * @return the sm main category
+	 */
 	public String getSmMainCategory() {
 		return smMainCategory;
 	}
 
+	/**
+	 * Sets the sm main category.
+	 *
+	 * @param smMainCategory the new sm main category
+	 */
 	public void setSmMainCategory(String smMainCategory) {
 		this.smMainCategory = smMainCategory;
 	}
 
+	/**
+	 * Gets the sm sub category.
+	 *
+	 * @return the sm sub category
+	 */
 	public String getSmSubCategory() {
 		return smSubCategory;
 	}
 
+	/**
+	 * Sets the sm sub category.
+	 *
+	 * @param smSubCategory the new sm sub category
+	 */
 	public void setSmSubCategory(String smSubCategory) {
 		this.smSubCategory = smSubCategory;
 	}
 
+	/**
+	 * Gets the sm sub category division.
+	 *
+	 * @return the sm sub category division
+	 */
 	public String getSmSubCategoryDivision() {
 		return smSubCategoryDivision;
 	}
 
+	/**
+	 * Sets the sm sub category division.
+	 *
+	 * @param smSubCategoryDivision the new sm sub category division
+	 */
 	public void setSmSubCategoryDivision(String smSubCategoryDivision) {
 		this.smSubCategoryDivision = smSubCategoryDivision;
 	}
+	
+	/**
+	 * Gets the sm application status.
+	 *
+	 * @return the sm application status
+	 */
 	public String getSmApplicationStatus() {
 		return smApplicationStatus;
 	}
 
+	/**
+	 * Sets the sm application status.
+	 *
+	 * @param smApplicationStatus the new sm application status
+	 */
 	public void setSmApplicationStatus(String smApplicationStatus) {
 		this.smApplicationStatus = smApplicationStatus;
 	}
+	
+	/**
+	 * Gets the sm payment type.
+	 *
+	 * @return the sm payment type
+	 */
 	public String getSmPaymentType() {
 		return smPaymentType;
 	}
 
+	/**
+	 * Sets the sm payment type.
+	 *
+	 * @param smPaymentType the new sm payment type
+	 */
 	public void setSmPaymentType(String smPaymentType) {
 		this.smPaymentType = smPaymentType;
 	}
 
+	/**
+	 * Gets the sm application type.
+	 *
+	 * @return the sm application type
+	 */
 	public String getSmApplicationType() {
 		return smApplicationType;
 	}
 
+	/**
+	 * Sets the sm application type.
+	 *
+	 * @param smApplicationType the new sm application type
+	 */
 	public void setSmApplicationType(String smApplicationType) {
 		this.smApplicationType = smApplicationType;
 	}
 
+	/**
+	 * Gets the sm state.
+	 *
+	 * @return the sm state
+	 */
 	public String getSmState() {
 		return smState;
 	}
 
+	/**
+	 * Sets the sm state.
+	 *
+	 * @param smState the new sm state
+	 */
 	public void setSmState(String smState) {
 		this.smState = smState;
 	}
 
+	/**
+	 * Gets the sm district.
+	 *
+	 * @return the sm district
+	 */
 	public String getSmDistrict() {
 		return smDistrict;
 	}
 
+	/**
+	 * Sets the sm district.
+	 *
+	 * @param smDistrict the new sm district
+	 */
 	public void setSmDistrict(String smDistrict) {
 		this.smDistrict = smDistrict;
 	}
+	
+	/**
+	 * Gets the sm report type.
+	 *
+	 * @return the sm report type
+	 */
 	public String getSmReportType() {
 		return smReportType;
 	}
 
+	/**
+	 * Sets the sm report type.
+	 *
+	 * @param smReportType the new sm report type
+	 */
 	public void setSmReportType(String smReportType) {
 		this.smReportType = smReportType;
 	}
 
+	/**
+	 * Gets the sm company name.
+	 *
+	 * @return the sm company name
+	 */
 	public String getSmCompanyName() {
 		return smCompanyName;
 	}
 
+	/**
+	 * Sets the sm company name.
+	 *
+	 * @param smCompanyName the new sm company name
+	 */
 	public void setSmCompanyName(String smCompanyName) {
 		this.smCompanyName = smCompanyName;
 	}
 	
+	/**
+	 * Gets the sm registration type.
+	 *
+	 * @return the sm registration type
+	 */
 	public String getSmRegistrationType() {
 		return smRegistrationType;
 	}
 
+	/**
+	 * Sets the sm registration type.
+	 *
+	 * @param smRegistrationType the new sm registration type
+	 */
 	public void setSmRegistrationType(String smRegistrationType) {
 		this.smRegistrationType = smRegistrationType;
 	}
+	
+	/**
+	 * Gets the cm item type.
+	 *
+	 * @return the cm item type
+	 */
 	public String getCmItemType() {
 		return cmItemType;
 	}
 
+	/**
+	 * Sets the cm item type.
+	 *
+	 * @param cmItemType the new cm item type
+	 */
 	public void setCmItemType(String cmItemType) {
 		this.cmItemType = cmItemType;
 	}
 
+	/**
+	 * Gets the cm item status.
+	 *
+	 * @return the cm item status
+	 */
 	public String getCmItemStatus() {
 		return cmItemStatus;
 	}
 
+	/**
+	 * Sets the cm item status.
+	 *
+	 * @param cmItemStatus the new cm item status
+	 */
 	public void setCmItemStatus(String cmItemStatus) {
 		this.cmItemStatus = cmItemStatus;
 	}
 
+	/**
+	 * Gets the cm unspsc code.
+	 *
+	 * @return the cm unspsc code
+	 */
 	public String getCmUnspscCode() {
 		return cmUnspscCode;
 	}
 
+	/**
+	 * Sets the cm unspsc code.
+	 *
+	 * @param cmUnspscCode the new cm unspsc code
+	 */
 	public void setCmUnspscCode(String cmUnspscCode) {
 		this.cmUnspscCode = cmUnspscCode;
 	}
 
+	/**
+	 * Gets the cm unspsc title.
+	 *
+	 * @return the cm unspsc title
+	 */
 	public String getCmUnspscTitle() {
 		return cmUnspscTitle;
 	}
 
+	/**
+	 * Sets the cm unspsc title.
+	 *
+	 * @param cmUnspscTitle the new cm unspsc title
+	 */
 	public void setCmUnspscTitle(String cmUnspscTitle) {
 		this.cmUnspscTitle = cmUnspscTitle;
 	}
 
+	/**
+	 * Gets the cm company name.
+	 *
+	 * @return the cm company name
+	 */
 	public String getCmCompanyName() {
 		return cmCompanyName;
 	}
 
+	/**
+	 * Sets the cm company name.
+	 *
+	 * @param cmCompanyName the new cm company name
+	 */
 	public void setCmCompanyName(String cmCompanyName) {
 		this.cmCompanyName = cmCompanyName;
 	}
 
+	/**
+	 * Gets the cm registration type.
+	 *
+	 * @return the cm registration type
+	 */
 	public String getCmRegistrationType() {
 		return cmRegistrationType;
 	}
 
+	/**
+	 * Sets the cm registration type.
+	 *
+	 * @param cmRegistrationType the new cm registration type
+	 */
 	public void setCmRegistrationType(String cmRegistrationType) {
 		this.cmRegistrationType = cmRegistrationType;
 	}
 
+	/**
+	 * Gets the cm item category.
+	 *
+	 * @return the cm item category
+	 */
 	public String getCmItemCategory() {
 		return cmItemCategory;
 	}
 
+	/**
+	 * Sets the cm item category.
+	 *
+	 * @param cmItemCategory the new cm item category
+	 */
 	public void setCmItemCategory(String cmItemCategory) {
 		this.cmItemCategory = cmItemCategory;
 	}
 
+	/**
+	 * Gets the cm item name.
+	 *
+	 * @return the cm item name
+	 */
 	public String getCmItemName() {
 		return cmItemName;
 	}
 
+	/**
+	 * Sets the cm item name.
+	 *
+	 * @param cmItemName the new cm item name
+	 */
 	public void setCmItemName(String cmItemName) {
 		this.cmItemName = cmItemName;
 	}
 
+	/**
+	 * Gets the cm ep number.
+	 *
+	 * @return the cm ep number
+	 */
 	public String getCmEpNumber() {
 		return cmEpNumber;
 	}
 
+	/**
+	 * Sets the cm ep number.
+	 *
+	 * @param cmEpNumber the new cm ep number
+	 */
 	public void setCmEpNumber(String cmEpNumber) {
 		this.cmEpNumber = cmEpNumber;
 	}
 
+	/**
+	 * Gets the cm business reg no.
+	 *
+	 * @return the cm business reg no
+	 */
 	public String getCmBusinessRegNo() {
 		return cmBusinessRegNo;
 	}
 
+	/**
+	 * Sets the cm business reg no.
+	 *
+	 * @param cmBusinessRegNo the new cm business reg no
+	 */
 	public void setCmBusinessRegNo(String cmBusinessRegNo) {
 		this.cmBusinessRegNo = cmBusinessRegNo;
 	}
 
+	/**
+	 * Gets the cm ic number.
+	 *
+	 * @return the cm ic number
+	 */
 	public String getCmIcNumber() {
 		return cmIcNumber;
 	}
 
+	/**
+	 * Sets the cm ic number.
+	 *
+	 * @param cmIcNumber the new cm ic number
+	 */
 	public void setCmIcNumber(String cmIcNumber) {
 		this.cmIcNumber = cmIcNumber;
 	}
 
+	/**
+	 * Gets the cm mof number.
+	 *
+	 * @return the cm mof number
+	 */
 	public String getCmMofNumber() {
 		return cmMofNumber;
 	}
 
+	/**
+	 * Sets the cm mof number.
+	 *
+	 * @param cmMofNumber the new cm mof number
+	 */
 	public void setCmMofNumber(String cmMofNumber) {
 		this.cmMofNumber = cmMofNumber;
 	}
 
+	/**
+	 * Gets the cm extention code.
+	 *
+	 * @return the cm extention code
+	 */
 	public String getCmExtentionCode() {
 		return cmExtentionCode;
 	}
 
+	/**
+	 * Sets the cm extention code.
+	 *
+	 * @param cmExtentionCode the new cm extention code
+	 */
 	public void setCmExtentionCode(String cmExtentionCode) {
 		this.cmExtentionCode = cmExtentionCode;
 	}
 
+	/**
+	 * Gets the cm extention type.
+	 *
+	 * @return the cm extention type
+	 */
 	public String getCmExtentionType() {
 		return cmExtentionType;
 	}
 
+	/**
+	 * Sets the cm extention type.
+	 *
+	 * @param cmExtentionType the new cm extention type
+	 */
 	public void setCmExtentionType(String cmExtentionType) {
 		this.cmExtentionType = cmExtentionType;
 	}
 
+	/**
+	 * Gets the cm extention brand.
+	 *
+	 * @return the cm extention brand
+	 */
 	public String getCmExtentionBrand() {
 		return cmExtentionBrand;
 	}
 
+	/**
+	 * Sets the cm extention brand.
+	 *
+	 * @param cmExtentionBrand the new cm extention brand
+	 */
 	public void setCmExtentionBrand(String cmExtentionBrand) {
 		this.cmExtentionBrand = cmExtentionBrand;
 	}
 
+	/**
+	 * Gets the cm extention measurment.
+	 *
+	 * @return the cm extention measurment
+	 */
 	public String getCmExtentionMeasurment() {
 		return cmExtentionMeasurment;
 	}
 
+	/**
+	 * Sets the cm extention measurment.
+	 *
+	 * @param cmExtentionMeasurment the new cm extention measurment
+	 */
 	public void setCmExtentionMeasurment(String cmExtentionMeasurment) {
 		this.cmExtentionMeasurment = cmExtentionMeasurment;
 	}
 
+	/**
+	 * Gets the cm extention colour.
+	 *
+	 * @return the cm extention colour
+	 */
 	public String getCmExtentionColour() {
 		return cmExtentionColour;
 	}
 
+	/**
+	 * Sets the cm extention colour.
+	 *
+	 * @param cmExtentionColour the new cm extention colour
+	 */
 	public void setCmExtentionColour(String cmExtentionColour) {
 		this.cmExtentionColour = cmExtentionColour;
 	}
 
+	/**
+	 * Gets the cm proof identity.
+	 *
+	 * @return the cm proof identity
+	 */
 	public String getCmProofIdentity() {
 		return cmProofIdentity;
 	}
 
+	/**
+	 * Sets the cm proof identity.
+	 *
+	 * @param cmProofIdentity the new cm proof identity
+	 */
 	public void setCmProofIdentity(String cmProofIdentity) {
 		this.cmProofIdentity = cmProofIdentity;
 	}
 
+	/**
+	 * Gets the sc quotation id.
+	 *
+	 * @return the sc quotation id
+	 */
 	public String getScQuotationId() {
 		return scQuotationId;
 	}
 
+	/**
+	 * Sets the sc quotation id.
+	 *
+	 * @param scQuotationId the new sc quotation id
+	 */
 	public void setScQuotationId(String scQuotationId) {
 		this.scQuotationId = scQuotationId;
 	}
 
+	/**
+	 * Gets the sc quotation no.
+	 *
+	 * @return the sc quotation no
+	 */
 	public String getScQuotationNo() {
 		return scQuotationNo;
 	}
 
+	/**
+	 * Sets the sc quotation no.
+	 *
+	 * @param scQuotationNo the new sc quotation no
+	 */
 	public void setScQuotationNo(String scQuotationNo) {
 		this.scQuotationNo = scQuotationNo;
 	}
 
+	/**
+	 * Gets the sc payment id.
+	 *
+	 * @return the sc payment id
+	 */
 	public String getScPaymentId() {
 		return scPaymentId;
 	}
 
+	/**
+	 * Sets the sc payment id.
+	 *
+	 * @param scPaymentId the new sc payment id
+	 */
 	public void setScPaymentId(String scPaymentId) {
 		this.scPaymentId = scPaymentId;
 	}
 
+	/**
+	 * Sets the pdf file.
+	 *
+	 * @param pdfFile the new pdf file
+	 */
 	public void setPdfFile(StreamedContent pdfFile) {
 		this.pdfFile = pdfFile;
 	}
 
+	/**
+	 * Gets the constructed param string.
+	 *
+	 * @return the constructed param string
+	 */
 	public String getConstructedParamString() {
 		return constructedParamString;
 	}
 
+	/**
+	 * Sets the constructed param string.
+	 *
+	 * @param constructedParamString the new constructed param string
+	 */
 	public void setConstructedParamString(String constructedParamString) {
 		this.constructedParamString = constructedParamString;
 	}
 
+	/**
+	 * Gets the lev one cat lst.
+	 *
+	 * @return the lev one cat lst
+	 */
 	public List<SelectItem> getLevOneCatLst() {
 		return levOneCatLst;
 	}
 
+	/**
+	 * Sets the lev one cat lst.
+	 *
+	 * @param levOneCatLst the new lev one cat lst
+	 */
 	public void setLevOneCatLst(List<SelectItem> levOneCatLst) {
 		this.levOneCatLst = levOneCatLst;
 	}
 
+	/**
+	 * Gets the lev two cat lst.
+	 *
+	 * @return the lev two cat lst
+	 */
 	public List<SelectItem> getLevTwoCatLst() {
 		return levTwoCatLst;
 	}
 
+	/**
+	 * Sets the lev two cat lst.
+	 *
+	 * @param levTwoCatLst the new lev two cat lst
+	 */
 	public void setLevTwoCatLst(List<SelectItem> levTwoCatLst) {
 		this.levTwoCatLst = levTwoCatLst;
 	}
 
+	/**
+	 * Gets the lev three cat lst.
+	 *
+	 * @return the lev three cat lst
+	 */
 	public List<SelectItem> getLevThreeCatLst() {
 		return levThreeCatLst;
 	}
 
+	/**
+	 * Sets the lev three cat lst.
+	 *
+	 * @param levThreeCatLst the new lev three cat lst
+	 */
 	public void setLevThreeCatLst(List<SelectItem> levThreeCatLst) {
 		this.levThreeCatLst = levThreeCatLst;
 	}
 
+	/**
+	 * Gets the state lst.
+	 *
+	 * @return the state lst
+	 */
 	public List<SelectItem> getStateLst() {
 		return stateLst;
 	}
 
+	/**
+	 * Sets the state lst.
+	 *
+	 * @param stateLst the new state lst
+	 */
 	public void setStateLst(List<SelectItem> stateLst) {
 		this.stateLst = stateLst;
 	}
 
+	/**
+	 * Gets the district lst.
+	 *
+	 * @return the district lst
+	 */
 	public List<SelectItem> getDistrictLst() {
 		return districtLst;
 	}
 
+	/**
+	 * Sets the district lst.
+	 *
+	 * @param districtLst the new district lst
+	 */
 	public void setDistrictLst(List<SelectItem> districtLst) {
 		this.districtLst = districtLst;
 	}
 
+	/**
+	 * Gets the generated url.
+	 *
+	 * @return the generated url
+	 */
 	public String getGeneratedURL() {
 		return generatedURL;
 	}
 
+	/**
+	 * Sets the generated url.
+	 *
+	 * @param generatedURL the new generated url
+	 */
 	public void setGeneratedURL(String generatedURL) {
 		this.generatedURL = generatedURL;
 	}
 
+	/**
+	 * Gets the report url.
+	 *
+	 * @return the report url
+	 */
 	public String getReportURL() {
 		return reportURL;
 	}
 
+	/**
+	 * Sets the report url.
+	 *
+	 * @param reportURL the new report url
+	 */
 	public void setReportURL(String reportURL) {
 		this.reportURL = reportURL;
 	}
 
+	/**
+	 * Gets the user id.
+	 *
+	 * @return the user id
+	 */
 	public String getUserId() {
 		return userId;
 	}
 
+	/**
+	 * Sets the user id.
+	 *
+	 * @param userId the new user id
+	 */
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 
+	/**
+	 * Gets the role code.
+	 *
+	 * @return the role code
+	 */
 	public String getRoleCode() {
 		return roleCode;
 	}
 
+	/**
+	 * Sets the role code.
+	 *
+	 * @param roleCode the new role code
+	 */
 	public void setRoleCode(String roleCode) {
 		this.roleCode = roleCode;
 	}
 
+	/**
+	 * Gets the from date.
+	 *
+	 * @return the from date
+	 */
 	public Date getFromDate() {
 		return fromDate;
 	}
 
+	/**
+	 * Sets the from date.
+	 *
+	 * @param fromDate the new from date
+	 */
 	public void setFromDate(Date fromDate) {
 		this.fromDate = fromDate;
 	}
 
+	/**
+	 * Gets the to date.
+	 *
+	 * @return the to date
+	 */
 	public Date getToDate() {
 		return toDate;
 	}
 
+	/**
+	 * Sets the to date.
+	 *
+	 * @param toDate the new to date
+	 */
 	public void setToDate(Date toDate) {
 		this.toDate = toDate;
 	}
 
+	/**
+	 * Gets the fl rec note no.
+	 *
+	 * @return the fl rec note no
+	 */
 	public String getFlRecNoteNo() {
 		return flRecNoteNo;
 	}
 
+	/**
+	 * Sets the fl rec note no.
+	 *
+	 * @param flRecNoteNo the new fl rec note no
+	 */
 	public void setFlRecNoteNo(String flRecNoteNo) {
 		this.flRecNoteNo = flRecNoteNo;
 	}
 
+	/**
+	 * Gets the authoriztion list.
+	 *
+	 * @return the authoriztion list
+	 */
 	public List<String> getAuthoriztionList() {
 		return authoriztionList;
 	}
 
+	/**
+	 * Sets the authoriztion list.
+	 *
+	 * @param authoriztionList the new authoriztion list
+	 */
 	public void setAuthoriztionList(List<String> authoriztionList) {
 		this.authoriztionList = authoriztionList;
 	}
 
+	/**
+	 * Gets the scqt.
+	 *
+	 * @return the scqt
+	 */
 	public ScQt getScqt() {
 		return scqt;
 	}
 
+	/**
+	 * Sets the scqt.
+	 *
+	 * @param scqt the new scqt
+	 */
 	public void setScqt(ScQt scqt) {
 		this.scqt = scqt;
 	}
 
+	/**
+	 * Gets the log.
+	 *
+	 * @return the log
+	 */
 	public static Logger getLog() {
 		return log;
 	}
 
+	/**
+	 * Gets the reg type list.
+	 *
+	 * @return the reg type list
+	 */
 	public List<SelectItem> getRegTypeList() {
 		return regTypeList;
 	}
 
+	/**
+	 * Sets the reg type list.
+	 *
+	 * @param regTypeList the new reg type list
+	 */
 	public void setRegTypeList(List<SelectItem> regTypeList) {
 		this.regTypeList = regTypeList;
 	}
 
+	/**
+	 * Gets the module list.
+	 *
+	 * @return the module list
+	 */
 	public List<SelectItem> getModuleList() {
 		return moduleList;
 	}
 
+	/**
+	 * Sets the module list.
+	 *
+	 * @param moduleList the new module list
+	 */
 	public void setModuleList(List<SelectItem> moduleList) {
 		this.moduleList = moduleList;
 	}
 
+	/**
+	 * Gets the rpt gen bean.
+	 *
+	 * @return the rpt gen bean
+	 */
 	public ReportsGenerateBean getRptGenBean() {
 		return rptGenBean;
 	}
 
+	/**
+	 * Sets the rpt gen bean.
+	 *
+	 * @param rptGenBean the new rpt gen bean
+	 */
 	public void setRptGenBean(ReportsGenerateBean rptGenBean) {
 		this.rptGenBean = rptGenBean;
 	}
 
+	/**
+	 * Gets the report list.
+	 *
+	 * @return the report list
+	 */
 	public List<SelectItem> getReportList() {
 		return reportList;
 	}
+	
+	/**
+	 * Sets the report list.
+	 *
+	 * @param reportList the new report list
+	 */
 	public void setReportList(List<SelectItem> reportList) {
 		this.reportList = reportList;
 	}
+	
+	/**
+	 * Checks if is enable value.
+	 *
+	 * @return true, if is enable value
+	 */
 	public boolean isEnableValue() {
 		return enableValue;
 	}
 
+	/**
+	 * Sets the enable value.
+	 *
+	 * @param enableValue the new enable value
+	 */
 	public void setEnableValue(boolean enableValue) {
 		this.enableValue = enableValue;
 	}	
 	
+	/**
+	 * Gets the simple quote no list.
+	 *
+	 * @return the simple quote no list
+	 */
 	public List<String> getSimpleQuoteNoList() {
 		return simpleQuoteNoList;
 	}
 
+	/**
+	 * Sets the simple quote no list.
+	 *
+	 * @param simpleQuoteNoList the new simple quote no list
+	 */
 	public void setSimpleQuoteNoList(List<String> simpleQuoteNoList) {
 		this.simpleQuoteNoList = simpleQuoteNoList;
 	}
 
+	/**
+	 * Gets the sc soa status list.
+	 *
+	 * @return the sc soa status list
+	 */
 	public List<SelectItem> getScSOAStatusList() {
 		return scSOAStatusList;
 	}
 
+	/**
+	 * Sets the sc soa status list.
+	 *
+	 * @param scSOAStatusList the new sc soa status list
+	 */
 	public void setScSOAStatusList(List<SelectItem> scSOAStatusList) {
 		this.scSOAStatusList = scSOAStatusList;
 	}
 
+	/**
+	 * Gets the sc soa status.
+	 *
+	 * @return the sc soa status
+	 */
 	public String getScSOAStatus() {
 		return scSOAStatus;
 	}
 
+	/**
+	 * Sets the sc soa status.
+	 *
+	 * @param scSOAStatus the new sc soa status
+	 */
 	public void setScSOAStatus(String scSOAStatus) {
 		this.scSOAStatus = scSOAStatus;
 	}
 
+	/**
+	 * Gets the sc simple quote type.
+	 *
+	 * @return the sc simple quote type
+	 */
 	public String getScSimpleQuoteType() {
 		return scSimpleQuoteType;
 	}
 
+	/**
+	 * Sets the sc simple quote type.
+	 *
+	 * @param scSimpleQuoteType the new sc simple quote type
+	 */
 	public void setScSimpleQuoteType(String scSimpleQuoteType) {
 		this.scSimpleQuoteType = scSimpleQuoteType;
 	}
 
+	/**
+	 * Gets the sc loa no.
+	 *
+	 * @return the sc loa no
+	 */
 	public String getScLOANo() {
 		return scLOANo;
 	}
 
+	/**
+	 * Sets the sc loa no.
+	 *
+	 * @param scLOANo the new sc loa no
+	 */
 	public void setScLOANo(String scLOANo) {
 		this.scLOANo = scLOANo;
 	}
+	
+	/**
+	 * Retrieve loa status list.
+	 *
+	 * @return the list
+	 */
 	public List<SelectItem> retrieveLOAStatusList(){
 		scSOAStatusList = new ArrayList<SelectItem>();		
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -2806,6 +6471,9 @@ public class ReportBackingBean extends
 		return scSOAStatusList;
 	}
 
+	/**
+	 * Supplier name validate.
+	 */
 	public void supplierNameValidate(){
 		if ((this.getScSupplier() != null)
 				&& (this.getScSupplier() != ReportConst.EMPTY_VAL)) {
@@ -2815,6 +6483,10 @@ public class ReportBackingBean extends
 			}
 		}	
 	}
+	
+	/**
+	 * Change terminate.
+	 */
 	public void changeTerminate(){
 		this.setCtTerminationType(null);
 		getManagedBean().getRptGenBean().setCtTerminationTypeView(false);
@@ -2828,6 +6500,10 @@ public class ReportBackingBean extends
 			getManagedBean().getRptGenBean().setCtTerminationTypeView(false);
 		}		
 	}
+	
+	/**
+	 * Change payment type.
+	 */
 	public void changePaymentType(){
 		this.setSmPaymentType(null);
 		paymentTypeList = new ArrayList<SelectItem>();
@@ -2844,6 +6520,11 @@ public class ReportBackingBean extends
 		}		
 	}
 	
+	/**
+	 * Retrieve payment type list.
+	 *
+	 * @return the list
+	 */
 	public List<SelectItem> retrievePaymentTypeList(){
 		paymentTypeList = new ArrayList<SelectItem>();		
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -2860,6 +6541,12 @@ public class ReportBackingBean extends
 		}
 		return paymentTypeList;
 	}
+	
+	/**
+	 * Retrieve govt payment type list.
+	 *
+	 * @return the list
+	 */
 	public List<SelectItem> retrieveGovtPaymentTypeList(){
 		paymentTypeList = new ArrayList<SelectItem>();		
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -2876,6 +6563,12 @@ public class ReportBackingBean extends
 		}
 		return paymentTypeList;
 	}
+	
+	/**
+	 * Retrieve cdc payment type list.
+	 *
+	 * @return the list
+	 */
 	public List<SelectItem> retrieveCDCPaymentTypeList(){
 		paymentTypeList = new ArrayList<SelectItem>();		
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -2892,6 +6585,12 @@ public class ReportBackingBean extends
 		}
 		return paymentTypeList;
 	}
+	
+	/**
+	 * Retrieve payment method.
+	 *
+	 * @return the list
+	 */
 	public List<String> retrievePaymentMethod(){
 		paymentMethodList = new ArrayList<String>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -2906,6 +6605,11 @@ public class ReportBackingBean extends
 		return paymentMethodList;
 	}
 	
+	/**
+	 * Retrieve pm service type.
+	 *
+	 * @return the list
+	 */
 	public List<SelectItem> retrievePMServiceType(){
 		serviceTypeList = new ArrayList<SelectItem>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -2925,6 +6629,9 @@ public class ReportBackingBean extends
 		return serviceTypeList;
 	}
 	
+	/**
+	 * Show capital naccum share.
+	 */
 	public void showCapitalNaccumShare(){
 		getManagedBean().getRptGenBean().setSmPaidUpCapitalFrmView(false);
 		if ((null != this.getReportValue())&&(this.getReportValue().equals(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL))) {			
@@ -2939,6 +6646,12 @@ public class ReportBackingBean extends
 			}
 		}
 	}
+	
+	/**
+	 * Retrieve processing officer list.
+	 *
+	 * @return the list
+	 */
 	public List<SelectItem> retrieveProcessingOfficerList(){
 		processingOfficerList = new ArrayList<SelectItem>();		
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -2957,6 +6670,10 @@ public class ReportBackingBean extends
 		}
 		return processingOfficerList;
 	}
+	
+	/**
+	 * Application status date change.
+	 */
 	public void applicationStatusDateChange(){
 		
 		getManagedBean().getRptGenBean().setSmMandatoryExpectedSiteVisitDateView(false);
@@ -2977,6 +6694,9 @@ public class ReportBackingBean extends
 		}
 	}
 	
+	/**
+	 * Change report type.
+	 */
 	public void changeReportType(){
 		
 		if ((null != this.getReportValue())&&(this.getReportValue().equals(ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL))) {
@@ -3000,6 +6720,13 @@ public class ReportBackingBean extends
 			}*/
 		}
 	}
+	
+	/**
+	 * Retrieve ministry name.
+	 *
+	 * @param orgprofileid the orgprofileid
+	 * @return the string
+	 */
 	public String retrieveMinistryName(Long orgprofileid){
 		ministryName =null;
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -3014,6 +6741,12 @@ public class ReportBackingBean extends
         }
 		return ministryName;
 	}
+	
+	/**
+	 * Retrieve reg status list.
+	 *
+	 * @return the list
+	 */
 	public List<SelectItem> retrieveRegStatusList(){
 		registrationStatusList = new ArrayList<SelectItem>();		
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -3031,6 +6764,10 @@ public class ReportBackingBean extends
 			}
 		return registrationStatusList;
 	}
+	
+	/**
+	 * Supplier type consultant.
+	 */
 	public void supplierTypeConsultant(){
 		getManagedBean().getRptGenBean().setSmConsultantRegistrationStatusView(false);
 		if((null!=this.getReportValue())&&(this.getReportValue()
@@ -3045,6 +6782,12 @@ public class ReportBackingBean extends
 			}
 		}
 	}
+	
+	/**
+	 * Gets the all module list.
+	 *
+	 * @return the all module list
+	 */
 	public List<SelectItem> getAllModuleList(){
 		 moduleList = new ArrayList<SelectItem>();		
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -3064,6 +6807,10 @@ public class ReportBackingBean extends
 			}
 		return moduleList;
 	 }
+	
+	/**
+	 * Retrieve identification type.
+	 */
 	public void retrieveIdentificationType(){
 		identificationTypeList = new ArrayList<SelectItem>();		
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -3080,6 +6827,10 @@ public class ReportBackingBean extends
 					}
 			}
 	 }
+	
+	/**
+	 * Retrieve accumulated paid up cptl.
+	 */
 	public void retrieveAccumulatedPaidUpCptl(){
 		accumulatedPaidUpCptlList = new ArrayList<SelectItem>();		
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -3096,6 +6847,12 @@ public class ReportBackingBean extends
 					}
 			}
 	 }
+	
+	/**
+	 * Gets the ltst ministry list.
+	 *
+	 * @return the ltst ministry list
+	 */
 	public SelectItem[] getLtstMinistryList() {
 		SelectItem[] items = null;
 
@@ -3131,6 +6888,12 @@ public class ReportBackingBean extends
 		}
 		return items;
 	}
+	
+	/**
+	 * Gets the ltst ministry list by userid.
+	 *
+	 * @return the ltst ministry list by userid
+	 */
 	public SelectItem[] getLtstMinistryListByUserid() {
 		SelectItem[] items = null;
 
@@ -3167,6 +6930,9 @@ public class ReportBackingBean extends
 		return items;
 	}
 	
+	/**
+	 * Retrieve ptj list by ministry id.
+	 */
 	public void retrievePtjListByMinistryId() {		
 		pmPtjList =new ArrayList<String>();		
 		if(ministryId!=null){
@@ -3194,6 +6960,11 @@ public class ReportBackingBean extends
 		}
 	}
 	
+	/**
+	 * Gets the doc type status drop down.
+	 *
+	 * @return the doc type status drop down
+	 */
 	public SelectItem[] getDocTypeStatusDropDown(){
 		docTypeStatusItems = null;
 		String doctype = null;
@@ -3244,6 +7015,12 @@ public class ReportBackingBean extends
 		}
 		return docTypeStatusItems;
     }
+	
+	/**
+	 * Retrieve sub type list.
+	 *
+	 * @return the list
+	 */
 	public List<SelectItem> retrieveSubTypeList(){
 		ctSubTypeList = new ArrayList<SelectItem>();
 		getManagedBean().getRptGenBean().setCtSubTypeView(false);
@@ -3279,6 +7056,12 @@ public class ReportBackingBean extends
         }
 		return ctSubTypeList;
 	}
+	
+	/**
+	 * Retrieve zone by user.
+	 *
+	 * @return the list
+	 */
 	public List<SelectItem> retrieveZoneByUser(){
 		zoneList = new ArrayList<SelectItem>();
 		this.setStringZone(null);
@@ -3298,6 +7081,12 @@ public class ReportBackingBean extends
         }
 		return zoneList;
 	}
+	
+	/**
+	 * Retrieve high role code by user.
+	 *
+	 * @return the list
+	 */
 	public List<String> retrieveHighRoleCodeByUser(){
 		highRoleCodeList = new ArrayList<String>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -3311,6 +7100,10 @@ public class ReportBackingBean extends
         }
 		return highRoleCodeList;
 	}
+	
+	/**
+	 * Direct purchase with requisitioner.
+	 */
 	public void  directPurchaseWithRequisitioner(){
 		if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_SUPPL_S1_RPT_VAL))){
 			getManagedBean().getRptGenBean().setScSimpleQuoteDtlWithoutRequiGroupView(false);
@@ -3322,6 +7115,12 @@ public class ReportBackingBean extends
 			 }
 		}
 	}
+	
+	/**
+	 * Role code users setup onload.
+	 *
+	 * @param lngPtjId the lng ptj id
+	 */
 	public void  roleCodeUsersSetupOnload(Long lngPtjId){
 		rolecodeRquisitionerList = new ArrayList<SelectItem>();
 		rolecodeApproverList = new ArrayList<SelectItem>();
@@ -3392,6 +7191,10 @@ public class ReportBackingBean extends
 			}
 		}
 	} 
+	
+	/**
+	 * Role code users setup.
+	 */
 	public void  roleCodeUsersSetup(){
 		rolecodeRquisitionerList = new ArrayList<SelectItem>();
 		rolecodeApproverList = new ArrayList<SelectItem>();
@@ -3494,6 +7297,12 @@ public class ReportBackingBean extends
 			}
 		}
 	}
+	
+	/**
+	 * Retrieve all role codes by user.
+	 *
+	 * @return the list
+	 */
 	public List<String> retrieveAllRoleCodesByUser(){
 		allRoleCodesList = new ArrayList<String>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -3508,6 +7317,9 @@ public class ReportBackingBean extends
 		return allRoleCodesList;
 	}
 	
+	/**
+	 * Zone by rolecode.
+	 */
 	public void  zoneByRolecode(){
 		if ((this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT))) {
 			getManagedBean().getRptGenBean().setSmZoneLabelView(false);
@@ -3545,6 +7357,12 @@ public class ReportBackingBean extends
 			}	
 		}
 	}
+	
+	/**
+	 * Retrieve param code by user.
+	 *
+	 * @return the list
+	 */
 	public List<String> retrieveParamCodeByUser(){
 		paramList = new ArrayList<String>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -3558,6 +7376,12 @@ public class ReportBackingBean extends
         }
 		return paramList;
 	}
+	
+	/**
+	 * Assign new company experience.
+	 *
+	 * @param catList the cat list
+	 */
 	public void assignNewCompanyExperience(List<SmSupplierCategory> catList) {		
 		if (catList == null) {
 			catList = new ArrayList<SmSupplierCategory>();
@@ -3578,16 +7402,27 @@ public class ReportBackingBean extends
 		assignValReqdToTrue();
 	}
 
+	/**
+	 * Assign val reqd to true.
+	 */
 	private void assignValReqdToTrue() {
 		this.setShowParentMsg(false);
 		this.setValueReqd(true);
 	}
 
+	/**
+	 * Reset child cat list.
+	 */
 	private void resetChildCatList() {
 		this.setSupplierChildCatList(new ArrayList<PmCategoryL2>());
 		this.setSupplierSubChildCatList(new ArrayList<PmCategoryL3>());
 	}
 
+	/**
+	 * Retrieve parent category list for experience page.
+	 *
+	 * @return the list
+	 */
 	public static List<PmCategoryL1> retrieveParentCategoryListForExperiencePage() {
 		//CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();		
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
@@ -3599,6 +7434,10 @@ public class ReportBackingBean extends
 			return null;
 		}
 	}
+	
+	/**
+	 * Select all.
+	 */
 	public void selectAll() {
 		if (this.isSelectedAll()) {
 			this.setSelected(true);
@@ -3608,6 +7447,12 @@ public class ReportBackingBean extends
 			this.setSelectedCatList(null);
 		}
 	}
+	
+	/**
+	 * Selected.
+	 *
+	 * @param index the index
+	 */
 	public void selected(int index) {
 		List<SmSupplierCategory> selectedCatsList = this.getSelectedCatList();
 		if (this.isSelected()) {
@@ -3623,6 +7468,10 @@ public class ReportBackingBean extends
 		}
 		this.setSelectedCatList(selectedCatsList);
 	}
+	
+	/**
+	 * Select all company experince categories.
+	 */
 	public void selectAllCompanyExperinceCategories() {
 		if (this.isSelectedAll()) {
 			this.setSelected(true);
@@ -3632,6 +7481,12 @@ public class ReportBackingBean extends
 			this.setSelectedCatList(null);
 		}
 	}
+	
+	/**
+	 * Selected company experince category.
+	 *
+	 * @param index the index
+	 */
 	public void selectedCompanyExperinceCategory(int index) {
 		List<SmSupplierCategory> selectedCatsList = this.getSelectedCatList();
 		if (this.isSelected()) {
@@ -3647,6 +7502,13 @@ public class ReportBackingBean extends
 		this.setSelectedCatList(selectedCatsList);
 	}
 
+	/**
+	 * Populate experience child category by parent.
+	 *
+	 * @param parentId the parent id
+	 * @param catL2 the cat l2
+	 * @param catL3 the cat l3
+	 */
 	public void populateExperienceChildCategoryByParent(long parentId,
 			PmCategoryL2 catL2, PmCategoryL3 catL3) {
 		try {
@@ -3658,6 +7520,12 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * Retrieve experience child category list.
+	 *
+	 * @param categoryL1Id the category l1 id
+	 * @return the list
+	 */
 	public static List<PmCategoryL2> retrieveExperienceChildCategoryList(
 			long categoryL1Id) {
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
@@ -3668,6 +7536,11 @@ public class ReportBackingBean extends
 		return resDTO.getCategoryL2List();
 	}
 	
+	/**
+	 * Retrieve report list by authorization.
+	 *
+	 * @return the list
+	 */
 	public List<SelectItem>  retrieveReportListByAuthorization() {
 		reportList = new ArrayList<SelectItem>();
 		rptGenBean = new ReportsGenerateBean();
@@ -3708,6 +7581,12 @@ public class ReportBackingBean extends
 				return reportList;	
 			}
 	
+	/**
+	 * Retrieve sub module report category list.
+	 *
+	 * @param language the language
+	 * @return the list
+	 */
 	public List<SelectItem>  retrieveSubModuleReportCategoryList(String language) {
 		reportList = new ArrayList<SelectItem>();	
 		reportCategoryList = new ArrayList<SelectItem>();	
@@ -3733,6 +7612,12 @@ public class ReportBackingBean extends
 				}
 				return reportCategoryList;	
 		}
+		
+		/**
+		 * Retrieve simple quote no.
+		 *
+		 * @return the list
+		 */
 		public List<String>  retrieveSimpleQuoteNo() {			
 			simpleQuoteNoList = new ArrayList<String>();					
 			if (null != new FacesScopes().getUserSessionBean().getUserId()) {			
@@ -3751,6 +7636,12 @@ public class ReportBackingBean extends
 					}
 					return simpleQuoteNoList;	
 			}
+	
+	/**
+	 * Retrieve report list by sub module.
+	 *
+	 * @return the list
+	 */
 	public List<SelectItem>  retrieveReportListBySubModule() {
 		reportList = new ArrayList<SelectItem>();			
 		this.setReportName(null);
@@ -3796,6 +7687,11 @@ public class ReportBackingBean extends
 				return reportList;	
 		}
 	
+    /**
+     * Gets the report idlist.
+     *
+     * @return the report idlist
+     */
     public void getReportIdlist() {
     	rptGenBean = new ReportsGenerateBean();
 		this.setReportValue(null);
@@ -3822,7 +7718,12 @@ public class ReportBackingBean extends
 	    	//processItemsByModule(items);	    	
     	}
 	}*/
-	private void processItemsByModule(SelectItem[] items) {
+	/**
+     * Process items by module.
+     *
+     * @param items the items
+     */
+    private void processItemsByModule(SelectItem[] items) {
 		Map<String,List<SelectItem>> localModuleItemMap=new HashMap<String,List<SelectItem>>();
 		if(null!=items){
 			for(SelectItem item:items){
@@ -3842,10 +7743,22 @@ public class ReportBackingBean extends
 		setModuleItemMap(localModuleItemMap);		
 	}
 
+	/**
+	 * Gets the report search bean.
+	 *
+	 * @return the report search bean
+	 */
 	public ISearchBean<PmParameterDesc> getReportSearchBean() {		
 		return super.createSearchBean(
 				PmParameterDesc.class, "moduleName");
 	}
+	
+	/**
+	 * Populate experience sub child category by child.
+	 *
+	 * @param childId the child id
+	 * @param catL3 the cat l3
+	 */
 	public void populateExperienceSubChildCategoryByChild(long childId,
 			PmCategoryL3 catL3) {
 		try {
@@ -3857,6 +7770,12 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * Retrieve experience sub child category list.
+	 *
+	 * @param categoryL2Id the category l2 id
+	 * @return the list
+	 */
 	public static List<PmCategoryL3> retrieveExperienceSubChildCategoryList(
 			long categoryL2Id) {
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
@@ -3867,6 +7786,11 @@ public class ReportBackingBean extends
 		return resDTO.getCategoryL3List();
 	}
 
+	/**
+	 * Check duplicate category for project.
+	 *
+	 * @param newCat the new cat
+	 */
 	public void checkDuplicateCategoryForProject(SmSupplierCategory newCat) {
 		for (SmSupplierCategory cat : this.getSelectedCatList()) {
 			if ((cat.getPmCategoryL1().getCategoryL1Id() != null)
@@ -3898,6 +7822,9 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * Delete selected codes.
+	 */
 	public void deleteSelectedCodes() {		
 		for (SmSupplierCategory cat : this.getSelectCatDeletionList()) {
 			this.getSelectedCatList().remove(cat);
@@ -3910,6 +7837,9 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * Assign category for comp experience.
+	 */
 	public void assignCategoryForCompExperience() {		
 		SmSupplierCategory cat = new SmSupplierCategory();		
 		if ((this.getSelectedCatList().size()>8)) {
@@ -3933,6 +7863,11 @@ public class ReportBackingBean extends
 	}
 	/*
 	 * Retrieve module list
+	 */
+	/**
+	 * Retrive module list.
+	 *
+	 * @return the list
 	 */
 	public List<SelectItem> retriveModuleList() {
 		moduleList = new ArrayList<SelectItem>();
@@ -3976,6 +7911,9 @@ public class ReportBackingBean extends
 		return moduleList;
 	}
 
+	/* (non-Javadoc)
+	 * @see my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean#preRenderView()
+	 */
 	public void preRenderView() {
 		rptGenBean = new ReportsGenerateBean();
 		getManagedBean().setRptGenBean(rptGenBean);
@@ -3988,6 +7926,9 @@ public class ReportBackingBean extends
 
 	/*
 	 * Retrieve report list by module
+	 */
+	/**
+	 * Retrive report list bymodule name.
 	 */
 	public void retriveReportListBymoduleName() {
 		reportList = new ArrayList<SelectItem>();
@@ -4007,6 +7948,10 @@ public class ReportBackingBean extends
 		getManagedBean().setRptGenBean(rptGenBean);		
 		retrieveRolecode();		
 	}
+	
+	/**
+	 * Madatory indicator.
+	 */
 	public void madatoryIndicator() {
 		if((null!=this.getReportValue())&&(this.getModuleValue()
 				.equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT))){
@@ -4021,6 +7966,13 @@ public class ReportBackingBean extends
 			getManagedBean().getRptGenBean().setMadatoryIndicatorView(false);
 		}
 	}
+	
+	/**
+	 * Retrive report list by module.
+	 *
+	 * @param module the module
+	 * @return the list
+	 */
 	public List<SelectItem> retriveReportListByModule(String module) {
 		reportList = new ArrayList<SelectItem>();
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -4057,6 +8009,12 @@ public class ReportBackingBean extends
 		}
 		return reportList;
 	}
+	
+	/**
+	 * Retrieve upssvo user.
+	 *
+	 * @return the list
+	 */
 	public List<SelectItem> retrieveUPSSVOUser(){
 		smUPSSVOUserList = new ArrayList<SelectItem>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {        	
@@ -4073,6 +8031,12 @@ public class ReportBackingBean extends
         }
 		return smUPSSVOUserList;
 	}
+	
+	/**
+	 * Retrieve ptj s1.
+	 *
+	 * @return the list
+	 */
 	public List<SelectItem> retrievePTJS1(){
 		scPtjList = new ArrayList<SelectItem>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {        	
@@ -4089,6 +8053,12 @@ public class ReportBackingBean extends
         }
 		return scPtjList;
 	}
+	
+	/**
+	 * Retrieve ptj s2.
+	 *
+	 * @return the list
+	 */
 	public List<SelectItem> retrievePTJS2(){
 		scPtjList = new ArrayList<SelectItem>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {        	
@@ -4105,6 +8075,12 @@ public class ReportBackingBean extends
         }
 		return scPtjList;
 	}
+	
+	/**
+	 * Retrieve requisitioner.
+	 *
+	 * @return the list
+	 */
 	public List<SelectItem> retrieveRequisitioner(){
 		scRequisitionerList = new ArrayList<SelectItem>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {        	
@@ -4125,6 +8101,12 @@ public class ReportBackingBean extends
         }
 		return scRequisitionerList;
 	}
+	
+	/**
+	 * Retrieve desc officer.
+	 *
+	 * @return the list
+	 */
 	public List<SelectItem> retrieveDescOfficer(){
 		scDescOfficerList = new ArrayList<SelectItem>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {        	
@@ -4145,6 +8127,12 @@ public class ReportBackingBean extends
         }
 		return scDescOfficerList;
 	}
+	
+	/**
+	 * Retrieve approvar naik taraf dp s1.
+	 *
+	 * @return the list
+	 */
 	public List<SelectItem> retrieveApprovarNaikTarafDPS1(){
 		approverNayakTarafList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -4161,6 +8149,12 @@ public class ReportBackingBean extends
 		}
 		return approverNayakTarafList;
 	}
+	
+	/**
+	 * Retrieve approvar naik taraf sc s2.
+	 *
+	 * @return the list
+	 */
 	public List<SelectItem> retrieveApprovarNaikTarafSCS2(){
 		approverNayakTarafList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -4179,6 +8173,12 @@ public class ReportBackingBean extends
 	}
 	/*
 	 * Retrieve Role code by User id
+	 */
+	/**
+	 * Retrive userrloe by user id.
+	 *
+	 * @param moduleName the module name
+	 * @return the list
 	 */
 	public List<String> retriveUserrloeByUserId(String moduleName) {
 		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
@@ -4204,6 +8204,10 @@ public class ReportBackingBean extends
 		}
 		return authoriztionList;
 	}
+	
+	/**
+	 * Retrieve all ministry.
+	 */
 	public void  retrieveAllMinistry() {
 		ptjList = new ArrayList<SelectItem>();
 		ministryList = new ArrayList<SelectItem>();
@@ -4262,6 +8266,11 @@ public class ReportBackingBean extends
 		}
 	}
 	
+	/**
+	 * Retrieve role code from param table.
+	 *
+	 * @return the list
+	 */
 	public List<String>  retrieveRoleCodeFromParamTable() {
 		paramTableRoleCodeList = new ArrayList<String>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -4276,6 +8285,11 @@ public class ReportBackingBean extends
 		return paramTableRoleCodeList;
 	}
 	
+	/**
+	 * Gets the parameter code type string.
+	 *
+	 * @return the parameter code type string
+	 */
 	public String  getParameterCodeTypeString() {
 		parameterCodeType = new String();
 		/*ptjList = new ArrayList<String>();
@@ -4292,6 +8306,10 @@ public class ReportBackingBean extends
 		}
 		return parameterCodeType;
 	}
+	
+	/**
+	 * Retrieve parameter code type.
+	 */
 	public void  retrieveParameterCodeType() {
 		ptjList = new ArrayList<SelectItem>();
 		ministryList = new ArrayList<SelectItem>();
@@ -4327,6 +8345,12 @@ public class ReportBackingBean extends
 			paramCodeSupplierGroupDropdown(parameterCodeType);				
 		}		
 	}
+	
+	/**
+	 * Param code supplier group dropdown.
+	 *
+	 * @param parameterCodeType the parameter code type
+	 */
 	public void  paramCodeSupplierGroupDropdown(String parameterCodeType) {
 		if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))){
 			if((getManagedBean().getRptGenBean().isFlGroupOneView())){
@@ -4442,6 +8466,10 @@ public class ReportBackingBean extends
 			}
 		}
 	}
+	
+	/**
+	 * Enable supplier comp name text or dropdown.
+	 */
 	public void  enableSupplierCompNameTextOrDropdown() {
 		if((this.getModuleValue()!=null)&&(this.getModuleValue().equalsIgnoreCase(
 				ModuleCodeConst.SUPPLIER_MANAGEMENT))){
@@ -4472,6 +8500,12 @@ public class ReportBackingBean extends
 			}
 		}
 	}
+	
+	/**
+	 * Retrieve fpjptj list.
+	 *
+	 * @return the list
+	 */
 	public List<SelectItem>  retrieveFPJPTJList() {
 		ptjList = new ArrayList<SelectItem>();		
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -4497,6 +8531,12 @@ public class ReportBackingBean extends
 		}
 		return ptjList;
 	}
+	
+	/**
+	 * Retrieve fmiptj list.
+	 *
+	 * @return the list
+	 */
 	public List<SelectItem>  retrieveFMIPTJList() {
 		ptjList = new ArrayList<SelectItem>();
 		//if ((null !=this.getCommonMinistry())&&(((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FMI)))||((highRoleCodeList!=null)&&((highRoleCodeList.contains(RoleCode.BPK_PCA.value())||highRoleCodeList.contains(RoleCode.BPK_CCA.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_USER.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_USER.value())))))) {
@@ -4527,6 +8567,13 @@ public class ReportBackingBean extends
 		}				
 		return ptjList;
 	}
+	
+	/**
+	 * Retrieve fmiptj list with arg.
+	 *
+	 * @param lngMinistry the lng ministry
+	 * @return the list
+	 */
 	public List<SelectItem>  retrieveFMIPTJListWithArg(Long lngMinistry) {
 		ptjList = new ArrayList<SelectItem>();		
 		Long firstPTJValue = null;
@@ -4551,6 +8598,12 @@ public class ReportBackingBean extends
 				}
 		return ptjList;
 	}
+	
+	/**
+	 * Retrieve only fpj ministry list.
+	 *
+	 * @return the list
+	 */
 	public List<SelectItem>  retrieveOnlyFPJMinistryList() {
     	ministryList = new ArrayList<SelectItem>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -4567,6 +8620,12 @@ public class ReportBackingBean extends
 		}
 		return ministryList;	
 	}
+	
+	/**
+	 * Retrieve fpj ministry list.
+	 *
+	 * @return the list
+	 */
 	public List<SelectItem>  retrieveFPJMinistryList() {
     	ministryList = new ArrayList<SelectItem>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -4608,7 +8667,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		}
 		return ministryList;	
 	}*/    
-	public void retrieveCMUnspc() {
+	/**
+ * Retrieve cm unspc.
+ */
+public void retrieveCMUnspc() {
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 						IPMReportSO.class);
@@ -4620,6 +8682,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			unspcList.add(selectItem);
 		}
 	}
+	
+	/**
+	 * Enable extension.
+	 */
 	public void enableExtension() {
 		this.setCmExtentionCode(null);
 		this.setCmExtentionBrand(null);
@@ -4658,6 +8724,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			rptGenBean.setCmExtentionCodeView(false);
 		}
 	}
+	
+	/**
+	 * Enable extension types.
+	 */
 	public void enableExtensionTypes() {
 		this.setCmExtentionBrand(null);
 		this.setCmExtentionType(null);
@@ -4735,6 +8805,12 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		}		
 	}
 
+	/**
+	 * Retrieve cm unspc idby code.
+	 *
+	 * @param unspcCode the unspc code
+	 * @return the long
+	 */
 	public Long retrieveCMUnspcIdbyCode(String unspcCode) {
 		Long unspcid = null;
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -4748,6 +8824,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		return unspcid;
 	}
 
+	/**
+	 * Retrieve extention.
+	 */
 	public void retrieveExtention() {
 		this.setCmExtentionBrand(null);
 		this.setCmExtentionType(null);
@@ -4782,6 +8861,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}
 		}
 	}
+	
+	/**
+	 * Retrieve brand.
+	 */
 	public void retrieveBrand() {
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -4795,6 +8878,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		}
 	}
 	
+	/**
+	 * Retrieve ext type.
+	 */
 	public void retrieveExtType() {
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -4808,6 +8894,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		}
 	}
 
+	/**
+	 * Retrieve measurement.
+	 */
 	public void retrieveMeasurement() {
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -4821,6 +8910,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		}
 	}
 
+	/**
+	 * Retrieve color.
+	 */
 	public void retrieveColor() {
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -4833,6 +8925,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			colorList.add(selectItem);
 		}
 	}
+	
+	/**
+	 * Retrieve rolecode.
+	 */
 	public void retrieveRolecode() {
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -4842,6 +8938,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			this.getRoleCodeList().add(rolecodeLst.get(i));
 		}
 	}
+	
+	/**
+	 * Retrieve supplier comp name.
+	 */
 	public void retrieveSupplierCompName() {
 		supplCompanyList = new ArrayList<String>();
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -4865,6 +8965,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		
 	}
 	
+	/**
+	 * Change date based on reg type.
+	 */
 	public void changeDateBasedOnRegType() {
 		getManagedBean().getRptGenBean().setSmActiveSubmissiveFromDateView(false);
 		getManagedBean().getRptGenBean().setSmActivationDateView(false);
@@ -4881,6 +8984,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			getManagedBean().getRptGenBean().setSmActSubmisAllDateView(true);
 		}
 	}
+	
+	/**
+	 * Enable criteria menu.
+	 */
 	public void enableCriteriaMenu() {
 		getManagedBean().getRptGenBean().setEnableCriteriaMenuView(false);
 		if((this.getReportValue()!=null)&&(!this.getReportValue().equals(ReportConst.EMPTY_VAL))){
@@ -4889,6 +8996,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	}
 	/*
 	 * Enable criteria variables by report name
+	 */
+	/**
+	 * Criteria variables by report.
 	 */
 	public void criteriaVariablesByReport() {
 		parameterCodeType = new String();
@@ -5038,6 +9148,12 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		}
 	}
 
+	/**
+	 * Gets the default values from and to date.
+	 *
+	 * @param reportCode the report code
+	 * @return the default values from and to date
+	 */
 	private void getDefaultValuesFromAndToDate(String reportCode) {
 
 		Date currentDate = new Date();
@@ -5057,6 +9173,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	}
 
 	
+	/**
+	 * Retrieve dates.
+	 */
 	public void retrieveDates() {
 		if ((this.getReportValue() != null) && (this.getReportValue() != ReportConst.EMPTY_VAL)) {
 			SimpleDateFormat outputDateFormat = new SimpleDateFormat(
@@ -5096,6 +9215,13 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}
 		}
 	}
+	
+	/**
+	 * Check one year defference.
+	 *
+	 * @param fromDate the from date
+	 * @param toDate the to date
+	 */
 	public void checkOneYearDefference(Date fromDate,Date toDate) {
 		SimpleDateFormat outputDateFormat = new SimpleDateFormat(
 				CommonConstants.DEFAULT_DATE_FORMAT);
@@ -5123,6 +9249,13 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			throw new EpException(MessageConst.ERROR_REPORT_780011);
 		}		
 	}
+	
+	/**
+	 * Check only year field defference.
+	 *
+	 * @param yearFrom the year from
+	 * @param yearTo the year to
+	 */
 	public void checkOnlyYearFieldDefference(String yearFrom,String yearTo) {
 		int yearFromInt=Integer.parseInt(yearFrom);
 		int yearToInt=Integer.parseInt(yearTo);
@@ -5130,6 +9263,13 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			throw new EpException(MessageConst.ERROR_REPORT_780015);
 		}
 	}
+	
+	/**
+	 * Check two years field defference.
+	 *
+	 * @param yearFrom the year from
+	 * @param yearTo the year to
+	 */
 	public void checkTwoYearsFieldDefference(String yearFrom,String yearTo) {
 		int yearFromInt=Integer.parseInt(yearFrom);
 		int yearToInt=Integer.parseInt(yearTo);
@@ -5137,6 +9277,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			throw new EpException(MessageConst.ERROR_REPORT_780017);
 		}
 	}
+	
+	/**
+	 * Retrieve state.
+	 */
 	public void retrieveState() {
 		stateLst = new ArrayList<SelectItem>();
 		districtLst = new ArrayList<SelectItem>();
@@ -5157,6 +9301,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		}
 	}
 
+	/**
+	 * Retrieve district.
+	 */
 	public void retrieveDistrict() {
 		districtLst = new ArrayList<SelectItem>();
 		addingStateList = new ArrayList<String>();
@@ -5178,6 +9325,11 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		}
 	}
 
+	/**
+	 * Retrieve category lev one.
+	 *
+	 * @return the list
+	 */
 	public List<SelectItem> retrieveCategoryLevOne() {
 		levOneCatLst = new ArrayList<SelectItem>();
 		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate
@@ -5195,6 +9347,12 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		return levOneCatLst;
 	}
 	
+	/**
+	 * Retrieve category lev two.
+	 *
+	 * @param mainCategory the main category
+	 * @return the list
+	 */
 	public List<SelectItem> retrieveCategoryLevTwo(String mainCategory) {
 		levTwoCatLst = new ArrayList<SelectItem>();
 		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate
@@ -5215,6 +9373,13 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		}
 		return levTwoCatLst;
 	}
+	
+	/**
+	 * Retrieve category lev three.
+	 *
+	 * @param subCategory the sub category
+	 * @return the list
+	 */
 	public List<SelectItem> retrieveCategoryLevThree(String subCategory) {
 		levThreeCatLst = new ArrayList<SelectItem>();
 		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate
@@ -5235,6 +9400,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		}
 		return levThreeCatLst;
 	}
+	
+	/**
+	 * Enable registration type.
+	 */
 	public void enableRegistrationType() {
 		this.setCmEpNumber(null);
 		this.setCmIcNumber(null);
@@ -5278,23 +9447,43 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		}
 	}
 
+	/**
+	 * Generate month list.
+	 *
+	 * @return the list
+	 */
 	public List<SelectItem> generateMonthList() {
 		scMonthList = scReportBackingBean.generateMonthList(strLanguage);
 		return scMonthList;
 	}
 
+	/**
+	 * Generate year list.
+	 *
+	 * @return the list
+	 */
 	public List<String> generateYearList() {
 		scYearList = rptGenBean.generateCommonYearList();
 		return scYearList;
 	}
 
+	/**
+	 * Created to dt update.
+	 */
 	public void createdToDtUpdate() {
 		this.setScCreatedToYear(this.getScCreatedFromYear());
 	}
+	
+	/**
+	 * Created to month update.
+	 */
 	public void createdToMonthUpdate(){
 		this.setScCreatedToMonth(this.getScCreatedFromMonth());
 	}
 
+	/**
+	 * On select effected values.
+	 */
 	public void onSelectEffectedValues() {
 		if (this.getScProcureAllList().size() > 0) {
 			rptGenBean.setScProcureQuoteEditView(true);
@@ -5323,6 +9512,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		}
 	}
 	
+	/**
+	 * Check sm year n month defference.
+	 */
 	public void checkSMYearNMonthDefference() {
 		int fromyear= 0;
 		int toyear = 0;
@@ -5355,6 +9547,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 
 	/*
 	 * Generate all modules reports
+	 */
+	/**
+	 * Generate report.
 	 */
 	public void generateReport() {
 		if (((this.getReportValue() != null)&&this.getReportValue().toString().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL))||((this.getReportValue() != null)&&this.getReportValue().toString().equals(ReportConst.SM_LIST_OF_DIR_OWN_CEO_COMPANY_RPT_VAL))||((this.getReportValue() != null)&&this.getReportValue().toString().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL))||((this.getReportValue() != null)&&this.getReportValue().toString().equals(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL))){
@@ -5505,6 +9700,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		}
 	}
  
+	/**
+	 * Generate report intime.
+	 */
 	public void generateReportIntime() {
 		ExecutorService service = Executors.newSingleThreadExecutor();
 
@@ -5535,6 +9733,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		    service.shutdown();
 		}
 	}
+	
+	/**
+	 * Generate report timer.
+	 */
 	public void generateReportTimer() {
 		Thread thread = new Thread(new Runnable() {
 	        @Override
@@ -5559,6 +9761,12 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		    }
 		}
 	}	
+	
+	/**
+	 * Load report with params.
+	 *
+	 * @param paramLst the param lst
+	 */
 	public void loadReportWithParams(List<String> paramLst) {
 		StringBuilder gnrtdURL = new StringBuilder();
 		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
@@ -5587,6 +9795,11 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		}
 	}
 
+	/**
+	 * Load report.
+	 *
+	 * @param gnrtdURL the gnrtd url
+	 */
 	public void loadReport(String gnrtdURL) {
 		try {
 			PortletRequest portalRequest = (PortletRequest) FacesContext
@@ -5606,6 +9819,11 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		}
 	}
 
+	/**
+	 * Load report with params string.
+	 *
+	 * @param paramConstrString the param constr string
+	 */
 	public void loadReportWithParamsString(String paramConstrString) {
 		StringBuilder gnrtdURL = new StringBuilder();
 		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
@@ -5637,6 +9855,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 
 	/*
 	 * Generate CT module report
+	 */
+	/**
+	 * Generate ct report.
 	 */
 	public void generateCTReport() {
 		if (((this.getCtContrMontrStatus() != null) && (this.getCtContrMontrStatus() != ReportConst.EMPTY_VAL))
@@ -5861,6 +10082,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 
 	/*
 	 * Generate SM module report
+	 */
+	/**
+	 * Generate sm report.
 	 */
 	public void generateSMReport() {
 		if ((getManagedBean().getReportValue() != null)
@@ -6416,6 +10640,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	/*
 	 * Generate SC module report
 	 */
+	/**
+	 * Generate sc report.
+	 */
 	public void generateSCReport() {
 		if ((getManagedBean().getReportValue() != null)
 				&& (getManagedBean().getReportValue().trim()
@@ -6801,6 +11028,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	/*
 	 * Generate CM module report
 	 */
+	/**
+	 * Generate cm report.
+	 */
 	public void generateCMReport() {
 		if (((this.getCmExtention() != null) && (this.getCmExtention() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmExtentionCode() != null) && (this.getCmExtentionCode() != ReportConst.EMPTY_VAL))
@@ -7022,6 +11252,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 
 	/*
 	 * Generate FL module report
+	 */
+	/**
+	 * Generate fl report.
 	 */
 	public void generateFLReport() {
 		if (((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
@@ -7422,6 +11655,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	/*
 	 * Generate PP module report
 	 */
+	/**
+	 * Generate pp report.
+	 */
 	public void generatePPReport() {
 		if (((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
 				|| ((this.getCommonMinistry() != null) && (this.getCommonMinistry() != ReportConst.EMPTY_VAL))
@@ -7464,6 +11700,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	}
 	/*
 	 * Generate PM module report
+	 */
+	/**
+	 * Generate pm report.
 	 */
 	public void generatePMReport() {
 		if (((this.getPmServiceType() != null) && (this.getPmServiceType() != ReportConst.EMPTY_VAL))
@@ -7511,12 +11750,19 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	/*
 	 * validate quotNo
 	 */
+	/**
+	 * Quotation number validation.
+	 */
 	public void quotationNumberValidation() {
 		if ((this.getScQuotationNo() != null)
 				&& (this.getScQuotationNo() != ReportConst.EMPTY_VAL)) {
 			specialCharValidation();
 		}
 	}
+	
+	/**
+	 * Simple quote no validation.
+	 */
 	public void simpleQuoteNoValidation() {
 		if ((this.getScProcessRptQuotationNo() != null)
 				&& (this.getScProcessRptQuotationNo() != ReportConst.EMPTY_VAL)) {
@@ -7524,6 +11770,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		}
 	}
 
+	/**
+	 * Special char validation.
+	 */
 	public void specialCharValidation() {
 		String ptString = ReportConst.NUMERIC_CHAR_PATTERN_ONLY;
 		Pattern pattern = Pattern.compile(ptString);
@@ -7549,6 +11798,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			throw new EpException(MessageConst.ERROR_REPORT_780006);
 		}
 	}
+	
+	/**
+	 * Mof reg no numeric validation.
+	 */
 	public void mofRegNoNumericValidation() {
 		String ptString1 = ReportConst.NUMERIC_PATTERN_ONLY;
 		Pattern pattern1 = Pattern.compile(ptString1);
@@ -7597,6 +11850,13 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}
 		}
 	}
+	
+	/**
+	 * Validate mof reg no.
+	 *
+	 * @param fromMofNo the from mof no
+	 * @param toMofNo the to mof no
+	 */
 	public void ValidateMofRegNo(String fromMofNo, String toMofNo) {
 		Long fromMofNoLng=Long.parseLong(fromMofNo);
 		Long toMofNoLng=Long.parseLong(toMofNo);		
@@ -7607,6 +11867,11 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 
 	/*
 	 * retrieve qtid based on qtno
+	 */
+	/**
+	 * Gets the quotation number.
+	 *
+	 * @return the quotation number
 	 */
 	public void getQuotationNumber() {
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
@@ -7636,6 +11901,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 
 	/*
 	 * Clear report criteria
+	 */
+	/**
+	 * Reset report form.
 	 */
 	public void resetReportForm() {		
 		assignNewCompanyExperience(new ArrayList<SmSupplierCategory>());
@@ -7860,6 +12128,12 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		applicationStatusDateChange();
 	}
 
+	/**
+	 * File generate report.
+	 *
+	 * @param reportFile the report file
+	 * @param paramConstrString the param constr string
+	 */
 	protected void fileGenerateReport(String reportFile,
 			String paramConstrString){
 		StringBuilder gnrtdURL = new StringBuilder();
@@ -7931,14 +12205,29 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	}
 	
 
+	/**
+	 * Gets the module item map.
+	 *
+	 * @return the module item map
+	 */
 	public Map<String, List<SelectItem>> getModuleItemMap() {
 		return moduleItemMap;
 	}
 
+	/**
+	 * Sets the module item map.
+	 *
+	 * @param moduleItemMap the module item map
+	 */
 	public void setModuleItemMap(Map<String, List<SelectItem>> moduleItemMap) {
 		this.moduleItemMap = moduleItemMap;
 	}
 
+	/**
+	 * Gets the application status data.
+	 *
+	 * @return the application status data
+	 */
 	public List<SelectItem> getApplicationStatusData() {
 
 		List<SelectItem> smApplStatusList = new ArrayList<SelectItem>();

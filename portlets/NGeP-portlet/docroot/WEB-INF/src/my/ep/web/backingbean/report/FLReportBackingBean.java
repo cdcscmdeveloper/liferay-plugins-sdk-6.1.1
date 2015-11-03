@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package my.ep.web.backingbean.report;
 
 import java.util.List;
@@ -13,7 +16,10 @@ import my.ep.web.managedbean.report.ReportMangedBean;
 import my.ep.web.constant.report.CommonMethod;
 
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class FLReportBackingBean.
+ *
  * @Author Jangari Kondal Reddy
  */
 @ManagedBean(name="flReportBackingBean")
@@ -22,6 +28,12 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 
 	/*
 	 * Enable FL module criteria by report name
+	 */
+	/**
+	 * Enable criteria variables by report by fl.
+	 *
+	 * @param rptGenBean the rpt gen bean
+	 * @param authoriztionList the authoriztion list
 	 */
 	public void enableCriteriaVariablesByReportByFL(ReportsGenerateBean rptGenBean,	List<String> authoriztionList){
 		
