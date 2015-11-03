@@ -1961,7 +1961,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				typeObj = comodityObj.getCmType().get(0);
 			} else {
 				typeObj = new CmType();
-				typeObj.setTypeCode("00");
+				typeObj.setTypeCode("000");
 				typeObj.setTypeName("N/A");
 				typeObj.setUnspscId(comodityObj);
 				reqDTO.setCmType(typeObj);
@@ -1973,7 +1973,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				brandObj = comodityObj.getCmBrand().get(0);
 			} else {
 				brandObj = new CmBrand();
-				brandObj.setBrandCode("000");
+				brandObj.setBrandCode("00");
 				brandObj.setBrandName("N/A");
 				brandObj.setUnspscId(comodityObj);
 				reqDTO.setCmBrand(brandObj);
