@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package my.ep.web.backingbean.report;
 
 import java.text.DateFormatSymbols;
@@ -18,30 +21,67 @@ import my.ep.web.bean.report.ReportsGenerateBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.ReportMangedBean;
 import my.ep.web.constant.report.CommonMethod;
+// TODO: Auto-generated Javadoc
+
 /**
+ * The Class SCReportBackingBean.
+ *
  * @Author Jangari Kondal Reddy
  */
 @ManagedBean(name="scReportBackingBean")
 @ViewScoped
 public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBean>{
 	
+	/** The month list. */
 	private List<SelectItem> monthList = new ArrayList<SelectItem>();
+	
+	/** The year list. */
 	private List<String> yearList = new ArrayList<String>();
 	
+	/**
+	 * Gets the year list.
+	 *
+	 * @return the year list
+	 */
 	public List<String> getYearList() {
 		return yearList;
 	}
+	
+	/**
+	 * Sets the year list.
+	 *
+	 * @param yearList the new year list
+	 */
 	public void setYearList(List<String> yearList) {
 		this.yearList = yearList;
 	}
+	
+	/**
+	 * Gets the month list.
+	 *
+	 * @return the month list
+	 */
 	public List<SelectItem> getMonthList() {
 		return monthList;
 	}
+	
+	/**
+	 * Sets the month list.
+	 *
+	 * @param monthList the new month list
+	 */
 	public void setMonthList(List<SelectItem> monthList) {
 		this.monthList = monthList;
 	}
 	/*
 	 *Enable SC module criteria by report name 
+	 */
+	/**
+	 * Enable criteria variables by report by sc.
+	 *
+	 * @param rptGenBean the rpt gen bean
+	 * @param authoriztionList the authoriztion list
+	 * @param approverNayakTarafList the approver nayak taraf list
 	 */
 	public void enableCriteriaVariablesByReportBySC(ReportsGenerateBean rptGenBean,	List<String> authoriztionList,List<SelectItem> approverNayakTarafList){
 			//rptGenBean.retriveStatus();
@@ -582,6 +622,13 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));	            
 		}		
 	}
+	
+	/**
+	 * Generate month list.
+	 *
+	 * @param language the language
+	 * @return the list
+	 */
 	public List<SelectItem> generateMonthList(String language){
 		monthList = new ArrayList<SelectItem>();
 		if((language!=null)&&(language.equalsIgnoreCase("en"))){
@@ -659,6 +706,12 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 		}
         return monthList;
 	}
+	
+	/**
+	 * Generate year list.
+	 *
+	 * @return the list
+	 */
 	public List<String> generateYearList(){
 		SimpleDateFormat outputDateFormat = new SimpleDateFormat(
 				CommonConstants.DEFAULT_DATE_FORMAT);
