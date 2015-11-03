@@ -870,18 +870,17 @@ public class SmFieldChangeUtil {
 
 	private static void setProfessionalBodyFieldChangeStatus(SmAppl latestAppl,
 			SmAppl currAppl) {
-		if (latestAppl.getSmAssociationBodies() == null
-				|| latestAppl.getSmAssociationBodies().isEmpty()) {
-			if (currAppl.getSmAssociationBodies() != null
-					&& !currAppl.getSmAssociationBodies().isEmpty()) {
+		if (SmCommonUtil.isCollectionEmpty(latestAppl.getSmAssociationBodies())) {
+			if (!SmCommonUtil.isCollectionEmpty(currAppl
+					.getSmAssociationBodies())) {
 				for (SmAssociationBody currBody : currAppl
 						.getSmAssociationBodies()) {
 					currBody.setChangedFieldStatus("N");
 				}
 			}
 		} else {
-			if (currAppl.getSmAssociationBodies() != null
-					&& !currAppl.getSmAssociationBodies().isEmpty()) {
+			if (!SmCommonUtil.isCollectionEmpty(currAppl
+					.getSmAssociationBodies())) {
 				SmAssociationBody latestBody = null;
 				for (SmAssociationBody currBody : currAppl
 						.getSmAssociationBodies()) {
