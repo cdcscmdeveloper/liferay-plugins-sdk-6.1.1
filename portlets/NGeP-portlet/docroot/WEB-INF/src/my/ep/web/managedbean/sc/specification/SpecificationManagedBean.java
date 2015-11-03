@@ -772,6 +772,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private boolean zonesWarnMessageUpdate;
 	private List<ScQtCategory> tobeRemoveCategoryCodes;
 	private boolean isSpecItemWeightageRequired;
+	private int ministryRemarksSize;
 	
 
 	/**
@@ -5202,6 +5203,20 @@ public class SpecificationManagedBean extends BaseManagedBean {
 
 	public void setSpecItemWeightageRequired(boolean isSpecItemWeightageRequired) {
 		this.isSpecItemWeightageRequired = isSpecItemWeightageRequired;
+	}
+
+	/**
+	 * @return the ministryRemarksSize
+	 */
+	public int getMinistryRemarksSize() {
+		return ministryRemarksSize;
+	}
+
+	/**
+	 * @param ministryRemarksSize the ministryRemarksSize to set
+	 */
+	public void setMinistryRemarksSize(int ministryRemarksSize) {
+		this.ministryRemarksSize = ministryRemarksSize;
 	}
 
 }
