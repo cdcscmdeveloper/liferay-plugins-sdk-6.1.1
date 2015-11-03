@@ -6,7 +6,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
-	<p:column>
+	<p:column style="width:18%">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" rendered="#{newable}" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.item']}"/>
@@ -55,14 +55,14 @@
 		</h:selectOneMenu>
 		<p:message id="fulfilTypeMsg" for="fulfilType" display="icon" />
 	</p:column>
-	<p:column style="width:110px;">
+	<p:column style="width:120px;">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.uom']}"/>
 		</f:facet>
 		
 		<c:if test="#{newable}">
-			<h:panelGroup layout="block" style="width:110px;">
+			<h:panelGroup layout="block" style="width:120px;">
 				<ac:lov id="#{templateSpecId}uomLovId" lovId="PM_UOM" 
 					headerText="UOM Lov"
 					saveObject="templateSpecBackingBean.managedBean.tplSpecQuestions[#{row}].clUom"
