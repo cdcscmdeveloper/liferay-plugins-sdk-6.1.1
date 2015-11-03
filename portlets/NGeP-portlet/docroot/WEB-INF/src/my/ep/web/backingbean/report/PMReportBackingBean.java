@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package my.ep.web.backingbean.report;
 
 import java.util.List;
@@ -10,7 +13,11 @@ import my.ep.web.bean.report.ReportsGenerateBean;
 import my.ep.web.constant.report.CommonMethod;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.ReportMangedBean;
+// TODO: Auto-generated Javadoc
+
 /**
+ * The Class PMReportBackingBean.
+ *
  * @Author Jangari Kondal Reddy
  */
 @ManagedBean(name="pmReportBackingBean")
@@ -19,6 +26,12 @@ public class PMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	
 	/*
 	 *Enable PM module criteria by report name 
+	 */
+	/**
+	 * Enable criteria variables by report by pm.
+	 *
+	 * @param rptGenBean the rpt gen bean
+	 * @param authoriztionList the authoriztion list
 	 */
 	public void enableCriteriaVariablesByReportByPM(ReportsGenerateBean rptGenBean,	List<String> authoriztionList){
 		switch (getManagedBean().getReportValue().trim()) {

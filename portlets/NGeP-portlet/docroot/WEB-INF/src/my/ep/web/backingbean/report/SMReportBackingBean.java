@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package my.ep.web.backingbean.report;
 
 
@@ -22,30 +25,66 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.ReportMangedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.constant.report.CommonMethod;
+// TODO: Auto-generated Javadoc
+
 /**
+ * The Class SMReportBackingBean.
+ *
  * @Author Jangari Kondal Reddy
  */
 @ManagedBean(name="smReportBackingBean")
 @ViewScoped
 public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>{
 	
+	/** The state lst. */
 	private List<SelectItem> stateLst = new ArrayList<SelectItem>();
+	
+	/** The lev one cat lst. */
 	private List<SelectItem> levOneCatLst = new ArrayList<SelectItem>();	
 
+	/**
+	 * Gets the state lst.
+	 *
+	 * @return the state lst
+	 */
 	public List<SelectItem> getStateLst() {
 		return stateLst;
 	}
+	
+	/**
+	 * Sets the state lst.
+	 *
+	 * @param stateLst the new state lst
+	 */
 	public void setStateLst(List<SelectItem> stateLst) {
 		this.stateLst = stateLst;
 	}
+	
+	/**
+	 * Gets the lev one cat lst.
+	 *
+	 * @return the lev one cat lst
+	 */
 	public List<SelectItem> getLevOneCatLst() {
 		return levOneCatLst;
 	}
+	
+	/**
+	 * Sets the lev one cat lst.
+	 *
+	 * @param levOneCatLst the new lev one cat lst
+	 */
 	public void setLevOneCatLst(List<SelectItem> levOneCatLst) {
 		this.levOneCatLst = levOneCatLst;
 	}
 	/*
 	 *Enable SM module criteria by report name 
+	 */
+	/**
+	 * Enable criteria variables by report by sm.
+	 *
+	 * @param rptGenBean the rpt gen bean
+	 * @param authoriztionList the authoriztion list
 	 */
 	public void enableCriteriaVariablesByReportBySM(ReportsGenerateBean rptGenBean,	List<String> authoriztionList){
 		switch (getManagedBean().getReportValue().trim()) {
@@ -515,6 +554,10 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	            //break;
 		}
 	}
+	
+	/**
+	 * Retrieve state.
+	 */
 	public void retrieveState(){
 		stateLst = new ArrayList<SelectItem>();		
 		IStateSO stateSO	=	(IStateSO)BusinessDelegate.getInstance().getServiceObject("pm", IStateSO.class);		
