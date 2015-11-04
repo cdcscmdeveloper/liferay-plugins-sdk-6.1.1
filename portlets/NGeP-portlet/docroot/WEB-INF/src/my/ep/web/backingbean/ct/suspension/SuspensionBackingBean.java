@@ -279,7 +279,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		    getManagedBean().setRemarkList(resDTO.getCtRemarks());
 		    getManagedBean().setAttachmentList(resDTO.getCtAttachments());
 		    ctBB.getManagedBean().setViewContract(getManagedBean().isViewOnly());
-		    ctBB.getManagedBean().setCtContractVer(getManagedBean().getContractVer());
+		    ctBB.getManagedBean().setContractVer(getManagedBean().getContractVer());
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 			 /*End remark setting*/
 			
