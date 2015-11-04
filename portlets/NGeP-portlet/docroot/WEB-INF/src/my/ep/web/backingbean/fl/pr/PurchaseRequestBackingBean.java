@@ -311,6 +311,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			reqDTO.setToken(token);
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setApproverMap(getManagedBean().getApproverMap());
+			reqDTO.setUserLocale(getFacesScopes().getUserLocale());
 			if(isFlFulfilmentRequisitioner()) {
 				List<String> backUpApprover = new ArrayList<String>();
 				if(getManagedBean().getSelectedApprover() != null){
@@ -405,8 +406,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}
 
 		getSupplierBranchesList(resDTO.getFlFulfilmentRequest().getSmSupplier());
-		if(!resDTO.getSelectedApproverList().isEmpty()){
-			getManagedBean().setSelectedApprover(resDTO.getSelectedApproverList().get(0));
+		
+		if(resDTO.getFlFulfilmentRequest().getApprover() != null){
+			getManagedBean().setSelectedApprover(resDTO.getFlFulfilmentRequest().getApprover().getUserName());
 		}
 		if(isRequisitioner()){
 			initializeApproverGroup();
@@ -1455,7 +1457,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 						}
 						for(PmUserGroupUser groupUser : resDTO.getApproverGroupUserList()) {
 							getManagedBean().getApproverList().add(groupUser.getPmUser().getUserName());
-							getManagedBean().getApproverMap().put(groupUser.getPmUser().getUserName(), groupUser);//TODO CR doesn't have this. is this necessary
+							getManagedBean().getApproverMap().put(groupUser.getPmUser().getUserName(), groupUser);
 						}
 					}
 					getManagedBean().getApproverList().clear();
