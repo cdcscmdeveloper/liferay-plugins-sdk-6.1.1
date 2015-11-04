@@ -141,39 +141,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			this.getManagedBean().setExtensionSearchItemDataModel(new ExtensionSearchItemDataModel());
 		}
 	
-		// set with and height of popUp
-
-		/*
-		 * ICodificationSO codificationSO = (ICodificationSO)
-		 * BusinessDelegate.getInstance
-		 * ().getServiceObject("cm",ICodificationSO.class); CodificationReqDTO
-		 * reqDTO = new CodificationReqDTO();
-		 * 
-		 * CodificationResDTO resDTO = codificationSO.searchSegment(reqDTO);
-		 * 
-		 * if(resDTO.isSuccessful()){
-		 * 
-		 * rootNodes = new DefaultTreeNode("rootNodes", null);
-		 * 
-		 * for(CmUnspsc segment : resDTO.getSegmentList()){ SegmentVO segmentObj
-		 * = new SegmentVO(); segmentObj.setName(segment.getUnspscTitle());
-		 * segmentObj.setParentCode(segment.getUnspscCode());
-		 * segmentObj.setUnspscLevel(0);
-		 * 
-		 * TreeNode segmentNode = new DefaultTreeNode("segment", segmentObj,
-		 * rootNodes);
-		 * 
-		 * //reqDTO.setParentCode(segment.getUnspscCode()); //resDTO =
-		 * codificationSO.searchFamily(reqDTO);
-		 * 
-		 * for(CmUnspsc catFamily : segment.getCmUnspscs()){
-		 * 
-		 * FamiliesVO familiesVO = new FamiliesVO();
-		 * familiesVO.setName(catFamily.getUnspscTitle());
-		 * familiesVO.setParentCode(catFamily.getUnspscCode());
-		 * familiesVO.setUnspscLevel(1); TreeNode families = new
-		 * DefaultTreeNode("families",familiesVO, segmentNode); } } }
-		 */
+		
 
 	}
 
@@ -593,9 +561,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			CodificationResDTO resDTO = codificationSO.searchUNSPSC(reqDTO);
 			for (CmUnspsc unspsc : resDTO.getUnspscList()) {
 				log.info("unspsc:" + unspsc.getUnspscCode());
-				// for(CmBrand brand:unspsc.getCmBrand()){
-				// log.info("brand:"+brand.getBrandCode());
-				// }
+				
 			}
 
 			this.getManagedBean().setUnspscList(resDTO.getUnspscList());
@@ -705,18 +671,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	public String goToAssignUnspsc(VCmPendingCodifiedItem item) {
 		log.info("**********goToAssignUnspsc************");
 
-		// IRequestItemSO requestItemSO = null;
-
-		// requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance()
-		// .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-		// IRequestItemSO.class);
-		// RequestItemReqDTO reqDTO = new RequestItemReqDTO();
-		//
-		// reqDTO.setDocType(item.getDocType());
-		// reqDTO.setDocId(item.getDocId());
-		//
-		// RequestItemResDTO resDTO = requestItemSO
-		// .retrieveItemListByDocIdNType(reqDTO);
+		
 		IPendingCodifiedItemSO codifiedSO = (IPendingCodifiedItemSO) BusinessDelegate
 				.getInstance().getServiceObject(
 						ModuleCodeConst.CATALOGUE_MANAGEMENT,
@@ -837,11 +792,6 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		log.info("CM_ADMIN:" + fs.hasRoleUser("CM_ADMIN"));
 		log.info("CD_OFFICER:" + fs.hasRoleUser("CD_OFFICER"));
 
-		// if (fs.hasRoleUser("CM_ADMIN")) {
-		// return "reviewUnspscCode?faces-redirect=true";
-		// } else if (fs.hasRoleUser("CD_OFFICER")) {
-		// return "reviewBeforeCreateTempCode?faces-redirect=true";
-		// }
 
 		if (this.getManagedBean().getCurrentTaskName()
 				.equals(my.ep.constant.cm.CmConst.TASK_CREATE_TEMP_CODE)) {
@@ -2395,9 +2345,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	public void fillExtensionLists() {
 
 		log.info("**********fillExtensionLists************");
-		System.out
-		.println("**********this.getManagedBean().getSelectedUNSPSCObj()="
-				+ this.getManagedBean().getSelectedUNSPSCObj());
+
 		if (this.getManagedBean().getSelectedUNSPSCObj().getUnspscCode() != null
 				&& !this.getManagedBean().getSelectedUNSPSCObj()
 				.getUnspscCode().isEmpty()) {
@@ -2490,25 +2438,6 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		FacesScopes face = new FacesScopes();
 		Object token = face.getBPMAuthenticationCtxToken();
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
-
-		// ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO)
-		// BusinessDelegate
-		// .getInstance().getServiceObject("sm", ISupplierSearchSO.class);
-		// SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
-		//
-		// PmUser pmUser = new FacesScopes().getUserSessionBean();
-		// supplierReqDTO.setUserId(pmUser.getUserId());
-
-		// SupplierSearchResDTO smResDTO = supplierSearchSO
-		// .retriveSupplierProfiles(supplierReqDTO);
-		//
-		// log.info("getSmSupplier"
-		// + smResDTO.getResultBean().getResultList().get(0));
-
-		// for (CmRequestCode code :
-		// this.getManagedBean().getRequestExtCodeList()) {
-		// code.setSmSupplier(smResDTO.getResultBean().getResultList().get(0));
-		// }
 
 		reqDTO.setCatalogueAdminRequest(true);
 		reqDTO.setRequestExtList(this.getManagedBean().getRequestExtCodeList());
@@ -2715,7 +2644,11 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 
 
-
+	/**
+	 * Navigate to KeyWord Maintenance Search Screen
+	 * 
+	 * @return String(keywordMaintainSearch.xhtml)  
+	 */
 	public String goToKeywordExtensionSearch(CmUnspsc unspscObj) {
 		log.debug("**********goToKeywordExtensionSearch************");
 
@@ -2789,8 +2722,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		resDTO = unspscSO.searchColor(reqDTO);
 
 		for (CmColor color : resDTO.getColorList()) {
-			// log.info("color:"+color);
-			// log.info("color:"+color.getColorId());
+			
 			if (!StringUtils.isBlank(color.getColorName()) && color.getRecordStatusFlg()==1) {
 				this.getManagedBean()
 				.getColorCriteria()
@@ -2804,9 +2736,6 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 
 	public String saveKeyWord(){
-
-
-		//System.out.println("keyword:"+this.getManagedBean().getKeywordItem().getCmKeyword().get(0).getKeyword());
 
 
 		ICodificationSO codificationSO = null;
@@ -2858,8 +2787,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 
 		int index = i%10;
-		System.out.println("*******cloneExtensionSelection*************"+this.getManagedBean().getCloneExtensionVOs().size());
-
+		
 		ExtensionCodeVO extCodeVO = new ExtensionCodeVO();
 		Object[] objects = (Object[]) this.getManagedBean().getExtensionSearchItemDataModel().getList().get(index);
 		System.out.println("objects1[8]"+objects[8]);
@@ -2893,7 +2821,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				}
 
 			}
-			System.out.println("addInLs:"+addInLs);
+			
 			if(addInLs){
 				this.getManagedBean().getCloneExtensionVOs().add(extCodeVO);
 			}
@@ -2902,19 +2830,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			this.getManagedBean().getCloneExtensionVOs().add(extCodeVO);
 		}
 
-		System.out.println("*******size*************"+this.getManagedBean().getCloneExtensionVOs().size());
 
-
-		/*	for (int k = 0; k < this.getManagedBean().getExtensionSearchItemDataModel().getList().size(); k++) {
-
-			Object[] objectsK = (Object[]) this.getManagedBean().getExtensionSearchItemDataModel().getList().get(k);
-
-			if(String.valueOf(objectsK[8]).equalsIgnoreCase("false")){
-				this.getManagedBean().setExtensionSearchcheckBoxAll(false);
-				break;
-			}
-
-		}*/
 
 
 
@@ -2975,7 +2891,6 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			extCodeVO.setColorName(String.valueOf(objects[7]));
 			extCodeVO.setKey(String.valueOf(objects[4])+String.valueOf(objects[5])+String.valueOf(objects[6])+String.valueOf(objects[7]));
 
-			System.out.println("*****isExtensionSearchcheckBoxAll******"+this.getManagedBean().isExtensionSearchcheckBoxAll());
 			if(this.getManagedBean().isExtensionSearchcheckBoxAll()){
 				extCodeVO.setSelected(true);
 				objects[8] = true;
@@ -2983,8 +2898,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				extCodeVO.setSelected(false);
 				objects[8] = false;
 			}
-			System.out.println("objects1[8]"+objects[8]);
-
+		
 			if(this.getManagedBean().getCloneExtensionVOs()!=null && this.getManagedBean().getCloneExtensionVOs().size()>0){
 
 
@@ -2996,7 +2910,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 					}
 
 
-					System.out.println("extCodeVO.isSelected():"+extCodeVO.isSelected());
+				
 					if(!extCodeVO.isSelected() && extCodeVO.getKey().equalsIgnoreCase(obj.getKey())){
 						this.getManagedBean().getCloneExtensionVOs().remove(obj);
 						addInLs = false;
@@ -3004,7 +2918,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 					}
 
 				}
-				System.out.println("addInLs:"+addInLs);
+			
 				if(addInLs){
 					if(!checkDuplicateAdd.containsKey(extCodeVO.getKey())){
 						this.getManagedBean().getCloneExtensionVOs().add(extCodeVO);
@@ -3012,19 +2926,12 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				}
 
 			}else{
-				System.out.println("***extCodeVO.isSelected()****"+extCodeVO.isSelected());
 				if(extCodeVO.isSelected()){
 					if(!checkDuplicateAdd.containsKey(extCodeVO.getKey())){
 						this.getManagedBean().getCloneExtensionVOs().add(extCodeVO);
 					}
 				}
 			}
-
-			System.out.println("*******size*************"+this.getManagedBean().getCloneExtensionVOs().size());
-
-
-
-
 
 		}
 
@@ -3037,11 +2944,6 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 
 	public void checkingCheckAll(){
-
-
-		System.out.println("****final****"+this.getManagedBean().isExtensionSearchcheckBoxAll());
-
-
 
 		int count =0;
 		Map tempMap = new HashMap();
@@ -3065,16 +2967,13 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			}
 
 		}
-		System.out.println("count:"+count);
-		System.out.println("resDTO.getExtensionResultBean().getResultList().size():"+ this.getManagedBean().getExtensionSearchItemDataModel().getList().size());
+		
 		if(count ==  this.getManagedBean().getExtensionSearchItemDataModel().getList().size()){
 			this.getManagedBean().setExtensionSearchcheckBoxAll(true);
 		}else{
 			this.getManagedBean().setExtensionSearchcheckBoxAll(false);
 		}
 
-
-		System.out.println("****last****"+this.getManagedBean().isExtensionSearchcheckBoxAll());
 	}
 	
 	
