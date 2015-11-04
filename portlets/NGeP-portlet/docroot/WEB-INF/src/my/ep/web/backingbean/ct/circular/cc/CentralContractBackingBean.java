@@ -1078,8 +1078,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		   return "../portal/circularListing.xhtml?faces-redirect=true";
 	   } else if(getManagedBean().isChkCentralCircular()) {
 		   return getManagedBean().getGotoPreviewPage();
-	   } 
-	   else {
+	   } else if(getManagedBean().getGotoPreviewPage()!=null) {
+		   return getManagedBean().getGotoPreviewPage();
+	   } else {
 		   return "search.xhtml?faces-redirect=true";
 	   }
 	}
