@@ -137,6 +137,10 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	 * Method used to initialize approver list
 	 */
 	public TerminationBackingBean() {
+		
+		if(ctBB == null){
+   		  ctBB = new ContractBackingBean();
+   	  }
 		if(this.getManagedBean().getAction() == null)
 			this.getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});		
 		
@@ -303,7 +307,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	public void setTerminationContractVer(ContractResDTO resDTO) {
 		getManagedBean().setContractVer(resDTO.getCtContractVer());
 		getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
-		
+		ctBB.renewSesionObject();
 		getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
 			    ParameterConst.DOCTYPE_CONTRACT_TERMINATION, getManagedBean().getCtContract().getContractNo()));
 		    ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());	
