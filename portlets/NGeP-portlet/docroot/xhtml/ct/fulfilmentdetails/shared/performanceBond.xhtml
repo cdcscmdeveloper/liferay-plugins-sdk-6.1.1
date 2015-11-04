@@ -11,23 +11,23 @@
 }
 </style>
 	<p:panel id="bondId" toggleable="true" toggleSpeed="500"
-		rendered="#{contractDetailsBackingBean.managedBean.ctContractAmount.bondReq and 
-		!contractDetailsBackingBean.managedBean.directPurchase}">
+		rendered="#{ctBackingBean.managedBean.ctContractAmount.bondReq and 
+		!ctBackingBean.managedBean.directPurchase}">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.panel.performance.bond']}"/>
 			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.performance.bond.dtls']}"/>
 	   	</f:facet>
 		 <p:dataTable id="tableBond" var="varBond" rowIndexVar="index"
-			  value="#{contractDetailsBackingBean.managedBean.ctContractAmount.ctPerformanceBonds}"
+			  value="#{ctBackingBean.managedBean.ctContractAmount.ctPerformanceBonds}"
 			  rowKey="#{rowKeyObj}"
-			  first="#{contractDetailsBackingBean.managedBean.firstRowSelected}">
+			  first="#{ctBackingBean.managedBean.firstRowSelected}">
 			  <ac:paginator for="tableBond" />
 			  
-			 <p:column style="width:2%;"  rendered="#{!contractDetailsBackingBean.managedBean.viewContract}">
+			 <p:column style="width:2%;"  rendered="#{!ctBackingBean.managedBean.viewContract}">
 			 <f:facet name="header">
-					<p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.selectAll}">
+					<p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.selectAll}">
 						<p:ajax partialSubmit="true" process="@this"
-							update="tableBond" listener="#{contractDetailsBackingBean.selectAllBond()}" />
+							update="tableBond" listener="#{ctBackingBean.selectAllBond()}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{varBond.selectedCheckBox}" styleClass="myCustomChekBox">
@@ -37,19 +37,19 @@
 			
 			<p:column style="width:10%;" headerText="#{lbl['lbl.ct.ref.no']}" styleClass="column-align-center">
 				<p:inputText value="#{varBond.refNo}" maxlength="50" 
-					disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:85px;" />
+					disabled="#{ctBackingBean.managedBean.viewContract}" style="width:85px;" />
 			</p:column>
 		
 			<p:column style="width:23%;" headerText="#{lbl['lbl.ct.financial.inst']}" styleClass="column-align-center">
 				<p:selectOneMenu id="orgName"  value="#{varBond.financialOrg.financialOrgId}"
-				    style="width:195px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
-					   <f:selectItems value="#{contractDetailsBackingBean.retrieveFinancialOrgList()}" />
+				    style="width:195px;" disabled="#{ctBackingBean.managedBean.viewContract}">
+					   <f:selectItems value="#{ctBackingBean.retrieveFinancialOrgList()}" />
 				</p:selectOneMenu>
 			</p:column>
 			
 			<p:column style="width:12%;" headerText="#{lbl['lbl.ct.amount']}" styleClass="column-align-center" >
 				<p:inputText value="#{varBond.bondAmount}" styleClass="ppRightBtn" maxlength="18" 
-				    disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:90px;" label="#{lbl['lbl.ct.amount']}">
+				    disabled="#{ctBackingBean.managedBean.viewContract}" style="width:90px;" label="#{lbl['lbl.ct.amount']}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						<p:ajax process="@this"></p:ajax>
@@ -58,10 +58,10 @@
 			
 			<p:column style="width:8%;" headerText="#{lbl['lbl.ct.effective.date']}" styleClass="column-align-center">
 				<p:calendar id="popupButtonCal4" value="#{varBond.effDate}"  styleClass="calendarDateField" size="9" 
-					disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
+					disabled="#{ctBackingBean.managedBean.viewContract}"
 					showOn="button" readonlyInput="true" navigator="true"
-					mindate="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate}"
-					maxdate="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.expDate}"
+					mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
+					maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
 					 <p:ajax event="dateSelect" update="@([id$=bondExpDateCalId])" process="@this" />
 				</p:calendar>
@@ -79,23 +79,23 @@
 			<p:column styleClass="column-align-center" style="width:35%;" headerText="#{lbl['lbl.txt.attachment']}">
 				<h:panelGroup id="uploadBondPg" columns="2">
 					<p:commandButton oncomplete="uploadBondDlg.show();return false;"  
-							rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"
+							rendered="#{!ctBackingBean.managedBean.viewContract}"
 					     style="float:left;" icon="iconAttachment" update=":form:tableBond, :form:uploadBondDlg">
-						<f:setPropertyActionListener value="#{varBond}" target="#{contractDetailsBackingBean.managedBean.ctPerformanceBond}" />
+						<f:setPropertyActionListener value="#{varBond}" target="#{ctBackingBean.managedBean.ctPerformanceBond}" />
 					</p:commandButton>
 					<h:commandLink
 						title="#{varBond.fileName}"
-						value="#{contractDetailsBackingBean.getShortFileName(varBond.fileName)}"						
+						value="#{ctBackingBean.getShortFileName(varBond.fileName)}"						
 						style="float:left;margin-top:10px;" styleClass="blue_font"
-						action="#{contractDetailsBackingBean.downloadFile(varBond.filePath, varBond.fileName)}" />
+						action="#{ctBackingBean.downloadFile(varBond.filePath, varBond.fileName)}" />
 				</h:panelGroup>
 			</p:column>
 		</p:dataTable>
 		<div class="ppRightBtn">
 			
 				<p:commandButton id="addPdBtn"  value="#{lbl['lbl.btn.add']}" process="@this,tableBond" 
-				  rendered="#{!contractDetailsBackingBean.managedBean.viewContract}" 
-				     action="#{contractDetailsBackingBean.addBondDetails}" update="@all,tableBond">
+				  rendered="#{!ctBackingBean.managedBean.viewContract}" 
+				     action="#{ctBackingBean.addBondDetails}" update="@all,tableBond">
 					<p:tooltip for="addPdBtn">
 					    <h:outputText value="#{lbl['lbl.ct.tooltip.add.performance.bond']}" escape="false" />
 					</p:tooltip>
@@ -104,7 +104,7 @@
 		  
 			     <p:commandButton id="delPdBtn" value="#{lbl['lbl.btn.delete']}" 
 			          process="@this" partialSubmit="true" onsuccess="dlgPerformDel.show();"
-				      rendered="#{!contractDetailsBackingBean.managedBean.viewContract}" >
+				      rendered="#{!ctBackingBean.managedBean.viewContract}" >
 					<p:tooltip for="delPdBtn">
 					    <h:outputText value="#{lbl['lbl.ct.tooltip.delete.performance.bond']}" escape="false" />
 					</p:tooltip>
@@ -117,7 +117,7 @@
 			<p:ajax event="close" />
 			<p:fileUpload style="display:inline;" mode="advanced"
 			    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-				fileUploadListener="#{contractDetailsBackingBean.fileUpload}"
+				fileUploadListener="#{ctBackingBean.fileUploadPerformance}"
 				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"  update=":form:tableBond">
 			</p:fileUpload>
@@ -132,9 +132,9 @@
 			</h:panelGrid>
 			<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.yes']}"  update="tableBond" 
-		         process="@this" actionListener="#{contractDetailsBackingBean.removePerformanceBond()}" onclick="dlgPerformDel.hide();">
+		         process="@this" actionListener="#{ctBackingBean.removePerformanceBond()}" onclick="dlgPerformDel.hide();">
 		         <f:setPropertyActionListener
-					target="#{contractDetailsBackingBean.managedBean.selectAll}" value="#{false}" /></p:commandButton>
+					target="#{ctBackingBean.managedBean.selectAll}" value="#{false}" /></p:commandButton>
 				<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgPerformDel.hide();" type="button" />
 			</div>
 		</p:dialog>
