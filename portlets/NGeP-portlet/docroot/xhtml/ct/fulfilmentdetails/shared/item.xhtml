@@ -7,7 +7,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
     <p:panel id="itemId" toggleable="true"  
-       rendered="#{contractDetailsBackingBean.managedBean.ctItemList.size() > 0}"  toggleSpeed="500">
+       rendered="#{ctBackingBean.managedBean.ctItemList.size() > 0}"  toggleSpeed="500">
        <f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.panel.product']}"/>
 			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.product.dtls']}"/>
@@ -16,10 +16,10 @@
        <h:panelGrid  style="width:100%;">
              
              <p:dataTable id="itemTable" var="ctItemVar" 
-                 value="#{contractDetailsBackingBean.managedBean.ctItemList}"  widgetVar="itemTableObj"
-                 selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedItem}" rowKey="#{ctItemVar}">
+                 value="#{ctBackingBean.managedBean.ctItemList}"  widgetVar="itemTableObj"
+                 selectionMode="single" selection="#{ctBackingBean.managedBean.selectedItem}" rowKey="#{ctItemVar}">
                  <ac:paginator for="itemTable"/>
-                 <p:ajax event="rowSelect" update=":form:changeField" listener="#{contractDetailsBackingBean.onSelectProductItem()}" 
+                 <p:ajax event="rowSelect" update=":form:changeField" listener="#{ctBackingBean.onSelectProductItem()}" 
                   onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 		 
 		         <p:column filterBy="#{ctItemVar.scRequestItem.itemName}" styleClass="column-align-center"
@@ -49,7 +49,7 @@
 		         </p:column>   
 		   
 		         <p:column style="width:14%;white-space:normal;" styleClass="column-align-center"
-		         	rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+		         	rendered="#{ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
 		            <f:facet name="header">
 			            <h:outputText value="#{lbl['lbl.ct.total.max.order.qty']}"/>
 	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.total.max.order.qty']}"/>
@@ -66,9 +66,9 @@
 	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.type.of.goods']}"/>
 	               	</f:facet>
 	             	<h:outputText rendered="#{ctItemVar.itemOrigin.parameterCode == 'L'}" 
-	                 	value="#{contractDetailsBackingBean.getParameterDesc(ctItemVar.itemOrigin)}" style="float:left;"/>
+	                 	value="#{ctBackingBean.getParameterDesc(ctItemVar.itemOrigin)}" style="float:left;"/>
 	               <h:outputText rendered="#{ctItemVar.itemOrigin.parameterCode == 'I'}" 
-	                 	value="#{contractDetailsBackingBean.getParameterDesc(ctItemVar.itemOrigin)}"  style="float:left;"/>
+	                 	value="#{ctBackingBean.getParameterDesc(ctItemVar.itemOrigin)}"  style="float:left;"/>
 	             	<!-- <p:commandLink rendered="#{ctItemVar.itemOrigin.parameterCode == 'I'}" styleClass="blue_font" 
 	                  	value="#{contractDetailsBackingBean.getParameterDesc(ctItemVar.itemOrigin)}" onclick="importedDlg.show();return false;" />	 -->
 		          </p:column> 
@@ -81,15 +81,15 @@
           </h:panelGrid>
      
           <p:outputPanel id="changeField">
-          	<h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+          	<h:panelGroup rendered="#{ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
 		        <p:spacer height="20"/>
 		        <h:panelGrid columns="2" style="height:50px;text-align:bottom;" 
-			         rendered="#{contractDetailsBackingBean.managedBean.selectedItem != null}">
+			         rendered="#{ctBackingBean.managedBean.selectedItem != null}">
 		             <h:outputLabel for="show" value="#{lbl['lbl.ct.show']}" style="width:50px;"/>
 		             <h:panelGrid columns="3">
-			             <p:selectOneMenu id="show" value="#{contractDetailsBackingBean.managedBean.showItem}" style="width:200px;">
-			                 <f:selectItems value="#{contractDetailsBackingBean.getDropdownCodeValues(ParameterTypeConst.itemDisplayType)}" />
-			                 <p:ajax event="change" update=":form:changeField" listener="#{contractDetailsBackingBean.changeField}" process="@form"
+			             <p:selectOneMenu id="show" value="#{ctBackingBean.managedBean.showItem}" style="width:200px;">
+			                 <f:selectItems value="#{ctBackingBean.getDropdownCodeValues(ParameterTypeConst.itemDisplayType)}" />
+			                 <p:ajax event="change" update=":form:changeField" listener="#{ctBackingBean.changeField}" process="@form"
 			                   onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />  
 				         </p:selectOneMenu>
 				         <p:spacer width="1"/>
@@ -99,14 +99,14 @@
 		 	</h:panelGroup>
 		        <p:spacer height="20"/>
 		        <h:panelGroup  style="width:100%"
-			        rendered="#{contractDetailsBackingBean.managedBean.selectedItem != null and 
-			        contractDetailsBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypePrice}">
+			        rendered="#{ctBackingBean.managedBean.selectedItem != null and 
+			        ctBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypePrice}">
 		     
 		           <p:dataTable id="itemPriceTier" var="itemPrice" 
-		                value="#{contractDetailsBackingBean.managedBean.selectedItem.ctItemPrices}">
+		                value="#{ctBackingBean.managedBean.selectedItem.ctItemPrices}">
 			            <ac:paginator for="itemPriceTier"/>
 			      
-			             <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeStandard}">
+			             <c:if test="#{ctBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeStandard}">
 			                  
 			                   <p:column headerText="#{lbl['lbl.ct.price']}" styleClass="column-align-center">
 			                        <h:outputText value="#{itemPrice.unitPrice}" style="float:right;">
@@ -127,7 +127,7 @@
 			                 </p:column> 
 			            </c:if>  
 			     
-			            <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeTier}">
+			            <c:if test="#{ctBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeTier}">
 			                  <p:column styleClass="column-align-center">
 					          	<f:facet name="header">
 									<h:outputText value="#{lbl['lbl.ct.from.qty']}"/>
@@ -135,7 +135,7 @@
 				               	</f:facet>
 			               		<h:outputText value="#{itemPrice.fromQty}" style="float:right;">
                						<f:converter converterId="dynamicNumberConverter" />
-									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
 			              		</h:outputText>
 			                  </p:column>       
 			           
@@ -146,7 +146,7 @@
 				               	</f:facet>
 				               	<h:outputText value="#{itemPrice.toQty}" style="float:right;">
                						<f:converter converterId="dynamicNumberConverter" />
-									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />		
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />		
 				               	</h:outputText>          
 			                  </p:column> 
 			           
@@ -169,7 +169,7 @@
 			                  </p:column>
 			              </c:if>   
 			        
-			              <c:if  test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode 
+			              <c:if  test="#{ctBackingBean.managedBean.selectedItem.priceType.parameterCode 
 			                  eq ParameterConst.priceTypeZonalStandard}">
 			                
 			                   <p:column headerText="#{lbl['lbl.ct.zone']}" style="white-space:normal;" styleClass="column-align-center">
@@ -196,7 +196,7 @@
 			                   </p:column>     
 			             </c:if>
 			           
-			             <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode
+			             <c:if test="#{ctBackingBean.managedBean.selectedItem.priceType.parameterCode
 			                  eq ParameterConst.priceTypeZonalTier}">
 			                 <p:column headerText="#{lbl['lbl.ct.zone']}" style="white-space:normal;">
 			                          <p:outputLabel value="#{itemPrice.ctContractZone.zoneName}"  rendered="#{!itemPrice.changeZoneLabel}" style="float:left;"/>
@@ -209,7 +209,7 @@
 				               	</f:facet>
 			               		<h:outputText value="#{itemPrice.fromQty}" style="float:right;">
                						<f:converter converterId="dynamicNumberConverter" />
-									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
 				              	</h:outputText>
 			                 </p:column>       
 			        
@@ -220,7 +220,7 @@
 				               	</f:facet>
 			               		<h:outputText value="#{itemPrice.toQty}" style="float:right;">
                						<f:converter converterId="dynamicNumberConverter" />
-									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />			
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />			
 				             	</h:outputText>		           
 			                 </p:column>    
 			          
@@ -244,7 +244,7 @@
 			                 </p:column>    
 			              </c:if> 
                     
-                          <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode
+                          <c:if test="#{ctBackingBean.managedBean.selectedItem.priceType.parameterCode
 			                  eq ParameterConst.priceTypeTariff}">
 			                   <p:column styleClass="column-align-center">
 					           	<f:facet name="header">
@@ -253,7 +253,7 @@
 				               	</f:facet>
 			               		<h:outputText value="#{itemPrice.fromQty}" style="float:right;">
                						<f:converter converterId="dynamicNumberConverter" />
-									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />			
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />			
 				               	</h:outputText>		            
 			                   </p:column>       
 			          
@@ -264,7 +264,7 @@
 				               	</f:facet>
 			               		<h:outputText value="#{itemPrice.toQty}" style="float:right;">
                						<f:converter converterId="dynamicNumberConverter" />
-									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
 				               	</h:outputText>   
 			                   </p:column>  
 			         
@@ -275,7 +275,7 @@
 				               	</f:facet>
 				                <h:outputText value="#{itemPrice.subSequence}">
                						<f:converter converterId="dynamicNumberConverter" />
-									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
 				                </h:outputText>
 			                   </p:column> 
 			          
@@ -299,7 +299,7 @@
 			                   </p:column>          
 			             </c:if> 
 			           
-			             <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode
+			             <c:if test="#{ctBackingBean.managedBean.selectedItem.priceType.parameterCode
 			                eq ParameterConst.priceTypeZonalTariff}">            
 			                <p:column headerText="#{lbl['lbl.ct.zone']}" style="white-space:normal;" styleClass="column-align-center">
 			                       <p:outputLabel value="#{itemPrice.ctContractZone.zoneName}"  rendered="#{!itemPrice.changeZoneLabel}"  style="float:left;"/>
@@ -313,7 +313,7 @@
 				               	</f:facet>
 			               		<h:outputText value="#{itemPrice.fromQty}" style="float:right;">
                						<f:converter converterId="dynamicNumberConverter" />
-									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
 				             	</h:outputText>			              
 			                 </p:column>       
 			            
@@ -324,7 +324,7 @@
 				               	</f:facet>
 			               		<h:outputText value="#{itemPrice.toQty}" float="right;">
                						<f:converter converterId="dynamicNumberConverter" />
-									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
 				             	</h:outputText>	           
 			                 </p:column>
 			           
@@ -335,7 +335,7 @@
 				               	</f:facet>
 			               		<h:outputText value="#{itemPrice.subSequence}">
                						<f:converter converterId="dynamicNumberConverter" />
-									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
 				              	</h:outputText>
 			                  </p:column>     
 			           
@@ -362,21 +362,21 @@
 		  </h:panelGroup>
 		  
 		   <h:panelGroup style="width:100%;" 
-		      rendered="#{contractDetailsBackingBean.managedBean.selectedItem !=null  and 
-		         contractDetailsBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeCeilQty }">
+		      rendered="#{ctBackingBean.managedBean.selectedItem !=null  and 
+		         ctBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeCeilQty }">
 			     <p:dataTable id="ceilingTable" var="itemCeilingQtiesVar" rowKey="#{itemCeilingQtiesVar}"
-			         value="#{contractDetailsBackingBean.getActiveItemCeilingQty()}" >
+			         value="#{ctBackingBean.getActiveItemCeilingQty()}" >
 				     <ac:paginator for="ceilingTable"/>
 				
 				     <p:column headerText="#{lbl['lbl.ct.ministry']}" style="white-space:normal;" styleClass="column-align-center">
 				         <div align="left">
-				          <h:outputText value="#{contractDetailsBackingBean.retrieveMinistryByOrgProfileId(itemCeilingQtiesVar.ctAgency.orgProfile.orgProfileId)}"  />
+				          <h:outputText value="#{ctBackingBean.retrieveMinistryByOrgProfileId(itemCeilingQtiesVar.ctAgency.orgProfile.orgProfileId)}"  />
 			    	     </div>
 			    	 </p:column>  
 			    	 
 			    	  <p:column headerText="#{lbl['lbl.ct.jabatan']}" style="white-space:normal;" styleClass="column-align-center">
 				         <div align="left">
-				         <h:outputText value="#{contractDetailsBackingBean.retrieveJabatanByOrgProfileId(itemCeilingQtiesVar.ctAgency.orgProfile.orgProfileId)}"  />
+				         <h:outputText value="#{ctBackingBean.retrieveJabatanByOrgProfileId(itemCeilingQtiesVar.ctAgency.orgProfile.orgProfileId)}"  />
 			    	</div>
 			    	 </p:column>     
 				
@@ -391,12 +391,12 @@
 								<h:outputText value="#{lbl['lbl.ct.ceiling.qty']}"/>
 			               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ceiling.qty']}"/>
 		               		</f:facet>
-					       <p:inputText style="width:70px;" styleClass="ppRightBtn" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
-					           	maxlength="#{amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" value="#{itemCeilingQtiesVar.ceilingQuantity}" required="true" label="#{lbl['lbl.ct.ceiling.qty']}">
+					       <p:inputText style="width:70px;" styleClass="ppRightBtn" disabled="#{ctBackingBean.managedBean.viewContract}"
+					           	maxlength="#{ctBackingBean.managedBean.selectedItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" value="#{itemCeilingQtiesVar.ceilingQuantity}" required="true" label="#{lbl['lbl.ct.ceiling.qty']}">
 						      	<f:converter converterId="dynamicNumberConverter" />
-								<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
+								<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
 					           	<p:ajax event="blur" update=":form:ceilingTable"
-                                	process="@form" listener="#{contractDetailsBackingBean.validateCeilingQty(itemCeilingQtiesVar)}"/>
+                                	process="@form" listener="#{ctBackingBean.validateCeilingQty(itemCeilingQtiesVar)}"/>
 					       </p:inputText>
 				     </p:column>            
 			  
@@ -404,17 +404,17 @@
 		  </h:panelGroup>
 		  
 		  <h:panelGroup  style="width:100%"
-			        rendered="#{contractDetailsBackingBean.managedBean.selectedItem != null and 
-			        contractDetailsBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeMaxQty}">
+			        rendered="#{ctBackingBean.managedBean.selectedItem != null and 
+			           ctBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeMaxQty}">
 		     
 		           <p:dataTable id="itemMaxQtyTbl" var="itemMaxQty" 
-		                value="#{contractDetailsBackingBean.managedBean.selectedItem.ctItemMaxQties}">
+		                value="#{ctBackingBean.managedBean.selectedItem.ctItemMaxQties}">
 			            <ac:paginator for="itemMaxQtyTbl"/>
 			            
 			            <p:column headerText="#{lbl['lbl.ct.zone']}" style="width:30%; white-space:normal;"
-				             rendered="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalStandard or 
-			  		         contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTier or 
-			  		         contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTariff}">
+				             rendered="#{ctBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalStandard or 
+			  		         ctBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTier or 
+			  		         ctBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTariff}">
 				               <p:outputLabel value="#{itemMaxQty.ctContractZone.zoneName}" style="float:left;" rendered="#{!itemMaxQty.changeZoneLabel}" />
 				               <p:outputLabel value="#{itemMaxQty.ctContractZone.zoneName} (#{lbl['lbl.ct.new']})" style="float:left;" rendered="#{itemMaxQty.changeZoneLabel}" />
 						</p:column>
@@ -425,7 +425,7 @@
 			               	</f:facet>
 		               		<h:outputText value="#{itemMaxQty.maxQuantity}" style="float:right;">
 		               			<f:converter converterId="dynamicNumberConverter" />
-								<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
+								<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
 			             	</h:outputText>
 						</p:column>  
 			            <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="width: 20%; white-space:normal;" styleClass="column-align-center">
@@ -446,29 +446,29 @@
 		     <h:panelGrid columns="2" width="100%">
 		      
 		        <p:outputLabel id="mtoloa" value="#{lbl['lbl.ct.loa.no']}" />
-	            <p:inputText id="txtmtoloa" style="width:200px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"></p:inputText>
+	            <p:inputText id="txtmtoloa" style="width:200px;" disabled="#{ctBackingBean.managedBean.viewContract}"></p:inputText>
 	            
 	            <p:outputLabel id="sourcingno" value="#{lbl['lbl.ct.sourcing.no']}" />
-	            <p:inputText id="txtsourcingno" style="width:200px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"></p:inputText>
+	            <p:inputText id="txtsourcingno" style="width:200px;" disabled="#{ctBackingBean.managedBean.viewContract}"></p:inputText>
                
                 <p:outputLabel id="mtocontract" value="#{lbl['lbl.ct.contract.no']}" />
-	            <p:inputText id="txtmtocontract" style="width:200px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"></p:inputText>
+	            <p:inputText id="txtmtocontract" style="width:200px;" disabled="#{ctBackingBean.managedBean.viewContract}"></p:inputText>
 	            
 	            <p:outputLabel id="suppliername" value="#{lbl['lbl.ct.business.name']}" />
-	            <p:inputText id="txtsuppliername" style="width:200px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"></p:inputText>
+	            <p:inputText id="txtsuppliername" style="width:200px;" disabled="#{ctBackingBean.managedBean.viewContract}"></p:inputText>
 	            
 	            <p:outputLabel id="mofno" value="#{lbl['lbl.ct.mof.no']}" />
-	            <p:inputText id="txtmofno" style="width:200px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"></p:inputText>
+	            <p:inputText id="txtmofno" style="width:200px;" disabled="#{ctBackingBean.managedBean.viewContract}"></p:inputText>
                 
                 <p:outputLabel id="agentname" value="#{lbl['lbl.ct.oversea.supp.name']}" />
-                 <p:selectOneMenu id="txtagentname" style="width:210px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
+                 <p:selectOneMenu id="txtagentname" style="width:210px;" disabled="#{ctBackingBean.managedBean.viewContract}">
                    <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" /> 
                    <f:selectItem itemLabel="-Interspiro AB-" itemValue="Interspiro AB" /> 
                 </p:selectOneMenu>
                 
                 <p:outputLabel id="promethod" value="#{lbl['lbl.ct.proc.type']}" />
                 <h:panelGrid columns="3">
-                    <p:selectOneMenu id="txtpromethod"  style="width:100px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
+                    <p:selectOneMenu id="txtpromethod"  style="width:100px;" disabled="#{ctBackingBean.managedBean.viewContract}">
                        <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" /> 
                        <f:selectItem itemLabel="-Ex-Work-" itemValue="Ex-Work" /> 
                        <f:selectItem itemLabel="-FOB-" itemValue="FOB" /> 
@@ -480,28 +480,28 @@
                 </h:panelGrid>
 	            
                 <p:outputLabel id="exportlicense" value="#{lbl['lbl.ct.req.exp.license']}" />
-                <p:selectOneRadio id="options" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">  
+                <p:selectOneRadio id="options" disabled="#{ctBackingBean.managedBean.viewContract}">  
                     <f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />  
                     <f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="2" />  
                  </p:selectOneRadio>  
                   
                 <h:outputLabel id="countryoforigin" value="#{lbl['lbl.ct.country.of.origin']}" />
-                <p:selectOneMenu id="txtcountryoforigin" style="width:110px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
+                <p:selectOneMenu id="txtcountryoforigin" style="width:110px;" disabled="#{ctBackingBean.managedBean.viewContract}">
                    <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" /> 
                    <f:selectItem itemLabel="Sewden" itemValue="Sewden" /> 
                 </p:selectOneMenu>
 	             
                 <h:outputLabel id="loadingport" value="#{lbl['lbl.ct.port.of.loading']}" />
-	            <p:inputText id="txtloadingport" style="width:100px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"></p:inputText>
+	            <p:inputText id="txtloadingport" style="width:100px;" disabled="#{ctBackingBean.managedBean.viewContract}"></p:inputText>
                  
                 <p:outputLabel id="countryofdestination" value="#{lbl['lbl.ct.country.of.destination']}" />
-                <p:selectOneMenu id="txtcountryofdestination" style="width:110px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
+                <p:selectOneMenu id="txtcountryofdestination" style="width:110px;" disabled="#{ctBackingBean.managedBean.viewContract}">
                    <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" /> 
                    <f:selectItem itemLabel="Malaysia" itemValue="Malaysia" /> 
                 </p:selectOneMenu>
 	             
                 <h:outputLabel id="dischargeport" value="#{lbl['lbl.ct.port.of.discharge']}" />
-	            <p:inputText id="txtdischargeport" style="width:100px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"></p:inputText>
+	            <p:inputText id="txtdischargeport" style="width:100px;" disabled="#{ctBackingBean.managedBean.viewContract}"></p:inputText>
 	            
 	            <h:panelGroup>
                   <div style="height: 40px; vertical-align:top;">
@@ -510,10 +510,10 @@
                </h:panelGroup>
                <h:panelGrid>
                    <p:inputTextarea id="finaldestination" rows="4" cols="31" maxlength="100"  autoResize="false" 
-                   		disabled="#{contractDetailsBackingBean.managedBean.viewContract}"/>
+                   		disabled="#{ctBackingBean.managedBean.viewContract}"/>
               </h:panelGrid>
               <h:outputLabel id="transportmode" value="#{lbl['lbl.ct.transport.mode']}" />
-	          <p:selectOneMenu id="txttransportmode" style="width:110px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
+	          <p:selectOneMenu id="txttransportmode" style="width:110px;" disabled="#{ctBackingBean.managedBean.viewContract}">
                    <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" /> 
                    <f:selectItem itemLabel="#{lbl['lbl.ct.sea']}" itemValue="#{lbl['lbl.ct.sea']}" /> 
                    <f:selectItem itemLabel="#{lbl['lbl.ct.air']}" itemValue="#{lbl['lbl.ct.air']}" /> 
@@ -522,9 +522,9 @@
            </h:panelGrid>
 		</p:dialog>
   	 </p:panel>
-  	 <p:spacer rendered="#{contractDetailsBackingBean.managedBean.ctItemList.size() > 0}" height="50"/>
+  	 <p:spacer rendered="#{ctBackingBean.managedBean.ctItemList.size() > 0}" height="50"/>
   	 <p:panel id="serviceId"
-         rendered="#{contractDetailsBackingBean.managedBean.ctItemServiceList.size() > 0 }"  toggleable="true"  toggleSpeed="500">
+         rendered="#{ctBackingBean.managedBean.ctItemServiceList.size() > 0 }"  toggleable="true"  toggleSpeed="500">
   	     <f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.panel.service']}"/>
 			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.service.dtls']}"/>
@@ -532,13 +532,14 @@
   	     <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.select.service.item']}" escape="false"/><br/><br/>
              <h:panelGrid  style="width:100%;">  
   	        <p:dataTable id="serviceTable" var="data"  widgetVar="serviceItemObj" 
-  	           value="#{contractDetailsBackingBean.managedBean.ctItemServiceList}" rowKey="#{data}" 
-               selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedServiceItem}">
+  	           value="#{ctBackingBean.managedBean.ctItemServiceList}" rowKey="#{data}" 
+               selectionMode="single" selection="#{ctBackingBean.managedBean.selectedServiceItem}">
                <ac:paginator for="serviceTable"/>
-              <p:ajax event="rowSelect" update=":form:showServicePrice" listener="#{contractDetailsBackingBean.onSelectServiceItem()}" 
+              <p:ajax event="rowSelect" update=":form:showServicePrice" listener="#{ctBackingBean.onSelectServiceItem()}" 
               	onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 		      
-		      <p:column filterBy="#{data.scRequestItem.itemName}" style="width:20%; white-space:normal;" filterMatchMode="contains" styleClass="column-align-center">
+		      <p:column filterBy="#{data.scRequestItem.itemName}" 
+		          style="width:20%; white-space:normal;" filterMatchMode="contains" styleClass="column-align-center">
 		             <f:facet name="header">
 		                    <h:outputText id="serviceItemDesc" value="#{lbl['lbl.ct.item.name']}"/>
 		                    <ac:iconTooltip value="#{lbl['lbl.ct.instruction.item.search']}"/>
@@ -586,13 +587,13 @@
         <p:outputPanel id="showServicePrice">
 		   <p:spacer height="20"/>
 		    <h:panelGrid columns="1" style="width:100%" 
-		       rendered="#{contractDetailsBackingBean.managedBean.selectedServiceItem != null}">
+		       rendered="#{ctBackingBean.managedBean.selectedServiceItem != null}">
 		    
 		      <p:dataTable id="servicePriceTable" var="itemPricesVar"
-		          value="#{contractDetailsBackingBean.managedBean.selectedServiceItem.ctItemPrices}">
+		          value="#{ctBackingBean.managedBean.selectedServiceItem.ctItemPrices}">
 			      <ac:paginator for="servicePriceTable"/>
 			     
-			      <c:if test="#{contractDetailsBackingBean.managedBean.selectedServiceItem.priceType.parameterCode eq ParameterConst.priceTypeStandard}">
+			      <c:if test="#{ctBackingBean.managedBean.selectedServiceItem.priceType.parameterCode eq ParameterConst.priceTypeStandard}">
 			            <p:column headerText="#{lbl['lbl.ct.price']}" style="white-space:normal;" styleClass="column-align-center">
 			               <h:outputText value="#{itemPricesVar.unitPrice}" style="float:right;">
 			                   <f:convertNumber
@@ -611,7 +612,7 @@
 			             </p:column> 
 			     </c:if>
 			   
-			     <c:if test="#{contractDetailsBackingBean.managedBean.selectedServiceItem.priceType.parameterCode eq ParameterConst.priceTypeZonalStandard}">
+			     <c:if test="#{ctBackingBean.managedBean.selectedServiceItem.priceType.parameterCode eq ParameterConst.priceTypeZonalStandard}">
 			           <p:column headerText="#{lbl['lbl.ct.zone']}" style="white-space:normal;" styleClass="column-align-center">
 			                 <p:outputLabel value="#{itemPricesVar.ctContractZone.zoneName}" style="float:left;" rendered="#{!itemPricesVar.changeZoneLabel}" />
 			                 <p:outputLabel value="#{itemPricesVar.ctContractZone.zoneName} (#{lbl['lbl.ct.new']})" style="float:left;" rendered="#{itemPricesVar.changeZoneLabel}" />
@@ -639,7 +640,7 @@
 	    </h:panelGrid>
 	 </p:outputPanel>
    </p:panel>
-	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true" rendered="#{!contractDetailsBackingBean.managedBean.viewContract}">
+	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true" rendered="#{!ctBackingBean.managedBean.viewContract}">
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">
@@ -647,11 +648,11 @@
 						<tr>
 							<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
 							<td class="TableFieldRight">
-								<p:dataGrid value="#{contractDetailsBackingBean.managedBean.contractVer.itemRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
+								<p:dataGrid value="#{ctBackingBean.managedBean.contractVer.itemRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 									<table>
 										<tr>
 											<td rowspan="2" valign="top">
-												<h:graphicImage value="#{contractDetailsBackingBean.userImagePath(remarkVar.createdUser.loginId)}" height="30" width="30" />
+												<h:graphicImage value="#{ctBackingBean.userImagePath(remarkVar.createdUser.loginId)}" height="30" width="30" />
 											</td>
 											<td width="5"></td>
 											<td>
@@ -665,7 +666,7 @@
 											<td></td>
 											<td>
 												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" 
-													disabled="#{contractDetailsBackingBean.managedBean.viewContract}"/> 
+													disabled="#{ctBackingBean.managedBean.viewContract}"/> 
 												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.remark']}"/>
 												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 											</td>

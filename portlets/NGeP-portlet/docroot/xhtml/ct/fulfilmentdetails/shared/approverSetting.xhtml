@@ -17,7 +17,7 @@
 			<h:panelGrid style="width:500px;">
 				<p:pickList id="approverpickList" value="#{contractDetailsBackingBean.managedBean.approverModel}"
 					var="data" itemValue="#{data}" itemLabel="#{data.userName}"
-					disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
+					disabled="#{ctBackingBean.managedBean.viewContract}"
 					showTargetControls="true" filterMatchMode="contains"
 					converter="pmUserConverter">
 					<f:facet name="sourceCaption">
