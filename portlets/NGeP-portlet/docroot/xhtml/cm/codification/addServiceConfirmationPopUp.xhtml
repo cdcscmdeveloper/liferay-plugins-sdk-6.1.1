@@ -14,8 +14,8 @@
 			<table style="width: 100">
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view"
-							value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscCode}"></p:outputLabel> -
-					</td>
+							value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscCode}"></p:outputLabel>
+						-</td>
 					<td><p:outputLabel styleClass="outputLabel-view"
 							value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}"></p:outputLabel></td>
 
@@ -30,13 +30,14 @@
 			<br />
 			<p:spacer height="20px;" />
 			<div style="text-align: right;">
-				<p:commandButton value="#{lbl['lbl.cm.cancel']}" immediate="true"
-					onclick="confirmationPopUp.hide()" />
+
 
 				<p:commandButton value="#{lbl['lbl.cm.ok']}"
 					action="#{catalogueBackingBean.addServiceToMaintain()}"
 					oncomplete="confirmationPopUp.hide()"
 					update=":form:confirmationPopUpId,:form:cmUNSPSCsearchID" />
+				<p:commandButton value="#{lbl['lbl.cm.cancel']}" immediate="true"
+					onclick="confirmationPopUp.hide()" />
 			</div>
 
 			<div class="clear"></div>
