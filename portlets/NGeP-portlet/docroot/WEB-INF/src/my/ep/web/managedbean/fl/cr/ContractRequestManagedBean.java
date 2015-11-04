@@ -285,6 +285,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private boolean itemAddButtonShow;
 	private boolean gstRateChange;
 	
+	private boolean hyperLinkPage = false;
+	
 	/** The active contract list document data model. */
 	private IPagingDataModel<VCtActiveContract> activeContractDataModel = new ActiveContractPagingDataModel();
 	
@@ -2657,6 +2659,20 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	public void setGstRateChange(boolean gstRateChange) {
 		this.gstRateChange = gstRateChange;
+	}
+
+	/**
+	 * @return the hyperLinkPage
+	 */
+	public boolean isHyperLinkPage() {
+		return hyperLinkPage;
+	}
+
+	/**
+	 * @param hyperLinkPage the hyperLinkPage to set
+	 */
+	public void setHyperLinkPage(boolean hyperLinkPage) {
+		this.hyperLinkPage = hyperLinkPage;
 	}
 
 }

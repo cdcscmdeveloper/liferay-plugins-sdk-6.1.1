@@ -211,6 +211,11 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
     private String gstRegNo;
     private boolean gstAmtChanged;
     
+    /** The back to previous. */
+	private String backToPrevious;
+	
+	private boolean hyperLinkPage = false;
+    
 	/**
 	 * Gets the item selected for cal.
 	 *
@@ -1219,6 +1224,34 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 
 	public void setGstAmtChanged(boolean gstAmtChanged) {
 		this.gstAmtChanged = gstAmtChanged;
+	}
+
+	/**
+	 * @return the backToPrevious
+	 */
+	public String getBackToPrevious() {
+		return backToPrevious;
+	}
+
+	/**
+	 * @param backToPrevious the backToPrevious to set
+	 */
+	public void setBackToPrevious(String backToPrevious) {
+		this.backToPrevious = backToPrevious;
+	}
+
+	/**
+	 * @return the hyperLinkPage
+	 */
+	public boolean isHyperLinkPage() {
+		return hyperLinkPage;
+	}
+
+	/**
+	 * @param hyperLinkPage the hyperLinkPage to set
+	 */
+	public void setHyperLinkPage(boolean hyperLinkPage) {
+		this.hyperLinkPage = hyperLinkPage;
 	}
 
 	

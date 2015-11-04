@@ -21,7 +21,7 @@
 				listener="#{contractRequestBackingBean.selectAddrEvent()}" />			
 			<p:column>
 				<p:selectBooleanCheckbox value="#{address.selectedAddressRowDelete}"
-					disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
+					rendered="#{contractRequestBackingBean.managedBean.buttonVal!='View'}"
 					styleClass="myCustomChekBox">
 					<p:ajax event="change"
 						update=":form:deleteAddrBtn,addressDataTable,@(.orderSummaryChange)"
@@ -100,8 +100,7 @@
 						saveObject="contractRequestBackingBean.managedBean.selectedAgencyAddressList"
 						conditionField="recordStatus^1|ctAgency.ctContractVer.contractVerId^#{contractRequestBackingBean.managedBean.flRequest.ctContract.latestContractVer.contractVerId}|ctAgency.orgProfile.orgProfileId^#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgProfileId}"
 						update=":form:addressDataTable,:form:itemDetPanelGroup"
-						rendered="#{contractRequestBackingBean.managedBean.agencyAddress}"
-						disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"/>
+						rendered="#{contractRequestBackingBean.managedBean.agencyAddress and contractRequestBackingBean.managedBean.buttonVal!='View'}"/>
 			<ac:lov id="addressTypeId" lovId="PM_ADDRESS_TYPE_FL"
 						postUpdateListener="contractRequestBackingBean.updateDeliveryAddrDt"
 						headerText="#{lbl['lbl.ct.delivery.address']}" 
@@ -110,11 +109,10 @@
 						saveObject="contractRequestBackingBean.managedBean.selectedAddrTypeList"
 						conditionField="recordStatus^1|addressType^#{contractRequestBackingBean.getDeliveryAddressType()}|pmOrgProfile.orgProfileId^#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgProfileId}"
 						update=":form:addressDataTable,:form:itemDetPanelGroup"
-						rendered="#{!contractRequestBackingBean.managedBean.agencyAddress}"
-						disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"/>
+						rendered="#{!contractRequestBackingBean.managedBean.agencyAddress and contractRequestBackingBean.managedBean.buttonVal!='View'}"/>
 			<p:commandButton value="#{lbl['lbl.fl.btn.other.address']}" 
 				action="#{contractRequestBackingBean.flManualDeliveryAddr}"
-				disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
+				rendered="#{contractRequestBackingBean.managedBean.buttonVal!='View'}"
 				update="addManualDelAddrPnl,@(.orderSummaryChange) " process="@this"
 				title="#{lbl['lbl.fl.tooltip.other.address']}"
 				oncomplete="addManualDeliveryAddr.show();" >
@@ -126,7 +124,8 @@
 				onsuccess="delAddrDlg.show()" process="@this"
 				update=":form:deleteAddrBtn,addressDataTable,@(.orderSummaryChange)"
 				title="#{lbl['lbl.fl.tooltip.delete']}"
-				disabled="#{contractRequestBackingBean.managedBean.deleteButtonHide or contractRequestBackingBean.managedBean.buttonVal=='View'}">
+				rendered="#{contractRequestBackingBean.managedBean.buttonVal!='View'}"
+				disabled="#{contractRequestBackingBean.managedBean.deleteButtonHide}">
 			</p:commandButton>
 
 		</div>
@@ -197,14 +196,12 @@
 					listener="#{contractRequestBackingBean.itemRowUnselectCheckbox}" />				
 				<ac:paginator for="itemDataTable" />
 				<p:column selectionMode="multiple" width="5%" 
-					disabledSelection="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
-					rendered="#{(contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType.parameterCode != ParameterConst.fulfilmentTypeOneOff)}">
+					rendered="#{(contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType.parameterCode != ParameterConst.fulfilmentTypeOneOff) and contractRequestBackingBean.managedBean.buttonVal!='View'}">
 				</p:column>	
 				<p:column headerText="#{lbl['lbl.fl.gst']}">
 					<p:selectBooleanCheckbox value="#{item.gst}"
-						disabled="#{(empty contractRequestBackingBean.managedBean.selectedDelAddr or 
-							contractRequestBackingBean.managedBean.buttonVal=='View' or 
-							item.orderedQty == 0)}">
+						rendered="#{contractRequestBackingBean.managedBean.buttonVal!='View'}"
+						disabled="#{(empty contractRequestBackingBean.managedBean.selectedDelAddr  or item.orderedQty == 0)}">
 						<p:ajax process="@this" listener="#{contractRequestBackingBean.retrieveOrderAmount(item)}"
 						update="subTotalTxt,unitPrice,orderedQty,itemDataTable"/>
 					</p:selectBooleanCheckbox>
@@ -272,14 +269,13 @@
 			<div style="width: 100%; text-align: right">
 				<p:commandButton id="addItems" value="#{lbl['lbl.btn.add']}" 
 					action="#{contractRequestBackingBean.addContractedItems}"
-					rendered="#{contractRequestBackingBean.managedBean.itemAddButtonShow}"
+					rendered="#{contractRequestBackingBean.managedBean.itemAddButtonShow and contractRequestBackingBean.managedBean.buttonVal!='View'}"
 					process="@this" update="resultPanel,searchPanel"
-					disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
 					oncomplete="addItems.show();" />
 				<p:commandButton value="#{lbl['lbl.fl.btn.delete']}" id="deleteItemBtn"
-					rendered="#{contractRequestBackingBean.managedBean.itemAddButtonShow}"
+					rendered="#{contractRequestBackingBean.managedBean.itemAddButtonShow and contractRequestBackingBean.managedBean.buttonVal!='View'}"
 					onsuccess="delItemDlg.show()" title="#{lbl['lbl.fl.tooltip.delete']}"
-					disabled="#{contractRequestBackingBean.managedBean.itemDeleteButtonShow or contractRequestBackingBean.managedBean.buttonVal=='View'}"
+					disabled="#{contractRequestBackingBean.managedBean.itemDeleteButtonShow }"
 					update="itemDataTable" partialSubmit="true" />
 			</div>
 		</h:panelGroup>

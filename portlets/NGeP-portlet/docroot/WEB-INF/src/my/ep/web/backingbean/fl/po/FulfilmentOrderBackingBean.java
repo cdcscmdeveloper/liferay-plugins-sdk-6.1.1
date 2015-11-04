@@ -105,8 +105,9 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	public static final String NAV_TO_CREATE_DO = "createDo";
 	public static final String NAV_TO_FL_ORDER = "flOrder";
 	public static final String NAV_ORDERNO = "/xhtml/fl/shared/hyperlinkView/orderNoPage/orderNoHyperlink.xhtml";
-	public static final String NAV_CR = "/xhtml/fl/shared/hyperlinkView/crPage/crHyperlink.xhtml";
-	public static final String NAV_PR = "/xhtml/fl/shared/hyperlinkView/prPage/prHyperlink.xhtml";
+	public static final String NAV_CR = "/xhtml/fl/contractrequest/crBasePage.xhtml";
+	public static final String NAV_PR = "/xhtml/fl/purchaserequest/prBasePage.xhtml";
+										
 	private static Logger log = Logger.getLogger(FulfilmentOrderBackingBean.class);
 	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "MM/dd/yy hh:mm a" );
 	private IPagingDataModel<FlFulfilmentOrder> pendingDoDataModel = new PendingDoPagingDataModel();
@@ -361,6 +362,8 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			doMB.getManagedBean().setRejectedRemark(resDTO.getStopInstrRejectedRemarkList());
 		}
 		doMB.sortOrderSummaryList(doMB.getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses());
+		FacesContext fc = FacesContext.getCurrentInstance();
+		doMB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 		doMB.getManagedBean().setFromPageUrl("/xhtml/fl/dopending/doPendingTable.xhtml");
 		return NAV_TO_CREATE_DO;
 	}
@@ -920,7 +923,12 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		 * @return the string
 		 */
 		public String backToPervious() {
-			return "flDocSearch";
+			if(getManagedBean().getBackToPrevious() !=null){
+				return getManagedBean().getBackToPrevious();
+			}
+			else{
+				return "flDocSearch";
+			}
 		}
 		
 		/**
@@ -1105,6 +1113,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		 * @return the string
 		 */
 		public String navigateDocument(String docType){
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER) || docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
 				IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -1116,7 +1125,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				orderBackingBean.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 				FacesContext fc = FacesContext.getCurrentInstance();
 				orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
-
+				orderBackingBean.getManagedBean().setHyperLinkPage(true);
 				return NAV_ORDERNO;
 			}if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_REQUEST)){
 				IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
@@ -1135,6 +1144,8 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				
 				crBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 				crBB.getManagedBean().setPmUser(reqDTO.getPmUser());
+				crBB.getManagedBean().setButtonVal("View");
+				flBB.getManagedBean().setHideRemarks(true);
 				crBB.getManagedBean().setPmPriceType(resDTO.getFlFulfilmentRequest().getCtContract().getLatestContractVer().getCtContractItems().get(0).getPriceType());
 				IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
 				ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
@@ -1168,6 +1179,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				}
 				FacesContext fc = FacesContext.getCurrentInstance();
 				crBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
+				crBB.getManagedBean().setHyperLinkPage(true);
 				return NAV_CR;
 			}if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
 				IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
@@ -1182,9 +1194,12 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				
 				prBB.setFulfilmentRequestField(resDTO);
 				prBB.getManagedBean().setPmUser(reqDTO.getPmUser());
+				prBB.getManagedBean().setButtonVal("View");
+				flBB.getManagedBean().setHideRemarks(true);
 				FacesContext fc = FacesContext.getCurrentInstance();
 				prBB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 				prBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
+				prBB.getManagedBean().setHyperLinkPage(true);
 				return NAV_PR;
 			}
 			return null;

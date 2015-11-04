@@ -306,6 +306,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			
 			PrBB.setFulfilmentRequestField(resDTO);
 			PrBB.getManagedBean().setPmUser(reqDTO.getPmUser());
+			PrBB.getManagedBean().setBackToDocument(null);
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(true);
 			}
@@ -326,6 +327,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			crBB.getManagedBean().setButtonVal(buttonVal);
 			crBB.setFulfilmentRequestField(resDTO);
 			crBB.initializeApproverGroup();
+			crBB.getManagedBean().setBackToDocument(null);
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(true);
 			}
@@ -407,7 +409,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				stopInstrBB.getManagedBean().setSelectedTabIndex(0);
 				stopInstrBB.populateStopInstrItem();
 				stopInstrBB.populateChargeLineData();
-				
+				stopInstrBB.getManagedBean().setBackToDocument(null);
 				if(resDTO.getFlOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
 					new FulfilmentBackingBean(ParameterConst.DOCTYPE_STOP_DELIVERY, resDTO.getFlOrder().getFlFulfilmentRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
 				} else {
@@ -444,6 +446,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			String[] outcome = new String[1];
 			outcome[0] = BpmOutcomeConst.BPM_REMOVE_FACTORING;
 			flOrderBB.getManagedBean().setOutComes(outcome);
+			flOrderBB.getManagedBean().setBackToPrevious(null);
 			flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			navgPage=NAV_TO_REMOVE_FACTORING_COMPANY;
 		} else if(docType.equals(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
@@ -470,6 +473,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			flOrderBB.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 			flOrderBB.getManagedBean().setRemoveFactoring(false);
 			flOrderBB.getManagedBean().setDocMaintainRemarks(true);
+			flOrderBB.getManagedBean().setBackToPrevious(null);
 			if(resDTO.getFlOrder().isFactored()) {
 				flOrderBB.getManagedBean().setFactoringCheck("true");
 				flOrderBB.getFactoringCompanyDtl();
@@ -505,6 +509,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			flOrderBB.getManagedBean().setFlRequest(coResDTO.getFlOrder().getFlFulfilmentRequest());
 			flOrderBB.getManagedBean().setFulfilmentOrder(coResDTO.getFlOrder());
 			flOrderBB.getManagedBean().setPmUser(reqDTO.getPmUser());
+			flOrderBB.getManagedBean().setBackToPrevious(null);
 			IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
 			ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
 			if(flOrderBB.getManagedBean().getFlRequest().getCtContract().isFactored()){
@@ -548,6 +553,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			doBB.getManagedBean().setDocMaintainRemarks(true);
 			doBB.getManagedBean().setFromPageUrl(navgPage);
 			doBB.getManagedBean().getFulfilmentOrder().setStatus(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus());
+			doBB.getManagedBean().setBackToPrevious(null);
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(true);
 			}
@@ -573,8 +579,10 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			invBB.getManagedBean().setFulfilmentRequest(resDTO.getInvoice().getFlRequest());
 			invBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			invBB.getManagedBean().setDocMaintainRemarks(true);
+			invBB.getManagedBean().setDocMaintain(true);
 			invBB.getManagedBean().setChargeLineItemRoot(null);
 			invBB.getManagedBean().setDelOrderList(new ArrayList<FlDeliveryOrder>()); 
+			invBB.getManagedBean().setBackToPrevious(null);
 			for(FlDeliveryOrder flDeliveryOrder : invBB.getManagedBean().getInvoice().getFlFulfilmentOrder().getFlDeliveryOrders()) {
 				if(flDeliveryOrder.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
 					invBB.getManagedBean().getDelOrderList().add(flDeliveryOrder);
@@ -631,6 +639,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			} else {
 				flBB.initializeRemarkAndAttachement(resDTO.getFulfilmentNote().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
 			}
+			recNoteBB.getManagedBean().setBackToPrevious(null);
 			navgPage=NAV_TO_MAINTAIN_FRN;
 		}else if(docType.equals(ParameterConst.DOCTYPE_PAYMENT_ADVICE)){
 			paymentSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IPaymentMatchSO.class);
@@ -680,6 +689,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			siBB.getManagedBean().setSelectedTabIndex(0);
 			siBB.getManagedBean().setStopInstr(resDTO.getFlStopInstr());
 			siBB.getManagedBean().setButtonVal(buttonVal);
+			siBB.getManagedBean().setBackToDocument(null);
 			siBB.getPopulateReasonList();
 			siBB.populateChargeLineData();
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
@@ -700,6 +710,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			DebitAdjustmentNoteBackingBean danBB = new DebitAdjustmentNoteBackingBean();
 			danBB.getManagedBean().setSelectedTabIndex(0);
 			danBB.setAdjustmentNote(resDTO);
+			danBB.getManagedBean().setBackToPrevious(null);
 			navgPage=NAV_TO_ADJUSTMENT_NOTE;
 		}else if(docType.equals(ParameterConst.DOCTYPE_RELIEF_ORDER)){
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);

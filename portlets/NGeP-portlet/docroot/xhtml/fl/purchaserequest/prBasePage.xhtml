@@ -49,7 +49,7 @@
 				
 				</td>
 				<c:if
-					test='#{purchaseRequestBackingBean.managedBean.buttonVal eq "View"}'>
+					test='#{purchaseRequestBackingBean.managedBean.buttonVal eq "View" and !purchaseRequestBackingBean.managedBean.isHyperLinkPage() }'>
 					<td colspan="4" style="text-align: right">	
 					<p:commandLink
 						value="#{lbl['lbl.td.doc.trackingDiary']}"

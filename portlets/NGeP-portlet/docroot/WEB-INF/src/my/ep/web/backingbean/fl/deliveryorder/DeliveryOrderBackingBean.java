@@ -70,6 +70,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
+import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean;
 import my.ep.web.backingbean.fl.stopinstr.StopInstrBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -97,8 +98,11 @@ import com.liferay.portal.util.PortalUtil;
 @RequestScoped
 public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManagedBean> {
 	
-	private static final String NAV_ORDERNO = "/xhtml/fl/shared/hyperlinkView/orderNoPage/orderNoHyperlink.xhtml";
-	private static final String NAV_STOP_INSTRUCTION = "/xhtml/fl/shared/hyperlinkView/stopInstrPage/stopInstrHyperlink.xhtml";
+	private static final String NAV_PO = "/xhtml/fl/purchaseorder/poBasePage.xhtml";
+	private static final String NAV_CO = "/xhtml/fl/contractorder/coBasePage.xhtml";
+	
+	private static final String NAV_STOP_INSTRUCTION = "/xhtml/fl/stopInstruction/siBasePage.xhtml";
+	
 	private static Logger log = Logger.getLogger(DeliveryOrderBackingBean.class);
 	private FlFulfilmentItemAddr amountSectionItemRow;
 	
@@ -786,8 +790,14 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	 * @return the string
 	 */
 	public String backAction() {
-		System.out.println("getManagedBean().getFromPageUrl(): "+getManagedBean().getFromPageUrl());
-		return getManagedBean().getFromPageUrl()+"?faces-rediret=true";
+		if(this.getManagedBean().getBackToPrevious() !=null){
+			return getManagedBean().getBackToPrevious();
+		}
+		else{
+			return "flDocSearch";
+		}
+		//System.out.println("getManagedBean().getFromPageUrl(): "+getManagedBean().getFromPageUrl());
+		//return getManagedBean().getFromPageUrl()+"?faces-rediret=true";
 	}
 	
 	/**
@@ -1096,6 +1106,9 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	 * @return the string
 	 */
 	public String navigateOrderNoPage(String docType){
+		String navgPage="";
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		//PurchaseRequestBackingBean prBB = new PurchaseRequestBackingBean();
 		IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		reqDTO.setFlOrderId(getManagedBean().getFulfilmentOrder().getFulfilmentOrderId());
@@ -1104,10 +1117,21 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		FulfilmentOrderBackingBean orderBackingBean = new FulfilmentOrderBackingBean();
 		orderBackingBean.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 		orderBackingBean.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
+		orderBackingBean.getManagedBean().setButtonVal("View");
+		if(isSupplierRole()){
+			orderBackingBean.getManagedBean().setSupplier(true);
+		}
+		flBB.getManagedBean().setHideRemarks(true);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+		orderBackingBean.getManagedBean().setHyperLinkPage(true);
+		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
+			return NAV_PO;
+		}else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
+			return NAV_CO;
+		}
+		return navgPage;
 		
-		return NAV_ORDERNO;
 	}
 	
 	/**
@@ -1116,6 +1140,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	 * @return String gotoCommonViewPage
 	 */
 	public String navigateDocument(Long docId){
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		IFulfilmentOrderSO orderSO= (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 		StopInstrBackingBean siBB = new StopInstrBackingBean();
 		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
@@ -1126,6 +1151,8 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		siBB.getManagedBean().setStopInstr(resDTO.getFlStopInstr());
 		siBB.getManagedBean().setSelectedTabIndex(0);
 		siBB.populateChargeLineData();
+		siBB.getManagedBean().setButtonVal("View");
+		flBB.getManagedBean().setHideRemarks(true);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		siBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
 		

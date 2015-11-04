@@ -240,6 +240,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	private BigDecimal gstAmount;
 	private BigDecimal invoiceAmountWithoutGST;
 	private List<TaxInvoiceVO> taxInvoiceList;
+	
+	private boolean hyperLinkPage = false;
 
 	/**
 	 * Gets the doc type.
@@ -1458,5 +1460,19 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	 */
 	public void setTaxInvoiceList(List<TaxInvoiceVO> taxInvoiceList) {
 		this.taxInvoiceList = taxInvoiceList;
+	}
+
+	/**
+	 * @return the hyperLinkPage
+	 */
+	public boolean isHyperLinkPage() {
+		return hyperLinkPage;
+	}
+
+	/**
+	 * @param hyperLinkPage the hyperLinkPage to set
+	 */
+	public void setHyperLinkPage(boolean hyperLinkPage) {
+		this.hyperLinkPage = hyperLinkPage;
 	}
 }

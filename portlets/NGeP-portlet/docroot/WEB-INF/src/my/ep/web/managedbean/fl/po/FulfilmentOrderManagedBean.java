@@ -206,6 +206,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
     private SpkiBackingBean spkiBackingBean;
     
     private boolean supplier = false;
+    
+    private boolean hyperLinkPage = false;
 	
 	
 	/* (non-Javadoc)
@@ -1170,6 +1172,20 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setSupplier(boolean supplier) {
 		this.supplier = supplier;
+	}
+
+	/**
+	 * @return the hyperLinkPage
+	 */
+	public boolean isHyperLinkPage() {
+		return hyperLinkPage;
+	}
+
+	/**
+	 * @param hyperLinkPage the hyperLinkPage to set
+	 */
+	public void setHyperLinkPage(boolean hyperLinkPage) {
+		this.hyperLinkPage = hyperLinkPage;
 	}
 
 }

@@ -507,6 +507,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private boolean selectChargeLineRow=false;
 	private boolean gstRateChange;
 	
+	private boolean hyperLinkPage = false;
+	
 /**
  * Gets the charge line item root.
  *
@@ -3218,6 +3220,20 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 
 	public void setGstRateChange(boolean gstRateChange) {
 		this.gstRateChange = gstRateChange;
+	}
+
+	/**
+	 * @return the hyperLinkPage
+	 */
+	public boolean isHyperLinkPage() {
+		return hyperLinkPage;
+	}
+
+	/**
+	 * @param hyperLinkPage the hyperLinkPage to set
+	 */
+	public void setHyperLinkPage(boolean hyperLinkPage) {
+		this.hyperLinkPage = hyperLinkPage;
 	}
 
 }

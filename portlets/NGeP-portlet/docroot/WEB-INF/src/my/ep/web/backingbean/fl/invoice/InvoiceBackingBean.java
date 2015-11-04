@@ -148,14 +148,15 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	private IPagingDataModel<FlInvoice> flInvoiceDataModel = new FlInvoicePagingDataModel();
 	
 	/** The Constant NAV_ORDERNO. */
-	private static final String NAV_ORDERNO = "/xhtml/fl/shared/hyperlinkView/orderNoPage/orderNoHyperlink.xhtml";
+	
+	private static final String NAV_PO = "/xhtml/fl/purchaseorder/poBasePage.xhtml";
+	private static final String NAV_CO = "/xhtml/fl/contractorder/coBasePage.xhtml";
 	
 	/** The Constant NAV_INVOICE. */
-	private static final String NAV_INVOICE = "/xhtml/fl/shared/hyperlinkView/invoicePage/invoiceHyperlink.xhtml";
+	private static final String NAV_INVOICE = "/xhtml/fl/invoice/invBasePage.xhtml";
 	
-	private static final String NAV_DELIVERYORDER_PAGE = "/xhtml/fl/shared/hyperlinkView/deliveryOrderPage/doHyperlink.xhtml";
-	private static final String NAV_FULFILMENTNOTE_PAGE= "/xhtml/fl/shared/hyperlinkView/receivednotePage/receivednoteHyperlink.xhtml";
-	
+	private static final String NAV_DELIVERYORDER_PAGE = "/xhtml/fl/deliveryorder/doBasePage.xhtml";
+	private static final String NAV_FULFILMENTNOTE_PAGE= "/xhtml/fl/receivednote/frnBasePage.xhtml";
 	/**
 	 * get faces scopes.
 	 *
@@ -1513,8 +1514,10 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public String backToPervious() throws PortalException, SystemException, IOException {
-		if(getManagedBean().getInvoiceId()==null) {
+		if(getManagedBean().isDocMaintain()) {
 			return "flDocSearch";
+		}else if(getManagedBean().isHyperLinkPage()){
+			return getManagedBean().getBackToPrevious();
 		} else {
 			String commonUrl = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL);
 			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
@@ -1749,6 +1752,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		 * @return the string
 		 */
 		public String navigateDocument(String docType){
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER) || docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
 				IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -1761,8 +1765,17 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				orderBackingBean.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 				FacesContext fc = FacesContext.getCurrentInstance();
 				orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
-
-				return NAV_ORDERNO;
+				orderBackingBean.getManagedBean().setHyperLinkPage(true);
+				orderBackingBean.getManagedBean().setButtonVal("View");
+				if(isSupplierRole()){
+					orderBackingBean.getManagedBean().setSupplier(true);
+				}
+				flBB.getManagedBean().setHideRemarks(true);
+				if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
+					return NAV_PO;
+				}else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
+					return NAV_CO;
+				}
 			}else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_INVOICE)){
 
 				IInvoiceSO invoiceSO = (IInvoiceSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IInvoiceSO.class);
@@ -1775,7 +1788,9 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				invBB.getManagedBean().setInvoice(resDTO.getInvoice());
 				FacesContext fc = FacesContext.getCurrentInstance();
 				invBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
-
+				invBB.getManagedBean().setButtonVal("View");
+				invBB.getManagedBean().setHyperLinkPage(true);
+				flBB.getManagedBean().setHideRemarks(true);
 				return NAV_INVOICE;
 			
 			}else if(docType.equalsIgnoreCase(FulfilmentConst.CONTRACT)){
@@ -1910,6 +1925,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		 */
 		
 		public String navigateDelOrder(FlDeliveryOrder delOrder){
+				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				IDeliveryOrderSO orderSO = (IDeliveryOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
 				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 				reqDTO.setDeliveryOrderId(delOrder.getDeliveryOrderId());
@@ -1921,8 +1937,11 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				doBB.getManagedBean().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
 				doBB.getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
 				doBB.getManagedBean().setFulfilmentOrder(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder());
-				doBB.getManagedBean().setFromPageUrl(fc.getViewRoot().getViewId());
-				doBB.getManagedBean().setButtonVal("Review");
+				//doBB.getManagedBean().setFromPageUrl(fc.getViewRoot().getViewId());
+				doBB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+				doBB.getManagedBean().setButtonVal("View");
+				doBB.getManagedBean().setHyperLinkPage(true);
+				flBB.getManagedBean().setHideRemarks(true);
 				return NAV_DELIVERYORDER_PAGE;
 		}
 		
@@ -1934,6 +1953,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		 */
 		
 		public String navigateFulfilmentNote(FlDeliveryOrder delOrder){
+				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
 				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 				reqDTO.setFulfilmentNoteId(delOrder.getFulfilmentNote().getFulfilmentNoteId());
@@ -1953,8 +1973,13 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				}
 				recNoteBB.getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(resDTO.getFulfilmentNote().getFlFulfilmentNoteItem());
 				recNoteBB.getManagedBean().setAcknowledged(true);
+				recNoteBB.getManagedBean().setButtonVal("View");
+				recNoteBB.getManagedBean().setHyperLinkPage(true);
+				flBB.getManagedBean().setHideRemarks(true);
+				
 				FacesContext fc = FacesContext.getCurrentInstance();
-				recNoteBB.getManagedBean().setFromPageUrl(fc.getViewRoot().getViewId());
+				recNoteBB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+				//recNoteBB.getManagedBean().setFromPageUrl(fc.getViewRoot().getViewId());
 				
 				
 			return NAV_FULFILMENTNOTE_PAGE;
