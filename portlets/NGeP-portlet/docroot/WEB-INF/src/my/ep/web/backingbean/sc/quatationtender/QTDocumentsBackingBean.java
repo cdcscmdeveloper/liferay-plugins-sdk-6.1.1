@@ -111,6 +111,7 @@ import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.CommonUtils;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.template.DocumentGenerator;
@@ -1736,8 +1737,6 @@ public class QTDocumentsBackingBean extends
 			if (resDTO.getScheduleResults() != null
 					&& !resDTO.getScheduleResults().getResultList().isEmpty()) {
 				scheduleList = resDTO.getScheduleResults().getResultList();
-				String startMonth = "";
-				String endMonth = "";
 				//Sorting
 				Collections.sort(scheduleList, new Comparator<ScQtSchedule>() {
 
@@ -1748,35 +1747,44 @@ public class QTDocumentsBackingBean extends
 					
 				});
 				for (ScQtSchedule qtSchedule : scheduleList) {
+					String startMonth = "";
+					String endMonth = "";
 					SimpleDateFormat dateFormat = new SimpleDateFormat(
-							"dd/MM/yyyy");
-
-					String fromdate = dateFormat.format(qtSchedule.getFromDate());
-					String todate = dateFormat.format(qtSchedule.getToDate());
+							CommonConstants.DEFAULT_DATE_FORMAT);
+					int months;
+					Date startDate = null;
+					Date endDate = null;
+					String fromdate = dateFormat.format(qtSchedule
+							.getFromDate());
+					String todate = dateFormat.format(qtSchedule
+							.getToDate());
 					String startdate = fromdate.substring(3, 5);
 					String startYear = fromdate.substring(6,
 							fromdate.length());
+					String fromDay = fromdate.substring(0, 2);
+
 					String enddate = todate.substring(3, 5);
-					String endYear = todate.substring(6, todate.length());
+					String endYear = todate.substring(6,
+							todate.length());
+					String toDay = todate.substring(0, 2);
+
 					startMonth = fulfilmentMonthlyDtls(startdate);
 					endMonth = fulfilmentMonthlyDtls(enddate);
-					int start = Integer.parseInt(startMonth);
-					int end = Integer.parseInt(endMonth);
+					log.info("startMonth : " + startMonth);
+					log.info("endMonth : " + endMonth);
 
 					int sYear = Integer.parseInt(startYear);
 					int eYear = Integer.parseInt(endYear);
-					int diffYear = 0;
-					int count = 0;
-					if (eYear >= sYear) {
-						if (!endYear.equals(startYear)) {
-							diffYear = eYear - sYear;
-						}
-						for (int i = start + 1; i <= end + 1; i++) {
-							count++;
-						}
-						count = count + (diffYear * 12);
-						qtSchedule.setTotalMonths(new BigDecimal(count));
-					}
+
+					String fromDate = fromDay + "/" + startdate + "/"
+							+ sYear;
+					String toDate = toDay + "/" + enddate + "/" + eYear;
+
+					startDate = dateFormat.parse(fromDate);
+					endDate = dateFormat.parse(toDate);
+
+					months = DateUtils.getMonths(startDate, endDate);
+					qtSchedule.setTotalMonths(new BigDecimal(months));
 				}
 			}
 		} finally {
