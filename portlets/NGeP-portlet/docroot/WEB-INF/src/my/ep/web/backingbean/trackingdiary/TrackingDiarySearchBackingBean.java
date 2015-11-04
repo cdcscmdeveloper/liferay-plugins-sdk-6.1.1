@@ -13,6 +13,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
@@ -42,7 +43,8 @@ public class TrackingDiarySearchBackingBean extends BaseBackingBean<TrackingDiar
 	public static final String NAV_TO_DETAIL_SEARCH = "/xhtml/trackingdiary/trackingDiaryDetailSearch.xhtml";
 	private IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel 	= new SearchTrackingDiaryPagingDataModel();
 
-	public String goToTrackingDiarySearch(String docType,String docNo,Long docId,Long statusId) {
+	public String goToTrackingDiarySearch(String moduleCode, String docType,String docNo,Long docId,Long statusId) {
+		getManagedBean().setModuleCode(moduleCode);
 		getManagedBean().setDocType(docType);
 		getManagedBean().setDocNo(docNo);
 		getManagedBean().setDocId(docId.toString());
@@ -52,7 +54,6 @@ public class TrackingDiarySearchBackingBean extends BaseBackingBean<TrackingDiar
 		searchTrackingDiaryDataModel.reloadData();	
 		return NAV_TO_DETAIL_SEARCH;
 	}
-
 	
 	private class SearchTrackingDiaryPagingDataModel extends PagingDataModel<PmTrackingDiary> {
 
@@ -68,19 +69,21 @@ public class TrackingDiarySearchBackingBean extends BaseBackingBean<TrackingDiar
 				ISearchBean<PmTrackingDiary> searchBean) {
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
-			SearchFilterBean searchFilterBean1 = new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getDocType());
-			SearchFilterBean searchFilterBean2 = new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getDocId());
-			SearchFilterBean searchFilterBean3 = new SearchFilterBean("groupDocType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getDocType());
-			SearchFilterBean searchFilterBean4 = new SearchFilterBean("groupId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getDocId());
 			
-			BaseSearchFilterBean multiFilterBean1 = new SearchMultiFilterBean(searchFilterBean1, searchFilterBean2);
-			BaseSearchFilterBean multiFilterBean2 = new SearchMultiFilterBean(searchFilterBean3, SearchCondition.CONDITION_OR.value(), searchFilterBean4);
-			BaseSearchFilterBean multiFilterBean3 = new SearchMultiFilterBean(multiFilterBean1, SearchCondition.CONDITION_OR.value(), multiFilterBean2);
-			searchBean.getDataFilterBeans().add(multiFilterBean3);
-			log.info("Fl TrackingDiary docId " + getManagedBean().getDocId());
-			log.info("Fl TrackingDiary DocType " + getManagedBean().getDocType());
-
+			if(getManagedBean().getModuleCode().equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT)) {
+				SearchFilterBean searchFilterBean1 = new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getDocType());
+				SearchFilterBean searchFilterBean2 = new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getDocId());
+				SearchFilterBean searchFilterBean3 = new SearchFilterBean("groupDocType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getDocType());
+				SearchFilterBean searchFilterBean4 = new SearchFilterBean("groupId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getDocId());
+				
+				BaseSearchFilterBean multiFilterBean1 = new SearchMultiFilterBean(searchFilterBean1, searchFilterBean2);
+				BaseSearchFilterBean multiFilterBean2 = new SearchMultiFilterBean(searchFilterBean3, SearchCondition.CONDITION_OR.value(), searchFilterBean4);
+				BaseSearchFilterBean multiFilterBean3 = new SearchMultiFilterBean(multiFilterBean1, SearchCondition.CONDITION_OR.value(), multiFilterBean2);
+				searchBean.getDataFilterBeans().add(multiFilterBean3);
+			}
+			
 			reqDTO.setSearchBean(searchBean);
+			
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
 			try {
 				ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate.getInstance().getServiceObject("cc", ITrackingDiarySO.class);
