@@ -406,23 +406,24 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	   }
 	
 	    /**
-		 * The method used to navigate to contract maintenance screen.
-		 * 
-		 * @return the navigate URL 
-		 */
-	   public String backAction() {
-		   if(getManagedBean().isChkCancelPage()) {
-			   getManagedBean().setChkCancelPage(false);
-			   return "cancelCircularBase.xhtml?faces-redirect=true";
-		   } else if(getManagedBean().isFromCircularNotice()) {
-			   return "../portal/circularListing.xhtml?faces-redirect=true";
-		   }else if(getManagedBean().isDifferentModule()){
-			     return getManagedBean().getGotoPreviewPage();
-		   }
-		   else {
-			   return "search.xhtml?faces-redirect=true";
-		   }
-	   }
+	     * The method used to navigate to contract maintenance screen.
+	     * 
+	     * @return the navigate URL 
+	     */
+	    public String backAction() {
+	    	if(getManagedBean().isChkCancelPage()) {
+	    		getManagedBean().setChkCancelPage(false);
+	    		return "cancelCircularBase.xhtml?faces-redirect=true";
+	    	} else if(getManagedBean().isFromCircularNotice()) {
+	    		return "../portal/circularListing.xhtml?faces-redirect=true";
+	    	} else if(getManagedBean().isDifferentModule()){
+	    		return getManagedBean().getGotoPreviewPage();
+	    	} else if(getManagedBean().getGotoPreviewPage()!=null) {
+	    		return getManagedBean().getGotoPreviewPage();
+	    	} else {
+	    		return "search.xhtml?faces-redirect=true";
+	    	}
+	    }
 	
 	   /**
 		 *Method used to reset change search information
