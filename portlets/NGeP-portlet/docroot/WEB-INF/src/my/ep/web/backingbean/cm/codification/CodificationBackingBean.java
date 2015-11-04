@@ -2734,7 +2734,11 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		return "keywordMaintainSearch?faces-redirect=true";
 	}
 
-
+	/**
+	 * This method is used to maintain keyword.
+	 * 
+	 * @return keywordMaintainSearch.xhtml
+	 */
 	public String saveKeyWord(){
 
 
@@ -2782,7 +2786,10 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		return "keywordMaintainSearch";
 	}
 
-
+	/**
+	 * This method is used to hold the selection of extension Object.
+	 * 
+	 */
 	public void cloneExtensionSelection(int i) {
 
 
@@ -2869,7 +2876,10 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 	}
 
-
+	/**
+	 * This method is used to hold all the selection of extension Object.
+	 * 
+	 */
 	public void cloneAllExtensionSelection(){
 
 		Map checkDuplicateAdd = new HashMap();
@@ -2942,7 +2952,10 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	}
 
 
-
+	/**
+	 * This method is used to check/uncheck checkBox at extensionSearch Screen.
+	 * 
+	 */
 	public void checkingCheckAll(){
 
 		int count =0;
