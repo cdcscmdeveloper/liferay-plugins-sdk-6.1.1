@@ -27,12 +27,13 @@
 			<p:panel header="#{lbl['lbl.sm.req.reactivation.link.expired.personnels']}" toggleable="true">
 
 				<p:dataTable var="person" widgetVar="suppPersonnelInfoDtWidVar"
-						editable="false"
 						value="#{bb.expiredActivationPersonnels}"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						selection="#{bb.selectedExpiredActivationPersonnels}"
 						rowKey="#{person}" rowIndexVar="index" id="personDt">
 						<ac:paginator for="personDt" />
-						<p:column selectionMode="multiple" width="5%" />
+						
+						<p:column selectionMode="single" width="2%" rendered="#{not empty bb.expiredActivationPersonnels}"/>
 
 						<p:column headerText="#{lbl['lbl.sm.person.composition.name']}">
 							<h:outputText value="#{person.name}" />
