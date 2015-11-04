@@ -35,7 +35,7 @@
            <p:selectOneMenu id="searchMinistry" style="width:300px" disabled="#{contractDetailsBackingBean.disableMinistrySelection()}"
                 rendered="#{!contractDetailsBackingBean.isBPKCCA()}"
                 value="#{contractDetailsBackingBean.managedBean.searchMinistryProfileId}" >
-      	   		<f:selectItems value="#{contractDetailsBackingBean.getMinistryDropdown()}"/>
+      	   		<f:selectItems value="#{ctBackingBean.getMinistryDropdown()}"/>
       	   		<p:ajax event="change" process="@form" update="@([id$=searchPtj])"  listener="#{contractDetailsBackingBean.resetPtjProfile}"/>
            </p:selectOneMenu>
            <p:inputText value="#{lbl['lbl.pm.org.gst.na']}" maxlength="50" disabled="true" style="width:170px;" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>

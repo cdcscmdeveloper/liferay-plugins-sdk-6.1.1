@@ -40,6 +40,7 @@ import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.suspension.IContractSuspensionSO;
 import my.ep.biz.service.ct.termination.IContractTerminationSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -60,6 +61,8 @@ import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.exception.EpException;
@@ -88,6 +91,7 @@ import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.type.aut.SearchOperator;
@@ -2473,6 +2477,54 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	        }
 		}
 		return getManagedBean().getLoaContractVerList();
+	}
+	
+	/**
+	 * The method used for generating a list of fulfilment status 
+	 * for searching contract as selection.
+	 * 
+	 * @return the selection list of fulfilment status
+	 */
+	public SelectItem[] getSearchFulfilmentStatusDropdown() {
+		IStatusSO statusSO = null;
+		SelectItem[] items = null;
+		
+		try {
+			statusSO = (IStatusSO)BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+			String languageCode = getFacesScopes().getUserLocale().getLanguage();
+			
+			int i = 1;
+		 	StatusReqDTO reqDTO = new StatusReqDTO();
+			reqDTO.setModuleCode("CT");
+			List <String> docTypeList = new ArrayList<String>();
+			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_CREATION);
+			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
+			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
+			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
+			docTypeList.add(ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT);
+			
+			reqDTO.setDocTypeList(docTypeList);
+			reqDTO.setLanguageCode(languageCode);
+			StatusResDTO resDTO = statusSO.retrieveStatusDescList(reqDTO);
+			
+		    List<PmStatusDesc> list =  resDTO.getStatusDescList();
+		    items = new SelectItem[list.size()+1];
+		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+		    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+		      
+			for (PmStatusDesc statusDesc : list) {
+				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc.getStatusName());
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		} finally {
+			statusSO = null;
+		}
+	    return items;
 	}
 	
 	/**
