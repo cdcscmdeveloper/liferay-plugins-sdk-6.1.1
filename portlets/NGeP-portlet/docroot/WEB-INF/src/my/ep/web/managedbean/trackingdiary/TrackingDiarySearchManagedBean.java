@@ -8,8 +8,6 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.web.managedbean.BaseManagedBean;
 
-import org.apache.log4j.Logger;
-
 /**
  * Managed Bean for Tracking Diary Search
  * 
@@ -19,10 +17,9 @@ import org.apache.log4j.Logger;
 @ManagedBean(name = "trackingDiarySearchManagedBean")
 @SessionScoped
 public class TrackingDiarySearchManagedBean extends BaseManagedBean {
-	private static Logger log = Logger.getLogger(TrackingDiarySearchManagedBean.class);
-
 	private static final long serialVersionUID = 1L;
 	
+	private String moduleCode;
 	private String docId; 
 	private String docNo; 
 	private String docType;
@@ -90,7 +87,11 @@ public class TrackingDiarySearchManagedBean extends BaseManagedBean {
 	public void setDocNo(String docNo) {
 		this.docNo = docNo;
 	}
-	
-	
+	public String getModuleCode() {
+		return moduleCode;
+	}
+	public void setModuleCode(String moduleCode) {
+		this.moduleCode = moduleCode;
+	}
 
 }
