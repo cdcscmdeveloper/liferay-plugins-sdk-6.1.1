@@ -16,14 +16,21 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.ICircularSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.ct.circular.CircularReqDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
 import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
@@ -77,8 +84,12 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	public SelectItem[] getCircularDocTypeValues() {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> circularDocTypes = new ArrayList<String>();
-		circularDocTypes.add(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
-		circularDocTypes.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+		if(isCentralContractAdmin()) {
+			circularDocTypes.add(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
+		}
+		if(isPanelAdmin()) {
+			circularDocTypes.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+		}
 		searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(), circularDocTypes));
 		return getDropdownCodeValuesBySearchBean(ParameterTypeConst.DOCUMENT_TYPES, searchBean);
 	}
@@ -101,12 +112,21 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	 * The method used to reset the search criteria for circular.
 	 */
 	public void searchReset(){
-		this.getManagedBean().setSearchCircularNo(null);
-		this.getManagedBean().setSearchCircularName(null);
-		this.getManagedBean().setSearchPhysicalCircularNo(null);
-		this.getManagedBean().setSearchCircularDocType(null);
-		this.getManagedBean().setSearchStatus(null);
-		getManagedBean().getCircularListingPagingDataModel().reloadData();
+		getManagedBean().setSearchCircularDocType(null);
+		getManagedBean().setSearchPhysicalCircularNo(null);
+		getManagedBean().setSearchCircularNo(null);
+		getManagedBean().setSearchCircularName(null);
+		getManagedBean().setSearchSupplierName(null);
+		getManagedBean().setSearchItemName(null);
+		getManagedBean().setSearchStartDate(null);
+		getManagedBean().setSearchEndDate(null);
+		getManagedBean().setSearchStatusId(null);
+		getManagedBean().setSearchStatus(null);
+		if(getManagedBean().isReadOnly()) {
+			getManagedBean().getCircularListingPagingDataModel().reloadData();
+		} else {
+			getManagedBean().resetCircularListingPagingDataModel();
+		}
 	}
 	
 	/**
@@ -208,6 +228,157 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 			circularSO = null;
 		}
 		return null;
+	}
+	
+	/**
+	 * This  method used to fetch status of circular
+	 */
+	public SelectItem[] getStatusDropdown() {
+		IStatusSO statusSO = null;
+		SelectItem[] items = null;
+		try {
+			statusSO = (IStatusSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
+			String languageCode = new FacesScopes().getUserLocale().getLanguage();
+			
+			int i = 1;
+			StatusReqDTO reqDTO = new StatusReqDTO();
+			reqDTO.setModuleCode(ModuleCodeConst.CONTRACT_MANAGEMENT);
+			reqDTO.setDocType(getManagedBean().getSearchCircularDocType());
+			reqDTO.setLanguageCode(languageCode);
+			StatusResDTO resDTO = statusSO.retrieveStatusDescList(reqDTO);
+			
+		    List<PmStatusDesc> list =  resDTO.getStatusDescList();
+		    items = new SelectItem[list.size()+1];
+		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+		      
+			for(PmStatusDesc statusDesc : list) {
+				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc.getStatusName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		} finally {
+			statusSO = null;
+		}
+	    return items;
+	}
+
+	/**
+	 * Method used to retrieve the information and render it on screen.
+	 */
+	public void preRenderSearch() {
+		//renewSesionObject();
+		searchReset();
+		getManagedBean().setReadOnly(false);
+		getManagedBean().resetCircularListingPagingDataModel();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "search.xhtml");
+	}
+	
+	/**
+	 * The method used for searching the circular list.
+	 * A warning message will display on screen when searching
+	 * with empty search criteria.
+	 * 
+	 * @throws Exception  if an exception occurred
+	 * @see    Exception
+	 */
+	public void searchCircular() throws Exception {
+		try {
+			if (getManagedBean().getSearchCircularDocType() == null) {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_100022,
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.circular.type", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())},
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			}
+			else {
+				getManagedBean().getCircularListingPagingDataModel().reloadData();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "circular search failed."));
+		}			
+	}
+	
+	/**
+	 * User need to make decision on circular maintenance page
+	 * Navigate to circular page as per user selection for update or view
+	 * */
+	public String gotoPage(String action, Long circularVerId) {
+		ICircularSO circularSO = null;
+		try {
+			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
+			
+			CircularReqDTO reqDTO = new CircularReqDTO();
+			reqDTO.setCircularVerId(circularVerId);
+			
+			if(getManagedBean().getSearchCircularDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
+				PanelBackingBean panelBackingBean = new PanelBackingBean();
+				panelBackingBean.getManagedBean().setSelectionOfZone(false);
+				panelBackingBean.getManagedBean().setSelectedPanelItems(null);
+				panelBackingBean.getManagedBean().setSelectedPanelZone(null);
+				panelBackingBean.getManagedBean().setSelectedTabIndex(0);
+				panelBackingBean.getManagedBean().setAction(action);
+				panelBackingBean.getManagedBean().setGotoPreviewPage("/xhtml/ct/circular/maintenance/search.xhtml");
+				
+				if(action.equalsIgnoreCase("view")) {
+					panelBackingBean.getManagedBean().setUpdateAction(false);
+					panelBackingBean.getManagedBean().setViewContract(true);
+					panelBackingBean.getManagedBean().setOutComes(new String[]{});
+				} else if(action.equalsIgnoreCase("update")) {
+					reqDTO.setUpdateAction(true);
+					panelBackingBean.getManagedBean().setUpdateAction(true);
+					panelBackingBean.getManagedBean().setViewContract(false);
+					panelBackingBean.getManagedBean().setCircularExtension(false);
+					panelBackingBean.getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
+				}
+				panelBackingBean.setPanelCircularVar(circularSO.retrieveCircularVerById(reqDTO));
+				return "/xhtml/ct/circular/panel/circularBase.xhtml";
+			} else {
+				CentralContractBackingBean centralContractBackingBean = new CentralContractBackingBean();
+				centralContractBackingBean.getManagedBean().setSelectedCircularContract(null);
+				centralContractBackingBean.getManagedBean().setSelectedCircularItem(null);
+				centralContractBackingBean.getManagedBean().setSelectedZoneItems(null);
+				centralContractBackingBean.getManagedBean().setSelectedTabIndex(0);
+				centralContractBackingBean.getManagedBean().setAction(action);
+				centralContractBackingBean.getManagedBean().setGotoPreviewPage("/xhtml/ct/circular/maintenance/search.xhtml");
+				
+				if(action.equalsIgnoreCase("view")) {
+					centralContractBackingBean.getManagedBean().setViewContract(true);
+					centralContractBackingBean.getManagedBean().setUpdateAction(false);
+					centralContractBackingBean.getManagedBean().setOutComes(new String[]{});
+				} else if(action.equalsIgnoreCase("update")) {
+					reqDTO.setUpdateAction(true);
+					centralContractBackingBean.getManagedBean().setUpdateAction(true);
+					centralContractBackingBean.getManagedBean().setViewContract(false);
+					centralContractBackingBean.getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
+				}
+				centralContractBackingBean.setContractCircularVar(circularSO.retrieveCircularVerById(reqDTO));
+				return "/xhtml/ct/circular/centralcontract/circularBase.xhtml";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		} finally {
+			circularSO = null;
+		}
+		return null;
+	}
+	
+	/**
+	 * Method used to check is it the login user have the Panel Circular Admin Role
+	 * return @param boolean 
+	 */
+	public boolean isPanelAdmin() {
+		return new FacesScopes().hasRoleUser(RoleCode.BPK_PCA.value());
+	}
+	
+	/**
+	 * Method used to check is it the login user have the Cental Contract Admin Role
+	 * return @param boolean
+	 */
+	public boolean isCentralContractAdmin() {
+		return new FacesScopes().hasRoleUser(RoleCode.BPK_CCA.value());
 	}
 	
 }
