@@ -188,7 +188,7 @@
 										label="#{lbl['lbl.pm.profiles.userdetails.idno']}"
 										disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
 										value="#{profileManagementBackingBean.managedBean.selectedUser.identificationNo}"
-										size="30" maxlength="12">
+										size="30" maxlength="15">
 										<p:ajax event="change"
 											listener="#{profileManagementBackingBean.checkIdentificationNumber()}"
 											partialSubmit="true" process="@this" update="@this,somIdType,itLoginId,somSalutation,itUserName,somNationality"/>
