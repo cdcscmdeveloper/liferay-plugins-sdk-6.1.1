@@ -83,11 +83,11 @@
 
 								</p:tree>
 							</p:column>
-							<p:column headerText="#{lbl['lbl.sc.action']}">
+							<p:column headerText="#{lbl['lbl.sc.action']}" style="text-align: center;">
 								<p:commandLink
 									actionListener="#{simpleQuoteBackingBean.editLocation(locationTree,index)}"
-									rendered="#{isEditable}"
-									process="@this" update="@([id$=locPopupPanel])"
+									rendered="#{isEditable}" process="@this"
+									update="@([id$=locPopupPanel])"
 									oncomplete="locationPopup.show();">
 									<p:graphicImage value="/css/images/design/edit.png" />
 								</p:commandLink>
@@ -129,7 +129,7 @@
 						selection="#{simpleQuoteBackingBean.managedBean.selectedBusinessNature}"
 						value="#{simpleQuoteBackingBean.managedBean.businessNatureCriterias}">
 						<ac:paginator for="byBusNatureDtl" />
-						<p:column selectionMode="multiple" style="width:2%" />
+						<p:column selectionMode="multiple" style="width:2%;text-align: center;"  />
 						<p:column headerText="#{lbl['lbl.sc.code']}" style="width:15%">
 							<h:outputText
 								value="#{busiNatureCriteria.pmBusinessNature.levelCode}" />
@@ -143,41 +143,27 @@
 
 					</p:dataTable>
 
-					<div>
-						<c:if test="#{isEditable}">
-							<table style="width: 100%">
-								<tr>
-									<td class="TableFieldLeft" width="80%"></td>
-									<td>
-										<table>
-											<tr>
-												<td class="TableFieldLeft"><ac:lov id="busiNatureId"
-														lovId="PM_BUSINESS_NATURE"
-														postUpdateListener="simpleQuoteBackingBean.businessNatureListener(simpleQuoteBackingBean.managedBean.businessNatures)"
-														headerText="Business Nature"
-														buttonLabel="#{lbl['lbl.btn.add']}"
-														selectionMode="multiple"
-														saveObject="simpleQuoteBackingBean.managedBean.businessNatures"
-														conditionField="recordStatus^1|businessLevel^#{ParameterConst.businessNatureLevel}"
-														update="@form" /></td>
-												<td><p:commandButton value="#{lbl['lbl.btn.delete']}"
-														process="@this,byBusNatureDtl" partialSubmit="true"
-														oncomplete="businessNatureDeletePopUp.show();"
-														update="@([id$=#{businessNatureDeleteId}])" /> <ac:confirmationPopup
-														id="businessNatureDeleteId"
-														widget="businessNatureDeletePopUp"
-														okAction="simpleQuoteBackingBean.deleteBusinessNature"
-														width="400" height="100"
-														title="#{lbl['lbl.msg.confirm.delete.header']}"
-														content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
-												</td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-							</table>
-						</c:if>
-					</div>
+					<c:if test="#{isEditable}">
+						<div class="ppRightBtn" style="width: 100%">
+							<ac:lov id="busiNatureId" lovId="PM_BUSINESS_NATURE"
+								postUpdateListener="simpleQuoteBackingBean.businessNatureListener(simpleQuoteBackingBean.managedBean.businessNatures)"
+								headerText="Business Nature" buttonLabel="#{lbl['lbl.btn.add']}"
+								selectionMode="multiple"
+								saveObject="simpleQuoteBackingBean.managedBean.businessNatures"
+								conditionField="recordStatus^1|businessLevel^#{ParameterConst.businessNatureLevel}"
+								update="@form" />
+							<p:commandButton value="#{lbl['lbl.btn.delete']}"
+								process="@this,byBusNatureDtl" partialSubmit="true"
+								oncomplete="businessNatureDeletePopUp.show();"
+								update="@([id$=#{businessNatureDeleteId}])" />
+							<ac:confirmationPopup id="businessNatureDeleteId"
+								widget="businessNatureDeletePopUp"
+								okAction="simpleQuoteBackingBean.deleteBusinessNature"
+								width="400" height="100"
+								title="#{lbl['lbl.msg.confirm.delete.header']}"
+								content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
+						</div>
+					</c:if>
 				</p:tab>
 
 				<!--  BY SUPPLIER   -->
@@ -188,7 +174,7 @@
 						selection="#{simpleQuoteBackingBean.managedBean.selectedSupplierList}"
 						value="#{simpleQuoteBackingBean.managedBean.supplierList}">
 						<ac:paginator for="supplierItemDt" />
-						<p:column selectionMode="multiple" style="width:2%" />
+						<p:column selectionMode="multiple" style="width:2%;text-align: center;" />
 						<p:column headerText="#{lbl['lbl.sc.supplier.ep.no']}"
 							style="width:10%">
 							<h:outputText value="#{quoteSupplier.smSupplier.epNo}" />
@@ -203,39 +189,25 @@
 						</p:column>
 					</p:dataTable>
 
-					<div>
-						<c:if test="#{isEditable}">
-							<table style="width: 100%">
-								<tr>
-									<td class="TableFieldLeft" width="80%"></td>
-									<td>
-										<table>
-											<tr>
-												<td class="TableFieldLeft"><ac:lov id="supplier"
-														lovId="SM_SUPPLIER_SQ"
-														postUpdateListener="simpleQuoteBackingBean.supplierListListener(simpleQuoteBackingBean.managedBean.smSuppliers, simpleQuoteBackingBean.managedBean.scQuote)"
-														headerText="Supplier List"
-														buttonLabel="#{lbl['lbl.btn.add']}"
-														selectionMode="multiple" update="@form"
-														saveObject="simpleQuoteBackingBean.managedBean.smSuppliers"
-														conditionField="#{simpleQuoteBackingBean.supplierListCriteria}" />
-												</td>
-												<td><p:commandButton value="#{lbl['lbl.btn.delete']}"
-														process="@this,supplierItemDt" partialSubmit="true"
-														oncomplete="supplierListDeletePopUp.show();"
-														update="@([id$=#{supplierListDeleteId}])" /> <ac:confirmationPopup
-														id="supplierListDeleteId" widget="supplierListDeletePopUp"
-														okAction="simpleQuoteBackingBean.deleteSupplier"
-														width="400" height="100"
-														title="#{lbl['lbl.msg.confirm.delete.header']}"
-														content="#{lbl['lbl.msg.confirm.delete']}" update="@form" /></td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-							</table>
-						</c:if>
-					</div>
+					<c:if test="#{isEditable}">
+						<div class="ppRightBtn" style="width: 100%">
+							<ac:lov id="supplier" lovId="SM_SUPPLIER_SQ"
+								postUpdateListener="simpleQuoteBackingBean.supplierListListener(simpleQuoteBackingBean.managedBean.smSuppliers, simpleQuoteBackingBean.managedBean.scQuote)"
+								headerText="Supplier List" buttonLabel="#{lbl['lbl.btn.add']}"
+								selectionMode="multiple" update="@form"
+								saveObject="simpleQuoteBackingBean.managedBean.smSuppliers"
+								conditionField="#{simpleQuoteBackingBean.supplierListCriteria}" />
+							<p:commandButton value="#{lbl['lbl.btn.delete']}"
+								process="@this,supplierItemDt" partialSubmit="true"
+								oncomplete="supplierListDeletePopUp.show();"
+								update="@([id$=#{supplierListDeleteId}])" />
+							<ac:confirmationPopup id="supplierListDeleteId"
+								widget="supplierListDeletePopUp"
+								okAction="simpleQuoteBackingBean.deleteSupplier" width="400"
+								height="100" title="#{lbl['lbl.msg.confirm.delete.header']}"
+								content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
+						</div>
+					</c:if>
 				</p:tab>
 
 				<!--  BY Government Seller   -->
@@ -246,7 +218,7 @@
 						selection="#{simpleQuoteBackingBean.managedBean.selectedGovtSellers}"
 						value="#{simpleQuoteBackingBean.managedBean.govtSellers}">
 						<ac:paginator for="govtSellerId" />
-						<p:column selectionMode="multiple" style="width:2%" />
+						<p:column selectionMode="multiple" style="width:2%;text-align: center;" />
 						<p:column headerText="#{lbl['lbl.sc.supplier.ep.no']}"
 							style="width:10%">
 							<h:outputText value="#{data.smSupplier.epNo}" />
@@ -264,39 +236,25 @@
 
 					</p:dataTable>
 
-					<div>
-						<c:if test="#{isEditable}">
-							<table style="width: 100%">
-								<tr>
-									<td class="TableFieldLeft" width="80%"></td>
-									<td>
-										<table>
-											<tr>
-												<td class="TableFieldLeft"><ac:lov id="govtSeller"
-														lovId="PM_ORG_PROFILE"
-														postUpdateListener="simpleQuoteBackingBean.govtSellerListener(simpleQuoteBackingBean.managedBean.orgProfiles)"
-														headerText="Government Seller"
-														buttonLabel="#{lbl['lbl.btn.add']}"
-														selectionMode="multiple"
-														saveObject="simpleQuoteBackingBean.managedBean.orgProfiles"
-														conditionField="recordStatus^1|govtSeller^1"
-														update="@form" /></td>
-												<td><p:commandButton value="#{lbl['lbl.btn.delete']}"
-														process="@this,govtSellerId" partialSubmit="true"
-														oncomplete="govtSellerDeletePopUp.show();"
-														update="@([id$=#{govtSellerDeleteId}])" /> <ac:confirmationPopup
-														id="govtSellerDeleteId" widget="govtSellerDeletePopUp"
-														okAction="simpleQuoteBackingBean.deleteGovtSeller"
-														width="400" height="100"
-														title="#{lbl['lbl.msg.confirm.delete.header']}"
-														content="#{lbl['lbl.msg.confirm.delete']}" update="@form" /></td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-							</table>
-						</c:if>
-					</div>
+					<c:if test="#{isEditable}">
+						<div class="ppRightBtn" style="width: 100%">
+							<ac:lov id="govtSeller" lovId="PM_ORG_PROFILE"
+								postUpdateListener="simpleQuoteBackingBean.govtSellerListener(simpleQuoteBackingBean.managedBean.orgProfiles)"
+								headerText="Government Seller"
+								buttonLabel="#{lbl['lbl.btn.add']}" selectionMode="multiple"
+								saveObject="simpleQuoteBackingBean.managedBean.orgProfiles"
+								conditionField="recordStatus^1|govtSeller^1" update="@form" />
+							<p:commandButton value="#{lbl['lbl.btn.delete']}"
+								process="@this,govtSellerId" partialSubmit="true"
+								oncomplete="govtSellerDeletePopUp.show();"
+								update="@([id$=#{govtSellerDeleteId}])" />
+							<ac:confirmationPopup id="govtSellerDeleteId"
+								widget="govtSellerDeletePopUp"
+								okAction="simpleQuoteBackingBean.deleteGovtSeller" width="400"
+								height="100" title="#{lbl['lbl.msg.confirm.delete.header']}"
+								content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
+						</div>
+					</c:if>
 				</p:tab>
 
 				<!-- Panel Supplier   -->
@@ -308,7 +266,7 @@
 						value="#{simpleQuoteBackingBean.managedBean.panelSuppliers}">
 
 						<ac:paginator for="bypanelItemId" />
-						<p:column selectionMode="multiple" style="width:2%" />
+						<p:column selectionMode="multiple" style="width:2%;text-align: center;" />
 
 						<p:column headerText="#{lbl['lbl.sc.supplier.ep.no']}"
 							style="width:10%">
@@ -330,33 +288,22 @@
 						</c:if>
 					</p:dataTable>
 
-					<div>
-						<c:if test="#{isEditable}">
-							<table style="width: 100%">
-								<tr>
-									<td class="TableFieldLeft" width="100%"></td>
-									<td>
-										<table>
-											<tr>
-												<td><p:commandButton value="#{lbl['lbl.btn.delete']}"
-														process="@this,bypanelItemId" partialSubmit="true"
-														rendered="#{isEditable}"
-														oncomplete="panelSupplierDeletePopUp.show();"
-														update="@([id$=#{panelSupplierDeleteId}])" /> <ac:confirmationPopup
-														id="panelSupplierDeleteId"
-														widget="panelSupplierDeletePopUp"
-														okAction="simpleQuoteBackingBean.deletePanelSupplier"
-														width="400" height="100"
-														title="#{lbl['lbl.msg.confirm.delete.header']}"
-														content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
-												</td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-							</table>
-						</c:if>
-					</div>
+					<c:if test="#{isEditable}">
+						<div class="ppRightBtn" style="width: 100%">
+							<p:commandButton value="#{lbl['lbl.btn.delete']}"
+								process="@this,bypanelItemId" partialSubmit="true"
+								rendered="#{isEditable}"
+								oncomplete="panelSupplierDeletePopUp.show();"
+								update="@([id$=#{panelSupplierDeleteId}])" />
+							<ac:confirmationPopup id="panelSupplierDeleteId"
+								widget="panelSupplierDeletePopUp"
+								okAction="simpleQuoteBackingBean.deletePanelSupplier"
+								width="400" height="100"
+								title="#{lbl['lbl.msg.confirm.delete.header']}"
+								content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
+						</div>
+
+					</c:if>
 				</p:tab>
 
 			</p:tabView>
