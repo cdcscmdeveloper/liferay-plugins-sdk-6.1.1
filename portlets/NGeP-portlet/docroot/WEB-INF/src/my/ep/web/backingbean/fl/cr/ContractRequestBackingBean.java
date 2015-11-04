@@ -3378,7 +3378,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * Page navigation to FLDoc search page in CR
 	 */
 		public String backToPervious() {
-			return "flDocSearch";
+			if(getManagedBean().getBackToDocument() !=null){
+				return getManagedBean().getBackToDocument();
+			}
+			else{
+				return "flDocSearch";
+			}
 		}
 		
 		/**

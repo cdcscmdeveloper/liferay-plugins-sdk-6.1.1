@@ -43,7 +43,7 @@
 			<tr>
 				<td>
 					<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  
-						action="/xhtml/fl/docsearch/flDocSearch.xhtml"
+						action="#{stopInstrBB.backToPervious}"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 						rendered="#{stopInstrBB.managedBean.taskId==null}" />
 				</td>

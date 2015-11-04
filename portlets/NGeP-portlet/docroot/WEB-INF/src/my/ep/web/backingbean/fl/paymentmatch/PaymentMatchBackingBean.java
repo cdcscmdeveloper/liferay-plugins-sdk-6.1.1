@@ -137,12 +137,13 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	private static Map<Long, PmGlAccount> glAccountCodeMap = new HashMap<Long, PmGlAccount>();
 	private static Map<Long, PmPrgActivity> progmActivityCodeMap = new HashMap<Long, PmPrgActivity>();
 	private static Map<Long, PmSubSetia> subSetiaCodeMap = new HashMap<Long, PmSubSetia>();
-	private static final String NAV_ORDERNO = "/xhtml/fl/shared/hyperlinkView/orderNoPage/orderNoHyperlink.xhtml";
-	private static final String NAV_ADJ = "/xhtml/fl/shared/hyperlinkView/adjustmentPage/adjustmentHyperlink.xhtml";
-	private static final String NAV_SI = "/xhtml/fl/shared/hyperlinkView/stopInstrPage/stopInstrHyperlink.xhtml";
-	private static final String NAV_INVOICE = "/xhtml/fl/shared/hyperlinkView/invoicePage/invoiceHyperlink.xhtml";
-	private static final String NAV_DELIVERYORDER_PAGE = "/xhtml/fl/shared/hyperlinkView/deliveryOrderPage/doHyperlink.xhtml";
-	private static final String NAV_FULFILMENTNOTE_PAGE= "/xhtml/fl/shared/hyperlinkView/receivednotePage/receivednoteHyperlink.xhtml";
+	private static final String NAV_PO = "/xhtml/fl/purchaseorder/poBasePage.xhtml";
+	private static final String NAV_CO = "/xhtml/fl/contractorder/coBasePage.xhtml";
+	private static final String NAV_ADJ = "/xhtml/fl/invoice/adjustment/danBasePage.xhtml";
+	private static final String NAV_SI = "/xhtml/fl/stopInstruction/siBasePage.xhtml";
+	private static final String NAV_INVOICE = "/xhtml/fl/invoice/invBasePage.xhtml";
+	private static final String NAV_DELIVERYORDER_PAGE = "/xhtml/fl/deliveryorder/doBasePage.xhtml";
+	private static final String NAV_FULFILMENTNOTE_PAGE= "/xhtml/fl//receivednote/frnBasePage.xhtml";
 	
 	/**
 	 * Gets the class name.
@@ -1337,6 +1338,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	 * @return the string
 	 */
 	public String navigateDocument(String docType){
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER) ||docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
 			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -1348,8 +1350,14 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			orderBackingBean.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			FacesContext fc = FacesContext.getCurrentInstance();
 			orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
-
-			return NAV_ORDERNO;
+			orderBackingBean.getManagedBean().setHyperLinkPage(true);
+			orderBackingBean.getManagedBean().setButtonVal("View");
+			flBB.getManagedBean().setHideRemarks(true);
+			if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
+				return NAV_PO;
+			}else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
+				return NAV_CO;
+			}
 		}else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE)){
 			IAdjustmentSO adjustmentSO = (IAdjustmentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IAdjustmentSO.class);
 			Long adjId = null;
@@ -1368,7 +1376,10 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			resDTO.setAdjLink(true);
 			adjBB.setAdjustmentNote(resDTO);
 			FacesContext fc = FacesContext.getCurrentInstance();
-			adjBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
+			adjBB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+			adjBB.getManagedBean().setButtonVal("View");
+			adjBB.getManagedBean().setHyperLinkPage(true);
+			flBB.getManagedBean().setHideRemarks(true);
 
 			return NAV_ADJ;
 		}else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE)){
@@ -1390,7 +1401,10 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			FacesContext fc = FacesContext.getCurrentInstance();
 			resDTO.setAdjLink(true);
 			adjBB.setAdjustmentNote(resDTO);
-			adjBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
+			adjBB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+			adjBB.getManagedBean().setButtonVal("View");
+			adjBB.getManagedBean().setHyperLinkPage(true);
+			flBB.getManagedBean().setHideRemarks(true);
 
 			return NAV_ADJ;
 		}else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_STOP_DELIVERY)){
@@ -1401,7 +1415,8 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			siBB.populateChargeLineData();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			siBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
-
+			siBB.getManagedBean().setButtonVal("View");
+			flBB.getManagedBean().setHideRemarks(true);
 			return NAV_SI;
 		}else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_INVOICE)){
 			IInvoiceSO invoiceSO = (IInvoiceSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IInvoiceSO.class);
@@ -1412,7 +1427,10 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			FulfilmentResDTO resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
 			InvoiceBackingBean invBB = new InvoiceBackingBean();
 			invBB.getManagedBean().setInvoice(resDTO.getInvoice());
-			
+			invBB.getManagedBean().setHyperLinkPage(true);
+			invBB.getManagedBean().setButtonVal("View");
+			flBB.getManagedBean().setHideRemarks(true);
+			invBB.getManagedBean().setDocMaintain(false);
 			invBB.getManagedBean().setDelOrderList(new ArrayList<FlDeliveryOrder>()); 
 			for(FlDeliveryOrder flDeliveryOrder : invBB.getManagedBean().getInvoice().getFlFulfilmentOrder().getFlDeliveryOrders()) {
 				if(flDeliveryOrder.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
@@ -1421,7 +1439,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			}		
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
-			invBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
+			invBB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 
 			return NAV_INVOICE;
 		}if(docType.equalsIgnoreCase(ParameterConst.CONTRACT)){
@@ -1441,6 +1459,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	 */
 	
 	public String navigateDelOrder(FlDeliveryOrder delOrder){
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			IDeliveryOrderSO orderSO = (IDeliveryOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			reqDTO.setDeliveryOrderId(delOrder.getDeliveryOrderId());
@@ -1453,7 +1472,11 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			doBB.getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
 			doBB.getManagedBean().setFulfilmentOrder(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder());
 			doBB.getManagedBean().setFromPageUrl(fc.getViewRoot().getViewId());
-			doBB.getManagedBean().setButtonVal("Review");
+			doBB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+			//doBB.getManagedBean().setButtonVal("Review");
+			doBB.getManagedBean().setHyperLinkPage(true);
+			doBB.getManagedBean().setButtonVal("View");
+			flBB.getManagedBean().setHideRemarks(true);
 			return NAV_DELIVERYORDER_PAGE;
 	}
 	
@@ -1465,6 +1488,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	 */
 	
 	public String navigateFulfilmentNote(FlDeliveryOrder delOrder){
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			reqDTO.setFulfilmentNoteId(delOrder.getFulfilmentNote().getFulfilmentNoteId());
@@ -1484,8 +1508,12 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			}
 			recNoteBB.getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(resDTO.getFulfilmentNote().getFlFulfilmentNoteItem());
 			recNoteBB.getManagedBean().setAcknowledged(true);
+			recNoteBB.getManagedBean().setHyperLinkPage(true);
+			//recNoteBB.getManagedBean().setButtonVal("View");
+			flBB.getManagedBean().setHideRemarks(true);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			recNoteBB.getManagedBean().setFromPageUrl(fc.getViewRoot().getViewId());
+			recNoteBB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 			
 			
 		return NAV_FULFILMENTNOTE_PAGE;

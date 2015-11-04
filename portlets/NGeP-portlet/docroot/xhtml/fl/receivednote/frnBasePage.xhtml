@@ -39,7 +39,7 @@
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
 						rendered="#{receivedNoteBackingBean.managedBean.taskId==null}"
-						action="#{receivedNoteBackingBean.backToPervious}" /></td>
+						action="#{receivedNoteBackingBean.backAction}" /></td>
 				<td colspan="4" style="text-align: right">
 					<ui:repeat
 						var="bpmAction"
@@ -66,7 +66,7 @@
 							</p:commandButton></td>
 					</c:if>	
 					<c:if
-					test='#{receivedNoteBackingBean.managedBean.buttonVal eq "View"}'>
+					test='#{receivedNoteBackingBean.managedBean.buttonVal eq "View" and !receivedNoteBackingBean.managedBean.isHyperLinkPage()}'>
 					<td colspan="4" style="text-align: right">	
 					<p:commandLink 
 						value="#{lbl['lbl.td.doc.trackingDiary']}"

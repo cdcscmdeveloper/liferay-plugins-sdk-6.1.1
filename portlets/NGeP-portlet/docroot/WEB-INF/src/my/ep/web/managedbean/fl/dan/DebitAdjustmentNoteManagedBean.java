@@ -115,6 +115,12 @@ public class DebitAdjustmentNoteManagedBean extends BaseManagedBean{
 	private boolean gfmasError=false;
 	private String gfmasErrorContent;
 	
+	private boolean hyperLinkPage = false;
+	
+	private String buttonVal;
+	
+	private String backToPrevious;
+	
 	
 	/**
 	 * Gets the adjustment.
@@ -633,6 +639,48 @@ public class DebitAdjustmentNoteManagedBean extends BaseManagedBean{
 
 	public void setSelectedNode(TreeNode selectedNode) {
 		this.selectedNode = selectedNode;
+	}
+
+	/**
+	 * @return the hyperLinkPage
+	 */
+	public boolean isHyperLinkPage() {
+		return hyperLinkPage;
+	}
+
+	/**
+	 * @param hyperLinkPage the hyperLinkPage to set
+	 */
+	public void setHyperLinkPage(boolean hyperLinkPage) {
+		this.hyperLinkPage = hyperLinkPage;
+	}
+
+	/**
+	 * @return the buttonVal
+	 */
+	public String getButtonVal() {
+		return buttonVal;
+	}
+
+	/**
+	 * @param buttonVal the buttonVal to set
+	 */
+	public void setButtonVal(String buttonVal) {
+		this.buttonVal = buttonVal;
+	}
+
+	/**
+	 * @return the backToPrevious
+	 */
+	public String getBackToPrevious() {
+		return backToPrevious;
+	}
+
+	/**
+	 * @param backToPrevious the backToPrevious to set
+	 */
+	public void setBackToPrevious(String backToPrevious) {
+		this.backToPrevious = backToPrevious;
 	}
 	
 }

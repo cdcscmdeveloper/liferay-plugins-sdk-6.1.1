@@ -73,7 +73,9 @@ import com.liferay.portal.util.PortalUtil;
 @ManagedBean(name="stopInstrBB")
 @RequestScoped
 public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
-	private static final String NAV_ORDERNO = "/xhtml/fl/shared/hyperlinkView/orderNoPage/orderNoHyperlink.xhtml";
+
+	private static final String NAV_PO = "/xhtml/fl/purchaseorder/poBasePage.xhtml";
+	private static final String NAV_CO = "/xhtml/fl/contractorder/coBasePage.xhtml";
 	
 	/**
 	 * Gets the faces scopes.
@@ -349,7 +351,12 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 	 * @return the string
 	 */
 	public String backToPervious() {
-		return "flDocSearch";
+		if(getManagedBean().getBackToDocument() !=null){
+			return getManagedBean().getBackToDocument();
+		}
+		else{
+			return "flDocSearch";
+		}
 	}
 	
 	/**
@@ -501,6 +508,7 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 	 * @return the string
 	 */
 	public String navigateDocument(String docType){
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		reqDTO.setFlOrderId(getManagedBean().getStopInstr().getFlFulfilmentOrder().getFulfilmentOrderId());
@@ -512,8 +520,19 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		orderBackingBean.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 		FacesContext fc = FacesContext.getCurrentInstance();
 		orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
-
-		return NAV_ORDERNO;
+		orderBackingBean.getManagedBean().setButtonVal("View");
+		orderBackingBean.getManagedBean().setHyperLinkPage(true);
+		if(isSupplierRole()){
+			orderBackingBean.getManagedBean().setSupplier(true);
+		}
+		flBB.getManagedBean().setHideRemarks(true);
+		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
+			return NAV_PO;
+		}else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
+			return NAV_CO;
+		}
+		return null;
+		
 	}
 	/**
 	 * Show 1GFMAS error
