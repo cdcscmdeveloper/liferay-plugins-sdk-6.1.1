@@ -28,6 +28,13 @@ import org.apache.commons.lang.StringUtils;
 
 public class SmFieldChangeUtil {
 
+	/**
+	 * Initialized all related application change field in table compare with
+	 * previous approved application
+	 * 
+	 * @param SmApplicationManagedBean
+	 *            bean
+	 */
 	public static void initLatestAppl(SmApplicationManagedBean bean) {
 		if (bean.isShowNewChanges()
 				&& bean.isPoUser()
@@ -52,6 +59,13 @@ public class SmFieldChangeUtil {
 		}
 	}
 
+	/**
+	 * Initialized all related personnel change field in table compare with
+	 * latest approved personnel
+	 * 
+	 * @param SmApplicationManagedBean
+	 *            bean
+	 */
 	public static void initPersonnelChangeField(SmApplicationManagedBean bean) {
 		bean.setLatestPersonnel(new SmPersonnel());
 		if (bean.isShowFieldChanges()) {
@@ -88,6 +102,13 @@ public class SmFieldChangeUtil {
 		}
 	}
 
+	/**
+	 * Initialized company experience change field in table compare with latest
+	 * approved company experience
+	 * 
+	 * @param SmApplicationManagedBean
+	 *            bean
+	 */
 	public static void initCompanyExperienceChangeField(
 			SmApplicationManagedBean bean) {
 		bean.setLatestCompanyExperience(new SmCompanyExperience());
@@ -103,6 +124,15 @@ public class SmFieldChangeUtil {
 		}
 	}
 
+	/**
+	 * Set current application entities object change field status for
+	 * displaying in data table
+	 * 
+	 * @param SmAppl
+	 *            latestAppl
+	 * @param SmAppl
+	 *            currAppl
+	 */
 	public static void setApplTableListChangeStatus(SmAppl latestAppl,
 			SmAppl currAppl) {
 		if (currAppl != null && latestAppl != null) {
@@ -137,6 +167,13 @@ public class SmFieldChangeUtil {
 		}
 	}
 
+	/**
+	 * Set current personnel entities object change field status for displaying
+	 * in data table
+	 * 
+	 * @param SmApplicationManagedBean
+	 *            bean
+	 */
 	public static void setPersonnelTableListChangeStatus(
 			SmApplicationManagedBean bean) {
 		if (bean.isShowFieldChanges() && bean.getLatestPersonnel() != null
@@ -159,6 +196,15 @@ public class SmFieldChangeUtil {
 		}
 	}
 
+	/**
+	 * Set current personnel entities child object change field status for
+	 * displaying in data table
+	 * 
+	 * @param SmPersonnel
+	 *            currPersonnel
+	 * @param SmAppl
+	 *            latestAppl
+	 */
 	private static void setCurrPersonnelFieldChange(SmPersonnel currPersonnel,
 			SmAppl latestAppl) {
 		SmPersonnel latestPersonnel = (SmPersonnel) SmCommonUtil
@@ -185,6 +231,15 @@ public class SmFieldChangeUtil {
 		setCurrPersonnelRelatedCompanies(currPersonnel, latestPersonnel);
 	}
 
+	/**
+	 * Get staff total by category
+	 * 
+	 * @param SmAppl
+	 *            appl
+	 * @param String
+	 *            staffCategory
+	 * @return SmStaffTotal
+	 */
 	public static SmStaffTotal getStaffTotalByCategoryFromList(SmAppl appl,
 			String staffCategory) {
 		SmStaffTotal staffTotal = new SmStaffTotal();
@@ -200,6 +255,14 @@ public class SmFieldChangeUtil {
 		return staffTotal;
 	}
 
+	/**
+	 * Set personnel field change status
+	 * 
+	 * @param SmAppl
+	 *            latestAppl
+	 * @param SmAppl
+	 *            currAppl
+	 */
 	private static void setPersonnelFieldChangeStatus(SmAppl latestAppl,
 			SmAppl currAppl) {
 		if (SmCommonUtil.isCollectionEmpty(latestAppl.getSmPersonnels())
@@ -221,6 +284,14 @@ public class SmFieldChangeUtil {
 		}
 	}
 
+	/**
+	 * Set current personnel change field status
+	 * 
+	 * @param SmPersonnel
+	 *            currPersonnel
+	 * @param SmPersonnel
+	 *            latestPersonnel
+	 */
 	private static void setCurrPersonnel(SmPersonnel currPersonnel,
 			SmPersonnel latestPersonnel) {
 		if (currPersonnel.getPmCountry() != null
@@ -253,6 +324,16 @@ public class SmFieldChangeUtil {
 		}
 	}
 
+	/**
+	 * Set current personnel association bodies change field status
+	 * 
+	 * @param SmAppl
+	 *            latestAppl
+	 * @param SmPersonnel
+	 *            currPersonnel
+	 * @param SmPersonnel
+	 *            latestPersonnel
+	 */
 	private static void setCurrPersonnelAssociationBodies(SmAppl latestAppl,
 			SmPersonnel currPersonnel, SmPersonnel latestPersonnel) {
 		if (latestPersonnel == null
@@ -323,6 +404,14 @@ public class SmFieldChangeUtil {
 		}
 	}
 
+	/**
+	 * Set current personnel related companies change field status
+	 * 
+	 * @param SmPersonnel
+	 *            currPersonnel
+	 * @param SmPersonnel
+	 *            latestPersonnel
+	 */
 	private static void setCurrPersonnelRelatedCompanies(
 			SmPersonnel currPersonnel, SmPersonnel latestPersonnel) {
 		if (latestPersonnel == null
@@ -393,6 +482,14 @@ public class SmFieldChangeUtil {
 		}
 	}
 
+	/**
+	 * Set current personnel staff experiences change field status
+	 * 
+	 * @param SmPersonnel
+	 *            currPersonnel
+	 * @param SmPersonnel
+	 *            latestPersonnel
+	 */
 	private static void setCurrPersonnelStaffExperiences(
 			SmPersonnel currPersonnel, SmPersonnel latestPersonnel) {
 		if (latestPersonnel == null
@@ -463,6 +560,14 @@ public class SmFieldChangeUtil {
 		}
 	}
 
+	/**
+	 * Set current personnel staff educations change field status
+	 * 
+	 * @param SmPersonnel
+	 *            currPersonnel
+	 * @param SmPersonnel
+	 *            latestPersonnel
+	 */
 	private static void setCurrPersonnelStaffEducations(
 			SmPersonnel currPersonnel, SmPersonnel latestPersonnel) {
 		if (latestPersonnel == null
@@ -533,6 +638,14 @@ public class SmFieldChangeUtil {
 		}
 	}
 
+	/**
+	 * Set current personnel addresses change field status
+	 * 
+	 * @param SmPersonnel
+	 *            currPersonnel
+	 * @param SmPersonnel
+	 *            latestPersonnel
+	 */
 	private static void setCurrPersonnelSmPersonnelAddresses(
 			SmPersonnel currPersonnel, SmPersonnel latestPersonnel) {
 		if (SmCommonUtil.isCollectionEmpty(currPersonnel
@@ -573,6 +686,14 @@ public class SmFieldChangeUtil {
 		}
 	}
 
+	/**
+	 * Set association company change field status
+	 * 
+	 * @param SmAppl
+	 *            latestAppl
+	 * @param SmAppl
+	 *            currAppl
+	 */
 	private static void setAssocCompanyFieldChangeStatus(SmAppl latestAppl,
 			SmAppl currAppl) {
 		if (SmCommonUtil
@@ -619,6 +740,14 @@ public class SmFieldChangeUtil {
 		}
 	}
 
+	/**
+	 * Set company experience field change status
+	 * 
+	 * @param SmAppl
+	 *            latestAppl
+	 * @param SmAppl
+	 *            currAppl
+	 */
 	private static void setCompanyExpFieldChangeStatus(SmAppl latestAppl,
 			SmAppl currAppl) {
 		if (SmCommonUtil
@@ -661,6 +790,14 @@ public class SmFieldChangeUtil {
 		}
 	}
 
+	/**
+	 * Set bank field change status
+	 * 
+	 * @param SmAppl
+	 *            latestAppl
+	 * @param SmAppl
+	 *            currAppl
+	 */
 	private static void setBankFieldChangeStatus(SmAppl latestAppl,
 			SmAppl currAppl) {
 		if (SmCommonUtil.isCollectionEmpty(latestAppl.getSmSupplierBanks())
@@ -716,6 +853,14 @@ public class SmFieldChangeUtil {
 		}
 	}
 
+	/**
+	 * Set branch field change status
+	 * 
+	 * @param SmAppl
+	 *            latestAppl
+	 * @param SmAppl
+	 *            currAppl
+	 */
 	private static void setBranchFieldChangeStatus(SmAppl latestAppl,
 			SmAppl currAppl) {
 		if (SmCommonUtil.isCollectionEmpty(latestAppl.getSmSupplierBranches())
@@ -772,6 +917,14 @@ public class SmFieldChangeUtil {
 		}
 	}
 
+	/**
+	 * Set equity company field change status
+	 * 
+	 * @param SmAppl
+	 *            latestAppl
+	 * @param SmAppl
+	 *            currAppl
+	 */
 	private static void setEquityCompanyFieldChangeStatus(SmAppl latestAppl,
 			SmAppl currAppl) {
 		if (SmCommonUtil.isCollectionEmpty(latestAppl.getSmEquityCompanies())
@@ -816,6 +969,14 @@ public class SmFieldChangeUtil {
 		}
 	}
 
+	/**
+	 * Set supplier certificate field change status
+	 * 
+	 * @param SmAppl
+	 *            latestAppl
+	 * @param SmAppl
+	 *            currAppl
+	 */
 	private static void setSuppCertFieldChangeStatus(SmAppl latestAppl,
 			SmAppl currAppl) {
 		if (SmCommonUtil.isCollectionEmpty(latestAppl.getSmSupplierCerts())) {
@@ -868,6 +1029,14 @@ public class SmFieldChangeUtil {
 		}
 	}
 
+	/**
+	 * Set professional body change status
+	 * 
+	 * @param SmAppl
+	 *            latestAppl
+	 * @param SmAppl
+	 *            currAppl
+	 */
 	private static void setProfessionalBodyFieldChangeStatus(SmAppl latestAppl,
 			SmAppl currAppl) {
 		if (SmCommonUtil.isCollectionEmpty(latestAppl.getSmAssociationBodies())) {
@@ -908,6 +1077,14 @@ public class SmFieldChangeUtil {
 		}
 	}
 
+	/**
+	 * Set current bank cheque signatories change field status
+	 * 
+	 * @param SmSupplierBank
+	 *            currBank
+	 * @param SmSupplierBank
+	 *            latestBank
+	 */
 	private static void setCurrBankChequeSignatories(SmSupplierBank currBank,
 			SmSupplierBank latestBank) {
 		if (SmCommonUtil.isCollectionEmpty(currBank.getSmChequeSignatories())
@@ -944,6 +1121,15 @@ public class SmFieldChangeUtil {
 		}
 	}
 
+	/**
+	 * Check if current bank signatories exist in latest bank signatories
+	 * 
+	 * @param SmChequeSignatory
+	 *            currSign
+	 * @param List
+	 *            <SmChequeSignatory> latestBankSignList
+	 * @return boolean
+	 */
 	private static boolean isCurrBankChequeSignatoryExistInLatest(
 			SmChequeSignatory currSign,
 			List<SmChequeSignatory> latestBankSignList) {
@@ -962,6 +1148,14 @@ public class SmFieldChangeUtil {
 		return retVal;
 	}
 
+	/**
+	 * Set current company experience category change field status
+	 * 
+	 * @param SmCompanyExperience
+	 *            currCompExp
+	 * @param SmCompanyExperience
+	 *            latestcurrCompExp
+	 */
 	private static void setCurrSmCompanyExpCat(SmCompanyExperience currCompExp,
 			SmCompanyExperience latestcurrCompExp) {
 		if (SmCommonUtil.isCollectionEmpty(currCompExp
@@ -994,6 +1188,15 @@ public class SmFieldChangeUtil {
 		}
 	}
 
+	/**
+	 * Get personnel address from list by type
+	 * 
+	 * @param String
+	 *            type
+	 * @param List
+	 *            <SmPersonnelAddress> personnelAddressList
+	 * @return SmPersonnelAddress
+	 */
 	public static SmPersonnelAddress getPersonnelAddressByTypeFromList(
 			String type, List<SmPersonnelAddress> personnelAddressList) {
 		SmPersonnelAddress addr = null;
@@ -1007,6 +1210,17 @@ public class SmFieldChangeUtil {
 		return addr;
 	}
 
+	/**
+	 * Get signatory from list by identification no and bank account no
+	 * 
+	 * @param String
+	 *            identificationNo
+	 * @param String
+	 *            accNo
+	 * @param List
+	 *            <SmChequeSignatory> signList
+	 * @return SmChequeSignatory
+	 */
 	public static SmChequeSignatory getSignatoryByIdNoAndBankAccNoFromList(
 			String identificationNo, String accNo,
 			List<SmChequeSignatory> signList) {
@@ -1026,6 +1240,15 @@ public class SmFieldChangeUtil {
 		return retVal;
 	}
 
+	/**
+	 * Check if current address has different compare with latest address
+	 * 
+	 * @param SmAddress
+	 *            latest
+	 * @param SmAddress
+	 *            current
+	 * @return boolean
+	 */
 	private static boolean isAddressHasDifferences(SmAddress latest,
 			SmAddress current) {
 		boolean retVal = false;
@@ -1072,12 +1295,36 @@ public class SmFieldChangeUtil {
 		return retVal;
 	}
 
+	/**
+	 * Check if latest object has difference compare with latest object
+	 * 
+	 * @param Object
+	 *            latest
+	 * @param Object
+	 *            current
+	 * @param String
+	 *            [] excludeProps
+	 * @return boolean
+	 */
 	private static boolean isHasDifferences(Object latest, Object current,
 			String[] excludeProps) {
 		return SmCommonUtil.isSmObjectPropsDifference(latest, current,
 				excludeProps);
 	}
 
+	/**
+	 * Is current object exist in latest object
+	 * 
+	 * @param Object
+	 *            currObj
+	 * @param List
+	 *            <? extends Object> latestList
+	 * @param String
+	 *            [] primitiveProps
+	 * @param String
+	 *            [] nonePrimitiveProps
+	 * @return boolean
+	 */
 	private static boolean isCurrExistInLatest(Object currObj,
 			List<? extends Object> latestList, String[] primitiveProps,
 			String[] nonePrimitiveProps) {
