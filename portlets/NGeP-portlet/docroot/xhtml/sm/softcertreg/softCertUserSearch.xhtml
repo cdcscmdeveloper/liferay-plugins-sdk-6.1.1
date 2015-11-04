@@ -46,7 +46,8 @@
 					listener="#{softCertBackingBean.unSelectPersonnel}"
 					update=":form:resultPanelId,@([id$=proceedBtnId])"></p:ajax>
 					
-				<p:column selectionMode="multiple" style="width:2%" disabledSelection="#{personnel.disableRowSelection}"/>
+				<p:column selectionMode="multiple" style="width:2%" disabledSelection="#{personnel.disableRowSelection}" 
+					rendered="#{not empty softCertBackingBean.managedBean.authorizedPersonnels}"/>
 
 				<p:column headerText="#{lbl['lbl.sm.userprofile.name']}" disabledSelection="#{personnel.disableRowSelection}">
 					<h:outputText value="#{personnel.name}" />
