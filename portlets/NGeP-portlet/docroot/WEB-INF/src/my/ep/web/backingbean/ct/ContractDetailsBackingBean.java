@@ -40,7 +40,6 @@ import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.suspension.IContractSuspensionSO;
 import my.ep.biz.service.ct.termination.IContractTerminationSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -61,8 +60,6 @@ import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.exception.EpException;
@@ -91,7 +88,6 @@ import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.type.aut.SearchOperator;
@@ -118,6 +114,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DualListModel;
@@ -203,19 +200,20 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	public void searchContract() throws Exception {
 		try { 
-			if ((getManagedBean().getCtNumber() == null || getManagedBean().getCtNumber().trim().length() == 0)
-					&& (getManagedBean().getCtName() == null || getManagedBean().getCtName().trim().length() == 0) 
-					&& (getManagedBean().getCtCircularNo() == null || getManagedBean().getCtCircularNo().trim().length() == 0) 
-					&& (getManagedBean().getCtCircularName() == null || getManagedBean().getCtCircularName().trim().length() == 0) 
-					&& (getManagedBean().getCtLoaNo() == null || getManagedBean().getCtLoaNo().trim().length() == 0) 
-					&& (getManagedBean().getCtSupplierName() == null || getManagedBean().getCtSupplierName().trim().length() == 0) 
-					&& getManagedBean().getCtDateStart() == null
-					&& getManagedBean().getCtDateEnd() == null 
-					&& (getManagedBean().getCtPhysicalNo() == null || getManagedBean().getCtPhysicalNo().trim().length() == 0) 
-					&& (getManagedBean().getCtPhysicalLoaNo() == null || getManagedBean().getCtPhysicalLoaNo().trim().length() == 0) 
-					&& getManagedBean().getCtStatus() == 0 
-					&& getManagedBean().getTerminationTypeId() == null 
-					&& getManagedBean().getCtContractStatus() == null
+			if (StringUtils.isBlank(getManagedBean().getSearchContractNo())
+					&& StringUtils.isBlank(getManagedBean().getSearchContractName()) 
+					&& StringUtils.isBlank(getManagedBean().getSearchCircularNo()) 
+					&& StringUtils.isBlank(getManagedBean().getSearchCircularName()) 
+					&& StringUtils.isBlank(getManagedBean().getSearchLoaNo()) 
+					&& StringUtils.isBlank(getManagedBean().getSearchSupplierName()) 
+					&& getManagedBean().getSearchCtStartDate() == null
+					&& getManagedBean().getSearchCtEndDate() == null 
+					&& StringUtils.isBlank(getManagedBean().getSearchCtPhysicalNo()) 
+					&& StringUtils.isBlank(getManagedBean().getSearchLoaPhysicalNo()) 
+					&& getManagedBean().getSearchStatus() == 0 
+					&& getManagedBean().getSearchTerminationType() == null 
+					&& getManagedBean().getSearchFulfilmentStatus() == null
+					&& getManagedBean().getSearchContractStatus() == 0
 					&& getManagedBean().getSearchMinistryProfileId() == null
 					&& getManagedBean().getSearchPtjProfile() == null) {
 					FacesContext.getCurrentInstance().addMessage(null,
@@ -228,6 +226,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "contract search failed."));
+
+
 		}
 	}
 	
@@ -235,19 +235,20 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * The method used to reset the search criteria for contract.
 	 */
 	public void searchReset() {
-		this.getManagedBean().setCtNumber(null);
-		this.getManagedBean().setCtName(null);	
-		this.getManagedBean().setCtCircularNo(null);	
-		this.getManagedBean().setCtCircularName(null);	
-		this.getManagedBean().setCtLoaNo(null);	
-		this.getManagedBean().setCtSupplierName(null);	
-		this.getManagedBean().setCtDateStart(null);	
-		this.getManagedBean().setCtDateEnd(null);	
-		this.getManagedBean().setCtPhysicalNo(null);	
-		this.getManagedBean().setCtPhysicalLoaNo(null);
-		this.getManagedBean().setCtStatus(0);
-		this.getManagedBean().setTerminationTypeId(null);
-		this.getManagedBean().setCtContractStatus(null);
+		this.getManagedBean().setSearchContractNo(null);
+		this.getManagedBean().setSearchContractName(null);	
+		this.getManagedBean().setSearchCircularNo(null);	
+		this.getManagedBean().setSearchCircularName(null);	
+		this.getManagedBean().setSearchLoaNo(null);	
+		this.getManagedBean().setSearchSupplierName(null);	
+		this.getManagedBean().setSearchCtStartDate(null);	
+		this.getManagedBean().setSearchCtEndDate(null);	
+		this.getManagedBean().setSearchCtPhysicalNo(null);	
+		this.getManagedBean().setSearchLoaPhysicalNo(null);
+		this.getManagedBean().setSearchStatus(0);
+		this.getManagedBean().setSearchTerminationType(null);
+		this.getManagedBean().setSearchFulfilmentStatus(null);
+		this.getManagedBean().setSearchContractStatus(0);
 		defaultMinistryPtjSearchValue();
 	}
 	
@@ -1715,7 +1716,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @return the navigate URL 
 	 */
 	public String gotoBackPage() {
-		return getManagedBean().getGotoPreviewPage();
+		String url = getManagedBean().getGotoPreviewPage();
+		renewSesionObject();
+		return url;
 	}
 	
 	/**
@@ -1922,45 +1925,45 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @return the selection list of contract status
 	 */
 	public SelectItem[] getSearchContractStatusDropdown() {
-		IStatusSO statusSO = null;
 		SelectItem[] items = null;
 		
 		try {
-			statusSO = (IStatusSO)BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-			String languageCode = getFacesScopes().getUserLocale().getLanguage();
-			
-			int i = 1;
-		 	StatusReqDTO reqDTO = new StatusReqDTO();
-			reqDTO.setModuleCode("CT");
-			List <String> docTypeList = new ArrayList<String>();
-			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_CREATION);
-			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
-			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
-			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
-			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
-			docTypeList.add(ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT);
-			
-			reqDTO.setDocTypeList(docTypeList);
-			reqDTO.setLanguageCode(languageCode);
-			StatusResDTO resDTO = statusSO.retrieveStatusDescList(reqDTO);
-			
-		    List<PmStatusDesc> list =  resDTO.getStatusDescList();
-		    items = new SelectItem[list.size()+1];
-		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
-		    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-		      
-			for (PmStatusDesc statusDesc : list) {
-				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc.getStatusName());
-			}
-			
+			items = new SelectItem[5];
+			int i = 0;
+			items[i++] = new SelectItem(0, ResourceBundleUtils.getMessage("lbl.txt.select", 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			items[i++] = new SelectItem(ContractConst.CONTRACT_STATUS_EFFECTIVE,  
+					ResourceBundleUtils.getMessage("lbl.ct.effective", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			items[i++] = new SelectItem(ContractConst.CONTRACT_STATUS_INACTIVE,  
+					ResourceBundleUtils.getMessage("lbl.ct.inactive", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			items[i++] = new SelectItem(ContractConst.CONTRACT_STATUS_EXPIRED,  
+					ResourceBundleUtils.getMessage("lbl.ct.expired", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			items[i++] = new SelectItem(ContractConst.CONTRACT_STATUS_TERMINATED,  
+					ResourceBundleUtils.getMessage("lbl.ct.terminated", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		} finally {
-			statusSO = null;
 		}
-	    return items;
+		return items;
+	}
+
+	/**
+	 * The method used to retrieve the contract status of the contract.
+	 * 
+	 * @return Effective, Terminated, Expired, Inactive
+    */
+	public String getContractStatusDesc(int contractStatus) {
+		if (contractStatus == ContractConst.CONTRACT_STATUS_EFFECTIVE) {
+			return ResourceBundleUtils.getMessage("lbl.ct.effective", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else if (contractStatus == ContractConst.CONTRACT_STATUS_INACTIVE	) {
+			return ResourceBundleUtils.getMessage("lbl.ct.inactive", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else if (contractStatus == ContractConst.CONTRACT_STATUS_EXPIRED	) {
+			return ResourceBundleUtils.getMessage("lbl.ct.expired", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else if (contractStatus == ContractConst.CONTRACT_STATUS_TERMINATED	) {
+			return ResourceBundleUtils.getMessage("lbl.ct.terminated", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else {
+			return "";
+		}
 	}
 	
 	/**
