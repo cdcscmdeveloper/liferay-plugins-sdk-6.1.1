@@ -11,18 +11,18 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		<br/>
 		<table class="ppTwoTable">
 			<tr>
-				<th>
-					<p:outputLabel value="#{lbl['lbl.pp.plan.number']}"/>
-				</th>
 				<td>
-					<p:inputText styleClass="ppDisplayTextM" value="#{pPlanBackingBean.managedBean.planSearchBean.planNumber}"/>
+					<p:outputLabel value="#{lbl['lbl.pp.plan.number']}"/>
 				</td>
-				<th>
+				<td>
+					<p:inputText size="27" styleClass="ppDisplayTextM" value="#{pPlanBackingBean.managedBean.planSearchBean.planNumber}"/>
+				</td>
+				<td>
 					<p:outputLabel value="#{lbl['lbl.pp.ptj']}"/>
-				</th>
+				</td>
 				<td>
 				 	<p:inputText 
-						size="35"
+						size="60"
 						id="opSearchIT" 
 						value="#{pPlanBackingBean.managedBean.selectedPTJ.orgName}" 
 						disabled="true"
