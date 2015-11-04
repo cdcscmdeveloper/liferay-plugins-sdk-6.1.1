@@ -587,7 +587,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setContractVer(resDTO.getCtContractVer());
 			getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 			ctBackingBean.getManagedBean().setCtContractVer(getManagedBean().getContractVer());
-				 
+			ctBackingBean.getManagedBean().setContractVer(getManagedBean().getContractVer());
 			//Retrieve agreement contract version for physical no & signed date
 			retrieveContractVerOfAgreement();
 			
