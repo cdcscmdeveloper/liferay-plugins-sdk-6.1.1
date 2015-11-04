@@ -25,6 +25,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
@@ -43,6 +44,8 @@ import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
@@ -186,6 +189,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setUserRole(getUserRole());
 			reqDTO.setTaskName(getManagedBean().getTaskName());
+			reqDTO.setApproverUserList(getManagedBean().getApproverList());
 			
 			String messagePrefix = "";
 			String messageSuffix = "";
@@ -1039,8 +1043,18 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		 * @return the string
 		 * @throws Exception the exception
 		 */
-		public String preSubmitFulfillmentOrder(
-				PmDigiSign pmDigiSign) throws Exception {
+		public String preSubmitFulfillmentOrder(PmDigiSign pmDigiSign) throws Exception {
+			
+			if(getManagedBean().isRemoveFactoring()){
+				IUserSO userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				UserReqDTO userReqDTO = new UserReqDTO();
+				userReqDTO.setOrgProfileId(getManagedBean().getFulfilmentOrder().getPmFinancialOrg().getPmOrgProfiles().get(0).getOrgProfileId());
+				UserResDTO userResDTO = userSO.retrieveUserListByOrgProfileId(userReqDTO);
+				if(userResDTO.getUserList() == null || userResDTO.getUserList().isEmpty()){
+					throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.factoringUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+				}
+			}
+			
 			if (pmDigiSign != null) {
 				this.getManagedBean().setPmDigiSign(pmDigiSign);
 				if(getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value()) 
