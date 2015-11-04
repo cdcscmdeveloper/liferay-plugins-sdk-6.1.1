@@ -12,24 +12,29 @@ import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
 
+import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.item.CtItemCeilingQty;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 
 /**
  * ContractBaseBackingBean is the Base class for contract
@@ -194,6 +199,34 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean>
 				||getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
 				||getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
 				||getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value()));
+	}
+	
+	/**
+	 * The method used for generating a list of fulfillment type
+	 * for schedule as selection.
+	 * 
+	 * @return the selection list of fulfillment type
+	 */
+	public SelectItem[] getScheduleTypeDropDown() {
+		SelectItem[] items = null;
+		ISearchBean<PmParameterDesc> searchBean = null;
+		
+		try {
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(
+					ParameterTypeConst.SCHEDULE_TYPE, searchBean);
+			
+		    items = new SelectItem[parameterDescs.size()];
+		    int i = 0;
+		    for (PmParameterDesc parameterDesc : parameterDescs) {
+		    	items[i++] = new SelectItem(
+		    			parameterDesc.getPmParameter().getParameterId(), 
+		    			parameterDesc.getCodeName());
+		    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+	    return items;
 	}
 }
 
