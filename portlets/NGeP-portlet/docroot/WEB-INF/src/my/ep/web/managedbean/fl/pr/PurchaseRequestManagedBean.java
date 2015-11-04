@@ -46,7 +46,6 @@ import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.web.backingbean.fl.pr.FLSupplierItemVO;
 import my.ep.web.managedbean.BaseManagedBean;
 
-import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 
 /**

@@ -11,6 +11,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.fl.order.FlStopInstr;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
@@ -69,6 +70,7 @@ public class StopInstrManagedBean extends BaseManagedBean {
     
     private boolean gfmasError=false;
     private String gfmasErrorContent;
+    private List<PmUser> approverList;
 	
 	/**
 	 * Gets the reason descs.
@@ -294,4 +296,22 @@ public class StopInstrManagedBean extends BaseManagedBean {
 	public void setGfmasErrorContent(String gfmasErrorContent) {
 		this.gfmasErrorContent = gfmasErrorContent;
 	}
+
+	/**
+	 * @return the approverList
+	 */
+	public List<PmUser> getApproverList() {
+		if(approverList == null){
+			setApproverList(new ArrayList<PmUser>());
+		}
+		return approverList;
+	}
+
+	/**
+	 * @param approverList the approverList to set
+	 */
+	public void setApproverList(List<PmUser> approverList) {
+		this.approverList = approverList;
+	}
+
 }
