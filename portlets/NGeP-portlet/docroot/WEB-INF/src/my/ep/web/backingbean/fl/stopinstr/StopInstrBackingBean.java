@@ -18,8 +18,10 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
+import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -33,6 +35,8 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
+import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
@@ -44,10 +48,13 @@ import my.ep.persistence.entity.fl.order.FlStopInstrItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
@@ -110,6 +117,7 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		reqDTO.setToken(token);
 		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 		reqDTO.setUserRole(getUserRole());
+		reqDTO.setApproverUserList(getManagedBean().getApproverList());
 		
 		reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
 		reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
@@ -378,6 +386,33 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
 			}
 		}
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)){
+			IFulfilmentSO fulfilmentSO = (IFulfilmentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+			IUserGroupSO userGroupSO = (IUserGroupSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserGroupSO.class);
+			BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(getManagedBean().getStopInstr().getFlRequest().getFulfilmentReqId());
+			UserGroupReqDTO userGroupReqDTO = new UserGroupReqDTO();
+			userGroupReqDTO.setGroupId(getManagedBean().getStopInstr().getFlRequest().getPmUserGroup().getUserGroupId());
+			userGroupReqDTO.setApprovalLimit(sumItemAmt);
+			UserGroupResDTO userGroupResDTO = userGroupSO.retrieveUserGroupUserListByGroupId(userGroupReqDTO);
+			String lastApproverLoginId = getManagedBean().getStopInstr().getFlRequest().getApprover().getLoginId();
+			List<PmUser> orderApproverList = new ArrayList<PmUser>();
+			List<PmUser> pendingApproverList = new ArrayList<PmUser>();
+			if(userGroupResDTO.getUserGroupUserList().isEmpty()){
+				throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.approverUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+			}
+			for(PmUserGroupUser groupUser : userGroupResDTO.getUserGroupUserList()) {
+				if (lastApproverLoginId.equalsIgnoreCase(groupUser.getPmUser().getLoginId())) {
+					orderApproverList.add(groupUser.getPmUser());
+				} else if (orderApproverList.size() > 0) {
+					orderApproverList.add(groupUser.getPmUser());
+				} else if (orderApproverList.size() == 0) {
+					pendingApproverList.add(groupUser.getPmUser());
+				}
+			}
+			orderApproverList.addAll(pendingApproverList);
+			getManagedBean().getApproverList().addAll(orderApproverList);
+		}
+
 		if (!hasGovtSellerRole() && (getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value()) 
 				|| getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value())
 						|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())
