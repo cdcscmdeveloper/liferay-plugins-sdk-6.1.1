@@ -27,6 +27,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
+import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -42,6 +43,8 @@ import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.pm.common.address.AddressReqDTO;
+import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
@@ -62,6 +65,7 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -876,6 +880,26 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 					if(newDate.before(startDate)){
 						throw new EpException(MessageConst.ERROR_745057, new String[]{getFullAddress(flDeliveryAddress.getPmAddress())});
 					}
+				}
+			}
+		}
+		IAddressSO addressSO = (IAddressSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+		for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+			AddressReqDTO reqDTO = new AddressReqDTO();
+			if(flDeliveryAddress.getFlTempDoAddr().isSelected()) {
+				Long addressId = flDeliveryAddress.getPmAddress().getAddressId();
+				if(flDeliveryAddress.getReceivingGrp()!=null && flDeliveryAddress.getReceivingGrp().getAddressTypeId()!=null) { // in case of Manual address
+					reqDTO = new AddressReqDTO();
+					reqDTO.setAddressTypeId(flDeliveryAddress.getReceivingGrp().getAddressTypeId());
+					AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+					addressId = resDTO.getAddressTypeList().get(0).getPmAddress().getAddressId();
+				}
+				
+				reqDTO.setAddressId(addressId);
+				reqDTO.setAddressType(AddressType.RECEIVING_OFFICER_ADDRESS.value());
+				AddressResDTO resDTO = addressSO.retrieveReceivingOfficerList(reqDTO);
+				if(resDTO.getAddressTypeList().isEmpty()){//TODO others as well needed to throw if list is empty
+					throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.receivingOfficer",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
 			}
 		}

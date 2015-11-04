@@ -4,6 +4,7 @@
 package my.ep.web.managedbean.fl.frn;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -112,6 +113,7 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private String gfmasErrorContent;
 	private String bpmTaskName;
 	private boolean lastFRNTaxInv;;
+	private List<PmUser> approverList;
 	
 	private boolean acknowledged;
 	
@@ -824,6 +826,23 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	 */
 	public void setHyperLinkPage(boolean hyperLinkPage) {
 		this.hyperLinkPage = hyperLinkPage;
+	}
+
+	/**
+	 * @return the approverList
+	 */
+	public List<PmUser> getApproverList() {
+		if(approverList == null){
+			setApproverList(new ArrayList<PmUser>());
+		}
+		return approverList;
+	}
+
+	/**
+	 * @param approverList the approverList to set
+	 */
+	public void setApproverList(List<PmUser> approverList) {
+		this.approverList = approverList;
 	}
 
 }
