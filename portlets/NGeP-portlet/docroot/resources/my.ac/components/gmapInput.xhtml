@@ -26,7 +26,7 @@
 			<i class="icon icon-map-marker"></i>&#160;#{lbl['lbl.gmap.panel.title']}
 		</legend>
 		
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.gmap.instruction']}" escape="false" />
+		<ac:instructionText value="#{lbl['lbl.gmap.instruction']}" />
   		
   		<div class="ui-fieldset-content">
   		
@@ -51,6 +51,7 @@
 		</p:commandButton>		
 
 		<p:remoteCommand 
+			id="updateGmap"
 			name="updateGmap" 
 			process="plat, plng" 
 			update="@([id$=mapPanel])" 
