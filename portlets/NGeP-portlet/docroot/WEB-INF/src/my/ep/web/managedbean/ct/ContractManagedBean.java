@@ -46,6 +46,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	private CtContractVer contractVer;
+	private CtContractVer ctContractVer;
 	private CtContractVer agreementContractVer;
 	private double performanceBondRuleAmt;
 	private String supplierCompanyName;
@@ -795,5 +796,13 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setSelectedServiceItem(CtContractItem selectedServiceItem) {
 		this.selectedServiceItem = selectedServiceItem;
 	}
-	
+
+	public CtContractVer getCtContractVer() {
+		return ctContractVer;
+	}
+
+	public void setCtContractVer(CtContractVer ctContractVer) {
+		this.ctContractVer = ctContractVer;
+	}
+
 }
