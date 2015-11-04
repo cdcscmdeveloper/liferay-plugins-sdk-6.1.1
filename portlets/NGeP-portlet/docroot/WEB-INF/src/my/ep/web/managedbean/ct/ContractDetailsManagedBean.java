@@ -3,11 +3,9 @@
  */
 package my.ep.web.managedbean.ct;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,41 +29,27 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.ct.CtAttachment;
-import my.ep.persistence.entity.ct.CtContract;
-import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
-import my.ep.persistence.entity.ct.dtl.CtAgency;
-import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
-import my.ep.persistence.entity.ct.dtl.CtContractAmount;
-import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
-import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
-import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
-import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
-import my.ep.persistence.entity.ct.dtl.zone.CtContractZoneDtl;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
-import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.ResourceBundleUtils;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
-import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.DualListModel;
-import org.primefaces.model.MenuModel;
-import org.primefaces.model.TreeNode;
-
 /**
  * Managed Bean For Contract Details
  * 
@@ -79,97 +63,47 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 	private String[] action;
 	private String taskName;
-	private String itemType;
-	private String showItem;
 	private String popupForImportedItems = "L";
-	private String searchContractNo;
-	private String searchContractName;
-	private Long searchMinistryProfileId;
-	private PmOrgProfile searchPtjProfile;
-	private String searchCircularNo;
-	private String searchCircularName;
-    private Date searchCtStartDate;
-	private Date searchCtEndDate;
-	private String searchSupplierName;
-	private String searchLoaNo;
-	private String searchLoaPhysicalNo;
-	private String searchCtPhysicalNo;
-	private int searchStatus;
-	private Long searchTerminationType;
-	private Long searchFulfilmentStatus;
-	private int searchContractStatus;
-	//private String supplierAddress;
-	//private String supplierCompanyName;
-	//private String supplierBranchName;
+	private String ctName;
+	private String ctPhysicalLoaNo;
+	private String ctNumber;
+	private String ctCircularNo;
+	private String ctLoaNo;
+	private String ctPhysicalNo;
+	private String ctCircularName;
+	private String ctSupplierName;
 	private String externalPageUrl;
-	private String ptjCodeName;
-	private String ptjCodeNameSearchValues;
-	private String frequencySchedule;
 	private String warningPercentage;
 	private String textBeforeSign;
 	private String buttonAction;	
 	private String gotoPreviewPage;	
-	private String financialAccNo;
 	private String fileDirectory;
-	private Long ministryProfileId;
-	private Long jabatanProfileId;
+	private Long ctContractStatus;
+	private Long terminationTypeId;
 	private Long loaContractVerId;
-    private BigDecimal paidAdvancePaymentAmt;
-    private BigDecimal paidInvoiceAmt;
-    private BigDecimal gstTotalAmount;
+    private Date ctDateStart;
+	private Date ctDateEnd;
 	private Date asAtDate = null;
 	private int selectedTabIndex = 0;
+	private int ctStatus;	
 	private int attachFileIndex;
-    private int firstRowSelected;
-    private double advancePaymentAmt;
-    private double performanceBondRuleAmt;	
-	private boolean selectAll;
-	private boolean directPurchase;
-	private boolean chkProgressive;
-	private boolean chkSchedule;
-	private boolean disableScheduleRadio;
-	//private boolean updateSupplierAddress;
-	//private boolean updateCompanyName;
-	private boolean updateContract = false;
+   private boolean updateContract = false;
 	private boolean viewContract = false;
-	private boolean chkJustification;
-	private boolean flgPaymentTracking;
-	private boolean chkConceValue;
-	private boolean progSchedButtonDeactive;
 	private boolean autoUpdate = true;
-	private boolean buttonHideActive = true;
-	private boolean disableGstAmount;
-	private List<CtContractItem> ctItemList;
-	private List<CtContractItem> ctItemServiceList;
-	private List<CtContractZoneDtl> ctContractZoneDtls;
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	private List<String> finalListOfSideMenu;
-	private List<String> yearList;
-	private List<CtAgencyAddress> selectedListOfAddress;
-	private List<PmAddressType> addressTypeList;
 	private SelectItem[] loaContractVerList;
 	private DualListModel<PmUser> approverModel;
 	private Map<Long, PmUserGroup> userGroupMap;
 	private Map<Long, PmUser> userMap;
-	private Map<String,Object> radioButtonSchedule;
 	private HashMap<String, PmUserGroupUser> approverMap;
-	private CtContractVer contractVer;
-	private CtContractVer agreementContractVer;
-	private CtContract ctContract;
 	private CtCircularVer ctCircularVer;
-	private CtContractItem selectedItem;
-	private CtContractItem selectedServiceItem;
-	private CtDeduction selectedDeduction;
-	private CtPerformanceBond ctPerformanceBond;
-	private CtContractZone selectedCtZone;
-	private CtAgency selectedAgency;
-	private CtContractAmount ctContractAmount;	
-	private TreeNode ctZoneTrees;
-	private MenuModel fulfilmentMenuModel;	
-	//private SmAddress smAddress;
-	private PmDigiSign pmDigiSign;	
+		private PmDigiSign pmDigiSign;	
 	private IPagingDataModel<VCtContract> contractDataModel = new ContractPagingDataModel();
+	
+	private Long searchMinistryProfileId;
+	private PmOrgProfile searchPtjProfile;
 	
 	public int deductionIndex =99;
 	public int scheduleIndex =99;
@@ -209,34 +143,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the itemType
-	 */
-	public String getItemType() {
-		return itemType;
-	}
-
-	/**
-	 * @param itemType the itemType to set
-	 */
-	public void setItemType(String itemType) {
-		this.itemType = itemType;
-	}
-
-	/**
-	 * @return the showItem
-	 */
-	public String getShowItem() {
-		return showItem;
-	}
-
-	/**
-	 * @param showItem the showItem to set
-	 */
-	public void setShowItem(String showItem) {
-		this.showItem = showItem;
-	}
-
-	/**
 	 * @return the popupForImportedItems
 	 */
 	public String getPopupForImportedItems() {
@@ -251,162 +157,117 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the searchContractName
+	 * @return the ctName
 	 */
-	public String getSearchContractName() {
-		return searchContractName;
+	public String getCtName() {
+		return ctName;
 	}
 
 	/**
-	 * @param searchContractName the searchContractName to set
+	 * @param ctName the ctName to set
 	 */
-	public void setSearchContractName(String searchContractName) {
-		this.searchContractName = searchContractName;
+	public void setCtName(String ctName) {
+		this.ctName = ctName;
 	}
 
 	/**
-	 * @return the searchLoaPhysicalNo
+	 * @return the ctPhysicalLoaNo
 	 */
-	public String getSearchLoaPhysicalNo() {
-		
-		return searchLoaPhysicalNo;
+	public String getCtPhysicalLoaNo() {
+		return ctPhysicalLoaNo;
 	}
 	
 	/**
-	 * @param searchLoaPhysicalNo the searchLoaPhysicalNo to set
+	 * @param ctPhysicalLoaNo the ctPhysicalLoaNo to set
 	 */
-	public void setSearchLoaPhysicalNo(String searchLoaPhysicalNo) {
-		this.searchLoaPhysicalNo = searchLoaPhysicalNo;
+	public void setCtPhysicalLoaNo(String ctPhysicalLoaNo) {
+		this.ctPhysicalLoaNo = ctPhysicalLoaNo;
 	}
 
 	/**
-	 * @return the searchContractNo
+	 * @return the ctNumber
 	 */
-	public String getSearchContractNo() {
-		return searchContractNo;
+	public String getCtNumber() {
+		return ctNumber;
 	}
 
 	/**
-	 * @param searchContractNo the searchContractNo to set
+	 * @param ctNumber the ctNumber to set
 	 */
-	public void setSearchContractNo(String searchContractNo) {
-		this.searchContractNo = searchContractNo;
+	public void setCtNumber(String ctNumber) {
+		this.ctNumber = ctNumber;
 	}
 	
 	/**
-	 * @return the searchCircularNo
+	 * @return the ctCircularNo
 	 */
-	public String getSearchCircularNo() {
-		return searchCircularNo;
+	public String getCtCircularNo() {
+		return ctCircularNo;
 	}
 
 	/**
-	 * @param searchCircularNo the searchCircularNo to set
+	 * @param ctCircularNo the ctCircularNo to set
 	 */
-	public void setSearchCircularNo(String searchCircularNo) {
-		this.searchCircularNo = searchCircularNo;
+	public void setCtCircularNo(String ctCircularNo) {
+		this.ctCircularNo = ctCircularNo;
 	}
 
 	/**
-	 * @return the searchLoaNo
+	 * @return the ctLoaNo
 	 */
-	public String getSearchLoaNo() {
-		return searchLoaNo;
+	public String getCtLoaNo() {
+		return ctLoaNo;
 	}
 
 	/**
-	 * @param searchLoaNo the searchLoaNo to set
+	 * @param ctLoaNo the ctLoaNo to set
 	 */
-	public void setSearchLoaNo(String searchLoaNo) {
-		this.searchLoaNo = searchLoaNo;
+	public void setCtLoaNo(String ctLoaNo) {
+		this.ctLoaNo = ctLoaNo;
 	}
 
 	/**
-	 * @return the searchCtPhysicalNo
+	 * @return the ctPhysicalNo
 	 */
-	public String getSearchCtPhysicalNo() {
-		
-		return searchCtPhysicalNo;
+	public String getCtPhysicalNo() {
+		return ctPhysicalNo;
 	}
 
 	/**
-	 * @param searchCtPhysicalNo the searchCtPhysicalNo to set
+	 * @param ctPhysicalNo the ctPhysicalNo to set
 	 */
-	public void setSearchCtPhysicalNo(String searchCtPhysicalNo) {
-		this.searchCtPhysicalNo = searchCtPhysicalNo;
+	public void setCtPhysicalNo(String ctPhysicalNo) {
+		this.ctPhysicalNo = ctPhysicalNo;
 	}
 
 	/**
-	 * @return the searchCircularName
+	 * @return the ctCircularName
 	 */
-	public String getSearchCircularName() {
-		return searchCircularName;
+	public String getCtCircularName() {
+		return ctCircularName;
 	}
 
 	/**
-	 * @param searchCircularName the searchCircularName to set
+	 * @param ctCircularName the ctCircularName to set
 	 */
-	public void setSearchCircularName(String searchCircularName) {
-		this.searchCircularName = searchCircularName;
+	public void setCtCircularName(String ctCircularName) {
+		this.ctCircularName = ctCircularName;
 	}
 
 	/**
-	 * @return the searchSupplierName
+	 * @return the ctSupplierName
 	 */
-	public String getSearchSupplierName() {
-		return searchSupplierName;
+	public String getCtSupplierName() {
+		return ctSupplierName;
 	}
 
 	/**
-	 * @param searchSupplierName the searchSupplierName to set
+	 * @param ctSupplierName the ctSupplierName to set
 	 */
-	public void setSearchSupplierName(String searchSupplierName) {
-		this.searchSupplierName = searchSupplierName;
+	public void setCtSupplierName(String ctSupplierName) {
+		this.ctSupplierName = ctSupplierName;
 	}
 
-	/**
-	 * @return the supplierAddress
-	 *//*
-	public String getSupplierAddress() {
-		return supplierAddress;
-	}
-
-	*//**
-	 * @param supplierAddress the supplierAddress to set
-	 *//*
-	public void setSupplierAddress(String supplierAddress) {
-		this.supplierAddress = supplierAddress;
-	}*/
-	
-
-	/**
-	 * @return the supplierBranchName
-	 *//*
-	public String getSupplierBranchName() {
-		return supplierBranchName;
-	}
-*/
-	/**
-	 * @param supplierBranchName the supplierBranchName to set
-	 *//*
-	public void setSupplierBranchName(String supplierBranchName) {
-		this.supplierBranchName = supplierBranchName;
-	}
-	*/
-	/**
-	 * @return the supplierCompanyName
-	 *//*
-	public String getSupplierCompanyName() {
-		return supplierCompanyName;
-	}	
-
-	*//**
-	 * @param supplierCompanyName the supplierCompanyName to set
-	 *//*
-	public void setSupplierCompanyName(String supplierCompanyName) {
-		this.supplierCompanyName = supplierCompanyName;
-	}
-*/
 	/**
 	 * @return the externalPageUrl
 	 */
@@ -420,49 +281,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public void setExternalPageUrl(String externalPageUrl) {
 		this.externalPageUrl = externalPageUrl;
 	}
-
-	/**
-	 * @return the ptjCodeName
-	 */
-	public String getPtjCodeName() {
-		return ptjCodeName;
-	}
-
-	/**
-	 * @param ptjCodeName the ptjCodeName to set
-	 */
-	public void setPtjCodeName(String ptjCodeName) {
-		this.ptjCodeName = ptjCodeName;
-	}
-
-	/**
-	 * @return the ptjCodeNameSearchValues
-	 */
-	public String getPtjCodeNameSearchValues() {
-		return ptjCodeNameSearchValues;
-	}
-
-	/**
-	 * @param ptjCodeNameSearchValues the ptjCodeNameSearchValues to set
-	 */
-	public void setPtjCodeNameSearchValues(String ptjCodeNameSearchValues) {
-		this.ptjCodeNameSearchValues = ptjCodeNameSearchValues;
-	}
-
-	/**
-	 * @return the frequencySchedule
-	 */
-	public String getFrequencySchedule() {
-		return frequencySchedule;
-	}
-
-	/**
-	 * @param frequencySchedule the frequencySchedule to set
-	 */
-	public void setFrequencySchedule(String frequencySchedule) {
-		this.frequencySchedule = frequencySchedule;
-	}
-
+	
 	/**
 	 * @return the warningPercentage
 	 */
@@ -520,20 +339,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the financialAccNo
-	 */
-	public String getFinancialAccNo() {
-		return financialAccNo;
-	}
-
-	/**
-	 * @param financialAccNo the financialAccNo to set
-	 */
-	public void setFinancialAccNo(String financialAccNo) {
-		this.financialAccNo = financialAccNo;
-	}
-
-	/**
 	 * @return the fileDirectory
 	 */
 	public String getFileDirectory() {
@@ -548,74 +353,32 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the searchFulfilmentStatus
+	 * @return the ctContractStatus
 	 */
-	public Long getSearchFulfilmentStatus() {
-		return searchFulfilmentStatus;
+	public Long getCtContractStatus() {
+		return ctContractStatus;
 	}
 
 	/**
-	 * @param searchFulfilmentStatus the searchFulfilmentStatus to set
+	 * @param ctContractStatus the ctContractStatus to set
 	 */
-	public void setSearchFulfilmentStatus(Long searchFulfilmentStatus) {
-		this.searchFulfilmentStatus = searchFulfilmentStatus;
+	public void setCtContractStatus(Long ctContractStatus) {
+		this.ctContractStatus = ctContractStatus;
 	}
 
 	/**
-	 * @return the searchContractStatus
+	 * @return the terminationTypeId
 	 */
-	public int getSearchContractStatus() {
-		return searchContractStatus;
+	public Long getTerminationTypeId() {
+		return terminationTypeId;
 	}
 
 	/**
-	 * @param searchContractStatus the searchContractStatus to set
+	 * @param terminationTypeId the terminationTypeId to set
 	 */
-	public void setSearchContractStatus(int searchContractStatus) {
-		this.searchContractStatus = searchContractStatus;
+	public void setTerminationTypeId(Long terminationTypeId) {
+		this.terminationTypeId = terminationTypeId;
 	}
-
-	/**
-	 * @return the searchTerminationType
-	 */
-	public Long getSearchTerminationType() {
-		return searchTerminationType;
-	}
-
-	/**
-	 * @param searchTerminationType the searchTerminationType to set
-	 */
-	public void setSearchTerminationType(Long searchTerminationType) {
-		this.searchTerminationType = searchTerminationType;
-	}
-
-	/**
-	 * @return the ministryProfileId
-	 */
-	public Long getMinistryProfileId() {
-		return ministryProfileId;
-	}
-
-	/**
-	 * @param ministryProfileId the ministryProfileId to set
-	 */
-	public void setMinistryProfileId(Long ministryProfileId) {
-		this.ministryProfileId = ministryProfileId;
-	}
-	
-	/**
-	 * @return the jabatanProfileId
-	 */
-	public Long getJabatanProfileId() {
-		return jabatanProfileId;
-	}
-
-	/**
-	 * @param jabatanProfileId the jabatanProfileId to set
-	 */
-	public void setJabatanProfileId(Long jabatanProfileId) {
-		this.jabatanProfileId = jabatanProfileId;
-	}	
 	
 	/**
 	 * @return the loaContractVerId
@@ -630,61 +393,33 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public void setLoaContractVerId(Long loaContractVerId) {
 		this.loaContractVerId = loaContractVerId;
 	}
-
+	
 	/**
-	 * @return the paidAdvancePaymentAmt
+	 * @return the ctDateStart
 	 */
-	public BigDecimal getPaidAdvancePaymentAmt() {
-		return paidAdvancePaymentAmt;
+	public Date getCtDateStart() {
+		return ctDateStart;
 	}
 
 	/**
-	 * @param paidAdvancePaymentAmt the paidAdvancePaymentAmt to set
+	 * @param ctDateStart the ctDateStart to set
 	 */
-	public void setPaidAdvancePaymentAmt(BigDecimal paidAdvancePaymentAmt) {
-		this.paidAdvancePaymentAmt = paidAdvancePaymentAmt;
+	public void setCtDateStart(Date ctDateStart) {
+		this.ctDateStart = ctDateStart;
 	}
 
 	/**
-	 * @return the paidInvoiceAmt
+	 * @return the ctDateEnd
 	 */
-	public BigDecimal getPaidInvoiceAmt() {
-		return paidInvoiceAmt;
+	public Date getCtDateEnd() {
+		return ctDateEnd;
 	}
 
 	/**
-	 * @param paidInvoiceAmt the paidInvoiceAmt to set
+	 * @param ctDateEnd the ctDateEnd to set
 	 */
-	public void setPaidInvoiceAmt(BigDecimal paidInvoiceAmt) {
-		this.paidInvoiceAmt = paidInvoiceAmt;
-	}
-
-	/**
-	 * @return the searchCtStartDate
-	 */
-	public Date getSearchCtStartDate() {
-		return searchCtStartDate;
-	}
-
-	/**
-	 * @param searchCtStartDate the searchCtStartDate to set
-	 */
-	public void setSearchCtStartDate(Date searchCtStartDate) {
-		this.searchCtStartDate = searchCtStartDate;
-	}
-
-	/**
-	 * @return the searchCtEndDate
-	 */
-	public Date getSearchCtEndDate() {
-		return searchCtEndDate;
-	}
-
-	/**
-	 * @param searchCtEndDate the searchCtEndDate to set
-	 */
-	public void setSearchCtEndDate(Date searchCtEndDate) {
-		this.searchCtEndDate = searchCtEndDate;
+	public void setCtDateEnd(Date ctDateEnd) {
+		this.ctDateEnd = ctDateEnd;
 	}	
 
 	/**
@@ -716,17 +451,17 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the searchStatus
+	 * @return the ctStatus
 	 */
-	public int getSearchStatus() {
-		return searchStatus;
+	public int getCtStatus() {
+		return ctStatus;
 	}
 
 	/**
-	 * @param searchStatus the searchStatus to set
+	 * @param ctStatus the ctStatus to set
 	 */
-	public void setSearchStatus(int searchStatus) {
-		this.searchStatus = searchStatus;
+	public void setCtStatus(int ctStatus) {
+		this.ctStatus = ctStatus;
 	}
 
 	/**
@@ -744,146 +479,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the firstRowSelected
-	 */
-	public int getFirstRowSelected() {
-		return firstRowSelected;
-	}
-
-	/**
-	 * @param firstRowSelected the firstRowSelected to set
-	 */
-	public void setFirstRowSelected(int firstRowSelected) {
-		this.firstRowSelected = firstRowSelected;
-	}
-
-	/**
-	 * @return the advancePaymentAmt
-	 */
-	public double getAdvancePaymentAmt() {
-		return advancePaymentAmt;
-	}
-
-	/**
-	 * @param advancePaymentAmt the advancePaymentAmt to set
-	 */
-	public void setAdvancePaymentAmt(double advancePaymentAmt) {
-		this.advancePaymentAmt = advancePaymentAmt;
-	}
-
-	/**
-	 * @return the performanceBondRuleAmt
-	 */
-	public double getPerformanceBondRuleAmt() {
-		return performanceBondRuleAmt;
-	}
-
-	/**
-	 * @param performanceBondRuleAmt the performanceBondRuleAmt to set
-	 */
-	public void setPerformanceBondRuleAmt(double performanceBondRuleAmt) {
-		this.performanceBondRuleAmt = performanceBondRuleAmt;
-	}
-
-	/**
-	 * @return the selectAll
-	 */
-	public boolean isSelectAll() {
-		return selectAll;
-	}
-
-	/**
-	 * @param selectAll the selectAll to set
-	 */
-	public void setSelectAll(boolean selectAll) {
-		this.selectAll = selectAll;
-	}
-
-	/**
-	 * @return the directPurchase
-	 */
-	public boolean isDirectPurchase() {
-		return directPurchase;
-	}
-
-	/**
-	 * @param directPurchase the directPurchase to set
-	 */
-	public void setDirectPurchase(boolean directPurchase) {
-		this.directPurchase = directPurchase;
-	}
-
-	/**
-	 * @return the chkProgressive
-	 */
-	public boolean isChkProgressive() {
-		return chkProgressive;
-	}
-
-	/**
-	 * @param chkProgressive the chkProgressive to set
-	 */
-	public void setChkProgressive(boolean chkProgressive) {
-		this.chkProgressive = chkProgressive;
-	}
-
-	/**
-	 * @return the chkSchedule
-	 */
-	public boolean isChkSchedule() {
-		return chkSchedule;
-	}
-
-	/**
-	 * @param chkSchedule the chkSchedule to set
-	 */
-	public void setChkSchedule(boolean chkSchedule) {
-		this.chkSchedule = chkSchedule;
-	}
-
-	/**
-	 * @return the disableScheduleRadio
-	 */
-	public boolean isDisableScheduleRadio() {
-		return disableScheduleRadio;
-	}
-
-	/**
-	 * @param disableScheduleRadio the disableScheduleRadio to set
-	 */
-	public void setDisableScheduleRadio(boolean disableScheduleRadio) {
-		this.disableScheduleRadio = disableScheduleRadio;
-	}
-
-	/**
-	 * @return the updateSupplierAddress
-	 *//*
-	public boolean isUpdateSupplierAddress() {
-		return updateSupplierAddress;
-	}
-
-	*//**
-	 * @param updateSupplierAddress the updateSupplierAddress to set
-	 *//*
-	public void setUpdateSupplierAddress(boolean updateSupplierAddress) {
-		this.updateSupplierAddress = updateSupplierAddress;
-	}
-*/
-	/**
-	 * @return the updateCompanyName
-	 *//*
-	public boolean isUpdateCompanyName() {
-		return updateCompanyName;
-	}
-
-	*//**
-	 * @param updateCompanyName the updateCompanyName to set
-	 *//*
-	public void setUpdateCompanyName(boolean updateCompanyName) {
-		this.updateCompanyName = updateCompanyName;
-	}
-*/
-	/**
 	 * @return the updateContract
 	 */
 	public boolean isUpdateContract() {
@@ -895,76 +490,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	 */
 	public void setUpdateContract(boolean updateContract) {
 		this.updateContract = updateContract;
-	}
-
-	/**
-	 * @return the viewContract
-	 */
-	public boolean isViewContract() {
-		return viewContract;
-	}
-
-	/**
-	 * @param viewContract the viewContract to set
-	 */
-	public void setViewContract(boolean viewContract) {
-		this.viewContract = viewContract;
-	}
-
-	/**
-	 * @return the chkJustification
-	 */
-	public boolean isChkJustification() {
-		return chkJustification;
-	}
-
-	/**
-	 * @param chkJustification the chkJustification to set
-	 */
-	public void setChkJustification(boolean chkJustification) {
-		this.chkJustification = chkJustification;
-	}
-
-	/**
-	 * @return the flgPaymentTracking
-	 */
-	public boolean isFlgPaymentTracking() {
-		return flgPaymentTracking;
-	}
-
-	/**
-	 * @param flgPaymentTracking the flgPaymentTracking to set
-	 */
-	public void setFlgPaymentTracking(boolean flgPaymentTracking) {
-		this.flgPaymentTracking = flgPaymentTracking;
-	}
-
-	/**
-	 * @return the chkConceValue
-	 */
-	public boolean isChkConceValue() {
-		return chkConceValue;
-	}
-
-	/**
-	 * @param chkConceValue the chkConceValue to set
-	 */
-	public void setChkConceValue(boolean chkConceValue) {
-		this.chkConceValue = chkConceValue;
-	}
-
-	/**
-	 * @return the progSchedButtonDeactive
-	 */
-	public boolean isProgSchedButtonDeactive() {
-		return progSchedButtonDeactive;
-	}
-
-	/**
-	 * @param progSchedButtonDeactive the progSchedButtonDeactive to set
-	 */
-	public void setProgSchedButtonDeactive(boolean progSchedButtonDeactive) {
-		this.progSchedButtonDeactive = progSchedButtonDeactive;
 	}
 
 	/**
@@ -980,69 +505,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
 	}
-
-	/**
-	 * @return the buttonHideActive
-	 */
-	public boolean isButtonHideActive() {
-		return buttonHideActive;
-	}
-
-	/**
-	 * @param buttonHideActive the buttonHideActive to set
-	 */
-	public void setButtonHideActive(boolean buttonHideActive) {
-		this.buttonHideActive = buttonHideActive;
-	}
-
-	/**
-	 * @return the ctItemList
-	 */
-	public List<CtContractItem> getCtItemList() {
-		if (ctItemList == null) {
-			ctItemList = new ArrayList<CtContractItem>();
-		}
-		return ctItemList;
-	}
-
-	/**
-	 * @param ctItemList the ctItemList to set
-	 */
-	public void setCtItemList(List<CtContractItem> ctItemList) {
-		this.ctItemList = ctItemList;
-	}
-
-	/**
-	 * @return the ctItemServiceList
-	 */
-	public List<CtContractItem> getCtItemServiceList() {
-		if (ctItemServiceList == null) {
-			ctItemServiceList = new ArrayList<CtContractItem>();
-		}
-		return ctItemServiceList;
-	}
-
-	/**
-	 * @param ctItemServiceList the ctItemServiceList to set
-	 */
-	public void setCtItemServiceList(List<CtContractItem> ctItemServiceList) {
-		this.ctItemServiceList = ctItemServiceList;
-	}
-
-	/**
-	 * @return the ctContractZoneDtls
-	 */
-	public List<CtContractZoneDtl> getCtContractZoneDtls() {
-		return ctContractZoneDtls;
-	}
-
-	/**
-	 * @param ctContractZoneDtls the ctContractZoneDtls to set
-	 */
-	public void setCtContractZoneDtls(List<CtContractZoneDtl> ctContractZoneDtls) {
-		this.ctContractZoneDtls = ctContractZoneDtls;
-	}
-
+	
 	/**
 	 * @return the remarkList
 	 */
@@ -1090,49 +553,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public void setFinalListOfSideMenu(List<String> finalListOfSideMenu) {
 		this.finalListOfSideMenu = finalListOfSideMenu;
 	}
-
-	/**
-	 * @return the yearList
-	 */
-	public List<String> getYearList() {
-		return yearList;
-	}
-
-	/**
-	 * @param yearList the yearList to set
-	 */
-	public void setYearList(List<String> yearList) {
-		this.yearList = yearList;
-	}
-
-	/**
-	 * @return the selectedListOfAddress
-	 */
-	public List<CtAgencyAddress> getSelectedListOfAddress() {
-		return selectedListOfAddress;
-	}
-
-	/**
-	 * @param selectedListOfAddress the selectedListOfAddress to set
-	 */
-	public void setSelectedListOfAddress(List<CtAgencyAddress> selectedListOfAddress) {
-		this.selectedListOfAddress = selectedListOfAddress;
-	}
-
-	/**
-	 * @return the addressTypeList
-	 */
-	public List<PmAddressType> getAddressTypeList() {
-		return addressTypeList;
-	}
-
-	/**
-	 * @param addressTypeList the addressTypeList to set
-	 */
-	public void setAddressTypeList(List<PmAddressType> addressTypeList) {
-		this.addressTypeList = addressTypeList;
-	}	
-
+	
 	/**
 	 * @return the loaContractVerList
 	 */
@@ -1193,26 +614,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the radioButtonSchedule
-	 */
-	public Map<String, Object> getRadioButtonSchedule() {
-		if (radioButtonSchedule == null) {
-			radioButtonSchedule = new LinkedHashMap<String,Object>();
-			FacesScopes face = new FacesScopes();
-			radioButtonSchedule.put(ResourceBundleUtils.getMessage("lbl.ct.frequency.schedule", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()), "S");
-			radioButtonSchedule.put(ResourceBundleUtils.getMessage("lbl.ct.progressive.schedule", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()), "P");
-		}
-		return radioButtonSchedule;
-	}
-
-	/**
-	 * @param radioButtonSchedule the radioButtonSchedule to set
-	 */
-	public void setRadioButtonSchedule(Map<String, Object> radioButtonSchedule) {
-		this.radioButtonSchedule = radioButtonSchedule;
-	}
-
-	/**
 	 * @return the approverMap
 	 */
 	public HashMap<String, PmUserGroupUser> getApproverMap() {
@@ -1227,160 +628,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	 */
 	public void setApproverMap(HashMap<String, PmUserGroupUser> approverMap) {
 		this.approverMap = approverMap;
-	}
-
-	/**
-	 * @return the contractVer
-	 */
-	public CtContractVer getContractVer() {
-		return contractVer;
-	}
-
-	/**
-	 * @param contractVer the contractVer to set
-	 */
-	public void setContractVer(CtContractVer contractVer) {
-		this.contractVer = contractVer;
-	}
-
-	/**
-	 * @return the agreementContractVer
-	 */
-	public CtContractVer getAgreementContractVer() {
-		return agreementContractVer;
-	}
-
-	/**
-	 * @param agreementContractVer the agreementContractVer to set
-	 */
-	public void setAgreementContractVer(CtContractVer agreementContractVer) {
-		this.agreementContractVer = agreementContractVer;
-	}
-
-	/**
-	 * @return the ctContract
-	 */
-	public CtContract getCtContract() {
-		return ctContract;
-	}
-
-	/**
-	 * @param ctContract the ctContract to set
-	 */
-	public void setCtContract(CtContract ctContract) {
-		this.ctContract = ctContract;
-	}
-
-	/**
-	 * @return the selectedItem
-	 */
-	public CtContractItem getSelectedItem() {
-		return selectedItem;
-	}
-
-	/**
-	 * @param selectedItem the selectedItem to set
-	 */
-	public void setSelectedItem(CtContractItem selectedItem) {
-		this.selectedItem = selectedItem;
-	}
-
-	/**
-	 * @return the selectedServiceItem
-	 */
-	public CtContractItem getSelectedServiceItem() {
-		return selectedServiceItem;
-	}
-
-	/**
-	 * @param selectedServiceItem the selectedServiceItem to set
-	 */
-	public void setSelectedServiceItem(CtContractItem selectedServiceItem) {
-		this.selectedServiceItem = selectedServiceItem;
-	}
-
-	/**
-	 * @return the selectedDeduction
-	 */
-	public CtDeduction getSelectedDeduction() {
-		return selectedDeduction;
-	}
-
-	/**
-	 * @param selectedDeduction the selectedDeduction to set
-	 */
-	public void setSelectedDeduction(CtDeduction selectedDeduction) {
-		this.selectedDeduction = selectedDeduction;
-	}
-
-	/**
-	 * @return the ctPerformanceBond
-	 */
-	public CtPerformanceBond getCtPerformanceBond() {
-		return ctPerformanceBond;
-	}
-
-	/**
-	 * @param ctPerformanceBond the ctPerformanceBond to set
-	 */
-	public void setCtPerformanceBond(CtPerformanceBond ctPerformanceBond) {
-		this.ctPerformanceBond = ctPerformanceBond;
-	}
-
-	/**
-	 * @return the selectedCtZone
-	 */
-	public CtContractZone getSelectedCtZone() {
-		return selectedCtZone;
-	}
-
-	/**
-	 * @param selectedCtZone the selectedCtZone to set
-	 */
-	public void setSelectedCtZone(CtContractZone selectedCtZone) {
-		this.selectedCtZone = selectedCtZone;
-	}
-
-	/**
-	 * @return the selectedAgency
-	 */
-	public CtAgency getSelectedAgency() {
-		return selectedAgency;
-	}
-
-	/**
-	 * @param selectedAgency the selectedAgency to set
-	 */
-	public void setSelectedAgency(CtAgency selectedAgency) {
-		this.selectedAgency = selectedAgency;
-	}	
-
-	/**
-	 * @return the ctContractAmount
-	 */
-	public CtContractAmount getCtContractAmount() {
-		return ctContractAmount;
-	}
-
-	/**
-	 * @param ctContractAmount the ctContractAmount to set
-	 */
-	public void setCtContractAmount(CtContractAmount ctContractAmount) {
-		this.ctContractAmount = ctContractAmount;
-	}
-
-	/**
-	 * @return the ctZoneTrees
-	 */
-	public TreeNode getCtZoneTrees() {
-		return ctZoneTrees;
-	}
-
-	/**
-	 * @param ctZoneTrees the ctZoneTrees to set
-	 */
-	public void setCtZoneTrees(TreeNode ctZoneTrees) {
-		this.ctZoneTrees = ctZoneTrees;
 	}
 
 	/**
@@ -1469,32 +716,18 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 
 	/**
 	 * @return the fulfilmentMenuModel
-	 */
+	 *//*
 	public MenuModel getFulfilmentMenuModel() {
 		return fulfilmentMenuModel;
 	}
 
-	/**
+	*//**
 	 * @param fulfilmentMenuModel the fulfilmentMenuModel to set
-	 */
+	 *//*
 	public void setFulfilmentMenuModel(MenuModel fulfilmentMenuModel) {
 		this.fulfilmentMenuModel = fulfilmentMenuModel;
-	}
+	}*/
 
-	/**
-	 * @return the smAddress
-	 *//*
-	public SmAddress getSmAddress() {
-		return smAddress;
-	}
-
-	*//**
-	 * @param smAddress the smAddress to set
-	 *//*
-	public void setSmAddress(SmAddress smAddress) {
-		this.smAddress = smAddress;
-	}
-	*/
 	/**
 	 * @return the ctCircularVer
 	 */
@@ -1522,35 +755,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public void setIndex(int index) {
 		this.index = index;
 	}
-
-	/**
-	 * @return the gstTotalAmount
-	 */
-	public BigDecimal getGstTotalAmount() {
-		return gstTotalAmount;
-	}
-
-	/**
-	 * @param gstTotalAmount the gstTotalAmount to set
-	 */
-	public void setGstTotalAmount(BigDecimal gstTotalAmount) {
-		this.gstTotalAmount = gstTotalAmount;
-	}
-
-	/**
-	 * @return boolean disableGstAmount
-	 */
-	public boolean isDisableGstAmount() {
-		return disableGstAmount;
-	}
- 
-	/**
-	 * @param disableGstAmount the disableGstAmount to set
-	 */
-	public void setDisableGstAmount(boolean disableGstAmount) {
-		this.disableGstAmount = disableGstAmount;
-	}
-
+	
 	/**
 	 * @return the pmDigiSign
 	 */
@@ -1591,6 +796,14 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	 */
 	public void setSearchPtjProfile(PmOrgProfile searchPtjProfile) {
 		this.searchPtjProfile = searchPtjProfile;
+	}
+
+	public boolean isViewContract() {
+		return viewContract;
+	}
+
+	public void setViewContract(boolean viewContract) {
+		this.viewContract = viewContract;
 	}
 
 	/**
@@ -1648,99 +861,100 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 		  		        for (SmSupplier supplier : supplierSearchResDTO.getResultBean().getResultList()) {
 		  		        	supplierIdList.add(supplier.getSupplierId());
 		  		        }
-						searchBean.getDataFilterBeans().add(new SearchFilterBean("SUPPLIER_ID",SearchOperator.OPERATOR_IN.value(), 
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("smSupplier.supplierId",SearchOperator.OPERATOR_IN.value(), 
 								supplierIdList));
 					}	
 				}
 				
-				if (StringUtils.isNotBlank(getSearchContractNo())) {
-					SearchFilterBean filterBean = new SearchFilterBean("CONTRACT_NO",SearchOperator.OPERATOR_LIKE.value(),
-													getSearchContractNo());
+				if (getCtNumber() != null && getCtNumber().length() > 0) {
+					SearchFilterBean filterBean = new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),
+													getCtNumber());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);				
 				}
-				if (StringUtils.isNotBlank(getSearchContractName())) {
-					SearchFilterBean filterBean = new SearchFilterBean("CONTRACT_NAME",SearchOperator.OPERATOR_LIKE.value(),
-													getSearchContractName());
+				if (getCtName() != null && getCtName().length() > 0) {
+					SearchFilterBean filterBean = new SearchFilterBean("contractName",SearchOperator.OPERATOR_LIKE.value(),
+													getCtName());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);				
 				}
 				if (getSearchPtjProfile() != null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("PTJ_ORG_ID", SearchOperator.OPERATOR_EQUALS.value(),
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("ctContract.ownerOrgProfile.orgProfileId", SearchOperator.OPERATOR_EQUALS.value(),
 							getSearchPtjProfile().getOrgProfileId()));
 					
 				} else if (getSearchMinistryProfileId() != null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("MINISTRY_ORG_ID", SearchOperator.OPERATOR_EQUALS.value(),
+					String searchBeanStr = "ctContract.ownerOrgProfile." + OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value());
+					searchBean.getDataFilterBeans().add(new SearchFilterBean(searchBeanStr, SearchOperator.OPERATOR_EQUALS.value(),
 							getSearchMinistryProfileId()));
 				}
-				if (StringUtils.isNotBlank(getSearchCircularNo())) {
-					SearchFilterBean filterBean = new SearchFilterBean("CIRCULAR_NO",SearchOperator.OPERATOR_LIKE.value(),
-													getSearchCircularNo());
+				if (getCtCircularNo() != null && getCtCircularNo().length() > 0) {
+					SearchFilterBean filterBean = new SearchFilterBean("ctCircularVer.circularNo",SearchOperator.OPERATOR_LIKE.value(),
+													getCtCircularNo());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);				
 				}
-				if (StringUtils.isNotBlank(getSearchCircularName())) {
-					SearchFilterBean filterBean = new SearchFilterBean("CIRCULAR_NAME",SearchOperator.OPERATOR_LIKE.value(),
-													getSearchCircularName());
+				if (getCtCircularName() != null && getCtCircularName().length() > 0) {
+					SearchFilterBean filterBean = new SearchFilterBean("ctCircularVer.name",SearchOperator.OPERATOR_LIKE.value(),
+													getCtCircularName());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);				
 				}
-				if (StringUtils.isNotBlank(getSearchLoaNo())) {
-					SearchFilterBean filterBean = new SearchFilterBean("LOA_NO",SearchOperator.OPERATOR_LIKE.value(),
-							getSearchLoaNo());
+				if (getCtLoaNo() != null && getCtLoaNo().length() > 0) {
+					SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.ctContractValue.loaNo",SearchOperator.OPERATOR_LIKE.value(),
+							getCtLoaNo());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
-				if (StringUtils.isNotBlank(getSearchSupplierName())) {
-					SearchFilterBean filterBean = new SearchFilterBean("COMPANY_NAME",SearchOperator.OPERATOR_LIKE.value(),
-													getSearchSupplierName());
+				if (getCtSupplierName() != null && getCtSupplierName().length() > 0) {
+					SearchFilterBean filterBean = new SearchFilterBean("companyName",SearchOperator.OPERATOR_LIKE.value(),
+													getCtSupplierName());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);				
 				}
-				if (getSearchCtStartDate() != null && getSearchCtEndDate() != null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("EFF_DATE",SearchOperator.OPERATOR_GREATER_EQUAL.value(), getSearchCtStartDate()));	
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("EXP_DATE",SearchOperator.OPERATOR_LESS_EQUAL.value(), getSearchCtEndDate()));		
+				if (getCtDateStart() != null && getCtDateEnd() != null) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("effDate",SearchOperator.OPERATOR_GREATER_EQUAL.value(), getCtDateStart()));	
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("expDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), getCtDateEnd()));		
 				
 				}
-				if (getSearchCtStartDate() != null && getSearchCtEndDate() == null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("EFF_DATE",SearchOperator.OPERATOR_EQUALS.value(), getSearchCtStartDate()));					
+				if (getCtDateStart() != null && getCtDateEnd() == null) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("effDate",SearchOperator.OPERATOR_EQUALS.value(), getCtDateStart()));					
 				}
-				if (getSearchCtStartDate() == null && getSearchCtEndDate() != null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("EXP_DATE",SearchOperator.OPERATOR_EQUALS.value(), getSearchCtEndDate()));	
+				if (getCtDateStart() == null && getCtDateEnd() != null) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("expDate",SearchOperator.OPERATOR_EQUALS.value(), getCtDateEnd()));	
 				}
-				if (StringUtils.isNotBlank(getSearchCtPhysicalNo())) {
-				   	SearchFilterBean filterBean = new SearchFilterBean("CONTRACT_PHYSICAL_NO",SearchOperator.OPERATOR_LIKE.value(),
-				   									getSearchCtPhysicalNo().trim());
+				if (getCtPhysicalNo() != null && getCtPhysicalNo().length() > 0) {
+				   	SearchFilterBean filterBean = new SearchFilterBean("contractPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),
+				   									getCtPhysicalNo().trim());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);					
 				}
-				if (StringUtils.isNotBlank(getSearchLoaPhysicalNo())) {
-					SearchFilterBean filterBean = new SearchFilterBean("LOA_PHYSICAL_NO",SearchOperator.OPERATOR_LIKE.value(),
-													getSearchLoaPhysicalNo());
+				if (getCtPhysicalLoaNo() != null && getCtPhysicalLoaNo().length() > 0) {
+					SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.ctContractValue.loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),
+													getCtPhysicalLoaNo());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);					
 				}
-				if (getSearchStatus() > 0) {
-					if (getSearchStatus() == ContractConst.STATUS_ALL) {
+				if (getCtStatus() > 0) {
+					if (getCtStatus() == ContractConst.STATUS_ALL) {
 						searchBean.getDataFilterBeans().add(new SearchMultiFilterBean(
 								new SearchFilterBean(
-										"STATUS",
+										"status",
 										SearchOperator.OPERATOR_EQUALS.value(),
 										ContractConst.STATUS_COMPLETE),
 								new SearchFilterBean(
-										"STATUS",
+										"status",
 										SearchOperator.OPERATOR_EQUALS.value(), 
 										ContractConst.STATUS_INCOMPLETE,
 								SearchCondition.CONDITION_OR.value())));
 						
 					} else {
-						searchBean.getDataFilterBeans().add(new SearchFilterBean("STATUS", 
-								SearchOperator.OPERATOR_EQUALS.value(), getSearchStatus()));
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("status", 
+								SearchOperator.OPERATOR_EQUALS.value(), getCtStatus()));
 					}
 				}
-				if (getSearchTerminationType() != null) {
+				if (getTerminationTypeId() != null) {
 					ParameterReqDTO reqDTO = new ParameterReqDTO();
-					reqDTO.setParameterId(getSearchTerminationType());
+					reqDTO.setParameterId(getTerminationTypeId());
 					reqDTO.setLanguageCode(fc.getUserLocale().getLanguage());
 					
 					IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(
@@ -1749,27 +963,20 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 					String parameterCode = resDTO.getPmParameter().getParameterCode();
 					
 					if (parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE)) {
-						searchBean.getDataFilterBeans().add(new SearchFilterBean("IS_TERMINATE",SearchOperator.OPERATOR_EQUALS.value(), 1));	
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("terminate",SearchOperator.OPERATOR_EQUALS.value(), 1));	
 					} else if (parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_MUTUAL)) {
-						searchBean.getDataFilterBeans().add(new SearchFilterBean("IS_MUTUAL_TERMINATE",SearchOperator.OPERATOR_EQUALS.value(), 1));	
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("mutualTerminate",SearchOperator.OPERATOR_EQUALS.value(), 1));	
 					} else if (parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)) {
-						searchBean.getDataFilterBeans().add(new SearchFilterBean("IS_REMEDY",SearchOperator.OPERATOR_EQUALS.value(), 1));	
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("remedy",SearchOperator.OPERATOR_EQUALS.value(), 1));	
 					}
 				}
-				if (getSearchFulfilmentStatus() != null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("CURRENT_STATUS_ID", 
-							SearchOperator.OPERATOR_EQUALS.value(), getSearchFulfilmentStatus()));
-				}
-				if (getSearchContractStatus() > 0) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("CONTRACT_STATUS", 
-							SearchOperator.OPERATOR_EQUALS.value(), getSearchContractStatus()));
-				}
-				searchBean.setUseEntityClass(true);
 				
 				contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 				ContractReqDTO reqDTO = new ContractReqDTO();
-				
+				if (getCtContractStatus() != null) {
+					reqDTO.setStatusId(getCtContractStatus());
+				}
 				reqDTO.setFromSupplier(isSupplierUser);
 				reqDTO.setvCtContractSearchBean(searchBean);
 				ContractResDTO resDTO = contractSO.searchContractDocument(reqDTO);
