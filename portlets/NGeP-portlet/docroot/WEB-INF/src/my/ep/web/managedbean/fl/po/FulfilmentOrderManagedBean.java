@@ -208,6 +208,7 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
     private boolean supplier = false;
     
     private boolean hyperLinkPage = false;
+    private List<PmUser> approverList;
 	
 	
 	/* (non-Javadoc)
@@ -1186,6 +1187,20 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setHyperLinkPage(boolean hyperLinkPage) {
 		this.hyperLinkPage = hyperLinkPage;
+	}
+
+	/**
+	 * @return the approverList
+	 */
+	public List<PmUser> getApproverList() {
+		return approverList;
+	}
+
+	/**
+	 * @param approverList the approverList to set
+	 */
+	public void setApproverList(List<PmUser> approverList) {
+		this.approverList = approverList;
 	}
 
 }

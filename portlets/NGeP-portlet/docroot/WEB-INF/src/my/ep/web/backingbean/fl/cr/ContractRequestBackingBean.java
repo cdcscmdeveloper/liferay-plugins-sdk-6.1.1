@@ -383,6 +383,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			reqDTO.setApproverMap(getManagedBean().getApproverMap());
 			reqDTO.setPmUserOrg(getManagedBean().getPmUserOrg());
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+			reqDTO.setUserLocale(getFacesScopes().getUserLocale());
 			getSumOrderedQty(flRequest);
 			
 			if(getManagedBean().getPmDigiSign() != null){
@@ -475,10 +476,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		if(!getManagedBean().getFlRequest().getFlDeliveryAddresses().isEmpty()){
 			getManagedBean().setSelectedDelAddr(getManagedBean().getFlRequest().getFlDeliveryAddresses().get(0));
 		}
-		if(!resDTO.getSelectedApproverList().isEmpty()){
-			getManagedBean().setSelectedApprover(resDTO.getSelectedApproverList().get(0));
+		if(getManagedBean().getFlRequest().getApprover() != null){
+			getManagedBean().setSelectedApprover(getManagedBean().getFlRequest().getApprover().getUserName());
 		}
-		
 		
 		if(isRequisitioner()){
 			initializeApproverGroup();
