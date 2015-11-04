@@ -98,6 +98,9 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		 */
 	      public SuspensionBackingBean() {
 	    	   
+	    	  if(ctBB == null){
+	    		  ctBB = new ContractBackingBean();
+	    	  }
 	    	    /*Initialization of button*/
 	    	   if(getManagedBean().getAction() == null) 
 	    		      getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});		
@@ -218,6 +221,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	 */
 	 public void setSuspensionContractVer(ContractResDTO resDTO){
 		 
+		    ctBB.renewSesionObject();
 		    getManagedBean().setContractVer(resDTO.getCtContractVer());	
 			getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 			
