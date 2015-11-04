@@ -1735,9 +1735,6 @@ public class SmApplicationBackingBean extends
 				// init business premise whether show or hide home office
 				initBusinessPremise();
 
-				// init GST information
-				initGst();
-
 			}
 			assignValReqdToFalse();
 		}
@@ -1791,8 +1788,13 @@ public class SmApplicationBackingBean extends
 			mofRegistrationSO = null;
 			// SmApplicationUtil.getInstance().setApplAddressTransientValue(
 			// getManagedBean().getSmAppl(), false);
+
+			// set application table field change status
 			SmFieldChangeUtil.setApplTableListChangeStatus(getManagedBean()
 					.getLatestAppl(), getManagedBean().getSmAppl());
+
+			// init GST information
+			initGst();
 		}
 
 	}
@@ -2526,7 +2528,6 @@ public class SmApplicationBackingBean extends
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().execute("banchDialog.hide()");
 		calcPersonnelListCount();
-		initGst();
 	}
 
 	/**
@@ -4417,7 +4418,6 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getSmAppl(), getManagedBean()
 							.getPrevApprovedPersonnels(), getManagedBean()
 							.isDisAllowOwnerEdit());
-			initGst();
 			if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
 				calculateCapital();
@@ -4911,8 +4911,8 @@ public class SmApplicationBackingBean extends
 		// reset personnel name and nationality to false for add new
 		getManagedBean().setDisabledShareholderPersonnelNameAndNationality(
 				false);
-		
-		//reset previous approved personnel because not exist for new personnel
+
+		// reset previous approved personnel because not exist for new personnel
 		getManagedBean().setLatestPersonnel(null);
 
 	}
