@@ -96,7 +96,7 @@
 							<td><p:selectOneMenu id="procTypeCategory"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.procurementTypeCategory.parameterId}"
 									disabled="#{!isEditable}"
-									style="width:120px;margin-bottom: 5px;margin-top: 5px;" required="true"
+									style="width:220px;margin-bottom: 5px;margin-top: 5px;" required="true"
 									label="#{lbl['lbl.sc.procurment.type.category']}">
 
 									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -146,7 +146,7 @@
 						     <p:outputLabel value="#{lbl['lbl.sc.reason']}" />
 						     <p:outputLabel value="*" styleClass="mandatory" />
 						 </td>
-						 <td style="width: 85%"> <p:selectOneMenu style="width: 120px;margin-bottom: 5px;" id="justificationId" label="#{lbl['lbl.sc.reason']}"
+						 <td style="width: 85%"> <p:selectOneMenu style="width: 220px;margin-bottom: 5px;" id="justificationId" label="#{lbl['lbl.sc.reason']}"
 						       required="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A'}"
 						         disabled="#{!isEditable}" 
 								value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationType.parameterCode}">
@@ -242,7 +242,7 @@
 									value="#{lbl['lbl.sc.sq.duration']}" /></td>
 						<td colspan="3"><p:outputPanel autoUpdate="true"
 									id="durationId">
-									<p:inputText size="14"
+									<p:inputText size="20"
 										label="#{lbl['lbl.sc.sq.duration']}" maxlength="5"
 										value="#{simpleQuoteBackingBean.managedBean.duration}"
 										disabled="true" style="text-align:right; margin-top: 4px">
