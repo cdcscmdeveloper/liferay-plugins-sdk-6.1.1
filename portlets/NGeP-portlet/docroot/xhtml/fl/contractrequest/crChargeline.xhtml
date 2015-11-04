@@ -28,14 +28,13 @@
 					<p:spacer width="15" />
 					<h:selectBooleanCheckbox 
 						onclick="goToSelectAll()"
-						disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
+						rendered="#{contractRequestBackingBean.managedBean.buttonVal!='View'}"
 						value="#{contractRequestBackingBean.selectAllCheckbox}">
 					</h:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox
 					value="#{chargeLineNode.selectedChargeItem}"
-					rendered="#{chargeLineNode.parent == 'true'}"
-					disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
+					rendered="#{chargeLineNode.parent == 'true' and contractRequestBackingBean.managedBean.buttonVal!='View'}"
 					styleClass="myCustomChekBox">
 					<p:ajax event="change"
 					listener="#{contractRequestBackingBean.selectCheckbox}"
@@ -264,6 +263,7 @@
 						update="chargeLineTbl,chargeAss,chargeLineSection"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 						disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}"
+						rendered="#{contractRequestBackingBean.managedBean.buttonVal!='View'}"
 						action="#{contractRequestBackingBean.chargeLineApply}" /></td>
 			</tr>
 		</table>

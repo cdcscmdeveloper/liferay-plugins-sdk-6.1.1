@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.persistence.Column;
 
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
@@ -138,6 +137,11 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private BigDecimal remainingQty;
 	
 	private boolean itemTypeProduct=false;
+	
+	/** The back to previous. */
+	private String backToPrevious;
+	
+	private boolean hyperLinkPage = false;
 	
 	
 	/**
@@ -792,6 +796,34 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	 */
 	public void setItemTypeProduct(boolean itemTypeProduct) {
 		this.itemTypeProduct = itemTypeProduct;
+	}
+
+	/**
+	 * @return the backToPrevious
+	 */
+	public String getBackToPrevious() {
+		return backToPrevious;
+	}
+
+	/**
+	 * @param backToPrevious the backToPrevious to set
+	 */
+	public void setBackToPrevious(String backToPrevious) {
+		this.backToPrevious = backToPrevious;
+	}
+
+	/**
+	 * @return the hyperLinkPage
+	 */
+	public boolean isHyperLinkPage() {
+		return hyperLinkPage;
+	}
+
+	/**
+	 * @param hyperLinkPage the hyperLinkPage to set
+	 */
+	public void setHyperLinkPage(boolean hyperLinkPage) {
+		this.hyperLinkPage = hyperLinkPage;
 	}
 
 }

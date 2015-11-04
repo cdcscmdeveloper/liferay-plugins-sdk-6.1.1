@@ -195,6 +195,12 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	
 	private List<FlDeliveryOrder> delOrderList;
 	
+	private boolean hyperLinkPage = false;
+	
+	private boolean docMaintain = false;
+	
+	private String backToPrevious;
+	
 	/**
 	 * Gets the doc type.
 	 *
@@ -1091,5 +1097,47 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	 */
 	public void setDelOrderList(List<FlDeliveryOrder> delOrderList) {
 		this.delOrderList = delOrderList;
+	}
+
+	/**
+	 * @return the hyperLinkPage
+	 */
+	public boolean isHyperLinkPage() {
+		return hyperLinkPage;
+	}
+
+	/**
+	 * @param hyperLinkPage the hyperLinkPage to set
+	 */
+	public void setHyperLinkPage(boolean hyperLinkPage) {
+		this.hyperLinkPage = hyperLinkPage;
+	}
+
+	/**
+	 * @return the backToPrevious
+	 */
+	public String getBackToPrevious() {
+		return backToPrevious;
+	}
+
+	/**
+	 * @param backToPrevious the backToPrevious to set
+	 */
+	public void setBackToPrevious(String backToPrevious) {
+		this.backToPrevious = backToPrevious;
+	}
+
+	/**
+	 * @return the docMaintain
+	 */
+	public boolean isDocMaintain() {
+		return docMaintain;
+	}
+
+	/**
+	 * @param docMaintain the docMaintain to set
+	 */
+	public void setDocMaintain(boolean docMaintain) {
+		this.docMaintain = docMaintain;
 	}
 }

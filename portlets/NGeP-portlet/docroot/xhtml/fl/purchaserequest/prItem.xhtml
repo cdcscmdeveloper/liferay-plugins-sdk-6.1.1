@@ -20,7 +20,7 @@
 				listener="#{purchaseRequestBackingBean.selectAddrEvent()}" />
 			<p:column>
 				<p:selectBooleanCheckbox value="#{address.selectedAddressRowDelete}"
-					disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
+					rendered="#{purchaseRequestBackingBean.managedBean.buttonVal!='View'}"
 					styleClass="myCustomChekBox">
 					<p:ajax event="change"
 						update=":form:deleteAddrBtn,addressDataTable,@(.orderSummaryChange)"
@@ -85,11 +85,12 @@
 						saveObject="purchaseRequestBackingBean.managedBean.selectedPmDelAddrList"
 						conditionField="recordStatus^1|addressType^#{purchaseRequestBackingBean.getDeliveryAddressType()}|pmOrgProfile.orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId}"
 						update=":form:addressDataTable,:form:itemDetPanelGroup"
-						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"/>
+						rendered="#{purchaseRequestBackingBean.managedBean.buttonVal!='View'}"
+						/>
 			<p:commandButton value="#{lbl['lbl.fl.btn.other.address']}" 
 				action="#{purchaseRequestBackingBean.flManualDeliveryAddr}"
 				update="addManualDelAddrPnl,@(.orderSummaryChange) "
-				disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
+				rendered="#{purchaseRequestBackingBean.managedBean.buttonVal!='View'}"
 				process="@this" oncomplete="addManualDeliveryAddr.show();"
 				title="#{lbl['lbl.fl.tooltip.other.address']}">
 				<f:setPropertyActionListener
@@ -100,6 +101,7 @@
 				onclick="delAddrDlg.show()" process="@this"
 				update=":form:deleteAddrBtn,addressDataTable,@(.orderSummaryChange)"
 				disabled="#{purchaseRequestBackingBean.managedBean.deleteButtonHide}"
+				rendered="#{purchaseRequestBackingBean.managedBean.buttonVal!='View'}"
 				title="#{lbl['lbl.fl.tooltip.delete']}">
 			</p:commandButton>
 		</div>
@@ -147,8 +149,8 @@
 				<ac:paginator for="itemDataTable" />
 				<p:column headerText="#{lbl['lbl.fl.gst']}">
 					<p:selectBooleanCheckbox value="#{flItem.gst}"
+						rendered="#{purchaseRequestBackingBean.managedBean.buttonVal!='View'}"
 						disabled="#{purchaseRequestBackingBean.managedBean.selectedDelAddr == null or 
-							purchaseRequestBackingBean.managedBean.buttonVal=='View' or 
 							flItem.orderedQty == 0}">
 						<p:ajax process="@this" listener="#{purchaseRequestBackingBean.retrieveOrderAmount(flItem)}"
 						update="subTotalTxt,unitPrice,orderedQty,itemDataTable"/>

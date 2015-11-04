@@ -5,6 +5,7 @@ package my.ep.web.backingbean.fl.dan;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -38,8 +39,10 @@ import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.dandata.FLDanDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.fl.adjust.FlAdjustment;
 import my.ep.persistence.entity.fl.adjust.FlAdjustmentItem;
+import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.type.pm.AddressType;
@@ -83,11 +86,11 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 	private static Logger log = Logger.getLogger(DebitAdjustmentNoteBackingBean.class);
 	
 	/** The Constant NAV_ORDERNO. */
-	private static final String NAV_ORDERNO = "/xhtml/fl/shared/hyperlinkView/orderNoPage/orderNoHyperlink.xhtml";
+	private static final String NAV_ORDERNO = "/xhtml/fl/purchaseorder/poBasePage.xhtml";
 	
 	/** The Constant NAV_INVOICE. */
-	private static final String NAV_INVOICE = "/xhtml/fl/shared/hyperlinkView/invoicePage/invoiceHyperlink.xhtml";
-
+	private static final String NAV_INVOICE = "/xhtml/fl/invoice/invBasePage.xhtml";
+	
 	/**
 	 * Gets the faces scopes.
 	 *
@@ -350,7 +353,12 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 	 * @return the string
 	 */
 	public String backToPervious() {
-		return "flDocSearch";
+		if(getManagedBean().getBackToPrevious() !=null){
+			return getManagedBean().getBackToPrevious();
+		}
+		else{
+			return "flDocSearch";
+		}
 	}
 	
 	/**
@@ -370,6 +378,7 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 	 * @return the string
 	 */
 	public String navigateDocument(String docType){
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
 			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -380,9 +389,11 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 			FulfilmentOrderBackingBean orderBackingBean = new FulfilmentOrderBackingBean();
 			orderBackingBean.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 			orderBackingBean.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
+			orderBackingBean.getManagedBean().setHyperLinkPage(true);
+			orderBackingBean.getManagedBean().setButtonVal("View");
 			FacesContext fc = FacesContext.getCurrentInstance();
 			orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
-
+			flBB.getManagedBean().setHideRemarks(true);
 			return NAV_ORDERNO;
 		}else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_INVOICE)){
 			IInvoiceSO invoiceSO = (IInvoiceSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IInvoiceSO.class);
@@ -393,9 +404,19 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 			FulfilmentResDTO resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
 			InvoiceBackingBean invBB = new InvoiceBackingBean();
 			invBB.getManagedBean().setInvoice(resDTO.getInvoice());
+			invBB.getManagedBean().setHyperLinkPage(true);
+			invBB.getManagedBean().setButtonVal("View");
+			invBB.getManagedBean().setDocMaintain(false);
 			FacesContext fc = FacesContext.getCurrentInstance();
-			invBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
-
+			invBB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+			flBB.getManagedBean().setHideRemarks(true);
+			invBB.getManagedBean().setDelOrderList(new ArrayList<FlDeliveryOrder>()); 
+			for(FlDeliveryOrder flDeliveryOrder : invBB.getManagedBean().getInvoice().getFlFulfilmentOrder().getFlDeliveryOrders()) {
+				if(flDeliveryOrder.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
+					invBB.getManagedBean().getDelOrderList().add(flDeliveryOrder);
+				}
+			}
+			
 			return NAV_INVOICE;
 		}
 		return null;

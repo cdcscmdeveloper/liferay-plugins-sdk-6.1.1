@@ -2898,7 +2898,14 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * @return the string
 	 */
 	public String backToPervious() {
-		return "flDocSearch";
+		if(getManagedBean().getBackToDocument() !=null){
+			return getManagedBean().getBackToDocument();
+		}
+		else{
+			return "flDocSearch";
+		}
+		
+		
 	}
 	
 	/**

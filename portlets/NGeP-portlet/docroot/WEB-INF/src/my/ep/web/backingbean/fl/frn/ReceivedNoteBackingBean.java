@@ -96,8 +96,9 @@ import com.liferay.portal.util.PortalUtil;
 public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManagedBean> {
 	private static Logger log = Logger.getLogger(ReceivedNoteBackingBean.class);
 	private String className="@(.myFrnEvalClassName)";
-	private static final String NAV_DELIVERYORDER_PAGE = "/xhtml/fl/shared/hyperlinkView/deliveryOrderPage/doHyperlink.xhtml";
-	private static final String NAV_ORDERNO = "/xhtml/fl/shared/hyperlinkView/orderNoPage/orderNoHyperlink.xhtml";
+	private static final String NAV_DELIVERYORDER_PAGE = "/xhtml/fl/deliveryorder/doBasePage.xhtml";
+	private static final String NAV_PO = "/xhtml/fl/purchaseorder/poBasePage.xhtml";
+	private static final String NAV_CO = "/xhtml/fl/contractorder/coBasePage.xhtml";
 	
 	/**
 	 * Gets the class name.
@@ -739,6 +740,8 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	 * @return the string
 	 */
 	public String navigateDocument(String docType){
+		String navgPage="";
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_DELIVERY_ORDER)){
 			IDeliveryOrderSO orderSO = (IDeliveryOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -749,11 +752,14 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			FacesContext fc = FacesContext.getCurrentInstance();
 			doBB.getManagedBean().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
 			doBB.getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
-			doBB.getManagedBean().setFromPageUrl(fc.getViewRoot().getViewId());
+			//doBB.getManagedBean().setFromPageUrl(fc.getViewRoot().getViewId());
+			doBB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 			// Set DO status
 			doBB.getManagedBean().setFulfilmentOrder(new FlFulfilmentOrder());
 			doBB.getManagedBean().getFulfilmentOrder().setStatus(resDTO.getFlDeliveryOrder().getStatus());
-			
+			doBB.getManagedBean().setButtonVal("View");
+			doBB.getManagedBean().setHyperLinkPage(true);
+			flBB.getManagedBean().setHideRemarks(true);
 			return NAV_DELIVERYORDER_PAGE;
 		}else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)||docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
 			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
@@ -766,8 +772,18 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			orderBackingBean.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			FacesContext fc = FacesContext.getCurrentInstance();
 			orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+			orderBackingBean.getManagedBean().setHyperLinkPage(true);
+			orderBackingBean.getManagedBean().setButtonVal("View");
+			flBB.getManagedBean().setHideRemarks(true);
+			if(isSupplierRole()){
+				orderBackingBean.getManagedBean().setSupplier(true);
+			}
+			if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
+				return NAV_PO;
+			}else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
+				return NAV_CO;
+			}
 			
-			return NAV_ORDERNO;
 		}
 		
 		return null;
@@ -818,7 +834,12 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	 * @return the string
 	 */
 	public String backAction() {
-		return getManagedBean().getFromPageUrl()+"?faces-rediret=true";
+		if(getManagedBean().getBackToPrevious() !=null){
+			return getManagedBean().getBackToPrevious();
+		}
+		else{
+			return "flDocSearch";
+		}
 	}
 	
 	/**
@@ -980,6 +1001,27 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				getManagedBean().setItemTypeProduct(false);
 			}
 		}
+	}
+	
+	/**
+	 * Checks if is supplier role.
+	 *
+	 * @return true, if is supplier role
+	 */
+	private boolean isSupplierRole(){
+		if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
+		}
+//		else if(getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())) {
+//			return Boolean.TRUE;
+//		}
+		return Boolean.FALSE;
 	}
 	
 }

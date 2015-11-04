@@ -47,7 +47,7 @@
 							action="#{contractRequestBackingBean.gpkiSignAction(bpmAction)}" />
 					</ui:repeat></td>
 				<c:if
-					test='#{contractRequestBackingBean.managedBean.buttonVal eq "View"}'>
+					test='#{contractRequestBackingBean.managedBean.buttonVal eq "View" and !contractRequestBackingBean.managedBean.isHyperLinkPage()}'>
 					<td colspan="4" style="text-align: right">	
 					<p:commandLink
 						value="#{lbl['lbl.td.doc.trackingDiary']}"
