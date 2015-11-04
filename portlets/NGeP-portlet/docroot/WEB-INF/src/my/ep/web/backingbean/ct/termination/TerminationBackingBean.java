@@ -307,7 +307,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
 			    ParameterConst.DOCTYPE_CONTRACT_TERMINATION, getManagedBean().getCtContract().getContractNo()));
 		    ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());	
-		    ctBB.getManagedBean().setCtContractVer(resDTO.getCtContractVer());
+		    ctBB.getManagedBean().setContractVer(resDTO.getCtContractVer());
 		//Retrieve agreement contract version for physical no & signed date
 		retrieveContractVerOfAgreement();
 		
