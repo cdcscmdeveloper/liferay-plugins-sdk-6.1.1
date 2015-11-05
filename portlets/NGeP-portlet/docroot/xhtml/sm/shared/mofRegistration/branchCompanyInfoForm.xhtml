@@ -70,7 +70,7 @@
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 				<ac:paginator for="dt" />
 
-				<p:column selectionMode="multiple" width="5%" />
+				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smSupplierBranches}"/>
 
 				<p:column headerText="#{lbl['lbl.sm.branch.branchName']}">
 					<table style="width: 100%">
