@@ -71,7 +71,6 @@ import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
-import my.ep.persistence.entity.ct.circular.cc.CtCircularContract;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtContractAmount;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
@@ -2266,20 +2265,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
     	return (isContractAdmin() || (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()) 
 				&& !getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())));
     }
-    
-    public boolean chkCircularActiveRecord(){
-    	if(ctBB.getManagedBean().getContractVer().getCtContract().getCtCircularContracts().size() > 0) {
-    			  for(CtCircularContract circularContract : ctBB.getManagedBean().getContractVer().getCtContract().getCtCircularContracts()) {
-    			      if(circularContract.getCtCircularVer().getRecordStatusFlg() == 1) {
-    			    	  getManagedBean().setCtCircularVer(circularContract.getCtCircularVer());
-    			    	  return true;
-    			      }
-    		  } 
-    	}
-      	return false;
-    }
-    
-    
+      
     private void defaultMinistryPtjSearchValue() {
     	if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
     			|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
