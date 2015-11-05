@@ -266,11 +266,12 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	/**
 	 * Method used to retrieve the information and render it on screen.
 	 */
-	public void preRenderSearch() {
+	public void preRenderSearch(boolean trackingDiarySearch) {
 		//renewSesionObject();
 		searchReset();
 		getManagedBean().setReadOnly(false);
 		getManagedBean().resetCircularListingPagingDataModel();
+		getManagedBean().setTrackingDiarySearch(trackingDiarySearch);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "search.xhtml");
 	}
