@@ -46,6 +46,15 @@
 							styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{danBackingBean.submitAction(bpmAction)}" />
 					</ui:repeat></td>
+				<c:if
+					test='#{danBackingBean.managedBean.buttonVal eq "View" and !danBackingBean.managedBean.isHyperLinkPage()}'>
+					<td colspan="4" style="text-align: right">	
+					<p:commandLink
+						value="#{lbl['lbl.td.doc.trackingDiary']}"
+						action="#{trackingDiarySearchBackingBean.goToTrackingDiarySearch(ModuleCodeConstant.ORDER_FULFILLMENT,danBackingBean.managedBean.adjustment.docType,danBackingBean.managedBean.adjustment.docNo,danBackingBean.managedBean.adjustment.adjustmentId,danBackingBean.managedBean.adjustment.status.statusId)}"
+						immediate="true" />
+					</td>		
+				</c:if>	
 			</tr>
 		</table>
 		<ui:include src="/xhtml/fl/invoice/adjustment/danHeaderPage.xhtml" />
