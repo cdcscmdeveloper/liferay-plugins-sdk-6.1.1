@@ -275,7 +275,7 @@
 								itemLabel="#{counLs.countryName}"
 								itemValue="#{counLs.countryId}" />
 							<p:ajax event="change"
-								listener="#{registrationBackingBean.populateStateByAddType('permenant')}"
+								listener="#{registrationBackingBean.populateStateByAddType('permenant',false)}"
 								update="cmbPermState,cmbPermDistrict,cmbPermCity,txtPermPostcodePanelId" />
 						</p:selectOneMenu> <p:message id="cmbPermCounrtyMsg" for="cmbPermCounrty"
 							display="icon" /></td>
@@ -297,7 +297,7 @@
 								value="#{registrationBackingBean.managedBean.permenantStateLs}"
 								itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
 							<p:ajax event="change"
-								listener="#{registrationBackingBean.populateDistrictByAddType('permenant')}"
+								listener="#{registrationBackingBean.populateDistrictByAddType('permenant',false)}"
 								update="cmbPermDistrict,cmbPermCity" />
 						</p:selectOneMenu>
 						<p:message id="cmbPermStateMsg" for="cmbPermState" display="icon" /></td>
@@ -319,7 +319,7 @@
 								value="#{registrationBackingBean.managedBean.permenantDistrictLs}"
 								itemValue="#{dist.districtId}" itemLabel="#{dist.districtName}" />
 							<p:ajax event="change"
-								listener="#{registrationBackingBean.populateCityByAddType('permenant')}"
+								listener="#{registrationBackingBean.populateCityByAddType('permenant', false)}"
 								update="cmbPermCity" />
 						</p:selectOneMenu>
 						<p:message id="cmbPermDistrictMsg" for="cmbPermDistrict" display="icon" /></td>
