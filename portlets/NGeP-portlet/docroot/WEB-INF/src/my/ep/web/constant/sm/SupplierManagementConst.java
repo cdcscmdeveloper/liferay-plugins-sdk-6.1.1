@@ -459,6 +459,8 @@ public class SupplierManagementConst {
 	public static final String APPROVER_APPROVE_APPL = "Permohonan diluluskan oleh Pelulus";
 	public static final String PO_SEND_INQUIRY_SUPP = "PO hantar pertanyaan kepada pembekal";
 	public static final String PO_ESCALATE_APPROVER = "PO hantar permohonan kepada Pelulus untuk keputusan akhir";
+	public static final String SUPP_REGISTRATION = "Pendaftaran Pembekal";
+	public static final String SUPP_ACCOUNT_ACTIVATION = "Pengaktifan Akaun Pendaftaran";
 
 	public static final String SDO_SUBMIT_APPL = "SDO hantar senarai dokumen sokongan";
 	public static final String SDO_SEND_INQUIRY = "SDO hantar pertanyaan kepada pembekal";
