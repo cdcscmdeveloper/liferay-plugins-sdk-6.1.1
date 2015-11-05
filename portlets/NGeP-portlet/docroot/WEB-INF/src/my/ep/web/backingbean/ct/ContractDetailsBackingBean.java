@@ -1579,15 +1579,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	
     	ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 		TerminationBackingBean trBB =  new TerminationBackingBean();
-		trBB.getManagedBean().setViewContract(true);
-		trBB.getManagedBean().setContractVer(resDTO.getCtContractVer());
-		trBB.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+		ctBB.getManagedBean().setViewContract(true);
+		ctBB.getManagedBean().setContractVer(resDTO.getCtContractVer());
 		trBB.getManagedBean().setExternalPageUrl(null);
 		trBB.setCtBB(new ContractBackingBean());	
 	//	trBB.getCtBB().getManagedBean().setCtContractVer(resDTO.getCtContractVer());
-		if (isContractWithGst(trBB.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())
-	    		|| (trBB.getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null 
-	    		&& trBB.getManagedBean().getContractVer().getCtContractAmount().getGstAmount().doubleValue() != 0)) {
+		if (isContractWithGst(ctBB.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())
+	    		|| (ctBB.getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null 
+	    		&& ctBB.getManagedBean().getContractVer().getCtContractAmount().getGstAmount().doubleValue() != 0)) {
 			trBB.getCtBB().getManagedBean().setGstCheckingGUI(true);
 	    } else {
 	    	trBB.getCtBB().getManagedBean().setGstCheckingGUI(false);
