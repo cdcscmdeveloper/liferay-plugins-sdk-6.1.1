@@ -20,11 +20,11 @@
 					</td>
 					<td>
 						<p:inputText for="cno"  disabled="true" maxlength="17" style="width:160px;"
-							value="#{ctBackingBean.managedBean.ctContractVer.ctContract.contractNo}" />
+							value="#{ctBackingBean.managedBean.contractVer.ctContract.contractNo}" />
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.no']}" />
 					</td>
-					<h:panelGroup rendered="#{ctBackingBean.managedBean.ctContractVer.ctContractAmount.agreement or 
-						ctBackingBean.managedBean.ctContractVer.ctContract.contractType.parameterCode eq ParameterConst.contractTypeCentral}">
+					<h:panelGroup rendered="#{ctBackingBean.managedBean.contractVer.ctContractAmount.agreement or 
+						ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode eq ParameterConst.contractTypeCentral}">
 					<td class="columnWidth200">
 						<p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physical.no']}" />
 					</td> 
@@ -41,7 +41,7 @@
 					</td>
 					<td>
 						<p:inputText for="contractAmount" styleClass="ppRightBtn"  maxlength="22" style="width:160px;"
-			   				value="#{ctBackingBean.managedBean.ctContractVer.ctContractAmount.contractAmount}"  disabled="true">
+			   				value="#{ctBackingBean.managedBean.contractVer.ctContractAmount.contractAmount}"  disabled="true">
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 					</td>
@@ -50,7 +50,7 @@
 					</td>
 					<td>
 						<p:inputText for="effectiveDate" disabled="true" style="width:160px;"
-							value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.effDate}">
+							value="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			  			</p:inputText>
 			  		</td>
@@ -63,7 +63,7 @@
 						<p:inputText for="gstAmount" styleClass="ppRightBtn"  maxlength="22" style="width:160px;"
 			   				 disabled="true" 
 			   				 rendered="#{ctBackingBean.managedBean.gstCheckingGUI}"
-			   				 value="#{ctBackingBean.managedBean.ctContractVer.ctContractAmount.gstAmount}" >
+			   				 value="#{ctBackingBean.managedBean.contractVer.ctContractAmount.gstAmount}" >
 			   				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 						<p:inputText styleClass="ppRightBtn" style="width:160px;" disabled="true" 
@@ -75,7 +75,7 @@
 					</td> 
 					<td>
 						<p:inputText for="edate" disabled="true" style="width:160px;"
-							value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.expDate}">
+							value="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			  			</p:inputText>
 			  		</td>
@@ -86,24 +86,24 @@
 					</td>
 					<td>
 						<p:inputText id="overAllAmts" styleClass="ppRightBtn"  maxlength="22" style="width:160px;"
-			   				value="#{ctBackingBean.managedBean.ctContractVer.ctContractAmount.gstAmount + ctBackingBean.managedBean.ctContractVer.ctContractAmount.contractAmount}"  disabled="true">
+			   				value="#{ctBackingBean.managedBean.contractVer.ctContractAmount.gstAmount + ctBackingBean.managedBean.contractVer.ctContractAmount.contractAmount}"  disabled="true">
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 					</td>
-					<h:panelGroup rendered="#{!ctBackingBean.managedBean.ctContractVer.ctContract.zonalPricing}">
+					<h:panelGroup rendered="#{!ctBackingBean.managedBean.contractVer.ctContract.zonalPricing}">
 					<td class="columnWidth200">
 	     	             	<p:outputLabel id="dperiodtxt" value="#{lbl['lbl.ct.delivery.period']}" style="width:100%" styleClass="required" />
 					</td> 
 					<td><p:inputText id="dperiod" styleClass="ppRightBtn" validator="#{webappBean.validateDPeriod}" required="true" style="width:45px;"
-		              		maxlength="4" value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.deliveryTerm}" disabled="true" />
+		              		maxlength="4" value="#{ctBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" disabled="true" />
                 		<p:spacer width="3"/>
                 		<h:outputText value="#{lbl['lbl.ct.days']}" />
                 	</td>
                 	</h:panelGroup>
                 	</tr>
                 	<tr>
-				  	<h:panelGroup rendered="#{ctBackingBean.managedBean.ctContractVer.ctContract.contractType.parameterCode eq ParameterConst.contractTypeCentral 
-                		and !ctBackingBean.managedBean.ctContractVer.ctContractAmount.agreement}">
+				  	<h:panelGroup rendered="#{ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode eq ParameterConst.contractTypeCentral 
+                		and !ctBackingBean.managedBean.contractVer.ctContractAmount.agreement}">
 					<td class="columnWidth200">
 						<p:outputLabel id="signBy1" value="#{lbl['lbl.ct.signed.date']}" />
 					</td> 
@@ -116,31 +116,31 @@
 					</td>
                 	</h:panelGroup>
 				</tr>
-				<h:panelGroup rendered="#{ctBackingBean.managedBean.ctContractVer.ctContractAmount.agreement}">
+				<h:panelGroup rendered="#{ctBackingBean.managedBean.contractVer.ctContractAmount.agreement}">
 				<tr rowspan="2">
-					<h:panelGroup rendered="#{ctBackingBean.managedBean.ctContractVer.ctContractAmount.ctAgreement.status.statusId != CtStatusConst.acComplete and
-						ctBackingBean.managedBean.ctContractVer.ctContractAmount.ctAgreement.status.statusId != CtStatusConst.saComplete}">
+					<h:panelGroup rendered="#{ctBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.status.statusId != CtStatusConst.acComplete and
+						ctBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.status.statusId != CtStatusConst.saComplete}">
 					<td class="columnWidth200">
 						<p:outputLabel for="astatus" value="#{lbl['lbl.ct.agreement.status']}" />
 					</td>
 					<td>
 						<p:inputTextarea id="astatus" autoResize="false" maxlength="1000" 
 							disabled="true" rows="2" style="width:160px;margin-bottom:5px;"
-							value="#{ctBackingBean.getStatusDescById(ctBackingBean.managedBean.ctContractVer.ctContractAmount.ctAgreement.status.statusId)}" />
+							value="#{ctBackingBean.getStatusDescById(ctBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.status.statusId)}" />
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.status']}" />
 					</td>
 					</h:panelGroup>
-					<h:panelGroup rendered="#{ctBackingBean.managedBean.ctContractVer.ctContractAmount.ctAgreement.status.statusId eq CtStatusConst.acComplete or
-						ctBackingBean.managedBean.ctContractVer.ctContractAmount.ctAgreement.status.statusId eq CtStatusConst.saComplete}">
+					<h:panelGroup rendered="#{ctBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.status.statusId eq CtStatusConst.acComplete or
+						ctBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.status.statusId eq CtStatusConst.saComplete}">
 					<td styleClass="columnWidth200">
 						<p:outputLabel id="agreement" value="#{lbl['lbl.ct.agreement']}" />
 					</td>
 					<td>
 						<h:commandLink for="agreement" styleClass="blue_font"
-							title="#{ctBackingBean.managedBean.ctContractVer.ctContractAmount.ctAgreement.fileName}"
-							value="#{ctBackingBean.getShortFileName(ctBackingBean.managedBean.ctContractVer.ctContractAmount.ctAgreement.fileName)}"
-							action="#{ctBackingBean.downloadFile(ctBackingBean.managedBean.ctContractVer.ctContractAmount.ctAgreement.filePath,
-							ctBackingBean.managedBean.ctContractVer.ctContractAmount.ctAgreement.fileName)}" />
+							title="#{ctBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.fileName}"
+							value="#{ctBackingBean.getShortFileName(ctBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.fileName)}"
+							action="#{ctBackingBean.downloadFile(ctBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.filePath,
+							ctBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.fileName)}" />
 					</td>
 					</h:panelGroup>
 					<td class="columnWidth200">
@@ -162,15 +162,15 @@
 					<td colspan="3">
 						<p:inputTextarea id="contractName" autoResize="false" maxlength="1000"
 							disabled="true" rows="4" style="width:585px; margin-bottom:5px;" 
-							value="#{ctBackingBean.managedBean.ctContractVer.ctContract.contractName}" />
+							value="#{ctBackingBean.managedBean.contractVer.ctContract.contractName}" />
 					</td>					
 				</tr>
 			</table>
 		</h:panelGroup>
 		<h:panelGrid style="width:330px; margin-left:5px">
-		   <h:panelGrid columns="3" rendered="#{ctBackingBean.managedBean.ctContractVer.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase
-		   		and ctBackingBean.managedBean.ctContractVer.ctContract.contractType.parameterCode eq ParameterConst.contractTypeMinistry}">
-			 <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.concession}" disabled="true">
+		   <h:panelGrid columns="3" rendered="#{ctBackingBean.managedBean.contractVer.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase
+		   		and ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode eq ParameterConst.contractTypeMinistry}">
+			 <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.contractVer.ctContractValue.concession}" disabled="true">
 			 </p:selectBooleanCheckbox>
 			 <p:spacer width="2" />
 			 <h:panelGrid columns="2">
@@ -178,8 +178,8 @@
 				 <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.concession']}" />
 			 </h:panelGrid>
 		   </h:panelGrid>
-		    <h:panelGrid columns="3" rendered="#{ctBackingBean.managedBean.ctContractVer.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}">
-			  <p:selectBooleanCheckbox id="exemptId" value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.ap201Exempt}" 
+		    <h:panelGrid columns="3" rendered="#{ctBackingBean.managedBean.contractVer.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}">
+			  <p:selectBooleanCheckbox id="exemptId" value="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" 
 			    disabled="true" style="text-align:top;"> 
 			  </p:selectBooleanCheckbox>
 			  <p:spacer width="2" />	
@@ -189,7 +189,7 @@
 			  </h:panelGrid>
 		   </h:panelGrid>
 		   <h:panelGrid columns="3">
-		     <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.feeExampted}" disabled="true"/>
+		     <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.contractVer.ctContractValue.feeExampted}" disabled="true"/>
 		     <p:spacer width="2" />	
 		     <h:panelGrid columns="2">
 			     <h:outputText value="#{lbl['lbl.ct.fee.exmption']}"/>
@@ -197,7 +197,7 @@
 			 </h:panelGrid>
 		   </h:panelGrid>
 		   <h:panelGrid columns="3">
-		     <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.ctContractVer.ctContractAmount.agreement}" disabled="true" />
+		     <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.contractVer.ctContractAmount.agreement}" disabled="true" />
 		     <p:spacer width="2" />	
 		     <h:panelGrid columns="2">
 			     <h:outputText value="#{lbl['lbl.ct.agreement']}" />
@@ -205,9 +205,9 @@
 			 </h:panelGrid>
 	       </h:panelGrid>	
 	       <h:panelGrid columns="3" 
-	          	rendered="#{false and ctBackingBean.managedBean.ctContractVer.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase
-	          	and ctBackingBean.managedBean.ctContractVer.ctContract.contractType.parameterCode eq ParameterConst.contractTypeMinistry}">
-			  <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.ctContractVer.ctContract.mto}"
+	          	rendered="#{false and ctBackingBean.managedBean.contractVer.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase
+	          	and ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode eq ParameterConst.contractTypeMinistry}">
+			  <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.contractVer.ctContract.mto}"
 				 disabled="true" style="text-align:top;" />
 			  <p:spacer width="2" />	
 			  <h:panelGrid columns="2">
@@ -215,9 +215,9 @@
 				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.mto']}" />
 			  </h:panelGrid>
 		   </h:panelGrid>	
-		   <h:panelGrid columns="3" rendered="#{ctBackingBean.managedBean.ctContractVer.ctContract.contractType.parameterCode eq ParameterConst.contractTypeCentral}">  
+		   <h:panelGrid columns="3" rendered="#{ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode eq ParameterConst.contractTypeCentral}">  
 			   <p:selectBooleanCheckbox 
-			      value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.followLoaAmt}"  disabled="true"/>
+			      value="#{ctBackingBean.managedBean.contractVer.ctContractValue.followLoaAmt}"  disabled="true"/>
 		       <p:spacer width="2" />
 		       <h:panelGrid columns="2">
 		       		<h:outputText value="#{lbl['lbl.ct.follow.ctvalue']}" />
@@ -225,10 +225,10 @@
 			   </h:panelGrid>
 		     </h:panelGrid> 
 		   <h:panelGrid columns="3" 
-		     rendered="#{ctBackingBean.managedBean.ctContractVer.ctContract.loa.loaAmt > ctBackingBean.managedBean.performanceBondRuleAmt
-		     	and ctBackingBean.managedBean.ctContractVer.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase
-		     	and ctBackingBean.managedBean.ctContractVer.ctContract.contractType.parameterCode eq ParameterConst.contractTypeMinistry}">
-			 <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.ctContractVer.ctContractAmount.bondReq ? false : true}"
+		     rendered="#{ctBackingBean.managedBean.contractVer.ctContract.loa.loaAmt > ctBackingBean.managedBean.performanceBondRuleAmt
+		     	and ctBackingBean.managedBean.contractVer.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase
+		     	and ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode eq ParameterConst.contractTypeMinistry}">
+			 <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.contractVer.ctContractAmount.bondReq ? false : true}"
 				 disabled="true" style="text-align:top;" />
 			  <p:spacer width="2" />	
 			  <h:panelGrid columns="2">
@@ -238,10 +238,10 @@
 		   </h:panelGrid>	
 	    </h:panelGrid>
 	     <h:panelGrid columns="2" style="width:870px;"  styleClass="top-aligned-columns" columnClasses="columnWidth200"
-	      	rendered="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.ap201Exempt or 
-	       	ctBackingBean.managedBean.ctContractVer.ctContractValue.concession}">	   		
+	      	rendered="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt or 
+	       	ctBackingBean.managedBean.contractVer.ctContractValue.concession}">	   		
 	   		<p:outputLabel for="justificationLbl" value="#{lbl['lbl.ct.justification.ap201']}" />
-			<p:inputTextarea id="justificationLbl" value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.justification}"
+			<p:inputTextarea id="justificationLbl" value="#{ctBackingBean.managedBean.contractVer.ctContractValue.justification}"
   				rows="3" style="width:585px;" maxlength="200" autoResize="false" disabled="true" />		         		
     	</h:panelGrid> 
 	</h:panelGrid>

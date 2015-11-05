@@ -21,13 +21,13 @@
                                    <h:panelGrid columns="3" style="width:300px;" >
                                           <h:panelGrid columns="2">
 	                                          <p:inputText disabled="true" style="width:85px;" 
-	                                              value="#{ctBackingBean.managedBean.ctContractVer.ctContract.smSupplier.regNo}" />
+	                                              value="#{ctBackingBean.managedBean.contractVer.ctContract.smSupplier.regNo}" />
 	                                            <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.business.reg.no']}" />
 					                    </h:panelGrid>
                                        <p:outputLabel value="#{lbl['lbl.ct.mof.no']}" />
                                       <h:panelGrid columns="2"> 
 	                                     <p:inputText disabled="true" style="width:85px;" 
-	             	                         value="#{ctBackingBean.managedBean.ctContractVer.ctContract.loa.scLoiLoa.mofNo}" />
+	             	                         value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.scLoiLoa.mofNo}" />
 	             	                      <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.mof.no']}" />
 					                 </h:panelGrid>
                                   </h:panelGrid>
@@ -37,7 +37,7 @@
                              </td>
                              <td> 
                                  <p:inputText disabled="true" style="width:170px;margin-bottom: 5px;"  
-                                     value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.gstRegNo == null ? lbl['lbl.txt.na'] : ctBackingBean.managedBean.ctContractVer.ctContractValue.gstRegNo}" />
+                                     value="#{ctBackingBean.managedBean.contractVer.ctContractValue.gstRegNo == null ? lbl['lbl.txt.na'] : ctBackingBean.managedBean.contractVer.ctContractValue.gstRegNo}" />
                              </td>
                         </tr>
                         <tr>
@@ -52,7 +52,7 @@
                                    <h:panelGrid columns="4" rendered="#{!ctBackingBean.managedBean.viewContract 
                                           and ctBackingBean.managedBean.updateCompanyName}">
 			                         <p:selectBooleanCheckbox disabled="#{ctBackingBean.isApprover()}"
-			                              value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.companyNameChange}">
+			                              value="#{ctBackingBean.managedBean.contractVer.ctContractValue.companyNameChange}">
 				                         <p:ajax event="change" 
 				                             listener="#{ctBackingBean.retrieveCompanyName}" update="supplierCompanyName, supplierBranchName" />
 				                      </p:selectBooleanCheckbox>
@@ -67,12 +67,12 @@
                   </td>
                   <td>
                       <p:inputText disabled="true" style="width:100px;margin-bottom: 5px;"  
-                         value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.gstEffDate}"
-                         rendered="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.gstEffDate != null}">
+                         value="#{ctBackingBean.managedBean.contractVer.ctContractValue.gstEffDate}"
+                         rendered="#{ctBackingBean.managedBean.contractVer.ctContractValue.gstEffDate != null}">
                            <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
                          </p:inputText>
                           <p:inputText disabled="true" style="width:100px;margin-bottom: 5px;"  value="#{lbl['lbl.ct.value.na']}" 
-                          rendered="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.gstEffDate == null}"/> 
+                          rendered="#{ctBackingBean.managedBean.contractVer.ctContractValue.gstEffDate == null}"/> 
                   </td>
                   </tr>
                   
@@ -100,12 +100,12 @@
                  </td>
                  <td>
                    <p:inputText disabled="true" style="width:100px;margin-bottom: 5px;"  
-                       value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.gstDeclaredDate}"
-                       rendered="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.gstDeclaredDate != null}" > 
+                       value="#{ctBackingBean.managedBean.contractVer.ctContractValue.gstDeclaredDate}"
+                       rendered="#{ctBackingBean.managedBean.contractVer.ctContractValue.gstDeclaredDate != null}" > 
                        <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
                        </p:inputText> 
                         <p:inputText disabled="true" style="width:100px;margin-bottom: 5px;"  value="#{lbl['lbl.txt.na']}" 
-                          rendered="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.gstDeclaredDate == null}"/> 
+                          rendered="#{ctBackingBean.managedBean.contractVer.ctContractValue.gstDeclaredDate == null}"/> 
                        
                        </td>
                  </tr>
@@ -125,7 +125,7 @@
                      <h:panelGrid columns="4" rendered="#{!ctBackingBean.managedBean.viewContract 
                                           and ctBackingBean.managedBean.updateSupplierAddress}">
 			            <p:selectBooleanCheckbox disabled="#{ctBackingBean.isApprover()}"
-			                value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.addressChange}" >
+			                value="#{ctBackingBean.managedBean.contractVer.ctContractValue.addressChange}" >
 			                <p:ajax event="change" listener="#{ctBackingBean.retrieveSupplierAddress}" update="supplierAddress" />
 			            </p:selectBooleanCheckbox>
 			            <p:spacer width="2" />	
@@ -139,7 +139,7 @@
                  <td>
                     <p:outputLabel value="#{lbl['lbl.ct.contact.person']}"/>  </td>
                 <td>  <p:inputText disabled="true" style="width:265px;margin-bottom: 5px;" 
-                      value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.supplierContact}" />
+                      value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierContact}" />
                 </td>
                  </tr>
                   <tr>
@@ -150,7 +150,7 @@
                           <table>
                                  <tr>
                                     <td>
-                                           <p:inputText  value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.supplierPhoneNo}"  
+                                           <p:inputText  value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierPhoneNo}"  
                                              disabled="true" style="width:98px;" />
                              </td> <td><p:spacer width="4"></p:spacer>
                                
@@ -158,7 +158,7 @@
                 </td>
                  <td>
                 <p:inputText  disabled="true" style="width:98px;"  
-                   value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.supplierFaxNo}"/>  
+                   value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierFaxNo}"/>  
                  </td>
                  </tr>
                  
@@ -172,7 +172,7 @@
                  </td>
                  <td>
                  <p:inputText disabled="true" style="width:265px;" 
-                       value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.supplierEmail}"/>
+                       value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierEmail}"/>
                        </td>
                        </tr>
                        </table>
@@ -182,7 +182,7 @@
        </p:panel>
       
        <p:panel id="BankInfoPanel" header="#{lbl['lbl.ct.panel.bank.info']}"  toggleable="true"  
-            toggleSpeed="500" rendered="#{!ctBackingBean.managedBean.ctContractVer.ctContract.factored}">
+            toggleSpeed="500" rendered="#{!ctBackingBean.managedBean.contractVer.ctContract.factored}">
               <h:panelGrid style="width:100%;" styleClass="top-aligned-columns">
                     <h:panelGroup style="width:100%;" >
                          <table style="width: 100%">
@@ -192,14 +192,14 @@
                                  </td>
                                  <td> 
                                       <p:inputText disabled="true" style="width:265px;" 
-                                           value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.bankName}"/>
+                                           value="#{ctBackingBean.managedBean.contractVer.ctContractValue.bankName}"/>
                                   </td>
                                   <td>
                                          <p:outputLabel  value="#{lbl['lbl.ct.account.no']}" />  
                                   </td>
                                   <td>
                                           <p:inputText  disabled="true" style="width:170px;"
-                                             value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.bankAccountNo}"/> 
+                                             value="#{ctBackingBean.managedBean.contractVer.ctContractValue.bankAccountNo}"/> 
                                    </td>
                                </tr>
                                <tr>
@@ -213,7 +213,7 @@
                           <td>
 	                      <h:panelGrid>
                                 <p:inputTextarea id="bankAddress" disabled="true" rows="5"  autoResize="false" style="width:265px; margin-bottom: 5px;"
-                                 value="#{ctBackingBean.getFullAddress(ctBackingBean.managedBean.ctContractVer.ctContractValue.bankAddress)}" />
+                                 value="#{ctBackingBean.getFullAddress(ctBackingBean.managedBean.contractVer.ctContractValue.bankAddress)}" />
 	                      </h:panelGrid>
 	                       </td>
 	                       <td>
@@ -221,7 +221,7 @@
 	                     </td>
 	                     <td>  
 	                     <p:inputTextarea id="bankBranch" disabled="true" rows="3"  style="width:170px; margin-bottom: 5px;"
-	                            autoResize="false" value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.bankBranch}" />
+	                            autoResize="false" value="#{ctBackingBean.managedBean.contractVer.ctContractValue.bankBranch}" />
                          </td>
                          </tr>
                          </table>
