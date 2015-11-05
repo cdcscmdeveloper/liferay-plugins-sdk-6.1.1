@@ -22,75 +22,71 @@
 		
 		<ui:param name="bb" value="#{smPersonnelRequestActivationBackingBean}" />
 		
-		<h:panelGrid id="search" style="width:100%;">
+		<table style="width: 100%">
+			<tr>
+				<td>
+					<p:commandButton id="resendBtnId" value="#{lbl['lbl.sm.button.resend.activation']}" oncomplete="confirmDialog.show();" 
+						style="float:right;" disabled="#{empty bb.selectedExpiredActivationPersonnel}" update="@form"/>
+				</td>
+			</tr>
+		</table>
 
-			<p:panel header="#{lbl['lbl.sm.req.reactivation.link.expired.personnels']}" toggleable="true">
+		<p:panel header="#{lbl['lbl.sm.req.reactivation.link.expired.personnels']}" toggleable="true" id="resultPanelId">
 
-				<p:dataTable var="person" widgetVar="suppPersonnelInfoDtWidVar"
-						value="#{bb.expiredActivationPersonnels}"
-						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-						selection="#{bb.selectedExpiredActivationPersonnels}"
-						rowKey="#{person}" rowIndexVar="index" id="personDt">
-						<ac:paginator for="personDt" />
-						
-						<p:column selectionMode="single" width="2%" rendered="#{not empty bb.expiredActivationPersonnels}"/>
+			<p:dataTable var="person" widgetVar="suppPersonnelInfoDtWidVar"
+				value="#{bb.expiredActivationPersonnels}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				selection="#{bb.selectedExpiredActivationPersonnel}"
+				rowKey="#{person}" rowIndexVar="index" id="personDt">
+				<ac:paginator for="personDt" />
+				
+				<p:ajax event="rowSelectRadio" update=":form:resultPanelId,@([id$=resendBtnId])"></p:ajax>
+				
+				<p:column selectionMode="single" width="2%" />
 
-						<p:column headerText="#{lbl['lbl.sm.person.composition.name']}">
-							<h:outputText value="#{person.name}" />
-						</p:column>
+				<p:column headerText="#{lbl['lbl.sm.person.composition.name']}">
+					<h:outputText value="#{person.name}" />
+				</p:column>
 
-						<p:column headerText="#{lbl['lbl.sm.person.composition.idenNum']}">
-							<h:outputText value="#{person.identificationNo}" />
-						</p:column>
-						<p:column headerText="#{lbl['lbl.sm.person.composition.isAuth']}">
-							<h:outputText value="#{lbl['lbl.txt.yes']}"
-								rendered="#{person.authorizedFlg eq '1'}" />
-							<h:outputText value="#{lbl['lbl.txt.no']}"
-								rendered="#{person.authorizedFlg eq '0'}" />
-						</p:column>
-						<p:column
-							headerText="#{lbl['lbl.sm.person.composition.certStatus']}">
-							<ac:smSoftcertStatus personnel="#{person}"  />
-						</p:column>
-						<p:column headerText="#{lbl['lbl.sm.person.composition.eprole']}"
-							style="white-space: normal;">
-							<h:outputText
-								value="#{lbl['lbl.sm.person.composition.suppAdmin']}"
-								rendered="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN'}" />
-							<h:outputText
-								value="#{lbl['lbl.sm.person.composition.suppUser']}"
-								rendered="#{person.epRole eq 'BASIC_SUPPLIER_USER' or person.epRole eq 'MOF_SUPPLIER_USER'}" />
-							<h:outputText value="#{lbl['lbl.sm.person.composition.catUser']}"
-								rendered="#{person.epRole eq 'CM_USER'}" />
-							<h:outputText value=" (#{lbl['lbl.sm.contract.signer']})"
-								rendered="#{person.contractSignerFlg eq 1 and person.smAppl.supplierType ne 'J'}" />
-						</p:column>
-					</p:dataTable>
-			</p:panel>
+				<p:column headerText="#{lbl['lbl.sm.person.composition.idenNum']}">
+					<h:outputText value="#{person.identificationNo}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.person.composition.isAuth']}">
+					<h:outputText value="#{lbl['lbl.txt.yes']}"
+						rendered="#{person.authorizedFlg eq '1'}" />
+					<h:outputText value="#{lbl['lbl.txt.no']}"
+						rendered="#{person.authorizedFlg eq '0'}" />
+				</p:column>
+				<p:column
+					headerText="#{lbl['lbl.sm.person.composition.certStatus']}">
+					<ac:smSoftcertStatus personnel="#{person}"  />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.person.composition.eprole']}"
+					style="white-space: normal;">
+					<h:outputText
+						value="#{lbl['lbl.sm.person.composition.suppAdmin']}"
+						rendered="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN'}" />
+					<h:outputText
+						value="#{lbl['lbl.sm.person.composition.suppUser']}"
+						rendered="#{person.epRole eq 'BASIC_SUPPLIER_USER' or person.epRole eq 'MOF_SUPPLIER_USER'}" />
+					<h:outputText value="#{lbl['lbl.sm.person.composition.catUser']}"
+						rendered="#{person.epRole eq 'CM_USER'}" />
+					<h:outputText value=" (#{lbl['lbl.sm.contract.signer']})"
+						rendered="#{person.contractSignerFlg eq 1 and person.smAppl.supplierType ne 'J'}" />
+				</p:column>
+			</p:dataTable>
+		</p:panel>
 
-			<p:panel style="border: none;">
-				<table style="width: 100%">
-					<tr><td><p:commandButton value="#{lbl['lbl.sm.button.resend.activation']}" oncomplete="confirmDialog.show();" 
-								style="float:right;" disabled="#{empty bb.expiredActivationPersonnels}" update="@form"/></td></tr>
-				</table>
-			</p:panel>
-		</h:panelGrid>
-
-		<p:dialog id="confirmDialog" header="#{lbl['lbl.sm.userprofile.confirmation']}"
-			widgetVar="confirmDialog" modal="true" width="550px" height="100px" >
-			<p:outputPanel id="dPanel">
-				<table style="width:100%">
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.req.reactivation.confirmation.msg']}" /></td>
-					</tr>
-				</table>
-			</p:outputPanel>
+		<p:confirmDialog id="confirmDialog" closable="true"
+			message="#{lbl['lbl.sm.req.reactivation.confirmation.msg']}"
+			header="#{lbl['lbl.sm.userprofile.confirmation']}" severity="alert"
+			widgetVar="confirmDialog">
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();" update="@form"
 					action="#{bb.resendActivation}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDialog.hide();" />
 			</div>
-		</p:dialog>
+		</p:confirmDialog>
 
 	</ui:define>
 </ui:composition>
