@@ -45,7 +45,8 @@
 							<p:outputPanel id="orgtypeId">
 								<p:selectOneMenu id="newOrgTypeFederalList"
 									rendered="#{organisationBackingBean.managedBean.orgCategory eq organisationBackingBean.federalGovt}" 
-									styleClass="ppDropDownWidthL" required="true" label="#{lbl['lbl.pm.organisation.orgType']}" style="margin-bottom: 5px;"
+									styleClass="ppDropDownWidthL" required="true" label="#{lbl['lbl.pm.organisation.orgType']}" 
+									style="width:275px;margin-bottom:5px;"
 									value="#{organisationBackingBean.managedBean.orgTypeId}">
 									<f:selectItems
 										value="#{organisationBackingBean.getNewOrgTypeDropdownValues()}" />
