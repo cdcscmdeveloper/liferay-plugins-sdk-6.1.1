@@ -3704,6 +3704,13 @@ public class DirectLOABackingBean extends
 								(ScAttachment) scLoaReportAttachment, scLoa,
 								getManagedBean().getScQt());
 					}
+					else if (SourcingConstants.DOC_DEF_KEY_CONTRACT_SUMMARY
+							.equals(docDefinitionKey)) {
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
+						generateContractSummaryPdfFromVelocity(
+								(ScAttachment) scLoaReportAttachment, scLoa);
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
