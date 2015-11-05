@@ -27,7 +27,14 @@
 						oncomplete="blockWidget.hide();"
 						action="#{panelBackingBean.gpkiSignAction(action)}"/>
 				</ui:repeat></td>
-
+			<c:if test='#{panelBackingBean.managedBean.action eq "view"}'>
+				<td style="text-align: right">
+					<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}" immediate="true"
+						action="#{trackingDiarySearchBackingBean.goToTrackingDiarySearch(ModuleCodeConstant.CONTRACT_MANAGEMENT,
+						panelBackingBean.managedBean.circularVer.docType,panelBackingBean.managedBean.circular.circularNo,
+						panelBackingBean.managedBean.circular.circularId,panelBackingBean.managedBean.circularVer.status.statusId)}"  />
+				</td>
+			</c:if>
 		</tr>
 	</table>
 </ui:composition>
