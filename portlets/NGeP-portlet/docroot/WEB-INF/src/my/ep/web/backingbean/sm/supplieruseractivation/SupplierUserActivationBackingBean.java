@@ -238,6 +238,12 @@ public class SupplierUserActivationBackingBean extends
 						//reqDTO.setPassword(password);
 						reqDTO.setLoginId(loginId);
 	//					reqDTO.setConfirmPassword(confirmPassword);
+						
+						//insert tracking diary
+						reqDTO.setTrackingDiaryVO(SmCommonUtil.assignTrackingDiaryValues(
+									 SupplierManagementConst.SUPP_ACCOUNT_ACTIVATION, getManagedBean().getSmPersonnel().getSmAppl().getApplId(), 
+									 getManagedBean().getSmPersonnel().getSmAppl().getApplId().toString(), RoleCode.SUPPLIER_TEMP.value()));
+						
 						System.out.println("Proceed to create user.............................");
 						ISupplierUserActivationSO reqSO = (ISupplierUserActivationSO) BusinessDelegate.getInstance().getServiceObject("sm", ISupplierUserActivationSO.class);
 						log.info("*******>Personnel add - " + this.getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState());
