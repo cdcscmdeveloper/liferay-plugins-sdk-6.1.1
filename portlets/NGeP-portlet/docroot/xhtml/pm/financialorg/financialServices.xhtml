@@ -11,7 +11,7 @@
 			rowKey="#{financialsrv}" rowIndexVar="rowIndex">
 			<ac:paginator for="financialsrv" />
 
-			<p:column>
+			<p:column width="35%">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.pm.financialorg.servicetype']}" />
@@ -53,7 +53,7 @@
 			</p:column>
 
 
-			<p:column headerText="#{lbl['lbl.pm.financialorg.bankcode']}">
+			<p:column width="45%" headerText="#{lbl['lbl.pm.financialorg.bankcode']}">
 				<ui:fragment
 					rendered="#{financialsrv.serviceTypeCode.parameterCode eq ParameterConst.bankServicesPaymentBank}">
 
@@ -61,8 +61,8 @@
 						styleClass="ppDisplayTextM" size="30" maxlength="20" />
 				</ui:fragment>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
-				<p:selectOneMenu 
+			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}" width="15%">
+				<p:selectOneMenu style="width: 110px !important;"
 					disabled="#{financialsrv.serviceTypeCode.parameterCode eq  ParameterConst.bankServicesPaymentBank ? true : financialsrv.brandNew}"
 					value="#{financialsrv.recordStatusFlg}" required="true"
 					>

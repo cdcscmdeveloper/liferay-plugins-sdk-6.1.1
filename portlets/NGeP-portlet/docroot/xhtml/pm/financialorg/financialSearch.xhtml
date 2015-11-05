@@ -25,7 +25,7 @@
 			<tr>
 				<th width="20%"><p:outputLabel
 						value="#{lbl['lbl.pm.financialorg.buzregno']}" /></th>
-				<td><p:inputText styleClass="ppDisplayTextM" maxlength="20"
+				<td><p:inputText styleClass="ppDisplayTextM" maxlength="20" size="40" 
 						value="#{financialOrgBackingBean.managedBean.financialOrgSearchBean.regNumber}" /></td>
 				<th>&#160;</th>
 				<td>&#160;</td>
@@ -34,7 +34,7 @@
 			<tr>
 				<th width="20%"><p:outputLabel
 						value="#{lbl['lbl.pm.financialorg.name']}" /></th>
-				<td><p:inputText styleClass="ppDisplayTextM"
+				<td><p:inputText styleClass="ppDisplayTextM" size="40" 
 						value="#{financialOrgBackingBean.managedBean.financialOrgSearchBean.orgName}"
 						maxlength="50" /></td>
 				<th>&#160;</th>
@@ -44,7 +44,7 @@
 
 			<tr>
 				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.status']}" /></th>
-				<td><p:selectOneMenu styleClass="ppDropDownWidthM" style="width: 135px;margin-bottom: 5px;"
+				<td><p:selectOneMenu styleClass="ppDropDownWidthM" style="margin-bottom: 5px;"
 						value="#{financialOrgBackingBean.managedBean.financialOrgSearchBean.orgStatus}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
