@@ -50,7 +50,7 @@
 				rowKey="#{equiBean}" rowIndexVar="index" id="eqiComDt">
 				<ac:paginator for="eqiComDt" />
 
-				<p:column selectionMode="multiple" width="5%" />
+				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smEquityCompanies}"/>
 				<p:column headerText="#{lbl['lbl.sm.equiComp.compName']}">
 					<h:outputText value="#{equiBean.companyName}" />
 				</p:column>

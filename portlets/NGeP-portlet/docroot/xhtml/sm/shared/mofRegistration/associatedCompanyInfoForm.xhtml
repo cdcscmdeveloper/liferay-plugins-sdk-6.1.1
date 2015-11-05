@@ -61,7 +61,7 @@
 				rowKey="#{assocBean}" rowIndexVar="index" id="asoc">
 				<ac:paginator for="asoc" />
 
-				<p:column selectionMode="multiple" width="5%" />
+				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smAssociateCompanies}"/>
 
 				<p:column headerText="#{lbl['lbl.sm.assocCmpny.companyName']}">
 					<h:outputText value="#{assocBean.companyName}" />

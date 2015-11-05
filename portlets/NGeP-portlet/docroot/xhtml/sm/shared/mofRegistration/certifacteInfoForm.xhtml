@@ -52,8 +52,8 @@
 				selection="#{backingBean.managedBean.selectedCertList}"
 				rowKey="#{certBean}" rowIndexVar="index" id="certDt">
 				<ac:paginator for="certDt" />
-				<p:column selectionMode="multiple" width="5%" />
-
+				
+				<p:column selectionMode="multiple" width="5%" rendered="#{not empty backingBean.managedBean.smAppl.smSupplierCerts}"/>
 
 				<p:column headerText="#{lbl['lbl.sm.cert.certName']}">
 					<h:outputText value="#{certBean.certName}" />
