@@ -3,6 +3,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
 	<h:outputScript library="js" name="smGstCalendar.js" />
@@ -207,10 +208,13 @@
 					<p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
-				<td class="tdContent" ><p:inputText size="40"
+				<td class="tdContent" >
+					<p:inputText size="40"
 						id="compAdd1" required="#{!empty param['disableValidation']}" maxlength="35"
 						label="#{lbl['lbl.sm.companyaddress']}"
-						value="#{registrationBackingBean.managedBean.smBusinessAdd.address1}" />
+						value="#{registrationBackingBean.managedBean.smBusinessAdd.address1}">
+						<p:ajax event="blur" update=":form:acgmap:gmapInput:gmapInput"></p:ajax>
+					</p:inputText>
 					<p:message id="compAdd1Msg" for="compAdd1" display="icon" /></td>
 
 				<td class="tdTitle">
@@ -224,12 +228,11 @@
 							value="#{registrationBackingBean.managedBean.countryLs}"
 							itemLabel="#{counLs.countryName}" itemValue="#{counLs.countryId}" />
 						<p:ajax event="change"
-							listener="#{registrationBackingBean.populateStateByAddType('business')}"
-							update="busState,busDistrict,busCity,compPostCodePanelId" />
+							listener="#{registrationBackingBean.populateStateByAddType('business',true)}"
+							update="busState,busDistrict,busCity,compPostCodePanelId,:form:acgmap:gmapInput:gmapInput" />
 					</p:selectOneMenu> <p:message id="compCountryIdMsg" for="compCountryId"
 						display="icon" /></td>
 			</tr>
-
 
 			<tr>
 				<td></td>
@@ -250,8 +253,8 @@
 							value="#{registrationBackingBean.managedBean.businessStateLs}"
 							itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
 						<p:ajax event="change"
-							listener="#{registrationBackingBean.populateDistrictByAddType('business')}"
-							update="busDistrict,busCity" />
+							listener="#{registrationBackingBean.populateDistrictByAddType('business', true)}"
+							update="busDistrict,busCity,:form:acgmap:gmapInput:gmapInput" />
 					</p:selectOneMenu> <p:message id="busStateMsg" for="busState" display="icon" /></td>
 			</tr>
 
@@ -274,8 +277,8 @@
 							value="#{registrationBackingBean.managedBean.businessDistrictLs}"
 							itemValue="#{dist.districtId}" itemLabel="#{dist.districtName}" />
 						<p:ajax event="change"
-							listener="#{registrationBackingBean.populateCityByAddType('business')}"
-							update="busCity" />
+							listener="#{registrationBackingBean.populateCityByAddType('business',true)}"
+							update="busCity,:form:acgmap:gmapInput:gmapInput" />
 					</p:selectOneMenu> <p:message id="busDistrictMsg" for="busDistrict" display="icon" /></td>
 			</tr>
 
@@ -297,6 +300,7 @@
 						<f:selectItems var="pcity"
 							value="#{registrationBackingBean.managedBean.businessCityLs}"
 							itemValue="#{pcity.cityId}" itemLabel="#{pcity.cityName}" />
+						<p:ajax event="change" update=":form:acgmap:gmapInput:gmapInput"></p:ajax>
 					</p:selectOneMenu> <p:message id="busCityMsg" for="busCity" display="icon" /></td>
 			</tr>
 
@@ -333,7 +337,43 @@
 					</p:outputPanel>
 				</td>
 			</tr>
+			
+			<tr>
+				<td></td>
+				<td colspan="3">
+					<SCRIPT type="text/javascript">
+				      function getAddress() {
+				    	  
+				    	  var addr1 = document.getElementById('#{p:component(&quot;compAdd1&quot;)}').value + ',';
+				    	  var addr2 = document.getElementById('#{p:component(&quot;compAdd2&quot;)}').value + ',';
+				    	  var addr3 = document.getElementById('#{p:component(&quot;compAdd3&quot;)}').value + ',';
+				    	  var addr4 = document.getElementById('#{p:component(&quot;compAdd4&quot;)}').value + ',';
 
+				    	  var cityName = document.getElementById('#{p:component(&quot;busCity&quot;)}_input').options[document.getElementById('#{p:component(&quot;busCity&quot;)}_input').selectedIndex].text;
+				    	  var districtName = document.getElementById('#{p:component(&quot;busDistrict&quot;)}_input').options[document.getElementById('#{p:component(&quot;busDistrict&quot;)}_input').selectedIndex].text;
+				    	  var stateName = document.getElementById('#{p:component(&quot;busState&quot;)}_input').options[document.getElementById('#{p:component(&quot;busState&quot;)}_input').selectedIndex].text;
+				    	  var countryName = document.getElementById('#{p:component(&quot;compCountryId&quot;)}_input').options[document.getElementById('#{p:component(&quot;compCountryId&quot;)}_input').selectedIndex].text;
+				    	  
+				    	  /*var cityName = '';
+				    	  var districtName = '';
+				    	  var stateName = '';
+				    	  var countryName = '';
+				    	  */
+				    	  var address = addr1 + addr2 + addr3 + addr4 + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
+
+				      	return address;
+				      }
+				      </SCRIPT>
+						
+					<ac:gmap id="acgmap" 
+						address="getAddress()"
+						locationName="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.companyName}"
+						latitude="#{registrationBackingBean.managedBean.smBusinessAdd.mapLatitude}"
+						longitude="#{registrationBackingBean.managedBean.smBusinessAdd.mapLongitude}"
+						disabled="#{registrationBackingBean.gmapDisabled}" />			
+				</td>
+			</tr>
+			
 			<tr>
 				<td class="tdTitle">
 					<p:outputLabel value="#{lbl['lbl.sm.telno']}" />
