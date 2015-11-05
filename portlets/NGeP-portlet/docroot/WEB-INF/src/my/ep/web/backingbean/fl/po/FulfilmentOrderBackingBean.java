@@ -80,8 +80,6 @@ import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.cr.ContractRequestBackingBean;
 import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
 import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean;
-import my.ep.web.bean.paginator.IPagingDataModel;
-import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.po.FulfilmentOrderManagedBean;
@@ -113,7 +111,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 										
 	private static Logger log = Logger.getLogger(FulfilmentOrderBackingBean.class);
 	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "MM/dd/yy hh:mm a" );
-	private IPagingDataModel<FlFulfilmentOrder> pendingDoDataModel = new PendingDoPagingDataModel();
 	
 	FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 	
@@ -775,64 +772,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		}
 	}
 
-	/**
-	 * The Class PendingDoPagingDataModel.
-	 */
-	private class PendingDoPagingDataModel extends PagingDataModel<FlFulfilmentOrder> {
-		
-		/** The Constant serialVersionUID. */
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Instantiates a new pending do paging data model.
-		 */
-		public PendingDoPagingDataModel() {
-			super("flPendingDoListDt");
-		}
-		
-		/* (non-Javadoc)
-		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
-		 */
-		@Override
-		public ISearchResultBean<FlFulfilmentOrder> pageChangeListener(ISearchBean<FlFulfilmentOrder> searchBean) {
-			if (log.isDebugEnabled()) {
-				log.debug("pageChangeListener");
-			}
-			try {
-				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-				reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-				searchBean.setUseEntityClass(true);
-				reqDTO.setPendingDoSearchBean(searchBean);
-				IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
-				FulfilmentResDTO resDTO = orderSO.searchPendingDoList(reqDTO);
-				if(resDTO.isSuccessful()) {
-					return resDTO.getPendingDoResultBean();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-	}
-
-	/**
-	 * Gets the pending do data model.
-	 *
-	 * @return the pending do data model
-	 */
-	public IPagingDataModel<FlFulfilmentOrder> getPendingDoDataModel() {
-		return pendingDoDataModel;
-	}
-
-	/**
-	 * Sets the pending do data model.
-	 *
-	 * @param pendingDoDataModel the new pending do data model
-	 */
-	public void setPendingDoDataModel(
-			IPagingDataModel<FlFulfilmentOrder> pendingDoDataModel) {
-		this.pendingDoDataModel = pendingDoDataModel;
-	}
 
 	// Please add role if there is new role for this backingbean
 	/**
