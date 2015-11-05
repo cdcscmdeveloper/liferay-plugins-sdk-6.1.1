@@ -71,6 +71,7 @@ import my.ep.exception.EpException;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.CtWorkflowStatus;
+import my.ep.persistence.entity.ct.circular.cc.CtCircularContract;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.ct.dtl.CtContractAmount;
@@ -2216,4 +2217,16 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					} 
 				}	
 			}
+			
+			 public boolean chkCircularActiveRecord(){
+			    	if(getManagedBean().getContractVer().getCtContract().getCtCircularContracts().size() > 0) {
+			    			  for(CtCircularContract circularContract : getManagedBean().getContractVer().getCtContract().getCtCircularContracts()) {
+			    			      if(circularContract.getCtCircularVer().getRecordStatusFlg() == 1) {
+			    			    	  getManagedBean().setCtCircularVer(circularContract.getCtCircularVer());
+			    			    	  return true;
+			    			      }
+			    		  } 
+			    	}
+			      	return false;
+			    }
 }
