@@ -26,10 +26,10 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.equiComp.shrAmt']}">
-					<ac:labelAmount value="#{equiBean.shareAmt}" />
+					<ac:labelAmount value="#{equiBean.shareAmt}" styleClass="outputLabel-view"/>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.equiComp.shrPerc']}">
-					<ac:labelAmount value="#{equiBean.sharePercentage}" />
+					<ac:labelAmount value="#{equiBean.sharePercentage}" styleClass="outputLabel-view"/>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
 					<p:commandLink update=":form:tt:eqiCompDialog" partialSubmit="true"
