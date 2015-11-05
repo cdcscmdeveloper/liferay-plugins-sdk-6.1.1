@@ -3,48 +3,35 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
-
-	<p:panel >
-
+	<style type="text/css">
+		div[id$="deliveryAddressStatusId_panel"] .ui-selectonemenu-items-wrapper{
+	        width:135px;
+	     }
+	</style>
+	<p:panel>
 		<p:dataTable id="deliveryAddressId"
 			value="#{organisationBackingBean.managedBean.addressTypesList}" widgetVar="deliveryAddres"
 			var="address" rowIndexVar="index" rowKey="#{address}" selection="#{organisationBackingBean.managedBean.selectedAddressTypes}">
 			<ac:paginator for="deliveryAddressId" />
-			<p:column selectionMode="multiple" disabledSelection="#{!address.brandNew}"
-				 style="width:2%" />
-			<!-- <p:column headerText="#{lbl['lbl.pm.address.address']}">
-				<h:outputText value="#{address.pmAddress.address1}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.address.district']}"
-				style="width : 15%">
-				<h:outputText value="#{address.pmAddress.pmDistrict.districtName}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.address.state']}"
-				style="width : 15%">
-				<h:outputText value="#{address.pmAddress.pmState.stateName}" />
-			</p:column> -->
 			 <p:column headerText="#{lbl['lbl.pm.address.address']}" style="white-space:normal;">
 				<h:outputText value="#{organisationBackingBean.getFullAddress(address.pmAddress)}" />
 			</p:column>
-				<p:column style="width:8%" headerText="#{lbl['lbl.pm.financialorg.status']}">
-				<p:selectOneMenu styleClass="ppDropDownWidthS"  label="#{lbl['lbl.pm.financialorg.status']}"
-					disabled="#{address.brandNew}"
+			<p:column style="width:15%;" headerText="#{lbl['lbl.pm.financialorg.status']}">
+				<p:selectOneMenu label="#{lbl['lbl.pm.financialorg.status']}" id="deliveryAddressStatusId" 
+					disabled="#{address.brandNew}" style="width:135px;"
 					value="#{address.recordStatusFlg}" required="true">
 					<f:selectItems
 						value="#{organisationBackingBean.getStatusOptions()}" />
 				</p:selectOneMenu>
-
 			</p:column>
-			<p:column style="width:5%">
+			<p:column style="width:5%;text-align:center;">
 				<p:commandLink oncomplete="addressPopup.show();"
 					actionListener="#{organisationBackingBean.editDeliveryAddress(address)}"
-					update="@([id$=deliveryAddressDialog])"								
-					style="padding-right:5px">
+					update="@([id$=deliveryAddressDialog])"	>
 					<p:graphicImage 
 						value="/css/images/design/edit.png" />
 				</p:commandLink>
 			</p:column>
-
 		</p:dataTable>
 		<p:spacer height="15"></p:spacer>
 		<div align="right">
@@ -56,7 +43,6 @@
 				update="deliveryAddressId,deliveryAddressDialog" process="@this,deliveryAddressId"
 				partialSubmit="true" />
 		</div>
-
 	</p:panel>
 	<p:dialog header="#{lbl['lbl.pm.header.general.org.delivery']}" widgetVar="addressPopup" id="deliveryAddressDialog" resizable="false"
 		modal="true" width="900" height="450">

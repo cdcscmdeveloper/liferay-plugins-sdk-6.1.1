@@ -4,8 +4,12 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
-	<p:outputPanel id="pFacFinancialService">
-	
+	<style type="text/css">
+		div[id$="finServiceStatusId_panel"] .ui-selectonemenu-items-wrapper{
+	        width:110px;
+	     }
+	</style>
+	<p:outputPanel id="pFacFinancialService">	
 		<p:dataTable id="financialsrvid" var="financialsrv"
 			value="#{financialOrgBackingBean.managedBean.financialOrg.pmFinancialSvcs}"
 			rowKey="#{financialsrv}" rowIndexVar="rowIndex">
@@ -49,9 +53,7 @@
 				</p:selectOneMenu>
 				<p:message for="svcType" id="svcTypeMsg" display="icon" /> 
 				</ui:fragment>
-
 			</p:column>
-
 
 			<p:column width="45%" headerText="#{lbl['lbl.pm.financialorg.bankcode']}">
 				<ui:fragment
@@ -62,10 +64,9 @@
 				</ui:fragment>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}" width="15%">
-				<p:selectOneMenu style="width: 110px !important;"
+				<p:selectOneMenu style="width: 110px !important;" id="finServiceStatusId"
 					disabled="#{financialsrv.serviceTypeCode.parameterCode eq  ParameterConst.bankServicesPaymentBank ? true : financialsrv.brandNew}"
-					value="#{financialsrv.recordStatusFlg}" required="true"
-					>
+					value="#{financialsrv.recordStatusFlg}" required="true"	>
 					<f:selectItems
 						value="#{financialOrgBackingBean.getStatusOptions()}" />
 				</p:selectOneMenu>

@@ -260,9 +260,9 @@
 				</p:selectOneMenu>
 
 			</p:column>
-			<p:column width="7%">
+			<p:column style="width:7%;text-align:center;">
 				<f:facet name="header">
-                     #{lbl['lbl.cm.action']}
+                     #{lbl['lbl.pm.action']}
 				</f:facet>
 				<p:commandLink id="cloneLink" title="#{lbl['lbl.cm.clone']}"
 					rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1 and typeValueObj.showFlag}"

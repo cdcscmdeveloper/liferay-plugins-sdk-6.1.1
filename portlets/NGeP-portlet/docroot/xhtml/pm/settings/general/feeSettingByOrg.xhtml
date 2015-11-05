@@ -110,9 +110,9 @@
 
 			</p:selectOneMenu>
 		</p:column>
-		<p:column width="5%">
+		<p:column style="width:5%;text-align:center;">
 			<f:facet name="header">
-               #{lbl['lbl.cm.action']}
+               #{lbl['lbl.pm.action']}
 			</f:facet>
 			<p:commandLink id="orgDeleteFee" partialSubmit="true" process="@this"
 				disabled="#{(feeObj.isG2G == 1) || (!(feeObj.brandNew) and (feeObj.effDate le DateUtils.getCurrentDateWithoutTime()))}"
