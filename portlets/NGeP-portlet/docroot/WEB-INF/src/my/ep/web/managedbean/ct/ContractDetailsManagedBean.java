@@ -116,7 +116,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public int itemIndex = 99;
 	public int settingIndex = 101;
 	private int index;
-	
+	private boolean trackingDiarySearch;
 	
 	/**
 	 * @return the action
@@ -906,6 +906,14 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	 */
 	public void setContractDataModel(IPagingDataModel<VCtContract> contractDataModel) {
 		this.contractDataModel = contractDataModel;
+	}
+
+	public boolean isTrackingDiarySearch() {
+		return trackingDiarySearch;
+	}
+
+	public void setTrackingDiarySearch(boolean trackingDiarySearch) {
+		this.trackingDiarySearch = trackingDiarySearch;
 	}
 
 	/**
