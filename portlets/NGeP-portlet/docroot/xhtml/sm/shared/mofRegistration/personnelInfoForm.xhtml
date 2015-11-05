@@ -412,7 +412,7 @@
 						<p:ajax event="rowDblselect"
 							listener="#{backingBean.unSelectAdmin}"
 							update=":form:tt:persInfPan"></p:ajax>
-						<p:column selectionMode="multiple" width="1%"
+						<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smPersonnels}"
 							disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
 							or (person.prevApprovedDirector or person.prevApprovedEquityOwner)}" />
 

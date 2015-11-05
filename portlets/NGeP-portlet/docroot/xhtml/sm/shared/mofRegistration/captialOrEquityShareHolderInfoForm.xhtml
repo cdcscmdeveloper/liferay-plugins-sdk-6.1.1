@@ -63,7 +63,7 @@
 					<p:ajax event="rowDblselect"
 						listener="#{backingBean.unSelectAdmin}"
 						update=":form:tt:shrInfPan"></p:ajax>
-					<p:column selectionMode="multiple" width="5%"
+					<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smapplShareHolders}"
 						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner}" />
 
 
