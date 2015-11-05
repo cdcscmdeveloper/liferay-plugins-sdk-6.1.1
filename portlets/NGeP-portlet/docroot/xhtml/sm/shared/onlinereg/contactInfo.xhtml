@@ -97,7 +97,7 @@
 							value="#{registrationBackingBean.managedBean.residentialStateLs}"
 							itemValue="#{resState.stateId}" itemLabel="#{resState.stateName}" />
 						<p:ajax event="change"
-							listener="#{registrationBackingBean.populateDistrictByAddType('residential')}"
+							listener="#{registrationBackingBean.populateDistrictByAddType('residential', false)}"
 							update="cmbResDistrict cmbResCity" />
 					</p:selectOneMenu> <p:message id="cmbResStateMsg" for="cmbResState" display="icon" />
 				</td>
@@ -124,7 +124,7 @@
 							value="#{registrationBackingBean.managedBean.residentialDistrictLs}"
 							itemValue="#{dist.districtId}" itemLabel="#{dist.districtName}" />
 						<p:ajax event="change"
-							listener="#{registrationBackingBean.populateCityByAddType('residential')}"
+							listener="#{registrationBackingBean.populateCityByAddType('residential', false)}"
 							update="cmbResCity" />
 					</p:selectOneMenu> <p:message id="cmbResDistrictMsg" for="cmbResDistrict"
 						display="icon" /></td>
