@@ -100,7 +100,7 @@
 					</f:facet>
 					#{plan.status !=null ? ppTrackingDiaryBackingBean.getStatusDescById(plan.status.statusId) : ppTrackingDiaryBackingBean.getDefaultStatusDesc(plan.planType)}
 				</p:column>
-				<p:column headerText="#{lbl['lbl.pm.action']}">
+				<p:column headerText="#{lbl['lbl.pm.action']}" style="text-align:center;">
 					<p:commandLink
 						action="#{ppTrackingDiaryBackingBean.goToTrackingDiarySearch(plan)}">
 						<p:graphicImage

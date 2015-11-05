@@ -32,7 +32,7 @@
 	    	#{restrict.pmCategoryL3.categoryName}
         </p:column>
 
-			<p:column width="9%" headerText="#{lbl['lbl.pm.action']}">
+			<p:column style="width:9%;text-align:center;" headerText="#{lbl['lbl.pm.action']}">
 				<p:commandLink partialSubmit="true" process="@this"
 					action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.restrCategory,rowIndex)}"
 					update="dtCat">

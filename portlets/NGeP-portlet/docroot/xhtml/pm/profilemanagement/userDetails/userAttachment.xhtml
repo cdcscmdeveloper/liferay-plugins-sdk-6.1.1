@@ -25,7 +25,7 @@
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 				</h:outputText>
 			</p:column>
-	        <p:column headerText="#{lbl['lbl.pm.action']}" >
+	        <p:column style="text-align:center;" headerText="#{lbl['lbl.pm.action']}" >
 	          	<p:commandLink action="#{profileManagementBackingBean.downloadAttachment(attachment)}" 
 	          		immediate="true" ajax="false" disabled="#{attachment.brandNew}">
  					  <p:graphicImage value="/css/images/design/attach.png" />

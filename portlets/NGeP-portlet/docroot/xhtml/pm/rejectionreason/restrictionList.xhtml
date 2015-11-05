@@ -36,7 +36,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 										listener="#{rejectionReasonBackingBean.validateUniqueRestrType(ParameterTypeConst.supplierApplicationTypes)}"/>
 								</p:selectOneMenu>
 					        </p:column>  
-					        <p:column width="5%" headerText="#{lbl['lbl.pm.action']}">
+					        <p:column style="width:5%;text-align:center;" headerText="#{lbl['lbl.pm.action']}">
 	           					<p:commandLink partialSubmit="true" 
 									process="@this" action="#{rejectionReasonBackingBean.deleteRestrictions(rejectionReasonBackingBean.restrApp,rowIndex)}"
 									update="dtAppType" >
@@ -77,7 +77,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 										listener="#{rejectionReasonBackingBean.validateUniqueRestrType(ParameterTypeConst.financialOrgRegType)}"/>
 								</p:selectOneMenu>
 					        </p:column>  
-					       	 <p:column width="5%" headerText="#{lbl['lbl.pm.action']}">
+					       	 <p:column style="width:5%;text-align:center;" headerText="#{lbl['lbl.pm.action']}">
 	           					<p:commandLink partialSubmit="true" 
 									process="@this" action="#{rejectionReasonBackingBean.deleteRestrictions(rejectionReasonBackingBean.restrComp,rowIndex)}"
 									update="dtComType" >
@@ -118,7 +118,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 										listener="#{rejectionReasonBackingBean.validateUniqueRestrType(ParameterTypeConst.supplierTypes)}"/>
 								</p:selectOneMenu>
 					        </p:column>  
-				        	 <p:column width="5%" headerText="#{lbl['lbl.pm.action']}">
+				        	 <p:column style="width:5%;text-align:center;" headerText="#{lbl['lbl.pm.action']}">
 	           					<p:commandLink partialSubmit="true" 
 									process="@this" action="#{rejectionReasonBackingBean.deleteRestrictions(rejectionReasonBackingBean.restrSupp,rowIndex)}"
 									update="dtSuppType" >

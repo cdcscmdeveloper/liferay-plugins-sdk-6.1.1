@@ -117,7 +117,7 @@
 			     		update="@this, :form:tvRoleReceivingAddr ,dtOrgUnit"/>
 			</p:selectOneMenu>
 		</p:column>
-	        <p:column width="5%" headerText="#{lbl['lbl.pm.action']}">  
+	        <p:column style="width:5%;text-align:center;" headerText="#{lbl['lbl.pm.action']}">  
       		    <p:commandLink action="#{profileManagementBackingBean.deleteOrgUnit(orgUnit)}" disabled="#{!orgUnit.brandNew}"
       		    	immediate="true" update="dtOrgUnit">
 					<p:graphicImage value="/css/images/design/delete.png"/>
