@@ -32,7 +32,6 @@ import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.VCtContract;
-import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
@@ -105,7 +104,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private Map<Long, PmUserGroup> userGroupMap;
 	private Map<Long, PmUser> userMap;
 	private HashMap<String, PmUserGroupUser> approverMap;
-	private CtCircularVer ctCircularVer;
 		private PmDigiSign pmDigiSign;	
 	private IPagingDataModel<VCtContract> contractDataModel = new ContractPagingDataModel();
 	
@@ -815,20 +813,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public void setFulfilmentMenuModel(MenuModel fulfilmentMenuModel) {
 		this.fulfilmentMenuModel = fulfilmentMenuModel;
 	}*/
-
-	/**
-	 * @return the ctCircularVer
-	 */
-	public CtCircularVer getCtCircularVer() {
-		return ctCircularVer;
-	}
-
-	/**
-	 * @param ctCircularVer the ctCircularVer to set
-	 */
-	public void setCtCircularVer(CtCircularVer ctCircularVer) {
-		this.ctCircularVer = ctCircularVer;
-	}
 
 	/**
 	 * @return the index
