@@ -97,8 +97,6 @@ import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
-import com.liferay.portal.kernel.util.StringUtil;
-
 @ManagedBean(name = "registrationBackingBean")
 @RequestScoped
 public class RegistrationBackingBean extends BaseBackingBean<RegistrationManagedBean>{
@@ -118,7 +116,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	private static Map<Long, PmCertBody> profCertBodyMap;
 	private static List<String> sabahSarawakRemoveWhiteSpaceList = Arrays.asList("D", "E", "G", "H");
 	private static List<String> rosRemoveWhiteSpaceList = Arrays.asList("O","M","P");
-
+	private boolean gmapDisabled;
+	
 	public RegistrationBackingBean() {	
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		getManagedBean().setMyCountryId(SmCommonUtil.getMyCountryId());
@@ -191,9 +190,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			smSupp.setSmSupplierBusinesses(new ArrayList<SmSupplierBusiness>());
 			
 			this.retrievePmCountryList();
-			this.populateStateByAddType("permenant");
-			this.populateStateByAddType("residential");
-			this.populateStateByAddType("business");
+			this.populateStateByAddType("permenant", false);
+			this.populateStateByAddType("residential", false);
+			this.populateStateByAddType("business", false);
 			this.retrieveFinancialOrgList();
 			
 			//this.getManagedBean().setSuppBusinessNature(new SmSupplierBusiness());
@@ -550,8 +549,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		reqDTO.setServerPort(fs.getRequest().getServerPort());
 		reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 		reqDTO.setLanguage(fs.getUserLocale().getLanguage());
-		
 		reqDTO.setSmSupp(this.getManagedBean().getSmSupp());
+		
+		//insert tracking diary
+		reqDTO.setTrackingDiaryVO(SmCommonUtil.assignTrackingDiaryValues(
+					 SupplierManagementConst.SUPP_REGISTRATION,smAppl.getApplId(), null, RoleCode.SUPPLIER_TEMP.value()));
+		
 		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
 		RegistrationResDTO resDTO = reqSO.createSupplier(reqDTO);
 		
@@ -1121,10 +1124,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * set State By Address Type
 	 * @param typeAdd - business, residential, permenant
 	 */
-	public void populateStateByAddType(String typeAdd) {
+	public void populateStateByAddType(String typeAdd, boolean reset) {
 		if (typeAdd.equals("business")) {
 			//List<PmState> stateLs = this.retrievePmStateList(this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryId());
 			//this.getManagedBean().setBusinessStateLs(stateLs);
+			if(reset){
+				getManagedBean().getSmBusinessAdd().getPmState().setStateId(null);
+			}
 			pmStateDropdownValues();
 			//registrationBackingBean.managedBean.smBusinessAdd.pmState.
 			if(getManagedBean().getSmBusinessAdd().isBrandNew()){
@@ -1147,8 +1153,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * set State By Address Type
 	 * @param typeAdd - business, residential, permenant
 	 */
-	public void populateDistrictByAddType(String typeAdd) {
+	public void populateDistrictByAddType(String typeAdd, boolean reset) {
 		if (typeAdd.equals("business")) {
+			if(reset){
+				getManagedBean().getSmBusinessAdd().getPmDistrict().setDistrictId(null);
+				getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
+			}
 			// this.getManagedBean().getSmBusinessAdd().getPmState().getStateId();
 			List<SelectItem> districtLs = SmCommonUtil.getDistrictList(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId());
 			this.getManagedBean().setBusinessDistrictLs(districtLs);
@@ -1175,9 +1185,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * set City By AddType
 	 * @param typeAdd - business, residential, permenant
 	 */
-	public void populateCityByAddType(String typeAdd) {
+	public void populateCityByAddType(String typeAdd, boolean reset) {
 		log.info("---------------City By Type--------------------");
 		if (typeAdd.equals("business")) {
+			if(reset){
+				getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
+			}
 			// this.getManagedBean().getSmBusinessAdd().getPmState().getStateId();
 			List<SelectItem> cityLs = SmCommonUtil.getCityList(this.getManagedBean().getSmBusinessAdd().getPmDistrict().getDistrictId());
 			this.getManagedBean().setBusinessCityLs(cityLs);
@@ -1232,14 +1245,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				getManagedBean().setUserMuslimFlg(personnel.getMuslimFlg());
 				getIndividualServiceType();
 				this.getManagedBean().setSmPermenantAdd(resDTO.getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress());
-				this.populateStateByAddType("permenant");
-				this.populateDistrictByAddType("permenant");
-				this.populateCityByAddType("permenant");
+				this.populateStateByAddType("permenant", false);
+				this.populateDistrictByAddType("permenant", false);
+				this.populateCityByAddType("permenant", false);
 
 				this.getManagedBean().setSmBusinessAdd(resDTO.getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress());
-				this.populateStateByAddType("business");
-				this.populateDistrictByAddType("business");
-				this.populateCityByAddType("business");
+				this.populateStateByAddType("business", false);
+				this.populateDistrictByAddType("business", false);
+				this.populateCityByAddType("business", false);
 			}else{
 				if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK) || 
 						this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK) ||
@@ -1249,9 +1262,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				}
 				
 				this.getManagedBean().setSmBusinessAdd(resDTO.getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress());
-				this.populateStateByAddType("business");
-				this.populateDistrictByAddType("business");
-				this.populateCityByAddType("business");
+				this.populateStateByAddType("business", false);
+				this.populateDistrictByAddType("business", false);
+				this.populateCityByAddType("business", false);
 			}
 			this.retrievePmCountryList();
 			this.retrieveFinancialOrgList();
@@ -1624,9 +1637,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			SmAddress smPermAdd = this.getManagedBean().getSmPermenantAdd();
 			this.getManagedBean().setSmResAdd(smPermAdd);
 			this.getManagedBean().getSmResAdd().getPmState().setStateId(smPermAdd.getPmState().getStateId());
-			populateDistrictByAddType("residential");
+			populateDistrictByAddType("residential", false);
 			this.getManagedBean().getSmResAdd().getPmDistrict().setDistrictId(smPermAdd.getPmDistrict().getDistrictId());
-			populateCityByAddType("residential");
+			populateCityByAddType("residential", false);
 			this.getManagedBean().getSmResAdd().getPmCity().setCityId(smPermAdd.getPmCity().getCityId());
 		}else{
 			this.getManagedBean().setSmResAdd(new SmAddress());
@@ -2236,6 +2249,32 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, signUp);
 		}
 	}
+
+	public boolean isGmapDisabled() {
+		gmapDisabled = false;
+		
+		if(getManagedBean().getSmBusinessAdd() != null){
+			SmAddress bizAddress = getManagedBean().getSmBusinessAdd();
+
+			if(bizAddress.getPmCountry() == null || bizAddress.getPmDistrict() == null || 
+					bizAddress.getPmState() == null || bizAddress.getPmCity() == null || 
+					bizAddress.getAddress1() == null ){
+					gmapDisabled = true;
+			}else{
+				if(StringUtils.isBlank(bizAddress.getAddress1()) || bizAddress.getPmCountry().getCountryId() == null ||
+						bizAddress.getPmDistrict().getDistrictId() == null || bizAddress.getPmState().getStateId() == null ||
+						bizAddress.getPmCity().getCityId() == null){
+					gmapDisabled = true;
+				}
+
+			}
+		}else{
+			gmapDisabled = true;
+		}
+
+		return gmapDisabled;
+	}
+
 }
 
 
