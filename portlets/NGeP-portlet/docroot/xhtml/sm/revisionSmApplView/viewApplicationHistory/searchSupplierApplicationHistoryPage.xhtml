@@ -24,54 +24,56 @@
 		<p:messages id="messages" showDetail="true" closable="false" showSummary="false" />
 		
 		<p:panel header="#{lbl['lbl.sm.search.supp.appl.history']}" toggleable="true" id="searchSupplierProfilePanelId">
+			<ui:include src="/xhtml/sm/shared/applViewOnlyPages/supplierApplicationSearchCriteria.xhtml" />
+		</p:panel>
 		
-		<ui:include src="/xhtml/sm/shared/applViewOnlyPages/supplierApplicationSearchCriteria.xhtml" />
+		<p:panel header="#{lbl['lbl.sm.results']}" toggleable="true" id="resultSupplierProfilePanelId">
 			
-		<p:dataTable var="smAppl" widgetVar="smApplWidgetVar"
-			editable="false" lazy="true" rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{viewSuppProfileBackingBean.managedBean.smSupplierDataModel}"
-			rowKey="#{smAppl}" rowIndexVar="index" id="supplierApplHistoryDtId">
-			<ac:paginator for="supplierApplHistoryDtId" />
-			
-			<p:column headerText="#{lbl['lbl.sm.companyname']}" style="width :25%;white-space : normal" 
-				rendered="#{!viewSuppProfileBackingBean.managedBean.supplierUser}">
-				<h:outputText value="#{smAppl[3]}" />
-			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.sm.application.no']}">
-				<h:outputText value="#{smAppl[0]}" />
-			</p:column>
-	
-			<p:column headerText="#{lbl['lbl.sm.applicationtype']}" style="width :25%;white-space : normal">
-				<h:outputText value="#{lbl['lbl.sm.appltype.newmof']}" rendered="#{smAppl[1] eq 'N'}" />
-				<h:outputText value="#{lbl['lbl.sm.appltype.bumiputera']}" rendered="#{smAppl[1] eq 'B'}" />
-				<h:outputText value="#{lbl['lbl.sm.appltype.categorycode']}" rendered="#{smAppl[1] eq 'A'}" />
-				<h:outputText value="#{lbl['lbl.sm.appltype.updateprofile']}" rendered="#{smAppl[1] eq 'U'}" />
-				<h:outputText value="#{lbl['lbl.sm.appltype.cancelmof']}" rendered="#{smAppl[1] eq 'C'}" />
-				<h:outputText value="#{lbl['lbl.sm.appltype.renewmof']}" rendered="#{smAppl[1] eq 'R'}" />
-			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.rpt.supplierType']}">
-				<h:outputText value="#{lbl['lbl.sm.contractor']}" rendered="#{smAppl[2] eq 'K'}"/>
-				<h:outputText value="#{lbl['lbl.sm.consultant']}" rendered="#{smAppl[2] eq 'J'}"/>
-			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.sm.regStatus']}">
-				<h:outputText value="#{smAppl[4]}" rendered="#{not empty smAppl[4]}"/>
-				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty smAppl[4]}"/>
-			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.sm.label.action']}">
-				<p:commandLink onstart="blockWidget.show()"
-					oncomplete="blockWidget.hide()"
-					action="#{viewSuppProfileBackingBean.initSmApplByApplNo(smAppl[0])}"
-					process="@this" partialSubmit="true" update="@([id$=searchSupplierProfilePanelId])"
-					style="padding-right:5px;">
-					<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
-				</p:commandLink>
-			</p:column>
-			
-		</p:dataTable>
+			<p:dataTable var="smAppl" widgetVar="smApplWidgetVar"
+				editable="false" lazy="true" rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{viewSuppProfileBackingBean.managedBean.smSupplierDataModel}"
+				rowKey="#{smAppl}" rowIndexVar="index" id="supplierApplHistoryDtId">
+				<ac:paginator for="supplierApplHistoryDtId" />
+				
+				<p:column headerText="#{lbl['lbl.sm.companyname']}" style="width :25%;white-space : normal" 
+					rendered="#{!viewSuppProfileBackingBean.managedBean.supplierUser}">
+					<h:outputText value="#{smAppl[3]}" />
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.application.no']}">
+					<h:outputText value="#{smAppl[0]}" />
+				</p:column>
+		
+				<p:column headerText="#{lbl['lbl.sm.applicationtype']}" style="width :25%;white-space : normal">
+					<h:outputText value="#{lbl['lbl.sm.appltype.newmof']}" rendered="#{smAppl[1] eq 'N'}" />
+					<h:outputText value="#{lbl['lbl.sm.appltype.bumiputera']}" rendered="#{smAppl[1] eq 'B'}" />
+					<h:outputText value="#{lbl['lbl.sm.appltype.categorycode']}" rendered="#{smAppl[1] eq 'A'}" />
+					<h:outputText value="#{lbl['lbl.sm.appltype.updateprofile']}" rendered="#{smAppl[1] eq 'U'}" />
+					<h:outputText value="#{lbl['lbl.sm.appltype.cancelmof']}" rendered="#{smAppl[1] eq 'C'}" />
+					<h:outputText value="#{lbl['lbl.sm.appltype.renewmof']}" rendered="#{smAppl[1] eq 'R'}" />
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.rpt.supplierType']}">
+					<h:outputText value="#{lbl['lbl.sm.contractor']}" rendered="#{smAppl[2] eq 'K'}"/>
+					<h:outputText value="#{lbl['lbl.sm.consultant']}" rendered="#{smAppl[2] eq 'J'}"/>
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.regStatus']}">
+					<h:outputText value="#{smAppl[4]}" rendered="#{not empty smAppl[4]}"/>
+					<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty smAppl[4]}"/>
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.label.action']}">
+					<p:commandLink onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()"
+						action="#{viewSuppProfileBackingBean.initSmApplByApplNo(smAppl[0])}"
+						process="@this" partialSubmit="true" update="@form"
+						style="padding-right:5px;">
+						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
+					</p:commandLink>
+				</p:column>
+				
+			</p:dataTable>
 			
 		</p:panel>
 	</ui:define>
