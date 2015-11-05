@@ -10,7 +10,6 @@ import javax.faces.bean.ViewScoped;
 import my.ep.constant.MessageConst;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
-import my.ep.exception.EpException;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.util.FacesScopes;
@@ -18,13 +17,11 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
-import org.springframework.util.CollectionUtils;
-
 @ManagedBean(name = "smPersonnelRequestActivationBackingBean")
 @ViewScoped
 public class SmPersonnelRequestActivationBackingBean {
 	private SmSupplier smSupplier;
-	private List<SmPersonnel> selectedExpiredActivationPersonnels;
+	private SmPersonnel selectedExpiredActivationPersonnel;
 	private List<SmPersonnel> expiredActivationPersonnels;
 
 	/**
@@ -32,7 +29,6 @@ public class SmPersonnelRequestActivationBackingBean {
 	 */
 	@PostConstruct
 	public void init() {
-		selectedExpiredActivationPersonnels = new ArrayList<SmPersonnel>();
 		smSupplier = SmApplicationUtil.getCurrentSupplier();
 		initExpiredPersonnels();
 		SmCommonUtil.setMDCUserId();
@@ -42,13 +38,13 @@ public class SmPersonnelRequestActivationBackingBean {
 	 * Re - send activation email to selected personnel
 	 */
 	public void resendActivation() {
-		validate();
 		FacesScopes fs = new FacesScopes();
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setServerName(fs.getRequest().getServerName());
 		reqDTO.setServerPort(fs.getRequest().getServerPort());
 		reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
-		reqDTO.setSmPersonnelList(selectedExpiredActivationPersonnels);
+		reqDTO.setSmPersonnelList(new ArrayList<SmPersonnel>());
+		reqDTO.getSmPersonnelList().add(selectedExpiredActivationPersonnel);
 		SmServiceLookup.getPersonnelSO().resendPersonnelActivationEmail(reqDTO);
 		SmCommonUtil.redirectToPage(
 				"/xhtml/sm/userProfileMaintenance/outputMsg",
@@ -74,26 +70,6 @@ public class SmPersonnelRequestActivationBackingBean {
 
 	}
 
-	/**
-	 * Validate if dont have any personnel selected for resend activation email
-	 */
-	private void validate() {
-		if (CollectionUtils.isEmpty(selectedExpiredActivationPersonnels)) {
-			throw new EpException(MessageConst.ERROR_722587,
-					new String[] { SmCommonUtil.getMessage("lbl.sm.personnel",
-							null) });
-		}
-	}
-
-	public List<SmPersonnel> getSelectedExpiredActivationPersonnels() {
-		return selectedExpiredActivationPersonnels;
-	}
-
-	public void setSelectedExpiredActivationPersonnels(
-			List<SmPersonnel> selectedExpiredActivationPersonnels) {
-		this.selectedExpiredActivationPersonnels = selectedExpiredActivationPersonnels;
-	}
-
 	public List<SmPersonnel> getExpiredActivationPersonnels() {
 		return expiredActivationPersonnels;
 	}
@@ -109,6 +85,15 @@ public class SmPersonnelRequestActivationBackingBean {
 
 	public void setSmSupplier(SmSupplier smSupplier) {
 		this.smSupplier = smSupplier;
+	}
+
+	public SmPersonnel getSelectedExpiredActivationPersonnel() {
+		return selectedExpiredActivationPersonnel;
+	}
+
+	public void setSelectedExpiredActivationPersonnel(
+			SmPersonnel selectedExpiredActivationPersonnel) {
+		this.selectedExpiredActivationPersonnel = selectedExpiredActivationPersonnel;
 	}
 
 }
