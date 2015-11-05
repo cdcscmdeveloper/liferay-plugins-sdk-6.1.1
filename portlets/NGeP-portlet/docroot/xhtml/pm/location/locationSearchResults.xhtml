@@ -39,7 +39,7 @@
 			<p:column headerText="#{lbl['lbl.pm.status']}" style="width :15%">
 				#{(location.status==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}  
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.action']}" style="width :5%">
+			<p:column headerText="#{lbl['lbl.pm.action']}" style="width:5%;text-align:center;">
 				<p:commandLink
 					action="#{locationBackingBean.redirectToLocation(location.locationType,location.locationId)}">
 					<p:graphicImage library="ep/images/design" 

@@ -18,7 +18,7 @@
 	    	#{restrict.pmCertBody.bodyName}
         </p:column>
 			
-			<p:column width="5%" headerText="#{lbl['lbl.pm.action']}">
+			<p:column style="width:5%;text-align:center;" headerText="#{lbl['lbl.pm.action']}">
 	           <p:commandLink partialSubmit="true"
 					process="@this" action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.restrCertbody,rowIndex)}"
 					update="dtCertBody" >

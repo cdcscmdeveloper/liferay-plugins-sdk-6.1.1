@@ -26,7 +26,7 @@
      	 #{(educationList.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}                 
        </p:column>
 
-			<p:column headerText="#{lbl['lbl.pm.action']}" style="width:5%;">
+			<p:column headerText="#{lbl['lbl.pm.action']}" style="width:5%;text-align:center;">
 				<p:commandLink
 					action="#{educationBackingBean.goToMaintaincePage(educationList)}"
 					process="@this" partialSubmit="true">

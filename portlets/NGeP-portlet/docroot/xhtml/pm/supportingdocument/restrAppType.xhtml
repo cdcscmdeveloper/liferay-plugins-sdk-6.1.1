@@ -34,7 +34,7 @@
 				</p:selectOneMenu>
 				<p:message id="somAppTypeMsg" for="somAppType" display="icon" />
 			</p:column>		
-			<p:column width="5%" headerText="#{lbl['lbl.pm.action']}">
+			<p:column style="width:5%;text-align:center;" headerText="#{lbl['lbl.pm.action']}">
 	           <p:commandLink partialSubmit="true" 
 					process="@this" action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.restrApp,rowIndex)}"
 					update="dtAppType" >

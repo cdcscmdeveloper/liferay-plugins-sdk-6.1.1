@@ -27,7 +27,7 @@
 	            #{(organisation.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
 	         </p:column>
 			<p:column headerText="#{lbl['lbl.pm.organisation.action']}"
-				style="width :5%">
+				style="width :5%;text-align:center;">
 				<p:commandLink
 					action="#{organisationBackingBean.redirectToOrganisation(organisation.orgProfileId)}"
 					update="@form">
