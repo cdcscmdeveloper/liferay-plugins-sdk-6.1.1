@@ -7,6 +7,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
+import org.apache.log4j.Logger;
+
 import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -19,15 +21,11 @@ import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
-import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.trackingdiary.TrackingDiarySearchManagedBean;
-import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-
-import org.apache.log4j.Logger;
 
 /**
  * Backingbean for Tracking Diary Search
@@ -44,6 +42,7 @@ public class TrackingDiarySearchBackingBean extends BaseBackingBean<TrackingDiar
 	private IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel 	= new SearchTrackingDiaryPagingDataModel();
 
 	public String goToTrackingDiarySearch(String moduleCode, String docType,String docNo,Long docId,Long statusId) {
+		log.debug("TrackingDiarySearchBackingBean.goToTrackingDiarySearch() - "+moduleCode);
 		getManagedBean().setModuleCode(moduleCode);
 		getManagedBean().setDocType(docType);
 		getManagedBean().setDocNo(docNo);
@@ -80,6 +79,12 @@ public class TrackingDiarySearchBackingBean extends BaseBackingBean<TrackingDiar
 				BaseSearchFilterBean multiFilterBean2 = new SearchMultiFilterBean(searchFilterBean3, SearchCondition.CONDITION_OR.value(), searchFilterBean4);
 				BaseSearchFilterBean multiFilterBean3 = new SearchMultiFilterBean(multiFilterBean1, SearchCondition.CONDITION_OR.value(), multiFilterBean2);
 				searchBean.getDataFilterBeans().add(multiFilterBean3);
+			} else if(getManagedBean().getModuleCode().equalsIgnoreCase(ModuleCodeConst.CONTRACT_MANAGEMENT)) {
+				SearchFilterBean searchFilterBean1 = new SearchFilterBean("groupDocType", SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getDocType());
+				SearchFilterBean searchFilterBean2 = new SearchFilterBean("groupId", SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getDocId());
+				
+				BaseSearchFilterBean multiFilterBean1 = new SearchMultiFilterBean(searchFilterBean1, searchFilterBean2);			
+				searchBean.getDataFilterBeans().add(multiFilterBean1);
 			}
 			
 			reqDTO.setSearchBean(searchBean);
