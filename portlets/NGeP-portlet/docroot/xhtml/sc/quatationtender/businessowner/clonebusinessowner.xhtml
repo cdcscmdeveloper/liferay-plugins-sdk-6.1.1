@@ -229,8 +229,9 @@
 				</p:dataTable>
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}"
+						partialSubmit="true" process="@this, clonepnlid"
 						action="#{qTBusinessOwnerBackingBean.addCloneCommitteeMembersAction}"
-						update="businessownerId" />
+						update="businessownerId, clonepnlid" />
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					    onclick="cloneBusinessOwner.hide()" />
 				</div>
