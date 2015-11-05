@@ -12,7 +12,7 @@
 	</ui:define>
 	<ui:define name="contentSection">
 	
-		<p:dataTable value="#{flOrderBB.pendingDoDataModel}" lazy="true"
+		<p:dataTable value="#{flOrderBB.managedBean.pendingDoDataModel}" lazy="true"
 			var="pending" id="flPendingDoListDt" rowIndexVar="rowIndex" width="100%" rows="10">
 			<ac:paginator for="flPendingDoListDt" />
 			<p:column headerText="#{lbl['lbl.fl.dopending.order.number']}" style="text-align:center">

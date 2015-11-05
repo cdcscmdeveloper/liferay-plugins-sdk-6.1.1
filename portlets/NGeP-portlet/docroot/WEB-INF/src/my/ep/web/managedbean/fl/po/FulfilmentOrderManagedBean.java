@@ -7,7 +7,13 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.dto.fl.FulfilmentReqDTO;
+import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
@@ -22,8 +28,13 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
 
 // TODO: Auto-generated Javadoc
@@ -36,6 +47,8 @@ import org.primefaces.model.DualListModel;
 @ManagedBean(name = "flOrderManagedBean")
 @SessionScoped
 public class FulfilmentOrderManagedBean extends BaseManagedBean {
+	
+	private static Logger log = Logger.getLogger(FulfilmentOrderManagedBean.class);
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
@@ -209,6 +222,74 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
     
     private boolean hyperLinkPage = false;
     private List<PmUser> approverList;
+    
+    private IPagingDataModel<FlFulfilmentOrder> pendingDoDataModel = new PendingDoPagingDataModel();
+    
+    /**
+	 * @return the pendingDoDataModel
+	 */
+	public IPagingDataModel<FlFulfilmentOrder> getPendingDoDataModel() {
+		return pendingDoDataModel;
+	}
+
+	/**
+	 * @param pendingDoDataModel the pendingDoDataModel to set
+	 */
+	public void setPendingDoDataModel(
+			IPagingDataModel<FlFulfilmentOrder> pendingDoDataModel) {
+		this.pendingDoDataModel = pendingDoDataModel;
+	}
+	
+	/**
+	 * Gets the faces scopes.
+	 *
+	 * @return the faces scopes
+	 */
+	private FacesScopes getFacesScopes(){
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
+
+
+	/**
+	 * The Class PendingDoPagingDataModel.
+	 */
+	private class PendingDoPagingDataModel extends PagingDataModel<FlFulfilmentOrder> {
+		
+		/** The Constant serialVersionUID. */
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Instantiates a new pending do paging data model.
+		 */
+		public PendingDoPagingDataModel() {
+			super("flPendingDoListDt");
+		}
+		
+		/* (non-Javadoc)
+		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		 */
+		@Override
+		public ISearchResultBean<FlFulfilmentOrder> pageChangeListener(ISearchBean<FlFulfilmentOrder> searchBean) {
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}
+			try {
+				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+				reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+				searchBean.setUseEntityClass(true);
+				reqDTO.setPendingDoSearchBean(searchBean);
+				IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+				FulfilmentResDTO resDTO = orderSO.searchPendingDoList(reqDTO);
+				if(resDTO.isSuccessful()) {
+					return resDTO.getPendingDoResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+	}
 	
 	
 	/* (non-Javadoc)
