@@ -3,9 +3,12 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
-
-	<p:outputPanel id="opFacBankDet">
-		
+	<style type="text/css">
+		div[id$="factoringBankStatusId_panel"] .ui-selectonemenu-items-wrapper{
+	        width:110px;
+	     }
+	</style>
+	<p:outputPanel id="opFacBankDet">		
 		<p:dataTable id="financialaccid" var="financialacc" resizableColumns="true" style="width: 100% !important;"
 			value="#{financialOrgBackingBean.managedBean.financialOrg.pmFinancialAccs}"
 			rowKey="#{financialacc}" rowIndexVar="rowIndex">
@@ -96,7 +99,7 @@
 			<p:column width="14%" headerText="#{lbl['lbl.pm.financialorg.status']}" >
 				<p:selectOneMenu value="#{financialacc.recordStatusFlg}" style="width: 110px !important;"
 					disabled="#{financialacc.brandNew}" styleClass="ppDropDownWidthS" 
-					 required="true">
+					required="true" id="factoringBankStatusId">
 					<f:selectItems
 						value="#{financialOrgBackingBean.getStatusOptions()}" />
 				</p:selectOneMenu>
