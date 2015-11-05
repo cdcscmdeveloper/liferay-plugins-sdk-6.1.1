@@ -28,55 +28,57 @@
 		
 			<p:panel header="#{lbl['lbl.sm.search.supprofile']}" toggleable="true" id="searchSupplierProfilePanelId" 
 				rendered="#{supplierDataMaintenanceBackingBean.managedBean.displaySearchPage}">
+				<ui:include src="/xhtml/sm/shared/applViewOnlyPages/supplierApplicationSearchCriteria.xhtml" />
+			</p:panel>
 			
-			<ui:include src="/xhtml/sm/shared/applViewOnlyPages/supplierApplicationSearchCriteria.xhtml" />
-				
-			<p:dataTable var="smSupplier" widgetVar="smApplWidgetVar"
-				editable="false" lazy="true" rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				value="#{supplierDataMaintenanceBackingBean.managedBean.smSupplierDataModel}"
-				selection="#{supplierDataMaintenanceBackingBean.managedBean.selectedSupplier}"
-				rowKey="#{smSupplier}" rowIndexVar="index" id="supplierApplHistoryDtId">
-				<ac:paginator for="supplierApplHistoryDtId" />
-				
-				<p:column headerText="#{lbl['lbl.sm.companyname']}" style="width :25%;white-space : normal"
-					rendered="#{!supplierDataMaintenanceBackingBean.managedBean.supplierUser}">
-					<h:outputText value="#{smSupplier.companyName}" />
-				</p:column>
-				
-				<p:column headerText="#{lbl['lbl.sm.application.no']}">
-					<h:outputText value="#{smSupplier.smAppl.applNo}" />
-				</p:column>
-	
-				<p:column headerText="#{lbl['lbl.sm.applicationtype']}" style="width :25%;white-space : normal">
-					<h:outputText value="#{lbl['lbl.sm.appltype.newmof']}" rendered="#{smSupplier.smAppl.applType eq 'N'}" />
-					<h:outputText value="#{lbl['lbl.sm.appltype.bumiputera']}" rendered="#{smSupplier.smAppl.applType eq 'B'}" />
-					<h:outputText value="#{lbl['lbl.sm.appltype.categorycode']}" rendered="#{smSupplier.smAppl.applType eq 'A'}" />
-					<h:outputText value="#{lbl['lbl.sm.appltype.updateprofile']}" rendered="#{smSupplier.smAppl.applType eq 'U'}" />
-					<h:outputText value="#{lbl['lbl.sm.appltype.cancelmof']}" rendered="#{smSupplier.smAppl.applType eq 'C'}" />
-					<h:outputText value="#{lbl['lbl.sm.appltype.renewmof']}" rendered="#{smSupplier.smAppl.applType eq 'R'}" />
-				</p:column>
-				
-				<p:column headerText="#{lbl['lbl.rpt.supplierType']}">
-					<h:outputText value="#{lbl['lbl.sm.contractor']}" rendered="#{smSupplier.smAppl.supplierType eq 'K'}"/>
-					<h:outputText value="#{lbl['lbl.sm.consultant']}" rendered="#{smSupplier.smAppl.supplierType eq 'J'}"/>
-				</p:column>
-				
-				<p:column headerText="#{lbl['lbl.sm.regStatus']}">
-					<h:outputText value="#{smSupplier.smAppl.pmRegStatus.pmStatus.pmStatusDescs[0].statusName}" rendered="#{not empty smSupplier.smAppl.pmRegStatus}"/>
-					<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty smSupplier.smAppl.pmRegStatus}"/>
-				</p:column>
-				
-				<p:column headerText="#{lbl['lbl.sm.label.action']}">
-					<p:commandLink onstart="blockWidget.show()"
-						oncomplete="blockWidget.hide()"
-						action="#{supplierDataMaintenanceBackingBean.navigateToMaintenance(smSupplier.smAppl)}"
-						process="@this" partialSubmit="true" update="@form"
-						style="padding-right:5px;">
-						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
-					</p:commandLink>
-				</p:column>
-				
-			</p:dataTable>
+			<p:panel header="#{lbl['lbl.sm.results']}" toggleable="true" id="resultSupplierProfilePanelId">
+			
+				<p:dataTable var="smSupplier" widgetVar="smApplWidgetVar"
+					editable="false" lazy="true" rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					value="#{supplierDataMaintenanceBackingBean.managedBean.smSupplierDataModel}"
+					selection="#{supplierDataMaintenanceBackingBean.managedBean.selectedSupplier}"
+					rowKey="#{smSupplier}" rowIndexVar="index" id="supplierApplHistoryDtId">
+					<ac:paginator for="supplierApplHistoryDtId" />
+					
+					<p:column headerText="#{lbl['lbl.sm.companyname']}" style="width :25%;white-space : normal"
+						rendered="#{!supplierDataMaintenanceBackingBean.managedBean.supplierUser}">
+						<h:outputText value="#{smSupplier.companyName}" />
+					</p:column>
+					
+					<p:column headerText="#{lbl['lbl.sm.application.no']}">
+						<h:outputText value="#{smSupplier.smAppl.applNo}" />
+					</p:column>
+		
+					<p:column headerText="#{lbl['lbl.sm.applicationtype']}" style="width :25%;white-space : normal">
+						<h:outputText value="#{lbl['lbl.sm.appltype.newmof']}" rendered="#{smSupplier.smAppl.applType eq 'N'}" />
+						<h:outputText value="#{lbl['lbl.sm.appltype.bumiputera']}" rendered="#{smSupplier.smAppl.applType eq 'B'}" />
+						<h:outputText value="#{lbl['lbl.sm.appltype.categorycode']}" rendered="#{smSupplier.smAppl.applType eq 'A'}" />
+						<h:outputText value="#{lbl['lbl.sm.appltype.updateprofile']}" rendered="#{smSupplier.smAppl.applType eq 'U'}" />
+						<h:outputText value="#{lbl['lbl.sm.appltype.cancelmof']}" rendered="#{smSupplier.smAppl.applType eq 'C'}" />
+						<h:outputText value="#{lbl['lbl.sm.appltype.renewmof']}" rendered="#{smSupplier.smAppl.applType eq 'R'}" />
+					</p:column>
+					
+					<p:column headerText="#{lbl['lbl.rpt.supplierType']}">
+						<h:outputText value="#{lbl['lbl.sm.contractor']}" rendered="#{smSupplier.smAppl.supplierType eq 'K'}"/>
+						<h:outputText value="#{lbl['lbl.sm.consultant']}" rendered="#{smSupplier.smAppl.supplierType eq 'J'}"/>
+					</p:column>
+					
+					<p:column headerText="#{lbl['lbl.sm.regStatus']}">
+						<h:outputText value="#{smSupplier.smAppl.pmRegStatus.pmStatus.pmStatusDescs[0].statusName}" rendered="#{not empty smSupplier.smAppl.pmRegStatus}"/>
+						<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty smSupplier.smAppl.pmRegStatus}"/>
+					</p:column>
+					
+					<p:column headerText="#{lbl['lbl.sm.label.action']}">
+						<p:commandLink onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
+							action="#{supplierDataMaintenanceBackingBean.navigateToMaintenance(smSupplier.smAppl)}"
+							process="@this" partialSubmit="true" update="@form"
+							style="padding-right:5px;">
+							<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
+						</p:commandLink>
+					</p:column>
+					
+				</p:dataTable>
 				
 			</p:panel>
 			
