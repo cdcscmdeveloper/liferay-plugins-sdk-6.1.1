@@ -16,6 +16,7 @@
 				<portlet id="ctCancelCircular" />
 				<portlet id="ctPanelItemGroup" />
 				<portlet id="ctCircularMaintenance" />
+				<portlet id="ctCircularSearch" />
 			</category>		
 			<portlet id="ctReviewAmendment" />			
 			<portlet id="ctContractMaintenance" />
@@ -30,7 +31,7 @@
 			<portlet id="ctContractAmendment" />
 			<portlet id="ctChangeBankAccount" />
 			<portlet id="ctRequestTermination" />
-			 
+			<portlet id="ctContractSearch" />
 		</category>
 		
 		<!-- Profile Management - START -->

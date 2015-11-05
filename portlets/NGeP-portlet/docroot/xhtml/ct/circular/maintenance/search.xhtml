@@ -84,10 +84,11 @@
 						</p:menuitem>
 						<p:menuitem id="menuItemId4" value="#{lbl['lbl.ct.update']}" icon="ui-icon-update"
 							onstart="circularSearchBlk.show();" oncomplete="circularSearchBlk.hide();"
-							rendered="#{(circularBackingBean.isPanelAdmin() and (data.status.statusId == CtStatusConst.pqApproved or 
+							rendered="#{circularBackingBean.managedBean.trackingDiarySearch and 
+							         ((circularBackingBean.isPanelAdmin() and (data.status.statusId == CtStatusConst.pqApproved or 
 									((data.status.statusId == CtStatusConst.pqRejected or data.status.statusId == CtStatusConst.pqCancelled) and data.ctCircular.latestCircularVer != null))) or 
 									     circularBackingBean.isCentralContractAdmin() and (data.status.statusId == CtStatusConst.cqApproved or 
-									((data.status.statusId == CtStatusConst.cqRejected or data.status.statusId == CtStatusConst.cqCancelled) and data.ctCircular.latestCircularVer != null)) }"
+									((data.status.statusId == CtStatusConst.cqRejected or data.status.statusId == CtStatusConst.cqCancelled) and data.ctCircular.latestCircularVer != null))) }"
 							action="#{circularBackingBean.gotoPage('update', data.circularVerId)}">
 						</p:menuitem>
 					</p:menuButton>
