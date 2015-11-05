@@ -698,16 +698,16 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			flBB.initializeRemarkAndAttachement(resDTO.getFlStopInstr().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 			navgPage=NAV_TO_STOP_INSTRUCTION;
 		} else if(docType.equals(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE) || docType.equals(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE)){
+			DebitAdjustmentNoteBackingBean danBB = new DebitAdjustmentNoteBackingBean();
 			IAdjustmentSO adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IAdjustmentSO.class);
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			flReqDTO.setDanId(Long.valueOf(flDocId));
 			flReqDTO.setDocType(docType);
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(true);
+				danBB.getManagedBean().setButtonVal(buttonVal);
 			}
 			FulfilmentResDTO resDTO = adjustmentSO.retrieveAdjustmentById(flReqDTO);
-			
-			DebitAdjustmentNoteBackingBean danBB = new DebitAdjustmentNoteBackingBean();
 			danBB.getManagedBean().setSelectedTabIndex(0);
 			danBB.setAdjustmentNote(resDTO);
 			danBB.getManagedBean().setBackToPrevious(null);
