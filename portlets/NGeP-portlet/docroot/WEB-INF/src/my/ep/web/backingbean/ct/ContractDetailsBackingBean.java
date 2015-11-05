@@ -13,12 +13,10 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -156,13 +154,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	public ContractDetailsBackingBean() {
 		/* Initialization of button */
-		if(ctBB == null){
+		/*if(ctBB == null){
 			ctBB = new ContractBackingBean();
-		}
+		}*/
 		
 		if (getManagedBean().getAction() == null) {
 			getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
-			ctBB.getManagedBean().setContractVer(new CtContractVer());
+			//ctBB.getManagedBean().setContractVer(new CtContractVer());
 		}
 		if (getManagedBean().getUserMap().size() == 0) {
 			initializeApproverList();
@@ -364,6 +362,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	public void setValidateContractField(ContractResDTO resDTO) {
 		
+		ctBB = new ContractBackingBean();
 		ctBB.getManagedBean().setContractVer(resDTO.getCtContractVer());
 	          
 	    // Retrieve Agencies
@@ -451,7 +450,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    			break;
 	    		}
 	    	}
-	    	scheduleDate();
+	    	ctBB.scheduleDate();
 	    }
 	    if (ctBB.getManagedBean().getContractVer().getCtProgressivePayments() != null 
 	    		&& !ctBB.getManagedBean().getContractVer().getCtProgressivePayments().isEmpty()) {
@@ -462,7 +461,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    			break;
 	    		}
 			}
-	    	progressiveDate();
+	    	ctBB.progressiveDate();
 	    }
 	    // Retrieve Delivery Terms
 	    if (ctBB.getManagedBean().getContractVer().getCtContractValue().getDeliveryTermUom() == null) {
@@ -580,7 +579,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
          	ctBB.getManagedBean().getContractVer().getCtContractItems().addAll(ctBB.getManagedBean().getCtItemServiceList());
               
          	if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-         		scheduleProgressiveDate();
+         		ctBB.scheduleProgressiveDate();
          	}
          	reqDTO.setCtContract(ctBB.getManagedBean().getContractVer().getCtContract());
          	CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
@@ -1758,40 +1757,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	}
 	
 	/**
-	 * The method used to set the date of frequency sSchedule.
-     */
-	private void scheduleDate() {	
-		for (CtSchedule ctSchedules : ctBB.getManagedBean().getContractVer().getCtSchedules()) {			   
-			if (ctSchedules.getFromDate() != null && ctSchedules.getToDate() != null) {
-				String fromDate = dateFormat.format(ctSchedules.getFromDate());
-				ctSchedules.setStartMonth(fromDate.substring(3, 5));
-				ctSchedules.setStartYear(fromDate.substring(6,fromDate.length()));
-					   
-				String toDate = dateFormat.format(ctSchedules.getToDate());
-				ctSchedules.setEndMonth(toDate.substring(3, 5));
-				ctSchedules.setEndYear(toDate.substring(6, toDate.length()));
-			}
-		}
-	}
-	
-	/**
-	 * The method used to set the date of progressive payment.
-     */
-	private void progressiveDate() {	
-		for (CtProgressivePayment ctSchedules : ctBB.getManagedBean().getContractVer().getCtProgressivePayments()) {			   
-			if (ctSchedules.getFromDate() != null && ctSchedules.getToDate() != null) {
-			    String fromDate = dateFormat.format(ctSchedules.getFromDate());
-			    ctSchedules.setStartMonth(fromDate.substring(3, 5));
-				ctSchedules.setStartYear(fromDate.substring(6,fromDate.length()));
-			   
-				String toDate = dateFormat.format(ctSchedules.getToDate());
-				ctSchedules.setEndMonth(toDate.substring(3, 5));
-			    ctSchedules.setEndYear(toDate.substring(6, toDate.length()));
-			}
-		}
-	}
-	
-	/**
 	 * The method used to render the check box for company name
 	 * and supplier address if there are any updates from profile
 	 * management module.
@@ -1847,53 +1812,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
     	}
 	}
 	
-	/**
-	 * The method used to retrieve schedule or progressive 
-	 * from date and to date value.
-     */
-	private void scheduleProgressiveDate() {    	
-		if (ctBB.getManagedBean().getContractVer().getCtContract().isFrequencySchedule()) {
-			if (ctBB.getManagedBean().getContractVer().getCtSchedules() != null 
-					&& !ctBB.getManagedBean().getContractVer().getCtSchedules().isEmpty()) {
-				for (CtSchedule schedule : ctBB.getManagedBean().getContractVer().getCtSchedules()) {
-					if (schedule.getStartMonth() != null && schedule.getEndMonth() != null) {
-						Date d1 = new Date();
-						String localDate = dateFormat.format(d1);
-						String date = localDate.substring(0, 2);
-						String fromDate = date + "/" + schedule.getStartMonth() + "/"+ schedule.getStartYear();
-						String toDate = date + "/" + schedule.getEndMonth() + "/"+ schedule.getEndYear();
-						try {
-							schedule.setFromDate(dateFormat.parse(fromDate));
-							schedule.setToDate(dateFormat.parse(toDate));
-						} catch (ParseException e) {
-							e.printStackTrace();
-						}
-					}
-				}
-				ctBB.getManagedBean().getContractVer().setCtProgressivePayments(null);
-			}
-		} else {
-			if (ctBB.getManagedBean().getContractVer().getCtProgressivePayments() != null 
-					&& !ctBB.getManagedBean().getContractVer().getCtProgressivePayments().isEmpty()) {
-				for (CtProgressivePayment schedule : ctBB.getManagedBean().getContractVer().getCtProgressivePayments()) {
-					if (schedule.getStartMonth() != null && schedule.getEndMonth() != null) {
-						Date d1 = new Date();
-						String localDate = dateFormat.format(d1);
-						String date = localDate.substring(0, 2);
-						String fromDate = date + "/" + schedule.getStartMonth() + "/"+ schedule.getStartYear();
-						String toDate = date + "/" + schedule.getEndMonth() + "/"+ schedule.getEndYear();
-						try {
-							schedule.setFromDate(dateFormat.parse(fromDate));
-							schedule.setToDate(dateFormat.parse(toDate));
-						} catch (ParseException e) {
-							log.debug(e.getMessage());
-						}
-					}
-				}
-				ctBB.getManagedBean().getContractVer().setCtSchedules(null);
-			} 
-		}	
-	}
+	
 	
 	/**
 	 * The method used for generating a list of status 
