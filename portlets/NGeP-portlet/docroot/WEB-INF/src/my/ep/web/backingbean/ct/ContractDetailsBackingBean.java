@@ -154,13 +154,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	public ContractDetailsBackingBean() {
 		/* Initialization of button */
-		/*if(ctBB == null){
+		if(ctBB == null){
 			ctBB = new ContractBackingBean();
-		}*/
+		}
 		
 		if (getManagedBean().getAction() == null) {
 			getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
-			//ctBB.getManagedBean().setContractVer(new CtContractVer());
+			ctBB.getManagedBean().setContractVer(new CtContractVer());
 		}
 		if (getManagedBean().getUserMap().size() == 0) {
 			initializeApproverList();
