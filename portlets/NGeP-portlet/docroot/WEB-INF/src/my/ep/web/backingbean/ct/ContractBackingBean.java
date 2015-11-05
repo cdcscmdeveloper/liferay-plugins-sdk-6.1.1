@@ -17,6 +17,7 @@ import java.net.URLConnection;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -1699,8 +1700,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		 *         false, if the contract is without gst
 	     */
 		public boolean contractWithGst(){
-			if (isContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())
-		    		|| (getManagedBean().getContractVer().getCtContractAmount() != null 
+			boolean dateValue = false;
+			if(getManagedBean().getContractVer().getCtContractValue().getGstEffDate() != null){
+					dateValue = isContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate());
+		     }
+			if (dateValue || (getManagedBean().getContractVer().getCtContractAmount() != null 
 		    		       && getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null 
 		    		&& getManagedBean().getContractVer().getCtContractAmount().getGstAmount().doubleValue() != 0)) {
 		    	return true;
@@ -2125,10 +2129,91 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 			}
 			
+			/**
+			 * The method used to set the date of frequency sSchedule.
+		     */
+			public void scheduleDate() {	
+				for (CtSchedule ctSchedules : getManagedBean().getContractVer().getCtSchedules()) {			   
+					if (ctSchedules.getFromDate() != null && ctSchedules.getToDate() != null) {
+						String fromDate = dateFormat.format(ctSchedules.getFromDate());
+						ctSchedules.setStartMonth(fromDate.substring(3, 5));
+						ctSchedules.setStartYear(fromDate.substring(6,fromDate.length()));
+							   
+						String toDate = dateFormat.format(ctSchedules.getToDate());
+						ctSchedules.setEndMonth(toDate.substring(3, 5));
+						ctSchedules.setEndYear(toDate.substring(6, toDate.length()));
+					}
+				}
+			}
+			
+			/**
+			 * The method used to set the date of progressive payment.
+		     */
+			public void progressiveDate() {	
+				for (CtProgressivePayment ctSchedules : getManagedBean().getContractVer().getCtProgressivePayments()) {			   
+					if (ctSchedules.getFromDate() != null && ctSchedules.getToDate() != null) {
+					    String fromDate = dateFormat.format(ctSchedules.getFromDate());
+					    ctSchedules.setStartMonth(fromDate.substring(3, 5));
+						ctSchedules.setStartYear(fromDate.substring(6,fromDate.length()));
+					   
+						String toDate = dateFormat.format(ctSchedules.getToDate());
+						ctSchedules.setEndMonth(toDate.substring(3, 5));
+					    ctSchedules.setEndYear(toDate.substring(6, toDate.length()));
+					}
+				}
+			}
 			public boolean getValueFromAmendment(){
 				if(getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT)){
 					return true;
 				}
 				return false;
+			}
+			
+			/**
+			 * The method used to retrieve schedule or progressive 
+			 * from date and to date value.
+		     */
+			public void scheduleProgressiveDate() {    	
+				if (getManagedBean().getContractVer().getCtContract().isFrequencySchedule()) {
+					if (getManagedBean().getContractVer().getCtSchedules() != null 
+							&& !getManagedBean().getContractVer().getCtSchedules().isEmpty()) {
+						for (CtSchedule schedule : getManagedBean().getContractVer().getCtSchedules()) {
+							if (schedule.getStartMonth() != null && schedule.getEndMonth() != null) {
+								Date d1 = new Date();
+								String localDate = dateFormat.format(d1);
+								String date = localDate.substring(0, 2);
+								String fromDate = date + "/" + schedule.getStartMonth() + "/"+ schedule.getStartYear();
+								String toDate = date + "/" + schedule.getEndMonth() + "/"+ schedule.getEndYear();
+								try {
+									schedule.setFromDate(dateFormat.parse(fromDate));
+									schedule.setToDate(dateFormat.parse(toDate));
+								} catch (ParseException e) {
+									e.printStackTrace();
+								}
+							}
+						}
+						getManagedBean().getContractVer().setCtProgressivePayments(null);
+					}
+				} else {
+					if (getManagedBean().getContractVer().getCtProgressivePayments() != null 
+							&& !getManagedBean().getContractVer().getCtProgressivePayments().isEmpty()) {
+						for (CtProgressivePayment schedule : getManagedBean().getContractVer().getCtProgressivePayments()) {
+							if (schedule.getStartMonth() != null && schedule.getEndMonth() != null) {
+								Date d1 = new Date();
+								String localDate = dateFormat.format(d1);
+								String date = localDate.substring(0, 2);
+								String fromDate = date + "/" + schedule.getStartMonth() + "/"+ schedule.getStartYear();
+								String toDate = date + "/" + schedule.getEndMonth() + "/"+ schedule.getEndYear();
+								try {
+									schedule.setFromDate(dateFormat.parse(fromDate));
+									schedule.setToDate(dateFormat.parse(toDate));
+								} catch (ParseException e) {
+									log.debug(e.getMessage());
+								}
+							}
+						}
+						getManagedBean().getContractVer().setCtSchedules(null);
+					} 
+				}	
 			}
 }
