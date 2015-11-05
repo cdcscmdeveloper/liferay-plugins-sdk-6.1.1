@@ -32,6 +32,7 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private List<SmPersonnel> personnelList;
 	private List<SmPersonnel> softCertSelectList;
 	private List<SmPersonnel> softCertPayList;
+	private SmPersonnel softCertSelect;
 	private HashMap<Long, BigDecimal> paymentMap = new HashMap<Long, BigDecimal>();
 	private BigDecimal totalPaymentAmount;
 	private BigDecimal totalAmountBeforeGst;
@@ -53,6 +54,7 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private List<SoftcertUploadSuppDocVO> softcertUploadSuppDocList;
 	private SoftCertMaintenanceBackingBean softCertMaintenanceBackingBean = new SoftCertMaintenanceBackingBean();
 	private boolean applySoftcertForOthers;
+
 	@ManagedProperty(value = "#{spkiBackingBean}")
 	private SpkiBackingBean spkiBackingBean;
 
@@ -273,6 +275,14 @@ public class SoftCertManagedBean extends BaseManagedBean {
 
 	public void setApplySoftcertForOthers(boolean applySoftcertForOthers) {
 		this.applySoftcertForOthers = applySoftcertForOthers;
+	}
+
+	public SmPersonnel getSoftCertSelect() {
+		return softCertSelect;
+	}
+
+	public void setSoftCertSelect(SmPersonnel softCertSelect) {
+		this.softCertSelect = softCertSelect;
 	}
 
 }

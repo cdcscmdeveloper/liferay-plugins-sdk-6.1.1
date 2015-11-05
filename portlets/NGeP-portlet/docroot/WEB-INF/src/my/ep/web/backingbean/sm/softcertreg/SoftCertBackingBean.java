@@ -368,24 +368,11 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 *            e
 	 */
 	public void unSelectPersonnel(AjaxBehaviorEvent e) {
-		if (getManagedBean().getSoftCertSelectList() != null) {
-			Iterator<SmPersonnel> iterator = getManagedBean()
-					.getSoftCertSelectList().iterator();
-			while (iterator.hasNext()) {
-				SmPersonnel personnel = iterator.next();
-				if (personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_PENDING_REQ
-						&& personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_REJECTED
-						&& personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_REQ_FAILED
-						&& personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL) {
-					iterator.remove();
-				} else {
-					if (personnel.getPmUser() == null) {
-						iterator.remove();
-					}
-				}
-			}
+		getManagedBean().setSoftCertSelectList(new ArrayList<SmPersonnel>());
+		if (getManagedBean().getSoftCertSelect() != null) {
+			getManagedBean().getSoftCertSelectList().add(
+					getManagedBean().getSoftCertSelect());
 		}
-		addSupplierTmpInSelectionListIfNotSelected();
 	}
 
 	/**
@@ -605,9 +592,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	}
 
 	/**
-	 * Set list of personnel row whether need to be disabled from check box tick
-	 * and also to determine whether supplier already given free soft
-	 * certificate
+	 * Set list of personnel row whether need to be disabled from selected and
+	 * also to determine whether supplier already given free soft certificate
 	 * 
 	 * @param List
 	 *            <SmPersonnel> personnels
@@ -616,8 +602,19 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		Long supplierId = getManagedBean().getLoginUserPersonnelInfo()
 				.getSmAppl().getSmSupplier().getSupplierId();
 		getManagedBean().setAlreadyHadFreeSoftcert(false);
+		getManagedBean().setSoftCertSelectList(new ArrayList<SmPersonnel>());
 		for (SmPersonnel personnel : personnels) {
-			if (personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_PENDING_REQ
+			if (StringUtils.isNotBlank(personnel.getEpRole())
+					&& personnel.getEpRole().equals(
+							RoleCode.SUPPLIER_TEMP.value())
+					&& personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PENDING_REQ) {
+				personnel.setDisableRowSelection(false);
+				getManagedBean().setSupplierTmpPersonnel(personnel);
+				getManagedBean().setSoftCertSelect(personnel);
+				getManagedBean().getSoftCertSelectList().add(
+						getManagedBean().getSoftCertSelect());
+
+			} else if (personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_PENDING_REQ
 					&& personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_REJECTED
 					&& personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
 				personnel.setDisableRowSelection(true);
@@ -639,58 +636,24 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				}
 			}
 			setPersonnelSoftcertInformation(personnel);
-			setSupplierTempSelection(personnel);
 		}
+		setDisableRowSelectionIfSuppTmpNotRequestSoftCert(personnels);
 	}
 
 	/**
-	 * Add personnel with role SUPPLIER_TMP in selection list if needed during
-	 * tick or untick
-	 */
-	private void addSupplierTmpInSelectionListIfNotSelected() {
-		if (getManagedBean().getSupplierTmpPersonnel() != null) {
-			if (getManagedBean().getSoftCertSelectList().isEmpty()) {
-				getManagedBean().setSoftCertSelectList(
-						new ArrayList<SmPersonnel>());
-				getManagedBean().getSoftCertSelectList().add(
-						getManagedBean().getSupplierTmpPersonnel());
-			} else {
-				boolean alreadyHaveSupplierTmp = false;
-				for (SmPersonnel personnel : getManagedBean()
-						.getSoftCertSelectList()) {
-					if (personnel.getPersonnelId().compareTo(
-							getManagedBean().getSupplierTmpPersonnel()
-									.getPersonnelId()) == 0) {
-						alreadyHaveSupplierTmp = true;
-						break;
-					}
-				}
-				if (!alreadyHaveSupplierTmp) {
-					getManagedBean().getSoftCertSelectList().add(
-							getManagedBean().getSupplierTmpPersonnel());
-				}
-			}
-		}
-	}
-
-	/**
-	 * Set personnel auto select and disable tick for role SUPPLIER_TEMP
+	 * Disable row select for all personnel if SUPPLIER_TEMP haven't request for
+	 * softcert
 	 * 
-	 * @param SmPersonnel
-	 *            personnel
+	 * @param List
+	 *            <SmPersonnel> personnels
 	 */
-	private void setSupplierTempSelection(SmPersonnel personnel) {
-		if (StringUtils.isNotBlank(personnel.getEpRole())
-				&& personnel.getEpRole().equals(RoleCode.SUPPLIER_TEMP.value())
-				&& personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PENDING_REQ) {
-			if (getManagedBean().getSoftCertSelectList() == null
-					|| getManagedBean().getSoftCertSelectList().isEmpty()) {
-				getManagedBean().setSoftCertSelectList(
-						new ArrayList<SmPersonnel>());
+	private void setDisableRowSelectionIfSuppTmpNotRequestSoftCert(
+			List<SmPersonnel> personnels) {
+		if (getManagedBean().getSupplierTmpPersonnel() != null
+				&& getManagedBean().getSupplierTmpPersonnel().getPersonnelId() != null) {
+			for (SmPersonnel per : personnels) {
+				per.setDisableRowSelection(true);
 			}
-			personnel.setDisableRowSelection(true);
-			getManagedBean().getSoftCertSelectList().add(personnel);
-			getManagedBean().setSupplierTmpPersonnel(personnel);
 		}
 	}
 

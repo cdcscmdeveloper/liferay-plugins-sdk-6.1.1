@@ -25,28 +25,14 @@
 			<p:dataTable id="softCertPageDataModelId" rowKey="#{personnel}" 
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rowIndexVar="index" value="#{softCertBackingBean.managedBean.authorizedPersonnels}"
-				var="personnel" selection="#{softCertBackingBean.managedBean.softCertSelectList}">
+				var="personnel" selection="#{softCertBackingBean.managedBean.softCertSelect}" >
 				<ac:paginator for="softCertPageDataModelId" />
 				
-				<p:ajax event="rowSelect" listener="#{softCertBackingBean.unSelectPersonnel}"
-					update=":form:resultPanelId,@([id$=proceedBtnId])"></p:ajax>
-				<p:ajax event="rowUnselect"
-					listener="#{softCertBackingBean.unSelectPersonnel}"
-					update=":form:resultPanelId,@([id$=proceedBtnId])"></p:ajax>
-				<p:ajax event="rowSelectCheckbox"
-					listener="#{softCertBackingBean.unSelectPersonnel}"
-					update=":form:resultPanelId,@([id$=proceedBtnId])"></p:ajax>
-				<p:ajax event="rowUnselectCheckbox"
-					listener="#{softCertBackingBean.unSelectPersonnel}"
-					update=":form:resultPanelId,@([id$=proceedBtnId])"></p:ajax>
-				<p:ajax event="rowDblselect"
-					listener="#{softCertBackingBean.unSelectPersonnel}"
-					update=":form:resultPanelId,@([id$=proceedBtnId])"></p:ajax>
-				<p:ajax event="toggleSelect"
+				<p:ajax event="rowSelectRadio"
 					listener="#{softCertBackingBean.unSelectPersonnel}"
 					update=":form:resultPanelId,@([id$=proceedBtnId])"></p:ajax>
 					
-				<p:column selectionMode="multiple" style="width:2%" disabledSelection="#{personnel.disableRowSelection}" 
+				<p:column selectionMode="single" style="width:2%" disabledSelection="#{personnel.disableRowSelection}" 
 					rendered="#{not empty softCertBackingBean.managedBean.authorizedPersonnels}"/>
 
 				<p:column headerText="#{lbl['lbl.sm.userprofile.name']}" disabledSelection="#{personnel.disableRowSelection}">
