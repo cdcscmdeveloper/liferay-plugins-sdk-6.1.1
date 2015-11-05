@@ -43,7 +43,7 @@
 						partialSubmit="true" process="@this" update=":form:tt:sfieldset"
 						style="padding-right :5px;">
 						<p:graphicImage value="/css/images/design/seller_detail.png"
-							title="View Signatories" />
+							title="#{lbl['lbl.sm.view.signatories']} " />
 					</p:commandLink>
 					<p:commandLink partialSubmit="true" process="@this" onstart="blockWidget.show()"
 						action="#{viewSmApplBackingBean.assignSelBank(bankBean)}" oncomplete="bankDialog.show()"
@@ -54,40 +54,39 @@
 			</p:dataTable>
 			<p:spacer height="2px;" />
 			
-			<p:panel id="sfieldset"
-				header="#{lbl['lbl.sm.bankDtls.cheSignPanHdr']} 
-			#{viewSmApplBackingBean.managedBean.selectedSignatoryBankAcct.accountNo}">
-				<p:dataTable id="signatory" var="auth" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					value="#{viewSmApplBackingBean.managedBean.selectedSignatoryBankAcct.smChequeSignatories}"
-					rowKey="#{auth}" rowIndexVar="index">
-					<ac:paginator for="signatory" />
-
-					<p:column headerText="#{lbl['lbl.sm.bankDtls.signName']}">
-						<h:outputText value="#{auth.smPersonnel.name}" />
-					</p:column>
-
-					<p:column headerText="#{lbl['lbl.sm.bankDtls.signId']}">
-						<h:outputText value="#{auth.smPersonnel.identificationNo}" />
-					</p:column>
-
-					<p:column headerText="#{lbl['lbl.sm.bankDtls.signIsBumi']}">
-						<h:outputText value="#{lbl['lbl.txt.no']}"
-							rendered="#{auth.smPersonnel.bumiFlg eq 0}" />
-						<h:outputText value="#{lbl['lbl.txt.yes']}"
-							rendered="#{auth.smPersonnel.bumiFlg eq 1}" />
-					</p:column>
-
-					<p:column headerText="#{lbl['lbl.sm.bankDtls.signPos']}">
-						<h:outputText value="#{auth.smPersonnel.designation}" />
-					</p:column>
-				</p:dataTable>
-			</p:panel>
-			
-			<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
-						poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.bankRemark}" 
-						approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.bankRemark}" />
 		</p:outputPanel>
 	</p:panel>
+	
+	<p:panel id="sfieldset" header="#{lbl['lbl.sm.bankDtls.cheSignPanHdr']}#{viewSmApplBackingBean.managedBean.selectedSignatoryBankAcct.accountNo}">
+		<p:dataTable id="signatory" var="auth" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{viewSmApplBackingBean.managedBean.selectedSignatoryBankAcct.smChequeSignatories}"
+			rowKey="#{auth}" rowIndexVar="index">
+			<ac:paginator for="signatory" />
+
+			<p:column headerText="#{lbl['lbl.sm.bankDtls.signName']}">
+				<h:outputText value="#{auth.smPersonnel.name}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sm.bankDtls.signId']}">
+				<h:outputText value="#{auth.smPersonnel.identificationNo}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sm.bankDtls.signIsBumi']}">
+				<h:outputText value="#{lbl['lbl.txt.no']}"
+					rendered="#{auth.smPersonnel.bumiFlg eq 0}" />
+				<h:outputText value="#{lbl['lbl.txt.yes']}"
+					rendered="#{auth.smPersonnel.bumiFlg eq 1}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sm.bankDtls.signPos']}">
+				<h:outputText value="#{auth.smPersonnel.designation}" />
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	
+	<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
+		poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.bankRemark}" 
+		approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.bankRemark}" />
 	
 	<p:dialog style="max-height:700px;width:700px"
 		header="#{lbl['lbl.sm.bankDtls.bankDiaHdr']}" widgetVar="bankDialog"
