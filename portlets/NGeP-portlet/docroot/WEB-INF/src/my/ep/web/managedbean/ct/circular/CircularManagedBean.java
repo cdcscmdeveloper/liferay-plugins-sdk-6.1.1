@@ -38,6 +38,7 @@ public class CircularManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 	
 	private boolean readOnly = true;
+	private boolean trackingDiarySearch;
 	private String searchCircularNo;
 	private String searchCircularName;
 	private String searchPhysicalCircularNo;
@@ -212,6 +213,12 @@ public class CircularManagedBean extends BaseManagedBean {
 	}
 	public void setReadOnly(boolean readOnly) {
 		this.readOnly = readOnly;
+	}
+	public boolean isTrackingDiarySearch() {
+		return trackingDiarySearch;
+	}
+	public void setTrackingDiarySearch(boolean trackingDiarySearch) {
+		this.trackingDiarySearch = trackingDiarySearch;
 	}
 	
 }
