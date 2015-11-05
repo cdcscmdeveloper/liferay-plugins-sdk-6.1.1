@@ -17,6 +17,7 @@ import org.primefaces.model.TreeNode;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
+import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.ct.dtl.CtContractAmount;
@@ -107,6 +108,9 @@ public class ContractManagedBean extends BaseManagedBean {
 	 private String showItem;
 	 private List<CtContractItem> ctItemServiceList;
 	 private CtContractItem selectedServiceItem;
+	 
+	 private boolean disableAmendDetails;
+	 private CtCircularVer ctCircularVer;
 	
 	/**
 	 * @return the fileDirectory
@@ -803,6 +807,28 @@ public class ContractManagedBean extends BaseManagedBean {
 
 	public void setCtContractVer(CtContractVer ctContractVer) {
 		this.ctContractVer = ctContractVer;
+	}
+
+	public boolean isDisableAmendDetails() {
+		return disableAmendDetails;
+	}
+
+	public void setDisableAmendDetails(boolean disableAmendDetails) {
+		this.disableAmendDetails = disableAmendDetails;
+	}
+	
+	/**
+	 * @return the ctCircularVer
+	 */
+	public CtCircularVer getCtCircularVer() {
+		return ctCircularVer;
+	}
+
+	/**
+	 * @param ctCircularVer the ctCircularVer to set
+	 */
+	public void setCtCircularVer(CtCircularVer ctCircularVer) {
+		this.ctCircularVer = ctCircularVer;
 	}
 
 }
