@@ -201,6 +201,8 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	private PmOrgProfile ptj;
 	private PmOrgProfile ministry;
 	
+	private boolean trackingDiarySearch;
+	
 	/**
 	 * Gets the temp login id.
 	 *
@@ -384,6 +386,10 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
 		
 		for(VFlDocument docsearchResult:searchResultList){
+			if(isTrackingDiarySearch()) {
+				docsearchResult.setViewAction(true);
+				continue;
+			}
 				docsearchResult.setUpdateAction(false);
 				docsearchResult.setViewAction(false);
 				docsearchResult.setCancelAction(false);
@@ -1534,6 +1540,14 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	 */
 	public void setMinistry(PmOrgProfile ministry) {
 		this.ministry = ministry;
+	}
+
+	public boolean isTrackingDiarySearch() {
+		return trackingDiarySearch;
+	}
+
+	public void setTrackingDiarySearch(boolean trackingDiarySearch) {
+		this.trackingDiarySearch = trackingDiarySearch;
 	}
 
 }

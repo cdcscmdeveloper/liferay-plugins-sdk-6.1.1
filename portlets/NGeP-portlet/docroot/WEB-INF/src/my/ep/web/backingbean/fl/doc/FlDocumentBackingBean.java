@@ -167,16 +167,15 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	 * <p>remove managedBean from session.
 	 * <p>reset doc search criteria.
 	 */
-	public void preRenderDocSearch() {
+	public void preRenderDocSearch(boolean trackingDiarySearch) {
 		renewSesionObject();
 		defaultPtjAndMinistryValues();
 		resetSearchCriteria();
+		getManagedBean().setTrackingDiarySearch(trackingDiarySearch);
 		FacesContext fc=FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-		.handleNavigation(fc, null, "flDocSearch?faces-redirect=true");
-		
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "flDocSearch?faces-redirect=true");
 	}
-
+	
 	/**
 	 * Transaction Type is mandatory field.
 	 * <p>Document Type is mandatory field.
