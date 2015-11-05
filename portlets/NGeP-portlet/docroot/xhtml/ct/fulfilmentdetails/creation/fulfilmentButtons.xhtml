@@ -28,6 +28,14 @@
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 					</ui:repeat>
 				</c:if></td>
+			<c:if test='#{ctBackingBean.managedBean.viewContract}'>
+				<td style="text-align: right">
+					<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}" immediate="true"
+						action="#{trackingDiarySearchBackingBean.goToTrackingDiarySearch(ModuleCodeConstant.CONTRACT_MANAGEMENT,
+						ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode,ctBackingBean.managedBean.contractVer.ctContract.contractNo,
+						ctBackingBean.managedBean.contractVer.ctContract.contractId,ctBackingBean.managedBean.contractVer.status.statusId)}"  />
+				</td>
+			</c:if>				
 		</tr>
 	</table>
 </ui:composition>
