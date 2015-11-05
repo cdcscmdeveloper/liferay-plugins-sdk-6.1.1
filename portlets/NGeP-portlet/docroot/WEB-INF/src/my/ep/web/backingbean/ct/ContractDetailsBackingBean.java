@@ -258,9 +258,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * The method used to clear the previous viewed information before
 	 * rendering the contract search screen.
 	 */
-	public void preRenderSearch() {
+	public void preRenderSearch(boolean trackingDiarySearch) {
 		renewSesionObject();
 		defaultMinistryPtjSearchValue();
+		getManagedBean().setTrackingDiarySearch(trackingDiarySearch);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CONTRACT_MAINT_PAGE);
 	}
