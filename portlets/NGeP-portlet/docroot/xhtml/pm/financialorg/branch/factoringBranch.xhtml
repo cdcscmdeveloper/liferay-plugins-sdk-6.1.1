@@ -34,7 +34,7 @@
 					<f:selectItems value="#{financialOrgBackingBean.getStatusOptions()}" />
 				</p:selectOneMenu>
 			</p:column>
-			<p:column width="5%" headerText="#{lbl['lbl.pm.action']}">  
+			<p:column style="width:5%;text-align:center;" headerText="#{lbl['lbl.pm.action']}">  
       		    <p:commandLink action="#{financialOrgBackingBean.deleteFinancialBranch(financialbranch)}" disabled="#{!financialbranch.brandNew}"
       		    	partialSubmit="true" process="@this" update="financialbranchid, :form:factoringPanel">
 					<p:graphicImage value="/css/images/design/delete.png"/>

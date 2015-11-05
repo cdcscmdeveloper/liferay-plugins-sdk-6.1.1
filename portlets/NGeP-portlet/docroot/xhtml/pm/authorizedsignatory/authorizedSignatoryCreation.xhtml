@@ -87,8 +87,8 @@
 						partialSubmit="true" process="@this" update="@this" />
 				</p:selectOneMenu>
 			</p:column>
-			<p:column width="5%" headerText="#{lbl['lbl.pm.action']}"
-				style="width :5%">
+			<p:column headerText="#{lbl['lbl.pm.action']}"
+				style="width :5%;text-align:center;">
 				<p:commandLink
 					action="#{authorizedsignatoryBackingBean.deleteAuthorizedSignatory(certSignatory)}"
 					disabled="#{!certSignatory.brandNew}" partialSubmit="true"

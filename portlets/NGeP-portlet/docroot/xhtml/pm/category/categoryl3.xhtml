@@ -415,7 +415,7 @@
 						<h:outputText value="#{pmBasicCategory.basicCategoryL3desc}" />
 					</p:column>
 
-					<p:column width="7%" headerText="#{lbl['lbl.pm.action']}">
+					<p:column style="width:7%;text-align:center;" headerText="#{lbl['lbl.pm.action']}">
 						<p:commandLink partialSubmit="true" process="@this"
 							action="#{categoryBackingBean.deleteBasicCategory(pmBasicCategory)}"
 							update="groupdetailsId">
@@ -471,7 +471,7 @@
 							required="true" />
 					</p:column>
 
-					<p:column width="7%" headerText="#{lbl['lbl.pm.action']}">
+					<p:column style="width:7%;text-align:center;" headerText="#{lbl['lbl.pm.action']}">
 						<p:commandLink partialSubmit="true" process="@this"
 							action="#{categoryBackingBean.deletePmMachine(pmMachineCategory)}"
 							update="machineDetailsId">
@@ -796,7 +796,7 @@
 
 							</p:column>
 
-							<p:column width="7%" headerText="#{lbl['lbl.pm.action']}">
+							<p:column style="width:7%;text-align:center;" headerText="#{lbl['lbl.pm.action']}">
 								<p:commandLink partialSubmit="true" process="@this"
 									action="#{categoryBackingBean.deleteCategoryRestr(pmCategoryRestr)}"
 									update="dtlCategoryRestrId">

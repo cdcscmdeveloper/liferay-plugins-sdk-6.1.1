@@ -31,7 +31,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        <p:column headerText="#{lbl['lbl.pm.status']}">  
 	             #{plan.status !=null ? pPlanBackingBean.getStatusDescById(plan.status.statusId) : pPlanBackingBean.getDefaultStatusDesc(plan.planType)}
 	        </p:column>  
-	        <p:column headerText="#{lbl['lbl.pm.action']}">  
+	        <p:column headerText="#{lbl['lbl.pm.action']}" style="text-align:center;">  
       		   <p:commandLink action="#{pPlanBackingBean.redirectToMaintainPlan(plan.planId)}">
 					<p:graphicImage value="#{!plan.updatable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"/>
 				</p:commandLink>

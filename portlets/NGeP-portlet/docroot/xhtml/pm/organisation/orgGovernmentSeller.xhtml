@@ -11,7 +11,7 @@
 			rowKey="#{supplierBank}" rowIndexVar="rowIndex">
 
 			<ac:paginator for="govorgid" />
-			<p:column headerText="#{lbl['lbl.pm.financialorg.paymentbankname']}">
+			<p:column headerText="#{lbl['lbl.pm.financialorg.paymentbankname']}" style="width:45%">
 				<p:selectOneMenu value="#{supplierBank.pmFinancialOrg.financialOrgId}" id="finorgn" 
 					label="#{lbl['lbl.pm.financialorg.paymentbankname']}" disabled="#{!supplierBank.brandNew}" 
 					required="true" style="margin-bottom: 5px;" styleClass="ppDropDownWidthL">
@@ -24,7 +24,7 @@
 				</p:selectOneMenu>
 				<p:message id="finorgnMsg" for="finorgn" display="icon" />
 			</p:column>
-			<p:column >
+			<p:column style="width:35%" >
 			<f:facet name="header">
 			     	<h:outputText value="* " styleClass="mandatory" />
 			    	<h:outputText value="#{lbl['lbl.pm.financialorg.acnumber']}" />
@@ -35,7 +35,7 @@
 			<p:message id="finAccountNoMsg" for="finAccountNo" display="icon" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
+			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}" style="width:15%">
 				<p:selectOneMenu value="#{supplierBank.recordStatusFlg}" id="paymentBankStatusId" 
 					required="true" disabled="#{supplierBank.brandNew}" style="margin-bottom: 5px;">
 					<f:selectItems
@@ -43,7 +43,7 @@
 				</p:selectOneMenu>
 
 			</p:column>
-	        <p:column width="5%" headerText="#{lbl['lbl.pm.financialorg.action']}">
+	        <p:column style="width :5%;text-align:center;" headerText="#{lbl['lbl.pm.financialorg.action']}">
              <p:commandLink partialSubmit="true" disabled="#{!supplierBank.brandNew}"             	
 				process="@this" action="#{organisationBackingBean.deleteSupplierBank(rowIndex)}"
 				update="govorgid" >
@@ -73,17 +73,16 @@
 		</f:facet>
 		<p:dataTable id="supplierUsers" widgetVar="supplierUser"
 			value="#{organisationBackingBean.managedBean.smPersonnels}" var="personnel"
-			rowIndexVar="index" rowKey="#{personnel}"
-			>
+			rowIndexVar="index" rowKey="#{personnel}">
 			<ac:paginator for="supplierUsers"></ac:paginator>
 
-			<p:column headerText="#{lbl['lbl.pm.org.govseller.userdetails.loginid']}" style="width :15%">
+			<p:column headerText="#{lbl['lbl.pm.org.govseller.userdetails.loginid']}" style="width :25%">
 				<h:outputText value="#{personnel.pmUser.loginId}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.org.govseller.userdetails.username']}" style="width :40%">
+			<p:column headerText="#{lbl['lbl.pm.org.govseller.userdetails.username']}" style="width :50%">
 				<h:outputText value="#{personnel.pmUser.userName}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
+			<p:column style="width:15%" headerText="#{lbl['lbl.pm.financialorg.status']}">
 				<p:selectOneMenu value="#{personnel.recordStatusFlg}" id="supplierUserStatusId" 
 					required="true" disabled="#{personnel.brandNew}" style="margin-bottom: 5px;">
 					<f:selectItems
@@ -92,7 +91,7 @@
 				</p:selectOneMenu>
 
 			</p:column>
-			<p:column width="5%" headerText="#{lbl['lbl.pm.financialorg.action']}">
+			<p:column style="width :5%;text-align:center;" headerText="#{lbl['lbl.pm.financialorg.action']}">
              <p:commandLink partialSubmit="true"
 				process="@this" disabled="#{!personnel.brandNew}"
 				action="#{organisationBackingBean.deletePersonnel(index)}" update="supplierUsers">

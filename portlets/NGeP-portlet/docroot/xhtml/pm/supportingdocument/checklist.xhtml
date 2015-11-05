@@ -144,7 +144,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 							value="#{restrict.mandatory}">
 						</p:selectBooleanCheckbox> 
 			        </p:column>  
-			        <p:column width="5%" headerText="#{lbl['lbl.pm.action']}">
+			        <p:column style="width:5%;text-align:center;" headerText="#{lbl['lbl.pm.action']}">
 	          			 <p:commandLink partialSubmit="true" 
 							process="@this" action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.checklist,rowIndex)}"
 							update="dtProcureCat" >

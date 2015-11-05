@@ -25,7 +25,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        <p:column headerText="#{lbl['lbl.pm.status']}">  
 	            #{(document.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
 	        </p:column>  
-	        <p:column headerText="#{lbl['lbl.pm.action']}">  
+	        <p:column style="text-align:center;" headerText="#{lbl['lbl.pm.action']}">  
       		   <p:commandLink action="#{supportDocBackingBean.redirectToMaintainDoc(document.documentId)}" >
 					<p:graphicImage value="/css/images/design/edit.png"/>
 				</p:commandLink>
