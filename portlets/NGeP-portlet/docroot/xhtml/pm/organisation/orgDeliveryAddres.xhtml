@@ -26,17 +26,16 @@
 			 <p:column headerText="#{lbl['lbl.pm.address.address']}" style="white-space:normal;">
 				<h:outputText value="#{organisationBackingBean.getFullAddress(address.pmAddress)}" />
 			</p:column>
-				<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
+				<p:column style="width:8%" headerText="#{lbl['lbl.pm.financialorg.status']}">
 				<p:selectOneMenu styleClass="ppDropDownWidthS"  label="#{lbl['lbl.pm.financialorg.status']}"
 					disabled="#{address.brandNew}"
-					value="#{address.recordStatusFlg}" required="true"
-					style="width: 135px;margin-bottom: 5px;">
+					value="#{address.recordStatusFlg}" required="true">
 					<f:selectItems
 						value="#{organisationBackingBean.getStatusOptions()}" />
 				</p:selectOneMenu>
 
 			</p:column>
-			<p:column>
+			<p:column style="width:5%">
 				<p:commandLink oncomplete="addressPopup.show();"
 					actionListener="#{organisationBackingBean.editDeliveryAddress(address)}"
 					update="@([id$=deliveryAddressDialog])"								
