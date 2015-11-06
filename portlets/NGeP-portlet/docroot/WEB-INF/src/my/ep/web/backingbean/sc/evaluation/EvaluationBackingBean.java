@@ -10951,6 +10951,35 @@ public class EvaluationBackingBean extends
 				}
 
 			}
+			if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
+					.getManagedBean().getScQt().getEvaluationType())
+					&& ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+							.equalsIgnoreCase(this.getManagedBean()
+									.getCommitteeType())
+					&& null != this.getManagedBean().getScQt()
+							.getFecEvaluationCheck()
+					&& !this.getManagedBean().isReadOnly()) {
+				if (null != this.getManagedBean().getScQt()
+						.getFecEvaluationCheck()) {
+					evaluationSo = BusinessDelegate.getInstance()
+							.getServiceObject(
+									ModuleCodeConst.SUPPLIER_SELECTION,
+									IQTEvaluationSO.class);
+					EvaluationReqDTO checkListreqDTO = new EvaluationReqDTO();
+					checkListreqDTO.setQtId(this.getManagedBean().getScQt()
+							.getQtId());
+					checkListreqDTO
+							.setStatusUpdateChecklistType(SourcingConstants.FINANCIAL_DOCTYPE);
+					evaluationSo.retriveAllChecklist(checkListreqDTO);
+					EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+					this.getManagedBean().getScQt().setFecEvaluationCheck(null);
+					reqDTO.setScQt(this.getManagedBean().getScQt());
+					evalResDTO = evaluationSo.saveReportDtls(reqDTO);
+					this.getManagedBean().setScQt(evalResDTO.getScQt());
+
+				}
+
+			}
 		} finally {
 
 		}
