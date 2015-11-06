@@ -67,7 +67,7 @@
 				<p:column headerText="#{lbl['lbl.sm.equiComp.shrPerc']}">
 					<h:outputText value="#{equiBean.sharePercentage}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.label.action']}">
+				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 					<p:commandLink update=":form:tt:eqiCompDialog" partialSubmit="true"
 						process="@this"
 						action="#{backingBean.assignSelEquiCompany(equiBean)}">
