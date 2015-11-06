@@ -1902,41 +1902,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	}
 	
 	/**
-	 * The method used to check whether the contract is fulfilled the criteria
-	 * for amendment.
-	 * 
-	 * @return true, if the criteria is fulfilled
-	 *         false, if the criteria is not fulfilled
-     */
-	public boolean checkAmendmentAllow(VCtContract vCtContract) {
-		if (vCtContract.getCtContract().getLatestContractVer() != null) {			
-			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-			
-			ContractReqDTO reqDTO = new ContractReqDTO();
-			reqDTO.setContractVerId(vCtContract.getCtContract().getLatestContractVer().getContractVerId());
-			// Amendment always get the latest contract amount
-			reqDTO.setAsAtDate(vCtContract.getCtContract().getLatestContractVer().getCtContractValue().getExpDate());
-			
-			ContractResDTO resDTO = contractSO.retrieveContractAmount(reqDTO);			
-			double contractAmount = resDTO.getCtContractAmount().getContractAmount().doubleValue();
-			if (contractAmount <= ContractConst.CONTRACT_THRESHOLD_200k) {
-				return false;
-			} else if (contractAmount <= ContractConst.CONTRACT_THRESHOLD_500k) {
-				if (resDTO.getCtContractAmount().isAgreement()) {
-					return true;
-				} else {
-					return false;
-				}
-			} else {
-				return true;
-			}
-		} else {
-			return false;
-		}
-	}	
-	
-	/**
 	 * The method used to add a new performance bond record.
 	 * This method will generate a new record in performance bond
 	 * list, user allow to enter the bond details and attachment. 
@@ -2145,24 +2110,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		} finally {
 			 contractSO = null;
 			 amendmentSO = null;
-		}
-	}
-	
-	/**
-	 * The method used to check whether current process is contract creation.
-	 * 
-	 * @return true, if current process is contract creation
-	 *         false, if current process is not contract creation
-     */
-	public boolean contractCreationProcess() {
-		if (ctBB.getManagedBean().getContractVer().getStatus().getStatusId().longValue() == ContractStatusConst.FD_PENDING_SUBMISSION.longValue()
-				|| ctBB.getManagedBean().getContractVer().getStatus().getStatusId().longValue() == ContractStatusConst.FD_PENDING_CONTRACT_CREATION.longValue()
-				|| ctBB.getManagedBean().getContractVer().getStatus().getStatusId().longValue() == ContractStatusConst.FD_PENDING_APPROVAL.longValue()
-				|| ctBB.getManagedBean().getContractVer().getStatus().getStatusId().longValue() == ContractStatusConst.FD_PENDING_REVISION.longValue()
-				|| ctBB.getManagedBean().getContractVer().getStatus().getStatusId().longValue() == ContractStatusConst.FD_PENDING_REVISION_APPROVAL.longValue()) {
-			return true;
-		} else {
-			return false;
 		}
 	}
 	
