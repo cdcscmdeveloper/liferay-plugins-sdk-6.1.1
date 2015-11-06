@@ -73,7 +73,7 @@
 						value="#{backingBean.getFullAddress(assocBean.smAddress)}"
 						style="float : left" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.label.action']}">
+				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 					<p:commandLink update=":form:tt:asDisp"
 						action="#{backingBean.assignSelAssoc(assocBean)}"
 						partialSubmit="true" process="@this" 
