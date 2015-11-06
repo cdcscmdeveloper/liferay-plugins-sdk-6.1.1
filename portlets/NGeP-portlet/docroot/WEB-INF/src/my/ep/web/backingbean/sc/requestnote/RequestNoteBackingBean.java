@@ -18,6 +18,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
@@ -78,6 +79,8 @@ import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserGroup;
+import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -107,6 +110,7 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
@@ -133,6 +137,7 @@ import org.apache.velocity.VelocityContext;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DualListModel;
+import org.springframework.util.CollectionUtils;
 
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.User;
@@ -254,6 +259,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    requestNoteReqDTO.setEndLoaTaskId(getManagedBean().getEndLoaTaskId());
 	    requestNoteReqDTO.setEndLoaToken(getManagedBean().getEndLoaToken());
 	    requestNoteReqDTO.setEndLoaRN(getManagedBean().getEndLoaRN());
+	    requestNoteReqDTO.setBackupApproverList(getManagedBean().getBackupApprovers());
 
 	    Long prInqId = getManagedBean().getPrInquiryId();
 	    Long pidId = getManagedBean().getPurchaseInDefaultId();
@@ -409,7 +415,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				requestNote.getRemarks(),
 				ScRequestNoteRemark.class));
 
-		initialInformation(requestNote);
+		initializeApproverGroup();
+//		initialInformation(requestNote);
 	}
 	
 	/**
@@ -438,6 +445,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setEndLoaTaskId(getManagedBean().getEndLoaTaskId());
 			requestNoteReqDTO.setEndLoaToken(getManagedBean().getEndLoaToken());
 			requestNoteReqDTO.setEndLoaRN(getManagedBean().getEndLoaRN());
+			
+			requestNoteReqDTO.setBackupApproverList(getManagedBean().getBackupApprovers());
 
 			Object ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 			setUserDetails(requestNote);
@@ -694,7 +703,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 		
 		// approver validation
-		if(null == requestNote.getApprovalUsers() || requestNote.getApprovalUsers().isEmpty()){
+		if(null == requestNote.getApprover()){
 			throw new EpException(
 					MessageConst.ERROR_760315,
 					new String[] {ResourceBundleUtils.getMessage("lbl.sc.approver",
@@ -959,7 +968,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				requestNote.getRemarks(),
 				ScRequestNoteRemark.class));
 
-		initialInformation(requestNote);
+		initializeApproverGroup();
+//		initialInformation(requestNote);
 	}
 
 	/**
@@ -976,6 +986,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
 		try {
 			parseRequestNote(requestNote, outcome, Boolean.TRUE);
+			
+			requestNoteReqDTO.setBackupApproverList(getManagedBean().getBackupApprovers());
 
 			if(getManagedBean().getPrInquiryId() != null){
 				requestNoteReqDTO.setPurchaseInquiryId(getManagedBean().getPrInquiryId());
@@ -1851,8 +1863,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		if(requestNote.getCreatedUser() == null){
 			getManagedBean().setCreatedBy(getUserById(facesScopes.getUserSessionBean().getUserId()).getUserName());
 		}
+		initializeApproverGroup();
 		
-		initialInformation(requestNote);
+//		initialInformation(requestNote);
 		getManagedBean().setRequestNote(requestNote);
 	
 		try {
@@ -2235,22 +2248,25 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param requestNote the request note
 	 */
 	private void formApprover(ScRequestNote requestNote){
-		List<ScRequestNoteApprovalUser> results = new ArrayList<ScRequestNoteApprovalUser>();
-		List<PmUser> selectedApprovers = getManagedBean().getApprovalUsers().getTarget();
-		if (selectedApprovers != null && selectedApprovers.size() > 0) {
-			for (PmUser pmUser :  selectedApprovers) {
+		String selectedApprover = getManagedBean().getSelectedApprover();
+		if(selectedApprover != null) {
+			PmUserGroupUser approverUser = getManagedBean().getApproverMap().get(selectedApprover);
+			if(approverUser != null) {
 				ScRequestNoteApprovalUser approver = new ScRequestNoteApprovalUser();
-				approver.setPmUser(pmUser);
+				approver.setPmUser(approverUser.getPmUser());
 				approver.setRequestNote(requestNote);
-				results.add(approver);
-			}
-		} else{
-			requestNote.setApprovalUsers(null);
-		}
-
-		if(!results.isEmpty()){
-			requestNote.setApprovalUsers(results);
-		}
+				requestNote.setApprover(approverUser.getPmUser());
+				
+				for(String username : getManagedBean().getApproverList()) {
+					if(!username.equals(selectedApprover)) {
+						PmUserGroupUser backupGroupApprover = getManagedBean().getApproverMap().get(username);
+						if(backupGroupApprover != null) {
+							getManagedBean().getBackupApprovers().add(backupGroupApprover.getPmUser());
+						}
+					}
+				}
+			}  
+		} 
 	}
 
 	/**
@@ -2301,7 +2317,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			List<PmUser> availableApprover	=	userResDTO.getUserList();
 			List<PmUser> selectedApprover	=	new ArrayList<PmUser>();
 			
-			if ( requestNote != null && requestNote.getApprovalUsers().size() > 0) {
+			/*if ( requestNote != null && requestNote.getApprover()().size() > 0) {
 			   for (int i = 0; i < requestNote.getApprovalUsers().size(); i++) {
 				    selectedApprover.add(requestNote.getApprovalUsers().get(i).getPmUser());
 				    for (int j = 0; j < availableApprover.size(); j++) {
@@ -2316,7 +2332,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			} else {
 				approvalUsers = new DualListModel<PmUser>(availableApprover, selectedApprover);
 				getManagedBean().setApprovalUsers(approvalUsers);
-			}
+			}*/
 	   }		
 	
 	
@@ -3672,5 +3688,121 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public void setTextBeforeSign(String textBeforeSign) {
 		this.textBeforeSign = textBeforeSign;
 	}	
+	
+	/**
+	 * Method get approver group and approver List.
+	 */
+	public void initializeApproverGroup() {
+		RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();
+		RequestNoteResDTO resDTO = new RequestNoteResDTO();
+		try {
+			ScRequestNote requestNote = getManagedBean().getRequestNote();
+			if(requestNote != null && requestNote.getPmOrgProfile() != null){
+				Long orgProfileId = requestNote.getPmOrgProfile().getOrgProfileId();
+				reqDTO.setOrgProfileId(orgProfileId);
+				resDTO = getDirectPurchaseSO().retrieveGroupListByOrgId(reqDTO);
+
+				PmUserGroup pmUserGroup = new PmUserGroup();
+				getManagedBean().getRequestNote().setPmUserGroup(pmUserGroup);
+				if(getManagedBean().getUserGroupList() != null) {
+					getManagedBean().getUserGroupList().clear();
+				}
+				
+
+				//new
+				getManagedBean().setUserGroupList(resDTO.getUserGroupList());
+				if(resDTO.getUserGroupList().size()>0) {
+					List<PmUserGroupUser> firstPmUserGroup = null;
+					for(PmUserGroup userGroup : getManagedBean().getUserGroupList()) {
+						reqDTO.setGroupId(userGroup.getUserGroupId());
+						reqDTO.setOrgProfileId(orgProfileId);
+//						reqDTO.setApproverLimit(calculatesTotalOrderedAmt());
+						resDTO = getDirectPurchaseSO().retrieveApproverListByGroupId(reqDTO);
+						if(firstPmUserGroup == null) {
+							firstPmUserGroup = resDTO.getApproverGroupUserList();
+						}
+						if(!CollectionUtils.isEmpty(firstPmUserGroup)) {
+							for(PmUserGroupUser groupUser : firstPmUserGroup) {
+								getManagedBean().getApproverMap().put(groupUser.getPmUser().getUserName(), groupUser);//TODO CR doesn't have this. is this necessary
+							}
+						}
+					}
+					getManagedBean().getApproverList().clear();
+					
+					for(PmUserGroupUser groupUser : firstPmUserGroup) {
+						getManagedBean().getApproverList().add(groupUser.getPmUser().getUserName());
+					}
+					if(requestNote.getPmUserGroup().getUserGroupId() == null){
+						requestNote.getPmUserGroup().setUserGroupId(getManagedBean().getUserGroupList().get(0).getUserGroupId());
+					}
+					if(StringUtils.isEmpty(getManagedBean().getSelectedApprover()) && requestNote.getApprover() != null){
+						getManagedBean().setSelectedApprover(requestNote.getApprover().getUserName());
+					}
+				}
+			}
+			if(getManagedBean().getRequestNote().getPmUserGroup()!= null && getManagedBean().getRequestNote().getPmUserGroup().getUserGroupId() == null){
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						MessageUtils.getMessage(MessageConst.ERROR_745070, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		} finally {
+		}
+	}
+	
+	private void getApproverList(){
+		ScRequestNote requestNote = getManagedBean().getRequestNote();
+		if(requestNote == null || requestNote.getPmUserGroup() == null || 
+				requestNote.getPmUserGroup().getUserGroupId()== null) {
+			getManagedBean().getApproverList().clear();
+			return;
+		}		
+		RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();
+		RequestNoteResDTO resDTO = new RequestNoteResDTO();
+		reqDTO.setGroupId(requestNote.getPmUserGroup().getUserGroupId());
+		reqDTO.setOrgProfileId(requestNote.getPmOrgProfile().getOrgProfileId());
+//		reqDTO.setApproverLimit(calculatesTotalOrderedAmt());
+		try {
+			resDTO = getDirectPurchaseSO().retrieveApproverListByGroupId(reqDTO);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(getManagedBean().getApproverList() != null) {
+			getManagedBean().getApproverList().clear();
+		}
+		List<PmUserGroupUser> groupUsers = resDTO.getApproverGroupUserList();
+		if(!CollectionUtils.isEmpty(groupUsers)) {
+			for(PmUserGroupUser groupUser : groupUsers) {
+				getManagedBean().getApproverList().add(groupUser.getPmUser().getUserName());
+			}
+		}
+	}
+	
+	/**
+	 * Gets the user group dropdown.
+	 *
+	 * @return the user group dropdown
+	 */
+	public SelectItem[] getUserGroupDropdown() {
+		SelectItem[] items = null;
+		if(getManagedBean().getRequestNote().getPmUserGroup()==null) {
+			getManagedBean().getRequestNote().setPmUserGroup(new PmUserGroup());
+		}
+		items = new SelectItem[getManagedBean().getUserGroupList().size()];
+		int i = 0;
+		for(PmUserGroup userGroup : getManagedBean().getUserGroupList()) {
+			items[i++] = new SelectItem(userGroup.getUserGroupId(), userGroup.getGroupName());
+		}
+	    return items;
+	}
+	
+	/**
+	 * User group change listener.
+	 */
+	public void userGroupChangeListener() {
+		getApproverList();
+	}
 	
 }
