@@ -100,7 +100,7 @@
 					<p:column headerText="#{lbl['lbl.ct.contract.no']}" style="width:10%;"  styleClass="column-align-center">
 						<h:outputText value="#{data.contractNo}" style="float:left;" />
 					</p:column>					
-					<p:column headerText="#{lbl['lbl.ct.contract.title']}" styleClass="column-align-center"  style="width:21%; white-space:normal;">
+					<p:column headerText="#{lbl['lbl.ct.contract.title']}" styleClass="column-align-center"  style="width:15%; white-space:normal;">
 						<h:outputText value="#{data.contractName}"  style="float:left;" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}"  
@@ -167,15 +167,15 @@
 								     onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
 							   </p:menuitem>
 								        
-							  <p:menuitem id="menuItemId3" value="#{lbl['lbl.ct.amendment']}" icon="ui-icon-amendment" 
+							  <p:menuitem id="menuItemId3" value="#{lbl['lbl.ct.amendment.with.supplement']}" icon="ui-icon-amendment" 
 							        rendered="#{contractDetailsBackingBean.isContractAdmin() and data.fdStatus == 1 and data.ctContract.recordStatusFlg ==1 and
 					 		             data.ctContract.procurementMode.parameterCode!=ParameterConst.procurementModeDirectPurchase 
-                             	        and contractDetailsBackingBean.checkAmendmentAllow(data) and !contractDetailsBackingBean.managedBean.trackingDiarySearch}" 
+                             	        and data.agStatus == 1 and !contractDetailsBackingBean.managedBean.trackingDiarySearch}" 
 								    action="#{contractDetailsBackingBean.gotoAmendPage(data.ctContract.contractId, 'update')}"
 								    onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
 							  </p:menuitem>
 					 		 
-					 		<p:menuitem id="menuItemId4" value="#{lbl['lbl.ct.contract.update']}"  icon="ui-icon-update" 
+					 		<p:menuitem id="menuItemId4" value="#{(data.agStatus == 1) ? lbl['lbl.ct.amendment.without.supplement'] : lbl['lbl.ct.fulfilment.details.update']}"  icon="ui-icon-update" 
 					 		      rendered="#{contractDetailsBackingBean.isContractAdmin() and data.fdStatus == 1 and data.ctContract.recordStatusFlg==1
 					 		      			  and !contractDetailsBackingBean.managedBean.trackingDiarySearch }"  
                              	  action="#{contractDetailsBackingBean.gotoUpdatePage(data.ctContract.contractId)}"
