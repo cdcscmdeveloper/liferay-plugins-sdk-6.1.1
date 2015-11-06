@@ -15,17 +15,17 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<p:column headerText="#{lbl['lbl.pm.document.name']}"  style="width:50%; white-space:normal;">
 	            #{document.docName}
 	        </p:column> 
-           <p:column headerText="#{lbl['lbl.pm.supplier.zone']}" > 
+           <p:column style="width:10%;" headerText="#{lbl['lbl.pm.supplier.zone']}" > 
 		    	<h:outputText value="#{document.pmZone.zoneName}" rendered="#{document.docCategoryCode.parameterCode == ParameterConst.documentCategorySupplierDocument and !empty document.pmZone}" />
 		    	<h:outputText value="#{lbl['lbl.pm.supplier.zone.all']}" rendered="#{document.docCategoryCode.parameterCode == ParameterConst.documentCategorySupplierDocument and empty document.pmZone}" />
 	        </p:column>  
-	        <p:column headerText="#{lbl['lbl.pm.restriction']}">  
+	        <p:column style="width:10%;" headerText="#{lbl['lbl.pm.restriction']}">  
 	            #{(document.byCompType or document.byAppType or document.byCategory or document.byProcureCat) ? lbl['lbl.btn.yes'] : lbl['lbl.btn.no'] }
 	        </p:column> 
-	        <p:column headerText="#{lbl['lbl.pm.status']}">  
+	        <p:column style="width:10%;" headerText="#{lbl['lbl.pm.status']}">  
 	            #{(document.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
 	        </p:column>  
-	        <p:column style="text-align:center;" headerText="#{lbl['lbl.pm.action']}">  
+	        <p:column style="width:5%;text-align:center;" headerText="#{lbl['lbl.pm.action']}">  
       		   <p:commandLink action="#{supportDocBackingBean.redirectToMaintainDoc(document.documentId)}" >
 					<p:graphicImage value="/css/images/design/edit.png"/>
 				</p:commandLink>
