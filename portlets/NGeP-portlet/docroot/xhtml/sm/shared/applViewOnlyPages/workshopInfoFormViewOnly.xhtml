@@ -22,7 +22,7 @@
 				<h:outputText value="#{viewSmApplBackingBean.getFullAddress(work.smAddress)}"
 					style="float : left" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.action']}">
+			<p:column headerText="#{lbl['lbl.sm.action']}" style="text-align: center  !important;">
 				<p:commandLink partialSubmit="true" process="@this" onstart="blockWidget.show()"
 					action="#{viewSmApplBackingBean.assignSelWorkshop(work)}" oncomplete="workShopDialog.show()"
 					update=":form:tt:workShopDialog" style="padding-right:5px">
