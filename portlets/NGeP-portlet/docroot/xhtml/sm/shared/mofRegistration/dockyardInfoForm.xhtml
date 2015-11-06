@@ -15,7 +15,7 @@
 				selection="#{backingBean.managedBean.selectedDockyardFacilities}"
 				rowKey="#{doc}" rowIndexVar="index" id="docDt">
 				<ac:paginator for="docDt" />
-				<p:column selectionMode="multiple" width="5%" />
+				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.applDockyardFacilities}"/>
 
 				<p:column headerText="#{lbl['lbl.sm.dockyard.name']}">
 					<h:outputText value="#{doc.facilityName}" />
@@ -26,7 +26,7 @@
 					<h:outputText value="#{backingBean.getFullAddress(doc.smAddress)}"
 						style="float : left" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.action']}">
+				<p:column headerText="#{lbl['lbl.sm.action']}" style="text-align: center  !important;">
 					<p:commandLink action="#{backingBean.assignSelDockyard(doc)}"
 						process="@this" partialSubmit="true"
 						update=":form:tt:dockYardDialog" style="padding-right:5px"

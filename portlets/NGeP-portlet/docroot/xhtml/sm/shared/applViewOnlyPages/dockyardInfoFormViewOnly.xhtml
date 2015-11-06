@@ -21,7 +21,7 @@
 				<h:outputText value="#{viewSmApplBackingBean.getFullAddress(doc.smAddress)}"
 					style="float : left" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.action']}">
+			<p:column headerText="#{lbl['lbl.sm.action']}" style="text-align: center  !important;">
 				<p:commandLink action="#{viewSmApplBackingBean.assignSelDockyard(doc)}" oncomplete="dockYardDialog.show()"
 					process="@this" partialSubmit="true" onstart="blockWidget.show()"
 					update=":form:tt:dockYardDialog" style="padding-right:5px">

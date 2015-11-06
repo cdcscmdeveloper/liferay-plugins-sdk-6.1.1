@@ -380,7 +380,7 @@
 				</f:facet>
 				<h:outputText value="#{aq.fieldMajor}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.label.action']}">
+			<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 				<p:commandLink update=":form:tt:equiAcadInfo" onstart="blockWidget.show()"
 					action="#{viewSmApplBackingBean.assignSelShrHldrAcademics(aq)}"
 					partialSubmit="true" process="@this" oncomplete="equiAcadInfo.show()">
