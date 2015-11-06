@@ -1026,7 +1026,8 @@ public class PurchaseInquiryBackingBean extends
 							reqNoteBackingBean.getUserById(
 									requestNote.getCreatedBy()).getUserName());
 
-					reqNoteBackingBean.initialInformation(requestNote);
+					reqNoteBackingBean.initializeApproverGroup();
+//					reqNoteBackingBean.initialInformation(requestNote);
 
 					IStatusSO statusSO = null;
 					try {

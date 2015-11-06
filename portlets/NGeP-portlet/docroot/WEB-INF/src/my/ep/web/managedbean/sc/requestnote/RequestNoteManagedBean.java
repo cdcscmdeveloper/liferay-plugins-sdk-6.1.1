@@ -5,6 +5,7 @@ package my.ep.web.managedbean.sc.requestnote;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +27,8 @@ import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserGroup;
+import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -276,6 +279,24 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	
 	/** The prompt message. */
 	private String promptMessage;
+	
+	/** The approver List by group */
+	private List<String> approverList;
+	
+	/** The user group list. */
+	private List<PmUserGroup> userGroupList;
+	
+	/** The approver map. */
+	private HashMap<String, PmUserGroupUser> approverMap;
+	
+	/** The selected approver */
+	private String selectedApprover = "";
+	
+	/** The selected approver group */
+	private Long selectedGroup;
+	
+	/** The back up approvers */
+	private List<PmUser> backupApprovers;
 	
     /**
      * Instantiates a new request note managed bean.
@@ -1643,5 +1664,84 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setPromptMessage(String promptMessage) {
 		this.promptMessage = promptMessage;
+	}
+
+	/**
+	 * @return the approverList
+	 */
+	public List<String> getApproverList() {
+		if(approverList == null){
+			setApproverList(new ArrayList<String>());
+		}
+		return approverList;
+	}
+
+	/**
+	 * @param approverList the approverList to set
+	 */
+	public void setApproverList(List<String> approverList) {
+		this.approverList = approverList;
+	}
+
+	/**
+	 * @return the userGroupList
+	 */
+	public List<PmUserGroup> getUserGroupList() {
+		return userGroupList;
+	}
+
+	/**
+	 * @param userGroupList the userGroupList to set
+	 */
+	public void setUserGroupList(List<PmUserGroup> userGroupList) {
+		this.userGroupList = userGroupList;
+	}
+
+	/**
+	 * @return the approverMap
+	 */
+	public HashMap<String, PmUserGroupUser> getApproverMap() {
+		if(approverMap == null){
+			setApproverMap(new HashMap<String,PmUserGroupUser>());
+		}
+		return approverMap;
+	}
+
+	/**
+	 * @param approverMap the approverMap to set
+	 */
+	public void setApproverMap(HashMap<String, PmUserGroupUser> approverMap) {
+		this.approverMap = approverMap;
+	}
+
+	/**
+	 * @return the selectedApprover
+	 */
+	public String getSelectedApprover() {
+		return selectedApprover;
+	}
+
+	/**
+	 * @param selectedApprover the selectedApprover to set
+	 */
+	public void setSelectedApprover(String selectedApprover) {
+		this.selectedApprover = selectedApprover;
+	}
+
+	/**
+	 * @return the backupApprovers
+	 */
+	public List<PmUser> getBackupApprovers() {
+		if(backupApprovers == null) {
+			setBackupApprovers(new ArrayList<PmUser>());
+		}
+		return backupApprovers;
+	}
+
+	/**
+	 * @param backupApprovers the backupApprovers to set
+	 */
+	public void setBackupApprovers(List<PmUser> backupApprovers) {
+		this.backupApprovers = backupApprovers;
 	}
 }
