@@ -125,14 +125,12 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	private String itemTypeParameter;
 
 	public CodificationBackingBean() {
-		System.out
-		.println(".................CodificationBackingBean................");
+		
 		this.getManagedBean().setContractedItem(null);
 		CmUnspsc unspsc = new CmUnspsc();
 		unspsc.setUnspscTitle("item");
 		this.getManagedBean().getContractedItem().add(unspsc);
 		
-		System.out.println("this.getManagedBean().isRefreshPageNoFlag():"+this.getManagedBean().isRefreshPageNoFlag());
 		if(this.getManagedBean().isRefreshPageNoFlag()){
 			System.out.println("****************************");
 			PagingDataModel paging = new ExtensionSearchItemDataModel();
@@ -145,6 +143,11 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 	}
 
+	/**
+	 * This method is used to reset the value of UNSPSC Search
+	 * 
+	 */
+	
 	public String resetAction() {
 		log.info("In reset action...................");
 		titleFilterBean = null;
@@ -161,7 +164,10 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		return null;
 	}
 
-
+	/**
+	 * Extension Search Data Model for displaying list of extension records.
+	 * 
+	 */
 
 	private class ExtensionSearchItemDataModel extends
 	PagingDataModel<Object[]> {
@@ -250,18 +256,23 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		this.getManagedBean().setExtensionSearchcheckBoxAll(false);
 		this.getManagedBean().setCloneExtensionVOs(null);
 		this.getManagedBean().getExtensionSearchItemDataModel().reloadData();
-		//extensionSearchItemDataModel.reloadData();
-
 	}
 	
 	
+	/**
+	 * Extension Search for Keywords.
+	 * 
+	 */
 	public void keywordExtensionCodeSearch(){
 		
 		this.getManagedBean().getKeywordExtensionSearchItemDataModel().reloadData();
 		
 	}
 	
-	
+	/**
+	 * Extension Search for Assign Contracted Item Code.
+	 * 
+	 */
 	public void extensionCodeSearchForAssign() {
 	
 		extensionSearchItemDataModel.reloadData();
@@ -506,6 +517,11 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	public void setSearchDataModel(IPagingDataModel<CmUnspsc> searchDataModel) {
 		this.searchDataModel = searchDataModel;
 	}
+	
+	/**
+	 * UNSPSC Search Data Model for displaying list of UNSPSC records.
+	 * 
+	 */
 
 	public void unspscSearch() {
 		String unspscCode = getManagedBean().getAutoCompleteUnspscCode()
@@ -537,7 +553,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		searchItemDataModel.reloadData();
 	}
 
-	public void unspscSearch2() {
+	/*public void unspscSearch2() {
 
 		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>unspscSearch");
 
@@ -569,11 +585,17 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			codificationSO = null;
 		}
 	}
-
+*/
 	public String codificationSearch() {
 
 		return NAV_TO_CODIFICATION_VIEW;
 	}
+	
+	/**
+	 * Navigate to extension Search screen.
+	 * 
+	 * @return extensionSearch.xhtml
+	 */
 
 	public String goToExtensionSearch(CmUnspsc unspscObj) {
 		log.debug("**********goToExtensionSearch************");
@@ -667,6 +689,12 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 		return NAV_TO_EXTENSION_SEARCH + "?faces-redirect=true";
 	}
+	
+	/**
+	 * Navigate to assign itemcode for contracted item
+	 * 
+	 * @return assignProductCode.xhtml
+	 */
 
 	public String goToAssignUnspsc(VCmPendingCodifiedItem item) {
 		log.info("**********goToAssignUnspsc************");
@@ -690,6 +718,11 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		return NAV_TO_ASSIGN_PRODUCT_CODE;
 	}
 
+	/**
+	 * Navigate to UNSPSC request form.
+	 * 
+	 * @return unspscRequestForm.xhtml
+	 */
 	public String requestUNSPSCcode() {
 
 		return NAV_TO_UNSPSC_REQUEST_FORM;
@@ -725,6 +758,13 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		return NAV_TO_EDIT_EXTENSION;
 	}
 
+	/**
+	 * 
+	 * Recommend ItemCode to Supplier
+	 * 
+	 * @return reviewBeforeCreateTempCode.xhtml or reviewUnspscCode.xhtml
+	 */
+	
 	public String recommendItemCode(Object[] objects) {
 
 		UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
@@ -868,10 +908,12 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 	}
 
+	/**
+	 * clear value contracted pop up screen.
+	 * 
+	 */
 	public void clearContractedCodePopUp() {
 		
-
-
 		titleFilterBean = new SearchFilterBean(
 				SearchOperator.OPERATOR_LIKE.value());
 		this.getManagedBean().setTitleFilterBean(titleFilterBean);
@@ -883,6 +925,11 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		this.getManagedBean().setRequestExtCode(null);
 		
 	}
+	
+	/**
+	 * filter family code by segment code
+	 * 
+	 */
 
 	public void filterFamily() {
 		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
@@ -903,7 +950,11 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		}
 
 	}
-
+	
+	/**
+	 * filter class code by family code
+	 * 
+	 */
 	public void filterClass() {
 		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICodificationSO.class);
@@ -923,6 +974,11 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		}
 
 	}
+	
+	/**
+	 * filter commodity code by class code
+	 * 
+	 */
 
 	public void filterCommodity() {
 		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
@@ -996,6 +1052,10 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 	}
 
+	/**
+	 * Assign Item code for contracted item (service type)
+	 * 
+	 */
 	public String insertContractedItemCodeForService(CmUnspsc commodity) {
 		this.getManagedBean().setSelectedUNSPSCObj(commodity);
 		return insertContractedItemCode();
@@ -1038,23 +1098,11 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			}
 		} else {
 			extCodeVO = new ExtensionCodeVO();
-/*			CmUnspsc selectedCommodity = this.getManagedBean()
-					.getSelectedUNSPSCObj();
-			log.info("..................selectedCommodity.getUnspscCode()="
-					+ selectedCommodity.getUnspscCode());*/
-			// to search service in cmItem no need to extensions
 			extCodeVO.setTypeId(null);
 			extCodeVO.setBrandId(null);
 			extCodeVO.setMeasurementId(null);
 			extCodeVO.setColorId(null);
-			//
-			// extCodeVO.setTypeName(selectedCommodity.getCmType().get(0)
-			// .getTypeName());// should be NA
-			// extCodeVO.setBrandName(selectedCommodity.getCmBrand().get(0)
-			// .getBrandName());// should be NA
-			// extCodeVO.setMeasurementName(selectedCommodity.getCmMeasurement()
-			// .get(0).getMeasurementName());// should be NA
-			// extCodeVO.setColorName("N/A");
+
 		}
 		if (extCodeVO != null) {
 			this.getManagedBean().getExtensionVoList().add(extCodeVO);
