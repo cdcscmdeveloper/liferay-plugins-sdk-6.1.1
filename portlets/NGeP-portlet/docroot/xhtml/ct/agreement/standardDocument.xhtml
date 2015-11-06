@@ -132,7 +132,7 @@
 					<p:outputLabel value="#{lbl['lbl.txt.attachment']}" styleClass="required" />
 				<p:commandButton oncomplete="uploadAgDlg.show();return false;" 
 					rendered="#{!agreementBackingBean.managedBean.uploadStampedAndSignedPage}"
-					icon="iconAttachment" value="#{lbl['lbl.btn.upload']}" update=":form:uploadAgPg, uploadAgDlg" />
+					value="#{lbl['lbl.btn.upload']}" update=":form:uploadAgPg, uploadAgDlg" />
 				<h:outputLabel rendered="#{!agreementBackingBean.managedBean.uploadStampedAndSignedPage}" />
 				<h:commandLink value="#{agreementBackingBean.managedBean.ctAgreement.fileName}" 
 					style="float:left;" styleClass="blue_font"

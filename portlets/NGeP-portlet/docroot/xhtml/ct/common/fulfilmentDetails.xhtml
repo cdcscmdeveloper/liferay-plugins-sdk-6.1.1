@@ -237,7 +237,7 @@
 	   	     <p:outputLabel id="ap201FileId"   value="#{lbl['lbl.ct.upload.ap201']}"  
 	   	           styleClass="required"    rendered="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}"/>
 	   <h:panelGroup id="uploadAp201Pg">
-			 <p:commandButton oncomplete="uploadAp201Dlg.show();return false;" icon="iconAttachment" 
+			 <p:commandButton oncomplete="uploadAp201Dlg.show();return false;"
 				 update="uploadAp201Pg" value="#{lbl['lbl.bpm.choose.file']}" disabled="#{ctBackingBean.managedBean.viewContract}"/>	
 		     <h:commandLink value="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap201FileName}" 
 		          styleClass="blue_font" action="#{ctBackingBean.downloadFile(ctBackingBean.managedBean.contractVer.ctContractValue.ap201FilePath, ctBackingBean.managedBean.contractVer.ctContractValue.ap201FileName)}" />					

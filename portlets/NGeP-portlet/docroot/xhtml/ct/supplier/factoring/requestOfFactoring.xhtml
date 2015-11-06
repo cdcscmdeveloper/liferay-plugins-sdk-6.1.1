@@ -274,7 +274,7 @@
 					<h:panelGrid columns="5">
 						<p:commandButton 
 							oncomplete="uploadFactoringDlg.show();return false;"
-							value="#{lbl['lbl.btn.upload']}" icon="iconAttachment"  immediate="true"
+							value="#{lbl['lbl.btn.upload']}" immediate="true"
 							update="factoringPanel, uploadFactoringDlg"
 							actionListener="#{supplierBackingBean.setUploadIndexValue(2)}"
 							disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.isContractAdmin() or supplierBackingBean.isApproverRole()
@@ -298,7 +298,7 @@
 					<h:panelGrid columns="3">
 						<p:commandButton
 							oncomplete="uploadFactoringDlg.show();return false;"
-							value="#{lbl['lbl.btn.upload']}" icon="iconAttachment"
+							value="#{lbl['lbl.btn.upload']}"
 							actionListener="#{supplierBackingBean.setUploadIndexValue(3)}"
 							update="factoringPanel, uploadFactoringDlg"
 							disabled="#{supplierBackingBean.isContractAdmin() or  supplierBackingBean.isApproverRole() or supplierBackingBean.managedBean.viewOnly}" />

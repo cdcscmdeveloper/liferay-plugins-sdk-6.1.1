@@ -24,7 +24,7 @@
 				<h:panelGroup id="upAgrSignedPagePg">
 					<p:commandButton
 						oncomplete="upAgrSignedPageDlg.show();return false;"
-						icon="iconAttachment" update="upAgrSignedPagePg, upAgrSignedPageDlg"
+						update="upAgrSignedPagePg, upAgrSignedPageDlg"
 						value="#{lbl['lbl.btn.upload.doc']}" />
 					<h:commandLink
 						value="#{agreementBackingBean.managedBean.ctAgreement.signedPageName}"
@@ -41,7 +41,7 @@
 				<h:panelGroup id="upStampedPagePg">
 					<p:commandButton
 						oncomplete="upStampedPageDlg.show();return false;"
-						icon="iconAttachment" update="upStampedPagePg, upStampedPageDlg"
+						update="upStampedPagePg, upStampedPageDlg"
 						value="#{lbl['lbl.btn.upload.doc']}" />
 					<h:commandLink
 						value="#{agreementBackingBean.managedBean.ctAgreement.stampedPageName}"

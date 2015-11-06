@@ -72,7 +72,7 @@
 				</h:panelGrid>
 		             
 		 		<h:panelGroup id="uploadCircularPg">
-			  		<p:commandButton icon="iconAttachment" value="#{lbl['lbl.bpm.choose.file']}" update="uploadCircularPg, uploadCircularDlg"
+			  		<p:commandButton value="#{lbl['lbl.bpm.choose.file']}" update="uploadCircularPg, uploadCircularDlg"
 						action="#{centralContractBackingBean.setCentralDetailsValue()}" disabled="#{centralContractBackingBean.managedBean.viewContract}"/>	
 				 	<h:commandLink action="#{centralContractBackingBean.downloadFile(1)}" 
 				 		styleClass="blue_font" value="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" />					
