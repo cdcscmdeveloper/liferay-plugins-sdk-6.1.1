@@ -470,7 +470,7 @@
 							<h:outputText value=" (#{lbl['lbl.sm.contract.signer']})"
 								rendered="#{person.contractSignerFlg eq 1 and (backingBean.managedBean.newSupplierType ne 'J' and backingBean.managedBean.smAppl.supplierType ne 'J')}" />
 						</p:column>
-						<p:column headerText="#{lbl['lbl.sm.label.action']}"
+						<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;"
 							disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
 							or (person.prevApprovedDirector or person.prevApprovedEquityOwner)}">
 							<p:commandLink onstart="blockWidget.show()"
