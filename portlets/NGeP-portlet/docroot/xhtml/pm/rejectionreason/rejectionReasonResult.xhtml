@@ -12,7 +12,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		<p:dataTable id="dtRejectReasonResult" emptyMessage="#{lbl['lbl.pp.no.record.found']}" rows="10"
 			 rowIndexVar="rowIndex" value="#{rejectionReasonBackingBean.pmReasonDescDataModel}" var="reason"  lazy="true">
 			<ac:paginator for="dtRejectReasonResult" />
-	        <p:column headerText="#{lbl['lbl.pm.reason.code']}">  
+	        <p:column style="width:20%;" headerText="#{lbl['lbl.pm.reason.code']}">  
 		    	#{reason.pmReason.reasonCode}
 	        </p:column>  
 	        <p:column rendered="false" headerText="#{lbl['lbl.pm.reason.category']}" style="width:15%; white-space:normal;">  
@@ -21,10 +21,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	         <p:column headerText="#{lbl['lbl.pm.reason.desc']}" style="width:50%; white-space:normal;">  
 	            #{reason.reasonDesc}
 	        </p:column> 
-	        <p:column headerText="#{lbl['lbl.pm.status']}">  
+	        <p:column style="width:10%;" headerText="#{lbl['lbl.pm.status']}">  
 	            #{(reason.pmReason.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
 	        </p:column>  
-	        <p:column style="text-align:center;" headerText="#{lbl['lbl.pm.action']}">  
+	        <p:column style="width:5%;text-align:center;" headerText="#{lbl['lbl.pm.action']}">  
       		   <p:commandLink action="#{rejectionReasonBackingBean.redirectToMaintainReason(reason.pmReason.reasonId)}" >
 					<p:graphicImage value="/css/images/design/edit.png"/>
 				</p:commandLink>
