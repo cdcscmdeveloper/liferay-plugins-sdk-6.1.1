@@ -145,6 +145,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
+import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
 import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
 import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
 import my.ep.web.backingbean.sc.requestnote.RequestNoteBackingBean;
@@ -228,25 +229,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		if (MDC.get(LogKey.USER_ID) == null) {
 			MDC.put(LogKey.USER_ID, 1L);
 		}
-
-		/*
-		 * this.getManagedBean().setWishLists(null);
-		 * 
-		 * WishListReqDTO reqDTO = new WishListReqDTO();
-		 * 
-		 * WishListResDTO resDTO = wishListSO.retrieveWishList(reqDTO);
-		 * this.getManagedBean().setWishLists(resDTO.getWishLists());
-		 */
-
-		this.getManagedBean().setAdvanceSearchList(
-				new ArrayList<AdvanceSearchVO>());
-		for (int i = 0; i < 3; i++) {
-			this.getManagedBean().getAdvanceSearchList()
-			.add(new AdvanceSearchVO());
-		}
-
-
-
 	}
 
 	/**
@@ -404,6 +386,63 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								new FacesScopes().getUserLocale())));
 
 		return "../catalogue/preRenderCatalogueMaintenanceFile.xhtml";
+	}
+	
+	/**
+	 * Add new Item to supplier item
+	 * 
+	 * @return acknowledge.xhtml
+	 */
+	public String addToMaintenanceFile(){
+		
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
+				.getInstance().getServiceObject("cm", ICatalogueSO.class);
+		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
+				.getInstance().getServiceObject("cm", ICodificationSO.class);
+
+		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
+				.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+
+		
+		SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+		CodificationReqDTO codeReqDTO = new CodificationReqDTO();
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		supplierReqDTO.setUserId(pmUser.getUserId());
+
+		SupplierSearchResDTO smResDTO = supplierSearchSO
+				.retriveSupplierProfiles(supplierReqDTO);
+		
+		UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
+		
+		codeReqDTO.setExtensionCode(bb.getManagedBean().getRequestCode().getCmRecommendCodes().get(0).getUnspscCode());
+		
+
+		CodificationResDTO codeResDTO = codificationSO
+				.searchItemByItemCode(codeReqDTO);
+		
+		
+		CmSupplierItem supplierItem = new CmSupplierItem();
+
+		supplierItem.setCmItem(codeResDTO.getCmItem());
+		supplierItem.setItemStatus("D");
+		supplierItem.setSmSupplier(smResDTO.getResultBean()
+				.getResultList().get(0));
+		supplierItem.setRecordStatus(true);
+		reqDTO.getSupplierItem().add(supplierItem);
+		CatalogueResDTO resDTO = catalogueSO.saveSupplierItem(reqDTO);
+		
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		
+		facesContext.addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+						.getMessage(MessageConst.INFO_710007, new String[] { ""
+								+ 1 },
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+		
+		return "/xhtml/common/acknowledge.xhtml";
 	}
 
 	/**
@@ -686,6 +725,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 
 	}
+	
+	/**
+	 * This method is mark the draft items to delete Flag.
+	 * 
+	 * @param supplierItemId
+	 *           (long supplierItemId(mandatory))
+	 */
 
 	public void deleteSupplierItem(long supplierItemId) throws Exception {
 		log.info("Supplier item id to delete: " + supplierItemId);
@@ -744,12 +790,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			reqDTO.setSupplierId(resDTO.getSupplierItem().getSupplierId());
 
 			log.info("resDTO.getSupplierItem().getSupplierId()" + resDTO.getSupplierItem().getSupplierId());
-
-			/*CatalogueResDTO resDTO2 = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
-
-			log.info("size:" + resDTO2.getSupplierZoneLs().size());
-
-			this.getManagedBean().setSupplierZoneList(resDTO2.getSupplierZoneLs());*/
 
 			CmSupplierItem clone = (CmSupplierItem) SerializationUtils.clone(this.getManagedBean().getDraftSearchDataModel().getList().get(index));
 
@@ -4700,39 +4740,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.getManagedBean().getCartList().remove(index);
 	}
 
-	/*
-	 * @PostConstruct public void init() {
-	 * 
-	 * 
-	 * FacesContext fCtx = FacesContext.getCurrentInstance(); PortletRequest req
-	 * = (PortletRequest) fCtx.getExternalContext() .getRequest(); ThemeDisplay
-	 * themeDisplay = (ThemeDisplay) req .getAttribute(WebKeys.THEME_DISPLAY);
-	 * Layout layout = themeDisplay.getLayout();
-	 * log.info("layout.getFriendlyURL():"+layout.getFriendlyURL());
-	 * if (layout.getFriendlyURL().equals("/maintain-catalogue")) {
-	 * 
-	 * ICatalogueSO catalogueSO = (ICatalogueSO)
-	 * BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
-	 * 
-	 * ISearchBean<CmSupplierItem> searchBean = new
-	 * SearchBean<CmSupplierItem>();
-	 * statusFilterBean.setSearchField("itemStatus");
-	 * statusFilterBean.setSearchValue("D");
-	 * searchBean.getDataFilterBeans().add(statusFilterBean);
-	 * 
-	 * 
-	 * 
-	 * CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-	 * 
-	 * reqDTO.setSearchBean(searchBean); log.info("catalogueSO:"+catalogueSO);
-	 * 
-	 * CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
-	 * 
-	 * this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList());
-	 * 
-	 * } }
-	 */
-
 	/**
 	 * Publish approved items.
 	 * 
@@ -5261,6 +5268,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		
 
 	}
+	
+	/**
+	 * retrieve supplier item
+	 * 
+	 * @param catalogueSO
+	 * @param supplierId
+	 * @param itemStatus
+	 */
 
 	private void retrieveSupplierItemsBySupplierId(ICatalogueSO catalogueSO,
 			Long supplierId, String itemStatus) {
@@ -5317,149 +5332,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return "supplierItemView";
 	}
 
-	/*
-	 * public void retrieveStandardDistrict(int index){
-	 * 
-	 * 
-	 * 
-	 * log.info("**********retrieveDistrict******************");
-	 * 
-	 * DistrictReqDTO reqDTO = new DistrictReqDTO();
-	 * log.info("pricing.getPmState().getStateId()"
-	 * +this.getManagedBean
-	 * ().getSelectedMaintainItem().getzStdPrices().get(index
-	 * ).getPmState().getStateId());
-	 * 
-	 * 
-	 * reqDTO.setStateId(this.getManagedBean().getSelectedMaintainItem().
-	 * getzStdPrices().get(index).getPmState().getStateId()); IDistrictSO
-	 * districtSO = (IDistrictSO)
-	 * BusinessDelegate.getInstance().getServiceObject("pm",IDistrictSO.class);
-	 * 
-	 * DistrictResDTO resDTO = districtSO .retriveDistrictListByStateID(reqDTO);
-	 * System
-	 * .out.println("resDTO.getDistrictList()"+resDTO.getDistrictList().size());
-	 * this
-	 * .getManagedBean().getSelectedMaintainItem().getzStdPrices().get(index)
-	 * .setPmDistricts(resDTO.getDistrictList());
-	 * 
-	 * if(resDTO.getDistrictList()!=null && resDTO.getDistrictList().size()>0){
-	 * this
-	 * .getManagedBean().getSelectedMaintainItem().getzStdPrices().get(index)
-	 * .setDistrictDisabled(false); }else{
-	 * this.getManagedBean().getSelectedMaintainItem
-	 * ().getzStdPrices().get(index).setDistrictDisabled(true); }
-	 * 
-	 * 
-	 * 
-	 * }
-	 */
-
-	/*
-	 * public void disableState(){
-	 * 
-	 * log.info("**********disableState******************");
-	 * 
-	 * 
-	 * 
-	 * 
-	 * Long districtId =
-	 * this.getManagedBean().getSelectedMaintainItem().getCmZonalStandardPricing
-	 * ().getPmDistrict().getDistrictId();
-	 * log.info("districtId:"+districtId); if(districtId == 0 ){
-	 * this.getManagedBean
-	 * ().getSelectedMaintainItem().getCmZonalStandardPricing(
-	 * ).setStateDisabled(false); }else{
-	 * this.getManagedBean().getSelectedMaintainItem
-	 * ().getCmZonalStandardPricing().setStateDisabled(true); } }
-	 */
-
-	/*
-	 * public void retrievePromotionDistrict(int index){
-	 * 
-	 * log.info("**********retrievePromotionDistrict******************"
-	 * );
-	 * 
-	 * DistrictReqDTO reqDTO = new DistrictReqDTO();
-	 * log.info("pricing.getPmState().getStateId()"
-	 * +this.getManagedBean
-	 * ().getSelectedMaintainItem().getCmZonalPromotionPricings
-	 * ().get(index).getPmState().getStateId());
-	 * 
-	 * 
-	 * reqDTO.setStateId(this.getManagedBean().getSelectedMaintainItem().
-	 * getCmZonalPromotionPricings().get(index).getPmState().getStateId());
-	 * IDistrictSO districtSO = (IDistrictSO)
-	 * BusinessDelegate.getInstance().getServiceObject("pm",IDistrictSO.class);
-	 * 
-	 * DistrictResDTO resDTO = districtSO .retriveDistrictListByStateID(reqDTO);
-	 * System
-	 * .out.println("resDTO.getDistrictList()"+resDTO.getDistrictList().size());
-	 * this
-	 * .getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings
-	 * ().get(index).setPmDistricts(resDTO.getDistrictList());
-	 * 
-	 * if(resDTO.getDistrictList()!=null && resDTO.getDistrictList().size()>0){
-	 * this
-	 * .getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings
-	 * ().get(index).setDistrictDisabled(false); }else{
-	 * this.getManagedBean().getSelectedMaintainItem
-	 * ().getCmZonalPromotionPricings().get(index).setDistrictDisabled(true); }
-	 * 
-	 * }
-	 */
-
-	/*
-	 * public void retrieveTierDistrict(int index){
-	 * 
-	 * log.info("**********retrieveDistrict******************");
-	 * 
-	 * this.getManagedBean().setDistrictList(null); DistrictReqDTO reqDTO = new
-	 * DistrictReqDTO();
-	 * log.info("pricing.getPmState().getStateId()"+this
-	 * .getManagedBean
-	 * ().getSelectedMaintainItem().getCmZonalTierPricings().get(index
-	 * ).getPmState().getStateId());
-	 * 
-	 * 
-	 * reqDTO.setStateId(this.getManagedBean().getSelectedMaintainItem().
-	 * getCmZonalTierPricings().get(index).getPmState().getStateId());
-	 * IDistrictSO districtSO = (IDistrictSO)
-	 * BusinessDelegate.getInstance().getServiceObject("pm",IDistrictSO.class);
-	 * 
-	 * DistrictResDTO resDTO = districtSO .retriveDistrictListByStateID(reqDTO);
-	 * System
-	 * .out.println("resDTO.getDistrictList()"+resDTO.getDistrictList().size());
-	 * this
-	 * .getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().get
-	 * (index).setPmDistricts(resDTO.getDistrictList());
-	 * 
-	 * }
-	 */
-
-	/*
-	 * public void retrievePromotionTierDistrict(int index){
-	 * log.info("**********retrieveDistrict******************");
-	 * 
-	 * this.getManagedBean().setDistrictList(null); DistrictReqDTO reqDTO = new
-	 * DistrictReqDTO();
-	 * 
-	 * 
-	 * reqDTO.setStateId(this.getManagedBean().getSelectedMaintainItem().
-	 * getCmZonalPromotionTierPricings().get(index).getPmState().getStateId());
-	 * IDistrictSO districtSO = (IDistrictSO)
-	 * BusinessDelegate.getInstance().getServiceObject("pm",IDistrictSO.class);
-	 * 
-	 * DistrictResDTO resDTO = districtSO .retriveDistrictListByStateID(reqDTO);
-	 * System
-	 * .out.println("resDTO.getDistrictList()"+resDTO.getDistrictList().size());
-	 * this
-	 * .getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings
-	 * ().get(index).setPmDistricts(resDTO.getDistrictList());
-	 * 
-	 * }
-	 */
-
 	/**
 	 * adds catalogue remarks for item reject reason.
 	 */
@@ -5479,16 +5351,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 * @return String(codificationView)
 	 */
 	public String navigateToSearchCode() {
-		//		CodificationBackingBean bb = new CodificationBackingBean();
-		//		bb.titleFilterBean = null;
-		//		bb.codeFilterBean = null;
-		//
-		//		bb.titleFilterBean = new SearchFilterBean(
-		//				SearchOperator.OPERATOR_LIKE.value());
-		//		bb.codeFilterBean = new SearchFilterBean(
-		//				SearchOperator.OPERATOR_LIKE.value());
-		//		bb.setSearchDataModel(new SearchPagingDataModel());
-		//		this.getManagedBean().setAutoCompleteUnspscCode(null);
 		return "codificationView";
 
 	}
@@ -5500,20 +5362,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 */
 	public String cancelToSupplierItemSearch() {
 
-		/*log.info("testing");
-		ICatalogueSO a = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
-		CatalogueResDTO resDTO = new CatalogueResDTO();
-		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-
-		reqDTO.setSupplierItemId(new Long("261"));
-		resDTO = a.findActivePricing(reqDTO);
-
-		log.info("resDTO.getPriceLs().size() = "+resDTO.getPriceLs().size());
-		log.info("resDTO.getPriceLs().getPricingId() = "+resDTO.getPriceLs().get(0).getPricingId());
-		log.info("resDTO.getPriceLs().get(0).getCmSupplierZone().getSuppZoneId() = "+resDTO.getPriceLs().get(0).getCmSupplierZone().getSuppZoneId());
-		log.info("resDTO.getPriceLs().get(0).getCmSupplierZone().getCmSupplierZoneDtls().get(0).getSuppZoneDtlId() = "+resDTO.getPriceLs().get(0).getCmSupplierZone().getCmSupplierZoneDtls().get(0).getSuppZoneDtlId());
-
-		 */return "supplierItemView";
+		 return "supplierItemView";
 	}
 
 	/**
@@ -8534,20 +8383,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 * This method is used to Reset catalogue search.
 	 */
 	public void resetCatalogueSearch() {
-		//		this.getManagedBean().getItemNameFilterBean().setSearchValue("");
-		//		this.getManagedBean().getItemCodeFilterBean().setSearchValue("");
-		//		this.getManagedBean().getSupplierNameFilterBean().setSearchValue("");
-		//		this.getManagedBean().getBizRegNoFilterBean().setSearchValue("");
-		//		this.getManagedBean().getEpNoFilterBean().setSearchValue("");
-		//		this.getManagedBean().getMofNoFilterBean().setSearchValue("");
-		//		this.getManagedBean().getContractNoFilterBean().setSearchValue("");
-		//		this.getManagedBean().getCircularNoFilterBean().setSearchValue("");
-		//		this.getManagedBean().setStateId(new long[0]);
-		//		this.getManagedBean().setDistrictList(null);
-		//		this.getManagedBean().setSimpleQuoteFlag(true);
-		//		this.getManagedBean().setCtRequestList(null);
-		//		this.getManagedBean().setSelectViewItems(null);
-		//		this.getManagedBean().getSearchDataModel().resetData();
 
 		renewSesionObject();
 
@@ -8924,9 +8759,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	public String navigateToCatalogDetForTempSupp(int index) {
 
-
-
-
 		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + this.getManagedBean().getDraftSupplierItemList().get(index).getSupplierItemId());
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
 
@@ -8941,11 +8773,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			log.info("resDTO.getSupplierItem().getSupplierId()" + resDTO.getSupplierItem().getSupplierId());
 
-			/*CatalogueResDTO resDTO2 = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
-
-			log.info("size:" + resDTO2.getSupplierZoneLs().size());
-
-			this.getManagedBean().setSupplierZoneList(resDTO2.getSupplierZoneLs());*/
 
 			CmSupplierItem clone = (CmSupplierItem) SerializationUtils.clone(this.getManagedBean().getDraftSupplierItemList().get(index));
 
@@ -9216,9 +9043,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					.getUnspscTitle());
 		}
 
-
-
-
 		if (unspsc.getUnspscCode() != null) {
 
 			codeReqDTO.setUnspscId(unspsc
@@ -9287,8 +9111,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				CmColor colorObj = bb.searchColorObjByColorId(1L);//first record of table reserved for NA
 
 				codeReqDTO.setUnspscCode(unspsc.getUnspscCode());
-				//				codeResDTO = codificationSO.searchCommodityObj(codeReqDTO);
-
+			
 				CmItem item = new CmItem();
 				item.setCmUnspsc(unspsc);
 				item.setCmType(typeObj);
@@ -9311,10 +9134,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				CmKeyword keyword = new CmKeyword();
 
 				bb.getManagedBean().getKeywordItem().getCmKeyword().add(keyword);
-
-
 			}
-
 
 		}
 
@@ -9325,8 +9145,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return "maintainKeywordDetail?faces-redirect=true;";
 
 	}
-
-
+	/**
+	 * get Image size for validation
+	 * 
+	 * @return Integer size
+	 */
 
 	public Integer getImageSize(){
 
@@ -9337,6 +9160,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	}
 
 
+	/**
+	 * Invalid file size msg
+	 * 
+	 * @return String msg
+	 */
 	public String getInvalidFileSize(){
 
 		String msg = "";
@@ -9349,6 +9177,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	}
 
 
+	/**
+	 * clone selected supplier item for resolving datatable multiple selection issue.
+	 * 
+	 * @param i
+	 */
 
 	public void cloneItemSelection(int i){
 		
@@ -9427,6 +9260,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 
 
+	/**
+	 * clone select all supplier item for resolving datatable multiple selection issue.
+	 */
 	public void cloneAllSupplierItemSelection(){
 		this.getManagedBean().setRefreshDraftSuppItemFlag(true);
 		Map checkDuplicateAdd = new HashMap();
