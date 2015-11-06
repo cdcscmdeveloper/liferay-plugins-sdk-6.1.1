@@ -126,7 +126,7 @@
 					style="width :150px;white-space : normal">
 					<h:outputText value="#{branchBean.smPersonnel.name}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.label.action']}">
+				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 					<p:commandLink id="selectButton" update=":form:tt:banchDialog"
 						partialSubmit="true" process="@this"
 						action="#{backingBean.assignSelBranch(branchBean,index)}" 
