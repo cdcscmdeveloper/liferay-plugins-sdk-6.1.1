@@ -58,7 +58,7 @@
 					style="float: left;white-space: normal;" rendered="#{empty table.smApplDocFiles[0].fileName}"/>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.qt.nb.downloadDoc']}" style="width : 10%;">
+			<p:column headerText="#{lbl['lbl.qt.nb.downloadDoc']}" style="width : 10%;text-align: center  !important;">
 				<p:commandLink rendered="#{not empty table.smApplDocFiles[0].fileName}"
 					action="#{viewSmApplBackingBean.downloadSelectedSuppDoc(table.smApplDocFiles[0].fileName,table.smApplDocFiles[0].filePath)}"
 					update=":form" ajax="false">
