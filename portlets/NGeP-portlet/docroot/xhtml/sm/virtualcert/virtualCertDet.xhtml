@@ -34,13 +34,13 @@
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.virtual.cert.download']}">
-		
+					<div align="center">
 					<p:commandButton
 						value="#{lbl['lbl.sc.view.recent.price.view.btn']}"
 						ajax="false">
 						<p:fileDownload value="#{virtualCertBackingBean.printVirtualCert(mofCert)}" />
 					</p:commandButton>
-					
+					</div>
 				</p:column>
 			</p:dataTable>
 			
