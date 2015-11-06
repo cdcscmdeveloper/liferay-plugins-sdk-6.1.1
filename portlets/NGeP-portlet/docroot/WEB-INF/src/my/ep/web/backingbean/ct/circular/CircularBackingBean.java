@@ -84,10 +84,10 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	public SelectItem[] getCircularDocTypeValues() {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> circularDocTypes = new ArrayList<String>();
-		if(isCentralContractAdmin()) {
+		if(isAuditor() || isCentralContractAdmin()) {
 			circularDocTypes.add(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
 		}
-		if(isPanelAdmin()) {
+		if(isAuditor() || isPanelAdmin()) {
 			circularDocTypes.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
 		}
 		searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(), circularDocTypes));
@@ -382,4 +382,12 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 		return new FacesScopes().hasRoleUser(RoleCode.BPK_CCA.value());
 	}
 	
+	/**
+	 * Method used to check is it the login user have the Auditor Role
+	 * return @param boolean
+	 */
+    public boolean isAuditor() {
+    	return new FacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()) ||  
+    			new FacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value());
+    }
 }
