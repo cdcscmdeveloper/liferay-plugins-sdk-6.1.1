@@ -22,7 +22,7 @@
 				<h:outputText value="#{viewSmApplBackingBean.getFullAddress(fac.smAddress)}"
 					style="float : left" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.action']}">
+			<p:column headerText="#{lbl['lbl.sm.action']}" style="text-align: center  !important;">
 				<p:commandLink action="#{viewSmApplBackingBean.assignSelFactory(fac)}" onstart="blockWidget.show()"
 					partialSubmit="true" process="@this" oncomplete="factoryDialog.show()"
 					update=":form:tt:factoryDialog" style="padding-right:5px">
