@@ -614,6 +614,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				} else {
 					ContractAgreementReqDTO agreementReqDTO = new ContractAgreementReqDTO();
                     agreementReqDTO.setAgreementId(resDTO.getAgreement().getAgreementId());
+                    if (resDTO.getAgreement().getCtAmendment() == null) {
+                    	agreementReqDTO.setDocType(ParameterConst.DOCTYPE_AGREEMENT);
+                    } else {
+                    	agreementReqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);
+                    }
                     ContractAgreementResDTO agreementResDTO = agreementSO.retrieveAgreement(agreementReqDTO);
                     setCtAgreementDetails(agreementResDTO);
 				}
