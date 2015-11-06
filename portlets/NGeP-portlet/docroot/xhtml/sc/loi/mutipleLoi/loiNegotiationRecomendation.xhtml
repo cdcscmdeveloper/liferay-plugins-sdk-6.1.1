@@ -40,7 +40,8 @@
 								rows="10"
 								selection="#{lOIDetailBackingBean.managedBean.selectedSupplier}"
 								rowKey="#{supplierDtl}" rowIndexVar="rowIndex"
-								rendered="#{!lOIDetailBackingBean.managedBean.itemized}">
+								rendered="#{!lOIDetailBackingBean.managedBean.itemized}" 
+								emptyMessage="#{lbl['lbl.sc.loi.suppliers.rejected']}">
 					
 								<p:ajax event="rowSelectRadio" partialSubmit="true" process="@this"
 									update="@this" listener="#{lOIDetailBackingBean.awardSelectedSupplierAction()}"/>
@@ -113,7 +114,7 @@
 												supplierDtl.smMofAccount.recordStatusFlg eq DbValueConst.recordStatusActive}" />
 								</p:column>
 					
-								<p:column selectionMode="single" style="width:2%" 
+								<p:column selectionMode="single" style="width:2%;" 
 										  disabledSelection="#{!isPendingNegotiationStatus or 
 															  !(supplierDtl.scQtRecommendDtl.get(0).loiAwarded)}" />
 							</p:dataTable>
