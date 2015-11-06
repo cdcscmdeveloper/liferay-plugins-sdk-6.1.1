@@ -540,7 +540,7 @@
 			selection="#{backingBean.managedBean.selectedShrHldrJobFunctions}"
 			rowIndexVar="rowIndex" rowKey="#{jf}">
 			<ac:paginator for="shrJfdt" />
-			<p:column selectionMode="multiple" style="width:2%" />
+			<p:column selectionMode="multiple" style="width:1%" rendered="#{not empty backingBean.managedBean.selectedShareHolder.smStaffExperiences}"/>
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" 
@@ -588,7 +588,7 @@
 				</f:facet>
 				<p:commandLink update=":form:tt:equiJobFunctionInfo"
 					action="#{backingBean.assignSelShrHldrJobFunc(jf)}"
-					partialSubmit="true" process="@this">
+					partialSubmit="true" process="@this" style="text-align: center  !important;">
 					<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"
 						style="margin-right:2px;" />
 				</p:commandLink>
@@ -718,7 +718,7 @@
 				selection="#{backingBean.managedBean.selectedShrHldrRelatedCompanies}"
 				rowIndexVar="rowIndex" rowKey="#{relCom}">
 				<ac:paginator for="shrRelCom" />
-				<p:column selectionMode="multiple" style="width:2%" />
+				<p:column selectionMode="multiple" style="width:1%" rendered="#{not empty backingBean.managedBean.selectedShareHolder.smRelatedCompanies}"/>
 				<p:column>
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sm.assocCmpny.companyName']}" />
@@ -743,7 +743,7 @@
 					</f:facet>
 					<h:outputText value="#{relCom.mofNo}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.label.action']}">
+				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 					<p:commandLink update=":form:tt:equiRelCompInfo"
 						action="#{backingBean.assignSelShrHldrRelatedCompany(relCom)}"
 						partialSubmit="true" process="@this">
@@ -907,7 +907,7 @@
 				selection="#{backingBean.managedBean.selectedShrHldrProfBodies}"
 				rowKey="#{profBean}" rowIndexVar="index" id="shrProfDt">
 				<ac:paginator for="shrProfDt" />
-				<p:column selectionMode="multiple" width="5%" />
+				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.selectedShareHolder.smAssociationBodies}"/>
 				<p:column headerText="#{lbl['lbl.sm.profBody.profBody']}">
 					<h:outputText value="#{profBean.pmCertBody.bodyName}" />
 				</p:column>
@@ -920,7 +920,7 @@
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.label.action']}">
+				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 					<p:commandLink update=":form:tt:equiShrProfBeanInfo"
 						action="#{backingBean.assignSelShrHldrProfBody(profBean)}"
 						partialSubmit="true" process="@this">

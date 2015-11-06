@@ -180,7 +180,7 @@
 				</f:facet>
 				<h:outputText value="#{jf.toYear}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.label.action']}">
+			<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 				<p:commandLink update=":form:tt:equiJobFunctionInfo" onstart="blockWidget.show()"
 					action="#{viewSmApplBackingBean.assignSelShrHldrJobFunc(jf)}" oncomplete="equiJobFunctionInfo.show()" 
 					partialSubmit="true" process="@this">
@@ -253,7 +253,7 @@
 				</f:facet>
 				<h:outputText value="#{relCom.mofNo}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.label.action']}">
+			<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 				<p:commandLink update=":form:tt:equiRelCompInfo" onstart="blockWidget.show()"
 					action="#{viewSmApplBackingBean.assignSelShrHldrRelatedCompany(relCom)}" oncomplete="equiRelCompInfo.show()"
 					partialSubmit="true" process="@this">
@@ -312,7 +312,7 @@
 			<p:column headerText="#{lbl['lbl.sm.prof.enddate']}">
 				<ac:labelDate value="#{profBean.expDate}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.label.action']}">
+			<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 				<p:commandLink update=":form:tt:equiShrProfBeanInfo" onstart="blockWidget.show()"
 					action="#{viewSmApplBackingBean.assignSelShrHldrProfBody(profBean)}"
 					partialSubmit="true" process="@this" oncomplete="equiShrProfBeanInfo.show()">
