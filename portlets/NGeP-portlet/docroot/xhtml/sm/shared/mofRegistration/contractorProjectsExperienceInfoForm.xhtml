@@ -80,7 +80,7 @@
 					<h:outputText value="#{lbl['lbl.sm.projDtls.fail']}"
 						rendered="#{contrBean.progressStatus eq 'F'}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.label.action']}">
+				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 					<p:commandLink partialSubmit="true" process="@this"
 						action="#{backingBean.assignSelCompanyExperience(contrBean)}"
 						update=":form:tt:contDialog" 
