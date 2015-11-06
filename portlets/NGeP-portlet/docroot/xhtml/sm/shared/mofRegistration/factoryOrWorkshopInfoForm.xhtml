@@ -15,7 +15,7 @@
 				selection="#{backingBean.managedBean.selectedFactoryFacilities}"
 				rowKey="#{fac}" rowIndexVar="index" id="facDt">
 				<ac:paginator for="facDt" />
-				<p:column selectionMode="multiple" width="5%" />
+				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.applFactoryFacilities}"/>
 
 				<p:column headerText="#{lbl['lbl.sm.factory.name']}">
 					<h:outputText value="#{fac.facilityName}" />
@@ -25,7 +25,7 @@
 					<h:outputText value="#{backingBean.getFullAddress(fac.smAddress)}"
 						style="float : left" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.action']}">
+				<p:column headerText="#{lbl['lbl.sm.action']}" style="text-align: center  !important;">
 					<p:commandLink action="#{backingBean.assignSelFactory(fac)}"
 						partialSubmit="true" process="@this"
 						update=":form:tt:factoryDialog" style="padding-right:5px" 
