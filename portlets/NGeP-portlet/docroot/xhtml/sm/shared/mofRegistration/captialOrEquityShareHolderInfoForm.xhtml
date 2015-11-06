@@ -96,7 +96,7 @@
 						<h:outputText value="#{lbl['lbl.txt.no']}"
 							rendered="#{shareBean.bumiFlg eq 0}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.label.action']}"
+					<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;"
 						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner}">
 						<p:commandLink onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()"
