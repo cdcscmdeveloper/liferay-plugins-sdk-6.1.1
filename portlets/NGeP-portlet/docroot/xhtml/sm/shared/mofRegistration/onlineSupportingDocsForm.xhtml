@@ -71,7 +71,7 @@
 
 			<p:column headerText="#{lbl['lbl.btn.download']}"
 				rendered="#{backingBean.managedBean.hasSuppDocToDownload}"
-				style="width : 10%;">
+				style="width : 10%;text-align: center  !important;">
 				<h:outputText rendered="#{table.pmDocument.hardCopyReq}"
 					value="#{lbl['lbl.sm.suppDoc.document.hdrCpyOnly']}"
 					style="float: left;white-space: normal;" />
@@ -86,7 +86,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.btn.upload.doc']}"
-				style="width : 10%;">
+				style="width : 10%;text-align: center  !important;">
 
 				<p:commandLink oncomplete="attachDlg1.show();return false;"
 					rendered="#{!table.pmDocument.hardCopyReq}"

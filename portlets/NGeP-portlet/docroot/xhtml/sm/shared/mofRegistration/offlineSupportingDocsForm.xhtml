@@ -139,7 +139,7 @@
 
 				<p:column headerText="#{lbl['lbl.btn.download']}"
 					rendered="#{backingBean.managedBean.hasSuppDocToDownload}"
-					style="width : 95%;">
+					style="width : 5%;text-align: center  !important;">
 					<p:commandLink rendered="#{table.pmDocument.download}"
 						action="#{backingBean.downloadSignatureSuppDoc(table.pmDocument.filePath,table.pmDocument.filePath)}"
 						update=":form" ajax="false">
