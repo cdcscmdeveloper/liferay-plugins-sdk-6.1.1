@@ -446,6 +446,9 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 								docsearchResult.setRemoveFactoringAction(true);
 								docsearchResult.setViewAction(true);
 							}
+							if(orderInfo.isCoGSTR){
+								docsearchResult.setCoGSTR(orderInfo.isCoGSTR);
+							}
 					  }
 			     }
 		 }		
@@ -556,6 +559,9 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 									orderInfo.setFactored(resDTO.getFlOrder().isFactored());
 								}
 							}
+						}
+						if(resDTO.getFlOrder().getFlReliefOrders() != null && !resDTO.getFlOrder().getFlReliefOrders().isEmpty()){
+							orderInfo.setCoGSTR(true);
 						}
 					}
 				}
@@ -705,6 +711,8 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		
 		/** The factored. */
 		private boolean factored = false;
+		
+		private boolean isCoGSTR=false;
 
 		/**
 		 * Gets the role.
@@ -776,6 +784,20 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		 */
 		public void setOrderId(Long orderId) {
 			this.orderId = orderId;
+		}
+
+		/**
+		 * @return the isCoGSTR
+		 */
+		public boolean isCoGSTR() {
+			return isCoGSTR;
+		}
+
+		/**
+		 * @param isCoGSTR the isCoGSTR to set
+		 */
+		public void setCoGSTR(boolean isCoGSTR) {
+			this.isCoGSTR = isCoGSTR;
 		}
 		
 	}
