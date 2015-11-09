@@ -44,7 +44,7 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	private List<TplSpecQuestion> tplSpecQuestions;
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 	private ScQt scQt;
-	
+	private String docType;
 	
 	public TemplateSpecManagedBean() {
 	}
@@ -173,6 +173,20 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	 */
 	public void setScQt(ScQt scQt) {
 		this.scQt = scQt;
+	}
+
+	/**
+	 * @return the docType
+	 */
+	public String getDocType() {
+		return docType;
+	}
+
+	/**
+	 * @param docType the docType to set
+	 */
+	public void setDocType(String docType) {
+		this.docType = docType;
 	}
 
 }
