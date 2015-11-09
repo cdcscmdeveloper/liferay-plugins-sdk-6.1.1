@@ -49,7 +49,7 @@
 				selection="#{backingBean.managedBean.selectedMachineList}"
 				rowKey="#{macBean}" rowIndexVar="index" id="macDt">
 				<ac:paginator for="macDt" />
-				<p:column selectionMode="multiple" width="5%" />
+				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smMachineDtls}"/>
 
 				<p:column headerText="#{lbl['lbl.sm.machine.equiType']}">
 					<h:outputText value="#{macBean.machineType}" />
@@ -69,7 +69,7 @@
 				<p:column headerText="#{lbl['lbl.sm.machine.value']}">
 					<ac:labelAmount value="#{macBean.value}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.label.action']}">
+				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 					<p:commandLink partialSubmit="true" process="@this"
 						action="#{backingBean.assignSelMachinery(macBean)}"
 						update=":form:tt:equipmentDialog" style="padding-right:5px" 
