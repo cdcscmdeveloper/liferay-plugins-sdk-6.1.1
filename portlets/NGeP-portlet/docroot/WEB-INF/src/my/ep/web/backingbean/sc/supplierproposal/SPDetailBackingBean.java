@@ -34,6 +34,9 @@ import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import my.ep.biz.bean.sc.EncryptDataBean;
+import my.ep.biz.bean.sc.EncryptDataBean.EncryptColumnName;
+import my.ep.biz.bean.sc.EncryptDataBean.EncryptTableName;
 import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
@@ -373,7 +376,7 @@ public class SPDetailBackingBean extends
 	 * Method to submit the Supplier Proposal details
 	 */
 	public void submitSupplierProposal() {
-
+		
 		PmDigiSign digiSign = null;
 		debugLogger("submitSupplierProposal");
 
@@ -531,9 +534,38 @@ public class SPDetailBackingBean extends
 							.getScQtProposalScoreList(), contractAmountVal);
 
 			scQtProposalChecklist.setSubmitted(isCompleted);
-
-			List<ScQtPRPExperience> experiences = this.getManagedBean()
-					.getScQtPRPExperiences();
+			// Added to set null which is the data will be encrypted and save .
+			List<ScQtPRPExperience> experiences = this.getManagedBean().getScQtPRPExperiences();
+			List<List<EncryptDataBean>>	encryptExpriencList = new ArrayList<List<EncryptDataBean>>();	
+			for(ScQtPRPExperience experience:experiences){
+				List<EncryptDataBean> experienceBeanList = new ArrayList<EncryptDataBean>();
+				if(experience.getEffectiveDate() != null){
+					EncryptDataBean effDateBean = new EncryptDataBean();
+					effDateBean.setTableName(EncryptTableName.SC_QT_PRP_EXPERIENCE.toString());
+					effDateBean.setColumnName(EncryptColumnName.EFF_DATE.toString());
+					effDateBean.setValue(DateUtils.dateToString("dd-MMM-yyyy", experience.getEffectiveDate()));
+					experienceBeanList.add(effDateBean);
+					experience.setEffectiveDate(null);
+				}
+				if(experience.getExpiryDate() != null){
+					EncryptDataBean expDateBean = new EncryptDataBean();
+					expDateBean.setTableName(EncryptTableName.SC_QT_PRP_EXPERIENCE.toString());
+					expDateBean.setColumnName(EncryptColumnName.EXP_DATE.toString());
+					expDateBean.setValue(DateUtils.dateToString("dd-MMM-yyyy", experience.getExpiryDate()));
+					experienceBeanList.add(expDateBean);
+					experience.setExpiryDate(null);
+				}
+				if(experience.getContractAmt() != null){
+					EncryptDataBean ctAmtDateBean = new EncryptDataBean();
+					ctAmtDateBean.setTableName(EncryptTableName.SC_QT_PRP_EXPERIENCE.toString());
+					ctAmtDateBean.setColumnName(EncryptColumnName.CONTRACT_AMT.toString());
+					ctAmtDateBean.setValue(experience.getContractAmt().toString());
+					experienceBeanList.add(ctAmtDateBean);
+					experience.setExpiryDate(null);
+				}
+				encryptExpriencList.add(experienceBeanList);
+			}
+			
 			ScQtProposal proposal = this.getManagedBean().getQtProposalChecklist().getScQtProposal();
 			proposal.setScQtProposalExperiences(experiences);
 			scQtProposalChecklist.setProposalScore(proposalScores);
@@ -558,10 +590,27 @@ public class SPDetailBackingBean extends
 
 			if (resDTO.isSuccessful()) {
 				getManagedBean().setDeletedPRPExperiences(null);
-				this.getManagedBean().setScQtProposal(resDTO.getScQtProposal());
+				ScQtProposal qtProPosal = resDTO.getScQtProposal();
+				this.getManagedBean().setScQtProposal(qtProPosal);
 				debugLogger("*****save successfull*****"
 						+ resDTO.isSuccessful());
-				
+				// Encrypt the data &  Save 
+				List<ScQtPRPExperience> proposalExp = qtProPosal
+						.getScQtProposalExperiences();
+				if (CollectionUtils.isNotEmpty(encryptExpriencList)) {
+					List<EncryptDataBean> encryptencryptExpList = new ArrayList<EncryptDataBean>();
+					for (int i = 0; i < proposalExp.size(); i++) {
+						List<EncryptDataBean> encryptExpList = encryptExpriencList.get(i);
+						for (EncryptDataBean encryptExp : encryptExpList) {
+							encryptExp.setPkId(proposalExp.get(i).getQtPrpExperienceId());
+							encryptencryptExpList.add(encryptExp);
+						}
+					}
+					reqDTO.setScQt(this.getManagedBean().getQt());
+					reqDTO.setEncryptDataList(encryptencryptExpList);
+					proposalSO.saveEncryptedProposalCheckLists(reqDTO);
+				}
+					
 				getManagedBean().getFinanceCheckDetailsList().set(index,
 						resDTO.getProposalChecklist());
 				this.getManagedBean().setQtProposalChecklist(resDTO.getProposalChecklist());
@@ -575,6 +624,7 @@ public class SPDetailBackingBean extends
 				if(isCompleted == true){
 					loadDataFromCache();
 				}
+				
 				return navigatePrepareFinProposalCheckList(
 						scQtProposalChecklist, resDTO.getProposalChecklist(),
 						isCompleted);
@@ -689,6 +739,7 @@ public class SPDetailBackingBean extends
 
 			proposalReqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			proposalReqDTO.setAnswersList(answers);
+			proposalReqDTO.setScQt(getManagedBean().getQt());
 			proposalResDTO = proposalSO.saveSpecDetails(proposalReqDTO);
 		} finally {
 			proposalSO = null;
@@ -711,6 +762,7 @@ public class SPDetailBackingBean extends
 					.getTemplateSpecBean().getSpecAnswerList();
 			proposalReqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			proposalReqDTO.setAnswersList(answers);
+			proposalReqDTO.setScQt(this.getManagedBean().getQt());
 			proposalResDTO = proposalSO.saveSpecDetails(proposalReqDTO);
 		} finally {
 			proposalSO = null;
@@ -744,19 +796,59 @@ public class SPDetailBackingBean extends
 							.getScQtProposalScoreList(), totalCreditVal);
 
 			scQtProposalChecklist.setSubmitted(isCompleted);
-
-			scQtProposalChecklist.setScQtPRPCreditFacilities(this
-					.getManagedBean().getScQtPRPCreditFacilities());
+			List<ScQtPRPCreditFacility> creditFacilitiesList = this
+					.getManagedBean().getScQtPRPCreditFacilities();
+			
+			List<List<EncryptDataBean>>	encryptCrditFacilitesList = new ArrayList<List<EncryptDataBean>>();
+			for(ScQtPRPCreditFacility prpCreditFacilities : creditFacilitiesList){
+				
+				if (prpCreditFacilities.isRecordStatus()) {
+					List<EncryptDataBean> crditFacilitesList = new ArrayList<EncryptDataBean>();
+					if (prpCreditFacilities.getCreditAmt() != null) {
+						EncryptDataBean amtCredit = new EncryptDataBean();
+						amtCredit.setTableName(EncryptTableName.SC_QT_PRP_CREDIT_FACILITY
+										.toString());
+						amtCredit.setColumnName(EncryptColumnName.CREDIT_AMT.toString());
+						amtCredit.setValue(prpCreditFacilities.getCreditAmt().toString());
+						crditFacilitesList.add(amtCredit);
+						prpCreditFacilities.setCreditAmt(null);
+					}
+					if (prpCreditFacilities.getAmtPaid() != null) {
+						EncryptDataBean amtPaid = new EncryptDataBean();
+						amtPaid.setTableName(EncryptTableName.SC_QT_PRP_CREDIT_FACILITY.toString());
+						amtPaid.setColumnName(EncryptColumnName.AMT_PAID.toString());
+						amtPaid.setValue(prpCreditFacilities.getAmtPaid().toString());
+						crditFacilitesList.add(amtPaid);
+						prpCreditFacilities.setAmtPaid(null);
+					}
+					encryptCrditFacilitesList.add(crditFacilitesList);
+				}
+			}
+			scQtProposalChecklist.setScQtPRPCreditFacilities(creditFacilitiesList);
 			scQtProposalChecklist.setProposalScore(proposalScores);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			reqDTO.setTobeRemovedCreditFacilities(getManagedBean()
 					.getToBeDeletedCreditFacilities());
 			reqDTO.setQtId(getManagedBean().getQt().getQtId());
+		
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 
 			if (resDTO.isSuccessful()) {
 				getManagedBean().setToBeDeletedCreditFacilities(null);
-
+				List<ScQtPRPCreditFacility> creditFacility = resDTO.getProposalChecklist().getScQtPRPCreditFacilities();
+				if (CollectionUtils.isNotEmpty(encryptCrditFacilitesList)) {
+					List<EncryptDataBean> encryptCreditFecList = new ArrayList<EncryptDataBean>();
+					for (int i = 0; i < creditFacility.size(); i++) {
+						List<EncryptDataBean> encryptExpList = encryptCrditFacilitesList.get(i);
+						for (EncryptDataBean encryptExp : encryptExpList) {
+							encryptExp.setPkId(creditFacility.get(i).getCreditFacilityId());
+							encryptCreditFecList.add(encryptExp);
+						}
+					}
+					reqDTO.setScQt(this.getManagedBean().getQt());
+					reqDTO.setEncryptDataList(encryptCreditFecList);
+					proposalSO.saveEncryptedProposalCheckLists(reqDTO);
+				}
 				return navigatePrepareFinProposalCheckList(
 						scQtProposalChecklist, resDTO.getProposalChecklist(),
 						isCompleted);
@@ -795,9 +887,20 @@ public class SPDetailBackingBean extends
 							.getScQtProposalScoreList(), cashOnHandVal);
 
 			scQtProposalChecklist.setSubmitted(isCompleted);
-
-			scQtProposalChecklist.setScQtPRPCashOnHands(this.getManagedBean()
-					.getScQtPRPCashOnHand());
+			List<ScQtPRPCashOnHand>  qtPRPCashOnHandList = this.getManagedBean()
+					.getScQtPRPCashOnHand();
+			scQtProposalChecklist.setScQtPRPCashOnHands(qtPRPCashOnHandList);
+			
+			List<EncryptDataBean> cashOnHandList = new ArrayList<EncryptDataBean>();
+			for(ScQtPRPCashOnHand prpCashOnHand : qtPRPCashOnHandList){
+				if(prpCashOnHand.isRecordStatus() && prpCashOnHand.getCashAmount()!= null){
+					EncryptDataBean cashAmount = new EncryptDataBean ();
+					cashAmount.setTableName(EncryptTableName.SC_QT_PRP_CASH_ONHAND.toString());
+					cashAmount.setColumnName(EncryptColumnName.CASH_AMT.toString());
+					cashAmount.setValue(prpCashOnHand.getCashAmount().toString());
+					cashOnHandList.add(cashAmount);
+				}
+			}
 			scQtProposalChecklist.setProposalScore(proposalScores);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			reqDTO.setTobecashOnHand(getManagedBean()
@@ -807,7 +910,16 @@ public class SPDetailBackingBean extends
 
 			if (resDTO.isSuccessful()) {
 				getManagedBean().setToBeDeletedCashOnHandList(null);
-
+				List<ScQtPRPCashOnHand> prpCashOnHandList = resDTO
+						.getProposalChecklist().getScQtPRPCashOnHands();
+				// Encrypt the data &  Save 
+				for (int i = 0; i < prpCashOnHandList.size(); i++) {
+					cashOnHandList.get(i).setPkId(
+							prpCashOnHandList.get(i).getPrpCashOnHandId());
+				}
+				reqDTO.setScQt(getManagedBean().getQt());
+				reqDTO.setEncryptDataList(cashOnHandList);
+				proposalSO.saveEncryptedProposalCheckLists(reqDTO);
 				return navigatePrepareFinProposalCheckList(
 						scQtProposalChecklist, resDTO.getProposalChecklist(),
 						isCompleted);
@@ -845,15 +957,35 @@ public class SPDetailBackingBean extends
 							.getScQtProposalScoreList(), avgBankStatementVal);
 
 			scQtProposalChecklist.setSubmitted(isCompleted);
-
-			scQtProposalChecklist.setPrpBankStmts(this.getManagedBean()
-					.getScQtPRPBankStmts());
+			List<ScQtPRPBankStmt> prpBankStmts = this.getManagedBean().getScQtPRPBankStmts();
+			scQtProposalChecklist.setPrpBankStmts(prpBankStmts);
+			List<EncryptDataBean> encryptBankStmtList = new ArrayList<EncryptDataBean>();
+			for (ScQtPRPBankStmt prpBankStmt:prpBankStmts){
+				if(prpBankStmt.getBalanceAmt() != null){
+					EncryptDataBean balanceAmt = new EncryptDataBean();
+					balanceAmt.setTableName(EncryptTableName.SC_QT_PRP_BANK_STATEMENT.toString());
+					balanceAmt.setColumnName(EncryptColumnName.BALANCE_AMT.toString());
+					balanceAmt.setValue(prpBankStmt.getBalanceAmt().toString());
+					encryptBankStmtList.add(balanceAmt);
+					prpBankStmt.setBalanceAmt(null);
+				}
+			}
+				
 			scQtProposalChecklist.setProposalScore(proposalScores);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			reqDTO.setQtId(getManagedBean().getQt().getQtId());
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 
 			if (resDTO.isSuccessful()) {
+				// Encrypt the data &  Save 
+				List<ScQtPRPBankStmt> prpBankStmtsList = resDTO.getProposalChecklist().getPrpBankStmts();
+				for (int i = 0; i < prpBankStmtsList.size(); i++) {
+					encryptBankStmtList.get(i).setPkId(
+							prpBankStmtsList.get(i).getBankStmtId());
+				}
+				reqDTO.setScQt(this.getManagedBean().getQt());
+				reqDTO.setEncryptDataList(encryptBankStmtList);
+				proposalSO.saveEncryptedProposalCheckLists(reqDTO);
 				return navigatePrepareFinProposalCheckList(
 						scQtProposalChecklist, resDTO.getProposalChecklist(),
 						isCompleted);
@@ -933,6 +1065,29 @@ public class SPDetailBackingBean extends
 					scQtProposalChecklist);
 			List<ScQtPRPExperience> experiences = this.getManagedBean()
 					.getScQtPRPExperiences();
+			
+			// Added to set null which is the data will be encrypted and save .
+				List<List<EncryptDataBean>>	encryptExpriencList = new ArrayList<List<EncryptDataBean>>();	
+				 for(ScQtPRPExperience experience:experiences){
+					List<EncryptDataBean> experienceBeanList = new ArrayList<EncryptDataBean>();
+					if(experience.getEffectiveDate() != null){
+						EncryptDataBean effDateBean = new EncryptDataBean();
+						 effDateBean.setTableName(EncryptTableName.SC_QT_PRP_EXPERIENCE.toString());
+						 effDateBean.setColumnName(EncryptColumnName.EFF_DATE.toString());
+						 effDateBean.setValue(DateUtils.dateToString("dd-MMM-yyyy", experience.getEffectiveDate()));
+						 experienceBeanList.add(effDateBean);
+						  experience.setEffectiveDate(null);
+					}
+					if(experience.getExpiryDate() != null){
+						EncryptDataBean expDateBean = new EncryptDataBean();
+						expDateBean.setTableName(EncryptTableName.SC_QT_PRP_EXPERIENCE.toString());
+						expDateBean.setColumnName(EncryptColumnName.EXP_DATE.toString());
+						expDateBean.setValue(DateUtils.dateToString("dd-MMM-yyyy", experience.getExpiryDate()));
+						experienceBeanList.add(expDateBean);
+						experience.setExpiryDate(null);
+					 }
+					encryptExpriencList.add(experienceBeanList);
+				}
 			scQtProposalChecklist.setSubmitted(isCompleted);
 
 			// initial save list is empty
@@ -979,8 +1134,24 @@ public class SPDetailBackingBean extends
 
 			if (resDTO.isSuccessful()) {
 				getManagedBean().setDeletedPRPExperiences(null);
+				// Encrypt the data &  Save 
 				this.getManagedBean().setScQtProposal(resDTO.getScQtProposal());
-
+				List<ScQtPRPExperience> proposalExp = resDTO.getScQtProposal()
+						.getScQtProposalExperiences();
+				if (CollectionUtils.isNotEmpty(encryptExpriencList)) {
+					List<EncryptDataBean> encryptencryptExpList = new ArrayList<EncryptDataBean>();
+					for (int i = 0; i < proposalExp.size(); i++) {
+						List<EncryptDataBean> encryptExpList = encryptExpriencList.get(i);
+						for (EncryptDataBean encryptExp : encryptExpList) {
+							encryptExp.setPkId(proposalExp.get(i).getQtPrpExperienceId());
+							encryptencryptExpList.add(encryptExp);
+						}
+					}
+					reqDTO.setScQt(this.getManagedBean().getQt());
+					reqDTO.setEncryptDataList(encryptencryptExpList);
+					proposalSO.saveEncryptedProposalCheckLists(reqDTO);
+				} // End
+				
 				updateQtFinNdTechProposalCheckList(
 						finProposalChecklist,
 						resDTO.getTobeUpdateProposalChecklist(),
@@ -1032,7 +1203,23 @@ public class SPDetailBackingBean extends
 							.getScQtProposalScoreList(), acidRatioVal);
 
 			scQtProposalChecklist.setSubmitted(isCompleted);
-
+             List<EncryptDataBean> prpAssetLiabilityList = new ArrayList<EncryptDataBean>();
+             if(scQtPRPAssetLiability.getCurrentAssets() != null){
+            	 EncryptDataBean currentAsset = new EncryptDataBean ();
+            	 currentAsset.setTableName(EncryptTableName.SC_QT_PRP_ASSET_LIABILITY.toString());
+            	 currentAsset.setColumnName(EncryptColumnName.CURRENT_ASSETS.toString());
+            	 currentAsset.setValue(scQtPRPAssetLiability.getCurrentAssets().toString());
+            	 prpAssetLiabilityList.add(currentAsset);
+            	 scQtPRPAssetLiability.setCurrentAssets(null);
+             }
+             if(scQtPRPAssetLiability.getCurrentLiabilities() != null){
+            	 EncryptDataBean currentLiabilities = new EncryptDataBean ();
+            	 currentLiabilities.setTableName(EncryptTableName.SC_QT_PRP_ASSET_LIABILITY.toString());
+            	 currentLiabilities.setColumnName(EncryptColumnName.CURRENT_LIABILITIES.toString());
+            	 currentLiabilities.setValue(scQtPRPAssetLiability.getCurrentLiabilities().toString());
+            	 prpAssetLiabilityList.add(currentLiabilities);
+            	 scQtPRPAssetLiability.setCurrentLiabilities(null);
+             }
 			scQtProposalChecklist.setPrpAssetLiabilities(scQtPRPAssetLiability);
 			scQtProposalChecklist.setProposalScore(proposalScores);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
@@ -1040,6 +1227,15 @@ public class SPDetailBackingBean extends
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 
 			if (resDTO.isSuccessful()) {
+				// Encrypt the data &  Save 
+				for (EncryptDataBean prpAssetLiability : prpAssetLiabilityList) {
+					prpAssetLiability.setPkId(resDTO.getProposalChecklist()
+							.getPrpAssetLiabilities().getPrpAssesLiabilityId());
+				}
+				reqDTO.setScQt(this.getManagedBean().getQt());
+				reqDTO.setEncryptDataList(prpAssetLiabilityList);
+				proposalSO.saveEncryptedProposalCheckLists(reqDTO);
+				
 				return navigatePrepareFinProposalCheckList(
 						scQtProposalChecklist, resDTO.getProposalChecklist(),
 						isCompleted);
@@ -1470,14 +1666,14 @@ public class SPDetailBackingBean extends
 		TemplateSpecBean templateSpecBean = getManagedBean()
 				.getTemplateSpecBean();
 		TplSpecMaster specMaster = scQtDoc.getTplSpecMaster();
-
+		
 		templateSpecBean.setSpecMaster(specMaster);
 		templateSpecBean.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
 
 		SmSupplier smSupplier = new SmSupplier();
 		smSupplier.setSupplierId(getManagedBean().getSupplierId());
 		templateSpecBean.setSupplier(smSupplier);
-
+		templateSpecBackingBean.getManagedBean().setScQt(this.getManagedBean().getQt());
 		templateSpecBackingBean.retrieveTemplateSpecMaster(templateSpecBean);
 
 		return NAV_TO_TECHNICAL_STANDARD_PRODUCT_PAGE;
@@ -1509,6 +1705,7 @@ public class SPDetailBackingBean extends
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			reqDTO.setDocDefinationKey(scQtProposalChecklist.getScQtCheckList()
 					.getPmDocument().getDocDefinitionKey());
+			reqDTO.setScQt(this.getManagedBean().getQt());
 			ProposalResDTO resDTO = proposalSO
 					.retrieveNonGovCompanyExpDtls(reqDTO);
 			this.getManagedBean().setScQtProposalScoreList(
@@ -1568,6 +1765,7 @@ public class SPDetailBackingBean extends
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			reqDTO.setDocDefinationKey(scQtProposalChecklist.getScQtCheckList()
 					.getPmDocument().getDocDefinitionKey());
+			reqDTO.setScQt(this.getManagedBean().getQt());
 			ProposalResDTO resDTO = proposalSO
 					.retrieveNonGovCompanyExpDtls(reqDTO);
 			this.getManagedBean().setScQtProposalScoreList(
@@ -1817,7 +2015,8 @@ public class SPDetailBackingBean extends
 
 			reqDTO.setYear(scQtProposalChecklist.getScQtCheckList()
 					.getScQtCheckListValue().getYear().intValue());
-
+			reqDTO.setScQt(this.getManagedBean().getQt());
+			
 			ProposalResDTO resDTO = proposalSO.retrieveCompanyExpDtls(reqDTO);
 			List<ScLoa> list = resDTO.getLoaResultBean().getResultList();
 			this.getManagedBean().setScLoaList(list);
@@ -1948,8 +2147,9 @@ public class SPDetailBackingBean extends
 
 			ScQt scQt = getManagedBean().getQt();
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
-			reqDTO.setQtId(scQt.getQtId());
+			reqDTO.setScQt(scQt);;
 			reqDTO.setQtSupplierId(getManagedBean().getSupplierId());
+			reqDTO.setQtId(scQt.getQtId());
 			// To retrieve financial spec details
 			ProposalResDTO resDTO = proposalSO
 					.retrieveFinancialSpecDtls(reqDTO);
@@ -2010,7 +2210,7 @@ public class SPDetailBackingBean extends
 			if (getManagedBean().getQt().getMaxProposal() > 1) {
 				reqDTO.setSubProposalNo(getManagedBean().getProposalIndex());
 			}
-
+			reqDTO.setScQt(getManagedBean().getQt());
 			TemplateSpecResDTO resDTO = templateSpecSO
 					.getTemplateMaster(reqDTO);
 			if (resDTO.isSuccessful()) {
@@ -2082,7 +2282,9 @@ public class SPDetailBackingBean extends
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			reqDTO.setDocDefinationKey(scQtProposalChecklist.getScQtCheckList()
 					.getPmDocument().getDocDefinitionKey());
-
+			reqDTO.setScQt(this.getManagedBean().getQt());
+			reqDTO.setFinancial(true);
+			
 			ProposalResDTO resDTO = null;
 			if (tecProposalCheckList == null) {
 				this.getManagedBean().setFinanicialOnlyCheckList(true);
@@ -2162,6 +2364,7 @@ public class SPDetailBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
+			reqDTO.setScQt(this.getManagedBean().getQt());
 			// to retrieve credit facility details
 			ProposalResDTO resDTO = proposalSO
 					.retrieveCreditFacilitiesDtls(reqDTO);
@@ -2206,6 +2409,7 @@ public class SPDetailBackingBean extends
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
+			reqDTO.setScQt(this.getManagedBean().getQt());
 			ProposalResDTO resDTO = proposalSO.retrieveCashOnHandDtls(reqDTO);
 			this.getManagedBean().setScQtProposalScoreList(
 					resDTO.getProposalScores());
@@ -2242,6 +2446,7 @@ public class SPDetailBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
+			reqDTO.setScQt(this.getManagedBean().getQt());
 			ProposalResDTO resDTO = proposalSO.retrieveBankStmtDtls(reqDTO);
 			this.getManagedBean().setScQtProposalScoreList(
 					resDTO.getProposalScores());
@@ -2289,6 +2494,7 @@ public class SPDetailBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
+			reqDTO.setScQt(this.getManagedBean().getQt());
 			ProposalResDTO resDTO = proposalSO
 					.retrieveAssetLiabilityDtls(reqDTO);
 
@@ -2413,7 +2619,8 @@ public class SPDetailBackingBean extends
 			reqDTO.setSupplierId(getManagedBean().getSupplierId());
 			reqDTO.setQtProposalCheckListId(scQtProposalChecklist
 					.getQtProposalChecklistId());
-
+			reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+			
 			ProposalResDTO resDTO = proposalSO.retrieveCompanyExpDtls(reqDTO);
 			List<ScLoa> list = resDTO.getLoaResultBean().getResultList();
 			log.info(" List Size : " + list.size());
