@@ -175,7 +175,8 @@ public class TemplateSpecBackingBean extends
 			if (null != speczoneDtl) {
 				reqDTO.setTplSpecZoneDtl(speczoneDtl);
 			}
-
+			reqDTO.setScQt(this.getManagedBean().getScQt());
+			
 			TemplateSpecResDTO resDTO = templateSpecSO
 					.getTemplateMaster(reqDTO);
 			if (resDTO.isSuccessful()) {
