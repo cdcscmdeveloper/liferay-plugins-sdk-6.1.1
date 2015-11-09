@@ -28,7 +28,7 @@
 				<p:column headerText="#{lbl['lbl.sm.manufacture.mesUnit']}">
 					<h:outputText value="#{manBean.pmUom.uomName}" rendered="#{not empty manBean.pmUom}"/>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.label.action']}">
+				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 					<p:commandLink update=":form:tt:manufactorDialog" process="@this" oncomplete="manufactorDialog.show()"
 						partialSubmit="true" onstart="blockWidget.show()"
 						action="#{viewSmApplBackingBean.assignSelManufacturer(manBean)}"

@@ -49,7 +49,7 @@
 				selection="#{backingBean.managedBean.selectedManufacturingList}"
 				rowKey="#{manBean}" rowIndexVar="index" id="manDt">
 				<ac:paginator for="manDt" />
-				<p:column selectionMode="multiple" width="5%" />
+				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smManufacturingDtls}"/>
 
 				<p:column headerText="#{lbl['lbl.sm.manufacture.prdType']}">
 					<h:outputText value="#{manBean.goodsType}" />
@@ -66,7 +66,7 @@
 				<p:column headerText="#{lbl['lbl.sm.manufacture.mesUnit']}">
 					<h:outputText value="#{manBean.pmUom.uomName}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.label.action']}">
+				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 					<p:commandLink update=":form:tt:manufactorDialog" process="@this"
 						partialSubmit="true"
 						action="#{backingBean.assignSelManufacturer(manBean)}"
