@@ -31,7 +31,8 @@
 				<ui:include src="/xhtml/sm/shared/applViewOnlyPages/supplierApplicationSearchCriteria.xhtml" />
 			</p:panel>
 			
-			<p:panel header="#{lbl['lbl.sm.results']}" toggleable="true" id="resultSupplierProfilePanelId">
+			<p:panel header="#{lbl['lbl.sm.results']}" toggleable="true" id="resultSupplierProfilePanelId" 
+				rendered="#{supplierDataMaintenanceBackingBean.managedBean.displaySearchPage}">
 			
 				<p:dataTable var="smSupplier" widgetVar="smApplWidgetVar"
 					editable="false" lazy="true" rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
