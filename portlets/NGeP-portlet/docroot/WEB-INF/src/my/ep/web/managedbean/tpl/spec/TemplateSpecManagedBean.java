@@ -15,6 +15,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -42,6 +43,8 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	
 	private List<TplSpecQuestion> tplSpecQuestions;
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
+	private ScQt scQt;
+	
 	
 	public TemplateSpecManagedBean() {
 	}
@@ -156,6 +159,20 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	 */
 	public void setTemplateSpecBean(TemplateSpecBean templateSpecBean) {
 		this.templateSpecBean = templateSpecBean;
+	}
+
+	/**
+	 * @return the scQt
+	 */
+	public ScQt getScQt() {
+		return scQt;
+	}
+
+	/**
+	 * @param scQt the scQt to set
+	 */
+	public void setScQt(ScQt scQt) {
+		this.scQt = scQt;
 	}
 
 }
