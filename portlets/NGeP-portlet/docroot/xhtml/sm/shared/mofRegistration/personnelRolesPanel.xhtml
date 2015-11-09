@@ -22,7 +22,7 @@
 												process=":form:tt:shrRolesPanel" partialSubmit="true"
 												listener="#{backingBean.managePersonnelRoles('Y')}" />
 										</p:selectBooleanCheckbox></td>
-									<td><p:outputLabel style="float: left"
+									<td><h:outputText style="float: left"
 											value="#{lbl['lbl.sm.person.equiOwner']}" /></td>
 								</c:if>
 								<c:if
@@ -43,7 +43,7 @@
 													and not empty backingBean.managedBean.latestPersonnel}"
 												oriValue="#{backingBean.managedBean.latestPersonnel.director}" 
 												currValue="#{backingBean.managedBean.selectedShareHolder.director}" />
-											<p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.dir']}" />
+											<h:outputText style="float: left" value="#{lbl['lbl.sm.person.dir']}" />
 										</td>
 										<td style="width: 20px"><p:selectBooleanCheckbox
 												value="#{backingBean.managedBean.selectedShareHolder.higherManagement}">
@@ -57,7 +57,7 @@
 													and not empty backingBean.managedBean.latestPersonnel}"
 												oriValue="#{backingBean.managedBean.latestPersonnel.higherManagement}" 
 												currValue="#{backingBean.managedBean.selectedShareHolder.higherManagement}" />
-											<p:outputLabel style="float: left"
+											<h:outputText style="float: left"
 												value="#{lbl['lbl.sm.person.hghMngmt']}" />
 										</td>
 									</c:if>
@@ -78,7 +78,7 @@
 													and not empty backingBean.managedBean.latestPersonnel}"
 												oriValue="#{backingBean.managedBean.latestPersonnel.management}" 
 												currValue="#{backingBean.managedBean.selectedShareHolder.management}" />
-										<p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.mngmt']}" />
+										<h:outputText style="float: left" value="#{lbl['lbl.sm.person.mngmt']}" />
 									</td>
 									<td style="width: 20px"><p:selectBooleanCheckbox
 											disabled="#{backingBean.managedBean.selectedShareHolder.disableStaff}"
@@ -93,7 +93,7 @@
 													and not empty backingBean.managedBean.latestPersonnel}"
 												oriValue="#{backingBean.managedBean.latestPersonnel.clerical}" 
 												currValue="#{backingBean.managedBean.selectedShareHolder.clerical}" />
-										<p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.stf']}" />
+										<h:outputText style="float: left" value="#{lbl['lbl.sm.person.stf']}" />
 									</td>
 								</tr>
 							</c:if>
@@ -123,7 +123,7 @@
 													and not empty backingBean.managedBean.latestPersonnel}"
 												oriValue="#{backingBean.managedBean.latestPersonnel.equityOwner}" 
 												currValue="#{backingBean.managedBean.selectedShareHolder.equityOwner}" />
-										<p:outputLabel style="float: left"
+										<h:outputText style="float: left"
 											value="#{lbl['lbl.sm.person.equiOwner']}" />
 									</td>
 								</c:if>
@@ -144,7 +144,7 @@
 													and not empty backingBean.managedBean.latestPersonnel}"
 												oriValue="#{backingBean.managedBean.latestPersonnel.director}" 
 												currValue="#{backingBean.managedBean.selectedShareHolder.director}" />
-											<p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.dir']}" />
+											<h:outputText style="float: left" value="#{lbl['lbl.sm.person.dir']}" />
 										</td>
 										<td style="width: 20px"><p:selectBooleanCheckbox
 												value="#{backingBean.managedBean.selectedShareHolder.higherManagement}">
@@ -158,7 +158,7 @@
 													and not empty backingBean.managedBean.latestPersonnel}"
 												oriValue="#{backingBean.managedBean.latestPersonnel.higherManagement}" 
 												currValue="#{backingBean.managedBean.selectedShareHolder.higherManagement}" />
-											<p:outputLabel style="float: left"
+											<h:outputText style="float: left"
 												value="#{lbl['lbl.sm.person.hghMngmt']}" />
 										</td>
 									</c:if>
@@ -174,7 +174,7 @@
 													and not empty backingBean.managedBean.latestPersonnel}"
 												oriValue="#{backingBean.managedBean.latestPersonnel.management}" 
 												currValue="#{backingBean.managedBean.selectedShareHolder.management}" />
-										<p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.mngmt']}" />
+										<h:outputText style="float: left" value="#{lbl['lbl.sm.person.mngmt']}" />
 									</td>
 								</c:if>
 							</tr>
@@ -193,7 +193,7 @@
 													and not empty backingBean.managedBean.latestPersonnel}"
 												oriValue="#{backingBean.managedBean.latestPersonnel.prof}" 
 												currValue="#{backingBean.managedBean.selectedShareHolder.prof}" />
-										<p:outputLabel style="float: left"
+										<h:outputText style="float: left"
 											value="#{lbl['lbl.sm.professional']}" />
 									</td>
 									<td style="width: 20px"><p:selectBooleanCheckbox
@@ -209,7 +209,7 @@
 												and not empty backingBean.managedBean.latestPersonnel}"
 											oriValue="#{backingBean.managedBean.latestPersonnel.semiProf}" 
 											currValue="#{backingBean.managedBean.selectedShareHolder.semiProf}" />
-										<p:outputLabel style="float: left"
+										<h:outputText style="float: left"
 											value="#{lbl['lbl.sm.professional.semi']}" />
 									</td>
 									<td style="width: 20px"><p:selectBooleanCheckbox
@@ -225,7 +225,7 @@
 												and not empty backingBean.managedBean.latestPersonnel}"
 											oriValue="#{backingBean.managedBean.latestPersonnel.clerical}" 
 											currValue="#{backingBean.managedBean.selectedShareHolder.clerical}" />
-										<p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.composition.clrStf']}" />
+										<h:outputText style="float: left" value="#{lbl['lbl.sm.person.composition.clrStf']}" />
 									</td>
 								</tr>
 							</c:if>
