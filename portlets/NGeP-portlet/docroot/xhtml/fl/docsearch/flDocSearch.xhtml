@@ -244,6 +244,10 @@
 										rendered="#{!(flDocument.docType==ParameterConst.doctypePurchaseRequest || flDocument.docType==ParameterConst.doctypeContractRequest || flDocument.docType==ParameterConst.doctypeShippingInstruction || flDocument.docType==ParameterConst.doctypeStopDelivery )}"
 										icon="ui-icon-print" 
 										action="#{flDocumentBackingBean.generateReport(flDocument.docType, flDocument.docNo)}" />							        
+									<p:menuitem value="#{lbl['lbl.btn.print.cogstr']}" ajax="false"
+										rendered="#{flDocument.coGSTR}"
+										icon="ui-icon-print" 
+										action="#{flDocumentBackingBean.generateReport(flDocument.docType, flDocument.docNo)}" />	
 									<p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.update']}"  
 							        	rendered="#{flDocument.isUpdateAction()}"
 							        	icon="ui-icon-update"
