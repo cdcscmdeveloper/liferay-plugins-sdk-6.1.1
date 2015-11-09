@@ -1674,6 +1674,7 @@ public class SPDetailBackingBean extends
 		smSupplier.setSupplierId(getManagedBean().getSupplierId());
 		templateSpecBean.setSupplier(smSupplier);
 		templateSpecBackingBean.getManagedBean().setScQt(this.getManagedBean().getQt());
+		templateSpecBackingBean.getManagedBean().setDocType(ParameterConst.DOCTYPE_QUOTATION);
 		templateSpecBackingBean.retrieveTemplateSpecMaster(templateSpecBean);
 
 		return NAV_TO_TECHNICAL_STANDARD_PRODUCT_PAGE;
@@ -2211,6 +2212,7 @@ public class SPDetailBackingBean extends
 				reqDTO.setSubProposalNo(getManagedBean().getProposalIndex());
 			}
 			reqDTO.setScQt(getManagedBean().getQt());
+			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 			TemplateSpecResDTO resDTO = templateSpecSO
 					.getTemplateMaster(reqDTO);
 			if (resDTO.isSuccessful()) {
