@@ -61,7 +61,7 @@
 					<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty smSupplier.smAppl.pmRegStatus}"/>
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sm.label.action']}">
+				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 					<p:commandLink onstart="blockWidget.show()"
 						oncomplete="blockWidget.hide()"
 						action="#{viewSuppProfileBackingBean.viewApplication(smSupplier.smAppl)}"
