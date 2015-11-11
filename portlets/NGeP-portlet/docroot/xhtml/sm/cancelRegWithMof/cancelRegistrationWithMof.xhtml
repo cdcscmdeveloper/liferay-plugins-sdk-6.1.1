@@ -40,9 +40,8 @@
 							onclick="excelDialog.show();return false;">
 							<p:graphicImage value="/css/images/design/upload.png"
 								style="margin-right:2px;" />
-						</p:commandLink> <p:outputLabel
+						</p:commandLink> <p:outputLabel styleClass="outputLabel-view"
 							value="#{backingBean.managedBean.cancellationAttachment.fileName}"
-							style="float : left;"
 							rendered="#{backingBean.managedBean.cancellationAttachment.fileName ne null}" /></td>
 				</tr>
 			</table>
