@@ -618,6 +618,10 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	    		rptGenBean.setScSOAStatusView(true);
 	    		rptGenBean.setScProcessRptQuotationNoView(true);
 	            break;
+		   case ReportConst.SC_S1_LOA_CONTENT_RPT_VAL:
+		     	rptGenBean.setScLOAContentView(true);
+
+			break;
 	        default:
 	        	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));	            
 		}		
