@@ -32,7 +32,7 @@
            <h:panelGrid>
              <p:inputTextarea id="justificationMember" disabled="true"
                   rows="4"  maxlength="200"  autoResize="false" style="width:180px;margin-bottom: 4px;" 
-                  value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.pbqcJustification}"/>
+                  value="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcJustification}"/>
           </h:panelGrid>           
           </h:panelGrid>
           
@@ -40,7 +40,7 @@
                  <p:outputLabel value="#{lbl['lbl.ct.list.comm.members']}" />
                 
                  <p:dataTable id="memberTable" var="data" 
-                     value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.ctCommitteeMembers}">
+                     value="#{ctBackingBean.managedBean.contractVer.ctAmendment.ctCommitteeMembers}">
                      <ac:paginator for="decisionTable" />
             	   
             	     <p:column style="width:50%;white-space:normal;" 
@@ -70,12 +70,12 @@
          </h:panelGrid>
      </p:panel>
      <p:panel header="#{lbl['lbl.txt.attachment']}" toggleable="true" 
-        rendered="#{amendmentBackingBean.managedBean.contractVer.committeDecisionAttachements.size() > 0}">
+        rendered="#{ctBackingBean.managedBean.contractVer.committeDecisionAttachements.size() > 0}">
 		<table style="width: 100%">
 				    <tr>
 			           <td class="TableFieldLeft" width="14%"><h:outputLabel value="#{lbl['lbl.txt.attachment']}" /></td>
 			           <td>
-				            <p:dataGrid id="lampiranComitte1" value="#{amendmentBackingBean.managedBean.contractVer.committeDecisionAttachements}"
+				            <p:dataGrid id="lampiranComitte1" value="#{ctBackingBean.managedBean.contractVer.committeDecisionAttachements}"
 					           var="attachFile" rowIndexVar="attachFileIndex" columns="1" style="width:100%">
 					           <table>
 						          <tr>

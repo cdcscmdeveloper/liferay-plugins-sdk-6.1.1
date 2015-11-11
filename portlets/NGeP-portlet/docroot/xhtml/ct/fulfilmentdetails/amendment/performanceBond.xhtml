@@ -7,13 +7,13 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 	<p:panel id="bondId" toggleable="true"  toggleSpeed="500" 
-		rendered="#{amendmentBackingBean.managedBean.contractVer.ctContractAmount.bondReq}" >
+		rendered="#{ctBackingBean.managedBean.contractVer.ctContractAmount.bondReq}" >
         <f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.panel.performance.bond']}"/>
 	        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.performance.bond.dtls']}"/>
 	  	</f:facet>
         <p:dataTable  id="tableBond" var="varBond" 
-           value="#{amendmentBackingBean.managedBean.contractVer.ctContractAmount.ctPerformanceBonds}"> 
+           value="#{ctBackingBean.managedBean.contractVer.ctContractAmount.ctPerformanceBonds}"> 
 	      <ac:paginator for="tableBond" />
          
             <p:column headerText="#{lbl['lbl.ct.ref.no']}"   style="width:10%;" styleClass="column-align-center">
@@ -48,7 +48,7 @@
 						title="#{varBond.fileName}"
 						value="#{amendmentBackingBean.getShortFileName(varBond.fileName)}"
 						rendered="#{varBond.filePath != null}" style="float:left;"
-						action="#{amendmentBackingBean.downloadFile(varBond.filePath, varBond.fileName)}" />
+						action="#{ctBackingBean.downloadFile(varBond.filePath, varBond.fileName)}" />
 				</h:panelGroup> 
 			</p:column>
 	    

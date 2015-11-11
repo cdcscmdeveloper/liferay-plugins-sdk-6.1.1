@@ -22,71 +22,72 @@
 			<p:outputLabel value="#{lbl['lbl.ct.file.no']}" />
 			<h:panelGrid columns="3">
 				<p:inputText style="width:270px;" disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}"
-					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.scLoiLoa.fileNo}" maxlength="50"  />
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.scLoiLoa.fileNo}" maxlength="50"  />
 				<p:spacer width="2" />
 				<p:inputText style="width:20px;" disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}"
-					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.fileExtNo}" maxlength="5" />
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.fileExtNo}" maxlength="5" />
 			</h:panelGrid>
 			<p:outputLabel value="#{lbl['lbl.ct.insurance.warranty']}" />
 			<h:panelGrid columns="4">
-				<p:selectOneRadio id="radiOptions" required="true" disabled="true"
-					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.insWarrantyReq}">
+				<p:selectOneRadio id="radiOptionsWarenty" required="true" disabled="true"
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.insWarrantyReq}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="true" />
 					<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="false" />
 				</p:selectOneRadio>
 			</h:panelGrid>
 			<p:outputLabel value="#{lbl['lbl.ct.contract.type']}" />
 			<p:inputText style="width:300px;" disabled="true"
-				value="#{amendmentBackingBean.getParameterDesc(amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractType)}" />				
+				value="#{amendmentBackingBean.getParameterDesc(ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractType)}" />				
 			<p:outputLabel value="#{lbl['lbl.ct.menu.agency']}" />
-			<p:inputTextarea rows="2"  autoResize="false" style="width:300px; margin-bottom: 5px;" disabled="true" rendered="#{amendmentBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeMinistry}"
-				value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.pmOrgProfile.orgName}" />
-			<p:inputText style="width:300px;" disabled="true" rendered="#{amendmentBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeCentral}"
-				value="#{amendmentBackingBean.getParameterDesc(amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.pmParameter)}" />				
+			<p:inputTextarea rows="2"  autoResize="false" style="width:300px; margin-bottom: 5px;" disabled="true" 
+			   rendered="#{ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode eq ParameterConst.contractTypeMinistry}"
+				value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.pmOrgProfile.orgName}" />
+			<p:inputText style="width:300px;" disabled="true" rendered="#{ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode eq ParameterConst.contractTypeCentral}"
+				value="#{amendmentBackingBean.getParameterDesc(ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.pmParameter)}" />				
 			<p:outputLabel value="#{lbl['lbl.ct.contract.admin']}" />
 			<p:inputText style="width:300px;" disabled="true"
-				value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractAdmin.userName}" />				
+				value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractAdmin.userName}" />				
 			<p:outputLabel value="#{lbl['lbl.ct.contract.period']}" />
 			<h:panelGrid columns="3">
 				<p:inputText style="width:75px;" disabled="true"
-					value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractPeriod}" />
+					value="#{ctBackingBean.managedBean.contractVer.ctContractValue.contractPeriod}" />
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.months']}" />
 			</h:panelGrid>
 			<p:outputLabel value="#{lbl['lbl.ct.contract.effective.date']}" />
 			<p:calendar id="popupButtonCal1" showOn="button" styleClass="calanderWidth" disabled="true"
 			    	pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-			        value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractEffDate}"/>
+			        value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractEffDate}"/>
 			<p:outputLabel value="#{lbl['lbl.ct.contract.expiry.date']}" />
 			<p:calendar id="popupButtonCal2" showOn="button"  disabled="true"  styleClass="calanderWidth"
 			    pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
-			    value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractExpDate}" />
+			    value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractExpDate}" />
 			<p:outputLabel value="#{lbl['lbl.ct.amend.effective.date']}" />
 			<p:calendar id="popupButtonCal3" showOn="button" disabled="true" styleClass="calanderWidth"
-			     value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}"
+			     value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}"
 		         pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			<p:outputLabel value="#{lbl['lbl.ct.extension.period']}" />
 			<h:panelGrid columns="3">
 				<p:inputText style="width:75px;"  disabled="true"
-					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.extendPeriod}" />
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.extendPeriod}" />
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.months']}" />
 			</h:panelGrid>
 			<p:outputLabel value="#{lbl['lbl.ct.extension.effective.date']}" />
 			<h:panelGrid columns="3" style="width:500px;"	columnClasses="columnWidth20,columnWidth30,columnWidth30">
 				<p:calendar id="popupButtonCal4" showOn="button" disabled="true" styleClass="calanderWidth1"
-				    value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.extendStartDate}"
+				    value="#{ctBackingBean.managedBean.contractVer.ctAmendment.extendStartDate}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				<p:outputLabel value="#{lbl['lbl.ct.extension.expiry.date']}" />
 				<p:calendar id="popupButtonCal5" showOn="button"  disabled="true" styleClass="calanderWidth2"
-				    value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.extendEndDate}"
+				    value="#{ctBackingBean.managedBean.contractVer.ctAmendment.extendEndDate}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			</h:panelGrid>
 			<p:outputLabel value="#{lbl['lbl.ct.required.agreement']}" />			
 			<h:panelGrid columns="4">
-				<p:selectOneRadio id="reqAgreement" disabled="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.agreementReq
+				<p:selectOneRadio id="reqAgreement" disabled="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.agreementReq
 				 	or amendmentBackingBean.managedBean.disableFinalAmendDetails}"
-					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.agreementReq}">
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.agreementReq}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="true" />
 					<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="false" />
 				</p:selectOneRadio>
@@ -103,7 +104,7 @@
 			<h:panelGrid columns="2">
 			   <p:selectOneMenu id="signer" style="width:310px" label="#{lbl['lbl.ct.loa.signer']}"
 			        disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}"
-			       value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractSigner.userId}">
+			       value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractSigner.userId}">
 				   <f:selectItems value="#{amendmentBackingBean.getContractSignerDropdown()}" />
 				   <p:ajax event="change" partialSubmit="true" process="@this" update="signer" 
 				   	listener="#{amendmentBackingBean.contractSignerChange()}" />
@@ -116,12 +117,12 @@
 		<h:panelGrid columns="2" style="width:80%" columnClasses="columnWidth225">
 		    <p:outputLabel value="#{lbl['lbl.ct.panel.loa.verifier']}" />
 			<p:inputText style="width:300px;" disabled="true"
-				value="#{amendmentBackingBean.managedBean.contractVer.approver.userName}" />
+				value="#{ctBackingBean.managedBean.contractVer.approver.userName}" />
 			<p:outputLabel value="#{lbl['lbl.ct.required.loa.verifier']}" />			
 			<h:panelGrid columns="4">
 				<p:selectOneRadio id="reqLoaVerifier" disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails or
 					amendmentBackingBean.managedBean.disableEndorseAmendDetails}"
-					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.approvalReq}">
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.approvalReq}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="true" />
 					<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="false" />
 				</p:selectOneRadio>
