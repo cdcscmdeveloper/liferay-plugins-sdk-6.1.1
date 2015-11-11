@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="loaContents" header="#{lbl['lbl.ct.panel.loa.contents']}" toggleable="true" toggleSpeed="500">
 		<p:dataTable id="loaContentDt" var="loaReportVar" 
-		     value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.scLoaReports}"
+		     value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.scLoaReports}"
 		     selectionMode="single" selection="#{amendmentBackingBean.managedBean.selectedScLoaReports}" rowKey="#{loaReportVar}">
 		     <p:ajax event="rowSelect" update=":form:delLoaContentBtn" />
 			 <p:column headerText="#{lbl['lbl.ct.contents']}" style="width:50%;" styleClass="column-align-center">

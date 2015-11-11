@@ -34,7 +34,7 @@
                    style="width:180px;margin-bottom: 4px;"   maxlength="200"  autoResize="false" 
                     required="true" label="#{lbl['lbl.txt.remarks']}"
                     onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
-                   value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.pbqcJustification}"/>
+                   value="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcJustification}"/>
             </h:panelGrid>
            </h:panelGrid>
        
@@ -42,7 +42,7 @@
                <p:outputLabel value="#{lbl['lbl.ct.list.comm.members']}" />
                 
                <p:dataTable id="secretryTable" var="data" rowIndexVar="index"
-                   value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.ctCommitteeMembers}">
+                   value="#{ctBackingBean.managedBean.contractVer.ctAmendment.ctCommitteeMembers}">
                    <ac:paginator for="decisionTable" />
 				   
 				   <p:column style="width:20%;white-space:normal;"
@@ -100,8 +100,7 @@
 					       <h:outputText value="#{lbl['lbl.ct.attendance']}"  />
 				        </f:facet>
 				        <p:selectBooleanCheckbox value="#{data.attended}" 
-				              disabled="#{data.memberRole.parameterCode == ParameterConst.committeeRoleSecretary or
-				               amendmentBackingBean.managedBean.disableAmendDetails}" />
+				              disabled="#{data.memberRole.parameterCode == ParameterConst.committeeRoleSecretary}" />
 				    </p:column> 
            </p:dataTable>
       </h:panelGrid>

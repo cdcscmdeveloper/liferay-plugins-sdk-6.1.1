@@ -13,11 +13,11 @@
 		<h:panelGrid columns="3">
 			<p:outputLabel value="#{lbl['lbl.ct.location.level']}" />
 			<p:outputLabel value=": " />
-			<p:outputLabel value="#{amendmentBackingBean.getParameterDesc(amendmentBackingBean.managedBean.ctContract.locationLevel)}" />
+			<p:outputLabel value="#{amendmentBackingBean.getParameterDesc(ctBackingBean.managedBean.contractVer.ctContract.locationLevel)}" />
 		</h:panelGrid>
 		<h:panelGrid width="100%" style="margin-top:20px">
- 		  <p:treeTable id="zoneLocationDataTable"  value="#{amendmentBackingBean.managedBean.ctZoneTrees}"
- 		    var="zoneTree">
+ 		  <p:treeTable id="zoneLocationDataTable" 
+ 		      value="#{amendmentBackingBean.managedBean.ctZoneTrees}" var="zoneTree">
  		    <p:column style="width:70%;" styleClass="column-align-center" >
             <f:facet name="header">#{lbl['lbl.ct.location.name']}</f:facet>
               <p:treeNode type="zone">

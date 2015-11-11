@@ -59,9 +59,9 @@
     	  });
     	});
 	 </script> 	
-	  <ui:param name="isPrepareLoa" value="#{amendmentBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingLoaSubmission or
-	  amendmentBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingLoaEndorsement or
-	  amendmentBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingLoaRevision}" />
+	  <ui:param name="isPrepareLoa" value="#{ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingLoaSubmission or
+	  ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingLoaEndorsement or
+	  ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingLoaRevision}" />
 	  <p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>			
@@ -75,6 +75,7 @@
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		   <tr>
 			<td width="20%;" style="vertical-align: baseline;" class="sidemenutd">
+		  
 		      <p:tabMenu id="sidemenuId" styleClass="sidemenu" 
 						activeIndex="#{amendmentBackingBean.managedBean.selectedTabIndex}" >
 		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.fd']}"
@@ -87,16 +88,32 @@
 			rendered="#{amendmentBackingBean.managedBean.ackFA eq null}"
 			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'AD')}" update=":form" />
 	
+	    <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.agency']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.otherChange and amendmentBackingBean.managedBean.ackFA eq null}"
+			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'AG')}" update=":form" />
+	      
 		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.zone']}"  onstart="blockWidget.show()"  oncomplete="blockWidget.hide()" 
-		    rendered="#{amendmentBackingBean.managedBean.ackFA eq null and amendmentBackingBean.managedBean.ctContract.zonalPricing and (amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange or 
-		   amendmentBackingBean.managedBean.contractVer.ctAmendment. itemPriceChange)}"
+		    rendered="#{(amendmentBackingBean.managedBean.ackFA eq null and ctBackingBean.managedBean.contractVer.ctContract.zonalPricing and (ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange or 
+		   ctBackingBean.managedBean.contractVer.ctAmendment. itemPriceChange)) or (ctBackingBean.managedBean.contractVer.ctAmendment.otherChange and ctBackingBean.managedBean.contractVer.ctContract.zonalPricing)}"
 			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'ZO')}" update=":form" />
 			 
 		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.item']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			 rendered="#{amendmentBackingBean.managedBean.ackFA eq null and (amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange or 
-		     amendmentBackingBean.managedBean.contractVer.ctAmendment. itemPriceChange)}"
+			 rendered="#{(amendmentBackingBean.managedBean.ackFA eq null and (ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange or 
+		     ctBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange)) or (ctBackingBean.managedBean.contractVer.ctAmendment.otherChange and amendmentBackingBean.managedBean.ackFA eq null) }"
 			 actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'IT')}" update=":form" />
+				
+		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.deduction']}" 
+		     onstart="blockWidget.show()"   oncomplete="blockWidget.hide()"
+		    rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.otherChange and amendmentBackingBean.managedBean.ackFA eq null}"
+			 actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'DE')}" update=":form" />
+			
+			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.schedule']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			rendered="#{ctBackingBean.managedBean.contractVer.ctContract.fulfillmentType.parameterCode eq ParameterConst.fulfilmentTypeScheduled 
+			and ctBackingBean.managedBean.contractVer.ctAmendment.otherChange and amendmentBackingBean.managedBean.ackFA eq null}"
+			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'SC')}" update=":form" />
 		
 		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.special.ap201']}" 
 		     onstart="blockWidget.show()"   oncomplete="blockWidget.hide()"
@@ -116,9 +133,9 @@
 			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.performance.bond']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.managedBean.ackFA eq null and amendmentBackingBean.managedBean.prepareLOA 
-			 and amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa != null
-			 and amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondReq 
-			 and amendmentBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}"
+			 and ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa != null
+			 and ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondReq 
+			 and ctBackingBean.managedBean.contractVer.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}"
 			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'PB')}" update=":form" />
 		 
 	
@@ -152,15 +169,19 @@
 		 </td>
 		 <td width="80%">
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.fd'] }">
-					<ui:include src="fulfilmentDetails.xhtml" />
-				    <ui:include src="/xhtml/ct/shared/quotationTender.xhtml" />
-				    <ui:include src="/xhtml/ct/shared/supplier.xhtml" />
+					<ui:include src="/xhtml/ct/common/fulfilmentDetails.xhtml" />
+				    <ui:include src="/xhtml/ct/common/quotationTender.xhtml" />
+				    <ui:include src="/xhtml/ct/common/supplier.xhtml" />
 				    <ui:include src="performanceBond.xhtml" />
 				</p:outputPanel>
 				
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.amendment'] }">
 					<ui:include src="amendmentDetails.xhtml" />
 					<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
+				</p:outputPanel>
+				
+				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.agency'] }">
+					<ui:include src="/xhtml/ct/common/agency.xhtml" />
 				</p:outputPanel>
 	
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.zone'] }">
@@ -171,6 +192,14 @@
 					<ui:include src="item.xhtml" />
 				</p:outputPanel>
 				
+				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.deduction'] }">
+					<ui:include src="/xhtml/ct/common/deduction.xhtml" />
+				</p:outputPanel>
+				
+				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.schedule'] }">
+					<ui:include src="/xhtml/ct/common/schedule.xhtml" />
+				</p:outputPanel>
+					
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.special.ap201'] }">
 					<ui:include src="bpk/approvalOfAP201.xhtml"/>
 				</p:outputPanel>
@@ -220,6 +249,7 @@
 				
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.setting'] }">
 					<ui:include	src="approverSetting.xhtml" />
+					<ui:include	src="/xhtml/ct/common/fulfilmentSetting.xhtml" />
 				</p:outputPanel>				
 			</td>
 		</tr>
