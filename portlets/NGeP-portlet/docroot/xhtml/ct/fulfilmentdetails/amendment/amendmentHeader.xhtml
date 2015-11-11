@@ -11,25 +11,25 @@
 					<h:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
 				</td>
 				<td style="width: 10%" class="header-info-text">
-					#{amendmentBackingBean.managedBean.contractVer.ctContractValue.loaNo}
+					#{ctBackingBean.managedBean.contractVer.ctContractValue.loaNo}
 				</td>
 				<td style="width: 10%">
 					<h:outputLabel value="#{lbl['lbl.ct.contract.no']}" />
 				</td>
 				<td style="width: 10%" class="header-info-text">
-					#{amendmentBackingBean.managedBean.ctContract.contractNo}
+					#{ctBackingBean.managedBean.contractVer.ctContract.contractNo}
 				</td>
 				<td style="width: 10%">
 					<h:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
 				</td>
 				<td style="width: 25%" class="header-info-text">
-					#{amendmentBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}
+					#{ctBackingBean.managedBean.contractVer.ctContract.ownerOrgProfile.orgName}
 				</td>
 				<td style="width: 5%">
 					<h:outputLabel value="#{lbl['lbl.ct.status']}" />
 				</td>
 				<td style="width: 15%" class="header-info-text">
-					#{amendmentBackingBean.getStatusDescById(amendmentBackingBean.managedBean.contractVer.status.statusId)}
+					#{ctBackingBean.getStatusDescById(ctBackingBean.managedBean.contractVer.status.statusId)}
 				</td>
 			</tr>
 		</table>

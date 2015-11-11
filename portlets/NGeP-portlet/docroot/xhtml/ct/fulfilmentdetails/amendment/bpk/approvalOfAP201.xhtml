@@ -11,19 +11,19 @@
 				value="#{lbl['lbl.ct.special.ap201.content']}" />
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox disabled="true" 
-				    value="#{amendmentBackingBean.managedBean.contractVer.ctContract.recordStatusFlg!=1}" />
+				    value="#{ctBackingBean.managedBean.contractVer.ctContract.recordStatusFlg!=1}" />
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.contract.not.active']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox disabled="true" 
-				   value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange}" />
+				   value="#{ctBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange}" />
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.change.item.price']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox disabled="true" 
-				   value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.clauseChange}" />
+				   value="#{ctBackingBean.managedBean.contractVer.ctAmendment.clauseChange}" />
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.change.contract.clause']}" />
 			</h:panelGrid>
@@ -57,7 +57,7 @@
 								
 							</td>
 							<td class="TableFieldRight">
-								<p:dataGrid value="#{amendmentBackingBean.managedBean.contractVer.ap201Remark}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
+								<p:dataGrid value="#{ctBackingBean.managedBean.contractVer.ap201Remark}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 									<table>
 										<tr>
 											<td rowspan="2" valign="top">
@@ -92,14 +92,14 @@
 				  			<p:outputLabel value="#{lbl['lbl.txt.attachment']}" styleClass="required" />
 				    	</td>
 			           	<td class="TableFieldRight">
-				        	<p:commandButton oncomplete="uploadDlg1.show();return false;"
-					        	update="lampiran1, uploadDlg1" value="#{lbl['lbl.ct.upload.attach.files']}" />
+				        	<p:commandButton oncomplete="uploadDlg2.show();return false;"
+					        	update="lampiran1, uploadDlg2" value="#{lbl['lbl.ct.upload.attach.files']}" />
 			           	</td>
 		           	</tr>
 		            <tr>
 		            	<td/>
 		            	<td>
-	            		<p:dataGrid id="lampiran1" value="#{amendmentBackingBean.managedBean.contractVer.ap201Attachements}"
+	            		<p:dataGrid id="lampiran1" value="#{ctBackingBean.managedBean.contractVer.ap201Attachements}"
 				           var="attachFile" rowIndexVar="attachFileIndex" columns="1" style="width:100%">
 							<table>
 								<tr>
@@ -117,7 +117,7 @@
 								<td>
 									<h:commandLink value="#{attachFile.fileName}" 
 										styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
-				 	 				<p:commandLink onclick="deleteAttachmentDlg1.show();" action="#{amendmentBackingBean.setAttachFileIndex(attachFileIndex)}"
+				 	 				<p:commandLink onclick="deleteAttachmentDlgObj.show();" action="#{amendmentBackingBean.setAttachFileIndex(attachFileIndex)}"
 										rendered="#{ctBackingBean.compareUserName(attachFile.createdUser.loginId)}">
 				   						<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 				 	 				</p:commandLink>
@@ -129,19 +129,19 @@
 					</tr>
 					</table>
 
-					<p:dialog id="uploadDlg1" widgetVar="uploadDlg1" modal="true" width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+					<p:dialog id="uploadDlg2" widgetVar="uploadDlg2" modal="true" width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 						<p:ajax event="close" />
 						<p:fileUpload style="display:inline;"
 						   sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 							fileUploadListener="#{amendmentBackingBean.ap201FileUpload}"
-							mode="advanced" id="upload1"
+							mode="advanced" id="upload201"
 							allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 							invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
 							update="lampiran1" >
 						</p:fileUpload> 
 					</p:dialog>
 	
-					<p:dialog id="deleteAttachmentDlg1" widgetVar="deleteAttachmentDlg1"
+					<p:dialog id="deleteAttachmentDlgId" widgetVar="deleteAttachmentDlgObj"
 				      	styleClass="screen-title" modal="true" width="330">  
 				 		<h:panelGrid columns="3">
 				 			<p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
@@ -151,8 +151,8 @@
 						<div class="ppRightBtn">
 							<p:commandButton value="#{lbl['lbl.btn.yes']}"  update="lampiran1" process="@form" 
 					     		actionListener="#{amendmentBackingBean.deleteAttachmentAction(amendmentBackingBean.managedBean.attachFileIndex)}" 
-					     		onclick="deleteAttachmentDlg1.hide();"/>
-						 	<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteAttachmentDlg1.hide();" type="button" />
+					     		onclick="deleteAttachmentDlgObj.hide();"/>
+						 	<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteAttachmentDlgObj1.hide();" type="button" />
 					 	</div>
 					</p:dialog>	
 				</td>
@@ -160,8 +160,3 @@
 		</table>
 	</p:panel>		  	
 </ui:composition>
-
-
-
-
-
