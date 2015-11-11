@@ -1,0 +1,41 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:cc="http://java.sun.com/jsf/composite"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+   	xmlns:p="http://primefaces.org/ui"
+   	xmlns:c="http://java.sun.com/jsp/jstl/core"
+   	xmlns:ac="http://ac.my/jsf/composite/cc" >
+    
+<cc:interface>
+	<cc:attribute name="id" />
+	<cc:attribute name="countryCode"	required="true" default="60" />
+	<cc:attribute name="areaCode" 		required="true" />
+	<cc:attribute name="phoneNumber" 	required="true" />
+	<cc:attribute name="required" 		default="false" />
+	<cc:attribute name="isMobile" 		default="false" />
+</cc:interface>
+
+<cc:implementation>
+	<h:panelGroup id="#{cc.attrs.id}">
+		<p:selectOneMenu rendered="#{cc.attrs.isMobile}">
+			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+			<f:selectItem itemLabel="Maxis" itemValue="Maxis" />
+			<f:selectItem itemLabel="Celcom" itemValue="Celcom" />
+			<f:selectItem itemLabel="Digi" itemValue="Digi" />
+			<f:selectItem itemLabel="U Mobile" itemValue="UMobile" />
+			<f:selectItem itemLabel="Tune Talk" itemValue="TuneTalk" />
+		</p:selectOneMenu>
+		&#160;
+		+
+		<p:inputText value="#{cc.attrs.countryCode}" size="4" required="#{cc.attrs.required}" />
+		<p:inputText value="#{cc.attrs.areaCode}" 	 size="4" required="#{cc.attrs.required}" />
+		<p:inputText value="#{cc.attrs.phoneNumber}" size="8" required="#{cc.attrs.required}" />		
+		<p:graphicImage id="teleno"	value="/css/images/design/tooltips.png" /> 
+		<p:tooltip	id="tfno" for="teleno">
+			<p:outputLabel escape="false" value="#{lbl['tt.sm.registration.company.telephoneno']}" />
+		</p:tooltip>
+	
+	</h:panelGroup>
+</cc:implementation>
+</ui:composition>
