@@ -2266,7 +2266,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}
 			getManagedBean().setBackupApprovers(backupApprovers);
-		} 
+		}  else{
+			requestNote.setApprover(null);
+		}
 	}
 
 	/**
