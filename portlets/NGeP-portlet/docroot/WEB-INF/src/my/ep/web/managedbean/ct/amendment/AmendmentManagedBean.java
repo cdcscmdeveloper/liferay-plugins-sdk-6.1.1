@@ -20,7 +20,6 @@ import org.primefaces.model.TreeNode;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.persistence.entity.ct.CtAttachment;
-import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.amend.CtCommitteeMember;
@@ -90,7 +89,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean showPrintButton;
 	private boolean bpmActionFlag = true;
 	private boolean autoUpdate = true;	
-	private boolean disableAmendDetails;
+	//private boolean disableAmendDetails;
 	private boolean disableEndorseAmendDetails;
 	private boolean disableFinalAmendDetails;
 	private boolean disableMeetingDetails;
@@ -106,8 +105,8 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private DualListModel<PmUser> approverModel;
 	private Map<Long, PmUser> userMap;
     private CtContractItem selectedServiceItem;
-	private CtContract ctContract;
-	private CtContractVer contractVer;
+	//private CtContract ctContract;
+	//private CtContractVer contractVer;
 	private CtContractVer agreementContractVer;
 	private CtPerformanceBond ctPerformanceBond;
 	private CtItemMaxQty ctItemMaxQty;
@@ -700,17 +699,17 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	
 	/**
 	 * @return the disableAmendDetails
-	 */
+	 *//*
 	public boolean isDisableAmendDetails() {
 		return disableAmendDetails;
 	}
 	
-	/**
+	*//**
 	 * @param disableAmendDetails the disableAmendDetails to set
-	 */
+	 *//*
 	public void setDisableAmendDetails(boolean disableAmendDetails) {
 		this.disableAmendDetails = disableAmendDetails;
-	}	
+	}	*/
 	
 	/**
 	 * @return the disableEndorseAmendDetails
@@ -914,31 +913,31 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	
 	/**
 	 * @return the ctContract
-	 */
+	 *//*
 	public CtContract getCtContract() {
 		return ctContract;
 	}
 	
-	/**
+	*//**
 	 * @param ctContract the ctContract to set
-	 */
+	 *//*
 	public void setCtContract(CtContract ctContract) {
 		this.ctContract = ctContract;
-	}
+	}*/
 	
 	/**
 	 * @return the contractVer
-	 */
+	 *//*
 	public CtContractVer getContractVer() {
 		return contractVer;
 	}
 	
-	/**
+	*//**
 	 * @param contractVer the contractVer to set
-	 */
+	 *//*
 	public void setContractVer(CtContractVer contractVer) {
 		this.contractVer = contractVer;
-	}
+	}*/
 	
 	/**
 	 * @return the agreementContractVer
@@ -1173,6 +1172,4 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public void setDisableMeetingDetails(boolean disableMeetingDetails) {
 		this.disableMeetingDetails = disableMeetingDetails;
 	}
-	
-	
 }
