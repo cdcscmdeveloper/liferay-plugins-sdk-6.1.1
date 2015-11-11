@@ -307,6 +307,9 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 
 	/** The newable flag. */
 	private boolean newableFlag = Boolean.TRUE;
+	
+	/** The removable flag */
+	private boolean removableFlag = Boolean.TRUE;
 
 	/** The editable flag. */
 	private boolean editableFlag = Boolean.TRUE;
@@ -2145,6 +2148,20 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	 */
 	public void setNewableFlag(boolean newableFlag) {
 		this.newableFlag = newableFlag;
+	}
+
+	/**
+	 * @return the removableFlag
+	 */
+	public boolean isRemovableFlag() {
+		return removableFlag;
+	}
+
+	/**
+	 * @param removableFlag the removableFlag to set
+	 */
+	public void setRemovableFlag(boolean removableFlag) {
+		this.removableFlag = removableFlag;
 	}
 
 	/**

@@ -128,9 +128,10 @@
 			</c:if>
 		</h:panelGroup>
 	</p:column>
-	<p:column style="width:40px;" rendered="#{newable}">
+	<p:column style="width:40px;" rendered="#{newable or removable}">
 		<f:facet name="header">
 			<p:commandButton id="addTopBtn" icon="ui-icon-add"
+				rendered="#{newable}"
 				style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
 				action="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,-1,TplSpecConst.questionTypeItem)}"
 				update="questionTbl" partialSubmit="true" process="questionTbl"
@@ -155,19 +156,21 @@
 		</c:if>
 		<c:if test="#{!isSpecificationReq}">
 			<p:commandButton id="addBtn" icon="ui-icon-add"
+				rendered="#{newable}"
 				style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
 				action="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,row,TplSpecConst.questionTypeItem)}"
 				update="questionTbl" partialSubmit="true" process="questionTbl"
 				title="#{lbl['lbl.tpl.spec.content.btn.add.tooltip']}" />
 		</c:if>
 		<p:commandButton id="#{templateSpecId}delBtn" icon="ui-icon-delete"
+			rendered="#{removable}"
 			style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
 			partialSubmit="true" process="questionTbl" update="questionTbl"
 			action="#{templateSpecBackingBean.deleteConfirmationAction(templateSpecBean, question)}"
 			title="#{lbl['lbl.tpl.spec.content.btn.delete.tooltip']}">
 			<f:setPropertyActionListener
-					target="#{templateSpecBean.specComponentId}"
-					value="#{templateSpecId}" />
+				target="#{templateSpecBean.specComponentId}"
+				value="#{templateSpecId}" />
 		</p:commandButton>
 	</p:column>
 </ui:composition>

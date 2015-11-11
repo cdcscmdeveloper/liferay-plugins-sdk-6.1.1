@@ -1687,6 +1687,9 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 * @return the userGroupList
 	 */
 	public List<PmUserGroup> getUserGroupList() {
+		if(userGroupList==null) {
+			userGroupList = new ArrayList<PmUserGroup>();
+		}
 		return userGroupList;
 	}
 
