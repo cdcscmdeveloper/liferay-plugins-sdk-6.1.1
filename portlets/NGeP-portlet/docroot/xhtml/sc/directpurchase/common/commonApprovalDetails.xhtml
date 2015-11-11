@@ -4,41 +4,48 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	
-	<p:panel header="#{lbl['lbl.sc.approve.list']}"  toggleable="true" toggleSpeed="500">
+
+	<p:panel header="#{lbl['lbl.sc.approve.list']}" id="approverId"
+		toggleable="true" toggleSpeed="500">
 		<f:facet name="header">
-			 <h:outputText value="* " styleClass="mandatory" />
-			 <h:outputText value="#{lbl['lbl.sc.approve.list']}" />
+			<h:outputText value="* " styleClass="mandatory" />
+			<h:outputText value="#{lbl['lbl.sc.approve.list']}" />
 		</f:facet>
-		
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.approver.instuction']}"/>	
-		
-		<h:panelGrid columns="1">
-			<h:panelGrid columns="2">
-				<h:outputLabel value="#{lbl['lbl.sc.ptj.approver.group']}"
-					style="text-align: top" />
-				<p:selectOneMenu style="width:350px; margin-bottom:5px;"
-					disabled="#{isPendingApprovalStatus or requestNoteBackingBean.managedBean.viewOnly}"
-					value="#{requestNoteBackingBean.managedBean.requestNote.pmUserGroup.userGroupId}">
-					<p:ajax event="change" process="@this" update="approverDropdown"
-						listener="#{requestNoteBackingBean.userGroupChangeListener()}" />
-					<f:selectItems
-						value="#{requestNoteBackingBean.getUserGroupDropdown()}" />
-				</p:selectOneMenu>
-			</h:panelGrid>
-			<h:panelGrid columns="2">
-				<h:outputLabel value="#{lbl['lbl.sc.approverName']}" />
-				<p:selectOneMenu id="approverDropdown"
-					disabled="#{isPendingApprovalStatus or requestNoteBackingBean.managedBean.viewOnly}"
-					value="#{requestNoteBackingBean.managedBean.selectedApprover}"
-					style="width:340px;">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-						itemValue="" />
-					<f:selectItems
-						value="#{requestNoteBackingBean.managedBean.approverList}" />
-						<p:ajax event="change"/>
-				</p:selectOneMenu>
-			</h:panelGrid>
-		</h:panelGrid>
+
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.approver.instuction']}" />
+
+		<br />
+		<br />
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 9%;"><h:outputText value="* "
+						styleClass="mandatory" /> <h:outputLabel
+						value="#{lbl['lbl.sc.ptj.approver.group']}" /></td>
+				<td><p:selectOneMenu style="width:300px; margin-bottom:5px;"
+						disabled="#{isPendingApprovalStatus or requestNoteBackingBean.managedBean.viewOnly}"
+						value="#{requestNoteBackingBean.managedBean.userGroupId}">
+						<p:ajax event="change" process="@this" update="approverId"
+							listener="#{requestNoteBackingBean.userGroupChangeListener()}" />
+						<f:selectItems
+							value="#{requestNoteBackingBean.getUserGroupDropdown()}" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><h:outputText value="* " styleClass="mandatory" /> <h:outputLabel
+						value="#{lbl['lbl.sc.approverName']}" /></td>
+				<td><p:selectOneMenu id="approverDropdown"
+						disabled="#{isPendingApprovalStatus or requestNoteBackingBean.managedBean.viewOnly}"
+						value="#{requestNoteBackingBean.managedBean.selectedApproverId}"
+						style="width:300px;">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems
+							value="#{requestNoteBackingBean.managedBean.approverList}"
+							var="user" itemLabel="#{user.userName}"
+							itemValue="#{user.userId}"/>
+							<p:ajax event="change" update="approverId" />
+					</p:selectOneMenu></td>
+			</tr>
+		</table>
 	</p:panel>
 </ui:composition>
