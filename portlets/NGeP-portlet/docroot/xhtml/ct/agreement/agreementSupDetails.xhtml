@@ -9,6 +9,31 @@
 	<p:panel id="suplimental" header="#{lbl['lbl.ct.menu.amendment']}"   toggleable="true"  
 	  toggleSpeed="500" rendered="#{agreementBackingBean.managedBean.agreementType eq CtConst.supplementalAgreement}">
 	  <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth150" >
+	    
+	    <f:verbatim/>
+	     <h:panelGrid columns="4">
+		    <p:selectBooleanCheckbox disabled="true"
+			    value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.contractExtend}">
+			</p:selectBooleanCheckbox>
+		    <p:spacer width="2" />				
+		    <h:panelGrid columns="2">
+				<p:outputLabel value="#{lbl['lbl.ct.contract.extension']}" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.extension']}" />
+			</h:panelGrid>
+		</h:panelGrid>
+		
+		<f:verbatim/>
+	     <h:panelGrid columns="3">
+		    <p:selectBooleanCheckbox disabled="true"
+			   value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.itemPriceChange}" >
+			</p:selectBooleanCheckbox>
+		    <p:spacer width="2" />
+		    <h:panelGrid columns="2">
+				<p:outputLabel value="#{lbl['lbl.ct.change.item.price']}" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.change.item.price']}" />
+			</h:panelGrid>
+		</h:panelGrid>
+	    
 	     <f:verbatim/>
 	     <h:panelGrid columns="3">
 		    <p:selectBooleanCheckbox disabled="true"
@@ -18,30 +43,6 @@
 		    <h:panelGrid columns="2">
 				<p:outputLabel value="#{lbl['lbl.ct.change.quantity']}" />
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.change.quantity']}" />
-			</h:panelGrid>
-		</h:panelGrid>
-		
-		<f:verbatim/>
-	     <h:panelGrid columns="3">
-		    <p:selectBooleanCheckbox disabled="true"
-			    value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.clauseChange}">
-			</p:selectBooleanCheckbox>
-		    <p:spacer width="2" />				
-		    <h:panelGrid columns="2">
-				<p:outputLabel value="#{lbl['lbl.ct.change.clause']}" />
-				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.change.clause']}" />
-			</h:panelGrid>	
-	  	</h:panelGrid>
-	  	
-	  	<f:verbatim/>
-	     <h:panelGrid columns="3">
-		    <p:selectBooleanCheckbox disabled="true"
-			   value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.itemPriceChange}" >
-			</p:selectBooleanCheckbox>
-		    <p:spacer width="2" />
-		    <h:panelGrid columns="2">
-				<p:outputLabel value="#{lbl['lbl.ct.change.item.price']}" />
-				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.change.item.price']}" />
 			</h:panelGrid>
 		</h:panelGrid>
 		
@@ -58,16 +59,28 @@
 		</h:panelGrid>
 		
 		<f:verbatim/>
-	     <h:panelGrid columns="4">
+	     <h:panelGrid columns="3">
 		    <p:selectBooleanCheckbox disabled="true"
-			    value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.contractExtend}">
+			    value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.clauseChange}">
 			</p:selectBooleanCheckbox>
 		    <p:spacer width="2" />				
 		    <h:panelGrid columns="2">
-				<p:outputLabel value="#{lbl['lbl.ct.contract.extension']}" />
-				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.extension']}" />
-			</h:panelGrid>
-		</h:panelGrid>
+				<p:outputLabel value="#{lbl['lbl.ct.change.clause']}" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.change.clause']}" />
+			</h:panelGrid>	
+	  	</h:panelGrid>
+	  	
+		<f:verbatim/>
+		<h:panelGrid columns="3">
+				<p:selectBooleanCheckbox disabled="true"
+					value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.otherChange}" >
+				</p:selectBooleanCheckbox>
+				<p:spacer width="2" />
+				<h:panelGrid columns="2">
+				        <p:outputLabel value="#{lbl['lbl.ct.gst.amend.other']}"/>
+				         <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.gst.other']}" />
+				    </h:panelGrid>
+		  	</h:panelGrid>
 		
 	  </h:panelGrid>
 	   <h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidth15" styleClass="top-aligned-columns">
