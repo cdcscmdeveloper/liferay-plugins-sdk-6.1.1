@@ -132,14 +132,14 @@
 						  <td>
 						  
 	    
-						  <ui:include src="smreportcontent.xhtml"></ui:include>
-						  <ui:include src="screportcontent.xhtml"></ui:include>
+						 <ui:include src="smreportcontent.xhtml"></ui:include>
+						 <ui:include src="screportcontent.xhtml"></ui:include>
 						 <ui:include src="cmreportcontent.xhtml"></ui:include>						
-						 <ui:include src="flreportcontent.xhtml"></ui:include>
-						 
+						 <ui:include src="flreportcontent.xhtml"></ui:include>						 
 						 <ui:include src="ctreportcontent.xhtml"></ui:include>
 						 <ui:include src="ppreportcontent.xhtml"></ui:include>
-						  <ui:include src="pmreportcontent.xhtml"></ui:include>
+						 <ui:include src="pmreportcontent.xhtml"></ui:include>
+						 <ui:include src="scloadocument.xhtml"></ui:include>
 						 
 						  </td>
 						  </tr>
@@ -174,7 +174,7 @@
 		            <div align="right">	
 		            
 		           <p:commandButton onstart="blkReportContent.show();" 
-				    oncomplete="blkReportContent.hide();" value="#{lbl['lbl.rpt.generate']}" disabled="#{reportBackingBean.managedBean.rptGenBean.generateButtonView}" ajax="false" onclick="handleLocalesDialogComplete(xhr, status, args)" 
+				    oncomplete="blkReportContent.hide();" value="#{lbl['lbl.rpt.generate']}" disabled="#{reportBackingBean.managedBean.rptGenBean.generateButtonView or reportBackingBean.managedBean.rptGenBean.scLOAContentView}" ajax="false" onclick="handleLocalesDialogComplete(xhr, status, args)" 
 		            update="@form" partialSubmit="true" process="@form">
         				<p:fileDownload value="#{reportBackingBean.generateReport()}" />
     				</p:commandButton> 	  	           

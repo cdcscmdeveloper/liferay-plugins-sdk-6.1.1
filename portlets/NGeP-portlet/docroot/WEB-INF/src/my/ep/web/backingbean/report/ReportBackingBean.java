@@ -1,5 +1,12 @@
-/*
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
  * 
+ ****************************************************
  */
 package my.ep.web.backingbean.report;
 
@@ -30,6 +37,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
@@ -43,12 +51,15 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.rpt.IPMReportSO;
+import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -60,6 +71,10 @@ import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
@@ -74,12 +89,17 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.rpt.PMReport;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
+import my.ep.web.backingbean.sc.loa.QtLOABackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.report.ReportsGenerateBean;
 import my.ep.web.constant.report.CommonMethod;
@@ -87,6 +107,8 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.ReportMangedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
@@ -96,14 +118,14 @@ import com.liferay.portal.util.PortalUtil;
 // TODO: Auto-generated Javadoc
 /**
  * The Class ReportBackingBean.
- *
+ * 
  * @Author Jangari Kondal Reddy
  */
 @ManagedBean(name = "reportBackingBean")
 @ViewScoped
 public class ReportBackingBean extends
 		SourcingBaseBackingBean<ReportMangedBean> {
-	
+
 	/** The Constant log. */
 	private static final Logger log = EpLogger
 			.getLogger(ReportBackingBean.class);
@@ -116,294 +138,311 @@ public class ReportBackingBean extends
 
 	/** The module value. */
 	private String moduleValue;
-	
+
 	/** The report name. */
 	private String reportName;
-	
+
 	/** The report value. */
 	private String reportValue;
-	
+
 	/** The report category. */
 	private String reportCategory;
-	
+
 	/** The string zone. */
 	private String stringZone;
-	
+
 	/** The scqt. */
 	private ScQt scqt;
-	
+
+	private String scLOAIdNo;
+
 	/** The enable value. */
 	private boolean enableValue = false;
-	
+
 	/** The parameter code type. */
 	String parameterCodeType = new String();
-	
+
 	/** The report list. */
 	private List<SelectItem> reportList = new ArrayList<SelectItem>();
-	
+
 	/** The report category list. */
 	private List<SelectItem> reportCategoryList = new ArrayList<SelectItem>();
-	
+
 	/** The module list. */
 	private List<SelectItem> moduleList;
-	
+
 	/** The reg type list. */
 	private List<SelectItem> regTypeList;
-	
+
 	/** The rpt gen bean. */
 	ReportsGenerateBean rptGenBean = new ReportsGenerateBean();
-	
+
 	/** The authoriztion list. */
 	private List<String> authoriztionList = new ArrayList<String>();
-	
+
 	/** The org profile list. */
 	private List<String> orgProfileList = new ArrayList<String>();
-	
+
 	/** The sc year list. */
 	private List<String> scYearList = new ArrayList<String>();
-	
+
 	/** The org profile id name list. */
 	private List<SelectItem> orgProfileIdNameList = new ArrayList<SelectItem>();
-	
+
 	/** The user listbyprofile role. */
 	private List<SelectItem> userListbyprofileRole = new ArrayList<SelectItem>();
-	
+
 	/** The state lst. */
 	private List<SelectItem> stateLst = new ArrayList<SelectItem>();
-	
+
 	/** The sm state list. */
-	private List<SelectItem> smStateList  = new ArrayList<SelectItem>();
-	
+	private List<SelectItem> smStateList = new ArrayList<SelectItem>();
+
 	/** The district lst. */
 	private List<SelectItem> districtLst = new ArrayList<SelectItem>();
-	
+
 	/** The lev one cat lst. */
 	private List<SelectItem> levOneCatLst = new ArrayList<SelectItem>();
-	
+
 	/** The lev two cat lst. */
 	private List<SelectItem> levTwoCatLst = new ArrayList<SelectItem>();
-	
+
 	/** The lev three cat lst. */
 	private List<SelectItem> levThreeCatLst = new ArrayList<SelectItem>();
-	
+
 	/** The procurement list. */
 	private List<SelectItem> procurementList = new ArrayList<SelectItem>();
-	
+
 	/** The sc procure all list. */
 	private List<SelectItem> scProcureAllList = new ArrayList<SelectItem>();
-	
+
 	/** The sc quotation list. */
 	private List<SelectItem> scQuotationList = new ArrayList<SelectItem>();
-	
+
 	/** The sc tender list. */
 	private List<SelectItem> scTenderList = new ArrayList<SelectItem>();
-	
+
 	/** The sc rstrctd tndr list. */
 	private List<SelectItem> scRstrctdTndrList = new ArrayList<SelectItem>();
-	
+
 	/** The sc month list. */
 	private List<SelectItem> scMonthList = new ArrayList<SelectItem>();
 
 	/** The requisitioner list. */
 	private List<SelectItem> requisitionerList = new ArrayList<SelectItem>();
-	
+
 	/** The status list. */
 	private List<SelectItem> statusList = new ArrayList<SelectItem>();
-	
+
 	/** The ministry list. */
 	private List<SelectItem> ministryList = new ArrayList<SelectItem>();
-	
+
 	/** The ptj list. */
 	private List<SelectItem> ptjList = new ArrayList<SelectItem>();
-	
+
 	/** The pm ministry list. */
 	private List<SelectItem> pmMinistryList = new ArrayList<SelectItem>();
-	
+
 	/** The pm ptj list. */
 	private List<String> pmPtjList = new ArrayList<String>();
-	
+
 	/** The processing officer list. */
 	private List<SelectItem> processingOfficerList = new ArrayList<SelectItem>();
 	// private List<PmOrgProfile> ptjList;
 	/** The loan list. */
 	private List<String> loanList = new ArrayList<String>();
-	
+
 	/** The unspc list. */
 	private List<SelectItem> unspcList = new ArrayList<SelectItem>();
-	
+
 	/** The brand list. */
 	private List<SelectItem> brandList = new ArrayList<SelectItem>();
-	
+
 	/** The ext type list. */
 	private List<SelectItem> extTypeList = new ArrayList<SelectItem>();
-	
+
 	/** The measurment list. */
 	private List<SelectItem> measurmentList = new ArrayList<SelectItem>();
-	
+
 	/** The color list. */
 	private List<SelectItem> colorList = new ArrayList<SelectItem>();
-	
+
 	/** The approver nayak taraf list. */
 	private List<SelectItem> approverNayakTarafList = new ArrayList<SelectItem>();
-	
+
 	/** The sc ptj list. */
 	private List<SelectItem> scPtjList = new ArrayList<SelectItem>();
-	
+
 	/** The sc requisitioner list. */
 	private List<SelectItem> scRequisitionerList = new ArrayList<SelectItem>();
-	
+
 	/** The sc desc officer list. */
 	private List<SelectItem> scDescOfficerList = new ArrayList<SelectItem>();
-	
+
 	/** The sm upssvo user list. */
 	private List<SelectItem> smUPSSVOUserList = new ArrayList<SelectItem>();
-	
+
 	/** The ct sub type list. */
 	private List<SelectItem> ctSubTypeList = new ArrayList<SelectItem>();
-	
+
 	/** The zone list. */
 	private List<SelectItem> zoneList = new ArrayList<SelectItem>();
-	
+
 	/** The param list. */
 	private List<String> paramList = new ArrayList<String>();
-	
+
 	/** The high role code list. */
 	private List<String> highRoleCodeList = new ArrayList<String>();
-	
+
 	/** The all role codes list. */
 	private List<String> allRoleCodesList = new ArrayList<String>();
-	
+
 	/** The param table role code list. */
 	private List<String> paramTableRoleCodeList = new ArrayList<String>();
-	
+
 	/** The rolecode rquisitioner list. */
 	private List<SelectItem> rolecodeRquisitionerList = new ArrayList<SelectItem>();
-	
+
 	/** The rolecode approver list. */
 	private List<SelectItem> rolecodeApproverList = new ArrayList<SelectItem>();
-	
+
 	/** The rolecode recieving officer list. */
 	private List<SelectItem> rolecodeRecievingOfficerList = new ArrayList<SelectItem>();
-	
+
 	/** The identification type list. */
 	private List<SelectItem> identificationTypeList = new ArrayList<SelectItem>();
-	
+
 	/** The accumulated paid up cptl list. */
 	private List<SelectItem> accumulatedPaidUpCptlList = new ArrayList<SelectItem>();
-	
+
 	/** The registration status list. */
 	private List<SelectItem> registrationStatusList = new ArrayList<SelectItem>();
-	
+
 	/** The simple quote no list. */
 	private List<String> simpleQuoteNoList = new ArrayList<String>();
-	
+
 	/** The service type list. */
 	private List<SelectItem> serviceTypeList = new ArrayList<SelectItem>();
-	
+
 	/** The payment method list. */
 	private List<String> paymentMethodList = new ArrayList<String>();
-	
+
 	/** The payment type list. */
 	private List<SelectItem> paymentTypeList = new ArrayList<SelectItem>();
-	
+
 	/** The sc soa status list. */
 	private List<SelectItem> scSOAStatusList = new ArrayList<SelectItem>();
-	
+
 	/** The sc report backing bean. */
 	SCReportBackingBean scReportBackingBean;
-	
+
 	/** The cm report backing bean. */
 	CMReportBackingBean cmReportBackingBean;
-	
+
 	/** The fl report backing bean. */
 	FLReportBackingBean flReportBackingBean;
-	
+
 	/** The sm report backing bean. */
 	SMReportBackingBean smReportBackingBean;
-	
+
 	/** The ct report backing bean. */
 	CTReportBackingBean ctReportBackingBean;
-	
+
 	/** The pp report backing bean. */
 	PPReportBackingBean ppReportBackingBean;
-	
+
 	/** The pm report backing bean. */
 	PMReportBackingBean pmReportBackingBean;
-	
+
 	/** The unspid. */
 	Long unspid = null;
-	
+
 	/** The ministry id. */
-	Long ministryId= null;
-	
+	Long ministryId = null;
+
 	/** The role code list. */
 	private List<String> roleCodeList = new ArrayList<String>();
-	
+
 	/** The suppl company list. */
 	private List<String> supplCompanyList = new ArrayList<String>();
-	
+
 	/** The value reqd. */
 	private boolean valueReqd;
-	
+
 	/** The show parent msg. */
 	private boolean showParentMsg;
-	
+
 	/** The selected cat list. */
 	private List<SmSupplierCategory> selectedCatList;
-	
+
 	/** The select cat deletion list. */
-	private List<SmSupplierCategory> selectCatDeletionList;	
-	
+	private List<SmSupplierCategory> selectCatDeletionList;
+
 	/** The module item map. */
-	private Map<String, List<SelectItem>> moduleItemMap=new HashMap<String, List<SelectItem>>();
-	
+	private Map<String, List<SelectItem>> moduleItemMap = new HashMap<String, List<SelectItem>>();
+
 	/**
 	 * Gets the select cat deletion list.
-	 *
+	 * 
 	 * @return the select cat deletion list
 	 */
 	public List<SmSupplierCategory> getSelectCatDeletionList() {
 		return selectCatDeletionList;
 	}
-	
+
 	/** The items. */
 	SelectItem[] items = null;
-	
+
 	/** The doc type status items. */
 	SelectItem[] docTypeStatusItems = null;
-	
+
 	/** The doc type status items list. */
-	List<SelectItem> docTypeStatusItemsList=new ArrayList<SelectItem>();	
-	
+	List<SelectItem> docTypeStatusItemsList = new ArrayList<SelectItem>();
+
+	/**
+	 * @return the scLOAIdNo
+	 */
+	public String getScLOAIdNo() {
+		return scLOAIdNo;
+	}
+
+	/**
+	 * @param scLOAIdNo
+	 *            the scLOAIdNo to set
+	 */
+	public void setScLOAIdNo(String scLOAIdNo) {
+		this.scLOAIdNo = scLOAIdNo;
+	}
+
 	/**
 	 * Sets the select cat deletion list.
-	 *
-	 * @param selectCatDeletionList the new select cat deletion list
+	 * 
+	 * @param selectCatDeletionList
+	 *            the new select cat deletion list
 	 */
 	public void setSelectCatDeletionList(
 			List<SmSupplierCategory> selectCatDeletionList) {
 		this.selectCatDeletionList = selectCatDeletionList;
 	}
-	
+
 	/** The selected all. */
 	private boolean selectedAll;
-	
+
 	/** The selected. */
 	private boolean selected;
-	
+
 	/** The supplier parent cat list. */
 	private List<PmCategoryL1> supplierParentCatList;
-	
+
 	/** The supplier child cat list. */
 	private List<PmCategoryL2> supplierChildCatList;
-	
+
 	/** The supplier sub child cat list. */
 	private List<PmCategoryL3> supplierSubChildCatList;
-		
 
 	/**
 	 * Gets the payment method list.
-	 *
+	 * 
 	 * @return the payment method list
 	 */
 	public List<String> getPaymentMethodList() {
@@ -412,8 +451,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the payment method list.
-	 *
-	 * @param paymentMethodList the new payment method list
+	 * 
+	 * @param paymentMethodList
+	 *            the new payment method list
 	 */
 	public void setPaymentMethodList(List<String> paymentMethodList) {
 		this.paymentMethodList = paymentMethodList;
@@ -421,7 +461,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the payment type list.
-	 *
+	 * 
 	 * @return the payment type list
 	 */
 	public List<SelectItem> getPaymentTypeList() {
@@ -430,18 +470,17 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the payment type list.
-	 *
-	 * @param paymentTypeList the new payment type list
+	 * 
+	 * @param paymentTypeList
+	 *            the new payment type list
 	 */
 	public void setPaymentTypeList(List<SelectItem> paymentTypeList) {
 		this.paymentTypeList = paymentTypeList;
 	}
 
-	
-
 	/**
 	 * Gets the service type list.
-	 *
+	 * 
 	 * @return the service type list
 	 */
 	public List<SelectItem> getServiceTypeList() {
@@ -450,8 +489,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the service type list.
-	 *
-	 * @param serviceTypeList the new service type list
+	 * 
+	 * @param serviceTypeList
+	 *            the new service type list
 	 */
 	public void setServiceTypeList(List<SelectItem> serviceTypeList) {
 		this.serviceTypeList = serviceTypeList;
@@ -459,7 +499,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the report category.
-	 *
+	 * 
 	 * @return the report category
 	 */
 	public String getReportCategory() {
@@ -468,16 +508,17 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the report category.
-	 *
-	 * @param reportCategory the new report category
+	 * 
+	 * @param reportCategory
+	 *            the new report category
 	 */
 	public void setReportCategory(String reportCategory) {
 		this.reportCategory = reportCategory;
-	}	
+	}
 
 	/**
 	 * Gets the processing officer list.
-	 *
+	 * 
 	 * @return the processing officer list
 	 */
 	public List<SelectItem> getProcessingOfficerList() {
@@ -486,8 +527,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the processing officer list.
-	 *
-	 * @param processingOfficerList the new processing officer list
+	 * 
+	 * @param processingOfficerList
+	 *            the new processing officer list
 	 */
 	public void setProcessingOfficerList(List<SelectItem> processingOfficerList) {
 		this.processingOfficerList = processingOfficerList;
@@ -495,7 +537,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the zone list.
-	 *
+	 * 
 	 * @return the zone list
 	 */
 	public List<SelectItem> getZoneList() {
@@ -504,18 +546,17 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the zone list.
-	 *
-	 * @param zoneList the new zone list
+	 * 
+	 * @param zoneList
+	 *            the new zone list
 	 */
 	public void setZoneList(List<SelectItem> zoneList) {
 		this.zoneList = zoneList;
 	}
 
-	
-
 	/**
 	 * Gets the report category list.
-	 *
+	 * 
 	 * @return the report category list
 	 */
 	public List<SelectItem> getReportCategoryList() {
@@ -524,8 +565,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the report category list.
-	 *
-	 * @param reportCategoryList the new report category list
+	 * 
+	 * @param reportCategoryList
+	 *            the new report category list
 	 */
 	public void setReportCategoryList(List<SelectItem> reportCategoryList) {
 		this.reportCategoryList = reportCategoryList;
@@ -533,7 +575,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the param table role code list.
-	 *
+	 * 
 	 * @return the param table role code list
 	 */
 	public List<String> getParamTableRoleCodeList() {
@@ -542,8 +584,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the param table role code list.
-	 *
-	 * @param paramTableRoleCodeList the new param table role code list
+	 * 
+	 * @param paramTableRoleCodeList
+	 *            the new param table role code list
 	 */
 	public void setParamTableRoleCodeList(List<String> paramTableRoleCodeList) {
 		this.paramTableRoleCodeList = paramTableRoleCodeList;
@@ -551,7 +594,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the identification type list.
-	 *
+	 * 
 	 * @return the identification type list
 	 */
 	public List<SelectItem> getIdentificationTypeList() {
@@ -560,16 +603,18 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the identification type list.
-	 *
-	 * @param identificationTypeList the new identification type list
+	 * 
+	 * @param identificationTypeList
+	 *            the new identification type list
 	 */
-	public void setIdentificationTypeList(List<SelectItem> identificationTypeList) {
+	public void setIdentificationTypeList(
+			List<SelectItem> identificationTypeList) {
 		this.identificationTypeList = identificationTypeList;
 	}
 
 	/**
 	 * Gets the accumulated paid up cptl list.
-	 *
+	 * 
 	 * @return the accumulated paid up cptl list
 	 */
 	public List<SelectItem> getAccumulatedPaidUpCptlList() {
@@ -578,8 +623,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the accumulated paid up cptl list.
-	 *
-	 * @param accumulatedPaidUpCptlList the new accumulated paid up cptl list
+	 * 
+	 * @param accumulatedPaidUpCptlList
+	 *            the new accumulated paid up cptl list
 	 */
 	public void setAccumulatedPaidUpCptlList(
 			List<SelectItem> accumulatedPaidUpCptlList) {
@@ -588,7 +634,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sm state list.
-	 *
+	 * 
 	 * @return the sm state list
 	 */
 	public List<SelectItem> getSmStateList() {
@@ -597,8 +643,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm state list.
-	 *
-	 * @param smStateList the new sm state list
+	 * 
+	 * @param smStateList
+	 *            the new sm state list
 	 */
 	public void setSmStateList(List<SelectItem> smStateList) {
 		this.smStateList = smStateList;
@@ -606,7 +653,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the ministry id.
-	 *
+	 * 
 	 * @return the ministry id
 	 */
 	public Long getMinistryId() {
@@ -615,8 +662,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the ministry id.
-	 *
-	 * @param ministryId the new ministry id
+	 * 
+	 * @param ministryId
+	 *            the new ministry id
 	 */
 	public void setMinistryId(Long ministryId) {
 		this.ministryId = ministryId;
@@ -624,7 +672,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the pm ministry list.
-	 *
+	 * 
 	 * @return the pm ministry list
 	 */
 	public List<SelectItem> getPmMinistryList() {
@@ -633,8 +681,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the pm ministry list.
-	 *
-	 * @param pmMinistryList the new pm ministry list
+	 * 
+	 * @param pmMinistryList
+	 *            the new pm ministry list
 	 */
 	public void setPmMinistryList(List<SelectItem> pmMinistryList) {
 		this.pmMinistryList = pmMinistryList;
@@ -642,7 +691,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the pm ptj list.
-	 *
+	 * 
 	 * @return the pm ptj list
 	 */
 	public List<String> getPmPtjList() {
@@ -651,8 +700,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the pm ptj list.
-	 *
-	 * @param pmPtjList the new pm ptj list
+	 * 
+	 * @param pmPtjList
+	 *            the new pm ptj list
 	 */
 	public void setPmPtjList(List<String> pmPtjList) {
 		this.pmPtjList = pmPtjList;
@@ -660,7 +710,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the doc type status items list.
-	 *
+	 * 
 	 * @return the doc type status items list
 	 */
 	public List<SelectItem> getDocTypeStatusItemsList() {
@@ -669,16 +719,18 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the doc type status items list.
-	 *
-	 * @param docTypeStatusItemsList the new doc type status items list
+	 * 
+	 * @param docTypeStatusItemsList
+	 *            the new doc type status items list
 	 */
-	public void setDocTypeStatusItemsList(List<SelectItem> docTypeStatusItemsList) {
+	public void setDocTypeStatusItemsList(
+			List<SelectItem> docTypeStatusItemsList) {
 		this.docTypeStatusItemsList = docTypeStatusItemsList;
 	}
 
 	/**
 	 * Gets the doc type status items.
-	 *
+	 * 
 	 * @return the doc type status items
 	 */
 	public SelectItem[] getDocTypeStatusItems() {
@@ -687,8 +739,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the doc type status items.
-	 *
-	 * @param docTypeStatusItems the new doc type status items
+	 * 
+	 * @param docTypeStatusItems
+	 *            the new doc type status items
 	 */
 	public void setDocTypeStatusItems(SelectItem[] docTypeStatusItems) {
 		this.docTypeStatusItems = docTypeStatusItems;
@@ -696,7 +749,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the rolecode rquisitioner list.
-	 *
+	 * 
 	 * @return the rolecode rquisitioner list
 	 */
 	public List<SelectItem> getRolecodeRquisitionerList() {
@@ -705,8 +758,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the rolecode rquisitioner list.
-	 *
-	 * @param rolecodeRquisitionerList the new rolecode rquisitioner list
+	 * 
+	 * @param rolecodeRquisitionerList
+	 *            the new rolecode rquisitioner list
 	 */
 	public void setRolecodeRquisitionerList(
 			List<SelectItem> rolecodeRquisitionerList) {
@@ -715,7 +769,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the rolecode approver list.
-	 *
+	 * 
 	 * @return the rolecode approver list
 	 */
 	public List<SelectItem> getRolecodeApproverList() {
@@ -724,8 +778,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the rolecode approver list.
-	 *
-	 * @param rolecodeApproverList the new rolecode approver list
+	 * 
+	 * @param rolecodeApproverList
+	 *            the new rolecode approver list
 	 */
 	public void setRolecodeApproverList(List<SelectItem> rolecodeApproverList) {
 		this.rolecodeApproverList = rolecodeApproverList;
@@ -733,7 +788,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the rolecode recieving officer list.
-	 *
+	 * 
 	 * @return the rolecode recieving officer list
 	 */
 	public List<SelectItem> getRolecodeRecievingOfficerList() {
@@ -742,8 +797,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the rolecode recieving officer list.
-	 *
-	 * @param rolecodeRecievingOfficerList the new rolecode recieving officer list
+	 * 
+	 * @param rolecodeRecievingOfficerList
+	 *            the new rolecode recieving officer list
 	 */
 	public void setRolecodeRecievingOfficerList(
 			List<SelectItem> rolecodeRecievingOfficerList) {
@@ -752,7 +808,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the high role code list.
-	 *
+	 * 
 	 * @return the high role code list
 	 */
 	public List<String> getHighRoleCodeList() {
@@ -761,8 +817,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the high role code list.
-	 *
-	 * @param highRoleCodeList the new high role code list
+	 * 
+	 * @param highRoleCodeList
+	 *            the new high role code list
 	 */
 	public void setHighRoleCodeList(List<String> highRoleCodeList) {
 		this.highRoleCodeList = highRoleCodeList;
@@ -770,7 +827,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the all role codes list.
-	 *
+	 * 
 	 * @return the all role codes list
 	 */
 	public List<String> getAllRoleCodesList() {
@@ -779,8 +836,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the all role codes list.
-	 *
-	 * @param allRoleCodesList the new all role codes list
+	 * 
+	 * @param allRoleCodesList
+	 *            the new all role codes list
 	 */
 	public void setAllRoleCodesList(List<String> allRoleCodesList) {
 		this.allRoleCodesList = allRoleCodesList;
@@ -788,7 +846,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the param list.
-	 *
+	 * 
 	 * @return the param list
 	 */
 	public List<String> getParamList() {
@@ -797,8 +855,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the param list.
-	 *
-	 * @param paramList the new param list
+	 * 
+	 * @param paramList
+	 *            the new param list
 	 */
 	public void setParamList(List<String> paramList) {
 		this.paramList = paramList;
@@ -806,7 +865,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the ct sub type list.
-	 *
+	 * 
 	 * @return the ct sub type list
 	 */
 	public List<SelectItem> getCtSubTypeList() {
@@ -815,8 +874,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the ct sub type list.
-	 *
-	 * @param ctSubTypeList the new ct sub type list
+	 * 
+	 * @param ctSubTypeList
+	 *            the new ct sub type list
 	 */
 	public void setCtSubTypeList(List<SelectItem> ctSubTypeList) {
 		this.ctSubTypeList = ctSubTypeList;
@@ -824,7 +884,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sm upssvo user list.
-	 *
+	 * 
 	 * @return the sm upssvo user list
 	 */
 	public List<SelectItem> getSmUPSSVOUserList() {
@@ -833,8 +893,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm upssvo user list.
-	 *
-	 * @param smUPSSVOUserList the new sm upssvo user list
+	 * 
+	 * @param smUPSSVOUserList
+	 *            the new sm upssvo user list
 	 */
 	public void setSmUPSSVOUserList(List<SelectItem> smUPSSVOUserList) {
 		this.smUPSSVOUserList = smUPSSVOUserList;
@@ -842,7 +903,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc desc officer list.
-	 *
+	 * 
 	 * @return the sc desc officer list
 	 */
 	public List<SelectItem> getScDescOfficerList() {
@@ -851,8 +912,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc desc officer list.
-	 *
-	 * @param scDescOfficerList the new sc desc officer list
+	 * 
+	 * @param scDescOfficerList
+	 *            the new sc desc officer list
 	 */
 	public void setScDescOfficerList(List<SelectItem> scDescOfficerList) {
 		this.scDescOfficerList = scDescOfficerList;
@@ -860,7 +922,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc ptj list.
-	 *
+	 * 
 	 * @return the sc ptj list
 	 */
 	public List<SelectItem> getScPtjList() {
@@ -869,8 +931,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc ptj list.
-	 *
-	 * @param scPtjList the new sc ptj list
+	 * 
+	 * @param scPtjList
+	 *            the new sc ptj list
 	 */
 	public void setScPtjList(List<SelectItem> scPtjList) {
 		this.scPtjList = scPtjList;
@@ -878,7 +941,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc requisitioner list.
-	 *
+	 * 
 	 * @return the sc requisitioner list
 	 */
 	public List<SelectItem> getScRequisitionerList() {
@@ -887,8 +950,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc requisitioner list.
-	 *
-	 * @param scRequisitionerList the new sc requisitioner list
+	 * 
+	 * @param scRequisitionerList
+	 *            the new sc requisitioner list
 	 */
 	public void setScRequisitionerList(List<SelectItem> scRequisitionerList) {
 		this.scRequisitionerList = scRequisitionerList;
@@ -896,7 +960,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the approver nayak taraf list.
-	 *
+	 * 
 	 * @return the approver nayak taraf list
 	 */
 	public List<SelectItem> getApproverNayakTarafList() {
@@ -905,16 +969,18 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the approver nayak taraf list.
-	 *
-	 * @param approverNayakTarafList the new approver nayak taraf list
+	 * 
+	 * @param approverNayakTarafList
+	 *            the new approver nayak taraf list
 	 */
-	public void setApproverNayakTarafList(List<SelectItem> approverNayakTarafList) {
+	public void setApproverNayakTarafList(
+			List<SelectItem> approverNayakTarafList) {
 		this.approverNayakTarafList = approverNayakTarafList;
 	}
 
 	/**
 	 * Gets the role code list.
-	 *
+	 * 
 	 * @return the role code list
 	 */
 	public List<String> getRoleCodeList() {
@@ -923,8 +989,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the role code list.
-	 *
-	 * @param roleCodeList the new role code list
+	 * 
+	 * @param roleCodeList
+	 *            the new role code list
 	 */
 	public void setRoleCodeList(List<String> roleCodeList) {
 		this.roleCodeList = roleCodeList;
@@ -932,7 +999,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the suppl company list.
-	 *
+	 * 
 	 * @return the suppl company list
 	 */
 	public List<String> getSupplCompanyList() {
@@ -941,8 +1008,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the suppl company list.
-	 *
-	 * @param supplCompanyList the new suppl company list
+	 * 
+	 * @param supplCompanyList
+	 *            the new suppl company list
 	 */
 	public void setSupplCompanyList(List<String> supplCompanyList) {
 		this.supplCompanyList = supplCompanyList;
@@ -950,7 +1018,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Checks if is show parent msg.
-	 *
+	 * 
 	 * @return true, if is show parent msg
 	 */
 	public boolean isShowParentMsg() {
@@ -959,8 +1027,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the show parent msg.
-	 *
-	 * @param showParentMsg the new show parent msg
+	 * 
+	 * @param showParentMsg
+	 *            the new show parent msg
 	 */
 	public void setShowParentMsg(boolean showParentMsg) {
 		this.showParentMsg = showParentMsg;
@@ -968,7 +1037,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the supplier child cat list.
-	 *
+	 * 
 	 * @return the supplier child cat list
 	 */
 	public List<PmCategoryL2> getSupplierChildCatList() {
@@ -977,8 +1046,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the supplier child cat list.
-	 *
-	 * @param supplierChildCatList the new supplier child cat list
+	 * 
+	 * @param supplierChildCatList
+	 *            the new supplier child cat list
 	 */
 	public void setSupplierChildCatList(List<PmCategoryL2> supplierChildCatList) {
 		this.supplierChildCatList = supplierChildCatList;
@@ -986,7 +1056,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the supplier sub child cat list.
-	 *
+	 * 
 	 * @return the supplier sub child cat list
 	 */
 	public List<PmCategoryL3> getSupplierSubChildCatList() {
@@ -995,8 +1065,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the supplier sub child cat list.
-	 *
-	 * @param supplierSubChildCatList the new supplier sub child cat list
+	 * 
+	 * @param supplierSubChildCatList
+	 *            the new supplier sub child cat list
 	 */
 	public void setSupplierSubChildCatList(
 			List<PmCategoryL3> supplierSubChildCatList) {
@@ -1005,7 +1076,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the supplier parent cat list.
-	 *
+	 * 
 	 * @return the supplier parent cat list
 	 */
 	public List<PmCategoryL1> getSupplierParentCatList() {
@@ -1014,8 +1085,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the supplier parent cat list.
-	 *
-	 * @param supplierParentCatList the new supplier parent cat list
+	 * 
+	 * @param supplierParentCatList
+	 *            the new supplier parent cat list
 	 */
 	public void setSupplierParentCatList(
 			List<PmCategoryL1> supplierParentCatList) {
@@ -1024,7 +1096,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Checks if is selected all.
-	 *
+	 * 
 	 * @return true, if is selected all
 	 */
 	public boolean isSelectedAll() {
@@ -1033,8 +1105,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the selected all.
-	 *
-	 * @param selectedAll the new selected all
+	 * 
+	 * @param selectedAll
+	 *            the new selected all
 	 */
 	public void setSelectedAll(boolean selectedAll) {
 		this.selectedAll = selectedAll;
@@ -1042,7 +1115,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Checks if is selected.
-	 *
+	 * 
 	 * @return true, if is selected
 	 */
 	public boolean isSelected() {
@@ -1051,8 +1124,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the selected.
-	 *
-	 * @param selected the new selected
+	 * 
+	 * @param selected
+	 *            the new selected
 	 */
 	public void setSelected(boolean selected) {
 		this.selected = selected;
@@ -1060,7 +1134,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the selected cat list.
-	 *
+	 * 
 	 * @return the selected cat list
 	 */
 	public List<SmSupplierCategory> getSelectedCatList() {
@@ -1069,8 +1143,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the selected cat list.
-	 *
-	 * @param selectedCatList the new selected cat list
+	 * 
+	 * @param selectedCatList
+	 *            the new selected cat list
 	 */
 	public void setSelectedCatList(List<SmSupplierCategory> selectedCatList) {
 		this.selectedCatList = selectedCatList;
@@ -1078,7 +1153,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the registration status list.
-	 *
+	 * 
 	 * @return the registration status list
 	 */
 	public List<SelectItem> getRegistrationStatusList() {
@@ -1087,17 +1162,18 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the registration status list.
-	 *
-	 * @param registrationStatusList the new registration status list
+	 * 
+	 * @param registrationStatusList
+	 *            the new registration status list
 	 */
-	public void setRegistrationStatusList(List<SelectItem> registrationStatusList) {
+	public void setRegistrationStatusList(
+			List<SelectItem> registrationStatusList) {
 		this.registrationStatusList = registrationStatusList;
 	}
- 
-	
+
 	/**
 	 * Gets the string zone.
-	 *
+	 * 
 	 * @return the string zone
 	 */
 	public String getStringZone() {
@@ -1106,8 +1182,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the string zone.
-	 *
-	 * @param stringZone the new string zone
+	 * 
+	 * @param stringZone
+	 *            the new string zone
 	 */
 	public void setStringZone(String stringZone) {
 		this.stringZone = stringZone;
@@ -1115,7 +1192,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Checks if is value reqd.
-	 *
+	 * 
 	 * @return true, if is value reqd
 	 */
 	public boolean isValueReqd() {
@@ -1124,8 +1201,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the value reqd.
-	 *
-	 * @param valueReqd the new value reqd
+	 * 
+	 * @param valueReqd
+	 *            the new value reqd
 	 */
 	public void setValueReqd(boolean valueReqd) {
 		this.valueReqd = valueReqd;
@@ -1133,7 +1211,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the brand list.
-	 *
+	 * 
 	 * @return the brand list
 	 */
 	public List<SelectItem> getBrandList() {
@@ -1142,8 +1220,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the brand list.
-	 *
-	 * @param brandList the new brand list
+	 * 
+	 * @param brandList
+	 *            the new brand list
 	 */
 	public void setBrandList(List<SelectItem> brandList) {
 		this.brandList = brandList;
@@ -1151,7 +1230,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the ext type list.
-	 *
+	 * 
 	 * @return the ext type list
 	 */
 	public List<SelectItem> getExtTypeList() {
@@ -1160,8 +1239,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the ext type list.
-	 *
-	 * @param extTypeList the new ext type list
+	 * 
+	 * @param extTypeList
+	 *            the new ext type list
 	 */
 	public void setExtTypeList(List<SelectItem> extTypeList) {
 		this.extTypeList = extTypeList;
@@ -1169,7 +1249,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the measurment list.
-	 *
+	 * 
 	 * @return the measurment list
 	 */
 	public List<SelectItem> getMeasurmentList() {
@@ -1178,8 +1258,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the measurment list.
-	 *
-	 * @param measurmentList the new measurment list
+	 * 
+	 * @param measurmentList
+	 *            the new measurment list
 	 */
 	public void setMeasurmentList(List<SelectItem> measurmentList) {
 		this.measurmentList = measurmentList;
@@ -1187,7 +1268,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the color list.
-	 *
+	 * 
 	 * @return the color list
 	 */
 	public List<SelectItem> getColorList() {
@@ -1196,8 +1277,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the color list.
-	 *
-	 * @param colorList the new color list
+	 * 
+	 * @param colorList
+	 *            the new color list
 	 */
 	public void setColorList(List<SelectItem> colorList) {
 		this.colorList = colorList;
@@ -1205,7 +1287,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the unspid.
-	 *
+	 * 
 	 * @return the unspid
 	 */
 	public Long getUnspid() {
@@ -1214,8 +1296,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the unspid.
-	 *
-	 * @param unspid the new unspid
+	 * 
+	 * @param unspid
+	 *            the new unspid
 	 */
 	public void setUnspid(Long unspid) {
 		this.unspid = unspid;
@@ -1223,7 +1306,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the unspc list.
-	 *
+	 * 
 	 * @return the unspc list
 	 */
 	public List<SelectItem> getUnspcList() {
@@ -1232,8 +1315,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the unspc list.
-	 *
-	 * @param unspcList the new unspc list
+	 * 
+	 * @param unspcList
+	 *            the new unspc list
 	 */
 	public void setUnspcList(List<SelectItem> unspcList) {
 		this.unspcList = unspcList;
@@ -1241,7 +1325,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the report value.
-	 *
+	 * 
 	 * @return the report value
 	 */
 	public String getReportValue() {
@@ -1250,8 +1334,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the report value.
-	 *
-	 * @param reportValue the new report value
+	 * 
+	 * @param reportValue
+	 *            the new report value
 	 */
 	public void setReportValue(String reportValue) {
 		this.reportValue = reportValue;
@@ -1259,7 +1344,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the report name.
-	 *
+	 * 
 	 * @return the report name
 	 */
 	public String getReportName() {
@@ -1268,8 +1353,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the report name.
-	 *
-	 * @param reportName the new report name
+	 * 
+	 * @param reportName
+	 *            the new report name
 	 */
 	public void setReportName(String reportName) {
 		this.reportName = reportName;
@@ -1277,7 +1363,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the module value.
-	 *
+	 * 
 	 * @return the module value
 	 */
 	public String getModuleValue() {
@@ -1286,8 +1372,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the module value.
-	 *
-	 * @param moduleValue the new module value
+	 * 
+	 * @param moduleValue
+	 *            the new module value
 	 */
 	public void setModuleValue(String moduleValue) {
 		this.moduleValue = moduleValue;
@@ -1295,7 +1382,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the ct report backing bean.
-	 *
+	 * 
 	 * @return the ct report backing bean
 	 */
 	public CTReportBackingBean getCtReportBackingBean() {
@@ -1304,8 +1391,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the ct report backing bean.
-	 *
-	 * @param ctReportBackingBean the new ct report backing bean
+	 * 
+	 * @param ctReportBackingBean
+	 *            the new ct report backing bean
 	 */
 	public void setCtReportBackingBean(CTReportBackingBean ctReportBackingBean) {
 		this.ctReportBackingBean = ctReportBackingBean;
@@ -1313,7 +1401,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc report backing bean.
-	 *
+	 * 
 	 * @return the sc report backing bean
 	 */
 	public SCReportBackingBean getScReportBackingBean() {
@@ -1322,8 +1410,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc report backing bean.
-	 *
-	 * @param scReportBackingBean the new sc report backing bean
+	 * 
+	 * @param scReportBackingBean
+	 *            the new sc report backing bean
 	 */
 	public void setScReportBackingBean(SCReportBackingBean scReportBackingBean) {
 		this.scReportBackingBean = scReportBackingBean;
@@ -1331,7 +1420,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the cm report backing bean.
-	 *
+	 * 
 	 * @return the cm report backing bean
 	 */
 	public CMReportBackingBean getCmReportBackingBean() {
@@ -1340,8 +1429,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the cm report backing bean.
-	 *
-	 * @param cmReportBackingBean the new cm report backing bean
+	 * 
+	 * @param cmReportBackingBean
+	 *            the new cm report backing bean
 	 */
 	public void setCmReportBackingBean(CMReportBackingBean cmReportBackingBean) {
 		this.cmReportBackingBean = cmReportBackingBean;
@@ -1349,7 +1439,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl report backing bean.
-	 *
+	 * 
 	 * @return the fl report backing bean
 	 */
 	public FLReportBackingBean getFlReportBackingBean() {
@@ -1358,8 +1448,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl report backing bean.
-	 *
-	 * @param flReportBackingBean the new fl report backing bean
+	 * 
+	 * @param flReportBackingBean
+	 *            the new fl report backing bean
 	 */
 	public void setFlReportBackingBean(FLReportBackingBean flReportBackingBean) {
 		this.flReportBackingBean = flReportBackingBean;
@@ -1367,7 +1458,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sm report backing bean.
-	 *
+	 * 
 	 * @return the sm report backing bean
 	 */
 	public SMReportBackingBean getSmReportBackingBean() {
@@ -1376,17 +1467,17 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm report backing bean.
-	 *
-	 * @param smReportBackingBean the new sm report backing bean
+	 * 
+	 * @param smReportBackingBean
+	 *            the new sm report backing bean
 	 */
 	public void setSmReportBackingBean(SMReportBackingBean smReportBackingBean) {
 		this.smReportBackingBean = smReportBackingBean;
 	}
-	
 
 	/**
 	 * Gets the pm report backing bean.
-	 *
+	 * 
 	 * @return the pm report backing bean
 	 */
 	public PMReportBackingBean getPmReportBackingBean() {
@@ -1395,8 +1486,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the pm report backing bean.
-	 *
-	 * @param pmReportBackingBean the new pm report backing bean
+	 * 
+	 * @param pmReportBackingBean
+	 *            the new pm report backing bean
 	 */
 	public void setPmReportBackingBean(PMReportBackingBean pmReportBackingBean) {
 		this.pmReportBackingBean = pmReportBackingBean;
@@ -1404,7 +1496,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the pp report backing bean.
-	 *
+	 * 
 	 * @return the pp report backing bean
 	 */
 	public PPReportBackingBean getPpReportBackingBean() {
@@ -1413,8 +1505,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the pp report backing bean.
-	 *
-	 * @param ppReportBackingBean the new pp report backing bean
+	 * 
+	 * @param ppReportBackingBean
+	 *            the new pp report backing bean
 	 */
 	public void setPpReportBackingBean(PPReportBackingBean ppReportBackingBean) {
 		this.ppReportBackingBean = ppReportBackingBean;
@@ -1422,7 +1515,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the org profile id name list.
-	 *
+	 * 
 	 * @return the org profile id name list
 	 */
 	public List<SelectItem> getOrgProfileIdNameList() {
@@ -1431,8 +1524,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the org profile id name list.
-	 *
-	 * @param orgProfileIdNameList the new org profile id name list
+	 * 
+	 * @param orgProfileIdNameList
+	 *            the new org profile id name list
 	 */
 	public void setOrgProfileIdNameList(List<SelectItem> orgProfileIdNameList) {
 		this.orgProfileIdNameList = orgProfileIdNameList;
@@ -1440,7 +1534,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc month list.
-	 *
+	 * 
 	 * @return the sc month list
 	 */
 	public List<SelectItem> getScMonthList() {
@@ -1449,8 +1543,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc month list.
-	 *
-	 * @param scMonthList the new sc month list
+	 * 
+	 * @param scMonthList
+	 *            the new sc month list
 	 */
 	public void setScMonthList(List<SelectItem> scMonthList) {
 		this.scMonthList = scMonthList;
@@ -1458,7 +1553,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc year list.
-	 *
+	 * 
 	 * @return the sc year list
 	 */
 	public List<String> getScYearList() {
@@ -1467,8 +1562,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc year list.
-	 *
-	 * @param scYearList the new sc year list
+	 * 
+	 * @param scYearList
+	 *            the new sc year list
 	 */
 	public void setScYearList(List<String> scYearList) {
 		this.scYearList = scYearList;
@@ -1476,7 +1572,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the user listbyprofile role.
-	 *
+	 * 
 	 * @return the user listbyprofile role
 	 */
 	public List<SelectItem> getUserListbyprofileRole() {
@@ -1485,8 +1581,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the user listbyprofile role.
-	 *
-	 * @param userListbyprofileRole the new user listbyprofile role
+	 * 
+	 * @param userListbyprofileRole
+	 *            the new user listbyprofile role
 	 */
 	public void setUserListbyprofileRole(List<SelectItem> userListbyprofileRole) {
 		this.userListbyprofileRole = userListbyprofileRole;
@@ -1494,7 +1591,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the org profile list.
-	 *
+	 * 
 	 * @return the org profile list
 	 */
 	public List<String> getOrgProfileList() {
@@ -1503,8 +1600,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the org profile list.
-	 *
-	 * @param orgProfileList the new org profile list
+	 * 
+	 * @param orgProfileList
+	 *            the new org profile list
 	 */
 	public void setOrgProfileList(List<String> orgProfileList) {
 		this.orgProfileList = orgProfileList;
@@ -1512,7 +1610,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the loan list.
-	 *
+	 * 
 	 * @return the loan list
 	 */
 	public List<String> getLoanList() {
@@ -1521,8 +1619,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the loan list.
-	 *
-	 * @param loanList the new loan list
+	 * 
+	 * @param loanList
+	 *            the new loan list
 	 */
 	public void setLoanList(List<String> loanList) {
 		this.loanList = loanList;
@@ -1530,7 +1629,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the requisitioner list.
-	 *
+	 * 
 	 * @return the requisitioner list
 	 */
 	public List<SelectItem> getRequisitionerList() {
@@ -1539,8 +1638,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the requisitioner list.
-	 *
-	 * @param requisitionerList the new requisitioner list
+	 * 
+	 * @param requisitionerList
+	 *            the new requisitioner list
 	 */
 	public void setRequisitionerList(List<SelectItem> requisitionerList) {
 		this.requisitionerList = requisitionerList;
@@ -1548,7 +1648,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the status list.
-	 *
+	 * 
 	 * @return the status list
 	 */
 	public List<SelectItem> getStatusList() {
@@ -1557,16 +1657,17 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the status list.
-	 *
-	 * @param statusList the new status list
+	 * 
+	 * @param statusList
+	 *            the new status list
 	 */
 	public void setStatusList(List<SelectItem> statusList) {
 		this.statusList = statusList;
 	}
-	
+
 	/**
 	 * Gets the parameter code type.
-	 *
+	 * 
 	 * @return the parameter code type
 	 */
 	public String getParameterCodeType() {
@@ -1575,8 +1676,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the parameter code type.
-	 *
-	 * @param parameterCodeType the new parameter code type
+	 * 
+	 * @param parameterCodeType
+	 *            the new parameter code type
 	 */
 	public void setParameterCodeType(String parameterCodeType) {
 		this.parameterCodeType = parameterCodeType;
@@ -1584,7 +1686,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the ministry list.
-	 *
+	 * 
 	 * @return the ministry list
 	 */
 	public List<SelectItem> getMinistryList() {
@@ -1593,17 +1695,17 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the ministry list.
-	 *
-	 * @param ministryList the new ministry list
+	 * 
+	 * @param ministryList
+	 *            the new ministry list
 	 */
 	public void setMinistryList(List<SelectItem> ministryList) {
 		this.ministryList = ministryList;
 	}
 
-	
 	/**
 	 * Gets the ptj list.
-	 *
+	 * 
 	 * @return the ptj list
 	 */
 	public List<SelectItem> getPtjList() {
@@ -1612,8 +1714,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the ptj list.
-	 *
-	 * @param ptjList the new ptj list
+	 * 
+	 * @param ptjList
+	 *            the new ptj list
 	 */
 	public void setPtjList(List<SelectItem> ptjList) {
 		this.ptjList = ptjList;
@@ -1621,14 +1724,13 @@ public class ReportBackingBean extends
 
 	/** The adding state list. */
 	private List<String> addingStateList = new ArrayList<String>();
-	
+
 	/** The adding district list. */
 	private List<String> addingDistrictList = new ArrayList<String>();
-	
-	
+
 	/**
 	 * Gets the adding state list.
-	 *
+	 * 
 	 * @return the adding state list
 	 */
 	public List<String> getAddingStateList() {
@@ -1637,8 +1739,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the adding state list.
-	 *
-	 * @param addingStateList the new adding state list
+	 * 
+	 * @param addingStateList
+	 *            the new adding state list
 	 */
 	public void setAddingStateList(List<String> addingStateList) {
 		this.addingStateList = addingStateList;
@@ -1646,7 +1749,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the adding district list.
-	 *
+	 * 
 	 * @return the adding district list
 	 */
 	public List<String> getAddingDistrictList() {
@@ -1655,8 +1758,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the adding district list.
-	 *
-	 * @param addingDistrictList the new adding district list
+	 * 
+	 * @param addingDistrictList
+	 *            the new adding district list
 	 */
 	public void setAddingDistrictList(List<String> addingDistrictList) {
 		this.addingDistrictList = addingDistrictList;
@@ -1666,624 +1770,624 @@ public class ReportBackingBean extends
 	private String localToDateVar;
 
 	/** The user id. */
-	private String userId;	
-	
+	private String userId;
+
 	/** The lng user id. */
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)243371;//116205;//243371;//61745;//219490;//240790;//183931;//20854;//243371;//20854;//168887;//221747;//219490;//243394;//243371;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
+	// private Long lngUserId =
+	// (long)243371;//116205;//243371;//61745;//219490;//240790;//183931;//20854;//243371;//20854;//168887;//221747;//219490;//243394;//243371;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
 	/** The str language. */
-	private String strLanguage = ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG,	ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-	//private String strLanguage = "ms";
+	private String strLanguage = ResourceBundleUtils.getMessage(
+			ReportConst.LABEL_LANG, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+			new FacesScopes().getUserLocale());
+	// private String strLanguage = "ms";
 	/** The role code. */
 	private String roleCode;
-	
+
 	/** The from date. */
 	private Date fromDate;
-	
+
 	/** The to date. */
 	private Date toDate;
-	
+
 	/** The sub module. */
 	private String subModule;
-	
+
 	/** The common ptj. */
 	private String commonPtj;
-	
+
 	/** The common ministry. */
 	private String commonMinistry;
-	
+
 	/** The ministry name. */
 	private String ministryName;
 	// sc
 	/** The sc quotation id. */
 	private String scQuotationId;
-	
+
 	/** The sc quotation no. */
 	private String scQuotationNo;
-	
+
 	/** The sc payment id. */
 	private String scPaymentId;
-	
+
 	/** The sc created to year. */
 	private String scCreatedToYear;
-	
+
 	/** The sc created to month. */
 	private String scCreatedToMonth;
-	
+
 	/** The sc created from year. */
 	private String scCreatedFromYear;
-	
+
 	/** The sc created from month. */
 	private String scCreatedFromMonth;
-	
+
 	/** The sc desk officer. */
 	private String scDeskOfficer;
-	
+
 	/** The sc ptj. */
 	private String scPtj;
-	
+
 	/** The sc status. */
 	private String scStatus;
-	
+
 	/** The sc publish from date. */
 	private Date scPublishFromDate;
-	
+
 	/** The sc publish to date. */
 	private Date scPublishToDate;
-	
+
 	/** The sc sone crtd from date. */
 	private Date scSoneCrtdFromDate;
-	
+
 	/** The sc sone crtd to date. */
 	private Date scSoneCrtdToDate;
-	
+
 	/** The sc requisener id. */
 	private String scRequisenerId;
-	
+
 	/** The sc supplier. */
 	private String scSupplier;
-	
+
 	/** The sc login. */
 	private String scLogin;
-	
+
 	/** The sc p ino. */
 	private String scPIno;
-	
+
 	/** The sc sone status. */
 	private String scSoneStatus;
-	
+
 	/** The sc prc rpt group. */
 	private String scPrcRptGroup;
-	
+
 	/** The sc pi dtls prc rpt group. */
 	private String scPIDtlsPrcRptGroup;
-	
+
 	/** The sc procurement type. */
 	private String scProcurementType;
-	
+
 	/** The sc process rpt quotation no. */
 	private String scProcessRptQuotationNo;
-	
+
 	/** The sc common status. */
 	private String scCommonStatus;
-	
+
 	/** The sc laprnpurchdefault group. */
 	private String scLAPRNPURCHDEFAULTGroup;
-	
+
 	/** The sc requestnotesummary group. */
 	private String scREQUESTNOTESUMMARYGroup;
-	
+
 	/** The sc pid no. */
 	private String scPIDNo;
-	
+
 	/** The sc contract or pkp type. */
 	private String scContractOrPKPType;
-	
+
 	/** The sc contract or pkp no. */
 	private String scContractOrPKPNo;
-	
+
 	/** The sc contract or pkp name. */
 	private String scContractOrPKPName;
-	
+
 	/** The sc request quote no. */
 	private String scRequestQuoteNo;
-	
+
 	/** The sc request note status. */
 	private String scRequestNoteStatus;
-	
+
 	/** The sc simple quote status. */
 	private String scSimpleQuoteStatus;
-	
+
 	/** The sc simple quote dtl group. */
 	private String scSimpleQuoteDtlGroup;
-	
+
 	/** The sc purchase in default status. */
 	private String scPurchaseInDefaultStatus;
-	
+
 	/** The sc soa status. */
 	private String scSOAStatus;
-	
+
 	/** The sc simple quote type. */
 	private String scSimpleQuoteType;
-	
+
 	/** The sc loa no. */
 	private String scLOANo;
-	
+
 	// cm
 	/** The cm item type. */
 	private String cmItemType;
-	
+
 	/** The cm item status. */
 	private String cmItemStatus;
-	
+
 	/** The cm unspsc code. */
 	private String cmUnspscCode;
-	
+
 	/** The cm unspsc title. */
 	private String cmUnspscTitle;
-	
+
 	/** The cm company name. */
 	private String cmCompanyName;
-	
+
 	/** The cm registration type. */
 	private String cmRegistrationType;
-	
+
 	/** The cm item category. */
 	private String cmItemCategory;
-	
+
 	/** The cm item name. */
 	private String cmItemName;
-	
+
 	/** The cm ep number. */
 	private String cmEpNumber;
-	
+
 	/** The cm business reg no. */
 	private String cmBusinessRegNo;
-	
+
 	/** The cm ic number. */
 	private String cmIcNumber;
-	
+
 	/** The cm mof number. */
 	private String cmMofNumber;
-	
+
 	/** The cm extention code. */
 	private String cmExtentionCode;
-	
+
 	/** The cm extention type. */
 	private String cmExtentionType;
-	
+
 	/** The cm extention brand. */
 	private String cmExtentionBrand;
-	
+
 	/** The cm extention measurment. */
 	private String cmExtentionMeasurment;
-	
+
 	/** The cm extention colour. */
 	private String cmExtentionColour;
-	
+
 	/** The cm proof identity. */
 	private String cmProofIdentity;
-	
+
 	/** The cm suppl or admin. */
 	private String cmSupplOrAdmin;
-	
+
 	/** The cm extention. */
 	private String cmExtention;
-	
+
 	/** The cm group one. */
 	private String cmGroupOne;
-	
+
 	/** The cm request number. */
 	private String cmRequestNumber;
 	// fl
 	/** The fl itm type. */
 	private String flItmType;
-	
+
 	/** The fl contract no. */
 	private String flContractNo;
-	
+
 	/** The fl sst. */
 	private String flSst;
-	
+
 	/** The fl jabatan. */
-	private String flJabatan;	
-	
+	private String flJabatan;
+
 	/** The fl supplier. */
 	private String flSupplier;
-	
+
 	/** The fl status. */
 	private String flStatus;
-	
+
 	/** The fl duration. */
 	private String flDuration;
-	
+
 	/** The fl recieving officer. */
 	private String flRecievingOfficer;
-	
+
 	/** The fl delivery address. */
 	private String flDeliveryAddress;
-	
+
 	/** The fl rec note no. */
 	private String flRecNoteNo;
-	
+
 	/** The fl contract type. */
 	private String flContractType;
-	
+
 	/** The fl requisitioner. */
 	private String flRequisitioner;
-	
+
 	/** The fl mto contract. */
 	private String flMtoContract;
-	
+
 	/** The fl invoice no. */
 	private String flInvoiceNo;
-	
+
 	/** The fl supplier invoice no. */
 	private String flSupplierInvoiceNo;
-	
+
 	/** The fl deduction type. */
 	private String flDeductionType;
-	
+
 	/** The fl cr no. */
 	private String flCrNo;
-	
+
 	/** The fl approver name. */
 	private String flApproverName;
-	
+
 	/** The fl document type. */
 	private String flDocumentType;
-	
+
 	/** The fl criteria. */
 	private String flCriteria;
-	
+
 	/** The fl scoring. */
 	private String flScoring;
-	
+
 	/** The fl pkp no. */
 	private String flPkpNo;
-	
+
 	/** The fl delivery order no. */
 	private String flDeliveryOrderNo;
-	
+
 	/** The fl supplier delivery order no. */
 	private String flSupplierDeliveryOrderNo;
-	
+
 	/** The fl item code. */
 	private String flItemCode;
-	
+
 	/** The fl po amount. */
 	private String flPoAmount;
-	
+
 	/** The fl pr no. */
 	private String flPrNo;
-	
+
 	/** The fl pmo. */
 	private String flPmo;
-	
+
 	/** The fl item name. */
 	private String flItemName;
-	
+
 	/** The fl contract order. */
 	private String flContractOrder;
-	
+
 	/** The fl contract request. */
 	private String flContractRequest;
-	
+
 	/** The fl purchase order no. */
 	private String flPurchaseOrderNo;
-	
+
 	/** The fl group one. */
 	private String flGroupOne;
-	
+
 	/** The fl group two. */
 	private String flGroupTwo;
-	
+
 	/** The fl group three. */
 	private String flGroupThree;
-	
+
 	/** The fl group four. */
 	private String flGroupFour;
-	
+
 	/** The fl group five. */
 	private String flGroupFive;
-	
+
 	/** The fl group six. */
 	private String flGroupSix;
-	
+
 	/** The fl group seven. */
 	private String flGroupSeven;
-	
+
 	/** The fl group eight. */
 	private String flGroupEight;
-	
+
 	/** The fl group nine. */
 	private String flGroupNine;
-	
+
 	/** The fl group ten. */
 	private String flGroupTen;
-	
+
 	/** The fl group eleven. */
 	private String flGroupEleven;
-	
+
 	/** The fl group twelve. */
 	private String flGroupTwelve;
-	
+
 	/** The fl group thirteen. */
 	private String flGroupThirteen;
-	
+
 	/** The fl group fourteen. */
 	private String flGroupFourteen;
-	
+
 	/** The fl group fifteen. */
 	private String flGroupFifteen;
-	
+
 	/** The fl group sixteen. */
 	private String flGroupSixteen;
-	
+
 	/** The fl group seventeen. */
 	private String flGroupSeventeen;
-	
+
 	/** The report category view. */
 	private boolean reportCategoryView = false;
-	
+
 	/** The fl stop instruction no. */
 	private String flStopInstructionNo;
-	
+
 	/** The fl payment advice no. */
 	private String flPaymentAdviceNo;
 	// sm
 	/** The sm threshold from year. */
 	private String smThresholdFromYear;
-	
+
 	/** The sm threshold to year. */
 	private String smThresholdToYear;
-	
+
 	/** The sm created from year. */
 	private String smCreatedFromYear;
-	
+
 	/** The sm created to year. */
 	private String smCreatedToYear;
-	
+
 	/** The sm monthly rpt by year. */
 	private String smMonthlyRptByYear;
-	
+
 	/** The sm svo user. */
 	private String smSVOUser;
-	
+
 	/** The sm application no. */
 	private String smApplicationNo;
-	
+
 	/** The sm zone. */
 	private String smZone;
-	
+
 	/** The sm supplier type. */
 	private String smSupplierType;
-	
+
 	/** The sm mof reg no. */
 	private String smMofRegNo;
-	
+
 	/** The sm registration status. */
 	private String smRegistrationStatus;
-	
+
 	/** The smcategory. */
 	private String smcategory;
-	
+
 	/** The sm main category. */
 	private String smMainCategory;
-	
+
 	/** The sm sub category. */
 	private String smSubCategory;
-	
+
 	/** The sm sub category division. */
 	private String smSubCategoryDivision;
-	
+
 	/** The sm application status. */
 	private String smApplicationStatus;
-	
+
 	/** The sm payment type. */
 	private String smPaymentType;
-	
+
 	/** The sm application type. */
 	private String smApplicationType;
-	
+
 	/** The sm state. */
 	private String smState;
-	
+
 	/** The sm district. */
 	private String smDistrict;
-	
+
 	/** The sm company name. */
 	private String smCompanyName;
-	
+
 	/** The sm registration type. */
 	private String smRegistrationType;
-	
+
 	/** The sm year text. */
 	private String smYearText;
-	
+
 	/** The sm mof reg no from. */
 	private String smMofRegNoFrom;
-	
+
 	/** The sm mof reg no to. */
 	private String smMofRegNoTo;
-	
+
 	/** The sm paid up capital frm. */
 	private String smPaidUpCapitalFrm;
-	
+
 	/** The sm paid up capital to. */
 	private String smPaidUpCapitalTo;
-	
+
 	/** The sm paid up capital naccum. */
 	private String smPaidUpCapitalNaccum;
-	
+
 	/** The sm payment method. */
 	private String smPaymentMethod;
-	
+
 	/** The sm processing type. */
 	private String smProcessingType;
-	
+
 	/** The sm receipt no. */
 	private String smReceiptNo;
-	
+
 	/** The sm report type. */
 	private String smReportType;
-	
+
 	/** The sm processing officer name. */
 	private String smProcessingOfficerName;
-	
+
 	/** The sm role. */
 	private String smRole;
-	
+
 	/** The sm ep no. */
 	private String smEpNo;
-	
+
 	/** The sm registration no. */
 	private String smRegistrationNo;
-	
+
 	/** The sm supporting document mode. */
 	private String smSupportingDocumentMode;
-	
+
 	/** The sm supporting document status. */
 	private String smSupportingDocumentStatus;
-	
+
 	/** The sm personnel role. */
 	private String smPersonnelRole;
-	
+
 	/** The sm identification type. */
 	private String smIdentificationType;
-	
+
 	/** The sm identification number. */
 	private String smIdentificationNumber;
-	
+
 	/** The sm cancellation by. */
 	private String smCancellationBy;
-	
+
 	/** The sm from month. */
 	private String smFromMonth;
-	
+
 	/** The sm to month. */
 	private String smToMonth;
-	
+
 	/** The sm user name. */
 	private String smUserName;
-	
+
 	/** The sm request expiry date. */
 	private String smRequestExpiryDate;
-	
+
 	/** The sm profile status. */
 	private String smProfileStatus;
-	
+
 	/** The sm gst registration no. */
 	private String smGSTRegistrationNo;
-	
+
 	/** The sm gst registered status. */
 	private String smGSTRegisteredStatus;
-	
+
 	/** The sm payment to. */
 	private String smPaymentTo;
 	// CT
 	/** The ct contract no. */
 	private String ctContractNo;
-	
+
 	/** The ct agreement. */
 	private String ctAgreement;
-	
+
 	/** The ct status. */
 	private String ctStatus;
-	
+
 	/** The ct contr montr status. */
 	private String ctContrMontrStatus;
-	
+
 	/** The ct complete. */
 	private String ctComplete;
-	
+
 	/** The ct group one. */
 	private String ctGroupOne;
-	
+
 	/** The ct group two. */
 	private String ctGroupTwo;
-	
+
 	/** The ct product service. */
 	private String ctProductService;
-	
+
 	/** The ct loan no. */
-	private String ctLoanNo;		
-	
+	private String ctLoanNo;
+
 	/** The ct procurement mode. */
-	private String ctProcurementMode;	
-	
+	private String ctProcurementMode;
+
 	/** The ct physical contract no. */
 	private String ctPhysicalContractNo;
-	
+
 	/** The ct group three. */
 	private String ctGroupThree;
-	
+
 	/** The ct status two. */
 	private String ctStatusTwo;
-	
+
 	/** The ct loa physical no. */
-	private String ctLOAPhysicalNo;	
-	
+	private String ctLOAPhysicalNo;
+
 	/** The ct user type. */
 	private String ctUserType;
-	
+
 	/** The ct sub type. */
 	private String ctSubType;
-	
+
 	/** The ct termination type. */
 	private String ctTerminationType;
-	
+
 	/** The ct circular no. */
 	private String ctCircularNo;
-	
+
 	/** The ct circular name. */
 	private String ctCircularName;
-	
+
 	/** The ct circular type. */
 	private String ctCircularType;
-	
+
 	/** The ct circular effective from date. */
 	private Date ctCircularEffectiveFromDate;
-	
+
 	/** The ct circular effective to date. */
 	private Date ctCircularEffectiveToDate;
-	
+
 	/** The ct supplier name. */
 	private String ctSupplierName;
 	// PP
 	/** The pp year. */
 	private String ppYear;
-	
+
 	/** The pp ministry. */
 	private String ppMinistry;
-	
+
 	/** The pp ptj. */
-	private String ppPTJ;	
-	
+	private String ppPTJ;
+
 	/** The lng state id. */
 	private long[] lngStateId;
-	
+
 	/** The lng district id. */
 	private long[] lngDistrictId;
-	//PM
+	// PM
 	/** The pm service type. */
 	private String pmServiceType;
-	
+
 	/** The pm status. */
 	private String pmStatus;
-	
+
 	/** The pm financial org name. */
 	private String pmFinancialOrgName;
-	
+
 	/** The pm business reg no. */
 	private String pmBusinessRegNo;
-	
-	
-	
 
 	/**
 	 * Gets the cm request number.
-	 *
+	 * 
 	 * @return the cm request number
 	 */
 	public String getCmRequestNumber() {
@@ -2292,8 +2396,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the cm request number.
-	 *
-	 * @param cmRequestNumber the new cm request number
+	 * 
+	 * @param cmRequestNumber
+	 *            the new cm request number
 	 */
 	public void setCmRequestNumber(String cmRequestNumber) {
 		this.cmRequestNumber = cmRequestNumber;
@@ -2301,7 +2406,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the ct supplier name.
-	 *
+	 * 
 	 * @return the ct supplier name
 	 */
 	public String getCtSupplierName() {
@@ -2310,8 +2415,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the ct supplier name.
-	 *
-	 * @param ctSupplierName the new ct supplier name
+	 * 
+	 * @param ctSupplierName
+	 *            the new ct supplier name
 	 */
 	public void setCtSupplierName(String ctSupplierName) {
 		this.ctSupplierName = ctSupplierName;
@@ -2319,7 +2425,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the ct circular effective from date.
-	 *
+	 * 
 	 * @return the ct circular effective from date
 	 */
 	public Date getCtCircularEffectiveFromDate() {
@@ -2328,8 +2434,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the ct circular effective from date.
-	 *
-	 * @param ctCircularEffectiveFromDate the new ct circular effective from date
+	 * 
+	 * @param ctCircularEffectiveFromDate
+	 *            the new ct circular effective from date
 	 */
 	public void setCtCircularEffectiveFromDate(Date ctCircularEffectiveFromDate) {
 		this.ctCircularEffectiveFromDate = ctCircularEffectiveFromDate;
@@ -2337,7 +2444,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the ct circular effective to date.
-	 *
+	 * 
 	 * @return the ct circular effective to date
 	 */
 	public Date getCtCircularEffectiveToDate() {
@@ -2346,8 +2453,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the ct circular effective to date.
-	 *
-	 * @param ctCircularEffectiveToDate the new ct circular effective to date
+	 * 
+	 * @param ctCircularEffectiveToDate
+	 *            the new ct circular effective to date
 	 */
 	public void setCtCircularEffectiveToDate(Date ctCircularEffectiveToDate) {
 		this.ctCircularEffectiveToDate = ctCircularEffectiveToDate;
@@ -2355,7 +2463,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the ct circular no.
-	 *
+	 * 
 	 * @return the ct circular no
 	 */
 	public String getCtCircularNo() {
@@ -2364,8 +2472,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the ct circular no.
-	 *
-	 * @param ctCircularNo the new ct circular no
+	 * 
+	 * @param ctCircularNo
+	 *            the new ct circular no
 	 */
 	public void setCtCircularNo(String ctCircularNo) {
 		this.ctCircularNo = ctCircularNo;
@@ -2373,7 +2482,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the ct circular name.
-	 *
+	 * 
 	 * @return the ct circular name
 	 */
 	public String getCtCircularName() {
@@ -2382,8 +2491,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the ct circular name.
-	 *
-	 * @param ctCircularName the new ct circular name
+	 * 
+	 * @param ctCircularName
+	 *            the new ct circular name
 	 */
 	public void setCtCircularName(String ctCircularName) {
 		this.ctCircularName = ctCircularName;
@@ -2391,7 +2501,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the ct circular type.
-	 *
+	 * 
 	 * @return the ct circular type
 	 */
 	public String getCtCircularType() {
@@ -2400,8 +2510,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the ct circular type.
-	 *
-	 * @param ctCircularType the new ct circular type
+	 * 
+	 * @param ctCircularType
+	 *            the new ct circular type
 	 */
 	public void setCtCircularType(String ctCircularType) {
 		this.ctCircularType = ctCircularType;
@@ -2409,7 +2520,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the ct termination type.
-	 *
+	 * 
 	 * @return the ct termination type
 	 */
 	public String getCtTerminationType() {
@@ -2418,8 +2529,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the ct termination type.
-	 *
-	 * @param ctTerminationType the new ct termination type
+	 * 
+	 * @param ctTerminationType
+	 *            the new ct termination type
 	 */
 	public void setCtTerminationType(String ctTerminationType) {
 		this.ctTerminationType = ctTerminationType;
@@ -2427,7 +2539,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sm payment to.
-	 *
+	 * 
 	 * @return the sm payment to
 	 */
 	public String getSmPaymentTo() {
@@ -2436,8 +2548,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm payment to.
-	 *
-	 * @param smPaymentTo the new sm payment to
+	 * 
+	 * @param smPaymentTo
+	 *            the new sm payment to
 	 */
 	public void setSmPaymentTo(String smPaymentTo) {
 		this.smPaymentTo = smPaymentTo;
@@ -2445,7 +2558,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the str language.
-	 *
+	 * 
 	 * @return the str language
 	 */
 	public String getStrLanguage() {
@@ -2454,8 +2567,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the str language.
-	 *
-	 * @param strLanguage the new str language
+	 * 
+	 * @param strLanguage
+	 *            the new str language
 	 */
 	public void setStrLanguage(String strLanguage) {
 		this.strLanguage = strLanguage;
@@ -2463,7 +2577,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the pm status.
-	 *
+	 * 
 	 * @return the pm status
 	 */
 	public String getPmStatus() {
@@ -2472,8 +2586,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the pm status.
-	 *
-	 * @param pmStatus the new pm status
+	 * 
+	 * @param pmStatus
+	 *            the new pm status
 	 */
 	public void setPmStatus(String pmStatus) {
 		this.pmStatus = pmStatus;
@@ -2481,7 +2596,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the pm financial org name.
-	 *
+	 * 
 	 * @return the pm financial org name
 	 */
 	public String getPmFinancialOrgName() {
@@ -2490,8 +2605,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the pm financial org name.
-	 *
-	 * @param pmFinancialOrgName the new pm financial org name
+	 * 
+	 * @param pmFinancialOrgName
+	 *            the new pm financial org name
 	 */
 	public void setPmFinancialOrgName(String pmFinancialOrgName) {
 		this.pmFinancialOrgName = pmFinancialOrgName;
@@ -2499,7 +2615,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the pm business reg no.
-	 *
+	 * 
 	 * @return the pm business reg no
 	 */
 	public String getPmBusinessRegNo() {
@@ -2508,8 +2624,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the pm business reg no.
-	 *
-	 * @param pmBusinessRegNo the new pm business reg no
+	 * 
+	 * @param pmBusinessRegNo
+	 *            the new pm business reg no
 	 */
 	public void setPmBusinessRegNo(String pmBusinessRegNo) {
 		this.pmBusinessRegNo = pmBusinessRegNo;
@@ -2517,17 +2634,18 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the pm service type.
-	 *
+	 * 
 	 * @return the pm service type
 	 */
 	public String getPmServiceType() {
 		return pmServiceType;
 	}
-	
+
 	/**
 	 * Sets the pm service type.
-	 *
-	 * @param pmServiceType the new pm service type
+	 * 
+	 * @param pmServiceType
+	 *            the new pm service type
 	 */
 	public void setPmServiceType(String pmServiceType) {
 		this.pmServiceType = pmServiceType;
@@ -2535,467 +2653,493 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl payment advice no.
-	 *
+	 * 
 	 * @return the fl payment advice no
 	 */
 	public String getFlPaymentAdviceNo() {
 		return flPaymentAdviceNo;
 	}
-	
+
 	/**
 	 * Sets the fl payment advice no.
-	 *
-	 * @param flPaymentAdviceNo the new fl payment advice no
+	 * 
+	 * @param flPaymentAdviceNo
+	 *            the new fl payment advice no
 	 */
 	public void setFlPaymentAdviceNo(String flPaymentAdviceNo) {
 		this.flPaymentAdviceNo = flPaymentAdviceNo;
 	}
-	
+
 	/**
 	 * Gets the fl supplier delivery order no.
-	 *
+	 * 
 	 * @return the fl supplier delivery order no
 	 */
 	public String getFlSupplierDeliveryOrderNo() {
 		return flSupplierDeliveryOrderNo;
 	}
-	
+
 	/**
 	 * Sets the fl supplier delivery order no.
-	 *
-	 * @param flSupplierDeliveryOrderNo the new fl supplier delivery order no
+	 * 
+	 * @param flSupplierDeliveryOrderNo
+	 *            the new fl supplier delivery order no
 	 */
 	public void setFlSupplierDeliveryOrderNo(String flSupplierDeliveryOrderNo) {
 		this.flSupplierDeliveryOrderNo = flSupplierDeliveryOrderNo;
 	}
-	
+
 	/**
 	 * Gets the sm gst registration no.
-	 *
+	 * 
 	 * @return the sm gst registration no
 	 */
 	public String getSmGSTRegistrationNo() {
 		return smGSTRegistrationNo;
 	}
-	
+
 	/**
 	 * Sets the sm gst registration no.
-	 *
-	 * @param smGSTRegistrationNo the new sm gst registration no
+	 * 
+	 * @param smGSTRegistrationNo
+	 *            the new sm gst registration no
 	 */
 	public void setSmGSTRegistrationNo(String smGSTRegistrationNo) {
 		this.smGSTRegistrationNo = smGSTRegistrationNo;
 	}
-	
+
 	/**
 	 * Gets the sm gst registered status.
-	 *
+	 * 
 	 * @return the sm gst registered status
 	 */
 	public String getSmGSTRegisteredStatus() {
 		return smGSTRegisteredStatus;
 	}
-	
+
 	/**
 	 * Sets the sm gst registered status.
-	 *
-	 * @param smGSTRegisteredStatus the new sm gst registered status
+	 * 
+	 * @param smGSTRegisteredStatus
+	 *            the new sm gst registered status
 	 */
 	public void setSmGSTRegisteredStatus(String smGSTRegisteredStatus) {
 		this.smGSTRegisteredStatus = smGSTRegisteredStatus;
 	}
-	
+
 	/**
 	 * Gets the sm profile status.
-	 *
+	 * 
 	 * @return the sm profile status
 	 */
 	public String getSmProfileStatus() {
 		return smProfileStatus;
 	}
-	
+
 	/**
 	 * Sets the sm profile status.
-	 *
-	 * @param smProfileStatus the new sm profile status
+	 * 
+	 * @param smProfileStatus
+	 *            the new sm profile status
 	 */
 	public void setSmProfileStatus(String smProfileStatus) {
 		this.smProfileStatus = smProfileStatus;
 	}
-	
+
 	/**
 	 * Gets the fl supplier invoice no.
-	 *
+	 * 
 	 * @return the fl supplier invoice no
 	 */
 	public String getFlSupplierInvoiceNo() {
 		return flSupplierInvoiceNo;
 	}
-	
+
 	/**
 	 * Sets the fl supplier invoice no.
-	 *
-	 * @param flSupplierInvoiceNo the new fl supplier invoice no
+	 * 
+	 * @param flSupplierInvoiceNo
+	 *            the new fl supplier invoice no
 	 */
 	public void setFlSupplierInvoiceNo(String flSupplierInvoiceNo) {
 		this.flSupplierInvoiceNo = flSupplierInvoiceNo;
 	}
-	
+
 	/**
 	 * Gets the fl stop instruction no.
-	 *
+	 * 
 	 * @return the fl stop instruction no
 	 */
 	public String getFlStopInstructionNo() {
 		return flStopInstructionNo;
 	}
-	
+
 	/**
 	 * Sets the fl stop instruction no.
-	 *
-	 * @param flStopInstructionNo the new fl stop instruction no
+	 * 
+	 * @param flStopInstructionNo
+	 *            the new fl stop instruction no
 	 */
 	public void setFlStopInstructionNo(String flStopInstructionNo) {
 		this.flStopInstructionNo = flStopInstructionNo;
 	}
-	
+
 	/**
 	 * Gets the sm request expiry date.
-	 *
+	 * 
 	 * @return the sm request expiry date
 	 */
 	public String getSmRequestExpiryDate() {
 		return smRequestExpiryDate;
 	}
-	
+
 	/**
 	 * Sets the sm request expiry date.
-	 *
-	 * @param smRequestExpiryDate the new sm request expiry date
+	 * 
+	 * @param smRequestExpiryDate
+	 *            the new sm request expiry date
 	 */
 	public void setSmRequestExpiryDate(String smRequestExpiryDate) {
 		this.smRequestExpiryDate = smRequestExpiryDate;
 	}
-	
+
 	/**
 	 * Gets the sm user name.
-	 *
+	 * 
 	 * @return the sm user name
 	 */
 	public String getSmUserName() {
 		return smUserName;
 	}
-	
+
 	/**
 	 * Sets the sm user name.
-	 *
-	 * @param smUserName the new sm user name
+	 * 
+	 * @param smUserName
+	 *            the new sm user name
 	 */
 	public void setSmUserName(String smUserName) {
 		this.smUserName = smUserName;
 	}
-	
+
 	/**
 	 * Gets the sm threshold from year.
-	 *
+	 * 
 	 * @return the sm threshold from year
 	 */
 	public String getSmThresholdFromYear() {
 		return smThresholdFromYear;
 	}
-	
+
 	/**
 	 * Sets the sm threshold from year.
-	 *
-	 * @param smThresholdFromYear the new sm threshold from year
+	 * 
+	 * @param smThresholdFromYear
+	 *            the new sm threshold from year
 	 */
 	public void setSmThresholdFromYear(String smThresholdFromYear) {
 		this.smThresholdFromYear = smThresholdFromYear;
 	}
-	
+
 	/**
 	 * Gets the sm threshold to year.
-	 *
+	 * 
 	 * @return the sm threshold to year
 	 */
 	public String getSmThresholdToYear() {
 		return smThresholdToYear;
 	}
-	
+
 	/**
 	 * Sets the sm threshold to year.
-	 *
-	 * @param smThresholdToYear the new sm threshold to year
+	 * 
+	 * @param smThresholdToYear
+	 *            the new sm threshold to year
 	 */
 	public void setSmThresholdToYear(String smThresholdToYear) {
 		this.smThresholdToYear = smThresholdToYear;
 	}
-	
+
 	/**
 	 * Gets the sm from month.
-	 *
+	 * 
 	 * @return the sm from month
 	 */
 	public String getSmFromMonth() {
 		return smFromMonth;
 	}
-	
+
 	/**
 	 * Sets the sm from month.
-	 *
-	 * @param smFromMonth the new sm from month
+	 * 
+	 * @param smFromMonth
+	 *            the new sm from month
 	 */
 	public void setSmFromMonth(String smFromMonth) {
 		this.smFromMonth = smFromMonth;
 	}
-	
+
 	/**
 	 * Gets the sm to month.
-	 *
+	 * 
 	 * @return the sm to month
 	 */
 	public String getSmToMonth() {
 		return smToMonth;
 	}
-	
+
 	/**
 	 * Sets the sm to month.
-	 *
-	 * @param smToMonth the new sm to month
+	 * 
+	 * @param smToMonth
+	 *            the new sm to month
 	 */
 	public void setSmToMonth(String smToMonth) {
 		this.smToMonth = smToMonth;
 	}
-	
+
 	/**
 	 * Checks if is report category view.
-	 *
+	 * 
 	 * @return true, if is report category view
 	 */
 	public boolean isReportCategoryView() {
 		return reportCategoryView;
 	}
-	
+
 	/**
 	 * Sets the report category view.
-	 *
-	 * @param reportCategoryView the new report category view
+	 * 
+	 * @param reportCategoryView
+	 *            the new report category view
 	 */
 	public void setReportCategoryView(boolean reportCategoryView) {
 		this.reportCategoryView = reportCategoryView;
 	}
-	
+
 	/**
 	 * Gets the ministry name.
-	 *
+	 * 
 	 * @return the ministry name
 	 */
 	public String getMinistryName() {
 		return ministryName;
 	}
-	
+
 	/**
 	 * Sets the ministry name.
-	 *
-	 * @param ministryName the new ministry name
+	 * 
+	 * @param ministryName
+	 *            the new ministry name
 	 */
 	public void setMinistryName(String ministryName) {
 		this.ministryName = ministryName;
 	}
-	
+
 	/**
 	 * Gets the sm payment method.
-	 *
+	 * 
 	 * @return the sm payment method
 	 */
 	public String getSmPaymentMethod() {
 		return smPaymentMethod;
 	}
-	
+
 	/**
 	 * Sets the sm payment method.
-	 *
-	 * @param smPaymentMethod the new sm payment method
+	 * 
+	 * @param smPaymentMethod
+	 *            the new sm payment method
 	 */
 	public void setSmPaymentMethod(String smPaymentMethod) {
 		this.smPaymentMethod = smPaymentMethod;
 	}
-	
+
 	/**
 	 * Gets the sm processing type.
-	 *
+	 * 
 	 * @return the sm processing type
 	 */
 	public String getSmProcessingType() {
 		return smProcessingType;
 	}
-	
+
 	/**
 	 * Sets the sm processing type.
-	 *
-	 * @param smProcessingType the new sm processing type
+	 * 
+	 * @param smProcessingType
+	 *            the new sm processing type
 	 */
 	public void setSmProcessingType(String smProcessingType) {
 		this.smProcessingType = smProcessingType;
 	}
-	
+
 	/**
 	 * Gets the sm receipt no.
-	 *
+	 * 
 	 * @return the sm receipt no
 	 */
 	public String getSmReceiptNo() {
 		return smReceiptNo;
 	}
-	
+
 	/**
 	 * Sets the sm receipt no.
-	 *
-	 * @param smReceiptNo the new sm receipt no
+	 * 
+	 * @param smReceiptNo
+	 *            the new sm receipt no
 	 */
 	public void setSmReceiptNo(String smReceiptNo) {
 		this.smReceiptNo = smReceiptNo;
 	}
-	
+
 	/**
 	 * Gets the sm processing officer name.
-	 *
+	 * 
 	 * @return the sm processing officer name
 	 */
 	public String getSmProcessingOfficerName() {
 		return smProcessingOfficerName;
 	}
-	
+
 	/**
 	 * Sets the sm processing officer name.
-	 *
-	 * @param smProcessingOfficerName the new sm processing officer name
+	 * 
+	 * @param smProcessingOfficerName
+	 *            the new sm processing officer name
 	 */
 	public void setSmProcessingOfficerName(String smProcessingOfficerName) {
 		this.smProcessingOfficerName = smProcessingOfficerName;
 	}
-	
+
 	/**
 	 * Gets the sm identification type.
-	 *
+	 * 
 	 * @return the sm identification type
 	 */
 	public String getSmIdentificationType() {
 		return smIdentificationType;
 	}
-	
+
 	/**
 	 * Sets the sm identification type.
-	 *
-	 * @param smIdentificationType the new sm identification type
+	 * 
+	 * @param smIdentificationType
+	 *            the new sm identification type
 	 */
 	public void setSmIdentificationType(String smIdentificationType) {
 		this.smIdentificationType = smIdentificationType;
 	}
-	
+
 	/**
 	 * Gets the sm identification number.
-	 *
+	 * 
 	 * @return the sm identification number
 	 */
 	public String getSmIdentificationNumber() {
 		return smIdentificationNumber;
 	}
-	
+
 	/**
 	 * Sets the sm identification number.
-	 *
-	 * @param smIdentificationNumber the new sm identification number
+	 * 
+	 * @param smIdentificationNumber
+	 *            the new sm identification number
 	 */
 	public void setSmIdentificationNumber(String smIdentificationNumber) {
 		this.smIdentificationNumber = smIdentificationNumber;
 	}
-	
+
 	/**
 	 * Gets the sm cancellation by.
-	 *
+	 * 
 	 * @return the sm cancellation by
 	 */
 	public String getSmCancellationBy() {
 		return smCancellationBy;
 	}
-	
+
 	/**
 	 * Sets the sm cancellation by.
-	 *
-	 * @param smCancellationBy the new sm cancellation by
+	 * 
+	 * @param smCancellationBy
+	 *            the new sm cancellation by
 	 */
 	public void setSmCancellationBy(String smCancellationBy) {
 		this.smCancellationBy = smCancellationBy;
 	}
-	
+
 	/**
 	 * Gets the sm personnel role.
-	 *
+	 * 
 	 * @return the sm personnel role
 	 */
 	public String getSmPersonnelRole() {
 		return smPersonnelRole;
 	}
-	
+
 	/**
 	 * Sets the sm personnel role.
-	 *
-	 * @param smPersonnelRole the new sm personnel role
+	 * 
+	 * @param smPersonnelRole
+	 *            the new sm personnel role
 	 */
 	public void setSmPersonnelRole(String smPersonnelRole) {
 		this.smPersonnelRole = smPersonnelRole;
 	}
-	
+
 	/**
 	 * Gets the sm mof reg no from.
-	 *
+	 * 
 	 * @return the sm mof reg no from
 	 */
 	public String getSmMofRegNoFrom() {
 		return smMofRegNoFrom;
 	}
-	
+
 	/**
 	 * Sets the sm mof reg no from.
-	 *
-	 * @param smMofRegNoFrom the new sm mof reg no from
+	 * 
+	 * @param smMofRegNoFrom
+	 *            the new sm mof reg no from
 	 */
 	public void setSmMofRegNoFrom(String smMofRegNoFrom) {
 		this.smMofRegNoFrom = smMofRegNoFrom;
 	}
-	
+
 	/**
 	 * Gets the sm mof reg no to.
-	 *
+	 * 
 	 * @return the sm mof reg no to
 	 */
 	public String getSmMofRegNoTo() {
 		return smMofRegNoTo;
 	}
-	
+
 	/**
 	 * Sets the sm mof reg no to.
-	 *
-	 * @param smMofRegNoTo the new sm mof reg no to
+	 * 
+	 * @param smMofRegNoTo
+	 *            the new sm mof reg no to
 	 */
 	public void setSmMofRegNoTo(String smMofRegNoTo) {
 		this.smMofRegNoTo = smMofRegNoTo;
 	}
-	
+
 	/**
 	 * Gets the sm paid up capital frm.
-	 *
+	 * 
 	 * @return the sm paid up capital frm
 	 */
 	public String getSmPaidUpCapitalFrm() {
 		return smPaidUpCapitalFrm;
 	}
-	
+
 	/**
 	 * Sets the sm paid up capital frm.
-	 *
-	 * @param smPaidUpCapitalFrm the new sm paid up capital frm
+	 * 
+	 * @param smPaidUpCapitalFrm
+	 *            the new sm paid up capital frm
 	 */
 	public void setSmPaidUpCapitalFrm(String smPaidUpCapitalFrm) {
 		this.smPaidUpCapitalFrm = smPaidUpCapitalFrm;
@@ -3003,7 +3147,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sm paid up capital to.
-	 *
+	 * 
 	 * @return the sm paid up capital to
 	 */
 	public String getSmPaidUpCapitalTo() {
@@ -3012,8 +3156,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm paid up capital to.
-	 *
-	 * @param smPaidUpCapitalTo the new sm paid up capital to
+	 * 
+	 * @param smPaidUpCapitalTo
+	 *            the new sm paid up capital to
 	 */
 	public void setSmPaidUpCapitalTo(String smPaidUpCapitalTo) {
 		this.smPaidUpCapitalTo = smPaidUpCapitalTo;
@@ -3021,7 +3166,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sm paid up capital naccum.
-	 *
+	 * 
 	 * @return the sm paid up capital naccum
 	 */
 	public String getSmPaidUpCapitalNaccum() {
@@ -3030,8 +3175,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm paid up capital naccum.
-	 *
-	 * @param smPaidUpCapitalNaccum the new sm paid up capital naccum
+	 * 
+	 * @param smPaidUpCapitalNaccum
+	 *            the new sm paid up capital naccum
 	 */
 	public void setSmPaidUpCapitalNaccum(String smPaidUpCapitalNaccum) {
 		this.smPaidUpCapitalNaccum = smPaidUpCapitalNaccum;
@@ -3039,7 +3185,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sm role.
-	 *
+	 * 
 	 * @return the sm role
 	 */
 	public String getSmRole() {
@@ -3048,8 +3194,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm role.
-	 *
-	 * @param smRole the new sm role
+	 * 
+	 * @param smRole
+	 *            the new sm role
 	 */
 	public void setSmRole(String smRole) {
 		this.smRole = smRole;
@@ -3057,7 +3204,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sm ep no.
-	 *
+	 * 
 	 * @return the sm ep no
 	 */
 	public String getSmEpNo() {
@@ -3066,8 +3213,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm ep no.
-	 *
-	 * @param smEpNo the new sm ep no
+	 * 
+	 * @param smEpNo
+	 *            the new sm ep no
 	 */
 	public void setSmEpNo(String smEpNo) {
 		this.smEpNo = smEpNo;
@@ -3075,7 +3223,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sm registration no.
-	 *
+	 * 
 	 * @return the sm registration no
 	 */
 	public String getSmRegistrationNo() {
@@ -3084,8 +3232,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm registration no.
-	 *
-	 * @param smRegistrationNo the new sm registration no
+	 * 
+	 * @param smRegistrationNo
+	 *            the new sm registration no
 	 */
 	public void setSmRegistrationNo(String smRegistrationNo) {
 		this.smRegistrationNo = smRegistrationNo;
@@ -3093,7 +3242,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sm supporting document mode.
-	 *
+	 * 
 	 * @return the sm supporting document mode
 	 */
 	public String getSmSupportingDocumentMode() {
@@ -3102,8 +3251,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm supporting document mode.
-	 *
-	 * @param smSupportingDocumentMode the new sm supporting document mode
+	 * 
+	 * @param smSupportingDocumentMode
+	 *            the new sm supporting document mode
 	 */
 	public void setSmSupportingDocumentMode(String smSupportingDocumentMode) {
 		this.smSupportingDocumentMode = smSupportingDocumentMode;
@@ -3111,7 +3261,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sm supporting document status.
-	 *
+	 * 
 	 * @return the sm supporting document status
 	 */
 	public String getSmSupportingDocumentStatus() {
@@ -3120,8 +3270,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm supporting document status.
-	 *
-	 * @param smSupportingDocumentStatus the new sm supporting document status
+	 * 
+	 * @param smSupportingDocumentStatus
+	 *            the new sm supporting document status
 	 */
 	public void setSmSupportingDocumentStatus(String smSupportingDocumentStatus) {
 		this.smSupportingDocumentStatus = smSupportingDocumentStatus;
@@ -3129,7 +3280,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the lng district id.
-	 *
+	 * 
 	 * @return the lng district id
 	 */
 	public long[] getLngDistrictId() {
@@ -3138,8 +3289,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the lng district id.
-	 *
-	 * @param lngDistrictId the new lng district id
+	 * 
+	 * @param lngDistrictId
+	 *            the new lng district id
 	 */
 	public void setLngDistrictId(long[] lngDistrictId) {
 		this.lngDistrictId = lngDistrictId;
@@ -3147,7 +3299,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the lng state id.
-	 *
+	 * 
 	 * @return the lng state id
 	 */
 	public long[] getLngStateId() {
@@ -3156,8 +3308,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the lng state id.
-	 *
-	 * @param lngStateId the new lng state id
+	 * 
+	 * @param lngStateId
+	 *            the new lng state id
 	 */
 	public void setLngStateId(long[] lngStateId) {
 		this.lngStateId = lngStateId;
@@ -3165,7 +3318,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the pp year.
-	 *
+	 * 
 	 * @return the pp year
 	 */
 	public String getPpYear() {
@@ -3174,8 +3327,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the pp year.
-	 *
-	 * @param ppYear the new pp year
+	 * 
+	 * @param ppYear
+	 *            the new pp year
 	 */
 	public void setPpYear(String ppYear) {
 		this.ppYear = ppYear;
@@ -3183,7 +3337,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the pp ministry.
-	 *
+	 * 
 	 * @return the pp ministry
 	 */
 	public String getPpMinistry() {
@@ -3192,8 +3346,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the pp ministry.
-	 *
-	 * @param ppMinistry the new pp ministry
+	 * 
+	 * @param ppMinistry
+	 *            the new pp ministry
 	 */
 	public void setPpMinistry(String ppMinistry) {
 		this.ppMinistry = ppMinistry;
@@ -3201,7 +3356,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the pp ptj.
-	 *
+	 * 
 	 * @return the pp ptj
 	 */
 	public String getPpPTJ() {
@@ -3210,8 +3365,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the pp ptj.
-	 *
-	 * @param ppPTJ the new pp ptj
+	 * 
+	 * @param ppPTJ
+	 *            the new pp ptj
 	 */
 	public void setPpPTJ(String ppPTJ) {
 		this.ppPTJ = ppPTJ;
@@ -3219,7 +3375,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc purchase in default status.
-	 *
+	 * 
 	 * @return the sc purchase in default status
 	 */
 	public String getScPurchaseInDefaultStatus() {
@@ -3228,8 +3384,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc purchase in default status.
-	 *
-	 * @param scPurchaseInDefaultStatus the new sc purchase in default status
+	 * 
+	 * @param scPurchaseInDefaultStatus
+	 *            the new sc purchase in default status
 	 */
 	public void setScPurchaseInDefaultStatus(String scPurchaseInDefaultStatus) {
 		this.scPurchaseInDefaultStatus = scPurchaseInDefaultStatus;
@@ -3237,7 +3394,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc simple quote dtl group.
-	 *
+	 * 
 	 * @return the sc simple quote dtl group
 	 */
 	public String getScSimpleQuoteDtlGroup() {
@@ -3246,8 +3403,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc simple quote dtl group.
-	 *
-	 * @param scSimpleQuoteDtlGroup the new sc simple quote dtl group
+	 * 
+	 * @param scSimpleQuoteDtlGroup
+	 *            the new sc simple quote dtl group
 	 */
 	public void setScSimpleQuoteDtlGroup(String scSimpleQuoteDtlGroup) {
 		this.scSimpleQuoteDtlGroup = scSimpleQuoteDtlGroup;
@@ -3255,7 +3413,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc simple quote status.
-	 *
+	 * 
 	 * @return the sc simple quote status
 	 */
 	public String getScSimpleQuoteStatus() {
@@ -3264,8 +3422,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc simple quote status.
-	 *
-	 * @param scSimpleQuoteStatus the new sc simple quote status
+	 * 
+	 * @param scSimpleQuoteStatus
+	 *            the new sc simple quote status
 	 */
 	public void setScSimpleQuoteStatus(String scSimpleQuoteStatus) {
 		this.scSimpleQuoteStatus = scSimpleQuoteStatus;
@@ -3273,7 +3432,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the items.
-	 *
+	 * 
 	 * @return the items
 	 */
 	public SelectItem[] getItems() {
@@ -3282,8 +3441,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the items.
-	 *
-	 * @param items the new items
+	 * 
+	 * @param items
+	 *            the new items
 	 */
 	public void setItems(SelectItem[] items) {
 		this.items = items;
@@ -3291,7 +3451,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc request note status.
-	 *
+	 * 
 	 * @return the sc request note status
 	 */
 	public String getScRequestNoteStatus() {
@@ -3300,8 +3460,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc request note status.
-	 *
-	 * @param scRequestNoteStatus the new sc request note status
+	 * 
+	 * @param scRequestNoteStatus
+	 *            the new sc request note status
 	 */
 	public void setScRequestNoteStatus(String scRequestNoteStatus) {
 		this.scRequestNoteStatus = scRequestNoteStatus;
@@ -3309,7 +3470,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the ct sub type.
-	 *
+	 * 
 	 * @return the ct sub type
 	 */
 	public String getCtSubType() {
@@ -3318,8 +3479,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the ct sub type.
-	 *
-	 * @param ctSubType the new ct sub type
+	 * 
+	 * @param ctSubType
+	 *            the new ct sub type
 	 */
 	public void setCtSubType(String ctSubType) {
 		this.ctSubType = ctSubType;
@@ -3327,7 +3489,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the ct user type.
-	 *
+	 * 
 	 * @return the ct user type
 	 */
 	public String getCtUserType() {
@@ -3336,8 +3498,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the ct user type.
-	 *
-	 * @param ctUserType the new ct user type
+	 * 
+	 * @param ctUserType
+	 *            the new ct user type
 	 */
 	public void setCtUserType(String ctUserType) {
 		this.ctUserType = ctUserType;
@@ -3345,7 +3508,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the ct loa physical no.
-	 *
+	 * 
 	 * @return the ct loa physical no
 	 */
 	public String getCtLOAPhysicalNo() {
@@ -3354,8 +3517,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the ct loa physical no.
-	 *
-	 * @param ctLOAPhysicalNo the new ct loa physical no
+	 * 
+	 * @param ctLOAPhysicalNo
+	 *            the new ct loa physical no
 	 */
 	public void setCtLOAPhysicalNo(String ctLOAPhysicalNo) {
 		this.ctLOAPhysicalNo = ctLOAPhysicalNo;
@@ -3363,7 +3527,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the ct status two.
-	 *
+	 * 
 	 * @return the ct status two
 	 */
 	public String getCtStatusTwo() {
@@ -3372,8 +3536,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the ct status two.
-	 *
-	 * @param ctStatusTwo the new ct status two
+	 * 
+	 * @param ctStatusTwo
+	 *            the new ct status two
 	 */
 	public void setCtStatusTwo(String ctStatusTwo) {
 		this.ctStatusTwo = ctStatusTwo;
@@ -3381,7 +3546,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the ct group three.
-	 *
+	 * 
 	 * @return the ct group three
 	 */
 	public String getCtGroupThree() {
@@ -3390,8 +3555,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the ct group three.
-	 *
-	 * @param ctGroupThree the new ct group three
+	 * 
+	 * @param ctGroupThree
+	 *            the new ct group three
 	 */
 	public void setCtGroupThree(String ctGroupThree) {
 		this.ctGroupThree = ctGroupThree;
@@ -3399,7 +3565,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the ct physical contract no.
-	 *
+	 * 
 	 * @return the ct physical contract no
 	 */
 	public String getCtPhysicalContractNo() {
@@ -3408,8 +3574,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the ct physical contract no.
-	 *
-	 * @param ctPhysicalContractNo the new ct physical contract no
+	 * 
+	 * @param ctPhysicalContractNo
+	 *            the new ct physical contract no
 	 */
 	public void setCtPhysicalContractNo(String ctPhysicalContractNo) {
 		this.ctPhysicalContractNo = ctPhysicalContractNo;
@@ -3417,7 +3584,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl group seventeen.
-	 *
+	 * 
 	 * @return the fl group seventeen
 	 */
 	public String getFlGroupSeventeen() {
@@ -3426,8 +3593,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl group seventeen.
-	 *
-	 * @param flGroupSeventeen the new fl group seventeen
+	 * 
+	 * @param flGroupSeventeen
+	 *            the new fl group seventeen
 	 */
 	public void setFlGroupSeventeen(String flGroupSeventeen) {
 		this.flGroupSeventeen = flGroupSeventeen;
@@ -3435,7 +3603,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the ct procurement mode.
-	 *
+	 * 
 	 * @return the ct procurement mode
 	 */
 	public String getCtProcurementMode() {
@@ -3444,16 +3612,17 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the ct procurement mode.
-	 *
-	 * @param ctProcurementMode the new ct procurement mode
+	 * 
+	 * @param ctProcurementMode
+	 *            the new ct procurement mode
 	 */
 	public void setCtProcurementMode(String ctProcurementMode) {
 		this.ctProcurementMode = ctProcurementMode;
 	}
-	
+
 	/**
 	 * Gets the sm year text.
-	 *
+	 * 
 	 * @return the sm year text
 	 */
 	public String getSmYearText() {
@@ -3462,8 +3631,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm year text.
-	 *
-	 * @param smYearText the new sm year text
+	 * 
+	 * @param smYearText
+	 *            the new sm year text
 	 */
 	public void setSmYearText(String smYearText) {
 		this.smYearText = smYearText;
@@ -3471,7 +3641,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the cm group one.
-	 *
+	 * 
 	 * @return the cm group one
 	 */
 	public String getCmGroupOne() {
@@ -3480,8 +3650,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the cm group one.
-	 *
-	 * @param cmGroupOne the new cm group one
+	 * 
+	 * @param cmGroupOne
+	 *            the new cm group one
 	 */
 	public void setCmGroupOne(String cmGroupOne) {
 		this.cmGroupOne = cmGroupOne;
@@ -3489,7 +3660,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the ct loan no.
-	 *
+	 * 
 	 * @return the ct loan no
 	 */
 	public String getCtLoanNo() {
@@ -3498,8 +3669,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the ct loan no.
-	 *
-	 * @param ctLoanNo the new ct loan no
+	 * 
+	 * @param ctLoanNo
+	 *            the new ct loan no
 	 */
 	public void setCtLoanNo(String ctLoanNo) {
 		this.ctLoanNo = ctLoanNo;
@@ -3507,7 +3679,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the ct product service.
-	 *
+	 * 
 	 * @return the ct product service
 	 */
 	public String getCtProductService() {
@@ -3516,8 +3688,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the ct product service.
-	 *
-	 * @param ctProductService the new ct product service
+	 * 
+	 * @param ctProductService
+	 *            the new ct product service
 	 */
 	public void setCtProductService(String ctProductService) {
 		this.ctProductService = ctProductService;
@@ -3525,7 +3698,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the ct group one.
-	 *
+	 * 
 	 * @return the ct group one
 	 */
 	public String getCtGroupOne() {
@@ -3534,8 +3707,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the ct group one.
-	 *
-	 * @param ctGroupOne the new ct group one
+	 * 
+	 * @param ctGroupOne
+	 *            the new ct group one
 	 */
 	public void setCtGroupOne(String ctGroupOne) {
 		this.ctGroupOne = ctGroupOne;
@@ -3543,7 +3717,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the ct group two.
-	 *
+	 * 
 	 * @return the ct group two
 	 */
 	public String getCtGroupTwo() {
@@ -3552,8 +3726,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the ct group two.
-	 *
-	 * @param ctGroupTwo the new ct group two
+	 * 
+	 * @param ctGroupTwo
+	 *            the new ct group two
 	 */
 	public void setCtGroupTwo(String ctGroupTwo) {
 		this.ctGroupTwo = ctGroupTwo;
@@ -3561,7 +3736,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the cm extention.
-	 *
+	 * 
 	 * @return the cm extention
 	 */
 	public String getCmExtention() {
@@ -3570,8 +3745,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the cm extention.
-	 *
-	 * @param cmExtention the new cm extention
+	 * 
+	 * @param cmExtention
+	 *            the new cm extention
 	 */
 	public void setCmExtention(String cmExtention) {
 		this.cmExtention = cmExtention;
@@ -3579,7 +3755,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the local to date var.
-	 *
+	 * 
 	 * @return the local to date var
 	 */
 	public String getLocalToDateVar() {
@@ -3588,18 +3764,17 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the local to date var.
-	 *
-	 * @param localToDateVar the new local to date var
+	 * 
+	 * @param localToDateVar
+	 *            the new local to date var
 	 */
 	public void setLocalToDateVar(String localToDateVar) {
 		this.localToDateVar = localToDateVar;
 	}
 
-	
-
 	/**
 	 * Gets the lng user id.
-	 *
+	 * 
 	 * @return the lng user id
 	 */
 	public Long getLngUserId() {
@@ -3608,8 +3783,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the lng user id.
-	 *
-	 * @param lngUserId the new lng user id
+	 * 
+	 * @param lngUserId
+	 *            the new lng user id
 	 */
 	public void setLngUserId(Long lngUserId) {
 		this.lngUserId = lngUserId;
@@ -3617,7 +3793,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the cm suppl or admin.
-	 *
+	 * 
 	 * @return the cm suppl or admin
 	 */
 	public String getCmSupplOrAdmin() {
@@ -3626,8 +3802,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the cm suppl or admin.
-	 *
-	 * @param cmSupplOrAdmin the new cm suppl or admin
+	 * 
+	 * @param cmSupplOrAdmin
+	 *            the new cm suppl or admin
 	 */
 	public void setCmSupplOrAdmin(String cmSupplOrAdmin) {
 		this.cmSupplOrAdmin = cmSupplOrAdmin;
@@ -3635,7 +3812,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sm svo user.
-	 *
+	 * 
 	 * @return the sm svo user
 	 */
 	public String getSmSVOUser() {
@@ -3644,8 +3821,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm svo user.
-	 *
-	 * @param smSVOUser the new sm svo user
+	 * 
+	 * @param smSVOUser
+	 *            the new sm svo user
 	 */
 	public void setSmSVOUser(String smSVOUser) {
 		this.smSVOUser = smSVOUser;
@@ -3653,7 +3831,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sm monthly rpt by year.
-	 *
+	 * 
 	 * @return the sm monthly rpt by year
 	 */
 	public String getSmMonthlyRptByYear() {
@@ -3662,8 +3840,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm monthly rpt by year.
-	 *
-	 * @param smMonthlyRptByYear the new sm monthly rpt by year
+	 * 
+	 * @param smMonthlyRptByYear
+	 *            the new sm monthly rpt by year
 	 */
 	public void setSmMonthlyRptByYear(String smMonthlyRptByYear) {
 		this.smMonthlyRptByYear = smMonthlyRptByYear;
@@ -3671,7 +3850,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sm created from year.
-	 *
+	 * 
 	 * @return the sm created from year
 	 */
 	public String getSmCreatedFromYear() {
@@ -3680,8 +3859,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm created from year.
-	 *
-	 * @param smCreatedFromYear the new sm created from year
+	 * 
+	 * @param smCreatedFromYear
+	 *            the new sm created from year
 	 */
 	public void setSmCreatedFromYear(String smCreatedFromYear) {
 		this.smCreatedFromYear = smCreatedFromYear;
@@ -3689,7 +3869,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sm created to year.
-	 *
+	 * 
 	 * @return the sm created to year
 	 */
 	public String getSmCreatedToYear() {
@@ -3698,8 +3878,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm created to year.
-	 *
-	 * @param smCreatedToYear the new sm created to year
+	 * 
+	 * @param smCreatedToYear
+	 *            the new sm created to year
 	 */
 	public void setSmCreatedToYear(String smCreatedToYear) {
 		this.smCreatedToYear = smCreatedToYear;
@@ -3707,7 +3888,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc request quote no.
-	 *
+	 * 
 	 * @return the sc request quote no
 	 */
 	public String getScRequestQuoteNo() {
@@ -3716,8 +3897,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc request quote no.
-	 *
-	 * @param scRequestQuoteNo the new sc request quote no
+	 * 
+	 * @param scRequestQuoteNo
+	 *            the new sc request quote no
 	 */
 	public void setScRequestQuoteNo(String scRequestQuoteNo) {
 		this.scRequestQuoteNo = scRequestQuoteNo;
@@ -3725,7 +3907,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc pid no.
-	 *
+	 * 
 	 * @return the sc pid no
 	 */
 	public String getScPIDNo() {
@@ -3734,8 +3916,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc pid no.
-	 *
-	 * @param scPIDNo the new sc pid no
+	 * 
+	 * @param scPIDNo
+	 *            the new sc pid no
 	 */
 	public void setScPIDNo(String scPIDNo) {
 		this.scPIDNo = scPIDNo;
@@ -3743,7 +3926,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc contract or pkp type.
-	 *
+	 * 
 	 * @return the sc contract or pkp type
 	 */
 	public String getScContractOrPKPType() {
@@ -3752,8 +3935,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc contract or pkp type.
-	 *
-	 * @param scContractOrPKPType the new sc contract or pkp type
+	 * 
+	 * @param scContractOrPKPType
+	 *            the new sc contract or pkp type
 	 */
 	public void setScContractOrPKPType(String scContractOrPKPType) {
 		this.scContractOrPKPType = scContractOrPKPType;
@@ -3761,7 +3945,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc contract or pkp no.
-	 *
+	 * 
 	 * @return the sc contract or pkp no
 	 */
 	public String getScContractOrPKPNo() {
@@ -3770,8 +3954,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc contract or pkp no.
-	 *
-	 * @param scContractOrPKPNo the new sc contract or pkp no
+	 * 
+	 * @param scContractOrPKPNo
+	 *            the new sc contract or pkp no
 	 */
 	public void setScContractOrPKPNo(String scContractOrPKPNo) {
 		this.scContractOrPKPNo = scContractOrPKPNo;
@@ -3779,7 +3964,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc contract or pkp name.
-	 *
+	 * 
 	 * @return the sc contract or pkp name
 	 */
 	public String getScContractOrPKPName() {
@@ -3788,8 +3973,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc contract or pkp name.
-	 *
-	 * @param scContractOrPKPName the new sc contract or pkp name
+	 * 
+	 * @param scContractOrPKPName
+	 *            the new sc contract or pkp name
 	 */
 	public void setScContractOrPKPName(String scContractOrPKPName) {
 		this.scContractOrPKPName = scContractOrPKPName;
@@ -3797,7 +3983,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc laprnpurchdefault group.
-	 *
+	 * 
 	 * @return the sc laprnpurchdefault group
 	 */
 	public String getScLAPRNPURCHDEFAULTGroup() {
@@ -3806,8 +3992,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc laprnpurchdefault group.
-	 *
-	 * @param scLAPRNPURCHDEFAULTGroup the new sc laprnpurchdefault group
+	 * 
+	 * @param scLAPRNPURCHDEFAULTGroup
+	 *            the new sc laprnpurchdefault group
 	 */
 	public void setScLAPRNPURCHDEFAULTGroup(String scLAPRNPURCHDEFAULTGroup) {
 		this.scLAPRNPURCHDEFAULTGroup = scLAPRNPURCHDEFAULTGroup;
@@ -3815,7 +4002,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc requestnotesummary group.
-	 *
+	 * 
 	 * @return the sc requestnotesummary group
 	 */
 	public String getScREQUESTNOTESUMMARYGroup() {
@@ -3824,8 +4011,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc requestnotesummary group.
-	 *
-	 * @param scREQUESTNOTESUMMARYGroup the new sc requestnotesummary group
+	 * 
+	 * @param scREQUESTNOTESUMMARYGroup
+	 *            the new sc requestnotesummary group
 	 */
 	public void setScREQUESTNOTESUMMARYGroup(String scREQUESTNOTESUMMARYGroup) {
 		this.scREQUESTNOTESUMMARYGroup = scREQUESTNOTESUMMARYGroup;
@@ -3833,7 +4021,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc common status.
-	 *
+	 * 
 	 * @return the sc common status
 	 */
 	public String getScCommonStatus() {
@@ -3842,8 +4030,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc common status.
-	 *
-	 * @param scCommonStatus the new sc common status
+	 * 
+	 * @param scCommonStatus
+	 *            the new sc common status
 	 */
 	public void setScCommonStatus(String scCommonStatus) {
 		this.scCommonStatus = scCommonStatus;
@@ -3851,7 +4040,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl group one.
-	 *
+	 * 
 	 * @return the fl group one
 	 */
 	public String getFlGroupOne() {
@@ -3860,8 +4049,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl group one.
-	 *
-	 * @param flGroupOne the new fl group one
+	 * 
+	 * @param flGroupOne
+	 *            the new fl group one
 	 */
 	public void setFlGroupOne(String flGroupOne) {
 		this.flGroupOne = flGroupOne;
@@ -3869,7 +4059,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl group two.
-	 *
+	 * 
 	 * @return the fl group two
 	 */
 	public String getFlGroupTwo() {
@@ -3878,8 +4068,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl group two.
-	 *
-	 * @param flGroupTwo the new fl group two
+	 * 
+	 * @param flGroupTwo
+	 *            the new fl group two
 	 */
 	public void setFlGroupTwo(String flGroupTwo) {
 		this.flGroupTwo = flGroupTwo;
@@ -3887,7 +4078,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl group three.
-	 *
+	 * 
 	 * @return the fl group three
 	 */
 	public String getFlGroupThree() {
@@ -3896,8 +4087,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl group three.
-	 *
-	 * @param flGroupThree the new fl group three
+	 * 
+	 * @param flGroupThree
+	 *            the new fl group three
 	 */
 	public void setFlGroupThree(String flGroupThree) {
 		this.flGroupThree = flGroupThree;
@@ -3905,7 +4097,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl group four.
-	 *
+	 * 
 	 * @return the fl group four
 	 */
 	public String getFlGroupFour() {
@@ -3914,8 +4106,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl group four.
-	 *
-	 * @param flGroupFour the new fl group four
+	 * 
+	 * @param flGroupFour
+	 *            the new fl group four
 	 */
 	public void setFlGroupFour(String flGroupFour) {
 		this.flGroupFour = flGroupFour;
@@ -3923,7 +4116,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl group five.
-	 *
+	 * 
 	 * @return the fl group five
 	 */
 	public String getFlGroupFive() {
@@ -3932,8 +4125,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl group five.
-	 *
-	 * @param flGroupFive the new fl group five
+	 * 
+	 * @param flGroupFive
+	 *            the new fl group five
 	 */
 	public void setFlGroupFive(String flGroupFive) {
 		this.flGroupFive = flGroupFive;
@@ -3941,7 +4135,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl group six.
-	 *
+	 * 
 	 * @return the fl group six
 	 */
 	public String getFlGroupSix() {
@@ -3950,8 +4144,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl group six.
-	 *
-	 * @param flGroupSix the new fl group six
+	 * 
+	 * @param flGroupSix
+	 *            the new fl group six
 	 */
 	public void setFlGroupSix(String flGroupSix) {
 		this.flGroupSix = flGroupSix;
@@ -3959,7 +4154,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl group seven.
-	 *
+	 * 
 	 * @return the fl group seven
 	 */
 	public String getFlGroupSeven() {
@@ -3968,8 +4163,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl group seven.
-	 *
-	 * @param flGroupSeven the new fl group seven
+	 * 
+	 * @param flGroupSeven
+	 *            the new fl group seven
 	 */
 	public void setFlGroupSeven(String flGroupSeven) {
 		this.flGroupSeven = flGroupSeven;
@@ -3977,7 +4173,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl group eight.
-	 *
+	 * 
 	 * @return the fl group eight
 	 */
 	public String getFlGroupEight() {
@@ -3986,8 +4182,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl group eight.
-	 *
-	 * @param flGroupEight the new fl group eight
+	 * 
+	 * @param flGroupEight
+	 *            the new fl group eight
 	 */
 	public void setFlGroupEight(String flGroupEight) {
 		this.flGroupEight = flGroupEight;
@@ -3995,7 +4192,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl group nine.
-	 *
+	 * 
 	 * @return the fl group nine
 	 */
 	public String getFlGroupNine() {
@@ -4004,8 +4201,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl group nine.
-	 *
-	 * @param flGroupNine the new fl group nine
+	 * 
+	 * @param flGroupNine
+	 *            the new fl group nine
 	 */
 	public void setFlGroupNine(String flGroupNine) {
 		this.flGroupNine = flGroupNine;
@@ -4013,7 +4211,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl group ten.
-	 *
+	 * 
 	 * @return the fl group ten
 	 */
 	public String getFlGroupTen() {
@@ -4022,8 +4220,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl group ten.
-	 *
-	 * @param flGroupTen the new fl group ten
+	 * 
+	 * @param flGroupTen
+	 *            the new fl group ten
 	 */
 	public void setFlGroupTen(String flGroupTen) {
 		this.flGroupTen = flGroupTen;
@@ -4031,7 +4230,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl group eleven.
-	 *
+	 * 
 	 * @return the fl group eleven
 	 */
 	public String getFlGroupEleven() {
@@ -4040,8 +4239,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl group eleven.
-	 *
-	 * @param flGroupEleven the new fl group eleven
+	 * 
+	 * @param flGroupEleven
+	 *            the new fl group eleven
 	 */
 	public void setFlGroupEleven(String flGroupEleven) {
 		this.flGroupEleven = flGroupEleven;
@@ -4049,7 +4249,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl group twelve.
-	 *
+	 * 
 	 * @return the fl group twelve
 	 */
 	public String getFlGroupTwelve() {
@@ -4058,8 +4258,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl group twelve.
-	 *
-	 * @param flGroupTwelve the new fl group twelve
+	 * 
+	 * @param flGroupTwelve
+	 *            the new fl group twelve
 	 */
 	public void setFlGroupTwelve(String flGroupTwelve) {
 		this.flGroupTwelve = flGroupTwelve;
@@ -4067,7 +4268,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl group thirteen.
-	 *
+	 * 
 	 * @return the fl group thirteen
 	 */
 	public String getFlGroupThirteen() {
@@ -4076,8 +4277,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl group thirteen.
-	 *
-	 * @param flGroupThirteen the new fl group thirteen
+	 * 
+	 * @param flGroupThirteen
+	 *            the new fl group thirteen
 	 */
 	public void setFlGroupThirteen(String flGroupThirteen) {
 		this.flGroupThirteen = flGroupThirteen;
@@ -4085,7 +4287,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl group fourteen.
-	 *
+	 * 
 	 * @return the fl group fourteen
 	 */
 	public String getFlGroupFourteen() {
@@ -4094,8 +4296,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl group fourteen.
-	 *
-	 * @param flGroupFourteen the new fl group fourteen
+	 * 
+	 * @param flGroupFourteen
+	 *            the new fl group fourteen
 	 */
 	public void setFlGroupFourteen(String flGroupFourteen) {
 		this.flGroupFourteen = flGroupFourteen;
@@ -4103,7 +4306,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl group fifteen.
-	 *
+	 * 
 	 * @return the fl group fifteen
 	 */
 	public String getFlGroupFifteen() {
@@ -4112,8 +4315,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl group fifteen.
-	 *
-	 * @param flGroupFifteen the new fl group fifteen
+	 * 
+	 * @param flGroupFifteen
+	 *            the new fl group fifteen
 	 */
 	public void setFlGroupFifteen(String flGroupFifteen) {
 		this.flGroupFifteen = flGroupFifteen;
@@ -4121,7 +4325,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl group sixteen.
-	 *
+	 * 
 	 * @return the fl group sixteen
 	 */
 	public String getFlGroupSixteen() {
@@ -4130,8 +4334,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl group sixteen.
-	 *
-	 * @param flGroupSixteen the new fl group sixteen
+	 * 
+	 * @param flGroupSixteen
+	 *            the new fl group sixteen
 	 */
 	public void setFlGroupSixteen(String flGroupSixteen) {
 		this.flGroupSixteen = flGroupSixteen;
@@ -4139,7 +4344,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the ct complete.
-	 *
+	 * 
 	 * @return the ct complete
 	 */
 	public String getCtComplete() {
@@ -4148,8 +4353,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the ct complete.
-	 *
-	 * @param ctComplete the new ct complete
+	 * 
+	 * @param ctComplete
+	 *            the new ct complete
 	 */
 	public void setCtComplete(String ctComplete) {
 		this.ctComplete = ctComplete;
@@ -4157,7 +4363,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the ct contr montr status.
-	 *
+	 * 
 	 * @return the ct contr montr status
 	 */
 	public String getCtContrMontrStatus() {
@@ -4166,31 +4372,32 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the ct contr montr status.
-	 *
-	 * @param ctContrMontrStatus the new ct contr montr status
+	 * 
+	 * @param ctContrMontrStatus
+	 *            the new ct contr montr status
 	 */
 	public void setCtContrMontrStatus(String ctContrMontrStatus) {
 		this.ctContrMontrStatus = ctContrMontrStatus;
 	}
-	
+
 	/** The generated url. */
 	private String generatedURL;
-	
+
 	/** The report url. */
 	private String reportURL;
-	
+
 	/** The pdf file. */
 	private StreamedContent pdfFile;
-	
+
 	/** The constructed param string. */
 	private String constructedParamString;
-	
+
 	/** The report file name jsp. */
 	private String reportFileNameJSP;
 
 	/**
 	 * Gets the ct contract no.
-	 *
+	 * 
 	 * @return the ct contract no
 	 */
 	public String getCtContractNo() {
@@ -4199,8 +4406,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the ct contract no.
-	 *
-	 * @param ctContractNo the new ct contract no
+	 * 
+	 * @param ctContractNo
+	 *            the new ct contract no
 	 */
 	public void setCtContractNo(String ctContractNo) {
 		this.ctContractNo = ctContractNo;
@@ -4208,7 +4416,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the ct agreement.
-	 *
+	 * 
 	 * @return the ct agreement
 	 */
 	public String getCtAgreement() {
@@ -4217,8 +4425,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the ct agreement.
-	 *
-	 * @param ctAgreement the new ct agreement
+	 * 
+	 * @param ctAgreement
+	 *            the new ct agreement
 	 */
 	public void setCtAgreement(String ctAgreement) {
 		this.ctAgreement = ctAgreement;
@@ -4226,7 +4435,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the ct status.
-	 *
+	 * 
 	 * @return the ct status
 	 */
 	public String getCtStatus() {
@@ -4235,8 +4444,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the ct status.
-	 *
-	 * @param ctStatus the new ct status
+	 * 
+	 * @param ctStatus
+	 *            the new ct status
 	 */
 	public void setCtStatus(String ctStatus) {
 		this.ctStatus = ctStatus;
@@ -4244,7 +4454,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sub module.
-	 *
+	 * 
 	 * @return the sub module
 	 */
 	public String getSubModule() {
@@ -4253,8 +4463,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sub module.
-	 *
-	 * @param subModule the new sub module
+	 * 
+	 * @param subModule
+	 *            the new sub module
 	 */
 	public void setSubModule(String subModule) {
 		this.subModule = subModule;
@@ -4262,7 +4473,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc prc rpt group.
-	 *
+	 * 
 	 * @return the sc prc rpt group
 	 */
 	public String getScPrcRptGroup() {
@@ -4271,8 +4482,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc prc rpt group.
-	 *
-	 * @param scPrcRptGroup the new sc prc rpt group
+	 * 
+	 * @param scPrcRptGroup
+	 *            the new sc prc rpt group
 	 */
 	public void setScPrcRptGroup(String scPrcRptGroup) {
 		this.scPrcRptGroup = scPrcRptGroup;
@@ -4280,7 +4492,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc pi dtls prc rpt group.
-	 *
+	 * 
 	 * @return the sc pi dtls prc rpt group
 	 */
 	public String getScPIDtlsPrcRptGroup() {
@@ -4289,8 +4501,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc pi dtls prc rpt group.
-	 *
-	 * @param scPIDtlsPrcRptGroup the new sc pi dtls prc rpt group
+	 * 
+	 * @param scPIDtlsPrcRptGroup
+	 *            the new sc pi dtls prc rpt group
 	 */
 	public void setScPIDtlsPrcRptGroup(String scPIDtlsPrcRptGroup) {
 		this.scPIDtlsPrcRptGroup = scPIDtlsPrcRptGroup;
@@ -4298,7 +4511,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc procurement type.
-	 *
+	 * 
 	 * @return the sc procurement type
 	 */
 	public String getScProcurementType() {
@@ -4307,8 +4520,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc procurement type.
-	 *
-	 * @param scProcurementType the new sc procurement type
+	 * 
+	 * @param scProcurementType
+	 *            the new sc procurement type
 	 */
 	public void setScProcurementType(String scProcurementType) {
 		this.scProcurementType = scProcurementType;
@@ -4316,7 +4530,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc process rpt quotation no.
-	 *
+	 * 
 	 * @return the sc process rpt quotation no
 	 */
 	public String getScProcessRptQuotationNo() {
@@ -4325,8 +4539,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc process rpt quotation no.
-	 *
-	 * @param scProcessRptQuotationNo the new sc process rpt quotation no
+	 * 
+	 * @param scProcessRptQuotationNo
+	 *            the new sc process rpt quotation no
 	 */
 	public void setScProcessRptQuotationNo(String scProcessRptQuotationNo) {
 		this.scProcessRptQuotationNo = scProcessRptQuotationNo;
@@ -4334,7 +4549,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc sone status.
-	 *
+	 * 
 	 * @return the sc sone status
 	 */
 	public String getScSoneStatus() {
@@ -4343,8 +4558,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc sone status.
-	 *
-	 * @param scSoneStatus the new sc sone status
+	 * 
+	 * @param scSoneStatus
+	 *            the new sc sone status
 	 */
 	public void setScSoneStatus(String scSoneStatus) {
 		this.scSoneStatus = scSoneStatus;
@@ -4352,7 +4568,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc sone crtd from date.
-	 *
+	 * 
 	 * @return the sc sone crtd from date
 	 */
 	public Date getScSoneCrtdFromDate() {
@@ -4361,8 +4577,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc sone crtd from date.
-	 *
-	 * @param scSoneCrtdFromDate the new sc sone crtd from date
+	 * 
+	 * @param scSoneCrtdFromDate
+	 *            the new sc sone crtd from date
 	 */
 	public void setScSoneCrtdFromDate(Date scSoneCrtdFromDate) {
 		this.scSoneCrtdFromDate = scSoneCrtdFromDate;
@@ -4370,7 +4587,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc sone crtd to date.
-	 *
+	 * 
 	 * @return the sc sone crtd to date
 	 */
 	public Date getScSoneCrtdToDate() {
@@ -4379,8 +4596,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc sone crtd to date.
-	 *
-	 * @param scSoneCrtdToDate the new sc sone crtd to date
+	 * 
+	 * @param scSoneCrtdToDate
+	 *            the new sc sone crtd to date
 	 */
 	public void setScSoneCrtdToDate(Date scSoneCrtdToDate) {
 		this.scSoneCrtdToDate = scSoneCrtdToDate;
@@ -4388,7 +4606,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc requisener id.
-	 *
+	 * 
 	 * @return the sc requisener id
 	 */
 	public String getScRequisenerId() {
@@ -4397,8 +4615,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc requisener id.
-	 *
-	 * @param scRequisenerId the new sc requisener id
+	 * 
+	 * @param scRequisenerId
+	 *            the new sc requisener id
 	 */
 	public void setScRequisenerId(String scRequisenerId) {
 		this.scRequisenerId = scRequisenerId;
@@ -4406,7 +4625,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc supplier.
-	 *
+	 * 
 	 * @return the sc supplier
 	 */
 	public String getScSupplier() {
@@ -4415,8 +4634,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc supplier.
-	 *
-	 * @param scSupplier the new sc supplier
+	 * 
+	 * @param scSupplier
+	 *            the new sc supplier
 	 */
 	public void setScSupplier(String scSupplier) {
 		this.scSupplier = scSupplier;
@@ -4424,7 +4644,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc login.
-	 *
+	 * 
 	 * @return the sc login
 	 */
 	public String getScLogin() {
@@ -4433,8 +4653,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc login.
-	 *
-	 * @param scLogin the new sc login
+	 * 
+	 * @param scLogin
+	 *            the new sc login
 	 */
 	public void setScLogin(String scLogin) {
 		this.scLogin = scLogin;
@@ -4442,7 +4663,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc p ino.
-	 *
+	 * 
 	 * @return the sc p ino
 	 */
 	public String getScPIno() {
@@ -4451,8 +4672,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc p ino.
-	 *
-	 * @param scPIno the new sc p ino
+	 * 
+	 * @param scPIno
+	 *            the new sc p ino
 	 */
 	public void setScPIno(String scPIno) {
 		this.scPIno = scPIno;
@@ -4460,7 +4682,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc publish from date.
-	 *
+	 * 
 	 * @return the sc publish from date
 	 */
 	public Date getScPublishFromDate() {
@@ -4469,8 +4691,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc publish from date.
-	 *
-	 * @param scPublishFromDate the new sc publish from date
+	 * 
+	 * @param scPublishFromDate
+	 *            the new sc publish from date
 	 */
 	public void setScPublishFromDate(Date scPublishFromDate) {
 		this.scPublishFromDate = scPublishFromDate;
@@ -4478,7 +4701,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc publish to date.
-	 *
+	 * 
 	 * @return the sc publish to date
 	 */
 	public Date getScPublishToDate() {
@@ -4487,8 +4710,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc publish to date.
-	 *
-	 * @param scPublishToDate the new sc publish to date
+	 * 
+	 * @param scPublishToDate
+	 *            the new sc publish to date
 	 */
 	public void setScPublishToDate(Date scPublishToDate) {
 		this.scPublishToDate = scPublishToDate;
@@ -4496,7 +4720,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc procure all list.
-	 *
+	 * 
 	 * @return the sc procure all list
 	 */
 	public List<SelectItem> getScProcureAllList() {
@@ -4505,8 +4729,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc procure all list.
-	 *
-	 * @param scProcureAllList the new sc procure all list
+	 * 
+	 * @param scProcureAllList
+	 *            the new sc procure all list
 	 */
 	public void setScProcureAllList(List<SelectItem> scProcureAllList) {
 		this.scProcureAllList = scProcureAllList;
@@ -4514,7 +4739,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc quotation list.
-	 *
+	 * 
 	 * @return the sc quotation list
 	 */
 	public List<SelectItem> getScQuotationList() {
@@ -4523,8 +4748,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc quotation list.
-	 *
-	 * @param scQuotationList the new sc quotation list
+	 * 
+	 * @param scQuotationList
+	 *            the new sc quotation list
 	 */
 	public void setScQuotationList(List<SelectItem> scQuotationList) {
 		this.scQuotationList = scQuotationList;
@@ -4532,7 +4758,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc tender list.
-	 *
+	 * 
 	 * @return the sc tender list
 	 */
 	public List<SelectItem> getScTenderList() {
@@ -4541,8 +4767,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc tender list.
-	 *
-	 * @param scTenderList the new sc tender list
+	 * 
+	 * @param scTenderList
+	 *            the new sc tender list
 	 */
 	public void setScTenderList(List<SelectItem> scTenderList) {
 		this.scTenderList = scTenderList;
@@ -4550,7 +4777,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc rstrctd tndr list.
-	 *
+	 * 
 	 * @return the sc rstrctd tndr list
 	 */
 	public List<SelectItem> getScRstrctdTndrList() {
@@ -4559,8 +4786,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc rstrctd tndr list.
-	 *
-	 * @param scRstrctdTndrList the new sc rstrctd tndr list
+	 * 
+	 * @param scRstrctdTndrList
+	 *            the new sc rstrctd tndr list
 	 */
 	public void setScRstrctdTndrList(List<SelectItem> scRstrctdTndrList) {
 		this.scRstrctdTndrList = scRstrctdTndrList;
@@ -4568,7 +4796,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc created to year.
-	 *
+	 * 
 	 * @return the sc created to year
 	 */
 	public String getScCreatedToYear() {
@@ -4577,8 +4805,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc created to year.
-	 *
-	 * @param scCreatedToYear the new sc created to year
+	 * 
+	 * @param scCreatedToYear
+	 *            the new sc created to year
 	 */
 	public void setScCreatedToYear(String scCreatedToYear) {
 		this.scCreatedToYear = scCreatedToYear;
@@ -4586,7 +4815,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc created to month.
-	 *
+	 * 
 	 * @return the sc created to month
 	 */
 	public String getScCreatedToMonth() {
@@ -4595,8 +4824,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc created to month.
-	 *
-	 * @param scCreatedToMonth the new sc created to month
+	 * 
+	 * @param scCreatedToMonth
+	 *            the new sc created to month
 	 */
 	public void setScCreatedToMonth(String scCreatedToMonth) {
 		this.scCreatedToMonth = scCreatedToMonth;
@@ -4604,7 +4834,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc created from year.
-	 *
+	 * 
 	 * @return the sc created from year
 	 */
 	public String getScCreatedFromYear() {
@@ -4613,8 +4843,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc created from year.
-	 *
-	 * @param scCreatedFromYear the new sc created from year
+	 * 
+	 * @param scCreatedFromYear
+	 *            the new sc created from year
 	 */
 	public void setScCreatedFromYear(String scCreatedFromYear) {
 		this.scCreatedFromYear = scCreatedFromYear;
@@ -4622,7 +4853,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc created from month.
-	 *
+	 * 
 	 * @return the sc created from month
 	 */
 	public String getScCreatedFromMonth() {
@@ -4631,8 +4862,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc created from month.
-	 *
-	 * @param scCreatedFromMonth the new sc created from month
+	 * 
+	 * @param scCreatedFromMonth
+	 *            the new sc created from month
 	 */
 	public void setScCreatedFromMonth(String scCreatedFromMonth) {
 		this.scCreatedFromMonth = scCreatedFromMonth;
@@ -4640,7 +4872,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc desk officer.
-	 *
+	 * 
 	 * @return the sc desk officer
 	 */
 	public String getScDeskOfficer() {
@@ -4649,8 +4881,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc desk officer.
-	 *
-	 * @param scDeskOfficer the new sc desk officer
+	 * 
+	 * @param scDeskOfficer
+	 *            the new sc desk officer
 	 */
 	public void setScDeskOfficer(String scDeskOfficer) {
 		this.scDeskOfficer = scDeskOfficer;
@@ -4658,7 +4891,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc ptj.
-	 *
+	 * 
 	 * @return the sc ptj
 	 */
 	public String getScPtj() {
@@ -4667,8 +4900,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc ptj.
-	 *
-	 * @param scPtj the new sc ptj
+	 * 
+	 * @param scPtj
+	 *            the new sc ptj
 	 */
 	public void setScPtj(String scPtj) {
 		this.scPtj = scPtj;
@@ -4676,7 +4910,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc status.
-	 *
+	 * 
 	 * @return the sc status
 	 */
 	public String getScStatus() {
@@ -4685,8 +4919,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc status.
-	 *
-	 * @param scStatus the new sc status
+	 * 
+	 * @param scStatus
+	 *            the new sc status
 	 */
 	public void setScStatus(String scStatus) {
 		this.scStatus = scStatus;
@@ -4694,7 +4929,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the procurement list.
-	 *
+	 * 
 	 * @return the procurement list
 	 */
 	public List<SelectItem> getProcurementList() {
@@ -4703,8 +4938,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the procurement list.
-	 *
-	 * @param procurementList the new procurement list
+	 * 
+	 * @param procurementList
+	 *            the new procurement list
 	 */
 	public void setProcurementList(List<SelectItem> procurementList) {
 		this.procurementList = procurementList;
@@ -4712,7 +4948,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl contract order.
-	 *
+	 * 
 	 * @return the fl contract order
 	 */
 	public String getFlContractOrder() {
@@ -4721,8 +4957,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl contract order.
-	 *
-	 * @param flContractOrder the new fl contract order
+	 * 
+	 * @param flContractOrder
+	 *            the new fl contract order
 	 */
 	public void setFlContractOrder(String flContractOrder) {
 		this.flContractOrder = flContractOrder;
@@ -4730,7 +4967,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl contract request.
-	 *
+	 * 
 	 * @return the fl contract request
 	 */
 	public String getFlContractRequest() {
@@ -4739,8 +4976,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl contract request.
-	 *
-	 * @param flContractRequest the new fl contract request
+	 * 
+	 * @param flContractRequest
+	 *            the new fl contract request
 	 */
 	public void setFlContractRequest(String flContractRequest) {
 		this.flContractRequest = flContractRequest;
@@ -4748,7 +4986,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl purchase order no.
-	 *
+	 * 
 	 * @return the fl purchase order no
 	 */
 	public String getFlPurchaseOrderNo() {
@@ -4757,8 +4995,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl purchase order no.
-	 *
-	 * @param flPurchaseOrderNo the new fl purchase order no
+	 * 
+	 * @param flPurchaseOrderNo
+	 *            the new fl purchase order no
 	 */
 	public void setFlPurchaseOrderNo(String flPurchaseOrderNo) {
 		this.flPurchaseOrderNo = flPurchaseOrderNo;
@@ -4766,7 +5005,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the report file name jsp.
-	 *
+	 * 
 	 * @return the report file name jsp
 	 */
 	public String getReportFileNameJSP() {
@@ -4775,8 +5014,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the report file name jsp.
-	 *
-	 * @param reportFileNameJSP the new report file name jsp
+	 * 
+	 * @param reportFileNameJSP
+	 *            the new report file name jsp
 	 */
 	public void setReportFileNameJSP(String reportFileNameJSP) {
 		this.reportFileNameJSP = reportFileNameJSP;
@@ -4784,7 +5024,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the pdf file.
-	 *
+	 * 
 	 * @return the pdf file
 	 */
 	public StreamedContent getPdfFile() {
@@ -4793,7 +5033,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl itm type.
-	 *
+	 * 
 	 * @return the fl itm type
 	 */
 	public String getFlItmType() {
@@ -4802,8 +5042,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl itm type.
-	 *
-	 * @param flItmType the new fl itm type
+	 * 
+	 * @param flItmType
+	 *            the new fl itm type
 	 */
 	public void setFlItmType(String flItmType) {
 		this.flItmType = flItmType;
@@ -4811,7 +5052,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl contract no.
-	 *
+	 * 
 	 * @return the fl contract no
 	 */
 	public String getFlContractNo() {
@@ -4820,8 +5061,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl contract no.
-	 *
-	 * @param flContractNo the new fl contract no
+	 * 
+	 * @param flContractNo
+	 *            the new fl contract no
 	 */
 	public void setFlContractNo(String flContractNo) {
 		this.flContractNo = flContractNo;
@@ -4829,7 +5071,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl sst.
-	 *
+	 * 
 	 * @return the fl sst
 	 */
 	public String getFlSst() {
@@ -4838,8 +5080,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl sst.
-	 *
-	 * @param flSst the new fl sst
+	 * 
+	 * @param flSst
+	 *            the new fl sst
 	 */
 	public void setFlSst(String flSst) {
 		this.flSst = flSst;
@@ -4847,7 +5090,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl jabatan.
-	 *
+	 * 
 	 * @return the fl jabatan
 	 */
 	public String getFlJabatan() {
@@ -4856,17 +5099,17 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl jabatan.
-	 *
-	 * @param flJabatan the new fl jabatan
+	 * 
+	 * @param flJabatan
+	 *            the new fl jabatan
 	 */
 	public void setFlJabatan(String flJabatan) {
 		this.flJabatan = flJabatan;
 	}
-	
 
 	/**
 	 * Gets the common ptj.
-	 *
+	 * 
 	 * @return the common ptj
 	 */
 	public String getCommonPtj() {
@@ -4875,8 +5118,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the common ptj.
-	 *
-	 * @param commonPtj the new common ptj
+	 * 
+	 * @param commonPtj
+	 *            the new common ptj
 	 */
 	public void setCommonPtj(String commonPtj) {
 		this.commonPtj = commonPtj;
@@ -4884,7 +5128,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the common ministry.
-	 *
+	 * 
 	 * @return the common ministry
 	 */
 	public String getCommonMinistry() {
@@ -4893,8 +5137,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the common ministry.
-	 *
-	 * @param commonMinistry the new common ministry
+	 * 
+	 * @param commonMinistry
+	 *            the new common ministry
 	 */
 	public void setCommonMinistry(String commonMinistry) {
 		this.commonMinistry = commonMinistry;
@@ -4902,7 +5147,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl supplier.
-	 *
+	 * 
 	 * @return the fl supplier
 	 */
 	public String getFlSupplier() {
@@ -4911,8 +5156,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl supplier.
-	 *
-	 * @param flSupplier the new fl supplier
+	 * 
+	 * @param flSupplier
+	 *            the new fl supplier
 	 */
 	public void setFlSupplier(String flSupplier) {
 		this.flSupplier = flSupplier;
@@ -4920,7 +5166,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl status.
-	 *
+	 * 
 	 * @return the fl status
 	 */
 	public String getFlStatus() {
@@ -4929,8 +5175,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl status.
-	 *
-	 * @param flStatus the new fl status
+	 * 
+	 * @param flStatus
+	 *            the new fl status
 	 */
 	public void setFlStatus(String flStatus) {
 		this.flStatus = flStatus;
@@ -4938,7 +5185,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl duration.
-	 *
+	 * 
 	 * @return the fl duration
 	 */
 	public String getFlDuration() {
@@ -4947,8 +5194,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl duration.
-	 *
-	 * @param flDuration the new fl duration
+	 * 
+	 * @param flDuration
+	 *            the new fl duration
 	 */
 	public void setFlDuration(String flDuration) {
 		this.flDuration = flDuration;
@@ -4956,7 +5204,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl recieving officer.
-	 *
+	 * 
 	 * @return the fl recieving officer
 	 */
 	public String getFlRecievingOfficer() {
@@ -4965,8 +5213,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl recieving officer.
-	 *
-	 * @param flRecievingOfficer the new fl recieving officer
+	 * 
+	 * @param flRecievingOfficer
+	 *            the new fl recieving officer
 	 */
 	public void setFlRecievingOfficer(String flRecievingOfficer) {
 		this.flRecievingOfficer = flRecievingOfficer;
@@ -4974,7 +5223,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl delivery address.
-	 *
+	 * 
 	 * @return the fl delivery address
 	 */
 	public String getFlDeliveryAddress() {
@@ -4983,8 +5232,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl delivery address.
-	 *
-	 * @param flDeliveryAddress the new fl delivery address
+	 * 
+	 * @param flDeliveryAddress
+	 *            the new fl delivery address
 	 */
 	public void setFlDeliveryAddress(String flDeliveryAddress) {
 		this.flDeliveryAddress = flDeliveryAddress;
@@ -4992,7 +5242,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl contract type.
-	 *
+	 * 
 	 * @return the fl contract type
 	 */
 	public String getFlContractType() {
@@ -5001,8 +5251,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl contract type.
-	 *
-	 * @param flContractType the new fl contract type
+	 * 
+	 * @param flContractType
+	 *            the new fl contract type
 	 */
 	public void setFlContractType(String flContractType) {
 		this.flContractType = flContractType;
@@ -5010,7 +5261,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl requisitioner.
-	 *
+	 * 
 	 * @return the fl requisitioner
 	 */
 	public String getFlRequisitioner() {
@@ -5019,8 +5270,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl requisitioner.
-	 *
-	 * @param flRequisitioner the new fl requisitioner
+	 * 
+	 * @param flRequisitioner
+	 *            the new fl requisitioner
 	 */
 	public void setFlRequisitioner(String flRequisitioner) {
 		this.flRequisitioner = flRequisitioner;
@@ -5028,7 +5280,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl mto contract.
-	 *
+	 * 
 	 * @return the fl mto contract
 	 */
 	public String getFlMtoContract() {
@@ -5037,8 +5289,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl mto contract.
-	 *
-	 * @param flMtoContract the new fl mto contract
+	 * 
+	 * @param flMtoContract
+	 *            the new fl mto contract
 	 */
 	public void setFlMtoContract(String flMtoContract) {
 		this.flMtoContract = flMtoContract;
@@ -5046,7 +5299,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl invoice no.
-	 *
+	 * 
 	 * @return the fl invoice no
 	 */
 	public String getFlInvoiceNo() {
@@ -5055,8 +5308,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl invoice no.
-	 *
-	 * @param flInvoiceNo the new fl invoice no
+	 * 
+	 * @param flInvoiceNo
+	 *            the new fl invoice no
 	 */
 	public void setFlInvoiceNo(String flInvoiceNo) {
 		this.flInvoiceNo = flInvoiceNo;
@@ -5064,7 +5318,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl deduction type.
-	 *
+	 * 
 	 * @return the fl deduction type
 	 */
 	public String getFlDeductionType() {
@@ -5073,8 +5327,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl deduction type.
-	 *
-	 * @param flDeductionType the new fl deduction type
+	 * 
+	 * @param flDeductionType
+	 *            the new fl deduction type
 	 */
 	public void setFlDeductionType(String flDeductionType) {
 		this.flDeductionType = flDeductionType;
@@ -5082,7 +5337,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl cr no.
-	 *
+	 * 
 	 * @return the fl cr no
 	 */
 	public String getFlCrNo() {
@@ -5091,8 +5346,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl cr no.
-	 *
-	 * @param flCrNo the new fl cr no
+	 * 
+	 * @param flCrNo
+	 *            the new fl cr no
 	 */
 	public void setFlCrNo(String flCrNo) {
 		this.flCrNo = flCrNo;
@@ -5100,7 +5356,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl approver name.
-	 *
+	 * 
 	 * @return the fl approver name
 	 */
 	public String getFlApproverName() {
@@ -5109,8 +5365,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl approver name.
-	 *
-	 * @param flApproverName the new fl approver name
+	 * 
+	 * @param flApproverName
+	 *            the new fl approver name
 	 */
 	public void setFlApproverName(String flApproverName) {
 		this.flApproverName = flApproverName;
@@ -5118,7 +5375,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl document type.
-	 *
+	 * 
 	 * @return the fl document type
 	 */
 	public String getFlDocumentType() {
@@ -5127,8 +5384,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl document type.
-	 *
-	 * @param flDocumentType the new fl document type
+	 * 
+	 * @param flDocumentType
+	 *            the new fl document type
 	 */
 	public void setFlDocumentType(String flDocumentType) {
 		this.flDocumentType = flDocumentType;
@@ -5136,7 +5394,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl criteria.
-	 *
+	 * 
 	 * @return the fl criteria
 	 */
 	public String getFlCriteria() {
@@ -5145,8 +5403,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl criteria.
-	 *
-	 * @param flCriteria the new fl criteria
+	 * 
+	 * @param flCriteria
+	 *            the new fl criteria
 	 */
 	public void setFlCriteria(String flCriteria) {
 		this.flCriteria = flCriteria;
@@ -5154,7 +5413,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl scoring.
-	 *
+	 * 
 	 * @return the fl scoring
 	 */
 	public String getFlScoring() {
@@ -5163,8 +5422,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl scoring.
-	 *
-	 * @param flScoring the new fl scoring
+	 * 
+	 * @param flScoring
+	 *            the new fl scoring
 	 */
 	public void setFlScoring(String flScoring) {
 		this.flScoring = flScoring;
@@ -5172,7 +5432,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl pkp no.
-	 *
+	 * 
 	 * @return the fl pkp no
 	 */
 	public String getFlPkpNo() {
@@ -5181,8 +5441,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl pkp no.
-	 *
-	 * @param flPkpNo the new fl pkp no
+	 * 
+	 * @param flPkpNo
+	 *            the new fl pkp no
 	 */
 	public void setFlPkpNo(String flPkpNo) {
 		this.flPkpNo = flPkpNo;
@@ -5190,7 +5451,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl delivery order no.
-	 *
+	 * 
 	 * @return the fl delivery order no
 	 */
 	public String getFlDeliveryOrderNo() {
@@ -5199,8 +5460,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl delivery order no.
-	 *
-	 * @param flDeliveryOrderNo the new fl delivery order no
+	 * 
+	 * @param flDeliveryOrderNo
+	 *            the new fl delivery order no
 	 */
 	public void setFlDeliveryOrderNo(String flDeliveryOrderNo) {
 		this.flDeliveryOrderNo = flDeliveryOrderNo;
@@ -5208,7 +5470,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl item code.
-	 *
+	 * 
 	 * @return the fl item code
 	 */
 	public String getFlItemCode() {
@@ -5217,8 +5479,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl item code.
-	 *
-	 * @param flItemCode the new fl item code
+	 * 
+	 * @param flItemCode
+	 *            the new fl item code
 	 */
 	public void setFlItemCode(String flItemCode) {
 		this.flItemCode = flItemCode;
@@ -5226,7 +5489,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl po amount.
-	 *
+	 * 
 	 * @return the fl po amount
 	 */
 	public String getFlPoAmount() {
@@ -5235,8 +5498,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl po amount.
-	 *
-	 * @param flPoAmount the new fl po amount
+	 * 
+	 * @param flPoAmount
+	 *            the new fl po amount
 	 */
 	public void setFlPoAmount(String flPoAmount) {
 		this.flPoAmount = flPoAmount;
@@ -5244,7 +5508,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl pr no.
-	 *
+	 * 
 	 * @return the fl pr no
 	 */
 	public String getFlPrNo() {
@@ -5253,8 +5517,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl pr no.
-	 *
-	 * @param flPrNo the new fl pr no
+	 * 
+	 * @param flPrNo
+	 *            the new fl pr no
 	 */
 	public void setFlPrNo(String flPrNo) {
 		this.flPrNo = flPrNo;
@@ -5262,7 +5527,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl pmo.
-	 *
+	 * 
 	 * @return the fl pmo
 	 */
 	public String getFlPmo() {
@@ -5271,8 +5536,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl pmo.
-	 *
-	 * @param flPmo the new fl pmo
+	 * 
+	 * @param flPmo
+	 *            the new fl pmo
 	 */
 	public void setFlPmo(String flPmo) {
 		this.flPmo = flPmo;
@@ -5280,7 +5546,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl item name.
-	 *
+	 * 
 	 * @return the fl item name
 	 */
 	public String getFlItemName() {
@@ -5289,17 +5555,17 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl item name.
-	 *
-	 * @param flItemName the new fl item name
+	 * 
+	 * @param flItemName
+	 *            the new fl item name
 	 */
 	public void setFlItemName(String flItemName) {
 		this.flItemName = flItemName;
 	}
 
-	
 	/**
 	 * Gets the sm application no.
-	 *
+	 * 
 	 * @return the sm application no
 	 */
 	public String getSmApplicationNo() {
@@ -5308,8 +5574,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm application no.
-	 *
-	 * @param smApplicationNo the new sm application no
+	 * 
+	 * @param smApplicationNo
+	 *            the new sm application no
 	 */
 	public void setSmApplicationNo(String smApplicationNo) {
 		this.smApplicationNo = smApplicationNo;
@@ -5317,7 +5584,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sm zone.
-	 *
+	 * 
 	 * @return the sm zone
 	 */
 	public String getSmZone() {
@@ -5326,8 +5593,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm zone.
-	 *
-	 * @param smZone the new sm zone
+	 * 
+	 * @param smZone
+	 *            the new sm zone
 	 */
 	public void setSmZone(String smZone) {
 		this.smZone = smZone;
@@ -5335,7 +5603,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sm supplier type.
-	 *
+	 * 
 	 * @return the sm supplier type
 	 */
 	public String getSmSupplierType() {
@@ -5344,8 +5612,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm supplier type.
-	 *
-	 * @param smSupplierType the new sm supplier type
+	 * 
+	 * @param smSupplierType
+	 *            the new sm supplier type
 	 */
 	public void setSmSupplierType(String smSupplierType) {
 		this.smSupplierType = smSupplierType;
@@ -5353,7 +5622,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sm mof reg no.
-	 *
+	 * 
 	 * @return the sm mof reg no
 	 */
 	public String getSmMofRegNo() {
@@ -5362,16 +5631,17 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm mof reg no.
-	 *
-	 * @param smMofRegNo the new sm mof reg no
+	 * 
+	 * @param smMofRegNo
+	 *            the new sm mof reg no
 	 */
 	public void setSmMofRegNo(String smMofRegNo) {
 		this.smMofRegNo = smMofRegNo;
 	}
-	
+
 	/**
 	 * Gets the sm registration status.
-	 *
+	 * 
 	 * @return the sm registration status
 	 */
 	public String getSmRegistrationStatus() {
@@ -5380,8 +5650,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm registration status.
-	 *
-	 * @param smRegistrationStatus the new sm registration status
+	 * 
+	 * @param smRegistrationStatus
+	 *            the new sm registration status
 	 */
 	public void setSmRegistrationStatus(String smRegistrationStatus) {
 		this.smRegistrationStatus = smRegistrationStatus;
@@ -5389,7 +5660,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the smcategory.
-	 *
+	 * 
 	 * @return the smcategory
 	 */
 	public String getSmcategory() {
@@ -5398,8 +5669,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the smcategory.
-	 *
-	 * @param smcategory the new smcategory
+	 * 
+	 * @param smcategory
+	 *            the new smcategory
 	 */
 	public void setSmcategory(String smcategory) {
 		this.smcategory = smcategory;
@@ -5407,7 +5679,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sm main category.
-	 *
+	 * 
 	 * @return the sm main category
 	 */
 	public String getSmMainCategory() {
@@ -5416,8 +5688,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm main category.
-	 *
-	 * @param smMainCategory the new sm main category
+	 * 
+	 * @param smMainCategory
+	 *            the new sm main category
 	 */
 	public void setSmMainCategory(String smMainCategory) {
 		this.smMainCategory = smMainCategory;
@@ -5425,7 +5698,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sm sub category.
-	 *
+	 * 
 	 * @return the sm sub category
 	 */
 	public String getSmSubCategory() {
@@ -5434,8 +5707,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm sub category.
-	 *
-	 * @param smSubCategory the new sm sub category
+	 * 
+	 * @param smSubCategory
+	 *            the new sm sub category
 	 */
 	public void setSmSubCategory(String smSubCategory) {
 		this.smSubCategory = smSubCategory;
@@ -5443,7 +5717,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sm sub category division.
-	 *
+	 * 
 	 * @return the sm sub category division
 	 */
 	public String getSmSubCategoryDivision() {
@@ -5452,16 +5726,17 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm sub category division.
-	 *
-	 * @param smSubCategoryDivision the new sm sub category division
+	 * 
+	 * @param smSubCategoryDivision
+	 *            the new sm sub category division
 	 */
 	public void setSmSubCategoryDivision(String smSubCategoryDivision) {
 		this.smSubCategoryDivision = smSubCategoryDivision;
 	}
-	
+
 	/**
 	 * Gets the sm application status.
-	 *
+	 * 
 	 * @return the sm application status
 	 */
 	public String getSmApplicationStatus() {
@@ -5470,16 +5745,17 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm application status.
-	 *
-	 * @param smApplicationStatus the new sm application status
+	 * 
+	 * @param smApplicationStatus
+	 *            the new sm application status
 	 */
 	public void setSmApplicationStatus(String smApplicationStatus) {
 		this.smApplicationStatus = smApplicationStatus;
 	}
-	
+
 	/**
 	 * Gets the sm payment type.
-	 *
+	 * 
 	 * @return the sm payment type
 	 */
 	public String getSmPaymentType() {
@@ -5488,8 +5764,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm payment type.
-	 *
-	 * @param smPaymentType the new sm payment type
+	 * 
+	 * @param smPaymentType
+	 *            the new sm payment type
 	 */
 	public void setSmPaymentType(String smPaymentType) {
 		this.smPaymentType = smPaymentType;
@@ -5497,7 +5774,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sm application type.
-	 *
+	 * 
 	 * @return the sm application type
 	 */
 	public String getSmApplicationType() {
@@ -5506,8 +5783,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm application type.
-	 *
-	 * @param smApplicationType the new sm application type
+	 * 
+	 * @param smApplicationType
+	 *            the new sm application type
 	 */
 	public void setSmApplicationType(String smApplicationType) {
 		this.smApplicationType = smApplicationType;
@@ -5515,7 +5793,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sm state.
-	 *
+	 * 
 	 * @return the sm state
 	 */
 	public String getSmState() {
@@ -5524,8 +5802,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm state.
-	 *
-	 * @param smState the new sm state
+	 * 
+	 * @param smState
+	 *            the new sm state
 	 */
 	public void setSmState(String smState) {
 		this.smState = smState;
@@ -5533,7 +5812,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sm district.
-	 *
+	 * 
 	 * @return the sm district
 	 */
 	public String getSmDistrict() {
@@ -5542,16 +5821,17 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm district.
-	 *
-	 * @param smDistrict the new sm district
+	 * 
+	 * @param smDistrict
+	 *            the new sm district
 	 */
 	public void setSmDistrict(String smDistrict) {
 		this.smDistrict = smDistrict;
 	}
-	
+
 	/**
 	 * Gets the sm report type.
-	 *
+	 * 
 	 * @return the sm report type
 	 */
 	public String getSmReportType() {
@@ -5560,8 +5840,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm report type.
-	 *
-	 * @param smReportType the new sm report type
+	 * 
+	 * @param smReportType
+	 *            the new sm report type
 	 */
 	public void setSmReportType(String smReportType) {
 		this.smReportType = smReportType;
@@ -5569,7 +5850,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sm company name.
-	 *
+	 * 
 	 * @return the sm company name
 	 */
 	public String getSmCompanyName() {
@@ -5578,16 +5859,17 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm company name.
-	 *
-	 * @param smCompanyName the new sm company name
+	 * 
+	 * @param smCompanyName
+	 *            the new sm company name
 	 */
 	public void setSmCompanyName(String smCompanyName) {
 		this.smCompanyName = smCompanyName;
 	}
-	
+
 	/**
 	 * Gets the sm registration type.
-	 *
+	 * 
 	 * @return the sm registration type
 	 */
 	public String getSmRegistrationType() {
@@ -5596,16 +5878,17 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sm registration type.
-	 *
-	 * @param smRegistrationType the new sm registration type
+	 * 
+	 * @param smRegistrationType
+	 *            the new sm registration type
 	 */
 	public void setSmRegistrationType(String smRegistrationType) {
 		this.smRegistrationType = smRegistrationType;
 	}
-	
+
 	/**
 	 * Gets the cm item type.
-	 *
+	 * 
 	 * @return the cm item type
 	 */
 	public String getCmItemType() {
@@ -5614,8 +5897,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the cm item type.
-	 *
-	 * @param cmItemType the new cm item type
+	 * 
+	 * @param cmItemType
+	 *            the new cm item type
 	 */
 	public void setCmItemType(String cmItemType) {
 		this.cmItemType = cmItemType;
@@ -5623,7 +5907,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the cm item status.
-	 *
+	 * 
 	 * @return the cm item status
 	 */
 	public String getCmItemStatus() {
@@ -5632,8 +5916,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the cm item status.
-	 *
-	 * @param cmItemStatus the new cm item status
+	 * 
+	 * @param cmItemStatus
+	 *            the new cm item status
 	 */
 	public void setCmItemStatus(String cmItemStatus) {
 		this.cmItemStatus = cmItemStatus;
@@ -5641,7 +5926,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the cm unspsc code.
-	 *
+	 * 
 	 * @return the cm unspsc code
 	 */
 	public String getCmUnspscCode() {
@@ -5650,8 +5935,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the cm unspsc code.
-	 *
-	 * @param cmUnspscCode the new cm unspsc code
+	 * 
+	 * @param cmUnspscCode
+	 *            the new cm unspsc code
 	 */
 	public void setCmUnspscCode(String cmUnspscCode) {
 		this.cmUnspscCode = cmUnspscCode;
@@ -5659,7 +5945,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the cm unspsc title.
-	 *
+	 * 
 	 * @return the cm unspsc title
 	 */
 	public String getCmUnspscTitle() {
@@ -5668,8 +5954,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the cm unspsc title.
-	 *
-	 * @param cmUnspscTitle the new cm unspsc title
+	 * 
+	 * @param cmUnspscTitle
+	 *            the new cm unspsc title
 	 */
 	public void setCmUnspscTitle(String cmUnspscTitle) {
 		this.cmUnspscTitle = cmUnspscTitle;
@@ -5677,7 +5964,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the cm company name.
-	 *
+	 * 
 	 * @return the cm company name
 	 */
 	public String getCmCompanyName() {
@@ -5686,8 +5973,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the cm company name.
-	 *
-	 * @param cmCompanyName the new cm company name
+	 * 
+	 * @param cmCompanyName
+	 *            the new cm company name
 	 */
 	public void setCmCompanyName(String cmCompanyName) {
 		this.cmCompanyName = cmCompanyName;
@@ -5695,7 +5983,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the cm registration type.
-	 *
+	 * 
 	 * @return the cm registration type
 	 */
 	public String getCmRegistrationType() {
@@ -5704,8 +5992,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the cm registration type.
-	 *
-	 * @param cmRegistrationType the new cm registration type
+	 * 
+	 * @param cmRegistrationType
+	 *            the new cm registration type
 	 */
 	public void setCmRegistrationType(String cmRegistrationType) {
 		this.cmRegistrationType = cmRegistrationType;
@@ -5713,7 +6002,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the cm item category.
-	 *
+	 * 
 	 * @return the cm item category
 	 */
 	public String getCmItemCategory() {
@@ -5722,8 +6011,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the cm item category.
-	 *
-	 * @param cmItemCategory the new cm item category
+	 * 
+	 * @param cmItemCategory
+	 *            the new cm item category
 	 */
 	public void setCmItemCategory(String cmItemCategory) {
 		this.cmItemCategory = cmItemCategory;
@@ -5731,7 +6021,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the cm item name.
-	 *
+	 * 
 	 * @return the cm item name
 	 */
 	public String getCmItemName() {
@@ -5740,8 +6030,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the cm item name.
-	 *
-	 * @param cmItemName the new cm item name
+	 * 
+	 * @param cmItemName
+	 *            the new cm item name
 	 */
 	public void setCmItemName(String cmItemName) {
 		this.cmItemName = cmItemName;
@@ -5749,7 +6040,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the cm ep number.
-	 *
+	 * 
 	 * @return the cm ep number
 	 */
 	public String getCmEpNumber() {
@@ -5758,8 +6049,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the cm ep number.
-	 *
-	 * @param cmEpNumber the new cm ep number
+	 * 
+	 * @param cmEpNumber
+	 *            the new cm ep number
 	 */
 	public void setCmEpNumber(String cmEpNumber) {
 		this.cmEpNumber = cmEpNumber;
@@ -5767,7 +6059,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the cm business reg no.
-	 *
+	 * 
 	 * @return the cm business reg no
 	 */
 	public String getCmBusinessRegNo() {
@@ -5776,8 +6068,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the cm business reg no.
-	 *
-	 * @param cmBusinessRegNo the new cm business reg no
+	 * 
+	 * @param cmBusinessRegNo
+	 *            the new cm business reg no
 	 */
 	public void setCmBusinessRegNo(String cmBusinessRegNo) {
 		this.cmBusinessRegNo = cmBusinessRegNo;
@@ -5785,7 +6078,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the cm ic number.
-	 *
+	 * 
 	 * @return the cm ic number
 	 */
 	public String getCmIcNumber() {
@@ -5794,8 +6087,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the cm ic number.
-	 *
-	 * @param cmIcNumber the new cm ic number
+	 * 
+	 * @param cmIcNumber
+	 *            the new cm ic number
 	 */
 	public void setCmIcNumber(String cmIcNumber) {
 		this.cmIcNumber = cmIcNumber;
@@ -5803,7 +6097,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the cm mof number.
-	 *
+	 * 
 	 * @return the cm mof number
 	 */
 	public String getCmMofNumber() {
@@ -5812,8 +6106,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the cm mof number.
-	 *
-	 * @param cmMofNumber the new cm mof number
+	 * 
+	 * @param cmMofNumber
+	 *            the new cm mof number
 	 */
 	public void setCmMofNumber(String cmMofNumber) {
 		this.cmMofNumber = cmMofNumber;
@@ -5821,7 +6116,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the cm extention code.
-	 *
+	 * 
 	 * @return the cm extention code
 	 */
 	public String getCmExtentionCode() {
@@ -5830,8 +6125,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the cm extention code.
-	 *
-	 * @param cmExtentionCode the new cm extention code
+	 * 
+	 * @param cmExtentionCode
+	 *            the new cm extention code
 	 */
 	public void setCmExtentionCode(String cmExtentionCode) {
 		this.cmExtentionCode = cmExtentionCode;
@@ -5839,7 +6135,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the cm extention type.
-	 *
+	 * 
 	 * @return the cm extention type
 	 */
 	public String getCmExtentionType() {
@@ -5848,8 +6144,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the cm extention type.
-	 *
-	 * @param cmExtentionType the new cm extention type
+	 * 
+	 * @param cmExtentionType
+	 *            the new cm extention type
 	 */
 	public void setCmExtentionType(String cmExtentionType) {
 		this.cmExtentionType = cmExtentionType;
@@ -5857,7 +6154,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the cm extention brand.
-	 *
+	 * 
 	 * @return the cm extention brand
 	 */
 	public String getCmExtentionBrand() {
@@ -5866,8 +6163,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the cm extention brand.
-	 *
-	 * @param cmExtentionBrand the new cm extention brand
+	 * 
+	 * @param cmExtentionBrand
+	 *            the new cm extention brand
 	 */
 	public void setCmExtentionBrand(String cmExtentionBrand) {
 		this.cmExtentionBrand = cmExtentionBrand;
@@ -5875,7 +6173,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the cm extention measurment.
-	 *
+	 * 
 	 * @return the cm extention measurment
 	 */
 	public String getCmExtentionMeasurment() {
@@ -5884,8 +6182,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the cm extention measurment.
-	 *
-	 * @param cmExtentionMeasurment the new cm extention measurment
+	 * 
+	 * @param cmExtentionMeasurment
+	 *            the new cm extention measurment
 	 */
 	public void setCmExtentionMeasurment(String cmExtentionMeasurment) {
 		this.cmExtentionMeasurment = cmExtentionMeasurment;
@@ -5893,7 +6192,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the cm extention colour.
-	 *
+	 * 
 	 * @return the cm extention colour
 	 */
 	public String getCmExtentionColour() {
@@ -5902,8 +6201,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the cm extention colour.
-	 *
-	 * @param cmExtentionColour the new cm extention colour
+	 * 
+	 * @param cmExtentionColour
+	 *            the new cm extention colour
 	 */
 	public void setCmExtentionColour(String cmExtentionColour) {
 		this.cmExtentionColour = cmExtentionColour;
@@ -5911,7 +6211,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the cm proof identity.
-	 *
+	 * 
 	 * @return the cm proof identity
 	 */
 	public String getCmProofIdentity() {
@@ -5920,8 +6220,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the cm proof identity.
-	 *
-	 * @param cmProofIdentity the new cm proof identity
+	 * 
+	 * @param cmProofIdentity
+	 *            the new cm proof identity
 	 */
 	public void setCmProofIdentity(String cmProofIdentity) {
 		this.cmProofIdentity = cmProofIdentity;
@@ -5929,7 +6230,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc quotation id.
-	 *
+	 * 
 	 * @return the sc quotation id
 	 */
 	public String getScQuotationId() {
@@ -5938,8 +6239,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc quotation id.
-	 *
-	 * @param scQuotationId the new sc quotation id
+	 * 
+	 * @param scQuotationId
+	 *            the new sc quotation id
 	 */
 	public void setScQuotationId(String scQuotationId) {
 		this.scQuotationId = scQuotationId;
@@ -5947,7 +6249,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc quotation no.
-	 *
+	 * 
 	 * @return the sc quotation no
 	 */
 	public String getScQuotationNo() {
@@ -5956,8 +6258,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc quotation no.
-	 *
-	 * @param scQuotationNo the new sc quotation no
+	 * 
+	 * @param scQuotationNo
+	 *            the new sc quotation no
 	 */
 	public void setScQuotationNo(String scQuotationNo) {
 		this.scQuotationNo = scQuotationNo;
@@ -5965,7 +6268,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc payment id.
-	 *
+	 * 
 	 * @return the sc payment id
 	 */
 	public String getScPaymentId() {
@@ -5974,8 +6277,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc payment id.
-	 *
-	 * @param scPaymentId the new sc payment id
+	 * 
+	 * @param scPaymentId
+	 *            the new sc payment id
 	 */
 	public void setScPaymentId(String scPaymentId) {
 		this.scPaymentId = scPaymentId;
@@ -5983,8 +6287,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the pdf file.
-	 *
-	 * @param pdfFile the new pdf file
+	 * 
+	 * @param pdfFile
+	 *            the new pdf file
 	 */
 	public void setPdfFile(StreamedContent pdfFile) {
 		this.pdfFile = pdfFile;
@@ -5992,7 +6297,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the constructed param string.
-	 *
+	 * 
 	 * @return the constructed param string
 	 */
 	public String getConstructedParamString() {
@@ -6001,8 +6306,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the constructed param string.
-	 *
-	 * @param constructedParamString the new constructed param string
+	 * 
+	 * @param constructedParamString
+	 *            the new constructed param string
 	 */
 	public void setConstructedParamString(String constructedParamString) {
 		this.constructedParamString = constructedParamString;
@@ -6010,7 +6316,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the lev one cat lst.
-	 *
+	 * 
 	 * @return the lev one cat lst
 	 */
 	public List<SelectItem> getLevOneCatLst() {
@@ -6019,8 +6325,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the lev one cat lst.
-	 *
-	 * @param levOneCatLst the new lev one cat lst
+	 * 
+	 * @param levOneCatLst
+	 *            the new lev one cat lst
 	 */
 	public void setLevOneCatLst(List<SelectItem> levOneCatLst) {
 		this.levOneCatLst = levOneCatLst;
@@ -6028,7 +6335,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the lev two cat lst.
-	 *
+	 * 
 	 * @return the lev two cat lst
 	 */
 	public List<SelectItem> getLevTwoCatLst() {
@@ -6037,8 +6344,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the lev two cat lst.
-	 *
-	 * @param levTwoCatLst the new lev two cat lst
+	 * 
+	 * @param levTwoCatLst
+	 *            the new lev two cat lst
 	 */
 	public void setLevTwoCatLst(List<SelectItem> levTwoCatLst) {
 		this.levTwoCatLst = levTwoCatLst;
@@ -6046,7 +6354,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the lev three cat lst.
-	 *
+	 * 
 	 * @return the lev three cat lst
 	 */
 	public List<SelectItem> getLevThreeCatLst() {
@@ -6055,8 +6363,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the lev three cat lst.
-	 *
-	 * @param levThreeCatLst the new lev three cat lst
+	 * 
+	 * @param levThreeCatLst
+	 *            the new lev three cat lst
 	 */
 	public void setLevThreeCatLst(List<SelectItem> levThreeCatLst) {
 		this.levThreeCatLst = levThreeCatLst;
@@ -6064,7 +6373,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the state lst.
-	 *
+	 * 
 	 * @return the state lst
 	 */
 	public List<SelectItem> getStateLst() {
@@ -6073,8 +6382,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the state lst.
-	 *
-	 * @param stateLst the new state lst
+	 * 
+	 * @param stateLst
+	 *            the new state lst
 	 */
 	public void setStateLst(List<SelectItem> stateLst) {
 		this.stateLst = stateLst;
@@ -6082,7 +6392,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the district lst.
-	 *
+	 * 
 	 * @return the district lst
 	 */
 	public List<SelectItem> getDistrictLst() {
@@ -6091,8 +6401,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the district lst.
-	 *
-	 * @param districtLst the new district lst
+	 * 
+	 * @param districtLst
+	 *            the new district lst
 	 */
 	public void setDistrictLst(List<SelectItem> districtLst) {
 		this.districtLst = districtLst;
@@ -6100,7 +6411,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the generated url.
-	 *
+	 * 
 	 * @return the generated url
 	 */
 	public String getGeneratedURL() {
@@ -6109,8 +6420,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the generated url.
-	 *
-	 * @param generatedURL the new generated url
+	 * 
+	 * @param generatedURL
+	 *            the new generated url
 	 */
 	public void setGeneratedURL(String generatedURL) {
 		this.generatedURL = generatedURL;
@@ -6118,7 +6430,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the report url.
-	 *
+	 * 
 	 * @return the report url
 	 */
 	public String getReportURL() {
@@ -6127,8 +6439,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the report url.
-	 *
-	 * @param reportURL the new report url
+	 * 
+	 * @param reportURL
+	 *            the new report url
 	 */
 	public void setReportURL(String reportURL) {
 		this.reportURL = reportURL;
@@ -6136,7 +6449,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the user id.
-	 *
+	 * 
 	 * @return the user id
 	 */
 	public String getUserId() {
@@ -6145,8 +6458,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the user id.
-	 *
-	 * @param userId the new user id
+	 * 
+	 * @param userId
+	 *            the new user id
 	 */
 	public void setUserId(String userId) {
 		this.userId = userId;
@@ -6154,7 +6468,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the role code.
-	 *
+	 * 
 	 * @return the role code
 	 */
 	public String getRoleCode() {
@@ -6163,8 +6477,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the role code.
-	 *
-	 * @param roleCode the new role code
+	 * 
+	 * @param roleCode
+	 *            the new role code
 	 */
 	public void setRoleCode(String roleCode) {
 		this.roleCode = roleCode;
@@ -6172,7 +6487,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the from date.
-	 *
+	 * 
 	 * @return the from date
 	 */
 	public Date getFromDate() {
@@ -6181,8 +6496,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the from date.
-	 *
-	 * @param fromDate the new from date
+	 * 
+	 * @param fromDate
+	 *            the new from date
 	 */
 	public void setFromDate(Date fromDate) {
 		this.fromDate = fromDate;
@@ -6190,7 +6506,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the to date.
-	 *
+	 * 
 	 * @return the to date
 	 */
 	public Date getToDate() {
@@ -6199,8 +6515,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the to date.
-	 *
-	 * @param toDate the new to date
+	 * 
+	 * @param toDate
+	 *            the new to date
 	 */
 	public void setToDate(Date toDate) {
 		this.toDate = toDate;
@@ -6208,7 +6525,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the fl rec note no.
-	 *
+	 * 
 	 * @return the fl rec note no
 	 */
 	public String getFlRecNoteNo() {
@@ -6217,8 +6534,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the fl rec note no.
-	 *
-	 * @param flRecNoteNo the new fl rec note no
+	 * 
+	 * @param flRecNoteNo
+	 *            the new fl rec note no
 	 */
 	public void setFlRecNoteNo(String flRecNoteNo) {
 		this.flRecNoteNo = flRecNoteNo;
@@ -6226,7 +6544,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the authoriztion list.
-	 *
+	 * 
 	 * @return the authoriztion list
 	 */
 	public List<String> getAuthoriztionList() {
@@ -6235,8 +6553,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the authoriztion list.
-	 *
-	 * @param authoriztionList the new authoriztion list
+	 * 
+	 * @param authoriztionList
+	 *            the new authoriztion list
 	 */
 	public void setAuthoriztionList(List<String> authoriztionList) {
 		this.authoriztionList = authoriztionList;
@@ -6244,7 +6563,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the scqt.
-	 *
+	 * 
 	 * @return the scqt
 	 */
 	public ScQt getScqt() {
@@ -6253,8 +6572,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the scqt.
-	 *
-	 * @param scqt the new scqt
+	 * 
+	 * @param scqt
+	 *            the new scqt
 	 */
 	public void setScqt(ScQt scqt) {
 		this.scqt = scqt;
@@ -6262,7 +6582,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the log.
-	 *
+	 * 
 	 * @return the log
 	 */
 	public static Logger getLog() {
@@ -6271,7 +6591,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the reg type list.
-	 *
+	 * 
 	 * @return the reg type list
 	 */
 	public List<SelectItem> getRegTypeList() {
@@ -6280,8 +6600,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the reg type list.
-	 *
-	 * @param regTypeList the new reg type list
+	 * 
+	 * @param regTypeList
+	 *            the new reg type list
 	 */
 	public void setRegTypeList(List<SelectItem> regTypeList) {
 		this.regTypeList = regTypeList;
@@ -6289,7 +6610,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the module list.
-	 *
+	 * 
 	 * @return the module list
 	 */
 	public List<SelectItem> getModuleList() {
@@ -6298,8 +6619,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the module list.
-	 *
-	 * @param moduleList the new module list
+	 * 
+	 * @param moduleList
+	 *            the new module list
 	 */
 	public void setModuleList(List<SelectItem> moduleList) {
 		this.moduleList = moduleList;
@@ -6307,7 +6629,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the rpt gen bean.
-	 *
+	 * 
 	 * @return the rpt gen bean
 	 */
 	public ReportsGenerateBean getRptGenBean() {
@@ -6316,8 +6638,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the rpt gen bean.
-	 *
-	 * @param rptGenBean the new rpt gen bean
+	 * 
+	 * @param rptGenBean
+	 *            the new rpt gen bean
 	 */
 	public void setRptGenBean(ReportsGenerateBean rptGenBean) {
 		this.rptGenBean = rptGenBean;
@@ -6325,25 +6648,26 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the report list.
-	 *
+	 * 
 	 * @return the report list
 	 */
 	public List<SelectItem> getReportList() {
 		return reportList;
 	}
-	
+
 	/**
 	 * Sets the report list.
-	 *
-	 * @param reportList the new report list
+	 * 
+	 * @param reportList
+	 *            the new report list
 	 */
 	public void setReportList(List<SelectItem> reportList) {
 		this.reportList = reportList;
 	}
-	
+
 	/**
 	 * Checks if is enable value.
-	 *
+	 * 
 	 * @return true, if is enable value
 	 */
 	public boolean isEnableValue() {
@@ -6352,16 +6676,17 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the enable value.
-	 *
-	 * @param enableValue the new enable value
+	 * 
+	 * @param enableValue
+	 *            the new enable value
 	 */
 	public void setEnableValue(boolean enableValue) {
 		this.enableValue = enableValue;
-	}	
-	
+	}
+
 	/**
 	 * Gets the simple quote no list.
-	 *
+	 * 
 	 * @return the simple quote no list
 	 */
 	public List<String> getSimpleQuoteNoList() {
@@ -6370,8 +6695,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the simple quote no list.
-	 *
-	 * @param simpleQuoteNoList the new simple quote no list
+	 * 
+	 * @param simpleQuoteNoList
+	 *            the new simple quote no list
 	 */
 	public void setSimpleQuoteNoList(List<String> simpleQuoteNoList) {
 		this.simpleQuoteNoList = simpleQuoteNoList;
@@ -6379,7 +6705,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc soa status list.
-	 *
+	 * 
 	 * @return the sc soa status list
 	 */
 	public List<SelectItem> getScSOAStatusList() {
@@ -6388,8 +6714,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc soa status list.
-	 *
-	 * @param scSOAStatusList the new sc soa status list
+	 * 
+	 * @param scSOAStatusList
+	 *            the new sc soa status list
 	 */
 	public void setScSOAStatusList(List<SelectItem> scSOAStatusList) {
 		this.scSOAStatusList = scSOAStatusList;
@@ -6397,7 +6724,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc soa status.
-	 *
+	 * 
 	 * @return the sc soa status
 	 */
 	public String getScSOAStatus() {
@@ -6406,8 +6733,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc soa status.
-	 *
-	 * @param scSOAStatus the new sc soa status
+	 * 
+	 * @param scSOAStatus
+	 *            the new sc soa status
 	 */
 	public void setScSOAStatus(String scSOAStatus) {
 		this.scSOAStatus = scSOAStatus;
@@ -6415,7 +6743,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc simple quote type.
-	 *
+	 * 
 	 * @return the sc simple quote type
 	 */
 	public String getScSimpleQuoteType() {
@@ -6424,8 +6752,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc simple quote type.
-	 *
-	 * @param scSimpleQuoteType the new sc simple quote type
+	 * 
+	 * @param scSimpleQuoteType
+	 *            the new sc simple quote type
 	 */
 	public void setScSimpleQuoteType(String scSimpleQuoteType) {
 		this.scSimpleQuoteType = scSimpleQuoteType;
@@ -6433,7 +6762,7 @@ public class ReportBackingBean extends
 
 	/**
 	 * Gets the sc loa no.
-	 *
+	 * 
 	 * @return the sc loa no
 	 */
 	public String getScLOANo() {
@@ -6442,31 +6771,33 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc loa no.
-	 *
-	 * @param scLOANo the new sc loa no
+	 * 
+	 * @param scLOANo
+	 *            the new sc loa no
 	 */
 	public void setScLOANo(String scLOANo) {
 		this.scLOANo = scLOANo;
 	}
-	
+
 	/**
 	 * Retrieve loa status list.
-	 *
+	 * 
 	 * @return the list
 	 */
-	public List<SelectItem> retrieveLOAStatusList(){
-		scSOAStatusList = new ArrayList<SelectItem>();		
+	public List<SelectItem> retrieveLOAStatusList() {
+		scSOAStatusList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-									IPMReportSO.class);			
-					List<Object[]> soaStatusList = reportSO.retrieveLOAStatusList(strLanguage);			
-					for (Object[] object : soaStatusList) {
-						SelectItem selectItem = new SelectItem();						
-						selectItem.setValue(object[0].toString());
-						selectItem.setLabel(object[1].toString());
-						scSOAStatusList.add(selectItem);
-					}
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<Object[]> soaStatusList = reportSO
+					.retrieveLOAStatusList(strLanguage);
+			for (Object[] object : soaStatusList) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setValue(object[0].toString());
+				selectItem.setLabel(object[1].toString());
+				scSOAStatusList.add(selectItem);
+			}
 		}
 		return scSOAStatusList;
 	}
@@ -6474,383 +6805,445 @@ public class ReportBackingBean extends
 	/**
 	 * Supplier name validate.
 	 */
-	public void supplierNameValidate(){
+	public void supplierNameValidate() {
 		if ((this.getScSupplier() != null)
 				&& (this.getScSupplier() != ReportConst.EMPTY_VAL)) {
-			if (this.getScSupplier().trim().length()<3) {
+			if (this.getScSupplier().trim().length() < 3) {
 				this.setScSupplier(null);
 				throw new EpException(MessageConst.ERROR_REPORT_780025);
 			}
-		}	
+		}
 	}
-	
+
 	/**
 	 * Change terminate.
 	 */
-	public void changeTerminate(){
+	public void changeTerminate() {
 		this.setCtTerminationType(null);
 		getManagedBean().getRptGenBean().setCtTerminationTypeView(false);
-		if ((null != this.getCtStatusTwo())&& (ReportConst.EMPTY_VAL != this.getCtStatusTwo())) {
-			if(this.getCtStatusTwo().trim().equalsIgnoreCase("TERMINATE")){
+		if ((null != this.getCtStatusTwo())
+				&& (ReportConst.EMPTY_VAL != this.getCtStatusTwo())) {
+			if (this.getCtStatusTwo().trim().equalsIgnoreCase("TERMINATE")) {
 				getManagedBean().getRptGenBean().setCtTerminationTypeView(true);
-			}else {
-				getManagedBean().getRptGenBean().setCtTerminationTypeView(false);
+			} else {
+				getManagedBean().getRptGenBean()
+						.setCtTerminationTypeView(false);
 			}
-		}else{
+		} else {
 			getManagedBean().getRptGenBean().setCtTerminationTypeView(false);
-		}		
+		}
 	}
-	
+
 	/**
 	 * Change payment type.
 	 */
-	public void changePaymentType(){
+	public void changePaymentType() {
 		this.setSmPaymentType(null);
 		paymentTypeList = new ArrayList<SelectItem>();
-		if ((null != this.getSmPaymentTo())&& (ReportConst.EMPTY_VAL != this.getSmPaymentTo())) {
-			if(this.getSmPaymentTo().trim().equalsIgnoreCase("Government")){
+		if ((null != this.getSmPaymentTo())
+				&& (ReportConst.EMPTY_VAL != this.getSmPaymentTo())) {
+			if (this.getSmPaymentTo().trim().equalsIgnoreCase("Government")) {
 				retrieveGovtPaymentTypeList();
-			}else if(this.getSmPaymentTo().trim().equalsIgnoreCase("CDC")){
+			} else if (this.getSmPaymentTo().trim().equalsIgnoreCase("CDC")) {
 				retrieveCDCPaymentTypeList();
-			}else {
+			} else {
 				retrievePaymentTypeList();
 			}
-		}else{
+		} else {
 			retrievePaymentTypeList();
-		}		
+		}
 	}
-	
+
 	/**
 	 * Retrieve payment type list.
-	 *
+	 * 
 	 * @return the list
 	 */
-	public List<SelectItem> retrievePaymentTypeList(){
-		paymentTypeList = new ArrayList<SelectItem>();		
+	public List<SelectItem> retrievePaymentTypeList() {
+		paymentTypeList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-									IPMReportSO.class);			
-					List<Object[]> regStatusList = reportSO.retrievePaymentTypeList(strLanguage);			
-					for (Object[] object : regStatusList) {
-						SelectItem selectItem = new SelectItem();						
-						selectItem.setValue(object[1].toString());
-						selectItem.setLabel(object[0].toString());
-						paymentTypeList.add(selectItem);
-					}
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<Object[]> regStatusList = reportSO
+					.retrievePaymentTypeList(strLanguage);
+			for (Object[] object : regStatusList) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setValue(object[1].toString());
+				selectItem.setLabel(object[0].toString());
+				paymentTypeList.add(selectItem);
+			}
 		}
 		return paymentTypeList;
 	}
-	
+
 	/**
 	 * Retrieve govt payment type list.
-	 *
+	 * 
 	 * @return the list
 	 */
-	public List<SelectItem> retrieveGovtPaymentTypeList(){
-		paymentTypeList = new ArrayList<SelectItem>();		
+	public List<SelectItem> retrieveGovtPaymentTypeList() {
+		paymentTypeList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-									IPMReportSO.class);			
-					List<Object[]> regStatusList = reportSO.retrieveGovtPaymentTypeList(strLanguage);			
-					for (Object[] object : regStatusList) {
-						SelectItem selectItem = new SelectItem();						
-						selectItem.setValue(object[1].toString());
-						selectItem.setLabel(object[0].toString());
-						paymentTypeList.add(selectItem);
-					}
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<Object[]> regStatusList = reportSO
+					.retrieveGovtPaymentTypeList(strLanguage);
+			for (Object[] object : regStatusList) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setValue(object[1].toString());
+				selectItem.setLabel(object[0].toString());
+				paymentTypeList.add(selectItem);
+			}
 		}
 		return paymentTypeList;
 	}
-	
+
 	/**
 	 * Retrieve cdc payment type list.
-	 *
+	 * 
 	 * @return the list
 	 */
-	public List<SelectItem> retrieveCDCPaymentTypeList(){
-		paymentTypeList = new ArrayList<SelectItem>();		
+	public List<SelectItem> retrieveCDCPaymentTypeList() {
+		paymentTypeList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-									IPMReportSO.class);			
-					List<Object[]> regStatusList = reportSO.retrieveCDCPaymentTypeList(strLanguage);			
-					for (Object[] object : regStatusList) {
-						SelectItem selectItem = new SelectItem();						
-						selectItem.setValue(object[1].toString());
-						selectItem.setLabel(object[0].toString());
-						paymentTypeList.add(selectItem);
-					}
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<Object[]> regStatusList = reportSO
+					.retrieveCDCPaymentTypeList(strLanguage);
+			for (Object[] object : regStatusList) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setValue(object[1].toString());
+				selectItem.setLabel(object[0].toString());
+				paymentTypeList.add(selectItem);
+			}
 		}
 		return paymentTypeList;
 	}
-	
+
 	/**
 	 * Retrieve payment method.
-	 *
+	 * 
 	 * @return the list
 	 */
-	public List<String> retrievePaymentMethod(){
+	public List<String> retrievePaymentMethod() {
 		paymentMethodList = new ArrayList<String>();
-        if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-									IPMReportSO.class);					
-					List<String> payMethodLst = reportSO.retrievePaymentMethod();			
-					for (int i = 0; i < payMethodLst.size(); i++) {
-						paymentMethodList.add(payMethodLst.get(i));
-					}        	    
-        }
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<String> payMethodLst = reportSO.retrievePaymentMethod();
+			for (int i = 0; i < payMethodLst.size(); i++) {
+				paymentMethodList.add(payMethodLst.get(i));
+			}
+		}
 		return paymentMethodList;
 	}
-	
+
 	/**
 	 * Retrieve pm service type.
-	 *
+	 * 
 	 * @return the list
 	 */
-	public List<SelectItem> retrievePMServiceType(){
+	public List<SelectItem> retrievePMServiceType() {
 		serviceTypeList = new ArrayList<SelectItem>();
-        if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-									IPMReportSO.class);
-					
-					List<Object[]> serviceTypeLst = reportSO.retrievePMServiceType(strLanguage);			
-					
-					for (Object[] object : serviceTypeLst) {
-						SelectItem selectItem = new SelectItem();						
-						selectItem.setValue(object[1].toString());
-						selectItem.setLabel(object[0].toString());
-						serviceTypeList.add(selectItem);
-					}
-        }
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+
+			List<Object[]> serviceTypeLst = reportSO
+					.retrievePMServiceType(strLanguage);
+
+			for (Object[] object : serviceTypeLst) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setValue(object[1].toString());
+				selectItem.setLabel(object[0].toString());
+				serviceTypeList.add(selectItem);
+			}
+		}
 		return serviceTypeList;
 	}
-	
+
 	/**
 	 * Show capital naccum share.
 	 */
-	public void showCapitalNaccumShare(){
+	public void showCapitalNaccumShare() {
 		getManagedBean().getRptGenBean().setSmPaidUpCapitalFrmView(false);
-		if ((null != this.getReportValue())&&(this.getReportValue().equals(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL))) {			
-			if ((null != this.getSmPaidUpCapitalNaccum())&&(ReportConst.EMPTY_VAL !=this.getSmApplicationStatus())) {
-				if (this.getSmPaidUpCapitalNaccum().trim().equalsIgnoreCase("P")) {
-					getManagedBean().getRptGenBean().setSmPaidUpCapitalFrmView(true);
-					getManagedBean().getRptGenBean().setSmPaidUpCptlDateView(true);
-				}else if (this.getSmPaidUpCapitalNaccum().trim().equalsIgnoreCase("A")){
-					getManagedBean().getRptGenBean().setSmPaidUpCapitalFrmView(true);
-					getManagedBean().getRptGenBean().setSmAccmltdCptlDateView(true);
+		if ((null != this.getReportValue())
+				&& (this.getReportValue()
+						.equals(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL))) {
+			if ((null != this.getSmPaidUpCapitalNaccum())
+					&& (ReportConst.EMPTY_VAL != this.getSmApplicationStatus())) {
+				if (this.getSmPaidUpCapitalNaccum().trim()
+						.equalsIgnoreCase("P")) {
+					getManagedBean().getRptGenBean().setSmPaidUpCapitalFrmView(
+							true);
+					getManagedBean().getRptGenBean().setSmPaidUpCptlDateView(
+							true);
+				} else if (this.getSmPaidUpCapitalNaccum().trim()
+						.equalsIgnoreCase("A")) {
+					getManagedBean().getRptGenBean().setSmPaidUpCapitalFrmView(
+							true);
+					getManagedBean().getRptGenBean().setSmAccmltdCptlDateView(
+							true);
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Retrieve processing officer list.
-	 *
+	 * 
 	 * @return the list
 	 */
-	public List<SelectItem> retrieveProcessingOfficerList(){
-		processingOfficerList = new ArrayList<SelectItem>();		
+	public List<SelectItem> retrieveProcessingOfficerList() {
+		processingOfficerList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-									IPMReportSO.class);
-			if ((null != this.getSmZone())&& (ReportConst.EMPTY_VAL != this.getSmZone())) {
-					List<Object[]> regStatusList = reportSO.retrieveProcessingOfficerList(this.getSmZone());			
-					for (Object[] object : regStatusList) {
-						SelectItem selectItem = new SelectItem();						
-						selectItem.setValue(object[1].toString());
-						selectItem.setLabel(object[0].toString());
-						processingOfficerList.add(selectItem);
-					}
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			if ((null != this.getSmZone())
+					&& (ReportConst.EMPTY_VAL != this.getSmZone())) {
+				List<Object[]> regStatusList = reportSO
+						.retrieveProcessingOfficerList(this.getSmZone());
+				for (Object[] object : regStatusList) {
+					SelectItem selectItem = new SelectItem();
+					selectItem.setValue(object[1].toString());
+					selectItem.setLabel(object[0].toString());
+					processingOfficerList.add(selectItem);
+				}
 			}
 		}
 		return processingOfficerList;
 	}
-	
+
 	/**
 	 * Application status date change.
 	 */
-	public void applicationStatusDateChange(){
-		
-		getManagedBean().getRptGenBean().setSmMandatoryExpectedSiteVisitDateView(false);
-		getManagedBean().getRptGenBean().setSmMandatoryActualSiteVisitDateView(false);
-		//getManagedBean().getRptGenBean().setSmMandatoryFromDateView(false);
-		if ((null != this.getReportValue())&&(this.getReportValue().equals(ReportConst.SM_SITE_VISIT_APPL_PERFORMED_RPT_VAL))) {			
-			if ((null != this.getSmApplicationStatus())&&(this.getSmApplicationStatus().equals(ReportConst.PEND_PRPR_SITE_VISIT))) {
-				getManagedBean().getRptGenBean().setSmMandatoryFromDateView(true);
-				getManagedBean().getRptGenBean().setSmMandatoryExpectedSiteVisitDateView(true);
+	public void applicationStatusDateChange() {
+
+		getManagedBean().getRptGenBean()
+				.setSmMandatoryExpectedSiteVisitDateView(false);
+		getManagedBean().getRptGenBean().setSmMandatoryActualSiteVisitDateView(
+				false);
+		// getManagedBean().getRptGenBean().setSmMandatoryFromDateView(false);
+		if ((null != this.getReportValue())
+				&& (this.getReportValue()
+						.equals(ReportConst.SM_SITE_VISIT_APPL_PERFORMED_RPT_VAL))) {
+			if ((null != this.getSmApplicationStatus())
+					&& (this.getSmApplicationStatus()
+							.equals(ReportConst.PEND_PRPR_SITE_VISIT))) {
+				getManagedBean().getRptGenBean().setSmMandatoryFromDateView(
+						true);
+				getManagedBean().getRptGenBean()
+						.setSmMandatoryExpectedSiteVisitDateView(true);
 				getManagedBean().getRptGenBean().setSmMandatoryDateView(false);
-			}else if ((null != this.getSmApplicationStatus())&&(this.getSmApplicationStatus().equals(ReportConst.SITE_VISIT_COMPLTD))) {
-				getManagedBean().getRptGenBean().setSmMandatoryFromDateView(true);
-				getManagedBean().getRptGenBean().setSmMandatoryActualSiteVisitDateView(true);
+			} else if ((null != this.getSmApplicationStatus())
+					&& (this.getSmApplicationStatus()
+							.equals(ReportConst.SITE_VISIT_COMPLTD))) {
+				getManagedBean().getRptGenBean().setSmMandatoryFromDateView(
+						true);
+				getManagedBean().getRptGenBean()
+						.setSmMandatoryActualSiteVisitDateView(true);
 				getManagedBean().getRptGenBean().setSmMandatoryDateView(false);
-			}/*else{
-				getManagedBean().getRptGenBean().setSmMandatoryDateView(true);
-			}*/
+			}/*
+			 * else{
+			 * getManagedBean().getRptGenBean().setSmMandatoryDateView(true); }
+			 */
 		}
 	}
-	
+
 	/**
 	 * Change report type.
 	 */
-	public void changeReportType(){
-		
-		if ((null != this.getReportValue())&&(this.getReportValue().equals(ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL))) {
-			getManagedBean().getRptGenBean().setSmMandatoryCreatedFromYearView(false);
-			getManagedBean().getRptGenBean().setSmMandatoryRegisteredReportTypeDateView(false);
-			getManagedBean().getRptGenBean().setSmMandatoryRecievedReportTypeView(false);
-			getManagedBean().getRptGenBean().setSmMandatoryApprovedReportTypeView(false);
-			getManagedBean().getRptGenBean().setSmMandatoryRejectedReportTypeView(false);
-			if (null != this.getSmReportType()&&this.getSmReportType().equalsIgnoreCase("RECEIVED")) {
-				getManagedBean().getRptGenBean().setSmMandatoryCreatedFromYearView(true);
-				getManagedBean().getRptGenBean().setSmMandatoryRecievedReportTypeView(true);
-			} else if (null != this.getSmReportType()&&this.getSmReportType().equalsIgnoreCase("APPROVED")) {
-				getManagedBean().getRptGenBean().setSmMandatoryCreatedFromYearView(true);
-				getManagedBean().getRptGenBean().setSmMandatoryApprovedReportTypeView(true);
-			} else if (null != this.getSmReportType()&&this.getSmReportType().equalsIgnoreCase("REJECTED")) {
-				getManagedBean().getRptGenBean().setSmMandatoryCreatedFromYearView(true);
-				getManagedBean().getRptGenBean().setSmMandatoryRejectedReportTypeView(true);
-			} /*else {
-			    rptGenBean.setSmMandatoryCreatedFromYearView(true);
-				rptGenBean.setSmMandatoryRegisteredReportTypeDateView(true);
-			}*/
+	public void changeReportType() {
+
+		if ((null != this.getReportValue())
+				&& (this.getReportValue()
+						.equals(ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL))) {
+			getManagedBean().getRptGenBean().setSmMandatoryCreatedFromYearView(
+					false);
+			getManagedBean().getRptGenBean()
+					.setSmMandatoryRegisteredReportTypeDateView(false);
+			getManagedBean().getRptGenBean()
+					.setSmMandatoryRecievedReportTypeView(false);
+			getManagedBean().getRptGenBean()
+					.setSmMandatoryApprovedReportTypeView(false);
+			getManagedBean().getRptGenBean()
+					.setSmMandatoryRejectedReportTypeView(false);
+			if (null != this.getSmReportType()
+					&& this.getSmReportType().equalsIgnoreCase("RECEIVED")) {
+				getManagedBean().getRptGenBean()
+						.setSmMandatoryCreatedFromYearView(true);
+				getManagedBean().getRptGenBean()
+						.setSmMandatoryRecievedReportTypeView(true);
+			} else if (null != this.getSmReportType()
+					&& this.getSmReportType().equalsIgnoreCase("APPROVED")) {
+				getManagedBean().getRptGenBean()
+						.setSmMandatoryCreatedFromYearView(true);
+				getManagedBean().getRptGenBean()
+						.setSmMandatoryApprovedReportTypeView(true);
+			} else if (null != this.getSmReportType()
+					&& this.getSmReportType().equalsIgnoreCase("REJECTED")) {
+				getManagedBean().getRptGenBean()
+						.setSmMandatoryCreatedFromYearView(true);
+				getManagedBean().getRptGenBean()
+						.setSmMandatoryRejectedReportTypeView(true);
+			} /*
+			 * else { rptGenBean.setSmMandatoryCreatedFromYearView(true);
+			 * rptGenBean.setSmMandatoryRegisteredReportTypeDateView(true); }
+			 */
 		}
 	}
-	
+
 	/**
 	 * Retrieve ministry name.
-	 *
-	 * @param orgprofileid the orgprofileid
+	 * 
+	 * @param orgprofileid
+	 *            the orgprofileid
 	 * @return the string
 	 */
-	public String retrieveMinistryName(Long orgprofileid){
-		ministryName =null;
-        if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-									IPMReportSO.class);
-					List<String> ministryNameLst = reportSO.retrieveMinistryNameByOrgprofileid(orgprofileid);			
-					if (ministryNameLst.size()>0) {
-					
-						ministryName=ministryNameLst.get(0);
-					}        	    
-        }
+	public String retrieveMinistryName(Long orgprofileid) {
+		ministryName = null;
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<String> ministryNameLst = reportSO
+					.retrieveMinistryNameByOrgprofileid(orgprofileid);
+			if (ministryNameLst.size() > 0) {
+
+				ministryName = ministryNameLst.get(0);
+			}
+		}
 		return ministryName;
 	}
-	
+
 	/**
 	 * Retrieve reg status list.
-	 *
+	 * 
 	 * @return the list
 	 */
-	public List<SelectItem> retrieveRegStatusList(){
-		registrationStatusList = new ArrayList<SelectItem>();		
+	public List<SelectItem> retrieveRegStatusList() {
+		registrationStatusList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-									IPMReportSO.class);
-			
-					List<Object[]> regStatusList = reportSO.retrieveRegStatusList("en");			
-					for (Object[] object : regStatusList) {
-						SelectItem selectItem = new SelectItem();						
-						selectItem.setValue(object[1].toString());
-						selectItem.setLabel(object[0].toString());
-						registrationStatusList.add(selectItem);
-					}
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+
+			List<Object[]> regStatusList = reportSO.retrieveRegStatusList("en");
+			for (Object[] object : regStatusList) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setValue(object[1].toString());
+				selectItem.setLabel(object[0].toString());
+				registrationStatusList.add(selectItem);
 			}
+		}
 		return registrationStatusList;
 	}
-	
+
 	/**
 	 * Supplier type consultant.
 	 */
-	public void supplierTypeConsultant(){
-		getManagedBean().getRptGenBean().setSmConsultantRegistrationStatusView(false);
-		if((null!=this.getReportValue())&&(this.getReportValue()
-				.equalsIgnoreCase(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL))){
-			if((null!=this.getSmSupplierType())&&(this.getSmSupplierType()
-					.equalsIgnoreCase(ReportConst.SUPPL_CONSLT_TYPE))){
-				getManagedBean().getRptGenBean().setSmConsultantRegistrationStatusView(true);
-				getManagedBean().getRptGenBean().setSmRegistrationStatusView(false);
-			}else{
-				getManagedBean().getRptGenBean().setSmConsultantRegistrationStatusView(false);
-				getManagedBean().getRptGenBean().setSmRegistrationStatusView(true);
+	public void supplierTypeConsultant() {
+		getManagedBean().getRptGenBean().setSmConsultantRegistrationStatusView(
+				false);
+		if ((null != this.getReportValue())
+				&& (this.getReportValue()
+						.equalsIgnoreCase(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL))) {
+			if ((null != this.getSmSupplierType())
+					&& (this.getSmSupplierType()
+							.equalsIgnoreCase(ReportConst.SUPPL_CONSLT_TYPE))) {
+				getManagedBean().getRptGenBean()
+						.setSmConsultantRegistrationStatusView(true);
+				getManagedBean().getRptGenBean().setSmRegistrationStatusView(
+						false);
+			} else {
+				getManagedBean().getRptGenBean()
+						.setSmConsultantRegistrationStatusView(false);
+				getManagedBean().getRptGenBean().setSmRegistrationStatusView(
+						true);
 			}
 		}
 	}
-	
+
 	/**
 	 * Gets the all module list.
-	 *
+	 * 
 	 * @return the all module list
 	 */
-	public List<SelectItem> getAllModuleList(){
-		 moduleList = new ArrayList<SelectItem>();		
+	public List<SelectItem> getAllModuleList() {
+		moduleList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-									IPMReportSO.class);
-					/*String language = ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG, 
-				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-					//String language = "ms";*/
-					List<Object[]> moduleLst = reportSO.retrieveModuleList(strLanguage,lngUserId);			
-					for (Object[] object : moduleLst) {
-						SelectItem selectItem = new SelectItem();						
-						selectItem.setValue(object[0].toString());
-						selectItem.setLabel(object[1].toString());
-						moduleList.add(selectItem);
-					}
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			/*
+			 * String language =
+			 * ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG,
+			 * ResourceBundleUtils.BUNDLE_COMMON_LABELS, new
+			 * FacesScopes().getUserLocale()); //String language = "ms";
+			 */
+			List<Object[]> moduleLst = reportSO.retrieveModuleList(strLanguage,
+					lngUserId);
+			for (Object[] object : moduleLst) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setValue(object[0].toString());
+				selectItem.setLabel(object[1].toString());
+				moduleList.add(selectItem);
 			}
+		}
 		return moduleList;
-	 }
-	
+	}
+
 	/**
 	 * Retrieve identification type.
 	 */
-	public void retrieveIdentificationType(){
-		identificationTypeList = new ArrayList<SelectItem>();		
+	public void retrieveIdentificationType() {
+		identificationTypeList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-									IPMReportSO.class);
-			
-					List<Object[]> identificationTypeLst = reportSO.retrieveIdentificationType();			
-					for (Object[] object : identificationTypeLst) {
-						SelectItem selectItem = new SelectItem();						
-						selectItem.setValue(object[0].toString());
-						selectItem.setLabel(object[1].toString());
-						identificationTypeList.add(selectItem);
-					}
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+
+			List<Object[]> identificationTypeLst = reportSO
+					.retrieveIdentificationType();
+			for (Object[] object : identificationTypeLst) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setValue(object[0].toString());
+				selectItem.setLabel(object[1].toString());
+				identificationTypeList.add(selectItem);
 			}
-	 }
-	
+		}
+	}
+
 	/**
 	 * Retrieve accumulated paid up cptl.
 	 */
-	public void retrieveAccumulatedPaidUpCptl(){
-		accumulatedPaidUpCptlList = new ArrayList<SelectItem>();		
+	public void retrieveAccumulatedPaidUpCptl() {
+		accumulatedPaidUpCptlList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-									IPMReportSO.class);
-			
-					List<Object[]> accumulatedPaidUpCptlLst = reportSO.retrieveAccumulatedPaidUpCptl();			
-					for (Object[] object : accumulatedPaidUpCptlLst) {
-						SelectItem selectItem = new SelectItem();						
-						selectItem.setValue(object[0].toString());
-						selectItem.setLabel(object[1].toString());
-						accumulatedPaidUpCptlList.add(selectItem);
-					}
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+
+			List<Object[]> accumulatedPaidUpCptlLst = reportSO
+					.retrieveAccumulatedPaidUpCptl();
+			for (Object[] object : accumulatedPaidUpCptlLst) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setValue(object[0].toString());
+				selectItem.setLabel(object[1].toString());
+				accumulatedPaidUpCptlList.add(selectItem);
 			}
-	 }
-	
+		}
+	}
+
 	/**
 	 * Gets the ltst ministry list.
-	 *
+	 * 
 	 * @return the ltst ministry list
 	 */
 	public SelectItem[] getLtstMinistryList() {
@@ -6868,11 +7261,12 @@ public class ReportBackingBean extends
 					.retrieveOrgProfileListByOrgType(reqDTO);
 
 			items = new SelectItem[resDTO.getOrgProfileList().size() + 1];
-			//items[0] = new SelectItem(null, "- Select One -");
-			//int i = 0;
+			// items[0] = new SelectItem(null, "- Select One -");
+			// int i = 0;
 			SelectItem selectItem = new SelectItem();
-			selectItem.setLabel(ResourceBundleUtils.getMessage("lbl.txt.select", 
-		 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			selectItem.setLabel(ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
 			selectItem.setValue(null);
 			ministryList.add(selectItem);
 			for (PmOrgProfile orgProfile : resDTO.getOrgProfileList()) {
@@ -6880,18 +7274,20 @@ public class ReportBackingBean extends
 				selectItem1.setLabel(orgProfile.getOrgName());
 				selectItem1.setValue(orgProfile.getOrgProfileId());
 				ministryList.add(selectItem1);
-				/*items[i++] = new SelectItem(orgProfile.getOrgProfileId(),
-						orgProfile.getOrgName());*/
-			}			
+				/*
+				 * items[i++] = new SelectItem(orgProfile.getOrgProfileId(),
+				 * orgProfile.getOrgName());
+				 */
+			}
 		} finally {
 			orgProfileSO = null;
 		}
 		return items;
 	}
-	
+
 	/**
 	 * Gets the ltst ministry list by userid.
-	 *
+	 * 
 	 * @return the ltst ministry list by userid
 	 */
 	public SelectItem[] getLtstMinistryListByUserid() {
@@ -6910,32 +7306,35 @@ public class ReportBackingBean extends
 					.retrieveOrgProfileListByOrgType(reqDTO);
 
 			items = new SelectItem[resDTO.getOrgProfileList().size() + 1];
-			//items[0] = new SelectItem(null, "- Select One -");
-			//int i = 0;
-			/*SelectItem selectItem = new SelectItem();
-			selectItem.setLabel("- Select One -");
-			selectItem.setValue(null);
-			ministryList.add(selectItem);*/
+			// items[0] = new SelectItem(null, "- Select One -");
+			// int i = 0;
+			/*
+			 * SelectItem selectItem = new SelectItem();
+			 * selectItem.setLabel("- Select One -"); selectItem.setValue(null);
+			 * ministryList.add(selectItem);
+			 */
 			for (PmOrgProfile orgProfile : resDTO.getOrgProfileList()) {
 				SelectItem selectItem1 = new SelectItem();
 				selectItem1.setLabel(orgProfile.getOrgName());
 				selectItem1.setValue(orgProfile.getOrgProfileId());
 				ministryList.add(selectItem1);
-				/*items[i++] = new SelectItem(orgProfile.getOrgProfileId(),
-						orgProfile.getOrgName());*/
-			}			
+				/*
+				 * items[i++] = new SelectItem(orgProfile.getOrgProfileId(),
+				 * orgProfile.getOrgName());
+				 */
+			}
 		} finally {
 			orgProfileSO = null;
 		}
 		return items;
 	}
-	
+
 	/**
 	 * Retrieve ptj list by ministry id.
 	 */
-	public void retrievePtjListByMinistryId() {		
-		pmPtjList =new ArrayList<String>();		
-		if(ministryId!=null){
+	public void retrievePtjListByMinistryId() {
+		pmPtjList = new ArrayList<String>();
+		if (ministryId != null) {
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 			reqDTO.setOrgType(OrganizationType.DIVISION.value());
 			reqDTO.setParentOrgProfileId(ministryId);
@@ -6944,218 +7343,324 @@ public class ReportBackingBean extends
 							IOrgProfileSO.class);
 			OrgProfileResDTO resDTO = orgProfileSO
 					.retrieveOrgProfileListByOrgType(reqDTO);
-			List<PmOrgProfile> orgProfileList =resDTO.getOrgProfileList();
+			List<PmOrgProfile> orgProfileList = resDTO.getOrgProfileList();
 			for (PmOrgProfile ptj : orgProfileList) {
 				ptj.getOrgName();
 				pmPtjList.add(ptj.getOrgName());
 			}
-			/*reqDTO.setParentOrgProfileId(ministryId);
-			//reqDTO.setParentOrgProfileId((long) 231618);
-			OrgProfileResDTO resDTO = orgProfileSO
-					.retrievePtjListByMinistryId(reqDTO);
-			List<PmOrgProfile> orgProfileList =resDTO.getOrgProfileList();
-			for (PmOrgProfile ptj : orgProfileList) {
-				ptj.getOrgName();
-			}*/
+			/*
+			 * reqDTO.setParentOrgProfileId(ministryId);
+			 * //reqDTO.setParentOrgProfileId((long) 231618); OrgProfileResDTO
+			 * resDTO = orgProfileSO .retrievePtjListByMinistryId(reqDTO);
+			 * List<PmOrgProfile> orgProfileList =resDTO.getOrgProfileList();
+			 * for (PmOrgProfile ptj : orgProfileList) { ptj.getOrgName(); }
+			 */
 		}
 	}
-	
+
 	/**
 	 * Gets the doc type status drop down.
-	 *
+	 * 
 	 * @return the doc type status drop down
 	 */
-	public SelectItem[] getDocTypeStatusDropDown(){
+	public SelectItem[] getDocTypeStatusDropDown() {
 		docTypeStatusItems = null;
 		String doctype = null;
 		SelectItem[] tempOneStatusItems = null;
 		SelectItem[] tempTwoStatusItems = null;
-		docTypeStatusItemsList=new ArrayList<SelectItem>();
-		if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.CON_REQ_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.CON_REQ_RPT_CEN_PEN_VAL))){
-			doctype =ReportConst.DOC_TYPE_CR;
-		} else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.CON_ORD_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.CON_ORD_RPT_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.INV_RPT_VIEW_PTJ_MIN_VAL)||this.getReportValue().equals(ReportConst.INV_RPT_VIEW_PTJ_CEN_PEN_VAL))){
-			doctype =ReportConst.DOC_TYPE_CO;
-		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.DEL_ORD_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.DEL_ORD_RPT_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.DEL_ORD_RPT_PO_VAL))){
-			doctype =ReportConst.DOC_TYPE_DO;
-		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.FL_REC_NOTE_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.FL_REC_NOTE_RPT_CEN_PEN_VAL))||(this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.FL_REC_NOTE_RPT_PO_VAL))){
-			doctype =ReportConst.DOC_TYPE_FN;
-		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.INV_RPT_VIEW_SUPL_MIN_VAL)||this.getReportValue().equals(ReportConst.INV_RPT_VIEW_SUPL_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.INV_RPT_VIEW_SUPL_PO_VAL))){
-			doctype =ReportConst.DOC_TYPE_IN;
-		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.PYMT_MATCH_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.PYMT_MATCH_RPT_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.PYMT_MATCH_RPT_PO_VAL))){
-			doctype =ReportConst.DOC_TYPE_PA;
-		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.DED_RPT_MIN_VAL))){
-			doctype =ReportConst.DOC_TYPE_DN;
-		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SUMM_RPT_PAN_ITM_VAL)||this.getReportValue().equals(ReportConst.PUR_ORD_RPT_PO_VAL)||this.getReportValue().equals(ReportConst.INV_RPT_VIEW_PTJ_PO_VAL))){
-			doctype =ReportConst.DOC_TYPE_PO;
-		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.PUR_REQ_RPT_PO_VAL))){
-			doctype =ReportConst.DOC_TYPE_PR;
-		/*}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.FL_REC_NOTE_RPT_PO_VAL))){
-			doctype =ReportConst.DOC_TYPE_FRN;*/	
-		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.EMR_PROCUR_RPT_PO_VAL))){	
-			docTypeStatusItemsList=new ArrayList<SelectItem>();
-			tempOneStatusItems = getStatusDropdownValues(this.getModuleValue(),ReportConst.DOC_TYPE_PO);
-			tempTwoStatusItems = getStatusDropdownValues(this.getModuleValue(),ReportConst.DOC_TYPE_PR);
-			for(SelectItem item1:tempOneStatusItems){				
-					docTypeStatusItemsList.add(item1);				
+		docTypeStatusItemsList = new ArrayList<SelectItem>();
+		if ((this.getReportValue() != null)
+				&& (this.getReportValue().equals(
+						ReportConst.CON_REQ_RPT_MIN_VAL) || this
+						.getReportValue().equals(
+								ReportConst.CON_REQ_RPT_CEN_PEN_VAL))) {
+			doctype = ReportConst.DOC_TYPE_CR;
+		} else if ((this.getReportValue() != null)
+				&& (this.getReportValue().equals(
+						ReportConst.CON_ORD_RPT_MIN_VAL)
+						|| this.getReportValue().equals(
+								ReportConst.CON_ORD_RPT_CEN_PEN_VAL)
+						|| this.getReportValue().equals(
+								ReportConst.INV_RPT_VIEW_PTJ_MIN_VAL) || this
+						.getReportValue().equals(
+								ReportConst.INV_RPT_VIEW_PTJ_CEN_PEN_VAL))) {
+			doctype = ReportConst.DOC_TYPE_CO;
+		} else if ((this.getReportValue() != null)
+				&& (this.getReportValue().equals(
+						ReportConst.DEL_ORD_RPT_MIN_VAL)
+						|| this.getReportValue().equals(
+								ReportConst.DEL_ORD_RPT_CEN_PEN_VAL) || this
+						.getReportValue()
+						.equals(ReportConst.DEL_ORD_RPT_PO_VAL))) {
+			doctype = ReportConst.DOC_TYPE_DO;
+		} else if ((this.getReportValue() != null)
+				&& (this.getReportValue().equals(
+						ReportConst.FL_REC_NOTE_RPT_MIN_VAL) || this
+						.getReportValue().equals(
+								ReportConst.FL_REC_NOTE_RPT_CEN_PEN_VAL))
+				|| (this.getReportValue() != null)
+				&& (this.getReportValue()
+						.equals(ReportConst.FL_REC_NOTE_RPT_PO_VAL))) {
+			doctype = ReportConst.DOC_TYPE_FN;
+		} else if ((this.getReportValue() != null)
+				&& (this.getReportValue().equals(
+						ReportConst.INV_RPT_VIEW_SUPL_MIN_VAL)
+						|| this.getReportValue().equals(
+								ReportConst.INV_RPT_VIEW_SUPL_CEN_PEN_VAL) || this
+						.getReportValue().equals(
+								ReportConst.INV_RPT_VIEW_SUPL_PO_VAL))) {
+			doctype = ReportConst.DOC_TYPE_IN;
+		} else if ((this.getReportValue() != null)
+				&& (this.getReportValue().equals(
+						ReportConst.PYMT_MATCH_RPT_MIN_VAL)
+						|| this.getReportValue().equals(
+								ReportConst.PYMT_MATCH_RPT_CEN_PEN_VAL) || this
+						.getReportValue().equals(
+								ReportConst.PYMT_MATCH_RPT_PO_VAL))) {
+			doctype = ReportConst.DOC_TYPE_PA;
+		} else if ((this.getReportValue() != null)
+				&& (this.getReportValue().equals(ReportConst.DED_RPT_MIN_VAL))) {
+			doctype = ReportConst.DOC_TYPE_DN;
+		} else if ((this.getReportValue() != null)
+				&& (this.getReportValue().equals(
+						ReportConst.SUMM_RPT_PAN_ITM_VAL)
+						|| this.getReportValue().equals(
+								ReportConst.PUR_ORD_RPT_PO_VAL) || this
+						.getReportValue().equals(
+								ReportConst.INV_RPT_VIEW_PTJ_PO_VAL))) {
+			doctype = ReportConst.DOC_TYPE_PO;
+		} else if ((this.getReportValue() != null)
+				&& (this.getReportValue()
+						.equals(ReportConst.PUR_REQ_RPT_PO_VAL))) {
+			doctype = ReportConst.DOC_TYPE_PR;
+			/*
+			 * }else
+			 * if((this.getReportValue()!=null)&&(this.getReportValue().equals
+			 * (ReportConst.FL_REC_NOTE_RPT_PO_VAL))){ doctype
+			 * =ReportConst.DOC_TYPE_FRN;
+			 */
+		} else if ((this.getReportValue() != null)
+				&& (this.getReportValue()
+						.equals(ReportConst.EMR_PROCUR_RPT_PO_VAL))) {
+			docTypeStatusItemsList = new ArrayList<SelectItem>();
+			tempOneStatusItems = getStatusDropdownValues(this.getModuleValue(),
+					ReportConst.DOC_TYPE_PO);
+			tempTwoStatusItems = getStatusDropdownValues(this.getModuleValue(),
+					ReportConst.DOC_TYPE_PR);
+			for (SelectItem item1 : tempOneStatusItems) {
+				docTypeStatusItemsList.add(item1);
 			}
-			for(SelectItem item2:tempTwoStatusItems){
-				if((!item2.getLabel().equals(ResourceBundleUtils.getMessage("lbl.txt.select", 
-			 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())))){						
-							docTypeStatusItemsList.add(item2);					
+			for (SelectItem item2 : tempTwoStatusItems) {
+				if ((!item2.getLabel().equals(
+						ResourceBundleUtils.getMessage("lbl.txt.select",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale())))) {
+					docTypeStatusItemsList.add(item2);
 				}
 			}
-		}		
-		if(null!=doctype){
+		}
+		if (null != doctype) {
 			docTypeStatusItems = null;
-			docTypeStatusItemsList=new ArrayList<SelectItem>();
-			docTypeStatusItems = getStatusDropdownValues(this.getModuleValue(),doctype);
-			for(SelectItem itemCommon:docTypeStatusItems){
+			docTypeStatusItemsList = new ArrayList<SelectItem>();
+			docTypeStatusItems = getStatusDropdownValues(this.getModuleValue(),
+					doctype);
+			for (SelectItem itemCommon : docTypeStatusItems) {
 				docTypeStatusItemsList.add(itemCommon);
 			}
 		}
 		return docTypeStatusItems;
-    }
-	
+	}
+
 	/**
 	 * Retrieve sub type list.
-	 *
+	 * 
 	 * @return the list
 	 */
-	public List<SelectItem> retrieveSubTypeList(){
+	public List<SelectItem> retrieveSubTypeList() {
 		ctSubTypeList = new ArrayList<SelectItem>();
 		getManagedBean().getRptGenBean().setCtSubTypeView(false);
 		getManagedBean().getRptGenBean().setCtSubTypeApproverView(false);
 		getManagedBean().getRptGenBean().setCtSubTypeMCAView(false);
-        if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-        	if (null != this.getCtUserType()) {
-        		String userTypeRoleCode = null;        		
-        		if (this.getCtUserType().equalsIgnoreCase(ReportConst.MINISTRY_CONTRACT_ADMIN)) {
-        			userTypeRoleCode=ReportConst.MIN_CONTRACT_ADMIN;
-        			getManagedBean().getRptGenBean().setCtSubTypeView(true);
-        			getManagedBean().getRptGenBean().setCtSubTypeApproverView(false);
-        			getManagedBean().getRptGenBean().setCtSubTypeMCAView(true);
-        		}else if(this.getCtUserType().equalsIgnoreCase(ReportConst.APPROVER_LBL)) {
-        			userTypeRoleCode=ReportConst.ROLE_CODE_CT_APPROVER;
-        			getManagedBean().getRptGenBean().setCtSubTypeView(true);
-        			getManagedBean().getRptGenBean().setCtSubTypeMCAView(false);
-        			getManagedBean().getRptGenBean().setCtSubTypeApproverView(true);
-        		}
-        		if (null != userTypeRoleCode) {
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			if (null != this.getCtUserType()) {
+				String userTypeRoleCode = null;
+				if (this.getCtUserType().equalsIgnoreCase(
+						ReportConst.MINISTRY_CONTRACT_ADMIN)) {
+					userTypeRoleCode = ReportConst.MIN_CONTRACT_ADMIN;
+					getManagedBean().getRptGenBean().setCtSubTypeView(true);
+					getManagedBean().getRptGenBean().setCtSubTypeApproverView(
+							false);
+					getManagedBean().getRptGenBean().setCtSubTypeMCAView(true);
+				} else if (this.getCtUserType().equalsIgnoreCase(
+						ReportConst.APPROVER_LBL)) {
+					userTypeRoleCode = ReportConst.ROLE_CODE_CT_APPROVER;
+					getManagedBean().getRptGenBean().setCtSubTypeView(true);
+					getManagedBean().getRptGenBean().setCtSubTypeMCAView(false);
+					getManagedBean().getRptGenBean().setCtSubTypeApproverView(
+							true);
+				}
+				if (null != userTypeRoleCode) {
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IPMReportSO.class);
-					List<Object[]> ptLst = reportSO.retrieveSubTypeList(lngUserId,userTypeRoleCode);			
+					List<Object[]> ptLst = reportSO.retrieveSubTypeList(
+							lngUserId, userTypeRoleCode);
 					for (Object[] object : ptLst) {
 						SelectItem selectItem = new SelectItem();
 						selectItem.setLabel(object[0].toString());
 						selectItem.setValue(object[1]);
 						ctSubTypeList.add(selectItem);
 					}
-        	    }
-        	}
-        }
+				}
+			}
+		}
 		return ctSubTypeList;
 	}
-	
+
 	/**
 	 * Retrieve zone by user.
-	 *
+	 * 
 	 * @return the list
 	 */
-	public List<SelectItem> retrieveZoneByUser(){
+	public List<SelectItem> retrieveZoneByUser() {
 		zoneList = new ArrayList<SelectItem>();
 		this.setStringZone(null);
-        if (null != new FacesScopes().getUserSessionBean().getUserId()) {        	
-        		
-					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-									IPMReportSO.class);
-					List<Object[]> zoneLst = reportSO.retrieveZoneByUser(lngUserId);			
-					for (Object[] object : zoneLst) {
-						SelectItem selectItem = new SelectItem();
-						selectItem.setValue(object[0]);
-						selectItem.setLabel(object[1].toString());
-						stringZone =object[1].toString();
-						zoneList.add(selectItem);
-					}
-        }
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<Object[]> zoneLst = reportSO.retrieveZoneByUser(lngUserId);
+			for (Object[] object : zoneLst) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setValue(object[0]);
+				selectItem.setLabel(object[1].toString());
+				stringZone = object[1].toString();
+				zoneList.add(selectItem);
+			}
+		}
 		return zoneList;
 	}
-	
+
 	/**
 	 * Retrieve high role code by user.
-	 *
+	 * 
 	 * @return the list
 	 */
-	public List<String> retrieveHighRoleCodeByUser(){
+	public List<String> retrieveHighRoleCodeByUser() {
 		highRoleCodeList = new ArrayList<String>();
-        if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-									IPMReportSO.class);
-					List<String> ptLst = reportSO.retrieveHighRoleCodeByUser(lngUserId);			
-					for (int i = 0; i < ptLst.size(); i++) {
-						highRoleCodeList.add(ptLst.get(i));
-					}        	    
-        }
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<String> ptLst = reportSO.retrieveHighRoleCodeByUser(lngUserId);
+			for (int i = 0; i < ptLst.size(); i++) {
+				highRoleCodeList.add(ptLst.get(i));
+			}
+		}
 		return highRoleCodeList;
 	}
-	
+
 	/**
 	 * Direct purchase with requisitioner.
 	 */
-	public void  directPurchaseWithRequisitioner(){
-		if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_SUPPL_S1_RPT_VAL))){
-			getManagedBean().getRptGenBean().setScSimpleQuoteDtlWithoutRequiGroupView(false);
-			getManagedBean().getRptGenBean().setScSimpleQuoteDtlGroupView(false);
-			 if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_REQUISITIONER))){
-				 getManagedBean().getRptGenBean().setScSimpleQuoteDtlWithoutRequiGroupView(true);
-			 }else{
-				 getManagedBean().getRptGenBean().setScSimpleQuoteDtlGroupView(true);
-			 }
+	public void directPurchaseWithRequisitioner() {
+		if ((this.getReportValue() != null)
+				&& (this.getReportValue()
+						.equals(ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_SUPPL_S1_RPT_VAL))) {
+			getManagedBean().getRptGenBean()
+					.setScSimpleQuoteDtlWithoutRequiGroupView(false);
+			getManagedBean().getRptGenBean()
+					.setScSimpleQuoteDtlGroupView(false);
+			if ((highRoleCodeList != null)
+					&& (highRoleCodeList
+							.contains(ReportConst.ROLE_CODE_REQUISITIONER))) {
+				getManagedBean().getRptGenBean()
+						.setScSimpleQuoteDtlWithoutRequiGroupView(true);
+			} else {
+				getManagedBean().getRptGenBean().setScSimpleQuoteDtlGroupView(
+						true);
+			}
 		}
 	}
-	
+
 	/**
 	 * Role code users setup onload.
-	 *
-	 * @param lngPtjId the lng ptj id
+	 * 
+	 * @param lngPtjId
+	 *            the lng ptj id
 	 */
-	public void  roleCodeUsersSetupOnload(Long lngPtjId){
+	public void roleCodeUsersSetupOnload(Long lngPtjId) {
 		rolecodeRquisitionerList = new ArrayList<SelectItem>();
 		rolecodeApproverList = new ArrayList<SelectItem>();
 		rolecodeRecievingOfficerList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-									IPMReportSO.class);
-			 if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_REQUISITIONER))){
-				List<Object[]> rlcdLst = reportSO.retrieveUserListByREQUISITIONER(lngUserId,ReportConst.ROLE_CODE_REQUISITIONER);			
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			if ((highRoleCodeList != null)
+					&& (highRoleCodeList
+							.contains(ReportConst.ROLE_CODE_REQUISITIONER))) {
+				List<Object[]> rlcdLst = reportSO
+						.retrieveUserListByREQUISITIONER(lngUserId,
+								ReportConst.ROLE_CODE_REQUISITIONER);
 				for (Object[] object : rlcdLst) {
 					SelectItem selectItem = new SelectItem();
 					selectItem.setLabel(object[0].toString());
 					selectItem.setValue(object[1]);
 					rolecodeRquisitionerList.add(selectItem);
-				}				
-			}else{
-				if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.CON_REQ_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.CON_REQ_RPT_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.PUR_REQ_RPT_PO_VAL)||this.getReportValue().equals(ReportConst.EMR_PROCUR_RPT_PO_VAL))){					
-					List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(lngUserId,ReportConst.ROLE_CODE_REQUISITIONER,lngPtjId);			
+				}
+			} else {
+				if ((this.getReportValue() != null)
+						&& (this.getReportValue().equals(
+								ReportConst.CON_REQ_RPT_MIN_VAL)
+								|| this.getReportValue().equals(
+										ReportConst.CON_REQ_RPT_CEN_PEN_VAL)
+								|| this.getReportValue().equals(
+										ReportConst.PUR_REQ_RPT_PO_VAL) || this
+								.getReportValue().equals(
+										ReportConst.EMR_PROCUR_RPT_PO_VAL))) {
+					List<Object[]> rlcdLst = reportSO
+							.retrieveUserListByAdminOrBKPRoleCode(lngUserId,
+									ReportConst.ROLE_CODE_REQUISITIONER,
+									lngPtjId);
 					for (Object[] object : rlcdLst) {
 						SelectItem selectItem = new SelectItem();
 						selectItem.setLabel(object[0].toString());
 						selectItem.setValue(object[1]);
 						rolecodeRquisitionerList.add(selectItem);
 					}
-				}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.FL_REC_NOTE_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.FL_REC_NOTE_RPT_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.LATE_DEL_RPT_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.LATE_DEL_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.FL_REC_NOTE_RPT_PO_VAL))){
-					List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(lngUserId,ReportConst.ROLE_CODE_RECEIVING_OFFICER,lngPtjId);			
+				} else if ((this.getReportValue() != null)
+						&& (this.getReportValue().equals(
+								ReportConst.FL_REC_NOTE_RPT_MIN_VAL)
+								|| this.getReportValue()
+										.equals(ReportConst.FL_REC_NOTE_RPT_CEN_PEN_VAL)
+								|| this.getReportValue().equals(
+										ReportConst.LATE_DEL_RPT_CEN_PEN_VAL)
+								|| this.getReportValue().equals(
+										ReportConst.LATE_DEL_RPT_MIN_VAL) || this
+								.getReportValue().equals(
+										ReportConst.FL_REC_NOTE_RPT_PO_VAL))) {
+					List<Object[]> rlcdLst = reportSO
+							.retrieveUserListByAdminOrBKPRoleCode(lngUserId,
+									ReportConst.ROLE_CODE_RECEIVING_OFFICER,
+									lngPtjId);
 					for (Object[] object : rlcdLst) {
 						SelectItem selectItem = new SelectItem();
 						selectItem.setLabel(object[0].toString());
 						selectItem.setValue(object[1]);
 						rolecodeRecievingOfficerList.add(selectItem);
 					}
-				}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.CON_ORD_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.CON_ORD_RPT_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.PUR_ORD_RPT_PO_VAL))){
-					List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(lngUserId,ReportConst.ROLE_CODE_FL_APPROVER,lngPtjId);			
+				} else if ((this.getReportValue() != null)
+						&& (this.getReportValue().equals(
+								ReportConst.CON_ORD_RPT_MIN_VAL)
+								|| this.getReportValue().equals(
+										ReportConst.CON_ORD_RPT_CEN_PEN_VAL) || this
+								.getReportValue().equals(
+										ReportConst.PUR_ORD_RPT_PO_VAL))) {
+					List<Object[]> rlcdLst = reportSO
+							.retrieveUserListByAdminOrBKPRoleCode(lngUserId,
+									ReportConst.ROLE_CODE_FL_APPROVER, lngPtjId);
 					for (Object[] object : rlcdLst) {
 						SelectItem selectItem = new SelectItem();
 						selectItem.setLabel(object[0].toString());
@@ -7164,24 +7669,37 @@ public class ReportBackingBean extends
 					}
 				}
 			}
-			if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_APPROVER)||highRoleCodeList.contains(ReportConst.ROLE_CODE_CT_APPROVER)||highRoleCodeList.contains(ReportConst.ROLE_CODE_RN_APPROVER))){
-				List<Object[]> rlcdLst = reportSO.retrieveUserListByREQUISITIONER(lngUserId,highRoleCodeList.get(0));			
+			if ((highRoleCodeList != null)
+					&& (highRoleCodeList
+							.contains(ReportConst.ROLE_CODE_APPROVER)
+							|| highRoleCodeList
+									.contains(ReportConst.ROLE_CODE_CT_APPROVER) || highRoleCodeList
+								.contains(ReportConst.ROLE_CODE_RN_APPROVER))) {
+				List<Object[]> rlcdLst = reportSO
+						.retrieveUserListByREQUISITIONER(lngUserId,
+								highRoleCodeList.get(0));
 				for (Object[] object : rlcdLst) {
 					SelectItem selectItem = new SelectItem();
 					selectItem.setLabel(object[0].toString());
 					selectItem.setValue(object[1]);
 					rolecodeApproverList.add(selectItem);
-				}				
+				}
 			}
-			if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_RECEIVING_OFFICER))){
-				List<Object[]> recoffLst = reportSO.retrieveUserListByREQUISITIONER(lngUserId,ReportConst.ROLE_CODE_RECEIVING_OFFICER);			
+			if ((highRoleCodeList != null)
+					&& (highRoleCodeList
+							.contains(ReportConst.ROLE_CODE_RECEIVING_OFFICER))) {
+				List<Object[]> recoffLst = reportSO
+						.retrieveUserListByREQUISITIONER(lngUserId,
+								ReportConst.ROLE_CODE_RECEIVING_OFFICER);
 				for (Object[] object : recoffLst) {
 					SelectItem selectItem = new SelectItem();
 					selectItem.setLabel(object[0].toString());
 					selectItem.setValue(object[1]);
 					rolecodeRecievingOfficerList.add(selectItem);
 				}
-				List<Object[]> rlcdLst = reportSO.retrieveUserListByREQUISITIONER(lngUserId,ReportConst.ROLE_CODE_REQUISITIONER);			
+				List<Object[]> rlcdLst = reportSO
+						.retrieveUserListByREQUISITIONER(lngUserId,
+								ReportConst.ROLE_CODE_REQUISITIONER);
 				for (Object[] object : rlcdLst) {
 					SelectItem selectItem = new SelectItem();
 					selectItem.setLabel(object[0].toString());
@@ -7190,78 +7708,141 @@ public class ReportBackingBean extends
 				}
 			}
 		}
-	} 
-	
+	}
+
 	/**
 	 * Role code users setup.
 	 */
-	public void  roleCodeUsersSetup(){
+	public void roleCodeUsersSetup() {
 		rolecodeRquisitionerList = new ArrayList<SelectItem>();
 		rolecodeApproverList = new ArrayList<SelectItem>();
 		rolecodeRecievingOfficerList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-									IPMReportSO.class);
-			/*if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_MIN_CONTRACT_ADMIN)||highRoleCodeList.contains(ReportConst.ROLE_CODE_FL_APPROVER)||highRoleCodeList.contains(ReportConst.ROLE_CODE_BPK_CCA)||highRoleCodeList.contains(ReportConst.ROLE_CODE_BPK_PCA))){
-				//List<String> ptLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(lngUserId);
-				if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.CON_REQ_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.CON_REQ_RPT_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.PUR_REQ_RPT_PO_VAL)||this.getReportValue().equals(ReportConst.EMR_PROCUR_RPT_PO_VAL))){
-					List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(lngUserId,ReportConst.ROLE_CODE_REQUISITIONER);			
-					for (Object[] object : rlcdLst) {
-						SelectItem selectItem = new SelectItem();
-						selectItem.setLabel(object[0].toString());
-						selectItem.setValue(object[1]);
-						rolecodeRquisitionerList.add(selectItem);
-					}
-				}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.FL_REC_NOTE_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.FL_REC_NOTE_RPT_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.LATE_DEL_RPT_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.LATE_DEL_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.FL_REC_NOTE_RPT_PO_VAL))){
-					List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(lngUserId,ReportConst.ROLE_CODE_RECEIVING_OFFICER);			
-					for (Object[] object : rlcdLst) {
-						SelectItem selectItem = new SelectItem();
-						selectItem.setLabel(object[0].toString());
-						selectItem.setValue(object[1]);
-						rolecodeRecievingOfficerList.add(selectItem);
-					}
-				}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.CON_ORD_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.CON_ORD_RPT_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.PUR_ORD_RPT_PO_VAL))){
-					List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(lngUserId,ReportConst.ROLE_CODE_FL_APPROVER);			
-					for (Object[] object : rlcdLst) {
-						SelectItem selectItem = new SelectItem();
-						selectItem.setLabel(object[0].toString());
-						selectItem.setValue(object[1]);
-						rolecodeApproverList.add(selectItem);
-					}
-				}
-			}else*/ if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_REQUISITIONER))){
-				List<Object[]> rlcdLst = reportSO.retrieveUserListByREQUISITIONER(lngUserId,ReportConst.ROLE_CODE_REQUISITIONER);			
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			/*
+			 * if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst
+			 * .
+			 * ROLE_CODE_MIN_CONTRACT_ADMIN)||highRoleCodeList.contains(ReportConst
+			 * .ROLE_CODE_FL_APPROVER)||highRoleCodeList.contains(ReportConst.
+			 * ROLE_CODE_BPK_CCA
+			 * )||highRoleCodeList.contains(ReportConst.ROLE_CODE_BPK_PCA))){
+			 * //List<String> ptLst =
+			 * reportSO.retrieveUserListByAdminOrBKPRoleCode(lngUserId);
+			 * if((this
+			 * .getReportValue()!=null)&&(this.getReportValue().equals(ReportConst
+			 * .CON_REQ_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.
+			 * CON_REQ_RPT_CEN_PEN_VAL
+			 * )||this.getReportValue().equals(ReportConst
+			 * .PUR_REQ_RPT_PO_VAL)||this
+			 * .getReportValue().equals(ReportConst.EMR_PROCUR_RPT_PO_VAL))){
+			 * List<Object[]> rlcdLst =
+			 * reportSO.retrieveUserListByAdminOrBKPRoleCode
+			 * (lngUserId,ReportConst.ROLE_CODE_REQUISITIONER); for (Object[]
+			 * object : rlcdLst) { SelectItem selectItem = new SelectItem();
+			 * selectItem.setLabel(object[0].toString());
+			 * selectItem.setValue(object[1]);
+			 * rolecodeRquisitionerList.add(selectItem); } }else
+			 * if((this.getReportValue
+			 * ()!=null)&&(this.getReportValue().equals(ReportConst
+			 * .FL_REC_NOTE_RPT_MIN_VAL
+			 * )||this.getReportValue().equals(ReportConst
+			 * .FL_REC_NOTE_RPT_CEN_PEN_VAL
+			 * )||this.getReportValue().equals(ReportConst
+			 * .LATE_DEL_RPT_CEN_PEN_VAL
+			 * )||this.getReportValue().equals(ReportConst
+			 * .LATE_DEL_RPT_MIN_VAL)||
+			 * this.getReportValue().equals(ReportConst.FL_REC_NOTE_RPT_PO_VAL
+			 * ))){ List<Object[]> rlcdLst =
+			 * reportSO.retrieveUserListByAdminOrBKPRoleCode
+			 * (lngUserId,ReportConst.ROLE_CODE_RECEIVING_OFFICER); for
+			 * (Object[] object : rlcdLst) { SelectItem selectItem = new
+			 * SelectItem(); selectItem.setLabel(object[0].toString());
+			 * selectItem.setValue(object[1]);
+			 * rolecodeRecievingOfficerList.add(selectItem); } }else
+			 * if((this.getReportValue
+			 * ()!=null)&&(this.getReportValue().equals(ReportConst
+			 * .CON_ORD_RPT_MIN_VAL
+			 * )||this.getReportValue().equals(ReportConst.CON_ORD_RPT_CEN_PEN_VAL
+			 * )
+			 * ||this.getReportValue().equals(ReportConst.PUR_ORD_RPT_PO_VAL))){
+			 * List<Object[]> rlcdLst =
+			 * reportSO.retrieveUserListByAdminOrBKPRoleCode
+			 * (lngUserId,ReportConst.ROLE_CODE_FL_APPROVER); for (Object[]
+			 * object : rlcdLst) { SelectItem selectItem = new SelectItem();
+			 * selectItem.setLabel(object[0].toString());
+			 * selectItem.setValue(object[1]);
+			 * rolecodeApproverList.add(selectItem); } } }else
+			 */if ((highRoleCodeList != null)
+					&& (highRoleCodeList
+							.contains(ReportConst.ROLE_CODE_REQUISITIONER))) {
+				List<Object[]> rlcdLst = reportSO
+						.retrieveUserListByREQUISITIONER(lngUserId,
+								ReportConst.ROLE_CODE_REQUISITIONER);
 				for (Object[] object : rlcdLst) {
 					SelectItem selectItem = new SelectItem();
 					selectItem.setLabel(object[0].toString());
 					selectItem.setValue(object[1]);
 					rolecodeRquisitionerList.add(selectItem);
-				}				
-			}else{
+				}
+			} else {
 				Long lngPtjId = null;
-				if(this.getCommonPtj()!=null){
+				if (this.getCommonPtj() != null) {
 					lngPtjId = Long.parseLong(this.getCommonPtj());
-				}			
-				//List<String> ptLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(lngUserId);
-				if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.CON_REQ_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.CON_REQ_RPT_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.PUR_REQ_RPT_PO_VAL)||this.getReportValue().equals(ReportConst.EMR_PROCUR_RPT_PO_VAL))){					
-					List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(lngUserId,ReportConst.ROLE_CODE_REQUISITIONER,lngPtjId);			
+				}
+				// List<String> ptLst =
+				// reportSO.retrieveUserListByAdminOrBKPRoleCode(lngUserId);
+				if ((this.getReportValue() != null)
+						&& (this.getReportValue().equals(
+								ReportConst.CON_REQ_RPT_MIN_VAL)
+								|| this.getReportValue().equals(
+										ReportConst.CON_REQ_RPT_CEN_PEN_VAL)
+								|| this.getReportValue().equals(
+										ReportConst.PUR_REQ_RPT_PO_VAL) || this
+								.getReportValue().equals(
+										ReportConst.EMR_PROCUR_RPT_PO_VAL))) {
+					List<Object[]> rlcdLst = reportSO
+							.retrieveUserListByAdminOrBKPRoleCode(lngUserId,
+									ReportConst.ROLE_CODE_REQUISITIONER,
+									lngPtjId);
 					for (Object[] object : rlcdLst) {
 						SelectItem selectItem = new SelectItem();
 						selectItem.setLabel(object[0].toString());
 						selectItem.setValue(object[1]);
 						rolecodeRquisitionerList.add(selectItem);
 					}
-				}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.FL_REC_NOTE_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.FL_REC_NOTE_RPT_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.LATE_DEL_RPT_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.LATE_DEL_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.FL_REC_NOTE_RPT_PO_VAL))){
-					List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(lngUserId,ReportConst.ROLE_CODE_RECEIVING_OFFICER,lngPtjId);			
+				} else if ((this.getReportValue() != null)
+						&& (this.getReportValue().equals(
+								ReportConst.FL_REC_NOTE_RPT_MIN_VAL)
+								|| this.getReportValue()
+										.equals(ReportConst.FL_REC_NOTE_RPT_CEN_PEN_VAL)
+								|| this.getReportValue().equals(
+										ReportConst.LATE_DEL_RPT_CEN_PEN_VAL)
+								|| this.getReportValue().equals(
+										ReportConst.LATE_DEL_RPT_MIN_VAL) || this
+								.getReportValue().equals(
+										ReportConst.FL_REC_NOTE_RPT_PO_VAL))) {
+					List<Object[]> rlcdLst = reportSO
+							.retrieveUserListByAdminOrBKPRoleCode(lngUserId,
+									ReportConst.ROLE_CODE_RECEIVING_OFFICER,
+									lngPtjId);
 					for (Object[] object : rlcdLst) {
 						SelectItem selectItem = new SelectItem();
 						selectItem.setLabel(object[0].toString());
 						selectItem.setValue(object[1]);
 						rolecodeRecievingOfficerList.add(selectItem);
 					}
-				}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.CON_ORD_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.CON_ORD_RPT_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.PUR_ORD_RPT_PO_VAL))){
-					List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(lngUserId,ReportConst.ROLE_CODE_FL_APPROVER,lngPtjId);			
+				} else if ((this.getReportValue() != null)
+						&& (this.getReportValue().equals(
+								ReportConst.CON_ORD_RPT_MIN_VAL)
+								|| this.getReportValue().equals(
+										ReportConst.CON_ORD_RPT_CEN_PEN_VAL) || this
+								.getReportValue().equals(
+										ReportConst.PUR_ORD_RPT_PO_VAL))) {
+					List<Object[]> rlcdLst = reportSO
+							.retrieveUserListByAdminOrBKPRoleCode(lngUserId,
+									ReportConst.ROLE_CODE_FL_APPROVER, lngPtjId);
 					for (Object[] object : rlcdLst) {
 						SelectItem selectItem = new SelectItem();
 						selectItem.setLabel(object[0].toString());
@@ -7270,24 +7851,37 @@ public class ReportBackingBean extends
 					}
 				}
 			}
-			if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_APPROVER)||highRoleCodeList.contains(ReportConst.ROLE_CODE_CT_APPROVER)||highRoleCodeList.contains(ReportConst.ROLE_CODE_RN_APPROVER))){
-				List<Object[]> rlcdLst = reportSO.retrieveUserListByREQUISITIONER(lngUserId,highRoleCodeList.get(0));			
+			if ((highRoleCodeList != null)
+					&& (highRoleCodeList
+							.contains(ReportConst.ROLE_CODE_APPROVER)
+							|| highRoleCodeList
+									.contains(ReportConst.ROLE_CODE_CT_APPROVER) || highRoleCodeList
+								.contains(ReportConst.ROLE_CODE_RN_APPROVER))) {
+				List<Object[]> rlcdLst = reportSO
+						.retrieveUserListByREQUISITIONER(lngUserId,
+								highRoleCodeList.get(0));
 				for (Object[] object : rlcdLst) {
 					SelectItem selectItem = new SelectItem();
 					selectItem.setLabel(object[0].toString());
 					selectItem.setValue(object[1]);
 					rolecodeApproverList.add(selectItem);
-				}				
+				}
 			}
-			if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_RECEIVING_OFFICER))){
-				List<Object[]> recoffLst = reportSO.retrieveUserListByREQUISITIONER(lngUserId,ReportConst.ROLE_CODE_RECEIVING_OFFICER);			
+			if ((highRoleCodeList != null)
+					&& (highRoleCodeList
+							.contains(ReportConst.ROLE_CODE_RECEIVING_OFFICER))) {
+				List<Object[]> recoffLst = reportSO
+						.retrieveUserListByREQUISITIONER(lngUserId,
+								ReportConst.ROLE_CODE_RECEIVING_OFFICER);
 				for (Object[] object : recoffLst) {
 					SelectItem selectItem = new SelectItem();
 					selectItem.setLabel(object[0].toString());
 					selectItem.setValue(object[1]);
 					rolecodeRecievingOfficerList.add(selectItem);
 				}
-				List<Object[]> rlcdLst = reportSO.retrieveUserListByREQUISITIONER(lngUserId,ReportConst.ROLE_CODE_REQUISITIONER);			
+				List<Object[]> rlcdLst = reportSO
+						.retrieveUserListByREQUISITIONER(lngUserId,
+								ReportConst.ROLE_CODE_REQUISITIONER);
 				for (Object[] object : rlcdLst) {
 					SelectItem selectItem = new SelectItem();
 					selectItem.setLabel(object[0].toString());
@@ -7297,92 +7891,170 @@ public class ReportBackingBean extends
 			}
 		}
 	}
-	
+
 	/**
 	 * Retrieve all role codes by user.
-	 *
+	 * 
 	 * @return the list
 	 */
-	public List<String> retrieveAllRoleCodesByUser(){
+	public List<String> retrieveAllRoleCodesByUser() {
 		allRoleCodesList = new ArrayList<String>();
-        if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-									IPMReportSO.class);
-					List<String> roleCodesLst = reportSO.retrieveAllRoleCodesByUser(lngUserId);			
-					for (int i = 0; i < roleCodesLst.size(); i++) {
-						allRoleCodesList.add(roleCodesLst.get(i));
-					}        	    
-        }
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<String> roleCodesLst = reportSO
+					.retrieveAllRoleCodesByUser(lngUserId);
+			for (int i = 0; i < roleCodesLst.size(); i++) {
+				allRoleCodesList.add(roleCodesLst.get(i));
+			}
+		}
 		return allRoleCodesList;
 	}
-	
+
 	/**
 	 * Zone by rolecode.
 	 */
-	public void  zoneByRolecode(){
-		if ((this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT))) {
+	public void zoneByRolecode() {
+		if ((this.getModuleValue()
+				.equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT))) {
 			getManagedBean().getRptGenBean().setSmZoneLabelView(false);
 			getManagedBean().getRptGenBean().setSmZoneView(false);
 			getManagedBean().getRptGenBean().setSmMandatoryZoneView(false);
-			if((null!=this.getReportValue())&&(this.getReportValue().equals(ReportConst.SM_REG_COMPANY_IN_MOF_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_SUPPL_STAT_BY_CATEGORY_RPT_VAL)
-					||this.getReportValue().equals(ReportConst.SM_SUPPL_STAT_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_QUESTIONAIRE_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_REG_COMPANY_IN_MOF_DET_RPT_VAL)
-					||this.getReportValue().equals(ReportConst.SM_REG_COMPANY_IN_MOF_PROJ_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_REG_COMPANY_IN_MOF_CONT_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_REG_COMPANY_IN_MOF_DET_CONT_RPT_VAL)
-					||this.getReportValue().equals(ReportConst.SM_REG_COMPANY_IN_MOF_PROJ_CONT_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_QUESTIONNAIRE_RESPONSE_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_SITE_VISIT_APPL_REQUIRE_RPT_VAL)
-					||this.getReportValue().equals(ReportConst.SM_SITE_VISIT_APPL_OFFICER_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_SITE_VISIT_APPL_PERFORMED_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_APPLICATION_RPT_VAL)
-					||this.getReportValue().equals(ReportConst.SM_LIST_OFFLINE_SUPP_DOC_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)
-					||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_STATISTICS_COMPANYTYPE_CAP_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_MOF_CANCELLATION_RPT_VAL)
-					||this.getReportValue().equals(ReportConst.SM_BPK_USER_PROFILE_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_BPK_ADMIN_PROFILE_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_DELETE_PENDING_APPL)
-                    ||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK)||this.getReportValue().equals(ReportConst.SM_THRESHOLD)||this.getReportValue().equals(ReportConst.SM_LST_MONTH_WISE_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_GST_RGSTRD_SUPPLIER))){				
-			
-				if((allRoleCodesList!=null)&&(allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_PO)||allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_APPROVER)||allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_ADMIN)||allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_SVO)||allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_SVC)||allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_SDO))){
-					//if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK))){				
-						this.setSmZone(this.getStringZone());
-						getManagedBean().getRptGenBean().setSmZoneLabelView(true);
-					//}
-					
-				}else if((allRoleCodesList!=null)&&(allRoleCodesList.contains(ReportConst.ROLE_CODE_MOF_SUPPLIER_ADMIN)||allRoleCodesList.contains(ReportConst.ROLE_CODE_MOF_SUPPLIER_USER)||allRoleCodesList.contains(ReportConst.ROLE_CODE_BASIC_SUPPLIER_USER)||allRoleCodesList.contains(ReportConst.ROLE_CODE_BASIC_SUPPLIER_ADMIN))){
-					if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SM_APPL_CLIENT_CHARTER_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_DIR_OWN_CEO_COMPANY_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK))){
+			if ((null != this.getReportValue())
+					&& (this.getReportValue().equals(
+							ReportConst.SM_REG_COMPANY_IN_MOF_RPT_VAL)
+							|| this.getReportValue()
+									.equals(ReportConst.SM_SUPPL_STAT_BY_CATEGORY_RPT_VAL)
+							|| this.getReportValue().equals(
+									ReportConst.SM_SUPPL_STAT_RPT_VAL)
+							|| this.getReportValue().equals(
+									ReportConst.SM_QUESTIONAIRE_RPT_VAL)
+							|| this.getReportValue()
+									.equals(ReportConst.SM_REG_COMPANY_IN_MOF_DET_RPT_VAL)
+							|| this.getReportValue()
+									.equals(ReportConst.SM_REG_COMPANY_IN_MOF_PROJ_RPT_VAL)
+							|| this.getReportValue()
+									.equals(ReportConst.SM_REG_COMPANY_IN_MOF_CONT_RPT_VAL)
+							|| this.getReportValue()
+									.equals(ReportConst.SM_REG_COMPANY_IN_MOF_DET_CONT_RPT_VAL)
+							|| this.getReportValue()
+									.equals(ReportConst.SM_REG_COMPANY_IN_MOF_PROJ_CONT_RPT_VAL)
+							|| this.getReportValue()
+									.equals(ReportConst.SM_QUESTIONNAIRE_RESPONSE_RPT_VAL)
+							|| this.getReportValue()
+									.equals(ReportConst.SM_SITE_VISIT_APPL_REQUIRE_RPT_VAL)
+							|| this.getReportValue()
+									.equals(ReportConst.SM_SITE_VISIT_APPL_OFFICER_RPT_VAL)
+							|| this.getReportValue()
+									.equals(ReportConst.SM_SITE_VISIT_APPL_PERFORMED_RPT_VAL)
+							|| this.getReportValue().equals(
+									ReportConst.SM_LIST_OF_APPLICATION_RPT_VAL)
+							|| this.getReportValue()
+									.equals(ReportConst.SM_LIST_OFFLINE_SUPP_DOC_RPT_VAL)
+							|| this.getReportValue()
+									.equals(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL)
+							|| this.getReportValue()
+									.equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)
+							|| this.getReportValue()
+									.equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)
+							|| this.getReportValue()
+									.equals(ReportConst.SM_STATISTICS_COMPANYTYPE_CAP_RPT_VAL)
+							|| this.getReportValue()
+									.equals(ReportConst.SM_LIST_OF_MOF_CANCELLATION_RPT_VAL)
+							|| this.getReportValue().equals(
+									ReportConst.SM_BPK_USER_PROFILE_RPT_VAL)
+							|| this.getReportValue().equals(
+									ReportConst.SM_BPK_ADMIN_PROFILE_RPT_VAL)
+							|| this.getReportValue().equals(
+									ReportConst.SM_DELETE_PENDING_APPL)
+							|| this.getReportValue().equals(
+									ReportConst.SM_PERSON_BRANCH_BANK)
+							|| this.getReportValue().equals(
+									ReportConst.SM_THRESHOLD)
+							|| this.getReportValue().equals(
+									ReportConst.SM_LST_MONTH_WISE_RPT_VAL) || this
+							.getReportValue().equals(
+									ReportConst.SM_LIST_OF_GST_RGSTRD_SUPPLIER))) {
+
+				if ((allRoleCodesList != null)
+						&& (allRoleCodesList
+								.contains(ReportConst.ROLE_CODE_UPS_PO)
+								|| allRoleCodesList
+										.contains(ReportConst.ROLE_CODE_UPS_APPROVER)
+								|| allRoleCodesList
+										.contains(ReportConst.ROLE_CODE_UPS_ADMIN)
+								|| allRoleCodesList
+										.contains(ReportConst.ROLE_CODE_UPS_SVO)
+								|| allRoleCodesList
+										.contains(ReportConst.ROLE_CODE_UPS_SVC) || allRoleCodesList
+									.contains(ReportConst.ROLE_CODE_UPS_SDO))) {
+					// if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK))){
+					this.setSmZone(this.getStringZone());
+					getManagedBean().getRptGenBean().setSmZoneLabelView(true);
+					// }
+
+				} else if ((allRoleCodesList != null)
+						&& (allRoleCodesList
+								.contains(ReportConst.ROLE_CODE_MOF_SUPPLIER_ADMIN)
+								|| allRoleCodesList
+										.contains(ReportConst.ROLE_CODE_MOF_SUPPLIER_USER)
+								|| allRoleCodesList
+										.contains(ReportConst.ROLE_CODE_BASIC_SUPPLIER_USER) || allRoleCodesList
+									.contains(ReportConst.ROLE_CODE_BASIC_SUPPLIER_ADMIN))) {
+					if ((this.getReportValue() != null)
+							&& (this.getReportValue().equals(
+									ReportConst.SM_APPL_CLIENT_CHARTER_RPT_VAL)
+									|| this.getReportValue()
+											.equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)
+									|| this.getReportValue()
+											.equals(ReportConst.SM_LIST_OF_DIR_OWN_CEO_COMPANY_RPT_VAL)
+									|| this.getReportValue()
+											.equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL) || this
+									.getReportValue().equals(
+											ReportConst.SM_PERSON_BRANCH_BANK))) {
 						rptGenBean.setSmMandatorySupplierTypeView(false);
 						rptGenBean.setSmSupplierTypeView(false);
 					}
-				}else {
-					//if((allRoleCodesList!=null)&&(allRoleCodesList.contains(ReportConst.ROLE_CODE_EP_ADMIN)||allRoleCodesList.contains(ReportConst.ROLE_CODE_PTJ_ADMIN))){
-					//if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK))){				
+				} else {
+					// if((allRoleCodesList!=null)&&(allRoleCodesList.contains(ReportConst.ROLE_CODE_EP_ADMIN)||allRoleCodesList.contains(ReportConst.ROLE_CODE_PTJ_ADMIN))){
+					// if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK))){
 					getManagedBean().getRptGenBean().setSmZoneView(true);
-					getManagedBean().getRptGenBean().setSmMandatoryZoneView(true);
-				//}
-				
+					getManagedBean().getRptGenBean().setSmMandatoryZoneView(
+							true);
+					// }
+
+				}
 			}
-			}	
 		}
 	}
-	
+
 	/**
 	 * Retrieve param code by user.
-	 *
+	 * 
 	 * @return the list
 	 */
-	public List<String> retrieveParamCodeByUser(){
+	public List<String> retrieveParamCodeByUser() {
 		paramList = new ArrayList<String>();
-        if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-									IPMReportSO.class);
-					List<String> ptLst = reportSO.retrieveParamCodeByUser(lngUserId);			
-					for (int i = 0; i < ptLst.size(); i++) {
-						paramList.add(ptLst.get(i));
-					}        	    
-        }
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<String> ptLst = reportSO.retrieveParamCodeByUser(lngUserId);
+			for (int i = 0; i < ptLst.size(); i++) {
+				paramList.add(ptLst.get(i));
+			}
+		}
 		return paramList;
 	}
-	
+
 	/**
 	 * Assign new company experience.
-	 *
-	 * @param catList the cat list
+	 * 
+	 * @param catList
+	 *            the cat list
 	 */
-	public void assignNewCompanyExperience(List<SmSupplierCategory> catList) {		
+	public void assignNewCompanyExperience(List<SmSupplierCategory> catList) {
 		if (catList == null) {
 			catList = new ArrayList<SmSupplierCategory>();
 		}
@@ -7420,13 +8092,14 @@ public class ReportBackingBean extends
 
 	/**
 	 * Retrieve parent category list for experience page.
-	 *
+	 * 
 	 * @return the list
 	 */
 	public static List<PmCategoryL1> retrieveParentCategoryListForExperiencePage() {
-		//CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();		
+		// CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
-				.getInstance().getServiceObject(ReportConst.PM_MODULE_SER_OBJ, ICategoryCodeSO.class);
+				.getInstance().getServiceObject(ReportConst.PM_MODULE_SER_OBJ,
+						ICategoryCodeSO.class);
 		CategoryCodeResDTO catCodeResDTO = reqSO.retrieveCategoryL1List();
 		if (catCodeResDTO != null) {
 			return catCodeResDTO.getCategoryL1List();
@@ -7434,7 +8107,7 @@ public class ReportBackingBean extends
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Select all.
 	 */
@@ -7447,11 +8120,12 @@ public class ReportBackingBean extends
 			this.setSelectedCatList(null);
 		}
 	}
-	
+
 	/**
 	 * Selected.
-	 *
-	 * @param index the index
+	 * 
+	 * @param index
+	 *            the index
 	 */
 	public void selected(int index) {
 		List<SmSupplierCategory> selectedCatsList = this.getSelectedCatList();
@@ -7468,7 +8142,7 @@ public class ReportBackingBean extends
 		}
 		this.setSelectedCatList(selectedCatsList);
 	}
-	
+
 	/**
 	 * Select all company experince categories.
 	 */
@@ -7481,11 +8155,12 @@ public class ReportBackingBean extends
 			this.setSelectedCatList(null);
 		}
 	}
-	
+
 	/**
 	 * Selected company experince category.
-	 *
-	 * @param index the index
+	 * 
+	 * @param index
+	 *            the index
 	 */
 	public void selectedCompanyExperinceCategory(int index) {
 		List<SmSupplierCategory> selectedCatsList = this.getSelectedCatList();
@@ -7504,10 +8179,13 @@ public class ReportBackingBean extends
 
 	/**
 	 * Populate experience child category by parent.
-	 *
-	 * @param parentId the parent id
-	 * @param catL2 the cat l2
-	 * @param catL3 the cat l3
+	 * 
+	 * @param parentId
+	 *            the parent id
+	 * @param catL2
+	 *            the cat l2
+	 * @param catL3
+	 *            the cat l3
 	 */
 	public void populateExperienceChildCategoryByParent(long parentId,
 			PmCategoryL2 catL2, PmCategoryL3 catL3) {
@@ -7522,32 +8200,34 @@ public class ReportBackingBean extends
 
 	/**
 	 * Retrieve experience child category list.
-	 *
-	 * @param categoryL1Id the category l1 id
+	 * 
+	 * @param categoryL1Id
+	 *            the category l1 id
 	 * @return the list
 	 */
 	public static List<PmCategoryL2> retrieveExperienceChildCategoryList(
 			long categoryL1Id) {
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
-				.getInstance().getServiceObject(ReportConst.PM_MODULE_SER_OBJ, ICategoryCodeSO.class);
+				.getInstance().getServiceObject(ReportConst.PM_MODULE_SER_OBJ,
+						ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setCategoryL1Id(categoryL1Id);
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL2ListByL1Id(reqDTO);
 		return resDTO.getCategoryL2List();
 	}
-	
+
 	/**
 	 * Retrieve report list by authorization.
-	 *
+	 * 
 	 * @return the list
 	 */
-	public List<SelectItem>  retrieveReportListByAuthorization() {
+	public List<SelectItem> retrieveReportListByAuthorization() {
 		reportList = new ArrayList<SelectItem>();
 		rptGenBean = new ReportsGenerateBean();
-		this.setReportValue(null);		
+		this.setReportValue(null);
 		this.setReportName(null);
-		setRoleCode(null);		
-		getManagedBean().setReportList(new ArrayList<SelectItem>());		
+		setRoleCode(null);
+		getManagedBean().setReportList(new ArrayList<SelectItem>());
 		rptGenBean = new ReportsGenerateBean();
 		getManagedBean().setRptGenBean(rptGenBean);
 		resetReportForm();
@@ -7555,209 +8235,240 @@ public class ReportBackingBean extends
 		this.setReportCategory(null);
 		this.setReportValue(null);
 		List<Object[]> reportModList = null;
-		/*String language = ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		//String language = "ms";
-*/		reportList = new ArrayList<SelectItem>();
-		if (null != new FacesScopes().getUserSessionBean().getUserId()) {			
-					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
-					if((this.getModuleValue()!=null)&&(this.getModuleValue().equalsIgnoreCase(ReportConst.FL_MOD_VAL))){
-						rptGenBean.setReportCategoryView(true);
-						retrieveSubModuleReportCategoryList(strLanguage);
-					}else{						
-						if((strLanguage!=null)&&(strLanguage.equalsIgnoreCase(ReportConst.ENG_LANG))){
-							reportModList = reportSO.retrieveReportListByModuleNUserAuthorization(lngUserId,this.getModuleValue());
-						}else if((strLanguage!=null)&&(strLanguage.equalsIgnoreCase(ReportConst.MALAY_LANG))){
-							reportModList = reportSO.retrieveMalayReportListByModuleNUserAuthorization(lngUserId,this.getModuleValue());
-						}
-						for (Object[] object : reportModList) {
-							SelectItem selectItem = new SelectItem();
-							selectItem.setLabel(object[0].toString());
-							selectItem.setValue(object[1].toString());
-							reportList.add(selectItem);
-						}
-					}					
+		/*
+		 * String language =
+		 * ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG,
+		 * ResourceBundleUtils.BUNDLE_COMMON_LABELS, new
+		 * FacesScopes().getUserLocale()); //String language = "ms";
+		 */reportList = new ArrayList<SelectItem>();
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			if ((this.getModuleValue() != null)
+					&& (this.getModuleValue()
+							.equalsIgnoreCase(ReportConst.FL_MOD_VAL))) {
+				rptGenBean.setReportCategoryView(true);
+				retrieveSubModuleReportCategoryList(strLanguage);
+			} else {
+				if ((strLanguage != null)
+						&& (strLanguage.equalsIgnoreCase(ReportConst.ENG_LANG))) {
+					reportModList = reportSO
+							.retrieveReportListByModuleNUserAuthorization(
+									lngUserId, this.getModuleValue());
+				} else if ((strLanguage != null)
+						&& (strLanguage
+								.equalsIgnoreCase(ReportConst.MALAY_LANG))) {
+					reportModList = reportSO
+							.retrieveMalayReportListByModuleNUserAuthorization(
+									lngUserId, this.getModuleValue());
 				}
-				return reportList;	
+				for (Object[] object : reportModList) {
+					SelectItem selectItem = new SelectItem();
+					selectItem.setLabel(object[0].toString());
+					selectItem.setValue(object[1].toString());
+					reportList.add(selectItem);
+				}
 			}
-	
+		}
+		return reportList;
+	}
+
 	/**
 	 * Retrieve sub module report category list.
-	 *
-	 * @param language the language
+	 * 
+	 * @param language
+	 *            the language
 	 * @return the list
 	 */
-	public List<SelectItem>  retrieveSubModuleReportCategoryList(String language) {
-		reportList = new ArrayList<SelectItem>();	
-		reportCategoryList = new ArrayList<SelectItem>();	
+	public List<SelectItem> retrieveSubModuleReportCategoryList(String language) {
+		reportList = new ArrayList<SelectItem>();
+		reportCategoryList = new ArrayList<SelectItem>();
 		this.setReportName(null);
-		setRoleCode(null);		
-		getManagedBean().setReportList(new ArrayList<SelectItem>());		
-		resetReportForm();
-		this.setReportValue(null);		
-		if (null != new FacesScopes().getUserSessionBean().getUserId()) {			
-					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-									IPMReportSO.class);
-					List<Object[]> reportCatList = reportSO.retrieveSubModuleReportCategoryList(language,this.getModuleValue(), lngUserId);
-					/*for (int i = 0; i < reportCatList.size(); i++) {
-						reportCategoryList.add(reportCatList.get(i));
-					}*/
-					for (Object[] object : reportCatList) {					
-						SelectItem selectItem = new SelectItem();
-						selectItem.setLabel(object[0].toString());
-						selectItem.setValue(object[1].toString());						
-						reportCategoryList.add(selectItem);
-					}
-				}
-				return reportCategoryList;	
-		}
-		
-		/**
-		 * Retrieve simple quote no.
-		 *
-		 * @return the list
-		 */
-		public List<String>  retrieveSimpleQuoteNo() {			
-			simpleQuoteNoList = new ArrayList<String>();					
-			if (null != new FacesScopes().getUserSessionBean().getUserId()) {			
-						IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-								.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-										IPMReportSO.class);
-						List<String> smplQtNoList = reportSO.retrieveSimpleQuoteNo(this.getScProcessRptQuotationNo());
-						if(smplQtNoList.size()>0){
-							for (int i = 0; i < smplQtNoList.size(); i++) {
-								simpleQuoteNoList.add(smplQtNoList.get(i));
-							}
-						}else{
-							this.setScProcessRptQuotationNo(null);
-							throw new EpException(MessageConst.ERROR_REPORT_780021);
-						}
-					}
-					return simpleQuoteNoList;	
-			}
-	
-	/**
-	 * Retrieve report list by sub module.
-	 *
-	 * @return the list
-	 */
-	public List<SelectItem>  retrieveReportListBySubModule() {
-		reportList = new ArrayList<SelectItem>();			
-		this.setReportName(null);
-		setRoleCode(null);		
-		getManagedBean().setReportList(new ArrayList<SelectItem>());		
+		setRoleCode(null);
+		getManagedBean().setReportList(new ArrayList<SelectItem>());
 		resetReportForm();
 		this.setReportValue(null);
-		if(rptGenBean.isReportCategoryView()==true||(this.getModuleValue()
-				.equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT)&&this.getReportCategory()!=null)){
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<Object[]> reportCatList = reportSO
+					.retrieveSubModuleReportCategoryList(language,
+							this.getModuleValue(), lngUserId);
+			/*
+			 * for (int i = 0; i < reportCatList.size(); i++) {
+			 * reportCategoryList.add(reportCatList.get(i)); }
+			 */
+			for (Object[] object : reportCatList) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setLabel(object[0].toString());
+				selectItem.setValue(object[1].toString());
+				reportCategoryList.add(selectItem);
+			}
+		}
+		return reportCategoryList;
+	}
+
+	/**
+	 * Retrieve simple quote no.
+	 * 
+	 * @return the list
+	 */
+	public List<String> retrieveSimpleQuoteNo() {
+		simpleQuoteNoList = new ArrayList<String>();
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<String> smplQtNoList = reportSO.retrieveSimpleQuoteNo(this
+					.getScProcessRptQuotationNo());
+			if (smplQtNoList.size() > 0) {
+				for (int i = 0; i < smplQtNoList.size(); i++) {
+					simpleQuoteNoList.add(smplQtNoList.get(i));
+				}
+			} else {
+				this.setScProcessRptQuotationNo(null);
+				throw new EpException(MessageConst.ERROR_REPORT_780021);
+			}
+		}
+		return simpleQuoteNoList;
+	}
+
+	/**
+	 * Retrieve report list by sub module.
+	 * 
+	 * @return the list
+	 */
+	public List<SelectItem> retrieveReportListBySubModule() {
+		reportList = new ArrayList<SelectItem>();
+		this.setReportName(null);
+		setRoleCode(null);
+		getManagedBean().setReportList(new ArrayList<SelectItem>());
+		resetReportForm();
+		this.setReportValue(null);
+		if (rptGenBean.isReportCategoryView() == true
+				|| (this.getModuleValue().equalsIgnoreCase(
+						ModuleCodeConst.ORDER_FULFILLMENT) && this
+						.getReportCategory() != null)) {
 			rptGenBean = new ReportsGenerateBean();
 			rptGenBean.setReportCategoryView(true);
-			//this.setReportCategoryView(true);
-		}else{
-		rptGenBean = new ReportsGenerateBean();
-		//rptGenBean.setReportCategoryView(this.isReportCategoryView());
+			// this.setReportCategoryView(true);
+		} else {
+			rptGenBean = new ReportsGenerateBean();
+			// rptGenBean.setReportCategoryView(this.isReportCategoryView());
 		}
 		getManagedBean().setRptGenBean(null);
 		this.setSubModule(null);
 		this.setReportName(ReportConst.EMPTY_VAL);
 		getManagedBean().setRptGenBean(rptGenBean);
 		resetReportForm();
-		/*String language = ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG, 
-			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		//String language = "ms";*/
+		/*
+		 * String language =
+		 * ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG,
+		 * ResourceBundleUtils.BUNDLE_COMMON_LABELS, new
+		 * FacesScopes().getUserLocale()); //String language = "ms";
+		 */
 		List<Object[]> reportModList = null;
-		if (null != new FacesScopes().getUserSessionBean().getUserId()) {			
-					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-									IPMReportSO.class);
-					if((strLanguage!=null)&&(strLanguage.equalsIgnoreCase(ReportConst.ENG_LANG))){
-						reportModList = reportSO.retrieveReportListBySubModule(this.getModuleValue(),this.getReportCategory(),lngUserId);
-					}else if((strLanguage!=null)&&(strLanguage.equalsIgnoreCase(ReportConst.MALAY_LANG))){
-						reportModList = reportSO.retrieveMalayReportListBySubModule(this.getModuleValue(),this.getReportCategory(),lngUserId);
-					}
-					//List<Object[]> reportModList = reportSO.retrieveReportListBySubModule(this.getModuleValue(),this.getReportCategory(),lngUserId);
-					for (Object[] object : reportModList) {
-						SelectItem selectItem = new SelectItem();
-						selectItem.setLabel(object[0].toString());
-						selectItem.setValue(object[1].toString());
-						reportList.add(selectItem);
-					}
-				}
-				return reportList;	
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			if ((strLanguage != null)
+					&& (strLanguage.equalsIgnoreCase(ReportConst.ENG_LANG))) {
+				reportModList = reportSO.retrieveReportListBySubModule(
+						this.getModuleValue(), this.getReportCategory(),
+						lngUserId);
+			} else if ((strLanguage != null)
+					&& (strLanguage.equalsIgnoreCase(ReportConst.MALAY_LANG))) {
+				reportModList = reportSO.retrieveMalayReportListBySubModule(
+						this.getModuleValue(), this.getReportCategory(),
+						lngUserId);
+			}
+			// List<Object[]> reportModList =
+			// reportSO.retrieveReportListBySubModule(this.getModuleValue(),this.getReportCategory(),lngUserId);
+			for (Object[] object : reportModList) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setLabel(object[0].toString());
+				selectItem.setValue(object[1].toString());
+				reportList.add(selectItem);
+			}
 		}
-	
-    /**
-     * Gets the report idlist.
-     *
-     * @return the report idlist
-     */
-    public void getReportIdlist() {
-    	rptGenBean = new ReportsGenerateBean();
-		this.setReportValue(null);
-    	String paramModule = null;
-    	items = null; 
-    	if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-	    	if ((this.getModuleValue()) != null){
-	    		paramModule="REP";
-	    	}
-	    	items=super.getRadioButtonCodeValuesBySearchBean(paramModule,this.getReportSearchBean());
-	    	processItemsByModule(items);	    	
-    	}
+		return reportList;
 	}
-    /*public void getAllModulelist() {
-    	rptGenBean = new ReportsGenerateBean();
-		this.setReportValue(null);
-    	String paramModule = null;
-    	items = null; 
-    	if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-	    	if ((this.getModuleValue()) != null){
-	    		paramModule="MOD";
-	    	}
-	    	items=super.getRadioButtonCodeValuesBySearchBean(paramModule,this.getReportSearchBean());
-	    	//processItemsByModule(items);	    	
-    	}
-	}*/
+
 	/**
-     * Process items by module.
-     *
-     * @param items the items
-     */
-    private void processItemsByModule(SelectItem[] items) {
-		Map<String,List<SelectItem>> localModuleItemMap=new HashMap<String,List<SelectItem>>();
-		if(null!=items){
-			for(SelectItem item:items){
-				String[] moduleItemArr= (String[])((String)item.getValue()).split(ReportConst.UNDERSCORE);
-				if(localModuleItemMap.keySet().contains(moduleItemArr[0])){
-					//code for contains
+	 * Gets the report idlist.
+	 * 
+	 * @return the report idlist
+	 */
+	public void getReportIdlist() {
+		rptGenBean = new ReportsGenerateBean();
+		this.setReportValue(null);
+		String paramModule = null;
+		items = null;
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			if ((this.getModuleValue()) != null) {
+				paramModule = "REP";
+			}
+			items = super.getRadioButtonCodeValuesBySearchBean(paramModule,
+					this.getReportSearchBean());
+			processItemsByModule(items);
+		}
+	}
+
+	/*
+	 * public void getAllModulelist() { rptGenBean = new ReportsGenerateBean();
+	 * this.setReportValue(null); String paramModule = null; items = null; if
+	 * (null != new FacesScopes().getUserSessionBean().getUserId()) { if
+	 * ((this.getModuleValue()) != null){ paramModule="MOD"; }
+	 * items=super.getRadioButtonCodeValuesBySearchBean
+	 * (paramModule,this.getReportSearchBean()); //processItemsByModule(items);
+	 * } }
+	 */
+	/**
+	 * Process items by module.
+	 * 
+	 * @param items
+	 *            the items
+	 */
+	private void processItemsByModule(SelectItem[] items) {
+		Map<String, List<SelectItem>> localModuleItemMap = new HashMap<String, List<SelectItem>>();
+		if (null != items) {
+			for (SelectItem item : items) {
+				String[] moduleItemArr = (String[]) ((String) item.getValue())
+						.split(ReportConst.UNDERSCORE);
+				if (localModuleItemMap.keySet().contains(moduleItemArr[0])) {
+					// code for contains
 					localModuleItemMap.get(moduleItemArr[0]).add(item);
 				} else {
-					//not contains
-					List<SelectItem> moduleItems=new ArrayList<SelectItem>();
+					// not contains
+					List<SelectItem> moduleItems = new ArrayList<SelectItem>();
 					moduleItems.add(item);
 					localModuleItemMap.put(moduleItemArr[0], moduleItems);
 				}
 			}
 		}
-		this.setReportList(localModuleItemMap.get(this.getModuleValue()));		
-		setModuleItemMap(localModuleItemMap);		
+		this.setReportList(localModuleItemMap.get(this.getModuleValue()));
+		setModuleItemMap(localModuleItemMap);
 	}
 
 	/**
 	 * Gets the report search bean.
-	 *
+	 * 
 	 * @return the report search bean
 	 */
-	public ISearchBean<PmParameterDesc> getReportSearchBean() {		
-		return super.createSearchBean(
-				PmParameterDesc.class, "moduleName");
+	public ISearchBean<PmParameterDesc> getReportSearchBean() {
+		return super.createSearchBean(PmParameterDesc.class, "moduleName");
 	}
-	
+
 	/**
 	 * Populate experience sub child category by child.
-	 *
-	 * @param childId the child id
-	 * @param catL3 the cat l3
+	 * 
+	 * @param childId
+	 *            the child id
+	 * @param catL3
+	 *            the cat l3
 	 */
 	public void populateExperienceSubChildCategoryByChild(long childId,
 			PmCategoryL3 catL3) {
@@ -7772,14 +8483,16 @@ public class ReportBackingBean extends
 
 	/**
 	 * Retrieve experience sub child category list.
-	 *
-	 * @param categoryL2Id the category l2 id
+	 * 
+	 * @param categoryL2Id
+	 *            the category l2 id
 	 * @return the list
 	 */
 	public static List<PmCategoryL3> retrieveExperienceSubChildCategoryList(
 			long categoryL2Id) {
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
-				.getInstance().getServiceObject(ReportConst.PM_MODULE_SER_OBJ, ICategoryCodeSO.class);
+				.getInstance().getServiceObject(ReportConst.PM_MODULE_SER_OBJ,
+						ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setCategoryL2Id(categoryL2Id);
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
@@ -7788,8 +8501,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Check duplicate category for project.
-	 *
-	 * @param newCat the new cat
+	 * 
+	 * @param newCat
+	 *            the new cat
 	 */
 	public void checkDuplicateCategoryForProject(SmSupplierCategory newCat) {
 		for (SmSupplierCategory cat : this.getSelectedCatList()) {
@@ -7825,14 +8539,14 @@ public class ReportBackingBean extends
 	/**
 	 * Delete selected codes.
 	 */
-	public void deleteSelectedCodes() {		
+	public void deleteSelectedCodes() {
 		for (SmSupplierCategory cat : this.getSelectCatDeletionList()) {
 			this.getSelectedCatList().remove(cat);
 		}
-		if ((this.getSelectedCatList().size()>9)) {
+		if ((this.getSelectedCatList().size() > 9)) {
 			this.setEnableValue(true);
-			//throw new EpException(MessageConst.ERROR_REPORT_780010);
-		}else{
+			// throw new EpException(MessageConst.ERROR_REPORT_780010);
+		} else {
 			this.setEnableValue(false);
 		}
 	}
@@ -7840,14 +8554,14 @@ public class ReportBackingBean extends
 	/**
 	 * Assign category for comp experience.
 	 */
-	public void assignCategoryForCompExperience() {		
-		SmSupplierCategory cat = new SmSupplierCategory();		
-		if ((this.getSelectedCatList().size()>8)) {
+	public void assignCategoryForCompExperience() {
+		SmSupplierCategory cat = new SmSupplierCategory();
+		if ((this.getSelectedCatList().size() > 8)) {
 			this.setEnableValue(true);
-			//throw new EpException(MessageConst.ERROR_REPORT_780010);
-		}else{
+			// throw new EpException(MessageConst.ERROR_REPORT_780010);
+		} else {
 			this.setEnableValue(false);
-		}		
+		}
 		cat.setPmCategoryL1(new PmCategoryL1());
 		PmCategoryL2 catL2 = new PmCategoryL2();
 		catL2.setPmCategoryL2s(new ArrayList<PmCategoryL2>());
@@ -7858,15 +8572,16 @@ public class ReportBackingBean extends
 		// cat.setSmCompanyExperience(exp);
 		this.setSupplierParentCatList(retrieveParentCategoryListForExperiencePage());
 		resetChildCatList();
-		assignValReqdToTrue();		
+		assignValReqdToTrue();
 		this.getSelectedCatList().add(cat);
 	}
+
 	/*
 	 * Retrieve module list
 	 */
 	/**
 	 * Retrive module list.
-	 *
+	 * 
 	 * @return the list
 	 */
 	public List<SelectItem> retriveModuleList() {
@@ -7906,13 +8621,16 @@ public class ReportBackingBean extends
 				.getMessageCommon(ReportConst.MOD_PP_TTL));
 		selectItem6.setValue(ReportConst.PP_MOD_VAL);
 		moduleList.add(selectItem6);
-		
-		//getAllModulelist();
+
+		// getAllModulelist();
 		return moduleList;
 	}
 
-	/* (non-Javadoc)
-	 * @see my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean#preRenderView()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean#
+	 * preRenderView()
 	 */
 	public void preRenderView() {
 		rptGenBean = new ReportsGenerateBean();
@@ -7933,44 +8651,46 @@ public class ReportBackingBean extends
 	public void retriveReportListBymoduleName() {
 		reportList = new ArrayList<SelectItem>();
 		rptGenBean = new ReportsGenerateBean();
-		this.setReportValue(null);		
+		this.setReportValue(null);
 		this.setReportName(null);
 		setRoleCode(null);
 		getManagedBean().setReportList(new ArrayList<SelectItem>());
 		getManagedBean().setRptGenBean(rptGenBean);
 		resetReportForm();
-		
-		
+
 		if (this.getModuleValue() != null) {
 			retriveReportListByModule(this.getModuleValue());
 		}
 		getManagedBean().setReportList(reportList);
-		getManagedBean().setRptGenBean(rptGenBean);		
-		retrieveRolecode();		
+		getManagedBean().setRptGenBean(rptGenBean);
+		retrieveRolecode();
 	}
-	
+
 	/**
 	 * Madatory indicator.
 	 */
 	public void madatoryIndicator() {
-		if((null!=this.getReportValue())&&(this.getModuleValue()
-				.equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT))){
+		if ((null != this.getReportValue())
+				&& (this.getModuleValue()
+						.equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT))) {
 			getManagedBean().getRptGenBean().setCmMadatoryIndicatorView(true);
 			getManagedBean().getRptGenBean().setMadatoryIndicatorView(false);
-		}else{
+		} else {
 			getManagedBean().getRptGenBean().setCmMadatoryIndicatorView(false);
 			getManagedBean().getRptGenBean().setMadatoryIndicatorView(true);
 		}
-		if((null!=this.getReportValue())&&(this.getReportValue()
-				.equalsIgnoreCase(ReportConst.SM_LAPORAN_TERIMAAN_HARIAN_RPT_VAL))){			
+		if ((null != this.getReportValue())
+				&& (this.getReportValue()
+						.equalsIgnoreCase(ReportConst.SM_LAPORAN_TERIMAAN_HARIAN_RPT_VAL))) {
 			getManagedBean().getRptGenBean().setMadatoryIndicatorView(false);
 		}
 	}
-	
+
 	/**
 	 * Retrive report list by module.
-	 *
-	 * @param module the module
+	 * 
+	 * @param module
+	 *            the module
 	 * @return the list
 	 */
 	public List<SelectItem> retriveReportListByModule(String module) {
@@ -8009,137 +8729,142 @@ public class ReportBackingBean extends
 		}
 		return reportList;
 	}
-	
+
 	/**
 	 * Retrieve upssvo user.
-	 *
+	 * 
 	 * @return the list
 	 */
-	public List<SelectItem> retrieveUPSSVOUser(){
+	public List<SelectItem> retrieveUPSSVOUser() {
 		smUPSSVOUserList = new ArrayList<SelectItem>();
-        if (null != new FacesScopes().getUserSessionBean().getUserId()) {        	
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
-			List<Object[]> ptLst = reportSO.retrieveUPSSVOUser(lngUserId);			
+			List<Object[]> ptLst = reportSO.retrieveUPSSVOUser(lngUserId);
 			for (Object[] object : ptLst) {
 				SelectItem selectItem = new SelectItem();
 				selectItem.setLabel(object[0].toString());
 				selectItem.setValue(object[1]);
 				smUPSSVOUserList.add(selectItem);
 			}
-        }
+		}
 		return smUPSSVOUserList;
 	}
-	
+
 	/**
 	 * Retrieve ptj s1.
-	 *
+	 * 
 	 * @return the list
 	 */
-	public List<SelectItem> retrievePTJS1(){
+	public List<SelectItem> retrievePTJS1() {
 		scPtjList = new ArrayList<SelectItem>();
-        if (null != new FacesScopes().getUserSessionBean().getUserId()) {        	
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
-			List<Object[]> ptLst = reportSO.retrievePTJS1(lngUserId);			
+			List<Object[]> ptLst = reportSO.retrievePTJS1(lngUserId);
 			for (Object[] object : ptLst) {
 				SelectItem selectItem = new SelectItem();
 				selectItem.setLabel(object[0].toString());
 				selectItem.setValue(object[1]);
 				scPtjList.add(selectItem);
 			}
-        }
+		}
 		return scPtjList;
 	}
-	
+
 	/**
 	 * Retrieve ptj s2.
-	 *
+	 * 
 	 * @return the list
 	 */
-	public List<SelectItem> retrievePTJS2(){
+	public List<SelectItem> retrievePTJS2() {
 		scPtjList = new ArrayList<SelectItem>();
-        if (null != new FacesScopes().getUserSessionBean().getUserId()) {        	
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
-			List<Object[]> ptLst = reportSO.retrievePTJS2(lngUserId);			
+			List<Object[]> ptLst = reportSO.retrievePTJS2(lngUserId);
 			for (Object[] object : ptLst) {
 				SelectItem selectItem = new SelectItem();
 				selectItem.setLabel(object[0].toString());
 				selectItem.setValue(object[1]);
 				scPtjList.add(selectItem);
 			}
-        }
+		}
 		return scPtjList;
 	}
-	
+
 	/**
 	 * Retrieve requisitioner.
-	 *
+	 * 
 	 * @return the list
 	 */
-	public List<SelectItem> retrieveRequisitioner(){
+	public List<SelectItem> retrieveRequisitioner() {
 		scRequisitionerList = new ArrayList<SelectItem>();
-        if (null != new FacesScopes().getUserSessionBean().getUserId()) {        	
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
 			Long orgProfileId = null;
-			if((this.getScPtj() != null) && (this.getScPtj().toString() != ReportConst.EMPTY_VAL)){
+			if ((this.getScPtj() != null)
+					&& (this.getScPtj().toString() != ReportConst.EMPTY_VAL)) {
 				orgProfileId = Long.parseLong(this.getScPtj());
 			}
-			List<Object[]> reqLst = reportSO.retrieveRequisitioner(lngUserId,orgProfileId);			
+			List<Object[]> reqLst = reportSO.retrieveRequisitioner(lngUserId,
+					orgProfileId);
 			for (Object[] object : reqLst) {
 				SelectItem selectItem = new SelectItem();
 				selectItem.setLabel(object[0].toString());
 				selectItem.setValue(object[1]);
 				scRequisitionerList.add(selectItem);
 			}
-        }
+		}
 		return scRequisitionerList;
 	}
-	
+
 	/**
 	 * Retrieve desc officer.
-	 *
+	 * 
 	 * @return the list
 	 */
-	public List<SelectItem> retrieveDescOfficer(){
+	public List<SelectItem> retrieveDescOfficer() {
 		scDescOfficerList = new ArrayList<SelectItem>();
-        if (null != new FacesScopes().getUserSessionBean().getUserId()) {        	
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
 			Long orgProfileId = null;
-			if((this.getScPtj() != null) && (this.getScPtj().toString() != ReportConst.EMPTY_VAL)){
+			if ((this.getScPtj() != null)
+					&& (this.getScPtj().toString() != ReportConst.EMPTY_VAL)) {
 				orgProfileId = Long.parseLong(this.getScPtj());
 			}
-			List<Object[]> reqLst = reportSO.retrieveDeskOfficer(lngUserId,orgProfileId);			
+			List<Object[]> reqLst = reportSO.retrieveDeskOfficer(lngUserId,
+					orgProfileId);
 			for (Object[] object : reqLst) {
 				SelectItem selectItem = new SelectItem();
 				selectItem.setLabel(object[0].toString());
 				selectItem.setValue(object[1]);
 				scDescOfficerList.add(selectItem);
 			}
-        }
+		}
 		return scDescOfficerList;
 	}
-	
+
 	/**
 	 * Retrieve approvar naik taraf dp s1.
-	 *
+	 * 
 	 * @return the list
 	 */
-	public List<SelectItem> retrieveApprovarNaikTarafDPS1(){
+	public List<SelectItem> retrieveApprovarNaikTarafDPS1() {
 		approverNayakTarafList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
-			List<Object[]> aprnktrfLst = reportSO.retrieveApprovarNaikTarafDPS1(lngUserId);
+			List<Object[]> aprnktrfLst = reportSO
+					.retrieveApprovarNaikTarafDPS1(lngUserId);
 			for (Object[] object : aprnktrfLst) {
 				SelectItem selectItem = new SelectItem();
 				selectItem.setLabel(object[0].toString());
@@ -8149,19 +8874,20 @@ public class ReportBackingBean extends
 		}
 		return approverNayakTarafList;
 	}
-	
+
 	/**
 	 * Retrieve approvar naik taraf sc s2.
-	 *
+	 * 
 	 * @return the list
 	 */
-	public List<SelectItem> retrieveApprovarNaikTarafSCS2(){
+	public List<SelectItem> retrieveApprovarNaikTarafSCS2() {
 		approverNayakTarafList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
-			List<Object[]> aprnktrfLst = reportSO.retrieveApprovarNaikTarafSCS2(lngUserId);
+			List<Object[]> aprnktrfLst = reportSO
+					.retrieveApprovarNaikTarafSCS2(lngUserId);
 			for (Object[] object : aprnktrfLst) {
 				SelectItem selectItem = new SelectItem();
 				selectItem.setLabel(object[0].toString());
@@ -8171,22 +8897,24 @@ public class ReportBackingBean extends
 		}
 		return approverNayakTarafList;
 	}
+
 	/*
 	 * Retrieve Role code by User id
 	 */
 	/**
 	 * Retrive userrloe by user id.
-	 *
-	 * @param moduleName the module name
+	 * 
+	 * @param moduleName
+	 *            the module name
 	 * @return the list
 	 */
 	public List<String> retriveUserrloeByUserId(String moduleName) {
 		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
-		if (null != new FacesScopes().getUserSessionBean().getUserId()) {			
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			reqDTO.setUserId(lngUserId);
-			//reqDTO.setUserId((long) 240500);
+			// reqDTO.setUserId((long) 240500);
 			reqDTO.setLanguageCode(ReportConst.ENG_LANG);
 			UserResDTO userResDTO = userSO
 					.retrieveUserRoleDescListByUserId(reqDTO);
@@ -8200,329 +8928,467 @@ public class ReportBackingBean extends
 								.getRoleCode());
 					}
 				}
-			}			
+			}
 		}
 		return authoriztionList;
 	}
-	
+
 	/**
 	 * Retrieve all ministry.
 	 */
-	public void  retrieveAllMinistry() {
+	public void retrieveAllMinistry() {
 		ptjList = new ArrayList<SelectItem>();
 		ministryList = new ArrayList<SelectItem>();
 		retrieveRoleCodeFromParamTable();
-		if(highRoleCodeList!=null){
-			if((paramTableRoleCodeList!=null)&&(paramTableRoleCodeList.contains(highRoleCodeList.get(0)))){
-			//if((highRoleCodeList!=null)&&((highRoleCodeList.contains(RoleCode.BPK_PCA.value())||highRoleCodeList.contains(RoleCode.BPK_CCA.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_USER.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_USER.value()))))  {	
-					 getLtstMinistryList();
-					 getParameterCodeTypeString();
-					 getManagedBean().getRptGenBean().setFlSupplierDropdownView(false);
-					 getManagedBean().getRptGenBean().setFlSupplierTextView(false);
-					 if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))){
-							retrieveSupplierCompName();	
-							if((this.getSupplCompanyList().size()>0)&&(getManagedBean().getRptGenBean().isFlSupplierView())){
-								getManagedBean().getRptGenBean().setFlSupplierDropdownView(true);
-							}else if((this.getSupplCompanyList().size()==0)&&(getManagedBean().getRptGenBean().isFlSupplierView())){
-								getManagedBean().getRptGenBean().setFlSupplierTextView(true);
-							}							
-						}else{
-							if(getManagedBean().getRptGenBean().isFlSupplierView()){
-								getManagedBean().getRptGenBean().setFlSupplierTextView(true);
-							}							
-						}
-					 paramCodeSupplierGroupDropdown(parameterCodeType);		
-			}else{
+		if (highRoleCodeList != null) {
+			if ((paramTableRoleCodeList != null)
+					&& (paramTableRoleCodeList
+							.contains(highRoleCodeList.get(0)))) {
+				// if((highRoleCodeList!=null)&&((highRoleCodeList.contains(RoleCode.BPK_PCA.value())||highRoleCodeList.contains(RoleCode.BPK_CCA.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_USER.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_USER.value()))))
+				// {
+				getLtstMinistryList();
+				getParameterCodeTypeString();
+				getManagedBean().getRptGenBean().setFlSupplierDropdownView(
+						false);
+				getManagedBean().getRptGenBean().setFlSupplierTextView(false);
+				if ((parameterCodeType != null)
+						&& (parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))) {
+					retrieveSupplierCompName();
+					if ((this.getSupplCompanyList().size() > 0)
+							&& (getManagedBean().getRptGenBean()
+									.isFlSupplierView())) {
+						getManagedBean().getRptGenBean()
+								.setFlSupplierDropdownView(true);
+					} else if ((this.getSupplCompanyList().size() == 0)
+							&& (getManagedBean().getRptGenBean()
+									.isFlSupplierView())) {
+						getManagedBean().getRptGenBean().setFlSupplierTextView(
+								true);
+					}
+				} else {
+					if (getManagedBean().getRptGenBean().isFlSupplierView()) {
+						getManagedBean().getRptGenBean().setFlSupplierTextView(
+								true);
+					}
+				}
+				paramCodeSupplierGroupDropdown(parameterCodeType);
+			} else {
 				retrieveParameterCodeType();
 			}
 		}
-		if ((this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.CONTRACT_MANAGEMENT))) {
+		if ((this.getModuleValue()
+				.equalsIgnoreCase(ModuleCodeConst.CONTRACT_MANAGEMENT))) {
 			getManagedBean().getRptGenBean().setCtSupplierTextView(false);
 			getManagedBean().getRptGenBean().setCtSupplierDefaultView(false);
-			getManagedBean().getRptGenBean().setCtGroupFiveWithoutSupplView(false);
+			getManagedBean().getRptGenBean().setCtGroupFiveWithoutSupplView(
+					false);
 			getManagedBean().getRptGenBean().setCtGroupFiveWithSupplView(false);
-			if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.CT_STATEMENT_OF_ORDER_REPORT_CC_PANEL_RPT_VAL))){
+			if ((this.getReportValue() != null)
+					&& (this.getReportValue()
+							.equals(ReportConst.CT_STATEMENT_OF_ORDER_REPORT_CC_PANEL_RPT_VAL))) {
 				getParameterCodeTypeString();
-				 if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))){
-						retrieveSupplierCompName();	
-						if((this.getSupplCompanyList().size()>0)&&(getManagedBean().getRptGenBean().isCtSupplierNameView())){
-							getManagedBean().getRptGenBean().setCtSupplierDefaultView(true);
-						}else if((this.getSupplCompanyList().size()==0)&&(getManagedBean().getRptGenBean().isFlSupplierView())){
-							getManagedBean().getRptGenBean().setCtSupplierTextView(true);
-						}
-						if(getManagedBean().getRptGenBean().isCtGroupFiveView()){
-							getManagedBean().getRptGenBean().setCtGroupFiveWithoutSupplView(true);
-						}
-					}else{
-						if(getManagedBean().getRptGenBean().isCtSupplierNameView()){
-							getManagedBean().getRptGenBean().setCtSupplierTextView(true);
-						}
-						if(getManagedBean().getRptGenBean().isCtGroupFiveView()){
-							getManagedBean().getRptGenBean().setCtGroupFiveWithSupplView(true);
-						}
-					}					
+				if ((parameterCodeType != null)
+						&& (parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))) {
+					retrieveSupplierCompName();
+					if ((this.getSupplCompanyList().size() > 0)
+							&& (getManagedBean().getRptGenBean()
+									.isCtSupplierNameView())) {
+						getManagedBean().getRptGenBean()
+								.setCtSupplierDefaultView(true);
+					} else if ((this.getSupplCompanyList().size() == 0)
+							&& (getManagedBean().getRptGenBean()
+									.isFlSupplierView())) {
+						getManagedBean().getRptGenBean().setCtSupplierTextView(
+								true);
+					}
+					if (getManagedBean().getRptGenBean().isCtGroupFiveView()) {
+						getManagedBean().getRptGenBean()
+								.setCtGroupFiveWithoutSupplView(true);
+					}
+				} else {
+					if (getManagedBean().getRptGenBean().isCtSupplierNameView()) {
+						getManagedBean().getRptGenBean().setCtSupplierTextView(
+								true);
+					}
+					if (getManagedBean().getRptGenBean().isCtGroupFiveView()) {
+						getManagedBean().getRptGenBean()
+								.setCtGroupFiveWithSupplView(true);
+					}
+				}
 			}
-			
+
 		}
 	}
-	
+
 	/**
 	 * Retrieve role code from param table.
-	 *
+	 * 
 	 * @return the list
 	 */
-	public List<String>  retrieveRoleCodeFromParamTable() {
+	public List<String> retrieveRoleCodeFromParamTable() {
 		paramTableRoleCodeList = new ArrayList<String>();
-        if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-									IPMReportSO.class);
-					List<String> roleCodeFromParamTableLst = reportSO.retrieveRoleCodeFromParamTable();			
-					for (int i = 0; i < roleCodeFromParamTableLst.size(); i++) {
-						paramTableRoleCodeList.add(roleCodeFromParamTableLst.get(i));
-					}        	    
-        }
-		return paramTableRoleCodeList;
-	}
-	
-	/**
-	 * Gets the parameter code type string.
-	 *
-	 * @return the parameter code type string
-	 */
-	public String  getParameterCodeTypeString() {
-		parameterCodeType = new String();
-		/*ptjList = new ArrayList<String>();
-		ministryList = new ArrayList<SelectItem>();*/
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
-			List<Object[]> paramcodeLst = reportSO.retrieveParameterCodeByUserid(lngUserId);			
+			List<String> roleCodeFromParamTableLst = reportSO
+					.retrieveRoleCodeFromParamTable();
+			for (int i = 0; i < roleCodeFromParamTableLst.size(); i++) {
+				paramTableRoleCodeList.add(roleCodeFromParamTableLst.get(i));
+			}
+		}
+		return paramTableRoleCodeList;
+	}
+
+	/**
+	 * Gets the parameter code type string.
+	 * 
+	 * @return the parameter code type string
+	 */
+	public String getParameterCodeTypeString() {
+		parameterCodeType = new String();
+		/*
+		 * ptjList = new ArrayList<String>(); ministryList = new
+		 * ArrayList<SelectItem>();
+		 */
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<Object[]> paramcodeLst = reportSO
+					.retrieveParameterCodeByUserid(lngUserId);
 			for (Object[] object : paramcodeLst) {
 				parameterCodeType = object[0].toString();
-				//parameterCodeType = "SUP";
+				// parameterCodeType = "SUP";
 			}
 		}
 		return parameterCodeType;
 	}
-	
+
 	/**
 	 * Retrieve parameter code type.
 	 */
-	public void  retrieveParameterCodeType() {
+	public void retrieveParameterCodeType() {
 		ptjList = new ArrayList<SelectItem>();
 		ministryList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-			 getParameterCodeTypeString();
-			if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FPJ))){
-				//retrieveFPJMinistryList();
-				//getLtstMinistryListByUserid();
+			getParameterCodeTypeString();
+			if ((parameterCodeType != null)
+					&& (parameterCodeType
+							.equals(ReportConst.PARAM_CODE_TYPE_FPJ))) {
+				// retrieveFPJMinistryList();
+				// getLtstMinistryListByUserid();
 				retrieveOnlyFPJMinistryList();
 				retrieveFPJPTJList();
-				if(getManagedBean().getRptGenBean().isFlSupplierView()){
-					getManagedBean().getRptGenBean().setFlSupplierTextView(true);
+				if (getManagedBean().getRptGenBean().isFlSupplierView()) {
+					getManagedBean().getRptGenBean()
+							.setFlSupplierTextView(true);
 				}
-			}else if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FMI))){
+			} else if ((parameterCodeType != null)
+					&& (parameterCodeType
+							.equals(ReportConst.PARAM_CODE_TYPE_FMI))) {
 				retrieveFPJMinistryList();
-				//retrieveFPJPTJList();
-				if(getManagedBean().getRptGenBean().isFlSupplierView()){
-					getManagedBean().getRptGenBean().setFlSupplierTextView(true);
-				}				
-			}else if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))){
-				retrieveSupplierCompName();	
-				if((this.getSupplCompanyList().size()>0)&&(getManagedBean().getRptGenBean().isFlSupplierView())){
-					getManagedBean().getRptGenBean().setFlSupplierDropdownView(true);
-				}else if((this.getSupplCompanyList().size()==0)&&(getManagedBean().getRptGenBean().isFlSupplierView())){
-					getManagedBean().getRptGenBean().setFlSupplierTextView(true);
+				// retrieveFPJPTJList();
+				if (getManagedBean().getRptGenBean().isFlSupplierView()) {
+					getManagedBean().getRptGenBean()
+							.setFlSupplierTextView(true);
 				}
-				
-			}else{
-				if(getManagedBean().getRptGenBean().isFlSupplierView()){
-					getManagedBean().getRptGenBean().setFlSupplierTextView(true);
-				}				
+			} else if ((parameterCodeType != null)
+					&& (parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))) {
+				retrieveSupplierCompName();
+				if ((this.getSupplCompanyList().size() > 0)
+						&& (getManagedBean().getRptGenBean().isFlSupplierView())) {
+					getManagedBean().getRptGenBean().setFlSupplierDropdownView(
+							true);
+				} else if ((this.getSupplCompanyList().size() == 0)
+						&& (getManagedBean().getRptGenBean().isFlSupplierView())) {
+					getManagedBean().getRptGenBean()
+							.setFlSupplierTextView(true);
+				}
+
+			} else {
+				if (getManagedBean().getRptGenBean().isFlSupplierView()) {
+					getManagedBean().getRptGenBean()
+							.setFlSupplierTextView(true);
+				}
 			}
-			paramCodeSupplierGroupDropdown(parameterCodeType);				
-		}		
+			paramCodeSupplierGroupDropdown(parameterCodeType);
+		}
 	}
-	
+
 	/**
 	 * Param code supplier group dropdown.
-	 *
-	 * @param parameterCodeType the parameter code type
+	 * 
+	 * @param parameterCodeType
+	 *            the parameter code type
 	 */
-	public void  paramCodeSupplierGroupDropdown(String parameterCodeType) {
-		if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))){
-			if((getManagedBean().getRptGenBean().isFlGroupOneView())){
-				getManagedBean().getRptGenBean().setFlGroupOneWithoutSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupTwoView())){
-				getManagedBean().getRptGenBean().setFlGroupTwoWithoutSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupThreeView())){
-				getManagedBean().getRptGenBean().setFlGroupThreeWithoutSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupFourView())){
-				getManagedBean().getRptGenBean().setFlGroupFourWithoutSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupFiveView())){
-				getManagedBean().getRptGenBean().setFlGroupFiveWithoutSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupSixView())){
-				getManagedBean().getRptGenBean().setFlGroupSixWithoutSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupSevenView())){
-				getManagedBean().getRptGenBean().setFlGroupSevenWithoutSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupEightView())){
-				getManagedBean().getRptGenBean().setFlGroupEightWithoutSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupNineView())){
-				getManagedBean().getRptGenBean().setFlGroupNineWithoutSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupTenView())){
-				getManagedBean().getRptGenBean().setFlGroupTenWithoutSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupElevenView())){
-				getManagedBean().getRptGenBean().setFlGroupElevenWithoutSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupTwelveView())){
-				getManagedBean().getRptGenBean().setFlGroupTwelveWithoutSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupThirteenView())){
-				getManagedBean().getRptGenBean().setFlGroupThirteenWithoutSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupFourteenView())){
-				getManagedBean().getRptGenBean().setFlGroupFourteenWithoutSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupFifteenView())){
-				getManagedBean().getRptGenBean().setFlGroupFifteenWithoutSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupSixteenView())){
-				getManagedBean().getRptGenBean().setFlGroupSixteenWithoutSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupSeventeenView())){
-				getManagedBean().getRptGenBean().setFlGroupSeventeenWithoutSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupEighteenView())){
-				getManagedBean().getRptGenBean().setFlGroupEighteenWithoutSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupNineteenView())){
-				getManagedBean().getRptGenBean().setFlGroupNineteenWithoutSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupTwentyView())){
-				getManagedBean().getRptGenBean().setFlGroupTwentyWithoutSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupTwentyOneView())){
-				getManagedBean().getRptGenBean().setFlGroupTwentyOneWithoutSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupTwentyTwoView())){
-				getManagedBean().getRptGenBean().setFlGroupTwentyTwoWithoutSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupTwentyThreeView())){
-				getManagedBean().getRptGenBean().setFlGroupTwentyThreeWithoutSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupTwentyFourView())){
-				getManagedBean().getRptGenBean().setFlGroupTwentyFourWithoutSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupTwentyFiveView())){
-				getManagedBean().getRptGenBean().setFlGroupTwentyFiveWithoutSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupTwentySixView())){
-				getManagedBean().getRptGenBean().setFlGroupTwentySixWithoutSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupTwentySevenView())){
-				getManagedBean().getRptGenBean().setFlGroupTwentySevenWithoutSupplView(true);
+	public void paramCodeSupplierGroupDropdown(String parameterCodeType) {
+		if ((parameterCodeType != null)
+				&& (parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))) {
+			if ((getManagedBean().getRptGenBean().isFlGroupOneView())) {
+				getManagedBean().getRptGenBean().setFlGroupOneWithoutSupplView(
+						true);
+			} else if ((getManagedBean().getRptGenBean().isFlGroupTwoView())) {
+				getManagedBean().getRptGenBean().setFlGroupTwoWithoutSupplView(
+						true);
+			} else if ((getManagedBean().getRptGenBean().isFlGroupThreeView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupThreeWithoutSupplView(true);
+			} else if ((getManagedBean().getRptGenBean().isFlGroupFourView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupFourWithoutSupplView(true);
+			} else if ((getManagedBean().getRptGenBean().isFlGroupFiveView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupFiveWithoutSupplView(true);
+			} else if ((getManagedBean().getRptGenBean().isFlGroupSixView())) {
+				getManagedBean().getRptGenBean().setFlGroupSixWithoutSupplView(
+						true);
+			} else if ((getManagedBean().getRptGenBean().isFlGroupSevenView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupSevenWithoutSupplView(true);
+			} else if ((getManagedBean().getRptGenBean().isFlGroupEightView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupEightWithoutSupplView(true);
+			} else if ((getManagedBean().getRptGenBean().isFlGroupNineView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupNineWithoutSupplView(true);
+			} else if ((getManagedBean().getRptGenBean().isFlGroupTenView())) {
+				getManagedBean().getRptGenBean().setFlGroupTenWithoutSupplView(
+						true);
+			} else if ((getManagedBean().getRptGenBean().isFlGroupElevenView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupElevenWithoutSupplView(true);
+			} else if ((getManagedBean().getRptGenBean().isFlGroupTwelveView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupTwelveWithoutSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupThirteenView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupThirteenWithoutSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupFourteenView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupFourteenWithoutSupplView(true);
+			} else if ((getManagedBean().getRptGenBean().isFlGroupFifteenView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupFifteenWithoutSupplView(true);
+			} else if ((getManagedBean().getRptGenBean().isFlGroupSixteenView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupSixteenWithoutSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupSeventeenView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupSeventeenWithoutSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupEighteenView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupEighteenWithoutSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupNineteenView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupNineteenWithoutSupplView(true);
+			} else if ((getManagedBean().getRptGenBean().isFlGroupTwentyView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupTwentyWithoutSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupTwentyOneView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupTwentyOneWithoutSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupTwentyTwoView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupTwentyTwoWithoutSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupTwentyThreeView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupTwentyThreeWithoutSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupTwentyFourView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupTwentyFourWithoutSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupTwentyFiveView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupTwentyFiveWithoutSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupTwentySixView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupTwentySixWithoutSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupTwentySevenView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupTwentySevenWithoutSupplView(true);
 			}
-		}else{
-			if((getManagedBean().getRptGenBean().isFlGroupOneView())){
-				getManagedBean().getRptGenBean().setFlGroupOneWithSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupTwoView())){
-				getManagedBean().getRptGenBean().setFlGroupTwoWithSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupThreeView())){
-				getManagedBean().getRptGenBean().setFlGroupThreeWithSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupFourView())){
-				getManagedBean().getRptGenBean().setFlGroupFourWithSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupFiveView())){
-				getManagedBean().getRptGenBean().setFlGroupFiveWithSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupSixView())){
-				getManagedBean().getRptGenBean().setFlGroupSixWithSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupSevenView())){
-				getManagedBean().getRptGenBean().setFlGroupSevenWithSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupEightView())){
-				getManagedBean().getRptGenBean().setFlGroupEightWithSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupNineView())){
-				getManagedBean().getRptGenBean().setFlGroupNineWithSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupTenView())){
-				getManagedBean().getRptGenBean().setFlGroupTenWithSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupElevenView())){
-				getManagedBean().getRptGenBean().setFlGroupElevenWithSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupTwelveView())){
-				getManagedBean().getRptGenBean().setFlGroupTwelveWithSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupThirteenView())){
-				getManagedBean().getRptGenBean().setFlGroupThirteenWithSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupFourteenView())){
-				getManagedBean().getRptGenBean().setFlGroupFourteenWithSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupFifteenView())){
-				getManagedBean().getRptGenBean().setFlGroupFifteenWithSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupSixteenView())){
-				getManagedBean().getRptGenBean().setFlGroupSixteenWithSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupSeventeenView())){
-				getManagedBean().getRptGenBean().setFlGroupSeventeenWithSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupEighteenView())){
-				getManagedBean().getRptGenBean().setFlGroupEighteenWithSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupNineteenView())){
-				getManagedBean().getRptGenBean().setFlGroupNineteenWithSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupTwentyView())){
-				getManagedBean().getRptGenBean().setFlGroupTwentyWithSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupTwentyOneView())){
-				getManagedBean().getRptGenBean().setFlGroupTwentyOneWithSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupTwentyTwoView())){
-				getManagedBean().getRptGenBean().setFlGroupTwentyTwoWithSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupTwentyThreeView())){
-				getManagedBean().getRptGenBean().setFlGroupTwentyThreeWithSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupTwentyFourView())){
-				getManagedBean().getRptGenBean().setFlGroupTwentyFourWithSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupTwentyFiveView())){
-				getManagedBean().getRptGenBean().setFlGroupTwentyFiveWithSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupTwentySixView())){
-				getManagedBean().getRptGenBean().setFlGroupTwentySixWithSupplView(true);
-			}else if((getManagedBean().getRptGenBean().isFlGroupTwentySevenView())){
-				getManagedBean().getRptGenBean().setFlGroupTwentySevenWithSupplView(true);
+		} else {
+			if ((getManagedBean().getRptGenBean().isFlGroupOneView())) {
+				getManagedBean().getRptGenBean().setFlGroupOneWithSupplView(
+						true);
+			} else if ((getManagedBean().getRptGenBean().isFlGroupTwoView())) {
+				getManagedBean().getRptGenBean().setFlGroupTwoWithSupplView(
+						true);
+			} else if ((getManagedBean().getRptGenBean().isFlGroupThreeView())) {
+				getManagedBean().getRptGenBean().setFlGroupThreeWithSupplView(
+						true);
+			} else if ((getManagedBean().getRptGenBean().isFlGroupFourView())) {
+				getManagedBean().getRptGenBean().setFlGroupFourWithSupplView(
+						true);
+			} else if ((getManagedBean().getRptGenBean().isFlGroupFiveView())) {
+				getManagedBean().getRptGenBean().setFlGroupFiveWithSupplView(
+						true);
+			} else if ((getManagedBean().getRptGenBean().isFlGroupSixView())) {
+				getManagedBean().getRptGenBean().setFlGroupSixWithSupplView(
+						true);
+			} else if ((getManagedBean().getRptGenBean().isFlGroupSevenView())) {
+				getManagedBean().getRptGenBean().setFlGroupSevenWithSupplView(
+						true);
+			} else if ((getManagedBean().getRptGenBean().isFlGroupEightView())) {
+				getManagedBean().getRptGenBean().setFlGroupEightWithSupplView(
+						true);
+			} else if ((getManagedBean().getRptGenBean().isFlGroupNineView())) {
+				getManagedBean().getRptGenBean().setFlGroupNineWithSupplView(
+						true);
+			} else if ((getManagedBean().getRptGenBean().isFlGroupTenView())) {
+				getManagedBean().getRptGenBean().setFlGroupTenWithSupplView(
+						true);
+			} else if ((getManagedBean().getRptGenBean().isFlGroupElevenView())) {
+				getManagedBean().getRptGenBean().setFlGroupElevenWithSupplView(
+						true);
+			} else if ((getManagedBean().getRptGenBean().isFlGroupTwelveView())) {
+				getManagedBean().getRptGenBean().setFlGroupTwelveWithSupplView(
+						true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupThirteenView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupThirteenWithSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupFourteenView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupFourteenWithSupplView(true);
+			} else if ((getManagedBean().getRptGenBean().isFlGroupFifteenView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupFifteenWithSupplView(true);
+			} else if ((getManagedBean().getRptGenBean().isFlGroupSixteenView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupSixteenWithSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupSeventeenView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupSeventeenWithSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupEighteenView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupEighteenWithSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupNineteenView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupNineteenWithSupplView(true);
+			} else if ((getManagedBean().getRptGenBean().isFlGroupTwentyView())) {
+				getManagedBean().getRptGenBean().setFlGroupTwentyWithSupplView(
+						true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupTwentyOneView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupTwentyOneWithSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupTwentyTwoView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupTwentyTwoWithSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupTwentyThreeView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupTwentyThreeWithSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupTwentyFourView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupTwentyFourWithSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupTwentyFiveView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupTwentyFiveWithSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupTwentySixView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupTwentySixWithSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupTwentySevenView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupTwentySevenWithSupplView(true);
 			}
 		}
 	}
-	
+
 	/**
 	 * Enable supplier comp name text or dropdown.
 	 */
-	public void  enableSupplierCompNameTextOrDropdown() {
-		if((this.getModuleValue()!=null)&&(this.getModuleValue().equalsIgnoreCase(
-				ModuleCodeConst.SUPPLIER_MANAGEMENT))){
+	public void enableSupplierCompNameTextOrDropdown() {
+		if ((this.getModuleValue() != null)
+				&& (this.getModuleValue()
+						.equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT))) {
 			getParameterCodeTypeString();
 			retrieveSupplierCompName();
-			if(((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.ROLE_CODE_SUP)))&&(this.getReportValue().equalsIgnoreCase(ReportConst.SM_PERSON_BRANCH_BANK))){
-				if((this.getSupplCompanyList().size()>0)&&(getManagedBean().getRptGenBean().isSmSupplierView())){
-					getManagedBean().getRptGenBean().setSmCompanyNameDropdownView(true);
-				}else if((this.getSupplCompanyList().size()==0)&&(getManagedBean().getRptGenBean().isSmSupplierView())){
+			if (((parameterCodeType != null) && (parameterCodeType
+					.equals(ReportConst.ROLE_CODE_SUP)))
+					&& (this.getReportValue()
+							.equalsIgnoreCase(ReportConst.SM_PERSON_BRANCH_BANK))) {
+				if ((this.getSupplCompanyList().size() > 0)
+						&& (getManagedBean().getRptGenBean().isSmSupplierView())) {
+					getManagedBean().getRptGenBean()
+							.setSmCompanyNameDropdownView(true);
+				} else if ((this.getSupplCompanyList().size() == 0)
+						&& (getManagedBean().getRptGenBean().isSmSupplierView())) {
 					getManagedBean().getRptGenBean().setSmCompanyNameView(true);
 				}
-				
+
 				getManagedBean().getRptGenBean().setSmExtraTwoColumnView(true);
-				getManagedBean().getRptGenBean().setSmRegistrationTypeView(false);
-				getManagedBean().getRptGenBean().setSmNonMandatoryDateView(false);
-				getManagedBean().getRptGenBean().setSmMOFRegisteredDateView(false);
-		    }else if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))){
-					
-				if((this.getSupplCompanyList().size()>0)&&(getManagedBean().getRptGenBean().isSmSupplierView())){
-					getManagedBean().getRptGenBean().setSmCompanyNameDropdownView(true);
-				}else if((this.getSupplCompanyList().size()==0)&&(getManagedBean().getRptGenBean().isSmSupplierView())){
+				getManagedBean().getRptGenBean().setSmRegistrationTypeView(
+						false);
+				getManagedBean().getRptGenBean().setSmNonMandatoryDateView(
+						false);
+				getManagedBean().getRptGenBean().setSmMOFRegisteredDateView(
+						false);
+			} else if ((parameterCodeType != null)
+					&& (parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))) {
+
+				if ((this.getSupplCompanyList().size() > 0)
+						&& (getManagedBean().getRptGenBean().isSmSupplierView())) {
+					getManagedBean().getRptGenBean()
+							.setSmCompanyNameDropdownView(true);
+				} else if ((this.getSupplCompanyList().size() == 0)
+						&& (getManagedBean().getRptGenBean().isSmSupplierView())) {
 					getManagedBean().getRptGenBean().setSmCompanyNameView(true);
 				}
-			}else{
-				if(getManagedBean().getRptGenBean().isSmSupplierView()){
+			} else {
+				if (getManagedBean().getRptGenBean().isSmSupplierView()) {
 					getManagedBean().getRptGenBean().setSmCompanyNameView(true);
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Retrieve fpjptj list.
-	 *
+	 * 
 	 * @return the list
 	 */
-	public List<SelectItem>  retrieveFPJPTJList() {
-		ptjList = new ArrayList<SelectItem>();		
+	public List<SelectItem> retrieveFPJPTJList() {
+		ptjList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
-			List<Object[]> ptjLst = reportSO.retrieveFPJPTJList(lngUserId);			
-			if(ptjLst.size()>0){
-				if(ptjLst.size()>2){
+			List<Object[]> ptjLst = reportSO.retrieveFPJPTJList(lngUserId);
+			if (ptjLst.size() > 0) {
+				if (ptjLst.size() > 2) {
 					SelectItem selectItem1 = new SelectItem();
-					selectItem1.setLabel(ResourceBundleUtils.getMessage("lbl.txt.select", 
-				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+					selectItem1.setLabel(ResourceBundleUtils.getMessage(
+							"lbl.txt.select",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()));
 					selectItem1.setValue(null);
 					ptjList.add(selectItem1);
 				}
-				for (Object[] object : ptjLst) {				
-					SelectItem selectItem = new SelectItem();				
+				for (Object[] object : ptjLst) {
+					SelectItem selectItem = new SelectItem();
 					selectItem.setLabel(object[0].toString());
 					selectItem.setValue(object[1].toString());
 					ptjList.add(selectItem);
@@ -8531,133 +9397,99 @@ public class ReportBackingBean extends
 		}
 		return ptjList;
 	}
-	
+
 	/**
 	 * Retrieve fmiptj list.
-	 *
+	 * 
 	 * @return the list
 	 */
-	public List<SelectItem>  retrieveFMIPTJList() {
+	public List<SelectItem> retrieveFMIPTJList() {
 		ptjList = new ArrayList<SelectItem>();
-		//if ((null !=this.getCommonMinistry())&&(((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FMI)))||((highRoleCodeList!=null)&&((highRoleCodeList.contains(RoleCode.BPK_PCA.value())||highRoleCodeList.contains(RoleCode.BPK_CCA.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_USER.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_USER.value())))))) {
-		if (null !=this.getCommonMinistry()){
-			 getParameterCodeTypeString();	
-			if(((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FMI)))||((paramTableRoleCodeList!=null)&&(paramTableRoleCodeList.contains(highRoleCodeList.get(0))))){				
+		// if ((null
+		// !=this.getCommonMinistry())&&(((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FMI)))||((highRoleCodeList!=null)&&((highRoleCodeList.contains(RoleCode.BPK_PCA.value())||highRoleCodeList.contains(RoleCode.BPK_CCA.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_USER.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_USER.value()))))))
+		// {
+		if (null != this.getCommonMinistry()) {
+			getParameterCodeTypeString();
+			if (((parameterCodeType != null) && (parameterCodeType
+					.equals(ReportConst.PARAM_CODE_TYPE_FMI)))
+					|| ((paramTableRoleCodeList != null) && (paramTableRoleCodeList
+							.contains(highRoleCodeList.get(0))))) {
 				Long lngorgprflid = Long.parseLong(this.getCommonMinistry());
 				IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 						.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 								IPMReportSO.class);
-				List<Object[]> ptjLst = reportSO.retrieveFMIPTJList(lngorgprflid);				
-				if(ptjLst.size()>0){
-					if(ptjLst.size()>2){
+				List<Object[]> ptjLst = reportSO
+						.retrieveFMIPTJList(lngorgprflid);
+				if (ptjLst.size() > 0) {
+					if (ptjLst.size() > 2) {
 						SelectItem selectItem1 = new SelectItem();
-						selectItem1.setLabel(ResourceBundleUtils.getMessage("lbl.txt.select", 
-					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+						selectItem1.setLabel(ResourceBundleUtils.getMessage(
+								"lbl.txt.select",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale()));
 						selectItem1.setValue(null);
 						ptjList.add(selectItem1);
 					}
-					for (Object[] object : ptjLst) {				
-						SelectItem selectItem = new SelectItem();				
+					for (Object[] object : ptjLst) {
+						SelectItem selectItem = new SelectItem();
 						selectItem.setLabel(object[0].toString());
 						selectItem.setValue(object[1].toString());
 						ptjList.add(selectItem);
 					}
 				}
 			}
-		}				
+		}
 		return ptjList;
 	}
-	
+
 	/**
 	 * Retrieve fmiptj list with arg.
-	 *
-	 * @param lngMinistry the lng ministry
+	 * 
+	 * @param lngMinistry
+	 *            the lng ministry
 	 * @return the list
 	 */
-	public List<SelectItem>  retrieveFMIPTJListWithArg(Long lngMinistry) {
-		ptjList = new ArrayList<SelectItem>();		
+	public List<SelectItem> retrieveFMIPTJListWithArg(Long lngMinistry) {
+		ptjList = new ArrayList<SelectItem>();
 		Long firstPTJValue = null;
-		//if ((null !=this.getCommonMinistry())&&(((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FMI)))||((highRoleCodeList!=null)&&((highRoleCodeList.contains(RoleCode.BPK_PCA.value())||highRoleCodeList.contains(RoleCode.BPK_CCA.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_USER.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_USER.value())))))) {
-		
-				IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-						.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-								IPMReportSO.class);
-				List<Object[]> ptjLst = reportSO.retrieveFMIPTJList(lngMinistry);
-				/*for (int i = 0; i < ptjLst.size(); i++) {				
-					ptjList.add(ptjLst.get(i));
-				}*/
-				for (Object[] object : ptjLst) {				
-					SelectItem selectItem = new SelectItem();				
-					selectItem.setLabel(object[0].toString());
-					selectItem.setValue(object[1].toString());
-					ptjList.add(selectItem);
-				}
-				if (ptjList.size()>0) {					
-					firstPTJValue=Long.parseLong((String) ptjList.get(0).getValue()) ;
-					roleCodeUsersSetupOnload(firstPTJValue);
-				}
+		// if ((null
+		// !=this.getCommonMinistry())&&(((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FMI)))||((highRoleCodeList!=null)&&((highRoleCodeList.contains(RoleCode.BPK_PCA.value())||highRoleCodeList.contains(RoleCode.BPK_CCA.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_USER.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_USER.value()))))))
+		// {
+
+		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+						IPMReportSO.class);
+		List<Object[]> ptjLst = reportSO.retrieveFMIPTJList(lngMinistry);
+		/*
+		 * for (int i = 0; i < ptjLst.size(); i++) { ptjList.add(ptjLst.get(i));
+		 * }
+		 */
+		for (Object[] object : ptjLst) {
+			SelectItem selectItem = new SelectItem();
+			selectItem.setLabel(object[0].toString());
+			selectItem.setValue(object[1].toString());
+			ptjList.add(selectItem);
+		}
+		if (ptjList.size() > 0) {
+			firstPTJValue = Long.parseLong((String) ptjList.get(0).getValue());
+			roleCodeUsersSetupOnload(firstPTJValue);
+		}
 		return ptjList;
 	}
-	
+
 	/**
 	 * Retrieve only fpj ministry list.
-	 *
+	 * 
 	 * @return the list
 	 */
-	public List<SelectItem>  retrieveOnlyFPJMinistryList() {
-    	ministryList = new ArrayList<SelectItem>();
-        if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+	public List<SelectItem> retrieveOnlyFPJMinistryList() {
+		ministryList = new ArrayList<SelectItem>();
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
-			List<Object[]> minstryLst = reportSO.retrieveFPJMinistryList(lngUserId);
-			for (Object[] object : minstryLst) {				
-				SelectItem selectItem = new SelectItem();				
-				selectItem.setLabel(object[0].toString());
-				selectItem.setValue(object[1].toString());
-				ministryList.add(selectItem);
-			}				
-		}
-		return ministryList;	
-	}
-	
-	/**
-	 * Retrieve fpj ministry list.
-	 *
-	 * @return the list
-	 */
-	public List<SelectItem>  retrieveFPJMinistryList() {
-    	ministryList = new ArrayList<SelectItem>();
-        if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-							IPMReportSO.class);
-			List<Object[]> minstryLst = reportSO.retrieveFPJMinistryList(lngUserId);
-			for (Object[] object : minstryLst) {
-				/*SelectItem selectItem1 = new SelectItem();
-				selectItem1.setLabel(ResourceBundleUtils.getMessage("lbl.txt.select", 
-			 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-				selectItem1.setValue(null);
-				ministryList.add(selectItem1);*/
-				SelectItem selectItem = new SelectItem();
-				
-				selectItem.setLabel(object[0].toString());
-				selectItem.setValue(object[1].toString());
-				ministryList.add(selectItem);
-				if ((null != object[1].toString())&&(ReportConst.EMPTY_VAL!= object[1].toString()  )) {
-					Long lngMinistry = Long.parseLong(object[1].toString());
-					retrieveFMIPTJListWithArg(lngMinistry);
-				}
-			}				
-		}
-		return ministryList;	
-	}
-/*public List<SelectItem>  retrieveFMIMinistryList() {
-if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-							IPMReportSO.class);
-			List<Object[]> minstryLst = reportSO.retrieveFMIMinistryList(lngUserId);
+			List<Object[]> minstryLst = reportSO
+					.retrieveFPJMinistryList(lngUserId);
 			for (Object[] object : minstryLst) {
 				SelectItem selectItem = new SelectItem();
 				selectItem.setLabel(object[0].toString());
@@ -8665,12 +9497,61 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				ministryList.add(selectItem);
 			}
 		}
-		return ministryList;	
-	}*/    
+		return ministryList;
+	}
+
 	/**
- * Retrieve cm unspc.
- */
-public void retrieveCMUnspc() {
+	 * Retrieve fpj ministry list.
+	 * 
+	 * @return the list
+	 */
+	public List<SelectItem> retrieveFPJMinistryList() {
+		ministryList = new ArrayList<SelectItem>();
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<Object[]> minstryLst = reportSO
+					.retrieveFPJMinistryList(lngUserId);
+			for (Object[] object : minstryLst) {
+				/*
+				 * SelectItem selectItem1 = new SelectItem();
+				 * selectItem1.setLabel
+				 * (ResourceBundleUtils.getMessage("lbl.txt.select",
+				 * ResourceBundleUtils.BUNDLE_COMMON_LABELS, new
+				 * FacesScopes().getUserLocale())); selectItem1.setValue(null);
+				 * ministryList.add(selectItem1);
+				 */
+				SelectItem selectItem = new SelectItem();
+
+				selectItem.setLabel(object[0].toString());
+				selectItem.setValue(object[1].toString());
+				ministryList.add(selectItem);
+				if ((null != object[1].toString())
+						&& (ReportConst.EMPTY_VAL != object[1].toString())) {
+					Long lngMinistry = Long.parseLong(object[1].toString());
+					retrieveFMIPTJListWithArg(lngMinistry);
+				}
+			}
+		}
+		return ministryList;
+	}
+
+	/*
+	 * public List<SelectItem> retrieveFMIMinistryList() { if (null != new
+	 * FacesScopes().getUserSessionBean().getUserId()) { IPMReportSO reportSO =
+	 * EpEjbBusinessDelegate.getInstance()
+	 * .getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
+	 * List<Object[]> minstryLst = reportSO.retrieveFMIMinistryList(lngUserId);
+	 * for (Object[] object : minstryLst) { SelectItem selectItem = new
+	 * SelectItem(); selectItem.setLabel(object[0].toString());
+	 * selectItem.setValue(object[1].toString()); ministryList.add(selectItem);
+	 * } } return ministryList; }
+	 */
+	/**
+	 * Retrieve cm unspc.
+	 */
+	public void retrieveCMUnspc() {
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 						IPMReportSO.class);
@@ -8682,7 +9563,7 @@ public void retrieveCMUnspc() {
 			unspcList.add(selectItem);
 		}
 	}
-	
+
 	/**
 	 * Enable extension.
 	 */
@@ -8724,7 +9605,7 @@ public void retrieveCMUnspc() {
 			rptGenBean.setCmExtentionCodeView(false);
 		}
 	}
-	
+
 	/**
 	 * Enable extension types.
 	 */
@@ -8745,16 +9626,20 @@ public void retrieveCMUnspc() {
 				&& (this.getCmUnspscCode() != ReportConst.EMPTY_VAL)) {
 			if ((this.getCmUnspscCode().length() == 8)) {
 				unspid = retrieveCMUnspcIdbyCode(this.getCmUnspscCode());
-				//unspid = (long) 11606;
+				// unspid = (long) 11606;
 				if (null != unspid) {
 					retrieveBrand();
 					retrieveExtType();
 					retrieveMeasurement();
-					retrieveColor();					
-					getManagedBean().getRptGenBean().setCmExtentionBrandView(true);		
-					getManagedBean().getRptGenBean().setCmExtentionTypeView(true);		
-					getManagedBean().getRptGenBean().setCmExtentionMeasurmentView(true);	
-					getManagedBean().getRptGenBean().setCmExtentionColourView(true);
+					retrieveColor();
+					getManagedBean().getRptGenBean().setCmExtentionBrandView(
+							true);
+					getManagedBean().getRptGenBean().setCmExtentionTypeView(
+							true);
+					getManagedBean().getRptGenBean()
+							.setCmExtentionMeasurmentView(true);
+					getManagedBean().getRptGenBean().setCmExtentionColourView(
+							true);
 				} else {
 					this.setCmUnspscCode(null);
 					this.setCmUnspscCode(null);
@@ -8766,10 +9651,14 @@ public void retrieveCMUnspc() {
 					extTypeList = new ArrayList<SelectItem>();
 					measurmentList = new ArrayList<SelectItem>();
 					colorList = new ArrayList<SelectItem>();
-					getManagedBean().getRptGenBean().setCmExtentionBrandView(false);
-					getManagedBean().getRptGenBean().setCmExtentionTypeView(false);
-					getManagedBean().getRptGenBean().setCmExtentionMeasurmentView(false);
-					getManagedBean().getRptGenBean().setCmExtentionColourView(false);
+					getManagedBean().getRptGenBean().setCmExtentionBrandView(
+							false);
+					getManagedBean().getRptGenBean().setCmExtentionTypeView(
+							false);
+					getManagedBean().getRptGenBean()
+							.setCmExtentionMeasurmentView(false);
+					getManagedBean().getRptGenBean().setCmExtentionColourView(
+							false);
 					throw new EpException(MessageConst.ERROR_REPORT_780013);
 				}
 			} else {
@@ -8784,8 +9673,10 @@ public void retrieveCMUnspc() {
 				colorList = new ArrayList<SelectItem>();
 				getManagedBean().getRptGenBean().setCmExtentionBrandView(false);
 				getManagedBean().getRptGenBean().setCmExtentionTypeView(false);
-				getManagedBean().getRptGenBean().setCmExtentionMeasurmentView(false);
-				getManagedBean().getRptGenBean().setCmExtentionColourView(false);
+				getManagedBean().getRptGenBean().setCmExtentionMeasurmentView(
+						false);
+				getManagedBean().getRptGenBean()
+						.setCmExtentionColourView(false);
 				throw new EpException(MessageConst.ERROR_REPORT_780013);
 			}
 		} else {
@@ -8800,15 +9691,17 @@ public void retrieveCMUnspc() {
 			colorList = new ArrayList<SelectItem>();
 			getManagedBean().getRptGenBean().setCmExtentionBrandView(false);
 			getManagedBean().getRptGenBean().setCmExtentionTypeView(false);
-			getManagedBean().getRptGenBean().setCmExtentionMeasurmentView(false);
+			getManagedBean().getRptGenBean()
+					.setCmExtentionMeasurmentView(false);
 			getManagedBean().getRptGenBean().setCmExtentionColourView(false);
-		}		
+		}
 	}
 
 	/**
 	 * Retrieve cm unspc idby code.
-	 *
-	 * @param unspcCode the unspc code
+	 * 
+	 * @param unspcCode
+	 *            the unspc code
 	 * @return the long
 	 */
 	public Long retrieveCMUnspcIdbyCode(String unspcCode) {
@@ -8861,7 +9754,7 @@ public void retrieveCMUnspc() {
 			}
 		}
 	}
-	
+
 	/**
 	 * Retrieve brand.
 	 */
@@ -8877,7 +9770,7 @@ public void retrieveCMUnspc() {
 			brandList.add(selectItem);
 		}
 	}
-	
+
 	/**
 	 * Retrieve ext type.
 	 */
@@ -8925,7 +9818,7 @@ public void retrieveCMUnspc() {
 			colorList.add(selectItem);
 		}
 	}
-	
+
 	/**
 	 * Retrieve rolecode.
 	 */
@@ -8938,7 +9831,7 @@ public void retrieveCMUnspc() {
 			this.getRoleCodeList().add(rolecodeLst.get(i));
 		}
 	}
-	
+
 	/**
 	 * Retrieve supplier comp name.
 	 */
@@ -8947,53 +9840,76 @@ public void retrieveCMUnspc() {
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 						IPMReportSO.class);
-		List<String> supplCompNameLst = reportSO.retrieveSupplierCompName(lngUserId);
+		List<String> supplCompNameLst = reportSO
+				.retrieveSupplierCompName(lngUserId);
 		for (int i = 0; i < supplCompNameLst.size(); i++) {
-		supplCompanyList.add(supplCompNameLst.get(i));
+			supplCompanyList.add(supplCompNameLst.get(i));
 		}
-		if(supplCompNameLst.size()>0){
-			if((this.getModuleValue()!=null)&&(this.getModuleValue().equalsIgnoreCase(
-					ModuleCodeConst.SUPPLIER_MANAGEMENT))){
+		if (supplCompNameLst.size() > 0) {
+			if ((this.getModuleValue() != null)
+					&& (this.getModuleValue()
+							.equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT))) {
 				this.setSmCompanyName(supplCompNameLst.get(0));
 			}
-		    if((this.getModuleValue()!=null)&&(this.getModuleValue().equalsIgnoreCase(
-						ModuleCodeConst.ORDER_FULFILLMENT))){	
-					this.setFlSupplier(supplCompNameLst.get(0));
+			if ((this.getModuleValue() != null)
+					&& (this.getModuleValue()
+							.equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT))) {
+				this.setFlSupplier(supplCompNameLst.get(0));
 			}
 		}
-		
-		
+
 	}
-	
+
 	/**
 	 * Change date based on reg type.
 	 */
 	public void changeDateBasedOnRegType() {
-		getManagedBean().getRptGenBean().setSmActiveSubmissiveFromDateView(false);
+		getManagedBean().getRptGenBean().setSmActiveSubmissiveFromDateView(
+				false);
 		getManagedBean().getRptGenBean().setSmActivationDateView(false);
 		getManagedBean().getRptGenBean().setSmSubmissionDateView(false);
 		getManagedBean().getRptGenBean().setSmActSubmisAllDateView(false);
-		if(((this.getSmRegistrationType()!=null)&&(this.getSmRegistrationType().equals(ReportConst.RPT_REG_BASIC))&&(this.getReportValue().equals(ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_SUPPLIER_PERFORMANCE)))){
-			getManagedBean().getRptGenBean().setSmActiveSubmissiveFromDateView(true);
+		if (((this.getSmRegistrationType() != null)
+				&& (this.getSmRegistrationType()
+						.equals(ReportConst.RPT_REG_BASIC)) && (this
+				.getReportValue().equals(
+						ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL) || this
+				.getReportValue().equals(ReportConst.SM_SUPPLIER_PERFORMANCE)))) {
+			getManagedBean().getRptGenBean().setSmActiveSubmissiveFromDateView(
+					true);
 			getManagedBean().getRptGenBean().setSmActivationDateView(true);
-		}else if(((this.getSmRegistrationType()!=null)&&(this.getSmRegistrationType().equals(ReportConst.RPT_REG_MOF))&&(this.getReportValue().equals(ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_SUPPLIER_PERFORMANCE)))){
-			getManagedBean().getRptGenBean().setSmActiveSubmissiveFromDateView(true);
+		} else if (((this.getSmRegistrationType() != null)
+				&& (this.getSmRegistrationType()
+						.equals(ReportConst.RPT_REG_MOF)) && (this
+				.getReportValue().equals(
+						ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL) || this
+				.getReportValue().equals(ReportConst.SM_SUPPLIER_PERFORMANCE)))) {
+			getManagedBean().getRptGenBean().setSmActiveSubmissiveFromDateView(
+					true);
 			getManagedBean().getRptGenBean().setSmSubmissionDateView(true);
-		}else if(((this.getSmRegistrationType()!=null)&&(this.getSmRegistrationType().equals(ReportConst.RPT_REG_ALL))&&(this.getReportValue().equals(ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_SUPPLIER_PERFORMANCE)))){
-			getManagedBean().getRptGenBean().setSmActiveSubmissiveFromDateView(true);
+		} else if (((this.getSmRegistrationType() != null)
+				&& (this.getSmRegistrationType()
+						.equals(ReportConst.RPT_REG_ALL)) && (this
+				.getReportValue().equals(
+						ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL) || this
+				.getReportValue().equals(ReportConst.SM_SUPPLIER_PERFORMANCE)))) {
+			getManagedBean().getRptGenBean().setSmActiveSubmissiveFromDateView(
+					true);
 			getManagedBean().getRptGenBean().setSmActSubmisAllDateView(true);
 		}
 	}
-	
+
 	/**
 	 * Enable criteria menu.
 	 */
 	public void enableCriteriaMenu() {
 		getManagedBean().getRptGenBean().setEnableCriteriaMenuView(false);
-		if((this.getReportValue()!=null)&&(!this.getReportValue().equals(ReportConst.EMPTY_VAL))){
+		if ((this.getReportValue() != null)
+				&& (!this.getReportValue().equals(ReportConst.EMPTY_VAL))) {
 			getManagedBean().getRptGenBean().setEnableCriteriaMenuView(true);
-		}		
+		}
 	}
+
 	/*
 	 * Enable criteria variables by report name
 	 */
@@ -9009,14 +9925,16 @@ public void retrieveCMUnspc() {
 		ctReportBackingBean = new CTReportBackingBean();
 		ppReportBackingBean = new PPReportBackingBean();
 		pmReportBackingBean = new PMReportBackingBean();
-		if(rptGenBean.isReportCategoryView()==true||(this.getModuleValue()
-				.equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT)&&this.getReportCategory()!=null)){
+		if (rptGenBean.isReportCategoryView() == true
+				|| (this.getModuleValue().equalsIgnoreCase(
+						ModuleCodeConst.ORDER_FULFILLMENT) && this
+						.getReportCategory() != null)) {
 			rptGenBean = new ReportsGenerateBean();
 			rptGenBean.setReportCategoryView(true);
-			//this.setReportCategoryView(true);
-		}else{
-		rptGenBean = new ReportsGenerateBean();
-		//rptGenBean.setReportCategoryView(this.isReportCategoryView());
+			// this.setReportCategoryView(true);
+		} else {
+			rptGenBean = new ReportsGenerateBean();
+			// rptGenBean.setReportCategoryView(this.isReportCategoryView());
 		}
 		getManagedBean().setRptGenBean(null);
 		this.setSubModule(null);
@@ -9036,25 +9954,38 @@ public void retrieveCMUnspc() {
 			reqDTO.setReportCode(getManagedBean().getReportValue());
 			PMReportResDTO rptResDTO = reportSO.retriveReportByrptId(reqDTO);
 			PMReport pmReport = rptResDTO.getPmReportDtls();
-			/*String language = ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG, 
- 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-			//String language = "ms";*/	
-		if (null != pmReport) {
+			/*
+			 * String language =
+			 * ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG,
+			 * ResourceBundleUtils.BUNDLE_COMMON_LABELS, new
+			 * FacesScopes().getUserLocale()); //String language = "ms";
+			 */
+			if (null != pmReport) {
 				String label = ReportConst.EMPTY_VAL;
 				if ((null != pmReport.getSubModule())
 						&& (ReportConst.EMPTY_VAL != pmReport.getSubModule())) {
-					/*label = pmReport.getReportTitle() + ReportConst.RPT_EIFON
-							+ pmReport.getSubModule();*/
-					if((strLanguage!=null)&&(strLanguage.equalsIgnoreCase(ReportConst.ENG_LANG))){
+					/*
+					 * label = pmReport.getReportTitle() + ReportConst.RPT_EIFON
+					 * + pmReport.getSubModule();
+					 */
+					if ((strLanguage != null)
+							&& (strLanguage
+									.equalsIgnoreCase(ReportConst.ENG_LANG))) {
 						label = pmReport.getReportTitle();
-					}else if((strLanguage!=null)&&(strLanguage.equalsIgnoreCase(ReportConst.MALAY_LANG))){
+					} else if ((strLanguage != null)
+							&& (strLanguage
+									.equalsIgnoreCase(ReportConst.MALAY_LANG))) {
 						label = pmReport.getReportTitleMalay();
-					}					
+					}
 					this.setSubModule(pmReport.getSubModule());
 				} else {
-					if((strLanguage!=null)&&(strLanguage.equalsIgnoreCase(ReportConst.ENG_LANG))){
+					if ((strLanguage != null)
+							&& (strLanguage
+									.equalsIgnoreCase(ReportConst.ENG_LANG))) {
 						label = pmReport.getReportTitle();
-					}else if((strLanguage!=null)&&(strLanguage.equalsIgnoreCase(ReportConst.MALAY_LANG))){
+					} else if ((strLanguage != null)
+							&& (strLanguage
+									.equalsIgnoreCase(ReportConst.MALAY_LANG))) {
 						label = pmReport.getReportTitleMalay();
 					}
 				}
@@ -9065,39 +9996,37 @@ public void retrieveCMUnspc() {
 			retrieveHighRoleCodeByUser();
 			retrieveAllRoleCodesByUser();
 			retrieveZoneByUser();
-			//retrieveMinistryList();
-			retriveUserrloeByUserId(this.getModuleValue());			
+			// retrieveMinistryList();
+			retriveUserrloeByUserId(this.getModuleValue());
 			retrieveParamCodeByUser();
-			
+
 			roleCodeUsersSetup();
-			
-			
-			if ((this.getModuleValue()
-					.equalsIgnoreCase(ReportConst.DP_MOD_VAL))) {
+
+			if ((this.getModuleValue().equalsIgnoreCase(ReportConst.DP_MOD_VAL))) {
 				retrieveApprovarNaikTarafDPS1();
 				retrievePTJS1();
-				 
+
 			}
 			if ((this.getModuleValue()
-							.equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION))) {
+					.equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION))) {
 				retrieveApprovarNaikTarafSCS2();
 				retrievePTJS2();
-			}	
+			}
 			retrieveRequisitioner();
 			retrieveDescOfficer();
 			generateYearList();
 			if ((this.getModuleValue()
 					.equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT))) {
 				cmReportBackingBean.criteriaVariablesByReportByCM(rptGenBean,
-						authoriztionList,paramList);
+						authoriztionList, paramList);
 			} else if ((this.getModuleValue()
 					.equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION))
 					|| (this.getModuleValue()
 							.equalsIgnoreCase(ReportConst.DP_MOD_VAL))) {
 				generateMonthList();
-				
+
 				scReportBackingBean.enableCriteriaVariablesByReportBySC(
-						rptGenBean, authoriztionList,approverNayakTarafList);
+						rptGenBean, authoriztionList, approverNayakTarafList);
 			} else if ((this.getModuleValue()
 					.equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT))) {
 				getDocTypeStatusDropDown();
@@ -9114,16 +10043,16 @@ public void retrieveCMUnspc() {
 				retrievePaymentMethod();
 				smReportBackingBean.enableCriteriaVariablesByReportBySM(
 						rptGenBean, authoriztionList);
-				
+
 			} else if ((this.getModuleValue()
 					.equalsIgnoreCase(ModuleCodeConst.CONTRACT_MANAGEMENT))) {
 				ctReportBackingBean.enableCriteriaVariablesByReportByCT(
 						rptGenBean, authoriztionList);
-			}else if ((this.getModuleValue()
+			} else if ((this.getModuleValue()
 					.equalsIgnoreCase(ModuleCodeConst.PROCUREMENT_PLAN))) {
 				ppReportBackingBean.enableCriteriaVariablesByReportByPP(
 						rptGenBean, authoriztionList);
-			}else if ((this.getModuleValue()
+			} else if ((this.getModuleValue()
 					.equalsIgnoreCase(ModuleCodeConst.PROFILE_MANAGEMENT))) {
 				pmReportBackingBean.enableCriteriaVariablesByReportByPM(
 						rptGenBean, authoriztionList);
@@ -9138,7 +10067,7 @@ public void retrieveCMUnspc() {
 			madatoryIndicator();
 			retrieveAllMinistry();
 			enableSupplierCompNameTextOrDropdown();
-			//retrieveParameterCodeType();		
+			// retrieveParameterCodeType();
 			enableCriteriaMenu();
 			getManagedBean().getRptGenBean().setGenerateButtonView(false);
 			zoneByRolecode();
@@ -9150,8 +10079,9 @@ public void retrieveCMUnspc() {
 
 	/**
 	 * Gets the default values from and to date.
-	 *
-	 * @param reportCode the report code
+	 * 
+	 * @param reportCode
+	 *            the report code
 	 * @return the default values from and to date
 	 */
 	private void getDefaultValuesFromAndToDate(String reportCode) {
@@ -9172,12 +10102,12 @@ public void retrieveCMUnspc() {
 			}
 	}
 
-	
 	/**
 	 * Retrieve dates.
 	 */
 	public void retrieveDates() {
-		if ((this.getReportValue() != null) && (this.getReportValue() != ReportConst.EMPTY_VAL)) {
+		if ((this.getReportValue() != null)
+				&& (this.getReportValue() != ReportConst.EMPTY_VAL)) {
 			SimpleDateFormat outputDateFormat = new SimpleDateFormat(
 					CommonConstants.DEFAULT_DATE_FORMAT);
 			if (this.getModuleValue().equalsIgnoreCase(
@@ -9190,94 +10120,107 @@ public void retrieveCMUnspc() {
 			}
 			if (this.getModuleValue().equalsIgnoreCase(
 					ModuleCodeConst.SUPPLIER_MANAGEMENT)) {
-				if((null!=this.getReportValue())&&(this.getReportValue().equals(ReportConst.SM_SUPPLIER_PERFORMANCE)||this.getReportValue().equals(ReportConst.SM_THRESHOLD)||this.getReportValue().equals(ReportConst.SM_THRESHOLD_VALUE)||this.getReportValue().equals(ReportConst.SM_LST_MONTH_WISE_RPT_VAL))){
+				if ((null != this.getReportValue())
+						&& (this.getReportValue().equals(
+								ReportConst.SM_SUPPLIER_PERFORMANCE)
+								|| this.getReportValue().equals(
+										ReportConst.SM_THRESHOLD)
+								|| this.getReportValue().equals(
+										ReportConst.SM_THRESHOLD_VALUE) || this
+								.getReportValue().equals(
+										ReportConst.SM_LST_MONTH_WISE_RPT_VAL))) {
 					Date currentDate = new Date();
-					this.setSmCreatedFromYear(outputDateFormat.format(currentDate)
-							.substring(6, 10));
-					this.setSmCreatedToYear(outputDateFormat.format(currentDate)
-							.substring(6, 10));
-					this.setSmThresholdFromYear(outputDateFormat.format(currentDate)
-							.substring(6, 10));
-					this.setSmThresholdToYear(outputDateFormat.format(currentDate)
-							.substring(6, 10));
-					this.setSmMonthlyRptByYear(outputDateFormat.format(currentDate)
-							.substring(6, 10));
-				}		
+					this.setSmCreatedFromYear(outputDateFormat.format(
+							currentDate).substring(6, 10));
+					this.setSmCreatedToYear(outputDateFormat
+							.format(currentDate).substring(6, 10));
+					this.setSmThresholdFromYear(outputDateFormat.format(
+							currentDate).substring(6, 10));
+					this.setSmThresholdToYear(outputDateFormat.format(
+							currentDate).substring(6, 10));
+					this.setSmMonthlyRptByYear(outputDateFormat.format(
+							currentDate).substring(6, 10));
+				}
 			}
-			if ((this.getModuleValue()
-						.equalsIgnoreCase(ReportConst.DP_MOD_VAL))) {
-					Date currentDate = new Date();
-					this.setScSoneCrtdToDate(currentDate);
-					Date newDate = new Date();
-					newDate.setMonth(0);
-					newDate.setDate(1);
-					this.setScSoneCrtdFromDate(newDate);
+			if ((this.getModuleValue().equalsIgnoreCase(ReportConst.DP_MOD_VAL))) {
+				Date currentDate = new Date();
+				this.setScSoneCrtdToDate(currentDate);
+				Date newDate = new Date();
+				newDate.setMonth(0);
+				newDate.setDate(1);
+				this.setScSoneCrtdFromDate(newDate);
 			}
 		}
 	}
-	
+
 	/**
 	 * Check one year defference.
-	 *
-	 * @param fromDate the from date
-	 * @param toDate the to date
+	 * 
+	 * @param fromDate
+	 *            the from date
+	 * @param toDate
+	 *            the to date
 	 */
-	public void checkOneYearDefference(Date fromDate,Date toDate) {
+	public void checkOneYearDefference(Date fromDate, Date toDate) {
 		SimpleDateFormat outputDateFormat = new SimpleDateFormat(
 				CommonConstants.DEFAULT_DATE_FORMAT);
-		String yearFrom=outputDateFormat.format(fromDate).substring(6, 10);
-		String yearTo=outputDateFormat.format(toDate).substring(6, 10);
-		String monthFrom=outputDateFormat.format(fromDate).substring(3, 5);
-		String monthTo=outputDateFormat.format(toDate).substring(3, 5);
-		String dayFrom=outputDateFormat.format(fromDate).substring(0, 2);
-		String dayTo=outputDateFormat.format(toDate).substring(0, 2);
-		int yearFromInt=Integer.parseInt(yearFrom);
-		int yearToInt=Integer.parseInt(yearTo);
-		int monthFromInt=Integer.parseInt(monthFrom);
-		int monthToInt=Integer.parseInt(monthTo);
-		int dayFromInt=Integer.parseInt(dayFrom);
-		int dayToInt=Integer.parseInt(dayTo);		
-		if(yearToInt==yearFromInt+1){
-			if(monthToInt==monthFromInt){
-				if(dayToInt>dayFromInt){
+		String yearFrom = outputDateFormat.format(fromDate).substring(6, 10);
+		String yearTo = outputDateFormat.format(toDate).substring(6, 10);
+		String monthFrom = outputDateFormat.format(fromDate).substring(3, 5);
+		String monthTo = outputDateFormat.format(toDate).substring(3, 5);
+		String dayFrom = outputDateFormat.format(fromDate).substring(0, 2);
+		String dayTo = outputDateFormat.format(toDate).substring(0, 2);
+		int yearFromInt = Integer.parseInt(yearFrom);
+		int yearToInt = Integer.parseInt(yearTo);
+		int monthFromInt = Integer.parseInt(monthFrom);
+		int monthToInt = Integer.parseInt(monthTo);
+		int dayFromInt = Integer.parseInt(dayFrom);
+		int dayToInt = Integer.parseInt(dayTo);
+		if (yearToInt == yearFromInt + 1) {
+			if (monthToInt == monthFromInt) {
+				if (dayToInt > dayFromInt) {
 					throw new EpException(MessageConst.ERROR_REPORT_780011);
-				}				
-			}else if(monthToInt>monthFromInt){
+				}
+			} else if (monthToInt > monthFromInt) {
 				throw new EpException(MessageConst.ERROR_REPORT_780011);
-			}			
-		}else if(yearToInt>yearFromInt+1){			
+			}
+		} else if (yearToInt > yearFromInt + 1) {
 			throw new EpException(MessageConst.ERROR_REPORT_780011);
-		}		
+		}
 	}
-	
+
 	/**
 	 * Check only year field defference.
-	 *
-	 * @param yearFrom the year from
-	 * @param yearTo the year to
+	 * 
+	 * @param yearFrom
+	 *            the year from
+	 * @param yearTo
+	 *            the year to
 	 */
-	public void checkOnlyYearFieldDefference(String yearFrom,String yearTo) {
-		int yearFromInt=Integer.parseInt(yearFrom);
-		int yearToInt=Integer.parseInt(yearTo);
-		if(yearFromInt>yearToInt){			
+	public void checkOnlyYearFieldDefference(String yearFrom, String yearTo) {
+		int yearFromInt = Integer.parseInt(yearFrom);
+		int yearToInt = Integer.parseInt(yearTo);
+		if (yearFromInt > yearToInt) {
 			throw new EpException(MessageConst.ERROR_REPORT_780015);
 		}
 	}
-	
+
 	/**
 	 * Check two years field defference.
-	 *
-	 * @param yearFrom the year from
-	 * @param yearTo the year to
+	 * 
+	 * @param yearFrom
+	 *            the year from
+	 * @param yearTo
+	 *            the year to
 	 */
-	public void checkTwoYearsFieldDefference(String yearFrom,String yearTo) {
-		int yearFromInt=Integer.parseInt(yearFrom);
-		int yearToInt=Integer.parseInt(yearTo);
-		if(yearToInt>yearFromInt+1){	
+	public void checkTwoYearsFieldDefference(String yearFrom, String yearTo) {
+		int yearFromInt = Integer.parseInt(yearFrom);
+		int yearToInt = Integer.parseInt(yearTo);
+		if (yearToInt > yearFromInt + 1) {
 			throw new EpException(MessageConst.ERROR_REPORT_780017);
 		}
 	}
-	
+
 	/**
 	 * Retrieve state.
 	 */
@@ -9327,7 +10270,7 @@ public void retrieveCMUnspc() {
 
 	/**
 	 * Retrieve category lev one.
-	 *
+	 * 
 	 * @return the list
 	 */
 	public List<SelectItem> retrieveCategoryLevOne() {
@@ -9339,18 +10282,19 @@ public void retrieveCMUnspc() {
 				.retrieveCategoryL1List();
 		for (PmCategoryL1 catOne : catCodeResDTO.getCategoryL1List()) {
 			SelectItem selectItem = new SelectItem();
-			selectItem.setLabel(catOne.getCategoryL1Code() + ReportConst.RPT_EIFON
-					+ catOne.getCategoryName());
+			selectItem.setLabel(catOne.getCategoryL1Code()
+					+ ReportConst.RPT_EIFON + catOne.getCategoryName());
 			selectItem.setValue(catOne.getCategoryL1Id());
 			levOneCatLst.add(selectItem);
 		}
 		return levOneCatLst;
 	}
-	
+
 	/**
 	 * Retrieve category lev two.
-	 *
-	 * @param mainCategory the main category
+	 * 
+	 * @param mainCategory
+	 *            the main category
 	 * @return the list
 	 */
 	public List<SelectItem> retrieveCategoryLevTwo(String mainCategory) {
@@ -9365,19 +10309,20 @@ public void retrieveCMUnspc() {
 					.retrieveCategoryL2ListByL1Id(catCodeReqDTO);
 			for (PmCategoryL2 catTwo : catCodeResDTO.getCategoryL2List()) {
 				SelectItem selectItem = new SelectItem();
-				selectItem.setLabel(catTwo.getCategoryL2Code() + ReportConst.RPT_EIFON
-						+ catTwo.getCategoryName());
+				selectItem.setLabel(catTwo.getCategoryL2Code()
+						+ ReportConst.RPT_EIFON + catTwo.getCategoryName());
 				selectItem.setValue(catTwo.getCategoryL2Id());
 				levTwoCatLst.add(selectItem);
 			}
 		}
 		return levTwoCatLst;
 	}
-	
+
 	/**
 	 * Retrieve category lev three.
-	 *
-	 * @param subCategory the sub category
+	 * 
+	 * @param subCategory
+	 *            the sub category
 	 * @return the list
 	 */
 	public List<SelectItem> retrieveCategoryLevThree(String subCategory) {
@@ -9392,15 +10337,15 @@ public void retrieveCMUnspc() {
 					.retrieveCategoryL3ListByL2Id(catCodeReqDTO);
 			for (PmCategoryL3 catThree : catCodeResDTO.getCategoryL3List()) {
 				SelectItem selectItem = new SelectItem();
-				selectItem.setLabel(catThree.getCategoryL3Code() + ReportConst.RPT_EIFON
-						+ catThree.getCategoryName());
+				selectItem.setLabel(catThree.getCategoryL3Code()
+						+ ReportConst.RPT_EIFON + catThree.getCategoryName());
 				selectItem.setValue(catThree.getCategoryL3Id());
 				levThreeCatLst.add(selectItem);
 			}
 		}
 		return levThreeCatLst;
 	}
-	
+
 	/**
 	 * Enable registration type.
 	 */
@@ -9408,7 +10353,7 @@ public void retrieveCMUnspc() {
 		this.setCmEpNumber(null);
 		this.setCmIcNumber(null);
 		this.setCmBusinessRegNo(null);
-		this.setCmMofNumber(null);		
+		this.setCmMofNumber(null);
 		getManagedBean().getRptGenBean().setCmMofRegView(false);
 		getManagedBean().getRptGenBean().setCmBasicRegView(false);
 		getManagedBean().getRptGenBean().setSmMofRegView(false);
@@ -9438,18 +10383,18 @@ public void retrieveCMUnspc() {
 					ReportConst.RPT_REG_BASIC)) {
 				getManagedBean().getRptGenBean().setSmBasicRegView(true);
 				getManagedBean().getRptGenBean().setSmMofRegView(false);
-				
+
 			} else if (this.getSmRegistrationType().equalsIgnoreCase(
 					ReportConst.RPT_REG_MOF)) {
 				getManagedBean().getRptGenBean().setSmMofRegView(true);
-				getManagedBean().getRptGenBean().setSmBasicRegView(false);				
+				getManagedBean().getRptGenBean().setSmBasicRegView(false);
 			}
 		}
 	}
 
 	/**
 	 * Generate month list.
-	 *
+	 * 
 	 * @return the list
 	 */
 	public List<SelectItem> generateMonthList() {
@@ -9459,7 +10404,7 @@ public void retrieveCMUnspc() {
 
 	/**
 	 * Generate year list.
-	 *
+	 * 
 	 * @return the list
 	 */
 	public List<String> generateYearList() {
@@ -9473,11 +10418,11 @@ public void retrieveCMUnspc() {
 	public void createdToDtUpdate() {
 		this.setScCreatedToYear(this.getScCreatedFromYear());
 	}
-	
+
 	/**
 	 * Created to month update.
 	 */
-	public void createdToMonthUpdate(){
+	public void createdToMonthUpdate() {
 		this.setScCreatedToMonth(this.getScCreatedFromMonth());
 	}
 
@@ -9511,38 +10456,41 @@ public void retrieveCMUnspc() {
 			rptGenBean.setScProcureRestrctdEditView(false);
 		}
 	}
-	
+
 	/**
 	 * Check sm year n month defference.
 	 */
 	public void checkSMYearNMonthDefference() {
-		int fromyear= 0;
+		int fromyear = 0;
 		int toyear = 0;
-		int fromMonth= 0;
-		int toMonth= 0;
-		if ((this.getSmCreatedFromYear() != null) && (this.getSmCreatedFromYear() != ReportConst.EMPTY_VAL)) {
+		int fromMonth = 0;
+		int toMonth = 0;
+		if ((this.getSmCreatedFromYear() != null)
+				&& (this.getSmCreatedFromYear() != ReportConst.EMPTY_VAL)) {
 			fromyear = Integer.parseInt(this.getSmCreatedFromYear());
 		}
-		if ((this.getSmCreatedToYear() != null) && (this.getSmCreatedToYear() != ReportConst.EMPTY_VAL)) {
-		    toyear = Integer.parseInt(this.getSmCreatedToYear());
+		if ((this.getSmCreatedToYear() != null)
+				&& (this.getSmCreatedToYear() != ReportConst.EMPTY_VAL)) {
+			toyear = Integer.parseInt(this.getSmCreatedToYear());
 		}
-		if ((this.getSmFromMonth() != null) && (this.getSmFromMonth() != ReportConst.EMPTY_VAL)) {
-		    fromMonth = Integer.parseInt(this.getSmFromMonth());
+		if ((this.getSmFromMonth() != null)
+				&& (this.getSmFromMonth() != ReportConst.EMPTY_VAL)) {
+			fromMonth = Integer.parseInt(this.getSmFromMonth());
 		}
-		if ((this.getSmToMonth() != null) && (this.getSmToMonth() != ReportConst.EMPTY_VAL)) {
-		    toMonth = Integer.parseInt(this.getSmToMonth());
+		if ((this.getSmToMonth() != null)
+				&& (this.getSmToMonth() != ReportConst.EMPTY_VAL)) {
+			toMonth = Integer.parseInt(this.getSmToMonth());
 		}
-		if(fromyear==toyear){
-			if(fromMonth>toMonth){
+		if (fromyear == toyear) {
+			if (fromMonth > toMonth) {
 				throw new EpException(MessageConst.ERROR_REPORT_780014);
-			}			
-		}else if(fromyear>toyear){			
+			}
+		} else if (fromyear > toyear) {
 			throw new EpException(MessageConst.ERROR_REPORT_780015);
-		}else if(toyear>fromyear+1){			
+		} else if (toyear > fromyear + 1) {
 			throw new EpException(MessageConst.ERROR_REPORT_780011);
 		}
-		
-		
+
 	}
 
 	/*
@@ -9552,10 +10500,23 @@ public void retrieveCMUnspc() {
 	 * Generate report.
 	 */
 	public void generateReport() {
-		if (((this.getReportValue() != null)&&this.getReportValue().toString().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL))||((this.getReportValue() != null)&&this.getReportValue().toString().equals(ReportConst.SM_LIST_OF_DIR_OWN_CEO_COMPANY_RPT_VAL))||((this.getReportValue() != null)&&this.getReportValue().toString().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL))||((this.getReportValue() != null)&&this.getReportValue().toString().equals(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL))){
+		if (((this.getReportValue() != null) && this.getReportValue()
+				.toString()
+				.equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL))
+				|| ((this.getReportValue() != null) && this
+						.getReportValue()
+						.toString()
+						.equals(ReportConst.SM_LIST_OF_DIR_OWN_CEO_COMPANY_RPT_VAL))
+				|| ((this.getReportValue() != null) && this
+						.getReportValue()
+						.toString()
+						.equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL))
+				|| ((this.getReportValue() != null) && this.getReportValue()
+						.toString()
+						.equals(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL))) {
 			mofRegNoNumericValidation();
 		}
-		
+
 		rptGenBean = new ReportsGenerateBean();
 		if ((this.getModuleValue() != null)
 				&& (getManagedBean().getReportValue() != null)) {
@@ -9581,20 +10542,26 @@ public void retrieveCMUnspc() {
 			}
 			if ((this.getFromDate() != null) && (this.getToDate() != null)) {
 				if (this.getToDate().after(this.getFromDate())) {
-					checkOneYearDefference(this.getFromDate(),this.getToDate());
+					checkOneYearDefference(this.getFromDate(), this.getToDate());
 				}
 			}
-			if ((this.getCtCircularEffectiveFromDate() != null) && (this.getCtCircularEffectiveToDate() != null)) {
-				if (this.getCtCircularEffectiveFromDate().after(this.getCtCircularEffectiveToDate())) {
+			if ((this.getCtCircularEffectiveFromDate() != null)
+					&& (this.getCtCircularEffectiveToDate() != null)) {
+				if (this.getCtCircularEffectiveFromDate().after(
+						this.getCtCircularEffectiveToDate())) {
 					throw new EpException(MessageConst.ERROR_REPORT_780008);
 				}
 			}
-			if ((this.getCtCircularEffectiveFromDate() != null) && (this.getCtCircularEffectiveToDate() != null)) {
-				if (this.getCtCircularEffectiveFromDate().after(this.getCtCircularEffectiveToDate())) {
-					checkOneYearDefference(this.getCtCircularEffectiveFromDate(),this.getCtCircularEffectiveToDate());
+			if ((this.getCtCircularEffectiveFromDate() != null)
+					&& (this.getCtCircularEffectiveToDate() != null)) {
+				if (this.getCtCircularEffectiveFromDate().after(
+						this.getCtCircularEffectiveToDate())) {
+					checkOneYearDefference(
+							this.getCtCircularEffectiveFromDate(),
+							this.getCtCircularEffectiveToDate());
 				}
 			}
-			
+
 			if ((this.getScSoneCrtdFromDate() != null)
 					&& (this.getScSoneCrtdToDate() != null)) {
 				if (this.getScSoneCrtdFromDate().after(
@@ -9602,17 +10569,20 @@ public void retrieveCMUnspc() {
 					throw new EpException(MessageConst.ERROR_REPORT_780008);
 				}
 			}
-			if ((this.getScSoneCrtdFromDate() != null) && (this.getScSoneCrtdToDate() != null)) {
-				if (this.getScSoneCrtdToDate().after(this.getScSoneCrtdFromDate())) {
-					checkOneYearDefference(this.getScSoneCrtdFromDate(),this.getScSoneCrtdToDate());
+			if ((this.getScSoneCrtdFromDate() != null)
+					&& (this.getScSoneCrtdToDate() != null)) {
+				if (this.getScSoneCrtdToDate().after(
+						this.getScSoneCrtdFromDate())) {
+					checkOneYearDefference(this.getScSoneCrtdFromDate(),
+							this.getScSoneCrtdToDate());
 				}
 			}
-			 if ((getManagedBean().getReportValue() != null)
+			if ((getManagedBean().getReportValue() != null)
 					&& (getManagedBean().getReportValue() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setReportValueIdVar(ReportConst.FL_AMP_REPORT_ID_EQ
 						+ getManagedBean().getReportValue());
 			}
-			
+
 			if ((((PmUser) new FacesScopes().getUserSessionBean()).getUserId() != null)
 					&& (new FacesScopes().getUserSessionBean().getUserId()
 							.toString() != ReportConst.EMPTY_VAL)) {
@@ -9620,31 +10590,47 @@ public void retrieveCMUnspc() {
 						+ new FacesScopes().getUserSessionBean().getUserId()
 								.toString());
 			}
-			if (((this.getSmThresholdFromYear() != null)
-					&& (this.getSmThresholdToYear() == null))||((this.getSmThresholdFromYear() == null)
-							&& (this.getSmThresholdToYear() != null))) {
+			if (((this.getSmThresholdFromYear() != null) && (this
+					.getSmThresholdToYear() == null))
+					|| ((this.getSmThresholdFromYear() == null) && (this
+							.getSmThresholdToYear() != null))) {
 				throw new EpException(MessageConst.ERROR_REPORT_780016);
 			}
 			if ((this.getSmThresholdFromYear() != null)
 					&& (this.getSmThresholdToYear() != null)) {
-			 checkOnlyYearFieldDefference(this.getSmThresholdFromYear(),this.getSmThresholdToYear());
+				checkOnlyYearFieldDefference(this.getSmThresholdFromYear(),
+						this.getSmThresholdToYear());
 			}
 			if ((this.getSmCreatedFromYear() != null)
 					&& (this.getSmCreatedToYear() != null)) {
-			 checkOnlyYearFieldDefference(this.getSmCreatedFromYear(),this.getSmCreatedToYear());
+				checkOnlyYearFieldDefference(this.getSmCreatedFromYear(),
+						this.getSmCreatedToYear());
 			}
-			if((this.getReportValue()!= null && (getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SM_SUPPLIER_PERFORMANCE)))||(this.getReportValue()!= null && (getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SM_THRESHOLD)))||(this.getReportValue()!= null && (getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SM_THRESHOLD_VALUE)))){
-				if ((this.getSmThresholdFromYear() != null) && (this.getSmThresholdToYear() != null)) {
-					checkTwoYearsFieldDefference(this.getSmThresholdFromYear(),this.getSmThresholdToYear());
+			if ((this.getReportValue() != null && (getManagedBean()
+					.getReportValue().trim()
+					.equalsIgnoreCase(ReportConst.SM_SUPPLIER_PERFORMANCE)))
+					|| (this.getReportValue() != null && (getManagedBean()
+							.getReportValue().trim()
+							.equalsIgnoreCase(ReportConst.SM_THRESHOLD)))
+					|| (this.getReportValue() != null && (getManagedBean()
+							.getReportValue().trim()
+							.equalsIgnoreCase(ReportConst.SM_THRESHOLD_VALUE)))) {
+				if ((this.getSmThresholdFromYear() != null)
+						&& (this.getSmThresholdToYear() != null)) {
+					checkTwoYearsFieldDefference(this.getSmThresholdFromYear(),
+							this.getSmThresholdToYear());
 				}
 			}
-			if(this.getReportValue()!= null && (getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SM_CAT_STATIC_BY_YEAR_RPT_VAL))){
-				if ((this.getSmCreatedFromYear() != null) && (this.getSmCreatedToYear() != null)) {
-					checkTwoYearsFieldDefference(this.getSmCreatedFromYear(),this.getSmCreatedToYear());
+			if (this.getReportValue() != null
+					&& (getManagedBean().getReportValue().trim()
+							.equalsIgnoreCase(ReportConst.SM_CAT_STATIC_BY_YEAR_RPT_VAL))) {
+				if ((this.getSmCreatedFromYear() != null)
+						&& (this.getSmCreatedToYear() != null)) {
+					checkTwoYearsFieldDefference(this.getSmCreatedFromYear(),
+							this.getSmCreatedToYear());
 				}
 			}
-			
-			
+
 			if (this.getModuleValue().equalsIgnoreCase(
 					ModuleCodeConst.SUPPLIER_SELECTION)
 					|| this.getModuleValue().equalsIgnoreCase(
@@ -9662,44 +10648,63 @@ public void retrieveCMUnspc() {
 			} else if (this.getModuleValue().equalsIgnoreCase(
 					ModuleCodeConst.CONTRACT_MANAGEMENT)) {
 				generateCTReport();
-			}else if (this.getModuleValue().equalsIgnoreCase(
+			} else if (this.getModuleValue().equalsIgnoreCase(
 					ModuleCodeConst.PROCUREMENT_PLAN)) {
 				generatePPReport();
-			}else if (this.getModuleValue().equalsIgnoreCase(
+			} else if (this.getModuleValue().equalsIgnoreCase(
 					ModuleCodeConst.PROFILE_MANAGEMENT)) {
 				generatePMReport();
 			}
 			if (null != constructedParamString
 					&& !ReportConst.EMPTY_VAL.equals(constructedParamString)) {
-				//try {
-					getManagedBean().getRptGenBean().setGenerateButtonView(true);
-					//generateReportTimer();
-					//generateReportIntime();
-					fileGenerateReport(getManagedBean().getReportJsp(),	constructedParamString);
-					/*FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("reportGenDialog.hide()");//execute("reportGenDialog.hide()");
-					RequestContext.getCurrentInstance().execute("reportGenDialog.hide()");*/
-					getManagedBean().getRptGenBean().setGenerateButtonView(false);
-				/*} catch (IOException e) {
-					getManagedBean().getRptGenBean().setGenerateButtonView(false);
-					throw new EpException(MessageConst.ERROR_REPORT_780009);
-				}*/
+				// try {
+				getManagedBean().getRptGenBean().setGenerateButtonView(true);
+				// generateReportTimer();
+				// generateReportIntime();
+				fileGenerateReport(getManagedBean().getReportJsp(),
+						constructedParamString);
+				/*
+				 * FacesContext.getCurrentInstance().getPartialViewContext().
+				 * getRenderIds().add("reportGenDialog.hide()");//execute(
+				 * "reportGenDialog.hide()");
+				 * RequestContext.getCurrentInstance()
+				 * .execute("reportGenDialog.hide()");
+				 */
+				getManagedBean().getRptGenBean().setGenerateButtonView(false);
+				/*
+				 * } catch (IOException e) {
+				 * getManagedBean().getRptGenBean().setGenerateButtonView
+				 * (false); throw new
+				 * EpException(MessageConst.ERROR_REPORT_780009); }
+				 */
 			}
-			//InputStream stream = ((ServletContext)FacesContext.getCurrentInstance().getExternalContext().getContext()).getResourceAsStream("/css/images/optimus.jpg");
-			////file = new DefaultStreamedContent(stream, "image/jpg", "downloaded_optimus.jpg");
-	        //RequestContext.getCurrentInstance().execute("statusDialog.hide()");
-			/*RequestContext context = RequestContext.getCurrentInstance();
-			context.addCallbackParam(ReportConst.RPT_IN_VALID,
-					ReportConst.RPT_TRUE);*/
-			//externalContext.addResponseCookie("primefaces.download", "true", Collections.<String, Object>emptyMap());
-			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-			externalContext.addResponseCookie("primefaces.download", ReportConst.RPT_TRUE, Collections.<String, Object>emptyMap());
+			// InputStream stream =
+			// ((ServletContext)FacesContext.getCurrentInstance().getExternalContext().getContext()).getResourceAsStream("/css/images/optimus.jpg");
+			// //file = new DefaultStreamedContent(stream, "image/jpg",
+			// "downloaded_optimus.jpg");
+			// RequestContext.getCurrentInstance().execute("statusDialog.hide()");
+			/*
+			 * RequestContext context = RequestContext.getCurrentInstance();
+			 * context.addCallbackParam(ReportConst.RPT_IN_VALID,
+			 * ReportConst.RPT_TRUE);
+			 */
+			// externalContext.addResponseCookie("primefaces.download", "true",
+			// Collections.<String, Object>emptyMap());
+			ExternalContext externalContext = FacesContext.getCurrentInstance()
+					.getExternalContext();
+			externalContext.addResponseCookie("primefaces.download",
+					ReportConst.RPT_TRUE,
+					Collections.<String, Object> emptyMap());
 		} else {
-			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-			externalContext.addResponseCookie("primefaces.download", ReportConst.RPT_TRUE, Collections.<String, Object>emptyMap());
+			ExternalContext externalContext = FacesContext.getCurrentInstance()
+					.getExternalContext();
+			externalContext.addResponseCookie("primefaces.download",
+					ReportConst.RPT_TRUE,
+					Collections.<String, Object> emptyMap());
 			throw new EpException(MessageConst.ERROR_REPORT_780001);
 		}
 	}
- 
+
 	/**
 	 * Generate report intime.
 	 */
@@ -9707,65 +10712,61 @@ public void retrieveCMUnspc() {
 		ExecutorService service = Executors.newSingleThreadExecutor();
 
 		try {
-		    Runnable rnbl = new Runnable() {
-		        @Override
-		        public void run() {
-						fileGenerateReport(getManagedBean().getReportJsp(),
-								constructedParamString);					
-		        }
-		    };
-		    Future<?> f = service.submit(rnbl);
-		    f.get(1, TimeUnit.MINUTES);     // attempt the task for one minutes
-		}
-		catch (final InterruptedException e) {
+			Runnable rnbl = new Runnable() {
+				@Override
+				public void run() {
+					fileGenerateReport(getManagedBean().getReportJsp(),
+							constructedParamString);
+				}
+			};
+			Future<?> f = service.submit(rnbl);
+			f.get(1, TimeUnit.MINUTES); // attempt the task for one minutes
+		} catch (final InterruptedException e) {
 			getManagedBean().getRptGenBean().setGenerateButtonView(false);
 			throw new EpException(MessageConst.ERROR_REPORT_780009);
-		}
-		catch (final TimeoutException e) {
+		} catch (final TimeoutException e) {
 			getManagedBean().getRptGenBean().setGenerateButtonView(false);
 			throw new EpException(MessageConst.ERROR_REPORT_780020);
-		}
-		catch (final ExecutionException e) {
+		} catch (final ExecutionException e) {
 			getManagedBean().getRptGenBean().setGenerateButtonView(false);
 			throw new EpException(MessageConst.ERROR_REPORT_780023);
-		} 
-		finally {
-		    service.shutdown();
+		} finally {
+			service.shutdown();
 		}
 	}
-	
+
 	/**
 	 * Generate report timer.
 	 */
 	public void generateReportTimer() {
 		Thread thread = new Thread(new Runnable() {
-	        @Override
-	        public void run(){
-					fileGenerateReport(getManagedBean().getReportJsp(),
-							constructedParamString);
-	        }
+			@Override
+			public void run() {
+				fileGenerateReport(getManagedBean().getReportJsp(),
+						constructedParamString);
+			}
 		});
 		thread.start();
 		long endTimeMillis = System.currentTimeMillis() + 60000;
 		while (thread.isAlive()) {
-		    if (System.currentTimeMillis() > endTimeMillis) {
-		    	getManagedBean().getRptGenBean().setGenerateButtonView(false);		    	
-		    	break;		        
-		    }
-		    try {
-		        Thread.sleep(50000);
-		    }
-		    catch (InterruptedException t) {
-		    	getManagedBean().getRptGenBean().setGenerateButtonView(false);
-		    	log.info(MessageConst.ERROR_REPORT_780020);
-		    }
+			if (System.currentTimeMillis() > endTimeMillis) {
+				getManagedBean().getRptGenBean().setGenerateButtonView(false);
+				break;
+			}
+			try {
+				Thread.sleep(50000);
+			} catch (InterruptedException t) {
+				getManagedBean().getRptGenBean().setGenerateButtonView(false);
+				log.info(MessageConst.ERROR_REPORT_780020);
+			}
 		}
-	}	
-	
+	}
+
 	/**
 	 * Load report with params.
-	 *
-	 * @param paramLst the param lst
+	 * 
+	 * @param paramLst
+	 *            the param lst
 	 */
 	public void loadReportWithParams(List<String> paramLst) {
 		StringBuilder gnrtdURL = new StringBuilder();
@@ -9797,8 +10798,9 @@ public void retrieveCMUnspc() {
 
 	/**
 	 * Load report.
-	 *
-	 * @param gnrtdURL the gnrtd url
+	 * 
+	 * @param gnrtdURL
+	 *            the gnrtd url
 	 */
 	public void loadReport(String gnrtdURL) {
 		try {
@@ -9821,8 +10823,9 @@ public void retrieveCMUnspc() {
 
 	/**
 	 * Load report with params string.
-	 *
-	 * @param paramConstrString the param constr string
+	 * 
+	 * @param paramConstrString
+	 *            the param constr string
 	 */
 	public void loadReportWithParamsString(String paramConstrString) {
 		StringBuilder gnrtdURL = new StringBuilder();
@@ -9860,40 +10863,65 @@ public void retrieveCMUnspc() {
 	 * Generate ct report.
 	 */
 	public void generateCTReport() {
-		if (((this.getCtContrMontrStatus() != null) && (this.getCtContrMontrStatus() != ReportConst.EMPTY_VAL))
+		if (((this.getCtContrMontrStatus() != null) && (this
+				.getCtContrMontrStatus() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtUserType() != null) && (this.getCtUserType() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtSubType() != null) && (this.getCtSubType() != ReportConst.EMPTY_VAL))
-				|| ((this.getCtProductService() != null) && (this.getCtProductService() != ReportConst.EMPTY_VAL))
-				|| ((this.getCtLoanNo() != null) && (this.getCtLoanNo() != ReportConst.EMPTY_VAL)) 
-				|| ((this.getCtLOAPhysicalNo() != null) && (this.getCtLOAPhysicalNo() != ReportConst.EMPTY_VAL))
-				|| ((this.getCommonMinistry() != null) && (this.getCommonMinistry() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtProductService() != null) && (this
+						.getCtProductService() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtLoanNo() != null) && (this.getCtLoanNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtLOAPhysicalNo() != null) && (this
+						.getCtLOAPhysicalNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getCommonMinistry() != null) && (this
+						.getCommonMinistry() != ReportConst.EMPTY_VAL))
 				|| ((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtContractNo() != null) && (this.getCtContractNo() != ReportConst.EMPTY_VAL))
-				|| ((this.getCtPhysicalContractNo() != null) && (this.getCtPhysicalContractNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtPhysicalContractNo() != null) && (this
+						.getCtPhysicalContractNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtAgreement() != null) && (this.getCtAgreement() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtStatus() != null) && (this.getCtStatus() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtStatusTwo() != null) && (this.getCtStatusTwo() != ReportConst.EMPTY_VAL))
-				|| ((this.getCtTerminationType() != null) && (this.getCtTerminationType() != ReportConst.EMPTY_VAL))
-				/*|| ((this.getCtAgreement() != null) && (!this.getCtAgreement().equals(ReportConst.CT_GROUP_VAL_ALL)))
-				|| ((this.getCtStatus() != null) && (!this.getCtStatus().equals(ReportConst.CT_GROUP_VAL_ALL)))
-				|| ((this.getCtStatusTwo() != null) && (!this.getCtStatusTwo().equals(ReportConst.CT_GROUP_VAL_ALL)))*/
+				|| ((this.getCtTerminationType() != null) && (this
+						.getCtTerminationType() != ReportConst.EMPTY_VAL))
+				/*
+				 * || ((this.getCtAgreement() != null) &&
+				 * (!this.getCtAgreement()
+				 * .equals(ReportConst.CT_GROUP_VAL_ALL))) ||
+				 * ((this.getCtStatus() != null) &&
+				 * (!this.getCtStatus().equals(ReportConst.CT_GROUP_VAL_ALL)))
+				 * || ((this.getCtStatusTwo() != null) &&
+				 * (!this.getCtStatusTwo()
+				 * .equals(ReportConst.CT_GROUP_VAL_ALL)))
+				 */
 				|| ((this.getCtComplete() != null) && (this.getCtComplete() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtCircularNo() != null) && (this.getCtCircularNo() != ReportConst.EMPTY_VAL))
-				|| ((this.getCtCircularName() != null) && (this.getCtCircularName() != ReportConst.EMPTY_VAL))
-				|| ((this.getCtCircularType() != null) && (this.getCtCircularType() != ReportConst.EMPTY_VAL))
-				|| ((this.getCtSupplierName() != null) && (!this.getCtSupplierName().equals(ReportConst.CT_GROUP_VAL_ALL)))
+				|| ((this.getCtCircularName() != null) && (this
+						.getCtCircularName() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtCircularType() != null) && (this
+						.getCtCircularType() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtSupplierName() != null) && (!this
+						.getCtSupplierName().equals(
+								ReportConst.CT_GROUP_VAL_ALL)))
 				|| ((getFromDate() != null) && (getFromDate().toString() != ReportConst.EMPTY_VAL))
 				|| ((getToDate() != null) && (getToDate().toString() != ReportConst.EMPTY_VAL))
-				|| ((getCtCircularEffectiveFromDate() != null) && (getCtCircularEffectiveFromDate().toString() != ReportConst.EMPTY_VAL))
-				|| ((getCtCircularEffectiveToDate() != null) && (getCtCircularEffectiveToDate().toString() != ReportConst.EMPTY_VAL)) 
-			    || ((this.getCtProcurementMode() != null) && (this.getCtProcurementMode().toString() != ReportConst.EMPTY_VAL)))
-			    /*|| ((this.getCtProcurementMode() != null) && (!this.getCtProcurementMode().toString().equals(ReportConst.CT_GROUP_VAL_ALL))))*/
-		       {
-			
+				|| ((getCtCircularEffectiveFromDate() != null) && (getCtCircularEffectiveFromDate()
+						.toString() != ReportConst.EMPTY_VAL))
+				|| ((getCtCircularEffectiveToDate() != null) && (getCtCircularEffectiveToDate()
+						.toString() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtProcurementMode() != null) && (this
+						.getCtProcurementMode().toString() != ReportConst.EMPTY_VAL)))
+		/*
+		 * || ((this.getCtProcurementMode() != null) &&
+		 * (!this.getCtProcurementMode
+		 * ().toString().equals(ReportConst.CT_GROUP_VAL_ALL))))
+		 */
+		{
+
 			if ((this.getCtSupplierName() != null)
 					&& (this.getCtSupplierName() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setCtSupplierNameVar(ReportConst.CT_AMP_SUPPLIER_NAME_EQ
-						+ this.getCtSupplierName());
+				rptGenBean
+						.setCtSupplierNameVar(ReportConst.CT_AMP_SUPPLIER_NAME_EQ
+								+ this.getCtSupplierName());
 			}
 			if ((this.getCtCircularNo() != null)
 					&& (this.getCtCircularNo() != ReportConst.EMPTY_VAL)) {
@@ -9902,18 +10930,21 @@ public void retrieveCMUnspc() {
 			}
 			if ((this.getCtCircularName() != null)
 					&& (this.getCtCircularName() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setCtCircularNameVar(ReportConst.CT_AMP_CIRCULAR_NAME_EQ
-						+ this.getCtCircularName());
+				rptGenBean
+						.setCtCircularNameVar(ReportConst.CT_AMP_CIRCULAR_NAME_EQ
+								+ this.getCtCircularName());
 			}
 			if ((this.getCtCircularType() != null)
 					&& (this.getCtCircularType() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setCtCircularTypeVar(ReportConst.CT_AMP_CIRCULAR_TYPE_EQ
-						+ this.getCtCircularType());
+				rptGenBean
+						.setCtCircularTypeVar(ReportConst.CT_AMP_CIRCULAR_TYPE_EQ
+								+ this.getCtCircularType());
 			}
 			if ((this.getCtTerminationType() != null)
 					&& (this.getCtTerminationType() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setCtTerminationTypeVar(ReportConst.CT_AMP_TERMINATION_TYPE_EQ
-						+ this.getCtTerminationType());
+				rptGenBean
+						.setCtTerminationTypeVar(ReportConst.CT_AMP_TERMINATION_TYPE_EQ
+								+ this.getCtTerminationType());
 			}
 			if ((this.getCtStatus() != null)
 					&& (this.getCtStatus() != ReportConst.EMPTY_VAL)) {
@@ -9922,10 +10953,11 @@ public void retrieveCMUnspc() {
 			}
 			if ((this.getCtStatusTwo() != null)
 					&& (this.getCtStatusTwo() != ReportConst.EMPTY_VAL)) {
-				/*if(!this.getCtStatusTwo().trim().equalsIgnoreCase("TERMINATE")){
-					rptGenBean.setCtStatusTwoVar(ReportConst.CT_AMP_STATUS_EQ
-							+ this.getCtStatusTwo());
-				}*/
+				/*
+				 * if(!this.getCtStatusTwo().trim().equalsIgnoreCase("TERMINATE")
+				 * ){ rptGenBean.setCtStatusTwoVar(ReportConst.CT_AMP_STATUS_EQ
+				 * + this.getCtStatusTwo()); }
+				 */
 				rptGenBean.setCtStatusTwoVar(ReportConst.CT_AMP_STATUS_EQ
 						+ this.getCtStatusTwo());
 			}
@@ -9936,10 +10968,11 @@ public void retrieveCMUnspc() {
 			}
 			if ((this.getCtPhysicalContractNo() != null)
 					&& (this.getCtPhysicalContractNo() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setCtPhysicalContractNoVar(ReportConst.CT_AMP_PHYSICALCONTRACT_NO_EQ
-						+ this.getCtPhysicalContractNo());
+				rptGenBean
+						.setCtPhysicalContractNoVar(ReportConst.CT_AMP_PHYSICALCONTRACT_NO_EQ
+								+ this.getCtPhysicalContractNo());
 			}
-			
+
 			if ((this.getCtAgreement() != null)
 					&& (this.getCtAgreement() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setCtAgreementVar(ReportConst.CT_AMP_AGREEMENT_EQ
@@ -9970,19 +11003,24 @@ public void retrieveCMUnspc() {
 			}
 			if ((this.getCtCircularEffectiveFromDate() != null)
 					&& (this.getCtCircularEffectiveFromDate().toString() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setCtCircularEffectiveFromDateVar(ReportConst.CT_AMP_CIRCULAR_FROM_DATE_EQ
-						+ outputDateFormat.format(this.getCtCircularEffectiveFromDate()));
+				rptGenBean
+						.setCtCircularEffectiveFromDateVar(ReportConst.CT_AMP_CIRCULAR_FROM_DATE_EQ
+								+ outputDateFormat.format(this
+										.getCtCircularEffectiveFromDate()));
 			}
 			if ((this.getCtCircularEffectiveToDate() != null)
 					&& (this.getCtCircularEffectiveToDate().toString() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setCtCircularEffectiveToDateVar(ReportConst.CT_AMP_CIRCULAR_TO_DATE_EQ
-						+ outputDateFormat.format(this.getCtCircularEffectiveToDate()));
+				rptGenBean
+						.setCtCircularEffectiveToDateVar(ReportConst.CT_AMP_CIRCULAR_TO_DATE_EQ
+								+ outputDateFormat.format(this
+										.getCtCircularEffectiveToDate()));
 			}
 			if ((this.getCtProcurementMode() != null)
 					&& (this.getCtProcurementMode() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setCtProcurementModeVar(ReportConst.CT_AMP_PROCUREMENTMODE_EQ
-						+ this.getCtProcurementMode());
-			}			
+				rptGenBean
+						.setCtProcurementModeVar(ReportConst.CT_AMP_PROCUREMENTMODE_EQ
+								+ this.getCtProcurementMode());
+			}
 			if ((this.getCtGroupOne() != null)
 					&& (this.getCtGroupOne() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setCtGroupOneVar(ReportConst.CT_AMP_GROUP_EQ
@@ -10011,14 +11049,17 @@ public void retrieveCMUnspc() {
 			}
 			if ((this.getCtLOAPhysicalNo() != null)
 					&& (this.getCtLOAPhysicalNo() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setCtLOAPhysicalNoVar(ReportConst.CT_AMP_PLOAPHYSICALNO_EQ
-						+ this.getCtLOAPhysicalNo());
+				rptGenBean
+						.setCtLOAPhysicalNoVar(ReportConst.CT_AMP_PLOAPHYSICALNO_EQ
+								+ this.getCtLOAPhysicalNo());
 			}
 			if ((this.getCommonMinistry() != null)
 					&& (this.getCommonMinistry() != ReportConst.EMPTY_VAL)) {
-				/*Long orgprofileid = Long.parseLong(this.getCommonMinistry());
-				rptGenBean.setCtMinistryVar(ReportConst.CT_AMP_PMINISTRY_EQ
-						+ retrieveMinistryName(orgprofileid));*/
+				/*
+				 * Long orgprofileid = Long.parseLong(this.getCommonMinistry());
+				 * rptGenBean.setCtMinistryVar(ReportConst.CT_AMP_PMINISTRY_EQ +
+				 * retrieveMinistryName(orgprofileid));
+				 */
 				rptGenBean.setCtMinistryVar(ReportConst.CT_AMP_PMINISTRY_EQ
 						+ this.getCommonMinistry());
 			}
@@ -10037,7 +11078,7 @@ public void retrieveCMUnspc() {
 				rptGenBean.setCtSubTypeVar(ReportConst.CT_AMP_SUBTYPE_EQ
 						+ this.getCtSubType());
 			}
-			
+
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if ((rptGenBean.getUrlReportJSPName() != null)
 					&& (rptGenBean.getUrlReportJSPName() != ReportConst.EMPTY_VAL)) {
@@ -10093,7 +11134,7 @@ public void retrieveCMUnspc() {
 				|| (getManagedBean().getReportValue() != null)
 				&& (getManagedBean().getReportValue().trim()
 						.equalsIgnoreCase(ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL))) {
-			if ( (getManagedBean().getReportValue() != null)
+			if ((getManagedBean().getReportValue() != null)
 					&& (getManagedBean().getReportValue().trim()
 							.equalsIgnoreCase(ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL))) {
 				checkSMYearNMonthDefference();
@@ -10130,17 +11171,17 @@ public void retrieveCMUnspc() {
 			}
 			if ((this.getSmFromMonth() != null)
 					&& (this.getSmFromMonth() != ReportConst.EMPTY_VAL)) {
-				String month = getManagedBean().getMonthMap().get(this.getSmFromMonth());
-				rptGenBean
-						.setSmFromMonthVar(ReportConst.AMP_SM_FROM_DATE_EQ
-								+ month);
+				String month = getManagedBean().getMonthMap().get(
+						this.getSmFromMonth());
+				rptGenBean.setSmFromMonthVar(ReportConst.AMP_SM_FROM_DATE_EQ
+						+ month);
 			}
 			if ((this.getSmToMonth() != null)
 					&& (this.getSmToMonth() != ReportConst.EMPTY_VAL)) {
-				String month = getManagedBean().getMonthMap().get(this.getSmToMonth());
-				rptGenBean
-						.setSmToMonthVar(ReportConst.AMP_SM_TO_DATE_EQ
-								+ month);
+				String month = getManagedBean().getMonthMap().get(
+						this.getSmToMonth());
+				rptGenBean.setSmToMonthVar(ReportConst.AMP_SM_TO_DATE_EQ
+						+ month);
 			}
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if ((rptGenBean.getUrlReportJSPName() != null)
@@ -10156,102 +11197,138 @@ public void retrieveCMUnspc() {
 						+ rptGenBean.getSmFromMonthVar()
 						+ rptGenBean.getSmToMonthVar()
 						+ rptGenBean.getUserIdVar());
-				
-			} else {
-				throw new EpException(MessageConst.ERROR_REPORT_780007);
-			}
-		} /*else if ((getManagedBean().getReportValue() != null)
-				&& (getManagedBean().getReportValue().trim()
-						.equalsIgnoreCase(ReportConst.SM_LAPORAN_TERIMAAN_HARIAN_RPT_VAL))) {
 
-			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
-			if ((rptGenBean.getUrlReportJSPName() != null)
-					&& (rptGenBean.getUrlReportJSPName() != ReportConst.EMPTY_VAL)) {
-				setConstructedParamString(ReportConst.AMP_REPORT_NAME
-						+ rptGenBean.getUrlReportJSPName()
-						+ rptGenBean.getReportValueIdVar()
-						+ rptGenBean.getUserIdVar());
 			} else {
 				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
-		}*/ else if (((this.getSmYearText() != null) && (this.getSmYearText() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmApplicationType() != null) && (this.getSmApplicationType() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmMonthlyRptByYear() != null) && (this.getSmMonthlyRptByYear() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmPaymentType() != null) && (this.getSmPaymentType() != ReportConst.EMPTY_VAL))
+		} /*
+		 * else if ((getManagedBean().getReportValue() != null) &&
+		 * (getManagedBean().getReportValue().trim()
+		 * .equalsIgnoreCase(ReportConst.SM_LAPORAN_TERIMAAN_HARIAN_RPT_VAL))) {
+		 * 
+		 * rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp()); if
+		 * ((rptGenBean.getUrlReportJSPName() != null) &&
+		 * (rptGenBean.getUrlReportJSPName() != ReportConst.EMPTY_VAL)) {
+		 * setConstructedParamString(ReportConst.AMP_REPORT_NAME +
+		 * rptGenBean.getUrlReportJSPName() + rptGenBean.getReportValueIdVar() +
+		 * rptGenBean.getUserIdVar()); } else { throw new
+		 * EpException(MessageConst.ERROR_REPORT_780007); } }
+		 */else if (((this.getSmYearText() != null) && (this.getSmYearText() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmApplicationType() != null) && (this
+						.getSmApplicationType() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmMonthlyRptByYear() != null) && (this
+						.getSmMonthlyRptByYear() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmPaymentType() != null) && (this
+						.getSmPaymentType() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmPaymentTo() != null) && (this.getSmPaymentTo() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmCompanyName() != null) && (this.getSmCompanyName() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmRegistrationType() != null) && (this.getSmRegistrationType() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmApplicationNo() != null) && (this.getSmApplicationNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmCompanyName() != null) && (this
+						.getSmCompanyName() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmRegistrationType() != null) && (this
+						.getSmRegistrationType() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmApplicationNo() != null) && (this
+						.getSmApplicationNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmZone() != null) && (this.getSmZone() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmSupplierType() != null) && (this.getSmSupplierType() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmSupplierType() != null) && (this
+						.getSmSupplierType() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmMofRegNo() != null) && (this.getSmMofRegNo() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmRegistrationStatus() != null) && (this.getSmRegistrationStatus() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmMainCategory() != null) && (this.getSmMainCategory() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmSubCategory() != null) && (this.getSmSubCategory() != ReportConst.EMPTY_VAL))//this.getSelectedCatList()
-				//|| ((this.getSelectedCatList() != null) && (this.getSelectedCatList().size()> 0))
-				||(((getManagedBean().getReportValue() != null)
-					&& (getManagedBean().getReportValue().trim()
-							.equalsIgnoreCase(ReportConst.SM_APPL_PEND_SITE_VISIT_RPT_VAL))
-					|| (getManagedBean().getReportValue() != null)
-					&& (getManagedBean().getReportValue().trim()
-							.equalsIgnoreCase(ReportConst.SM_SITE_VISIT_APPL_REQUIRE_RPT_VAL))
-							|| (getManagedBean().getReportValue() != null)
-							&& (getManagedBean().getReportValue().trim()
-									.equalsIgnoreCase(ReportConst.SM_CATEGORY_STATISTIC_RPT_VAL))
-									|| (getManagedBean().getReportValue() != null)
-									&& (getManagedBean().getReportValue().trim()
-											.equalsIgnoreCase(ReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL))
-											|| (getManagedBean().getReportValue() != null)
-											&& (getManagedBean().getReportValue().trim()
-													.equalsIgnoreCase(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL)))&& (this.getSelectedCatList().size()> 0))
-				|| ((this.getSmSubCategoryDivision() != null) && (this.getSmSubCategoryDivision() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmApplicationStatus() != null) && (this.getSmApplicationStatus() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmRegistrationStatus() != null) && (this
+						.getSmRegistrationStatus() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmMainCategory() != null) && (this
+						.getSmMainCategory() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmSubCategory() != null) && (this
+						.getSmSubCategory() != ReportConst.EMPTY_VAL))// this.getSelectedCatList()
+				// || ((this.getSelectedCatList() != null) &&
+				// (this.getSelectedCatList().size()> 0))
+				|| (((getManagedBean().getReportValue() != null)
+						&& (getManagedBean().getReportValue().trim()
+								.equalsIgnoreCase(ReportConst.SM_APPL_PEND_SITE_VISIT_RPT_VAL))
+						|| (getManagedBean().getReportValue() != null)
+						&& (getManagedBean().getReportValue().trim()
+								.equalsIgnoreCase(ReportConst.SM_SITE_VISIT_APPL_REQUIRE_RPT_VAL))
+						|| (getManagedBean().getReportValue() != null)
+						&& (getManagedBean().getReportValue().trim()
+								.equalsIgnoreCase(ReportConst.SM_CATEGORY_STATISTIC_RPT_VAL))
+						|| (getManagedBean().getReportValue() != null)
+						&& (getManagedBean().getReportValue().trim()
+								.equalsIgnoreCase(ReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL)) || (getManagedBean()
+						.getReportValue() != null)
+						&& (getManagedBean().getReportValue().trim()
+								.equalsIgnoreCase(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL))) && (this
+						.getSelectedCatList().size() > 0))
+				|| ((this.getSmSubCategoryDivision() != null) && (this
+						.getSmSubCategoryDivision() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmApplicationStatus() != null) && (this
+						.getSmApplicationStatus() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmState() != null) && (this.getSmState() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmDistrict() != null) && (this.getSmDistrict() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmReportType() != null) && (this.getSmReportType() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmMofRegNoFrom() != null) && (this.getSmMofRegNoFrom() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmMofRegNoFrom() != null) && (this
+						.getSmMofRegNoFrom() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmMofRegNoTo() != null) && (this.getSmMofRegNoTo() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmPaidUpCapitalFrm() != null) && (this.getSmPaidUpCapitalFrm() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmPaidUpCapitalTo() != null) && (this.getSmPaidUpCapitalTo() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmPaidUpCapitalNaccum() != null) && (this.getSmPaidUpCapitalNaccum() != ReportConst.EMPTY_VAL))
-				//|| ((this.getSmRole() != null) && (this.getSmRole() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmPaidUpCapitalFrm() != null) && (this
+						.getSmPaidUpCapitalFrm() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmPaidUpCapitalTo() != null) && (this
+						.getSmPaidUpCapitalTo() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmPaidUpCapitalNaccum() != null) && (this
+						.getSmPaidUpCapitalNaccum() != ReportConst.EMPTY_VAL))
+				// || ((this.getSmRole() != null) && (this.getSmRole() !=
+				// ReportConst.EMPTY_VAL))
 				|| ((this.getSmEpNo() != null) && (this.getSmEpNo() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmRegistrationNo() != null) && (this.getSmRegistrationNo() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmGSTRegistrationNo() != null) && (this.getSmGSTRegistrationNo() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmGSTRegisteredStatus() != null) && (this.getSmGSTRegisteredStatus() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmSupportingDocumentMode() != null) && (this.getSmSupportingDocumentMode() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmSupportingDocumentStatus() != null) && (this.getSmSupportingDocumentStatus() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmPersonnelRole()!= null) && (this.getSmPersonnelRole() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmIdentificationType()!= null) && (this.getSmIdentificationType() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmIdentificationNumber()!= null) && (this.getSmIdentificationNumber() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmCancellationBy()!= null) && (this.getSmCancellationBy() != ReportConst.EMPTY_VAL))
-				|| ((this.getFromDate() != null) && (this.getFromDate().toString() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmRegistrationNo() != null) && (this
+						.getSmRegistrationNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmGSTRegistrationNo() != null) && (this
+						.getSmGSTRegistrationNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmGSTRegisteredStatus() != null) && (this
+						.getSmGSTRegisteredStatus() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmSupportingDocumentMode() != null) && (this
+						.getSmSupportingDocumentMode() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmSupportingDocumentStatus() != null) && (this
+						.getSmSupportingDocumentStatus() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmPersonnelRole() != null) && (this
+						.getSmPersonnelRole() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmIdentificationType() != null) && (this
+						.getSmIdentificationType() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmIdentificationNumber() != null) && (this
+						.getSmIdentificationNumber() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmCancellationBy() != null) && (this
+						.getSmCancellationBy() != ReportConst.EMPTY_VAL))
+				|| ((this.getFromDate() != null) && (this.getFromDate()
+						.toString() != ReportConst.EMPTY_VAL))
 				|| ((this.getToDate() != null) && (this.getToDate().toString() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmUserName() != null) && (this.getSmUserName().toString() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmRequestExpiryDate() != null) && (this.getSmRequestExpiryDate().toString() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmProfileStatus() != null) && (this.getSmProfileStatus().toString() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmThresholdFromYear() != null) && (this.getSmThresholdFromYear().toString() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmThresholdToYear() != null) && (this.getSmThresholdToYear().toString() != ReportConst.EMPTY_VAL))) {
+				|| ((this.getSmUserName() != null) && (this.getSmUserName()
+						.toString() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmRequestExpiryDate() != null) && (this
+						.getSmRequestExpiryDate().toString() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmProfileStatus() != null) && (this
+						.getSmProfileStatus().toString() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmThresholdFromYear() != null) && (this
+						.getSmThresholdFromYear().toString() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmThresholdToYear() != null) && (this
+						.getSmThresholdToYear().toString() != ReportConst.EMPTY_VAL))) {
 
 			if ((getManagedBean().getReportValue() != null)
 					&& (getManagedBean().getReportValue().trim()
-							.equalsIgnoreCase(ReportConst.SM_APPLICATION_APPROVED_RPT_VAL))){
-				if (((this.getSmCompanyName() == null) || (this.getSmCompanyName().equals(ReportConst.EMPTY_VAL)))
-				&& ((this.getSmMofRegNo() == null) || (this.getSmMofRegNo().equals(ReportConst.EMPTY_VAL)))
-				&& ((this.getFromDate() == null) || (this.getFromDate().toString().equals(ReportConst.EMPTY_VAL)))
-				&& ((this.getToDate() == null) || (this.getToDate().toString().equals(ReportConst.EMPTY_VAL)))){
+							.equalsIgnoreCase(ReportConst.SM_APPLICATION_APPROVED_RPT_VAL))) {
+				if (((this.getSmCompanyName() == null) || (this
+						.getSmCompanyName().equals(ReportConst.EMPTY_VAL)))
+						&& ((this.getSmMofRegNo() == null) || (this
+								.getSmMofRegNo().equals(ReportConst.EMPTY_VAL)))
+						&& ((this.getFromDate() == null) || (this.getFromDate()
+								.toString().equals(ReportConst.EMPTY_VAL)))
+						&& ((this.getToDate() == null) || (this.getToDate()
+								.toString().equals(ReportConst.EMPTY_VAL)))) {
 					throw new EpException(MessageConst.ERROR_REPORT_780003);
-				}		
+				}
 			}
-			if((getManagedBean().getReportValue() != null)
+			if ((getManagedBean().getReportValue() != null)
 					&& (getManagedBean().getReportValue().trim()
 							.equalsIgnoreCase(ReportConst.SM_SUPPLIER_PERFORMANCE))
 					|| (getManagedBean().getReportValue() != null)
 					&& (getManagedBean().getReportValue().trim()
 							.equalsIgnoreCase(ReportConst.SM_THRESHOLD))
-							|| (getManagedBean().getReportValue() != null)
-							&& (getManagedBean().getReportValue().trim()
-									.equalsIgnoreCase(ReportConst.SM_THRESHOLD_VALUE))){
+					|| (getManagedBean().getReportValue() != null)
+					&& (getManagedBean().getReportValue().trim()
+							.equalsIgnoreCase(ReportConst.SM_THRESHOLD_VALUE))) {
 				if ((this.getSmThresholdFromYear() != null)
 						&& (this.getSmThresholdFromYear() != ReportConst.EMPTY_VAL)) {
 					rptGenBean
@@ -10263,13 +11340,12 @@ public void retrieveCMUnspc() {
 					rptGenBean
 							.setSmThresholdToYearVar(ReportConst.AMP_SM_TO_YEAR_EQ
 									+ this.getSmThresholdToYear());
-				}				
-			}	
+				}
+			}
 			if ((this.getSmProfileStatus() != null)
 					&& (this.getSmProfileStatus() != ReportConst.EMPTY_VAL)) {
-				rptGenBean
-						.setSmProfileStatusVar(ReportConst.AMP_SM_PRFL_STS_EQ
-								+ this.getSmProfileStatus());
+				rptGenBean.setSmProfileStatusVar(ReportConst.AMP_SM_PRFL_STS_EQ
+						+ this.getSmProfileStatus());
 			}
 			if ((this.getSmGSTRegistrationNo() != null)
 					&& (this.getSmGSTRegistrationNo() != ReportConst.EMPTY_VAL)) {
@@ -10285,9 +11361,8 @@ public void retrieveCMUnspc() {
 			}
 			if ((this.getSmUserName() != null)
 					&& (this.getSmUserName() != ReportConst.EMPTY_VAL)) {
-				rptGenBean
-						.setSmUserNameVar(ReportConst.AMP_SM_USER_NAME_EQ
-								+ this.getSmUserName());
+				rptGenBean.setSmUserNameVar(ReportConst.AMP_SM_USER_NAME_EQ
+						+ this.getSmUserName());
 			}
 			if ((this.getSmRequestExpiryDate() != null)
 					&& (this.getSmRequestExpiryDate() != ReportConst.EMPTY_VAL)) {
@@ -10388,7 +11463,7 @@ public void retrieveCMUnspc() {
 						.setReportTypeTotVar(ReportConst.AMP_SM_REPORT_TYPE_EQ
 								+ this.getSmReportType());
 			}
-			
+
 			if ((this.getSmPaymentMethod() != null)
 					&& (this.getSmPaymentMethod() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
@@ -10403,9 +11478,8 @@ public void retrieveCMUnspc() {
 			}
 			if ((this.getSmReceiptNo() != null)
 					&& (this.getSmReceiptNo() != ReportConst.EMPTY_VAL)) {
-				rptGenBean
-						.setSmReceiptNoVar(ReportConst.AMP_SM_RECEIPT_NO_EQ
-								+ this.getSmReceiptNo());
+				rptGenBean.setSmReceiptNoVar(ReportConst.AMP_SM_RECEIPT_NO_EQ
+						+ this.getSmReceiptNo());
 			}
 			if ((this.getSmProcessingOfficerName() != null)
 					&& (this.getSmProcessingOfficerName() != ReportConst.EMPTY_VAL)) {
@@ -10413,8 +11487,7 @@ public void retrieveCMUnspc() {
 						.setSmProcessingOfficerNameVar(ReportConst.AMP_SM_PRO_OFFICERNAME_EQ
 								+ this.getSmProcessingOfficerName());
 			}
-			
-			
+
 			if ((this.getSmApplicationNo() != null)
 					&& (this.getSmApplicationNo() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
@@ -10449,54 +11522,64 @@ public void retrieveCMUnspc() {
 						+ this.getSmMonthlyRptByYear());
 			}
 			if ((this.getSmMofRegNoFrom() != null && (this.getSmMofRegNoFrom() != ReportConst.EMPTY_VAL))
-					&& (this.getSmMofRegNoTo() != null && (this.getSmMofRegNoTo() != ReportConst.EMPTY_VAL))) {
+					&& (this.getSmMofRegNoTo() != null && (this
+							.getSmMofRegNoTo() != ReportConst.EMPTY_VAL))) {
 				String mofRegNoFrom = null;
 				String mofRegNoTo = null;
-				if(this.getSmMofRegNoFrom().contains(ReportConst.PARAM_IFON)){
-					mofRegNoFrom = this.getSmMofRegNoFrom().replace(ReportConst.PARAM_IFON, ReportConst.EMPTY_VAL);
-					if(mofRegNoFrom.contains(ReportConst.PARAM_SPACE)){
-						mofRegNoFrom=mofRegNoFrom.replace(ReportConst.PARAM_SPACE, ReportConst.EMPTY_VAL);	
+				if (this.getSmMofRegNoFrom().contains(ReportConst.PARAM_IFON)) {
+					mofRegNoFrom = this.getSmMofRegNoFrom().replace(
+							ReportConst.PARAM_IFON, ReportConst.EMPTY_VAL);
+					if (mofRegNoFrom.contains(ReportConst.PARAM_SPACE)) {
+						mofRegNoFrom = mofRegNoFrom.replace(
+								ReportConst.PARAM_SPACE, ReportConst.EMPTY_VAL);
 					}
-				}else{
+				} else {
 					mofRegNoFrom = this.getSmMofRegNoFrom();
 				}
-								
-				if(this.getSmMofRegNoTo().contains(ReportConst.PARAM_IFON)){
-					mofRegNoTo = this.getSmMofRegNoTo().replace(ReportConst.PARAM_IFON, ReportConst.EMPTY_VAL);	
-					if(mofRegNoTo.contains(ReportConst.PARAM_SPACE)){
-						mofRegNoTo=mofRegNoTo.replace(ReportConst.PARAM_SPACE, ReportConst.EMPTY_VAL);	
+
+				if (this.getSmMofRegNoTo().contains(ReportConst.PARAM_IFON)) {
+					mofRegNoTo = this.getSmMofRegNoTo().replace(
+							ReportConst.PARAM_IFON, ReportConst.EMPTY_VAL);
+					if (mofRegNoTo.contains(ReportConst.PARAM_SPACE)) {
+						mofRegNoTo = mofRegNoTo.replace(
+								ReportConst.PARAM_SPACE, ReportConst.EMPTY_VAL);
 					}
-				}else{
+				} else {
 					mofRegNoTo = this.getSmMofRegNoTo();
 				}
-				
-			  ValidateMofRegNo(mofRegNoFrom, mofRegNoTo);
+
+				ValidateMofRegNo(mofRegNoFrom, mofRegNoTo);
 			}
 			if ((this.getSmMofRegNoFrom() != null)
 					&& (this.getSmMofRegNoFrom() != ReportConst.EMPTY_VAL)) {
-					rptGenBean.setSmMofRegNoFromVar(ReportConst.AMP_SM_MOF_REG_NO_FRM_EQ
-						+ this.getSmMofRegNoFrom());
+				rptGenBean
+						.setSmMofRegNoFromVar(ReportConst.AMP_SM_MOF_REG_NO_FRM_EQ
+								+ this.getSmMofRegNoFrom());
 			}
 			if ((this.getSmMofRegNoTo() != null)
 					&& (this.getSmMofRegNoTo() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setSmMofRegNoToVar(ReportConst.AMP_SM_MOF_REG_NO_TO_EQ
-						+ this.getSmMofRegNoTo());
+				rptGenBean
+						.setSmMofRegNoToVar(ReportConst.AMP_SM_MOF_REG_NO_TO_EQ
+								+ this.getSmMofRegNoTo());
 			}
 			if ((this.getSmPaidUpCapitalFrm() != null)
 					&& (this.getSmPaidUpCapitalFrm() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setSmPaidUpCapitalFrmVar(ReportConst.AMP_SM_PAIDUP_CPTL_FROM_EQ
-						+ this.getSmPaidUpCapitalFrm());
+				rptGenBean
+						.setSmPaidUpCapitalFrmVar(ReportConst.AMP_SM_PAIDUP_CPTL_FROM_EQ
+								+ this.getSmPaidUpCapitalFrm());
 			}
 			if ((this.getSmPaidUpCapitalTo() != null)
 					&& (this.getSmPaidUpCapitalTo() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setSmPaidUpCapitalToVar(ReportConst.AMP_SM_PAIDUP_CPTL_TO_EQ
-						+ this.getSmPaidUpCapitalTo());
+				rptGenBean
+						.setSmPaidUpCapitalToVar(ReportConst.AMP_SM_PAIDUP_CPTL_TO_EQ
+								+ this.getSmPaidUpCapitalTo());
 			}
 			if ((this.getSmPaidUpCapitalNaccum() != null)
 					&& (this.getSmPaidUpCapitalNaccum() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setSmPaidUpCapitalNaccumVar(ReportConst.AMP_SM_PAIDUP_CPTL_R_ACLTD_EQ
-						+ this.getSmPaidUpCapitalNaccum());
-			}			
+				rptGenBean
+						.setSmPaidUpCapitalNaccumVar(ReportConst.AMP_SM_PAIDUP_CPTL_R_ACLTD_EQ
+								+ this.getSmPaidUpCapitalNaccum());
+			}
 			if ((this.getSmEpNo() != null)
 					&& (this.getSmEpNo() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setSmEpNoVar(ReportConst.AMP_SM_EP_NO_EQ
@@ -10509,33 +11592,39 @@ public void retrieveCMUnspc() {
 			}
 			if ((this.getSmSupportingDocumentMode() != null)
 					&& (this.getSmSupportingDocumentMode() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setSmSupportingDocumentModeVar(ReportConst.AMP_SM_SUPP_DOC_MODE_EQ
-						+ this.getSmSupportingDocumentMode());
+				rptGenBean
+						.setSmSupportingDocumentModeVar(ReportConst.AMP_SM_SUPP_DOC_MODE_EQ
+								+ this.getSmSupportingDocumentMode());
 			}
 			if ((this.getSmSupportingDocumentStatus() != null)
 					&& (this.getSmSupportingDocumentStatus() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setSmSupportingDocumentStatusVar(ReportConst.AMP_SM_SUPP_DOC_STATUS_EQ
-						+ this.getSmSupportingDocumentStatus());
+				rptGenBean
+						.setSmSupportingDocumentStatusVar(ReportConst.AMP_SM_SUPP_DOC_STATUS_EQ
+								+ this.getSmSupportingDocumentStatus());
 			}
 			if ((this.getSmPersonnelRole() != null)
 					&& (this.getSmPersonnelRole() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setSmPersonnelRoleVar(ReportConst.AMP_SM_PERSONNEL_ROLE_EQ
-						+ this.getSmPersonnelRole());
+				rptGenBean
+						.setSmPersonnelRoleVar(ReportConst.AMP_SM_PERSONNEL_ROLE_EQ
+								+ this.getSmPersonnelRole());
 			}
 			if ((this.getSmIdentificationType() != null)
 					&& (this.getSmIdentificationType() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setSmIdentificationTypeVar(ReportConst.AMP_SM_IDENT_TYPE_EQ
-						+ this.getSmIdentificationType());
+				rptGenBean
+						.setSmIdentificationTypeVar(ReportConst.AMP_SM_IDENT_TYPE_EQ
+								+ this.getSmIdentificationType());
 			}
 			if ((this.getSmIdentificationNumber() != null)
 					&& (this.getSmIdentificationNumber() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setSmIdentificationNumberVar(ReportConst.AMP_SM_IDENT_NO_EQ
-						+ this.getSmIdentificationNumber());
+				rptGenBean
+						.setSmIdentificationNumberVar(ReportConst.AMP_SM_IDENT_NO_EQ
+								+ this.getSmIdentificationNumber());
 			}
 			if ((this.getSmCancellationBy() != null)
 					&& (this.getSmCancellationBy() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setSmCancellationByVar(ReportConst.AMP_SM_CANCEL_BY_EQ
-						+ this.getSmCancellationBy());
+				rptGenBean
+						.setSmCancellationByVar(ReportConst.AMP_SM_CANCEL_BY_EQ
+								+ this.getSmCancellationBy());
 			}
 			StringBuffer maincategory = new StringBuffer();
 			StringBuffer subcategory = new StringBuffer();
@@ -10546,22 +11635,26 @@ public void retrieveCMUnspc() {
 					|| (getManagedBean().getReportValue() != null)
 					&& (getManagedBean().getReportValue().trim()
 							.equalsIgnoreCase(ReportConst.SM_SITE_VISIT_APPL_REQUIRE_RPT_VAL))
-							|| (getManagedBean().getReportValue() != null)
-							&& (getManagedBean().getReportValue().trim()
-									.equalsIgnoreCase(ReportConst.SM_CATEGORY_STATISTIC_RPT_VAL))
-									|| (getManagedBean().getReportValue() != null)
-									&& (getManagedBean().getReportValue().trim()
-											.equalsIgnoreCase(ReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL))
-											|| (getManagedBean().getReportValue() != null)
-											&& (getManagedBean().getReportValue().trim()
-													.equalsIgnoreCase(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL))) {
+					|| (getManagedBean().getReportValue() != null)
+					&& (getManagedBean().getReportValue().trim()
+							.equalsIgnoreCase(ReportConst.SM_CATEGORY_STATISTIC_RPT_VAL))
+					|| (getManagedBean().getReportValue() != null)
+					&& (getManagedBean().getReportValue().trim()
+							.equalsIgnoreCase(ReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL))
+					|| (getManagedBean().getReportValue() != null)
+					&& (getManagedBean().getReportValue().trim()
+							.equalsIgnoreCase(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL))) {
 				maincategory.append(ReportConst.AMP_SM_MAIN_CATEGORY_EQ);
 				subcategory.append(ReportConst.AMP_SM_SUB_CATEGORY_EQ);
-				subcategorydivision.append(ReportConst.AMP_SM_SUB_DIV_CATEGORY_EQ);
-				for (SmSupplierCategory smSupplier : this.getSelectedCatList()){
-					maincategory.append(ReportConst.KAMA+smSupplier.getPmCategoryL1().getCategoryL1Id());
-					subcategory.append(ReportConst.KAMA+smSupplier.getPmCategoryL2().getCategoryL2Id());
-					subcategorydivision.append(ReportConst.KAMA+smSupplier.getPmCategoryL3().getCategoryL3Id());
+				subcategorydivision
+						.append(ReportConst.AMP_SM_SUB_DIV_CATEGORY_EQ);
+				for (SmSupplierCategory smSupplier : this.getSelectedCatList()) {
+					maincategory.append(ReportConst.KAMA
+							+ smSupplier.getPmCategoryL1().getCategoryL1Id());
+					subcategory.append(ReportConst.KAMA
+							+ smSupplier.getPmCategoryL2().getCategoryL2Id());
+					subcategorydivision.append(ReportConst.KAMA
+							+ smSupplier.getPmCategoryL3().getCategoryL3Id());
 				}
 			}
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
@@ -10591,14 +11684,14 @@ public void retrieveCMUnspc() {
 						+ rptGenBean.getZoneTotVar()
 						+ rptGenBean.getSupplierTypeTotVar()
 						+ rptGenBean.getMofRegNoTotVar()
-						+ rptGenBean.getRegistrationStatusTotVar()						
+						+ rptGenBean.getRegistrationStatusTotVar()
 						+ rptGenBean.getSmMofRegNoFromVar()
 						+ rptGenBean.getSmMofRegNoToVar()
 						+ rptGenBean.getSmPaidUpCapitalFrmVar()
 						+ rptGenBean.getSmPaidUpCapitalToVar()
 						+ rptGenBean.getSmPaidUpCapitalNaccumVar()
 						+ rptGenBean.getSmProfileStatusVar()
-						//+ rptGenBean.getSmRoleVar()
+						// + rptGenBean.getSmRoleVar()
 						+ rptGenBean.getSmEpNoVar()
 						+ rptGenBean.getSmRegistrationNoVar()
 						+ rptGenBean.getSmSupportingDocumentModeVar()
@@ -10606,10 +11699,8 @@ public void retrieveCMUnspc() {
 						+ rptGenBean.getSmPersonnelRoleVar()
 						+ rptGenBean.getSmIdentificationTypeVar()
 						+ rptGenBean.getSmIdentificationNumberVar()
-						+ rptGenBean.getSmCancellationByVar()
-						+ maincategory
-						+ subcategory
-						+ subcategorydivision
+						+ rptGenBean.getSmCancellationByVar() + maincategory
+						+ subcategory + subcategorydivision
 						+ rptGenBean.getApplicationStatusTotVar()
 						+ rptGenBean.getSmYearTextVar()
 						+ rptGenBean.getSmMonthlyRptByYearVar()
@@ -10618,10 +11709,10 @@ public void retrieveCMUnspc() {
 						+ rptGenBean.getSmProcessingTypeVar()
 						+ rptGenBean.getSmReceiptNoVar()
 						+ rptGenBean.getSmThresholdFromYearVar()
-						+ rptGenBean.getSmThresholdToYearVar()						
+						+ rptGenBean.getSmThresholdToYearVar()
 						+ rptGenBean.getSmUserNameVar()
 						+ rptGenBean.getSmRequestExpiryDateVar()
-						+ rptGenBean.getSmProcessingOfficerNameVar()						
+						+ rptGenBean.getSmProcessingOfficerNameVar()
 						+ rptGenBean.getApplicationTypeTotVar()
 						+ rptGenBean.getStateTotVar()
 						+ rptGenBean.getDistrictTotVar()
@@ -10663,8 +11754,10 @@ public void retrieveCMUnspc() {
 		} else if (((getScQuotationNo() != null) && (getScQuotationNo() != ReportConst.EMPTY_VAL))
 				|| ((getFromDate() != null) && (getFromDate().toString() != ReportConst.EMPTY_VAL))
 				|| ((getToDate() != null) && (getToDate().toString() != ReportConst.EMPTY_VAL))
-				|| ((getScSoneCrtdFromDate() != null) && (getScSoneCrtdFromDate().toString() != ReportConst.EMPTY_VAL))
-				|| ((getScSoneCrtdToDate() != null) && (getScSoneCrtdToDate().toString() != ReportConst.EMPTY_VAL))
+				|| ((getScSoneCrtdFromDate() != null) && (getScSoneCrtdFromDate()
+						.toString() != ReportConst.EMPTY_VAL))
+				|| ((getScSoneCrtdToDate() != null) && (getScSoneCrtdToDate()
+						.toString() != ReportConst.EMPTY_VAL))
 				|| ((getScPIno() != null) && (getScPIno() != ReportConst.EMPTY_VAL))
 				|| ((getScRequisenerId() != null) && (getScRequisenerId() != ReportConst.EMPTY_VAL))
 				|| ((getScSupplier() != null) && (getScSupplier() != ReportConst.EMPTY_VAL))
@@ -10673,22 +11766,30 @@ public void retrieveCMUnspc() {
 				|| (this.getScQuotationList().size() > 0)
 				|| (this.getScTenderList().size() > 0)
 				|| (this.getScRstrctdTndrList().size() > 0)
-				|| ((getScCreatedToYear() != null) && (getScCreatedToYear().toString() != ReportConst.EMPTY_VAL))
-				|| ((getScCreatedFromYear() != null) && (getScCreatedFromYear().toString() != ReportConst.EMPTY_VAL))
-				|| ((getScDeskOfficer() != null) && (getScDeskOfficer().toString() != ReportConst.EMPTY_VAL))
+				|| ((getScCreatedToYear() != null) && (getScCreatedToYear()
+						.toString() != ReportConst.EMPTY_VAL))
+				|| ((getScCreatedFromYear() != null) && (getScCreatedFromYear()
+						.toString() != ReportConst.EMPTY_VAL))
+				|| ((getScDeskOfficer() != null) && (getScDeskOfficer()
+						.toString() != ReportConst.EMPTY_VAL))
 				|| ((getScPtj() != null) && (getScPtj().toString() != ReportConst.EMPTY_VAL))
 				|| ((getScStatus() != null) && (getScStatus().toString() != ReportConst.EMPTY_VAL))
-				|| ((getScPublishFromDate() != null) && (getScPublishFromDate().toString() != ReportConst.EMPTY_VAL))
-				|| ((getScPublishToDate() != null) && (getScPublishToDate().toString() != ReportConst.EMPTY_VAL))
-				/*|| ((getScPrcRptGroup() != null) && (getScPrcRptGroup() != ReportConst.EMPTY_VAL))
-				|| ((getScPIDtlsPrcRptGroup() != null) && (getScPIDtlsPrcRptGroup() != ReportConst.EMPTY_VAL))*/
+				|| ((getScPublishFromDate() != null) && (getScPublishFromDate()
+						.toString() != ReportConst.EMPTY_VAL))
+				|| ((getScPublishToDate() != null) && (getScPublishToDate()
+						.toString() != ReportConst.EMPTY_VAL))
+				/*
+				 * || ((getScPrcRptGroup() != null) && (getScPrcRptGroup() !=
+				 * ReportConst.EMPTY_VAL)) || ((getScPIDtlsPrcRptGroup() !=
+				 * null) && (getScPIDtlsPrcRptGroup() != ReportConst.EMPTY_VAL))
+				 */
 				|| ((getScProcurementType() != null) && (getScProcurementType() != ReportConst.EMPTY_VAL))
 				|| ((getScProcessRptQuotationNo() != null) && (getScProcessRptQuotationNo() != ReportConst.EMPTY_VAL))
 				|| ((getScCommonStatus() != null) && (getScCommonStatus() != ReportConst.EMPTY_VAL))
 				|| ((getScSimpleQuoteStatus() != null) && (getScSimpleQuoteStatus() != ReportConst.EMPTY_VAL))
 				|| ((getScPurchaseInDefaultStatus() != null) && (getScPurchaseInDefaultStatus() != ReportConst.EMPTY_VAL))
 				|| ((getScRequestNoteStatus() != null) && (getScRequestNoteStatus() != ReportConst.EMPTY_VAL))
-				|| ((getScLAPRNPURCHDEFAULTGroup() != null) && (getScLAPRNPURCHDEFAULTGroup() != ReportConst.EMPTY_VAL))				
+				|| ((getScLAPRNPURCHDEFAULTGroup() != null) && (getScLAPRNPURCHDEFAULTGroup() != ReportConst.EMPTY_VAL))
 				|| ((getScPIDNo() != null) && (getScPIDNo() != ReportConst.EMPTY_VAL))
 				|| ((getScSOAStatus() != null) && (getScSOAStatus() != ReportConst.EMPTY_VAL))
 				|| ((getScSimpleQuoteType() != null) && (getScSimpleQuoteType() != ReportConst.EMPTY_VAL))
@@ -10703,25 +11804,28 @@ public void retrieveCMUnspc() {
 					&& (this.getScCreatedFromMonth() == null)) {
 				throw new EpException(MessageConst.ERROR_REPORT_780004);
 			}
-			/*if ((this.getScCreatedToMonth() != null)
-					&& (this.getScCreatedFromMonth() != null)) {*/
-				if ((this.getScCreatedToYear() != null)
-						&& (this.getScCreatedFromYear() != null)) {
-					if (Integer.parseInt(this.getScCreatedToYear()) < Integer
-							.parseInt(this.getScCreatedFromYear())) {
-						throw new EpException(MessageConst.ERROR_REPORT_780008);
-					} else if (Integer.parseInt(this.getScCreatedToYear()) == Integer
-							.parseInt(this.getScCreatedFromYear())) {
-						if ((this.getScCreatedToMonth() != null)
-								&& (this.getScCreatedFromMonth() != null)) {
-							if (Integer.parseInt(this.getScCreatedToMonth()) < Integer
-									.parseInt(this.getScCreatedFromMonth())) {
-								throw new EpException(MessageConst.ERROR_REPORT_780008);
-							}
-						}
-					}
+			/*
+			 * if ((this.getScCreatedToMonth() != null) &&
+			 * (this.getScCreatedFromMonth() != null)) {
+			 */
+			if ((this.getScCreatedToYear() != null)
+					&& (this.getScCreatedFromYear() != null)) {
+				if (Integer.parseInt(this.getScCreatedToYear()) < Integer
+						.parseInt(this.getScCreatedFromYear())) {
+					throw new EpException(MessageConst.ERROR_REPORT_780008);
+				} else if (Integer.parseInt(this.getScCreatedToYear()) == Integer
+						.parseInt(this.getScCreatedFromYear())) {
 					if ((this.getScCreatedToMonth() != null)
 							&& (this.getScCreatedFromMonth() != null)) {
+						if (Integer.parseInt(this.getScCreatedToMonth()) < Integer
+								.parseInt(this.getScCreatedFromMonth())) {
+							throw new EpException(
+									MessageConst.ERROR_REPORT_780008);
+						}
+					}
+				}
+				if ((this.getScCreatedToMonth() != null)
+						&& (this.getScCreatedFromMonth() != null)) {
 					rptGenBean
 							.setScCreatedFromDtVar(ReportConst.AMP_CREAT_FRM_DT_EQ
 									+ this.getScCreatedFromMonth()
@@ -10730,32 +11834,33 @@ public void retrieveCMUnspc() {
 							.setScCreatedToDtVar(ReportConst.AMP_CREAT_TO_DT_EQ
 									+ this.getScCreatedToMonth()
 									+ this.getScCreatedToYear());
-					}else {
-						rptGenBean
-						.setScCreatedFromDtVar(ReportConst.AMP_CREAT_FRM_DT_EQ
-								+ this.getScCreatedFromYear());
-						rptGenBean
-						.setScCreatedToDtVar(ReportConst.AMP_CREAT_TO_DT_EQ
-								+ this.getScCreatedToYear());
+				} else {
+					rptGenBean
+							.setScCreatedFromDtVar(ReportConst.AMP_CREAT_FRM_DT_EQ
+									+ this.getScCreatedFromYear());
+					rptGenBean
+							.setScCreatedToDtVar(ReportConst.AMP_CREAT_TO_DT_EQ
+									+ this.getScCreatedToYear());
 				}
-				}
-			//}
-				
+			}
+			// }
+
 			if ((this.getScSOAStatus() != null)
-						&& (this.getScSOAStatus() != ReportConst.EMPTY_VAL)) {
-					rptGenBean.setScSOAStatusVar(ReportConst.AMP_PROCURE_STATUS_EQ
-							+ this.getScSOAStatus());
-			}	
+					&& (this.getScSOAStatus() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setScSOAStatusVar(ReportConst.AMP_PROCURE_STATUS_EQ
+						+ this.getScSOAStatus());
+			}
 			if ((this.getScSimpleQuoteType() != null)
 					&& (this.getScSimpleQuoteType() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setScSimpleQuoteTypeVar(ReportConst.SC_AMP_SIMPL_QUOTE_TYPE_EQ
-						+ this.getScSimpleQuoteType());
-		    }
+				rptGenBean
+						.setScSimpleQuoteTypeVar(ReportConst.SC_AMP_SIMPL_QUOTE_TYPE_EQ
+								+ this.getScSimpleQuoteType());
+			}
 			if ((this.getScLOANo() != null)
 					&& (this.getScLOANo() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setScLOANoVar(ReportConst.SC_AMP_LOA_NO_EQ
 						+ this.getScLOANo());
-		    }
+			}
 			if ((this.getScRequestQuoteNo() != null)
 					&& (this.getScRequestQuoteNo() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setScRequestQuoteNoVar(ReportConst.SC_AMP_RQ_NO_EQ
@@ -10783,9 +11888,9 @@ public void retrieveCMUnspc() {
 				rptGenBean.setScPIDNoVar(ReportConst.SC_AMP_PID_NO_EQ
 						+ this.getScPIDNo());
 			}
-			if((this.getReportValue() != null)
+			if ((this.getReportValue() != null)
 					&& (this.getReportValue().trim()
-							.equalsIgnoreCase(ReportConst.SC_SUMMARY_REQUEST_NOTE_S1_RPT_VAL))){
+							.equalsIgnoreCase(ReportConst.SC_SUMMARY_REQUEST_NOTE_S1_RPT_VAL))) {
 				if ((this.getScREQUESTNOTESUMMARYGroup() != null)
 						&& (this.getScREQUESTNOTESUMMARYGroup() != ReportConst.EMPTY_VAL)) {
 					rptGenBean
@@ -10793,7 +11898,7 @@ public void retrieveCMUnspc() {
 									+ this.getScREQUESTNOTESUMMARYGroup());
 				}
 			}
-			
+
 			if ((this.getScLAPRNPURCHDEFAULTGroup() != null)
 					&& (this.getScLAPRNPURCHDEFAULTGroup() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
@@ -10813,18 +11918,21 @@ public void retrieveCMUnspc() {
 			}
 			if ((this.getScPurchaseInDefaultStatus() != null)
 					&& (this.getScPurchaseInDefaultStatus() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setScPurchaseInDefaultStatusVar(ReportConst.SC_AMP_STATUS_EQ
-						+ this.getScPurchaseInDefaultStatus());
+				rptGenBean
+						.setScPurchaseInDefaultStatusVar(ReportConst.SC_AMP_STATUS_EQ
+								+ this.getScPurchaseInDefaultStatus());
 			}
 			if ((this.getScSimpleQuoteStatus() != null)
 					&& (this.getScSimpleQuoteStatus() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setScSimpleQuoteStatusVar(ReportConst.SC_AMP_STATUS_EQ
-						+ this.getScSimpleQuoteStatus());
+				rptGenBean
+						.setScSimpleQuoteStatusVar(ReportConst.SC_AMP_STATUS_EQ
+								+ this.getScSimpleQuoteStatus());
 			}
 			if ((this.getScRequestNoteStatus() != null)
 					&& (this.getScRequestNoteStatus() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setScRequestNoteStatusVar(ReportConst.SC_AMP_STATUS_EQ
-						+ this.getScRequestNoteStatus());
+				rptGenBean
+						.setScRequestNoteStatusVar(ReportConst.SC_AMP_STATUS_EQ
+								+ this.getScRequestNoteStatus());
 			}
 			if ((this.getScQuotationNo() != null)
 					&& (this.getScQuotationNo() != ReportConst.EMPTY_VAL)) {
@@ -10849,8 +11957,10 @@ public void retrieveCMUnspc() {
 			}
 			if ((this.getScProcessRptQuotationNo() != null)
 					&& (this.getScProcessRptQuotationNo() != ReportConst.EMPTY_VAL)) {
-				if((getManagedBean().getReportValue() != null)&&(getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SC_S1_SIMPLE_QUOTE_PROCESS_RPT_VAL))){
-				  simpleQuoteNoValidation();
+				if ((getManagedBean().getReportValue() != null)
+						&& (getManagedBean().getReportValue().trim()
+								.equalsIgnoreCase(ReportConst.SC_S1_SIMPLE_QUOTE_PROCESS_RPT_VAL))) {
+					simpleQuoteNoValidation();
 				}
 				rptGenBean
 						.setScProcessRptQuotationNoVar(ReportConst.SC_AMP_QT_NO_EQ
@@ -10930,9 +12040,9 @@ public void retrieveCMUnspc() {
 				rptGenBean.setScSoneStatusVar(ReportConst.SC_AMP_STATUS_EQ
 						+ this.getScSoneStatus());
 			}
-			if((this.getReportValue() != null)
+			if ((this.getReportValue() != null)
 					&& (this.getReportValue().trim()
-							.equalsIgnoreCase(ReportConst.SC_PURCHASE_ITEM_INQUIRY_FINAL_S1_RPT_VAL))){
+							.equalsIgnoreCase(ReportConst.SC_PURCHASE_ITEM_INQUIRY_FINAL_S1_RPT_VAL))) {
 				if ((this.getScPIDtlsPrcRptGroup() != null)
 						&& (this.getScPIDtlsPrcRptGroup() != ReportConst.EMPTY_VAL)) {
 					rptGenBean
@@ -10947,19 +12057,28 @@ public void retrieveCMUnspc() {
 								+ this.getScPrcRptGroup());
 			}
 			String userRoleLogin = ReportConst.EMPTY_VAL;
-			if (approverNayakTarafList.size()>0) {
+			if (approverNayakTarafList.size() > 0) {
 				userRoleLogin = ReportConst.APPROVERNT;
-			} else if ((authoriztionList.contains(ReportConst.BPK_APPROVER)||authoriztionList.contains(ReportConst.RN_APPROVER))&&(this.getModuleValue().equalsIgnoreCase(
-					ReportConst.DP_MOD_VAL))) {
+			} else if ((authoriztionList.contains(ReportConst.BPK_APPROVER) || authoriztionList
+					.contains(ReportConst.RN_APPROVER))
+					&& (this.getModuleValue()
+							.equalsIgnoreCase(ReportConst.DP_MOD_VAL))) {
 				userRoleLogin = ReportConst.APPROVER;
-			} else if ((authoriztionList.contains(ReportConst.BUDGET_APPROVER)||authoriztionList.contains(ReportConst.BPK_APPROVER)||authoriztionList.contains(ReportConst.COMMITTEE_APPROVER)||authoriztionList.contains(ReportConst.PUBLICATION_APPROVER))&&((this.getModuleValue().equalsIgnoreCase(
-					ModuleCodeConst.SUPPLIER_SELECTION)))) {
+			} else if ((authoriztionList.contains(ReportConst.BUDGET_APPROVER)
+					|| authoriztionList.contains(ReportConst.BPK_APPROVER)
+					|| authoriztionList
+							.contains(ReportConst.COMMITTEE_APPROVER) || authoriztionList
+						.contains(ReportConst.PUBLICATION_APPROVER))
+					&& ((this.getModuleValue()
+							.equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION)))) {
 				userRoleLogin = ReportConst.APPROVER;
-			}else if (authoriztionList.contains(ReportConst.DESK_OFFICER)&&((this.getModuleValue().equalsIgnoreCase(
-					ModuleCodeConst.SUPPLIER_SELECTION)))) {
+			} else if (authoriztionList.contains(ReportConst.DESK_OFFICER)
+					&& ((this.getModuleValue()
+							.equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION)))) {
 				userRoleLogin = ReportConst.DESKOFFR;
-			} else if (authoriztionList.contains(ReportConst.REQUISITIONER)&&(this.getModuleValue().equalsIgnoreCase(
-							ReportConst.DP_MOD_VAL))) {
+			} else if (authoriztionList.contains(ReportConst.REQUISITIONER)
+					&& (this.getModuleValue()
+							.equalsIgnoreCase(ReportConst.DP_MOD_VAL))) {
 				userRoleLogin = ReportConst.REQUISITIONER;
 			}
 			if (!userRoleLogin.equals(ReportConst.REQUISITIONER)) {
@@ -11025,6 +12144,7 @@ public void retrieveCMUnspc() {
 			throw new EpException(MessageConst.ERROR_REPORT_780003);
 		}
 	}
+
 	/*
 	 * Generate CM module report
 	 */
@@ -11033,53 +12153,78 @@ public void retrieveCMUnspc() {
 	 */
 	public void generateCMReport() {
 		if (((this.getCmExtention() != null) && (this.getCmExtention() != ReportConst.EMPTY_VAL))
-				|| ((this.getCmExtentionCode() != null) && (this.getCmExtentionCode() != ReportConst.EMPTY_VAL))
+				|| ((this.getCmExtentionCode() != null) && (this
+						.getCmExtentionCode() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmItemType() != null) && (this.getCmItemType() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmItemName() != null) && (this.getCmItemName() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmItemType() != null) && (this.getCmItemType() != ReportConst.EMPTY_VAL))
-				/*|| ((this.getCmItemStatus() != null) && (this.getCmItemStatus() != ReportConst.EMPTY_VAL))*/
+				/*
+				 * || ((this.getCmItemStatus() != null) &&
+				 * (this.getCmItemStatus() != ReportConst.EMPTY_VAL))
+				 */
 				|| ((this.getCmUnspscCode() != null) && (this.getCmUnspscCode() != ReportConst.EMPTY_VAL))
-				|| ((this.getCmUnspscTitle() != null) && (this.getCmUnspscTitle() != ReportConst.EMPTY_VAL))
-				|| ((this.getCmExtentionType() != null) && (this.getCmExtentionType() != ReportConst.EMPTY_VAL))
-				|| ((this.getCmExtentionBrand() != null) && (this.getCmExtentionBrand() != ReportConst.EMPTY_VAL))
-				|| ((this.getCmExtentionMeasurment() != null) && (this.getCmExtentionMeasurment() != ReportConst.EMPTY_VAL))
-				|| ((this.getCmExtentionColour() != null) && (this.getCmExtentionColour() != ReportConst.EMPTY_VAL))
-				|| ((this.getCmCompanyName() != null) && (this.getCmCompanyName() != ReportConst.EMPTY_VAL))
-				|| ((this.getCmRegistrationType() != null) && (this.getCmRegistrationType() != ReportConst.EMPTY_VAL))
-				|| ((this.getCmItemCategory() != null) && (this.getCmItemCategory() != ReportConst.EMPTY_VAL))
-				|| ((this.getCmProofIdentity() != null) && (this.getCmProofIdentity() != ReportConst.EMPTY_VAL))
-				|| ((this.getFromDate() != null) && (this.getFromDate().toString() != ReportConst.EMPTY_VAL))
+				|| ((this.getCmUnspscTitle() != null) && (this
+						.getCmUnspscTitle() != ReportConst.EMPTY_VAL))
+				|| ((this.getCmExtentionType() != null) && (this
+						.getCmExtentionType() != ReportConst.EMPTY_VAL))
+				|| ((this.getCmExtentionBrand() != null) && (this
+						.getCmExtentionBrand() != ReportConst.EMPTY_VAL))
+				|| ((this.getCmExtentionMeasurment() != null) && (this
+						.getCmExtentionMeasurment() != ReportConst.EMPTY_VAL))
+				|| ((this.getCmExtentionColour() != null) && (this
+						.getCmExtentionColour() != ReportConst.EMPTY_VAL))
+				|| ((this.getCmCompanyName() != null) && (this
+						.getCmCompanyName() != ReportConst.EMPTY_VAL))
+				|| ((this.getCmRegistrationType() != null) && (this
+						.getCmRegistrationType() != ReportConst.EMPTY_VAL))
+				|| ((this.getCmItemCategory() != null) && (this
+						.getCmItemCategory() != ReportConst.EMPTY_VAL))
+				|| ((this.getCmProofIdentity() != null) && (this
+						.getCmProofIdentity() != ReportConst.EMPTY_VAL))
+				|| ((this.getFromDate() != null) && (this.getFromDate()
+						.toString() != ReportConst.EMPTY_VAL))
 				|| ((this.getToDate() != null) && (this.getToDate().toString() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmEpNumber() != null) && (this.getCmEpNumber() != ReportConst.EMPTY_VAL))
-				|| ((this.getCmBusinessRegNo() != null) && (this.getCmBusinessRegNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getCmBusinessRegNo() != null) && (this
+						.getCmBusinessRegNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmIcNumber() != null) && (this.getCmIcNumber() != ReportConst.EMPTY_VAL))
-				|| ((this.getCmRequestNumber() != null) && (this.getCmRequestNumber() != ReportConst.EMPTY_VAL))
+				|| ((this.getCmRequestNumber() != null) && (this
+						.getCmRequestNumber() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmMofNumber() != null) && (this.getCmMofNumber() != ReportConst.EMPTY_VAL))) {
-			
-			if((this.getCmUnspscCode() != null) && (this.getCmUnspscCode() != ReportConst.EMPTY_VAL)){
-				if(((this.getCmExtentionType() == null) || (this.getCmExtentionType()== ReportConst.EMPTY_VAL))
-						&& ((this.getCmExtentionBrand() == null) || (this.getCmExtentionBrand()== ReportConst.EMPTY_VAL))
-						&& ((this.getCmExtentionMeasurment() == null) || (this.getCmExtentionMeasurment()== ReportConst.EMPTY_VAL))
-						&& ((this.getCmExtentionColour() == null) || (this.getCmExtentionColour()== ReportConst.EMPTY_VAL))){
+
+			if ((this.getCmUnspscCode() != null)
+					&& (this.getCmUnspscCode() != ReportConst.EMPTY_VAL)) {
+				if (((this.getCmExtentionType() == null) || (this
+						.getCmExtentionType() == ReportConst.EMPTY_VAL))
+						&& ((this.getCmExtentionBrand() == null) || (this
+								.getCmExtentionBrand() == ReportConst.EMPTY_VAL))
+						&& ((this.getCmExtentionMeasurment() == null) || (this
+								.getCmExtentionMeasurment() == ReportConst.EMPTY_VAL))
+						&& ((this.getCmExtentionColour() == null) || (this
+								.getCmExtentionColour() == ReportConst.EMPTY_VAL))) {
 					throw new EpException(MessageConst.ERROR_REPORT_780024);
-					
-					/*FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							null,MessageUtils.getMessage(
-									MessageConst.ERROR_REPORT_780024,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-			String pageUrl = "/xhtml/reports/reportsmain.xhtml";
-			//String pageUrl = "/xhtml/reports/reportcontent.xhtml";
-			FacesContext context = FacesContext.getCurrentInstance();
-			context.getApplication().getNavigationHandler()
-					.handleNavigation(context, null, pageUrl);*/
+
+					/*
+					 * FacesContext.getCurrentInstance().addMessage(null,new
+					 * FacesMessage(FacesMessage.SEVERITY_ERROR,
+					 * null,MessageUtils.getMessage(
+					 * MessageConst.ERROR_REPORT_780024,
+					 * MessageUtils.BUNDLE_COMMON_MESSAGES, new
+					 * FacesScopes().getUserLocale()))); String pageUrl =
+					 * "/xhtml/reports/reportsmain.xhtml"; //String pageUrl =
+					 * "/xhtml/reports/reportcontent.xhtml"; FacesContext
+					 * context = FacesContext.getCurrentInstance();
+					 * context.getApplication().getNavigationHandler()
+					 * .handleNavigation(context, null, pageUrl);
+					 */
 				}
 			}
-			
+
 			if ((this.getCmRequestNumber() != null)
 					&& (this.getCmRequestNumber() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setCmRequestNumberVar(ReportConst.CM_AMP_REQUEST_NO_EQ
-						+ this.getCmRequestNumber());
+				rptGenBean
+						.setCmRequestNumberVar(ReportConst.CM_AMP_REQUEST_NO_EQ
+								+ this.getCmRequestNumber());
 			}
 			if ((this.getCmItemName() != null)
 					&& (this.getCmItemName() != ReportConst.EMPTY_VAL)) {
@@ -11091,7 +12236,7 @@ public void retrieveCMUnspc() {
 				rptGenBean.setItemTypeTotVar(ReportConst.CM_AMP_ITEM_TYPE_EQ
 						+ this.getCmItemType());
 			}
-			
+
 			if ((this.getCmUnspscCode() != null)
 					&& (this.getCmUnspscCode() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
@@ -11185,18 +12330,20 @@ public void retrieveCMUnspc() {
 				rptGenBean.setMofNumberTotVar(ReportConst.CM_AMP_MOF_NO_EQ
 						+ this.getCmMofNumber());
 			}
-			
+
 			if ((this.getCmExtention() != null)
 					&& (this.getCmExtention() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setCmExtentionVar(ReportConst.CM_AMP_EXTENSION_EQ
 						+ this.getCmExtention());
 			}
-			if ((this.getCmGroupOne() != null)&& (this.getCmGroupOne() != ReportConst.EMPTY_VAL)) {
-					rptGenBean.setCmGroupOneVar(ReportConst.CM_AMP_PGROUP_EQ
-							+ this.getCmGroupOne());
-			}			
+			if ((this.getCmGroupOne() != null)
+					&& (this.getCmGroupOne() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setCmGroupOneVar(ReportConst.CM_AMP_PGROUP_EQ
+						+ this.getCmGroupOne());
+			}
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
-			if ((rptGenBean.getUrlReportJSPName() != null)&& (rptGenBean.getUrlReportJSPName() != ReportConst.EMPTY_VAL)) {
+			if ((rptGenBean.getUrlReportJSPName() != null)
+					&& (rptGenBean.getUrlReportJSPName() != ReportConst.EMPTY_VAL)) {
 				setConstructedParamString(ReportConst.AMP_REPORT_NAME
 						+ rptGenBean.getUrlReportJSPName()
 						+ rptGenBean.getItemNameTotVar()
@@ -11228,25 +12375,25 @@ public void retrieveCMUnspc() {
 			}
 		} else {
 			throw new EpException(MessageConst.ERROR_REPORT_780003);
-			
-			/*//throw new EpException(MessageConst.ERROR_REPORT_780003);
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-							MessageUtils.getMessage(
-									MessageConst.ERROR_REPORT_780003,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							null,MessageUtils.getMessage(
-									MessageConst.ERROR_REPORT_780003,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-			String pageUrl = "/xhtml/reports/reportsmain.xhtml";
-			//String pageUrl = "/xhtml/reports/reportcontent.xhtml";
-			FacesContext context = FacesContext.getCurrentInstance();
-			context.getApplication().getNavigationHandler()
-					.handleNavigation(context, null, pageUrl);*/
+
+			/*
+			 * //throw new EpException(MessageConst.ERROR_REPORT_780003);
+			 * FacesContext.getCurrentInstance().addMessage( null, new
+			 * FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+			 * MessageUtils.getMessage( MessageConst.ERROR_REPORT_780003,
+			 * MessageUtils.BUNDLE_COMMON_MESSAGES, new
+			 * FacesScopes().getUserLocale())));
+			 * FacesContext.getCurrentInstance().addMessage(null,new
+			 * FacesMessage(FacesMessage.SEVERITY_ERROR,
+			 * null,MessageUtils.getMessage( MessageConst.ERROR_REPORT_780003,
+			 * MessageUtils.BUNDLE_COMMON_MESSAGES, new
+			 * FacesScopes().getUserLocale()))); String pageUrl =
+			 * "/xhtml/reports/reportsmain.xhtml"; //String pageUrl =
+			 * "/xhtml/reports/reportcontent.xhtml"; FacesContext context =
+			 * FacesContext.getCurrentInstance();
+			 * context.getApplication().getNavigationHandler()
+			 * .handleNavigation(context, null, pageUrl);
+			 */
 		}
 	}
 
@@ -11261,40 +12408,58 @@ public void retrieveCMUnspc() {
 				|| ((this.getFlContractNo() != null) && (this.getFlContractNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlSst() != null) && (this.getFlSst() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlJabatan() != null) && (this.getFlJabatan() != ReportConst.EMPTY_VAL))
-				|| ((this.getCommonMinistry() != null) && (this.getCommonMinistry() != ReportConst.EMPTY_VAL))
+				|| ((this.getCommonMinistry() != null) && (this
+						.getCommonMinistry() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlSupplier() != null) && (this.getFlSupplier() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlStatus() != null) && (this.getFlStatus() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlDuration() != null) && (this.getFlDuration() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlRecievingOfficer() != null) && (this.getFlRecievingOfficer() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlDeliveryAddress() != null) && (this.getFlDeliveryAddress() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlRecievingOfficer() != null) && (this
+						.getFlRecievingOfficer() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlDeliveryAddress() != null) && (this
+						.getFlDeliveryAddress() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlRecNoteNo() != null) && (this.getFlRecNoteNo() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlContractType() != null) && (this.getFlContractType() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlRequisitioner() != null) && (this.getFlRequisitioner() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlMtoContract() != null) && (this.getFlMtoContract() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlContractType() != null) && (this
+						.getFlContractType() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlRequisitioner() != null) && (this
+						.getFlRequisitioner() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlMtoContract() != null) && (this
+						.getFlMtoContract() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlInvoiceNo() != null) && (this.getFlInvoiceNo() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlSupplierInvoiceNo() != null) && (this.getFlSupplierInvoiceNo() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlPaymentAdviceNo() != null) && (this.getFlPaymentAdviceNo() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlDeductionType() != null) && (this.getFlDeductionType() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlSupplierInvoiceNo() != null) && (this
+						.getFlSupplierInvoiceNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlPaymentAdviceNo() != null) && (this
+						.getFlPaymentAdviceNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlDeductionType() != null) && (this
+						.getFlDeductionType() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlCrNo() != null) && (this.getFlCrNo() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlApproverName() != null) && (this.getFlApproverName() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlDocumentType() != null) && (this.getFlDocumentType() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlApproverName() != null) && (this
+						.getFlApproverName() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlDocumentType() != null) && (this
+						.getFlDocumentType() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlCriteria() != null) && (this.getFlCriteria() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlScoring() != null) && (this.getFlScoring() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlPkpNo() != null) && (this.getFlPkpNo() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlStopInstructionNo() != null) && (this.getFlStopInstructionNo() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlDeliveryOrderNo() != null) && (this.getFlDeliveryOrderNo() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlSupplierDeliveryOrderNo() != null) && (this.getFlSupplierDeliveryOrderNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlStopInstructionNo() != null) && (this
+						.getFlStopInstructionNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlDeliveryOrderNo() != null) && (this
+						.getFlDeliveryOrderNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlSupplierDeliveryOrderNo() != null) && (this
+						.getFlSupplierDeliveryOrderNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlItemCode() != null) && (this.getFlItemCode() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlPoAmount() != null) && (this.getFlPoAmount() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlPrNo() != null) && (this.getFlPrNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlPmo() != null) && (this.getFlPmo() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlItemName() != null) && (this.getFlItemName() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlItmType() != null) && (this.getFlItmType() != ReportConst.EMPTY_VAL))
-				|| ((this.getFromDate() != null) && (this.getFromDate().toString() != ReportConst.EMPTY_VAL))
+				|| ((this.getFromDate() != null) && (this.getFromDate()
+						.toString() != ReportConst.EMPTY_VAL))
 				|| ((this.getToDate() != null) && (this.getToDate().toString() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlContractOrder() != null) && (this.getFlContractOrder() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlContractRequest() != null) && (this.getFlContractRequest() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlPurchaseOrderNo() != null) && (this.getFlPurchaseOrderNo() != ReportConst.EMPTY_VAL))) {
+				|| ((this.getFlContractOrder() != null) && (this
+						.getFlContractOrder() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlContractRequest() != null) && (this
+						.getFlContractRequest() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlPurchaseOrderNo() != null) && (this
+						.getFlPurchaseOrderNo() != ReportConst.EMPTY_VAL))) {
 			if ((this.getCommonPtj() != null)
 					&& (this.getCommonPtj() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setPtjTotVar(ReportConst.FL_AMP_PTJ_NAME_EQ
@@ -11313,10 +12478,12 @@ public void retrieveCMUnspc() {
 			}
 			if ((this.getCommonMinistry() != null)
 					&& (this.getCommonMinistry() != ReportConst.EMPTY_VAL)) {
-				/*Long orgprofileid = Long.parseLong(this.getCommonMinistry());
-				
-				rptGenBean.setMinistryTotVar(ReportConst.FL_AMP_MINISTRY_EQ
-						+ retrieveMinistryName(orgprofileid));*/
+				/*
+				 * Long orgprofileid = Long.parseLong(this.getCommonMinistry());
+				 * 
+				 * rptGenBean.setMinistryTotVar(ReportConst.FL_AMP_MINISTRY_EQ +
+				 * retrieveMinistryName(orgprofileid));
+				 */
 				rptGenBean.setMinistryTotVar(ReportConst.FL_AMP_MINISTRY_EQ
 						+ this.getCommonMinistry());
 			}
@@ -11372,14 +12539,16 @@ public void retrieveCMUnspc() {
 			}
 			if ((this.getFlSupplierInvoiceNo() != null)
 					&& (this.getFlSupplierInvoiceNo() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setFlSupplierInvoiceNoVar(ReportConst.FL_AMP_SUPPL_INV_NO_EQ
-						+ this.getFlSupplierInvoiceNo());
+				rptGenBean
+						.setFlSupplierInvoiceNoVar(ReportConst.FL_AMP_SUPPL_INV_NO_EQ
+								+ this.getFlSupplierInvoiceNo());
 			}
-			
+
 			if ((this.getFlPaymentAdviceNo() != null)
 					&& (this.getFlPaymentAdviceNo() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setFlPaymentAdviceNoVar(ReportConst.FL_AMP_PAYMENT_ADV_NO_EQ
-						+ this.getFlPaymentAdviceNo());
+				rptGenBean
+						.setFlPaymentAdviceNoVar(ReportConst.FL_AMP_PAYMENT_ADV_NO_EQ
+								+ this.getFlPaymentAdviceNo());
 			}
 			if ((this.getFlDeductionType() != null)
 					&& (this.getFlDeductionType() != ReportConst.EMPTY_VAL)) {
@@ -11420,8 +12589,9 @@ public void retrieveCMUnspc() {
 			}
 			if ((this.getFlStopInstructionNo() != null)
 					&& (this.getFlStopInstructionNo() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setFlStopInstructionNoVar(ReportConst.FL_AMP_STOP_INSTR_NO_EQ
-						+ this.getFlStopInstructionNo());
+				rptGenBean
+						.setFlStopInstructionNoVar(ReportConst.FL_AMP_STOP_INSTR_NO_EQ
+								+ this.getFlStopInstructionNo());
 			}
 			if ((this.getFlDeliveryOrderNo() != null)
 					&& (this.getFlDeliveryOrderNo() != ReportConst.EMPTY_VAL)) {
@@ -11466,7 +12636,7 @@ public void retrieveCMUnspc() {
 					&& (this.getFromDate().toString() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setFromDateVar(ReportConst.FL_AMP_FROM_DATE_EQ
 						+ outputDateFormat.format(this.getFromDate()));
-			}			
+			}
 			if ((this.getToDate() != null)
 					&& (this.getToDate().toString() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setToDateVar(ReportConst.FL_AMP_TO_DATE_EQ
@@ -11646,12 +12816,13 @@ public void retrieveCMUnspc() {
 						+ rptGenBean.getReportValueIdVar()
 						+ rptGenBean.getUserIdVar());
 			} else {
-				throw new EpException(MessageConst.ERROR_REPORT_780007); 
+				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
 		} else {
 			throw new EpException(MessageConst.ERROR_REPORT_780003);
 		}
-	}  
+	}
+
 	/*
 	 * Generate PP module report
 	 */
@@ -11660,7 +12831,8 @@ public void retrieveCMUnspc() {
 	 */
 	public void generatePPReport() {
 		if (((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
-				|| ((this.getCommonMinistry() != null) && (this.getCommonMinistry() != ReportConst.EMPTY_VAL))
+				|| ((this.getCommonMinistry() != null) && (this
+						.getCommonMinistry() != ReportConst.EMPTY_VAL))
 				|| ((this.getPpYear() != null) && (this.getPpYear() != ReportConst.EMPTY_VAL))) {
 			if ((this.getCommonPtj() != null)
 					&& (this.getCommonPtj() != ReportConst.EMPTY_VAL)) {
@@ -11670,17 +12842,16 @@ public void retrieveCMUnspc() {
 			if ((this.getCommonMinistry() != null)
 					&& (this.getCommonMinistry() != ReportConst.EMPTY_VAL)) {
 				Long orgprofileid = Long.parseLong(this.getCommonMinistry());
-				
-				rptGenBean
-						.setPpMinistryVar(ReportConst.FL_AMP_MINISTRY_EQ
-								+ retrieveMinistryName(orgprofileid));
+
+				rptGenBean.setPpMinistryVar(ReportConst.FL_AMP_MINISTRY_EQ
+						+ retrieveMinistryName(orgprofileid));
 			}
 			if ((this.getPpYear() != null)
 					&& (this.getPpYear() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setPpYearVar(ReportConst.AMP_SM_YEAR_EQ
 						+ this.getPpYear());
 			}
-			
+
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if ((rptGenBean.getUrlReportJSPName() != null)
 					&& (rptGenBean.getUrlReportJSPName() != ReportConst.EMPTY_VAL)) {
@@ -11688,7 +12859,7 @@ public void retrieveCMUnspc() {
 						+ rptGenBean.getUrlReportJSPName()
 						+ rptGenBean.getPpPTJVar()
 						+ rptGenBean.getPpMinistryVar()
-						+ rptGenBean.getPpYearVar()			
+						+ rptGenBean.getPpYearVar()
 						+ rptGenBean.getReportValueIdVar()
 						+ rptGenBean.getUserIdVar());
 			} else {
@@ -11698,6 +12869,7 @@ public void retrieveCMUnspc() {
 			throw new EpException(MessageConst.ERROR_REPORT_780003);
 		}
 	}
+
 	/*
 	 * Generate PM module report
 	 */
@@ -11706,18 +12878,22 @@ public void retrieveCMUnspc() {
 	 */
 	public void generatePMReport() {
 		if (((this.getPmServiceType() != null) && (this.getPmServiceType() != ReportConst.EMPTY_VAL))
-				|| ((this.getPmBusinessRegNo() != null) && (this.getPmBusinessRegNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getPmBusinessRegNo() != null) && (this
+						.getPmBusinessRegNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getPmStatus() != null) && (this.getPmStatus() != ReportConst.EMPTY_VAL))
-				|| ((this.getPmFinancialOrgName() != null) && (this.getPmFinancialOrgName() != ReportConst.EMPTY_VAL))) {
+				|| ((this.getPmFinancialOrgName() != null) && (this
+						.getPmFinancialOrgName() != ReportConst.EMPTY_VAL))) {
 			if ((this.getPmServiceType() != null)
 					&& (this.getPmServiceType() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setPmServiceTypeVar(ReportConst.PM_AMP_SERVICE_TYPE_EQ
-						+ this.getPmServiceType());
+				rptGenBean
+						.setPmServiceTypeVar(ReportConst.PM_AMP_SERVICE_TYPE_EQ
+								+ this.getPmServiceType());
 			}
 			if ((this.getPmBusinessRegNo() != null)
 					&& (this.getPmBusinessRegNo() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setPmBusinessRegNoVar(ReportConst.PM_AMP_BIZREG_NO_EQ
-						+ this.getPmBusinessRegNo());
+				rptGenBean
+						.setPmBusinessRegNoVar(ReportConst.PM_AMP_BIZREG_NO_EQ
+								+ this.getPmBusinessRegNo());
 			}
 			if ((this.getPmStatus() != null)
 					&& (this.getPmStatus() != ReportConst.EMPTY_VAL)) {
@@ -11726,8 +12902,9 @@ public void retrieveCMUnspc() {
 			}
 			if ((this.getPmFinancialOrgName() != null)
 					&& (this.getPmFinancialOrgName() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setPmFinancialOrgNameVar(ReportConst.PM_AMP_FINORG_NAME_EQ
-						+ this.getPmFinancialOrgName());
+				rptGenBean
+						.setPmFinancialOrgNameVar(ReportConst.PM_AMP_FINORG_NAME_EQ
+								+ this.getPmFinancialOrgName());
 			}
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if ((rptGenBean.getUrlReportJSPName() != null)
@@ -11747,6 +12924,7 @@ public void retrieveCMUnspc() {
 			throw new EpException(MessageConst.ERROR_REPORT_780003);
 		}
 	}
+
 	/*
 	 * validate quotNo
 	 */
@@ -11759,7 +12937,7 @@ public void retrieveCMUnspc() {
 			specialCharValidation();
 		}
 	}
-	
+
 	/**
 	 * Simple quote no validation.
 	 */
@@ -11777,49 +12955,78 @@ public void retrieveCMUnspc() {
 		String ptString = ReportConst.NUMERIC_CHAR_PATTERN_ONLY;
 		Pattern pattern = Pattern.compile(ptString);
 		Matcher match;
-		if((getManagedBean().getReportValue() != null)&&(getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SC_S1_SIMPLE_QUOTE_PROCESS_RPT_VAL)||getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SC_SIMPLE_QUOTE_DTL_STS_COMPLD_S1_RPT_VAL)||getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_SUPPL_S1_RPT_VAL))){
-			//if(this.getScProcessRptQuotationNo() != null){
+		if ((getManagedBean().getReportValue() != null)
+				&& (getManagedBean()
+						.getReportValue()
+						.trim()
+						.equalsIgnoreCase(
+								ReportConst.SC_S1_SIMPLE_QUOTE_PROCESS_RPT_VAL)
+						|| getManagedBean()
+								.getReportValue()
+								.trim()
+								.equalsIgnoreCase(
+										ReportConst.SC_SIMPLE_QUOTE_DTL_STS_COMPLD_S1_RPT_VAL) || getManagedBean()
+						.getReportValue()
+						.trim()
+						.equalsIgnoreCase(
+								ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_SUPPL_S1_RPT_VAL))) {
+			// if(this.getScProcessRptQuotationNo() != null){
 			match = pattern.matcher(this.getScProcessRptQuotationNo());
-		  //}
-		}else {
+			// }
+		} else {
 			match = pattern.matcher(this.getScQuotationNo());
 		}
 		if (match.matches()) {
-			if((getManagedBean().getReportValue() != null)&&(getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SC_S1_SIMPLE_QUOTE_PROCESS_RPT_VAL)||getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SC_SIMPLE_QUOTE_DTL_STS_COMPLD_S1_RPT_VAL)||getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_SUPPL_S1_RPT_VAL))){
+			if ((getManagedBean().getReportValue() != null)
+					&& (getManagedBean()
+							.getReportValue()
+							.trim()
+							.equalsIgnoreCase(
+									ReportConst.SC_S1_SIMPLE_QUOTE_PROCESS_RPT_VAL)
+							|| getManagedBean()
+									.getReportValue()
+									.trim()
+									.equalsIgnoreCase(
+											ReportConst.SC_SIMPLE_QUOTE_DTL_STS_COMPLD_S1_RPT_VAL) || getManagedBean()
+							.getReportValue()
+							.trim()
+							.equalsIgnoreCase(
+									ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_SUPPL_S1_RPT_VAL))) {
 				retrieveSimpleQuoteNo();
-			}else {
+			} else {
 				getQuotationNumber();
 			}
-			
-			
+
 		} else {
 			this.setScQuotationNo(null);
 			this.setScProcessRptQuotationNo(null);
 			throw new EpException(MessageConst.ERROR_REPORT_780006);
 		}
 	}
-	
+
 	/**
 	 * Mof reg no numeric validation.
 	 */
 	public void mofRegNoNumericValidation() {
 		String ptString1 = ReportConst.NUMERIC_PATTERN_ONLY;
 		Pattern pattern1 = Pattern.compile(ptString1);
-		if((this.getSmMofRegNoFrom() != null)
-				&& (this.getSmMofRegNoFrom() != ReportConst.EMPTY_VAL)){
+		if ((this.getSmMofRegNoFrom() != null)
+				&& (this.getSmMofRegNoFrom() != ReportConst.EMPTY_VAL)) {
 			String mofRegNoFrom = null;
-			if(this.getSmMofRegNoFrom().contains(ReportConst.PARAM_IFON)){
-				mofRegNoFrom = this.getSmMofRegNoFrom().replace(ReportConst.PARAM_IFON, ReportConst.EMPTY_VAL);	
-				if(mofRegNoFrom.contains(ReportConst.PARAM_SPACE)){
-					mofRegNoFrom=mofRegNoFrom.replace(ReportConst.PARAM_SPACE, ReportConst.EMPTY_VAL);	
+			if (this.getSmMofRegNoFrom().contains(ReportConst.PARAM_IFON)) {
+				mofRegNoFrom = this.getSmMofRegNoFrom().replace(
+						ReportConst.PARAM_IFON, ReportConst.EMPTY_VAL);
+				if (mofRegNoFrom.contains(ReportConst.PARAM_SPACE)) {
+					mofRegNoFrom = mofRegNoFrom.replace(
+							ReportConst.PARAM_SPACE, ReportConst.EMPTY_VAL);
 				}
-			}else{
+			} else {
 				mofRegNoFrom = this.getSmMofRegNoFrom();
 			}
-						
+
 			Matcher match1 = pattern1.matcher(mofRegNoFrom);
 			if (match1.matches()) {
-				//this.setSmMofRegNoFrom(mofRegNoFrom);
+				// this.setSmMofRegNoFrom(mofRegNoFrom);
 			} else {
 				this.setSmMofRegNoFrom(null);
 				this.setSmMofRegNoTo(null);
@@ -11828,21 +13035,23 @@ public void retrieveCMUnspc() {
 		}
 		String ptString2 = ReportConst.NUMERIC_PATTERN_ONLY;
 		Pattern pattern2 = Pattern.compile(ptString2);
-		if((this.getSmMofRegNoTo() != null)
-				&& (this.getSmMofRegNoTo() != ReportConst.EMPTY_VAL)){
+		if ((this.getSmMofRegNoTo() != null)
+				&& (this.getSmMofRegNoTo() != ReportConst.EMPTY_VAL)) {
 			String mofRegNoTo = null;
-			if(this.getSmMofRegNoTo().contains(ReportConst.PARAM_IFON)){
-				mofRegNoTo = this.getSmMofRegNoTo().replace(ReportConst.PARAM_IFON, ReportConst.EMPTY_VAL);	
-				if(mofRegNoTo.contains(ReportConst.PARAM_SPACE)){
-					mofRegNoTo=mofRegNoTo.replace(ReportConst.PARAM_SPACE, ReportConst.EMPTY_VAL);	
+			if (this.getSmMofRegNoTo().contains(ReportConst.PARAM_IFON)) {
+				mofRegNoTo = this.getSmMofRegNoTo().replace(
+						ReportConst.PARAM_IFON, ReportConst.EMPTY_VAL);
+				if (mofRegNoTo.contains(ReportConst.PARAM_SPACE)) {
+					mofRegNoTo = mofRegNoTo.replace(ReportConst.PARAM_SPACE,
+							ReportConst.EMPTY_VAL);
 				}
-			}else{
+			} else {
 				mofRegNoTo = this.getSmMofRegNoTo();
 			}
-						
+
 			Matcher match2 = pattern2.matcher(mofRegNoTo);
 			if (match2.matches()) {
-				//this.setSmMofRegNoTo(mofRegNoTo);
+				// this.setSmMofRegNoTo(mofRegNoTo);
 			} else {
 				this.setSmMofRegNoFrom(null);
 				this.setSmMofRegNoTo(null);
@@ -11850,18 +13059,20 @@ public void retrieveCMUnspc() {
 			}
 		}
 	}
-	
+
 	/**
 	 * Validate mof reg no.
-	 *
-	 * @param fromMofNo the from mof no
-	 * @param toMofNo the to mof no
+	 * 
+	 * @param fromMofNo
+	 *            the from mof no
+	 * @param toMofNo
+	 *            the to mof no
 	 */
 	public void ValidateMofRegNo(String fromMofNo, String toMofNo) {
-		Long fromMofNoLng=Long.parseLong(fromMofNo);
-		Long toMofNoLng=Long.parseLong(toMofNo);		
-		if(fromMofNoLng>toMofNoLng){
-					throw new EpException(MessageConst.ERROR_REPORT_780019);
+		Long fromMofNoLng = Long.parseLong(fromMofNo);
+		Long toMofNoLng = Long.parseLong(toMofNo);
+		if (fromMofNoLng > toMofNoLng) {
+			throw new EpException(MessageConst.ERROR_REPORT_780019);
 		}
 	}
 
@@ -11870,7 +13081,7 @@ public void retrieveCMUnspc() {
 	 */
 	/**
 	 * Gets the quotation number.
-	 *
+	 * 
 	 * @return the quotation number
 	 */
 	public void getQuotationNumber() {
@@ -11905,7 +13116,7 @@ public void retrieveCMUnspc() {
 	/**
 	 * Reset report form.
 	 */
-	public void resetReportForm() {		
+	public void resetReportForm() {
 		assignNewCompanyExperience(new ArrayList<SmSupplierCategory>());
 		getManagedBean().getRptGenBean().setCmMofRegView(false);
 		getManagedBean().getRptGenBean().setCmBasicRegView(false);
@@ -11920,11 +13131,14 @@ public void retrieveCMUnspc() {
 		this.setScQuotationId(null);
 		this.setScQuotationNo(null);
 		this.setScPaymentId(null);
+		this.getManagedBean().setLoaReportDocumentList(
+				new ArrayList<ScLoaReport>());
+		this.setScLOAIdNo(null);
 		this.setCmItemType(null);
 		this.setCmItemStatus(null);
 		this.setCmUnspscCode(null);
 		this.setCmUnspscTitle(null);
-		//this.setCmUnspscTitle(null);
+		// this.setCmUnspscTitle(null);
 		this.setCmCompanyName(null);
 		this.setCmRegistrationType(null);
 		this.setCmItemCategory(null);
@@ -11949,7 +13163,7 @@ public void retrieveCMUnspc() {
 		brandList = new ArrayList<SelectItem>();
 		extTypeList = new ArrayList<SelectItem>();
 		measurmentList = new ArrayList<SelectItem>();
-		colorList = new ArrayList<SelectItem>();		
+		colorList = new ArrayList<SelectItem>();
 		this.setFlItmType(null);
 		this.setCommonPtj(null);
 		this.setFlContractNo(null);
@@ -11985,8 +13199,10 @@ public void retrieveCMUnspc() {
 		this.setFlPmo(null);
 		this.setFlItemName(null);
 		this.setSmApplicationNo(null);
-		if((allRoleCodesList!=null)&&(allRoleCodesList.contains(ReportConst.ROLE_CODE_EP_ADMIN)||allRoleCodesList.contains(ReportConst.ROLE_CODE_PTJ_ADMIN))){
-				this.setSmZone(null);
+		if ((allRoleCodesList != null)
+				&& (allRoleCodesList.contains(ReportConst.ROLE_CODE_EP_ADMIN) || allRoleCodesList
+						.contains(ReportConst.ROLE_CODE_PTJ_ADMIN))) {
+			this.setSmZone(null);
 		}
 		this.setSmSupplierType(null);
 		this.setSmMofRegNo(null);
@@ -12018,7 +13234,7 @@ public void retrieveCMUnspc() {
 		this.setSmMofRegNoTo(null);
 		this.setSmPaidUpCapitalFrm(null);
 		this.setSmPaidUpCapitalTo(null);
-		this.setSmPaidUpCapitalNaccum(null);		
+		this.setSmPaidUpCapitalNaccum(null);
 		this.setSmRole(null);
 		this.setSmEpNo(null);
 		this.setSmRegistrationNo(null);
@@ -12089,7 +13305,7 @@ public void retrieveCMUnspc() {
 		this.setCtLoanNo(null);
 		this.setCtLOAPhysicalNo(null);
 		this.setCtSubType(null);
-		this.setCtUserType(null);		
+		this.setCtUserType(null);
 		this.setCtProcurementMode(null);
 		this.setCtCircularNo(null);
 		this.setCtCircularName(null);
@@ -12130,12 +13346,14 @@ public void retrieveCMUnspc() {
 
 	/**
 	 * File generate report.
-	 *
-	 * @param reportFile the report file
-	 * @param paramConstrString the param constr string
+	 * 
+	 * @param reportFile
+	 *            the report file
+	 * @param paramConstrString
+	 *            the param constr string
 	 */
 	protected void fileGenerateReport(String reportFile,
-			String paramConstrString){
+			String paramConstrString) {
 		StringBuilder gnrtdURL = new StringBuilder();
 		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.EXC_PREV_URL));
@@ -12149,13 +13367,12 @@ public void retrieveCMUnspc() {
 			obj = new URL(gnrtdURL.toString());
 			log.info(gnrtdURL.toString());
 			urlConnection = (HttpURLConnection) obj.openConnection();
-			
+
 			urlConnection.setConnectTimeout(290000);
 			urlConnection.setReadTimeout(290000);
 			new Thread(new InterruptThread(urlConnection)).start();
-			
-			buf = new BufferedInputStream(
-					urlConnection.getInputStream());
+
+			buf = new BufferedInputStream(urlConnection.getInputStream());
 			PortletResponse portletResponse = (PortletResponse) FacesContext
 					.getCurrentInstance().getExternalContext().getResponse();
 			HttpServletResponse res = PortalUtil
@@ -12164,13 +13381,13 @@ public void retrieveCMUnspc() {
 			if (position != -1) {
 				reportFile = reportFile.substring(0, position);
 			}
-			res.setHeader(
-					ReportConst.CONTENT_DISPOSITION,
+			res.setHeader(ReportConst.CONTENT_DISPOSITION,
 					ReportConst.ATTACHMENTNFILENAMEEQUIFON + reportFile
 							+ ReportConst.UNDERSCORE
 							+ ReportConst.REPORT_DATE_TIME.format(new Date())
 							+ ReportConst.DOTPDFEIFON);//
-			res.setHeader(ReportConst.CONTENT_TRANSFER_ENCODING, ReportConst.BINARY);
+			res.setHeader(ReportConst.CONTENT_TRANSFER_ENCODING,
+					ReportConst.BINARY);
 			res.setContentType(ReportConst.APPLICATIONEIFONPDF);
 			res.flushBuffer();
 			OutputStream out = res.getOutputStream();
@@ -12182,32 +13399,40 @@ public void retrieveCMUnspc() {
 			buf.close();
 			out.close();
 		} catch (MalformedURLException e) {
-			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-			externalContext.addResponseCookie(org.primefaces.util.Constants.DOWNLOAD_COOKIE, ReportConst.RPT_TRUE, Collections.<String, Object>emptyMap());
+			ExternalContext externalContext = FacesContext.getCurrentInstance()
+					.getExternalContext();
+			externalContext.addResponseCookie(
+					org.primefaces.util.Constants.DOWNLOAD_COOKIE,
+					ReportConst.RPT_TRUE,
+					Collections.<String, Object> emptyMap());
 			getManagedBean().getRptGenBean().setGenerateButtonView(false);
 			throw new EpException(MessageConst.ERROR_REPORT_780009);
-		}catch ( IllegalArgumentException e) {
-			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-			externalContext.addResponseCookie(org.primefaces.util.Constants.DOWNLOAD_COOKIE, ReportConst.RPT_TRUE, Collections.<String, Object>emptyMap());
+		} catch (IllegalArgumentException e) {
+			ExternalContext externalContext = FacesContext.getCurrentInstance()
+					.getExternalContext();
+			externalContext.addResponseCookie(
+					org.primefaces.util.Constants.DOWNLOAD_COOKIE,
+					ReportConst.RPT_TRUE,
+					Collections.<String, Object> emptyMap());
 			getManagedBean().getRptGenBean().setGenerateButtonView(false);
 			throw new EpException(MessageConst.ERROR_REPORT_780009);
-		}catch (IOException e) {
-			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-			externalContext.addResponseCookie("primefaces.download", ReportConst.RPT_TRUE, Collections.<String, Object>emptyMap());
+		} catch (IOException e) {
+			ExternalContext externalContext = FacesContext.getCurrentInstance()
+					.getExternalContext();
+			externalContext.addResponseCookie("primefaces.download",
+					ReportConst.RPT_TRUE,
+					Collections.<String, Object> emptyMap());
 			getManagedBean().getRptGenBean().setGenerateButtonView(false);
 			throw new EpException(MessageConst.ERROR_REPORT_780020);
-		}
-		finally
-	      {
+		} finally {
 			urlConnection.disconnect();
-	      }
-		
+		}
+
 	}
-	
 
 	/**
 	 * Gets the module item map.
-	 *
+	 * 
 	 * @return the module item map
 	 */
 	public Map<String, List<SelectItem>> getModuleItemMap() {
@@ -12216,8 +13441,9 @@ public void retrieveCMUnspc() {
 
 	/**
 	 * Sets the module item map.
-	 *
-	 * @param moduleItemMap the module item map
+	 * 
+	 * @param moduleItemMap
+	 *            the module item map
 	 */
 	public void setModuleItemMap(Map<String, List<SelectItem>> moduleItemMap) {
 		this.moduleItemMap = moduleItemMap;
@@ -12225,7 +13451,7 @@ public void retrieveCMUnspc() {
 
 	/**
 	 * Gets the application status data.
-	 *
+	 * 
 	 * @return the application status data
 	 */
 	public List<SelectItem> getApplicationStatusData() {
@@ -12248,5 +13474,186 @@ public void retrieveCMUnspc() {
 		return smApplStatusList;
 
 	}
-	
+
+	public void getScLOAReports() {
+
+		log.info("getLOAReports");
+		if (this.getScLOAIdNo() != null && !(this.getScLOAIdNo() == "") && this.getScLOAIdNo().startsWith("LA")) {
+
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+
+			reqDTO.setLoaNo(this.getScLOAIdNo());
+			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOADtlByLoaNo(
+					reqDTO);
+
+			AwardSupplierReqDTO reqDTOLOA = new AwardSupplierReqDTO();
+			log.info("ScLoa--->" + resDTO.getScLoa());
+			if (resDTO.getScLoa() != null) {
+
+				reqDTOLOA.setScLoa(resDTO.getScLoa());
+
+				AwardSupplierResDTO reportsResDTO = getQtAwardSO()
+						.retrieveLOADtl(reqDTOLOA);
+
+				this.getManagedBean().setScLoa(reportsResDTO.getScLoa());
+
+				this.getManagedBean().setLoaReportDocumentList(
+						reportsResDTO.getScLoa().getScLoaReports());
+
+				this.getManagedBean().setScQt(reportsResDTO.getScQt());
+
+			}
+
+		}
+	}
+
+	/**
+	 * Gets the qt award so.
+	 * 
+	 * @return the qt award so
+	 */
+	private IQTAwardSO getQtAwardSO() {
+		log.info("getQtAwardSO");
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+	}
+
+	/**
+	 * Download report as pdf or xlsx files in Letter of Acceptance.
+	 * 
+	 * @param scLoaReport
+	 *            the sc loa report
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public void downloadReport(ScLoaReport scLoaReport) throws IOException {
+		
+		log.info("downloadReport");
+		
+		LOADetailBackingBean loaDetail = new LOADetailBackingBean();
+		
+		loaDetail.getManagedBean().setScLoa(this.getManagedBean().getScLoa());
+		loaDetail.getManagedBean().setScQt(this.getManagedBean().getScQt());
+		
+		if (this.getManagedBean().getScLoa().getContractSigner() == null) {
+			this.getManagedBean().getScLoa().setContractSigner(new PmUser());
+			loaDetail.getManagedBean().setContractSignerUser(
+					this.getManagedBean().getScLoa().getContractSigner());
+		} else {
+			loaDetail.getManagedBean().setContractSignerUser(
+					this.getManagedBean().getScLoa().getContractSigner());
+		}
+
+		getSuppLoiLoaMapData(loaDetail);
+
+		if (scLoaReport != null) {
+			loaDetail.downloadReport(scLoaReport);
+		}
+	}
+
+	private void getSuppLoiLoaMapData(LOADetailBackingBean loaDetail) {
+		log.info("getSuppLoiLoaMapData");
+		if (this.getManagedBean().getScQt() != null) {
+			retrieveSuppLoiLoaMapForReport(this.getManagedBean().getScQt()
+					.getQtId());
+		}
+		loaDetail.getManagedBean().setSuppLoiLoaMap(
+				this.getManagedBean().getSuppLoiLoaMap());
+
+	}
+
+	/**
+	 * Download all reports as pdf or xlsx files in Letter of Acceptance.
+	 * 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public void downloadAllReports() throws IOException {
+		log.info("downloadAllReports");
+		
+		if (CollectionUtils.isNotEmpty(this.getManagedBean()
+				.getLoaReportDocumentList())) {
+
+			LOADetailBackingBean loaDetailAll = new LOADetailBackingBean();
+
+			if (this.getManagedBean().getScLoa() != null) {
+
+				loaDetailAll.getManagedBean().setScLoa(
+						this.getManagedBean().getScLoa());
+				loaDetailAll
+						.getManagedBean()
+						.getScLoa()
+						.setPmStatus(
+								this.getManagedBean().getScLoa().getPmStatus());
+				loaDetailAll
+						.getManagedBean()
+						.getScLoa()
+						.setScLoaReports(
+								(this.getManagedBean().getScLoa()
+										.getScLoaReports()));
+				loaDetailAll.getManagedBean().setScQt(
+						this.getManagedBean().getScQt());
+
+				if (this.getManagedBean().getScLoa().getContractSigner() == null) {
+					this.getManagedBean().getScLoa()
+							.setContractSigner(new PmUser());
+					loaDetailAll.getManagedBean().setContractSignerUser(
+							this.getManagedBean().getScLoa()
+									.getContractSigner());
+				} else {
+					loaDetailAll.getManagedBean().setContractSignerUser(
+							this.getManagedBean().getScLoa()
+									.getContractSigner());
+				}
+
+				getSuppLoiLoaMapData(loaDetailAll);
+				loaDetailAll.downloadAllReports();
+			}
+		}
+	}
+
+	/**
+	 * Select all documents.
+	 * 
+	 * @param event
+	 *            the event
+	 */
+	public void selectAllDocuments(AjaxBehaviorEvent event) {
+		log.info("Inside of getQtAwardSO()");
+		LOADetailBackingBean loaDetailDocs = new LOADetailBackingBean();
+		loaDetailDocs.selectAllDocuments(event);
+	}
+
+	/**
+	 * retrieving SuppLoiLoaMap .
+	 * 
+	 * @param qtId
+	 *            the qt id
+	 */
+	private void retrieveSuppLoiLoaMapForReport(Long qtId) {
+		log.info("retrieveSuppLoiLoaMapForReport");
+
+		IQTAwardSO qtAwardSO = null;
+		try {
+			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setDocId(qtId);
+			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+
+			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOILOAList(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+
+				this.getManagedBean().setSuppLoiLoaMap(
+						resDTO.getLoiLoaSupplierMap());
+
+			}
+
+		} finally {
+			qtAwardSO = null;
+		}
+
+	}
 }
