@@ -223,6 +223,8 @@ public class ReportsGenerateBean {
 		
 		/** The sc loa no view. */
 		private boolean scLOANoView = false;
+		
+		private boolean scLOAContentView=false;
 		//cm module
 		/** The cm item type view. */
 		private boolean cmItemTypeView = false;
@@ -12958,6 +12960,18 @@ public class ReportsGenerateBean {
 			 }
 			}
 			 return yearList; 
+		}
+		/**
+		 * @return the scLOAContentView
+		 */
+		public boolean isScLOAContentView() {
+			return scLOAContentView;
+		}
+		/**
+		 * @param scLOAContentView the scLOAContentView to set
+		 */
+		public void setScLOAContentView(boolean scLOAContentView) {
+			this.scLOAContentView = scLOAContentView;
 		}
 		
 }

@@ -11,7 +11,7 @@
 						  <tr>
 						    <td width="100%">
 							    <h:panelGrid  id="scReportCriteria" columns="4" style="width:85%;">
-							    						 							 			
+
 							    
 							    	 
 								  <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scProcureAllChkView}" >			
@@ -123,6 +123,15 @@
 									<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />										
 									</p:inputText>																					
 									</c:if>
+								 <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scLOAContentView}" >			
+									<p:outputLabel value="#{lbl['lbl.rpt.loaidnolabel']}"   style="margin-top:5px;width:160px;"/>
+							     <p:inputText id="rptLOANo" value="#{reportBackingBean.scLOAIdNo}"
+								      style="margin-top:5px;width:290px;">
+								 <p:ajax event="blur"
+									listener="#{reportBackingBean.getScLOAReports()}" process="@this"
+									partialSubmit="true" update="@form" />
+							     </p:inputText>
+						         </c:if>
 									<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scSimpleQuoteTypeView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.simplequotetypelabel']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scSimpleQuoteType}" style="margin-top:5px;width:300px;">

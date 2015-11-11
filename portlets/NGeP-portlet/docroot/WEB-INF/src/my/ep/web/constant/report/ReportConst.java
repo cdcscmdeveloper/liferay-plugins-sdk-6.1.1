@@ -91,6 +91,7 @@ public class ReportConst {
 	public static final String SC_S1_PURCHASE_DEFAULT_DTLS_RPT_VAL = "SC_067";
 	public static final String SC_S1_SIMPLE_QUOTE_PROCESS_RPT_VAL = "SC_068";
 	public static final String SC_S1_LOA_RPT_VAL = "SC_069";
+	public static final String SC_S1_LOA_CONTENT_RPT_VAL = "SC_070";
 	public static final String PYMT_RCPT_RPT_NAME = "lbl.rpt.sc.PYMT_RCPT_RPT_NAME";
 	public static final String PYMT_RCPT_RPT_VAL = "PymtRcpt";
 	//S1 Report
