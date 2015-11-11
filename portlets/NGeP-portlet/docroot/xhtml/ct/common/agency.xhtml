@@ -61,8 +61,10 @@
 								</p:row>
 							</p:columnGroup>
 						
-							<p:column style="width:10px;" rendered="#{!ctBackingBean.managedBean.viewContract}">
-	     		                   <p:selectBooleanCheckbox value="#{agencyData.selectedCheckBox}">
+							<p:column style="width:10px;" 
+							    rendered="#{!ctBackingBean.managedBean.viewContract}">
+	     		                   <p:selectBooleanCheckbox value="#{agencyData.selectedCheckBox}" 
+	     		                     disabled="#{ctBackingBean.managedBean.disableAmendDetails}">
 			  		               <p:ajax event="change" update=":form:delBtn" listener="#{ctBackingBean.selectOneCheckboxSelect}"></p:ajax>
 		       	                   </p:selectBooleanCheckbox>
 	      	                 </p:column>
@@ -80,7 +82,7 @@
 			
 			    <p:column>
            		    <p:inputText value="#{agencyData.ceilingAmount}"  required="true"  label="#{lbl['lbl.ct.ceiling.amount']}"
-           		        disabled="#{ctBackingBean.managedBean.viewContract}" style="width:80px;" maxlength="23"  styleClass="ppRightBtn">
+           		        disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}" style="width:80px;" maxlength="23"  styleClass="ppRightBtn">
 			 		    <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			 		    <p:ajax event="change" update=":form:tableAgencyDetails" listener="#{ctBackingBean.validateCeilingAmount(agencyData)}"/> 
 				     </p:inputText>
@@ -88,10 +90,10 @@
 		   
 		   	     <p:column>
 			      	<p:calendar id="agencyDateActive" value="#{agencyData.effDate}"  navigator="true" size="6"
-		               readonlyInput="true" 
+		               readonlyInput="true"  
 		               mindate="#{(ctBackingBean.managedBean.contractVer.ctContractValue.effDate gt DateUtils.getCurrentDateWithoutTime()) ? ctBackingBean.managedBean.contractVer.ctContractValue.effDate : DateUtils.getCurrentDateWithoutTime()}" 
 		               maxdate="#{agencyData.expDate}"			             
-		               showOn="button"  disabled="#{ctBackingBean.managedBean.viewContract}"
+		               showOn="button"  disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}"
 		               pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 		           	   <p:ajax event="dateSelect" update="agenyStatus" listener="#{ctBackingBean.checkAgencyStatus(agencyData)}"  /> 
 		           </p:calendar>
@@ -127,7 +129,8 @@
 			 	 				
 		       </p:column>
 		       <p:column style="white-space:normal;">
-		           <p:inputText id="uploadRefNoDoc"  value="#{agencyData.refNo}" style="width:80px;" 
+		           <p:inputText id="uploadRefNoDoc"  value="#{agencyData.refNo}" 
+		             style="width:80px;" disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
 		              rendered="#{agencyData.ap178}"> </p:inputText>
 		       </p:column>
 		        
@@ -140,14 +143,16 @@
        	<div class="ppRightBtn">
        		<p:commandButton id="addBtn" value="#{lbl['lbl.btn.add']}"   oncomplete="dlgAgency.show();" 
        	         partialSubmit="true" process="@this"	action="#{ctBackingBean.resetAgencyDetails}" 
+       	         disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
        	        update=":form:agencyies" rendered="#{!ctBackingBean.managedBean.viewContract}">
        			<p:tooltip for="addBtn">
 				    <h:outputText value="#{lbl['lbl.ct.tooltip.add.agency']}" escape="false" />
 				</p:tooltip>
        		</p:commandButton>
 			 <p:commandButton id="delBtn" value="#{lbl['lbl.btn.delete']}" process="@this"
-			 	onsuccess="dlgDel.show()" disabled="#{ctBackingBean.managedBean.buttonHideActive}" 
-			 	rendered="#{!ctBackingBean.managedBean.viewContract}">
+			 	onsuccess="dlgDel.show()" 
+			 	disabled="#{ctBackingBean.managedBean.buttonHideActive or ctBackingBean.managedBean.disableAmendDetails}" 
+			 	rendered="#{!ctBackingBean.managedBean.viewContract}" >
        			<p:tooltip for="delBtn">
 				    <h:outputText value="#{lbl['lbl.ct.tooltip.delete.agency']}" escape="false" />
 				</p:tooltip>
@@ -162,7 +167,7 @@
 	           		value="#{ctBackingBean.managedBean.selectedAgency.ctAgencyAddresses}"
 					rowKey="#{deliveryAddress}" selection="#{ctBackingBean.managedBean.selectedListOfAddress}">
 					<ac:paginator for="deliveryAddressTbl"/>
-					<p:column selectionMode="multiple" style="width:3%"  
+					<p:column selectionMode="multiple" style="width:3%"  disabledSelection="#{ctBackingBean.managedBean.disableAmendDetails}"
 						rendered="#{!ctBackingBean.managedBean.viewContract}"/>
 					<p:column headerText="#{lbl['lbl.ct.delivery.address']}" style="width:100%; white-space:normal;">
 					   <h:outputText value="#{ctBackingBean.getFullAddress(deliveryAddress.addressType.pmAddress)}" />
@@ -177,9 +182,11 @@
 						saveObject="ctBackingBean.managedBean.addressTypeList"
 						conditionField="#{ctBackingBean.getDeliveryAddressCondition()}"
 						update=":form:deliveryAddressTbl"
+						disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
 						rendered="#{!ctBackingBean.managedBean.viewContract}"/>
 					 <p:commandButton id="delAddressBtn" value="#{lbl['lbl.btn.delete']}" 
-				     	 process="@this" onclick="delAddressDlg.show()" rendered="#{!ctBackingBean.managedBean.viewContract}"/>
+				     	 process="@this" onclick="delAddressDlg.show()"  disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
+				     	 rendered="#{!ctBackingBean.managedBean.viewContract}"/>
 				</div>
 		      	<p:dialog id="delAddressDlg" widgetVar="delAddressDlg"
 			   		styleClass="screen-title" modal="true" width="330">  
@@ -303,7 +310,7 @@
 											<td></td>
 											<td>
 												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000"
-													disabled="#{ctBackingBean.managedBean.viewContract or !ctBackingBean.contractSharing}" />
+													disabled="#{ctBackingBean.managedBean.viewContract or !ctBackingBean.contractSharing or ctBackingBean.managedBean.disableAmendDetails}" />
 												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.remark']}" rendered="#{remarkIndex==0}" />
 												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 											</td>

@@ -31,6 +31,10 @@ public class AmendTabSideMenus {
 	List<String> menuWithDeclaration = null;
 	List<String> menuWithAmendSupplier = null;
 	
+	List<String> menuWithAgency = null;
+	List<String> menuDeduction= null;
+	List<String> menuSchedule = null;
+		
 	/**
 	 * The constructor used for initializing the variable.
 	 * This method will initialize the tab menu list.
@@ -89,6 +93,22 @@ public class AmendTabSideMenus {
 			menuWithDeclaration =  new ArrayList<String>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.menu.declaration", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
+		
+		if (menuDeduction == null) {
+			menuDeduction =  new ArrayList<String>(Arrays.asList(
+					ResourceBundleUtils.getMessage("lbl.ct.menu.deduction", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+		}
+		  
+		if (menuWithAgency == null) {
+			menuWithAgency =  new ArrayList<String>(Arrays.asList(
+					ResourceBundleUtils.getMessage("lbl.ct.menu.agency", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+		}
+		
+		if (menuSchedule == null) {
+			menuSchedule =  new ArrayList<String>(Arrays.asList(
+					ResourceBundleUtils.getMessage("lbl.ct.menu.schedule", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+		}
+		
 		  
 		if (menuWithAmendSupplier == null) {
 			menuWithAmendSupplier =  new ArrayList<String>(Arrays.asList(

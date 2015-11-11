@@ -18,7 +18,8 @@
 		       	<ac:paginator for="tableDeduction" />
 		   	    <p:ajax event="rowSelect" update=":form:clauseDescp" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  />
 		         <p:column style="width:25px;" rendered="#{!ctBackingBean.managedBean.viewContract}">
-		           <p:selectBooleanCheckbox value="#{datas.selectedCheckBox}" styleClass="myCustomChekBox">
+		           <p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
+		                value="#{datas.selectedCheckBox}" styleClass="myCustomChekBox">
 		           		<p:ajax event="change" update=":form:delDeductionBtn" listener="#{ctBackingBean.selectOneCheckboxSelect}"></p:ajax>
 			       </p:selectBooleanCheckbox>
 		      </p:column>
@@ -28,7 +29,7 @@
 	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.deduction.type']}"/>
 	           		</f:facet>
 	           		<p:selectOneMenu value="#{datas.deductionType.parameterId}" style="width:170px;"
-			      		disabled="#{ctBackingBean.managedBean.viewContract}"  rendered="#{datas.deductionType.parameterCode != 'AP'}">
+			      		disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}"  rendered="#{datas.deductionType.parameterCode != 'AP'}">
 			           <f:selectItems value="#{ctBackingBean.retrieveParameterDescListByType()}" />
 			         </p:selectOneMenu>
 			             <h:outputText rendered="#{datas.deductionType.parameterCode == 'AP' }" 
@@ -43,12 +44,13 @@
 		         </p:column>  
 		   
 		   </p:dataTable>  
-		   <c:if test="#{!ctBackingBean.managedBean.viewContract}">
+		   <c:if test="#{!ctBackingBean.managedBean.viewContract }">
 		   <div class="ppRightBtn">
                     <p:commandButton id="addDeductionBtn" value="#{lbl['lbl.btn.add']}" 
+                       disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
                        process="@form"  action="#{ctBackingBean.addDeduction()}" update=":form:tableDeduction"/>
 		  	        <p:commandButton id="delDeductionBtn" value="#{lbl['lbl.btn.delete']}" process="@form" 
-		  	            disabled="#{ctBackingBean.managedBean.buttonHideActive}"  onclick="dlgDeduction.show()"/>
+		  	            disabled="#{ctBackingBean.managedBean.buttonHideActive or ctBackingBean.managedBean.disableAmendDetails}"  onclick="dlgDeduction.show()"/>
 		  	</div>
 		  	</c:if>
 		  	<p:dialog id="dlgDeduction" widgetVar="dlgDeduction" modal="true" width="330" styleClass="screen-title">  
@@ -71,8 +73,9 @@
         	           selection="#{ctBackingBean.selectedDeductionClauses}"  rowKey="#{data}"> 
                        <ac:paginator for="tableClause" />   
                             <p:column selectionMode="multiple"   style="width:2%; vertical-align:top;" 
+                               disabledSelection="#{ctBackingBean.managedBean.disableAmendDetails}"
                                rendered="#{ctBackingBean.managedBean.selectedDeduction.deductionType.parameterCode !=
-        	                         ParameterConst.deductionTypeAdvancePayment and !ctBackingBean.managedBean.viewContract}">
+        	                         ParameterConst.deductionTypeAdvancePayment or !ctBackingBean.managedBean.viewContract}">
         	                         </p:column>
                            
                              <p:column style="white-space:normal;width:98%;">
@@ -82,8 +85,8 @@
 				               	</f:facet>
                                  <h:outputText escape="false" value="#{data.clauseDescription}" 
                                    rendered="#{ctBackingBean.managedBean.selectedDeduction.deductionType.parameterCode == ParameterConst.deductionTypeAdvancePayment}" style="float:left;"/>
-                                 <p:inputTextarea value="#{data.clauseDescription}" maxlength="500" rows="4" style="width:97%;"
-                                     disabled="#{!ctBackingBean.managedBean.flgPaymentTracking or ctBackingBean.managedBean.viewContract}"
+                                 <p:inputTextarea value="#{data.clauseDescription}" maxlength="500" rows="4" style="width:97%;" autoResize="false"
+                                     disabled="#{ctBackingBean.managedBean.flgPaymentTracking or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}"
                                      rendered="#{ctBackingBean.managedBean.selectedDeduction.deductionType.parameterCode != ParameterConst.deductionTypeAdvancePayment}" styleClass="ui-inputtextarea">
         	                     <p:ajax process="@this"/>
         	                   </p:inputTextarea>
@@ -93,14 +96,16 @@
                       <div class="ppRightBtn"> 
                           <c:if test="#{ctBackingBean.managedBean.selectedDeduction != null and 
                                 ctBackingBean.managedBean.selectedDeduction.deductionType.parameterCode  != ParameterConst.deductionTypeAdvancePayment and
-        	                    !ctBackingBean.managedBean.viewContract}">
+        	                    !ctBackingBean.managedBean.viewContract }">
         	                <p:commandButton id="addDeductionClauseBtn" value="#{lbl['lbl.btn.add']}" process="@form" 
+        	                    disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
         	                    action="#{ctBackingBean.addDeductionClause()}" update=":form:tableClause">
         	                  	<p:tooltip for="addDeductionClauseBtn">
 							    	<h:outputText value="#{lbl['lbl.ct.tooltip.add.clause']}" escape="false" />
 								</p:tooltip>
 							</p:commandButton>
 		  	                <p:commandButton id="delDeductionClauseBtn"  
+		  	                       disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
 		  	                      value="#{lbl['lbl.btn.delete']}" process="@form" onclick="dlgDeductionClause.show()">
 							</p:commandButton>
                          </c:if>
@@ -146,7 +151,7 @@
 											<td></td>
 											<td>
 												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" 
-													disabled="#{ctBackingBean.managedBean.viewContract}"/> 
+													disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}"/> 
 												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.remark']}"/>
 												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 											</td>
