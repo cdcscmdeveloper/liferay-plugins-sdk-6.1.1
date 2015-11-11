@@ -2248,24 +2248,24 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param requestNote the request note
 	 */
 	private void formApprover(ScRequestNote requestNote){
-		String selectedApprover = getManagedBean().getSelectedApprover();
-		if(selectedApprover != null) {
-			PmUserGroupUser approverUser = getManagedBean().getApproverMap().get(selectedApprover);
-			if(approverUser != null) {
-				ScRequestNoteApprovalUser approver = new ScRequestNoteApprovalUser();
-				approver.setPmUser(approverUser.getPmUser());
-				approver.setRequestNote(requestNote);
-				requestNote.setApprover(approverUser.getPmUser());
-				
-				for(String username : getManagedBean().getApproverList()) {
-					if(!username.equals(selectedApprover)) {
-						PmUserGroupUser backupGroupApprover = getManagedBean().getApproverMap().get(username);
-						if(backupGroupApprover != null) {
-							getManagedBean().getBackupApprovers().add(backupGroupApprover.getPmUser());
-						}
+		Long selectedApproverId = getManagedBean().getSelectedApproverId();
+		if(selectedApproverId != null) {
+			List<PmUser> backupApprovers = new ArrayList<PmUser>();
+			if(getManagedBean().getApproverList() != null) {
+				List<PmUser> approverList = getManagedBean().getApproverList();
+
+				for (PmUser user : approverList) {
+					if(selectedApproverId.equals(user.getUserId())){
+						ScRequestNoteApprovalUser approver = new ScRequestNoteApprovalUser();
+						approver.setPmUser(user);
+						approver.setRequestNote(requestNote);
+						requestNote.setApprover(user);
+					} else{
+						backupApprovers.add(user);
 					}
 				}
-			}  
+			}
+			getManagedBean().setBackupApprovers(backupApprovers);
 		} 
 	}
 
@@ -3701,46 +3701,26 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				Long orgProfileId = requestNote.getPmOrgProfile().getOrgProfileId();
 				reqDTO.setOrgProfileId(orgProfileId);
 				resDTO = getDirectPurchaseSO().retrieveGroupListByOrgId(reqDTO);
+				if(resDTO.getUserGroupList().size()>0) {
+					getManagedBean().setUserGroupList(resDTO.getUserGroupList());
+				}
 
-				PmUserGroup pmUserGroup = new PmUserGroup();
-				getManagedBean().getRequestNote().setPmUserGroup(pmUserGroup);
-				if(getManagedBean().getUserGroupList() != null) {
-					getManagedBean().getUserGroupList().clear();
+				if(requestNote.getPmUserGroup() == null){
+					requestNote.setPmUserGroup(resDTO.getUserGroupList().get(0));
+
+				} else{
+					getManagedBean().setUserGroupId(requestNote.getPmUserGroup().getUserGroupId());
 				}
 				
-
-				//new
-				getManagedBean().setUserGroupList(resDTO.getUserGroupList());
-				if(resDTO.getUserGroupList().size()>0) {
-					List<PmUserGroupUser> firstPmUserGroup = null;
-					for(PmUserGroup userGroup : getManagedBean().getUserGroupList()) {
-						reqDTO.setGroupId(userGroup.getUserGroupId());
-						reqDTO.setOrgProfileId(orgProfileId);
-//						reqDTO.setApproverLimit(calculatesTotalOrderedAmt());
-						resDTO = getDirectPurchaseSO().retrieveApproverListByGroupId(reqDTO);
-						if(firstPmUserGroup == null) {
-							firstPmUserGroup = resDTO.getApproverGroupUserList();
-						}
-						if(!CollectionUtils.isEmpty(firstPmUserGroup)) {
-							for(PmUserGroupUser groupUser : firstPmUserGroup) {
-								getManagedBean().getApproverMap().put(groupUser.getPmUser().getUserName(), groupUser);//TODO CR doesn't have this. is this necessary
-							}
-						}
-					}
-					getManagedBean().getApproverList().clear();
-					
-					for(PmUserGroupUser groupUser : firstPmUserGroup) {
-						getManagedBean().getApproverList().add(groupUser.getPmUser().getUserName());
-					}
-					if(requestNote.getPmUserGroup().getUserGroupId() == null){
-						requestNote.getPmUserGroup().setUserGroupId(getManagedBean().getUserGroupList().get(0).getUserGroupId());
-					}
-					if(StringUtils.isEmpty(getManagedBean().getSelectedApprover()) && requestNote.getApprover() != null){
-						getManagedBean().setSelectedApprover(requestNote.getApprover().getUserName());
-					}
+				if(requestNote.getApprover() != null){
+					getManagedBean().setSelectedApproverId(requestNote.getApprover().getUserId());
 				}
+				
+				userGroupChangeListener();
 			}
-			if(getManagedBean().getRequestNote().getPmUserGroup()!= null && getManagedBean().getRequestNote().getPmUserGroup().getUserGroupId() == null){
+			
+			
+			if(getManagedBean().getRequestNote().getPmUserGroup() != null && getManagedBean().getRequestNote().getPmUserGroup().getUserGroupId() == null){
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 						MessageUtils.getMessage(MessageConst.ERROR_745070, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
@@ -3749,34 +3729,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
-		}
-	}
-	
-	private void getApproverList(){
-		ScRequestNote requestNote = getManagedBean().getRequestNote();
-		if(requestNote == null || requestNote.getPmUserGroup() == null || 
-				requestNote.getPmUserGroup().getUserGroupId()== null) {
-			getManagedBean().getApproverList().clear();
-			return;
-		}		
-		RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();
-		RequestNoteResDTO resDTO = new RequestNoteResDTO();
-		reqDTO.setGroupId(requestNote.getPmUserGroup().getUserGroupId());
-		reqDTO.setOrgProfileId(requestNote.getPmOrgProfile().getOrgProfileId());
-//		reqDTO.setApproverLimit(calculatesTotalOrderedAmt());
-		try {
-			resDTO = getDirectPurchaseSO().retrieveApproverListByGroupId(reqDTO);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if(getManagedBean().getApproverList() != null) {
-			getManagedBean().getApproverList().clear();
-		}
-		List<PmUserGroupUser> groupUsers = resDTO.getApproverGroupUserList();
-		if(!CollectionUtils.isEmpty(groupUsers)) {
-			for(PmUserGroupUser groupUser : groupUsers) {
-				getManagedBean().getApproverList().add(groupUser.getPmUser().getUserName());
-			}
 		}
 	}
 	
@@ -3793,7 +3745,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		items = new SelectItem[getManagedBean().getUserGroupList().size()];
 		int i = 0;
 		for(PmUserGroup userGroup : getManagedBean().getUserGroupList()) {
-			items[i++] = new SelectItem(userGroup.getUserGroupId(), userGroup.getGroupName());
+			items[i++] = new SelectItem(userGroup.getUserGroupId(), userGroup.getGroupName().replaceAll("\\s+", " ").trim());
 		}
 	    return items;
 	}
@@ -3802,7 +3754,38 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * User group change listener.
 	 */
 	public void userGroupChangeListener() {
-		getApproverList();
+		debugLogger("userGroupChangeListener");
+		RequestNoteResDTO resDTO = null;
+		
+		ScRequestNote requestNote = getManagedBean().getRequestNote();
+		Long userGroupId = getManagedBean().getUserGroupId();
+		
+		if(userGroupId == null) {
+			getManagedBean().getApproverList().clear();
+			return;
+		}
+		
+		if(getManagedBean().getUserGroupList() != null) {
+			for (PmUserGroup pmUserGroup : getManagedBean().getUserGroupList()) {
+				if(userGroupId.equals(pmUserGroup.getUserGroupId())){
+					requestNote.setPmUserGroup(pmUserGroup);
+				}
+			}
+		}
+
+		List<PmUser> approvers  = new ArrayList<PmUser>();
+		RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();
+		reqDTO.setGroupId(requestNote.getPmUserGroup().getUserGroupId());
+		reqDTO.setOrgProfileId(requestNote.getPmOrgProfile().getOrgProfileId());
+		resDTO = getDirectPurchaseSO().retrieveApproverListByGroupId(reqDTO);
+		List<PmUserGroupUser> groupUsers = resDTO.getApproverGroupUserList();
+
+		if(!CollectionUtils.isEmpty(groupUsers)) {
+			for(PmUserGroupUser groupUser : groupUsers) {
+				approvers.add(groupUser.getPmUser());
+			}
+		}
+		getManagedBean().setApproverList(approvers);
 	}
 	
 }

@@ -281,19 +281,16 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private String promptMessage;
 	
 	/** The approver List by group */
-	private List<String> approverList;
+	private List<PmUser> approverList;
 	
 	/** The user group list. */
 	private List<PmUserGroup> userGroupList;
 	
-	/** The approver map. */
-	private HashMap<String, PmUserGroupUser> approverMap;
+	/** The selected approver id. */
+	private Long selectedApproverId;
 	
-	/** The selected approver */
-	private String selectedApprover = "";
-	
-	/** The selected approver group */
-	private Long selectedGroup;
+	/** The user group id. */
+	private Long userGroupId;
 	
 	/** The back up approvers */
 	private List<PmUser> backupApprovers;
@@ -1669,27 +1666,24 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	/**
 	 * @return the approverList
 	 */
-	public List<String> getApproverList() {
+	public List<PmUser> getApproverList() {
 		if(approverList == null){
-			setApproverList(new ArrayList<String>());
+			setApproverList(new ArrayList<PmUser>());
 		}
 		return approverList;
 	}
 
 	/**
-	 * @param approverList the approverList to set
+	 * @param arrayList the approverList to set
 	 */
-	public void setApproverList(List<String> approverList) {
-		this.approverList = approverList;
+	public void setApproverList(List<PmUser> arrayList) {
+		this.approverList = arrayList;
 	}
 
 	/**
 	 * @return the userGroupList
 	 */
 	public List<PmUserGroup> getUserGroupList() {
-		if(userGroupList==null) {
-			userGroupList = new ArrayList<PmUserGroup>();
-		}
 		return userGroupList;
 	}
 
@@ -1699,38 +1693,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setUserGroupList(List<PmUserGroup> userGroupList) {
 		this.userGroupList = userGroupList;
 	}
-
-	/**
-	 * @return the approverMap
-	 */
-	public HashMap<String, PmUserGroupUser> getApproverMap() {
-		if(approverMap == null){
-			setApproverMap(new HashMap<String,PmUserGroupUser>());
-		}
-		return approverMap;
-	}
-
-	/**
-	 * @param approverMap the approverMap to set
-	 */
-	public void setApproverMap(HashMap<String, PmUserGroupUser> approverMap) {
-		this.approverMap = approverMap;
-	}
-
-	/**
-	 * @return the selectedApprover
-	 */
-	public String getSelectedApprover() {
-		return selectedApprover;
-	}
-
-	/**
-	 * @param selectedApprover the selectedApprover to set
-	 */
-	public void setSelectedApprover(String selectedApprover) {
-		this.selectedApprover = selectedApprover;
-	}
-
+	
 	/**
 	 * @return the backupApprovers
 	 */
@@ -1747,4 +1710,33 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setBackupApprovers(List<PmUser> backupApprovers) {
 		this.backupApprovers = backupApprovers;
 	}
+
+	/**
+	 * @return the userGroupId
+	 */
+	public Long getUserGroupId() {
+		return userGroupId;
+	}
+
+	/**
+	 * @param userGroupId the userGroupId to set
+	 */
+	public void setUserGroupId(Long userGroupId) {
+		this.userGroupId = userGroupId;
+	}
+
+	/**
+	 * @return the selectedApproverId
+	 */
+	public Long getSelectedApproverId() {
+		return selectedApproverId;
+	}
+
+	/**
+	 * @param selectedApproverId the selectedApproverId to set
+	 */
+	public void setSelectedApproverId(Long selectedApproverId) {
+		this.selectedApproverId = selectedApproverId;
+	}
+	
 }
