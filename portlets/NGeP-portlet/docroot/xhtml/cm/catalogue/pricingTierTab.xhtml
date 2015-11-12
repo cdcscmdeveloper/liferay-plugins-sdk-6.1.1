@@ -22,7 +22,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.from.qty']}
 				</f:facet>
-				<p:inputText id="fromQty" styleClass="fromQty"
+				<p:inputText id="fromQty" styleClass="fromQty" maxlength="6"
 					value="#{price.fromQty}" size="5"
 					disabled="#{!price.showFlag || price.standardDisabled}">
 					<p:ajax event="keyup"
@@ -34,7 +34,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.to.qty']}
 				</f:facet>
-				<p:inputText value="#{price.toQty}" size="5"
+				<p:inputText value="#{price.toQty}" size="5" maxlength="6"
 					disabled="#{price.standardDisabled}">
 					<p:ajax event="change"
 						listener="#{catalogueBackingBean.updateToQty(rowIndex)}"
@@ -47,7 +47,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.price.uom']}
 				</f:facet>
-				<p:inputText id="tierPriceId" value="#{price.price}" size="10"
+				<p:inputText id="tierPriceId" value="#{price.price}" size="10" maxlength="18"
 					disabled="#{price.standardDisabled}" style="text-align:right">
 					<p:ajax event="keyup"
 						listener="#{catalogueBackingBean.validateTierPrice(rowIndex)}"
