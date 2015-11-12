@@ -79,7 +79,7 @@
 						<ui:include src="step5BumiAppln_SupportingDocumentsInfo.xhtml" />
 					</c:if>
 				</c:when>
-				<c:otherwise test="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}">
+				<c:otherwise>
 					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 5}">
 						<ui:include src="step6BumiAppln_RegisterCategoryCodesInfo.xhtml" />
 					</c:if>
