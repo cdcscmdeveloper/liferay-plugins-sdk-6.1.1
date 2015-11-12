@@ -34,7 +34,9 @@ public class RegisteredCategory {
 					&& this.category.getMainCat().equalsIgnoreCase(
 							temp.category.getMainCat())
 					&& this.category.getSubCat().equalsIgnoreCase(
-							temp.category.getSubCat()))
+							temp.category.getSubCat())
+					&& this.category.getSubCatDivision().equalsIgnoreCase(
+							temp.category.getSubCatDivision()))
 				return true;
 		}
 		return false;
@@ -44,8 +46,9 @@ public class RegisteredCategory {
 	@Override
 	public int hashCode() {
 
-		return (this.mOFNo.hashCode() + this.category.getMainCat().hashCode() + this.category
-				.getSubCat().hashCode());
+		return (this.mOFNo.hashCode() + this.category.getMainCat().hashCode()
+				+ this.category.getSubCat().hashCode() + this.category
+				.getSubCatDivision().hashCode());
 	}
 
 }
