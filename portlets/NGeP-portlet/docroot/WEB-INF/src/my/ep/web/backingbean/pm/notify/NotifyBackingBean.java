@@ -83,22 +83,34 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 
 			//end
 			
-			this.getManagedBean().setSelectedNotifys(pmNotifyUserArr);
-			
-			for (PmNotifyUser notifyUser : this.getManagedBean()
-					.getSelectedNotifys()) {
-				reqDTO.getPmNotifyUserList().add(notifyUser);
-			}
-			NotifyResDTO resDTO = reqSO.removeNotifyList(reqDTO);
-			debugLogger("NotifyResDTO isSuccessful[" + resDTO.isSuccessful()
-					+ "]");
-			if (resDTO.isSuccessful()) {
-				resetSelectedNotify();
-				String message = "";
+			if(pmNotifyUserArr.length > 0){
+				
+				this.getManagedBean().setSelectedNotifys(pmNotifyUserArr);
+				
+				for (PmNotifyUser notifyUser : this.getManagedBean()
+						.getSelectedNotifys()) {
+					reqDTO.getPmNotifyUserList().add(notifyUser);
+				}
+				
+				NotifyResDTO resDTO = reqSO.removeNotifyList(reqDTO);
+				
+				debugLogger("NotifyResDTO isSuccessful[" + resDTO.isSuccessful()
+						+ "]");
+				if (resDTO.isSuccessful()) {
+					resetSelectedNotify();
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO,
+									"Record removed successfully.", ""));
+					notifyDataModel.reloadData();
+				}
+				
+			} else {
+				
 				FacesContext.getCurrentInstance().addMessage(
 						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								"Record removed successfully.", message));
+						new FacesMessage(FacesMessage.SEVERITY_ERROR,
+								"Please select at least one record.", ""));
 				notifyDataModel.reloadData();
 			}
 		}
