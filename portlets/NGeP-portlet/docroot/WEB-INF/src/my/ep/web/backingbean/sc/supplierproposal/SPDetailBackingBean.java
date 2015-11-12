@@ -585,6 +585,7 @@ public class SPDetailBackingBean extends
 						.getDeletedPRPExperiences());
 			}
 			reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+			reqDTO.setScQt(this.getManagedBean().getQt());
 			reqDTO.setScQtProposal(proposal);
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 
@@ -830,7 +831,8 @@ public class SPDetailBackingBean extends
 			reqDTO.setTobeRemovedCreditFacilities(getManagedBean()
 					.getToBeDeletedCreditFacilities());
 			reqDTO.setQtId(getManagedBean().getQt().getQtId());
-		
+			reqDTO.setScQt(this.getManagedBean().getQt());
+			
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 
 			if (resDTO.isSuccessful()) {
@@ -906,6 +908,7 @@ public class SPDetailBackingBean extends
 			reqDTO.setTobecashOnHand(getManagedBean()
 					.getToBeDeletedCashOnHandList());
 			reqDTO.setQtId(getManagedBean().getQt().getQtId());
+			reqDTO.setScQt(this.getManagedBean().getQt());
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 
 			if (resDTO.isSuccessful()) {
@@ -973,6 +976,7 @@ public class SPDetailBackingBean extends
 				
 			scQtProposalChecklist.setProposalScore(proposalScores);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
+			reqDTO.setScQt(this.getManagedBean().getQt());
 			reqDTO.setQtId(getManagedBean().getQt().getQtId());
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 
@@ -1023,15 +1027,33 @@ public class SPDetailBackingBean extends
 							.getScQtProposalScoreList(), totalEmployeeVal);
 
 			scQtProposalChecklist.setSubmitted(isCompleted);
-			scQtProposalChecklist.setScQtPRPEmployee(getManagedBean()
-					.getScQtPRPEmployee());
+			ScQtPRPEmployee prpEmployee = getManagedBean().getScQtPRPEmployee();
+			List<EncryptDataBean> encEmployeeList = null;
+			if(prpEmployee != null && prpEmployee.getTotalEmployees() != 0){
+				
+				encEmployeeList = new ArrayList<EncryptDataBean>();
+				EncryptDataBean encEmployeeBean = new EncryptDataBean();
+				encEmployeeBean.setTableName(EncryptTableName.SC_QT_PRP_EMPLOYEE.toString());
+				encEmployeeBean.setColumnName(EncryptColumnName.TOTAL_EMPLOYEE.toString());
+				encEmployeeBean.setValue(Integer.toString(prpEmployee.getTotalEmployees()));
+				encEmployeeList.add(encEmployeeBean);
+				prpEmployee.setTotalEmployees(0);
+			}
+			scQtProposalChecklist.setScQtPRPEmployee(prpEmployee);
 
 			scQtProposalChecklist.setProposalScore(proposalScores);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			reqDTO.setQtId(getManagedBean().getQt().getQtId());
+			reqDTO.setScQt(this.getManagedBean().getQt());
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 
 			if (resDTO.isSuccessful()) {
+				if(CollectionUtils.isNotEmpty(encEmployeeList)){
+				ScQtPRPEmployee employee = resDTO.getProposalChecklist().getScQtPRPEmployee();
+				encEmployeeList.get(0).setPkId(employee.getPrpEmployeeId());
+				reqDTO.setEncryptDataList(encEmployeeList);
+				proposalSO.saveEncryptedProposalCheckLists(reqDTO);
+				}
 				return navigatePrepareTecProposalCheckList(
 						scQtProposalChecklist, resDTO.getProposalChecklist(),
 						isCompleted);
@@ -1130,6 +1152,7 @@ public class SPDetailBackingBean extends
 			reqDTO.setChecklistType(SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV);
 			reqDTO.setTobeUpdateProposalChecklist(finProposalChecklist);
 			reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+			reqDTO.setScQt(this.getManagedBean().getQt());
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 
 			if (resDTO.isSuccessful()) {
@@ -1147,7 +1170,7 @@ public class SPDetailBackingBean extends
 							encryptencryptExpList.add(encryptExp);
 						}
 					}
-					reqDTO.setScQt(this.getManagedBean().getQt());
+					
 					reqDTO.setEncryptDataList(encryptencryptExpList);
 					proposalSO.saveEncryptedProposalCheckLists(reqDTO);
 				} // End
@@ -1224,6 +1247,7 @@ public class SPDetailBackingBean extends
 			scQtProposalChecklist.setProposalScore(proposalScores);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			reqDTO.setQtId(getManagedBean().getQt().getQtId());
+			reqDTO.setScQt(this.getManagedBean().getQt());
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 
 			if (resDTO.isSuccessful()) {
@@ -1280,6 +1304,7 @@ public class SPDetailBackingBean extends
 			scQtProposalChecklist.setProposalScore(proposalScores);
 			reqDTO.setQtId(getManagedBean().getQt().getQtId());
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
+			reqDTO.setScQt(this.getManagedBean().getQt());
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 
 			return navigatePrepareFinProposalCheckList(scQtProposalChecklist,
@@ -1327,7 +1352,7 @@ public class SPDetailBackingBean extends
 				scQtProposalChecklist.setSubmitted(true);
 
 				reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
-
+				reqDTO.setScQt(this.getManagedBean().getQt());
 				ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 
 				if (resDTO.isSuccessful()) {
@@ -1707,6 +1732,7 @@ public class SPDetailBackingBean extends
 			reqDTO.setDocDefinationKey(scQtProposalChecklist.getScQtCheckList()
 					.getPmDocument().getDocDefinitionKey());
 			reqDTO.setScQt(this.getManagedBean().getQt());
+			reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
 			ProposalResDTO resDTO = proposalSO
 					.retrieveNonGovCompanyExpDtls(reqDTO);
 			this.getManagedBean().setScQtProposalScoreList(
@@ -1767,6 +1793,7 @@ public class SPDetailBackingBean extends
 			reqDTO.setDocDefinationKey(scQtProposalChecklist.getScQtCheckList()
 					.getPmDocument().getDocDefinitionKey());
 			reqDTO.setScQt(this.getManagedBean().getQt());
+			reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
 			ProposalResDTO resDTO = proposalSO
 					.retrieveNonGovCompanyExpDtls(reqDTO);
 			this.getManagedBean().setScQtProposalScoreList(
@@ -2286,6 +2313,7 @@ public class SPDetailBackingBean extends
 					.getPmDocument().getDocDefinitionKey());
 			reqDTO.setScQt(this.getManagedBean().getQt());
 			reqDTO.setFinancial(true);
+			reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
 			
 			ProposalResDTO resDTO = null;
 			if (tecProposalCheckList == null) {
