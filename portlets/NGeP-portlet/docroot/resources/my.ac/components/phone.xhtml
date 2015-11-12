@@ -11,30 +11,28 @@
 	<cc:attribute name="id" />
 	<cc:attribute name="countryCode"	required="true" default="60" />
 	<cc:attribute name="areaCode" 		required="true" />
-	<cc:attribute name="phoneNumber" 	required="true" />
+	<cc:attribute name="number" 		required="true" />
+	<cc:attribute name="telcoId" />
 	<cc:attribute name="required" 		default="false" />
 	<cc:attribute name="isMobile" 		default="false" />
 </cc:interface>
 
 <cc:implementation>
 	<h:panelGroup id="#{cc.attrs.id}">
-		<p:selectOneMenu rendered="#{cc.attrs.isMobile}">
-			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-			<f:selectItem itemLabel="Maxis" itemValue="Maxis" />
-			<f:selectItem itemLabel="Celcom" itemValue="Celcom" />
-			<f:selectItem itemLabel="Digi" itemValue="Digi" />
-			<f:selectItem itemLabel="U Mobile" itemValue="UMobile" />
-			<f:selectItem itemLabel="Tune Talk" itemValue="TuneTalk" />
-		</p:selectOneMenu>
-		&#160;
+
 		+
 		<p:inputText value="#{cc.attrs.countryCode}" size="4" required="#{cc.attrs.required}" />
 		<p:inputText value="#{cc.attrs.areaCode}" 	 size="4" required="#{cc.attrs.required}" />
-		<p:inputText value="#{cc.attrs.phoneNumber}" size="8" required="#{cc.attrs.required}" />		
+		<p:inputText value="#{cc.attrs.number}" size="10" required="#{cc.attrs.required}" />		
 		<p:graphicImage id="teleno"	value="/css/images/design/tooltips.png" /> 
 		<p:tooltip	id="tfno" for="teleno">
 			<p:outputLabel escape="false" value="#{lbl['tt.sm.registration.company.telephoneno']}" />
 		</p:tooltip>
+		&#160;
+		<p:selectOneMenu value="#{cc.attrs.telcoId}" rendered="#{cc.attrs.isMobile}">
+			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+			<f:selectItems value="#{applicationBean.telcoItems}" />
+		</p:selectOneMenu>
 	
 	</h:panelGroup>
 </cc:implementation>
