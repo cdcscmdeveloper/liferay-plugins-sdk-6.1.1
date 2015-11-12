@@ -3010,15 +3010,18 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
 			getManagedBean().setAutoUpdate(Boolean.TRUE);
+			if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome)){
+				if(getManagedBean().getSelectedApprover() == null){
+					throw new EpException(MessageConst.ERROR_750010);
+				}
+			}
 			if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome) || BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
 				if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().size()==0) {
 					throw new EpException(MessageConst.ERROR_100023, new String[]{ResourceBundleUtils.getMessage("lbl.fl.delivery.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}else{
 					checkReceivingOfficerList();
 				}
-				if(getManagedBean().getSelectedApprover() == null){
-					throw new EpException(MessageConst.ERROR_750010);
-				}
+				
 				if(!getManagedBean().isDeclarationCheck()){
 					getManagedBean().setSelectedTabIndex(0);
 					throw new EpException(MessageConst.ERROR_745071);
