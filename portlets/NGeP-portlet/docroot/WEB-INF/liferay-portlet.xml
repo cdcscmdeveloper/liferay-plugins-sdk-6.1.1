@@ -1904,7 +1904,6 @@
 		<header-portlet-css>
 			/css/ep/ep.css
 		</header-portlet-css>
-		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
