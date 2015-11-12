@@ -1845,6 +1845,8 @@ public class SPDetailBackingBean extends
 					.getScQtCheckList().getScQtCheckListValue();
 
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
+			reqDTO.setQtId(getManagedBean().getQt().getQtId());
+			reqDTO.setScQt(this.getManagedBean().getQt());
 			ProposalResDTO resDTO = proposalSO.retrieveEmployeeDtls(reqDTO);
 
 			ScQtPRPEmployee scQtPRPEmployee = resDTO.getScQtPRPEmployee();
