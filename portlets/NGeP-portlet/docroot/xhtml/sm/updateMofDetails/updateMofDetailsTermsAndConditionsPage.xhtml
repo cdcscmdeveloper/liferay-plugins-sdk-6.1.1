@@ -18,36 +18,38 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 		
-		<table style="width: 100%">
-			<tr>
-				<td style="padding-left: 4px;"><p:outputPanel>
-						<p>
-							<h:outputText value="#{lbl['lbl.sm.updateMof.descData']}"
-								escape="false" />
-						</p>
-					</p:outputPanel></td>
-			</tr>
-		</table>
-		<br />
-		<p:separator />
-		<table>
-			<tr>
-
-				<td width="10px" style="padding: 4px 2px 0px 4px;"><p:selectBooleanCheckbox
-						value="#{backingBean.managedBean.termsAccepted}">
-						<p:ajax event="change" update=":form:updCmdBtn" />
-					</p:selectBooleanCheckbox></td>
-				<td><p:outputLabel value="#{lbl['lbl.sm.termsConditions']}" /></td>
-			</tr>
-
-		</table>
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.proceed']}" id="updCmdBtn"
-				action="#{backingBean.proceedToApplication('U')}"
-				disabled="#{!backingBean.managedBean.termsAccepted}" 
-				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-			<!-- <p:commandButton value="Cancel"
-				action="/xhtml/sm/homeScreen/defaultVirtualCertPage.xhtml" /> -->
-		</div>
+		<p:panel id="updateMofTncPanelId" header="#{lbl['lbl.sm.term.and.condition.header']}">
+			<p:scrollPanel style="height:200px;border:0;" mode="native">
+				<table style="width: 100%">
+					<tr>
+						<td style="padding-left: 4px;"><p:outputPanel>
+								<p>
+									<h:outputText value="#{lbl['lbl.sm.updateMof.descData']}"
+										escape="false" />
+								</p>
+							</p:outputPanel></td>
+					</tr>
+				</table>
+			</p:scrollPanel>
+			
+			<br />
+			<table>
+				<tr>
+	
+					<td width="10px" style="padding: 4px 2px 0px 4px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.termsAccepted}">
+							<p:ajax event="change" update=":form:updCmdBtn" />
+						</p:selectBooleanCheckbox></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.termsConditions']}" /></td>
+				</tr>
+	
+			</table>
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sm.proceed']}" id="updCmdBtn"
+					action="#{backingBean.proceedToApplication('U')}"
+					disabled="#{!backingBean.managedBean.termsAccepted}" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+			</div>
+		</p:panel>
 	</ui:define>
 </ui:composition>
