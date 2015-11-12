@@ -38,8 +38,9 @@
 
 					<tr>
 
-						<td><h:outputText
-								value="#{lbl['lbl.tpl.spec.content.user.score']}"
+						<td><h:outputText value="* " styleClass="mandatory"
+								rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}" />
+							<h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"
 								rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}" /></td>
 						<td><p:inputText id="sampleaddressUserScoreId"
 								rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}"
