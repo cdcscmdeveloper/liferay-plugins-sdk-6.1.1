@@ -128,11 +128,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtScoreOfferPrice;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting;
 import my.ep.persistence.entity.sc.quationtender.ScQtTechnicalCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScTechnicalEvaluationReportAttachment;
-import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPAssetLiability;
-import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPBankStmt;
-import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPCashOnHand;
-import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPCreditFacility;
-import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalScore;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleItem;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleLable;
@@ -3777,9 +3772,7 @@ public class EvaluationBackingBean extends
 							this.getManagedBean().getScQt());
 					proposalPage = detailBackingBean
 							.retrieveTecNonGovCompanyExpDtls(proposalCheckList);
-					List<ScQtPRPExperience> prpExperienceList = detailBackingBean
-							.getManagedBean().getScQtPRPExperiences();
-					this.getManagedBean().setPrpCompanyExperienceList(prpExperienceList);
+					
 					evaluationPage = "techPrivateCompanyExperience.xhtml";
 				}
 
@@ -4331,11 +4324,7 @@ public class EvaluationBackingBean extends
 									this.getManagedBean()
 											.getTechGovProposalScore());
 					this.getManagedBean().setStatusHide(true);
-					proposalPage = detailBackingBean
-							.retrieveFinNonGovCompanyExpDtls(proposalCheckList);
-					List<ScQtPRPExperience> prpExperienceList = detailBackingBean
-							.getManagedBean().getScQtPRPExperiences();
-					this.getManagedBean().setPrpCompanyExperienceList(prpExperienceList);
+					
 					evaluationPage = "finPrivateCompanyExperience.xhtml";
 				}
 
@@ -4418,13 +4407,6 @@ public class EvaluationBackingBean extends
 					
 					proposalPage = detailBackingBean
 							.retrieveBankStmtDtls(proposalCheckList);
-					List<ScQtPRPBankStmt> bankStms = detailBackingBean
-							.getManagedBean().getScQtPRPBankStmts();
-					if (CollectionUtils.isNotEmpty(bankStms)) {
-						this.getManagedBean().getQtProposalChecklist()
-								.setPrpBankStmts(bankStms);
-					}
-					
 					evaluationPage = "bankStatement.xhtml";
 				} else if (QTConstants.FINANCIAL_CREDIT_FACILITY_CODE
 						.equalsIgnoreCase(docDefinationKey)) {
@@ -4508,12 +4490,6 @@ public class EvaluationBackingBean extends
 					this.getManagedBean().setStatusHide(true);
 					proposalPage = detailBackingBean
 							.retrieveCreditFacilitiesDtls(proposalCheckList);
-					List<ScQtPRPCreditFacility> creditFacilities = detailBackingBean
-							.getManagedBean().getScQtPRPCreditFacilities();
-					if (CollectionUtils.isNotEmpty(creditFacilities)) {
-						this.getManagedBean().getQtProposalChecklist()
-								.setScQtPRPCreditFacilities(creditFacilities);
-					}
 					evaluationPage = "creditFacility.xhtml";
 				} else if (QTConstants.FINANCIAL_CASH_ON_HAND_CODE
 						.equalsIgnoreCase(docDefinationKey)) {
@@ -4600,12 +4576,6 @@ public class EvaluationBackingBean extends
 					proposalPage = detailBackingBean
 							.retrieveCashOnHandDtls(proposalCheckList);
 					
-					List<ScQtPRPCashOnHand> cashOnHands = detailBackingBean
-							.getManagedBean().getScQtPRPCashOnHand();
-					if (CollectionUtils.isNotEmpty(cashOnHands)) {
-						this.getManagedBean().getQtProposalChecklist()
-								.setScQtPRPCashOnHands(cashOnHands);
-					}
 					evaluationPage = "cashOnHand.xhtml";
 
 				}
@@ -4691,12 +4661,7 @@ public class EvaluationBackingBean extends
 					this.getManagedBean().setStatusHide(true);
 					proposalPage = detailBackingBean
 							.retrieveAssetLiabilityDtls(proposalCheckList);
-					ScQtPRPAssetLiability assetLiabilities = detailBackingBean
-							.getManagedBean().getScQtPRPAssetLiability();
-					if (assetLiabilities != null) {
-						this.getManagedBean().getQtProposalChecklist()
-								.setPrpAssetLiabilities(assetLiabilities);
-					}
+					
 					evaluationPage = "assetsLiabilities.xhtml";
 				} else if (QTConstants.FINANCIAL_PAID_UP_CAPITAL_CODE
 						.equalsIgnoreCase(docDefinationKey)) {
