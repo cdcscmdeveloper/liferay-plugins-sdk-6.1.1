@@ -12,19 +12,19 @@
 					<td width="6%">
 						<p:outputLabel value="#{lbl['lbl.pm.profiles.navigation.loginid']}" />  
 					</td>
-					<td class="header-info-text">
+					<td class="header-info-text" width="30%">
 						#{profileManagementBackingBean.managedBean.selectedUser.loginId}
 					</td>
 					<td width="8%">
 						<p:outputLabel value="#{lbl['lbl.pm.profiles.navigation.username']}" />
 					</td>
-					<td class="header-info-text">
+					<td class="header-info-text" width="33%">
 						#{profileManagementBackingBean.managedBean.selectedUser.userName}
 					</td>
 					<td width="5%">
 						<p:outputLabel value="#{lbl['lbl.pm.profiles.navigation.status']}" />  
 					</td>
-					<td class="header-info-text">
+					<td class="header-info-text" width="18%">
 						#{(profileManagementBackingBean.managedBean.selectedUserOrg.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
 					</td>
 				</tr>
