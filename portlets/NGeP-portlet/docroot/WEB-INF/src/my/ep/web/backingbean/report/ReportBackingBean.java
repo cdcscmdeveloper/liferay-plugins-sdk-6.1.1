@@ -10852,7 +10852,7 @@ public class ReportBackingBean extends
 	 * Generate CT module report
 	 */
 	/**
-	 * Generate ct report.
+	 * Generate ct module report.
 	 */
 	public void generateCTReport() {
 		if (((this.getCtContrMontrStatus() != null) && (this
@@ -11113,11 +11113,9 @@ public class ReportBackingBean extends
 		}
 	}
 
-	/*
-	 * Generate SM module report
-	 */
+	
 	/**
-	 * Generate sm report.
+	 * Generate sm module report.
 	 */
 	public void generateSMReport() {
 		if ((getManagedBean().getReportValue() != null)
@@ -11720,11 +11718,9 @@ public class ReportBackingBean extends
 		}
 	}
 
-	/*
-	 * Generate SC module report
-	 */
+	
 	/**
-	 * Generate sc report.
+	 * Generate sc module report.
 	 */
 	public void generateSCReport() {
 		if ((getManagedBean().getReportValue() != null)
@@ -12137,11 +12133,9 @@ public class ReportBackingBean extends
 		}
 	}
 
-	/*
-	 * Generate CM module report
-	 */
+	
 	/**
-	 * Generate cm report.
+	 * Generate cm module report.
 	 */
 	public void generateCMReport() {
 		if (((this.getCmExtention() != null) && (this.getCmExtention() != ReportConst.EMPTY_VAL))
@@ -12389,11 +12383,9 @@ public class ReportBackingBean extends
 		}
 	}
 
-	/*
-	 * Generate FL module report
-	 */
+	
 	/**
-	 * Generate fl report.
+	 * Generate fl module report.
 	 */
 	public void generateFLReport() {
 		if (((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
@@ -12815,11 +12807,9 @@ public class ReportBackingBean extends
 		}
 	}
 
-	/*
-	 * Generate PP module report
-	 */
+	
 	/**
-	 * Generate pp report.
+	 * Generate pp module report.
 	 */
 	public void generatePPReport() {
 		if (((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
@@ -12862,11 +12852,9 @@ public class ReportBackingBean extends
 		}
 	}
 
-	/*
-	 * Generate PM module report
-	 */
+	
 	/**
-	 * Generate pm report.
+	 * Generate pm module report.
 	 */
 	public void generatePMReport() {
 		if (((this.getPmServiceType() != null) && (this.getPmServiceType() != ReportConst.EMPTY_VAL))
@@ -12917,9 +12905,7 @@ public class ReportBackingBean extends
 		}
 	}
 
-	/*
-	 * validate quotNo
-	 */
+	
 	/**
 	 * Quotation number validation.
 	 */
@@ -13068,9 +13054,7 @@ public class ReportBackingBean extends
 		}
 	}
 
-	/*
-	 * retrieve qtid based on qtno
-	 */
+	
 	/**
 	 * Gets the quotation number.
 	 * 
@@ -13102,9 +13086,7 @@ public class ReportBackingBean extends
 		}
 	}
 
-	/*
-	 * Clear report criteria
-	 */
+	
 	/**
 	 * Reset report form.
 	 */
