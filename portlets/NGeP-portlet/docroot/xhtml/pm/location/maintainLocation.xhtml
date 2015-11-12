@@ -8,11 +8,11 @@
 
 	<p:panel header="#{lbl['lbl.pm.location.details']}" toggleable="true"
 		id="crtLocationId">
-		<table>
+		<table width="50%">
 			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.pm.location.type']}" /> <p:outputLabel
+				<td class="TableFieldLeft" style="width: 30%;"><h:outputLabel value="#{lbl['lbl.pm.location.type']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu id="locationcode"
+				<td class="TableFieldRight" style="width: 70%;"><p:selectOneMenu id="locationcode"
 						label="#{lbl['lbl.pm.location.type']}"
 						styleClass="ppDropDownWidthM"
 						style="width: 135px;margin-bottom: 5px;"
@@ -28,9 +28,8 @@
 
 			<ui:fragment
 				rendered="#{locationBackingBean.managedBean.selectedType eq 'ST'}">
-
 				<tr>
-					<td class="TableFieldLeft" style="width: 30%"><p:outputLabel
+					<td><p:outputLabel
 							value=" #{lbl['lbl.pm.country']}" /> <p:outputLabel value="*"
 							styleClass="mandatory" /></td>
 					<td><p:selectOneMenu
@@ -48,11 +47,11 @@
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
-					<td class="TableFieldLeft" style="width: 30%"><p:outputLabel
+					<td><p:outputLabel
 							value="#{lbl['lbl.pm.state.code']}" /> <p:outputLabel value="*"
 							styleClass="mandatory" /></td>
 
-					<td class="TableFieldRight"><p:inputText id="statecode"
+					<td><p:inputText id="statecode"
 							label="#{lbl['lbl.pm.state.code']}" styleClass="ppDisplayTextM"
 							style="text-transform: uppercase"
 							value="#{locationBackingBean.managedBean.state.stateCode}"
@@ -64,10 +63,10 @@
 						</p:inputText></td>
 				</tr>
 				<tr>
-					<td class="TableFieldLeft" style="width: 30%"><h:outputLabel
+					<td><h:outputLabel
 							value="#{lbl['lbl.pm.state.name']}" /> <p:outputLabel value="*"
 							styleClass="mandatory" /></td>
-					<td class="TableFieldRight"><p:inputText id="statename"
+					<td><p:inputText id="statename"
 							styleClass="ppDisplayTextL" label="#{lbl['lbl.pm.state.name']}"
 							maxlength="50"
 							value="#{locationBackingBean.managedBean.state.stateName}"
@@ -98,10 +97,10 @@
 				rendered="#{locationBackingBean.managedBean.selectedType eq 'DV'}">
 
 				<tr>
-					<td width="120"><p:outputLabel
+					<td><p:outputLabel
 							value="#{lbl['lbl.pm.address.country']}" /> <h:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td width="220"><p:selectOneMenu id="divCountry"
+					<td><p:selectOneMenu id="divCountry"
 							required="true" label="#{lbl['lbl.pm.address.country']}"
 							value="#{locationBackingBean.managedBean.division.pmState.pmCountry.countryId}"
 							disabled="#{!locationBackingBean.managedBean.division.brandNew}"
@@ -119,10 +118,10 @@
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
-					<td width="150"><p:outputLabel
+					<td><p:outputLabel
 							value="#{lbl['lbl.pm.address.state']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td width="220"><p:selectOneMenu id="divState" required="true"
+					<td><p:selectOneMenu id="divState" required="true"
 							label="#{lbl['lbl.pm.address.state']}"
 							value="#{locationBackingBean.managedBean.division.pmState.stateId}"
 							disabled="#{!locationBackingBean.managedBean.division.brandNew}"
@@ -138,11 +137,11 @@
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
-					<td class="TableFieldLeft" style="width: 30%"><p:outputLabel
+					<td><p:outputLabel
 							value="#{lbl['lbl.pm.division.code']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 
-					<td class="TableFieldRight"><p:inputText id="divisioncode"
+					<td><p:inputText id="divisioncode"
 							styleClass="ppDisplayTextM" style="text-transform: uppercase"
 							label="#{lbl['lbl.pm.division.code']}" size="40"
 							disabled="#{!locationBackingBean.managedBean.division.brandNew}"
@@ -155,10 +154,10 @@
 				</tr>
 
 				<tr>
-					<td class="TableFieldLeft" style="width: 40%"><h:outputLabel
+					<td><h:outputLabel
 							value="#{lbl['lbl.pm.division.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td class="TableFieldRight"><p:inputText id="divisionname"
+					<td><p:inputText id="divisionname"
 							styleClass="ppDisplayTextL"
 							label="#{lbl['lbl.pm.division.name']}" maxlength="50"
 							value="#{locationBackingBean.managedBean.division.divisionName}"
@@ -180,10 +179,10 @@
 			<ui:fragment
 				rendered="#{locationBackingBean.managedBean.selectedType eq 'DS'}">
 				<tr>
-					<td width="120"><p:outputLabel
+					<td><p:outputLabel
 							value="#{lbl['lbl.pm.address.country']}" /> <h:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td width="220"><p:selectOneMenu id="disCountry"
+					<td><p:selectOneMenu id="disCountry"
 							required="true" label="#{lbl['lbl.pm.address.country']}"
 							disabled="#{!locationBackingBean.managedBean.district.brandNew}"
 							value="#{locationBackingBean.managedBean.district.pmState.pmCountry.countryId}"
@@ -202,10 +201,10 @@
 				</tr>
 
 				<tr>
-					<td width="150"><p:outputLabel
+					<td><p:outputLabel
 							value="#{lbl['lbl.pm.address.state']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td width="220"><p:selectOneMenu id="disState" required="true"
+					<td><p:selectOneMenu id="disState" required="true"
 							label="#{lbl['lbl.pm.address.state']}"
 							disabled="#{!locationBackingBean.managedBean.district.brandNew}"
 							value="#{locationBackingBean.managedBean.district.pmState.stateId}"
@@ -224,7 +223,7 @@
 				</tr>
 
 				<tr>
-					<td class="TableFieldLeft" style="width: 30%"><p:outputLabel
+					<td><p:outputLabel
 							value=" #{lbl['lbl.pm.division']}" /></td>
 					<td><p:selectOneMenu
 							value="#{locationBackingBean.managedBean.district.pmDivision.divisionId}"
@@ -244,11 +243,11 @@
 
 
 				<tr>
-					<td class="TableFieldLeft" style="width: 30%"><p:outputLabel
+					<td><p:outputLabel
 							value="#{lbl['lbl.pm.district.code']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 
-					<td class="TableFieldRight"><p:inputText id="districtcode"
+					<td><p:inputText id="districtcode"
 							styleClass="ppDisplayTextM" style="text-transform: uppercase"
 							label="#{lbl['lbl.pm.district.code']}"
 							disabled="#{!locationBackingBean.managedBean.district.brandNew}"
@@ -260,10 +259,10 @@
 				</tr>
 
 				<tr>
-					<td class="TableFieldLeft" style="width: 30%"><h:outputLabel
+					<td><h:outputLabel
 							value="#{lbl['lbl.pm.district.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td class="TableFieldRight"><p:inputText id="districtname"
+					<td><p:inputText id="districtname"
 							styleClass="ppDisplayTextL"
 							label="#{lbl['lbl.pm.district.name']}" maxlength="50"
 							value="#{locationBackingBean.managedBean.district.districtName}"
@@ -285,10 +284,10 @@
 			<ui:fragment
 				rendered="#{locationBackingBean.managedBean.selectedType eq 'CT'}">
 				<tr>
-					<td width="120"><p:outputLabel
+					<td><p:outputLabel
 							value="#{lbl['lbl.pm.address.country']}" /> <h:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td width="220"><p:selectOneMenu id="cityCountry"
+					<td><p:selectOneMenu id="cityCountry"
 							required="true" label="#{lbl['lbl.pm.address.country']}"
 							value="#{locationBackingBean.managedBean.state.pmCountry.countryId}"
 							disabled="#{!locationBackingBean.managedBean.city.brandNew}"
@@ -306,10 +305,10 @@
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
-					<td width="150"><p:outputLabel
+					<td><p:outputLabel
 							value="#{lbl['lbl.pm.address.state']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td width="220"><p:selectOneMenu id="cityState"
+					<td><p:selectOneMenu id="cityState"
 							required="true" label="#{lbl['lbl.pm.address.state']}"
 							value="#{locationBackingBean.managedBean.district.pmState.stateId}"
 							disabled="#{!locationBackingBean.managedBean.city.brandNew}"
@@ -329,7 +328,7 @@
 				</tr>
 
 				<tr>
-					<td class="TableFieldLeft" style="width: 30%"><p:outputLabel
+					<td><p:outputLabel
 							value="#{lbl['lbl.pm.district']}" /> <p:outputLabel value="*"
 							styleClass="mandatory" /></td>
 					<td><p:selectOneMenu label="#{lbl['lbl.pm.district']}"
@@ -347,11 +346,11 @@
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
-					<td class="TableFieldLeft" style="width: 30%"><p:outputLabel
+					<td><p:outputLabel
 							value="#{lbl['lbl.pm.city.code']}" /> <p:outputLabel value="*"
 							styleClass="mandatory" /></td>
 
-					<td class="TableFieldRight"><p:inputText id="citycode"
+					<td><p:inputText id="citycode"
 							styleClass="ppDisplayTextM" label="#{lbl['lbl.pm.city.code']}"
 							style="text-transform: uppercase"
 							disabled="#{!locationBackingBean.managedBean.city.brandNew}"
@@ -363,10 +362,10 @@
 				</tr>
 
 				<tr>
-					<td class="TableFieldLeft" style="width: 30%"><h:outputLabel
+					<td><h:outputLabel
 							value="#{lbl['lbl.pm.city.name']}" /> <p:outputLabel value="*"
 							styleClass="mandatory" /></td>
-					<td class="TableFieldRight"><p:inputText id="cityname"
+					<td><p:inputText id="cityname"
 							label="#{lbl['lbl.pm.city.name']}" maxlength="50"
 							styleClass="ppDisplayTextL"
 							value="#{locationBackingBean.managedBean.city.cityName}"
@@ -385,11 +384,7 @@
 						</p:selectOneMenu></td>
 				</tr>
 			</ui:fragment>
-
-
 		</table>
-
-
 	</p:panel>
 
 
