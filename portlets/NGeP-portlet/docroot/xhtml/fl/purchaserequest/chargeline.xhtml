@@ -23,15 +23,14 @@
 				listener="#{purchaseRequestBackingBean.onNodeUnSelect()}"
 				update="chargeLineTbl,@(.chargeLineSection)"
 				disabled="#{purchaseRequestBackingBean.managedBean.selectChargeLineRow=='true'}"></p:ajax>
-			<p:column style="white-space:normal;width:5%">
+			<p:column />
+			<p:column style="white-space:normal;width:2%">
 				<f:facet name="header">
-					<h:outputText value=" " />
-					<p:spacer width="15" />
-					<h:selectBooleanCheckbox 
-						onclick="goToSelectAll()"
+					<p:selectBooleanCheckbox 
+						onchange="goToSelectAll()"
 						rendered="#{purchaseRequestBackingBean.managedBean.buttonVal!='View'}"
 						value="#{purchaseRequestBackingBean.selectAllCheckbox}">
-					</h:selectBooleanCheckbox>
+					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox
 					value="#{chargeLineNode.selectedChargeItem}"
