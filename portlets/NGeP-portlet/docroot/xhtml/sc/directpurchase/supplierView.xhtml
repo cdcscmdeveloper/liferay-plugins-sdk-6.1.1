@@ -63,7 +63,7 @@
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.submit.instruction']}" />
 
-		<p:spacer height="5px" />
+		<br /><br />
 		<table style="width: 100%;">
 			<tr>
 				<td style="width: 20%;"><p:outputLabel
@@ -81,6 +81,51 @@
 				<td><p:inputText disabled="true" size="30"
 						value="#{simpleQuoteBackingBean.managedBean.scQuote.title}" /></td>
 			</tr>
+			<tr>
+				<td style="padding-right: 0px; text-align: right; width: 7%"><p:outputLabel
+						value="#{lbl['lbl.sc.quote.scope.of.work.and.services']}" /></td>
+				<td class="TableFieldRight"><p:commandButton
+						oncomplete="uploadDlg.show();return false;" icon="iconAttachment"
+						disabled="true"
+						value="#{lbl['lbl.txt.choose.files']}" /></td>
+			</tr>
+			<tr>
+				<td />
+				<td><ui:param name="attachFile"
+						value="#{simpleQuoteBackingBean.managedBean.scQuote.scQuoteAttachment}" />
+
+					<c:if test="#{!empty attachFile}">
+						<table>
+							<tr>
+								<td rowspan="2" style="vertical-align: top;" align="left">
+									<ui:param name="icon"
+										value="#{simpleQuoteBackingBean.determineIcon(attachFile)}"></ui:param>
+									<p:graphicImage value="/css/images/design/#{icon}" height="30"
+										width="30">
+									</p:graphicImage>
+								</td>
+								<td><h:outputText
+										value="#{attachFile.createdUser.userName}" />, <h:outputText
+										value="#{attachFile.createdDate}">
+										<f:convertDateTime
+											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+									</h:outputText></td>
+							</tr>
+							<tr>
+								<td><h:commandLink value="#{attachFile.fileName}"
+										styleClass="blue_font" immediate="true"
+										action="#{simpleQuoteBackingBean.downloadFile(attachFile)}" />
+									<p:commandLink
+										action="#{simpleQuoteBackingBean.deleteUploadFile}"
+										immediate="true" update="tplSpecId" disabled="true">
+										<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+									</p:commandLink></td>
+							</tr>
+						</table>
+					</c:if></td>
+			</tr>
+
+
 
 			<tr>
 				<td style="width: 20%;"><p:outputLabel
