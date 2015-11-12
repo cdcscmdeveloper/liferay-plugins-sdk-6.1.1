@@ -6780,7 +6780,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve loa status list.
+	 * Retrieve LOA status list.
 	 * 
 	 * @return the list
 	 */
@@ -6816,7 +6816,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Change terminate.
+	 * Change the terminate type status.
 	 */
 	public void changeTerminate() {
 		this.setCtTerminationType(null);
@@ -6835,7 +6835,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Change payment type.
+	 * Change the payment type status to retrieve paymnet type list.
 	 */
 	public void changePaymentType() {
 		this.setSmPaymentType(null);
@@ -6924,7 +6924,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve payment method.
+	 * Retrieve payment method list.
 	 * 
 	 * @return the list
 	 */
@@ -6968,7 +6968,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Show capital naccum share.
+	 * Show capital and accumulated share.
 	 */
 	public void showCapitalNaccumShare() {
 		getManagedBean().getRptGenBean().setSmPaidUpCapitalFrmView(false);
@@ -7123,7 +7123,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve reg status list.
+	 * Retrieve registration status list.
 	 * 
 	 * @return the list
 	 */
@@ -7146,7 +7146,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Supplier type consultant.
+	 * Supplier type consultant comparison.
 	 */
 	public void supplierTypeConsultant() {
 		getManagedBean().getRptGenBean().setSmConsultantRegistrationStatusView(
@@ -7221,7 +7221,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve accumulated paid up cptl.
+	 * Retrieve accumulated paid-up capital.
 	 */
 	public void retrieveAccumulatedPaidUpCptl() {
 		accumulatedPaidUpCptlList = new ArrayList<SelectItem>();
@@ -7242,7 +7242,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Gets the ltst ministry list.
+	 * Gets the latest ministry list.
 	 * 
 	 * @return the ltst ministry list
 	 */
@@ -7286,7 +7286,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Gets the ltst ministry list by userid.
+	 * Gets the latest ministry list by userid.
 	 * 
 	 * @return the ltst ministry list by userid
 	 */
@@ -7330,7 +7330,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve ptj list by ministry id.
+	 * Retrieve PTJ list by ministry id.
 	 */
 	public void retrievePtjListByMinistryId() {
 		pmPtjList = new ArrayList<String>();
@@ -7359,9 +7359,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Gets the doc type status drop down.
+	 * Gets the document type status dropdown.
 	 * 
-	 * @return the doc type status drop down
+	 * @return the doc type status dropdown
 	 */
 	public SelectItem[] getDocTypeStatusDropDown() {
 		docTypeStatusItems = null;
@@ -8075,7 +8075,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Assign val reqd to true.
+	 * Assign value required to true.
 	 */
 	private void assignValReqdToTrue() {
 		this.setShowParentMsg(false);
@@ -8083,7 +8083,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Reset child cat list.
+	 * Reset child category list.
 	 */
 	private void resetChildCatList() {
 		this.setSupplierChildCatList(new ArrayList<PmCategoryL2>());
@@ -8109,7 +8109,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Select all.
+	 * Select all categories.
 	 */
 	public void selectAll() {
 		if (this.isSelectedAll()) {
@@ -8122,7 +8122,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Selected.
+	 * Selected category.
 	 * 
 	 * @param index
 	 *            the index
@@ -8398,9 +8398,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Gets the report idlist.
+	 * Gets the report id list.
 	 * 
-	 * @return the report idlist
+	 * @return the report id list
 	 */
 	public void getReportIdlist() {
 		rptGenBean = new ReportsGenerateBean();
