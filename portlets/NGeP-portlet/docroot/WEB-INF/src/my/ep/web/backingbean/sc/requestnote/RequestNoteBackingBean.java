@@ -3709,7 +3709,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 				if(requestNote.getPmUserGroup() == null){
 					requestNote.setPmUserGroup(resDTO.getUserGroupList().get(0));
-
+					getManagedBean().setUserGroupId(requestNote.getPmUserGroup().getUserGroupId());
+					
 				} else{
 					getManagedBean().setUserGroupId(requestNote.getPmUserGroup().getUserGroupId());
 				}
@@ -3722,13 +3723,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 			
 			
-			if(getManagedBean().getRequestNote().getPmUserGroup() != null && getManagedBean().getRequestNote().getPmUserGroup().getUserGroupId() == null){
+			if(getManagedBean().getRequestNote().getPmUserGroup()== null){
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 						MessageUtils.getMessage(MessageConst.ERROR_745070, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
 		}
@@ -3762,10 +3763,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
 		Long userGroupId = getManagedBean().getUserGroupId();
 		
-		if(userGroupId == null) {
-			getManagedBean().getApproverList().clear();
-			return;
-		}
 		
 		if(getManagedBean().getUserGroupList() != null) {
 			for (PmUserGroup pmUserGroup : getManagedBean().getUserGroupList()) {
