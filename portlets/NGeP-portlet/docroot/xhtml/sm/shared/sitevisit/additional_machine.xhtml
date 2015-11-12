@@ -8,7 +8,7 @@
 		<p:dataTable id="addlMachineDtTbl" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvAdtMachines}" var="addMachineDtl"
 			selection="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.selectedAdtMachines}" rowKey="#{addMachineDtl}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
-			<p:column selectionMode="multiple" style="width:2%" rendered="#{!viewFlag}"/>
+			<p:column selectionMode="multiple" style="width:2%" rendered="#{!viewFlag and not empty svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvAdtMachines}"/>
 			<p:column>
 					<f:facet name="header">
 						#{lbl['lbl.sm.manufacturing.type.machine']}
