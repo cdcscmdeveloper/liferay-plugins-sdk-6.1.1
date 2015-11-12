@@ -10,7 +10,8 @@
 		<p:dataTable id="dtPrintWorkId" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvPrintworks}" 
 		var="pWork" selection="#{svoSiteVisitBackingBean.managedBean.selectedPrintWorks}" rowKey="#{pWork}" 
 		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
-			<p:column selectionMode="multiple" style="width:2%" />
+			<p:column selectionMode="multiple" style="width:2%" 
+			rendered="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvPrintworks}" />
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.sm.sitevisit.printing.type']}
