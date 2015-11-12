@@ -14,6 +14,10 @@
 			.value {
 				width: 1000px;
 			}
+			
+			.calendarClass td.ui-widget-content{
+				border : 1px solid #dddddd !important;
+			}
 		</style>
 
 		<script type="text/javascript">	
@@ -125,7 +129,7 @@
 		 <p:growl id="calendarMsg" showDetail="true" />
 		<p:panel id="ruleConfigId">			
 			<h:panelGroup id="calendarId">
-				<table width="100%">
+				<table width="100%" >
 					<tr>
 						<td width="10%"><p:outputLabel
 								value="#{lbl['lbl.pm.cal.state']}" /> <p:outputLabel value="*"
@@ -171,7 +175,7 @@
 					</td>
 					</tr>
 					<tr>
-						<td colspan="3"><p:schedule id="schedule"
+						<td colspan="3"><p:schedule id="schedule" styleClass="calendarClass"
 								pattern="dd-MM-yyyy" locale="#{calendarBackingBean.getLocale()}" timeZone="GMT+8"
 								leftHeaderTemplate="" rightHeaderTemplate=""
 								style="width : 700px; height : 600px;"
