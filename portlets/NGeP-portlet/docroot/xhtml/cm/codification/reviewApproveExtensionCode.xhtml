@@ -83,25 +83,25 @@
 					</f:facet>
 
 						<div style="width:100%; ">
-							<p:inputText value="#{review.reviewedTypeName}" id="reviewedTypeNameId"
+							<p:inputText value="#{review.reviewedTypeName}" id="reviewedTypeNameId" maxlength="100"
 								disabled="#{!review.requestType}" required="true" label="#{lbl['lbl.cm.type']}">
 								<p:ajax event="blur" update=":form:dt:typeremark1"></p:ajax>
 							</p:inputText>
 						</div>
 						<div style="width:100%; ">
-							<p:inputText value="#{review.reviewedBrandName}"
+							<p:inputText value="#{review.reviewedBrandName}" maxlength="100"
 								disabled="#{!review.requestBrand}" required="true" label="#{lbl['lbl.cm.brand']}">
 								<p:ajax event="blur" update=":form:dt:brandRemark1"></p:ajax>
 							</p:inputText>
 						</div>
 						<div style="width:100%; ">
-							<p:inputText value="#{review.reviewedMeasurementName}"
+							<p:inputText value="#{review.reviewedMeasurementName}" maxlength="100"
 								disabled="#{!review.requestMeasurement}"  required="true" label="#{lbl['lbl.cm.measurement']}">
 								<p:ajax event="blur" update=":form:dt:measurementRemark1"></p:ajax>
 							</p:inputText>
 						</div>
 						<div style="width:100%; ">
-							<p:inputText value="#{review.reviewedColorName}"
+							<p:inputText value="#{review.reviewedColorName}" maxlength="100"
 								disabled="#{!review.requestColor}" required="true" label="#{lbl['lbl.cm.color']}">
 								<p:ajax event="blur" update=":form:dt:colorRemark1"></p:ajax>
 							</p:inputText>
@@ -116,28 +116,28 @@
 					</f:facet>
 
 						<div style="width:100%; ">
-							<p:inputText id="typeremark1" value="#{review.typeRemark}"
+							<p:inputText id="typeremark1" value="#{review.typeRemark}" maxlength="100"
 								size="40" requiredMessage="#{lbl['lbl.cm.error.error10']}"
 								disabled="#{!(unspscCodeBackingBean.checkRemark(review.typeName, review.reviewedTypeName))}"
 								required="#{unspscCodeBackingBean.checkRemark(review.typeName, review.reviewedTypeName)}"></p:inputText>
 							
 						</div>
 						<div style="width:100%; ">
-							<p:inputText id="brandRemark1" value="#{review.brandRemark}"
+							<p:inputText id="brandRemark1" value="#{review.brandRemark}" maxlength="100"
 								size="40" requiredMessage="#{lbl['lbl.cm.error.error11']}"
 								disabled="#{!(unspscCodeBackingBean.checkRemark(review.brandName, review.reviewedBrandName))}"
 								required="#{unspscCodeBackingBean.checkRemark(review.brandName, review.reviewedBrandName)}"></p:inputText>
 							
 						</div>
 						<div style="width:100%; ">
-							<p:inputText value="#{review.measurementRemark}" size="40" id="measurementRemark1" requiredMessage="#{lbl['lbl.cm.error.error12']}"
+							<p:inputText value="#{review.measurementRemark}" maxlength="100" size="40" id="measurementRemark1" requiredMessage="#{lbl['lbl.cm.error.error12']}"
 								disabled="#{!(unspscCodeBackingBean.checkRemark(review.measurementName, review.reviewedMeasurementName))}"
 								required="#{unspscCodeBackingBean.checkRemark(review.measurementName, review.reviewedMeasurementName)}">								
 							</p:inputText>
 							
 						</div>
 						<div style="width:100%; ">
-							<p:inputText value="#{review.colorRemark}" size="40" id="colorRemark1" requiredMessage="#{lbl['lbl.cm.error.error13']}"
+							<p:inputText value="#{review.colorRemark}" maxlength="100" size="40" id="colorRemark1" requiredMessage="#{lbl['lbl.cm.error.error13']}"
 							    disabled="#{!(unspscCodeBackingBean.checkRemark(review.colorName, review.reviewedColorName))}"
 								required="#{unspscCodeBackingBean.checkRemark(review.colorName, review.reviewedColorName)}"></p:inputText>
 							
