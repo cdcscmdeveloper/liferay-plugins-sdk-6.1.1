@@ -210,7 +210,7 @@
 							conditionField="recordStatus^1">
 						</ac:lov> <ac:lovPopup /></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.sku']}" /></td>
-					<td><p:inputText size="35"
+					<td><p:inputText size="35" maxlength="50"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.skuNumber}"
 							readonly="#{!codificationBackingBean.productCode(catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.cmUnspsc.unspscCode) or unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"></p:inputText></td>
 					<td></td>
@@ -219,22 +219,22 @@
 
 					<td><p:outputLabel
 							value="#{lbl['lbl.cm.manufacturing.part.no']}" /></td>
-					<td><p:inputText size="35"
+					<td><p:inputText size="35" maxlength="100"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.manufacturer}"
 							readonly="#{!codificationBackingBean.productCode(catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.cmUnspsc.unspscCode) or unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"></p:inputText></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.model']}" /></td>
-					<td colspan="1"><p:inputText size="35"
+					<td colspan="1"><p:inputText size="35" maxlength="20"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.modelNumber}"
 							readonly="#{!codificationBackingBean.productCode(catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.cmUnspsc.unspscCode) or unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"></p:inputText></td>
 				</tr>
 				<tr style="height: 30px;">
 
 					<td><p:outputLabel value="#{lbl['lbl.cm.min.order']}" /></td>
-					<td><p:inputText size="35" label="#{lbl['lbl.cm.min.order']}"
+					<td><p:inputText size="35" label="#{lbl['lbl.cm.min.order']}" maxlength="6"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.minOrder}"
 							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"></p:inputText></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.delivery.term']}" /></td>
-					<td colspan="1"><p:inputText size="26"
+					<td colspan="1"><p:inputText size="26" maxlength="6"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.leadTime}"
 							converterMessage="#{lbl['lbl.cm.error.delivery.term']}"
 							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}" />
@@ -246,7 +246,7 @@
 				<tr style="height: 30px;">
 					<td><p:outputLabel
 							value="#{lbl['lbl.cm.additional.item.description']}" /></td>
-					<td colspan="3"><p:inputTextarea
+					<td colspan="3"><p:inputTextarea maxlength="2000"
 							style="width:80% !important;height:100px;overflow:scroll;"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}"
 							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue or unspscCodeBackingBean.supplierTemp}" /></td>
