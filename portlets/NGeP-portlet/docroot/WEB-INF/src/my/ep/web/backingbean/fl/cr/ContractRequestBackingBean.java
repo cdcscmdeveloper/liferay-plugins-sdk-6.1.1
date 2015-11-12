@@ -3576,9 +3576,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			if((getManagedBean().getSearchItemCode() == null || getManagedBean().getSearchItemCode().isEmpty()) && 
 					(getManagedBean().getSearchItemName() == null || getManagedBean().getSearchItemName().isEmpty()) && 
 					(getManagedBean().getSearchItemType() == null)){
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_WARN, null, MessageUtils.getMessage(MessageConst.WARN_755000,
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				throw new EpException(MessageConst.ERROR_100060);
 			}else{
 				getContractItemPagingDataModel().reloadData();
 			}
