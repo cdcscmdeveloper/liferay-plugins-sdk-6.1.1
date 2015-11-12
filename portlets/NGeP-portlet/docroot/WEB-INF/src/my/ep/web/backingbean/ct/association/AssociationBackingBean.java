@@ -29,6 +29,7 @@ import my.ep.dto.ct.maintain.ContractAssociationReqDTO;
 import my.ep.dto.ct.maintain.ContractAssociationResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.assoc.CtAssocContract;
 import my.ep.persistence.entity.ct.assoc.CtAssociation;
@@ -305,24 +306,16 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 	 * @see    Exception
 	 */
 	public void searchAssociation() throws Exception {
-		try {
-			if ((getManagedBean().getProjectName() == null || getManagedBean().getProjectName().length() == 0)
-					&& (getManagedBean().getCtName() == null || getManagedBean().getCtName().length() == 0)
-					&& (getManagedBean().getProjectDescription() == null || getManagedBean().getProjectDescription().length() == 0)
-					&& (getManagedBean().getCtSupplierName() == null || getManagedBean().getCtSupplierName().length() == 0)
-					&& getManagedBean().getCtDateStart() == null
-					&& getManagedBean().getCtDateEnd() == null
-					&&(getManagedBean().getCtProductCode() == null || getManagedBean().getCtProductCode().length() == 0)) {
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_WARN, null, 
-								MessageUtils.getMessage(MessageConst.WARN_755000,
-										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			} else {
-				associationDataModel.reloadData();
-		   }
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "contract search failed."));
+		if ((getManagedBean().getProjectName() == null || getManagedBean().getProjectName().length() == 0)
+				&& (getManagedBean().getCtName() == null || getManagedBean().getCtName().length() == 0)
+				&& (getManagedBean().getProjectDescription() == null || getManagedBean().getProjectDescription().length() == 0)
+				&& (getManagedBean().getCtSupplierName() == null || getManagedBean().getCtSupplierName().length() == 0)
+				&& getManagedBean().getCtDateStart() == null
+				&& getManagedBean().getCtDateEnd() == null
+				&&(getManagedBean().getCtProductCode() == null || getManagedBean().getCtProductCode().length() == 0)) {
+			throw new EpException(MessageConst.ERROR_100060);
+		} else {
+			associationDataModel.reloadData();
 		}
 	}
 	

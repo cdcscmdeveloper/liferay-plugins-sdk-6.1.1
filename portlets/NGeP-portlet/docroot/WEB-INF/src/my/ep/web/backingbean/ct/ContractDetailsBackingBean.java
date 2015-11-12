@@ -199,35 +199,25 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @see    Exception
 	 */
 	public void searchContract() throws Exception {
-		try { 
-			if (StringUtils.isBlank(getManagedBean().getSearchContractNo())
-					&& StringUtils.isBlank(getManagedBean().getSearchContractName()) 
-					&& StringUtils.isBlank(getManagedBean().getSearchCircularNo()) 
-					&& StringUtils.isBlank(getManagedBean().getSearchCircularName()) 
-					&& StringUtils.isBlank(getManagedBean().getSearchLoaNo()) 
-					&& StringUtils.isBlank(getManagedBean().getSearchSupplierName()) 
-					&& getManagedBean().getSearchCtStartDate() == null
-					&& getManagedBean().getSearchCtEndDate() == null 
-					&& StringUtils.isBlank(getManagedBean().getSearchCtPhysicalNo()) 
-					&& StringUtils.isBlank(getManagedBean().getSearchLoaPhysicalNo()) 
-					&& getManagedBean().getSearchStatus() == 0 
-					&& getManagedBean().getSearchTerminationType() == null 
-					&& getManagedBean().getSearchFulfilmentStatus() == null
-					&& getManagedBean().getSearchContractStatus() == 0
-					&& getManagedBean().getSearchMinistryProfileId() == null
-					&& getManagedBean().getSearchPtjProfile() == null) {
-					FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_WARN, null,
-								MessageUtils.getMessage(MessageConst.WARN_755000,
-										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			} else {
-				getManagedBean().getContractDataModel().reloadData();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "contract search failed."));
-
-
+		if (StringUtils.isBlank(getManagedBean().getSearchContractNo())
+				&& StringUtils.isBlank(getManagedBean().getSearchContractName()) 
+				&& StringUtils.isBlank(getManagedBean().getSearchCircularNo()) 
+				&& StringUtils.isBlank(getManagedBean().getSearchCircularName()) 
+				&& StringUtils.isBlank(getManagedBean().getSearchLoaNo()) 
+				&& StringUtils.isBlank(getManagedBean().getSearchSupplierName()) 
+				&& getManagedBean().getSearchCtStartDate() == null
+				&& getManagedBean().getSearchCtEndDate() == null 
+				&& StringUtils.isBlank(getManagedBean().getSearchCtPhysicalNo()) 
+				&& StringUtils.isBlank(getManagedBean().getSearchLoaPhysicalNo()) 
+				&& getManagedBean().getSearchStatus() == 0 
+				&& getManagedBean().getSearchTerminationType() == null 
+				&& getManagedBean().getSearchFulfilmentStatus() == null
+				&& getManagedBean().getSearchContractStatus() == 0
+				&& getManagedBean().getSearchMinistryProfileId() == null
+				&& getManagedBean().getSearchPtjProfile() == null) {
+			throw new EpException(MessageConst.ERROR_100060);
+		} else {
+			getManagedBean().getContractDataModel().reloadData();
 		}
 	}
 	
