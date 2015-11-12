@@ -16,14 +16,16 @@
 				<f:facet name="header">
 					#{lbl['lbl.sm.sitevisit.printing.type']}
 				</f:facet>
-				<p:inputText value="#{pWork.printType}" maxlength="100" id="txtPrintTypeId" disabled="#{viewFlag}" />
+				<p:inputText value="#{pWork.printType}" maxlength="100" id="txtPrintTypeId" disabled="#{viewFlag}"
+				required="#{empty param['disabledValidation']}" label="#{lbl['lbl.sm.sitevisit.printing.type']}" />
 			</p:column>
 			
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.sm.sitevisit.printing.uname']}
 				</f:facet>
-				<p:inputText value="#{pWork.clientName}" maxlength="100" id="txtUsernameId" disabled="#{viewFlag}"/>
+				<p:inputText value="#{pWork.clientName}" maxlength="100" id="txtUsernameId" disabled="#{viewFlag}" 
+				required="#{empty param['disabledValidation']}" label="#{lbl['lbl.sm.sitevisit.printing.uname']}" />
 			</p:column>
 			
 			<p:column>	
@@ -31,7 +33,7 @@
 					#{lbl['lbl.sm.sitevisit.printing.workval.rm']}
 				</f:facet>
 				<p:inputText value="#{pWork.printAmt}" maxlength="14" label="#{lbl['lbl.sm.sitevisit.printing.workval.rm']}"
-					id="txtWorkValueId" disabled="#{viewFlag}">
+					id="txtWorkValueId" disabled="#{viewFlag}" required="#{empty param['disabledValidation']}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />					
 				</p:inputText>
 
