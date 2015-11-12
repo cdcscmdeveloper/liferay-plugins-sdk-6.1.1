@@ -17,39 +17,38 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 	
-		<p:messages id="defBumiApplPageMsgs" showDetail="true"
-			autoUpdate="true" closable="true" showSummary="false" />
-		<table style="width: 100%">
-			<tr>
-				<td style="padding-left: 4px;"><p:outputPanel>
-						<p>
-							<h:outputText value="#{lbl['lbl.sm.bumi.descData']}"
-								escape="false" />
-						</p>
-					</p:outputPanel></td>
-			</tr>
-		</table>
-		<br />
-		<p:separator />
-		<table>
-			<tr>
-
-				<td width="10px" style="padding: 4px 2px 0px 4px;"><p:selectBooleanCheckbox
-						value="#{backingBean.managedBean.termsAccepted}">
-						<p:ajax event="change" update=":form:bumCmdBtn"
-							partialSubmit="true" process="@this" />
-					</p:selectBooleanCheckbox></td>
-				<td><p:outputLabel value="#{lbl['lbl.sm.termsConditions']}" /></td>
-			</tr>
-
-		</table>
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.proceed']}" id="bumCmdBtn"
-				action="#{backingBean.proceedToApplication('B')}"
-				disabled="#{!backingBean.managedBean.termsAccepted}" 
-				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-			<!-- <p:commandButton value="Cancel"
-				action="/xhtml/sm/homeScreen/defaultVirtualCertPage.xhtml" /> -->
-		</div>
+		<p:messages id="defBumiApplPageMsgs" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		
+		<p:panel id="bumiTncPanelId" header="#{lbl['lbl.sm.term.and.condition.header']}">
+			<p:scrollPanel style="height:200px;border:0;" mode="native">
+				<table style="width: 100%">
+					<tr>
+						<td style="padding-left: 4px;">
+							<p:outputPanel><p><h:outputText value="#{lbl['lbl.sm.bumi.descData']}" escape="false" /></p></p:outputPanel>
+						</td>
+					</tr>
+				</table>
+			</p:scrollPanel>
+			
+			<br />
+			<table>
+				<tr>
+	
+					<td width="10px" style="padding: 4px 2px 0px 4px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.termsAccepted}">
+							<p:ajax event="change" update=":form:bumCmdBtn"
+								partialSubmit="true" process="@this" />
+						</p:selectBooleanCheckbox></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.termsConditions']}" /></td>
+				</tr>
+	
+			</table>
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sm.proceed']}" id="bumCmdBtn"
+					action="#{backingBean.proceedToApplication('B')}"
+					disabled="#{!backingBean.managedBean.termsAccepted}" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+			</div>
+		</p:panel>
 	</ui:define>
 </ui:composition>
