@@ -136,7 +136,7 @@
 					</f:facet>
 
 						<div style="width:100%; ">
-							<p:inputText value="#{review.typeRemarkII}" size="30"
+							<p:inputText value="#{review.typeRemarkII}" size="30" maxlength="100"
 								requiredMessage="#{lbl['lbl.cm.error.error10']}"
 								disabled="#{(unspscCodeBackingBean.codeAdmin) or (!unspscCodeBackingBean.codeAdmin and !(unspscCodeBackingBean.checkRemark(review.reviewedTypeNameII, review.reviewedTypeName)))}"
 								required="#{unspscCodeBackingBean.checkRemark(review.reviewedTypeNameII, review.reviewedTypeName)}"
@@ -145,20 +145,20 @@
 						</div>
 						<div style="width:100%; ">
 							<p:inputText value="#{review.brandRemarkII}" size="30"
-								id="brandRemark2" requiredMessage="#{lbl['lbl.cm.error.error11']}"
+								id="brandRemark2" requiredMessage="#{lbl['lbl.cm.error.error11']}" maxlength="100"
 								required="#{unspscCodeBackingBean.checkRemark(review.reviewedBrandNameII, review.reviewedBrandName)}"
 								disabled="#{(unspscCodeBackingBean.codeAdmin) or (!unspscCodeBackingBean.codeAdmin and !(unspscCodeBackingBean.checkRemark(review.reviewedBrandNameII, review.reviewedBrandName)))}"></p:inputText>
 							
 						</div>
 						<div style="width:100%; ">
-							<p:inputText value="#{review.measurementRemarkII}" size="30"
+							<p:inputText value="#{review.measurementRemarkII}" size="30" maxlength="100"
 								id="measurementRemark2" requiredMessage="#{lbl['lbl.cm.error.error12']}"
 								required="#{unspscCodeBackingBean.checkRemark(review.reviewedMeasurementNameII, review.reviewedMeasurementName)}"
 								disabled="#{(unspscCodeBackingBean.codeAdmin) or (!unspscCodeBackingBean.codeAdmin and !(unspscCodeBackingBean.checkRemark(review.reviewedMeasurementNameII, review.reviewedMeasurementName)))}"></p:inputText>
 							
 						</div>
 						<div style="width:100%; ">
-							<p:inputText value="#{review.colorRemarkII}" size="30"
+							<p:inputText value="#{review.colorRemarkII}" size="30" maxlength="100"
 								id="colorRemark2" requiredMessage="#{lbl['lbl.cm.error.error13']}"
 								required="#{unspscCodeBackingBean.checkRemark(review.reviewedColorNameII, review.reviewedColorName)}"
 								disabled="#{(unspscCodeBackingBean.codeAdmin) or (!unspscCodeBackingBean.codeAdmin and !(unspscCodeBackingBean.checkRemark(review.reviewedColorNameII, review.reviewedColorName)))}"></p:inputText>
