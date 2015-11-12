@@ -65,7 +65,9 @@
 			
 			<p:column>
 				<f:facet name="header">#{lbl['lbl.sm.verifyLbl']}</f:facet>
+				<div align="center">
 				<p:selectBooleanCheckbox value="#{bankInfo.valid}" disabled="#{viewFlag}"></p:selectBooleanCheckbox>
+				</div>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sm.remark']}">
@@ -91,8 +93,10 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.availableLbl']}" styleClass="colAlignTop">
+				<div align="center">
 				<p:selectBooleanCheckbox value="#{finLsItem.valid}" disabled="#{viewFlag}">
 				</p:selectBooleanCheckbox>
+				</div>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.remark']}">
