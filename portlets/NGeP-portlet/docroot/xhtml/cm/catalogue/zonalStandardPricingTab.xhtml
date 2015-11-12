@@ -45,7 +45,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.price']}
 				</f:facet>
-				<p:inputText value="#{standard.price}" size="10"
+				<p:inputText value="#{standard.price}" size="10" maxlength="18"
 					disabled="#{standard.standardDisabled}" style="text-align:right">
 					<p:ajax event="keyup" update="zonalStanErrorLink zPromoLink" />
 					<f:convertNumber
