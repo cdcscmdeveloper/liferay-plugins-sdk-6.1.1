@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<p:panel header="#{lbl['lbl.pm.supplier.zone.dtl']}" toggleable="true">
+	<p:panel id="supplierZoneDetailPanel" header="#{lbl['lbl.pm.supplier.zone.dtl']}" toggleable="true">
 
 		<table>
 			<tr>
@@ -48,7 +48,7 @@
 
 	</p:panel>
 
-	<p:panel header="STATE LIST" toggleable="true">
+	<p:panel id="statePanel" toggleable="true">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.pm.state']}" />
