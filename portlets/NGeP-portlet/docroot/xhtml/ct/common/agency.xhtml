@@ -103,13 +103,8 @@
 				  <h:outputText value="#{agencyData.expDate}">
 				      <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText>
 		   	   </p:column>
-		   	
 		   	   <p:column>
-		   	       <p:selectBooleanCheckbox value="#{agencyData.ap178}" style="width:10px;float:center;" disabled="true"
-		   	          rendered="#{ctBackingBean.retrieveMinistryOrgProfile(
-		   	          	ctBackingBean.managedBean.contractVer.ctContract.ownerOrgProfile.orgProfileId).getOrgProfileId() != 
-		   	          	ctBackingBean.retrieveMinistryOrgProfile(agencyData.orgProfile.orgProfileId).getOrgProfileId()}">
-		   	      </p:selectBooleanCheckbox>
+		   	       <p:selectBooleanCheckbox value="#{agencyData.ap178}" style="float:center;" disabled="true" />
 		       </p:column>
 		       <p:column style="white-space:normal;">
 		         <p:commandButton id="uploadSharingDoc" oncomplete="uploadDlg1.show();return false;" icon="iconAttachment" 
