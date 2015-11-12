@@ -1103,24 +1103,17 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 * user can view and update central circular
    */
    public void searchCircularVer() throws Exception {
-		try {
-			if ((getManagedBean().getSearchCircularNo() == null || getManagedBean().getSearchCircularNo().trim().length() == 0) &&
-				(getManagedBean().getSearchCircularName() == null || getManagedBean().getSearchCircularName().trim().length() == 0) && 
-				(getManagedBean().getSearchPhysicalCircularNo() == null || getManagedBean().getSearchPhysicalCircularNo().length() == 0) && 
-				getManagedBean().getSearchStartDate() == null &&
-				getManagedBean().getSearchEndDate() == null &&
-				getManagedBean().getSearchStatusId() == null) {
-					FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_WARN, null, MessageUtils.getMessage(MessageConst.WARN_755000,
-							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			}
-			else {
-				getManagedBean().getCircularVerPagingDataModel().reloadData();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "Circular save failed."));
-		}			
+	   if ((getManagedBean().getSearchCircularNo() == null || getManagedBean().getSearchCircularNo().trim().length() == 0) &&
+			   (getManagedBean().getSearchCircularName() == null || getManagedBean().getSearchCircularName().trim().length() == 0) && 
+			   (getManagedBean().getSearchPhysicalCircularNo() == null || getManagedBean().getSearchPhysicalCircularNo().length() == 0) && 
+			   getManagedBean().getSearchStartDate() == null &&
+			   getManagedBean().getSearchEndDate() == null &&
+			   getManagedBean().getSearchStatusId() == null) {
+		   throw new EpException(MessageConst.ERROR_100060);
+	   }
+	   else {
+		   getManagedBean().getCircularVerPagingDataModel().reloadData();
+	   }
 	}
 	
    /**

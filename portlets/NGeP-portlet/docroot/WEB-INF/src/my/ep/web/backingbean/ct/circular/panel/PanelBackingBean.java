@@ -443,8 +443,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		 *Method used to searchCircularVer to retrieve circular information
 	 */
 	public void searchCircularVer() throws Exception {
-		try {
-			if ((getManagedBean().getSearchCircularNo() == null || getManagedBean().getSearchCircularNo().trim().length() == 0) && 
+		if ((getManagedBean().getSearchCircularNo() == null || getManagedBean().getSearchCircularNo().trim().length() == 0) && 
 				(getManagedBean().getSearchCircularName() == null || getManagedBean().getSearchCircularName().trim().length() == 0) &&
 				(getManagedBean().getSearchSupplierName() == null || getManagedBean().getSearchSupplierName().trim().length() == 0) && 
 				(getManagedBean().getSearchPhysicalCircularNo() == null || getManagedBean().getSearchPhysicalCircularNo().trim().length() == 0) &&
@@ -452,16 +451,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				getManagedBean().getSearchStartDate() == null &&
 				getManagedBean().getSearchEndDate() == null &&
 				getManagedBean().getSearchStatusId() == null) {
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_WARN, null, MessageUtils.getMessage(MessageConst.WARN_755000,
-							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			}
-			else {
-				getManagedBean().getCircularVerPagingDataModel().reloadData();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "circular search failed."));
+			throw new EpException(MessageConst.ERROR_100060);
+		}
+		else {
+			getManagedBean().getCircularVerPagingDataModel().reloadData();
 		}			
 	}
 	

@@ -318,7 +318,7 @@ public class LovBackingBean implements Serializable {
 		if(StringUtils.isNotBlank(searchValue1.toString())) {
 			if(((SearchFilterBean)this.getLovSearchBean().getDataFilterBeans().get(0)).getSearchField() == null ||
 					((SearchFilterBean)this.getLovSearchBean().getDataFilterBeans().get(0)).getSearchField().length() == 0) {
-				throw new EpException(MessageConst.WARN_755000);
+				throw new EpException(MessageConst.ERROR_100060);
 			}
 		}
 		
