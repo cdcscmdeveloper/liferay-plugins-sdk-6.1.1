@@ -29,8 +29,10 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.sm.applicationView.BaseReviewApplicationBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -158,6 +160,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO.setSmMofAccount(getManagedBean().getSmMofAccount());
 			reqDTO.setRemark(getManagedBean().getApplnApprovalRemarks());
 			reqDTO.setDocType(ParameterConst.SM_DATA_MAINTENANCE_RMRK_DECISION_APPROVE);
+			reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 			SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
 					getManagedBean().getSmAppl(),
 					SupplierManagementConst.APPROVER_SUBMIT_SUPPLIER_DATA_MAINTENANCE);
@@ -440,6 +443,29 @@ public class SupplierDataMaintenanceBackingBean extends
 	public void hideConfirmDialog() {
 		getManagedBean().setShowParentMsg(true);
 		RequestContext.getCurrentInstance().execute("confirmDialog.hide()");
+	}
+	
+	/**
+	 * Get supplier admin by appl
+	 * @param SmAppl smAppl
+	 * @return SmPersonnel
+	 */
+	private SmPersonnel getSupplierAdminByAppl(SmAppl smAppl) {
+		SmPersonnel supplierAdmin = null;
+
+		if (smAppl.getSmPersonnels() != null
+				&& !smAppl.getSmPersonnels().isEmpty()) {
+			for (SmPersonnel personnel : smAppl.getSmPersonnels()) {
+				if (StringUtils.isNotBlank(personnel.getEpRole())
+						&& StringUtils.isNotBlank(personnel.getEmail())
+						&& personnel.getEpRole().equals(
+								RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+					supplierAdmin = personnel;
+					break;
+				}
+			}
+		}
+		return supplierAdmin;
 	}
 
 	/**
