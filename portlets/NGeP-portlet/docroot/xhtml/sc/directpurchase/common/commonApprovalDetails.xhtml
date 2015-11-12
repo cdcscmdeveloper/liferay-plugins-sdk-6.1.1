@@ -34,7 +34,8 @@
 			<tr>
 				<td><h:outputText value="* " styleClass="mandatory" /> <h:outputLabel
 						value="#{lbl['lbl.sc.approverName']}" /></td>
-				<td><p:selectOneMenu id="approverDropdown"
+				<td><p:selectOneMenu id="approverDropdown" required="true"
+				        label="#{lbl['lbl.sc.approverName']}"
 						disabled="#{isPendingApprovalStatus or requestNoteBackingBean.managedBean.viewOnly}"
 						value="#{requestNoteBackingBean.managedBean.selectedApproverId}"
 						style="width:300px;">
