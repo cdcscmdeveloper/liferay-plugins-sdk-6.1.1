@@ -457,7 +457,7 @@ public class ApprovalBackingBean extends
 					.getQtCommitteResultBean();
 			this.getManagedBean().setQtCommittes(qtcomSearchBean);
 			List<TabBean> tabBeans = constructCommitteTabBean(qtcomSearchBean
-					.getResultList());
+					.getResultList(),qtId);
 			// initializeRemark(qtcomSearchBean.getResultList());
 			this.getManagedBean().getQt()
 					.setScQtCommittees(qtcomSearchBean.getResultList());
@@ -1054,7 +1054,7 @@ public class ApprovalBackingBean extends
 	 * @return the List<TabBean>
 	 */
 	public List<TabBean> constructCommitteTabBean(
-			List<ScQtCommittee> qtCommittees) {
+			List<ScQtCommittee> qtCommittees,Long qtId) {
 
 		String parameterType = ParameterTypeConst.SC_COMMITTEE_TYPE;
 		ParameterHelper parameterHelper = ParameterHelper.getInstance();
@@ -1070,7 +1070,7 @@ public class ApprovalBackingBean extends
 						parameterType, committeeType), committeeType,
 						getQtCommitteeTypeDtl(scQtCommittee.getScCommittee()
 								.getCommitteeType().getParameterCode(),
-								scQtCommittee.getScQt().getQtId()));
+								qtId));
 				committeTabs.add(bean);
 			}
 		}

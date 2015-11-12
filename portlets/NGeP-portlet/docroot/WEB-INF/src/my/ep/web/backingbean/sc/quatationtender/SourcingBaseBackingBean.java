@@ -1969,6 +1969,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				}
 			}
 
+		}else{
+			scLoa.setBondAmt(null);
+			scLoa.setBondPercentage(null);
 		}
 		return scLoa;
 	}
