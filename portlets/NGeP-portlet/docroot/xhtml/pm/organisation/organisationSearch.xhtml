@@ -11,7 +11,7 @@
 				<th width="20%"><p:outputLabel
 						value="#{lbl['lbl.pm.org.category']}" /><p:outputLabel
 						value="*" styleClass="mandatory" /></th>
-				<td><p:selectOneRadio value="#{organisationBackingBean.managedBean.searchOrgCategory}">
+				<td><p:selectOneRadio styleClass="commonLabel" value="#{organisationBackingBean.managedBean.searchOrgCategory}">
 						<f:selectItem itemLabel="#{lbl['lbl.pm.org.federal.government']}" itemValue="#{organisationBackingBean.federalGovt}"/>
 						<f:selectItem itemLabel="#{lbl['lbl.pm.org.others']}" itemValue="#{organisationBackingBean.others}"/>
 						<p:ajax process="@this" event="change" partialSubmit="true" update="orgSearchPanel,:form:searchOrganisation" listener ="#{organisationBackingBean.resetOrganisationSearchBean()}"/>
