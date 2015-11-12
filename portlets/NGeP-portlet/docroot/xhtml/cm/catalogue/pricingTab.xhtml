@@ -43,7 +43,7 @@
 			</p:column>
 			<p:column>
 				<p:inputText readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
-					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price}" style="text-align:right">
+					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price}" maxlength="14" style="text-align:right">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 			</p:column>
