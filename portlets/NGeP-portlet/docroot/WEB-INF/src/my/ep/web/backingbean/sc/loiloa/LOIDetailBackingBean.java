@@ -4488,7 +4488,10 @@ public class LOIDetailBackingBean extends
 							IQTSuppFinalizationSO.class);
 			ScQt scQt = this.getManagedBean().getScQt();
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+			ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 			reqDTO.setQtId(scQt.getQtId());
+			reqDTO.setScQtFinalization(scQtFinalization);
+			
 			if (scQt.isZonal() && 
 					scQtRecommend.getTplSpecZoneDtl() != null) {
 				reqDTO.setQtZoneCriteriaId(scQtRecommend.getTplSpecZoneDtl()
