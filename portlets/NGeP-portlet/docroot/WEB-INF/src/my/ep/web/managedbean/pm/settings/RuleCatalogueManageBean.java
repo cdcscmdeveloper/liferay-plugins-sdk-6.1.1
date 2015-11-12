@@ -105,6 +105,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 //	private boolean error3 = false;
 //	private boolean error4 = false;
 	private PmCategoryL3 selectedCategoryL3;
+	private PmOrgProfile currentActiveOrg;
 	/**
 	 * @return the selectedCategoryL3
 	 */
@@ -866,6 +867,20 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		c1.add(Calendar.DATE, 1);
 		
         return c1.getTime();
-    } 
+    }
+
+	/**
+	 * @return the currentActiveOrg
+	 */
+	public PmOrgProfile getCurrentActiveOrg() {
+		return currentActiveOrg;
+	}
+
+	/**
+	 * @param currentActiveOrg the currentActiveOrg to set
+	 */
+	public void setCurrentActiveOrg(PmOrgProfile currentActiveOrg) {
+		this.currentActiveOrg = currentActiveOrg;
+	} 
 
 }
