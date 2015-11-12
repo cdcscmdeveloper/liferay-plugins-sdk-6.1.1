@@ -11,7 +11,8 @@
 			selection="#{registrationBackingBean.managedBean.selectedSuppBanks}"
 			id="bankInfoId" rowKey="#{bankInfo}">
 
-			<p:column selectionMode="multiple" style="width:2%" />
+			<p:column selectionMode="multiple" style="width:2%"  
+			rendered="#{not empty registrationBackingBean.managedBean.smAppl.smSupplierBanks}"  />
 
 			<p:column>
 				<f:facet name="header">
