@@ -304,6 +304,7 @@
 							value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.pidValidDays}"
 							size="32" style="text-align:right;margin-right: 5px;"
 							disabled="#{!(isPendingSubmissionStatus or isPendingVerification)}">
+							<p:ajax partialSubmit="true" process="@this" update="@this" />
 						</p:inputText> <p:message id="pidvalidDaysMsg" for="pidvalidDays" display="icon" /></td>
 				</tr>
 
