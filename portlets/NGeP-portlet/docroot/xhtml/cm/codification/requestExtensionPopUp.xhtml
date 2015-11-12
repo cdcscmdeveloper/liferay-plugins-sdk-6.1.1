@@ -36,7 +36,7 @@
 							update="requestTypeId"></p:ajax>
 					</p:selectBooleanCheckbox></td>
 				<td><p:outputLabel value="#{lbl['lbl.cm.request.new']}"></p:outputLabel></td>
-				<td><p:inputText id="requestTypeId"
+				<td><p:inputText id="requestTypeId" maxlength="100"
 						value="#{unspscCodeBackingBean.managedBean.requestExtCode.typeName}"
 						disabled="#{unspscCodeBackingBean.managedBean.typeDisable}">
 						</p:inputText></td>
@@ -55,7 +55,7 @@
 							update="requestBrandId"></p:ajax>
 					</p:selectBooleanCheckbox></td>
 				<td><p:outputLabel value="#{lbl['lbl.cm.request.new']}"></p:outputLabel></td>
-				<td><p:inputText id="requestBrandId"
+				<td><p:inputText id="requestBrandId" maxlength="100"
 						value="#{unspscCodeBackingBean.managedBean.requestExtCode.brandName}"
 						disabled="#{unspscCodeBackingBean.managedBean.brandDisable}">
 						</p:inputText></td>
@@ -75,7 +75,7 @@
 							update="requestMeasurementId"></p:ajax>
 					</p:selectBooleanCheckbox></td>
 				<td><p:outputLabel value="#{lbl['lbl.cm.request.new']}"></p:outputLabel></td>
-				<td><p:inputText id="requestMeasurementId"
+				<td><p:inputText id="requestMeasurementId" maxlength="100"
 						value="#{unspscCodeBackingBean.managedBean.requestExtCode.measurementName}"
 						disabled="#{unspscCodeBackingBean.managedBean.measurementDisable}">
 						</p:inputText></td>
@@ -94,7 +94,7 @@
 							update="requestColorId"></p:ajax>
 					</p:selectBooleanCheckbox></td>
 				<td><p:outputLabel value="#{lbl['lbl.cm.request.new']}"></p:outputLabel></td>
-				<td><p:inputText id="requestColorId"
+				<td><p:inputText id="requestColorId" maxlength="100"
 						value="#{unspscCodeBackingBean.managedBean.requestExtCode.colorName}"
 						disabled="#{unspscCodeBackingBean.managedBean.colorDisable}">
 						</p:inputText></td>
