@@ -8642,11 +8642,9 @@ public class ReportBackingBean extends
 				.handleNavigation(fc, null, ReportConst.REPORT_PAGE);
 	}
 
-	/*
-	 * Retrieve report list by module
-	 */
+	
 	/**
-	 * Retrive report list bymodule name.
+	 * Retrieve report list by module name.
 	 */
 	public void retriveReportListBymoduleName() {
 		reportList = new ArrayList<SelectItem>();
@@ -8731,7 +8729,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve upssvo user.
+	 * Retrieve ups svo user.
 	 * 
 	 * @return the list
 	 */
@@ -8753,7 +8751,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve ptj s1.
+	 * Retrieve PTJ for s1.
 	 * 
 	 * @return the list
 	 */
@@ -8775,7 +8773,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve ptj s2.
+	 * Retrieve PTJ for s2.
 	 * 
 	 * @return the list
 	 */
@@ -8853,7 +8851,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve approvar naik taraf dp s1.
+	 * Retrieve approvar naik taraf for dp s1.
 	 * 
 	 * @return the list
 	 */
@@ -8876,7 +8874,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve approvar naik taraf sc s2.
+	 * Retrieve approvar naik taraf for sc s2.
 	 * 
 	 * @return the list
 	 */
@@ -8898,11 +8896,9 @@ public class ReportBackingBean extends
 		return approverNayakTarafList;
 	}
 
-	/*
-	 * Retrieve Role code by User id
-	 */
+	
 	/**
-	 * Retrive userrloe by user id.
+	 * Retrive userrole by user id.
 	 * 
 	 * @param moduleName
 	 *            the module name
@@ -9318,7 +9314,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Enable supplier comp name text or dropdown.
+	 * Enable supplier company name text or dropdown.
 	 */
 	public void enableSupplierCompNameTextOrDropdown() {
 		if ((this.getModuleValue() != null)
@@ -9366,7 +9362,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve fpjptj list.
+	 * Retrieve fpj PTJ list.
 	 * 
 	 * @return the list
 	 */
@@ -9399,7 +9395,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve fmiptj list.
+	 * Retrieve fmi PTJ list.
 	 * 
 	 * @return the list
 	 */
@@ -9443,7 +9439,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve fmiptj list with arg.
+	 * Retrieve fmi PTJ list with arg.
 	 * 
 	 * @param lngMinistry
 	 *            the lng ministry
@@ -9698,7 +9694,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve cm unspc idby code.
+	 * Retrieve cm unspc id by code.
 	 * 
 	 * @param unspcCode
 	 *            the unspc code
@@ -9772,7 +9768,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve ext type.
+	 * Retrieve extention type.
 	 */
 	public void retrieveExtType() {
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -9833,7 +9829,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve supplier comp name.
+	 * Retrieve supplier company name.
 	 */
 	public void retrieveSupplierCompName() {
 		supplCompanyList = new ArrayList<String>();
@@ -9861,7 +9857,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Change date based on reg type.
+	 * Change date based on registration type.
 	 */
 	public void changeDateBasedOnRegType() {
 		getManagedBean().getRptGenBean().setSmActiveSubmissiveFromDateView(
@@ -9910,11 +9906,9 @@ public class ReportBackingBean extends
 		}
 	}
 
-	/*
-	 * Enable criteria variables by report name
-	 */
+	
 	/**
-	 * Criteria variables by report.
+	 * Enable criteria variables by report name
 	 */
 	public void criteriaVariablesByReport() {
 		parameterCodeType = new String();
@@ -10154,7 +10148,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Check one year defference.
+	 * Check for one year defference.
 	 * 
 	 * @param fromDate
 	 *            the from date
@@ -10269,7 +10263,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve category lev one.
+	 * Retrieve category level one.
 	 * 
 	 * @return the list
 	 */
@@ -10291,7 +10285,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve category lev two.
+	 * Retrieve category level two.
 	 * 
 	 * @param mainCategory
 	 *            the main category
@@ -10319,7 +10313,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve category lev three.
+	 * Retrieve category level three.
 	 * 
 	 * @param subCategory
 	 *            the sub category
@@ -10413,7 +10407,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Created to dt update.
+	 * Created to date update.
 	 */
 	public void createdToDtUpdate() {
 		this.setScCreatedToYear(this.getScCreatedFromYear());
@@ -10493,11 +10487,9 @@ public class ReportBackingBean extends
 
 	}
 
-	/*
-	 * Generate all modules reports
-	 */
+	
 	/**
-	 * Generate report.
+	 * Generate all modules reports
 	 */
 	public void generateReport() {
 		if (((this.getReportValue() != null) && this.getReportValue()
