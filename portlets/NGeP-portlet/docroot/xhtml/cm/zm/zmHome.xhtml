@@ -85,7 +85,7 @@
 						<TD width="25%" valign="top"><p:outputLabel
 								value="#{lbl['lbl.cm.zm.name']}"></p:outputLabel> <p:outputLabel
 								value="*" styleClass="mandatory" /></TD>
-						<TD width="75%"><p:inputText id="zoneNameId"
+						<TD width="75%"><p:inputText id="zoneNameId" maxlength="50"
 								value="#{zoneMaintenanceBackingBean.managedBean.selectedSupplierZone.suppZoneName}">
 								<p:ajax event="keyup" update=":form:zoneAddButton"></p:ajax>
 								<p:ajax event="change" update=":form:zoneAddButton"></p:ajax>
