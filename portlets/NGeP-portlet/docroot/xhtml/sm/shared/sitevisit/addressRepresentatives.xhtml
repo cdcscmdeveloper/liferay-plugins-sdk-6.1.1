@@ -55,7 +55,7 @@
 		<p:dataTable id="dtIntRepTbl" var="interviewee" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvInterviewees}"
 		selection="#{svoSiteVisitBackingBean.managedBean.selectedInterviewees}" rowKey="#{interviewee}">
-		<p:column selectionMode="multiple" style="width:2%" />
+		<p:column selectionMode="multiple" style="width:2%" rendered="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvInterviewees}" />
 		
 		<p:column>	
 			<f:facet name="header">
