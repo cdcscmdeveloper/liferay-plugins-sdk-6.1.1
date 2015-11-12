@@ -142,7 +142,8 @@
 			<ui:fragment
 				rendered="#{specificationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
 				<tr>
-					<td style="width: 150px;"><h:outputText
+					<td style="width: 150px;"><h:outputText value="*"
+							styleClass="mandatory" /> <h:outputText
 							value=" #{lbl['lbl.sc.spec.qual.present.demo']}" /></td>
 					<td><p:inputText style="text-align:right" maxlength="5"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
@@ -157,7 +158,8 @@
 
 
 			<tr>
-				<td style="width: 150px;"><h:outputText
+				<td style="width: 150px;"><h:outputText value="*"
+						styleClass="mandatory" /> <h:outputText
 						value="#{lbl['lbl.sc.spec.technical']}" /></td>
 				<td><p:inputText style="text-align:right" maxlength="5"
 						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"

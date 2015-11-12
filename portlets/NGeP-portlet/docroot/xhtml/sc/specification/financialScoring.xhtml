@@ -130,7 +130,8 @@
 
 			<table>
 				<tr>
-					<td style="width: 215px;"><h:outputText
+					<td style="width: 215px;"><h:outputText value="*"
+							styleClass="mandatory" /> <h:outputText
 							value="#{lbl['lbl.sc.passing.score']}" /></td>
 					<td><p:inputText style="text-align:right" maxlength="5"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
@@ -217,7 +218,8 @@
 
 		<table>
 			<tr>
-				<td style="width: 215px;"><h:outputText
+				<td style="width: 215px;"><h:outputText value="*"
+						styleClass="mandatory" /> <h:outputText
 						value="#{lbl['lbl.sc.passing.score']}" /></td>
 				<td><p:inputText style="text-align:right" maxlength="5"
 						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
