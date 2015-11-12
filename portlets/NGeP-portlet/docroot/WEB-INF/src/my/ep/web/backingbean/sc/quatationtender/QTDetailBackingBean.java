@@ -71,7 +71,6 @@ import my.ep.dto.pm.common.object.ObjectReqDTO;
 import my.ep.dto.pm.common.object.ObjectResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
@@ -659,6 +658,7 @@ public class QTDetailBackingBean extends
 			QuationTenderResDTO resDTO = detailSO.retriveQTDetails(reqDTO);
 			ScQt selectedScQt = resDTO.getQtDetail();
 			setAmmendMentBean(resDTO.getAmendMentBean());
+			this.getManagedBean().setRuleDataBean(resDTO.getRuleDataBean());
 
 			Long currentStatus = selectedScQt.getQtStatus().getStatusId();
 			this.getManagedBean().setCurrentStatusId(currentStatus);
@@ -756,14 +756,12 @@ public class QTDetailBackingBean extends
 		scQt.setExistingContractNo(this.getManagedBean().getCtContract()
 				.getContractNo());
 
-		// Setting the pm status for qt details
-		StatusReqDTO reqDTO = new StatusReqDTO();
-		reqDTO.setStatusId(1l);
+				
 		// Setting the Committee Appointment details to Qtdetails
 		List<TabBean> committeTabs = this.getManagedBean()
 				.getScCommitteeMemberTabList();
 		List<ScQtCommittee> qtCommitteList = null;
-		if (null != committeTabs) {
+		if (CollectionUtils.isNotEmpty(committeTabs)) {
 			qtCommitteList = new ArrayList<ScQtCommittee>();
 			for (int i = 0; i < committeTabs.size(); i++) {
 				TabBean tabBean = committeTabs.get(i);
@@ -802,16 +800,7 @@ public class QTDetailBackingBean extends
 				List<ScQtCategory> restrictedList = this.getManagedBean()
 						.getSuppCriteriarestrictedList();
 				if (restrictedList != null && !restrictedList.isEmpty()) {
-					/*
-					 * for (ScQtCategory scQtCategory : restrictedList) {
-					 * scQtCategory.setPmCategoryL1(scQtCategory
-					 * .getPmCategoryL3().getPmCategoryL2() .getPmCategoryL1());
-					 * scQtCategory.setPmCategoryL2(scQtCategory
-					 * .getPmCategoryL3().getPmCategoryL2()); //
-					 * scQtCategory.setScQt(this.getManagedBean().getQt());
-					 * setUserDetails(scQtCategory);
-					 * categoryList.add(scQtCategory); }
-					 */
+					
 					scQt.setScQtCategorys(restrictedList);
 				}
 				List<ScQtSupplier> qtSuppliers = this.getManagedBean()
@@ -1102,6 +1091,9 @@ public class QTDetailBackingBean extends
 
 		quationTenderReqDTO.setAmendMentBean(this.getManagedBean()
 				.getAmendMentBean());
+		
+		quationTenderReqDTO.setRuleDataBean(this.getManagedBean()
+				.getRuleDataBean());
 
 		quationTenderReqDTO.setToBeRemovedCommitteMembers(this.getManagedBean()
 				.getToBeDelCommitteMemebers());
