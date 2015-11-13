@@ -13,7 +13,8 @@
 			value="#{svoSiteVisitBackingBean.managedBean.smSvAddressMap[svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode]}" 
 			selection="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.selectedAddresses}" 
 			 rowKey="#{svAdd}">
-			<p:column selectionMode="multiple" style="width:2%" disabledSelection="#{viewFlag}"/>
+			<p:column selectionMode="multiple" style="width:2%" disabledSelection="#{viewFlag}"
+			rendered="#{not empty svoSiteVisitBackingBean.managedBean.smSvAddressMap[svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode]}" />
 			
 			<ui:remove>
 			<p:column headerText="#{lbl['lbl.sm.facility.type']}">
