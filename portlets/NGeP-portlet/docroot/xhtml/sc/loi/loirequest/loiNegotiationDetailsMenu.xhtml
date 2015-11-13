@@ -56,7 +56,7 @@
 			<p:column headerText="#{lbl['lbl.sc.remarks']}"
 				style="width:40%">
 				<p:inputText id="remarksId" value="#{negoloc.remark}" label="#{lbl['lbl.sc.remarks']}"
-				  size="30" disabled="#{!isEditableStatus or afterNegotiation}"/>
+				  size="30" maxlength="200" disabled="#{!isEditableStatus or afterNegotiation}"/>
 				<p:message id="remarksIdMsg" for="remarksId" display="icon" />
 			</p:column>
 
