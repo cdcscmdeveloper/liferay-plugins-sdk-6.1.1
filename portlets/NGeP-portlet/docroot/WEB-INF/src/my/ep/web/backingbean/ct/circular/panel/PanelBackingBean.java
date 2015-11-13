@@ -31,6 +31,16 @@ import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DualListModel;
+import org.primefaces.model.TreeNode;
+import org.primefaces.model.UploadedFile;
+
+import com.liferay.portal.util.PortalUtil;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -39,7 +49,6 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
-import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -65,8 +74,6 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
@@ -95,7 +102,6 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
@@ -122,16 +128,6 @@ import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
-
-import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.DualListModel;
-import org.primefaces.model.TreeNode;
-import org.primefaces.model.UploadedFile;
-
-import com.liferay.portal.util.PortalUtil;
 
 /**
  * Circular Panel Backing bean
@@ -200,17 +196,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		    FacesContext fc = FacesContext.getCurrentInstance();
 		    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "circularBase.xhtml?faces-redirect=true");
 	  }
-	
-	 /**
-		 * Method used to retrieve the information and render it on screen.
-		 */
-	public void preRenderSearch() {
-	
-		renewSesionObject();
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "search.xhtml?faces-redirect=true");
-	}
 	
 	/**
 	 * Method used to retrieve the information and render it on screen.
@@ -424,39 +409,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	    		return "search.xhtml?faces-redirect=true";
 	    	}
 	    }
-	
-	   /**
-		 *Method used to reset change search information
-		 */
-	   public void searchReset(){
-		    this.getManagedBean().setSearchCircularNo(null);
-		    this.getManagedBean().setSearchCircularName(null);
-		    this.getManagedBean().setSearchSupplierName(null);
-		    this.getManagedBean().setSearchPhysicalCircularNo(null);
-	 	    this.getManagedBean().setSearchItemName(null);
-		    this.getManagedBean().setSearchStartDate(null);
-		    this.getManagedBean().setSearchEndDate(null);
-		    this.getManagedBean().setSearchStatusId(null);
-	   }
-	
-     /**
-		 *Method used to searchCircularVer to retrieve circular information
-	 */
-	public void searchCircularVer() throws Exception {
-		if ((getManagedBean().getSearchCircularNo() == null || getManagedBean().getSearchCircularNo().trim().length() == 0) && 
-				(getManagedBean().getSearchCircularName() == null || getManagedBean().getSearchCircularName().trim().length() == 0) &&
-				(getManagedBean().getSearchSupplierName() == null || getManagedBean().getSearchSupplierName().trim().length() == 0) && 
-				(getManagedBean().getSearchPhysicalCircularNo() == null || getManagedBean().getSearchPhysicalCircularNo().trim().length() == 0) &&
-				(getManagedBean().getSearchItemName() == null || getManagedBean().getSearchItemName().trim().length() == 0) &&
-				getManagedBean().getSearchStartDate() == null &&
-				getManagedBean().getSearchEndDate() == null &&
-				getManagedBean().getSearchStatusId() == null) {
-			throw new EpException(MessageConst.ERROR_100060);
-		}
-		else {
-			getManagedBean().getCircularVerPagingDataModel().reloadData();
-		}			
-	}
 	
     /**
 	    *Method used to searchCircularVer to retrieve circular information
@@ -1475,42 +1427,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 	
 	/**
-	 * Method to retrieve list of status as per module and doc type
-	 * Construct drop down for user selection
-	 * Return SelectItem object
-	 * */
-	public SelectItem[] getStatusDropdown() {
-		IStatusSO statusSO = null;
-		SelectItem[] items = null;
-		try {
-			statusSO = (IStatusSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
-			String languageCode = getFacesScopes().getUserLocale().getLanguage();
-			
-			int i = 1;
-		 	StatusReqDTO reqDTO = new StatusReqDTO();
-			reqDTO.setModuleCode("CT");
-			reqDTO.setDocType(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
-			reqDTO.setLanguageCode(languageCode);
-			StatusResDTO resDTO = statusSO.retrieveStatusDescList(reqDTO);
-			
-		    List<PmStatusDesc> list =  resDTO.getStatusDescList();
-		    items = new SelectItem[list.size()+2];
-		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-		      
-			for(PmStatusDesc statusDesc : list) {
-				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc.getStatusName());
-			}
-			items[i++] = new SelectItem(0L, ResourceBundleUtils.getMessage("lbl.ct.panel.circular.canceled", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		} finally {
-			statusSO = null;
-		}
-	    return items;
-	}
-	
-	/**
 	 * Method to retrieve zonal level list as per district and state
 	 * Construct drop down for user selection
 	 * Return SelectItem object
@@ -1529,51 +1445,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}
 		}
 		return items;
-	}
-	
-	/**
-	 * User need to make decision on panel circular maintenance page
-	 * Navigate to panel circular page as per user selection for update or view
-	 * */
-	public String gotoPage(String action, Long circularVerId) {
-	
-		log.info("Action :"+action+" Id :"+circularVerId);
-		ICircularSO circularSO = null;
-		try {
-			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
-			
-			CircularReqDTO reqDTO = new CircularReqDTO();
-			reqDTO.setCircularVerId(circularVerId);
-			getManagedBean().setSelectionOfZone(false);
-			getManagedBean().setSelectedPanelItems(null);
-			getManagedBean().setSelectedPanelZone(null);
-			getManagedBean().setSelectedTabIndex(0);
-			getManagedBean().setAction(action);
-			
-			if(action.equalsIgnoreCase("view")) {
-			        getManagedBean().setUpdateAction(false);
-					getManagedBean().setViewContract(true);
-			        getManagedBean().setOutComes(new String[]{});
-			
-			} else if(action.equalsIgnoreCase("update")) {
-				    reqDTO.setUpdateAction(true);
-				    getManagedBean().setUpdateAction(true);
-					getManagedBean().setViewContract(false);
-					getManagedBean().setCircularExtension(false);
-				    getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
-			
-			}
-			
-			setPanelCircularVar(circularSO.retrieveCircularVerById(reqDTO));
-		//	extendStartEndDate();
-			return "circularBase.xhtml?faces-redirect=true";
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		} finally {
-			circularSO = null;
-		}
-		return null;
 	}
 	
 	/**
@@ -2217,14 +2088,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 */
 	public String getCancelPortletTitle() {
 		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.cancel.circular.request", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		return portletTitle;
-	}
-	
-	/**
-	 * Method to retrieve portal details title
-	 */
-	public String getMaintenancePortletTitle() {
-		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.panel.circular.contract.maintenance", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		return portletTitle;
 	}
 	
