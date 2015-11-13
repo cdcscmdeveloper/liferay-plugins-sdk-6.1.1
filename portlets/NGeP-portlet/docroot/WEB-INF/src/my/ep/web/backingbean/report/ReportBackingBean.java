@@ -10755,7 +10755,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Load report with params.
+	 * Load report with constructed paramList.
 	 * 
 	 * @param paramLst
 	 *            the param lst
@@ -10789,7 +10789,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Load report.
+	 * Load report with generated URL.
 	 * 
 	 * @param gnrtdURL
 	 *            the gnrtd url
@@ -10814,7 +10814,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Load report with params string.
+	 * Load report with costructed param string.
 	 * 
 	 * @param paramConstrString
 	 *            the param constr string
