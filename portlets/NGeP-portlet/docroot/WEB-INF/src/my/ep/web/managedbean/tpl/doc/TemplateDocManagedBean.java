@@ -77,6 +77,7 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 	
 	private TreeNode [] treenode;
 	private boolean createNew = false;
+	private boolean editFlag = true;
 	
 	
 
@@ -392,6 +393,16 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 	public void setCreateNew(boolean createNew) {
 		this.createNew = createNew;
 	}
+
+	public boolean isEditFlag() {
+		return editFlag;
+	}
+
+	public void setEditFlag(boolean editFlag) {
+		this.editFlag = editFlag;
+	}
+	
+	
 	
 	
 	
