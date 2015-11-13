@@ -4,28 +4,18 @@
 package my.ep.web.managedbean.ct.circular.panel;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 
-import my.ep.biz.bean.search.ISearchBean;
-import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.ct.circular.ICircularSO;
+import org.primefaces.model.DualListModel;
+import org.primefaces.model.TreeNode;
+
 import my.ep.constant.EpPropertiesConst;
-import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.ct.ContractConst;
-import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.dto.ct.circular.CircularReqDTO;
-import my.ep.dto.ct.circular.CircularResDTO;
-import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.circular.CtCancelCircularReq;
@@ -39,22 +29,14 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
-import my.ep.type.aut.SearchOperator;
 import my.ep.util.EpPropertiesUtils;
-import my.ep.web.bean.paginator.IPagingDataModel;
-import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.util.lookupservice.BusinessDelegate;
-
-import org.primefaces.model.DualListModel;
-import org.primefaces.model.TreeNode;
 
 /**
  * Circular Panel Managed Bean
@@ -72,19 +54,10 @@ public class PanelManagedBean extends BaseManagedBean {
 	private String circularDocType;
 	private String circularAdmin;
 	private String action;
-	private String searchCircularNo;
-	private String searchCircularName;
-	private String searchPhysicalCircularNo;
-	private String searchSupplierName;
-	private String searchItemName;
 	private String zoneName;
 	private String gotoPreviewPage;	
 	private String taskName;
 		
-	private Date searchStartDate;
-	private Date searchEndDate;	
-	
-	private Long searchStatusId;
 	private Long itemCategoryId;
 	private Long panelCoverageId;
 	private int selectedTabIndex;
@@ -141,8 +114,6 @@ public class PanelManagedBean extends BaseManagedBean {
 	private SmPersonnel smPersonnel;
 	private SmAddress supplierAddress;
 	private SmMofAccount smMofAccount;
-	
-	private IPagingDataModel<CtCircularVer> circularVerPagingDataModel = new CircularVerPagingDataModel();
 	
 	/**
 	 * @return the circular
@@ -260,89 +231,7 @@ public class PanelManagedBean extends BaseManagedBean {
 		this.approverModel = approverModel;
 	}
 
-	/**
-	 * @return the searchStartDate
-	 */
-	public Date getSearchStartDate() {
-		return searchStartDate;
-	}
 
-	/**
-	 * @param searchStartDate the searchStartDate to set
-	 */
-	public void setSearchStartDate(Date searchStartDate) {
-		this.searchStartDate = searchStartDate;
-	}
-
-	/**
-	 * @return the searchEndDate
-	 */
-	public Date getSearchEndDate() {
-		return searchEndDate;
-	}
-
-	/**
-	 * @param searchEndDate the searchEndDate to set
-	 */
-	public void setSearchEndDate(Date searchEndDate) {
-		this.searchEndDate = searchEndDate;
-	}
-
-	/**
-	 * @return the searchCircularNo
-	 */
-	public String getSearchCircularNo() {
-		return searchCircularNo;
-	}
-
-	/**
-	 * @param searchCircularNo the searchCircularNo to set
-	 */
-	public void setSearchCircularNo(String searchCircularNo) {
-		this.searchCircularNo = searchCircularNo;
-	}
-
-	/**
-	 * @return the searchCircularName
-	 */
-	public String getSearchCircularName() {
-		return searchCircularName;
-	}
-
-	/**
-	 * @param searchCircularName the searchCircularName to set
-	 */
-	public void setSearchCircularName(String searchCircularName) {
-		this.searchCircularName = searchCircularName;
-	}
-	
-	/**
-	 * @return the searchPhysicalCircularNo
-	 */
-	public String getSearchPhysicalCircularNo() {
-		return searchPhysicalCircularNo;
-	}
-	
-	/**
-	 * @param searchPhysicalCircularNo the searchPhysicalCircularNo to set
-	 */
-	public void setSearchPhysicalCircularNo(String searchPhysicalCircularNo) {
-		this.searchPhysicalCircularNo = searchPhysicalCircularNo;
-	}
-
-	/**
-	 * @return the searchSupplierName
-	 */
-	public String getSearchSupplierName() {
-		return searchSupplierName;
-	}
-
-	/**
-	 * @param searchSupplierName the searchSupplierName to set
-	 */
-	public void setSearchSupplierName(String searchSupplierName) {
-		this.searchSupplierName = searchSupplierName;
-	}
 
 	/**
 	 * @return the differentModule
@@ -356,34 +245,6 @@ public class PanelManagedBean extends BaseManagedBean {
 	 */
 	public void setDifferentModule(boolean differentModule) {
 		this.differentModule = differentModule;
-	}
-
-	/**
-	 * @return the searchItemName
-	 */
-	public String getSearchItemName() {
-		return searchItemName;
-	}
-
-	/**
-	 * @param searchItemName the searchItemName to set
-	 */
-	public void setSearchItemName(String searchItemName) {
-		this.searchItemName = searchItemName;
-	}
-
-	/**
-	 * @return the searchStatusId
-	 */
-	public Long getSearchStatusId() {
-		return searchStatusId;
-	}
-
-	/**
-	 * @param searchStatusId the searchStatusId to set
-	 */
-	public void setSearchStatusId(Long searchStatusId) {
-		this.searchStatusId = searchStatusId;
 	}
 
 	/**
@@ -955,21 +816,6 @@ public class PanelManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * @return the circularVerPagingDataModel
-	 */
-	public IPagingDataModel<CtCircularVer> getCircularVerPagingDataModel() {
-		return circularVerPagingDataModel;
-	}
-
-	/**
-	 * @param circularVerPagingDataModel the circularVerPagingDataModel to set
-	 */
-	public void setCircularVerPagingDataModel(
-			IPagingDataModel<CtCircularVer> circularVerPagingDataModel) {
-		this.circularVerPagingDataModel = circularVerPagingDataModel;
-	}
-	
-	/**
 	 * @return the fromCircularNotice
 	 */
 	public boolean isFromCircularNotice() {
@@ -1067,112 +913,4 @@ public class PanelManagedBean extends BaseManagedBean {
 		this.smMofAccount = smMofAccount;
 	}
 
-
-	/**
-	 * Pagination for panel circular search list 
-	 */
-	private class CircularVerPagingDataModel extends PagingDataModel<CtCircularVer> {
-		private static final long serialVersionUID = 1L;
-
-		public CircularVerPagingDataModel() {
-			super("circularVerDt", false);
-		}
-		
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
-		 * .biz.bean.search.ISearchBean)
-		 */
-		@Override
-		public ISearchResultBean<CtCircularVer> pageChangeListener(ISearchBean<CtCircularVer> searchBean) {
-			try {				
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctCircular.circularType",SearchOperator.OPERATOR_EQUALS.value(),ContractConst.CIRCULAR_DOC_TYPE_PANEL));
-				if(getSearchCircularNo()!=null && getSearchCircularNo().length()>0) {
-					SearchFilterBean filterBean = new SearchFilterBean("ctCircular.circularNo",
-													SearchOperator.OPERATOR_LIKE.value(),getSearchCircularNo());
-					filterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(filterBean);	
-				}
-				if(getSearchCircularName()!=null && getSearchCircularName().length()>0) {
-					SearchFilterBean filterBean = new SearchFilterBean("name",
-													SearchOperator.OPERATOR_LIKE.value(),getSearchCircularName());
-					filterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(filterBean);
-				}
-				if(getSearchSupplierName()!=null && getSearchSupplierName().length()>0) {
-					SearchFilterBean filterBean = new SearchFilterBean("ctPanelItems.ctPanelSuppliers.supplier.companyName",
-													SearchOperator.OPERATOR_LIKE.value(),getSearchSupplierName());
-					filterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(filterBean);
-				}			
-				if(getSearchPhysicalCircularNo()!=null && getSearchPhysicalCircularNo().length()>0) {
-					SearchFilterBean filterBean = new SearchFilterBean("circularNo",
-													SearchOperator.OPERATOR_LIKE.value(),getSearchPhysicalCircularNo());
-					filterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(filterBean);
-				}	
-				if(getSearchItemName()!=null && getSearchItemName().length()>0) {
-					SearchFilterBean filterBean = new SearchFilterBean("ctPanelItems.itemName",
-													SearchOperator.OPERATOR_LIKE.value(),getSearchItemName());
-					filterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(filterBean);
-				
-				}if(getSearchStartDate()!=null && getSearchEndDate()!=null) {
-				    searchBean.getDataFilterBeans().add(new SearchFilterBean("startDate",SearchOperator.OPERATOR_GREATER_EQUAL.value(), getSearchStartDate()));	
-				    searchBean.getDataFilterBeans().add(new SearchFilterBean("endDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), getSearchEndDate()));		
-			
-			    }if(getSearchStartDate()!=null && getSearchEndDate()==null) {
-				   searchBean.getDataFilterBeans().add(new SearchFilterBean("startDate",SearchOperator.OPERATOR_EQUALS.value(), getSearchStartDate()));	
-			
-			    }if(getSearchStartDate()==null && getSearchEndDate()!=null) {
-			        searchBean.getDataFilterBeans().add(new SearchFilterBean("endDate",SearchOperator.OPERATOR_EQUALS.value(), getSearchEndDate()));	
-			    }
-			    
-			    if(getSearchStatusId()!=null) {
-					//Filter out cancelled status
-					if(getSearchStatusId().longValue() == ContractStatusConst.PQ_APPROVED || 
-							getSearchStatusId().longValue() == ContractStatusConst.PQ_REJECTED)
-						searchBean.getDataFilterBeans().add(new SearchFilterBean("ctCircular.recordStatus",SearchOperator.OPERATOR_NOT_EQUALS.value(), DbValueConst.RECORD_STATUS_CANCELLED));
-					//display cancelled circular
-					else if(getSearchStatusId().longValue() == 0L)
-						searchBean.getDataFilterBeans().add(new SearchFilterBean("ctCircular.recordStatus",SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_CANCELLED));
-				}					
-				
-			    CircularReqDTO reqDTO = new CircularReqDTO();
-				reqDTO.setCircularVerSearchBean(searchBean);
-				reqDTO.setFilterStatusId(getSearchStatusId());
-				
-				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
-				CircularResDTO resDTO = circularSO.searchCircularVer(reqDTO);
-				if(resDTO.isSuccessful()) {
-					if(resDTO.getCircularVerResultBean() != null && resDTO.getCircularVerResultBean().getResultList() != null) {
-						
-						for(CtCircularVer circularVer : resDTO.getCircularVerResultBean().getResultList()) {
-							/*CircularReqDTO circularReqDTO = new CircularReqDTO();
-							circularReqDTO.setCircularId(circularVer.getCtCircular().getCircularId());
-							circularVer.getCtCircular().setLatestCircularVer(circularSO.getLatestCircularVer(circularReqDTO).getCircularVer());
-							*/
-							if(circularVer.getCtCircular().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED) {
-								PmStatus cancelStatus = new PmStatus();
-								cancelStatus.setStatusId(0L);
-								circularVer.setStatus(cancelStatus);
-							
-						  }
-							//if(circularVer.getStatus() != null && circularVer.getStatus().getStatusId().equals(ContractStatusConst.PQ_REJECTED)) {
-								if(circularVer.getCtCircular().getLatestCircularVer() != null)
-									circularVer.setCircularVerId(circularVer.getCtCircular().getLatestCircularVer().getCircularVerId());
-						 // }
-					  }
-				  }
-				return resDTO.getCircularVerResultBean();
-			}
-			} catch (Exception e) {
-				e.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-			}
-			return null;
-		}
-	}
 }
