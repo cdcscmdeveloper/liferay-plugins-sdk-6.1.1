@@ -119,6 +119,7 @@
 
 					<p:inputTextarea cols="#{isPendingNegotiation ? '70' : '110'}"
 						rows="2" value="#{negoTerm.termDesc}" autoResize="false"
+						maxlength="1000"
 						rendered="#{empty negoTerm.pmTerm}" />
 				</c:if>
 
@@ -135,7 +136,7 @@
 				</c:if>
 
 				<c:if test="#{isEditableStatus and !afterNegotiation}">
-					<p:inputTextarea cols="70" rows="2" value="#{negoTerm.negoResult}" 
+					<p:inputTextarea cols="70" rows="2" maxlength="255" value="#{negoTerm.negoResult}" 
 						autoResize="false">
 						<p:ajax partialSubmit="true" process="@this" update="@this" />
 					</p:inputTextarea>
