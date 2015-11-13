@@ -189,7 +189,7 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 		return NAV_TO_MAINT;
 	}
 	
-	public String goToMaint(TplDocMaster selTemplate, boolean editFlag) {       
+	public String goToMaint(TplDocMaster selTemplate, boolean readOnlyFlag) {       
 		ITemplateDocSO templateSO = (ITemplateDocSO) BusinessDelegate.getInstance().getServiceObject("cc", ITemplateDocSO.class);
 		getManagedBean().setSelectedTemplate(selTemplate);
 		
@@ -203,7 +203,7 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 		getManagedBean().setDeletedList(new ArrayList<TplDocSection>());
 		getTemplateDatatableList(templateSectionList);
 		this.getManagedBean().setCreateNew(false);
-		getManagedBean().setEditFlag(editFlag);
+		getManagedBean().setReadOnlyFlag(readOnlyFlag);
 		
 		return NAV_TO_MAINT;
 	}
