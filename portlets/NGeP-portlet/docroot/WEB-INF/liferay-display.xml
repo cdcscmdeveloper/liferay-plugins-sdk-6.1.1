@@ -9,9 +9,7 @@
 		<category name="category.ep.ct">
 			<category name="category.ep.cr">
 				<portlet id="ctCcCircular" />
-				<portlet id="ctCcCircularMaintenance" />
 				<portlet id="ctPanelCircular" />
-				<portlet id="ctPanelCircularMaintenance" />
 				<portlet id="ctCircularListing" />
 				<portlet id="ctCancelCircular" />
 				<portlet id="ctPanelItemGroup" />
