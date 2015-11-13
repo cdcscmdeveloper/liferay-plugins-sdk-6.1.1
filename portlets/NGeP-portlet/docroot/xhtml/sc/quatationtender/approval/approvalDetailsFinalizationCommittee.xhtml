@@ -6,11 +6,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 
-	<p:panel header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true">
+	<p:panel id="fcreqDetails" header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true">
 		<p:dataTable id="fcareqdtlsid"
 			value="#{fcaApprovalTab.scQtApproval.scQtApprovalDtls}"
-			var="fcrequestdetails" rowIndexVar="index" editable="true"
-			rowKey="#{fcrequestdetails}">
+			var="fcrequestdetails" >
 
 			<p:column headerText="#{lbl['lbl.sc.qt.type.reqdtls']}">
 				<h:outputText
@@ -61,13 +60,13 @@
 		</p:dataTable>
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true"
-		id="fcuploads">
+	<p:panel  id="fcuploads" header="#{lbl['lbl.sc.remark']}" toggleable="true"
+		>
 		<table style="width: 100%" id="remarkslist">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
 						value="#{lbl['lbl.sc.remark']}" /></td>
-				<td class="TableFieldRight"><p:dataGrid
+				<td class="TableFieldRight"><p:dataGrid id="cancelRemarks"
 						value="#{fcaApprovalRemarkList}" var="remarkVar"
 						rowIndexVar="remarkIndex" columns="1">
 						<table>
