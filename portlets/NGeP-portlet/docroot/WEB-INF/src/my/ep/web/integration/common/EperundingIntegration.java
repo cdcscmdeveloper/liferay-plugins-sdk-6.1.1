@@ -16,6 +16,7 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
+import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmEquityCompany;
@@ -24,6 +25,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.web.integration.eperunding.AssociatedCompany;
@@ -68,16 +70,15 @@ public class EperundingIntegration extends EperundingTemplate{
 	}
 
 	@Override
-	public void createFilesAuthMgtEqtBODforEperunding() {
+	public void createFilesMgtEqtBODforEperunding() {
 		
 		if(null!=SupplierIdList){
 			reqDTO = new SupplierSearchReqDTO();
 			reqDTO.setSupplierIdList(SupplierIdList);
 			
-			SupplierSearchResDTO resDTO = supplierSearchSO.getEquityBodMgtAuthEperunding(reqDTO);
+			SupplierSearchResDTO resDTO = supplierSearchSO.getEquityBodMgtEperunding(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-				createAuthorizedSignatory(resDTO);
 				createEquiytyOwner(resDTO);
 				createBoardOfDirector(resDTO);
 				createManagementPersonnel(resDTO);
@@ -85,7 +86,6 @@ public class EperundingIntegration extends EperundingTemplate{
 		}else{
 			SupplierSearchResDTO resDTO = new SupplierSearchResDTO();
 			resDTO.setSuccessful(false);
-			createAuthorizedSignatory(resDTO);
 			createEquiytyOwner(resDTO);
 			createBoardOfDirector(resDTO);
 			createManagementPersonnel(resDTO);
@@ -474,36 +474,46 @@ public class EperundingIntegration extends EperundingTemplate{
 	/* (non-Javadoc)
 	 * @see my.ep.web.integration.common.EperundingInterface#createAuthorizedSignatory(my.ep.dto.sm.search.SupplierSearchResDTO)
 	 */
-	public void createAuthorizedSignatory(SupplierSearchResDTO resDTO) {
+	@Override
+	public void createAuthorizedSignatory() {
 		
 		log.info("createAuthorizedSignatory start");
-
 		List<Signatory> signatoryList = new ArrayList<Signatory>();
-		Signatory signatory = null;
-		AuthorizedSignatory authorizedSignatory = null;
+		
+		if(null!=SupplierIdList){
+			reqDTO = new SupplierSearchReqDTO();
+			reqDTO.setSupplierIdList(SupplierIdList);
+			SupplierSearchResDTO resDTO = supplierSearchSO.getAuthorizedSignatoryEperunding(reqDTO);
+			
+			Signatory signatory = null;
+			AuthorizedSignatory authorizedSignatory = null;
 
-		if (resDTO.isSuccessful()) {
-			for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
+			if (resDTO.isSuccessful()) {
+				for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
 
-				for (SmPersonnel smPersonnel : smSupplier.getSmAppl().getSmPersonnels()) {
-					if (smPersonnel.isAuthorized()) {
-						signatory = new Signatory();
-						authorizedSignatory = new AuthorizedSignatory();
-						signatory.setMOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
+					for (SmSupplierBank smSupplierBank : smSupplier.getSmAppl().getSmSupplierBanks()) {
+						
+						for(SmChequeSignatory chequeSignatory :smSupplierBank.getSmChequeSignatories()){
+							
+								signatory = new Signatory();
+								authorizedSignatory = new AuthorizedSignatory();
+								signatory.setMOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
 
-						authorizedSignatory.setName(smPersonnel.getName());
-						authorizedSignatory.setNewICNo(smPersonnel.getIdentificationNo());
-						authorizedSignatory.setPassport(IntegrationConstants.VAVLUE_NA);
-						if (smPersonnel.isBumi())
-							authorizedSignatory.setIsBumi(IntegrationConstants.VAVLUE_YES);
-						else
-							authorizedSignatory.setIsBumi(IntegrationConstants.VAVLUE_NO);
-						authorizedSignatory.setDesignation(smPersonnel.getDesignation());
+								authorizedSignatory.setName(chequeSignatory.getSmPersonnel().getName());
+								authorizedSignatory.setNewICNo(chequeSignatory.getSmPersonnel().getIdentificationNo());
+								authorizedSignatory.setPassport(IntegrationConstants.VAVLUE_NA);
+								if (chequeSignatory.getSmPersonnel().isBumi())
+									authorizedSignatory.setIsBumi(IntegrationConstants.VAVLUE_YES);
+								else
+									authorizedSignatory.setIsBumi(IntegrationConstants.VAVLUE_NO);
+								authorizedSignatory.setDesignation(chequeSignatory.getSmPersonnel().getDesignation());
 
-						signatory.setAuthorizedSignatory(authorizedSignatory);
+								signatory.setAuthorizedSignatory(authorizedSignatory);
 
-						if (!signatoryList.contains(signatory))
-							signatoryList.add(signatory);
+								if (!signatoryList.contains(signatory))
+									signatoryList.add(signatory);
+						}
+					
 					}
 				}
 			}
