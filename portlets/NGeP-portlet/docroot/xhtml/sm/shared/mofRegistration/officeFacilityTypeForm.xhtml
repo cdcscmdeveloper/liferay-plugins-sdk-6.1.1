@@ -46,6 +46,12 @@
 
 			<table style="width: 100%">
 				<tr>
+					<td colspan="4">
+						<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.not.allowed.change.factype.home.office']}" 
+						rendered="#{backingBean.managedBean.alreadyBusinessSpecialCatcode}"/>
+					</td>
+				</tr>
+				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.facility.ownerType']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td style="padding-bottom: 2px;"><p:selectOneRadio
@@ -82,7 +88,7 @@
 									id="rentedFacTypeId"
 									value="#{backingBean.managedBean.basicCompanyFacility.facilityType}"
 									required="true" label="#{lbl['lbl.sm.facility.facilityType']}">
-									<f:selectItem
+									<f:selectItem itemDisabled="#{backingBean.managedBean.alreadyBusinessSpecialCatcode}"
 										itemLabel="#{lbl['lbl.sm.facility.facilityType.home.office']}"
 										itemValue="H" />
 	
