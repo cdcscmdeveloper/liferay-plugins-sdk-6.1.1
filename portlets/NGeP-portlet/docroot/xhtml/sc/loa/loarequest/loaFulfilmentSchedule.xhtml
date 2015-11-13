@@ -24,6 +24,7 @@
 					<h:column>
 						<p:inputText disabled="#{!isEditableStatus}" 
 							label ="#{lbl['lbl.sc.spec.total.frequency']}"
+							maxlength="3"
 							value="#{lOADetailBackingBean.managedBean.totalFrequency}"
 							style="text-align:right;">
 							<p:ajax event="blur" update="frequencySchedule"
