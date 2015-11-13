@@ -892,6 +892,10 @@ public class SmApplicationBackingBean extends
 							getManagedBean().getSmSupplier(), getManagedBean()
 									.getSmAppl()));
 
+			// set whether allowed to change business type from office to
+			// business
+			setBusinessAndHadApprovedSpecialCatcode();
+
 			getManagedBean()
 					.setRegStatusDescList(
 							SmApplicationUtil.getInstance()
@@ -7338,6 +7342,50 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
+	 * Get whether supplier already is business office and had approved special
+	 * category
+	 */
+	private void setBusinessAndHadApprovedSpecialCatcode() {
+		SmFacility hq = getHq();
+		if (!getManagedBean().getSmAppl().getApplType()
+				.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+				&& !SmCommonUtil.isCollectionEmpty(getManagedBean().getSmAppl()
+						.getSmSupplierCategories())
+				&& hq != null
+				&& hq.getFacilityType().equals("B")) {
+			for (SmSupplierCategory cat : getManagedBean().getSmAppl()
+					.getSmSupplierCategories()) {
+				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+						&& cat.isSpecialCategory()) {
+					getManagedBean().setAlreadyBusinessSpecialCatcode(true);
+					break;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Get HQ
+	 * 
+	 * @return SmFacility
+	 */
+	private SmFacility getHq() {
+		SmFacility hq = null;
+		if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getSmAppl()
+				.getSmFacilities())) {
+			for (SmFacility fac : getManagedBean().getSmAppl()
+					.getSmFacilities()) {
+				if (fac.getFacilityType().equals("H")
+						|| fac.getFacilityType().equals("B")) {
+					hq = fac;
+					break;
+				}
+			}
+		}
+		return hq;
+	}
+
+	/**
 	 * Add or remove verification count for sections.
 	 * 
 	 * @param sec
@@ -8731,6 +8779,7 @@ public class SmApplicationBackingBean extends
 	 * Initiate the business premise of the supplier in the managed bean.
 	 */
 	private void initBusinessPremise() {
+		getManagedBean().setDisabledHomeOffice(false);
 		String suppType = "";
 		if (getManagedBean().getSmAppl() != null) {
 			suppType = StringUtils.isNotBlank(getManagedBean()
@@ -8745,8 +8794,6 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getBasicCompanyFacility().setFacilityType(
 					SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE);
 
-		} else {
-			getManagedBean().setDisabledHomeOffice(false);
 		}
 	}
 
