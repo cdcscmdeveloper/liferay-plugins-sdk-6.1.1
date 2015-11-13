@@ -16,7 +16,7 @@
 			var="pending" id="flPendingDoListDt" rowIndexVar="rowIndex" width="100%" rows="10">
 			<ac:paginator for="flPendingDoListDt" />
 			<p:column headerText="#{lbl['lbl.fl.dopending.order.number']}" style="text-align:center">
-				<h:outputText value="#{pending.docNo}" style="float:right;"/>
+				<h:outputText value="#{pending.docNo}" style="float:left;"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.doc.type']}" style="text-align:center">
 				<h:outputText value="#{flOrderBB.getParameterDesc(ParameterTypeConst.fulfilmentDocumentType, pending.docType)}" style="float:left;"/>
@@ -28,8 +28,8 @@
 				<h:outputText value="#{pending.flFulfilmentRequest.preparedOrgProfile.orgName}" style="float:left;"/>
 			</p:column>			
 			<p:column headerText="#{lbl['lbl.fl.created.date']}" style="text-align:center">
-				<h:outputText value="#{pending.createdDate}">
-					<f:convertDateTime pattern="dd-MM-yyyy HH:mm" style="float:right;"/>
+				<h:outputText value="#{pending.createdDate}" style="float:left;">
+					<f:convertDateTime pattern="dd-MM-yyyy HH:mm" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="Status" style="text-align:center">
