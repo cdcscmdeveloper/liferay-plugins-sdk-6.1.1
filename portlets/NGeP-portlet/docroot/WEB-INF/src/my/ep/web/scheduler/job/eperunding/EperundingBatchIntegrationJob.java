@@ -36,8 +36,9 @@ public class EperundingBatchIntegrationJob implements Job {
 	  eperundingTemplate.createDeletedCompany();
 	  eperundingTemplate.createRegisteredCategory();
 	  eperundingTemplate.createGovernmentProject();
+	  eperundingTemplate.createAuthorizedSignatory();
 	  
-	  eperundingTemplate.createFilesAuthMgtEqtBODforEperunding();
+	  eperundingTemplate.createFilesMgtEqtBODforEperunding();
 	  
 	  eperundingTemplate.createBranchCompany();
 	  eperundingTemplate.createCompanyOwner();
