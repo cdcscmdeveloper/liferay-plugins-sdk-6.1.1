@@ -225,7 +225,7 @@
 			</td>
 			<td colspan="3">
 				<p:inputText disabled="#{isDocTypeQuotation || !isEditableStatus}"
-					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fileNo}" size="33" />
+					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fileNo}" size="33" maxlength="50"/>
 				<p:inputText id="fileExtNo"  style="margin-left: 2px;width: 28px; text-align:right;"
 					value="#{lOADetailBackingBean.managedBean.scLoa.fileExtNo}" size="6"
 					required="true"
@@ -569,7 +569,7 @@
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.witnessName}"
 					required="true"
 					label="#{lbl['lbl.sc.loiloa.witness.full.name']}"
-					maxlength="50"
+					maxlength="80"
 					disabled="#{!isEditableStatus}" />
 				<p:message id="witnessNameMsg" for="witnessName" display="icon" />
 			</td>
@@ -598,7 +598,7 @@
 				<p:inputText id="designation" size="40"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.designation}"
 					required="true"
-					maxlength="30"
+					maxlength="50"
 					label="#{lbl['lbl.sc.designation']}"
 					disabled="#{!isEditableStatus}" />
 				<p:message id="designationMsg" for="designation" display="icon" />
