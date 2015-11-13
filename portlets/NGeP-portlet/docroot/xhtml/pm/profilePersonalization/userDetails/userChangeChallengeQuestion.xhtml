@@ -15,6 +15,7 @@
 				</td>
 			    <td width="35%">
 			    	<p:password id="ccqCurrentPassword"  styleClass="ppDisplayTextM" 
+			    		required="#{!empty param['challengeValidation']}"
 						label="#{lbl['lbl.pm.profiles.ccq.cp']}" feedback="false" maxlength="20" style="margin-bottom: 10px;"
 						value="#{profilePersonalizationBackingBean.managedBean.currentPassword}" >
 					</p:password>
@@ -33,7 +34,8 @@
 				<td width="35%">	
 			   		<p:selectOneMenu styleClass="ppDropDownWidthL" id="somChallengeQA#{varStatus.index}_name"
           				label="#{profilePersonalizationBackingBean.getChallengeQuestionsLabel(varStatus.index)}"
-          				value="#{qa.question}">
+          				value="#{qa.question}"
+          				required="#{!empty param['challengeValidation']}">
           				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />  
 	            		<f:selectItems value="#{profilePersonalizationBackingBean.managedBean.challengeQADDList}" />    
                   	</p:selectOneMenu>
@@ -43,7 +45,11 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 			    <td width="35%">
-			    	<p:inputText id="inputChallengeAnswer#{varStatus.index}_name" value="#{qa.answer}"  styleClass="ppDisplayTextM" >			    	
+			    	<p:inputText label="#{profilePersonalizationBackingBean.getChallengeAnswersLabel(varStatus.index)}"
+			    		 id="inputChallengeAnswer#{varStatus.index}_name"
+			    		 required="#{!empty param['challengeValidation']}"
+			    		 value="#{qa.answer}"
+			    		 styleClass="ppDisplayTextM" >			    	
 			    	</p:inputText>
 			    </td>
 			    </tr>
@@ -58,12 +64,12 @@
 				<td>
 					<p:commandButton value="#{lbl['lbl.btn.submit']}" update="pChangeChallengeQuestion"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-						action="#{profilePersonalizationBackingBean.changeChallengeQuestions}"
-	    				/>
+						action="#{profilePersonalizationBackingBean.changeChallengeQuestions}">
+							<f:param name="challengeValidation" value="true" />
+					</p:commandButton>
 					
 					<p:commandButton value="#{lbl['lbl.btn.clear']}" immediate="true" update="pChangeChallengeQuestion"
-						action="#{profilePersonalizationBackingBean.clearChallengeQuestions}"
-		    		 />
+						action="#{profilePersonalizationBackingBean.clearChallengeQuestions}"/>
 				</td>
 			</tr>
 		</table>
