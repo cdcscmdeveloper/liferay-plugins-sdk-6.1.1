@@ -139,9 +139,15 @@
 				            </p:menuitem>
 						</p:menu>	
 						<p:spacer width="5px" />							
-						<p:commandLink action="#{templateDocBackingBean.editContent}"
+						<p:commandLink action="#{templateDocBackingBean.editContent}" rendered="#{!templateDocBackingBean.managedBean.readOnlyFlag}"
 							oncomplete="popupEdit.show();return false;" update=":form:popupEdit">
 							<h:graphicImage value="/css/images/design/ico-edit.png" />
+							<f:setPropertyActionListener value="#{document}"
+								target="#{templateDocBackingBean.managedBean.selectedSection}" />
+						</p:commandLink>
+						<p:commandLink action="#{templateDocBackingBean.editContent}" rendered="#{templateDocBackingBean.managedBean.readOnlyFlag}"
+							oncomplete="popupEdit.show();return false;" update=":form:popupEdit">
+							<h:graphicImage value="/css/images/design/document.png" />
 							<f:setPropertyActionListener value="#{document}"
 								target="#{templateDocBackingBean.managedBean.selectedSection}" />
 						</p:commandLink>
@@ -177,7 +183,7 @@
 					<h:outputLabel value="#{lbl['lbl.tpl.doc.section.name']}" style="float: left;" />
 				</h:panelGrid>
 				<h:panelGrid width="100%">
-					<h:inputText id="sectionName"
+					<h:inputText id="sectionName" readonly="#{templateDocBackingBean.managedBean.readOnlyFlag}"
 						value="#{templateDocBackingBean.managedBean.selectedSectionName}"
 						maxlength="100" style="width: 95%;" />
 				</h:panelGrid>
@@ -185,7 +191,7 @@
 					<h:outputLabel value="#{lbl['lbl.tpl.doc.section.title']}" style="float: left;" />
 				</h:panelGrid>
 				<h:panelGrid width="100%">
-					<h:inputText id="sectionTitle"
+					<h:inputText id="sectionTitle" readonly="#{templateDocBackingBean.managedBean.readOnlyFlag}"
 						value="#{templateDocBackingBean.managedBean.selectedSectionTitle}"
 						maxlength="100" style="width: 95%; float: left;" />
 				</h:panelGrid>
@@ -204,7 +210,7 @@
 					<h:outputLabel value="#{lbl['lbl.tpl.doc.section.contents']}" style="float: left;" />
 				</h:panelGrid>
 				<h:panelGrid id="contentID" width="100%">
-					<p:editor id="editor" width="600" height="230"
+					<p:editor id="editor" width="600" height="230" disabled="#{templateDocBackingBean.managedBean.readOnlyFlag}"
 						value="#{templateDocBackingBean.managedBean.selectedSectionText}"
 						controls="bold italic color underline alignleft center alignright justify" rendered="#{templateDocBackingBean.managedBean.selectedOption == '1'}">
 					</p:editor>
