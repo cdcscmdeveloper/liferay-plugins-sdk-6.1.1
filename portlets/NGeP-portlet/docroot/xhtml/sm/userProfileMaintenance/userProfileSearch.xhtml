@@ -62,7 +62,7 @@
 							rendered="#{personnel.contractSigner}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sm.userprofile.action']}">
+					<p:column headerText="#{lbl['lbl.sm.userprofile.action']}" style="text-align: center  !important;">
 						<p:commandLink title="#{lbl['lbl.sm.userprofile.edit']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 							action="#{smPersonnelBackingBean.navigateToUpdateUserPage(personnel.personnelId)}" update="@form">
 							<p:graphicImage value="/css/images/design/edit.png" rendered="#{personnel.recordStatusFlg eq 1}" title="#{lbl['lbl.sm.edit']}"></p:graphicImage>
