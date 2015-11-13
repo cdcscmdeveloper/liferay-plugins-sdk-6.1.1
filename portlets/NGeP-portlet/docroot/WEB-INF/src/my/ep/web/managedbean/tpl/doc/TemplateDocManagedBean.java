@@ -77,7 +77,7 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 	
 	private TreeNode [] treenode;
 	private boolean createNew = false;
-	private boolean readOnlyFlag = true;
+	private boolean readOnlyFlag = false;
 	
 	
 
