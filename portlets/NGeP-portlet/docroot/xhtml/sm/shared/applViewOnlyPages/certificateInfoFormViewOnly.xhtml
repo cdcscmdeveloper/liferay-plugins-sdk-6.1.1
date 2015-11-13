@@ -20,11 +20,11 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.cert.strtDate']}">
-					<ac:labelDate value="#{certBean.certStartDate}" />
+					<ac:labelDate value="#{certBean.certStartDate}" styleClass="outputLabel-view"/>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.cert.expDate']}">
-					<ac:labelDate value="#{certBean.certEndDate}" />
+					<ac:labelDate value="#{certBean.certEndDate}" styleClass="outputLabel-view"/>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 					<p:commandLink action="#{viewSmApplBackingBean.assignSelCert(certBean)}" onstart="blockWidget.show()"
