@@ -10848,9 +10848,7 @@ public class ReportBackingBean extends
 		}
 	}
 
-	/*
-	 * Generate CT module report
-	 */
+	
 	/**
 	 * Generate ct module report.
 	 */
