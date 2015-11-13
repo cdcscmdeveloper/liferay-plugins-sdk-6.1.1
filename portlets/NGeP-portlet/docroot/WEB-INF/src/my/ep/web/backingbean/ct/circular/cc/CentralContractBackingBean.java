@@ -33,6 +33,16 @@ import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.DualListModel;
+import org.primefaces.model.TreeNode;
+import org.primefaces.model.UploadedFile;
+
+import com.liferay.portal.util.PortalUtil;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -40,7 +50,6 @@ import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
-import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -62,8 +71,6 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.exception.EpException;
@@ -88,7 +95,6 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
@@ -106,16 +112,6 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.DualListModel;
-import org.primefaces.model.TreeNode;
-import org.primefaces.model.UploadedFile;
-
-import com.liferay.portal.util.PortalUtil;
 
 /**
  * Central Contract Circular Backingbean
@@ -179,19 +175,13 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "circularBase.xhtml?faces-redirect=true");
 	}
-	
-	public void preRenderSearch() {
-			renewSesionObject();
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "search.xhtml?faces-redirect=true");
-	}
 
 	/**
 	 * This  method call once user navigate central circular  page from task list
 	 * Method used to retrieve all information from BPM
 	 * Method used to retrieve circular information from BPM
 	 * Method return null if task id null
- */
+	 */
 	public void preRenderView() {
 		ICircularSO circularSO = null;
 		try {
@@ -307,40 +297,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			List<PmUser> target = new ArrayList<PmUser>();
 			getManagedBean().setApproverModel(new DualListModel<PmUser>(source, target));
 		}
-	}
-	
-	/**
-	 * This  method used to fetch status of circular
-	 */
-	public SelectItem[] getStatusDropdown() {
-		IStatusSO statusSO = null;
-		SelectItem[] items = null;
-		try {
-			statusSO = (IStatusSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
-			String languageCode = getFacesScopes().getUserLocale().getLanguage();
-			
-			int i = 1;
-			StatusReqDTO reqDTO = new StatusReqDTO();
-			reqDTO.setModuleCode("CT");
-			reqDTO.setDocType(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
-			reqDTO.setLanguageCode(languageCode);
-			StatusResDTO resDTO = statusSO.retrieveStatusDescList(reqDTO);
-			
-		    List<PmStatusDesc> list =  resDTO.getStatusDescList();
-		    items = new SelectItem[list.size()+2];
-		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-		      
-			for(PmStatusDesc statusDesc : list) {
-				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc.getStatusName());
-			}
-			items[i++] = new SelectItem(0L, ResourceBundleUtils.getMessage("lbl.ct.cc.circular.canceled", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		} finally {
-			statusSO = null;
-		}
-	    return items;
 	}
 	
 	/**
@@ -772,51 +728,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			circularSO = null;
 		}
 	}
-	/**
-	 * This method used to navigate circular details for view 
-	 * and update during maintenance
-	 */
-	public String gotoPage(String action, Long circularVerId) {
-		
-		ICircularSO circularSO = null;
-		try {
-			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
-			
-			CircularReqDTO reqDTO = new CircularReqDTO();
-			reqDTO.setCircularVerId(circularVerId);
-			getManagedBean().setSelectedTabIndex(0);
-			getManagedBean().setAction(action);
-			CircularResDTO resDTO = null;
-			if(action.equalsIgnoreCase("view")) {
-				resDTO = circularSO.retrieveCircularVerById(reqDTO);
-				getManagedBean().setViewContract(true);
-				getManagedBean().setUpdateAction(false);
-				getManagedBean().setOutComes(new String[]{});
-				setContractCircularVar(resDTO);				
-			} else if(action.equalsIgnoreCase("update")) {
-				reqDTO.setUpdateAction(true);
-				resDTO = circularSO.retrieveCircularVerById(reqDTO);
-				getManagedBean().setUpdateAction(true);
-				getManagedBean().setViewContract(false);
-				getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
-				setContractCircularVar(resDTO);
-			}
-			
-			getManagedBean().setSelectedCircularContract(null);
-			getManagedBean().setSelectedCircularItem(null);
-			getManagedBean().setSelectedZoneItems(null);
-			
-			return "circularBase.xhtml?faces-redirect=true";
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		} finally {
-			circularSO = null;
-		}
-		return null;
-	}
 
-	  /**
+	/**
 	 * This  method used to retrieve list of active approver start
 	 * Setting selected and non selected approver value 
 	 * Retrieve approver for central circular
@@ -1084,37 +997,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		   return "search.xhtml?faces-redirect=true";
 	   }
 	}
-   
-   /**
-	 * The method reset search value for maintenance
-	 * */
-   public void searchReset(){
-		this.getManagedBean().setSearchCircularNo(null);
-		this.getManagedBean().setSearchCircularName(null);
-		this.getManagedBean().setSearchPhysicalCircularNo(null);
-		this.getManagedBean().setSearchStartDate(null);
-		this.getManagedBean().setSearchEndDate(null);
-		this.getManagedBean().setSearchStatusId(null);
-	}
-   
-   /**
-	 * Method used to search central circular 
-	 * navigate to contract maintenance page
-	 * user can view and update central circular
-   */
-   public void searchCircularVer() throws Exception {
-	   if ((getManagedBean().getSearchCircularNo() == null || getManagedBean().getSearchCircularNo().trim().length() == 0) &&
-			   (getManagedBean().getSearchCircularName() == null || getManagedBean().getSearchCircularName().trim().length() == 0) && 
-			   (getManagedBean().getSearchPhysicalCircularNo() == null || getManagedBean().getSearchPhysicalCircularNo().length() == 0) && 
-			   getManagedBean().getSearchStartDate() == null &&
-			   getManagedBean().getSearchEndDate() == null &&
-			   getManagedBean().getSearchStatusId() == null) {
-		   throw new EpException(MessageConst.ERROR_100060);
-	   }
-	   else {
-		   getManagedBean().getCircularVerPagingDataModel().reloadData();
-	   }
-	}
 	
    /**
 	 * Method used to add contract person into contract person list
@@ -1291,14 +1173,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.cc.circular.creation", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		return portletTitle;
 	}
-	
-	 /**
-		 * Method to retrieve maintenance  portal name from property file
-	    */
-	public String getMaintenancePortletTitle() {
-		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.cc.circular.maintenance", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		return portletTitle;
-	}	
 	
 	/**
 	 * Method to authenticate user during submit of central circular
