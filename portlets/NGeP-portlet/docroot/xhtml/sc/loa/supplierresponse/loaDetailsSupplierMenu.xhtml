@@ -133,7 +133,7 @@
 					value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.witnessName}"
 					required="true"
 					label="#{lbl['lbl.sc.loiloa.witness.full.name']}"
-					maxlength="50" />
+					maxlength="80" />
 				<p:message id="witnessNameMsg" for="witnessName" display="icon" />
 			</td>
 		</tr>
@@ -143,7 +143,7 @@
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
 			<td colspan="3">
-				<p:inputText id="identificationNo" size="50"
+				<p:inputText id="identificationNo" size="15"
 					value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.identificationNo}"
 					required="true"
 					label="#{lbl['lbl.sc.identification.no']}"
