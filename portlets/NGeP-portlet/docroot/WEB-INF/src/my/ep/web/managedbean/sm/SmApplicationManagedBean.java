@@ -359,6 +359,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean showWorkShopPanel;
 	private boolean showPersonnelViewOnly;
 	private boolean disabledShareholderPersonnelNameAndNationality;
+	private boolean alreadyBusinessSpecialCatcode;
 	private String selectedShareholderIdentificationType;
 	private String revisionApplType;
 	private Long myCountryId;
@@ -3020,5 +3021,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setShowNewChanges(boolean showNewChanges) {
 		this.showNewChanges = showNewChanges;
+	}
+
+	public boolean isAlreadyBusinessSpecialCatcode() {
+		return alreadyBusinessSpecialCatcode;
+	}
+
+	public void setAlreadyBusinessSpecialCatcode(
+			boolean alreadyBusinessSpecialCatcode) {
+		this.alreadyBusinessSpecialCatcode = alreadyBusinessSpecialCatcode;
 	}
 }
