@@ -3610,9 +3610,14 @@ public class SmApplicationBackingBean extends
 				validCat = false;
 				if (cat.getRecordStatusFlg().compareTo(
 						SupplierManagementConst.DELETED_RECORD_STATUS) == 0) {
-					throw new EpException(MessageConst.ERROR_722563);
+					if (cat.getCancelledDate() == null) {
+						throw new EpException(MessageConst.ERROR_722563);
+					} else if (!isValidToAddAfterOneYear(cat.getCancelledDate())) {
+						throw new EpException(MessageConst.ERROR_722563);
+					}
+				} else {
+					throw new EpException(MessageConst.ERROR_722533);
 				}
-				throw new EpException(MessageConst.ERROR_722533);
 			}
 		}
 
@@ -3635,6 +3640,24 @@ public class SmApplicationBackingBean extends
 			RequestContext.getCurrentInstance().execute("regCatDialog.hide()");
 
 		}
+	}
+
+	/**
+	 * Check whether is valid to add deleted category after one year
+	 * 
+	 * @param Date
+	 *            cancelDate
+	 * @return boolean
+	 */
+	private boolean isValidToAddAfterOneYear(Date cancelDate) {
+		boolean retVal = false;
+		Calendar cancelDateAfterOneYear = Calendar.getInstance();
+		cancelDateAfterOneYear.setTime(cancelDate);
+		cancelDateAfterOneYear.add(Calendar.YEAR, 1);
+		if (new Date().after(cancelDateAfterOneYear.getTime())) {
+			retVal = true;
+		}
+		return retVal;
 	}
 
 	// -- Process Category Codes End
