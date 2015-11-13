@@ -188,6 +188,25 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 		this.getManagedBean().setCreateNew(false);
 		return NAV_TO_MAINT;
 	}
+	
+	public String goToMaint(TplDocMaster selTemplate, boolean editFlag) {       
+		ITemplateDocSO templateSO = (ITemplateDocSO) BusinessDelegate.getInstance().getServiceObject("cc", ITemplateDocSO.class);
+		getManagedBean().setSelectedTemplate(selTemplate);
+		
+		TemplateDocReqDTO reqDTO = new TemplateDocReqDTO();
+		reqDTO.setDocMasterId(getManagedBean().getSelectedTemplate().getDocMasterId());
+		TemplateDocResDTO resDTO= templateSO.getTemplateSectionListByMaster(reqDTO);
+		List<TplDocSection> templateSectionList = resDTO.getDocSectionList();
+		TplDocMaster tplDocMaster = resDTO.getTplDocMaster();
+
+		getManagedBean().setSelectedTemplate(tplDocMaster);
+		getManagedBean().setDeletedList(new ArrayList<TplDocSection>());
+		getTemplateDatatableList(templateSectionList);
+		this.getManagedBean().setCreateNew(false);
+		getManagedBean().setEditFlag(editFlag);
+		
+		return NAV_TO_MAINT;
+	}
 
 	public void reset() {  
 		this.getManagedBean().getDocMasterDataModel().resetData();
