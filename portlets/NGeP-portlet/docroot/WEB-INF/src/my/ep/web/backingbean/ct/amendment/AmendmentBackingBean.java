@@ -1709,7 +1709,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		  			} else {
 		  				getManagedBean().setSelectedTabIndex(5);
 		  			}
-		  	  	} if (getManagedBean().isBpkSaSkApprover() && outputValue.equalsIgnoreCase("BPK")) { 
+		  	  	} 
+		  	if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()){
+		  		if (outputValue.equalsIgnoreCase(ContractConst.SCHEDULE_DETAIL)&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
+			  			ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
+		  			index = 6;
+		  	   } else {
+		  		 index = 5;
+		  	   }
+		  	} else if (outputValue.equalsIgnoreCase(ContractConst.SCHEDULE_DETAIL)&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
+		  			ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+		  		index = 5;
+		  	} else {
+		  		index = 4;
+		  	}
+		  	if (getManagedBean().isBpkSaSkApprover() && outputValue.equalsIgnoreCase("BPK")) { 
 					getManagedBean().setSelectedTabIndex(index + 1);
 			   	}
 			    if (getManagedBean().isPrepareLOA()) {
@@ -1746,9 +1760,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			    		getManagedBean().setSelectedTabIndex(index + 1);
 			    	}
 			  	}
-			    if (isApproverSetting() && !getManagedBean().isPrepareLOA() && outputValue.equalsIgnoreCase("SE")) {
+			  if (isApproverSetting() && !getManagedBean().isPrepareLOA() && outputValue.equalsIgnoreCase("SE")) {
 			    	getManagedBean().setSelectedTabIndex(index + 1);
-			      }
+			    }
 		  } 
 		}else if(getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)){
 			if (outputValue.equalsIgnoreCase("LOD")) {
@@ -4829,7 +4843,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * 
 	 * @return the role of login user
 	 */
-	private String getUserRole() {		
+	private String getUserRole() {	     
 	    if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
 			return RoleCode.MIN_CONTRACT_ADMIN.value();
 	    } else if (getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
