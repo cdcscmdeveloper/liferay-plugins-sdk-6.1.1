@@ -8,7 +8,7 @@
 
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td width="10%" class="sidemenutd" style="vertical-align: baseline;"><p:tabMenu
+			<td width="20%" class="sidemenutd" style="vertical-align: baseline;"><p:tabMenu
 					activeIndex="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex}"
 					styleClass="sidemenu" style="display : table-caption;">
 					<p:menuitem value="#{lbl['lbl.sc.quotation.tender.document']}"
@@ -27,7 +27,7 @@
 						action="#{supplierProposalDetailBackingBean.retrieveIntegrityDetails}"
 						update="@form" />
 				</p:tabMenu></td>
-			<td width="90%" style="vertical-align: top; overflow : auto"><h:panelGroup
+			<td width="80%" style="vertical-align: top; overflow : auto"><h:panelGroup
 					id="menuSPContent">
 					<c:if
 						test="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '0'}">
