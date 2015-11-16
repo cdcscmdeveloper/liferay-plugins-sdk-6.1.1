@@ -3612,7 +3612,7 @@ public class SmApplicationBackingBean extends
 						SupplierManagementConst.DELETED_RECORD_STATUS) == 0) {
 					if (cat.getCancelledDate() == null) {
 						throw new EpException(MessageConst.ERROR_722563);
-					} else if (!isValidToAddAfterOneYear(cat.getCancelledDate())) {
+					} else if (!isValidToAddAfterDeleted(cat.getCancelledDate())) {
 						throw new EpException(MessageConst.ERROR_722563);
 					}
 				} else {
@@ -3643,18 +3643,19 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Check whether is valid to add deleted category after one year
+	 * Check whether is valid to add again previously deleted category
 	 * 
 	 * @param Date
 	 *            cancelDate
 	 * @return boolean
 	 */
-	private boolean isValidToAddAfterOneYear(Date cancelDate) {
+	private boolean isValidToAddAfterDeleted(Date cancelDate) {
 		boolean retVal = false;
-		Calendar cancelDateAfterOneYear = Calendar.getInstance();
-		cancelDateAfterOneYear.setTime(cancelDate);
-		cancelDateAfterOneYear.add(Calendar.YEAR, 1);
-		if (new Date().after(cancelDateAfterOneYear.getTime())) {
+		Calendar cancelCalDate = Calendar.getInstance();
+		cancelCalDate.setTime(cancelDate);
+		cancelCalDate.add(Calendar.YEAR, SmRuleHelper.getInstance()
+				.getYearsAllowedToAddDeletedCatCode());
+		if (new Date().after(cancelCalDate.getTime())) {
 			retVal = true;
 		}
 		return retVal;

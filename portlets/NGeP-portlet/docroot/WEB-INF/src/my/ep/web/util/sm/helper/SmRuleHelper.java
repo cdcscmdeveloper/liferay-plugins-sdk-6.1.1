@@ -94,6 +94,10 @@ public class SmRuleHelper {
 	public int getMinPaidUpCapitalForContractor() {
 		return 2500;
 	}
+	
+	public int getYearsAllowedToAddDeletedCatCode(){
+		return 1;
+	}
 
 	private RuleResDTO getRuleValueByRuleType(String ruleType) {
 		IRuleSO ruleSO = null;

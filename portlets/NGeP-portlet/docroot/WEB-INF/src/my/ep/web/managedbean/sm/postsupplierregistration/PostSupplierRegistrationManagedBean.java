@@ -26,6 +26,7 @@ public class PostSupplierRegistrationManagedBean extends BaseManagedBean{
 	private boolean bannerImage;
 	private int flowStatus;
 	private SmAppl smAppl;
+	private String mofExpDateMsg;
 	
 	public SmSupplier getSmSupplier() {
 		return smSupplier;
@@ -81,6 +82,14 @@ public class PostSupplierRegistrationManagedBean extends BaseManagedBean{
 
 	public void setSmAppl(SmAppl smAppl) {
 		this.smAppl = smAppl;
+	}
+
+	public String getMofExpDateMsg() {
+		return mofExpDateMsg;
+	}
+
+	public void setMofExpDateMsg(String mofExpDateMsg) {
+		this.mofExpDateMsg = mofExpDateMsg;
 	}
 
 }
