@@ -7369,21 +7369,20 @@ public class SmApplicationBackingBean extends
 	 * category
 	 */
 	private void setBusinessAndHadApprovedSpecialCatcode() {
-		SmFacility hq = getHq();
 		if (!getManagedBean().getSmAppl().getApplType()
 				.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
 				&& !SmCommonUtil.isCollectionEmpty(getManagedBean().getSmAppl()
-						.getSmSupplierCategories())
-				&& hq != null
-				&& hq.getFacilityType().equals("B")) {
-			for (SmSupplierCategory cat : getManagedBean().getSmAppl()
-					.getSmSupplierCategories()) {
-				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
-						&& cat.isSpecialCategory()) {
-					getManagedBean().setAlreadyBusinessSpecialCatcode(true);
-					break;
+						.getSmSupplierCategories())) {
+			SmFacility hq = getHq();
+			if (hq != null && hq.getFacilityType().equals("B"))
+				for (SmSupplierCategory cat : getManagedBean().getSmAppl()
+						.getSmSupplierCategories()) {
+					if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+							&& cat.isSpecialCategory()) {
+						getManagedBean().setAlreadyBusinessSpecialCatcode(true);
+						break;
+					}
 				}
-			}
 		}
 	}
 
