@@ -257,7 +257,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		 * Instantiates a new search lov paging data model.
 		 */
 		public SearchLOVPagingDataModel() {
-			super("searchLOVPagingDataModel");
+			super("lovTb2");
 		}
 
 		/*
@@ -373,7 +373,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		 * Instantiates a new search lov machine paging data model.
 		 */
 		public SearchLOVMachinePagingDataModel() {
-			super("searchLOVMachinePagingDataModel");
+			super("lovTb22");
 		}
 
 		/*
