@@ -18,9 +18,8 @@
 				onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 				update=":form:itemDetPanelGroup"
 				listener="#{purchaseRequestBackingBean.selectAddrEvent()}" />
-			<p:column>
+			<p:column rendered="#{purchaseRequestBackingBean.managedBean.buttonVal!='View'}">
 				<p:selectBooleanCheckbox value="#{address.selectedAddressRowDelete}"
-					rendered="#{purchaseRequestBackingBean.managedBean.buttonVal!='View'}"
 					styleClass="myCustomChekBox">
 					<p:ajax event="change"
 						update=":form:deleteAddrBtn,addressDataTable,@(.orderSummaryChange)"
@@ -61,7 +60,7 @@
 				</h:outputText>
 			</p:column>
 			</ui:remove>
-			<p:column style="white-space:normal;">
+			<p:column style="white-space:normal;text-align:center;">
 				<f:facet name="header" style="white-space:normal;">
 					<h:outputText value="#{lbl['lbl.fl.receiving.officer']}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.recv.officer']}"/>
@@ -71,7 +70,7 @@
 					action="#{purchaseRequestBackingBean.receivingOfficerList(address)}"
 					update=":form:addReceivingOfficerDialog,@(.orderSummaryChange)">
 					<p:graphicImage value="/css/images/design/ico-officer.png"
-						title="Recv Officer List" />
+						title="#{lbl['lbl.fl.tooltip.recv.officer']}" />
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
@@ -149,9 +148,8 @@
 				<ac:paginator for="itemDataTable" />
 				<p:column headerText="#{lbl['lbl.fl.gst']}">
 					<p:selectBooleanCheckbox value="#{flItem.gst}"
-						rendered="#{purchaseRequestBackingBean.managedBean.buttonVal!='View'}"
-						disabled="#{purchaseRequestBackingBean.managedBean.selectedDelAddr == null or 
-							flItem.orderedQty == 0}">
+						disabled="#{(purchaseRequestBackingBean.managedBean.selectedDelAddr == null or 
+							flItem.orderedQty == 0) or purchaseRequestBackingBean.managedBean.buttonVal=='View'}">
 						<p:ajax process="@this" listener="#{purchaseRequestBackingBean.retrieveOrderAmount(flItem)}"
 						update="subTotalTxt,unitPrice,orderedQty,itemDataTable"/>
 					</p:selectBooleanCheckbox>
@@ -472,13 +470,6 @@
 				<h:outputText value="#{receivingOfficer.pmUser.email}" style="float:left;"/>
 			</p:column>
 		</p:dataTable>
-		<p:spacer height="2px"></p:spacer>
-		<div style="width: 100%; text-align: right">
-			<p:commandButton value="#{lbl['lbl.fl.close']}" 
-				oncomplete="addOfficer.hide();" update="addressDataTable"
-				process="@this,receivingOfficerDt">
-			</p:commandButton>
-		</div>
 	</p:dialog>
 	<p:dialog id="reqItemInfoDialog" header="#{lbl['lbl.fl.requested.item']}"
 		widgetVar="reqItemInfo" showEffect="fade" hideEffect="fade"
