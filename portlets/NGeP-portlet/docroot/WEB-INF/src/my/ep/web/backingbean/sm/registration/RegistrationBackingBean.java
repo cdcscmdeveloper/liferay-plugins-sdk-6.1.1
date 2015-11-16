@@ -2281,6 +2281,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				new FacesMessage(FacesMessage.SEVERITY_INFO, "Your Code Is Correct !",null));
 	}
 
+	public boolean isShowNewChanges() {
+		String newChanges = EpPropertiesUtils.getInstance().getProperty(
+				"sm.show.new.changes");
+		boolean showNewChanges = Boolean.valueOf(newChanges);
+		return showNewChanges;
+	}
 
 }
 
