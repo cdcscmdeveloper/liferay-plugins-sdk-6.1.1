@@ -3052,6 +3052,11 @@ public class SmCommonUtil {
 		return ret;
 	}
 
+	/**
+	 * Get the instance of smCommonUtil
+	 * 
+	 * @return SmCommonUtil
+	 */
 	public static SmCommonUtil getInstance() {
 		if (instance == null) {
 			try {
