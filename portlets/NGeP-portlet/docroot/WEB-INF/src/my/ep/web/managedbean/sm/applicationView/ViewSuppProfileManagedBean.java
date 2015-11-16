@@ -1,5 +1,6 @@
 package my.ep.web.managedbean.sm.applicationView;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -40,6 +41,7 @@ public class ViewSuppProfileManagedBean extends
 	private boolean allowedToDoMaintenance;
 	private boolean editDisciplinaryAction;
 	private PmRegStatus existingRegStatus;
+	private Date existingMofExpiryDate;
 	private List<SmSupplierCategory> deleteApprovedCategories;
 	private IPagingDataModel<SmSupplier> smSupplierDataModel = new SmSupplierPagingDataModel();
 
@@ -206,6 +208,14 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setEditDisciplinaryAction(boolean editDisciplinaryAction) {
 		this.editDisciplinaryAction = editDisciplinaryAction;
+	}
+
+	public Date getExistingMofExpiryDate() {
+		return existingMofExpiryDate;
+	}
+
+	public void setExistingMofExpiryDate(Date existingMofExpiryDate) {
+		this.existingMofExpiryDate = existingMofExpiryDate;
 	}
 
 }

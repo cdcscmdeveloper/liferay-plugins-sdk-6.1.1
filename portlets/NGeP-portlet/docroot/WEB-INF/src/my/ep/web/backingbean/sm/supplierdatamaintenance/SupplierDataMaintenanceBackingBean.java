@@ -95,6 +95,10 @@ public class SupplierDataMaintenanceBackingBean extends
 		checkIfSupplierHasActiveTransaction(true);
 		getManagedBean().setExistingRegStatus(
 				getManagedBean().getSmAppl().getPmRegStatus());
+		if (getManagedBean().getSmMofAccount() != null) {
+			getManagedBean().setExistingMofExpiryDate(
+					getManagedBean().getSmMofAccount().getExpDate());
+		}
 		getManagedBean().setDeleteApprovedCategories(
 				new ArrayList<SmSupplierCategory>());
 	}
@@ -144,8 +148,10 @@ public class SupplierDataMaintenanceBackingBean extends
 
 		try {
 
-			// set registration status
+			// set registration status and expiry date
 			reqDTO.setOldRegStatus(getManagedBean().getExistingRegStatus());
+			reqDTO.setOldMofExpiryDate(getManagedBean()
+					.getExistingMofExpiryDate());
 			setSupplierRegistrationAndBumiStatusChanged();
 
 			// set active status for newly added category
@@ -160,7 +166,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO.setSmMofAccount(getManagedBean().getSmMofAccount());
 			reqDTO.setRemark(getManagedBean().getApplnApprovalRemarks());
 			reqDTO.setDocType(ParameterConst.SM_DATA_MAINTENANCE_RMRK_DECISION_APPROVE);
-			reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
+			reqDTO.setPortalBaseUrl(SmCommonUtil.getEpBaseUrl());
 			SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
 					getManagedBean().getSmAppl(),
 					SupplierManagementConst.APPROVER_SUBMIT_SUPPLIER_DATA_MAINTENANCE);
@@ -444,10 +450,12 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setShowParentMsg(true);
 		RequestContext.getCurrentInstance().execute("confirmDialog.hide()");
 	}
-	
+
 	/**
 	 * Get supplier admin by appl
-	 * @param SmAppl smAppl
+	 * 
+	 * @param SmAppl
+	 *            smAppl
 	 * @return SmPersonnel
 	 */
 	private SmPersonnel getSupplierAdminByAppl(SmAppl smAppl) {
