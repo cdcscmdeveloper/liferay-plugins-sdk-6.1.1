@@ -1,237 +1,253 @@
-<ui:composition 
-    xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	
 	xmlns:ac="http://ac.my/jsf/composite/cc">
- 
- 
- <p:messages id="rptmessagesMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />		
-		<table style="width: 100%" >
-			<tr>
-				<td>
-				<p:panel style="width: 100%;" header="#{lbl['lbl.rpt.rptcriteria']}"
-						 id="rptModuleId" >
-						 <table style="margin-top: 10px; width: 100%;">
-						  <tr>
-						    <td width="100%">
-						    <h:panelGrid id="rptModule" columns="4"  style="margin-bottom:5px;width:85%;">
-						    <p:column>
-								<table style="width: 190px;">
-									<tr style="width: 100%;">
-										<td style="margin-top:5px;width:160px;"><p:outputLabel value="#{lbl['lbl.rpt.module']}" />
-												<p:outputLabel value="*" styleClass="mandatory"	/>
+
+
+	<p:messages id="rptmessagesMsg" showDetail="true" autoUpdate="true"
+		closable="true" showSummary="false" />
+	<table style="width: 100%">
+		<tr>
+			<td><p:panel style="width: 100%;"
+					header="#{lbl['lbl.rpt.rptcriteria']}" id="rptModuleId">
+					<table style="margin-top: 10px; width: 100%;">
+						<tr>
+							<td width="100%"><h:panelGrid id="rptModule" columns="4"
+									style="margin-bottom:5px;width:85%;">
+									<p:column>
+										<table style="width: 190px;">
+											<tr style="width: 100%;">
+												<td style="margin-top: 5px; width: 160px;"><p:outputLabel
+														value="#{lbl['lbl.rpt.module']}" /> <p:outputLabel
+														value="*" styleClass="mandatory" /></td>
+
+											</tr>
+										</table>
+									</p:column>
+									<p:column>
+										<table style="width: 100%">
+											<tr>
+												<td style="width: 84%"><p:selectOneMenu
+														label="#{lbl['lbl.rpt.module']}" id="moduleName"
+														value="#{reportBackingBean.moduleValue}" required="true"
+														style="margin-top:5px;width:300px;">
+														<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+															itemValue="#{null}"></f:selectItem>
+														<f:selectItems
+															value="#{reportBackingBean.getAllModuleList()}"></f:selectItems>
+														<p:ajax event="change"
+															listener="#{reportBackingBean.retrieveReportListByAuthorization}"
+															process="@this" partialSubmit="true" update="@all" />
+													</p:selectOneMenu></td>
+												<td><p:message id="moduleNameMsg" for="moduleName"
+														display="icon" /></td>
+											</tr>
+										</table>
+									</p:column>
+
+
+									<c:if
+										test="#{reportBackingBean.managedBean.rptGenBean.reportCategoryView}">
+										<p:column>
+											<table style="width: 190px;">
+												<tr style="width: 100%;">
+													<td style="margin-top: 5px; width: 160px;"><p:outputLabel
+															value="#{lbl['lbl.rpt.rptCategory']}" /> <p:outputLabel
+															value="*" styleClass="mandatory" /></td>
+												</tr>
+											</table>
+										</p:column>
+										<p:column>
+											<table style="width: 100%">
+												<tr>
+													<td style="width: 84%"><p:selectOneMenu
+															label="#{lbl['lbl.rpt.rptCategory']}" id="reportCategory"
+															value="#{reportBackingBean.reportCategory}"
+															required="true" style="margin-top:5px;width:300px;">
+															<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+																itemValue="#{null}"></f:selectItem>
+															<f:selectItems
+																value="#{reportBackingBean.getReportCategoryList()}"></f:selectItems>
+															<p:ajax event="change"
+																listener="#{reportBackingBean.retrieveReportListBySubModule}"
+																process="@this" partialSubmit="true" update="@all" />
+														</p:selectOneMenu></td>
+													<td><p:message id="reportCategoryMsg"
+															for="reportCategory" display="icon" /></td>
+												</tr>
+											</table>
+										</p:column>
+									</c:if>
+
+									<p:column>
+										<table style="width: 190px;">
+											<tr style="width: 100%;">
+												<td style="margin-top: 5px; width: 160px;"><p:outputLabel
+														value="#{lbl['lbl.rpt.rptName']}" /> <p:outputLabel
+														value="*" styleClass="mandatory" /></td>
+
+											</tr>
+										</table>
+									</p:column>
+									<p:column>
+										<table style="width: 100%">
+											<tr>
+												<td style="width: 84%"><p:selectOneMenu
+														label="#{lbl['lbl.rpt.rptName']}" id="reportName"
+														value="#{reportBackingBean.reportValue}" required="true"
+														style="margin-top:5px;width:300px;">
+														<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+															itemValue="#{null}"></f:selectItem>
+														<f:selectItems value="#{reportBackingBean.reportList}"></f:selectItems>
+														<p:ajax event="change"
+															listener="#{reportBackingBean.criteriaVariablesByReport}"
+															process="@this" partialSubmit="true" update="@all" />
+													</p:selectOneMenu></td>
+												<td><p:message id="reportNameMsg" for="reportName"
+														display="icon" /></td>
+											</tr>
+										</table>
+									</p:column>
+								</h:panelGrid></td>
+						</tr>
+
+						<tr>
+							<td width="100%"><c:if
+									test="#{reportBackingBean.managedBean.rptGenBean.enableCriteriaMenuView}">
+									<p:panel style="width: 100%;"
+										header="#{reportBackingBean.reportName}" id="rptNameId"
+										toggleable="true">
+										<table style="width: 100%; margin-top: 4px;">
+											<c:if
+												test="#{reportBackingBean.managedBean.rptGenBean.madatoryIndicatorView}">
+												<tr>
+													<td width="100%"><h:outputText
+															styleClass="instruction"
+															style="float:left;margin-left:20px;"
+															value="#{lbl['lbl.instruction.mandatory']}" /></td>
+												</tr>
+											</c:if>
+											<c:if
+												test="#{reportBackingBean.managedBean.rptGenBean.cmMadatoryIndicatorView}">
+												<tr>
+													<td width="100%"><h:outputText
+															styleClass="instruction"
+															style="float:left;margin-left:20px;"
+															value="#{lbl['lbl.rpt.search.criteria.PLZ_ENTER_ONE_RPT_CRITERIA_SEARCH']}" />
+													</td>
+												</tr>
+											</c:if>
+											<tr>
+												<td><ui:include src="smreportcontent.xhtml"></ui:include>
+													<ui:include src="screportcontent.xhtml"></ui:include>
+													<ui:include src="cmreportcontent.xhtml"></ui:include> 
+													<ui:include	src="flreportcontent.xhtml"></ui:include> 
+													<ui:include	src="ctreportcontent.xhtml"></ui:include> 
+													<ui:include	src="ppreportcontent.xhtml"></ui:include>
+													<ui:include	src="pmreportcontent.xhtml"></ui:include> 
+													<ui:include	src="scloadocument.xhtml"></ui:include> 
+													<ui:include	src="cmunspscdialog.xhtml"></ui:include>
 												</td>
-										
-									</tr>
-								</table>
-							</p:column>
-						    <p:column>
-								<table style="width: 100%">
-									<tr>
-										<td style="width: 84%"><p:selectOneMenu
-												label="#{lbl['lbl.rpt.module']}" id="moduleName"
-												value="#{reportBackingBean.moduleValue}" required="true"
-												style="margin-top:5px;width:300px;">
-												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-												<f:selectItems value="#{reportBackingBean.getAllModuleList()}"></f:selectItems>
-												<p:ajax event="change" listener="#{reportBackingBean.retrieveReportListByAuthorization}" process="@this"
-												 partialSubmit="true"  update="@all"/>
-											</p:selectOneMenu></td>
-										<td><p:message id="moduleNameMsg" for="moduleName"
-												display="icon" /></td>
-									</tr>
-								</table>
-							</p:column>
-						     
-						   
-						    <c:if test="#{reportBackingBean.managedBean.rptGenBean.reportCategoryView}"> 
-						     <p:column>
-								<table style="width: 190px;">
-									<tr style="width: 100%;">
-										<td style="margin-top:5px;width:160px;"><p:outputLabel value="#{lbl['lbl.rpt.rptCategory']}" />
-												<p:outputLabel value="*" styleClass="mandatory"	/>
-										</td>										
-									</tr>
-								</table>
-							</p:column>
-						    <p:column>
-								<table style="width: 100%">
-									<tr>
-										<td style="width: 84%"><p:selectOneMenu
-												label="#{lbl['lbl.rpt.rptCategory']}" id="reportCategory"
-												value="#{reportBackingBean.reportCategory}" required="true"
-												style="margin-top:5px;width:300px;">
-												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-												<f:selectItems value="#{reportBackingBean.getReportCategoryList()}"></f:selectItems>
-												<p:ajax event="change" listener="#{reportBackingBean. retrieveReportListBySubModule}" process="@this"
-												 partialSubmit="true"  update="@all"/>
-											</p:selectOneMenu></td>
-										<td><p:message id="reportCategoryMsg" for="reportCategory"
-												display="icon" /></td>
-									</tr>
-								</table>
-							</p:column>
-						     </c:if>
-						     
-							 <p:column>
-								<table style="width: 190px;">
-									<tr style="width: 100%;">
-										<td style="margin-top:5px;width:160px;"><p:outputLabel value="#{lbl['lbl.rpt.rptName']}" />
-												<p:outputLabel value="*" styleClass="mandatory"	/>
-												</td>
-										
-									</tr>
-								</table>
-							</p:column>
-							 <p:column>
-								<table style="width: 100%">
-									<tr>
-										<td style="width: 84%"><p:selectOneMenu
-												label="#{lbl['lbl.rpt.rptName']}" id="reportName"
-												value="#{reportBackingBean.reportValue}" required="true"
-												style="margin-top:5px;width:300px;">
-												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>												
-												<f:selectItems value="#{reportBackingBean.reportList}"></f:selectItems>
-												<p:ajax event="change" listener="#{reportBackingBean.criteriaVariablesByReport}" process="@this"
-									 			partialSubmit="true" update="@all"/>
-											</p:selectOneMenu></td>
-										<td><p:message id="reportNameMsg" for="reportName"
-												display="icon" /></td>
-									</tr>
-								</table>
-							</p:column>							
-							</h:panelGrid>
-						    </td>
-						    </tr>
-						    
-						     <tr>
-						     <td width="100%">
-						<c:if test="#{reportBackingBean.managedBean.rptGenBean.enableCriteriaMenuView}">     
-						 <p:panel style="width: 100%;" header="#{reportBackingBean.reportName}"
-						 id="rptNameId" toggleable="true">    
-						 <table  style="width: 100%;margin-top:4px;"  >
-						 <c:if test="#{reportBackingBean.managedBean.rptGenBean.madatoryIndicatorView}">
-						  <tr>
-						    <td width="100%">
-								<p:outputLabel styleClass="instruction" style="float:left;margin-left:20px;" value="#{lbl['lbl.instruction.mandatory']}"/>
-							    </td>
-						  </tr>
-						  </c:if>
-						  <c:if test="#{reportBackingBean.managedBean.rptGenBean.cmMadatoryIndicatorView}">
-						  <tr>
-						    <td width="100%">
-								<p:outputLabel styleClass="instruction" style="float:left;margin-left:20px;" value="#{lbl['lbl.rpt.search.criteria.PLZ_ENTER_ONE_RPT_CRITERIA_SEARCH']}"/>
-							    </td>
-						  </tr>
-						  </c:if>
-						  <tr>
-						  <td>
-						  
-	    
-						 <ui:include src="smreportcontent.xhtml"></ui:include>
-						 <ui:include src="screportcontent.xhtml"></ui:include>
-						 <ui:include src="cmreportcontent.xhtml"></ui:include>						
-						 <ui:include src="flreportcontent.xhtml"></ui:include>						 
-						 <ui:include src="ctreportcontent.xhtml"></ui:include>
-						 <ui:include src="ppreportcontent.xhtml"></ui:include>
-						 <ui:include src="pmreportcontent.xhtml"></ui:include>
-						 <ui:include src="scloadocument.xhtml"></ui:include>
-						 
-						  </td>
-						  </tr>
-							</table>
-							<div>
-						<c:if test="#{reportBackingBean.managedBean.rptGenBean.fromDateView}">
-						<TABLE style="margin-top:10px;width:50%;">
-							<TR>
-								<TD>
-									<p:outputLabel  value="#{lbl['lbl.rpt.dtRangeFrm']}" style="width:158px;"/>
-								</TD>
-								<TD>
-									<p:calendar showOn="button" navigator="true" display="inline" readonlyInput="true" value="#{reportBackingBean.fromDate}" 
-									
-										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"  partialSubmit="true" process="@form">																				
-									</p:calendar>
-								</TD>
-								<TD>
-									<p:outputLabel  value="#{lbl['lbl.rpt.dtRangeTo']}" style="width:50px;"/>
-								</TD>				
-								<TD>
-									<p:calendar  showOn="button" navigator="true" display="inline" readonlyInput="true" value="#{reportBackingBean.toDate}"
-										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"   partialSubmit="true" process="@form">	
-																							
-									</p:calendar> 
-								</TD>
-							</TR>
-						</TABLE>
-						</c:if>							
-		            </div>
-					<h:panelGroup id="rptbtnGroup"  style="margin-top:10px;">
-		            <div align="right">	
-		            
-		           <p:commandButton onstart="blkReportContent.show();" 
-				    oncomplete="blkReportContent.hide();" value="#{lbl['lbl.rpt.generate']}" disabled="#{reportBackingBean.managedBean.rptGenBean.generateButtonView or reportBackingBean.managedBean.rptGenBean.scLOAContentView}" ajax="false" onclick="handleLocalesDialogComplete(xhr, status, args)" 
-		            update="@form" partialSubmit="true" process="@form">
-        				<p:fileDownload value="#{reportBackingBean.generateReport()}" />
-    				</p:commandButton> 	  	           
-					<p:commandButton   value="#{lbl['lbl.btn.reset']}"	action="#{reportBackingBean.resetReportForm}"
-					 update="@form" partialSubmit="true" process="@form" />					        					
-				   </div>
-				   </h:panelGroup>
-				  </p:panel>
-				  </c:if>
-				  </td>
-				  </tr>								    
-				  </table>
-				  <p:dialog id="statusDialog" modal="true" widgetVar="statusDialog" header="Status" draggable="false" closable="false" resizable="false">
-		            <p:graphicImage value="/css/images/ajax-loader.gif" />
-		         </p:dialog>	
+											</tr>
+										</table>
+										<div>
+											<c:if
+												test="#{reportBackingBean.managedBean.rptGenBean.fromDateView}">
+												<TABLE style="margin-top: 10px; width: 50%;">
+													<TR>
+														<TD><p:outputLabel
+																value="#{lbl['lbl.rpt.dtRangeFrm']}"
+																style="width:158px;" /></TD>
+														<TD><p:calendar showOn="button" navigator="true"
+																display="inline" readonlyInput="true"
+																value="#{reportBackingBean.fromDate}"
+																pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+																partialSubmit="true" process="@form">
+															</p:calendar></TD>
+														<TD><p:outputLabel
+																value="#{lbl['lbl.rpt.dtRangeTo']}" style="width:50px;" />
+														</TD>
+														<TD><p:calendar showOn="button" navigator="true"
+																display="inline" readonlyInput="true"
+																value="#{reportBackingBean.toDate}"
+																pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+																partialSubmit="true" process="@form">
+
+															</p:calendar></TD>
+													</TR>
+												</TABLE>
+											</c:if>
+										</div>
+										<h:panelGroup id="rptbtnGroup" style="margin-top:10px;">
+											<div align="right">
+
+												<p:commandButton onstart="blkReportContent.show();"
+													oncomplete="blkReportContent.hide();"
+													value="#{lbl['lbl.rpt.generate']}"
+													disabled="#{reportBackingBean.managedBean.rptGenBean.generateButtonView or reportBackingBean.managedBean.rptGenBean.scLOAContentView}"
+													ajax="false"
+													onclick="handleLocalesDialogComplete(xhr, status, args)"
+													update="@form" partialSubmit="true" process="@form">
+													<p:fileDownload
+														value="#{reportBackingBean.generateReport()}" />
+												</p:commandButton>
+												<p:commandButton value="#{lbl['lbl.btn.reset']}"
+													action="#{reportBackingBean.resetReportForm}"
+													update="@form" partialSubmit="true" process="@form" />
+											</div>
+										</h:panelGroup>
+									</p:panel>
+								</c:if></td>
+						</tr>
+					</table>
+					<p:dialog id="statusDialog" modal="true" widgetVar="statusDialog"
+						header="Status" draggable="false" closable="false"
+						resizable="false">
+						<p:graphicImage value="/css/images/ajax-loader.gif" />
+					</p:dialog>
 					<p:dialog id="reportGenDialog" widgetVar="reportGenDialog"
-						modal="true" header="Report" width="1100" height="500" 
+						modal="true" header="Report" width="1100" height="500"
 						resizable="false" position="right" closable="true"
-						closeOnEscape="true" draggable="true" onHide="closeDialogBox(this)">
+						closeOnEscape="true" draggable="true"
+						onHide="closeDialogBox(this)">
 						<h:panelGroup id="reportResult" styleClass="reportResultStyle">
 							<object id="someId" data="#{reportBackingBean.reportURL}"
 								type="application/pdf" width="1100" height="500" />
-						</h:panelGroup>						
+						</h:panelGroup>
 					</p:dialog>
-			<script type="text/javascript">
-			/*Function to hide the Iframe*/
-			function closeDialogBox(obj){
-				//$('.reportIframe').hide();
-			}
-			function handleLocalesDialogComplete(xhr, status, args)
-			{
-				//alert("Download started!");
-			    //statusDialog.show();
-			   if (args) {
-			      var reportInValid = args.reportInValid;			
-			     if(reportInValid){
-			    	 //window.open(args.reportViewUrl,'_blank');
-			    	 //reportGenDialog.show();
-			    	// alert("Download finished!");
-					    //statusDialog.hide();
-			     }
-			   }
-			}
-			function start() {
-				 //alert("Download started!");
-			    statusDialog.show();
-			}
+					<script type="text/javascript">
+						/*Function to hide the Iframe*/
+						function closeDialogBox(obj) {
+							//$('.reportIframe').hide();
+						}
+						function handleLocalesDialogComplete(xhr, status, args) {
+							//alert("Download started!");
+							//statusDialog.show();
+							if (args) {
+								var reportInValid = args.reportInValid;
+								if (reportInValid) {
+									//window.open(args.reportViewUrl,'_blank');
+									//reportGenDialog.show();
+									// alert("Download finished!");
+									//statusDialog.hide();
+								}
+							}
+						}
+						function start() {
+							//alert("Download started!");
+							statusDialog.show();
+						}
 
-			function stop() {
-				 //alert("Download finished!");
-			    statusDialog.hide();
-			}
-			
-		     </script>
-		</p:panel>
-		</td>
-	</tr>
-  </table>
- 
-  </ui:composition>
+						function stop() {
+							//alert("Download finished!");
+							statusDialog.hide();
+						}
+					</script>
+				</p:panel></td>
+		</tr>
+	</table>
+
+</ui:composition>
