@@ -1,6 +1,8 @@
 package my.ep.web.backingbean.sm.postsupplierregistration;
 
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -33,10 +35,12 @@ import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
@@ -45,6 +49,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.postsupplierregistration.PostSupplierRegistrationManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
@@ -651,6 +656,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			if(validMofUser()){
 				log.info("MOF_SUPPLIER_ADMIN>>>>");
 				mofUserAction(suppSearchResDTO.getSmSupplier());
+				setMofExpiryMsg(userSupplier);
 
 			}else if(validBasicSupplier()){
 				basicSupplierAction(userSupplier.getSupplierId());
@@ -661,6 +667,33 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, PROMO_PAGE);
+	}
+	
+	/**
+	 * Set MOF Expiry Date notification message
+	 * @param SmSupplier supp
+	 */
+	private void setMofExpiryMsg(SmSupplier supp) {
+		SmMofAccount acc = SmCommonUtil.getMofAccountBySuppIdAndSuppType(
+				supp.getSupplierId(), supp.getSmAppl().getSupplierType());
+		if (acc != null
+				&& acc.getExpDate() != null
+				&& acc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+			Date currDate = new Date();
+			Calendar currDateAfterThreeMonths = Calendar.getInstance();
+			currDateAfterThreeMonths.setTime(currDate);
+			currDateAfterThreeMonths.add(Calendar.MONTH, 3);
+			if (currDateAfterThreeMonths.getTime().after(acc.getExpDate())) {
+				getManagedBean().setMofExpDateMsg(
+						SmCommonUtil.getMessage(
+								"lbl.sm.suppalert.mofexpiry.msg",
+								new String[] {
+										DateUtils.dateToString("dd-MM-yyyy",
+												acc.getExpDate()),
+										SmCommonUtil.getEpBaseUrl()
+												+ "/renew-mof-account" }));
+			}
+		}
 	}
 	
 	/**
