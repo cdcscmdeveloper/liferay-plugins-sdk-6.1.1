@@ -18,21 +18,22 @@
                                       <p:outputLabel value="#{lbl['lbl.ct.business.reg.no']}"/>  
                                 </td>
                                 <td>
-                                   <h:panelGrid columns="3" style="width:300px;" >
+                                   <h:panelGrid columns="3" style="width:350px;" >   
                                           <h:panelGrid columns="2">
 	                                          <p:inputText disabled="true" style="width:85px;" 
 	                                              value="#{ctBackingBean.managedBean.contractVer.ctContract.smSupplier.regNo}" />
 	                                            <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.business.reg.no']}" />
-					                    </h:panelGrid>
-                                       <p:outputLabel value="#{lbl['lbl.ct.mof.no']}" />
-                                      <h:panelGrid columns="2"> 
-	                                     <p:inputText disabled="true" style="width:85px;" 
-	             	                         value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.scLoiLoa.mofNo}" />
-	             	                      <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.mof.no']}" />
-					                 </h:panelGrid>
+					                      </h:panelGrid>
+                                      
+                                         <p:outputLabel value="#{lbl['lbl.ct.mof.no']}" />
+                                         <h:panelGrid columns="2"> 
+	                                        <p:inputText disabled="true" style="width:85px;" 
+	             	                            value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.scLoiLoa.mofNo}" />
+	             	                         <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.mof.no']}" />
+					                     </h:panelGrid>
                                   </h:panelGrid>
                              </td>
-                             <td>
+                             <td class="columnWidth150">
                                 <p:outputLabel value="#{lbl['lbl.ct.supplier.gst.reg']}"/> 
                              </td>
                              <td> 
@@ -40,28 +41,49 @@
                                      value="#{ctBackingBean.managedBean.contractVer.ctContractValue.gstRegNo == null ? lbl['lbl.txt.na'] : ctBackingBean.managedBean.contractVer.ctContractValue.gstRegNo}" />
                              </td>
                         </tr>
-                        <tr>
+                        
+                         <h:panelGroup  rendered="#{!ctBackingBean.managedBean.viewContract 
+                                           and ctBackingBean.managedBean.updateCompanyName}">
+                                <tr>
+                              <td></td>
+                                      <td>
+                                            <h:panelGrid columns="4">
+                                            <p:selectBooleanCheckbox disabled="#{ctBackingBean.isApprover()}"
+			                                       value="#{ctBackingBean.managedBean.contractVer.ctContractValue.companyNameChange}">
+				                                   <p:ajax event="change" 
+				                                        listener="#{ctBackingBean.retrieveCompanyName}" update="supplierCompanyName, supplierBranchName" />
+				                            </p:selectBooleanCheckbox>
+			                               <p:spacer width="2" />	
+			                               <p:outputLabel value="#{lbl['lbl.ct.update.name']}" style="width:210px;text-align:left;"/>
+			                               <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.update.business.name']}" />
+		                                  </h:panelGrid>
+                                     </td>
+                                      
+                                      <td width="100">
+                                              <p:outputLabel value="#{lbl['lbl.ct.supplier.gst.eff.date']}" />
+                                      </td>
+                                      <td>
+                                        <p:inputText disabled="true" style="width:100px;margin-bottom: 5px;"  
+                                             value="#{ctBackingBean.managedBean.contractVer.ctContractValue.gstEffDate}"
+                                             rendered="#{ctBackingBean.managedBean.contractVer.ctContractValue.gstEffDate != null}">
+                                             <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+                                        </p:inputText>
+                                       <p:inputText disabled="true" style="width:100px;margin-bottom: 5px;"  value="#{lbl['lbl.ct.value.na']}" 
+                                              rendered="#{ctBackingBean.managedBean.contractVer.ctContractValue.gstEffDate == null}"/> 
+                                       </td>
+                                       </tr>
+                                   </h:panelGroup>
+                  
+                      
+                             <tr>
                              <td>
                                 <p:outputLabel value="#{lbl['lbl.ct.business.name']}" />
                              </td>
                              <td>
-                                <h:panelGrid columns="3">
-	                   	           <p:inputText disabled="true" style="width:265px;" id="supplierCompanyName"
-	             	                   value="#{ctBackingBean.managedBean.supplierCompanyName}" />
-                                   <p:spacer width="5"/>
-                                   <h:panelGrid columns="4" rendered="#{!ctBackingBean.managedBean.viewContract 
-                                          and ctBackingBean.managedBean.updateCompanyName}">
-			                         <p:selectBooleanCheckbox disabled="#{ctBackingBean.isApprover()}"
-			                              value="#{ctBackingBean.managedBean.contractVer.ctContractValue.companyNameChange}">
-				                         <p:ajax event="change" 
-				                             listener="#{ctBackingBean.retrieveCompanyName}" update="supplierCompanyName, supplierBranchName" />
-				                      </p:selectBooleanCheckbox>
-			                         <p:spacer width="2" />	
-			               <p:outputLabel value="#{lbl['lbl.ct.update.name']}" style="width:100px;"/>
-			               <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.update.business.name']}" />
-		               </h:panelGrid>
-                 </h:panelGrid>
-                 </td>
+                               <p:inputText disabled="true" style="width:265px;" id="supplierCompanyName"
+	             	                value="#{ctBackingBean.managedBean.supplierCompanyName}" />
+                             </td>
+                 <h:panelGroup  rendered="#{!ctBackingBean.managedBean.updateCompanyName}">
                   <td width="100">
                       <p:outputLabel value="#{lbl['lbl.ct.supplier.gst.eff.date']}" />
                   </td>
@@ -74,6 +96,22 @@
                           <p:inputText disabled="true" style="width:100px;margin-bottom: 5px;"  value="#{lbl['lbl.ct.value.na']}" 
                           rendered="#{ctBackingBean.managedBean.contractVer.ctContractValue.gstEffDate == null}"/> 
                   </td>
+                  </h:panelGroup>
+                   <h:panelGroup  rendered="#{ctBackingBean.managedBean.updateCompanyName}">
+                     <td width="100">
+                     <p:outputLabel  value="#{lbl['lbl.ct.supplier.ep.date']}"/>  
+                 </td>
+                 <td>
+                   <p:inputText disabled="true" style="width:100px;margin-bottom: 5px;"  
+                       value="#{ctBackingBean.managedBean.contractVer.ctContractValue.gstDeclaredDate}"
+                       rendered="#{ctBackingBean.managedBean.contractVer.ctContractValue.gstDeclaredDate != null}" > 
+                       <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+                       </p:inputText> 
+                        <p:inputText disabled="true" style="width:100px;margin-bottom: 5px;"  value="#{lbl['lbl.txt.na']}" 
+                          rendered="#{ctBackingBean.managedBean.contractVer.ctContractValue.gstDeclaredDate == null}"/> 
+                       
+                       </td>
+                   </h:panelGroup>
                   </tr>
                   
                   <tr>
@@ -95,6 +133,7 @@
                		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.branch.info']}" rendered="#{ctBackingBean.managedBean.branchInfoFilePath != null}"/>
 				</h:panelGrid>
 				</td>
+				<h:panelGroup  rendered="#{!ctBackingBean.managedBean.updateCompanyName}">
 				<td width="100">
                      <p:outputLabel  value="#{lbl['lbl.ct.supplier.ep.date']}"/>  
                  </td>
@@ -108,7 +147,26 @@
                           rendered="#{ctBackingBean.managedBean.contractVer.ctContractValue.gstDeclaredDate == null}"/> 
                        
                        </td>
+                       </h:panelGroup>
+                       <h:panelGroup  rendered="#{ctBackingBean.managedBean.updateCompanyName}">
+                     <td></td>
+                      <td></td>
+                       </h:panelGroup>
                  </tr>
+                 <h:panelGroup  rendered="#{!ctBackingBean.managedBean.viewContract 
+                                           and ctBackingBean.managedBean.updateCompanyName}">
+                 <tr>
+                 <td></td>
+                 <td>
+                  <h:panelGrid columns="4">
+                        <p:selectBooleanCheckbox disabled="#{ctBackingBean.isApprover()}"
+			                   value="#{ctBackingBean.managedBean.contractVer.ctContractValue.addressChange}" >
+			                          <p:ajax event="change" listener="#{ctBackingBean.retrieveSupplierAddress}" update="supplierAddress" />
+			                 </p:selectBooleanCheckbox>
+			                               <p:spacer width="2" />	
+			                               <p:outputLabel value="#{lbl['lbl.ct.update.address']}" style="width:100px;text-align:left;"/>
+			                               <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.update.supplier.address']}" />
+			                               </h:panelGrid></td></tr></h:panelGroup>
                  <tr>
                  <td>
                 <h:panelGroup>
@@ -118,22 +176,9 @@
                 </h:panelGroup>
                 </td>
                 <td>
-                <h:panelGrid columns="3">
                     <p:inputTextarea id="supplierAddress" disabled="true" rows="5"   maxlength="200"   autoResize="false"
                         value="#{ctBackingBean.managedBean.supplierAddress}"  style="width:265px; margin-bottom: 5px;" />
-                     <p:spacer width="5"/>
-                     <h:panelGrid columns="4" rendered="#{!ctBackingBean.managedBean.viewContract 
-                                          and ctBackingBean.managedBean.updateSupplierAddress}">
-			            <p:selectBooleanCheckbox disabled="#{ctBackingBean.isApprover()}"
-			                value="#{ctBackingBean.managedBean.contractVer.ctContractValue.addressChange}" >
-			                <p:ajax event="change" listener="#{ctBackingBean.retrieveSupplierAddress}" update="supplierAddress" />
-			            </p:selectBooleanCheckbox>
-			            <p:spacer width="2" />	
-			         <p:outputLabel value="#{lbl['lbl.ct.update.address']}" style="width:100px;"/>
-			         <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.update.supplier.address']}" />
-		           </h:panelGrid>
-                 </h:panelGrid>
-                 </td>
+                   </td>
                  </tr>
                  <tr>
                  <td>
@@ -146,7 +191,7 @@
                       <td>
                        <p:outputLabel  value="#{lbl['lbl.ct.tel']}"/>  
                       </td>
-                      <td style="width:450px;">
+                      <td style="width:400px;">
                           <table>
                                  <tr>
                                     <td>
