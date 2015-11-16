@@ -44,14 +44,16 @@ import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.dto.rpt.PMReportReqDTO;
 import my.ep.biz.dto.rpt.PMReportResDTO;
+import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
-import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -59,8 +61,9 @@ import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.constant.sc.QTStatusConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.cm.codification.CodificationReqDTO;
+import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -71,14 +74,13 @@ import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -89,30 +91,28 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.rpt.PMReport;
-import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
-import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
-import my.ep.web.backingbean.sc.loa.QtLOABackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.report.ReportsGenerateBean;
 import my.ep.web.constant.report.CommonMethod;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.ReportMangedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
-
 import com.liferay.portal.util.PortalUtil;
 
 // TODO: Auto-generated Javadoc
@@ -160,7 +160,7 @@ public class ReportBackingBean extends
 	private boolean enableValue = false;
 
 	/** The parameter code type. */
-	String parameterCodeType = new String();
+	private String parameterCodeType = new String();
 
 	/** The report list. */
 	private List<SelectItem> reportList = new ArrayList<SelectItem>();
@@ -175,7 +175,7 @@ public class ReportBackingBean extends
 	private List<SelectItem> regTypeList;
 
 	/** The rpt gen bean. */
-	ReportsGenerateBean rptGenBean = new ReportsGenerateBean();
+	private ReportsGenerateBean rptGenBean = new ReportsGenerateBean();
 
 	/** The authoriztion list. */
 	private List<String> authoriztionList = new ArrayList<String>();
@@ -332,33 +332,36 @@ public class ReportBackingBean extends
 
 	/** The sc soa status list. */
 	private List<SelectItem> scSOAStatusList = new ArrayList<SelectItem>();
+	
+	/** The search lov paging data model. */
+	private IPagingDataModel<CmUnspsc> searchUnspscPagingDataModel = new SearchUnspscPagingDataModel();
 
 	/** The sc report backing bean. */
-	SCReportBackingBean scReportBackingBean;
+	private SCReportBackingBean scReportBackingBean;
 
 	/** The cm report backing bean. */
-	CMReportBackingBean cmReportBackingBean;
+	private CMReportBackingBean cmReportBackingBean;
 
 	/** The fl report backing bean. */
-	FLReportBackingBean flReportBackingBean;
+	private FLReportBackingBean flReportBackingBean;
 
 	/** The sm report backing bean. */
-	SMReportBackingBean smReportBackingBean;
+	private SMReportBackingBean smReportBackingBean;
 
 	/** The ct report backing bean. */
-	CTReportBackingBean ctReportBackingBean;
+	private CTReportBackingBean ctReportBackingBean;
 
 	/** The pp report backing bean. */
-	PPReportBackingBean ppReportBackingBean;
+	private PPReportBackingBean ppReportBackingBean;
 
 	/** The pm report backing bean. */
-	PMReportBackingBean pmReportBackingBean;
+	private PMReportBackingBean pmReportBackingBean;
 
 	/** The unspid. */
-	Long unspid = null;
+	private Long unspid = null;
 
 	/** The ministry id. */
-	Long ministryId = null;
+	private Long ministryId = null;
 
 	/** The role code list. */
 	private List<String> roleCodeList = new ArrayList<String>();
@@ -380,7 +383,651 @@ public class ReportBackingBean extends
 
 	/** The module item map. */
 	private Map<String, List<SelectItem>> moduleItemMap = new HashMap<String, List<SelectItem>>();
+	
+	/** The items. */
+	private SelectItem[] items = null;
 
+	/** The doc type status items. */
+	private SelectItem[] docTypeStatusItems = null;
+
+	/** The doc type status items list. */
+	private List<SelectItem> docTypeStatusItemsList = new ArrayList<SelectItem>();
+	
+	
+	/** The local to date var. */
+	private String localToDateVar;
+
+	/** The user id. */
+	private String userId;
+
+	/** The lng user id. */
+	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+	// private Long lngUserId =
+	// (long)243371;//116205;//243371;//61745;//219490;//240790;//183931;//20854;//243371;//20854;//168887;//221747;//219490;//243394;//243371;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
+	/** The str language. */
+	private String strLanguage = ResourceBundleUtils.getMessage(
+			ReportConst.LABEL_LANG, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+			new FacesScopes().getUserLocale());
+	// private String strLanguage = "ms";
+	/** The role code. */
+	private String roleCode;
+
+	/** The from date. */
+	private Date fromDate;
+
+	/** The to date. */
+	private Date toDate;
+
+	/** The sub module. */
+	private String subModule;
+
+	/** The common ptj. */
+	private String commonPtj;
+
+	/** The common ministry. */
+	private String commonMinistry;
+
+	/** The ministry name. */
+	private String ministryName;
+	// sc
+	/** The sc quotation id. */
+	private String scQuotationId;
+
+	/** The sc quotation no. */
+	private String scQuotationNo;
+
+	/** The sc payment id. */
+	private String scPaymentId;
+
+	/** The sc created to year. */
+	private String scCreatedToYear;
+
+	/** The sc created to month. */
+	private String scCreatedToMonth;
+
+	/** The sc created from year. */
+	private String scCreatedFromYear;
+
+	/** The sc created from month. */
+	private String scCreatedFromMonth;
+
+	/** The sc desk officer. */
+	private String scDeskOfficer;
+
+	/** The sc ptj. */
+	private String scPtj;
+
+	/** The sc status. */
+	private String scStatus;
+
+	/** The sc publish from date. */
+	private Date scPublishFromDate;
+
+	/** The sc publish to date. */
+	private Date scPublishToDate;
+
+	/** The sc sone crtd from date. */
+	private Date scSoneCrtdFromDate;
+
+	/** The sc sone crtd to date. */
+	private Date scSoneCrtdToDate;
+
+	/** The sc requisener id. */
+	private String scRequisenerId;
+
+	/** The sc supplier. */
+	private String scSupplier;
+
+	/** The sc login. */
+	private String scLogin;
+
+	/** The sc p ino. */
+	private String scPIno;
+
+	/** The sc sone status. */
+	private String scSoneStatus;
+
+	/** The sc prc rpt group. */
+	private String scPrcRptGroup;
+
+	/** The sc pi dtls prc rpt group. */
+	private String scPIDtlsPrcRptGroup;
+
+	/** The sc procurement type. */
+	private String scProcurementType;
+
+	/** The sc process rpt quotation no. */
+	private String scProcessRptQuotationNo;
+
+	/** The sc common status. */
+	private String scCommonStatus;
+
+	/** The sc laprnpurchdefault group. */
+	private String scLAPRNPURCHDEFAULTGroup;
+
+	/** The sc requestnotesummary group. */
+	private String scREQUESTNOTESUMMARYGroup;
+
+	/** The sc pid no. */
+	private String scPIDNo;
+
+	/** The sc contract or pkp type. */
+	private String scContractOrPKPType;
+
+	/** The sc contract or pkp no. */
+	private String scContractOrPKPNo;
+
+	/** The sc contract or pkp name. */
+	private String scContractOrPKPName;
+
+	/** The sc request quote no. */
+	private String scRequestQuoteNo;
+
+	/** The sc request note status. */
+	private String scRequestNoteStatus;
+
+	/** The sc simple quote status. */
+	private String scSimpleQuoteStatus;
+
+	/** The sc simple quote dtl group. */
+	private String scSimpleQuoteDtlGroup;
+
+	/** The sc purchase in default status. */
+	private String scPurchaseInDefaultStatus;
+
+	/** The sc soa status. */
+	private String scSOAStatus;
+
+	/** The sc simple quote type. */
+	private String scSimpleQuoteType;
+
+	/** The sc loa no. */
+	private String scLOANo;
+
+	// cm
+	/** The cm item type. */
+	private String cmItemType;
+
+	/** The cm item status. */
+	private String cmItemStatus;
+
+	/** The cm unspsc code. */
+	private String cmUnspscCode;
+
+	/** The cm unspsc title. */
+	private String cmUnspscTitle;
+
+	/** The cm company name. */
+	private String cmCompanyName;
+
+	/** The cm registration type. */
+	private String cmRegistrationType;
+
+	/** The cm item category. */
+	private String cmItemCategory;
+
+	/** The cm item name. */
+	private String cmItemName;
+
+	/** The cm ep number. */
+	private String cmEpNumber;
+
+	/** The cm business reg no. */
+	private String cmBusinessRegNo;
+
+	/** The cm ic number. */
+	private String cmIcNumber;
+
+	/** The cm mof number. */
+	private String cmMofNumber;
+
+	/** The cm extention code. */
+	private String cmExtentionCode;
+
+	/** The cm extention type. */
+	private String cmExtentionType;
+
+	/** The cm extention brand. */
+	private String cmExtentionBrand;
+
+	/** The cm extention measurment. */
+	private String cmExtentionMeasurment;
+
+	/** The cm extention colour. */
+	private String cmExtentionColour;
+
+	/** The cm proof identity. */
+	private String cmProofIdentity;
+
+	/** The cm suppl or admin. */
+	private String cmSupplOrAdmin;
+
+	/** The cm extention. */
+	private String cmExtention;
+
+	/** The cm group one. */
+	private String cmGroupOne;
+
+	/** The cm request number. */
+	private String cmRequestNumber;
+	// fl
+	/** The fl itm type. */
+	private String flItmType;
+
+	/** The fl contract no. */
+	private String flContractNo;
+
+	/** The fl sst. */
+	private String flSst;
+
+	/** The fl jabatan. */
+	private String flJabatan;
+
+	/** The fl supplier. */
+	private String flSupplier;
+
+	/** The fl status. */
+	private String flStatus;
+
+	/** The fl duration. */
+	private String flDuration;
+
+	/** The fl recieving officer. */
+	private String flRecievingOfficer;
+
+	/** The fl delivery address. */
+	private String flDeliveryAddress;
+
+	/** The fl rec note no. */
+	private String flRecNoteNo;
+
+	/** The fl contract type. */
+	private String flContractType;
+
+	/** The fl requisitioner. */
+	private String flRequisitioner;
+
+	/** The fl mto contract. */
+	private String flMtoContract;
+
+	/** The fl invoice no. */
+	private String flInvoiceNo;
+
+	/** The fl supplier invoice no. */
+	private String flSupplierInvoiceNo;
+
+	/** The fl deduction type. */
+	private String flDeductionType;
+
+	/** The fl cr no. */
+	private String flCrNo;
+
+	/** The fl approver name. */
+	private String flApproverName;
+
+	/** The fl document type. */
+	private String flDocumentType;
+
+	/** The fl criteria. */
+	private String flCriteria;
+
+	/** The fl scoring. */
+	private String flScoring;
+
+	/** The fl pkp no. */
+	private String flPkpNo;
+
+	/** The fl delivery order no. */
+	private String flDeliveryOrderNo;
+
+	/** The fl supplier delivery order no. */
+	private String flSupplierDeliveryOrderNo;
+
+	/** The fl item code. */
+	private String flItemCode;
+
+	/** The fl po amount. */
+	private String flPoAmount;
+
+	/** The fl pr no. */
+	private String flPrNo;
+
+	/** The fl pmo. */
+	private String flPmo;
+
+	/** The fl item name. */
+	private String flItemName;
+
+	/** The fl contract order. */
+	private String flContractOrder;
+
+	/** The fl contract request. */
+	private String flContractRequest;
+
+	/** The fl purchase order no. */
+	private String flPurchaseOrderNo;
+
+	/** The fl group one. */
+	private String flGroupOne;
+
+	/** The fl group two. */
+	private String flGroupTwo;
+
+	/** The fl group three. */
+	private String flGroupThree;
+
+	/** The fl group four. */
+	private String flGroupFour;
+
+	/** The fl group five. */
+	private String flGroupFive;
+
+	/** The fl group six. */
+	private String flGroupSix;
+
+	/** The fl group seven. */
+	private String flGroupSeven;
+
+	/** The fl group eight. */
+	private String flGroupEight;
+
+	/** The fl group nine. */
+	private String flGroupNine;
+
+	/** The fl group ten. */
+	private String flGroupTen;
+
+	/** The fl group eleven. */
+	private String flGroupEleven;
+
+	/** The fl group twelve. */
+	private String flGroupTwelve;
+
+	/** The fl group thirteen. */
+	private String flGroupThirteen;
+
+	/** The fl group fourteen. */
+	private String flGroupFourteen;
+
+	/** The fl group fifteen. */
+	private String flGroupFifteen;
+
+	/** The fl group sixteen. */
+	private String flGroupSixteen;
+
+	/** The fl group seventeen. */
+	private String flGroupSeventeen;
+
+	/** The report category view. */
+	private boolean reportCategoryView = false;
+
+	/** The fl stop instruction no. */
+	private String flStopInstructionNo;
+
+	/** The fl payment advice no. */
+	private String flPaymentAdviceNo;
+	// sm
+	/** The sm threshold from year. */
+	private String smThresholdFromYear;
+
+	/** The sm threshold to year. */
+	private String smThresholdToYear;
+
+	/** The sm created from year. */
+	private String smCreatedFromYear;
+
+	/** The sm created to year. */
+	private String smCreatedToYear;
+
+	/** The sm monthly rpt by year. */
+	private String smMonthlyRptByYear;
+
+	/** The sm svo user. */
+	private String smSVOUser;
+
+	/** The sm application no. */
+	private String smApplicationNo;
+
+	/** The sm zone. */
+	private String smZone;
+
+	/** The sm supplier type. */
+	private String smSupplierType;
+
+	/** The sm mof reg no. */
+	private String smMofRegNo;
+
+	/** The sm registration status. */
+	private String smRegistrationStatus;
+
+	/** The smcategory. */
+	private String smcategory;
+
+	/** The sm main category. */
+	private String smMainCategory;
+
+	/** The sm sub category. */
+	private String smSubCategory;
+
+	/** The sm sub category division. */
+	private String smSubCategoryDivision;
+
+	/** The sm application status. */
+	private String smApplicationStatus;
+
+	/** The sm payment type. */
+	private String smPaymentType;
+
+	/** The sm application type. */
+	private String smApplicationType;
+
+	/** The sm state. */
+	private String smState;
+
+	/** The sm district. */
+	private String smDistrict;
+
+	/** The sm company name. */
+	private String smCompanyName;
+
+	/** The sm registration type. */
+	private String smRegistrationType;
+
+	/** The sm year text. */
+	private String smYearText;
+
+	/** The sm mof reg no from. */
+	private String smMofRegNoFrom;
+
+	/** The sm mof reg no to. */
+	private String smMofRegNoTo;
+
+	/** The sm paid up capital frm. */
+	private String smPaidUpCapitalFrm;
+
+	/** The sm paid up capital to. */
+	private String smPaidUpCapitalTo;
+
+	/** The sm paid up capital naccum. */
+	private String smPaidUpCapitalNaccum;
+
+	/** The sm payment method. */
+	private String smPaymentMethod;
+
+	/** The sm processing type. */
+	private String smProcessingType;
+
+	/** The sm receipt no. */
+	private String smReceiptNo;
+
+	/** The sm report type. */
+	private String smReportType;
+
+	/** The sm processing officer name. */
+	private String smProcessingOfficerName;
+
+	/** The sm role. */
+	private String smRole;
+
+	/** The sm ep no. */
+	private String smEpNo;
+
+	/** The sm registration no. */
+	private String smRegistrationNo;
+
+	/** The sm supporting document mode. */
+	private String smSupportingDocumentMode;
+
+	/** The sm supporting document status. */
+	private String smSupportingDocumentStatus;
+
+	/** The sm personnel role. */
+	private String smPersonnelRole;
+
+	/** The sm identification type. */
+	private String smIdentificationType;
+
+	/** The sm identification number. */
+	private String smIdentificationNumber;
+
+	/** The sm cancellation by. */
+	private String smCancellationBy;
+
+	/** The sm from month. */
+	private String smFromMonth;
+
+	/** The sm to month. */
+	private String smToMonth;
+
+	/** The sm user name. */
+	private String smUserName;
+
+	/** The sm request expiry date. */
+	private String smRequestExpiryDate;
+
+	/** The sm profile status. */
+	private String smProfileStatus;
+
+	/** The sm gst registration no. */
+	private String smGSTRegistrationNo;
+
+	/** The sm gst registered status. */
+	private String smGSTRegisteredStatus;
+
+	/** The sm payment to. */
+	private String smPaymentTo;
+	// CT
+	/** The ct contract no. */
+	private String ctContractNo;
+
+	/** The ct agreement. */
+	private String ctAgreement;
+
+	/** The ct status. */
+	private String ctStatus;
+
+	/** The ct contr montr status. */
+	private String ctContrMontrStatus;
+
+	/** The ct complete. */
+	private String ctComplete;
+
+	/** The ct group one. */
+	private String ctGroupOne;
+
+	/** The ct group two. */
+	private String ctGroupTwo;
+
+	/** The ct product service. */
+	private String ctProductService;
+
+	/** The ct loan no. */
+	private String ctLoanNo;
+
+	/** The ct procurement mode. */
+	private String ctProcurementMode;
+
+	/** The ct physical contract no. */
+	private String ctPhysicalContractNo;
+
+	/** The ct group three. */
+	private String ctGroupThree;
+
+	/** The ct status two. */
+	private String ctStatusTwo;
+
+	/** The ct loa physical no. */
+	private String ctLOAPhysicalNo;
+
+	/** The ct user type. */
+	private String ctUserType;
+
+	/** The ct sub type. */
+	private String ctSubType;
+
+	/** The ct termination type. */
+	private String ctTerminationType;
+
+	/** The ct circular no. */
+	private String ctCircularNo;
+
+	/** The ct circular name. */
+	private String ctCircularName;
+
+	/** The ct circular type. */
+	private String ctCircularType;
+
+	/** The ct circular effective from date. */
+	private Date ctCircularEffectiveFromDate;
+
+	/** The ct circular effective to date. */
+	private Date ctCircularEffectiveToDate;
+
+	/** The ct supplier name. */
+	private String ctSupplierName;
+	// PP
+	/** The pp year. */
+	private String ppYear;
+
+	/** The pp ministry. */
+	private String ppMinistry;
+
+	/** The pp ptj. */
+	private String ppPTJ;
+
+	/** The lng state id. */
+	private long[] lngStateId;
+
+	/** The lng district id. */
+	private long[] lngDistrictId;
+	// PM
+	/** The pm service type. */
+	private String pmServiceType;
+
+	/** The pm status. */
+	private String pmStatus;
+
+	/** The pm financial org name. */
+	private String pmFinancialOrgName;
+
+	/** The pm business reg no. */
+	private String pmBusinessRegNo;
+	
+	/** The selected all. */
+	private boolean selectedAll;
+
+	/** The selected. */
+	private boolean selected;
+
+	/** The supplier parent cat list. */
+	private List<PmCategoryL1> supplierParentCatList;
+
+	/** The supplier child cat list. */
+	private List<PmCategoryL2> supplierChildCatList;
+
+	/** The supplier sub child cat list. */
+	private List<PmCategoryL3> supplierSubChildCatList;
+	
 	/**
 	 * Gets the select cat deletion list.
 	 * 
@@ -390,15 +1037,7 @@ public class ReportBackingBean extends
 		return selectCatDeletionList;
 	}
 
-	/** The items. */
-	SelectItem[] items = null;
-
-	/** The doc type status items. */
-	SelectItem[] docTypeStatusItems = null;
-
-	/** The doc type status items list. */
-	List<SelectItem> docTypeStatusItemsList = new ArrayList<SelectItem>();
-
+	
 	/**
 	 * @return the scLOAIdNo
 	 */
@@ -425,20 +1064,7 @@ public class ReportBackingBean extends
 		this.selectCatDeletionList = selectCatDeletionList;
 	}
 
-	/** The selected all. */
-	private boolean selectedAll;
-
-	/** The selected. */
-	private boolean selected;
-
-	/** The supplier parent cat list. */
-	private List<PmCategoryL1> supplierParentCatList;
-
-	/** The supplier child cat list. */
-	private List<PmCategoryL2> supplierChildCatList;
-
-	/** The supplier sub child cat list. */
-	private List<PmCategoryL3> supplierSubChildCatList;
+	
 
 	/**
 	 * Gets the payment method list.
@@ -1766,624 +2392,7 @@ public class ReportBackingBean extends
 		this.addingDistrictList = addingDistrictList;
 	}
 
-	/** The local to date var. */
-	private String localToDateVar;
-
-	/** The user id. */
-	private String userId;
-
-	/** The lng user id. */
-	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	// private Long lngUserId =
-	// (long)243371;//116205;//243371;//61745;//219490;//240790;//183931;//20854;//243371;//20854;//168887;//221747;//219490;//243394;//243371;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
-	/** The str language. */
-	private String strLanguage = ResourceBundleUtils.getMessage(
-			ReportConst.LABEL_LANG, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-			new FacesScopes().getUserLocale());
-	// private String strLanguage = "ms";
-	/** The role code. */
-	private String roleCode;
-
-	/** The from date. */
-	private Date fromDate;
-
-	/** The to date. */
-	private Date toDate;
-
-	/** The sub module. */
-	private String subModule;
-
-	/** The common ptj. */
-	private String commonPtj;
-
-	/** The common ministry. */
-	private String commonMinistry;
-
-	/** The ministry name. */
-	private String ministryName;
-	// sc
-	/** The sc quotation id. */
-	private String scQuotationId;
-
-	/** The sc quotation no. */
-	private String scQuotationNo;
-
-	/** The sc payment id. */
-	private String scPaymentId;
-
-	/** The sc created to year. */
-	private String scCreatedToYear;
-
-	/** The sc created to month. */
-	private String scCreatedToMonth;
-
-	/** The sc created from year. */
-	private String scCreatedFromYear;
-
-	/** The sc created from month. */
-	private String scCreatedFromMonth;
-
-	/** The sc desk officer. */
-	private String scDeskOfficer;
-
-	/** The sc ptj. */
-	private String scPtj;
-
-	/** The sc status. */
-	private String scStatus;
-
-	/** The sc publish from date. */
-	private Date scPublishFromDate;
-
-	/** The sc publish to date. */
-	private Date scPublishToDate;
-
-	/** The sc sone crtd from date. */
-	private Date scSoneCrtdFromDate;
-
-	/** The sc sone crtd to date. */
-	private Date scSoneCrtdToDate;
-
-	/** The sc requisener id. */
-	private String scRequisenerId;
-
-	/** The sc supplier. */
-	private String scSupplier;
-
-	/** The sc login. */
-	private String scLogin;
-
-	/** The sc p ino. */
-	private String scPIno;
-
-	/** The sc sone status. */
-	private String scSoneStatus;
-
-	/** The sc prc rpt group. */
-	private String scPrcRptGroup;
-
-	/** The sc pi dtls prc rpt group. */
-	private String scPIDtlsPrcRptGroup;
-
-	/** The sc procurement type. */
-	private String scProcurementType;
-
-	/** The sc process rpt quotation no. */
-	private String scProcessRptQuotationNo;
-
-	/** The sc common status. */
-	private String scCommonStatus;
-
-	/** The sc laprnpurchdefault group. */
-	private String scLAPRNPURCHDEFAULTGroup;
-
-	/** The sc requestnotesummary group. */
-	private String scREQUESTNOTESUMMARYGroup;
-
-	/** The sc pid no. */
-	private String scPIDNo;
-
-	/** The sc contract or pkp type. */
-	private String scContractOrPKPType;
-
-	/** The sc contract or pkp no. */
-	private String scContractOrPKPNo;
-
-	/** The sc contract or pkp name. */
-	private String scContractOrPKPName;
-
-	/** The sc request quote no. */
-	private String scRequestQuoteNo;
-
-	/** The sc request note status. */
-	private String scRequestNoteStatus;
-
-	/** The sc simple quote status. */
-	private String scSimpleQuoteStatus;
-
-	/** The sc simple quote dtl group. */
-	private String scSimpleQuoteDtlGroup;
-
-	/** The sc purchase in default status. */
-	private String scPurchaseInDefaultStatus;
-
-	/** The sc soa status. */
-	private String scSOAStatus;
-
-	/** The sc simple quote type. */
-	private String scSimpleQuoteType;
-
-	/** The sc loa no. */
-	private String scLOANo;
-
-	// cm
-	/** The cm item type. */
-	private String cmItemType;
-
-	/** The cm item status. */
-	private String cmItemStatus;
-
-	/** The cm unspsc code. */
-	private String cmUnspscCode;
-
-	/** The cm unspsc title. */
-	private String cmUnspscTitle;
-
-	/** The cm company name. */
-	private String cmCompanyName;
-
-	/** The cm registration type. */
-	private String cmRegistrationType;
-
-	/** The cm item category. */
-	private String cmItemCategory;
-
-	/** The cm item name. */
-	private String cmItemName;
-
-	/** The cm ep number. */
-	private String cmEpNumber;
-
-	/** The cm business reg no. */
-	private String cmBusinessRegNo;
-
-	/** The cm ic number. */
-	private String cmIcNumber;
-
-	/** The cm mof number. */
-	private String cmMofNumber;
-
-	/** The cm extention code. */
-	private String cmExtentionCode;
-
-	/** The cm extention type. */
-	private String cmExtentionType;
-
-	/** The cm extention brand. */
-	private String cmExtentionBrand;
-
-	/** The cm extention measurment. */
-	private String cmExtentionMeasurment;
-
-	/** The cm extention colour. */
-	private String cmExtentionColour;
-
-	/** The cm proof identity. */
-	private String cmProofIdentity;
-
-	/** The cm suppl or admin. */
-	private String cmSupplOrAdmin;
-
-	/** The cm extention. */
-	private String cmExtention;
-
-	/** The cm group one. */
-	private String cmGroupOne;
-
-	/** The cm request number. */
-	private String cmRequestNumber;
-	// fl
-	/** The fl itm type. */
-	private String flItmType;
-
-	/** The fl contract no. */
-	private String flContractNo;
-
-	/** The fl sst. */
-	private String flSst;
-
-	/** The fl jabatan. */
-	private String flJabatan;
-
-	/** The fl supplier. */
-	private String flSupplier;
-
-	/** The fl status. */
-	private String flStatus;
-
-	/** The fl duration. */
-	private String flDuration;
-
-	/** The fl recieving officer. */
-	private String flRecievingOfficer;
-
-	/** The fl delivery address. */
-	private String flDeliveryAddress;
-
-	/** The fl rec note no. */
-	private String flRecNoteNo;
-
-	/** The fl contract type. */
-	private String flContractType;
-
-	/** The fl requisitioner. */
-	private String flRequisitioner;
-
-	/** The fl mto contract. */
-	private String flMtoContract;
-
-	/** The fl invoice no. */
-	private String flInvoiceNo;
-
-	/** The fl supplier invoice no. */
-	private String flSupplierInvoiceNo;
-
-	/** The fl deduction type. */
-	private String flDeductionType;
-
-	/** The fl cr no. */
-	private String flCrNo;
-
-	/** The fl approver name. */
-	private String flApproverName;
-
-	/** The fl document type. */
-	private String flDocumentType;
-
-	/** The fl criteria. */
-	private String flCriteria;
-
-	/** The fl scoring. */
-	private String flScoring;
-
-	/** The fl pkp no. */
-	private String flPkpNo;
-
-	/** The fl delivery order no. */
-	private String flDeliveryOrderNo;
-
-	/** The fl supplier delivery order no. */
-	private String flSupplierDeliveryOrderNo;
-
-	/** The fl item code. */
-	private String flItemCode;
-
-	/** The fl po amount. */
-	private String flPoAmount;
-
-	/** The fl pr no. */
-	private String flPrNo;
-
-	/** The fl pmo. */
-	private String flPmo;
-
-	/** The fl item name. */
-	private String flItemName;
-
-	/** The fl contract order. */
-	private String flContractOrder;
-
-	/** The fl contract request. */
-	private String flContractRequest;
-
-	/** The fl purchase order no. */
-	private String flPurchaseOrderNo;
-
-	/** The fl group one. */
-	private String flGroupOne;
-
-	/** The fl group two. */
-	private String flGroupTwo;
-
-	/** The fl group three. */
-	private String flGroupThree;
-
-	/** The fl group four. */
-	private String flGroupFour;
-
-	/** The fl group five. */
-	private String flGroupFive;
-
-	/** The fl group six. */
-	private String flGroupSix;
-
-	/** The fl group seven. */
-	private String flGroupSeven;
-
-	/** The fl group eight. */
-	private String flGroupEight;
-
-	/** The fl group nine. */
-	private String flGroupNine;
-
-	/** The fl group ten. */
-	private String flGroupTen;
-
-	/** The fl group eleven. */
-	private String flGroupEleven;
-
-	/** The fl group twelve. */
-	private String flGroupTwelve;
-
-	/** The fl group thirteen. */
-	private String flGroupThirteen;
-
-	/** The fl group fourteen. */
-	private String flGroupFourteen;
-
-	/** The fl group fifteen. */
-	private String flGroupFifteen;
-
-	/** The fl group sixteen. */
-	private String flGroupSixteen;
-
-	/** The fl group seventeen. */
-	private String flGroupSeventeen;
-
-	/** The report category view. */
-	private boolean reportCategoryView = false;
-
-	/** The fl stop instruction no. */
-	private String flStopInstructionNo;
-
-	/** The fl payment advice no. */
-	private String flPaymentAdviceNo;
-	// sm
-	/** The sm threshold from year. */
-	private String smThresholdFromYear;
-
-	/** The sm threshold to year. */
-	private String smThresholdToYear;
-
-	/** The sm created from year. */
-	private String smCreatedFromYear;
-
-	/** The sm created to year. */
-	private String smCreatedToYear;
-
-	/** The sm monthly rpt by year. */
-	private String smMonthlyRptByYear;
-
-	/** The sm svo user. */
-	private String smSVOUser;
-
-	/** The sm application no. */
-	private String smApplicationNo;
-
-	/** The sm zone. */
-	private String smZone;
-
-	/** The sm supplier type. */
-	private String smSupplierType;
-
-	/** The sm mof reg no. */
-	private String smMofRegNo;
-
-	/** The sm registration status. */
-	private String smRegistrationStatus;
-
-	/** The smcategory. */
-	private String smcategory;
-
-	/** The sm main category. */
-	private String smMainCategory;
-
-	/** The sm sub category. */
-	private String smSubCategory;
-
-	/** The sm sub category division. */
-	private String smSubCategoryDivision;
-
-	/** The sm application status. */
-	private String smApplicationStatus;
-
-	/** The sm payment type. */
-	private String smPaymentType;
-
-	/** The sm application type. */
-	private String smApplicationType;
-
-	/** The sm state. */
-	private String smState;
-
-	/** The sm district. */
-	private String smDistrict;
-
-	/** The sm company name. */
-	private String smCompanyName;
-
-	/** The sm registration type. */
-	private String smRegistrationType;
-
-	/** The sm year text. */
-	private String smYearText;
-
-	/** The sm mof reg no from. */
-	private String smMofRegNoFrom;
-
-	/** The sm mof reg no to. */
-	private String smMofRegNoTo;
-
-	/** The sm paid up capital frm. */
-	private String smPaidUpCapitalFrm;
-
-	/** The sm paid up capital to. */
-	private String smPaidUpCapitalTo;
-
-	/** The sm paid up capital naccum. */
-	private String smPaidUpCapitalNaccum;
-
-	/** The sm payment method. */
-	private String smPaymentMethod;
-
-	/** The sm processing type. */
-	private String smProcessingType;
-
-	/** The sm receipt no. */
-	private String smReceiptNo;
-
-	/** The sm report type. */
-	private String smReportType;
-
-	/** The sm processing officer name. */
-	private String smProcessingOfficerName;
-
-	/** The sm role. */
-	private String smRole;
-
-	/** The sm ep no. */
-	private String smEpNo;
-
-	/** The sm registration no. */
-	private String smRegistrationNo;
-
-	/** The sm supporting document mode. */
-	private String smSupportingDocumentMode;
-
-	/** The sm supporting document status. */
-	private String smSupportingDocumentStatus;
-
-	/** The sm personnel role. */
-	private String smPersonnelRole;
-
-	/** The sm identification type. */
-	private String smIdentificationType;
-
-	/** The sm identification number. */
-	private String smIdentificationNumber;
-
-	/** The sm cancellation by. */
-	private String smCancellationBy;
-
-	/** The sm from month. */
-	private String smFromMonth;
-
-	/** The sm to month. */
-	private String smToMonth;
-
-	/** The sm user name. */
-	private String smUserName;
-
-	/** The sm request expiry date. */
-	private String smRequestExpiryDate;
-
-	/** The sm profile status. */
-	private String smProfileStatus;
-
-	/** The sm gst registration no. */
-	private String smGSTRegistrationNo;
-
-	/** The sm gst registered status. */
-	private String smGSTRegisteredStatus;
-
-	/** The sm payment to. */
-	private String smPaymentTo;
-	// CT
-	/** The ct contract no. */
-	private String ctContractNo;
-
-	/** The ct agreement. */
-	private String ctAgreement;
-
-	/** The ct status. */
-	private String ctStatus;
-
-	/** The ct contr montr status. */
-	private String ctContrMontrStatus;
-
-	/** The ct complete. */
-	private String ctComplete;
-
-	/** The ct group one. */
-	private String ctGroupOne;
-
-	/** The ct group two. */
-	private String ctGroupTwo;
-
-	/** The ct product service. */
-	private String ctProductService;
-
-	/** The ct loan no. */
-	private String ctLoanNo;
-
-	/** The ct procurement mode. */
-	private String ctProcurementMode;
-
-	/** The ct physical contract no. */
-	private String ctPhysicalContractNo;
-
-	/** The ct group three. */
-	private String ctGroupThree;
-
-	/** The ct status two. */
-	private String ctStatusTwo;
-
-	/** The ct loa physical no. */
-	private String ctLOAPhysicalNo;
-
-	/** The ct user type. */
-	private String ctUserType;
-
-	/** The ct sub type. */
-	private String ctSubType;
-
-	/** The ct termination type. */
-	private String ctTerminationType;
-
-	/** The ct circular no. */
-	private String ctCircularNo;
-
-	/** The ct circular name. */
-	private String ctCircularName;
-
-	/** The ct circular type. */
-	private String ctCircularType;
-
-	/** The ct circular effective from date. */
-	private Date ctCircularEffectiveFromDate;
-
-	/** The ct circular effective to date. */
-	private Date ctCircularEffectiveToDate;
-
-	/** The ct supplier name. */
-	private String ctSupplierName;
-	// PP
-	/** The pp year. */
-	private String ppYear;
-
-	/** The pp ministry. */
-	private String ppMinistry;
-
-	/** The pp ptj. */
-	private String ppPTJ;
-
-	/** The lng state id. */
-	private long[] lngStateId;
-
-	/** The lng district id. */
-	private long[] lngDistrictId;
-	// PM
-	/** The pm service type. */
-	private String pmServiceType;
-
-	/** The pm status. */
-	private String pmStatus;
-
-	/** The pm financial org name. */
-	private String pmFinancialOrgName;
-
-	/** The pm business reg no. */
-	private String pmBusinessRegNo;
+	
 
 	/**
 	 * Gets the cm request number.
@@ -6778,6 +6787,23 @@ public class ReportBackingBean extends
 	public void setScLOANo(String scLOANo) {
 		this.scLOANo = scLOANo;
 	}
+	
+	
+	/**
+	 * @return the searchLOVPagingDataModel
+	 */
+	public IPagingDataModel<CmUnspsc> getSearchUnspscPagingDataModel() {
+		return searchUnspscPagingDataModel;
+	}
+
+	/**
+	 * @param searchLOVPagingDataModel the searchLOVPagingDataModel to set
+	 */
+	public void setSearchUnspscPagingDataModel(
+			IPagingDataModel<CmUnspsc> searchUnspscPagingDataModel) {
+		this.searchUnspscPagingDataModel = searchUnspscPagingDataModel;
+	}
+	
 
 	/**
 	 * Retrieve LOA status list.
@@ -9628,15 +9654,21 @@ public class ReportBackingBean extends
 					retrieveExtType();
 					retrieveMeasurement();
 					retrieveColor();
-					getManagedBean().getRptGenBean().setCmExtentionBrandView(
-							true);
-					getManagedBean().getRptGenBean().setCmExtentionTypeView(
-							true);
-					getManagedBean().getRptGenBean()
-							.setCmExtentionMeasurmentView(true);
-					getManagedBean().getRptGenBean().setCmExtentionColourView(
-							true);
-				} else {
+					if (CollectionUtils.isNotEmpty(brandList)
+							&& CollectionUtils.isNotEmpty(extTypeList)
+							&& CollectionUtils.isNotEmpty(measurmentList)
+							&& CollectionUtils.isNotEmpty(colorList)) {
+						
+						getManagedBean().getRptGenBean()
+								.setCmExtentionBrandView(true);
+						getManagedBean().getRptGenBean()
+								.setCmExtentionTypeView(true);
+						getManagedBean().getRptGenBean()
+								.setCmExtentionMeasurmentView(true);
+						getManagedBean().getRptGenBean()
+								.setCmExtentionColourView(true);
+					}
+				} /*else {
 					this.setCmUnspscCode(null);
 					this.setCmUnspscCode(null);
 					this.setCmExtentionBrand(null);
@@ -9656,8 +9688,8 @@ public class ReportBackingBean extends
 					getManagedBean().getRptGenBean().setCmExtentionColourView(
 							false);
 					throw new EpException(MessageConst.ERROR_REPORT_780013);
-				}
-			} else {
+				}*/
+			} /*else {
 				this.setCmUnspscCode(null);
 				this.setCmExtentionBrand(null);
 				this.setCmExtentionType(null);
@@ -9674,7 +9706,7 @@ public class ReportBackingBean extends
 				getManagedBean().getRptGenBean()
 						.setCmExtentionColourView(false);
 				throw new EpException(MessageConst.ERROR_REPORT_780013);
-			}
+			}*/
 		} else {
 			this.setCmUnspscCode(null);
 			this.setCmExtentionBrand(null);
@@ -12177,17 +12209,28 @@ public class ReportBackingBean extends
 				|| ((this.getCmMofNumber() != null) && (this.getCmMofNumber() != ReportConst.EMPTY_VAL))) {
 
 			if ((this.getCmUnspscCode() != null)
-					&& (this.getCmUnspscCode() != ReportConst.EMPTY_VAL)) {
-				if (((this.getCmExtentionType() == null) || (this
-						.getCmExtentionType() == ReportConst.EMPTY_VAL))
-						&& ((this.getCmExtentionBrand() == null) || (this
-								.getCmExtentionBrand() == ReportConst.EMPTY_VAL))
-						&& ((this.getCmExtentionMeasurment() == null) || (this
-								.getCmExtentionMeasurment() == ReportConst.EMPTY_VAL))
-						&& ((this.getCmExtentionColour() == null) || (this
-								.getCmExtentionColour() == ReportConst.EMPTY_VAL))) {
-					throw new EpException(MessageConst.ERROR_REPORT_780024);
+					&& (this.getCmUnspscTitle() != null)
+					&& (this.getCmUnspscCode() != ReportConst.EMPTY_VAL)
+					&& (this.getCmUnspscTitle() != ReportConst.EMPTY_VAL)) {
 
+				if (CollectionUtils.isNotEmpty(brandList)
+						&& CollectionUtils.isNotEmpty(extTypeList)
+						&& CollectionUtils.isNotEmpty(measurmentList)
+						&& CollectionUtils.isNotEmpty(colorList)) {
+					if (((this.getCmExtentionType() == null) || (this
+							.getCmExtentionType() == ReportConst.EMPTY_VAL))
+							&& ((this.getCmExtentionBrand() == null) || (this
+									.getCmExtentionBrand() == ReportConst.EMPTY_VAL))
+							&& ((this.getCmExtentionMeasurment() == null) || (this
+									.getCmExtentionMeasurment() == ReportConst.EMPTY_VAL))
+							&& ((this.getCmExtentionColour() == null) || (this
+									.getCmExtentionColour() == ReportConst.EMPTY_VAL))) {
+
+						throw new EpException(MessageConst.ERROR_REPORT_780024);
+
+					}
+				}
+			
 					/*
 					 * FacesContext.getCurrentInstance().addMessage(null,new
 					 * FacesMessage(FacesMessage.SEVERITY_ERROR,
@@ -12202,7 +12245,7 @@ public class ReportBackingBean extends
 					 * .handleNavigation(context, null, pageUrl);
 					 */
 				}
-			}
+		
 
 			if ((this.getCmRequestNumber() != null)
 					&& (this.getCmRequestNumber() != ReportConst.EMPTY_VAL)) {
@@ -13447,6 +13490,11 @@ public class ReportBackingBean extends
 
 	}
 
+	/**
+	 * Gets the sc loa reports.
+	 * 
+	 * @return the sc loa reports
+	 */
 	public void getScLOAReports() {
 
 		log.info("getLOAReports");
@@ -13628,4 +13676,140 @@ public class ReportBackingBean extends
 		}
 
 	}
+	
+	/**
+	 * The Class SearchUnspscPagingDataModel.
+	 */
+	private class SearchUnspscPagingDataModel extends PagingDataModel<CmUnspsc> {
+
+		/** The Constant serialVersionUID. */
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Instantiates a new search unspsc paging data model.
+		 */
+		public SearchUnspscPagingDataModel() {
+			super("lovTb2");
+
+		}
+
+		public ISearchResultBean<CmUnspsc> pageChangeListener(
+				ISearchBean<CmUnspsc> searchBean) {
+
+			ICodificationSO iCodificationSO = null;
+
+			try {
+
+				for (int i = 0; i < 3; i++) {
+					if (getManagedBean().getSearchValue()[i] != null
+							&& !getManagedBean().getSearchValue()[i].equals("")) {
+						if (getManagedBean().getSearchFieldValue()[i] != null
+								&& !getManagedBean().getSearchFieldValue()[i]
+										.equals("")) {
+
+							if (getManagedBean().getSearchFieldValue()[i]
+									.equals("1"))
+								searchBean.getDataFilterBeans().add(
+										new SearchFilterBean("unspscCode",
+												SearchOperator.OPERATOR_EQUALS
+														.value(),
+												getManagedBean()
+														.getSearchValue()[i]));
+							else if (getManagedBean().getSearchFieldValue()[i]
+									.equals("2"))
+								searchBean.getDataFilterBeans().add(
+										new SearchFilterBean("unspscTitle",
+												SearchOperator.OPERATOR_LIKE
+														.value(),
+												getManagedBean()
+														.getSearchValue()[i]));
+						}
+					}
+				}
+
+				iCodificationSO = (ICodificationSO) BusinessDelegate
+						.getInstance().getServiceObject("cm",
+								ICodificationSO.class);
+
+				CodificationReqDTO reqDTO = new CodificationReqDTO();
+				reqDTO.setSearchBean(searchBean);
+				CodificationResDTO resDTO = iCodificationSO
+						.searchUNSPSCCodeForReport(reqDTO);
+
+				if (resDTO.isSuccessful()) {
+
+					return resDTO.getResultBean();
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				iCodificationSO = null;
+			}
+
+			return null;
+
+		}
+	}
+
+	/**
+	 * Adds the unspsc code.
+	 */
+	public void addUnspscCode() {
+
+		List<SelectItem> searchField = new ArrayList<SelectItem>();
+
+		searchField.add(new SelectItem(1, ResourceBundleUtils.getMessage(
+				"lbl.rpt.unspscCodeScreen", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale())));
+		searchField.add(new SelectItem(2, ResourceBundleUtils.getMessage(
+				"lbl.rpt.unspscTitle",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale())));
+		
+		List<SelectItem> searchOperator = new ArrayList<SelectItem>();
+
+		SelectItem item = new SelectItem(
+				SearchOperator.OPERATOR_EQUALS.value(),
+				ResourceBundleUtils.getMessage("lbl.operator.equals",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+		searchOperator.add(item);
+		this.getManagedBean().setSearchField(searchField);
+		this.getManagedBean().setSearchOperator(searchOperator);
+		
+	}
+
+	/**
+	 * Search lov.
+	 */
+	public void searchLOV() {
+		searchUnspscPagingDataModel.reloadData();
+	}
+	
+	/**
+	 * Populate to save lov.
+	 */
+	public void populateToSaveLOV() {
+		this.setCmUnspscCode(this.getManagedBean().getSelectedLOV()
+				.getUnspscCode());
+		this.setCmUnspscTitle(this.getManagedBean().getSelectedLOV()
+				.getUnspscTitle());		
+		enableExtensionTypes();
+	}
+
+	/**
+	 * Reset lov.
+	 * 
+	 * @return the searchUnspsc
+	 */
+	
+	public void resetLOV() {
+		getManagedBean().setSearchValue(new String[3]);
+		getManagedBean().setSearchFieldValue(new String[3]);
+		getManagedBean().setSearchOperatorValue(new String[3]);
+		this.getSearchUnspscPagingDataModel().resetData();		
+	}
+
+	
 }
