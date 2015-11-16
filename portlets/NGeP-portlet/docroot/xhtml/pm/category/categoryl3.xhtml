@@ -554,9 +554,9 @@
 					<table style="width: 100%;">
 						<tr>
 							<td style="text-align: right;"><p:commandButton
-									icon="ui-icon-search" value="#{lbl['lbl.btn.search']}"
+									value="#{lbl['lbl.btn.search']}"
 									action="#{categoryBackingBean.searchLOV}" update="lovTb2">
-								</p:commandButton> <p:commandButton icon="ui-icon-reset"
+								</p:commandButton> <p:commandButton 
 									value="#{lbl['lbl.btn.reset']}"
 									action="#{categoryBackingBean.resetLOV}"
 									update="searchPanel,resultPanel">
@@ -594,14 +594,14 @@
 					<tr>
 						<td style="text-align: right;"><p:commandButton id="slbtn"
 								value="#{lbl['lbl.btn.select']}" update="searchPanel"
-								oncomplete="updateCategory();lovPopupCategory.hide();" /> <ui:remove>
-								<p:commandButton icon="ui-icon-cancel"
+								oncomplete="updateCategory();lovPopupCategory.hide();" /> 
+								<p:commandButton 
 									value="#{lbl['lbl.btn.cancel']}"
 									action="#{categoryBackingBean.resetLOV}"
 									oncomplete="lovPopupCategory.hide();"
 									update="searchPanel,resultPanel">
 								</p:commandButton>
-							</ui:remove></td>
+							</td>
 					</tr>
 				</table>
 			</p:panel>
@@ -661,10 +661,10 @@
 					<table style="width: 100%;">
 						<tr>
 							<td style="text-align: right;"><p:commandButton
-									icon="ui-icon-search" value="#{lbl['lbl.btn.search']}"
+									value="#{lbl['lbl.btn.search']}"
 									action="#{categoryBackingBean.searchPmMachineLOV}"
 									update="lovTb22">
-								</p:commandButton> <p:commandButton icon="ui-icon-reset"
+								</p:commandButton> <p:commandButton 
 									value="#{lbl['lbl.btn.reset']}"
 									action="#{categoryBackingBean.resetPmMachineLOV}"
 									update="searchPanel2,resultPanel2">
@@ -702,7 +702,14 @@
 					<tr>
 						<td style="text-align: right;"><p:commandButton id="slbtn2"
 								value="#{lbl['lbl.btn.select']}" update="searchPanel2"
-								oncomplete="updatePmMachine();lovPopupPmMachine.hide();" /></td>
+								oncomplete="updatePmMachine();lovPopupPmMachine.hide();" />
+								<p:commandButton 
+									value="#{lbl['lbl.btn.cancel']}"
+									action="#{categoryBackingBean.resetPmMachineLOV}"
+									oncomplete="lovPopupPmMachine.hide();"
+									update="searchPanel2,resultPanel2">
+								</p:commandButton>
+						</td>
 					</tr>
 				</table>
 			</p:panel>
