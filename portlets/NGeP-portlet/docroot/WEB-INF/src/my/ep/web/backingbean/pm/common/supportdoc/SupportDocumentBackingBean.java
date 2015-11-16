@@ -971,10 +971,25 @@ public class SupportDocumentBackingBean extends
 	 */
 	public SelectItem[] docDefinitionOptions() {
 		log.info("docDefinitionOptions");
-		// return
-		// getDropdownValues(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
-		SelectItem[]  selectdocTypeOptions=getDropdownValuesBySearchBeanNew(
-				ParameterTypeConst.DOCUMENT_DEFINITION_TYPE, null);
+		SelectItem[]  selectdocTypeOptions = null;
+		if(!getManagedBean().getSelectedDocument().isBrandNew()){
+			selectdocTypeOptions=getDropdownValuesBySearchBeanNew(
+					ParameterTypeConst.DOCUMENT_DEFINITION_TYPE, null);			
+		}else{
+			ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+			
+			List<String> docDefinitionForNew = new ArrayList<String>();
+			docDefinitionForNew.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
+			docDefinitionForNew.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION);
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmParameter.parameterCode",
+							SearchOperator.OPERATOR_IN.value(),
+							docDefinitionForNew));
+			
+			selectdocTypeOptions=getDropdownValuesBySearchBeanNew(
+					ParameterTypeConst.DOCUMENT_DEFINITION_TYPE, searchBean);
+		}
+		
 		this.getManagedBean().setDocDefinitionOptions(selectdocTypeOptions);
 		return selectdocTypeOptions;
 	}
