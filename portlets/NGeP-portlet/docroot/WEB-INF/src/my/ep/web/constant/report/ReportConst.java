@@ -481,7 +481,10 @@ public class ReportConst {
 	public static final String PEND_PRPR_SITE_VISIT = "Pending Prepare Site Visit Report";
 	public static final String SITE_VISIT_COMPLTD = "Site Visit Report Completed";
 	public static final String KAMA = ",";
-	public static final String SUPPL_CONSLT_TYPE = "J";
+	public static final String SUPPL_CONSLT_TYPE = "J";	
+	public static final String SUPPL_CONSULT_MOF_NO = "465-";
+	public static final String SUPPL_CONTRACT_MOF_NO = "357-";
+	
 	
 	public static final String AMP_EP_NO_EQ = "&epno=";
 	public static final String AMP_TO_DATE_EQ = "&todt=";

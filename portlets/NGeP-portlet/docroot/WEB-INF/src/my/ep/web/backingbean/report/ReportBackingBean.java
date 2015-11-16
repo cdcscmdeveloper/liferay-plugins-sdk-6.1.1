@@ -7193,7 +7193,23 @@ public class ReportBackingBean extends
 				getManagedBean().getRptGenBean().setSmRegistrationStatusView(
 						true);
 			}
+		} else if (null != this.getReportValue()
+				&& this.getSmSupplierType() != null) {
+			if (this.getReportValue().equalsIgnoreCase(
+					ReportConst.SM_REG_COMPANY_IN_MOF_RPT_VAL)) {
+				if (this.getSmSupplierType().equalsIgnoreCase(
+						ReportConst.SUPPL_CONSLT_TYPE)) {
+					this.setSmMofRegNo(ReportConst.SUPPL_CONSULT_MOF_NO);
+
+				} else {
+					this.setSmMofRegNo(ReportConst.SUPPL_CONTRACT_MOF_NO);
+				}
+
+			}
+		} else {
+			this.setSmMofRegNo(null);
 		}
+
 	}
 
 	/**
