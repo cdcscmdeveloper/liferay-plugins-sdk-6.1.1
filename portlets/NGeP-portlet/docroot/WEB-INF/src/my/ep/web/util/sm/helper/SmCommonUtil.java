@@ -1906,7 +1906,8 @@ public class SmCommonUtil {
 
 		String portalUrl = themeDisplay.getURLPortal();
 		String currentUrl = themeDisplay.getURLCurrent();
-		if(StringUtils.isNotBlank(currentUrl)){
+		if (StringUtils.isNotBlank(currentUrl)
+				&& StringUtils.isNotBlank(layout.getFriendlyURL())) {
 			currentUrl = currentUrl.substring(0,
 					currentUrl.indexOf(layout.getFriendlyURL()));
 		}
