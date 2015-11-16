@@ -42,9 +42,9 @@
 						<table style="width: 100%;">
 							<tr>
 								<td style="text-align: right;"><p:commandButton
-										icon="ui-icon-search" value="#{lbl['lbl.btn.search']}"
-										action="#{reportBackingBean.searchLOV}" update="lovTb2">
-									</p:commandButton> <p:commandButton icon="ui-icon-reset"
+										 value="#{lbl['lbl.btn.search']}"
+										 action="#{reportBackingBean.searchLOV}" update="lovTb2">
+									</p:commandButton> <p:commandButton 
 										value="#{lbl['lbl.btn.reset']}"
 										action="#{reportBackingBean.resetLOV}"
 										update="searchPanel,resultPanel">
@@ -82,7 +82,15 @@
 							<td style="text-align: right;"><p:commandButton id="slbtn"
 									value="#{lbl['lbl.btn.select']}"
 									update="searchPanel,resultPanel"
-									oncomplete="updateCmunspsc();lovPopupUnspsc.hide();" /></td>
+									oncomplete="updateCmunspsc();lovPopupUnspsc.hide();" />
+									<p:commandButton 
+									value="#{lbl['lbl.btn.cancel']}"
+									action="#{reportBackingBean.resetLOV}"
+									oncomplete="lovPopupUnspsc.hide();"
+									update="searchPanel,resultPanel">
+								</p:commandButton>
+									
+							</td>
 						</tr>
 					</table>
 				</p:panel>
