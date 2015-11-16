@@ -327,7 +327,7 @@
 		<portlet-name>flPaymentMatch</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 		<css-class-wrapper>flpm-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
