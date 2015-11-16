@@ -102,7 +102,7 @@ public class FinancialOrgBackingBean extends
 	public FinancialOrgBackingBean() {
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		if (pmUser != null && pmUser.getUserId() != null) {
-			System.out.println("***userId: " + pmUser.getUserId());
+			//System.out.println("***userId: " + pmUser.getUserId());
 
 			new LogKey(pmUser.getUserId()); 
 		}else{
@@ -588,18 +588,18 @@ public class FinancialOrgBackingBean extends
 	private void validationFinancialOrg() {
 		log.info("validationFinancialOrg");
 		if(this.getManagedBean().getFinancialOrg().getPmFinancialSvcs()!=null && this.getManagedBean().getFinancialOrg().getPmFinancialSvcs().isEmpty()){
-			throw new EpException("At least one Financial Service is required.");
+			throw new EpException(MessageConst.ERROR_775203);
 		}
 		
 		if(StringUtils.isBlank(this.getManagedBean().getFinancialOrg().getBizRegNumber())){
 			if(!this.getManagedBean().getServiceTypes().contains(ParameterConst.BANK_SERVICES_PAYMENT_BANK)){
-				throw new EpException("Reg No. is mandatory for Service Type other than Payment Bank.");
+				throw new EpException(MessageConst.ERROR_775204);
 			}
 		}
 		
 		if(this.getManagedBean().getServiceTypes().contains(ParameterConst.BANK_SERVICES_FACTORING_COMPANY)){
 			if(this.getManagedBean().getFinancialOrg().getPmFinancialAccs() == null || this.getManagedBean().getFinancialOrg().getPmFinancialAccs().isEmpty()){
-				throw new EpException("At least one Factoring Bank Detail is required.");
+				throw new EpException(MessageConst.ERROR_775205);
 			}
 		}
 		
@@ -634,17 +634,17 @@ public class FinancialOrgBackingBean extends
 								throw new EpException(MessageConst.ERROR_770044);
 							}
 						}else{
-							System.out.println("set division null");
+							//set set division null
 							pmAddress.setPmDivision(null);
 						}
 						
 				
 //						for(PmContact pmContact:pmAddressType.getPmContacts()){
 							if(StringUtils.isBlank(this.getManagedBean().getContactPerson().getContactName())){
-								throw new EpException("Main Contact's Contact Name is required");
+								throw new EpException(MessageConst.ERROR_775206);
 							}
 							if(StringUtils.isBlank(this.getManagedBean().getContactPerson().getEmail())){
-								throw new EpException("Main Contact's Email is required");
+								throw new EpException(MessageConst.ERROR_775207);
 							}
 //						}
 					}
@@ -661,13 +661,10 @@ public class FinancialOrgBackingBean extends
 									SearchOperator.OPERATOR_EQUALS.value(),
 									getManagedBean().getFinancialOrg().getFinOrgName(), true));
 					
-					List<String> activeAndInActiveStatus = new ArrayList<String>();
-					activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_INACTIVE);
-					activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_ACTIVE);
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("recordStatusFlg",
-									SearchOperator.OPERATOR_IN.value(), 
-									activeAndInActiveStatus
+									SearchOperator.OPERATOR_EQUALS.value(), 
+									DbValueConst.RECORD_STATUS_ACTIVE
 									));
 					
 					if(!getManagedBean().getFinancialOrg().isBrandNew() 
@@ -690,8 +687,9 @@ public class FinancialOrgBackingBean extends
 					if(resDto.getFinaceialOrgResultBean() != null 
 							&& resDto.getFinaceialOrgResultBean().getResultList() != null 
 							&& !resDto.getFinaceialOrgResultBean().getResultList().isEmpty()){
-						throw new EpException(getManagedBean().getFinancialOrg().getFinOrgName()+
-								" already exists. Please input another financial org. name.");
+						throw new EpException(
+								MessageConst.ERROR_775208,  
+								new String[]{getManagedBean().getFinancialOrg().getFinOrgName()});
 					}		
 					
 				}
@@ -771,7 +769,7 @@ public class FinancialOrgBackingBean extends
 		for(PmFinancialAcc pmFinancialAcc: pmFinancialAccList){
 			if(pmFinancialAcc.getPmPaymentBankOrg()==null 
 					|| pmFinancialAcc.getPmPaymentBankOrg().getFinancialOrgId()==null){
-				throw new EpException("Payment Bank Name is required");
+				throw new EpException(MessageConst.ERROR_775209);
 			}
 		}
 		if (pmFinancialAccList != null && !pmFinancialAccList.isEmpty()) {
@@ -802,7 +800,7 @@ public class FinancialOrgBackingBean extends
 								isCurrentPairOverlap = PmCommonUtil.dateOverlapping(startA, endA, startB, endB, false);
 								
 								if (isCurrentPairOverlap) {
-									throw new EpException("Factoring Bank Effective Date and Expiry Date must not overlapping.");
+									throw new EpException(MessageConst.ERROR_775210);
 								}
 							}
 						}
@@ -895,12 +893,12 @@ public class FinancialOrgBackingBean extends
 		
 		// check if Factoring Org. is required
 		for (PmFinancialSvc financialSvc : financialOrg.getPmFinancialSvcs()) {
-			System.out.println("Record Status Fin SVC---====>>>"+financialSvc.getRecordStatusFlg());
+			//System.out.println("Record Status Fin SVC---====>>>"+financialSvc.getRecordStatusFlg());
 			PmParameter pmParameter = (PmParameter) serviceTypeMapper.get(financialSvc.getServiceTypeCode().getParameterId());
 			if(ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(pmParameter.getParameterCode())){
 				if(financialSvc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED){
 					for(PmFinancialAcc finAcc:financialOrg.getPmFinancialAccs()){
-						System.out.println("Record Status Fin ACC---====>>>"+finAcc.getRecordStatusFlg());
+						//System.out.println("Record Status Fin ACC---====>>>"+finAcc.getRecordStatusFlg());
 						finAcc.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 						finAcc.setExpDate(new Date());
 						
@@ -1004,7 +1002,7 @@ public class FinancialOrgBackingBean extends
 		log.info("addFinancialService");
 		if(this.getManagedBean().getFinancialOrg().getPmFinancialSvcs()!=null){
 			if(this.getManagedBean().getFinancialOrg().getPmFinancialSvcs().size() > ProfileManagementConst.MAX_FINANCIAL_SERVICE){
-				throw new EpException("Financial Org. exceeded maximum Financial Services.");
+				throw new EpException(MessageConst.ERROR_775200);
 			}
 		}	
 		validateFinancialService();
@@ -1070,13 +1068,13 @@ public class FinancialOrgBackingBean extends
 		for (PmFinancialSvc financialService : this.getManagedBean().getFinancialOrg().getPmFinancialSvcs()) {
 			if(financialService.getServiceTypeCode()==null 
 					|| financialService.getServiceTypeCode().getParameterId()==null){
-				throw new EpException("Service Type is mandatory.");
+				throw new EpException(MessageConst.ERROR_775201);
 			}
 			tempServiceList.add(financialService.getServiceTypeCode().getParameterId());
 		}
 		Set<Long> tempServiceSet = new HashSet<Long>(tempServiceList);
 		if(tempServiceSet.size()!=tempServiceList.size()){
-			throw new EpException("Service Type must be unique.");
+			throw new EpException(MessageConst.ERROR_775202);
 		}
 		
 	}
@@ -1159,7 +1157,7 @@ public class FinancialOrgBackingBean extends
 	}
 	public void getBankCode(Long financialOrgId){
 		
-		System.out.println("Org ProfileID-------->"+financialOrgId);
+		log.info("Org ProfileID-------->"+financialOrgId);
 		IFinancialOrgSO financialOrgSO = null;
 		FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
 		reqDTO.setFinancialOrgId(financialOrgId);
@@ -1171,7 +1169,7 @@ public class FinancialOrgBackingBean extends
 		PmFinancialSvc pmFinancialSvc = resDTO.getPmFinancialSvc();
 		if(resDTO.isSuccessful()){
 			if(null!=pmFinancialSvc){
-			System.out.println("BANK CODE"+pmFinancialSvc.getBankCode()
+			log.info("BANK CODE"+pmFinancialSvc.getBankCode()
 					 + "|" + pmFinancialSvc.getFinancialSvcId());
 			for(PmFinancialAcc financialAcc:getManagedBean().getFinancialOrg().getPmFinancialAccs()){
 			    if(financialAcc.isBrandNew()){
