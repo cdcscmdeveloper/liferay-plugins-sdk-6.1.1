@@ -11,7 +11,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	      <h:panelGrid style="width:100%">
 		  <p:dataTable id="panelItemDt" var="panelItemsVar"  value="#{panelBackingBean.managedBean.circularVer.ctPanelItems}" 
 		      selectionMode="single" rowKey="#{panelItemsVar}" selection="#{panelBackingBean.managedBean.selectedPanelItems}"
-		      rowIndexVar="index" widgetVar="panelItemObj" style="width:1100px;">
+		      rowIndexVar="index" widgetVar="panelItemObj" style="width:970px;">
 		      <ac:paginator for="panelItemDt" />
               <p:ajax event="rowSelect"  listener="#{panelBackingBean.setPanelListner()}" process="@this" 
                   onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  update="@([id$=itemZone],[id$=itemSupplier],[id$=deleteItemBtn])"  />	
