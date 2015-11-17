@@ -20,16 +20,16 @@
 		<br />
 		<table>
 			<tr>
-				<td style="color: blue; font-weight: bold; text-align: left;font-size: 15px;">
+				<td style="color: blue; font-weight: bold; text-align: left;font-size: 16px;">
 					<h:outputText value="#{lbl['lbl.sm.suppalert.mofexpiry.msg']}" />
 				</td>
-				<td style="color: blue; font-weight: bold; text-align: left;font-size: 15px;">
-					<div id="blinkId"><h:outputText value="#{postSupplierRegBB.managedBean.mofExpDateMsg}" /></div>
+				<td style="color: blue; font-weight: bold; text-align: left;font-size: 16px;">
+					<div id="blinkId">&#160;&#160;<h:outputText value="#{postSupplierRegBB.managedBean.mofExpDateMsg}" /></div>
 				</td>
 			</tr>
 			<tr>
 				<td style="text-align: left;font-size: 13px;font-weight: bold;" colspan="2">
-					<h:commandLink  action="#{postSupplierRegBB.pageRedirect('renew-mof-account')}"  value="#{lbl['lbl.sm.suppalert.mofexpiry.renew']}"/>
+					<p:commandLink  action="#{postSupplierRegBB.pageRedirect('renew-mof-account')}"  value="#{lbl['lbl.sm.suppalert.mofexpiry.renew']}"/>
 				</td>
 			</tr>
 		</table>
