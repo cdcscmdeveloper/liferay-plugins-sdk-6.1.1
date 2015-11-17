@@ -13727,10 +13727,11 @@ public class ReportBackingBean extends
 									.equals("1"))
 								searchBean.getDataFilterBeans().add(
 										new SearchFilterBean("unspscCode",
-												SearchOperator.OPERATOR_EQUALS
+												SearchOperator.OPERATOR_LIKE
 														.value(),
 												getManagedBean()
 														.getSearchValue()[i]));
+							
 							else if (getManagedBean().getSearchFieldValue()[i]
 									.equals("2"))
 								searchBean.getDataFilterBeans().add(
@@ -13738,7 +13739,7 @@ public class ReportBackingBean extends
 												SearchOperator.OPERATOR_LIKE
 														.value(),
 												getManagedBean()
-														.getSearchValue()[i]));
+														.getSearchValue()[i],true));
 						}
 					}
 				}
