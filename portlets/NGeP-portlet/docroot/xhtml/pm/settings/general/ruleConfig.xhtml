@@ -147,7 +147,7 @@
 			</p:column>
 
 			<p:column width="15%" id="fromValueColumnId"
-				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1}">
+				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType == 1}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />			
 				                 	#{lbl['lbl.pm.rule.from.value']}
@@ -156,7 +156,7 @@
 					size="15" required="true" maxlength="18" style="text-align:right"
 					onchange="#{ruleCatalogueBackingBean.updateErrorDialog(index)}"
 					requiredMessage="#{lbl['lbl.pm.settings.fromvalue.required']}"
-					disabled="#{!(typeValueObj.brandNew) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1 and !typeValueObj.showFlag)}">
+					disabled="#{!(typeValueObj.brandNew) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType == 1 and !typeValueObj.showFlag)}">
 					<p:ajax partialSubmit="true" process="@this"
 						update="@this, @([id$=cloneLink]), fromValueMsg, :form:settingTabId:errorDialog" />
 				</p:inputText>
@@ -164,7 +164,7 @@
 			</p:column>
 
 			<p:column width="15%"
-				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1}">
+				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType == 1}">
 				<f:facet name="header">
 				                	#{lbl['lbl.pm.rule.to.value']}
 			                	</f:facet>
@@ -195,7 +195,7 @@
 				</f:facet>
 
 				<p:calendar 
-					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1 and typeValueObj.showFlag)}"
+					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType == 1 and typeValueObj.showFlag)}"
 					disabled="#{typeValueObj.effDate le DateUtils.getCurrentDateWithoutTime()}"
 					showOn="button" id="effDateId" style="width:100px;"
 					mindate="#{ruleCatalogueBackingBean.managedBean.tomorrow}"
@@ -221,7 +221,7 @@
 			                	</f:facet>
 
 				<p:calendar 
-					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1 and typeValueObj.showFlag)}"
+					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType == 1 and typeValueObj.showFlag)}"
 					disabled="#{typeValueObj.expDate lt DateUtils.getCurrentDateWithoutTime()}"
 					showOn="button" id="ruleConfigexpDateId" style="width :100px;"
 					mindate="#{ruleCatalogueBackingBean.managedBean.today}"
@@ -247,7 +247,7 @@
 				                </f:facet>
 
 				<p:selectOneMenu value="#{typeValueObj.recordStatusFlg}"
-					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1 and typeValueObj.showFlag)}"
+					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType == 1 and typeValueObj.showFlag)}"
 					disabled="#{typeValueObj.brandNew}" style="width:100px;">
 					<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 					<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
@@ -265,7 +265,7 @@
                      #{lbl['lbl.pm.action']}
 				</f:facet>
 				<p:commandLink id="cloneLink" title="#{lbl['lbl.cm.clone']}"
-					rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1 and typeValueObj.showFlag}"
+					rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType == 1 and typeValueObj.showFlag}"
 					disabled="#{!typeValueObj.brandNew or typeValueObj.fromValue eq null or typeValueObj.toValue eq null or typeValueObj.fromValue >=typeValueObj.toValue or typeValueObj.effDate eq null }"
 					action="#{ruleCatalogueBackingBean.cloneRuleTypeValue(index)}"
 					partialSubmit="true" process="@this"
@@ -274,7 +274,7 @@
 				</p:commandLink>
 				<p:commandLink
 					disabled="#{typeValueObj.effDate le DateUtils.getCurrentDateWithoutTime()}"
-					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1 and typeValueObj.showFlag)}"
+					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType == 1 and typeValueObj.showFlag)}"
 					id="deleteValue" partialSubmit="true" process="@this"
 					update=":form:settingTabId:ruleTypeValueTableID"
 					action="#{ruleCatalogueBackingBean.deleteMoreRuleValue(index)}">
@@ -286,7 +286,7 @@
 						actionListener="#{ruleCatalogueBackingBean.updateErrorDialog(index)}"
 						update=":form:settingTabId:ruleTypeValueTableID :form:settingTabId:errorDialog"
 						oncomplete="errorDialog.show();"
-						rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1 and (typeValueObj.fromValue >= typeValueObj.toValue)}">
+						rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType == 1 and (typeValueObj.fromValue >= typeValueObj.toValue)}">
 						<f:param name="index" value="#{index}"></f:param>
 						<p:graphicImage value="/css/images/design/icon_error.png"></p:graphicImage>
 					</p:commandLink>
