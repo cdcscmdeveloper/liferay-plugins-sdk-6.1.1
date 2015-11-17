@@ -28,7 +28,7 @@
 					</c:if> <c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
 						<p:inputText
 							value="#{qTDetailBB.getParameterDesc(ParameterTypeConst.quotationTenderType, qTDetailBB.managedBean.qt.qtType)}"
-							disabled="true" size="30" style="width: 195px;" />
+							disabled="true" size="30" />
 					</c:if></td>
 			</tr>
 			<tr>
@@ -39,7 +39,7 @@
 						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PROCUREMENT_TYPE_CAT_ID)}"
 						required="true" label="#{lbl['lbl.sc.procurment.type.category']}"
 						value="#{qTDetailBB.managedBean.qt.procurementTypeCatId.parameterId}"
-						style="width: 195px;margin-bottom: 5px;">
+						style="width: 235px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{qTDetailBB.getDropdownValues(ParameterTypeConst.procurementTypeCategory)}" />
 						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
@@ -57,7 +57,6 @@
 								<td><p:inputText
 										value="#{lbl[qTDetailBB.managedBean.qt.panel ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
 										readonly="true" size="30" disabled="true"
-										style="width: 195px;"
 										rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
 								<ui:fragment
 									rendered="#{qTDetailBB.managedBean.qt.panel eq 'No'}">
@@ -66,7 +65,7 @@
 											rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
 									<td><p:inputText
 											value="#{qTDetailBB.getParameterDesc(ParameterTypeConst.scOpenFor, qTDetailBB.managedBean.qt.openFor)}"
-											disabled="true" size="30" style="width: 192px;"
+											disabled="true" size="30" 
 											rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" />
 									</td>
 								</ui:fragment>
@@ -97,7 +96,7 @@
 									value="#{qTDetailBB.managedBean.qt.publishPeriod}"
 									disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_PUBLISH_PERIOD)}"
 									valueChangeListener="#{qTDetailBB.publishPeriodDaysChanged}"
-									size="30" style="text-align:right; width: 195px;">
+									size="30" style="text-align:right;">
 									<p:ajax event="blur" process="@this" partialSubmit="true"
 										listener="#{qTScheduleDetailBackingBean.handlePublishClosingDate}" />
 								</p:inputMask></td>
@@ -118,7 +117,7 @@
 									value="#{qTDetailBB.managedBean.qt.qtValidityPeriod}" size="30"
 									disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_VALIDITY_PERIOD)}"
 									valueChangeListener="#{qTDetailBB.proposalValidityChanged}"
-									style="text-align:right; width: 192px;">
+									style="text-align:right;">
 									<f:ajax></f:ajax>
 								</p:inputMask></td>
 							<td><p:message id="proposalvalidityMsg"
@@ -130,13 +129,16 @@
 			</tr>
 			<ui:fragment rendered="#{qTDetailBB.managedBean.qt.panel eq 'No'}">
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
-					<td><p:inputText
-							value="#{lbl[qTDetailBB.managedBean.qt.zonal ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
-							disabled="true" size="30" style="width: 195px;" /> <ac:iconTooltip
-							value="#{lbl['lbl.sc.qt.zone.location.tooltip']}" /></td>
-					<td />
-					<td />
+					<td><p:outputLabel value="#{lbl['lbl.sc.qt.zone.location']}123" /></td>
+					<td colspan="4"><table>
+						<tr>
+							<td><p:inputText
+								value="#{lbl[qTDetailBB.managedBean.qt.zonal ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
+								disabled="true" size="30" /></td>
+							<td colspan="3"><ac:iconTooltip
+								value="#{lbl['lbl.sc.qt.zone.location.tooltip']}" /></td>
+						</tr>
+					</table></td>
 				</tr>
 			</ui:fragment>
 		</table>
