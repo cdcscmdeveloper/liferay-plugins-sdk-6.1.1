@@ -27,7 +27,7 @@
 						<tr>
 							<td><p:inputText id="fileno" label="#{lbl['lbl.sc.qt.fileno']}"
 									required="true" value="#{qTDetailBB.managedBean.qt.fileNo}"
-									size="30" maxlength="50" style="width: 195px;" 
+									size="30" maxlength="50" 
 									disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_FILE_NO)}" /></td>
 							<td><p:message id="filenoMsg" for="fileno" display="icon" />
 							</td>
@@ -46,13 +46,13 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
 				<td><p:inputText
 						value="#{qTDetailBB.getParameterDesc(qTDetailBB.managedBean.qt.procurementMode)}"
-						disabled="true" size="30" readonly="true" style="width: 195px;"/></td>
+						disabled="true" size="30" readonly="true"/></td>
 				<td />
 				<td />
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" /></td>
-				<td><p:inputText id="estprice" style="text-align:right; width: 195px;"
+				<td><p:inputText id="estprice" style="text-align:right;"
 						value="#{qTDetailBB.managedBean.qt.estimatedAmount}" size="30"
 						disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_ESTMT_AMT)}"
 						 valueChangeListener="#{qTDetailBB.estimateAmtChanged}">
@@ -71,7 +71,7 @@
 							value="#{lbl['lbl.sc.justification']}" /></td>
 					<td colspan="3"><p:inputTextarea
 							value="#{qTDetailBB.managedBean.qt.justificationRemark}"
-							cols="30" rows="2" style=" margin-bottom:5px; width: 195px;" maxlength="200"
+							cols="30" rows="2" style=" margin-bottom:5px;" maxlength="200"
 							disabled="true" readonly="true"/></td>
 				</tr>
 			</ui:fragment>
