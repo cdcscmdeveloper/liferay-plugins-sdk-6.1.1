@@ -6806,7 +6806,7 @@ public class ReportBackingBean extends
 	
 
 	/**
-	 * Retrieve LOA status list.
+	 * retrieveLOAStatusList- will retrieve LOA status(SOA Status) list.
 	 * 
 	 * @return the list
 	 */
@@ -6829,7 +6829,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Supplier name validate.
+	 * supplierNameValidate-will validate Supplier name, like supplier name should have minimum 3 characters length.
 	 */
 	public void supplierNameValidate() {
 		if ((this.getScSupplier() != null)
@@ -6842,7 +6842,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Change the terminate type status.
+	 * changeTerminate- based on status =TERMINATE, it will enable and disable the termination type field.
 	 */
 	public void changeTerminate() {
 		this.setCtTerminationType(null);
@@ -6861,7 +6861,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Change the payment type status to retrieve paymnet type list.
+	 * changePaymentType- will change to retrieve payment type list based on selecting payment type like Government, CDC or simple payment type list.
 	 */
 	public void changePaymentType() {
 		this.setSmPaymentType(null);
@@ -6881,9 +6881,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve payment type list.
+	 * retrievePaymentTypeList -  will retrieve simple payment type list.
 	 * 
-	 * @return the list
+	 * @return the payment type list
 	 */
 	public List<SelectItem> retrievePaymentTypeList() {
 		paymentTypeList = new ArrayList<SelectItem>();
@@ -6904,9 +6904,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve govt payment type list.
+	 * retrieveGovtPaymentTypeList -  will retrieve govt payment type list.
 	 * 
-	 * @return the list
+	 * @return the payment type list
 	 */
 	public List<SelectItem> retrieveGovtPaymentTypeList() {
 		paymentTypeList = new ArrayList<SelectItem>();
@@ -6927,9 +6927,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve cdc payment type list.
+	 * retrieveCDCPaymentTypeList -  will retrieve cdc payment type list.
 	 * 
-	 * @return the list
+	 * @return the payment type list
 	 */
 	public List<SelectItem> retrieveCDCPaymentTypeList() {
 		paymentTypeList = new ArrayList<SelectItem>();
@@ -6950,9 +6950,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve payment method list.
+	 * retrievePaymentMethod - will etrieve payment method list.
 	 * 
-	 * @return the list
+	 * @return the payment method list
 	 */
 	public List<String> retrievePaymentMethod() {
 		paymentMethodList = new ArrayList<String>();
@@ -6969,9 +6969,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve pm service type.
+	 * retrievePMServiceType - will Retrieve  service type List.
 	 * 
-	 * @return the list
+	 * @return the service type List
 	 */
 	public List<SelectItem> retrievePMServiceType() {
 		serviceTypeList = new ArrayList<SelectItem>();
@@ -6994,7 +6994,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Show capital and accumulated share.
+	 * showCapitalNaccumShare - will change to Show capital or accumulated share date.
 	 */
 	public void showCapitalNaccumShare() {
 		getManagedBean().getRptGenBean().setSmPaidUpCapitalFrmView(false);
@@ -7021,9 +7021,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve processing officer list.
+	 * retrieveProcessingOfficerList - will retrieve processing officer list.
 	 * 
-	 * @return the list
+	 * @return the processing officer list
 	 */
 	public List<SelectItem> retrieveProcessingOfficerList() {
 		processingOfficerList = new ArrayList<SelectItem>();
