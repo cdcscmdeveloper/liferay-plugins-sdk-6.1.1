@@ -161,7 +161,7 @@ public class RuleCatalogueBackingBean extends
 			newRuleValue.setCategoryL3Id(this.getManagedBean().getSelectedCategoryL3());
 //		}
 
-		if (this.getManagedBean().getSelectedRuleType().getIsRangeValue() == 1) {
+		if (this.getManagedBean().getSelectedRuleType().getRangeType() == 1) {
 
 			if (this.getManagedBean().getSelectedRuleType()
 					.getConfigRuleValues() != null
@@ -1099,7 +1099,7 @@ public class RuleCatalogueBackingBean extends
 		PmConfigRuleValue selectedValueToDel = this.getManagedBean()
 				.getSelectedRuleType().getConfigRuleValues().get(rowIndex);
 
-		if (this.getManagedBean().getSelectedRuleType().getIsRangeValue() == 1
+		if (this.getManagedBean().getSelectedRuleType().getRangeType() == 1
 				&& selectedValueToDel.isShowFlag()) {// if its range and parent
 														// record, delete all
 														// child
@@ -1292,7 +1292,7 @@ public class RuleCatalogueBackingBean extends
 					// next
 					// record\
 					continue;
-				}else if(ruleType.getIsRangeValue() == 1 && baseValueToCompare.isError()){// to value can not be less than from value
+				}else if(ruleType.getRangeType() == 1 && baseValueToCompare.isError()){// to value can not be less than from value
 					throw new EpException(MessageConst.ERROR_770210, new String[] {ruleType.getRuleTypeDesc()});
 				}
 				
@@ -1303,7 +1303,7 @@ public class RuleCatalogueBackingBean extends
 					if (value.getRecordStatusFlg() == 0) {// if is inActive one
 						// go to next record
 						continue;
-					}else if(ruleType.getIsRangeValue() == 1 && value.isError()){ // to value can not be less than from value
+					}else if(ruleType.getRangeType() == 1 && value.isError()){ // to value can not be less than from value
 						throw new EpException(MessageConst.ERROR_770210, new String[] {ruleType.getRuleTypeDesc()});
 					}
 					
@@ -1314,7 +1314,7 @@ public class RuleCatalogueBackingBean extends
 						
 						// hit error and return
 						switch (ruleType.getValidationType()) {
-						case '1': if(ruleType.getIsRangeValue() ==1 && baseValueToCompare.getGroupValueId().equals(value.getGroupValueId())){
+						case '1': if(ruleType.getRangeType() ==1 && baseValueToCompare.getGroupValueId().equals(value.getGroupValueId())){
 							
 							throw new EpException(
 									MessageConst.ERROR_770110,
@@ -1468,7 +1468,7 @@ public class RuleCatalogueBackingBean extends
 		boolean validationResult = false;
 		boolean isValuesEqual = false;
 		if (ruleType.getValidationType() == '1'
-				&& !(ruleType.getIsRangeValue() == 1 && firstRuleValue
+				&& !(ruleType.getRangeType() == 1 && firstRuleValue
 						.getGroupValueId().equals(
 								secondRuleValue.getGroupValueId()))) {// EffectiveDate
 																		// validation
@@ -1485,7 +1485,7 @@ public class RuleCatalogueBackingBean extends
 					firstRuleValue.getExpDate(), secondRuleValue.getEffDate(),
 					secondRuleValue.getExpDate());
 		} else if (ruleType.getValidationType() == '2'
-				|| ruleType.getValidationType() == '3' && !(ruleType.getIsRangeValue() == 1 && firstRuleValue
+				|| ruleType.getValidationType() == '3' && !(ruleType.getRangeType() == 1 && firstRuleValue
 						.getGroupValueId().equals(
 								secondRuleValue.getGroupValueId()))) {// EffectiveDate
 			// +value
@@ -1520,7 +1520,7 @@ public class RuleCatalogueBackingBean extends
 				validationResult = true;
 			}
 
-		}else if (ruleType.getIsRangeValue() == 1
+		}else if (ruleType.getRangeType() == 1
 				&& firstRuleValue.getGroupValueId().equals(
 						secondRuleValue.getGroupValueId())){// step-2 validation : validate values in a group
 					
@@ -2632,7 +2632,7 @@ public class RuleCatalogueBackingBean extends
 
 		PmConfigRuleValue ruleValue = this.getManagedBean()
 				.getSelectedRuleType().getConfigRuleValues().get(index);
-		if (this.getManagedBean().getSelectedRuleType().getIsRangeValue() == 1
+		if (this.getManagedBean().getSelectedRuleType().getRangeType() == 1
 				&& ruleValue.isShowFlag()) {
 			Date effDate = ruleValue.getEffDate();
 			Date expDate = ruleValue.getExpDate();
@@ -2664,7 +2664,7 @@ public class RuleCatalogueBackingBean extends
 //			newRuleValue.setCategoryL3Id(this.getManagedBean().getCategoryL3());
 //		}
 
-		if (this.getManagedBean().getSelectedRuleType().getIsRangeValue() == 1) {
+		if (this.getManagedBean().getSelectedRuleType().getRangeType() == 1) {
 
 			if (this.getManagedBean().getSelectedRuleType()
 					.getConfigRuleValues() != null
