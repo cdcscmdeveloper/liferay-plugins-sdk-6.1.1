@@ -299,7 +299,7 @@ public class SpecificationBackingBean extends
 
 			}
 		}
-		return "specificationview.xhtml";
+		return "businessOwnerMain.xhtml";
 	}
 
 	/**
@@ -664,7 +664,7 @@ public class SpecificationBackingBean extends
 							new ArrayList<TreeNode>());
 				}
 
-				return "specificationCreation.xhtml?faces-redirect=true";
+				return "businessOwnerTabMenu.xhtml?faces-redirect=true";
 			}
 
 		} else {
@@ -730,7 +730,7 @@ public class SpecificationBackingBean extends
 							this.getManagedBean().getScQt().setZonal(true);
 						}
 					}
-					return "specificationCreation.xhtml?faces-redirect=true";
+					return "businessOwnerTabMenu.xhtml?faces-redirect=true";
 				} else {
 
 					if (null != supplierCriteria
@@ -785,7 +785,7 @@ public class SpecificationBackingBean extends
 							}
 
 						}
-						return "specificationCreation.xhtml?faces-redirect=true";
+						return "businessOwnerTabMenu.xhtml?faces-redirect=true";
 					}
 
 				}
@@ -846,7 +846,7 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setCheckListTitle("");
 		this.getManagedBean().setIndex(-1);
 		this.getManagedBean().setSpecComplete(false);
-		return "/xhtml/sc/specification/specificationCreation.xhtml?faces-redirect=true";
+		return "/xhtml/sc/specification/businessOwnerTabMenu.xhtml?faces-redirect=true";
 
 	}
 
@@ -868,7 +868,7 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setScoringForYears(null);
 		this.getManagedBean().setCheckListTitle("");
 		this.getManagedBean().setIndex(-1);
-		return "/xhtml/sc/specification/specificationCommitteeView.xhtml?faces-redirect=true";
+		return "/xhtml/sc/specification/specificationCommitteeMain.xhtml?faces-redirect=true";
 
 	}
 
@@ -879,7 +879,7 @@ public class SpecificationBackingBean extends
 	 * @return the string
 	 */
 	public String businessOwnerTemplateSpec() {
-		return "/xhtml/sc/main/createTemplate.xhtml?faces-redirect=true";
+		return "/xhtml/sc/BoSctemplateSpec/createTemplate.xhtml?faces-redirect=true";
 	}
 
 	/**
@@ -889,7 +889,7 @@ public class SpecificationBackingBean extends
 	 * @return the string
 	 */
 	public String retriveTemplatespec() {
-		return "/xhtml/sc/main/createCommitteeTemplate.xhtml?faces-redirect=true";
+		return "/xhtml/sc/BoSctemplateSpec/createCommitteeTemplate.xhtml?faces-redirect=true";
 	}
 
 	/**
@@ -2914,7 +2914,7 @@ public class SpecificationBackingBean extends
 		} finally {
 			specSo = null;
 		}
-		return "weightageGroup.xhtml";
+		return "technicalScoring.xhtml";
 	}
 
 	/**
@@ -5292,7 +5292,7 @@ public class SpecificationBackingBean extends
 				getManagedBean().setZoneGeneralTrees(null);
 				getManagedBean().setZoneTrees(null);
 			}
-			return "specificationCreation.xhtml?faces-redirect=true";
+			return "businessOwnerTabMenu.xhtml?faces-redirect=true";
 		} else {
 			if (null == this.getManagedBean().getCtCircularVer()) {
 				throw new EpException(MessageConst.ERROR_760157);
@@ -5390,7 +5390,7 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setScQtCheckSt2techProposal(null);
 
 			}
-			return "specificationCreation.xhtml?faces-redirect=true";
+			return "businessOwnerTabMenu.xhtml?faces-redirect=true";
 		}
 
 	}
@@ -6516,7 +6516,7 @@ public class SpecificationBackingBean extends
 				 * templateSpecBean.getSpecMaster().setScoringReq(
 				 * this.getManagedBean().getScQt().isTechEvaluationReq());
 				 */
-				return "/xhtml/sc/main/committeeTechnicalEditAction.xhtml?faces-redirect=true";
+				return "/xhtml/sc/BoSctemplateSpec/committeeTechnicalEditAction.xhtml?faces-redirect=true";
 			} else {
 				setUserDetails(checkList);
 				this.getManagedBean().setChecklistScoreType(null);
@@ -6628,7 +6628,7 @@ public class SpecificationBackingBean extends
 						checkList.setScQtCheckListValue(checkListValue);
 					}
 					this.getManagedBean().setScQtChecklist(checkList);
-					return "companyExperience.xhtml?faces-redirect=true";
+					return "/xhtml/sc/specification/SpecificationCommittee/TechnicalCheckList/companyExperience.xhtml?faces-redirect=true";
 				} else if (QTConstants.TECHNICAL_PRIVATE_CODE
 						.equalsIgnoreCase(checkList.getPmDocument()
 								.getDocDefinitionKey())) {
@@ -6731,7 +6731,7 @@ public class SpecificationBackingBean extends
 						checkList.setScQtCheckListValue(checkListValue);
 					}
 					this.getManagedBean().setScQtChecklist(checkList);
-					return "companyExperiencePrivate.xhtmlfaces-redirect=true";
+					return "/xhtml/sc/specification/SpecificationCommittee/TechnicalCheckList/companyExperiencePrivate.xhtmlfaces-redirect=true";
 				}
 
 				else if (QTConstants.TECHNICAL_STAFF_LIST
@@ -6794,7 +6794,7 @@ public class SpecificationBackingBean extends
 
 					}
 					this.getManagedBean().setScQtChecklist(checkList);
-					return "technicalEmployeeList.xhtml?faces-redirect=true";
+					return "/xhtml/sc/specification/SpecificationCommittee/TechnicalCheckList/technicalEmployeeList.xhtml?faces-redirect=true";
 				} else if (QTConstants.TECHNICAL_NUMBER_EMPLOYEES
 						.equalsIgnoreCase(checkList.getPmDocument()
 								.getDocDefinitionKey())) {
@@ -6861,7 +6861,7 @@ public class SpecificationBackingBean extends
 						checkList.setScQtCheckListValue(checkListValue);
 					}
 					this.getManagedBean().setScQtChecklist(checkList);
-					return "totalEmployees.xhtml?faces-redirect=true";
+					return "/xhtml/sc/specification/SpecificationCommittee/TechnicalCheckList/totalEmployees.xhtml?faces-redirect=true";
 				}
 
 			}
@@ -6968,7 +6968,7 @@ public class SpecificationBackingBean extends
 
 				}
 
-				return "/xhtml/sc/main/financialCommitteeTemplate.xhtml?faces-redirect=true";
+				return "/xhtml/sc/BoSctemplateSpec/financialCommitteeTemplate.xhtml?faces-redirect=true";
 			} else {
 				setUserDetails(checkList);
 				this.getManagedBean().setCheckListScore(
@@ -7042,7 +7042,7 @@ public class SpecificationBackingBean extends
 						checkList.setScQtCheckListValue(checkListValue);
 					}
 					this.getManagedBean().setScQtChecklist(checkList);
-					return "financialGovernementCompany.xhtml?faces-redirect=true";
+					return "/xhtml/sc/specification/SpecificationCommittee/FinancialCheckList/financialGovernementCompany.xhtml?faces-redirect=true";
 				} else if (QTConstants.FINANCIAL_PRIVATE_CODE
 						.equalsIgnoreCase(checkList.getPmDocument()
 								.getDocDefinitionKey())) {
@@ -7107,7 +7107,7 @@ public class SpecificationBackingBean extends
 						checkList.setScQtCheckListValue(checkListValue);
 					}
 					this.getManagedBean().setScQtChecklist(checkList);
-					return "financialPrivateCompany.xhtml?faces-redirect=true";
+					return "/xhtml/sc/specification/SpecificationCommittee/FinancialCheckList/financialPrivateCompany.xhtml?faces-redirect=true";
 
 				} else if (QTConstants.FINANCIAL_CREDIT_FACILITY_CODE
 						.equalsIgnoreCase(checkList.getPmDocument()
@@ -7165,7 +7165,7 @@ public class SpecificationBackingBean extends
 						}
 					}
 					this.getManagedBean().setScQtChecklist(checkList);
-					return "creditFacility.xhtml?faces-redirect=true";
+					return "/xhtml/sc/specification/SpecificationCommittee/FinancialCheckList/creditFacility.xhtml?faces-redirect=true";
 				}
 
 				else if (QTConstants.FINANCIAL_CASH_ON_HAND_CODE
@@ -7223,7 +7223,7 @@ public class SpecificationBackingBean extends
 					}
 					this.getManagedBean().setScQtChecklist(checkList);
 
-					return "cashOnhand.xhtml?faces-redirect=true";
+					return "/xhtml/sc/specification/SpecificationCommittee/FinancialCheckList/cashOnhand.xhtml?faces-redirect=true";
 				}
 
 				else if (QTConstants.FINANCIAL_BANK_STMT_CODE
@@ -7307,7 +7307,7 @@ public class SpecificationBackingBean extends
 
 					}
 					this.getManagedBean().setScQtChecklist(checkList);
-					return "bankStatement.xhtml?faces-redirect=true";
+					return "/xhtml/sc/specification/SpecificationCommittee/FinancialCheckList/bankStatement.xhtml?faces-redirect=true";
 				}
 
 				else if (QTConstants.FINANCIAL_ASSET_LIABILITY_CODE
@@ -7365,7 +7365,7 @@ public class SpecificationBackingBean extends
 						}
 					}
 					this.getManagedBean().setScQtChecklist(checkList);
-					return "assetsLiabilities.xhtml?faces-redirect=true";
+					return "/xhtml/sc/specification/SpecificationCommittee/FinancialCheckList/assetsLiabilities.xhtml?faces-redirect=true";
 				} else if (QTConstants.FINANCIAL_SUPPLIER_DETAILS_CODE
 						.equalsIgnoreCase(checkList.getPmDocument()
 								.getDocDefinitionKey())) {
@@ -7430,7 +7430,7 @@ public class SpecificationBackingBean extends
 						}
 					}
 					this.getManagedBean().setScQtChecklist(checkList);
-					return "supplierinfo.xhtml?faces-redirect=true";
+					return "/xhtml/sc/specification/SpecificationCommittee/FinancialCheckList/supplierinfo.xhtml?faces-redirect=true";
 				} else if (QTConstants.FINANCIAL_PAID_UP_CAPITAL_CODE
 						.equalsIgnoreCase(checkList.getPmDocument()
 								.getDocDefinitionKey())) {
@@ -7485,7 +7485,7 @@ public class SpecificationBackingBean extends
 						}
 					}
 					this.getManagedBean().setScQtChecklist(checkList);
-					return "paidUpCapital.xhtml?faces-redirect=true";
+					return "/xhtml/sc/specification/SpecificationCommittee/FinancialCheckList/paidUpCapital.xhtml?faces-redirect=true";
 				}
 			}
 		} finally {
@@ -7688,7 +7688,7 @@ public class SpecificationBackingBean extends
 		} finally {
 			templateSpecSO = null;
 		}
-		return "/xhtml/sc/main/committeeTechnicalEditAction.xhtml?faces-redirect=true";
+		return "/xhtml/sc/BoSctemplateSpec/committeeTechnicalEditAction.xhtml?faces-redirect=true";
 	}
 
 	/**
@@ -13602,7 +13602,7 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setCheckListTitle("");
 					retriveTechnicalSpecification();
 					this.getManagedBean().setIndex(-1);
-					return "/xhtml/sc/specification/specificationCreation.xhtml?faces-redirect=true";
+					return "/xhtml/sc/specification/businessOwnerTabMenu.xhtml?faces-redirect=true";
 				} else if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE
 						.equalsIgnoreCase(flowType)) {
 					if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
@@ -13633,7 +13633,7 @@ public class SpecificationBackingBean extends
 					}
 					this.getManagedBean().setCheckListTitle("");
 					this.getManagedBean().setIndex(-1);
-					return "/xhtml/sc/specification/specificationCommitteeView.xhtml?faces-redirect=true";
+					return "/xhtml/sc/specification/specificationCommitteeMain.xhtml?faces-redirect=true";
 
 				}
 			}
@@ -13642,13 +13642,13 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setCheckListTitle("");
 				this.getManagedBean().setIndex(-1);
 				this.getManagedBean().getScQtCheckSt2techProposal();
-				return "/xhtml/sc/specification/specificationCreation.xhtml?faces-redirect=true";
+				return "/xhtml/sc/specification/businessOwnerTabMenu.xhtml?faces-redirect=true";
 			} else if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE
 					.equalsIgnoreCase(flowType)) {
 				this.getManagedBean().setCheckListTitle("");
 				this.getManagedBean().setIndex(-1);
 				this.getManagedBean().getScQtCheckSt2techProposal();
-				return "/xhtml/sc/specification/specificationCommitteeView.xhtml?faces-redirect=true";
+				return "/xhtml/sc/specification/specificationCommitteeMain.xhtml?faces-redirect=true";
 			}
 
 		}
@@ -13779,7 +13779,7 @@ public class SpecificationBackingBean extends
 				setTechnicalCheckList(savedCheckLists.get(0),
 						QTConstants.DOCTYPE_QT);
 				// return
-				// "/xhtml/sc/specification/specificationCreation.xhtml?faces-redirect=true";
+				// "/xhtml/sc/specification/businessOwnerTabMenu.xhtml?faces-redirect=true";
 			} else if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE
 					.equalsIgnoreCase(flowType)) {
 
@@ -13822,7 +13822,7 @@ public class SpecificationBackingBean extends
 				// this.getManagedBean().setCheckListTitle("");
 				// this.getManagedBean().setIndex(-1);
 				// return
-				// "/xhtml/sc/specification/specificationCommitteeView.xhtml?faces-redirect=true";
+				// "/xhtml/sc/specification/specificationCommitteeMain.xhtml?faces-redirect=true";
 
 			}
 			FacesContext
@@ -14347,7 +14347,7 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setIndex(-1);
 				this.getManagedBean().setCheckListTitle("");
 				this.getManagedBean().setSpecComplete(false);
-				return "/xhtml/sc/specification/specificationCreation.xhtml?faces-redirect=true";
+				return "/xhtml/sc/specification/businessOwnerTabMenu.xhtml?faces-redirect=true";
 			} else if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE
 					.equalsIgnoreCase(flowType)) {
 
@@ -14382,7 +14382,7 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setCheckListTitle("");
 				this.getManagedBean().setFinancialScoring(null);
 				this.getManagedBean().setOfferPricePackage(null);
-				return "/xhtml/sc/specification/specificationCommitteeView.xhtml?faces-redirect=true";
+				return "/xhtml/sc/specification/specificationCommitteeMain.xhtml?faces-redirect=true";
 
 			}
 		}
@@ -14454,7 +14454,7 @@ public class SpecificationBackingBean extends
 					retriveFinancialSpecification();
 					// this.getManagedBean().setIndex(-1);
 					// return
-					// "/xhtml/sc/specification/specificationCreation.xhtml?faces-redirect=true";
+					// "/xhtml/sc/specification/businessOwnerTabMenu.xhtml?faces-redirect=true";
 				} else if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE
 						.equalsIgnoreCase(flowType)) {
 					if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
@@ -14488,7 +14488,7 @@ public class SpecificationBackingBean extends
 					// this.getManagedBean().setCheckListTitle("");
 					// this.getManagedBean().setIndex(-1);
 					// return
-					// "/xhtml/sc/specification/specificationCommitteeView.xhtml?faces-redirect=true";
+					// "/xhtml/sc/specification/specificationCommitteeMain.xhtml?faces-redirect=true";
 
 				}
 			}
@@ -14575,14 +14575,14 @@ public class SpecificationBackingBean extends
 		}
 
 		if (SourcingConstants.FLOW_TYPE_BO.equalsIgnoreCase(flowtype)) {
-			return "/xhtml/sc/main/newTemplateMaintenance.xhtml?faces-redirect=true";
+			return "/xhtml/sc/BoSctemplateSpec/newTemplateMaintenance.xhtml?faces-redirect=true";
 
 		} else if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE
 				.equalsIgnoreCase(flowtype)) {
 			this.getManagedBean().setIndex(-1);
 			this.getManagedBean().setNewTemplateSpec(true);
 
-			return "/xhtml/sc/main/technicalCommitteeTemplate.xhtml?faces-redirect=true";
+			return "/xhtml/sc/BoSctemplateSpec/technicalCommitteeTemplate.xhtml?faces-redirect=true";
 		}
 
 		return null;
@@ -14769,9 +14769,9 @@ public class SpecificationBackingBean extends
 		// }
 
 		if (SourcingConstants.TECHINICAL_STAGE.equalsIgnoreCase(specType)) {
-			return "/xhtml/sc/main/BusinessOwnerTechnicalSpecEdit.xhtml?faces-redirect=true";
+			return "/xhtml/sc/BoSctemplateSpec/BusinessOwnerTechnicalSpecEdit.xhtml?faces-redirect=true";
 		} else if (SourcingConstants.FINANCIAL_STAGE.equalsIgnoreCase(specType)) {
-			return "/xhtml/sc/main/financialTemplate.xhtml?faces-redirect=true";
+			return "/xhtml/sc/BoSctemplateSpec/financialTemplate.xhtml?faces-redirect=true";
 		}
 		return null;
 
@@ -15433,14 +15433,14 @@ public class SpecificationBackingBean extends
 			if (SourcingConstants.FLOW_TYPE_BO.equalsIgnoreCase(type)) {
 
 				panelbackingbean.getManagedBean().setGotoPreviewPage(
-						"/xhtml/sc/specification/specificationCreation.xhtml");
+						"/xhtml/sc/specification/businessOwnerTabMenu.xhtml");
 			}
 			if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE
 					.equalsIgnoreCase(type)) {
 				panelbackingbean
 						.getManagedBean()
 						.setGotoPreviewPage(
-								"/xhtml/sc/specification/specificationCommitteeView.xhtml");
+								"/xhtml/sc/specification/specificationCommitteeMain.xhtml");
 			}
 
 			pageView = panelbackingbean.gotoCommonViewPage(ctCircularVer
