@@ -684,14 +684,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			currDateAfterThreeMonths.setTime(currDate);
 			currDateAfterThreeMonths.add(Calendar.MONTH, 3);
 			if (currDateAfterThreeMonths.getTime().after(acc.getExpDate())) {
-				getManagedBean().setMofExpDateMsg(
-						SmCommonUtil.getMessage(
-								"lbl.sm.suppalert.mofexpiry.msg",
-								new String[] {
-										DateUtils.dateToString("dd-MM-yyyy",
-												acc.getExpDate()),
-										SmCommonUtil.getEpBaseUrl()
-												+ "/renew-mof-account" }));
+				getManagedBean().setMofExpDateMsg(DateUtils.dateToString("dd-MM-yyyy",
+						acc.getExpDate()));
 			}
 		}
 	}
