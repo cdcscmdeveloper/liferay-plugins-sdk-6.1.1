@@ -3745,11 +3745,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		if(getManagedBean().getRequestNote().getPmUserGroup()==null) {
 			getManagedBean().getRequestNote().setPmUserGroup(new PmUserGroup());
 		}
-		items = new SelectItem[getManagedBean().getUserGroupList().size()];
-		int i = 0;
-		for(PmUserGroup userGroup : getManagedBean().getUserGroupList()) {
-			items[i++] = new SelectItem(userGroup.getUserGroupId(), userGroup.getGroupName().replaceAll("\\s+", " ").trim());
+		if(!CollectionUtils.isEmpty(getManagedBean().getUserGroupList())) {
+			items = new SelectItem[getManagedBean().getUserGroupList().size()];
+			int i = 0;
+			for(PmUserGroup userGroup : getManagedBean().getUserGroupList()) {
+				items[i++] = new SelectItem(userGroup.getUserGroupId(), userGroup.getGroupName().replaceAll("\\s+", " ").trim());
+			}
+		} else {
+			items = new SelectItem[0];
 		}
+		
 	    return items;
 	}
 	
