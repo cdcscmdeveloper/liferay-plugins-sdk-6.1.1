@@ -1,0 +1,23 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	
+	<ui:define name="contentSection">
+	
+		<table style="border: 0px; align:center;width: 100%" >
+			<tr>
+			
+			 <td width="100%" align="left" valign="top"><ui:include src="/xhtml/sc/specification/specificationCommitteeinclde.xhtml" /></td>
+				<!--  <td width="100%" align="left" valign="top"><ui:include src="/xhtml/sc/specification/businessOwnerMenu.xhtml" /></td> -->
+				<!-- <td> <td width="100%" align="left" valign="top"><ui:include src="/xhtml/sc/specification/specificationGroup.xhtml" /></td></td> -->
+			</tr>
+		</table>
+						
+	</ui:define>
+
+	</ui:composition>

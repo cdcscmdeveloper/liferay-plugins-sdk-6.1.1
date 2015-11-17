@@ -1,0 +1,175 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+
+	<ui:define name="contentSection">
+		<!-- <ac:title value="#{lbl['lbl.sc.spec.specification.committee']}"></ac:title> -->
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
+		</p:blockUI>
+		<p:messages id="financialAssetsLiabilitysScore" autoUpdate="true"
+			showDetail="true" showSummary="false" closable="true" severity="error, info"></p:messages>
+		<div>
+			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+				immediate="true"
+				action="#{specificationBackingBean.committeeBackAction}" />
+
+			<p:commandButton value="#{lbl['lbl.btn.save']}"
+				rendered="#{((specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
+				style="float:right;" onstart="blockWidget.show();"
+				oncomplete="blockWidget.hide();"
+				action="#{specificationBackingBean.saveCheckListScores}">
+				<f:setPropertyActionListener
+					target="#{specificationBackingBean.managedBean.criteriaType}"
+					value="60" />
+
+			</p:commandButton>
+
+
+
+		</div>
+		<p:spacer height="25"></p:spacer>
+		<br />
+		<br />
+		<ui:include src="/xhtml/sc/specification/SpecificationCommittee/TechnicalFinancialCommon/checklistHeader.xhtml" />
+
+		<p:spacer height="20" />
+		<p:panel header="#{lbl['lbl.sc.assest.liabilities']}"
+			toggleable="true">
+			<table>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.current.asset']}" /></td>
+					<td><p:inputText style="text-align:right" disabled="true">
+
+						</p:inputText></td>
+				</tr>
+				<p:spacer height="10"></p:spacer>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.current.liability']}" /></td>
+					<td><p:inputText style="text-align:right" disabled="true">
+
+						</p:inputText></td>
+				</tr>
+				<p:spacer height="25"></p:spacer>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.acid.ratio']}" /></td>
+					<td><p:inputText style="text-align:right" id="totalacidratio"
+							readonly="true" disabled="true" /> <ac:iconTooltip
+							value="#{lbl['lbl.sc.acid.ratio.tooltip']}" /></td>
+				</tr>
+			</table>
+		</p:panel>
+		<p:spacer height="20"></p:spacer>
+
+		<p:panel id="financialAssetsLiabilityScore"
+			header="#{lbl['lbl.sc.spec.asset.score.net.amount']}"
+			toggleable="true"
+			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
+			<table>
+				<tr>
+					<td style="width: 120px;"><ui:fragment
+							rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+							<p:outputLabel value="*" styleClass="mandatory"
+								style="float : left"></p:outputLabel>
+						</ui:fragment> <p:outputLabel style="float : left"
+							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
+					<td><p:selectOneMenu required="true" style="width: 160px;"
+							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+							label="#{lbl['lbl.sc.spec.asset.score.type']}"
+							id="assetLiabilityAutoScore"
+							value="#{specificationBackingBean.managedBean.checklistScoreType}">
+							<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
+							<p:ajax event="change"
+								update="assetLiabilitie,financialAssetsLiabilityScore"
+								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
+						</p:selectOneMenu> <p:message id="assetLiabilityAutoScoreId"
+							for="assetLiabilityAutoScore" display="icon"></p:message></td>
+					<td><ac:iconTooltip
+							value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type.tooltip']}" />
+					</td>
+				</tr>
+			</table>
+			<p:spacer height="5"></p:spacer>
+			<h:panelGroup id="assetLiabilitie">
+				<h:panelGroup
+					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
+					<ui:param name="scoringPnlGroupId" value="contractorGroupId" />
+					<h:panelGroup id="assetsGroupId">
+						<ui:param name="scoringList"
+							value="#{specificationBackingBean.managedBean.checkListScore}" />
+						<ui:param name="selectionList"
+							value="#{specificationBackingBean.managedBean.checkListSelectScore}" />
+
+						<ui:param name="componentName" value="Assets" />
+						<ui:param name="scoringPnlId" value="assetId" />
+						<ui:param name="scoringPnlName"
+							value="#{lbl['lbl.sc.spec.asset.score.net.amount']}"></ui:param>
+						<ui:include src="/xhtml/sc/specification/SpecificationCommittee/TechnicalFinancialCommon/scoring.xhtml"></ui:include>
+						<div align="right">
+							<p:commandButton value="#{lbl['lbl.btn.add']}"
+								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+								process="@this,#{scoringPnlId}" partialSubmit="true"
+								oncomplete="scoreWidget.paginator.endLink.click();"
+								actionListener="#{specificationBackingBean.addScoring(60)}"
+								update="#{scoringPnlId}" />
+							<p:commandButton value="#{lbl['lbl.btn.delete']}"
+								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+								process="@this" partialSubmit="true"
+								oncomplete="financialAssetLiabilityDeletePopUp.show();"
+								update="@([id$=#{financialAssetsLiabilityDeleteId}])">
+								<f:setPropertyActionListener
+									target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
+									value="#{false}" />
+							</p:commandButton>
+
+						</div>
+						<ui:param name="financialAssetsLiabilityDeleteId"
+							value="financialAssetsLiabilityDeleteId"></ui:param>
+
+						<ac:confirmationPopup id="#{financialAssetsLiabilityDeleteId}"
+							widget="financialAssetLiabilityDeletePopUp" width="400"
+							height="200"
+							okAction="specificationBackingBean.deleteCheckListScoreContrats"
+							title="#{lbl['lbl.sc.assest.liabilities']}"
+							content="#{lbl['lbl.sc.dialog.confirm.message']}"
+							update="@([id$=#{scoringPnlId}])" />
+					</h:panelGroup>
+				</h:panelGroup>
+				<p:spacer height="5"></p:spacer>
+				<h:panelGroup
+					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
+					<table>
+						<tr>
+							<td style="width: 120px;"><ui:fragment
+									rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+									<p:outputLabel value="*" styleClass="mandatory"
+										style="float : left"></p:outputLabel>
+								</ui:fragment> <p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"
+									style="float : left"></p:outputLabel></td>
+							<td><p:inputText id="finAssetsLiaScore" required="true"
+									style="text-align:right;"
+									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+									label="#{lbl['lbl.sc.spec.max.score']}" maxlength="18"
+									value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
+									<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+								</p:inputText> <p:message id="finAssetLiabilityMaxScore"
+									for="finAssetsLiaScore" display="icon"></p:message></td>
+						</tr>
+					</table>
+				</h:panelGroup>
+			</h:panelGroup>
+		</p:panel>
+
+
+	</ui:define>
+</ui:composition>

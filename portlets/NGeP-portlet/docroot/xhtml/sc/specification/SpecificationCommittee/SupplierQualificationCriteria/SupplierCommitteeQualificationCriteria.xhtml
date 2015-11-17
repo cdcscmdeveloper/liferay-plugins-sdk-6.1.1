@@ -1,0 +1,31 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+
+
+
+
+	<c:if
+		test="#{specificationBackingBean.managedBean.scQt.qtType == PmCodeConst.quotationTenderTypeOpen and  specificationBackingBean.managedBean.scQt.panel == 'No'}">
+		<ui:include src="/xhtml/sc/specification/SpecificationCommittee/SupplierQualificationCriteria/NonPanel/supplierCommitteeOpen.xhtml" />
+	</c:if>
+
+	<c:if
+		test="#{specificationBackingBean.managedBean.scQt.qtType == PmCodeConst.quotationTenderTypeRestrictedTender}">
+		<ui:include src="/xhtml/sc/specification/SpecificationCommittee/SupplierQualificationCriteria/RestrictedTender/specCommitteeRestrictedtender.xhtml" />
+	</c:if>
+	<c:if
+		test="#{ specificationBackingBean.managedBean.scQt.panel != 'No' and specificationBackingBean.managedBean.scQt.qtType == PmCodeConst.quotationTenderTypeOpen }">
+		<ui:include src="/xhtml/sc/specification/SpecificationCommittee/SupplierQualificationCriteria/Panel/specificationCommitteePanelInfo.xhtml" />
+	</c:if>
+
+
+
+
+</ui:composition>
+

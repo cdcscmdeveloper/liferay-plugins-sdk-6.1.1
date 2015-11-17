@@ -79,47 +79,56 @@
 				<td width="80%;" valign="top"><c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '0'}">
 
-						<ui:include src="specificationDetails.xhtml"></ui:include>
+						<ui:include
+							src="/xhtml/sc/specification/SpecificationCommittee/General/specificationCommitteeGeneralDetails.xhtml"></ui:include>
 
 					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '1'}">
 
-						<ui:include src="SupplierCommitteeQualificationCriteria.xhtml"></ui:include>
+						<ui:include
+							src="/xhtml/sc/specification/SpecificationCommittee/SupplierQualificationCriteria/SupplierCommitteeQualificationCriteria.xhtml"></ui:include>
 					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '2'}">
 
-						<ui:include src="technicalChecklist.xhtml"></ui:include>
+						<ui:include
+							src="/xhtml/sc/specification/SpecificationCommittee/TechnicalCheckList/technicalChecklist.xhtml"></ui:include>
 
 
 					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '3'}">
 
-						<ui:include src="financialChecklist.xhtml"></ui:include>
+						<ui:include
+							src="/xhtml/sc/specification/SpecificationCommittee/FinancialCheckList/financialChecklist.xhtml"></ui:include>
 					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '4'}">
 
-						<ui:include src="weightageGroup.xhtml" />
+						<ui:include
+							src="/xhtml/sc/specification/SpecificationCommittee/TechnicalScoring/technicalScoring.xhtml" />
 
 
 					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '5'}">
 
-						<ui:include src="financialScoring.xhtml" />
+						<ui:include
+							src="/xhtml/sc/specification/SpecificationCommittee/FinancialScoring/financialScoring.xhtml" />
 					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '6'}">
 
-						<ui:include src="recomondation.xhtml" />
+						<ui:include
+							src="/xhtml/sc/specification/SpecificationCommittee/Recommendation/recomondation.xhtml" />
 					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '7'}">
 
-						<ui:include src="deliveryAddress.xhtml" />
+						<ui:include
+							src="/xhtml/sc/specification/SpecificationCommittee/DeliveryAddress/deliveryAddress.xhtml" />
 					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '8'}">
 
 						<c:if
 							test="#{specificationBackingBean.managedBean.fulfilmentType eq null or specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA' or specificationBackingBean.managedBean.fulfilmentType eq 'OF'}">
 
-							<ui:include src="schedule.xhtml" />
+							<ui:include
+								src="/xhtml/sc/specification/SpecificationCommittee/FulfilmentSchedule/schedule.xhtml" />
 						</c:if>
 
 
@@ -127,7 +136,8 @@
 						test="#{specificationBackingBean.managedBean.activeIndex eq '9'}">
 						<ui:param name="committeeActivityList"
 							value="#{specificationBackingBean.managedBean.committeeActivities}"></ui:param>
-						<ui:include src="specificationSignoff.xhtml" />
+						<ui:include
+							src="/xhtml/sc/specification/SpecificationCommittee/CommitteeEndorsment/specificationSignoff.xhtml" />
 
 					</c:if></td>
 			</tr>
@@ -208,42 +218,50 @@
 				<td width="80%;" valign="top"><c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '0'}">
 
-						<ui:include src="specificationDetails.xhtml"></ui:include>
+						<ui:include
+							src="/xhtml/sc/specification/SpecificationCommittee/General/specificationCommitteeGeneralDetails.xhtml"></ui:include>
 
 					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '1'}">
 
-						<ui:include src="SupplierCommitteeQualificationCriteria.xhtml"></ui:include>
+						<ui:include
+							src="/xhtml/sc/specification/SpecificationCommittee/SupplierQualificationCriteria/SupplierCommitteeQualificationCriteria.xhtml"></ui:include>
 					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '2'}">
 						<ui:fragment
 							rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '1'}">
-							<ui:include src="prepareSpecification.xhtml"></ui:include>
+							<ui:include
+								src="/xhtml/sc/specification/SpecificationCommittee/PrepareSpecification/prepareSpecification.xhtml"></ui:include>
 						</ui:fragment>
 
 					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '3'}">
 
-						<ui:include src="financialChecklist.xhtml"></ui:include>
+						<ui:include
+							src="/xhtml/sc/specification/SpecificationCommittee/FinancialCheckList/financialChecklist.xhtml"></ui:include>
 					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '4'}">
 
-						<ui:include src="financialScoring.xhtml" />
+						<ui:include
+							src="/xhtml/sc/specification/SpecificationCommittee/FinancialScoring/financialScoring.xhtml" />
 					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '5'}">
 
-						<ui:include src="recomondation.xhtml" />
+						<ui:include
+							src="/xhtml/sc/specification/SpecificationCommittee/Recommendation/recomondation.xhtml" />
 					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '6'}">
 
-						<ui:include src="deliveryAddress.xhtml" />
+						<ui:include
+							src="/xhtml/sc/specification/SpecificationCommittee/DeliveryAddress/deliveryAddress.xhtml" />
 					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '7'}">
 
 						<c:if
 							test="#{specificationBackingBean.managedBean.fulfilmentType eq null or specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA' or specificationBackingBean.managedBean.fulfilmentType eq 'OF'}">
 
-							<ui:include src="schedule.xhtml" />
+							<ui:include
+								src="/xhtml/sc/specification/SpecificationCommittee/FulfilmentSchedule/schedule.xhtml" />
 						</c:if>
 
 
@@ -251,7 +269,8 @@
 						test="#{specificationBackingBean.managedBean.activeIndex eq '8'}">
 						<ui:param name="committeeActivityList"
 							value="#{specificationBackingBean.managedBean.committeeActivities}"></ui:param>
-						<ui:include src="specificationSignoff.xhtml" />
+						<ui:include
+							src="/xhtml/sc/specification/SpecificationCommittee/CommitteeEndorsment/specificationSignoff.xhtml" />
 
 					</c:if></td>
 			</tr>
@@ -261,7 +280,8 @@
 
 
 	</c:if>
-	<ui:include src="/xhtml/sc/specification/upload.xhtml" />
+	<ui:include
+		src="/xhtml/sc/specification/SpecificationCommittee/TechnicalFinancialCommon/upload.xhtml" />
 	<p:dialog id="technicalStandardDlgs"
 		widgetVar="technicalStandardChecklistDlgs"
 		header="#{lbl['lbl.sc.spec.tech.check.list']}" resizable="false"
