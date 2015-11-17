@@ -11728,6 +11728,8 @@ public class ReportBackingBean extends
 						+ rptGenBean.getSmPaidUpCapitalNaccumVar()
 						+ rptGenBean.getSmProfileStatusVar()
 						// + rptGenBean.getSmRoleVar()
+						+ rptGenBean.getSmGSTRegistrationNoVar()
+                        + rptGenBean.getSmGSTRegisteredStatusVar()
 						+ rptGenBean.getSmEpNoVar()
 						+ rptGenBean.getSmRegistrationNoVar()
 						+ rptGenBean.getSmSupportingDocumentModeVar()
