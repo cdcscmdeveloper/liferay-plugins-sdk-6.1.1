@@ -367,7 +367,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * The method used to retrieve the information and render it on screen.
 	 */
 	public void preRenderView() throws UnsupportedEncodingException {
-		IContractSO contractSO = null;
 		IContractAmendmentSO contractAmendmentSO;
 		ContractResDTO resDTO = null;
 	
@@ -462,8 +461,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	        	}
 	        	if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() == null) {
 	        		ctReqDTO.setCtContractVer(ctBackingBean.getManagedBean().getContractVer());
-	        		contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
-	        		ContractResDTO resDTO1 = contractSO.setScLoa(ctReqDTO);
+	        		ContractResDTO resDTO1 = contractAmendmentSO.setScLoa(ctReqDTO);
 	        		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentLoa(resDTO1.getAmendmentScLoa());
 	        		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractAdmin() == null) {
 	        			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setContractAdmin(getFacesScopes().getUserSessionBean());
@@ -559,7 +557,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			contractSO = null;
+			contractAmendmentSO = null;
 		}
 	}
 	
