@@ -13,7 +13,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -144,7 +143,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	
 	private String editorValue;
 	private ContractBackingBean ctBB = null;
-	SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 	
 	/**
 	 * The constructor used for initializing the variable.

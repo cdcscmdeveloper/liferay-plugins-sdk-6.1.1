@@ -144,7 +144,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	private BigDecimal paidAdvancePercentage = new BigDecimal(0);
 	private BigDecimal balanceToPaid = new BigDecimal(0);
 	private PmOrgProfile[] selectedPmOrgProfile;
-	SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+	private SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 	private IPagingDataModel<PmOrgProfile> agencyDataModel = new AgencyPagingDataModel();	
 	
 	public ContractBackingBean() {
