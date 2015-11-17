@@ -1,0 +1,338 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	<p:panel id="techCommitteeChecklist"
+		header="#{lbl['lbl.sc.spec.tech.check.list']}" toggleable="true">
+
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.spec.tech.check.list.instruction']}"
+			escape="false" />
+
+		<p:dataTable id="stageTwotechProposal" var="stageTwoTechnical"
+			value="#{specificationBackingBean.managedBean.scQtCheckSt2techProposal}"
+			rowIndexVar="index"
+			selection="#{specificationBackingBean.managedBean.s2TechSelect}"
+			first="#{specificationBackingBean.managedBean.technicalTableRow}"
+			rowKey="#{stageTwoTechnical}">
+			<!-- 	<ac:paginator for="stageTwotechProposal" /> -->
+
+			<!-- 	<p:column selectionMode="multiple" style="text-align:left;"
+				rendered="#{stageTwoTechnical.manditory !='true' and stageTwoTechnical.definationType.parameterCode ne 'TS'}" />
+
+			<p:column style="text-align:left;" selectionMode="multiple"
+				disabledSelection="true"
+				rendered="#{stageTwoTechnical.manditory ==true and stageTwoTechnical.definationType.parameterCode ne 'TS' }" />
+			<p:column style="text-align:left;" disabledSelection="true"
+				selectionMode="multiple"
+				rendered="#{stageTwoTechnical.manditory !=true and stageTwoTechnical.definationType.parameterCode eq 'TS'}" /> -->
+
+			<p:column style="width:2px;">
+				<f:facet name="header">
+					<p:selectBooleanCheckbox disabled="true"
+						value="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}">
+						<p:ajax partialSubmit="true" process="@this" disabled="true"
+							update="stageTwotechProposal"
+							listener="#{specificationBackingBean.selectAll(specificationBackingBean.managedBean.templateSpecBean.selectAll, specificationBackingBean.managedBean.scQtCheckSt2techProposal)}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox value="#{stageTwoTechnical.selected}"
+					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+					rendered="#{stageTwoTechnical.manditory !='true' and stageTwoTechnical.definationType.parameterCode ne 'TS'}">
+					<p:ajax partialSubmit="true" process="@this" update="@this"
+						listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwoTechnical,index)}" />
+				</p:selectBooleanCheckbox>
+
+				<p:selectBooleanCheckbox value="#{stageTwoTechnical.selected}"
+					disabled="true"
+					rendered="#{stageTwoTechnical.manditory ==true and stageTwoTechnical.definationType.parameterCode ne 'TS' }">
+					<p:ajax partialSubmit="true" process="@this" update="@this"
+						listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwoTechnical,index)}" />
+				</p:selectBooleanCheckbox>
+
+				<p:selectBooleanCheckbox value="#{stageTwoTechnical.selected}"
+					disabled="true"
+					rendered="#{stageTwoTechnical.manditory !=true and stageTwoTechnical.definationType.parameterCode eq 'TS'}">
+					<p:ajax partialSubmit="true" process="@this" update="@this"
+						listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwoTechnical,index)}" />
+				</p:selectBooleanCheckbox>
+			</p:column>
+
+
+			<p:column headerText="#{lbl['lbl.sc.spec.checklist.title']}"
+				style="width:42%;white-space: normal;">
+
+
+				<ui:fragment rendered="#{stageTwoTechnical.title == null}">
+					<p:inputText required="true" id="techChecklistTitle"
+						label="#{lbl['lbl.sc.spec.checklist.title']}"
+						value="#{stageTwoTechnical.title}" size="30" maxlength="1000">
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							update="technicalChecklisttypes"
+							listener="#{specificationBackingBean.technicalCheckListTitleChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
+					</p:inputText>
+					<p:message id="techChecklistId" for="techChecklistTitle"
+						display="icon"></p:message>
+				</ui:fragment>
+
+				<ui:fragment rendered="#{stageTwoTechnical.title != null}">
+					<h:outputText value="#{stageTwoTechnical.title}" size="30"></h:outputText>
+				</ui:fragment>
+
+			</p:column>
+
+
+			<p:column style="width:10%;white-space: normal;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.type']}" />
+					<ac:iconTooltip id="technicalChecklistMechasine#{index}Sc"
+						value="#{lbl['lbl.sc.type.technical.tooltip']}" />
+				</f:facet>
+
+				<h:panelGroup id="technicalChecklisttypes">
+
+
+					<ui:fragment
+						rendered="#{((stageTwoTechnical.pmDocument ne null and (stageTwoTechnical.pmDocument.docDefinitionKey eq 'TG' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'TN' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'TL' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'NE')) or (stageTwoTechnical.pmDocument eq null and stageTwoTechnical.definationType.parameterCode eq 'TS'))}">
+
+						<h:outputText
+							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.definationType)}"></h:outputText>
+					</ui:fragment>
+
+
+					<ui:fragment
+						rendered="#{(stageTwoTechnical.pmDocument ne null and (stageTwoTechnical.pmDocument.docDefinitionKey eq 'UP' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'KP' or stageTwoTechnical.pmDocument.docDefinitionKey  eq null))}">
+						<p:selectOneMenu style="width:100px;" required="true"
+							id="techChecklistTitlenullType" label="#{lbl['lbl.sc.type']}"
+							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+							value="#{stageTwoTechnical.definationType.parameterId}">
+							<f:selectItems
+								value="#{specificationBackingBean.getFinancialChecklistDefTypeValues(ParameterTypeConst.documentDefinitionType)}"></f:selectItems>
+							<p:ajax event="change" process="@this"
+								update="technicalChecklistsupplier,scoreView,uploadtech,technicalSpecificationStatus"
+								partialSubmit="true"
+								listener="#{specificationBackingBean.technicalCheckListTypeChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
+						</p:selectOneMenu>
+						<p:message id="techChecklistTitlenullType1"
+							for="techChecklistTitlenullType" display="icon"></p:message>
+					</ui:fragment>
+
+					<ui:fragment rendered="#{stageTwoTechnical.pmDocument eq null and stageTwoTechnical.definationType.parameterCode ne 'TS'}">
+						<p:selectOneMenu style="width:100px;" required="true"
+							id="techChecklistTitletypenotnullType" label="#{lbl['lbl.sc.type']}"
+							value="#{stageTwoTechnical.definationType.parameterId}">
+							<f:selectItems
+								value="#{specificationBackingBean.getTechnicalChecklistDefTypeValues(ParameterTypeConst.documentDefinitionType)}"></f:selectItems>
+							<p:ajax event="change" process="@this"
+								update="technicalChecklistsupplier,scoreView,uploadtech,technicalSpecificationStatus"
+								partialSubmit="true"
+								listener="#{specificationBackingBean.technicalCheckListTypeChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
+						</p:selectOneMenu>
+						<p:message id="techChecklistTitletypenotnullType1"
+							for="techChecklistTitletypenotnullType" display="icon"></p:message>
+					</ui:fragment>
+
+
+				</h:panelGroup>
+			</p:column>
+			<p:column style="width:8%;white-space: normal;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.spec.supplier.action']}" />
+					<ac:iconTooltip
+						id="technicalChecklistSupplierActionMechasine#{index}Sc"
+						value="#{lbl['lbl.sc.spec.supplier.action.tooltip']}" />
+				</f:facet>
+
+				<h:panelGroup id="technicalChecklistsupplier">
+
+					<ui:fragment
+						rendered="#{((stageTwoTechnical.pmDocument ne null and (stageTwoTechnical.pmDocument.docDefinitionKey eq 'TG' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'TN' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'TL' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'NE')) or (stageTwoTechnical.pmDocument eq null and stageTwoTechnical.definationType.parameterCode eq 'TS'))}">
+
+						<h:outputText
+							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.action)}"></h:outputText>
+					</ui:fragment>
+
+					<ui:fragment
+						rendered="#{((stageTwoTechnical.pmDocument ne null and (stageTwoTechnical.pmDocument.docDefinitionKey eq 'UP' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'KP' or stageTwoTechnical.pmDocument.docDefinitionKey  eq null)) or(stageTwoTechnical.pmDocument eq null and stageTwoTechnical.definationType.parameterCode ne 'TS'))}">
+						<p:selectOneMenu styleClass="sample#{index}" style="width:100px;"
+							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+							rendered="#{stageTwoTechnical.definationType.parameterCode eq 'UP' and stageTwoTechnical.action.parameterCode eq null}"
+							required="true" id="actionTitleActionnullType"
+							label="#{lbl['lbl.sc.spec.supplier.action']}"
+							value="#{stageTwoTechnical.action.parameterId}">
+							<f:selectItems
+								value="#{specificationBackingBean.managedBean.technicalChecklistAction}" />
+							<p:ajax event="change" process="@this" partialSubmit="true"
+								update="scoreView,uploadtech,technicalSpecificationStatus"
+								listener="#{specificationBackingBean.technicalChecklistDropDownActionChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
+						</p:selectOneMenu>
+						<p:message id="actionTitleActionnullType1"
+							for="actionTitleActionnullType" display="icon"></p:message>
+
+
+
+						<p:selectOneMenu value="#{stageTwoTechnical.action.parameterId}"
+							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+							rendered="#{stageTwoTechnical.definationType.parameterCode eq 'UP' and stageTwoTechnical.action.parameterCode ne null}"
+							required="true" id="actionActionTitlenotnullType"
+							label="#{lbl['lbl.sc.spec.supplier.action']}"
+							style="width:100px;">
+							<f:selectItems
+								value="#{specificationBackingBean.PTJUploadDropDownActionValues}"></f:selectItems>
+							<p:ajax event="change" process="@this" partialSubmit="true"
+								update="scoreView,uploadtech,technicalSpecificationStatus"
+								listener="#{specificationBackingBean.technicalChecklistDropDownActionChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
+						</p:selectOneMenu>
+
+						<p:message id="actionActionTitlenotnullType1"
+							for="actionActionTitlenotnullType" display="icon"></p:message>
+						<h:outputText
+							rendered="#{stageTwoTechnical.definationType.parameterCode ne 'UP'}"
+							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.action)}"></h:outputText>
+					</ui:fragment>
+				</h:panelGroup>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.spec.scoring']}"
+				style="width:10%;white-space: normal;text-align: center;">
+				<h:panelGroup id="scoreView">
+					<p:selectBooleanCheckbox value="#{stageTwoTechnical.scoringReq}"
+						disabled="true"
+						rendered="#{((stageTwoTechnical.definationType.parameterCode eq 'UP' and stageTwoTechnical.action.parameterCode  eq 'V') or(stageTwoTechnical.definationType.parameterCode eq 'TS' and stageTwoTechnical.action.parameterCode  eq 'I'))}">
+
+					</p:selectBooleanCheckbox>
+
+					<p:selectBooleanCheckbox value="#{stageTwoTechnical.scoringReq}"
+						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+						rendered="#{(!(stageTwoTechnical.definationType.parameterCode eq 'UP' and stageTwoTechnical.action.parameterCode  eq 'V') and !(stageTwoTechnical.definationType.parameterCode eq 'TS' and stageTwoTechnical.action.parameterCode  eq 'I'))}">
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							update="technicalSpecificationStatus"
+							listener="#{specificationBackingBean.technicalCheckListScoreReqChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
+					</p:selectBooleanCheckbox>
+				</h:panelGroup>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.spec.specification.status']}"
+				style="width:7%;white-space: normal;">
+				<h:panelGroup id="technicalSpecificationStatus">
+					<h:outputText
+						value="#{specificationBackingBean.getStatusDescById(stageTwoTechnical.pmStatus.statusId)}"></h:outputText>
+				</h:panelGroup>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.document']}"
+				style="width:18%;white-space: normal;text-align: center;">
+
+				<!-- <h:panelGroup id="document"> rendered="#{stageTwoTechnical.definationType.parameterId eq '184'}"-->
+				<h:panelGroup id="uploadtech">
+					<p:commandLink oncomplete="uploadDlg.show();return false;"
+						styleClass="sample#{index}"
+						rendered="#{stageTwoTechnical.definationType.parameterCode eq 'UP' and (specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
+						update="stageTwotechProposal">
+						<h:graphicImage value="/css/images/design/upload.png" />
+						<f:setPropertyActionListener value="#{stageTwoTechnical}"
+							target="#{specificationBackingBean.managedBean.scQtChecklist}" />
+
+					</p:commandLink>
+					<p:spacer width="10" height="5" />
+					<h:commandLink
+						value="#{stageTwoTechnical.scQtCheckListAttachment.fileName}"
+						styleClass="blue_font" immediate="true"
+						action="#{specificationBackingBean.downloadFile(stageTwoTechnical.scQtCheckListAttachment)}" />
+					<p:commandLink
+						rendered="#{stageTwoTechnical.scQtCheckListAttachment.fileName ne null and (specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
+						action="#{specificationBackingBean.deleteCheckListAttachmentFile(stageTwoTechnical.scQtCheckListAttachment)}"
+						immediate="true" update="@form">
+						<h:graphicImage value="/css/images/design/trash.png"
+							styleClass="tasklist_title1" />
+						<f:setPropertyActionListener value="#{stageTwoTechnical}"
+							target="#{specificationBackingBean.managedBean.scQtChecklist}" />
+					</p:commandLink>
+					<!-- <h:outputText
+						value="#{stageTwoTechnical.scQtCheckListAttachment.fileName}"></h:outputText> -->
+					<!-- 	</h:panelGroup> -->
+				</h:panelGroup>
+			</p:column>
+			<p:column style="width:5%;text-align: center;">
+				<f:facet name="header">
+					<ui:fragment
+						rendered="#{specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+						<h:outputText value="* " styleClass="mandatory" />
+					</ui:fragment>
+					<h:outputText value="#{lbl['lbl.sc.action']}" />
+				</f:facet>
+
+				<p:commandLink
+					rendered="#{stageTwoTechnical.definationType.parameterCode eq 'TS' or stageTwoTechnical.definationType.parameterCode eq 'SD' or stageTwoTechnical.definationType.parameterCode eq 'WF'}"
+					action="#{specificationBackingBean.technicalChecklistEditAction(index,stageTwoTechnical,'T')}">
+					<ui:fragment
+						rendered="#{specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION or 
+						!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION}">
+						<h:graphicImage value="/css/images/design/edit.png" />
+					</ui:fragment>
+					<ui:fragment
+						rendered="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+						<h:graphicImage value="/css/images/design/ico-view.png" />
+					</ui:fragment>
+					<f:setPropertyActionListener value="#{stageTwoTechnical}"
+						target="#{specificationBackingBean.managedBean.scQtChecklist}" />
+				</p:commandLink>
+				<!-- </h:panelGroup> -->
+			</p:column>
+		</p:dataTable>
+		<p:spacer height="20"></p:spacer>
+
+		<div align="right">
+			<p:commandButton
+				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+				value="#{lbl['lbl.sc.spec.btn.standard.check.list']}"
+				process="@this" oncomplete="stageTwoTech.show();"
+				actionListener="#{specificationBackingBean.retriveTechnicalStandardCheckList}"
+				update="compilencestageTwo" />
+			<p:commandButton value="#{lbl['lbl.sc.spec.create.specification']}"
+				process="@this"
+				actionListener="#{specificationBackingBean.technicalSpecBoValidate}"
+				disabled="#{((specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or (specificationBackingBean.managedBean.panelItemCategory eq 'S' and specificationBackingBean.managedBean.scQt.panel))}"
+				partialSubmit="true" oncomplete="createOwnerSpec.show();" />
+
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
+				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+				process="@this,stageTwotechProposal"
+				action="#{specificationBackingBean.addTechnicalCheckList}"
+				update="@all,stageTwotechProposal" />
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+				process="@this" partialSubmit="true"
+				oncomplete="technicalCheckListDeletePopUp.show();"
+				update="@([id$=#{technicalCheckListDeleteId}])">
+				<f:setPropertyActionListener
+					target="#{specificationBackingBean.managedBean.techStandaraChecklist}"
+					value="#{true}" />
+				<f:setPropertyActionListener
+					target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
+					value="#{false}" />
+			</p:commandButton>
+
+
+		</div>
+		<ui:param name="technicalCheckListDeleteId"
+			value="technicalCheckListDeleteId"></ui:param>
+
+		<ac:confirmationPopup id="#{technicalCheckListDeleteId}"
+			widget="technicalCheckListDeletePopUp" width="400" height="200"
+			okAction="specificationBackingBean.deleteTechnicalCheckList"
+			title="#{lbl['lbl.sc.spec.tech.check.list']}"
+			content="#{lbl['lbl.sc.dialog.confirm.message']}"
+			update="@([id$=stageTwotechProposal])" />
+		<ui:include src="stageTwoTechnical.xhtml" />
+	</p:panel>
+
+	<ui:include src="/xhtml/sc/BoSctemplateSpec/createCommitteeTemplate.xhtml"></ui:include>
+
+
+
+</ui:composition>
