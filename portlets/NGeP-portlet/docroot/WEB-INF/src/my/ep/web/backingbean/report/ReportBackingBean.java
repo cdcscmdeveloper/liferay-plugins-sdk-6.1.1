@@ -7047,7 +7047,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Application status date change.
+	 * applicationStatusDateChange - will change application status date.
 	 */
 	public void applicationStatusDateChange() {
 
@@ -7083,7 +7083,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Change report type.
+	 * changeReportType - will change report type.
 	 */
 	public void changeReportType() {
 
