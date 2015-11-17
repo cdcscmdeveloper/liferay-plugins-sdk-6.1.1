@@ -14,7 +14,7 @@
 			rowKey="#{scLoaReport}">
 			<ac:paginator for="contentsTbl" />
            
-           <p:column style="width:2%" >
+           <!-- <p:column style="width:2%" >
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selectAllNegoLoc"
 						value="#{lOIDetailBackingBean.flag}" >
@@ -25,7 +25,7 @@
 				<p:selectBooleanCheckbox value="#{scLoaReport.selected}" >
 					<p:ajax partialSubmit="true" process="@this" update="contentsTbl" />
 				</p:selectBooleanCheckbox>
-			</p:column>
+			</p:column> -->
 			
 			<p:column headerText="#{lbl['lbl.sc.content']}">				
 				<h:outputText value="#{scLoaReport.title}" />
