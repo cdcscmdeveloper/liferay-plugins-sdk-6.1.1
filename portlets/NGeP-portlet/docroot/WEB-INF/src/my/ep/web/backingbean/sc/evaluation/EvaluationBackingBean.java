@@ -4324,7 +4324,8 @@ public class EvaluationBackingBean extends
 									this.getManagedBean()
 											.getTechGovProposalScore());
 					this.getManagedBean().setStatusHide(true);
-					
+					proposalPage = detailBackingBean
+							.retrieveFinNonGovCompanyExpDtls(proposalCheckList);
 					evaluationPage = "finPrivateCompanyExperience.xhtml";
 				}
 
