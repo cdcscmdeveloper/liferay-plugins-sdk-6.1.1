@@ -9585,7 +9585,7 @@ public class SmApplicationBackingBean extends
 	 * Set hq facility in selected facility
 	 */
 	private void setHqFacilityInSelectedFacility() {
-		SmFacility hq = getHqFacility();
+		SmFacility hq = getHq();
 		if (!isFacilityExistInList(hq, getManagedBean()
 				.getSelectedFactoryFacilities())) {
 			if (getManagedBean().getSelectedFactoryFacilities() == null
