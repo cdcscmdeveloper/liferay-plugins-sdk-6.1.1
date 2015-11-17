@@ -7,11 +7,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
-	<ui:define name="resourceSection">
-		<script type="application/javascript">
-			
-			//var $jq = jQuery.noConflict(true);
-		
+	<ui:define name="contentSection">
+	<script type="application/javascript">
 			$(document).ready(function(e){
 				  $("input[id$=txtPermAdd1]").keydown(function(e){
 					if(e.which==9 || e.keycode==9){
@@ -61,12 +58,17 @@
 						e.preventDefault();
 					} 
 				  });
+				  
+				  $("input[id$=usrEmail]").bind("cut copy paste",function(e) {
+			          e.preventDefault();
+			      });
+				  
+				  $("input[id$=conEmail]").bind("cut copy paste",function(e) {
+			          e.preventDefault();
+			      });
 			});
-				
-		</script>
-	</ui:define>
-
-	<ui:define name="contentSection">
+	</script>
+	
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 	<div align="right">
 		<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnSubmit" update="@([id$=Msg])" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();"
