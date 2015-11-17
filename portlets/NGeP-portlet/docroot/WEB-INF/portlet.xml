@@ -3245,7 +3245,7 @@
 
 <portlet>
 		<portlet-name>onlineAccountMaintenance</portlet-name>
-		<display-name>Online Account Maintenance</display-name>
+		<display-name>Basic Account Maintenance</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
