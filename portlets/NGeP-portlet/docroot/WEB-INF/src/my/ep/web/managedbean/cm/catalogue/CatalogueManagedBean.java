@@ -474,6 +474,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private SmGstSupplier smGstSupplier;
 	private List<String> availableNoList;
 	private String scheduleNo;
+	
+	private String expiryAlert;
 
 	private class ExpiredSearchPagingDataModel extends
 			PagingDataModel<CmSupplierItem> {
@@ -3707,5 +3709,15 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void setScheduleNo(String scheduleNo) {
 		this.scheduleNo = scheduleNo;
 	}
+
+	public String getExpiryAlert() {
+		return expiryAlert;
+	}
+
+	public void setExpiryAlert(String expiryAlert) {
+		this.expiryAlert = expiryAlert;
+	}
+	
+	
 
 }
