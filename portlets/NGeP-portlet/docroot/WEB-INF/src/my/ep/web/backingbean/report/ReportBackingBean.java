@@ -7126,11 +7126,11 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve ministry name.
+	 * retrieveMinistryName - will retrieve ministry name based on org profile id.
 	 * 
 	 * @param orgprofileid
 	 *            the orgprofileid
-	 * @return the string
+	 * @return the string ministryName
 	 */
 	public String retrieveMinistryName(Long orgprofileid) {
 		ministryName = null;
@@ -7149,9 +7149,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve registration status list.
+	 * retrieveRegStatusList - will retrieve registration status list.
 	 * 
-	 * @return the list
+	 * @return the registrationStatusList
 	 */
 	public List<SelectItem> retrieveRegStatusList() {
 		registrationStatusList = new ArrayList<SelectItem>();
@@ -7172,7 +7172,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Supplier type consultant comparison.
+	 * supplierTypeConsultant - Supplier type consultant comparison for eanbling and disabling for ConsultantRegistrationStatus .
 	 */
 	public void supplierTypeConsultant() {
 		getManagedBean().getRptGenBean().setSmConsultantRegistrationStatusView(
@@ -7213,7 +7213,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Gets the all module list.
+	 * getAllModuleList - will retrieve the all module list to dropdown list.
 	 * 
 	 * @return the all module list
 	 */
@@ -7242,7 +7242,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve identification type.
+	 * retrieveIdentificationType - will retrieve identification type List.
 	 */
 	public void retrieveIdentificationType() {
 		identificationTypeList = new ArrayList<SelectItem>();
@@ -7263,7 +7263,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve accumulated paid-up capital.
+	 * retrieveAccumulatedPaidUpCptl - will retrieve accumulated paid-up capital.
 	 */
 	public void retrieveAccumulatedPaidUpCptl() {
 		accumulatedPaidUpCptlList = new ArrayList<SelectItem>();
