@@ -14,14 +14,8 @@
 	<ui:define name="resourceSection">
 		<script>
 			$('#portlet_smDeactivateAdmin_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.userprofile.deactivate.admin']}");
-			
-			function clickLogout() {
-				alert('test!!!');
-    			var logoutUrl=document.getElementsByClassName('sign-out ')[0].getElementsByTagName('a')[0];
-    			alert(logoutUrl.href);
-    			window.location=logoutUrl.href;
-			}
 		</script>
+		<h:outputScript library="js" name="logout.js" />
 	</ui:define>
 
 
@@ -110,7 +104,6 @@
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.proceed']}" action="#{smPersonnelBackingBean.confirmDeactivateAdmin}" update="@form" 
 					disabled="#{not empty smPersonnelBackingBean.managedBean.noSupplierUserMsg}" />
-				<p:commandButton value="Logout Baru" onclick="clickLogout();" />
 			</div>
 		</p:panel>
 		
@@ -129,15 +122,10 @@
 		</p:confirmDialog>
 		
 		<p:dialog id="successDialog" header="#{lbl['lbl.sm.success.dialog.header']}" closable="false"
-			widgetVar="successDialog" modal="true" width="550px" height="200px">
+			widgetVar="successDialog" modal="true" width="550px" height="180px">
 			<p:messages id="successDialogMsg" showSummary="false"
 				showDetail="true" autoUpdate="true" closable="false" />
 			<div align="right">
-				<ui:remove>
-					<p:commandButton value="#{lbl['lbl.btn.proceed']}" onclick="successDialog.hide();" update="@form"
-						action="#{smPersonnelBackingBean.proceedToLogout()}" process="@this" partialSubmit="true"
-						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-				</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.proceed']}" onclick="clickLogout();" />
 			</div>
 		</p:dialog>
