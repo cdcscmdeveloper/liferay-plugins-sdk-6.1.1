@@ -110,6 +110,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	private static String signUp = "/xhtml/sm/onlinereg/signUp.xhtml?faces-redirect=true";
 	private static String firstUserRegistration = "/xhtml/sm/onlinereg/firstUserRegistration.xhtml?faces-redirect=true";
 	private static String termAndCondition = "/xhtml/sm/onlinereg/signUpTermCondition.xhtml?faces-redirect=true";
+	private static String basicAccDeactivation = "/xhtml/sm/basicaccountdeactivation/basicAccountDeactivationDet.xhtml";
+	private static String acknowledgement = "/xhtml/sm/onlinereg/outputMsg.xhtml";
 	
 	private static String defaultAccPurpose = "P";
 	private static Map<Long, Object> bizNatureL5Map;
@@ -595,13 +597,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * @return String
 	 */
 	public String updateOnlineAccount() {
-		boolean deactivateAccount = this.getManagedBean().getSmSupp().getRecordStatusFlg()
-				.intValue() == DbValueConst.RECORD_STATUS_SUSPENDED ? true
-				: false;
-		String retPage = deactivateAccount ? null : "/xhtml/sm/onlinereg/outputMsg";
-		
-		//validateGstRegNo();
-
 		log.info("--------------------updateOnlineAccount----------------");
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 
@@ -625,14 +620,15 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						FacesMessage.SEVERITY_INFO,
 						null,
 						MessageUtils.getMessage(MessageConst.INFO_721013, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-				if(deactivateAccount){
+				/*if(deactivateAccount){
 					RequestContext.getCurrentInstance().execute("successDialog.show()");
 				}else{
 					renewSesionObject();
 				}
-				return retPage;
+				return retPage;*/
+				return acknowledgement;
 			} else {
-				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
+				//RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
 				throw new EpException(MessageConst.ERROR_721006);
 			}
 		} catch(Exception ex){
@@ -1881,16 +1877,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}
 		}
 		
-		if(this.getManagedBean().getSmSupp().getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_SUSPENDED){
-			if(SmApplicationUtil.hasActiveTransactions(this.getManagedBean().getSmSupp())){
-				throw new EpException(MessageConst.ERROR_721035);
-			}else{
-				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.show()");
-			}
-			return null;
-		}else{
-			return updateOnlineAccount();
-		}
+		return updateOnlineAccount();
+		
 	}
 	
 	/**
@@ -2276,18 +2264,103 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		return gmapDisabled;
 	}
 	
+	//captcha test method
 	public void check(ActionEvent e){
 		FacesContext.getCurrentInstance().addMessage(null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, "Your Code Is Correct !",null));
 	}
 
 	public boolean isShowNewChanges() {
-		String newChanges = EpPropertiesUtils.getInstance().getProperty(
-				"sm.show.new.changes");
+		String newChanges = EpPropertiesUtils.getInstance().getProperty("sm.show.new.changes");
 		boolean showNewChanges = Boolean.valueOf(newChanges);
 		return showNewChanges;
 	}
 
+	/**
+	 * retrieve Basic Account Status
+	 * @param
+	 */
+	public void retrieveBasicAccountStatus(){
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		if(pmUser.getUserId().longValue() != 1 || pmUser == null){
+			SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+			supplierSearchReqDTO.setUserId(pmUser.getUserId());
+
+			SmSupplier smSupp = SmApplicationUtil.getCurrentSupplier();
+			log.info("-------smResDTO-------" + smSupp.getSupplierId()); 
+
+			getManagedBean().setSmSupp(smSupp);
+			
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, basicAccDeactivation);
+		}else{
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+					FacesMessage.SEVERITY_ERROR,
+					null,
+					MessageUtils.getMessage(MessageConst.ERROR_721017, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlinereg/outputMsg.xhtml");
+		}
+	}
+	
+	/**
+	 * Update basic account status
+	 */
+	public String updateBasicAccountStatus(){
+		if(this.getManagedBean().getSmSupp().getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_SUSPENDED){
+			if(SmApplicationUtil.hasActiveTransactions(this.getManagedBean().getSmSupp())){
+				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
+				throw new EpException(MessageConst.ERROR_721035);
+			}else{
+				RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+				reqDTO.setSmSupp(getManagedBean().getSmSupp());
+				IRegistrationSO reqSO = SmServiceLookup.getRegistrationSO();
+				try {
+					reqSO.updateOnlineAcc(reqDTO);
+					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+							FacesMessage.SEVERITY_INFO,
+							null,
+							MessageUtils.getMessage(MessageConst.INFO_721013, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					
+					RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
+					RequestContext.getCurrentInstance().execute("successDialog.show()");
+					
+					return null;
+				} catch(Exception ex){
+					RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
+					throw new EpException(ex.getMessage());
+				}finally{
+					RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
+				}
+			}
+		}else{
+			return acknowledgement;
+		}
+	}
+	
+	/**
+	 * Save Basic Account Status
+	 */
+	public String saveBasicAccountStatus(){
+		boolean deactivateAccount = this.getManagedBean().getSmSupp().getRecordStatusFlg()
+				.intValue() == DbValueConst.RECORD_STATUS_SUSPENDED ? true
+				: false;
+		
+		if(deactivateAccount){
+			RequestContext.getCurrentInstance().execute("submissionConfirmDlg.show()");
+			return null;
+		}else{
+			//updateBasicAccountStatus();
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+					FacesMessage.SEVERITY_INFO,
+					null,
+					MessageUtils.getMessage(MessageConst.INFO_721013, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			
+			return acknowledgement;
+		}
+		
+	}
+	
 }
 
 
