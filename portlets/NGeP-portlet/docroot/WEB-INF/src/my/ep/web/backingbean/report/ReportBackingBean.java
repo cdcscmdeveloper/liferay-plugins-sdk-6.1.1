@@ -13145,7 +13145,7 @@ public class ReportBackingBean extends
 
 	
 	/**
-	 * Reset report form.
+	 * resetReportForm - Reset the criteria and clears the criteria.
 	 */
 	public void resetReportForm() {
 		assignNewCompanyExperience(new ArrayList<SmSupplierCategory>());
@@ -13376,7 +13376,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * File generate report.
+	 * fileGenerateReport - Ut will generate report based on generated URL.
 	 * 
 	 * @param reportFile
 	 *            the report file
@@ -13462,7 +13462,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Gets the module item map.
+	 *  Gets the module item map.
 	 * 
 	 * @return the module item map
 	 */
@@ -13481,7 +13481,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Gets the application status data.
+	 * getApplicationStatusData - Gets the application status data.
 	 * 
 	 * @return the application status data
 	 */
@@ -13507,7 +13507,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Gets the sc loa reports.
+	 *  getScLOAReports - Gets the sc loa reports.
 	 * 
 	 * @return the sc loa reports
 	 */
@@ -13544,7 +13544,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Gets the qt award so.
+	 * getQtAwardSO - Gets the qt award so.
 	 * 
 	 * @return the qt award so
 	 */
@@ -13555,7 +13555,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Download report as pdf or xlsx files in Letter of Acceptance.
+	 * downloadReport - Download report as pdf or xlsx files in Letter of Acceptance.
 	 * 
 	 * @param scLoaReport
 	 *            the sc loa report
@@ -13599,7 +13599,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Download all reports as pdf or xlsx files in Letter of Acceptance.
+	 * downloadAllReports - Download all reports as pdf or xlsx files in Letter of Acceptance.
 	 * 
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
@@ -13649,7 +13649,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Select all documents.
+	 *  selectAllDocuments - Select all documents based an event.
 	 * 
 	 * @param event
 	 *            the event
@@ -13661,7 +13661,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * retrieving SuppLoiLoaMap .
+	 * retrieveSuppLoiLoaMapForReport - will retrieving SuppLoiLoaMap based on qtid.
 	 * 
 	 * @param qtId
 	 *            the qt id
