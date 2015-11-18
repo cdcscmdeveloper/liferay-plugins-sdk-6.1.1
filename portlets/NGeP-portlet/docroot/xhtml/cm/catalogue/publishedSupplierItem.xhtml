@@ -7,6 +7,11 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
+	<table style="width:100%;margin: 5px;">
+		<tr>
+			<td><p:outputLabel value="#{catalogueBackingBean.managedBean.expiryAlert}" style="float:left;font-weight: bold;" /></td>
+		</tr>	
+	</table>
 
 	<p:dataTable id="publishSupplierItemID" lazy="true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		value="#{catalogueBackingBean.managedBean.publishSearchDataModel}"
