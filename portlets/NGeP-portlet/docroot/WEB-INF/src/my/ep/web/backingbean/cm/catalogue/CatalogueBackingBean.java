@@ -4668,6 +4668,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				this.getManagedBean().setTabActiveIndex(0);
 
 			} else if (status.equalsIgnoreCase("Published")) {
+				
+				
+				resDTO = catalogueSO.findPublishItemForAlert();
+				
+				if(resDTO.getSupplierItemList()!=null && resDTO.getSupplierItemList().size()>0){
+					String msg = "";
+					Locale locale = new FacesScopes().getUserLocale();
+	
+					msg = ResourceBundleUtils.getMessage("lbl.cm.expiry.alert", new String[] { ""+resDTO.getSupplierItemList().size()} ,
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+					
+					this.getManagedBean().setExpiryAlert(msg);
+				}else{
+					this.getManagedBean().setExpiryAlert("");
+				}
 
 				this.getManagedBean().getPublishSearchDataModel().reloadData();
 				this.getManagedBean().setTabActiveIndex(4);
