@@ -12,6 +12,11 @@
 	<ui:define name="contentSection">
 		<p:messages id="messages" showDetail="true" showSummary="false"
 			escape="false" autoUpdate="true" closable="true" />
+		
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
 		<p:panel header="#{lbl['lbl.sm.catcode.delete.cancel.header']}"
 			toggleable="true" id="catDelPan">
 			<p:dataTable var="catBean" id="delCatDT"
@@ -100,7 +105,8 @@
 			
 			<div align="right">
 				<p:commandButton id="confCatDel" value="#{lbl['lbl.btn.yes']}"
-					update=":form:catDelPan" oncomplete="confirmation.hide()"
+					update="@form" onclick="confirmation.hide()"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 					action="#{deleteCategoryCodeBB.deleteSelectedCatCodes}" />
 				<p:commandButton id="decline" value="#{lbl['lbl.btn.no']}"
 					onclick="confirmation.hide()" type="button" />
