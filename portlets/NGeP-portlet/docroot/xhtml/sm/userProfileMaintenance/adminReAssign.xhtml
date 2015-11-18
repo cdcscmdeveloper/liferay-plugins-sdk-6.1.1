@@ -16,7 +16,7 @@
 			$('#portlet_smDeactivateAdmin_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.userprofile.deactivate.admin']}");
 			
 			function clickLogout() {
-				$('[id*="yui_patched_v3_11_0_1"]').click();
+				window.location=$('[id*="yui_patched_v3_11_0_1"]').href;
 			}
 		</script>
 	</ui:define>
@@ -109,29 +109,27 @@
 					disabled="#{not empty smPersonnelBackingBean.managedBean.noSupplierUserMsg}" />
 			</div>
 		</p:panel>
-
-		<p:dialog id="confirmDialog" header="#{lbl['lbl.sm.userprofile.confirmation']}"
-			widgetVar="confirmDialog" modal="true" width="500px" height="100px">
-			<p:panel id="dPanel" style="border: none;">
-				<table style="width:100%">
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.deactivate.confirmation']}" /></td>
-					</tr>
-				</table>
-			</p:panel>
+		
+		<p:confirmDialog id="confirmDialog" closable="true"
+			message="#{lbl['lbl.sm.userprofile.deactivate.confirmation']}"
+			header="#{lbl['lbl.sm.userprofile.confirmation']}" severity="alert"
+			widgetVar="confirmDialog">
+			
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();" action="#{smPersonnelBackingBean.deactivateAdmin()}" 
-					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"/>
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();" update="@form"
+					action="#{smPersonnelBackingBean.deactivateAdmin()}" process="@this" partialSubmit="true"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDialog.hide();" />
 			</div>
-		</p:dialog>
+	
+		</p:confirmDialog>
 		
 		<p:dialog id="successDialog" header="#{lbl['lbl.sm.success.dialog.header']}" closable="false"
 			widgetVar="successDialog" modal="true" width="550px" height="150px">
 			<p:messages id="successDialogMsg" showSummary="false"
 				showDetail="true" autoUpdate="true" closable="false" />
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.proceed']}" onclick="clickLogout();" ajax="false" />
+				<button onclick="clickLogout();" value="#{lbl['lbl.btn.proceed']}"/>
 			</div>
 		</p:dialog>
 	</ui:define>
