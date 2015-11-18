@@ -399,6 +399,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				}
 				getManagedBean().setSelectedItem(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().get(0));
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+				flBB.getManagedBean().setHideRemarks(false);
 				if(getManagedBean().getFulfilmentRequest().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
 					new FulfilmentBackingBean(ParameterConst.DOCTYPE_FULFILMENT_NOTE, getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
 				} else {
@@ -451,6 +452,11 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				(getManagedBean().getFulfilmentNote().getStatus()!=null && getManagedBean().getFulfilmentNote().getStatus().getStatusId().longValue()==FulfilmentStatusConst.FN_PENDING_DO_ACKNOWLEDGMENT.longValue())){
 				getManagedBean().getFulfilmentNote().setSubmissionDate(DateUtils.getCurrentDateWithoutTime());
 			}			
+		}else{
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase("View")){
+				flBB.getManagedBean().setHideRemarks(false);
+			}
 		}
 	}
 	

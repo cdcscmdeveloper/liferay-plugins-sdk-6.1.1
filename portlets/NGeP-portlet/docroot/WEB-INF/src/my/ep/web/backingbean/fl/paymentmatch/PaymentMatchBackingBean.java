@@ -302,6 +302,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			IPaymentMatchSO paymentMatchSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IPaymentMatchSO.class);
 			
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			flBB.getManagedBean().setHideRemarks(false);
 			FlPaymentAdvice paymentAdvice = null;
 			resDTO = paymentMatchSO.retrievePaymentAdviseByOrderId(flReqDTO);
 			if(resDTO.getPaymentAdvice()==null) {
@@ -362,6 +363,11 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				errReq.setErrorId(paymentObj.getErrorId());
 				FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
 				getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
+			}
+		}else{
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase("View")){
+				flBB.getManagedBean().setHideRemarks(false);
 			}
 		}
 	}

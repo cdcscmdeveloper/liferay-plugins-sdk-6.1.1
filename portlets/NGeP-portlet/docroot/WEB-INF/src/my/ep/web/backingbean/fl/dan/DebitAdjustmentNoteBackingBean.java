@@ -209,6 +209,11 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 				FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
 				getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
 			}
+		}else{
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase("View")){
+				flBB.getManagedBean().setHideRemarks(false);
+			}
 		}
 	}
 	
