@@ -166,7 +166,6 @@ public class SmPersonnelBackingBean extends
 				authorizedPersonnelList.remove(adminPersonnel);
 				getManagedBean().setSmPersonnelList(authorizedPersonnelList);
 				getManagedBean().setUpdateSmPersonnel(adminPersonnel);
-				getManagedBean().setLogoutUrl(SmCommonUtil.getLogoutUrl());
 				SmCommonUtil.setRoleName(smSupplier.getSmAppl()
 						.getSupplierType(), getManagedBean()
 						.getSmPersonnelList());
@@ -1519,18 +1518,8 @@ public class SmPersonnelBackingBean extends
 		resDTO = SmServiceLookup.getPersonnelSO().reassignSupplierAdmin(reqDTO);
 
 		if (resDTO.isSuccessful()) {
-			// SmCommonUtil.redirectToPage(
-			// SmApplicationUtil.getApplicationErrorPage(),
-			// MessageConst.INFO_721027);
-
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_721027,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-			RequestContext.getCurrentInstance().execute("successDialog.show()");
+			SmCommonUtil
+					.callDeactivationSuccessDialog(MessageConst.INFO_721027);
 		} else {
 			throw new EpException(MessageConst.ERROR_721112);
 		}
