@@ -11,45 +11,77 @@
 	<div class="header-info">
 		<table style="width: 100%;">
 			<tr>
-				<td width="10%"><p:outputLabel value="#{lbl['lbl.cm.doc.no']}" style="text-align : right;"></p:outputLabel></td>
+				<td width="10%"><p:outputLabel value="#{lbl['lbl.cm.doc.no']}"
+						style="text-align : right;"></p:outputLabel></td>
 				<td width="15%" class="header-info-text"><h:outputText
 						style="white-space: normal!important; text-align : left;"
-						value="#{unspscCodeBackingBean.managedBean.requestCode.docNo}"/></td>
+						value="#{unspscCodeBackingBean.managedBean.requestCode.docNo}" /></td>
 
-				<td width="10%"><p:outputLabel value="#{lbl['lbl.cm.doc.status']}" style="text-align : right;"></p:outputLabel></td>
-				<td width="15%" class="header-info-text"><h:outputText 
+				<td width="10%"><p:outputLabel
+						value="#{lbl['lbl.cm.doc.status']}" style="text-align : right;"></p:outputLabel></td>
+				<td width="15%" class="header-info-text"><h:outputText
 						style="white-space: normal!important; text-align : left;"
-						value="#{unspscCodeBackingBean.managedBean.docStatus}"/></td>
+						value="#{unspscCodeBackingBean.managedBean.docStatus}" /></td>
 
-				<td width="10%"><p:outputLabel value="#{lbl['lbl.cm.company.name']}" style="text-align : right;"></p:outputLabel></td>
+				<td width="10%"><p:outputLabel
+						value="#{lbl['lbl.cm.company.name']}" style="text-align : right;"></p:outputLabel></td>
 				<td width="15%" class="header-info-text"><c:choose>
 						<c:when
 							test="#{unspscCodeBackingBean.managedBean.requestCode.smSupplier != null}">
 							<h:outputText
-					    	style="white-space: normal!important; text-align : left;"
-								value="#{unspscCodeBackingBean.managedBean.requestCode.smSupplier.companyName}"
-								/>
+								style="white-space: normal!important; text-align : left;"
+								value="#{unspscCodeBackingBean.managedBean.requestCode.smSupplier.companyName}" />
 						</c:when>
 						<c:otherwise>
 							<h:outputText value="N/A" style="text-align : left;" />
 						</c:otherwise>
 					</c:choose></td>
 
-				<td width="10%"><p:outputLabel value="#{lbl['lbl.cm.ep.no']}" style="text-align : right;"></p:outputLabel></td>
+				<td width="10%"><p:outputLabel value="#{lbl['lbl.cm.ep.no']}"
+						style="text-align : right;"></p:outputLabel></td>
 				<td width="15%"><c:choose>
 						<c:when
 							test="#{unspscCodeBackingBean.managedBean.requestCode.smSupplier != null}">
 							<h:outputText
-					    	style="white-space: normal!important; text-align : left;"
-								value="#{unspscCodeBackingBean.managedBean.requestCode.smSupplier.epNo}"
-								/>
+								style="white-space: normal!important; text-align : left;"
+								value="#{unspscCodeBackingBean.managedBean.requestCode.smSupplier.epNo}" />
 						</c:when>
 						<c:otherwise>
 							<h:outputText value="N/A" style="text-align : left;" />
 						</c:otherwise>
 					</c:choose></td>
 			</tr>
+			<tr>
+				<c:choose>
+					<c:when
+						test="#{unspscCodeBackingBean.managedBean.requestCode.smSupplier != null and unspscCodeBackingBean.managedBean.requestCode.smSupplier.smAppl.supplierType == 'O'}">
+						<p:outputLabel value="#{lbl['lbl.txt.business.reg.no']}"
+							style="text-align : right;"></p:outputLabel>
+						<h:outputText
+							style="white-space: normal!important; text-align : left;"
+							value="#{unspscCodeBackingBean.managedBean.requestCode.smSupplier.regNo}" />
+					</c:when>
+					<c:when
+						test="#{unspscCodeBackingBean.managedBean.requestCode.smSupplier != null and unspscCodeBackingBean.managedBean.requestCode.smSupplier.smAppl.supplierType != 'O'}">
+						<td><p:outputLabel value="#{lbl['lbl.sc.mof.no']}"
+							style="text-align : right;"></p:outputLabel></td>
+						<td><h:outputText
+							style="white-space: normal!important; text-align : left;"
+							value="#{unspscCodeBackingBean.retrieveMofNo(unspscCodeBackingBean.managedBean.requestCode.smSupplier.supplierId , unspscCodeBackingBean.managedBean.requestCode.smSupplier.smAppl.supplierType)}" />
+					</td></c:when>
+					<c:otherwise>
+						<p:outputLabel value="#{lbl['lbl.txt.business.reg.no']}"
+							style="text-align : right;"></p:outputLabel>
+						<h:outputText value="N/A" style="text-align : left;" />
+					</c:otherwise>
+				</c:choose>
+			</tr>
 		</table>
+
+
+
+
+
 	</div>
 	<p:spacer height="10px"></p:spacer>
 

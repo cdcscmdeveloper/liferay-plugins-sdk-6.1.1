@@ -444,6 +444,60 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		
 		return "/xhtml/common/acknowledge.xhtml";
 	}
+	
+	public String addToMaintainByItemId(){
+		
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
+				.getInstance().getServiceObject("cm", ICatalogueSO.class);
+		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
+				.getInstance().getServiceObject("cm", ICodificationSO.class);
+
+		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
+				.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+
+		
+		SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+		CodificationReqDTO codeReqDTO = new CodificationReqDTO();
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		supplierReqDTO.setUserId(pmUser.getUserId());
+
+		SupplierSearchResDTO smResDTO = supplierSearchSO
+				.retriveSupplierProfiles(supplierReqDTO);
+		
+		UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
+		
+		
+		codeReqDTO.setItemId(bb.getManagedBean().getRequestCode().getItemId());
+
+		CodificationResDTO codeResDTO = codificationSO
+				.searchItemByItemId(codeReqDTO);
+		
+		
+		CmSupplierItem supplierItem = new CmSupplierItem();
+
+		supplierItem.setCmItem(codeResDTO.getCmItem());
+		supplierItem.setItemStatus("D");
+		supplierItem.setSmSupplier(smResDTO.getResultBean()
+				.getResultList().get(0));
+		supplierItem.setRecordStatus(true);
+		reqDTO.getSupplierItem().add(supplierItem);
+		CatalogueResDTO resDTO = catalogueSO.saveSupplierItem(reqDTO);
+		
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		
+		facesContext.addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+						.getMessage(MessageConst.INFO_710007, new String[] { ""
+								+ 1 },
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+		
+		return "/xhtml/common/acknowledge.xhtml";
+	}
+	
+	
 
 	/**
 	 * Supplier items added to CatalogMaintaince.
