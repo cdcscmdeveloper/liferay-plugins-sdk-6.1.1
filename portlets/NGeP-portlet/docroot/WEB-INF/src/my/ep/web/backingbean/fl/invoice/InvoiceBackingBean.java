@@ -399,7 +399,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				reqDTO.setFlOrderId(paymentObj.getFlOrderId());
 				resDTO = invoiceSO.retrieveInvoiceByFlOrderId(reqDTO);//if save button are exist
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-				
+				flBB.getManagedBean().setHideRemarks(false);
 				if(resDTO.getInvoice() == null){
 					getManagedBean().setInvoice(new FlInvoice());
 					getManagedBean().getInvoice().setFlInvoiceItemSummary(new ArrayList<FlInvoiceItemSummary>());
@@ -496,6 +496,11 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				getSupplierGst(getManagedBean().getInvoice());
 			}
 			validateAdvancedPayment();
+		}else{
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase("View")){
+				flBB.getManagedBean().setHideRemarks(false);
+			}
 		} 
 	}
 	
