@@ -25,6 +25,7 @@
 				<td><p:selectOneMenu style="width:300px; margin-bottom:5px;"
 						disabled="#{isPendingApprovalStatus or requestNoteBackingBean.managedBean.viewOnly}"
 						value="#{requestNoteBackingBean.managedBean.userGroupId}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<p:ajax event="change" process="@this" update="approverId"
 							listener="#{requestNoteBackingBean.userGroupChangeListener()}" />
 						<f:selectItems
