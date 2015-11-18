@@ -8091,7 +8091,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Assign new company experience.
+	 * assignNewCompanyExperience - Assign new company experience of categories based on category level type.
 	 * 
 	 * @param catList
 	 *            the cat list
@@ -8117,7 +8117,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Assign value required to true.
+	 * assignValReqdToTrue - will assign value required to true.
 	 */
 	private void assignValReqdToTrue() {
 		this.setShowParentMsg(false);
@@ -8125,7 +8125,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Reset child category list.
+	 * resetChildCatList - Reset child category list.
 	 */
 	private void resetChildCatList() {
 		this.setSupplierChildCatList(new ArrayList<PmCategoryL2>());
@@ -8133,9 +8133,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve parent category list for experience page.
+	 * retrieveParentCategoryListForExperiencePage - Retrieve parent category list for experience page.
 	 * 
-	 * @return the list
+	 * @return the CategoryL1List
 	 */
 	public static List<PmCategoryL1> retrieveParentCategoryListForExperiencePage() {
 		// CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
@@ -8164,7 +8164,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Selected category.
+	 * selected- Selected category based on selected index.
 	 * 
 	 * @param index
 	 *            the index
@@ -8186,7 +8186,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Select all company experince categories.
+	 * selectAllCompanyExperinceCategories - will select for all company experince categories.
 	 */
 	public void selectAllCompanyExperinceCategories() {
 		if (this.isSelectedAll()) {
@@ -8199,7 +8199,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Selected company experince category.
+	 * selectedCompanyExperinceCategory - Selected for perticular company experince category.
 	 * 
 	 * @param index
 	 *            the index
@@ -8220,7 +8220,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Populate experience child category by parent.
+	 * populateExperienceChildCategoryByParent - will populate experience child category by parent.
 	 * 
 	 * @param parentId
 	 *            the parent id
@@ -8241,7 +8241,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve experience child category list.
+	 * retrieveExperienceChildCategoryList - Retrieve experience child category list.
 	 * 
 	 * @param categoryL1Id
 	 *            the category l1 id
@@ -8259,9 +8259,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve report list by authorization.
+	 * retrieveReportListByAuthorization - Retrieve report list by user authorization.
 	 * 
-	 * @return the list
+	 * @return the reportList
 	 */
 	public List<SelectItem> retrieveReportListByAuthorization() {
 		reportList = new ArrayList<SelectItem>();
@@ -8317,11 +8317,11 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve sub module report category list.
+	 * retrieveSubModuleReportCategoryList - Retrieve sub module report category list based on module and user authorization.
 	 * 
 	 * @param language
 	 *            the language
-	 * @return the list
+	 * @return the reportCategoryList
 	 */
 	public List<SelectItem> retrieveSubModuleReportCategoryList(String language) {
 		reportList = new ArrayList<SelectItem>();
@@ -8353,9 +8353,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve simple quote no.
+	 * retrieveSimpleQuoteNo - Retrieve simple quote no.
 	 * 
-	 * @return the list
+	 * @return the simpleQuoteNoList
 	 */
 	public List<String> retrieveSimpleQuoteNo() {
 		simpleQuoteNoList = new ArrayList<String>();
