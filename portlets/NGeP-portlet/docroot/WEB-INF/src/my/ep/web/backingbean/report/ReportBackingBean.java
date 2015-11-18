@@ -10331,11 +10331,11 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve category level two.
+	 * retrieveCategoryLevTwo - Retrieve category level two.
 	 * 
 	 * @param mainCategory
 	 *            the main category
-	 * @return the list
+	 * @return the levTwoCatLst
 	 */
 	public List<SelectItem> retrieveCategoryLevTwo(String mainCategory) {
 		levTwoCatLst = new ArrayList<SelectItem>();
@@ -10359,11 +10359,11 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve category level three.
+	 * retrieveCategoryLevThree - Retrieve category level three.
 	 * 
 	 * @param subCategory
 	 *            the sub category
-	 * @return the list
+	 * @return the levThreeCatLst
 	 */
 	public List<SelectItem> retrieveCategoryLevThree(String subCategory) {
 		levThreeCatLst = new ArrayList<SelectItem>();
@@ -10387,7 +10387,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Enable registration type.
+	 * enableRegistrationType - Enable registration type.
 	 */
 	public void enableRegistrationType() {
 		this.setCmEpNumber(null);
@@ -10467,7 +10467,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * On select effected values.
+	 * onSelectEffectedValues - On select effected values.S
 	 */
 	public void onSelectEffectedValues() {
 		if (this.getScProcureAllList().size() > 0) {
@@ -10498,7 +10498,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Check sm year n month defference.
+	 * checkSMYearNMonthDefference - Check sm year n month defference.
 	 */
 	public void checkSMYearNMonthDefference() {
 		int fromyear = 0;
@@ -10535,7 +10535,7 @@ public class ReportBackingBean extends
 
 	
 	/**
-	 * Generate all modules reports
+	 * generateReport - Generate all modules reports
 	 */
 	public void generateReport() {
 		if (((this.getReportValue() != null) && this.getReportValue()
@@ -10744,7 +10744,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Generate report intime.
+	 * generateReportIntime - Generate report intime.
 	 */
 	public void generateReportIntime() {
 		ExecutorService service = Executors.newSingleThreadExecutor();
@@ -10774,7 +10774,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Generate report timer.
+	 * generateReportTimer - Generate report timer.
 	 */
 	public void generateReportTimer() {
 		Thread thread = new Thread(new Runnable() {
@@ -10801,7 +10801,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Load report with constructed paramList.
+	 * loadReportWithParams - Load report with constructed paramList.
 	 * 
 	 * @param paramLst
 	 *            the param lst
@@ -10835,7 +10835,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Load report with generated URL.
+	 *  loadReport - Load report with generated URL.
 	 * 
 	 * @param gnrtdURL
 	 *            the gnrtd url
@@ -10860,7 +10860,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Load report with costructed param string.
+	 * loadReportWithParamsString - Load report with costructed param string.
 	 * 
 	 * @param paramConstrString
 	 *            the param constr string
@@ -10895,8 +10895,8 @@ public class ReportBackingBean extends
 	}
 
 	
-	/**
-	 * Generate ct module report.
+	/**  
+	 * generateCTReport - Generate ct module report.
 	 */
 	public void generateCTReport() {
 		if (((this.getCtContrMontrStatus() != null) && (this
@@ -11159,7 +11159,7 @@ public class ReportBackingBean extends
 
 	
 	/**
-	 * Generate sm module report.
+	 * generateSMReport - Generate sm module report.
 	 */
 	public void generateSMReport() {
 		if ((getManagedBean().getReportValue() != null)
@@ -11766,7 +11766,7 @@ public class ReportBackingBean extends
 
 	
 	/**
-	 * Generate sc module report.
+	 * generateSCReport - Generate sc module report.
 	 */
 	public void generateSCReport() {
 		if ((getManagedBean().getReportValue() != null)
@@ -12181,7 +12181,7 @@ public class ReportBackingBean extends
 
 	
 	/**
-	 * Generate cm module report.
+	 * generateCMReport - Generate cm module report.
 	 */
 	public void generateCMReport() {
 		if (((this.getCmExtention() != null) && (this.getCmExtention() != ReportConst.EMPTY_VAL))
@@ -12442,7 +12442,7 @@ public class ReportBackingBean extends
 
 	
 	/**
-	 * Generate fl module report.
+	 * generateFLReport - Generate fl module report.
 	 */
 	public void generateFLReport() {
 		if (((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
@@ -12866,7 +12866,7 @@ public class ReportBackingBean extends
 
 	
 	/**
-	 * Generate pp module report.
+	 * generatePPReport - Generate pp module report.
 	 */
 	public void generatePPReport() {
 		if (((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
@@ -12911,7 +12911,7 @@ public class ReportBackingBean extends
 
 	
 	/**
-	 * Generate pm module report.
+	 * generatePMReport - Generate pm module report.
 	 */
 	public void generatePMReport() {
 		if (((this.getPmServiceType() != null) && (this.getPmServiceType() != ReportConst.EMPTY_VAL))
@@ -12964,7 +12964,7 @@ public class ReportBackingBean extends
 
 	
 	/**
-	 * Quotation number validation.
+	 * quotationNumberValidation - Quotation number validation.
 	 */
 	public void quotationNumberValidation() {
 		if ((this.getScQuotationNo() != null)
@@ -12974,7 +12974,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Simple quote no validation.
+	 * simpleQuoteNoValidation - Simple quote no validation.
 	 */
 	public void simpleQuoteNoValidation() {
 		if ((this.getScProcessRptQuotationNo() != null)
@@ -12984,7 +12984,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Special char validation.
+	 * specialCharValidation - Special char validation.
 	 */
 	public void specialCharValidation() {
 		String ptString = ReportConst.NUMERIC_CHAR_PATTERN_ONLY;
