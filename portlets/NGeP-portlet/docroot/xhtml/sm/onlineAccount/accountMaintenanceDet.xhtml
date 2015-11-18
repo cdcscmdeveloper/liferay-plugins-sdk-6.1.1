@@ -6,15 +6,6 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	
-	<ui:define name="resourceSection">
-		<script>
-			function clickLogout() {
-				_145_deleteAllCookies();
-				$('[id*="yui_patched_v3_11_0_1"]').click();
-			}
-		</script>
-	</ui:define>
 
 	<ui:define name="contentSection">
 		<p:messages id="messages" showDetail="true" autoUpdate="true" 
@@ -29,15 +20,6 @@
 			</p:commandButton>
 		</div>
 		
-		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100" width="500">
-   			 #{lbl['lbl.sm.basic.msg.account.confirm.deactivate']}
-   			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" action="#{registrationBackingBean.updateOnlineAccount(SupplierManagementConst.BPM_VERIFY)}" 
-								onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="submissionConfirmDlg.hide();" />
-			</div>
-		</p:dialog>
-		
 		<ui:include src="/xhtml/sm/shared/onlinereg/accountInfo.xhtml" />
 		<p:outputPanel id="outPnlRegForm">
 			<c:choose>
@@ -51,14 +33,5 @@
 				</c:otherwise>
 			</c:choose>
 		</p:outputPanel>
-		
-		<p:dialog id="successDialog" header="#{lbl['lbl.sm.success.dialog.header']}" closable="false"
-			widgetVar="successDialog" modal="true" width="400px" height="100px">
-			<p:messages id="successDialogMsg" showSummary="false"
-				showDetail="true" autoUpdate="true" closable="false" />
-			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.ok']}" onclick="clickLogout();" ajax="false" />
-			</div>
-		</p:dialog>
 	</ui:define>
 </ui:composition>
