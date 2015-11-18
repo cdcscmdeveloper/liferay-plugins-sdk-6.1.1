@@ -8684,7 +8684,7 @@ public class ReportBackingBean extends
 
 	
 	/**
-	 * Retrieve report list by module name.
+	 * retriveReportListBymoduleName - Retrieve report list by module name.
 	 */
 	public void retriveReportListBymoduleName() {
 		reportList = new ArrayList<SelectItem>();
@@ -8725,7 +8725,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrive report list by module.
+	 * retriveReportListByModule - Retrive report list by module.
 	 * 
 	 * @param module
 	 *            the module
@@ -8769,9 +8769,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve ups svo user.
+	 * retrieveUPSSVOUser - Retrieve ups svo user, based on user id.
 	 * 
-	 * @return the list
+	 * @return the smUPSSVOUserList
 	 */
 	public List<SelectItem> retrieveUPSSVOUser() {
 		smUPSSVOUserList = new ArrayList<SelectItem>();
@@ -8791,9 +8791,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve PTJ for s1.
+	 * retrievePTJS1 - Retrieve PTJ for s1, based on user id.
 	 * 
-	 * @return the list
+	 * @return the ptjList
 	 */
 	public List<SelectItem> retrievePTJS1() {
 		scPtjList = new ArrayList<SelectItem>();
@@ -8813,9 +8813,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve PTJ for s2.
+	 * retrievePTJS2 - Retrieve PTJ for s2, based on user id.
 	 * 
-	 * @return the list
+	 * @return the ptjList
 	 */
 	public List<SelectItem> retrievePTJS2() {
 		scPtjList = new ArrayList<SelectItem>();
@@ -8835,9 +8835,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve requisitioner.
+	 * equisitionerList - Retrieve requisitioner, based on user id and organization profile id.
 	 * 
-	 * @return the list
+	 * @return the requisitionerList
 	 */
 	public List<SelectItem> retrieveRequisitioner() {
 		scRequisitionerList = new ArrayList<SelectItem>();
@@ -8863,9 +8863,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve desc officer.
+	 * retrieveDescOfficer - Retrieve desc officer, based on user id and organization profile id.
 	 * 
-	 * @return the list
+	 * @return the descOfficerList
 	 */
 	public List<SelectItem> retrieveDescOfficer() {
 		scDescOfficerList = new ArrayList<SelectItem>();
@@ -8891,9 +8891,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve approvar naik taraf for dp s1.
+	 *retrieveApprovarNaikTarafDPS1 - Retrieve approvar naik taraf for dp s1, based on user id.
 	 * 
-	 * @return the list
+	 * @return the approverNayakTarafList
 	 */
 	public List<SelectItem> retrieveApprovarNaikTarafDPS1() {
 		approverNayakTarafList = new ArrayList<SelectItem>();
@@ -8914,7 +8914,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve approvar naik taraf for sc s2.
+	 * retrieveApprovarNaikTarafSCS2 - Retrieve approvar naik taraf for sc s2, based on user id.
 	 * 
 	 * @return the list
 	 */
@@ -8938,11 +8938,11 @@ public class ReportBackingBean extends
 
 	
 	/**
-	 * Retrive userrole by user id.
+	 * retriveUserrloeByUserId - Retrive userrole by user id, based on module name.
 	 * 
 	 * @param moduleName
 	 *            the module name
-	 * @return the list
+	 * @return the authoriztionList
 	 */
 	public List<String> retriveUserrloeByUserId(String moduleName) {
 		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
@@ -8970,7 +8970,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve all ministry.
+	 * retrieveAllMinistry - Retrieve all ministry, based on rolecode.
 	 */
 	public void retrieveAllMinistry() {
 		ptjList = new ArrayList<SelectItem>();
@@ -9057,9 +9057,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve role code from param table.
+	 * retrieveRoleCodeFromParamTable - Retrieve role code from param table.
 	 * 
-	 * @return the list
+	 * @return the paramTableRoleCodeList
 	 */
 	public List<String> retrieveRoleCodeFromParamTable() {
 		paramTableRoleCodeList = new ArrayList<String>();
