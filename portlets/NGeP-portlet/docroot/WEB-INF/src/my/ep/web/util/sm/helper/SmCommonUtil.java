@@ -1936,6 +1936,7 @@ public class SmCommonUtil {
 		String ssoLogoutUrl = ePRes.getString("hook.sso.logout.url");
 		String logoutcookie = ssoLogoutUrl + currentPortalUrl
 				+ "/c/portal/logout";
+		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>LOGOUT URL:" + logoutcookie);
 		redirectToExternalUrl(logoutcookie);
 	}
 
