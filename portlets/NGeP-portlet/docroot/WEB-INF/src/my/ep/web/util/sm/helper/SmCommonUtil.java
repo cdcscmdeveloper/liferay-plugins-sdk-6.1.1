@@ -1921,23 +1921,27 @@ public class SmCommonUtil {
 	/**
 	 * Redirect to liferay logout url
 	 */
-	public static void redirectToLogoutUrl() {
-		FacesScopes fs = new FacesScopes();
-		FacesContext fCtx = FacesContext.getCurrentInstance();
-		PortletRequest req = (PortletRequest) fCtx.getExternalContext()
-				.getRequest();
-		PortletConfig portletConfig = (PortletConfig) req
-				.getAttribute("javax.portlet.config");
-		ResourceBundle ePRes = portletConfig.getResourceBundle(fs
-				.getUserLocale());
-		ThemeDisplay themeDisplay = (ThemeDisplay) req
-				.getAttribute(WebKeys.THEME_DISPLAY);
-		String currentPortalUrl = themeDisplay.getPortalURL();
-		String ssoLogoutUrl = ePRes.getString("hook.sso.logout.url");
-		String logoutcookie = ssoLogoutUrl + currentPortalUrl
-				+ "/c/portal/logout";
+	public static String getLogoutUrl() {
+		String logoutcookie = "";
+		try {
+			FacesScopes fs = new FacesScopes();
+			FacesContext fCtx = FacesContext.getCurrentInstance();
+			PortletRequest req = (PortletRequest) fCtx.getExternalContext()
+					.getRequest();
+			PortletConfig portletConfig = (PortletConfig) req
+					.getAttribute("javax.portlet.config");
+			ResourceBundle ePRes = portletConfig.getResourceBundle(fs
+					.getUserLocale());
+			ThemeDisplay themeDisplay = (ThemeDisplay) req
+					.getAttribute(WebKeys.THEME_DISPLAY);
+			String currentPortalUrl = themeDisplay.getPortalURL();
+			String ssoLogoutUrl = ePRes.getString("hook.sso.logout.url");
+			logoutcookie = ssoLogoutUrl + currentPortalUrl + "/c/portal/logout";
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>LOGOUT URL:" + logoutcookie);
-		redirectToExternalUrl(logoutcookie);
+		return logoutcookie;
 	}
 
 	/**
