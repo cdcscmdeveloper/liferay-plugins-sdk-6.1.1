@@ -9862,7 +9862,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve rolecode.
+	 * retrieveRolecode - Retrieve rolecode.
 	 */
 	public void retrieveRolecode() {
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -9875,7 +9875,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve supplier company name.
+	 * retrieveSupplierCompName - Retrieve supplier company name.
 	 */
 	public void retrieveSupplierCompName() {
 		supplCompanyList = new ArrayList<String>();
@@ -9903,7 +9903,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Change date based on registration type.
+	 * changeDateBasedOnRegType - Change date based on registration type.
 	 */
 	public void changeDateBasedOnRegType() {
 		getManagedBean().getRptGenBean().setSmActiveSubmissiveFromDateView(
@@ -9942,7 +9942,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Enable criteria menu.
+	 * enableCriteriaMenu - Enable criteria menu.
 	 */
 	public void enableCriteriaMenu() {
 		getManagedBean().getRptGenBean().setEnableCriteriaMenuView(false);
@@ -9954,7 +9954,7 @@ public class ReportBackingBean extends
 
 	
 	/**
-	 * Enable criteria variables by report name
+	 * criteriaVariablesByReport - Enable criteria variables by report name
 	 */
 	public void criteriaVariablesByReport() {
 		parameterCodeType = new String();
@@ -10118,7 +10118,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Gets the default values from and to date.
+	 * getDefaultValuesFromAndToDate - Gets the default values from and to date.
 	 * 
 	 * @param reportCode
 	 *            the report code
@@ -10143,7 +10143,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve dates.
+	 * retrieveDates - Retrieve dates.
 	 */
 	public void retrieveDates() {
 		if ((this.getReportValue() != null)
@@ -10194,7 +10194,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Check for one year defference.
+	 * checkOneYearDefference - Check for one year defference.
 	 * 
 	 * @param fromDate
 	 *            the from date
@@ -10230,7 +10230,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Check only year field defference.
+	 * checkOnlyYearFieldDefference - Check only year field defference.
 	 * 
 	 * @param yearFrom
 	 *            the year from
@@ -10246,7 +10246,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Check two years field defference.
+	 * checkTwoYearsFieldDefference - Check two years field defference.
 	 * 
 	 * @param yearFrom
 	 *            the year from
@@ -10262,7 +10262,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve state.
+	 * retrieveState - Retrieve state.
 	 */
 	public void retrieveState() {
 		stateLst = new ArrayList<SelectItem>();
@@ -10285,7 +10285,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve district.
+	 * retrieveDistrict - Retrieve district.
 	 */
 	public void retrieveDistrict() {
 		districtLst = new ArrayList<SelectItem>();
@@ -10309,9 +10309,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve category level one.
+	 * retrieveCategoryLevOne - Retrieve category level one.
 	 * 
-	 * @return the list
+	 * @return the levOneCatLst
 	 */
 	public List<SelectItem> retrieveCategoryLevOne() {
 		levOneCatLst = new ArrayList<SelectItem>();
