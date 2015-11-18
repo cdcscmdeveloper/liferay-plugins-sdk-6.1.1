@@ -1519,18 +1519,18 @@ public class SmPersonnelBackingBean extends
 		resDTO = SmServiceLookup.getPersonnelSO().reassignSupplierAdmin(reqDTO);
 
 		if (resDTO.isSuccessful()) {
-			SmCommonUtil.redirectToPage(
-					SmApplicationUtil.getApplicationErrorPage(),
-					MessageConst.INFO_721027);
+			// SmCommonUtil.redirectToPage(
+			// SmApplicationUtil.getApplicationErrorPage(),
+			// MessageConst.INFO_721027);
 
-			// FacesContext fc = FacesContext.getCurrentInstance();
-			// fc.addMessage(
-			// null,
-			// new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-			// MessageUtils.getMessage(MessageConst.INFO_721027,
-			// MessageUtils.BUNDLE_COMMON_MESSAGES,
-			// new FacesScopes().getUserLocale())));
-			// RequestContext.getCurrentInstance().execute("successDialog.show()");
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.INFO_721027,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			RequestContext.getCurrentInstance().execute("successDialog.show()");
 		} else {
 			throw new EpException(MessageConst.ERROR_721112);
 		}
@@ -1544,7 +1544,6 @@ public class SmPersonnelBackingBean extends
 	 * Redirect to liferay logout url
 	 */
 	public void proceedToLogout() {
-		RequestContext.getCurrentInstance().execute("successDialog.hide()");
 		SmCommonUtil.redirectToLogoutUrl();
 	}
 
