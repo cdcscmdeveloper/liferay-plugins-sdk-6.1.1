@@ -16,6 +16,7 @@ import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
@@ -1518,14 +1519,18 @@ public class SmPersonnelBackingBean extends
 		resDTO = SmServiceLookup.getPersonnelSO().reassignSupplierAdmin(reqDTO);
 
 		if (resDTO.isSuccessful()) {
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_721027,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-			RequestContext.getCurrentInstance().execute("successDialog.show()");
+			SmCommonUtil.redirectToPage(
+					SmApplicationUtil.getApplicationErrorPage(),
+					MessageConst.INFO_721027);
+
+			// FacesContext fc = FacesContext.getCurrentInstance();
+			// fc.addMessage(
+			// null,
+			// new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+			// MessageUtils.getMessage(MessageConst.INFO_721027,
+			// MessageUtils.BUNDLE_COMMON_MESSAGES,
+			// new FacesScopes().getUserLocale())));
+			// RequestContext.getCurrentInstance().execute("successDialog.show()");
 		} else {
 			throw new EpException(MessageConst.ERROR_721112);
 		}
