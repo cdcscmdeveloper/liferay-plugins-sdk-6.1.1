@@ -275,8 +275,8 @@ public class SmDeleteCategoryCodeBackingBean extends
 																"lbl.sm.category.categorySucessfullyDel",
 																null)));
 			}
-		} finally {
-
+		} catch (Exception ex) {
+			throw new EpException(ex.getMessage());
 		}
 
 	}
