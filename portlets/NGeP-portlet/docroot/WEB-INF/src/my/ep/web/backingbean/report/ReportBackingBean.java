@@ -7126,7 +7126,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * retrieveMinistryName - will retrieve ministry name based on org profile id.
+	 * retrieveMinistryName - will retrieve ministry name based on organization profile id.
 	 * 
 	 * @param orgprofileid
 	 *            the orgprofileid
@@ -7284,7 +7284,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Gets the latest ministry list.
+	 * getLtstMinistryList - Gets the latest ministry list based on organization type.
 	 * 
 	 * @return the ltst ministry list
 	 */
@@ -7328,7 +7328,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Gets the latest ministry list by userid.
+	 * getLtstMinistryListByUserid - Gets the latest ministry list by userid.
 	 * 
 	 * @return the ltst ministry list by userid
 	 */
@@ -7372,7 +7372,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve PTJ list by ministry id.
+	 * retrievePtjListByMinistryId - Retrieve PTJ list by ministry id.
 	 */
 	public void retrievePtjListByMinistryId() {
 		pmPtjList = new ArrayList<String>();
@@ -7401,7 +7401,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Gets the document type status dropdown.
+	 * getDocTypeStatusDropDown - Gets the document type status dropdown.
 	 * 
 	 * @return the doc type status dropdown
 	 */
@@ -7514,9 +7514,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve sub type list.
+	 * retrieveSubTypeList - Retrieve sub type list.
 	 * 
-	 * @return the list
+	 * @return the subTypeList
 	 */
 	public List<SelectItem> retrieveSubTypeList() {
 		ctSubTypeList = new ArrayList<SelectItem>();
@@ -7560,9 +7560,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve zone by user.
+	 * retrieveZoneByUser - Retrieve zone by user.
 	 * 
-	 * @return the list
+	 * @return the zoneList
 	 */
 	public List<SelectItem> retrieveZoneByUser() {
 		zoneList = new ArrayList<SelectItem>();
@@ -7585,9 +7585,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve high role code by user.
+	 * retrieveHighRoleCodeByUser - Retrieve high role code by user.
 	 * 
-	 * @return the list
+	 * @return the highRoleCodeList
 	 */
 	public List<String> retrieveHighRoleCodeByUser() {
 		highRoleCodeList = new ArrayList<String>();
@@ -7604,7 +7604,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Direct purchase with requisitioner.
+	 * directPurchaseWithRequisitioner - Direct purchase with requisitioner.
 	 */
 	public void directPurchaseWithRequisitioner() {
 		if ((this.getReportValue() != null)
@@ -7627,7 +7627,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Role code users setup onload.
+	 * roleCodeUsersSetupOnload - Role code users setup onload based on PtjId.
 	 * 
 	 * @param lngPtjId
 	 *            the lng ptj id
@@ -7753,7 +7753,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Role code users setup.
+	 * roleCodeUsersSetup - Role code users setup will be done by user id.
 	 */
 	public void roleCodeUsersSetup() {
 		rolecodeRquisitionerList = new ArrayList<SelectItem>();
@@ -7935,9 +7935,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve all role codes by user.
+	 * retrieveAllRoleCodesByUser - Retrieve all role codes by user.
 	 * 
-	 * @return the list
+	 * @return the retrieveAllRoleCodesByUser
 	 */
 	public List<String> retrieveAllRoleCodesByUser() {
 		allRoleCodesList = new ArrayList<String>();
@@ -7955,7 +7955,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Zone by rolecode.
+	 * zoneByRolecode - will retrieve Zone by rolecode.
 	 */
 	public void zoneByRolecode() {
 		if ((this.getModuleValue()
@@ -8072,9 +8072,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve param code by user.
+	 * retrieveParamCodeByUser - will retrieve param code by user.
 	 * 
-	 * @return the list
+	 * @return the paramList
 	 */
 	public List<String> retrieveParamCodeByUser() {
 		paramList = new ArrayList<String>();
