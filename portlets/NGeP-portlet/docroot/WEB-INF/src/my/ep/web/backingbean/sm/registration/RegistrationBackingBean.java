@@ -2316,15 +2316,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				reqDTO.setSmSupp(getManagedBean().getSmSupp());
 				IRegistrationSO reqSO = SmServiceLookup.getRegistrationSO();
 				try {
-					reqSO.updateOnlineAcc(reqDTO);
-					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
-							FacesMessage.SEVERITY_INFO,
-							null,
-							MessageUtils.getMessage(MessageConst.INFO_721013, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-					
+					reqSO.updateOnlineAcc(reqDTO);			
 					RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
-					RequestContext.getCurrentInstance().execute("successDialog.show()");
-					
+					SmCommonUtil.callDeactivationSuccessDialog(MessageConst.INFO_721034);
 					return null;
 				} catch(Exception ex){
 					RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
