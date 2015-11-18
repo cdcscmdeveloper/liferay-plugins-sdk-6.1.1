@@ -1946,7 +1946,9 @@ public class SmCommonUtil {
 
 	/**
 	 * Call deactivation account message dialog
-	 * @param String msgKey
+	 * 
+	 * @param String
+	 *            msgKey
 	 */
 	public static void callDeactivationSuccessDialog(String msgKey) {
 		FacesContext fc = FacesContext.getCurrentInstance();
