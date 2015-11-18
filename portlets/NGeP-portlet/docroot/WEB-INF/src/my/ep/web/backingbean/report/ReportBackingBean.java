@@ -13040,7 +13040,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Mof reg no numeric validation.
+	 * mofRegNoNumericValidation - Mof reg no numeric validation.
 	 */
 	public void mofRegNoNumericValidation() {
 		String ptString1 = ReportConst.NUMERIC_PATTERN_ONLY;
@@ -13096,7 +13096,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Validate mof reg no.
+	 * ValidateMofRegNo - will validate mof reg no.
 	 * 
 	 * @param fromMofNo
 	 *            the from mof no
@@ -13113,7 +13113,7 @@ public class ReportBackingBean extends
 
 	
 	/**
-	 * Gets the quotation number.
+	 * getQuotationNumber - Gets the quotation number.
 	 * 
 	 * @return the quotation number
 	 */
@@ -13770,7 +13770,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Adds the unspsc code.
+	 * addUnspscCode - Adds the unspsc code.
 	 */
 	public void addUnspscCode() {
 
@@ -13805,7 +13805,7 @@ public class ReportBackingBean extends
 	}
 	
 	/**
-	 * Populate to save lov.
+	 *  populateToSaveLOV - Populate to save lov.
 	 */
 	public void populateToSaveLOV() {
 		this.setCmUnspscCode(this.getManagedBean().getSelectedLOV()
@@ -13816,7 +13816,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Reset lov.
+	 * resetLOV - Reset lov.
 	 * 
 	 * @return the searchUnspsc
 	 */
