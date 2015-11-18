@@ -15,7 +15,6 @@
 		<script>
 			$('#portlet_smDeactivateAdmin_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.userprofile.deactivate.admin']}");
 		</script>
-		<h:outputScript library="js" name="logout.js" />
 	</ui:define>
 
 
@@ -121,13 +120,7 @@
 	
 		</p:confirmDialog>
 		
-		<p:dialog id="successDialog" header="#{lbl['lbl.sm.success.dialog.header']}" closable="false"
-			widgetVar="successDialog" modal="true" width="550px" height="180px">
-			<p:messages id="successDialogMsg" showSummary="false"
-				showDetail="true" autoUpdate="true" closable="false" />
-			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.proceed']}" onclick="clickLogout();" />
-			</div>
-		</p:dialog>
+		<ac:smDeactivationPopup />
+			
 	</ui:define>
 </ui:composition>
