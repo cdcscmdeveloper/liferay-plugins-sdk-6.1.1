@@ -15,9 +15,11 @@
 		<script>
 			$('#portlet_smDeactivateAdmin_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.userprofile.deactivate.admin']}");
 			
-			function clickLogout(url) {
-				alert($('[id*="yui_patched_v3_11_0_1"]').href);
-				window.location=$('[id*="yui_patched_v3_11_0_1"]').href;
+			function clickLogout() {
+				alert('test!!!');
+    			var logoutUrl=document.getElementsByClassName('sign-out ')[0].getElementsByTagName('a')[0];
+    			alert(logoutUrl.href);
+    			window.location=logoutUrl.href;
 			}
 		</script>
 	</ui:define>
@@ -108,7 +110,7 @@
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.proceed']}" action="#{smPersonnelBackingBean.confirmDeactivateAdmin}" update="@form" 
 					disabled="#{not empty smPersonnelBackingBean.managedBean.noSupplierUserMsg}" />
-				<p:commandButton value="Logout Baru" onclick="clickLogout('url');" />
+				<p:commandButton value="Logout Baru" onclick="clickLogout();" />
 			</div>
 		</p:panel>
 		
@@ -136,7 +138,7 @@
 						action="#{smPersonnelBackingBean.proceedToLogout()}" process="@this" partialSubmit="true"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				</ui:remove>
-				<p:commandButton value="#{lbl['lbl.btn.proceed']}" onclick="clickLogout('url');" />
+				<p:commandButton value="#{lbl['lbl.btn.proceed']}" onclick="clickLogout();" />
 			</div>
 		</p:dialog>
 	</ui:define>
