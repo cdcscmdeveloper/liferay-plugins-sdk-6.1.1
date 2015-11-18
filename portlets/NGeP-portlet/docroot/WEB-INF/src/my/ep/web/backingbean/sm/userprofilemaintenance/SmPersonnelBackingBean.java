@@ -16,7 +16,6 @@ import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
@@ -167,6 +166,7 @@ public class SmPersonnelBackingBean extends
 				authorizedPersonnelList.remove(adminPersonnel);
 				getManagedBean().setSmPersonnelList(authorizedPersonnelList);
 				getManagedBean().setUpdateSmPersonnel(adminPersonnel);
+				getManagedBean().setLogoutUrl(SmCommonUtil.getLogoutUrl());
 				SmCommonUtil.setRoleName(smSupplier.getSmAppl()
 						.getSupplierType(), getManagedBean()
 						.getSmPersonnelList());
@@ -1544,7 +1544,7 @@ public class SmPersonnelBackingBean extends
 	 * Redirect to liferay logout url
 	 */
 	public void proceedToLogout() {
-		SmCommonUtil.redirectToLogoutUrl();
+		SmCommonUtil.redirectToExternalUrl(getManagedBean().getLogoutUrl());
 	}
 
 	/**

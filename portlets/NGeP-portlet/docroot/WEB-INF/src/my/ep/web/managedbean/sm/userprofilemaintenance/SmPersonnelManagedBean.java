@@ -88,6 +88,7 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private String token;
 	private boolean deactivatePersonnel;
 	private Date currDate;
+	private String logoutUrl;
 
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
@@ -611,6 +612,14 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	public void setCurrDate(Date currDate) {
 		this.currDate = currDate;
+	}
+
+	public String getLogoutUrl() {
+		return logoutUrl;
+	}
+
+	public void setLogoutUrl(String logoutUrl) {
+		this.logoutUrl = logoutUrl;
 	}
 
 }
