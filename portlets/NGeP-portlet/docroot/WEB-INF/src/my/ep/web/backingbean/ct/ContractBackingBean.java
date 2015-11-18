@@ -937,21 +937,29 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/* Implementation of contract schedule end*/
 	
 	/* Implementation of contract deduction start*/
-   	
+	
+	public String getParameterCode(PmParameter parameterObj){
+		if(parameterObj.getParameterId() == null)
+			  return new String();
+		return ParameterHelper.getInstance().getPmParameterById(parameterObj.getParameterId()).getParameterCode();
+	}
+	
 	public SelectItem[] retrieveParameterDescListByType() {
 		
 		SelectItem[] items = null;
+		 int i = 1;
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>(); ;
 		
 		try {
-			SearchFilterBean filterBean = new SearchFilterBean("pmParameter.parameterCode",SearchOperator.OPERATOR_NOT_EQUALS.value(), "AP");
+			SearchFilterBean filterBean = new SearchFilterBean("pmParameter.parameterCode",SearchOperator.OPERATOR_NOT_EQUALS.value(), ParameterConst.DEDUCTION_TYPE_ADVANCE_PAYMENT);
 	        filterBean.setCaseInsensitive(true);	
 	        searchBean.getDataFilterBeans().add(filterBean);
 			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(
 					ParameterTypeConst.DEDUCTION_TYPE, searchBean);
-			
-		    items = new SelectItem[parameterDescs.size()];
-		    int i = 0;
+			items = new SelectItem[parameterDescs.size() + 1];
+		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+			    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+		     
 		    for (PmParameterDesc parameterDesc : parameterDescs) {
 		    	items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(), parameterDesc.getCodeName());
 		    }
@@ -962,11 +970,27 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    return items;
 	}
 	
+	public void validateDeductionType(Long parameteId)  {
+		
+		    if(getManagedBean().getContractVer().getCtDeductions().size() > 0 ) {
+			    int count = 0;
+		         for(CtDeduction deId : getManagedBean().getContractVer().getCtDeductions()){
+					    if(parameteId.intValue() == deId.getDeductionType().getParameterId().intValue()){
+						    count++;
+						    if(count == 2)
+							     throw new EpException(MessageConst.ERROR_100046,
+							    		 new String[] {getParameterDesc(ParameterHelper.getInstance().getPmParameterById(parameteId))});
+				         }
+				    }
+			  }
+	   }
+	
 	/**
 	 * The method used to add new deduction .
 	 * This method will generate new record in deduction 
 	 */	
 	public void addDeduction() {
+		
 		CtDeduction deduction = new CtDeduction();
 		deduction.setDeductionType(new PmParameter());
 		this.getManagedBean().getContractVer().getCtDeductions().add(deduction);
