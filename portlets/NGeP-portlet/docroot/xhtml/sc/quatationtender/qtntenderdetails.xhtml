@@ -39,7 +39,7 @@
 						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PROCUREMENT_TYPE_CAT_ID)}"
 						required="true" label="#{lbl['lbl.sc.procurment.type.category']}"
 						value="#{qTDetailBB.managedBean.qt.procurementTypeCatId.parameterId}"
-						style="width: 235px;margin-bottom: 5px;">
+						style="width: 238px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{qTDetailBB.getDropdownValues(ParameterTypeConst.procurementTypeCategory)}" />
 						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
@@ -96,7 +96,7 @@
 									value="#{qTDetailBB.managedBean.qt.publishPeriod}"
 									disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_PUBLISH_PERIOD)}"
 									valueChangeListener="#{qTDetailBB.publishPeriodDaysChanged}"
-									size="30" style="text-align:right;">
+									size="30" style="text-align:right;width: 228px;">
 									<p:ajax event="blur" process="@this" partialSubmit="true"
 										listener="#{qTScheduleDetailBackingBean.handlePublishClosingDate}" />
 								</p:inputMask></td>
@@ -117,7 +117,7 @@
 									value="#{qTDetailBB.managedBean.qt.qtValidityPeriod}" size="30"
 									disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_VALIDITY_PERIOD)}"
 									valueChangeListener="#{qTDetailBB.proposalValidityChanged}"
-									style="text-align:right;">
+									style="text-align:right;width: 228px;">
 									<f:ajax></f:ajax>
 								</p:inputMask></td>
 							<td><p:message id="proposalvalidityMsg"
