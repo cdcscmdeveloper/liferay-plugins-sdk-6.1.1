@@ -9077,7 +9077,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Gets the parameter code type string.
+	 * getParameterCodeTypeString - Gets the parameter code type string.
 	 * 
 	 * @return the parameter code type string
 	 */
@@ -9102,7 +9102,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve parameter code type.
+	 * retrieveParameterCodeType - Retrieve parameter code type.
 	 */
 	public void retrieveParameterCodeType() {
 		ptjList = new ArrayList<SelectItem>();
@@ -9153,7 +9153,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Param code supplier group dropdown.
+	 * paramCodeSupplierGroupDropdown - Param code supplier group dropdown.
 	 * 
 	 * @param parameterCodeType
 	 *            the parameter code type
@@ -9354,7 +9354,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Enable supplier company name text or dropdown.
+	 * enableSupplierCompNameTextOrDropdown - Enable supplier company name text or dropdown.
 	 */
 	public void enableSupplierCompNameTextOrDropdown() {
 		if ((this.getModuleValue() != null)
@@ -9402,9 +9402,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve fpj PTJ list.
+	 * retrieveFPJPTJList - Retrieve fpj PTJ list.
 	 * 
-	 * @return the list
+	 * @return the ptjList
 	 */
 	public List<SelectItem> retrieveFPJPTJList() {
 		ptjList = new ArrayList<SelectItem>();
@@ -9435,9 +9435,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve fmi PTJ list.
+	 * retrieveFMIPTJList - Retrieve fmi PTJ list.
 	 * 
-	 * @return the list
+	 * @return the ptjList
 	 */
 	public List<SelectItem> retrieveFMIPTJList() {
 		ptjList = new ArrayList<SelectItem>();
@@ -9479,11 +9479,11 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve fmi PTJ list with arg.
+	 * retrieveFMIPTJListWithArg - Retrieve fmi PTJ list with arg.
 	 * 
 	 * @param lngMinistry
 	 *            the lng ministry
-	 * @return the list
+	 * @return the ptjList
 	 */
 	public List<SelectItem> retrieveFMIPTJListWithArg(Long lngMinistry) {
 		ptjList = new ArrayList<SelectItem>();
@@ -9514,9 +9514,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve only fpj ministry list.
+	 * retrieveOnlyFPJMinistryList - Retrieve only fpj ministry list.
 	 * 
-	 * @return the list
+	 * @return the ministryList
 	 */
 	public List<SelectItem> retrieveOnlyFPJMinistryList() {
 		ministryList = new ArrayList<SelectItem>();
@@ -9537,9 +9537,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve fpj ministry list.
+	 * retrieveFPJMinistryList - Retrieve fpj ministry list.
 	 * 
-	 * @return the list
+	 * @return the ministryList
 	 */
 	public List<SelectItem> retrieveFPJMinistryList() {
 		ministryList = new ArrayList<SelectItem>();
@@ -9585,7 +9585,7 @@ public class ReportBackingBean extends
 	 * } } return ministryList; }
 	 */
 	/**
-	 * Retrieve cm unspc.
+	 * retrieveCMUnspc - Retrieve cm unspc.
 	 */
 	public void retrieveCMUnspc() {
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -9601,7 +9601,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Enable extension.
+	 * enableExtension - Enable extention will enable brand, extension type,measurement and color extentions.
 	 */
 	public void enableExtension() {
 		this.setCmExtentionCode(null);
@@ -9643,7 +9643,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Enable extension types.
+	 * enableExtensionTypes - Enable extention types will enable brand, extension type,measurement and color extentions.
 	 */
 	public void enableExtensionTypes() {
 		this.setCmExtentionBrand(null);
@@ -9740,7 +9740,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve cm unspc id by code.
+	 * retrieveCMUnspcIdbyCode - Retrieve cm unspc id by code by unspcCode.
 	 * 
 	 * @param unspcCode
 	 *            the unspc code
@@ -9760,7 +9760,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve extention.
+	 * retrieveExtention - Retrieve extention bsed on extention type.
 	 */
 	public void retrieveExtention() {
 		this.setCmExtentionBrand(null);
@@ -9798,7 +9798,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve brand.
+	 * retrieveBrand - Retrieve brand extention type.
 	 */
 	public void retrieveBrand() {
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -9814,7 +9814,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve extention type.
+	 *  retrieveExtType - Retrieve extention type.
 	 */
 	public void retrieveExtType() {
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -9830,7 +9830,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve measurement.
+	 * retrieveMeasurement - Retrieve measurement extention type.
 	 */
 	public void retrieveMeasurement() {
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -9846,7 +9846,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve color.
+	 * retrieveColor - Retrieve color extention type.
 	 */
 	public void retrieveColor() {
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
