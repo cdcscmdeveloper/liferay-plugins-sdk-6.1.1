@@ -42,11 +42,21 @@
 						<td />
 						<td />
 					</tr>
+						<tr>
+						<td width="10%"><p:outputLabel style="font-weight: bold;"
+								value=" #{lbl['lbl.pm.settings.ministry']}:"></p:outputLabel></td>
+						<td><h:outputText style="white-space: normal!important;"
+								value="#{codificationBackingBean.retrieveMinistryByOrgProfileId(codificationBackingBean.managedBean.selectedVPendingCodifiedItem.pmOrgProfile.orgProfileId)}" /></td>
+						<td width="10%"><p:outputLabel style="font-weight: bold;"
+								value=" #{lbl['lbl.pm.kumpulan.ptj']}:"></p:outputLabel></td>
+						<td><h:outputText style="white-space: normal!important;"
+								value="#{codificationBackingBean.retrieveJabatanByOrgProfileId(codificationBackingBean.managedBean.selectedVPendingCodifiedItem.pmOrgProfile.orgProfileId)}" /></td>
+					</tr>
 					<tr>
 						<td width="10%"><p:outputLabel style="font-weight: bold;"
 								value="#{lbl['lbl.cm.doc.ptj']}:"></p:outputLabel></td>
 						<td><h:outputText style="white-space: normal!important;"
-								value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.pmOrgProfile.parentOrgProfile.orgName}" /></td>
+								value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.pmOrgProfile.orgName}" /></td>
 						<td />
 						<td />
 					</tr>

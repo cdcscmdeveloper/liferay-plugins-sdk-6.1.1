@@ -66,13 +66,33 @@
 					<h:outputText value="#{vPendingCodifiedItem.title}"
 						style="white-space: normal!important;" />
 				</p:column>
+				
+				<p:column>
+					<f:facet name="header">
+					 #{lbl['lbl.pm.settings.ministry']}
+				   </f:facet>
+					<h:outputText
+						value="#{codificationBackingBean.retrieveMinistryByOrgProfileId(vPendingCodifiedItem.pmOrgProfile.orgProfileId)}"
+						style="white-space: normal!important;" />
+
+				</p:column>
+				
+				<p:column>
+					<f:facet name="header">
+					#{lbl['lbl.pm.kumpulan.ptj']}
+				   </f:facet>
+					<h:outputText
+						value="#{codificationBackingBean.retrieveJabatanByOrgProfileId(vPendingCodifiedItem.pmOrgProfile.orgProfileId)}"
+						style="white-space: normal!important;" />
+
+				</p:column>
 
 				<p:column>
 					<f:facet name="header">
 					#{lbl['lbl.cm.doc.ptj']}
 				   </f:facet>
 					<h:outputText
-						value="#{vPendingCodifiedItem.pmOrgProfile.parentOrgProfile.orgName}"
+						value="#{vPendingCodifiedItem.pmOrgProfile.orgName}"
 						style="white-space: normal!important;" />
 
 				</p:column>

@@ -22,6 +22,7 @@ import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.cm.codification.IRequestCodeSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -36,6 +37,8 @@ import my.ep.dto.cm.codification.RequestCodeResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
@@ -2107,14 +2110,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			}
 		}
 
-		/*
-		 * for(CmRequestRemark remark:
-		 * this.getManagedBean().getReviewExtCodeList
-		 * ().get(0).getCmRequestRemarks()){
-		 * remark.setCmRequestCode(this.getManagedBean
-		 * ().getReviewExtCodeList().get(0)); }
-		 */
-
+		
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
 		reqDTO.setOutCome(action);
 		reqDTO.setToken(token);
@@ -2528,35 +2524,29 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				resStatusDTO.getPmStatusDesc() != null ? resStatusDTO
 						.getPmStatusDesc().getStatusName() : "Review");
 
+		FacesContext fc = FacesContext.getCurrentInstance();
 		System.out.println("********res.getTaskName()********"
 				+ res.getTaskName());
 		if (res.getTaskName().equalsIgnoreCase("Approve Extension Code")) {
-			FacesContext fc = FacesContext.getCurrentInstance();
+			
 			fc.getApplication()
 			.getNavigationHandler()
 			.handleNavigation(fc, null,
 					"reviewApproveExtensionCode.xhtml");
 		} else if (res.getTaskName().equalsIgnoreCase("Endorse Extension Code")) {
-			FacesContext fc = FacesContext.getCurrentInstance();
+		
 			fc.getApplication()
 			.getNavigationHandler()
 			.handleNavigation(fc, null,
 					"reviewApproveExtensionCodeII.xhtml");
 		} else if (res.getTaskName().equalsIgnoreCase("Publish Extension Code")) {
-			FacesContext fc = FacesContext.getCurrentInstance();
+		
 			fc.getApplication()
 			.getNavigationHandler()
 			.handleNavigation(fc, null,
 					"reviewApproveExtensionCodeII.xhtml");
-		} else if (res.getTaskName().equalsIgnoreCase("Extension Result Notification")) {
-			FacesContext fc = FacesContext.getCurrentInstance();
-
-			// boolean isPublished;
-			// if(unspsc.isPublished() == null) {
-			// isPublished = true;
-			// } else {
-			// isPublished = unspsc.isPublished().booleanValue();
-			// }
+		} else if (res.getTaskName().equalsIgnoreCase("Publish Result Notification")) { 
+			
 
 			if (unspsc.isPublished()) {
 				fc.getApplication().getNavigationHandler()
@@ -2567,8 +2557,15 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				.handleNavigation(fc, null,
 						"reviewExtensionCodeFlow2.xhtml");
 			}
-		} else {
-			FacesContext fc = FacesContext.getCurrentInstance();
+		}else if(res.getTaskName().equalsIgnoreCase("Recommend Result Notification")){
+			
+			fc.getApplication()
+			.getNavigationHandler()
+			.handleNavigation(fc, null,
+					"reviewExtensionCodeFlow2.xhtml");
+			
+		}else {
+			
 			fc.getApplication()
 			.getNavigationHandler()
 			.handleNavigation(fc, null, "reviewExtensionCodeFlow.xhtml");
@@ -2673,19 +2670,19 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			.getNavigationHandler()
 			.handleNavigation(fc, null,
 					"selectRecommendUnspscCode.xhtml");
-		} else if (res.getTaskName().equalsIgnoreCase("Publish Extension Code")) {
+		} else if (res.getTaskName().equalsIgnoreCase("Publish Extension Code") || res.getTaskName().equalsIgnoreCase("Publish Result Notification")) {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
 			.getNavigationHandler()
 			.handleNavigation(fc, null,
 					"reviewApproveExtensionCodeII.xhtml");
-		} else if (res.getTaskName().equalsIgnoreCase("Extension Result Notification")) {
+		} else if (res.getTaskName().equalsIgnoreCase("Recommend Result Notification")) {  
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
 			.getNavigationHandler()
 			.handleNavigation(fc, null,
 					"unspscResultNotification.xhtml");
-		} else {
+		}else {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 			.handleNavigation(fc, null, "reviewUnspscCode");
@@ -3200,31 +3197,21 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 	}
 	
-	
-	
-	/*public void revertBackOriginalValue(){
-		
-		
-		if (this.getManagedBean().getReviewExtCodeList() != null
-				&& this.getManagedBean().getReviewExtCodeList().size() > 0) {
 
-			for (CmRequestCode code : this.getManagedBean()
-					.getReviewExtCodeList()) {
-				
-				System.out.println("code.getColorNameDD()"+code.getColorNameDD());
-				if (code.getColorNameDD() != null)
-				code.setRequestColor(true);
-				if (code.getBrandNameDD() != null)
-				code.setRequestBrand(true);
-				if (code.getTypeNameDD() != null)
-				code.setRequestType(true);
-				if (code.getMeasurementNameDD() != null)
-				code.setRequestMeasurement(true);
-			
-			}
+	public String retrieveMofNo(long supplierId, String supplierType){
+		
+		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+		String mofNo = "N/A";
+		IMofAccountSO mofSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject("sm", IMofAccountSO.class);
+		reqDTO.setSupplierId(supplierId);
+		reqDTO.setSupplierType(supplierType);
+		MofAccountResDTO resDTO = mofSO.retriveMOFAccountBySupplierIdAndType(reqDTO);
+		
+		if( resDTO.getMofAccount()!=null){
+			mofNo = resDTO.getMofAccount().getMofNo();
 		}
-
-			
-	}*/
+		
+		return mofNo;
+	}
 
 }
