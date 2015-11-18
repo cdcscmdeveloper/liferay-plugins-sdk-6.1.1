@@ -136,7 +136,7 @@
 					</table></td>
 				<td style="width: 102px;"><p:outputLabel
 						value="#{lbl['lbl.fl.prepared.date']}" /></td>
-				<td><p:inputText size="20" disabled="true"
+				<td><p:inputText size="17" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.createdDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -151,7 +151,7 @@
 						action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.doctypeInvoice)}" immediate="true"></p:commandLink>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.invoice.no']}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.submission.date']}" /></td>
-				<td><p:inputText size="20" disabled="true"
+				<td><p:inputText size="17" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.submissionDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -160,14 +160,14 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.invoice.date']}" /></td>
-				<td><p:inputText size="20" disabled="true"
+				<td><p:inputText size="17" disabled="true"
 					value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.submissionDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
 				<td style="width: 137px;"><p:outputLabel
 						value="#{lbl['lbl.fl.payment.match.payment.date']}" /></td>
-				<td><p:inputText size="20" disabled="true"
+				<td><p:inputText size="17" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.paymentDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -188,7 +188,7 @@
 					</p:inputText>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.desc']}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.payment.match.payment.ref']}" /></td>
-				<td><p:inputText size="20" disabled="true"
+				<td><p:inputText size="17" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.paymentRefNo}" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.pm.payment.reference']}"/></td>
 			</tr>
 		</table>
