@@ -264,6 +264,7 @@
 		<portlet id="smDeactivateAdmin"></portlet>
 		<portlet id="supplierPromotion"></portlet>
 		<portlet id="updateGstInfo"></portlet>
+		<portlet id="basicAccountDeactivation"></portlet>
 	</category>
 
 	<category name="category.ep.wp">
