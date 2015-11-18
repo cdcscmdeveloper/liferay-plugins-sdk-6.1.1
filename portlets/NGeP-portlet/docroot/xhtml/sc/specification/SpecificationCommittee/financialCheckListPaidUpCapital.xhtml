@@ -1,0 +1,164 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+
+	<ui:define name="contentSection">
+		<!-- <ac:title value="#{lbl['lbl.sc.spec.specification.committee']}"></ac:title> -->
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
+		</p:blockUI>
+		<p:messages id="financialPaidUpCapitalsScore" autoUpdate="true"
+			showDetail="true" showSummary="false" closable="true" severity="error, info"></p:messages>
+
+		<div>
+			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+				immediate="true"
+				action="#{specificationBackingBean.committeeBackAction}" />
+
+			<p:commandButton value="#{lbl['lbl.btn.save']}"
+				rendered="#{((specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
+				style="float:right;" onstart="blockWidget.show();"
+				oncomplete="blockWidget.hide();"
+				action="#{specificationBackingBean.saveCheckListScores}">
+				<f:setPropertyActionListener
+					target="#{specificationBackingBean.managedBean.criteriaType}"
+					value="70" />
+
+			</p:commandButton>
+
+
+
+		</div>
+		<p:spacer height="25"></p:spacer>
+		<br />
+		<br />
+
+		<ui:include src="/xhtml/sc/specification/SpecificationCommittee/checklistHeader.xhtml" />
+
+		<p:spacer height="20"></p:spacer>
+		<p:panel header="#{lbl['lbl.sc.spec.paid.up.capital']}"
+			toggleable="true">
+			<table>
+				<tr>
+					<td><h:outputLabel
+							value="#{lbl['lbl.sc.paid.up.capital.ringgit']}"></h:outputLabel>
+					</td>
+					<td><p:inputText disabled="true"></p:inputText></td>
+					<td><ac:iconTooltip
+							value="#{lbl['lbl.sc.paid.up.capital.ringgit.tooltip']}" /></td>
+				</tr>
+			</table>
+		</p:panel>
+		<p:spacer height="20"></p:spacer>
+		<p:panel id="financialPaidUpCapitalScore"
+			header="#{lbl['lbl.sc.spec.score.paid.up.capital']}"
+			toggleable="true"
+			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
+			<table>
+				<tr>
+					<td style="width: 115px;"><ui:fragment
+							rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+							<p:outputLabel value="*" styleClass="mandatory"
+								style="float : left"></p:outputLabel>
+						</ui:fragment> <p:outputLabel style="float : left"
+							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
+					<td><p:selectOneMenu required="true" style="width: 160px;"
+							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+							label="#{lbl['lbl.sc.spec.asset.score.type']}"
+							id="paidUpCapitalAutoScore"
+							value="#{specificationBackingBean.managedBean.checklistScoreType}">
+							<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
+							<p:ajax event="change"
+								update="paidUpCapital,financialPaidUpCapitalScore"
+								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
+						</p:selectOneMenu> <p:message id="paidUpCapitalAutoScoreId"
+							for="paidUpCapitalAutoScore" display="icon"></p:message></td>
+					<td><ac:iconTooltip
+							value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type.tooltip']}" />
+					</td>
+				</tr>
+			</table>
+			<p:spacer height="5"></p:spacer>
+			<h:panelGroup id="paidUpCapital">
+				<h:panelGroup
+					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
+
+					<ui:param name="scoringPnlGroupId" value="paidupCapitalId" />
+					<h:panelGroup id="paidGroupId">
+						<ui:param name="scoringList"
+							value="#{specificationBackingBean.managedBean.checkListScore}" />
+						<ui:param name="selectionList"
+							value="#{specificationBackingBean.managedBean.checkListSelectScore}" />
+						<ui:param name="componentName" value="Paid Up Capital" />
+						<ui:param name="scoringPnlId" value="paidUpId" />
+						<ui:param name="scoringPnlName"
+							value="Scoring For Paid Up Capital"></ui:param>
+						<ui:include src="/xhtml/sc/specification/SpecificationCommittee/scoring.xhtml"></ui:include>
+						<div align="right">
+							<p:commandButton value="#{lbl['lbl.btn.add']}"
+								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+								process="@this,#{scoringPnlId}" partialSubmit="true"
+								update="#{scoringPnlId}"
+								actionListener="#{specificationBackingBean.addScoring(70)}" />
+							<p:commandButton value="#{lbl['lbl.btn.delete']}"
+								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+								process="@this" partialSubmit="true"
+								oncomplete="financialPaidUpCapitalDeletePopUp.show();"
+								update="@([id$=#{financialPaidupCapitalDeleteId}])">
+								<f:setPropertyActionListener
+									target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
+									value="#{false}" />
+							</p:commandButton>
+
+						</div>
+						<ui:param name="financialPaidupCapitalDeleteId"
+							value="financialPaidupCapitalDeleteId"></ui:param>
+
+						<ac:confirmationPopup id="#{financialPaidupCapitalDeleteId}"
+							widget="financialPaidUpCapitalDeletePopUp" width="400"
+							height="200"
+							okAction="specificationBackingBean.deleteCheckListScoreContrats"
+							title="#{lbl['lbl.sc.spec.paid.up.capital']}"
+							content="#{lbl['lbl.sc.dialog.confirm.message']}"
+							update="@([id$=#{scoringPnlId}])" />
+					</h:panelGroup>
+
+				</h:panelGroup>
+				<p:spacer height="5"></p:spacer>
+				<h:panelGroup
+					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
+					<table>
+						<tr>
+							<td style="width: 115px;"><ui:fragment
+									rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+									<p:outputLabel value="*" styleClass="mandatory"
+										style="float : left"></p:outputLabel>
+								</ui:fragment> <p:outputLabel style="float : left"
+									value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel></td>
+							<td><p:inputText maxlength="18" required="true"
+									style="text-align:right;"
+									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+									label="#{lbl['lbl.sc.spec.max.score']}" id="finpaidUpScore"
+									value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
+									<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+								</p:inputText> <p:message id="finpaidUpMaxScore" for="finpaidUpScore"
+									display="icon"></p:message></td>
+						</tr>
+					</table>
+				</h:panelGroup>
+			</h:panelGroup>
+		</p:panel>
+
+
+	</ui:define>
+</ui:composition>
