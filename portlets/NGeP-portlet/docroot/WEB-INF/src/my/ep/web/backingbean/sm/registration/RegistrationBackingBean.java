@@ -2149,7 +2149,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 */
 	public void proceedToLogout() {
 		RequestContext.getCurrentInstance().execute("successDialog.hide()");
-		SmCommonUtil.redirectToLogoutUrl();
+//		SmCommonUtil.redirectToLogoutUrl();
 	}
 	
 	/**
