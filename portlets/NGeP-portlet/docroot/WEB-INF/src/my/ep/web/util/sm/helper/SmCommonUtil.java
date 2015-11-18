@@ -32,6 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -47,6 +48,7 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 import javax.persistence.Id;
+import javax.portlet.PortletConfig;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
@@ -1920,15 +1922,21 @@ public class SmCommonUtil {
 	 * Redirect to liferay logout url
 	 */
 	public static void redirectToLogoutUrl() {
+		FacesScopes fs = new FacesScopes();
 		FacesContext fCtx = FacesContext.getCurrentInstance();
 		PortletRequest req = (PortletRequest) fCtx.getExternalContext()
 				.getRequest();
+		PortletConfig portletConfig = (PortletConfig) req
+				.getAttribute("javax.portlet.config");
+		ResourceBundle ePRes = portletConfig.getResourceBundle(fs
+				.getUserLocale());
 		ThemeDisplay themeDisplay = (ThemeDisplay) req
 				.getAttribute(WebKeys.THEME_DISPLAY);
-
-		String portalUrl = themeDisplay.getURLPortal();
-		String logOutUrl = portalUrl + "/c/portal/logout";
-		redirectToExternalUrl(logOutUrl);
+		String currentPortalUrl = themeDisplay.getPortalURL();
+		String ssoLogoutUrl = ePRes.getString("hook.sso.logout.url");
+		String logoutcookie = ssoLogoutUrl + currentPortalUrl
+				+ "/c/portal/logout";
+		redirectToExternalUrl(logoutcookie);
 	}
 
 	/**
