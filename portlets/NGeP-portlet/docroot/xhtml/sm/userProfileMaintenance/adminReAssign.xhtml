@@ -129,7 +129,9 @@
 			<p:messages id="successDialogMsg" showSummary="false"
 				showDetail="true" autoUpdate="true" closable="false" />
 			<div align="right">
-				<button onclick="clickLogout();" value="#{lbl['lbl.btn.proceed']}"/>
+				<p:commandButton value="#{lbl['lbl.btn.proceed']}" onclick="successDialog.hide();" update="@form"
+					action="#{smPersonnelBackingBean.proceedToLogout()}" process="@this" partialSubmit="true"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 			</div>
 		</p:dialog>
 	</ui:define>
