@@ -1919,7 +1919,7 @@ public class SmCommonUtil {
 	}
 
 	/**
-	 * Redirect to liferay logout url
+	 * Get liferay logout url
 	 */
 	public static String getLogoutUrl() {
 		String logoutcookie = "";
@@ -1942,6 +1942,22 @@ public class SmCommonUtil {
 		}
 		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>LOGOUT URL:" + logoutcookie);
 		return logoutcookie;
+	}
+
+	/**
+	 * Call deactivation account message dialog
+	 * @param String msgKey
+	 */
+	public static void callDeactivationSuccessDialog(String msgKey) {
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+						.getMessage(msgKey,
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+		RequestContext.getCurrentInstance()
+				.execute("deactivationDialog.show()");
 	}
 
 	/**
