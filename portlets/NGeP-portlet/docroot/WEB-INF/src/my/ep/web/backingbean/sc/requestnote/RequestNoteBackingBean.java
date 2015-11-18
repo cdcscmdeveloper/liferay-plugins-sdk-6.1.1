@@ -129,6 +129,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.SourcingZoneHelper;
 import my.ep.web.util.template.DocumentGenerator;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
@@ -137,7 +138,6 @@ import org.apache.velocity.VelocityContext;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DualListModel;
-import org.springframework.util.CollectionUtils;
 
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.User;
@@ -3708,9 +3708,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 
 				if(requestNote.getPmUserGroup() == null){
-					requestNote.setPmUserGroup(resDTO.getUserGroupList().get(0));
-					getManagedBean().setUserGroupId(requestNote.getPmUserGroup().getUserGroupId());
-					
+					if(!CollectionUtils.isEmpty(resDTO.getUserGroupList())) {
+						PmUserGroup userGroup = resDTO.getUserGroupList().get(0);
+						requestNote.setPmUserGroup(userGroup);
+						getManagedBean().setUserGroupId(userGroup.getUserGroupId());
+					}
 				} else{
 					getManagedBean().setUserGroupId(requestNote.getPmUserGroup().getUserGroupId());
 				}
@@ -3778,17 +3780,21 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 
 		List<PmUser> approvers  = new ArrayList<PmUser>();
-		RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();
-		reqDTO.setGroupId(requestNote.getPmUserGroup().getUserGroupId());
-		reqDTO.setOrgProfileId(requestNote.getPmOrgProfile().getOrgProfileId());
-		resDTO = getDirectPurchaseSO().retrieveApproverListByGroupId(reqDTO);
-		List<PmUserGroupUser> groupUsers = resDTO.getApproverGroupUserList();
+		
+		if(requestNote.getPmUserGroup() != null) {
+			RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();
+			reqDTO.setGroupId(requestNote.getPmUserGroup().getUserGroupId());
+			reqDTO.setOrgProfileId(requestNote.getPmOrgProfile().getOrgProfileId());
+			resDTO = getDirectPurchaseSO().retrieveApproverListByGroupId(reqDTO);
+			List<PmUserGroupUser> groupUsers = resDTO.getApproverGroupUserList();
 
-		if(!CollectionUtils.isEmpty(groupUsers)) {
-			for(PmUserGroupUser groupUser : groupUsers) {
-				approvers.add(groupUser.getPmUser());
+			if(!CollectionUtils.isEmpty(groupUsers)) {
+				for(PmUserGroupUser groupUser : groupUsers) {
+					approvers.add(groupUser.getPmUser());
+				}
 			}
 		}
+		
 		getManagedBean().setApproverList(approvers);
 	}
 	
