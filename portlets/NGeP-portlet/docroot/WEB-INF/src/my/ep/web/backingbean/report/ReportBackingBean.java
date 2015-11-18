@@ -8378,9 +8378,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve report list by sub module.
+	 * retrieveReportListBySubModule - Retrieve report list by sub module and user authorization.
 	 * 
-	 * @return the list
+	 * @return the reportList
 	 */
 	public List<SelectItem> retrieveReportListBySubModule() {
 		reportList = new ArrayList<SelectItem>();
@@ -8440,7 +8440,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Gets the report id list.
+	 * getReportIdlist - Gets the report id list based on paramModule type = "REP" .
 	 * 
 	 * @return the report id list
 	 */
@@ -8469,7 +8469,7 @@ public class ReportBackingBean extends
 	 * } }
 	 */
 	/**
-	 * Process items by module.
+	 * processItemsByModule - Process items by module.
 	 * 
 	 * @param items
 	 *            the items
@@ -8505,7 +8505,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Populate experience sub child category by child.
+	 * populateExperienceSubChildCategoryByChild - Populate experience sub child category by child.
 	 * 
 	 * @param childId
 	 *            the child id
@@ -8524,7 +8524,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Retrieve experience sub child category list.
+	 * retrieveExperienceSubChildCategoryList - Retrieve experience sub child category list.
 	 * 
 	 * @param categoryL2Id
 	 *            the category l2 id
@@ -8542,7 +8542,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Check duplicate category for project.
+	 *  checkDuplicateCategoryForProject - Check duplicate category for project.
 	 * 
 	 * @param newCat
 	 *            the new cat
@@ -8579,7 +8579,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Delete selected codes.
+	 * deleteSelectedCodes - Delete selected codes.
 	 */
 	public void deleteSelectedCodes() {
 		for (SmSupplierCategory cat : this.getSelectCatDeletionList()) {
@@ -8594,7 +8594,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Assign category for comp experience.
+	 * assignCategoryForCompExperience - Assign category for comp experience.
 	 */
 	public void assignCategoryForCompExperience() {
 		SmSupplierCategory cat = new SmSupplierCategory();
@@ -8618,13 +8618,11 @@ public class ReportBackingBean extends
 		this.getSelectedCatList().add(cat);
 	}
 
-	/*
-	 * Retrieve module list
-	 */
+	
 	/**
-	 * Retrive module list.
+	 * retriveModuleList - Retrive module list.
 	 * 
-	 * @return the list
+	 * @return the moduleList
 	 */
 	public List<SelectItem> retriveModuleList() {
 		moduleList = new ArrayList<SelectItem>();
@@ -8707,7 +8705,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Madatory indicator.
+	 * madatoryIndicator - Indicator for Madatory .
 	 */
 	public void madatoryIndicator() {
 		if ((null != this.getReportValue())
