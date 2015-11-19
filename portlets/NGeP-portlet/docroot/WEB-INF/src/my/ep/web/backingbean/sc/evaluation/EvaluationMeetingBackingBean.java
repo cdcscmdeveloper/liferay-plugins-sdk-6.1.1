@@ -1567,7 +1567,7 @@ public class EvaluationMeetingBackingBean extends
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
-							"/xhtml/sc/evaluation/xhtml/sc/evaluation/evaluationstage1view.xhtml");
+							"/xhtml/sc/evaluation/evaluationMain.xhtml");
 		}
 	}
 

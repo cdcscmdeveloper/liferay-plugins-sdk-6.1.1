@@ -1,0 +1,46 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+
+	<ui:define name="contentSection">
+
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
+		</p:blockUI>
+		<p:messages id="financialEvaluationUploadDtlsId" autoUpdate="true"
+			closable="true" showDetail="true" showSummary="false"
+			severity="error,info"></p:messages>
+		<div>
+			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+				action="#{evaluationBackingBean.evaluationBackaction}"
+				immediate="true" />
+
+			<p:commandButton value="#{lbl['lbl.btn.save']}" style="float:right;"
+				update="@all" onstart="blockWidget.show();"
+				oncomplete="blockWidget.hide();"
+				action="#{evaluationBackingBean.saveEvalutionStageUploadDtls}" />
+		</div>
+		<p:spacer height="25" />
+		<br />
+		<br />
+		<ui:include src="/xhtml/sc/evaluation/evaluationHeader.xhtml" />
+		<br />
+		<p:panel header="#{lbl['lbl.sc.eva.financial.proposal.evaluation']}">
+			<ui:include src="/xhtml/sc/evaluation/checklistHeader.xhtml" />
+		</p:panel>
+		<br />
+		<ui:include
+			src="financialEvaluationStageUploadScoringSupplierList.xhtml" />
+
+
+	</ui:define>
+</ui:composition>
