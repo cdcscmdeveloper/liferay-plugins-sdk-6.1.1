@@ -1506,7 +1506,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			recNoteBB.getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
 			recNoteBB.getManagedBean().setFulfilmentRequest(resDTO.getFulfilmentNote().getFlRequest());
 			recNoteBB.getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFulfilmentNote().getFlRequest());
-			recNoteBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+			recNoteBB.getManagedBean().setButtonVal("View");
 			reqDTO.setDeliveryOrderId(resDTO.getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
 			recNoteBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			for(FlFulfilmentNoteItem fulfilmentNoteItem: resDTO.getFulfilmentNote().getFlFulfilmentNoteItem()){
