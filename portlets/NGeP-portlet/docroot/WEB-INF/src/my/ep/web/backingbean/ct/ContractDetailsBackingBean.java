@@ -87,10 +87,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
-import my.ep.persistence.entity.sm.SmAddress;
-import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.type.aut.SearchOperator;
-import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -509,7 +506,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		    }
 		 //ctBB.getManagedBean().setSmAddress(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
 		 ctBB.getManagedBean().setSupplierAddress(AddressUtils.getFullAddress(ctBB.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress()));
-		 renderUpdateCheckbox(ctBB.getManagedBean().getContractVer());
+		 ctBB.renderUpdateCheckbox(ctBB.getManagedBean().getContractVer());
 		 ctBB.getManagedBean().setSupplierCompanyName(ctBB.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 		 ctBB.getManagedBean().setSupplierBranchName(ctBB.getManagedBean().getContractVer().getCtContractValue().getSupplierBranch());
 		 ctBB.retrieveBranchInfo();
@@ -1540,7 +1537,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		    ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 		    setValidateContractField(resDTO);		    
 		    getManagedBean().setAction(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});		    
-	        ctBB.getManagedBean().setViewContract(false);
+		    ctBB.getManagedBean().setUpdateContract(true);
+		    ctBB.getManagedBean().setViewContract(false);
 	        getManagedBean().setExternalPageUrl(null);
 	        this.getManagedBean().setSelectedTabIndex(0);	     
 			return CONTRACT_PAGE;
@@ -1740,43 +1738,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	
 	   	ctBB.getManagedBean().setPaidAdvancePaymentAmt(paidAdvancePaymentAmt);
 		ctBB.getManagedBean().setPaidInvoiceAmt(paidInvoiceAmt);
-	}
-	
-	/**
-	 * The method used to render the check box for company name
-	 * and supplier address if there are any updates from profile
-	 * management module.
-     */
-	private void renderUpdateCheckbox(CtContractVer ctContractVer) {
-		if (ctContractVer.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
-				&& this.getManagedBean().isUpdateContract()) {
-			if (!ctContractVer.getCtContractValue().getSupplierName().equalsIgnoreCase(
-					ctBB.getManagedBean().getContractVer().getCtContract().getSmSupplier().getCompanyName())) {
-				ctBB.getManagedBean().setUpdateCompanyName(true);
-			}
-			SmAddress latestAddress = retrieveLatestSupplierAddress();
-			if (!ctContractVer.getCtContractValue().getSupplierAddress().equals(latestAddress)) {
-				ctBB.getManagedBean().setUpdateSupplierAddress(true);
-			}
-		} else {
-			ctBB.getManagedBean().setUpdateCompanyName(ctContractVer.getCtContractValue().isCompanyNameChange());
-			ctBB.getManagedBean().setUpdateSupplierAddress(ctContractVer.getCtContractValue().isAddressChange());
-		}
-	}
-	
-	/**
-	 * The method used to retrieve the latest supplier address.
-     */
-	private SmAddress retrieveLatestSupplierAddress() {
-		SmAddress smAddress = new SmAddress();
-		List<SmCompanyAddress> smCompanyAddresses = new ArrayList<SmCompanyAddress>();
-		smCompanyAddresses = ctBB.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses();
-		for (SmCompanyAddress address : smCompanyAddresses) {
-			if (address.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())) { // C-Company Address, M-Mailing Address
-				smAddress = address.getSmAddress();
-			}
-		}
-		return smAddress;
 	}
 	
 	/**
