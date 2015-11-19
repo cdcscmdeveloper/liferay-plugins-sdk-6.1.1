@@ -154,6 +154,7 @@ public class ReportBackingBean extends
 	/** The scqt. */
 	private ScQt scqt;
 
+	/** The sc loa id no. */
 	private String scLOAIdNo;
 
 	/** The enable value. */
@@ -1039,6 +1040,8 @@ public class ReportBackingBean extends
 
 	
 	/**
+	 * Gets the sc loa id no.
+	 *
 	 * @return the scLOAIdNo
 	 */
 	public String getScLOAIdNo() {
@@ -1046,8 +1049,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * @param scLOAIdNo
-	 *            the scLOAIdNo to set
+	 * Sets the sc loa id no.
+	 *
+	 * @param scLOAIdNo            the scLOAIdNo to set
 	 */
 	public void setScLOAIdNo(String scLOAIdNo) {
 		this.scLOAIdNo = scLOAIdNo;
@@ -6790,6 +6794,8 @@ public class ReportBackingBean extends
 	
 	
 	/**
+	 * Gets the search unspsc paging data model.
+	 *
 	 * @return the searchLOVPagingDataModel
 	 */
 	public IPagingDataModel<CmUnspsc> getSearchUnspscPagingDataModel() {
@@ -6797,7 +6803,9 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * @param searchLOVPagingDataModel the searchLOVPagingDataModel to set
+	 * Sets the search unspsc paging data model.
+	 *
+	 * @param searchUnspscPagingDataModel the new search unspsc paging data model
 	 */
 	public void setSearchUnspscPagingDataModel(
 			IPagingDataModel<CmUnspsc> searchUnspscPagingDataModel) {
@@ -9954,7 +9962,7 @@ public class ReportBackingBean extends
 
 	
 	/**
-	 * criteriaVariablesByReport - Enable criteria variables by report name
+	 * criteriaVariablesByReport - Enable criteria variables by report name.
 	 */
 	public void criteriaVariablesByReport() {
 		parameterCodeType = new String();
@@ -10535,7 +10543,7 @@ public class ReportBackingBean extends
 
 	
 	/**
-	 * generateReport - Generate all modules reports
+	 * generateReport - Generate all modules reports.
 	 */
 	public void generateReport() {
 		if (((this.getReportValue() != null) && this.getReportValue()
@@ -13587,6 +13595,12 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * getSuppLoiLoaMapData - Gets the supp loi loa map data.
+	 *
+	 * @param loaDetail the loa detail
+	 * @return the supp loi loa map data
+	 */
 	private void getSuppLoiLoaMapData(LOADetailBackingBean loaDetail) {
 		log.info("getSuppLoiLoaMapData");
 		if (this.getManagedBean().getScQt() != null) {
