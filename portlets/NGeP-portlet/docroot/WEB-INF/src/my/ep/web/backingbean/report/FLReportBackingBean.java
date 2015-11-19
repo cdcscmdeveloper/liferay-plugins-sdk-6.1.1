@@ -26,11 +26,9 @@ import my.ep.web.constant.report.CommonMethod;
 @ViewScoped
 public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>{
 
-	/*
-	 * Enable FL module criteria by report name
-	 */
+	
 	/**
-	 * Enable criteria variables by report by fl.
+	 * enableCriteriaVariablesByReportByFL - Enable criteria variables by report by ORDER FULFILLMENT.
 	 *
 	 * @param rptGenBean the rpt gen bean
 	 * @param authoriztionList the authoriztion list

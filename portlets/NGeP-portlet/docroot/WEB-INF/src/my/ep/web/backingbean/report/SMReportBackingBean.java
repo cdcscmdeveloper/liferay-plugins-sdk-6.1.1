@@ -77,11 +77,9 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	public void setLevOneCatLst(List<SelectItem> levOneCatLst) {
 		this.levOneCatLst = levOneCatLst;
 	}
-	/*
-	 *Enable SM module criteria by report name 
-	 */
+	
 	/**
-	 * Enable criteria variables by report by sm.
+	 * enableCriteriaVariablesByReportBySM - Enable criteria variables by report by SUPPLIER MANAGEMENT.
 	 *
 	 * @param rptGenBean the rpt gen bean
 	 * @param authoriztionList the authoriztion list
