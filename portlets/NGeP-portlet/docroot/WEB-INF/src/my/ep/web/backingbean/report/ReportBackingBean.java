@@ -8705,7 +8705,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * madatoryIndicator - Indicator for Madatory .
+	 * madatoryIndicator - Indicator for Mandatory .
 	 */
 	public void madatoryIndicator() {
 		if ((null != this.getReportValue())
