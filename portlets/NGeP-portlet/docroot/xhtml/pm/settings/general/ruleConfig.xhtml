@@ -62,7 +62,7 @@
 
 			<ac:paginator for="ruleTypeValueTableID" />
 			<p:column
-				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'A')}">
+				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'A') and (ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType != 2)}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
 					                 #{lbl['lbl.pm.value']}
@@ -80,7 +80,7 @@
 				<p:message id="amountValueMsg" for="amountValueId" display="icon" />
 			</p:column>
 			<p:column
-				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'N')}">
+				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'N') and (ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType != 2)}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
 					                 #{lbl['lbl.pm.value']}
@@ -97,7 +97,7 @@
 				<p:message id="numberValueMsg" for="numberValueId" display="icon" />
 			</p:column>
 			<p:column
-				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'M'}">
+				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'M' and (ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType != 2)}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
 			  
@@ -117,7 +117,7 @@
 					display="icon" />
 			</p:column>
 			<p:column
-				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'P'}">
+				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'P' and ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType != 2}}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
 					                 #{lbl['lbl.pm.value']}
@@ -147,7 +147,7 @@
 			</p:column>
 
 			<p:column width="15%" id="fromValueColumnId"
-				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType == 1}">
+				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType == 1 or ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType == 2}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />			
 				                 	#{lbl['lbl.pm.rule.from.value']}
@@ -164,7 +164,7 @@
 			</p:column>
 
 			<p:column width="15%"
-				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType == 1}">
+				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType == 1 or ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType == 2}">
 				<f:facet name="header">
 				                	#{lbl['lbl.pm.rule.to.value']}
 			                	</f:facet>
