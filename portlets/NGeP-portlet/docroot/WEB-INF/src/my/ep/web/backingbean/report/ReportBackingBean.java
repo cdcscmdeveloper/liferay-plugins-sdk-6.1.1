@@ -6808,7 +6808,7 @@ public class ReportBackingBean extends
 	/**
 	 * retrieveLOAStatusList- will retrieve LOA status(SOA Status) list.
 	 * 
-	 * @return the list
+	 * @return the SOAStatusList
 	 */
 	public List<SelectItem> retrieveLOAStatusList() {
 		scSOAStatusList = new ArrayList<SelectItem>();
