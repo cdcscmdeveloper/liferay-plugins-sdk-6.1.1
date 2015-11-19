@@ -69,6 +69,7 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.ct.CtAttachment;
+import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.CtWorkflowStatus;
 import my.ep.persistence.entity.ct.circular.cc.CtCircularContract;
@@ -2189,7 +2190,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 			public boolean getValueFromAmendment(){
 				if(getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT)){
-					return true;
+					if(getManagedBean().getContractVer().getCtAmendment().isOtherChange()) {
+						return false;
+					}
+				  return true;
 				}
 				return false;
 			}
@@ -2253,4 +2257,26 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			    	}
 			      	return false;
 			    }
+			 
+			 /**
+				 * The method used to render the check box for company name
+				 * and supplier address if there are any updates from profile
+				 * management module.
+			     */
+				public void renderUpdateCheckbox(CtContractVer ctContractVer) {
+					if (ctContractVer.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+							&& this.getManagedBean().isUpdateContract()) {
+						if (!ctContractVer.getCtContractValue().getSupplierName().equalsIgnoreCase(
+								getManagedBean().getContractVer().getCtContract().getSmSupplier().getCompanyName())) {
+							    getManagedBean().setUpdateCompanyName(true);
+						}
+						SmAddress latestAddress = retrieveLatestSupplierAddress();
+						if (!ctContractVer.getCtContractValue().getSupplierAddress().equals(latestAddress)) {
+							   getManagedBean().setUpdateSupplierAddress(true);
+						}
+					} else {
+						   getManagedBean().setUpdateCompanyName(ctContractVer.getCtContractValue().isCompanyNameChange());
+						   getManagedBean().setUpdateSupplierAddress(ctContractVer.getCtContractValue().isAddressChange());
+					}
+				}
 }

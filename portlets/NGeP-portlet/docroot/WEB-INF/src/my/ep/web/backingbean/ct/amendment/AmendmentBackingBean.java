@@ -106,7 +106,6 @@ import my.ep.persistence.entity.ct.dtl.item.CtItemCeilingQty;
 import my.ep.persistence.entity.ct.dtl.item.CtItemMaxQty;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
-import my.ep.persistence.entity.ct.dtl.zone.CtContractZoneDtl;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -117,7 +116,6 @@ import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
@@ -137,7 +135,6 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
-import my.ep.web.backingbean.ct.LocationDTO;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
@@ -161,9 +158,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
-import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 import org.springframework.util.CollectionUtils;
 
@@ -706,7 +701,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (ctBackingBean.getManagedBean().getContractVer().getCtContractZones() != null 
 					&& ctBackingBean.getManagedBean().getContractVer().getCtContractZones().size() > 0) {
 				Collections.sort(ctBackingBean.getManagedBean().getContractVer().getCtContractZones(), new CtContractZone());
-				retriveZonesByContractVer();
+				ctBackingBean.retriveZonesByContractVer();
 			}
 			
 			// Retrieve Deduction Clauses
@@ -793,6 +788,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		    ctBackingBean.getManagedBean().setUpdateSupplierAddress(false);
 		    ctBackingBean.getManagedBean().setSmAddress(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
 		    ctBackingBean.getManagedBean().setSupplierAddress(AddressUtils.getFullAddress(ctBackingBean.getManagedBean().getSmAddress()));
+		    ctBackingBean.renderUpdateCheckbox(ctBackingBean.getManagedBean().getContractVer());
 		    ctBackingBean.getManagedBean().setSupplierCompanyName(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 		    ctBackingBean.getManagedBean().setSupplierBranchName(this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierBranch());
 		    ctBackingBean.retrieveBranchInfo();
@@ -1677,12 +1673,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    	} 
 	  /*Menu for other started*/
 		 else if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()){
-			 index = 5;
 			 if (outputValue.equalsIgnoreCase("AG")) {
 	 	       		getManagedBean().setSelectedTabIndex(2);
 	        	}
 			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
-				 index = 6;
 				if (outputValue.equalsIgnoreCase("ZO")) {
 	 	       		getManagedBean().setSelectedTabIndex(3);
 	        	}
@@ -1700,7 +1694,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		  			getManagedBean().setSelectedTabIndex(4);
 		      	}
 		  	} 
-		  	if (outputValue.equalsIgnoreCase(ContractConst.SCHEDULE_DETAIL)&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
+		  	if (outputValue.equalsIgnoreCase(ContractConst.SCHEDULE_DETAIL) 
+		  		 && ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
 		  			ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
 		  		if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {  
 		  			     getManagedBean().setSelectedTabIndex(6);
@@ -1709,13 +1704,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		  			}
 		  	  	} 
 		  	if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()){
-		  		if (outputValue.equalsIgnoreCase(ContractConst.SCHEDULE_DETAIL)&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
+		  		if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
 			  			ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
 		  			index = 6;
 		  	   } else {
 		  		 index = 5;
 		  	   }
-		  	} else if (outputValue.equalsIgnoreCase(ContractConst.SCHEDULE_DETAIL)&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
+		  	} else if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
 		  			ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
 		  		index = 5;
 		  	} else {
@@ -2040,41 +2035,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if (getManagedBean().isShowPrintButton()) {
 			getManagedBean().setBpmActionFlag(true);
 		}
-	}
-	
-	/**
-	 * The method used for creating the zone tree node.
-     */
-	private void retriveZonesByContractVer() {
-		TreeNode rootLocationTree =  new DefaultTreeNode("Root", null);
-		TreeNode zoneNode =  null;
-	    
-		for (CtContractZone zone : this.ctBackingBean.getManagedBean().getContractVer().getCtContractZones()) {
-			if (zone.getDeliveryTermUom() == null) {
-				zone.setDeliveryTermUom(new PmParameter()); 
-				zone.getDeliveryTermUom().setParameterId(0L);
-			}
-			zoneNode = new DefaultTreeNode("zone", new LocationDTO(
-					zone.toString(), zone.getZoneName(), zone.getDeliveryTerm(), 
-						zone.getDeliveryTermUom().getParameterId()), rootLocationTree);
-			List<PmState> state = new ArrayList<PmState>();
-			if (zone.getCtContractZoneDtls() != null) {
-				for (CtContractZoneDtl zoneDtl : zone.getCtContractZoneDtls()) {
-					if (zoneDtl.getState() != null && ctBackingBean.getManagedBean().getContractVer().getCtContract().getLocationLevel().getParameterCode().equalsIgnoreCase(
-							ParameterConst.LOCATION_LEVEL_STATE)) {
-						if (!state.contains(zoneDtl.getState())) {
-							new DefaultTreeNode("state",new LocationDTO(zoneDtl.getContractZoneDtlId(), zoneDtl.getState()), zoneNode);
-						}
-						state.add(zoneDtl.getState());
-					}
-					if (zoneDtl.getDistrict() != null && ctBackingBean.getManagedBean().getContractVer().getCtContract().getLocationLevel().getParameterCode().equalsIgnoreCase(
-							ParameterConst.LOCATION_LEVEL_DISTRICT)) {
-						new DefaultTreeNode("district", new LocationDTO(zoneDtl.getContractZoneDtlId(), zoneDtl.getDistrict()), zoneNode);
-					}
-				}
-			}
-		}
-		this.getManagedBean().setCtZoneTrees(rootLocationTree);
 	}
 	
 	/**
@@ -3499,7 +3459,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					new SearchFilterBean("pmParameter.parameterCode",
 							SearchOperator.OPERATOR_IN.value(),
 							itemDisplayTypeList));
-		}
+		} 
 		return super.getDropdownCodeValuesBySearchBean(ParameterTypeConst.ITEM_DISPLAY_TYPE, searchBean);
 	}
 	
