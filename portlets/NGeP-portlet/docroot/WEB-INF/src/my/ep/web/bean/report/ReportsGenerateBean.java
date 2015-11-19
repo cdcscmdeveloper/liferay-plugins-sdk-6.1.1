@@ -1,6 +1,13 @@
-/*
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
  * 
- */
+ ****************************************************
+*/
 package my.ep.web.bean.report;
 
 
@@ -12810,7 +12817,7 @@ public class ReportsGenerateBean {
 				stateLst.add(selectItem);			
 			}
 		}
-		
+	
 		/**
 		 * Gets the sts lst.
 		 *
@@ -12974,4 +12981,41 @@ public class ReportsGenerateBean {
 			this.scLOAContentView = scLOAContentView;
 		}
 		
+	/**
+	 * Retrieve states by zone name.
+	 * 
+	 * @param zoneName
+	 *            the zone name
+	 */
+	public void retrieveStatesByZoneName(String zoneName) {
+
+		StateReqDTO stateReqDTO = new StateReqDTO();
+		stateLst = new ArrayList<SelectItem>();
+
+		IStateSO stateSO = BusinessDelegate.getInstance().getServiceObject(
+				"pm", IStateSO.class);
+
+		stateReqDTO.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
+
+		if (stateSO != null && zoneName != null) {
+			stateReqDTO.setZoneName(zoneName);
+			StateResDTO resStateDTO = stateSO
+					.retriveStatesListByCountryCodeWithZoneName(stateReqDTO);
+			for (PmState state : resStateDTO.getStateList()) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setLabel(state.getStateName());
+				selectItem.setValue(state.getStateId());
+				stateLst.add(selectItem);
+			}
+		} else if (stateSO != null) {
+			StateResDTO resStateDTO = stateSO
+					.retriveStatesListByCountryCode(stateReqDTO);
+			for (PmState state : resStateDTO.getStateList()) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setLabel(state.getStateName());
+				selectItem.setValue(state.getStateId());
+				stateLst.add(selectItem);
+			}
+		}
+	}
 }

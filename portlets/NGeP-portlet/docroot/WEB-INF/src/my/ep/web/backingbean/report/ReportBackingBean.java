@@ -7034,6 +7034,11 @@ public class ReportBackingBean extends
 	 * @return the processing officer list
 	 */
 	public List<SelectItem> retrieveProcessingOfficerList() {
+		
+		this.setSmState(null);
+		rptGenBean.retrieveStatesByZoneName(this.smZone);
+		districtLst = new ArrayList<SelectItem>();		
+		
 		processingOfficerList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -13253,9 +13258,10 @@ public class ReportBackingBean extends
 		this.setSmApplicationStatus(null);
 		this.setSmPaymentType(null);
 		this.setSmApplicationType(null);
-		this.setSmState(null);
-		this.setSmSVOUser(null);
+		this.setSmZone(null);
+		this.setSmState(null);		
 		this.setSmDistrict(null);
+		this.setSmSVOUser(null);
 		this.setSmReportType(null);
 		this.setSmProcessingType(null);
 		this.setSmReceiptNo(null);
@@ -13836,7 +13842,7 @@ public class ReportBackingBean extends
 	 * resetLOV - Reset lov.
 	 * 
 	 * @return the searchUnspsc
-	 */
+	 */	
 	
 	public void resetLOV() {
 		getManagedBean().setSearchValue(new String[3]);
@@ -13844,6 +13850,5 @@ public class ReportBackingBean extends
 		getManagedBean().setSearchOperatorValue(new String[3]);
 		this.getSearchUnspscPagingDataModel().resetData();		
 	}
-
 	
 }
