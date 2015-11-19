@@ -54,7 +54,7 @@
 				<h:outputLabel value="#{lbl['lbl.txt.attachment']}" />
 			</td>
 			<td class="TableFieldRight">
-				<p:commandButton oncomplete="attachmentPopupDlg.show();return false;" icon="iconAttachment"
+				<p:commandButton oncomplete="attachmentPopupDlg.show();return false;" 
 					partialSubmit="true" process="@this" update="@([id$=attachmentPopup])" 
 					value="#{lbl['lbl.txt.attach.file']}" 
 					rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}">
