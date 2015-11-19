@@ -524,6 +524,7 @@ public class CommonApplBackingBean extends
 			SmRemaksResDTO remResDTO = getRemarksByDoc(
 					ParameterConst.NEW_SM_APPLN_FOR_DELETE_PENDING_APPL,
 					appl.getApplId());
+			String suppRemarks = "";
 			StringBuffer sb = new StringBuffer();
 			if (resDTO != null && remResDTO.getRemarksList() != null
 					&& !remResDTO.getRemarksList().isEmpty()) {
@@ -534,7 +535,11 @@ public class CommonApplBackingBean extends
 				// sb.append(rem.getRemark()).append("\n");
 				// }
 			}
-			smApplBB.getManagedBean().setSupplierRemarks(sb.toString());
+			if (sb.length()>0) {
+				suppRemarks = sb.toString().replaceAll(
+						"(?s),", "<br />");
+			}
+			smApplBB.getManagedBean().setSupplierRemarks(suppRemarks);
 			smApplBB.getManagedBean().setSmAppl(appl);
 			smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 			smApplBB.getManagedBean().setTaskId(taskId);
