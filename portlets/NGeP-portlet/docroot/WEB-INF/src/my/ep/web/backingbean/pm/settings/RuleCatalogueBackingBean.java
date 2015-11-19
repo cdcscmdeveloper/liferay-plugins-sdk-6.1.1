@@ -710,9 +710,14 @@ public class RuleCatalogueBackingBean extends
 		}
 		PmFeeExemption exemption = this.getManagedBean()
 				.getFeeExemptionsForContract().get(index);
-		exemption.setDefaultEffDate(defaultEffDate);
+		
 		exemption.setEffDate(defaultEffDate);
 		exemption.setExpDate(defaultExpDate);
+		
+		exemption.setDefaultEffDate(defaultEffDate);
+		if(defaultEffDate.getTime() > currentDate.getTime()){
+			exemption.setDefaultEffDate(currentDate);
+		}
 		this.getManagedBean().getFeeExemptionsForContract().remove(index);
 		this.getManagedBean().getFeeExemptionsForContract()
 				.add(index, exemption);
@@ -1722,17 +1727,17 @@ public class RuleCatalogueBackingBean extends
 
 		for (int i = 0; i < feeExemptionList.size(); i++) {
 			PmFeeExemption baseExemption = feeExemptionList.get(i);
-			if (baseExemption.getRecordStatusFlg() == 0) {
-				// if record inactive choose next one
-				continue;
-			}
+//			if (baseExemption.getRecordStatusFlg() == 0) {
+//				// if record inactive choose next one
+//				continue;
+//			}
 
 			for (int j = i + 1; j <= (feeExemptionList.size() - 1); j++) {
 				PmFeeExemption ex = feeExemptionList.get(j);
-				if (ex.getRecordStatusFlg() == 0) {
-					// if record inactive choose next one
-					continue;
-				}
+//				if (ex.getRecordStatusFlg() == 0) {
+//					// if record inactive choose next one
+//					continue;
+//				}
 				if ((ex.getFeeExemptionType().equals("1")
 						&& baseExemption.getFeeExemptionType().equals("1") && ex
 						.getOrgProfileId().getOrgProfileId() == baseExemption
