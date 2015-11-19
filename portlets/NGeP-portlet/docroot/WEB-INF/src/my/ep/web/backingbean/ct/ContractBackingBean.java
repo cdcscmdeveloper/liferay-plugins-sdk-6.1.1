@@ -938,10 +938,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/* Implementation of contract schedule end*/
 	
 	/* Implementation of contract deduction start*/
-	
 	public String getParameterCode(PmParameter parameterObj){
-		if(parameterObj == null || parameterObj.getParameterId() == null)
-			  return new String();
+		if(parameterObj == null || parameterObj.getParameterId() == null) {
+			  return "Str";
+		}
 		return ParameterHelper.getInstance().getPmParameterById(parameterObj.getParameterId()).getParameterCode();
 	}
 	
