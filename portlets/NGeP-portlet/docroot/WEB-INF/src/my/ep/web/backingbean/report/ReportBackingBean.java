@@ -13709,6 +13709,9 @@ public class ReportBackingBean extends
 
 		}
 
+		/* (non-Javadoc)
+		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		 */
 		public ISearchResultBean<CmUnspsc> pageChangeListener(
 				ISearchBean<CmUnspsc> searchBean) {
 
