@@ -1,0 +1,37 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+
+	<ui:define name="contentSection">
+		<h:panelGroup>
+			<div>
+				<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+					immediate="true"
+					action="#{evaluationBackingBean.evaluationBackaction}" />
+
+			</div>
+			<p:spacer height="25" />
+			<br />
+			<br />
+			<ui:include src="/xhtml/sc/evaluation/evaluationHeader.xhtml" />
+			<br />
+			<p:panel header="#{lbl['lbl.sc.eva.technical.proposal.evaluation']}">
+				<ui:include src="/xhtml/sc/evaluation/checklistHeader.xhtml" />
+			</p:panel>
+			<br />
+			<h:panelGroup>
+				<ui:include src="technicalFinancialUploadNoScoreSupplierList.xhtml" />
+			</h:panelGroup>
+
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

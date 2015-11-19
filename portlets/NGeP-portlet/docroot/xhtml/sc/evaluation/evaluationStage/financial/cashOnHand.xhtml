@@ -1,0 +1,26 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+
+
+
+	<h:panelGroup id="cashOnHandAmount">
+		<ui:param name="scoringPnlId" value="cashOnhandAmountId" />
+		<ui:param name="scoringList"
+			value="#{evaluationBackingBean.managedBean.technicalGovNoOfContracts}"></ui:param>
+		<ui:param name="scoringPnlName"
+			value="#{lbl['lbl.sc.spec.score.total.cash']}"></ui:param>
+		<ui:include src="/xhtml/sc/evaluation/evaluationStage/evaluationScoring.xhtml"></ui:include>
+	</h:panelGroup>
+
+
+
+
+
+</ui:composition>
