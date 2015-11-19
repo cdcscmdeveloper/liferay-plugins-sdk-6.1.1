@@ -25,11 +25,9 @@ import my.ep.web.constant.report.CommonMethod;
 @ViewScoped
 public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBean>{
 	
-	/*
-	 *Enable CT module criteria by report name 
-	 */
+	
 	/**
-	 * Enable criteria variables by report by ct.
+	 * enableCriteriaVariablesByReportByCT - Enable criteria variables by report by CONTRACT MANAGEMENT.
 	 *
 	 * @param rptGenBean the rpt gen bean
 	 * @param authoriztionList the authoriztion list
