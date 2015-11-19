@@ -23,7 +23,6 @@
 			<portlet id="ctAgreement" />
 			<portlet id="ctRequestFactoring" />
 			<portlet id="ctSuppAgreement" />
-			<portlet id="ctTemplate"/>
 			<portlet id="ctContractSuspend" />
 			<portlet id="ctContractTerminate" />
 			<portlet id="ctContractAmendment" />

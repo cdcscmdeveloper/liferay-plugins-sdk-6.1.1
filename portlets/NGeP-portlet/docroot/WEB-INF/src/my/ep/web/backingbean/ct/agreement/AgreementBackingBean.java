@@ -1313,33 +1313,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		
 				attachmentFormat = null;
 			}
-	}
-	
-	/**
-	 * The method used to download the template doc.
-	 * 
-	 * @param  agreementContent  an object of agreement content
-	 * @throws IOException       if an input or output exception occurred
-	 * @see    IOException
-	 */
-	public void downloadTemplateDoc(CtAgreementContent agreementContent) throws IOException {
-		// TODO download the templateDoc file
-		/*
-		 * IContractTemplateSO contractTemplateSO = null; ContractTemplateReqDTO
-		 * reqDTO = null; ContractTemplateResDTO ResDTO = null; try {
-		 * //this.getManagedBean().setFilePath(agreementDetails.getFilePath());
-		 * contractTemplateSO =
-		 * (IContractTemplateSO)BusinessDelegate.getInstance
-		 * ().getServiceObject("ct", IContractTemplateSO.class); reqDTO = new
-		 * ContractTemplateReqDTO(); reqDTO.setTemplateId(agreementContent);
-		 * ResDTO = contractTemplateSO.retrieveTemplateById(reqDTO);
-		 * this.getManagedBean().setCtTemplates(ResDTO.getCtTemplate());
-		 * }catch(Exception ex) { log.error("Exception>>", ex); }finally{
-		 * contractTemplateSO = null; }
-		 * agreementDetails.getFileType().;ParameterConst.agreementTemplateDoc;
-		 */
-		// agreementContent.getTitle();
-	}
+	}	
 
 	/**
 	 * The method used to download all agreement contents
