@@ -75,7 +75,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	}
 	
 	/**
-	 * enableCriteriaVariablesByReportBySC - Enable criteria variables by report by SOURCING(SUPPLIER SELECTION and DIRECT PURCHASE).
+	 * enableCriteriaVariablesByReportBySC - Enable criteria variables by report of SOURCING(SUPPLIER SELECTION and DIRECT PURCHASE).
 	 *
 	 * @param rptGenBean the rpt gen bean
 	 * @param authoriztionList the authoriztion list
