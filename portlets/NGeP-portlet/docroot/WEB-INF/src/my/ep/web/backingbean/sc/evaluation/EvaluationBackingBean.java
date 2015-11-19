@@ -199,8 +199,6 @@ public class EvaluationBackingBean extends
 	/** The pm digi sign. */
 	private PmDigiSign pmDigiSign;
 
-	/** The Constant DOCUMENT_PAGE. */
-	private static final String DOCUMENT_PAGE = "/xhtml/sc/evaluation/evaluationstage1view.xhtml?faces-redirect=true";
 
 	/**
 	 * Instantiates a new evaluation backing bean.
@@ -897,10 +895,10 @@ public class EvaluationBackingBean extends
 
 		if (SourcingConstants.TECHINICAL_STAGE.equals(checkListType)) {
 
-			return "technicalComplianceStage.xhtml";
+			return "/xhtml/sc/evaluation/compliance/technicalComplianceEditSuppliers.xhtml";
 		} else {
 
-			return "financialComplianceStage.xhtml";
+			return "/xhtml/sc/evaluation/compliance/financialComplianceEditSuppliers.xhtml";
 		}
 
 	}
@@ -928,7 +926,7 @@ public class EvaluationBackingBean extends
 		} finally {
 
 		}
-		return "sampleComplianceStage.xhtml";
+		return "/xhtml/sc/evaluation/compliance/sampleComplianceEditItems.xhtml";
 	}
 
 	/**
@@ -1210,7 +1208,7 @@ public class EvaluationBackingBean extends
 		this.getManagedBean().setComplianceCheckListIndex(-1);
 		this.getManagedBean().setCheckListType("");
 
-		return "evaluationstage1view.xhtml";
+		return "/xhtml/sc/evaluation/evaluationMain.xhtml";
 
 	}
 
@@ -1273,7 +1271,7 @@ public class EvaluationBackingBean extends
 	 */
 	public String technicalBackaction() {
 		this.getManagedBean().setTechindex(-1);
-		return "standardEvaluationTechList.xhtml";
+		return "/xhtml/sc/evaluation/evaluationStage/technical/technicalOtherCheckListSuppliesMain.xhtml";
 
 	}
 
@@ -1285,7 +1283,7 @@ public class EvaluationBackingBean extends
 	 */
 	public String financialBackaction() {
 		this.getManagedBean().setTechindex(-1);
-		return "standardEvaluationFinList.xhtml";
+		return "/xhtml/sc/evaluation/evaluationStage/financial/financialOtherListSuppliersMain.xhtml";
 
 	}
 
@@ -1297,7 +1295,7 @@ public class EvaluationBackingBean extends
 	 */
 	public String technicalSpecBackaction() {
 		this.getManagedBean().setTechindex(-1);
-		return "technicalSpecEvaluation.xhtml";
+		return "/xhtml/sc/evaluation/evaluationStage/technical/technicalSpecEvaluation.xhtml";
 
 	}
 
@@ -1310,9 +1308,9 @@ public class EvaluationBackingBean extends
 	public String financialSpecBackaction() {
 		this.getManagedBean().setTechindex(-1);
 		if (this.getManagedBean().getScQt().isZonal()) {
-			return "evaluationFinancialSpec.xhtml";
+			return "/xhtml/sc/evaluation/evaluationStage/financial/financialSpecWithZone.xhtml";
 		} else {
-			return "evaluationFinSpecWithOutzone.xhtml";
+			return "/xhtml/sc/evaluation/evaluationStage/financial/financialSpecWithOutzone.xhtml";
 		}
 
 	}
@@ -1702,7 +1700,7 @@ public class EvaluationBackingBean extends
 			resDTO = null;
 
 		}
-		// return "evaluationstage1view.xhtml";
+		// return "/xhtml/sc/evaluation/evaluationMain.xhtml";
 
 	}
 
@@ -2462,7 +2460,7 @@ public class EvaluationBackingBean extends
 												.getManagedBean().getScQt()
 												.getQtId(), reqDTO
 												.getEvalStage()));
-				return "technicalEvaluationStgView.xhtml";
+				return "/xhtml/sc/evaluation/evaluationStage/technicalFinancialUploadNoActionNoScoringSuppliersMain.xhtml";
 			}
 			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 					.equalsIgnoreCase(this.getManagedBean().getScQtChecklist()
@@ -2476,7 +2474,7 @@ public class EvaluationBackingBean extends
 												.getManagedBean().getScQt()
 												.getQtId(), reqDTO
 												.getEvalStage()));
-				return "technicalSpecEvaluation.xhtml";
+				return "/xhtml/sc/evaluation/evaluationStage/technical/technicalSpecEvaluation.xhtml";
 				// return "productServiceTechScoreSpec.xhtml";
 			} else {
 				this.getManagedBean()
@@ -2488,11 +2486,8 @@ public class EvaluationBackingBean extends
 												.getManagedBean().getScQt()
 												.getQtId(), reqDTO
 												.getEvalStage()));
-				return "standardEvaluationTechList.xhtml";
-				// return "techGovCompanyExperience.xhtml";
-				// return "techPrivateCompanyExperience.xhtml";
-				// return "senariTechnical.xhtml";
-				// return "bilanganPerjaka.xhtml";
+				return "/xhtml/sc/evaluation/evaluationStage/technical/technicalOtherCheckListSuppliesMain.xhtml";
+				
 			}
 		} finally {
 
@@ -2559,7 +2554,7 @@ public class EvaluationBackingBean extends
 												.getManagedBean().getScQt()
 												.getQtId(), reqDTO
 												.getEvalStage()));
-				return "technicalEvaluationEvaluateDocument.xhtml";
+				return "/xhtml/sc/evaluation/evaluationStage/technical/technicalUploadNoActionSuppliersMain.xhtml";
 			} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 					.equalsIgnoreCase(this.getManagedBean().getScQtChecklist()
 							.getDefinationType().getParameterCode())) {
@@ -2575,7 +2570,7 @@ public class EvaluationBackingBean extends
 												.getManagedBean().getScQt()
 												.getQtId(), reqDTO
 												.getEvalStage()));
-				return "technicalSpecEvaluation.xhtml";
+				return "/xhtml/sc/evaluation/evaluationStage/technical/technicalSpecEvaluation.xhtml";
 				// return "productServiceTechScoreSpec.xhtml";
 
 			} else {
@@ -2589,7 +2584,7 @@ public class EvaluationBackingBean extends
 												.getQtId(), reqDTO
 												.getEvalStage()));
 
-				return "standardEvaluationTechList.xhtml";
+				return "/xhtml/sc/evaluation/evaluationStage/technical/technicalOtherCheckListSuppliesMain.xhtml";
 
 			}
 		} finally {
@@ -2741,7 +2736,7 @@ public class EvaluationBackingBean extends
 												.getManagedBean().getScQt()
 												.getQtId(), reqDTO
 												.getEvalStage()));
-				return "technicalEvaluationStgView.xhtml";
+				return "/xhtml/sc/evaluation/evaluationStage/technicalFinancialUploadNoActionNoScoringSuppliersMain.xhtml";
 			} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 					.equalsIgnoreCase(this.getManagedBean().getScQtChecklist()
 							.getDefinationType().getParameterCode())) {
@@ -2785,7 +2780,7 @@ public class EvaluationBackingBean extends
 				if (null != speczone.getZones()
 						&& !speczone.getZones().isEmpty()) {
 					retriveFinancialSpecZones(speczone);
-					return "evaluationFinancialSpec.xhtml";
+					return "/xhtml/sc/evaluation/evaluationStage/financial/financialSpecWithZone.xhtml";
 				} else {
 					// rertriveFinSpecDtlsByChecklistId() withoutzone
 					// retriveProposalChecklistByzone() withzonespec
@@ -2807,7 +2802,7 @@ public class EvaluationBackingBean extends
 													.getQtId(), specDtls
 													.getEvalStage()));
 
-					return "evaluationFinSpecWithOutzone.xhtml";
+					return "/xhtml/sc/evaluation/evaluationStage/financial/financialSpecWithOutzone.xhtml";
 				}
 
 			} else {
@@ -2820,7 +2815,7 @@ public class EvaluationBackingBean extends
 												.getManagedBean().getScQt()
 												.getQtId(), reqDTO
 												.getEvalStage()));
-				return "standardEvaluationFinList.xhtml";
+				return "/xhtml/sc/evaluation/evaluationStage/financial/financialOtherListSuppliersMain.xhtml";
 
 			}
 		} finally {
@@ -3118,7 +3113,7 @@ public class EvaluationBackingBean extends
 												.getManagedBean().getScQt()
 												.getQtId(), reqDTO
 												.getEvalStage()));
-				return "financialEvaluationEvaluationDocument.xhtml";
+				return "/xhtml/sc/evaluation/evaluationStage/financial/financialUploadNoActionSupplierMain.xhtml";
 			}
 			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 					.equalsIgnoreCase(this.getManagedBean().getScQtChecklist()
@@ -3162,7 +3157,7 @@ public class EvaluationBackingBean extends
 						&& !speczone.getZones().isEmpty()) {
 
 					retriveFinancialSpecZones(speczone);
-					return "evaluationFinancialSpec.xhtml";
+					return "/xhtml/sc/evaluation/evaluationStage/financial/financialSpecWithZone.xhtml";
 				} else {
 					// rertriveFinSpecDtlsByChecklistId() withoutzone
 					// retriveProposalChecklistByzone() withzonespec
@@ -3189,7 +3184,7 @@ public class EvaluationBackingBean extends
 													.getQtId(), specDtls
 													.getEvalStage()));
 
-					return "evaluationFinSpecWithOutzone.xhtml";
+					return "/xhtml/sc/evaluation/evaluationStage/financial/financialSpecWithOutzone.xhtml";
 				}
 
 			} else {
@@ -3202,7 +3197,7 @@ public class EvaluationBackingBean extends
 												.getManagedBean().getScQt()
 												.getQtId(), reqDTO
 												.getEvalStage()));
-				return "standardEvaluationFinList.xhtml";
+				return "/xhtml/sc/evaluation/evaluationStage/financial/financialOtherListSuppliersMain.xhtml";
 
 			}
 		} finally {
@@ -3363,6 +3358,7 @@ public class EvaluationBackingBean extends
 		String proposalPage = null;
 		String evaluationPage = null;
 		SPDetailBackingBean detailBackingBean = new SPDetailBackingBean();
+		detailBackingBean.getManagedBean().setQt(this.getManagedBean().getScQt());
 		try {
 			// this.getManagedBean().setTechindex(index);
 			this.getManagedBean().setUserScores(null);
@@ -3416,7 +3412,7 @@ public class EvaluationBackingBean extends
 						.getScQtCheckList().getScQtDoc().getTplSpecMaster());
 				specBB.retrieveTemplateSpecMaster(templateSpecBean);
 
-				return "productServiceTechScoreSpec.xhtml";
+				return "/xhtml/sc/evaluation/evaluationStage/technical/technicalTemplateSpecScoring.xhtml";
 			}
 
 			else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
@@ -3472,7 +3468,7 @@ public class EvaluationBackingBean extends
 						.getQtProposalChecklist()
 						.setProposalScore(
 								this.getManagedBean().getTechGovProposalScore());
-				return "techSampleEvaluation.xhtml";
+				return "/xhtml/sc/evaluation/evaluationStage/technical/techSampleEvaluation.xhtml";
 			} else {
 				String docDefinationKey = proposalCheckList.getScQtCheckList()
 						.getPmDocument().getDocDefinitionKey();
@@ -3625,7 +3621,7 @@ public class EvaluationBackingBean extends
 									.getSupplierId());
 					proposalPage = detailBackingBean
 							.retrieveTecCompanyExpDtls(proposalCheckList);
-					evaluationPage = "techGovCompanyExperience.xhtml";
+					evaluationPage = "/xhtml/sc/evaluation/evaluationStage/technical/techGovCompanyExperience.xhtml";
 					// return "techGovCompanyExperience.xhtml";
 				} else if (QTConstants.TECHNICAL_PRIVATE_CODE
 						.equalsIgnoreCase(docDefinationKey)) {
@@ -3773,7 +3769,7 @@ public class EvaluationBackingBean extends
 					proposalPage = detailBackingBean
 							.retrieveTecNonGovCompanyExpDtls(proposalCheckList);
 					
-					evaluationPage = "techPrivateCompanyExperience.xhtml";
+					evaluationPage = "/xhtml/sc/evaluation/evaluationStage/technical/techPrivateCompanyExperience.xhtml";
 				}
 
 				else if (QTConstants.TECHNICAL_STAFF_LIST
@@ -3875,7 +3871,7 @@ public class EvaluationBackingBean extends
 					 */
 					proposalPage = detailBackingBean
 							.retriveTechnicalStaffDtls(proposalCheckList);
-					evaluationPage = "senariTechnical.xhtml";
+					evaluationPage = "/xhtml/sc/evaluation/evaluationStage/technical/technicalStaffList.xhtml";
 
 					// return "senariTechnical.xhtml";
 				}
@@ -3966,8 +3962,8 @@ public class EvaluationBackingBean extends
 					this.getManagedBean().setStatusHide(true);
 					proposalPage = detailBackingBean
 							.retrieveEmployeeDtls(proposalCheckList);
-					evaluationPage = "bilanganPerjaka.xhtml";
-					// return "bilanganPerjaka.xhtml";
+					evaluationPage = "/xhtml/sc/evaluation/evaluationStage/technical/technicalNoOfEmployees.xhtml";
+					
 				}
 
 			}
@@ -4138,7 +4134,7 @@ public class EvaluationBackingBean extends
 					}
 				}
 
-				return "productStandardTarifTierFinSpec.xhtml";
+				return "/xhtml/sc/evaluation/evaluationStage/financial/financialSpecTemplateSpecScoring.xhtml";
 			}
 
 			else {
@@ -4243,7 +4239,7 @@ public class EvaluationBackingBean extends
 									.getSupplierId());
 					proposalPage = detailBackingBean
 							.retrieveFinCompanyExpDtls(proposalCheckList);
-					evaluationPage = "finGovCompanyExperience.xhtml";
+					evaluationPage = "/xhtml/sc/evaluation/evaluationStage/financial/finGovCompanyExperience.xhtml";
 
 				} else if (QTConstants.FINANCIAL_PRIVATE_CODE
 						.equalsIgnoreCase(docDefinationKey)) {
@@ -4326,7 +4322,7 @@ public class EvaluationBackingBean extends
 					this.getManagedBean().setStatusHide(true);
 					proposalPage = detailBackingBean
 							.retrieveFinNonGovCompanyExpDtls(proposalCheckList);
-					evaluationPage = "finPrivateCompanyExperience.xhtml";
+					evaluationPage = "/xhtml/sc/evaluation/evaluationStage/financial/finPrivateCompanyExperience.xhtml";
 				}
 
 				else if (QTConstants.FINANCIAL_BANK_STMT_CODE
@@ -4408,7 +4404,7 @@ public class EvaluationBackingBean extends
 					
 					proposalPage = detailBackingBean
 							.retrieveBankStmtDtls(proposalCheckList);
-					evaluationPage = "bankStatement.xhtml";
+					evaluationPage = "/xhtml/sc/evaluation/evaluationStage/financial/bankStatement.xhtml";
 				} else if (QTConstants.FINANCIAL_CREDIT_FACILITY_CODE
 						.equalsIgnoreCase(docDefinationKey)) {
 					reqDTO.setProposalChecklist(proposalCheckList);
@@ -4491,7 +4487,7 @@ public class EvaluationBackingBean extends
 					this.getManagedBean().setStatusHide(true);
 					proposalPage = detailBackingBean
 							.retrieveCreditFacilitiesDtls(proposalCheckList);
-					evaluationPage = "creditFacility.xhtml";
+					evaluationPage = "/xhtml/sc/evaluation/evaluationStage/financial/creditFacility.xhtml";
 				} else if (QTConstants.FINANCIAL_CASH_ON_HAND_CODE
 						.equalsIgnoreCase(docDefinationKey)) {
 
@@ -4577,7 +4573,7 @@ public class EvaluationBackingBean extends
 					proposalPage = detailBackingBean
 							.retrieveCashOnHandDtls(proposalCheckList);
 					
-					evaluationPage = "cashOnHand.xhtml";
+					evaluationPage = "/xhtml/sc/evaluation/evaluationStage/financial/cashOnHand.xhtml";
 
 				}
 
@@ -4663,7 +4659,7 @@ public class EvaluationBackingBean extends
 					proposalPage = detailBackingBean
 							.retrieveAssetLiabilityDtls(proposalCheckList);
 					
-					evaluationPage = "assetsLiabilities.xhtml";
+					evaluationPage = "/xhtml/sc/evaluation/evaluationStage/financial/assetsLiabilities.xhtml";
 				} else if (QTConstants.FINANCIAL_PAID_UP_CAPITAL_CODE
 						.equalsIgnoreCase(docDefinationKey)) {
 
@@ -4752,7 +4748,7 @@ public class EvaluationBackingBean extends
 					proposalPage = detailBackingBean
 							.retrievePaidUpCapitalNdDeclarationDtls();
 
-					evaluationPage = "paidUpCapital.xhtml";
+					evaluationPage = "/xhtml/sc/evaluation/evaluationStage/financial/paidUpCapital.xhtml";
 				}
 
 				else if (QTConstants.FINANCIAL_SUPPLIER_DETAILS_CODE
@@ -4845,7 +4841,7 @@ public class EvaluationBackingBean extends
 					 */
 					proposalPage = detailBackingBean.retrieveSupplierDtls();
 
-					evaluationPage = "/xhtml/sc/evaluation/supplierInfo.xhtml";
+					evaluationPage = "/xhtml/sc/evaluation/evaluationStage/financial/supplierInfo.xhtml";
 					// return "supplierInfo.xhtml";
 				}
 			}
@@ -4855,7 +4851,7 @@ public class EvaluationBackingBean extends
 		this.getManagedBean().setProposalPage(proposalPage);
 		this.getManagedBean().setEvaluationPage(evaluationPage);
 
-		return "financialotherchecklists.xhtml";
+		return "/xhtml/sc/evaluation/evaluationStage/financial/financialotherchecklists.xhtml";
 	}
 
 	/**
@@ -7850,7 +7846,7 @@ public class EvaluationBackingBean extends
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
-							"/xhtml/sc/evaluation/evaluationstage1view.xhtml");
+							"/xhtml/sc/evaluation/evaluationMain.xhtml");
 		} else if (SCProcessNameConst.FINALISE_OC_EVALUATION
 				.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.UPDATE_OC_EVALUATION
@@ -7858,7 +7854,7 @@ public class EvaluationBackingBean extends
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
-							"/xhtml/sc/evaluation/evaluationstage1view.xhtml");
+							"/xhtml/sc/evaluation/evaluationMain.xhtml");
 		} else if (SCProcessNameConst.FINALISE_TEC_EVALUATION
 				.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.UPDATE_TEC_EVALUATION
@@ -7866,7 +7862,7 @@ public class EvaluationBackingBean extends
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
-							"/xhtml/sc/evaluation/evaluationstage1view.xhtml");
+							"/xhtml/sc/evaluation/evaluationMain.xhtml");
 		}
 
 		else if (SCProcessNameConst.FINALISE_FEC_EVALUATION
@@ -7876,7 +7872,7 @@ public class EvaluationBackingBean extends
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
-							"/xhtml/sc/evaluation/evaluationstage1view.xhtml");
+							"/xhtml/sc/evaluation/evaluationMain.xhtml");
 		} else if (SCProcessNameConst.ENDORSE_OC_EVALUATION
 				.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.SIGNOFF_OC_EVALUATION
@@ -7884,7 +7880,7 @@ public class EvaluationBackingBean extends
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
-							"/xhtml/sc/evaluation/evaluationstage1view.xhtml");
+							"/xhtml/sc/evaluation/evaluationMain.xhtml");
 		}
 
 		else if (SCProcessNameConst.ENDORSE_TEC_EVALUATION
@@ -7894,7 +7890,7 @@ public class EvaluationBackingBean extends
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
-							"/xhtml/sc/evaluation/evaluationstage1view.xhtml");
+							"/xhtml/sc/evaluation/evaluationMain.xhtml");
 		} else if (SCProcessNameConst.ENDORSE_FEC_EVALUATION
 				.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.SIGNOFF_FEC_EVALUATION
@@ -7902,7 +7898,7 @@ public class EvaluationBackingBean extends
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
-							"/xhtml/sc/evaluation/evaluationstage1view.xhtml");
+							"/xhtml/sc/evaluation/evaluationMain.xhtml");
 		}
 
 		else if (SCProcessNameConst.ENDORSE_EC_EVALUATION
@@ -7912,7 +7908,7 @@ public class EvaluationBackingBean extends
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
-							"/xhtml/sc/evaluation/evaluationstage1view.xhtml");
+							"/xhtml/sc/evaluation/evaluationMain.xhtml");
 		}
 	}
 
@@ -9224,7 +9220,7 @@ public class EvaluationBackingBean extends
 		String templateDocUrl = null;
 		try {
 			TemplateDocBackingBean tplDocBB = new TemplateDocBackingBean();
-			tplDocBB.getManagedBean().setExternalPageUrl(DOCUMENT_PAGE);
+			tplDocBB.getManagedBean().setExternalPageUrl("/xhtml/sc/evaluation/evaluationMain.xhtml");
 
 			this.getManagedBean().setScQtEvaluationReport(scQtEvaluationReport);
 
@@ -10013,12 +10009,7 @@ public class EvaluationBackingBean extends
 		this.outputTab = outputTab;
 	}
 
-	/**
-	 * @return the documentPage
-	 */
-	public static String getDocumentPage() {
-		return DOCUMENT_PAGE;
-	}
+	
 
 	/**
 	 * Gets the text before sign.
