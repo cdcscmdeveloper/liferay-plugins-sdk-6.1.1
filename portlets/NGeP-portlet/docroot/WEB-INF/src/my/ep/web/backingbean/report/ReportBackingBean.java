@@ -10904,7 +10904,7 @@ public class ReportBackingBean extends
 
 	
 	/**  
-	 * generateCTReport - Generate ct module report.
+	 * generateCTReport - Generate CONTRACT MANAGEMENT module reports.
 	 */
 	public void generateCTReport() {
 		if (((this.getCtContrMontrStatus() != null) && (this
@@ -11167,7 +11167,7 @@ public class ReportBackingBean extends
 
 	
 	/**
-	 * generateSMReport - Generate sm module report.
+	 * generateSMReport - Generate SUPPLIER MANAGEMENT module reports.
 	 */
 	public void generateSMReport() {
 		if ((getManagedBean().getReportValue() != null)
@@ -11774,7 +11774,7 @@ public class ReportBackingBean extends
 
 	
 	/**
-	 * generateSCReport - Generate sc module report.
+	 * generateSCReport - Generate SOURCING(SUPPLIER SELECTION and DIRECT PURCHASE) module reports.
 	 */
 	public void generateSCReport() {
 		if ((getManagedBean().getReportValue() != null)
@@ -12189,7 +12189,7 @@ public class ReportBackingBean extends
 
 	
 	/**
-	 * generateCMReport - Generate cm module report.
+	 * generateCMReport - Generate CATALOGUE MANAGEMENT module reports.
 	 */
 	public void generateCMReport() {
 		if (((this.getCmExtention() != null) && (this.getCmExtention() != ReportConst.EMPTY_VAL))
@@ -12450,7 +12450,7 @@ public class ReportBackingBean extends
 
 	
 	/**
-	 * generateFLReport - Generate fl module report.
+	 * generateFLReport - Generate ORDER FULFILLMENT module reports.
 	 */
 	public void generateFLReport() {
 		if (((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
@@ -12874,7 +12874,7 @@ public class ReportBackingBean extends
 
 	
 	/**
-	 * generatePPReport - Generate pp module report.
+	 * generatePPReport - Generate PROCUREMENT PLAN module reports.
 	 */
 	public void generatePPReport() {
 		if (((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
@@ -12919,7 +12919,7 @@ public class ReportBackingBean extends
 
 	
 	/**
-	 * generatePMReport - Generate pm module report.
+	 * generatePMReport - Generate PROFILE MANAGEMENT module reports.
 	 */
 	public void generatePMReport() {
 		if (((this.getPmServiceType() != null) && (this.getPmServiceType() != ReportConst.EMPTY_VAL))
