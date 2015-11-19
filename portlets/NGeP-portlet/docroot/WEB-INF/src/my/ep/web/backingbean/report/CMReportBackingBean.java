@@ -29,7 +29,7 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	 *Enable CM module criteria by report name 
 	 */
 	/**
-	 * Criteria variables by report by cm.
+	 * criteriaVariablesByReportByCM - Enable criteria variables by report by CATALOGUE MANAGEMENT.
 	 *
 	 * @param rptGenBean the rpt gen bean
 	 * @param authoriztionList the authoriztion list

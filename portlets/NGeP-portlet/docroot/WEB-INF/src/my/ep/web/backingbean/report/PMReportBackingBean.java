@@ -24,11 +24,9 @@ import my.ep.web.managedbean.report.ReportMangedBean;
 @ViewScoped
 public class PMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>{
 	
-	/*
-	 *Enable PM module criteria by report name 
-	 */
+	
 	/**
-	 * Enable criteria variables by report by pm.
+	 * enableCriteriaVariablesByReportByPM - Enable criteria variables by report by PROFILE_MANAGEMENT.
 	 *
 	 * @param rptGenBean the rpt gen bean
 	 * @param authoriztionList the authoriztion list

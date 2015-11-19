@@ -73,11 +73,9 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	public void setMonthList(List<SelectItem> monthList) {
 		this.monthList = monthList;
 	}
-	/*
-	 *Enable SC module criteria by report name 
-	 */
+	
 	/**
-	 * Enable criteria variables by report by sc.
+	 * enableCriteriaVariablesByReportBySC - Enable criteria variables by report by SOURCING(SUPPLIER SELECTION and DIRECT PURCHASE).
 	 *
 	 * @param rptGenBean the rpt gen bean
 	 * @param authoriztionList the authoriztion list
