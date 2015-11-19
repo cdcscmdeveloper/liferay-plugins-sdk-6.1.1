@@ -111,6 +111,8 @@ public class ContractManagedBean extends BaseManagedBean {
 	 
 	 private boolean disableAmendDetails;
 	 private CtCircularVer ctCircularVer;
+	 
+	  private boolean updateContract = false;
 	
 	/**
 	 * @return the fileDirectory
@@ -829,6 +831,14 @@ public class ContractManagedBean extends BaseManagedBean {
 	 */
 	public void setCtCircularVer(CtCircularVer ctCircularVer) {
 		this.ctCircularVer = ctCircularVer;
+	}
+
+	public boolean isUpdateContract() {
+		return updateContract;
+	}
+
+	public void setUpdateContract(boolean updateContract) {
+		this.updateContract = updateContract;
 	}
 
 }

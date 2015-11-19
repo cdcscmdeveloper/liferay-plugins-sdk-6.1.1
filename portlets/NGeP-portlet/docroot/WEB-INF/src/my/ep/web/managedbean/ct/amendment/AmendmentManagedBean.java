@@ -15,7 +15,6 @@ import javax.faces.bean.SessionScoped;
 
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.MenuModel;
-import org.primefaces.model.TreeNode;
 
 import my.ep.constant.ct.ContractConst;
 import my.ep.constants.CTProcessNameConst;
@@ -115,7 +114,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private CtContractItem selectedItem;
 	private CtItemPrice ctServiceItemPrices;
 	private CtCommitteeMember newCommitteMembers;
-	private TreeNode ctZoneTrees;
+	//private TreeNode ctZoneTrees;
 	private MenuModel amendMenuModel;
 	private ScLoaWitness scLoaWitness;
 	private ScLoaReport selectedScLoaReports;
@@ -698,20 +697,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * @return the disableAmendDetails
-	 *//*
-	public boolean isDisableAmendDetails() {
-		return disableAmendDetails;
-	}
-	
-	*//**
-	 * @param disableAmendDetails the disableAmendDetails to set
-	 *//*
-	public void setDisableAmendDetails(boolean disableAmendDetails) {
-		this.disableAmendDetails = disableAmendDetails;
-	}	*/
-	
-	/**
 	 * @return the disableEndorseAmendDetails
 	 */
 	public boolean isDisableEndorseAmendDetails() {
@@ -1049,20 +1034,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	 */
 	public void setNewCommitteMembers(CtCommitteeMember newCommitteMembers) {
 		this.newCommitteMembers = newCommitteMembers;
-	}
-	
-	/**
-	 * @return the ctZoneTrees
-	 */
-	public TreeNode getCtZoneTrees() {
-		return ctZoneTrees;
-	}
-	
-	/**
-	 * @param ctZoneTrees the ctZoneTrees to set
-	 */
-	public void setCtZoneTrees(TreeNode ctZoneTrees) {
-		this.ctZoneTrees = ctZoneTrees;
 	}
 	
 	/**
