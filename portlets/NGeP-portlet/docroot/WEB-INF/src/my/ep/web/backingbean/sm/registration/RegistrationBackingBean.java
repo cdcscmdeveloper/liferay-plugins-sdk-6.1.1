@@ -260,8 +260,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 
 		SmSupplierOwner suppOwner = this.getManagedBean().getSmSuppOwner();
-		log.info("-----------Owner ID Type---------" + suppOwner.getIdentificationType().getParameterCode());
-		log.info("-----------Owner ID---------" + suppOwner.getIdentificationNo());
+		//log.info("-----------Owner ID Type---------" + suppOwner.getIdentificationType().getParameterCode());
+		//log.info("-----------Owner ID---------" + suppOwner.getIdentificationNo());
 		
 		this.validateIDFormat(suppOwner.getIdentificationNo(),suppOwner.getIdentificationType().getParameterCode());
 		
