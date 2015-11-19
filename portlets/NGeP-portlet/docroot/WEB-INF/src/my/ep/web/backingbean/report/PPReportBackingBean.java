@@ -26,7 +26,7 @@ public class PPReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	
 	
 	/**
-	 * enableCriteriaVariablesByReportByPP - Enable criteria variables by report by PROCUREMENT PLAN.
+	 * enableCriteriaVariablesByReportByPP - Enable criteria variables by report of PROCUREMENT PLAN.
 	 *
 	 * @param rptGenBean the rpt gen bean
 	 * @param authoriztionList the authoriztion list

@@ -28,7 +28,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 
 	
 	/**
-	 * enableCriteriaVariablesByReportByFL - Enable criteria variables by report by ORDER FULFILLMENT.
+	 * enableCriteriaVariablesByReportByFL - Enable criteria variables by report of ORDER FULFILLMENT.
 	 *
 	 * @param rptGenBean the rpt gen bean
 	 * @param authoriztionList the authoriztion list

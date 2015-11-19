@@ -26,7 +26,7 @@ public class PMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	
 	
 	/**
-	 * enableCriteriaVariablesByReportByPM - Enable criteria variables by report by PROFILE_MANAGEMENT.
+	 * enableCriteriaVariablesByReportByPM - Enable criteria variables by report of PROFILE_MANAGEMENT.
 	 *
 	 * @param rptGenBean the rpt gen bean
 	 * @param authoriztionList the authoriztion list

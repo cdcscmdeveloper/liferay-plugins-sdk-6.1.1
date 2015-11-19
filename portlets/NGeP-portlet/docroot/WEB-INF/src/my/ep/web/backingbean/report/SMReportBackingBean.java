@@ -79,7 +79,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	}
 	
 	/**
-	 * enableCriteriaVariablesByReportBySM - Enable criteria variables by report by SUPPLIER MANAGEMENT.
+	 * enableCriteriaVariablesByReportBySM - Enable criteria variables of report by SUPPLIER MANAGEMENT.
 	 *
 	 * @param rptGenBean the rpt gen bean
 	 * @param authoriztionList the authoriztion list
