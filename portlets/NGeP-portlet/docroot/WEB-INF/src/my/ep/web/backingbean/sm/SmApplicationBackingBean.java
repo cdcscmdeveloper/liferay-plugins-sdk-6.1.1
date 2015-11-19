@@ -6252,10 +6252,11 @@ public class SmApplicationBackingBean extends
 								.equalsIgnoreCase(
 										SupplierManagementConst.SM_REASON_CODE_OTHER)) {
 							sb.append(desc.getReasonDesc());
-							sb.append("\n");
+							sb.append(",");
 						} else {
-							sb.append(getManagedBean().getSupplierRemarks())
-									.append("\n");
+							sb.append(desc.getReasonDesc()).append(" (");
+							sb.append(getManagedBean().getSupplierRemarks());
+							sb.append("),");
 						}
 					}
 				}
@@ -6267,10 +6268,13 @@ public class SmApplicationBackingBean extends
 			SmRemark remark = new SmRemark();
 			remark.setDocId(getManagedBean().getSmAppl().getApplId());
 			remark.setDocType(ParameterConst.NEW_SM_APPLN_FOR_DELETE_PENDING_APPL);
-			if (sb.toString().length() > 2500) {
-				remark.setRemark(sb.toString().substring(0, 2500));
-			} else {
-				remark.setRemark(sb.toString());
+			remark.setRemark(sb.toString());
+			if (remark.getRemark().endsWith(",")) {
+				remark.setRemark(remark.getRemark().substring(0,
+						remark.getRemark().length() - 1));
+			}
+			if (remark.getRemark().length() > 2500) {
+				remark.setRemark(remark.getRemark().substring(0, 2500));
 			}
 
 			saveSmRemarks(remark);
