@@ -27,7 +27,7 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	
 	
 	/**
-	 * enableCriteriaVariablesByReportByCT - Enable criteria variables by report by CONTRACT MANAGEMENT.
+	 * enableCriteriaVariablesByReportByCT - Enable criteria variables by report of CONTRACT MANAGEMENT.
 	 *
 	 * @param rptGenBean the rpt gen bean
 	 * @param authoriztionList the authoriztion list
