@@ -155,7 +155,7 @@
 				<p:outputLabel id="bidStatusDTBS" style="float : left"
 					value="#{biddingBB.getStatusDescById(bid.pmStatus.statusId)}" />
 			</p:column>
-			<p:column style="width :10%">
+			<p:column style="width :10%; align: center" >
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.action']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.action.bidding.maintenance.tooltip']}" />
@@ -217,7 +217,7 @@
 			widgetVar="bidPauseOrCancel" showEffect="fade" hideEffect="fade"
 			draggable="false" resizable="false" modal="false"
 			id="bidPauseOrCancel">
-			<ui:include src="/xhtml/sc/bidding/bsPauseOrCancelBidPopup.xhtml"></ui:include>
+			<ui:include src="/xhtml/sc/bidding/bidManagement/bsPauseOrCancelBidPopup.xhtml"></ui:include>
 		</p:dialog>
 
 	</h:panelGrid>
@@ -227,7 +227,7 @@
 			widgetVar="bidRescheduleOrResume" showEffect="fade" hideEffect="fade"
 			modal="false" id="rescheduleOrResumeBid">
 			<ui:include
-				src="/xhtml/sc/bidding/bsReScheduleOrResumeBidPopup.xhtml"></ui:include>
+				src="/xhtml/sc/bidding/bidManagement/bsReScheduleOrResumeBidPopup.xhtml"></ui:include>
 		</p:dialog>
 	</h:panelGrid>
 </ui:composition>
