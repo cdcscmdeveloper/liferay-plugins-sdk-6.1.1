@@ -390,6 +390,19 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	/** The contract no filter bean. */
 	private SearchFilterBean contractNoFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_LIKE.value());
+	
+	/** The contract title filter bean. */
+	private SearchFilterBean contractTitleFilterBean = new SearchFilterBean(
+			SearchOperator.OPERATOR_LIKE.value());
+	
+	/** The contract loa no filter bean. */
+	private SearchFilterBean loaNoFilterBean = new SearchFilterBean(
+			SearchOperator.OPERATOR_LIKE.value());
+	
+	/** The contract loa physical no filter bean. */
+	private SearchFilterBean loaPhysicalNoFilterBean = new SearchFilterBean(
+			SearchOperator.OPERATOR_LIKE.value());
+	
 
 	/** The physical contract no filter bean. */
 	private SearchFilterBean physicalContractNoFilterBean = new SearchFilterBean(
@@ -976,6 +989,12 @@ public class CatalogueManagedBean extends BaseManagedBean {
 							.getSearchValue())
 					&& StringUtils.isBlank((String) bizRegNoFilterBean
 							.getSearchValue())
+					&& StringUtils.isBlank((String) contractTitleFilterBean
+							.getSearchValue())
+					&& StringUtils.isBlank((String) loaNoFilterBean
+							.getSearchValue())
+					&& StringUtils.isBlank((String) loaPhysicalNoFilterBean
+							.getSearchValue())		
 					&& StringUtils.isBlank((String) keyWordFilterBean
 							.getSearchValue()) && districtId == null) {
 				log.debug("******SearchResultBean******");
@@ -1028,6 +1047,27 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					keyWordFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(keyWordFilterBean);
 				}*/
+				
+				if (StringUtils.isNotBlank((String) contractTitleFilterBean
+						.getSearchValue())) {
+					contractTitleFilterBean.setSearchField("CONTRACT_NAME");
+					contractTitleFilterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(contractTitleFilterBean);
+				}
+				
+				if (StringUtils.isNotBlank((String) loaNoFilterBean
+						.getSearchValue())) {
+					loaNoFilterBean.setSearchField("LOA_NO");
+					loaNoFilterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(loaNoFilterBean);
+				}
+				
+				if (StringUtils.isNotBlank((String) loaPhysicalNoFilterBean
+						.getSearchValue())) {
+					loaPhysicalNoFilterBean.setSearchField("LOA_PHYSICAL_NO");
+					loaPhysicalNoFilterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(loaPhysicalNoFilterBean);
+				}
 
 				if (StringUtils.isNotBlank((String) itemCodeFilterBean
 						.getSearchValue())) {
@@ -1328,6 +1368,18 @@ public class CatalogueManagedBean extends BaseManagedBean {
 			hasSearchValue = true;
 		}
 
+		
+		if (StringUtils.isNotBlank((String) contractTitleFilterBean.getSearchValue())) {
+			hasSearchValue = true;
+		}
+		
+		if (StringUtils.isNotBlank((String) loaNoFilterBean.getSearchValue())) {
+			hasSearchValue = true;
+		}
+		
+		if (StringUtils.isNotBlank((String) loaPhysicalNoFilterBean.getSearchValue())) {
+			hasSearchValue = true;
+		}
 		log.info("hasSearchValue: " + hasSearchValue);
 
 		if (!hasSearchValue) {
@@ -3717,6 +3769,32 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void setExpiryAlert(String expiryAlert) {
 		this.expiryAlert = expiryAlert;
 	}
+
+	public SearchFilterBean getContractTitleFilterBean() {
+		return contractTitleFilterBean;
+	}
+
+	public void setContractTitleFilterBean(SearchFilterBean contractTitleFilterBean) {
+		this.contractTitleFilterBean = contractTitleFilterBean;
+	}
+
+	public SearchFilterBean getLoaNoFilterBean() {
+		return loaNoFilterBean;
+	}
+
+	public void setLoaNoFilterBean(SearchFilterBean loaNoFilterBean) {
+		this.loaNoFilterBean = loaNoFilterBean;
+	}
+
+	public SearchFilterBean getLoaPhysicalNoFilterBean() {
+		return loaPhysicalNoFilterBean;
+	}
+
+	public void setLoaPhysicalNoFilterBean(SearchFilterBean loaPhysicalNoFilterBean) {
+		this.loaPhysicalNoFilterBean = loaPhysicalNoFilterBean;
+	}
+	
+	
 	
 	
 
