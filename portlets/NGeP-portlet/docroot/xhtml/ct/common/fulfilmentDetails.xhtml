@@ -64,7 +64,8 @@
 					<td>
 						<p:inputText for="gstAmount" styleClass="ppRightBtn"  
 						     maxlength="18" style="width:130px;"
-			   				 disabled="#{!ctBackingBean.managedBean.disableGstAmount or ctBackingBean.getValueFromAmendment()}" 
+			   				 disabled="#{!ctBackingBean.managedBean.disableGstAmount or 
+			   				    ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails}" 
 			   				 rendered="#{ctBackingBean.contractWithGst()}" 
 			   				 value="#{ctBackingBean.managedBean.ctContractAmount.gstAmount}" label="#{lbl['lbl.ct.gst.amt']}" >
 			   				<p:ajax  event="blur" update="overAllAmts" process="@this"  listener="#{ctBackingBean.calculateOrverAllAmt()}"></p:ajax>
@@ -100,7 +101,8 @@
 					</td> 
 					<td><p:inputText id="dperiod" styleClass="ppRightBtn" validator="#{webappBean.validateDPeriod}" required="true" style="width:45px;"
 		              		maxlength="4" value="#{ctBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}"
-		              		disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.getValueFromAmendment()}" label="#{lbl['lbl.ct.delivery.period']}" />
+		              		disabled="#{ctBackingBean.managedBean.viewContract 
+		              		or ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails}" label="#{lbl['lbl.ct.delivery.period']}" />
                 		<p:spacer width="3"/>
                 		<h:outputText value="#{lbl['lbl.ct.days']}" />
                 	</td>
@@ -161,7 +163,7 @@
 		   <h:panelGrid columns="3" rendered="#{!ctBackingBean.managedBean.directPurchase}">
 			 <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.contractVer.ctContractValue.concession}"
 			 	 disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.ctContractAmount.agreement 
-			 	 or ctBackingBean.getValueFromAmendment()}">
+			 	 or ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails}">
 			    <p:ajax event="change" update=":form:justificationPanel,:form:exemptId" listener="#{ctBackingBean.chkJustificationAction}" process="@this"/> 
 			 </p:selectBooleanCheckbox>
 			 <p:spacer width="2" />
@@ -173,7 +175,7 @@
 		     <h:panelGrid columns="3" rendered="#{!ctBackingBean.managedBean.directPurchase}">
 			  <p:selectBooleanCheckbox id="exemptId" value="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" 
 			    	disabled="#{ctBackingBean.managedBean.chkConceValue or ctBackingBean.managedBean.viewContract 
-			    	or ctBackingBean.getValueFromAmendment()}" 
+			    	or ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails}" 
 			    	style="text-align:top;">
 			     <p:ajax event="change" update=":form:justificationPanel" listener="#{ctBackingBean.chkJustificationAction}" process="@this"/> 
 			  </p:selectBooleanCheckbox>
@@ -231,7 +233,8 @@
 	  <h:panelGrid columns="2">
 	    <p:inputTextarea id="justificationLbl" value="#{ctBackingBean.managedBean.contractVer.ctContractValue.justification}"
 		  	rows="3" style="width:455px;" maxlength="199" label="#{lbl['lbl.ct.justification.ap201']}"
-		  	required="true" autoResize="false" disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.getValueFromAmendment()}"></p:inputTextarea>
+		  	required="true" autoResize="false" disabled="#{ctBackingBean.managedBean.viewContract 
+		  	or ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails}"></p:inputTextarea>
 		   	<p:message for="justificationLbl" display="icon"/>	
 	  </h:panelGrid>	
 	   	     <p:outputLabel id="ap201FileId"   value="#{lbl['lbl.ct.upload.ap201']}"  
