@@ -2230,6 +2230,14 @@
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 		<css-class-wrapper>basicaccountdeactivation-portlet</css-class-wrapper>
 	</portlet>
+	
+	<portlet>
+		<portlet-name>basicDataMaintenance</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<css-class-wrapper>basicDataMaintenance-portlet</css-class-wrapper>
+	</portlet>
 
 	<role-mapper>
 		<role-name>administrator</role-name>
