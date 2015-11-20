@@ -17,9 +17,8 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
 		</p:blockUI>
-		<p:messages id="financialCashOnHandScore" autoUpdate="true"
+		<p:messages id="financialAssetsLiabilitysScore" autoUpdate="true"
 			showDetail="true" showSummary="false" closable="true" severity="error, info"></p:messages>
-
 		<div>
 			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 				immediate="true"
@@ -32,7 +31,8 @@
 				action="#{specificationBackingBean.saveCheckListScores}">
 				<f:setPropertyActionListener
 					target="#{specificationBackingBean.managedBean.criteriaType}"
-					value="52" />
+					value="60" />
+
 			</p:commandButton>
 
 
@@ -41,50 +41,43 @@
 		<p:spacer height="25"></p:spacer>
 		<br />
 		<br />
-		<ui:include src="/xhtml/sc/specification/SpecificationCommittee/checklistHeader.xhtml" />
+		<ui:include src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />
 
-		<p:spacer height="20"></p:spacer>
-		<p:panel header="#{lbl['lbl.sc.spec.cash.hand']}" toggleable="true">
-			<p:dataTable id="cashHand" rowIndexVar="index" var="cash"
-				rowKey="#{cash}">
-				<ac:paginator for="cashHand"></ac:paginator>
-				<!-- <p:column  selectionMode="multiple" style="width:2px;"></p:column> -->
-				<p:column headerText="#{lbl['lbl.sc.bank.name']}">
-					<p:inputText></p:inputText>
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.account.no']}">
-					<p:inputText></p:inputText>
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.account.type']}">
-					<p:inputText></p:inputText>
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.address']}">
-					<p:inputText></p:inputText>
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.amount']}">
-					<p:inputText></p:inputText>
-				</p:column>
+		<p:spacer height="20" />
+		<p:panel header="#{lbl['lbl.sc.assest.liabilities']}"
+			toggleable="true">
+			<table>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.current.asset']}" /></td>
+					<td><p:inputText style="text-align:right" disabled="true">
 
-			</p:dataTable>
+						</p:inputText></td>
+				</tr>
+				<p:spacer height="10"></p:spacer>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.current.liability']}" /></td>
+					<td><p:inputText style="text-align:right" disabled="true">
 
+						</p:inputText></td>
+				</tr>
+				<p:spacer height="25"></p:spacer>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.acid.ratio']}" /></td>
+					<td><p:inputText style="text-align:right" id="totalacidratio"
+							readonly="true" disabled="true" /> <ac:iconTooltip
+							value="#{lbl['lbl.sc.acid.ratio.tooltip']}" /></td>
+				</tr>
+			</table>
 		</p:panel>
-
-		<table>
-			<tr>
-				<td style="width: 150px;"><h:outputLabel
-						value="#{lbl['lbl.sc.spec.total.cash']}"></h:outputLabel></td>
-				<td><p:inputText readonly="true" disabled="true"></p:inputText>
-				</td>
-			</tr>
-		</table>
-
 		<p:spacer height="20"></p:spacer>
-		<p:panel id="financialCashOnhandScore"
-			header="#{lbl['lbl.sc.spec.score.total.cash']}" toggleable="true"
+
+		<p:panel id="financialAssetsLiabilityScore"
+			header="#{lbl['lbl.sc.spec.asset.score.net.amount']}"
+			toggleable="true"
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
 			<table>
 				<tr>
-					<td style="width: 150px;"><ui:fragment
+					<td style="width: 120px;"><ui:fragment
 							rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
 							<p:outputLabel value="*" styleClass="mandatory"
 								style="float : left"></p:outputLabel>
@@ -93,60 +86,61 @@
 					<td><p:selectOneMenu required="true" style="width: 160px;"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							label="#{lbl['lbl.sc.spec.asset.score.type']}"
-							id="cashOnHandAutoScore"
+							id="assetLiabilityAutoScore"
 							value="#{specificationBackingBean.managedBean.checklistScoreType}">
 							<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
 							<p:ajax event="change"
-								update="totalcashOnhand,financialCashOnhandScore"
+								update="assetLiabilitie,financialAssetsLiabilityScore"
 								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
-						</p:selectOneMenu> <p:message id="cashOnHandAutoScoreId" for="cashOnHandAutoScore"
-							display="icon"></p:message></td>
+						</p:selectOneMenu> <p:message id="assetLiabilityAutoScoreId"
+							for="assetLiabilityAutoScore" display="icon"></p:message></td>
 					<td><ac:iconTooltip
 							value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type.tooltip']}" />
 					</td>
 				</tr>
 			</table>
 			<p:spacer height="5"></p:spacer>
-			<h:panelGroup id="totalcashOnhand">
+			<h:panelGroup id="assetLiabilitie">
 				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
-
 					<ui:param name="scoringPnlGroupId" value="contractorGroupId" />
-					<h:panelGroup id="cashGroupId">
+					<h:panelGroup id="assetsGroupId">
 						<ui:param name="scoringList"
 							value="#{specificationBackingBean.managedBean.checkListScore}" />
 						<ui:param name="selectionList"
 							value="#{specificationBackingBean.managedBean.checkListSelectScore}" />
-						<ui:param name="componentName" value="CashOnHand" />
-						<ui:param name="scoringPnlId" value="cashId" />
+
+						<ui:param name="componentName" value="Assets" />
+						<ui:param name="scoringPnlId" value="assetId" />
 						<ui:param name="scoringPnlName"
-							value="#{lbl['lbl.sc.spec.score.total.cash']}"></ui:param>
-						<ui:include src="/xhtml/sc/specification/SpecificationCommittee/scoring.xhtml"></ui:include>
+							value="#{lbl['lbl.sc.spec.asset.score.net.amount']}"></ui:param>
+						<ui:include src="/xhtml/sc/specification/specificationCommittee/scoring.xhtml"></ui:include>
 						<div align="right">
 							<p:commandButton value="#{lbl['lbl.btn.add']}"
 								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 								process="@this,#{scoringPnlId}" partialSubmit="true"
 								oncomplete="scoreWidget.paginator.endLink.click();"
-								actionListener="#{specificationBackingBean.addScoring(52)}"
+								actionListener="#{specificationBackingBean.addScoring(60)}"
 								update="#{scoringPnlId}" />
 							<p:commandButton value="#{lbl['lbl.btn.delete']}"
 								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 								process="@this" partialSubmit="true"
-								oncomplete="financialCashOnHabdDeletePopUp.show();"
-								update="@([id$=#{financialCashOnHandDeleteId}])">
+								oncomplete="financialAssetLiabilityDeletePopUp.show();"
+								update="@([id$=#{financialAssetsLiabilityDeleteId}])">
 								<f:setPropertyActionListener
 									target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
 									value="#{false}" />
 							</p:commandButton>
 
 						</div>
-						<ui:param name="financialCashOnHandDeleteId"
-							value="financialCashOnHandDeleteId"></ui:param>
+						<ui:param name="financialAssetsLiabilityDeleteId"
+							value="financialAssetsLiabilityDeleteId"></ui:param>
 
-						<ac:confirmationPopup id="#{financialCashOnHandDeleteId}"
-							widget="financialCashOnHabdDeletePopUp" width="400" height="200"
+						<ac:confirmationPopup id="#{financialAssetsLiabilityDeleteId}"
+							widget="financialAssetLiabilityDeletePopUp" width="400"
+							height="200"
 							okAction="specificationBackingBean.deleteCheckListScoreContrats"
-							title="#{lbl['lbl.sc.spec.cash.hand']}"
+							title="#{lbl['lbl.sc.assest.liabilities']}"
 							content="#{lbl['lbl.sc.dialog.confirm.message']}"
 							update="@([id$=#{scoringPnlId}])" />
 					</h:panelGroup>
@@ -156,25 +150,24 @@
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 					<table>
 						<tr>
-							<td style="width: 150px;"><ui:fragment
+							<td style="width: 120px;"><ui:fragment
 									rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
 									<p:outputLabel value="*" styleClass="mandatory"
 										style="float : left"></p:outputLabel>
 								</ui:fragment> <p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"
 									style="float : left"></p:outputLabel></td>
-							<td><p:inputText id="finCashScore" maxlength="18"
+							<td><p:inputText id="finAssetsLiaScore" required="true"
 									style="text-align:right;"
 									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
-									label="#{lbl['lbl.sc.spec.max.score']}" required="true"
+									label="#{lbl['lbl.sc.spec.max.score']}" maxlength="18"
 									value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
 									<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
-								</p:inputText> <p:message id="finCashMaxScore" for="finCashScore"
-									display="icon"></p:message></td>
+								</p:inputText> <p:message id="finAssetLiabilityMaxScore"
+									for="finAssetsLiaScore" display="icon"></p:message></td>
 						</tr>
 					</table>
 				</h:panelGroup>
 			</h:panelGroup>
-
 		</p:panel>
 
 

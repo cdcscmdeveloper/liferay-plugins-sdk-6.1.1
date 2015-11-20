@@ -47,26 +47,26 @@
 			<td width="80%;" valign="top"><c:if
 					test="#{specificationBackingBean.managedBean.activeIndex eq '0'}">
 
-					<ui:include src="/xhtml/sc/specification/BusinessOwner/businessOwnerGeneral.xhtml"></ui:include>
+					<ui:include src="/xhtml/sc/specification/businessOwner/businessOwnerGeneral.xhtml"></ui:include>
 
 				</c:if> <c:if
 					test="#{specificationBackingBean.managedBean.activeIndex eq '1'}">
 
-					<ui:include src="/xhtml/sc/specification/BusinessOwner/supplierQualificationCriteria.xhtml"></ui:include>
+					<ui:include src="/xhtml/sc/specification/businessOwner/supplierQualificationCriteria.xhtml"></ui:include>
 				</c:if> <c:if
 					test="#{specificationBackingBean.managedBean.activeIndex eq '2'}">
-					<ui:include src="/xhtml/sc/specification/BusinessOwner/technicalSpecification.xhtml"></ui:include>
+					<ui:include src="/xhtml/sc/specification/businessOwner/technicalSpecification.xhtml"></ui:include>
 
 				</c:if> <c:if
 					test="#{specificationBackingBean.managedBean.activeIndex eq '3'}">
-					<ui:include src="/xhtml/sc/specification/BusinessOwner/financialSpecification.xhtml"></ui:include>
+					<ui:include src="/xhtml/sc/specification/businessOwner/financialSpecification.xhtml"></ui:include>
 
 				</c:if> <c:if
 					test="#{specificationBackingBean.managedBean.activeIndex eq '4'}">
 
 					<ui:fragment
 						rendered="#{specificationBackingBean.managedBean.scQt.specApprovalReq eq 'true'}">
-						<ui:include src="/xhtml/sc/specification/BusinessOwner/approvalBusinessOwner.xhtml"></ui:include>
+						<ui:include src="/xhtml/sc/specification/businessOwner/approvalBusinessOwner.xhtml"></ui:include>
 
 					</ui:fragment>
 
