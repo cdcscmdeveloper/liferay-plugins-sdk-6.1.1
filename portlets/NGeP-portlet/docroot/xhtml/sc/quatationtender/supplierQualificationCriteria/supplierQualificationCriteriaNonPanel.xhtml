@@ -6,10 +6,11 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sc.category.code.list']}"
-		toggleable="true">
-		
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.category.code.list.instruction']}" escape="false" />
+	<p:panel header="#{lbl['lbl.sc.category.code.list']}" toggleable="true">
+
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.category.code.list.instruction']}"
+			escape="false" />
 
 		<p:dataTable id="openPnlId" var="cateGory" widgetVar="openCodes"
 			value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList}"
@@ -17,7 +18,8 @@
 			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedCategoryList}"
 			rowKey="#{cateGory}">
 
-			<p:column selectionMode="multiple" style="width:1%" rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"/>
+			<p:column selectionMode="multiple" style="width:1%"
+				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}" />
 
 			<p:column headerText="#{lbl['lbl.sc.category.code']}">
 				#{cateGory.pmCategoryL1.categoryL1Code}#{cateGory.pmCategoryL2.categoryL2Code}#{cateGory.pmCategoryL3.categoryL3Code}
@@ -56,36 +58,36 @@
 				update="@([id$=#{supplierOpencategoryDeleteId}])"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}" />
 		</div>
-		<ui:param name="supplierOpencategoryDeleteId" value="supplierOpencategoryDeleteId" />
+		<ui:param name="supplierOpencategoryDeleteId"
+			value="supplierOpencategoryDeleteId" />
 		<ac:confirmationPopup id="#{supplierOpencategoryDeleteId}"
 			widget="supplierOpencategoryDeletePopUp"
-			okAction="qTSupplierQulCriteriaBackingBean.deleteCategoryCodes" width="400"
-			height="200" title="#{lbl['lbl.sc.category.code']}"
+			okAction="qTSupplierQulCriteriaBackingBean.deleteCategoryCodes"
+			width="400" height="200" title="#{lbl['lbl.sc.category.code']}"
 			content="#{lbl['lbl.sc.dialog.confirm.category.codes']}"
 			update="@([id$=openPnlId])" />
-		
-		<ac:categoryCodePopup 
+		<ac:categoryCodePopup
 			okAction="qTSupplierQulCriteriaBackingBean.addNewCategoryAction"
 			update="@([id$=openPnlId])" />
 	</p:panel>
-	
-	<ui:param name="isQuotationThresHold" value="#{qTSupplierQulCriteriaBackingBean.isQuotationThresHold(qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount)}" />
+
+	<ui:param name="isQuotationThresHold"
+		value="#{qTSupplierQulCriteriaBackingBean.isQuotationThresHold(qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount)}" />
 
 	<p:panel toggleable="true"
 		rendered="#{((isQuotationThresHold and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false')  or (!isQuotationThresHold  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal) or (!isQuotationThresHold  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false'))}">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.sc.location.list.paidup.capital']}" />
-			<ac:iconTooltip value="#{lbl['lbl.sc.location.list.paidup.capital.tooltip']}" />
+			<ac:iconTooltip
+				value="#{lbl['lbl.sc.location.list.paidup.capital.tooltip']}" />
 		</f:facet>
 
 		<table style="width: 100%">
-			<h:panelGroup id="allstate"
-				rendered="#{!isQuotationThresHold}">
+			<h:panelGroup id="allstate" rendered="#{!isQuotationThresHold}">
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.all.states']}"
 							style="width : 80px" /></td>
-					<td>
-						<p:selectBooleanCheckbox
+					<td><p:selectBooleanCheckbox
 							disabled="#{qTSupplierQulCriteriaBackingBean.managedBean.allStateCode.value() eq 'Peninsular' }"
 							value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState}">
 							<f:selectItem
@@ -99,10 +101,11 @@
 				<ui:fragment
 					rendered="#{!isQuotationThresHold and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState eq 'true'}">
 					<tr>
-						<td style="width: 185px"><p:outputLabel
+						<td style="width: 210px"><p:outputLabel
 								value="#{lbl['lbl.sc.paidup']}"
 								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState eq 'true'}" /></td>
-						<td><p:inputText size="30" maxlength="18" disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
+						<td><p:inputText size="30" maxlength="18"
+								disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
 								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState eq 'true'}"
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.minPaidUpCapital}"
 								style="margin-right:5px;text-align:right;">
@@ -122,9 +125,10 @@
 				rendered="#{((isQuotationThresHold and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false') or (!isQuotationThresHold and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false') or (!isQuotationThresHold and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal))}">
 				<table style="width: 100%">
 					<tr>
-						<td style="width: 185px"><p:outputLabel
+						<td style="width: 210px"><p:outputLabel
 								value="#{lbl['lbl.sc.paidup']}" /></td>
-						<td><p:inputText size="30" maxlength="18"   disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
+						<td><p:inputText size="30" maxlength="18"
+								disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
 								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false'}"
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.minPaidUpCapital}"
 								style="margin-right:5px;text-align:right;">
@@ -134,14 +138,13 @@
 							</p:inputText></td>
 					</tr>
 					<tr>
-						<td><p:outputLabel
-								value="#{lbl['lbl.sc.location.level']}" /> <p:outputLabel
-								value="*" styleClass="mandatory" /></td>
-						<td><p:selectOneMenu id="locLevels"  disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
+						<td><p:outputLabel value="#{lbl['lbl.sc.location.level']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<td><p:selectOneMenu id="locLevels"
+								disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
 								label="#{lbl['lbl.sc.location.level']}"
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.locationLevel.parameterId}"
-								style="width: 178px;">
-
+								style="width: 236px;">
 								<f:selectItems
 									value="#{qTSupplierQulCriteriaBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
 								<p:ajax event="change" update="zoneLocationDataTable"
@@ -156,9 +159,9 @@
 					<p:dataTable id="zoneLocationDataTable" rows="10"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.zoneTrees}"
 						var="zoneTree" style="width:100%" rowIndexVar="index">
-						
+
 						<ac:paginator for="zoneLocationDataTable" />
-						
+
 						<p:column style="width:90%">
 							<f:facet name="header">
 								<h:outputText value="* " styleClass="mandatory" />
@@ -184,24 +187,34 @@
 						</p:column>
 
 						<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%">
-							<p:commandLink  disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
+							<p:commandLink
+								disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
 								actionListener="#{qTSupplierQulCriteriaBackingBean.editZoneLocation(zoneTree,index)}"
 								process="@this" update="@([id$=zonePopupPanel])"
 								oncomplete="ZoneLocation.show();">
-								<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/edit.png" styleClass="tasklist_title1" />
+								<h:graphicImage
+									value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
+									styleClass="tasklist_title1" />
 							</p:commandLink>
 						</p:column>
 
 					</p:dataTable>
 				</h:panelGrid>
 				<div align="right">
-					<p:selectBooleanCheckbox id="checkAll" style="float:left;margin-top: 13px;margin-right: -4px;"  rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}">
-						<p:ajax event="change" partialSubmit="true" process="@all" update="zoneLocationDataTable" listener="#{qTSupplierQulCriteriaBackingBean.checkAllConditions}" />
+					<p:selectBooleanCheckbox id="checkAll"
+						style="float:left;margin-top: 13px;margin-right: -4px;"
+						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}">
+						<p:ajax event="change" partialSubmit="true" process="@all"
+							update="zoneLocationDataTable"
+							listener="#{qTSupplierQulCriteriaBackingBean.checkAllConditions}" />
 					</p:selectBooleanCheckbox>
 					<p:spacer width="1" />
-					<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}" style="float:left;margin-top: 12px;;margin-left: 10px;"  rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"/>
+					<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}"
+						style="float:left;margin-top: 12px;;margin-left: 10px;"
+						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}" />
 					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
-						update="@([id$=zonePopupPanel])"  rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
+						update="@([id$=zonePopupPanel])"
+						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
 						actionListener="#{qTSupplierQulCriteriaBackingBean.showZoneLocationPopup}" />
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"
 						process="@this,zoneLocationDataTable" partialSubmit="true"
@@ -209,7 +222,8 @@
 						update="@([id$=#{supplierNonZoneDeleteId}])"
 						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}" />
 				</div>
-				<ui:param name="supplierNonZoneDeleteId" value="supplierNonZoneDeleteId" />
+				<ui:param name="supplierNonZoneDeleteId"
+					value="supplierNonZoneDeleteId" />
 				<ac:confirmationPopup id="#{supplierNonZoneDeleteId}"
 					widget="supplierNonZoneDeletePopUp"
 					okAction="qTSupplierQulCriteriaBackingBean.deleteSupplierQualificationTreeNode"
@@ -222,14 +236,16 @@
 				rendered="#{isQuotationThresHold and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal}">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.location.list.paidup.capital']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.location.list.paidup.capital.tooltip']}" />
+					<ac:iconTooltip
+						value="#{lbl['lbl.sc.location.list.paidup.capital.tooltip']}" />
 				</f:facet>
-				
+
 				<table style="width: 100%">
 					<tr>
-						<td style="width: 185px"><p:outputLabel
+						<td style="width: 210px"><p:outputLabel
 								value="#{lbl['lbl.sc.paidup']}" /></td>
-						<td><p:inputText size="30" maxlength="18" disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
+						<td><p:inputText size="30" maxlength="18"
+								disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
 								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false'}"
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.minPaidUpCapital}"
 								style="margin-right:5px;text-align:right;">
@@ -244,7 +260,7 @@
 						<td><p:selectOneMenu id="locZoneLevels"
 								disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.locationLevel.parameterId}"
-								style="width: 178px;">
+								style="width: 236px;">
 								<f:selectItems
 									value="#{qTSupplierQulCriteriaBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
 								<p:ajax event="change" update="zoneyesDataTable"
@@ -259,9 +275,9 @@
 					<p:dataTable id="zoneyesDataTable" rows="10"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.zoneTrees}"
 						var="zoneTree" style="width:100%" rowIndexVar="index">
-						
+
 						<ac:paginator for="zoneyesDataTable" />
-						
+
 						<p:column style="width:90%">
 							<f:facet name="header">
 								<h:outputText value="* " styleClass="mandatory" />
@@ -289,22 +305,25 @@
 								</p:treeNode>
 							</p:tree>
 						</p:column>
-						<p:column headerText="#{lbl['lbl.sc.action']}"
-							style="width:10%">
-							<p:commandLink  disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
+						<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%">
+							<p:commandLink
+								disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
 								actionListener="#{qTSupplierQulCriteriaBackingBean.editZoneLocation(zoneTree,index)}"
 								process="@this" update="@([id$=zonePopupPanel])"
 								oncomplete="ZoneLocation.show();">
-								<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/edit.png" styleClass="tasklist_title1" />
+								<h:graphicImage
+									value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
+									styleClass="tasklist_title1" />
 							</p:commandLink>
 						</p:column>
 					</p:dataTable>
 				</h:panelGrid>
 				<div align="right" style="width: 100%">
-					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"  rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
+					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
+						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
 						update="@([id$=zonePopupPanel])"
 						actionListener="#{qTSupplierQulCriteriaBackingBean.showZoneLocationPopup}" />
-					
+
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"
 						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
 						process="@this,zoneyesDataTable" partialSubmit="true"
@@ -322,8 +341,7 @@
 			</h:panelGroup>
 
 			<p:dialog header="#{lbl['lbl.sc.add.location']}"
-				widgetVar="ZoneLocation" modal="true" width="35%" position="top"
-				height="65%">
+				widgetVar="ZoneLocation" modal="true" position="top" height="65%">
 				<p:panel id="zonePopupPanel">
 					<table border="0">
 						<tr>
@@ -359,17 +377,23 @@
 						<tr>
 							<td>
 								<div class="ppRightBtn">
-									<p:selectBooleanCheckbox id="popupCheckAll"  style="float:left;margin-top: 13px;margin-right: -4px;">
-										<p:ajax event="change" partialSubmit="true" process="@all" update=":form:treeZoneLocationPopup" listener="#{qTSupplierQulCriteriaBackingBean.checkAllPopUpConditions}" />
+									<p:selectBooleanCheckbox id="popupCheckAll"
+										style="float:left;margin-top: 13px;margin-right: -4px;">
+										<p:ajax event="change" partialSubmit="true" process="@all"
+											update=":form:treeZoneLocationPopup"
+											listener="#{qTSupplierQulCriteriaBackingBean.checkAllPopUpConditions}" />
 									</p:selectBooleanCheckbox>
 									<p:spacer width="1" />
-									<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}" style="float:left;margin-top: 12px;;margin-left: 10px;" />
-									<p:commandButton value="#{lbl['lbl.btn.ok']}"  rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
+									<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}"
+										style="float:left;margin-top: 12px;;margin-left: 10px;" />
+									<p:commandButton value="#{lbl['lbl.btn.ok']}"
+										rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
 										onclick="ZoneLocation.hide();" process="@all"
 										update="@this, zoneLocationDataTable, zonePopupPanel, zoneyesDataTable"
 										action="#{qTSupplierQulCriteriaBackingBean.updateZoneLocation}">
 									</p:commandButton>
-									<p:commandButton value="#{lbl['lbl.btn.cancel']}"  rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
+									<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+										rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
 										onclick="ZoneLocation.hide();" />
 								</div>
 							</td>
@@ -381,14 +405,15 @@
 	</h:panelGroup>
 	<table>
 		<tr>
-			<td style="width: 193px"><p:outputLabel
+			<td style="width: 210px"><p:outputLabel
 					value="#{lbl['lbl.sc.totalsup']}" /></td>
-			<td><p:inputText id="totalSuppliersId" style="margin-right:5px;" 
-					disabled="true" size="30" 
+			<td><p:inputText id="totalSuppliersId" style="margin-right:5px;"
+					disabled="true" size="30"
 					value="#{qTSupplierQulCriteriaBackingBean.managedBean.totalSuppliers}" /></td>
 			<td><p:commandButton value="#{lbl['lbl.btn.search']}"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-					update="totalSuppliersId" rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
+					update="totalSuppliersId"
+					rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
 					action="#{qTSupplierQulCriteriaBackingBean.searchForSupplierCount}"
 					partialSubmit="true" process="@this" /></td>
 			<td />
