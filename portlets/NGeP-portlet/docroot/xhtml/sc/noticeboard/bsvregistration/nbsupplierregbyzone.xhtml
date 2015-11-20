@@ -1,0 +1,28 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:tabView var="zones"  orientation="left" dynamic="true"
+		value="#{noticeBoardBackingBean.managedBean.zoneBean}">
+	<p:ajax event="tabChange" listener="#{noticeBoardBackingBean.bsvZoneTabChange}"
+			></p:ajax>
+		<p:tab title="#{zones.tplSpecZoneDtl.zoneName}">
+			<ui:param name="bsvDetails" value="#{zones}"></ui:param>
+			<ui:param name="brefingDtlId"
+								value="withZone#{zones.zoneName}"></ui:param>
+								<ui:param name="siteVisitDtlId"
+								value="withZone#{zones.zoneName}"></ui:param>
+			<ui:param name="bsvSelectedDtls" value="#{noticeBoardBackingBean.managedBean.selectedBriefingDtls}"></ui:param>
+			<ui:param name="siteVisitSelectedDtls" value="#{noticeBoardBackingBean.managedBean.selectedsiteVisitDtls}"></ui:param>
+			<ui:include src="/xhtml/sc/noticeboard/bsvregistration/supplierRegistrationDtls.xhtml"></ui:include>
+		</p:tab>
+
+
+	</p:tabView>
+
+
+</ui:composition>
+
