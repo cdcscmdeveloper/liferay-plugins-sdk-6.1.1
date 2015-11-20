@@ -13554,6 +13554,8 @@ public class ReportBackingBean extends
 
 			}
 
+		}else{
+			this.getManagedBean().setLoaReportDocumentList(new ArrayList<ScLoaReport>());
 		}
 	}
 
