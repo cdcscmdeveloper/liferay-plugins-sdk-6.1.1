@@ -25,9 +25,7 @@ import my.ep.web.constant.report.CommonMethod;
 @ViewScoped
 public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBean>{
 	
-	/*
-	 *Enable CM module criteria by report name 
-	 */
+	
 	/**
 	 * criteriaVariablesByReportByCM - Enable criteria variables by report of CATALOGUE MANAGEMENT.
 	 *
