@@ -11,6 +11,11 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import org.apache.log4j.Logger;
+import org.primefaces.model.DualListModel;
+// TODO: Auto-generated Javadoc
+//BackingBEan
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.service.fl.IFulfilmentDocumentSO;
@@ -48,11 +53,6 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-
-import org.apache.log4j.Logger;
-import org.primefaces.model.DualListModel;
-// TODO: Auto-generated Javadoc
-//BackingBEan
 
 /**
  * Managed Bean for Fulfillment document.
@@ -446,7 +446,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 								docsearchResult.setRemoveFactoringAction(true);
 								docsearchResult.setViewAction(true);
 							}
-							if(orderInfo.isCoGSTR){
+							if(orderInfo.isCoGSTR()){
 								docsearchResult.setCoGSTR(orderInfo.isCoGSTR);
 							}
 					  }
@@ -565,6 +565,13 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 						}
 					}
 				}
+			} 
+			if(orderInfo.getRole()==null) {
+				if(isFlFulfilmentApprover()){
+					orderInfo.setRole(RoleCode.FL_APPROVER.value());
+				} else if(isFlFulfilmentSupplier()){
+					orderInfo.setRole(RoleCode.BASIC_SUPPLIER_USER.value());
+				}
 			}
 		}
 		return orderInfo;
@@ -649,7 +656,6 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
 				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
-				flDocTypes.add(ParameterConst.DOCTYPE_RELIEF_ORDER);
 				flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
 				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
@@ -673,7 +679,6 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
 				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
-				flDocTypes.add(ParameterConst.DOCTYPE_RELIEF_ORDER);
 				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
@@ -690,7 +695,6 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 			flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 			flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
 			flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
-			flDocTypes.add(ParameterConst.DOCTYPE_RELIEF_ORDER);
 		}
 		return flDocTypes;
 	}
