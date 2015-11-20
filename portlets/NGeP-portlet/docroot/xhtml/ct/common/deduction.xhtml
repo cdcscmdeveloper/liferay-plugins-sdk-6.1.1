@@ -42,10 +42,7 @@
 			            
 			              <h:outputText rendered="#{datas.deductionType.parameterCode == ParameterConst.deductionTypeAdvancePayment}" 
 			                 value="#{ctBackingBean.getParameterDesc(datas.deductionType)}" style="float:left;" />
-			                <p:spacer width="10"/>
-			              <p:inputText  id="otherValueId"  style="width:350px;"
-			                 rendered="#{ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeOthers}"></p:inputText>
-			         </p:column> 
+			              </p:column> 
 		       
 		              <p:column  headerText="#{lbl['lbl.ct.amount']}" style="width:150px;text-align:right;">
 	                       <h:outputText value="#{datas.amount}" 
