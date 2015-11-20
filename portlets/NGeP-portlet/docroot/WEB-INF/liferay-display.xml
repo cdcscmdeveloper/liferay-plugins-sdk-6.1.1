@@ -264,6 +264,7 @@
 		<portlet id="supplierPromotion"></portlet>
 		<portlet id="updateGstInfo"></portlet>
 		<portlet id="basicAccountDeactivation"></portlet>
+		<portlet id="basicDataMaintenance"></portlet>
 	</category>
 
 	<category name="category.ep.wp">
