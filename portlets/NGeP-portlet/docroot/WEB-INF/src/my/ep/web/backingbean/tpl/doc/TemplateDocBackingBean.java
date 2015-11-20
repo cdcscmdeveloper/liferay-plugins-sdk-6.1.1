@@ -454,7 +454,7 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 				
 				
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("docTitle",SearchOperator.OPERATOR_EQUALS.value(), tplDocMasterE.getDocTitle(), true));
-				
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("processType.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),ParameterConst.TPL_DOC_PROCESS_TYPE_STANDARD));
 				
 				reqDTO.setSearchBean(searchBean);
 				TemplateDocResDTO resDTO = templateSO.searchTemplateDoc(reqDTO);
