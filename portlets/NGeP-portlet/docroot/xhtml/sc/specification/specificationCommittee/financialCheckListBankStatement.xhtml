@@ -44,7 +44,7 @@
 		<p:spacer height="25"></p:spacer>
 		<br />
 		<br />
-		<ui:include src="/xhtml/sc/specification/SpecificationCommittee/checklistHeader.xhtml" />
+		<ui:include src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />
 
 		<p:spacer height="20"></p:spacer>
 		<p:panel header="#{lbl['lbl.sc.spec.bank.statement']}"
@@ -164,7 +164,7 @@
 						<ui:param name="scoringPnlId" value="bankStatememtId" />
 						<ui:param name="scoringPnlName"
 							value="#{lbl['lbl.sc.spec.score.avg.bank.statement']}"></ui:param>
-						<ui:include src="/xhtml/sc/specification/SpecificationCommittee/scoring.xhtml"></ui:include>
+						<ui:include src="/xhtml/sc/specification/specificationCommittee/scoring.xhtml"></ui:include>
 						<div align="right">
 							<p:commandButton value="#{lbl['lbl.btn.add']}"
 								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
