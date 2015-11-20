@@ -870,7 +870,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	 */
 	public String biddingMonitorBackAction() {
 		debugLogger("supplierProposalBackAction");
-		return "/xhtml/sc/bidding/biddingmain.xhtml ? faces-redirect=true";
+		return "/xhtml/sc/bidding/bidManagement/biddingmain.xhtml ? faces-redirect=true";
 	}
 
 	public String formattedTotalAmount(TplSpecQuestion specQuestion,
