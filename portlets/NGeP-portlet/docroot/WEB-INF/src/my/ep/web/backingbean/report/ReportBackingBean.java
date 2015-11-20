@@ -13666,6 +13666,9 @@ public class ReportBackingBean extends
 				loaDetailAll.downloadAllReports();
 			}
 		}
+		else{
+			throw new EpException(MessageConst.ERROR_REPORT_780026);
+		}
 	}
 
 	/**
