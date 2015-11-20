@@ -59,8 +59,8 @@ public interface QTConstants {
 	public static final String FC_COORDINATE_MEETING_PAGE = "/xhtml/sc/supplierFinalization/confirmMeeting/confirmMeeting.xhtml";
 	public static final String FC_SUPPLIER_FINALIZATION_PAGE = "/xhtml/sc/supplierFinalization/suppFinalizationMenu.xhtml";
 	public static final String FC_ONLINE_BIDDING_ENDORSEMENT_PAGE = "/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/endorsement.xhtml";
-	public static final String SCHEDULE_BIDDING_MAIN_PAGE = "/xhtml/sc/bidding/scheduleBiddingMain.xhtml";
-	public static final String ONLINE_BIDDING_MAIN_PAGE = "/xhtml/sc/bidding/onlineBiddingMain.xhtml";
+	public static final String SCHEDULE_BIDDING_MAIN_PAGE = "/xhtml/sc/bidding/scheduleBidding/scheduleBiddingMain.xhtml";
+	public static final String ONLINE_BIDDING_MAIN_PAGE = "/xhtml/sc/bidding/onlineBidding/onlineBiddingMain.xhtml";
 	public static final String LOI_LIST_PAGE = "/xhtml/sc/loi/loilist/loiList.xhtml";
 	public static final String LOI_PAGE = "/xhtml/sc/loi/loirequest/loiDetailsMaint.xhtml";
 	public static final String SUPPLIER_LOI_PAGE = "/xhtml/sc/loi/supplierresponse/loiSupplierMaint.xhtml";
