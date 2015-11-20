@@ -10,16 +10,16 @@
 
 		<table style="width: 100%" border="0">
 			<tr>
-				<td valign="top" style="width: 270px;"><h:outputLabel
+				<td valign="top" style="width:300px;"><h:outputLabel
 						value="#{lbl['lbl.sc.title']}" /></td>
-				<td colspan="3"><p:inputTextarea readonly="true" rows="2"
+				<td colspan="3"><p:inputTextarea readonly="true" rows="3"
 						cols="143" style="margin-bottom:5px;width: 80%;"
 						value="#{specificationBackingBean.managedBean.scQt.qtTitle}"></p:inputTextarea></td>
 			</tr>
 
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.spec.panel']}" /></td>
-				<td><p:inputText size="32"
+				<td><p:inputText size="32" style="width:292px;"
 						value="#{lbl[specificationBackingBean.managedBean.scQt.panel ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
 						readonly="true"></p:inputText></td>
 
@@ -29,7 +29,7 @@
 
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText size="32" style="text-align:right"
+				<td><p:inputText size="32" style="text-align:right;width:292px;"
 						id="estPrice" required="true"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						label="#{lbl['lbl.sc.spec.est.price']}" maxlength="18"
@@ -52,7 +52,7 @@
 					<ui:fragment
 						rendered="#{specificationBackingBean.managedBean.scQt.ppPlan ne null and specificationBackingBean.managedBean.scQt.ppPlan.planNo ne null}">
 						<td><h:outputLabel value=" #{lbl['lbl.sc.justification']}" /></td>
-						<td colspan="3"><p:inputTextarea rows="2" cols="143"
+						<td colspan="3"><p:inputTextarea rows="3" cols="143"
 								style="margin-bottom:5px;width: 80%;"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								maxlength="200"
@@ -72,7 +72,7 @@
 						</ui:fragment></td>
 					<td><ui:fragment
 							rendered="#{specificationBackingBean.managedBean.scQt.panel ne 'No'}">
-							<p:selectOneMenu style="width:230px;margin-bottom:5px;"
+							<p:selectOneMenu style="width:300px;margin-bottom:5px;"
 								value="#{specificationBackingBean.managedBean.scQt.qtType}"
 								disabled="true">
 								<f:selectItems
@@ -105,7 +105,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="procTypeBoCategory" required="true"
 							value="#{specificationBackingBean.managedBean.scQt.procurementTypeCatId.parameterId}"
-							style="margin-bottom:5px;width:230px;"
+							style="margin-bottom:5px;width:300px;"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							label="#{lbl['lbl.sc.procurment.type.category']}">
 							<f:selectItems
@@ -227,7 +227,7 @@
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							label="#{lbl['lbl.sc.spec.complete.period']}"
 							value="#{specificationBackingBean.managedBean.scQt.contractDuration}"
-							style="text-align:right;margin-bottom:5px;">
+							style="text-align:right;margin-bottom:5px;width:292px;">
 							<p:ajax event="change" process="@this" partialSubmit="true" />
 						</p:inputMask> <p:message id="completionBo" for="contractBo" display="icon"></p:message></td>
 				</tr>
@@ -241,7 +241,7 @@
 						<table>
 							<tr>
 								<td><p:selectOneMenu id="procCategory" required="true"
-										style="margin-bottom:5px;width:209px;"
+										style="margin-bottom:5px;width:303px;"
 										disabled="#{specificationBackingBean.managedBean.readOnly}"
 										label="#{lbl['lbl.sc.procurement.category']}"
 										value="#{specificationBackingBean.managedBean.scQt.pmProcurementCategory.parameterId}">
@@ -263,7 +263,7 @@
 						rendered="#{specificationBackingBean.managedBean.scQt.specApprovalReq}">
 						<td><p:outputLabel
 								value="#{lbl['lbl.sc.ministry.spec.secretary']}" /></td>
-						<td><p:inputText size="32" style="margin-bottom:5px;"
+						<td><p:inputText size="32" style="margin-bottom:5px;width:292px;"
 								value="#{lbl[specificationBackingBean.managedBean.scQt.specApprovalReq ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
 								readonly="true"></p:inputText></td>
 					</ui:fragment>
@@ -279,14 +279,14 @@
 			rendered="#{(specificationBackingBean.managedBean.scQt.qtType eq 'O' and specificationBackingBean.managedBean.scQt.panel eq 'No' and specificationBackingBean.managedBean.scQt.zonal !='false' and specificationBackingBean.managedBean.scQt.estimatedAmount ne null and specificationBackingBean.managedBean.scQt.estimatedAmount gt 0)}">
 			<table style="width: 100%">
 				<tr>
-					<td style="width: 270px"><p:outputLabel
+					<td style="width: 300px"><p:outputLabel
 							value="#{lbl['lbl.sc.zone.location.level']}" /> <p:outputLabel
 							value="*" styleClass="mandatory"></p:outputLabel></td>
 					<td><p:selectOneMenu id="locationLevels"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							label="#{lbl['lbl.sc.zone.location.level']}"
 							value="#{specificationBackingBean.managedBean.scQt.zoneLocationLevel.parameterId}"
-							style="width: 209px;">
+							style="width: 303px;">
 
 							<f:selectItems
 								value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
