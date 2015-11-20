@@ -63,28 +63,28 @@
 				</p:tabMenu></td>
 			<td width="80%" valign="top"><h:panelGroup id="menuQTContent">
 					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '0'}">
-						<ui:include src="qtdetails.xhtml" />
+						<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderGeneralDetails.xhtml" />
 					</c:if>
 					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '1'}">
 						<ui:include
 							src="/xhtml/sc/quatationtender/committeeappointment/qtcommitteeappointment.xhtml" />
 					</c:if>
 					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '2'}">
-						<ui:include src="qtsupplierqualfcriteria.xhtml" />
+						<ui:include src="/xhtml/sc/quatationtender/supplierQualificationCriteria/supplierQualificationCriteria.xhtml" />
 					</c:if>
 					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '3'}">
-						<ui:include src="approvalWorkFlowMain.xhtml" />
+						<ui:include src="/xhtml/sc/quatationtender/approval/approvalCheckBox.xhtml" />
 					</c:if>
 					<ui:fragment
 						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_QT_SUBMISSION) or (qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)}">
 						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '4'}">
-							<ui:include src="qttechnicalchecklist.xhtml" />
+							<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderTechnicalChecklist.xhtml" />
 						</c:if>
 						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '5'}">
-							<ui:include src="qtfinancialchecklist.xhtml" />
+							<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderFinancialChecklist.xhtml" />
 						</c:if>
 						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '6'}">
-							<ui:include src="qtactivitiestracking.xhtml" />
+							<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderActivitiesTracking.xhtml" />
 						</c:if>
 					</ui:fragment>
 					<ui:fragment
@@ -95,16 +95,16 @@
 								src="/xhtml/sc/quatationtender/briefingsitevisit/qtbriefingsitevisitdetails.xhtml" />
 						</c:if>
 						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '5'}">
-							<ui:include src="qtschedule.xhtml" />
+							<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderPublishingDetails.xhtml" />
 						</c:if>
 						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '6'}">
-							<ui:include src="deduction.xhtml" />
+							<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderPaymentDeduction.xhtml" />
 						</c:if>
 						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '7'}">
-							<ui:include src="documents.xhtml" />
+							<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderDocuments.xhtml" />
 						</c:if>
 						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '8'}">
-							<ui:include src="qtactivitiestracking.xhtml" />
+							<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderActivitiesTracking.xhtml" />
 						</c:if>
 						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '9'}">
 							<ui:include

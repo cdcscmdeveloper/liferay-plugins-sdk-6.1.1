@@ -5,8 +5,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:dialog id="popupSuppDtl" widgetVar="suppDetails"
-		resizable="false" position="top" styleClass="pop_up_top"
+	<p:dialog id="popupSuppDtl" widgetVar="suppDetails" resizable="false"
+		position="top" styleClass="pop_up_top"
 		header="#{lbl['lbl.sc.supplier.details']}" width="450" height="550">
 		<table style="width: 100%">
 			<tr>
@@ -102,7 +102,7 @@
 			</tr>
 		</table>
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+			<p:commandButton value="#{lbl['lbl.btn.close']}"
 				onclick="suppDetails.hide();" />
 		</div>
 	</p:dialog>

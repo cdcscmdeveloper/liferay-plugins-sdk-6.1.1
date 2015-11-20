@@ -107,15 +107,9 @@
 						size="30" readonly="true" disabled="true" /></td>
 			</tr>
 		</table>
-		<p:spacer height="5" />
-		<p:panelGrid style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-			<p:row>
-				<p:column width="100%" style="text-align:right">
-					<p:commandButton value="#{lbl['lbl.btn.close']}"
-						 onclick="suppDetails.hide();" />
-				</p:column>
-			</p:row>
-		</p:panelGrid>
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.close']}"
+				onclick="suppDetails.hide();" />
+		</div>
 	</p:dialog>
 </ui:composition>

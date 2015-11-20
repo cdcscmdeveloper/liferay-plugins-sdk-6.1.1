@@ -9,15 +9,15 @@
 		<c:if
 			test="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType == ParameterTypeConst.quotationTenderTypeOpen 
 						and qTSupplierQulCriteriaBackingBean.managedBean.qt.panel == 'No'}">
-			<ui:include src="nrmqtntender.xhtml" />
+			<ui:include src="supplierQualificationCriteriaNonPanel.xhtml" />
 		</c:if>
 		<c:if
 			test="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.panel ne 'No'}">
-			<ui:include src="panel/panelDetails.xhtml" />
+			<ui:include src="supplierQualificationCriteriaPanel.xhtml" />
 		</c:if>
 		<c:if
 			test="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType == ParameterTypeConst.quotationTenderTypeRestrictedTender and qTSupplierQulCriteriaBackingBean.managedBean.qt.panel == 'No'}">
-			<ui:include src="restrictedtender/restrictedTenderDetails.xhtml" />
+			<ui:include src="supplierQualificationCriteriaRestrictedTender.xhtml" />
 		</c:if>
 	</h:panelGroup>
 </ui:composition>

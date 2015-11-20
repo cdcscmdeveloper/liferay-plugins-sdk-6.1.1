@@ -6,11 +6,158 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<p:panel header="#{lbl['lbl.sc.general.info']}" toggleable="true">
+		<table>
+			<tr>
+				<td style="width: 220px;" valign="top"><p:outputLabel
+						value="#{lbl['lbl.sc.title']}" /> <p:outputLabel value="*"
+						styleClass="mandatory" /></td>
+				<td colspan="3"><p:inputTextarea id="title1"
+						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_TITLE)}"
+						label="#{lbl['lbl.sc.title']}" required="true"
+						value="#{qTDetailBB.managedBean.qt.qtTitle}" cols="110" rows="2"
+						valueChangeListener="#{qTDetailBB.qtMaiantanceValueChangeListner}"
+						style=" margin-bottom:5px; width: 100%; " maxlength="1000">
+						<f:ajax></f:ajax>
+					</p:inputTextarea> <p:message id="title1Msg" for="title1" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.qt.fileno']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><table>
+						<tr>
+							<td><p:inputText id="fileno"
+									label="#{lbl['lbl.sc.qt.fileno']}" required="true"
+									value="#{qTDetailBB.managedBean.qt.fileNo}" size="30"
+									maxlength="50"
+									disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_FILE_NO)}" /></td>
+							<td><p:message id="filenoMsg" for="fileno" display="icon" />
+							</td>
+						</tr>
+					</table></td>
+				<td style="width: 385px;"><p:outputLabel
+						value="#{lbl['lbl.sc.created.date']}" /></td>
+				<td><p:inputText
+						value="#{qTDetailBB.managedBean.qt.createdDate}" disabled="true"
+						size="30">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
+				<td><p:inputText
+						value="#{qTDetailBB.getParameterDesc(qTDetailBB.managedBean.qt.procurementMode)}"
+						disabled="true" size="30" readonly="true" /></td>
+				<td />
+				<td />
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" /></td>
+				<td><p:inputText id="estprice" style="text-align:right;"
+						value="#{qTDetailBB.managedBean.qt.estimatedAmount}" size="30"
+						disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_ESTMT_AMT)}"
+						valueChangeListener="#{qTDetailBB.estimateAmtChanged}">
+						<f:ajax></f:ajax>
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+
+					</p:inputText></td>
+				<td />
+				<td />
+			</tr>
+			<ui:fragment
+				rendered="#{qTDetailBB.managedBean.qt.ppPlan.planNo ne null}">
+				<tr>
+					<td valign="top"><p:outputLabel
+							value="#{lbl['lbl.sc.justification']}" /></td>
+					<td colspan="3"><p:inputTextarea
+							value="#{qTDetailBB.managedBean.qt.justificationRemark}"
+							cols="30" rows="2" style=" margin-bottom:5px;" maxlength="200"
+							disabled="true" readonly="true" /></td>
+				</tr>
+			</ui:fragment>
+		</table>
+	</p:panel>
+	<p:panel header="#{lbl['lbl.sc.qt.goso.list']}" toggleable="true"
+		rendered="#{!qTDetailBB.managedBean.qt.planned and false}">
+		<p:dataTable id="gosodoList"
+			value="#{qTDetailBB.managedBean.qt.scQtGosodoBudgets}" var="gosodo"
+			selection="#{qTDetailBB.managedBean.selectedGosodoBudgets}"
+			rowKey="#{gosodo}" rowIndexVar="rowIndex" style="width : 100%">
+
+			<p:column selectionMode="multiple" style="width:2%"
+				disabledSelection="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_GOSODO)}" />
+
+			<ac:paginator for="gosodoList" />
+
+			<p:column headerText="#{lbl['lbl.sc.qt.gocode']}">
+				<h:outputText value="#{gosodo.pmGo.goCode}"
+					rendered="#{rowIndex lt qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}" />
+				<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
+					<p:selectOneMenu value="#{gosodo.pmGo.goId}"
+						rendered="#{rowIndex eq qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems value="#{qTDetailBB.goList}" var="go"
+							itemLabel="#{go.goCode}" itemValue="#{go.goId}" />
+						<p:ajax event="change"
+							listener="#{qTDetailBB.handleGoChanged(gosodo)}"
+							partialSubmit="true" process="@this" update="solist" />
+					</p:selectOneMenu>
+				</c:if>
+				<c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
+					<p:inputText value="#{gosodo.pmGo.goId}" disabled="true" />
+				</c:if>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.qt.socode']}">
+				<h:outputText value="#{gosodo.pmSo.soCode}"
+					rendered="#{rowIndex lt qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}" />
+				<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
+					<p:selectOneMenu id="solist" value="#{gosodo.pmSo.soId}"
+						rendered="#{rowIndex eq qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems value="#{qTDetailBB.handleGoChanged(gosodo)}"
+							var="so" itemLabel="#{so.soCode}" itemValue="#{so.soId}" />
+						<p:ajax event="change"
+							listener="#{qTDetailBB.handleSoChanged(gosodo)}"
+							partialSubmit="true" process="@this" />
+					</p:selectOneMenu>
+				</c:if>
+				<c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
+					<p:inputText value="#{gosodo.pmSo.soCode}" disabled="true" />
+				</c:if>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.qt.goso.amount']}">
+				<h:outputText value="#{gosodo.budgetAmt}"
+					rendered="#{rowIndex lt qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}" />
+				<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
+					<p:inputText value="#{gosodo.budgetAmt}"
+						rendered="#{rowIndex eq qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}" />
+				</c:if>
+				<c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
+					<p:inputText value="#{gosodo.budgetAmt}" disabled="true" />
+				</c:if>
+
+			</p:column>
+		</p:dataTable>
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
+				actionListener="#{qTDetailBB.addGoSoDoAction}" update="gosodoList"
+				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_GOSODO)}">
+			</p:commandButton>
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				actionListener="#{qTDetailBB.deleteGoSoDoAction}"
+				update="gosodoList"
+				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_GOSODO)}" />
+		</div>
+	</p:panel>
 	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.qt.details']}"
 		toggleable="true">
 		<table>
 			<tr>
-				<td style="width: 190px;"><p:outputLabel
+				<td style="width: 220px;"><p:outputLabel
 						value="#{lbl['lbl.sc.qttentype']}" /></td>
 				<td colspan="3"><c:if
 						test="#{qTDetailBB.managedBean.qt.brandNew}">
@@ -51,7 +198,7 @@
 				<td colspan="4"><p:outputPanel id="testPanel">
 						<table style="width: 100%">
 							<tr>
-								<td style="width: 190px;"><p:outputLabel
+								<td style="width: 220px;"><p:outputLabel
 										value="#{lbl['lbl.sc.qt.panel']}"
 										rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
 								<td><p:inputText
@@ -60,12 +207,12 @@
 										rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
 								<ui:fragment
 									rendered="#{qTDetailBB.managedBean.qt.panel eq 'No'}">
-									<td style="width: 215px"><p:outputLabel
+									<td style="width: 360px"><p:outputLabel
 											value="#{lbl['lbl.sc.open.for']}"
 											rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
 									<td><p:inputText
 											value="#{qTDetailBB.getParameterDesc(ParameterTypeConst.scOpenFor, qTDetailBB.managedBean.qt.openFor)}"
-											disabled="true" size="30" 
+											disabled="true" size="30"
 											rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" />
 									</td>
 								</ui:fragment>
@@ -106,7 +253,7 @@
 									value="#{lbl['lbl.sc.qt.publishing.period.tooltip']}" /></td>
 						</tr>
 					</table></td>
-				<td style="width: 215px;"><p:outputLabel
+				<td style="width: 360px;"><p:outputLabel
 						value="#{lbl['lbl.sc.qt.proposal.validity']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><table>
@@ -131,14 +278,14 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
 					<td colspan="4"><table>
-						<tr>
-							<td><p:inputText
-								value="#{lbl[qTDetailBB.managedBean.qt.zonal ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
-								disabled="true" size="30" /></td>
-							<td colspan="3"><ac:iconTooltip
-								value="#{lbl['lbl.sc.qt.zone.location.tooltip']}" /></td>
-						</tr>
-					</table></td>
+							<tr>
+								<td><p:inputText
+										value="#{lbl[qTDetailBB.managedBean.qt.zonal ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
+										disabled="true" size="30" /></td>
+								<td colspan="3"><ac:iconTooltip
+										value="#{lbl['lbl.sc.qt.zone.location.tooltip']}" /></td>
+							</tr>
+						</table></td>
 				</tr>
 			</ui:fragment>
 		</table>
@@ -148,7 +295,7 @@
 		rendered="#{qTDetailBB.managedBean.qt.zonal and qTDetailBB.managedBean.qt.panel eq 'false'}">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 190px"><p:outputLabel
+				<td style="width: 220px"><p:outputLabel
 						value="#{lbl['lbl.sc.zone.location.level']}" /></td>
 				<td colspan="3"><p:inputText
 						value="#{qTDetailBB.getParameterDesc(qTDetailBB.managedBean.qt.zoneLocationLevel)}"
@@ -178,4 +325,5 @@
 			</p:column>
 		</p:dataTable>
 	</p:panel>
+
 </ui:composition>
