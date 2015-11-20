@@ -46,9 +46,10 @@
 								<td><p:outputLabel value="#{lbl['lbl.cm.supplier.name']}" /></td>
 								<td><p:inputText size="50"
 										value="#{catalogueBackingBean.managedBean.supplierNameFilterBean.searchValue}"></p:inputText></td>
-								<td><!-- <p:outputLabel value="#{lbl['lbl.cm.keyword']}" /> --></td>
-								<td><!-- <p:inputText size="50"
-										value="#{catalogueBackingBean.managedBean.keyWordFilterBean.searchValue}"></p:inputText> --></td>
+								<td><p:outputLabel
+											value="#{lbl['lbl.cm.business.reg.no']}" /></td>
+								<td><p:inputText size="50"
+											value="#{catalogueBackingBean.managedBean.bizRegNoFilterBean.searchValue}"></p:inputText></td>
 
 							</tr>
 						</table>
@@ -60,9 +61,9 @@
 									<td width="35%"><p:inputText size="50"
 											value="#{catalogueBackingBean.managedBean.epNoFilterBean.searchValue}"></p:inputText></td>
 									<td><p:outputLabel
-											value="#{lbl['lbl.cm.business.reg.no']}" /></td>
+											value="#{lbl['lbl.sm.mofno']}" /></td>
 									<td><p:inputText size="50"
-											value="#{catalogueBackingBean.managedBean.bizRegNoFilterBean.searchValue}"></p:inputText></td>
+											value="#{catalogueBackingBean.managedBean.mofNoFilterBean.searchValue}"></p:inputText></td>
 
 								</tr>
 
@@ -78,12 +79,22 @@
 												value="#{lbl['lbl.fl.tooltip.active.contract.mof']}" />
 										</p:tooltip></td>
 
-									<td width="15%"><p:outputLabel
-											value="#{lbl['lbl.sm.mofno']}" /></td>
+									<td width="15%"><p:outputLabel value="#{lbl['lbl.ct.contract.title']}" /></td>
 									<td width="35%"><p:inputText size="50"
-											value="#{catalogueBackingBean.managedBean.mofNoFilterBean.searchValue}"></p:inputText></td>
+											value="#{catalogueBackingBean.managedBean.contractTitleFilterBean.searchValue}"></p:inputText></td>
 
 
+								</tr>
+								
+								<tr>
+									<td><p:outputLabel
+											value="#{lbl['lbl.ct.loa.no']}" /></td>
+									<td><p:inputText size="50"
+											value="#{catalogueBackingBean.managedBean.loaNoFilterBean.searchValue}" />
+									</td>
+									<td><p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" /></td>
+									<td><p:inputText size="50"
+											value="#{catalogueBackingBean.managedBean.loaPhysicalNoFilterBean.searchValue}"></p:inputText></td>
 								</tr>
 
 								<tr>
