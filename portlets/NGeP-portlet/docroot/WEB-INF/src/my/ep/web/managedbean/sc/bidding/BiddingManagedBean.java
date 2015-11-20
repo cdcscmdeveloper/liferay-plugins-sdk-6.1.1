@@ -966,7 +966,7 @@ public class BiddingManagedBean extends BaseManagedBean {
 		private static final long serialVersionUID = 1L;
 
 		public SearchPagingDataModel() {
-			super("biddingList");
+			super("biddingList",false);
 
 		}
 
