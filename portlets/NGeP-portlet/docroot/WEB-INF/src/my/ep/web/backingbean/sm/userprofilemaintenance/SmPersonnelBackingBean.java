@@ -862,6 +862,7 @@ public class SmPersonnelBackingBean extends
 				smPersonnel.setPmCountry(resCountryDTO.getPmCountry());
 			}
 		}
+		setPrevEpRole(smPersonnel);
 
 	}
 
