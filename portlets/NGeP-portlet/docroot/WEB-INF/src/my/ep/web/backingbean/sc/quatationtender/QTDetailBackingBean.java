@@ -3380,7 +3380,7 @@ public class QTDetailBackingBean extends
 		templateSpecBean
 				.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
 		specBB.retrieveTemplateSpecMaster(templateSpecBean);
-		return "/xhtml/sc/quatationtender/technicalTemplateMaintenance.xhtml?faces-redirect=true";
+		return "/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderTechnicalTemplateMaintenance.xhtml?faces-redirect=true";
 	}
 
 	/**
@@ -3477,7 +3477,7 @@ public class QTDetailBackingBean extends
 
 		}
 
-		return "/xhtml/sc/quatationtender/financialTemplateMaintenance.xhtml?faces-redirect=true";
+		return "/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderFinancialTemplateMaintenance.xhtml?faces-redirect=true";
 	}
 
 	/**
