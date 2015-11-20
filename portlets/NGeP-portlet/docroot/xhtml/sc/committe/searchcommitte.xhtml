@@ -10,7 +10,7 @@
 		id="qtsearchid">
 		<table>
 			<tr>
-				<td valign="top"><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
+				<td style="width:220px" valign="top"><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
 				<td colspan="3"><p:inputTextarea
 						value="#{committeBackingBean.managedBean.qtnTenderSearchBean.qtTitle}"
 						cols="115" rows="2" style=" margin-bottom:5px;width: 100%;"
@@ -20,7 +20,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.qtn.no']}" /></td>
 				<td><p:inputText
 						value="#{committeBackingBean.managedBean.qtnTenderSearchBean.qtNo}"
-						size="37" maxlength="21" /></td>
+						size="40" maxlength="21" /></td>
 				<td />
 				<td />
 			</tr>
@@ -35,7 +35,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.recordstatus']}" /></td>
-				<td><p:selectOneMenu style="width: 243px;margin-bottom: 5px;"
+				<td><p:selectOneMenu style="width: 305px;margin-bottom: 5px;"
 						value="#{committeBackingBean.managedBean.qtnTenderSearchBean.recordStatus}">
 						<f:selectItems
 							value="#{committeBackingBean.getRecordStatusDropdownValues()}" />
@@ -47,7 +47,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.committe.type']}" /></td>
 				<td><p:selectOneMenu
 						value="#{committeBackingBean.managedBean.qtnTenderSearchBean.committeeType}"
-						style="width: 243px;margin-bottom: 5px;">
+						style="width: 305px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{committeBackingBean.getFCCommitteesDropDown()}" />
 					</p:selectOneMenu></td>
@@ -101,7 +101,7 @@
    	    		#{(scqtcommittee.scCommittee.recordStatusFlg==1)? lbl['lbl.txt.active'] : lbl['lbl.txt.inactive']}              
       		</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.action']}" style="width:6%">
+			<p:column headerText="#{lbl['lbl.sc.action']}" style="width:6%;text-align: center;">
 				<ui:param name="isFCCommitteeType"
 					value="#{scqtcommittee.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeQuotationCommitteeB or 
 			scqtcommittee.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeQuotationCommitteeA or
