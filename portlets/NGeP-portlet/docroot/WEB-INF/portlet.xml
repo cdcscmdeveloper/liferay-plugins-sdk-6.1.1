@@ -883,7 +883,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/sc/bidding/ePSchedulerManager.xhtml</value>
+			<value>/xhtml/sc/bidding/schedulerManager/ePSchedulerManager.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -914,7 +914,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/sc/bidding/biddingmain.xhtml</value>
+			<value>/xhtml/sc/bidding/bidManagement/biddingmain.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -945,7 +945,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/sc/bidding/scheduleBiddingPreRenderView.xhtml</value>
+			<value>/xhtml/sc/bidding/scheduleBidding/scheduleBiddingPreRenderView.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -976,7 +976,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/sc/bidding/onlineBiddingPreRenderer.xhtml</value>
+			<value>/xhtml/sc/bidding/onlineBidding/onlineBiddingPreRenderer.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
