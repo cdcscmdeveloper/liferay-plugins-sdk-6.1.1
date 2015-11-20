@@ -152,9 +152,16 @@ import com.liferay.portal.util.PortalUtil;
 public class NoticeBoardBackingBean extends
 		SourcingBaseBackingBean<NoticeBoardManagedBean> {
 	public static Logger log = Logger.getLogger(NoticeBoardBackingBean.class);
-	private static final String NAV_TO_QTN_TENDER_DETAILS_PAGE = "tenderNoticeDetailScreen.xhtml?faces-redirect=true";
+	private static final String NAV_TO_QTN_TENDER_DETAILS_PAGE = "nbQuotationNTendenDetail.xhtml?faces-redirect=true";
 	private static final String MOF_INVALID_MSG_KEY = "lbl.sc.mof.invalid.orinactive";
 	private static final String CAP_CHAR = "^";
+	private static final String MAIN_PAGE = "nbMainPage";
+	private static final String QT_DETAILS_PAGE = "/xhtml/sc/noticeboard/qtdetails/nbQuotationNTendenDetail.xhtml";
+	private static final String CHECK_SUPPLIER_QUAL_PAGE = "/xhtml/sc/noticeboard/supplierqualification/nbSupplierQulificationCriteria.xhtml";
+	private static final String PRICE_SCHEDULE_PAGE ="/xhtml/sc/noticeboard/priceshedule/nbPriceSchedule.xhtml";
+	private static final String VIEW_AWARD_SUPP_PAGE = "/xhtml/sc/noticeboard/awardsupplier/nbAwardSupplierView.xhtml";
+	private static final String BSV_SUPP_REGISTRATION_PAGE = "/xhtml/sc/noticeboard/bsvregistration/nbSupplierRegistration.xhtml";
+	private static final String NB_MAIN_PAGE = "/xhtml/sc/noticeboard/resultview/nbMainPage.xhtml";
 	
 	private IPagingDataModel<Object[]> qtDataModel = new QTPagingDataModel();
 	private IPagingDataModel<ScQtCategory> categoryCodesDataModel = new QTCategoryCodesDataModel();
@@ -203,7 +210,7 @@ public class NoticeBoardBackingBean extends
 		log.info("** Qtn / TenderDetsils **");
 		IQTNoticeBoardSO qtNoticeBoardSO = null;
 		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
-		this.getManagedBean().setPreviousPage("noticeboardlandingpage");
+		this.getManagedBean().setPreviousPage(MAIN_PAGE);
 		try {
 			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
@@ -315,7 +322,7 @@ public class NoticeBoardBackingBean extends
 		}
 
 		// this.getManagedBean().setTabIndex(0);
-		String pageUrl = "/xhtml/sc/noticeboard/tenderNoticeDetail.xhtml";
+		String pageUrl = QT_DETAILS_PAGE;
 		FacesContext context = FacesContext.getCurrentInstance();
 		context.getApplication().getNavigationHandler()
 				.handleNavigation(context, null, pageUrl);
@@ -381,7 +388,7 @@ public class NoticeBoardBackingBean extends
 		log.info("** Back Button **");
 		this.getManagedBean().setMofNumber(null);
 		this.getManagedBean().setCompanyName(null);
-		String pageUrl = "/xhtml/sc/noticeboard/"
+		String pageUrl = "/xhtml/sc/noticeboard/resultview/"
 				+ this.getManagedBean().getPreviousPage();
 		FacesContext context = FacesContext.getCurrentInstance();
 		context.getApplication().getNavigationHandler()
@@ -623,7 +630,7 @@ public class NoticeBoardBackingBean extends
 	 */
 	public String gotoSupplierQualificationCriteria(Long qtId) {
 
-		this.getManagedBean().setPreviousPage("noticeboardlandingpage");
+		this.getManagedBean().setPreviousPage(MAIN_PAGE);
 		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 		reqDTO.setQtId(qtId);
 		NoticeBoardResDTO resDTO = getNBResDTO(reqDTO);
@@ -635,7 +642,7 @@ public class NoticeBoardBackingBean extends
 		if(null != mofNo){
 			this.getManagedBean().setMofNo(mofNo);
 		}
-		return "/xhtml/sc/noticeboard/nbsupplierqulificationcriteria.xhtml";
+		return CHECK_SUPPLIER_QUAL_PAGE;
 	}
 	
 	/**
@@ -671,7 +678,7 @@ public class NoticeBoardBackingBean extends
 	public String gotoSupplierRegistration(Long qtId) {
 		
 		NoticeBoardManagedBean managedBean = this.getManagedBean();
-		managedBean.setPreviousPage("noticeboardlandingpage");
+		managedBean.setPreviousPage(MAIN_PAGE);
 		this.getManagedBean().setSelectedZoneTabIndex(0);
 		retriveBsvDetails(qtId);
 		SmSupplier smSupplier = managedBean.getSmSupplier();
@@ -693,7 +700,7 @@ public class NoticeBoardBackingBean extends
 		//managedBean.setSelectedZoneTabIndex(0);
 		managedBean.setBriefingDtls(null);
 		
-		return "/xhtml/sc/noticeboard/nbsupplierreg.xhtml";
+		return BSV_SUPP_REGISTRATION_PAGE;
 	}
 
 	public void bsvZoneTabChangeAction(Integer selectedZoneTabIndex) {
@@ -832,7 +839,7 @@ public class NoticeBoardBackingBean extends
 		ScQtCommittee evalCommitte = null;
 		
 		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
-		this.getManagedBean().setPreviousPage("noticeboardlandingpage");
+		this.getManagedBean().setPreviousPage(MAIN_PAGE);
 
 		try {
 			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
@@ -886,7 +893,7 @@ public class NoticeBoardBackingBean extends
 			
 		} finally {
 		}
-		return "/xhtml/sc/noticeboard/noticeboardPriceSchedule.xhtml";
+		return PRICE_SCHEDULE_PAGE;
 	}
 
 	/**
@@ -1601,7 +1608,7 @@ public class NoticeBoardBackingBean extends
 		
 		IQTNoticeBoardSO qtNoticeBoardSO = null;
 		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
-		this.getManagedBean().setPreviousPage("noticeboardlandingpage");
+		this.getManagedBean().setPreviousPage(MAIN_PAGE);
 		try {
 			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
@@ -1645,7 +1652,7 @@ public class NoticeBoardBackingBean extends
 		} finally {
 		}
 
-		return "/xhtml/sc/noticeboard/awardsupplier.xhtml";
+		return VIEW_AWARD_SUPP_PAGE;
 	}
 
 	/**
@@ -1689,7 +1696,7 @@ public class NoticeBoardBackingBean extends
 			FacesContext.getCurrentInstance()
 			.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,
 							null,"Attachment not found."));
-			String pageUrl = "/xhtml/sc/noticeboard/noticeboardlandingpage";
+			String pageUrl = NB_MAIN_PAGE;
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.getApplication().getNavigationHandler()
 					.handleNavigation(context, null, pageUrl);
@@ -2188,58 +2195,6 @@ public class NoticeBoardBackingBean extends
 	
 	
 	/**
-	 * Get final price of BidSupplierItems.
-	 * 
-	 * @param qtId
-	 *         the Long variable
-	 * @param recommendType
-	 *         the String variable
-	 * @param scLoiLoaItem
-	 *         the instance of ScLoiLoaItem
-	 * @return finalPrice
-	 */
-	private BigDecimal getPriceByBidding(Long qtId, String recommendType, ScLoiLoaItem scLoiLoaItem) {
-		
-		BigDecimal finalPrice = null;
-		final long scLoiLoaItemRequestId = scLoiLoaItem.getScRequestItem()
-				.getRequestNoteItemId();
-		final long scLoiLoaItemSupplierId = scLoiLoaItem.getScLoa()
-				.getScLoiLoa().getSmSupplier().getSupplierId();	
-		IBiddingSO biddinSO = null;
-		try{
-			biddinSO = getBiddingSO();
-		BiddingReqDTO biddingReqDTO = new BiddingReqDTO();
-		biddingReqDTO.setDocId(qtId);
-		biddingReqDTO.setRecommendType(recommendType);
-		BiddingResDTO biddingResDTO = biddinSO
-				.retriveBidSupplierItems(biddingReqDTO);
-		List<ScBidSupplierItem> scBidSupplierItemList = biddingResDTO.getBidSupplierItems();
-		
-		for (ScBidSupplierItem scBidSupplierItem : scBidSupplierItemList) {
-			// check requestId of scLoiLoaItem with requestId  of scBidItem&& 
-			// supplierId of scLoiLoaItem with supplierId of scBidSupplier
-			if ( scLoiLoaItemRequestId== scBidSupplierItem
-					.getScBidItem().getScRequestItem().getRequestNoteItemId() &&
-					scLoiLoaItemSupplierId == scBidSupplierItem
-						.getScBidSupplier().getSmSupplier().getSupplierId()) {
-					finalPrice = scBidSupplierItem.getFinalPrice();
-					break;
-				}
-			}
-		} finally{
-			biddinSO = null;
-		}
-
-		return finalPrice;
-	}
-	
-	private IBiddingSO getBiddingSO() {
-		IBiddingSO biddinSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
-		return biddinSO;
-	}
-	
-	/**
 	 * Category Selection Action
 	 * 
 	 * @param pmCategoryL3
@@ -2551,26 +2506,7 @@ public class NoticeBoardBackingBean extends
 		return isNotRigistered;
 	}
 	
-	/*private void setQtAmendMentData(ScQt scQt, QtAmendMentBean amendMentBean){
-		
-		if (0 != amendMentBean.getNewValidityPeriodDays()) {
-
-			scQt.setQtValidityPeriod(amendMentBean
-					.getNewValidityPeriodDays());
-		}
-		if (0 != amendMentBean.getNewPublishPeriodDays()) {
-			scQt.setPublishPeriod(amendMentBean
-					.getNewPublishPeriodDays());
-		}
-		if (null != amendMentBean.getNewTitle()) {
-			scQt.setQtTitle(amendMentBean.getNewTitle());
-		}
-		if (null != amendMentBean.getNewEstmtPrice()) {
-			scQt.setEstimatedAmount(amendMentBean
-					.getNewEstmtPrice());
-		}
-	}
-	*/
+	
 	/**
 	 * @param scLoalist
 	 * @param qtId
