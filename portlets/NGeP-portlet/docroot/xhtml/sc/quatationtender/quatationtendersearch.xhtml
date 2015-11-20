@@ -160,9 +160,9 @@
 						<h:outputText value="#{qTDetailBB.getStatusDescById(scQt.qtStatus.statusId)}"/>
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:6%">
+					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:6%;text-align: center;">
 						<p:commandLink id="editIcon" action="#{qTDetailBB.editQuationTenderDetails(scQt)}"
-							style="margin-right:20px;" partialSubmit="true" process="@this">
+							partialSubmit="true" process="@this">
 							<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/edit.png" styleClass="tasklist_title1"
 								title="#{lbl['lbl.sc.qt.search.edit.tooltip']}" />
 						</p:commandLink>
