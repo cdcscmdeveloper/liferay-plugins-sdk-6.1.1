@@ -10,7 +10,7 @@
 
 		<table style="width: 100%" border="0">
 			<tr>
-				<td valign="top" style="width:300px;"><h:outputLabel
+				<td valign="top" style="width: 300px;"><h:outputLabel
 						value="#{lbl['lbl.sc.title']}" /></td>
 				<td colspan="3"><p:inputTextarea readonly="true" rows="3"
 						cols="143" style="margin-bottom:5px;width: 80%;"
@@ -29,8 +29,9 @@
 
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText size="32" style="text-align:right;width:292px;"
-						id="estPrice" required="true"
+				<td><p:inputText size="32"
+						style="text-align:right;width:292px;" id="estPrice"
+						required="true"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						label="#{lbl['lbl.sc.spec.est.price']}" maxlength="18"
 						value="#{specificationBackingBean.managedBean.scQt.estimatedAmount}"
@@ -263,7 +264,8 @@
 						rendered="#{specificationBackingBean.managedBean.scQt.specApprovalReq}">
 						<td><p:outputLabel
 								value="#{lbl['lbl.sc.ministry.spec.secretary']}" /></td>
-						<td><p:inputText size="32" style="margin-bottom:5px;width:292px;"
+						<td><p:inputText size="32"
+								style="margin-bottom:5px;width:292px;"
 								value="#{lbl[specificationBackingBean.managedBean.scQt.specApprovalReq ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
 								readonly="true"></p:inputText></td>
 					</ui:fragment>
@@ -383,10 +385,10 @@
 		<h:panelGroup id="zonePopupGeneral">
 			<table styleClass="noBorders tr,noBorders td" border="0">
 				<TR>
-					<TD width="30%" valign="top"><p:outputLabel
+					<td style="width:35%" valign="top"><p:outputLabel
 							value="#{lbl['lbl.sc.zone.name']}"></p:outputLabel> <p:outputLabel
-							value="*" styleClass="mandatory" /></TD>
-					<td width="70%">
+							value="*" styleClass="mandatory" /></td>
+					<td style="width:65%">
 						<table>
 							<tr>
 								<td><p:inputText size="50" id="zoneNameId"
