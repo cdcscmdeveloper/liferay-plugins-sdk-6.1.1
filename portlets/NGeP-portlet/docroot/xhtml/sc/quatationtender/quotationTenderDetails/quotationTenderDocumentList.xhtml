@@ -58,7 +58,7 @@
 				</ui:fragment>
 			</p:column>
 			-->
-			<p:column style="width:10%;" headerText="#{lbl['lbl.sc.action']}">
+			<p:column style="width:10%;text-align: center;" headerText="#{lbl['lbl.sc.action']}">
 				<p:commandLink
 					action="#{qTDocumentsBackingBean.showTemplateAction(rowIndex,scQtDocReport)}">
 					<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/edit.png" rendered="#{scQtDocReport.definationType.parameterCode eq 'TD'}"/>
