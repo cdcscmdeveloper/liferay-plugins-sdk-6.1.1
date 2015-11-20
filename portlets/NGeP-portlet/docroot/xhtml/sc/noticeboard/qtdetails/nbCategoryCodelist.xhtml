@@ -1,0 +1,43 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<h:outputText value="#{lbl['lbl.sc.category.code.list']}"
+		style="font-weight:bold;text-align: left;font-size: 14px;" />
+	<p:spacer height="30px" />
+
+			<p:dataTable style="width:100%"
+				value="#{noticeBoardBackingBean.categoryCodesDataModel}"
+				var="scQtCategory" id="restrcatcode" lazy="true" rows="5">
+				 <ac:paginator for="restrcatcode" />
+
+				<p:column headerText="#{lbl['lbl.sc.category.code']}"
+					style="width:10%;white-space: normal;">
+					<h:outputText value="#{scQtCategory.pmCategoryL1.categoryL1Code}" />
+					<h:outputText value="#{scQtCategory.pmCategoryL2.categoryL2Code}" />
+					<h:outputText value="#{ scQtCategory.pmCategoryL3.categoryL3Code}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.main.category']}"
+					style="width:30%;white-space: normal;">
+					<h:outputText value="#{scQtCategory.pmCategoryL1.categoryName}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.sub.category']}"
+					style="width:30%;white-space: normal;">
+					<h:outputText value="#{scQtCategory.pmCategoryL2.categoryName}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.sub.category.division']}"
+					style="width:25%;white-space: normal;">
+					<h:outputText value="#{scQtCategory.pmCategoryL3.categoryName}" />
+				</p:column>
+
+			</p:dataTable>
+	
+</ui:composition>
