@@ -263,7 +263,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	        	/*rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);*/
 	        	rptGenBean.setSmNonMandatoryDateView(true);
-		         rptGenBean.setSmApplicationDateView(true);
+		        rptGenBean.setSmPaymentPRDateView(true);
 	            break; 
 		 case ReportConst.SM_SITE_VISIT_APPL_REQUIRE_RPT_VAL:
 			    rptGenBean.retrieveCategoryLevOne1();

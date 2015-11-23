@@ -709,7 +709,7 @@
 								style="margin-top:5px;width:300px;">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 									itemValue="#{null}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.processingFee']}"
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.mofprocessingFee']}"
 									itemValue="#{lbl['lbl.rpt.processingFee']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.regFee']}"
 									itemValue="#{lbl['lbl.rpt.regFee']}"></f:selectItem>
@@ -791,7 +791,7 @@
 								style="margin-top:5px;width:300px;">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 									itemValue="#{null}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.new']}"
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.newmofaccount']}"
 									itemValue="#{lbl['lbl.rpt.new']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.reNew']}"
 									itemValue="#{lbl['lbl.rpt.reNew']}"></f:selectItem>
@@ -2071,6 +2071,13 @@
 									<p:outputLabel  value="#{lbl['lbl.rpt.application.submissiondatefrom']}" style="width:158px;"/>
 								</TD>
 								</c:if>
+								
+								<c:if test="#{reportBackingBean.managedBean.rptGenBean.smPaymentPRDateView}">
+							    <TD>
+									<p:outputLabel  value="#{lbl['lbl.rpt.application.paymentprdate']}" style="width:158px;"/>
+								</TD>
+								</c:if>
+								
 							<c:if test="#{reportBackingBean.managedBean.rptGenBean.smRegisteredDateView}">
 							    <TD>
 									<p:outputLabel  value="#{lbl['lbl.rpt.registereddatefrom']}" style="width:158px;"/>
