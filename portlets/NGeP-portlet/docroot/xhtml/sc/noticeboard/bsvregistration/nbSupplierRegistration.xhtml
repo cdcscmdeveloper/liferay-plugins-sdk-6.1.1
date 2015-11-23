@@ -11,6 +11,8 @@
 	
 <style type="text/css">
    .ui-state-hover{
+     background:none !important;
+     border:none !important;
   	 background-color: none !important;
 	 box-shadow: none !important;
    }
@@ -20,7 +22,7 @@
 		<div class="clear"></div>
 		<p:messages id="supplierReg" showDetail="true" showSummary="false"
 			autoUpdate="true" closable="true" />
-		<p:panelGrid style="width:100%;"
+		<h:panelGrid style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="100%" style="text-align:left">
@@ -40,7 +42,7 @@
 
 			</p:row>
 
-		</p:panelGrid>
+		</h:panelGrid>
 		
 		<p:panel  header="#{lbl['lbl.sc.notice.board.supplier.info']}" toggleable="true">
 			<h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0"
