@@ -69,10 +69,10 @@
 						<td><p:outputLabel
 								value="#{lbl['lbl.cm.request.description']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
-						<td><p:inputText
+							<td><p:inputTextarea style="width: 283px;height:50px;" maxlength="1000"
 								requiredMessage="#{lbl['lbl.cm.error.error15']}"
 								value="#{unspscCodeBackingBean.managedBean.requestCode.itemDetail}"
-								required="true" size="40"></p:inputText> <p:graphicImage
+								required="true" size="40"></p:inputTextarea> <p:graphicImage
 								id="uid2" value="/css/images/design/tooltips.png" /> <p:tooltip
 								id="uidt2" for="uid2">
 								<p:outputLabel escape="false"
