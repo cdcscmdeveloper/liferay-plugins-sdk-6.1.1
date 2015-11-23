@@ -240,19 +240,18 @@ public class SupplierFinalizationBackingBean extends
 				this.getManagedBean().getPayLoad();
 		getManagedBean().setCommitteeType(dataType.getCommitteeType());
 		
+		retrieveQTDetails(qtId);
+		
 		if (ParameterConst.DECISION_FORWARD_TO_HIGHER_COMMITTEES
 				.equals(dataType.getFcDecision())) {
-			this.getManagedBean().setInitialDecisionFwdHighAuth(true);
-		} else if (ParameterConst.DECISION_FORWARD_TO_BPK
-					.equals(dataType.getFcDecision()) && 
-						QTStatusConst.SF_ESCALATION_TO_BPK
+			getManagedBean().setInitialDecisionFwdHighAuth(true);
+		} else if ((ParameterConst.DECISION_FORWARD_TO_BPK
+						.equals(dataType.getFcDecision()) || isQTRefinalized()) && 
+					QTStatusConst.SF_ESCALATION_TO_BPK
 							.equals(getManagedBean().getCurrentStatusId())) {
 			getManagedBean().setCommitteeType(StringUtils.EMPTY);
-			this.getManagedBean().setInitialDecisionFwdToBPK(true);
+			getManagedBean().setInitialDecisionFwdToBPK(true);
 		}
-		
-		
-		retrieveQTDetails(qtId);
 		
 		String committeeType = getManagedBean().getCommitteeType();
 		if (StringUtils.isNotBlank(committeeType) && 
@@ -1192,14 +1191,18 @@ public class SupplierFinalizationBackingBean extends
 		// then have to add the recommended supplier to the recommendedSupppliersByZone map
 		// before saving the data
 		if (isSingleAward) {
+			ScQtEvaluationResultDtl awardedSupplier = this.getManagedBean().getRecommendedSupplier();
 			if (this.getManagedBean().getRecommendedSupplier() != null) {
+				awardedSupplier.setAwareded(true);
+				awardedSupplier.setShortListed(false);
+				
 				List<ScQtEvaluationResultDtl> awardedSupplierList = 
 									new ArrayList<ScQtEvaluationResultDtl>();
-				awardedSupplierList.add(this.getManagedBean().getRecommendedSupplier());
+				awardedSupplierList.add(awardedSupplier);
 				recommendedSuppliersByZone.put(
 						currentZone.getSpecZoneId(), awardedSupplierList);
 				this.getManagedBean().getResetSupplierList()
-					.remove(this.getManagedBean().getRecommendedSupplier());					
+									 .remove(awardedSupplier);					
 			} else {
 				recommendedSuppliersByZone.remove(currentZone.getSpecZoneId());
 			}
@@ -1812,7 +1815,8 @@ public class SupplierFinalizationBackingBean extends
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		int activeIndex = this.getManagedBean().getActiveIndex();
 		String taskId = this.getManagedBean().getTaskId();
-
+		SuppFinalizationResDTO resDTO = null;
+		
 		try {
 			qtSuppFinalizationSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -1833,6 +1837,12 @@ public class SupplierFinalizationBackingBean extends
 					getManagedBean().getCurrentStatusId());
 			reqDTO.setInitialDecisionFwdHighAuth(
 					getManagedBean().isInitialDecisionFwdHighAuth());
+			
+			boolean hasPendingLOA = false;
+			resDTO = qtSuppFinalizationSO.retrievePendingLOA(reqDTO);
+			hasPendingLOA = resDTO.isHasPendingLOA();
+			
+			reqDTO.setHasPendingLoa(hasPendingLOA);		
 //			reqDTO.setScQtCommitteeActivity(
 //					this.getManagedBean().getSignedOffCommitteeActivity());
 			
@@ -1867,7 +1877,7 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 			
-			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
+			resDTO = qtSuppFinalizationSO
 					.submitSupplierFinalization(reqDTO);
 
 			if (resDTO.isSuccessful()) {
