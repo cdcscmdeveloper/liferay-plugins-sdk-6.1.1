@@ -231,6 +231,7 @@ public class ReportsGenerateBean {
 		/** The sc loa no view. */
 		private boolean scLOANoView = false;
 		
+		/** The sc loa content view. */
 		private boolean scLOAContentView=false;
 		//cm module
 		/** The cm item type view. */
@@ -337,7 +338,10 @@ public class ReportsGenerateBean {
 		private boolean smZoneLabelView = false;
 		
 		/** The sm supplier type view. */
-		private boolean smSupplierTypeView = false;
+		private boolean smSupplierTypeView = false;		
+	
+		/** The sm mandatory doc supplier type view. */
+		private boolean smMandatoryDOCSupplierTypeView = false;
 		
 		/** The sm mof reg no view. */
 		private boolean smMofRegNoView = false;
@@ -545,6 +549,9 @@ public class ReportsGenerateBean {
 		
 		/** The sm non mandatory date view. */
 		private boolean smNonMandatoryDateView = false;
+		
+		/** The sm mof account end date view. */
+		private boolean smMOFAccountEndDateView = false;		
 		
 		/** The sm application received date view. */
 		private boolean smApplicationReceivedDateView = false;
@@ -3142,7 +3149,13 @@ public class ReportsGenerateBean {
 		private String fromDateVar=ReportConst.EMPTY_VAL;
 		
 		/** The to date var. */
-		private String toDateVar=ReportConst.EMPTY_VAL;		
+		private String toDateVar=ReportConst.EMPTY_VAL;
+		
+		/** The mof account end date from date var. */
+		private String mofAccountEndDateFromDateVar=ReportConst.EMPTY_VAL;		
+		
+		/** The mof account end date to date var. */
+		private String mofAccountEndDateToDateVar=ReportConst.EMPTY_VAL;	
 		//cm
 		/** The cm suppl or admin var. */
 		private String cmSupplOrAdminVar=ReportConst.EMPTY_VAL;	
@@ -12968,14 +12981,21 @@ public class ReportsGenerateBean {
 			}
 			 return yearList; 
 		}
+		
 		/**
+		 * Checks if is sc loa content view.
+		 * 
 		 * @return the scLOAContentView
 		 */
 		public boolean isScLOAContentView() {
 			return scLOAContentView;
 		}
+		
 		/**
-		 * @param scLOAContentView the scLOAContentView to set
+		 * Sets the sc loa content view.
+		 * 
+		 * @param scLOAContentView
+		 *            the scLOAContentView to set
 		 */
 		public void setScLOAContentView(boolean scLOAContentView) {
 			this.scLOAContentView = scLOAContentView;
@@ -13017,5 +13037,67 @@ public class ReportsGenerateBean {
 				stateLst.add(selectItem);
 			}
 		}
+	}
+
+	/**
+	 * Checks if is sm mandatory doc supplier type view.
+	 * 
+	 * @return the smMandatoryDOCSupplierTypeView
+	 */
+	public boolean isSmMandatoryDOCSupplierTypeView() {
+		return smMandatoryDOCSupplierTypeView;
+	}
+
+	/**
+	 * Sets the sm mandatory doc supplier type view.
+	 * 
+	 * @param smMandatoryDOCSupplierTypeView
+	 *            the smMandatoryDOCSupplierTypeView to set
+	 */
+	public void setSmMandatoryDOCSupplierTypeView(
+			boolean smMandatoryDOCSupplierTypeView) {
+		this.smMandatoryDOCSupplierTypeView = smMandatoryDOCSupplierTypeView;
+	}
+
+	/**
+	 * @return the smMOFAccountEndDateView
+	 */
+	public boolean isSmMOFAccountEndDateView() {
+		return smMOFAccountEndDateView;
+	}
+
+	/**
+	 * @param smMOFAccountEndDateView the smMOFAccountEndDateView to set
+	 */
+	public void setSmMOFAccountEndDateView(boolean smMOFAccountEndDateView) {
+		this.smMOFAccountEndDateView = smMOFAccountEndDateView;
+	}
+
+	/**
+	 * @return the mofAccountEndDateFromDateVar
+	 */
+	public String getMofAccountEndDateFromDateVar() {
+		return mofAccountEndDateFromDateVar;
+	}
+
+	/**
+	 * @param mofAccountEndDateFromDateVar the mofAccountEndDateFromDateVar to set
+	 */
+	public void setMofAccountEndDateFromDateVar(String mofAccountEndDateFromDateVar) {
+		this.mofAccountEndDateFromDateVar = mofAccountEndDateFromDateVar;
+	}
+
+	/**
+	 * @return the mofAccountEndDateToDateVar
+	 */
+	public String getMofAccountEndDateToDateVar() {
+		return mofAccountEndDateToDateVar;
+	}
+
+	/**
+	 * @param mofAccountEndDateToDateVar the mofAccountEndDateToDateVar to set
+	 */
+	public void setMofAccountEndDateToDateVar(String mofAccountEndDateToDateVar) {
+		this.mofAccountEndDateToDateVar = mofAccountEndDateToDateVar;
 	}
 }

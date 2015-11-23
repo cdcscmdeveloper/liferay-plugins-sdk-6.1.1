@@ -220,6 +220,41 @@
 								</table>
 							</p:column>
 						</c:if>
+						
+						<c:if
+							test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryDOCSupplierTypeView}">
+							<p:column >
+								<table style="width: 180px;">
+									<tr style="width: 100%;">
+										<td style="width:160px;"><p:outputLabel value="#{lbl['lbl.rpt.supplierType']}"
+												 /><p:outputLabel value="*" styleClass="mandatory"
+												/></td>
+
+									</tr>
+								</table>
+							</p:column>
+							<p:column>
+								<table style="width: 100%">
+									<tr>
+										<td style="width: 84%"><p:selectOneMenu
+												label="#{lbl['lbl.rpt.supplierType']}" id="SupplierType" 
+												value="#{reportBackingBean.smSupplierType}" 
+												style="margin-top:5px;width:300px;">
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}"
+													itemValue="#{null}"></f:selectItem>
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.consultant']}"
+													itemValue="J"></f:selectItem>
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.contractor']}"
+													itemValue="K"></f:selectItem>
+												<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
+											</p:selectOneMenu></td>
+										<td><p:message id="supplierTypeMsg" for="SupplierType"
+												display="icon" showDetail="false"/></td>
+									</tr>
+								</table>
+							</p:column>
+						</c:if>
+						
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryAllSupplierTypeView}">
 							<p:column >
@@ -1035,7 +1070,7 @@
 									itemValue="#{lbl['lbl.rpt.director']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.owner']}"
 									itemValue="#{lbl['lbl.rpt.owner']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.ceo']}"
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.highermanagemnt']}"
 									itemValue="#{lbl['lbl.rpt.ceo']}"></f:selectItem>	
 									<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />							
 							</p:selectOneMenu>
@@ -1462,7 +1497,7 @@
 						<TABLE style="margin-top:10px;width:50%;">
 							<TR>
 								<TD>
-									<p:outputLabel value="#{lbl['lbl.rpt.mofRegNoFrom']}"	style="margin-top:5px;width:185px;" />
+									<p:outputLabel value="#{lbl['lbl.rpt.mofRegNoFrom']}"	style="margin-top:5px;width:163px;" />
 								</TD>
 								<TD>
 									<p:inputText maxlength="22"	value="#{reportBackingBean.smMofRegNoFrom}"	style="margin-top:5px;width:150px;">
@@ -1470,7 +1505,7 @@
 									</p:inputText>
 								</TD>   
 								<TD>
-									<p:outputLabel  value="#{lbl['lbl.rpt.dtRangeTo']}" style="width:62px;"/>
+									<p:outputLabel  value="#{lbl['lbl.rpt.dtRangeTo']}" style="width:50px;"/>
 								</TD>				
 								<TD>
 									<p:inputText maxlength="22"	value="#{reportBackingBean.smMofRegNoTo}" style="margin-top:5px;width:150px;">
@@ -2041,11 +2076,13 @@
 									<p:outputLabel  value="#{lbl['lbl.rpt.registereddatefrom']}" style="width:158px;"/>
 								</TD>
 								</c:if>
+																
 								<c:if test="#{reportBackingBean.managedBean.rptGenBean.smMOFRegisteredDateView}">
 							    <TD>
-									<p:outputLabel  value="#{lbl['lbl.rpt.mofregistereddatefrom']}" style="width:158px;"/>
+									<p:outputLabel  value="#{lbl['lbl.rpt.mofregistereddatefrom']}" style="width:173px;margin-left: -13px;"/>
 								</TD>
 								</c:if>
+																
 							<c:if test="#{reportBackingBean.managedBean.rptGenBean.smRejectedDateView}">
 							    <TD>
 									<p:outputLabel  value="#{lbl['lbl.rpt.rejecteddatefrom']}" style="width:158px;"/>
@@ -2071,6 +2108,29 @@
 																							
 									</p:calendar> 
 								</TD>
+							</TR>
+							<TR>
+							<c:if test="#{reportBackingBean.managedBean.rptGenBean.smMOFAccountEndDateView}">
+							    <TD>
+									<p:outputLabel  value="#{lbl['lbl.rpt.mofaccountenddatefrom']}" style="width:173px;margin-left: -13px;"/>
+								</TD>
+								
+							     <TD>
+									<p:calendar showOn="button" navigator="true" display="inline" readonlyInput="true" value="#{reportBackingBean.mofAccountEndDateFromDate}" 
+									
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"  partialSubmit="true" process="@form">																				
+									</p:calendar>
+								</TD>
+								<TD>
+									<p:outputLabel  value="#{lbl['lbl.rpt.dtRangeTo']}" style="width:50px;"/>
+								</TD>				
+								<TD>
+									<p:calendar  showOn="button" navigator="true" display="inline" readonlyInput="true" value="#{reportBackingBean.mofAccountEndDateToDate}"
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"   partialSubmit="true" process="@form">	
+																							
+									</p:calendar> 
+								</TD>
+								</c:if>
 							</TR>
 						</TABLE>
 						</c:if>							

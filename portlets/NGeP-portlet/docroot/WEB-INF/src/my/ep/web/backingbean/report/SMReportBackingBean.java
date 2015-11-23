@@ -349,7 +349,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	            break;
 		 case ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL: 			    
 				rptGenBean.setSmCompanyNameView(true);
-	        	rptGenBean.setSmSupplierTypeView(true);
+	        	rptGenBean.setSmMandatoryDOCSupplierTypeView(true);
 	        	rptGenBean.setSmCommonZoneView(true);
 			    rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
 	        	//rptGenBean.setSmZoneView(true);
@@ -379,6 +379,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	        	rptGenBean.setSmExtraTwoColumnTwoView(true);
 	        	rptGenBean.setSmNonMandatoryDateView(true);
 	        	rptGenBean.setSmMOFRegisteredDateView(true);
+	        	rptGenBean.setSmMOFAccountEndDateView(true);
 	            break;
 		 case ReportConst.SM_STATISTICS_COMPANYTYPE_CAP_RPT_VAL:
 	        	rptGenBean.setSmAllSupplierTypeView(true);	        	
