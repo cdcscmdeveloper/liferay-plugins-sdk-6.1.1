@@ -559,6 +559,9 @@ public class ReportsGenerateBean {
 		/** The sm payment date view. */
 		private boolean smPaymentDateView = false;
 		
+		/** The sm payment pr date view. */
+		private boolean smPaymentPRDateView = false;
+		
 		/** The sm role view. */
 		private boolean smRoleView = false;
 		
@@ -13060,6 +13063,8 @@ public class ReportsGenerateBean {
 	}
 
 	/**
+	 * Checks if is sm mof account end date view.
+	 * 
 	 * @return the smMOFAccountEndDateView
 	 */
 	public boolean isSmMOFAccountEndDateView() {
@@ -13067,13 +13072,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param smMOFAccountEndDateView the smMOFAccountEndDateView to set
+	 * Sets the sm mof account end date view.
+	 * 
+	 * @param smMOFAccountEndDateView
+	 *            the smMOFAccountEndDateView to set
 	 */
 	public void setSmMOFAccountEndDateView(boolean smMOFAccountEndDateView) {
 		this.smMOFAccountEndDateView = smMOFAccountEndDateView;
 	}
 
 	/**
+	 * Gets the mof account end date from date var.
+	 * 
 	 * @return the mofAccountEndDateFromDateVar
 	 */
 	public String getMofAccountEndDateFromDateVar() {
@@ -13081,13 +13091,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param mofAccountEndDateFromDateVar the mofAccountEndDateFromDateVar to set
+	 * Sets the mof account end date from date var.
+	 * 
+	 * @param mofAccountEndDateFromDateVar
+	 *            the mofAccountEndDateFromDateVar to set
 	 */
 	public void setMofAccountEndDateFromDateVar(String mofAccountEndDateFromDateVar) {
 		this.mofAccountEndDateFromDateVar = mofAccountEndDateFromDateVar;
 	}
 
 	/**
+	 * Gets the mof account end date to date var.
+	 * 
 	 * @return the mofAccountEndDateToDateVar
 	 */
 	public String getMofAccountEndDateToDateVar() {
@@ -13095,9 +13110,31 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param mofAccountEndDateToDateVar the mofAccountEndDateToDateVar to set
+	 * Sets the mof account end date to date var.
+	 * 
+	 * @param mofAccountEndDateToDateVar
+	 *            the mofAccountEndDateToDateVar to set
 	 */
 	public void setMofAccountEndDateToDateVar(String mofAccountEndDateToDateVar) {
 		this.mofAccountEndDateToDateVar = mofAccountEndDateToDateVar;
+	}
+
+	/**
+	 * Checks if is sm payment pr date view.
+	 * 
+	 * @return the smPaymentPRDateView
+	 */
+	public boolean isSmPaymentPRDateView() {
+		return smPaymentPRDateView;
+	}
+
+	/**
+	 * Sets the sm payment pr date view.
+	 * 
+	 * @param smPaymentPRDateView
+	 *            the smPaymentPRDateView to set
+	 */
+	public void setSmPaymentPRDateView(boolean smPaymentPRDateView) {
+		this.smPaymentPRDateView = smPaymentPRDateView;
 	}
 }
