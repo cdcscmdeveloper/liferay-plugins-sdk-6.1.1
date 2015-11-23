@@ -18,8 +18,8 @@
 	  </td>
 	  </tr>
 	   <tr> 
-		<td><p:outputLabel value="#{lbl['lbl.ct.panel.group.status']}" /></td>
-     	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;" 
+		<td><p:outputLabel value="#{lbl['lbl.ct.panel.group.status']}" styleClass="required" /></td>
+     	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;" required="true" label="#{lbl['lbl.ct.panel.group.status']}"
      	      value="#{panelGroupItemBackingBean.managedBean.ctPanelItemGroup.recordStatusFlg}"
      			disabled="#{panelGroupItemBackingBean.managedBean.ctPanelItemGroup.brandNew}" > 
     	    	<f:selectItems value="#{panelGroupItemBackingBean.getStatusList()}"></f:selectItems>   	   
