@@ -429,6 +429,8 @@ public class ReportConst {
 	///sm
 	public static final String AMP_SM_TO_DATE_EQ = "&PTODATE=";
 	public static final String AMP_SM_FROM_DATE_EQ = "&PFROMDATE=";
+	public static final String AMP_SM_MOF_ACC_END_TO_DATE_EQ = "&PEXTODATE=";
+	public static final String AMP_SM_MOF_ACC_END_FROM_DATE_EQ = "&PEXFROMDATE=";
 	public static final String AMP_SM_REG_TYPE_EQ = "&PREGTYPE=";
 	public static final String AMP_SM_MOF_REG_NO_EQ = "&PMOFNO=";
 	public static final String AMP_SM_USER_ID_EQ = "&PUSER=";

@@ -413,6 +413,14 @@ public class ReportBackingBean extends
 	/** The role code. */
 	private String roleCode;
 
+	
+	/** The mof account end date from date. */
+	private Date mofAccountEndDateFromDate;
+
+
+	/** The mof account end date to date. */
+	private Date mofAccountEndDateToDate;
+	
 	/** The from date. */
 	private Date fromDate;
 
@@ -10146,6 +10154,10 @@ public class ReportBackingBean extends
 		List<String> smReportNameList = new ArrayList<String>();
 		smReportNameList.add(ReportConst.SM_LIST_OF_APPLICATION_RPT_VAL);
 		smReportNameList.add(ReportConst.SM_LIST_OFFLINE_SUPP_DOC_RPT_VAL);
+		smReportNameList.add(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL);
+		smReportNameList.add(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL);
+		
+		
 
 		for (String code : smReportNameList)
 			if (code.equalsIgnoreCase(reportCode)) {
@@ -11428,6 +11440,16 @@ public class ReportBackingBean extends
 					&& (this.getToDate().toString() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setToDateVar(ReportConst.AMP_SM_TO_DATE_EQ
 						+ outputDateFormat.format(this.getToDate()));
+			}			
+			if ((this.getMofAccountEndDateFromDate() != null)
+					&& (this.getMofAccountEndDateFromDate().toString() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setMofAccountEndDateFromDateVar(ReportConst.AMP_SM_MOF_ACC_END_FROM_DATE_EQ
+						+ outputDateFormat.format(this.getMofAccountEndDateFromDate()));
+			}
+			if ((this.getMofAccountEndDateToDate() != null)
+					&& (this.getToDate().toString() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setMofAccountEndDateToDateVar(ReportConst.AMP_SM_MOF_ACC_END_TO_DATE_EQ
+						+ outputDateFormat.format(this.getMofAccountEndDateToDate()));
 			}
 
 			if ((this.getSmMainCategory() != null)
@@ -11727,6 +11749,8 @@ public class ReportBackingBean extends
 						+ rptGenBean.getIcNumberTotVar()
 						+ rptGenBean.getFromDateVar()
 						+ rptGenBean.getToDateVar()
+						+ rptGenBean.getMofAccountEndDateFromDateVar()
+						+ rptGenBean.getMofAccountEndDateToDateVar()						
 						+ rptGenBean.getApplicationNoTotVar()
 						+ rptGenBean.getZoneTotVar()
 						+ rptGenBean.getSupplierTypeTotVar()
@@ -11772,7 +11796,7 @@ public class ReportBackingBean extends
 			} else {
 				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
-		} else {
+		} else if(!getManagedBean().getRptGenBean().isSmMandatoryDOCSupplierTypeView()) {
 			throw new EpException(MessageConst.ERROR_REPORT_780003);
 		}
 	}
@@ -13854,6 +13878,38 @@ public class ReportBackingBean extends
 		getManagedBean().setSearchFieldValue(new String[3]);
 		getManagedBean().setSearchOperatorValue(new String[3]);
 		this.getSearchUnspscPagingDataModel().resetData();		
+	}
+
+
+	/**
+	 * @return the mofAccountEndDateFromDate
+	 */
+	public Date getMofAccountEndDateFromDate() {
+		return mofAccountEndDateFromDate;
+	}
+
+
+	/**
+	 * @param mofAccountEndDateFromDate the mofAccountEndDateFromDate to set
+	 */
+	public void setMofAccountEndDateFromDate(Date mofAccountEndDateFromDate) {
+		this.mofAccountEndDateFromDate = mofAccountEndDateFromDate;
+	}
+
+
+	/**
+	 * @return the mofAccountEndDateToDate
+	 */
+	public Date getMofAccountEndDateToDate() {
+		return mofAccountEndDateToDate;
+	}
+
+
+	/**
+	 * @param mofAccountEndDateToDate the mofAccountEndDateToDate to set
+	 */
+	public void setMofAccountEndDateToDate(Date mofAccountEndDateToDate) {
+		this.mofAccountEndDateToDate = mofAccountEndDateToDate;
 	}
 	
 }
