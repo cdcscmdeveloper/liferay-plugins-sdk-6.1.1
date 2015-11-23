@@ -609,8 +609,11 @@ public class SmApplicationBackingBean extends
 							&& currSupp.getBusinessType().equals("A")) {
 						throw new EpException(MessageConst.ERROR_722607);
 					}
-					smAppl.setSupplierType(getManagedBean()
-							.getNewSupplierType());
+					if (StringUtils.isBlank(smAppl.getSupplierType())) {
+						getManagedBean().setNewSupplierType("K");
+						smAppl.setSupplierType(getManagedBean()
+								.getNewSupplierType());
+					}
 				}
 				// else if (applicationType.equalsIgnoreCase("B")) {}
 				else if (applicationType
