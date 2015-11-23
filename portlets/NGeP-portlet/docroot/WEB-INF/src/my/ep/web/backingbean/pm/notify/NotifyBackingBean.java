@@ -125,9 +125,9 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 		//Timestamp timestamp = new Timestamp(new Date().getTime());
 		//selectedNotify.setChangedDate(timestamp);
 		
-		debugLogger("IsRead[" + selectedNotify.isReadFlag() + "]");
+		debugLogger("IsRead[" + selectedNotify.isRead() + "]");
 		
-		if (!selectedNotify.isReadFlag()) {
+		if (!selectedNotify.isRead()) {
 		
 			INotifySO reqSO = (INotifySO) BusinessDelegate.getInstance()
 					.getServiceObject("pm", INotifySO.class);
@@ -140,7 +140,7 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 					+ resDTO.isSuccessful() + "]");
 			
 			if (resDTO.isSuccessful()) {
-				selectedNotify.setReadFlag(true);
+				selectedNotify.setRead(true);
 			}
 		}
 	}
@@ -208,7 +208,7 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 
 					if (getManagedBean().isUnRead()) {
 						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("isReadFlag",
+								new SearchFilterBean("isRead",
 										SearchOperator.OPERATOR_EQUALS.value(),
 										0));
 					}
