@@ -356,6 +356,9 @@ public class LOIDetailManagedBean extends BaseManagedBean {
     /** The Multi LOI Zone Details */
     private List<TplSpecZoneDtl> multiLOIZoneDetails;
     
+    /** Zone map */
+    private Map<Long,TplSpecZoneDtl> zoneMap;
+    
     /** Items by zone */
     private Map<Long,List<ScQtRecommend>> scQtRecommendsByZone;
     
@@ -2095,10 +2098,26 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 
 	/**
 	 * @param multiLOIZoneDetails 
-	 * 					the multiLOIZoneDetails to set
+	 * 				the multiLOIZoneDetails to set
 	 */
-	public void setMultiLOIZoneDetails(List<TplSpecZoneDtl> multiLOIZoneDetails) {
+	public void setMultiLOIZoneDetails(
+					List<TplSpecZoneDtl> multiLOIZoneDetails) {
 		this.multiLOIZoneDetails = multiLOIZoneDetails;
+	}
+
+	/**
+	 * @return the zoneMap
+	 */
+	public Map<Long,TplSpecZoneDtl> getZoneMap() {
+		return zoneMap;
+	}
+
+	/**
+	 * @param zoneMap 
+	 * 			the zoneMap to set
+	 */
+	public void setZoneMap(Map<Long,TplSpecZoneDtl> zoneMap) {
+		this.zoneMap = zoneMap;
 	}
 
 	/**
