@@ -3442,12 +3442,26 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public SelectItem[] getItemDisplayTypeDropdownList() {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		
-		if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()
+		if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
+				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange())) {
+			
+					List<String> itemDisplayTypeList = new ArrayList<String> ();
+					itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+					itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY);
+					itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY);
+					
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("pmParameter.parameterCode",
+									SearchOperator.OPERATOR_IN.value(),
+									itemDisplayTypeList));
+	
+		} else if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()
 				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange())) {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmParameter.parameterCode",
 							SearchOperator.OPERATOR_EQUALS.value(), 
 							ParameterConst.ITEM_DISPLAY_TYPE_PRICE));
+		
 		} else if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()
 				&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()) {
 			
