@@ -25,11 +25,8 @@
 						action="#{noticeBoardBackingBean.downloadReport(document)}" />
 				</p:column>
 			</p:dataTable>
-			<p:spacer height="20px" />
-
 			<div align="right">
-				<p:commandButton ajax="false" value="#{lbl['lbl.btn.download.all']}"
-					icon="ui-icon-download"
+				<p:commandButton ajax="false" value="#{lbl['lbl.btn.download.all']}" styleClass="BtnSpacing"
 					rendered="#{noticeBoardBackingBean.managedBean.scQtDocReports ne null and noticeBoardBackingBean.managedBean.scQtDocReports.size()>0}"
 					action="#{noticeBoardBackingBean.downloadAllQTDocuments()}" />
 			</div>
