@@ -11,10 +11,10 @@
 
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
+				<td style="width:180px;"><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
 				<td colspan="3"><p:inputTextarea label="#{lbl['lbl.sc.title']}"
 						value="#{specificationBackingBean.managedBean.scQt.qtTitle}"
-						required="true" cols="130" rows="2" disabled="true"
+						required="true" cols="130" rows="3" disabled="true"
 						readonly="true" style=" margin-bottom:5px;width: 98%;"
 						maxlength="100" /></td>
 			</tr>
@@ -22,14 +22,14 @@
 				<td><h:outputLabel value="#{lbl['lbl.sc.spec.panel']}" /></td>
 				<td colspan="3"><p:inputText
 						value="#{lbl[specificationBackingBean.managedBean.scQt.panel ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
-						readonly="true" disabled="true" size="24" /></td>
+						readonly="true" disabled="true" size="25" /></td>
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" />
 				</td>
 				<td><p:inputText readonly="true" style="text-align: right;"
 						value="#{specificationBackingBean.managedBean.scQt.estimatedAmount}"
-						disabled="true" size="24">
+						disabled="true" size="25">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText></td>
@@ -45,9 +45,9 @@
 				</ui:fragment>
 			</tr>
 			<tr>
-				<td style="width: 200px;"><h:outputLabel
+				<td ><h:outputLabel
 						value="#{lbl['lbl.sc.qttentype']}" /></td>
-				<td><p:inputText readonly="true" size="24"
+				<td><p:inputText readonly="true" size="25"
 						value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.quotationTenderType, specificationBackingBean.managedBean.scQt.qtType)}"
 						disabled="true" /></td>
 
@@ -63,15 +63,15 @@
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						required="true"
 						value="#{specificationBackingBean.managedBean.scQt.procurementTypeCatId.parameterId}"
-						style="width: 178px;margin-bottom: 5px;">
+						style="width: 213px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.procurementTypeCategory)}" />
 						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 					</p:selectOneMenu> <p:message id="procuremntypeCategorySpecCommittee"
 						for="specCommitteeprocTypeCategory" display="icon" /></td>
-				<td style="width: 275px;"><h:outputLabel
+				<td style="width: 205px;"><h:outputLabel
 						value="#{lbl['lbl.sc.open.for']}" /></td>
-				<td><p:inputText readonly="true" size="30"
+				<td><p:inputText readonly="true" size="25"
 						value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.scOpenFor, specificationBackingBean.managedBean.scQt.openFor)}"
 						disabled="true" /></td>
 
@@ -80,14 +80,14 @@
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.procurement.category']}" /></td>
 				<td><p:selectOneMenu disabled="true"
-						style="width: 178px;margin-bottom: 5px;"
+						style="width: 213px;margin-bottom: 5px;"
 						label="#{lbl['lbl.sc.procurement.category']}"
 						value="#{specificationBackingBean.managedBean.scQt.pmProcurementCategory.parameterId}">
 						<f:selectItems
 							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
 					</p:selectOneMenu></td>
 				<td><h:outputLabel value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
-				<td><p:inputText readonly="true" disabled="true" size="30"
+				<td><p:inputText readonly="true" disabled="true" size="25"
 						value="#{lbl[specificationBackingBean.managedBean.scQt.zonal ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 				</td>
 			</tr>
@@ -100,13 +100,13 @@
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.spec.requir.tech.eval']}" /></td>
 
-				<td><p:inputText size="30"
+				<td><p:inputText size="25"
 						value="#{lbl[specificationBackingBean.managedBean.scQt.techEvaluationReq ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
 						readonly="true" disabled="true"></p:inputText></td>
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.max.proposal']}" /></td>
-				<td><p:inputText id="proposalId" size="24" disabled="true"
+				<td><p:inputText id="proposalId" size="25" disabled="true"
 						label="#{lbl['lbl.sc.max.proposal']}" maxlength="1"
 						value="#{specificationBackingBean.managedBean.scQt.maxProposal}"
 						style="text-align:right;margin-bottom: 5px;">
@@ -126,7 +126,7 @@
 									id="fulfilId" label="#{lbl['lbl.sc.fullfillent.type']}"
 									disabled="#{specificationBackingBean.managedBean.readOnly}"
 									value="#{specificationBackingBean.managedBean.scQt.fulfilmentType.parameterId}"
-									style="width: 178px;margin-bottom: 5px;">
+									style="width: 213px;margin-bottom: 5px;">
 
 									<f:selectItems
 										value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
@@ -139,14 +139,14 @@
 						</tr>
 					</table>
 				</td>
-				<td style="white-space: nowrap;"><p:outputLabel
+				<td><p:outputLabel
 						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" /> <ui:fragment
 						rendered="#{!specificationBackingBean.managedBean.readOnly}">
-						<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+					<!-- 	<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel> -->
 					</ui:fragment></td>
 				<td><p:inputMask id="contract"
 						required="#{!specificationBackingBean.managedBean.readOnly}"
-						size="30" mask="9?99" placeHolder="" maxlength="3"
+						size="25" mask="9?99" placeHolder="" maxlength="3"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						label="#{lbl['lbl.sc.spec.complete.period']}"
 						value="#{specificationBackingBean.managedBean.scQt.contractDuration}"
@@ -161,11 +161,11 @@
 		rendered="#{specificationBackingBean.managedBean.scQt.zonal !='false' and specificationBackingBean.managedBean.scQt.panel eq 'false'}">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 175px"><p:outputLabel
+				<td style="width: 180px"><p:outputLabel
 						value="#{lbl['lbl.sc.zone.location.level']}" /></td>
 				<td><p:selectOneMenu id="locationLevels" disabled="true"
 						value="#{specificationBackingBean.managedBean.scQt.zoneLocationLevel.parameterId}"
-						style="width: 178px;">
+						style="width: 213px;">
 
 						<f:selectItems
 							value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
