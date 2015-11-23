@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -52,6 +54,7 @@ import javax.portlet.PortletConfig;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
@@ -147,6 +150,7 @@ import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -2869,6 +2873,158 @@ public class SmCommonUtil {
 					+ e.getMessage() + "<<<<<<<<<<<<<");
 		}
 		return retVal;
+	}
+
+	/**
+	 * Get business type select items
+	 * 
+	 * @param String
+	 *            businessType
+	 * @param String
+	 *            suppType
+	 * @param String
+	 *            applType
+	 * @return
+	 */
+	public List<SelectItem> getBusinessTypeItems(String businessType,
+			String suppType, String applType) {
+		List<SelectItem> itemList = new ArrayList<SelectItem>();
+		try {
+			SelectItem[] items = getDropdownCodeValuesBySearchBean(
+					SupplierManagementConst.SUPPLIER_BUSINESS_TYPE, null);
+
+			for (SelectItem selectItem : items) {
+				if (StringUtils.isNotBlank(businessType)) {
+					if (applType.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+						if (suppType
+								.equals(SupplierManagementConst.STYPE_CONTRACTOR)) {
+							if (selectItem.getValue() == null
+									|| !selectItem.getValue().equals("A")) {
+								itemList.add(selectItem);
+							}
+						} else if (suppType
+								.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
+							if (selectItem.getValue() == null
+									|| (!selectItem.getValue().equals("K")
+											&& !selectItem.getValue().equals(
+													"L")
+											&& !selectItem.getValue().equals(
+													"M") && !selectItem
+											.getValue().equals("A"))) {
+								itemList.add(selectItem);
+							}
+						}
+					} else {
+						if (selectItem.getValue() != null) {
+							if (businessType
+									.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH)
+									|| businessType
+											.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)) {
+
+								if (selectItem
+										.getValue()
+										.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH)
+										|| selectItem
+												.getValue()
+												.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)) {
+									itemList.add(selectItem);
+								}
+							} else if (businessType
+									.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)
+									|| businessType
+											.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK)) {
+								if (selectItem
+										.getValue()
+										.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)
+										|| selectItem
+												.getValue()
+												.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK)) {
+									itemList.add(selectItem);
+								}
+							} else if (businessType
+									.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)
+									|| businessType
+											.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)) {
+								if (selectItem
+										.getValue()
+										.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)
+										|| selectItem
+												.getValue()
+												.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)) {
+									itemList.add(selectItem);
+								}
+							}
+						}
+					}
+
+				} else {
+					if (applType.equals(SupplierManagementConst.ACC_MOF)) {
+						if (selectItem.getValue() == null) {
+							itemList.add(selectItem);
+						}
+					} else {
+						itemList.add(selectItem);
+					}
+				}
+			}
+
+			// sort
+			if (CollectionUtils.isNotEmpty(itemList)) {
+				Collections.sort(itemList, new Comparator<SelectItem>() {
+					@Override
+					public int compare(final SelectItem s1, final SelectItem s2) {
+						return StringUtil.upperCase(s1.getLabel()).compareTo(
+								StringUtil.upperCase(s2.getLabel()));
+					}
+				});
+			}
+
+		} catch (Exception e) {
+			throw new EpException(MessageConst.ERROR_721010, new String[] {
+					e.toString(), e.getMessage() });
+
+		}
+		return itemList;
+	}
+
+	/**
+	 * Get dropdown code values by search bean
+	 * 
+	 * @param String
+	 *            parameterType
+	 * @param ISearchBean
+	 *            <PmParameterDesc> searchBean
+	 * @return SelectItem[]
+	 */
+	public SelectItem[] getDropdownCodeValuesBySearchBean(String parameterType,
+			ISearchBean<PmParameterDesc> searchBean) {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+			List<PmParameterDesc> parameterDescs = ParameterHelper
+					.getInstance().getParameterDescListBySearchBean(
+							parameterType, searchBean);
+
+			items = new SelectItem[parameterDescs.size() + 1];
+
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			int i = 1;
+			for (PmParameterDesc parameterDesc : parameterDescs) {
+				items[i++] = new SelectItem(parameterDesc.getPmParameter()
+						.getParameterCode(), parameterDesc.getCodeName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
 	}
 
 	public static boolean isSmObjectPropsDifference(Object latest,
