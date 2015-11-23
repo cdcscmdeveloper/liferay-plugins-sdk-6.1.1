@@ -128,8 +128,11 @@
 					update="searchPanel #{lovBackingBean.lovBean.clientId} #{lovBackingBean.lovBean.update}"
 					oncomplete="lovPopup.hide();"
 					process="resultPanel"
-					partialSubmit="true" />	
-			</TD></tr></table>
+					partialSubmit="true"  styleClass="BtnSpacing"/>	<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+				partialSubmit="true" process="@this" update="@this"
+				oncomplete="lovPopup.hide();" styleClass="BtnSpacing"/>
+			</TD>
+			</tr></table>
 			
 		</h:panelGroup>
 		</p:panel>
