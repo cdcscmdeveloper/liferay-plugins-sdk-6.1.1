@@ -85,9 +85,9 @@
 			       </h:panelGrid>
 				   <!-- Item Price -->
 			       <p:outputPanel style="width:100%" 
-			           rendered="#{(amendmentBackingBean.managedBean.selectedItem !=null and 
-			    	   amendmentBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypePrice)
-				       and ctBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange}">
+			           rendered="#{amendmentBackingBean.managedBean.selectedItem !=null and 
+			    	   amendmentBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypePrice
+				       and (ctBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or  ctBackingBean.managedBean.contractVer.ctAmendment.otherChange)}">
 				
 				            <p:dataTable id="itemPriceTable" var="itemPriceVar" 
 					             value="#{amendmentBackingBean.managedBean.selectedItem.ctItemPrices}" >
@@ -175,7 +175,8 @@
 						           		amendmentBackingBean.managedBean.selectedItem.chkStatus}"
 								     style="width:10%; white-space:normal;">
 									<p:commandLink update=":form:itemId" process="@form" 
-										disabled="#{itemPriceVar.chkIndexOfRow}"
+										disabled="#{itemPriceVar.chkIndexOfRow or 
+										(ctBackingBean.managedBean.contractVer.ctAmendment.otherChange and !ctBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange) }"
 									   	rendered="#{!itemPriceVar.changePrice and itemPriceVar.editable}" action="#{amendmentBackingBean.editItemPriceOnIndexs()}">
 										<f:setPropertyActionListener value="#{itemPriceVar}" target="#{amendmentBackingBean.managedBean.ctItemPrices}" />
 										<p:graphicImage value="/css/images/design/ico-edit.png" title="#{lbl['lbl.ct.edit']}" />
@@ -205,8 +206,8 @@
 				<!-- Ceiling Quantity -->
 				<p:outputPanel style="width:100%" 
 			         rendered="#{amendmentBackingBean.managedBean.selectedItem!=null and
-			 		(amendmentBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeCeilQty)
-			 		and ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange}">
+			 		amendmentBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeCeilQty
+			 		and (ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange or ctBackingBean.managedBean.contractVer.ctAmendment.otherChange)}">
 				<p:dataTable id="ceilingTable" var="itemCeilingQtiesVar"
 					value="#{amendmentBackingBean.getActiveItemCeilingQty()}" >
 					<ac:paginator for="ceilingTable" />
@@ -230,21 +231,26 @@
 							<h:outputText value="#{lbl['lbl.ct.ceiling.qty']}"/>
 		               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ceiling.qty']}"/>
 	               		 </f:facet>
-					     <h:panelGroup style="float:right;" rendered="#{itemCeilingQtiesVar.changeCeilQuantity}">
-						  <p:inputText value="#{itemCeilingQtiesVar.ceilingQuantity}" styleClass="ppRightBtn" style="width:100px;" label="#{lbl['lbl.ct.ceiling.qty']}"
-						  	maxlength="#{amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}"
-						  	disabled="#{ctBackingBean.managedBean.disableAmendDetails}" >
+					     <h:panelGroup style="float:right;" 
+					         rendered="#{itemCeilingQtiesVar.changeCeilQuantity or ctBackingBean.managedBean.contractVer.ctAmendment.otherChange}">
+						  <p:inputText value="#{itemCeilingQtiesVar.ceilingQuantity}" 
+						      styleClass="ppRightBtn" style="width:100px;" label="#{lbl['lbl.ct.ceiling.qty']}"
+						  	  maxlength="#{amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}"
+						  	  disabled="#{ctBackingBean.managedBean.disableAmendDetails}" >
 							<f:converter converterId="dynamicNumberConverter" />
 							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
 							<p:ajax event="blur" update="@this"/>
 						</p:inputText>
 						</h:panelGroup>
-						<h:outputText value="#{itemCeilingQtiesVar.ceilingQuantity}" style="float:right;" rendered="#{!itemCeilingQtiesVar.changeCeilQuantity}">
+						<h:outputText value="#{itemCeilingQtiesVar.ceilingQuantity}"
+						        style="float:right;" rendered="#{!itemCeilingQtiesVar.changeCeilQuantity 
+						             and !ctBackingBean.managedBean.contractVer.ctAmendment.otherChange}">
 							<f:converter converterId="dynamicNumberConverter" />
 							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
 						</h:outputText>
 					</p:column>
-					<p:column rendered="false" headerText="#{lbl['lbl.ct.effective.date']}" style="width:10%; white-space:normal;" styleClass="column-align-center">
+					<p:column rendered="false" headerText="#{lbl['lbl.ct.effective.date']}" 
+					    style="width:10%; white-space:normal;" styleClass="column-align-center">
 						<h:outputText value="#{itemCeilingQtiesVar.effDate}" style="float:left;">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
@@ -285,9 +291,9 @@
 			</p:outputPanel>
 			<!-- Maximum Order Quantity -->
 			<p:outputPanel style="width:100%" 
-		           rendered="#{(amendmentBackingBean.managedBean.selectedItem !=null and 
-		    	   amendmentBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeMaxQty)
-			       and ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange}">
+		           rendered="#{amendmentBackingBean.managedBean.selectedItem !=null and 
+		    	   amendmentBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeMaxQty
+			       and (ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange or ctBackingBean.managedBean.contractVer.ctAmendment.otherChange)}">
 			
 			            <p:dataTable id="itemMaxQtyTable" var="itemMaxQtyVar" 
 				             value="#{amendmentBackingBean.managedBean.selectedItem.ctItemMaxQties}" >
@@ -335,7 +341,8 @@
 					           		amendmentBackingBean.managedBean.selectedItem.chkStatus}"
 							    	style="width:10%; white-space:normal;">
 								<p:commandLink update=":form:itemId" process="@form" 
-									disabled="#{itemMaxQtyVar.chkIndexOfRow}"
+									disabled="#{itemMaxQtyVar.chkIndexOfRow 
+									  or (ctBackingBean.managedBean.contractVer.ctAmendment.otherChange and !ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"
 								   	rendered="#{!itemMaxQtyVar.changeQuantity and itemMaxQtyVar.editable}" action="#{amendmentBackingBean.editItemMaxQtyOnIndexs()}">
 									<f:setPropertyActionListener value="#{itemMaxQtyVar}" target="#{amendmentBackingBean.managedBean.ctItemMaxQty}" />
 									<p:graphicImage value="/css/images/design/ico-edit.png" title="#{lbl['lbl.ct.edit']}" />
