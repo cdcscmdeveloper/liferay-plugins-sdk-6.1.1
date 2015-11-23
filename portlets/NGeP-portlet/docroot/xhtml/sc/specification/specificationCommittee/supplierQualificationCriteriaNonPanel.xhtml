@@ -190,13 +190,13 @@
 			<tr>
 				<td style="width: 185px;"><p:outputLabel
 						value="#{lbl['lbl.sc.all.states']}" /></td>
-				<td><p:inputText
+				<td><p:inputText size="30"
 						value="#{lbl[specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
 						disabled="true" style="margin-right:5px;" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.paidup']}" /></td>
-				<td><p:inputText maxlength="18" disabled="true"
+				<td><p:inputText maxlength="18" disabled="true" size="30"
 						value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"
 						style="margin-right:5px;text-align:right;">
 						<f:convertNumber
