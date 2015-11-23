@@ -106,7 +106,7 @@
 				<ui:fragment
 					rendered="#{!isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState eq 'true'}">
 					<tr>
-						<td style="width: 185px"><p:outputLabel
+						<td style="width: 199px"><p:outputLabel
 								value="#{lbl['lbl.sc.paidup']}"
 								rendered="#{!isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState eq 'true'}" /></td>
 						<td><p:inputText size="30" maxlength="18"
@@ -133,7 +133,7 @@
 				rendered="#{((isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal =='false') or (!isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='false') or (!isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal))}">
 				<table style="width: 100%">
 					<tr>
-						<td style="width: 185px"><p:outputLabel
+						<td style="width: 199px"><p:outputLabel
 								value="#{lbl['lbl.sc.paidup']}" /></td>
 						<td><p:inputText size="30" maxlength="18"
 								rendered="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'}"
@@ -152,7 +152,7 @@
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								label="#{lbl['lbl.sc.location.level']}"
 								value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.locationLevel.parameterId}"
-								style="width:215px;">
+								style="width:250px;">
 
 								<f:selectItems
 									value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
@@ -253,7 +253,7 @@
 				</f:facet>
 				<table style="width: 100%">
 					<tr>
-						<td style="width: 185px"><p:outputLabel
+						<td style="width: 199px"><p:outputLabel
 								value="#{lbl['lbl.sc.paidup']}" /></td>
 						<td><p:inputText size="30" maxlength="18"
 								rendered="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'}"
@@ -272,7 +272,7 @@
 						<td><p:selectOneMenu id="locZoneLevels"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.locationLevel.parameterId}"
-								style="width:215px;">
+								style="width:250px;">
 								<f:selectItems
 									value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
 								<p:ajax event="change" update="zoneyesDataTable" process="@this"
