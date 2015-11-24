@@ -608,7 +608,7 @@
 								<table style="width: 182px;">
 									<tr style="width: 100%;">
 										<td style="width:160px;"><p:outputLabel value="#{lbl['lbl.rpt.applStatus']}"
-												/><p:outputLabel value="*" styleClass="mandatory" rendered="false"
+												/><p:outputLabel value="*" styleClass="mandatory"
 												/></td>
 
 									</tr>
@@ -1523,7 +1523,7 @@
 						<TABLE style="margin-top:10px;width:50%;">
 							<TR>
 								<TD>
-									<p:outputLabel value="#{lbl['lbl.rpt.mofRegNoFrom']}"	style="margin-top:5px;width:163px;" />
+									<p:outputLabel value="#{lbl['lbl.rpt.mofRegNoFrom']}"	style="margin-top:5px;width:185px;" />
 								</TD>
 								<TD>
 									<p:inputText maxlength="22"	value="#{reportBackingBean.smMofRegNoFrom}"	style="margin-top:5px;width:150px;">
@@ -1531,7 +1531,7 @@
 									</p:inputText>
 								</TD>   
 								<TD>
-									<p:outputLabel  value="#{lbl['lbl.rpt.dtRangeTo']}" style="width:50px;"/>
+									<p:outputLabel  value="#{lbl['lbl.rpt.dtRangeTo']}" style="width:62px;"/>
 								</TD>				
 								<TD>
 									<p:inputText maxlength="22"	value="#{reportBackingBean.smMofRegNoTo}" style="margin-top:5px;width:150px;">
@@ -2109,13 +2109,11 @@
 									<p:outputLabel  value="#{lbl['lbl.rpt.registereddatefrom']}" style="width:158px;"/>
 								</TD>
 								</c:if>
-																
 								<c:if test="#{reportBackingBean.managedBean.rptGenBean.smMOFRegisteredDateView}">
 							    <TD>
-									<p:outputLabel  value="#{lbl['lbl.rpt.mofregistereddatefrom']}" style="width:173px;margin-left: -13px;"/>
+									<p:outputLabel  value="#{lbl['lbl.rpt.mofregistereddatefrom']}" style="width:158px;"/>
 								</TD>
 								</c:if>
-																
 							<c:if test="#{reportBackingBean.managedBean.rptGenBean.smRejectedDateView}">
 							    <TD>
 									<p:outputLabel  value="#{lbl['lbl.rpt.rejecteddatefrom']}" style="width:158px;"/>
@@ -2145,7 +2143,7 @@
 							<TR>
 							<c:if test="#{reportBackingBean.managedBean.rptGenBean.smMOFAccountEndDateView}">
 							    <TD>
-									<p:outputLabel  value="#{lbl['lbl.rpt.mofaccountenddatefrom']}" style="width:173px;margin-left: -13px;"/>
+									<p:outputLabel  value="#{lbl['lbl.rpt.mofaccountenddatefrom']}" style="width:158px;"/>
 								</TD>
 								
 							     <TD>
