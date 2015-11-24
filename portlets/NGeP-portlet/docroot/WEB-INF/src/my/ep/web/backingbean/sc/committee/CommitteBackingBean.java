@@ -113,13 +113,13 @@ public class CommitteBackingBean extends
 		SourcingBaseBackingBean<CommitteManagedBean> {
 
 	/** The Constant NAV_TO_COMMITTEE_MAINTENANACE. */
-	private static final String NAV_TO_COMMITTEE_MAINTENANACE = "/xhtml/sc/committe/committeemaintanancepage.xhtml";
+	private static final String NAV_TO_COMMITTEE_MAINTENANACE = "/xhtml/sc/committe/committeeMaintanancePage.xhtml";
 	
 	/** The Constant NAV_TO_VIEW_HISTORY. */
 	private static final String NAV_TO_VIEW_HISTORY = "/xhtml/sc/committe//history/viewHistory.xhtml";
 	
 	/** The Constant NAV_TO_SEARCH_PAGE. */
-	private static final String NAV_TO_SEARCH_PAGE = "/xhtml/sc/committe/committemain.xhtml";
+	private static final String NAV_TO_SEARCH_PAGE = "/xhtml/sc/committe/committeeSearch.xhtml";
 
 	/** The Constant logger. */
 	private static final Logger logger = EpLogger
@@ -431,6 +431,48 @@ public class CommitteBackingBean extends
 							getManagedBean().getCloneQtnTenderSearchBean()));
 		}
 
+		
+	}
+	
+	private class committeeQTPagingDataModel extends PagingDataModel<ScQtCommittee> {
+		
+		private static final long serialVersionUID = 1L;
+
+		private ScCommittee committee;
+		
+		/**
+		 * @param componentId
+		 * @param scCommittee
+		 */
+		public committeeQTPagingDataModel(String componentId,
+				ScCommittee scCommittee) {
+			super(componentId);
+			this.committee = scCommittee;
+		}
+		
+		/* (non-Javadoc)
+		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		 */
+		@Override
+		protected ISearchResultBean<ScQtCommittee> pageChangeListener(
+				ISearchBean<ScQtCommittee> committeeBean) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("pageChangeListener");
+			}
+			ICommitteSO committeSO;
+			try {
+				committeSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+				committeReqDTO.setScCommittee(committee);
+				committeReqDTO.setCommSearchBean(committeeBean);
+				CommitteResDTO resDTO = committeSO.retrieveCommitteDetailsByCommitteeType(committeReqDTO);
+				return resDTO.getQtCommitteResultBean();
+			} finally {
+				committeSO = null;
+			}
+		}
+		
 		
 	}
 
@@ -923,6 +965,9 @@ public class CommitteBackingBean extends
 				}
 				this.getManagedBean().setQtCommittee(qtCommitte);
 				this.getManagedBean().setScCommittee(qtCommitte.getScCommittee());
+				
+				this.getManagedBean().setCommitteeQTDataModel(
+						new committeeQTPagingDataModel("qtDetailsId", getManagedBean().getScCommittee()));
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}

@@ -8,9 +8,9 @@
 
 	<p:panel header="#{lbl['lbl.sc.qtn.list']}" toggleable="true">
 		<p:dataTable id="qtDetailsId"
-			value="#{committeBackingBean.managedBean.scCommittee.scQtCommittees}"
-			var="scQtCommittees" rows="10">
-			
+			value="#{committeBackingBean.managedBean.committeeQTDataModel}"
+			var="scQtCommittees" rowIndexVar="index" lazy="true" rows="10">
+
 			<ac:paginator for="qtDetailsId" />
 
 			<p:column headerText="#{lbl['lbl.sc.qtn.no']}" style="width:15%">
@@ -21,11 +21,13 @@
 				#{scQtCommittees.scQt.qtTitle}
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.procurement.mode']}" style="width:10%">
+			<p:column headerText="#{lbl['lbl.sc.procurement.mode']}"
+				style="width:10%">
 				#{committeBackingBean.getParameterDesc(scQtCommittees.scQt.procurementMode)}
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.created.date']}" style="width:10%">
+			<p:column headerText="#{lbl['lbl.sc.created.date']}"
+				style="width:10%">
 				<h:outputText value="#{scQtCommittees.scQt.createdDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -40,9 +42,10 @@
 		<br />
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 2px"><p:outputLabel value="#{lbl['lbl.sc.total']}" /></td>
+				<td style="width: 2px"><p:outputLabel
+						value="#{lbl['lbl.sc.total']}" /></td>
 				<td colspan="3"><p:inputText
-						value="#{committeBackingBean.managedBean.scCommittee.scQtCommittees.size()}"
+						value="#{committeBackingBean.managedBean.committeeQTDataModel.rowCount}"
 						readonly="true" style="text-align: right;" /></td>
 			</tr>
 		</table>
