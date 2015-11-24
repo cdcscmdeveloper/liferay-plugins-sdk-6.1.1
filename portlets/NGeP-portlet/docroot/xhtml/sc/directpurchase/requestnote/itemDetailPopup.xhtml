@@ -86,9 +86,9 @@
 								<td><p:inputText size="25" styleClass="ppRightBtn"  disabled="#{requestNoteBackingBean.managedBean.viewOnly}"
 								        required="true"
 										id="qtyId" label="#{lbl['lbl.sc.quantity']}"
+										 validatorMessage="Order Qty : must be a decimal number between 0.0 and 9999999999.999"
 										value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.quantity}">
-										<f:convertNumber
-											pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.uom.uomCode)}" />
+									 <p:ajax event="keyup" />
 									</p:inputText></td>
 								<td><p:message id="qtyIdMsg" for="qtyId" display="icon" /></td>
 							</tr>
