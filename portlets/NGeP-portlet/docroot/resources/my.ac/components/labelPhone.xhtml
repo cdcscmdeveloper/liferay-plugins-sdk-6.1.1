@@ -10,14 +10,12 @@
 		<cc:attribute name="areaCode" default="true"/>
 		<cc:attribute name="number" required="true" />
 		<cc:attribute name="rendered" default="true"/>
-		<cc:attribute name="styleClass" default="outputLabel-view-label"/>
+		<cc:attribute name="styleClass" default="outputLabel-view"/>
 	</cc:interface>
 
 	<cc:implementation>
 		<p:outputPanel rendered="#{not empty cc.attrs.number}">
-			<h:outputLabel value="+#{cc.attrs.countryCode}" styleClass="#{cc.attrs.styleClass}" />
-			<h:outputLabel value="#{cc.attrs.areaCode} - " styleClass="#{cc.attrs.styleClass}" />
-			<h:outputLabel value="#{cc.attrs.number}" styleClass="#{cc.attrs.styleClass}" />
+			<h:outputLabel value="+#{cc.attrs.countryCode}  #{cc.attrs.areaCode}-#{cc.attrs.number}" styleClass="#{cc.attrs.styleClass}" />
 		</p:outputPanel>
 	</cc:implementation>
 
