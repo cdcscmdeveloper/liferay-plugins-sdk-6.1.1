@@ -8052,8 +8052,12 @@ public class ReportBackingBean extends
 							|| this.getReportValue().equals(
 									ReportConst.SM_THRESHOLD)
 							|| this.getReportValue().equals(
-									ReportConst.SM_LST_MONTH_WISE_RPT_VAL) || this
-							.getReportValue().equals(
+									ReportConst.SM_LST_MONTH_WISE_RPT_VAL)
+							|| this.getReportValue().equals(
+									ReportConst.SM_APPLICATION_APPROVED_RPT_VAL) 
+							|| this.getReportValue().equals(
+									ReportConst.SM_APPLICATION_REJECTED_RPT_VAL)							
+							|| this.getReportValue().equals(
 									ReportConst.SM_LIST_OF_GST_RGSTRD_SUPPLIER))) {
 
 				if ((allRoleCodesList != null)
