@@ -14,9 +14,9 @@
 			committeBackingBean.managedBean.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeFinancialEvaluationCommittee}">
 		
 		<ui:fragment rendered="#{committeBackingBean.managedBean.scCommittee.committeStatus.statusId eq QTStatusConst.CMT_COMPLETED}">
-			<ui:include src="/xhtml/sc/committe/committenavbutton.xhtml" />
+			<ui:include src="committeeButtons.xhtml" />
 		</ui:fragment>
-		<ui:include src="/xhtml/sc/committe/committeeheader.xhtml" />
+		<ui:include src="committeeHeader.xhtml" />
 		<ui:include src="committeeqcselection.xhtml" />
 		<ui:include src="committeeaddscreen.xhtml" />
 	</c:if>
@@ -28,11 +28,11 @@
 			committeBackingBean.managedBean.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeProcurementBoardA or
 			committeBackingBean.managedBean.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeFederalProcurementBoardSbh or 
 			committeBackingBean.managedBean.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeFederalProcurementBoardSwk}">
-		<ui:include src="/xhtml/sc/committe/committenavbutton.xhtml" />
+		<ui:include src="committeeButtons.xhtml" />
 	
-		<ui:include src="/xhtml/sc/committe/committeeheader.xhtml" />
-		<ui:include src="committeefcselection.xhtml" />
-		<ui:include src="committeeaddscreentwo.xhtml"/>
+		<ui:include src="committeeHeader.xhtml" />
+		<ui:include src="committeeFCselection.xhtml" />
+		<ui:include src="committeeFcAddScreen.xhtml"/>
 	</c:if>
 
 	<c:if
