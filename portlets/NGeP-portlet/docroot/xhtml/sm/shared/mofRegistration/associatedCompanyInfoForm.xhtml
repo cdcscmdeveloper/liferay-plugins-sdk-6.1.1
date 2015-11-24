@@ -394,39 +394,35 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
-				<td><p:inputText label="#{lbl['lbl.sm.phoneno']}"
-						id="assocCompanyPhnNo"
-						value="#{backingBean.managedBean.selectedAssocCompany.phoneNo}"
-						validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}"
-						size="35" maxlength="12">
-						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-					</p:inputText> 
+				<td>
+					<ac:phone id="assocCompanyPhnNo" isMobile="false" label="#{lbl['lbl.sm.phoneno']}"
+					countryCode="#{backingBean.managedBean.selectedAssocCompany.phoneCountry}" 
+					areaCode="#{backingBean.managedBean.selectedAssocCompany.phoneArea}" 
+					number="#{backingBean.managedBean.selectedAssocCompany.phoneNo}"  
+					validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}" />
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges 
 								and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
 						oriValue="#{backingBean.managedBean.latestAssocCompany.phoneNo}" 
 						currValue="#{backingBean.managedBean.selectedAssocCompany.phoneNo}" 
 						alertValue="#{backingBean.managedBean.latestAssocCompany.phoneNo}"/>
-					<p:message id="assocCompanyPhnNoMsg" for="assocCompanyPhnNo"
-						showSummary="true" showDetail="false" display="icon" /></td>
+				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
-				<td><p:inputText label="#{lbl['lbl.sm.faxno']}"
-						id="assocCompanyFaxNo"
-						value="#{backingBean.managedBean.selectedAssocCompany.faxNo}"
-						validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}"
-						size="35" maxlength="12">
-						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-					</p:inputText> 
+				<td>
+					<ac:phone id="assocCompanyFaxNo" isMobile="false" label="#{lbl['lbl.sm.faxno']}"
+					countryCode="#{backingBean.managedBean.selectedAssocCompany.faxCountry}" 
+					areaCode="#{backingBean.managedBean.selectedAssocCompany.faxArea}" 
+					number="#{backingBean.managedBean.selectedAssocCompany.faxNo}"  
+					validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}" />
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges 
 								and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
 						oriValue="#{backingBean.managedBean.latestAssocCompany.faxNo}" 
 						currValue="#{backingBean.managedBean.selectedAssocCompany.faxNo}" 
 						alertValue="#{backingBean.managedBean.latestAssocCompany.faxNo}"/>
-					<p:message id="assocCompanyFaxNoMsg" for="assocCompanyFaxNo"
-						showSummary="true" showDetail="false" display="icon" /></td>
+				</td>
 			</tr>
 
 		</table>

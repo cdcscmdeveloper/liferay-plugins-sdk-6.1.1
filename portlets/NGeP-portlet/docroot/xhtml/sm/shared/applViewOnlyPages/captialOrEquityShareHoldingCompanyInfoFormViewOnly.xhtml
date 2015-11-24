@@ -115,11 +115,19 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.phoneno']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.phoneNo}" /></td>
+					<td>
+						<ac:labelPhone countryCode="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.phoneCountry}" 
+							areaCode="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.phoneArea}"
+							number="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.phoneNo}" />
+					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.faxno']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.faxNo}" /></td>
+					<td>
+						<ac:labelPhone countryCode="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.faxCountry}" 
+							areaCode="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.faxArea}"
+							number="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.faxNo}" />
+					</td>
 				</tr>
 	
 			</table>

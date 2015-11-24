@@ -238,40 +238,35 @@
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
-			<td><p:inputText label="#{lbl['lbl.sm.phoneno']}"
-					id="branchPhoneNo"
-					validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}"
-					value="#{backingBean.managedBean.selectedBranch.phoneNo}" size="35"
-					maxlength="12">
-					<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-					<p:ajax process="@this" partialSubmit="true"/>
-				</p:inputText> 
+			<td>
+				<ac:phone id="branchPhoneNo" isMobile="false" label="#{lbl['lbl.sm.phoneno']}"
+				countryCode="#{backingBean.managedBean.selectedBranch.phoneCountry}" 
+				areaCode="#{backingBean.managedBean.selectedBranch.phoneArea}" 
+				number="#{backingBean.managedBean.selectedBranch.phoneNo}"  
+				validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}" />
 				<ac:smFieldChangeAlert 
 					isShow="#{backingBean.managedBean.showFieldChanges
 							and not empty backingBean.managedBean.selectedBranch.supplierBranchId}"
 					oriValue="#{backingBean.managedBean.latestBranch.phoneNo}" 
 					currValue="#{backingBean.managedBean.selectedBranch.phoneNo}" 
 					alertValue="#{backingBean.managedBean.latestBranch.phoneNo}"/>
-				<p:message id="branchPhoneNoMsg" for="branchPhoneNo"
-					showSummary="true" showDetail="false" display="icon" /></td>
+			</td>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
-			<td><p:inputText label="#{lbl['lbl.sm.faxno']}" id="branchFaxNo"
-					validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}"
-					value="#{backingBean.managedBean.selectedBranch.faxNo}" size="35"
-					maxlength="12">
-					<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-					<p:ajax process="@this" partialSubmit="true"/>
-				</p:inputText> 
+			<td>
+				<ac:phone id="branchFaxNo" isMobile="false" label="#{lbl['lbl.sm.faxno']}"
+				countryCode="#{backingBean.managedBean.selectedBranch.faxCountry}" 
+				areaCode="#{backingBean.managedBean.selectedBranch.faxArea}" 
+				number="#{backingBean.managedBean.selectedBranch.faxNo}"  
+				validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}" />
 				<ac:smFieldChangeAlert 
 					isShow="#{backingBean.managedBean.showFieldChanges
 							and not empty backingBean.managedBean.selectedBranch.supplierBranchId}"
 					oriValue="#{backingBean.managedBean.latestBranch.faxNo}" 
 					currValue="#{backingBean.managedBean.selectedBranch.faxNo}" 
 					alertValue="#{backingBean.managedBean.latestBranch.faxNo}"/>
-				<p:message id="branchFaxNoMsg" for="branchFaxNo" showSummary="true"
-					showDetail="false" display="icon" /></td>
+			</td>
 		</tr>
 		<tr>
 			<td><p:outputLabel

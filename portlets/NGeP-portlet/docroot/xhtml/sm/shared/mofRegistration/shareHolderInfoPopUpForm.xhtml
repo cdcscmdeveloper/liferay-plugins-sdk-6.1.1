@@ -243,57 +243,53 @@
 							rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq 1}"
 							value="*" styleClass="mandatory" />
 					</p:outputPanel></td>
-				<td><p:inputText size="35" maxlength="12"
-						required="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq 1}"
-						value="#{backingBean.managedBean.selectedShareHolder.mobileNo}"
-						validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}"
-						label="#{lbl['lbl.sm.mobileNo']}" id="equiPerMob">
-						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-					</p:inputText> 
+				<td>
+					<ac:phone id="equiPerMob" label="#{lbl['lbl.sm.mobileNo']}"
+					countryCode="#{backingBean.managedBean.selectedShareHolder.mobileCountry}" 
+					areaCode="#{backingBean.managedBean.selectedShareHolder.mobileArea}" 
+					number="#{backingBean.managedBean.selectedShareHolder.mobileNo}" 
+					isMobile="true" required="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq 1}"
+					validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}"
+					telcoId="#{backingBean.managedBean.selectedShareHolder.mobileTelcoId}" />
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges
 							and not empty backingBean.managedBean.latestPersonnel}"
 						oriValue="#{backingBean.managedBean.latestPersonnel.mobileNo}" 
 						currValue="#{backingBean.managedBean.selectedShareHolder.mobileNo}" 
 						alertValue="#{backingBean.managedBean.latestPersonnel.mobileNo}"/>
-					<p:outputPanel id="equiPerMobMsgOutputPanel">
-						<p:message id="equiPerMobMsg" for="equiPerMob" showSummary="true"
-							showDetail="false" display="icon" />
-					</p:outputPanel></td>
+				</td>
 
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
-				<td><p:inputText size="35" maxlength="12"
-						value="#{backingBean.managedBean.selectedShareHolder.phoneNo}"
-						label="#{lbl['lbl.sm.phoneno']}" id="equiPerPhnNo"
-						validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}">
-						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-					</p:inputText> 
+				<td>
+					<ac:phone id="equiPerPhnNo" isMobile="false" label="#{lbl['lbl.sm.phoneno']}"
+					countryCode="#{backingBean.managedBean.selectedShareHolder.phoneCountry}" 
+					areaCode="#{backingBean.managedBean.selectedShareHolder.phoneArea}" 
+					number="#{backingBean.managedBean.selectedShareHolder.phoneNo}"  
+					validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}" />
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges
 							and not empty backingBean.managedBean.latestPersonnel}"
 						oriValue="#{backingBean.managedBean.latestPersonnel.phoneNo}" 
 						currValue="#{backingBean.managedBean.selectedShareHolder.phoneNo}" 
 						alertValue="#{backingBean.managedBean.latestPersonnel.phoneNo}"/>
-					<p:message id="equiPerPhnNoMsg" for="equiPerPhnNo"
-						showSummary="true" showDetail="false" display="icon" /></td>
+				</td>
 				<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
-				<td><p:inputText size="35" maxlength="12"
-						validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}"
-						value="#{backingBean.managedBean.selectedShareHolder.faxNo}"
-						label="#{lbl['lbl.sm.faxno']}" id="equiPerFaxNo">
-						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-					</p:inputText> 
+				<td>
+					<ac:phone id="equiPerFaxNo" isMobile="false" label="#{lbl['lbl.sm.faxno']}"
+					countryCode="#{backingBean.managedBean.selectedShareHolder.faxCountry}" 
+					areaCode="#{backingBean.managedBean.selectedShareHolder.faxArea}" 
+					number="#{backingBean.managedBean.selectedShareHolder.faxNo}"  
+					validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}" /> 
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges
 							and not empty backingBean.managedBean.latestPersonnel}"
 						oriValue="#{backingBean.managedBean.latestPersonnel.faxNo}" 
 						currValue="#{backingBean.managedBean.selectedShareHolder.faxNo}" 
 						alertValue="#{backingBean.managedBean.latestPersonnel.faxNo}"/>
-					<p:message id="equiPerFaxNoMsg" for="equiPerFaxNo"
-						showSummary="true" showDetail="false" display="icon" /></td>
+				</td>
 			</tr>
 
 			<tr>
@@ -370,7 +366,7 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 						<p:ajax event="change" process="@this"
-							update=":form:tt:shareHolderAddrDialog,:form:tt:equiPerMobMsgOutputPanel,shrPrivPanel, @([id$=mobileOutputPanel]),tooltip5,:#{p:component('emailOutPanelId')},:#{p:component('emailInputPanelId')}"
+							update=":form:tt:shareHolderAddrDialog,shrPrivPanel, @([id$=mobileOutputPanel]),tooltip5,:#{p:component('emailOutPanelId')},:#{p:component('emailInputPanelId')}"
 							listener="#{backingBean.assignShareHolderPrivilege}" />
 					</p:selectOneRadio></td>
 				<td><p:graphicImage id="tooltip3"
