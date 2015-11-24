@@ -35,13 +35,68 @@
 			</tr>
 		</table>
 	
-	<p:panel header="#{lbl['lbl.sm.basic.data.maintenance']}" toggleable="true"
+	<p:panel header="#{lbl['lbl.sm.panHdr.comBasic']}" toggleable="true"
 		id="basicDataMaintenancePanelId">
 		
 		<table style="width: 100%;table-layout:fixed">
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.companyname']}" /></td>
 				<td><p:outputLabel styleClass="outputLabel-view" value="#{bb.managedBean.selectedSupplier.companyName}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.estdate']}" /></td>
+				<td><ac:labelDate styleClass="outputLabel-view" value="#{bb.managedBean.selectedSupplier.establishDate}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.rocNo']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{bb.managedBean.selectedSupplier.regNo}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.ep.no']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{bb.managedBean.selectedSupplier.epNo}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.companyaddress']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{bb.managedBean.selectedSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.country']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{bb.managedBean.selectedSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry.countryName}"/></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{bb.managedBean.selectedSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{bb.managedBean.selectedSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateName}"/></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{bb.managedBean.selectedSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.district']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{bb.managedBean.selectedSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict.districtName}"/></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{bb.managedBean.selectedSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address4}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.towncity']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{bb.managedBean.selectedSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity.cityName}"/></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.postcode']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{bb.managedBean.selectedSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.phoneno']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{bb.managedBean.selectedSupplier.smAppl.smCompanyBasic.phoneNo}"/></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.faxno']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{bb.managedBean.selectedSupplier.smAppl.smCompanyBasic.faxNo}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.website']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{bb.managedBean.selectedSupplier.smAppl.smCompanyBasic.website}"/></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.remark']}" styleClass="outputLabel-view-label"/><p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:inputTextarea autoResize="false"
+						id="remarkId" cols="50"
+						maxlength="2000" required="true"
+						validatorMessage="#{lbl['lbl.sm.basic.data.maintenance.remarks.maxlength.msg']}"
+						value="#{bb.managedBean.remarks}">
+						<f:validateLength maximum="2000" />
+					</p:inputTextarea> <p:message id="remarkIdMsg" for="remarkId"
+						showSummary="true" showDetail="false" display="icon" /></td>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.businesscomptype']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td>
 					<p:selectOneMenu id="busTypeId" required="true" value="#{bb.managedBean.selectedSupplier.businessType}">
@@ -57,25 +112,6 @@
 					</p:tooltip>&#160;					
 					<p:message id="busTypeIdMsg" for="busTypeId" display="icon" />
 				</td>
-			</tr>
-			<tr>
-				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.rocNo']}" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view" value="#{bb.managedBean.selectedSupplier.regNo}" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.ep.no']}" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view" value="#{bb.managedBean.selectedSupplier.epNo}" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.remark']}" styleClass="outputLabel-view-label"/><p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputTextarea autoResize="false"
-						id="remarkId" cols="50"
-						maxlength="2000" required="true"
-						validatorMessage="#{lbl['lbl.sm.basic.data.maintenance.remarks.maxlength.msg']}"
-						value="#{bb.managedBean.remarks}">
-						<f:validateLength maximum="2000" />
-					</p:inputTextarea> <p:message id="remarkIdMsg" for="remarkId"
-						showSummary="true" showDetail="false" display="icon" /></td>
-				<td>&#160;</td>
-				<td>&#160;</td>
 			</tr>
 		</table>
 		
