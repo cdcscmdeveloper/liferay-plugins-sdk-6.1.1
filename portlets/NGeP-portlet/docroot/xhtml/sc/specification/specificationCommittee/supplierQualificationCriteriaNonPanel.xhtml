@@ -123,7 +123,7 @@
 
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 185px"><p:outputLabel
+				<td style="width: 200px"><p:outputLabel
 						value="#{lbl['lbl.sc.all.states']}"
 						rendered="#{!isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState =='false'}" />
 				</td>
@@ -145,7 +145,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.location.level']}" /></td>
 				<td><p:selectOneMenu id="locLevels" disabled="true"
 						value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.locationLevel.parameterId}"
-						style="width: 215px;">
+						style="width: 250px;">
 						<f:selectItems
 							value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
 					</p:selectOneMenu></td>
