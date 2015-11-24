@@ -88,11 +88,19 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.phoneno']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.phoneNo}" /></td>
+					<td>
+						<ac:labelPhone countryCode="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.phoneCountry}" 
+							areaCode="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.phoneArea}"
+							number="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.phoneNo}" />
+					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.faxno']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.faxNo}" /></td>
+					<td>
+						<ac:labelPhone countryCode="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.faxCountry}" 
+							areaCode="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.faxArea}"
+							number="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.faxNo}" />
+					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sc.spec.area.feat']}" /></td>

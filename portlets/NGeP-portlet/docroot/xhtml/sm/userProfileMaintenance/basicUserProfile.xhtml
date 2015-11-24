@@ -8,7 +8,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
@@ -171,28 +172,27 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.userprofile.phone']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="basicBUPhone"
-							label="#{lbl['lbl.sm.userprofile.phone']}"
-							value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.phoneNo}"
-							size="35" maxlength="12" required="true" 
-							validatorMessage="#{lbl['lbl.sm.userprofile.phone']} - #{lbl['lbl.sm.invalidNo']}">
-							<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-							</p:inputText>
-						<p:message id="basicBUPhoneMsg" for="basicBUPhone"
-							showSummary="true" showDetail="false" display="icon" /></td>
+					<td>
+						<ac:phone id="basicBUPhone" isMobile="false" label="#{lbl['lbl.sm.userprofile.phone']}"
+							countryCode="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.phoneCountry}" 
+							areaCode="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.phoneArea}" 
+							number="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.phoneNo}"  
+							validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}" 
+							required="true"/>
+					</td>
 
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.userprofile.mobile']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="basicBUMobile"
-							label="#{lbl['lbl.sm.userprofile.mobile']}"
-							value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileNo}"
-							size="35" maxlength="12" required="true" 
-							validatorMessage="#{lbl['lbl.sm.userprofile.mobile']} - #{lbl['lbl.sm.invalidNo']}">
-							<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-							</p:inputText>
-						<p:message id="basicBUMobileMsg" for="basicBUMobile"
-							showSummary="true" showDetail="false" display="icon" /></td>
+					<td>
+						<ac:phone id="basicBUMobile" label="#{lbl['lbl.sm.userprofile.mobile']}"
+							countryCode="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileCountry}" 
+							areaCode="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileArea}" 
+							number="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileNo}" 
+							isMobile="true" required="true"
+							validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}"
+							telcoId="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileTelcoId}" />
+					</td>
 				</tr>
 				
 				<tr>

@@ -1,0 +1,24 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<cc:interface>
+		<cc:attribute name="countryCode" required="true" />
+		<cc:attribute name="areaCode" default="true"/>
+		<cc:attribute name="number" required="true" />
+		<cc:attribute name="rendered" default="true"/>
+		<cc:attribute name="styleClass" default="outputLabel-view-label"/>
+	</cc:interface>
+
+	<cc:implementation>
+		<p:outputPanel rendered="#{not empty cc.attrs.number}">
+			<h:outputLabel value="+#{cc.attrs.countryCode}" styleClass="#{cc.attrs.styleClass}" />
+			<h:outputLabel value="#{cc.attrs.areaCode} - " styleClass="#{cc.attrs.styleClass}" />
+			<h:outputLabel value="#{cc.attrs.number}" styleClass="#{cc.attrs.styleClass}" />
+		</p:outputPanel>
+	</cc:implementation>
+
+</ui:component>
