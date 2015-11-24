@@ -2895,91 +2895,100 @@ public class SmCommonUtil {
 
 			for (SelectItem selectItem : items) {
 				if (StringUtils.isNotBlank(businessType)) {
-					if (applType.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+					if (selectItem.getValue() != null) {
+						if (businessType
+								.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH)
+								|| businessType
+										.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)) {
+
+							if (selectItem
+									.getValue()
+									.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH)
+									|| selectItem
+											.getValue()
+											.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)) {
+								itemList.add(selectItem);
+							}
+						} else if (businessType
+								.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)
+								|| businessType
+										.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK)) {
+							if (selectItem
+									.getValue()
+									.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)
+									|| selectItem
+											.getValue()
+											.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK)) {
+								itemList.add(selectItem);
+							}
+						} else if (businessType
+								.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)
+								|| businessType
+										.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)) {
+							if (selectItem
+									.getValue()
+									.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)
+									|| selectItem
+											.getValue()
+											.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)) {
+								itemList.add(selectItem);
+							}
+						} else if (businessType
+								.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)
+								|| businessType
+										.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)) {
+							if (selectItem
+									.getValue()
+									.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)
+									|| selectItem
+											.getValue()
+											.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)) {
+								itemList.add(selectItem);
+							}
+						}
+					}
+				} else {
+					if (applType.equals(SupplierManagementConst.ACC_BASIC)) {
+						itemList.add(selectItem);
+					} else if (applType
+							.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+							&& suppType != null) {
 						if (suppType
 								.equals(SupplierManagementConst.STYPE_CONTRACTOR)) {
 							if (selectItem.getValue() == null
-									|| !selectItem.getValue().equals("A")) {
+									|| !selectItem
+											.getValue()
+											.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL)) {
 								itemList.add(selectItem);
 							}
 						} else if (suppType
 								.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
 							if (selectItem.getValue() == null
-									|| (!selectItem.getValue().equals("K")
-											&& !selectItem.getValue().equals(
-													"L")
-											&& !selectItem.getValue().equals(
-													"M") && !selectItem
-											.getValue().equals("A"))) {
+									|| (!selectItem
+											.getValue()
+											.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN)
+											&& !selectItem
+													.getValue()
+													.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI)
+											&& !selectItem
+													.getValue()
+													.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN) && !selectItem
+											.getValue()
+											.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL))) {
 								itemList.add(selectItem);
 							}
 						}
-					} else {
-						if (selectItem.getValue() != null) {
-							if (businessType
-									.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH)
-									|| businessType
-											.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)) {
-
-								if (selectItem
-										.getValue()
-										.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH)
-										|| selectItem
-												.getValue()
-												.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)) {
-									itemList.add(selectItem);
-								}
-							} else if (businessType
-									.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)
-									|| businessType
-											.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK)) {
-								if (selectItem
-										.getValue()
-										.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)
-										|| selectItem
-												.getValue()
-												.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK)) {
-									itemList.add(selectItem);
-								}
-							} else if (businessType
-									.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)
-									|| businessType
-											.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)) {
-								if (selectItem
-										.getValue()
-										.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)
-										|| selectItem
-												.getValue()
-												.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)) {
-									itemList.add(selectItem);
-								}
-							}
-						}
-					}
-
-				} else {
-					if (applType.equals(SupplierManagementConst.ACC_MOF)) {
+					} else if (suppType == null
+							&& applType
+									.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
 						if (selectItem.getValue() == null) {
 							itemList.add(selectItem);
 						}
-					} else {
-						itemList.add(selectItem);
 					}
 				}
 			}
-
-			// sort
-			if (CollectionUtils.isNotEmpty(itemList)) {
-				Collections.sort(itemList, new Comparator<SelectItem>() {
-					@Override
-					public int compare(final SelectItem s1, final SelectItem s2) {
-						return StringUtil.upperCase(s1.getLabel()).compareTo(
-								StringUtil.upperCase(s2.getLabel()));
-					}
-				});
-			}
-
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new EpException(MessageConst.ERROR_721010, new String[] {
 					e.toString(), e.getMessage() });
 
