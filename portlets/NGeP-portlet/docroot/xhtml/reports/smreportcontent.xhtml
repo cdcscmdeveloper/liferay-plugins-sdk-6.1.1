@@ -1075,6 +1075,32 @@
 									<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />							
 							</p:selectOneMenu>
 						</c:if>
+						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smPersonnelStaffRoleView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.role']}"
+								style="margin-top:5px;width:160px;" />							
+							<p:selectOneMenu value="#{reportBackingBean.smPersonnelRole}"
+								style="margin-top:5px;width:300px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.newdirector']}"
+									itemValue="#{lbl['lbl.rpt.newdirectorvalue']}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.equityowner']}"
+									itemValue="#{lbl['lbl.rpt.equityownervalue']}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.highermanagemnt']}"
+									itemValue="#{lbl['lbl.rpt.ceo']}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.management']}"
+									itemValue="#{lbl['lbl.rpt.managementvalue']}"></f:selectItem>									
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.staff']}"
+									itemValue="#{lbl['lbl.rpt.staffvalue']}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.professionalstaff']}"
+									itemValue="#{lbl['lbl.rpt.professionalstaffvalue']}"></f:selectItem>	
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.semiprofessionalstaff']}"
+									itemValue="#{lbl['lbl.rpt.semiprofessionalstaffvalue']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.clericalstaff']}"
+									itemValue="#{lbl['lbl.rpt.clericalstaffvalue']}"></f:selectItem>									
+									<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />							
+							</p:selectOneMenu>
+						</c:if>
 						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smIdentficationTypeView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.identificationtype']}"
 								style="margin-top:5px;width:160px;" />
