@@ -179,8 +179,6 @@ public class LOIDetailBackingBean extends
 	/** The flag. */
 	private boolean flag;
 	
-	private List<ScQtEvaluationResultDtl> shortListedSupplierList;
-	
 	/**
 	 * Instantiates a new LOI detail backing bean.
 	 */
@@ -616,17 +614,21 @@ public class LOIDetailBackingBean extends
 			}
 		} else {
 			getManagedBean().setItemized(false);
-			for (ScQtRecommend scQtRecommend : scQtRecommendList) {
-				scQtRecommend.setShortListedSupplierList(this.getShortListedSupplierList());
-				setRecommendedSupplierList(scQtRecommend);
-			}
+//			for (ScQtRecommend scQtRecommend : scQtRecommendList) {
+//				setRecommendedSupplierList(scQtRecommend);
+//				scQtRecommend.setShortListedSupplierList(
+//						this.getShortListedSupplierList());
+//			}
+			
 			ScQtRecommend scQtRecommend = scQtRecommendList.get(0);
-			List<ScQtEvaluationResultDtl> recommendedSupplierList 
+			setRecommendedSupplierList(scQtRecommend);
+			
+			List<ScQtEvaluationResultDtl> recommendedSuppplierList 
 									= scQtRecommend.getAwardSupplierList();
 
-			if (CollectionUtils.isNotEmpty(recommendedSupplierList)) {
+			if (CollectionUtils.isNotEmpty(recommendedSuppplierList)) {
 				for (ScQtEvaluationResultDtl recommendedSupplier 
-													: recommendedSupplierList) {
+												: recommendedSuppplierList) {
 					Long recommendedSupplierId = recommendedSupplier.getQtEvaluationResult().getScQtProposal()
 													.getScQtSupplier().getSmSupplier().getSupplierId();
 					BigDecimal totalOfferedPrice = new BigDecimal(0);
@@ -649,15 +651,15 @@ public class LOIDetailBackingBean extends
 									break;
 								}
 							}
+							
+							qtRecommend.setAwardSupplierList(recommendedSuppplierList);
 						}
-
-						qtRecommend.setAwardSupplierList(recommendedSupplierList);
 					}
 					totalOfferedPrice = totalOfferedPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 					recommendedSupplier.getQtEvaluationResult().setOfferedPrice(totalOfferedPrice);
 				}
 			}
-			getManagedBean().setRecommendedSupplierList(recommendedSupplierList);			
+			getManagedBean().setRecommendedSupplierList(recommendedSuppplierList);			
 		}				
 	}
 	
@@ -2437,7 +2439,17 @@ public class LOIDetailBackingBean extends
 					.getQtCommitteRemarks()));
 			reqDTO.setScQtCommittee(scQtCommittee);
 		}
-		reqDTO.setScQtRecommendList(getManagedBean().getRecommendList());
+		
+		List<ScQtRecommend> scQtRecommends = this.getManagedBean().getRecommendList();
+		if (getManagedBean().isZonal()) {
+			scQtRecommends = new ArrayList<ScQtRecommend>();
+			Map<Long,List<ScQtRecommend>> qtRecommendsByZone 
+						= getManagedBean().getScQtRecommendsByZone();
+			for (Long specZoneId : qtRecommendsByZone.keySet()) {
+				scQtRecommends.addAll(qtRecommendsByZone.get(specZoneId));
+			}
+		}
+		reqDTO.setScQtRecommendList(scQtRecommends);
 		reqDTO.setItemized(this.getManagedBean().isItemized());
 		reqDTO.setDeletedMeetingAttendanceList(
 				getManagedBean().getDeletedMeetingAttendanceList());
@@ -4344,7 +4356,7 @@ public class LOIDetailBackingBean extends
 				resDTO = this.getShortListedSuppliersByPkg(
 							this.getManagedBean().getSelectedZone());
 				shortlistedSupplierList = resDTO.getQualifiedByPackageSuppliers();
-				this.setShortListedSupplierList(shortlistedSupplierList);
+//				this.setShortListedSupplierList(shortlistedSupplierList);
 			}
 			isSuccessful = resDTO.isSuccessful();
 			scQtRecommend.setShortListedSupplierList(shortlistedSupplierList);
@@ -4352,6 +4364,7 @@ public class LOIDetailBackingBean extends
 			isSuccessful = true;
 			shortlistedSupplierList = scQtRecommend
 					.getShortListedSupplierList();
+//			this.setShortListedSupplierList(shortlistedSupplierList);
 		}
 		if (isSuccessful) {
 			// set the checkbox or radio button of supplier selected
@@ -4827,18 +4840,4 @@ public class LOIDetailBackingBean extends
 		}
 	}
 
-	/**
-	 * @return the shortListedSupplierList
-	 */
-	public List<ScQtEvaluationResultDtl> getShortListedSupplierList() {
-		return shortListedSupplierList;
-	}
-
-	/**
-	 * @param shortListedSupplierList the shortListedSupplierList to set
-	 */
-	public void setShortListedSupplierList(
-			List<ScQtEvaluationResultDtl> shortListedSupplierList) {
-		this.shortListedSupplierList = shortListedSupplierList;
-	}
 }
