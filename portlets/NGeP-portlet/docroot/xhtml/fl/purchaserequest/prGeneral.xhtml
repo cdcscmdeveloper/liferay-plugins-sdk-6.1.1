@@ -98,7 +98,8 @@
 						value="*" styleClass="mandatory" /></td>
 				<td rowspan="3" style="width:290px"><p:inputTextarea cols="50" rows="4" id="title"
 						onkeyup="limitTextArea(this,500);"
-						onkeydown="limitTextArea(this,500);" 
+						onkeydown="limitTextArea(this,500);"
+						autoResize="false"
 						style=" margin-bottom:5px;" label="#{lbl['lbl.fl.title']}"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.title}"
 						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"/>
@@ -271,6 +272,7 @@
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
 				<td><p:inputTextarea cols="50" rows="8" disabled="true"
 						id="smAddress" style=" margin-bottom:5px;"
+						autoResize="false"
 						value="#{purchaseRequestBackingBean.getFullAddress(purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.smAddress)}" /></td>
 			</tr>
 			<tr>
