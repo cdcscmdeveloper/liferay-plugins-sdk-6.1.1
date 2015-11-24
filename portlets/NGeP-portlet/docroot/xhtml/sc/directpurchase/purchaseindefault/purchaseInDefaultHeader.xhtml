@@ -13,7 +13,7 @@
 						<p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.pid.no']}" />  
 					</td>
 					<td class="header-info-text">
-						 #{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.purchaseInDefaultNo == null ? lbl['lbl.sc.system.generated'] : purchaseInDefaultBackingBean.managedBean.purchaseInDefault.purchaseInDefaultNo}
+						 #{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.brandNew ? lbl['lbl.sc.system.generated'] : purchaseInDefaultBackingBean.managedBean.purchaseInDefault.purchaseInDefaultNo}
 					</td>
 					<td width="20%">
 						<p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.pkp.no']}" />
