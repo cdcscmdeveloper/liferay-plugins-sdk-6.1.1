@@ -5,6 +5,10 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<ui:param name="uomCode"
+				value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.uom.uomCode}" />
+				
 	<p:panel header="#{lbl['lbl.sc.price.inquiry.header.inquiry.detail']}" toggleable="true" id="addToCartId">
 		<table>
 			<tr>
@@ -70,6 +74,11 @@
 					       validatorMessage="Order Qty: must be a decimal number between 0.0 and 9999999999.999"
 						   value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.quantity}"
 						   size="25">
+						   <p:ajax partialSubmit="true" process="@this" update="@this" />
+							<ac:validateNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, uomCode)}"
+								maxIntegerDigits="10" />
+						   
 						</p:inputText>
 			     </td>
 			     <td><p:message id="oderQtyIdMsg" for="oderQtyId"
