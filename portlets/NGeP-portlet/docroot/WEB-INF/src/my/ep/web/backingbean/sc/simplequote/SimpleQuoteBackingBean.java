@@ -373,7 +373,7 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setPageNavToRequestNote(fc.getViewRoot().getViewId());
 			
 			// page navigation to simple quote
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "simpleQuote");
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "simpleQuoteMain");
 
 		} finally {
 
@@ -728,7 +728,7 @@ public class SimpleQuoteBackingBean extends
 		getManagedBean().setEditableFlag(Boolean.TRUE);
 		CatalogueBackingBean catalogueBackingBean = new CatalogueBackingBean();
 		catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(false);
-		return "simpleQuote";
+		return "simpleQuoteMain";
 	}
 	
 	/**
@@ -1214,8 +1214,11 @@ public class SimpleQuoteBackingBean extends
 				List<ScRequestNote> requestNotes = new ArrayList<ScRequestNote>();
 				requestNote = getManagedBean().getRequestNote();
 				setUserDetails(requestNote);
-				requestNote.setRequestNoteNo(directPurchaseSO
-						.generateRequestNoteNo());
+				
+				if(StringUtils.isBlank(requestNote.getRequestNoteNo())){
+					requestNote.setRequestNoteNo(directPurchaseSO
+							.generateRequestNoteNo());
+				}
 				requestNote.setTitle(quote.getTitle());
 				requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SQ);
 				requestNote.setWorkFlowStatuses(null);
@@ -1941,7 +1944,7 @@ public class SimpleQuoteBackingBean extends
 		ptjLocality(ParameterConst.LOCATION_LEVEL_DISTRICT);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "simpleQuote");
+				.handleNavigation(fc, null, "simpleQuoteMain");
 	}
 
 	/**
@@ -4674,7 +4677,7 @@ public class SimpleQuoteBackingBean extends
 			// page navigation to simple quote
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, "simpleQuote");
+					.handleNavigation(fc, null, "simpleQuoteMain");
 		}
 	}
 
