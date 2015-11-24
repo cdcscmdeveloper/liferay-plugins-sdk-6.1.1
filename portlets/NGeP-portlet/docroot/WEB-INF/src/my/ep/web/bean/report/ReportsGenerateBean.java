@@ -605,7 +605,10 @@ public class ReportsGenerateBean {
 		private boolean smMandatoryMofRegNoToView = false;
 		
 		/** The sm personnel role view. */
-		private boolean smPersonnelRoleView = false;
+		private boolean smPersonnelRoleView = false;		
+		
+		/** The sm personnel staff role view. */
+		private boolean smPersonnelStaffRoleView = false;
 		
 		/** The sm identfication type view. */
 		private boolean smIdentficationTypeView = false;
@@ -13136,5 +13139,19 @@ public class ReportsGenerateBean {
 	 */
 	public void setSmPaymentPRDateView(boolean smPaymentPRDateView) {
 		this.smPaymentPRDateView = smPaymentPRDateView;
+	}
+
+	/**
+	 * @return the smPersonnelStaffRoleView
+	 */
+	public boolean isSmPersonnelStaffRoleView() {
+		return smPersonnelStaffRoleView;
+	}
+
+	/**
+	 * @param smPersonnelStaffRoleView the smPersonnelStaffRoleView to set
+	 */
+	public void setSmPersonnelStaffRoleView(boolean smPersonnelStaffRoleView) {
+		this.smPersonnelStaffRoleView = smPersonnelStaffRoleView;
 	}
 }
