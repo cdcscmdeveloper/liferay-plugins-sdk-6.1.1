@@ -12,7 +12,7 @@
 			<tr>
 				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS'}">
-					<td width="150px"><h:outputLabel
+					<td style="width: 175px;"><h:outputLabel
 							value="#{lbl['lbl.sc.periodic.fullfillent.type']}" /></td>
 					<td><p:selectOneRadio
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
@@ -41,7 +41,7 @@
 					<tr>
 						<h:panelGroup
 							rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS' and  specificationBackingBean.managedBean.scQt.scheduleType eq 'F'}">
-							<td><h:outputLabel
+							<td style="width: 175px;"><h:outputLabel
 									value="#{lbl['lbl.sc.spec.total.frequency']}"></h:outputLabel></td>
 							<td><p:inputText style="text-align:right;"
 									disabled="#{specificationBackingBean.managedBean.readOnly}"
@@ -187,8 +187,8 @@
 
 				<table>
 					<tr>
-						<td><h:outputLabel value="#{lbl['lbl.sc.spec.total.phase']}"></h:outputLabel>
-						</td>
+						<td style="width: 175px;"><h:outputLabel
+								value="#{lbl['lbl.sc.spec.total.phase']}"></h:outputLabel></td>
 						<td><p:inputText style="text-align:right;"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.totalProgressivePayment}">
@@ -221,7 +221,8 @@
 								update="@this,progressivePayment" />
 							<ac:validateNumber integerOnly="true" maxIntegerDigits="3"></ac:validateNumber>
 						</p:inputText>
-						<ac:iconTooltip id="progressivePaymentPhaseno#{index}SC" value="#{lbl['lbl.sc.spec.phase.tooltip']}" />
+						<ac:iconTooltip id="progressivePaymentPhaseno#{index}SC"
+							value="#{lbl['lbl.sc.spec.phase.tooltip']}" />
 						<p:message id="phaseNumId" for="progressivePhase" display="icon"></p:message>
 					</p:column>
 					<p:column style="width:10%">
