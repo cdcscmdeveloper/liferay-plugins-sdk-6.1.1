@@ -6158,11 +6158,18 @@ public class SimpleQuoteBackingBean extends
 		FacesScopes facesScopes = new FacesScopes();
 		if (event.getFile() != null) {
 			ScQuote scQuote = getManagedBean().getScQuote();
+			
+			if (scQuote.getQuoteNo() == null) {
+				scQuote.setQuoteNo(getQuoteSO().generateQuoteNo());
+			}
+			
 			ScQuoteAttachment attachment = scQuote.getScQuoteAttachment();
 			if (null == attachment) {
 				attachment = new ScQuoteAttachment();
 				attachment.setScQuote(scQuote);
 			}
+			
+			
 
 			attachment.setDocNo(scQuote.getQuoteNo());
 			attachment
