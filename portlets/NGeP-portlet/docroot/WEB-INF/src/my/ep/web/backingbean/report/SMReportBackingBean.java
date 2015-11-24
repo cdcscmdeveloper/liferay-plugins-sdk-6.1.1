@@ -392,13 +392,25 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	        	rptGenBean.setSmMOFRegisteredDateView(true);
 	            break;      
 		 case ReportConst.SM_LIST_OF_PER_MORE_COMPANY_RPT_VAL:
-	        	//rptGenBean.setSmIdentficationTypeView(true);
-	        	rptGenBean.setSmIdentificationNumberView(true);
+	        	//rptGenBean.setSmIdentficationTypeView(true);	        	
 	        	rptGenBean.setSmExtraTwoColumnView(true);
+	        	rptGenBean.setSmSupplierTypeView(true);
+	        	rptGenBean.setSmCompanyNameView(true);
+	        	rptGenBean.setSmMofRegNoFromView(true);
+	        	rptGenBean.setSmMofRegNoToView(true);
+	        	rptGenBean.setSmIdentificationNumberView(true);
+	        	rptGenBean.setSmPersonnelStaffRoleView(true);
+	        	
+	        	/*rptGenBean.setSmCompanyNameView(true);
+	        	rptGenBean.setSmMandatorySupplierTypeView(true);
+	        	rptGenBean.setSmMofRegNoFromView(true);
+	        	rptGenBean.setSmMofRegNoToView(true);
+	        	rptGenBean.setSmIdentificationNumberView(true);*/
+	        	
 	        	/*rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);*/
-	        	rptGenBean.setSmNonMandatoryDateView(true);
-	        	rptGenBean.setSmMOFRegisteredDateView(true);
+	        	/*rptGenBean.setSmNonMandatoryDateView(true);
+	        	rptGenBean.setSmMOFRegisteredDateView(true);*/
 	            break;
 		 case ReportConst.SM_LIST_OF_MOF_CANCELLATION_RPT_VAL:
 	        	rptGenBean.setSmMandatorySupplierTypeView(true);
