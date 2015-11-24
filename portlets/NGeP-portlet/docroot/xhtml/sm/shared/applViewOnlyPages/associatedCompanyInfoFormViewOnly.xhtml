@@ -95,11 +95,19 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.phoneno']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.phoneNo}"/></td>
+					<td>
+						<ac:labelPhone countryCode="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.phoneCountry}" 
+							areaCode="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.phoneArea}"
+							number="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.phoneNo}" />
+					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.faxno']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.faxNo}"/></td>
+					<td>
+						<ac:labelPhone countryCode="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.faxCountry}" 
+							areaCode="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.faxArea}"
+							number="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.faxNo}" />
+					</td>
 				</tr>
 			</table>
 		</p:scrollPanel>

@@ -408,36 +408,33 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
-				<td><p:inputText maxlength="12"
-						value="#{backingBean.managedBean.selectedEquityCompany.phoneNo}"
-						size="35" label="#{lbl['lbl.sm.phoneno']}" id="suppEquiCompPhnNo"
-						validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}">
-						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-					</p:inputText> 
+				<td>
+					<ac:phone id="suppEquiCompPhnNo" isMobile="false" label="#{lbl['lbl.sm.phoneno']}"
+					countryCode="#{backingBean.managedBean.selectedEquityCompany.phoneCountry}" 
+					areaCode="#{backingBean.managedBean.selectedEquityCompany.phoneArea}" 
+					number="#{backingBean.managedBean.selectedEquityCompany.phoneNo}"  
+					validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}" />
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges}"
 						oriValue="#{backingBean.managedBean.latestEquityCompany.phoneNo}" 
 						currValue="#{backingBean.managedBean.selectedEquityCompany.phoneNo}" 
 						alertValue="#{backingBean.managedBean.latestEquityCompany.phoneNo}"/>
-					<p:message id="suppEquiCompPhnNoMsg" for="suppEquiCompPhnNo"
-						showSummary="true" showDetail="false" display="icon" /></td>
+				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
-				<td><p:inputText maxlength="12" label="#{lbl['lbl.sm.faxno']}"
-						id="suppEquiCompFaxNo"
-						value="#{backingBean.managedBean.selectedEquityCompany.faxNo}"
-						size="35"
-						validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}">
-						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-					</p:inputText> 
+				<td>
+					<ac:phone id="suppEquiCompFaxNo" isMobile="false" label="#{lbl['lbl.sm.faxno']}"
+					countryCode="#{backingBean.managedBean.selectedEquityCompany.faxCountry}" 
+					areaCode="#{backingBean.managedBean.selectedEquityCompany.faxArea}" 
+					number="#{backingBean.managedBean.selectedEquityCompany.faxNo}"  
+					validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}" /> 
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges}"
 						oriValue="#{backingBean.managedBean.latestEquityCompany.faxNo}" 
 						currValue="#{backingBean.managedBean.selectedEquityCompany.faxNo}" 
 						alertValue="#{backingBean.managedBean.latestEquityCompany.faxNo}"/>
-					<p:message id="suppEquiCompFaxNoMsg" for="suppEquiCompFaxNo"
-						showSummary="true" showDetail="false" display="icon" /></td>
+				</td>
 			</tr>
 
 		</table>

@@ -87,11 +87,19 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.phoneno']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.phoneNo}" /></td>
+					<td>
+						<ac:labelPhone countryCode="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.phoneCountry}" 
+							areaCode="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.phoneArea}"
+							number="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.phoneNo}" />
+					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.faxno']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.faxNo}" /></td>
+					<td>
+						<ac:labelPhone countryCode="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.faxCountry}" 
+							areaCode="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.faxArea}"
+							number="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.faxNo}" />
+					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sc.spec.area.feat']}" /></td>
