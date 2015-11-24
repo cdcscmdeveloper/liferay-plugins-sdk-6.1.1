@@ -3705,30 +3705,18 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				resDTO = getDirectPurchaseSO().retrieveGroupListByOrgId(reqDTO);
 				if(resDTO.getUserGroupList().size()>0) {
 					getManagedBean().setUserGroupList(resDTO.getUserGroupList());
+				} else {
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_745070, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
-
-				if(requestNote.getPmUserGroup() == null){
-					if(!CollectionUtils.isEmpty(resDTO.getUserGroupList())) {
-						PmUserGroup userGroup = resDTO.getUserGroupList().get(0);
-						requestNote.setPmUserGroup(userGroup);
-						getManagedBean().setUserGroupId(userGroup.getUserGroupId());
-					}
-				} else{
+				if(requestNote.getPmUserGroup() != null){
 					getManagedBean().setUserGroupId(requestNote.getPmUserGroup().getUserGroupId());
 				}
-				
 				if(requestNote.getApprover() != null){
 					getManagedBean().setSelectedApproverId(requestNote.getApprover().getUserId());
 				}
-				
 				userGroupChangeListener();
-			}
-			
-			
-			if(getManagedBean().getRequestNote().getPmUserGroup()== null){
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-						MessageUtils.getMessage(MessageConst.ERROR_745070, 
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
 		} catch (Exception e) {
 			//e.printStackTrace();
@@ -3771,7 +3759,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		Long userGroupId = getManagedBean().getUserGroupId();
 		
 		
-		if(getManagedBean().getUserGroupList() != null) {
+		if(userGroupId != null && getManagedBean().getUserGroupList() != null) {
 			for (PmUserGroup pmUserGroup : getManagedBean().getUserGroupList()) {
 				if(userGroupId.equals(pmUserGroup.getUserGroupId())){
 					requestNote.setPmUserGroup(pmUserGroup);
