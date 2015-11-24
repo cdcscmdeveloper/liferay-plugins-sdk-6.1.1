@@ -1,3 +1,13 @@
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.constant.report;
 
 import java.text.SimpleDateFormat;
@@ -484,11 +494,14 @@ public class ReportConst {
 	public static final String SITE_VISIT_COMPLTD = "Site Visit Report Completed";
 	public static final String KAMA = ",";
 	public static final String SUPPL_CONSLT_TYPE = "J";	
+	public static final String SUPPL_CONTRACT_TYPE = "K";	
 	public static final String SUPPL_CONSULT_MOF_NO = "465-";
 	public static final String SUPPL_CONTRACT_MOF_NO = "357-";
 	
 	
 	public static final String AMP_EP_NO_EQ = "&epno=";
+	
+	/** The Constant AMP_TO_DATE_EQ. */
 	public static final String AMP_TO_DATE_EQ = "&todt=";
 	public static final String AMP_FROM_DATE_EQ = "&frdt=";
 	public static final String AMP_SUPP_DOC_EQ = "&supportingdocci=";
