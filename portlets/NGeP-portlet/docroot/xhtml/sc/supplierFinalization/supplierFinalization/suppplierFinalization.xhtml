@@ -17,7 +17,7 @@
 		}
 		
 		<c:if test="#{suppFinalizationBackingBean.managedBean.scQt.zonal}">
-			.tdWidth: { 86%; }
+			.tdWidth: { 80%; }
 		</c:if>
 		<c:if test="#{!suppFinalizationBackingBean.managedBean.scQt.zonal}">
 			.tdWidth: { 100%; }
@@ -324,14 +324,13 @@
 		
 	</p:panel>
 	
-	<p:spacer height="10px" />
 	<p:outputPanel id="itemSupplierPanel">
 		<table style="border: 0px;width:100%;">
 			<tr>
 				<c:if test="#{suppFinalizationBackingBean.managedBean.scQt.zonal and
 				 			  decisionSupplFinalOrFwdHighAuth}">
 				 			  	
-					<td width="14%" class="sidemenutd" valign="top">
+					<td width="20%" class="sidemenutd" valign="top">
 						<p:remoteCommand name="onZoneTabChangeAction" update="@form" 
 										 partialSubmit="true" process="@form" action="#{suppFinalizationBackingBean.onZoneTabChangeAction}" />
 						
@@ -343,7 +342,7 @@
 					</td>
 				</c:if>
 				
-				<td class="tdWidth">
+				<td style="width:80%;">
 					<h:panelGroup id="itemPanel" rendered="#{(suppFinalizationBackingBean.managedBean.recommendSupplier or 
 																suppFinalizationBackingBean.managedBean.forwardToHigherAuthority) and
 																	suppFinalizationBackingBean.managedBean.itemize}">
@@ -358,7 +357,6 @@
 		</table>	
 	</p:outputPanel>
 	
-	<p:spacer height="20px" />
 	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true">
 		<table style="width: 100%" id="remarksList">
 			<tr>

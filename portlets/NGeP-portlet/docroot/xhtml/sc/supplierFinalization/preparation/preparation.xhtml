@@ -8,7 +8,7 @@
 
 	<table style="border: 0px;width:100%;">
 		<tr>
-			<td width="14%" class="sidemenutd" valign="top">
+			<td width="20%" class="sidemenutd" valign="top">
 				<p:tabMenu styleClass="sidemenu"
 					activeIndex="#{suppFinalizationBackingBean.managedBean.prepareActiveIndex}">
 					
@@ -24,7 +24,7 @@
 				</p:tabMenu>
 			</td>
 			
-			<td style="width:86%;">
+			<td style="width:80%;">
 				<c:if test="#{suppFinalizationBackingBean.managedBean.prepareActiveIndex eq '0'}">
 					<ui:include src="/xhtml/sc/supplierFinalization/preparation/meetingDtls.xhtml"></ui:include>
 				</c:if> 
