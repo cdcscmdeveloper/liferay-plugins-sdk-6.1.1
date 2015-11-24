@@ -26,8 +26,8 @@
 	
 	<p:dataTable id="designatedAreaTbl" var="daObj" rows="10"
 		widgetVar="designatedAreaTblWidVar"
-		value="#{ruleCatalogueBackingBean.managedBean.designatedAreaList}"
-		selection="#{ruleCatalogueBackingBean.managedBean.selectedDesignatedArea}"
+		value="#{ruleCatalogueBackingBean.managedBean.daValidityList}"
+		selection="#{ruleCatalogueBackingBean.managedBean.selectedDaValidity}"
 		rowKey="#{daObj}" rowIndexVar="rowIndex" selectionMode="single">
 		<ac:paginator for="designatedAreaTbl" />
 		<p:column style="width:20%">
@@ -37,7 +37,7 @@
 			</f:facet>
 			<p:selectOneMenu required="true" 
 				disabled="#{(!daObj.brandNew)}" 
-				id="somDaLocationTypeId" value="#{daObj.locationType}"
+				id="somDaLocationTypeId" value="#{daObj.designatedArea.locationType}"
 				label="#{lbl['lbl.pm.settings.gst.location.type']}"
 				style="width:100px;">
 				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -48,7 +48,7 @@
 				<p:ajax event="change" 
 					update=":form:settingTabId:gstId:designatedAreaTbl" 
 					listener="#{ruleCatalogueBackingBean.resetLovLocation(daObj)}"
-					process=":form:settingTabId:gstId:designatedAreaTbl" />
+					process="@this" partialSubmit="true" />
 			</p:selectOneMenu>
 			<p:message id="somDaLocationTypeIdMsg" for="somDaLocationTypeId" display="icon" />
 		</p:column>
@@ -60,12 +60,12 @@
 			<ac:lov id="lovPmLocation" lovId="V_PM_LOCATION" 
 				readonly="true" required="true" 
 				label="#{lbl['lbl.pm.location.code']}"
-				disabled="#{!(daObj.brandNew) or empty daObj.locationType}"
+				disabled="#{!(daObj.brandNew) or empty daObj.designatedArea.locationType}"
 				update=":form:settingTabId:gstId:designatedAreaTbl"
 				size="15" headerText="#{lbl['lbl.pm.location.code']}"
-				saveObject="ruleCatalogueBackingBean.managedBean.designatedAreaList[#{rowIndex}].vPmLocation"
-				conditionField="status^1|locationType^#{daObj.locationType}|countryId^#{ruleCatalogueBackingBean.getDefaultCountry()}"
-				value="#{daObj.vPmLocation.locationCode}">
+				saveObject="ruleCatalogueBackingBean.managedBean.daValidityList[#{rowIndex}].designatedArea.vPmLocation"
+				conditionField="status^1|locationType^#{daObj.designatedArea.locationType}|countryId^#{ruleCatalogueBackingBean.getDefaultCountry()}"
+				value="#{daObj.designatedArea.vPmLocation.locationCode}">
 			</ac:lov>
 			<p:message id="lovPmLocationMsg" for="lovPmLocation" display="icon" />
 
@@ -76,11 +76,42 @@
 				<h:outputText value="*" styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.pm.settings.gst.da.title']}" />
 			</f:facet>
-			<h:outputText id ="daTitleId" value="#{daObj.vPmLocation.locationName}" />
+			<h:outputText id ="daTitleId" value="#{daObj.designatedArea.vPmLocation.locationName}" />
 
 		</p:column>
+		<p:column width="10%">
+			<f:facet name="header">
+				<h:outputText value="*" styleClass="mandatory" />
+				<h:outputText value=" #{lbl['lbl.pm.as.effdate']}" />
+			                	</f:facet>
+		<p:calendar showOn="button" id="daEffDateId" 
+				mindate="#{ruleCatalogueBackingBean.managedBean.today}" style="width :45px;"
+				required="true" label="#{lbl['lbl.pm.as.effdate']}"
+				readonlyInput="true"
+				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+				value="#{daObj.effDate}">
+				<p:ajax event="dateSelect" update="@([id$=daExpDateId])" process="@this" />
+			</p:calendar>
+		</p:column>
+
+		<p:column width="10%">
+			<f:facet name="header">
+			<h:outputText value="*" styleClass="mandatory" />
+				<h:outputText value=" #{lbl['lbl.pm.as.expdate']}" />
+						
+			                	</f:facet>
+
+			<p:calendar showOn="button" id="daExpDateId" required="true"
+				mindate="#{ruleCatalogueBackingBean.managedBean.today}" style="width :45px;"
+				label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
+				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+				value="#{daObj.expDate}" validatorMessage="#{lbl['lbl.pm.as.expdate']} #{lbl['lbl.pm.date.range.validation']} #{lbl['lbl.pm.as.effdate']}">
+				<f:attribute name="startDate" value="#{daObj.effDate}" />
+				<f:validator validatorId="primeDateRangeValidator" />
+			</p:calendar>
+		</p:column>
 		
-		<p:column style="width:13%">
+	<!-- 	<p:column style="width:13%">
 			<f:facet name="header">				
 				<h:outputText value="#{lbl['lbl.pm.status']}" />
 			</f:facet>
@@ -93,14 +124,14 @@
 								partialSubmit="true" process="@this"
 								update="@this" />				
 			</p:selectOneMenu>
-		</p:column>
-		
+		</p:column>  -->
+	
 		<p:column style="width:5%;text-align:center;">
 			<f:facet name="header">				
 				<h:outputText value="#{lbl['lbl.pm.action']}" />
 			</f:facet>
 			<p:commandLink id="deldaItemCl" partialSubmit="true"
-				process="@this"
+				process="@this" disabled="#{daObj.effDate le ruleCatalogueBackingBean.managedBean.today}"
 				action="#{ruleCatalogueBackingBean.deleteDesignatedArea(rowIndex)}"
 				update=":form:settingTabId:gstId">
 				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>

@@ -20,7 +20,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmConfigGeneral;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
 import my.ep.persistence.entity.pm.general.settings.gst.PmDaGst;
-import my.ep.persistence.entity.pm.general.settings.gst.PmDesignatedArea;
+import my.ep.persistence.entity.pm.general.settings.gst.PmDaValidity;
 import my.ep.persistence.entity.pm.general.settings.gst.PmGstItem;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRule;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
@@ -83,9 +83,12 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private Long selectedMeasurement;
 	private Long selectedColor;
 	private Date currentDate = new Date();
-	private List<PmDesignatedArea> designatedAreaList;
-	private PmDesignatedArea selectedDesignatedArea;
-	private List<PmDesignatedArea> deletedDesignatedAreaList;
+//	private List<PmDesignatedArea> designatedAreaList;
+	private List<PmDaValidity> daValidityList;
+//	private PmDesignatedArea selectedDesignatedArea;
+	private PmDaValidity selectedDaValidity;
+//	private List<PmDesignatedArea> deletedDesignatedAreaList;
+    private List<PmDaValidity> deletedDaValidityList;
 	private List<PmGstItem> taxableItemsForDA;
 	private List<PmGstItem> deletedTaxableItemsForDA;
 	private PmGstItem selectedGstItemForDA;
@@ -616,53 +619,37 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.deletedTaxableItems = deletedTaxableItems;
 	}
 
-	/**
-	 * @return the designatedAreaList
-	 */
-	public List<PmDesignatedArea> getDesignatedAreaList() {
-		if(designatedAreaList == null){
-			designatedAreaList = new ArrayList<PmDesignatedArea>();
+
+
+	public List<PmDaValidity> getDaValidityList() {
+		if(daValidityList == null){
+			daValidityList = new ArrayList<PmDaValidity>();
 		}
-		return designatedAreaList;
+		return daValidityList;
 	}
 
-	/**
-	 * @param designatedAreaList the designatedAreaList to set
-	 */
-	public void setDesignatedAreaList(List<PmDesignatedArea> designatedAreaList) {
-		this.designatedAreaList = designatedAreaList;
+	public void setDaValidityList(List<PmDaValidity> daValidityList) {
+		this.daValidityList = daValidityList;
 	}
 
-	/**
-	 * @return the selectedDesignatedArea
-	 */
-	public PmDesignatedArea getSelectedDesignatedArea() {
-		return selectedDesignatedArea;
+
+	public PmDaValidity getSelectedDaValidity() {
+		return selectedDaValidity;
 	}
 
-	/**
-	 * @param selectedDesignatedArea the selectedDesignatedArea to set
-	 */
-	public void setSelectedDesignatedArea(PmDesignatedArea selectedDesignatedArea) {
-		this.selectedDesignatedArea = selectedDesignatedArea;
-	}
-
-	/**
-	 * @return the deletedDesignatedAreaList
-	 */
-	public List<PmDesignatedArea> getDeletedDesignatedAreaList() {
-		if(deletedDesignatedAreaList == null){
-			deletedDesignatedAreaList = new ArrayList<PmDesignatedArea>();
+	public List<PmDaValidity> getDeletedDaValidityList() {
+		if(deletedDaValidityList == null){
+			deletedDaValidityList = new ArrayList<PmDaValidity>();
 		}
-		return deletedDesignatedAreaList;
+		return deletedDaValidityList;
 	}
 
-	/**
-	 * @param deletedDesignatedAreaList the deletedDesignatedAreaList to set
-	 */
-	public void setDeletedDesignatedAreaList(
-			List<PmDesignatedArea> deletedDesignatedAreaList) {		
-		this.deletedDesignatedAreaList = deletedDesignatedAreaList;
+	public void setSelectedDaValidity(PmDaValidity selectedDaValidity) {
+		this.selectedDaValidity = selectedDaValidity;
+	}
+
+	public void setDeletedDaValidityList(List<PmDaValidity> deletedDaValidityList) {
+		this.deletedDaValidityList = deletedDaValidityList;
 	}
 
 	/**
