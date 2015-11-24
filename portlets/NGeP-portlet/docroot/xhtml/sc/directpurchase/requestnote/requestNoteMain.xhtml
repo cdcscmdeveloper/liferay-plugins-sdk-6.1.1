@@ -29,33 +29,33 @@
 			<ac:gpkiPopup
 				textBeforeSign="#{requestNoteBackingBean.textBeforeSign}"
 				postSignAction="#{requestNoteBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}"
-				postCancelAction="#{requestNoteBackingBean.gpkiCancelAction}" />
-
+				postCancelAction="#{requestNoteBackingBean.gpkiCancelAction}"
+                enableAutoUpdate="#{requestNoteBackingBean.enableAutoUpdate()}" />
 			<ui:include
-				src="/xhtml/sc/directpurchase/common/commonReqNoteButtons.xhtml" />
+				src="/xhtml/sc/directpurchase/requestnote/requestNoteButtons.xhtml" />
 			<ui:include
-				src="/xhtml/sc/directpurchase/common/commonRequestNoteHeader.xhtml" />
+				src="/xhtml/sc/directpurchase/requestnote/requestNoteHeader.xhtml" />
 			<table style="border: 0px; align: center;" width="100%">
 				<tr>
 					<td>
 					<td width="100%" align="left" valign="top"><ui:include
-							src="/xhtml/sc/directpurchase/common/commonItemDetails.xhtml" />
+							src="/xhtml/sc/directpurchase/requestnote/requestNoteItemDetails.xhtml" />
 						<ui:include
-							src="/xhtml/sc/directpurchase/common/commonApprovalDetails.xhtml" />
+							src="/xhtml/sc/directpurchase/requestnote/requestNoteApprovalDetail.xhtml" />
 						<ui:include
-							src="/xhtml/sc/directpurchase/common/commonRemarks.xhtml" /></td>
+							src="/xhtml/sc/directpurchase/requestnote/requestNoteRemarks.xhtml" /></td>
 					</td>
 				</tr>
 			</table>
 
 			<!-- Item Details PopUp -->
 			<ui:include
-				src="/xhtml/sc/directpurchase/common/itemDetailPopup.xhtml" />
+				src="/xhtml/sc/directpurchase/requestnote/itemDetailPopup.xhtml" />
 			<!-- Justification PopUp -->
 			<ui:include
-				src="/xhtml/sc/directpurchase/common/justificationPopup.xhtml" />
+				src="/xhtml/sc/directpurchase/requestnote/justificationPopup.xhtml" />
 			<!-- Pricing PopUp -->
-			<ui:include src="/xhtml/sc/directpurchase/common/pricingPopup.xhtml" />
+			<ui:include src="/xhtml/sc/directpurchase/requestnote/pricingPopup.xhtml" />
 			<!-- Supplier Details PopUp -->
 			<ui:include src="/xhtml/sc/common/supplierDetailsPopup.xhtml" />
 		</p:outputPanel>

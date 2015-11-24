@@ -2146,7 +2146,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/sc/directpurchase/preRenderDirectPurchase.xhtml</value>
+			<value>/xhtml/sc/directpurchase/requestnote/preRenderRequestNote.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -5045,7 +5045,7 @@
 			<init-param>
 				<name>javax.portlet.faces.defaultViewId.view</name>
 				<value>
-					/xhtml/sc/directpurchase/reviewPurchaseInquiry.xhtml
+					/xhtml/sc/directpurchase/purchaseinquiry/reviewPurchaseInquiry.xhtml
 				</value>
 			</init-param>
 			<expiration-cache>0</expiration-cache>
@@ -5080,7 +5080,7 @@
 			<init-param>
 				<name>javax.portlet.faces.defaultViewId.view</name>
 				<value>
-					/xhtml/sc/directpurchase/reviewPurchaseInDefault.xhtml
+					/xhtml/sc/directpurchase/purchaseindefault/reviewPurchaseInDefault.xhtml
 				</value>
 			</init-param>
 			<expiration-cache>0</expiration-cache>
@@ -5115,7 +5115,7 @@
 			<init-param>
 				<name>javax.portlet.faces.defaultViewId.view</name>
 				<value>
-					/xhtml/sc/directpurchase/reviewSimpleQuote.xhtml
+					/xhtml/sc/directpurchase/simplequote/reviewSimpleQuote.xhtml
 				</value>
 			</init-param>
 			<expiration-cache>0</expiration-cache>
@@ -5150,7 +5150,7 @@
 			<init-param>
 				<name>javax.portlet.faces.defaultViewId.view</name>
 				<value>
-					/xhtml/sc/directpurchase/reviewSupplierView.xhtml
+					/xhtml/sc/directpurchase/simplequoteresponse/reviewSimpleQuoteResp.xhtml
 				</value>
 			</init-param>
 			<expiration-cache>0</expiration-cache>
@@ -5358,7 +5358,7 @@
 			<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 			<init-param>
 				<name>javax.portlet.faces.defaultViewId.view</name>
-				<value>/xhtml/sc/directpurchase/requestnotesearch.xhtml</value>
+				<value>/xhtml/sc/directpurchase/requestnote/requestnotesearch.xhtml</value>
 			</init-param>
 			<expiration-cache>0</expiration-cache>
 			<supports>
@@ -7239,7 +7239,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/sc/directpurchase/simpleQuoteSearch.xhtml</value>
+			<value>/xhtml/sc/directpurchase/simplequote/simpleQuoteSearch.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>

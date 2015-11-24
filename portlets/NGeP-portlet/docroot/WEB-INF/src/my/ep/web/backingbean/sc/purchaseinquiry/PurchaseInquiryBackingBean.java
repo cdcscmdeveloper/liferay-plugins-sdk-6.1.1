@@ -1059,7 +1059,7 @@ public class PurchaseInquiryBackingBean extends
 				}
 			}
 			// redirect to RequestNote screen
-			return "commonRequestNote";
+			return "requestNoteMain";
 
 		} else {
 			finalizeRemarks(prInquiry.getRemarks());

@@ -44,22 +44,22 @@
 	<navigation-rule>
 		<from-view-id>*</from-view-id>
 		<navigation-case>
-			<from-outcome>commonRequestNote</from-outcome>
-			<to-view-id>/xhtml/sc/directpurchase/common/commonRequestNote.xhtml</to-view-id>
+			<from-outcome>requestNoteMain</from-outcome>
+			<to-view-id>/xhtml/sc/directpurchase/requestnote/requestNoteMain.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
     <navigation-rule>
 		<from-view-id>*</from-view-id>
 		<navigation-case>
 			<from-outcome>prInquiryMain</from-outcome>
-			<to-view-id>/xhtml/sc/directpurchase/prInquiryMain.xhtml</to-view-id>
+			<to-view-id>/xhtml/sc/directpurchase/purchaseinquiry/prInquiryMain.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
 	<navigation-rule>
 		<from-view-id>*</from-view-id>
 		<navigation-case>
 			<from-outcome>purchaseInDefaultMain</from-outcome>
-			<to-view-id>/xhtml/sc/directpurchase/purchaseInDefaultMain.xhtml</to-view-id>
+			<to-view-id>/xhtml/sc/directpurchase/purchaseindefault/purchaseInDefaultMain.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
 	
@@ -74,8 +74,8 @@
 	<navigation-rule>
 		<from-view-id>*</from-view-id>
 		<navigation-case>
-			<from-outcome>simpleQuote</from-outcome>
-			<to-view-id>/xhtml/sc/directpurchase/simpleQuote.xhtml</to-view-id>
+			<from-outcome>simpleQuoteMain</from-outcome>
+			<to-view-id>/xhtml/sc/directpurchase/simplequote/simpleQuoteMain.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
 	
@@ -83,17 +83,11 @@
 		<from-view-id>*</from-view-id>
 		<navigation-case>
 			<from-outcome>supplerView</from-outcome>
-			<to-view-id>/xhtml/sc/directpurchase/supplierViewMain.xhtml</to-view-id>
+			<to-view-id>/xhtml/sc/directpurchase/simplequoteresponse/simpleQuoteRespMain.xhtml</to-view-id>
+			
 		</navigation-case>
 	</navigation-rule>
 	
-	<navigation-rule>
-		<from-view-id>*</from-view-id>
-		<navigation-case>
-			<from-outcome>requestNoteByZone</from-outcome>
-			<to-view-id>/xhtml/sc/directpurchase/requestNoteByZone.xhtml</to-view-id>
-		</navigation-case>
-	</navigation-rule>
 	
 	<converter>
 		<converter-id>procurementTypeConverter</converter-id>

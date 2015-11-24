@@ -768,7 +768,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			getManagedBean().setTitleChecker(Boolean.FALSE);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			// page nav. to common request note
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "requestNoteMain");
 		}
 	}
 	
@@ -802,7 +802,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 
 		// page nav. to common request note
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "requestNoteMain");
 	}
 
 	/**
@@ -1198,7 +1198,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "requestNoteMain");
 	}
 
 	/**
@@ -1215,7 +1215,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "requestNoteMain");
 	}
 	
 	/**
@@ -1907,7 +1907,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		RequestContext.getCurrentInstance().execute("addToCartPopup.hide()");
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "requestNoteMain");
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 	}
 
@@ -2238,7 +2238,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setRequestNoteDtls(mainRequestNoteDtls);
 		getManagedBean().getRequestNote().setRequestNoteDtls(mainRequestNoteDtls);
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "requestNoteMain");
 	}
 
 	
@@ -2853,7 +2853,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 		retrieveRequestNoteDetails(scRequestNote, DPStatusConstants.RN_PENDING_SUBMISSION, isZone);
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "requestNoteMain");
 	}
 
 	/**
@@ -2948,7 +2948,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 		}
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "requestNoteMain");
 	}
 	
 	/**
