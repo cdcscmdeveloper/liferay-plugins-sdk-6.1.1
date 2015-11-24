@@ -9,6 +9,8 @@
 		resizable="false" styleClass="pop_up_top" width="520">
 		<p:panel id="itemDetailsId">
 		<p:messages id="itemDetMsg" showDetail="true" autoUpdate="#{!requestNoteBackingBean.managedBean.autoUpdate}" closable="false" showSummary="false" />
+		<ui:param name="uomCode"
+				value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.uom.uomCode}" />
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.product.code']}" /></td>
@@ -83,12 +85,15 @@
 					<td>
 					  <table>
 							<tr>
-								<td><p:inputText size="25" styleClass="ppRightBtn"  disabled="#{requestNoteBackingBean.managedBean.viewOnly}"
-								        required="true"
-										id="qtyId" label="#{lbl['lbl.sc.quantity']}"
-										 validatorMessage="Order Qty : must be a decimal number between 0.0 and 9999999999.999"
+								<td><p:inputText size="25" styleClass="ppRightBtn"
+										disabled="#{requestNoteBackingBean.managedBean.viewOnly}"
+										required="true" id="qtyId" label="#{lbl['lbl.sc.quantity']}"
+										validatorMessage="Order Qty : must be a decimal number between 0.0 and 9999999999.999"
 										value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.quantity}">
-									 <p:ajax event="keyup" />
+										<p:ajax partialSubmit="true" process="@this" update="@this" />
+										<ac:validateNumber
+											pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, uomCode)}"
+											maxIntegerDigits="10" />
 									</p:inputText></td>
 								<td><p:message id="qtyIdMsg" for="qtyId" display="icon" /></td>
 							</tr>
@@ -137,7 +142,7 @@
 				<p:commandButton id="okBtn"
 					rendered="#{!requestNoteBackingBean.managedBean.viewOnly}"
 					value="#{lbl['lbl.sc.ok']}" process="@this qtyId"
-					update="@form" 	partialSubmit="true" 
+					update="itemDetailsId" 	partialSubmit="true" 
 					action="#{requestNoteBackingBean.editQuantity}"/>
 
 				<p:commandButton value="#{lbl['lbl.sc.close']}" partialSubmit="true"
