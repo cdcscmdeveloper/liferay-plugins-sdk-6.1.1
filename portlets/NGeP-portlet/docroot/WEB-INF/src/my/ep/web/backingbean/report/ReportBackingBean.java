@@ -7214,21 +7214,37 @@ public class ReportBackingBean extends
 				getManagedBean().getRptGenBean().setSmRegistrationStatusView(
 						true);
 			}
-		} else if (null != this.getReportValue()
-				&& this.getSmSupplierType() != null) {
+		} else if (null != this.getReportValue()) {
 			if (this.getReportValue().equalsIgnoreCase(
 					ReportConst.SM_REG_COMPANY_IN_MOF_RPT_VAL)) {
-				if (this.getSmSupplierType().equalsIgnoreCase(
-						ReportConst.SUPPL_CONSLT_TYPE)) {
-					this.setSmMofRegNo(ReportConst.SUPPL_CONSULT_MOF_NO);
-
+				if (this.getSmSupplierType() != null) {
+					if (this.getSmSupplierType().equalsIgnoreCase(
+							ReportConst.SUPPL_CONSLT_TYPE)) {
+						this.setSmMofRegNo(ReportConst.SUPPL_CONSULT_MOF_NO);
+					} else if (this.getSmSupplierType().equalsIgnoreCase(
+							ReportConst.SUPPL_CONTRACT_TYPE)) {
+						this.setSmMofRegNo(ReportConst.SUPPL_CONTRACT_MOF_NO);
+					}
 				} else {
-					this.setSmMofRegNo(ReportConst.SUPPL_CONTRACT_MOF_NO);
+					this.setSmMofRegNo(null);
 				}
-
+			} else if (this.getReportValue().equalsIgnoreCase(
+					ReportConst.SM_LIST_OF_DIR_OWN_CEO_COMPANY_RPT_VAL)) {
+				if (this.getSmSupplierType() != null) {
+					if (this.getSmSupplierType().equalsIgnoreCase(
+							ReportConst.SUPPL_CONSLT_TYPE)) {
+						this.setSmMofRegNoFrom(ReportConst.SUPPL_CONSULT_MOF_NO);
+						this.setSmMofRegNoTo(ReportConst.SUPPL_CONSULT_MOF_NO);
+					} else if (this.getSmSupplierType().equalsIgnoreCase(
+							ReportConst.SUPPL_CONTRACT_TYPE)) {
+						this.setSmMofRegNoFrom(ReportConst.SUPPL_CONTRACT_MOF_NO);
+						this.setSmMofRegNoTo(ReportConst.SUPPL_CONTRACT_MOF_NO);
+					}
+				} else {
+					this.setSmMofRegNoFrom(null);
+					this.setSmMofRegNoTo(null);
+				}
 			}
-		} else {
-			this.setSmMofRegNo(null);
 		}
 
 	}
