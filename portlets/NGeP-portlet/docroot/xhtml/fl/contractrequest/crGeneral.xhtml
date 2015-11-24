@@ -90,7 +90,8 @@
 						value="*" styleClass="mandatory" /> </td>
 				<td rowspan="3" style="width:290px"><p:inputTextarea cols="50" rows="4" id="title"
 						onkeyup="limitTextArea(this,500);"
-						onkeydown="limitTextArea(this,500);" 
+						onkeydown="limitTextArea(this,500);"
+						autoResize="false"
 						style=" margin-bottom:5px;" label="#{lbl['lbl.fl.title']}"
 						disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
 						value="#{contractRequestBackingBean.managedBean.flRequest.title}" /> 						
@@ -281,7 +282,7 @@
 			<tr>
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
-				<td><p:inputTextarea cols="50" rows="8" disabled="true" 
+				<td><p:inputTextarea cols="50" rows="8" disabled="true" autoResize="false"
 				value="#{contractRequestBackingBean.getFullAddress(contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.smAddress)}"
 						style=" margin-bottom:5px;"
 						 /></td>
@@ -330,7 +331,7 @@
 			<tr>
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
-				<td><p:inputTextarea cols="50" rows="8" disabled="true"
+				<td><p:inputTextarea cols="50" rows="8" disabled="true" autoResize="false"
 						style=" margin-bottom:5px;"
 						value="#{contractRequestBackingBean.managedBean.facSupplierAddress}" /></td>
 			</tr>
