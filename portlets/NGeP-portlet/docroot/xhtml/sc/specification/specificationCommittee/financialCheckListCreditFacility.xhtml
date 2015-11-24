@@ -77,19 +77,19 @@
 		<p:spacer height="25"></p:spacer>
 		<table>
 			<tr>
-				<td style="width: 150px;"><h:outputLabel
+				<td style="width: 157px;"><h:outputLabel
 						value="#{lbl['lbl.sc.spec.total.credit']}"></h:outputLabel></td>
 				<td><p:inputText readonly="true" disabled="true"></p:inputText></td>
 				<p:spacer height="10"></p:spacer>
 			</tr>
 			<tr>
-				<td style="width: 150px;"><h:outputLabel
+				<td style="width: 157px;"><h:outputLabel
 						value="#{lbl['lbl.sc.spec.total.credit.amount.paid']}"></h:outputLabel></td>
 				<td><p:inputText readonly="true" disabled="true"></p:inputText></td>
 				<p:spacer height="10"></p:spacer>
 			</tr>
 			<tr>
-				<td style="width: 150px;"><h:outputLabel
+				<td style="width: 157px;"><h:outputLabel
 						value="#{lbl['lbl.sc.spec.total.credit.percentage.paid']}"></h:outputLabel></td>
 				<td><p:inputText readonly="true" disabled="true"></p:inputText>
 					<ac:iconTooltip
@@ -104,7 +104,7 @@
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
 			<table>
 				<tr>
-					<td style="width: 135px;"><ui:fragment
+					<td style="width: 150px;"><ui:fragment
 							rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
 							<p:outputLabel value="*" styleClass="mandatory"
 								style="float : left"></p:outputLabel>
@@ -177,7 +177,7 @@
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 					<table>
 						<tr>
-							<td style="width: 135px;"><ui:fragment
+							<td style="width: 150px;"><ui:fragment
 									rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
 									<p:outputLabel value="*" styleClass="mandatory"
 										style="float : left"></p:outputLabel>
