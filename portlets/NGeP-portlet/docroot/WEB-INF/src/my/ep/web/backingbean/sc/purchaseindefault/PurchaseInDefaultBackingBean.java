@@ -687,11 +687,21 @@ public class PurchaseInDefaultBackingBean extends
 			throws FileNotFoundException, IOException {
 		debugLogger("handleFileUpload");
 		FacesScopes facesScopes = new FacesScopes();
+		IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION,
+							IPurchaseInDefaultSO.class);
+			
 		if (event.getFile() != null) {
 			ScPurchaseInDefault purchaseInDefault = getManagedBean()
 					.getPurchaseInDefault();
 			ScPurchaseInDefaultAttachment attachment = getManagedBean()
 					.getPurchaseInDefault().getScPurchaseInDefaultAttachment();
+			
+			if(purchaseInDefault.getPurchaseInDefaultNo() == null){
+				purchaseInDefault.setPurchaseInDefaultNo(purchaseInDefaultSO.generatePIDNo());
+			}
+			
 			if (null == attachment) {
 				attachment = new ScPurchaseInDefaultAttachment();
 				attachment.setScPurchaseInDefault(purchaseInDefault);
