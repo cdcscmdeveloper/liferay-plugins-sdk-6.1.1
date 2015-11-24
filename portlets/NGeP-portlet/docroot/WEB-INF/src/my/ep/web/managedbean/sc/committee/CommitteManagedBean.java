@@ -193,6 +193,8 @@ public class CommitteManagedBean extends BaseManagedBean {
 
 	/** The is editable. */
 	private boolean isEditable = true;
+	
+	private IPagingDataModel<ScQtCommittee> committeeQTDataModel;
 
 	// Search Committee
 	/** The search qt data model. */
@@ -1473,6 +1475,21 @@ public class CommitteManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectAllMembers(boolean selectAllMembers) {
 		this.selectAllMembers = selectAllMembers;
+	}
+
+	/**
+	 * @return the committeeQTDataModel
+	 */
+	public IPagingDataModel<ScQtCommittee> getCommitteeQTDataModel() {
+		return committeeQTDataModel;
+	}
+
+	/**
+	 * @param committeeQTDataModel the committeeQTDataModel to set
+	 */
+	public void setCommitteeQTDataModel(
+			IPagingDataModel<ScQtCommittee> committeeQTDataModel) {
+		this.committeeQTDataModel = committeeQTDataModel;
 	}
 
 }
