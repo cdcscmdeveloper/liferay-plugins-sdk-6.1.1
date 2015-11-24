@@ -10,7 +10,12 @@
 		closable="false"
 		 modal="true" dynamic="true">
 		<p:panel id="addToCartId">
-		<p:messages id="cartmessages" showDetail="true" autoUpdate="#{!requestNoteBackingBean.managedBean.autoUpdate}" closable="false" showSummary="false" />
+			<p:messages id="cartmessages" showDetail="true"
+				autoUpdate="#{!requestNoteBackingBean.managedBean.autoUpdate}"
+				closable="false" showSummary="false" />
+			<ui:param name="uomCode"
+				value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.uom.uomCode}" />
+				
 			<table style="width: 100%">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.supp.name']}" /></td>
@@ -37,7 +42,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.uom']}" /></td>
 					<td><p:inputText disabled="true" size="25"
-							value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.pmUom.uomName}"/>
+							value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.pmUom.uomName}" />
 					</td>
 				</tr>
 				<tr>
@@ -51,15 +56,20 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.order.qty']}" /></td>
-					<td><p:inputText size="25" styleClass="ppRightBtn"  label="#{lbl['lbl.sc.order.qty']}" maxlength="14" id="oderQtyId" 
-					       validatorMessage="Order Qty : must be a decimal number between 0.0 and 9999999999.999"
+					<td><p:inputText size="25" styleClass="ppRightBtn"
+							label="#{lbl['lbl.sc.order.qty']}" maxlength="14" id="oderQtyId"
+							validatorMessage="Order Qty : must be a decimal number between 0.0 and 9999999999.999"
 							value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.quantity}">
-							 <p:ajax event="keyup" />
-						</p:inputText><p:message id="oderQtyMsg" for="oderQtyId" display="icon" /></td>
+							<p:ajax partialSubmit="true" process="@this" update="@this" />
+							<ac:validateNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, uomCode)}"
+								maxIntegerDigits="10" />
+						</p:inputText>
+						<p:message id="oderQtyMsg" for="oderQtyId" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.price.type']}" /> 
-					 <p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.price.type']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
 					<td>
 						<table>
 							<tr>
@@ -70,17 +80,16 @@
 										value="#{requestNoteBackingBean.managedBean.priceType}">
 										<f:selectItems
 											value="#{requestNoteBackingBean.managedBean.priceTypes}" />
-									</p:selectOneMenu>
-									<p:message id="priceTypeMsg" for="priceType"
-										display="icon" /></td>
-								<td style="margin-top: -3px"><ac:iconTooltip value="#{lbl['lbl.sc.pricetype.tooltip']}"/></td>
+									</p:selectOneMenu> <p:message id="priceTypeMsg" for="priceType" display="icon" /></td>
+								<td style="margin-top: -3px"><ac:iconTooltip
+										value="#{lbl['lbl.sc.pricetype.tooltip']}" /></td>
 							</tr>
 						</table>
 					</td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.procurement.type']}"  /> 
-					   <p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td>
 						<table>
 							<tr>
@@ -95,49 +104,59 @@
 											listener="#{requestNoteBackingBean.procurementTypeEvent}"
 											process="@this" />
 									</p:selectOneRadio></td>
-								<td style="margin-top: -3px"><p:message id="procTypeMsg" for="procType"
-										display="icon" /> <ac:iconTooltip
+								<td style="margin-top: -3px"><p:message id="procTypeMsg"
+										for="procType" display="icon" /> <ac:iconTooltip
 										value="#{lbl['lbl.sc.procurementtype.tooltip']}" /></td>
 							</tr>
 						</table>
 					</td>
 				</tr>
-				
+
 				<tr>
-					<td>
-						<h:panelGroup id="justLabel">
-							<p:outputLabel value="#{lbl['lbl.sc.reason']}" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}" />
-							<p:outputLabel value="*" styleClass="mandatory" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}" />
-					 	</h:panelGroup>
-					</td>
-					<td><h:panelGroup id="justValue"><p:selectOneMenu style="margin-bottom: 5px; width: 185px;" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}"
-							id="justificationId" label="#{lbl['lbl.sc.reason']}"
-							required="#{requestNoteBackingBean.managedBean.justRequired}"
-							value="#{requestNoteBackingBean.managedBean.justificationType}">
-							<f:selectItems
-								value="#{requestNoteBackingBean.managedBean.justDropdown}" />
-						</p:selectOneMenu> <p:message id="justTypeMsg" for="justificationId" display="icon" /></h:panelGroup></td>
+					<td><h:panelGroup id="justLabel">
+							<p:outputLabel value="#{lbl['lbl.sc.reason']}"
+								rendered="#{requestNoteBackingBean.managedBean.procTypeOption}" />
+							<p:outputLabel value="*" styleClass="mandatory"
+								rendered="#{requestNoteBackingBean.managedBean.procTypeOption}" />
+						</h:panelGroup></td>
+					<td><h:panelGroup id="justValue">
+							<p:selectOneMenu style="margin-bottom: 5px; width: 185px;"
+								rendered="#{requestNoteBackingBean.managedBean.procTypeOption}"
+								id="justificationId" label="#{lbl['lbl.sc.reason']}"
+								required="#{requestNoteBackingBean.managedBean.justRequired}"
+								value="#{requestNoteBackingBean.managedBean.justificationType}">
+								<f:selectItems
+									value="#{requestNoteBackingBean.managedBean.justDropdown}" />
+							</p:selectOneMenu>
+							<p:message id="justTypeMsg" for="justificationId" display="icon" />
+						</h:panelGroup></td>
 				</tr>
 				<tr>
-					<td style="vertical-align: top;padding-right: 1px;text-align: right;">
+					<td
+						style="vertical-align: top; padding-right: 1px; text-align: right;">
 						<h:panelGroup id="justRmksLabel">
-							<p:outputLabel value="#{lbl['lbl.sc.justification']}" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}" />
-							<p:outputLabel value="*" styleClass="mandatory" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}" />
+							<p:outputLabel value="#{lbl['lbl.sc.justification']}"
+								rendered="#{requestNoteBackingBean.managedBean.procTypeOption}" />
+							<p:outputLabel value="*" styleClass="mandatory"
+								rendered="#{requestNoteBackingBean.managedBean.procTypeOption}" />
 						</h:panelGroup>
 					</td>
-					<td><h:panelGroup id="justRmksValue"><p:inputTextarea id="justificationRmk" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}"
-							label="#{lbl['lbl.sc.justification']}" maxlength="100"
-							required="#{requestNoteBackingBean.managedBean.justRequired}"
-							value="#{requestNoteBackingBean.managedBean.justification}"
-							rows="2" cols="65" style="margin-bottom: 5px; width: 305px;" /> <p:message
-							id="justRmksMsg" for="justificationRmk" display="icon" /></h:panelGroup></td>
+					<td><h:panelGroup id="justRmksValue">
+							<p:inputTextarea id="justificationRmk"
+								rendered="#{requestNoteBackingBean.managedBean.procTypeOption}"
+								label="#{lbl['lbl.sc.justification']}" maxlength="100"
+								required="#{requestNoteBackingBean.managedBean.justRequired}"
+								value="#{requestNoteBackingBean.managedBean.justification}"
+								rows="2" cols="65" style="margin-bottom: 5px; width: 305px;" />
+							<p:message id="justRmksMsg" for="justificationRmk" display="icon" />
+						</h:panelGroup></td>
 				</tr>
 			</table>
 
 			<p:spacer height="3px" />
-			<div class="ppRightBtn" style="width:100%">
-				<p:commandButton value="#{lbl['lbl.btn.proceed']}"
-					process="@form" partialSubmit="true" id="proceedBtn"
+			<div class="ppRightBtn" style="width: 100%">
+				<p:commandButton value="#{lbl['lbl.btn.proceed']}" process="@form"
+					partialSubmit="true" id="proceedBtn"
 					action="#{requestNoteBackingBean.addToRequestNote(requestNoteBackingBean.managedBean.addToCartFlag)}"
 					onstart="popupBlockWidget.show();"
 					oncomplete="popupBlockWidget.hide();"
@@ -148,7 +167,7 @@
 					oncomplete="addToCartPopup.hide();" partialSubmit="true" />
 			</div>
 		</p:panel>
-    <p:blockUI block="addToCartId" widgetVar="popupBlockWidget">
+		<p:blockUI block="addToCartId" widgetVar="popupBlockWidget">
 		 <p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	  </p:blockUI>
 	<p:defaultCommand target="proceedBtn"></p:defaultCommand>
