@@ -11,10 +11,11 @@
 
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
+				<td style="width: 200px;"><p:outputLabel
+						value="#{lbl['lbl.sc.title']}" /></td>
 				<td colspan="3"><p:inputTextarea label="#{lbl['lbl.sc.title']}"
 						value="#{evaluationBackingBean.managedBean.scQt.qtTitle}"
-						required="true" cols="130" rows="2" disabled="true"
+						required="true" cols="130" rows="3" disabled="true"
 						readonly="true" style=" margin-bottom:5px;width: 100%;"
 						maxlength="100" /></td>
 			</tr>
@@ -45,8 +46,7 @@
 				</ui:fragment>
 			</tr>
 			<tr>
-				<td style="width: 200px;"><h:outputLabel
-						value="#{lbl['lbl.sc.qttentype']}" /></td>
+				<td><h:outputLabel value="#{lbl['lbl.sc.qttentype']}" /></td>
 				<td><p:inputText readonly="true" size="24"
 						value="#{evaluationBackingBean.getParameterDesc(ParameterTypeConst.quotationTenderType, evaluationBackingBean.managedBean.scQt.qtType)}"
 						disabled="true" /></td>
@@ -60,7 +60,7 @@
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.procurement.category']}" /></td>
 				<td><p:selectOneMenu disabled="true"
-						style="width: 178px;margin-bottom: 5px;"
+						style="width: 205px;margin-bottom: 5px;"
 						label="#{lbl['lbl.sc.procurement.category']}"
 						value="#{evaluationBackingBean.managedBean.scQt.pmProcurementCategory.parameterId}">
 						<f:selectItems
@@ -100,7 +100,7 @@
 						<tr>
 							<td><p:selectOneMenu disabled="true"
 									value="#{evaluationBackingBean.managedBean.scQt.fulfilmentType.parameterId}"
-									style="width: 178px;margin-bottom: 5px;">
+									style="width: 205px;margin-bottom: 5px;">
 
 									<f:selectItems
 										value="#{evaluationBackingBean.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
