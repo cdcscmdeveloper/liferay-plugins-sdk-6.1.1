@@ -20,8 +20,6 @@
 			<p:ajax event="rowSelectRadio"
 				listener="#{qTBusinessOwnerBackingBean.consolidateRowSelectRadio}" />
 
-
-
 			<p:column style="width:2%" rendered="#{!readOnly}">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk"
@@ -70,21 +68,21 @@
 				</f:facet>
 			</p:column>
 		</p:dataTable>
-		<div align="right">
+		<div class="ppRightBtn">
 			<c:if test="#{!readOnly}">
-				<p:commandButton value="#{lbl['lbl.btn.clone']}"
+				<p:commandButton value="#{lbl['lbl.btn.clone']}" styleClass="BtnSpacing"
 					actionListener="#{qTBusinessOwnerBackingBean.cloneBusinessOwnerPopupAction}"
 					oncomplete="cloneBusinessOwner.show();" process="@this"
 					update="@(.cloneAddMember)"
 					rendered="#{qTDetailBB.managedBean.qt.qtStatus.statusId ne QTStatusConst.QT_CANCELLED}" />
 
 				<p:commandButton id="businessowneradd" value="#{lbl['lbl.btn.add']}"
-					process="@this"
+					process="@this" styleClass="BtnSpacing"
 					action="#{qTBusinessOwnerBackingBean.addBusinessOwner}"
 					oncomplete="newbusinessowner.show();" update="@(.qtAddMember)"
 					rendered="#{qTDetailBB.managedBean.qt.qtStatus.statusId ne QTStatusConst.QT_CANCELLED}" />
 
-				<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
 					process="@this, businessownerId" partialSubmit="true"
 					oncomplete="businessOwnerDeletePopUp.show();"
 					update="@([id$=#{businessOwnerDeleteId}])"
@@ -113,12 +111,8 @@
 					value="#{qTBusinessOwnerBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 
 				<p:ajax event="change" process="@this" update="@this,approvalSpec" />
-
 			</p:selectOneRadio>
-
-
 		</h:panelGrid>
-
 		<h:panelGroup id="approvalSpec">
 			<h:panelGrid
 				rendered="#{qTDetailBB.managedBean.qt.specApprovalReq ne null and qTDetailBB.managedBean.qt.specApprovalReq ne '0'}"
@@ -137,7 +131,6 @@
 						var="appName" itemLabel="#{appName.userName}"
 						itemValue="#{appName.userId}" />
 				</p:selectOneMenu>
-
 			</h:panelGrid>
 		</h:panelGroup>
 	</p:panel>

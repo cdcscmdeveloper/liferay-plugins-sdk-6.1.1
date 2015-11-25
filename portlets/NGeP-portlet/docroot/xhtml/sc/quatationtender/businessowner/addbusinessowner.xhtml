@@ -14,7 +14,7 @@
 				closable="true" showSummary="false" severity="error, info" />
 			<p:panel id="usersearchpnlids" header="#{lbl['lbl.sc.search']}"
 				toggleable="true">
-				<table>
+				<table style="width: 100%;">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.name']}" /></td>
 						<td colspan="3"><p:inputText
@@ -97,15 +97,14 @@
 					</p:column>
 
 				</p:dataTable>
-				<br />
 				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.ok']}"
+					<p:commandButton value="#{lbl['lbl.btn.ok']}" styleClass="BtnSpacing"
 						partialSubmit="true" process="@this, bopanel"
 						action="#{qTBusinessOwnerBackingBean.okBusinessOwnerAction}"
 						update="businessownerId, bopanel" />
 
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
-						oncomplete="newbusinessowner.hide();" />
+						oncomplete="newbusinessowner.hide();" styleClass="BtnSpacing" />
 				</div>
 			</p:panel>
 		</h:panelGroup>

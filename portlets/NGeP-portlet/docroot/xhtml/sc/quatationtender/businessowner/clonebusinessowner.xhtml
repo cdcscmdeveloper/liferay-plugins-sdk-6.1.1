@@ -14,7 +14,7 @@
 				closable="true" showSummary="false" severity="error, info" />
 			<p:panel header="#{lbl['lbl.btn.search']}" toggleable="true"
 				id="searchpnlid">
-				<table width="900px">
+				<table style="width: 100%;">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
 						<td colspan="3"><p:inputText
@@ -178,8 +178,6 @@
 				<ui:fragment rendered="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessSelectQt ne null}">
 					#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessSelectQt.qtNo} > #{lbl['lbl.sc.committee.details']}
 				</ui:fragment>
-				<br />
-				
 				<p:dataTable id="businessownerlistid"
 					value="#{qTBusinessOwnerBackingBean.managedBean.cloneCommitteMemebers}"
 					var="member" rowKey="#{member}"
@@ -228,12 +226,12 @@
 
 				</p:dataTable>
 				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.ok']}"
+					<p:commandButton value="#{lbl['lbl.btn.ok']}" styleClass="BtnSpacing"
 						partialSubmit="true" process="@this, clonepnlid"
 						action="#{qTBusinessOwnerBackingBean.addCloneCommitteeMembersAction}"
 						update="businessownerId, clonepnlid" />
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-					    onclick="cloneBusinessOwner.hide()" />
+					    onclick="cloneBusinessOwner.hide()" styleClass="BtnSpacing" />
 				</div>
 			</p:panel>
 		</h:panelGroup>
