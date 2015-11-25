@@ -53,19 +53,11 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.phoneno']}" /></td>
-				<td>
-					<ac:labelPhone countryCode="#{viewSmApplBackingBean.managedBean.selectedBranch.phoneCountry}" 
-						areaCode="#{viewSmApplBackingBean.managedBean.selectedBranch.phoneArea}"
-						number="#{viewSmApplBackingBean.managedBean.selectedBranch.phoneNo}" />
-				</td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBranch.phoneFull}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.faxno']}" /></td>
-				<td>
-					<ac:labelPhone countryCode="#{viewSmApplBackingBean.managedBean.selectedBranch.faxCountry}" 
-						areaCode="#{viewSmApplBackingBean.managedBean.selectedBranch.faxArea}"
-						number="#{viewSmApplBackingBean.managedBean.selectedBranch.faxNo}" />
-				</td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBranch.faxFull}" /></td>
 			</tr>
 			<tr>
 			<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.composition.poc']}" /></td>
