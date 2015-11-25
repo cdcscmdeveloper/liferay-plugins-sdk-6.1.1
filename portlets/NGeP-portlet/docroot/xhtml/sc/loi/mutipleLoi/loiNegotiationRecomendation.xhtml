@@ -10,7 +10,7 @@
 	
 	<style type="text/css">
 		<c:if test="#{lOIDetailBackingBean.managedBean.scQt.zonal}">
-			.tdWidth: { 86%; }
+			.tdWidth: { 80%; }
 		</c:if>
 		<c:if test="#{!lOIDetailBackingBean.managedBean.scQt.zonal}">
 			.tdWidth: { 100%; }
@@ -21,7 +21,7 @@
 		<table style="border: 0px;width:100%;">
 			<tr>
 				<c:if test="#{lOIDetailBackingBean.managedBean.scQt.zonal}">
-					<td width="14%" class="sidemenutd" valign="top">
+					<td width="20%" class="sidemenutd" valign="top">
 						<p:remoteCommand name="onZoneTabChangeAction" update="@([id$=itemSupplierPanel])" 
 										 partialSubmit="true" process="@this" action="#{lOIDetailBackingBean.onZoneTabChangeAction}" />
 						
@@ -172,7 +172,7 @@
 										</p:column>
 									</p:dataList>
 									
-									<p:dataList  var="recommendedSuppl" value="#{item.awardSupplierList}"
+									<p:dataList var="recommendedSuppl" value="#{item.awardSupplierList}"
 										type="none" rendered="#{!isPendingNegotiationStatus}">
 										<p:column rendered="#{recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}">
 											<p:commandLink update="@([id$=suppDtlPopUp])"
