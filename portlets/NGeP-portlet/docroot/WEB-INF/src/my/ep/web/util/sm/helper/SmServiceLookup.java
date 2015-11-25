@@ -28,6 +28,7 @@ import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.revertApplication.IRevertApplicationSO;
 import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
+import my.ep.biz.service.sm.rule.ISmRuleSO;
 import my.ep.biz.service.sm.scheduler.ISmSchedulerSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.siteVisit.ISiteVisitSO;
@@ -430,6 +431,16 @@ public class SmServiceLookup {
 		return (IRevertApplicationSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 						IRevertApplicationSO.class);
+	}
+	
+	/**
+	 * Get ISmRuleSO
+	 * 
+	 * @return ISmRuleSO
+	 */
+	public static ISmRuleSO getSmRuleSO() {
+		return (ISmRuleSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmRuleSO.class);
 	}
 
 }
