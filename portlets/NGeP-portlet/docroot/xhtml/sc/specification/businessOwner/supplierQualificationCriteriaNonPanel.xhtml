@@ -46,13 +46,14 @@
 
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
-				process="@this,openPnlId" partialSubmit="true"
-				update="@([id$=catCodePopup])"
+				styleClass="BtnSpacing" process="@this,openPnlId"
+				partialSubmit="true" update="@([id$=catCodePopup])"
 				disabled="#{specificationBackingBean.managedBean.readOnly}"
 				oncomplete="catCodePopup.show();"
 				action="#{categoryCodeSearchBackingBean.renewSesionObject}" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				process="@this,openPnlId" partialSubmit="true"
+				styleClass="BtnSpacing" process="@this,openPnlId"
+				partialSubmit="true"
 				oncomplete="supplierOpencategoryDeletePopUp.show();"
 				update="@([id$=#{supplierOpencategoryDeleteId}])"
 				disabled="#{specificationBackingBean.managedBean.readOnly}" />
@@ -222,11 +223,12 @@
 					<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}"
 						style="float:left;margin-top: 12px;;margin-left: 10px;" />
 					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
-						update="@([id$=zonePopupPanel])"
+						styleClass="BtnSpacing" update="@([id$=zonePopupPanel])"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						actionListener="#{specificationBackingBean.showSupplierLocationPopup}" />
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"
-						process="@this,zoneLocationDataTable" partialSubmit="true"
+						styleClass="BtnSpacing" process="@this,zoneLocationDataTable"
+						partialSubmit="true"
 						oncomplete="supplierNonZoneDeletePopUp.show();"
 						update="@([id$=#{supplierNonZoneDeleteId}])"
 						disabled="#{specificationBackingBean.managedBean.readOnly}" />
@@ -346,10 +348,11 @@
 					<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}"
 						style="float:left;margin-top: 12px;;margin-left: 10px;" />
 					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
-						update="@([id$=zonePopupPanel])"
+						styleClass="BtnSpacing" update="@([id$=zonePopupPanel])"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						actionListener="#{specificationBackingBean.showSupplierLocationPopup}" />
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"
+						styleClass="BtnSpacing"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						process="@this,zoneyesDataTable" partialSubmit="true"
 						oncomplete="supplierZonalDeletePopUp.show();"
@@ -416,12 +419,13 @@
 									<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}"
 										style="float:left;margin-top: 12px;;margin-left: 10px;" />
 									<p:commandButton value="#{lbl['lbl.btn.ok']}"
-										onclick="ZoneLocation.hide();" process="@all"
+										styleClass="BtnSpacing" onclick="ZoneLocation.hide();"
+										process="@all"
 										update="@this, zoneLocationDataTable, zonePopupPanel, zoneyesDataTable"
 										action="#{specificationBackingBean.updateSupplierLocations}">
 									</p:commandButton>
 									<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-										onclick="ZoneLocation.hide();" />
+										styleClass="BtnSpacing" onclick="ZoneLocation.hide();" />
 								</div>
 							</td>
 						</tr>

@@ -45,11 +45,11 @@
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
-		<p:spacer height="20"></p:spacer>
+		
 
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sc.spec.create.specification']}"
-				process="@this"
+				styleClass="BtnSpacing" process="@this"
 				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval' or (specificationBackingBean.managedBean.panelItemCategory eq 'S' and specificationBackingBean.managedBean.scQt.panel)}"
 				actionListener="#{specificationBackingBean.technicalSpecBoValidate}"
 				partialSubmit="true" oncomplete="createOwnerSpec.show();"

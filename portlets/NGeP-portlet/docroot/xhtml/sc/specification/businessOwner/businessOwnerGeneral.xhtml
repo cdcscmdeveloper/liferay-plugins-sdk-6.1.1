@@ -358,10 +358,12 @@
 				<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}"
 					style="float:left;margin-top: 12px;;margin-left: 10px;" />
 				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
+				styleClass="BtnSpacing"
 					update="@([id$=zonePopupGeneral])"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					actionListener="#{specificationBackingBean.showGeneralZonesPopup}" />
 				<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
+				styleClass="BtnSpacing"
 					partialSubmit="true"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					oncomplete="zonesNonpanelDeletePopUp.show();"
@@ -439,10 +441,10 @@
 						</p:selectBooleanCheckbox> <p:spacer width="1" /> <h:outputLabel
 							value="#{lbl['lbl.sc.spec.check.all']}"
 							style="float:left;margin-top: 12px;;margin-left: 10px;" /> <p:commandButton
-							value="#{lbl['lbl.btn.cancel']}" style="float:right;"
+							value="#{lbl['lbl.btn.cancel']}" style="float:right;" styleClass="BtnSpacing"
 							onclick="ZoneGeneral.hide();" /> &#160;&#160; <p:commandButton
 							value="#{lbl['lbl.btn.ok']}" style="float:right;" process="@all"
-							update="@this, zoneGeneralDataTable,zonePopupGeneral"
+							update="@this, zoneGeneralDataTable,zonePopupGeneral" styleClass="BtnSpacing"
 							action="#{specificationBackingBean.updateZoneGeneralLocation}">
 						</p:commandButton></TD>
 				</TR>
