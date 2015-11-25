@@ -7,57 +7,50 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<h:panelGroup id="committeePanlrYesCircularList">
-		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
-			columns="2" columnClasses="columnWidth20">
+		<table style="width: 100%;">
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.sc.circular.no']}" /></td>
+				<td><p:inputText size="75"
+						value="#{specificationBackingBean.managedBean.cirCularNo}"
+						disabled="true" /> <p:spacer width="5" /> <h:commandLink
+						value="#{lbl['lbl.sc.circular.attach']}"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
+						style="margin-right:20px;"
+						process="@all,committeePanlrYesCircularList" partialSubmit="true"
+						update="committeepanelItemList"
+						action="#{specificationBackingBean.viewCircularAttachments('SC')}">
 
-			<h:column>
-				<h:outputLabel value="#{lbl['lbl.sc.circular.no']}" />
-			</h:column>
-			<h:column>
-				<p:inputText size="75"
-					value="#{specificationBackingBean.managedBean.cirCularNo}"
-					disabled="true" />
-				<p:spacer width="5" />
+					</h:commandLink></td>
+			</tr>
+			<tr>
 
-				<h:commandLink value="#{lbl['lbl.sc.circular.attach']}"
-					disabled="#{specificationBackingBean.managedBean.readOnly}"
-					style="margin-right:20px;"
-					process="@all,committeePanlrYesCircularList" partialSubmit="true"
-					update="committeepanelItemList"
-					action="#{specificationBackingBean.viewCircularAttachments('SC')}">
+				<td><h:outputLabel value="#{lbl['lbl.sc.circular.name']}" /></td>
 
-				</h:commandLink>
-			</h:column>
+				<td><p:inputTextarea rows="3" cols="75"
+						style="margin-bottom:5px;width:80%;"
+						value="#{specificationBackingBean.managedBean.circularName}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
 
-			<h:column>
-				<h:outputLabel value="#{lbl['lbl.sc.circular.name']}" />
-			</h:column>
-
-			<h:column>
-				<p:inputTextarea rows="3" cols="75" style="margin-bottom:5px;"
-					value="#{specificationBackingBean.managedBean.circularName}"
-					disabled="true" />
-			</h:column>
-
-			<h:column>
-				<h:outputLabel value="#{lbl['lbl.sc.circular.exp.date']}" />
-			</h:column>
-			<h:column>
-				<p:inputText
-					value="#{specificationBackingBean.managedBean.circularExpDate}"
-					disabled="true">
-					<f:convertDateTime
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-				</p:inputText>
-			</h:column>
-
-
-		</h:panelGrid>
+				<td><h:outputLabel value="#{lbl['lbl.sc.circular.exp.date']}" />
+				</td>
+				<td><p:inputText size="75"
+						value="#{specificationBackingBean.managedBean.circularExpDate}"
+						disabled="true">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
+			</tr>
+		</table>
 
 
 
-		<p:panel header="#{lbl['lbl.sc.item.list']}"
-			toggleable="true" id="committeepanelItemList">
+
+
+
+		<p:panel header="#{lbl['lbl.sc.item.list']}" toggleable="true"
+			id="committeepanelItemList">
 
 
 			<p:dataTable id="panelDataItemList" var="panelItem"
