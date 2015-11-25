@@ -319,7 +319,7 @@ public class QTBusinessOwnerBackingBean extends
 		 */
 		public BOPagingDataModel(String componentId,
 				QtnTenderSearchBean cloneBusinessOwnerSearchBean) {
-			super(componentId);
+			super(componentId, false);
 			this.cloneBusinessOwnerSearchBean = cloneBusinessOwnerSearchBean;
 		}
 
@@ -839,6 +839,12 @@ public class QTBusinessOwnerBackingBean extends
 		getManagedBean().setCloneCommitteMemebers(null);
 		getManagedBean().setCloneBusinessTenderList(null);
 		getManagedBean().setSelectedCommitteMemebers(null);
+
+		IPagingDataModel<ScQt> cloneSearchBODataModel = getManagedBean().getCloneBusinessOwnerDataModel();
+		if (cloneSearchBODataModel == null) {
+			getManagedBean().setCloneBusinessOwnerDataModel(new BOPagingDataModel("clonesearchboid", getManagedBean().getCloneBusinessOwnerSearchBean()));
+		}
+		getManagedBean().getCloneBusinessOwnerDataModel().resetData();
 		getManagedBean().setAutoUpdate(false);
 	}
 
