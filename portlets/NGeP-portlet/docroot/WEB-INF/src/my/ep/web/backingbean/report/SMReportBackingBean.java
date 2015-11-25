@@ -433,9 +433,11 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	            break; 
 		 case ReportConst.SM_COMPANY_ADDRESS_LIST_RPT_VAL:
 	        	rptGenBean.setSmMandatoryAllSupplierTypeView(true);
-	        	rptGenBean.setSmApplicationStatusThreeView(true);
-	        	rptGenBean.setSmMandatoryFromDateView(true);
-	        	rptGenBean.setSmMandatoryDateView(true);
+	        	rptGenBean.setSmMandatoryApplicationStatusThreeView(true);
+	        	rptGenBean.setSmSupportingDocumentModeView(true);
+	        	rptGenBean.setSmCompanyNameView(true);	        	
+	        	/*rptGenBean.setSmMandatoryFromDateView(true);
+	        	rptGenBean.setSmMandatoryDateView(true);*/
 	            break;      
 		 case ReportConst.SM_BPK_USER_PROFILE_RPT_VAL: 
 			    rptGenBean.setSmCommonZoneView(true);
