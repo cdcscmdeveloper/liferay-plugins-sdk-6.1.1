@@ -9,7 +9,7 @@
 	
 	<style type="text/css">
 		<c:if test="#{suppFinalBiddingBackingBean.managedBean.scQt.zonal}">
-			.tdWidth: { 86%; }
+			.tdWidth: { 80%; }
 		</c:if>
 		<c:if test="#{!suppFinalBiddingBackingBean.managedBean.scQt.zonal}">
 			.tdWidth: { 100%; }
@@ -30,7 +30,7 @@
 		<table style="border: 0px;width:100%;">
 			<tr>
 				<c:if test="#{suppFinalBiddingBackingBean.managedBean.scQt.zonal}">
-					<td width="14%" class="sidemenutd" valign="top">
+					<td width="20%" class="sidemenutd" valign="top">
 						<p:remoteCommand name="onZoneTabChangeAction" update="@([id$=zonalMenu],[id$=itemPanel],[id$=packagePanel])" 
 										 partialSubmit="true" process="@this" action="#{suppFinalBiddingBackingBean.onZoneTabChangeAction}" />
 						
