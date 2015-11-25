@@ -49,12 +49,12 @@
 
 		</p:dataTable>
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.add']}"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" styleClass="BtnSpacing"
 				process="@this, restrictedPnlId" partialSubmit="true" update="@([id$=catCodePopup])"
 				oncomplete="catCodePopup.show();"
 				action="#{categoryCodeSearchBackingBean.renewSesionObject}" 
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}" />
-			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
 				process="@this, restrictedPnlId" partialSubmit="true"
 				oncomplete="supplierRestrictedCategoryDeletePopUp.show();"
 				update="@([id$=#{supplierRestrictedCategoryDeleteId}])"
@@ -63,7 +63,7 @@
 		<ui:param name="supplierRestrictedCategoryDeleteId" value="supplierRestrictedCategoryDeleteId" />
 		<ac:confirmationPopup id="#{supplierRestrictedCategoryDeleteId}"
 			widget="supplierRestrictedCategoryDeletePopUp"
-			okAction="qTSupplierQulCriteriaBackingBean.deleteRestrictedCategoryAction" width="400"
+			okAction="qTSupplierQulCriteriaBackingBean.deleteRestrictedCategoryAction" width="33%"
 			height="200" title="#{lbl['lbl.sc.category.code']}"
 			content="#{lbl['lbl.sc.dialog.confirm.category.codes']}"
 			update="@([id$=restrictedPnlId])" />
