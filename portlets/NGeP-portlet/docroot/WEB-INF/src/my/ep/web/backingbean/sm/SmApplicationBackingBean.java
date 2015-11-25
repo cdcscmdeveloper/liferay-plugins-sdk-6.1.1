@@ -7077,12 +7077,15 @@ public class SmApplicationBackingBean extends
 										.getApprvrDecFlg().compareTo(
 												new Integer(1)) == 0)) {
 							cat.setRecordStatusFlg(SupplierManagementConst.APPROVED_RECORD_STATUS);
+							setSupplierCategoryEffectiveDate(cat,
+									getManagedBean().getSmAppl().getApplType());
 						} else {
 							cat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
 						}
 
 					}
 				}
+
 				SmApplicationNotificationUtil
 						.setApprovalNotificationParameters(getManagedBean(),
 								reqDTO);
@@ -9660,6 +9663,25 @@ public class SmApplicationBackingBean extends
 						getManagedBean().getSmAppl().getSmSupplier()
 								.getSupplierId());
 			}
+		}
+	}
+
+	private void setSupplierCategoryEffectiveDate(SmSupplierCategory cat,
+			String applType) {
+		Calendar c = Calendar.getInstance();
+		if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+				&& cat.getCategoryEffDate() == null) {
+			if (StringUtils.isNotBlank(applType)
+					&& !applType.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+					&& !applType.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
+					&& !applType.equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)
+					&& !applType
+							.equals(ParameterConst.NEW_SM_APPLN_FOR_DELETE_PENDING_APPL)) {
+				c.add(Calendar.MONTH, SmServiceLookup.getSmRuleSO()
+						.retrieveNewCatEffectiveMonthAfterAppoved()
+						.getNewCatEffectiveMonth());
+			}
+			cat.setCategoryEffDate(c.getTime());
 		}
 	}
 
