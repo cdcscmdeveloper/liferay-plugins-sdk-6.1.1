@@ -14,16 +14,16 @@
 	<ui:include src="committeeApproval.xhtml" />
 
 	<div class="ppRightBtn">
-		<p:commandButton value="#{lbl['lbl.btn.clone']}"
+		<p:commandButton value="#{lbl['lbl.btn.clone']}" styleClass="BtnSpacing"
 			actionListener="#{qTCommitteBackingBean.committeeclonePopupAction(qTDetailBB.managedBean.selectedTabBean.scQtCommittee)}"
 			oncomplete="screen2.show();" process="@this"
 			update="@([id$=cloneid])" />
-		<p:commandButton id="committeeapproveradd"
+		<p:commandButton id="committeeapproveradd" styleClass="BtnSpacing"
 			value="#{lbl['lbl.btn.add']}" process="@this"
 			actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, qTDetailBB.managedBean.selectedTabBean.titleName)}"
 			oncomplete="newspecificationcommittee.show();"
 			update="@([id$=cloneid])" />
-		<p:commandButton value="#{lbl['lbl.btn.delete']}"
+		<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
 			process="@this, committeeapprovalId" partialSubmit="true"
 			oncomplete="committeeApprovalDeletePopUp.show();"
 			update="@([id$=#{committeeApprovalDeleteId}])" />
@@ -32,7 +32,7 @@
 	<ac:confirmationPopup id="#{committeeApprovalDeleteId}"
 		widget="committeeApprovalDeletePopUp"
 		okAction="qTCommitteBackingBean.deleteSpecificationCommittee"
-		width="450" height="200"
+		width="40%" height="200"
 		title="#{lbl['lbl.sc.qt.committee.appointment']}"
 		content="#{lbl['lbl.sc.dialog.confirm.committee.members.dtls']}"
 		update="@([id$=committeeapprovalId])" />
