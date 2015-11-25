@@ -59,8 +59,9 @@ import org.primefaces.event.TabChangeEvent;
 public class BSVAttendanceBackingBean extends
 		SourcingBaseBackingBean<BSVAttendanceManagedBean> {
 
-	private static final String NAV_TO_BSV_REG_PAGE = "bsvAttendanceRegisterPopup.xhtml";
-
+	private static final String NAV_TO_BSV_REG_PAGE = "/xhtml/sc/bsvattendance/addattendance/bsvAttendanceRegisterPopup.xhtml";
+    private static final String BSV_MAIN_PAGE = "/xhtml/sc/bsvattendance/attendancedetails/bsvAttendanceRegisterMain.xhtml";
+	
 	public static Logger log = Logger.getLogger(BSVAttendanceBackingBean.class);
 	private String slectedHeaderName;
 
@@ -210,10 +211,10 @@ public class BSVAttendanceBackingBean extends
 	public String registerSupplier(ScQtBsvDtl briefing) {
 
 		log.info("** attendanceRegistration **");
-		this.getManagedBean().setPreviousPage("bsvAttendanceRegisterMain");
+		this.getManagedBean().setPreviousPage(BSV_MAIN_PAGE);
 		getregistrationDetails(briefing);
 
-		return NAV_TO_BSV_REG_PAGE + "?faces-redirect=true";
+		return NAV_TO_BSV_REG_PAGE;
 	}
 
 	/**
@@ -397,7 +398,7 @@ public class BSVAttendanceBackingBean extends
 				renewSessionWithPreviousValues();
 				this.getManagedBean().setBsvZoneindx(bsvZoneindx);	
 				retrieveBriefingSiteVisitList(qtId);
-				url = previousPage + ".xhtml?faces-redirect=true";
+				url = previousPage + "?faces-redirect=true";
 				return url;
 			}
 			if (resDTO.isSuccessful()
@@ -490,8 +491,7 @@ public class BSVAttendanceBackingBean extends
 
 		fc.getApplication()
 				.getNavigationHandler()
-				.handleNavigation(fc, null,
-						"/xhtml/sc/bsvattendance/bsvAttendanceRegisterMain.xhtml");
+				.handleNavigation(fc, null,BSV_MAIN_PAGE);
 	}
 
 	/**
@@ -558,7 +558,7 @@ public class BSVAttendanceBackingBean extends
 		log.info("** Back Button **");
 		retrieveBriefingSiteVisitList(this.getManagedBean().getScQt().getQtId());
 		return this.getManagedBean().getPreviousPage()
-				+ ".xhtml?faces-redirect=true";
+				+ "?faces-redirect=true";
 
 	}
 
@@ -1070,8 +1070,8 @@ public class BSVAttendanceBackingBean extends
 
 		fc.getApplication()
 				.getNavigationHandler()
-				.handleNavigation(fc, null,
-						"/xhtml/sc/bsvattendance/bsvAttendanceRegisterPopup.xhtml");
+				.handleNavigation(fc, null,NAV_TO_BSV_REG_PAGE);
+						
 	}
 
 	/**
