@@ -13947,6 +13947,33 @@ public class ReportBackingBean extends
 		getManagedBean().setSearchOperatorValue(new String[3]);
 		this.getSearchUnspscPagingDataModel().resetData();		
 	}
+	
+	/**
+	 * Application status change.
+	 */
+	public void applicationStatusChange(){
+		
+		this.getManagedBean().getRptGenBean().setSmNonMandatoryDateView(false);
+		this.getManagedBean().getRptGenBean().setSmApprovalDateView(false);
+		this.getManagedBean().getRptGenBean().setSmRejectedDateView(false);
+		
+		if (this.getSmApplicationStatus() != null) {
+			
+			if (this.getSmApplicationStatus().equalsIgnoreCase("APPROVED")) {
+				this.getManagedBean().getRptGenBean()
+						.setSmNonMandatoryDateView(true);
+				this.getManagedBean().getRptGenBean()
+						.setSmApprovalDateView(true);
+
+			} else if (this.getSmApplicationStatus().equalsIgnoreCase(
+					"REJECTED")) {
+				this.getManagedBean().getRptGenBean()
+						.setSmNonMandatoryDateView(true);
+				this.getManagedBean().getRptGenBean()
+						.setSmRejectedDateView(true);
+			}
+		}
+	}
 
 
 	/**
