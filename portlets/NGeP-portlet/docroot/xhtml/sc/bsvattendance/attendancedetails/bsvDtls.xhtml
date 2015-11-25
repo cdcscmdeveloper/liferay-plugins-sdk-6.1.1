@@ -1,0 +1,235 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:fragment rendered="#{bsvDetails.scQtBsv.sameBsv}">
+		<p:panel header="#{lbl['lbl.sc.notice.board.briefing.and.sv.dtls']}" toggleable="true">
+			<h:panelGroup rendered="#{!bsvDetails.briefingList.isEmpty()}">
+			<h:outputText value="* " styleClass="mandatory" />
+				<h:outputText value="#{lbl['lbl.sc.attendance.required.for.briefiing.sv']}"
+					style="font-weight:bold;text-align: left;" />
+			</h:panelGroup>
+
+			<p:dataTable id="samebsvdtls" var="brfsitdtl"
+				value="#{bsvDetails.briefingList}" style="width:100%">
+				<ac:paginator for="samebsvdtls"></ac:paginator>
+				<p:column headerText="#{lbl['lbl.sc.description']}"
+					style="width:25%;white-space: normal;">
+					<h:outputText value="#{brfsitdtl.bsvDesc}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.date.time']}"
+					style="width:18%;white-space: normal;">
+					<h:outputText value="#{brfsitdtl.bsvDate}">
+						<f:convertDateTime
+							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.location']}"
+					style="width:20%;white-space: normal;">
+					<p:commandLink style="margin-right:20px;;"
+						actionListener="#{bsvAttendanceBackingBean.showLocationDtls(brfsitdtl)}"
+						oncomplete="popupLoc.show()" update="@(.locationpopup)">
+						<h:outputText value="#{brfsitdtl.location}" />
+					</p:commandLink>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.coordinate.officer']}"
+					style="width:18%;white-space: normal;">
+					<h:outputText value="#{brfsitdtl.coordinatingOfficer}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.max.attendence']}"
+					style="width:5%;white-space: normal;">
+					<h:outputLabel value="#{brfsitdtl.maxNoOfAttendance}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.status']}"
+					style="width:9%;white-space: normal;">
+					<h:outputText
+						value="#{bsvAttendanceBackingBean.getStatusDescById(brfsitdtl.bsvStatus.statusId)}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.action']}"
+					style="width:5%;white-space: normal;">
+
+					<p:commandLink
+						rendered="#{bsvAttendanceBackingBean.showRegistrationIcon(brfsitdtl)}"
+						action="#{bsvAttendanceBackingBean.registerSupplier(brfsitdtl)}"
+						process="@this" immediate="true">
+						<h:graphicImage value="/css/images/design/register.png" />
+					</p:commandLink>
+
+					
+				</p:column>
+			</p:dataTable>
+
+
+		</p:panel>
+	</ui:fragment>
+	<ui:fragment rendered="#{!bsvDetails.scQtBsv.sameBsv}">
+
+
+		<p:panel header="#{lbl['lbl.sc.briefing.dtls']}" toggleable="true">
+			<h:panelGroup rendered="#{!bsvDetails.briefingList.isEmpty()}">
+			<h:outputText value="* " styleClass="mandatory" />
+				<h:outputText value="#{lbl['lbl.sc.attendance.required.for.brefing']}"
+					style="font-weight:bold;text-align: left;" />
+			</h:panelGroup>
+			<p:dataTable id="brfsitdtl" var="brfsitdtl"
+				value="#{bsvDetails.briefingList}" style="width:100%">
+				<ac:paginator for="brfsitdtl"></ac:paginator>
+				<p:column headerText="#{lbl['lbl.sc.description']}"
+					style="width:25%;white-space: normal;">
+					<h:outputText value="#{brfsitdtl.bsvDesc}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.date.time']}"
+					style="width:18%;white-space: normal;">
+					<h:outputText value="#{brfsitdtl.bsvDate}">
+						<f:convertDateTime
+							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.location']}"
+					style="width:20%;white-space: normal;">
+					<p:commandLink style="margin-right:20px;;"
+						action="#{bsvAttendanceBackingBean.showLocationDtls(brfsitdtl)}"
+						oncomplete="popupLoc.show()" update="@(.locationpopup)">
+						<h:outputText value="#{brfsitdtl.location}" />
+					</p:commandLink>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.coordinate.officer']}"
+					style="width:18%;white-space: normal;">
+					<h:outputText value="#{brfsitdtl.coordinatingOfficer}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.max.attendence']}"
+					style="width:5%;white-space: normal;">
+					<h:outputLabel value="#{brfsitdtl.maxNoOfAttendance}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.status']}"
+					style="width:9%;white-space: normal;">
+					<h:outputText
+						value="#{bsvAttendanceBackingBean.getStatusDescById(brfsitdtl.bsvStatus.statusId)}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.action']}"
+					style="width:5%;white-space: normal;">
+					<p:commandLink
+						rendered="#{bsvAttendanceBackingBean.showRegistrationIcon(brfsitdtl)}"
+						action="#{bsvAttendanceBackingBean.registerSupplier(brfsitdtl)}"
+						process="@this">
+						<h:graphicImage value="/css/images/design/register.png" />
+					</p:commandLink>
+					
+				</p:column>
+			</p:dataTable>
+
+		</p:panel>
+
+		<p:panel header="#{lbl['lbl.sc.site.visit.dtls']}" toggleable="true">
+			<h:panelGroup rendered="#{!bsvDetails.sitevisitList.isEmpty()}">
+			 <h:outputText value="* " styleClass="mandatory" rendered="#{bsvDetails.scQtBsv.allSiteVisitReq}" />
+				<h:outputText value="#{lbl['lbl.sc.all.attendance.required.for.sv']}"
+					rendered="#{bsvDetails.scQtBsv.allSiteVisitReq}"
+					style="font-weight:bold;text-align: left;" />
+				
+
+				<h:outputText
+					value="#{lbl['lbl.sc.qt.atleast']} #{bsvDetails.scQtBsv.minSiteVisitAttend} #{lbl['lbl.sc.attendance.required.for.sv']}"
+					rendered="#{!bsvDetails.scQtBsv.allSiteVisitReq}"
+					style="font-weight:bold;text-align: left;" />
+
+			</h:panelGroup>
+			<p:dataTable id="svdetails" var="sitevisitDtls"
+				value="#{bsvDetails.sitevisitList}" style="width:100%">
+				<ac:paginator for="svdetails"></ac:paginator>
+				<p:column headerText="#{lbl['lbl.sc.description']}"
+					style="width:25%;white-space: normal;">
+					<h:outputText value="#{sitevisitDtls.bsvDesc}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.date.time']}"
+					style="width:18%;white-space: normal;">
+					<h:outputText value="#{sitevisitDtls.bsvDate}">
+						<f:convertDateTime
+							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.location']}"
+					style="width:20%;white-space: normal;">
+					<p:commandLink style="margin-right:20px;"
+						action="#{bsvAttendanceBackingBean.showLocationDtls(sitevisitDtls)}"
+						oncomplete="popupLoc.show()" update="@(.locationpopup)">
+						<h:outputText value="#{sitevisitDtls.location}" />
+					</p:commandLink>
+
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.coordinate.officer']}"
+					style="width:18%;white-space: normal;">
+					<h:outputText value="#{sitevisitDtls.coordinatingOfficer}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.max.attendence']}"
+					style="width:5%;white-space: normal;">
+					<h:outputLabel value="#{sitevisitDtls.maxNoOfAttendance}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.status']}"
+					style="width:9%;white-space: normal;">
+
+					<h:outputText
+						value="#{bsvAttendanceBackingBean.getStatusDescById(sitevisitDtls.bsvStatus.statusId)}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.ss.item.detail.action']}"
+					style="width:5%;white-space: normal;">
+					<p:commandLink
+						rendered="#{bsvAttendanceBackingBean.showRegistrationIcon(sitevisitDtls)}"
+						action="#{bsvAttendanceBackingBean.registerSupplier(sitevisitDtls)}"
+						process="@this">
+						<h:graphicImage value="/css/images/design/register.png" />
+					</p:commandLink>
+					
+				</p:column>
+			</p:dataTable>
+
+		</p:panel>
+	</ui:fragment>
+
+	<p:panel header="#{lbl['lbl.sc.remarks']}" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td class="TableFieldLeft" width="24%"><h:outputLabel
+						value="#{lbl['lbl.sc.remark']}" /></td>
+				<td class="TableFieldRight"><p:dataGrid
+						value="#{bsvDetails.scQtBsv.bsvRemarks}" var="remarkVar"
+						rowIndexVar="remarkIndex" columns="1">
+
+						<table>
+							<tr>
+								<td rowspan="2" valign="top"><h:graphicImage
+										value="#{bsvAttendanceBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
+										height="30" width="30" /></td>
+								<td width="5"></td>
+								<td><h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
+									<h:outputText value="#{remarkVar.changedDate}">
+										<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+									</h:outputText></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td><h:inputTextarea cols="40" value="#{remarkVar.remark}"
+										rendered="#{remarkVar.remarkId eq null}" /> <h:outputText
+										value="#{remarkVar.remark}"
+										rendered="#{remarkVar.remarkId ne null}"
+										style="display: inline-block; width:220px;word-wrap: break-word;" />
+								</td>
+							</tr>
+						</table>
+					</p:dataGrid></td>
+			</tr>
+		</table>
+	</p:panel>
+
+
+
+</ui:composition>
