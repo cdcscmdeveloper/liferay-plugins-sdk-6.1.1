@@ -12,7 +12,7 @@
 
 
 	<ui:define name="contentSection">
-		<!-- <ac:title value="#{lbl['lbl.sc.spec.specification.committee']}"></ac:title> -->
+		
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
 		</p:blockUI>
@@ -21,10 +21,11 @@
 		</p:messages>
 		<div>
 			<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"
-				style="float:left;"
+				style="float:left;" styleClass="BtnSpacing"
 				action="#{specificationBackingBean.committeeBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
+			styleClass="BtnSpacing"
 				rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
 				style="float:right;" onstart="blockWidget.show();"
 				oncomplete="blockWidget.hide();"
@@ -41,13 +42,12 @@
 
 
 		</div>
-		<p:spacer height="25"></p:spacer>
-		<br />
-		<br />
-		<ui:include src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />
+		
+		<ui:include
+			src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />
 
-		<p:spacer height="20"></p:spacer>
-		<p:panel toggleable="true">
+		
+		<p:panel toggleable="true" styleClass="BtnSpacing">
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.sc.spec.company.exp.fed.private']}" />
 				<ac:iconTooltip
@@ -104,7 +104,7 @@
 				</p:column>
 			</p:dataTable>
 
-			<p:spacer height="20" />
+			
 
 			<table>
 
@@ -114,7 +114,7 @@
 					<td><p:inputText readonly="true" disabled="true"></p:inputText>
 					</td>
 				</tr>
-				<p:spacer height="10"></p:spacer>
+				
 				<tr>
 					<td width="150px"><h:outputText
 							value="#{lbl['lbl.sc.spec.total.no.years']}" /></td>
@@ -126,13 +126,13 @@
 			</table>
 
 		</p:panel>
-		<br />
+		
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.spec.score.company.exp.intruction']}"
 			escape="false" />
-		<p:spacer height="20"></p:spacer>
+		
 
-		<p:panel id="companyExpPrivateContracts" toggleable="true"
+		<p:panel id="companyExpPrivateContracts" toggleable="true" styleClass="BtnSpacing"
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.sc.spec.score.total.no.contracts']}" />
@@ -147,7 +147,7 @@
 								style="float : left"></p:outputLabel>
 						</ui:fragment> <p:outputLabel style="float : left"
 							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
-					<td><p:selectOneMenu style="width:160px;"
+					<td><p:selectOneMenu style="width:160px;margin-bottom: 5px;"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							id="techPrivateNoOfAutoscore"
 							label="#{lbl['lbl.sc.spec.asset.score.type']}"
@@ -163,7 +163,7 @@
 					</td>
 				</tr>
 			</table>
-			<p:spacer height="5"></p:spacer>
+			
 			<h:panelGroup id="companytechnicalPrivate">
 				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
@@ -178,15 +178,18 @@
 						<ui:param name="scoringPnlId" value="contractorListId" />
 						<ui:param name="scoringPnlName"
 							value="#{lbl['lbl.sc.spec.score.total.no.contracts']}"></ui:param>
-						<ui:include src="/xhtml/sc/specification/specificationCommittee/scoring.xhtml"></ui:include>
+						<ui:include
+							src="/xhtml/sc/specification/specificationCommittee/scoring.xhtml"></ui:include>
 						<div align="right">
 							<p:commandButton value="#{lbl['lbl.btn.add']}"
+								styleClass="BtnSpacing"
 								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 								process="@this,#{scoringPnlId}" partialSubmit="true"
 								oncomplete="scoreWidget.paginator.endLink.click();"
 								actionListener="#{specificationBackingBean.addScoring(15)}"
 								update="#{scoringPnlId}" />
 							<p:commandButton value="#{lbl['lbl.btn.delete']}"
+								styleClass="BtnSpacing"
 								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 								process="@this" partialSubmit="true"
 								oncomplete="technicalNonGovCompanyExperienceNoOfContractsDeletePopUp.show();"
@@ -211,7 +214,7 @@
 
 					</h:panelGroup>
 				</h:panelGroup>
-				<p:spacer height="5"></p:spacer>
+				
 				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 					<table>
@@ -236,14 +239,14 @@
 			</h:panelGroup>
 		</p:panel>
 
-		<p:panel id="techcompanyExpPrivateNumbersOfYears"
+		<p:panel id="techcompanyExpPrivateNumbersOfYears" styleClass="BtnSpacing"
 			header="#{lbl['lbl.sc.spec.score.total.no.years']}" toggleable="true"
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
 			<table>
 				<tr>
 					<td width="150px"><p:outputLabel style="float : left"
 							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
-					<td><p:selectOneMenu style="width:160px;"
+					<td><p:selectOneMenu style="width:160px;margin-bottom: 5px;"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							label="#{lbl['lbl.sc.spec.asset.score.type']}"
 							id="techPrivateNoOfYearsAutoScore"
@@ -259,7 +262,7 @@
 					</td>
 				</tr>
 			</table>
-			<p:spacer height="5"></p:spacer>
+			
 			<h:panelGroup id="companyprivateYears">
 				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.companyScoreType eq '1'}">
@@ -375,12 +378,14 @@
 
 						<div align="right">
 							<p:commandButton value="#{lbl['lbl.btn.add']}"
+								styleClass="BtnSpacing"
 								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 								process="@this,#{scoringPnlId}" partialSubmit="true"
 								oncomplete="scoreWidget.paginator.endLink.click();"
 								actionListener="#{specificationBackingBean.addScoringyears(16)}"
 								update="#{scoringPnlId}" />
 							<p:commandButton value="#{lbl['lbl.btn.delete']}"
+								styleClass="BtnSpacing"
 								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 								process="@this" partialSubmit="true"
 								oncomplete="technicalNonGovCompanyExperienceNoOfYearsDeletePopUp.show();"
@@ -405,7 +410,7 @@
 					</h:panelGroup>
 
 				</h:panelGroup>
-				<p:spacer height="5"></p:spacer>
+				
 				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.companyScoreType eq '2'}">
 					<table>

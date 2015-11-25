@@ -21,10 +21,11 @@
 
 		<div>
 			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-				immediate="true"
+				immediate="true" styleClass="BtnSpacing"
 				action="#{specificationBackingBean.committeeBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
+				styleClass="BtnSpacing"
 				rendered="#{((specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
 				style="float:right;" onstart="blockWidget.show();"
 				oncomplete="blockWidget.hide();"
@@ -38,13 +39,12 @@
 
 		</div>
 
-		<p:spacer height="25"></p:spacer>
-		<br />
-		<br />
+
 
 		<h:panelGroup>
 
-			<ui:include src="/xhtml/sc/specification/specificationCommittee/financialCheckListSupplierInfoscore.xhtml" />
+			<ui:include
+				src="/xhtml/sc/specification/specificationCommittee/financialCheckListSupplierInfoscore.xhtml" />
 		</h:panelGroup>
 	</ui:define>
 
