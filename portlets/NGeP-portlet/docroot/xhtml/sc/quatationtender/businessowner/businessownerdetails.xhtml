@@ -51,7 +51,7 @@
 			<p:column headerText="#{lbl['lbl.sc.grade']}" style="width : 5%">
 				<h:outputText value="#{businessowner.grade}" />
 			</p:column>
-			<p:column style="width : 6%;">
+			<p:column style="width : 7%;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.pnp']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
@@ -59,7 +59,7 @@
 				<h:outputText
 					value="#{lbl[businessowner.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.consolidate']}" style="width:10%"
+			<p:column headerText="#{lbl['lbl.sc.consolidate']}" style="width:11%"
 				selectionMode="single">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
@@ -92,7 +92,7 @@
 		<ui:param name="businessOwnerDeleteId" value="businessOwnerDeleteId" />
 		<ac:confirmationPopup id="#{businessOwnerDeleteId}"
 			widget="businessOwnerDeletePopUp"
-			okAction="qTBusinessOwnerBackingBean.deleteBusinessOwner" width="450"
+			okAction="qTBusinessOwnerBackingBean.deleteBusinessOwner" width="40%"
 			height="200" title="#{lbl['lbl.sc.qt.business.owner']}"
 			content="#{lbl['lbl.sc.dialog.confirm.business.owner.dtls']}"
 			update="@([id$=businessownerId])" />
