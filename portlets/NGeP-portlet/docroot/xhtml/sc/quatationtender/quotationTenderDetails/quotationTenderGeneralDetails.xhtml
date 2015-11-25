@@ -7,9 +7,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sc.general.info']}" toggleable="true">
-		<table>
+		<table style="width: 100%;">
 			<tr>
-				<td style="width: 220px;" valign="top"><p:outputLabel
+				<td style="width: 200px;" valign="top"><p:outputLabel
 						value="#{lbl['lbl.sc.title']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
 				<td colspan="3"><p:inputTextarea id="title1"
@@ -28,18 +28,18 @@
 						<tr>
 							<td><p:inputText id="fileno"
 									label="#{lbl['lbl.sc.qt.fileno']}" required="true"
-									value="#{qTDetailBB.managedBean.qt.fileNo}" size="30"
+									value="#{qTDetailBB.managedBean.qt.fileNo}" size="25"
 									maxlength="50"
 									disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_FILE_NO)}" /></td>
 							<td><p:message id="filenoMsg" for="fileno" display="icon" />
 							</td>
 						</tr>
 					</table></td>
-				<td style="width: 385px;"><p:outputLabel
+				<td style="width: 164px;"><p:outputLabel
 						value="#{lbl['lbl.sc.created.date']}" /></td>
 				<td><p:inputText
 						value="#{qTDetailBB.managedBean.qt.createdDate}" disabled="true"
-						size="30">
+						size="25">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
@@ -48,20 +48,19 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
 				<td><p:inputText
 						value="#{qTDetailBB.getParameterDesc(qTDetailBB.managedBean.qt.procurementMode)}"
-						disabled="true" size="30" readonly="true" /></td>
+						disabled="true" size="25" readonly="true" /></td>
 				<td />
 				<td />
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" /></td>
 				<td><p:inputText id="estprice" style="text-align:right;"
-						value="#{qTDetailBB.managedBean.qt.estimatedAmount}" size="30"
+						value="#{qTDetailBB.managedBean.qt.estimatedAmount}" size="25"
 						disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_ESTMT_AMT)}"
 						valueChangeListener="#{qTDetailBB.estimateAmtChanged}">
 						<f:ajax></f:ajax>
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-
 					</p:inputText></td>
 				<td />
 				<td />
@@ -73,7 +72,7 @@
 							value="#{lbl['lbl.sc.justification']}" /></td>
 					<td colspan="3"><p:inputTextarea
 							value="#{qTDetailBB.managedBean.qt.justificationRemark}"
-							cols="30" rows="2" style=" margin-bottom:5px;" maxlength="200"
+							cols="25" rows="2" style=" margin-bottom:5px;" maxlength="200"
 							disabled="true" readonly="true" /></td>
 				</tr>
 			</ui:fragment>
@@ -143,11 +142,11 @@
 			</p:column>
 		</p:dataTable>
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.add']}"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" styleClass="BtnSpacing"
 				actionListener="#{qTDetailBB.addGoSoDoAction}" update="gosodoList"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_GOSODO)}">
 			</p:commandButton>
-			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
 				actionListener="#{qTDetailBB.deleteGoSoDoAction}"
 				update="gosodoList"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_GOSODO)}" />
@@ -155,9 +154,9 @@
 	</p:panel>
 	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.qt.details']}"
 		toggleable="true">
-		<table>
+		<table style="widows: 100%;">
 			<tr>
-				<td style="width: 220px;"><p:outputLabel
+				<td style="width: 200px;"><p:outputLabel
 						value="#{lbl['lbl.sc.qttentype']}" /></td>
 				<td colspan="3"><c:if
 						test="#{qTDetailBB.managedBean.qt.brandNew}">
@@ -175,7 +174,7 @@
 					</c:if> <c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
 						<p:inputText
 							value="#{qTDetailBB.getParameterDesc(ParameterTypeConst.quotationTenderType, qTDetailBB.managedBean.qt.qtType)}"
-							disabled="true" size="30" />
+							disabled="true" size="25" />
 					</c:if></td>
 			</tr>
 			<tr>
@@ -186,7 +185,7 @@
 						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PROCUREMENT_TYPE_CAT_ID)}"
 						required="true" label="#{lbl['lbl.sc.procurment.type.category']}"
 						value="#{qTDetailBB.managedBean.qt.procurementTypeCatId.parameterId}"
-						style="width: 238px;margin-bottom: 5px;">
+						style="width: 215px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{qTDetailBB.getDropdownValues(ParameterTypeConst.procurementTypeCategory)}" />
 						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
@@ -196,23 +195,23 @@
 			</tr>
 			<tr>
 				<td colspan="4"><p:outputPanel id="testPanel">
-						<table style="width: 100%">
+						<table>
 							<tr>
-								<td style="width: 220px;"><p:outputLabel
+								<td style="width: 200px;"><p:outputLabel
 										value="#{lbl['lbl.sc.qt.panel']}"
 										rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
 								<td><p:inputText
 										value="#{lbl[qTDetailBB.managedBean.qt.panel ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
-										readonly="true" size="30" disabled="true"
+										readonly="true" size="25" disabled="true"
 										rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
 								<ui:fragment
 									rendered="#{qTDetailBB.managedBean.qt.panel eq 'No'}">
-									<td style="width: 360px"><p:outputLabel
+									<td style="width: 200px"><p:outputLabel
 											value="#{lbl['lbl.sc.open.for']}"
 											rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
 									<td><p:inputText
 											value="#{qTDetailBB.getParameterDesc(ParameterTypeConst.scOpenFor, qTDetailBB.managedBean.qt.openFor)}"
-											disabled="true" size="30"
+											disabled="true" size="25"
 											rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" />
 									</td>
 								</ui:fragment>
@@ -226,9 +225,8 @@
 				<td colspan="3"><ac:lov id="contractLovId" lovId="CT_CONTRACT"
 						headerText="Contract Lov" update=":form:qtdetailsid"
 						saveObject="qTDetailBB.managedBean.ctContract"
-						value="#{qTDetailBB.managedBean.ctContract.contractNo}" size="30"
-						conditionField="#{qTDetailBB.constuctConditionFields()}"
-						style="width: 195px;">
+						value="#{qTDetailBB.managedBean.ctContract.contractNo}" size="25"
+						conditionField="#{qTDetailBB.constuctConditionFields()}">
 					</ac:lov> <ac:lovPopup /></td>
 			</tr>
 			<tr>
@@ -243,7 +241,7 @@
 									value="#{qTDetailBB.managedBean.qt.publishPeriod}"
 									disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_PUBLISH_PERIOD)}"
 									valueChangeListener="#{qTDetailBB.publishPeriodDaysChanged}"
-									size="30" style="text-align:right;width: 228px;">
+									size="25" style="text-align:right;">
 									<p:ajax event="blur" process="@this" partialSubmit="true"
 										listener="#{qTScheduleDetailBackingBean.handlePublishClosingDate}" />
 								</p:inputMask></td>
@@ -253,7 +251,7 @@
 									value="#{lbl['lbl.sc.qt.publishing.period.tooltip']}" /></td>
 						</tr>
 					</table></td>
-				<td style="width: 360px;"><p:outputLabel
+				<td><p:outputLabel
 						value="#{lbl['lbl.sc.qt.proposal.validity']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><table>
@@ -261,10 +259,10 @@
 							<td><p:inputMask id="proposalvalidity" mask="9?9999"
 									maxlength="5" placeHolder=""
 									label="#{lbl['lbl.sc.qt.publishing.period']}" required="true"
-									value="#{qTDetailBB.managedBean.qt.qtValidityPeriod}" size="30"
+									value="#{qTDetailBB.managedBean.qt.qtValidityPeriod}" size="25"
 									disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_VALIDITY_PERIOD)}"
 									valueChangeListener="#{qTDetailBB.proposalValidityChanged}"
-									style="text-align:right;width: 228px;">
+									style="text-align:right;">
 									<f:ajax></f:ajax>
 								</p:inputMask></td>
 							<td><p:message id="proposalvalidityMsg"
@@ -281,7 +279,7 @@
 							<tr>
 								<td><p:inputText
 										value="#{lbl[qTDetailBB.managedBean.qt.zonal ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
-										disabled="true" size="30" /></td>
+										disabled="true" size="25" /></td>
 								<td colspan="3"><ac:iconTooltip
 										value="#{lbl['lbl.sc.qt.zone.location.tooltip']}" /></td>
 							</tr>
@@ -295,11 +293,11 @@
 		rendered="#{qTDetailBB.managedBean.qt.zonal and qTDetailBB.managedBean.qt.panel eq 'false'}">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 220px"><p:outputLabel
+				<td style="width: 200px"><p:outputLabel
 						value="#{lbl['lbl.sc.zone.location.level']}" /></td>
 				<td colspan="3"><p:inputText
 						value="#{qTDetailBB.getParameterDesc(qTDetailBB.managedBean.qt.zoneLocationLevel)}"
-						disabled="true" size="30" readonly="true" /> <ac:iconTooltip
+						disabled="true" size="25" readonly="true" /> <ac:iconTooltip
 						value="#{lbl['lbl.sc.zone.location.level.tooltip']}" /></td>
 			</tr>
 		</table>
