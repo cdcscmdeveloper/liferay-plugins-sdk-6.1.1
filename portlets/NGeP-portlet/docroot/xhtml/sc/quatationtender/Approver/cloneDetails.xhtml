@@ -171,7 +171,6 @@
 						<h:outputText
 							value="#{qTCommitteBackingBean.getStatusDescById(scQt.qtStatus.statusId)}" style="white-space: normal;"/>
 					</p:column>
-
 				</p:dataTable>
 				<br />
 				<ui:fragment
@@ -210,7 +209,7 @@
 						<h:outputText value="#{committeeMember.grade}" />
 					</p:column>
 
-					<p:column style="width : 6%;">
+					<p:column style="width : 7%;">
 						<f:facet name="header">
 							<h:outputText value="#{lbl['lbl.sc.pnp']}" />
 							<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
@@ -225,12 +224,11 @@
 							/>
 					</p:column>
 				</p:dataTable>
-				<br />
 				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.ok']}"
+					<p:commandButton value="#{lbl['lbl.btn.ok']}" styleClass="BtnSpacing"
 						action="#{qTCommitteBackingBean.addCloneCommitteeMembersApprovalsAction}"
 						update="@(.scmemberdtls)" />
-					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}" styleClass="BtnSpacing"
 						onclick="screen2.hide();" update="@(.scMemberDtl)" />
 				</div>
 			</p:panel>
