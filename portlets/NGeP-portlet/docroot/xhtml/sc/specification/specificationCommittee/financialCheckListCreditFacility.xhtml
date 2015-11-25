@@ -13,18 +13,20 @@
 
 
 	<ui:define name="contentSection">
-		<!-- <ac:title value="#{lbl['lbl.sc.spec.specification.committee']}"></ac:title> -->
+		
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
 		</p:blockUI>
 		<p:messages id="financialCreditFacility" autoUpdate="true"
-			showDetail="true" showSummary="false" closable="true" severity="error, info"></p:messages>
+			showDetail="true" showSummary="false" closable="true"
+			severity="error, info"></p:messages>
 		<div>
 			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-				immediate="true"
+				immediate="true" styleClass="BtnSpacing"
 				action="#{specificationBackingBean.committeeBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
+			styleClass="BtnSpacing"
 				rendered="#{((specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
 				style="float:right;" onstart="blockWidget.show();"
 				oncomplete="blockWidget.hide();"
@@ -38,13 +40,12 @@
 
 
 		</div>
-		<p:spacer height="25"></p:spacer>
-		<br />
-		<br />
-		<ui:include src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />
+		
+		<ui:include
+			src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />
 
-		<p:spacer height="20"></p:spacer>
-		<p:panel header="#{lbl['lbl.sc.spec.credit.facility']}"
+		
+		<p:panel header="#{lbl['lbl.sc.spec.credit.facility']}" styleClass="BtnSpacing"
 			toggleable="true">
 			<p:dataTable id="credit" rowIndexVar="index" var="experience"
 				rowKey="#{experience}">
@@ -74,7 +75,7 @@
 			</p:dataTable>
 
 		</p:panel>
-		<p:spacer height="25"></p:spacer>
+		
 		<table>
 			<tr>
 				<td style="width: 157px;"><h:outputLabel
@@ -97,8 +98,8 @@
 				</td>
 			</tr>
 		</table>
-		<p:spacer height="20"></p:spacer>
-		<p:panel id="financialCreditFacilityScores"
+		
+		<p:panel id="financialCreditFacilityScores" styleClass="BtnSpacing"
 			header="#{lbl['lbl.sc.spec.score.total.credit.facility']}"
 			toggleable="true"
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
@@ -110,7 +111,7 @@
 								style="float : left"></p:outputLabel>
 						</ui:fragment> <p:outputLabel style="float : left"
 							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
-					<td><p:selectOneMenu required="true" style="width: 160px;"
+					<td><p:selectOneMenu required="true" style="width: 160px;margin-bottom: 5px;"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							label="#{lbl['lbl.sc.spec.asset.score.type']}"
 							id="fincreditFacilityAutoScore"
@@ -126,7 +127,7 @@
 					</td>
 				</tr>
 			</table>
-			<p:spacer height="5"></p:spacer>
+			
 			<h:panelGroup id="creditFacility">
 				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
@@ -141,14 +142,17 @@
 						<ui:param name="scoringPnlId" value="creditFacilityId" />
 						<ui:param name="scoringPnlName"
 							value="#{lbl['lbl.sc.spec.score.total.credit.facility']}"></ui:param>
-						<ui:include src="/xhtml/sc/specification/specificationCommittee/scoring.xhtml"></ui:include>
+						<ui:include
+							src="/xhtml/sc/specification/specificationCommittee/scoring.xhtml"></ui:include>
 						<div align="right">
 							<p:commandButton value="#{lbl['lbl.btn.add']}"
+								styleClass="BtnSpacing"
 								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 								process="@this,#{scoringPnlId}" partialSubmit="true"
 								actionListener="#{specificationBackingBean.addScoring(51)}"
 								update="#{scoringPnlId}" />
 							<p:commandButton value="#{lbl['lbl.btn.delete']}"
+								styleClass="BtnSpacing"
 								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 								process="@this" partialSubmit="true"
 								oncomplete="financialCreditFacilityDeletePopUp.show();"
@@ -172,7 +176,7 @@
 					</h:panelGroup>
 
 				</h:panelGroup>
-				<p:spacer height="5"></p:spacer>
+				
 				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 					<table>

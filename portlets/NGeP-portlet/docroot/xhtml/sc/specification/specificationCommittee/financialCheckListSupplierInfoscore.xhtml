@@ -16,15 +16,15 @@
 
 		<ui:include src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />
 
-		<p:spacer height="20" />
+		
 
-		<p:panel header="#{lbl['lbl.sc.spec.total.score.suppliers']}"
+		<p:panel header="#{lbl['lbl.sc.spec.total.score.suppliers']}" styleClass="BtnSpacing"
 			toggleable="true">
 			<table>
 				<tr>
 					<td style="width: 105px;"><p:outputLabel
 							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
-					<td><p:selectOneMenu disabled="true" style="width: 160px;"
+					<td><p:selectOneMenu disabled="true" style="width: 160px;margin-bottom: 5px;"
 							value="#{specificationBackingBean.managedBean.checklistScoreType}">
 							<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
 
@@ -36,7 +36,7 @@
 			</table>
 
 			<h:panelGroup id="supplierScore">
-				<p:spacer height="5"></p:spacer>
+				
 				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 					<table>

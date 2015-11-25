@@ -21,10 +21,11 @@
 			autoUpdate="true" closable="true" severity="error, info"></p:messages>
 		<div>
 			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-				immediate="true"
+				immediate="true" styleClass="BtnSpacing"
 				action="#{specificationBackingBean.committeeBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
+				styleClass="BtnSpacing"
 				rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
 				style="float:right;" onstart="blockWidget.show();"
 				oncomplete="blockWidget.hide();"
@@ -37,14 +38,14 @@
 
 
 		</div>
-		<p:spacer height="25"></p:spacer>
-		<br />
-		<br />
-		<ui:include src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />
 
-		<p:spacer height="20" />
+		<ui:include
+			src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />
 
-		<p:panel header="#{lbl['lbl.sc.spec.total.num.employees']}">
+
+
+		<p:panel header="#{lbl['lbl.sc.spec.total.num.employees']}"
+			styleClass="BtnSpacing">
 			<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sc.spec.total.num.employees.instruction']}"
 				escape="false" />
@@ -72,7 +73,7 @@
 			</h:panelGrid> -->
 		</p:panel>
 
-		<p:panel id="technicalTotalEmployees"
+		<p:panel id="technicalTotalEmployees" styleClass="BtnSpacing"
 			header="#{lbl['lbl.sc.scoring.tot.employees']}" toggleable="true"
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
 			<table>
@@ -83,7 +84,7 @@
 								style="float : left"></p:outputLabel>
 						</ui:fragment> <p:outputLabel style="float : left"
 							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
-					<td><p:selectOneMenu required="true" style="width:160px;"
+					<td><p:selectOneMenu required="true" style="width:160px;margin-bottom: 5px;"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							label="#{lbl['lbl.sc.spec.asset.score.type']}"
 							id="techTotalEmployeeAutoScore"
@@ -99,7 +100,7 @@
 					</td>
 				</tr>
 			</table>
-			<p:spacer height="5"></p:spacer>
+
 			<h:panelGroup id="totalEmployees">
 				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
@@ -113,16 +114,18 @@
 						<ui:param name="scoringPnlId" value="employessId" />
 						<ui:param name="scoringPnlName"
 							value="#{lbl['lbl.sc.scoring.tot.employees']}"></ui:param>
-						<ui:include src="/xhtml/sc/specification/specificationCommittee/scoring.xhtml"></ui:include>
+						<ui:include
+							src="/xhtml/sc/specification/specificationCommittee/scoring.xhtml"></ui:include>
 						<div align="right">
 							<p:commandButton value="#{lbl['lbl.btn.add']}"
+								styleClass="BtnSpacing"
 								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 								process="@this,#{scoringPnlId}" partialSubmit="true"
 								oncomplete="scoreWidget.paginator.endLink.click();"
 								update="#{scoringPnlId}"
 								actionListener="#{specificationBackingBean.addScoring(21)}" />
 							<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
-								partialSubmit="true"
+								styleClass="BtnSpacing" partialSubmit="true"
 								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 								oncomplete="technicalNumberOfEmployeesDeletePopUp.show();"
 								update="@([id$=#{technicalNumberofEmployeesDeleteId}])">
@@ -143,7 +146,7 @@
 							update="@([id$=#{scoringPnlId}])" />
 					</h:panelGroup>
 				</h:panelGroup>
-				<p:spacer height="5"></p:spacer>
+
 				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 					<table>
