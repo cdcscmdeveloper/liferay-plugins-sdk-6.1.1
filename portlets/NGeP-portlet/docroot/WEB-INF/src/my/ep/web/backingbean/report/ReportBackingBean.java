@@ -7139,10 +7139,10 @@ public class ReportBackingBean extends
 						.setSmMandatoryCreatedFromYearView(true);
 				getManagedBean().getRptGenBean()
 						.setSmMandatoryRejectedReportTypeView(true);
-			} /*
-			 * else { rptGenBean.setSmMandatoryCreatedFromYearView(true);
-			 * rptGenBean.setSmMandatoryRegisteredReportTypeDateView(true); }
-			 */
+			} 
+			/* * else { rptGenBean.setSmMandatoryCreatedFromYearView(true);
+			 * rptGenBean.setSmMandatoryRegisteredReportTypeDateView(true); }*/
+			 
 		}
 	}
 
@@ -13428,7 +13428,7 @@ public class ReportBackingBean extends
 		this.setPmBusinessRegNo(null);
 		this.setPmStatus(null);
 		this.setPmFinancialOrgName(null);
-		changeReportType();
+		//changeReportType();
 		retrieveDates();
 		applicationStatusDateChange();
 	}

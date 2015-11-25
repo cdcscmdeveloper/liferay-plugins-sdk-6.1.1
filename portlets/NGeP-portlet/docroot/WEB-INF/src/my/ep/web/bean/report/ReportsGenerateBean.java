@@ -451,6 +451,9 @@ public class ReportsGenerateBean {
 		/** The sm mandatory created from year view. */
 		private boolean smMandatoryCreatedFromYearView = false;
 		
+		/** The sm mandatory year from report type view. */
+		private boolean smMandatoryYearFromReportTypeView = false;		
+		
 		/** The sm mandatory company name view. */
 		private boolean smMandatoryCompanyNameView = false;
 		
@@ -13153,5 +13156,20 @@ public class ReportsGenerateBean {
 	 */
 	public void setSmPersonnelStaffRoleView(boolean smPersonnelStaffRoleView) {
 		this.smPersonnelStaffRoleView = smPersonnelStaffRoleView;
+	}
+
+	/**
+	 * @return the smMandatoryYearFromReportTypeView
+	 */
+	public boolean isSmMandatoryYearFromReportTypeView() {
+		return smMandatoryYearFromReportTypeView;
+	}
+
+	/**
+	 * @param smMandatoryYearFromReportTypeView the smMandatoryYearFromReportTypeView to set
+	 */
+	public void setSmMandatoryYearFromReportTypeView(
+			boolean smMandatoryYearFromReportTypeView) {
+		this.smMandatoryYearFromReportTypeView = smMandatoryYearFromReportTypeView;
 	}
 }
