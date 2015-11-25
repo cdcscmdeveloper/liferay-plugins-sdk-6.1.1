@@ -45,25 +45,13 @@
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.email']}" /></td>
 				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.email}"/></td>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.mobileNo']}" /></td>
-				<td>
-					<ac:labelPhone countryCode="#{viewSmApplBackingBean.managedBean.selectedShareHolder.mobileCountry}" 
-						areaCode="#{viewSmApplBackingBean.managedBean.selectedShareHolder.mobileArea}"
-						number="#{viewSmApplBackingBean.managedBean.selectedShareHolder.mobileNo}" />
-				</td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.mobileFull}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.phoneno']}" /></td>
-				<td>
-					<ac:labelPhone countryCode="#{viewSmApplBackingBean.managedBean.selectedShareHolder.phoneCountry}" 
-						areaCode="#{viewSmApplBackingBean.managedBean.selectedShareHolder.phoneArea}"
-						number="#{viewSmApplBackingBean.managedBean.selectedShareHolder.phoneNo}" />
-				</td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.phoneFull}" /></td>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.faxno']}" /></td>
-				<td>
-					<ac:labelPhone countryCode="#{viewSmApplBackingBean.managedBean.selectedShareHolder.faxCountry}" 
-						areaCode="#{viewSmApplBackingBean.managedBean.selectedShareHolder.faxArea}"
-						number="#{viewSmApplBackingBean.managedBean.selectedShareHolder.faxNo}" />
-				</td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.faxFull}" /></td>
 			</tr>
 
 			<tr>
