@@ -28,26 +28,26 @@
 
 		<div class="ppRightBtn">
 			<p:commandButton id="specificationcommitteeadd"
-				value="#{lbl['lbl.btn.add']}" process="@this"
+				value="#{lbl['lbl.btn.add']}" process="@this" styleClass="BtnSpacing"
 				rendered="#{!qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode) and qTDetailBB.managedBean.selectedTabBean.tabType ne SourcingConstants.committeTypeFinalization}"
 				actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, qTDetailBB.managedBean.selectedTabBean.titleName)}"
 				oncomplete="newspecificationcommittee.show();"
 				update="@(.scAddMember)" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				process="@this, specificationcommitteeid" partialSubmit="true"
+				process="@this, specificationcommitteeid" partialSubmit="true" styleClass="BtnSpacing"
 				oncomplete="committeeAppointmentDeletePopUp.show();"
 				update="@([id$=#{committeeAppointmentDeleteId}],[id$=#{scmemberInfoDtls}])"
 				rendered="#{!qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode) and qTDetailBB.managedBean.selectedTabBean.tabType ne SourcingConstants.committeTypeFinalization}" />
 
-			<p:commandButton value="#{lbl['lbl.sc.qt.clone.to.tec']}"
+			<p:commandButton value="#{lbl['lbl.sc.qt.clone.to.tec']}" styleClass="BtnSpacing"
 				process="@this, specificationcommitteeid"
 				update="@(.clonetecid),@([id$=committeTabMenu]),@([id$=committeMenus])"
 				rendered="#{qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeSpecificationCommittee and qTDetailBB.managedBean.qt.evaluationType eq 2 and !qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode)}"
 				actionListener="#{qTCommitteBackingBean.addCloneToTecDtl}"
 				title="#{lbl['lbl.sc.qt.clone.to.tec.tooltip']}" />
 
-			<p:commandButton value="#{lbl['lbl.sc.qt.clone.to.ec']}"
+			<p:commandButton value="#{lbl['lbl.sc.qt.clone.to.ec']}" styleClass="BtnSpacing"
 				process="@this, specificationcommitteeid"
 				update="@(.clonetecid),@([id$=committeTabMenu]),@([id$=committeMenus])"
 				rendered="#{qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeSpecificationCommittee and qTDetailBB.managedBean.qt.evaluationType eq 1 and !qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode)}"
@@ -59,7 +59,7 @@
 		<ac:confirmationPopup id="#{committeeAppointmentDeleteId}"
 			widget="committeeAppointmentDeletePopUp"
 			okAction="qTCommitteBackingBean.deleteSpecificationCommittee"
-			width="450" height="200"
+			width="40%" height="200"
 			title="#{lbl['lbl.sc.qt.committee.appointment']}"
 			content="#{lbl['lbl.sc.dialog.confirm.committee.members.dtls']}"
 			update="@([id$=specificationcommitteeid])" />
