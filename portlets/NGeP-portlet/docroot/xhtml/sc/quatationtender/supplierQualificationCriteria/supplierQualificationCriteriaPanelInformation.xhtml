@@ -10,7 +10,7 @@
 			<table style="width: 100%;">
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.circular.no']}" /></td>
-					<td><p:inputText size="75"
+					<td><p:inputText size="65"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.circularNo}"
 						disabled="true"  />
 						<p:spacer width="5" />
@@ -21,7 +21,7 @@
 				</tr>
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.circular.name']}" /></td>
-					<td colspan="3"><p:inputTextarea rows="3" cols="75" style="margin-bottom:5px;"
+					<td colspan="3"><p:inputTextarea rows="3" cols="75" style="margin-bottom:5px;width :74%;"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.circularName}"
 						disabled="true" /></td>
 				</tr>
@@ -29,7 +29,7 @@
 					<td><h:outputLabel value="#{lbl['lbl.sc.circular.exp.date']}" /></td>
 					<td colspan="3"><p:inputText
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.circularExpDate}"
-						disabled="true" size="30">
+						disabled="true" size="65">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
