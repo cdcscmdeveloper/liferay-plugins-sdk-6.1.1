@@ -647,7 +647,7 @@ public class QTScheduleDetailBackingBean extends
 		fc.getApplication()
 				.getNavigationHandler()
 				.handleNavigation(fc, null,
-						"/xhtml/sc/bsvattendance/additionalAttandanceApproval.xhtml");
+						"/xhtml/sc/bsvattendance/approval/additionalAttandanceApproval.xhtml");
 	}
 
 	/**
