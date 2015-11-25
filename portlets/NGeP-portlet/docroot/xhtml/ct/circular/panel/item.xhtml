@@ -25,8 +25,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			 
 			  <p:column style="white-space:pre-line;width:125px;" styleClass="column-align-center" >
 			       <f:facet name="header">
-						<h:outputText value="#{lbl['lbl.ct.panel.coverage']}"/>
-	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.panel.coverage']}"/>
+						<h:outputText id="coverageId" value="#{lbl['lbl.ct.panel.coverage']}" styleClass="required"/>
+	               		<ac:iconTooltip for="coverageId"  value="#{lbl['lbl.ct.tooltip.panel.coverage']}"/>
 	               </f:facet>
 			       <p:selectOneMenu id="panelCoverage" value="#{panelItemsVar.zoneAllParamterId}" style="width:100px;" 
 			       		disabled="#{panelBackingBean.managedBean.viewContract}">
@@ -36,7 +36,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			       </p:selectOneMenu>
 	  	      </p:column>
 			 
-			  <p:column headerText="#{lbl['lbl.ct.item.category']}" style="white-space:pre-line;width:125px;" styleClass="column-align-center" >
+			  <p:column  style="white-space:pre-line;width:125px;" styleClass="column-align-center" >
+			      <f:facet name="header">
+			         <h:outputText value="#{lbl['lbl.ct.item.category']}" styleClass="required"/>
+			      </f:facet>
 			      <p:selectOneMenu value="#{panelItemsVar.categoryParameterId}" style="width:100px"
 			      		disabled="#{panelBackingBean.managedBean.viewContract}">
 			           <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.itemCategoryType)}"/>
@@ -44,7 +47,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			      </p:selectOneMenu>
 			  </p:column>
 			  
-			  <p:column headerText="#{lbl['lbl.ct.item.group']}" style="width:150px;" styleClass="column-align-center" >
+			  <p:column  style="width:150px;" styleClass="column-align-center" >
+			     <f:facet name="header">
+			        <h:outputText value="#{lbl['lbl.ct.item.group']}" styleClass="required"/>
+			     </f:facet>
 			     <div  align="left">
 			       <ac:lov id="itemGroupLovId" lovId="CT_PANEL_ITEM_GROUP" size="10" headerText="#{lbl['lbl.ct.item.group']}" readonly="true" 
 						value="#{panelItemsVar.ctPanelItemGroup.groupName}" conditionField="recordStatus^1" 
@@ -54,7 +60,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			       </div>
 			   </p:column>
 		 	
-              <p:column headerText="#{lbl['lbl.ct.item.name']}" style="width:175px;" styleClass="column-align-center" >
+              <p:column style="width:175px;" styleClass="column-align-center">
+                  <f:facet name="header">
+			        <h:outputText value="#{lbl['lbl.ct.item.name']}" styleClass="required"/>
+			     </f:facet>
                   <p:inputTextarea value="#{panelItemsVar.itemName}" maxlength="100" rows="2" style="width:100px;" autoResize="false"
                   	disabled="#{panelBackingBean.managedBean.viewContract}"/>
                   	<p:spacer width="3" />
@@ -63,7 +72,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 						<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}"  />
 					</p:commandLink>
               </p:column>
-              <p:column headerText="#{lbl['lbl.ct.item.type']}" style="width:125px;;white-space:pre-line" styleClass="column-align-center" >
+              <p:column  style="width:125px;;white-space:pre-line" styleClass="column-align-center" >
+                   <f:facet name="header">
+			        <h:outputText value="#{lbl['lbl.ct.item.type']}" styleClass="required"/>
+			     </f:facet>
                     <p:selectOneMenu value="#{panelItemsVar.itemType.parameterId}" style="width:100px;"
 			      		disabled="#{panelBackingBean.managedBean.viewContract}">
 			           <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.scItemType)}"/>
@@ -71,7 +83,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
               </p:column>
 			  <p:column styleClass="column-align-center" style="width:75px;">
 				  	<f:facet name="header" >
-						<h:outputText value="#{lbl['lbl.ct.uom']}" style="float:left;white-space:pre-line"  />
+						<h:outputText value="#{lbl['lbl.ct.uom']}" style="float:left;white-space:pre-line" styleClass="required"  />
 	               	</f:facet>
 			       <ac:lov id="uomLovId" lovId="PM_UOM" size="10" headerText="#{lbl['lbl.ct.uom']}" readonly="true" 
 				         value="#{panelItemsVar.pmUom.uomName}" conditionField="recordStatus^1" 
@@ -233,7 +245,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			 <table style="width: 100%">
 				<tr>
 					<td style="width: 120px;"><p:outputLabel value="#{lbl['lbl.ct.location.level']}" /></td>
-					<td><p:selectOneMenu id="locationLevels" style="width: 178px;" disabled="#{panelBackingBean.managedBean.viewContract}"
+					<td><p:selectOneMenu id="locationLevels" style="width:178px;" disabled="#{panelBackingBean.managedBean.viewContract}"
 							value="#{panelBackingBean.managedBean.selectedPanelItems.locationLevelId.parameterId}">
 							<f:selectItems value="#{panelBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
 							<p:ajax event="change" listener="#{panelBackingBean.selectLocation}" process="@this" update=":form:zoneGeneralDataTable"/>
@@ -249,7 +261,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			    <ac:paginator for="zoneGeneralDataTable" />
 			    <p:ajax event="rowSelect" update="@([id$=itemSupplier])" 
 			        process="@this"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  />	
-					<p:column headerText="#{lbl['lbl.ct.location']}" style="width:60%" styleClass="column-align-center" >
+					<p:column style="width:60%" styleClass="column-align-center" >
+				    	<f:facet name="header">
+				    	     <h:outputText value="#{lbl['lbl.ct.location']}" styleClass="required"/>
+				    	</f:facet>
 				    	 <h:outputText value="#{panelZoneVar.name}" style="float:left;"/>	
 					</p:column>
                     <p:column headerText="#{lbl['lbl.ct.status']}" style="width:20%" styleClass="column-align-center" >
@@ -280,16 +295,17 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	  </h:panelGroup>
 	  <p:dialog header="#{lbl['lbl.ct.add.location']}" widgetVar="ZoneGeneral" 
 	  	styleClass="pop_up_top" modal="true" width="600" height="500">
-		<p:panel id="zonePopupGeneral">
+	  	<p:panel id="zonePopupGeneral">
 			<table styleClass="noBorders tr,noBorders td">
 				<tr>
-					<td width="25%" valign="top"><p:outputLabel value="#{lbl['lbl.ct.zone.name']}"></p:outputLabel></td>
+					<td width="25%" valign="top"><p:outputLabel value="#{lbl['lbl.ct.zone.name']}" styleClass="required"></p:outputLabel></td>
 					<td width="70%"><p:inputText id="zoneName" style="width:300px;" disabled="#{panelBackingBean.managedBean.viewContract}"
-							value="#{panelBackingBean.managedBean.zoneName}"  label="#{lbl['lbl.ct.zone.name']}" maxlength="20"></p:inputText>
+							value="#{panelBackingBean.managedBean.zoneName}"  
+						    maxlength="20"></p:inputText>
 					</td>
 				</tr>
 				<tr>
-					<td width="25%" valign="top"><p:outputLabel value="#{lbl['lbl.ct.location']}" /></td>
+					<td width="25%" valign="top"><p:outputLabel value="#{lbl['lbl.ct.location']}" styleClass="required" /></td>
 					<td width="70%">
 				
 						<div style="height: 370px; overflow-y: scroll;">
@@ -368,7 +384,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				          <h:outputText value="#{panelBackingBean.retrieveMofNo(supVar.supplier)}" style="float:left;" />
 				      </p:column>
 				      
-				       <p:column headerText="#{lbl['lbl.ct.bank.account.name']}"  style="width:15%;" styleClass="column-align-center" >
+				       <p:column  style="width:15%;" styleClass="column-align-center" >
+				              <f:facet name="header">
+				                  <h:outputText value="#{lbl['lbl.ct.bank.account.name']}"  styleClass="required"/>
+				              </f:facet>
 				               <p:selectOneMenu id="accountId" style="width:250px;margin-bottom: 5px;"
 						           value="#{supVar.bankAccountNo}">
 						           <f:selectItems value="#{panelBackingBean.populateBankAccountList(supVar.supplier)}" />
