@@ -198,11 +198,11 @@
 			</p:panel>
 		</c:if>
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.ok']}"
+			<p:commandButton value="#{lbl['lbl.btn.ok']}" styleClass="BtnSpacing"
 				action="#{qTCommitteBackingBean.okCommitteeAction}"
 				update="@(.scmemberdtls)" />
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-				styleClass="apply_button" update="@(.scmemberdtls)"
+				styleClass="BtnSpacing" update="@(.scmemberdtls)"
 				oncomplete="newspecificationcommittee.hide();" />
 		</div>
 	</p:dialog>
