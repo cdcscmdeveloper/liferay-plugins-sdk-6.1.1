@@ -117,7 +117,7 @@
 			scqtcommittee.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeFederalProcurementBoardSwk}" />
 					<p:commandLink
 						action="#{committeBackingBean.editAction(scqtcommittee)}"
-						style="margin-right:20px;" partialSubmit="true" process="@this"
+						partialSubmit="true" process="@this"
 						rendered="#{(isFCCommitteeType and scqtcommittee.scCommittee.recordStatus) or (!isFCCommitteeType and scqtcommittee.scCommittee.committeStatus.statusId ne QTStatusConst.CMT_COMPLETED)}">
 						<h:graphicImage
 							value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
@@ -125,7 +125,7 @@
 					</p:commandLink>
 					<p:commandLink
 						action="#{committeBackingBean.editAction(scqtcommittee)}"
-						style="margin-right:20px;" partialSubmit="true" process="@this"
+						partialSubmit="true" process="@this"
 						rendered="#{(isFCCommitteeType and !scqtcommittee.scCommittee.recordStatus) or (!isFCCommitteeType and scqtcommittee.scCommittee.committeStatus.statusId eq QTStatusConst.CMT_COMPLETED)}">
 						<h:graphicImage
 							value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png"
