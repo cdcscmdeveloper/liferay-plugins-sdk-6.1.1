@@ -91,14 +91,9 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.phoneno']}" /></td>
-					<td>
-						<ac:labelPhone fullNo="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.phoneFull}"/>
-					</td>
-					
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.phoneFull}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.faxno']}" /></td>
-					<td>
-						<ac:labelPhone fullNo="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.faxFull}" />
-					</td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.faxFull}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.website']}" /></td>
