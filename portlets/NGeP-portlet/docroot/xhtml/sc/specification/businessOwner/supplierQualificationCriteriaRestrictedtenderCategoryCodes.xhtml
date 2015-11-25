@@ -7,7 +7,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sc.category.code.list']}" toggleable="true">
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.category.code.list.instruction']}" escape="false" />
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.category.code.list.instruction']}"
+			escape="false" />
 
 		<p:dataTable id="restrictedPnlId" var="cateGory"
 			widgetVar="restricedCodes" rows="10"
@@ -45,13 +47,14 @@
 
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
-				process="@this,restrictedPnlId" partialSubmit="true"
-				update="@([id$=catCodePopup])"
+				styleClass="BtnSpacing" process="@this,restrictedPnlId"
+				partialSubmit="true" update="@([id$=catCodePopup])"
 				disabled="#{specificationBackingBean.managedBean.readOnly}"
 				oncomplete="catCodePopup.show();"
 				action="#{categoryCodeSearchBackingBean.renewSesionObject}" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				process="@this,restrictedPnlId" partialSubmit="true"
+				styleClass="BtnSpacing" process="@this,restrictedPnlId"
+				partialSubmit="true"
 				oncomplete="supplierRestrictedcategoryDeletePopUp.show();"
 				update="@([id$=#{supplierRestrictedcategoryDeleteId}])"
 				disabled="#{specificationBackingBean.managedBean.readOnly}" />
