@@ -9952,34 +9952,82 @@ public class ReportBackingBean extends
 		getManagedBean().getRptGenBean().setSmActivationDateView(false);
 		getManagedBean().getRptGenBean().setSmSubmissionDateView(false);
 		getManagedBean().getRptGenBean().setSmActSubmisAllDateView(false);
-		if (((this.getSmRegistrationType() != null)
-				&& (this.getSmRegistrationType()
-						.equals(ReportConst.RPT_REG_BASIC)) && (this
-				.getReportValue().equals(
-						ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL) || this
-				.getReportValue().equals(ReportConst.SM_SUPPLIER_PERFORMANCE)))) {
-			getManagedBean().getRptGenBean().setSmActiveSubmissiveFromDateView(
-					true);
-			getManagedBean().getRptGenBean().setSmActivationDateView(true);
-		} else if (((this.getSmRegistrationType() != null)
-				&& (this.getSmRegistrationType()
-						.equals(ReportConst.RPT_REG_MOF)) && (this
-				.getReportValue().equals(
-						ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL) || this
-				.getReportValue().equals(ReportConst.SM_SUPPLIER_PERFORMANCE)))) {
-			getManagedBean().getRptGenBean().setSmActiveSubmissiveFromDateView(
-					true);
-			getManagedBean().getRptGenBean().setSmSubmissionDateView(true);
-		} else if (((this.getSmRegistrationType() != null)
-				&& (this.getSmRegistrationType()
-						.equals(ReportConst.RPT_REG_ALL)) && (this
-				.getReportValue().equals(
-						ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL) || this
-				.getReportValue().equals(ReportConst.SM_SUPPLIER_PERFORMANCE)))) {
-			getManagedBean().getRptGenBean().setSmActiveSubmissiveFromDateView(
-					true);
-			getManagedBean().getRptGenBean().setSmActSubmisAllDateView(true);
+		getManagedBean().getRptGenBean().setSmMofRegNoTwoView(false);
+		getManagedBean().getRptGenBean().setSmMofRegNoView(false);
+
+		if (this.getSmRegistrationType() != null) {
+			if (this.getSmRegistrationType().equals(ReportConst.RPT_REG_BASIC)) {
+
+				if (this.getReportValue().equals(
+						ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL)) {
+
+					getManagedBean().getRptGenBean()
+							.setSmActiveSubmissiveFromDateView(true);
+					getManagedBean().getRptGenBean().setSmMofRegNoTwoView(true);
+					getManagedBean().getRptGenBean().setSmActivationDateView(
+							true);
+				} else if (this.getReportValue().equals(
+						ReportConst.SM_SUPPLIER_PERFORMANCE)) {
+					getManagedBean().getRptGenBean()
+							.setSmActiveSubmissiveFromDateView(true);
+					getManagedBean().getRptGenBean().setSmActivationDateView(
+							true);
+				}
+			} else if (this.getSmRegistrationType().equals(
+					ReportConst.RPT_REG_MOF)) {
+				if (this.getReportValue().equals(
+						ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL)) {
+					getManagedBean().getRptGenBean()
+							.setSmActiveSubmissiveFromDateView(true);
+					getManagedBean().getRptGenBean().setSmMofRegNoView(true);
+					getManagedBean().getRptGenBean().setSmSubmissionDateView(
+							true);
+
+				} else if (this.getReportValue().equals(
+						ReportConst.SM_SUPPLIER_PERFORMANCE)) {
+					getManagedBean().getRptGenBean()
+							.setSmActiveSubmissiveFromDateView(true);
+					getManagedBean().getRptGenBean().setSmSubmissionDateView(
+							true);
+				}
+			} else if (this.getSmRegistrationType().equals(
+					ReportConst.RPT_REG_ALL)) {
+				if (this.getReportValue().equals(
+						ReportConst.SM_SUPPLIER_PERFORMANCE)) {
+					getManagedBean().getRptGenBean()
+							.setSmActiveSubmissiveFromDateView(true);
+					getManagedBean().getRptGenBean().setSmActSubmisAllDateView(
+							true);
+				}
+
+			}
 		}
+		/*
+		 * if (((this.getSmRegistrationType() != null) &&
+		 * (this.getSmRegistrationType() .equals(ReportConst.RPT_REG_BASIC)) &&
+		 * (this .getReportValue().equals(
+		 * ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL) || this
+		 * .getReportValue().equals(ReportConst.SM_SUPPLIER_PERFORMANCE)))) {
+		 * getManagedBean().getRptGenBean().setSmActiveSubmissiveFromDateView(
+		 * true);
+		 * getManagedBean().getRptGenBean().setSmActivationDateView(true); }
+		 * else if (((this.getSmRegistrationType() != null) &&
+		 * (this.getSmRegistrationType() .equals(ReportConst.RPT_REG_MOF)) &&
+		 * (this .getReportValue().equals(
+		 * ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL) || this
+		 * .getReportValue().equals(ReportConst.SM_SUPPLIER_PERFORMANCE)))) {
+		 * getManagedBean().getRptGenBean().setSmActiveSubmissiveFromDateView(
+		 * true);
+		 * getManagedBean().getRptGenBean().setSmSubmissionDateView(true); }
+		 * else if (((this.getSmRegistrationType() != null) &&
+		 * (this.getSmRegistrationType() .equals(ReportConst.RPT_REG_ALL)) &&
+		 * (this .getReportValue().equals(
+		 * ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL) || this
+		 * .getReportValue().equals(ReportConst.SM_SUPPLIER_PERFORMANCE)))) {
+		 * getManagedBean().getRptGenBean().setSmActiveSubmissiveFromDateView(
+		 * true);
+		 * getManagedBean().getRptGenBean().setSmActSubmisAllDateView(true); }
+		 */
 	}
 
 	/**
