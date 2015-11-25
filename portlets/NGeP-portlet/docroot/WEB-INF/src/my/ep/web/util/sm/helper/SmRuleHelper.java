@@ -19,23 +19,20 @@ public class SmRuleHelper {
 	private static SmRuleHelper instance;
 
 	public int getApplicationSubmissionDays() {
-		return 60;
+		return SmServiceLookup.getSmRuleSO()
+				.retrieveApplicationSubmissionDays()
+				.getApplicationSubmissionDays();
 	}
 
 	public int getApplicationResubmissionDays() {
-		return 60;
+		return SmServiceLookup.getSmRuleSO()
+				.retrieveApplicationReSubmissionDays()
+				.getApplicationSubmissionDays();
 	}
 
 	public int getMaxCategoryAllowed() {
-		RuleResDTO ruleResDTO = getRuleValueByRuleType(RuleTypeConst.SM_CATEGORY_MAX_LIMIT);
-		if (ruleResDTO != null && ruleResDTO.isSuccessful()
-				&& ruleResDTO.getRuleValueList() != null
-				&& ruleResDTO.getRuleValueList().size() > 0) {
-			return (Integer.parseInt(ruleResDTO.getRuleValueList().get(0)
-					.getRuleValue()));
-		} else {
-			return 30;
-		}
+		return SmServiceLookup.getSmRuleSO().retrieveMaxCategoryAllowed()
+				.getMaxCategoryAllowed();
 	}
 
 	public int getMaxMofAuthorizedUser() {
@@ -64,7 +61,7 @@ public class SmRuleHelper {
 	}
 
 	public int getRenewalNotificationDays() {
-			return 90;
+		return 90;
 	}
 
 	public int getValidRenewalDays() {
@@ -94,38 +91,24 @@ public class SmRuleHelper {
 	public int getMinPaidUpCapitalForContractor() {
 		return 2500;
 	}
-	
-	public int getYearsAllowedToAddDeletedCatCode(){
+
+	public int getYearsAllowedToAddDeletedCatCode() {
 		return 1;
 	}
 
-	private RuleResDTO getRuleValueByRuleType(String ruleType) {
-		IRuleSO ruleSO = null;
-		try {
-			ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
-			RuleReqDTO ruleReqDTO = new RuleReqDTO();
-			ruleReqDTO.setRuleType(ruleType);
-			RuleResDTO ruleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
-			return ruleResDTO;
-		} finally {
-			ruleSO = null;
-		}
-	}
-
 	public BigDecimal getProcessingFee() {
-		return SmServiceLookup.getSmRuleSO()
-				.retrieveProcessingFeeRate().getProcessingFeeRate();
+		return SmServiceLookup.getSmRuleSO().retrieveProcessingFeeRate()
+				.getProcessingFeeRate();
 	}
 
 	public BigDecimal getRegistrationFee() {
-		return SmServiceLookup.getSmRuleSO()
-				.retrieveRegistrationFeeRate().getRegistrationFeeRate();
+		return SmServiceLookup.getSmRuleSO().retrieveRegistrationFeeRate()
+				.getRegistrationFeeRate();
 	}
 
 	public BigDecimal getSoftCertFee() {
-		return SmServiceLookup.getSmRuleSO()
-				.retrieveSoftcertRate().getSoftcertRate();
+		return SmServiceLookup.getSmRuleSO().retrieveSoftcertRate()
+				.getSoftcertRate();
 	}
 
 	public static SmRuleHelper getInstance() {
@@ -134,11 +117,11 @@ public class SmRuleHelper {
 		}
 		return instance;
 	}
-	
+
 	public int getMaxSupportingDocumentSize() {
 		return 20 * 1024 * 1024;
 	}
-	
+
 	public int getMaxSoftCertDocumentSize() {
 		return 1 * 1024 * 1024;
 	}
