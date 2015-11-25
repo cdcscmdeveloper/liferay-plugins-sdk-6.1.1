@@ -55,7 +55,8 @@
 				</f:facet>
 				<ui:fragment
 					rendered="#{finance.definationType.parameterCode eq 'TS' or finance.definationType.parameterCode eq 'SD' or finance.definationType.parameterCode eq 'WF'}">
-					<h:outputText value="#{finance.qtScoreWeightage.score}" />
+					<h:outputLabel value="#{finance.qtScoreWeightage.score}"
+						style="text-align:right" />
 				</ui:fragment>
 				<ui:fragment
 					rendered="#{((finance.definationType.parameterCode eq 'UP' or finance.definationType.parameterCode eq 'NA') and finance.scoringReq)}">
