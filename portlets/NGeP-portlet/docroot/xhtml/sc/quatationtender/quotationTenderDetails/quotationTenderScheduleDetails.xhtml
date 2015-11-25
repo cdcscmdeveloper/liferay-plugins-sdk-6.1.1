@@ -26,7 +26,7 @@
 										<p:ajax event="dateSelect" process="@this"
 											listener="#{qTScheduleDetailBackingBean.handlePublishClosingDate()}"
 											update="proposalvalidityid, closingDate, publishId" />
-									</p:calendar> <h:inputText value="12:00 PM" disabled="true" size="4"
+									</p:calendar> <p:inputText value="12:00 PM" disabled="true" size="4"
 										style="width: 65px;margin-top: 1px;margin-bottom: 0px;" /></td>
 								<td><p:message id="noticePublishMsg" for="noticePublish"
 										display="icon" /></td>
@@ -64,7 +64,7 @@
 						style="width: 111px;margin-top:5px">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<h:inputText
+					</p:inputText>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<p:inputText
 						value="12:00 PM" disabled="true" size="4"
 						style="width: 65px;margin-top: 5px;margin-bottom: 0px;" /> <ac:iconTooltip
 						value="#{lbl['lbl.sc.closing.date.tooltip']}" /></td>
@@ -163,7 +163,7 @@
 				</p:column>
 			</p:dataTable>
 			<div class="ppRightBtn">
-				<p:commandButton id="samplesubaddId"
+				<p:commandButton id="samplesubaddId" styleClass="BtnSpacing"
 					value="#{lbl['lbl.sc.qt.btn.same.address']}"
 					rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 					process="@this,sampleid"
@@ -362,12 +362,12 @@
 		</p:dataTable>
 
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.add']}"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" styleClass="BtnSpacing"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 				process="@this, cpersondetailsid" partialSubmit="true"
 				action="#{qTScheduleDetailBackingBean.addContactPerson}"
 				update="cpersondetailsid" />
-			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
 				process="@this, cpersondetailsid" partialSubmit="true"
 				oncomplete="contactPersonDeletePopUp.show();"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
@@ -408,14 +408,13 @@
 				</p:selectOneMenu>
 			</p:column>
 		</p:dataTable>
-
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.add']}"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" styleClass="BtnSpacing"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 				process="@this, doaaid" partialSubmit="true"
 				action="#{qTScheduleDetailBackingBean.addDeskOfficerAdminAssistant}"
 				update="doaaid" />
-			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
 				process="@this, doaaid" partialSubmit="true"
 				oncomplete="doaaDeletePopUp.show()"
 				update="@([id$=#{doaaDeleteId}])"
