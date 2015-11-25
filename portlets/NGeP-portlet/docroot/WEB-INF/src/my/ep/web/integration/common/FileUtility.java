@@ -21,8 +21,11 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import my.ep.biz.service.integration.common.JAXBUtility;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.cm.codification.CodificationResDTO;
+import my.ep.dto.jms.common.JMSReqDTO;
+import my.ep.dto.jms.common.JMSResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.agoffice.AgOfficeReqDTO;
@@ -105,6 +108,7 @@ public class FileUtility extends InitializeSO{
 	SFTPUtility sftpUtility = new SFTPUtility();
 	OsbUtility osbUtility = new OsbUtility();
 	Encryption encryption = new Encryption();
+	JAXBUtility jaxbUtility = new JAXBUtility();
 
 	// 1GFMAS
 
@@ -1345,10 +1349,19 @@ public class FileUtility extends InitializeSO{
 			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
 			
-			sftpUtility.upload(reqDTO);
+//			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(ServiceCode.EPE04.value(),fileName);
+//			 osbUtility.osbServiceCallOutBound(ServiceCode.EPE04.value(),fileName);
+			
+			JMSReqDTO jmsReqDTO = new JMSReqDTO();
+			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
+			jmsReqDTO.setTextMessage(true);
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE04.value(),fileName));
+			
+			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
+			
+			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
 			 
 			 log.info("createEquiytyOwner end");
 
@@ -1455,10 +1468,19 @@ public class FileUtility extends InitializeSO{
 			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
 			
-			sftpUtility.upload(reqDTO);
+//			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			osbUtility.osbServiceCallOutBound(ServiceCode.EPE01.value(),fileName);
+//			osbUtility.osbServiceCallOutBound(ServiceCode.EPE01.value(),fileName);
+			
+			JMSReqDTO jmsReqDTO = new JMSReqDTO();
+			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
+			jmsReqDTO.setTextMessage(true);
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE01.value(),fileName));
+			
+			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
+			
+			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
 			
 			log.info("createConsultantProfile end");
 
@@ -1515,10 +1537,21 @@ public class FileUtility extends InitializeSO{
 			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
 			
-			sftpUtility.upload(reqDTO);
+//			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			osbUtility.osbServiceCallOutBound(ServiceCode.EPE07.value(),fileName);
+//			osbUtility.osbServiceCallOutBound(ServiceCode.EPE07.value(),fileName);
+			
+			// Call JMS send method to send to the Queue.
+			JMSReqDTO jmsReqDTO = new JMSReqDTO();
+			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
+			jmsReqDTO.setTextMessage(true);
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE07.value(),fileName));
+			
+			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
+			
+			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
+			
 			
 			log.info("createAuthorizedSignatory end");
 
@@ -1602,10 +1635,20 @@ public class FileUtility extends InitializeSO{
 			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
 			
-			sftpUtility.upload(reqDTO);
+//			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			osbUtility.osbServiceCallOutBound(ServiceCode.EPE06.value(),fileName);
+//			osbUtility.osbServiceCallOutBound(ServiceCode.EPE06.value(),fileName);
+			
+			// Call JMS send method to send to the Queue.
+			JMSReqDTO jmsReqDTO = new JMSReqDTO();
+			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
+			jmsReqDTO.setTextMessage(true);
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE06.value(),fileName));
+			
+			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
+			
+			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
 			
 			log.info("createManagementPersonnel end");
 
@@ -1683,10 +1726,20 @@ public class FileUtility extends InitializeSO{
 			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
 			
-			sftpUtility.upload(reqDTO);
+//			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			osbUtility.osbServiceCallOutBound(ServiceCode.EPE05.value(),fileName);
+//			osbUtility.osbServiceCallOutBound(ServiceCode.EPE05.value(),fileName);
+			
+			// Call JMS send method to send to the Queue.
+			JMSReqDTO jmsReqDTO = new JMSReqDTO();
+			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
+			jmsReqDTO.setTextMessage(true);
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE05.value(),fileName));
+			
+			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
+			
+			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
 			
 			log.info("createBoardOfDirector end");
 
@@ -1749,10 +1802,20 @@ public class FileUtility extends InitializeSO{
 			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
 			
-			sftpUtility.upload(reqDTO);
+//			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			osbUtility.osbServiceCallOutBound(ServiceCode.EPE08.value(),fileName);
+//			osbUtility.osbServiceCallOutBound(ServiceCode.EPE08.value(),fileName);
+			
+			// Call JMS send method to send to the Queue.
+			JMSReqDTO jmsReqDTO = new JMSReqDTO();
+			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
+			jmsReqDTO.setTextMessage(true);
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE08.value(),fileName));
+			
+			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
+			
+			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
 			
 			log.info("createBranchCompany end");
 
@@ -1809,10 +1872,20 @@ public class FileUtility extends InitializeSO{
 			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
 			
-			sftpUtility.upload(reqDTO);
+//			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			osbUtility.osbServiceCallOutBound(ServiceCode.EPE09.value(),fileName);
+//			osbUtility.osbServiceCallOutBound(ServiceCode.EPE09.value(),fileName);
+			
+			// Call JMS send method to send to the Queue.
+			JMSReqDTO jmsReqDTO = new JMSReqDTO();
+			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
+			jmsReqDTO.setTextMessage(true);
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE09.value(),fileName));
+			
+			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
+			
+			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
 			
 			log.info("createRegisteredCategory end");
 
@@ -1878,10 +1951,20 @@ public class FileUtility extends InitializeSO{
 			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
 			
-			sftpUtility.upload(reqDTO);
+//			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			osbUtility.osbServiceCallOutBound(ServiceCode.EPE10.value(),fileName);
+//			osbUtility.osbServiceCallOutBound(ServiceCode.EPE10.value(),fileName);
+			
+			// Call JMS send method to send to the Queue.
+			JMSReqDTO jmsReqDTO = new JMSReqDTO();
+			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
+			jmsReqDTO.setTextMessage(true);
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE10.value(),fileName));
+			
+			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
+			
+			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
 			log.info("createGovernmentProject end");
 			
 
@@ -1934,10 +2017,20 @@ public class FileUtility extends InitializeSO{
 			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
 			
-			sftpUtility.upload(reqDTO);
+//			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			osbUtility.osbServiceCallOutBound(ServiceCode.EPE11.value(),fileName);
+//			osbUtility.osbServiceCallOutBound(ServiceCode.EPE11.value(),fileName);
+			
+			// Call JMS send method to send to the Queue.
+			JMSReqDTO jmsReqDTO = new JMSReqDTO();
+			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
+			jmsReqDTO.setTextMessage(true);
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE11.value(),fileName));
+			
+			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
+			
+			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
 			
 			log.info("createDeletedCompany end");
 
@@ -2010,10 +2103,20 @@ public class FileUtility extends InitializeSO{
 			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
 			
-			sftpUtility.upload(reqDTO);
+//			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			osbUtility.osbServiceCallOutBound(ServiceCode.EPE03.value(),fileName);
+//			osbUtility.osbServiceCallOutBound(ServiceCode.EPE03.value(),fileName);
+			
+			// Call JMS send method to send to the Queue.
+			JMSReqDTO jmsReqDTO = new JMSReqDTO();
+			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
+			jmsReqDTO.setTextMessage(true);
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE03.value(),fileName));
+			
+			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
+			
+			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
 			
 			log.info("createCompanyOwner end");
 
@@ -2085,10 +2188,20 @@ public class FileUtility extends InitializeSO{
 			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
 			
-			sftpUtility.upload(reqDTO);
+//			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			osbUtility.osbServiceCallOutBound(ServiceCode.EPE02.value(),fileName);
+//			osbUtility.osbServiceCallOutBound(ServiceCode.EPE02.value(),fileName);
+			
+			// Call JMS send method to send to the Queue.
+			JMSReqDTO jmsReqDTO = new JMSReqDTO();
+			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
+			jmsReqDTO.setTextMessage(true);
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE02.value(),fileName));
+			
+			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
+			
+			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
 			
 			log.info("createAssociatedCompany end");
 
@@ -2556,6 +2669,7 @@ public class FileUtility extends InitializeSO{
 		return gfmasErrorList;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public void setValuesToPmInterface(BatchReqDTO reqDTO){
 	
 		PmInterfaceLog pmInterfaceLog = new PmInterfaceLog();
