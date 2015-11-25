@@ -210,7 +210,7 @@
 						<h:outputText value="#{member.grade}" />
 					</p:column>
 
-					<p:column style="width : 6%;">
+					<p:column style="width : 8%;">
 						<f:facet name="header">
 							<h:outputText value="#{lbl['lbl.sc.pnp']}" />
 							<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
@@ -219,7 +219,7 @@
 							value="#{lbl[member.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.consolidate']}">
+					<p:column headerText="#{lbl['lbl.sc.consolidate']}" style="width : 12%;">
 						<h:outputText
 							value="#{lbl[member.consolidateValue ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 					</p:column>
