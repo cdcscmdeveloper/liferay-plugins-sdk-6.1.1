@@ -660,7 +660,7 @@
 													itemValue="#{lbl['lbl.rpt.approved']}"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.rejected']}"
 													itemValue="#{lbl['lbl.rpt.rejected']}"></f:selectItem>
-													<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
+													<p:ajax event="change" listener="#{reportBackingBean.applicationStatusChange}" partialSubmit="true"	update="@form" />
 											</p:selectOneMenu></td>
 										<td><p:message id="appStatusMsg" for="ApplicationStatus"
 												display="icon" showDetail="false"/></td>
@@ -680,7 +680,7 @@
 													itemValue="#{lbl['lbl.rpt.approved']}"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.rejected']}"
 													itemValue="#{lbl['lbl.rpt.rejected']}"></f:selectItem>
-													<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
+													<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
