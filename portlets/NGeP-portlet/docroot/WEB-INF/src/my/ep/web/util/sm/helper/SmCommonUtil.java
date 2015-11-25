@@ -1878,7 +1878,7 @@ public class SmCommonUtil {
 	 * @return BigDecimal
 	 */
 	public static BigDecimal getGstCurrentRate() {
-		return SmServiceLookup.getPaymentSO().retrieveGstCurrentRate()
+		return SmServiceLookup.getSmRuleSO().retrieveGstCurrentRate()
 				.getGstCurrRate();
 	}
 

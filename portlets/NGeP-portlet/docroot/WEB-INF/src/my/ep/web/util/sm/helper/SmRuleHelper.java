@@ -114,17 +114,17 @@ public class SmRuleHelper {
 	}
 
 	public BigDecimal getProcessingFee() {
-		return SmServiceLookup.getPaymentSO()
+		return SmServiceLookup.getSmRuleSO()
 				.retrieveProcessingFeeRate().getProcessingFeeRate();
 	}
 
 	public BigDecimal getRegistrationFee() {
-		return SmServiceLookup.getPaymentSO()
+		return SmServiceLookup.getSmRuleSO()
 				.retrieveRegistrationFeeRate().getRegistrationFeeRate();
 	}
 
 	public BigDecimal getSoftCertFee() {
-		return SmServiceLookup.getPaymentSO()
+		return SmServiceLookup.getSmRuleSO()
 				.retrieveSoftcertRate().getSoftcertRate();
 	}
 
