@@ -82,22 +82,21 @@
 				</ui:fragment>
 			</p:column>
 		</p:dataTable>
-	
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.download.all']}" ajax="false"
+			<p:commandButton value="#{lbl['lbl.btn.download.all']}" ajax="false" styleClass="BtnSpacing"
 				action="#{qTDocumentsBackingBean.downloadAllReports}" />
 			<p:commandButton value="#{lbl['lbl.btn.clone']}"
 				actionListener="#{qTDocumentsBackingBean.cloneDocumentPopupAction}"
 				oncomplete="screen2.show();" process="@this"
-				update="@(.clonedocument)"
+				update="@(.clonedocument)" styleClass="BtnSpacing"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_DOCUMENTS)}" />
-			<p:commandButton value="#{lbl['lbl.btn.add']}"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" styleClass="BtnSpacing"
 				process="@this, doctbl" partialSubmit="true"
 				action="#{qTDocumentsBackingBean.addDocumentList}"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_DOCUMENTS)}"
 				oncomplete="documentWidget.paginator.endLink.click();"
 				update="doctbl" />
-			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
 				process="@this, doctbl" partialSubmit="true"
 				update="@([id$=#{documentDeleteId}])"
 				oncomplete="documentDeletePopUp.show();"
@@ -108,7 +107,7 @@
 		</div>
 		<ac:confirmationPopup id="documentDeleteId"
 				widget="documentDeletePopUp"
-				okAction="qTDocumentsBackingBean.markDeleteSelectedRowsAction(qTDocumentsBackingBean.managedBean.scQtDocReportList, qTDocumentsBackingBean.managedBean.markDeletedScQtDocReportList)" width="400"
+				okAction="qTDocumentsBackingBean.markDeleteSelectedRowsAction(qTDocumentsBackingBean.managedBean.scQtDocReportList, qTDocumentsBackingBean.managedBean.markDeletedScQtDocReportList)" width="33%"
 				height="100" title="#{lbl['lbl.sc.document.list']}"
 				content="#{lbl['lbl.sc.dialog.confirm.document.dtls']}" update="@form" />
 	</p:panel>
