@@ -1871,6 +1871,12 @@ public class QTDetailBackingBean extends
 			ScQt qt = qtReqDTO.getQtdetail();
 			// Fix for Other Approval Validations on submit only
 			qt.setOtherApproval(true);
+			
+			if (!ParameterConst.PROCUREMENT_CATEGORY_UBATAN_DAN_BAHAN_KIMIA
+					.equalsIgnoreCase(qt.getPmProcurementCategory().getParameterCode())) {
+				qt.setMitiApproval(true);
+				//qt.setMitiApproval(true);
+			}
 
 			Long currentStatus = qt.getQtStatus().getStatusId();
 			if (currentStatus
@@ -3776,6 +3782,7 @@ public class QTDetailBackingBean extends
 	 */
 	public void qtDetailsTabChange(Integer activeIndex) {
 		int priviousIndex = this.getManagedBean().getActiveIndex();
+		getManagedBean().getQt().setMitiApproval(false);
 		getManagedBean().getQt().setOtherApproval(false);
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
