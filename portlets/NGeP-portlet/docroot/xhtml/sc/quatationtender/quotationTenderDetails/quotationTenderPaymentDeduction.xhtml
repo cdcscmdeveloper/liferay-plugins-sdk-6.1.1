@@ -54,13 +54,13 @@
 
 		</p:dataTable>
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.add']}"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" styleClass="BtnSpacing"
 				process="@this, deductPaymentTblId" partialSubmit="true"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_DEDUCTIONPAYMENT)}"
 				action="#{qTDeductionPaymentBackingBean.addDeductionPaymentAction}"
 				oncomplete="deductPaymentTblWidget.paginator.endLink.click();"
 				update="deductPaymentTblId" />
-			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_DEDUCTIONPAYMENT)}"
 				process="@this, deductPaymentTblId" partialSubmit="true"
 				oncomplete="deductionPayDeletePopUp.show();"
@@ -119,13 +119,13 @@
 			<div class="ppRightBtn">
 				<h:panelGroup
 					rendered="#{!empty qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction and qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers}">
-					<p:commandButton value="#{lbl['lbl.btn.add']}"
+					<p:commandButton value="#{lbl['lbl.btn.add']}" styleClass="BtnSpacing"
 						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_DEDUCTIONPAYMENT)}"
 						process="@this, deductClauseTbl" partialSubmit="true"
 						action="#{qTDeductionPaymentBackingBean.addDeductionClauseAction}"
 						oncomplete="deductClauseTblWidget.paginator.endLink.click();"
 						update="deductClauseTbl" />
-					<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
 						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_DEDUCTIONPAYMENT)}"
 						process="@this, deductClauseTbl" partialSubmit="true"
 						oncomplete="deductionClauseDeletePopUp.show();"
