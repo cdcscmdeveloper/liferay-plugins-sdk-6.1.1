@@ -16,7 +16,7 @@
 			test="#{qTCommitteBackingBean.managedBean.committeMember.userSelection eq 'E' }">
 			<p:panel id="usersearchpnlid" header="#{lbl['lbl.sc.search']}"
 				toggleable="true">
-				<table>
+				<table style="width: 100%;">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.name']}" /></td>
 						<td colspan="3"><p:inputText
@@ -24,7 +24,7 @@
 								size="64" /></td>
 					</tr>
 					<tr>
-						<td style="width: 126px;"><p:outputLabel
+						<td><p:outputLabel
 								value="#{lbl['lbl.sc.id.type']}" /></td>
 						<td colspan="3"><p:selectOneMenu
 								value="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.identificationType}"
@@ -100,14 +100,11 @@
 							style="width: 110px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
-
 							<f:selectItems var="role"
 								value="#{qTCommitteBackingBean.getRoleTypeDropdownValues(existcommitteeuser.PMP)}"
 								itemLabel="#{role.codeName}"
 								itemValue="#{role.pmParameter.parameterId}" />
-
-							<p:ajax event="change" partialSubmit="true">
-							</p:ajax>
+							<p:ajax event="change" partialSubmit="true"/>
 						</p:selectOneMenu>
 					</p:column>
 				</p:dataTable>
@@ -202,12 +199,12 @@
 			</p:panel>
 		</c:if>
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.ok']}"
+			<p:commandButton value="#{lbl['lbl.btn.ok']}" styleClass="BtnSpacing"
 				action="#{qTCommitteBackingBean.okCommitteeAction}"
 				update="@(.scMemberDtl)" />
 
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-				styleClass="apply_button"
+				styleClass="BtnSpacing"
 				oncomplete="newspecificationcommittee.hide();"
 				update="@(.scMemberDtl)" />
 		</div>
