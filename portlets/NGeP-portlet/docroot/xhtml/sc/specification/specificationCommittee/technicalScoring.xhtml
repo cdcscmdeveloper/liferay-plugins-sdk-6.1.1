@@ -57,7 +57,7 @@
 					<ac:iconTooltip id="technicalScoringMaxScore#{index}SC"
 						value="#{lbl['lbl.sc.spec.max.score.tooltip']}" />
 				</f:facet>
-				<h:outputText value="#{tech.qtScoreWeightage.score}"
+				<h:outputLabel value="#{tech.qtScoreWeightage.score}" style="text-align:right"
 					rendered="#{tech.definationType.parameterCode eq 'TS' or tech.definationType.parameterCode eq 'SD' or tech.definationType.parameterCode eq 'WF'}" />
 				<p:inputText value="#{tech.qtScoreWeightage.score}"
 					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
