@@ -92,16 +92,12 @@
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.phoneno']}" /></td>
 					<td>
-						<ac:labelPhone countryCode="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.phoneCountry}" 
-							areaCode="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.phoneArea}"
-							number="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.phoneNo}" />
+						<ac:labelPhone fullNo="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.phoneFull}"/>
 					</td>
 					
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.faxno']}" /></td>
 					<td>
-						<ac:labelPhone countryCode="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.faxCountry}" 
-							areaCode="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.faxArea}"
-							number="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.faxNo}" />
+						<ac:labelPhone fullNo="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.faxFull}" />
 					</td>
 				</tr>
 				<tr>

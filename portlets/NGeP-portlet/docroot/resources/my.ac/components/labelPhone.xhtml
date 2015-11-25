@@ -6,16 +6,20 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<cc:interface>
-		<cc:attribute name="countryCode" required="true" />
-		<cc:attribute name="areaCode" default="true"/>
-		<cc:attribute name="number" required="true" />
+		<cc:attribute name="fullNo" />
+		<cc:attribute name="countryCode" />
+		<cc:attribute name="areaCode"/>
+		<cc:attribute name="number"/>
 		<cc:attribute name="rendered" default="true"/>
 		<cc:attribute name="styleClass" default="outputLabel-view"/>
 	</cc:interface>
 
 	<cc:implementation>
-		<p:outputPanel rendered="#{not empty cc.attrs.number}">
+		<p:outputPanel rendered="#{empty cc.attrs.fullNo and not empty cc.attrs.number}">
 			<h:outputLabel value="+#{cc.attrs.countryCode}  #{cc.attrs.areaCode}-#{cc.attrs.number}" styleClass="#{cc.attrs.styleClass}" />
+		</p:outputPanel>
+		<p:outputPanel rendered="#{not empty cc.attrs.fullNo}">
+			<h:outputLabel value="#{cc.attrs.fullNo}" styleClass="#{cc.attrs.styleClass}" />
 		</p:outputPanel>
 	</cc:implementation>
 
