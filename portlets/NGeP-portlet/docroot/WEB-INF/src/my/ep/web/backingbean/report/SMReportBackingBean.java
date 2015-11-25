@@ -148,8 +148,10 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			    rptGenBean.generateCommonYearList();
 			    getManagedBean().setMonthMap(rptGenBean.getMonthMap());
 	        	rptGenBean.setSmExtraTwoColumnView(true);
-				rptGenBean.setSmMandatoryReportTypeView(true);
+				//rptGenBean.setSmMandatoryReportTypeView(true);
 				rptGenBean.setSmFromMonthView(true);
+				rptGenBean.setSmMandatoryCreatedFromYearView(true);
+				rptGenBean.setSmMandatoryYearFromReportTypeView(true);
 				//rptGenBean.setSmMandatoryFromDateView(true);
 				//rptGenBean.setSmMandatoryDateView(true);
 				//rptGenBean.setSmMandatoryCreatedFromYearView(true);				
