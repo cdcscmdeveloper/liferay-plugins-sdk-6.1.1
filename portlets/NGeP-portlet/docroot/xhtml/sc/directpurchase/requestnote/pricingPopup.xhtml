@@ -8,7 +8,7 @@
 		header="#{lbl['lbl.sc.pricing']}" dynamic="true"
 		width="700" resizable="false" styleClass="pop_up_top" closable="false">
 		<h:panelGroup>
-			<table style="width: 550px">
+			<table style="width: 100%">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.supp.name']}" /></td>
 					<td><p:inputText disabled="true" size="46"
@@ -40,8 +40,7 @@
 		</h:panelGroup>
 
 		<h:panelGroup>
-			<p:spacer height="15px" />
-			<p:dataTable id="priceDtl" var="itemPrice"
+			<p:dataTable id="priceDtl" var="itemPrice" styleClass="BtnSpacing"
 				value="#{requestNoteBackingBean.managedBean.pricingList}"
 				rowKey="#{itemPrice}" rowIndexVar="index">
 				<p:column headerText="#{lbl['lbl.sc.zone']}" style="width:45%"
@@ -70,8 +69,7 @@
 
 			</p:dataTable>
 		</h:panelGroup>
-		<p:spacer height="3px"/>
-		<div class="ppRightBtn">
+		<div class="ppRightBtn BtnSpacing">
 			<p:commandButton value="#{lbl['lbl.sc.close']}" partialSubmit="true"
 				process="@this" onclick="pricingPopup.hide()" />
 		</div>

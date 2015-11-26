@@ -45,7 +45,7 @@
 						value="#{lbl['lbl.sc.price.inquiry.desc']}" /></td>
 				<td colspan="4"><p:inputTextarea disabled="true"
 						value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.itemDesc}"
-						rows="2" cols="122" style="margin-bottom: 5px; width: 300px;" /></td>
+						rows="2" cols="122" style="margin-bottom: 5px; width: 352px;" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
@@ -92,7 +92,7 @@
 				   <table>
 						   <tr>
 								<td><p:selectOneMenu required="true" id="priceType"
-										style="margin-bottom: 5px; width: 185px;"
+										style="margin-bottom: 5px; width: 213px;"
 										label="#{lbl['lbl.sc.price.inquiry.price.type']}"
 										disabled="#{!isPendingSubmissionStatus}"
 										value="#{purchaseInquiryBackingBean.managedBean.priceType}">
@@ -164,7 +164,8 @@
 						 <td>
 							<table>
 								<tr>
-								  <td><p:selectOneRadio style="margin-bottom: 5px;"
+								  <td><p:selectOneRadio styleClass="commonLabel" 
+								        style="margin-bottom: 5px;"
 										id="procType" required="true"
 										label="#{lbl['lbl.sc.procurement.type']}"
 										value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode}">
@@ -221,24 +222,33 @@
 	<p:panel header="#{lbl['lbl.sc.price.inquiry.header.response.detail']}" toggleable="true">
 		 <table style="width: 100%">
 			<tr>
-				<td style="width: 18%;">
+				<td style="width: 19%;">
 					<p:outputLabel value="#{lbl['lbl.sc.price.inquiry.stock.avail']}" />
 					<p:outputLabel value="*" styleClass="mandatory"  rendered="#{isPendingSupplierRespStatus}"/>
 				</td>
 				<td>
-				<h:panelGrid  styleClass="noBorder" border="0" cellpadding="0" cellspacing="0" width="100%" columns="1">
-					<h:column>
-						<p:selectOneRadio  id="stockAvailable"  label="#{lbl['lbl.sc.price.inquiry.stock.avail']}"
-						    disabled="#{!isPendingSupplierRespStatus}"
-							value="#{purchaseInquiryBackingBean.managedBean.stockAvailable}"
-						     required="#{!purchaseInquiryBackingBean.isRequisitioner()}">
-							<f:selectItem itemLabel="#{lbl['lbl.sc.price.inquiry.yes']}" itemValue="1" />
-							<f:selectItem itemLabel="#{lbl['lbl.sc.price.inquiry.no']}" itemValue="0" />
-							 <p:ajax event="change" update="respDtl" process="@this" listener="#{purchaseInquiryBackingBean.stockAvailabilityEvent}"  partialSubmit="true"/>
-						</p:selectOneRadio>
-						<p:message id="stockAvailableMsg" for="stockAvailable" display="icon"/>
-					</h:column>
-				</h:panelGrid>
+					<table>
+						<tr>
+							<td><p:selectOneRadio styleClass="commonLabel"
+									id="stockAvailable"
+									label="#{lbl['lbl.sc.price.inquiry.stock.avail']}"
+									disabled="#{!isPendingSupplierRespStatus}"
+									value="#{purchaseInquiryBackingBean.managedBean.stockAvailable}"
+									required="#{!purchaseInquiryBackingBean.isRequisitioner()}">
+									<f:selectItem itemLabel="#{lbl['lbl.sc.price.inquiry.yes']}"
+										itemValue="1" />
+									<f:selectItem itemLabel="#{lbl['lbl.sc.price.inquiry.no']}"
+										itemValue="0" />
+									<p:ajax event="change" update="respDtl" process="@this"
+										listener="#{purchaseInquiryBackingBean.stockAvailabilityEvent}"
+										partialSubmit="true" />
+								</p:selectOneRadio></td>
+							<td style="margin-top: -3px"><p:message
+									id="stockAvailableMsg" for="stockAvailable" display="icon" /></td>
+						</tr>
+					</table>
+
+
 				</td>
 			</tr>
 		</table>
@@ -287,7 +297,7 @@
 	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true">
 	  <table style="width: 100%">
 		<tr>
-			<td class="TableFieldLeft" width="13%"></td>
+			<td class="TableFieldLeft" width="15%"></td>
 			
 			<td class="TableFieldRight">
 				<p:dataGrid id="catatan" value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.remarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
