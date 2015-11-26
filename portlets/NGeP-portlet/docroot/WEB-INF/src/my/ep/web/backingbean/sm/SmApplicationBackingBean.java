@@ -7386,6 +7386,7 @@ public class SmApplicationBackingBean extends
 	 * @return
 	 */
 	public void onBlurSetMofNo(Object obj) {
+		String mofNo = "";
 		try {
 			Object objRegNoVal = PropertyUtils.getProperty(obj, "regNo");
 			if (objRegNoVal != null) {
@@ -7395,12 +7396,13 @@ public class SmApplicationBackingBean extends
 						.retriveMofAccountBySupplierRegNo(reqDTO)
 						.getMofAccount();
 				if (acc != null) {
-					PropertyUtils.setProperty(obj, "mofNo", acc.getMofNo());
+					mofNo = acc.getMofNo();
 				}
 			}
+			PropertyUtils.setProperty(obj, "mofNo", mofNo);
 		} catch (IllegalAccessException | InvocationTargetException
 				| NoSuchMethodException e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 		}
 	}
 
