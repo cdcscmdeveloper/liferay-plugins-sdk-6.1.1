@@ -8,22 +8,14 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
-<style type="text/css">
-   .ui-state-hover{
-     background:none !important;
-     border:none !important;
-  	 background-color: none !important;
-	 box-shadow: none !important;
-   }
-</style>
+
 	<ui:define name="contentSection">
 	<!-- 	<ac:title value="#{lbl['lbl.sc.notice.board.self.registration']}" /> -->
 		<div class="clear"></div>
 		<p:messages id="supplierReg" showDetail="true" showSummary="false"
 			autoUpdate="true" closable="true" />
 		<h:panelGrid style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
+			styleClass="noBorders tr,noBorders td" >
 			<p:row>
 				<p:column width="100%" style="text-align:left">
 					<p:commandButton value="#{lbl['lbl.btn.back']}"
@@ -39,9 +31,7 @@
 						rendered="#{noticeBoardBackingBean.managedBean.renderRegisterBtn}" />
 				</h:panelGroup>
 				</p:column>
-
 			</p:row>
-
 		</h:panelGrid>
 		
 		<p:panel  header="#{lbl['lbl.sc.notice.board.supplier.info']}" toggleable="true">
@@ -79,9 +69,13 @@
 		<c:if test="#{noticeBoardBackingBean.managedBean.scQt.zonal}">
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr>
-					<td width="20%" valign="top"><p:tabMenu styleClass="sidemenu"
+					<td width="20%" valign="top" class="sidemenutd">
+					<p:remoteCommand
+							name="bsvZoneTabChangeAction" update="@form" partialSubmit="true"
+							process="@this" action="#{noticeBoardBackingBean.bsvZoneTabChangeAction}" />
+					<p:tabMenu styleClass="sidemenu"
 							activeIndex="#{noticeBoardBackingBean.managedBean.selectedZoneTabIndex}"
-							model="#{noticeBoardBackingBean.managedBean.zoneMenuModel}" style="margin-right:20px;"/></td>
+							model="#{noticeBoardBackingBean.managedBean.zoneMenuModel}"/></td>
 					<td width="80%"><ui:param name="bsvDetails"
 							value="#{noticeBoardBackingBean.managedBean.normalBsvBean}" /> <ui:include
 							src="/xhtml/sc/noticeboard/bsvregistration/supplierRegistrationDtls.xhtml" /></td>
