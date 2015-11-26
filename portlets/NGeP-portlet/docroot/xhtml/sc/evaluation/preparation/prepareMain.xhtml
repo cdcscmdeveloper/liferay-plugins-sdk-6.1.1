@@ -54,33 +54,28 @@
 	<table style="width: 100%">
 		<tr>
 			<td></td>
-			<td>
-				<div align="right" style="width: 99%">
-					<ui:fragment
-						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' or evaluationBackingBean.managedBean.committeeType eq 'OC'}">
-						<p:commandButton value="#{lbl['lbl.btn.next']}" iconPos="right"
-							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							actionListener="#{evaluationBackingBean.setTabValue(0,1)}"
-							action="#{evaluationBackingBean.updateSmAppl}" update=":form" />
-					</ui:fragment>
-
-					<ui:fragment
-						rendered="#{((evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.evaluationStageStatusHide) or (evaluationBackingBean.managedBean.committeeType eq 'FEC' and evaluationBackingBean.managedBean.evaluationStageStatusHide))}">
-						<p:commandButton value="#{lbl['lbl.btn.next']}" iconPos="right"
-							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							actionListener="#{evaluationBackingBean.setTabValue(0,2)}"
-							action="#{evaluationBackingBean.updateSmAppl}" update=":form" />
-					</ui:fragment>
-
-					<ui:fragment
-						rendered="#{((evaluationBackingBean.managedBean.committeeType eq 'TEC' and !evaluationBackingBean.managedBean.evaluationStageStatusHide) or (evaluationBackingBean.managedBean.committeeType eq 'FEC' and !evaluationBackingBean.managedBean.evaluationStageStatusHide))}">
-						<p:commandButton value="#{lbl['lbl.btn.next']}" iconPos="right"
-							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							actionListener="#{evaluationBackingBean.setTabValue(0,4)}"
-							action="#{evaluationBackingBean.updateSmAppl}" update=":form" />
-					</ui:fragment>
-				</div>
-			</td>
+			<td><ui:fragment
+					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' or evaluationBackingBean.managedBean.committeeType eq 'OC'}">
+					<p:commandButton value="#{lbl['lbl.btn.next']}" iconPos="right"
+						styleClass="BtnSpacing" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();" style="float:right;"
+						actionListener="#{evaluationBackingBean.setTabValue(0,1)}"
+						action="#{evaluationBackingBean.updateSmAppl}" update=":form" />
+				</ui:fragment> <ui:fragment
+					rendered="#{((evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.evaluationStageStatusHide) or (evaluationBackingBean.managedBean.committeeType eq 'FEC' and evaluationBackingBean.managedBean.evaluationStageStatusHide))}">
+					<p:commandButton value="#{lbl['lbl.btn.next']}" iconPos="right"
+						styleClass="BtnSpacing" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();" style="float:right;"
+						actionListener="#{evaluationBackingBean.setTabValue(0,2)}"
+						action="#{evaluationBackingBean.updateSmAppl}" update=":form" />
+				</ui:fragment> <ui:fragment
+					rendered="#{((evaluationBackingBean.managedBean.committeeType eq 'TEC' and !evaluationBackingBean.managedBean.evaluationStageStatusHide) or (evaluationBackingBean.managedBean.committeeType eq 'FEC' and !evaluationBackingBean.managedBean.evaluationStageStatusHide))}">
+					<p:commandButton value="#{lbl['lbl.btn.next']}" iconPos="right"
+						styleClass="BtnSpacing" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();" style="float:right;"
+						actionListener="#{evaluationBackingBean.setTabValue(0,4)}"
+						action="#{evaluationBackingBean.updateSmAppl}" update=":form" />
+				</ui:fragment></td>
 		</tr>
 	</table>
 
