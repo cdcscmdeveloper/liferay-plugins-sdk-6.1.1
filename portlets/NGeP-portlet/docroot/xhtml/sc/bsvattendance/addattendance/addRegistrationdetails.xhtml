@@ -18,14 +18,11 @@
 				update="@([id$=attendanceDetailstbl],[id$=regDelteBtn],[id$=attendanceNavInfo])"
 				process="@this" />
 
-
-
 			<p:column headerText="#{lbl['lbl.sc.supplier.name']}"
 				filterBy="#{scQtBriefReg.supplier.companyName}">
 
 				<h:outputText value="#{scQtBriefReg.supplier.companyName}" />
 			</p:column>
-
 
 		</p:dataTable>
 
@@ -152,14 +149,12 @@
 						update="@this"></p:ajax>
 				</p:inputText>
 			</p:column>
-			<p:column style="width:6%;white-space: normal;">
+			<p:column style="width:6%;white-space: normal; text-align:center;">
 				<p:selectBooleanCheckbox value="#{scQtBriefAttendace.attended}"
 					disabled="#{(bsvAttendanceBackingBean.managedBean.maintanceFlow and !scQtBriefAttendace.brandNew ) or !scQtBriefAttendace.authorized}">
 					<p:ajax event="change" process="@this" partialSubmit="true"
 						update="@this"></p:ajax>
 				</p:selectBooleanCheckbox>
-
-
 			</p:column>
 		</p:dataTable>
 			
