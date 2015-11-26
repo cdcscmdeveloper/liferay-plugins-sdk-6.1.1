@@ -22,7 +22,7 @@
 			editable="true" rowIndexVar="index" rowKey="#{meetingAttendance}">
 			<ac:paginator for="turuthadir" />
 
-			<!-- 	<p:column selectionMode="multiple" style="width:2%"></p:column> -->
+
 
 			<p:column style="width:2px;">
 				<f:facet name="header">
@@ -74,15 +74,16 @@
 
 
 		</p:dataTable>
-		<p:spacer height="10"></p:spacer>
+
 		<div align="right">
-			<p:commandButton id="turutbutton"
+			<p:commandButton id="turutbutton" styleClass="BtnSpacing"
 				disabled="#{evaluationBackingBean.managedBean.readOnly}"
 				value="#{lbl['lbl.btn.add']}" process="@this,turuthadir"
 				partialSubmit="true" update="turuthadir"
 				oncomplete="tirutWidget.paginator.endLink.click();"
 				action="#{evaluationBackingBean.addTurutDetails}" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				styleClass="BtnSpacing"
 				disabled="#{evaluationBackingBean.managedBean.readOnly}"
 				oncomplete="evaluationMeetingAttendanceDeletePopUp.show();"
 				update="@([id$=#{evaluationmeetingAttendanceDeleteId}])"
