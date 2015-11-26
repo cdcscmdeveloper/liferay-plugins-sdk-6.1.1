@@ -105,7 +105,7 @@ public class FileUtility extends InitializeSO{
 	
 	private static final String valuestar =".*";
 	
-	SFTPUtility sftpUtility = new SFTPUtility();
+//	SFTPUtility sftpUtility = new SFTPUtility();
 	OsbUtility osbUtility = new OsbUtility();
 	Encryption encryption = new Encryption();
 	JAXBUtility jaxbUtility = new JAXBUtility();
