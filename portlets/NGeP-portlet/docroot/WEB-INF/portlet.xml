@@ -3902,7 +3902,7 @@
 	 	</portlet-class>
 	 	<init-param>
 	 		<name>javax.portlet.faces.defaultViewId.view</name>
-	 		<value>/xhtml/sc/supplierproposal/prerenderSupplierPropsal.xhtml</value>
+	 		<value>/xhtml/sc/supplierProposal/proposalCommon/supplierPropsalPrerender.xhtml</value>
 	 	</init-param>
 	 	<expiration-cache>0</expiration-cache>
 	 	<supports>

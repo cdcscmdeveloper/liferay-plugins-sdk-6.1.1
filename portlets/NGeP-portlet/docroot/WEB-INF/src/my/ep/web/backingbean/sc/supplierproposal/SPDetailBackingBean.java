@@ -138,32 +138,34 @@ import com.liferay.portal.util.PortalUtil;
 @RequestScoped
 public class SPDetailBackingBean extends
 		SourcingBaseBackingBean<SPDetailManagedBean> {
+	// Proposal 
+	private static final String NAV_TO_PROPOSAL_MAIN_PAGE = "/xhtml/sc/supplierProposal/proposalCommon/supplierProposalMain.xhtml";
 
 	// Technical Proposal
-	private static final String NAV_TO_TECHNICAL_STANDARD_PRODUCT_PAGE = "/xhtml/sc/supplierproposal/technicalSpecification.xhtml";
-	private static final String NAV_TO_NON_FEDERAL_GOVT_PAGE = "/xhtml/sc/supplierproposal/technicalNonFederalGovt.xhtml";
-	private static final String NAV_TO_FEDERAL_GOVT_PAGE = "/xhtml/sc/supplierproposal/technicalFederalGovt.xhtml";
-	private static final String NAV_TO_TECHNICAL_EMPL_LIST_PAGE = "/xhtml/sc/supplierproposal/technicalEmployeeList.xhtml";
-	private static final String NAV_TO_NO_OF_EMPLOYEE__PAGE = "/xhtml/sc/supplierproposal/technicalNoOfEmployee.xhtml";
-	private static final String NAV_TO_SAMPLING_ADDRESS_PAGE = "/xhtml/sc/supplierproposal/technicalSamplingAddress.xhtml";
-
+	private static final String NAV_TO_TECHNICAL_CHECKLIST_MAIN_PAGE = "/xhtml/sc/supplierProposal/technicalProposal/techinicalChecklistmain.xhtml";
+	private static final String NAV_TO_TECHNICAL_STANDARD_PRODUCT_PAGE = "/xhtml/sc/supplierProposal/technicalProposal/technicalSpecification.xhtml";
+	private static final String NAV_TO_NON_FEDERAL_GOVT_PAGE = "/xhtml/sc/supplierProposal/technicalProposal/technicalNonFederalGovt.xhtml";
+	private static final String NAV_TO_NO_OF_EMPLOYEE__PAGE = "/xhtml/sc/supplierProposal/technicalProposal/technicalNoOfEmployee.xhtml";
+	private static final String NAV_TO_SAMPLING_ADDRESS_PAGE = "/xhtml/sc/supplierProposal/technicalProposal/technicalSamplingAddress.xhtml";
+	private static final String NAV_TO_FEDERAL_GOVT_PAGE = "/xhtml/sc/supplierProposal/technicalProposal/technicalFederalGovt.xhtml";
+	private static final String NAV_TO_TECHNICAL_EMPL_LIST_PAGE = "/xhtml/sc/supplierProposal/technicalProposal/technicalEmployeeList.xhtml";
+	
 	// Financial Proposal
-	private static final String NAV_TO_FINANCE_STATNDARD_PRODUCT_PAGE = "/xhtml/sc/supplierproposal/financialSpecification.xhtml";
-
-	private static final String NAV_TO_MORE_THAN_PROPOSAL_PAGE = "/xhtml/sc/supplierproposal/financialSpecMoreProposal.xhtml";
-	private static final String NAV_TO_ZONE_MORE_THAN_PROPOSAL_PAGE = "/xhtml/sc/supplierproposal/financialMoreZone.xhtml";
-
-	private static final String NAV_TO_SUPPLIER_DETAILS_PAGE = "/xhtml/sc/supplierproposal/financialSupplierDetails.xhtml";
-	private static final String NAV_TO_CREDIT_FACILITIES_PAGE = "/xhtml/sc/supplierproposal/financialCreditFacilities.xhtml";
-	private static final String NAV_TO_CASH_ON_HAND_PAGES = "/xhtml/sc/supplierproposal/financialCashOnHand.xhtml";
-	private static final String NAV_TO_GOVT_COMPANY_EXPERIENCE_PAGE = "/xhtml/sc/supplierproposal/financialFederalGovt.xhtml";
-	private static final String NAV_TO_NON_GOVT_COMPANY_EXPERIENCE_PAGE = "/xhtml/sc/supplierproposal/financialNonFederalGovt.xhtml";
-	private static final String NAV_TO_FINANCE_BANK_STATEMENT_PAGE = "/xhtml/sc/supplierproposal/financialBankStatement.xhtml";
-	private static final String NAV_TO_ASSET_LIABILITY_PAGE = "/xhtml/sc/supplierproposal/financialAssetLiability.xhtml";
-	private static final String NAV_TO_PAID_UP_CAPITAL_PAGE = "/xhtml/sc/supplierproposal/financialPaidUpCapital.xhtml";
-	private static final String NAV_TO_PROPOSAL_MAIN_PAGE = "/xhtml/sc/supplierproposal/supplierProposalMain.xhtml";
-	private static final String NAV_TO_FINANCIAL_CHECKLIST_MAIN_PAGE = "/xhtml/sc/supplierproposal/financialchecklistsmain.xhtml";
-	private static final String NAV_TO_TECHNICAL_CHECKLIST_MAIN_PAGE = "/xhtml/sc/supplierproposal/techinicalChecklistmain.xhtml";
+	private static final String NAV_TO_FINANCIAL_CHECKLIST_MAIN_PAGE = "/xhtml/sc/supplierProposal/financialProposal/financialchecklistsmain.xhtml";
+	private static final String NAV_TO_FINANCE_STATNDARD_PRODUCT_PAGE = "/xhtml/sc/supplierProposal/financialProposal/financialSpecification.xhtml";
+	private static final String NAV_TO_MORE_THAN_PROPOSAL_PAGE = "/xhtml/sc/supplierProposal/financialProposal/financialSpecMoreProposal.xhtml";
+	private static final String NAV_TO_ZONE_MORE_THAN_PROPOSAL_PAGE = "/xhtml/sc/supplierProposal/financialProposal/financialMoreZone.xhtml";
+	private static final String NAV_TO_NON_GOVT_COMPANY_EXPERIENCE_PAGE = "/xhtml/sc/supplierProposal/financialProposal/financialNonFederalGovt.xhtml";
+	private static final String NAV_TO_CREDIT_FACILITIES_PAGE = "/xhtml/sc/supplierProposal/financialProposal/financialCreditFacilities.xhtml";
+	private static final String NAV_TO_CASH_ON_HAND_PAGES = "/xhtml/sc/supplierProposal/financialProposal/financialCashOnHand.xhtml";
+	private static final String NAV_TO_FINANCE_BANK_STATEMENT_PAGE = "/xhtml/sc/supplierProposal/financialProposal/financialBankStatement.xhtml";
+	private static final String NAV_TO_ASSET_LIABILITY_PAGE = "/xhtml/sc/supplierProposal/financialProposal/financialAssetLiability.xhtml";
+	private static final String NAV_TO_GOVT_COMPANY_EXPERIENCE_PAGE = "/xhtml/sc/supplierProposal/financialProposal/financialFederalGovt.xhtml";
+	private static final String NAV_TO_SUPPLIER_DETAILS_PAGE = "/xhtml/sc/supplierProposal/financialProposal/financialSupplierDetails.xhtml";
+	private static final String NAV_TO_PAID_UP_CAPITAL_PAGE = "/xhtml/sc/supplierProposal/financialProposal/financialPaidUpCapital.xhtml";
+	
+	
+	
 
 	private static final SimpleDateFormat BANK_STATEMENT_MONTH_FORMAT = new SimpleDateFormat(
 			"MMMM yyyy");
@@ -3263,7 +3265,7 @@ public class SPDetailBackingBean extends
 		getManagedBean().setDeletedPRPExperiences(null);
 		getManagedBean().setToBeDeletedCashOnHandList(null);
 		getManagedBean().setToBeDeletedCreditFacilities(null);
-		return "/xhtml/sc/supplierproposal/supplierProposalMain.xhtml?faces-redirect=true";
+		return NAV_TO_PROPOSAL_MAIN_PAGE + "?faces-redirect=true";
 	}
 
 	/**
