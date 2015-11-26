@@ -12,32 +12,35 @@
 
 
 	<ui:define name="contentSection">
-		
+
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
 		</p:blockUI>
 		<p:messages id="boTemplatespecCreate" showDetail="true"
 			showSummary="false" autoUpdate="true" closable="true"
 			severity="error, info" />
-		<div>
-			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-				styleClass="BtnSpacing" immediate="true"
-				action="#{specificationBackingBean.businessOwnerTemplateSpecBackAction}" />
-			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-				styleClass="BtnSpacing" style="float:right;" immediate="true"
-				onclick="createTechnicalDialog.show();"></p:commandButton>
-			<p:commandButton value="#{lbl['lbl.btn.complete']}"
-				styleClass="BtnSpacing" style="float:right;"
-				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-				action="#{specificationBackingBean.completeTemplateSpecDetails('BO',1)}" />
-			<p:commandButton value="#{lbl['lbl.btn.save']}" style="float:right;"
-				styleClass="BtnSpacing" onstart="blockWidget.show();"
-				oncomplete="blockWidget.hide();"
-				action="#{specificationBackingBean.saveTemplateSpecDetails('BO',1)}"
-				update="@all" />
+		<table width="100%">
+			<tr>
+				<td align="right"><p:commandButton
+						value="#{lbl['lbl.btn.back']}" style="float:left;"
+						styleClass="BtnSpacing" immediate="true"
+						action="#{specificationBackingBean.businessOwnerTemplateSpecBackAction}" />
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+						styleClass="BtnSpacing" style="float:right;" immediate="true"
+						onclick="createTechnicalDialog.show();"></p:commandButton> <p:commandButton
+						value="#{lbl['lbl.btn.complete']}" styleClass="BtnSpacing"
+						style="float:right;" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"
+						action="#{specificationBackingBean.completeTemplateSpecDetails('BO',1)}" />
+					<p:commandButton value="#{lbl['lbl.btn.save']}"
+						style="float:right;" styleClass="BtnSpacing"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+						action="#{specificationBackingBean.saveTemplateSpecDetails('BO',1)}"
+						update="@all" /></td>
+			</tr>
+		</table>
 
-		</div>
-		
+
 		<p:panel header="#{lbl['lbl.sc.template.spec']}" toggleable="true"
 			style="width:100%;">
 

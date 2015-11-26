@@ -12,41 +12,39 @@
 
 
 	<ui:define name="contentSection">
-		
+
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
 		</p:blockUI>
 		<p:messages id="conpamyExpPrivate" showDetail="true" autoUpdate="true"
 			showSummary="false" closable="true" severity="error, info">
 		</p:messages>
-		<div>
-			<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"
-				style="float:left;" styleClass="BtnSpacing"
-				action="#{specificationBackingBean.committeeBackAction}" />
+		<table width="100%">
+			<tr>
+				<td align="right"><p:commandButton
+						value="#{lbl['lbl.btn.back']}" immediate="true"
+						style="float:left;" styleClass="BtnSpacing"
+						action="#{specificationBackingBean.committeeBackAction}" /> <p:commandButton
+						value="#{lbl['lbl.btn.save']}" styleClass="BtnSpacing"
+						rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
+						style="float:right;" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"
+						action="#{specificationBackingBean.saveCheckListScores}">
+						<f:setPropertyActionListener
+							target="#{specificationBackingBean.managedBean.criteriaType}"
+							value="15" />
+						<f:setPropertyActionListener
+							target="#{specificationBackingBean.managedBean.otherCriteriaType}"
+							value="16" />
 
-			<p:commandButton value="#{lbl['lbl.btn.save']}"
-			styleClass="BtnSpacing"
-				rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
-				style="float:right;" onstart="blockWidget.show();"
-				oncomplete="blockWidget.hide();"
-				action="#{specificationBackingBean.saveCheckListScores}">
-				<f:setPropertyActionListener
-					target="#{specificationBackingBean.managedBean.criteriaType}"
-					value="15" />
-				<f:setPropertyActionListener
-					target="#{specificationBackingBean.managedBean.otherCriteriaType}"
-					value="16" />
+					</p:commandButton></td>
+			</tr>
+		</table>
 
-			</p:commandButton>
-
-
-
-		</div>
-		
 		<ui:include
 			src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />
 
-		
+
 		<p:panel toggleable="true" styleClass="BtnSpacing">
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.sc.spec.company.exp.fed.private']}" />
@@ -104,8 +102,8 @@
 				</p:column>
 			</p:dataTable>
 
-			
 
+			<p:spacer height="10px"></p:spacer>
 			<table>
 
 				<tr>
@@ -114,7 +112,7 @@
 					<td><p:inputText readonly="true" disabled="true"></p:inputText>
 					</td>
 				</tr>
-				
+
 				<tr>
 					<td width="150px"><h:outputText
 							value="#{lbl['lbl.sc.spec.total.no.years']}" /></td>
@@ -126,13 +124,14 @@
 			</table>
 
 		</p:panel>
-		
+
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.spec.score.company.exp.intruction']}"
 			escape="false" />
-		
 
-		<p:panel id="companyExpPrivateContracts" toggleable="true" styleClass="BtnSpacing"
+
+		<p:panel id="companyExpPrivateContracts" toggleable="true"
+			styleClass="BtnSpacing"
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.sc.spec.score.total.no.contracts']}" />
@@ -163,7 +162,7 @@
 					</td>
 				</tr>
 			</table>
-			
+
 			<h:panelGroup id="companytechnicalPrivate">
 				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
@@ -214,7 +213,7 @@
 
 					</h:panelGroup>
 				</h:panelGroup>
-				
+
 				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 					<table>
@@ -239,7 +238,8 @@
 			</h:panelGroup>
 		</p:panel>
 
-		<p:panel id="techcompanyExpPrivateNumbersOfYears" styleClass="BtnSpacing"
+		<p:panel id="techcompanyExpPrivateNumbersOfYears"
+			styleClass="BtnSpacing"
 			header="#{lbl['lbl.sc.spec.score.total.no.years']}" toggleable="true"
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
 			<table>
@@ -262,7 +262,7 @@
 					</td>
 				</tr>
 			</table>
-			
+
 			<h:panelGroup id="companyprivateYears">
 				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.companyScoreType eq '1'}">
@@ -410,7 +410,7 @@
 					</h:panelGroup>
 
 				</h:panelGroup>
-				
+
 				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.companyScoreType eq '2'}">
 					<table>

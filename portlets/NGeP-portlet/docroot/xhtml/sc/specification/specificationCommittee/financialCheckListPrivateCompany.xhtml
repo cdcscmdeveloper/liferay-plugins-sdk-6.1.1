@@ -12,7 +12,7 @@
 
 
 	<ui:define name="contentSection">
-		
+
 
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
@@ -21,31 +21,29 @@
 			showDetail="true" showSummary="false" closable="true"
 			severity="error, info"></p:messages>
 
-		<div>
-			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-				immediate="true" styleClass="BtnSpacing"
-				action="#{specificationBackingBean.committeeBackAction}" />
+		<table width="100%">
+			<tr>
+				<td align="right"><p:commandButton
+						value="#{lbl['lbl.btn.back']}" style="float:left;"
+						immediate="true" styleClass="BtnSpacing"
+						action="#{specificationBackingBean.committeeBackAction}" /> <p:commandButton
+						value="#{lbl['lbl.btn.save']}" styleClass="BtnSpacing"
+						rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
+						style="float:right;" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"
+						action="#{specificationBackingBean.saveCheckListScores}">
+						<f:setPropertyActionListener
+							target="#{specificationBackingBean.managedBean.criteriaType}"
+							value="17" />
 
-			<p:commandButton value="#{lbl['lbl.btn.save']}"
-			styleClass="BtnSpacing"
-				rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
-				style="float:right;" onstart="blockWidget.show();"
-				oncomplete="blockWidget.hide();"
-				action="#{specificationBackingBean.saveCheckListScores}">
-				<f:setPropertyActionListener
-					target="#{specificationBackingBean.managedBean.criteriaType}"
-					value="17" />
+					</p:commandButton></td>
+			</tr>
+		</table>
 
-			</p:commandButton>
-
-
-
-		</div>
-		
 		<ui:include
 			src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />
 
-		
+
 		<p:panel toggleable="true" styleClass="BtnSpacing">
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.sc.spec.company.exp.fed.private']}" />
@@ -101,8 +99,8 @@
 					<p:inputText></p:inputText>
 				</p:column>
 			</p:dataTable>
+			<p:spacer height="10px"></p:spacer>
 
-			
 			<table>
 
 				<tr>
@@ -121,7 +119,7 @@
 
 
 
-		
+
 		<p:panel id="financialPrivateContracts" styleClass="BtnSpacing"
 			header="#{lbl['lbl.sc.spec.score.total.contract.amount']}"
 			toggleable="true"
@@ -150,7 +148,7 @@
 					</td>
 				</tr>
 			</table>
-			
+
 			<h:panelGroup id="finPrivateCompany">
 				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
@@ -202,7 +200,7 @@
 							update="@([id$=#{scoringPnlId}])" />
 					</h:panelGroup>
 				</h:panelGroup>
-				
+
 				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 					<table>

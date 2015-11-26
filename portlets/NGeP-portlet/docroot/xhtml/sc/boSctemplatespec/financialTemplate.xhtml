@@ -12,33 +12,37 @@
 
 
 	<ui:define name="contentSection">
-		
+
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
 		</p:blockUI>
 		<p:messages id="boFinancialmessages" showDetail="true"
 			showSummary="false" autoUpdate="true" closable="true"
 			severity="error, info" />
-		<div>
-			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-				immediate="true" styleClass="BtnSpacing"
-				action="#{specificationBackingBean.businessOwnerTemplateSpecBackAction}" />
+		<table width="100%">
+			<tr>
+				<td align="right"><p:commandButton
+						value="#{lbl['lbl.btn.back']}" style="float:left;"
+						immediate="true" styleClass="BtnSpacing"
+						action="#{specificationBackingBean.businessOwnerTemplateSpecBackAction}" />
 
-			<p:commandButton value="#{lbl['lbl.btn.complete']}"
-				styleClass="BtnSpacing" style="float:right;" update="@all"
-				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
-				action="#{specificationBackingBean.completeTemplateSpecDetails('BO',2)}" />
-
-
-			<p:commandButton value="#{lbl['lbl.btn.save']}" style="float:right;"
-				styleClass="BtnSpacing" update="@all" onstart="blockWidget.show();"
-				oncomplete="blockWidget.hide();"
-				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
-				action="#{specificationBackingBean.saveTemplateSpecDetails('BO',2)}" />
+					<p:commandButton value="#{lbl['lbl.btn.complete']}"
+						styleClass="BtnSpacing" style="float:right;" update="@all"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+						disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
+						action="#{specificationBackingBean.completeTemplateSpecDetails('BO',2)}" />
 
 
-		</div>
+					<p:commandButton value="#{lbl['lbl.btn.save']}"
+						style="float:right;" styleClass="BtnSpacing" update="@all"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+						disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
+						action="#{specificationBackingBean.saveTemplateSpecDetails('BO',2)}" />
+
+
+				</td>
+			</tr>
+		</table>
 
 
 		<p:panel header="#{lbl['lbl.sc.template.spec']}" toggleable="true">

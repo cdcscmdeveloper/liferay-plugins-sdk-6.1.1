@@ -12,36 +12,35 @@
 
 
 	<ui:define name="contentSection">
-		<!-- <ac:title value="#{lbl['lbl.sc.spec.specification.committee']}"></ac:title> -->
+
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
 		</p:blockUI>
 		<p:messages id="committeeFinancialmessages" showDetail="true"
 			showSummary="false" autoUpdate="true" closable="true"
 			severity="error, info" />
-		<div>
-			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-				immediate="true"
-				action="#{specificationBackingBean.committeeBackAction}" />
+		<table width="100%">
+			<tr>
+				<td align="right"><p:commandButton
+						value="#{lbl['lbl.btn.back']}" style="float:left;"
+						immediate="true" styleClass="BtnSpacing"
+						action="#{specificationBackingBean.committeeBackAction}" /> <p:commandButton
+						value="#{lbl['lbl.btn.complete']}"
+						rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
+						style="float:right;" update="@all" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();" styleClass="BtnSpacing"
+						action="#{specificationBackingBean.completeTemplateSpecDetails('SC',2)}" />
 
-			<p:commandButton value="#{lbl['lbl.btn.complete']}"
-				rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
-				style="float:right;" update="@all" onstart="blockWidget.show();"
-				oncomplete="blockWidget.hide();"
-				action="#{specificationBackingBean.completeTemplateSpecDetails('SC',2)}" />
-
-			<p:commandButton value="#{lbl['lbl.btn.save']}"
-				rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
-				style="float:right;" update="@all" onstart="blockWidget.show();"
-				oncomplete="blockWidget.hide();"
-				action="#{specificationBackingBean.saveTemplateSpecDetails('SC',2)}" />
+					<p:commandButton value="#{lbl['lbl.btn.save']}"
+						rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
+						style="float:right;" update="@all" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();" styleClass="BtnSpacing"
+						action="#{specificationBackingBean.saveTemplateSpecDetails('SC',2)}" />
 
 
-		</div>
-		<p:spacer height="25" />
-		<br />
-		<br />
-		<!-- 	<ui:include src="/xhtml/sc/main/templateMaintenanceheader.xhtml"></ui:include> -->
+				</td>
+			</tr>
+		</table>
 		<p:panel header="#{lbl['lbl.sc.template.spec']}" toggleable="true">
 
 
@@ -50,7 +49,8 @@
 					<td valign="top"><h:outputLabel
 							value="#{lbl['lbl.sc.document.title']}"></h:outputLabel></td>
 					<td colspan="3"><p:inputTextarea rows="2" cols="95"
-							disabled="true" style="margin-bottom:5px;width:85%;" maxlength="200"
+							disabled="true" style="margin-bottom:5px;width:85%;"
+							maxlength="200"
 							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specName}" /></td>
 				</tr>
 				<tr>
@@ -59,7 +59,8 @@
 					<td><p:inputText
 							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemTypeCode)}"
 							disabled="true" size="30" /></td>
-					<td><h:outputLabel value="#{lbl['lbl.tpl.spec.specification.type']}" /></td>
+					<td><h:outputLabel
+							value="#{lbl['lbl.tpl.spec.specification.type']}" /></td>
 					<td><p:inputText disabled="true" size="30"
 							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specTypeCode)}" /></td>
 
