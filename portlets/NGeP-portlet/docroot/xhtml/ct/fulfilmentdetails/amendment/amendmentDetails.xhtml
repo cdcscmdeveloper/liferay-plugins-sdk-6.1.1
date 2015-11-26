@@ -134,8 +134,7 @@
 				<p:message for="txtdesc" display="icon" />	
 			</h:panelGrid>			
 		</h:panelGrid>
-		<h:panelGroup rendered="#{!ctBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt and
-				  		        !ctBackingBean.managedBean.disableAmendDetails}">
+		<h:panelGroup rendered="#{!ctBackingBean.managedBean.disableAmendDetails}">
 		  <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth170">
 			<h:panelGrid columns="1" style="float:right;">
 				<p:outputLabel value="#{lbl['lbl.ct.secretary']}" />
