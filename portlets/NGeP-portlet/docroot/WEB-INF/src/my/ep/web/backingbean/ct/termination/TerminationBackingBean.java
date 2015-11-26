@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.Format;
@@ -351,9 +352,10 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	    }
 	    ctBB.getManagedBean().setViewContract(getManagedBean().isViewContract());
 	    ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
-	    if (isContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())
-	    		|| (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null 
-	    		&& getManagedBean().getContractVer().getCtContractAmount().getGstAmount().doubleValue() != 0)) {
+	    if (isContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+	    	if (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() == null) {
+	    		ctBB.getManagedBean().getContractVer().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
+			}
 	    	ctBB.getManagedBean().setGstCheckingGUI(true);
 	    } else {
 	    	ctBB.getManagedBean().setGstCheckingGUI(false);

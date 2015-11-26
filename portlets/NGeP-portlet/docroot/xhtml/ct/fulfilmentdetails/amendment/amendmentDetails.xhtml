@@ -254,14 +254,14 @@
 				<p:inputText id="newGstAmtTxt" styleClass="ppRightBtn"  maxlength="18" style="width:80px;" required="true" label="#{lbl['lbl.ct.new.gst.amt']}"  
 				   value="#{ctBackingBean.managedBean.contractVer.ctAmendment.newGstAmount}" 
 				   disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
-				   rendered="#{amendmentBackingBean.contractWithGst()}">
+				   rendered="#{ctBackingBean.managedBean.gstCheckingGUI}">
 					 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					 <p:ajax event="blur" update="newGstAmtTxt, overallAmt" process="@this" 
 					   onstart="blockWidget.show();"  oncomplete="blockWidget.hide();" />
 				</p:inputText>
 				<p:message for="newGstAmtTxt" display="icon" />
 				<p:inputText styleClass="ppRightBtn" style="width:80px;" disabled="true" 
-	   				 rendered="#{!amendmentBackingBean.contractWithGst()}" value="#{lbl['lbl.txt.na']}">
+	   				 rendered="#{!ctBackingBean.managedBean.gstCheckingGUI}" value="#{lbl['lbl.txt.na']}">
 				</p:inputText>
 			</h:panelGrid>
 			
