@@ -140,7 +140,10 @@
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.equiComp.compName']}" id="supEquiCompName"
 						value="#{backingBean.managedBean.selectedEquityCompany.companyName}"
-						size="35" /> 
+						size="35" > 
+							<p:ajax event="blur" process="@this" update="supEquiMofNoId" partialSubmit="true"
+								listener="#{backingBean.onBlurSetMofNo(backingBean.managedBean.selectedEquityCompany)}"/>
+						</p:inputText>
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
 							oriValue="#{backingBean.managedBean.latestEquityCompany.companyName}" 
@@ -149,6 +152,13 @@
 						<p:message id="supEquiCompNameMsg"
 						for="supEquiCompName" showSummary="true" showDetail="false"
 						display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.mofNo']}" /></td>
+				<td>
+					<p:inputText value="#{backingBean.managedBean.selectedEquityCompany.mofNo}"
+						readonly="true" size="35" id="supEquiMofNoId"/>
+				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.regNo']}" />

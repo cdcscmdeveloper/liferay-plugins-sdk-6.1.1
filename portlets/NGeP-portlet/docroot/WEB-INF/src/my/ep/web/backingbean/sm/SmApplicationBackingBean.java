@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
@@ -50,6 +51,7 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -141,6 +143,7 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -7372,6 +7375,32 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setApprvrSecReview(
 					assignVerificationCount(getManagedBean()
 							.getApprvrSecReview(), isSectionVerified));
+		}
+	}
+
+	/**
+	 * Set mof no by business registration no entered
+	 * 
+	 * @param String
+	 *            regNo
+	 * @return
+	 */
+	public void onBlurSetMofNo(Object obj) {
+		try {
+			Object objRegNoVal = PropertyUtils.getProperty(obj, "regNo");
+			if (objRegNoVal != null) {
+				MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+				reqDTO.setRegNo(objRegNoVal.toString());
+				SmMofAccount acc = SmServiceLookup.getMofAccountSO()
+						.retriveMofAccountBySupplierRegNo(reqDTO)
+						.getMofAccount();
+				if (acc != null) {
+					PropertyUtils.setProperty(obj, "mofNo", acc.getMofNo());
+				}
+			}
+		} catch (IllegalAccessException | InvocationTargetException
+				| NoSuchMethodException e) {
+			e.printStackTrace();
 		}
 	}
 
