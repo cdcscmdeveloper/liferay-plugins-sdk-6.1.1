@@ -2997,6 +2997,12 @@ public class ReportsGenerateBean {
 		/** The pp ministry view. */
 		private boolean ppMinistryView = false;
 		
+		/** The pp mandatory view. */
+		private boolean ppMandatoryView = false;
+		
+		/** The pp non mandatory view. */
+		private boolean ppNonMandatoryView = false;		
+						
 		/** The pp ptj view. */
 		private boolean ppPTJView = false;
 		//PM
@@ -13171,5 +13177,33 @@ public class ReportsGenerateBean {
 	public void setSmMandatoryYearFromReportTypeView(
 			boolean smMandatoryYearFromReportTypeView) {
 		this.smMandatoryYearFromReportTypeView = smMandatoryYearFromReportTypeView;
+	}
+
+	/**
+	 * @return the ppMandatoryView
+	 */
+	public boolean isPpMandatoryView() {
+		return ppMandatoryView;
+	}
+
+	/**
+	 * @param ppMandatoryView the ppMandatoryView to set
+	 */
+	public void setPpMandatoryView(boolean ppMandatoryView) {
+		this.ppMandatoryView = ppMandatoryView;
+	}
+
+	/**
+	 * @return the ppNonMandatoryView
+	 */
+	public boolean isPpNonMandatoryView() {
+		return ppNonMandatoryView;
+	}
+
+	/**
+	 * @param ppNonMandatoryView the ppNonMandatoryView to set
+	 */
+	public void setPpNonMandatoryView(boolean ppNonMandatoryView) {
+		this.ppNonMandatoryView = ppNonMandatoryView;
 	}
 }

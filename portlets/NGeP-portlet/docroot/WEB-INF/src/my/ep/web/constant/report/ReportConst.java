@@ -838,11 +838,14 @@ public class ReportConst {
 	public static final String EXT_TYPE="Type";
 	public static final String EXT_BRAND="Brand";
 	public static final String EXT_MEASUREMENT="Measurement";
+	
+	/** The Constant EXT_COLOUR. */
 	public static final String EXT_COLOUR="Colour";
 	public static final String ROLE_CODE_SUP="SUP";
 	public static final String ROLE_CODE_MIN_CONTRACT_ADMIN="MIN_CONTRACT_ADMIN";
 	public static final String ROLE_CODE_BPK_CCA="BPK_CCA";
 	public static final String ROLE_CODE_BPK_PCA="BPK_PCA";
+	public static final String ROLE_CODE_BPK_OFFICER="BPK_OFFICER";
 	public static final String ROLE_CODE_REQUISITIONER="REQUISITIONER";
 	public static final String ROLE_CODE_APPROVER="APPROVER";
 	public static final String ROLE_CODE_FL_APPROVER="FL_APPROVER";

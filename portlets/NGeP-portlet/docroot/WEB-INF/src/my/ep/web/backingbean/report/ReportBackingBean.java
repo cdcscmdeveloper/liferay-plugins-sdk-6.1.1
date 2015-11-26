@@ -333,7 +333,7 @@ public class ReportBackingBean extends
 
 	/** The sc soa status list. */
 	private List<SelectItem> scSOAStatusList = new ArrayList<SelectItem>();
-	
+
 	/** The search lov paging data model. */
 	private IPagingDataModel<CmUnspsc> searchUnspscPagingDataModel = new SearchUnspscPagingDataModel();
 
@@ -384,7 +384,7 @@ public class ReportBackingBean extends
 
 	/** The module item map. */
 	private Map<String, List<SelectItem>> moduleItemMap = new HashMap<String, List<SelectItem>>();
-	
+
 	/** The items. */
 	private SelectItem[] items = null;
 
@@ -393,8 +393,7 @@ public class ReportBackingBean extends
 
 	/** The doc type status items list. */
 	private List<SelectItem> docTypeStatusItemsList = new ArrayList<SelectItem>();
-	
-	
+
 	/** The local to date var. */
 	private String localToDateVar;
 
@@ -413,14 +412,12 @@ public class ReportBackingBean extends
 	/** The role code. */
 	private String roleCode;
 
-	
 	/** The mof account end date from date. */
 	private Date mofAccountEndDateFromDate;
 
-
 	/** The mof account end date to date. */
 	private Date mofAccountEndDateToDate;
-	
+
 	/** The from date. */
 	private Date fromDate;
 
@@ -1021,7 +1018,7 @@ public class ReportBackingBean extends
 
 	/** The pm business reg no. */
 	private String pmBusinessRegNo;
-	
+
 	/** The selected all. */
 	private boolean selectedAll;
 
@@ -1036,7 +1033,7 @@ public class ReportBackingBean extends
 
 	/** The supplier sub child cat list. */
 	private List<PmCategoryL3> supplierSubChildCatList;
-	
+
 	/**
 	 * Gets the select cat deletion list.
 	 * 
@@ -1046,10 +1043,9 @@ public class ReportBackingBean extends
 		return selectCatDeletionList;
 	}
 
-	
 	/**
 	 * Gets the sc loa id no.
-	 *
+	 * 
 	 * @return the scLOAIdNo
 	 */
 	public String getScLOAIdNo() {
@@ -1058,8 +1054,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the sc loa id no.
-	 *
-	 * @param scLOAIdNo            the scLOAIdNo to set
+	 * 
+	 * @param scLOAIdNo
+	 *            the scLOAIdNo to set
 	 */
 	public void setScLOAIdNo(String scLOAIdNo) {
 		this.scLOAIdNo = scLOAIdNo;
@@ -1075,8 +1072,6 @@ public class ReportBackingBean extends
 			List<SmSupplierCategory> selectCatDeletionList) {
 		this.selectCatDeletionList = selectCatDeletionList;
 	}
-
-	
 
 	/**
 	 * Gets the payment method list.
@@ -2403,8 +2398,6 @@ public class ReportBackingBean extends
 	public void setAddingDistrictList(List<String> addingDistrictList) {
 		this.addingDistrictList = addingDistrictList;
 	}
-
-	
 
 	/**
 	 * Gets the cm request number.
@@ -6799,11 +6792,10 @@ public class ReportBackingBean extends
 	public void setScLOANo(String scLOANo) {
 		this.scLOANo = scLOANo;
 	}
-	
-	
+
 	/**
 	 * Gets the search unspsc paging data model.
-	 *
+	 * 
 	 * @return the searchLOVPagingDataModel
 	 */
 	public IPagingDataModel<CmUnspsc> getSearchUnspscPagingDataModel() {
@@ -6812,14 +6804,44 @@ public class ReportBackingBean extends
 
 	/**
 	 * Sets the search unspsc paging data model.
-	 *
-	 * @param searchUnspscPagingDataModel the new search unspsc paging data model
+	 * 
+	 * @param searchUnspscPagingDataModel
+	 *            the new search unspsc paging data model
 	 */
 	public void setSearchUnspscPagingDataModel(
 			IPagingDataModel<CmUnspsc> searchUnspscPagingDataModel) {
 		this.searchUnspscPagingDataModel = searchUnspscPagingDataModel;
 	}
-	
+
+	/**
+	 * @return the mofAccountEndDateFromDate
+	 */
+	public Date getMofAccountEndDateFromDate() {
+		return mofAccountEndDateFromDate;
+	}
+
+	/**
+	 * @param mofAccountEndDateFromDate
+	 *            the mofAccountEndDateFromDate to set
+	 */
+	public void setMofAccountEndDateFromDate(Date mofAccountEndDateFromDate) {
+		this.mofAccountEndDateFromDate = mofAccountEndDateFromDate;
+	}
+
+	/**
+	 * @return the mofAccountEndDateToDate
+	 */
+	public Date getMofAccountEndDateToDate() {
+		return mofAccountEndDateToDate;
+	}
+
+	/**
+	 * @param mofAccountEndDateToDate
+	 *            the mofAccountEndDateToDate to set
+	 */
+	public void setMofAccountEndDateToDate(Date mofAccountEndDateToDate) {
+		this.mofAccountEndDateToDate = mofAccountEndDateToDate;
+	}
 
 	/**
 	 * retrieveLOAStatusList- will retrieve LOA status(SOA Status) list.
@@ -6845,7 +6867,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * supplierNameValidate-will validate Supplier name, like supplier name should have minimum 3 characters length.
+	 * supplierNameValidate-will validate Supplier name, like supplier name
+	 * should have minimum 3 characters length.
 	 */
 	public void supplierNameValidate() {
 		if ((this.getScSupplier() != null)
@@ -6858,7 +6881,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * changeTerminate- based on status =TERMINATE, it will enable and disable the termination type field.
+	 * changeTerminate- based on status =TERMINATE, it will enable and disable
+	 * the termination type field.
 	 */
 	public void changeTerminate() {
 		this.setCtTerminationType(null);
@@ -6877,7 +6901,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * changePaymentType- will change to retrieve payment type list based on selecting payment type like Government, CDC or simple payment type list.
+	 * changePaymentType- will change to retrieve payment type list based on
+	 * selecting payment type like Government, CDC or simple payment type list.
 	 */
 	public void changePaymentType() {
 		this.setSmPaymentType(null);
@@ -6897,7 +6922,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * retrievePaymentTypeList -  will retrieve simple payment type list.
+	 * retrievePaymentTypeList - will retrieve simple payment type list.
 	 * 
 	 * @return the payment type list
 	 */
@@ -6920,7 +6945,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * retrieveGovtPaymentTypeList -  will retrieve govt payment type list.
+	 * retrieveGovtPaymentTypeList - will retrieve govt payment type list.
 	 * 
 	 * @return the payment type list
 	 */
@@ -6943,7 +6968,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * retrieveCDCPaymentTypeList -  will retrieve cdc payment type list.
+	 * retrieveCDCPaymentTypeList - will retrieve cdc payment type list.
 	 * 
 	 * @return the payment type list
 	 */
@@ -6985,7 +7010,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * retrievePMServiceType - will Retrieve  service type List.
+	 * retrievePMServiceType - will Retrieve service type List.
 	 * 
 	 * @return the service type List
 	 */
@@ -7010,7 +7035,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * showCapitalNaccumShare - will change to Show capital or accumulated share date.
+	 * showCapitalNaccumShare - will change to Show capital or accumulated share
+	 * date.
 	 */
 	public void showCapitalNaccumShare() {
 		getManagedBean().getRptGenBean().setSmPaidUpCapitalFrmView(false);
@@ -7042,11 +7068,11 @@ public class ReportBackingBean extends
 	 * @return the processing officer list
 	 */
 	public List<SelectItem> retrieveProcessingOfficerList() {
-		
+
 		this.setSmState(null);
 		rptGenBean.retrieveStatesByZoneName(this.smZone);
-		districtLst = new ArrayList<SelectItem>();		
-		
+		districtLst = new ArrayList<SelectItem>();
+
 		processingOfficerList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -7139,15 +7165,18 @@ public class ReportBackingBean extends
 						.setSmMandatoryCreatedFromYearView(true);
 				getManagedBean().getRptGenBean()
 						.setSmMandatoryRejectedReportTypeView(true);
-			} 
-			/* * else { rptGenBean.setSmMandatoryCreatedFromYearView(true);
-			 * rptGenBean.setSmMandatoryRegisteredReportTypeDateView(true); }*/
-			 
+			}
+			/*
+			 * * else { rptGenBean.setSmMandatoryCreatedFromYearView(true);
+			 * rptGenBean.setSmMandatoryRegisteredReportTypeDateView(true); }
+			 */
+
 		}
 	}
 
 	/**
-	 * retrieveMinistryName - will retrieve ministry name based on organization profile id.
+	 * retrieveMinistryName - will retrieve ministry name based on organization
+	 * profile id.
 	 * 
 	 * @param orgprofileid
 	 *            the orgprofileid
@@ -7193,7 +7222,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * supplierTypeConsultant - Supplier type consultant comparison for eanbling and disabling for ConsultantRegistrationStatus .
+	 * supplierTypeConsultant - Supplier type consultant comparison for eanbling
+	 * and disabling for ConsultantRegistrationStatus .
 	 */
 	public void supplierTypeConsultant() {
 		getManagedBean().getRptGenBean().setSmConsultantRegistrationStatusView(
@@ -7300,7 +7330,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * retrieveAccumulatedPaidUpCptl - will retrieve accumulated paid-up capital.
+	 * retrieveAccumulatedPaidUpCptl - will retrieve accumulated paid-up
+	 * capital.
 	 */
 	public void retrieveAccumulatedPaidUpCptl() {
 		accumulatedPaidUpCptlList = new ArrayList<SelectItem>();
@@ -7321,7 +7352,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * getLtstMinistryList - Gets the latest ministry list based on organization type.
+	 * getLtstMinistryList - Gets the latest ministry list based on organization
+	 * type.
 	 * 
 	 * @return the ltst ministry list
 	 */
@@ -8053,11 +8085,11 @@ public class ReportBackingBean extends
 									ReportConst.SM_THRESHOLD)
 							|| this.getReportValue().equals(
 									ReportConst.SM_LST_MONTH_WISE_RPT_VAL)
-							|| this.getReportValue().equals(
-									ReportConst.SM_APPLICATION_APPROVED_RPT_VAL) 
-							|| this.getReportValue().equals(
-									ReportConst.SM_APPLICATION_REJECTED_RPT_VAL)							
-							|| this.getReportValue().equals(
+							|| this.getReportValue()
+									.equals(ReportConst.SM_APPLICATION_APPROVED_RPT_VAL)
+							|| this.getReportValue()
+									.equals(ReportConst.SM_APPLICATION_REJECTED_RPT_VAL) || this
+							.getReportValue().equals(
 									ReportConst.SM_LIST_OF_GST_RGSTRD_SUPPLIER))) {
 
 				if ((allRoleCodesList != null)
@@ -8132,7 +8164,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * assignNewCompanyExperience - Assign new company experience of categories based on category level type.
+	 * assignNewCompanyExperience - Assign new company experience of categories
+	 * based on category level type.
 	 * 
 	 * @param catList
 	 *            the cat list
@@ -8174,7 +8207,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * retrieveParentCategoryListForExperiencePage - Retrieve parent category list for experience page.
+	 * retrieveParentCategoryListForExperiencePage - Retrieve parent category
+	 * list for experience page.
 	 * 
 	 * @return the CategoryL1List
 	 */
@@ -8227,7 +8261,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * selectAllCompanyExperinceCategories - will select for all company experince categories.
+	 * selectAllCompanyExperinceCategories - will select for all company
+	 * experince categories.
 	 */
 	public void selectAllCompanyExperinceCategories() {
 		if (this.isSelectedAll()) {
@@ -8240,7 +8275,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * selectedCompanyExperinceCategory - Selected for perticular company experince category.
+	 * selectedCompanyExperinceCategory - Selected for perticular company
+	 * experince category.
 	 * 
 	 * @param index
 	 *            the index
@@ -8261,7 +8297,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * populateExperienceChildCategoryByParent - will populate experience child category by parent.
+	 * populateExperienceChildCategoryByParent - will populate experience child
+	 * category by parent.
 	 * 
 	 * @param parentId
 	 *            the parent id
@@ -8282,7 +8319,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * retrieveExperienceChildCategoryList - Retrieve experience child category list.
+	 * retrieveExperienceChildCategoryList - Retrieve experience child category
+	 * list.
 	 * 
 	 * @param categoryL1Id
 	 *            the category l1 id
@@ -8300,7 +8338,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * retrieveReportListByAuthorization - Retrieve report list by user authorization.
+	 * retrieveReportListByAuthorization - Retrieve report list by user
+	 * authorization.
 	 * 
 	 * @return the reportList
 	 */
@@ -8358,7 +8397,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * retrieveSubModuleReportCategoryList - Retrieve sub module report category list based on module and user authorization.
+	 * retrieveSubModuleReportCategoryList - Retrieve sub module report category
+	 * list based on module and user authorization.
 	 * 
 	 * @param language
 	 *            the language
@@ -8419,7 +8459,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * retrieveReportListBySubModule - Retrieve report list by sub module and user authorization.
+	 * retrieveReportListBySubModule - Retrieve report list by sub module and
+	 * user authorization.
 	 * 
 	 * @return the reportList
 	 */
@@ -8481,7 +8522,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * getReportIdlist - Gets the report id list based on paramModule type = "REP" .
+	 * getReportIdlist - Gets the report id list based on paramModule type =
+	 * "REP" .
 	 * 
 	 * @return the report id list
 	 */
@@ -8546,7 +8588,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * populateExperienceSubChildCategoryByChild - Populate experience sub child category by child.
+	 * populateExperienceSubChildCategoryByChild - Populate experience sub child
+	 * category by child.
 	 * 
 	 * @param childId
 	 *            the child id
@@ -8565,7 +8608,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * retrieveExperienceSubChildCategoryList - Retrieve experience sub child category list.
+	 * retrieveExperienceSubChildCategoryList - Retrieve experience sub child
+	 * category list.
 	 * 
 	 * @param categoryL2Id
 	 *            the category l2 id
@@ -8583,7 +8627,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 *  checkDuplicateCategoryForProject - Check duplicate category for project.
+	 * checkDuplicateCategoryForProject - Check duplicate category for project.
 	 * 
 	 * @param newCat
 	 *            the new cat
@@ -8659,7 +8703,6 @@ public class ReportBackingBean extends
 		this.getSelectedCatList().add(cat);
 	}
 
-	
 	/**
 	 * retriveModuleList - Retrive module list.
 	 * 
@@ -8723,7 +8766,6 @@ public class ReportBackingBean extends
 				.handleNavigation(fc, null, ReportConst.REPORT_PAGE);
 	}
 
-	
 	/**
 	 * retriveReportListBymoduleName - Retrieve report list by module name.
 	 */
@@ -8876,7 +8918,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * equisitionerList - Retrieve requisitioner, based on user id and organization profile id.
+	 * equisitionerList - Retrieve requisitioner, based on user id and
+	 * organization profile id.
 	 * 
 	 * @return the requisitionerList
 	 */
@@ -8904,7 +8947,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * retrieveDescOfficer - Retrieve desc officer, based on user id and organization profile id.
+	 * retrieveDescOfficer - Retrieve desc officer, based on user id and
+	 * organization profile id.
 	 * 
 	 * @return the descOfficerList
 	 */
@@ -8932,7 +8976,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 *retrieveApprovarNaikTarafDPS1 - Retrieve approvar naik taraf for dp s1, based on user id.
+	 * retrieveApprovarNaikTarafDPS1 - Retrieve approvar naik taraf for dp s1,
+	 * based on user id.
 	 * 
 	 * @return the approverNayakTarafList
 	 */
@@ -8955,7 +9000,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * retrieveApprovarNaikTarafSCS2 - Retrieve approvar naik taraf for sc s2, based on user id.
+	 * retrieveApprovarNaikTarafSCS2 - Retrieve approvar naik taraf for sc s2,
+	 * based on user id.
 	 * 
 	 * @return the list
 	 */
@@ -8977,9 +9023,9 @@ public class ReportBackingBean extends
 		return approverNayakTarafList;
 	}
 
-	
 	/**
-	 * retriveUserrloeByUserId - Retrive userrole by user id, based on module name.
+	 * retriveUserrloeByUserId - Retrive userrole by user id, based on module
+	 * name.
 	 * 
 	 * @param moduleName
 	 *            the module name
@@ -9395,7 +9441,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * enableSupplierCompNameTextOrDropdown - Enable supplier company name text or dropdown.
+	 * enableSupplierCompNameTextOrDropdown - Enable supplier company name text
+	 * or dropdown.
 	 */
 	public void enableSupplierCompNameTextOrDropdown() {
 		if ((this.getModuleValue() != null)
@@ -9642,7 +9689,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * enableExtension - Enable extention will enable brand, extension type,measurement and color extentions.
+	 * enableExtension - Enable extention will enable brand, extension
+	 * type,measurement and color extentions.
 	 */
 	public void enableExtension() {
 		this.setCmExtentionCode(null);
@@ -9684,7 +9732,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * enableExtensionTypes - Enable extention types will enable brand, extension type,measurement and color extentions.
+	 * enableExtensionTypes - Enable extention types will enable brand,
+	 * extension type,measurement and color extentions.
 	 */
 	public void enableExtensionTypes() {
 		this.setCmExtentionBrand(null);
@@ -9713,7 +9762,7 @@ public class ReportBackingBean extends
 							&& CollectionUtils.isNotEmpty(extTypeList)
 							&& CollectionUtils.isNotEmpty(measurmentList)
 							&& CollectionUtils.isNotEmpty(colorList)) {
-						
+
 						getManagedBean().getRptGenBean()
 								.setCmExtentionBrandView(true);
 						getManagedBean().getRptGenBean()
@@ -9723,45 +9772,40 @@ public class ReportBackingBean extends
 						getManagedBean().getRptGenBean()
 								.setCmExtentionColourView(true);
 					}
-				} /*else {
-					this.setCmUnspscCode(null);
-					this.setCmUnspscCode(null);
-					this.setCmExtentionBrand(null);
-					this.setCmExtentionType(null);
-					this.setCmExtentionMeasurment(null);
-					this.setCmExtentionColour(null);
-					brandList = new ArrayList<SelectItem>();
-					extTypeList = new ArrayList<SelectItem>();
-					measurmentList = new ArrayList<SelectItem>();
-					colorList = new ArrayList<SelectItem>();
-					getManagedBean().getRptGenBean().setCmExtentionBrandView(
-							false);
-					getManagedBean().getRptGenBean().setCmExtentionTypeView(
-							false);
-					getManagedBean().getRptGenBean()
-							.setCmExtentionMeasurmentView(false);
-					getManagedBean().getRptGenBean().setCmExtentionColourView(
-							false);
-					throw new EpException(MessageConst.ERROR_REPORT_780013);
-				}*/
-			} /*else {
-				this.setCmUnspscCode(null);
-				this.setCmExtentionBrand(null);
-				this.setCmExtentionType(null);
-				this.setCmExtentionMeasurment(null);
-				this.setCmExtentionColour(null);
-				brandList = new ArrayList<SelectItem>();
-				extTypeList = new ArrayList<SelectItem>();
-				measurmentList = new ArrayList<SelectItem>();
-				colorList = new ArrayList<SelectItem>();
-				getManagedBean().getRptGenBean().setCmExtentionBrandView(false);
-				getManagedBean().getRptGenBean().setCmExtentionTypeView(false);
-				getManagedBean().getRptGenBean().setCmExtentionMeasurmentView(
-						false);
-				getManagedBean().getRptGenBean()
-						.setCmExtentionColourView(false);
-				throw new EpException(MessageConst.ERROR_REPORT_780013);
-			}*/
+				} /*
+				 * else { this.setCmUnspscCode(null);
+				 * this.setCmUnspscCode(null); this.setCmExtentionBrand(null);
+				 * this.setCmExtentionType(null);
+				 * this.setCmExtentionMeasurment(null);
+				 * this.setCmExtentionColour(null); brandList = new
+				 * ArrayList<SelectItem>(); extTypeList = new
+				 * ArrayList<SelectItem>(); measurmentList = new
+				 * ArrayList<SelectItem>(); colorList = new
+				 * ArrayList<SelectItem>();
+				 * getManagedBean().getRptGenBean().setCmExtentionBrandView(
+				 * false);
+				 * getManagedBean().getRptGenBean().setCmExtentionTypeView(
+				 * false); getManagedBean().getRptGenBean()
+				 * .setCmExtentionMeasurmentView(false);
+				 * getManagedBean().getRptGenBean().setCmExtentionColourView(
+				 * false); throw new
+				 * EpException(MessageConst.ERROR_REPORT_780013); }
+				 */
+			} /*
+			 * else { this.setCmUnspscCode(null);
+			 * this.setCmExtentionBrand(null); this.setCmExtentionType(null);
+			 * this.setCmExtentionMeasurment(null);
+			 * this.setCmExtentionColour(null); brandList = new
+			 * ArrayList<SelectItem>(); extTypeList = new
+			 * ArrayList<SelectItem>(); measurmentList = new
+			 * ArrayList<SelectItem>(); colorList = new ArrayList<SelectItem>();
+			 * getManagedBean().getRptGenBean().setCmExtentionBrandView(false);
+			 * getManagedBean().getRptGenBean().setCmExtentionTypeView(false);
+			 * getManagedBean().getRptGenBean().setCmExtentionMeasurmentView(
+			 * false); getManagedBean().getRptGenBean()
+			 * .setCmExtentionColourView(false); throw new
+			 * EpException(MessageConst.ERROR_REPORT_780013); }
+			 */
 		} else {
 			this.setCmUnspscCode(null);
 			this.setCmExtentionBrand(null);
@@ -9855,7 +9899,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 *  retrieveExtType - Retrieve extention type.
+	 * retrieveExtType - Retrieve extention type.
 	 */
 	public void retrieveExtType() {
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -10041,7 +10085,6 @@ public class ReportBackingBean extends
 		}
 	}
 
-	
 	/**
 	 * criteriaVariablesByReport - Enable criteria variables by report name.
 	 */
@@ -10224,8 +10267,6 @@ public class ReportBackingBean extends
 		smReportNameList.add(ReportConst.SM_LIST_OFFLINE_SUPP_DOC_RPT_VAL);
 		smReportNameList.add(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL);
 		smReportNameList.add(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL);
-		
-		
 
 		for (String code : smReportNameList)
 			if (code.equalsIgnoreCase(reportCode)) {
@@ -10626,7 +10667,6 @@ public class ReportBackingBean extends
 
 	}
 
-	
 	/**
 	 * generateReport - Generate all modules reports.
 	 */
@@ -10928,7 +10968,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 *  loadReport - Load report with generated URL.
+	 * loadReport - Load report with generated URL.
 	 * 
 	 * @param gnrtdURL
 	 *            the gnrtd url
@@ -10987,8 +11027,7 @@ public class ReportBackingBean extends
 		}
 	}
 
-	
-	/**  
+	/**
 	 * generateCTReport - Generate CONTRACT MANAGEMENT module reports.
 	 */
 	public void generateCTReport() {
@@ -11250,7 +11289,6 @@ public class ReportBackingBean extends
 		}
 	}
 
-	
 	/**
 	 * generateSMReport - Generate SUPPLIER MANAGEMENT module reports.
 	 */
@@ -11508,16 +11546,20 @@ public class ReportBackingBean extends
 					&& (this.getToDate().toString() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setToDateVar(ReportConst.AMP_SM_TO_DATE_EQ
 						+ outputDateFormat.format(this.getToDate()));
-			}			
+			}
 			if ((this.getMofAccountEndDateFromDate() != null)
 					&& (this.getMofAccountEndDateFromDate().toString() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setMofAccountEndDateFromDateVar(ReportConst.AMP_SM_MOF_ACC_END_FROM_DATE_EQ
-						+ outputDateFormat.format(this.getMofAccountEndDateFromDate()));
+				rptGenBean
+						.setMofAccountEndDateFromDateVar(ReportConst.AMP_SM_MOF_ACC_END_FROM_DATE_EQ
+								+ outputDateFormat.format(this
+										.getMofAccountEndDateFromDate()));
 			}
 			if ((this.getMofAccountEndDateToDate() != null)
 					&& (this.getToDate().toString() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setMofAccountEndDateToDateVar(ReportConst.AMP_SM_MOF_ACC_END_TO_DATE_EQ
-						+ outputDateFormat.format(this.getMofAccountEndDateToDate()));
+				rptGenBean
+						.setMofAccountEndDateToDateVar(ReportConst.AMP_SM_MOF_ACC_END_TO_DATE_EQ
+								+ outputDateFormat.format(this
+										.getMofAccountEndDateToDate()));
 			}
 
 			if ((this.getSmMainCategory() != null)
@@ -11818,7 +11860,7 @@ public class ReportBackingBean extends
 						+ rptGenBean.getFromDateVar()
 						+ rptGenBean.getToDateVar()
 						+ rptGenBean.getMofAccountEndDateFromDateVar()
-						+ rptGenBean.getMofAccountEndDateToDateVar()						
+						+ rptGenBean.getMofAccountEndDateToDateVar()
 						+ rptGenBean.getApplicationNoTotVar()
 						+ rptGenBean.getZoneTotVar()
 						+ rptGenBean.getSupplierTypeTotVar()
@@ -11832,7 +11874,7 @@ public class ReportBackingBean extends
 						+ rptGenBean.getSmProfileStatusVar()
 						// + rptGenBean.getSmRoleVar()
 						+ rptGenBean.getSmGSTRegistrationNoVar()
-                        + rptGenBean.getSmGSTRegisteredStatusVar()
+						+ rptGenBean.getSmGSTRegisteredStatusVar()
 						+ rptGenBean.getSmEpNoVar()
 						+ rptGenBean.getSmRegistrationNoVar()
 						+ rptGenBean.getSmSupportingDocumentModeVar()
@@ -11864,14 +11906,15 @@ public class ReportBackingBean extends
 			} else {
 				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
-		} else if(!getManagedBean().getRptGenBean().isSmMandatoryDOCSupplierTypeView()) {
+		} else if (!getManagedBean().getRptGenBean()
+				.isSmMandatoryDOCSupplierTypeView()) {
 			throw new EpException(MessageConst.ERROR_REPORT_780003);
 		}
 	}
 
-	
 	/**
-	 * generateSCReport - Generate SOURCING(SUPPLIER SELECTION and DIRECT PURCHASE) module reports.
+	 * generateSCReport - Generate SOURCING(SUPPLIER SELECTION and DIRECT
+	 * PURCHASE) module reports.
 	 */
 	public void generateSCReport() {
 		if ((getManagedBean().getReportValue() != null)
@@ -12284,7 +12327,6 @@ public class ReportBackingBean extends
 		}
 	}
 
-	
 	/**
 	 * generateCMReport - Generate CATALOGUE MANAGEMENT module reports.
 	 */
@@ -12351,22 +12393,21 @@ public class ReportBackingBean extends
 
 					}
 				}
-			
-					/*
-					 * FacesContext.getCurrentInstance().addMessage(null,new
-					 * FacesMessage(FacesMessage.SEVERITY_ERROR,
-					 * null,MessageUtils.getMessage(
-					 * MessageConst.ERROR_REPORT_780024,
-					 * MessageUtils.BUNDLE_COMMON_MESSAGES, new
-					 * FacesScopes().getUserLocale()))); String pageUrl =
-					 * "/xhtml/reports/reportsmain.xhtml"; //String pageUrl =
-					 * "/xhtml/reports/reportcontent.xhtml"; FacesContext
-					 * context = FacesContext.getCurrentInstance();
-					 * context.getApplication().getNavigationHandler()
-					 * .handleNavigation(context, null, pageUrl);
-					 */
-				}
-		
+
+				/*
+				 * FacesContext.getCurrentInstance().addMessage(null,new
+				 * FacesMessage(FacesMessage.SEVERITY_ERROR,
+				 * null,MessageUtils.getMessage(
+				 * MessageConst.ERROR_REPORT_780024,
+				 * MessageUtils.BUNDLE_COMMON_MESSAGES, new
+				 * FacesScopes().getUserLocale()))); String pageUrl =
+				 * "/xhtml/reports/reportsmain.xhtml"; //String pageUrl =
+				 * "/xhtml/reports/reportcontent.xhtml"; FacesContext context =
+				 * FacesContext.getCurrentInstance();
+				 * context.getApplication().getNavigationHandler()
+				 * .handleNavigation(context, null, pageUrl);
+				 */
+			}
 
 			if ((this.getCmRequestNumber() != null)
 					&& (this.getCmRequestNumber() != ReportConst.EMPTY_VAL)) {
@@ -12545,7 +12586,6 @@ public class ReportBackingBean extends
 		}
 	}
 
-	
 	/**
 	 * generateFLReport - Generate ORDER FULFILLMENT module reports.
 	 */
@@ -12969,7 +13009,6 @@ public class ReportBackingBean extends
 		}
 	}
 
-	
 	/**
 	 * generatePPReport - Generate PROCUREMENT PLAN module reports.
 	 */
@@ -13014,7 +13053,6 @@ public class ReportBackingBean extends
 		}
 	}
 
-	
 	/**
 	 * generatePMReport - Generate PROFILE MANAGEMENT module reports.
 	 */
@@ -13067,7 +13105,6 @@ public class ReportBackingBean extends
 		}
 	}
 
-	
 	/**
 	 * quotationNumberValidation - Quotation number validation.
 	 */
@@ -13216,7 +13253,6 @@ public class ReportBackingBean extends
 		}
 	}
 
-	
 	/**
 	 * getQuotationNumber - Gets the quotation number.
 	 * 
@@ -13248,7 +13284,6 @@ public class ReportBackingBean extends
 		}
 	}
 
-	
 	/**
 	 * resetReportForm - Reset the criteria and clears the criteria.
 	 */
@@ -13351,7 +13386,7 @@ public class ReportBackingBean extends
 		this.setSmPaymentType(null);
 		this.setSmApplicationType(null);
 		this.setSmZone(null);
-		this.setSmState(null);		
+		this.setSmState(null);
 		this.setSmDistrict(null);
 		this.setSmSVOUser(null);
 		this.setSmReportType(null);
@@ -13476,7 +13511,7 @@ public class ReportBackingBean extends
 		this.setPmBusinessRegNo(null);
 		this.setPmStatus(null);
 		this.setPmFinancialOrgName(null);
-		//changeReportType();
+		// changeReportType();
 		retrieveDates();
 		applicationStatusDateChange();
 	}
@@ -13568,7 +13603,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 *  Gets the module item map.
+	 * Gets the module item map.
 	 * 
 	 * @return the module item map
 	 */
@@ -13613,14 +13648,15 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 *  getScLOAReports - Gets the sc loa reports.
+	 * getScLOAReports - Gets the sc loa reports.
 	 * 
 	 * @return the sc loa reports
 	 */
 	public void getScLOAReports() {
 
 		log.info("getLOAReports");
-		if (this.getScLOAIdNo() != null && !(this.getScLOAIdNo() == "") && this.getScLOAIdNo().startsWith("LA")) {
+		if (this.getScLOAIdNo() != null && !(this.getScLOAIdNo() == "")
+				&& this.getScLOAIdNo().startsWith("LA")) {
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 
@@ -13646,8 +13682,9 @@ public class ReportBackingBean extends
 
 			}
 
-		}else{
-			this.getManagedBean().setLoaReportDocumentList(new ArrayList<ScLoaReport>());
+		} else {
+			this.getManagedBean().setLoaReportDocumentList(
+					new ArrayList<ScLoaReport>());
 		}
 	}
 
@@ -13663,7 +13700,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * downloadReport - Download report as pdf or xlsx files in Letter of Acceptance.
+	 * downloadReport - Download report as pdf or xlsx files in Letter of
+	 * Acceptance.
 	 * 
 	 * @param scLoaReport
 	 *            the sc loa report
@@ -13671,14 +13709,14 @@ public class ReportBackingBean extends
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void downloadReport(ScLoaReport scLoaReport) throws IOException {
-		
+
 		log.info("downloadReport");
-		
+
 		LOADetailBackingBean loaDetail = new LOADetailBackingBean();
-		
+
 		loaDetail.getManagedBean().setScLoa(this.getManagedBean().getScLoa());
 		loaDetail.getManagedBean().setScQt(this.getManagedBean().getScQt());
-		
+
 		if (this.getManagedBean().getScLoa().getContractSigner() == null) {
 			this.getManagedBean().getScLoa().setContractSigner(new PmUser());
 			loaDetail.getManagedBean().setContractSignerUser(
@@ -13697,8 +13735,9 @@ public class ReportBackingBean extends
 
 	/**
 	 * getSuppLoiLoaMapData - Gets the supp loi loa map data.
-	 *
-	 * @param loaDetail the loa detail
+	 * 
+	 * @param loaDetail
+	 *            the loa detail
 	 * @return the supp loi loa map data
 	 */
 	private void getSuppLoiLoaMapData(LOADetailBackingBean loaDetail) {
@@ -13713,14 +13752,15 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * downloadAllReports - Download all reports as pdf or xlsx files in Letter of Acceptance.
+	 * downloadAllReports - Download all reports as pdf or xlsx files in Letter
+	 * of Acceptance.
 	 * 
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void downloadAllReports() throws IOException {
 		log.info("downloadAllReports");
-		
+
 		if (CollectionUtils.isNotEmpty(this.getManagedBean()
 				.getLoaReportDocumentList())) {
 
@@ -13759,14 +13799,13 @@ public class ReportBackingBean extends
 				getSuppLoiLoaMapData(loaDetailAll);
 				loaDetailAll.downloadAllReports();
 			}
-		}
-		else{
+		} else {
 			throw new EpException(MessageConst.ERROR_REPORT_780026);
 		}
 	}
 
 	/**
-	 *  selectAllDocuments - Select all documents based an event.
+	 * selectAllDocuments - Select all documents based an event.
 	 * 
 	 * @param event
 	 *            the event
@@ -13778,7 +13817,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * retrieveSuppLoiLoaMapForReport - will retrieving SuppLoiLoaMap based on qtid.
+	 * retrieveSuppLoiLoaMapForReport - will retrieving SuppLoiLoaMap based on
+	 * qtid.
 	 * 
 	 * @param qtId
 	 *            the qt id
@@ -13809,7 +13849,7 @@ public class ReportBackingBean extends
 		}
 
 	}
-	
+
 	/**
 	 * The Class SearchUnspscPagingDataModel.
 	 */
@@ -13826,8 +13866,12 @@ public class ReportBackingBean extends
 
 		}
 
-		/* (non-Javadoc)
-		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
+		 * .biz.bean.search.ISearchBean)
 		 */
 		public ISearchResultBean<CmUnspsc> pageChangeListener(
 				ISearchBean<CmUnspsc> searchBean) {
@@ -13851,7 +13895,7 @@ public class ReportBackingBean extends
 														.value(),
 												getManagedBean()
 														.getSearchValue()[i]));
-							
+
 							else if (getManagedBean().getSearchFieldValue()[i]
 									.equals("2"))
 								searchBean.getDataFilterBeans().add(
@@ -13859,7 +13903,8 @@ public class ReportBackingBean extends
 												SearchOperator.OPERATOR_LIKE
 														.value(),
 												getManagedBean()
-														.getSearchValue()[i],true));
+														.getSearchValue()[i],
+												true));
 						}
 					}
 				}
@@ -13897,13 +13942,14 @@ public class ReportBackingBean extends
 		List<SelectItem> searchField = new ArrayList<SelectItem>();
 
 		searchField.add(new SelectItem(1, ResourceBundleUtils.getMessage(
-				"lbl.rpt.unspscCodeScreen", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				"lbl.rpt.unspscCodeScreen",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale())));
 		searchField.add(new SelectItem(2, ResourceBundleUtils.getMessage(
 				"lbl.rpt.unspscTitle",
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale())));
-		
+
 		List<SelectItem> searchOperator = new ArrayList<SelectItem>();
 
 		SelectItem item = new SelectItem(
@@ -13914,7 +13960,7 @@ public class ReportBackingBean extends
 		searchOperator.add(item);
 		this.getManagedBean().setSearchField(searchField);
 		this.getManagedBean().setSearchOperator(searchOperator);
-		
+
 	}
 
 	/**
@@ -13923,15 +13969,15 @@ public class ReportBackingBean extends
 	public void searchLOV() {
 		searchUnspscPagingDataModel.reloadData();
 	}
-	
+
 	/**
-	 *  populateToSaveLOV - Populate to save lov.
+	 * populateToSaveLOV - Populate to save lov.
 	 */
 	public void populateToSaveLOV() {
 		this.setCmUnspscCode(this.getManagedBean().getSelectedLOV()
 				.getUnspscCode());
 		this.setCmUnspscTitle(this.getManagedBean().getSelectedLOV()
-				.getUnspscTitle());		
+				.getUnspscTitle());
 		enableExtensionTypes();
 	}
 
@@ -13939,26 +13985,26 @@ public class ReportBackingBean extends
 	 * resetLOV - Reset lov.
 	 * 
 	 * @return the searchUnspsc
-	 */	
-	
+	 */
+
 	public void resetLOV() {
 		getManagedBean().setSearchValue(new String[3]);
 		getManagedBean().setSearchFieldValue(new String[3]);
 		getManagedBean().setSearchOperatorValue(new String[3]);
-		this.getSearchUnspscPagingDataModel().resetData();		
+		this.getSearchUnspscPagingDataModel().resetData();
 	}
-	
+
 	/**
 	 * Application status change.
 	 */
-	public void applicationStatusChange(){
-		
+	public void applicationStatusChange() {
+
 		this.getManagedBean().getRptGenBean().setSmNonMandatoryDateView(false);
 		this.getManagedBean().getRptGenBean().setSmApprovalDateView(false);
 		this.getManagedBean().getRptGenBean().setSmRejectedDateView(false);
-		
+
 		if (this.getSmApplicationStatus() != null) {
-			
+
 			if (this.getSmApplicationStatus().equalsIgnoreCase("APPROVED")) {
 				this.getManagedBean().getRptGenBean()
 						.setSmNonMandatoryDateView(true);
@@ -13975,36 +14021,4 @@ public class ReportBackingBean extends
 		}
 	}
 
-
-	/**
-	 * @return the mofAccountEndDateFromDate
-	 */
-	public Date getMofAccountEndDateFromDate() {
-		return mofAccountEndDateFromDate;
-	}
-
-
-	/**
-	 * @param mofAccountEndDateFromDate the mofAccountEndDateFromDate to set
-	 */
-	public void setMofAccountEndDateFromDate(Date mofAccountEndDateFromDate) {
-		this.mofAccountEndDateFromDate = mofAccountEndDateFromDate;
-	}
-
-
-	/**
-	 * @return the mofAccountEndDateToDate
-	 */
-	public Date getMofAccountEndDateToDate() {
-		return mofAccountEndDateToDate;
-	}
-
-
-	/**
-	 * @param mofAccountEndDateToDate the mofAccountEndDateToDate to set
-	 */
-	public void setMofAccountEndDateToDate(Date mofAccountEndDateToDate) {
-		this.mofAccountEndDateToDate = mofAccountEndDateToDate;
-	}
-	
 }
