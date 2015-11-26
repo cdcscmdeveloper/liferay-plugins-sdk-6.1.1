@@ -48,7 +48,7 @@ public class SmPersonnelRequestActivationBackingBean {
 		SmServiceLookup.getPersonnelSO().resendPersonnelActivationEmail(reqDTO);
 		SmCommonUtil.redirectToPage(
 				"/xhtml/sm/userProfileMaintenance/outputMsg",
-				MessageConst.INFO_721032);
+				MessageConst.INFO_721032,null);
 	}
 
 	/**

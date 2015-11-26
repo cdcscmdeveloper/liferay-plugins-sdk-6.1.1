@@ -60,7 +60,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		initIdentificationTypes();
 		initCountries();
 		initStatest();
-		SmCommonUtil.redirectToPage("forceReplaceAdmin.xhtml", "");
+		SmCommonUtil.redirectToPage("forceReplaceAdmin.xhtml", "",null);
 	}
 
 	/**
@@ -265,7 +265,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		if (!getManagedBean().isExistingUser()) {
 			initDefaultNewAdmin();
 			SmCommonUtil.redirectToPage(
-					"/xhtml/sm/forcereplaceadmin/addNewAdminInfo.xhtml", "");
+					"/xhtml/sm/forcereplaceadmin/addNewAdminInfo.xhtml", "",null);
 		}
 		// replace with existing personnel
 		else {
@@ -452,7 +452,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		if (resDto.isSuccessful()) {
 			SmCommonUtil.redirectToPage(
 					SmApplicationUtil.getApplicationErrorPage(),
-					MessageConst.INFO_721027);
+					MessageConst.INFO_721027,null);
 		} else {
 			throw new EpException(MessageConst.ERROR_721113);
 		}
@@ -477,7 +477,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 */
 	public void viewTnc() {
 		SmCommonUtil.redirectToPage(
-				"/xhtml/sm/forcereplaceadmin/tncDetails.xhtml", "");
+				"/xhtml/sm/forcereplaceadmin/tncDetails.xhtml", "",null);
 	}
 
 }

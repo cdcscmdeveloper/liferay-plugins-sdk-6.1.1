@@ -89,7 +89,7 @@ public class SmPersonnelBackingBean extends
 
 		initAuthorizedPersonnels(smSupplier);
 		getManagedBean().setDisableAddNewUser(validatePersonLimit(smSupplier));
-		SmCommonUtil.redirectToPage("userProfileSearch.xhtml", "");
+		SmCommonUtil.redirectToPage("userProfileSearch.xhtml", "", null);
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class SmPersonnelBackingBean extends
 					getManagedBean().getUpdateSmPersonnelMailingAddress()
 							.getSmAddress());
 
-		SmCommonUtil.redirectToPage("updateUserProfile.xhtml", "");
+		SmCommonUtil.redirectToPage("updateUserProfile.xhtml", "", null);
 	}
 
 	/**
@@ -143,7 +143,8 @@ public class SmPersonnelBackingBean extends
 		getManagedBean().setNoSupplierUserMsg("");
 
 		if (isHavePendingTaskList(smSupplier)) {
-			SmCommonUtil.redirectToPage(redirectPage, MessageConst.INFO_721213);
+			SmCommonUtil.redirectToPage(redirectPage, MessageConst.INFO_721213,
+					null);
 		} else {
 			redirectPage = "adminReAssign.xhtml";
 			if (resDTO.getSmPersonnelList() != null
@@ -178,7 +179,7 @@ public class SmPersonnelBackingBean extends
 				constructNoSupplierUserToDeactivateMsg(smSupplier);
 			}
 
-			SmCommonUtil.redirectToPage(redirectPage, "");
+			SmCommonUtil.redirectToPage(redirectPage, "", null);
 		}
 
 	}
@@ -1087,7 +1088,7 @@ public class SmPersonnelBackingBean extends
 		log.info("Result:" + resDTO.isSuccessful());
 		if (resDTO.isSuccessful()) {
 			SmCommonUtil.redirectToPage("userProfileSearch.xhtml",
-					MessageConst.INFO_100002);
+					MessageConst.INFO_100002, null);
 			getManagedBean().setBasicSmPersonnel(resDTO.getSmPersonnel());
 		}
 	}
@@ -1139,7 +1140,11 @@ public class SmPersonnelBackingBean extends
 
 		if (resDTO.isSuccessful()) {
 			SmCommonUtil.redirectToPage("userProfileSearch.xhtml",
-					MessageConst.INFO_721014);
+					MessageConst.INFO_721014,
+					new String[] {
+							smPersonnel.getEmail(),
+							SmRuleHelper.getInstance().getEmailActivationDays()
+									+ "" });
 			return resDTO.getSmPersonnel();
 		} else
 			return null;

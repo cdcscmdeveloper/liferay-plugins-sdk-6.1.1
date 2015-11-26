@@ -45,7 +45,7 @@ public class SmUpdateGstInfoBackingBean extends
 	 */
 	public void preRenderGstInfo() {
 		renewSesionObject();
-		SmCommonUtil.redirectToPage("gstUpdateInfoTnc.xhtml", "");
+		SmCommonUtil.redirectToPage("gstUpdateInfoTnc.xhtml", "",null);
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class SmUpdateGstInfoBackingBean extends
 						.getSmSupplierBranchList());
 		initHqGstInfo();
 		initBranchGstInfo();
-		SmCommonUtil.redirectToPage("gstInfoBasePage.xhtml", "");
+		SmCommonUtil.redirectToPage("gstInfoBasePage.xhtml", "",null);
 	}
 
 	/**
@@ -202,7 +202,7 @@ public class SmUpdateGstInfoBackingBean extends
 		renewSesionObject();
 		SmCommonUtil.redirectToPage(
 				SmApplicationUtil.getApplicationErrorPage(),
-				MessageConst.INFO_721062);
+				MessageConst.INFO_721062,null);
 	}
 
 	/**

@@ -1684,15 +1684,24 @@ public class SmCommonUtil {
 	 * @param msgKeyId
 	 *            - String
 	 */
-	public static void redirectToPage(String page, String msgKeyId) {
+	public static void redirectToPage(String page, String msgKeyId,String[]params) {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		if (StringUtils.isNotBlank(msgKeyId)) {
-			fc.addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(msgKeyId,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
+			if(params!=null && params.length>0){
+				fc.addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(msgKeyId,params,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			}else{
+				fc.addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(msgKeyId,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			}
 		}
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, page);
