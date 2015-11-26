@@ -69,7 +69,7 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 					<p:commandLink update=":form:tt:eqiCompDialog" partialSubmit="true"
-						process="@this"
+						process="@this" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						action="#{backingBean.assignSelEquiCompany(equiBean)}">
 						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
 					</p:commandLink>
@@ -82,6 +82,7 @@
 					action="#{backingBean.assignNewEquiCompBean}" partialSubmit="true"
 					process="@this" update=":form:tt:eqiCompDialog" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 					action="#{backingBean.deleteSelectedEquiCompanies}"
 					process="equiInfPan" partialSubmit="true"
 					update=":form:tt:eqiComDt" />
@@ -140,10 +141,7 @@
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.equiComp.compName']}" id="supEquiCompName"
 						value="#{backingBean.managedBean.selectedEquityCompany.companyName}"
-						size="35" > 
-							<p:ajax event="blur" process="@this" update="supEquiMofNoId" partialSubmit="true"
-								listener="#{backingBean.onBlurSetMofNo(backingBean.managedBean.selectedEquityCompany)}"/>
-						</p:inputText>
+						size="35" />
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
 							oriValue="#{backingBean.managedBean.latestEquityCompany.companyName}" 
@@ -154,22 +152,26 @@
 						display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.mofNo']}" /></td>
-				<td>
-					<p:inputText value="#{backingBean.managedBean.selectedEquityCompany.mofNo}"
-						readonly="true" size="35" id="supEquiMofNoId"/>
-				</td>
-			</tr>
-			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.regNo']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText maxlength="20"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.equiComp.regNo']}" id="suppEquiCompRegNo"
 						value="#{backingBean.managedBean.selectedEquityCompany.regNo}"
-						size="35" /> <p:message id="suppEquiCompRegNoMsg"
+						size="35" > 
+						<p:ajax event="blur" process="@this" update="suppEquiMofNoId" partialSubmit="true"
+								listener="#{backingBean.onBlurSetMofNo(backingBean.managedBean.selectedEquityCompany)}"/>
+						</p:inputText>
+						<p:message id="suppEquiCompRegNoMsg"
 						for="suppEquiCompRegNo" showSummary="true" showDetail="false"
 						display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.mofNo']}" /></td>
+				<td>
+					<p:inputText value="#{backingBean.managedBean.selectedEquityCompany.mofNo}"
+						readonly="true" size="35" id="suppEquiMofNoId"/>
+				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.shrAmt']} " />
