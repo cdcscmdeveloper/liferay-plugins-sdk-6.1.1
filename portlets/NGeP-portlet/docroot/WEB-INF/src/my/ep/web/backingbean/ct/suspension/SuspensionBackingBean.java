@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -295,9 +296,10 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		    if(roleResDTO.isSuccessful() && roleResDTO.getRuleValueList()!=null && roleResDTO.getRuleValueList().size()>0) {
 		    	ctBB.getManagedBean().setPerformanceBondRuleAmt(Double.parseDouble(roleResDTO.getRuleValueList().get(0).getRuleValue()));
 		    }
-		    if (isContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())
-		    		|| (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null 
-		    		&& getManagedBean().getContractVer().getCtContractAmount().getGstAmount().doubleValue() != 0)) {
+		    if (isContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+		    	if (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() == null) {
+		    		ctBB.getManagedBean().getContractVer().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
+				}
 		    	ctBB.getManagedBean().setGstCheckingGUI(true);
 		    } else {
 		    	ctBB.getManagedBean().setGstCheckingGUI(false);

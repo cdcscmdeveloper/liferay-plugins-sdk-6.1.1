@@ -88,8 +88,13 @@
 					</td>
 					<td>
 						<p:inputText for="gstAmount" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
-			   				 disabled="true"  value="#{agreementBackingBean.managedBean.contractVer.ctContractAmount.gstAmount}">
+			   				 disabled="true" 
+			   				 rendered="#{ctBackingBean.managedBean.gstCheckingGUI}"
+			   				 value="#{agreementBackingBean.managedBean.contractVer.ctContractAmount.gstAmount}" >
 			   				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText>
+						<p:inputText styleClass="ppRightBtn" style="width:130px;" disabled="true" 
+			   				  rendered="#{!ctBackingBean.managedBean.gstCheckingGUI}" value="#{lbl['lbl.txt.na']}">
 						</p:inputText>
 				     </td>
 				<td class="columnWidth150">

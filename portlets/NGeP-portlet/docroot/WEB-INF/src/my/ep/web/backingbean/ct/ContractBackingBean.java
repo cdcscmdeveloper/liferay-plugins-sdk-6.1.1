@@ -1718,41 +1718,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    		return false;
 	    	}
 	    }
-	    
-	    /**
-		 * The method used to check whether the contract is with gst.
-		 * 
-		 * @return true, if the contract is with gst
-		 *         false, if the contract is without gst
-	     */
-		public boolean contractWithGst(){
-			boolean dateValue = false;
-			if(getManagedBean().getContractVer().getCtContractValue().getGstEffDate() != null){
-					dateValue = isContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate());
-		     }
-			if (dateValue || (getManagedBean().getContractVer().getCtContractAmount() != null 
-		    		       && getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null 
-		    		&& getManagedBean().getContractVer().getCtContractAmount().getGstAmount().doubleValue() != 0)) {
-		    	return true;
-		    } else {
-		    	return false;
-		    }
-		}
-		
-		/**
-		 * The method used to verify contract is with GST.
-		 * 
-		 * @param gstEffDate  the gst effective date
-		 * 
-		 * @return true, if contract is with GST
-		 *         false, if contract is without GST
-		 */
-		public boolean isContractWithGst(Date gstEffDate) {
-			if (gstEffDate != null && gstEffDate.getTime() <= DateUtils.getCurrentDateWithoutTime().getTime())
-				return true;
-			else
-				return false;
-		}
 		
 		 public void calculateOrverAllAmt(){
 		    	if(getManagedBean().getCtContractAmount()!= null && getManagedBean().getCtContractAmount().getGstAmount() !=  null){
