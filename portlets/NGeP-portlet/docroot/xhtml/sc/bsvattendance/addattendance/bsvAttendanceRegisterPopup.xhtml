@@ -28,19 +28,20 @@
 							style="float:left;" />
 					</p:column>
 					<p:column width="10%" style="text-align:right" >
-						<p:commandButton value="#{lbl['lbl.btn.save']}"
-							process="@form" 
-							action="#{bsvAttendanceBackingBean.saveBriefingRegAttendance('save')}" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();" style="float:right;"/>
-						<p:commandButton value="#{lbl['lbl.btn.complete']}"
-							process="@form" 
-							action="#{bsvAttendanceBackingBean.saveBriefingRegAttendance('complete')}" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();" style="float:right;"/>
-					</p:column>
+					<p:commandButton value="#{lbl['lbl.btn.complete']}" process="@form"
+						action="#{bsvAttendanceBackingBean.saveBriefingRegAttendance('complete')}"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+						style="float:right;" />
+						
+					<p:commandButton value="#{lbl['lbl.btn.save']}" process="@form"
+						action="#{bsvAttendanceBackingBean.saveBriefingRegAttendance('save')}"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+						style="float:right;" />
+				</p:column>
 				</p:row>
 				</h:panelGrid>
 				
-				<div align="left" class="header-info">
+				<div align="left" class="header-info header-spacing">
 					<table style="width: 100%">
 						<tr>
 							<td style="width: 10%"><h:outputLabel value="#{lbl['lbl.sc.briefing']}:" /></td>
@@ -55,8 +56,6 @@
 						</tr>
 					</table>
 				</div>
-		
-		<p:spacer height="10px"></p:spacer>
 		<ui:include src="/xhtml/sc/bsvattendance/addattendance/addRegistrationdetails.xhtml"></ui:include>
 	</ui:define>
 
