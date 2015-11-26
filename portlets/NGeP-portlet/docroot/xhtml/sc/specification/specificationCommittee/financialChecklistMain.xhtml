@@ -132,7 +132,7 @@
 
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.supplier.action']}"
-				style="width:10%;white-space: normal;">
+				style="width:15%;white-space: normal;">
 				<h:panelGroup id="financialChecklistsupplier">
 					<ui:fragment
 						rendered="#{((stageTwofunctional.pmDocument ne null and (stageTwofunctional.pmDocument.docDefinitionKey ne 'UP' and  stageTwofunctional.pmDocument.docDefinitionKey ne null)) or (stageTwofunctional.pmDocument eq null and stageTwofunctional.definationType.parameterCode eq 'TS'))}">
@@ -148,7 +148,7 @@
 							rendered="#{stageTwofunctional.definationType.parameterCode eq 'UP' and stageTwofunctional.action.parameterCode eq null}"
 							required="true" id="financialactionnull"
 							label="#{lbl['lbl.sc.spec.supplier.action']}"
-							style="width:100px;">
+							style="width:140px;">
 							<f:selectItems
 								value="#{specificationBackingBean.managedBean.financialChecklistAction}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
@@ -161,7 +161,7 @@
 							rendered="#{stageTwofunctional.definationType.parameterCode eq 'UP' and stageTwofunctional.action.parameterCode ne null}"
 							required="true" id="financialactionnotnullvalue"
 							label="#{lbl['lbl.sc.spec.supplier.action']}"
-							style="width:100px;">
+							style="width:140px;">
 							<f:selectItems
 								value="#{specificationBackingBean.PTJUploadDropDownActionValues}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
@@ -175,7 +175,7 @@
 				</h:panelGroup>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.scoring']}"
-				style="width:10%;white-space: normal;text-align: center;">
+				style="width:5%;white-space: normal;text-align: center;">
 				<h:panelGroup id="scoreFinanceView">
 					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
 						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
