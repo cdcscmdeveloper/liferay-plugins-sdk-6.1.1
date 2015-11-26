@@ -19,7 +19,7 @@
 				</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
 				<h:panelGrid columns="2">
-					<p:outputLabel value="#{lbl['lbl.ct.contract.extension']}" style="width:150px; text-align:left" />
+					<p:outputLabel value="#{lbl['lbl.ct.contract.extension']}" style="width:100%; text-align:left" />
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.extension']}" />
 				</h:panelGrid>
 			</h:panelGrid>
@@ -159,7 +159,7 @@
 				rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend}"/><br/>
 		</h:panelGrid>
 		<h:panelGrid id="typesOfAmend"  columns="6" style="width:100%" columnClasses="columnWidth170">
-			<h:outputLabel value="#{lbl['lbl.ct.extension.period']}"
+			<h:outputLabel value="#{lbl['lbl.ct.extension.period']}" styleClass="required"
 				rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" />
 			<h:panelGrid columns="3"
 				rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
