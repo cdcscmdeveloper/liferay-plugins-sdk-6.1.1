@@ -322,12 +322,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			ContractResDTO resDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
 			setValidateContractField(resDTO);
-			// If the GST Amount has been keyed in by user in sourcing,0
-			// the value must generate into Fulfilment Details and non-editable.
-			if(resDTO.getCtContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION) 
-					&& ctBB.getManagedBean().getContractVer().getCtContractAmount().getGstAmount() == null){
-				ctBB.getManagedBean().setDisableGstAmount(true);
-			}
+			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, 
 					ContractManagementConst.NAV_TO_CONTRACT_DETAILS);
@@ -532,6 +527,30 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 		ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 		ctBB.initializeRemarkAndAttachement(resDTO.getCtContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
+		
+		if (isContractWithGst(ctBB.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+			if (ctBB.getManagedBean().getCtContractAmount().getGstAmount() == null) {
+	    		ctBB.getManagedBean().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
+			}
+	    	ctBB.getManagedBean().setGstCheckingGUI(true);
+	    	ctBB.getManagedBean().setDisableGstAmount(true);
+	    	
+	    	// If the GST is effective and the Amount has been keyed in by user in sourcing,0
+			// the value must generate into Fulfilment Details and non-editable.
+	    	if (!ctBB.getManagedBean().isViewContract()
+	    			&& ctBB.getManagedBean().getContractVer().getCtContractValue().getLoaGstAmount() == null) {
+	    		// Only allow to change during FD creation and FD Update
+	    		if (resDTO.getCtContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)
+	    				|| (ctBB.getManagedBean().getCtContractAmount().isAgreement()
+	    						&& !ctBB.getManagedBean().getCtContractAmount().getCtAgreement().getStatus().getStatusId().equals(ContractStatusConst.AC_COMPLETE)
+	    						&& !ctBB.getManagedBean().getCtContractAmount().getCtAgreement().getStatus().getStatusId().equals(ContractStatusConst.SA_COMPLETE))) {
+		    		ctBB.getManagedBean().setDisableGstAmount(false);
+		    		ctBB.getManagedBean().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
+	    		}
+			}	    	
+	    } else {
+	    	ctBB.getManagedBean().setGstCheckingGUI(false);
+	    }
 	}
 	
 	/**
@@ -1564,14 +1583,16 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	
     	ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 		TerminationBackingBean trBB =  new TerminationBackingBean();
-		ctBB.getManagedBean().setViewContract(true);
-		ctBB.getManagedBean().setContractVer(resDTO.getCtContractVer());
-		trBB.getManagedBean().setExternalPageUrl(null);
 		trBB.setCtBB(new ContractBackingBean());	
+		trBB.getCtBB().getManagedBean().setViewContract(true);
+		trBB.getCtBB().getManagedBean().setContractVer(resDTO.getCtContractVer());
+		trBB.getManagedBean().setExternalPageUrl(null);
+		
 	//	trBB.getCtBB().getManagedBean().setCtContractVer(resDTO.getCtContractVer());
-		if (isContractWithGst(ctBB.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())
-	    		|| (ctBB.getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null 
-	    		&& ctBB.getManagedBean().getContractVer().getCtContractAmount().getGstAmount().doubleValue() != 0)) {
+		if (isContractWithGst(trBB.getCtBB().getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+			if (trBB.getCtBB().getManagedBean().getContractVer().getCtContractAmount().getGstAmount() == null) {
+				trBB.getCtBB().getManagedBean().getContractVer().getCtContractAmount().setContractAmount(BigDecimal.ZERO);
+			}
 			trBB.getCtBB().getManagedBean().setGstCheckingGUI(true);
 	    } else {
 	    	trBB.getCtBB().getManagedBean().setGstCheckingGUI(false);

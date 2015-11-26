@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
@@ -528,6 +529,15 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 		ctBB.initializeRemarkAndAttachement(getManagedBean().getCtAgreement().getCtWorkflowStatus(),
 				getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+		if (getManagedBean().getContractVer().getCtContractValue().getGstEffDate() != null 
+				&& getManagedBean().getContractVer().getCtContractValue().getGstEffDate().getTime() <= DateUtils.getCurrentDateWithoutTime().getTime()) {
+			if (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() == null) {
+				getManagedBean().getContractVer().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
+			}
+			ctBB.getManagedBean().setGstCheckingGUI(true);
+	    } else {
+	    	ctBB.getManagedBean().setGstCheckingGUI(false);
+	    }
 	}
 	
 	/**
@@ -1040,9 +1050,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 		ContractResDTO resDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
-		ContractDetailsBackingBean contractDetailsBB = new ContractDetailsBackingBean();
-		contractDetailsBB.setValidateContractField(resDTO);
+		ContractDetailsBackingBean contractDetailsBB = new ContractDetailsBackingBean();		
 		contractDetailsBB.getManagedBean().setViewContract(true);
+		contractDetailsBB.getManagedBean().setAsAtDate(null);
+		contractDetailsBB.setValidateContractField(resDTO);
 		//contractDetailsBB.ConstructSideTabMenu();
 		contractDetailsBB.getManagedBean().setSelectedTabIndex(0);
 		contractDetailsBB.getManagedBean().setExternalPageUrl(AGREEMENT_DOC_PAGE);
@@ -1455,8 +1466,18 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			context.put("contractStartDate", df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
 			context.put("contractEndDate", df.format(getManagedBean().getCtAgreement().getExpDate()));
 			context.put("contractPeriod", getManagedBean().getAgreementContractVer().getCtContractValue().getContractPeriod() + "");
-			context.put("contractValue", nf.format(getManagedBean().getContractVer().getCtContractAmount().getContractAmount()) + "");
-			context.put("contractValueText", NumberWordUtil.convert(getManagedBean().getContractVer().getCtContractAmount().getContractAmount().toString()));
+
+			BigDecimal overallAmount  = null;
+			if (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null) {
+				overallAmount = getManagedBean().getContractVer().getCtContractAmount().getContractAmount().add(
+						getManagedBean().getContractVer().getCtContractAmount().getGstAmount());
+			} else {
+				overallAmount = getManagedBean().getContractVer().getCtContractAmount().getContractAmount();
+			}
+			BigDecimal lamt  = overallAmount.setScale(
+					CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, BigDecimal.ROUND_HALF_UP);
+			context.put("contractValue", nf.format(lamt) + "");
+			context.put("contractValueText", NumberWordUtil.convert(lamt.toString()));
 			context.put("isBondReq", getManagedBean().getContractVer().getCtContractAmount().isBondReq());
 			if (getManagedBean().getContractVer().getCtContractAmount().isBondReq()) {
 				if (getManagedBean().getCtAgreement().getCtAmendment() != null) {

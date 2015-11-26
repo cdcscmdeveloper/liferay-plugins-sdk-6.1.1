@@ -809,6 +809,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctBackingBean.getManagedBean().setFrequencySchedule(ContractConst.PROGRESSIVE_SCHEDULE);
 			}
 		    
+			if (isContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+		    	if (ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount() == null) {
+		    		ctBackingBean.getManagedBean().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
+				}
+		    	ctBackingBean.getManagedBean().setGstCheckingGUI(true);
+		    } else {
+		    	ctBackingBean.getManagedBean().setGstCheckingGUI(false);
+		    }
+			
 		    // Amendment process	  
 		    getManagedBean().setCommitteeType(retrieveCommitteeType());
 		    ctBackingBean.getManagedBean().setDisableAmendDetails(false);
@@ -4114,12 +4123,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}				
 			context.put("newContractValue", amountDF.format(contractValue));
 			
-			if (contractWithGst()) {
+			if (isContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
 				context.put("newGSTAmout", amountDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount()));
 				context.put("newOverallAmt", amountDF.format(contractValue.add(
 						ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount())));
 			} else {
-				context.put("newGSTAmout", "TB");
+				context.put("newGSTAmout", "T/B");
 				context.put("newOverallAmt", amountDF.format(contractValue));
 			}			
 						
@@ -4368,13 +4377,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				context.put("bondAmt200k", false);
 			}
 			
-			context.put("contractWithGst", contractWithGst());
+			context.put("contractWithGst", isContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate()));
 			String gstRegNo = "TB";
 			String gstEffDate = "TB";
 			String gstDeclareDate = "TB";
 			BigDecimal overallAmt = scLoa.getLoaAmt();
 			
-			if (contractWithGst()) {
+			if (isContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
 				context.put("contractAmt", amountDF.format(overallAmt));
 				context.put("contractAmtTxt", (scLoa.getLoaAmt() != null && scLoa.getLoaAmt().doubleValue() != 0) ? NumberWordUtil.convert(amountNoCommaDF.format(overallAmt)) : ""); 
 				
@@ -4908,22 +4917,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
     public boolean isContractAdmin() {
 		return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) 
 				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()));
-	}
-    
-    /**
-	 * The method used to check whether the contract is with gst.
-	 * 
-	 * @return true, if the contract is with gst
-	 *         false, if the contract is without gst
-     */
-	public boolean contractWithGst(){
-		if (isContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())
-	    		|| (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null 
-	    		&& ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getGstAmount().doubleValue() != 0)) {
-	    	return true;
-	    } else {
-	    	return false;
-	    }
 	}
 	
 	/**
