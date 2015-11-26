@@ -83,7 +83,7 @@
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<h:panelGroup id="addtositebutton">
-				<p:commandButton id="addtositevisitid"
+				<p:commandButton id="addtositevisitid" styleClass="BtnSpacing"
 					update="@([id$=sameasbsvrequired])"
 					value="#{lbl['lbl.sc.qt.addtositevisit']}"
 					process="@this,briefingdtlid" partialSubmit="true"
@@ -91,13 +91,13 @@
 					rendered="#{bsvdtlbean.scQtBsv.sameBsv eq 'false' and !qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}" />
 			</h:panelGroup>
 			<p:commandButton id="briefingaddid" value="#{lbl['lbl.btn.add']}"
-				process="@this"
+				process="@this" styleClass="BtnSpacing"
 				disabled="#{bsvdtlbean.briefingList.size() eq 1}"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
 				action="#{qTBriefingSiteVisitBackingBean.addBsvDetails('B')}"
 				oncomplete="addbsvdtls.show();" update="@(.qtBriefDetails)" />
 
-			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
 				process="@this,briefingdtlid" partialSubmit="true"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
 				action="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('B')}"
@@ -174,13 +174,13 @@
 					</p:column>
 				</p:dataTable>
 				<div class="ppRightBtn">
-					<p:commandButton id="addsitevisitid"
+					<p:commandButton id="addsitevisitid" styleClass="BtnSpacing"
 						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
 						value="#{lbl['lbl.btn.add']}" process="@this"
 						action="#{qTBriefingSiteVisitBackingBean.addBsvDetails('S')}"
 						oncomplete="addbsvdtls.show();" update="@(.qtBriefDetails)" />
 
-					<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
 						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
 						process="@this, sitevisitdtlid" partialSubmit="true"
 						action="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('S')}"
