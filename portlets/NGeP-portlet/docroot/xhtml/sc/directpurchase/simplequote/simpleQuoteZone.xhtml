@@ -135,6 +135,7 @@
 			<div align="right" style="width: 100%">
 				<c:if test="#{isEditable}">
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					    styleClass="BtnSpacing"
 						process="@this, panelzoneDataTable" partialSubmit="true"
 						oncomplete="deliveryZoneDeletePopUp.show();"
 						update="@([id$=#{deliveryZoneDeleteId}])" />
@@ -142,6 +143,7 @@
 			</div>
 
 			<ac:confirmationPopup id="deliveryZoneDeleteId"
+			    styleClass="BtnSpacing"
 				widget="deliveryZoneDeletePopUp"
 				okAction="simpleQuoteBackingBean.deleteZoneTreeNode" 
 				width="400" height="100" 

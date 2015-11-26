@@ -25,14 +25,14 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" /></td>
-					<td><p:selectOneMenu style="margin-bottom: 5px; width: 246px;"
+					<td><p:selectOneMenu style="margin-bottom: 5px; width: 286px;"
 							value="#{simpleQuoteBackingBean.managedBean.searchProcType}">
 							<f:selectItems
 								value="#{simpleQuoteBackingBean.getDropdownCodeValues(ParameterTypeConst.procurementType)}" />
 						</p:selectOneMenu></td>
 						
 					<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
-					<td><p:selectOneMenu style="width: 176px;"
+					<td><p:selectOneMenu style="width: 286px;"
 							value="#{simpleQuoteBackingBean.managedBean.searchStatus}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
@@ -58,20 +58,21 @@
 						</p:calendar></td>
 				</tr>
 			</table>
-			<br />
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.search']}"
+				<p:commandButton value="#{lbl['lbl.btn.search']}" 
 					action="#{simpleQuoteMB.searchSimpleQuote}"
+					styleClass="BtnSpacing"
 					update="scQuoteDataModel" process="@this sqSearchId" />
 
 				<p:commandButton value="#{lbl['lbl.btn.reset']}"
+				    styleClass="BtnSpacing"
 					action="#{simpleQuoteBackingBean.reset}"
 					update="@([id$=sqSearchId])" resetValues="true"
 					partialSubmit="true" process="@this" />
 			</div>
 		</p:panel>
 		<p:panel header="#{lbl['lbl.sc.search.result']}" toggleable="true">
-			<p:dataTable id="scQuoteDataModel" 
+			<p:dataTable id="scQuoteDataModel"
 				value="#{simpleQuoteBackingBean.managedBean.scQuoteDataModel}"
 				var="scQuote" rows="10" rowIndexVar="index" lazy="true">
 				<ac:paginator for="scQuoteDataModel" />
@@ -100,22 +101,23 @@
 					</h:outputText>
 				</p:column>
 
-				<p:column style="width: 22%;" headerText="#{lbl['lbl.sc.prepared.by']}">
+				<p:column style="width: 22%;"
+					headerText="#{lbl['lbl.sc.prepared.by']}">
 					<h:outputText
 						value="#{simpleQuoteBackingBean.showCreatedBy(scQuote.createdBy)}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.status']}">
-				#{simpleQuoteBackingBean.getStatusDescById(scQuote.currentStatus.pmStatus.statusId)}
+				    #{simpleQuoteBackingBean.getStatusDescById(scQuote.currentStatus.pmStatus.statusId)}
 			</p:column>
-
-				<p:column headerText="#{lbl['lbl.sc.action']}">
-					<p:commandLink
-						action="#{simpleQuoteBackingBean.viewQuote(scQuote)}"
-						partialSubmit="true" process="@this">
-						<p:graphicImage value="/css/images/design/document.png" />
-					</p:commandLink>
-				</p:column>
-			</p:dataTable>
+			<p:column headerText="#{lbl['lbl.sc.action']}"
+					style="text-align: center;">
+				<p:commandLink
+					action="#{simpleQuoteBackingBean.viewQuote(scQuote)}"
+					partialSubmit="true" process="@this">
+					<p:graphicImage value="/css/images/design/document.png" />
+				</p:commandLink>
+		   </p:column>
+		 </p:dataTable>
 
 		</p:panel>
 	</ui:define>

@@ -41,13 +41,14 @@
 			</table>
 		</p:panel>
 
-		<p:spacer height="3px" />
 		<div class="ppRightBtn" style="width: 100%">
 			<p:commandButton id="okBtn" value="#{lbl['lbl.btn.ok']}"
+			    styleClass="BtnSpacing"
 				process="@all" update="@form" partialSubmit="true"
 				actionListener="#{simpleQuoteBackingBean.updateLocation}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+			    styleClass="BtnSpacing"
 				onclick="locationPopup.hide();" />
 		</div>
 
