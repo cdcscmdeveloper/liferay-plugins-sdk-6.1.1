@@ -148,7 +148,7 @@
 								<p:column headerText="#{lbl['lbl.ct.price']}" style="width:10%; white-space:normal;" styleClass="column-align-center">
 								  <h:panelGroup style="float:right;" rendered="#{itemPriceVar.changePrice}">
 								   	<p:inputText value="#{itemPriceVar.unitPrice}" styleClass="ppRightBtn" style="width:100px;" label="#{lbl['lbl.ct.price']}"
-								   		disabled="#{ctBackingBean.managedBean.disableAmendDetails}">
+								   		disabled="#{ctBackingBean.managedBean.disableAmendDetails}" required="true">
 										<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 										<p:ajax process="@this"/>
 									</p:inputText>
@@ -311,7 +311,7 @@
 				            
 							
 							<p:column headerText="#{lbl['lbl.ct.max.order.qty']}" styleClass="column-align-center">							  								
-								<p:inputText value="#{itemMaxQtyVar.maxQuantity}" styleClass="ppRightBtn" style="float:right;" rendered="#{itemMaxQtyVar.changeQuantity}" label="#{lbl['lbl.ct.max.order.qty']}"
+								<p:inputText value="#{itemMaxQtyVar.maxQuantity}" styleClass="ppRightBtn" style="float:right;" required="true" rendered="#{itemMaxQtyVar.changeQuantity}" label="#{lbl['lbl.ct.max.order.qty']}"
 					        		maxlength="#{amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" disabled="#{ctBackingBean.managedBean.disableAmendDetails}">
 									<f:converter converterId="dynamicNumberConverter" />
 									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
