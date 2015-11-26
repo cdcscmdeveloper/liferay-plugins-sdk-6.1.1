@@ -170,16 +170,28 @@
 						required="#{backingBean.managedBean.valueReqd}"
 						label=" #{lbl['lbl.sm.assocCmpny.regNo']}" id="asocRegNo"
 						value="#{backingBean.managedBean.selectedAssocCompany.regNo}"
-						size="35" maxlength="20" /> <p:graphicImage id="asocRegNoImg"
+						size="35" maxlength="20" >
+						<p:ajax event="blur" process="@this" update="assocMofNoId" partialSubmit="true"
+							listener="#{backingBean.onBlurSetMofNo(backingBean.managedBean.selectedAssocCompany)}"/>
+					</p:inputText> 
+					<p:graphicImage id="asocRegNoImg"
 						value="/css/images/design/tooltips.png" 
-						style="padding-left : 10px;" rendered="false" /> <p:tooltip
-						id="asocRegNoImgtt" for="asocRegNoImg">
-						<p:inputTextarea escape="false" readonly="true" disabled="true"
-							rows="3" cols="50"
-							value="#{lbl['lbl.sm.assocCmpny.regNoToolTip']}" />
+						style="padding-left : 10px;" rendered="false" /> 
+					<p:tooltip
+					id="asocRegNoImgtt" for="asocRegNoImg">
+					<p:inputTextarea escape="false" readonly="true" disabled="true"
+						rows="3" cols="50"
+						value="#{lbl['lbl.sm.assocCmpny.regNoToolTip']}" />
 					</p:tooltip>
 					<p:message id="asocRegNoMsg" for="asocRegNo" showSummary="true"
 						showDetail="false" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.mofNo']}" /></td>
+				<td>
+					<p:inputText value="#{backingBean.managedBean.selectedAssocCompany.mofNo}"
+						readonly="true" size="35" id="assocMofNoId"/>
+				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" />
