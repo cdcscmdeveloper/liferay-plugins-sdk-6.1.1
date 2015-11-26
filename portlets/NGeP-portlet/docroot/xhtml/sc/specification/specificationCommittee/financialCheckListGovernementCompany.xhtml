@@ -20,7 +20,9 @@
 			showSummary="false" autoUpdate="true" closable="true"
 			severity="error, info"></p:messages>
 
-		<div>
+		<table width="100%">
+			<tr>
+				<td align="right">
 			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 				immediate="true" styleClass="BtnSpacing"
 				action="#{specificationBackingBean.committeeBackAction}" />
@@ -38,7 +40,9 @@
 
 
 
-		</div>
+		</td>
+		</tr>
+		</table>
 		
 		<ui:include
 			src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />
@@ -100,8 +104,8 @@
 					<p:inputText></p:inputText>
 				</p:column>
 			</p:dataTable>
-			
 
+			<p:spacer height="10px"></p:spacer>
 			<table>
 
 				<tr>
@@ -121,7 +125,7 @@
 
 		
 
-		<p:panel id="financialGovernmentContracts"
+		<p:panel id="financialGovernmentContracts" styleClass="BtnSpacing"
 			header="#{lbl['lbl.sc.spec.score.total.contract.amount']}"
 			toggleable="true"
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">

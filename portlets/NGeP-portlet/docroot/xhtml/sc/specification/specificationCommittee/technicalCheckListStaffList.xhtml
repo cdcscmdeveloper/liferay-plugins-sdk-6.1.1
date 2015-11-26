@@ -13,39 +13,37 @@
 
 
 	<ui:define name="contentSection">
-		
+
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
 		</p:blockUI>
 		<p:messages id="TechnicalEmployeeList" autoUpdate="true"
 			showDetail="true" showSummary="false" closable="true"
 			severity="error, info"></p:messages>
-		<div>
-			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-				immediate="true" styleClass="BtnSpacing"
-				action="#{specificationBackingBean.committeeBackAction}" />
+		<table width="100%">
+			<tr>
+				<td align="right"><p:commandButton
+						value="#{lbl['lbl.btn.back']}" style="float:left;"
+						immediate="true" styleClass="BtnSpacing"
+						action="#{specificationBackingBean.committeeBackAction}" /> <p:commandButton
+						value="#{lbl['lbl.btn.save']}" styleClass="BtnSpacing"
+						rendered="#{((specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
+						style="float:right;" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"
+						action="#{specificationBackingBean.saveCheckListScores}">
+						<f:setPropertyActionListener
+							target="#{specificationBackingBean.managedBean.criteriaType}"
+							value="20" />
+					</p:commandButton></td>
+			</tr>
+		</table>
 
-			<p:commandButton value="#{lbl['lbl.btn.save']}"
-			styleClass="BtnSpacing"
-				rendered="#{((specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
-				style="float:right;" onstart="blockWidget.show();"
-				oncomplete="blockWidget.hide();"
-				action="#{specificationBackingBean.saveCheckListScores}">
-				<f:setPropertyActionListener
-					target="#{specificationBackingBean.managedBean.criteriaType}"
-					value="20" />
-			</p:commandButton>
-
-
-
-		</div>
-		
 		<ui:include
 			src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />
 
-		
-		<p:panel header="#{lbl['lbl.sc.spec.tech.staff.list']}" styleClass="BtnSpacing"
-			toggleable="true">
+
+		<p:panel header="#{lbl['lbl.sc.spec.tech.staff.list']}"
+			styleClass="BtnSpacing" toggleable="true">
 
 			<p:dataTable id="techEmployeeList" var="techEmployee"
 				rowIndexVar="index">
@@ -73,27 +71,28 @@
 			</p:dataTable>
 
 		</p:panel>
-		
+		<p:spacer height="10px"></p:spacer>
 		<table>
 			<tr>
-				<td width="150px"><h:outputLabel
+				<td width="180px"><h:outputLabel
 						value="#{lbl['lbl.sc.spec.total.staff']}"></h:outputLabel></td>
 				<td><p:inputText readonly="true"></p:inputText></td>
 			</tr>
 		</table>
-		
+
 		<p:panel id="technicalStaffListScoring" styleClass="BtnSpacing"
 			header="#{lbl['lbl.sc.spec.score.tot.tech.staff']}" toggleable="true"
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
 			<table>
 				<tr>
-					<td width="150px"><ui:fragment
+					<td width="180px"><ui:fragment
 							rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
 							<p:outputLabel value="*" styleClass="mandatory"
 								style="float : left"></p:outputLabel>
 						</ui:fragment> <p:outputLabel style="float : left"
 							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
-					<td><p:selectOneMenu required="true" style="width:160px;margin-bottom: 5px;"
+					<td><p:selectOneMenu required="true"
+							style="width:160px;margin-bottom: 5px;"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							label="#{lbl['lbl.sc.spec.asset.score.type']}"
 							id="techNoOfEmployeeAutoScore"
@@ -109,7 +108,7 @@
 					</td>
 				</tr>
 			</table>
-			
+
 			<h:panelGroup id="employeelist">
 				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
@@ -155,12 +154,12 @@
 							update="@([id$=#{scoringPnlId}])" />
 					</h:panelGroup>
 				</h:panelGroup>
-				
+
 				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 					<table>
 						<tr>
-							<td width="150px"><ui:fragment
+							<td width="180px"><ui:fragment
 									rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
 									<p:outputLabel value="*" styleClass="mandatory"
 										style="float : left"></p:outputLabel>

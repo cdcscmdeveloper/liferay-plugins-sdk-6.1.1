@@ -13,13 +13,15 @@
 
 
 	<ui:define name="contentSection">
-		<!-- <ac:title value="#{lbl['lbl.sc.spec.specification.committee']}"></ac:title> -->
+		
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
 		</p:blockUI>
 		<p:messages id="TotalEmployees" showDetail="true" showSummary="false"
 			autoUpdate="true" closable="true" severity="error, info"></p:messages>
-		<div>
+		<table width="100%">
+			<tr>
+				<td align="right">
 			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 				immediate="true" styleClass="BtnSpacing"
 				action="#{specificationBackingBean.committeeBackAction}" />
@@ -37,7 +39,9 @@
 
 
 
-		</div>
+		</td>
+		</tr>
+		</table>
 
 		<ui:include
 			src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />

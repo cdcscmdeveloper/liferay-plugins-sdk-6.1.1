@@ -29,13 +29,13 @@
 			</p:dataTable>
 
 		</h:panelGroup>
-		<p:spacer height="10"></p:spacer>
+		
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}" styleClass="BtnSpacing"
 				actionListener="#{specificationBackingBean.cancelPopup}"
 				style="float:right;" onclick="stageTwoFinance.hide();"></p:commandButton>
 			<p:commandButton value="#{lbl['lbl.btn.ok']}" style="float:right;"
-				process="@all" partialSubmit="true"
+				process="@all" partialSubmit="true" styleClass="BtnSpacing"
 				action="#{specificationBackingBean.addFinancialComplianceList}"
 				update="financeProposaltwo"></p:commandButton>
 		</div>
