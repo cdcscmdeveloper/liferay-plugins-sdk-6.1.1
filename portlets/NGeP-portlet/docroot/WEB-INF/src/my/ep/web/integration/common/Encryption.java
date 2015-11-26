@@ -17,7 +17,7 @@ public class Encryption {
 	
 	private static Logger log = EpLogger.getLogger(Encryption.class);
 
-	SFTPUtility sftpUtility = new SFTPUtility();
+	SFTPUtility sftpUtility = null;//new SFTPUtility();
 	OsbUtility osbUtility = new OsbUtility();
 
 	public void encryptGmas(BatchReqDTO reqDTO) {
@@ -129,6 +129,10 @@ public class Encryption {
 
 		// once upload is done cal web service osb integration to transfer file.
 		osbUtility.osbServiceCallOutBound(reqDTO.getServiceCode(), reqDTO.getFileName());
+		
+		//Create Payload and insert into the queue
+		
+		//upload and osb utility is of no use
 
 	}
 
