@@ -1,5 +1,9 @@
 package my.ep.web.util.sm.helper;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -3203,6 +3207,54 @@ public class SmCommonUtil {
 			}
 		}
 		return retVal;
+	}
+	
+	public void copyEntityProperties(Object fromObj, Object toObj,
+			String[] excludeProps) {
+		List<String> excludeList = new ArrayList<String>();
+		excludeList.add("serialVersionUID");
+		excludeList.add("changedFieldStatus");
+		excludeList.add("createdDate");
+		excludeList.add("createdBy");
+		excludeList.add("changedDate");
+		excludeList.add("changedBy");
+		excludeList.add("smAppl");
+		excludeList.add("smAddress");
+
+		if (excludeProps != null && excludeProps.length > 0) {
+			excludeList.addAll(Arrays.asList(excludeProps));
+		}
+		Class<? extends Object> fromClass = fromObj.getClass();
+		Class<? extends Object> toClass = toObj.getClass();
+		try {
+			BeanInfo fromBean = Introspector.getBeanInfo(fromClass);
+			BeanInfo toBean = Introspector.getBeanInfo(toClass);
+			PropertyDescriptor[] toPd = toBean.getPropertyDescriptors();
+			List<PropertyDescriptor> fromPd = Arrays.asList(fromBean
+					.getPropertyDescriptors());
+			for (PropertyDescriptor propertyDescriptor : toPd) {
+				propertyDescriptor.getDisplayName();
+				PropertyDescriptor pd = fromPd.get(fromPd
+						.indexOf(propertyDescriptor));
+				if (pd.getDisplayName().equals(
+						propertyDescriptor.getDisplayName())
+						&& !pd.getDisplayName().equals("class")
+						&& !excludeList.contains(pd.getDisplayName())) {
+					if (propertyDescriptor.getWriteMethod() != null) {
+						propertyDescriptor.getWriteMethod().invoke(toObj,
+								pd.getReadMethod().invoke(fromObj));
+					}
+				}
+			}
+		} catch (IntrospectionException e) {
+			throw new EpException(e.getMessage());
+		} catch (IllegalArgumentException e) {
+			throw new EpException(e.getMessage());
+		} catch (IllegalAccessException e) {
+			throw new EpException(e.getMessage());
+		} catch (InvocationTargetException e) {
+			throw new EpException(e.getMessage());
+		}
 	}
 
 	private static Field[] getFields(Object target, boolean findInSuperClasses,
