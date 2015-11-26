@@ -161,7 +161,7 @@ public class SPDetailBackingBean extends
 	private static final String NAV_TO_FINANCE_BANK_STATEMENT_PAGE = "/xhtml/sc/supplierProposal/financialProposal/financialBankStatement.xhtml";
 	private static final String NAV_TO_ASSET_LIABILITY_PAGE = "/xhtml/sc/supplierProposal/financialProposal/financialAssetLiability.xhtml";
 	private static final String NAV_TO_GOVT_COMPANY_EXPERIENCE_PAGE = "/xhtml/sc/supplierProposal/financialProposal/financialFederalGovt.xhtml";
-	private static final String NAV_TO_SUPPLIER_DETAILS_PAGE = "/xhtml/sc/supplierProposal/financialProposal/financialSupplierDetails.xhtml";
+	private static final String NAV_TO_SUPPLIER_DETAILS_PAGE = "/xhtml/sc/supplierProposal/financialProposal/supplierDetailsTabList.xhtml";
 	private static final String NAV_TO_PAID_UP_CAPITAL_PAGE = "/xhtml/sc/supplierProposal/financialProposal/financialPaidUpCapital.xhtml";
 	
 	
