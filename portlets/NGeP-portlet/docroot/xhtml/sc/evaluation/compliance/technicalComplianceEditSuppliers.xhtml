@@ -21,28 +21,26 @@
 				autoUpdate="true" closable="true" severity="error,info"
 				showSummary="false" />
 
-			<div>
-				<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-					immediate="true"
-					action="#{evaluationBackingBean.evaluationBackaction}" />
-
-				<p:commandButton value="#{lbl['lbl.btn.save']}"
-					disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
-					style="float:right;" update="@all" onstart="blockWidget.show();"
-					oncomplete="blockWidget.hide();"
-					action="#{evaluationBackingBean.saveComplianceUploadCheckList}" />
-			</div>
-			<p:spacer height="30" />
-			<br />
-			<br />
+			<table width="100%">
+				<tr>
+					<td align="right"><p:commandButton
+							value="#{lbl['lbl.btn.back']}" style="float:left;"
+							immediate="true" styleClass="BtnSpacing"
+							action="#{evaluationBackingBean.evaluationBackaction}" /> <p:commandButton
+							value="#{lbl['lbl.btn.save']}"
+							disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
+							style="float:right;" update="@all" onstart="blockWidget.show();"
+							oncomplete="blockWidget.hide();" styleClass="BtnSpacing"
+							action="#{evaluationBackingBean.saveComplianceUploadCheckList}" />
+					</td>
+				</tr>
+			</table>
 			<ui:include src="/xhtml/sc/evaluation/evaluationHeader.xhtml" />
-			<br />
+			
 			<p:panel header="#{lbl['lbl.sc.eva.technical.proposal.compliance']}">
 				<ui:include src="/xhtml/sc/evaluation/checklistHeader.xhtml" />
 			</p:panel>
-			<p:spacer height="15" />
-			<br />
-			<br />
+			
 			<h:panelGroup>
 				<ui:include src="technicalComplianceSupplierList.xhtml" />
 			</h:panelGroup>
