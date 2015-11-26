@@ -182,7 +182,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			} else {
 				SmCommonUtil.redirectToPage(
 						SmApplicationUtil.getApplicationErrorPage(),
-						MessageConst.INFO_721212);
+						MessageConst.INFO_721212,null);
 			}
 		}
 
@@ -1879,7 +1879,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 		setSupplierProfileOrHistoryUrl(baseUrl, baseUrlLabel, smAppl
 				.getSmSupplier().getSupplierId().toString());
-		SmCommonUtil.redirectToPage(basePage, "");
+		SmCommonUtil.redirectToPage(basePage, "",null);
 	}
 
 	/**

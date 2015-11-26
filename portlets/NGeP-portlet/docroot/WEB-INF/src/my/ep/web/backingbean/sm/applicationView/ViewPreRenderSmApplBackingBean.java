@@ -36,10 +36,10 @@ public class ViewPreRenderSmApplBackingBean {
 					applNo.length()).equals("APP") ? SmApplicationUtil
 					.getReviewApplicationBasePage(applType) : SmApplicationUtil
 					.getReviewApplicationSupplierBasePage(applType);
-			SmCommonUtil.redirectToPage(redirectToAppl, "");
+			SmCommonUtil.redirectToPage(redirectToAppl, "",null);
 		} else {
 			SmCommonUtil.redirectToPage(redirectToAppl,
-					MessageConst.INFO_721212);
+					MessageConst.INFO_721212,null);
 		}
 
 	}

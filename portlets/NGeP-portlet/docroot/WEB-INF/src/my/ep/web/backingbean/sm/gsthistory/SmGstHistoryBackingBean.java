@@ -44,11 +44,11 @@ public class SmGstHistoryBackingBean extends
 			setHqAndBranchGst(supplier);
 			getManagedBean().setRenderedBackButton(false);
 			SmCommonUtil.redirectToPage(
-					"/xhtml/sm/gstHistory/resultGstHistory.xhtml", "");
+					"/xhtml/sm/gstHistory/resultGstHistory.xhtml", "",null);
 		} else {
 			getManagedBean().setRenderedBackButton(true);
 			SmCommonUtil.redirectToPage(
-					"/xhtml/sm/gstHistory/searchGstHistory.xhtml", "");
+					"/xhtml/sm/gstHistory/searchGstHistory.xhtml", "",null);
 		}
 	}
 
@@ -60,7 +60,7 @@ public class SmGstHistoryBackingBean extends
 	public void viewGst(SmSupplier supplier) {
 		setHqAndBranchGst(supplier);
 		SmCommonUtil.redirectToPage(
-				"/xhtml/sm/gstHistory/resultGstHistory.xhtml", "");
+				"/xhtml/sm/gstHistory/resultGstHistory.xhtml", "",null);
 	}
 
 	/**
@@ -193,7 +193,7 @@ public class SmGstHistoryBackingBean extends
 	 */
 	public void back() {
 		SmCommonUtil.redirectToPage(
-				"/xhtml/sm/gstHistory/searchGstHistory.xhtml", "");
+				"/xhtml/sm/gstHistory/searchGstHistory.xhtml", "",null);
 	}
 
 	/**

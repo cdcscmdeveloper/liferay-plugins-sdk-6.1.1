@@ -2,13 +2,6 @@ package my.ep.web.util.sm.helper;
 
 import java.math.BigDecimal;
 
-import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
-import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.pm.RuleTypeConst;
-import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
-import my.ep.dto.pm.general.settings.rule.RuleResDTO;
-import my.ep.web.util.lookupservice.BusinessDelegate;
-
 /**
  * 
  * @author KS
@@ -36,19 +29,23 @@ public class SmRuleHelper {
 	}
 
 	public int getMaxMofAuthorizedUser() {
-		return 5;
+		return SmServiceLookup.getSmRuleSO().retrieveMaxMofAuthUser()
+				.getMaxMofAuthorizedUser();
 	}
 
 	public int getMaxAdditionalMofAuthorizedUser() {
-		return 10;
+		return SmServiceLookup.getSmRuleSO().retrieveMaxAdditionalMofAuthUser()
+				.getMaxAdditionalMofAuthUser();
 	}
 
 	public int getMaxBasicAuthorizedUser() {
-		return 3;
+		return SmServiceLookup.getSmRuleSO().retrieveMaxBasicAuthUser()
+				.getMaxBasicAuthUser();
 	}
 
 	public int getEmailActivationDays() {
-		return 7;
+		return SmServiceLookup.getSmRuleSO().retrieveEmailActivationDays()
+				.getEmailActivationDays();
 	}
 
 	/**

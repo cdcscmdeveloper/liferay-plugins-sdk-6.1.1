@@ -27,7 +27,7 @@ public class SmBulkApplicationBackingBean extends
 		getManagedBean().setSelectedTasks(new ArrayList<SmBulkApplicationVO>());
 		SmCommonUtil.setMDCUserId();
 		SmCommonUtil.redirectToPage(
-				"/xhtml/sm/bulkApplication/bulkApplicationTaskList.xhtml", "");
+				"/xhtml/sm/bulkApplication/bulkApplicationTaskList.xhtml", "",null);
 	}
 
 	public void approveBulkApplication() {

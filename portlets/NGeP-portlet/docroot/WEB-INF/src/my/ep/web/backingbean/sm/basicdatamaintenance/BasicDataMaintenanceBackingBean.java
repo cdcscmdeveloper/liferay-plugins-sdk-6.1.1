@@ -41,7 +41,7 @@ public class BasicDataMaintenanceBackingBean extends
 		renewSesionObject();
 		resetSearchCriteria();
 		SmCommonUtil.setMDCUserId();
-		SmCommonUtil.redirectToPage("searchBasicDataMaintenance.xhtml", "");
+		SmCommonUtil.redirectToPage("searchBasicDataMaintenance.xhtml", "",null);
 	}
 
 	public void viewSupplier(SmSupplier supplier) {
@@ -56,7 +56,7 @@ public class BasicDataMaintenanceBackingBean extends
 			throw new EpException(MessageConst.ERROR_722618);
 		}
 		setBusinessTypeList();
-		SmCommonUtil.redirectToPage("basicDataMaintenance.xhtml", "");
+		SmCommonUtil.redirectToPage("basicDataMaintenance.xhtml", "",null);
 	}
 
 	public void search() {
@@ -68,7 +68,7 @@ public class BasicDataMaintenanceBackingBean extends
 	}
 
 	public void back() {
-		SmCommonUtil.redirectToPage("searchBasicDataMaintenance.xhtml", "");
+		SmCommonUtil.redirectToPage("searchBasicDataMaintenance.xhtml", "",null);
 	}
 
 	public void onChangeSearchBy(AjaxBehaviorEvent e) {
@@ -89,7 +89,7 @@ public class BasicDataMaintenanceBackingBean extends
 					.updateBasicSupplierInfo(reqDTO);
 			SmCommonUtil.redirectToPage(
 					SmApplicationUtil.getApplicationErrorPage(),
-					MessageConst.INFO_721221);
+					MessageConst.INFO_721221,null);
 		} else {
 			throw new EpException("Failed to update supplier info!!");
 		}
