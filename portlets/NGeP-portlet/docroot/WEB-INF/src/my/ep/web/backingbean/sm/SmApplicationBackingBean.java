@@ -3273,18 +3273,9 @@ public class SmApplicationBackingBean extends
 			equiCompBean.setShareAmt(new BigDecimal(0));
 		}
 		validatePaidCaptialAmt(false);
-		SmApplicationUtil.getInstance()
-				.populateStateByCountry(equiCompBean.getSmAddress(),
-						SupplierManagementConst.SM_EQUI_COMPANY_PANEL,
-						getManagedBean());
-		SmApplicationUtil.getInstance()
-				.populateDistrictsByState(equiCompBean.getSmAddress(),
-						SupplierManagementConst.SM_EQUI_COMPANY_PANEL,
-						getManagedBean());
-		SmApplicationUtil.getInstance()
-				.populateCitiesByDistrict(equiCompBean.getSmAddress(),
-						SupplierManagementConst.SM_EQUI_COMPANY_PANEL,
-						getManagedBean());
+		SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
+				getManagedBean(), equiCompBean.getSmAddress(),
+				SupplierManagementConst.SM_EQUI_COMPANY_PANEL);
 		getManagedBean().setSelectedEquityCompany(equiCompBean);
 		if (getManagedBean().getLatestAppl() != null) {
 			getManagedBean().setLatestEquityCompany(
