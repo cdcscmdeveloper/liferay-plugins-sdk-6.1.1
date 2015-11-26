@@ -284,27 +284,27 @@
 				<!-- </h:panelGroup> -->
 			</p:column>
 		</p:dataTable>
-		<p:spacer height="20"></p:spacer>
+	
 
 		<div align="right">
-			<p:commandButton
+			<p:commandButton styleClass="BtnSpacing"
 				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 				value="#{lbl['lbl.sc.spec.btn.standard.check.list']}"
 				process="@this" oncomplete="stageTwoTech.show();"
 				actionListener="#{specificationBackingBean.retriveTechnicalStandardCheckList}"
 				update="compilencestageTwo" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.create.specification']}"
-				process="@this"
+				process="@this" styleClass="BtnSpacing"
 				actionListener="#{specificationBackingBean.technicalSpecBoValidate}"
 				disabled="#{((specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or (specificationBackingBean.managedBean.panelItemCategory eq 'S' and specificationBackingBean.managedBean.scQt.panel))}"
 				partialSubmit="true" oncomplete="createOwnerSpec.show();" />
 
-			<p:commandButton value="#{lbl['lbl.btn.add']}"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" styleClass="BtnSpacing"
 				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 				process="@this,stageTwotechProposal"
 				action="#{specificationBackingBean.addTechnicalCheckList}"
 				update="@all,stageTwotechProposal" />
-			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
 				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 				process="@this" partialSubmit="true"
 				oncomplete="technicalCheckListDeletePopUp.show();"

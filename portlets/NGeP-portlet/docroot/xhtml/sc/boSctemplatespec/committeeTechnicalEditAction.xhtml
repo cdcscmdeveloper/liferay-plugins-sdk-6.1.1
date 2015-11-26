@@ -19,35 +19,30 @@
 		<p:messages id="committeeTechmessages" showDetail="true"
 			showSummary="false" autoUpdate="true" closable="true"
 			severity="error, info" />
-		<div>
-			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-				immediate="true"
-				action="#{specificationBackingBean.committeeBackAction}" />
+		<table width="100%">
+			<tr>
+				<td align="right"><p:commandButton
+						value="#{lbl['lbl.btn.back']}" style="float:left;"
+						immediate="true" styleClass="BtnSpacing"
+						action="#{specificationBackingBean.committeeBackAction}" /> <p:commandButton
+						value="#{lbl['lbl.btn.cancel']}"
+						rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
+						style="float:right;" immediate="true" styleClass="BtnSpacing"
+						onclick="createTechnicalDialog.show();"></p:commandButton> <p:commandButton
+						value="#{lbl['lbl.btn.complete']}" styleClass="BtnSpacing"
+						rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
+						style="float:right;" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"
+						action="#{specificationBackingBean.completeTemplateSpecDetails('SC',1)}"
+						update="@all" /> <p:commandButton value="#{lbl['lbl.btn.save']}"
+						rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
+						style="float:right;" update="@all" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();" styleClass="BtnSpacing"
+						action="#{specificationBackingBean.saveTemplateSpecDetails('SC',1)}" />
 
-
-			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-				rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
-				style="float:right;" immediate="true"
-				onclick="createTechnicalDialog.show();"></p:commandButton>
-
-			<p:commandButton value="#{lbl['lbl.btn.complete']}"
-				rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
-				style="float:right;" onstart="blockWidget.show();"
-				oncomplete="blockWidget.hide();"
-				action="#{specificationBackingBean.completeTemplateSpecDetails('SC',1)}"
-				update="@all" />
-
-			<p:commandButton value="#{lbl['lbl.btn.save']}"
-				rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
-				style="float:right;" update="@all" onstart="blockWidget.show();"
-				oncomplete="blockWidget.hide();"
-				action="#{specificationBackingBean.saveTemplateSpecDetails('SC',1)}" />
-
-		</div>
-		<p:spacer height="25" />
-		<br />
-		<br />
-		<!-- 	<ui:include src="/xhtml/sc/main/templateMaintenanceheader.xhtml"></ui:include> -->
+				</td>
+			</tr>
+		</table>
 		<p:panel header="#{lbl['lbl.sc.template.spec']}" toggleable="true">
 
 

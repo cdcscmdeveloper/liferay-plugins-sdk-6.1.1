@@ -12,7 +12,7 @@
 
 
 	<ui:define name="contentSection">
-		<!-- <ac:title value="#{lbl['lbl.sc.spec.specification.committee']}"></ac:title> -->
+
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
 		</p:blockUI>
@@ -20,34 +20,32 @@
 			autoUpdate="true" showSummary="false" closable="true"
 			severity="error, info">
 		</p:messages>
-		<div>
-			<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"
-				style="float:left;" styleClass="BtnSpacing"
-				action="#{specificationBackingBean.committeeBackAction}" />
+		<table width="100%">
+			<tr>
+				<td align="right"><p:commandButton
+						value="#{lbl['lbl.btn.back']}" immediate="true"
+						style="float:left;" styleClass="BtnSpacing"
+						action="#{specificationBackingBean.committeeBackAction}" /> <p:commandButton
+						value="#{lbl['lbl.btn.save']}" styleClass="BtnSpacing"
+						rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
+						style="float:right;" update="@all" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"
+						action="#{specificationBackingBean.saveCheckListScores}">
+						<f:setPropertyActionListener
+							target="#{specificationBackingBean.managedBean.criteriaType}"
+							value="10" />
+						<f:setPropertyActionListener
+							target="#{specificationBackingBean.managedBean.otherCriteriaType}"
+							value="11" />
 
-			<p:commandButton value="#{lbl['lbl.btn.save']}"
-				styleClass="BtnSpacing"
-				rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
-				style="float:right;" update="@all" onstart="blockWidget.show();"
-				oncomplete="blockWidget.hide();"
-				action="#{specificationBackingBean.saveCheckListScores}">
-				<f:setPropertyActionListener
-					target="#{specificationBackingBean.managedBean.criteriaType}"
-					value="10" />
-				<f:setPropertyActionListener
-					target="#{specificationBackingBean.managedBean.otherCriteriaType}"
-					value="11" />
+					</p:commandButton></td>
+			</tr>
+		</table>
 
-			</p:commandButton>
-
-
-
-		</div>
-		
 		<ui:include
 			src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />
 
-		
+
 		<p:panel toggleable="true" styleClass="BtnSpacing">
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.sc.spec.company.exp.fed.gov']}" />
@@ -104,7 +102,7 @@
 				</p:column>
 			</p:dataTable>
 
-		
+			<p:spacer height="10px"></p:spacer>
 			<table>
 				<tr>
 					<td width="150px"><h:outputText
@@ -113,7 +111,7 @@
 					<td><p:inputText readonly="true" disabled="true"></p:inputText>
 					</td>
 				</tr>
-				
+
 				<tr>
 					<td width="150px"><h:outputText
 							value="#{lbl['lbl.sc.spec.total.no.years']}" /></td>
@@ -125,13 +123,13 @@
 
 		</p:panel>
 
-	
+
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.spec.score.company.exp.intruction']}"
 			escape="false" />
 
 
-		
+
 		<p:panel id="techCompanyExpContracts" styleClass="BtnSpacing"
 			header="#{lbl['lbl.sc.spec.score.total.no.contracts']}"
 			toggleable="true"
@@ -160,7 +158,7 @@
 					</td>
 				</tr>
 			</table>
-			
+
 			<h:panelGroup id="companyContract">
 				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
@@ -208,7 +206,7 @@
 							update="@([id$=#{scoringPnlId}])" />
 					</h:panelGroup>
 				</h:panelGroup>
-				
+
 				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 					<table>
@@ -258,7 +256,7 @@
 					</td>
 				</tr>
 			</table>
-			
+
 			<h:panelGroup id="companyGovScore">
 				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.companyScoreType eq '1'}">
@@ -406,7 +404,7 @@
 							update="@([id$=#{scoringPnlId}])" />
 					</h:panelGroup>
 				</h:panelGroup>
-				
+
 				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.companyScoreType eq '2'}">
 					<table>

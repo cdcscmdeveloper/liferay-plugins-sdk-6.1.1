@@ -51,11 +51,13 @@
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"
+			styleClass="BtnSpacing"
 				partialSubmit="true" update="@([id$=deliveryAddrDlg])"
 				disabled="#{specificationBackingBean.managedBean.readOnly}"
 				action="#{specificationBackingBean.deliveryList(zonePnlList.tplSpecZoneDtl)}"
 				oncomplete="deliveryAddress.show();" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+			styleClass="BtnSpacing"
 				process="@this,pjtDelivered" partialSubmit="true"
 				disabled="#{specificationBackingBean.managedBean.readOnly}"
 				oncomplete="deliveryAddressDeletePopUp.show();"

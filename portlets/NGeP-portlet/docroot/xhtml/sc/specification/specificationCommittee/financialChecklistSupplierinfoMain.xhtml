@@ -19,25 +19,23 @@
 		<p:messages id="TotalSuppliers" showDetail="true" showSummary="false"
 			autoUpdate="true" closable="true" severity="error, info"></p:messages>
 
-		<div>
-			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-				immediate="true" styleClass="BtnSpacing"
-				action="#{specificationBackingBean.committeeBackAction}" />
-
-			<p:commandButton value="#{lbl['lbl.btn.save']}"
-				styleClass="BtnSpacing"
-				rendered="#{((specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
-				style="float:right;" onstart="blockWidget.show();"
-				oncomplete="blockWidget.hide();"
-				action="#{specificationBackingBean.saveCheckListScores}">
-				<f:setPropertyActionListener
-					target="#{specificationBackingBean.managedBean.criteriaType}"
-					value="30" />
-			</p:commandButton>
-
-
-
-		</div>
+		<table width="100%">
+			<tr>
+				<td align="right"><p:commandButton
+						value="#{lbl['lbl.btn.back']}" style="float:left;"
+						immediate="true" styleClass="BtnSpacing"
+						action="#{specificationBackingBean.committeeBackAction}" /> <p:commandButton
+						value="#{lbl['lbl.btn.save']}" styleClass="BtnSpacing"
+						rendered="#{((specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
+						style="float:right;" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"
+						action="#{specificationBackingBean.saveCheckListScores}">
+						<f:setPropertyActionListener
+							target="#{specificationBackingBean.managedBean.criteriaType}"
+							value="30" />
+					</p:commandButton></td>
+			</tr>
+		</table>
 
 
 
