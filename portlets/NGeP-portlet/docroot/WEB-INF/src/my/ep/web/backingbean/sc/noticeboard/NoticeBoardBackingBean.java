@@ -388,7 +388,7 @@ public class NoticeBoardBackingBean extends
 				+ this.getManagedBean().getPreviousPage();
 		FacesContext context = FacesContext.getCurrentInstance();
 		context.getApplication().getNavigationHandler()
-				.handleNavigation(context, null, pageUrl);
+				.handleNavigation(context, null, pageUrl+"?faces-redirect=true");
 
 	}
 
