@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<!-- <ui:include src="/xhtml/sc/quatationtender/qtntenderheader.xhtml" /> -->
+	
 
 
 
@@ -111,16 +111,16 @@
 
 
 		</p:dataTable>
-		<p:spacer height="10"></p:spacer>
+		
 		<div align="right">
-			<p:commandButton id="meetingbutton"
+			<p:commandButton id="meetingbutton" styleClass="BtnSpacing"
 				disabled="#{evaluationBackingBean.managedBean.readOnly}"
 				value="#{lbl['lbl.btn.add']}"
 				oncomplete="evaluationMeeting.paginator.endLink.click();"
 				process="@this,evaluationmeetingDetails" partialSubmit="true"
 				action="#{evaluationBackingBean.addMeetingAction}"
 				update="evaluationmeetingDetails" />
-			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
 				disabled="#{evaluationBackingBean.managedBean.readOnly}"
 				process="@this" partialSubmit="true"
 				oncomplete="evaluationMeetingDtlsDeletePopUp.show();"
