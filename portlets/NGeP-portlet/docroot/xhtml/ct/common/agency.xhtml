@@ -34,7 +34,10 @@
                		               <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ceiling.amt']}"/>
                	              </f:facet>
 							  </p:column>
-							  <p:column rowspan="2" headerText="#{lbl['lbl.ct.effective.date']}" style="width:8%;" styleClass="column-align-center"/>
+							  <p:column rowspan="2" style="width:8%;" styleClass="column-align-center">
+							      <f:facet name="header">
+							        <h:outputText value="#{lbl['lbl.ct.effective.date']}" styleClass="required"/>
+							      </f:facet></p:column>
 							  <p:column rowspan="2" headerText="#{lbl['lbl.ct.expiry.date']}" style="width:8%;" styleClass="column-align-center"/>
 							  <p:column colspan="3" headerText="#{lbl['lbl.ct.ap178']}" style="text-align:center; white-space:normal;" styleClass="column-align-center"> 
 									 <f:facet name="header">

@@ -659,7 +659,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * 					will invoke base on the action
 	 */
     public void validateCtContractVer(String action) throws EpException {
-    	CtContractVer contractVer = ctBB.getManagedBean().getContractVer();
+    	//CtContractVer contractVer = ctBB.getManagedBean().getContractVer();
     	getManagedBean().setAutoUpdate(true);
 		// Validation for remark
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)
@@ -683,33 +683,40 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
  			}
  		}
+		
+		if(ctBB.getManagedBean().getContractVer().getCtDeductions() != null && ctBB.getManagedBean().getContractVer().getCtDeductions().size() > 0){
+			  for(CtDeduction deduction : ctBB.getManagedBean().getContractVer().getCtDeductions()){
+				   if(deduction.getDeductionType() == null ||deduction.getDeductionType().getParameterId() == null ){
+					   throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.deduction.type", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				   }
+			  }
+		}
+		
 		// Validation for zone
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 	    	getZoneObjDetails();
-			if (contractVer.getCtContractZones() != null) {
-				for (CtContractZone contractZone : contractVer.getCtContractZones()) {
+			if (ctBB.getManagedBean().getContractVer().getCtContractZones() != null) {
+				for (CtContractZone contractZone : ctBB.getManagedBean().getContractVer().getCtContractZones()) {
 					if (contractZone.getDeliveryTerm() == 0) {
 						throw new EpException(MessageConst.ERROR_750004, new String[]{contractZone.getZoneName()});
 					}
 				}
 			}
 		}
-		log.info(">>>>>>>>> null exception checking contractVer>>>>>>>>" +contractVer);
-		if(contractVer!=null) {
-			log.info(">>>>>>>>> null exception checking>>>>>>>>" +contractVer.getDocType());
-		}
-		if (contractVer.getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION) 
-				|| contractVer.getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)) {
+		if (ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION) 
+				|| ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)) {
 			// Validation for agency
 			if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY) 
-					&& contractVer.getCtAgencies().size() == 0 && action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+					&& ctBB.getManagedBean().getContractVer().getCtAgencies().size() == 0 && action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 				throw new EpException(MessageConst.ERROR_750006); // At least one row should be in Agency section.
 			}
 			// Validation for performance bond
 			if (ctBB.getManagedBean().getCtContractAmount().isBondReq() && !ctBB.getManagedBean().isDirectPurchase()) {
 				//In CT Update(bond required): if previously the bond already defined, number of performance bond must be > 0 while submission; 
 				//In CT Update(bond required): if previously no bond defined, system allow submission of FD Update even the number of performance bond entered = 0.
-				if (contractVer.getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)) {
+				if (ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)) {
 					if (ctBB.getManagedBean().getContractVer().getCtContract().getLatestContractVer() != null) {
 						for (CtContractAmount contractAmt : ctBB.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getCtContractAmounts()) {
 				    		if (getManagedBean().getAsAtDate().getTime() >= contractAmt.getEffDate().getTime() 
@@ -776,16 +783,16 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 							}
 						}						
 						
-						if (contractVer.getCtContract().getLoa().getBondAmt() == null 
+						if (ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() == null 
 							&& ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 									ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 							throw new EpException(MessageConst.ERROR_750021);
 				
-						} else if (contractVer.getCtContract().getLoa().getBondAmt() != null 
+						} else if (ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() != null 
 							&& ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 									ParameterConst.CONTRACT_TYPE_MINISTRY)) {						
 							bondAmount = Double.valueOf(df.format(bondAmount));
-							double oriBondAmount = Double.valueOf(df.format(contractVer.getCtContract().getLoa().getBondAmt().doubleValue()));
+							double oriBondAmount = Double.valueOf(df.format(ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt().doubleValue()));
 							bondAmendAmount = Double.valueOf(df.format(bondAmendAmount));
 						
 							int retval = Double.compare(bondAmount , oriBondAmount);
@@ -811,11 +818,23 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 				List<String> schedulePhaseNoList = new ArrayList<String>();
 				if (ctBB.getManagedBean().getContractVer().getCtContract().isFrequencySchedule()) {
-					if (contractVer.getCtSchedules() == null || contractVer.getCtSchedules().size() < 2 
+					if (ctBB.getManagedBean().getContractVer().getCtSchedules() == null || ctBB.getManagedBean().getContractVer().getCtSchedules().size() < 2 
 							&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
 						throw new EpException(MessageConst.ERROR_750022);
 			     	}
-					for (CtSchedule schedules : contractVer.getCtSchedules()) {
+					for (CtSchedule schedules : ctBB.getManagedBean().getContractVer().getCtSchedules()) {
+						if (schedules.getScheduleNo() == null) {
+							throw new EpException(MessageConst.ERROR_100022,
+									new String[] {ResourceBundleUtils.getMessage("lbl.ct.schedule.no", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						}
+						if (schedulePhaseNoList.contains(schedules.getScheduleNo().toString())) {
+							throw new EpException(MessageConst.ERROR_100046, 
+									new String[] {ResourceBundleUtils.getMessage("lbl.ct.schedule.no", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						} else {
+							schedulePhaseNoList.add(schedules.getScheduleNo().toString());
+						}
 						if (schedules.getStartMonth() == null) {
 							throw new EpException(MessageConst.ERROR_100022,
 									new String[] {ResourceBundleUtils.getMessage("lbl.ct.frequency.schedule", 
@@ -830,33 +849,22 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 											+ " " + ResourceBundleUtils.getMessage("lbl.ct.end.period", 
 													ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			        	}
-						if (schedules.getScheduleNo() == null) {
-							throw new EpException(MessageConst.ERROR_100022,
-									new String[] {ResourceBundleUtils.getMessage("lbl.ct.schedule.no", 
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-						}
-						if (schedulePhaseNoList.contains(schedules.getScheduleNo().toString())) {
-							throw new EpException(MessageConst.ERROR_100046, 
-									new String[] {ResourceBundleUtils.getMessage("lbl.ct.schedule.no", 
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-						} else {
-							schedulePhaseNoList.add(schedules.getScheduleNo().toString());
-						}
+						
 						if (schedules.getScheduleType() == null || schedules.getScheduleType().getParameterId() == null) {
 							throw new EpException(MessageConst.ERROR_100022, 
 									new String[] {ResourceBundleUtils.getMessage("lbl.ct.schedule.type", 
 											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 						}
 					}     	
-				} else if (contractVer.getCtProgressivePayments() == null || contractVer.getCtProgressivePayments().size() < 2 
+				} else if (ctBB.getManagedBean().getContractVer().getCtProgressivePayments() == null || ctBB.getManagedBean().getContractVer().getCtProgressivePayments().size() < 2 
 						&& !ctBB.getManagedBean().getContractVer().getCtContract().isFrequencySchedule()
 						&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
 					throw new EpException(MessageConst.ERROR_750022);
 				}
-				if (contractVer.getCtProgressivePayments() != null && !contractVer.getCtProgressivePayments().isEmpty() 
+				if (ctBB.getManagedBean().getContractVer().getCtProgressivePayments() != null && !ctBB.getManagedBean().getContractVer().getCtProgressivePayments().isEmpty() 
 						&& !ctBB.getManagedBean().getContractVer().getCtContract().isFrequencySchedule()) {
 					float percentage = 0.0f;
-					for (CtProgressivePayment progressivePayment : contractVer.getCtProgressivePayments()) {
+					for (CtProgressivePayment progressivePayment : ctBB.getManagedBean().getContractVer().getCtProgressivePayments()) {
 						percentage = percentage + progressivePayment.getPercentage();
 						if (progressivePayment.getPhaseNo()== null) {
 							throw new EpException(MessageConst.ERROR_100022,
@@ -904,10 +912,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			}
 			// Validation for AP178 agency
-			if (contractVer.getCtAgencies().size()>0) {
+			if (ctBB.getManagedBean().getContractVer().getCtAgencies().size()>0) {
 				double ceilingAmt = 0.0;
 				DecimalFormat df = new DecimalFormat("#.00");
-				for (CtAgency ctAgency : contractVer.getCtAgencies()) {
+				for (CtAgency ctAgency : ctBB.getManagedBean().getContractVer().getCtAgencies()) {
 					ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
 					if (ctAgency.isAp178() == true && (ctAgency.getFileName() == null  || ctAgency.getFileName().equalsIgnoreCase(""))) {
 						throw new EpException(MessageConst.ERROR_750008); 
@@ -940,8 +948,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			}			
 			// Validation for ceiling quantity
-			if (contractVer.getCtContractItems() != null) {
-				for (CtContractItem item : contractVer.getCtContractItems()) {
+			if (ctBB.getManagedBean().getContractVer().getCtContractItems() != null) {
+				for (CtContractItem item : ctBB.getManagedBean().getContractVer().getCtContractItems()) {
 					double totalCeilingQuantity = 0.0;
 					if (item.getCtItemMaxQties().size() != 0) {						
 						for (CtItemCeilingQty ctItemCeilingQty : item.getCtItemCeilingQties()) {

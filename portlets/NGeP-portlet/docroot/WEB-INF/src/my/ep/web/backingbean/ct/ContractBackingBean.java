@@ -973,10 +973,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	
 	public void validateDeductionType(Long parameteId)  {
 		
-		    if(getManagedBean().getContractVer().getCtDeductions().size() > 0 ) {
+		   getManagedBean().setSelectedDeduction(null);
+		if(getManagedBean().getContractVer().getCtDeductions().size() > 0 ) {
 			    int count = 0;
 		         for(CtDeduction deId : getManagedBean().getContractVer().getCtDeductions()){
-					    if(parameteId.intValue() == deId.getDeductionType().getParameterId().intValue()){
+					    if(deId.getDeductionType().getParameterId() != null && parameteId.intValue() == deId.getDeductionType().getParameterId().intValue()){
 						    count++;
 						    if(count == 2)
 							     throw new EpException(MessageConst.ERROR_100046,

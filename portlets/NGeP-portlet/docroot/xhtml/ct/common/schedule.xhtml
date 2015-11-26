@@ -33,14 +33,20 @@
 	                       disabledSelection="#{payScheduleObj.useInFulfilment or ctBackingBean.managedBean.disableAmendDetails}" 
 	                       rendered="#{!ctBackingBean.managedBean.viewContract}"/>
 		       
-		               <p:column style="width:9%;" headerText="#{lbl['lbl.ct.schedule.no']}" styleClass="column-align-center"  >
+		               <p:column style="width:9%;"  styleClass="column-align-center"  >
+		                     <f:facet name="header">
+		                        <h:outputText value="#{lbl['lbl.ct.schedule.no']}" styleClass="required"/>
+		                     </f:facet>
 		                   <p:inputText value="#{payScheduleObj.scheduleNo}" styleClass="ppRightBtn"  
 		                       maxlength="4"  style="width:60px;" 
 		                       disabled="#{payScheduleObj.useInFulfilment or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}">
 		                   </p:inputText>
 		               </p:column> 
 		      
-		               <p:column style="width:28%;" headerText="#{lbl['lbl.ct.start.period']}" styleClass="column-align-center" >
+		               <p:column style="width:28%;" styleClass="column-align-center" >
+		                   <f:facet name="header">
+		                        <h:outputText value="#{lbl['lbl.ct.start.period']}" styleClass="required"/>
+		                   </f:facet>
 		                   <p:selectOneMenu id="fromMonth" value="#{payScheduleObj.startMonth}" 
 		                      disabled="#{payScheduleObj.useInFulfilment or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}" style="width:110px;">
                                <f:selectItems value="#{ctBackingBean.retrieveStartMonthList(payScheduleObj.startYear)}"/>  
@@ -56,7 +62,11 @@
                            </p:selectOneMenu> 
 		               </p:column> 	
 		       
-		                <p:column style="width:32%;" headerText="#{lbl['lbl.ct.end.period']}" styleClass="column-align-center" >
+		                <p:column style="width:32%;" styleClass="column-align-center" >
+		                  <f:facet name="header">
+		                        <h:outputText value="#{lbl['lbl.ct.end.period']}" styleClass="required"/>
+		                   </f:facet>
+		                  
 		                    <h:panelGroup>
 		                        <p:selectOneMenu id="toMonth" value="#{payScheduleObj.endMonth}" 
 		                            disabled="#{payScheduleObj.useInFulfilment or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}" style="width:110px;" >
@@ -82,7 +92,7 @@
 		           
 		                  <p:column style="width:20%;white-space:normal;" styleClass="column-align-center" >
 		                      <f:facet name="header">
-						     	<h:outputText value="#{lbl['lbl.ct.fulfilment.type']}"/>
+						     	<h:outputText value="#{lbl['lbl.ct.fulfilment.type']}" styleClass="required"/>
 				               	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.schedule.type']}"/>
 				              </f:facet>
 		                      <p:selectOneMenu  value="#{payScheduleObj.scheduleType.parameterId}"
@@ -135,19 +145,30 @@
 		                 disabledSelection="#{progPaymentObj.useInFulfilment or ctBackingBean.managedBean.disableAmendDetails}" 
 		                 rendered="#{!ctBackingBean.managedBean.viewContract}"/> 
                   
-                      <p:column style="width:4%;" headerText="#{lbl['lbl.ct.phase']}" styleClass="column-align-center" >
+                      <p:column style="width:4%;"  styleClass="column-align-center" >
+                          <f:facet name="header">
+		                        <h:outputText value="#{lbl['lbl.ct.phase']}" styleClass="required"/>
+		                   </f:facet>
+                          
                            <p:inputText value="#{progPaymentObj.phaseNo}" maxlength="4" style="width:25px;" styleClass="ppRightBtn" 
                                   disabled="#{progPaymentObj.useInFulfilment or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}" label="#{lbl['lbl.ct.phase']}">
                            </p:inputText>
                       </p:column>
 		      
-		               <p:column style="width:25%;" headerText="#{lbl['lbl.ct.description']}" styleClass="column-align-center" >
+		               <p:column style="width:25%;" styleClass="column-align-center" >
+		                     <f:facet name="header">
+		                        <h:outputText value="#{lbl['lbl.ct.description']}" styleClass="required"/>
+		                   </f:facet>
 		                    <p:inputText value="#{progPaymentObj.phaseDesc}"  maxlength="50" style="width:200px;" 
 		                         disabled="#{progPaymentObj.useInFulfilment or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}" label="#{lbl['lbl.ct.description']}">
 		                    </p:inputText>
 		                </p:column>
               
-                        <p:column style="width:20%;" headerText="#{lbl['lbl.ct.start.period']}" styleClass="column-align-center"  >
+                        <p:column style="width:20%;" styleClass="column-align-center"  >
+		                     <f:facet name="header">
+		                        <h:outputText value="#{lbl['lbl.ct.start.period']}" styleClass="required"/>
+		                   </f:facet>
+		                    
 		                    <p:selectOneMenu id="fromProMonth" value="#{progPaymentObj.startMonth}"  style="width:110px;" 
 		                        disabled="#{progPaymentObj.useInFulfilment or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}">
                                 <f:selectItems value="#{ctBackingBean.retrieveStartMonthList(progPaymentObj.startYear)}" />  
@@ -164,7 +185,11 @@
                               </p:selectOneMenu> 
 		                  </p:column> 	
 		        
-		                  <p:column style="width:28%;" headerText="#{lbl['lbl.ct.end.period']}" styleClass="column-align-center" >
+		                  <p:column style="width:28%;" styleClass="column-align-center" >
+		                       <f:facet name="header">
+		                        <h:outputText value="#{lbl['lbl.ct.end.period']}" styleClass="required"/>
+		                   </f:facet>
+		                      
 		                      <h:panelGroup columns="5">
 		                          <p:selectOneMenu id="toProMonth" value="#{progPaymentObj.endMonth}"  style="width:110px;"
 		                               disabled="#{progPaymentObj.useInFulfilment or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}">
@@ -190,7 +215,10 @@
 		                           </h:outputText>
 		                      </p:column>
                
-                              <p:column style="width:14%;" headerText="#{lbl['lbl.ct.percentage']}" styleClass="column-align-center" >
+                              <p:column style="width:14%;"  styleClass="column-align-center" >
+                                   <f:facet name="header">
+		                        <h:outputText value="#{lbl['lbl.ct.percentage']}" styleClass="required"/>
+		                   </f:facet>
                                  <h:panelGroup>
                                      <p:inputText value="#{progPaymentObj.percentage}" style="width:50px;" styleClass="ppRightBtn" 
                          	            disabled="#{progPaymentObj.useInFulfilment or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}" label="#{lbl['lbl.ct.percentage']}">
