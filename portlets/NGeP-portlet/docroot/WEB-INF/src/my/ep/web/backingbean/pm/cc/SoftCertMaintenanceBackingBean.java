@@ -40,7 +40,7 @@ public class SoftCertMaintenanceBackingBean {
 
 	public SoftCertMaintenanceBackingBean() {}
 	
-	private static final Logger logger = EpLogger
+	private static final Logger log = EpLogger
 			.getLogger(SoftCertMaintenanceBackingBean.class);
 	
 	private KMCClient getClient() throws KMCAPIException {
@@ -70,19 +70,42 @@ public class SoftCertMaintenanceBackingBean {
 			{
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
 				tok = (String) res.get(GenSecToken.TOKEN);
-				System.out.println("Token is "+tok);
+				log.info(">>>>>>>TOKEN:"+tok+"<<<<<<<<<");
 				break;
 
 			default:
-				System.err.println("API return error. Message was : "+res.getStatusMessage());
+				log.info(">>>>>>>>>>API return error. Message was : "+res.getStatusMessage());
 			}
-//			assertEquals(IKMCAPIResponse.OPERATION_SUCCESSFUL,res.getStatusCode());
 			
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
 			throw new EpException(ex.getMessage());
-//			fail(ex.getMessage());
+		}
+		
+		return tok;
+	}
+	
+	public String generateSecurityTokenByDicertUserId(String digiCertUserId){
+		String tok = null;
+		try{
+			KMCClient client = getClient();
+			
+			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.generateToken(digiCertUserId,getSupplierEpNo()));
+			switch(res.getStatusCode())
+			{
+			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
+				tok = (String) res.get(GenSecToken.TOKEN);
+				break;
+
+			default:
+				System.err.println("API return error. Message was : "+res.getStatusMessage());
+			}
+			
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+			throw new EpException(ex.getMessage());
 		}
 		
 		return tok;
@@ -146,7 +169,7 @@ public class SoftCertMaintenanceBackingBean {
 	}
 	
 	public void RequestRevokeCert(String digiCertUserId, String supplierEpNo) throws IOException, PortalException, SystemException {
-	    String token = generateSecurityToken(); 
+	    String token = generateSecurityTokenByDicertUserId(digiCertUserId); 
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 		String url4 = "https://kmcep-dev.digicert.com.my/kmc/RequestRevokeCert.aspx?userID=" + digiCertUserId + "&orgid=" + supplierEpNo + "&token=" + encodedtoken;
