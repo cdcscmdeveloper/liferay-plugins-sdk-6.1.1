@@ -35,12 +35,19 @@
 				</p:selectBooleanCheckbox>
 		      </p:column>
 			
-			<p:column style="width:10%;" headerText="#{lbl['lbl.ct.ref.no']}" styleClass="column-align-center">
+			<p:column style="width:10%;"  styleClass="column-align-center">
+				  <f:facet name="header">
+				        <h:outputText value="#{lbl['lbl.ct.ref.no']}"  styleClass="required"/>
+				</f:facet>
 				<p:inputText value="#{varBond.refNo}" maxlength="50" 
 					disabled="#{ctBackingBean.managedBean.viewContract}" style="width:85px;" />
 			</p:column>
 		
-			<p:column style="width:23%;" headerText="#{lbl['lbl.ct.financial.inst']}" styleClass="column-align-center">
+			<p:column style="width:23%;"  styleClass="column-align-center">
+				<f:facet name="header">
+				        <h:outputText value="#{lbl['lbl.ct.financial.inst']}"  styleClass="required"/>
+				</f:facet>
+				
 				<p:selectOneMenu id="orgName"  value="#{varBond.financialOrg.financialOrgId}"
 				    style="width:195px;" disabled="#{ctBackingBean.managedBean.viewContract}">
 					   <f:selectItems value="#{ctBackingBean.retrieveFinancialOrgList()}" />
@@ -56,7 +63,11 @@
 				</p:inputText>
 			</p:column>
 			
-			<p:column style="width:8%;" headerText="#{lbl['lbl.ct.effective.date']}" styleClass="column-align-center">
+			<p:column style="width:8%;" styleClass="column-align-center">
+				<f:facet name="header">
+				        <h:outputText value="#{lbl['lbl.ct.effective.date']}"  styleClass="required"/>
+				</f:facet>
+				
 				<p:calendar id="popupButtonCal4" value="#{varBond.effDate}"  styleClass="calendarDateField" size="9" 
 					disabled="#{ctBackingBean.managedBean.viewContract}"
 					showOn="button" readonlyInput="true" navigator="true"
@@ -76,7 +87,11 @@
 			    </p:calendar>
 			</p:column>
 			
-			<p:column styleClass="column-align-center" style="width:35%;" headerText="#{lbl['lbl.txt.attachment']}">
+			<p:column styleClass="column-align-center" style="width:35%;">
+				<f:facet name="header">
+				        <h:outputText value="#{lbl['lbl.txt.attachment']}"  styleClass="required"/>
+				</f:facet>
+				
 				<h:panelGroup id="uploadBondPg" columns="2">
 					<p:commandButton oncomplete="uploadBondDlg.show();return false;"  
 							rendered="#{!ctBackingBean.managedBean.viewContract}"
