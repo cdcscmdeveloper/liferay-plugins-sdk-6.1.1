@@ -12,14 +12,14 @@
 
 
 
-	<p:panel header="#{lbl['lbl.sc.eva.qualified.supplier.list.compliance.stage']}"
+	<p:panel
+		header="#{lbl['lbl.sc.eva.qualified.supplier.list.compliance.stage']}"
 		toggleable="true">
 
 		<p:dataTable var="qualifiedSupplier" id="complianceQualifiedSupplier"
 			rows="10" editable="true" rowIndexVar="index"
 			value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM}"
-			lazy="true"
-			rowKey="#{qualifiedSupplier}">
+			lazy="true" rowKey="#{qualifiedSupplier}">
 			<ac:paginator for="complianceQualifiedSupplier" />
 
 
@@ -37,12 +37,11 @@
 
 	</p:panel>
 
-
+	<p:spacer height="10px" />
 	<table>
 
 		<tr>
-			<td><h:outputLabel
-					value="#{lbl['lbl.sc.total']}" /></td>
+			<td><h:outputLabel value="#{lbl['lbl.sc.total']}" /></td>
 			<td><p:inputText readonly="true" disabled="true"
 					value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM.rowCount}"></p:inputText></td>
 		</tr>
@@ -52,14 +51,14 @@
 
 
 
-	<p:panel header="#{lbl['lbl.sc.eva.disqualified.supplier.list.compliance.stage']}"
+	<p:panel
+		header="#{lbl['lbl.sc.eva.disqualified.supplier.list.compliance.stage']}"
 		toggleable="true">
 
 		<p:dataTable var="disQualifiedSupplier"
 			value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM}"
-			lazy="true"
-			id="complianceDisQualifiedSupplier" editable="true" rows="10"
-			rowIndexVar="index" rowKey="#{disQualifiedSupplier}">
+			lazy="true" id="complianceDisQualifiedSupplier" editable="true"
+			rows="10" rowIndexVar="index" rowKey="#{disQualifiedSupplier}">
 			<ac:paginator for="complianceDisQualifiedSupplier" />
 
 
@@ -77,12 +76,11 @@
 
 	</p:panel>
 
-
+	<p:spacer height="10px" />
 	<table>
 
 		<tr>
-			<td><h:outputLabel
-					value="#{lbl['lbl.sc.total']}" /></td>
+			<td><h:outputLabel value="#{lbl['lbl.sc.total']}" /></td>
 			<td><p:inputText readonly="true" disabled="true"
 					value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM.rowCount}"></p:inputText></td>
 		</tr>
