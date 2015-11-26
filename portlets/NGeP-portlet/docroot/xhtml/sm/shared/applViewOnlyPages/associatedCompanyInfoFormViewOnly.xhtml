@@ -55,6 +55,12 @@
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.regNo}"/></td>
 				</tr>
 				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.mofNo']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" 
+							value="#{empty viewSmApplBackingBean.managedBean.selectedAssocCompany.mofNo?lbl['lbl.sm.no.available']:
+								viewSmApplBackingBean.managedBean.selectedAssocCompany.mofNo}"/></td>
+				</tr>
+				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.companyaddress']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.address1}"/></td>
 				</tr>
