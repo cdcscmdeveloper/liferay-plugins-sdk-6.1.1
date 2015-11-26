@@ -5,43 +5,92 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
- 		
-		         <div>						 
-					 <table style="width:100%;" >
-						  <tr>
-						    <td width="100%">
-							    <h:panelGrid  id="ppReportCriteria" columns="4" style="width:85%;">
-							    	 <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ppMinistryView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.ministry']}" style="margin-top:5px;width:160px;" />									
-									<p:selectOneMenu id="ppMinistry" value="#{reportBackingBean.commonMinistry}" style="margin-top:5px;width:300px;">										
-										<f:selectItems value="#{reportBackingBean.ministryList}"></f:selectItems>	
-										<p:ajax event="change" listener="#{reportBackingBean.retrieveFMIPTJList}" process="@this" partialSubmit="true" update="@all" />	
-										
-																																																																			
-									</p:selectOneMenu>	
-								  </c:if>
-									<c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ppPTJView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.ptj']}" style="margin-top:5px;width:160px;" />									
-									<p:selectOneMenu id="ppPtj" value="#{reportBackingBean.commonPtj}" style="margin-top:5px;width:300px;">
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItems value="#{reportBackingBean.ptjList}"></f:selectItems>
-										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																																										
-									</p:selectOneMenu>		
-								  </c:if> 
-								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ppYearView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.yearone']}" style="margin-top:5px;width:160px;" />									
-									<p:selectOneMenu id="ppYear" value="#{reportBackingBean.ppYear}" style="margin-top:5px;width:300px;">
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItems value="#{reportBackingBean.generateYearList()}"></f:selectItems>
-										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																																
-									</p:selectOneMenu>		
-								  </c:if>
-										   
-								  			 			
-							    </h:panelGrid>							    
-						    </td>
-						  </tr>							  
-					</table>
-		       </div>
-		      
-  </ui:composition>
+
+	<div>
+		<table style="width: 100%;">
+			<tr>
+				<td width="100%"><h:panelGrid id="ppReportCriteria" columns="4"
+						style="width:85%;">
+						<c:if
+							test="#{ctReportBackingBean.managedBean.rptGenBean.ppNonMandatoryView}">
+							<c:if
+								test="#{ctReportBackingBean.managedBean.rptGenBean.ppMinistryView}">
+								<p:outputLabel value="#{lbl['lbl.rpt.ministry']}"
+									style="margin-top:5px;width:160px;" />
+								<p:selectOneMenu id="ppMinistry"
+									value="#{reportBackingBean.commonMinistry}"
+									style="margin-top:5px;width:300px;">
+									<f:selectItems value="#{reportBackingBean.ministryList}"></f:selectItems>
+									<p:ajax event="change"
+										listener="#{reportBackingBean.retrieveFMIPTJList}"
+										process="@this" partialSubmit="true" update="@all" />
+								</p:selectOneMenu>
+							</c:if>
+						</c:if>
+
+						<c:if
+							test="#{ctReportBackingBean.managedBean.rptGenBean.ppMandatoryView}">
+							<c:if
+								test="#{ctReportBackingBean.managedBean.rptGenBean.ppMinistryView}">
+								<p:column>
+									<table style="width: 182px;">
+										<tr style="width: 100%;">
+											<td style="margin-top: 5px; width: 160px;"><p:outputLabel
+													value="#{lbl['lbl.rpt.ministry']}" id="ministryId" /> <p:outputLabel
+													value="*" styleClass="mandatory" /></td>
+										</tr>
+									</table>
+								</p:column>
+								<p:column>
+									<table style="width: 100%">
+										<tr>
+											<td style="width: 84%"><p:selectOneMenu
+													label="#{lbl['lbl.rpt.ministry']}" id="ppMinistry"
+													value="#{reportBackingBean.commonMinistry}"
+													style="margin-top:5px;width:300px;" required="true">
+													<f:selectItems value="#{reportBackingBean.ministryList}"></f:selectItems>
+													<p:ajax event="change"
+														listener="#{reportBackingBean.retrieveFMIPTJList}"
+														process="@this" partialSubmit="true" update="@all" />
+												</p:selectOneMenu></td>
+											<td><p:message id="rptMinMsg" for="ppMinistry"
+													display="icon" showDetail="false" /></td>
+										</tr>
+									</table>
+								</p:column>
+							</c:if>
+						</c:if>
+						<c:if
+							test="#{ctReportBackingBean.managedBean.rptGenBean.ppPTJView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.ptj']}"
+								style="margin-top:5px;width:160px;" />
+							<p:selectOneMenu id="ppPtj"
+								value="#{reportBackingBean.commonPtj}"
+								style="margin-top:5px;width:300px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItems value="#{reportBackingBean.ptjList}"></f:selectItems>
+								<p:ajax event="change" partialSubmit="true"
+									update="@([id$=Msg])" />
+							</p:selectOneMenu>
+						</c:if>
+						<c:if
+							test="#{ctReportBackingBean.managedBean.rptGenBean.ppYearView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.yearone']}"
+								style="margin-top:5px;width:160px;" />
+							<p:selectOneMenu id="ppYear" value="#{reportBackingBean.ppYear}"
+								style="margin-top:5px;width:300px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItems value="#{reportBackingBean.generateYearList()}"></f:selectItems>
+								<p:ajax event="change" partialSubmit="true"
+									update="@([id$=Msg])" />
+							</p:selectOneMenu>
+						</c:if>
+
+					</h:panelGrid></td>
+			</tr>
+		</table>
+	</div>
+
+</ui:composition>
