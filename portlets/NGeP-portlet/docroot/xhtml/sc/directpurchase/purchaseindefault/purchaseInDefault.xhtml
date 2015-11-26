@@ -302,7 +302,7 @@
 							required="true"
 							label="#{lbl['lbl.sc.purchase.in.default.valid.period']}"
 							value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.pidValidDays}"
-							size="32" style="text-align:right;margin-right: 5px;"
+							size="46" style="text-align:right;margin-right: 5px;"
 							disabled="#{!(isPendingSubmissionStatus or isPendingVerification)}">
 							<p:ajax partialSubmit="true" process="@this" update="@this" />
 						</p:inputText> <p:message id="pidvalidDaysMsg" for="pidvalidDays" display="icon" /></td>
@@ -319,7 +319,7 @@
 										label="#{lbl['lbl.sc.purchase.in.default.just']}"
 										disabled="#{!isPendingSubmissionStatus}" required="true"
 										value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.reasonType.reasonCode}"
-										style="margin-bottom: 5px;">
+										style="margin-bottom: 5px;width:346px;">
 										<f:selectItems
 											value="#{purchaseInDefaultBackingBean.managedBean.justifications}" />
 
@@ -353,7 +353,7 @@
 							validatorMessage="* Order Qty: must be a decimal number between 0.0 and 9999999999.999"
 							label="#{lbl['lbl.sc.purchase.in.default.order.qty']}"
 							value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.quantity}"
-							style="text-align:right;" size="32"
+							style="text-align:right;" size="46"
 							disabled="#{!isPendingSubmissionStatus}">
 							<p:ajax partialSubmit="true" process="@this" update="@this" />
 						</p:inputText> <p:message id="ordqtyMsg" for="ordqty" display="icon" /></td>
@@ -387,7 +387,7 @@
 								</tr>
 								<tr>
 									<td></td>
-									<td><p:inputTextarea style="width:350px;"
+									<td><p:inputTextarea style="width:297px;"
 											value="#{remarkVar.remark}" maxlength="1000" label="Remarks"
 											rendered="#{remarkIndex==0}" id="remark"
 											disabled="#{!purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"

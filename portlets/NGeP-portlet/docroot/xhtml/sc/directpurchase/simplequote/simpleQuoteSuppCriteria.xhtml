@@ -42,7 +42,6 @@
 				<p:tab title="#{lbl['lbl.sc.sq.supplier.location']}"
 					rendered="#{simpleQuoteBackingBean.managedBean.byLocality}">
 					<h:panelGroup id="locPanel">
-						<p:spacer height="2px"></p:spacer>
 						<table style="width: 100%">
 							<tr>
 								<td style="width: 160px"><p:outputLabel
@@ -58,11 +57,9 @@
 									</p:selectOneMenu></td>
 							</tr>
 						</table>
-						<p:spacer height="2px"></p:spacer>
 						<p:dataTable id="locationDataTable"
 							value="#{simpleQuoteBackingBean.managedBean.locationTrees}"
 							var="locationTree" rowIndexVar="index">
-
 							<p:column headerText="#{lbl['lbl.sc.location.name']}">
 								<p:tree value="#{locationTree}" var="location"
 									selectionMode="checkbox">
@@ -94,15 +91,17 @@
 
 							</p:column>
 						</p:dataTable>
-						<p:spacer height="2px"></p:spacer>
+						
 						<div align="right" style="width: 100%">
 							<c:if test="#{isEditable}">
 								<p:commandButton value="#{lbl['lbl.btn.add']}"
+								    styleClass="BtnSpacing"
 									process="@this ,locLevels" update="@form" partialSubmit="true"
 									oncomplete="locationPopup.show();"
 									actionListener="#{simpleQuoteBackingBean.showLocationPopup}" />
 
 								<p:commandButton value="#{lbl['lbl.btn.delete']}"
+								    styleClass="BtnSpacing"
 									process="@this, locationDataTable" partialSubmit="true"
 									oncomplete="supplierLocationDeletePopUp.show();"
 									update="@([id$=#{supplierLocationDeleteId}])" />
@@ -129,7 +128,7 @@
 						selection="#{simpleQuoteBackingBean.managedBean.selectedBusinessNature}"
 						value="#{simpleQuoteBackingBean.managedBean.businessNatureCriterias}">
 						<ac:paginator for="byBusNatureDtl" />
-						<p:column selectionMode="multiple" style="width:2%;text-align: center;"  />
+						<p:column selectionMode="multiple" styleClass="td-check-box-spacing" />
 						<p:column headerText="#{lbl['lbl.sc.code']}" style="width:15%">
 							<h:outputText
 								value="#{busiNatureCriteria.pmBusinessNature.levelCode}" />
@@ -144,7 +143,7 @@
 					</p:dataTable>
 
 					<c:if test="#{isEditable}">
-						<div class="ppRightBtn" style="width: 100%">
+						<div class="ppRightBtn BtnSpacing" style="width: 100%">
 							<ac:lov id="busiNatureId" lovId="PM_BUSINESS_NATURE"
 								postUpdateListener="simpleQuoteBackingBean.businessNatureListener(simpleQuoteBackingBean.managedBean.businessNatures)"
 								headerText="Business Nature" buttonLabel="#{lbl['lbl.btn.add']}"
@@ -174,7 +173,7 @@
 						selection="#{simpleQuoteBackingBean.managedBean.selectedSupplierList}"
 						value="#{simpleQuoteBackingBean.managedBean.supplierList}">
 						<ac:paginator for="supplierItemDt" />
-						<p:column selectionMode="multiple" style="width:2%;text-align: center;" />
+						<p:column selectionMode="multiple" styleClass="td-check-box-spacing" />
 						<p:column headerText="#{lbl['lbl.sc.supplier.ep.no']}"
 							style="width:10%">
 							<h:outputText value="#{quoteSupplier.smSupplier.epNo}" />
@@ -190,7 +189,7 @@
 					</p:dataTable>
 
 					<c:if test="#{isEditable}">
-						<div class="ppRightBtn" style="width: 100%">
+						<div class="ppRightBtn BtnSpacing" style="width: 100%">
 							<ac:lov id="supplier" lovId="SM_SUPPLIER_SQ"
 								postUpdateListener="simpleQuoteBackingBean.supplierListListener(simpleQuoteBackingBean.managedBean.smSuppliers, simpleQuoteBackingBean.managedBean.scQuote)"
 								headerText="Supplier List" buttonLabel="#{lbl['lbl.btn.add']}"
@@ -218,7 +217,7 @@
 						selection="#{simpleQuoteBackingBean.managedBean.selectedGovtSellers}"
 						value="#{simpleQuoteBackingBean.managedBean.govtSellers}">
 						<ac:paginator for="govtSellerId" />
-						<p:column selectionMode="multiple" style="width:2%;text-align: center;" />
+						<p:column selectionMode="multiple" styleClass="td-check-box-spacing" />
 						<p:column headerText="#{lbl['lbl.sc.supplier.ep.no']}"
 							style="width:10%">
 							<h:outputText value="#{data.smSupplier.epNo}" />
@@ -237,7 +236,7 @@
 					</p:dataTable>
 
 					<c:if test="#{isEditable}">
-						<div class="ppRightBtn" style="width: 100%">
+						<div class="ppRightBtn BtnSpacing" style="width: 100%">
 							<ac:lov id="govtSeller" lovId="PM_ORG_PROFILE"
 								postUpdateListener="simpleQuoteBackingBean.govtSellerListener(simpleQuoteBackingBean.managedBean.orgProfiles)"
 								headerText="Government Seller"
@@ -266,7 +265,7 @@
 						value="#{simpleQuoteBackingBean.managedBean.panelSuppliers}">
 
 						<ac:paginator for="bypanelItemId" />
-						<p:column selectionMode="multiple" style="width:2%;text-align: center;" />
+						<p:column selectionMode="multiple" styleClass="td-check-box-spacing" />
 
 						<p:column headerText="#{lbl['lbl.sc.supplier.ep.no']}"
 							style="width:10%">
@@ -289,7 +288,7 @@
 					</p:dataTable>
 
 					<c:if test="#{isEditable}">
-						<div class="ppRightBtn" style="width: 100%">
+						<div class="ppRightBtn BtnSpacing" style="width: 100%">
 							<p:commandButton value="#{lbl['lbl.btn.delete']}"
 								process="@this,bypanelItemId" partialSubmit="true"
 								rendered="#{isEditable}"

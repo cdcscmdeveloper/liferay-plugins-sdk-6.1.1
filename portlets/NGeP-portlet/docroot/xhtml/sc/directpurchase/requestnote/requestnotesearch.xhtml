@@ -26,7 +26,8 @@
 					<p:outputLabel value="#{lbl['lbl.sc.request.note.header.method']}" />
 				</td>
 				<td>
-					<p:selectOneMenu style="width:176px;margin-bottom: 5px;" value="#{requestNoteBackingBean.managedBean.searchSrcMethod}">
+					<p:selectOneMenu style="width:215px;margin-bottom: 5px;" 
+					  value="#{requestNoteBackingBean.managedBean.searchSrcMethod}">
 						<f:selectItems value="#{requestNoteBackingBean.getDropdownCodeValues(ParameterTypeConst.sourceMethod)}" />
 					</p:selectOneMenu>
 				</td>
@@ -35,7 +36,7 @@
 				</td>
 				<td>
 					<p:selectOneMenu id="rnStatus"
-						style="width: 187px;"
+						style="width: 230px;"
 						value="#{requestNoteBackingBean.managedBean.searchStatus}" > 
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 						<f:selectItems
@@ -71,14 +72,14 @@
 			</tr>
 		    </table>
 		    
-		<p:spacer height="4px"></p:spacer>
-		    
 		    <div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.search']}" 
+				    styleClass="BtnSpacing"
 					action="#{requestNoteBackingBean.searchAction}"
 					update="reqNoteTbl" />
 					
 				<p:commandButton value="#{lbl['lbl.btn.reset']}" 
+				    styleClass="BtnSpacing"
 					action="#{requestNoteBackingBean.resetAction}" update="@form"
 				    resetValues="true" partialSubmit="true"
 					process="@this" />					
@@ -114,7 +115,7 @@
 					</h:outputText>
 				</p:column>
 				
-				<p:column style="width:10%" headerText="#{lbl['lbl.sc.action']}">
+				<p:column style="width:10%;text-align: center;" headerText="#{lbl['lbl.sc.action']}">
 					<p:commandLink action="#{requestNoteBackingBean.editRequestNote(scRequestNote)}"
 						partialSubmit="true" process="@this">
 						<p:graphicImage value="/css/images/design/document.png" />

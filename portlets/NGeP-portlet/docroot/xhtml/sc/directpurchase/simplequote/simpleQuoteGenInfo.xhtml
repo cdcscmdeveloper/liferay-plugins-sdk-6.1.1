@@ -8,12 +8,13 @@
 	<p:panel id="sqinfoId" header="#{lbl['lbl.sc.simple.quote.information']}" toggleable="true">
 	  <table style="width:100%;">
 			<tr>
-				<td style="width:19%"><p:outputLabel
+				<td style="width:20%"><p:outputLabel
 						value="#{lbl['lbl.sc.panel']}" /></td>
 				<td colspan="3">
 					<table>
 						<tr>
 							<td><p:selectOneRadio id="panel" required="true"
+							        styleClass="commonLabel"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.panel}"
 									label="#{lbl['lbl.sc.panel']}" disabled="true">
 									<f:selectItems
@@ -119,6 +120,7 @@
 					<table>
 						<tr>
 							<td><p:selectOneRadio style="margin-bottom: 5px;"
+							        styleClass="commonLabel"
 									disabled="#{!isEditable}"
 									id="procurementType" required="true"
 									label="#{lbl['lbl.sc.procurement.type']}"
@@ -142,7 +144,7 @@
 				<table style="width: 100%">
 				    <tr>
 					   <ui:fragment rendered="#{simpleQuoteBackingBean.managedBean.procTypeOption}">
-						 <td style="width: 19%">
+						 <td style="width: 20%">
 						     <p:outputLabel value="#{lbl['lbl.sc.reason']}" />
 						     <p:outputLabel value="*" styleClass="mandatory" />
 						 </td>
@@ -181,6 +183,7 @@
 					<table>
 						<tr>
 							<td><p:selectOneRadio id="zonal" required="true"
+							        styleClass="commonLabel"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.zonal}"
 									label="#{lbl['lbl.sc.sq.zonal']}"
 									disabled="#{!isEditable or simpleQuoteBackingBean.managedBean.scQuote.panel eq 'true'}">
@@ -217,7 +220,7 @@
 						</tr>
 					</table>
 				  </td>
-				   <td style="width: 15%;">
+				   <td style="width: 20%;">
 				     <p:outputLabel value="#{lbl['lbl.sc.end.date']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
 
 				    <td style="width: 40%;">
@@ -242,7 +245,7 @@
 									value="#{lbl['lbl.sc.sq.duration']}" /></td>
 						<td colspan="3"><p:outputPanel autoUpdate="true"
 									id="durationId">
-									<p:inputText size="20"
+									<p:inputText size="26"
 										label="#{lbl['lbl.sc.sq.duration']}" maxlength="5"
 										value="#{simpleQuoteBackingBean.managedBean.duration}"
 										disabled="true" style="text-align:right; margin-top: 4px">
@@ -262,6 +265,7 @@
 								<table>
 									<tr>
 										<td><p:selectOneRadio id="noOfQuote"
+										        styleClass="commonLabel"
 												label="#{lbl['lbl.sc.sq.simple.quote.type']}"
 												required="true" disabled="#{!isEditable}"
 												value="#{simpleQuoteBackingBean.managedBean.scQuote.multipleQuote}">
