@@ -35,19 +35,19 @@
 					</c:if>
 					<c:if
 						test="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '1'}">
-						<ui:include src="sptechdetails.xhtml" />
+						<ui:include src="/xhtml/sc/supplierProposal/technicalProposal/supplierProposalTechChecklist.xhtml" />
 					</c:if>
 					<c:if
 						test="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '2'}">
-						<ui:include src="spfinancedetails.xhtml" />
+						<ui:include src="/xhtml/sc/supplierProposal/financialProposal/supplierProposalFinChecklist.xhtml" />
 					</c:if>
 					<h:panelGroup
 						rendered="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '3'}">
-						<ui:include src="spdeclaration.xhtml" />
+						<ui:include src="supplierProposalDeclaration.xhtml" />
 					</h:panelGroup>
 					<h:panelGroup
 						rendered="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '4'}">
-						<ui:include src="spintegrity.xhtml" />
+						<ui:include src="supplierProposalIntegrityPact.xhtml" />
 					</h:panelGroup>
 				</h:panelGroup></td>
 		</tr>
