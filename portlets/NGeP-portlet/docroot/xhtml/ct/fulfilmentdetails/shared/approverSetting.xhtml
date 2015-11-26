@@ -28,7 +28,7 @@
 						</p:tooltip> 
 					</f:facet>  
         			<f:facet name="targetCaption">
-        				#{lbl['lbl.ct.selected.approver']}
+        				<h:outputText value="#{lbl['lbl.ct.selected.approver']}" styleClass="required"/>
         				<p:graphicImage id="targetList" value="/css/images/design/tooltips.png" /> 
 						  <p:tooltip id="targetTooltip" for="targetList">
 							<h:outputText id="targetApprover" escape="false" value="#{lbl['lbl.ct.tooltip.selected.approver']}" />
