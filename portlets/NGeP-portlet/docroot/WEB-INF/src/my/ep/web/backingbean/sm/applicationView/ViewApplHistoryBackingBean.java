@@ -56,7 +56,7 @@ public class ViewApplHistoryBackingBean extends
 		SmCommonUtil
 				.redirectToPage(
 						"/xhtml/sm/revisionSmApplView/viewApplicationHistory/searchSupplierApplicationHistoryPage.xhtml",
-						"");
+						"",null);
 	}
 
 	/**

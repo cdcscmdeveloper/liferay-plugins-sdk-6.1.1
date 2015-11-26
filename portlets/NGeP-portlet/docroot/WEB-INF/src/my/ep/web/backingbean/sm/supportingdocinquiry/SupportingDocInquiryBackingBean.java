@@ -60,7 +60,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		SmCommonUtil
 				.redirectToPage(
 						"/xhtml/sm/suppliersupportingdocinquiry/expiredSdoInquiryList.xhtml",
-						"");
+						"",null);
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		SmCommonUtil
 				.redirectToPage(
 						"/xhtml/sm/suppliersupportingdocinquiry/expiredSdoInquiryApplication.xhtml",
-						"");
+						"",null);
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		SmCommonUtil
 				.redirectToPage(
 						"/xhtml/sm/suppliersupportingdocinquiry/expiredSdoInquiryList.xhtml",
-						"");
+						"",null);
 	}
 
 	/**

@@ -44,11 +44,11 @@ public class ViewSuppProfileBackingBean extends
 					viewApplication(resDTO.getSmAppl());
 				} else {
 					SmCommonUtil.redirectToPage(redirectToAppl,
-							MessageConst.INFO_721212);
+							MessageConst.INFO_721212,null);
 				}
 			} else {
 				SmCommonUtil.redirectToPage(redirectToAppl,
-						MessageConst.INFO_721212);
+						MessageConst.INFO_721212,null);
 			}
 			setTabParam();
 			getManagedBean().setRenderedBackButton(false);
@@ -69,7 +69,7 @@ public class ViewSuppProfileBackingBean extends
 				SmCommonUtil
 						.redirectToPage(
 								"/xhtml/sm/revisionSmApplView/viewSupplierProfile/searchSupplierProfilePage.xhtml",
-								"");
+								"",null);
 			}
 		}
 	}
