@@ -15,7 +15,7 @@
 					showTargetControls="true" filterMatchMode="contains"
 					converter="pmUserConverter">
 					<f:facet name="sourceCaption">#{lbl['lbl.ct.available.approver']}</f:facet>  
-        			<f:facet name="targetCaption">#{lbl['lbl.ct.selected.approver']}</f:facet>
+        			<f:facet name="targetCaption"><h:outputText value="#{lbl['lbl.ct.selected.approver']}" styleClass="required" ></h:outputText></f:facet>
 				</p:pickList>
 			</h:panelGrid>
 	</p:panel>

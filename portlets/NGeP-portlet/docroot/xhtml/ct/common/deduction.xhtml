@@ -26,17 +26,17 @@
 			               </p:selectBooleanCheckbox>
 		            </p:column>
 		           
-		            <p:column style="width:650px;" id="updateColumn">
+		            <p:column style="width:650px;" id="updateColumn"  styleClass="column-align-center">
 		        	     <f:facet name="header">
-			                  <h:outputText value="#{lbl['lbl.ct.deduction.type']}"/>
+			                  <h:outputText value="#{lbl['lbl.ct.deduction.type']}" styleClass="required"/>
 	               		      <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.deduction.type']}"/>
 	           		     </f:facet>
 	           		   
-	           		     <p:selectOneMenu value="#{datas.deductionType.parameterId}" style="width:170px;"
+	           		     <p:selectOneMenu value="#{datas.deductionType.parameterId}" style="width:170px;float:left;text-align:left;"
 			      		     disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}"  
 			      		     rendered="#{datas.deductionType.parameterCode != ParameterConst.deductionTypeAdvancePayment}">
 			                    <f:selectItems value="#{ctBackingBean.retrieveParameterDescListByType()}" />
-			                    <p:ajax event="change" update=":form:tableDeduction" process="@all"  partialSubmit="true"
+			                    <p:ajax event="change" update=":form:tableDeduction, :form:clauseDescp" process="@all"  partialSubmit="true"
 			                         listener="#{ctBackingBean.validateDeductionType(datas.deductionType.parameterId)}"></p:ajax>
 			              </p:selectOneMenu>
 			            
