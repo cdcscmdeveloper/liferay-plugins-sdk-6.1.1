@@ -20,14 +20,14 @@
 						<td valign="top"><p:outputLabel
 								value="#{lbl['lbl.sc.description']}" /> <p:outputLabel value="*"
 								styleClass="mandatory" /></td>
-						<td colspan="4">
+						<td colspan="3">
 							<table>
 								<tr>
 									<td><p:inputText id="briefdesc"
 											required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
 											label="#{lbl['lbl.sc.description']}"
 											value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDesc}"
-											style="margin-top:5px;" size="95" maxlength="500" /></td>
+											style="margin-top:5px;" size="80" maxlength="500" /></td>
 									<td><p:message id="briefdescMsg" for="briefdesc"
 											display="icon" /></td>
 								</tr>
@@ -55,13 +55,13 @@
 								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.location}"
 								style="margin-top:5px;" size="30" maxlength="255" /> <p:message
 								id="brieflocationMsg" for="brieflocation" display="icon" /></td>
-						<td><p:outputLabel value="#{lbl['lbl.sc.state']}" /> <p:outputLabel
+						<td style="width: 92px;"><p:outputLabel value="#{lbl['lbl.sc.state']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td><p:selectOneMenu id="briefstate"
 								label="#{lbl['lbl.sc.state']}"
 								required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
 								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.pmState.stateId}"
-								style="width: 218px;margin-bottom: 5px;">
+								style="width: 249px;margin-bottom: 5px;">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems var="stateList"
 									value="#{qTBriefingSiteVisitBackingBean.managedBean.states}"
@@ -84,7 +84,7 @@
 						<td><p:outputLabel value="#{lbl['lbl.fl.division']}" /></td>
 						<td><p:selectOneMenu id="manDivison"
 								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.pmDivision.divisionId}"
-								style="width: 218px;margin-bottom: 5px;"
+								style="width: 249px;margin-bottom: 5px;"
 								disabled="#{!qTBriefingSiteVisitBackingBean.managedBean.stateCode}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems var="divisionList"
@@ -105,7 +105,7 @@
 						<td><p:outputLabel value="#{lbl['lbl.sc.district']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td><p:selectOneMenu styleClass="brieftstate"
-								style="width: 218px;margin-bottom: 5px;" id="briefdistrict"
+								style="width: 249px;margin-bottom: 5px;" id="briefdistrict"
 								required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
 								label="#{lbl['lbl.sc.district']}"
 								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.pmDistrict.districtId}">
@@ -128,7 +128,7 @@
 						<td><p:outputLabel value="#{lbl['lbl.sc.town']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td><p:selectOneMenu styleClass="briefdistrictCity"
-								style="width: 218px;margin-bottom: 5px;" id="briefcity"
+								style="width: 249px;margin-bottom: 5px;" id="briefcity"
 								required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
 								label="#{lbl['lbl.sc.town']}"
 								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.pmCity.cityId}">
@@ -149,7 +149,7 @@
 								required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
 								label="#{lbl['lbl.sc.post.code']}"
 								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.postcode}"
-								size="38" >
+								size="30" >
 								<p:ajax event="blur" partialSubmit="true" process="@this"
 									listener="#{qTBriefingSiteVisitBackingBean.validatePostcode}" />
 							</p:inputText> <p:message id="briefpostMsg" for="briefpost" display="icon" /></td>
@@ -161,7 +161,7 @@
 								required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
 								label="#{lbl['lbl.sc.coordinate.officer']}"
 								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.coordinatingOfficer}"
-								size="95" maxlength="255" /> <p:message id="briefofficerMsg"
+								size="80" maxlength="255" /> <p:message id="briefofficerMsg"
 								for="briefofficer" display="icon" /></td>
 					</tr>
 					<tr>
