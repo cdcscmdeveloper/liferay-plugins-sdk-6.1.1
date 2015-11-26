@@ -28,7 +28,6 @@ import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
-import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
@@ -49,8 +48,6 @@ import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
-import my.ep.dto.sc.bidding.BiddingReqDTO;
-import my.ep.dto.sc.bidding.BiddingResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
@@ -75,7 +72,6 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.sc.bidding.ScBidSupplierItem;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
@@ -703,10 +699,14 @@ public class NoticeBoardBackingBean extends
 		return BSV_SUPP_REGISTRATION_PAGE;
 	}
 
-	public void bsvZoneTabChangeAction(Integer selectedZoneTabIndex) {
+	public void bsvZoneTabChangeAction() {
 		if (log.isDebugEnabled()) {
 			log.debug("bsvZoneTabChangeAction");
 		}
+		Integer selectedZoneTabIndex = Integer.valueOf(FacesContext
+				.getCurrentInstance().getExternalContext()
+				.getRequestParameterMap().get("selectedZoneTabIndex"));
+		
 		this.getManagedBean().setBriefingDtls(null);
 		BriefingZoneBean selectedBsvBean = this.getManagedBean().getZoneBean()
 				.get(selectedZoneTabIndex);
@@ -1886,14 +1886,13 @@ public class NoticeBoardBackingBean extends
 					isNotRigistered = isNotRigistered(briefingZoneBean,isNotRigistered);
 					MenuItem zoneItem = new MenuItem();
 					zoneItem.setValue(specZoneDtl.getZoneName());
-					zoneItem.setUpdate("@form");
-					// zoneItem.setPartialSubmit(true);
+					zoneItem.setAjax(true);
+					zoneItem.setUpdate("@this");
+					zoneItem.setPartialSubmit(true);
 					zoneItem.setProcess("@this");
-					zoneItem.setActionExpression(FacesScopes
-							.createMethodExpression(facesContext,
-									"#{noticeBoardBackingBean.bsvZoneTabChangeAction("
-											+ zoneTabIndex + ")}", null,
-									new Class[] { Integer.class }));
+					zoneItem
+					.setOncomplete("bsvZoneTabChangeAction([ {name : 'selectedZoneTabIndex', value : "
+							+ zoneTabIndex + "}]);");
 					zoneMenuModel.addMenuItem(zoneItem);
 
 					zoneTabIndex++;
