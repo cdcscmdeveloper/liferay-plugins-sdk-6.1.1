@@ -8,64 +8,70 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 		<p:panel  header="#{lbl['lbl.ct.panel.fulfilment.setting']}"  toggleable="true"  toggleSpeed="500">
          <h:panelGrid columns="3" style="width:100%;" columnClasses="columnWidth240">  
-             <p:outputLabel value="#{lbl['lbl.ct.contract.notify']}"  />
+            
+             <p:outputLabel value="#{lbl['lbl.ct.contract.notify']}" styleClass="required"  />
              <p:inputText maxlength="4" disabled="#{ctBackingBean.managedBean.viewContract}"
 	             value="#{ctBackingBean.managedBean.contractVer.ctSetting.ctNotifyDays}"
-	             style="width:50px;" label="#{lbl['lbl.ct.contract.notify']}" />
+	             style="width:50px;" label="#{lbl['lbl.ct.contract.notify']}" required="true" />
              <h:panelGrid columns="3">
-             	<p:outputLabel value="#{lbl['lbl.ct.contract.notify.desc']}" style="float:left;" />
+             	<p:outputLabel value="#{lbl['lbl.ct.contract.notify.desc']}" style="float:left;"/>
              	<p:spacer width="1"/>
 			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.notification']}" />
 			 </h:panelGrid>
-             <p:outputLabel value="#{lbl['lbl.ct.agreement.notify']}"  />  
+             
+             <p:outputLabel value="#{lbl['lbl.ct.agreement.notify']}"  styleClass="required" />  
              <p:inputText maxlength="4" disabled="#{ctBackingBean.managedBean.viewContract}"
              	value="#{ctBackingBean.managedBean.contractVer.ctSetting.agNotifyDaysB4Ag}"
-             	style="width:50px;" label="#{lbl['lbl.ct.agreement.notify']}"   />  
+             	style="width:50px;" label="#{lbl['lbl.ct.agreement.notify']}"   required="true" />  
              <h:panelGrid columns="3">
 	       		<p:outputLabel value="#{lbl['lbl.ct.agreement.notify.desc']}" style="float:left;"/>
 	            <p:spacer width="1"/>
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.notification']}" />
 			 </h:panelGrid>
-			 <p:outputLabel value="#{lbl['lbl.ct.pb.notify']}" />  
+			
+			 <p:outputLabel value="#{lbl['lbl.ct.pb.notify']}"  styleClass="required"/>  
              <p:inputText maxlength="4" disabled="#{ctBackingBean.managedBean.viewContract}"
              	value="#{ctBackingBean.managedBean.contractVer.ctSetting.bondNotifyDays}"
-             	style="width:50px;" label="#{lbl['lbl.ct.pb.notify']}"  />  
+             	style="width:50px;" label="#{lbl['lbl.ct.pb.notify']}"  required="true"  />  
              <h:panelGrid columns="3">
-             	<p:outputLabel value="#{lbl['lbl.ct.pb.notify.desc']}" style="float:left;"/>
+             	<p:outputLabel value="#{lbl['lbl.ct.pb.notify.desc']}" style="float:left;" />
              	<p:spacer width="1"/>
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.perforamnce.bond.notification']}" />
 			 </h:panelGrid>
-             <h:outputLabel value="#{lbl['lbl.ct.termination.notify']}"  />  
+          
+             <h:outputLabel value="#{lbl['lbl.ct.termination.notify']}"  styleClass="required" />  
              <p:inputText maxlength="4" disabled="#{ctBackingBean.managedBean.viewContract}"
              	value="#{ctBackingBean.managedBean.contractVer.ctSetting.terminationNotifyDays}"
-             	style="width:50px;" label="#{lbl['lbl.ct.termination.notify']}"  />  
+             	style="width:50px;" label="#{lbl['lbl.ct.termination.notify']}"  required="true" />  
              <h:panelGrid columns="3">
              	<p:outputLabel value="#{lbl['lbl.ct.termination.notify.desc']}" style="float:left;"/>
              	<p:spacer width="1"/>
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.termination.notification']}" />
 			 </h:panelGrid>
-             <p:outputLabel value="#{lbl['lbl.ct.do.notify']}" />  
+             
+             <p:outputLabel value="#{lbl['lbl.ct.do.notify']}"  styleClass="required"/>  
              <p:inputText maxlength="4" disabled="#{ctBackingBean.managedBean.viewContract}"
              	value="#{ctBackingBean.managedBean.contractVer.ctSetting.supplierDoDays}"
-             	style="width:50px;" label="#{lbl['lbl.ct.do.notify']}" />  
+             	style="width:50px;" label="#{lbl['lbl.ct.do.notify']}"  required="true" />  
              <h:panelGrid columns="3">
              	<p:outputLabel value="#{lbl['lbl.ct.do.notify.desc']}" style="float:left;"/>
              	<p:spacer width="1"/>
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.delivery.order.notification']}" />
 			 </h:panelGrid>
+			
 			 <c:if test="#{!ctBackingBean.managedBean.directPurchase 
              	and ParameterConst.contractTypeMinistry == ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode 
              	and ctBackingBean.managedBean.contractVer.ctContract.mto}">
-	             <p:outputLabel value="#{lbl['lbl.ct.approver.notify']}"  />  
+	             <p:outputLabel value="#{lbl['lbl.ct.approver.notify']}"   styleClass="required"/>  
 	             <p:inputText maxlength="4" disabled="#{ctBackingBean.managedBean.viewContract}"             	
 	             	value="#{ctBackingBean.managedBean.contractVer.ctSetting.approverMtoDays}"
-	             	style="width:50px;" label="#{lbl['lbl.ct.approver.notify']}" />              
+	             	style="width:50px;" label="#{lbl['lbl.ct.approver.notify']}" required="true" />              
 	             <h:outputLabel value="#{lbl['lbl.ct.approver.notify.desc']}" style="float:left;"/>
              </c:if>
-             <p:outputLabel value="#{lbl['lbl.ct.last.co.notify']}"  />  
+             <p:outputLabel value="#{lbl['lbl.ct.last.co.notify']}"  styleClass="required" />  
              <p:inputText maxlength="4" disabled="#{ctBackingBean.managedBean.viewContract}"
              	value="#{ctBackingBean.managedBean.contractVer.ctSetting.lastCOBeforeExpiryDays}"
-             	style="width:50px;" label="#{lbl['lbl.ct.last.co.notify']}" />  
+             	style="width:50px;" label="#{lbl['lbl.ct.last.co.notify']}"  required="true"/>  
              <h:outputLabel value="#{lbl['lbl.ct.last.co.notify.desc']}" style="float:left;"/>             
            </h:panelGrid>
          </p:panel>
