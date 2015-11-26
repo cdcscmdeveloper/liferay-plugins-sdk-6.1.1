@@ -2,6 +2,7 @@ package my.ep.web.integration.common;
 
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.fl.payment.IPaymentMatchSO;
+import my.ep.biz.service.integration.jms.IRemoteClientSO;
 import my.ep.biz.service.osb.fl.IFLOsbSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
@@ -104,6 +105,8 @@ public class InitializeSO {
 	protected IRegistrationSO registrationSO = BusinessDelegate.getInstance()
 			.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 					IRegistrationSO.class);
+	protected IRemoteClientSO remoteClientSO = BusinessDelegate.getInstance()
+			.getServiceObject("mdb", IRemoteClientSO.class);
 
 	public InitializeSO() {
 		super();
