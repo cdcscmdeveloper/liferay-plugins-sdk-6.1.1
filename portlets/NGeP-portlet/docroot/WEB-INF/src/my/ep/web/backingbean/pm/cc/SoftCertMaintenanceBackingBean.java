@@ -86,31 +86,6 @@ public class SoftCertMaintenanceBackingBean {
 		return tok;
 	}
 	
-	public String generateSecurityTokenByDicertUserId(String digiCertUserId){
-		String tok = null;
-		try{
-			KMCClient client = getClient();
-			
-			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.generateToken(digiCertUserId,getSupplierEpNo()));
-			switch(res.getStatusCode())
-			{
-			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
-				tok = (String) res.get(GenSecToken.TOKEN);
-				break;
-
-			default:
-				System.err.println("API return error. Message was : "+res.getStatusMessage());
-			}
-			
-		} catch (Exception ex)
-		{
-			ex.printStackTrace();
-			throw new EpException(ex.getMessage());
-		}
-		
-		return tok;
-	}
-	
 	public String getDigiCertUserId() {
 		FacesScopes facesScope = new FacesScopes();
 		PmUser user  = facesScope.getUserSessionBean(); 		
@@ -169,7 +144,7 @@ public class SoftCertMaintenanceBackingBean {
 	}
 	
 	public void RequestRevokeCert(String digiCertUserId, String supplierEpNo) throws IOException, PortalException, SystemException {
-	    String token = generateSecurityTokenByDicertUserId(digiCertUserId); 
+	    String token = generateSecurityToken(); 
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 		String url4 = "https://kmcep-dev.digicert.com.my/kmc/RequestRevokeCert.aspx?userID=" + digiCertUserId + "&orgid=" + supplierEpNo + "&token=" + encodedtoken;
