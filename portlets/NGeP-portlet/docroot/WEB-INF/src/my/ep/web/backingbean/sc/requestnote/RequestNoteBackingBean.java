@@ -702,11 +702,18 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 		}
 		
-		// approver validation
+		// approver group name validation
+		if(null == requestNote.getPmUserGroup()){
+			throw new EpException(
+					MessageConst.ERROR_760315,
+					new String[] {ResourceBundleUtils.getMessage("lbl.sc.ptj.approver.group",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		}
+		// approver name validation
 		if(null == requestNote.getApprover()){
 			throw new EpException(
 					MessageConst.ERROR_760315,
-					new String[] {ResourceBundleUtils.getMessage("lbl.sc.approver",
+					new String[] {ResourceBundleUtils.getMessage("lbl.sc.approverName",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		}
 	}
@@ -3732,9 +3739,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	public SelectItem[] getUserGroupDropdown() {
 		SelectItem[] items = null;
-		if(getManagedBean().getRequestNote().getPmUserGroup()==null) {
-			getManagedBean().getRequestNote().setPmUserGroup(new PmUserGroup());
-		}
+		
 		if(!CollectionUtils.isEmpty(getManagedBean().getUserGroupList())) {
 			items = new SelectItem[getManagedBean().getUserGroupList().size()];
 			int i = 0;
@@ -3754,24 +3759,21 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public void userGroupChangeListener() {
 		debugLogger("userGroupChangeListener");
 		RequestNoteResDTO resDTO = null;
-		
+
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
 		Long userGroupId = getManagedBean().getUserGroupId();
-		
-		
-		if(userGroupId != null && getManagedBean().getUserGroupList() != null) {
-			for (PmUserGroup pmUserGroup : getManagedBean().getUserGroupList()) {
-				if(userGroupId.equals(pmUserGroup.getUserGroupId())){
-					requestNote.setPmUserGroup(pmUserGroup);
-				}
-			}
-		}
-
 		List<PmUser> approvers  = new ArrayList<PmUser>();
 		
-		if(requestNote.getPmUserGroup() != null) {
+		if(userGroupId != null){
+			if(getManagedBean().getUserGroupList() != null) {
+				for (PmUserGroup pmUserGroup : getManagedBean().getUserGroupList()) {
+					if(userGroupId.equals(pmUserGroup.getUserGroupId())){
+						requestNote.setPmUserGroup(pmUserGroup);
+					}
+				}
+			}
 			RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();
-			reqDTO.setGroupId(requestNote.getPmUserGroup().getUserGroupId());
+			reqDTO.setGroupId(userGroupId);
 			reqDTO.setOrgProfileId(requestNote.getPmOrgProfile().getOrgProfileId());
 			resDTO = getDirectPurchaseSO().retrieveApproverListByGroupId(reqDTO);
 			List<PmUserGroupUser> groupUsers = resDTO.getApproverGroupUserList();
@@ -3781,9 +3783,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					approvers.add(groupUser.getPmUser());
 				}
 			}
+			
+		} else{
+			requestNote.setPmUserGroup(null);
+			requestNote.setApprover(null);
+			
 		}
 		
 		getManagedBean().setApproverList(approvers);
 	}
-	
 }
