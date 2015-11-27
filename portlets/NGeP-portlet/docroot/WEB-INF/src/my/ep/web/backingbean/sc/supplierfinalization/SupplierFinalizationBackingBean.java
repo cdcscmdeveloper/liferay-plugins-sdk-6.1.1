@@ -97,7 +97,6 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.sc.bidding.ScBidSupplierItem;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
@@ -1597,7 +1596,7 @@ public class SupplierFinalizationBackingBean extends
 							.equals(getFacesScopes().getUserSessionBean().getUserId())) {
 						if (scQtCommitteeActivity.getScCommitteeMember()
 								.getMemberRole().getParameterCode().equals(
-										SourcingConstants.MEMBER_ROLE_CHAIRPERSON)) {
+										ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
 							isChairperson = true;
 						}
 					}
@@ -1607,7 +1606,7 @@ public class SupplierFinalizationBackingBean extends
 					if (scQtCommitteeActivity.isSignedOff() && 
 							!scQtCommitteeActivity.getScCommitteeMember()
 							.getMemberRole().getParameterCode().equals(
-									SourcingConstants.MEMBER_ROLE_CHAIRPERSON)) {
+									ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
 						++totalMembersEndorsed;
 					}
 				}
@@ -4107,7 +4106,7 @@ public class SupplierFinalizationBackingBean extends
 				.getCommitteeList()) {
 			String memberRole = committee.getScCommitteeMember()
 					.getMemberRole().getParameterCode();
-			if (memberRole.equals(SourcingConstants.MEMBER_ROLE_CHAIRPERSON)) {
+			if (memberRole.equals(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
 				chairpersonList.add(committee);
 			} else {
 				if (!committee.isSignedOff()) {
@@ -6996,7 +6995,7 @@ public class SupplierFinalizationBackingBean extends
 		ScCommitteeMember member = CommitteeresDTO.getCommMember();
 		String roleCodeChar = member.getMemberRole().getParameterCode();
 		
-		if (roleCodeChar.equals(SourcingConstants.MEMBER_ROLE_SECRATARY)) {
+		if (roleCodeChar.equals(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
 			if (committeeType.equals(
 						ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
 				committeeRoleCode = RoleCode.QCA_SECRETARY.value();

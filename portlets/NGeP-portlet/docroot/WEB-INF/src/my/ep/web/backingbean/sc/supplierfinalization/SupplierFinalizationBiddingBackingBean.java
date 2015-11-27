@@ -1058,7 +1058,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 			String memberRole = committee.getScCommitteeMember()
 					.getMemberRole().getParameterCode();
 
-			if (memberRole.equals(SourcingConstants.MEMBER_ROLE_CHAIRPERSON)) {
+			if (memberRole.equals(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
 				chairpersonList.add(committee);
 			} else {
 				if (!committee.isBiddingSignedOff()) {
