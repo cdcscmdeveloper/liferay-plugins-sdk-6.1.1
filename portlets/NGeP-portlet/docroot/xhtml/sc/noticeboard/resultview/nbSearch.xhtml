@@ -403,9 +403,9 @@
 						id="nbSearchButton" value="#{lbl['lbl.btn.search']}"
 						action="#{noticeBoardBackingBean.searchNoticeBoard}"
 						update="@(.nbsrhresultsStyleClass)" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();" process="">
+						oncomplete="blockWidget.hide();" process="" styleClass="BtnSpacing">
 					</p:commandButton> <p:commandButton value="#{lbl['lbl.btn.reset']}" update="nbpanel"
-						process="@this" action="#{noticeBoardBackingBean.reset}">
+						process="@this" action="#{noticeBoardBackingBean.reset}" styleClass="BtnSpacing">
 					</p:commandButton></td>
 			</tr>
 		</table>
