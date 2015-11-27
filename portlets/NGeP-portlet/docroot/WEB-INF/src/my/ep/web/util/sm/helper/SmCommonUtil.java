@@ -3256,6 +3256,49 @@ public class SmCommonUtil {
 			throw new EpException(e.getMessage());
 		}
 	}
+	
+	public Object getObjectByPropertiesFromList(Object compareVal,
+			List<? extends Object> list, String compareProp) {
+		Object retVal = null;
+		if (!isCollectionEmpty(list) && compareVal != null) {
+			for (Object obj : list) {
+				Object objVal;
+				try {
+					objVal = PropertyUtils.getProperty(obj, compareProp);
+					if (objVal != null && objVal.equals(compareVal)) {
+						retVal = obj;
+						break;
+					}
+				} catch (IllegalAccessException | InvocationTargetException
+						| NoSuchMethodException e) {
+					throw new EpException(e.getMessage());
+				}
+			}
+		}
+		return retVal;
+	}
+	
+	public void compareAndRemoveObjectFromList(
+			List<? extends Object> compareList,
+			List<? extends Object> removeList, String propName) {
+		Object removeVal = null;
+		Object compareObject = null;
+		Iterator<? extends Object> removeIter = removeList.iterator();
+		while (removeIter.hasNext()) {
+			Object removeObj = removeIter.next();
+			try {
+				removeVal = PropertyUtils.getProperty(removeObj, propName);
+				compareObject = getObjectByPropertiesFromList(removeVal,
+						compareList, propName);
+				if (compareObject == null) {
+					removeIter.remove();
+				}
+			} catch (IllegalAccessException | InvocationTargetException
+					| NoSuchMethodException e) {
+				throw new EpException(e.getMessage());
+			}
+		}
+	}
 
 	private static Field[] getFields(Object target, boolean findInSuperClasses,
 			boolean setFieldsAsAccessible) {
