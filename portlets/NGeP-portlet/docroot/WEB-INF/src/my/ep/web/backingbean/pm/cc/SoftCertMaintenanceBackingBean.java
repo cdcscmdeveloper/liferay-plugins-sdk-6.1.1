@@ -149,8 +149,10 @@ public class SoftCertMaintenanceBackingBean {
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 		String url4 = "https://kmcep-dev.digicert.com.my/kmc/RequestRevokeCert.aspx?userID=" + digiCertUserId + "&orgid=" + supplierEpNo + "&token=" + encodedtoken;
 		externalContext.redirect(url4);
-		System.out.println("Encoded encodedtoken " + encodedtoken);
-		System.out.println("Encoded URL " + url4);	 
+		log.info(">>>>>>>>>>>>>>>>>DigicertUserId:"+digiCertUserId);
+		log.info(">>>>>>>>>>>>>>>>>OrgId:"+supplierEpNo);
+		log.info(">>>>>>>>>>>>>>>>>Token:"+encodedtoken);
+		log.info(">>>>>>>>>>>>>>>>>Encoded URL " + url4);	 
 	}
 	
 
