@@ -1,0 +1,15 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<div class="ppRightBtn">
+	<div class="ppRightBtn">
+		<p:commandButton value="#{lbl['lbl.btn.submit']}" process="@all" rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}"
+			action="#{supplierProposalDetailBackingBean.submitSupplierProposal}"/>
+	</div>
+	</div>
+</ui:composition>

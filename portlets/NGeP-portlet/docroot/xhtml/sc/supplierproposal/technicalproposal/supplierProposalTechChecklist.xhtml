@@ -1,0 +1,114 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sc.technical.proposal']}" toggleable="true">
+		<p:dataTable id="techDeailsId" var="techList"
+			value="#{supplierProposalDetailBackingBean.managedBean.tecCheckDetailsList}"
+			selection="#{supplierProposalDetailBackingBean.managedBean.selectedCheckDetails}"
+			rowKey="#{techList}" rowIndexVar="rowIndex"
+			first="#{supplierProposalDetailBackingBean.managedBean.technicalTableRow}">
+
+			<p:columnGroup type="header">
+				<p:row>
+					<p:column headerText="" />
+
+					<p:column headerText="#{lbl['lbl.sc.descriptions']}"
+						style="width:60%" />
+
+					<p:column headerText="#{lbl['lbl.sc.instruction']}"
+						style="width:28%" />
+
+					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%" />
+
+				</p:row>
+			</p:columnGroup>
+
+			<p:column style="width:2%">
+				<p:selectBooleanCheckbox id="selAllChk"
+					value="#{techList.submitted}" disabled="true"
+					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'TS' 
+						or (techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey ne 'NE')
+						or (techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey eq 'NE' and !techList.scQtCheckList.scQtCheckListValue.allEmployee)
+						or (techList.scQtCheckList.definationType.parameterCode eq 'UP' and techList.scQtCheckList.action.parameterCode eq 'O')
+						or techList.scQtCheckList.definationType.parameterCode eq 'NA'}" />
+			</p:column>
+
+			<p:column style="white-space : normal">
+				<h:outputText value="#{techList.scQtCheckList.title}" />
+			</p:column>
+
+			<p:column style="white-space : normal">
+				<h:outputText
+					rendered="#{((techList.scQtCheckList.definationType.parameterCode eq 'UP' and techList.scQtCheckList.action.parameterCode eq 'O') or (techList.scQtCheckList.definationType.parameterCode eq 'NA'))}"
+					value="#{lbl['lbl.sc.attachment.msg']}" />
+				<h:outputText
+					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'UP' and techList.scQtCheckList.action.parameterCode eq 'V'}"
+					value="#{lbl['lbl.sc.attachment.view.msg']}" />
+				<h:outputText
+					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'TS' 
+						or (techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey ne 'NE')
+						or (techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey eq 'NE' and !techList.scQtCheckList.scQtCheckListValue.allEmployee)}"
+					value="#{lbl['lbl.sc.prepare']}" />
+				<h:outputText
+					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'SP' or techList.scQtCheckList.definationType.parameterCode eq 'SD' or
+						(techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey eq 'NE' and techList.scQtCheckList.scQtCheckListValue.allEmployee)}"
+					value="#{lbl['lbl.sc.view']}" />
+			</p:column>
+
+			<p:column style="white-space: normal;">
+				<ui:fragment
+					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'TS' 
+						or (techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey ne 'NE')
+						or (techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey eq 'NE' and !techList.scQtCheckList.scQtCheckListValue.allEmployee)}">
+					<p:commandButton
+						action="#{supplierProposalDetailBackingBean.prepareTechnicalAction(techList)}"
+						value="#{lbl['lbl.btn.prepare']}" style="width:101px;" />
+				</ui:fragment>
+
+				<ui:fragment
+					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'SP' or techList.scQtCheckList.definationType.parameterCode eq 'SD' or
+						(techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey eq 'NE' and techList.scQtCheckList.scQtCheckListValue.allEmployee)}">
+					<p:commandButton
+						action="#{supplierProposalDetailBackingBean.prepareTechnicalAction(techList)}"
+						value="#{lbl['lbl.txt.view']}" style="width:101px;" />
+				</ui:fragment>
+
+				<ui:fragment
+					rendered="#{((techList.scQtCheckList.definationType.parameterCode eq 'UP' and techList.scQtCheckList.action.parameterCode eq 'O') or (techList.scQtCheckList.definationType.parameterCode eq 'NA'))}">
+					<p:commandButton oncomplete="attachmentDlg.show();return false;"
+						rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}"
+						value="#{lbl['lbl.txt.attachment']}" style="width:101px;">
+						<f:setPropertyActionListener value="#{techList}"
+							target="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist}" />
+					</p:commandButton>
+					<h:commandLink
+						value="#{techList.scQtProposalChecklistAttachment.fileName}"
+						styleClass="blue_font" immediate="true"
+						action="#{supplierProposalDetailBackingBean.downloadEncryptedFile(techList.scQtProposalChecklistAttachment)}"
+						rendered="#{!empty techList.scQtProposalChecklistAttachment}" />
+
+				</ui:fragment>
+
+				<ui:fragment
+					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'UP' and techList.scQtCheckList.action.parameterCode eq 'V'}">
+					<h:commandLink
+						value="#{techList.scQtCheckList.scQtCheckListAttachment.fileName}"
+						styleClass="blue_font" immediate="true"
+						action="#{supplierProposalDetailBackingBean.downloadFile(techList.scQtCheckList.scQtCheckListAttachment)}"
+						rendered="#{!empty techList.scQtCheckList.scQtCheckListAttachment}" />
+
+
+
+				</ui:fragment>
+
+			</p:column>
+
+		</p:dataTable>
+	</p:panel>
+
+</ui:composition>
