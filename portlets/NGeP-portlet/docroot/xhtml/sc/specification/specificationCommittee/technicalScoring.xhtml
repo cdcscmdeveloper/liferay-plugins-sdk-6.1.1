@@ -47,7 +47,7 @@
 				<h:outputText value="#{tech.title}" size="50" />
 			</p:column>
 
-			<p:column style="width:20%;">
+			<p:column style="width:20%;text-align:right;">
 				<f:facet name="header">
 					<ui:fragment
 						rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
@@ -74,7 +74,7 @@
 				<p:message id="techScoreId" for="techScoreWeight" display="icon"></p:message>
 			</p:column>
 
-			<p:column style="width:20%;"
+			<p:column style="width:20%;text-align:right;"
 				rendered="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq ne 'false'}">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.spec.weight.weight']}" />

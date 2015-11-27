@@ -42,7 +42,7 @@
 					size="50" escape="false" />
 			</p:column>
 
-			<p:column style="width:20%;">
+			<p:column style="width:20%;text-align:right">
 
 				<f:facet name="header">
 					<ui:fragment
@@ -73,7 +73,7 @@
 						display="icon"></p:message>
 				</ui:fragment>
 			</p:column>
-			<p:column style="width:20%;"
+			<p:column style="width:20%;text-align:right;"
 				rendered="#{specificationBackingBean.managedBean.financialScoreSetting.weightageReq ne 'false'}">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.spec.weight.weight']}" />
