@@ -1009,6 +1009,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	private ScQt cloneCommitteeSelectQt;
 	private ScQt cloneBusinessSelectQt;
+	private ScQt cloneDocumentSelectQt;
 	
 	 /** The auto update. */
     private boolean autoUpdate =true;
@@ -6494,6 +6495,20 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setScQtApprovalDtls(ScQtApprovalRequest scQtApprovalDtls) {
 		this.scQtApprovalDtls = scQtApprovalDtls;
+	}
+
+	/**
+	 * @return the cloneDocumentSelectQt
+	 */
+	public ScQt getCloneDocumentSelectQt() {
+		return cloneDocumentSelectQt;
+	}
+
+	/**
+	 * @param cloneDocumentSelectQt the cloneDocumentSelectQt to set
+	 */
+	public void setCloneDocumentSelectQt(ScQt cloneDocumentSelectQt) {
+		this.cloneDocumentSelectQt = cloneDocumentSelectQt;
 	}
 
 }
