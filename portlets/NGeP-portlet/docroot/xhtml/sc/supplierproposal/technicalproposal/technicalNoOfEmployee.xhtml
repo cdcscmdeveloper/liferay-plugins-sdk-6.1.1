@@ -1,0 +1,85 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sc.spec.total.num.employees']}"
+		toggleable="true">
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.sp.btn.complete.instruction']}" escape="false"
+			rendered="#{!supplierProposalDetailBackingBean.managedBean.closed and !supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}" />
+
+		<p:spacer height="2"></p:spacer>
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td><h:outputText
+						rendered="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}"
+						value="#{lbl['lbl.sc.spec.total.num.employees.for.all.employees']}" />
+					<h:outputText
+						rendered="#{!supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}"
+						value="#{lbl['lbl.sc.spec.total.num.employees.for.this.project']}" /></td>
+			</tr>
+		</table>
+		<p:spacer height="1"></p:spacer>
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td width="200px"><h:outputText value="* "
+						styleClass="mandatory"
+						rendered="#{!supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee and !statusHide}" />
+					<h:outputText value="#{lbl['lbl.sc.total.employees']}" /></td>
+				<td><h:panelGroup id="totalNoOfEmployeesInvolved">
+						<p:inputText id="totalEmployees" style="text-align:right;margin-bottom:5px;"
+							rendered="#{!supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}"
+							size="20" required="true" maxlength="6"
+							label="#{lbl['lbl.sc.total.employees']}"
+							value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPEmployee.totalEmployees}"
+							disabled="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee or statusHide}">
+							<f:validateLongRange minimum="1" maximum="99999999999" />
+							<p:ajax process="@this" partialSubmit="true"
+								update="@this,totalEmployeesMsg"></p:ajax>
+						</p:inputText>
+						<p:message id="totalEmployeesMsg" for="totalEmployees"
+							display="icon" />
+						<p:inputText disabled="true"
+							style="text-align:right;margin-bottom:5px;" size="20"
+							rendered="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}"
+							value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPEmployee.totalEmployees}"></p:inputText>
+					</h:panelGroup></td>
+			</tr>
+			<tr>
+				<td><h:outputText
+						value="#{lbl['lbl.tpl.spec.content.system.score']}"
+						rendered="#{checklistScoreType eq '1'}" /> <ui:fragment
+						rendered="#{checklistScoreType eq '2' and !pageDisable}">
+						<h:outputText value="* " styleClass="mandatory" />
+
+
+					</ui:fragment> <h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"
+						rendered="#{ checklistScoreType eq '2'}" /></td>
+				<td><p:inputText readonly="true" disabled="true"
+						value="#{noOfContracts.autoScore}" style="text-align:right"
+						rendered="#{ checklistScoreType eq '1'}"></p:inputText> <p:inputText
+						id="technicalNoOfEmployeesUserScoreId"
+						label="#{lbl['lbl.tpl.spec.content.user.score']}"
+						value="#{noOfContracts.userScore}" maxlength="18" required="true"
+						disabled="#{pageDisable}" style="text-align:right"
+						rendered="#{checklistScoreType eq '2'}">
+						<ac:validateNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+							maxIntegerDigits="14" integerOnly="true" />
+						<f:attribute name="min" value="0" />
+						<f:attribute name="max" value="#{contractUserScore}" />
+					</p:inputText> <p:spacer width="5"></p:spacer> <h:outputText
+						value="/#{contractUserScore}"
+						rendered="#{ checklistScoreType eq '2'}" /> <p:message
+						id="technicalNoOfEmployeesUserScoreMessage"
+						for="technicalNoOfEmployeesUserScoreId" display="icon">
+					</p:message></td>
+			</tr>
+		</table>
+	</p:panel>
+
+</ui:composition>
