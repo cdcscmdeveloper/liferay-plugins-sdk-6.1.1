@@ -380,7 +380,7 @@ public class ApprovalBackingBean extends
 					}
 				}
 			}
-			if (SourcingConstants.QT_TYPE_RESTRICTED_TENDER
+			if (ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER
 					.equalsIgnoreCase(this.getManagedBean().getQt().getQtType())) {
 				if (null != this.getManagedBean().getQt().getScQtSuppliers()) {
 					this.getManagedBean().setQtSupplierList(
@@ -518,7 +518,7 @@ public class ApprovalBackingBean extends
 
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
 
-			if (SourcingConstants.QT_TYPE_RESTRICTED_TENDER
+			if (ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER
 					.equalsIgnoreCase(this.getManagedBean().getQt().getQtType())) {
 				if (null != this.getManagedBean().getQt().getScQtSuppliers()) {
 					this.getManagedBean().setQtSupplierList(
@@ -1181,7 +1181,7 @@ public class ApprovalBackingBean extends
 					if (ParameterConst.RESTR_APPROVAL_DECISION_TYPE_PROCEED
 							.equalsIgnoreCase(approvalRequest
 									.getApproverAction().getParameterCode())) {
-						scQt.setQtType(SourcingConstants.QT_TYPE_OPEN);
+						scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
 						scQt.setScQtSuppliers(null);
 					} else if (ParameterConst.RESTR_APPROVAL_DECISION_TYPE_REVISE
 							.equalsIgnoreCase(approvalRequest
@@ -1230,9 +1230,9 @@ public class ApprovalBackingBean extends
 						if (QTConstants.QT_OPEN
 								.equalsIgnoreCase(approvalRequest
 										.getOriginalValue())) {
-							scQt.setOpenFor(QTConstants.QT_ALL);
+							scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
 						} else {
-							scQt.setOpenFor(QTConstants.QT_BUMIPUTRA);
+							scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
 						}
 						isRejected = true;
 					} else if (ParameterConst.APPROVAL_DECISION_TYPE_REVISED
@@ -1340,7 +1340,7 @@ public class ApprovalBackingBean extends
 				if (ParameterConst.APPROVAL_REQUEST_RESTRICTED_TENDER
 						.equalsIgnoreCase(approvalType)) {
 
-					scQt.setQtType(SourcingConstants.QT_TYPE_OPEN);
+					scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
 					scQt.setScQtSuppliers(null);
 				} else if (ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD
 						.equalsIgnoreCase(approvalType)) {

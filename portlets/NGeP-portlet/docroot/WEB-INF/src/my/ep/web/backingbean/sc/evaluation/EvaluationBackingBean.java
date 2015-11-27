@@ -728,7 +728,7 @@ public class EvaluationBackingBean extends
 									.getScCommitteeMember()
 									.getMemberRole()
 									.getParameterCode()
-									.equals(SourcingConstants.MEMBER_ROLE_SECRATARY)) {
+									.equals(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
 								if (!committeeActivity.isAttended()) {
 									committeeActivity.setAttended(true);
 								}
@@ -761,7 +761,7 @@ public class EvaluationBackingBean extends
 								if (scCommitteeMember
 										.getMemberRole()
 										.getParameterCode()
-										.equals(SourcingConstants.MEMBER_ROLE_SECRATARY)) {
+										.equals(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
 									activity.setAttended(true);
 
 								}
@@ -7646,7 +7646,7 @@ public class EvaluationBackingBean extends
 		String roleCode = member.getMemberRole().getParameterCode();
 		this.getManagedBean().setRoleCode(roleCode);
 		if (roleCode
-				.equalsIgnoreCase(SourcingConstants.MEMBER_ROLE_CHAIRPERSON)) {
+				.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
 			this.getManagedBean().setLocalOutCome(outCome);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 
@@ -7806,20 +7806,20 @@ public class EvaluationBackingBean extends
 		ScCommitteeMember member = CommitteeresDTO.getCommMember();
 		if (null != member) {
 			if (member.getMemberRole().getParameterCode()
-					.equalsIgnoreCase(SourcingConstants.MEMBER_ROLE_SECRETARY)) {
+					.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
 
 				this.getManagedBean().setReadOnly(false);
 				this.getManagedBean().setMemberOnly(false);
 
 			} else if (member.getMemberRole().getParameterCode()
-					.equalsIgnoreCase(SourcingConstants.MEMBER_ROLE_MEMBER)) {
+					.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_MEMBER)) {
 				this.getManagedBean().setReadOnly(true);
 				this.getManagedBean().setMemberOnly(false);
 
 			} else if (member
 					.getMemberRole()
 					.getParameterCode()
-					.equalsIgnoreCase(SourcingConstants.MEMBER_ROLE_CHAIRPERSON)) {
+					.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
 				this.getManagedBean().setReadOnly(true);
 				this.getManagedBean().setMemberOnly(true);
 			}
