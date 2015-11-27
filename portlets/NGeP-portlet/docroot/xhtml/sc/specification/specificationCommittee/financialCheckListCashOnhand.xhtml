@@ -43,8 +43,7 @@
 			src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />
 
 
-		<p:panel header="#{lbl['lbl.sc.spec.cash.hand']}" toggleable="true"
-			styleClass="BtnSpacing">
+		<p:panel header="#{lbl['lbl.sc.spec.cash.hand']}" toggleable="true">
 			<p:dataTable id="cashHand" rowIndexVar="index" var="cash"
 				rowKey="#{cash}">
 				<ac:paginator for="cashHand"></ac:paginator>
@@ -79,7 +78,7 @@
 		</table>
 
 
-		<p:panel id="financialCashOnhandScore" styleClass="BtnSpacing"
+		<p:panel id="financialCashOnhandScore"
 			header="#{lbl['lbl.sc.spec.score.total.cash']}" toggleable="true"
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
 			<table>
