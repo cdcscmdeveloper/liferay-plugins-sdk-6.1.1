@@ -20,6 +20,8 @@
 						styleClass="mandatory" /> <h:outputLabel
 						value="#{lbl['lbl.sc.ptj.approver.group']}" /></td>
 				<td><p:selectOneMenu style="width:300px; margin-bottom:5px;"
+				        id="appGroupId"
+				        label="#{lbl['lbl.sc.ptj.approver.group']}"
 						disabled="#{isPendingApprovalStatus or requestNoteBackingBean.managedBean.viewOnly}"
 						value="#{requestNoteBackingBean.managedBean.userGroupId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -27,12 +29,12 @@
 							listener="#{requestNoteBackingBean.userGroupChangeListener()}" />
 						<f:selectItems
 							value="#{requestNoteBackingBean.getUserGroupDropdown()}" />
-					</p:selectOneMenu></td>
+					</p:selectOneMenu><p:message id="appGroupIdMsg" for="appGroupId" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><h:outputText value="* " styleClass="mandatory" /> <h:outputLabel
 						value="#{lbl['lbl.sc.approverName']}" /></td>
-				<td><p:selectOneMenu id="approverDropdown" required="true"
+				<td><p:selectOneMenu id="approverNameId"
 				        label="#{lbl['lbl.sc.approverName']}"
 						disabled="#{isPendingApprovalStatus or requestNoteBackingBean.managedBean.viewOnly}"
 						value="#{requestNoteBackingBean.managedBean.selectedApproverId}"
@@ -43,7 +45,7 @@
 							var="user" itemLabel="#{user.userName}"
 							itemValue="#{user.userId}"/>
 							<p:ajax event="change" update="approverId" />
-					</p:selectOneMenu></td>
+					</p:selectOneMenu> <p:message id="approverNameIdMsg" for="approverNameId" display="icon" /></td>
 			</tr>
 		</table>
 	</p:panel>
