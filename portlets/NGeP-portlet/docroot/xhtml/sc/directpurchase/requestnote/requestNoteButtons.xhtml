@@ -105,7 +105,7 @@
 						<ui:param name="isCancel" value="${bpmAction == 'CANCEL'}" />
 						
 						<p:commandButton value="#{lbl[buttonLabel]}" partialSubmit="true"
-							styleClass="ui-button" onstart="blockWidget.show();"
+							onstart="blockWidget.show();"
 							oncomplete="blockWidget.hide();"
 							process="#{isCancel ? '@this,  @([id$= remark])' : '@form'}"
 							update="#{isCancel ? '@this,  @([id$= remark])' : '@form'}"
