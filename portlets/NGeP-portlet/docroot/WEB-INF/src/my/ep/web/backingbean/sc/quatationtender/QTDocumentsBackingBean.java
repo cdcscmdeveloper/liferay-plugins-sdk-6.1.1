@@ -164,14 +164,6 @@ public class QTDocumentsBackingBean extends
 	 */
 	public QTDocumentsBackingBean() {
 		// PagingDataModel for Clone Quotation Tender List
-		IPagingDataModel<ScQt> cloneSearchDocumentDataModel = getManagedBean()
-				.getCloneDocumentDataModel();
-
-		if (cloneSearchDocumentDataModel == null) {
-			getManagedBean().setCloneDocumentDataModel(
-					new DocumentPagingDataModel("clonesearchdocid",
-							getManagedBean().getCloneDocumentSearchBean()));
-		}
 	}
 
 	/**
@@ -195,7 +187,7 @@ public class QTDocumentsBackingBean extends
 		 */
 		public DocumentPagingDataModel(String componentId,
 				QtnTenderSearchBean cloneDocumentSearchBean) {
-			super(componentId);
+			super(componentId, false);
 			this.cloneDocumentSearchBean = cloneDocumentSearchBean;
 		}
 
@@ -321,6 +313,8 @@ public class QTDocumentsBackingBean extends
 	 * Clone search document action.
 	 */
 	public void cloneSearchDocumentAction() {
+		debugLogger("cloneSearchDocumentAction");
+		getManagedBean().setCloneDocumentSelectQt(null);
 		getManagedBean().getCloneDocumentDataModel().reloadData();
 	}
 
@@ -329,7 +323,18 @@ public class QTDocumentsBackingBean extends
 	 */
 	public void cloneDocumentPopupAction() {
 		debugLogger("cloneDocumentPopupAction");
-		getManagedBean().getCloneDocumentDataModel().reloadData();
+		getManagedBean().setCloneDocumentSelectQt(null);
+		
+		IPagingDataModel<ScQt> cloneSearchDocumentDataModel = getManagedBean()
+				.getCloneDocumentDataModel();
+
+		if (cloneSearchDocumentDataModel == null) {
+			getManagedBean().setCloneDocumentDataModel(
+					new DocumentPagingDataModel("clonesearchdocid",
+							getManagedBean().getCloneDocumentSearchBean()));
+		}
+		getManagedBean().getCloneDocumentDataModel().resetData();
+		
 		getManagedBean().getCloneDocumentSearchBean().setQtTitle(null);
 		getManagedBean().getCloneDocumentSearchBean().setQtNo(null);
 		getManagedBean().getCloneDocumentSearchBean().setProcurementMode(null);
@@ -470,7 +475,9 @@ public class QTDocumentsBackingBean extends
 	 *            the event
 	 */
 	public void onRowCloneAction(SelectEvent event) {
+		debugLogger("onRowCloneAction");
 		ScQt scQt = (ScQt) event.getObject();
+		this.getManagedBean().setCloneDocumentSelectQt(scQt);
 		IQTDetailSO detailSO;
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		QuationTenderResDTO resDTO = null;
@@ -564,21 +571,15 @@ public class QTDocumentsBackingBean extends
 		debugLogger("resetClone");
 		this.getManagedBean().getCloneDocumentSearchBean().setQtTitle(null);
 		this.getManagedBean().getCloneDocumentSearchBean().setQtNo(null);
-		this.getManagedBean().getCloneDocumentSearchBean()
-				.setProcurementMode(null);
-		this.getManagedBean().getCloneDocumentSearchBean()
-				.setFromCreatedDate(null);
-		this.getManagedBean().getCloneDocumentSearchBean()
-				.setToCreatedDate(null);
+		this.getManagedBean().getCloneDocumentSearchBean().setProcurementMode(null);
+		this.getManagedBean().getCloneDocumentSearchBean().setFromCreatedDate(null);
+		this.getManagedBean().getCloneDocumentSearchBean().setToCreatedDate(null);
 		this.getManagedBean().getCloneDocumentSearchBean().setQtStatus(null);
-		this.getManagedBean().getCloneDocumentSearchBean()
-				.setFromPublishDate(null);
-		this.getManagedBean().getCloneDocumentSearchBean()
-				.setToPublishDate(null);
-		this.getManagedBean().getCloneDocumentSearchBean()
-				.setFromClosingDate(null);
-		this.getManagedBean().getCloneDocumentSearchBean()
-				.setToClosingDate(null);
+		this.getManagedBean().getCloneDocumentSearchBean().setFromPublishDate(null);
+		this.getManagedBean().getCloneDocumentSearchBean().setToPublishDate(null);
+		this.getManagedBean().getCloneDocumentSearchBean().setFromClosingDate(null);
+		this.getManagedBean().getCloneDocumentSearchBean().setToClosingDate(null);
+		this.getManagedBean().setCloneDocumentSelectQt(null);
 	}
 
 	/**
