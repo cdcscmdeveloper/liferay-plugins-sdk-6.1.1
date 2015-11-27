@@ -67,26 +67,31 @@
 			</h:panelGrid>
 		</p:panel>
 
-		<c:if
-			test="#{null ne noticeBoardBackingBean.managedBean.scQt.finalization.recommendedTypeId}">
-			<c:if test="#{!noticeBoardBackingBean.managedBean.scQt.zonal}">
-				<ui:include src="/xhtml/sc/noticeboard/awardsupplier/nbAwardedDetails.xhtml"></ui:include>
+		<p:panel header="#{lbl['lbl.sc.notice.board.awarded.list']}"
+			toggleable="true" id="awardSuppPanlId">
+			<c:if
+				test="#{null ne noticeBoardBackingBean.managedBean.scQt.finalization.recommendedTypeId}">
+				<c:if test="#{!noticeBoardBackingBean.managedBean.scQt.zonal}">
+					<ui:include
+						src="/xhtml/sc/noticeboard/awardsupplier/nbAwardedDetails.xhtml"></ui:include>
+				</c:if>
+				<c:if test="#{noticeBoardBackingBean.managedBean.scQt.zonal}">
+					<p:tabView var="zones" dynamic="true" cache="true"
+						orientation="left"
+						value="#{noticeBoardBackingBean.managedBean.zones}">
+						<p:ajax event="tabChange"
+							listener="#{noticeBoardBackingBean.awardSupplierTabChange}"></p:ajax>
+						<p:tab title="#{zones.zoneName}">
+
+							<ui:include
+								src="/xhtml/sc/noticeboard/awardsupplier/nbAwardedDetails.xhtml"></ui:include>
+
+						</p:tab>
+
+
+					</p:tabView>
+				</c:if>
 			</c:if>
-			<c:if test="#{noticeBoardBackingBean.managedBean.scQt.zonal}">
-				<p:tabView var="zones" dynamic="true" cache="true"
-					orientation="left"
-					value="#{noticeBoardBackingBean.managedBean.zones}">
-					<p:ajax event="tabChange"
-						listener="#{noticeBoardBackingBean.awardSupplierTabChange}"></p:ajax>
-					<p:tab title="#{zones.zoneName}">
-
-						<ui:include src="/xhtml/sc/noticeboard/awardsupplier/nbAwardedDetails.xhtml"></ui:include>
-
-					</p:tab>
-
-
-				</p:tabView>
-			</c:if>
-		</c:if>
+		</p:panel>
 	</ui:define>
 </ui:composition>
