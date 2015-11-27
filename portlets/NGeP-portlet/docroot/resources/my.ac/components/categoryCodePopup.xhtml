@@ -24,7 +24,7 @@
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td width="20%">
-					<p:outputLabel value="#{lbl['lbl.sc.category.code.search.by']}" />
+					<p:outputLabel value="#{lbl['lbl.sc.category.code.search.by']}" styleClass="commonLabel"/>
 				</td>
 				<td width="80%">
 					<p:selectOneRadio id="searchBy"
@@ -37,7 +37,7 @@
 			<c:if test="#{categoryCodeSearchBackingBean.managedBean.searchBy == ParameterConst.categoryCodeSearchByCode}">
 			<tr>
 				<td>
-					<p:outputLabel value="#{lbl['lbl.sc.main.category']}" />
+					<p:outputLabel value="#{lbl['lbl.sc.main.category']}" styleClass="commonLabel"/>
 				</td>
 				<td>
 					<h:selectOneMenu id="catCodeLvl1"
@@ -144,19 +144,19 @@
 			</p:panel>
 			</c:if>
 		</h:panelGroup>
-		
-		<br />
 
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.ok']}"
-				action="#{categoryCodeSearchBackingBean.okAction(cc.attrs.okAction)}"
-				process="@form"
-				update="#{cc.attrs.update}" />
-			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-				partialSubmit="true" process="@this" update="@this"
-				action="#{categoryCodeSearchBackingBean.cancelAction}"
-				oncomplete="catCodePopup.hide()" />
-		</div>
-	</p:dialog>
+			<table style="width: 100%;" styleClass="BtnSpacing">
+				<tr>
+					<TD style="text-align: right;"><p:commandButton
+							value="#{lbl['lbl.btn.ok']}"
+							action="#{categoryCodeSearchBackingBean.okAction(cc.attrs.okAction)}"
+							process="@form" update="#{cc.attrs.update}" /> <p:commandButton
+							value="#{lbl['lbl.btn.cancel']}" partialSubmit="true"
+							process="@this" update="@this"
+							action="#{categoryCodeSearchBackingBean.cancelAction}"
+							oncomplete="catCodePopup.hide()"  /></TD>
+				</tr>
+			</table>
+		</p:dialog>
 </cc:implementation>
 </ui:composition>
