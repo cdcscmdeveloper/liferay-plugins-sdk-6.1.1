@@ -28,15 +28,16 @@
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sc.name']}" /></td>
 									<td colspan="3"><p:inputText maxlength="50"
+											style="margin-bottom: 5px;"
 											value="#{evaluationMeetingBackingBean.managedBean.name}"
-											size="64" /></td>
+											size="47" /></td>
 								</tr>
 								<tr>
-									<td style="width: 110px;"><p:outputLabel
+									<td style="width: 125px;"><p:outputLabel
 											value="#{lbl['lbl.sc.id.type']}" /></td>
 									<td><p:selectOneMenu
 											value="#{evaluationMeetingBackingBean.managedBean.identificationType}"
-											style="width: 215px;margin-bottom: 5px;">
+											style="width: 365px;margin-bottom: 5px;">
 											<f:selectItems
 												value="#{evaluationMeetingBackingBean.getDropdownCodeValues(ParameterTypeConst.identificationTypes)}" />
 										</p:selectOneMenu></td>
@@ -48,7 +49,7 @@
 											value="#{lbl['lbl.sc.identification.no']}" /></td>
 									<td><p:inputText maxlength="20"
 											value="#{evaluationMeetingBackingBean.managedBean.identificationNo}"
-											size="30" /></td>
+											size="47" /></td>
 									<td />
 									<td />
 								</tr>
@@ -277,17 +278,18 @@
 						</p:panel>
 					</c:if>
 				</h:panelGroup>
-				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.ok']}"
-						oncomplete="prepareCommittee.paginator.endLink.click();"
-						update="evaluationpreparecommittee,addexistingNewId"
-						process="@this, newCommitteeProfile,addexistingNewId"
-						actionListener="#{evaluationMeetingBackingBean.addCommitteeAction}" />
-					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-						actionListener="#{evaluationMeetingBackingBean.closeListener}"
-						styleClass="apply_button" process="@this"
-						oncomplete="newspecificationcommittee.hide();" />
-				</div>
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+					style="float:right;" styleClass="BtnSpacing"
+					actionListener="#{evaluationMeetingBackingBean.closeListener}"
+					process="@this" oncomplete="newspecificationcommittee.hide();" />
+
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" style="float:right;"
+					styleClass="BtnSpacing"
+					oncomplete="prepareCommittee.paginator.endLink.click();"
+					update="evaluationpreparecommittee,addexistingNewId"
+					process="@this, newCommitteeProfile,addexistingNewId"
+					actionListener="#{evaluationMeetingBackingBean.addCommitteeAction}" />
+
 			</h:panelGroup>
 			<p:ajax event="close"
 				listener="#{evaluationMeetingBackingBean.closeListener}" />

@@ -14,7 +14,7 @@
 	<p:messages id="evaluationMeeting" showDetail="true"
 		autoUpdate="#{evaluationMeetingBackingBean.managedBean.autoUpdate}"
 		closable="true" severity="error,info" showSummary="false" />
-	<!-- <ac:title value="#{lbl['lbl.sc.eva.evaluation.Meeting']}"></ac:title> -->
+	
 	<div align="right">
 
 		<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
@@ -89,14 +89,16 @@
 			</p:column>
 
 		</p:dataTable>
-		<p:spacer height="10"></p:spacer>
+		
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
+			styleClass="BtnSpacing"
 				process="@this,evaluationmeetingDetails" partialSubmit="true"
 				action="#{evaluationMeetingBackingBean.addMeetingAction}"
 				oncomplete="meetingDtls.paginator.endLink.click();"
 				update="evaluationmeetingDetails" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
+			styleClass="BtnSpacing"
 				partialSubmit="true"
 				oncomplete="confirmMeetingDtlsDeletePopUp.show();"
 				update="@([id$=#{confirmmeetingdtlsDeleteId}])">
@@ -216,13 +218,15 @@
 
 		</p:dataTable>
 
-		<p:spacer height="10"></p:spacer>
+		
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.clone']}" process="@this"
+			styleClass="BtnSpacing"
 				partialSubmit="true" oncomplete="screen2.show();"
 				actionListener="#{evaluationMeetingBackingBean.addCloneCommittee}"
 				update="@([id$=#{cloneid}])" />
 			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"
+			styleClass="BtnSpacing"
 				partialSubmit="true"
 				actionListener="#{evaluationMeetingBackingBean.addCommitteeDetails}"
 				update="@([id$=#{newspecificationcommitteeid}])"
@@ -230,6 +234,7 @@
 
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
+			styleClass="BtnSpacing"
 				partialSubmit="true"
 				oncomplete="confirmMeetingCommitteemembersDeletePopUp.show();"
 				update="@([id$=#{confirmmeetingCommitteemembersDeleteId}])">

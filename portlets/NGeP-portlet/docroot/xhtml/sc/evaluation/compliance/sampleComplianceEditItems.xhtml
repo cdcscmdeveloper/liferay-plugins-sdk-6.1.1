@@ -17,22 +17,23 @@
 		</p:blockUI>
 		<p:messages id="sampleCompliance" showDetail="true" autoUpdate="true"
 			closable="true" severity="error,info" showSummary="false" />
-		<div>
+		<table width="100%">
+			<tr>
+				<td align="right">
 			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-				immediate="true"
+				immediate="true" styleClass="BtnSpacing"
 				action="#{evaluationBackingBean.evaluationBackaction}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
 				style="float:right;" update="@all" onstart="blockWidget.show();"
-				oncomplete="blockWidget.hide();"
+				oncomplete="blockWidget.hide();" styleClass="BtnSpacing"
 				action="#{evaluationBackingBean.saveComplianceSample}" />
-		</div>
-		<p:spacer height="25" />
-		<br />
-		<br />
+		</td>
+		</tr>
+		</table>
 		<ui:include src="/xhtml/sc/evaluation/evaluationHeader.xhtml" />
-		<br />
+		
 
 		<table>
 			<tr>

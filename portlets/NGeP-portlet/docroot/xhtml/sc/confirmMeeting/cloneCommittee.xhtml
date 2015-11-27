@@ -185,12 +185,7 @@
 								value="#{evaluationMeetingBackingBean.getStatusDescById(scQt.qtStatus.statusId)}" />
 						</p:column>
 					</p:dataTable>
-
-
-					<p:spacer height="20"></p:spacer>
-					<br />
-					<br />
-
+					<p:spacer height="15px" />
 
 					<ui:fragment
 						rendered="#{evaluationMeetingBackingBean.managedBean.cloneSelectQt ne null}">
@@ -248,13 +243,14 @@
 						</p:column>
 
 					</p:dataTable>
-					<p:spacer height="30"></p:spacer>
+
 					<div align="right">
 						<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+							styleClass="BtnSpacing"
 							actionListener="#{evaluationMeetingBackingBean.closeListener}"
 							style="float:right;" onclick="screen2.hide();" />
 						<p:commandButton value="#{lbl['lbl.btn.ok']}" process="@this"
-							partialSubmit="true"
+							styleClass="BtnSpacing" partialSubmit="true"
 							actionListener="#{evaluationMeetingBackingBean.cloneCommitteeDtls}"
 							oncomplete="prepareCommittee.paginator.endLink.click();"
 							update="evaluationpreparecommittee" />

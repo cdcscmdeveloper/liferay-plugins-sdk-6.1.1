@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<!-- <ui:include src="/xhtml/sc/quatationtender/qtntenderheader.xhtml" />  -->
+
 
 
 	<p:panel header="#{lbl['lbl.sc.committee.endorsement.evaluation']}"
@@ -224,11 +224,10 @@
 	</p:panel>
 	<table style="width: 100%">
 		<tr>
-			<td><div align="left" style="width: 99%">
-					<p:commandButton value="#{lbl['lbl.btn.prev']}"
-						actionListener="#{evaluationBackingBean.setTabValue('5','4')}"
-						action="#{evaluationBackingBean.updateSmAppl}" update=":form" />
-				</div></td>
+			<td><p:commandButton value="#{lbl['lbl.btn.prev']}"
+					style="float:left;" styleClass="BtnSpacing"
+					actionListener="#{evaluationBackingBean.setTabValue('5','4')}"
+					action="#{evaluationBackingBean.updateSmAppl}" update=":form" /></td>
 
 		</tr>
 	</table>
