@@ -94,8 +94,10 @@
 				</p:dataTable>
 			</p:panel>
 			<!-- End of Committee members -->
+		<p:panel id="offerPricePnlId" header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
 			<c:if test="#{!noticeBoardBackingBean.managedBean.scQt.zonal}">
-				<ui:include src="/xhtml/sc/noticeboard/priceshedule/nbOfferPriceSuppliers.xhtml"></ui:include>
+				<ui:include
+					src="/xhtml/sc/noticeboard/priceshedule/nbOfferPriceSuppliers.xhtml"></ui:include>
 			</c:if>
 			<c:if test="#{noticeBoardBackingBean.managedBean.scQt.zonal}">
 				<p:tabView var="zones" dynamic="true" cache="true"
@@ -104,15 +106,12 @@
 					<p:ajax event="tabChange"
 						listener="#{noticeBoardBackingBean.offeredPriceTabChange}"></p:ajax>
 					<p:tab title="#{zones.zoneName}">
-
-						<ui:include src="/xhtml/sc/noticeboard/priceshedule/nbOfferPriceSuppliers.xhtml"></ui:include>
-
+						<ui:include
+							src="/xhtml/sc/noticeboard/priceshedule/nbOfferPriceSuppliers.xhtml"></ui:include>
 					</p:tab>
-
-
 				</p:tabView>
 			</c:if>
-		
+		</p:panel>
 
 	</ui:define>
 </ui:composition>
