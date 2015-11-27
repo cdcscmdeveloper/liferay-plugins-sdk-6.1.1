@@ -87,7 +87,7 @@
 						<tr>
 							<td colspan="2"><p:commandButton
 									oncomplete="attachDlg.show();return false;"
-									icon="iconAttachment" update="bpkuploads" value="#{lbl['lbl.btn.attach.files']}" disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}" >
+									update="bpkuploads" value="#{lbl['lbl.btn.attach.files']}" disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}" >
 									<f:setPropertyActionListener value="#{bpkApproverCategory}"
 										target="#{approvalBackingBean.managedBean.scQtApproval}" />
 								</p:commandButton></td>

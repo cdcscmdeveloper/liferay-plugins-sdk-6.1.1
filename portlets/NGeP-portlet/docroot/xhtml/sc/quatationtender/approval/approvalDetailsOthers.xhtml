@@ -38,7 +38,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.document']}">
 				<p:commandButton oncomplete="otherApprovalAttachDlg.show();"
-					value="#{lbl['lbl.btn.attach.files']}" icon="iconAttachment"
+					value="#{lbl['lbl.btn.attach.files']}" 
 					partialSubmit="true" process="otherreqdtlsid"
 					disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}"
 					update="otherreqdtlsid">
