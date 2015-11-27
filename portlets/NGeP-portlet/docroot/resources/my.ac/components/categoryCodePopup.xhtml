@@ -24,11 +24,11 @@
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td width="20%">
-					<p:outputLabel value="#{lbl['lbl.sc.category.code.search.by']}" styleClass="commonLabel"/>
+					<p:outputLabel value="#{lbl['lbl.sc.category.code.search.by']}" />
 				</td>
 				<td width="80%">
 					<p:selectOneRadio id="searchBy"
-						value="#{categoryCodeSearchBackingBean.managedBean.searchBy}">
+						value="#{categoryCodeSearchBackingBean.managedBean.searchBy}" styleClass="commonLabel">
 						<f:selectItems value="#{categoryCodeSearchBackingBean.getRadioButtonCodeValues(ParameterTypeConst.categoryCodeSearchBy)}" />
 						<p:ajax event="change" update="catCodePnl" />
 					</p:selectOneRadio>
@@ -37,7 +37,7 @@
 			<c:if test="#{categoryCodeSearchBackingBean.managedBean.searchBy == ParameterConst.categoryCodeSearchByCode}">
 			<tr>
 				<td>
-					<p:outputLabel value="#{lbl['lbl.sc.main.category']}" styleClass="commonLabel"/>
+					<p:outputLabel value="#{lbl['lbl.sc.main.category']}"/>
 				</td>
 				<td>
 					<h:selectOneMenu id="catCodeLvl1"
@@ -145,16 +145,16 @@
 			</c:if>
 		</h:panelGroup>
 
-			<table style="width: 100%;" styleClass="BtnSpacing">
+			<table style="width: 100%;">
 				<tr>
 					<TD style="text-align: right;"><p:commandButton
 							value="#{lbl['lbl.btn.ok']}"
 							action="#{categoryCodeSearchBackingBean.okAction(cc.attrs.okAction)}"
-							process="@form" update="#{cc.attrs.update}" /> <p:commandButton
+							process="@form" update="#{cc.attrs.update}" styleClass="BtnSpacing" /> <p:commandButton
 							value="#{lbl['lbl.btn.cancel']}" partialSubmit="true"
 							process="@this" update="@this"
 							action="#{categoryCodeSearchBackingBean.cancelAction}"
-							oncomplete="catCodePopup.hide()"  /></TD>
+							oncomplete="catCodePopup.hide()"  styleClass="BtnSpacing" /></TD>
 				</tr>
 			</table>
 		</p:dialog>
