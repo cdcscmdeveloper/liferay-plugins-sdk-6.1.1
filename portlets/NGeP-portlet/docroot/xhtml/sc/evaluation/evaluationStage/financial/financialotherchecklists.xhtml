@@ -21,27 +21,31 @@
 				closable="true" showDetail="true" showSummary="false"
 				severity="error, info"></p:messages>
 			<h:panelGroup>
-				<div>
-					<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-						immediate="true"
-						action="#{evaluationBackingBean.financialBackaction}" />
-					<ui:param name="checklistScoreType"
-						value="#{evaluationBackingBean.managedBean.checklistScoreType}"></ui:param>
-					<ui:param name="companyScoreType"
-						value="#{evaluationBackingBean.managedBean.companyScoreType}"></ui:param>
-					<ui:include src="/xhtml/sc/evaluation/evaluationStage/commonOtherchecklistbuttons.xhtml"></ui:include>
+				<table width="100%">
+					<tr>
+						<td align="right"><p:commandButton
+								value="#{lbl['lbl.btn.back']}" style="float:left;"
+								immediate="true" styleClass="BtnSpacing"
+								action="#{evaluationBackingBean.financialBackaction}" /> <ui:param
+								name="checklistScoreType"
+								value="#{evaluationBackingBean.managedBean.checklistScoreType}"></ui:param>
+							<ui:param name="companyScoreType"
+								value="#{evaluationBackingBean.managedBean.companyScoreType}"></ui:param>
+							<ui:include
+								src="/xhtml/sc/evaluation/evaluationStage/commonOtherchecklistbuttons.xhtml"></ui:include>
 
-				</div>
+						</td>
+					</tr>
+				</table>
 			</h:panelGroup>
-			<p:spacer height="25" />
-			<br />
-			<br />
+
 			<ui:include src="/xhtml/sc/evaluation/evaluationHeader.xhtml" />
-			<br />
-			<p:panel header="#{lbl['lbl.sc.eva.financial.proposal.evaluation']}">
-				<ui:include src="/xhtml/sc/evaluation/evaluationStage/supplierChecklistHeader.xhtml" />
+
+			<p:panel id="financialOtherChecklistSupplierScoringProposalheader" header="#{lbl['lbl.sc.eva.financial.proposal.evaluation']}">
+				<ui:include
+					src="/xhtml/sc/evaluation/evaluationStage/supplierChecklistHeader.xhtml" />
 			</p:panel>
-			<br />
+
 
 
 			<p:panel header="#{lbl['lbl.sc.compliance.list']}" toggleable="true"
@@ -62,7 +66,7 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.document']}" style="width:10%">
 						<h:commandLink immediate="true"
-							action="#{evaluationBackingBean.downloadEncryptedFile(cashHand.scQtProposalChecklistAttachment)}" >
+							action="#{evaluationBackingBean.downloadEncryptedFile(cashHand.scQtProposalChecklistAttachment)}">
 							<h:graphicImage value="/css/images/design/icon_txt.png" />
 						</h:commandLink>
 
@@ -71,7 +75,7 @@
 				</p:dataTable>
 
 			</p:panel>
-			<p:spacer height="25"></p:spacer>
+			
 			<h:panelGroup>
 				<ui:param name="statusHide"
 					value="#{evaluationBackingBean.managedBean.statusHide}"></ui:param>

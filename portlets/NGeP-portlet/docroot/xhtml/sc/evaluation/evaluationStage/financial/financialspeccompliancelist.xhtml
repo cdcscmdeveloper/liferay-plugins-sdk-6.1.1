@@ -10,8 +10,10 @@
 	<h:panelGroup>
 		<p:panel header="#{lbl['lbl.sc.compliance.list']}" toggleable="true"
 			collapsed="true">
-			<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.eva.evaluation.stage.document.instruction']}" escape="false" />
-			
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.eva.evaluation.stage.document.instruction']}"
+				escape="false" />
+
 			<p:dataTable var="techComplianceList" id="sampleComplianceListId"
 				rows="10"
 				value="#{evaluationBackingBean.managedBean.evaluationComplianceList}"
@@ -20,12 +22,13 @@
 				<ac:paginator for="sampleComplianceListId" />
 
 
-				<p:column headerText="#{lbl['lbl.sc.spec.checklist.title']}" style="width:90%">
+				<p:column headerText="#{lbl['lbl.sc.spec.checklist.title']}"
+					style="width:90%">
 					<h:outputText value="#{techComplianceList.scQtCheckList.title}"></h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.document']}" style="width:10%">
 					<h:commandLink immediate="true"
-						action="#{evaluationBackingBean.downloadEncryptedFile(techComplianceList.scQtProposalChecklistAttachment)}" >
+						action="#{evaluationBackingBean.downloadEncryptedFile(techComplianceList.scQtProposalChecklistAttachment)}">
 						<h:graphicImage value="/css/images/design/icon_txt.png" />
 					</h:commandLink>
 				</p:column>

@@ -16,24 +16,25 @@
 
 
 		<h:panelGroup>
-			<div>
-				<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-					action="#{evaluationBackingBean.evaluationBackaction}" />
-
-			</div>
+			<table width="100%">
+				<tr>
+					<td align="right"><p:commandButton
+							value="#{lbl['lbl.btn.back']}" style="float:left;"
+							styleClass="BtnSpacing"
+							action="#{evaluationBackingBean.evaluationBackaction}" /></td>
+				</tr>
+			</table>
 		</h:panelGroup>
-		<p:spacer height="25" />
-		<br />
-		<br />
+		
 		<ui:include src="/xhtml/sc/evaluation/evaluationHeader.xhtml" />
-		<br/>		
+		
 		<p:panel header="#{lbl['lbl.sc.eva.financial.proposal.evaluation']}">
 			<ui:include src="/xhtml/sc/evaluation/checklistHeader.xhtml" />
 		</p:panel>
-		<br />
 		
+
 		<h:panelGroup>
-			<table style="border: 0px;width: 100%">
+			<table style="border: 0px; width: 100%">
 				<tr>
 					<td style="width: 16%" class="sidemenutd" valign="top"><p:remoteCommand
 							name="specTabChange" update="@form" partialSubmit="true"
@@ -44,7 +45,7 @@
 							style="display : table-caption;"
 							model="#{evaluationBackingBean.managedBean.evaluationSpecZonalMenuModel}">
 						</p:tabMenu></td>
-					<td  style="width: 84%"><h:panelGroup id="zoneSpecAnswers">
+					<td style="width: 84%"><h:panelGroup id="zoneSpecAnswers">
 							<ui:param name="finSpecsupplierList"
 								value="#{evaluationBackingBean.managedBean.finSpecSupplierListDM}"></ui:param>
 							<ui:param name="finSpecofferPrice"
@@ -52,8 +53,7 @@
 
 
 
-							<ui:include
-								src="finSpecSupplierOfferPriceList.xhtml"></ui:include>
+							<ui:include src="finSpecSupplierOfferPriceList.xhtml"></ui:include>
 						</h:panelGroup></td>
 				</tr>
 			</table>

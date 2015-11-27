@@ -18,16 +18,14 @@
 		<p:dataTable var="prefQualSupplier"
 			id="evaluationSummaryPreferencemarginQualifiedSuppliers"
 			value="#{qualifiedPreferenceList}" rows="10" editable="true"
-			lazy="true"
-			rowIndexVar="index" rowKey="#{qualifiedPreferenceListId}">
+			lazy="true" rowIndexVar="index" rowKey="#{qualifiedPreferenceListId}">
 			<ac:paginator
 				for="evaluationSummaryPreferencemarginQualifiedSuppliers" />
 
 
 
 
-			<p:column headerText="#{lbl['lbl.sc.ranking']}"
-				style="width:10%">
+			<p:column headerText="#{lbl['lbl.sc.ranking']}" style="width:10%">
 
 				<h:outputLabel value="#{prefQualSupplier.evalRank}"
 					style="text-align:right"></h:outputLabel>
@@ -45,8 +43,7 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.total.score']}"
-				style="width:10%">
+			<p:column headerText="#{lbl['lbl.sc.total.score']}" style="width:10%">
 				<h:outputLabel value="#{prefQualSupplier.totalScore}"
 					style="text-align:right"></h:outputLabel>
 			</p:column>
@@ -59,9 +56,9 @@
 
 
 			</p:column>
-			
+
 			<p:column headerText="#{lbl['lbl.sc.offered.price']}"
-					style="width:15%">
+				style="width:15%">
 				<h:outputLabel
 					value="#{prefQualSupplier.qtEvaluationResult.scQtProposal.proposalAmount.proposalAmt}"
 					style="text-align:right">
@@ -74,10 +71,10 @@
 			<p:column style="width:15%">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.difference.rm']}" />
-					<ac:iconTooltip id="summaryPrefMargin#{row}" value="#{lbl['lbl.sc.difference.rm.tooltip']}" />
+					<ac:iconTooltip id="summaryPrefMargin#{row}"
+						value="#{lbl['lbl.sc.difference.rm.tooltip']}" />
 				</f:facet>
-				<h:outputLabel
-					value="#{prefQualSupplier.priceDifference}"
+				<h:outputLabel value="#{prefQualSupplier.priceDifference}"
 					style="text-align:right">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -90,10 +87,10 @@
 				style="width:15%">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.difference.perc']}" />
-					<ac:iconTooltip id="summaryPriceDiff#{row}" value="#{lbl['lbl.sc.difference.perc.tooltip']}" />
+					<ac:iconTooltip id="summaryPriceDiff#{row}"
+						value="#{lbl['lbl.sc.difference.perc.tooltip']}" />
 				</f:facet>
-				<h:outputLabel
-					value="#{prefQualSupplier.percentageDifference}"
+				<h:outputLabel value="#{prefQualSupplier.percentageDifference}"
 					style="text-align:right">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
@@ -102,8 +99,7 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.pref.margin']}"
-				style="width:25%">
+			<p:column headerText="#{lbl['lbl.sc.pref.margin']}" style="width:25%">
 
 				<h:outputLabel
 					rendered="#{prefQualSupplier.qtEvaluationResult.scQtProposal.proposalAmount.preferenceMargin gt 0}"
@@ -122,7 +118,7 @@
 
 	</p:panel>
 
-
+	<p:spacer height="10px" />
 	<table>
 		<tr>
 			<td style="width: 220px;"><h:outputLabel
@@ -132,8 +128,7 @@
 				</p:inputText></td>
 		</tr>
 		<tr>
-			<td><h:outputLabel
-					value="#{lbl['lbl.sc.total']}" /></td>
+			<td><h:outputLabel value="#{lbl['lbl.sc.total']}" /></td>
 			<td><p:inputText readonly="true" disabled="true"
 					style="text-align:right"
 					value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM.rowCount}"></p:inputText></td>
@@ -153,8 +148,7 @@
 		<p:dataTable var="disQualifiedSupplier"
 			id="evaluationSummaryPreferencemarginDisQualifiedSuppliers"
 			value="#{disQualifiedPreferenceList}" rows="10" editable="true"
-			lazy="true"
-			rowIndexVar="index" rowKey="#{disQualifiedSupplier}">
+			lazy="true" rowIndexVar="index" rowKey="#{disQualifiedSupplier}">
 			<ac:paginator
 				for="evaluationSummaryPreferencemarginDisQualifiedSuppliers" />
 
@@ -168,8 +162,7 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.total.score']}"
-				style="width:10%">
+			<p:column headerText="#{lbl['lbl.sc.total.score']}" style="width:10%">
 				<h:outputLabel value="#{disQualifiedSupplier.totalScore}"
 					style="text-align:right"></h:outputLabel>
 			</p:column>
@@ -188,7 +181,7 @@
 
 
 	</p:panel>
-
+	<p:spacer height="10px" />
 
 	<table>
 

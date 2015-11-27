@@ -12,15 +12,16 @@
 
 	<p:panel toggleable="true">
 		<f:facet name="header">
-			<h:outputText value="#{lbl['lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage']}" />
-			<ac:iconTooltip value="#{lbl['lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage.tooltip']}" />
+			<h:outputText
+				value="#{lbl['lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage']}" />
+			<ac:iconTooltip
+				value="#{lbl['lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage.tooltip']}" />
 		</f:facet>
 
 		<p:dataTable var="qualifiedSupplier" id="oneTierQualifiedSupplier"
 			rows="10" editable="true" rowIndexVar="index"
 			value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM}"
-			lazy="true"
-			rowKey="#{qualifiedSupplier}">
+			lazy="true" rowKey="#{qualifiedSupplier}">
 			<ac:paginator for="oneTierQualifiedSupplier" />
 
 			<p:column headerText="#{lbl['lbl.sc.ranking']}"
@@ -52,17 +53,16 @@
 
 	</p:panel>
 
-
+	<p:spacer height="10px" />
 	<table>
 		<tr>
 			<td style="width: 220px;"><h:outputLabel
 					value="#{lbl['lbl.sc.passing.score']}" /></td>
 			<td><p:inputText readonly="true" disabled="true"
-				style="text-align:right" value="#{passingScore}"></p:inputText></td>
+					style="text-align:right" value="#{passingScore}"></p:inputText></td>
 		</tr>
 		<tr>
-			<td><h:outputLabel
-					value="#{lbl['lbl.sc.total']}" /></td>
+			<td><h:outputLabel value="#{lbl['lbl.sc.total']}" /></td>
 			<td><p:inputText readonly="true" disabled="true"
 					style="text-align:right"
 					value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM.rowCount}"></p:inputText></td>
@@ -75,15 +75,16 @@
 
 	<p:panel toggleable="true">
 		<f:facet name="header">
-			<h:outputText value="#{lbl['lbl.sc.eva.disqualified.supplier.list.tec.evaluation.stage']}" />
-			<ac:iconTooltip value="#{lbl['lbl.sc.eva.disqualified.supplier.list.tec.evaluation.stage.tooltip']}" />
+			<h:outputText
+				value="#{lbl['lbl.sc.eva.disqualified.supplier.list.tec.evaluation.stage']}" />
+			<ac:iconTooltip
+				value="#{lbl['lbl.sc.eva.disqualified.supplier.list.tec.evaluation.stage.tooltip']}" />
 		</f:facet>
 
 		<p:dataTable var="disQualifiedSupplier" rows="10"
 			value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM}"
-			lazy="true"
-			id="oneTierDisQualifiedSupplier" editable="true" rowIndexVar="index"
-			rowKey="#{disQualifiedSupplier}">
+			lazy="true" id="oneTierDisQualifiedSupplier" editable="true"
+			rowIndexVar="index" rowKey="#{disQualifiedSupplier}">
 			<ac:paginator for="oneTierDisQualifiedSupplier" />
 
 
@@ -111,7 +112,7 @@
 
 	</p:panel>
 
-
+	<p:spacer height="10px" />
 	<table>
 
 		<tr>

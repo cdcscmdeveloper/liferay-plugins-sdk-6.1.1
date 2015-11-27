@@ -11,27 +11,28 @@
 
 	<h:panelGroup>
 		<h:panelGroup>
-			<div>
-				<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-					immediate="true"
-					action="#{evaluationBackingBean.financialSpecBackaction}" />
-
-				<p:commandButton value="#{lbl['lbl.btn.save']}"
-					disabled="#{evaluationBackingBean.managedBean.readOnly}"
-					style="float:right;" update="@all" onstart="blockWidget.show();"
-					oncomplete="blockWidget.hide();"
-					action="#{evaluationBackingBean.saveTempleateSpecDtls}" />
-			</div>
+			<table width="100%">
+				<tr>
+					<td align="right"><p:commandButton
+							value="#{lbl['lbl.btn.back']}" style="float:left;"
+							immediate="true" styleClass="BtnSpacing"
+							action="#{evaluationBackingBean.financialSpecBackaction}" /> <p:commandButton
+							value="#{lbl['lbl.btn.save']}"
+							disabled="#{evaluationBackingBean.managedBean.readOnly}"
+							style="float:right;" update="@all" onstart="blockWidget.show();"
+							oncomplete="blockWidget.hide();" styleClass="BtnSpacing"
+							action="#{evaluationBackingBean.saveTempleateSpecDtls}" /></td>
+				</tr>
+			</table>
 		</h:panelGroup>
-		<p:spacer height="25" />
-		<br />
-		<br />
+
 		<ui:include src="/xhtml/sc/evaluation/evaluationHeader.xhtml" />
-		<br />
-		<p:panel header="#{lbl['lbl.sc.eva.financial.proposal.evaluation']}">
-			<ui:include src="/xhtml/sc/evaluation/evaluationStage/supplierChecklistHeader.xhtml" />
+
+		<p:panel id="financialSpecSupplierScoringProposalheader" header="#{lbl['lbl.sc.eva.financial.proposal.evaluation']}">
+			<ui:include
+				src="/xhtml/sc/evaluation/evaluationStage/supplierChecklistHeader.xhtml" />
 		</p:panel>
-		<br />
+
 	</h:panelGroup>
 
 </ui:composition>
