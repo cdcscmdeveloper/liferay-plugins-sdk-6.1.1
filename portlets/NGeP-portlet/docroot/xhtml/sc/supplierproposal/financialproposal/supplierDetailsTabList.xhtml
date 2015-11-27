@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel>
+
+		<p:tabView id="supplierinfotabViewid" dynamic="true">
+			<ui:param name="smSupplier"
+				value="#{supplierProposalDetailBackingBean.managedBean.smSupplier}" />
+			<ui:param name="smAppl"
+				value="#{supplierProposalDetailBackingBean.managedBean.smAppl}" />
+
+			<p:tab id="tab1" title="#{lbl['lbl.sc.spec.supplier.info']}">
+				<ui:include src="/xhtml/sc/supplierProposal/financialProposal/supplierCompanyDetails.xhtml" />
+			</p:tab>
+
+			<p:tab id="tab2" title="#{lbl['lbl.sc.sp.branch']}">
+				<ui:include src="/xhtml/sc/supplierProposal/financialProposal/supplierBranchesInfo.xhtml" />
+			</p:tab>
+
+			<p:tab id="tab3" title="#{lbl['lbl.sc.sp.capital.info']}">
+				<ui:include src="/xhtml/sc/supplierProposal/financialProposal/supplierCapitalInfo.xhtml" />
+			</p:tab>
+
+			<p:tab id="tab4" title="#{lbl['lbl.sc.sp.personnel']}">
+				<ui:include src="/xhtml/sc/supplierProposal/financialProposal/supplierPersonnelInfo.xhtml" />
+			</p:tab>
+
+			<p:tab id="tab5" title="#{lbl['lbl.sc.sp.bank.info']}">
+				<ui:include src="/xhtml/sc/supplierProposal/financialProposal/supplierBankInfo.xhtml" />
+			</p:tab>
+
+			<p:tab id="tab6" title="#{lbl['lbl.sc.sp.categories.code']}"
+				styleClass="noBorders tr,noBorders td">
+				<ui:include src="/xhtml/sc/supplierProposal/financialProposal/supplierCategoryCodes.xhtml" />
+			</p:tab>
+
+
+			<p:tab rendered="#{statusHide}">
+				<f:facet name="title">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText
+						value="#{lbl['lbl.sc.scores']} " />
+				</f:facet>
+				<p:spacer height="15"></p:spacer>
+				<ui:include
+					src="#{evaluationBackingBean.managedBean.evaluationPage}"></ui:include>
+			</p:tab>
+
+		</p:tabView>
+
+	</p:panel>
+</ui:composition>

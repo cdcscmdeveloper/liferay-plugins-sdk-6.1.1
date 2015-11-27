@@ -1,0 +1,33 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<style type="text/css">
+.sidemenu>.ui-tabmenu-nav {
+	padding-bottom: 310px !important;
+	margin-bottom: -310px !important;
+}
+</style>			
+	<table style="width: 100%">
+		<tr>
+			<TD style="width: 16%; vertical-align: baseline;" class="sidemenutd">
+				<p:remoteCommand id="zoneRemote" name="zoneTabChange" update="@form" partialSubmit="true" process="@form" action="#{supplierProposalDetailBackingBean.zoneTabChange}" />
+				
+				<p:tabMenu styleClass="sidemenu"
+					id="zonalMenu"
+					activeIndex="#{supplierProposalDetailBackingBean.managedBean.activeIndex}"
+					style="display : table-caption; width :  225px;"
+					model="#{supplierProposalDetailBackingBean.managedBean.proposalZonalMenuModel}">
+				</p:tabMenu></TD>
+			<td style="width: 84%;vertical-align: top;"><p:outputPanel id="zoneSpecAnswers">
+					<ac:templateSpec processValidationId="zoneRemote"
+						templateSpecBean="#{supplierProposalDetailBackingBean.managedBean.templateSpecBean}"
+						title="#{lbl['lbl.sc.spec.financial.title']}" />
+				</p:outputPanel></td>
+		</tr>
+	</table>
+</ui:composition>
