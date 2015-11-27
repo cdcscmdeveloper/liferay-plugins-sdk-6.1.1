@@ -2,6 +2,7 @@ package my.ep.web.integration.common;
 
 import java.util.Date;
 
+
 /*
  * @author P Ganga prasad
  */
@@ -9,8 +10,10 @@ public abstract class EperundingTemplate extends InitializeSO {
 
 	protected OsbUtility osbUtility = new OsbUtility();
 	protected FileUtility fileUtility = new FileUtility();
-	protected String path = fileUtility.createDirectory(new Date(),
-			IntegrationConstants.EPERUNDING_UPLOAD_DIR_LOCAL);
+	protected String path = IntegrationConstants.EPERUNDING_UPLOAD_DIR_LOCAL;
+	
+//	protected String path = fileUtility.createDirectory(new Date(),
+//			IntegrationConstants.EPERUNDING_UPLOAD_DIR_LOCAL);
 	protected Date currentDate = new Date();
 
 	public abstract void createConsultantProfile();
