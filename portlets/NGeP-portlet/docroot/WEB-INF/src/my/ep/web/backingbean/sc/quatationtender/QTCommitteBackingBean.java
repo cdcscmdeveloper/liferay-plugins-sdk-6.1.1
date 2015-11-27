@@ -297,7 +297,7 @@ public class QTCommitteBackingBean extends
 		 */
 		public QTPagingDataModel(String componentId,
 				QtnTenderSearchBean cloneQtnTenderSearchBean) {
-			super(componentId);
+			super(componentId, false);
 			this.cloneQtnTenderSearchBean = cloneQtnTenderSearchBean;
 		}
 
