@@ -81,7 +81,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		getManagedBean().setSoftcertDocNo(
 				SmCommonUtil.getSoftcertDocNo(getManagedBean()
 						.getLoginUserPersonnelInfo().getSmAppl()));
-		SmCommonUtil.redirectToPage("softCertBasePage.xhtml", "",null);
+		SmCommonUtil.redirectToPage("softCertBasePage.xhtml", "", null);
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		getPersonnelByPmUser(usr);
 		setPersonnelSoftcertInformation(getManagedBean()
 				.getLoginUserPersonnelInfo());
-		SmCommonUtil.redirectToPage("mySoftcertPage.xhtml", "",null);
+		SmCommonUtil.redirectToPage("mySoftcertPage.xhtml", "", null);
 	}
 
 	/**
@@ -126,7 +126,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			paymentBB.getManagedBean().setBpmPojo(bpmObj);
 			paymentBB.retrieveBillInfo();
 			SmCommonUtil.redirectToPage(
-					"/xhtml/sm/payment/portletViewMode.xhtml", "",null);
+					"/xhtml/sm/payment/portletViewMode.xhtml", "", null);
 		}
 	}
 
@@ -356,7 +356,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				}
 				renewSesionObject();
 				SmCommonUtil.redirectToPage(
-						SmApplicationUtil.getApplicationErrorPage(), msgKey,null);
+						SmApplicationUtil.getApplicationErrorPage(), msgKey,
+						null);
 			}
 		}
 	}
@@ -442,11 +443,14 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	/**
 	 * Revoke soft certificate
 	 */
-	public void revoke(SmPersonnel smPersonnel) {
+	public void revoke() {
 		try {
 			getManagedBean().getSoftCertMaintenanceBackingBean()
-					.RequestRevokeCert(smPersonnel.getIdentificationNo(),
-							smPersonnel.getSmAppl().getSmSupplier().getEpNo());
+					.RequestRevokeCert(
+							getManagedBean().getLoginUserPersonnelInfo()
+									.getIdentificationNo(),
+							getManagedBean().getLoginUserPersonnelInfo()
+									.getSmAppl().getSmSupplier().getEpNo());
 		} catch (Exception ex) {
 			throwKmcExceptionInNewPage(ex.getMessage());
 		}

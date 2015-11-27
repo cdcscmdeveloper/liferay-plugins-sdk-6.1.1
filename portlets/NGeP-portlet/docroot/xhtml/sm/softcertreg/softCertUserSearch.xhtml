@@ -76,8 +76,12 @@
 				<p:column disabledSelection="#{personnel.disableRowSelection}"
 					headerText="#{lbl['lbl.sm.label.action']}">
 					<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{personnel.softcertFlg ne '1'}"/>
-					<h:commandLink rendered="#{personnel.softcertFlg eq '1'}"
-						action="#{softCertBackingBean.revoke(personnel)}" target="_blank"
+					<h:commandLink 
+						rendered="#{personnel.softcertFlg eq '1' and 
+						(softCertBackingBean.managedBean.loginUserPersonnelInfo.epRole eq 'MOF_SUPPLIER_ADMIN' or 
+						softCertBackingBean.managedBean.loginUserPersonnelInfo.epRole eq 'BASIC_SUPPLIER_ADMIN' or 
+						softCertBackingBean.managedBean.loginUserPersonnelInfo.epRole eq 'SUPPLIER_TEMP')}"
+						action="#{softCertBackingBean.revoke()}" target="_blank"
 						process="@this" partialSubmit="true" update=":form" value="#{lbl['lbl.sm.softcert.revoke']}"/>
 				</p:column>
 
