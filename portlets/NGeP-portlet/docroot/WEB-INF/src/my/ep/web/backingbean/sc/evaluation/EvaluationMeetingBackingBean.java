@@ -1062,7 +1062,7 @@ public class EvaluationMeetingBackingBean extends
 		 */
 		public clonePagingDataModel() {
 
-			super("clonesearchCommitteid");
+			super("clonesearchCommitteid",false);
 
 		}
 
@@ -1353,7 +1353,7 @@ public class EvaluationMeetingBackingBean extends
 		 */
 		public existingUserPagingDataModel() {
 
-			super("existingcommitteesearch");
+			super("existingcommitteesearch",false);
 
 		}
 
