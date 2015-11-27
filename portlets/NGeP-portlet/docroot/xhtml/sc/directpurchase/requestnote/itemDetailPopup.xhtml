@@ -140,7 +140,7 @@
 				<p:commandButton id="okBtn"
 					rendered="#{!requestNoteBackingBean.managedBean.viewOnly}"
 					value="#{lbl['lbl.sc.ok']}" process="@this qtyId"
-					update="itemDetailsId" 	partialSubmit="true" 
+					update="itemDetailsId, @([id$=requestNoteItemDetails])" partialSubmit="true" 
 					action="#{requestNoteBackingBean.editQuantity}"/>
 
 				<p:commandButton value="#{lbl['lbl.sc.close']}" partialSubmit="true"
