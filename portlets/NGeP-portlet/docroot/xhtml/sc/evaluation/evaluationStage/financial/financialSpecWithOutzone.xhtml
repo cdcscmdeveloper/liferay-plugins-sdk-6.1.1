@@ -14,22 +14,22 @@
 	<ui:define name="contentSection">
 
 
-		<div>
-			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-				immediate="true"
-				action="#{evaluationBackingBean.evaluationBackaction}" />
+		<table width="100%">
+			<tr>
+				<td align="right"><p:commandButton
+						value="#{lbl['lbl.btn.back']}" style="float:left;"
+						immediate="true" styleClass="BtnSpacing"
+						action="#{evaluationBackingBean.evaluationBackaction}" /></td>
+			</tr>
+		</table>
 
-		</div>
 
-		<p:spacer height="25" />
-		<br />
-		<br />
 		<ui:include src="/xhtml/sc/evaluation/evaluationHeader.xhtml" />
-		<br />
+
 		<p:panel header="#{lbl['lbl.sc.eva.financial.proposal.evaluation']}">
 			<ui:include src="/xhtml/sc/evaluation/checklistHeader.xhtml" />
 		</p:panel>
-		<br />
+
 
 		<h:panelGroup>
 
@@ -39,8 +39,7 @@
 				value="#{evaluationBackingBean.managedBean.offerPricePackage}"></ui:param>
 			<ui:param name="finSpecSupplierId" value="finSpecSupplierWithOutzone"></ui:param>
 
-			<ui:include
-				src="finSpecSupplierOfferPriceList.xhtml"></ui:include>
+			<ui:include src="finSpecSupplierOfferPriceList.xhtml"></ui:include>
 
 		</h:panelGroup>
 

@@ -8,7 +8,8 @@
 
 
 
-	<p:panel header="#{lbl['lbl.sc.item.list']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.item.list']}" toggleable="true"
+		>
 
 		<p:dataTable var="summaryItem" id="evaluationSummaryItem"
 			editable="true" value="#{itemList}" rows="10"
@@ -18,9 +19,9 @@
 			<ac:paginator for="evaluationSummaryItem" />
 
 			<p:ajax event="rowSelect" process="@this" partialSubmit="true"
-				update="@form" listener="#{evaluationBackingBean.recommendationSummaryItemSelect}"></p:ajax>
-			<p:column headerText="#{lbl['lbl.sc.item']}"
-				style="width:35%">
+				update="@form"
+				listener="#{evaluationBackingBean.recommendationSummaryItemSelect}"></p:ajax>
+			<p:column headerText="#{lbl['lbl.sc.item']}" style="width:35%">
 
 				<h:outputText value="#{summaryItem.tplSpecQuestion.clItem}"></h:outputText>
 
@@ -31,17 +32,18 @@
 
 	<h:panelGroup id="summaryItemQualified">
 
-		<p:panel toggleable="true">
+		<p:panel toggleable="true" >
 			<f:facet name="header">
 				<h:outputText value="#{qualifiedSupplierListHeader}" />
-				<ac:iconTooltip id ="summIteQualify" value="#{qualifiedSupplierListTooltip}" />
+				<ac:iconTooltip id="summIteQualify"
+					value="#{qualifiedSupplierListTooltip}" />
 			</f:facet>
 
 			<p:dataTable var="summaryqualSup"
 				id="evaluationSummaryItemQualifiedSuppliers" rows="10"
 				value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM}"
-				lazy="true"
-				editable="true" rowIndexVar="index" rowKey="#{summaryqualSup}">
+				lazy="true" editable="true" rowIndexVar="index"
+				rowKey="#{summaryqualSup}">
 
 
 				<ac:paginator for="evaluationSummaryItemQualifiedSuppliers"></ac:paginator>
@@ -74,18 +76,17 @@
 		</p:panel>
 
 
+		<p:spacer height="10px" />
 		<table>
 			<tr>
 				<td style="width: 220px;"><h:outputLabel
 						value="#{lbl['lbl.sc.passing.score']}" /></td>
 				<td><p:inputText readonly="true" disabled="true"
-						style="text-align:right"
-						value="#{passingScore}"></p:inputText></td>
+						style="text-align:right" value="#{passingScore}"></p:inputText></td>
 			</tr>
-			
+
 			<tr>
-				<td><h:outputLabel
-						value="#{lbl['lbl.sc.total']}" /></td>
+				<td><h:outputLabel value="#{lbl['lbl.sc.total']}" /></td>
 				<td><p:inputText readonly="true" disabled="true"
 						style="text-align:right"
 						value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM.rowCount}"></p:inputText></td>
@@ -99,14 +100,15 @@
 		<p:panel toggleable="true">
 			<f:facet name="header">
 				<h:outputText value="#{disQualifiedSupplierListHeader}" />
-				<ac:iconTooltip id ="summIteDisQualify" value="#{disQualifiedSupplierListTooltip}" />
+				<ac:iconTooltip id="summIteDisQualify"
+					value="#{disQualifiedSupplierListTooltip}" />
 			</f:facet>
 
 			<p:dataTable var="disQualifiedSupplier"
 				id="evaluationSummaryItemDisQualifiedSuppliers" rows="10"
 				value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM}"
-				lazy="true"
-				editable="true" rowIndexVar="index" rowKey="#{disQualifiedSupplier}">
+				lazy="true" editable="true" rowIndexVar="index"
+				rowKey="#{disQualifiedSupplier}">
 
 				<ac:paginator for="evaluationSummaryItemDisQualifiedSuppliers"></ac:paginator>
 
@@ -129,7 +131,7 @@
 
 		</p:panel>
 
-
+		<p:spacer height="10px" />
 		<table>
 
 			<tr>

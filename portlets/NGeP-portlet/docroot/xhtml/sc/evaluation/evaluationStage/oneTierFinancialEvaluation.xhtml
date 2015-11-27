@@ -56,23 +56,19 @@
 
 	<table style="width: 100%">
 		<tr>
-			<td><div align="left" style="width: 99%">
-					<p:commandButton value="#{lbl['lbl.btn.prev']}"
-						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq}"
-						actionListener="#{evaluationBackingBean.setTabValue('3','2')}"
-						action="#{evaluationBackingBean.updateSmAppl}" update=":form" />
-				</div></td>
-			<td><div align="right" style="width: 99%">
+			<td><p:commandButton value="#{lbl['lbl.btn.prev']}"
+					style="float:left;" styleClass="BtnSpacing"
+					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq}"
+					actionListener="#{evaluationBackingBean.setTabValue('3','2')}"
+					action="#{evaluationBackingBean.updateSmAppl}" update=":form" /></td>
+			<td><p:commandButton value="#{lbl['lbl.btn.next']}"
+					style="float:right;" styleClass="BtnSpacing"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq}"
+					actionListener="#{evaluationBackingBean.setTabValue('3','4')}"
+					action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
+					update=":form" /></td>
 
-
-					<p:commandButton value="#{lbl['lbl.btn.next']}"
-						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq}"
-						actionListener="#{evaluationBackingBean.setTabValue('3','4')}"
-						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
-						update=":form" />
-
-				</div></td>
 		</tr>
 	</table>
 
