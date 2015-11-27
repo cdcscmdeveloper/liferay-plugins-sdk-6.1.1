@@ -49,7 +49,7 @@
 			src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />
 
 		
-		<p:panel header="#{lbl['lbl.sc.spec.credit.facility']}" styleClass="BtnSpacing"
+		<p:panel header="#{lbl['lbl.sc.spec.credit.facility']}" 
 			toggleable="true">
 			<p:dataTable id="credit" rowIndexVar="index" var="experience"
 				rowKey="#{experience}">
@@ -103,7 +103,7 @@
 			</tr>
 		</table>
 		
-		<p:panel id="financialCreditFacilityScores" styleClass="BtnSpacing"
+		<p:panel id="financialCreditFacilityScores" 
 			header="#{lbl['lbl.sc.spec.score.total.credit.facility']}"
 			toggleable="true"
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">

@@ -44,7 +44,7 @@
 			src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />
 
 
-		<p:panel toggleable="true" styleClass="BtnSpacing">
+		<p:panel toggleable="true">
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.sc.spec.company.exp.fed.private']}" />
 				<ac:iconTooltip
@@ -120,7 +120,7 @@
 
 
 
-		<p:panel id="financialPrivateContracts" styleClass="BtnSpacing"
+		<p:panel id="financialPrivateContracts" 
 			header="#{lbl['lbl.sc.spec.score.total.contract.amount']}"
 			toggleable="true"
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
