@@ -44,7 +44,6 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
-import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -1756,7 +1755,7 @@ public class QTCommitteBackingBean extends
 			}
 		}
 
-		if (SourcingConstants.ONE_TIER.equals(evalStg)
+		if (ParameterConst.EVALUATION_TYPES_ONE_TIER.equals(evalStg)
 				&& status.getStatusId() < QTStatusConst.QT_SUPPLIER_FINALIZATION) {
 			for (String committee : committeCodes) {
 				if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
@@ -1769,7 +1768,7 @@ public class QTCommitteBackingBean extends
 							new String[] { committee });
 				}
 			}
-		} else if (SourcingConstants.TWO_TIER.equals(evalStg)
+		} else if (ParameterConst.EVALUATION_TYPES_TWO_TIER.equals(evalStg)
 				&& status.getStatusId() < QTStatusConst.QT_SUPPLIER_FINALIZATION) {
 			for (String committee : committeCodes) {
 				if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
@@ -2036,7 +2035,7 @@ public class QTCommitteBackingBean extends
 		for (ScCommitteeMember committeeMember : commMembers) {
 			String memberRole = committeeMember.getMemberRole()
 					.getParameterCode();
-			if (SourcingConstants.MEMBER_ROLE_CHAIRPERSON
+			if (ParameterConst.COMMITTEE_ROLE_CHAIRPERSON
 					.equalsIgnoreCase(memberRole)) {
 				if (!committeeMember.isPNP()) {
 					throw new EpException(MessageConst.ERROR_760264);
@@ -2060,7 +2059,7 @@ public class QTCommitteBackingBean extends
 		for (ScCommitteeMember committeeMember : commMembers) {
 			String memberRole = committeeMember.getMemberRole()
 					.getParameterCode();
-			if (SourcingConstants.MEMBER_ROLE_SECRATARY
+			if (ParameterConst.COMMITTEE_ROLE_SECRETARY
 					.equalsIgnoreCase(memberRole)) {
 				count++;
 				if (count >= 2) {
@@ -2080,7 +2079,7 @@ public class QTCommitteBackingBean extends
 		for (ScCommitteeMember committeeMember : commMembers) {
 			String memberRole = committeeMember.getMemberRole()
 					.getParameterCode();
-			if (SourcingConstants.MEMBER_ROLE_MEMBER
+			if (ParameterConst.COMMITTEE_ROLE_MEMBER
 					.equalsIgnoreCase(memberRole)) {
 				i++;
 				if (i >= 1) {
