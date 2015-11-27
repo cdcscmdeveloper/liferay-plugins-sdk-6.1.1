@@ -101,7 +101,7 @@
 						<tr>
 							<td colspan="2"><p:commandButton
 									oncomplete="fcAttachDlg.show();return false;"
-									icon="iconAttachment" update="fcuploads" value="#{lbl['lbl.btn.attach.files']}" disabled="#{qTDetailBB.approvalDtlsEditable(fcaApprovalTab.scQtApproval)}" >
+									update="fcuploads" value="#{lbl['lbl.btn.attach.files']}" disabled="#{qTDetailBB.approvalDtlsEditable(fcaApprovalTab.scQtApproval)}" >
 									<f:setPropertyActionListener value="#{fcaApprovalTab.scQtApproval}"
 										target="#{approvalBackingBean.managedBean.scQtApproval}" />
 								</p:commandButton></td>
