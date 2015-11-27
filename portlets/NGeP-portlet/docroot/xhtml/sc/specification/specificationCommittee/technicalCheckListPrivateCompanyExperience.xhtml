@@ -45,7 +45,7 @@
 			src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />
 
 
-		<p:panel toggleable="true" styleClass="BtnSpacing">
+		<p:panel toggleable="true">
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.sc.spec.company.exp.fed.private']}" />
 				<ac:iconTooltip
@@ -131,7 +131,7 @@
 
 
 		<p:panel id="companyExpPrivateContracts" toggleable="true"
-			styleClass="BtnSpacing"
+			
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.sc.spec.score.total.no.contracts']}" />
@@ -239,7 +239,7 @@
 		</p:panel>
 
 		<p:panel id="techcompanyExpPrivateNumbersOfYears"
-			styleClass="BtnSpacing"
+			
 			header="#{lbl['lbl.sc.spec.score.total.no.years']}" toggleable="true"
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
 			<table>

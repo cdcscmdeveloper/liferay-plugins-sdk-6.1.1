@@ -46,7 +46,7 @@
 			src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />
 
 
-		<p:panel toggleable="true" styleClass="BtnSpacing">
+		<p:panel toggleable="true">
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.sc.spec.company.exp.fed.gov']}" />
 				<ac:iconTooltip
@@ -130,7 +130,7 @@
 
 
 
-		<p:panel id="techCompanyExpContracts" styleClass="BtnSpacing"
+		<p:panel id="techCompanyExpContracts" 
 			header="#{lbl['lbl.sc.spec.score.total.no.contracts']}"
 			toggleable="true"
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
@@ -233,7 +233,7 @@
 			</h:panelGroup>
 		</p:panel>
 
-		<p:panel id="techGovNumberOfYearsUpdate" styleClass="BtnSpacing"
+		<p:panel id="techGovNumberOfYearsUpdate" 
 			header="#{lbl['lbl.sc.spec.score.total.no.years']}" toggleable="true"
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
 			<table>
