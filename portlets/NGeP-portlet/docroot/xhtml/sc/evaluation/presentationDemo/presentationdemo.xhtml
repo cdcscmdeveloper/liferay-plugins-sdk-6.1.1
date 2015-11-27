@@ -28,7 +28,7 @@
 
 
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.document']}" style="width:15%">
+			<p:column headerText="#{lbl['lbl.sc.document']}" style="width:15%;text-align: center;">
 
 				<p:commandLink oncomplete="uploadDlg.show();return false;"
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
@@ -90,7 +90,7 @@
 							<td colspan="2"><p:commandButton
 									disabled="#{evaluationBackingBean.managedBean.readOnly}"
 									oncomplete="demoAttachDlg.show();"
-									value="#{lbl['lbl.txt.attach.files']}" icon="iconAttachment"
+									value="#{lbl['lbl.txt.attach.files']}" 
 									partialSubmit="true" process="@this"
 									update="@([id$=demoremarksupdtls])">
 								</p:commandButton></td>

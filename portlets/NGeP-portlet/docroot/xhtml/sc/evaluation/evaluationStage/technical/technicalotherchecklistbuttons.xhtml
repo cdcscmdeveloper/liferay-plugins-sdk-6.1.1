@@ -8,26 +8,27 @@
 
 
 
-	
-			<div>
-				<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-					immediate="true"
-					action="#{evaluationBackingBean.evaluationBackaction}" />
 
-			</div>
-		
-		<p:spacer height="25" />
-		<br />
-		<br />
-		<ui:include src="/xhtml/sc/evaluation/evaluationHeader.xhtml" />
-		<br />
-		<p:panel header="#{lbl['lbl.sc.eva.technical.proposal.evaluation']}">
-			<ui:include src="/xhtml/sc/evaluation/checklistHeader.xhtml" />
-		</p:panel>
-		<br />
+	<table width="100%">
+		<tr>
+			<td align="right"><p:commandButton
+					value="#{lbl['lbl.btn.back']}" style="float:left;" immediate="true"
+					styleClass="BtnSpacing"
+					action="#{evaluationBackingBean.evaluationBackaction}" /></td>
+		</tr>
+	</table>
 
-		<h:panelGroup>
-			<ui:include src="technicalEvaluationStgaeOtherchecklistSupplierList.xhtml" />
-		</h:panelGroup>
-	
+
+	<ui:include src="/xhtml/sc/evaluation/evaluationHeader.xhtml" />
+	<br />
+	<p:panel header="#{lbl['lbl.sc.eva.technical.proposal.evaluation']}">
+		<ui:include src="/xhtml/sc/evaluation/checklistHeader.xhtml" />
+	</p:panel>
+
+
+	<h:panelGroup>
+		<ui:include
+			src="technicalEvaluationStgaeOtherchecklistSupplierList.xhtml" />
+	</h:panelGroup>
+
 </ui:composition>
