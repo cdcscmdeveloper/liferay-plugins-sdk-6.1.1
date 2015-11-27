@@ -9,7 +9,7 @@
 	<p:panel header="#{lbl['lbl.sc.qt.schedule']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 210px;"><p:outputLabel
+				<td style="width: 235px;"><p:outputLabel
 						value="#{lbl['lbl.sc.publish.date']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
 				<td><h:panelGroup id="publishId">
@@ -83,7 +83,7 @@
 										id="sampleclsdate" required="true"
 										pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
-										showOn="button" /> <h:inputText value="12:00 PM"
+										showOn="button" /> <p:inputText value="12:00 PM"
 										disabled="true" size="4"
 										style="width: 65px;margin-top: 1px;margin-bottom: 0px;" /></td>
 								<td><p:message id="sampledate" for="sampleclsdate"
@@ -176,7 +176,7 @@
 			rendered="#{qTScheduleDetailBackingBean.managedBean.qt.zonal ne 'true'}">
 			<table style="width: 100%">
 				<tr>
-					<td style="width: 82px;"><p:outputLabel
+					<td style="width: 120px;"><p:outputLabel
 							value="#{lbl['lbl.sc.qt.address.one']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td>
@@ -192,7 +192,7 @@
 							</tr>
 						</table>
 					</td>
-					<td style="width: 200px;"><p:outputLabel
+					<td style="width: 170px;"><p:outputLabel
 							value="#{lbl['lbl.sc.state']}" /> <p:outputLabel value="*"
 							styleClass="mandatory" /></td>
 					<td>
@@ -202,7 +202,7 @@
 										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 										label="#{lbl['lbl.sc.state']}" required="true"
 										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmState.stateId}"
-										style="width: 218px;margin-bottom: 5px;">
+										style="width: 249px;margin-bottom: 5px;">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="" />
 										<f:selectItems var="state"
@@ -227,7 +227,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.sc.division']}" /></td>
 					<td><p:selectOneMenu id="sampleDivison1"
 							value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmDivision.divisionId}"
-							style="width: 218px;margin-bottom: 5px;"
+							style="width: 249px;margin-bottom: 5px;"
 							disabled="#{!qTScheduleDetailBackingBean.managedBean.stateCode or qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="divisionList"
@@ -252,7 +252,7 @@
 							<tr>
 								<td><p:selectOneMenu styleClass="samplestate"
 										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
-										style="width: 218px;margin-bottom: 5px;" id="sampledistrict1"
+										style="width: 249px;margin-bottom: 5px;" id="sampledistrict1"
 										required="true" label="#{lbl['lbl.sc.district']}"
 										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmDistrict.districtId}">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -284,7 +284,7 @@
 							<tr>
 								<td><p:selectOneMenu styleClass="sampledistrictCity"
 										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
-										style="width: 218px;margin-bottom: 5px;" id="samplecity1"
+										style="width: 249px;margin-bottom: 5px;" id="samplecity1"
 										required="true" label="#{lbl['lbl.sc.town']}"
 										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmCity.cityId}">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
