@@ -59,7 +59,7 @@
 			<ui:include src="approverCommittee.xhtml" />
 		</c:if>
 		<c:if
-			test="${approvalBackingBean.managedBean.approvalType == SourcingConstants.publicationApproval}">
+			test="${approvalBackingBean.managedBean.approvalType == SourcingConstants.approvalTypePublicationApproval}">
 			<ui:include src="requestPTJdetails.xhtml" />
 			<ui:include src="publicApproval.xhtml" />
 		</c:if>

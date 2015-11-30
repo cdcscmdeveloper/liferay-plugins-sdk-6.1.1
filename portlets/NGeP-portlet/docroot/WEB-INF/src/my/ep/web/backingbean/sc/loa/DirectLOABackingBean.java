@@ -1638,7 +1638,7 @@ public class DirectLOABackingBean extends
 		IParameterSO parameterSo = null;
 		try {
 
-			removefullfillmentDetails(SourcingConstants.FREQUENCY_SCHEDULE);
+			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 
 			List<ScQtSchedule> scheduleList = this.getManagedBean().getScLoa()
 					.getScQtSchedules();
@@ -1878,7 +1878,7 @@ public class DirectLOABackingBean extends
 	 */
 	public void addProgressiveDetails() {
 
-		removefullfillmentDetails(SourcingConstants.PROGRESSIVE_PAYMENT);
+		removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
 		List<ScQtProgressivePayment> payments = this.getManagedBean()
 				.getScLoa().getScQtProgPayments();
 
@@ -1894,7 +1894,7 @@ public class DirectLOABackingBean extends
 
 		}
 		this.getManagedBean().getScQt()
-				.setScheduleType(SourcingConstants.PROGRESSIVE_PAYMENT);
+				.setScheduleType(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
 		this.getManagedBean().getScLoa().setScQtProgPayments(payments);
 
 	}
@@ -3167,7 +3167,7 @@ public class DirectLOABackingBean extends
 				.getManagedBean().getScQt().getFulfilmentType()
 				.getParameterCode())) {
 			this.getManagedBean().getScQt()
-					.setScheduleType(SourcingConstants.FREQUENCY_SCHEDULE);
+					.setScheduleType(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 			this.getManagedBean().setTotalFrequency(0);
 			this.getManagedBean().setTotalProgressivePayment(0);
 
@@ -3175,8 +3175,8 @@ public class DirectLOABackingBean extends
 
 		this.getManagedBean().getScQt().setScQtSchedules(null);
 		this.getManagedBean().getScQt().setScQtProgressivePayments(null);
-		removefullfillmentDetails(SourcingConstants.PROGRESSIVE_PAYMENT);
-		removefullfillmentDetails(SourcingConstants.FREQUENCY_SCHEDULE);
+		removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
+		removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 		getLoaReports();
 		checkAgreementMandatory();
 
@@ -3351,12 +3351,12 @@ public class DirectLOABackingBean extends
 		String scheduleType = (String) event.getComponent().getAttributes()
 				.get("value");
 		String toBeRemoveType = null;
-		if (SourcingConstants.FREQUENCY_SCHEDULE.equalsIgnoreCase(scheduleType)) {
-			toBeRemoveType = SourcingConstants.PROGRESSIVE_PAYMENT;
+		if (ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE.equalsIgnoreCase(scheduleType)) {
+			toBeRemoveType = ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT;
 			this.getManagedBean().setTotalProgressivePayment(0);
-		} else if (SourcingConstants.PROGRESSIVE_PAYMENT
+		} else if (ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT
 				.equalsIgnoreCase(scheduleType)) {
-			toBeRemoveType = SourcingConstants.FREQUENCY_SCHEDULE;
+			toBeRemoveType = ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE;
 			this.getManagedBean().setTotalFrequency(0);
 		}
 		this.getManagedBean().getScQt().setScheduleType(scheduleType);
@@ -3366,7 +3366,7 @@ public class DirectLOABackingBean extends
 
 	private void removefullfillmentDetails(String scheduleType) {
 
-		if (SourcingConstants.FREQUENCY_SCHEDULE.equalsIgnoreCase(scheduleType)) {
+		if (ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE.equalsIgnoreCase(scheduleType)) {
 			List<ScQtSchedule> scheduleList = this.getManagedBean().getScLoa()
 					.getScQtSchedules();
 
@@ -3384,7 +3384,7 @@ public class DirectLOABackingBean extends
 			}
 			this.getManagedBean().getScLoa()
 					.setScQtSchedules(new ArrayList<ScQtSchedule>());
-		} else if (SourcingConstants.PROGRESSIVE_PAYMENT
+		} else if (ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT
 				.equalsIgnoreCase(scheduleType)) {
 			List<ScQtProgressivePayment> payments = this.getManagedBean()
 					.getScLoa().getScQtProgPayments();
