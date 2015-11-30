@@ -1942,7 +1942,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		IContractAmendmentSO contractAmendmentSO = null;
 		contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
 		 if(contractAmendmentSO.getCommitteeType(ctBackingBean.getManagedBean().getContractVer())== null) {
-			 throw new EpException(MessageConst.WARN_755018);
+			 throw new EpException(MessageConst.ERROR_755018);
 		 }
 	    return contractAmendmentSO.getCommitteeType(ctBackingBean.getManagedBean().getContractVer());
 	}
@@ -3140,7 +3140,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						&& committeMember.getMemberRole().getParameterId().intValue() == parameterId.intValue()) {
 					counter++;
 					if (counter == 2) {
-						throw new EpException(MessageConst.WARN_755016);
+						throw new EpException(MessageConst.ERROR_755016);
 					}
 				}
 			}
