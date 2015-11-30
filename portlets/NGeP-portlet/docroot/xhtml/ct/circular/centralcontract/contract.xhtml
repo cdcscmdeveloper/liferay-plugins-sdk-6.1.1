@@ -400,12 +400,8 @@
 				</p:dataTable>
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}"
-						process="contractDlg" 
-						action="#{centralContractBackingBean.addSelectedContract}"
-						update="centralContractDt"/>
-					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-						 type="button" ajax="false"
-						onclick="contractDlg.hide();" />
+						process="contractDlg" action="#{centralContractBackingBean.addSelectedContract}" update="centralContractDt"/>
+					<p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="contractDlg.hide();" />
 				</div>
 	    	</p:dialog>
 	</p:panel>
