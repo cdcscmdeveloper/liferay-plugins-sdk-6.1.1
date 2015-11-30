@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.BidItemBean;
 import my.ep.biz.bean.sc.BidPackageBean;
@@ -49,7 +50,7 @@ public class BiddingManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	private String searchBiddingNo;
-	private List<PmStatusDesc> statusDescs;
+	private SelectItem[] statusDescs; 
 	private Long selectedStatusDesc;
 	private String searchDocumentNo;
 	private String searchBidTitle;
@@ -549,14 +550,14 @@ public class BiddingManagedBean extends BaseManagedBean {
 	/**
 	 * @return the statusDescs
 	 */
-	public List<PmStatusDesc> getStatusDescs() {
+	public SelectItem[] getStatusDescs() {
 		return statusDescs;
 	}
 
 	/**
 	 * @param statusDescs the statusDescs to set
 	 */
-	public void setStatusDescs(List<PmStatusDesc> statusDescs) {
+	public void setStatusDescs(SelectItem[] statusDescs) {
 		this.statusDescs = statusDescs;
 	}
 
