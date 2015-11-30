@@ -275,10 +275,11 @@
                       	#{pmVar.orgName}
 					</p:column>
 			 </p:dataTable>           
-			  <h:panelGrid columns="1"  style="float:right;height:100px;vertical-align: middle;">
+			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.select']}" process="@form" update=":form:tableAgencyDetails,:form:itemId,:form:messages,:form:agencyRemarksAttachmentPnl" 
 				    action="#{ctBackingBean.addAgencyDetails()}" onclick="dlgAgency.hide();"/>
-			  </h:panelGrid>
+				    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="dlgAgency.hide();" />
+           </div>
            </h:panelGroup>
 	</p:dialog>
 	<p:panel id="agencyRemarksAttachmentPnl" header="#{lbl['lbl.txt.remarks']}" toggleable="true" 
