@@ -385,7 +385,7 @@
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 				<p:column  style="width:20%;white-space:normal;" filterBy="#{serviceItemVar.scRequestItem.itemName}" filterMatchMode="contains">
 				      <f:facet name="header">
-		                    <h:outputText id="serviceItemDesc" value="#{lbl['lbl.ct.item.name']}"/>
+		                    <h:outputText id="serviceItemDesc" value="#{lbl['lbl.ct.item.desc']}"/>
 		                        &#160; <p:graphicImage id="amendServiceItemId" value="/css/images/design/tooltips.png" /> <p:tooltip
 							          id="amendServiceTooltip" for="amendServiceItemId">
 							<h:outputText id="amendServiceInstruction" escape="false" value="#{lbl['lbl.ct.instruction.item.search']}" />
