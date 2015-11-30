@@ -19,13 +19,15 @@
 	</style>
 	<p:panel id="panelLOA" header="#{lbl['lbl.ct.menu.loa.details']}" toggleable="true" toggleSpeed="500">
 		<h:panelGrid columns="2" columnClasses="columnWidth225">
-			<p:outputLabel value="#{lbl['lbl.ct.file.no']}" />
+			<p:outputLabel value="#{lbl['lbl.ct.file.no']}" styleClass="required" />
 			<h:panelGrid columns="3">
-				<p:inputText style="width:270px;" disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}"
-					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.scLoiLoa.fileNo}" maxlength="50"  />
+				<p:inputText style="width:250px;" disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}"
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.scLoiLoa.fileNo}" maxlength="50"
+					required="true" label="#{lbl['lbl.ct.file.no']}"  />
 				<p:spacer width="2" />
-				<p:inputText style="width:20px;" disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}"
-					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.fileExtNo}" maxlength="5" />
+				<p:inputText style="width:36px;" disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}"
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.fileExtNo}" maxlength="5" 
+					 required="true" label="#{lbl['lbl.ct.file.no']}"/>
 			</h:panelGrid>
 			<p:outputLabel value="#{lbl['lbl.ct.insurance.warranty']}" />
 			<h:panelGrid columns="4">
