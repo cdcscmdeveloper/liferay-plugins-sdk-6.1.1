@@ -613,7 +613,7 @@ public class SmApplicationBackingBean extends
 							&& currSupp.getBusinessType().equals("A")) {
 						throw new EpException(MessageConst.ERROR_722607);
 					}
-					if (StringUtils.isBlank(smAppl.getSupplierType())) {
+					if (StringUtils.isBlank(getManagedBean().getNewSupplierType())) {
 						getManagedBean().setNewSupplierType("K");
 						smAppl.setSupplierType(getManagedBean()
 								.getNewSupplierType());
