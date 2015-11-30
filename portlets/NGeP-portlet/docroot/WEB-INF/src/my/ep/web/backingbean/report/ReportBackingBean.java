@@ -6924,7 +6924,7 @@ public class ReportBackingBean extends
 	/**
 	 * retrievePaymentTypeList - will retrieve simple payment type list.
 	 * 
-	 * @return the payment type list
+	 * @return the paymentTypeList
 	 */
 	public List<SelectItem> retrievePaymentTypeList() {
 		paymentTypeList = new ArrayList<SelectItem>();
@@ -6947,7 +6947,7 @@ public class ReportBackingBean extends
 	/**
 	 * retrieveGovtPaymentTypeList - will retrieve govt payment type list.
 	 * 
-	 * @return the payment type list
+	 * @return the paymentTypeList
 	 */
 	public List<SelectItem> retrieveGovtPaymentTypeList() {
 		paymentTypeList = new ArrayList<SelectItem>();
@@ -6970,7 +6970,7 @@ public class ReportBackingBean extends
 	/**
 	 * retrieveCDCPaymentTypeList - will retrieve cdc payment type list.
 	 * 
-	 * @return the payment type list
+	 * @return the paymentTypeList
 	 */
 	public List<SelectItem> retrieveCDCPaymentTypeList() {
 		paymentTypeList = new ArrayList<SelectItem>();
@@ -6993,7 +6993,7 @@ public class ReportBackingBean extends
 	/**
 	 * retrievePaymentMethod - will etrieve payment method list.
 	 * 
-	 * @return the payment method list
+	 * @return the paymentMethodList
 	 */
 	public List<String> retrievePaymentMethod() {
 		paymentMethodList = new ArrayList<String>();
@@ -7012,7 +7012,7 @@ public class ReportBackingBean extends
 	/**
 	 * retrievePMServiceType - will Retrieve service type List.
 	 * 
-	 * @return the service type List
+	 * @return the serviceTypeList
 	 */
 	public List<SelectItem> retrievePMServiceType() {
 		serviceTypeList = new ArrayList<SelectItem>();
@@ -7065,7 +7065,7 @@ public class ReportBackingBean extends
 	/**
 	 * retrieveProcessingOfficerList - will retrieve processing officer list.
 	 * 
-	 * @return the processing officer list
+	 * @return the processingOfficerList
 	 */
 	public List<SelectItem> retrieveProcessingOfficerList() {
 
@@ -7282,7 +7282,7 @@ public class ReportBackingBean extends
 	/**
 	 * getAllModuleList - will retrieve the all module list to dropdown list.
 	 * 
-	 * @return the all module list
+	 * @return the moduleList
 	 */
 	public List<SelectItem> getAllModuleList() {
 		moduleList = new ArrayList<SelectItem>();
@@ -7355,7 +7355,7 @@ public class ReportBackingBean extends
 	 * getLtstMinistryList - Gets the latest ministry list based on organization
 	 * type.
 	 * 
-	 * @return the ltst ministry list
+	 * @return the ministryList selectItem
 	 */
 	public SelectItem[] getLtstMinistryList() {
 		SelectItem[] items = null;
@@ -7399,7 +7399,7 @@ public class ReportBackingBean extends
 	/**
 	 * getLtstMinistryListByUserid - Gets the latest ministry list by userid.
 	 * 
-	 * @return the ltst ministry list by userid
+	 * @return the lministryList selectItem by userid
 	 */
 	public SelectItem[] getLtstMinistryListByUserid() {
 		SelectItem[] items = null;
@@ -7472,7 +7472,7 @@ public class ReportBackingBean extends
 	/**
 	 * getDocTypeStatusDropDown - Gets the document type status dropdown.
 	 * 
-	 * @return the doc type status dropdown
+	 * @return the docTypeStatusItems
 	 */
 	public SelectItem[] getDocTypeStatusDropDown() {
 		docTypeStatusItems = null;
@@ -8006,7 +8006,7 @@ public class ReportBackingBean extends
 	/**
 	 * retrieveAllRoleCodesByUser - Retrieve all role codes by user.
 	 * 
-	 * @return the retrieveAllRoleCodesByUser
+	 * @return the allRoleCodesList
 	 */
 	public List<String> retrieveAllRoleCodesByUser() {
 		allRoleCodesList = new ArrayList<String>();
@@ -8324,7 +8324,7 @@ public class ReportBackingBean extends
 	 * 
 	 * @param categoryL1Id
 	 *            the category l1 id
-	 * @return the list
+	 * @return the categoryL2List
 	 */
 	public static List<PmCategoryL2> retrieveExperienceChildCategoryList(
 			long categoryL1Id) {
@@ -8524,8 +8524,6 @@ public class ReportBackingBean extends
 	/**
 	 * getReportIdlist - Gets the report id list based on paramModule type =
 	 * "REP" .
-	 * 
-	 * @return the report id list
 	 */
 	public void getReportIdlist() {
 		rptGenBean = new ReportsGenerateBean();
@@ -8579,7 +8577,7 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Gets the report search bean.
+	 * Gets the report search bean based on moduleName .
 	 * 
 	 * @return the report search bean
 	 */
@@ -8613,7 +8611,7 @@ public class ReportBackingBean extends
 	 * 
 	 * @param categoryL2Id
 	 *            the category l2 id
-	 * @return the list
+	 * @return the categoryL3List
 	 */
 	public static List<PmCategoryL3> retrieveExperienceSubChildCategoryList(
 			long categoryL2Id) {
@@ -8630,7 +8628,7 @@ public class ReportBackingBean extends
 	 * checkDuplicateCategoryForProject - Check duplicate category for project.
 	 * 
 	 * @param newCat
-	 *            the new cat
+	 *            the new category
 	 */
 	public void checkDuplicateCategoryForProject(SmSupplierCategory newCat) {
 		for (SmSupplierCategory cat : this.getSelectedCatList()) {
@@ -8812,7 +8810,7 @@ public class ReportBackingBean extends
 	 * 
 	 * @param module
 	 *            the module
-	 * @return the list
+	 * @return the reportList
 	 */
 	public List<SelectItem> retriveReportListByModule(String module) {
 		reportList = new ArrayList<SelectItem>();
@@ -9003,7 +9001,7 @@ public class ReportBackingBean extends
 	 * retrieveApprovarNaikTarafSCS2 - Retrieve approvar naik taraf for sc s2,
 	 * based on user id.
 	 * 
-	 * @return the list
+	 * @return the approverNayakTarafList
 	 */
 	public List<SelectItem> retrieveApprovarNaikTarafSCS2() {
 		approverNayakTarafList = new ArrayList<SelectItem>();
@@ -9166,7 +9164,7 @@ public class ReportBackingBean extends
 	/**
 	 * getParameterCodeTypeString - Gets the parameter code type string.
 	 * 
-	 * @return the parameter code type string
+	 * @return the parameterCodeType string
 	 */
 	public String getParameterCodeTypeString() {
 		parameterCodeType = new String();
@@ -9829,7 +9827,7 @@ public class ReportBackingBean extends
 	 * 
 	 * @param unspcCode
 	 *            the unspc code
-	 * @return the long
+	 * @return the long unspcid
 	 */
 	public Long retrieveCMUnspcIdbyCode(String unspcCode) {
 		Long unspcid = null;
@@ -13626,7 +13624,7 @@ public class ReportBackingBean extends
 	/**
 	 * getApplicationStatusData - Gets the application status data.
 	 * 
-	 * @return the application status data
+	 * @return the applicationStatusList
 	 */
 	public List<SelectItem> getApplicationStatusData() {
 
@@ -13652,7 +13650,7 @@ public class ReportBackingBean extends
 	/**
 	 * getScLOAReports - Gets the sc loa reports.
 	 * 
-	 * @return the sc loa reports
+	 * @return the sc loaReportLList
 	 */
 	public void getScLOAReports() {
 
@@ -13693,7 +13691,7 @@ public class ReportBackingBean extends
 	/**
 	 * getQtAwardSO - Gets the qt award so.
 	 * 
-	 * @return the qt award so
+	 * @return the qtAwardSO
 	 */
 	private IQTAwardSO getQtAwardSO() {
 		log.info("getQtAwardSO");
@@ -13740,7 +13738,7 @@ public class ReportBackingBean extends
 	 * 
 	 * @param loaDetail
 	 *            the loa detail
-	 * @return the supp loi loa map data
+	 * @return the suppLoiLoaMap
 	 */
 	private void getSuppLoiLoaMapData(LOADetailBackingBean loaDetail) {
 		log.info("getSuppLoiLoaMapData");
