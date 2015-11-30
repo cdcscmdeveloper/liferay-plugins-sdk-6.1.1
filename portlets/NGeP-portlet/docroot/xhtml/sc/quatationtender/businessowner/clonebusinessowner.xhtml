@@ -19,19 +19,19 @@
 						<td><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
 						<td colspan="3"><p:inputText
 								value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.qtTitle}"
-								style="width:650px;" maxlength="100" /></td>
+								style="width:98%;" maxlength="100" /></td>
 					</tr>
 
 					<tr>
 						<td style="width: 165px;"><p:outputLabel
 								value="#{lbl['lbl.sc.qtn.no']}" /></td>
-						<td style="width: 285px;"><p:inputText style="width:210px;"
+						<td style="width: 285px;"><p:inputText size="35"
 								maxlength="21"
 								value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.qtNo}" /></td>
 						<td style="width: 165px;"><p:outputLabel
 								value="#{lbl['lbl.sc.procurement.mode']}" /></td>
 						<td style="width: 285px;"><p:selectOneMenu
-								style="width: 210px;margin-bottom: 5px;"
+								style="width: 283px;margin-bottom: 5px;"
 								value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.procurementMode}">
 								<f:selectItems
 									value="#{qTBusinessOwnerBackingBean.getProcurementModeDropdownValues()}" />
@@ -102,7 +102,7 @@
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
-						<td><p:selectOneMenu style="width: 210px;margin-bottom: 5px;"
+						<td><p:selectOneMenu style="width: 283px;margin-bottom: 5px;"
 								value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.qtStatus}">
 								<f:selectItems
 									value="#{qTBusinessOwnerBackingBean.getStatusDropdownValues('SC', 'QT')}" />
