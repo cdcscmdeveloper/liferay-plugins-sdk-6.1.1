@@ -613,7 +613,8 @@ public class SmApplicationBackingBean extends
 							&& currSupp.getBusinessType().equals("A")) {
 						throw new EpException(MessageConst.ERROR_722607);
 					}
-					if (StringUtils.isBlank(getManagedBean().getNewSupplierType())) {
+					if (StringUtils.isBlank(getManagedBean()
+							.getNewSupplierType())) {
 						getManagedBean().setNewSupplierType("K");
 						smAppl.setSupplierType(getManagedBean()
 								.getNewSupplierType());
@@ -2277,34 +2278,15 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignShareHolderPrivilege(AjaxBehaviorEvent e) {
 		log.info("**** Enter Share Holder privilege ******");
-		if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() == 0) {
-			getManagedBean().getSelectedShareHolder().setSoftcertFlg(0);
-			getManagedBean().getSelectedShareHolder().setContractSignerFlg(0);
+		if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+			getManagedBean().getSelectedShareHolder().setContractSignerFlg(
+					DbValueConst.RECORD_STATUS_SUSPENDED);
 			getManagedBean().getShareHolderMailAddr().setSameAsPerm(true);
-			getManagedBean().setRemoveEpRole(true);
 		} else {
 			getManagedBean().getShareHolderMailAddr().setSameAsPerm(false);
 			assignSelShareHolderAddress(getManagedBean()
 					.getSelectedShareHolder());
-			getManagedBean().setRemoveEpRole(false);
 		}
-		buildRoleList();
-		if (!getManagedBean().isRemoveEpRole()
-				&& (getManagedBean().getSelectedShareHolder().getEpRole() != null && (getManagedBean()
-						.getSelectedShareHolder().getEpRole()
-						.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value()) || getManagedBean()
-						.getSelectedShareHolder().getEpRole()
-						.equalsIgnoreCase(RoleCode.SUPPLIER_TEMP.value())))) {
-			SelectItem role = new SelectItem();
-			role.setLabel("Supplier Admin");
-			role.setValue(getManagedBean().getSelectedShareHolder().getEpRole());
-			getManagedBean().getePRoleList().add(role);
-		}
-		SmApplicationUtil.setPersonnelAuthorizedChangeInformation(
-				getManagedBean().getSmAppl(),
-				getPrevApprovedPersonnel(getManagedBean()
-						.getSelectedShareHolder()), getManagedBean()
-						.getSelectedShareHolder());
 	}
 
 	/**
@@ -2314,8 +2296,7 @@ public class SmApplicationBackingBean extends
 	 *            - AjaxBehaviorEvent object
 	 */
 	public void assignShareHolderPrivilegeByEpRole(AjaxBehaviorEvent e) {
-		SmApplicationUtil.setPersonnelAuthorizedChangeInformation(
-				getManagedBean().getSmAppl(),
+		SmApplicationUtil.setPersonnelRoleChange(getManagedBean().getSmAppl(),
 				getPrevApprovedPersonnel(getManagedBean()
 						.getSelectedShareHolder()), getManagedBean()
 						.getSelectedShareHolder());
@@ -4650,9 +4631,9 @@ public class SmApplicationBackingBean extends
 					SmCommonUtil.getMessage("lbl.sm.person.panHdr", null));
 		}
 
-		if (shareHolderBean.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE
-				&& shareHolderBean.getPmUser() != null
-				&& shareHolderBean.getPmUser().getUserId() != null)
+		if (shareHolderBean.getPmUser() != null
+				&& shareHolderBean.getPmUser().getUserId() != null
+				&& shareHolderBean.getPmUser().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE)
 			getManagedBean().setDisableIcEmail(true);
 		else
 			getManagedBean().setDisableIcEmail(false);
@@ -4717,17 +4698,13 @@ public class SmApplicationBackingBean extends
 		per.setSemiProf(shareHolderBean.isSemiProf());
 		per.setClerical(shareHolderBean.isClerical());
 		getManagedBean().setSelectedPersonnel(per);
-		if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() != 1)
-			getManagedBean().setRemoveEpRole(true);
-		else
-			getManagedBean().setRemoveEpRole(false);
-		buildRoleList();
-		if (!getManagedBean().isRemoveEpRole()
-				&& (getManagedBean().getSelectedShareHolder().getEpRole() != null && (getManagedBean()
-						.getSelectedShareHolder().getEpRole()
+		getManagedBean().setRemoveEpRole(false);
+		buildRoleList(getManagedBean().getSelectedPersonnel());
+		if (getManagedBean().getSelectedShareHolder().getEpRole() != null
+				&& (getManagedBean().getSelectedShareHolder().getEpRole()
 						.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value()) || getManagedBean()
 						.getSelectedShareHolder().getEpRole()
-						.equalsIgnoreCase(RoleCode.SUPPLIER_TEMP.value())))) {
+						.equalsIgnoreCase(RoleCode.SUPPLIER_TEMP.value()))) {
 			SelectItem role = new SelectItem();
 			role.setLabel(SmCommonUtil.getMessage(
 					"lbl.sm.person.composition.suppAdmin", null));
@@ -4764,20 +4741,17 @@ public class SmApplicationBackingBean extends
 	 * @param shareHolderBean
 	 *            - SmPersonnel object
 	 */
-	public String getAuthorizedPersonnelAccountStatus(SmPersonnel smPersonnel,
+	public String getPersonnelActivationStatus(SmPersonnel smPersonnel,
 			SmSupplier smSupplier) {
 		String accStatus = "";
-		if (smSupplier != null
-				&& smSupplier.getSupplierId() != null
+		if (smSupplier != null && smSupplier.getSupplierId() != null
 				&& smPersonnel.getEpRole() != null
-				&& StringUtils.isNotBlank(smPersonnel.getEpRole())
-				&& smPersonnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+				&& StringUtils.isNotBlank(smPersonnel.getEpRole())) {
 
 			if (smPersonnel.getPersonnelId() != null
-					&& SmApplicationUtil
-							.isLatestApprovedPersonnelAlreadyAuthorized(
-									smPersonnel.getIdentificationNo(),
-									smSupplier.getSupplierId())) {
+					&& SmApplicationUtil.isLatestApprovedPersonnelActivated(
+							smPersonnel.getIdentificationNo(),
+							smSupplier.getSupplierId())) {
 				accStatus = SmCommonUtil.getMessage(
 						"lbl.sm.activation.status.activated", null);
 			} else {
@@ -4859,20 +4833,38 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Builds the role list.
 	 */
-	public void buildRoleList() {
+	public void buildRoleList(SmPersonnel personnel) {
 		List<SelectItem> roles = new ArrayList<SelectItem>();
 		SelectItem role = new SelectItem();
 		role = new SelectItem();
-		role.setLabel("Supplier User");
+		role.setLabel(SmCommonUtil.getMessage(
+				"lbl.sm.person.composition.suppUser", null));
 		role.setValue(RoleCode.MOF_SUPPLIER_USER.value());
-		if (!getManagedBean().isRemoveEpRole())
-			roles.add(role);
-		role = new SelectItem();
-		role.setLabel("Catalogue User");
-		role.setValue(RoleCode.CM_USER.value());
+		roles.add(role);
+		
 		if (getManagedBean().getSmAppl().getSupplierType()
-				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR))
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)
+				&& getManagedBean().getSmAppl().getSmCompanyBasic() != null
+				&& getManagedBean().getSmAppl().getSmCompanyBasic()
+						.isWithFederal()) {
+			role = new SelectItem();
+			role.setLabel(SmCommonUtil.getMessage(
+					"lbl.sm.person.composition.catUser", null));
+			role.setValue(RoleCode.CM_USER.value());
 			roles.add(role);
+		}
+		
+		if (personnel.getEpRole() != null
+				&& (personnel.getEpRole().equalsIgnoreCase(
+						RoleCode.MOF_SUPPLIER_ADMIN.value()) || personnel
+						.getEpRole().equalsIgnoreCase(
+								RoleCode.SUPPLIER_TEMP.value()))) {
+			role = new SelectItem();
+			role.setLabel(SmCommonUtil.getMessage(
+					"lbl.sm.person.composition.suppAdmin", null));
+			role.setValue(personnel.getEpRole());
+			roles.add(role);
+		}
 		getManagedBean().setePRoleList(roles);
 	}
 
@@ -4939,7 +4931,7 @@ public class SmApplicationBackingBean extends
 		} else {
 			getManagedBean().setUserWithRole(true);
 		}
-		buildRoleList();
+		buildRoleList(getManagedBean().getSelectedShareHolder());
 		getManagedBean().setRedirectToPersonPage(true);
 
 		// set default nationality to MALAYSIA
@@ -9075,11 +9067,10 @@ public class SmApplicationBackingBean extends
 	 * 
 	 * @return List<SelectItem> epRoles
 	 */
-	public List<SelectItem> getAuthorizedPersonnelValidEpRoles() {
+	public List<SelectItem> getPersonnelValidEpRoles() {
 		List<SelectItem> ePRoleList = new ArrayList<SelectItem>();
 		SelectItem roleToRemove = null;
-		if (getManagedBean().getePRoleList() != null
-				&& !getManagedBean().getePRoleList().isEmpty()) {
+		if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getePRoleList())) {
 			ePRoleList = getManagedBean().getePRoleList();
 			if (getManagedBean().getSmAppl().getSmCompanyBasic() != null
 					&& !getManagedBean().getSmAppl().getSmCompanyBasic()

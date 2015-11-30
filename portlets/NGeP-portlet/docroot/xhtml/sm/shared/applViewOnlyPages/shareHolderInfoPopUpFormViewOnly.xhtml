@@ -125,7 +125,7 @@
 			<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and not empty viewSmApplBackingBean.managedBean.selectedShareHolder.epRole}">
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.activation.status']}"/></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.getAuthorizedPersonnelAccountStatus(viewSmApplBackingBean.managedBean.selectedShareHolder,viewSmApplBackingBean.managedBean.smSupplier)}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.getPersonnelActivationStatus(viewSmApplBackingBean.managedBean.selectedShareHolder,viewSmApplBackingBean.managedBean.smSupplier)}" /></td>
 				</tr>
 			</p:outputPanel>
 		</table>
