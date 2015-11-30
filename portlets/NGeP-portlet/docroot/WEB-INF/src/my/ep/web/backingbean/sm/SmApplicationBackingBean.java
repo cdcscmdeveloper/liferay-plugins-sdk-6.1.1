@@ -145,6 +145,7 @@ import my.ep.web.vo.SmPersonnleCalcVO;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -2667,7 +2668,14 @@ public class SmApplicationBackingBean extends
 	public void addOrUpdateAssocToSmAppl() {
 		if (getManagedBean().getSmAppl().getSmAssociateCompanies()
 				.contains(getManagedBean().getSelectedAssocCompany())) {
-
+			getManagedBean()
+					.getSmAppl()
+					.getSmAssociateCompanies()
+					.set(getManagedBean()
+							.getSmAppl()
+							.getSmAssociateCompanies()
+							.indexOf(getManagedBean().getSelectedAssocCompany()),
+							getManagedBean().getSelectedAssocCompany());
 		} else {
 			getManagedBean().getSmAppl().getSmAssociateCompanies()
 					.add(getManagedBean().getSelectedAssocCompany());
@@ -2709,7 +2717,8 @@ public class SmApplicationBackingBean extends
 		SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
 				getManagedBean(), assocBean.getSmAddress(),
 				SupplierManagementConst.SM_ASSOC_COMPANY_PANEL);
-		getManagedBean().setSelectedAssocCompany(assocBean);
+		getManagedBean().setSelectedAssocCompany(
+				(SmAssociateCompany) SerializationUtils.clone(assocBean));
 		getManagedBean().getSelectedAssocCompany().setIsShareholding(
 				new BigDecimal(0));
 		assignValReqdToTrue();
@@ -3002,7 +3011,16 @@ public class SmApplicationBackingBean extends
 		}
 		if (getManagedBean().getSmAppl().getSmCompanyExperiences()
 				.contains(getManagedBean().getSelectedCompanyExperience())) {
-			// TODO if any validation reqd for branch info
+			getManagedBean()
+					.getSmAppl()
+					.getSmCompanyExperiences()
+					.set(getManagedBean()
+							.getSmAppl()
+							.getSmCompanyExperiences()
+							.indexOf(
+									getManagedBean()
+											.getSelectedCompanyExperience()),
+							getManagedBean().getSelectedCompanyExperience());
 		} else {
 			log.info(" **** THIS IS AN ADD FOR Consultant Prjs******");
 			getManagedBean().getSmAppl().getSmCompanyExperiences()
@@ -3055,7 +3073,6 @@ public class SmApplicationBackingBean extends
 	 *            - SmCompanyExperience object
 	 */
 	public void assignSelCompanyExperience(SmCompanyExperience consultantBean) {
-		getManagedBean().setSelectedCompanyExperience(consultantBean);
 		assignValReqdToTrue();
 		if (consultantBean.getConsultantFee() == null) {
 			consultantBean.setConsultantFee(new BigDecimal(0));
@@ -3079,6 +3096,8 @@ public class SmApplicationBackingBean extends
 			}
 
 		}
+		getManagedBean().setSelectedCompanyExperience(
+				(SmCompanyExperience) SerializationUtils.clone(consultantBean));
 		SmFieldChangeUtil.initCompanyExperienceChangeField(getManagedBean());
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
