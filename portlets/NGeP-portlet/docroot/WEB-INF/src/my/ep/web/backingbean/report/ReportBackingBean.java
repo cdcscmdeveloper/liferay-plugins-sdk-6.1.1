@@ -13024,10 +13024,12 @@ public class ReportBackingBean extends
 			}
 			if ((this.getCommonMinistry() != null)
 					&& (this.getCommonMinistry() != ReportConst.EMPTY_VAL)) {
-				Long orgprofileid = Long.parseLong(this.getCommonMinistry());
+				/*Long orgprofileid = Long.parseLong(this.getCommonMinistry());
 
 				rptGenBean.setPpMinistryVar(ReportConst.FL_AMP_MINISTRY_EQ
-						+ retrieveMinistryName(orgprofileid));
+						+ retrieveMinistryName(orgprofileid));*/
+				rptGenBean.setPpMinistryVar(ReportConst.FL_AMP_MINISTRY_EQ
+						+ this.getCommonMinistry());
 			}
 			if ((this.getPpYear() != null)
 					&& (this.getPpYear() != ReportConst.EMPTY_VAL)) {
