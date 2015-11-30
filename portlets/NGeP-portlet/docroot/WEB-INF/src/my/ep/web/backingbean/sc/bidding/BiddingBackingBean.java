@@ -15,6 +15,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.BidItemBean;
 import my.ep.biz.bean.sc.BidPackageBean;
@@ -93,8 +94,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		getManagedBean().setSearchBiddingDateTo(null);
 		getManagedBean().setSelectedStatusDesc(null);
 		getManagedBean().setMindate(null);
-		getManagedBean().searchForScheduledBids();
-
+		getManagedBean().getSearchDataModel().resetData();
 	}
 
 	/**
@@ -114,10 +114,18 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	 * 
 	 * @return
 	 */
-	public List<PmStatusDesc> getStatusDescList() {
-		List<PmStatusDesc> statusDescs = getManagedBean().getStatusDescs();
+	public void getStatusDescList() {
+		SelectItem[] statusDescs = getManagedBean().getStatusDescs();
+		if(statusDescs == null || statusDescs.length == 0){
+			statusDescs = getStatusDropdownValues(ModuleCodeConst.SUPPLIER_SELECTION
+					.toUpperCase(),ParameterConst.DOCTYPE_BIDDING);
+			getManagedBean().setStatusDescs(statusDescs);
+		}
+				
+			
+		//List<PmStatusDesc> statusDescs = getManagedBean().getStatusDescs();
 
-		if (statusDescs == null || statusDescs.size() == 0) {
+		/*if (statusDescs == null || statusDescs.size() == 0) {
 			IStatusSO statusSO = null;
 
 			try {
@@ -143,8 +151,8 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 				statusSO = null;
 			}
 		}
-
-		return statusDescs;
+*/
+		//return statusDescs;
 	}
 
 	/**
