@@ -6,9 +6,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
-
-import sun.util.logging.resources.logging;
-
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.util.FacesScopes;
 
@@ -139,7 +136,7 @@ public class WebappBean {
 				"lbl.ct.validation.phone.number",
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale());
-		String pattern = "\\d+";
+		String pattern = "^\\+[0-9]*$";
 		if (!inputValue.matches(pattern)) {
 			throw new ValidatorException(new FacesMessage(
 					FacesMessage.SEVERITY_ERROR, "", errMsg));
@@ -156,7 +153,7 @@ public class WebappBean {
 				"lbl.ct.validation.mobile.number",
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale());
-		String pattern = "\\d+";
+		String pattern ="^\\+[0-9]*$";
 		if (!inputValue.matches(pattern)) {
 			throw new ValidatorException(new FacesMessage(
 					FacesMessage.SEVERITY_ERROR, "", errMsg));
@@ -173,7 +170,7 @@ public class WebappBean {
 				"lbl.ct.validation.fax.number",
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale());
-		String pattern = "\\d+";
+		String pattern = "^\\+[0-9]*$";
 		if (!inputValue.matches(pattern)) {
 			throw new ValidatorException(new FacesMessage(
 					FacesMessage.SEVERITY_ERROR, "", errMsg));
