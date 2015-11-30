@@ -419,7 +419,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
         
         	
         	if(getManagedBean().getSelectedContractList() == null || getManagedBean().getSelectedContractList().isEmpty()){
-        		throw new EpException(MessageConst.WARN_755015);
+        		throw new EpException(MessageConst.ERROR_755015);
         	}
         	try {
         	contractSO = (IContractSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
