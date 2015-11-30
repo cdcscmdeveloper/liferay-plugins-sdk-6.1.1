@@ -3333,7 +3333,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the pp year.
 	 * 
-	 * @return the pp year
+	 * @return the ppYear
 	 */
 	public String getPpYear() {
 		return ppYear;
@@ -3352,7 +3352,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the pp ministry.
 	 * 
-	 * @return the pp ministry
+	 * @return the ppMinistry
 	 */
 	public String getPpMinistry() {
 		return ppMinistry;
@@ -3371,7 +3371,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the pp ptj.
 	 * 
-	 * @return the pp ptj
+	 * @return the ppPTJ
 	 */
 	public String getPpPTJ() {
 		return ppPTJ;
@@ -3390,7 +3390,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc purchase in default status.
 	 * 
-	 * @return the sc purchase in default status
+	 * @return the scPurchaseInDefaultStatus
 	 */
 	public String getScPurchaseInDefaultStatus() {
 		return scPurchaseInDefaultStatus;
@@ -3409,7 +3409,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc simple quote dtl group.
 	 * 
-	 * @return the sc simple quote dtl group
+	 * @return the scSimpleQuoteDtlGroup
 	 */
 	public String getScSimpleQuoteDtlGroup() {
 		return scSimpleQuoteDtlGroup;
@@ -3428,7 +3428,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc simple quote status.
 	 * 
-	 * @return the sc simple quote status
+	 * @return the scSimpleQuoteStatus
 	 */
 	public String getScSimpleQuoteStatus() {
 		return scSimpleQuoteStatus;
@@ -3466,7 +3466,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc request note status.
 	 * 
-	 * @return the sc request note status
+	 * @return the scRequestNoteStatus
 	 */
 	public String getScRequestNoteStatus() {
 		return scRequestNoteStatus;
@@ -3485,7 +3485,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ct sub type.
 	 * 
-	 * @return the ct sub type
+	 * @return the ctSubType
 	 */
 	public String getCtSubType() {
 		return ctSubType;
@@ -3504,7 +3504,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ct user type.
 	 * 
-	 * @return the ct user type
+	 * @return the ctUserType
 	 */
 	public String getCtUserType() {
 		return ctUserType;
@@ -3523,7 +3523,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ct loa physical no.
 	 * 
-	 * @return the ct loa physical no
+	 * @return the ctLOAPhysicalNo
 	 */
 	public String getCtLOAPhysicalNo() {
 		return ctLOAPhysicalNo;
@@ -3542,7 +3542,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ct status two.
 	 * 
-	 * @return the ct status two
+	 * @return the ctStatusTwo
 	 */
 	public String getCtStatusTwo() {
 		return ctStatusTwo;
@@ -3561,7 +3561,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ct group three.
 	 * 
-	 * @return the ct group three
+	 * @return the ctGroupThree
 	 */
 	public String getCtGroupThree() {
 		return ctGroupThree;
@@ -3580,7 +3580,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ct physical contract no.
 	 * 
-	 * @return the ct physical contract no
+	 * @return the ctPhysicalContractNo
 	 */
 	public String getCtPhysicalContractNo() {
 		return ctPhysicalContractNo;
@@ -3599,7 +3599,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl group seventeen.
 	 * 
-	 * @return the fl group seventeen
+	 * @return the flGroupSeventeen
 	 */
 	public String getFlGroupSeventeen() {
 		return flGroupSeventeen;
@@ -3618,7 +3618,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ct procurement mode.
 	 * 
-	 * @return the ct procurement mode
+	 * @return the ctProcurementMode
 	 */
 	public String getCtProcurementMode() {
 		return ctProcurementMode;
@@ -3637,7 +3637,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm year text.
 	 * 
-	 * @return the sm year text
+	 * @return the smYearText
 	 */
 	public String getSmYearText() {
 		return smYearText;
@@ -3656,7 +3656,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the cm group one.
 	 * 
-	 * @return the cm group one
+	 * @return the cmGroupOne
 	 */
 	public String getCmGroupOne() {
 		return cmGroupOne;
@@ -3675,7 +3675,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ct loan no.
 	 * 
-	 * @return the ct loan no
+	 * @return the ctLoanNo
 	 */
 	public String getCtLoanNo() {
 		return ctLoanNo;
@@ -3694,7 +3694,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ct product service.
 	 * 
-	 * @return the ct product service
+	 * @return the ctProductService
 	 */
 	public String getCtProductService() {
 		return ctProductService;
@@ -3713,7 +3713,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ct group one.
 	 * 
-	 * @return the ct group one
+	 * @return the ctGroupOne
 	 */
 	public String getCtGroupOne() {
 		return ctGroupOne;
@@ -3732,7 +3732,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ct group two.
 	 * 
-	 * @return the ct group two
+	 * @return the ctGroupTwo
 	 */
 	public String getCtGroupTwo() {
 		return ctGroupTwo;
@@ -3751,7 +3751,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the cm extention.
 	 * 
-	 * @return the cm extention
+	 * @return the cmExtention
 	 */
 	public String getCmExtention() {
 		return cmExtention;
@@ -3770,7 +3770,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the local to date var.
 	 * 
-	 * @return the local to date var
+	 * @return the localToDateVar
 	 */
 	public String getLocalToDateVar() {
 		return localToDateVar;
@@ -3789,7 +3789,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the lng user id.
 	 * 
-	 * @return the lng user id
+	 * @return the lngUserId
 	 */
 	public Long getLngUserId() {
 		return lngUserId;
@@ -3808,7 +3808,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the cm suppl or admin.
 	 * 
-	 * @return the cm suppl or admin
+	 * @return the cmSupplOrAdmin
 	 */
 	public String getCmSupplOrAdmin() {
 		return cmSupplOrAdmin;
@@ -3827,7 +3827,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm svo user.
 	 * 
-	 * @return the sm svo user
+	 * @return the smSVOUser
 	 */
 	public String getSmSVOUser() {
 		return smSVOUser;
@@ -3846,7 +3846,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm monthly rpt by year.
 	 * 
-	 * @return the sm monthly rpt by year
+	 * @return the smMonthlyRptByYear
 	 */
 	public String getSmMonthlyRptByYear() {
 		return smMonthlyRptByYear;
@@ -3865,7 +3865,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm created from year.
 	 * 
-	 * @return the sm created from year
+	 * @return the smCreatedFromYear
 	 */
 	public String getSmCreatedFromYear() {
 		return smCreatedFromYear;
@@ -3884,7 +3884,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm created to year.
 	 * 
-	 * @return the sm created to year
+	 * @return the smCreatedToYear
 	 */
 	public String getSmCreatedToYear() {
 		return smCreatedToYear;
@@ -3903,7 +3903,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc request quote no.
 	 * 
-	 * @return the sc request quote no
+	 * @return the scRequestQuoteNo
 	 */
 	public String getScRequestQuoteNo() {
 		return scRequestQuoteNo;
@@ -3922,7 +3922,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc pid no.
 	 * 
-	 * @return the sc pid no
+	 * @return the scPIDNo
 	 */
 	public String getScPIDNo() {
 		return scPIDNo;
@@ -3941,7 +3941,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc contract or pkp type.
 	 * 
-	 * @return the sc contract or pkp type
+	 * @return the scContractOrPKPType
 	 */
 	public String getScContractOrPKPType() {
 		return scContractOrPKPType;
@@ -3960,7 +3960,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc contract or pkp no.
 	 * 
-	 * @return the sc contract or pkp no
+	 * @return the scContractOrPKPNo
 	 */
 	public String getScContractOrPKPNo() {
 		return scContractOrPKPNo;
@@ -3979,7 +3979,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc contract or pkp name.
 	 * 
-	 * @return the sc contract or pkp name
+	 * @return the scContractOrPKPName
 	 */
 	public String getScContractOrPKPName() {
 		return scContractOrPKPName;
@@ -3998,7 +3998,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc laprnpurchdefault group.
 	 * 
-	 * @return the sc laprnpurchdefault group
+	 * @return the scLAPRNPURCHDEFAULTGroup
 	 */
 	public String getScLAPRNPURCHDEFAULTGroup() {
 		return scLAPRNPURCHDEFAULTGroup;
@@ -4017,7 +4017,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc requestnotesummary group.
 	 * 
-	 * @return the sc requestnotesummary group
+	 * @return the scREQUESTNOTESUMMARYGroup
 	 */
 	public String getScREQUESTNOTESUMMARYGroup() {
 		return scREQUESTNOTESUMMARYGroup;
@@ -4036,7 +4036,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc common status.
 	 * 
-	 * @return the sc common status
+	 * @return the scCommonStatus
 	 */
 	public String getScCommonStatus() {
 		return scCommonStatus;
@@ -4055,7 +4055,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl group one.
 	 * 
-	 * @return the fl group one
+	 * @return the flGroupOne
 	 */
 	public String getFlGroupOne() {
 		return flGroupOne;
@@ -4074,7 +4074,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl group two.
 	 * 
-	 * @return the fl group two
+	 * @return the flGroupTwo
 	 */
 	public String getFlGroupTwo() {
 		return flGroupTwo;
@@ -4093,7 +4093,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl group three.
 	 * 
-	 * @return the fl group three
+	 * @return the flGroupThree
 	 */
 	public String getFlGroupThree() {
 		return flGroupThree;
@@ -4112,7 +4112,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl group four.
 	 * 
-	 * @return the fl group four
+	 * @return the flGroupFour
 	 */
 	public String getFlGroupFour() {
 		return flGroupFour;
@@ -4131,7 +4131,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl group five.
 	 * 
-	 * @return the fl group five
+	 * @return the flGroupFive
 	 */
 	public String getFlGroupFive() {
 		return flGroupFive;
@@ -4150,7 +4150,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl group six.
 	 * 
-	 * @return the fl group six
+	 * @return the flGroupSix
 	 */
 	public String getFlGroupSix() {
 		return flGroupSix;
@@ -4169,7 +4169,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl group seven.
 	 * 
-	 * @return the fl group seven
+	 * @return the flGroupSeven
 	 */
 	public String getFlGroupSeven() {
 		return flGroupSeven;
@@ -4188,7 +4188,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl group eight.
 	 * 
-	 * @return the fl group eight
+	 * @return the flGroupEight
 	 */
 	public String getFlGroupEight() {
 		return flGroupEight;
@@ -4207,7 +4207,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl group nine.
 	 * 
-	 * @return the fl group nine
+	 * @return the flGroupNine
 	 */
 	public String getFlGroupNine() {
 		return flGroupNine;
@@ -4226,7 +4226,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl group ten.
 	 * 
-	 * @return the fl group ten
+	 * @return the flGroupTen
 	 */
 	public String getFlGroupTen() {
 		return flGroupTen;
@@ -4245,7 +4245,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl group eleven.
 	 * 
-	 * @return the fl group eleven
+	 * @return the flGroupEleven
 	 */
 	public String getFlGroupEleven() {
 		return flGroupEleven;
@@ -4264,7 +4264,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl group twelve.
 	 * 
-	 * @return the fl group twelve
+	 * @return the flGroupTwelve
 	 */
 	public String getFlGroupTwelve() {
 		return flGroupTwelve;
@@ -4283,7 +4283,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl group thirteen.
 	 * 
-	 * @return the fl group thirteen
+	 * @return the flGroupThirteen
 	 */
 	public String getFlGroupThirteen() {
 		return flGroupThirteen;
@@ -4302,7 +4302,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl group fourteen.
 	 * 
-	 * @return the fl group fourteen
+	 * @return the flGroupFourteen
 	 */
 	public String getFlGroupFourteen() {
 		return flGroupFourteen;
@@ -4321,7 +4321,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl group fifteen.
 	 * 
-	 * @return the fl group fifteen
+	 * @return the flGroupFifteen
 	 */
 	public String getFlGroupFifteen() {
 		return flGroupFifteen;
@@ -4340,7 +4340,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl group sixteen.
 	 * 
-	 * @return the fl group sixteen
+	 * @return the flGroupSixteen
 	 */
 	public String getFlGroupSixteen() {
 		return flGroupSixteen;
@@ -4359,7 +4359,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ct complete.
 	 * 
-	 * @return the ct complete
+	 * @return the ctComplete
 	 */
 	public String getCtComplete() {
 		return ctComplete;
@@ -4378,7 +4378,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ct contr montr status.
 	 * 
-	 * @return the ct contr montr status
+	 * @return the ctContrMontrStatus
 	 */
 	public String getCtContrMontrStatus() {
 		return ctContrMontrStatus;
@@ -4412,7 +4412,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ct contract no.
 	 * 
-	 * @return the ct contract no
+	 * @return the ctContractNo
 	 */
 	public String getCtContractNo() {
 		return ctContractNo;
@@ -4431,7 +4431,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ct agreement.
 	 * 
-	 * @return the ct agreement
+	 * @return the ctAgreement
 	 */
 	public String getCtAgreement() {
 		return ctAgreement;
@@ -4450,7 +4450,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ct status.
 	 * 
-	 * @return the ct status
+	 * @return the ctStatus
 	 */
 	public String getCtStatus() {
 		return ctStatus;
@@ -4469,7 +4469,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sub module.
 	 * 
-	 * @return the sub module
+	 * @return the subModule
 	 */
 	public String getSubModule() {
 		return subModule;
@@ -4488,7 +4488,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc prc rpt group.
 	 * 
-	 * @return the sc prc rpt group
+	 * @return the scPrcRptGroup
 	 */
 	public String getScPrcRptGroup() {
 		return scPrcRptGroup;
@@ -4507,7 +4507,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc pi dtls prc rpt group.
 	 * 
-	 * @return the sc pi dtls prc rpt group
+	 * @return the scPIDtlsPrcRptGroup
 	 */
 	public String getScPIDtlsPrcRptGroup() {
 		return scPIDtlsPrcRptGroup;
@@ -4526,7 +4526,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc procurement type.
 	 * 
-	 * @return the sc procurement type
+	 * @return the scProcurementType
 	 */
 	public String getScProcurementType() {
 		return scProcurementType;
@@ -4545,7 +4545,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc process rpt quotation no.
 	 * 
-	 * @return the sc process rpt quotation no
+	 * @return the scProcessRptQuotationNo
 	 */
 	public String getScProcessRptQuotationNo() {
 		return scProcessRptQuotationNo;
@@ -4564,7 +4564,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc sone status.
 	 * 
-	 * @return the sc sone status
+	 * @return the scSoneStatus
 	 */
 	public String getScSoneStatus() {
 		return scSoneStatus;
@@ -4583,7 +4583,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc sone crtd from date.
 	 * 
-	 * @return the sc sone crtd from date
+	 * @return the scSoneCrtdFromDate
 	 */
 	public Date getScSoneCrtdFromDate() {
 		return scSoneCrtdFromDate;
@@ -4602,7 +4602,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc sone crtd to date.
 	 * 
-	 * @return the sc sone crtd to date
+	 * @return the scSoneCrtdToDate
 	 */
 	public Date getScSoneCrtdToDate() {
 		return scSoneCrtdToDate;
@@ -4621,7 +4621,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc requisener id.
 	 * 
-	 * @return the sc requisener id
+	 * @return the scRequisenerId
 	 */
 	public String getScRequisenerId() {
 		return scRequisenerId;
@@ -4640,7 +4640,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc supplier.
 	 * 
-	 * @return the sc supplier
+	 * @return the scSupplier
 	 */
 	public String getScSupplier() {
 		return scSupplier;
@@ -4659,7 +4659,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc login.
 	 * 
-	 * @return the sc login
+	 * @return the scLogin
 	 */
 	public String getScLogin() {
 		return scLogin;
@@ -4678,7 +4678,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc p ino.
 	 * 
-	 * @return the sc p ino
+	 * @return the scPIno
 	 */
 	public String getScPIno() {
 		return scPIno;
@@ -4697,7 +4697,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc publish from date.
 	 * 
-	 * @return the sc publish from date
+	 * @return the scPublishFromDate
 	 */
 	public Date getScPublishFromDate() {
 		return scPublishFromDate;
@@ -4716,7 +4716,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc publish to date.
 	 * 
-	 * @return the sc publish to date
+	 * @return the scPublishToDate
 	 */
 	public Date getScPublishToDate() {
 		return scPublishToDate;
@@ -4735,7 +4735,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc procure all list.
 	 * 
-	 * @return the sc procure all list
+	 * @return the scProcureAllList
 	 */
 	public List<SelectItem> getScProcureAllList() {
 		return scProcureAllList;
@@ -4754,7 +4754,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc quotation list.
 	 * 
-	 * @return the sc quotation list
+	 * @return the scQuotationList
 	 */
 	public List<SelectItem> getScQuotationList() {
 		return scQuotationList;
@@ -4773,7 +4773,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc tender list.
 	 * 
-	 * @return the sc tender list
+	 * @return the scTenderList
 	 */
 	public List<SelectItem> getScTenderList() {
 		return scTenderList;
@@ -4792,7 +4792,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc rstrctd tndr list.
 	 * 
-	 * @return the sc rstrctd tndr list
+	 * @return the scRstrctdTndrList
 	 */
 	public List<SelectItem> getScRstrctdTndrList() {
 		return scRstrctdTndrList;
@@ -4811,7 +4811,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc created to year.
 	 * 
-	 * @return the sc created to year
+	 * @return the scCreatedToYear
 	 */
 	public String getScCreatedToYear() {
 		return scCreatedToYear;
@@ -4830,7 +4830,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc created to month.
 	 * 
-	 * @return the sc created to month
+	 * @return the scCreatedToMonth
 	 */
 	public String getScCreatedToMonth() {
 		return scCreatedToMonth;
@@ -4849,7 +4849,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc created from year.
 	 * 
-	 * @return the sc created from year
+	 * @return the scCreatedFromYear
 	 */
 	public String getScCreatedFromYear() {
 		return scCreatedFromYear;
@@ -4868,7 +4868,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc created from month.
 	 * 
-	 * @return the sc created from month
+	 * @return the scCreatedFromMonth
 	 */
 	public String getScCreatedFromMonth() {
 		return scCreatedFromMonth;
@@ -4887,7 +4887,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc desk officer.
 	 * 
-	 * @return the sc desk officer
+	 * @return the scDeskOfficer
 	 */
 	public String getScDeskOfficer() {
 		return scDeskOfficer;
@@ -4906,7 +4906,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc ptj.
 	 * 
-	 * @return the sc ptj
+	 * @return the scPtj
 	 */
 	public String getScPtj() {
 		return scPtj;
@@ -4925,7 +4925,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc status.
 	 * 
-	 * @return the sc status
+	 * @return the scStatus
 	 */
 	public String getScStatus() {
 		return scStatus;
@@ -4944,7 +4944,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the procurement list.
 	 * 
-	 * @return the procurement list
+	 * @return the procurementList
 	 */
 	public List<SelectItem> getProcurementList() {
 		return procurementList;
@@ -4963,7 +4963,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl contract order.
 	 * 
-	 * @return the fl contract order
+	 * @return the flContractOrder
 	 */
 	public String getFlContractOrder() {
 		return flContractOrder;
@@ -4982,7 +4982,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl contract request.
 	 * 
-	 * @return the fl contract request
+	 * @return the flContractRequest
 	 */
 	public String getFlContractRequest() {
 		return flContractRequest;
@@ -5001,7 +5001,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl purchase order no.
 	 * 
-	 * @return the fl purchase order no
+	 * @return the flPurchaseOrderNo
 	 */
 	public String getFlPurchaseOrderNo() {
 		return flPurchaseOrderNo;
@@ -5020,7 +5020,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the report file name jsp.
 	 * 
-	 * @return the report file name jsp
+	 * @return the reportFileNameJSP
 	 */
 	public String getReportFileNameJSP() {
 		return reportFileNameJSP;
@@ -5039,7 +5039,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the pdf file.
 	 * 
-	 * @return the pdf file
+	 * @return the pdfFile
 	 */
 	public StreamedContent getPdfFile() {
 		return pdfFile;
@@ -5048,7 +5048,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl itm type.
 	 * 
-	 * @return the fl itm type
+	 * @return the flItmType
 	 */
 	public String getFlItmType() {
 		return flItmType;
@@ -5067,7 +5067,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl contract no.
 	 * 
-	 * @return the fl contract no
+	 * @return the flContractNo
 	 */
 	public String getFlContractNo() {
 		return flContractNo;
@@ -5086,7 +5086,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl sst.
 	 * 
-	 * @return the fl sst
+	 * @return the flSst
 	 */
 	public String getFlSst() {
 		return flSst;
@@ -5105,7 +5105,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl jabatan.
 	 * 
-	 * @return the fl jabatan
+	 * @return the flJabatan
 	 */
 	public String getFlJabatan() {
 		return flJabatan;
@@ -5124,7 +5124,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the common ptj.
 	 * 
-	 * @return the common ptj
+	 * @return the commonPtj
 	 */
 	public String getCommonPtj() {
 		return commonPtj;
@@ -5143,7 +5143,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the common ministry.
 	 * 
-	 * @return the common ministry
+	 * @return the commonMinistry
 	 */
 	public String getCommonMinistry() {
 		return commonMinistry;
@@ -5162,7 +5162,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl supplier.
 	 * 
-	 * @return the fl supplier
+	 * @return the flSupplier
 	 */
 	public String getFlSupplier() {
 		return flSupplier;
@@ -5181,7 +5181,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl status.
 	 * 
-	 * @return the fl status
+	 * @return the flStatus
 	 */
 	public String getFlStatus() {
 		return flStatus;
@@ -5200,7 +5200,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl duration.
 	 * 
-	 * @return the fl duration
+	 * @return the flDuration
 	 */
 	public String getFlDuration() {
 		return flDuration;
@@ -5219,7 +5219,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl recieving officer.
 	 * 
-	 * @return the fl recieving officer
+	 * @return the flRecievingOfficer
 	 */
 	public String getFlRecievingOfficer() {
 		return flRecievingOfficer;
@@ -5238,7 +5238,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl delivery address.
 	 * 
-	 * @return the fl delivery address
+	 * @return the flDeliveryAddress
 	 */
 	public String getFlDeliveryAddress() {
 		return flDeliveryAddress;
@@ -5257,7 +5257,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl contract type.
 	 * 
-	 * @return the fl contract type
+	 * @return the flContractType
 	 */
 	public String getFlContractType() {
 		return flContractType;
@@ -5276,7 +5276,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl requisitioner.
 	 * 
-	 * @return the fl requisitioner
+	 * @return the flRequisitioner
 	 */
 	public String getFlRequisitioner() {
 		return flRequisitioner;
@@ -5295,7 +5295,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl mto contract.
 	 * 
-	 * @return the fl mto contract
+	 * @return the flMtoContract
 	 */
 	public String getFlMtoContract() {
 		return flMtoContract;
@@ -5314,7 +5314,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl invoice no.
 	 * 
-	 * @return the fl invoice no
+	 * @return the flInvoiceNo
 	 */
 	public String getFlInvoiceNo() {
 		return flInvoiceNo;
@@ -5333,7 +5333,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl deduction type.
 	 * 
-	 * @return the fl deduction type
+	 * @return the flDeductionType
 	 */
 	public String getFlDeductionType() {
 		return flDeductionType;
@@ -5352,7 +5352,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl cr no.
 	 * 
-	 * @return the fl cr no
+	 * @return the flCrNo
 	 */
 	public String getFlCrNo() {
 		return flCrNo;
@@ -5371,7 +5371,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl approver name.
 	 * 
-	 * @return the fl approver name
+	 * @return the flApproverName
 	 */
 	public String getFlApproverName() {
 		return flApproverName;
@@ -5390,7 +5390,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl document type.
 	 * 
-	 * @return the fl document type
+	 * @return the flDocumentType
 	 */
 	public String getFlDocumentType() {
 		return flDocumentType;
@@ -5409,7 +5409,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl criteria.
 	 * 
-	 * @return the fl criteria
+	 * @return the flCriteria
 	 */
 	public String getFlCriteria() {
 		return flCriteria;
@@ -5428,7 +5428,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl scoring.
 	 * 
-	 * @return the fl scoring
+	 * @return the flScoring
 	 */
 	public String getFlScoring() {
 		return flScoring;
@@ -5447,7 +5447,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl pkp no.
 	 * 
-	 * @return the fl pkp no
+	 * @return the flPkpNo
 	 */
 	public String getFlPkpNo() {
 		return flPkpNo;
@@ -5466,7 +5466,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl delivery order no.
 	 * 
-	 * @return the fl delivery order no
+	 * @return the flDeliveryOrderNo
 	 */
 	public String getFlDeliveryOrderNo() {
 		return flDeliveryOrderNo;
@@ -5485,7 +5485,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl item code.
 	 * 
-	 * @return the fl item code
+	 * @return the flItemCode
 	 */
 	public String getFlItemCode() {
 		return flItemCode;
@@ -5504,7 +5504,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl po amount.
 	 * 
-	 * @return the fl po amount
+	 * @return the flPoAmount
 	 */
 	public String getFlPoAmount() {
 		return flPoAmount;
