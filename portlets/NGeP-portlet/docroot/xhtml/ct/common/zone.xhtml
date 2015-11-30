@@ -56,7 +56,8 @@
       </p:treeTable>
  	 </h:panelGrid>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true" rendered="#{!ctBackingBean.managedBean.viewContract}">
+	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true"
+	      rendered="#{!ctBackingBean.managedBean.viewContract}">
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">
@@ -82,7 +83,7 @@
 											<td></td>
 											<td>
 												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" 
-													disabled="#{ctBackingBean.managedBean.viewContract}"/> 
+													disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}"/> 
 												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.remark']}" rendered="#{remarkIndex==0}" />
 												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 											</td>
