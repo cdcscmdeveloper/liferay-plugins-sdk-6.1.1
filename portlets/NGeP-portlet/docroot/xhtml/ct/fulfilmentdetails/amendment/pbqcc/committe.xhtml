@@ -23,25 +23,25 @@
 				</p:selectBooleanCheckbox>
 		      </p:column>
                
-			    <p:column style="width:15%;white-space:normal" 
+			    <p:column style="width:17%;white-space:normal" 
 			       styleClass="column-align-center"  headerText="#{lbl['lbl.ct.name']}">
 				 <div align="left">
 				    <h:outputText value="#{ctCommitteeVar.memberName}" /></div>
 				</p:column> 
 				 
-				 <p:column style="width:13%;"
+				 <p:column style="width:11%;white-space:normal;"
 				    styleClass="column-align-center"  headerText="#{lbl['lbl.ct.identification.no']}">
 				  <div align="left">
 				        <h:outputText value="#{ctCommitteeVar.icPassport}" /></div>
 				 </p:column>  
 				 
-				 <p:column style="width:27%;white-space:normal"
+				 <p:column style="width:27%;white-space:normal;"
 				    styleClass="column-align-center"  headerText="#{lbl['lbl.ct.designation']}" >
 				     <div align="left">
 				         <h:outputText value="#{ctCommitteeVar.designation}" /></div>
 				 </p:column> 
 				
-				 <p:column style="width:20%;white-space:normal" 
+				 <p:column style="width:20%;white-space:normal;" 
 				     styleClass="column-align-center"  headerText="#{lbl['lbl.ct.email']}">
 				      <div align="left">
 				           <h:outputText value="#{ctCommitteeVar.email}" />
@@ -133,7 +133,7 @@
 		                <h:panelGrid id="changeCommitteMember" columns="2" width="100%" columnClasses="columnWidth20">
 		                  
 		                     <p:outputLabel for="nameId" value="#{lbl['lbl.ct.name']}" />
-	                         <p:inputText id="nameId" value="#{amendmentBackingBean.managedBean.committeeName}" style="width:260px;"/>
+	                         <p:inputText id="nameId" value="#{amendmentBackingBean.managedBean.committeeName}"  maxlength="80" style="width:260px;"/>
                            
                              <p:outputLabel for="idenType" value="#{lbl['lbl.ct.identification.type']}" />
 	                         <p:selectOneMenu id="idenType"  style="width:180px;margin-bottom: 5px;" value="#{amendmentBackingBean.managedBean.identificationType}">
