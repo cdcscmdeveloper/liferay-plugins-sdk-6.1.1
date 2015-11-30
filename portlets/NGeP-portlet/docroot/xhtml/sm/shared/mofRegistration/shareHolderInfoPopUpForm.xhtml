@@ -356,12 +356,11 @@
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sm.person.shrPrvHdr']}" toggleable="true"
 		id="shrPrivPanel"
-		rendered="#{!backingBean.managedBean.validSmUserLimit or backingBean.managedBean.userWithRole}">
+		rendered="#{!backingBean.managedBean.validSmUserLimit}">
 		<table>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.isAuth']}" /></td>
-				<td><p:selectOneRadio
-						disabled="#{backingBean.disableEpRoleDropDown(backingBean.managedBean.selectedShareHolder)}"
+				<td><p:selectOneRadio 
 						value="#{backingBean.managedBean.selectedShareHolder.authorizedFlg}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
@@ -388,20 +387,15 @@
 		</table>
 		<table>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}"
-						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}" />
-					<p:outputLabel value="*" styleClass="mandatory"
-						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}" /></td>
 				<td><p:selectOneMenu id="smPersnEpRole"
 						label="#{lbl['lbl.sm.userprofile.eprole']}"
 						value="#{backingBean.managedBean.selectedShareHolder.epRole}"
-						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}"
-						required="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}"
 						disabled="#{backingBean.disableEpRoleDropDown(backingBean.managedBean.selectedShareHolder)}"
 						style="width: 207px;margin: 5px 0px 5px 0px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems
-							value="#{backingBean.getAuthorizedPersonnelValidEpRoles()}" />
+							value="#{backingBean.managedBean.ePRoleList}" />
 						<p:ajax event="change" update="shrPrivPanel" process="@this"
 							listener="#{backingBean.assignShareHolderPrivilegeByEpRole}" />
 					</p:selectOneMenu> 
@@ -428,7 +422,6 @@
 			</tr>
 			<p:outputPanel
 				rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
-							and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' 
 							and (backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_ADMIN' or backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER')}">
 				<tr>
 					<td><p:outputLabel
@@ -467,12 +460,12 @@
 					</p:tooltip></td>
 			</tr>
 			<p:outputPanel
-				rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and not empty backingBean.managedBean.selectedShareHolder.epRole}">
+				rendered="#{not empty backingBean.managedBean.selectedShareHolder.epRole}">
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.activation.status']} :" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view"
-							value="#{backingBean.getAuthorizedPersonnelAccountStatus(backingBean.managedBean.selectedShareHolder,backingBean.managedBean.smSupplier)}" /></td>
+							value="#{backingBean.getPersonnelActivationStatus(backingBean.managedBean.selectedShareHolder,backingBean.managedBean.smSupplier)}" /></td>
 				</tr>
 			</p:outputPanel>
 		</table>
