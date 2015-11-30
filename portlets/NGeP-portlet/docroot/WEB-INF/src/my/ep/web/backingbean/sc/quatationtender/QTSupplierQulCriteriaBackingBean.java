@@ -1352,7 +1352,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 		List<TplSpecLoc> tplSpecLocList = new ArrayList<TplSpecLoc>();
 
 		ScQt scQt = getManagedBean().getQt();
-		if (!isQuotationThresHold(scQt.getEstimatedAmount())) {
+		if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scQt.getProcurementMode().getParameterCode())) {
 			// value > 500k - always get the
 			// scQtSupplierCriteria.getLocationLevel()
 			if (getManagedBean().getAllStateCode() != PTJLocalityCode.STATE_PENINSULAR
