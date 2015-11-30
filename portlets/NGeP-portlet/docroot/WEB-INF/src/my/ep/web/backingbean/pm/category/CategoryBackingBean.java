@@ -105,6 +105,18 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	/** The result. */
 	boolean result = false;
 
+	//Authorization 
+	private ISearchBean<PmParameterDesc> facilityTypeSearchBean;
+		
+	public ISearchBean<PmParameterDesc> getFacilityTypeSearchBean() {
+		return facilityTypeSearchBean;
+	}
+
+	public void setFacilityTypeSearchBean(
+			ISearchBean<PmParameterDesc> facilityTypeSearchBean) {
+		this.facilityTypeSearchBean = facilityTypeSearchBean;
+	}
+
 	/**
 	 * Instantiates a new category backing bean.
 	 */
@@ -1849,7 +1861,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				&& CollectionUtils.isEmpty(tobeAddedPmMachineCategory)
 				&& this.getManagedBean().isCheckSpecialCategory()) {
 
-			throw new EpException(MessageConst.ERROR_775008);
+			throw new EpException(MessageConst.ERROR_775008 ,new String[]{ResourceBundleUtils.getMessage("lbl.pm.special.equipment",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 		}
 	}
 
@@ -2716,7 +2728,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-							MessageUtils.getMessage(MessageConst.ERROR_775014,
+							MessageUtils.getMessage(MessageConst.ERROR_775014,new String[]{ResourceBundleUtils.getMessage("lbl.pm.category.grouping",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
 			return false;
@@ -2732,9 +2744,10 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-							MessageUtils.getMessage(MessageConst.ERROR_775015,
+							MessageUtils.getMessage(MessageConst.ERROR_775015,new String[]{ResourceBundleUtils.getMessage("lbl.pm.company.type.tab",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
+			
 			return false;
 			// last
 		}
