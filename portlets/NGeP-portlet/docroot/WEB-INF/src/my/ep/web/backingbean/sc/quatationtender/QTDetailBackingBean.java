@@ -2621,7 +2621,7 @@ public class QTDetailBackingBean extends
 					contactPerson.setEmail(user.getEmail());
 					contactPerson.setFaxNo(user.getFaxNo());
 					contactPerson
-							.setOfficerType(SourcingConstants.CONTACT_PERSON_TYPE);
+							.setOfficerType(SourcingConstants.OFFICER_TYPE_QT);
 					contactPerson.setName(user.getUserName());
 					contactPerson.setScQt(this.getManagedBean().getQt());
 					qtContactPerson.add(contactPerson);
@@ -3156,17 +3156,6 @@ public class QTDetailBackingBean extends
 								}
 							}
 						}
-					}
-					if (getManagedBean().getQt().getEstimatedAmount() != null) {
-						if (getManagedBean().getQt().getQtValidityPeriod() == null) {
-							getManagedBean().getQt().setQtValidityPeriod(
-									SourcingConstants.SIXTY_DAYS);
-						}
-						if (getManagedBean().getQt().getQtValidityPeriod() == null) {
-							getManagedBean().getQt().setQtValidityPeriod(
-									SourcingConstants.NINTY_DAYS);
-						}
-
 					}
 
 				}

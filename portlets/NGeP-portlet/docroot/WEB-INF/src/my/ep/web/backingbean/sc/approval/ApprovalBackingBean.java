@@ -486,28 +486,12 @@ public class ApprovalBackingBean extends
 			paramTypes = getRequestTypes(((SCQuotationTenderDataType) obj)
 					.getXflagPublication());
 			this.getManagedBean().setApprovalType(
-					SourcingConstants.PUBLICATION_APPROVAL);
+					SourcingConstants.APPROVAL_TYPE_PUBLICATION_APPROVAL);
 			approvalRequests = getApprovalRequests(qtId,
 					ParameterConst.APPROVAL_CATEGORY_PTJ,
 					ParameterConst.DOCTYPE_QUOTATION, paramTypes);
-			Date clsDate = null;
-			if (null != this.getManagedBean().getQt().getLatestBsvDate()) {
-
-				clsDate = DateUtils.addDays(this.getManagedBean().getQt()
-						.getLatestBsvDate(), this.getManagedBean().getQt()
-						.getPublishPeriod());
-
-			} else {
-				clsDate = DateUtils.addDays(this.getManagedBean().getQt()
-						.getPublishDate(), this.getManagedBean().getQt()
-						.getPublishPeriod());
-			}
+			
 			this.setDefaultDateTime(this.getManagedBean().getQt());
-			/*
-			 * getManagedBean().setProposalValidityUntil(
-			 * DateUtils.addDays(clsDate, this.getManagedBean().getQt()
-			 * .getQtValidityPeriod()));
-			 */
 
 		} else if (SCProcessNameConst.APPROVE_PCB.equalsIgnoreCase(taskName)) {
 			paramTypes = getRequestTypes(((SCQuotationTenderDataType) obj)
@@ -617,7 +601,7 @@ public class ApprovalBackingBean extends
 				RequestContext.getCurrentInstance().execute(
 						"reviceApprovalDlg.show()");
 			} else {
-				if (SourcingConstants.PUBLICATION_APPROVAL.equalsIgnoreCase(this
+				if (SourcingConstants.APPROVAL_TYPE_PUBLICATION_APPROVAL.equalsIgnoreCase(this
 						.getManagedBean().getApprovalType())) {
 	
 					this.setDefaultDateTime(reqDTO.getQtdetail());

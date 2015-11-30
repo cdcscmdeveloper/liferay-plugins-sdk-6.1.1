@@ -15,7 +15,7 @@
 		<h:panelGroup id="schedule">
 			<p:panel header="#{lbl['lbl.sc.spec.freq.schedule']} "
 				toggleable="true"
-				rendered="#{isDocTypePurchaseRequest or (isDocTypeQuotation and lOADetailBackingBean.managedBean.scQt.scheduleType == 'F')}">
+				rendered="#{isDocTypePurchaseRequest or (isDocTypeQuotation and lOADetailBackingBean.managedBean.scQt.scheduleType == ParameterConst.periodicScheduleTypeFrequencySchedule)}">
 
 				<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
 					<h:column>
@@ -112,7 +112,7 @@
 	<h:panelGroup id="progressive">
 			<p:panel header="#{lbl['lbl.sc.spec.progressive.payment']}"
 				toggleable="true"
-				rendered="#{isDocTypeQuotation and lOADetailBackingBean.managedBean.scQt.scheduleType == 'P'}">
+				rendered="#{isDocTypeQuotation and lOADetailBackingBean.managedBean.scQt.scheduleType == ParameterConst.periodicScheduleTypeProgressivePayment}">
 
 				<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
 					<h:column>

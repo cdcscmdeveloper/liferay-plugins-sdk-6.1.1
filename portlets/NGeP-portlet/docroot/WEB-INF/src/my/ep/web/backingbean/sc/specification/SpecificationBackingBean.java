@@ -5968,26 +5968,26 @@ public class SpecificationBackingBean extends
 			if (ParameterConst.FULFILMENT_TYPE_ONE_OFF.equalsIgnoreCase(this
 					.getManagedBean().getFulfilmentType())) {
 				this.getManagedBean().getScQt()
-						.setScheduleType(SourcingConstants.FREQUENCY_SCHEDULE);
+						.setScheduleType(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 
 			} else if (ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
 					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())) {
 				this.getManagedBean().getScQt()
-						.setScheduleType(SourcingConstants.PROGRESSIVE_PAYMENT);
+						.setScheduleType(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
 				this.getManagedBean().setTotalProgressivePayment(0);
 
 			} else if (ParameterConst.FULFILMENT_TYPE_SCHEDULED
 					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())) {
 				this.getManagedBean().getScQt()
-						.setScheduleType(SourcingConstants.FREQUENCY_SCHEDULE);
+						.setScheduleType(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 				this.getManagedBean().setTotalFrequency(0);
 				this.getManagedBean().setTotalProgressivePayment(0);
 
 			}
 			this.getManagedBean().getScQt().setScQtSchedules(null);
 			this.getManagedBean().getScQt().setScQtProgressivePayments(null);
-			removefullfillmentDetails(SourcingConstants.PROGRESSIVE_PAYMENT);
-			removefullfillmentDetails(SourcingConstants.FREQUENCY_SCHEDULE);
+			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
+			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 
 		} finally {
 
@@ -6085,12 +6085,12 @@ public class SpecificationBackingBean extends
 		log.info("display schedule type" + scheduleType);
 		log.info("display fulfilment  type"
 				+ this.getManagedBean().getFulfilmentType());
-		if (SourcingConstants.FREQUENCY_SCHEDULE.equalsIgnoreCase(scheduleType)) {
-			scheduleType = SourcingConstants.PROGRESSIVE_PAYMENT;
+		if (ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE.equalsIgnoreCase(scheduleType)) {
+			scheduleType = ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT;
 			this.getManagedBean().setTotalProgressivePayment(0);
-		} else if (SourcingConstants.PROGRESSIVE_PAYMENT
+		} else if (ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT
 				.equalsIgnoreCase(scheduleType)) {
-			scheduleType = SourcingConstants.FREQUENCY_SCHEDULE;
+			scheduleType = ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE;
 			this.getManagedBean().setTotalFrequency(0);
 		}
 		removefullfillmentDetails(scheduleType);
@@ -8618,7 +8618,7 @@ public class SpecificationBackingBean extends
 		IParameterSO parameterSo = null;
 		try {
 
-			removefullfillmentDetails(SourcingConstants.FREQUENCY_SCHEDULE);
+			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 
 			List<ScQtSchedule> scheduleList = this.getManagedBean()
 					.getScheduleList();
@@ -8831,7 +8831,7 @@ public class SpecificationBackingBean extends
 	public void addProgressiveDetails() {
 
 		try {
-			removefullfillmentDetails(SourcingConstants.PROGRESSIVE_PAYMENT);
+			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
 			List<ScQtProgressivePayment> payments = this.getManagedBean()
 					.getProgressivePaymentList();
 
@@ -8845,7 +8845,7 @@ public class SpecificationBackingBean extends
 
 			}
 			this.getManagedBean().getScQt()
-					.setScheduleType(SourcingConstants.PROGRESSIVE_PAYMENT);
+					.setScheduleType(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
 
 			this.getManagedBean().setProgressivePaymentList(payments);
 
@@ -11407,7 +11407,7 @@ public class SpecificationBackingBean extends
 						.getFulfilmentType()
 						.equalsIgnoreCase(
 								ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
-			scQt.setScheduleType(SourcingConstants.PROGRESSIVE_PAYMENT);
+			scQt.setScheduleType(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
 		}
 		if (null != this.getManagedBean().getFulfilmentType()
 				&& !"".equalsIgnoreCase(this.getManagedBean()
@@ -11416,7 +11416,7 @@ public class SpecificationBackingBean extends
 						.getFulfilmentType()
 						.equalsIgnoreCase(
 								ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
-			scQt.setScheduleType(SourcingConstants.FREQUENCY_SCHEDULE);
+			scQt.setScheduleType(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 		}
 
 		List<ScQtCheckList> localChecklist = new ArrayList<ScQtCheckList>();
@@ -11546,7 +11546,7 @@ public class SpecificationBackingBean extends
 			localChecklist.addAll(financialCheckList);
 			scQt.setScQtChecklists(localChecklist);
 		}
-		if (SourcingConstants.FREQUENCY_SCHEDULE.equalsIgnoreCase(scQt
+		if (ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE.equalsIgnoreCase(scQt
 				.getScheduleType())) {
 			List<ScQtSchedule> freqschedule = this.getManagedBean()
 					.getScheduleList();
@@ -11595,7 +11595,7 @@ public class SpecificationBackingBean extends
 			}
 		}
 
-		if (SourcingConstants.PROGRESSIVE_PAYMENT.equalsIgnoreCase(scQt
+		if (ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT.equalsIgnoreCase(scQt
 				.getScheduleType())) {
 			List<ScQtProgressivePayment> progressivePayemnt = this
 					.getManagedBean().getProgressivePaymentList();
@@ -16103,7 +16103,7 @@ public class SpecificationBackingBean extends
 
 	private void removefullfillmentDetails(String scheduleType) {
 
-		if (SourcingConstants.FREQUENCY_SCHEDULE.equalsIgnoreCase(scheduleType)) {
+		if (ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE.equalsIgnoreCase(scheduleType)) {
 			List<ScQtSchedule> scheduleList = this.getManagedBean()
 					.getScheduleList();
 
@@ -16121,7 +16121,7 @@ public class SpecificationBackingBean extends
 			}
 			this.getManagedBean()
 					.setScheduleList(new ArrayList<ScQtSchedule>());
-		} else if (SourcingConstants.PROGRESSIVE_PAYMENT
+		} else if (ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT
 				.equalsIgnoreCase(scheduleType)) {
 			List<ScQtProgressivePayment> payments = this.getManagedBean()
 					.getProgressivePaymentList();
@@ -16201,25 +16201,6 @@ public class SpecificationBackingBean extends
 									new FacesScopes().getUserLocale())));
 		}
 
-	}
-
-	/**
-	 * Gets the FulfilmentType Radi Values for Frequency schedule tab.
-	 * 
-	 * @return List<SelectItem>
-	 */
-	public List<SelectItem> getFulFilmentTypeRadioValues() {
-		List<SelectItem> selectItems = new ArrayList<SelectItem>();
-
-		try {
-
-			selectItems.add(new SelectItem("F", "Frequency Schedule"));
-			selectItems.add(new SelectItem("P", "Progressive Payment"));
-
-		} finally {
-
-		}
-		return selectItems;
 	}
 
 	private boolean retriveExistingTemplatespec(List<ScQtCheckList> checkList) {
