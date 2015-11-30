@@ -1441,7 +1441,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 *            smSupplier
 	 * @return String
 	 */
-	public String getAuthorizedPersonnelAccountStatus(SmPersonnel smPersonnel,
+	public String getPersonnelActivationStatus(SmPersonnel smPersonnel,
 			SmSupplier smSupplier) {
 		String accStatus = "";
 		if (smSupplier != null
@@ -1450,7 +1450,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				&& StringUtils.isNotBlank(smPersonnel.getEpRole())
 				&& smPersonnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 
-			if (SmApplicationUtil.isLatestApprovedPersonnelAlreadyAuthorized(
+			if (SmApplicationUtil.isLatestApprovedPersonnelActivated(
 					smPersonnel.getIdentificationNo(),
 					smSupplier.getSupplierId())) {
 				accStatus = SmCommonUtil.getMessage(
