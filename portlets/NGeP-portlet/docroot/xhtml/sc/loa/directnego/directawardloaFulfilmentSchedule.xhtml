@@ -11,13 +11,12 @@
 		<table border="0" cellspacing="0" cellpadding="0">
 			<tr>
 				<h:panelGroup
-					rendered="#{directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode eq 'PS'}">
+					rendered="#{directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode eq ParameterConst.fulfilmentTypeScheduled}">
 					<td width="150px"><h:outputLabel
 							value="#{lbl['lbl.sc.periodic.fullfillent.type']}" /></td>
 					<td><p:selectOneRadio disabled="#{!isEditableStatus}"
 							value="#{directLOABackingBean.managedBean.scQt.scheduleType}" >
-							<f:selectItem itemLabel="Frequency Schedule" itemValue="F"></f:selectItem>
-							<f:selectItem itemLabel="Progressive Payment" itemValue="P"></f:selectItem>
+							<f:selectItems value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.periodicScheduleType)}" />
 							<p:ajax event="change" update="progressive,schedule"
 								partialSubmit="true"
 								listener="#{directLOABackingBean.scheduleTypeChange}"></p:ajax>
@@ -32,7 +31,7 @@
 		<h:panelGroup id="schedule">
 			<p:panel header="#{lbl['lbl.sc.spec.freq.schedule']} "
 				toggleable="true"
-				rendered="#{directLOABackingBean.managedBean.scQt.scheduleType eq 'F'}">
+				rendered="#{directLOABackingBean.managedBean.scQt.scheduleType eq ParameterConst.periodicScheduleTypeFrequencySchedule}">
 
 				<h:outputText styleClass="instruction"
 					value="#{lbl['lbl.sc.spec.freq.schedule.instruction']}"
@@ -166,7 +165,7 @@
 	<h:panelGroup id="progressive">
 		<p:panel header="#{lbl['lbl.sc.spec.progressive.payment']}"
 			toggleable="true"
-			rendered="#{directLOABackingBean.managedBean.scQt.scheduleType eq 'P'}">
+			rendered="#{directLOABackingBean.managedBean.scQt.scheduleType eq ParameterConst.periodicScheduleTypeProgressivePayment}">
 
 			<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sc.spec.progressive.payment.instruction']}"

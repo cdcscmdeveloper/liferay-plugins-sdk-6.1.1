@@ -300,7 +300,7 @@ public class QTScheduleDetailBackingBean extends
 		if (null == contactList) {
 			contactList = new ArrayList<ScQtContactPerson>();
 		}
-		contactperson.setOfficerType(SourcingConstants.CONTACT_PERSON_TYPE);
+		contactperson.setOfficerType(SourcingConstants.OFFICER_TYPE_QT);
 		contactperson.setScQt(getManagedBean().getQt());
 		contactList.add(contactperson);
 		this.getManagedBean().setScQtContactPersons(contactList);
@@ -358,7 +358,7 @@ public class QTScheduleDetailBackingBean extends
 		ScQtContactPerson contactPerson = new ScQtContactPerson();
 		contactPerson.setUser(new PmUser());
 		contactPerson
-				.setOfficerType(SourcingConstants.CONTACT_PERSON_TYPE_DOAA);
+				.setOfficerType(SourcingConstants.OFFICER_TYPE_DOAA);
 		contactPerson.setScQt(getManagedBean().getQt());
 		doaaList.add(contactPerson);
 		this.getManagedBean().setPmuserContactpersonList(doaaList);
