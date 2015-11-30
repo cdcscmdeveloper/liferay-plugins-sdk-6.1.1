@@ -233,11 +233,10 @@
 					<ac:iconTooltip
 						value="#{lbl['lbl.ct.tooltip.factoring.bank.name']}" />
 				</h:panelGrid>			
-				<f:verbatim/><f:verbatim/>
 	
 					<p:outputLabel value="#{lbl['lbl.ct.start.date']}"  styleClass="required" />
 				<h:panelGrid columns="2">
-					<p:calendar id="effdateCal" size="25" required="true"
+					<p:calendar id="effdateCal" size="10" required="true"
 						showOn="button" label="#{lbl['lbl.ct.start.date']}"
 						value="#{supplierBackingBean.managedBean.factoring.effDate}"
 						mindate="#{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.effDate}"
@@ -250,26 +249,7 @@
 					</p:calendar>
 					<p:message for="effdateCal" display="icon" />
 				</h:panelGrid>
-				
-					<p:outputLabel value="#{lbl['lbl.ct.end.date']}"  styleClass="required" />
-				<h:panelGrid columns="2">
-					<p:calendar id="expdateCal" size="25" required="true"
-						showOn="button" label="#{lbl['lbl.ct.end.date']}"
-						value="#{supplierBackingBean.managedBean.factoring.expDate}"
-						disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly
-							or supplierBackingBean.isContractAdmin() or supplierBackingBean.isApproverRole()}"
-						readonlyInput="true" navigator="true"
-						mindate="#{supplierBackingBean.managedBean.factoring.effDate}"
-						maxdate="#{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.expDate}"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-						<f:attribute name="startDate"
-							value="#{supplierBackingBean.managedBean.factoring.effDate}" />
-						<f:validator validatorId="primeDateRangeValidator" />
-						<p:ajax event="dateSelect" update="notificationBtn" />
-					</p:calendar>
-					<p:message for="expdateCal" display="icon" />
-				</h:panelGrid>
-					<p:outputLabel value="#{lbl['lbl.ct.copy.factoring.agreement']}"  styleClass="required" />
+				<p:outputLabel value="#{lbl['lbl.ct.copy.factoring.agreement']}"  styleClass="required" />
 				<h:panelGroup id="uploadFactoringPg">
 					<h:panelGrid columns="5">
 						<p:commandButton 
@@ -290,7 +270,25 @@
 							action="#{supplierBackingBean.downloadFile(supplierBackingBean.managedBean.factoring.filePath, supplierBackingBean.managedBean.factoring.fileName)}" />
 					</h:panelGrid>
 				</h:panelGroup>
-
+              
+               	<p:outputLabel value="#{lbl['lbl.ct.end.date']}"  styleClass="required" />
+				<h:panelGrid columns="2">
+					<p:calendar id="expdateCal" size="10" required="true"
+						showOn="button" label="#{lbl['lbl.ct.end.date']}"
+						value="#{supplierBackingBean.managedBean.factoring.expDate}"
+						disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly
+							or supplierBackingBean.isContractAdmin() or supplierBackingBean.isApproverRole()}"
+						readonlyInput="true" navigator="true"
+						mindate="#{supplierBackingBean.managedBean.factoring.effDate}"
+						maxdate="#{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.expDate}"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+						<f:attribute name="startDate"
+							value="#{supplierBackingBean.managedBean.factoring.effDate}" />
+						<f:validator validatorId="primeDateRangeValidator" />
+						<p:ajax event="dateSelect" update="notificationBtn" />
+					</p:calendar>
+					<p:message for="expdateCal" display="icon" />
+				</h:panelGrid>
 				
 					<p:outputLabel value="#{lbl['lbl.ct.copy.factoring.removal']}" styleClass="required" rendered="#{supplierBackingBean.managedBean.removeFactoring}"  />
 				<h:panelGroup id="uploadRemoveFactoringPg"
