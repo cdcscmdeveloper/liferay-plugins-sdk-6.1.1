@@ -230,7 +230,7 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 		if(getManagedBean().getAdjustment().getStatus()==null) {
 			IStatusSO statusSO = (IStatusSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
 			StatusReqDTO statusReqDTO = new StatusReqDTO();
-			statusReqDTO.setStatusId(FulfilmentStatusConst.PENDING_SUBSEQUENT_DEBIT_APPROVAL);
+			statusReqDTO.setStatusId(FulfilmentStatusConst.DN_PENDING_APPROVAL);
 			getManagedBean().getAdjustment().setStatus(statusSO.retrieveStatusByStatusId(statusReqDTO).getPmStatus());
 		}
 		if(getManagedBean().getAdjustment().getFlOrder().isFactored()){
