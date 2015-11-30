@@ -235,6 +235,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	private Long disPmPrgActivity;
 	private boolean selectAllCheckbox;
 	
+	/**
+	 * Instantiates a new fulfilment backing bean.
+	 */
 	public ContractRequestBackingBean() {
 		if (getManagedBean().getFlRequest() == null) {
 			getManagedBean().setFlRequest(new FlFulfilmentRequest());
@@ -503,6 +506,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 		}
 	}
+	
 	private void getSumOrderedQty(FlFulfilmentRequest flRequest) {
 		if(flRequest.getFlFulfilmentItems() != null && !flRequest.getFlFulfilmentItems().isEmpty()){
 			BigDecimal sumOrderedQty = BigDecimal.ZERO;
@@ -514,6 +518,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 		}
 	}
+	
 	/**
 	 * Gets the supplier branches list based on SupplierId.
 	 *
@@ -529,6 +534,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setSupplierBranchesList(supplierBranches);
 		return supplierBranches;
 	}*/
+	
 	/**
 	 * Removes the selected delivery addresses from delivery Address List.
 	 * <p>
@@ -569,6 +575,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 		}
 	}
+	
 	/**
 	 * To remove a contract item from a delivery address.
 	 */
@@ -610,6 +617,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			populateItemsForSelectedAddress();
 		}
 	}
+	
 	/**
 	 * Close listener.
 	 */
@@ -653,6 +661,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setAddressTypesList(resDTO.getAddressTypeList());
 		sortAddressType(getManagedBean().getAddressTypesList());
 	}
+	
 	/**
 	 * flManualDeliveryAddr Method loads country List.
 	 * default selected one is Malaysia.
@@ -780,6 +789,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setAddressTypesList(new ArrayList<PmAddressType>());
 		selectAddrEvent();
 	}
+	
 	/**
 	 * update UI manual delivery address datatable.
 	 * 
@@ -898,6 +908,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * 
 	 */
 	public void addContractedItems() {
+		getManagedBean().setAutoUpdate(false);
+		getManagedBean().setItemAutoUpdate(false);
 		getManagedBean().setContractedItemList(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractItems());
 		getManagedBean().setSelectedContractedItemList(new ArrayList<CtContractItem>());
 		this.getManagedBean().setSearchItemType(null);
@@ -990,6 +1002,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			populateItemsForSelectedAddress();
 		}
 		getManagedBean().setSelectedContractedItemList(new ArrayList<CtContractItem>());
+		getManagedBean().setItemAutoUpdate(false);
+		getManagedBean().setAutoUpdate(true);
 	}
 
 	/**
@@ -1314,8 +1328,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		setFulfilmentItemAddr(getManagedBean().getFlRequest());
 	}
 
-	
-
 	private void setFlSupplierDtl(FlFulfilmentRequest flRequest) {
 		if(flRequest.getFlSupplierDtl() == null){
 			FlSupplierDtl supplierDtl = new FlSupplierDtl();
@@ -1464,6 +1476,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		return getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value());
 
 	}
+	
 	/**
 	 * check role user is fl_approver
 	 */
@@ -1503,6 +1516,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			throw new EpException(MessageConst.ERROR_740002, new String[]{nf.format(contractAmount).toString()});
 		}
 	}
+
 	/**
 	 * check contract ceiling amount has exceed or not exceed.
 	 * 
@@ -1537,6 +1551,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 		}
 	}
+
 	/**
 	 * check contract ceiling quantity has exceed or not exceed.
 	 * 
@@ -1680,6 +1695,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}			
 		}
 	}
+	
 	/**
 	 * initialize approver group.
 	 */
@@ -1737,6 +1753,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			requestSO = null;
 		}
 	}
+	
 	/**
 	 * Retrieve approver list and set into approverModel.
 	 */
@@ -1757,6 +1774,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 	}
 	
+	/**
+	 * Retrieve pmUserGroup List
+	 */
 	public SelectItem[] getUserGroupDropdown() {
 		SelectItem[] items = null;
 		if(getManagedBean().getFlRequest().getPmUserGroup()==null) {
@@ -2210,6 +2230,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 		}
 	}
+	
 	/**
 	 * Edits the manual address
 	 * @param flDelAddress
@@ -2268,6 +2289,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		flDelAddress.setEditable(true);
 		
 	}
+	
 	private void setManualAddressList(){
 		Map<Long, List<PmAddressType>> addressTypeMap = new HashMap<Long, List<PmAddressType>>();
 		if(getManagedBean().getAddressTypesList()==null || getManagedBean().getAddressTypesList().size()==0) {
@@ -2303,6 +2325,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		AddressResDTO resDTO=getReceivingOfficerList(addressId, AddressType.RECEIVING_OFFICER_ADDRESS.value());
 		getManagedBean().setReceivingOffList(resDTO.getAddressTypeList());
 	}
+	
 	/**
 	 * To get the receiving officer list from profile management service object
 	 * @param addressId
@@ -2329,6 +2352,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		CountryResDTO resDTO = reqSO.retrieveCountryList();
 		getManagedBean().setCountryList(resDTO.getCountryList());
 	}
+	
 	/**
 	 * Retrieve the state list from profile management service object
 	 */
@@ -2340,6 +2364,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
 		getManagedBean().setStateList(resDTO.getStateList());
 	}
+	
 	/**
 	 * Retrieve the division list from profile management service object
 	 */
@@ -2372,6 +2397,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setDistrictList(resDTO.getDistrictList());
 		
 	}
+	
 	/**
 	 * Retrieve the city list from profile management service object
 	 */
@@ -2383,6 +2409,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		CityResDTO resDTO = reqSO.retriveCityListByDistrictId(reqDTO);
 		this.getManagedBean().setCityList(resDTO.getCityList());
 	}
+
 	/**
 	 * Retrieve the delivery address list from 
 	 */
@@ -2398,6 +2425,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 		getManagedBean().setManualAddrList(manualAddrList);
 	}
+	
 	/**
 	 * Selected tab will have different validation.
 	 * <p>selected tab 1: 
@@ -2430,6 +2458,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				initializeApproverGroup();
 			}
 			sortAddress(getManagedBean().getFlRequest().getFlDeliveryAddresses());
+			getManagedBean().setAutoUpdate(false);
 			getManagedBean().setEmailValidate(true);
 			hideItemAddButtons();
 		} else if(selectedTabIndex==2){
@@ -2619,6 +2648,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 	
 	}
+	
 	/**
 	 * clear the charge line details,if node is unselected,
 	 */
@@ -2644,6 +2674,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setFinancingTypeCode("");		
 	
 	}
+	
 	/**
 	 * Charge line apply for selected nodes.
 	 */
@@ -2834,6 +2865,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 		}
 	}
+	
 	/**
 	 * Gets the vot fund list based on profileId.
 	 *
@@ -2981,8 +3013,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		this.disPmPrgActivity = disPmPrgActivity;
 	}
 
-	
-
 	/**
 	 * @return the votFundCodeMap
 	 */
@@ -3063,6 +3093,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			flDeliveryAddress.setEndDate(getManagedBean().getFlRequest().getEndDate());
 		}
 	}
+	
 	/**
 	 * Update delivery date based on delivery Term and uomCode.
 	 */
@@ -3146,6 +3177,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 		}
 	}
+	
 	/**
 	 * Checks if user is  fl fulfillment requisitioner.
 	 *
@@ -3247,355 +3279,362 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * chargeLine Panel enable if  checkbox selected
 	 *
 	 */
-		public void selectCheckbox(AjaxBehaviorEvent e){
-			getManagedBean().setSelectChargeLineRow(false);
-			onNodeUnSelect();
-			getManagedBean().setProgramLov(false);
-			getManagedBean().setProjectLov(false);
-			
-			//Poulate chargeline data.
-			//Get the selected chargeline item.
-			updateSelectedTreeNodes();
-			TreeNode[] selectedNodes=getManagedBean().getSelectedNodes();
-			if(null!=selectedNodes && selectedNodes.length>0){
-				getManagedBean().setChargeLinePanel(true);
-				getManagedBean().setSelectChargeLineRow(true);
-			}else{
-				getManagedBean().setChargeLinePanel(false);
-				getManagedBean().setSelectChargeLineRow(false);
-			}
-					 
-			//If Selected node is one then display chargeline data.Otherwise clear chargeline Data.
-			//Because multiple nodes conflict chargeline data.
-			if(null!=selectedNodes && selectedNodes.length==1){
-				 TreeNode selectedNode=selectedNodes[0];
-				 //Populate Chargeline data....
-				 for(TreeNode children:selectedNode.getChildren()){
-						FlFulfilmentItemAddr childData=((FlFulfilmentItemAddr)children.getData());
-						if(null !=childData.getPmVotFund()){
-							if(VotFundType.AMANAH.value().equalsIgnoreCase(childData.getPmVotFund().getVotFundType())){
-								getManagedBean().getPmVoteFund().setVotFundCode(childData.getPmVotFund().getVotFundCode());
-								getManagedBean().getPmVoteFund().setVotFundId(childData.getPmVotFund().getVotFundId());
-							}else{
-								getManagedBean().setVotFundCode(childData.getPmVotFund().getVotFundCode());
-								getManagedBean().setVotFundId(childData.getPmVotFund().getVotFundId());
-							}
-						}
-						
-						if(childData.getAssetInd()!=null) {
-							getManagedBean().setAssetIndCode(childData.getAssetInd().getParameterCode());
-							getManagedBean().setAssetIndId(childData.getAssetInd().getParameterId());
-						}
-							
-						if(childData.getPmGlAccount()!=null) {
-							getManagedBean().setGosodo(childData.getPmGlAccount());
-						}
-						
-						if(childData.getPmPrgActivity()!=null) {
-							getManagedBean().setPmPrgActivity(childData.getPmPrgActivity());
-							getManagedBean().setProgramLov(true);
-						}
-						
-						if(childData.getPmSubSetia()!=null) {
-							getManagedBean().setPmSubSetia(childData.getPmSubSetia());
-							getManagedBean().setProjectLov(true);
-						}
-					}
-			}	 
-		}
-		/**
-		 * Select all checkboxes.
-		 * chargeLine Panel enable if  checkboxes selected
-		 */
-		public void selectAllCheckboxes(){
-			getManagedBean().setSelectChargeLineRow(false);
-			onNodeUnSelect();
-			getManagedBean().setProgramLov(false);
-			getManagedBean().setProjectLov(false);
-			boolean checkValue=isSelectAllCheckbox();
-			TreeNode root=getManagedBean().getChargeLineItemRoot();
-			for(TreeNode node:root.getChildren()){
-				FlFulfilmentItemAddr addr=(FlFulfilmentItemAddr) node.getData();
-				addr.setSelectedChargeItem(checkValue);
-			}
-			if(checkValue==true){
-				getManagedBean().setChargeLinePanel(true);
-				getManagedBean().setSelectChargeLineRow(true);
-			}else{
-				getManagedBean().setSelectChargeLineRow(false);
-				getManagedBean().setChargeLinePanel(false);
-			}
-		}
-		/**
-		 * Check vot fund lov.
-		 */
-		public void checkVotFundLov(BaseEntity entity){
-			getManagedBean().setProgramLov(false);
-			getManagedBean().setProjectLov(false);
-			getManagedBean().setVotFundDisplay(false);
-			getManagedBean().setVotFundCode("");
-			getManagedBean().setVotFundId(0L);
-			if(getManagedBean().getPmSubSetia()!=null) {
-				getManagedBean().getPmSubSetia().setSubSetiaCode("");
-				getManagedBean().getPmSubSetia().setSetiaCode("");
-				getManagedBean().getPmSubSetia().setProjectCode("");
-				getManagedBean().getPmSubSetia().setFinancingType(null);
-			}
-			getManagedBean().setPmPrgActivity(null);
-			
-			if(null != getManagedBean().getPmVoteFund()){
-				votFundCodeMap.put(getManagedBean().getPmVoteFund().getVotFundId(), getManagedBean().getPmVoteFund());
-			}
-		}
-		/**
-		 * Check vot fund dropdown.
-		 */
-		public void checkVotFundDropdown(){
-			getManagedBean().setProgramLov(false);
-			getManagedBean().setProjectLov(false);
-			getManagedBean().setVotFundDisplay(true);
-			
-			if(null != getManagedBean().getPmVoteFund()){
-				if(!"".equalsIgnoreCase(getManagedBean().getPmVoteFund().getVotFundCode())){
-					getManagedBean().getPmVoteFund().setVotFundCode("");
-					getManagedBean().getPmVoteFund().getVotFundCode();
-				}
-			}
-			PmVotFund pmVotFund = votFundCodeMap.get(getManagedBean().getVotFundId());
-			getManagedBean().setPmPrgActivity(null);
-			getManagedBean().setPmSubSetia(null);
+	public void selectCheckbox(AjaxBehaviorEvent e){
+		getManagedBean().setSelectChargeLineRow(false);
+		onNodeUnSelect();
+		getManagedBean().setProgramLov(false);
+		getManagedBean().setProjectLov(false);
 
-			if(pmVotFund!=null && !"".equalsIgnoreCase(pmVotFund.getVotFundType())){
-				if(VotFundType.BEKALAN.value().equalsIgnoreCase(pmVotFund.getVotFundType()) || VotFundType.TANGGUNGAN.value().equalsIgnoreCase(pmVotFund.getVotFundType())){
+		//Poulate chargeline data.
+		//Get the selected chargeline item.
+		updateSelectedTreeNodes();
+		TreeNode[] selectedNodes=getManagedBean().getSelectedNodes();
+		if(null!=selectedNodes && selectedNodes.length>0){
+			getManagedBean().setChargeLinePanel(true);
+			getManagedBean().setSelectChargeLineRow(true);
+		}else{
+			getManagedBean().setChargeLinePanel(false);
+			getManagedBean().setSelectChargeLineRow(false);
+		}
+
+		//If Selected node is one then display chargeline data.Otherwise clear chargeline Data.
+		//Because multiple nodes conflict chargeline data.
+		if(null!=selectedNodes && selectedNodes.length==1){
+			TreeNode selectedNode=selectedNodes[0];
+			//Populate Chargeline data....
+			for(TreeNode children:selectedNode.getChildren()){
+				FlFulfilmentItemAddr childData=((FlFulfilmentItemAddr)children.getData());
+				if(null !=childData.getPmVotFund()){
+					if(VotFundType.AMANAH.value().equalsIgnoreCase(childData.getPmVotFund().getVotFundType())){
+						getManagedBean().getPmVoteFund().setVotFundCode(childData.getPmVotFund().getVotFundCode());
+						getManagedBean().getPmVoteFund().setVotFundId(childData.getPmVotFund().getVotFundId());
+					}else{
+						getManagedBean().setVotFundCode(childData.getPmVotFund().getVotFundCode());
+						getManagedBean().setVotFundId(childData.getPmVotFund().getVotFundId());
+					}
+				}
+
+				if(childData.getAssetInd()!=null) {
+					getManagedBean().setAssetIndCode(childData.getAssetInd().getParameterCode());
+					getManagedBean().setAssetIndId(childData.getAssetInd().getParameterId());
+				}
+
+				if(childData.getPmGlAccount()!=null) {
+					getManagedBean().setGosodo(childData.getPmGlAccount());
+				}
+
+				if(childData.getPmPrgActivity()!=null) {
+					getManagedBean().setPmPrgActivity(childData.getPmPrgActivity());
 					getManagedBean().setProgramLov(true);
-				} else if(VotFundType.PEMBANGUNAN.value().equalsIgnoreCase(pmVotFund.getVotFundType()) || VotFundType.SETIA.value().equalsIgnoreCase(pmVotFund.getVotFundType())){
+				}
+
+				if(childData.getPmSubSetia()!=null) {
+					getManagedBean().setPmSubSetia(childData.getPmSubSetia());
 					getManagedBean().setProjectLov(true);
 				}
 			}
+		}	 
+	}
+	
+	/**
+	 * Select all checkboxes.
+	 * chargeLine Panel enable if  checkboxes selected
+	 */
+	public void selectAllCheckboxes(){
+		getManagedBean().setSelectChargeLineRow(false);
+		onNodeUnSelect();
+		getManagedBean().setProgramLov(false);
+		getManagedBean().setProjectLov(false);
+		boolean checkValue=isSelectAllCheckbox();
+		TreeNode root=getManagedBean().getChargeLineItemRoot();
+		for(TreeNode node:root.getChildren()){
+			FlFulfilmentItemAddr addr=(FlFulfilmentItemAddr) node.getData();
+			addr.setSelectedChargeItem(checkValue);
 		}
+		if(checkValue==true){
+			getManagedBean().setChargeLinePanel(true);
+			getManagedBean().setSelectChargeLineRow(true);
+		}else{
+			getManagedBean().setSelectChargeLineRow(false);
+			getManagedBean().setChargeLinePanel(false);
+		}
+	}
+	
+	/**
+	 * Check vot fund lov.
+	 */
+	public void checkVotFundLov(BaseEntity entity){
+		getManagedBean().setProgramLov(false);
+		getManagedBean().setProjectLov(false);
+		getManagedBean().setVotFundDisplay(false);
+		getManagedBean().setVotFundCode("");
+		getManagedBean().setVotFundId(0L);
+		if(getManagedBean().getPmSubSetia()!=null) {
+			getManagedBean().getPmSubSetia().setSubSetiaCode("");
+			getManagedBean().getPmSubSetia().setSetiaCode("");
+			getManagedBean().getPmSubSetia().setProjectCode("");
+			getManagedBean().getPmSubSetia().setFinancingType(null);
+		}
+		getManagedBean().setPmPrgActivity(null);
+
+		if(null != getManagedBean().getPmVoteFund()){
+			votFundCodeMap.put(getManagedBean().getPmVoteFund().getVotFundId(), getManagedBean().getPmVoteFund());
+		}
+	}
+	
+	/**
+	 * Check vot fund dropdown.
+	 */
+	public void checkVotFundDropdown(){
+		getManagedBean().setProgramLov(false);
+		getManagedBean().setProjectLov(false);
+		getManagedBean().setVotFundDisplay(true);
+
+		if(null != getManagedBean().getPmVoteFund()){
+			if(!"".equalsIgnoreCase(getManagedBean().getPmVoteFund().getVotFundCode())){
+				getManagedBean().getPmVoteFund().setVotFundCode("");
+				getManagedBean().getPmVoteFund().getVotFundCode();
+			}
+		}
+		PmVotFund pmVotFund = votFundCodeMap.get(getManagedBean().getVotFundId());
+		getManagedBean().setPmPrgActivity(null);
+		getManagedBean().setPmSubSetia(null);
+
+		if(pmVotFund!=null && !"".equalsIgnoreCase(pmVotFund.getVotFundType())){
+			if(VotFundType.BEKALAN.value().equalsIgnoreCase(pmVotFund.getVotFundType()) || VotFundType.TANGGUNGAN.value().equalsIgnoreCase(pmVotFund.getVotFundType())){
+				getManagedBean().setProgramLov(true);
+			} else if(VotFundType.PEMBANGUNAN.value().equalsIgnoreCase(pmVotFund.getVotFundType()) || VotFundType.SETIA.value().equalsIgnoreCase(pmVotFund.getVotFundType())){
+				getManagedBean().setProjectLov(true);
+			}
+		}
+	}
 	
 	/**
 	 * Page navigation to FLDoc search page in CR
 	 */
-		public String backToPervious() {
-			if(getManagedBean().getBackToDocument() !=null){
-				return getManagedBean().getBackToDocument();
-			}
-			else{
-				return "flDocSearch";
-			}
+	public String backToPervious() {
+		if(getManagedBean().getBackToDocument() !=null){
+			return getManagedBean().getBackToDocument();
 		}
-		
-		/**
-		 * get the Request Item Information based on RequestNoteItemId,SupplierId and PriceType.
-		 *
-		 * @param flItemAddr the fl item addr
-		 */
-		public void reqItemInfoList(FlFulfilmentItemAddr flItemAddr){
-			getManagedBean().setItemName(flItemAddr.getScRequestItem().getItemName());
-			flItemAddr.setPriceType(getManagedBean().getPmPriceType());
-			getManagedBean().setPriceType(flItemAddr.getPriceType());
-			getManagedBean().setStandardUnitPrice(flItemAddr.getUnitPrice().doubleValue());
-			getManagedBean().setStandardPrice(false);
-			getManagedBean().setZonalPrice(false);
-			getManagedBean().setZonalTierPrice(false);
-			getManagedBean().setTariffPrice(false);
-			getManagedBean().setServiceItem(false);
-			
-			IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractItemSO.class);
-			ContractItemReqDTO reqDTO = new ContractItemReqDTO();
-			ContractItemResDTO ciItemResDTO = null;
-			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
-			reqDTO.setItemId(flItemAddr.getScRequestItem().getRequestNoteItemId());
-			
-			if(ParameterConst.ITEM_TYPE_SERVICE.equals(flItemAddr.getItemType().getParameterCode())){
-				getManagedBean().setServiceItem(true);
-				if(flItemAddr.getScRequestItem().getTplSpecQuestion()!=null) {
-					getManagedBean().setUomFrequency(flItemAddr.getScRequestItem().getTplSpecQuestion().getClUomFrequency());
-					getManagedBean().setUomPerYear(flItemAddr.getScRequestItem().getTplSpecQuestion().getClUomPerYear());
-					getManagedBean().setUomPerMonth(flItemAddr.getScRequestItem().getTplSpecQuestion().getClUomPerMonth());
-					getManagedBean().setUomPerDay(flItemAddr.getScRequestItem().getTplSpecQuestion().getClUomPerDay());
-				}
-				if(ParameterConst.PRICE_TYPE_STANDARD.equals(flItemAddr.getPriceType().getParameterCode())){
-					ciItemResDTO = contractItemSO.getPricePerUom(reqDTO);
-					getManagedBean().setPricePerUom(ciItemResDTO.getItemPrice());
-				}
-				getManagedBean().setUomName(flItemAddr.getScRequestItem().getUom() != null ? flItemAddr.getScRequestItem().getUom().getUomName() : "");
+		else{
+			return "flDocSearch";
+		}
+	}
+
+	/**
+	 * get the Request Item Information based on RequestNoteItemId,SupplierId and PriceType.
+	 *
+	 * @param flItemAddr the fl item addr
+	 */
+	public void reqItemInfoList(FlFulfilmentItemAddr flItemAddr){
+		getManagedBean().setItemName(flItemAddr.getScRequestItem().getItemName());
+		flItemAddr.setPriceType(getManagedBean().getPmPriceType());
+		getManagedBean().setPriceType(flItemAddr.getPriceType());
+		getManagedBean().setStandardUnitPrice(flItemAddr.getUnitPrice().doubleValue());
+		getManagedBean().setStandardPrice(false);
+		getManagedBean().setZonalPrice(false);
+		getManagedBean().setZonalTierPrice(false);
+		getManagedBean().setTariffPrice(false);
+		getManagedBean().setServiceItem(false);
+
+		IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractItemSO.class);
+		ContractItemReqDTO reqDTO = new ContractItemReqDTO();
+		ContractItemResDTO ciItemResDTO = null;
+		reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
+		reqDTO.setItemId(flItemAddr.getScRequestItem().getRequestNoteItemId());
+
+		if(ParameterConst.ITEM_TYPE_SERVICE.equals(flItemAddr.getItemType().getParameterCode())){
+			getManagedBean().setServiceItem(true);
+			if(flItemAddr.getScRequestItem().getTplSpecQuestion()!=null) {
+				getManagedBean().setUomFrequency(flItemAddr.getScRequestItem().getTplSpecQuestion().getClUomFrequency());
+				getManagedBean().setUomPerYear(flItemAddr.getScRequestItem().getTplSpecQuestion().getClUomPerYear());
+				getManagedBean().setUomPerMonth(flItemAddr.getScRequestItem().getTplSpecQuestion().getClUomPerMonth());
+				getManagedBean().setUomPerDay(flItemAddr.getScRequestItem().getTplSpecQuestion().getClUomPerDay());
 			}
 			if(ParameterConst.PRICE_TYPE_STANDARD.equals(flItemAddr.getPriceType().getParameterCode())){
-				getManagedBean().setStandardPrice(true);
-			}else if(ParameterConst.PRICE_TYPE_ZONAL_STANDARD.equals(flItemAddr.getPriceType().getParameterCode())){
-				getManagedBean().setZonalPrice(true);
-			}else if(ParameterConst.PRICE_TYPE_ZONAL_TIER.equals(flItemAddr.getPriceType().getParameterCode()) || ParameterConst.PRICE_TYPE_ZONAL_TARIFF.equals(flItemAddr.getPriceType().getParameterCode())){
-				getManagedBean().setZonalTierPrice(true);
+				ciItemResDTO = contractItemSO.getPricePerUom(reqDTO);
+				getManagedBean().setPricePerUom(ciItemResDTO.getItemPrice());
 			}
-			if(ParameterConst.PRICE_TYPE_TARIFF.equals(flItemAddr.getPriceType().getParameterCode()) || ParameterConst.PRICE_TYPE_ZONAL_TARIFF.equals(flItemAddr.getPriceType().getParameterCode())) {
-				getManagedBean().setTariffPrice(true);
-			}
+			getManagedBean().setUomName(flItemAddr.getScRequestItem().getUom() != null ? flItemAddr.getScRequestItem().getUom().getUomName() : "");
+		}
+		if(ParameterConst.PRICE_TYPE_STANDARD.equals(flItemAddr.getPriceType().getParameterCode())){
+			getManagedBean().setStandardPrice(true);
+		}else if(ParameterConst.PRICE_TYPE_ZONAL_STANDARD.equals(flItemAddr.getPriceType().getParameterCode())){
+			getManagedBean().setZonalPrice(true);
+		}else if(ParameterConst.PRICE_TYPE_ZONAL_TIER.equals(flItemAddr.getPriceType().getParameterCode()) || ParameterConst.PRICE_TYPE_ZONAL_TARIFF.equals(flItemAddr.getPriceType().getParameterCode())){
+			getManagedBean().setZonalTierPrice(true);
+		}
+		if(ParameterConst.PRICE_TYPE_TARIFF.equals(flItemAddr.getPriceType().getParameterCode()) || ParameterConst.PRICE_TYPE_ZONAL_TARIFF.equals(flItemAddr.getPriceType().getParameterCode())) {
+			getManagedBean().setTariffPrice(true);
+		}
 
-			ciItemResDTO = contractItemSO.retrieveItemPriceAndZone(reqDTO);
-			getManagedBean().setReqItemInfoList(ciItemResDTO.getCtItemPriceList());
-			List<FLCtSupplierItemVO> supplierItems=new ArrayList<FLCtSupplierItemVO>();
-			if(ciItemResDTO.getCtItemPriceList() != null && ciItemResDTO.getCtItemPriceList().size() >0){
-				for (CtItemPrice contractItemPrice : ciItemResDTO.getCtItemPriceList() ) {
-					if(null != contractItemPrice.getCtContractZone()){
-						CtContractZone ctContractZone = contractItemPrice.getCtContractZone();
-						if(ctContractZone.getCtContractZoneDtls() != null && ctContractZone.getCtContractZoneDtls().size()>0){
-							FLCtSupplierItemVO itemPriceVO=new FLCtSupplierItemVO();
-							itemPriceVO.setSupplierItemPrice(contractItemPrice);
-							itemPriceVO.setItemZoneTree(LocationSingleton.getInstance().constuctContractTreeNode(ctContractZone));
-							supplierItems.add(itemPriceVO);
-						}
-					} else {
+		ciItemResDTO = contractItemSO.retrieveItemPriceAndZone(reqDTO);
+		getManagedBean().setReqItemInfoList(ciItemResDTO.getCtItemPriceList());
+		List<FLCtSupplierItemVO> supplierItems=new ArrayList<FLCtSupplierItemVO>();
+		if(ciItemResDTO.getCtItemPriceList() != null && ciItemResDTO.getCtItemPriceList().size() >0){
+			for (CtItemPrice contractItemPrice : ciItemResDTO.getCtItemPriceList() ) {
+				if(null != contractItemPrice.getCtContractZone()){
+					CtContractZone ctContractZone = contractItemPrice.getCtContractZone();
+					if(ctContractZone.getCtContractZoneDtls() != null && ctContractZone.getCtContractZoneDtls().size()>0){
 						FLCtSupplierItemVO itemPriceVO=new FLCtSupplierItemVO();
 						itemPriceVO.setSupplierItemPrice(contractItemPrice);
+						itemPriceVO.setItemZoneTree(LocationSingleton.getInstance().constuctContractTreeNode(ctContractZone));
 						supplierItems.add(itemPriceVO);
 					}
+				} else {
+					FLCtSupplierItemVO itemPriceVO=new FLCtSupplierItemVO();
+					itemPriceVO.setSupplierItemPrice(contractItemPrice);
+					supplierItems.add(itemPriceVO);
 				}
-				getManagedBean().setSupplierItemPriceList(supplierItems);
-			}	
-			
-		}
-		
-		private void sortAddressType(List<PmAddressType> addressTypeList) {
+			}
+			getManagedBean().setSupplierItemPriceList(supplierItems);
+		}	
+
+	}
+
+	private void sortAddressType(List<PmAddressType> addressTypeList) {
 		// Creating Comparator
-			if (null == addressTypeList || addressTypeList.isEmpty()) {
-				return;
-			}
-			Comparator<PmAddressType> comparator = new Comparator<PmAddressType>() {
-				@Override
-				public int compare(PmAddressType o1, PmAddressType o2) {
-					return new CompareToBuilder()
-				     .append(o1.getPmAddress().getAddress1(), o2.getPmAddress().getAddress1())
-				     .append(o1.getPmAddress().getAddress2(), o2.getPmAddress().getAddress2())
-				     .append(o1.getPmAddress().getAddress3(), o2.getPmAddress().getAddress3()).toComparison();
-				}
-			};
-			  Collections.sort(addressTypeList, comparator);
+		if (null == addressTypeList || addressTypeList.isEmpty()) {
+			return;
 		}
-		private void sortAddress(List<FlDeliveryAddress> flDelAddressList) {
-		//Creating Comparator
-			if(null==flDelAddressList || flDelAddressList.isEmpty()){
-				return;
+		Comparator<PmAddressType> comparator = new Comparator<PmAddressType>() {
+			@Override
+			public int compare(PmAddressType o1, PmAddressType o2) {
+				return new CompareToBuilder()
+				.append(o1.getPmAddress().getAddress1(), o2.getPmAddress().getAddress1())
+				.append(o1.getPmAddress().getAddress2(), o2.getPmAddress().getAddress2())
+				.append(o1.getPmAddress().getAddress3(), o2.getPmAddress().getAddress3()).toComparison();
 			}
-			Comparator<FlDeliveryAddress> comparator = new Comparator<FlDeliveryAddress>() {
-			    @Override
-			    public int compare(FlDeliveryAddress o1, FlDeliveryAddress o2) {
-			    return new CompareToBuilder()
+		};
+		Collections.sort(addressTypeList, comparator);
+	}
+	
+	private void sortAddress(List<FlDeliveryAddress> flDelAddressList) {
+		//Creating Comparator
+		if(null==flDelAddressList || flDelAddressList.isEmpty()){
+			return;
+		}
+		Comparator<FlDeliveryAddress> comparator = new Comparator<FlDeliveryAddress>() {
+			@Override
+			public int compare(FlDeliveryAddress o1, FlDeliveryAddress o2) {
+				return new CompareToBuilder()
 				.append(o1.getPmAddress().getAddress1(), o2.getPmAddress().getAddress1())
 				.append(o1.getPmAddress().getAddress2(), o2.getPmAddress().getAddress2())
 				.append(o1.getPmAddress().getAddress3(), o2.getPmAddress().getAddress3())
 				.toComparison();
-			    }
-			};
-			Collections.sort(flDelAddressList, comparator);
-	    }
-		// sorting Item for OrderSummary Tab
-		private void sortOrderSummaryList(List<FlDeliveryAddress> deliveryAddressList) {
-			//Creating Comparator
-			if(null==deliveryAddressList || deliveryAddressList.isEmpty()){
-				return;
 			}
-			for(FlDeliveryAddress flDeliveryAddress : deliveryAddressList) {
-				sortItems(flDeliveryAddress.getFlFulfilmentItemAddr());
-			}
-	    }
-		// sorting all the items showing in DelAddress and Item Tab
-		private void sortItems(List<FlFulfilmentItemAddr> flItemAddressList) {
-			//Creating Comparator
-			if(null==flItemAddressList || flItemAddressList.isEmpty()){
-				return;
-			}
-			  Comparator<FlFulfilmentItemAddr> comparator = new Comparator<FlFulfilmentItemAddr>() {
-		            @Override
-		            public int compare(FlFulfilmentItemAddr o1, FlFulfilmentItemAddr o2) {
-		            	String object1Code = o1.getScRequestItem().getCmItem()!=null?o1.getScRequestItem().getCmItem().getExtensionCode():o1.getScRequestItem().getTempUnspscCode();
-		            	String object2Code = o2.getScRequestItem().getCmItem()!=null?o2.getScRequestItem().getCmItem().getExtensionCode():o2.getScRequestItem().getTempUnspscCode();
-		                return new CompareToBuilder()
-			                .append(object1Code, object2Code)
-			                .toComparison();
-		            }
-		        };
-				Collections.sort(flItemAddressList, comparator);
-	    }
-		/**
-		 * Reset the search.
-		 */
-		public void searchReset(){
-			this.getManagedBean().setSearchItemType(null);
-			this.getManagedBean().setSearchItemCode(null);
-			this.getManagedBean().setSearchItemName(null);
-			getContractItemPagingDataModel().resetData();
+		};
+		Collections.sort(flDelAddressList, comparator);
+	}
+	// sorting Item for OrderSummary Tab
+	private void sortOrderSummaryList(List<FlDeliveryAddress> deliveryAddressList) {
+		//Creating Comparator
+		if(null==deliveryAddressList || deliveryAddressList.isEmpty()){
+			return;
 		}
-		
-		private IPagingDataModel<CtContractItem> contractItemPagingDataModel = new ContractItemPagingDataModel();
-		
-		 
-		private class ContractItemPagingDataModel extends PagingDataModel<CtContractItem> {
-			private static final long serialVersionUID = 1L;
-
-			public ContractItemPagingDataModel() {
-				super("itemListResultDt",false);
-			}
+		for(FlDeliveryAddress flDeliveryAddress : deliveryAddressList) {
+			sortItems(flDeliveryAddress.getFlFulfilmentItemAddr());
+		}
+	}
+	// sorting all the items showing in DelAddress and Item Tab
+	private void sortItems(List<FlFulfilmentItemAddr> flItemAddressList) {
+		//Creating Comparator
+		if(null==flItemAddressList || flItemAddressList.isEmpty()){
+			return;
+		}
+		Comparator<FlFulfilmentItemAddr> comparator = new Comparator<FlFulfilmentItemAddr>() {
 			@Override
-			public ISearchResultBean<CtContractItem> pageChangeListener(ISearchBean<CtContractItem> searchBean) {
-				IContractItemSO contractItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
-				ContractItemResDTO resDTO = new ContractItemResDTO();
-				ContractItemReqDTO reqDTO = new ContractItemReqDTO();
-				
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctContractVer.contractVerId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId()));
-				if(getManagedBean().getSearchItemCode() != null && getManagedBean().getSearchItemCode() != ""){
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("scRequestItem.cmItem.extensionCode",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchItemCode(),true));
-				}
-				if(getManagedBean().getSearchItemName() != null && getManagedBean().getSearchItemName() != ""){
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("scRequestItem.itemName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchItemName(),true));
-				}
-				if(getManagedBean().getSearchItemType() != null){
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("itemType.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchItemType()));
-				}
-
-				reqDTO.setContractItemSearchBean(searchBean);
-				resDTO = contractItemSO.searchContractItem(reqDTO);
-
-				return resDTO.getContractItemResultBean();
-
+			public int compare(FlFulfilmentItemAddr o1, FlFulfilmentItemAddr o2) {
+				String object1Code = o1.getScRequestItem().getCmItem()!=null?o1.getScRequestItem().getCmItem().getExtensionCode():o1.getScRequestItem().getTempUnspscCode();
+				String object2Code = o2.getScRequestItem().getCmItem()!=null?o2.getScRequestItem().getCmItem().getExtensionCode():o2.getScRequestItem().getTempUnspscCode();
+				return new CompareToBuilder()
+				.append(object1Code, object2Code)
+				.toComparison();
 			}
-			
-		}
-		/**
-		 * @return the contractItemPagingDataModel
-		 */
-		public IPagingDataModel<CtContractItem> getContractItemPagingDataModel() {
-			return contractItemPagingDataModel;
-		}
-		/**
-		 * Search contract item list from paging item data model.
-		 */
-		public void searchContractItemList(){
+		};
+		Collections.sort(flItemAddressList, comparator);
+	}
+	
+	/**
+	 * Reset the search.
+	 */
+	public void searchReset(){
+		this.getManagedBean().setSearchItemType(null);
+		this.getManagedBean().setSearchItemCode(null);
+		this.getManagedBean().setSearchItemName(null);
+		getContractItemPagingDataModel().resetData();
+	}
 
-			if((getManagedBean().getSearchItemCode() == null || getManagedBean().getSearchItemCode().isEmpty()) && 
-					(getManagedBean().getSearchItemName() == null || getManagedBean().getSearchItemName().isEmpty()) && 
-					(getManagedBean().getSearchItemType() == null)){
-				throw new EpException(MessageConst.ERROR_100060);
-			}else{
-				getContractItemPagingDataModel().reloadData();
+	private IPagingDataModel<CtContractItem> contractItemPagingDataModel = new ContractItemPagingDataModel();
+
+	private class ContractItemPagingDataModel extends PagingDataModel<CtContractItem> {
+		private static final long serialVersionUID = 1L;
+
+		public ContractItemPagingDataModel() {
+			super("itemListResultDt",false);
+		}
+		@Override
+		public ISearchResultBean<CtContractItem> pageChangeListener(ISearchBean<CtContractItem> searchBean) {
+			IContractItemSO contractItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
+			ContractItemResDTO resDTO = new ContractItemResDTO();
+			ContractItemReqDTO reqDTO = new ContractItemReqDTO();
+
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("ctContractVer.contractVerId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId()));
+			if(getManagedBean().getSearchItemCode() != null && getManagedBean().getSearchItemCode() != ""){
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("scRequestItem.cmItem.extensionCode",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchItemCode(),true));
 			}
-		}
-		/**
-		 * Get item type values from pmParameter
-		 * @return list of dropdown item values.
-		 */
-		public SelectItem[] getItemTypeValues(){
-			ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-			String recommend = ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE;
+			if(getManagedBean().getSearchItemName() != null && getManagedBean().getSearchItemName() != ""){
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("scRequestItem.itemName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchItemName(),true));
+			}
+			if(getManagedBean().getSearchItemType() != null){
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("itemType.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchItemType()));
+			}
 
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmParameter.parameterCode",
-							SearchOperator.OPERATOR_NOT_EQUALS.value(), recommend));
+			reqDTO.setContractItemSearchBean(searchBean);
+			resDTO = contractItemSO.searchContractItem(reqDTO);
 
-			SelectItem[] items = getDropdownCodeValuesBySearchBean(ParameterTypeConst.SC_ITEM_TYPE, searchBean);
-			return items;
+			return resDTO.getContractItemResultBean();
+
 		}
+
+	}
+	
+	/**
+	 * @return the contractItemPagingDataModel
+	 */
+	public IPagingDataModel<CtContractItem> getContractItemPagingDataModel() {
+		return contractItemPagingDataModel;
+	}
+	
+	/**
+	 * Search contract item list from paging item data model.
+	 */
+	public void searchContractItemList(){
+		getManagedBean().setItemAutoUpdate(true);
+		if((getManagedBean().getSearchItemCode() == null || getManagedBean().getSearchItemCode().isEmpty()) && 
+				(getManagedBean().getSearchItemName() == null || getManagedBean().getSearchItemName().isEmpty()) && 
+				(getManagedBean().getSearchItemType() == null)){
+			throw new EpException(MessageConst.ERROR_100060);
+		}else{
+			getContractItemPagingDataModel().reloadData();
+		}
+	}
+	
+	/**
+	 * Get item type values from pmParameter
+	 * @return list of dropdown item values.
+	 */
+	public SelectItem[] getItemTypeValues(){
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		String recommend = ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE;
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_NOT_EQUALS.value(), recommend));
+
+		SelectItem[] items = getDropdownCodeValuesBySearchBean(ParameterTypeConst.SC_ITEM_TYPE, searchBean);
+		return items;
+	}
 			
 	private void setFulfilmentItemAddr(FlFulfilmentRequest flRequest) {
 		if(getManagedBean().getItemAddrList()==null) {
@@ -3650,6 +3689,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 		}
 	}
+
 	/**
 	 * Not remove address row.
 	 */
@@ -3663,6 +3703,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 		}
 	}
+	
 	private void resetSelectedTreeNodes() {
 		TreeNode root=getManagedBean().getChargeLineItemRoot();
 		for(TreeNode node:root.getChildren()){
@@ -3715,6 +3756,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			
 		}
 	}
+	
 	/**
 	 * Get selected factoring company details from profile management service object
 	 * @param financialOrgId
@@ -3747,6 +3789,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 		}
 	}
+	
 	/**
 	 * Gpki sign action.
 	 *
@@ -3791,6 +3834,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setValidated(Boolean.TRUE);
 		return submitAction(getManagedBean().getButtonAction());
 	}
+	
 	/**
 	 * Enable auto update.
 	 */
@@ -3798,6 +3842,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		RequestContext.getCurrentInstance().update("@form");
 	}
+	
 	/**
 	 * Get preparef PTJ condition for construct the LOV listing
 	 * @return String
@@ -4111,12 +4156,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			IPagingDataModel<PmUom> unitOfMeasurementDataModel) {
 		this.unitOfMeasurementDataModel = unitOfMeasurementDataModel;
 	}	
+	
 	/**
 	 * Retrieve measurement.
 	 */
 	public void retrieveMeasurement(){		
 		unitOfMeasurementDataModel.reloadData();		
 	}
+	
 	/**
 	 * Reset measurement search.
 	 */
@@ -4140,6 +4187,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	public void setSelectAllCheckbox(boolean selectAllCheckbox) {
 		this.selectAllCheckbox = selectAllCheckbox;
 	}
+	
 	/**
 	 * Gets the item max quantity.
 	 *
@@ -4157,6 +4205,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}	
 		return maxQuantity;
 	}
+	
 	/**
 	 * Navigate to contract view page.
 	 * @param docId
@@ -4168,6 +4217,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		ctDetBB.getManagedBean().setGotoPreviewPage(fc.getViewRoot().getViewId());
 		return ctDetBB.gotoCommonViewPage(docId);
 	}
+	
 	/**
 	 * back to document
 	 * @return String backToDocument
@@ -4184,6 +4234,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	public String getDeliveryAddressType() {
 		return AddressType.DELIVERY_ADDRESS.value();
 	}
+	
 	/**
 	 * Show 1GFMAS error
 	 *
@@ -4194,6 +4245,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null,getManagedBean().getGfmasErrorContent()));
 	}
 	
+	/**
+	 * Compare PTJ group
+	 * if PTJ group is not equals to current PTJ group , FulfilmenItemAddress chargeline will be reset
+	 */
 	public void comparePtjGroup(BaseEntity entity){
 		IOrgProfileSO profileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
@@ -4221,6 +4276,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().setCurrentChargePtjGroup(resDTO.getPmOrgProfile());
 		}
 	}
+	
 	private BigDecimal calculatesTotalOrderedAmt(){
 		BigDecimal totalAmt = new BigDecimal(0);
 		for(FlDeliveryAddress  deliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
@@ -4230,6 +4286,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 		return totalAmt;
 	}
+	
 	private void getApproverList(){
 		if(getManagedBean().getFlRequest().getPmUserGroup()==null || getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId()==null) {
 			getManagedBean().getApproverList().clear();
@@ -4272,14 +4329,23 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		flRequest.setGstRate(gstRate);
 	}	
 	
+	/**
+	 * set false item row select check box
+	 */
 	public void itemRowSelectCheckbox(AjaxBehaviorEvent e){
 		getManagedBean().setItemDeleteButtonShow(false);
 	}
 	
+	/**
+	 * set true item row select check box
+	 */
 	public void itemRowUnselectCheckbox(AjaxBehaviorEvent e){
 		getManagedBean().setItemDeleteButtonShow(true);
 	}
 	
+	/**
+	 * set item delete button show to true or false
+	 */
 	public void itemToggleSelect(AjaxBehaviorEvent e){
 		if(null !=getManagedBean().getShowItemAddrList() && getManagedBean().getShowItemAddrList().size()>0){
 			if(null !=getManagedBean().getSelectedItemsRows() && getManagedBean().getSelectedItemsRows().size()>0){
@@ -4293,6 +4359,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 	}
 	
+	/**
+	 * if is purchase in default or contract fulfilment type is one off then item add button is true else false.
+	 */
 	public void hideItemAddButtons(){
 		if(getManagedBean().getFlRequest().getScPurchaseInDefault() == null){
 			getManagedBean().setItemAddButtonShow(true);

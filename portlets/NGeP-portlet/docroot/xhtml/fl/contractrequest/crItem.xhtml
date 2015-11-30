@@ -269,7 +269,7 @@
 				<p:commandButton id="addItems" value="#{lbl['lbl.btn.add']}" 
 					action="#{contractRequestBackingBean.addContractedItems}"
 					rendered="#{contractRequestBackingBean.managedBean.itemAddButtonShow and contractRequestBackingBean.managedBean.buttonVal!='View'}"
-					process="@this" update="resultPanel,searchPanel"
+					process="@this" update="resultPanel,searchPanel,messages,messages2"
 					oncomplete="addItems.show();" />
 				<p:commandButton value="#{lbl['lbl.fl.btn.delete']}" id="deleteItemBtn"
 					rendered="#{contractRequestBackingBean.managedBean.itemAddButtonShow and contractRequestBackingBean.managedBean.buttonVal!='View'}"
@@ -665,7 +665,7 @@
 	<p:dialog id="addContractedItemDialog" header="#{lbl['lbl.fl.item.list']}" 
 		widgetVar="addItems" showEffect="fade" hideEffect="fade" modal="true"
 		width="600" resizable="false">
-		<p:messages id="messages2" showSummary="false" showDetail="true" autoUpdate="false" closable="true" severity="error,info,warn" />
+		<p:messages id="messages2" showSummary="false" showDetail="true" autoUpdate="#{contractRequestBackingBean.managedBean.itemAutoUpdate}" closable="true" severity="error,info,warn"  />
 		<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.search.criteria']}" escape="false"/>
 			<table>
