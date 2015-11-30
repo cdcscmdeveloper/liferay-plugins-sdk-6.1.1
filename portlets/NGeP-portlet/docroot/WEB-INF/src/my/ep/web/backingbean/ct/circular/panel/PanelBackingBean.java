@@ -1801,7 +1801,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public void updateZoneGeneralLocation() {
 		
 		if(getManagedBean().getZoneName() == null || getManagedBean().getZoneName() == ""){
-			throw new EpException(MessageConst.WARN_755002);
+			throw new EpException(MessageConst.ERROR_755002);
 		}
 		
 		List<CtPanelZoneDtl> allNodes = new ArrayList<CtPanelZoneDtl>();
@@ -1819,7 +1819,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				if(!getManagedBean().getSelectedPanelItems().getCtPanelZones().get(getManagedBean().getIndex()).getName().equalsIgnoreCase(getManagedBean().getZoneName())){
 					for(CtPanelZone panelZone : getManagedBean().getSelectedPanelItems().getCtPanelZones()){
 						   if(panelZone.getName().equalsIgnoreCase(getManagedBean().getZoneName())){
-							   throw new EpException(MessageConst.WARN_755001);
+							   throw new EpException(MessageConst.ERROR_755001);
 						   }
 				      }
 				}	
@@ -1832,7 +1832,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				
 		          for(CtPanelZone panelZone : getManagedBean().getSelectedPanelItems().getCtPanelZones()){
 					   if(panelZone.getName().equalsIgnoreCase(getManagedBean().getZoneName())){
-						   throw new EpException(MessageConst.WARN_755001);
+						   throw new EpException(MessageConst.ERROR_755001);
 					   }
 				   }
 			
