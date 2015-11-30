@@ -3795,6 +3795,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		initiateRemark(ctBackingBean.getManagedBean().getContractVer().getAp201Remark());
 		initiateRemark(ctBackingBean.getManagedBean().getContractVer().getSupplierRemarks());
 		initiateRemark(ctBackingBean.getManagedBean().getContractVer().getAgencyRemarks());
+		initiateRemark(ctBackingBean.getManagedBean().getContractVer().getZoneRemarks());
 		initiateRemark(ctBackingBean.getManagedBean().getContractVer().getItemRemarks());
 		initiateRemark(ctBackingBean.getManagedBean().getContractVer().getDeductionRemarks());
 		initiateRemark(ctBackingBean.getManagedBean().getContractVer().getScheduleRemarks());
