@@ -1076,7 +1076,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the payment method list.
 	 * 
-	 * @return the payment method list
+	 * @return the paymentMethodList
 	 */
 	public List<String> getPaymentMethodList() {
 		return paymentMethodList;
@@ -1095,7 +1095,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the payment type list.
 	 * 
-	 * @return the payment type list
+	 * @return the paymentTypeList
 	 */
 	public List<SelectItem> getPaymentTypeList() {
 		return paymentTypeList;
@@ -1114,7 +1114,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the service type list.
 	 * 
-	 * @return the service type list
+	 * @return the serviceTypeList
 	 */
 	public List<SelectItem> getServiceTypeList() {
 		return serviceTypeList;
@@ -1133,7 +1133,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the report category.
 	 * 
-	 * @return the report category
+	 * @return the reportCategory
 	 */
 	public String getReportCategory() {
 		return reportCategory;
@@ -1152,7 +1152,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the processing officer list.
 	 * 
-	 * @return the processing officer list
+	 * @return the processingOfficerList
 	 */
 	public List<SelectItem> getProcessingOfficerList() {
 		return processingOfficerList;
@@ -1171,7 +1171,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the zone list.
 	 * 
-	 * @return the zone list
+	 * @return the zoneList
 	 */
 	public List<SelectItem> getZoneList() {
 		return zoneList;
@@ -1190,7 +1190,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the report category list.
 	 * 
-	 * @return the report category list
+	 * @return the reportCategoryList
 	 */
 	public List<SelectItem> getReportCategoryList() {
 		return reportCategoryList;
@@ -1209,7 +1209,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the param table role code list.
 	 * 
-	 * @return the param table role code list
+	 * @return the paramTableRoleCodeList
 	 */
 	public List<String> getParamTableRoleCodeList() {
 		return paramTableRoleCodeList;
@@ -1228,7 +1228,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the identification type list.
 	 * 
-	 * @return the identification type list
+	 * @return the identificationTypeList
 	 */
 	public List<SelectItem> getIdentificationTypeList() {
 		return identificationTypeList;
@@ -1248,7 +1248,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the accumulated paid up cptl list.
 	 * 
-	 * @return the accumulated paid up cptl list
+	 * @return the accumulatedPaidUpCptlList
 	 */
 	public List<SelectItem> getAccumulatedPaidUpCptlList() {
 		return accumulatedPaidUpCptlList;
@@ -1268,7 +1268,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm state list.
 	 * 
-	 * @return the sm state list
+	 * @return the smStateList
 	 */
 	public List<SelectItem> getSmStateList() {
 		return smStateList;
@@ -1287,7 +1287,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ministry id.
 	 * 
-	 * @return the ministry id
+	 * @return the ministryId
 	 */
 	public Long getMinistryId() {
 		return ministryId;
@@ -1306,7 +1306,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the pm ministry list.
 	 * 
-	 * @return the pm ministry list
+	 * @return the pmMinistryList
 	 */
 	public List<SelectItem> getPmMinistryList() {
 		return pmMinistryList;
@@ -1325,7 +1325,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the pm ptj list.
 	 * 
-	 * @return the pm ptj list
+	 * @return the pmPtjList
 	 */
 	public List<String> getPmPtjList() {
 		return pmPtjList;
@@ -1344,7 +1344,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the doc type status items list.
 	 * 
-	 * @return the doc type status items list
+	 * @return the docTypeStatusItemsList
 	 */
 	public List<SelectItem> getDocTypeStatusItemsList() {
 		return docTypeStatusItemsList;
@@ -1364,7 +1364,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the doc type status items.
 	 * 
-	 * @return the doc type status items
+	 * @return the docTypeStatusItems
 	 */
 	public SelectItem[] getDocTypeStatusItems() {
 		return docTypeStatusItems;
@@ -1383,7 +1383,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the rolecode rquisitioner list.
 	 * 
-	 * @return the rolecode rquisitioner list
+	 * @return the rolecodeRquisitionerList
 	 */
 	public List<SelectItem> getRolecodeRquisitionerList() {
 		return rolecodeRquisitionerList;
@@ -1403,7 +1403,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the rolecode approver list.
 	 * 
-	 * @return the rolecode approver list
+	 * @return the rolecodeApproverList
 	 */
 	public List<SelectItem> getRolecodeApproverList() {
 		return rolecodeApproverList;
@@ -1422,7 +1422,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the rolecode recieving officer list.
 	 * 
-	 * @return the rolecode recieving officer list
+	 * @return the rolecodeRecievingOfficerList
 	 */
 	public List<SelectItem> getRolecodeRecievingOfficerList() {
 		return rolecodeRecievingOfficerList;
@@ -1442,7 +1442,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the high role code list.
 	 * 
-	 * @return the high role code list
+	 * @return the highRoleCodeList
 	 */
 	public List<String> getHighRoleCodeList() {
 		return highRoleCodeList;
@@ -1461,7 +1461,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the all role codes list.
 	 * 
-	 * @return the all role codes list
+	 * @return the allRoleCodesList
 	 */
 	public List<String> getAllRoleCodesList() {
 		return allRoleCodesList;
@@ -1480,7 +1480,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the param list.
 	 * 
-	 * @return the param list
+	 * @return the paramList
 	 */
 	public List<String> getParamList() {
 		return paramList;
@@ -1499,7 +1499,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ct sub type list.
 	 * 
-	 * @return the ct sub type list
+	 * @return the ctSubTypeList
 	 */
 	public List<SelectItem> getCtSubTypeList() {
 		return ctSubTypeList;
@@ -1518,7 +1518,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm upssvo user list.
 	 * 
-	 * @return the sm upssvo user list
+	 * @return the smUPSSVOUserList
 	 */
 	public List<SelectItem> getSmUPSSVOUserList() {
 		return smUPSSVOUserList;
@@ -1537,7 +1537,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc desc officer list.
 	 * 
-	 * @return the sc desc officer list
+	 * @return the scDescOfficerList
 	 */
 	public List<SelectItem> getScDescOfficerList() {
 		return scDescOfficerList;
@@ -1556,7 +1556,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc ptj list.
 	 * 
-	 * @return the sc ptj list
+	 * @return the scPtjList
 	 */
 	public List<SelectItem> getScPtjList() {
 		return scPtjList;
@@ -1575,7 +1575,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc requisitioner list.
 	 * 
-	 * @return the sc requisitioner list
+	 * @return the scRequisitionerList
 	 */
 	public List<SelectItem> getScRequisitionerList() {
 		return scRequisitionerList;
@@ -1594,7 +1594,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the approver nayak taraf list.
 	 * 
-	 * @return the approver nayak taraf list
+	 * @return the approverNayakTarafList
 	 */
 	public List<SelectItem> getApproverNayakTarafList() {
 		return approverNayakTarafList;
@@ -1614,7 +1614,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the role code list.
 	 * 
-	 * @return the role code list
+	 * @return the roleCodeList
 	 */
 	public List<String> getRoleCodeList() {
 		return roleCodeList;
@@ -1633,7 +1633,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the suppl company list.
 	 * 
-	 * @return the suppl company list
+	 * @return the supplCompanyList
 	 */
 	public List<String> getSupplCompanyList() {
 		return supplCompanyList;
@@ -1671,7 +1671,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the supplier child cat list.
 	 * 
-	 * @return the supplier child cat list
+	 * @return the supplierChildCatList
 	 */
 	public List<PmCategoryL2> getSupplierChildCatList() {
 		return supplierChildCatList;
@@ -1690,7 +1690,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the supplier sub child cat list.
 	 * 
-	 * @return the supplier sub child cat list
+	 * @return the supplierSubChildCatList
 	 */
 	public List<PmCategoryL3> getSupplierSubChildCatList() {
 		return supplierSubChildCatList;
@@ -1710,7 +1710,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the supplier parent cat list.
 	 * 
-	 * @return the supplier parent cat list
+	 * @return the supplierParentCatList
 	 */
 	public List<PmCategoryL1> getSupplierParentCatList() {
 		return supplierParentCatList;
@@ -1768,7 +1768,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the selected cat list.
 	 * 
-	 * @return the selected cat list
+	 * @return the selectedCatList
 	 */
 	public List<SmSupplierCategory> getSelectedCatList() {
 		return selectedCatList;
@@ -1787,7 +1787,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the registration status list.
 	 * 
-	 * @return the registration status list
+	 * @return the registrationStatusList
 	 */
 	public List<SelectItem> getRegistrationStatusList() {
 		return registrationStatusList;
@@ -1845,7 +1845,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the brand list.
 	 * 
-	 * @return the brand list
+	 * @return the brandList
 	 */
 	public List<SelectItem> getBrandList() {
 		return brandList;
@@ -1864,7 +1864,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ext type list.
 	 * 
-	 * @return the ext type list
+	 * @return the extTypeList
 	 */
 	public List<SelectItem> getExtTypeList() {
 		return extTypeList;
@@ -1883,7 +1883,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the measurment list.
 	 * 
-	 * @return the measurment list
+	 * @return the measurmentList
 	 */
 	public List<SelectItem> getMeasurmentList() {
 		return measurmentList;
@@ -1902,7 +1902,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the color list.
 	 * 
-	 * @return the color list
+	 * @return the colorList
 	 */
 	public List<SelectItem> getColorList() {
 		return colorList;
@@ -1940,7 +1940,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the unspc list.
 	 * 
-	 * @return the unspc list
+	 * @return the unspcList
 	 */
 	public List<SelectItem> getUnspcList() {
 		return unspcList;
@@ -1959,7 +1959,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the report value.
 	 * 
-	 * @return the report value
+	 * @return the reportValue
 	 */
 	public String getReportValue() {
 		return reportValue;
@@ -1978,7 +1978,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the report name.
 	 * 
-	 * @return the report name
+	 * @return the reportName
 	 */
 	public String getReportName() {
 		return reportName;
@@ -1997,7 +1997,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the module value.
 	 * 
-	 * @return the module value
+	 * @return themoduleValue
 	 */
 	public String getModuleValue() {
 		return moduleValue;
@@ -2016,7 +2016,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ct report backing bean.
 	 * 
-	 * @return the ct report backing bean
+	 * @return the ctReportBackingBean
 	 */
 	public CTReportBackingBean getCtReportBackingBean() {
 		return ctReportBackingBean;
@@ -2035,7 +2035,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc report backing bean.
 	 * 
-	 * @return the sc report backing bean
+	 * @return the scReportBackingBean
 	 */
 	public SCReportBackingBean getScReportBackingBean() {
 		return scReportBackingBean;
@@ -2054,7 +2054,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the cm report backing bean.
 	 * 
-	 * @return the cm report backing bean
+	 * @return the cmReportBackingBean
 	 */
 	public CMReportBackingBean getCmReportBackingBean() {
 		return cmReportBackingBean;
@@ -2073,7 +2073,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl report backing bean.
 	 * 
-	 * @return the fl report backing bean
+	 * @return the flReportBackingBean
 	 */
 	public FLReportBackingBean getFlReportBackingBean() {
 		return flReportBackingBean;
@@ -2092,7 +2092,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm report backing bean.
 	 * 
-	 * @return the sm report backing bean
+	 * @return the smReportBackingBean
 	 */
 	public SMReportBackingBean getSmReportBackingBean() {
 		return smReportBackingBean;
@@ -2111,7 +2111,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the pm report backing bean.
 	 * 
-	 * @return the pm report backing bean
+	 * @return the pmReportBackingBean
 	 */
 	public PMReportBackingBean getPmReportBackingBean() {
 		return pmReportBackingBean;
@@ -2130,7 +2130,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the pp report backing bean.
 	 * 
-	 * @return the pp report backing bean
+	 * @return the ppReportBackingBean
 	 */
 	public PPReportBackingBean getPpReportBackingBean() {
 		return ppReportBackingBean;
@@ -2149,7 +2149,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the org profile id name list.
 	 * 
-	 * @return the org profile id name list
+	 * @return the orgProfileIdNameList
 	 */
 	public List<SelectItem> getOrgProfileIdNameList() {
 		return orgProfileIdNameList;
@@ -2168,7 +2168,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc month list.
 	 * 
-	 * @return the sc month list
+	 * @return the scMonthList
 	 */
 	public List<SelectItem> getScMonthList() {
 		return scMonthList;
@@ -2187,7 +2187,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sc year list.
 	 * 
-	 * @return the sc year list
+	 * @return the scYearList
 	 */
 	public List<String> getScYearList() {
 		return scYearList;
@@ -2206,7 +2206,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the user listbyprofile role.
 	 * 
-	 * @return the user listbyprofile role
+	 * @return the userListbyprofileRole
 	 */
 	public List<SelectItem> getUserListbyprofileRole() {
 		return userListbyprofileRole;
@@ -2225,7 +2225,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the org profile list.
 	 * 
-	 * @return the org profile list
+	 * @return the orgProfileList
 	 */
 	public List<String> getOrgProfileList() {
 		return orgProfileList;
@@ -2244,7 +2244,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the loan list.
 	 * 
-	 * @return the loan list
+	 * @return the loanList
 	 */
 	public List<String> getLoanList() {
 		return loanList;
@@ -2263,7 +2263,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the requisitioner list.
 	 * 
-	 * @return the requisitioner list
+	 * @return the requisitionerList
 	 */
 	public List<SelectItem> getRequisitionerList() {
 		return requisitionerList;
@@ -2282,7 +2282,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the status list.
 	 * 
-	 * @return the status list
+	 * @return the statusList
 	 */
 	public List<SelectItem> getStatusList() {
 		return statusList;
@@ -2301,7 +2301,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the parameter code type.
 	 * 
-	 * @return the parameter code type
+	 * @return the parameterCodeType
 	 */
 	public String getParameterCodeType() {
 		return parameterCodeType;
@@ -2320,7 +2320,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ministry list.
 	 * 
-	 * @return the ministry list
+	 * @return the ministryList
 	 */
 	public List<SelectItem> getMinistryList() {
 		return ministryList;
@@ -2339,7 +2339,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ptj list.
 	 * 
-	 * @return the ptj list
+	 * @return the ptjList
 	 */
 	public List<SelectItem> getPtjList() {
 		return ptjList;
@@ -2383,7 +2383,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the adding district list.
 	 * 
-	 * @return the adding district list
+	 * @return the addingDistrictList
 	 */
 	public List<String> getAddingDistrictList() {
 		return addingDistrictList;
@@ -2402,7 +2402,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the cm request number.
 	 * 
-	 * @return the cm request number
+	 * @return the cmRequestNumber
 	 */
 	public String getCmRequestNumber() {
 		return cmRequestNumber;
@@ -2421,7 +2421,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ct supplier name.
 	 * 
-	 * @return the ct supplier name
+	 * @return the ctSupplierName
 	 */
 	public String getCtSupplierName() {
 		return ctSupplierName;
@@ -2440,7 +2440,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ct circular effective from date.
 	 * 
-	 * @return the ct circular effective from date
+	 * @return the ctCircularEffectiveFromDate
 	 */
 	public Date getCtCircularEffectiveFromDate() {
 		return ctCircularEffectiveFromDate;
@@ -2459,7 +2459,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ct circular effective to date.
 	 * 
-	 * @return the ct circular effective to date
+	 * @return the ctCircularEffectiveToDate
 	 */
 	public Date getCtCircularEffectiveToDate() {
 		return ctCircularEffectiveToDate;
@@ -2478,7 +2478,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ct circular no.
 	 * 
-	 * @return the ct circular no
+	 * @return the ctCircularNo
 	 */
 	public String getCtCircularNo() {
 		return ctCircularNo;
@@ -2497,7 +2497,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ct circular name.
 	 * 
-	 * @return the ct circular name
+	 * @return the ctCircularName
 	 */
 	public String getCtCircularName() {
 		return ctCircularName;
@@ -2516,7 +2516,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ct circular type.
 	 * 
-	 * @return the ct circular type
+	 * @return the ctCircularType
 	 */
 	public String getCtCircularType() {
 		return ctCircularType;
@@ -2535,7 +2535,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ct termination type.
 	 * 
-	 * @return the ct termination type
+	 * @return the ctTerminationType
 	 */
 	public String getCtTerminationType() {
 		return ctTerminationType;
@@ -2554,7 +2554,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm payment to.
 	 * 
-	 * @return the sm payment to
+	 * @return the smPaymentTo
 	 */
 	public String getSmPaymentTo() {
 		return smPaymentTo;
@@ -2573,7 +2573,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the str language.
 	 * 
-	 * @return the str language
+	 * @return the strLanguage
 	 */
 	public String getStrLanguage() {
 		return strLanguage;
@@ -2592,7 +2592,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the pm status.
 	 * 
-	 * @return the pm status
+	 * @return the pmStatus
 	 */
 	public String getPmStatus() {
 		return pmStatus;
@@ -2611,7 +2611,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the pm financial org name.
 	 * 
-	 * @return the pm financial org name
+	 * @return the pmFinancialOrgName
 	 */
 	public String getPmFinancialOrgName() {
 		return pmFinancialOrgName;
@@ -2630,7 +2630,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the pm business reg no.
 	 * 
-	 * @return the pm business reg no
+	 * @return the pmBusinessRegNo
 	 */
 	public String getPmBusinessRegNo() {
 		return pmBusinessRegNo;
@@ -2649,7 +2649,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the pm service type.
 	 * 
-	 * @return the pm service type
+	 * @return the pmServiceType
 	 */
 	public String getPmServiceType() {
 		return pmServiceType;
@@ -2668,7 +2668,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl payment advice no.
 	 * 
-	 * @return the fl payment advice no
+	 * @return the flPaymentAdviceNo
 	 */
 	public String getFlPaymentAdviceNo() {
 		return flPaymentAdviceNo;
@@ -2687,7 +2687,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl supplier delivery order no.
 	 * 
-	 * @return the fl supplier delivery order no
+	 * @return the flSupplierDeliveryOrderNo
 	 */
 	public String getFlSupplierDeliveryOrderNo() {
 		return flSupplierDeliveryOrderNo;
@@ -2706,7 +2706,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm gst registration no.
 	 * 
-	 * @return the sm gst registration no
+	 * @return the smGSTRegistrationNo
 	 */
 	public String getSmGSTRegistrationNo() {
 		return smGSTRegistrationNo;
@@ -2725,7 +2725,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm gst registered status.
 	 * 
-	 * @return the sm gst registered status
+	 * @return the smGSTRegisteredStatus
 	 */
 	public String getSmGSTRegisteredStatus() {
 		return smGSTRegisteredStatus;
@@ -2744,7 +2744,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm profile status.
 	 * 
-	 * @return the sm profile status
+	 * @return the smProfileStatus
 	 */
 	public String getSmProfileStatus() {
 		return smProfileStatus;
@@ -2763,7 +2763,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl supplier invoice no.
 	 * 
-	 * @return the fl supplier invoice no
+	 * @return the flSupplierInvoiceNo
 	 */
 	public String getFlSupplierInvoiceNo() {
 		return flSupplierInvoiceNo;
@@ -2782,7 +2782,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the fl stop instruction no.
 	 * 
-	 * @return the fl stop instruction no
+	 * @return the fflStopInstructionNo
 	 */
 	public String getFlStopInstructionNo() {
 		return flStopInstructionNo;
@@ -2801,7 +2801,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm request expiry date.
 	 * 
-	 * @return the sm request expiry date
+	 * @return the smRequestExpiryDate
 	 */
 	public String getSmRequestExpiryDate() {
 		return smRequestExpiryDate;
@@ -2820,7 +2820,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm user name.
 	 * 
-	 * @return the sm user name
+	 * @return the smUserName
 	 */
 	public String getSmUserName() {
 		return smUserName;
@@ -2839,7 +2839,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm threshold from year.
 	 * 
-	 * @return the sm threshold from year
+	 * @return the smThresholdFromYear
 	 */
 	public String getSmThresholdFromYear() {
 		return smThresholdFromYear;
@@ -2858,7 +2858,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm threshold to year.
 	 * 
-	 * @return the sm threshold to year
+	 * @return the smThresholdToYear
 	 */
 	public String getSmThresholdToYear() {
 		return smThresholdToYear;
@@ -2877,7 +2877,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm from month.
 	 * 
-	 * @return the sm from month
+	 * @return the smFromMonth
 	 */
 	public String getSmFromMonth() {
 		return smFromMonth;
@@ -2896,7 +2896,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm to month.
 	 * 
-	 * @return the sm to month
+	 * @return the smToMonth
 	 */
 	public String getSmToMonth() {
 		return smToMonth;
@@ -2934,7 +2934,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the ministry name.
 	 * 
-	 * @return the ministry name
+	 * @return the ministryName
 	 */
 	public String getMinistryName() {
 		return ministryName;
@@ -2953,7 +2953,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm payment method.
 	 * 
-	 * @return the sm payment method
+	 * @return the smPaymentMethod
 	 */
 	public String getSmPaymentMethod() {
 		return smPaymentMethod;
@@ -2972,7 +2972,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm processing type.
 	 * 
-	 * @return the sm processing type
+	 * @return the smProcessingType
 	 */
 	public String getSmProcessingType() {
 		return smProcessingType;
@@ -2991,7 +2991,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm receipt no.
 	 * 
-	 * @return the sm receipt no
+	 * @return the smReceiptNo
 	 */
 	public String getSmReceiptNo() {
 		return smReceiptNo;
@@ -3010,7 +3010,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm processing officer name.
 	 * 
-	 * @return the sm processing officer name
+	 * @return the smProcessingOfficerName
 	 */
 	public String getSmProcessingOfficerName() {
 		return smProcessingOfficerName;
@@ -3029,7 +3029,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm identification type.
 	 * 
-	 * @return the sm identification type
+	 * @return the smIdentificationType
 	 */
 	public String getSmIdentificationType() {
 		return smIdentificationType;
@@ -3048,7 +3048,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm identification number.
 	 * 
-	 * @return the sm identification number
+	 * @return the smIdentificationNumber
 	 */
 	public String getSmIdentificationNumber() {
 		return smIdentificationNumber;
@@ -3067,7 +3067,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm cancellation by.
 	 * 
-	 * @return the sm cancellation by
+	 * @return the smCancellationBy
 	 */
 	public String getSmCancellationBy() {
 		return smCancellationBy;
@@ -3086,7 +3086,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm personnel role.
 	 * 
-	 * @return the sm personnel role
+	 * @return the smPersonnelRole
 	 */
 	public String getSmPersonnelRole() {
 		return smPersonnelRole;
@@ -3105,7 +3105,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm mof reg no from.
 	 * 
-	 * @return the sm mof reg no from
+	 * @return the smMofRegNoFrom
 	 */
 	public String getSmMofRegNoFrom() {
 		return smMofRegNoFrom;
@@ -3124,7 +3124,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm mof reg no to.
 	 * 
-	 * @return the sm mof reg no to
+	 * @return the smMofRegNoTo
 	 */
 	public String getSmMofRegNoTo() {
 		return smMofRegNoTo;
@@ -3143,7 +3143,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm paid up capital frm.
 	 * 
-	 * @return the sm paid up capital frm
+	 * @return the smPaidUpCapitalFrm
 	 */
 	public String getSmPaidUpCapitalFrm() {
 		return smPaidUpCapitalFrm;
@@ -3162,7 +3162,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm paid up capital to.
 	 * 
-	 * @return the sm paid up capital to
+	 * @return the smPaidUpCapitalTo
 	 */
 	public String getSmPaidUpCapitalTo() {
 		return smPaidUpCapitalTo;
@@ -3181,7 +3181,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm paid up capital naccum.
 	 * 
-	 * @return the sm paid up capital naccum
+	 * @return the smPaidUpCapitalNaccum
 	 */
 	public String getSmPaidUpCapitalNaccum() {
 		return smPaidUpCapitalNaccum;
@@ -3200,7 +3200,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm role.
 	 * 
-	 * @return the sm role
+	 * @return the smRole
 	 */
 	public String getSmRole() {
 		return smRole;
@@ -3219,7 +3219,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm ep no.
 	 * 
-	 * @return the sm ep no
+	 * @return the smEpNo
 	 */
 	public String getSmEpNo() {
 		return smEpNo;
@@ -3238,7 +3238,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm registration no.
 	 * 
-	 * @return the sm registration no
+	 * @return the smRegistrationNo
 	 */
 	public String getSmRegistrationNo() {
 		return smRegistrationNo;
@@ -3257,7 +3257,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm supporting document mode.
 	 * 
-	 * @return the sm supporting document mode
+	 * @return the smSupportingDocumentMode
 	 */
 	public String getSmSupportingDocumentMode() {
 		return smSupportingDocumentMode;
@@ -3276,7 +3276,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the sm supporting document status.
 	 * 
-	 * @return the sm supporting document status
+	 * @return the smSupportingDocumentStatus
 	 */
 	public String getSmSupportingDocumentStatus() {
 		return smSupportingDocumentStatus;
@@ -3295,7 +3295,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the lng district id.
 	 * 
-	 * @return the lng district id
+	 * @return the lngDistrictId
 	 */
 	public long[] getLngDistrictId() {
 		return lngDistrictId;
@@ -3314,7 +3314,7 @@ public class ReportBackingBean extends
 	/**
 	 * Gets the lng state id.
 	 * 
-	 * @return the lng state id
+	 * @return the lngStateId
 	 */
 	public long[] getLngStateId() {
 		return lngStateId;
