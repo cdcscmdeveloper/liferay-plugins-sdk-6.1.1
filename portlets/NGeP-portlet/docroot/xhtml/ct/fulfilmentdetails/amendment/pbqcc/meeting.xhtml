@@ -23,14 +23,18 @@
 			          </p:calendar>
 			    </p:column> 
 			 
-			     <p:column style="width:55%;white-space:normal;" 
-			        styleClass="column-align-center"  headerText="#{lbl['lbl.ct.location.of.meeting']}">
+			     <p:column style="width:55%;white-space:normal;" styleClass="column-align-center">
+			         <f:facet name="header">
+			             <h:outputText value="#{lbl['lbl.ct.location.of.meeting']}" styleClass="required" />
+			         </f:facet>
 				      <p:inputText value="#{ctMeetingsVar.meetingLocation}" style="width:95%;" maxlength="50"
 				      	disabled="#{amendmentBackingBean.managedBean.disableMeetingDetails}"/>
 			     </p:column> 
 			   
-			     <p:column style="width:20%;white-space:normal;" 
-			       styleClass="column-align-center"  headerText="#{lbl['lbl.ct.status']}">
+			     <p:column style="width:20%;white-space:normal;"  styleClass="column-align-center">
+			        <f:facet name="header">
+			             <h:outputText value="#{lbl['lbl.ct.status']}" styleClass="required"/>
+			        </f:facet>
 				      <p:selectOneMenu value="#{ctMeetingsVar.meetingStatusId}"  style="with:150px;"
 				      	disabled="#{amendmentBackingBean.managedBean.disableMeetingDetails}">
 			              <f:selectItems value="#{amendmentBackingBean.getMeetingStatusDropdown()}"/>
