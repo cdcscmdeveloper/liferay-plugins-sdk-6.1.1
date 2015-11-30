@@ -253,10 +253,17 @@ public class SmApplicationUtil {
 		PersonnelResDTO resDTO = smPersonnelSO.retrievePersonnelCount(reqDTO);
 
 		int authPersLimit = 0;
+
+		// upgrade from basic to MOF only 5 authorized personnel
 		if (applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
-			authPersLimit = 5;
-		} else {
-			authPersLimit = 10;
+			authPersLimit = SmRuleHelper.getInstance()
+					.getMaxMofAuthorizedUser();
+		}
+		// if supplier already MOF, can have additional authorized personnel
+		// from 6 to 10
+		else {
+			authPersLimit = SmRuleHelper.getInstance()
+					.getMaxAdditionalMofAuthorizedUser();
 		}
 
 		if (resDTO != null && resDTO.getCount() != null) {
@@ -268,7 +275,10 @@ public class SmApplicationUtil {
 			if (isAddNewPersonnel) {
 				resultCount = resultCount + 1;
 			}
-			if (resultCount > 5) {
+			// for additional authorized personnel(6 until 10) need to add
+			// justification
+			if (resultCount > SmRuleHelper.getInstance()
+					.getMaxMofAuthorizedUser()) {
 				countVO.setJustificationRequired(true);
 			}
 		}
@@ -5054,12 +5064,12 @@ public class SmApplicationUtil {
 	}
 
 	/**
-	 * Get whether latest approved personnel is authorized
+	 * Get whether latest approved personnel is activated
 	 * 
 	 * @param identificationNo
 	 *            , supplierId - String identificationNo - Long supplierId
 	 */
-	public static boolean isLatestApprovedPersonnelAlreadyAuthorized(
+	public static boolean isLatestApprovedPersonnelActivated(
 			String identificationNo, Long supplierId) {
 		boolean isAlreadyActivate = false;
 		try {
@@ -5073,10 +5083,10 @@ public class SmApplicationUtil {
 			PersonnelResDTO resDTO = personnelSO
 					.retrieveLatestApprovedPersonnelByIdentificationNoAndSupplierId(reqDTO);
 			if (resDTO.getSmPersonnel() != null
-					&& (resDTO.getSmPersonnel().getEpRole() != null || StringUtils
-							.isNotBlank(resDTO.getSmPersonnel().getEpRole()))
-					&& resDTO.getSmPersonnel().getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE
-					&& resDTO.getSmPersonnel().getPmUser() != null) {
+					&& StringUtils.isNotBlank(resDTO.getSmPersonnel()
+							.getEpRole())
+					&& resDTO.getSmPersonnel().getPmUser() != null
+					&& resDTO.getSmPersonnel().getPmUser().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 				isAlreadyActivate = true;
 			}
 		} catch (Exception ex) {
@@ -5448,108 +5458,63 @@ public class SmApplicationUtil {
 	 * @param prevPersonnel
 	 * @param currPersonnel
 	 */
-	public static void setPersonnelAuthorizedChangeInformation(SmAppl currAppl,
+	public static void setPersonnelRoleChange(SmAppl currAppl,
 			SmPersonnel prevPersonnel, SmPersonnel currPersonnel) {
-		if (currPersonnel.getAuthorizedFlg() == 0) {
-			currPersonnel.setSoftcertFlg(0);
-			currPersonnel.setContractSignerFlg(0);
-			currPersonnel.setEpRole("");
-		} else {
-			if (currAppl.getSupplierType().equalsIgnoreCase(
-					SupplierManagementConst.STYPE_CONSULTANT)) {
-				currPersonnel.setEpRole(RoleCode.MOF_SUPPLIER_USER.value());
-				currPersonnel.setSoftcertFlg(0);
+		// already activated
+		if (currPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+			// if catalogue_user directly set softcert 0 and contractsigner 0
+			if (currPersonnel.getEpRole().equals(RoleCode.CM_USER.value())) {
+				if (currPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PENDING_REQ) {
+					currPersonnel.setSoftcertFlg(0);
+				}
 				currPersonnel.setContractSignerFlg(0);
 			} else {
-				// newly added
-				if (currPersonnel.getPersonnelId() == null) {
-					if (currPersonnel.getEpRole().equals(
-							RoleCode.CM_USER.value())) {
+				// if no epRole directly set contractsigner 0 and softcert 0
+				if (StringUtils.isBlank(currPersonnel.getEpRole())) {
+					if (currPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PENDING_REQ) {
 						currPersonnel.setSoftcertFlg(0);
-						currPersonnel.setContractSignerFlg(0);
-					} else {
+					}
+					currPersonnel.setContractSignerFlg(0);
+				}
+				// if has epRole
+				else {
+					// if dont have prev approved directly set softcert to
+					// pending request and contract to 0
+					if (prevPersonnel == null) {
 						currPersonnel
 								.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
 						currPersonnel.setContractSignerFlg(0);
 					}
-				}
-				// already exist in db
-				else {
-					// already activated
-					if (currPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-						if (currPersonnel.getEpRole().equals(
-								RoleCode.CM_USER.value())) {
-							currPersonnel.setSoftcertFlg(0);
-							currPersonnel.setContractSignerFlg(0);
-						} else {
-							// if dont have prev approved directly set softcert
-							// to pending request and contract to 0
-							if (prevPersonnel == null) {
-								currPersonnel
-										.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
-								currPersonnel.setContractSignerFlg(0);
-							}
-							// if have prev approved
-							else {
-								// if prev approved softcert is 0, directly set
-								// to pending request
-								if (prevPersonnel.getSoftcertFlg() == 0) {
-									currPersonnel
-											.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
-								}
-								// if prev approved softcert is not 0, directly
-								// get prev approved softcert
-								else {
-									currPersonnel.setSoftcertFlg(prevPersonnel
-											.getSoftcertFlg());
-								}
-								currPersonnel
-										.setContractSignerFlg(prevPersonnel
-												.getContractSignerFlg());
-							}
-
-							// if epRole blank set back to prev approved role if
-							// exist
-							if (StringUtils.isBlank(currPersonnel.getEpRole())) {
-								String epRole = "";
-								if (prevPersonnel != null
-										&& StringUtils.isNotBlank(prevPersonnel
-												.getEpRole())) {
-									if (prevPersonnel.getEpRole().equals(
-											RoleCode.BASIC_SUPPLIER_USER
-													.value())) {
-										epRole = RoleCode.MOF_SUPPLIER_USER
-												.value();
-									} else if (prevPersonnel
-											.getEpRole()
-											.equals(RoleCode.BASIC_SUPPLIER_ADMIN
-													.value())) {
-										epRole = RoleCode.MOF_SUPPLIER_ADMIN
-												.value();
-									} else {
-										epRole = prevPersonnel.getEpRole();
-									}
-								}
-								currPersonnel.setEpRole(epRole);
-							}
-						}
-					}
-					// pending activation
+					// if have prev approved
 					else {
-						if (currPersonnel.getEpRole().equals(
-								RoleCode.CM_USER.value())) {
-							currPersonnel.setSoftcertFlg(0);
-							currPersonnel.setContractSignerFlg(0);
-						} else {
+						// if prev approved softcert is 0, directly set
+						// to pending request
+						if (prevPersonnel.getSoftcertFlg() == 0) {
 							currPersonnel
 									.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
-							currPersonnel
-									.setContractSignerFlg(prevPersonnel == null ? 0
-											: prevPersonnel
-													.getContractSignerFlg());
 						}
+						// if prev approved softcert is not 0, directly
+						// get prev approved softcert
+						else {
+							currPersonnel.setSoftcertFlg(prevPersonnel
+									.getSoftcertFlg());
+						}
+						currPersonnel.setContractSignerFlg(prevPersonnel
+								.getContractSignerFlg());
 					}
 				}
+			}
+		}
+		// pending activation
+		else {
+			if (currPersonnel.getEpRole().equals(RoleCode.CM_USER.value())) {
+				currPersonnel.setSoftcertFlg(0);
+				currPersonnel.setContractSignerFlg(0);
+			} else {
+				currPersonnel
+						.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+				currPersonnel.setContractSignerFlg(prevPersonnel == null ? 0
+						: prevPersonnel.getContractSignerFlg());
 			}
 		}
 	}
