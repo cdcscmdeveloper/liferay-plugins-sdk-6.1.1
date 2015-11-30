@@ -2350,7 +2350,7 @@ public class QTDetailBackingBean extends
 							this.getManagedBean().setQtSupplierList(
 									new ArrayList<ScQtSupplier>());
 						}
-					} else if (SourcingConstants.QT_TYPE_RESTRICTED_TENDER
+					} else if (ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER
 							.equalsIgnoreCase(scQt.getQtType())) {
 						if (tenderResDTO.getSupplierResultBean()
 								.getTotalRecord() > 0) {
@@ -2366,8 +2366,7 @@ public class QTDetailBackingBean extends
 						}
 					}
 
-					boolean isQuotationThresHold = isQuotationThresHold(scQt
-							.getEstimatedAmount());
+					boolean isQuotationThresHold = ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scQt.getProcurementMode().getParameterCode());
 					if (!isQuotationThresHold
 							&& this.getManagedBean().getAllStateCode() == PTJLocalityCode.STATE_PENINSULAR
 							&& !scQt.getScQtSupplierCriteria().isAllState()) {
@@ -2375,7 +2374,7 @@ public class QTDetailBackingBean extends
 					}
 
 					if (isQuotationThresHold
-							&& SourcingConstants.QT_TYPE_OPEN
+							&& ParameterConst.QUOTATION_TENDER_TYPE_OPEN
 									.equalsIgnoreCase(scQt.getQtType())) {
 						if (null == scQt.getScQtSupplierCriteria()
 								.getLocationLevel()) {
@@ -2425,15 +2424,14 @@ public class QTDetailBackingBean extends
 					}
 				} else {
 					ScQt scQt = this.getManagedBean().getQt();
-					boolean isQuotationThresHold = isQuotationThresHold(scQt
-							.getEstimatedAmount());
+					boolean isQuotationThresHold = ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scQt.getProcurementMode().getParameterCode());
 					if (!isQuotationThresHold
 							&& this.getManagedBean().getAllStateCode() == PTJLocalityCode.STATE_PENINSULAR
 							&& !scQt.getScQtSupplierCriteria().isAllState()) {
 						scQt.getScQtSupplierCriteria().setAllState(true);
 					}
 					if (isQuotationThresHold
-							&& SourcingConstants.QT_TYPE_OPEN
+							&& ParameterConst.QUOTATION_TENDER_TYPE_OPEN
 									.equalsIgnoreCase(scQt.getQtType())) {
 						if (null == scQt.getScQtSupplierCriteria()
 								.getLocationLevel()) {
@@ -4056,7 +4054,7 @@ public class QTDetailBackingBean extends
 			return true;
 		}
 
-		if (SourcingConstants.ONE_TIER.equalsIgnoreCase(evalType)) {
+		if (ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(evalType)) {
 			if (QTStatusConst.QT_EVALUATION_PROPOSAL.equals(statusId)) {
 				return true;
 
