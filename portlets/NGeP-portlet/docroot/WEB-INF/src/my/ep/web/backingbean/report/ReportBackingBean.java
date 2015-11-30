@@ -13256,7 +13256,7 @@ public class ReportBackingBean extends
 	/**
 	 * getQuotationNumber - Gets the quotation number.
 	 * 
-	 * @return the quotation number
+	 * @return the quotationNumber
 	 */
 	public void getQuotationNumber() {
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
