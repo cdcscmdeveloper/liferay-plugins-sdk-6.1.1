@@ -216,6 +216,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private String textBeforeSign;
 	private String buttonAction;
 	private boolean validated = false;
+	private boolean itemAutoUpdate = false;
 	
 	//uom
 	private String measurementCodes;	
@@ -2673,6 +2674,20 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setHyperLinkPage(boolean hyperLinkPage) {
 		this.hyperLinkPage = hyperLinkPage;
+	}
+
+	/**
+	 * @return the itemAutoUpdate
+	 */
+	public boolean isItemAutoUpdate() {
+		return itemAutoUpdate;
+	}
+
+	/**
+	 * @param itemAutoUpdate the itemAutoUpdate to set
+	 */
+	public void setItemAutoUpdate(boolean itemAutoUpdate) {
+		this.itemAutoUpdate = itemAutoUpdate;
 	}
 
 }
