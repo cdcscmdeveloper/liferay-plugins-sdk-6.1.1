@@ -40,6 +40,17 @@
 		
 		<table style="width: 100%;table-layout:fixed">
 			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.ownername']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{bb.managedBean.selectedSupplier.smSupplierOwners[0].ownerName}" 
+					rendered="#{not empty bb.managedBean.selectedSupplier.smSupplierOwners}"/>
+				</td>
+				<td><p:outputLabel styleClass="outputLabel-view-label" 
+					value="#{bb.managedBean.selectedSupplier.smSupplierOwners[0].identificationType.parameterCode eq SupplierManagementConst.NEW_IC?lbl['lbl.sm.individual.newicno']:lbl['lbl.sm.identificationno']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{bb.managedBean.selectedSupplier.smSupplierOwners[0].identificationNo}" 
+					rendered="#{not empty bb.managedBean.selectedSupplier.smSupplierOwners}"/>
+				</td>
+			</tr>
+			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.companyname']}" /></td>
 				<td><p:outputLabel styleClass="outputLabel-view" value="#{bb.managedBean.selectedSupplier.companyName}" /></td>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.estdate']}" /></td>
