@@ -17,11 +17,12 @@
 
 		<table style="width: 30%">
 			<tr>
-				<td style="width: 90px;"><ui:fragment
+				<td style="width: 105px;"><p:outputLabel
+						value="#{lbl['lbl.tpl.spec.content.user.score']}"
+						rendered="#{checklistScoreType eq '2'}" /> <ui:fragment
 						rendered="#{checklistScoreType eq '2' and !pageDisable}">
-						<h:outputText value="* " styleClass="mandatory" />
-					</ui:fragment> <h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"
-						rendered="#{checklistScoreType eq '2'}" /></td>
+						<p:outputLabel value="* " styleClass="mandatory" />
+					</ui:fragment></td>
 				<td><p:inputText value="#{noOfContracts.userScore}"
 						id="financialSupplierInfoUserScoreId"
 						label="#{lbl['lbl.tpl.spec.content.user.score']}" required="true"
@@ -41,7 +42,8 @@
 			</tr>
 		</table>
 
-		<ui:include src="/xhtml/sc/evaluation/evaluationStage/evaluationScoring.xhtml"></ui:include>
+		<ui:include
+			src="/xhtml/sc/evaluation/evaluationStage/evaluationScoring.xhtml"></ui:include>
 	</h:panelGroup>
 
 
