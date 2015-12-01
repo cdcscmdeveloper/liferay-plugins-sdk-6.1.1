@@ -123,7 +123,7 @@ public class OrganisationBackingBean extends
 	public static final int FEDERAL_GOVT = 0;
 	public static final int OTHERS = 1;
 	
-
+	private boolean gmapDisabled;
 	/**
 	 * The constructor used for save user logging.
 	 * 
@@ -2147,9 +2147,9 @@ public class OrganisationBackingBean extends
 			}		
 			
 			//validate unique gst registration number
-			if(!validateGstRegNo(gstSupplier)){
-				throw new EpException(MessageConst.ERROR_775117);
-			}
+//			if(!validateGstRegNo(gstSupplier)){
+//				throw new EpException(MessageConst.ERROR_775117);
+//			}
 		}
 	}
 	
@@ -2223,7 +2223,7 @@ public class OrganisationBackingBean extends
 		return getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value());
 	}
 
-	public boolean validateGstRegNo(SmGstSupplier gstSupplier) {
+	private boolean validateGstRegNo(SmGstSupplier gstSupplier) {
 		ISupplierGstSO supplierGstSO = null;
 		boolean valid = true;
 		try{
@@ -2381,5 +2381,30 @@ public class OrganisationBackingBean extends
 		}finally{
 			orgSO = null;
 		}
+	}
+	
+	public boolean isGmapDisabled() {
+		gmapDisabled = false;
+		
+		if(getManagedBean().getOfficeAddress() != null){
+			PmAddress officeAddress = getManagedBean().getOfficeAddress();
+
+			if(officeAddress.getPmCountry() == null || officeAddress.getPmDistrict() == null || 
+					officeAddress.getPmState() == null || officeAddress.getPmCity() == null || 
+							officeAddress.getAddress1() == null ){
+					gmapDisabled = true;
+			}else{
+				if(StringUtils.isBlank(officeAddress.getAddress1()) || officeAddress.getPmCountry().getCountryId() == null ||
+						officeAddress.getPmDistrict().getDistrictId() == null || officeAddress.getPmState().getStateId() == null ||
+								officeAddress.getPmCity().getCityId() == null){
+					gmapDisabled = true;
+				}
+
+			}
+		}else{
+			gmapDisabled = true;
+		}
+
+		return gmapDisabled;
 	}
 }
