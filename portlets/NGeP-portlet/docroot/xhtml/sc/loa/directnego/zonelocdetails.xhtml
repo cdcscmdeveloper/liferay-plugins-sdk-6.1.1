@@ -7,13 +7,12 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sc.zone.details']}" toggleable="true">
-
-
-		<table>
+		<table width="100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.zone.location.level']}" />
-					<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
-				<td><p:selectOneMenu id="locationLevels"
+				<td width="20%"><p:outputLabel
+						value="#{lbl['lbl.sc.zone.location.level']}" /> <p:outputLabel
+						value="*" styleClass="mandatory"></p:outputLabel></td>
+				<td><p:selectOneMenu id="locationLevels" styleClass="commonLabel"
 						disabled="#{!isEditableStatus}" required="true"
 						label="#{lbl['lbl.sc.zone.location.level']}"
 						value="#{directLOABackingBean.managedBean.scQt.zoneLocationLevel.parameterId}"
@@ -21,7 +20,7 @@
 
 						<f:selectItems
 							value="#{directLOABackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
-						<p:ajax event="change" update="generalLocationList" 
+						<p:ajax event="change" update="generalLocationList"
 							listener="#{directLOABackingBean.selectZoneLocationLevel}"></p:ajax>
 					</p:selectOneMenu> <ac:iconTooltip
 						value="#{lbl['lbl.sc.zone.location.level.tooltip']}" /> <p:message
@@ -34,13 +33,13 @@
 				value="#{directLOABackingBean.managedBean.zoneTrees}" var="zoneTree"
 				style="width:100%" rowIndexVar="index" rowKey="#{zoneTree}">
 
-				<p:column style="width:250%;">
+				<p:column>
 					<f:facet name="header">
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.zone.location']}" />
 					</f:facet>
 					<p:tree value="#{zoneTree}" var="location" selectionMode="checkbox"
-						style="width:80%;">
+						style="width:85%;">
 						<p:ajax event="select"
 							listener="#{directLOABackingBean.selectZoneTreeNode}" />
 						<p:ajax event="unselect"
@@ -61,7 +60,8 @@
 						</p:treeNode>
 					</p:tree>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%;" rendered="#{isEditableStatus}">
+				<p:column headerText="#{lbl['lbl.sc.action']}" style="width:15%;text-align: center;"
+					rendered="#{isEditableStatus}">
 					<p:commandLink
 						actionListener="#{directLOABackingBean.editZones(zoneTree,index)}"
 						process="@this" update="@([id$=dlgId])"
@@ -71,8 +71,7 @@
 				</p:column>
 			</p:dataTable>
 		</h:panelGrid>
-		<div align="right" style="width: 100%">
-
+		<div class="ppRightBtn BtnSpacing" style="width: 100%">
 			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
 				rendered="#{isEditableStatus}" update="@([id$=zonePopupGeneral])"
 				actionListener="#{directLOABackingBean.showGeneralZonesPopup}" />
@@ -90,8 +89,8 @@
 			update="@([id$=zoneGeneralDataTable],[id$=#{productAndServiceId}])" />
 
 		<p:dialog id="dlgId" header="#{lbl['lbl.sc.add.location']}"
-			widgetVar="ZoneGeneral" modal="true" width="490" position="top"
-			height="410">
+			widgetVar="ZoneGeneral" modal="true" width="520" closable="false"
+			resizable="false">
 			<p:messages id="directAwardZonemessages" showDetail="true"
 				showSummary="false" autoUpdate="true" closable="true"
 				severity="error, info" />
@@ -141,20 +140,19 @@
 							</div>
 						</TD>
 					</TR>
-					<TR>
-						<td><p:commandButton value="#{lbl['lbl.btn.cancel']}"
-								style="float:right;" onclick="ZoneGeneral.hide();" /></td>
-						<td><p:commandButton value="#{lbl['lbl.btn.ok']}"
-								style="float:right;" process="@all"
-								update="@this, zoneGeneralDataTable,zonePopupGeneral"
-								action="#{directLOABackingBean.updateZoneGeneralLocation}">
-							</p:commandButton></td>
-					</TR>
 				</table>
 			</h:panelGroup>
 
-			<p:ajax event="close"
-				listener="#{directLOABackingBean.closeListener}" />
+			<div class="ppRightBtn BtnSpacing" style="width: 100%">
+				<p:commandButton value="#{lbl['lbl.btn.ok']}"
+					process="@all"
+					update="@this, zoneGeneralDataTable,zonePopupGeneral"
+					action="#{directLOABackingBean.updateZoneGeneralLocation}">
+				</p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+					style="float:right;" onclick="ZoneGeneral.hide();" />
+			</div>
+
 		</p:dialog>
 
 	</p:panel>

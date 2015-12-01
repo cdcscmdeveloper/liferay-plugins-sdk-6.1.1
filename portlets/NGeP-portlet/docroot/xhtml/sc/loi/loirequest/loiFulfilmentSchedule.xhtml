@@ -21,7 +21,7 @@
 						<h:outputLabel value="#{lbl['lbl.sc.spec.total.frequency']}"></h:outputLabel>
 					</h:column>
 					<h:column>
-						<p:inputText disabled="#{!isEditableStatus}" styleClass="ppNumericAlign"
+						<p:inputText disabled="#{!isEditableStatus}" style="text-align:right;"
 							value="#{lOIDetailBackingBean.managedBean.totalFrequency}">
 							<p:ajax event="blur" update="frequencySchedule"
 								partialSubmit="true" process="@this"

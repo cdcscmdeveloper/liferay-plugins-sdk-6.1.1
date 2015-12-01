@@ -52,22 +52,18 @@
 					</tr>
 				</table>
 
-
-
-
-
 				<p:dataTable id="frequencySchedule" var="frequency" rows="10"
 					rowIndexVar="index"
 					value="#{directLOABackingBean.managedBean.scLoa.scQtSchedules}">
 					<ac:paginator for="frequencySchedule" />
 
-					<p:column style="width:40%">
+					<p:column style="width:8%">
 
 						<f:facet name="header">
 							<h:outputText value="* " styleClass="mandatory" />
 							<h:outputText value="#{lbl['lbl.sc.spec.schedule.no']}" />
 						</f:facet>
-						<p:inputText value="#{frequency.scheduleNo}" required="true"
+						<p:inputText value="#{frequency.scheduleNo}" required="true" styleClass="ppRightBtn"
 							maxlength="3" label="#{lbl['lbl.sc.spec.schedule.no']}" size="5"
 							id="scheduleNum" disabled="#{!isEditableStatus}">
 							<p:ajax process="@this" partialSubmit="true"
@@ -77,7 +73,7 @@
 						<p:message id="freqScheduledid" for="scheduleNum" display="icon"></p:message>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.start.month']}"
-						style="width:10%">
+						style="width:15%">
 						<p:selectOneMenu style="width:100px;" disabled="#{!isEditableStatus}"
 							value="#{frequency.startMonth}">
 
@@ -102,7 +98,7 @@
 
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.end.month']}" style="width:25%">
+					<p:column headerText="#{lbl['lbl.sc.end.month']}" style="width:15%">
 						<p:selectOneMenu style="width:100px;" id="scheduleendMonth" disabled="#{!isEditableStatus}"
 							value="#{frequency.endMonth}">
 
@@ -113,7 +109,7 @@
 						</p:selectOneMenu>
 
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.end.year']}" style="width:15%">
+					<p:column headerText="#{lbl['lbl.sc.end.year']}" style="width:10%">
 						<p:selectOneMenu value="#{frequency.endYear}"  disabled="#{!isEditableStatus}" style="width:100px;">
 							<f:selectItems value="#{directLOABackingBean.yearsDisplayDtls}"></f:selectItems>
 							<p:ajax event="change" update="scheduleDetails" process="@this"
@@ -124,13 +120,13 @@
 
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.total.months']}"
-						style="width:10%">
+						style="width:10%;text-align: right;white-space: normal;">
 						<h:panelGroup id="scheduleDetails">
 							<h:outputText value="#{frequency.totalMonths}"></h:outputText>
 						</h:panelGroup>
 					</p:column>
 
-					<p:column style="width:15%">
+					<p:column style="width:25%">
 
 						<f:facet name="header">
 							<h:outputText value="* " styleClass="mandatory" />
@@ -138,7 +134,7 @@
 							<ac:iconTooltip value="#{lbl['lbl.sc.schedule.type.tooltip']}" />
 						</f:facet>
 
-						<p:selectOneMenu style="width:120px;" required="true"
+						<p:selectOneMenu style="width:180px;" required="true"
 							id="scheduledTypeId" label="#{lbl['lbl.sc.schedule.type']}"
 							value="#{frequency.scheduleType.parameterId}" disabled="#{!isEditableStatus}">
 
@@ -263,7 +259,7 @@
 					</p:selectOneMenu>
 
 				</p:column>
-				<p:column style="width:10%">
+				<p:column style="width:10%;text-align: right;">
 					<f:facet name="header">
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.percentage']}" />
@@ -279,18 +275,11 @@
 					<p:message id="pahsePercentage" for="progressivePercentage"
 						display="icon"></p:message>
 				</p:column>
-
-
-
-
-
 			</p:dataTable>
 
 			<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sc.spec.progressive.payment.loa.instruction']}"
 				escape="false" />
-
-
 
 		</p:panel>
 
@@ -298,35 +287,3 @@
 
 
 </ui:composition>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

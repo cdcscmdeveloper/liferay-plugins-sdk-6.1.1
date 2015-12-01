@@ -16,11 +16,11 @@
 		</p:commandLink>
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 20%"><p:outputLabel
+				<td style="width: 22%"><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.bond.res.due.date']}" /></td>
 				<td colspan="3" style="width: 80%;"><p:inputText
 						value="#{lOADetailBackingBean.managedBean.scLoa.bondResDueDate}"
-						size="14" disabled="true" readonly="true">
+						size="20" disabled="true" readonly="true">
 						<f:convertDateTime pattern="dd/MM/yyyy" />
 					</p:inputText> <p:spacer width="10px" /> <p:inputText
 						value="#{!empty lOADetailBackingBean.managedBean.scLoa.bondResDueDate ? DateUtils.getDaysDifference(DateUtils.getCurrentDateWithoutTime(), lOADetailBackingBean.managedBean.scLoa.bondResDueDate) : ''}"
@@ -30,15 +30,15 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.cont.period']}" /></td>
-				<td><p:inputText
+				<td><p:inputText style="text-align: right;"
 						value="#{lOADetailBackingBean.managedBean.scLoa.contractDuration} months"
-						disabled="true" size="8" readonly="true" /></td>
+						disabled="true" size="35" readonly="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.cont.amt']}" /></td>
-				<td><p:inputText
+				<td><p:inputText style="text-align: right;"
 						value="#{lOADetailBackingBean.managedBean.overallContractAmt}"
-						disabled="true" size="8" readonly="true">
+						disabled="true" size="35" readonly="true">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText></td>
@@ -46,15 +46,15 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.bond.percentage']}" /></td>
-				<td><p:inputText
+				<td><p:inputText style="text-align: right;"
 						value="#{lOADetailBackingBean.managedBean.scLoa.bondPercentage}"
-						disabled="true" size="30" readonly="true" /></td>
+						disabled="true" size="35" readonly="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.bond.amt']}" /></td>
-				<td><p:inputText
+				<td><p:inputText style="text-align: right;"
 						value="#{lOADetailBackingBean.managedBean.scLoa.bondAmt}"
-						disabled="true" size="30" readonly="true">
+						disabled="true" size="35" readonly="true">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText> <p:spacer width="10px" /></td>
@@ -63,7 +63,7 @@
 				<td></td>
 				<td><p:inputTextarea
 						value="#{lOADetailBackingBean.managedBean.bondAmountWord}"
-						cols="50" rows="3" maxlength="500" style=" margin-bottom:5px;"
+						rows="3" maxlength="500" style=" margin-bottom:5px;width: 274px;"
 						disabled="true" /></td>
 			</tr>
 		</table>
@@ -83,7 +83,7 @@
 		</p:column>
 
 		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.amt']}"
-			style="width:10%">
+			style="width:10%;text-align: right;">
 			#{bondList.bondAmount}
 		</p:column>
 
