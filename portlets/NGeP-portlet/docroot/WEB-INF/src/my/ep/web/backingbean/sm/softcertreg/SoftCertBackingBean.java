@@ -642,6 +642,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			setPersonnelSoftcertInformation(personnel);
 		}
 		setDisableRowSelectionIfSuppTmpNotRequestSoftCert(personnels);
+		initDisableRevokeButton();
 	}
 
 	/**
@@ -1044,5 +1045,28 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			}
 		}
 		getManagedBean().setApplySoftcertForOthers(applyForOthers);
+	}
+
+	/**
+	 * Set whether to disable or enable revoke button
+	 */
+	private void initDisableRevokeButton() {
+		if (getManagedBean().isRenderRevokeButton()) {
+			if (getManagedBean().getLoginUserPersonnelInfo() != null
+					&& (getManagedBean().getLoginUserPersonnelInfo()
+							.getEpRole()
+							.equals(RoleCode.MOF_SUPPLIER_ADMIN.value())
+							|| getManagedBean()
+									.getLoginUserPersonnelInfo()
+									.getEpRole()
+									.equals(RoleCode.BASIC_SUPPLIER_ADMIN
+											.value()) || getManagedBean()
+							.getLoginUserPersonnelInfo().getEpRole()
+							.equals(RoleCode.SUPPLIER_TEMP.value()))) {
+				getManagedBean().setRenderRevokeButton(true);
+			} else {
+				getManagedBean().setRenderRevokeButton(false);
+			}
+		}
 	}
 }
