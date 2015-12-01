@@ -101,7 +101,7 @@
 			<table>
 
 				<tr>
-					<td style="width: 215px;"><h:outputText
+					<td style="width: 222px;"><p:outputLabel
 							value="#{lbl['lbl.sc.spec.total.points']} " /></td>
 					<td><p:inputText readonly="true" disabled="true"
 							style="text-align:right"
@@ -111,7 +111,7 @@
 				<ui:fragment
 					rendered="#{specificationBackingBean.managedBean.financialScoreSetting.weightageReq ne 'false'}">
 					<tr>
-						<td><h:outputText
+						<td><p:outputLabel
 								value="#{lbl['lbl.sc.spec.total.weightage']}" /></td>
 						<td><p:inputText readonly="true" disabled="true"
 								style="text-align:right"
@@ -131,9 +131,9 @@
 
 			<table>
 				<tr>
-					<td style="width: 215px;"><h:outputText value="*"
-							styleClass="mandatory" /> <h:outputText
-							value="#{lbl['lbl.sc.passing.score']}" /></td>
+					<td style="width: 222px;"><p:outputLabel
+							value="#{lbl['lbl.sc.passing.score']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText style="text-align:right" maxlength="5"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							value="#{specificationBackingBean.managedBean.financialScoreSetting.passingScore}">
@@ -219,9 +219,9 @@
 
 		<table>
 			<tr>
-				<td style="width: 215px;"><h:outputText value="*"
-						styleClass="mandatory" /> <h:outputText
-						value="#{lbl['lbl.sc.passing.score']}" /></td>
+				<td style="width: 222px;"><p:outputLabel
+						value="#{lbl['lbl.sc.passing.score']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText style="text-align:right" maxlength="5"
 						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 						value="#{specificationBackingBean.managedBean.finacialItemScoreSetting.passingScore}">
