@@ -735,6 +735,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 
 		if (smPersonnel.getPmUser() != null
 				&& smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED) {
+			getManagedBean().setRenderRevokeButton(true);
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setSmSupplierId(getManagedBean().getLoginUserPersonnelInfo()
 					.getSmAppl().getSmSupplier().getSupplierId());
@@ -1044,5 +1045,4 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		}
 		getManagedBean().setApplySoftcertForOthers(applyForOthers);
 	}
-
 }
