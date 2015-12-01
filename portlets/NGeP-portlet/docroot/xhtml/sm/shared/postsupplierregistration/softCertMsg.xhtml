@@ -1,0 +1,21 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<table>
+		<tr>
+			<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.application.status']}" /></td>
+			<td><c:if test="#{postSupplierRegBB.retrieveCurrentUserSoftCertStatus() == postSupplierRegBB.softCertProsseingStatus()}">
+					<h:outputText value="#{lbl['lbl.sm.postreg.softcert.pending.approval']}" />
+				</c:if> 
+				<c:if test="#{postSupplierRegBB.retrieveCurrentUserSoftCertStatus() == postSupplierRegBB.softCertRejectedStatus()}">
+					<h:outputText value="#{lbl['lbl.sm.postreg.softcert.reject']}" />
+				</c:if></td>
+		</tr>
+	</table>
+
+</ui:composition>
