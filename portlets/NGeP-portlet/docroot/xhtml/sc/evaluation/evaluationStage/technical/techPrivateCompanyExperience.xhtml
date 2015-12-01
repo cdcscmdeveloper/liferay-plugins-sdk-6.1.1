@@ -14,7 +14,7 @@
 				value="#{evaluationBackingBean.managedBean.technicalGovNoOfContracts}"></ui:param>
 			<ui:param name="scoringPnlName"
 				value="#{lbl['lbl.sc.spec.score.total.no.contracts']}"></ui:param>
-			<p:panel header="#{scoringPnlName}" toggleable="true"
+			<p:panel header="#{scoringPnlName}" toggleable="true" id="technicalSupplierNoofContractsPrivateEvaluationAutoScoringId"
 				rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}">
 
 				<p:dataTable id="#{scoringPnlId}" rowIndexVar="index" rows="10"
@@ -48,7 +48,7 @@
 				value="#{evaluationBackingBean.managedBean.technicalGovNoOfYears}"></ui:param>
 			<ui:param name="scoringPnlName"
 				value="#{lbl['lbl.sc.spec.score.total.no.years']}"></ui:param>
-			<p:panel header="#{scoringPnlName}" toggleable="true"
+			<p:panel header="#{scoringPnlName}" toggleable="true" id="technicalSupplierNoofYearsPrivateEvaluationAutoScoringId"
 				rendered="#{evaluationBackingBean.managedBean.companyScoreType eq '1'}">
 				<p:dataTable id="#{scoringPnlId}" rowIndexVar="index" rows="10"
 					value="#{scoringList}" var="checkListScoring"

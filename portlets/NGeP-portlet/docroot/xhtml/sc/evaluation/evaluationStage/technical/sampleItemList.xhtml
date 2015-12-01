@@ -39,10 +39,12 @@
 
 					<tr>
 
-						<td><h:outputText value="* " styleClass="mandatory"
+						<td><p:outputLabel
+								value="#{lbl['lbl.tpl.spec.content.user.score']}"
 								rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}" />
-							<h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"
-								rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}" /></td>
+							<p:outputLabel value="* " styleClass="mandatory"
+								rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}" />
+						</td>
 						<td><p:inputText id="sampleaddressUserScoreId"
 								rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}"
 								label="#{lbl['lbl.tpl.spec.content.user.score']}"
