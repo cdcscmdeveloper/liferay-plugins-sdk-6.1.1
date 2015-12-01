@@ -68,7 +68,7 @@
 					<p:message id="isLoiReqMsg" for="isLoiReq" display="icon" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.action']}" style="width:30%">
+				<p:column headerText="#{lbl['lbl.sc.action']}" style="width:30%;text-align: center;">
                    <h:panelGroup id="loiPrepareButton" rendered="#{!isMultipleLoi}">
                           <p:commandButton value="#{lbl['lbl.sc.loiloa.create.loi']}"
 							partialSubmit="true" process="@form" update="@form"
@@ -110,7 +110,7 @@
 							value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, loiloaBean.loiLoaType)}" />
 					</p:column>
 
-					<p:column>
+					<p:column style="text-align: center;">
 						<f:facet name="header">
 							<h:outputText value="#{lbl['lbl.sc.item']}" />
 							<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.item.view.tooltip']}" />
@@ -128,7 +128,7 @@
 						<h:outputText value="#{loiloaBean.loiLoaStatus}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:15%">
+					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:15%;text-align: center;">
 
 						<h:panelGroup rendered="#{loiloaBean.loiLoaType eq 'LI'}">
 

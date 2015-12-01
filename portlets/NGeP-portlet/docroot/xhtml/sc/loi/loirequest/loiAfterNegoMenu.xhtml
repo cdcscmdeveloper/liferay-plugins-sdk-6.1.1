@@ -21,14 +21,13 @@
 			<p:column selectionMode="multiple" style="width:2%"
 				rendered="#{isEditableStatus}" />
 
-			<p:column headerText="#{lbl['lbl.sc.document.title']}">
+			<p:column headerText="#{lbl['lbl.sc.document.title']}" style="width:50%">
 				<p:inputText style="width:85%" value="#{scLoiSuppDoc.title}">
 					<p:ajax event="keyup" />
 				</p:inputText>
 			</p:column>
 
-
-			<p:column style="width:15%;" headerText="#{lbl['lbl.sc.upload']}">
+			<p:column style="width:20%;text-align: center;" headerText="#{lbl['lbl.sc.upload']}">
 				<ui:fragment>
 					<h:commandLink value="#{scLoiSuppDoc.scLoiSupportingDocAttachment.fileName}" styleClass="blue_font" 
 					immediate="true" action="#{lOIDetailBackingBean.downloadFile(scLoiSuppDoc.scLoiSupportingDocAttachment)}"/>
@@ -45,8 +44,7 @@
 
 		</p:dataTable>
 
-		<p:spacer height="2" />
-		<div class="ppRightBtn">
+		<div class="ppRightBtn BtnSpacing">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				process="@this, suppDocTbl" partialSubmit="true"
 				action="#{lOIDetailBackingBean.addLoiSuppDocAction}"

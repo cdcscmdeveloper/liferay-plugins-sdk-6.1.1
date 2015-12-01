@@ -61,8 +61,7 @@
 			</p:column>
 
 		</p:dataTable>
-		<p:spacer height="10px" />
-		<div align="right">
+		<div align="right" class="BtnSpacing">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				process="@this,negoloctbl" partialSubmit="true"
 				action="#{lOIDetailBackingBean.addNegotiationLocation}"
@@ -136,14 +135,14 @@
 				</c:if>
 
 				<c:if test="#{isEditableStatus and !afterNegotiation}">
-					<p:inputTextarea cols="70" rows="2" maxlength="255" value="#{negoTerm.negoResult}" 
+					<p:inputTextarea style="width:400px" rows="2" maxlength="255" value="#{negoTerm.negoResult}" 
 						autoResize="false">
 						<p:ajax partialSubmit="true" process="@this" update="@this" />
 					</p:inputTextarea>
 				</c:if>
 			</p:column>
-
-			<p:column rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}">
+			
+			<p:column rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}" style="text-align: center;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.selection']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.selection.loi.negotiate.tooltip']}" />
@@ -153,12 +152,9 @@
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:selectBooleanCheckbox>
 			</p:column>
-
-
 		</p:dataTable>
-		<p:spacer height="10px" />
 
-		<div align="right">
+		<div align="right" class="BtnSpacing">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				process="@this negoTermstbl" partialSubmit="true"
 				action="#{lOIDetailBackingBean.addNegotiationTerm}"

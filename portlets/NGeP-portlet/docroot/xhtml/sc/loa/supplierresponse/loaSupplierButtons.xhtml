@@ -14,7 +14,7 @@
 	<ui:param name="isMultipleLOI" value="#{lOADetailBackingBean.managedBean.scLoa.finalizationMethod eq ParameterConst.recommendByMultipleLoi}" />
 
 	<div class="ppRightBtn">
-		<p:commandButton value="#{lbl['lbl.btn.save']}" process="@form" partialSubmit="true"
+		<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all" partialSubmit="true" update="@form"
 			onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 			action="#{lOADetailBackingBean.saveAction}" />
 
@@ -57,5 +57,4 @@
 			</c:when>
 		</c:choose>
 	</div>
-	<p:spacer height="1px"></p:spacer>
 </ui:composition>

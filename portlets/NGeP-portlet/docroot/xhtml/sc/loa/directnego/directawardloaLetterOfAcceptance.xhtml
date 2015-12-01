@@ -16,7 +16,7 @@
 
 			<ac:paginator for="contentsTbl" />
 
-			<p:column style="width:2%" >
+			<p:column style="width:2%">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selectAllNegoLoc"
 						value="#{directLOABackingBean.flag}"
@@ -25,7 +25,8 @@
 							listener="#{directLOABackingBean.selectAllDocuments}"></p:ajax>
 					</p:selectBooleanCheckbox>
 				</f:facet>
-				<p:selectBooleanCheckbox value="#{scLoaReport.selected}" disabled="#{!empty scLoaReport.pmDocument}">
+				<p:selectBooleanCheckbox value="#{scLoaReport.selected}"
+					disabled="#{!empty scLoaReport.pmDocument}">
 					<p:ajax partialSubmit="true" process="@this" update="contentsTbl" />
 				</p:selectBooleanCheckbox>
 			</p:column>
@@ -39,11 +40,12 @@
 					rendered="#{!empty scLoaReport.pmDocument}" />
 			</p:column>
 
-			<p:column style="width:15%;" headerText="#{lbl['lbl.sc.upload']}"
-				disabled="#{!isEditableStatus}">
+			<p:column style="width:15%;text-align: center;"
+				headerText="#{lbl['lbl.sc.upload']}" disabled="#{!isEditableStatus}">
 				<ui:fragment
 					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload}">
-
+                   <h:outputText value="#{scLoaReport.scLoaReportAttachment.fileName}" />
+                   
 					<p:commandButton oncomplete="attachmentPopupDlg.show();"
 						rendered="#{isEditableStatus}"
 						value="#{lbl['lbl.txt.attachment']}" partialSubmit="true"
@@ -55,11 +57,12 @@
 							target="#{directLOABackingBean.managedBean.attachmentDocType}"
 							value="LAR" />
 					</p:commandButton>
-					<h:outputText value="#{scLoaReport.scLoaReportAttachment.fileName}" />
+					
 				</ui:fragment>
 			</p:column>
 
-			<p:column style="width:10%;" headerText="#{lbl['lbl.sc.action']}">
+			<p:column style="width:10%;text-align: center;"
+				headerText="#{lbl['lbl.sc.action']}">
 				<p:commandButton id="download" icon="ui-icon-download"
 					style="background-color:transparent !important; border:0px none;"
 					ajax="false"
@@ -68,7 +71,7 @@
 			</p:column>
 		</p:dataTable>
 
-		<div class="ppRightBtn">
+		<div class="ppRightBtn BtnSpacing">
 			<p:commandButton rendered="#{!isPendingVerification}"
 				value="#{lbl['lbl.btn.download.all']}" ajax="false"
 				styleClass="ui-button"
@@ -118,9 +121,7 @@
 			selection="#{directLOABackingBean.managedBean.selectedScLoaSuppDocs}">
 
 			<ac:paginator for="suppDocTbl" />
-
-			
-				<p:column style="width:2%" >
+			<p:column style="width:2%">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selectAllNegoLoc"
 						value="#{directLOABackingBean.suppDocFlag}"
@@ -129,11 +130,11 @@
 							listener="#{directLOABackingBean.selectAllSuppDocuments}"></p:ajax>
 					</p:selectBooleanCheckbox>
 				</f:facet>
-				<p:selectBooleanCheckbox value="#{scLoaSuppDoc.selected}" disabled="#{!isEditableStatus}">
+				<p:selectBooleanCheckbox value="#{scLoaSuppDoc.selected}"
+					disabled="#{!isEditableStatus}">
 					<p:ajax partialSubmit="true" process="@this" update="suppDocTbl" />
 				</p:selectBooleanCheckbox>
 			</p:column>
-				
 			
 			<p:column headerText="#{lbl['lbl.sc.document.title']}">
 				<p:inputText style="width:85%" value="#{scLoaSuppDoc.title}">
@@ -141,9 +142,13 @@
 				</p:inputText>
 			</p:column>
 
-
-			<p:column style="width:15%;" headerText="#{lbl['lbl.sc.upload']}">
+			<p:column style="width:15%;text-align: center;"
+				headerText="#{lbl['lbl.sc.upload']}">
 				<ui:fragment>
+					<h:commandLink
+						value="#{scLoaSuppDoc.scLoaSupportingDocAttachment.fileName}"
+						styleClass="blue_font" immediate="true"
+						action="#{directLOABackingBean.downloadFile(scLoaSuppDoc.scLoaSupportingDocAttachment)}" />
 
 					<p:commandButton oncomplete="loaSuppAttmPopupDlg.show();"
 						rendered="#{isEditableStatus}"
@@ -154,18 +159,12 @@
 							value="#{scLoaSuppDoc}" />
 					</p:commandButton>
 
-					<h:commandLink
-						value="#{scLoaSuppDoc.scLoaSupportingDocAttachment.fileName}"
-						styleClass="blue_font" immediate="true"
-						action="#{directLOABackingBean.downloadFile(scLoaSuppDoc.scLoaSupportingDocAttachment)}" />
-
 				</ui:fragment>
 			</p:column>
 
 		</p:dataTable>
 
-		<p:spacer height="2" />
-		<div class="ppRightBtn">
+		<div class="ppRightBtn BtnSpacing">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				process="@this, suppDocTbl" partialSubmit="true"
 				rendered="#{isEditableStatus}"
@@ -177,7 +176,6 @@
 				rendered="#{isEditableStatus}" process="@this, suppDocTbl"
 				partialSubmit="true" oncomplete="supporingDocDeletePopUp.show();"
 				update="@([id$=#{supporingDocDeleteId}])" />
-
 		</div>
 		<ac:confirmationPopup id="supporingDocDeleteId"
 			widget="supporingDocDeletePopUp"
