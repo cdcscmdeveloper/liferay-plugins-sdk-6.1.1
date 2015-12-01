@@ -617,9 +617,9 @@ public class SmApplicationBackingBean extends
 							|| StringUtils.isBlank(getManagedBean()
 									.getNewSupplierType())) {
 						getManagedBean().setNewSupplierType("K");
-						smAppl.setSupplierType(getManagedBean()
-								.getNewSupplierType());
 					}
+					smAppl.setSupplierType(getManagedBean()
+							.getNewSupplierType());
 				}
 				// else if (applicationType.equalsIgnoreCase("B")) {}
 				else if (applicationType
