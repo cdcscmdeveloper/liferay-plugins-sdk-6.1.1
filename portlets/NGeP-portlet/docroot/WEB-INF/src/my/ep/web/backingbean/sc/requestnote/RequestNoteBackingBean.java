@@ -487,11 +487,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	
 
 	/**
-	 * delivery Term Prompt. before submit / Approve request note, 
+	 * validate delivery term. before submit / Approve request note, 
 	 * it shows the prompt(dialogue) that If system checking the different of delivery period, 
 	 * show alert only but allow to proceed with submission of Request note.
 	 */
-	public void deliveryTermPrompt(String outcome) {
+	public void validateDeliveryTerm(String outcome) {
 		getManagedBean().setAction(outcome);
 		boolean isDeliveryTermPrompt = Boolean.FALSE;
 		List<ScRequestNoteDtl>	requestNoteDtls  = this.getManagedBean().getRequestNoteDtls();
