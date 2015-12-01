@@ -96,25 +96,19 @@
 		</div>
 
 
-		<table>
-			<tr>
-				<td><p:commandButton value="#{lbl['lbl.btn.search']}"
-						id="bidSearchBtn" styleClass="BtnSpacing"
-						process="@this,biddingNoBS,pickedStatus,docNoBS,bidTitleBS,bidFromDate,bidToDate"
-						partialSubmit="true"
-						action="#{biddingBB.managedBean.searchForScheduledBids}"
-						update="biddingListPanel" /></td>
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.search']}" id="bidSearchBtn"
+				styleClass="BtnSpacing"
+				process="@this,biddingNoBS,pickedStatus,docNoBS,bidTitleBS,bidFromDate,bidToDate"
+				partialSubmit="true"
+				action="#{biddingBB.managedBean.searchForScheduledBids}"
+				update="biddingListPanel" />
 
-				<td><p:commandButton value="#{lbl['lbl.btn.reset']}"
-						id="resetBtn" styleClass="BtnSpacing"
-						action="#{biddingBB.resetSearchFormAction}" process="@this"
-						update="biddingListPanel,bidSearchPanel" partialSubmit="true" /></td>
-			</tr>
-		</table>
-
-
-
-
+			<p:commandButton value="#{lbl['lbl.btn.reset']}" id="resetBtn"
+				styleClass="BtnSpacing" action="#{biddingBB.resetSearchFormAction}"
+				process="@this" update="biddingListPanel,bidSearchPanel"
+				partialSubmit="true" />
+		</div>
 
 	</p:panel>
 

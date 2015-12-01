@@ -132,19 +132,15 @@
 			</tr>
 
 		</table>
-		<table>
-			<tr>
-				<td><p:commandButton value="#{lbl['lbl.btn.ok']}"
-						styleClass="BtnSpacing" style="float : right;"
-						actionListener="#{biddingBB.reScheduleOrReBidAction()}"
-						process="@this,reBidOrResumeSupplierNotes,newBidStart,newResumeBidEndDate,newReBidEndDate "
-						partialSubmit="true" oncomplete="bidRescheduleOrResume.hide();"
-						update="@form" /></td>
-				<td><p:commandButton value="#{lbl['lbl.btn.cancel']}" style="float : right;"
-						styleClass="BtnSpacing" onclick="bidRescheduleOrResume.hide();"
-						immediate="true" /></td>
-			</tr>
-		</table>
-
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.ok']}" styleClass="BtnSpacing"
+				actionListener="#{biddingBB.reScheduleOrReBidAction()}"
+				process="@this,reBidOrResumeSupplierNotes,newBidStart,newResumeBidEndDate,newReBidEndDate "
+				partialSubmit="true" oncomplete="bidRescheduleOrResume.hide();"
+				update="@form" />
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+				styleClass="BtnSpacing" onclick="bidRescheduleOrResume.hide();"
+				immediate="true" />
+		</div>
 	</p:panel>
 </ui:composition>

@@ -26,18 +26,16 @@
 			</tr>
 		</table>
 	</div>
-	<table>
-		<tr>
-			<td><p:commandButton value="#{lbl['lbl.btn.ok']}" update="@form"
-					styleClass="BtnSpacing" style="float : right;"
-					actionListener="#{biddingBB.bidPauseOrCancelAction}"
-					process="@this,bidPauseOrCancelsupplierNotes " partialSubmit="true"
-					oncomplete="bidPauseOrCancel.hide();" /></td>
+	<div align="right">
+		<p:commandButton value="#{lbl['lbl.btn.ok']}" update="@form"
+			styleClass="BtnSpacing"
+			actionListener="#{biddingBB.bidPauseOrCancelAction}"
+			process="@this,bidPauseOrCancelsupplierNotes " partialSubmit="true"
+			oncomplete="bidPauseOrCancel.hide();" />
 
-			<td><p:commandButton value="#{lbl['lbl.btn.cancel']}"
-					style="float : right;" styleClass="BtnSpacing" partialSubmit="true"
-					onclick="bidPauseOrCancel.hide();" immediate="true" /></td>
-		</tr>
-	</table>
+		<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+			styleClass="BtnSpacing" partialSubmit="true"
+			onclick="bidPauseOrCancel.hide();" immediate="true" />
+	</div>
 
 </ui:composition>
