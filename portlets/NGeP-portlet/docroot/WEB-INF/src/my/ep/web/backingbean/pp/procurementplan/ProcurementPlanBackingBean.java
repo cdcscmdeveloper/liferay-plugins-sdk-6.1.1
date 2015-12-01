@@ -28,6 +28,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -42,6 +43,8 @@ import my.ep.constant.pp.ProcurementPlanConst;
 import my.ep.constants.PPProcessNameConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.common.address.AddressReqDTO;
+import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanReqDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanResDTO;
 import my.ep.exception.EpException;
@@ -66,6 +69,7 @@ import my.ep.persistence.entity.pp.procurementplan.PpRemark;
 import my.ep.persistence.entity.pp.procurementplan.PpWorkflowStatus;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -418,7 +422,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			// APPROVAL & VERIFICATION	
 			}else if(PPProcessNameConst.REVIEW_PLAN.equalsIgnoreCase(taskName)
 					|| PPProcessNameConst.VERIFY_PLAN.equalsIgnoreCase(taskName)){
-				this.getManagedBean().setModeEditable(false);
+				this.getManagedBean().setModeEditable(true);
 				this.getManagedBean().setModeReview(true);
 				this.getManagedBean().setModeReviewEditable(true);
 			}
@@ -951,8 +955,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	public boolean isRolePlanner(){
 		boolean isPlanner = false;
-		if(getFacesScopes().hasRoleUser(RoleCode.PLAN_PROCU_OFFICER.value()) 
-				||getFacesScopes().hasRoleUser(RoleCode.PLAN_EXPEN_OFFICER.value())){
+		if(getFacesScopes().hasRoleUser(RoleCode.PLAN_OFFICER.value())){
 			isPlanner = true;
 		}
 		
@@ -977,13 +980,17 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		Long statusId = plan.getStatus().getStatusId();
 		if(statusId!=null){
 			if(ProcurementPlanConst.PPP_PENDING_SUBMISSION.equals(statusId)){
-				roleCode = RoleCode.PLAN_PROCU_OFFICER.value();
+				roleCode = RoleCode.PLAN_OFFICER.value();
+				//roleCode = RoleCode.PLAN_PROCU_OFFICER.value();
 			}else if(ProcurementPlanConst.PPE_PENDING_SUBMISSION.equals(statusId)){
-				roleCode = RoleCode.PLAN_EXPEN_OFFICER.value();
+				roleCode = RoleCode.PLAN_OFFICER.value();
+				//roleCode = RoleCode.PLAN_EXPEN_OFFICER.value();
 			}else if(ProcurementPlanConst.PPE_PENDING_REVISION.equals(statusId)){
-				roleCode = RoleCode.PLAN_EXPEN_OFFICER.value();
+				roleCode = RoleCode.PLAN_OFFICER.value();
+				//roleCode = RoleCode.PLAN_EXPEN_OFFICER.value();
 			}else if(ProcurementPlanConst.PPP_PENDING_REVISION.equals(statusId)){
-				roleCode = RoleCode.PLAN_PROCU_OFFICER.value();
+				roleCode = RoleCode.PLAN_OFFICER.value();
+				//roleCode = RoleCode.PLAN_PROCU_OFFICER.value();
 			}else if(ProcurementPlanConst.PPP_PENDING_VERIFICATION.equals(statusId)
 					|| ProcurementPlanConst.PPP_PENDING_REVISION_VERIFICATION.equals(statusId)){
 				roleCode = RoleCode.PLAN_VERFICATION_OFFICER.value();
@@ -994,14 +1001,17 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				roleCode = RoleCode.PLAN_APPROVER.value();
 			}else if(ProcurementPlanConst.PPP_APPROVED.equals(statusId) 
 						|| ProcurementPlanConst.PPE_APPROVED.equals(statusId)){
-				roleCode = RoleCode.PLAN_PROCU_OFFICER.value();
+				roleCode = RoleCode.PLAN_OFFICER.value();
+				//roleCode = RoleCode.PLAN_PROCU_OFFICER.value();
 			}
 		}else{
 			//pending submission or new
 			if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(plan.getPlanType().getParameterCode())){
-				roleCode = RoleCode.PLAN_PROCU_OFFICER.value();
+				roleCode = RoleCode.PLAN_OFFICER.value();
+				//roleCode = RoleCode.PLAN_PROCU_OFFICER.value();
 			}else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(plan.getPlanType().getParameterCode())){
-				roleCode = RoleCode.PLAN_EXPEN_OFFICER.value();
+				roleCode = RoleCode.PLAN_OFFICER.value();
+				//roleCode = RoleCode.PLAN_EXPEN_OFFICER.value();
 			}
 		}
 		return roleCode;
@@ -1071,7 +1081,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		List<PmUser> sourceApprover = new ArrayList<PmUser>(); 
         List<PmUser> targetApprover = new ArrayList<PmUser>();  
         this.getManagedBean().setApproverModel(new DualListModel<PmUser>(sourceApprover, targetApprover));
-        generateSourceApprovers(retrieveMinistryOrgProfile(getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId()).getOrgProfileId(), RoleCode.PLAN_APPROVER.value(), ppPlanActors); 
+        generateSourceApprovers(getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId(), RoleCode.PLAN_APPROVER.value(), ppPlanActors); 
 
 		log.info("loadPlanActors - End");
 	}
@@ -1215,7 +1225,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}
 			this.getManagedBean().getVerifierModel().setTarget(target);
 		}
-		List<PmUser> sourceList = PpCommonUtil.retrieveUserListByRole(orgProfileId, roleCode, this.getManagedBean().getVerifierModel().getTarget());
+		List<PmUser> sourceList = PpCommonUtil.retrieveUserListByRole(orgProfileId, roleCode, this.getManagedBean().getVerifierModel().getTarget(),false);
 		this.getManagedBean().getVerifierModel().setSource(sourceList);
 	
 	}
@@ -1226,7 +1236,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * @param roleCode
 	 * @param ppPlanActors
 	 */
-	private void generateSourceApprovers(Long orgProfileId, String roleCode, List<PpPlanActor>ppPlanActors){
+	private void generateSourceApprovers(Long ptjOrgProfileId, String roleCode, List<PpPlanActor>ppPlanActors){
 		log.info("generateSourceApprovers");
 		if(ppPlanActors!=null){
 		   List<PmUser> target = new ArrayList<PmUser>();  
@@ -1239,7 +1249,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}
 			this.getManagedBean().getApproverModel().setTarget(target);
 		}
-		List<PmUser> sourceList = PpCommonUtil.retrieveUserListByRole(orgProfileId, roleCode, this.getManagedBean().getApproverModel().getTarget());
+		List<PmUser> sourceList = PpCommonUtil.retrieveUserListByRole(ptjOrgProfileId, roleCode, this.getManagedBean().getApproverModel().getTarget(),true);
 		this.getManagedBean().getApproverModel().setSource(sourceList);
 	}
 	
@@ -1519,7 +1529,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							if(justification.getRoleCode() ==null || StringUtils.isBlank(justification.getRoleCode().getRoleCode())){
 								log.info("set setRemarkRole");
 								PmRole roleCode = new PmRole();
-								roleCode.setRoleCode(RoleCode.PLAN_EXPEN_OFFICER.value());
+								roleCode.setRoleCode(RoleCode.PLAN_OFFICER.value());
+							//	roleCode.setRoleCode(RoleCode.PLAN_EXPEN_OFFICER.value());
 								justification.setRoleCode(roleCode);
 								justification.setPpWorkflowStatus(this.getManagedBean().getSelectedPlan().getCurrentStatus());
 							}
@@ -1578,7 +1589,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							if(itemRemark.getRoleCode() ==null || StringUtils.isBlank(itemRemark.getRoleCode().getRoleCode())){
 								log.info("set setRemarkRole");
 								PmRole roleCode = new PmRole();
-								roleCode.setRoleCode(RoleCode.PLAN_EXPEN_OFFICER.value());
+								roleCode.setRoleCode(RoleCode.PLAN_OFFICER.value());
+								//roleCode.setRoleCode(RoleCode.PLAN_EXPEN_OFFICER.value());
 								itemRemark.setRoleCode(roleCode);
 								itemRemark.setPpWorkflowStatus(this.getManagedBean().getSelectedPlan().getCurrentStatus());
 							}
@@ -2733,6 +2745,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					if(StringUtils.isBlank(ppItem.getProcurementTitle())){
 						throw new EpException(MessageConst.ERROR_730010);
 					}
+					if(StringUtils.isBlank(ppItem.getProcurementDesc())){
+						throw new EpException(MessageConst.ERROR_730030);
+					}
 					if(ppItem.getProcurementCat().getParameterId()==null){
 						throw new EpException(MessageConst.ERROR_730011);
 					}
@@ -3319,10 +3334,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		FacesScopes sc = new FacesScopes();
 		if (sc.hasRoleUser(RoleCode.PLAN_APPROVER.value())) {
 			return RoleCode.PLAN_APPROVER.value();
-		} else if (sc.hasRoleUser(RoleCode.PLAN_EXPEN_OFFICER.value())) {
-			return RoleCode.PLAN_EXPEN_OFFICER.value();
-		} else if (sc.hasRoleUser(RoleCode.PLAN_PROCU_OFFICER.value())) {
-			return RoleCode.PLAN_PROCU_OFFICER.value();
+		} else if (sc.hasRoleUser(RoleCode.PLAN_OFFICER.value())) {
+			return RoleCode.PLAN_OFFICER.value();
+//		} else if (sc.hasRoleUser(RoleCode.PLAN_EXPEN_OFFICER.value())) {
+//			return RoleCode.PLAN_EXPEN_OFFICER.value();
+//		} else if (sc.hasRoleUser(RoleCode.PLAN_PROCU_OFFICER.value())) {
+//			return RoleCode.PLAN_PROCU_OFFICER.value();
 		} else if (sc.hasRoleUser(RoleCode.PLAN_VERF_OFFICER.value())) {
 			return RoleCode.PLAN_VERF_OFFICER.value();
 		} 
@@ -3504,6 +3521,19 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public void populateSaveObject(){
 		if(getManagedBean().getSelectedPTJ() != null){
 			getManagedBean().getPlanSearchBean().setPtj(getManagedBean().getSelectedPTJ());
+		}
+	}
+	
+	public String retrievePpBillingAddr() {
+		AddressReqDTO reqDTO = new AddressReqDTO();
+		reqDTO.setOrgProfileId(getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId());
+		reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
+		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
+		AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+		if(resDTO.getAddressTypeList() !=null && !resDTO.getAddressTypeList().isEmpty()){
+			return getFullAddress(resDTO.getAddressTypeList().get(0).getPmAddress());
+		}else{
+			return "";
 		}
 	}
 }
