@@ -91,8 +91,7 @@
 					rowKey="#{flItem}"
 					styleClass="itemsSelectedPanel show-column-names">
 					<p:column headerText="#{lbl['lbl.fl.item']}"   style="white-space:normal;text-align:center">
-						<h:outputText value="#{doItems.scRequestItem.itemName}"	id="itemDesc" style="float:left;"/>
-						<p:tooltip for="itemDesc" value="#{doItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : doItems.scRequestItem.itemDesc}"  />
+						<h:outputText value="#{doItems.scRequestItem.itemName}"	id="itemDesc" style="text-align:left; float:left;" title="#{doItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : doItems.scRequestItem.itemDesc}"/>
 					</p:column>
 					<p:column style="white-space:normal;text-align:center">
 						<f:facet name="header" >

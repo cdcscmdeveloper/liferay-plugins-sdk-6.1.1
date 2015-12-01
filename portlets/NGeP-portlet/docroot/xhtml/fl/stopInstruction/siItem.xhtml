@@ -22,8 +22,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;">
 				<h:outputText value="#{chargeLineNode.flFulfilmentItemAddr.scRequestItem.itemName}"  id="itemDesc"
-					rendered="#{chargeLineNode.parent == 'true'}" />
-				<p:tooltip for="itemDesc" value="#{chargeLineNode.flFulfilmentItemAddr.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : chargeLineNode.flFulfilmentItemAddr.scRequestItem.itemDesc}"  />	
+					rendered="#{chargeLineNode.parent == 'true'}" title="#{chargeLineNode.flFulfilmentItemAddr.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : chargeLineNode.flFulfilmentItemAddr.scRequestItem.itemDesc}"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.uom']}" style="white-space:normal;">
 				<h:outputText value="#{chargeLineNode.flFulfilmentItemAddr.scRequestItem.uom.uomName}"
