@@ -522,13 +522,13 @@
            </h:panelGrid>
 		</p:dialog>
   	 </p:panel>
-  	 <p:spacer rendered="#{ctBackingBean.managedBean.ctItemList.size() > 0}" height="50"/>
-  	 <p:panel id="serviceId"
+  	<p:panel id="serviceId"
          rendered="#{ctBackingBean.managedBean.ctItemServiceList.size() > 0 }"  toggleable="true"  toggleSpeed="500">
   	     <f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.panel.service']}"/>
 			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.service.dtls']}"/>
    	     </f:facet>
+   	      <p:spacer height="50"/>
   	     <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.select.service.item']}" escape="false"/><br/><br/>
              <h:panelGrid  style="width:100%;">  
   	        <p:dataTable id="serviceTable" var="data"  widgetVar="serviceItemObj" 
