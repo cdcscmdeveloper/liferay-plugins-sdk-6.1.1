@@ -528,7 +528,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			supplierReqDTO.setUserId(pmUser.getUserId());
-			supplierReqDTO.setAllStatuses(true);
 
 			SupplierSearchResDTO smResDTO = supplierSearchSO
 					.retriveSupplierProfiles(supplierReqDTO);
@@ -3564,7 +3563,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			//same item with existed one cannot overlap the date
 			SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 			supplierReqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-			supplierReqDTO.setAllStatuses(true);
 			SupplierSearchResDTO smResDTO = supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
 
 			reqDTO.setSupplierItemId(this.getManagedBean().getSelectedMaintainItem().getSupplierItemId());
