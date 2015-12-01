@@ -4841,7 +4841,7 @@ public class SmApplicationBackingBean extends
 				"lbl.sm.person.composition.suppUser", null));
 		role.setValue(RoleCode.MOF_SUPPLIER_USER.value());
 		roles.add(role);
-		
+
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)
 				&& getManagedBean().getSmAppl().getSmCompanyBasic() != null
@@ -4853,7 +4853,7 @@ public class SmApplicationBackingBean extends
 			role.setValue(RoleCode.CM_USER.value());
 			roles.add(role);
 		}
-		
+
 		if (personnel.getEpRole() != null
 				&& (personnel.getEpRole().equalsIgnoreCase(
 						RoleCode.MOF_SUPPLIER_ADMIN.value()) || personnel
@@ -7413,6 +7413,8 @@ public class SmApplicationBackingBean extends
 	 * category
 	 */
 	private void setBusinessAndHadApprovedSpecialCatcode() {
+		getManagedBean().setAlreadyBusinessSpecialCatcode(false);
+		StringBuffer bf = new StringBuffer();
 		if (!getManagedBean().getSmAppl().getApplType()
 				.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
 				&& !SmCommonUtil.isCollectionEmpty(getManagedBean().getSmAppl()
@@ -7422,12 +7424,23 @@ public class SmApplicationBackingBean extends
 				for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 						.getSmSupplierCategories()) {
 					if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
-							&& cat.isSpecialCategory()) {
+							&& cat.getPmCategoryL3().getHomeOperated() != DbValueConst.RECORD_STATUS_ACTIVE) {
 						getManagedBean().setAlreadyBusinessSpecialCatcode(true);
-						break;
+						bf.append(" "
+								+ cat.getPmCategoryL1().getCategoryL1Code()
+								+ cat.getPmCategoryL2().getCategoryL2Code()
+								+ cat.getPmCategoryL3().getCategoryL3Code()
+								+ ",");
 					}
 				}
 		}
+		getManagedBean().setBusinessOfficeCatCodeMsg(
+				SmCommonUtil.getMessage(
+						"lbl.sm.not.allowed.change.factype.home.office", null)
+						+ "<br /> - " + bf.toString());
+		getManagedBean().setBusinessOfficeCatCodeMsg(
+				StringUtils.removeEnd(getManagedBean()
+						.getBusinessOfficeCatCodeMsg(), ","));
 	}
 
 	/**

@@ -48,8 +48,8 @@
 			<table style="width: 100%">
 				<p:outputPanel rendered="#{backingBean.managedBean.alreadyBusinessSpecialCatcode}">
 					<tr>
-						<td colspan="4">
-							<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.not.allowed.change.factype.home.office']}" />
+						<td colspan="4" style="white-space: normal;">
+							<h:outputText styleClass="instruction" value="#{backingBean.managedBean.businessOfficeCatCodeMsg}" escape="false"/>
 						</td>
 					</tr>
 				</p:outputPanel>
