@@ -86,8 +86,7 @@
 							value="#{newItems.itemCode}" style="float:right;"/>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center;width:20%" >
-						<h:outputText value="#{newItems.scRequestItem.itemName}" id="itemDesc" style="float:left;text-align:left;"/>
-						<p:tooltip for="itemDesc" value="#{newItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : newItems.scRequestItem.itemDesc}"  />
+						<h:outputText value="#{newItems.scRequestItem.itemName}" id="itemDesc" style="float:left;text-align:left;" title="#{newItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : newItems.scRequestItem.itemDesc}"/>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.uom']}" style="text-align:center">
 						<h:outputText value="#{newItems.scRequestItem.uom.uomName}" style="float:left;"/>

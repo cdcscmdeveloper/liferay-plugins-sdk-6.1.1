@@ -194,7 +194,7 @@
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					listener="#{contractRequestBackingBean.itemRowUnselectCheckbox}" />				
 				<ac:paginator for="itemDataTable" />
-				<p:column selectionMode="multiple" width="5%" 
+				<p:column selectionMode="multiple" style="width:5%" styleClass="td-check-box-spacing"
 					rendered="#{(contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType.parameterCode != ParameterConst.fulfilmentTypeOneOff) and contractRequestBackingBean.managedBean.buttonVal!='View'}">
 				</p:column>	
 				<p:column headerText="#{lbl['lbl.fl.gst']}">
@@ -214,8 +214,7 @@
 					<h:outputText rendered="#{item.scRequestItem.cmItem!=null}" value="#{item.scRequestItem.cmItem.extensionCode}" />
 				</p:column>				
 				<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center;width:20%">
-					<h:outputText value="#{item.scRequestItem.itemName}" id="itemDesc" style="text-align:left; float:left;"/>
-					<p:tooltip for="itemDesc" value="#{item.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : item.scRequestItem.itemDesc}"  />
+					<h:outputText value="#{item.scRequestItem.itemName}" id="itemDesc" style="text-align:left; float:left;" title="#{item.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : item.scRequestItem.itemDesc}"/>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.uom']}" style="text-align:center">
 					<h:outputText value="#{item.scRequestItem.uom.uomName}" style="float:left;"/>
@@ -719,8 +718,7 @@
 					<h:outputText rendered="#{item.scRequestItem.cmItem!=null}" value="#{item.scRequestItem.cmItem.extensionCode}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.item']}">
-					<h:outputText value="#{item.scRequestItem.itemName}" id="itemDesc"/>
-					<p:tooltip for="itemDesc" value="#{item.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : item.scRequestItem.itemDesc}"  />
+					<h:outputText value="#{item.scRequestItem.itemName}" id="itemDesc" title="#{item.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : item.scRequestItem.itemDesc}"/>
 				</p:column>
 			</p:dataTable>
 
