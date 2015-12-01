@@ -20,12 +20,14 @@
 		<ui:param name="isViewByItem"
 			value="#{biddingBB.managedBean.bidManagementViewBy eq 'I'}" />
 
-		<div style="height: 40px;">
-			<p:commandButton id="backButton" value="#{lbl['lbl.btn.back']}"
-				style="float:left;" partialSubmit="true" process="@this"
-				action="#{biddingBB.biddingMonitorBackAction}" />
-		</div>
-		
+		<table>
+			<tr>
+				<td><p:commandButton id="backButton" styleClass="BtnSpacing"
+						value="#{lbl['lbl.btn.back']}" style="float:left;"
+						partialSubmit="true" process="@this"
+						action="#{biddingBB.biddingMonitorBackAction}" /></td>
+			</tr>
+		</table>
 
 		<div align="left" class="header-info">
 			<table style="width: 100%;">
@@ -139,7 +141,8 @@
 		<p:dialog id="zoneLocPopup" widgetVar="zoneLocPopup" rendered="false"
 			header="#{lbl['lb.sc.zone.details']}" modal="true" width="350"
 			height="200">
-			<ui:include src="/xhtml/sc/bidding/bidManagement/BMByItemZoneLocationPopup.xhtml" />
+			<ui:include
+				src="/xhtml/sc/bidding/bidManagement/BMByItemZoneLocationPopup.xhtml" />
 		</p:dialog>
 	</ui:define>
 </ui:composition>

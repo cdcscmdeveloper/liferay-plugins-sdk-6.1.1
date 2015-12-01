@@ -55,7 +55,7 @@
 		<p:panel header="#{lbl['lbl.sc.bid.summary']}" toggleable="true"
 			rendered="#{!empty biddingBB.managedBean.selectedBidItem}">
 
-			<p:spacer height="2"></p:spacer>
+			
 
 			<div align="center">
 
@@ -74,12 +74,6 @@
 					legendPosition="e" style="height:300px;" />
 
 			</div>
-
-
-			<p:spacer height="10"></p:spacer>
-
-
-			<p:spacer height="10"></p:spacer>
 
 			<p:dataTable id="rankingList" rowIndexVar="index" rows="10"
 				value="#{biddingBB.managedBean.bidPriceItems}" var="bidPriceItem">

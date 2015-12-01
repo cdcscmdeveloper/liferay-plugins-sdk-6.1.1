@@ -8,7 +8,7 @@
 
 
 	<p:messages id="bidSearchMessages" autoUpdate="true" showDetail="true"
-		showSummary="false" closable="true" severity="error, info"/>
+		showSummary="false" closable="true" severity="error, info" />
 	<p:panel header="#{lbl['lbl.sc.search']}" id="bidSearchPanel"
 		toggleable="true">
 
@@ -95,22 +95,26 @@
 
 		</div>
 
-		<p:spacer height="10"></p:spacer>
 
-		<div align="right">
+		<table>
+			<tr>
+				<td><p:commandButton value="#{lbl['lbl.btn.search']}"
+						id="bidSearchBtn" styleClass="BtnSpacing"
+						process="@this,biddingNoBS,pickedStatus,docNoBS,bidTitleBS,bidFromDate,bidToDate"
+						partialSubmit="true"
+						action="#{biddingBB.managedBean.searchForScheduledBids}"
+						update="biddingListPanel" /></td>
 
-			<p:commandButton value="#{lbl['lbl.btn.search']}" id="bidSearchBtn"
-				process="@this,biddingNoBS,pickedStatus,docNoBS,bidTitleBS,bidFromDate,bidToDate"
-				partialSubmit="true"
-				action="#{biddingBB.managedBean.searchForScheduledBids}"
-				update="biddingListPanel" />
+				<td><p:commandButton value="#{lbl['lbl.btn.reset']}"
+						id="resetBtn" styleClass="BtnSpacing"
+						action="#{biddingBB.resetSearchFormAction}" process="@this"
+						update="biddingListPanel,bidSearchPanel" partialSubmit="true" /></td>
+			</tr>
+		</table>
 
-			<p:commandButton value="#{lbl['lbl.btn.reset']}" id="resetBtn"
-				action="#{biddingBB.resetSearchFormAction}" process="@this"
-				update="biddingListPanel,bidSearchPanel" partialSubmit="true" />
-		</div>
 
-		<p:spacer height="10"></p:spacer>
+
+
 
 	</p:panel>
 
@@ -155,16 +159,18 @@
 				<p:outputLabel id="bidStatusDTBS" style="float : left"
 					value="#{biddingBB.getStatusDescById(bid.pmStatus.statusId)}" />
 			</p:column>
-			<p:column style="width :10%; align: center" >
+			<p:column style="width :10%; align: center">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.action']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.action.bidding.maintenance.tooltip']}" />
+					<ac:iconTooltip
+						value="#{lbl['lbl.sc.action.bidding.maintenance.tooltip']}" />
 				</f:facet>
 
 				<p:commandLink id="bidManagementNavigationBtn" size="5"
 					action="#{biddingBB.bidManagementAction(bid)}" process="@this">
 
-					<p:graphicImage id="viewBtnImage"  value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png"
+					<p:graphicImage id="viewBtnImage"
+						value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png"
 						title="#{lbl['lbl.txt.view']}" />
 					<p:spacer width="5"></p:spacer>
 				</p:commandLink>
@@ -175,8 +181,8 @@
 					actionListener="#{biddingBB.bidPausePopUpAction(bid)}"
 					update="@([id$=pauseCancelPopUp])"
 					oncomplete="bidPauseOrCancel.show();" size="5">
-					<p:graphicImage id="pauseBtnImage" value="#{CommonUIConstant.imagePathUptoDesign}/ico-suspend.png"
-						 
+					<p:graphicImage id="pauseBtnImage"
+						value="#{CommonUIConstant.imagePathUptoDesign}/ico-suspend.png"
 						title="#{lbl['lbl.sc.pause.bid']}" />
 					<p:spacer width="5"></p:spacer>
 				</p:commandLink>
@@ -188,8 +194,8 @@
 					update="@([id$=pauseCancelPopUp])"
 					oncomplete="bidPauseOrCancel.show();" size="5">
 
-					<p:graphicImage id="cancelBtnImage" value="#{CommonUIConstant.imagePathUptoDesign}/ico-termination.png"
-						
+					<p:graphicImage id="cancelBtnImage"
+						value="#{CommonUIConstant.imagePathUptoDesign}/ico-termination.png"
 						title="#{lbl['lbl.sc.cancel.bid']}" />
 					<p:spacer width="5"></p:spacer>
 				</p:commandLink>
@@ -200,7 +206,7 @@
 					update="@([id$=rescheduleRebidPopUp])"
 					oncomplete="bidRescheduleOrResume.show();" size="5">
 					<p:graphicImage id="resumeBtnImage"
-						 value="#{CommonUIConstant.imagePathUptoDesign}/ico-play.png"
+						value="#{CommonUIConstant.imagePathUptoDesign}/ico-play.png"
 						title="#{lbl['lbl.sc.resume.bid']}" />
 				</p:commandLink>
 
@@ -217,7 +223,8 @@
 			widgetVar="bidPauseOrCancel" showEffect="fade" hideEffect="fade"
 			draggable="false" resizable="false" modal="false"
 			id="bidPauseOrCancel">
-			<ui:include src="/xhtml/sc/bidding/bidManagement/bsPauseOrCancelBidPopup.xhtml"></ui:include>
+			<ui:include
+				src="/xhtml/sc/bidding/bidManagement/bsPauseOrCancelBidPopup.xhtml"></ui:include>
 		</p:dialog>
 
 	</h:panelGrid>

@@ -50,14 +50,14 @@
 					</h:outputText>
 				</p:column>
 			</p:dataTable>
-
 		</div>
-		<div align="right">
+		<table>
+			<tr>
+				<td><p:commandButton value="#{lbl['lbl.btn.close']}" style="float:right;"
+						styleClass="BtnSpacing" onclick="pricePop.hide();" /></td>
 
-			<p:commandButton value="#{lbl['lbl.btn.close']}"
-				onclick="pricePop.hide();" />
-
-		</div>
+			</tr>
+		</table>
 
 	</p:panel>
 </ui:composition>

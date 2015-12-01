@@ -6,21 +6,18 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<table>
-
 		<tr>
 			<TD><p:outputLabel value="#{lbl['lbl.sc.item.name']}" /></TD>
 			<TD><p:inputText
 					value="#{onlineBiddingBB.scBidPrice.scBidSupplierItem.scBidItem.scRequestItem.itemName}"
 					size="35" disabled="true" /></TD>
 		</tr>
-
 		<tr>
 			<TD><p:outputLabel value="#{lbl['lbl.sc.item.description']}" /></TD>
 			<TD><p:inputTextarea cols="80" rows="5"
 					value="#{onlineBiddingBB.scBidPrice.scBidSupplierItem.scBidItem.scRequestItem.itemDesc}"
 					disabled="true" /></TD>
 		</tr>
-
 		<tr>
 			<p:spacer height="4"></p:spacer>
 			<TD><p:outputLabel value="#{lbl['lbl.sc.uom']}" /></TD>
@@ -28,7 +25,6 @@
 					value="#{onlineBiddingBB.scBidPrice.scBidSupplierItem.scBidItem.scRequestItem.uom.uomName}"
 					size="20" disabled="true" /></TD>
 		</tr>
-
 		<h:panelGroup
 			rendered="#{onlineBiddingBB.scBidPrice.scBidSupplierItem.scBidItem.scRequestItem.itemType.parameterCode eq onlineBiddingBB.servicetype}">
 			<tr>
@@ -61,10 +57,7 @@
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText></TD>
 			</tr>
-
-
 		</h:panelGroup>
-
 		<tr>
 			<TD><p:outputLabel value="#{lbl['lbl.sc.quantity']}" /></TD>
 			<TD><p:inputText style="text-align : right;"
@@ -74,13 +67,12 @@
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText></TD>
 		</tr>
-
 	</table>
-
-	<div style="width: 100%; align: right;">
-
-		<p:commandButton value="#{lbl['lbl.btn.close']}" style="float : right"
+	<table>
+	<tr>
+	<td><p:commandButton value="#{lbl['lbl.btn.close']}" style="float : right" styleClass="BtnSpacing"
 			onclick="itemDetails.hide();" />
-	</div>
-
+	</td>
+	</tr>
+	</table>
 </ui:composition>

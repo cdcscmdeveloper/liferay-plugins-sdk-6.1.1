@@ -60,15 +60,13 @@
 			</h4>
 
 		</div>
-		<p:spacer height="2"></p:spacer>
+		
 		<div>
 			<p:lineChart id="LineChartVBP"
 				value="#{biddingBB.managedBean.bidPriceLinearModel}"
 				legendPosition="e" style="height:300px;" />
 		</div>
-		<p:spacer height="10"></p:spacer>
-
-		<p:spacer height="10"></p:spacer>
+		
 		<p:dataTable id="bidPackagesListForBMBP"
 			value="#{biddingBB.managedBean.bidPackages}" var="item">
 			<ac:paginator for="bidPackagesListForBMBP"></ac:paginator>
