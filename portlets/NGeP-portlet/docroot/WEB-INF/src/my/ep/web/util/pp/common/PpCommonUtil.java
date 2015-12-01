@@ -22,7 +22,6 @@ import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pp.ProcurementPlanConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -45,8 +44,6 @@ import my.ep.persistence.entity.pp.procurementplan.PpWorkflowStatus;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pm.helper.ParameterHelper;
-
 import org.apache.log4j.Logger;
 /**
  * Common Methods for Procurement Plan 
@@ -332,7 +329,7 @@ public class PpCommonUtil {
 	 * @param roleCode
 	 * @return @return List<PmUser>
 	 */
-	public static List<PmUser> retrieveUserListByRole(Long orgProfileId, String roleCode, List<PmUser> excludedUsers){
+	public static List<PmUser> retrieveUserListByRole(Long ptjOrgProfileId, String roleCode, List<PmUser> excludedUsers, boolean isWithGroupUser){
 		log.info("retrieveUserListByRole - Start");
 		List<PmUser> pmUsers = new ArrayList<PmUser>();
 		List<Long> userIds = null;
@@ -340,8 +337,9 @@ public class PpCommonUtil {
 		try{
 			UserReqDTO reqDTO = new UserReqDTO();
 			UserResDTO resDTO = new UserResDTO();
-			reqDTO.setOrgProfileId(orgProfileId);
+			reqDTO.setOrgProfileId(ptjOrgProfileId);
 			reqDTO.setRoleCode(roleCode);
+			reqDTO.setWithProfileGroup(isWithGroupUser);
 			
 			if(excludedUsers!=null && !excludedUsers.isEmpty()){
 				userIds = new ArrayList<Long>();
@@ -352,7 +350,7 @@ public class PpCommonUtil {
 			}
 			
 			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			resDTO = userSO.retrieveUserListByRole(reqDTO);
+			resDTO = userSO.retrieveUserListWithProfileGroupUserByRole(reqDTO);
 			
 			if(resDTO.isSuccessful() && resDTO.getUserList()!=null){
 				pmUsers = resDTO.getUserList();

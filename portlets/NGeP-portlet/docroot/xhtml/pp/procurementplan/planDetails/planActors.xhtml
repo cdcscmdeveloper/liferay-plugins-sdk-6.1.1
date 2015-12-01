@@ -19,7 +19,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					</th>
 					<td>
 						<p:pickList styleClass="ppActors" id="plVerifier" var="actor" itemValue="#{actor}" itemLabel="#{actor.userName}"
-							value="#{pPlanBackingBean.managedBean.verifierModel}" disabled="#{!pPlanBackingBean.managedBean.modeEditable}"
+							value="#{pPlanBackingBean.managedBean.verifierModel}" disabled="#{!pPlanBackingBean.managedBean.modeEditable or !pPlanBackingBean.isRolePlanner()}"
 							showTargetControls="true" filterMatchMode="contains" converter="pmUserConverter">
 							<f:facet name="sourceCaption">#{lbl['lbl.pp.available.verifier']}</f:facet>
 							<f:facet name="targetCaption">#{lbl['lbl.pp.selected.verifier']}</f:facet>
@@ -43,7 +43,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</th>
 				<td>
 					<p:pickList styleClass="ppActors" id="plAppover" var="actor" itemValue="#{actor}" itemLabel="#{actor.userName}"
-						value="#{pPlanBackingBean.managedBean.approverModel}" disabled="#{!pPlanBackingBean.managedBean.modeEditable}"
+						value="#{pPlanBackingBean.managedBean.approverModel}" disabled="#{!pPlanBackingBean.managedBean.modeEditable or !pPlanBackingBean.isRolePlanner()}"
 						showTargetControls="true" filterMatchMode="contains" converter="pmUserConverter">
 						<f:facet name="sourceCaption">#{lbl['lbl.pp.available.approver']}</f:facet>
 						<f:facet name="targetCaption">#{lbl['lbl.pp.selected.approver']}</f:facet>
