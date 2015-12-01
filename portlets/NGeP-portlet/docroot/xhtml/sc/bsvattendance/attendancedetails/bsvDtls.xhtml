@@ -51,7 +51,7 @@
 						value="#{bsvAttendanceBackingBean.getStatusDescById(brfsitdtl.bsvStatus.statusId)}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.action']}"
-					style="width:5%;white-space: normal;">
+					style="width:5%;white-space: normal; text-align:center;">
 
 					<p:commandLink
 						rendered="#{bsvAttendanceBackingBean.showRegistrationIcon(brfsitdtl)}"
@@ -114,7 +114,7 @@
 						value="#{bsvAttendanceBackingBean.getStatusDescById(brfsitdtl.bsvStatus.statusId)}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.action']}"
-					style="width:5%;white-space: normal;">
+					style="width:5%;white-space: normal;text-align:center;">
 					<p:commandLink
 						rendered="#{bsvAttendanceBackingBean.showRegistrationIcon(brfsitdtl)}"
 						action="#{bsvAttendanceBackingBean.registerSupplier(brfsitdtl)}"
@@ -133,8 +133,6 @@
 				<h:outputText value="#{lbl['lbl.sc.all.attendance.required.for.sv']}"
 					rendered="#{bsvDetails.scQtBsv.allSiteVisitReq}"
 					style="font-weight:bold;text-align: left;" />
-				
-
 				<h:outputText
 					value="#{lbl['lbl.sc.qt.atleast']} #{bsvDetails.scQtBsv.minSiteVisitAttend} #{lbl['lbl.sc.attendance.required.for.sv']}"
 					rendered="#{!bsvDetails.scQtBsv.allSiteVisitReq}"
@@ -181,7 +179,7 @@
 						value="#{bsvAttendanceBackingBean.getStatusDescById(sitevisitDtls.bsvStatus.statusId)}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ss.item.detail.action']}"
-					style="width:5%;white-space: normal;">
+					style="width:5%;white-space: normal; text-align:center;">
 					<p:commandLink
 						rendered="#{bsvAttendanceBackingBean.showRegistrationIcon(sitevisitDtls)}"
 						action="#{bsvAttendanceBackingBean.registerSupplier(sitevisitDtls)}"
@@ -229,7 +227,5 @@
 			</tr>
 		</table>
 	</p:panel>
-
-
 
 </ui:composition>
