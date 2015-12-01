@@ -41,7 +41,8 @@
 					<td><p:outputLabel value="#{lbl['lbl.sc.qt.bsv.date']}" /></td>
 					<td><p:inputText id="publishBsvDate"
 							value="#{approvalBackingBean.managedBean.qt.latestBsvDate}"
-							readonly="true" disabled="true" style="width: 111px;margin-top:5px">
+							readonly="true" disabled="true"
+							style="width: 111px;margin-top:5px">
 							<f:convertDateTime
 								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 						</p:inputText></td>
@@ -53,14 +54,14 @@
 				<td><p:inputText
 						value="#{approvalBackingBean.managedBean.qt.publishPeriod}"
 						readonly="true" id="publishingperiod" disabled="true"
-						style="width: 111px;margin-top:5px; text-align:right" />
-					</td>
+						style="width: 111px;margin-top:5px; text-align:right" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.closing.date']}" /></td>
 				<td><p:inputText id="publishClosingDate"
 						value="#{approvalBackingBean.managedBean.qt.closingDate}"
-						readonly="true" disabled="true" style="width: 111px;margin-top:5px">
+						readonly="true" disabled="true"
+						style="width: 111px;margin-top:5px">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<p:inputText
@@ -77,8 +78,9 @@
 							id="proposalPreparation" required="true"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button" />
 						<p:inputText value="12:00 PM" disabled="true" size="4"
-							style="width: 65px;margin-top: 1px;margin-bottom: 0px;" /> <p:message id="proposalPreparationMsg"
-							for="proposalPreparation" display="icon" /></td>
+							style="width: 65px;margin-top: 1px;margin-bottom: 0px;" /> <p:message
+							id="proposalPreparationMsg" for="proposalPreparation"
+							display="icon" /></td>
 				</tr>
 			</c:if>
 
@@ -87,15 +89,16 @@
 						value="#{lbl['lbl.sc.qt.proposal.validity']}" /></td>
 				<td><p:inputText
 						value="#{approvalBackingBean.managedBean.qt.qtValidityPeriod}"
-						readonly="true" disabled="true" size="30"
-						style="margin-top:5px;text-align:right" /></td>
+						readonly="true" disabled="true"
+						style="width: 111px;margin-top:5px;text-align:right" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.proposal.validity.until']}" /></td>
 				<td><p:inputText id="proposalvalidityid"
 						value="#{approvalBackingBean.managedBean.qt.proposalValidityEndDate}"
-						readonly="true" disabled="true" style="width: 111px;margin-top:5px;">
+						readonly="true" disabled="true"
+						style="width: 111px;margin-top:5px;">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
@@ -111,10 +114,10 @@
 		</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true">
-	<h:outputText styleClass="instruction"
-				value="#{lbl['lbl.sc.approval.remarks.instruction']}"
-				rendered="#{approvalBackingBean.isReviceOrReject()}"></h:outputText>
-	
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.approval.remarks.instruction']}"
+			rendered="#{approvalBackingBean.isReviceOrReject()}"></h:outputText>
+
 		<table style="width: 100%" id="publicremark">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
