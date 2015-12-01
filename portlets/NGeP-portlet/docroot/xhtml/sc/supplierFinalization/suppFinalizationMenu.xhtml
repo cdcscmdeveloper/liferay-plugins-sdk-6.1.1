@@ -13,8 +13,7 @@
 			<p:graphicImage value="#{CommonUIConstant.imagePath}/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 			
-		<ui:param name="isQTStatusReFinalized" value="#{suppFinalizationBackingBean.managedBean.scQt.currentWorkFlowStatus.pmStatus.statusId 
-															== QTStatusConst.QT_RE_FINALIZATION}" />
+		<ui:param name="isQTStatusReFinalized" value="#{suppFinalizationBackingBean.managedBean.qtRefinalized}" />
 		<ui:param name="isSupplierFinalization" value="#{suppFinalizationBackingBean.managedBean.currentStatusId 
 															== QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION}" />
 																
