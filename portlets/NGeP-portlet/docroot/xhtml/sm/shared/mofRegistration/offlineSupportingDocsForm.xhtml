@@ -180,7 +180,7 @@
 										label="#{lbl['lbl.sm.suppdoc.license.expdate']}"
 										value="#{table.licenseExpDate}"
 										pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
-										readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" 
+										readonlyInput="true" size="30" showOn="button" yearRange="-99:+10" 
 										mindate="#{table.licenseEffDate}">
 										<p:ajax event="dateSelect" process="@this" partialSubmit="true"/>
 									</p:calendar>
