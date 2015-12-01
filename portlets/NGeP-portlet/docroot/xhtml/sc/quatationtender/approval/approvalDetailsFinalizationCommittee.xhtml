@@ -25,36 +25,49 @@
 			value="#{fcaApprovalTab.scQtApproval.approverSettings}"
 			var="approverSettings">
 			<p:column headerText="#{lbl['lbl.sc.finalization.committee']}">
-				<p:selectOneMenu id="fcApprovalId"
-					value="#{approverSettings.committeType}"
-					style="width: 178px;margin-bottom: 5px;">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-						itemValue="#{null}" />
-					<f:selectItems var="secretary"
-						value="#{fcaApprovalTab.approverCommittes}"
-						itemLabel="#{secretary.parameterCode}"
-						itemValue="#{secretary.parameterCode}" />
-					<p:ajax event="change" update="commTypes" process="@this"
-						listener="#{qTDetailBB.changePbSecretaryCommType}"
-						partialSubmit="true" />
-				</p:selectOneMenu>
-
+				<c:choose>
+					<c:when test="#{!empty fcaApprovalTab.scQtApproval.scQtApprovalDtls}">
+						<p:selectOneMenu id="fcApprovalId"
+							value="#{approverSettings.committeType}"
+							style="width: 178px;margin-bottom: 5px;">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+								itemValue="#{null}" />
+							<f:selectItems var="secretary"
+								value="#{fcaApprovalTab.approverCommittes}"
+								itemLabel="#{secretary.parameterCode}"
+								itemValue="#{secretary.parameterCode}" />
+							<p:ajax event="change" update="commTypes" process="@this"
+								listener="#{qTDetailBB.changePbSecretaryCommType}"
+								partialSubmit="true" />
+						</p:selectOneMenu>
+					</c:when>
+					<c:otherwise>
+						#{approverSettings.committeType}
+					</c:otherwise>
+				</c:choose>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.secretary.name']}">
 				<h:panelGroup id="commTypes">
-					<p:selectOneMenu id="usersSecretaryId"
-						value="#{approverSettings.approver.userId}"
-						style="width: 178px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-							itemValue="#{null}" />
-						<f:selectItems var="usersSecretary"
-							value="#{qTDetailBB.retrievePmUserSecratryDtl(approverSettings.committeType)}"
-							itemLabel="#{usersSecretary.userName}"
-							itemValue="#{usersSecretary.userId}" />
-						<p:ajax event="change"
-							listener="#{qTDetailBB.updateUserIdToSettings}" process="@this"
-							partialSubmit="true" update="@this" />
-					</p:selectOneMenu>
+					<c:choose>
+						<c:when test="#{!empty fcaApprovalTab.scQtApproval.scQtApprovalDtls}">
+							<p:selectOneMenu id="usersSecretaryId"
+								value="#{approverSettings.approver.userId}"
+								style="width: 178px;margin-bottom: 5px;">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+									itemValue="#{null}" />
+								<f:selectItems var="usersSecretary"
+									value="#{qTDetailBB.retrievePmUserSecratryDtl(approverSettings.committeType)}"
+									itemLabel="#{usersSecretary.userName}"
+									itemValue="#{usersSecretary.userId}" />
+								<p:ajax event="change"
+									listener="#{qTDetailBB.updateUserIdToSettings}" process="@this"
+									partialSubmit="true" update="@this" />
+							</p:selectOneMenu>
+						</c:when>
+						<c:otherwise>
+							#{approverSettings.approver.userName}
+						</c:otherwise>
+					</c:choose>
 				</h:panelGroup>
 			</p:column>
 		</p:dataTable>

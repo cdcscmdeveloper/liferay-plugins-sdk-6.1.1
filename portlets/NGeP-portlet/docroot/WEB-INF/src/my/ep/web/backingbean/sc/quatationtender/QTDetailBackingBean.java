@@ -1542,16 +1542,21 @@ public class QTDetailBackingBean extends
 			}
 
 			String fcTitleName = null;
-			List<PmParameter> fcSecretaries = retrieveFinalizationCommitteeType(qtId);
+			PmParameter fcSecretaryCode = scQt.getFinalizationCommitte();
+			if (fcSecretaryCode == null || fcSecretaryCode.getParameterId() == null) {
+				List<PmParameter> fcSecretaries = retrieveFinalizationCommitteeType();
+				if (fcSecretaries != null && fcSecretaries.size() > 0) {
+					fcSecretaryCode = fcSecretaries.get(0);
+				} else {
+					fcSecretaryCode = null;
+				}
+			}
+			
 			// Displaying the Secretary Details
-			/*
-			 * List<PmUser> pmUsersList = retrievePmUserSecratryDtl(commType);
-			 * this.getManagedBean().setPmUsersSecretaryList(pmUsersList);
-			 */
-			if (fcSecretaries != null && fcSecretaries.size() > 0) {
+			if (fcSecretaryCode != null) {
 				StringBuilder fcTitleLabel = new StringBuilder(
 						"lbl.sc.finalization.committee.secretary.");
-				String fcSecretary = fcSecretaries.get(0).getParameterCode();
+				String fcSecretary = fcSecretaryCode.getParameterCode();
 
 				if (fcSecretary != null) {
 					if (fcSecretary
@@ -1683,11 +1688,10 @@ public class QTDetailBackingBean extends
 	/**
 	 * Retrieve finalization committee types.
 	 * 
-	 * @param qtId
-	 *            the qt id
 	 * @return the list
 	 */
-	private List<PmParameter> retrieveFinalizationCommitteeType(Long qtId) {
+	public List<PmParameter> retrieveFinalizationCommitteeType() {
+		ScQt scQt = getManagedBean().getQt();
 		List<PmParameter> finalizationSecratary = getManagedBean()
 				.getFinalizationSecratary();
 
@@ -1698,7 +1702,7 @@ public class QTDetailBackingBean extends
 						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 
 				CommitteReqDTO reqDTO = new CommitteReqDTO();
-				reqDTO.setQtId(qtId);
+				reqDTO.setQtId(scQt.getQtId());
 				CommitteResDTO resDTO = committeSO
 						.retrieveFinalizationCommitteeType(reqDTO);
 
@@ -1777,7 +1781,6 @@ public class QTDetailBackingBean extends
 
 			}
 			this.getManagedBean().setActiveIndex(1);
-			retrieveFinalizationCommitteeType(qtId);
 			retrieveQuationTenderDetails(new Long(qtId), null);
 			if (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
 					.equalsIgnoreCase(taskName)
@@ -2175,8 +2178,7 @@ public class QTDetailBackingBean extends
 							}
 							tabBeans.add(new TabBean(titleName,
 									approvalCategoryCode, qtApproval,
-									retrieveFinalizationCommitteeType(scQt
-											.getQtId())));
+									retrieveFinalizationCommitteeType()));
 						} else if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT
 								.equals(approvalCategoryCode)) {
 							tabBeans.add(new TabBean(titleName,
@@ -4148,7 +4150,7 @@ public class QTDetailBackingBean extends
 						qtApproval.getScQtApprovalRemarks(),
 						ScQtApprovalRemark.class));
 				TabBean tabBean = new TabBean(null, null, qtApproval,
-						retrieveFinalizationCommitteeType(scQt.getQtId()));
+						retrieveFinalizationCommitteeType());
 				this.getManagedBean().setSelectedApprovalTabBean(tabBean);
 			} else {
 				scQt.setScQtRemarks(initializeRemarks(scQt, this
@@ -4176,9 +4178,6 @@ public class QTDetailBackingBean extends
 		if (null != commType) {
 			getManagedBean().getSelectedApprovalTabBean().getScQtApproval()
 					.getApproverSettings().get(0).setApprover(new PmUser());
-		} else {
-			retrieveFinalizationCommitteeType(getManagedBean().getQt()
-					.getQtId());
 		}
 	}
 
