@@ -360,6 +360,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean showPersonnelViewOnly;
 	private boolean disabledShareholderPersonnelNameAndNationality;
 	private boolean alreadyBusinessSpecialCatcode;
+	private String businessOfficeCatCodeMsg;
 	private String selectedShareholderIdentificationType;
 	private String revisionApplType;
 	private Long myCountryId;
@@ -3030,5 +3031,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setAlreadyBusinessSpecialCatcode(
 			boolean alreadyBusinessSpecialCatcode) {
 		this.alreadyBusinessSpecialCatcode = alreadyBusinessSpecialCatcode;
+	}
+
+	public String getBusinessOfficeCatCodeMsg() {
+		return businessOfficeCatCodeMsg;
+	}
+
+	public void setBusinessOfficeCatCodeMsg(String businessOfficeCatCodeMsg) {
+		this.businessOfficeCatCodeMsg = businessOfficeCatCodeMsg;
 	}
 }
