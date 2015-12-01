@@ -54,6 +54,7 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private List<SoftcertUploadSuppDocVO> softcertUploadSuppDocList;
 	private SoftCertMaintenanceBackingBean softCertMaintenanceBackingBean = new SoftCertMaintenanceBackingBean();
 	private boolean applySoftcertForOthers;
+	private boolean renderRevokeButton;
 
 	@ManagedProperty(value = "#{spkiBackingBean}")
 	private SpkiBackingBean spkiBackingBean;
@@ -283,6 +284,14 @@ public class SoftCertManagedBean extends BaseManagedBean {
 
 	public void setSoftCertSelect(SmPersonnel softCertSelect) {
 		this.softCertSelect = softCertSelect;
+	}
+
+	public boolean isRenderRevokeButton() {
+		return renderRevokeButton;
+	}
+
+	public void setRenderRevokeButton(boolean renderRevokeButton) {
+		this.renderRevokeButton = renderRevokeButton;
 	}
 
 }
