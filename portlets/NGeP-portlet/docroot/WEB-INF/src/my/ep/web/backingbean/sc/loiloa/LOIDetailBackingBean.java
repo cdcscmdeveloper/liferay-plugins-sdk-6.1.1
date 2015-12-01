@@ -15,10 +15,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -146,6 +148,8 @@ import org.primefaces.model.StreamedContent;
  * @author Viswanath
  * 
  * @author Sri
+ * 
+ * @author Praneeth
  */
 @ManagedBean(name = "lOIDetailBackingBean")
 @RequestScoped
@@ -463,8 +467,9 @@ public class LOIDetailBackingBean extends
 	 *            the recommend dtl ids
 	 */
 	private void retrieveMultipleLoiDtls(Long qtId, String committeeType,
-			List<String> recommendDtlIds) {
+										 List<String> recommendDtlIds) {
 		try {
+			boolean isZonal = false;
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setQtId(qtId);
 			reqDTO.setCommitteeType(committeeType);
@@ -477,11 +482,15 @@ public class LOIDetailBackingBean extends
 						.getScQtFinalization();
 				List<ScQtRecommend> scQtRecommendList = resDTO
 						.getScQtRecommendList();
-				
+				isZonal = scQtFinalization.getScQt().isZonal();
 				List<ScLoi> scLois = resDTO.getScLois();
+				Map<Long,List<ScLoiLoaItem>> loiLoaItemsMap 
+							= new HashMap<Long,List<ScLoiLoaItem>>();
+				Map<Long,List<ScLoiLoaItem>> supplierLoiLoaItemsMap = null;
 				if (CollectionUtils.isNotEmpty(scLois) && 
 						CollectionUtils.isNotEmpty(recommendDtlIds)) {
 					List<ScLoi> previousLois = null;
+					
 					for (ScLoi scLoi : scLois) {
 						if (CollectionUtils.isNotEmpty(
 									scLoi.getScLoiLoaItems())) {
@@ -495,6 +504,28 @@ public class LOIDetailBackingBean extends
 									}
 									previousLois.add(scLoi);
 									break;
+								}
+								
+								if (isZonal) {
+									Long specZoneId = loiLoaItem.getTplSpecZoneDtl().getSpecZoneId();
+									if (loiLoaItemsMap.containsKey(specZoneId)) {
+										loiLoaItemsMap.get(specZoneId).add(loiLoaItem);
+									} else {
+										List<ScLoiLoaItem> loiLoaItems = new ArrayList<ScLoiLoaItem>();
+										loiLoaItems.add(loiLoaItem);
+										loiLoaItemsMap.put(specZoneId, loiLoaItems);
+									}
+								}
+							}
+							
+							if (!isZonal) { 
+								if (CollectionUtils.isEmpty(previousLois) || 
+										!previousLois.contains(scLoi)) {
+									if (supplierLoiLoaItemsMap == null) {
+										supplierLoiLoaItemsMap = new HashMap<Long,List<ScLoiLoaItem>>();
+									}
+									Long supplierId = scLoi.getScLoiLoa().getSmSupplier().getSupplierId();
+									supplierLoiLoaItemsMap.put(supplierId, scLoi.getScLoiLoaItems());								
 								}
 							}
 						}
@@ -514,11 +545,13 @@ public class LOIDetailBackingBean extends
 				getManagedBean().setScQt(scQtFinalization.getScQt());
 				getManagedBean().setCommitteeType(committeeType);
 				getManagedBean().setLois(scLois);
+				getManagedBean().setLoiLoaItemsMap(loiLoaItemsMap);
+				getManagedBean().setSupplierLoiLoaItemsMap(supplierLoiLoaItemsMap);
 				getManagedBean().setRecommendDtlIds(recommendDtlIds);
 				
 				String recommendType = scQtFinalization.getRecommendedTypeId()
 													   .getParameterCode();
-				if (scQtFinalization.getScQt().isZonal()) {
+				if (isZonal) {
 					this.getManagedBean().setMultiLOIZoneDetails(
 							new ArrayList<TplSpecZoneDtl>());
 					this.getManagedBean().setScQtRecommendsByZone(
@@ -528,11 +561,15 @@ public class LOIDetailBackingBean extends
 					List<TplSpecZoneDtl> zoneDetails = new ArrayList<TplSpecZoneDtl>();
 					Map<Long, List<ScQtRecommend>> scQtRecommendsByZone 
 									= new LinkedHashMap<Long, List<ScQtRecommend>>();					
+					Map<Long,TplSpecZoneDtl> zoneMap = new HashMap<Long,TplSpecZoneDtl>();
+					getManagedBean().setZoneMap(zoneMap);
+					
 					for (ScQtRecommend scQtRecommend : scQtRecommendList) {
 						specZoneDtl = scQtRecommend.getTplSpecZoneDtl();
 						
 						if (!zoneDetails.contains(specZoneDtl)) {
 							zoneDetails.add(specZoneDtl);
+							zoneMap.put(specZoneDtl.getSpecZoneId(), specZoneDtl);
 						}
 						if (scQtRecommendsByZone.containsKey(
 										specZoneDtl.getSpecZoneId())) {
@@ -550,6 +587,8 @@ public class LOIDetailBackingBean extends
 					if (CollectionUtils.isNotEmpty(zoneDetails)) {
 						this.getManagedBean().setMultiLOIZoneDetails(zoneDetails);
 						this.getManagedBean().setSelectedZone(zoneDetails.get(0));
+						this.getManagedBean().setZoneActiveIndex(
+									zoneDetails.get(0).getZoneTabIndex());
 						this.getManagedBean().setScQtRecommendsByZone(scQtRecommendsByZone);
 						processMultiLOIDetails(recommendType, 
 								scQtRecommendsByZone.get(zoneDetails.get(0).getSpecZoneId()));					
@@ -614,54 +653,72 @@ public class LOIDetailBackingBean extends
 			}
 		} else {
 			getManagedBean().setItemized(false);
-//			for (ScQtRecommend scQtRecommend : scQtRecommendList) {
-//				setRecommendedSupplierList(scQtRecommend);
-//				scQtRecommend.setShortListedSupplierList(
-//						this.getShortListedSupplierList());
-//			}
 			
-			ScQtRecommend scQtRecommend = scQtRecommendList.get(0);
-			setRecommendedSupplierList(scQtRecommend);
-			
-			List<ScQtEvaluationResultDtl> recommendedSuppplierList 
-									= scQtRecommend.getAwardSupplierList();
-
-			if (CollectionUtils.isNotEmpty(recommendedSuppplierList)) {
-				for (ScQtEvaluationResultDtl recommendedSupplier 
-												: recommendedSuppplierList) {
-					Long recommendedSupplierId = recommendedSupplier.getQtEvaluationResult().getScQtProposal()
-													.getScQtSupplier().getSmSupplier().getSupplierId();
-					BigDecimal totalOfferedPrice = new BigDecimal(0);
-					for (ScQtRecommend qtRecommend : scQtRecommendList) {
-						ScRequestItem requestItem = qtRecommend.getRequestItem();
-						BigDecimal offeredPricePerItem = calculateOfferedPrice(recommendedSupplier, requestItem);
-						if (offeredPricePerItem != null) {
-							totalOfferedPrice = totalOfferedPrice.add(offeredPricePerItem);
-						}
-						if (recommendedSupplier.isAwareded()) {
-							this.getManagedBean().setSelectedSupplier(
-									recommendedSupplier);
-							for (ScQtRecommendDtl recommendDtl 
-										: scQtRecommend.getRecommendDtls()) {
-								if (recommendedSupplierId.equals(
-										recommendDtl.getSupplier().getSupplierId())) {
-									recommendDtl.setRecordStatus(true);
-									recommendDtl.setRecordStatusFlg(
-											DbValueConst.RECORD_STATUS_ACTIVE);
-									break;
-								}
-							}
-							
-							qtRecommend.setAwardSupplierList(recommendedSuppplierList);
-						}
-					}
-					totalOfferedPrice = totalOfferedPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-					recommendedSupplier.getQtEvaluationResult().setOfferedPrice(totalOfferedPrice);
-				}
-			}
-			getManagedBean().setRecommendedSupplierList(recommendedSuppplierList);			
+			ScQtEvaluationResultDtl awardedSupplier 
+						= processRecommendedSuppliersByPKG(scQtRecommendList);
+			getManagedBean().setRecommendedSupplierList(
+					scQtRecommendList.get(0).getAwardSupplierList());	
+			getManagedBean().setSelectedSupplier(awardedSupplier);
 		}				
 	}
+	
+	private ScQtEvaluationResultDtl processRecommendedSuppliersByPKG(List<ScQtRecommend> scQtRecommendList) {
+		ScQtEvaluationResultDtl awardedSupplier = null;
+		ScQtRecommend scQtRecommend = scQtRecommendList.get(0);
+		setRecommendedSupplierList(scQtRecommend);
+		
+		List<ScQtEvaluationResultDtl> recommendedSuppplierList 
+								= scQtRecommend.getAwardSupplierList();
+		if (CollectionUtils.isNotEmpty(recommendedSuppplierList)) {
+			for (ScQtEvaluationResultDtl recommendedSupplier 
+											: recommendedSuppplierList) {
+				Long recommendedSupplierId = recommendedSupplier.getQtEvaluationResult()
+						.getScQtProposal().getScQtSupplier().getSmSupplier().getSupplierId();
+				BigDecimal totalOfferedPrice = new BigDecimal(0);
+				if (recommendedSupplier.isAwareded()) {
+					for (ScQtRecommendDtl recommendDtl 
+								: scQtRecommend.getRecommendDtls()) {
+						if (recommendedSupplierId.equals(
+								recommendDtl.getSupplier().getSupplierId())) {
+							recommendDtl.setRecordStatus(true);
+							recommendDtl.setRecordStatusFlg(
+									DbValueConst.RECORD_STATUS_ACTIVE);
+							awardedSupplier = recommendedSupplier;
+							break;
+						}
+					}
+				}
+
+				List<ScLoiLoaItem> awardedSupplierLoiLoaItems = new ArrayList<ScLoiLoaItem>();				
+				Map<Long,List<ScLoiLoaItem>> loiLoaItemsMap 
+							= getManagedBean().getLoiLoaItemsMap();
+				
+				if (getManagedBean().isZonal()) {
+					List<ScLoiLoaItem> loiLoaItems = loiLoaItemsMap.get(
+							scQtRecommend.getTplSpecZoneDtl().getSpecZoneId());
+					for (ScLoiLoaItem scLoiLoaItem : loiLoaItems) {
+						Long itemSupplierId = scLoiLoaItem.getScQtRecommendDtl()
+													.getSupplier().getSupplierId();
+						if (recommendedSupplierId.equals(itemSupplierId)) {
+							awardedSupplierLoiLoaItems.add(scLoiLoaItem);
+						}
+					}					
+				} else {
+					
+					// Get loiLoaItems corresponding to the supplier
+					awardedSupplierLoiLoaItems = getManagedBean().getSupplierLoiLoaItemsMap()
+													.get(recommendedSupplierId);
+				}
+				totalOfferedPrice = calculateAfterNegoSubTotal(
+							awardedSupplierLoiLoaItems, scQtRecommendList);
+				totalOfferedPrice = totalOfferedPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+				recommendedSupplier.getQtEvaluationResult()
+								   .setOfferedPrice(totalOfferedPrice);
+			}
+		}	
+		
+		return awardedSupplier;
+	}	
 	
 	private void generateZoneMenuModel() {
 		if (CollectionUtils.isNotEmpty(
@@ -3658,41 +3715,203 @@ public class LOIDetailBackingBean extends
 		attachment.setFileName("Negotiation_Recommendation.pdf");
 		populateAttachmentDetails(attachment);
 		VelocityContext context = new VelocityContext();
+		List<ScQtRecommend> recommendedItems = getManagedBean().getRecommendList();
 		CommonUtils commonUtils = new CommonUtils();
 		DecimalFormat amountDF = new DecimalFormat(
-				commonUtils
-						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-
-		if (getManagedBean().getRecommendList() != null) {
-			context.put("numberFormatter", new DecimalFormat("#,###,##0.00"));
-			context.put("recommendList", getManagedBean().getRecommendList());
-			context.put("bean", this);
-			context.put("recommendSupplierList", getManagedBean().getRecommendedSupplierList());
-			context.put("itemized", getManagedBean().isItemized());
-		}
+						commonUtils.getDisplayNumberFormat(
+								CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));		
+		
 		String afterNegoSubTotal = "";
 		List<ScLoi> lois = getManagedBean().getLois();
+		NegotiationRecommendationReportDTO reportDTO = null;
+		Map<TplSpecZoneDtl,NegotiationRecommendationReportDTO> zoneDetailsMap = null;
+		
 		if (CollectionUtils.isNotEmpty(lois)) {
 			for (ScLoi loi : lois) {
-				for (ScLoiLoaItem scLoiLoaItem : loi.getScLoiLoaItems()) {
-					for (ScQtRecommend qtRecommend : getManagedBean().getRecommendList()) {
-						for (ScQtRecommendDtl dtl : qtRecommend.getRecommendDtls()) {
-							if (dtl.getRecommendDtlId() == scLoiLoaItem.getScQtRecommendDtl().getRecommendDtlId() 
-									&& dtl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
-								afterNegoSubTotal = amountDF.format(loi.getAfterNegoTotal());
+				if (!QTStatusConst.LOI_REJECTED.equals(
+						loi.getScWorkFlowStatus().getPmStatus().getStatusId())) {
+					Map<Long,TplSpecZoneDtl> zoneMap = getManagedBean().getZoneMap();
+					if (recommendedItems != null) {
+						Long awardedSupplierId = null;
+						
+						if (!getManagedBean().isItemized()) {
+							Set<ScQtEvaluationResultDtl> awardedSuppliers = null;
+							if (getManagedBean().isZonal()) {
+								if (zoneDetailsMap == null) {
+									zoneDetailsMap = new HashMap<TplSpecZoneDtl,NegotiationRecommendationReportDTO>();
+								}
+								Map<Long,List<ScQtRecommend>> scQtRecommendsByZone
+										= getManagedBean().getScQtRecommendsByZone();		
+								
+								for (Long zoneId : zoneMap.keySet()) {
+									awardedSupplierId = null;
+									reportDTO = new NegotiationRecommendationReportDTO();
+									ScQtRecommend scQtRecommend 
+											= scQtRecommendsByZone.get(zoneId).get(0);
+									if (CollectionUtils.isEmpty(
+											scQtRecommend.getAwardSupplierList())) {
+										processRecommendedSuppliersByPKG(
+												scQtRecommendsByZone.get(zoneId));
+									}
+									
+									if (CollectionUtils.isNotEmpty(
+											scQtRecommend.getAwardSupplierList())) {
+										for (ScQtEvaluationResultDtl evalResDtl
+													: scQtRecommend.getAwardSupplierList()) {
+											if (evalResDtl.isAwareded()) {
+												awardedSuppliers = new HashSet<ScQtEvaluationResultDtl>();												
+												awardedSuppliers.add(evalResDtl);
+												awardedSupplierId = evalResDtl.getQtEvaluationResult()
+														.getScQtProposal().getScQtSupplier()
+														.getSmSupplier().getSupplierId();
+												break;
+											}
+										}
+									}
+									
+									Long loiSupplierId = loi.getScLoiLoa().getSmSupplier().getSupplierId();
+									if (awardedSupplierId != null && 
+											loiSupplierId.equals(awardedSupplierId)) {
+										Map<Long,List<ScLoiLoaItem>> loiLoaItemsMap 
+													= getManagedBean().getLoiLoaItemsMap();
+										List<ScLoiLoaItem> loiLoaItems = new ArrayList<ScLoiLoaItem>();
+										for (ScLoiLoaItem scLoiLoaItem 
+												: loiLoaItemsMap.get(zoneId)) {
+											Long itemSupplierId = scLoiLoaItem.getScQtRecommendDtl()
+																		.getSupplier().getSupplierId();
+											if (awardedSupplierId.equals(itemSupplierId)) {
+												loiLoaItems.add(scLoiLoaItem);
+											}
+										}
+							
+										BigDecimal afterNegotiationSubTotal = calculateAfterNegoSubTotal(
+												loiLoaItems, scQtRecommendsByZone.get(zoneId));
+										afterNegoSubTotal = amountDF.format(afterNegotiationSubTotal);
+										reportDTO.setAwardedSuppliers(
+												new ArrayList<ScQtEvaluationResultDtl>(awardedSuppliers));
+										reportDTO.setRecommendedItems(scQtRecommendsByZone.get(zoneId));
+										reportDTO.setLoiLoaItems(loiLoaItems);
+										reportDTO.setAfterNegoSubTotal(afterNegoSubTotal);
+										zoneDetailsMap.put(zoneMap.get(zoneId),reportDTO);
+									}
+								}
+							} else {
+								reportDTO = new NegotiationRecommendationReportDTO();
+								reportDTO.setEmpty(true);
+								Set<ScQtEvaluationResultDtl> recommendedSuppliers 
+											= new HashSet<ScQtEvaluationResultDtl>(
+														getManagedBean().getRecommendedSupplierList());
+								if (CollectionUtils.isNotEmpty(recommendedSuppliers)) {
+									for (ScQtEvaluationResultDtl evalResDtl
+														: recommendedSuppliers) {
+										if (evalResDtl.isAwareded()) {
+											awardedSuppliers = new HashSet<ScQtEvaluationResultDtl>();
+											awardedSuppliers.add(evalResDtl);
+											awardedSupplierId = evalResDtl.getQtEvaluationResult()
+													.getScQtProposal().getScQtSupplier()
+													.getSmSupplier().getSupplierId();											
+											break;
+										}
+									}
+								}			
+								
+								Long loiSupplierId = loi.getScLoiLoa().getSmSupplier().getSupplierId();
+								if (loiSupplierId.equals(awardedSupplierId)) {
+									reportDTO.setEmpty(false);
+									BigDecimal afterNegotiationSubTotal = calculateAfterNegoSubTotal(
+											loi.getScLoiLoaItems(), recommendedItems);
+									afterNegoSubTotal = amountDF.format(afterNegotiationSubTotal);									
+									reportDTO.setAwardedSuppliers(
+											new ArrayList<ScQtEvaluationResultDtl>(awardedSuppliers));
+									reportDTO.setRecommendedItems(recommendedItems);
+									reportDTO.setAfterNegoSubTotal(afterNegoSubTotal);
+									reportDTO.setLoiLoaItems(loi.getScLoiLoaItems());
+									
+									break;
+								}
 							}
+						} else {
+							if (getManagedBean().isZonal()) {
+								if (zoneDetailsMap == null) {
+									zoneDetailsMap = new HashMap<TplSpecZoneDtl,NegotiationRecommendationReportDTO>();
+								}
+								Map<Long,List<ScQtRecommend>> scQtRecommendsByZone
+										= getManagedBean().getScQtRecommendsByZone();
+								
+								for (Long zoneId : zoneMap.keySet()) {
+									reportDTO = new NegotiationRecommendationReportDTO();
+									Map<Long,List<ScLoiLoaItem>> loiLoaItemsMap 
+												= getManagedBean().getLoiLoaItemsMap();
+
+									processMultiLOIDetails(ParameterConst.RECOMMEND_TYPE_ITEM, 
+															 scQtRecommendsByZone.get(zoneId));
+									
+									BigDecimal afterNegotiationSubTotal = calculateAfterNegoSubTotal(
+											loiLoaItemsMap.get(zoneId), scQtRecommendsByZone.get(zoneId));
+									afterNegoSubTotal = amountDF.format(afterNegotiationSubTotal);								
+									
+									reportDTO.setRecommendedItems(scQtRecommendsByZone.get(zoneId));
+									reportDTO.setAfterNegoSubTotal(afterNegoSubTotal);
+									zoneDetailsMap.put(zoneMap.get(zoneId),reportDTO);
+								}
+							} else {
+								reportDTO = new NegotiationRecommendationReportDTO();
+								BigDecimal afterNegotiationSubTotal = calculateAfterNegoSubTotal(
+										loi.getScLoiLoaItems(), recommendedItems);
+								afterNegoSubTotal = amountDF.format(afterNegotiationSubTotal);								
+								reportDTO.setRecommendedItems(recommendedItems);
+								reportDTO.setAfterNegoSubTotal(afterNegoSubTotal);
+							}
+
 						}
-					}
+					}	
+					
 				}
 			}
-			context.put("scLois", lois);
 		}
-		context.put("afterNegoSubTotal", afterNegoSubTotal);
+		
+		if (getManagedBean().isZonal()) {
+			for (TplSpecZoneDtl specZone
+						: getManagedBean().getZoneMap().values()) {
+				if (!zoneDetailsMap.containsKey(
+						specZone)) {
+					NegotiationRecommendationReportDTO tempDTO
+							= new NegotiationRecommendationReportDTO();
+					tempDTO.setEmpty(true);
+					zoneDetailsMap.put(specZone,tempDTO);
+				}
+			}
+		}
+		
+		context.put("reportDTO", reportDTO);
+		context.put("zoneDetailsMap", zoneDetailsMap);
+		context.put("numberFormatter", new DecimalFormat("#,###,##0.00"));
+		context.put("itemized", getManagedBean().isItemized());
 		context.put("isZonal", getManagedBean().isZonal());
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				"/sc/loi/loi-negotiationRecommendation.vm", context,
 				new FileOutputStream(getActualFilePath(attachment)));
 	}
+	
+	private BigDecimal calculateAfterNegoSubTotal(List<ScLoiLoaItem> scLoiLoaItems, 
+											  List<ScQtRecommend> recommendedItems) {
+		BigDecimal afterNegotiationSubTotal = new BigDecimal(0.0);
+		
+		if (CollectionUtils.isNotEmpty(scLoiLoaItems)) {
+			for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
+				if (scLoiLoaItem.getAfterNegoSubTotal() != null) {
+					BigDecimal itemAfterNegoSubTotal = scLoiLoaItem.getAfterNegoSubTotal(); 
+					itemAfterNegoSubTotal = itemAfterNegoSubTotal.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+					afterNegotiationSubTotal = afterNegotiationSubTotal.add(
+														itemAfterNegoSubTotal);
+					afterNegotiationSubTotal = afterNegotiationSubTotal
+													.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+				}
+			}
+		}
+				
+		return afterNegotiationSubTotal;
+	}	
 
 	/**
 	 * Generate negotiation result pdf.
@@ -4354,19 +4573,19 @@ public class LOIDetailBackingBean extends
 				shortlistedSupplierList = resDTO.getQualifiedByItemSuppliers();
 			} else {
 				resDTO = this.getShortListedSuppliersByPkg(
-							this.getManagedBean().getSelectedZone());
+									scQtRecommend.getTplSpecZoneDtl());
 				shortlistedSupplierList = resDTO.getQualifiedByPackageSuppliers();
-//				this.setShortListedSupplierList(shortlistedSupplierList);
 			}
+			
 			isSuccessful = resDTO.isSuccessful();
 			scQtRecommend.setShortListedSupplierList(shortlistedSupplierList);
 		} else {
 			isSuccessful = true;
 			shortlistedSupplierList = scQtRecommend
 					.getShortListedSupplierList();
-//			this.setShortListedSupplierList(shortlistedSupplierList);
 		}
 		if (isSuccessful) {
+			
 			// set the checkbox or radio button of supplier selected
 			// Multiple LOI or Online Bidding
 			Map<Long,ScQtRecommendDtl> recommendDtlsMap = new HashMap<Long,ScQtRecommendDtl>();
@@ -4405,8 +4624,8 @@ public class LOIDetailBackingBean extends
 					}
 				}				
 			}			
-
 		}
+		
 	}
 
 	/**
@@ -4838,6 +5057,92 @@ public class LOIDetailBackingBean extends
 				}
 			}
 		}
+	}
+	
+	public class NegotiationRecommendationReportDTO {
+		private List<ScQtEvaluationResultDtl> awardedSuppliers;
+		private List<ScQtRecommend> recommendedItems;
+		private List<ScLoiLoaItem> loiLoaItems;
+		private String afterNegoSubTotal;
+		private boolean empty;
+		
+		public NegotiationRecommendationReportDTO() {}
+		
+		/**
+		 * @return the awardedSuppliers
+		 */
+		public List<ScQtEvaluationResultDtl> getAwardedSuppliers() {
+			return awardedSuppliers;
+		}
+
+		/**
+		 * @param awardedSuppliers 
+		 * 				the awardedSuppliers to set
+		 */
+		public void setAwardedSuppliers(
+						List<ScQtEvaluationResultDtl> awardedSuppliers) {
+			this.awardedSuppliers = awardedSuppliers;
+		}
+
+		/**
+		 * @return the recommendedItems
+		 */
+		public List<ScQtRecommend> getRecommendedItems() {
+			return recommendedItems;
+		}
+		
+		/**
+		 * @param recommendedItems 
+		 * 				the recommendedItems to set
+		 */
+		public void setRecommendedItems(List<ScQtRecommend> recommendedItems) {
+			this.recommendedItems = recommendedItems;
+		}
+
+		/**
+		 * @return the loiLoaItems
+		 */
+		public List<ScLoiLoaItem> getLoiLoaItems() {
+			return loiLoaItems;
+		}
+
+		/**
+		 * @param loiLoaItems 
+		 * 				the loiLoaItems to set
+		 */
+		public void setLoiLoaItems(List<ScLoiLoaItem> loiLoaItems) {
+			this.loiLoaItems = loiLoaItems;
+		}
+
+		/**
+		 * @return the afterNegoSubTotal
+		 */
+		public String getAfterNegoSubTotal() {
+			return afterNegoSubTotal;
+		}
+
+		/**
+		 * @param afterNegoSubTotal 
+		 * 				the afterNegoSubTotal to set
+		 */
+		public void setAfterNegoSubTotal(String afterNegoSubTotal) {
+			this.afterNegoSubTotal = afterNegoSubTotal;
+		}
+
+		/**
+		 * @return the empty
+		 */
+		public boolean isEmpty() {
+			return empty;
+		}
+
+		/**
+		 * @param empty the empty to set
+		 */
+		public void setEmpty(boolean empty) {
+			this.empty = empty;
+		}
+		
 	}
 
 }
