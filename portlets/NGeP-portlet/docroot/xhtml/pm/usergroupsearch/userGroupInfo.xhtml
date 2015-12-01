@@ -9,8 +9,6 @@
 
 	<p:panel id="groupInfo" header="#{lbl['lbl.pm.ug.result.title1']}"
 		toggleable="true">
-		<p:spacer height="10"></p:spacer>
-
 		<table>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.ug.result.groupcode']}" />
@@ -71,12 +69,15 @@
 						value="#{usergroupBackingBean.managedBean.userGroup.recordStatusFlg}"
 						disabled="#{usergroupBackingBean.managedBean.userGroup.brandNew}">
 						<f:selectItems
-							value="#{usergroupBackingBean.getUserGroupStatus()}"></f:selectItems>	
+							value="#{usergroupBackingBean.getUserGroupStatus()}"></f:selectItems>
+							<p:ajax event="change"
+									listener="#{usergroupBackingBean.userGroupStatusChange()}"
+									partialSubmit="true" process="@this"
+									update="@this, usergroupmsg" />	
 					</p:selectOneMenu></td>
 			</tr>
 		</table>
 	</p:panel>
-	<p:spacer height="20"></p:spacer>
 
 	<p:panel header="#{lbl['lbl.pm.ug.result.title']}" toggleable="true"
 		id="userPanelId">
