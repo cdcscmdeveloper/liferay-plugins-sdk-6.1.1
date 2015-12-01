@@ -19,7 +19,8 @@
 
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.spec.panel']}" /></td>
-				<td><p:inputText size="32" style="width:292px;margin-bottom:5px;"
+				<td><p:inputText size="32"
+						style="width:292px;margin-bottom:5px;"
 						value="#{lbl[specificationBackingBean.managedBean.scQt.panel ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
 						readonly="true"></p:inputText></td>
 
@@ -284,19 +285,27 @@
 					<td style="width: 300px"><p:outputLabel
 							value="#{lbl['lbl.sc.zone.location.level']}" /> <p:outputLabel
 							value="*" styleClass="mandatory"></p:outputLabel></td>
-					<td><p:selectOneMenu id="locationLevels"
-							disabled="#{specificationBackingBean.managedBean.readOnly}"
-							label="#{lbl['lbl.sc.zone.location.level']}"
-							value="#{specificationBackingBean.managedBean.scQt.zoneLocationLevel.parameterId}"
-							style="width: 303px;">
+					<td>
+						<table>
+							<tr>
+								<td><p:selectOneMenu id="locationLevels" required="true"
+										disabled="#{specificationBackingBean.managedBean.readOnly}"
+										label="#{lbl['lbl.sc.zone.location.level']}"
+										value="#{specificationBackingBean.managedBean.scQt.zoneLocationLevel.parameterId}"
+										style="width: 303px;">
 
-							<f:selectItems
-								value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
-							<p:ajax event="change" update="generalLocationList"
-								listener="#{specificationBackingBean.selectZoneLocationLevel}"></p:ajax>
-						</p:selectOneMenu> <ac:iconTooltip
-							value="#{lbl['lbl.sc.zone.location.level.tooltip']}" /> <p:message
-							id="withzone" for="locationLevels" display="icon"></p:message></td>
+										<f:selectItems
+											value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
+										<p:ajax event="change" update="generalLocationList"
+											listener="#{specificationBackingBean.selectZoneLocationLevel}"></p:ajax>
+									</p:selectOneMenu> <p:message id="withzone" for="locationLevels" display="icon"></p:message>
+								</td>
+								<td style="margin-top: -3px"><ac:iconTooltip
+										value="#{lbl['lbl.sc.zone.location.level.tooltip']}" /></td>
+							</tr>
+						</table>
+					</td>
+
 				</tr>
 			</table>
 		</p:panel>
@@ -358,13 +367,11 @@
 				<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}"
 					style="float:left;margin-top: 12px;;margin-left: 10px;" />
 				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
-				styleClass="BtnSpacing"
-					update="@([id$=zonePopupGeneral])"
+					styleClass="BtnSpacing" update="@([id$=zonePopupGeneral])"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					actionListener="#{specificationBackingBean.showGeneralZonesPopup}" />
 				<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
-				styleClass="BtnSpacing"
-					partialSubmit="true"
+					styleClass="BtnSpacing" partialSubmit="true"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					oncomplete="zonesNonpanelDeletePopUp.show();"
 					update="@([id$=#{zonesNonpanelDeleteId}])" />
@@ -387,10 +394,10 @@
 		<h:panelGroup id="zonePopupGeneral">
 			<table styleClass="noBorders tr,noBorders td" border="0">
 				<TR>
-					<td style="width:35%" valign="top"><p:outputLabel
+					<td style="width: 35%" valign="top"><p:outputLabel
 							value="#{lbl['lbl.sc.zone.name']}"></p:outputLabel> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td style="width:65%">
+					<td style="width: 65%">
 						<table>
 							<tr>
 								<td><p:inputText size="50" id="zoneNameId"
@@ -441,10 +448,12 @@
 						</p:selectBooleanCheckbox> <p:spacer width="1" /> <h:outputLabel
 							value="#{lbl['lbl.sc.spec.check.all']}"
 							style="float:left;margin-top: 12px;;margin-left: 10px;" /> <p:commandButton
-							value="#{lbl['lbl.btn.cancel']}" style="float:right;" styleClass="BtnSpacing"
-							onclick="ZoneGeneral.hide();" /> &#160;&#160; <p:commandButton
-							value="#{lbl['lbl.btn.ok']}" style="float:right;" process="@all"
-							update="@this, zoneGeneralDataTable,zonePopupGeneral" styleClass="BtnSpacing"
+							value="#{lbl['lbl.btn.cancel']}" style="float:right;"
+							styleClass="BtnSpacing" onclick="ZoneGeneral.hide();" />
+						&#160;&#160; <p:commandButton value="#{lbl['lbl.btn.ok']}"
+							style="float:right;" process="@all"
+							update="@this, zoneGeneralDataTable,zonePopupGeneral"
+							styleClass="BtnSpacing"
 							action="#{specificationBackingBean.updateZoneGeneralLocation}">
 						</p:commandButton></TD>
 				</TR>
