@@ -14,6 +14,12 @@
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"
 						style="float:right;" id="proceedBtnId" disabled="#{empty softCertBackingBean.managedBean.softCertSelectList}">
 					</p:commandButton>
+					<h:commandLink style="float:right;" action="#{softCertBackingBean.revoke}"
+						disabled="#{!softCertBackingBean.managedBean.renderRevokeButton}" target="_blank"
+						process="@this" partialSubmit="true" update=":form" >
+							<p:commandButton type="button" value="#{lbl['lbl.sm.softcert.revoke']}" style="float:right;"
+							disabled="#{!softCertBackingBean.managedBean.renderRevokeButton}"/>
+					</h:commandLink>
 				</td>
 			</tr>
 		</table>
@@ -71,18 +77,6 @@
 				<p:column disabledSelection="#{personnel.disableRowSelection}"
 					headerText="#{lbl['lbl.sm.userprofile.softcertexpirationdate']}">
 					<h:outputText value="#{personnel.softcertValidityDate}" />
-				</p:column>
-				
-				<p:column disabledSelection="#{personnel.disableRowSelection}"
-					headerText="#{lbl['lbl.sm.label.action']}">
-					<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{personnel.softcertFlg ne '1'}"/>
-					<h:commandLink 
-						rendered="#{personnel.softcertFlg eq '1' and 
-						(softCertBackingBean.managedBean.loginUserPersonnelInfo.epRole eq 'MOF_SUPPLIER_ADMIN' or 
-						softCertBackingBean.managedBean.loginUserPersonnelInfo.epRole eq 'BASIC_SUPPLIER_ADMIN' or 
-						softCertBackingBean.managedBean.loginUserPersonnelInfo.epRole eq 'SUPPLIER_TEMP')}"
-						action="#{softCertBackingBean.revoke()}" target="_blank"
-						process="@this" partialSubmit="true" update=":form" value="#{lbl['lbl.sm.softcert.revoke']}"/>
 				</p:column>
 
 			</p:dataTable>
