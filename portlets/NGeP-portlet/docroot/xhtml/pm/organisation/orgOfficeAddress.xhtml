@@ -49,7 +49,7 @@
 						  value="#{organisationBackingBean.getStateList(organisationBackingBean.managedBean.officeAddress.pmCountry.countryId)}" 
 						  var="state" itemLabel="#{state.stateName}"
 						  itemValue="#{state.stateId}"/>
-						<p:ajax event="change" update="orgDistrict, orgDivision, orgCity" process="@this"
+						<p:ajax event="change" update="orgDistrict, orgDivision, orgCity,:form:addressTabs:acgmap:gmapInput:gmapInput" process="@this"
 						 	listener="#{organisationBackingBean.retrievePmState()}"/>
 					</p:selectOneMenu></td>
 				<td><p:message for="orgState" id="orgStateMsg" display="icon" /></td>
@@ -64,7 +64,9 @@
 						label="#{lbl['lbl.pm.address.address']}" maxlength="255"
 						required="true" styleClass="ppDisplayTextL"
 						value="#{organisationBackingBean.managedBean.officeAddress.address1}"
-						size="40" /></td>
+						size="40" >
+						<p:ajax event="blur" update=":form:addressTabs:acgmap:gmapInput:gmapInput"></p:ajax>
+					</p:inputText></td>
 				<td><p:message for="address1" id="address1Msg" display="icon" /></td>
 				<td width="150">
 					<p:outputLabel value="#{lbl['lbl.pm.address.division']}" /> 
@@ -81,14 +83,14 @@
 						<f:selectItems
 						  value="#{organisationBackingBean.getDivisionList(organisationBackingBean.managedBean.officeAddress.pmState.stateId)}" 
 						  var="division" itemLabel="#{division.divisionName}" itemValue="#{division.divisionId}"/>
-						  <p:ajax event="change" update="orgDivision,orgDistrict,orgCity" listener="#{organisationBackingBean.retrievePmDivision(organisationBackingBean.managedBean.officeAddress.pmDivision)}"/>
+						  <p:ajax event="change" update="orgDivision,orgDistrict,orgCity,:form:addressTabs:acgmap:gmapInput:gmapInput" listener="#{organisationBackingBean.retrievePmDivision(organisationBackingBean.managedBean.officeAddress.pmDivision)}"/>
 					</p:selectOneMenu>
 				</td>
 				<td><p:message for="orgDivision" id="orgDivisionMsg" display="icon" /></td>
 			</tr>
 			<tr>
 				<td></td>
-				<td><p:inputText styleClass="ppDisplayTextL"
+				<td><p:inputText styleClass="ppDisplayTextL" id="address2"
 						value="#{organisationBackingBean.managedBean.officeAddress.address2}"
 						size="40" maxlength="255" /></td>
 				<td></td>
@@ -105,14 +107,14 @@
 							value="#{organisationBackingBean.getDistrictList(organisationBackingBean.managedBean.officeAddress.pmState.stateId)}"
 							var="district" itemLabel="#{district.districtName}"
 							itemValue="#{district.districtId}"/>
-						<p:ajax event="change" update="orgDistrict,orgCity" listener="#{organisationBackingBean.retrievePmDistrict(organisationBackingBean.managedBean.officeAddress.pmDistrict)}"/>
+						<p:ajax event="change" update="orgDistrict,orgCity,:form:addressTabs:acgmap:gmapInput:gmapInput" listener="#{organisationBackingBean.retrievePmDistrict(organisationBackingBean.managedBean.officeAddress.pmDistrict)}"/>
 					</p:selectOneMenu></td>
 				<td><p:message for="orgDistrict" id="orgDistrictMsg"
 						display="icon" /></td>
 			</tr>
 			<tr>
 				<td></td>
-				<td><p:inputText maxlength="255" styleClass="ppDisplayTextL"
+				<td><p:inputText maxlength="255" styleClass="ppDisplayTextL" id="address3"
 						value="#{organisationBackingBean.managedBean.officeAddress.address3}"
 						size="40" /></td>
 				<td></td>
@@ -128,14 +130,14 @@
 							value="#{organisationBackingBean.getCityList(organisationBackingBean.managedBean.officeAddress.pmDistrict.districtId)}"
 							var="city" itemLabel="#{city.cityName}"
 							itemValue="#{city.cityId}"/>
-							<p:ajax event="change" update="orgCity" listener="#{organisationBackingBean.retrievePmCity(organisationBackingBean.managedBean.officeAddress.pmCity)}"/>
+							<p:ajax event="change" update="orgCity,:form:addressTabs:acgmap:gmapInput:gmapInput" listener="#{organisationBackingBean.retrievePmCity(organisationBackingBean.managedBean.officeAddress.pmCity)}"/>
 					</p:selectOneMenu></td>
 				<td><p:message id="orgCityMsg" for="orgCity" display="icon" /></td>
 
 			</tr>
 			<tr>
 				<td></td>
-				<td><p:inputText maxlength="255" styleClass="ppDisplayTextL"
+				<td><p:inputText maxlength="255" styleClass="ppDisplayTextL" id="address4"
 						value="#{organisationBackingBean.managedBean.officeAddress.address4}"
 						size="40" /></td>
 				<td></td>
@@ -178,6 +180,42 @@
 							title="#{lbl['lbl.pm.header.general.org.contactPerson']}"
 							value="/css/images/design/ico-edit-contact.png" />
 					</p:commandLink></td>
+			</tr>
+			
+			<tr>
+				<td></td>
+				<td colspan="3">
+					<SCRIPT type="text/javascript">
+				      function getAddress() {
+				    	  
+				    	  var addr1 = document.getElementById('#{p:component(&quot;address1&quot;)}').value + ',';
+				    	  var addr2 = document.getElementById('#{p:component(&quot;address2&quot;)}').value + ',';
+				    	  var addr3 = document.getElementById('#{p:component(&quot;address3&quot;)}').value + ',';
+				    	  var addr4 = document.getElementById('#{p:component(&quot;address4&quot;)}').value + ',';
+
+				    	  var cityName = document.getElementById('#{p:component(&quot;orgCity&quot;)}_input').options[document.getElementById('#{p:component(&quot;orgCity&quot;)}_input').selectedIndex].text;
+				    	  var districtName = document.getElementById('#{p:component(&quot;orgDistrict&quot;)}_input').options[document.getElementById('#{p:component(&quot;orgDistrict&quot;)}_input').selectedIndex].text;
+				    	  var stateName = document.getElementById('#{p:component(&quot;orgState&quot;)}_input').options[document.getElementById('#{p:component(&quot;orgState&quot;)}_input').selectedIndex].text;
+				    	  var countryName = document.getElementById('#{p:component(&quot;orgCountry&quot;)}_input').options[document.getElementById('#{p:component(&quot;orgCountry&quot;)}_input').selectedIndex].text;
+				    	  
+				    	  /*var cityName = '';
+				    	  var districtName = '';
+				    	  var stateName = '';
+				    	  var countryName = '';
+				    	  */
+				    	  var address = addr1 + addr2 + addr3 + addr4 + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
+
+				      	return address;
+				      }
+				      </SCRIPT>
+						
+					<ac:gmap id="acgmap" 
+						address="getAddress()"
+						locationName="#{organisationBackingBean.managedBean.orgProfile.pmOrgValidity.orgName}"
+						latitude="#{organisationBackingBean.managedBean.officeAddress.mapLatitude}"
+						longitude="#{organisationBackingBean.managedBean.officeAddress.mapLongitude}"
+						disabled="#{organisationBackingBean.gmapDisabled}" />			
+				</td>
 			</tr>
 		</table>
 	</p:panel>
