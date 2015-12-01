@@ -72,7 +72,7 @@
 	</p:panel>
 
 	<ui:param name="isQuotationThresHold"
-		value="#{qTSupplierQulCriteriaBackingBean.isQuotationThresHold(qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount)}" />
+		value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.procurementMode.parameterCode == ParameterConst.procurementModeQuotation}" />
 
 	<p:panel toggleable="true"
 		rendered="#{((isQuotationThresHold and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false')  or (!isQuotationThresHold  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal) or (!isQuotationThresHold  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false'))}">
