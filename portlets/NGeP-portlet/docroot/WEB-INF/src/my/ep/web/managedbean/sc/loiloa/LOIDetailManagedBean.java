@@ -362,6 +362,12 @@ public class LOIDetailManagedBean extends BaseManagedBean {
     /** Items by zone */
     private Map<Long,List<ScQtRecommend>> scQtRecommendsByZone;
     
+    /** ScLoiLoaItems by zone */
+    private Map<Long,List<ScLoiLoaItem>> loiLoaItemsMap;  
+    
+    /** ScLoiLoaItems by supplier */
+    private Map<Long,List<ScLoiLoaItem>> supplierLoiLoaItemsMap;
+    
     /** The zone active index */
 	private int ZoneActiveIndex;
 	
@@ -2134,6 +2140,38 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	public void setScQtRecommendsByZone(
 			Map<Long, List<ScQtRecommend>> scQtRecommendsByZone) {
 		this.scQtRecommendsByZone = scQtRecommendsByZone;
+	}
+
+	/**
+	 * @return the loiLoaItemsMap
+	 */
+	public Map<Long, List<ScLoiLoaItem>> getLoiLoaItemsMap() {
+		return loiLoaItemsMap;
+	}
+
+	/**
+	 * @param loiLoaItemsMap 
+	 * 				the loiLoaItemsMap to set
+	 */
+	public void setLoiLoaItemsMap(
+					Map<Long, List<ScLoiLoaItem>> loiLoaItemsMap) {
+		this.loiLoaItemsMap = loiLoaItemsMap;
+	}
+
+	/**
+	 * @return the supplierLoiLoaItemsMap
+	 */
+	public Map<Long, List<ScLoiLoaItem>> getSupplierLoiLoaItemsMap() {
+		return supplierLoiLoaItemsMap;
+	}
+
+	/**
+	 * @param supplierLoiLoaItemsMap 
+	 * 				the supplierLoiLoaItemsMap to set
+	 */
+	public void setSupplierLoiLoaItemsMap(
+			Map<Long, List<ScLoiLoaItem>> supplierLoiLoaItemsMap) {
+		this.supplierLoiLoaItemsMap = supplierLoiLoaItemsMap;
 	}
 
 	/**
