@@ -38,7 +38,7 @@
 					rendered="#{!empty scLoaReport.pmDocument}" />
 			</p:column>
 
-			<p:column style="width:15%;" headerText="#{lbl['lbl.sc.upload']}"
+			<p:column style="width:15%;text-align: center;" headerText="#{lbl['lbl.sc.upload']}"
 				rendered="#{isEditableStatus}">
 				<ui:fragment
 					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload}">
@@ -57,7 +57,7 @@
 				</ui:fragment>
 			</p:column>
 
-			<p:column style="width:10%;" headerText="#{lbl['lbl.sc.action']}">
+			<p:column style="width:10%;text-align: center;" headerText="#{lbl['lbl.sc.action']}">
 				<p:commandButton id="download" icon="ui-icon-download"
 					style="background-color:transparent !important; border:0px none;"
 					ajax="false"
@@ -66,7 +66,7 @@
 			</p:column>
 		</p:dataTable>
 
-		<div class="ppRightBtn">
+		<div class="ppRightBtn BtnSpacing">
 			<p:commandButton rendered="#{!isPendingVerification}"
 				value="#{lbl['lbl.btn.download.all']}" ajax="false"
 				styleClass="ui-button"

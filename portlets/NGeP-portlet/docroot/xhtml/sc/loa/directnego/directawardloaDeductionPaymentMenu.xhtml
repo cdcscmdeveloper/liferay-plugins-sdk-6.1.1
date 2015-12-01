@@ -31,6 +31,7 @@
 
 				<c:if test="#{isEditableStatus}">
 					<p:selectOneMenu id="deductionType"
+					    style="width: 250px;"
 						label="#{lbl['lbl.sc.deduction.type']}"
 						value="#{scQtDeduction.deductionType.parameterId}">
 						<f:selectItems
@@ -65,7 +66,7 @@
 		</p:dataTable>
 
 		<c:if test="#{isEditableStatus}">
-			<div class="ppRightBtn">
+			<div class="ppRightBtn BtnSpacing">
 				<p:commandButton value="#{lbl['lbl.btn.add']}"
 					process="@this, deductTbl"
 					action="#{directLOABackingBean.addDeductionPaymentAction}"
@@ -130,7 +131,7 @@
 
 			</p:dataTable>
 
-			<div class="ppRightBtn">
+			<div class="ppRightBtn BtnSpacing">
 				<h:panelGroup
 					rendered="#{!empty directLOABackingBean.managedBean.selectedScQtDeduction and directLOABackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers and isEditableStatus}">
 					<p:commandButton value="#{lbl['lbl.btn.add']}"

@@ -65,7 +65,7 @@
 		</p:dataTable>
 
 		<c:if test="#{isEditableStatus}">
-			<div class="ppRightBtn">
+			<div class="ppRightBtn BtnSpacing">
 				<p:commandButton value="#{lbl['lbl.btn.add']}"
 					process="@this, deductTbl" partialSubmit="true"
 					action="#{lOADetailBackingBean.addDeductionPaymentAction}"
@@ -83,8 +83,6 @@
 				title="#{lbl['lbl.msg.confirm.delete.header']}"
 				content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
 		</c:if>
-
-		<br />
 
 		<h:panelGroup id="clausePnl">
 			<h:outputText value="#{lbl['lbl.sc.deduction.payment']} (" />
@@ -131,7 +129,7 @@
 
 			</p:dataTable>
 
-			<div class="ppRightBtn">
+			<div class="ppRightBtn BtnSpacing">
 				<h:panelGroup
 					rendered="#{!empty lOADetailBackingBean.managedBean.selectedScQtDeduction and lOADetailBackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers and isEditableStatus}">
 					<p:commandButton value="#{lbl['lbl.btn.add']}"

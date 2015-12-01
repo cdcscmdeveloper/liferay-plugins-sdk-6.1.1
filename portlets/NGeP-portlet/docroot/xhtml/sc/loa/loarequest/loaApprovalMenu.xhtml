@@ -24,7 +24,7 @@
 				<c:if test="#{isEditableStatus}">
 					<p:selectOneMenu id="contractSigner" 
 						value="#{lOADetailBackingBean.managedBean.contractSignerUser.userId}"
-						style="width: 240px;margin-bottom: 5px;"
+						style="width: 276px;margin-bottom: 5px;"
 						required="true"
 						label="#{lbl['lbl.sc.loiloa.loa.contract.signer']}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
@@ -75,7 +75,7 @@
 						disabled="#{!isPendingSubmissionStatus}"
 						required="#{lOADetailBackingBean.managedBean.scLoa.approvalReq}"
 						label="#{lbl['lbl.sc.approver']}"
-						style="width: 240px;margin-bottom: 5px;">
+						style="width: 276px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
 						<f:selectItems

@@ -35,7 +35,6 @@
 					<ac:iconTooltip value="#{lbl['lbl.sc.gst.register.num.tooltip']}" />
 				</td>
 			</tr>
-
 			<tr>
 				<td style="width: 20%;"><p:outputLabel
 						value="#{lbl['lbl.sc.gst.effective.date']}" /></td>
@@ -68,7 +67,7 @@
 			<tr>
 				<td style="width: 20%;"><p:outputLabel
 						value="#{lbl['lbl.sc.panel']}" /></td>
-				<td><p:selectOneRadio
+				<td><p:selectOneRadio styleClass="commonLabel"
 						value="#{simpleQuoteBackingBean.managedBean.scQuote.panel}"
 						disabled="true">
 						<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}" itemValue="true" />
@@ -124,16 +123,13 @@
 						</table>
 					</c:if></td>
 			</tr>
-
-
-
 			<tr>
 				<td style="width: 20%;"><p:outputLabel
 						value="#{lbl['lbl.sc.sq.zonal']}" /></td>
 				<td>
 					<table>
 						<tr>
-							<td><p:selectOneRadio
+							<td><p:selectOneRadio styleClass="commonLabel"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.zonal}"
 									disabled="true">
 									<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}"
@@ -176,7 +172,7 @@
 				<td>
 					<table>
 						<tr>
-							<td><p:selectOneRadio
+							<td><p:selectOneRadio styleClass="commonLabel"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.multipleQuote}"
 									disabled="true">
 									<f:selectItem itemLabel="#{lbl['lbl.sc.sq.single']}"
