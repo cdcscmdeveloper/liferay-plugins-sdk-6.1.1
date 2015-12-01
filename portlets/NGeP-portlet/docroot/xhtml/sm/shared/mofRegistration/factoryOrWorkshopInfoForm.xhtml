@@ -24,17 +24,44 @@
 					style="width :60%;white-space : normal">
 					<h:outputText value="#{backingBean.getFullAddress(fac.smAddress)}"
 						style="float : left" />
+						
+						<script>
+						
+					      function getAddress2(addr1, addr2, addr3, addr4, cityName, districtName, stateName, countryName) {
+
+					    	  var address = addr1 + addr2 + addr3 + addr4 + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
+
+					      	return address;
+					      }
+						
+						</script>
+
+
+						<ac:gmapInput id="gmapInput" 
+							latitude="#{fac.smAddress.mapLatitude}" 
+							longitude="#{fac.smAddress.mapLongitude}" 
+							address="getAddress2('#{fac.smAddress.address1}', '#{fac.smAddress.address2}', '#{fac.smAddress.address3}', '#{fac.smAddress.address4}', '#{fac.smAddress.pmCity.cityName}', '#{fac.smAddress.pmDistrict.districtName}', '#{fac.smAddress.pmState.stateName}', '#{fac.smAddress.pmCountry.countryName}')"
+							showButton="true"
+							disabled="false" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.action']}" style="text-align: center  !important;">
 					<p:commandLink action="#{backingBean.assignSelFactory(fac)}"
 						partialSubmit="true" process="@this"
 						update=":form:tt:factoryDialog" style="padding-right:5px" 
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" >
-						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
+						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />test
 					</p:commandLink>
 				</p:column>
 
 			</p:dataTable>
+			
+		<ac:gmapDialog id="gmapDialog" 
+			latitude="#{cc.attrs.latitude}" 
+			longitude="#{cc.attrs.longitude}" 
+			locationName="#{cc.attrs.locationName}" />
+	
+		<ac:gmapScript />
+			
 			<p:spacer height="2px;" />
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
