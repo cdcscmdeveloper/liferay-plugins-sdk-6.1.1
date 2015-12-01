@@ -6,22 +6,28 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<table>
-		<tr style="align : left;" >
-			<TD  ><p:outputLabel id="notificationBidNoLbl" value="#{lbl['lbl.sc.bidding.no']}" /></TD>
+		<tr style="align: left;">
+			<TD><p:outputLabel id="notificationBidNoLbl"
+					value="#{lbl['lbl.sc.bidding.no']}" /></TD>
 			<TD><p:inputText id="popupBiddingNo" size="20" disabled="true"
 					value="#{onlineBiddingBB.scBidSchedule.bidNo}" /></TD>
 		</tr>
-		<tr  style="align : left;">
-			<TD><p:outputLabel id="notificationDocNoLbl" value="#{lbl['lbl.sc.document.no']}" /></TD>
+		<tr style="align: left;">
+			<TD><p:outputLabel id="notificationDocNoLbl"
+					value="#{lbl['lbl.sc.document.no']}" /></TD>
 			<TD><p:inputText id="popupDocumentNo" size="20" disabled="true"
 					value="#{onlineBiddingBB.scBidSchedule.scBid.docNo}" /></TD>
 		</tr>
 		<tr>
-			<TD colspan="2"><p:inputTextarea id="notificationRemark" cols="80" rows="10" style="white-space : normal; "
-					disabled="true" value="#{onlineBiddingBB.scBidAction.remark}" /></TD>
+			<TD colspan="2"><p:inputTextarea id="notificationRemark"
+					cols="80" rows="10" style="white-space : normal; " disabled="true"
+					value="#{onlineBiddingBB.scBidAction.remark}" /></TD>
 		</tr>
 	</table>
-	<p:commandButton style="float : right" value="#{lbl['lbl.btn.ok']}" partialSubmit="true" action="#{onlineBiddingBB.biddStatusNotificationAction}"
-		process="@this" oncomplete="onlineBiddingNotification.hide();" />
+	<div align="right">
+		<p:commandButton value="#{lbl['lbl.btn.ok']}" partialSubmit="true"
+			action="#{onlineBiddingBB.biddStatusNotificationAction}"
+			process="@this" oncomplete="onlineBiddingNotification.hide();" />
+	</div>
 
 </ui:composition>
