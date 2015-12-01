@@ -44,6 +44,9 @@
             //alert(4 + ": " + results[0].geometry.location.lat() + ", " + results[0].geometry.location.lng() + ": " + results[0].formatted_address);
             inputX.value = results[0].geometry.location.lat();
             inputY.value = results[0].geometry.location.lng();
+            
+            document.getElementById('#{p:component(&quot;dlglat&quot;)}').value = results[0].geometry.location.lat();
+            document.getElementById('#{p:component(&quot;dlglng&quot;)}').value = results[0].geometry.location.lng();
 
             updateGmap();
 
