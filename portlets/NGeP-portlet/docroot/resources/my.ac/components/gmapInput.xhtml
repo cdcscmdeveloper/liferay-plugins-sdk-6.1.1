@@ -53,7 +53,7 @@
 		<p:remoteCommand 
 			id="updateGmap"
 			name="updateGmap" 
-			process="plat, plng" 
+			process="plat, plng, @([id$=mapPanel2])" 
 			update="@([id$=mapPanel])" 
 			oncomplete="dlg.show();" />
 		</div>
