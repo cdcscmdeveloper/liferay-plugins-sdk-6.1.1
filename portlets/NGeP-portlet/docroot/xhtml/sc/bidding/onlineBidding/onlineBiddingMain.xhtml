@@ -22,11 +22,11 @@
 				update="itemWiseBidListOB,packageRankingPanelOB,onlineBiddingNotification" />
 		</h:panelGroup>
 
-		<ui:include src="/xhtml/sc/bidding/onlineBiddingHeader.xhtml" />
+		<ui:include src="/xhtml/sc/bidding/onlineBidding/onlineBiddingHeader.xhtml" />
 		<p:panel id="onLineBiddingPanel"
 			header="#{lbl['lbl.sc.bidding.bid.price.details']}" toggleable="true">
 			<p:spacer height="5" />
-			<ui:include src="/xhtml/sc/bidding/onlineBiddingTimers.xhtml" />
+			<ui:include src="/xhtml/sc/bidding/onlineBidding/onlineBiddingTimers.xhtml" />
 			<h:panelGrid rendered="#{onlineBiddingBB.scBidSchedule eq null}">
 				<p:spacer height="5" />
 				<h:outputText style="font-size : 25px;" styleClass="lastUpdated"
@@ -319,13 +319,13 @@
 			widgetVar="onlineBiddingItemDetails" modal="true"
 			id="onlineBiddingItemDetails">
 			<ui:include
-				src="/xhtml/sc/bidding/onlineBiddingItemDetailsPopup.xhtml"></ui:include>
+				src="/xhtml/sc/bidding/onlineBidding/onlineBiddingItemDetailsPopup.xhtml"></ui:include>
 		</p:dialog>
 		<p:dialog header="#{lbl['lbl.sc.notification']}"
 			widgetVar="onlineBiddingNotification" showEffect="fade"
 			hideEffect="fade" modal="true" id="onlineBiddingNotification">
 			<ui:include
-				src="/xhtml/sc/bidding/ onlineBiddingNotificationPopup.xhtml"></ui:include>
+				src="/xhtml/sc/bidding/onlineBidding/biddingNotificationPopup.xhtml"></ui:include>
 		</p:dialog>
 	</ui:define>
 </ui:composition>

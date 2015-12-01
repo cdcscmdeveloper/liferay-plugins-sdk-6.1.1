@@ -25,8 +25,8 @@
 				<TD>
 					<div style="align: right">
 						<p:inputText id="hPopupQty" style="float : right"
-							value="#{biddingBB.managedBean.selectedBidItem.qty}"
-							size="20" disabled="true">
+							value="#{biddingBB.managedBean.selectedBidItem.qty}" size="20"
+							disabled="true">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, biddingBB.managedBean.historyPrice.scBidSupplierItem.scBidItem.scRequestItem.uom.uomCode)}" />
 						</p:inputText>
@@ -53,7 +53,6 @@
 			<p:lineChart value="#{biddingBB.managedBean.historyPriceLinearModel}"
 				legendPosition="e" style="height:250px; width:750px" />
 		</div>
-		<p:spacer height="5"></p:spacer>
 		<div>
 			<p:dataTable id="historySummary"
 				value="#{biddingBB.managedBean.bidHistoryPriceList}" var="history">
@@ -74,9 +73,11 @@
 			</p:dataTable>
 		</div>
 	</p:panel>
-	<div align="right">
-		<p:commandButton value="#{lbl['lbl.btn.close']}"
-			onclick="priceHistory.hide();" />
-	</div>
-
+	<table>
+		<tr>
+			<td><p:commandButton value="#{lbl['lbl.btn.close']}"
+					style="float:right;" styleClass="BtnSpacing"
+					onclick="priceHistory.hide();" /></td>
+		</tr>
+	</table>
 </ui:composition>
