@@ -26,12 +26,14 @@
 		<p:spacer height="1"></p:spacer>
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
-				<td width="200px"><h:outputText value="* "
-						styleClass="mandatory"
+				<td width="120px"><p:outputLabel
+						value="#{lbl['lbl.sc.total.employees']}" /> <p:outputLabel
+						value="* " styleClass="mandatory"
 						rendered="#{!supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee and !statusHide}" />
-					<h:outputText value="#{lbl['lbl.sc.total.employees']}" /></td>
+				</td>
 				<td><h:panelGroup id="totalNoOfEmployeesInvolved">
-						<p:inputText id="totalEmployees" style="text-align:right;margin-bottom:5px;"
+						<p:inputText id="totalEmployees"
+							style="text-align:right;margin-bottom:5px;"
 							rendered="#{!supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}"
 							size="20" required="true" maxlength="6"
 							label="#{lbl['lbl.sc.total.employees']}"
@@ -50,15 +52,16 @@
 					</h:panelGroup></td>
 			</tr>
 			<tr>
-				<td><h:outputText
+				<td><p:outputLabel
 						value="#{lbl['lbl.tpl.spec.content.system.score']}"
-						rendered="#{checklistScoreType eq '1'}" /> <ui:fragment
+						rendered="#{checklistScoreType eq '1'}" /> <p:outputLabel
+						value="#{lbl['lbl.tpl.spec.content.user.score']}"
+						rendered="#{ checklistScoreType eq '2'}" /> <ui:fragment
 						rendered="#{checklistScoreType eq '2' and !pageDisable}">
-						<h:outputText value="* " styleClass="mandatory" />
+						<p:outputLabel value="* " styleClass="mandatory" />
 
 
-					</ui:fragment> <h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"
-						rendered="#{ checklistScoreType eq '2'}" /></td>
+					</ui:fragment></td>
 				<td><p:inputText readonly="true" disabled="true"
 						value="#{noOfContracts.autoScore}" style="text-align:right"
 						rendered="#{ checklistScoreType eq '1'}"></p:inputText> <p:inputText

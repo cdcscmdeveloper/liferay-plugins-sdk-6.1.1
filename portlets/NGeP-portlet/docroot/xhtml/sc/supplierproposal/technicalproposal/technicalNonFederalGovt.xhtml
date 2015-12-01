@@ -6,18 +6,20 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel id="nonFedExpPanel" header="#{lbl['lbl.sc.spec.company.exp.fed.private']}"
+	<p:panel id="nonFedExpPanel"
+		header="#{lbl['lbl.sc.spec.company.exp.fed.private']}"
 		toggleable="true">
-		
-		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.sp.btn.complete.instruction']}" escape="false"
+
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.sp.btn.complete.instruction']}" escape="false"
 			rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}" />
-		
+
 		<table>
 			<tr>
-				<td>
-					<p:outputLabel style="font-weight: bold;" value="#{supplierProposalDetailBackingBean.managedBean.year}" />
-					<p:outputLabel value="#{lbl['lbl.sc.spec.company.exp.since.year']} " />
-				</td>
+				<td><p:outputLabel style="font-weight: bold;"
+						value="#{supplierProposalDetailBackingBean.managedBean.year}" />
+					<p:outputLabel
+						value="#{lbl['lbl.sc.spec.company.exp.since.year']} " /></td>
 			</tr>
 		</table>
 		<p:dataTable id="technongovtid" var="technongovt"
@@ -190,17 +192,17 @@
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				partialSubmit="true" process="@this"
 				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
-				oncomplete="techNonFedDelete.show();" update="@([id$=nonFedExpPanel])"/>
-				
-					<ui:param name="techNonFedDeleteId"
-			value="techNonFedDeleteId"></ui:param>
-				
-				<ac:confirmationPopup id="#{techNonFedDeleteId}"
-			widget="techNonFedDelete" width="400" height="200"
-			okAction="supplierProposalDetailBackingBean.deleteNonFederalGovtExperience"
-			title="#{lbl['lbl.sc.spec.company.exp.fed.private']}"
-			content="#{lbl['lbl.sc.dialog.confirm.message']}"
-			update="@([id$=nonFedExpPanel])" />
+				oncomplete="techNonFedDelete.show();"
+				update="@([id$=nonFedExpPanel])" />
+
+			<ui:param name="techNonFedDeleteId" value="techNonFedDeleteId"></ui:param>
+
+			<ac:confirmationPopup id="#{techNonFedDeleteId}"
+				widget="techNonFedDelete" width="400" height="200"
+				okAction="supplierProposalDetailBackingBean.deleteNonFederalGovtExperience"
+				title="#{lbl['lbl.sc.spec.company.exp.fed.private']}"
+				content="#{lbl['lbl.sc.dialog.confirm.message']}"
+				update="@([id$=nonFedExpPanel])" />
 
 		</div>
 
@@ -214,15 +216,16 @@
 							value="#{supplierProposalDetailBackingBean.managedBean.totalContracts}"
 							readonly="true" disabled="true" size="10">
 						</p:inputText></td>
-					<td style="width: 90px;"><h:outputText
+					<td style="width: 105px;"><p:outputLabel
 							value="#{lbl['lbl.tpl.spec.content.system.score']}"
-							rendered="#{checklistScoreType eq '1'}" /> <ui:fragment
+							rendered="#{checklistScoreType eq '1'}" /> <p:outputLabel
+							value="#{lbl['lbl.tpl.spec.content.user.score']}"
+							rendered="#{ checklistScoreType eq '2'}" /> <ui:fragment
 							rendered="#{checklistScoreType eq '2' and !pageDisable}">
-							<h:outputText value="* " styleClass="mandatory" />
+							<p:outputLabel value="* " styleClass="mandatory" />
 
 
-						</ui:fragment> <h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"
-							rendered="#{ checklistScoreType eq '2'}" /></td>
+						</ui:fragment></td>
 					<td><p:inputText readonly="true" disabled="true"
 							value="#{noOfContracts.autoScore}" style="text-align:right"
 							rendered="#{ checklistScoreType eq '1'}"></p:inputText> <p:inputText
@@ -244,22 +247,24 @@
 					</td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.spec.total.no.years']}" /></td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.spec.total.no.years']}" /></td>
 					<td colspan="3"><p:inputText style="text-align:right"
 							value="#{supplierProposalDetailBackingBean.managedBean.totalYears/12}"
 							readonly="true" disabled="true" size="10">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 						</p:inputText></td>
-					<td style="width: 90px;"><h:outputText
+					<td style="width: 105px;"><p:outputLabel
 							value="#{lbl['lbl.tpl.spec.content.system.score']}"
-							rendered="#{companyScoreType eq '1'}" /> <ui:fragment
+							rendered="#{companyScoreType eq '1'}" /> <p:outputLabel
+							value="#{lbl['lbl.tpl.spec.content.user.score']}"
+							rendered="#{companyScoreType eq '2'}" /> <ui:fragment
 							rendered="#{companyScoreType eq '2' and !pageDisable}">
-							<h:outputText value="* " styleClass="mandatory" />
+							<p:outputLabel value="* " styleClass="mandatory" />
 
 
-						</ui:fragment> <h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"
-							rendered="#{companyScoreType eq '2'}" /></td>
+						</ui:fragment></td>
 					<td><p:inputText readonly="true" disabled="true"
 							value="#{noOfYears.autoScore}" style="text-align:right"
 							rendered="#{companyScoreType eq '1'}"></p:inputText> <p:inputText

@@ -54,7 +54,7 @@
 
 			<table style="width: 100%">
 				<tr>
-					<td style="width: 300px"><p:outputLabel style="float:left;"
+					<td style="width: 250px"><p:outputLabel style="float:left;"
 							value="#{lbl['lbl.sc.total.amount']}" /></td>
 					<td colspan="3"><p:inputText style="text-align:right"
 							value="#{supplierProposalDetailBackingBean.managedBean.totalAmount}"
@@ -73,15 +73,16 @@
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText> <ac:iconTooltip value="#{lbl['lbl.sc.sp.avgogbankst.tooltip']}" />
 					</td>
-					<td style="width: 90px;"><h:outputText
+					<td style="width: 105px;"><p:outputLabel
 							value="#{lbl['lbl.tpl.spec.content.system.score']}"
-							rendered="#{checklistScoreType eq '1'}" /> <ui:fragment
+							rendered="#{checklistScoreType eq '1'}" /> <p:outputLabel
+							value="#{lbl['lbl.tpl.spec.content.user.score']}"
+							rendered="#{ checklistScoreType eq '2'}" /> <ui:fragment
 							rendered="#{checklistScoreType eq '2' and !pageDisable}">
-							<h:outputText value="* " styleClass="mandatory" />
+							<p:outputLabel value="* " styleClass="mandatory" />
 
 
-						</ui:fragment> <h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"
-							rendered="#{ checklistScoreType eq '2'}" /></td>
+						</ui:fragment></td>
 					<td><p:inputText readonly="true" disabled="true"
 							value="#{noOfContracts.autoScore}" style="text-align:right"
 							rendered="#{ checklistScoreType eq '1'}"></p:inputText> <p:inputText

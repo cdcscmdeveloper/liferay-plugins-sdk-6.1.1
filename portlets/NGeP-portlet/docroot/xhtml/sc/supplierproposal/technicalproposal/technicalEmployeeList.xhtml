@@ -45,21 +45,22 @@
 		<p:spacer height="5" />
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 171px"><p:outputLabel
+				<td style="width: 176px"><p:outputLabel
 						value="#{lbl['lbl.sc.spec.total.staff']}" /></td>
 				<td colspan="3"><p:inputText style="text-align:right"
 						value="#{supplierProposalDetailBackingBean.managedBean.totalNoOfYearsExperience}"
 						readonly="true" disabled="true" size="30">
 					</p:inputText></td>
-				<td style="width: 90px;"><h:outputText
+				<td style="width: 105px;"><p:outputLabel
 						value="#{lbl['lbl.tpl.spec.content.system.score']}"
-						rendered="#{checklistScoreType eq '1'}" /> <ui:fragment
+						rendered="#{checklistScoreType eq '1'}" /> <p:outputLabel
+						value="#{lbl['lbl.tpl.spec.content.user.score']}"
+						rendered="#{ checklistScoreType eq '2'}" /> <ui:fragment
 						rendered="#{checklistScoreType eq '2' and !pageDisable}">
-						<h:outputText value="* " styleClass="mandatory" />
+						<p:outputLabel value="* " styleClass="mandatory" />
 
 
-					</ui:fragment> <h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"
-						rendered="#{ checklistScoreType eq '2'}" /></td>
+					</ui:fragment></td>
 				<td><p:inputText readonly="true" disabled="true"
 						value="#{noOfContracts.autoScore}" style="text-align:right"
 						rendered="#{ checklistScoreType eq '1'}"></p:inputText> <p:inputText
