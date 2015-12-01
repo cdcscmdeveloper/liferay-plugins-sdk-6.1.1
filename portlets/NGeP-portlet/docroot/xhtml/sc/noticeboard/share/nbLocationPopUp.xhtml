@@ -114,40 +114,4 @@
 
 	</p:dialog>
 	
-	<p:dialog header="#{lbl['lbl.sc.zone.details']}"
-		widgetVar="popupZonedtl" modal="true" id="zonedtls"
-		dynamic="true"  appendToBody="false" closeOnEscape="true">
-		<h:panelGrid border="0" width="100%" columns="3"
-				columnClasses="columnWidth20,columnWidth50,columnWidth30">
-				<h:outputLabel value="#{lbl['lbl.sc.zone']}" />
-				<h:outputText style="white-space: normal;word-wrap: break-word;"
-					value="#{zones.tplSpecZoneDtl.zoneName}" />
-				<h:outputLabel value="" />
-		</h:panelGrid>
-			<p:dataTable
-				value="#{noticeBoardBackingBean.managedBean.locationNodes}"
-				var="locTree" style="width:100%">
-				<p:column headerText="#{lbl['lbl.sc.location']}">
-					<p:tree value="#{locTree}" var="location">
-						<p:treeNode type="zone">
-							<h:outputText value="#{location.zoneName}" />
-						</p:treeNode>
-						<p:treeNode type="state">
-							<h:outputText value="#{location.pmState.stateName}" />
-						</p:treeNode>
-						<p:treeNode type="division">
-							<h:outputText value="#{location.pmDivision.divisionName}" />
-						</p:treeNode>
-						<p:treeNode type="district">
-							<h:outputText value="#{location.pmDistrict.districtName}" />
-						</p:treeNode>
-						<p:treeNode type="city">
-							<h:outputText value="#{location.pmCity.cityName}" />
-						</p:treeNode>
-					</p:tree>
-				</p:column>
-			</p:dataTable>
-		<p:spacer height="7px"></p:spacer>
-	</p:dialog>
-	
 </ui:composition>
