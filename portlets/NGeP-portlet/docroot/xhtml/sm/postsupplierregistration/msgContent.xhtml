@@ -18,26 +18,27 @@
 						<div class="flow-chart">
 							<p class="title">#{lbl['lbl.sm.basic.pls.proceed']}</p>
 							<!-- Basic Account-->
-							<p:outputPanel rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.supplierTypeBasicWithoutMof}">
-								<ui:include src="/xhtml/sm/shared/postsupplierregistration/flowBasic.xhtml"></ui:include>
+							<p:outputPanel rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.getSupplierTypeBasicWithoutMof()}">
+							<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 1}">
+								<div class="flow-chart-left lst">
+									<p><strong>#{lbl['lbl.sm.basic.step']} 1</strong><br /><p:commandLink styleClass="flowChart-Link" value="#{lbl['lbl.sm.basic.softcert.request']}" action="#{postSupplierRegBB.pageNavigate}" /></p>
+								</div>
+								<div class="flow-chart-left dlast">
+									<p><strong>#{lbl['lbl.sm.basic.step']} 2</strong><br /> #{lbl['lbl.sm.basic.completed']}</p>
+								</div>
+							</c:if>
 							</p:outputPanel>
 							
 							<!-- MOF Account-->
 							<p:outputPanel rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
 								<c:choose>
-									<c:when test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.supplierType == ParameterConst.supplierTypeContractor}">		
-										<c:choose>
-											<c:when test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.smCompanyBasic.withFederal}">
-												<ui:include src="/xhtml/sm/shared/postsupplierregistration/flowMofContractorFederal.xhtml"></ui:include>
-											</c:when>
-											<c:otherwise>
-												<ui:include src="/xhtml/sm/shared/postsupplierregistration/flowMofCommon.xhtml"></ui:include>
-											</c:otherwise>
-										</c:choose>
+									<c:when test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.smCompanyBasic.withFederal and 
+									postSupplierRegBB.managedBean.smSupplier.smAppl.supplierType == ParameterConst.getSupplierTypeContractor()}">		
+										<ui:include src="/xhtml/sm/postsupplierregistration/flowMofContractorFederal.xhtml"></ui:include>
 									</c:when>
 									
 									<c:otherwise>
-										<ui:include src="/xhtml/sm/shared/postsupplierregistration/flowMofCommon.xhtml"></ui:include>
+										<ui:include src="/xhtml/sm/postsupplierregistration/flowMofCommon.xhtml"></ui:include>
 									</c:otherwise>
 								</c:choose>
 							</p:outputPanel>
@@ -62,26 +63,6 @@
 						</td>
 					</tr>
 				</table>
-			</p:outputPanel>
-			
-			<!-- Softcert Msg-->
-			<p:outputPanel rendered="#{postSupplierRegBB.retrieveCurrentUserSoftCertStatus() != postSupplierRegBB.softCertPendingReqStatus() and 
-				postSupplierRegBB.retrieveCurrentUserSoftCertStatus() != postSupplierRegBB.softCertIsActiveStatus()}">
-				<c:if test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.supplierType == ParameterConst.supplierTypeContractor and 
-					postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
-						<c:if test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
-							<c:if test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.smCompanyBasic.withFederal}">
-								<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 6}">
-									<ui:include src="/xhtml/sm/shared/postsupplierregistration/softCertMsg.xhtml" />
-								</c:if>
-							</c:if>
-						</c:if>
-				</c:if>
-				
-				<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 2 and 
-							postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.supplierTypeBasicWithoutMof}">
-						<ui:include src="/xhtml/sm/shared/postsupplierregistration/softCertMsg.xhtml" />
-				</c:if>
 			</p:outputPanel>
 			</c:if>
 		</p:outputPanel>
