@@ -375,8 +375,6 @@ public class ApprovalBackingBean extends
 				for (ScQtApprovalRequest approvalRequest : approvalRequests) {
 					if (approvalRequest.getApproverAction() == null) {
 						approvalRequest.setApproverAction(new PmParameter());
-					} else {
-						approvalRequest.setApproverAction(new PmParameter());
 					}
 				}
 			}
