@@ -45,6 +45,17 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					 #{pPlanBackingBean.managedBean.selectedPlan.orgProfile.pmOrgValidity.orgName}"></p:inputText>
 			</td>
 		</tr>
+		<c:if test="#{pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode eq ParameterConst.planTypeProcurement}">
+			<tr>
+				<th>
+					<p:outputLabel value="#{lbl['lbl.pp.ptj.address']}" />
+				</th>
+				<td>
+					<p:inputTextarea disabled="true" style="white-space:normal" readonly="true"
+						rows="7" cols="60" escape="false" value="#{pPlanBackingBean.retrievePpBillingAddr()}"/>
+				</td>
+			</tr>
+		</c:if>
 		<tr>
 			<th>
 				

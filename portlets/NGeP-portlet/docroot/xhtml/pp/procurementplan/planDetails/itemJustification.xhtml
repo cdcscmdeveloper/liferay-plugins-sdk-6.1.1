@@ -12,7 +12,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			
  	</script>
 	<p:remoteCommand name="updateJustification"  update="dgJustication" />
-	<p:dialog id="dlItemJustification" header="#{lbl['lbl.pp.justification']}"
+	<p:dialog id="dlItemJustification" header="#{lbl['lbl.pp.justification']}" modal="true" 
 		widgetVar="dlItemJustificationWv" dynamic="true" width="700" height="200" closable="false">
 		<p:ajax event="close" listener="#{pPlanBackingBean.closeJustification}" update="dgJustication"/>
 		<p:remoteCommand name="confirmCmd" action="#{pPlanBackingBean.confirmJustificationCloseDialog}" oncomplete="dlItemJustificationWv.hide()" />

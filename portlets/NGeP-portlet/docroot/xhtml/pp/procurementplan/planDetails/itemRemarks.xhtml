@@ -9,7 +9,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 >
 	
 	<p:dialog id="dlItemRemark" header="#{pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode ne ParameterConst.planTypeExpenditure ? lbl['lbl.pp.item.remark'] : lbl['lbl.pp.reason.for.update']}" 
-		widgetVar="dlItemRemarkWv" dynamic="true" width="700" height="200" closable="false">
+		widgetVar="dlItemRemarkWv" modal="true" dynamic="true" width="700" height="200" closable="false">
 		
 		<p:ajax event="close" listener="#{pPlanBackingBean.closeItemRemark}" update="opItemRemark"/>
 		<p:remoteCommand name="confirmRmkCmd" action="#{pPlanBackingBean.confirmRemarkCloseDialog}" update="opItemRemark" oncomplete="dlItemRemarkWv.hide()" />
