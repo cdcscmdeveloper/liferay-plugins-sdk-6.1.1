@@ -112,14 +112,14 @@ public class PPReportBackingBean extends
 	 */
 	private void checkAuthorizationByRoleCode(ReportsGenerateBean rptGenBean,
 			List<String> authoriztionList) {
-		if ((authoriztionList != null)
-				&& (authoriztionList
-						.contains(ReportConst.ROLE_CODE_BPK_OFFICER))) {
-			rptGenBean.setPpMandatoryView(true);
-			rptGenBean.setPpMinistryView(true);
-		} else {
-			rptGenBean.setPpNonMandatoryView(true);
-			rptGenBean.setPpMinistryView(true);
+		if (authoriztionList != null) {
+			if (authoriztionList.contains(ReportConst.ROLE_CODE_BPK_OFFICER)) {
+				rptGenBean.setPpMandatoryView(true);
+				rptGenBean.setPpMinistryView(true);
+			} else {
+				rptGenBean.setPpNonMandatoryView(true);
+				rptGenBean.setPpMinistryView(true);
+			}
 		}
 	}
 }
