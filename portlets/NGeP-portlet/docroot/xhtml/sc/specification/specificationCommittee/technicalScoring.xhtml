@@ -57,7 +57,8 @@
 					<ac:iconTooltip id="technicalScoringMaxScore#{index}SC"
 						value="#{lbl['lbl.sc.spec.max.score.tooltip']}" />
 				</f:facet>
-				<h:outputLabel value="#{tech.qtScoreWeightage.score}" style="text-align:right"
+				<h:outputLabel value="#{tech.qtScoreWeightage.score}"
+					style="text-align:right"
 					rendered="#{tech.definationType.parameterCode eq 'TS' or tech.definationType.parameterCode eq 'SD' or tech.definationType.parameterCode eq 'WF'}" />
 				<p:inputText value="#{tech.qtScoreWeightage.score}"
 					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
@@ -103,7 +104,7 @@
 		<h:panelGroup id="addpoints">
 			<table>
 				<tr>
-					<td style="width: 149px;"><h:outputText
+					<td style="width: 200px;"><p:outputLabel
 							value="#{lbl['lbl.sc.spec.total.points']} " /></td>
 
 					<td><p:inputText readonly="true" disabled="true"
@@ -115,7 +116,7 @@
 					rendered="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq ne 'false'}">
 
 					<tr>
-						<td><h:outputText
+						<td><p:outputLabel
 								value="#{lbl['lbl.sc.spec.total.weightage']}" /></td>
 						<td><p:inputText readonly="true" disabled="true"
 								style="text-align:right"
@@ -142,9 +143,9 @@
 			<ui:fragment
 				rendered="#{specificationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
 				<tr>
-					<td style="width: 150px;"><h:outputText value="*"
-							styleClass="mandatory" /> <h:outputText
-							value=" #{lbl['lbl.sc.spec.qual.present.demo']}" /></td>
+					<td style="width: 200px;"><p:outputLabel
+							value=" #{lbl['lbl.sc.spec.qual.present.demo']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText style="text-align:right" maxlength="5"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							value="#{specificationBackingBean.managedBean.demoScoreSetting.passingScore}">
@@ -158,9 +159,9 @@
 
 
 			<tr>
-				<td style="width: 150px;"><h:outputText value="*"
-						styleClass="mandatory" /> <h:outputText
-						value="#{lbl['lbl.sc.spec.technical']}" /></td>
+				<td style="width: 200px;"><p:outputLabel
+						value="#{lbl['lbl.sc.spec.technical']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText style="text-align:right" maxlength="5"
 						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 						value="#{specificationBackingBean.managedBean.technicalScoreSetting.passingScore}">
