@@ -12,7 +12,6 @@
 	<p:panel header="#{lbl['lbl.fl.menu.items']}" toggleable="true" id="itemPnl">
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.frn.item']}" escape="false"/>
 		<br />
-	<div id="flDataTableScroll">	
 	<p:dataTable id="frnItemDt" var="item" 
 			value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flFulfilmentNoteItem}"	
 			selection="#{receivedNoteBackingBean.managedBean.selectedItem}"
@@ -38,8 +37,7 @@
             	<h:outputText value="#{item.flDelOrderItem.flFulfilmentItemAddr.itemCode}" />
         	</p:column>
         	<p:column style="white-space:normal;">
-				<h:outputText value="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemName}" id="itemDesc"/>
-				<p:tooltip for="itemDesc" value="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemDesc}"  />
+				<h:outputText value="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemName}" id="itemDesc" title="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemDesc}"/>
 			</p:column>
 			<p:column >
 				<h:outputText value="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomName}" />
@@ -61,7 +59,7 @@
 			</p:column>
 			
 		</p:dataTable>
-		</div>
+		
 		<p:spacer height="20"/>
 		<h:panelGroup styleClass="selectedItemSection" id="selectedItemSection">
 			<table style="width: 100%">
