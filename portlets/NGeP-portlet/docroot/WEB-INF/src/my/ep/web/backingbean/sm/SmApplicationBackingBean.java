@@ -4539,12 +4539,12 @@ public class SmApplicationBackingBean extends
 	public boolean disableEpRoleDropDown(SmPersonnel smPersonnel) {
 		boolean retVal = false;
 		if (StringUtils.isNotBlank(smPersonnel.getEpRole())
-				&& smPersonnel.getEpRole().equals(
+				&& (smPersonnel.getEpRole().equals(
 						RoleCode.MOF_SUPPLIER_ADMIN.value())
 				|| smPersonnel.getEpRole().equals(
 						RoleCode.SUPPLIER_TEMP.value())
 				|| smPersonnel.getEpRole().equals(
-						RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+						RoleCode.BASIC_SUPPLIER_ADMIN.value()))) {
 			retVal = true;
 		} else if (StringUtils.isNotBlank(smPersonnel.getEpRole())
 				&& smPersonnel.getEpRole().equals(
