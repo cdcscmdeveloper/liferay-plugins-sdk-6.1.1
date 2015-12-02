@@ -53,6 +53,7 @@ import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
@@ -66,6 +67,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
@@ -93,6 +95,7 @@ import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
@@ -129,6 +132,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -2851,6 +2855,8 @@ public class SpecificationBackingBean extends
 							.isEmpty()) {
 				if (null == this.getManagedBean().getTechnicalScoreSetting()) {
 					ScQtScoreSetting technicalScoresetting = constructScoreSetting(1);
+					technicalScoresetting
+							.setPassingScore(retrieveTechnicalEvalutionPassingScorePmrules());
 					this.getManagedBean().setTechnicalScoreSetting(
 							technicalScoresetting);
 
@@ -10644,28 +10650,33 @@ public class SpecificationBackingBean extends
 	 */
 	public void checkTechnicalPassingScore(
 			ScQtScoreSetting technicalScoreSetting) {
-		if (null != technicalScoreSetting) {
-			if (this.getManagedBean().getScQt().getEvaluationType()
-					.equalsIgnoreCase(QTConstants.EVALUATION_ONE_TIER)) {
-				if (null == technicalScoreSetting.getPassingScore()
-						|| technicalScoreSetting.getPassingScore().intValue() < 0) {
-					this.getManagedBean().setActiveIndex(4);
-					throw new EpException(MessageConst.ERROR_760172);
-				} else if (null != technicalScoreSetting.getPassingScore()
-						&& technicalScoreSetting.getPassingScore().intValue() > 100) {
-					this.getManagedBean().setActiveIndex(4);
-					throw new EpException(MessageConst.ERROR_760142);
-				}
-			} else {
+		if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
+				.getManagedBean().getScQt().getEvaluationType())
+				|| (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
+						.getManagedBean().getScQt().getEvaluationType()) && this
+						.getManagedBean().getScQt().isTechEvaluationReq())) {
+			if (null != technicalScoreSetting) {
+				BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules();
 				if (null == technicalScoreSetting.getPassingScore()
 						|| technicalScoreSetting.getPassingScore().intValue() <= 0) {
 					this.getManagedBean().setActiveIndex(4);
 					throw new EpException(MessageConst.ERROR_760234);
-				} else if (null != technicalScoreSetting.getPassingScore()
+				}
+				if (null != technicalScoreSetting.getPassingScore()
 						&& technicalScoreSetting.getPassingScore().intValue() > 100) {
 					this.getManagedBean().setActiveIndex(4);
 					throw new EpException(MessageConst.ERROR_760142);
 				}
+				if (null != passingScore
+						&& (technicalScoreSetting.getPassingScore().intValue() < passingScore
+								.intValue())) {
+					technicalScoreSetting.setPassingScore(new BigDecimal(50));
+					this.getManagedBean().setTechnicalScoreSetting(
+							technicalScoreSetting);
+					throw new EpException(MessageConst.ERROR_760364,
+							new String[] { String.valueOf(passingScore) });
+				}
+
 			}
 		}
 
@@ -15711,6 +15722,14 @@ public class SpecificationBackingBean extends
 						this.getManagedBean().setActiveIndex(4);
 						throw new EpException(MessageConst.ERROR_760142);
 					}
+					BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules();
+
+					if (null != passingScore
+							&& (technicalScoreSetting.getPassingScore()
+									.intValue() < passingScore.intValue())) {
+						throw new EpException(MessageConst.ERROR_760364,
+								new String[] { String.valueOf(passingScore) });
+					}
 				}
 			}
 
@@ -16463,6 +16482,29 @@ public class SpecificationBackingBean extends
 
 		}
 		return uploaditems;
+	}
+
+	private BigDecimal retrieveTechnicalEvalutionPassingScorePmrules() {
+		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IRuleSO.class);
+		BigDecimal technicalPassingScore = new BigDecimal(0);
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		ruleReqDTO.setRuleType(RuleTypeConst.SC_TECHNICAL_PASSING_SCORE);
+		List<PmConfigRuleValue> ruleValueList = ruleSO
+				.getRuleValuesByTypeInCurrentDate(ruleReqDTO)
+				.getRuleValueList();
+		for (PmConfigRuleValue pmConfigRuleValue : ruleValueList) {
+			if (null != pmConfigRuleValue.getRuleValue()) {
+				technicalPassingScore = new BigDecimal(
+						pmConfigRuleValue.getRuleValue());
+			}
+		}
+		if (null == technicalPassingScore
+				|| technicalPassingScore.intValue() == 0) {
+			technicalPassingScore = new BigDecimal(50);
+		}
+		return technicalPassingScore;
 	}
 
 	/*
