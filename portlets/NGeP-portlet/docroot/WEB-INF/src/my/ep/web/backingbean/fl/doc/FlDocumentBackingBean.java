@@ -1070,6 +1070,12 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		}		
 		return retrievePTJList;
 	}
+	
+	/**
+	 * Retrieve supplier gst information by supplier ud and branch code
+	 *
+	 * @return SupplierGstResDTO resDTO
+	 */
 	public SupplierGstResDTO getSupplierGst(FlFulfilmentRequest flRequest) {
 		ISupplierGstSO supplierGstSO = (ISupplierGstSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);
 		

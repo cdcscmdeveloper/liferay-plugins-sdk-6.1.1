@@ -274,6 +274,11 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 		}
 	}
 	
+	/**
+	 * Set the portlet title for remove factoring company
+	 *
+	 * @return portletTitle
+	 */
 	public String getPortletTitle() {
 		String rfc = ResourceBundleUtils.getMessage("lbl.fl.rfc",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale());
 		String title = ResourceBundleUtils.getMessage("lbl.fl.doc.maintenance",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale());
