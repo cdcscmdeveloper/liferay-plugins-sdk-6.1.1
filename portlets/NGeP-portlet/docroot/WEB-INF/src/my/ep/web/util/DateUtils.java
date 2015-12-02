@@ -440,6 +440,30 @@ public class DateUtils {
 		return false;
 	}
 	
+	/**
+	 * Check whether current date already exceed param date (optional additional
+	 * months passed will be added to param date)
+	 * 
+	 * @param Date
+	 *            paramDate
+	 * @param int months
+	 * @return boolean
+	 */
+	public static boolean isCurrentDateAlreadyExceedParamDatePlusMonths(
+			Date paramDate, Integer additionalMonth) {
+		boolean retVal = false;
+		Calendar calAfterAddMonths = Calendar.getInstance();
+		calAfterAddMonths.setTime(paramDate);
+		if (additionalMonth != null) {
+			calAfterAddMonths.add(Calendar.MONTH, additionalMonth);
+		}
+
+		if (new Date().after(calAfterAddMonths.getTime())) {
+			retVal = true;
+		}
+		return retVal;
+	}
+	
 	
 	/**
 	 * Gets the months.
