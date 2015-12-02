@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
@@ -20,6 +21,7 @@ import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
 import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
@@ -45,6 +47,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -56,7 +59,6 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.liferay.portal.kernel.exception.PortalException;
@@ -68,7 +70,7 @@ import com.liferay.portal.theme.ThemeDisplay;
 @RequestScoped
 public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSupplierRegistrationManagedBean>{
 	//private static final String CATALOGUE_UPLOAD_PATH = "/xhtml/cm/codification/codificationView.xhtml";
-	private static final String CATALOGUE_UPLOAD_PATH = "codification-search";
+	private static final String CATALOGUE_UPLOAD_PATH = "supptemp-codification-search";
 	private static final String CATALOGUE_MAINT = "catalogue-maintenance-file";
 	//private static final String SUPPLIER_TYPE_SELECTION_PATH = "supptemp-registration-cont";
 	private static final String SOFT_CERT_PATH = "supptemp-request-soft-cert";
@@ -82,6 +84,9 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	private static final String MOF_SOFTCERT_REQUEST = "request-soft-cert";
 	//private static final String MOF_CODIFICATION_SEARCH = "codification-search";
 	private static final String UPGRADE_TO_MOF = "upgrade-basic-to-mof";
+	private int softCertStatus;
+	private boolean changeRoleSection;
+	private boolean roleChangeSuccess;
 	
 	public static Logger log = Logger.getLogger(PostSupplierRegistrationBackingBean.class);
 	
@@ -124,40 +129,17 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				if(supplier.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
 					SmWorkflowStatus workFlowStatus = getSmWorkflowStatus(supplier.getSmAppl());
 					if(workFlowStatus != null && workFlowStatus.getPmStatus().getStatusId() == 20199){
-						if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(ParameterConst.SUPPLIER_TYPE_CONTRACTOR)){
-							if(supplier.getSmAppl().getSmCompanyBasic().isWithFederal()){
-								if(checkPendingSoftCertRequest(supplier.getSupplierId())){
-									path = SOFT_CERT_PATH;
-									getManagedBean().setFlowStatus(5);
-								}else{
-									getManagedBean().setFlowStatus(0);
-								}
-							}else{
-								getManagedBean().setFlowStatus(0);
-							}
-						}else if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(ParameterConst.SUPPLIER_TYPE_CONSULTANT)){	
-							//path = MOF_REG_PATH;
-							getManagedBean().setFlowStatus(0);
-						}
+						path = mofSupplierFlowAfterApproval(supplier);
 					}else{
 						path = MOF_REG_PATH;
 						getManagedBean().setFlowStatus(1);
 					}
 					log.info("********FLOW STATUS**********" +  getManagedBean().getFlowStatus());
 				}else if(supplier.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.BASIC_ACCOUNT)){
-					//Basic Applcation
-					path = SOFT_CERT_PATH;
-					getManagedBean().setFlowStatus(1);
+					path = basicAccountFlow(supplier);
 				}
 			}
 		}
-
-
-		/*			if(isPath){
-				return path;
-			}else{
-				return desc;
-			}*/
 
 		return path;
 
@@ -179,18 +161,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		}else{
 			String path = currentStatusAndPath();
 			log.info("******xhtml*******" + path);
-			
-			/*if(path.equalsIgnoreCase(SUPPLIER_TYPE_SELECTION_PATH)){
-				FacesContext fc = FacesContext.getCurrentInstance();
-				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, path);
-			}else{
-				try{*/
-					pageRedirect(path);
-			/*	}
-				catch(Exception ex){
-					throw new Exception(ex.getMessage());
-				}
-			}*/
+			pageRedirect(path);
 		}
 		
 	}
@@ -714,6 +685,171 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		}
 		
 		return catalogueStatus;
+	}
+	
+	/**
+	 * retrieve current user soft cert status
+	 * @param 
+	 * @return SmPersonnel
+	 */
+	public SmPersonnel retrieveCurrentPersonnel(){
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		IPersonnelSO reqSO = SmServiceLookup.getPersonnelSO();
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setUserId(pmUser.getUserId());
+		PersonnelResDTO resDTO = reqSO.retrievePersonnelByUserId(reqDTO);
+		
+		return resDTO.getSmPersonnel();
+	}
+	
+	public int softCertProsseingStatus(){
+		return my.ep.constant.sm.SupplierManagementConst.SOFT_CERT_PROCESSING;
+	}
+	
+	public int softCertIsActiveStatus(){
+		return my.ep.constant.sm.SupplierManagementConst.SOFT_CERT_ISSUED;
+	}
+	
+	public int softCertRejectedStatus(){
+		return my.ep.constant.sm.SupplierManagementConst.SOFT_CERT_REJECTED;
+	}
+	
+	public int softCertPendingReqStatus(){
+		return my.ep.constant.sm.SupplierManagementConst.SOFT_CERT_PENDING_REQ;
+	}
+	
+	private void changeRoleForSupplierTemp(Long personnelId){
+		changeRoleSection = true;
+		IPersonnelSO personnelSO = SmServiceLookup.getPersonnelSO();
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setPersonnelId(personnelId);
+		reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
+		
+		try{
+			PersonnelResDTO resDTO =  personnelSO.supplierTempChangeRole(reqDTO);
+			//PersonnelResDTO resDTO = new PersonnelResDTO();
+			//resDTO.setSuccessful(true);
+			if(resDTO.isSuccessful()){
+				roleChangeSuccess = true;
+				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721035,
+						MessageUtils.BUNDLE_COMMON_MESSAGES,
+						new FacesScopes().getUserLocale())));	
+
+			}
+		}catch(Exception ex){
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,null,MessageUtils.getMessage(MessageConst.ERROR_721011,
+					MessageUtils.BUNDLE_COMMON_MESSAGES,
+					new FacesScopes().getUserLocale())));	
+		}
+	}
+	
+	public int retrieveCurrentUserSoftCertStatus(){
+		return softCertStatus;
+	}
+	
+	private String mofSupplierFlowAfterApproval(SmSupplier supplier){
+		String path = null;
+		SmPersonnel currentPersonnel = retrieveCurrentPersonnel();
+		log.info("-------mofSupplierFlowAfterApproval supplier type-------------" + supplier.getSmAppl().getSupplierType());
+		if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(ParameterConst.SUPPLIER_TYPE_CONTRACTOR)){
+			List<CmSupplierItem> cmSuppItemLs = getCmSupplierItems(supplier.getSupplierId());
+			//SmPersonnel currentPersonnel = retrieveCurrentPersonnel();
+			softCertStatus = currentPersonnel.getSoftcertFlg();
+			if(supplier.getSmAppl().getSmCompanyBasic().isWithFederal()){
+				if(cmSuppItemLs.size() < 1){
+					path = CATALOGUE_UPLOAD_PATH;
+					getManagedBean().setFlowStatus(5);
+				}else{
+					if(checkPendingSoftCertRequest(supplier.getSupplierId())){
+						path = SOFT_CERT_PATH;
+						getManagedBean().setFlowStatus(6);
+					}else{
+						if(softCertStatus == SupplierManagementConst.SOFT_CERT_REJECTED){
+							path = SOFT_CERT_PATH;
+						}
+						getManagedBean().setFlowStatus(6);
+					}
+				}
+
+
+				if(cmSuppItemLs.size() > 0 && validSupplierTemp() && softCertStatus == SupplierManagementConst.SOFT_CERT_ISSUED){
+					log.info(">>>CHange ROle for SUpplier Temp<<");
+					changeRoleForSupplierTemp(currentPersonnel.getPersonnelId());
+				}
+			}else{
+			/*	getManagedBean().setFlowStatus(5);
+				if(validSupplierTemp() && softCertStatus == SupplierManagementConst.SOFT_CERT_ISSUED){
+					log.info(">>>CHange ROle for SUpplier Temp<<");
+					changeRoleForSupplierTemp(currentPersonnel.getPersonnelId());
+				}*/
+				log.info(">>>Contractor<<<");
+				if(validSupplierTemp()){
+					log.info(">>>CHange ROle for SUpplier Temp<<");
+					changeRoleForSupplierTemp(currentPersonnel.getPersonnelId());
+				}
+			}
+		}else{
+			log.info(">>>Consultant<<");
+			if(validSupplierTemp()){
+				log.info(">>>CHange ROle for SUpplier Temp<<");
+				changeRoleForSupplierTemp(currentPersonnel.getPersonnelId());
+			}
+		}
+		
+		return path;
+	}
+	
+	private String basicAccountFlow(SmSupplier supplier){
+		String path = null;
+		
+		//Basic Applcation
+		List<CmSupplierItem> cmSuppItemLs = getCmSupplierItems(supplier.getSupplierId());
+		SmPersonnel currentPersonnel = retrieveCurrentPersonnel();
+		softCertStatus = currentPersonnel.getSoftcertFlg();
+		
+		if(cmSuppItemLs.size() < 1){
+			path = CATALOGUE_UPLOAD_PATH;
+			getManagedBean().setFlowStatus(1);
+		}else{
+			if(checkPendingSoftCertRequest(supplier.getSupplierId())){
+				path = SOFT_CERT_PATH;
+				getManagedBean().setFlowStatus(2);
+			}else{
+				if(softCertStatus == SupplierManagementConst.SOFT_CERT_REJECTED){
+					path = SOFT_CERT_PATH;
+				}
+				
+				getManagedBean().setFlowStatus(2);
+			}
+			
+/*						log.info("cmSuppItemLs.size()>>>>" + cmSuppItemLs.size());
+			log.info("validSupplierTemp()>>>>" + validSupplierTemp());
+			log.info("softCertStatus()>>>>" + softCertStatus);*/
+			
+			if(cmSuppItemLs.size() > 0 && validSupplierTemp() && softCertStatus == SupplierManagementConst.SOFT_CERT_ISSUED){
+				log.info(">>>CHange ROle for SUpplier Temp<<");
+				changeRoleForSupplierTemp(currentPersonnel.getPersonnelId());
+			}
+		}
+		
+		return path;
+	}
+	
+	public void naviToDashBoard(){
+		String currentUrl = SmCommonUtil.getEpBaseUrl();
+		log.info("CurrentUrl >>>>" + currentUrl);
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, currentUrl);
+		
+	}
+
+	public boolean isChangeRoleSection() {
+		return changeRoleSection;
+	}
+
+	public boolean isRoleChangeSuccess() {
+		return roleChangeSuccess;
 	}
 	
 /*	private void initCatalogueBackingBean(){
