@@ -1524,6 +1524,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			
 		return NAV_FULFILMENTNOTE_PAGE;
 	}
+	
 	/**
 	 * Show 1GFMAS error
 	 *
@@ -1533,6 +1534,11 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		RequestContext.getCurrentInstance().update("@form");
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null,getManagedBean().getGfmasErrorContent()));
 	}
+	
+	/**
+	 * Retrieve payment advise information by payment id and display in UI
+	 *
+	 */
 	public void viewPaymentMatch() {
 		IPaymentMatchSO paymentSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IPaymentMatchSO.class);
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());

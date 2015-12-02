@@ -1252,7 +1252,11 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		return false;
 	}
 	
-	
+	/**
+	 * Retrieve supplier gst
+	 * Recalculate the gst unit price
+	 *
+	 */
 	public void getSupplierGst(FlFulfilmentRequest flRequest) {
 		ISupplierGstSO supplierGstSO = (ISupplierGstSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);
 		

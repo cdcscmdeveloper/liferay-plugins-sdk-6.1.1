@@ -450,6 +450,12 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 			Collections.sort(flAdjustmentItem, comparator);
     }
 	
+	/**
+	 * selected tab index ==1 
+	 * populate chargeline tree data
+	 *
+	 * @param selectedTabIndex the selected tab index
+	 */
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==1){
 			sortItems(getManagedBean().getAdjustment().getFlAdjustmentItem());
@@ -478,6 +484,11 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 		RequestContext.getCurrentInstance().update("@form");
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null,getManagedBean().getGfmasErrorContent()));
 	}
+	
+	/**
+	 * Retrieve adjustment information by danId and display it in UI 
+	 *
+	 */
 	public void viewDebitAdjustment() {
 		IAdjustmentSO adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IAdjustmentSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();

@@ -784,7 +784,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		}
 	}
 
-
 	// Please add role if there is new role for this backingbean
 	/**
 	 * Gets the user role.
@@ -1169,6 +1168,10 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			}
 			return null;
 		}
+		
+		/**
+		 * Retrieve purchase order information and display in UI
+		 */
 		public void viewPurchaseOrder() {
 			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
@@ -1214,6 +1217,10 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "poBasePage?faces-redirect=true");
 			}
 		}
+		
+		/**
+		 * Retrieve purchase order information and display in UI
+		 */
 		public void viewContractOrder() {
 			IFulfilmentOrderSO fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());

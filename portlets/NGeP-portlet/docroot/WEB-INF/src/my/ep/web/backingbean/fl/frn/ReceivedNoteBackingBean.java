@@ -901,6 +901,11 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		RequestContext.getCurrentInstance().update("@form");
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null,getManagedBean().getGfmasErrorContent()));
 	}
+	
+	/**
+	 * Retrieve received note by fulfilment note id and display in UI
+	 *
+	 */
 	public void viewReceivedNote() {
 		IReceivedNoteSO receivedNoteSO =(IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
@@ -992,6 +997,10 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		}
 	}
 	
+	/**
+	 * Recalculate gst unit price
+	 *
+	 */
 	public boolean reCalculateGstUnitPrice(FlFulfilmentNote fulfilmentNote){
 		boolean amtChanged = false;
 		if(fulfilmentNote.getFlRequest().getGstRate() == null){
@@ -1029,7 +1038,11 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		return amtChanged;
 	}
 	
-	
+	/**
+	 * Applicable in the delivery order item rejection column. Selected the item the item amount, quantity, delivery quantity, delivery amount 
+	 * total received amount , total received quantity and remaining quantity will be set and display
+	 *
+	 */
 	public void selectedItemRow(){
 		if(null != getManagedBean().getSelectedItem()){
 			getManagedBean().setOrderedAmt(getManagedBean().getSelectedItem().getFlDelOrderItem().getFlFulfilmentItemAddr().getOrderedAmt());
