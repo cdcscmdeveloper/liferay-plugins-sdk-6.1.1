@@ -232,7 +232,7 @@
 								disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
 								value="#{profileManagementBackingBean.managedBean.selectedUser.loginId}"
 								validatorMessage="#{lbl['lbl.pm.profiles.userdetails.loginid']} - #{lbl['lbl.pm.profiles.invalidLogin']}">
-								<f:validateRegex pattern="^([a-zA-Z0-9._-]{8,40})?$" />
+								<f:validateRegex pattern="^([a-zA-Z0-9.-]{8,40})?$" />
 								<p:ajax event="blur"
 									partialSubmit="true" process="@this" update="@this" />
 							</p:inputText> 
