@@ -23,7 +23,7 @@
 		<ac:gpkiPopup textBeforeSign="#{suppFinalizationBackingBean.textBeforeSign}"
 		   postSignAction="#{suppFinalizationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
 		
-		<div align="right">
+		<div align="right" class="BtnSpacing">
 			<p:commandButton value="#{lbl['lbl.btn.save']}" 
 				process="@all" partialSubmit="true" update="@form" 
 				action="#{suppFinalizationBackingBean.saveSupplierFinalization}" 
@@ -44,7 +44,7 @@
 		
 		<ui:include src="/xhtml/sc/supplierFinalization/suppFinalizationHeader.xhtml"></ui:include>
 		
-		<p:tabMenu id="tab" activeIndex="#{suppFinalizationBackingBean.managedBean.activeIndex}">
+		<p:tabMenu id="tab" activeIndex="#{suppFinalizationBackingBean.managedBean.activeIndex}" styleClass="header-spacing">
 			<p:menuitem value="#{lbl['lbl.sc.preparation']}" actionListener="#{suppFinalizationBackingBean.onTabMenuChangeAction(0)}" 
 						process="@form" update="@form" partialSubmit="true" style="width:150px;" 
 						rendered="#{!suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK}">
