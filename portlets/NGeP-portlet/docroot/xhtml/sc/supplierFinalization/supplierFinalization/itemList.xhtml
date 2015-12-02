@@ -30,7 +30,7 @@
 				listener="#{suppFinalizationBackingBean.unselectItemEvent}"
 				update="@([id$=itemListTbl],[id$=supplierPanel],[id$=awardSupplier],[id$=supplierListTblPanel])"></p:ajax>
 				
-			<p:column style="width:2%;" rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser or 
+			<p:column styleClass="td-check-box-spacing" rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser or 
 													 suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK}">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk" value="#{suppFinalizationBackingBean.managedBean.selectAll}">
@@ -150,8 +150,8 @@
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.req.higher.authority']}" 
-					  rendered="#{suppFinalizationBackingBean.managedBean.forwardToHigherAuthority}"
-					  style="width:1%;white-space:normal;">
+					  styleClass="td-check-box-spacing" 
+					  rendered="#{suppFinalizationBackingBean.managedBean.forwardToHigherAuthority}">
 				<p:selectBooleanCheckbox value="#{item.higherAuthReq}" disabled="#{item.disabled or item.awardedItem or 
 						(item.higherAuthReq and suppFinalizationBackingBean.managedBean.scQtFinalization.higherSecretary.userId eq 
 							suppFinalizationBackingBean.managedBean.loggedInUserId)}">

@@ -156,7 +156,7 @@
 	         		</p:commandLink> 
 				</p:column>
 								
-				<p:column style="text-align: center;" selectionMode="#{suppFinalizationBackingBean.managedBean.selectionMode}" 
+				<p:column styleClass="td-check-box-spacing" selectionMode="#{suppFinalizationBackingBean.managedBean.selectionMode}" 
 					disabledSelection="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
 											suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK) or 
 												shortlistedSupp.suppSelectionDisabled or 
@@ -275,7 +275,7 @@
 	         		</p:commandLink> 
 				</p:column>
 				
-				<p:column style="text-align: center;" rendered="#{showSelectionColumn}">
+				<p:column styleClass="td-check-box-spacing" rendered="#{showSelectionColumn}">
 					<p:selectBooleanCheckbox id="selectAwardSupplier" value="#{shortlistedSupp.awareded}" 
 						disabled="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
 										suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK) or 
@@ -419,7 +419,7 @@
 	         		</p:commandLink> 
 				</p:column>
 				
-				<p:column style="text-align: center;" selectionMode="single" 
+				<p:column styleClass="td-check-box-spacing" selectionMode="single" 
 					disabledSelection="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
 											suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK) or 
 												shortlistedSupp.suppSelectionDisabled or 
