@@ -688,7 +688,9 @@ public class SmApplicationBackingBean extends
 			if (!applicationType
 					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
 					&& !applicationType
-							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)
+					&& !applicationType
+							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
 				SmApplicationUtil
 						.checkEquityOwnerUpdateAllowance(getManagedBean());
 			}
@@ -4536,14 +4538,17 @@ public class SmApplicationBackingBean extends
 	 */
 	public boolean disableEpRoleDropDown(SmPersonnel smPersonnel) {
 		boolean retVal = false;
-		if (smPersonnel.getEpRole().equals(RoleCode.MOF_SUPPLIER_ADMIN.value())
+		if (StringUtils.isNotBlank(smPersonnel.getEpRole())
+				&& smPersonnel.getEpRole().equals(
+						RoleCode.MOF_SUPPLIER_ADMIN.value())
 				|| smPersonnel.getEpRole().equals(
 						RoleCode.SUPPLIER_TEMP.value())
 				|| smPersonnel.getEpRole().equals(
 						RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
 			retVal = true;
-		} else if (smPersonnel.getEpRole().equals(
-				RoleCode.MOF_SUPPLIER_USER.value())
+		} else if (StringUtils.isNotBlank(smPersonnel.getEpRole())
+				&& smPersonnel.getEpRole().equals(
+						RoleCode.MOF_SUPPLIER_USER.value())
 				&& smPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
 				&& (smPersonnel.getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ || smPersonnel
 						.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING)) {
