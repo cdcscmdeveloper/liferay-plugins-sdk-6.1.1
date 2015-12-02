@@ -14,7 +14,7 @@
 			<tr>
 				<td style="width: 19%;"><p:outputLabel value="#{lbl['lbl.sc.direct.purchase.title']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText size="46" id="title" required="true"
+				<td colspan="3"><p:inputText size="46" id="title" required="true"
 						maxlength="100" label="#{lbl['lbl.sc.direct.purchase.title']}" disabled="#{!isPendingSubmissionStatus}"
 						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.title}"
 						style="margin-bottom: 5px;" /> 
@@ -80,8 +80,7 @@
 								maxIntegerDigits="10" />
 						   
 						</p:inputText>
-			     </td>
-			     <td><p:message id="oderQtyIdMsg" for="oderQtyId"
+			     <p:message id="oderQtyIdMsg" for="oderQtyId"
 										display="icon" /></td>
 			</tr>
 			<tr>
