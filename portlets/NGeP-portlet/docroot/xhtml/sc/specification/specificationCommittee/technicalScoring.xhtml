@@ -132,7 +132,7 @@
 
 		</h:panelGroup>
 	</p:panel>
-	<p:panel toggleable="true">
+	<p:panel id="passingScoreForTechnicalAndDemoSpecCommittee" toggleable="true">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.sc.passing.score']}" />
 			<ac:iconTooltip
@@ -165,7 +165,7 @@
 				<td><p:inputText style="text-align:right" maxlength="5"
 						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 						value="#{specificationBackingBean.managedBean.technicalScoreSetting.passingScore}">
-						<p:ajax event="blur" process="@all" partialSubmit="true"
+						<p:ajax event="blur" process="@all" partialSubmit="true" update="@([id$=passingScoreForTechnicalAndDemoSpecCommittee])"
 							listener="#{specificationBackingBean.checkTechnicalPassingScore(specificationBackingBean.managedBean.technicalScoreSetting)}" />
 					</p:inputText> <ac:iconTooltip value="#{lbl['lbl.sc.spec.technical.tooltip']}" />
 				</td>
