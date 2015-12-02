@@ -9,7 +9,7 @@
 	<!--  Supplier Details dialog -->
 	<p:dialog id="suppDetailsPopup" widgetVar="suppDetailsPopup"
 		position="center" header="#{lbl['lbl.sc.companyinfo']}" modal="true"
-		dynamic="true" styleClass="pop_up_top" width="1000" height="300"
+		dynamic="true" styleClass="pop_up_top" width="1000"
 		resizable="false">
 
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -19,20 +19,20 @@
 				<td><p:inputText size="30"
 						value="#{supplierDetailBackingBean.managedBean.smSupplier.regNo}"
 						disabled="true" /></td>
-				<td width="18%"><p:outputLabel value="#{lbl['lbl.sc.mof.no']}" />
+				<td><p:outputLabel value="#{lbl['lbl.sc.mof.no']}" />
 				</td>
-				<td width="26%"><p:inputText size="30"
+				<td><p:inputText size="30"
 						value="#{supplierDetailBackingBean.managedBean.mofNo}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
-				<td width="24%"><p:outputLabel value="#{lbl['lbl.sc.ep.no']}" /></td>
-				<td width="32%"><p:inputText size="30"
+				<td><p:outputLabel value="#{lbl['lbl.sc.ep.no']}" /></td>
+				<td><p:inputText size="30"
 						value="#{supplierDetailBackingBean.managedBean.smSupplier.epNo}"
 						disabled="true" /></td>
-				<td style="width: 18%;"><p:outputLabel
+				<td><p:outputLabel
 						value="#{lbl['lbl.sc.gst.register.num']}" /></td>
-				<td width="26%"><p:inputText disabled="true" size="30"
+				<td><p:inputText disabled="true" size="30"
 						value="#{supplierDetailBackingBean.managedBean.smGstSupplier.gstRegNo}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.gst.register.num.tooltip']}" />
 				</td>
@@ -43,9 +43,9 @@
 				<td><p:inputText size="30"
 						value="#{supplierDetailBackingBean.managedBean.smSupplier.companyName}"
 						disabled="true" /></td>
-				<td style="width: 18%;"><p:outputLabel
+				<td><p:outputLabel
 						value="#{lbl['lbl.sc.gst.effective.date']}" /></td>
-				<td width="26%"><p:inputText disabled="true" size="30"
+				<td><p:inputText disabled="true" size="30"
 						value="#{supplierDetailBackingBean.managedBean.smGstSupplier.gstEffDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -58,9 +58,9 @@
 				<td><p:inputText id="suppAddr1"
 						value="#{supplierDetailBackingBean.managedBean.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}"
 						size="30" disabled="true" /></td>
-				<td style="width: 18%;"><p:outputLabel
+				<td><p:outputLabel
 						value="#{lbl['lbl.sc.gst.declared.date']}" /></td>
-				<td width="26%"><p:inputText disabled="true" size="30"
+				<td><p:inputText disabled="true" size="30"
 						value="#{supplierDetailBackingBean.managedBean.smGstSupplier.gstDeclaredDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -105,8 +105,7 @@
 						disabled="true" /></td>
 			</tr>
 		</table>
-		<p:spacer height="3px"></p:spacer>
-		<div class="ppRightBtn">
+		<div class="ppRightBtn BtnSpacing">
 			<p:commandButton value="#{lbl['lbl.sc.close']}" partialSubmit="true"
 				process="@this" immediate="true" onclick="suppDetailsPopup.hide()" />
 		</div>
