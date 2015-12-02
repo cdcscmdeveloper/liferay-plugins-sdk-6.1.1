@@ -11458,6 +11458,18 @@ public class SpecificationBackingBean extends
 			scQt.setScheduleType(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 		}
 
+		if (null != this.getManagedBean().getFulfilmentType()
+				&& !"".equalsIgnoreCase(this.getManagedBean()
+						.getFulfilmentType())
+				&& this.getManagedBean()
+						.getFulfilmentType()
+						.equalsIgnoreCase(
+								ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+			if (null == scQt.getScheduleType()) {
+				scQt.setScheduleType(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
+			}
+		}
+
 		List<ScQtCheckList> localChecklist = new ArrayList<ScQtCheckList>();
 
 		List<ScQtCheckList> techCheckList = this.getManagedBean()
