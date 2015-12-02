@@ -102,13 +102,15 @@
 			<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '5'}">
 				<ui:include src="/xhtml/sc/loi/mutipleLoi/loiNegotiationReport.xhtml" />
 			</c:if>
-		</p:panel>		
+		</p:panel>
 
-		<ui:include src="/xhtml/sc/loi/mutipleLoi/supplierDetailsPopUp.xhtml"/> 
-		<p:dialog id="loiAttachmentPopupId" widgetVar="loiAttachmentPopupDlg" 
-			modal="true" resizable="false" width="700px" height="200" styleClass="pop_up_top" 
-			header="#{lbl['lbl.txt.choose.files']}">
-			
+		<!-- Supplier Details PopUp -->
+		<ui:include src="/xhtml/sc/loi/mutipleLoi/supplierDetailsPopUp.xhtml" />
+
+		<p:dialog id="loiAttachmentPopupId" widgetVar="loiAttachmentPopupDlg"
+			modal="true" resizable="false" width="700px" height="200"
+			styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
+
 			<p:ajax event="close" />
 			<p:fileUpload style="display:inline;"
 				fileUploadListener="#{lOIDetailBackingBean.handleFileUpload}"
@@ -116,9 +118,10 @@
 				sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-				update="@form, contentPanel" oncomplete="loiAttachmentPopupDlg.hide()">
+				update="@form, contentPanel"
+				oncomplete="loiAttachmentPopupDlg.hide()">
 			</p:fileUpload>
 		</p:dialog>
-		
+
 	</ui:define>
 </ui:composition>

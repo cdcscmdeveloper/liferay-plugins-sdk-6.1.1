@@ -13,20 +13,20 @@
 				<tr>
 					<td width="18%"><p:outputLabel value="#{lbl['lbl.sc.ep.no']}" />
 					</td>
-					<td width="82%"><p:inputText size="50"
+					<td width="82%"><p:inputText size="40"
 							value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.epNo}"
 							disabled="true" /></td>
 				</tr>
 			
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.mof.no']}" /></td>
-				<td><p:inputText size="50"
+				<td><p:inputText size="40"
 						value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" /></td>
-				<td><p:inputText size="50"
+				<td><p:inputText size="40"
 						value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.supplierName}"
 						disabled="true" /> <p:spacer width="5" /> <p:commandLink
 						oncomplete="suppDetailsPopup.show();return false;" process="@this"
@@ -45,7 +45,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.gst.register.num']}" />
 				</td>
-				<td><p:inputText size="50"
+				<td><p:inputText size="40"
 						value="#{directLOABackingBean.managedBean.scLoa.gstRegNo eq null ? lbl['lbl.txt.na']:directLOABackingBean.managedBean.scLoa.gstRegNo}"
 						disabled="true" />
 					<ac:iconTooltip
@@ -55,7 +55,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.gst.effective.date']}" />
 				</td>
-				<td><p:inputText size="50"
+				<td><p:inputText size="40"
 						value="#{directLOABackingBean.managedBean.scLoa.gstEffDate eq null ? lbl['lbl.txt.na']:directLOABackingBean.managedBean.scLoa.gstEffDate}"
 						disabled="true">
 						<f:convertDateTime
@@ -68,7 +68,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.gst.declared.date']}" />
 				</td>
-				<td><p:inputText size="50"
+				<td><p:inputText size="40"
 						value="#{directLOABackingBean.managedBean.scLoa.gstDeclaredDate eq null ? lbl['lbl.txt.na'] : directLOABackingBean.managedBean.scLoa.gstDeclaredDate}"
 						disabled="true">
 						<f:convertDateTime
@@ -80,7 +80,7 @@
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.branch']}" /></td>
-				<td><p:inputText id="branch" size="50"
+				<td><p:inputText id="branch" size="40"
 						value="#{directLOABackingBean.managedBean.selectedSupplierBranchName}"
 						disabled="true" /></td>
 			</tr>
@@ -113,7 +113,7 @@
 				<td width="18%"><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.witness.full.name']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td colspan="3"><p:inputText id="witnessName" size="50"
+				<td colspan="3"><p:inputText id="witnessName" size="40"
 						required="true"
 						value="#{directLOABackingBean.managedBean.loaSupplierWitness.witnessName}"
 						label="#{lbl['lbl.sc.loiloa.witness.full.name']}" maxlength="50" />
@@ -123,7 +123,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.identification.no']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td colspan="3"><p:inputText id="identificationNo" size="50"
+				<td colspan="3"><p:inputText id="identificationNo" size="40"
 						required="true"
 						value="#{directLOABackingBean.managedBean.loaSupplierWitness.identificationNo}"
 						label="#{lbl['lbl.sc.identification.no']}" maxlength="15" /> <p:message
@@ -133,10 +133,10 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.designation']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td colspan="3"><p:inputText id="designation" size="50"
+				<td colspan="3"><p:inputText id="designation" size="40"
 						required="true"
 						value="#{directLOABackingBean.managedBean.loaSupplierWitness.designation}"
-						maxlength="30" label="#{lbl['lbl.sc.designation']}" /> <p:message
+						maxlength="40" label="#{lbl['lbl.sc.designation']}" /> <p:message
 						id="designationMsg" for="designation" display="icon" /></td>
 			</tr>
 			<tr>
@@ -144,14 +144,14 @@
 						value="#{lbl['lbl.sc.address']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
 				<td rowspan="3" width="32%"><p:inputTextarea id="address"
-						required="true" cols="50" rows="5"
+						required="true" rows="5"
 						value="#{directLOABackingBean.managedBean.loaSupplierWitness.address}"
-						style=" margin-bottom:5px; width: 325px;" maxlength="200"
+						style=" margin-bottom:5px; width: 309px;" maxlength="200"
 						label="#{lbl['lbl.sc.address']}" /> <p:message id="addressMsg"
 						for="address" display="icon" /></td>
 				<td width="18%"><p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td width="32%"><p:inputText id="phoneNo" size="30"
+				<td width="32%"><p:inputText id="phoneNo" size="25"
 						required="true"
 						value="#{directLOABackingBean.managedBean.loaSupplierWitness.phoneNo}"
 						maxlength="20" validator="#{webappBean.checkPhoneNumber}"
@@ -161,15 +161,15 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.fax.no']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText id="faxNo" size="30" required="true"
+				<td><p:inputText id="faxNo" size="25" required="true"
 						value="#{directLOABackingBean.managedBean.loaSupplierWitness.faxNo}"
-						maxlength="20" validator="#{webappBean.checkPhoneNumber}"
+						maxlength="20" validator="#{webappBean.checkFaxNumber}"
 						label="#{lbl['lbl.sc.fax.no']}" /> <p:message id="faxNoMsg"
 						for="faxNo" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.mobile.no']}" /></td>
-				<td><p:inputText id="mobileNo" size="30"
+				<td><p:inputText id="mobileNo" size="25"
 						value="#{directLOABackingBean.managedBean.loaSupplierWitness.mobileNo}"
 						maxlength="20" validator="#{webappBean.checkPhoneNumber}"
 						label="#{lbl['lbl.sc.mobile.no']}" /> <p:message id="mobileNoMsg"
@@ -177,7 +177,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.email']}" /></td>
-				<td colspan="3"><p:inputText id="email" size="50"
+				<td colspan="3"><p:inputText id="email" size="40"
 						style=" margin-bottom:5px;"
 						value="#{directLOABackingBean.managedBean.loaSupplierWitness.email}"
 						maxlength="80" validator="#{webappBean.checkEmail}"
