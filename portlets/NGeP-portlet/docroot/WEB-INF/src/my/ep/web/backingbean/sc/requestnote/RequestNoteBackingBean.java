@@ -426,8 +426,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @return the string
 	 * page navigate to acknowledge page.
 	 */	
-	public String submitAction(String outcome) {
-		debugLogger("submitAction");
+	public String requestNoteSubmit(String outcome) {
+		debugLogger("requestNoteSubmit");
 		RequestNoteResDTO requestNoteResDTO = null;
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
@@ -487,11 +487,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	
 
 	/**
-	 * validate delivery term. before submit / Approve request note, 
+	 * submit Action. before submit / Approve request note, 
 	 * it shows the prompt(dialogue) that If system checking the different of delivery period, 
 	 * show alert only but allow to proceed with submission of Request note.
 	 */
-	public void validateDeliveryTerm(String outcome) {
+	public void submitAction(String outcome) {
 		getManagedBean().setAction(outcome);
 		boolean isDeliveryTermPrompt = Boolean.FALSE;
 		List<ScRequestNoteDtl>	requestNoteDtls  = this.getManagedBean().getRequestNoteDtls();
@@ -521,7 +521,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					outcome.equals(BpmOutcomeConst.BPM_REJECT)){
 				approverAction(outcome);
 			} else{
-				submitAction(outcome);
+				requestNoteSubmit(outcome);
 			}
 		}
 	}
