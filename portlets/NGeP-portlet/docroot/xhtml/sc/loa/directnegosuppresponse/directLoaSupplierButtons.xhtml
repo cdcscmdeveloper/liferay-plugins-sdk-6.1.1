@@ -14,7 +14,8 @@
 	</p:blockUI>
 
 	<div class="ppRightBtn">
-		<p:commandButton value="#{lbl['lbl.btn.save']}" process="@form" partialSubmit="true"
+		<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all" partialSubmit="true" 
+		    update="@form"
 			onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 			action="#{directLOABackingBean.saveAction}" />
 

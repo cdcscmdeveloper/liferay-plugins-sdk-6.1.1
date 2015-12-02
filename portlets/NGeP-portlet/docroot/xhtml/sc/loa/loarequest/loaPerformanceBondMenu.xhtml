@@ -21,7 +21,7 @@
 				<td colspan="3" style="width: 80%;"><p:inputText
 						value="#{lOADetailBackingBean.managedBean.scLoa.bondResDueDate}"
 						size="20" disabled="true" readonly="true">
-						<f:convertDateTime pattern="dd/MM/yyyy" />
+						<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 					</p:inputText> <p:spacer width="10px" /> <p:inputText
 						value="#{!empty lOADetailBackingBean.managedBean.scLoa.bondResDueDate ? DateUtils.getDaysDifference(DateUtils.getCurrentDateWithoutTime(), lOADetailBackingBean.managedBean.scLoa.bondResDueDate) : ''}"
 						disabled="true" size="8"  style="text-align:right;"/></td>
@@ -63,7 +63,7 @@
 				<td></td>
 				<td><p:inputTextarea
 						value="#{lOADetailBackingBean.managedBean.bondAmountWord}"
-						rows="3" maxlength="500" style=" margin-bottom:5px;width: 274px;"
+						rows="3" maxlength="500" style="margin-bottom:5px;width: 274px;"
 						disabled="true" /></td>
 			</tr>
 		</table>
@@ -90,14 +90,14 @@
 		<p:column headerText="#{lbl['lbl.sc.effective.date']}"
 			style="width:15%">
 			<h:outputText value="#{bondList.bondEffDate}">
-				<f:convertDateTime pattern="dd/MM/yyyy" />
+				<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 			</h:outputText>
 		</p:column>
 
 		<p:column headerText="#{lbl['lbl.sc.exp.date']}"
 			style="width:15%">
 			<h:outputText value="#{bondList.bondExpDate}">
-				<f:convertDateTime pattern="dd/MM/yyyy" />
+				<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 			</h:outputText>
 		</p:column>
 
