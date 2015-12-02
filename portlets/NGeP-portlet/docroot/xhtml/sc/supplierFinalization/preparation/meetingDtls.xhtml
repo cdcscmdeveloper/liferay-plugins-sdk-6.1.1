@@ -20,7 +20,7 @@
 						
 						<ui:param name="disableMeeting" value="#{!suppFinalizationBackingBean.managedBean.secretaryUser or 
 																  meetingDtl.recordStatusFlg ne DbValueConst.recordStatusActive}" />
-						<p:column style="width:20px;">
+						<p:column styleClass="td-check-box-spacing">
 							<f:facet name="header">
 								<p:selectBooleanCheckbox id="selAllChk"
 									value="#{suppFinalizationBackingBean.managedBean.selectAllMeetings}"
@@ -88,8 +88,7 @@
 						</p:column>
 					</p:dataTable> 
 					
-					<p:spacer height="10px"></p:spacer>
-					<div align="right">
+					<div align="right" class="BtnSpacing">
 						<p:commandButton value="#{lbl['lbl.btn.add']}"
 							process="@this,meetingDtlTbl" 
 							partialSubmit="true"
