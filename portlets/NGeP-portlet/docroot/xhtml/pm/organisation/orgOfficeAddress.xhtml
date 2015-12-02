@@ -151,40 +151,8 @@
 				<td><p:message for="postCode" id="postCodeMsg" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.pm.address.tel']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText id="telNo" required="true"
-						label="#{lbl['lbl.pm.address.tel']}" maxlength="12" styleClass="ppDisplayTextL"
-						value="#{organisationBackingBean.managedBean.officeAddress.phoneNo}"
-						  validatorMessage="#{lbl['lbl.pm.address.tel']} - #{lbl['lbl.pm.profiles.invalidNo']}">
-						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-						</p:inputText></td>
-				<td><p:message for="telNo" id="telNoMsg" display="icon" /></td>
-
-				<td><p:outputLabel value="#{lbl['lbl.pm.address.fax']}" /></td>
-				<td><p:inputText id="faxNo" maxlength="12" styleClass="ppDisplayTextL"
-						value="#{organisationBackingBean.managedBean.officeAddress.faxNo}"
-						  validatorMessage="#{lbl['lbl.pm.address.fax']} - #{lbl['lbl.pm.profiles.invalidNo']}" >
-						  <f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-						  </p:inputText></td>
-						  	<td><p:message for="faxNo" id="faxNoMsg" display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel styleClass="pmrequiredfield" value="#{lbl['lbl.pm.header.general.org.contactPerson']}" />
-				</td>
-				<td><p:commandLink
-						action="#{organisationBackingBean.addContacePerson}"
-						update="addManualDelAddrPnl" process="addManualDelAddrPnl"
-						partialSubmit="true">
-						<p:graphicImage
-							title="#{lbl['lbl.pm.header.general.org.contactPerson']}"
-							value="/css/images/design/ico-edit-contact.png" />
-					</p:commandLink></td>
-			</tr>
-			
-			<tr>
 				<td></td>
-				<td colspan="3">
+				<td colspan="4">
 					<SCRIPT type="text/javascript">
 				      function getAddress() {
 				    	  
@@ -217,6 +185,38 @@
 						disabled="#{organisationBackingBean.gmapDisabled}" />			
 				</td>
 			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.pm.address.tel']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText id="telNo" required="true"
+						label="#{lbl['lbl.pm.address.tel']}" maxlength="12" styleClass="ppDisplayTextL"
+						value="#{organisationBackingBean.managedBean.officeAddress.phoneNo}"
+						  validatorMessage="#{lbl['lbl.pm.address.tel']} - #{lbl['lbl.pm.profiles.invalidNo']}">
+						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+						</p:inputText></td>
+				<td><p:message for="telNo" id="telNoMsg" display="icon" /></td>
+
+				<td><p:outputLabel value="#{lbl['lbl.pm.address.fax']}" /></td>
+				<td><p:inputText id="faxNo" maxlength="12" styleClass="ppDisplayTextL"
+						value="#{organisationBackingBean.managedBean.officeAddress.faxNo}"
+						  validatorMessage="#{lbl['lbl.pm.address.fax']} - #{lbl['lbl.pm.profiles.invalidNo']}" >
+						  <f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+						  </p:inputText></td>
+						  	<td><p:message for="faxNo" id="faxNoMsg" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel styleClass="pmrequiredfield" value="#{lbl['lbl.pm.header.general.org.contactPerson']}" />
+				</td>
+				<td><p:commandLink
+						action="#{organisationBackingBean.addContacePerson}"
+						update="addManualDelAddrPnl" process="addManualDelAddrPnl"
+						partialSubmit="true">
+						<p:graphicImage
+							title="#{lbl['lbl.pm.header.general.org.contactPerson']}"
+							value="/css/images/design/ico-edit-contact.png" />
+					</p:commandLink></td>
+			</tr>
+			
 		</table>
 	</p:panel>
 	<p:dialog id="contactPerson" header="#{lbl['lbl.pm.header.general.org.contactPerson']}" closable="false" resizable="false" 
