@@ -737,9 +737,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 
 			}
 		}catch(Exception ex){
-			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,null,MessageUtils.getMessage(MessageConst.ERROR_721011,
-					MessageUtils.BUNDLE_COMMON_MESSAGES,
-					new FacesScopes().getUserLocale())));	
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,null,ex.getMessage()));	
 		}
 	}
 	
