@@ -5463,7 +5463,9 @@ public class SmApplicationUtil {
 		// already activated
 		if (currPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 			// if catalogue_user directly set softcert 0 and contractsigner 0
-			if (currPersonnel.getEpRole().equals(RoleCode.CM_USER.value())) {
+			if (StringUtils.isNotBlank(currPersonnel.getEpRole())
+					&& currPersonnel.getEpRole().equals(
+							RoleCode.CM_USER.value())) {
 				if (currPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PENDING_REQ) {
 					currPersonnel.setSoftcertFlg(0);
 				}

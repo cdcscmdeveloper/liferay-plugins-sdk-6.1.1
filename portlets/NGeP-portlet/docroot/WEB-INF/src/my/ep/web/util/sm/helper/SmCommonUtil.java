@@ -1688,17 +1688,18 @@ public class SmCommonUtil {
 	 * @param msgKeyId
 	 *            - String
 	 */
-	public static void redirectToPage(String page, String msgKeyId,String[]params) {
+	public static void redirectToPage(String page, String msgKeyId,
+			String[] params) {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		if (StringUtils.isNotBlank(msgKeyId)) {
-			if(params!=null && params.length>0){
+			if (params != null && params.length > 0) {
 				fc.addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(msgKeyId,params,
+								MessageUtils.getMessage(msgKeyId, params,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
-			}else{
+			} else {
 				fc.addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -3208,7 +3209,7 @@ public class SmCommonUtil {
 		}
 		return retVal;
 	}
-	
+
 	public void copyEntityProperties(Object fromObj, Object toObj,
 			String[] excludeProps) {
 		List<String> excludeList = new ArrayList<String>();
@@ -3256,7 +3257,7 @@ public class SmCommonUtil {
 			throw new EpException(e.getMessage());
 		}
 	}
-	
+
 	public Object getObjectByPropertiesFromList(Object compareVal,
 			List<? extends Object> list, String compareProp) {
 		Object retVal = null;
@@ -3277,7 +3278,7 @@ public class SmCommonUtil {
 		}
 		return retVal;
 	}
-	
+
 	public void compareAndRemoveObjectFromList(
 			List<? extends Object> compareList,
 			List<? extends Object> removeList, String propName) {
