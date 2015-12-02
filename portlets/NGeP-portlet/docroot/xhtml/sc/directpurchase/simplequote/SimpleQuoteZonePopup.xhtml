@@ -50,7 +50,7 @@
 		<div class="ppRightBtn BtnSpacing" style="width: 100%">
 			<p:commandButton id="proceedBtn"
 				value="#{lbl['lbl.btn.proceed']}" process="@all"
-				update="@this, zoneLocationDataTable" partialSubmit="true"
+				update="@this, zoneLocationDataTable, zonePopupPanel" partialSubmit="true"
 				actionListener="#{simpleQuoteBackingBean.updateZone}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
