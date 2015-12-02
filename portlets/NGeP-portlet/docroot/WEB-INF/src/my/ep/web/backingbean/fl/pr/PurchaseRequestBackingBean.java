@@ -3237,6 +3237,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null,getManagedBean().getGfmasErrorContent()));
 	}
 	
+	/**
+	 * Comapre PTJ group 
+	 * If the current charge PTJ group is different, then chargeline will be initialize
+	 *
+	 */
 	public void comparePtjGroup(BaseEntity entity){
 		IOrgProfileSO profileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
@@ -3264,6 +3269,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			getManagedBean().setCurrentChargePtjGroup(resDTO.getPmOrgProfile());
 		}
 	}
+	
 	/**
 	 * Get preparef PTJ condition for construct the LOV listing
 	 * @return String
@@ -3273,6 +3279,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				retrieveMinistryOrgProfile(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId()).getOrgProfileId();
 		return condition;
 	}
+	
 	private BigDecimal calculatesTotalOrderedAmt(){
 		BigDecimal totalAmt = new BigDecimal(0);
 		for(FlDeliveryAddress  deliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
@@ -3282,6 +3289,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}
 		return totalAmt;
 	}
+	
 	private void getApproverList(){
 		if(getManagedBean().getFulfilmentRequest().getPmUserGroup()==null || getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId()==null) {
 			getManagedBean().getApproverList().clear();
