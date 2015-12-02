@@ -32,7 +32,7 @@
 				<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
 					#{scLoiLoa.supplierName}
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.action']}">
+				<p:column headerText="#{lbl['lbl.sc.action']}" style="text-align: center;">
 					<p:commandButton value="#{lbl['lbl.sc.loiloa.create.loa']}"
 						rendered="#{!scLoiLoa.loaCreated}"
 						action="#{lOADetailBackingBean.createQtLOAAction(scLoiLoa)}" />
@@ -56,25 +56,25 @@
 					<p:column headerText="#{lbl['lbl.sc.loiloa.loa.type']}">
 					#{loiloa.type}
 				</p:column>
-				<p:column>
-					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.sc.item']}" />
-						<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.item.view.tooltip']}" />
-					</f:facet>
-					<p:commandLink
-						actionListener="#{qtLOABackingBean.showItemDetailsPopUps(loiloa)}"
-						oncomplete="qtItemDtlDlg.show()" update=":form:qtItemDtlDialog"
-						process="@this">
-						<p:graphicImage
-							title="Item Detail"
-							value="/css/images/design/document.png"
-							style="margin-right:2px;" />
-					</p:commandLink>
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.status']}">
+					<p:column style="text-align: center;">
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.sc.item']}" />
+							<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.item.view.tooltip']}" />
+						</f:facet>
+						<p:commandLink
+							actionListener="#{qtLOABackingBean.showItemDetailsPopUps(loiloa)}"
+							oncomplete="qtItemDtlDlg.show()" update=":form:qtItemDtlDialog"
+							process="@this">
+							<p:graphicImage title="Item Detail"
+								value="/css/images/design/document.png"
+								style="margin-right:2px;" />
+						</p:commandLink>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.status']}">
 					#{qtLOABackingBean.getStatusDescById(loiloa.status.statusId)}
 				</p:column>
-					<p:column headerText="#{lbl['lbl.sc.action']}">
+					<p:column headerText="#{lbl['lbl.sc.action']}"
+						style="text-align: center;">
 
 						<h:panelGroup rendered="#{loiloa.type eq 'LOI'}">
 
