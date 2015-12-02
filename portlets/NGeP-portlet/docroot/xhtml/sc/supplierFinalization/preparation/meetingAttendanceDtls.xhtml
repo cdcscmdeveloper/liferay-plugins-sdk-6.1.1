@@ -16,8 +16,8 @@
 						selection="#{suppFinalizationBackingBean.managedBean.selectedMeetingAttList}">
 						<ac:paginator for="meetingAttDtlTbl" />
 						
-						<p:column selectionMode="multiple" style="width:2%"  
-							rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}"></p:column>
+						<p:column selectionMode="multiple" styleClass="td-check-box-spacing" 
+								  rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}"/>
 								
 						<p:ajax event="toggleSelect" update="@([id$=meetingAttDtlTbl],[id$=attdDelBtn])" 
 								process="@this" partialSubmit="true"/>	
@@ -43,8 +43,7 @@
 						</p:column>
 					</p:dataTable>
 					
-					<p:spacer height="10px"></p:spacer>
-					<div align="right">
+					<div align="right" class="BtnSpacing">
 						<p:commandButton value="#{lbl['lbl.btn.add']}"
 							process="@this,meetingAttDtlTbl" 
 							partialSubmit="true"
@@ -61,7 +60,6 @@
 										suppFinalizationBackingBean.managedBean.secretaryUser}" 
 							disabled="#{(suppFinalizationBackingBean.managedBean.selectedMeetingAttList eq null) ||
 										(suppFinalizationBackingBean.managedBean.selectedMeetingAttList.size() eq 0)}" />
-	
 					</div>
 					
 					<!-- Dialog to prompt the user before deleting attendance records -->
