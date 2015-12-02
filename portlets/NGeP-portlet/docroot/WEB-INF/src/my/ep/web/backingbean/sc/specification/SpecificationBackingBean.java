@@ -1893,7 +1893,9 @@ public class SpecificationBackingBean extends
 						}
 					}
 
-					boolean isQuotationThresHold = ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scQt.getProcurementMode().getParameterCode());
+					boolean isQuotationThresHold = ParameterConst.PROCUREMENT_MODE_QUOTATION
+							.equals(scQt.getProcurementMode()
+									.getParameterCode());
 					if (!isQuotationThresHold
 							&& ParameterConst.QUOTATION_TENDER_TYPE_OPEN
 									.equalsIgnoreCase(scQt.getQtType())
@@ -1964,7 +1966,9 @@ public class SpecificationBackingBean extends
 				} else {
 					this.getManagedBean().setPanelItemCategory("");
 					ScQt scQt = this.getManagedBean().getScQt();
-					boolean isQuotationThresHold = ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scQt.getProcurementMode().getParameterCode());
+					boolean isQuotationThresHold = ParameterConst.PROCUREMENT_MODE_QUOTATION
+							.equals(scQt.getProcurementMode()
+									.getParameterCode());
 
 					if (!isQuotationThresHold
 							&& ParameterConst.QUOTATION_TENDER_TYPE_OPEN
@@ -4889,7 +4893,8 @@ public class SpecificationBackingBean extends
 			}
 
 			if (QTConstants.OPEN_TYPE.equals(scQt.getQtType())
-					&& ParameterConst.PROCUREMENT_MODE_TENDER.equals(scQt.getProcurementMode().getParameterCode())
+					&& ParameterConst.PROCUREMENT_MODE_TENDER.equals(scQt
+							.getProcurementMode().getParameterCode())
 					&& this.getManagedBean().getScQt()
 							.getScQtSupplierCriteria().isAllState()) {
 				if (null != qtSupplierCriteria) {
@@ -5837,14 +5842,16 @@ public class SpecificationBackingBean extends
 			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.SC_EVALUATION_TYPE);
 
 			for (PmParameterDesc paramDesc : localParamDesc) {
-				String evaluationTypeCode = paramDesc.getPmParameter().getParameterCode();
-				if (ParameterConst.EVALUATION_TYPES_ONE_TIER.equals(evaluationTypeCode)) {
+				String evaluationTypeCode = paramDesc.getPmParameter()
+						.getParameterCode();
+				if (ParameterConst.EVALUATION_TYPES_ONE_TIER
+						.equals(evaluationTypeCode)) {
 
-					itemList.add(new SelectItem(evaluationTypeCode,
-							paramDesc.getCodeName()));
-					
+					itemList.add(new SelectItem(evaluationTypeCode, paramDesc
+							.getCodeName()));
+
 					if (scQt.getEvaluationType() == null) {
-						scQt.setEvaluationType(evaluationTypeCode);	
+						scQt.setEvaluationType(evaluationTypeCode);
 					}
 				}
 			}
@@ -5867,65 +5874,74 @@ public class SpecificationBackingBean extends
 
 			boolean isQuotationThresHold = isQuotationThresHold(scQt
 					.getEstimatedAmount());
-			ScQtSupplierCriteria scQtSupplierCriteria = scQt.getScQtSupplierCriteria();
-			
+			ScQtSupplierCriteria scQtSupplierCriteria = scQt
+					.getScQtSupplierCriteria();
+
 			if (null == scQt.getEstimatedAmount()
 					|| scQt.getEstimatedAmount().intValue() <= 20000) {
 				throw new EpException(MessageConst.ERROR_760024,
 						new String[] { "20000" });
 			}
-			
+
 			// Procurement Mode
 			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-			parameterReqDTO.setParameterType(ParameterTypeConst.SC_PROCUREMENT_MODE);
+			parameterReqDTO
+					.setParameterType(ParameterTypeConst.SC_PROCUREMENT_MODE);
 			if (isQuotationThresHold) {
-				parameterReqDTO.setParameterCode(ParameterConst.PROCUREMENT_MODE_QUOTATION);	
+				parameterReqDTO
+						.setParameterCode(ParameterConst.PROCUREMENT_MODE_QUOTATION);
 			} else {
-				parameterReqDTO.setParameterCode(ParameterConst.PROCUREMENT_MODE_TENDER);
+				parameterReqDTO
+						.setParameterCode(ParameterConst.PROCUREMENT_MODE_TENDER);
 			}
 			ParameterResDTO parameterResDTO = parameterSo
 					.retrieveParameterByTypeAndCode(parameterReqDTO);
 			scQt.setProcurementMode(parameterResDTO.getPmParameter());
-			
+
 			// QT Type
 			scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
-			
+
 			// Open For
-			if (isQuotationThresHold && isOpenForBumiputraThresHold(scQt.getEstimatedAmount())) {
-				scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);	
+			if (isQuotationThresHold
+					&& isOpenForBumiputraThresHold(scQt.getEstimatedAmount())) {
+				scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
 			} else {
 				scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
 			}
-			
+
 			// Evaluation Type
-			if (isQuotationThresHold && isOneTierThresHold(scQt.getEstimatedAmount())) {
+			if (isQuotationThresHold
+					&& isOneTierThresHold(scQt.getEstimatedAmount())) {
 				scQt.setEvaluationType(null);
-				
-				populateEvaluationTypes(scQt);				
+
+				populateEvaluationTypes(scQt);
 			}
 
 			// All State
-			if (ParameterConst.QUOTATION_TENDER_TYPE_OPEN.equalsIgnoreCase(scQt.getQtType())) {
+			if (ParameterConst.QUOTATION_TENDER_TYPE_OPEN.equalsIgnoreCase(scQt
+					.getQtType())) {
 				if (null != scQtSupplierCriteria) {
-					if (!isQuotationThresHold &&
-						getManagedBean().getAllStateCode() == PTJLocalityCode.STATE_PENINSULAR) {
-						
+					if (!isQuotationThresHold
+							&& getManagedBean().getAllStateCode() == PTJLocalityCode.STATE_PENINSULAR) {
+
 						scQtSupplierCriteria.setAllState(true);
-						
+
 					} else {
 						if (null == scQtSupplierCriteria.getLocationLevel()) {
-							scQtSupplierCriteria.setLocationLevel(new PmParameter());
+							scQtSupplierCriteria
+									.setLocationLevel(new PmParameter());
 						}
-						
+
 						scQtSupplierCriteria.setAllState(false);
 					}
 				}
 			}
-			
+
 			// Reset zones details
 			if (null != scQtSupplierCriteria
-					&& ((scQtSupplierCriteria.isAllState() && ParameterConst.QUOTATION_TENDER_TYPE_OPEN.equalsIgnoreCase(scQt.getQtType()))
-					|| ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER.equalsIgnoreCase(scQt.getQtType()))) {
+					&& ((scQtSupplierCriteria.isAllState() && ParameterConst.QUOTATION_TENDER_TYPE_OPEN
+							.equalsIgnoreCase(scQt.getQtType())) || ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER
+							.equalsIgnoreCase(scQt.getQtType()))) {
 				if (null != getManagedBean().getExistingSupplierLocationList()) {
 					this.getManagedBean().setSupplierLocationList(
 							getManagedBean().getExistingSupplierLocationList());
@@ -5967,19 +5983,25 @@ public class SpecificationBackingBean extends
 
 			if (ParameterConst.FULFILMENT_TYPE_ONE_OFF.equalsIgnoreCase(this
 					.getManagedBean().getFulfilmentType())) {
-				this.getManagedBean().getScQt()
-						.setScheduleType(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
+				this.getManagedBean()
+						.getScQt()
+						.setScheduleType(
+								ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 
 			} else if (ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
 					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())) {
-				this.getManagedBean().getScQt()
-						.setScheduleType(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
+				this.getManagedBean()
+						.getScQt()
+						.setScheduleType(
+								ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
 				this.getManagedBean().setTotalProgressivePayment(0);
 
 			} else if (ParameterConst.FULFILMENT_TYPE_SCHEDULED
 					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())) {
-				this.getManagedBean().getScQt()
-						.setScheduleType(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
+				this.getManagedBean()
+						.getScQt()
+						.setScheduleType(
+								ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 				this.getManagedBean().setTotalFrequency(0);
 				this.getManagedBean().setTotalProgressivePayment(0);
 
@@ -6085,7 +6107,8 @@ public class SpecificationBackingBean extends
 		log.info("display schedule type" + scheduleType);
 		log.info("display fulfilment  type"
 				+ this.getManagedBean().getFulfilmentType());
-		if (ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE.equalsIgnoreCase(scheduleType)) {
+		if (ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE
+				.equalsIgnoreCase(scheduleType)) {
 			scheduleType = ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT;
 			this.getManagedBean().setTotalProgressivePayment(0);
 		} else if (ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT
@@ -8844,8 +8867,10 @@ public class SpecificationBackingBean extends
 				payments.add(payment);
 
 			}
-			this.getManagedBean().getScQt()
-					.setScheduleType(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
+			this.getManagedBean()
+					.getScQt()
+					.setScheduleType(
+							ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
 
 			this.getManagedBean().setProgressivePaymentList(payments);
 
@@ -11317,7 +11342,8 @@ public class SpecificationBackingBean extends
 			}
 			if (null == scQt.getEstimatedAmount()) {
 				this.getManagedBean().getScQt().setPanel(true);
-				this.getManagedBean().getScQt().setOpenFor(ParameterConst.OPEN_FOR_ALL);
+				this.getManagedBean().getScQt()
+						.setOpenFor(ParameterConst.OPEN_FOR_ALL);
 				this.getManagedBean().getScQt()
 						.setPmProcurementCategory(new PmParameter());
 			}
@@ -11546,8 +11572,8 @@ public class SpecificationBackingBean extends
 			localChecklist.addAll(financialCheckList);
 			scQt.setScQtChecklists(localChecklist);
 		}
-		if (ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE.equalsIgnoreCase(scQt
-				.getScheduleType())) {
+		if (ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE
+				.equalsIgnoreCase(scQt.getScheduleType())) {
 			List<ScQtSchedule> freqschedule = this.getManagedBean()
 					.getScheduleList();
 			List<ScQtSchedule> localScheduleList = new ArrayList<ScQtSchedule>();
@@ -11595,8 +11621,8 @@ public class SpecificationBackingBean extends
 			}
 		}
 
-		if (ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT.equalsIgnoreCase(scQt
-				.getScheduleType())) {
+		if (ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT
+				.equalsIgnoreCase(scQt.getScheduleType())) {
 			List<ScQtProgressivePayment> progressivePayemnt = this
 					.getManagedBean().getProgressivePaymentList();
 			List<ScQtProgressivePayment> paymentList = new ArrayList<ScQtProgressivePayment>();
@@ -13031,19 +13057,19 @@ public class SpecificationBackingBean extends
 	public SelectItem[] getQuotationTendervalues(String quotationTenderType) {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		ScQt scQt = getManagedBean().getScQt();
-		
+
 		if (null != scQt
-				&& ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scQt.getProcurementMode().getParameterCode())) {
+				&& ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scQt
+						.getProcurementMode().getParameterCode())) {
 			List<String> qtTypes = new ArrayList<String>();
 			qtTypes.add(ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER);
-			searchBean.getDataFilterBeans().add(new SearchFilterBean(
-						"pmParameter.parameterCode",
-						SearchOperator.OPERATOR_NOT_IN.value(),
-						qtTypes
-					));	
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmParameter.parameterCode",
+							SearchOperator.OPERATOR_NOT_IN.value(), qtTypes));
 		}
-		
-		return super.getRadioButtonCodeValuesBySearchBean(quotationTenderType, searchBean);
+
+		return super.getRadioButtonCodeValuesBySearchBean(quotationTenderType,
+				searchBean);
 	}
 
 	/**
@@ -14690,8 +14716,9 @@ public class SpecificationBackingBean extends
 		List<TplSpecLoc> tplSpecLocList = new ArrayList<TplSpecLoc>();
 
 		ScQt scQt = getManagedBean().getScQt();
-		
-		if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scQt.getProcurementMode().getParameterCode())) {
+
+		if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scQt
+				.getProcurementMode().getParameterCode())) {
 			if (getManagedBean().getAllStateCode() != PTJLocalityCode.STATE_PENINSULAR
 					&& !scQtSupplierCriteria.isAllState()) {
 				if (null != scQtSupplierCriteria
@@ -15323,8 +15350,10 @@ public class SpecificationBackingBean extends
 			panelbackingbean.getManagedBean().setDifferentModule(true);
 			if (SourcingConstants.FLOW_TYPE_BO.equalsIgnoreCase(type)) {
 
-				panelbackingbean.getManagedBean().setGotoPreviewPage(
-						"/xhtml/sc/specification/businessOwner/businessOwnerTabMenu.xhtml");
+				panelbackingbean
+						.getManagedBean()
+						.setGotoPreviewPage(
+								"/xhtml/sc/specification/businessOwner/businessOwnerTabMenu.xhtml");
 			}
 			if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE
 					.equalsIgnoreCase(type)) {
@@ -15654,34 +15683,32 @@ public class SpecificationBackingBean extends
 	private void validateTechnicalPassingScoring(
 			ScQtScoreSetting technicalScoreSetting) {
 		try {
-			if (null != technicalScoreSetting
-					&& technicalScoreSetting.getSettingType() == 1) {
+			if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
+					.getManagedBean().getScQt().getEvaluationType())
+					|| (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
+							.getManagedBean().getScQt().getEvaluationType()) && this
+							.getManagedBean().getScQt().isTechEvaluationReq())) {
+				if (null != technicalScoreSetting
+						&& technicalScoreSetting.getSettingType() == 1) {
 
-				if (null == technicalScoreSetting.getPassingScore()) {
-					this.getManagedBean().setActiveIndex(4);
-					throw new EpException(MessageConst.ERROR_760192);
-				} else {
-					if (this.getManagedBean().getScQt().getEvaluationType()
-							.equalsIgnoreCase(QTConstants.EVALUATION_TWO_TIER)) {
+					if (null == technicalScoreSetting.getPassingScore()) {
+						this.getManagedBean().setActiveIndex(4);
+						throw new EpException(MessageConst.ERROR_760192);
+					} else {
+
 						if (technicalScoreSetting.getPassingScore().intValue() <= 0) {
 							this.getManagedBean().setActiveIndex(4);
 							throw new EpException(MessageConst.ERROR_760234);
 						}
 
-					} else {
-
-						if (technicalScoreSetting.getPassingScore().intValue() < 0) {
-							this.getManagedBean().setActiveIndex(4);
-							throw new EpException(MessageConst.ERROR_760172);
-						}
 					}
 
-				}
-
-				if (null != technicalScoreSetting.getPassingScore()
-						&& technicalScoreSetting.getPassingScore().intValue() > 100) {
-					this.getManagedBean().setActiveIndex(4);
-					throw new EpException(MessageConst.ERROR_760142);
+					if (null != technicalScoreSetting.getPassingScore()
+							&& technicalScoreSetting.getPassingScore()
+									.intValue() > 100) {
+						this.getManagedBean().setActiveIndex(4);
+						throw new EpException(MessageConst.ERROR_760142);
+					}
 				}
 			}
 
@@ -16103,7 +16130,8 @@ public class SpecificationBackingBean extends
 
 	private void removefullfillmentDetails(String scheduleType) {
 
-		if (ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE.equalsIgnoreCase(scheduleType)) {
+		if (ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE
+				.equalsIgnoreCase(scheduleType)) {
 			List<ScQtSchedule> scheduleList = this.getManagedBean()
 					.getScheduleList();
 
