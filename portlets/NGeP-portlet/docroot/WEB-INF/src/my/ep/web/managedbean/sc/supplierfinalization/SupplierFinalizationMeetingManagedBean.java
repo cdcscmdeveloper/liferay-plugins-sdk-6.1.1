@@ -3,6 +3,7 @@
  */
 package my.ep.web.managedbean.sc.supplierfinalization;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -70,6 +71,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	private boolean selectAll;
 	private boolean selectAllMembers;
 	private boolean hasPreviousMeeting;
+	
+	private Date currentDate = new Date();
 	
 	public SupplierFinalizationMeetingManagedBean() {
 		this.userSearchBean = new UserCommitteeSearchBean();
@@ -531,5 +534,12 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 						boolean hasPreviousMeeting) {
 		this.hasPreviousMeeting = hasPreviousMeeting;
 	}
-	
+
+	/**
+	 * @return the currentDate
+	 */
+	public Date getCurrentDate() {
+		return currentDate;
+	}
+
 }
