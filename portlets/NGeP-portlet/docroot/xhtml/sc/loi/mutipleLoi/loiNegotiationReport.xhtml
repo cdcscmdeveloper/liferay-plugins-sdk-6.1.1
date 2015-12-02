@@ -63,7 +63,7 @@
 				</ui:fragment>
 			</p:column>
 
-			<p:column style="width:10%;" headerText="#{lbl['lbl.sc.action']}">
+			<p:column style="width:10%;text-align: center;" headerText="#{lbl['lbl.sc.action']}">
 				<p:commandButton id="download" icon="ui-icon-download"
 					style="background-color:transparent !important; border:0px none;"
 					ajax="false"
@@ -71,10 +71,8 @@
 					rendered="#{scLoiReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload 
 									? !empty scLoiReport.scLoiReportAttachment.fileName : true}" />
 			</p:column>
-
 		</p:dataTable>
-		<p:spacer height="2" />
-		<div class="ppRightBtn">
+		<div class="ppRightBtn BtnSpacing">
 			<p:commandButton value="#{lbl['lbl.btn.download.all']}" ajax="false"
 				rendered="#{isPendingNegotiationStatus}"
 				action="#{lOIDetailBackingBean.downloadAllReports}" />
