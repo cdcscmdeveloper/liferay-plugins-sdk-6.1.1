@@ -131,10 +131,9 @@
 						style="float: left;white-space: normal;" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}"
-					style="width : 95%;">
-					<h:outputText value="#{table.pmDocument.docName}"
-						style="float: left;white-space: normal;" />
+				<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" style="width : 95%;">
+				
+					<h:outputText value="#{table.pmDocument.docName}" style="float: left;white-space: normal;" />
 					
 					<p:outputPanel rendered="#{table.pmDocument.licenseReq}">
 						<table width="100%">
@@ -144,11 +143,12 @@
 									<p:outputLabel value="*" styleClass="mandatory" />
 								</td>
 								<td style="border-style: none !important;">
-									<p:inputText value="#{table.licenseNo}" size="35" id="licenseNoOfflineId" required="true" label="#{lbl['lbl.sm.suppdoc.license.no']}" >
+									<p:inputText value="#{table.licenseNo}" size="20" id="licenseNoOfflineId" required="true" label="#{lbl['lbl.sm.suppdoc.license.no']}" >
 										<p:ajax process="@this" partialSubmit="true"/>
 									</p:inputText>
 									<p:message id="licenseNoOfflineIdMsg" for="licenseNoOfflineId" showSummary="true" showDetail="false" display="icon" />
 								</td>
+								<td colspan="2" style="border-style: none !important;"></td>
 							</tr>
 							<tr>
 								<td style="border-style: none !important;">
@@ -161,15 +161,13 @@
 										label="#{lbl['lbl.sm.suppdoc.license.effdate']}"
 										value="#{table.licenseEffDate}"
 										pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
-										readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" >
+										readonlyInput="true" size="20" showOn="button" yearRange="-99:+0" >
 										<p:ajax event="dateSelect" update="licenseExpDateOfflineId" process="@this" partialSubmit="true"/>
 									</p:calendar>
 									<p:message id="licenseEffDateOfflineIdMsg"
 										for="licenseEffDateOfflineId" showSummary="true" showDetail="false"
 										display="icon" />
 								</td>
-							</tr>
-							<tr>
 								<td style="border-style: none !important;">
 									<p:outputLabel value="#{lbl['lbl.sm.suppdoc.license.expdate']}" />
 									<p:outputLabel value="*" styleClass="mandatory" />
@@ -180,7 +178,7 @@
 										label="#{lbl['lbl.sm.suppdoc.license.expdate']}"
 										value="#{table.licenseExpDate}"
 										pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
-										readonlyInput="true" size="30" showOn="button" yearRange="-99:+10" 
+										readonlyInput="true" size="20" showOn="button" yearRange="-99:+10" 
 										mindate="#{table.licenseEffDate}">
 										<p:ajax event="dateSelect" process="@this" partialSubmit="true"/>
 									</p:calendar>

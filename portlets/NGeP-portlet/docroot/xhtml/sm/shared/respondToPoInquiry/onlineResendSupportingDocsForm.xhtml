@@ -60,6 +60,7 @@
 				<p:column headerText="#{lbl['lbl.btn.upload.doc']}"
 					style="width : 10%;">
 					<p:commandLink oncomplete="attachDlg1.show();return false;"
+						process="@this" partialSubmit="true"
 						action="#{backingBean.assignSelectedSupportDoc(table)}"
 						rendered="#{table.verifiedFlg != 1}">
 						<p:graphicImage value="/css/images/design/upload.png"
