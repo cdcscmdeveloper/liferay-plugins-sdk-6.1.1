@@ -1827,19 +1827,21 @@ public class SpecificationBackingBean extends
 		retriveFulfilmentDtls();
 		retriveDeliveryDetails();
 		retriveCommitteeEndorsment();
-		checktemplateSpecStatus(this.getManagedBean().getScQt());
-		checkFinancialSpecStatus(this.getManagedBean().getScQt());
-		validateTechnicalPassingScoring(this.getManagedBean()
-				.getTechnicalScoreSetting());
-		validateTechnicalDemoPassingScoring(this.getManagedBean()
-				.getDemoScoreSetting());
-		technicalWeightageCalculate();
-		validateFinancialPackageItemPassingScoring(this.getManagedBean()
-				.getFinancialScoreSetting(), this.getManagedBean()
-				.getFinacialItemScoreSetting());
-		financialWeightageCalculate();
-		financialItemScoreCalculate(this.getManagedBean()
-				.getFinacialItemScoreSetting());
+		if (!this.getManagedBean().isReadOnly()) {
+			checktemplateSpecStatus(this.getManagedBean().getScQt());
+			checkFinancialSpecStatus(this.getManagedBean().getScQt());
+			validateTechnicalPassingScoring(this.getManagedBean()
+					.getTechnicalScoreSetting());
+			validateTechnicalDemoPassingScoring(this.getManagedBean()
+					.getDemoScoreSetting());
+			technicalWeightageCalculate();
+			validateFinancialPackageItemPassingScoring(this.getManagedBean()
+					.getFinancialScoreSetting(), this.getManagedBean()
+					.getFinacialItemScoreSetting());
+			financialWeightageCalculate();
+			financialItemScoreCalculate(this.getManagedBean()
+					.getFinacialItemScoreSetting());
+		}
 
 		// this.getManagedBean().setActiveIndex(0);
 
