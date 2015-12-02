@@ -23,7 +23,7 @@
 						size="20" disabled="true" readonly="true">
 						<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 					</p:inputText> <p:spacer width="10px" /> <p:inputText
-						styleClass="ppNumericAlign"
+						style="text-align: right;"
 						value="#{!empty directLOABackingBean.managedBean.scLoa.bondResDueDate ? DateUtils.getDaysDifference(DateUtils.getCurrentDateWithoutTime(), directLOABackingBean.managedBean.scLoa.bondResDueDate) : ''}"
 						disabled="true" size="8" /></td>
 
@@ -31,13 +31,13 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.cont.period']}" /></td>
-				<td><p:inputText
+				<td><p:inputText style="text-align: right;"
 						value="#{directLOABackingBean.managedBean.scLoa.contractDuration}"
 						disabled="true" size="35" readonly="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.cont.amt']}" /></td>
-				<td><p:inputText
+				<td><p:inputText style="text-align: right;"
 						value="#{directLOABackingBean.managedBean.overallContractAmt}"
 						disabled="true" size="35" readonly="true">
 						<f:convertNumber
@@ -47,13 +47,13 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.bond.percentage']}" /></td>
-				<td><p:inputText
+				<td><p:inputText style="text-align: right;"
 						value="#{directLOABackingBean.managedBean.scLoa.bondPercentage}"
 						disabled="true" size="35" readonly="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.bond.amt']}" /></td>
-				<td><p:inputText
+				<td><p:inputText style="text-align: right;"
 						value="#{directLOABackingBean.managedBean.scLoa.bondAmt}"
 						disabled="true" size="35" readonly="true">
 						<f:convertNumber

@@ -116,13 +116,13 @@
 			<td rowspan="3" valign="top" width="21%">
 				<p:outputLabel value="#{lbl['lbl.sc.address']}" />
 			</td>
-			<td rowspan="3" width="32%">
-				<p:inputTextarea id="suppAddr" cols="50"
+			<td rowspan="3">
+				<p:inputTextarea id="suppAddr"
 					rows="5"
 					value="#{lOADetailBackingBean.getFullAddress(lOADetailBackingBean.managedBean.scLoa.supplierAddress)}"
 					style=" margin-bottom:5px;width: 274px;" disabled="true" />
 			</td>
-			<td style="width: 15%;">
+			<td style="width: 18%;">
 				<p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
 			</td>
 			<td>
@@ -310,7 +310,7 @@
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
-			<td width="28%">
+			<td width="27%">
 				<table>
 					<tr>
 						<td>
@@ -435,11 +435,11 @@
 						disabled="true" size="35" />
 				</c:if>
 			</td>
-			<td>
+			<td style="width: 21%">
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.cont.admin']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
-			<td style="width: 28%">
+			<td>
 				<c:if test="#{isEditableStatus}">
 					<p:selectOneMenu id="contractAdmin"
 						value="#{lOADetailBackingBean.managedBean.scLoa.contractAdmin.userId}"
@@ -469,7 +469,7 @@
 			<td>
 				<p:outputLabel value="#{lbl[lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.period' : 'lbl.sc.loiloa.loa.cont.period']}" />
 			</td>
-			<td colspan="3">
+			<td>
 				<p:inputText 
 					value="#{lOADetailBackingBean.managedBean.scLoa.contractDuration}"
 					disabled="true" size="35" style="text-align:right;"/>
