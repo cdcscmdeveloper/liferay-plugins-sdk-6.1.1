@@ -84,7 +84,7 @@
 						</p:menuitem>
 						<p:menuitem id="menuItemId4" value="#{lbl['lbl.ct.update']}" icon="ui-icon-update"
 							onstart="circularSearchBlk.show();" oncomplete="circularSearchBlk.hide();"
-							rendered="#{circularBackingBean.managedBean.trackingDiarySearch and 
+							rendered="#{!circularBackingBean.managedBean.trackingDiarySearch and 
 							         ((circularBackingBean.isPanelAdmin() and (data.status.statusId == CtStatusConst.pqApproved or 
 									((data.status.statusId == CtStatusConst.pqRejected or data.status.statusId == CtStatusConst.pqCancelled) and data.ctCircular.latestCircularVer != null))) or 
 									     circularBackingBean.isCentralContractAdmin() and (data.status.statusId == CtStatusConst.cqApproved or 
