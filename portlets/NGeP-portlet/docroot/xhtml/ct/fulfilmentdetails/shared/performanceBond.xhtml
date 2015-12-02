@@ -19,8 +19,7 @@
 	   	</f:facet>
 		 <p:dataTable id="tableBond" var="varBond" rowIndexVar="index"
 			  value="#{ctBackingBean.managedBean.ctContractAmount.ctPerformanceBonds}"
-			  rowKey="#{rowKeyObj}"
-			  first="#{ctBackingBean.managedBean.firstRowSelected}">
+			  rowKey="#{rowKeyObj}">
 			  <ac:paginator for="tableBond" />
 			  
 			 <p:column style="width:2%;"  rendered="#{!ctBackingBean.managedBean.viewContract}">
@@ -40,7 +39,9 @@
 				        <h:outputText value="#{lbl['lbl.ct.ref.no']}"  styleClass="required"/>
 				</f:facet>
 				<p:inputText value="#{varBond.refNo}" maxlength="50" 
-					disabled="#{ctBackingBean.managedBean.viewContract}" style="width:85px;" />
+					disabled="#{ctBackingBean.managedBean.viewContract}" style="width:85px;" >
+					<p:ajax process="@this"></p:ajax>
+					</p:inputText>
 			</p:column>
 		
 			<p:column style="width:23%;"  styleClass="column-align-center">
@@ -51,6 +52,7 @@
 				<p:selectOneMenu id="orgName"  value="#{varBond.financialOrg.financialOrgId}"
 				    style="width:195px;" disabled="#{ctBackingBean.managedBean.viewContract}">
 					   <f:selectItems value="#{ctBackingBean.retrieveFinancialOrgList()}" />
+					   <p:ajax process="@this"></p:ajax>
 				</p:selectOneMenu>
 			</p:column>
 			
@@ -87,22 +89,25 @@
 			    </p:calendar>
 			</p:column>
 			
-			<p:column styleClass="column-align-center" style="width:35%;">
-				<f:facet name="header">
-				        <h:outputText value="#{lbl['lbl.txt.attachment']}"  styleClass="required"/>
-				</f:facet>
+			<p:column styleClass="column-align-center"  headerText="#{lbl['lbl.txt.attachment']}" style="width:35%;">
+				
 				
 				<h:panelGroup id="uploadBondPg" columns="2">
-					<p:commandButton oncomplete="uploadBondDlg.show();return false;"  
-							rendered="#{!ctBackingBean.managedBean.viewContract}"
-					     style="float:left;" icon="iconAttachment" update=":form:tableBond, :form:uploadBondDlg">
-						<f:setPropertyActionListener value="#{varBond}" target="#{ctBackingBean.managedBean.ctPerformanceBond}" />
+					<p:commandButton oncomplete="uploadBondDlg.show();return false;" 
+					   process="@this" partialSubmit="true" actionListener="#{ctBackingBean.PerformanceBondValue(varBond)}"
+							rendered="#{!ctBackingBean.managedBean.viewContract and varBond.fileName == null}" 
+					     style="float:left;" icon="iconAttachment">
 					</p:commandButton>
 					<h:commandLink
 						title="#{varBond.fileName}"
 						value="#{ctBackingBean.getShortFileName(varBond.fileName)}"						
-						style="float:left;margin-top:10px;" styleClass="blue_font"
+						style="float:left;margin-top:5px;" styleClass="blue_font"
 						action="#{ctBackingBean.downloadFile(varBond.filePath, varBond.fileName)}" />
+					<p:commandLink rendered="#{varBond.fileName != null}" style="float:left;margin-top:5px;" 
+					  action="#{ctBackingBean.setIndexProperty(index)}"
+					   process="@this" partialSubmit="true"  onsuccess="deleteBondAttachmentDlg.show();">
+			   				<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+			 	</p:commandLink>
 				</h:panelGroup>
 			</p:column>
 		</p:dataTable>
@@ -110,7 +115,7 @@
 			
 				<p:commandButton id="addPdBtn"  value="#{lbl['lbl.btn.add']}" process="@this,tableBond" 
 				  rendered="#{!ctBackingBean.managedBean.viewContract}" 
-				     action="#{ctBackingBean.addBondDetails}" update="@all,tableBond">
+				     action="#{ctBackingBean.addBondDetails}" update="@all">
 					<p:tooltip for="addPdBtn">
 					    <h:outputText value="#{lbl['lbl.ct.tooltip.add.performance.bond']}" escape="false" />
 					</p:tooltip>
@@ -130,12 +135,15 @@
 			width="700px" height="350" styleClass="pop_up_top"
 			header="#{lbl['lbl.bpm.choose.file']}">
 			<p:ajax event="close" />
-			<p:fileUpload style="display:inline;" mode="advanced"
-			    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-				fileUploadListener="#{ctBackingBean.fileUploadPerformance}"
+			<p:fileUpload style="display:inline;" 
+			   	fileUploadListener="#{ctBackingBean.fileUploadPerformance}"
+			    mode="advanced" id="performanceFileuploadId"
+			 	sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" 
 				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
-				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"  update=":form:tableBond">
+				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"  
+				update=":form:tableBond">
 			</p:fileUpload>
+		
 		</p:dialog>
 		<p:dialog id="dlgPerformDel" widgetVar="dlgPerformDel"
 			styleClass="screen-title"
@@ -153,6 +161,21 @@
 				<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgPerformDel.hide();" type="button" />
 			</div>
 		</p:dialog>
+		
+		<p:dialog id="deleteBondAttachment" widgetVar="deleteBondAttachmentDlg"
+      	      styleClass="screen-title" modal="true" width="330">  
+      	        <h:panelGrid columns="3">
+ 			<p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+		   	<p:spacer width="10"/>
+            <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.delete.attachment.msg']}</div>
+     	</h:panelGrid>
+		<div class="ppRightBtn">
+	     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this" partialSubmit="true" update=":form:tableBond"
+	     	actionListener="#{ctBackingBean.deleteBondAttachement()}" immediate="true"
+	     	onclick="deleteBondAttachmentDlg.hide();"/>
+		 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteBondAttachmentDlg.hide();" type="button" />
+	   </div>
+ 	</p:dialog>	
 	</p:panel>
 </ui:composition>
 

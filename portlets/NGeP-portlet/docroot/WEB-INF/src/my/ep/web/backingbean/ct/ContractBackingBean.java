@@ -2245,4 +2245,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						   getManagedBean().setUpdateSupplierAddress(ctContractVer.getCtContractValue().isAddressChange());
 					}
 				}
+				
+				public void PerformanceBondValue(CtPerformanceBond ctBond){
+					getManagedBean().setCtPerformanceBond(ctBond);
+				}
+				
+				/**
+				 * The method used to delete the uploaded agency file.
+				 */    
+			    public void deleteBondAttachement(){
+			    	CtPerformanceBond ctBondAttch =  getManagedBean().getCtContractAmount().getCtPerformanceBonds().get(getManagedBean().getIndex());
+			    	getManagedBean().getCtContractAmount().getCtPerformanceBonds().remove(getManagedBean().getIndex());
+			    	ctBondAttch.setFileName(null);
+			    	ctBondAttch.setFilePath(null);
+			    	getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(getManagedBean().getIndex(), ctBondAttch);
+			    }
 }
