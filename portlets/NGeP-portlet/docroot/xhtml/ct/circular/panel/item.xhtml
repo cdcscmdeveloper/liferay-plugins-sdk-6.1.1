@@ -296,15 +296,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	  <p:dialog id="ZoneGeneral" header="#{lbl['lbl.ct.add.location']}" widgetVar="ZoneGeneral" 
 	  	styleClass="pop_up_top" modal="true" width="600" height="500">
 	  	 <p:panel id="zonePopupGeneral">
-	  	  <p:messages id="zoneItemMsgId" showSummary="false" 
-			   showDetail="true"   autoUpdate="true" cosable="true" severity="error, info" />  
-			<table styleClass="noBorders tr,noBorders td">
+	  	 	<table styleClass="noBorders tr,noBorders td">
 				<tr>
 					<td width="25%" valign="top"><p:outputLabel value="#{lbl['lbl.ct.zone.name']}" styleClass="required"></p:outputLabel></td>
 					<td width="70%"><p:inputText id="zoneName" style="width:300px;" disabled="#{panelBackingBean.managedBean.viewContract}"
 							value="#{panelBackingBean.managedBean.zoneName}"  
-							label="#{lbl['lbl.ct.zone.name']}" required="#{panelBackingBean.managedBean.requiredValue}"
-						    maxlength="20"></p:inputText> #{panelBackingBean.managedBean.requiredValue}
+							label="#{lbl['lbl.ct.zone.name']}"
+						    maxlength="20"></p:inputText> 
 					</td>
 				</tr>
 				<tr>
@@ -331,7 +329,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		
 		<div align="right">
 		<p:spacer height="10"/>
-		<p:commandButton value="#{lbl['lbl.btn.ok']}"  process="@this zonePopupGeneral"
+		<p:commandButton value="#{lbl['lbl.btn.ok']}"  process="@all"
 			update=":form:zonePopupGeneral, :form:itemZone"
 			rendered="#{!panelBackingBean.managedBean.viewContract}"
 			action="#{panelBackingBean.updateZoneGeneralLocation}">
