@@ -28,9 +28,6 @@ import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -68,7 +65,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
@@ -663,15 +659,7 @@ public class QTScheduleDetailBackingBean extends
 
 		FacesScopes facesScopes = new FacesScopes();
 		Object ctxToken = facesScopes.getBPMAuthenticationCtxToken();
-
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
-
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		reqDTO.setCtxToken(ctxToken);
-		reqDTO.setTaskId(this.getManagedBean().getTaskId());
-		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-
+		
 		IQTBriefingSO briefingSO;
 		try {
 			List<ScQtBsvRegistration> registrations = this.getManagedBean()
@@ -687,7 +675,7 @@ public class QTScheduleDetailBackingBean extends
 			briefingReqDTO.setScQt(this.getManagedBean().getQt());
 			briefingReqDTO.setToken(ctxToken);
 			briefingReqDTO.setTaskId(this.getManagedBean().getTaskId());
-			briefingReqDTO.setPayLoad(res.getPojo());
+			briefingReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 			briefingReqDTO.setOutcome(outcome);
 			briefingReqDTO.setTplSpecZoneDtl(this.getManagedBean()
 					.getQtBriefing().getScQtBsv().getTplSpecZoneDtl());

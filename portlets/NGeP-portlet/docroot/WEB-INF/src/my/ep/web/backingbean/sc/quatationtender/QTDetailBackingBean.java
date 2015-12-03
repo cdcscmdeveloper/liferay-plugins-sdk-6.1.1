@@ -47,9 +47,6 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -138,7 +135,6 @@ import my.ep.type.pm.PTJLocalityCode;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -415,7 +411,7 @@ public class QTDetailBackingBean extends
 
 			quationTenderReqDTO.setTaskId(this.getManagedBean().getTaskId());
 			quationTenderReqDTO.setPayLoad(this.getManagedBean()
-					.getQuotationTenderDataType());
+					.getPayLoad());
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.submitQT(quationTenderReqDTO);
 			if (quationTenderResDTO.isSuccessful()) {
@@ -1768,15 +1764,12 @@ public class QTDetailBackingBean extends
 							.equalsIgnoreCase(taskName)) {
 
 				SCCommitteeDataType committeDataType = (SCCommitteeDataType) payLoad;
-				this.getManagedBean().setQuotationTenderDataType(
-						committeDataType);
 
 				qtId = committeDataType.getQtId().longValue();
 				this.getManagedBean().setPendingRevision(true);
 			} else {
 
 				SCEvaluationDataType evalDataType = (SCEvaluationDataType) payLoad;
-				this.getManagedBean().setQuotationTenderDataType(evalDataType);
 				qtId = evalDataType.getQtId().longValue();
 
 			}
@@ -1812,7 +1805,6 @@ public class QTDetailBackingBean extends
 			// qtId = quotationTenderDataType.getQtId().longValue();
 			SCQuotationTenderDataType quationDataType = (SCQuotationTenderDataType) payLoad;
 			qtId = quationDataType.getQtId().longValue();
-			this.getManagedBean().setQuotationTenderDataType(quationDataType);
 			// retrieveFinalizationSecratryDtl(qtId);
 			retrieveQuationTenderDetails(new Long(qtId), null);
 		}
@@ -1858,20 +1850,13 @@ public class QTDetailBackingBean extends
 
 		FacesScopes facesScopes = new FacesScopes();
 		Object ctxToken = facesScopes.getBPMAuthenticationCtxToken();
-
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
-
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		reqDTO.setCtxToken(ctxToken);
-		reqDTO.setTaskId(this.getManagedBean().getTaskId());
-		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-		String taskName = res.getTaskName();
+		String taskName = this.getManagedBean().getTaskName();
 
 		qtReqDTO.setOutcome(outcome);
 		IQTDetailSO detailSO;
 		try {
 			ScQt qt = qtReqDTO.getQtdetail();
+			Object payLoad = getManagedBean().getPayLoad();
 			// Fix for Other Approval Validations on submit only
 			qt.setOtherApproval(true);
 			
@@ -1927,7 +1912,7 @@ public class QTDetailBackingBean extends
 				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 				committeReqDTO.setToken(ctxToken);
 				committeReqDTO.setTaskId(this.getManagedBean().getTaskId());
-				committeReqDTO.setPayLoad(res.getPojo());
+				committeReqDTO.setPayLoad(payLoad);
 				committeReqDTO.setOutcome(outcome);
 				committeReqDTO.setPmUser(facesScopes.getUserSessionBean());
 				committeReqDTO.setRoleCode(getUserRoleCode());
@@ -1941,8 +1926,8 @@ public class QTDetailBackingBean extends
 							.equalsIgnoreCase(taskName)) {
 
 				// TODO - temporary for FC.
-				if (res.getPojo() instanceof SCEvaluationDataType) {
-					if ("FC".equals(((SCEvaluationDataType) res.getPojo())
+				if (payLoad instanceof SCEvaluationDataType) {
+					if ("FC".equals(((SCEvaluationDataType) payLoad)
 							.getCommitteeType())) {
 						ICommitteSO committeSO = EpEjbBusinessDelegate
 								.getInstance().getServiceObject(
@@ -1952,7 +1937,7 @@ public class QTDetailBackingBean extends
 						committeReqDTO.setToken(ctxToken);
 						committeReqDTO.setTaskId(this.getManagedBean()
 								.getTaskId());
-						committeReqDTO.setPayLoad(res.getPojo());
+						committeReqDTO.setPayLoad(payLoad);
 						committeReqDTO.setOutcome(outcome);
 						committeReqDTO.setPmUser(facesScopes
 								.getUserSessionBean());
@@ -1972,7 +1957,7 @@ public class QTDetailBackingBean extends
 						committeReqDTO.setToken(ctxToken);
 						committeReqDTO.setTaskId(this.getManagedBean()
 								.getTaskId());
-						committeReqDTO.setPayLoad(res.getPojo());
+						committeReqDTO.setPayLoad(payLoad);
 						committeReqDTO.setOutcome(outcome);
 						committeReqDTO.setPmUser(facesScopes
 								.getUserSessionBean());
@@ -1993,7 +1978,7 @@ public class QTDetailBackingBean extends
 				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 				committeReqDTO.setToken(ctxToken);
 				committeReqDTO.setTaskId(this.getManagedBean().getTaskId());
-				committeReqDTO.setPayLoad(res.getPojo());
+				committeReqDTO.setPayLoad(payLoad);
 				committeReqDTO.setOutcome(outcome);
 				committeReqDTO.setPmUser(facesScopes.getUserSessionBean());
 				committeReqDTO.setRoleCode(getUserRoleCode());
@@ -2004,7 +1989,7 @@ public class QTDetailBackingBean extends
 			} else {
 				qtReqDTO.setToken(ctxToken);
 				qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
-				qtReqDTO.setPayLoad(res.getPojo());
+				qtReqDTO.setPayLoad(payLoad);
 				qtReqDTO.setDocType(QTConstants.DOCTYPE_QT);
 				FacesScopes facesScope = new FacesScopes();
 				qtReqDTO.setPmUser(facesScope.getUserSessionBean());

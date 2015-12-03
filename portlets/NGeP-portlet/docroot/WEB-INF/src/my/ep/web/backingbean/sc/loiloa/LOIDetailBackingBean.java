@@ -229,8 +229,6 @@ public class LOIDetailBackingBean extends
 			} 
 
 			getManagedBean().setSourceId(sourceId);
-			getManagedBean().setPayLoadData(awardDataType);
-
 			getManagedBean()
 					.setRecommendDtlIds(awardDataType.getGroupkeyList());
 
@@ -268,7 +266,6 @@ public class LOIDetailBackingBean extends
 			SCAwardSupplierDataType awardDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
 
 			Long sourceId = Long.valueOf(awardDataType.getSourceId());
-			getManagedBean().setPayLoadData(awardDataType);
 
 			getManagedBean()
 					.setRecommendDtlIds(awardDataType.getGroupkeyList());
@@ -325,7 +322,6 @@ public class LOIDetailBackingBean extends
 			Long sourceId = Long.valueOf(dpDataType.getSourceId());
 			Long loiId = Long.valueOf(dpDataType.getAwardId());
 			getManagedBean().setSourceId(sourceId);
-			getManagedBean().setPayLoadData(dpDataType);
 
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO.setLoiId(loiId);
@@ -435,7 +431,6 @@ public class LOIDetailBackingBean extends
 			SCEvaluationDataType evaluationDataType = getBpmTaskDetails(SCEvaluationDataType.class);
 
 			Long sourceId = Long.valueOf(evaluationDataType.getQtId());
-			getManagedBean().setPayLoadData(evaluationDataType);
 			
 			String loggedInUserIdentificationNo = getFacesScopes().getUserSessionBean()
 														.getIdentificationNo();
@@ -1853,7 +1848,7 @@ public class LOIDetailBackingBean extends
 			reqDTO.setScLoi(scLoi);
 			reqDTO.setOutcome(outcome);
 			reqDTO.setRoleCode(getUserRoleCode());
-			reqDTO.setPayLoad(getManagedBean().getPayLoadData());
+			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveLOIDtl(reqDTO);
@@ -1921,7 +1916,7 @@ public class LOIDetailBackingBean extends
 			Long sourceId = getManagedBean().getSourceId();
 			List<String> recommendDtlIds = getManagedBean()
 					.getRecommendDtlIds();
-			Object payLoadData = getManagedBean().getPayLoadData();
+			Object payLoadData = getManagedBean().getPayLoad();
 			boolean isLoiRequired  = getManagedBean().isLoiRequired();
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			List<ScLoiLoa> recSupplierList =getManagedBean().getRecSupplierList();
@@ -1941,7 +1936,7 @@ public class LOIDetailBackingBean extends
 					getManagedBean().setRecSupplierList(resDTO.getLoiLoas());
 					getManagedBean().setSourceId(sourceId);
 					getManagedBean().setRecommendDtlIds(recommendDtlIds);
-					getManagedBean().setPayLoadData(payLoadData);
+					getManagedBean().setPayLoad(payLoadData);
 					getManagedBean().setLoiRequired(isLoiRequired);
 					reloadLOIList(sourceId);
 				}
@@ -2016,7 +2011,7 @@ public class LOIDetailBackingBean extends
 		debugLogger("submitAction");
 		try {
 			SCAwardSupplierDataType awardDataType = (SCAwardSupplierDataType) getManagedBean()
-					.getPayLoadData();
+					.getPayLoad();
 
 			ScLoi scLoi = this.getManagedBean().getScLoi();
 			String outcome = BpmOutcomeConst.BPM_SUBMIT;
@@ -2067,7 +2062,7 @@ public class LOIDetailBackingBean extends
 			reqDTO.setOutcome(outcome);
 			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(getManagedBean().getTaskId());
-			reqDTO.setPayLoad(getManagedBean().getPayLoadData());
+			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 
 			AwardSupplierResDTO resDTO = getQtAwardSO().updateBPMAction(reqDTO);
 
@@ -2103,7 +2098,7 @@ public class LOIDetailBackingBean extends
 		try {
 
 			SCAwardSupplierDataType awardDataType = (SCAwardSupplierDataType) getManagedBean()
-					.getPayLoadData();
+					.getPayLoad();
 
 			ScLoi scLoi = this.getManagedBean().getScLoi();
 			Long statusId = scLoi.getScWorkFlowStatus().getPmStatus()
@@ -2356,7 +2351,7 @@ public class LOIDetailBackingBean extends
 			ScQtFinalization scQtFinalization = getManagedBean()
 					.getScQtFinalization();
 			SCEvaluationDataType evaluationDataType = (SCEvaluationDataType) getManagedBean()
-					.getPayLoadData();
+					.getPayLoad();
 
 			AwardSupplierReqDTO reqDTO = parseMultipleLoiDtls(true);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
@@ -3095,7 +3090,7 @@ public class LOIDetailBackingBean extends
 	private void renewSessionWithPreviousValues() {
 		List<ScLoiLoa>  recSupplierList = getManagedBean().getRecSupplierList();
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
-		Object payLoadData = getManagedBean().getPayLoadData();
+		Object payLoadData = getManagedBean().getPayLoad();
 		Long sourceId = getManagedBean().getSourceId();
 		String taskId = getManagedBean().getTaskId();
 		String[] outcomes = getManagedBean().getOutComes();
@@ -3113,7 +3108,7 @@ public class LOIDetailBackingBean extends
 		this.renewSesionObject();
 
 		getManagedBean().setSourceId(sourceId);
-		getManagedBean().setPayLoadData(payLoadData);
+		getManagedBean().setPayLoad(payLoadData);
 		getManagedBean().setTaskId(taskId);
 		getManagedBean().setOutComes(outcomes);
 		getManagedBean().setCurrentStatusId(currentStatusId);

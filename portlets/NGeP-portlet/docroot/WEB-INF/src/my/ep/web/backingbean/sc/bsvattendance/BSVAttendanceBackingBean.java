@@ -33,7 +33,6 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.util.MessageUtils;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.constant.CommonUIConst;
@@ -296,7 +295,7 @@ public class BSVAttendanceBackingBean extends
 			BriefingReqDTO reqDTO = new BriefingReqDTO();
 			FacesScopes facesScopes = new FacesScopes();
 			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
-			reqDTO.setPayLoad(this.getManagedBean().getSiteVisitPayLoad());
+			reqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setBsvDetails(bsvs);
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
@@ -447,13 +446,13 @@ public class BSVAttendanceBackingBean extends
 		String[] outcomes = getManagedBean().getOutComes();
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		String taskName = getManagedBean().getTaskName();
-		Object siteVisitDatatype = getManagedBean().getSiteVisitPayLoad();
+		Object siteVisitDatatype = getManagedBean().getPayLoad();
 		this.renewSesionObject();
 		getManagedBean().setTaskId(taskId);
 		getManagedBean().setOutComes(outcomes);
 		getManagedBean().setCurrentStatusId(currentStatusId);
 		getManagedBean().setTaskName(taskName);
-		getManagedBean().setSiteVisitPayLoad(siteVisitDatatype);
+		getManagedBean().setPayLoad(siteVisitDatatype);
 	}
 
 	/**
@@ -483,7 +482,6 @@ public class BSVAttendanceBackingBean extends
 	public void preRenderView() {
 
 		SCQuotationTenderDataType siteVisitDatatype = getBpmTaskDetails(SCQuotationTenderDataType.class);
-		this.getManagedBean().setSiteVisitPayLoad(siteVisitDatatype);
 
 		retrieveBriefingSiteVisitList(siteVisitDatatype.getQtId().longValue());
 
@@ -508,7 +506,7 @@ public class BSVAttendanceBackingBean extends
 		briefingReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		FacesScopes facesScopes = new FacesScopes();
 		briefingReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
-		briefingReqDTO.setPayLoad(this.getManagedBean().getSiteVisitPayLoad());
+		briefingReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 		IQTBriefingSO briefingSO = getBriefingSO();
 		try {
 			BriefingResDTO resDTO = briefingSO.updateBPMAction(briefingReqDTO);
@@ -1042,36 +1040,6 @@ public class BSVAttendanceBackingBean extends
 
 		return "";
 
-	}
-
-	/**
-	 * Method will process to approval for BSV attendance details
-	 */
-	public void getAttandanceApproval() {
-
-		SCQuotationTenderDataType siteVisitDatatype = getBpmTaskDetails(SCQuotationTenderDataType.class);
-		this.getManagedBean().setSiteVisitPayLoad(siteVisitDatatype);
-
-		// retrieveBriefingSiteVisitList(siteVisitDatatype.getQtId().longValue());
-		IQTBriefingSO briefingSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						IQTBriefingSO.class);
-		BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
-		briefingReqDTO.setQtBriefingId(null);
-		briefingReqDTO.setAttandanceReq(true);
-		BriefingResDTO resDTO = briefingSO
-				.retrieveBriefingRegistrationList(briefingReqDTO);
-		ScQtBsvDtl bsvDtl = resDTO.getScQtBriefing();
-		this.getManagedBean().setScQtBriefing(bsvDtl);
-		List<ScQtBsvRegistration> registrations = resDTO
-				.getBriefingRegResultBean().getResultList();
-		this.getManagedBean().setBriefingRegistrationList(registrations);
-		FacesContext fc = FacesContext.getCurrentInstance();
-
-		fc.getApplication()
-				.getNavigationHandler()
-				.handleNavigation(fc, null,NAV_TO_BSV_REG_PAGE);
-						
 	}
 
 	/**
