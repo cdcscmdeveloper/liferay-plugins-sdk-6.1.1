@@ -27,6 +27,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -104,6 +105,25 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 	/** The result. */
 	boolean result = false;
+    private String originalCategoryName;
+    private boolean categoryNameChanged = false;
+    
+    
+	public boolean isCategoryNameChanged() {
+		return categoryNameChanged;
+	}
+
+	public void setCategoryNameChanged(boolean categoryNameChanged) {
+		this.categoryNameChanged = categoryNameChanged;
+	}
+
+	public String getOriginalCategoryName() {
+		return originalCategoryName;
+	}
+
+	public void setOriginalCategoryName(String originalCategoryName) {
+		this.originalCategoryName = originalCategoryName;
+	}
 
 	//Authorization 
 	private ISearchBean<PmParameterDesc> facilityTypeSearchBean;
@@ -116,7 +136,20 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			ISearchBean<PmParameterDesc> facilityTypeSearchBean) {
 		this.facilityTypeSearchBean = facilityTypeSearchBean;
 	}
-
+	
+	public void categoryNameChanges(ValueChangeEvent event){
+		log.info("...event.getOldValue()="+(String) event.getOldValue());
+		log.info("...event.getNewValue()="+(String) event.getNewValue());
+		if(originalCategoryName != null && !originalCategoryName.isEmpty()){
+			if(originalCategoryName.equalsIgnoreCase((String)event.getNewValue())){
+				setCategoryNameChanged(false);
+			}else{
+				setCategoryNameChanged(true);
+			}
+		}else{//initial original category desc
+			originalCategoryName = (String) event.getOldValue();
+		}
+	}
 	/**
 	 * Instantiates a new category backing bean.
 	 */
@@ -2804,7 +2837,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						}
 					}
 				}
-			} else {
+			} else if(isCategoryNameChanged()){
 				CategoryCodeResDTO resDTOUpdate = retrieveCategoryL3ListByCatCodeDesc(categoryCodeSO);
 				if (resDTOUpdate.getCategoryL3List() != null
 						&& resDTOUpdate.getCategoryL3List().size() > 0
