@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<div align="left" class="header-info">
+	<div align="left" class="header-info header-spacing">
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 5%"><h:outputLabel
@@ -22,10 +22,9 @@
 				<td style="width: 5%"><h:outputLabel
 						value="#{lbl['lbl.sc.status']}" /></td>
 				<td style="width: 12%" class="header-info-text">
-					#{(committeBackingBean.managedBean.qtCommittee.recordStatusFlg==1)? lbl['lbl.txt.active'] : lbl['lbl.txt.inactive']}
-				</td>
+					#{(committeBackingBean.managedBean.qtCommittee.recordStatusFlg==1)?
+					lbl['lbl.txt.active'] : lbl['lbl.txt.inactive']}</td>
 			</tr>
 		</table>
 	</div>
-	<p:spacer height="10px" />
 </ui:composition>
