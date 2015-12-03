@@ -2276,7 +2276,7 @@ public class SmApplicationUtil {
 					msg.append("<td style='width:5%'>").append(count)
 							.append(")").append("</td>");
 					msg.append("<td style='width:10%'>").append(arr[0])
-							.append(arr[1]).append(arr[2]).append("  - </td>");
+							.append(arr[1]).append(arr[2]).append("</td>");
 					msg.append("<td style='white-space: normal;'>").append("(")
 							.append(arr[3]).append(" / ").append(arr[4])
 							.append(")").append("</td>");
