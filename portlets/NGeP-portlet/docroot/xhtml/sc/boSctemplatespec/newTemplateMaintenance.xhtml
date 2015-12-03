@@ -19,22 +19,22 @@
 		<p:messages id="boTemplatespecCreate" showDetail="true"
 			showSummary="false" autoUpdate="true" closable="true"
 			severity="error, info" />
-		<table width="100%">
+		<table width="100%" class="BtnSpacing">
 			<tr>
 				<td align="right"><p:commandButton
 						value="#{lbl['lbl.btn.back']}" style="float:left;"
-						styleClass="BtnSpacing" immediate="true"
+						immediate="true"
 						action="#{specificationBackingBean.businessOwnerTemplateSpecBackAction}" />
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-						styleClass="BtnSpacing" style="float:right;" immediate="true"
+						style="float:right;" immediate="true"
 						onclick="createTechnicalDialog.show();"></p:commandButton> <p:commandButton
-						value="#{lbl['lbl.btn.complete']}" styleClass="BtnSpacing"
+						value="#{lbl['lbl.btn.complete']}" 
 						style="float:right;" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
 						action="#{specificationBackingBean.completeTemplateSpecDetails('BO',1)}" />
 					<p:commandButton value="#{lbl['lbl.btn.save']}"
-						style="float:right;" styleClass="BtnSpacing"
-						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+						style="float:right;" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"
 						action="#{specificationBackingBean.saveTemplateSpecDetails('BO',1)}"
 						update="@all" /></td>
 			</tr>
@@ -113,7 +113,7 @@
 			<p:dialog id="bocreateTechnicalDialog"
 				widgetVar="createTechnicalDialog"
 				header="#{lbl['lbl.sc.cancel.confirm']}" resizable="false"
-				width="325" height="75" closable="false">
+				width="400" height="75" closable="false">
 				<table>
 					<tr>
 						<td align="center"><h:graphicImage

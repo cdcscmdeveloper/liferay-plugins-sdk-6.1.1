@@ -11,7 +11,7 @@
 		<!-- <ac:title value="#{lbl['lbl.sc.spec.business.owner']}"></ac:title> -->
 		<p:messages id="bocreateTemplate" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" severity="error, info"/>
-		<p:panel header="#{lbl['lbl.sc.search']}" id="searchBospec">
+		<p:panel header="#{lbl['lbl.sc.search']}" id="searchBospec" toggleable="true">
 
 			<table>
 				<tr>
@@ -252,7 +252,7 @@
 
 
 					<p:column headerText="#{lbl['lbl.sc.action']}"
-						style="width:10%;">
+						style="width:10%;text-align: center;">
 						<ui:fragment
 							rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'ST'}">
 							<p:commandButton value="#{lbl['lbl.btn.prepare']}" process="@all"
