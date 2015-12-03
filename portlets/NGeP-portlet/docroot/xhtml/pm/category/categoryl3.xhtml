@@ -269,7 +269,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.pm.desc']}" /> <p:outputLabel
 							value="* " styleClass="mandatory" /></td>
 					<td><p:inputText style="width:41%" required="true"
-							id="catCodeDescId" label="#{lbl['lbl.pm.desc']}"
+							id="catCodeDescId" label="#{lbl['lbl.pm.desc']}" valueChangeListener="#{categoryBackingBean.categoryNameChanges}"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryName}"
 							size="33" /> <p:message id="catCodeDescIdMsg"
 							for="catCodeDescId" showSummary="true" showDetail="false"
@@ -450,9 +450,6 @@
 								oncomplete="lovPopupCategory.show();" process="@this"
 								partialSubmit="true" update="lovPopupCategory" />
 						</div>
-						<p:remoteCommand name="updateCategory"
-							update=":form:outpnlCatRes,resultPanel"
-							action="#{categoryBackingBean.populateToSaveLOV}" />
 						<p:dialog id="lovPopupCategory" widgetVar="lovPopupCategory"
 							modal="true" width="700" position="top">
 							<p:ajax event="close" listener="#{categoryBackingBean.resetLOV}"
@@ -556,9 +553,10 @@
 								<table style="width: 100%;">
 									<tr>
 										<td style="text-align: right;"><p:commandButton
-												id="slbtn" value="#{lbl['lbl.btn.select']}"
-												update="searchPanel"
-												oncomplete="updateCategory();lovPopupCategory.hide();" /> <p:commandButton
+												id="slbtn" value="#{lbl['lbl.btn.select']}" action="#{categoryBackingBean.populateToSaveLOV}" 
+												update="@form" partialSubmit="true" process=":form:outpnlCatRes"
+												oncomplete="lovPopupCategory.hide();" /> 
+												<p:commandButton
 												value="#{lbl['lbl.btn.cancel']}"
 												action="#{categoryBackingBean.resetLOV}"
 												oncomplete="lovPopupCategory.hide();"
@@ -568,7 +566,7 @@
 								</table>
 							</p:panel>
 						</p:dialog>
-
+						
 					</p:tab>
 					<p:tab title="#{lbl['lbl.pm.company.type.tab']}"
 						disabled="#{!categoryBackingBean.managedBean.pmCategoryL3.byCompType}">
@@ -725,9 +723,7 @@
 								partialSubmit="true" oncomplete="lovPopupPmMachine.show();"
 								update="lovPopupPmMachine" />
 						</div>
-						<p:remoteCommand name="updatePmMachine"
-							update=":form:outpnlCatRes,resultPanel2"
-							action="#{categoryBackingBean.populateToSavePmMachineLOV}" />
+					
 						<p:dialog id="lovPopupPmMachine" widgetVar="lovPopupPmMachine"
 							modal="true" width="700" position="top">
 							<p:ajax event="close"
@@ -820,9 +816,10 @@
 								<table style="width: 100%;">
 									<tr>
 										<td style="text-align: right;"><p:commandButton
-												id="slbtn2" value="#{lbl['lbl.btn.select']}"
-												update="searchPanel2"
-												oncomplete="updatePmMachine();lovPopupPmMachine.hide();" />
+												id="slbtn2" value="#{lbl['lbl.btn.select']}" 
+												partialSubmit="true" process=":form:outpnlCatRes"
+							update=":form:outpnlCatRes,resultPanel2" action="#{categoryBackingBean.populateToSavePmMachineLOV}"
+												oncomplete="lovPopupPmMachine.hide();" />
 											<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 												action="#{categoryBackingBean.resetPmMachineLOV}"
 												oncomplete="lovPopupPmMachine.hide();"
@@ -838,8 +835,7 @@
 				</p:tabView>
 
 			</p:panel>
-
-		</p:outputPanel>
+				</p:outputPanel>
 
 
 
