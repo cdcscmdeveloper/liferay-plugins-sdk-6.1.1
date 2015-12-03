@@ -346,7 +346,9 @@ public class ReportConst {
 		public static final String SM_LST_DAILY_APPL_SUBM_BASIC_ACC_MOF_REG_RPT_NAME = "lbl.rpt.sm.SM_LST_DAILY_APPL_SUBM_BASIC_ACC_MOF_REG_RPT_NAME";
 		public static final String SM_LST_DAILY_APPL_SUBM_BASIC_ACC_MOF_REG_RPT_VAL = "LstOfDailyApplSubmittedRpt(BasicAcc/MOFReg)";
 		public static final String SM_LST_DISCPLNRY_ACTN_IMPOS_AGAINST_SUPPL_RPT_NAME = "lbl.rpt.sm.SM_LST_DISCPLNRY_ACTN_IMPOS_AGAINST_SUPPL_RPT_NAME";		
-		public static final String SM_LST_COMPLAINTS_AGAINST_SUPPL_RPT_NAME = "lbl.rpt.sm.SM_LST_COMPLAINTS_AGAINST_SUPPL_RPT_NAME";
+		public static final String SM_LST_COMPLAINTS_AGAINST_SUPPL_RPT_NAME = "lbl.rpt.sm.SM_LST_COMPLAINTS_AGAINST_SUPPL_RPT_NAME";		
+		public static final String SM_REPORT_RESIT = "Tarikh Resit";
+		public static final String SM_REPORT_TRANSACTION = "Tarikh Transaksi";
 		
 		public static final String SM_REG_COMPANY_IN_MOF_RPT_VAL = "SM_001";
 		public static final String SM_CATEGORY_STATISTIC_RPT_VAL = "SM_002";
@@ -402,7 +404,12 @@ public class ReportConst {
 		public static final String SM_THRESHOLD_VALUE = "SM_062";
 		public static final String SM_LIST_OF_APPL_STATUS = "SM_063";
 		public static final String SM_AGENCY_STATISTICAL = "SM_064";
-		public static final String SM_LIST_OF_GST_RGSTRD_SUPPLIER = "SM_065";
+		public static final String SM_LIST_OF_GST_RGSTRD_SUPPLIER = "SM_065";		
+		public static final String SM_RECEIPT_AND_TRANSACTION_DATE_RPT_VAL = "SM_071"; 
+		public static final String SM_RECEIPT_PAYMENT_METHODS_RPT_VAL = "SM_072";
+		public static final String SM_RECEIPT_CLASSIFICATION_CODE_RPT_VAL = "SM_073";
+		public static final String SM_OUTSTANDING_RESULTS_RECEIVED_RPT_VAL = "SM_074"; 
+		public static final String SM_LIST_RECIPT_TIMES_RPT_VAL = "SM_075";
 		
 	// SM - virtual certificate
 	public static final String SM_VIRTUAL_VERIFICATION_jsp = "SM_VIRTUAL_VERIFICATION.jsp";
@@ -437,10 +444,17 @@ public class ReportConst {
 	public static final String CT_LIST_OF_CONTRACT_CC_RPT_VAL = "CT_022";
 	
 	///sm
+	
+	
 	public static final String AMP_SM_TO_DATE_EQ = "&PTODATE=";
 	public static final String AMP_SM_FROM_DATE_EQ = "&PFROMDATE=";
 	public static final String AMP_SM_MOF_ACC_END_TO_DATE_EQ = "&PEXTODATE=";
 	public static final String AMP_SM_MOF_ACC_END_FROM_DATE_EQ = "&PEXFROMDATE=";
+	public static final String AMP_SM_REP_TYPE_EQ = "&PTYPE=";	
+	public static final String AMP_SM_SUP_NAME_EQ = "&PCOMPANYNAME=";
+	public static final String AMP_SM_MOF_REG_FEE_TYPE_EQ = "&PPAYTYPE1=";
+	public static final String AMP_SM_PROCESSING_FEE_TYPE_EQ = "&PPAYTYPE2=";
+	public static final String AMP_SM_SOFTCERTIFICATE_TYPE_EQ = "&PPAYTYPE3=";	
 	public static final String AMP_SM_REG_TYPE_EQ = "&PREGTYPE=";
 	public static final String AMP_SM_MOF_REG_NO_EQ = "&PMOFNO=";
 	public static final String AMP_SM_USER_ID_EQ = "&PUSER=";
@@ -845,6 +859,8 @@ public class ReportConst {
 	public static final String ROLE_CODE_MIN_CONTRACT_ADMIN="MIN_CONTRACT_ADMIN";
 	public static final String ROLE_CODE_BPK_CCA="BPK_CCA";
 	public static final String ROLE_CODE_BPK_PCA="BPK_PCA";
+	public static final String ROLE_CODE_COLLECTOR_CDC="COLLECTOR_CDC";
+	public static final String ROLE_CODE_COLLECTOR_GOV="COLLECTOR_GOV";
 	public static final String ROLE_CODE_BPK_OFFICER="BPK_OFFICER";
 	public static final String ROLE_CODE_REQUISITIONER="REQUISITIONER";
 	public static final String ROLE_CODE_APPROVER="APPROVER";

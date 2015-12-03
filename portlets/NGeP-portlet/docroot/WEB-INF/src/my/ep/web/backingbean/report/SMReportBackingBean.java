@@ -559,10 +559,38 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			 rptGenBean.setSmMandatoryFromDateView(true);
 	         rptGenBean.setSmGSTEffectiveDateView(true);
 	         rptGenBean.setSmExtraTwoColumnView(true);
+	         break;
+		case ReportConst.SM_RECEIPT_AND_TRANSACTION_DATE_RPT_VAL:
+			  rptGenBean.setSmMandatoryReciptTransactionReportTypeView(true) ;
+			  rptGenBean.setSmMandatoryRTDateView(true);	
+			  rptGenBean.setSmMandatoryReceiptDateView(true);
+			  rptGenBean.setSmSupplierNameView(true);
+			  checkAuthorizationByRoleCode(rptGenBean,authoriztionList);
+			
+			break;
+		case ReportConst.SM_RECEIPT_PAYMENT_METHODS_RPT_VAL:
+			break;
+		case ReportConst.SM_RECEIPT_CLASSIFICATION_CODE_RPT_VAL:
+			break;
+		case ReportConst.SM_OUTSTANDING_RESULTS_RECEIVED_RPT_VAL:
+			break;
+		case ReportConst.SM_LIST_RECIPT_TIMES_RPT_VAL:
          break;
 	        default: 
 	        	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));
 	            //break;
+		}
+	}		
+	
+	private void checkAuthorizationByRoleCode(ReportsGenerateBean rptGenBean,
+			List<String> authoriztionList) {		
+		if (authoriztionList != null) {
+			if (authoriztionList.contains(ReportConst.ROLE_CODE_COLLECTOR_GOV)) {
+				rptGenBean.setCollectorGovRegistrationChkView(true);
+			} else if (authoriztionList.contains(ReportConst.ROLE_CODE_COLLECTOR_CDC)) {
+				rptGenBean.setCollectorCDCRegistrationChkView(true);
+
+			}
 		}
 	}
 	
