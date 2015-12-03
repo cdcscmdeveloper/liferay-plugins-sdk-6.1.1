@@ -2057,4 +2057,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return false;
 	}
 
+	/**
+	 * To check whether proposalValidityDatereached or not..
+	 * @param proposalValidityEndDate
+	 * @return isProposalValidityDateReached
+	 */
+	public boolean checkProposalValidityDateReach(Date proposalValidityEndDate){
+		
+		return DateUtils.isDateGreater(new Date(), proposalValidityEndDate);
+		
+	}
 }
