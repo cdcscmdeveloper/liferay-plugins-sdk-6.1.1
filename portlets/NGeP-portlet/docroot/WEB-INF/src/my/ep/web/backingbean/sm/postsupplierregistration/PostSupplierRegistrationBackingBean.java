@@ -737,9 +737,9 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 		
 		try{
-			//PersonnelResDTO resDTO =  personnelSO.supplierTempChangeRole(reqDTO);
-			PersonnelResDTO resDTO = new PersonnelResDTO();
-			resDTO.setSuccessful(true);
+			PersonnelResDTO resDTO =  personnelSO.supplierTempChangeRole(reqDTO);
+			//PersonnelResDTO resDTO = new PersonnelResDTO();
+			//resDTO.setSuccessful(true);
 			if(resDTO.isSuccessful()){
 				roleChangeSuccess = true;
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721035,
