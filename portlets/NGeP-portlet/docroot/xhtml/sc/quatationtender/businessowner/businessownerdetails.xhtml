@@ -101,7 +101,7 @@
 	<p:panel toggleable="true">
 		<table style="width: 100%;">
 			<tr>
-				<td style="width: 350px;"><p:outputLabel
+				<td style="width: 355px;"><p:outputLabel
 						value="#{lbl['lbl.sc.qt.req.approval.specification']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneRadio required="true"
@@ -126,10 +126,9 @@
 						<td colspan="4">
 							<table>
 								<tr>
-									<td><p:selectOneMenu id="ministryspec"
-											disabled="#{readOnly}"
+									<td style="width: 355px;"><p:selectOneMenu id="ministryspec"
+											disabled="#{readOnly}" required="true"
 											label="#{lbl['lbl.sc.ministry.spec.secretary']}"
-											required="true"
 											value="#{qTDetailBB.managedBean.qt.ministrySpecSecrataryId.userId}"
 											style="width: 280px;margin-bottom: 5px;">
 											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
