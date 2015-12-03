@@ -19,17 +19,17 @@
 		<p:messages id="committeeTechmessages" showDetail="true"
 			showSummary="false" autoUpdate="true" closable="true"
 			severity="error, info" />
-		<table width="100%">
+		<table width="100%" class="BtnSpacing">
 			<tr>
 				<td align="right"><p:commandButton
 						value="#{lbl['lbl.btn.back']}" style="float:left;"
-						immediate="true" styleClass="BtnSpacing"
+						immediate="true" 
 						action="#{specificationBackingBean.committeeBackAction}" /> <p:commandButton
 						value="#{lbl['lbl.btn.cancel']}"
 						rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
-						style="float:right;" immediate="true" styleClass="BtnSpacing"
+						style="float:right;" immediate="true" 
 						onclick="createTechnicalDialog.show();"></p:commandButton> <p:commandButton
-						value="#{lbl['lbl.btn.complete']}" styleClass="BtnSpacing"
+						value="#{lbl['lbl.btn.complete']}" 
 						rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
 						style="float:right;" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
@@ -37,7 +37,7 @@
 						update="@all" /> <p:commandButton value="#{lbl['lbl.btn.save']}"
 						rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
 						style="float:right;" update="@all" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();" styleClass="BtnSpacing"
+						oncomplete="blockWidget.hide();" 
 						action="#{specificationBackingBean.saveTemplateSpecDetails('SC',1)}" />
 
 				</td>
@@ -112,7 +112,7 @@
 			<p:dialog id="specCommitteeEditTechnicalDialog"
 				widgetVar="createTechnicalDialog"
 				header="#{lbl['lbl.sc.cancel.confirm']}" resizable="false"
-				width="325" height="75" closable="false">
+				width="400" height="75" closable="false">
 				<table>
 					<tr>
 						<td align="center"><h:graphicImage

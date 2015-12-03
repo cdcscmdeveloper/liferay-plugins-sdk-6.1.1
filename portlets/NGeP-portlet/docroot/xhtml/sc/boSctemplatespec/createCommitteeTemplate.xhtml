@@ -14,7 +14,7 @@
 		<p:messages id="specCommitteecreateTemplate" showDetail="true"
 			autoUpdate="true" closable="true" showSummary="false" severity="error, info"/>
 
-		<p:panel id="commiteeCreationSpec" header="#{lbl['lbl.sc.search']}">
+		<p:panel id="commiteeCreationSpec" header="#{lbl['lbl.sc.search']}" toggleable="true">
 
 			<table>
 				<tr>
@@ -250,7 +250,7 @@
 							value="#{specificationBackingBean.getParameterDesc(tplSpecMaster.procurementCategory)}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%;">
+					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%;text-align: center;">
 						<ui:fragment
 							rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'ST'}">
 							<p:commandButton value="#{lbl['lbl.btn.create']}" process="@all"
