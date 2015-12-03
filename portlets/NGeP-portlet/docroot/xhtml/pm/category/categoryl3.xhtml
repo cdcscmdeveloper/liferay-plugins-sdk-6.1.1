@@ -702,7 +702,7 @@
 								<h:inputText label="#{lbl['lbl.pm.machine.display.sequence']}"
 									maxlength="3" value="#{pmMachineCategory.displaySeq}"
 									requiredMessage="#{lbl['lbl.pm.machine.display.sequence.reqmsg']}"
-									required="true" />
+									required="#{categoryBackingBean.managedBean.checkSpecialCategory}" />
 							</p:column>
 
 							<p:column style="width:7%;text-align:center;"
