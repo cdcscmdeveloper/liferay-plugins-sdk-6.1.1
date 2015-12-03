@@ -1214,7 +1214,7 @@ public class QTBusinessOwnerBackingBean extends
 			quationTenderReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			quationTenderReqDTO.setTaskId(this.getManagedBean().getTaskId());
 			quationTenderReqDTO.setPayLoad(this.getManagedBean()
-					.getQuotationTenderDataType());
+					.getPayLoad());
 			quationTenderReqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
 			quationTenderReqDTO.setPmUser(facesScopes.getUserSessionBean());
 			quationTenderReqDTO.setRoleCode(getUserRoleCode());

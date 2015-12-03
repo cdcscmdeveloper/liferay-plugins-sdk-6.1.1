@@ -30,9 +30,6 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -67,7 +64,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.pm.profilemanagement.ProfileManagementBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
@@ -347,7 +343,6 @@ public class ApprovalBackingBean extends
 			qtId = ((SCQuotationTenderDataType) obj).getQtId().longValue();
 
 		}
-		this.getManagedBean().setQuotationTenderDataType(obj);
 
 		String approvalCategoryCode = null;
 		List<ScQtApprovalRequest> approvalRequests = null;
@@ -699,13 +694,7 @@ public class ApprovalBackingBean extends
 	private QuationTenderResDTO updateBpmTask(String outcome,
 			PmDigiSign digiSign) {
 		FacesScopes facesScopes = new FacesScopes();
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		reqDTO.setCtxToken(facesScopes.getBPMAuthenticationCtxToken());
-		reqDTO.setTaskId(this.getManagedBean().getTaskId());
-		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-		String taskName = res.getTaskName();
+		String taskName = this.getManagedBean().getTaskName();
 		QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
 		try {
 			ScQt qt = this.getManagedBean().getQt();
@@ -769,7 +758,7 @@ public class ApprovalBackingBean extends
 						.getBPMAuthenticationCtxToken());
 				committeReqDTO.setTaskId(this.getManagedBean().getTaskId());
 				committeReqDTO.setPayLoad(this.getManagedBean()
-						.getQuotationTenderDataType());
+						.getPayLoad());
 				committeReqDTO.setOutcome(outcome);
 				committeReqDTO
 						.setPmUser(new FacesScopes().getUserSessionBean());
@@ -821,7 +810,7 @@ public class ApprovalBackingBean extends
 					if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
 
 						((SCQuotationTenderDataType) this.getManagedBean()
-								.getQuotationTenderDataType())
+								.getPayLoad())
 								.setBpkRevise(true);
 					} else if (BpmOutcomeConst.BPM_REJECT
 							.equalsIgnoreCase(action)) {
@@ -936,7 +925,7 @@ public class ApprovalBackingBean extends
 
 				qt.setScQtCommittees(null);
 				qtReqDTO.setPayLoad(this.getManagedBean()
-						.getQuotationTenderDataType());
+						.getPayLoad());
 				FacesScopes facesScope = new FacesScopes();
 				qtReqDTO.setDeskOfficer(facesScope.getUserSessionBean());
 				qtReqDTO.setQtdetail(qt);
@@ -1384,7 +1373,7 @@ public class ApprovalBackingBean extends
 			qt.setScQtCommittees(null);
 
 			qtReqDTO.setPayLoad(this.getManagedBean()
-					.getQuotationTenderDataType());
+					.getPayLoad());
 			FacesScopes facesScope = new FacesScopes();
 			qtReqDTO.setDeskOfficer(facesScope.getUserSessionBean());
 			qtReqDTO.setQtdetail(qt);
