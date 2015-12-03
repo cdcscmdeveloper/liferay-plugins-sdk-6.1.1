@@ -83,7 +83,6 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPEmployee;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalScore;
 import my.ep.persistence.entity.sc.supplierproposal.ScSlAttachment;
-import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
@@ -92,7 +91,6 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
-import my.ep.type.pm.AddressType;
 import my.ep.util.MessageUtils;
 import my.ep.util.encrypt.BouncyCastleProvider_AES_CBC;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -453,42 +451,6 @@ public class SPDetailBackingBean extends
 		} finally {
 			proposalSO = null;
 		}
-	}
-
-	/**
-	 * Prepare original text.
-	 * 
-	 * @param smSupplier
-	 *            the sm supplier
-	 * @return the string
-	 */
-	private String prepareOriginalText(SmSupplier smSupplier) {
-		FacesScopes facesScopes = new FacesScopes();
-		StringBuilder sb = new StringBuilder();
-		String countryCode = "";
-		String orginalText = "";
-
-		if (smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses() != null
-				&& smSupplier.getSmAppl().getSmCompanyBasic()
-						.getSmCompanyAddresses().size() > 0) {
-			List<SmCompanyAddress> companyAddress = smSupplier.getSmAppl()
-					.getSmCompanyBasic().getSmCompanyAddresses();
-
-			for (SmCompanyAddress compaAddress : companyAddress) {
-				if (compaAddress.getAddressType().equalsIgnoreCase(
-						AddressType.CONTACT_ADDRESS.value())) {
-					countryCode = compaAddress.getSmAddress().getPmCountry()
-							.getCountryCode();
-					break;
-				}
-			}
-		}
-		sb.append(getManagedBean().getQtProposal().getProposalNo()).append("|")
-				.append(facesScopes.getUserSessionBean().getIdentificationNo())
-				.append("|").append(smSupplier.getRegNo()).append("|")
-				.append(countryCode);
-		orginalText = sb.toString();
-		return orginalText;
 	}
 
 	private void commonMessageAcknowledmentPage(String messageId,
@@ -1541,75 +1503,9 @@ public class SPDetailBackingBean extends
 
 	}
 
-	/**
-	 * method to update bpm task
-	 * 
-	 * @param action
-	 * @return
-	 */
-	public String updateBpmTask(String action) {
-
-		ProposalReqDTO prReqDTO = constructReqDTO();
-		prReqDTO.setOutcome(action);
-		prReqDTO.setTaskId(this.getManagedBean().getTaskId());
-		FacesScopes facesScopes = new FacesScopes();
-		prReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
-		prReqDTO.setPayLoad(this.getManagedBean().getProposalData());
-		IQTProposalSO proSo = getProposalSO();
-		try {
-			ProposalResDTO resDTO = proSo.updateBPMAction(prReqDTO);
-			if (resDTO.isSuccessful()) {
-
-				// to nullify personnel tab SmPersonnleCalcVO object
-				getManagedBean().setPersonCalc(null);
-
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								"Record saved successfully.", " Type. : "
-
-						));
-
-				FacesContext fc = FacesContext.getCurrentInstance();
-				fc.getApplication()
-						.getNavigationHandler()
-						.handleNavigation(fc, null,
-								"/xhtml/shared/acknowledge.xhtml");
-			}
-		} catch (Exception ex) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Sorry We are unable to Process", " Type. : "
-
-					));
-		}
-		return null;
-
-	}
-
 	private IQTProposalSO getProposalSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
-	}
-
-	private ProposalReqDTO constructReqDTO() {
-		List<ScQtProposalChecklist> scQtProposalChecklists = new ArrayList<ScQtProposalChecklist>();
-		ScQtProposal scQtProposal = getManagedBean().getQtProposal();
-		List<ScQtProposalChecklist> tecQtProposalChecklists = getManagedBean()
-				.getTecCheckDetailsList();
-		scQtProposalChecklists.addAll(tecQtProposalChecklists);
-		tecQtProposalChecklists = getManagedBean().getFinanceCheckDetailsList();
-		scQtProposalChecklists.addAll(tecQtProposalChecklists);
-		ProposalReqDTO reqDTO = new ProposalReqDTO();
-		reqDTO.setQtSupplierId(1L);
-		// Update Changes
-		for (ScQtProposalChecklist proposalChecklist : scQtProposalChecklists) {
-			proposalChecklist.setSubmitted(true);
-		}
-		scQtProposal.setScQtProposalChecklists(scQtProposalChecklists);
-		reqDTO.setScQtProposal(scQtProposal);
-		return reqDTO;
 	}
 
 	/**
