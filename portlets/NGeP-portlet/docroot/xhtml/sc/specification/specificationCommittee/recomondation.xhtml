@@ -27,7 +27,7 @@
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationPackageScore.overallTechnical}">
 
-								<p:ajax event="blur" update="totalrecommendation"
+								<p:ajax event="blur" update="@([id$=package])"
 									process="@this,package"
 									listener="#{specificationBackingBean.calculateTotalPackage(specificationBackingBean.managedBean.recommendationPackageScore)}"></p:ajax>
 							</p:inputText></td>
@@ -35,11 +35,11 @@
 					<tr>
 						<td><h:outputText value="*" styleClass="mandatory" /> <h:outputLabel
 								value="#{lbl['lbl.sc.spec.financial']}"></h:outputLabel></td>
-						<td><p:inputText style="text-align:right" maxlength="5"
+						<td><p:inputText style="text-align:right" maxlength="5" readonly="true"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationPackageScore.overallFin}">
 
-								<p:ajax event="blur" update="totalrecommendation"
+								<p:ajax event="blur" update="@([id$=package])"
 									process="@this,package"
 									listener="#{specificationBackingBean.calculateTotalPackage(specificationBackingBean.managedBean.recommendationPackageScore)}"></p:ajax>
 							</p:inputText></td>
