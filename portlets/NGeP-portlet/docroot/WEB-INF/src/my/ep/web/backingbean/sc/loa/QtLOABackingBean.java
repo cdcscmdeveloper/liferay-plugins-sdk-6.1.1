@@ -89,7 +89,7 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 			loaDetailBackingBean.getManagedBean().setPayLoad(dpDataType);
 
 			lOIDetailBackingBean.getManagedBean().setSourceId(sourceId);
-			lOIDetailBackingBean.getManagedBean().setPayLoadData(dpDataType);
+			lOIDetailBackingBean.getManagedBean().setPayLoad(dpDataType);
 
 			retrieveLOAList(sourceId);
 			if(getManagedBean().getSuppLoiLoaMap() != null && getManagedBean().getSuppLoiLoaMap().size()>0){
@@ -152,7 +152,6 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			AwardSupplierResDTO resDTO = null;
-			List<SuppLoiLoaBean> suppLoiLoaList = new ArrayList<>();
 			List<Long> loiLoaList = new ArrayList<Long>();
 			if (getManagedBean().getSelectedLoiLoa() != null) {
 				Long supplierId = getManagedBean().getSelectedLoiLoa().getSmSupplier().getSupplierId();

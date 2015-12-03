@@ -344,7 +344,7 @@ public class SpecificationBackingBean extends
 			List<SelectItem> evaluationTypeList = this.getManagedBean()
 					.getEvaluationTypeItem();
 			SCQuotationTenderDataType quotationTenderDataType = (SCQuotationTenderDataType) this
-					.getManagedBean().getSpecificationDataType();
+					.getManagedBean().getPayLoad();
 			CtPanelItem panelItem = null;
 			CtCircularVer circularVer = null;
 			int ministryRemarksSize = this.getManagedBean()
@@ -484,7 +484,7 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setLocalLevelCode(locationLevael);
 			this.getManagedBean().setSpecComplete(isSpecComplete);
 			this.getManagedBean().setTaskName(taskName);
-			this.getManagedBean().setSpecificationDataType(
+			this.getManagedBean().setPayLoad(
 					quotationTenderDataType);
 			this.getManagedBean().setMinistryRemarksSize(ministryRemarksSize);
 
@@ -9766,7 +9766,7 @@ public class SpecificationBackingBean extends
 					.getCurrentStatusId());
 			spReqDTO.setTaskId(this.getManagedBean().getTaskId());
 			spReqDTO.setPayLoad(this.getManagedBean()
-					.getSpecificationDataType());
+					.getPayLoad());
 			FacesScopes facesScopes = new FacesScopes();
 			spReqDTO.setPmUser(facesScopes.getUserSessionBean());
 			spReqDTO.setRoleCode(getUserRoleCode());
@@ -11321,7 +11321,6 @@ public class SpecificationBackingBean extends
 	public void preRenderView() {
 
 		SCQuotationTenderDataType quotationTenderDataType = getBpmTaskDetails(SCQuotationTenderDataType.class);
-		this.getManagedBean().setSpecificationDataType(quotationTenderDataType);
 		FacesScopes facesScopes = new FacesScopes();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		if (SCProcessNameConst.PREPARE_SPECIFICATION.equalsIgnoreCase(this
@@ -11895,7 +11894,7 @@ public class SpecificationBackingBean extends
 							IQTSpecSO.class);
 			int activeIndex = this.getManagedBean().getActiveIndex();
 			SCQuotationTenderDataType quotationTenderDataType = (SCQuotationTenderDataType) this
-					.getManagedBean().getSpecificationDataType();
+					.getManagedBean().getPayLoad();
 			SpecificationResDTO resDTO = null;
 			String taskId = this.getManagedBean().getTaskId();
 			String[] outComes = this.getManagedBean().getOutComes();
@@ -12389,7 +12388,7 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setCurrentStatusId(statusId);
 			this.getManagedBean().setOutComes(outComes);
 			this.getManagedBean().setReadOnly(readonly);
-			this.getManagedBean().setSpecificationDataType(
+			this.getManagedBean().setPayLoad(
 					quotationTenderDataType);
 		} /*
 		 * catch (Exception e) { e.printStackTrace(); }
@@ -12993,7 +12992,7 @@ public class SpecificationBackingBean extends
 		}
 		specReqDTO.setDigiSignData(pmDigiSign);
 		specReqDTO.setTaskId(this.getManagedBean().getTaskId());
-		specReqDTO.setPayLoad(this.getManagedBean().getSpecificationDataType());
+		specReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 		FacesScopes facesScopes = new FacesScopes();
 		specReqDTO.setPmUser(facesScopes.getUserSessionBean());
 		specReqDTO.setRoleCode(getUserRoleCode());
@@ -13284,7 +13283,7 @@ public class SpecificationBackingBean extends
 		}
 		spReqDTO.setDigiSignData(digiSign);
 		spReqDTO.setTaskId(this.getManagedBean().getTaskId());
-		spReqDTO.setPayLoad(this.getManagedBean().getSpecificationDataType());
+		spReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 		FacesScopes facesScopes = new FacesScopes();
 		spReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 		spReqDTO.setPmUser(facesScopes.getUserSessionBean());
@@ -13330,8 +13329,8 @@ public class SpecificationBackingBean extends
 		spReqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
 		spReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		((SCQuotationTenderDataType) this.getManagedBean()
-				.getSpecificationDataType()).setCircular(true);
-		spReqDTO.setPayLoad(this.getManagedBean().getSpecificationDataType());
+				.getPayLoad()).setCircular(true);
+		spReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 		FacesScopes facesScopes = new FacesScopes();
 		spReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 		IQTSpecSO specSO = getSpecSO();
