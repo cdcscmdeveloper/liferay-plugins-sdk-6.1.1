@@ -1845,6 +1845,9 @@ public class SpecificationBackingBean extends
 			financialWeightageCalculate();
 			financialItemScoreCalculate(this.getManagedBean()
 					.getFinacialItemScoreSetting());
+			calculateRecommendationPackageAndItemScores(this.getManagedBean()
+					.getRecommendationPackageScore(), this.getManagedBean()
+					.getRecommendationScore());
 		}
 
 		// this.getManagedBean().setActiveIndex(0);
@@ -2856,7 +2859,7 @@ public class SpecificationBackingBean extends
 				if (null == this.getManagedBean().getTechnicalScoreSetting()) {
 					ScQtScoreSetting technicalScoresetting = constructScoreSetting(1);
 					technicalScoresetting
-							.setPassingScore(retrieveTechnicalEvalutionPassingScorePmrules());
+							.setPassingScore(retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_PASSING_SCORE));
 					this.getManagedBean().setTechnicalScoreSetting(
 							technicalScoresetting);
 
@@ -3234,6 +3237,21 @@ public class SpecificationBackingBean extends
 										100));
 							}
 
+						}
+						if (QTConstants.EVALUATION_TWO_TIER
+								.equalsIgnoreCase(this.getManagedBean()
+										.getScQt().getEvaluationType())
+								|| (QTConstants.EVALUATION_ONE_TIER
+										.equalsIgnoreCase(this.getManagedBean()
+												.getScQt().getEvaluationType()) && this
+										.getManagedBean().getScQt()
+										.isTechEvaluationReq())) {
+							BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_WEIGHTAGE);
+							pkgScoreSetting.setOverallTechnical(passingScore);
+							pkgScoreSetting.setOverallFin(passingScore);
+							this.getManagedBean()
+									.setRecommendationPackageTotal(
+											new BigDecimal(100));
 						}
 
 						this.getManagedBean().setRecommendationPackageScore(
@@ -8902,6 +8920,13 @@ public class SpecificationBackingBean extends
 			if (null == technical.getOverallFin()) {
 				technical.setOverallFin(new BigDecimal(0));
 			}
+			if (technical.getOverallTechnical().intValue() < 50) {
+				throw new EpException(MessageConst.ERROR_760365);
+			}
+			int financialScore = 100 - technical.getOverallTechnical()
+					.intValue();
+			technical.setOverallFin(new BigDecimal(financialScore));
+			this.getManagedBean().setRecommendationPackageScore(technical);
 			int local = technical.getOverallTechnical().intValue()
 					+ technical.getOverallFin().intValue();
 
@@ -8931,7 +8956,10 @@ public class SpecificationBackingBean extends
 					+ technical.getOverallOtherTechnical().intValue();
 			this.getManagedBean().setRecommendTechnicalScore(
 					new BigDecimal(local));
-
+			
+			if (local < 50) {
+				throw new EpException(MessageConst.ERROR_760366);
+			}
 			int financialScore = 0;
 			if (null != getManagedBean().getRecommendfinancialScore()) {
 				financialScore = getManagedBean().getRecommendfinancialScore()
@@ -10656,7 +10684,7 @@ public class SpecificationBackingBean extends
 						.getManagedBean().getScQt().getEvaluationType()) && this
 						.getManagedBean().getScQt().isTechEvaluationReq())) {
 			if (null != technicalScoreSetting) {
-				BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules();
+				BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_PASSING_SCORE);
 				if (null == technicalScoreSetting.getPassingScore()
 						|| technicalScoreSetting.getPassingScore().intValue() <= 0) {
 					this.getManagedBean().setActiveIndex(4);
@@ -12096,6 +12124,8 @@ public class SpecificationBackingBean extends
 					specReqDTO.setScoreSettings(scoreSetting);
 					specReqDTO.setScQt(this.getManagedBean().getScQt());
 					if (!this.getManagedBean().isReadOnly()) {
+						calculateRecommendationPackageAndItemScores(
+								packageScoreSetting, itemScoreSetting);
 						specSO.validateSCRecommandationSettings(specReqDTO);
 					}
 
@@ -12203,8 +12233,12 @@ public class SpecificationBackingBean extends
 					specReqDTO.setScoreSettings(scoreSetting);
 					specReqDTO.setScQt(delivery);
 					if (!this.getManagedBean().isReadOnly()) {
+						calculateRecommendationPackageAndItemScores(
+								packageScoreSetting, itemScoreSetting);
 						specSO.validateSCRecommandationSettings(specReqDTO);
+
 					}
+
 					resDTO = specSO.saveQTDtl(specReqDTO);
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
@@ -15734,7 +15768,7 @@ public class SpecificationBackingBean extends
 						this.getManagedBean().setActiveIndex(4);
 						throw new EpException(MessageConst.ERROR_760142);
 					}
-					BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules();
+					BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_PASSING_SCORE);
 
 					if (null != passingScore
 							&& (technicalScoreSetting.getPassingScore()
@@ -16496,13 +16530,14 @@ public class SpecificationBackingBean extends
 		return uploaditems;
 	}
 
-	private BigDecimal retrieveTechnicalEvalutionPassingScorePmrules() {
+	private BigDecimal retrieveTechnicalEvalutionPassingScorePmrules(
+			String ruleType) {
 		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IRuleSO.class);
 		BigDecimal technicalPassingScore = new BigDecimal(0);
 		RuleReqDTO ruleReqDTO = new RuleReqDTO();
-		ruleReqDTO.setRuleType(RuleTypeConst.SC_TECHNICAL_PASSING_SCORE);
+		ruleReqDTO.setRuleType(ruleType);
 		List<PmConfigRuleValue> ruleValueList = ruleSO
 				.getRuleValuesByTypeInCurrentDate(ruleReqDTO)
 				.getRuleValueList();
@@ -16517,6 +16552,38 @@ public class SpecificationBackingBean extends
 			technicalPassingScore = new BigDecimal(50);
 		}
 		return technicalPassingScore;
+	}
+
+	private void calculateRecommendationPackageAndItemScores(
+			ScQtScoreSetting recommendationPackage,
+			ScQtScoreSetting recommendationItem) {
+		if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
+				.getManagedBean().getScQt().getEvaluationType())
+				|| (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
+						.getManagedBean().getScQt().getEvaluationType()) && this
+						.getManagedBean().getScQt().isTechEvaluationReq())) {
+			if (null != recommendationPackage
+					&& null != recommendationPackage.getOverallTechnical()
+					&& recommendationPackage.getOverallTechnical().intValue() < 50) {
+				this.getManagedBean().setActiveIndex(6);
+				throw new EpException(MessageConst.ERROR_760365);
+			}
+			if (null != recommendationItem) {
+				int itemPassingScore = 0;
+				if (null != recommendationItem.getOverallTechnical()
+						&& null != recommendationItem
+								.getOverallOtherTechnical()) {
+					itemPassingScore = recommendationItem.getOverallTechnical()
+							.intValue()
+							+ recommendationItem.getOverallOtherTechnical()
+									.intValue();
+				}
+				if (itemPassingScore < 50) {
+					this.getManagedBean().setActiveIndex(6);
+					throw new EpException(MessageConst.ERROR_760366);
+				}
+			}
+		}
 	}
 
 	/*
