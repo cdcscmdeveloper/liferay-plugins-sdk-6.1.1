@@ -59,8 +59,8 @@
 				<h:outputText
 					value="#{lbl[businessowner.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.consolidate']}" style="width:11%;text-align: center;"
-				selectionMode="single">
+			<p:column headerText="#{lbl['lbl.sc.consolidate']}"
+				style="width:11%;text-align: center;" selectionMode="single">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.consolidate']}" />
@@ -70,7 +70,8 @@
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<c:if test="#{!readOnly}">
-				<p:commandButton value="#{lbl['lbl.btn.clone']}" styleClass="BtnSpacing"
+				<p:commandButton value="#{lbl['lbl.btn.clone']}"
+					styleClass="BtnSpacing"
 					actionListener="#{qTBusinessOwnerBackingBean.cloneBusinessOwnerPopupAction}"
 					oncomplete="cloneBusinessOwner.show();" process="@this"
 					update="@(.cloneAddMember)"
@@ -82,9 +83,9 @@
 					oncomplete="newbusinessowner.show();" update="@(.qtAddMember)"
 					rendered="#{qTDetailBB.managedBean.qt.qtStatus.statusId ne QTStatusConst.QT_CANCELLED}" />
 
-				<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
-					process="@this, businessownerId" partialSubmit="true"
-					oncomplete="businessOwnerDeletePopUp.show();"
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					styleClass="BtnSpacing" process="@this, businessownerId"
+					partialSubmit="true" oncomplete="businessOwnerDeletePopUp.show();"
 					update="@([id$=#{businessOwnerDeleteId}])"
 					rendered="#{qTDetailBB.managedBean.qt.qtStatus.statusId ne QTStatusConst.QT_CANCELLED}" />
 			</c:if>
@@ -98,40 +99,54 @@
 			update="@([id$=businessownerId])" />
 	</p:panel>
 	<p:panel toggleable="true">
-		<h:panelGrid border="0" cellpadding="0" cellspacing="0" columns="3"
-			columnClasses="columnWidth10" style="margin-left: 26px;">
-			<p:outputLabel value="*" styleClass="mandatory" />
-			<h:outputLabel value="#{lbl['lbl.sc.qt.req.approval.specification']}" />
-
-			<p:selectOneRadio required="true"
-				value="#{qTDetailBB.managedBean.qt.specApprovalReq}"
-				disabled="#{readOnly}"
-				label="#{lbl['lbl.sc.qt.req.approval.specification']}">
-				<f:selectItems
-					value="#{qTBusinessOwnerBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-
-				<p:ajax event="change" process="@this" update="@this,approvalSpec" />
-			</p:selectOneRadio>
-		</h:panelGrid>
+		<table style="width: 100%;">
+			<tr>
+				<td style="width: 350px;"><p:outputLabel
+						value="#{lbl['lbl.sc.qt.req.approval.specification']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneRadio required="true"
+						value="#{qTDetailBB.managedBean.qt.specApprovalReq}"
+						disabled="#{readOnly}"
+						label="#{lbl['lbl.sc.qt.req.approval.specification']}">
+						<f:selectItems
+							value="#{qTBusinessOwnerBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+						<p:ajax event="change" process="@this" update="@this,approvalSpec" />
+					</p:selectOneRadio></td>
+			</tr>
+		</table>
 		<h:panelGroup id="approvalSpec">
-			<h:panelGrid
+			<h:panelGroup
 				rendered="#{qTDetailBB.managedBean.qt.specApprovalReq ne null and qTDetailBB.managedBean.qt.specApprovalReq ne '0'}"
-				border="0" cellpadding="0" cellspacing="0" columns="3">
-				<p:outputLabel value="*" styleClass="mandatory" style="width:192px;"
-					valign="top" />
-				<p:outputLabel value="#{lbl['lbl.sc.ministry.spec.secretary']}" />
-				<p:selectOneMenu id="ministryspec" disabled="#{readOnly}"
-					label="#{lbl['lbl.sc.ministry.spec.secretary']}" required="true"
-					value="#{qTDetailBB.managedBean.qt.ministrySpecSecrataryId.userId}"
-					style="width: 280px;margin-bottom: 5px;">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-						itemValue="#{null}" />
-					<f:selectItems
-						value="#{qTBusinessOwnerBackingBean.managedBean.comitteeUserName}"
-						var="appName" itemLabel="#{appName.userName}"
-						itemValue="#{appName.userId}" />
-				</p:selectOneMenu>
-			</h:panelGrid>
+				border="0" cellpadding="0" cellspacing="0">
+				<table style="width: 100%;">
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sc.ministry.spec.secretary']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" valign="top" /></td>
+						<td colspan="4">
+							<table>
+								<tr>
+									<td><p:selectOneMenu id="ministryspec"
+											disabled="#{readOnly}"
+											label="#{lbl['lbl.sc.ministry.spec.secretary']}"
+											required="true"
+											value="#{qTDetailBB.managedBean.qt.ministrySpecSecrataryId.userId}"
+											style="width: 280px;margin-bottom: 5px;">
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+												itemValue="#{null}" />
+											<f:selectItems
+												value="#{qTBusinessOwnerBackingBean.managedBean.comitteeUserName}"
+												var="appName" itemLabel="#{appName.userName}"
+												itemValue="#{appName.userId}" />
+										</p:selectOneMenu></td>
+									<td><p:message id="ministryspecMsg" for="ministryspec"
+											display="icon" /></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</h:panelGroup>
 		</h:panelGroup>
 	</p:panel>
 </ui:composition>
