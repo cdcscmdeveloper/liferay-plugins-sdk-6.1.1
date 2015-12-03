@@ -9,7 +9,7 @@
 	<!--  Supplier Details dialog -->
 	<p:dialog id="suppDetailsPopup" widgetVar="suppDetailsPopup"
 		position="center" header="#{lbl['lbl.sc.companyinfo']}" modal="true"
-		dynamic="true" styleClass="pop_up_top" width="1000"
+		dynamic="true" styleClass="pop_up_top" width="950"
 		resizable="false">
 
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -36,7 +36,6 @@
 						value="#{supplierDetailBackingBean.managedBean.smGstSupplier.gstRegNo}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.gst.register.num.tooltip']}" />
 				</td>
-
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.comp.name']}" /></td>
