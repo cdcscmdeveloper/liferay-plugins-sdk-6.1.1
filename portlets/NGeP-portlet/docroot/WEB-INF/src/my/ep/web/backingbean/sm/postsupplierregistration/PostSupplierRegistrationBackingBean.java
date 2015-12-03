@@ -81,6 +81,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	private static final String SUPPLIER_TYPE_SELECTION_XHTML = "/xhtml/sm/supplierregistrationcont/supplierTypeSelection.xhtml";
 	private static final String CONTENT_PAGE = "/xhtml/sm/postsupplierregistration/msgContent.xhtml";
 	private static final String PROMO_PAGE = "/xhtml/sm/postsupplierregistration/supplierPromo.xhtml";
+	private static final String ACKNOWLEDGEMENT_PAGE = "/xhtml/sm/postsupplierregistration/postRegCompleteAcknowlegement.xhtml";
+	
 	private static final String MOF_SOFTCERT_REQUEST = "request-soft-cert";
 	//private static final String MOF_CODIFICATION_SEARCH = "codification-search";
 	private static final String UPGRADE_TO_MOF = "upgrade-basic-to-mof";
@@ -150,8 +152,16 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		log.info("******PreRender****" + currStatus);
 		//this.getManagedBean().setStatusDesc(currStatus);
 		
+		String pageRedirect = null;
+		
+		if(changeRoleSection){
+			pageRedirect= ACKNOWLEDGEMENT_PAGE;
+		}else{
+			pageRedirect= CONTENT_PAGE;
+		}
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CONTENT_PAGE);
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, pageRedirect);
 	}
 	
 	public void pageNavigate() throws Exception{
@@ -719,6 +729,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	}
 	
 	private void changeRoleForSupplierTemp(Long personnelId){
+		log.info("*****changeRoleForSupplierTemp - start******");
 		changeRoleSection = true;
 		IPersonnelSO personnelSO = SmServiceLookup.getPersonnelSO();
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
@@ -726,9 +737,9 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 		
 		try{
-			PersonnelResDTO resDTO =  personnelSO.supplierTempChangeRole(reqDTO);
-			//PersonnelResDTO resDTO = new PersonnelResDTO();
-			//resDTO.setSuccessful(true);
+			//PersonnelResDTO resDTO =  personnelSO.supplierTempChangeRole(reqDTO);
+			PersonnelResDTO resDTO = new PersonnelResDTO();
+			resDTO.setSuccessful(true);
 			if(resDTO.isSuccessful()){
 				roleChangeSuccess = true;
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721035,
@@ -739,6 +750,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		}catch(Exception ex){
 			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,null,ex.getMessage()));	
 		}
+		
 	}
 	
 	public int retrieveCurrentUserSoftCertStatus(){
@@ -784,6 +796,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				if(validSupplierTemp()){
 					log.info(">>>CHange ROle for SUpplier Temp<<");
 					changeRoleForSupplierTemp(currentPersonnel.getPersonnelId());
+
 				}
 			}
 		}else{
@@ -833,13 +846,17 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		return path;
 	}
 	
-	public void naviToDashBoard(){
+	public void naviToDashBoard() throws IOException{
+		log.info("<<<<<< naviToDashBoard >>>>>");
+		System.out.println("<<<<<< test >>>>>");
 		String currentUrl = SmCommonUtil.getEpBaseUrl();
 		log.info("CurrentUrl >>>>" + currentUrl);
 		
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, currentUrl);
-		
+		ExternalContext externalContext = FacesContext.getCurrentInstance()
+				.getExternalContext();
+	
+		externalContext.redirect(currentUrl);
+
 	}
 
 	public boolean isChangeRoleSection() {
