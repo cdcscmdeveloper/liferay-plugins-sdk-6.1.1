@@ -110,7 +110,7 @@
                 <ui:param name="requestNoteDtl" value="#{requestNoteBackingBean.managedBean.requestNoteDtl}"></ui:param>				
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.request.note.price.type']}"/> <p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><h:selectOneMenu id="priceType" style="width:217px;" required="true"
+					<td><h:selectOneMenu id="priceType" style="width:217px;"
 						disabled="#{requestNoteBackingBean.managedBean.viewOnly}"
 						label="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.price.type']}"
 						value="#{requestNoteBackingBean.managedBean.requestNoteDtl.priceTypeId}">
