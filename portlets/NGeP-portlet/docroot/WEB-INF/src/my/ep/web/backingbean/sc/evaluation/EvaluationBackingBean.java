@@ -98,7 +98,6 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
@@ -158,7 +157,6 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
-import my.ep.web.util.pm.helper.StatusHelper;
 import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -1213,57 +1211,6 @@ public class EvaluationBackingBean extends
 	}
 
 	/**
-	 * Sets the technical evaluation status.
-	 * 
-	 * @param checkList
-	 *            (Mandatory)
-	 * @param checkListType
-	 *            (Mandatory)
-	 * @param status
-	 *            (Mandatory)
-	 */
-	private void setTechnicalEvaluationStatus(ScQtCheckList checkList,
-			String checkListType, PmStatus status) {
-		IQTEvaluationSO evaluationSo = null;
-		try {
-			EvaluationReqDTO checklistreqDTO = new EvaluationReqDTO();
-			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-			checklistreqDTO.setEvaluationStatus(status);
-			// checkList.setPmEvalStatus(status);
-			checklistreqDTO.setCheckList(checkList);
-			EvaluationResDTO checkListresDTO = evaluationSo
-					.saveOrUpdatePresentationDemoCheckList(checklistreqDTO);
-			this.getManagedBean().setScQtChecklist(
-					checkListresDTO.getCheckList());
-			if (null != checkListType && checkListType.equalsIgnoreCase("ET")) {
-				this.getManagedBean()
-						.getEvaluationStgTechnicalCheckList()
-						.remove(this.getManagedBean()
-								.getEvaluationCheckListIndex());
-				this.getManagedBean()
-						.getEvaluationStgTechnicalCheckList()
-						.add(this.getManagedBean()
-								.getEvaluationCheckListIndex(),
-								this.getManagedBean().getScQtChecklist());
-			} else if (null != checkListType
-					&& checkListType.equalsIgnoreCase("EF")) {
-				this.getManagedBean()
-						.getEvaluationStgfinancialCheckList()
-						.remove(this.getManagedBean()
-								.getEvaluationCheckListIndex());
-				this.getManagedBean()
-						.getEvaluationStgfinancialCheckList()
-						.add(this.getManagedBean()
-								.getEvaluationCheckListIndex(),
-								this.getManagedBean().getScQtChecklist());
-			}
-		} finally {
-			evaluationSo = null;
-		}
-	}
-
-	/**
 	 * Technical backaction.
 	 * 
 	 * @return navigate to compliance qualified supplier technical checklist
@@ -1544,7 +1491,6 @@ public class EvaluationBackingBean extends
 	private void generateEvaluationStage() {
 
 		IQTEvaluationSO evaluationSO = null;
-		EvaluationResDTO resDTO = new EvaluationResDTO();
 
 		try {
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
@@ -1556,7 +1502,7 @@ public class EvaluationBackingBean extends
 				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 				reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
 				reqDTO.setEvalStage(QTConstants.COMPLIANCE_CHECK);
-				resDTO = evaluationSO.generateEvaluationSheet(reqDTO);
+				evaluationSO.generateEvaluationSheet(reqDTO);
 			}
 
 			else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
@@ -1569,7 +1515,7 @@ public class EvaluationBackingBean extends
 					reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
 				}
 
-				resDTO = evaluationSO.generateEvaluationSheet(reqDTO);
+				evaluationSO.generateEvaluationSheet(reqDTO);
 			}
 
 			else if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
@@ -1579,16 +1525,16 @@ public class EvaluationBackingBean extends
 					reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
 
 					reqDTO.setEvalStage(QTConstants.COMPLIANCE_CHECK);
-					resDTO = evaluationSO.generateEvaluationSheet(reqDTO);
+					evaluationSO.generateEvaluationSheet(reqDTO);
 					reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
-					resDTO = evaluationSO.generateEvaluationSheet(reqDTO);
+					evaluationSO.generateEvaluationSheet(reqDTO);
 				} else if (this.getManagedBean().getScQt()
 						.isTechEvaluationReq()) {
 					reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 					reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
 
 					reqDTO.setEvalStage(QTConstants.COMPLIANCE_CHECK);
-					resDTO = evaluationSO.generateEvaluationSheet(reqDTO);
+					evaluationSO.generateEvaluationSheet(reqDTO);
 
 				}
 
@@ -1600,7 +1546,6 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setGenerateEvaluationButton(true);
 
 		} finally {
-			evaluationSO = null;
 			evaluationSO = null;
 
 		}
@@ -2377,8 +2322,6 @@ public class EvaluationBackingBean extends
 	 */
 	public String viewTechnicalEvaluation(ScQtCheckList checklist, int index,
 			String checklistType) {
-		IQTEvaluationSO evaluationSo = null;
-		EvaluationResDTO resDTO = null;
 		// this.getManagedBean().setQtProposalChecklist(checklist);
 		try {
 			this.getManagedBean().setEvaluationCheckListType("");
@@ -2387,8 +2330,6 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setEvaluationTechnicalFinancialType(
 					checklistType);
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
-			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 
 			reqDTO.setCheckListId(this.getManagedBean().getScQtChecklist()
 					.getQtChecklistId());
@@ -2510,8 +2451,6 @@ public class EvaluationBackingBean extends
 	 */
 	public String evaluateTechnicalEvaluation(ScQtCheckList checklist,
 			int index, String checklistType) {
-		IQTEvaluationSO evaluationSo = null;
-		EvaluationResDTO resDTO = null;
 		try {
 			this.getManagedBean().setEvaluationCheckListType("");
 			this.getManagedBean().setScQtChecklist(checklist);
@@ -2520,8 +2459,7 @@ public class EvaluationBackingBean extends
 					checklistType);
 			this.getManagedBean().setUserScores(null);
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
-			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			
 			reqDTO.setCheckListId(this.getManagedBean().getScQtChecklist()
 					.getQtChecklistId());
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
@@ -2627,7 +2565,6 @@ public class EvaluationBackingBean extends
 	public String viewfinacialEvaluation(ScQtCheckList checklist, int index,
 			String checklistType) {
 		IQTEvaluationSO evaluationSo = null;
-		EvaluationResDTO resDTO = null;
 		// this.getManagedBean().setQtProposalChecklist(checklist);
 		try {
 			this.getManagedBean().setEvaluationCheckListType("");
@@ -2830,10 +2767,7 @@ public class EvaluationBackingBean extends
 	 *            the speczone
 	 */
 	private void retriveFinancialSpecZones(EvaluationResDTO speczone) {
-		IQTEvaluationSO evaluationSo = null;
 		try {
-			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 			// if (null == this.getManagedBean().getFinSpecZoneBean()) {
 			this.getManagedBean().setSpecZoneDtls(speczone.getZones());
 
@@ -2919,7 +2853,6 @@ public class EvaluationBackingBean extends
 			}
 			// }
 		} finally {
-			evaluationSo = null;
 		}
 	}
 
@@ -3068,7 +3001,6 @@ public class EvaluationBackingBean extends
 	public String evaluatefinancialEvaluation(ScQtCheckList checklist,
 			int index, String checklistType) {
 		IQTEvaluationSO evaluationSo = null;
-		EvaluationResDTO resDTO = null;
 		try {
 			this.getManagedBean().setEvaluationCheckListType("");
 			this.getManagedBean().setScQtChecklist(checklist);
@@ -3245,7 +3177,6 @@ public class EvaluationBackingBean extends
 	 *            (Mandatory)
 	 */
 	public void specTabChange() {
-		IQTEvaluationSO evaluationSo = null;
 		try {
 			this.getManagedBean().getFinSpecSupplierListDM().reloadData();
 			Integer selectedZoneTabIndex = Integer.valueOf(FacesContext
@@ -3320,7 +3251,6 @@ public class EvaluationBackingBean extends
 				}
 			}
 		} finally {
-			evaluationSo = null;
 		}
 	}
 
@@ -6879,13 +6809,11 @@ public class EvaluationBackingBean extends
 			ScAttachment attachemnt = this.getManagedBean().getScAttachment();
 			String reportFileName = this.getManagedBean()
 					.getReportDownloadFileName();
-			List<ScQtProposalChecklist> demoList = this.getManagedBean()
-					.getPresentationDemoSupplierList();
 			int countDays = this.getManagedBean().getCountDays();
 			int currentTime = this.getManagedBean().getCurrentTime();
 			String QtNum = this.getManagedBean().getScQt().getQtNo();
 			SCEvaluationDataType evaluationDataType = (SCEvaluationDataType) this
-					.getManagedBean().getEvaluationPayLoad();
+					.getManagedBean().getPayLoad();
 
 			if (!this.getManagedBean().isDemo()) {
 				if (tabindex == 0) {
@@ -6915,7 +6843,7 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setScAttachment(attachemnt);
 			this.getManagedBean().setReportDownloadFileName(reportFileName);
 			this.getManagedBean().setCountDays(countDays);
-			this.getManagedBean().setEvaluationPayLoad(evaluationDataType);
+			this.getManagedBean().setPayLoad(evaluationDataType);
 			this.getManagedBean().setCurrentTime(currentTime);
 
 			retriveMeetingDtls(qtId, committeeType, index);
@@ -7495,7 +7423,6 @@ public class EvaluationBackingBean extends
 		try {
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-			int index = this.getManagedBean().getTechindex();
 			List<TplSpecAnswer> answers = getManagedBean()
 					.getTemplateSpecBean().getSpecAnswerList();
 			for (TplSpecAnswer tplSpecAnswer : answers) {
@@ -7725,7 +7652,7 @@ public class EvaluationBackingBean extends
 		reqDtO.setCommType(this.getManagedBean().getCommitteeType());
 		reqDtO.setDigiSignData(digiSign);
 		reqDtO.setTaskId(this.getManagedBean().getTaskId());
-		reqDtO.setPayLoad(this.getManagedBean().getEvaluationPayLoad());
+		reqDtO.setPayLoad(this.getManagedBean().getPayLoad());
 		FacesScopes facesScopes = new FacesScopes();
 		reqDtO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 		reqDtO.setPmUser(facesScopes.getUserSessionBean());
@@ -7785,7 +7712,6 @@ public class EvaluationBackingBean extends
 		SCEvaluationDataType evaluationDataType = getBpmTaskDetails(SCEvaluationDataType.class);
 		FacesScopes facesScopes = new FacesScopes();
 
-		this.getManagedBean().setEvaluationPayLoad(evaluationDataType);
 		// FacesScopes facesScopes = new FacesScopes();
 		FacesContext fc = FacesContext.getCurrentInstance();
 
@@ -9698,20 +9624,6 @@ public class EvaluationBackingBean extends
 	}
 
 	/**
-	 * Retrive status.
-	 * 
-	 * @param moduleCode
-	 *            (Mandatory)
-	 * @param docType
-	 *            (Mandatory)
-	 * @return List<PmStatusDesc>
-	 */
-	private List<PmStatusDesc> retriveStatus(String moduleCode, String docType) {
-		return StatusHelper.getInstance()
-				.getStatusDescList(moduleCode, docType);
-	}
-
-	/**
 	 * Event to update the status of the selected meeting
 	 * 
 	 * @param scQtMeeting
@@ -10714,7 +10626,6 @@ public class EvaluationBackingBean extends
 		IQTEvaluationSO evaluationSo = null;
 		try {
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
-			EvaluationResDTO resDTO = new EvaluationResDTO();
 			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 			List<ScQtProposalChecklist> dataProposalCheckList = (List<ScQtProposalChecklist>) this
@@ -10741,7 +10652,7 @@ public class EvaluationBackingBean extends
 				}
 
 			}
-			resDTO = evaluationSo.saveOrUpdateComplianceDtls(reqDTO);
+			evaluationSo.saveOrUpdateComplianceDtls(reqDTO);
 		} finally {
 			evaluationSo = null;
 		}
