@@ -35,7 +35,6 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	//Header
 	private ScQt scQt;
 	private String processName;
-	private Object payLoad;
 	private String committeeType;
 		
 	private List<ScQtMeeting> scQtMeetings;
@@ -422,19 +421,6 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	 */
 	public void setProcessName(String processName) {
 		this.processName = processName;
-	}
-	/**
-	 * @return the payLoad
-	 */
-	public Object getPayLoad() {
-		return payLoad;
-	}
-	/**
-	 * @param payLoad 
-	 * 			the payLoad to set
-	 */
-	public void setPayLoad(Object payLoad) {
-		this.payLoad = payLoad;
 	}
 	/**
 	 * @return the selectedCommitteeMembersList

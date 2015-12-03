@@ -84,8 +84,6 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	 */
 	public boolean checkStatus = true;
 
-	// payLoad object Added By Vidyasagar.
-	private Object proposalData;
 	private Long supplierId;
 
 	// private ScAttachment scAttachment = new ScAttachment();
@@ -881,21 +879,6 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setCheckStatus(boolean checkStatus) {
 		this.checkStatus = checkStatus;
-	}
-
-	/**
-	 * @return the proposalData
-	 */
-	public Object getProposalData() {
-		return proposalData;
-	}
-
-	/**
-	 * @param proposalData
-	 *            the proposalData to set
-	 */
-	public void setProposalData(Object proposalData) {
-		this.proposalData = proposalData;
 	}
 
 	/**

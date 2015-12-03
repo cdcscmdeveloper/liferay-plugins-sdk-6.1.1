@@ -77,7 +77,6 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	//Offline Bidding Endorsement
 	private List<ScQtFinalizationEndorsementRemarks> remarks;
 	private String attachmentDocType;
-	private Object payLoad;
 	private String action;
 	
 	// Item price pop up
@@ -406,21 +405,6 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	 */
 	public void setProcessName(String processName) {
 		this.processName = processName;
-	}
-	
-	/**
-	 * @return  the payLoad
-	 */
-	public Object getPayLoad() {
-		return payLoad;
-	}
-	
-	/**
-	 * @param payLoad
-	 * 			the payLoad to set
-	 */
-	public void setPayLoad(Object payLoad) {
-		this.payLoad = payLoad;
 	}
 	
 	/**

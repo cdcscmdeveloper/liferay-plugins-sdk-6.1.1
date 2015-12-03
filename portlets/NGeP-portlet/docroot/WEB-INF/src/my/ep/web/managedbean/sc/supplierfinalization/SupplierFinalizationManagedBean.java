@@ -3,7 +3,6 @@
  */
 package my.ep.web.managedbean.sc.supplierfinalization;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -167,8 +166,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private String subject;
 	private String message;
 	private String pinNo;
-	
-	private Object payLoad;
 	
 	private boolean selectAll;
 	private boolean selectAllMeetings;
@@ -1522,21 +1519,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setCommitteeType(String committeeType) {
 		this.committeeType = committeeType;
-	}
-
-	/**
-	 * @return the payLoad
-	 */
-	public Object getPayLoad() {
-		return payLoad;
-	}
-
-	/**
-	 * @param payLoad 
-	 * 			the payLoad to set
-	 */
-	public void setPayLoad(Object payLoad) {
-		this.payLoad = payLoad;
 	}
 
 	/**

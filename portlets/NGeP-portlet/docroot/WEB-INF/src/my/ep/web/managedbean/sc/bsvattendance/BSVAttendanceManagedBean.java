@@ -37,9 +37,6 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	private ScQtBsvAttendance scQtBriefingAttendance;
 	private ScQt scQt;
 
-	/** added by Vidyasagar */
-	private Object siteVisitPayLoad;
-
 	private String previousPage;
 
 	private String location;
@@ -157,20 +154,6 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	 */
 	public void setScQt(ScQt scQt) {
 		this.scQt = scQt;
-	}
-
-	/**
-	 * @return the siteVisitPayLoad
-	 */
-	public Object getSiteVisitPayLoad() {
-		return siteVisitPayLoad;
-	}
-
-	/**
-	 * @param siteVisitPayLoad the siteVisitPayLoad to set
-	 */
-	public void setSiteVisitPayLoad(Object siteVisitPayLoad) {
-		this.siteVisitPayLoad = siteVisitPayLoad;
 	}
 
 	/**

@@ -211,9 +211,6 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	/** The doc type. */
 	private String docType;
 	
-	/** The pay load data. */
-	private Object payLoadData;
-	
 	/** The approver user. */
 	private PmUser approverUser;
 	
@@ -1286,24 +1283,6 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setDocType(String docType) {
 		this.docType = docType;
-	}
-
-	/**
-	 * Gets the pay load data.
-	 *
-	 * @return the payLoadData
-	 */
-	public Object getPayLoadData() {
-		return payLoadData;
-	}
-
-	/**
-	 * Sets the pay load data.
-	 *
-	 * @param payLoadData the payLoadData to set
-	 */
-	public void setPayLoadData(Object payLoadData) {
-		this.payLoadData = payLoadData;
 	}
 
 	/**

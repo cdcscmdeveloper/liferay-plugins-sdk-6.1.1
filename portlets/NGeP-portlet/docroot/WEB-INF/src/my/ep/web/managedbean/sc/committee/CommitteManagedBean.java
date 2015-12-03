@@ -242,9 +242,6 @@ public class CommitteManagedBean extends BaseManagedBean {
 	/** The comm type title. */
 	private String commTypeTitle;
 	
-	/** The pay load. */
-	private Object payLoad;
-	
 	/** The selected history committee. */
 	private ScCommittee selectedHistoryCommittee;
 
@@ -1385,24 +1382,6 @@ public class CommitteManagedBean extends BaseManagedBean {
 	public void setAddRepresentativesTypeslist(
 			List<SelectItem> addRepresentativesTypeslist) {
 		this.addRepresentativesTypeslist = addRepresentativesTypeslist;
-	}
-
-	/**
-	 * Gets the pay load.
-	 *
-	 * @return the pay load
-	 */
-	public Object getPayLoad() {
-		return payLoad;
-	}
-
-	/**
-	 * Sets the pay load.
-	 *
-	 * @param payLoad the new pay load
-	 */
-	public void setPayLoad(Object payLoad) {
-		this.payLoad = payLoad;
 	}
 
 	/**
