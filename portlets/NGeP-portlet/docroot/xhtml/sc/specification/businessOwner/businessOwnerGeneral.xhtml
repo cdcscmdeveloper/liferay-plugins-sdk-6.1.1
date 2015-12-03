@@ -162,7 +162,7 @@
 												update="@form"
 												listener="#{specificationBackingBean.evaluationTypeChange}"></p:ajax>
 
-										</p:selectOneRadio></td> 
+										</p:selectOneRadio></td>
 									<td><p:message id="evalMsg" for="evalType" display="icon" /></td>
 									<td style="margin-top: -3px"><ac:iconTooltip
 											value="#{lbl['lbl.sc.evaluation.type.tooltip']}" /></td>
@@ -279,7 +279,7 @@
 	</p:panel>
 
 	<h:panelGroup id="generalLocationList">
-		<p:panel header="#{lbl['lbl.sc.qt.zone.location.info']}"
+		<p:panel header="#{lbl['lbl.sc.qt.zone.location.info']}" toggleable="true"
 			rendered="#{(specificationBackingBean.managedBean.scQt.qtType eq 'O' and specificationBackingBean.managedBean.scQt.panel eq 'No' and specificationBackingBean.managedBean.scQt.zonal !='false' and specificationBackingBean.managedBean.scQt.estimatedAmount ne null and specificationBackingBean.managedBean.scQt.estimatedAmount gt 0)}">
 			<table style="width: 100%">
 				<tr>
@@ -309,82 +309,84 @@
 
 				</tr>
 			</table>
+
+
+			<h:panelGroup
+				rendered="#{specificationBackingBean.managedBean.scQt.qtType eq 'O' and specificationBackingBean.managedBean.scQt.panel eq 'No' and specificationBackingBean.managedBean.scQt.zonal !='false' and specificationBackingBean.managedBean.scQt.estimatedAmount ne null and specificationBackingBean.managedBean.scQt.estimatedAmount gt 0}">
+				<h:panelGrid width="100%">
+					<p:dataTable id="zoneGeneralDataTable" rows="10"
+						value="#{specificationBackingBean.managedBean.zoneGeneralTrees}"
+						var="zoneTree" style="width:100%" rowIndexVar="index"
+						rowKey="#{zoneTree}">
+
+						<p:column style="width:250%;">
+							<f:facet name="header">
+								<h:outputText value="* " styleClass="mandatory" />
+								<h:outputText value="#{lbl['lbl.sc.zone.location']}" />
+							</f:facet>
+							<p:tree value="#{zoneTree}" var="location"
+								selectionMode="checkbox">
+								<p:ajax event="select"
+									listener="#{specificationBackingBean.selectZoneTreeNode}" />
+								<p:ajax event="unselect"
+									listener="#{specificationBackingBean.unSelectZoneTreeNode}" />
+
+								<p:treeNode type="zone">
+									<h:outputText value="#{location.zoneName}" />
+								</p:treeNode>
+
+								<p:treeNode type="state">
+									<h:outputText value="#{location.pmState.stateName}" />
+								</p:treeNode>
+								<p:treeNode type="division">
+									<h:outputText value="#{location.pmDivision.divisionName}" />
+								</p:treeNode>
+								<p:treeNode type="district">
+									<h:outputText value="#{location.pmDistrict.districtName}" />
+								</p:treeNode>
+							</p:tree>
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sc.action']}"
+							style="width:10%;text-align: center;">
+							<p:commandLink
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
+								actionListener="#{specificationBackingBean.editZones(zoneTree,index)}"
+								process="@this" update="@([id$=dlgId])"
+								oncomplete="ZoneGeneral.show();">
+								<h:graphicImage value="/css/images/design/edit.png" />
+							</p:commandLink>
+						</p:column>
+					</p:dataTable>
+				</h:panelGrid>
+				<div align="right" style="width: 100%">
+					<p:selectBooleanCheckbox id="checkAllZonesList"
+						style="float:left;margin-top: 13px;margin-right: -4px;">
+						<p:ajax event="change" partialSubmit="true" process="@all"
+							update="zoneGeneralDataTable"
+							listener="#{specificationBackingBean.checkAllZoneGeneral}" />
+					</p:selectBooleanCheckbox>
+					<p:spacer width="1" />
+					<h:outputText value="#{lbl['lbl.sc.spec.check.all']}"
+						style="float:left;margin-top: 12px;;margin-left: 10px;" />
+					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
+						styleClass="BtnSpacing" update="@([id$=zonePopupGeneral])"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
+						actionListener="#{specificationBackingBean.showGeneralZonesPopup}" />
+					<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
+						styleClass="BtnSpacing" partialSubmit="true"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
+						oncomplete="zonesNonpanelDeletePopUp.show();"
+						update="@([id$=#{zonesNonpanelDeleteId}])" />
+				</div>
+				<ui:param name="zonesNonpanelDeleteId" value="zonesNonpanelDeleteId"></ui:param>
+				<ac:confirmationPopup id="#{zonesNonpanelDeleteId}"
+					widget="zonesNonpanelDeletePopUp"
+					okAction="specificationBackingBean.deleteTreeNode" width="400"
+					height="100" title="#{lbl['lbl.sc.qt.zone.location.info']}"
+					content="#{lbl['lbl.sc.dialog.confirm.zones.delete']}"
+					update="@([id$=zoneGeneralDataTable])" />
+			</h:panelGroup>
 		</p:panel>
-
-		<h:panelGroup
-			rendered="#{specificationBackingBean.managedBean.scQt.qtType eq 'O' and specificationBackingBean.managedBean.scQt.panel eq 'No' and specificationBackingBean.managedBean.scQt.zonal !='false' and specificationBackingBean.managedBean.scQt.estimatedAmount ne null and specificationBackingBean.managedBean.scQt.estimatedAmount gt 0}">
-			<h:panelGrid width="100%">
-				<p:dataTable id="zoneGeneralDataTable" rows="10"
-					value="#{specificationBackingBean.managedBean.zoneGeneralTrees}"
-					var="zoneTree" style="width:100%" rowIndexVar="index"
-					rowKey="#{zoneTree}">
-
-					<p:column style="width:250%;">
-						<f:facet name="header">
-							<h:outputText value="* " styleClass="mandatory" />
-							<h:outputText value="#{lbl['lbl.sc.zone.location']}" />
-						</f:facet>
-						<p:tree value="#{zoneTree}" var="location"
-							selectionMode="checkbox">
-							<p:ajax event="select"
-								listener="#{specificationBackingBean.selectZoneTreeNode}" />
-							<p:ajax event="unselect"
-								listener="#{specificationBackingBean.unSelectZoneTreeNode}" />
-
-							<p:treeNode type="zone">
-								<h:outputText value="#{location.zoneName}" />
-							</p:treeNode>
-
-							<p:treeNode type="state">
-								<h:outputText value="#{location.pmState.stateName}" />
-							</p:treeNode>
-							<p:treeNode type="division">
-								<h:outputText value="#{location.pmDivision.divisionName}" />
-							</p:treeNode>
-							<p:treeNode type="district">
-								<h:outputText value="#{location.pmDistrict.districtName}" />
-							</p:treeNode>
-						</p:tree>
-					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%;text-align: center;">
-						<p:commandLink
-							disabled="#{specificationBackingBean.managedBean.readOnly}"
-							actionListener="#{specificationBackingBean.editZones(zoneTree,index)}"
-							process="@this" update="@([id$=dlgId])"
-							oncomplete="ZoneGeneral.show();">
-							<h:graphicImage value="/css/images/design/edit.png" />
-						</p:commandLink>
-					</p:column>
-				</p:dataTable>
-			</h:panelGrid>
-			<div align="right" style="width: 100%">
-				<p:selectBooleanCheckbox id="checkAllZonesList"
-					style="float:left;margin-top: 13px;margin-right: -4px;">
-					<p:ajax event="change" partialSubmit="true" process="@all"
-						update="zoneGeneralDataTable"
-						listener="#{specificationBackingBean.checkAllZoneGeneral}" />
-				</p:selectBooleanCheckbox>
-				<p:spacer width="1" />
-				<h:outputText value="#{lbl['lbl.sc.spec.check.all']}"
-					style="float:left;margin-top: 12px;;margin-left: 10px;" />
-				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
-					styleClass="BtnSpacing" update="@([id$=zonePopupGeneral])"
-					disabled="#{specificationBackingBean.managedBean.readOnly}"
-					actionListener="#{specificationBackingBean.showGeneralZonesPopup}" />
-				<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
-					styleClass="BtnSpacing" partialSubmit="true"
-					disabled="#{specificationBackingBean.managedBean.readOnly}"
-					oncomplete="zonesNonpanelDeletePopUp.show();"
-					update="@([id$=#{zonesNonpanelDeleteId}])" />
-			</div>
-			<ui:param name="zonesNonpanelDeleteId" value="zonesNonpanelDeleteId"></ui:param>
-			<ac:confirmationPopup id="#{zonesNonpanelDeleteId}"
-				widget="zonesNonpanelDeletePopUp"
-				okAction="specificationBackingBean.deleteTreeNode" width="400"
-				height="100" title="#{lbl['lbl.sc.qt.zone.location.info']}"
-				content="#{lbl['lbl.sc.dialog.confirm.zones.delete']}"
-				update="@([id$=zoneGeneralDataTable])" />
-		</h:panelGroup>
 	</h:panelGroup>
 	<p:dialog id="dlgId" header="#{lbl['lbl.sc.add.location']}"
 		widgetVar="ZoneGeneral" modal="true" width="520" position="top"
