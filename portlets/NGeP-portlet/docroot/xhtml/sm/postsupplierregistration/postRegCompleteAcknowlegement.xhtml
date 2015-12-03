@@ -10,7 +10,7 @@
     <ui:define name="contentSection">
 			<p:messages id="ackMsg" showDetail="true" autoUpdate="true" escape="false"/>
 			<div align="right">
-				<p:commandButton action="#{postSupplierRegBB.naviToDashBoard()}" value="Complete" 
+				<p:commandButton action="#{postSupplierRegBB.naviToDashBoard()}" value="Complete" ajax="false"
 				rendered="#{postSupplierRegBB.roleChangeSuccess}"></p:commandButton>
 			</div>
 	</ui:define>
