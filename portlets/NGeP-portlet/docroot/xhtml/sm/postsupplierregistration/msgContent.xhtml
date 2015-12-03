@@ -9,93 +9,82 @@
 
 
 	<ui:define name="contentSection">
-		<c:choose>
-			<c:when test="#{!postSupplierRegBB.changeRoleSection}">
-				<p:outputPanel rendered="#{postSupplierRegBB.validSupplierTemp()}"  id="basicPanelId">
-					<c:if test="#{postSupplierRegBB.managedBean.flowStatus > 0}">
-					<h:outputStylesheet library="ep/css" name="tab.css"  />
-					<div class="container-content">
-						<div class="cover-container-content">
-							<div class="flow-chartbox">
-								<div class="flow-chart">
-									<p class="title">#{lbl['lbl.sm.basic.pls.proceed']}</p>
-									<!-- Basic Account-->
-									<p:outputPanel rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.supplierTypeBasicWithoutMof}">
-										<ui:include src="/xhtml/sm/shared/postsupplierregistration/flowBasic.xhtml"></ui:include>
-									</p:outputPanel>
-									
-									<!-- MOF Account-->
-									<p:outputPanel rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
+		<p:outputPanel rendered="#{postSupplierRegBB.validSupplierTemp()}"  id="basicPanelId">
+			<c:if test="#{postSupplierRegBB.managedBean.flowStatus > 0}">
+			<h:outputStylesheet library="ep/css" name="tab.css"  />
+			<div class="container-content">
+				<div class="cover-container-content">
+					<div class="flow-chartbox">
+						<div class="flow-chart">
+							<p class="title">#{lbl['lbl.sm.basic.pls.proceed']}</p>
+							<!-- Basic Account-->
+							<p:outputPanel rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.supplierTypeBasicWithoutMof}">
+								<ui:include src="/xhtml/sm/shared/postsupplierregistration/flowBasic.xhtml"></ui:include>
+							</p:outputPanel>
+							
+							<!-- MOF Account-->
+							<p:outputPanel rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
+								<c:choose>
+									<c:when test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.supplierType == ParameterConst.supplierTypeContractor}">		
 										<c:choose>
-											<c:when test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.supplierType == ParameterConst.supplierTypeContractor}">		
-												<c:choose>
-													<c:when test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.smCompanyBasic.withFederal}">
-														<ui:include src="/xhtml/sm/shared/postsupplierregistration/flowMofContractorFederal.xhtml"></ui:include>
-													</c:when>
-													<c:otherwise>
-														<ui:include src="/xhtml/sm/shared/postsupplierregistration/flowMofCommon.xhtml"></ui:include>
-													</c:otherwise>
-												</c:choose>
+											<c:when test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.smCompanyBasic.withFederal}">
+												<ui:include src="/xhtml/sm/shared/postsupplierregistration/flowMofContractorFederal.xhtml"></ui:include>
 											</c:when>
-											
 											<c:otherwise>
 												<ui:include src="/xhtml/sm/shared/postsupplierregistration/flowMofCommon.xhtml"></ui:include>
 											</c:otherwise>
 										</c:choose>
-									</p:outputPanel>
-								</div>
-							</div>
+									</c:when>
+									
+									<c:otherwise>
+										<ui:include src="/xhtml/sm/shared/postsupplierregistration/flowMofCommon.xhtml"></ui:include>
+									</c:otherwise>
+								</c:choose>
+							</p:outputPanel>
 						</div>
 					</div>
-					
-					<p:outputPanel rendered="#{postSupplierRegBB.managedBean.flowStatus == 3 and postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
-						<table>
-							<tr>
-								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.application.no']}" /></td>
-								<td><h:outputText value="#{postSupplierRegBB.managedBean.smAppl.applNo}" /></td>
-							</tr>
-							
-							<tr>
-								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.application.status']}" /></td>
-								<td>
-									<h:outputText value="#{postSupplierRegBB.managedBean.statusDesc}" />
-									<h:outputText value=" - " rendered="#{postSupplierRegBB.managedBean.hyperlink}" /> 
-									<p:commandLink value="#{lbl['lbl.sm.basic.click.to.continue']}"  rendered="#{postSupplierRegBB.managedBean.hyperlink}" action="#{postSupplierRegBB.pageNavigate}"></p:commandLink>
-								</td>
-							</tr>
-						</table>
-					</p:outputPanel>
-					
-					<!-- Softcert Msg-->
-					<p:outputPanel rendered="#{postSupplierRegBB.retrieveCurrentUserSoftCertStatus() != postSupplierRegBB.softCertPendingReqStatus() and 
-						postSupplierRegBB.retrieveCurrentUserSoftCertStatus() != postSupplierRegBB.softCertIsActiveStatus()}">
-						<c:if test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.supplierType == ParameterConst.supplierTypeContractor and 
-							postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
-								<c:if test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
-									<c:if test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.smCompanyBasic.withFederal}">
-										<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 6}">
-											<ui:include src="/xhtml/sm/shared/postsupplierregistration/softCertMsg.xhtml" />
-										</c:if>
-									</c:if>
-								</c:if>
-						</c:if>
-						
-						<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 2 and 
-									postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.supplierTypeBasicWithoutMof}">
-								<ui:include src="/xhtml/sm/shared/postsupplierregistration/softCertMsg.xhtml" />
-						</c:if>
-					</p:outputPanel>
-					</c:if>
-				</p:outputPanel>
-			</c:when>
-			
-			<c:otherwise>
-				<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
-				<div align="right">
-					<p:commandButton action="#{postSupplierRegBB.naviToDashBoard()}" rendered="#{postSupplierRegBB.roleChangeSuccess}" value="OK"></p:commandButton>
 				</div>
-			</c:otherwise>
-		</c:choose>
+			</div>
+			
+			<p:outputPanel rendered="#{postSupplierRegBB.managedBean.flowStatus == 3 and postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
+				<table>
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.application.no']}" /></td>
+						<td><h:outputText value="#{postSupplierRegBB.managedBean.smAppl.applNo}" /></td>
+					</tr>
+					
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.application.status']}" /></td>
+						<td>
+							<h:outputText value="#{postSupplierRegBB.managedBean.statusDesc}" />
+							<h:outputText value=" - " rendered="#{postSupplierRegBB.managedBean.hyperlink}" /> 
+							<p:commandLink value="#{lbl['lbl.sm.basic.click.to.continue']}"  rendered="#{postSupplierRegBB.managedBean.hyperlink}" action="#{postSupplierRegBB.pageNavigate}"></p:commandLink>
+						</td>
+					</tr>
+				</table>
+			</p:outputPanel>
+			
+			<!-- Softcert Msg-->
+			<p:outputPanel rendered="#{postSupplierRegBB.retrieveCurrentUserSoftCertStatus() != postSupplierRegBB.softCertPendingReqStatus() and 
+				postSupplierRegBB.retrieveCurrentUserSoftCertStatus() != postSupplierRegBB.softCertIsActiveStatus()}">
+				<c:if test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.supplierType == ParameterConst.supplierTypeContractor and 
+					postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
+						<c:if test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
+							<c:if test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.smCompanyBasic.withFederal}">
+								<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 6}">
+									<ui:include src="/xhtml/sm/shared/postsupplierregistration/softCertMsg.xhtml" />
+								</c:if>
+							</c:if>
+						</c:if>
+				</c:if>
+				
+				<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 2 and 
+							postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.supplierTypeBasicWithoutMof}">
+						<ui:include src="/xhtml/sm/shared/postsupplierregistration/softCertMsg.xhtml" />
+				</c:if>
+			</p:outputPanel>
+			</c:if>
+		</p:outputPanel>
 	</ui:define>
 
 </ui:composition>
