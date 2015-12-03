@@ -5,10 +5,11 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel header="#{lbl['lbl.sc.briefing.dtls']}" toggleable="true" styleClass="briefingList">
+	<p:panel header="#{lbl['lbl.sc.briefing.dtls']}" toggleable="true"
+		styleClass="briefingList">
 		<table style="width: 100%" border="0">
 			<tr>
-				<td style="width: 150px;white-space:nowrap;"><p:outputLabel
+				<td style="width: 280px; white-space: nowrap;"><p:outputLabel
 						value="#{lbl['lbl.sc.briefing.sameas.sv']}" /></td>
 				<td><p:selectOneRadio value="#{bsvdtlbean.scQtBsv.sameBsv}"
 						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}">
@@ -77,7 +78,9 @@
 					rendered="#{QTStatusConst.BSV_COMPLETED ne briefingdtls.bsvStatus.statusId}"
 					action="#{qTBriefingSiteVisitBackingBean.editAction(briefingdtls,index,'B')}"
 					partialSubmit="true" process="@this" update="@([id$=briefdlgId])">
-					<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/edit.png" styleClass="tasklist_title1" />
+					<h:graphicImage
+						value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
+						styleClass="tasklist_title1" />
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
@@ -97,18 +100,20 @@
 				action="#{qTBriefingSiteVisitBackingBean.addBsvDetails('B')}"
 				oncomplete="addbsvdtls.show();" update="@(.qtBriefDetails)" />
 
-			<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
-				process="@this,briefingdtlid" partialSubmit="true"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				styleClass="BtnSpacing" process="@this,briefingdtlid"
+				partialSubmit="true"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
 				action="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('B')}"
 				update="@form" />
 		</div>
 	</p:panel>
-	
+
 	<h:panelGroup id="sameasbsvrequired">
 		<h:panelGroup rendered="#{bsvdtlbean.scQtBsv.sameBsv eq 'false'}">
 
-			<p:panel header="#{lbl['lbl.sc.site.visit.dtls']}" toggleable="true" styleClass="briefingList">
+			<p:panel header="#{lbl['lbl.sc.site.visit.dtls']}" toggleable="true"
+				styleClass="briefingList">
 				<p:dataTable id="sitevisitdtlid" var="sitevisitdtls"
 					value="#{bsvdtlbean.sitevisitList}" styleClass="briefDetails"
 					selection="#{bsvdtlbean.selectedSiteVisitDtls}"
@@ -124,7 +129,8 @@
 							rendered="#{QTStatusConst.QT_PROPOSAL_PREPARATION eq qTBriefingSiteVisitBackingBean.managedBean.currentStatusId}">
 							<p:commandLink
 								action="#{qTBriefingSiteVisitBackingBean.gotoAttandanceDtl(sitevisitdtls)}"
-								partialSubmit="true" process="@this" update="@([id$=briefdlgId])">
+								partialSubmit="true" process="@this"
+								update="@([id$=briefdlgId])">
 								<h:outputText value="#{sitevisitdtls.bsvDesc}" />
 							</p:commandLink>
 						</h:panelGroup>
@@ -169,7 +175,9 @@
 							rendered="#{QTStatusConst.BSV_COMPLETED ne sitevisitdtls.bsvStatus.statusId}"
 							action="#{qTBriefingSiteVisitBackingBean.editAction(sitevisitdtls,rowIndex,'S')}"
 							partialSubmit="true" process="@this" update="@([id$=briefdlgId])">
-							<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/edit.png" styleClass="tasklist_title1" />
+							<h:graphicImage
+								value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
+								styleClass="tasklist_title1" />
 						</p:commandLink>
 					</p:column>
 				</p:dataTable>
@@ -180,7 +188,8 @@
 						action="#{qTBriefingSiteVisitBackingBean.addBsvDetails('S')}"
 						oncomplete="addbsvdtls.show();" update="@(.qtBriefDetails)" />
 
-					<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
+					<p:commandButton value="#{lbl['lbl.btn.delete']}"
+						styleClass="BtnSpacing"
 						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
 						process="@this, sitevisitdtlid" partialSubmit="true"
 						action="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('S')}"
@@ -189,30 +198,31 @@
 				<h:panelGroup rendered="#{bsvdtlbean.sitevisitList.size() ge 2}">
 					<table style="width: 100%" border="0">
 						<tr>
-							<td style="width: 27px;">
-								<ac:iconTooltip value="#{lbl['lbl.sc.qt.attendance.tooltip']}" />
-							</td>
-							<td style="width: 130px;"><p:outputLabel
+							<td style="width: 27px;"><ac:iconTooltip
+									value="#{lbl['lbl.sc.qt.attendance.tooltip']}" /></td>
+							<td style="width: 145px;"><p:outputLabel
 									value="#{lbl['lbl.sc.qt.attendance.site']}" /></td>
-							<td style="width: 115px;white-space:nowrap;"><p:selectOneRadio
+							<td style="width: 130px;"><p:selectOneRadio
 									disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
 									value="#{bsvdtlbean.scQtBsv.allSiteVisitReq}">
-									<f:selectItem itemLabel="#{lbl['lbl.sc.qt.all']}" itemValue="true" />
-									<f:selectItem itemLabel="#{lbl['lbl.sc.qt.atleast']}" itemValue="false" />
+									<f:selectItem itemLabel="#{lbl['lbl.sc.qt.all']}"
+										itemValue="true" />
+									<f:selectItem itemLabel="#{lbl['lbl.sc.qt.atleast']}"
+										itemValue="false" />
 									<p:ajax event="click"
 										listener="#{qTBriefingSiteVisitBackingBean.siteVisitClickEvent}"
 										update="@([id$=minSiteVisitAtt])" />
 								</p:selectOneRadio></td>
 							<td><h:panelGroup id="minSiteVisitAtt">
 									<ui:fragment rendered="#{!bsvdtlbean.scQtBsv.allSiteVisitReq}">
-										<p:inputText id="minSiteVisitAttss" size="5" style="width: 30px;"
+										<p:inputText id="minSiteVisitAttss" size="5"
 											value="#{bsvdtlbean.scQtBsv.minSiteVisitAttend}"
-											readonly="#{bsvdtlbean.scQtBsv.allSiteVisitReq}" >
+											readonly="#{bsvdtlbean.scQtBsv.allSiteVisitReq}">
 											<p:ajax event="change" process="@this" partialSubmit="true" />
-											</p:inputText>
+										</p:inputText>
 									</ui:fragment>
 								</h:panelGroup></td>
-							
+
 						</tr>
 					</table>
 				</h:panelGroup>
