@@ -18,14 +18,16 @@
 					disabled="#{terminationBackingBean.managedBean.viewContract}">
 					<f:facet name="sourceCaption">
 						#{lbl['lbl.ct.available.approver']}
-						<p:graphicImage id="sourceList" value="/css/images/design/tooltips.png"/> 
+						<p:spacer width="2"/>
+						<p:graphicImage id="sourceList" value="/css/images/design/tooltips.png" style="margin-bottom:-5px;" /> 
 						  <p:tooltip id="sourceTooltip" for="sourceList">
 							<h:outputText id="sourceApprover" escape="false" value="#{lbl['lbl.ct.tooltip.available.approver']}" />
 						</p:tooltip> 
 					</f:facet>  
         			<f:facet name="targetCaption">
-        				#{lbl['lbl.ct.selected.approver']}
-        				<p:graphicImage id="targetList" value="/css/images/design/tooltips.png" /> 
+        				<h:outputText value ="#{lbl['lbl.ct.selected.approver']}" styleClass="required"></h:outputText>
+        				<p:spacer width="2"/>
+        				<p:graphicImage id="targetList" value="/css/images/design/tooltips.png" style="margin-bottom:-5px;" /> 
 						  <p:tooltip id="targetTooltip" for="targetList">
 							<h:outputText id="targetApprover" escape="false" value="#{lbl['lbl.ct.tooltip.selected.approver']}" />
 						</p:tooltip> 
