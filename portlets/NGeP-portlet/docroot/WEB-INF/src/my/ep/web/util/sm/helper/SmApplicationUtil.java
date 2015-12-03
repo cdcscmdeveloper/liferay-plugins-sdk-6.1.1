@@ -2188,16 +2188,25 @@ public class SmApplicationUtil {
 	 */
 	public static void checkOverLappingCategories(
 			SmApplicationManagedBean managedBean) {
-		String msg = getOverlappedCategoryMsg(managedBean.getSmAppl()
-				.getSmSupplier().getSupplierId(), managedBean.getSmAppl()
-				.getApplId());
-		if (StringUtils.isNotBlank(msg)) {
-			managedBean.setOverLappedCategoryExists(true);
-		} else {
-			managedBean.setOverLappedCategoryExists(false);
+		managedBean.setOverLappedCategoryExists(false);
+		managedBean.setOverLappedCategoryMsg("");
+		for (SmSupplierCategory cat : managedBean.getSmAppl()
+				.getSmSupplierCategories()) {
+			if (cat.isOverLapCategory()
+					&& (cat.getRecordStatusFlg().compareTo(
+							SupplierManagementConst.APPROVED_RECORD_STATUS) == 0 || cat
+							.getRecordStatusFlg().compareTo(
+									SupplierManagementConst.PENDING_ACT_STATUS) == 0)) {
+				managedBean.setOverLappedCategoryExists(true);
+			}
 		}
-		managedBean.setOverLappedCategoryMsg(SmCommonUtil.getMessage(
-				"lbl.sm.category.overlappingMsg", null) + msg);
+		if (managedBean.isOverLappedCategoryExists()) {
+			managedBean.setOverLappedCategoryMsg(SmCommonUtil.getMessage(
+					"lbl.sm.category.overlappingMsg", null)
+					+ getOverlappedCategoryMsg(managedBean.getSmAppl()
+							.getSmSupplier().getSupplierId(), managedBean
+							.getSmAppl().getApplId()));
+		}
 	}
 
 	/**
@@ -2259,13 +2268,22 @@ public class SmApplicationUtil {
 		List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO()
 				.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
 		if (!SmCommonUtil.isCollectionEmpty(resultList)) {
+			int count = 1;
+			msg.append("<table style='width: 55%;table-layout:fixed'>");
 			for (Object[] arr : resultList) {
 				if (arr.length == 5) {
-					msg.append(arr[0]).append(arr[1]).append(arr[2])
-							.append(" (").append(arr[3]).append(" / ")
-							.append(arr[4]).append(")").append("<br />");
+					msg.append("<tr>");
+					msg.append("<td style='width:5%'>").append(count)
+							.append(")").append("</td>");
+					msg.append("<td style='width:10%'>").append(arr[0])
+							.append(arr[1]).append(arr[2]).append("  - </td>");
+					msg.append("<td style='white-space: normal;'>").append("(")
+							.append(arr[3]).append(" / ").append(arr[4])
+							.append(")").append("</td>");
+					count++;
 				}
 			}
+			msg.append("</table><br />");
 		}
 		return msg.toString();
 	}
