@@ -206,7 +206,7 @@
 				<td>
 					<p:outputLabel value="#{lbl['lbl.sm.person.email']} " /> 
 					<p:outputPanel id="emailOutPanelId" >
-						<p:outputLabel value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}"/>
+						<p:outputLabel value="*" styleClass="mandatory" rendered="#{not empty backingBean.managedBean.selectedShareHolder.epRole}"/>
 					</p:outputPanel>
 				</td>
 				<td>
@@ -369,7 +369,7 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 							<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 							<p:ajax event="change" process="@this"
-								update=":form:tt:shareHolderAddrDialog,shrPrivPanel, @([id$=mobileOutputPanel]),tooltip5,:#{p:component('emailOutPanelId')},:#{p:component('emailInputPanelId')}"
+								update=":form:tt:shareHolderAddrDialog,shrPrivPanel, @([id$=mobileOutputPanel]),tooltip5}"
 								listener="#{backingBean.assignShareHolderPrivilege}" />
 						</p:selectOneRadio></td>
 					<td><p:graphicImage id="tooltip3"
@@ -401,8 +401,8 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems
 							value="#{backingBean.managedBean.ePRoleList}" />
-						<p:ajax event="change" update="shrPrivPanel" process="@this"
-							listener="#{backingBean.assignShareHolderPrivilegeByEpRole}" />
+						<p:ajax event="change" update="shrPrivPanel,:#{p:component('emailOutPanelId')},:#{p:component('emailInputPanelId')" process="@this"
+							listener="#{backingBean.assignShareHolderPrivilegeByEpRole}" partialSubmit="true"/>
 					</p:selectOneMenu> 
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges
