@@ -37,7 +37,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletResponse;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -50,9 +49,6 @@ import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -70,15 +66,12 @@ import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
-import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
-import my.ep.jaxb.sc.sitevisitproposaldata.SCSiteVisitProposalDataType;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
@@ -115,10 +108,8 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.sc.supplierproposal.SPDetailBackingBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDateFormat;
@@ -543,92 +534,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	/**
-	 * Base method to invoke anthor action.
-	 */
-	public void preRenderView() {
-		HttpServletRequest servletRequest = PortalUtil
-				.getHttpServletRequest(new FacesScopes().getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil
-				.getOriginalServletRequest(servletRequest);
-		String taskId = originalServletRequest.getParameter("taskId");
-
-		this.getManagedBean().setTaskId(taskId);
-
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
-		// TODO
-		FacesScopes facesScopes = new FacesScopes();
-		// String ctx = bpmSO.authenticate("roslan", "welcome1");
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		reqDTO.setCtxToken(facesScopes.getBPMAuthenticationCtxToken());
-		reqDTO.setTaskId(taskId);
-		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-		Object obj = res.getPojo();
-		this.getManagedBean().setOutComes(res.getAction());
-
-		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-		QTDetailBackingBean detailBackingBean = new QTDetailBackingBean();
-
-		if ("Proposal Preparation".equalsIgnoreCase(res.getProcessName())) {
-
-			SCSiteVisitProposalDataType proposalDateType = (SCSiteVisitProposalDataType) obj;
-			/*
-			 * tenderReqDTO.setQtId(new Long(proposalDateType.getQtId())
-			 * .longValue()); QuationTenderResDTO tenderResDTO = detailSO
-			 * .retriveQTDetails(tenderReqDTO);
-			 * 
-			 * detailBackingBean.getManagedBean()
-			 * .setQt(tenderResDTO.getQtDetail());
-			 */
-
-			SPDetailBackingBean backingBean = new SPDetailBackingBean();
-			backingBean.getManagedBean().setProposalData(proposalDateType);
-			// detailBackingBean.populateParentOrgProfile(tenderResDTO.getQtDetail());
-			// backingBean.retrieveTechnicalProposalList(proposalDateType
-			// .getQtId().longValue());
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(
-							fc,
-							null,
-							"/xhtml/ss/supplierproposal/supplierProposalMain.xhtml"
-									+ "?faces-redirect=true");
-		} else if ("Service QuotationTender Creation".equalsIgnoreCase(res
-				.getProcessName())) {
-
-			SCQuotationTenderDataType datatype = (SCQuotationTenderDataType) obj;
-			tenderReqDTO.setQtId(new Long(datatype.getQtId()).longValue());
-			QuationTenderResDTO tenderResDTO = detailSO
-					.retriveQTDetails(tenderReqDTO);
-
-			detailBackingBean.getManagedBean()
-					.setQt(tenderResDTO.getQtDetail());
-			detailBackingBean.getManagedBean().setTaskId(taskId);
-			detailBackingBean.getManagedBean().setQuotationTenderDataType(
-					datatype);
-			// populateParentOrgProfile(tenderResDTO.getQtDetail());
-			// detailBackingBean.onChangeAction();
-			tenderResDTO = detailSO.retriveQTApprovalDetails(tenderReqDTO);
-			// ApprovalBackingBean approvalBackingBean = new
-			// ApprovalBackingBean();
-
-			// detailBackingBean.populateParentOrgProfile(tenderResDTO.getQtDetail());
-
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(
-							fc,
-							null,
-							"/xhtml/ss/quatationtender/quatationtendercreation.xhtml"
-									+ "?faces-redirect=true");
-		}
-	}
-
-	/**
 	 * To populate parentOrgProfile.
 	 * 
 	 * @param scQt
@@ -813,49 +718,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 
 		return scRemarks;
-	}
-
-	/**
-	 * To get BpmTask Details.
-	 * 
-	 * @param clazz
-	 * @return Object payLoadInstance
-	 */
-	@SuppressWarnings("unchecked")
-	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(
-			Class<BPM_DATA_TYPE> clazz) {
-		FacesScopes facesScopes = new FacesScopes();
-		HttpServletRequest servletRequest = PortalUtil
-				.getHttpServletRequest(facesScopes.getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil
-				.getOriginalServletRequest(servletRequest);
-
-		String taskId = originalServletRequest.getParameter("taskId");
-
-		IBpmSO bpmSO;
-
-		try {
-			bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-					.getServiceObject(IBpmSO.class);
-
-			BpmRequestDTO reqDTO = new BpmRequestDTO();
-			reqDTO.setCtxToken(facesScopes.getBPMAuthenticationCtxToken());
-			reqDTO.setTaskId(taskId);
-
-			BpmResponseDTO resDTO = bpmSO.getTaskDetails(reqDTO);
-
-			this.renewSesionObject();
-			this.getManagedBean().setTaskId(taskId);
-			this.getManagedBean().setOutComes(resDTO.getAction());
-			this.getManagedBean().setCurrentStatusId(
-					Long.valueOf(resDTO.getDocStatus()));
-			this.getManagedBean().setTaskName(resDTO.getTaskName());
-
-			return (BPM_DATA_TYPE) resDTO.getPojo();
-
-		} finally {
-			bpmSO = null;
-		}
 	}
 
 	/**
