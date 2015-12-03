@@ -101,9 +101,9 @@
 					<h:commandLink
 						title="#{varBond.fileName}"
 						value="#{ctBackingBean.getShortFileName(varBond.fileName)}"						
-						style="float:left;margin-top:5px;" styleClass="blue_font"
+						style="float:left;" styleClass="blue_font"
 						action="#{ctBackingBean.downloadFile(varBond.filePath, varBond.fileName)}" />
-					<p:commandLink rendered="#{varBond.fileName != null}" style="float:left;margin-top:5px;" 
+					<p:commandLink rendered="#{varBond.fileName != null}" style="float:left;" 
 					  action="#{ctBackingBean.setIndexProperty(index)}"
 					   process="@this" partialSubmit="true"  onsuccess="deleteBondAttachmentDlg.show();">
 			   				<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
