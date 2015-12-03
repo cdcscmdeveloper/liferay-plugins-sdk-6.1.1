@@ -352,9 +352,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	/** The upload update id. */
 	private String uploadUpdateId;
-	// Payload for BPM
-	/** The quotation tender data type. */
-	private Object quotationTenderDataType;
 	
 	/** The is editable. */
 	private boolean isEditable;
@@ -2902,24 +2899,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setProcessName(String processName) {
 		this.processName = processName;
-	}
-
-	/**
-	 * Gets the quotation tender data type.
-	 *
-	 * @return the quotation tender data type
-	 */
-	public Object getQuotationTenderDataType() {
-		return quotationTenderDataType;
-	}
-
-	/**
-	 * Sets the quotation tender data type.
-	 *
-	 * @param quotationTenderDataType the new quotation tender data type
-	 */
-	public void setQuotationTenderDataType(Object quotationTenderDataType) {
-		this.quotationTenderDataType = quotationTenderDataType;
 	}
 
 	/**

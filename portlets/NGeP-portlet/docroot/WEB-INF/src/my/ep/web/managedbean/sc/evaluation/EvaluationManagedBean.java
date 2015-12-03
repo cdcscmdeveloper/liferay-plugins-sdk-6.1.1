@@ -294,9 +294,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	/** The template spec bean. */
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
-	// payload
-	/** The evaluation pay load. */
-	private Object evaluationPayLoad;
 
 	/** The sc qt evaluation report list. */
 	private List<ScQtEvaluationReport> scQtEvaluationReportList;
@@ -2189,25 +2186,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setComplianceSummaryCount(int complianceSummaryCount) {
 		this.complianceSummaryCount = complianceSummaryCount;
-	}
-
-	/**
-	 * Gets the evaluation pay load.
-	 * 
-	 * @return the evaluation pay load
-	 */
-	public Object getEvaluationPayLoad() {
-		return evaluationPayLoad;
-	}
-
-	/**
-	 * Sets the evaluation pay load.
-	 * 
-	 * @param evaluationPayLoad
-	 *            the new evaluation pay load
-	 */
-	public void setEvaluationPayLoad(Object evaluationPayLoad) {
-		this.evaluationPayLoad = evaluationPayLoad;
 	}
 
 	/**
