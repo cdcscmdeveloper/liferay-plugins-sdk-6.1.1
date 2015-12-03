@@ -13,7 +13,7 @@
 
 
 	<ui:define name="contentSection">
-		
+
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
 		</p:blockUI>
@@ -21,37 +21,31 @@
 			showDetail="true" showSummary="false" closable="true"
 			severity="error, info"></p:messages>
 
-		<table width="100%">
+		<table width="100%" class="BtnSpacing">
 			<tr>
-				<td align="right">
-			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-				immediate="true" styleClass="BtnSpacing"
-				action="#{specificationBackingBean.committeeBackAction}" />
+				<td align="right"><p:commandButton
+						value="#{lbl['lbl.btn.back']}" style="float:left;"
+						immediate="true"
+						action="#{specificationBackingBean.committeeBackAction}" /> <p:commandButton
+						value="#{lbl['lbl.btn.save']}"
+						rendered="#{((specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
+						style="float:right;" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"
+						action="#{specificationBackingBean.saveCheckListScores}">
+						<f:setPropertyActionListener
+							target="#{specificationBackingBean.managedBean.criteriaType}"
+							value="70" />
 
-			<p:commandButton value="#{lbl['lbl.btn.save']}"
-			styleClass="BtnSpacing"
-				rendered="#{((specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
-				style="float:right;" onstart="blockWidget.show();"
-				oncomplete="blockWidget.hide();"
-				action="#{specificationBackingBean.saveCheckListScores}">
-				<f:setPropertyActionListener
-					target="#{specificationBackingBean.managedBean.criteriaType}"
-					value="70" />
-
-			</p:commandButton>
-
-
-
-		</td>
-		</tr>
+					</p:commandButton></td>
+			</tr>
 		</table>
-		
+
 
 		<ui:include
 			src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />
 
-		
-		<p:panel header="#{lbl['lbl.sc.spec.paid.up.capital']}" 
+
+		<p:panel header="#{lbl['lbl.sc.spec.paid.up.capital']}"
 			toggleable="true">
 			<table>
 				<tr>
@@ -64,8 +58,8 @@
 				</tr>
 			</table>
 		</p:panel>
-		
-		<p:panel id="financialPaidUpCapitalScore" 
+
+		<p:panel id="financialPaidUpCapitalScore"
 			header="#{lbl['lbl.sc.spec.score.paid.up.capital']}"
 			toggleable="true"
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
@@ -77,7 +71,8 @@
 								style="float : left"></p:outputLabel>
 						</ui:fragment> <p:outputLabel style="float : left"
 							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
-					<td><p:selectOneMenu required="true" style="width: 160px;margin-bottom: 5px;"
+					<td><p:selectOneMenu required="true"
+							style="width: 160px;margin-bottom: 5px;"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							label="#{lbl['lbl.sc.spec.asset.score.type']}"
 							id="paidUpCapitalAutoScore"
@@ -93,7 +88,7 @@
 					</td>
 				</tr>
 			</table>
-			
+
 			<h:panelGroup id="paidUpCapital">
 				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
@@ -133,8 +128,8 @@
 							value="financialPaidupCapitalDeleteId"></ui:param>
 
 						<ac:confirmationPopup id="#{financialPaidupCapitalDeleteId}"
-							widget="financialPaidUpCapitalDeletePopUp" width="400"
-							height="200"
+							widget="financialPaidUpCapitalDeletePopUp" width="450"
+							height="100"
 							okAction="specificationBackingBean.deleteCheckListScoreContrats"
 							title="#{lbl['lbl.sc.spec.paid.up.capital']}"
 							content="#{lbl['lbl.sc.dialog.confirm.message']}"
@@ -142,7 +137,7 @@
 					</h:panelGroup>
 
 				</h:panelGroup>
-				
+
 				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 					<table>
