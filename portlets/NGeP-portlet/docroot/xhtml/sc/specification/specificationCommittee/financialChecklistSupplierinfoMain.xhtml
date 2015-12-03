@@ -19,13 +19,13 @@
 		<p:messages id="TotalSuppliers" showDetail="true" showSummary="false"
 			autoUpdate="true" closable="true" severity="error, info"></p:messages>
 
-		<table width="100%">
+		<table width="100%" class="BtnSpacing">
 			<tr>
 				<td align="right"><p:commandButton
 						value="#{lbl['lbl.btn.back']}" style="float:left;"
-						immediate="true" styleClass="BtnSpacing"
+						immediate="true" 
 						action="#{specificationBackingBean.committeeBackAction}" /> <p:commandButton
-						value="#{lbl['lbl.btn.save']}" styleClass="BtnSpacing"
+						value="#{lbl['lbl.btn.save']}" 
 						rendered="#{((specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
 						style="float:right;" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"

@@ -20,15 +20,15 @@
 			showSummary="false" autoUpdate="true" closable="true"
 			severity="error, info"></p:messages>
 
-		<table width="100%">
+		<table width="100%" class="BtnSpacing">
 			<tr>
 				<td align="right">
 			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-				immediate="true" styleClass="BtnSpacing"
+				immediate="true" 
 				action="#{specificationBackingBean.committeeBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
-			styleClass="BtnSpacing"
+			
 				rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
 				style="float:right;" onstart="blockWidget.show();"
 				oncomplete="blockWidget.hide();"
@@ -197,8 +197,8 @@
 
 						<ac:confirmationPopup
 							id="#{financialGovCompanyExperienceNoOfContractsDeleteId}"
-							widget="financialGovCompanyExperienceDeletePopUp" width="400"
-							height="200"
+							widget="financialGovCompanyExperienceDeletePopUp" width="450"
+							height="100"
 							okAction="specificationBackingBean.deleteCheckListScoreContrats"
 							title="#{lbl['lbl.sc.spec.company.exp.fed.gov']}"
 							content="#{lbl['lbl.sc.dialog.confirm.message']}"

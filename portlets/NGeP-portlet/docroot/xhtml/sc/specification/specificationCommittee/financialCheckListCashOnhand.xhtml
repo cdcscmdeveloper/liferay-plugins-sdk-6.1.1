@@ -21,13 +21,13 @@
 			showDetail="true" showSummary="false" closable="true"
 			severity="error, info"></p:messages>
 
-		<table width="100%">
+		<table width="100%" class="BtnSpacing">
 			<tr>
 				<td align="right"><p:commandButton
 						value="#{lbl['lbl.btn.back']}" style="float:left;"
-						immediate="true" styleClass="BtnSpacing"
+						immediate="true"
 						action="#{specificationBackingBean.committeeBackAction}" /> <p:commandButton
-						value="#{lbl['lbl.btn.save']}" styleClass="BtnSpacing"
+						value="#{lbl['lbl.btn.save']}"
 						rendered="#{((specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
 						style="float:right;" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
@@ -65,17 +65,17 @@
 				</p:column>
 
 			</p:dataTable>
-
+			<p:spacer height="10px"></p:spacer>
+			<table>
+				<tr>
+					<td style="width: 150px;"><h:outputLabel
+							value="#{lbl['lbl.sc.spec.total.cash']}"></h:outputLabel></td>
+					<td><p:inputText readonly="true" disabled="true"></p:inputText>
+					</td>
+				</tr>
+			</table>
 		</p:panel>
-		<p:spacer height="10px"></p:spacer>
-		<table>
-			<tr>
-				<td style="width: 150px;"><h:outputLabel
-						value="#{lbl['lbl.sc.spec.total.cash']}"></h:outputLabel></td>
-				<td><p:inputText readonly="true" disabled="true"></p:inputText>
-				</td>
-			</tr>
-		</table>
+
 
 
 		<p:panel id="financialCashOnhandScore"
@@ -147,7 +147,7 @@
 							value="financialCashOnHandDeleteId"></ui:param>
 
 						<ac:confirmationPopup id="#{financialCashOnHandDeleteId}"
-							widget="financialCashOnHabdDeletePopUp" width="400" height="200"
+							widget="financialCashOnHabdDeletePopUp" width="450" height="100"
 							okAction="specificationBackingBean.deleteCheckListScoreContrats"
 							title="#{lbl['lbl.sc.spec.cash.hand']}"
 							content="#{lbl['lbl.sc.dialog.confirm.message']}"

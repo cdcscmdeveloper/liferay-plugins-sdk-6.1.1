@@ -21,13 +21,13 @@
 			showDetail="true" showSummary="false" closable="true"
 			severity="error, info"></p:messages>
 
-		<table width="100%">
+		<table width="100%" class="BtnSpacing">
 			<tr>
 				<td align="right"><p:commandButton
 						value="#{lbl['lbl.btn.back']}" style="float:left;"
-						immediate="true" styleClass="BtnSpacing"
+						immediate="true"
 						action="#{specificationBackingBean.committeeBackAction}" /> <p:commandButton
-						value="#{lbl['lbl.btn.save']}" styleClass="BtnSpacing"
+						value="#{lbl['lbl.btn.save']}"
 						rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
 						style="float:right;" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
@@ -45,7 +45,7 @@
 
 
 		<p:panel header="#{lbl['lbl.sc.spec.bank.statement']}"
-			 toggleable="true">
+			toggleable="true">
 			<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sc.spec.bank.statement.instruction']}"
 				escape="false" />
@@ -65,7 +65,7 @@
 							<f:selectItems
 								value="#{specificationBackingBean.monthDropDownValues}"></f:selectItems>
 							<p:ajax event="change"
-								update="toDetailsUpdate,bankInfo,amountdetails"
+								update="toDetailsUpdate,amountdetails"
 								listener="#{specificationBackingBean.bankStatementsfromChange}"></p:ajax>
 						</p:selectOneMenu> <p:spacer width="1"></p:spacer> <p:selectOneMenu
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
@@ -76,7 +76,7 @@
 								value="#{specificationBackingBean.bankYearsDisplayDtls}">
 							</f:selectItems>
 							<p:ajax event="change"
-								update="toDetailsUpdate,bankInfo,amountdetails"
+								update="toDetailsUpdate,amountdetails"
 								listener="#{specificationBackingBean.bankStatementsyearsChange}"></p:ajax>
 						</p:selectOneMenu></td>
 
@@ -94,32 +94,30 @@
 						</h:panelGroup></td>
 				</tr>
 			</table>
-			<h:panelGroup id="bankInfo">
 
+			<h:panelGroup id="amountdetails">
+				<p:spacer height="10px"></p:spacer>
+				<table>
+					<tr>
+						<td><h:outputLabel value="#{lbl['lbl.sc.spec.total.amount']}"></h:outputLabel></td>
+						<td><p:inputText disabled="true"
+								value="#{specificationBackingBean.managedBean.totalAmount}"></p:inputText></td>
+					</tr>
+
+					<tr>
+						<td><h:outputLabel
+								value="#{lbl['lbl.sc.spec.avg.bank.statement']}"></h:outputLabel></td>
+						<td><p:inputText disabled="true"
+								value="#{specificationBackingBean.managedBean.totalAmountAvg}"></p:inputText></td>
+					</tr>
+				</table>
 
 			</h:panelGroup>
 		</p:panel>
 
-		<h:panelGroup id="amountdetails">
-			<p:spacer height="10px"></p:spacer>
-			<table>
-				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.spec.total.amount']}"></h:outputLabel></td>
-					<td><p:inputText disabled="true"
-							value="#{specificationBackingBean.managedBean.totalAmount}"></p:inputText></td>
-				</tr>
 
-				<tr>
-					<td><h:outputLabel
-							value="#{lbl['lbl.sc.spec.avg.bank.statement']}"></h:outputLabel></td>
-					<td><p:inputText disabled="true"
-							value="#{specificationBackingBean.managedBean.totalAmountAvg}"></p:inputText></td>
-				</tr>
-			</table>
 
-		</h:panelGroup>
-
-		<p:panel id="financialBankStmtScore" 
+		<p:panel id="financialBankStmtScore"
 			header="#{lbl['lbl.sc.spec.score.avg.bank.statement']}"
 			toggleable="true"
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
@@ -189,8 +187,8 @@
 							value="financiaBankStatementsDeleteId"></ui:param>
 
 						<ac:confirmationPopup id="#{financiaBankStatementsDeleteId}"
-							widget="financialBankStatementsDeletePopUp" width="400"
-							height="200"
+							widget="financialBankStatementsDeletePopUp" width="450"
+							height="100"
 							okAction="specificationBackingBean.deleteCheckListScoreContrats"
 							title="#{lbl['lbl.sc.spec.bank.statement']}"
 							content="#{lbl['lbl.sc.dialog.confirm.message']}"
