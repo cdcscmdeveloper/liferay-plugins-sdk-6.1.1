@@ -7,53 +7,56 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
-		<c:if
-			test="#{qTDetailBB.managedBean.qt.qtStatus.statusId ne QTStatusConst.QT_CANCELLED}">
+		
 			
-			<table width="100%">
-			<tr>
-				<td align="right">
-				<ui:fragment rendered="#{qTDetailBB.managedBean.taskName eq null}">
-					<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-						action="#{qTDetailBB.gotoQtSearchPage}"
-						partialSubmit="true"
-						process="@this"
-						update="@this" />
-
-				</ui:fragment>
-
+		<table width="100%">
+		<tr>
+			<td align="right">
+			<c:if test="#{qTDetailBB.managedBean.taskId eq null}">
+				<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+					action="#{qTDetailBB.gotoQtSearchPage}"
+					partialSubmit="true"
+					process="@this"
+					update="@this" />
+			</c:if>
+				
+			<c:if test="#{qTDetailBB.managedBean.qt.qtStatus.statusId ne QTStatusConst.QT_CANCELLED}">
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
 					action="#{qTDetailBB.saveQtDetailsAction}" process="@form" partialSubmit="true"
 					onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
 					update="@form" />
-				<p:commandButton value="#{lbl['lbl.btn.submit']}"
-					action="#{qTDetailBB.submitQtDetailsFormMaintanace}" process="@form"
-					update="@all"
-					onstart="blockWidget.show();"
-					oncomplete="blockWidget.hide();"
-					rendered="#{qTDetailBB.managedBean.currentStatusId ge QTStatusConst.QT_PENDING_QT_SUBMISSION and qTDetailBB.managedBean.outComes eq null}" />
 
-
-				<c:if test="#{qTDetailBB.managedBean.taskId ne null}">
-					<ui:repeat var="bpmAction"
-						value="#{qTDetailBB.managedBean.outComes}">
-						<ui:param name="buttonLabel"
-							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-						<p:commandButton value="#{lbl[buttonLabel]}"
-							styleClass="ui-button"
+				<c:choose>
+					<c:when test="#{qTDetailBB.managedBean.taskId ne null}">
+						<ui:repeat var="bpmAction"
+							value="#{qTDetailBB.managedBean.outComes}">
+							<ui:param name="buttonLabel"
+								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+							<p:commandButton value="#{lbl[buttonLabel]}"
+								styleClass="ui-button"
+								onstart="blockWidget.show();"
+								oncomplete="blockWidget.hide();"
+								action="#{qTDetailBB.updateBpmTask(bpmAction)}" />
+						</ui:repeat>
+					</c:when>
+					<c:otherwise>
+						<p:commandButton value="#{lbl['lbl.btn.submit']}"
+							action="#{qTDetailBB.submitQtDetailsFormMaintanace}" process="@form"
+							update="@all"
 							onstart="blockWidget.show();"
-							oncomplete="blockWidget.hide();"
-							action="#{qTDetailBB.updateBpmTask(bpmAction)}" />
-					</ui:repeat>
-				</c:if>
+							oncomplete="blockWidget.hide();" />
+					</c:otherwise>
+				</c:choose>
+				
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
 					style="float:right;margin-right: 12px;" 
 					onclick="cancelQTDlg.show()" />
-				</td>
-			</tr>
-			</table>
-		</c:if>
+			</c:if>
+			</td>
+		</tr>
+		</table>
+			
 		<p:dialog id="cancelQTDlg" widgetVar="cancelQTDlg"
 			header="#{lbl['lbl.sc.cancel.confirm']}" resizable="false"
 			width="30%" height="77" closable="false">
