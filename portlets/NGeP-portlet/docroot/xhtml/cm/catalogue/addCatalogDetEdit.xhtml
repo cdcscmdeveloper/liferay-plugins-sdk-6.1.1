@@ -73,7 +73,7 @@
 					action="#{catalogueBackingBean.singleSubmitToReviewItems}"
 					update="@form"></p:commandButton>
 				<p:commandButton value="#{lbl['lbl.cm.save.as.draft']}"
-					rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue}"
+					rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue and !unspscCodeBackingBean.supplierTemp}"
 					action="#{catalogueBackingBean.saveCatalogItem}" update="@form"></p:commandButton>
 
 				<ui:remove>
