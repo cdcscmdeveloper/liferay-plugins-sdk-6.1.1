@@ -19,27 +19,27 @@
 		<p:messages id="businessOwnerTechmessages" showDetail="true"
 			showSummary="false" autoUpdate="true" closable="true"
 			severity="error, info" />
-		<table width="100%">
+		<table width="100%" class="BtnSpacing">
 			<tr>
 				<td align="right"><p:commandButton
 						value="#{lbl['lbl.btn.back']}" style="float:left;"
-						immediate="true" styleClass="BtnSpacing"
+						immediate="true" 
 						action="#{specificationBackingBean.businessOwnerTemplateSpecBackAction}" />
 
 
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 						style="float:right;" onclick="createTechnicalDialog.show();"
-						immediate="true" styleClass="BtnSpacing"
+						immediate="true" 
 						disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"></p:commandButton>
 
 					<p:commandButton value="#{lbl['lbl.btn.complete']}"
 						style="float:right;" update="@all" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();" styleClass="BtnSpacing"
+						oncomplete="blockWidget.hide();" 
 						disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 						action="#{specificationBackingBean.completeTemplateSpecDetails('BO',1)}" />
 
 					<p:commandButton value="#{lbl['lbl.btn.save']}"
-						style="float:right;" styleClass="BtnSpacing"
+						style="float:right;" 
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 						disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 						action="#{specificationBackingBean.saveTemplateSpecDetails('BO',1)}"
@@ -118,7 +118,7 @@
 			<p:dialog id="bocreateEditTechnicalDialog"
 				widgetVar="createTechnicalDialog"
 				header="#{lbl['lbl.sc.cancel.confirm']}" resizable="false"
-				width="325" height="75" closable="false">
+				width="400" height="75" closable="false">
 				<table>
 					<tr>
 						<td align="center"><h:graphicImage
