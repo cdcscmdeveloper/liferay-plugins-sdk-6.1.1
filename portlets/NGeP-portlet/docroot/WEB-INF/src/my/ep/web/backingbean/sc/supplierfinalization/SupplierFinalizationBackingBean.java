@@ -1172,6 +1172,30 @@ public class SupplierFinalizationBackingBean extends
 		Map<Long, List<ScQtEvaluationResultDtl>> recommendedSuppliersByZone 
 						= this.getManagedBean().getRecommendedSupppliersByZone();
 		
+		boolean isAward = true;
+		String finalizationMethodStr = null;
+		if (finalizationMethod != null) {
+			finalizationMethodStr = finalizationMethod.getParameterCode();
+			
+			if (!ParameterConst.RECOMMEND_BY_AWARD.equals(
+					finalizationMethodStr) && !isQTRefinalized()) {
+				isAward = false;
+				if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
+						.equals(finalizationMethodStr) && 
+								StringUtils.isBlank(
+									scQtFinalization.getOnlineBiddingEndorse())) {
+					setZoneAndTabIndexOnException(currentZone);
+					throw new EpException(MessageConst.ERROR_100022, new String[]{
+							ResourceBundleUtils.getMessage("lbl.sc.online.bidding.endorsement", 
+						 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
+					});
+				}							
+			}
+		} else {
+			setZoneAndTabIndexOnException(currentZone);
+			throw new EpException(MessageConst.ERROR_760211);
+		}		
+		
 		if (MapUtils.isEmpty(recommendedSuppliersByZone)) {
 			recommendedSuppliersByZone =
 				new LinkedHashMap<Long, List<ScQtEvaluationResultDtl>>();
@@ -1243,31 +1267,7 @@ public class SupplierFinalizationBackingBean extends
 						scQtRecommend.setRecommendDtls(
 								new ArrayList<ScQtRecommendDtl>());
 					}					
-					
-					boolean isAward = true;
-					String finalizationMethodStr = null;
-					if (finalizationMethod != null) {
-						finalizationMethodStr = finalizationMethod.getParameterCode();
-						
-						if ( !ParameterConst.RECOMMEND_BY_AWARD
-										.equals(finalizationMethodStr) ) {
-							isAward = false;
-							if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
-									.equals(finalizationMethodStr) && 
-											StringUtils.isBlank(
-												scQtFinalization.getOnlineBiddingEndorse())) {
-								setZoneAndTabIndexOnException(zoneDtl);
-								throw new EpException(MessageConst.ERROR_100022, new String[]{
-										ResourceBundleUtils.getMessage("lbl.sc.online.bidding.endorsement", 
-									 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
-								});
-							}							
-						}
-					} else {
-						setZoneAndTabIndexOnException(zoneDtl);
-						throw new EpException(MessageConst.ERROR_760211);
-					}
-					
+
 					if (MapUtils.isNotEmpty(recommendedSuppliersByZone)) {
 						if (recommendedSuppliersByZone.keySet().contains(
 								zoneDtl.getSpecZoneId())) {
@@ -6600,6 +6600,7 @@ public class SupplierFinalizationBackingBean extends
 	public void awardSupplierEvent() {
 		debugLogger("awardSupplierEvent");
 
+		boolean qtRefinalized = isQTRefinalized();
 		String awardSupplierStr = getManagedBean().getAwardSupplier();
 		List<ScQtRecommend> selectedItemList 
 				= this.getManagedBean().getSelectedItemList();
@@ -6620,6 +6621,17 @@ public class SupplierFinalizationBackingBean extends
 												// selection followed by
 												// checkbox selection
 
+			boolean isAwarded = false;
+			boolean isShortlisted = false;
+			PmParameter finalizationMethod = getManagedBean().getScQtFinalization()
+										.getFinalizationMethod();
+			if (qtRefinalized || ParameterConst.RECOMMEND_BY_AWARD.equals(
+									finalizationMethod.getParameterCode())) {
+				isAwarded = true;
+			} else {
+				isShortlisted = true;
+			}
+			
 			// get the SmSupplier object by the dropdown selection
 			for (ScQtRecommend scQtRecommend : selectedItemSet) {
 				if (!scQtRecommend.isSelected()) {
@@ -6637,17 +6649,6 @@ public class SupplierFinalizationBackingBean extends
 				
 				this.getManagedBean().getSelectedItemList().clear();
 				this.getManagedBean().getSelectedItemList().add(scQtRecommend);
-				
-				boolean isAwarded = false;
-				boolean isShortlisted = false;
-				PmParameter finalizationMethod = getManagedBean().getScQtFinalization()
-											.getFinalizationMethod();
-				if (ParameterConst.RECOMMEND_BY_AWARD.equals(
-								finalizationMethod.getParameterCode())) {
-					isAwarded = true;
-				} else {
-					isShortlisted = true;
-				}
 				
 				List<ScQtEvaluationResultDtl> shortListedSupplierList = scQtRecommend
 						.getShortListedSupplierList();
