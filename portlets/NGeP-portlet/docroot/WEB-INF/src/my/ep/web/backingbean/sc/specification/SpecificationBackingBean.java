@@ -484,8 +484,7 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setLocalLevelCode(locationLevael);
 			this.getManagedBean().setSpecComplete(isSpecComplete);
 			this.getManagedBean().setTaskName(taskName);
-			this.getManagedBean().setPayLoad(
-					quotationTenderDataType);
+			this.getManagedBean().setPayLoad(quotationTenderDataType);
 			this.getManagedBean().setMinistryRemarksSize(ministryRemarksSize);
 
 		} /*
@@ -8920,8 +8919,14 @@ public class SpecificationBackingBean extends
 			if (null == technical.getOverallFin()) {
 				technical.setOverallFin(new BigDecimal(0));
 			}
-			if (technical.getOverallTechnical().intValue() < 50) {
-				throw new EpException(MessageConst.ERROR_760365);
+			if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
+					.getManagedBean().getScQt().getEvaluationType())
+					|| (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
+							.getManagedBean().getScQt().getEvaluationType()) && this
+							.getManagedBean().getScQt().isTechEvaluationReq())) {
+				if (technical.getOverallTechnical().intValue() < 50) {
+					throw new EpException(MessageConst.ERROR_760365);
+				}
 			}
 			int financialScore = 100 - technical.getOverallTechnical()
 					.intValue();
@@ -8956,9 +8961,14 @@ public class SpecificationBackingBean extends
 					+ technical.getOverallOtherTechnical().intValue();
 			this.getManagedBean().setRecommendTechnicalScore(
 					new BigDecimal(local));
-			
-			if (local < 50) {
-				throw new EpException(MessageConst.ERROR_760366);
+			if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
+					.getManagedBean().getScQt().getEvaluationType())
+					|| (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
+							.getManagedBean().getScQt().getEvaluationType()) && this
+							.getManagedBean().getScQt().isTechEvaluationReq())) {
+				if (local < 50) {
+					throw new EpException(MessageConst.ERROR_760366);
+				}
 			}
 			int financialScore = 0;
 			if (null != getManagedBean().getRecommendfinancialScore()) {
@@ -9765,8 +9775,7 @@ public class SpecificationBackingBean extends
 			spReqDTO.setPrepareSpecStatus(this.getManagedBean()
 					.getCurrentStatusId());
 			spReqDTO.setTaskId(this.getManagedBean().getTaskId());
-			spReqDTO.setPayLoad(this.getManagedBean()
-					.getPayLoad());
+			spReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 			FacesScopes facesScopes = new FacesScopes();
 			spReqDTO.setPmUser(facesScopes.getUserSessionBean());
 			spReqDTO.setRoleCode(getUserRoleCode());
@@ -12388,8 +12397,7 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setCurrentStatusId(statusId);
 			this.getManagedBean().setOutComes(outComes);
 			this.getManagedBean().setReadOnly(readonly);
-			this.getManagedBean().setPayLoad(
-					quotationTenderDataType);
+			this.getManagedBean().setPayLoad(quotationTenderDataType);
 		} /*
 		 * catch (Exception e) { e.printStackTrace(); }
 		 */
@@ -13328,8 +13336,8 @@ public class SpecificationBackingBean extends
 		spReqDTO.setScQt(scQt);
 		spReqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
 		spReqDTO.setTaskId(this.getManagedBean().getTaskId());
-		((SCQuotationTenderDataType) this.getManagedBean()
-				.getPayLoad()).setCircular(true);
+		((SCQuotationTenderDataType) this.getManagedBean().getPayLoad())
+				.setCircular(true);
 		spReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 		FacesScopes facesScopes = new FacesScopes();
 		spReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
