@@ -64,7 +64,7 @@
 				<td rowspan="3" valign="top" style="width: 138px;"><p:outputLabel
 						value="* #{lbl['lbl.fl.title']}" /></td>
 				<td rowspan="3"><p:inputTextarea cols="50" rows="4" id="title"
-						disabled="true" style=" margin-bottom:5px;"
+						disabled="true" style=" margin-bottom:5px;" autoResize="false"
 						value="#{flOrderBB.managedBean.flRequest.title}" /> <h:outputText
 						value="" /></td>
 				<td style="width: 150px;"><p:outputLabel
@@ -211,7 +211,7 @@
 			<tr>
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
-				<td><p:inputTextarea cols="50" rows="8" disabled="true" 
+				<td><p:inputTextarea cols="50" rows="8" disabled="true"  autoResize="false"
 				value="#{flOrderBB.getFullAddress(flOrderBB.managedBean.flRequest.flSupplierDtl.smAddress)}"
 						style=" margin-bottom:5px;"
 						 /></td>
@@ -261,7 +261,7 @@
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
 				<td><p:inputTextarea cols="50" rows="8" disabled="true"
-						style=" margin-bottom:5px;"
+						style=" margin-bottom:5px;" autoResize="false"
 						value="#{flOrderBB.managedBean.supplierAddress}" /></td>
 			</tr>
 			<tr>

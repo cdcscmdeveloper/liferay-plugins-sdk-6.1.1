@@ -16,7 +16,7 @@
 				<td rowspan="3" valign="top" style="width: 108px;"><p:outputLabel
 						value="#{lbl['lbl.fl.do.title']}" /></td>
 				<td rowspan="3"><p:inputTextarea cols="50" rows="4" id="title"
-						disabled="true" style=" margin-bottom:5px;"
+						disabled="true" style=" margin-bottom:5px;" autoResize="false"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.title}" /> <h:outputText
 						value="" /></td>						
 			</tr>
@@ -125,7 +125,7 @@
 			<tr>
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
-				<td><p:inputTextarea cols="55" rows="8" disabled="true"
+				<td><p:inputTextarea cols="55" rows="8" disabled="true" autoResize="false"
 						style=" margin-bottom:5px;"
 						value="#{flOrderBB.getFullAddress(createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.smAddress)}"
 						 /></td>
@@ -179,7 +179,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.stop.instuc.reason.justification']}" /></td>
 				<td><p:inputText disabled="true" size="60"	value="#{createDOBackingBean.managedBean.reasonDesc}" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
-				<td><p:inputTextarea cols="40"  value="#{createDOBackingBean.managedBean.rejectedRemark.get(0).remark}" disabled="true"/> </td>
+				<td><p:inputTextarea cols="40"  value="#{createDOBackingBean.managedBean.rejectedRemark.get(0).remark}" autoResize="false" disabled="true"/> </td>
 			</tr>
 		</table>
 	</p:panel>

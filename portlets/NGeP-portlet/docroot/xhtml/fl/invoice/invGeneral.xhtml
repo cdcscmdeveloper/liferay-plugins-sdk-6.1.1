@@ -17,6 +17,7 @@
 						value="#{lbl['lbl.fl.do.title']}" /></td>
 				<td rowspan="2" colspan="3"><p:inputTextarea cols="40" rows="2"
 						style=" margin-bottom:5px;"
+						autoResize="false"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.title}"
 						disabled="true" /></td>
 			</tr>
@@ -167,7 +168,7 @@
 				<td valign="top" style="width: 109px;" ><p:outputLabel
 						value="#{lbl['lbl.fl.address']}" /></td>
 				<td ><p:inputTextarea rows="5" cols="47"
-						style="margin-bottom:5px;" disabled="true"
+						style="margin-bottom:5px;" disabled="true" autoResize="false"
 						value="#{invoiceBackingBean.getFullAddress(invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.smAddress)}" /></td>
 			    <td style="vertical-align: top;"><h:outputLabel value="#{lbl['lbl.fl.dan.factored']}" /></td>
 				<td style="vertical-align: top;"><p:selectBooleanCheckbox disabled="true"
@@ -231,7 +232,7 @@
 			<tr>
 				<td valign="top" style="width: 137px;"><p:outputLabel
 						value="Address" /></td>
-				<td><p:inputTextarea cols="47" rows="5"
+				<td><p:inputTextarea cols="47" rows="5" autoResize="false"
 						value="#{invoiceBackingBean.managedBean.supplierAddress}"
 						style="margin-bottom:5px;" disabled="true" /></td>
 			</tr>
