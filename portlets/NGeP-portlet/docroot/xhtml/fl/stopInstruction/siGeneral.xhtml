@@ -67,19 +67,19 @@
 						value="#{lbl['lbl.fl.supp.buss.reg.no']}" /></td>
 				<td><table style="width: 100%">
 						<tr>
-							<td style="width: 100px;"><p:inputText size="16" disabled="true"
+							<td><p:inputText size="15" disabled="true"
 									value="#{stopInstrBB.managedBean.stopInstr.flRequest.smSupplier.regNo}" />
 									<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.buss.reg.no']}"/></td>
 							<td><p:outputLabel
 									value="#{lbl['lbl.fl.supp.mof.no']}" /></td>
-							<td><p:inputText size="19" disabled="true"
+							<td><p:inputText size="15" disabled="true"
 									value="#{stopInstrBB.managedBean.stopInstr.flRequest.flSupplierDtl.mofNo}" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.mof.no']}"/></td>
 						</tr>
 					</table>
 				</td>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.ep.basic.acct.no']}" /></td>
-				<td style="width:255px;"><p:inputText size="15" disabled="true" 
+				<td style="width:235px;"><p:inputText size="15" disabled="true" 
 									value="#{stopInstrBB.managedBean.stopInstr.flRequest.smSupplier.epNo ==null ? lbl['lbl.fl.supp.na'] : stopInstrBB.managedBean.stopInstr.flRequest.smSupplier.epNo}"></p:inputText></td>		
 			</tr>
 			<tr>
