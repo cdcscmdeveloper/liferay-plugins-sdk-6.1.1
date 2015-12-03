@@ -892,7 +892,7 @@ public class PurchaseInquiryBackingBean extends
 								.getRequestItem().getRequestNoteItemId());
 
 						PrInquiryResDTO inquiryResDTO = getPrInquirySO()
-								.validateProceedPItoRN(inquiryReqDTO);
+								.isPIProceedabletoRN(inquiryReqDTO);
 						if (!inquiryResDTO.isProceedable()) {
 							throw new EpException(MessageConst.ERROR_760358);
 						}
