@@ -22,7 +22,7 @@
 }
 
 .columnWidth400 {
-	width: 400px;
+	width: 375px;
 }
 
 .columnWidth300 {
@@ -107,7 +107,7 @@
 			<br />
 			<br />
 			<h:panelGrid columns="4" style="width:100%;"
-				columnClasses="columnWidth200,columnWidth400,columnWidth200,columnWidth300">					
+				columnClasses="columnWidth200,columnWidth400,columnWidth300,columnWidth300">					
 				
 				<p:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
 				<p:inputText id="loaNo"
@@ -226,7 +226,7 @@
 
                 <p:outputLabel value="#{lbl['lbl.ct.bank.account.name']}" />
 				<h:panelGrid columns="3">
-					<p:inputText id="bankName" style="width:350px;"
+					<p:inputText id="bankName" style="width:320px;"
 						value="#{supplierBackingBean.managedBean.accBankName}"
 						disabled="true" />
 					<p:spacer width="1" />
