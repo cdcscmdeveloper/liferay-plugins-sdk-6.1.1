@@ -52,22 +52,27 @@
 			</p:column>
 
 		</p:dataTable>
-		<br />
-		<h:outputText value="#{lbl['lbl.sc.totalsup']}" />
-		<p:spacer width="5" />
-		<p:inputText
-			value="#{qTSupplierQulCriteriaBackingBean.managedBean.totalSupplier}"
-			disabled="true" />
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.search']}" partialSubmit="true"
-				process="@this" styleClass="BtnSpacing"
-				action="#{qTSupplierQulCriteriaBackingBean.searchRestrictedSupplierPopupAction}"
-				update="suppPopup" oncomplete="suppdlg.show();" />
-			<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
-				process="@this, supplierlist" partialSubmit="true"
-				oncomplete="restrictedSupplierDeletePopUp.show();"
-				update="@([id$=#{restrictedSupplierDeleteId}])" />
-		</div>
+		<table width="100%">
+			<tr>
+				<td>
+					<h:outputText value="#{lbl['lbl.sc.totalsup']}" style="float:left;"/>
+					<p:spacer width="5" />
+					<p:inputText
+						value="#{qTSupplierQulCriteriaBackingBean.managedBean.totalSupplier}"
+						disabled="true" style="text-align: right;"/>
+				</td>
+				<td style="text-align: right;">
+					<p:commandButton value="#{lbl['lbl.btn.search']}" partialSubmit="true"
+						process="@this" styleClass="BtnSpacing"
+						action="#{qTSupplierQulCriteriaBackingBean.searchRestrictedSupplierPopupAction}"
+						update="suppPopup" oncomplete="suppdlg.show();" />
+					<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
+						process="@this, supplierlist" partialSubmit="true"
+						oncomplete="restrictedSupplierDeletePopUp.show();"
+						update="@([id$=#{restrictedSupplierDeleteId}])" />
+				</td>
+			</tr>
+		</table>
 		<ui:param name="restrictedSupplierDeleteId"
 			value="restrictedSupplierDeleteId" />
 		<ac:confirmationPopup id="#{restrictedSupplierDeleteId}"
