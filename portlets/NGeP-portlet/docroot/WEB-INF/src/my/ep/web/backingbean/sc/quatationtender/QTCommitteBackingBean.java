@@ -691,12 +691,12 @@ public class QTCommitteBackingBean extends
 
 		if (null != treeNodes && treeNodes.length > 0) {
 			for (int nodes = 0; nodes < treeNodes.length; nodes++) {
-				TreeNodeBean treeNodeBean = (TreeNodeBean) treeNodes[nodes]
+				TreeNodeBean<?> treeNodeBean = (TreeNodeBean<?>) treeNodes[nodes]
 						.getData();
 				String type = treeNodeBean.getType();
 
 				if ("committee".equalsIgnoreCase(type)) {
-					ScCommittee scCommittee = (ScCommittee) ((TreeNodeBean) treeNodes[nodes]
+					ScCommittee scCommittee = (ScCommittee) ((TreeNodeBean<?>) treeNodes[nodes]
 							.getData()).getObject();
 					if (!clonedCommittes.containsKey(scCommittee
 							.getCommitteeType().getParameterCode())) {
@@ -706,7 +706,7 @@ public class QTCommitteBackingBean extends
 					}
 				}
 				if ("scCommitteeMember".equalsIgnoreCase(type)) {
-					ScCommittee scCommittee = (ScCommittee) ((TreeNodeBean) treeNodes[nodes]
+					ScCommittee scCommittee = (ScCommittee) ((TreeNodeBean<?>) treeNodes[nodes]
 							.getParent().getData()).getObject();
 					if (!clonedCommittes.containsKey(scCommittee
 							.getCommitteeType().getParameterCode())) {
@@ -824,7 +824,7 @@ public class QTCommitteBackingBean extends
 		for (int i = 0; i < treeNode.size(); i++) {
 			if (treeNode.get(i).isSelected()) {
 				committeeMembers
-						.add((ScCommitteeMember) ((TreeNodeBean) treeNode
+						.add((ScCommitteeMember) ((TreeNodeBean<?>) treeNode
 								.get(i).getData()).getObject());
 			}
 		}
@@ -1879,7 +1879,7 @@ public class QTCommitteBackingBean extends
 	 *            the event
 	 */
 	public void onNodeUnselect(NodeUnselectEvent event) {
-		TreeNodeBean nodeBean = (TreeNodeBean) event.getTreeNode().getData();
+		TreeNodeBean<?> nodeBean = (TreeNodeBean<?>) event.getTreeNode().getData();
 		if ("committee".equalsIgnoreCase(nodeBean.getType())) {
 			List<TreeNode> childNodes = event.getTreeNode().getChildren();
 			for (int i = 0; i < childNodes.size(); i++) {
