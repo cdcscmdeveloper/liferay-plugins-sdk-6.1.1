@@ -105,6 +105,12 @@ public class ReportsGenerateBean {
 	/** The report category view. */
 	private boolean reportCategoryView = false;
 	
+	/** The collector gov registration chk view. */
+	private boolean collectorGovRegistrationChkView = false;
+	
+	/** The collector cdc registration chk view. */
+	private boolean collectorCDCRegistrationChkView=false;
+	
 	/** The generate button view. */
 	private boolean generateButtonView = false;
 		//sc module
@@ -358,6 +364,12 @@ public class ReportsGenerateBean {
 		/** The sm sub category view. */
 		private boolean smSubCategoryView = false;
 		
+		/** The sm supplier name view. */
+		private boolean smSupplierNameView = false;
+		
+		/** The sm supplier name. */
+		private boolean smSupplierName = false; 
+		
 		/** The sm sub category division view. */
 		private boolean smSubCategoryDivisionView = false;
 		
@@ -386,7 +398,10 @@ public class ReportsGenerateBean {
 		private boolean smDistrictView = false;		
 		
 		/** The sm report type view. */
-		private boolean smReportTypeView = false;
+		private boolean smReportTypeView = false;		
+	
+		/** The sm mandatory recipt transaction report type view. */
+		private boolean smMandatoryReciptTransactionReportTypeView = false;		
 		
 		/** The sm application status view. */
 		private boolean smApplicationStatusView = false;
@@ -557,7 +572,16 @@ public class ReportsGenerateBean {
 		private boolean smMOFAccountEndDateView = false;		
 		
 		/** The sm application received date view. */
-		private boolean smApplicationReceivedDateView = false;
+		private boolean smApplicationReceivedDateView = false;		
+		
+		/** The sm mandatory rt date view. */
+		private boolean smMandatoryRTDateView = false;
+		
+		/** The sm mandatory receipt date view. */
+		private boolean smMandatoryReceiptDateView = false;
+		
+		/** The sm mandatory transact date view. */
+		private boolean smMandatoryTransactionDateView = false;
 		
 		/** The sm payment date view. */
 		private boolean smPaymentDateView = false;
@@ -3295,6 +3319,18 @@ public class ReportsGenerateBean {
 		/** The sm personnel role var. */
 		private String smPersonnelRoleVar=ReportConst.EMPTY_VAL;
 		
+		/** The sm supplier name var. */
+		private String smSupplierNameVar=ReportConst.EMPTY_VAL;		
+		
+		/** The sm mof registration fee var var. */
+		private String smMofRegistrationFeeVar=ReportConst.EMPTY_VAL;
+		
+		/** The sm processing fee var. */
+		private String smProcessingFeeVar=ReportConst.EMPTY_VAL;	
+		
+		/** The sm soft certificate fee var. */
+		private String smSoftCertificateFeeVar=ReportConst.EMPTY_VAL;		
+
 		/** The sm identification type var. */
 		private String smIdentificationTypeVar=ReportConst.EMPTY_VAL;
 		
@@ -3324,6 +3360,10 @@ public class ReportsGenerateBean {
 		
 		/** The sm to month var. */
 		private String smToMonthVar=ReportConst.EMPTY_VAL;
+		
+		
+		/** The sm rt report type var. */
+		private String smRTReportTypeVar=ReportConst.EMPTY_VAL;
 		
 		/** The Sm threshold from year var. */
 		private String SmThresholdFromYearVar=ReportConst.EMPTY_VAL;
@@ -5824,6 +5864,25 @@ public class ReportsGenerateBean {
 		}
 		
 		/**
+		 * Gets the sm supplier name var.
+		 * 
+		 * @return the smSupplierNameVar
+		 */
+		public String getSmSupplierNameVar() {
+			return smSupplierNameVar;
+		}
+
+		/**
+		 * Sets the sm supplier name var.
+		 * 
+		 * @param smSupplierNameVar
+		 *            the smSupplierNameVar to set
+		 */
+		public void setSmSupplierNameVar(String smSupplierNameVar) {
+			this.smSupplierNameVar = smSupplierNameVar;
+		}
+		
+		/**
 		 * Checks if is sm registration type two view.
 		 *
 		 * @return true, if is sm registration type two view
@@ -6775,6 +6834,48 @@ public class ReportsGenerateBean {
 		}
 		
 		/**
+		 * @return the smMofRegistrationFeeVarVar
+		 */
+		public String getSmMofRegistrationFeeVar() {
+			return smMofRegistrationFeeVar;
+		}
+
+		/**
+		 * @param smMofRegistrationFeeVarVar the smMofRegistrationFeeVarVar to set
+		 */
+		public void setSmMofRegistrationFeeVar(String smMofRegistrationFeeVar) {
+			this.smMofRegistrationFeeVar = smMofRegistrationFeeVar;
+		}
+
+		/**
+		 * @return the smProcessingFeeVar
+		 */
+		public String getSmProcessingFeeVar() {
+			return smProcessingFeeVar;
+		}
+
+		/**
+		 * @param smProcessingFeeVar the smProcessingFeeVar to set
+		 */
+		public void setSmProcessingFeeVar(String smProcessingFeeVar) {
+			this.smProcessingFeeVar = smProcessingFeeVar;
+		}
+
+		/**
+		 * @return the smSoftCertificateFeeVar
+		 */
+		public String getSmSoftCertificateFeeVar() {
+			return smSoftCertificateFeeVar;
+		}
+
+		/**
+		 * @param smSoftCertificateFeeVar the smSoftCertificateFeeVar to set
+		 */
+		public void setSmSoftCertificateFeeVar(String smSoftCertificateFeeVar) {
+			this.smSoftCertificateFeeVar = smSoftCertificateFeeVar;
+		}
+
+		/**
 		 * Sets the ct user type var.
 		 *
 		 * @param ctUserTypeVar the new ct user type var
@@ -6962,6 +7063,26 @@ public class ReportsGenerateBean {
 		public void setFlGroupSeventeenVar(String flGroupSeventeenVar) {
 			this.flGroupSeventeenVar = flGroupSeventeenVar;
 		}
+		
+		/**
+		 * Gets the sm rt report type var.
+		 * 
+		 * @return the smRTReportTypeVar
+		 */
+		public String getSmRTReportTypeVar() {
+			return smRTReportTypeVar;
+		}
+
+		/**
+		 * Sets the sm rt report type var.
+		 * 
+		 * @param smRTReportTypeVar
+		 *            the smRTReportTypeVar to set
+		 */
+		public void setSmRTReportTypeVar(String smRTReportTypeVar) {
+			this.smRTReportTypeVar = smRTReportTypeVar;
+		}
+		
 		
 		/**
 		 * Checks if is enable criteria menu view.
@@ -13151,6 +13272,8 @@ public class ReportsGenerateBean {
 	}
 
 	/**
+	 * Checks if is sm personnel staff role view.
+	 * 
 	 * @return the smPersonnelStaffRoleView
 	 */
 	public boolean isSmPersonnelStaffRoleView() {
@@ -13158,13 +13281,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param smPersonnelStaffRoleView the smPersonnelStaffRoleView to set
+	 * Sets the sm personnel staff role view.
+	 * 
+	 * @param smPersonnelStaffRoleView
+	 *            the smPersonnelStaffRoleView to set
 	 */
 	public void setSmPersonnelStaffRoleView(boolean smPersonnelStaffRoleView) {
 		this.smPersonnelStaffRoleView = smPersonnelStaffRoleView;
 	}
 
 	/**
+	 * Checks if is sm mandatory year from report type view.
+	 * 
 	 * @return the smMandatoryYearFromReportTypeView
 	 */
 	public boolean isSmMandatoryYearFromReportTypeView() {
@@ -13172,7 +13300,10 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param smMandatoryYearFromReportTypeView the smMandatoryYearFromReportTypeView to set
+	 * Sets the sm mandatory year from report type view.
+	 * 
+	 * @param smMandatoryYearFromReportTypeView
+	 *            the smMandatoryYearFromReportTypeView to set
 	 */
 	public void setSmMandatoryYearFromReportTypeView(
 			boolean smMandatoryYearFromReportTypeView) {
@@ -13180,6 +13311,8 @@ public class ReportsGenerateBean {
 	}
 
 	/**
+	 * Checks if is pp mandatory view.
+	 * 
 	 * @return the ppMandatoryView
 	 */
 	public boolean isPpMandatoryView() {
@@ -13187,13 +13320,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param ppMandatoryView the ppMandatoryView to set
+	 * Sets the pp mandatory view.
+	 * 
+	 * @param ppMandatoryView
+	 *            the ppMandatoryView to set
 	 */
 	public void setPpMandatoryView(boolean ppMandatoryView) {
 		this.ppMandatoryView = ppMandatoryView;
 	}
 
 	/**
+	 * Checks if is pp non mandatory view.
+	 * 
 	 * @return the ppNonMandatoryView
 	 */
 	public boolean isPpNonMandatoryView() {
@@ -13201,9 +13339,168 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param ppNonMandatoryView the ppNonMandatoryView to set
+	 * Sets the pp non mandatory view.
+	 * 
+	 * @param ppNonMandatoryView
+	 *            the ppNonMandatoryView to set
 	 */
 	public void setPpNonMandatoryView(boolean ppNonMandatoryView) {
 		this.ppNonMandatoryView = ppNonMandatoryView;
+	}
+
+	
+	/**
+	 * Checks if is sm mandatory transaction date view.
+	 * 
+	 * @return the smMandatoryTransactDateView
+	 */
+	public boolean isSmMandatoryTransactionDateView() {
+		return smMandatoryTransactionDateView;
+	}
+
+	/**
+	 * Sets the sm mandatory transaction date view.
+	 * 
+	 * @param smMandatoryTransactionDateView
+	 *            the new sm mandatory transaction date view
+	 */
+	public void setSmMandatoryTransactionDateView(boolean smMandatoryTransactionDateView) {
+		this.smMandatoryTransactionDateView = smMandatoryTransactionDateView;
+	}
+
+	/**
+	 * Checks if is sm mandatory receipt date view.
+	 * 
+	 * @return the smMandatoryReceiptDateView
+	 */
+	public boolean isSmMandatoryReceiptDateView() {
+		return smMandatoryReceiptDateView;
+	}
+
+	/**
+	 * Sets the sm mandatory receipt date view.
+	 * 
+	 * @param smMandatoryReceiptDateView
+	 *            the smMandatoryReceiptDateView to set
+	 */
+	public void setSmMandatoryReceiptDateView(boolean smMandatoryReceiptDateView) {
+		this.smMandatoryReceiptDateView = smMandatoryReceiptDateView;
+	}
+
+	/**
+	 * Checks if is sm supplier name view.
+	 * 
+	 * @return the smSupplierNameView
+	 */
+	public boolean isSmSupplierNameView() {
+		return smSupplierNameView;
+	}
+
+	/**
+	 * Sets the sm supplier name view.
+	 * 
+	 * @param smSupplierNameView
+	 *            the smSupplierNameView to set
+	 */
+	public void setSmSupplierNameView(boolean smSupplierNameView) {
+		this.smSupplierNameView = smSupplierNameView;
+	}
+
+	/**
+	 * Checks if is sm supplier name.
+	 * 
+	 * @return the smSupplierName
+	 */
+	public boolean isSmSupplierName() {
+		return smSupplierName;
+	}
+
+	/**
+	 * Sets the sm supplier name.
+	 * 
+	 * @param smSupplierName
+	 *            the smSupplierName to set
+	 */
+	public void setSmSupplierName(boolean smSupplierName) {
+		this.smSupplierName = smSupplierName;
+	}
+
+	/**
+	 * Checks if is sm mandatory recipt transaction report type view.
+	 * 
+	 * @return the smMandatoryReciptTransactionReportTypeView
+	 */
+	public boolean isSmMandatoryReciptTransactionReportTypeView() {
+		return smMandatoryReciptTransactionReportTypeView;
+	}
+
+	/**
+	 * Sets the sm mandatory recipt transaction report type view.
+	 * 
+	 * @param smMandatoryReciptTransactionReportTypeView
+	 *            the smMandatoryReciptTransactionReportTypeView to set
+	 */
+	public void setSmMandatoryReciptTransactionReportTypeView(
+			boolean smMandatoryReciptTransactionReportTypeView) {
+		this.smMandatoryReciptTransactionReportTypeView = smMandatoryReciptTransactionReportTypeView;
+	}
+
+	/**
+	 * Checks if is sm mandatory rt date view.
+	 * 
+	 * @return the smMandatoryRTDateView
+	 */
+	public boolean isSmMandatoryRTDateView() {
+		return smMandatoryRTDateView;
+	}
+
+	/**
+	 * Sets the sm mandatory rt date view.
+	 * 
+	 * @param smMandatoryRTDateView
+	 *            the smMandatoryRTDateView to set
+	 */
+	public void setSmMandatoryRTDateView(boolean smMandatoryRTDateView) {
+		this.smMandatoryRTDateView = smMandatoryRTDateView;
+	}
+
+	/**
+	 * Checks if is collector gov registration chk view.
+	 * 
+	 * @return the collectorGovRegistrationChkView
+	 */
+	public boolean isCollectorGovRegistrationChkView() {
+		return collectorGovRegistrationChkView;
+	}
+
+	/**
+	 * Sets the collector gov registration chk view.
+	 * 
+	 * @param collectorGovRegistrationChkView
+	 *            the collectorGovRegistrationChkView to set
+	 */
+	public void setCollectorGovRegistrationChkView(
+			boolean collectorGovRegistrationChkView) {
+		this.collectorGovRegistrationChkView = collectorGovRegistrationChkView;
+	}
+
+	/**
+	 * Checks if is collector cdc registration chk view.
+	 * 
+	 * @return the collectorCDCRegistrationChkView
+	 */
+	public boolean isCollectorCDCRegistrationChkView() {
+		return collectorCDCRegistrationChkView;
+	}
+
+	/**
+	 * Sets the collector cdc registration chk view.
+	 * 
+	 * @param collectorCDCRegistrationChkView
+	 *            the collectorCDCRegistrationChkView to set
+	 */
+	public void setCollectorCDCRegistrationChkView(
+			boolean collectorCDCRegistrationChkView) {
+		this.collectorCDCRegistrationChkView = collectorCDCRegistrationChkView;
 	}
 }
