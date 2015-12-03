@@ -64,7 +64,7 @@
 		<ac:confirmationPopup id="#{supplierOpencategoryDeleteId}"
 			widget="supplierOpencategoryDeletePopUp"
 			okAction="specificationBackingBean.deleteCategoryCodes" width="400"
-			height="200" title="#{lbl['lbl.sc.category.code']}"
+			height="100" title="#{lbl['lbl.sc.category.code']}"
 			content="#{lbl['lbl.sc.dialog.confirm.category.codes']}"
 			update="@([id$=openPnlId])" />
 
@@ -200,7 +200,7 @@
 							</p:tree>
 						</p:column>
 
-						<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%;">
+						<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%;text-align: center;">
 							<p:commandLink
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								actionListener="#{specificationBackingBean.editSupplierLocations(zoneTree,index)}"
@@ -220,7 +220,7 @@
 							listener="#{specificationBackingBean.checkAllConditions}" />
 					</p:selectBooleanCheckbox>
 					<p:spacer width="1" />
-					<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}"
+					<h:outputText value="#{lbl['lbl.sc.spec.check.all']}"
 						style="float:left;margin-top: 12px;;margin-left: 10px;" />
 					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
 						styleClass="BtnSpacing" update="@([id$=zonePopupPanel])"
@@ -238,7 +238,7 @@
 				<ac:confirmationPopup id="#{supplierNonZoneDeleteId}"
 					widget="supplierNonZoneDeletePopUp"
 					okAction="specificationBackingBean.deleteSupplierQualificationTreeNode"
-					width="400" height="200"
+					width="400" height="100"
 					title="#{lbl['lbl.sc.location.list.paidup.capital']}"
 					content="#{lbl['lbl.sc.dialog.confirm.supplier.locations']}"
 					update="@([id$=zoneLocationDataTable])" />
@@ -324,7 +324,7 @@
 
 							</p:tree>
 						</p:column>
-						<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%;">
+						<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%;text-align: center;">
 							<p:commandLink
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								actionListener="#{specificationBackingBean.editSupplierLocations(zoneTree,index)}"
@@ -364,7 +364,7 @@
 				<ac:confirmationPopup id="#{supplierZonalDeleteId}"
 					widget="supplierZonalDeletePopUp"
 					okAction="specificationBackingBean.deleteSupplierQualificationTreeNode"
-					width="400" height="200"
+					width="400" height="100"
 					title="#{lbl['lbl.sc.location.list.paidup.capital']}"
 					content="#{lbl['lbl.sc.dialog.confirm.supplier.locations']}"
 					update="@([id$=zoneyesDataTable])" />
@@ -416,7 +416,7 @@
 											listener="#{specificationBackingBean.checkAllPopUpConditions(specificationBackingBean.managedBean.checkAllList)}" />
 									</p:selectBooleanCheckbox>
 									<p:spacer width="1" />
-									<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}"
+									<h:outputText value="#{lbl['lbl.sc.spec.check.all']}"
 										style="float:left;margin-top: 12px;;margin-left: 10px;" />
 									<p:commandButton value="#{lbl['lbl.btn.ok']}"
 										styleClass="BtnSpacing" onclick="ZoneLocation.hide();"
