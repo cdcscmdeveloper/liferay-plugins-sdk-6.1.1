@@ -67,9 +67,7 @@
 			<c:if test="#{backingBean.managedBean.overLappedCategoryExists}">
 				<table style="width: 100%">
 					<tr>
-						<td><p:outputLabel escape="false"
-								value="#{backingBean.managedBean.overLappedCategoryMsg}"
-								style="color: red;font-weight: bold;float:left;" /></td>
+						<td><h:outputText styleClass="instruction" value="#{backingBean.managedBean.overLappedCategoryMsg}" escape="false"/></td>
 					</tr>
 				</table>
 			</c:if>

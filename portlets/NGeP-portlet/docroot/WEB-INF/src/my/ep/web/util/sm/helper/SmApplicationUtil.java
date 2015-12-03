@@ -2188,32 +2188,16 @@ public class SmApplicationUtil {
 	 */
 	public static void checkOverLappingCategories(
 			SmApplicationManagedBean managedBean) {
-		managedBean.setOverLappedCategoryMsg("");
-		managedBean.setOverLappedCategoryExists(false);
-		int i = 0;
-		StringBuffer sb = new StringBuffer();
-		sb.append(SmCommonUtil.getMessage("lbl.sm.category.overlappingMsg",
-				null));
-		sb.append("<table>");
-		for (SmSupplierCategory cat : managedBean.getSmAppl()
-				.getSmSupplierCategories()) {
-			if (cat.isOverLapCategory()
-					&& (cat.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.APPROVED_RECORD_STATUS) == 0 || cat
-							.getRecordStatusFlg().compareTo(
-									SupplierManagementConst.PENDING_ACT_STATUS) == 0)) {
-				managedBean.setOverLappedCategoryExists(true);
-				sb.append("<tr><td>").append(++i).append(".) ")
-						.append(cat.getPmCategoryL1().getCategoryL1Code())
-						.append(cat.getPmCategoryL2().getCategoryL2Code())
-						.append(cat.getPmCategoryL3().getCategoryL3Code())
-						.append("</tr></td>");
-			}
+		String msg = getOverlappedCategoryMsg(managedBean.getSmAppl()
+				.getSmSupplier().getSupplierId(), managedBean.getSmAppl()
+				.getApplId());
+		if (StringUtils.isNotBlank(msg)) {
+			managedBean.setOverLappedCategoryExists(true);
+		} else {
+			managedBean.setOverLappedCategoryExists(false);
 		}
-		sb.append("</table>");
-		if (managedBean.isOverLappedCategoryExists()) {
-			managedBean.setOverLappedCategoryMsg(sb.toString());
-		}
+		managedBean.setOverLappedCategoryMsg(SmCommonUtil.getMessage(
+				"lbl.sm.category.overlappingMsg", null) + msg);
 	}
 
 	/**
@@ -2254,6 +2238,36 @@ public class SmApplicationUtil {
 		} finally {
 			mofRegistrationSO = null;
 		}
+	}
+
+	/**
+	 * Get overlapped category message
+	 * 
+	 * @param Long
+	 *            catL3Id
+	 * @param Long
+	 *            supplierId
+	 * @param Long
+	 *            applId
+	 * @return String
+	 */
+	public static String getOverlappedCategoryMsg(Long supplierId, Long applId) {
+		StringBuffer msg = new StringBuffer();
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSupplierId(supplierId);
+		reqDTO.setApplId(applId);
+		List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO()
+				.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
+		if (!SmCommonUtil.isCollectionEmpty(resultList)) {
+			for (Object[] arr : resultList) {
+				if (arr.length == 5) {
+					msg.append(arr[0]).append(arr[1]).append(arr[2])
+							.append(" (").append(arr[3]).append(" / ")
+							.append(arr[4]).append(")").append("<br />");
+				}
+			}
+		}
+		return msg.toString();
 	}
 
 	/**
