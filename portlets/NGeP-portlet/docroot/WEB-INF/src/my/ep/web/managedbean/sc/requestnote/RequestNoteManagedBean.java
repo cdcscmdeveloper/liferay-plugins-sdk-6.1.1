@@ -21,7 +21,6 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
-import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -137,9 +136,6 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     /** The procurement types. */
     private SelectItem[] procurementTypes; // for procurement type dropdown
     
-    /** The process name. */
-    private String processName;
-    
     /** The request note status. */
     private PmStatus requestNoteStatus;
     
@@ -172,10 +168,6 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     
     /** The sc rn zone. */
     private ScRNZone scRNZone = new ScRNZone(); 
-    
-    // BPM Task
-    /** The direct purchase data type. */
-    private SCDirectPurchaseDataType directPurchaseDataType;
     
     // For Search Request Note
     /** The search req note no. */
@@ -704,43 +696,6 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setPriceTypeCode(String priceTypeCode) {
 		this.priceTypeCode = priceTypeCode;
-	}
-
-	/**
-	 * Gets the process name.
-	 *
-	 * @return the processName
-	 */
-	public String getProcessName() {
-		return processName;
-	}
-
-	/**
-	 * Sets the process name.
-	 *
-	 * @param processName the processName to set
-	 */
-	public void setProcessName(String processName) {
-		this.processName = processName;
-	}
-
-	/**
-	 * Gets the direct purchase data type.
-	 *
-	 * @return the directPurchaseDataType
-	 */
-	public SCDirectPurchaseDataType getDirectPurchaseDataType() {
-		return directPurchaseDataType;
-	}
-
-	/**
-	 * Sets the direct purchase data type.
-	 *
-	 * @param directPurchaseDataType the directPurchaseDataType to set
-	 */
-	public void setDirectPurchaseDataType(
-			SCDirectPurchaseDataType directPurchaseDataType) {
-		this.directPurchaseDataType = directPurchaseDataType;
 	}
 	
 	/**

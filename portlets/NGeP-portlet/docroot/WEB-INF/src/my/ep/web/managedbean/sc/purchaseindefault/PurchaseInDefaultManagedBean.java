@@ -79,9 +79,6 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 	/** The justifications. */
 	private SelectItem[] justifications; // justification drop down
 
-	/** The process name. */
-	private String processName;
-
 	/** The pid status. */
 	private PmStatus pidStatus;
 
@@ -343,25 +340,6 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 	 */
 	public void setJustifications(SelectItem[] justifications) {
 		this.justifications = justifications;
-	}
-
-	/**
-	 * Gets the process name.
-	 * 
-	 * @return the processName
-	 */
-	public String getProcessName() {
-		return processName;
-	}
-
-	/**
-	 * Sets the process name.
-	 * 
-	 * @param processName
-	 *            the processName to set
-	 */
-	public void setProcessName(String processName) {
-		this.processName = processName;
 	}
 
 	/**
