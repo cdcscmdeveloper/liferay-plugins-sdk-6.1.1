@@ -94,9 +94,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	/** The created by. */
 	private String createdBy;
 
-	/** The process name. */
-	private String processName;
-
 	/** The user division list. */
 	private List<PmOrgProfile> userDivisionList;
 
@@ -1285,25 +1282,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	 */
 	public void setCmSupplierItem(CmSupplierItem cmSupplierItem) {
 		this.cmSupplierItem = cmSupplierItem;
-	}
-
-	/**
-	 * Gets the process name.
-	 * 
-	 * @return the processName
-	 */
-	public String getProcessName() {
-		return processName;
-	}
-
-	/**
-	 * Sets the process name.
-	 * 
-	 * @param processName
-	 *            the processName to set
-	 */
-	public void setProcessName(String processName) {
-		this.processName = processName;
 	}
 
 	/**

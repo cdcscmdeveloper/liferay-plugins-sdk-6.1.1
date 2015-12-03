@@ -90,9 +90,6 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	/** The price types. */
 	private SelectItem[] priceTypes; // price type drop down 
 	
-	/** The process name. */
-	private String processName;
-	
 	/** The pri status. */
 	private PmStatus priStatus;
 	
@@ -443,24 +440,6 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public void setMethod(String method) {
 		this.method = method;
-	}
-
-	/**
-	 * Gets the process name.
-	 *
-	 * @return the processName
-	 */
-	public String getProcessName() {
-		return processName;
-	}
-
-	/**
-	 * Sets the process name.
-	 *
-	 * @param processName the processName to set
-	 */
-	public void setProcessName(String processName) {
-		this.processName = processName;
 	}
 
 	/**
