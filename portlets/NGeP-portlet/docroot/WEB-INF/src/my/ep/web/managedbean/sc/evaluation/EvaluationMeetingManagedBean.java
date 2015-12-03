@@ -22,7 +22,6 @@ import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
-import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -114,9 +113,6 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 
 	/** The qt. */
 	private ScQt qt;
-
-	/** The pay load. */
-	private Object payLoad;
 
 	/** The committee type. */
 	private String committeeType;
@@ -643,25 +639,6 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	 */
 	public void setQt(ScQt qt) {
 		this.qt = qt;
-	}
-
-	/**
-	 * Gets the pay load.
-	 * 
-	 * @return the pay load
-	 */
-	public Object getPayLoad() {
-		return payLoad;
-	}
-
-	/**
-	 * Sets the pay load.
-	 * 
-	 * @param payLoad
-	 *            the new pay load
-	 */
-	public void setPayLoad(Object payLoad) {
-		this.payLoad = payLoad;
 	}
 
 	/**

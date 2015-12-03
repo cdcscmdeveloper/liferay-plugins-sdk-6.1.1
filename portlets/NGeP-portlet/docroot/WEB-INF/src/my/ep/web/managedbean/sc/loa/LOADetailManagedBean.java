@@ -195,9 +195,6 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	
 	/** The bond amount word. */
 	private String bondAmountWord;
-	
-	/** The pay load. */
-	private Object payLoad;
 
 	/** The action. */
 	private String action;
@@ -1126,24 +1123,6 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 */
 	public void setBondAmountWord(String bondAmountWord) {
 		this.bondAmountWord = bondAmountWord;
-	}
-
-	/**
-	 * Gets the pay load.
-	 *
-	 * @return the payLoad
-	 */
-	public Object getPayLoad() {
-		return payLoad;
-	}
-
-	/**
-	 * Sets the pay load.
-	 *
-	 * @param payLoad the payLoad to set
-	 */
-	public void setPayLoad(Object payLoad) {
-		this.payLoad = payLoad;
 	}
 
 	/**

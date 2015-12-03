@@ -106,9 +106,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	/** The committee activities. */
 	private List<ScQtCommitteeActivity> committeeActivities;
 
-	/** The specification data type. */
-	private Object specificationDataType;
-
 	/** The is sample req. */
 	public boolean isSampleReq = true;
 
@@ -1278,25 +1275,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setSampleReq(boolean isSampleReq) {
 		this.isSampleReq = isSampleReq;
-	}
-
-	/**
-	 * Gets the specification data type.
-	 * 
-	 * @return the specification data type
-	 */
-	public Object getSpecificationDataType() {
-		return specificationDataType;
-	}
-
-	/**
-	 * Sets the specification data type.
-	 * 
-	 * @param specificationDataType
-	 *            the new specification data type
-	 */
-	public void setSpecificationDataType(Object specificationDataType) {
-		this.specificationDataType = specificationDataType;
 	}
 
 	/**
