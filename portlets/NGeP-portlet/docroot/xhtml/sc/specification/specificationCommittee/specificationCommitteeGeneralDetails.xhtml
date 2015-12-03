@@ -11,7 +11,8 @@
 
 		<table style="width: 100%">
 			<tr>
-				<td style="width:180px;"><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
+				<td style="width: 180px;"><p:outputLabel
+						value="#{lbl['lbl.sc.title']}" /></td>
 				<td colspan="3"><p:inputTextarea label="#{lbl['lbl.sc.title']}"
 						value="#{specificationBackingBean.managedBean.scQt.qtTitle}"
 						required="true" cols="130" rows="3" disabled="true"
@@ -45,8 +46,7 @@
 				</ui:fragment>
 			</tr>
 			<tr>
-				<td ><h:outputLabel
-						value="#{lbl['lbl.sc.qttentype']}" /></td>
+				<td><h:outputLabel value="#{lbl['lbl.sc.qttentype']}" /></td>
 				<td><p:inputText readonly="true" size="25"
 						value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.quotationTenderType, specificationBackingBean.managedBean.scQt.qtType)}"
 						disabled="true" /></td>
@@ -142,7 +142,7 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" /> <ui:fragment
 						rendered="#{!specificationBackingBean.managedBean.readOnly}">
-					<!-- 	<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel> -->
+						<!-- 	<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel> -->
 					</ui:fragment></td>
 				<td><p:inputMask id="contract"
 						required="#{!specificationBackingBean.managedBean.readOnly}"
@@ -157,7 +157,7 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.sc.qt.zone.location.info']}"
+	<p:panel header="#{lbl['lbl.sc.qt.zone.location.info']}" toggleable="true"
 		rendered="#{specificationBackingBean.managedBean.scQt.zonal !='false' and specificationBackingBean.managedBean.scQt.panel eq 'false'}">
 		<table style="width: 100%">
 			<tr>
@@ -173,36 +173,37 @@
 					</p:selectOneMenu></td>
 			</tr>
 		</table>
-	</p:panel>
 
-	<p:panel
-		rendered="#{specificationBackingBean.managedBean.scQt.zonal !='false' and specificationBackingBean.managedBean.scQt.panel eq 'false'}">
-		<h:panelGrid width="100%">
-			<p:dataTable id="zoneGeneralDataTable" rows="10"
-				value="#{specificationBackingBean.managedBean.zoneGeneralTrees}"
-				var="zoneTree" style="width:100%" rowIndexVar="index">
-				<p:column headerText="#{lbl['lbl.sc.zone.location']}">
-					<p:tree value="#{zoneTree}" var="location">
 
-						<p:treeNode type="zone">
-							<h:outputText value="#{location.zoneName}" />
-						</p:treeNode>
+		<h:panelGroup
+			rendered="#{specificationBackingBean.managedBean.scQt.zonal !='false' and specificationBackingBean.managedBean.scQt.panel eq 'false'}">
+			<h:panelGrid width="100%">
+				<p:dataTable id="zoneGeneralDataTable" rows="10"
+					value="#{specificationBackingBean.managedBean.zoneGeneralTrees}"
+					var="zoneTree" style="width:100%" rowIndexVar="index">
+					<p:column headerText="#{lbl['lbl.sc.zone.location']}">
+						<p:tree value="#{zoneTree}" var="location">
 
-						<p:treeNode type="state">
-							<h:outputText value="#{location.pmState.stateName}" />
-						</p:treeNode>
-						<p:treeNode type="division">
-							<h:outputText value="#{location.pmDivision.divisionName}" />
-						</p:treeNode>
-						<p:treeNode type="district">
-							<h:outputText value="#{location.pmDistrict.districtName}" />
-						</p:treeNode>
-					</p:tree>
-				</p:column>
+							<p:treeNode type="zone">
+								<h:outputText value="#{location.zoneName}" />
+							</p:treeNode>
 
-			</p:dataTable>
-		</h:panelGrid>
+							<p:treeNode type="state">
+								<h:outputText value="#{location.pmState.stateName}" />
+							</p:treeNode>
+							<p:treeNode type="division">
+								<h:outputText value="#{location.pmDivision.divisionName}" />
+							</p:treeNode>
+							<p:treeNode type="district">
+								<h:outputText value="#{location.pmDistrict.districtName}" />
+							</p:treeNode>
+						</p:tree>
+					</p:column>
 
+				</p:dataTable>
+			</h:panelGrid>
+
+		</h:panelGroup>
 	</p:panel>
 
 
