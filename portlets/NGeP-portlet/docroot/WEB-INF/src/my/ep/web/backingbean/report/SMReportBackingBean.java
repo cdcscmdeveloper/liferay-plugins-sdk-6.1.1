@@ -569,6 +569,12 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			
 			break;
 		case ReportConst.SM_RECEIPT_PAYMENT_METHODS_RPT_VAL:
+			  rptGenBean.setSmMandatoryPaymentMethodView(true); 
+			  rptGenBean.setSmNonMandatoryReciptTransactionReportTypeView(true) ;
+			  rptGenBean.setSmMandatoryForDateView(true);
+			  rptGenBean.setSmFromDateView(true);			  
+			  rptGenBean.setSmSupplierNameView(true);
+			  checkAuthorizationByRoleCode(rptGenBean,authoriztionList);
 			break;
 		case ReportConst.SM_RECEIPT_CLASSIFICATION_CODE_RPT_VAL:
 			break;

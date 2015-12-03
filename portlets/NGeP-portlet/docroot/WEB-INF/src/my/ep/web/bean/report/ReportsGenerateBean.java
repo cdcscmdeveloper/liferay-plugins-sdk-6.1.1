@@ -403,6 +403,12 @@ public class ReportsGenerateBean {
 		/** The sm mandatory recipt transaction report type view. */
 		private boolean smMandatoryReciptTransactionReportTypeView = false;		
 		
+		/** The sm non mandatory recipt transaction report type view. */
+		private boolean smNonMandatoryReciptTransactionReportTypeView = false;
+		
+		/** The sm mandatory payment method view. */
+		private boolean smMandatoryPaymentMethodView = false;		
+		
 		/** The sm application status view. */
 		private boolean smApplicationStatusView = false;
 		
@@ -464,7 +470,10 @@ public class ReportsGenerateBean {
 		private boolean smMandatoryRegistrationStatusView = false;
 		
 		/** The sm mandatory created from year view. */
-		private boolean smMandatoryCreatedFromYearView = false;
+		private boolean smMandatoryCreatedFromYearView = false;		
+		
+		/** The sm from date view. */
+		private boolean smFromDateView = false;
 		
 		/** The sm mandatory year from report type view. */
 		private boolean smMandatoryYearFromReportTypeView = false;		
@@ -577,11 +586,23 @@ public class ReportsGenerateBean {
 		/** The sm mandatory rt date view. */
 		private boolean smMandatoryRTDateView = false;
 		
+		/** The sm non mandatory rt date view. */
+		private boolean smNonMandatoryRTDateView = false;
+		
+		/** The sm mandatory for date view. */
+		private boolean smMandatoryForDateView = false; 		
+		
 		/** The sm mandatory receipt date view. */
 		private boolean smMandatoryReceiptDateView = false;
 		
+		/** The sm non mandatory receipt date view. */
+		private boolean smNonMandatoryReceiptDateView = false;		
+		
 		/** The sm mandatory transact date view. */
 		private boolean smMandatoryTransactionDateView = false;
+		
+		/** The sm non mandatory transaction date view. */
+		private boolean smNonMandatoryTransactionDateView = false;
 		
 		/** The sm payment date view. */
 		private boolean smPaymentDateView = false;
@@ -2410,6 +2431,84 @@ public class ReportsGenerateBean {
 			this.flGroupTwentyThreeWithSupplView = flGroupTwentyThreeWithSupplView;
 		}
 		
+		/**
+		 * Checks if is sm non mandatory recipt transaction report type view.
+		 * 
+		 * @return the smNonMandatoryReciptTransactionReportTypeView
+		 */
+		public boolean isSmNonMandatoryReciptTransactionReportTypeView() {
+			return smNonMandatoryReciptTransactionReportTypeView;
+		}
+
+		/**
+		 * Checks if is sm non mandatory transaction date view.
+		 * 
+		 * @return the smNonMandatoryTransactionDateView
+		 */
+		public boolean isSmNonMandatoryTransactionDateView() {
+			return smNonMandatoryTransactionDateView;
+		}
+
+		/**
+		 * Sets the sm non mandatory transaction date view.
+		 * 
+		 * @param smNonMandatoryTransactionDateView
+		 *            the smNonMandatoryTransactionDateView to set
+		 */
+		public void setSmNonMandatoryTransactionDateView(
+				boolean smNonMandatoryTransactionDateView) {
+			this.smNonMandatoryTransactionDateView = smNonMandatoryTransactionDateView;
+		}
+
+		/**
+		 * Checks if is sm non mandatory rt date view.
+		 * 
+		 * @return the smNonMandatoryRTDateView
+		 */
+		public boolean isSmNonMandatoryRTDateView() {
+			return smNonMandatoryRTDateView;
+		}
+
+		/**
+		 * Sets the sm non mandatory rt date view.
+		 * 
+		 * @param smNonMandatoryRTDateView
+		 *            the smNonMandatoryRTDateView to set
+		 */
+		public void setSmNonMandatoryRTDateView(boolean smNonMandatoryRTDateView) {
+			this.smNonMandatoryRTDateView = smNonMandatoryRTDateView;
+		}
+
+		/**
+		 * Checks if is sm mandatory payment method view.
+		 * 
+		 * @return the smMandatoryPaymentMethodView
+		 */
+		public boolean isSmMandatoryPaymentMethodView() {
+			return smMandatoryPaymentMethodView;
+		}
+
+		/**
+		 * Sets the sm mandatory payment method view.
+		 * 
+		 * @param smMandatoryPaymentMethodView
+		 *            the smMandatoryPaymentMethodView to set
+		 */
+		public void setSmMandatoryPaymentMethodView(boolean smMandatoryPaymentMethodView) {
+			this.smMandatoryPaymentMethodView = smMandatoryPaymentMethodView;
+		}
+
+		/**
+		 * Sets the sm non mandatory recipt transaction report type view.
+		 * 
+		 * @param smNonMandatoryReciptTransactionReportTypeView
+		 *            the smNonMandatoryReciptTransactionReportTypeView to set
+		 */
+		public void setSmNonMandatoryReciptTransactionReportTypeView(
+				boolean smNonMandatoryReciptTransactionReportTypeView) {
+			this.smNonMandatoryReciptTransactionReportTypeView = smNonMandatoryReciptTransactionReportTypeView;
+		}
+
 		/**
 		 * Checks if is fl group twenty four without suppl view.
 		 *
@@ -4765,6 +4864,26 @@ public class ReportsGenerateBean {
 		}
 		
 		/**
+		 * Checks if is sm non mandatory receipt date view.
+		 * 
+		 * @return the smNonSmMandatoryReceiptDateView
+		 */
+		public boolean isSmNonMandatoryReceiptDateView() {
+			return smNonMandatoryReceiptDateView;
+		}
+
+		/**
+		 * Sets the sm non mandatory receipt date view.
+		 * 
+		 * @param smNonMandatoryReceiptDateView
+		 *            the new sm non mandatory receipt date view
+		 */
+		public void setSmNonMandatoryReceiptDateView(
+				boolean smNonMandatoryReceiptDateView) {
+			this.smNonMandatoryReceiptDateView = smNonMandatoryReceiptDateView;
+		}
+
+		/**
 		 * Sets the sm mof registered date view.
 		 *
 		 * @param smMOFRegisteredDateView the new sm mof registered date view
@@ -5174,6 +5293,25 @@ public class ReportsGenerateBean {
 		}
 		
 		/**
+		 * Checks if is sm mandatory for date view.
+		 * 
+		 * @return the smMandatoryForDateView
+		 */
+		public boolean isSmMandatoryForDateView() {
+			return smMandatoryForDateView;
+		}
+
+		/**
+		 * Sets the sm mandatory for date view.
+		 * 
+		 * @param smMandatoryForDateView
+		 *            the smMandatoryForDateView to set
+		 */
+		public void setSmMandatoryForDateView(boolean smMandatoryForDateView) {
+			this.smMandatoryForDateView = smMandatoryForDateView;
+		}
+
+		/**
 		 * Checks if is sm approval date view.
 		 *
 		 * @return true, if is sm approval date view
@@ -5218,6 +5356,25 @@ public class ReportsGenerateBean {
 			return smYearFromView;
 		}
 		
+		/**
+		 * Checks if is sm from date view.
+		 * 
+		 * @return the smFromDateView
+		 */
+		public boolean isSmFromDateView() {
+			return smFromDateView;
+		}
+
+		/**
+		 * Sets the sm from date view.
+		 * 
+		 * @param smFromDateView
+		 *            the smFromDateView to set
+		 */
+		public void setSmFromDateView(boolean smFromDateView) {
+			this.smFromDateView = smFromDateView;
+		}
+
 		/**
 		 * Sets the sm year from view.
 		 *
@@ -6834,6 +6991,8 @@ public class ReportsGenerateBean {
 		}
 		
 		/**
+		 * Gets the sm mof registration fee var.
+		 * 
 		 * @return the smMofRegistrationFeeVarVar
 		 */
 		public String getSmMofRegistrationFeeVar() {
@@ -6841,13 +7000,18 @@ public class ReportsGenerateBean {
 		}
 
 		/**
-		 * @param smMofRegistrationFeeVarVar the smMofRegistrationFeeVarVar to set
+		 * Sets the sm mof registration fee var.
+		 * 
+		 * @param smMofRegistrationFeeVar
+		 *            the new sm mof registration fee var
 		 */
 		public void setSmMofRegistrationFeeVar(String smMofRegistrationFeeVar) {
 			this.smMofRegistrationFeeVar = smMofRegistrationFeeVar;
 		}
 
 		/**
+		 * Gets the sm processing fee var.
+		 * 
 		 * @return the smProcessingFeeVar
 		 */
 		public String getSmProcessingFeeVar() {
@@ -6855,13 +7019,18 @@ public class ReportsGenerateBean {
 		}
 
 		/**
-		 * @param smProcessingFeeVar the smProcessingFeeVar to set
+		 * Sets the sm processing fee var.
+		 * 
+		 * @param smProcessingFeeVar
+		 *            the smProcessingFeeVar to set
 		 */
 		public void setSmProcessingFeeVar(String smProcessingFeeVar) {
 			this.smProcessingFeeVar = smProcessingFeeVar;
 		}
 
 		/**
+		 * Gets the sm soft certificate fee var.
+		 * 
 		 * @return the smSoftCertificateFeeVar
 		 */
 		public String getSmSoftCertificateFeeVar() {
@@ -6869,7 +7038,10 @@ public class ReportsGenerateBean {
 		}
 
 		/**
-		 * @param smSoftCertificateFeeVar the smSoftCertificateFeeVar to set
+		 * Sets the sm soft certificate fee var.
+		 * 
+		 * @param smSoftCertificateFeeVar
+		 *            the smSoftCertificateFeeVar to set
 		 */
 		public void setSmSoftCertificateFeeVar(String smSoftCertificateFeeVar) {
 			this.smSoftCertificateFeeVar = smSoftCertificateFeeVar;

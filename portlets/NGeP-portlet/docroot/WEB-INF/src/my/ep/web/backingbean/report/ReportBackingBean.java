@@ -821,6 +821,8 @@ public class ReportBackingBean extends
 	/** The sm application status. */
 	private String smApplicationStatus;
 
+	private String paymentMethod;
+
 	/** The sm payment type. */
 	private String smPaymentType;
 
@@ -868,19 +870,19 @@ public class ReportBackingBean extends
 
 	/** The sm report type. */
 	private String smReportType;
-			
+
 	/** The sm rt report type. */
-	private String smRTReportType;	
-	
+	private String smRTReportType;
+
 	/** The sm supplier name. */
 	private String smSupplierName;
-	
-	private List<SelectItem> smMofRegistrationFeeList=new ArrayList<SelectItem>();	
-	
-	private List<SelectItem> smSoftCertificateFeeList=new ArrayList<SelectItem>();
-	
-	private List<SelectItem> smProcessingFeeList=new ArrayList<SelectItem>();
-	
+
+	private List<SelectItem> smMofRegistrationFeeList = new ArrayList<SelectItem>();
+
+	private List<SelectItem> smSoftCertificateFeeList = new ArrayList<SelectItem>();
+
+	private List<SelectItem> smProcessingFeeList = new ArrayList<SelectItem>();
+
 	/** The sm processing officer name. */
 	private String smProcessingOfficerName;
 
@@ -1188,7 +1190,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * @param smMofRegistrationFeeList the smMofRegistrationFeeList to set
+	 * @param smMofRegistrationFeeList
+	 *            the smMofRegistrationFeeList to set
 	 */
 	public void setSmMofRegistrationFeeList(
 			List<SelectItem> smMofRegistrationFeeList) {
@@ -1203,7 +1206,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * @param smSoftCertificateFeeList the smSoftCertificateFeeList to set
+	 * @param smSoftCertificateFeeList
+	 *            the smSoftCertificateFeeList to set
 	 */
 	public void setSmSoftCertificateFeeList(
 			List<SelectItem> smSoftCertificateFeeList) {
@@ -1218,7 +1222,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * @param smProcessingFeeList the smProcessingFeeList to set
+	 * @param smProcessingFeeList
+	 *            the smProcessingFeeList to set
 	 */
 	public void setSmProcessingFeeList(List<SelectItem> smProcessingFeeList) {
 		this.smProcessingFeeList = smProcessingFeeList;
@@ -1453,7 +1458,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * @param smSupplierName the smSupplierName to set
+	 * @param smSupplierName
+	 *            the smSupplierName to set
 	 */
 	public void setSmSupplierName(String smSupplierName) {
 		this.smSupplierName = smSupplierName;
@@ -2896,7 +2902,6 @@ public class ReportBackingBean extends
 		return smUserName;
 	}
 
-	
 	/**
 	 * Sets the sm user name.
 	 * 
@@ -3180,6 +3185,21 @@ public class ReportBackingBean extends
 	 */
 	public String getSmMofRegNoFrom() {
 		return smMofRegNoFrom;
+	}
+
+	/**
+	 * @return the paymentMethod
+	 */
+	public String getPaymentMethod() {
+		return paymentMethod;
+	}
+
+	/**
+	 * @param paymentMethod
+	 *            the paymentMethod to set
+	 */
+	public void setPaymentMethod(String paymentMethod) {
+		this.paymentMethod = paymentMethod;
 	}
 
 	/**
@@ -3722,6 +3742,25 @@ public class ReportBackingBean extends
 	 */
 	public void setSmYearText(String smYearText) {
 		this.smYearText = smYearText;
+	}
+
+	/**
+	 * Gets the sm rt report type.
+	 * 
+	 * @return the smRTReportType
+	 */
+	public String getSmRTReportType() {
+		return smRTReportType;
+	}
+
+	/**
+	 * Sets the sm rt report type.
+	 * 
+	 * @param smRTReportType
+	 *            the smRTReportType to set
+	 */
+	public void setSmRTReportType(String smRTReportType) {
+		this.smRTReportType = smRTReportType;
 	}
 
 	/**
@@ -6921,8 +6960,7 @@ public class ReportBackingBean extends
 	public void setMofAccountEndDateToDate(Date mofAccountEndDateToDate) {
 		this.mofAccountEndDateToDate = mofAccountEndDateToDate;
 	}
-	
-	
+
 	/**
 	 * retrieveLOAStatusList- will retrieve LOA status(SOA Status) list.
 	 * 
@@ -10327,7 +10365,6 @@ public class ReportBackingBean extends
 		}
 	}
 
-
 	/**
 	 * getDefaultValuesFromAndToDate - Gets the default values from and to date.
 	 * 
@@ -11552,14 +11589,15 @@ public class ReportBackingBean extends
 				|| ((this.getSmRTReportType() != null) && (this
 						.getSmRTReportType().toString() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmSupplierName() != null) && (this
-						.getSmSupplierName().toString() != ReportConst.EMPTY_VAL))				
+						.getSmSupplierName().toString() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmPaymentMethod() != null) && (this
+						.getSmPaymentMethod().toString() != ReportConst.EMPTY_VAL))
 				|| (this.getSmMofRegistrationFeeList() != null && this
 						.getSmMofRegistrationFeeList().size() > 0)
 				|| (this.getSmProcessingFeeList() != null && this
 						.getSmProcessingFeeList().size() > 0)
 				|| (this.getSmSoftCertificateFeeList() != null && this
-						.getSmSoftCertificateFeeList().size() > 0))
-		 {
+						.getSmSoftCertificateFeeList().size() > 0)) {
 
 			if ((getManagedBean().getReportValue() != null)
 					&& (getManagedBean().getReportValue().trim()
@@ -11597,11 +11635,25 @@ public class ReportBackingBean extends
 									+ this.getSmThresholdToYear());
 				}
 			}
-			
-			if (getManagedBean().getReportValue() != null){
-				if(getManagedBean().getReportValue().trim()
+
+			if (getManagedBean().getReportValue() != null) {
+				if (getManagedBean()
+						.getReportValue()
+						.trim()
 						.equalsIgnoreCase(
-								ReportConst.SM_RECEIPT_AND_TRANSACTION_DATE_RPT_VAL)) {
+								ReportConst.SM_RECEIPT_AND_TRANSACTION_DATE_RPT_VAL)
+						|| getManagedBean()
+								.getReportValue()
+								.trim()
+								.equalsIgnoreCase(
+										ReportConst.SM_RECEIPT_PAYMENT_METHODS_RPT_VAL)) {
+
+					if ((this.getSmPaymentMethod() != null)
+							&& (this.getSmPaymentMethod() != ReportConst.EMPTY_VAL)) {
+						rptGenBean
+								.setSmPaymentMethodVar(ReportConst.AMP_SM_PAYMENT_TYPE_METHOD_EQ
+										+ this.getSmPaymentMethod());
+					}
 
 					if ((this.getSmRTReportType() != null)
 							&& (this.getSmRTReportType() != ReportConst.EMPTY_VAL)) {
@@ -11622,7 +11674,7 @@ public class ReportBackingBean extends
 						rptGenBean
 								.setSmMofRegistrationFeeVar(ReportConst.AMP_SM_MOF_REG_FEE_TYPE_EQ
 										+ this.getSmMofRegistrationFeeList()
-												.get(0));						
+												.get(0));
 					}
 
 					if (this.getSmProcessingFeeList() != null
@@ -11642,7 +11694,7 @@ public class ReportBackingBean extends
 
 				}
 			}
-			
+
 			if ((this.getSmProfileStatus() != null)
 					&& (this.getSmProfileStatus() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setSmProfileStatusVar(ReportConst.AMP_SM_PRFL_STS_EQ
@@ -11992,12 +12044,12 @@ public class ReportBackingBean extends
 						+ rptGenBean.getItemCategoryTotVar()
 						+ rptGenBean.getEpNumberTotVar()
 						+ rptGenBean.getBusinessRegNoTotVar()
-						+ rptGenBean.getIcNumberTotVar()						
+						+ rptGenBean.getIcNumberTotVar()
 						+ rptGenBean.getSmRTReportTypeVar()
 						+ rptGenBean.getSmSupplierNameVar()
 						+ rptGenBean.getSmMofRegistrationFeeVar()
 						+ rptGenBean.getSmProcessingFeeVar()
-						+ rptGenBean.getSmSoftCertificateFeeVar()						
+						+ rptGenBean.getSmSoftCertificateFeeVar()
 						+ rptGenBean.getFromDateVar()
 						+ rptGenBean.getToDateVar()
 						+ rptGenBean.getMofAccountEndDateFromDateVar()
@@ -13165,10 +13217,12 @@ public class ReportBackingBean extends
 			}
 			if ((this.getCommonMinistry() != null)
 					&& (this.getCommonMinistry() != ReportConst.EMPTY_VAL)) {
-				/*Long orgprofileid = Long.parseLong(this.getCommonMinistry());
-
-				rptGenBean.setPpMinistryVar(ReportConst.FL_AMP_MINISTRY_EQ
-						+ retrieveMinistryName(orgprofileid));*/
+				/*
+				 * Long orgprofileid = Long.parseLong(this.getCommonMinistry());
+				 * 
+				 * rptGenBean.setPpMinistryVar(ReportConst.FL_AMP_MINISTRY_EQ +
+				 * retrieveMinistryName(orgprofileid));
+				 */
 				rptGenBean.setPpMinistryVar(ReportConst.FL_AMP_MINISTRY_EQ
 						+ this.getCommonMinistry());
 			}
@@ -13435,7 +13489,7 @@ public class ReportBackingBean extends
 		getManagedBean().getRptGenBean().setCmMofRegView(false);
 		getManagedBean().getRptGenBean().setCmBasicRegView(false);
 		getManagedBean().getRptGenBean().setSmMofRegView(false);
-		getManagedBean().getRptGenBean().setSmBasicRegView(false);		
+		getManagedBean().getRptGenBean().setSmBasicRegView(false);
 		getManagedBean().getRptGenBean().setCmExtentionBrandView(false);
 		getManagedBean().getRptGenBean().setCmExtentionTypeView(false);
 		getManagedBean().getRptGenBean().setCmExtentionMeasurmentView(false);
@@ -13520,7 +13574,7 @@ public class ReportBackingBean extends
 		}
 		this.setSmSupplierType(null);
 		this.setSmRTReportType(null);
-		this.setSmSupplierName(null);
+		this.setSmSupplierName(null);		
 		smMofRegistrationFeeList = new ArrayList<SelectItem>();
 		smProcessingFeeList = new ArrayList<SelectItem>();
 		smSoftCertificateFeeList = new ArrayList<SelectItem>();
@@ -14168,42 +14222,64 @@ public class ReportBackingBean extends
 			}
 		}
 	}
-	
+
 	/**
 	 * Change receipt and transaction report type.
 	 */
 	public void changeRTReportType() {
-		
+
 		this.getRptGenBean().setSmMandatoryReceiptDateView(false);
 		this.getRptGenBean().setSmMandatoryTransactionDateView(false);
 
 		if (this.getSmRTReportType() != null) {
-			if (this.getSmRTReportType().equalsIgnoreCase(ReportConst.SM_REPORT_RESIT)) {					
-                this.getRptGenBean().setSmMandatoryReceiptDateView(true);
-				
-			} else if (this.getSmRTReportType().equalsIgnoreCase(ReportConst.SM_REPORT_TRANSACTION)) {				
+			if (this.getSmRTReportType().equalsIgnoreCase(
+					ReportConst.SM_REPORT_RESIT)) {
+				this.getRptGenBean().setSmMandatoryReceiptDateView(true);
+
+			} else if (this.getSmRTReportType().equalsIgnoreCase(
+					ReportConst.SM_REPORT_TRANSACTION)) {
 				this.getRptGenBean().setSmMandatoryTransactionDateView(true);
 			}
 		}
 	}
 
-	/**
-	 * Gets the sm rt report type.
-	 * 
-	 * @return the smRTReportType
-	 */
-	public String getSmRTReportType() {
-		return smRTReportType;
+	public void changeRTReportTypeForPayment() {
+
+		this.getRptGenBean().setSmMandatoryReceiptDateView(false);
+
+		if (this.getSmRTReportType() != null) {
+			if (this.getSmRTReportType().equalsIgnoreCase(
+					ReportConst.SM_REPORT_RESIT)
+					|| this.getSmRTReportType().equalsIgnoreCase(
+							ReportConst.SM_REPORT_TRANSACTION)) {
+				this.getRptGenBean().setSmMandatoryForDateView(true);
+				this.getRptGenBean().setSmFromDateView(true);
+
+			}
+		}
 	}
 
-	/**
-	 * Sets the sm rt report type.
-	 * 
-	 * @param smRTReportType
-	 *            the smRTReportType to set
-	 */
-	public void setSmRTReportType(String smRTReportType) {
-		this.smRTReportType = smRTReportType;
+	public List<SelectItem> getPaymentTypeMethodList() {
+
+		List<SelectItem> paymentTypeMethodList = new ArrayList<SelectItem>();
+
+		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+						IPMReportSO.class);
+
+		List<Object[]> paymentTypeList = reportSO
+				.retrievePayementTypeMethodList();
+
+		for (Object object : paymentTypeList) {
+
+			SelectItem selectItem1 = new SelectItem();
+			selectItem1.setValue(object);
+			selectItem1.setLabel(object.toString());
+			paymentTypeMethodList.add(selectItem1);
+
+		}
+
+		return paymentTypeMethodList;
 	}
 
 }
