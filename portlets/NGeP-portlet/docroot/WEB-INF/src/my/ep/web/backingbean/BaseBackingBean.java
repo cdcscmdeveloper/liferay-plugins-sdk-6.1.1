@@ -28,15 +28,20 @@ import javax.faces.context.ExceptionHandler;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constants.BpmConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.exception.EpException;
@@ -50,6 +55,7 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.exceptionhandler.EpExceptionHandler;
@@ -64,7 +70,6 @@ import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
@@ -680,7 +685,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 		tempDir += "/" + path;
 
-		String uploadDir = "";
+		//String uploadDir = "";
 
 		UploadedFile file = event.getFile();
 
@@ -1008,6 +1013,59 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		} finally {
 			out.flush();
 			out.close(); 
+		}
+	}
+	
+
+
+	/**
+	 * To get BpmTask Details.
+	 * 
+	 * @param clazz
+	 * @return Object payLoadInstance
+	 */
+	@SuppressWarnings("unchecked")
+	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(
+			Class<BPM_DATA_TYPE> clazz) {
+		FacesScopes facesScopes = new FacesScopes();
+		HttpServletRequest servletRequest = PortalUtil
+				.getHttpServletRequest(facesScopes.getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil
+				.getOriginalServletRequest(servletRequest);
+
+		String taskId = originalServletRequest.getParameter("taskId");
+
+		IBpmSO bpmSO;
+
+		try {
+			bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+					.getServiceObject(IBpmSO.class);
+
+			BpmRequestDTO reqDTO = new BpmRequestDTO();
+			reqDTO.setCtxToken(facesScopes.getBPMAuthenticationCtxToken());
+			reqDTO.setTaskId(taskId);
+
+			BpmResponseDTO resDTO = bpmSO.getTaskDetails(reqDTO);
+
+			this.renewSesionObject();
+			
+			boolean isAssignedState = BpmConstants.STATE_ASSIGNED.equals(resDTO.getStatus());
+			Object payLoad = resDTO.getPojo();
+			
+			this.getManagedBean().setTaskId(taskId);
+			this.getManagedBean().setAssignedState(isAssignedState);
+			//if (isAssignedState) {
+				this.getManagedBean().setOutComes(resDTO.getAction());	
+			//}
+			this.getManagedBean().setCurrentStatusId(
+					Long.valueOf(resDTO.getDocStatus()));
+			this.getManagedBean().setTaskName(resDTO.getTaskName());
+			this.getManagedBean().setPayLoad(payLoad);
+
+			return (BPM_DATA_TYPE) payLoad;
+
+		} finally {
+			bpmSO = null;
 		}
 	}
 }

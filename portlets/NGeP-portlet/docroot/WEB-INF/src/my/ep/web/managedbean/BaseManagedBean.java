@@ -19,6 +19,8 @@ public abstract class BaseManagedBean implements Serializable {
 	private String title;
 	private Long currentStatusId;
 	private String taskName;
+	private boolean isAssignedState;
+	private Object payLoad;
 
 	public String getTaskName() {
 		return taskName;
@@ -80,6 +82,34 @@ public abstract class BaseManagedBean implements Serializable {
 	 */
 	public void setCurrentStatusId(Long currentStatusId) {
 		this.currentStatusId = currentStatusId;
+	}
+
+	/**
+	 * @return the isAssignedState
+	 */
+	public boolean isAssignedState() {
+		return isAssignedState;
+	}
+
+	/**
+	 * @param isAssignedState the isAssignedState to set
+	 */
+	public void setAssignedState(boolean isAssignedState) {
+		this.isAssignedState = isAssignedState;
+	}
+
+	/**
+	 * @return the payLoad
+	 */
+	public Object getPayLoad() {
+		return payLoad;
+	}
+
+	/**
+	 * @param payLoad the payLoad to set
+	 */
+	public void setPayLoad(Object payLoad) {
+		this.payLoad = payLoad;
 	}
 
 }
