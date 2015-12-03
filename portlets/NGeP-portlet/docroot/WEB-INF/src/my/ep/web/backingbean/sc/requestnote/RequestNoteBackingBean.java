@@ -43,9 +43,6 @@ import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IPrInquirySO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -112,7 +109,6 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
 import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
@@ -723,60 +719,43 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @return void
 	 */
 	public void preRenderView() {
-		renewSesionObject();
-		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
-		String taskId = originalServletRequest.getParameter("taskId");
-		if (StringUtils.isNotBlank(taskId)) {
-			this.getManagedBean().setTaskId(taskId);
-			log.info("taskId : " + taskId);
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-			FacesScopes facesScopes = new FacesScopes();
-			BpmRequestDTO reqDTO = new BpmRequestDTO();
-			reqDTO.setCtxToken(facesScopes.getBPMAuthenticationCtxToken());
-			reqDTO.setTaskId(taskId);
-			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-			this.getManagedBean().setOutComes(res.getAction());
-			this.getManagedBean().setProcessName(res.getProcessName());
-			Object obj = res.getPojo();
-			SCDirectPurchaseDataType directPurchaseDataType = (SCDirectPurchaseDataType) obj;
-			Long dpId = null;
-			boolean zoneFlag = Boolean.FALSE;
-			ScRequestNote	requestNote = null;
+		SCDirectPurchaseDataType directPurchaseDataType = super.getBpmTaskDetails(SCDirectPurchaseDataType.class);
+		Long dpId = null;
+		boolean zoneFlag = Boolean.FALSE;
+		ScRequestNote	requestNote = null;
 
-			if(directPurchaseDataType.getRnId() == null){
-				dpId = Long.valueOf(directPurchaseDataType.getDpId());
-			} else{
-				dpId = Long.valueOf(directPurchaseDataType.getRnId());
-			}
-			
-			if(directPurchaseDataType.getPidId() != null) {
-				getManagedBean().setPurchaseInDefaultId(
-						Long.valueOf(directPurchaseDataType.getPidId()));
-			}
-			
-			requestNoteReqDTO.setRequestNoteId(dpId);
-			RequestNoteResDTO requestNoteResDTO = getDirectPurchaseSO().getRequestNote(requestNoteReqDTO);
-			if(requestNoteResDTO.getRequestNoteDetail() != null){
-				requestNote = requestNoteResDTO.getRequestNoteDetail();
-			}
-
-			if(requestNote != null){
-				if (requestNote.getScRNZone() != null) {
-					getManagedBean().setScRNZone(requestNote.getScRNZone());	
-				} else {
-					getManagedBean().setScRNZone(new ScRNZone());	
-				}
-				
-				retrieveRequestNoteDetails(requestNote, res.getDocStatus().longValue(), zoneFlag);
-			}
-			// title checker
-			getManagedBean().setTitleChecker(Boolean.FALSE);
-			FacesContext fc = FacesContext.getCurrentInstance();
-			// page nav. to common request note
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "requestNoteMain");
+		if(directPurchaseDataType.getRnId() == null){
+			dpId = Long.valueOf(directPurchaseDataType.getDpId());
+		} else{
+			dpId = Long.valueOf(directPurchaseDataType.getRnId());
 		}
+		
+		if(directPurchaseDataType.getPidId() != null) {
+			getManagedBean().setPurchaseInDefaultId(
+					Long.valueOf(directPurchaseDataType.getPidId()));
+		}
+		
+		requestNoteReqDTO.setRequestNoteId(dpId);
+		RequestNoteResDTO requestNoteResDTO = getDirectPurchaseSO().getRequestNote(requestNoteReqDTO);
+		if(requestNoteResDTO.getRequestNoteDetail() != null){
+			requestNote = requestNoteResDTO.getRequestNoteDetail();
+		}
+
+		if(requestNote != null){
+			if (requestNote.getScRNZone() != null) {
+				getManagedBean().setScRNZone(requestNote.getScRNZone());	
+			} else {
+				getManagedBean().setScRNZone(new ScRNZone());	
+			}
+			
+			retrieveRequestNoteDetails(requestNote, getManagedBean().getCurrentStatusId(), zoneFlag);
+		}
+		// title checker
+		getManagedBean().setTitleChecker(Boolean.FALSE);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		// page nav. to common request note
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "requestNoteMain");
 	}
 	
 	/**
@@ -2323,8 +2302,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 			
 			UserResDTO userResDTO = getUserSO().retrieveUserListByRole(userReqDto);
-			List<PmUser> availableApprover	=	userResDTO.getUserList();
-			List<PmUser> selectedApprover	=	new ArrayList<PmUser>();
+			//List<PmUser> availableApprover	=	userResDTO.getUserList();
+			//List<PmUser> selectedApprover	=	new ArrayList<PmUser>();
 			
 			/*if ( requestNote != null && requestNote.getApprover()().size() > 0) {
 			   for (int i = 0; i < requestNote.getApprovalUsers().size(); i++) {
