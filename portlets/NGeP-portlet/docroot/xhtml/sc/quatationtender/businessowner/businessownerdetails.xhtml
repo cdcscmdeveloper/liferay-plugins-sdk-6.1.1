@@ -59,7 +59,7 @@
 				<h:outputText
 					value="#{lbl[businessowner.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.consolidate']}" style="width:11%"
+			<p:column headerText="#{lbl['lbl.sc.consolidate']}" style="width:11%;text-align: center;"
 				selectionMode="single">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
@@ -117,7 +117,7 @@
 			<h:panelGrid
 				rendered="#{qTDetailBB.managedBean.qt.specApprovalReq ne null and qTDetailBB.managedBean.qt.specApprovalReq ne '0'}"
 				border="0" cellpadding="0" cellspacing="0" columns="3">
-				<p:outputLabel value="*" styleClass="mandatory" style="width:66px;"
+				<p:outputLabel value="*" styleClass="mandatory" style="width:192px;"
 					valign="top" />
 				<p:outputLabel value="#{lbl['lbl.sc.ministry.spec.secretary']}" />
 				<p:selectOneMenu id="ministryspec" disabled="#{readOnly}"
