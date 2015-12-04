@@ -7,7 +7,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.supplier.list']}"
+		id="technicalFinancialUploadNoActionChecklistNoScoringSupplierListIds"
+		toggleable="true">
 		<p:dataTable var="complianceTechnicalSupplier" rows="10" lazy="true"
 			value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckListDM}"
 			id="complianceTechnicalSupplier" editable="true" rowIndexVar="index"

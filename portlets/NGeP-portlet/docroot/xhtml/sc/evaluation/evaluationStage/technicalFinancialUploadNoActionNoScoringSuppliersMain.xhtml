@@ -13,24 +13,25 @@
 
 	<ui:define name="contentSection">
 		<h:panelGroup>
-			<div>
-				<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-					immediate="true"
-					action="#{evaluationBackingBean.evaluationBackaction}" />
-
-			</div>
-			<p:spacer height="25" />
-			<br />
-			<br />
+			<table width="100%" class="BtnSpacing">
+				<tr>
+					<td align="right"><p:commandButton
+							value="#{lbl['lbl.btn.back']}" style="float:left;"
+							immediate="true"
+							action="#{evaluationBackingBean.evaluationBackaction}" /></td>
+				</tr>
+			</table>
 			<ui:include src="/xhtml/sc/evaluation/evaluationHeader.xhtml" />
-			<br />
-			<p:panel header="#{lbl['lbl.sc.eva.technical.proposal.evaluation']}">
+
+			<p:panel id="technicalFinancialUploadNoActionChecklistHeaderId"
+				toggleable="true"
+				header="#{lbl['lbl.sc.eva.technical.proposal.evaluation']}">
 				<ui:include src="/xhtml/sc/evaluation/checklistHeader.xhtml" />
 			</p:panel>
-			<br />
-			<h:panelGroup>
-				<ui:include src="technicalFinancialUploadNoScoreSupplierList.xhtml" />
-			</h:panelGroup>
+
+
+			<ui:include src="technicalFinancialUploadNoScoreSupplierList.xhtml" />
+
 
 		</h:panelGroup>
 	</ui:define>
