@@ -4656,22 +4656,22 @@ public class SmApplicationUtil {
 	 */
 	public void removePendingApprovedCategoryIfNotValid(SmAppl appl,
 			String facilityType) {
-		// List<SmSupplierCategory> catList = appl.getSmSupplierCategories();
-		// if (!SmCommonUtil.isCollectionEmpty(catList)) {
-		// for (Iterator<SmSupplierCategory> catIt = catList.iterator(); catIt
-		// .hasNext();) {
-		// SmSupplierCategory cat = catIt.next();
-		// if (cat.getRecordStatusFlg().compareTo(
-		// SupplierManagementConst.PENDING_ACT_STATUS) == 0
-		// || cat.getRecordStatusFlg()
-		// .compareTo(
-		// SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
-		// if (!isCatL3Valid(appl, facilityType, cat)) {
-		// catIt.remove();
-		// }
-		// }
-		// }
-		// }
+		List<SmSupplierCategory> catList = appl.getSmSupplierCategories();
+		if (!SmCommonUtil.isCollectionEmpty(catList)) {
+			for (Iterator<SmSupplierCategory> catIt = catList.iterator(); catIt
+					.hasNext();) {
+				SmSupplierCategory cat = catIt.next();
+				if (cat.getRecordStatusFlg().compareTo(
+						SupplierManagementConst.PENDING_ACT_STATUS) == 0
+						|| cat.getRecordStatusFlg()
+								.compareTo(
+										SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
+					if (!isCatL3Valid(appl, facilityType, cat)) {
+						catIt.remove();
+					}
+				}
+			}
+		}
 	}
 
 	/**
