@@ -6,83 +6,85 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<table style="border: 0px;width:100%; align:center">
-		<tr>
-			<td width="100%" align="left" valign="top">
-				<p:panel header="#{lbl['lbl.sc.join.in']}" toggleable="true" id="attendeesPanel">
-					<p:dataTable id="meetingAttDtlTbl" var="meetingAttDtl"
-						value="#{suppFinalizationBackingBean.managedBean.meetingAttendanceList}" rows="10"
-						rowKey="#{meetingAttDtl}" rowIndexVar="rowIndex"
-						selection="#{suppFinalizationBackingBean.managedBean.selectedMeetingAttList}">
-						<ac:paginator for="meetingAttDtlTbl" />
-						
-						<p:column selectionMode="multiple" styleClass="td-check-box-spacing" 
-								  rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}"/>
-								
-						<p:ajax event="toggleSelect" update="@([id$=meetingAttDtlTbl],[id$=attdDelBtn])" 
-								process="@this" partialSubmit="true"/>	
-						<p:ajax event="rowSelect" update="@([id$=meetingAttDtlTbl],[id$=attdDelBtn])" 
-								process="@this" partialSubmit="true"/>
-						<p:ajax event="rowSelectCheckbox" update="@([id$=meetingAttDtlTbl],[id$=attdDelBtn])" 
-								process="@this" partialSubmit="true"/>
-						<p:ajax event="rowUnselect" update="@([id$=meetingAttDtlTbl],[id$=attdDelBtn])" 
-								process="@this" partialSubmit="true"/>
-						<p:ajax event="rowUnselectCheckbox" update="@([id$=meetingAttDtlTbl],[id$=attdDelBtn])" 
-								process="@this" partialSubmit="true"/>				
+	<p:panel id="attendeesPanel" header="#{lbl['lbl.sc.join.in']}" toggleable="true">
+		<p:dataTable id="meetingAttDtlTbl" var="meetingAttDtl"
+			value="#{suppFinalizationBackingBean.managedBean.meetingAttendanceList}"
+			rows="10" rowKey="#{meetingAttDtl}" rowIndexVar="rowIndex"
+			selection="#{suppFinalizationBackingBean.managedBean.selectedMeetingAttList}">
+			<ac:paginator for="meetingAttDtlTbl" />
 
-						<p:column headerText="#{lbl['lbl.sc.name']}">
-							<h:inputText value="#{meetingAttDtl.name}" maxlength="50" size="50" 
-										 required="true" label="#{lbl['lbl.sc.name']}"
-										 disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}"/>
-						</p:column>
-			
-						<p:column headerText="#{lbl['lbl.sc.identification.no']}">
-							<h:inputText value="#{meetingAttDtl.icPassport}" maxlength="15" size="15"
-										 required="true" label="#{lbl['lbl.sc.identification.no']}"
-										 disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}"/>
-						</p:column>
-					</p:dataTable>
-					
-					<div align="right" class="BtnSpacing">
-						<p:commandButton value="#{lbl['lbl.btn.add']}"
-							process="@this,meetingAttDtlTbl" 
-							partialSubmit="true"
-							action="#{suppFinalizationBackingBean.addMeetingAttendance}"
-							update="@([id$=attendeesPanel])" 
-							rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}"/>
-							
-						<p:commandButton value="#{lbl['lbl.btn.delete']}" id="attdDelBtn"
-							process="@this, meetingAttDtlTbl" partialSubmit="true" 
-							update="@([id$=meetingAttDtlTbl],[id$=attdDelBtn])"
-							onsuccess="dlgPerformDel.show();" 
-							rendered="#{(suppFinalizationBackingBean.managedBean.meetingAttendanceList ne null) and
+			<p:column selectionMode="multiple" styleClass="td-check-box-spacing"
+					  rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}" />
+
+			<p:ajax event="toggleSelect"
+				update="@([id$=meetingAttDtlTbl],[id$=attdDelBtn])" process="@this"
+				partialSubmit="true" />
+			<p:ajax event="rowSelect"
+				update="@([id$=meetingAttDtlTbl],[id$=attdDelBtn])" process="@this"
+				partialSubmit="true" />
+			<p:ajax event="rowSelectCheckbox"
+				update="@([id$=meetingAttDtlTbl],[id$=attdDelBtn])" process="@this"
+				partialSubmit="true" />
+			<p:ajax event="rowUnselect"
+				update="@([id$=meetingAttDtlTbl],[id$=attdDelBtn])" process="@this"
+				partialSubmit="true" />
+			<p:ajax event="rowUnselectCheckbox"
+				update="@([id$=meetingAttDtlTbl],[id$=attdDelBtn])" process="@this"
+				partialSubmit="true" />
+
+			<p:column headerText="#{lbl['lbl.sc.name']}">
+				<h:inputText value="#{meetingAttDtl.name}" maxlength="50" size="50"
+					required="true" label="#{lbl['lbl.sc.name']}"
+					disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.identification.no']}">
+				<h:inputText value="#{meetingAttDtl.icPassport}" maxlength="15"
+					size="15" required="true"
+					label="#{lbl['lbl.sc.identification.no']}"
+					disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}" />
+			</p:column>
+		</p:dataTable>
+
+		<div align="right" class="BtnSpacing">
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
+				process="@this,meetingAttDtlTbl" partialSubmit="true"
+				action="#{suppFinalizationBackingBean.addMeetingAttendance}"
+				update="@([id$=attendeesPanel])"
+				rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}" />
+
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" id="attdDelBtn"
+				process="@this, meetingAttDtlTbl" partialSubmit="true"
+				update="@([id$=meetingAttDtlTbl],[id$=attdDelBtn])"
+				onsuccess="dlgPerformDel.show();"
+				rendered="#{(suppFinalizationBackingBean.managedBean.meetingAttendanceList ne null) and
 										(suppFinalizationBackingBean.managedBean.meetingAttendanceList.size() gt 0) and 
-										suppFinalizationBackingBean.managedBean.secretaryUser}" 
-							disabled="#{(suppFinalizationBackingBean.managedBean.selectedMeetingAttList eq null) ||
+										suppFinalizationBackingBean.managedBean.secretaryUser}"
+				disabled="#{(suppFinalizationBackingBean.managedBean.selectedMeetingAttList eq null) ||
 										(suppFinalizationBackingBean.managedBean.selectedMeetingAttList.size() eq 0)}" />
-					</div>
-					
-					<!-- Dialog to prompt the user before deleting attendance records -->
-					<p:dialog id="dlgPerformDel" widgetVar="dlgPerformDel" styleClass="screen-title" 
-							  resizable="false" modal="true" width="330">
-						<h:panelGrid columns="3">
-							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/exclamation.png"
-								styleClass="ui-icon-complain"></p:graphicImage>
-							<p:spacer width="10" />
-							<div class="confirmation-message-box" style="font-size:11px;">#{lbl['lbl.sc.dialog.confirm.message']}</div>
-						</h:panelGrid>
-						<div class="ppRightBtn">
-							<p:commandButton value="#{lbl['lbl.btn.yes']}"  update="attdDelBtn, meetingAttDtlTbl" 
-											 process="@this, meetingAttDtlTbl"
-						          			 actionListener="#{suppFinalizationBackingBean.deleteMeetingAttendanceDetails()}" 
-						        			 onclick="dlgPerformDel.hide();">
-						    </p:commandButton>
-							<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgPerformDel.hide();" type="button" />
-						</div>
-					</p:dialog>					
-				</p:panel> 
-			</td>
-		</tr>
-	</table>
-		
+		</div>
+
+		<!-- Dialog to prompt the user before deleting attendance records -->
+		<p:dialog id="dlgPerformDel" widgetVar="dlgPerformDel"
+			styleClass="screen-title" resizable="false" modal="true" width="330">
+			<h:panelGrid columns="3">
+				<p:graphicImage
+					value="#{CommonUIConstant.imagePathUptoDesign}/exclamation.png"
+					styleClass="ui-icon-complain"></p:graphicImage>
+				<p:spacer width="10" />
+				<div class="confirmation-message-box" style="font-size: 11px;">#{lbl['lbl.sc.dialog.confirm.message']}</div>
+			</h:panelGrid>
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					update="attdDelBtn, meetingAttDtlTbl"
+					process="@this, meetingAttDtlTbl"
+					actionListener="#{suppFinalizationBackingBean.deleteMeetingAttendanceDetails()}"
+					onclick="dlgPerformDel.hide();">
+				</p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="dlgPerformDel.hide();" type="button" />
+			</div>
+		</p:dialog>
+	</p:panel>
+
 </ui:composition>
