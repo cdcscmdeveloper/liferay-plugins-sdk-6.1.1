@@ -140,21 +140,21 @@
 							<tr>
 								<td style="border-style: none !important;">
 									<p:outputLabel value="#{lbl['lbl.sm.suppdoc.license.no']}" />
-									<p:outputLabel value="*" styleClass="mandatory" />
+									<p:outputLabel value="*" styleClass="mandatory" rendered="#{table.pmDocument.mandatory}"/>
 								</td>
 								<td style="border-style: none !important;">
-									<p:inputText value="#{table.licenseNo}" size="20" id="licenseNoOfflineId" required="true" label="#{lbl['lbl.sm.suppdoc.license.no']}" >
+									<p:inputText value="#{table.licenseNo}" size="20" id="licenseNoOfflineId" required="#{table.pmDocument.mandatory}" label="#{lbl['lbl.sm.suppdoc.license.no']}" >
 										<p:ajax process="@this" partialSubmit="true"/>
 									</p:inputText>
 									<p:message id="licenseNoOfflineIdMsg" for="licenseNoOfflineId" showSummary="true" showDetail="false" display="icon" />
 								</td>
 								<td style="border-style: none !important;">
 									<p:outputLabel value="#{lbl['lbl.sm.suppdoc.license.effdate']}" />
-									<p:outputLabel value="*" styleClass="mandatory" />
+									<p:outputLabel value="*" styleClass="mandatory" rendered="#{table.pmDocument.mandatory}"/>
 								</td>
 								<td style="border-style: none !important;">
 									<p:calendar id="licenseEffDateOfflineId"
-										navigator="true" required="true" 
+										navigator="true" required="#{table.pmDocument.mandatory}" 
 										label="#{lbl['lbl.sm.suppdoc.license.effdate']}"
 										value="#{table.licenseEffDate}"
 										pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
@@ -170,11 +170,11 @@
 								<td colspan="2" style="border-style: none !important;"></td>
 								<td style="border-style: none !important;">
 									<p:outputLabel value="#{lbl['lbl.sm.suppdoc.license.expdate']}" />
-									<p:outputLabel value="*" styleClass="mandatory" />
+									<p:outputLabel value="*" styleClass="mandatory" rendered="#{table.pmDocument.mandatory}"/>
 								</td>
 								<td style="border-style: none !important;">
 									<p:calendar id="licenseExpDateOfflineId" disabled="#{empty table.licenseEffDate}"
-										navigator="true" required="true"
+										navigator="true" required="#{table.pmDocument.mandatory}"
 										label="#{lbl['lbl.sm.suppdoc.license.expdate']}"
 										value="#{table.licenseExpDate}"
 										pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
