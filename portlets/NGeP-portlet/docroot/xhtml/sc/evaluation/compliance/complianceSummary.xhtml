@@ -33,20 +33,21 @@
 
 
 		</p:dataTable>
+		<p:spacer height="10px" />
+		<table>
 
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.sc.total']}" /></td>
+				<td><p:inputText readonly="true" disabled="true"
+						style="text-align:right"
+						value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM.rowCount}"></p:inputText></td>
+			</tr>
+
+		</table>
 
 	</p:panel>
 
-	<p:spacer height="10px" />
-	<table>
 
-		<tr>
-			<td><h:outputLabel value="#{lbl['lbl.sc.total']}" /></td>
-			<td><p:inputText readonly="true" disabled="true"
-					value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM.rowCount}"></p:inputText></td>
-		</tr>
-
-	</table>
 
 
 
@@ -72,20 +73,21 @@
 
 
 		</p:dataTable>
+		<p:spacer height="10px" />
+		<table>
 
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.sc.total']}" /></td>
+				<td><p:inputText readonly="true" disabled="true"
+						style="text-align:right"
+						value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM.rowCount}"></p:inputText></td>
+			</tr>
+
+		</table>
 
 	</p:panel>
 
-	<p:spacer height="10px" />
-	<table>
 
-		<tr>
-			<td><h:outputLabel value="#{lbl['lbl.sc.total']}" /></td>
-			<td><p:inputText readonly="true" disabled="true"
-					value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM.rowCount}"></p:inputText></td>
-		</tr>
-
-	</table>
 
 
 
