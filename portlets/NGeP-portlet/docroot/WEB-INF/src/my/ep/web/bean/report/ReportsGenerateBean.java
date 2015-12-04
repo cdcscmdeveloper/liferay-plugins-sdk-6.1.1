@@ -349,6 +349,9 @@ public class ReportsGenerateBean {
 		/** The sm mandatory doc supplier type view. */
 		private boolean smMandatoryDOCSupplierTypeView = false;
 		
+		/** The sm mandatory for code view. */
+		private boolean smMandatoryForCodeView=false;
+		
 		/** The sm mof reg no view. */
 		private boolean smMofRegNoView = false;
 		
@@ -3452,14 +3455,16 @@ public class ReportsGenerateBean {
 		private String smProcessingTypeVar=ReportConst.EMPTY_VAL;
 		
 		/** The sm payment method var. */
-		private String smPaymentMethodVar=ReportConst.EMPTY_VAL;
+		private String smPaymentMethodVar=ReportConst.EMPTY_VAL;		
+		
+		/** The Sm code var. */
+		private String SmCodeVar=ReportConst.EMPTY_VAL;		
 		
 		/** The sm from month var. */
 		private String smFromMonthVar=ReportConst.EMPTY_VAL;
 		
 		/** The sm to month var. */
-		private String smToMonthVar=ReportConst.EMPTY_VAL;
-		
+		private String smToMonthVar=ReportConst.EMPTY_VAL;		
 		
 		/** The sm rt report type var. */
 		private String smRTReportTypeVar=ReportConst.EMPTY_VAL;
@@ -6537,6 +6542,25 @@ public class ReportsGenerateBean {
 		}
 		
 		/**
+		 * Gets the sm code var.
+		 * 
+		 * @return the smCodeVar
+		 */
+		public String getSmCodeVar() {
+			return SmCodeVar;
+		}
+
+		/**
+		 * Sets the sm code var.
+		 * 
+		 * @param smCodeVar
+		 *            the smCodeVar to set
+		 */
+		public void setSmCodeVar(String smCodeVar) {
+			SmCodeVar = smCodeVar;
+		}
+
+		/**
 		 * Sets the sm supporting document status view.
 		 *
 		 * @param smSupportingDocumentStatusView the new sm supporting document status view
@@ -8122,6 +8146,25 @@ public class ReportsGenerateBean {
 			return smSVOUserView;
 		}
 		
+		/**
+		 * Checks if is sm mandatory for code view.
+		 * 
+		 * @return the smMandatoryForCodeView
+		 */
+		public boolean isSmMandatoryForCodeView() {
+			return smMandatoryForCodeView;
+		}
+
+		/**
+		 * Sets the sm mandatory for code view.
+		 * 
+		 * @param smMandatoryForCodeView
+		 *            the smMandatoryForCodeView to set
+		 */
+		public void setSmMandatoryForCodeView(boolean smMandatoryForCodeView) {
+			this.smMandatoryForCodeView = smMandatoryForCodeView;
+		}
+
 		/**
 		 * Sets the sm svo user view.
 		 *
