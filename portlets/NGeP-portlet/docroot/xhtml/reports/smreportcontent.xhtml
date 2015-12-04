@@ -20,18 +20,17 @@
 								style="margin-left:-10px;width:78px;" />
 							<p:selectManyCheckbox id="mofRegistrationChk" required="true"
 								value="#{reportBackingBean.smMofRegistrationFeeList}"
-								label="#{lbl['lbl.rpt.smPaymentTypereq']}">
+								label="#{lbl['lbl.rpt.smPaymentType']}">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.smMofRegistrationFee']}"
 									itemValue="M" />
 							</p:selectManyCheckbox>
-							<p:selectManyCheckbox id="processingFeeChk" required="true"
-								value="#{reportBackingBean.smProcessingFeeList}"
-								label="#{lbl['lbl.rpt.smPaymentTypereq']}">
+							<p:selectManyCheckbox id="processingFeeChk" 
+								value="#{reportBackingBean.smProcessingFeeList}">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.smProcessingFee']}"
 									itemValue="P" />
 							</p:selectManyCheckbox>
 
-							<p:selectManyCheckbox id="softCertificateFee" required="true"
+							<p:selectManyCheckbox id="softCertificateFee" 
 								value="#{reportBackingBean.smSoftCertificateFeeList}">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.smSoftCertificateFee']}"
 									itemValue="S" />
