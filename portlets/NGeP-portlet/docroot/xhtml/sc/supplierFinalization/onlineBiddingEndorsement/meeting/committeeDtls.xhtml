@@ -6,107 +6,100 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<table style="border: 0px;width:100%; align:center">
-		<tr>
-			<td width="100%" align="left" valign="top"> 
-				<p:panel header="#{suppFinalBiddingBackingBean.managedBean.committeeTabLabel}" toggleable="true">
-					<p:dataTable id="committeeDtlTbl" var="committeeDtl"
-						value="#{suppFinalBiddingBackingBean.managedBean.committeeList}" rows="10"
-						rowKey="#{committeeDtl}" rowIndexVar="rowIndex" resizableColumns="false">
-						<ac:paginator for="committeeDtlTbl" />
+	<p:panel header="#{suppFinalBiddingBackingBean.managedBean.committeeTabLabel}"
+			 toggleable="true">
+		<p:dataTable id="committeeDtlTbl" var="committeeDtl"
+			value="#{suppFinalBiddingBackingBean.managedBean.committeeList}"
+			rows="10" rowKey="#{committeeDtl}" rowIndexVar="rowIndex"
+			resizableColumns="false">
+			<ac:paginator for="committeeDtlTbl" />
 
-						<p:column headerText="#{lbl['lbl.sc.name']}" style="width:100%; white-space:normal;">
-							<h:outputText value="#{committeeDtl.scCommitteeMember.memberName}"></h:outputText>
-						</p:column>
-			
-						<p:column headerText="#{lbl['lbl.sc.identification.no']}">
-							<h:outputText value="#{committeeDtl.scCommitteeMember.icPassport}"></h:outputText>
-						</p:column>
-			
-						<p:column headerText="#{lbl['lbl.sc.designation']}" style="width:100%; white-space:normal;">
-							<h:outputText value="#{committeeDtl.scCommitteeMember.designation}"></h:outputText>
-						</p:column>
-						
-						<p:column headerText="#{lbl['lbl.sc.email']}">
-							<h:outputText value="#{committeeDtl.scCommitteeMember.email}"></h:outputText>
-						</p:column>
-			
-						<p:column headerText="#{lbl['lbl.sc.grade']}">
-							<h:outputText value="#{committeeDtl.scCommitteeMember.grade}"></h:outputText>
-						</p:column>
-			
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="#{lbl['lbl.sc.pnp']}" />
-								<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
-							</f:facet>
-							<h:outputText value="#{suppFinalBiddingBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+			<p:column headerText="#{lbl['lbl.sc.name']}"
+				style="width:100%; white-space:normal;">
+				<h:outputText value="#{committeeDtl.scCommitteeMember.memberName}"></h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.identification.no']}">
+				<h:outputText value="#{committeeDtl.scCommitteeMember.icPassport}"></h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.designation']}"
+				style="width:100%; white-space:normal;">
+				<h:outputText value="#{committeeDtl.scCommitteeMember.designation}"></h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.email']}">
+				<h:outputText value="#{committeeDtl.scCommitteeMember.email}"></h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.grade']}">
+				<h:outputText value="#{committeeDtl.scCommitteeMember.grade}"></h:outputText>
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.pnp']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
+				</f:facet>
+				<h:outputText
+					value="#{suppFinalBiddingBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
 								fn:toUpperCase(committeeDtl.scCommitteeMember.PNP))}" />
-						</p:column>
-						
-						<p:column headerText="#{lbl['lbl.sc.role']}">
-							<h:outputText value="#{suppFinalBiddingBackingBean.getParameterDesc(committeeDtl.scCommitteeMember.memberRole)}"></h:outputText>
-						</p:column>
-						
-						<p:column headerText="#{lbl['lbl.sc.representative.type']}">
-							<h:outputText value="#{suppFinalBiddingBackingBean.getParameterDesc(committeeDtl.scCommitteeMember.representativeType)}"/>
-						</p:column>
-						
-						<p:column headerText="#{lbl['lbl.sc.attendance']}">
-							<p:selectBooleanCheckbox value="#{committeeDtl.attended}" 
-								  disabled="#{!suppFinalBiddingBackingBean.managedBean.secretaryUser}"/>
-						</p:column>
-					</p:dataTable>
-					
-					<p:spacer height="10px"></p:spacer>
-				</p:panel> 
-				
-				<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true">
-					<table style="width: 100%" id="remarkslist">
-						<tr>
-							<td class="TableFieldLeft" style="width: 96px;">
-								<p:outputLabel value="#{lbl['lbl.sc.remark']}" />
-							</td>
-							
-							<td class="TableFieldRight">
-								<p:dataGrid var="remarkVar"
-									value="#{suppFinalBiddingBackingBean.managedBean.committeeRemarkList}"
-									rowIndexVar="remarkIndex" columns="1">
-									<table>
-										<tr>
-											<td rowspan="2" valign="top">
-												<h:graphicImage height="30"
-													value="#{suppFinalBiddingBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
-													width="30" />
-											</td>
-											<td width="5"></td>
-											<td>
-												<h:outputText value="#{remarkVar.createdUser.userName}" />,
-												<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
-													<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
-												</h:outputText>
-											</td>
-										</tr>
-										<tr>
-											<td></td>
-											<td>
-												<p:inputTextarea cols="40" value="#{remarkVar.remark}"
-													rendered="#{remarkVar.remarkId eq null}"
-													disabled="#{!suppFinalBiddingBackingBean.managedBean.secretaryUser}">
-													<p:ajax partialSubmit="true" process="@this" update="@this"/>
-												</p:inputTextarea> 
-												<h:outputText value="#{remarkVar.remark}"
-													rendered="#{remarkVar.remarkId ne null}"
-													style="display: inline-block; width:220px;word-wrap: break-word;" />
-											</td>
-										</tr>
-									</table>
-								</p:dataGrid>
-							</td>
-						</tr>
-					</table>
-				</p:panel>
-			</td>
-		</tr>
-	</table>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.role']}">
+				<h:outputText
+					value="#{suppFinalBiddingBackingBean.getParameterDesc(committeeDtl.scCommitteeMember.memberRole)}"></h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.representative.type']}">
+				<h:outputText
+					value="#{suppFinalBiddingBackingBean.getParameterDesc(committeeDtl.scCommitteeMember.representativeType)}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.attendance']}">
+				<p:selectBooleanCheckbox value="#{committeeDtl.attended}"
+					disabled="#{!suppFinalBiddingBackingBean.managedBean.secretaryUser}" />
+			</p:column>
+		</p:dataTable>
+
+		<p:spacer height="10px"></p:spacer>
+	</p:panel>
+
+	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true">
+		<table style="width: 100%" id="remarkslist">
+			<tr>
+				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
+						value="#{lbl['lbl.sc.remark']}" /></td>
+
+				<td class="TableFieldRight"><p:dataGrid var="remarkVar"
+						value="#{suppFinalBiddingBackingBean.managedBean.committeeRemarkList}"
+						rowIndexVar="remarkIndex" columns="1">
+						<table>
+							<tr>
+								<td rowspan="2" valign="top"><h:graphicImage height="30"
+										value="#{suppFinalBiddingBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
+										width="30" /></td>
+								<td width="5"></td>
+								<td><h:outputText value="#{remarkVar.createdUser.userName}" />,
+									<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
+										<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+									</h:outputText></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
+										rendered="#{remarkVar.remarkId eq null}"
+										disabled="#{!suppFinalBiddingBackingBean.managedBean.secretaryUser}">
+										<p:ajax partialSubmit="true" process="@this" update="@this" />
+									</p:inputTextarea> <h:outputText value="#{remarkVar.remark}"
+										rendered="#{remarkVar.remarkId ne null}"
+										style="display: inline-block; width:220px;word-wrap: break-word;" />
+								</td>
+							</tr>
+						</table>
+					</p:dataGrid></td>
+			</tr>
+		</table>
+	</p:panel>
+
 </ui:composition>
