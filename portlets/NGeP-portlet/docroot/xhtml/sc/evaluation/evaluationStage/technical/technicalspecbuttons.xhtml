@@ -12,7 +12,7 @@
 	<h:panelGroup>
 		<h:panelGroup>
 
-			<table width="100%">
+			<table width="100%" class="BtnSpacing">
 				<tr>
 					<td align="right"><p:commandButton
 							value="#{lbl['lbl.btn.back']}" style="float:left;"
@@ -31,7 +31,7 @@
 
 		<ui:include src="/xhtml/sc/evaluation/evaluationHeader.xhtml" />
 
-		<p:panel id="technicalSpecSupplierScoringOtherProposalheader"
+		<p:panel id="technicalSpecSupplierScoringOtherProposalheader" toggleable="true"
 			header="#{lbl['lbl.sc.eva.technical.proposal.evaluation']}">
 			<ui:include
 				src="/xhtml/sc/evaluation/evaluationStage/supplierChecklistHeader.xhtml" />
