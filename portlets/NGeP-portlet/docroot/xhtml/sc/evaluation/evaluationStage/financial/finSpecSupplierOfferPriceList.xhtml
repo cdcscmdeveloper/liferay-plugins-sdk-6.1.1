@@ -16,7 +16,8 @@
 	<ui:include src="financialspecSupplierList.xhtml"></ui:include>
 
 
-	<p:panel header="#{lbl['lbl.sc.spec.scoring.offered.price']}">
+	<p:panel id="evaluationStageSpecificationCommitteeBypackageofferPrice"
+		toggleable="true" header="#{lbl['lbl.sc.spec.scoring.offered.price']}">
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.spec.scoring.offered.price.instruction']}"
 			escape="false" />
@@ -52,48 +53,41 @@
 					<ac:iconTooltip
 						value="#{lbl['lbl.sc.by.package.evaluation.tooltip']}" />
 				</p:column>
-				<p:column style="font-weight: bold;">
+				<p:column style="text-align:right">
 
-					<h:outputLabel value="#{finSpecofferPrice.fromVariance}"
-						style="text-align:right"></h:outputLabel>
+					<h:outputText value="#{finSpecofferPrice.fromVariance}"></h:outputText>
 				</p:column>
 
 
 
-				<p:column colspan="1" style="font-weight: bold;">
-					<h:outputLabel value="#{finSpecofferPrice.toVariance}"
-						style="text-align:right"></h:outputLabel>
+				<p:column colspan="1" style="text-align:right">
+					<h:outputText value="#{finSpecofferPrice.toVariance}"></h:outputText>
 				</p:column>
 
-				<p:column colspan="1" style="font-weight: bold;">
-					<h:outputLabel
-						value="#{evaluationBackingBean.managedBean.packageFromVarieance}"
-						style="text-align:right">
+				<p:column colspan="1" style="text-align:right">
+					<h:outputText
+						value="#{evaluationBackingBean.managedBean.packageFromVarieance}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputLabel>
+					</h:outputText>
 				</p:column>
 
-				<p:column colspan="1" style="font-weight: bold;">
-					<h:outputLabel
-						value="#{evaluationBackingBean.managedBean.packageToVarieance}"
-						style="text-align:right">
+				<p:column colspan="1" style="text-align:right">
+					<h:outputText
+						value="#{evaluationBackingBean.managedBean.packageToVarieance}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputLabel>
+					</h:outputText>
 				</p:column>
-				<p:column colspan="1" style="font-weight: bold;">
-					<h:outputLabel value="#{finSpecofferPrice.belowScore}"
-						style="text-align:right"></h:outputLabel>
+				<p:column colspan="1" style="text-align:right">
+					<h:outputText value="#{finSpecofferPrice.belowScore}"></h:outputText>
 				</p:column>
-				<p:column colspan="1" style="font-weight: bold;">
-					<h:outputLabel
-						value="#{evaluationBackingBean.managedBean.withInVarieance}"
-						style="text-align:right"></h:outputLabel>
+				<p:column colspan="1" style="text-align:right">
+					<h:outputText
+						value="#{evaluationBackingBean.managedBean.withInVarieance}"></h:outputText>
 				</p:column>
-				<p:column colspan="1" style="font-weight: bold;">
-					<h:outputLabel value="#{finSpecofferPrice.aboveScore}"
-						style="text-align:right"></h:outputLabel>
+				<p:column colspan="1" style="text-align:right">
+					<h:outputText value="#{finSpecofferPrice.aboveScore}"></h:outputText>
 				</p:column>
 
 

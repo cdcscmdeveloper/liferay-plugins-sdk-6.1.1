@@ -16,22 +16,24 @@
 
 
 		<h:panelGroup>
-			<table width="100%">
+			<table width="100%" class="BtnSpacing">
 				<tr>
 					<td align="right"><p:commandButton
 							value="#{lbl['lbl.btn.back']}" style="float:left;"
-							styleClass="BtnSpacing"
 							action="#{evaluationBackingBean.evaluationBackaction}" /></td>
 				</tr>
 			</table>
 		</h:panelGroup>
-		
+
 		<ui:include src="/xhtml/sc/evaluation/evaluationHeader.xhtml" />
-		
-		<p:panel header="#{lbl['lbl.sc.eva.financial.proposal.evaluation']}">
+
+		<p:panel
+			id="evaluationStageFinancialSpceZoneSelectByBussinessOnenerIds"
+			toggleable="true"
+			header="#{lbl['lbl.sc.eva.financial.proposal.evaluation']}">
 			<ui:include src="/xhtml/sc/evaluation/checklistHeader.xhtml" />
 		</p:panel>
-		
+
 
 		<h:panelGroup>
 			<table style="border: 0px; width: 100%">
