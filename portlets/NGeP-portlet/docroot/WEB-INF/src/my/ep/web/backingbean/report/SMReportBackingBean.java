@@ -565,8 +565,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			  rptGenBean.setSmMandatoryRTDateView(true);	
 			  rptGenBean.setSmMandatoryReceiptDateView(true);
 			  rptGenBean.setSmSupplierNameView(true);
-			  checkAuthorizationByRoleCode(rptGenBean,authoriztionList);
-			
+			  checkAuthorizationByRoleCode(rptGenBean,authoriztionList);			
 			break;
 		case ReportConst.SM_RECEIPT_PAYMENT_METHODS_RPT_VAL:
 			  rptGenBean.setSmMandatoryPaymentMethodView(true); 
@@ -577,10 +576,18 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			  checkAuthorizationByRoleCode(rptGenBean,authoriztionList);
 			break;
 		case ReportConst.SM_RECEIPT_CLASSIFICATION_CODE_RPT_VAL:
+			  rptGenBean.setSmMandatoryForCodeView(true);
+			  rptGenBean.setSmNonMandatoryDateView(true);
+			  rptGenBean.setSmFromDateView(true);
 			break;
 		case ReportConst.SM_OUTSTANDING_RESULTS_RECEIVED_RPT_VAL:
+			  rptGenBean.setSmMandatoryForDateView(true);
+			  rptGenBean.setSmFromDateView(true);
+			  checkAuthorizationByRoleCode(rptGenBean,authoriztionList);
 			break;
 		case ReportConst.SM_LIST_RECIPT_TIMES_RPT_VAL:
+			  rptGenBean.setSmMandatoryForDateView(true);
+			  rptGenBean.setSmFromDateView(true);			 
          break;
 	        default: 
 	        	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));

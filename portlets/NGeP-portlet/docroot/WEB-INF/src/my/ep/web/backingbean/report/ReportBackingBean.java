@@ -821,6 +821,8 @@ public class ReportBackingBean extends
 	/** The sm application status. */
 	private String smApplicationStatus;
 
+	private String smCode;
+
 	private String paymentMethod;
 
 	/** The sm payment type. */
@@ -3185,6 +3187,21 @@ public class ReportBackingBean extends
 	 */
 	public String getSmMofRegNoFrom() {
 		return smMofRegNoFrom;
+	}
+
+	/**
+	 * @return the smCode
+	 */
+	public String getSmCode() {
+		return smCode;
+	}
+
+	/**
+	 * @param smCode
+	 *            the smCode to set
+	 */
+	public void setSmCode(String smCode) {
+		this.smCode = smCode;
 	}
 
 	/**
@@ -11592,6 +11609,7 @@ public class ReportBackingBean extends
 						.getSmSupplierName().toString() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmPaymentMethod() != null) && (this
 						.getSmPaymentMethod().toString() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmCode() != null) && (this.getSmCode().toString() != ReportConst.EMPTY_VAL))
 				|| (this.getSmMofRegistrationFeeList() != null && this
 						.getSmMofRegistrationFeeList().size() > 0)
 				|| (this.getSmProcessingFeeList() != null && this
@@ -11646,7 +11664,18 @@ public class ReportBackingBean extends
 								.getReportValue()
 								.trim()
 								.equalsIgnoreCase(
-										ReportConst.SM_RECEIPT_PAYMENT_METHODS_RPT_VAL)) {
+										ReportConst.SM_RECEIPT_PAYMENT_METHODS_RPT_VAL)
+						|| getManagedBean()
+								.getReportValue()
+								.trim()
+								.equalsIgnoreCase(
+										ReportConst.SM_RECEIPT_CLASSIFICATION_CODE_RPT_VAL)) {
+
+					if ((this.getSmCode() != null)
+							&& (this.getSmCode() != ReportConst.EMPTY_VAL)) {
+						rptGenBean.setSmCodeVar(ReportConst.AMP_SM_OCDE_TYPE
+								+ this.getSmCode());
+					}
 
 					if ((this.getSmPaymentMethod() != null)
 							&& (this.getSmPaymentMethod() != ReportConst.EMPTY_VAL)) {
@@ -12045,7 +12074,8 @@ public class ReportBackingBean extends
 						+ rptGenBean.getEpNumberTotVar()
 						+ rptGenBean.getBusinessRegNoTotVar()
 						+ rptGenBean.getIcNumberTotVar()
-						+ rptGenBean.getSmRTReportTypeVar()
+						+ rptGenBean.getSmRTReportTypeVar()						
+						+ rptGenBean.getSmCodeVar()
 						+ rptGenBean.getSmSupplierNameVar()
 						+ rptGenBean.getSmMofRegistrationFeeVar()
 						+ rptGenBean.getSmProcessingFeeVar()
@@ -13574,13 +13604,14 @@ public class ReportBackingBean extends
 		}
 		this.setSmSupplierType(null);
 		this.setSmRTReportType(null);
-		this.setSmSupplierName(null);		
+		this.setSmSupplierName(null);
 		smMofRegistrationFeeList = new ArrayList<SelectItem>();
 		smProcessingFeeList = new ArrayList<SelectItem>();
 		smSoftCertificateFeeList = new ArrayList<SelectItem>();
 		this.setSmMofRegNo(null);
 		this.setSmRegistrationStatus(null);
 		this.setSmcategory(null);
+		this.setSmCode(null);
 		this.setSmMainCategory(null);
 		this.setSmSubCategory(null);
 		this.setSmSubCategoryDivision(null);
