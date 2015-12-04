@@ -136,13 +136,13 @@
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
-				process="@all" partialSubmit="true"
+				process="@all" partialSubmit="true" styleClass="BtnSpacing"
 				action="#{supplierProposalDetailBackingBean.addCashOnHand}"
 				update="@([id$=cashOnHandPanel])" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
-				partialSubmit="true" process="@this"
+				partialSubmit="true" process="@this" styleClass="BtnSpacing"
 				update="@([id$=finCashOnHandDeleteId])"
 				action="#{supplierProposalDetailBackingBean.deleteCashOnHand}" />
 

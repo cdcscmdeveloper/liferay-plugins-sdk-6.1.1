@@ -14,34 +14,34 @@
 	<c:if test="#{!supplierProposalDetailBackingBean.managedBean.closed}">
 
 		<c:if test="#{'TS' eq docDefinationKey}">
-			<p:commandButton value="#{lbl['lbl.btn.save']}"
+			<p:commandButton value="#{lbl['lbl.btn.save']}" styleClass="BtnSpacing"
 				action="#{supplierProposalDetailBackingBean.saveTechnicalSpecificationAction(false)}"
 				process="@all" partialSubmit="true" update="@all" />
 
-			<p:commandButton value="#{lbl['lbl.btn.complete']}"
+			<p:commandButton value="#{lbl['lbl.btn.complete']}" styleClass="BtnSpacing"
 				action="#{supplierProposalDetailBackingBean.saveTechnicalSpecificationAction(true)}"
 				process="@all" partialSubmit="true" update="@all"/>
 		</c:if>
 
 		<c:if test="#{'WF' eq docDefinationKey}">
 			<c:if test="#{'TN' eq chkDefinationKey}">
-				<p:commandButton value="#{lbl['lbl.btn.save']}"
+				<p:commandButton value="#{lbl['lbl.btn.save']}" styleClass="BtnSpacing"
 					process="@all" partialSubmit="true" update="@all"
 					action="#{supplierProposalDetailBackingBean.saveTechNonGovCompanyExpAction(false)}" />
 				<p:commandButton value="#{lbl['lbl.btn.complete']}"
-					process="@all" partialSubmit="true"
+					process="@all" partialSubmit="true" styleClass="BtnSpacing"
 					update="@all"
 					action="#{supplierProposalDetailBackingBean.saveTechNonGovCompanyExpAction(true)}" />
 			</c:if>
 			<c:if test="#{'NE' eq chkDefinationKey}">
-				<p:commandButton value="#{lbl['lbl.btn.save']}"
+				<p:commandButton value="#{lbl['lbl.btn.save']}" styleClass="BtnSpacing"
 					process="@all" partialSubmit="true" update="@all"
 					action="#{supplierProposalDetailBackingBean.saveTechEmployeesDtlAction(false)}"
 					rendered="#{!supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}" />
 
 				<p:commandButton value="#{lbl['lbl.btn.complete']}"
 					process="@all" partialSubmit="true"
-					update="@all"
+					update="@all" styleClass="BtnSpacing"
 					action="#{supplierProposalDetailBackingBean.saveTechEmployeesDtlAction(true)}"
 					rendered="#{!supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}" />
 			</c:if>

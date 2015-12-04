@@ -184,13 +184,13 @@
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="true"
-				process="@all"
+				process="@all" styleClass="BtnSpacing"
 				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
 				action="#{supplierProposalDetailBackingBean.addNonFederalGovtExperience}"
 				update="@([id$=nonFedExpPanel])" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				partialSubmit="true" process="@this"
+				partialSubmit="true" process="@this" styleClass="BtnSpacing"
 				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
 				oncomplete="techNonFedDelete.show();"
 				update="@([id$=nonFedExpPanel])" />
