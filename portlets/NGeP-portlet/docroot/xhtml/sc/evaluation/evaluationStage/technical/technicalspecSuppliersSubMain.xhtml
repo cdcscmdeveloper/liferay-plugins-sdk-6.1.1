@@ -9,18 +9,18 @@
 
 
 
-	<table width="100%">
+	<table width="100%" class="BtnSpacing">
 		<tr>
 			<td align="right"><p:commandButton
 					value="#{lbl['lbl.btn.back']}" style="float:left;" immediate="true"
-					styleClass="BtnSpacing"
 					action="#{evaluationBackingBean.evaluationBackaction}" /></td>
 		</tr>
 	</table>
 
 	<ui:include src="/xhtml/sc/evaluation/evaluationHeader.xhtml" />
 
-	<p:panel header="#{lbl['lbl.sc.eva.technical.proposal.evaluation']}">
+	<p:panel header="#{lbl['lbl.sc.eva.technical.proposal.evaluation']}"
+		toggleable="true">
 		<ui:include src="/xhtml/sc/evaluation/checklistHeader.xhtml" />
 	</p:panel>
 
