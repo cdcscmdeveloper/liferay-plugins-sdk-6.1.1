@@ -21,11 +21,11 @@
 				closable="true" showDetail="true" showSummary="false"
 				severity="error, info"></p:messages>
 			<h:panelGroup>
-				<table width="100%">
+				<table width="100%" class="BtnSpacing">
 					<tr>
 						<td align="right"><p:commandButton
 								value="#{lbl['lbl.btn.back']}" style="float:left;"
-								immediate="true" styleClass="BtnSpacing"
+								immediate="true" 
 								action="#{evaluationBackingBean.financialBackaction}" /> <ui:param
 								name="checklistScoreType"
 								value="#{evaluationBackingBean.managedBean.checklistScoreType}"></ui:param>
