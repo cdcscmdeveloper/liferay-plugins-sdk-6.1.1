@@ -9,62 +9,53 @@
 	<p:panel header="#{committeBackingBean.managedBean.headerTitle}"
 		toggleable="true" styleClass="committeMemberDtls">
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.view.history']}"
+			<p:commandButton value="#{lbl['lbl.btn.view.history']}" styleClass="BtnSpacing"
 				action="#{committeBackingBean.viewHistoryAction(committeBackingBean.managedBean.qtCommittee)}" />
 		</div>
 		<p:dataTable id="fcMembersId" rowKey="#{committeemember}"
 			value="#{committeBackingBean.managedBean.qtCommittee.scCommittee.scCommitteeMembers}"
 			var="committeemember" rowIndexVar="index" editable="true" rows="10">
 
-			<p:ajax event="rowSelect" listener="#{committeBackingBean.selectMemberEvent}"
-					update="@([id$=memberListTbl])"></p:ajax>
+			<p:ajax event="rowSelect"
+				listener="#{committeBackingBean.selectMemberEvent}"
+				update="@([id$=memberListTbl])" />
 
-			<p:column style="width:2%" rendered="#{isCommitteeRecordStatusActive}">
+			<p:column style="width:2%"
+				rendered="#{isCommitteeRecordStatusActive}">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllMemChk"
 						value="#{committeBackingBean.managedBean.selectAllMembers}">
-						<p:ajax partialSubmit="true" process="@this"
-							update="fcMembersId"
+						<p:ajax partialSubmit="true" process="@this" update="fcMembersId"
 							listener="#{committeBackingBean.selectAllMembers(
 											committeBackingBean.managedBean.selectAllMembers)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
-				<p:selectBooleanCheckbox id="selectMember" value="#{committeemember.selected}">
+				<p:selectBooleanCheckbox id="selectMember"
+					value="#{committeemember.selected}">
 					<p:ajax partialSubmit="true" process="@this" update="@this"
-							listener="#{committeBackingBean.selectMemberEvent(committeemember)}" />
+						listener="#{committeBackingBean.selectMemberEvent(committeemember)}" />
 				</p:selectBooleanCheckbox>
 			</p:column>
 
 			<ac:paginator for="fcMembersId" />
 
 			<p:column headerText="#{lbl['lbl.sc.name']}">
-				<h:outputText value="#{committeemember.memberName}" />
+				<h:outputText value="#{committeemember.memberName}" style="white-space: normal;" />
 			</p:column>
-
 			<p:column headerText="#{lbl['lbl.sc.identification.no']}"
 				style="width: 10%">
 				<h:outputText value="#{committeemember.icPassport}" />
 			</p:column>
-
-			<p:column
-				headerText="#{lbl['lbl.sc.designation']}"
-				style="width: 30%">
-				<h:outputText value="#{committeemember.designation}" />
+			<p:column headerText="#{lbl['lbl.sc.designation']}">
+				<h:outputText value="#{committeemember.designation}" style="white-space: normal;" />
 			</p:column>
-
-			<p:column
-				headerText="#{lbl['lbl.sc.email']}"
-				style="width: 15%">
-				<h:outputText value="#{committeemember.email}" />
+			<p:column headerText="#{lbl['lbl.sc.email']}">
+				<h:outputText value="#{committeemember.email}" style="white-space: normal;" />
 			</p:column>
-
-			<p:column
-				headerText="#{lbl['lbl.sc.grade']}"
-				style="width: 8%">
+			<p:column headerText="#{lbl['lbl.sc.grade']}" style="width: 8%">
 				<h:outputText value="#{committeemember.grade}" />
 			</p:column>
-
-			<p:column style="width: 5%">
+			<p:column style="width: 6%">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.pnp']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
@@ -72,27 +63,23 @@
 				<h:outputText
 					value="#{lbl[committeemember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.role']}"
-				style="width: 10%">
-
+			<p:column headerText="#{lbl['lbl.sc.role']}" style="width: 10%">
 				<h:outputText
-					value="#{committeBackingBean.getParameterDesc(committeemember.memberRole)}" />
-
+					value="#{committeBackingBean.getParameterDesc(committeemember.memberRole)}" style="white-space: normal;" />
 			</p:column>
-
-
 			<p:column style="width: 15%">
 				<f:facet name="header">
-					<h:outputText value="* " styleClass="mandatory" rendered="#{isCommitteeRecordStatusActive}" />
+					<h:outputText value="* " styleClass="mandatory"
+						rendered="#{isCommitteeRecordStatusActive}" />
 					<h:outputText value="#{lbl['lbl.sc.representative.type']}" />
 				</f:facet>
 				<ui:fragment
 					rendered="#{committeemember.memberRole.parameterCode eq 'M'}">
-					<p:selectOneMenu required="#{!committeemember.selected}" id="representativeType"
+					<p:selectOneMenu required="#{!committeemember.selected}"
+						id="representativeType"
 						value="#{committeemember.representativeType.parameterId}"
 						label="#{lbl['lbl.sc.representative.type']}"
-						style="width: 178px;margin-bottom: 5px;">
+						style="width: 150px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{committeBackingBean.managedBean.representativesTypeslist}" />
 						<p:ajax event="change"
@@ -101,31 +88,26 @@
 					</p:selectOneMenu>
 					<p:message id="representiveMsg" for="representativeType"
 						display="icon" />
-
 				</ui:fragment>
-
 			</p:column>
 		</p:dataTable>
-		<br />
 		<div class="ppRightBtn">
-			<p:commandButton id="quotationcommitteeadd"
+			<p:commandButton id="quotationcommitteeadd" styleClass="BtnSpacing"
 				value="#{lbl['lbl.btn.add']}" process="@this"
 				action="#{committeBackingBean.addCommitteMember(committeBackingBean.managedBean.headerTitle)}"
 				oncomplete="screen3.show();" update="@(.addQCMember)"
 				rendered="#{isCommitteeRecordStatusActive}" />
-
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				process="@this, fcMembersId" partialSubmit="true"
-				oncomplete="fcCommitteeDeletePopUp.show();"
+				styleClass="BtnSpacing" process="@this, fcMembersId"
+				partialSubmit="true" oncomplete="fcCommitteeDeletePopUp.show();"
 				update="@([id$=#{fcCommitteeDeleteId}])"
 				rendered="#{isCommitteeRecordStatusActive}" />
 		</div>
 		<ui:param name="fcCommitteeDeleteId" value="fcCommitteeDeleteId" />
 		<ac:confirmationPopup id="#{fcCommitteeDeleteId}"
 			widget="fcCommitteeDeletePopUp"
-			okAction="committeBackingBean.deleteCommitteeAction"
-			width="450" height="200"
-			title="#{committeBackingBean.managedBean.headerTitle}"
+			okAction="committeBackingBean.deleteCommitteeAction" width="450"
+			height="200" title="#{committeBackingBean.managedBean.headerTitle}"
 			content="#{lbl['lbl.sc.dialog.confirm.committee.members.dtls']}"
 			update="@([id$=fcMembersId])" />
 	</p:panel>
