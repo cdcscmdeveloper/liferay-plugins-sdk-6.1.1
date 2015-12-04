@@ -183,6 +183,9 @@ public class LOADetailBackingBean extends
 	private boolean flag;
 
 	private static final String  BRANCH_INFO_TITLE = "Branch Information";
+	
+	private static final String MALAY_NA = "T/B";
+	
 	/**
 	 * Instantiates a new LOA detail backing bean.
 	 */
@@ -1406,7 +1409,7 @@ public class LOADetailBackingBean extends
 		}
 		context.put("bondAmt", bondAmtStr);
 		
-		String gstAmount = "";
+		String gstAmount = MALAY_NA;
 		String overallctAmt = "";
 		BigDecimal loaAmount = scLoa.getLoaAmt();
 		if (scLoa.getGstAmt() != null) {
@@ -4821,8 +4824,8 @@ public class LOADetailBackingBean extends
 		context.put("offerPrice", offerPrice);
 		context.put("offerPriceWording", offerPriceWording);
 
-		String gstAmount = "T/B";
-		String gstAmountWording = "T/B";
+		String gstAmount = MALAY_NA;
+		String gstAmountWording = MALAY_NA;
 		String overallctAmt = "";
 		String overallctAmtWording = "";
 		BigDecimal gstAmt = scLoa.getGstAmt();
