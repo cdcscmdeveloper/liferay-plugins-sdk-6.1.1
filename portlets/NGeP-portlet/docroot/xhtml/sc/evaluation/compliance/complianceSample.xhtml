@@ -24,13 +24,12 @@
 							value="#{evaluationBackingBean.managedBean.scQt.sampleClosingDate}"
 							readonly="true" disabled="true">
 							<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</p:inputText></td>
 				</tr>
 
 				<tr>
-					<td><h:outputLabel
-							value="#{lbl['lbl.sc.remaining.day']}" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.remaining.day']}" /></td>
 					<td><p:inputText
 							value="#{evaluationBackingBean.managedBean.countDays}"
 							readonly="true" disabled="true"></p:inputText></td>
@@ -42,10 +41,14 @@
 
 	<ui:fragment
 		rendered="#{evaluationBackingBean.managedBean.countDays lt 0 or(evaluationBackingBean.managedBean.countDays eq 0 and evaluationBackingBean.managedBean.currentTime ge 12)}">
-		<p:panel header="#{lbl['lbl.sc.eva.sample.proposal.compliance']}"
+		<p:panel
+			id="sampletechnicalChecklistComplianceChecklistmainPageProposalspecCommitteeIds"
+			header="#{lbl['lbl.sc.eva.sample.proposal.compliance']}"
 			toggleable="true">
-			
-			<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.eva.compliance.stage.instruction']}" escape="false" />
+
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.eva.compliance.stage.instruction']}"
+				escape="false" />
 
 			<p:dataTable var="complianceSample" id="complianceSample" rows="10"
 				rowIndexVar="index" style="width:100%" lazy="true"
@@ -62,8 +65,7 @@
 
 
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.label.no']}"
-					style="width:30%">
+				<p:column headerText="#{lbl['lbl.sc.label.no']}" style="width:30%">
 
 
 					<h:outputText value="#{complianceSample.lableNo}"></h:outputText>
