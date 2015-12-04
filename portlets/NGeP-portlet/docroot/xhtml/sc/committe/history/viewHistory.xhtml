@@ -11,15 +11,16 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+		<table width="100%">
+			<tr>
+				<td align="right">
+					<p:commandButton value="#{lbl['lbl.btn.back']}123"
+						style="float:left;"
+						action="#{committeBackingBean.viewHistoryBackAction}" />
+				</td>
+			</tr>
+		</table>
 
-		<div>
-			<p:commandButton value="#{lbl['lbl.btn.back']}"
-				style="float:left;"
-				action="#{committeBackingBean.viewHistoryBackAction}" />
-		</div>
-		<br />
-		<br />
-		<br />
 		<ui:include src="../quotationcommitteeheader.xhtml" />
 		
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
