@@ -150,6 +150,7 @@ import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
 import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
 import my.ep.web.backingbean.sc.requestnote.RequestNoteBackingBean;
 import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
+import my.ep.web.constant.cm.CmHelper;
 import my.ep.web.managedbean.cm.catalogue.CatalogueManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.cm.helper.CmApplicationUtil;
@@ -3215,7 +3216,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			//1 year period between start and end date
 			Calendar cal = Calendar.getInstance();  
 			cal.setTime(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate());
-			cal.add(Calendar.YEAR, 1);
+			cal.add(Calendar.YEAR, CmHelper.getInstance().getStandardPricingYear());
 
 			if(cal.getTime().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate())<0){
 				FacesContext.getCurrentInstance().addMessage(
@@ -9240,7 +9241,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public Integer getImageSize(){
 
 
-		Integer size = 1024 * getMaxCategoryAllowed();
+		Integer size = 1024 * CmHelper.getInstance().getMaxCategoryAllowed();
 
 		return size;
 	}
@@ -9256,7 +9257,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		String msg = "";
 		Locale locale = new FacesScopes().getUserLocale();
 
-		msg = ResourceBundleUtils.getMessage("lbl.cm.invalid.file.size", new String[] { ""+getMaxCategoryAllowed()} ,
+		msg = ResourceBundleUtils.getMessage("lbl.cm.invalid.file.size", new String[] { ""+CmHelper.getInstance().getMaxCategoryAllowed()} ,
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 
 		return msg;
@@ -9481,31 +9482,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	}
 
 
-	public int getMaxCategoryAllowed() {
-		RuleResDTO ruleResDTO = getRuleValueByRuleType(RuleTypeConst.CM_IMAGE_LIMIT);
-		if (ruleResDTO != null && ruleResDTO.isSuccessful()
-				&& ruleResDTO.getRuleValueList() != null
-				&& ruleResDTO.getRuleValueList().size() > 0) {
-			return (Integer.parseInt(ruleResDTO.getRuleValueList().get(0)
-					.getRuleValue()));
-		} else {
-			return 2048;
-		}
-	}
-
-	private RuleResDTO getRuleValueByRuleType(String ruleType) {
-		IRuleSO ruleSO = null;
-		try {
-			ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
-			RuleReqDTO ruleReqDTO = new RuleReqDTO();
-			ruleReqDTO.setRuleType(ruleType);
-			RuleResDTO ruleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
-			return ruleResDTO;
-		} finally {
-			ruleSO = null;
-		}
-	}
 
 
 
