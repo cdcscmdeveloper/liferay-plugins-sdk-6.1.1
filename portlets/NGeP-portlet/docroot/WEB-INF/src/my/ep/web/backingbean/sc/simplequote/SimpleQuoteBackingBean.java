@@ -4374,7 +4374,7 @@ public class SimpleQuoteBackingBean extends
 		CtPanelItem quotePanelItem = null;
 		
 		QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
-		SCDirectPurchaseDataType directPurchaseDataType = super.getBpmTaskDetails(SCDirectPurchaseDataType.class);
+		SCDirectPurchaseDataType directPurchaseDataType = super.getBpmTaskDetails(SCDirectPurchaseDataType.class, null);
 		
 		Long quoteId = Long.valueOf(directPurchaseDataType.getDpId());
 		Long purchaseInDefaultId = null;

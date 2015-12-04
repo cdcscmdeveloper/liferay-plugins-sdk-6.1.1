@@ -1026,7 +1026,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	 */
 	@SuppressWarnings("unchecked")
 	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(
-			Class<BPM_DATA_TYPE> clazz) {
+			Class<BPM_DATA_TYPE> clazz, String[] additionalButtons) {
 		FacesScopes facesScopes = new FacesScopes();
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(facesScopes.getRequest());
@@ -1055,7 +1055,22 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			this.getManagedBean().setTaskId(taskId);
 			this.getManagedBean().setAssignedState(isAssignedState);
 			if (isAssignedState) {
-				this.getManagedBean().setOutComes(resDTO.getAction());	
+				String[] outComes = null;
+				if (additionalButtons != null && additionalButtons.length > 0) {
+					int i = 0;
+					outComes = new String[additionalButtons.length + resDTO.getAction().length];
+					
+					for (String additionalButton : additionalButtons) {
+						outComes[i++] = additionalButton;
+					}
+				
+					for (String action : resDTO.getAction()) {
+						outComes[i++] = action;
+					}
+				} else {
+					outComes = resDTO.getAction();
+				}				
+				this.getManagedBean().setOutComes(outComes);	
 			}
 			this.getManagedBean().setCurrentStatusId(
 					Long.valueOf(resDTO.getDocStatus()));

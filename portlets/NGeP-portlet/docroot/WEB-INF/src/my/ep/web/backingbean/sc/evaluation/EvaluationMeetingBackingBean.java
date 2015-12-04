@@ -1519,7 +1519,7 @@ public class EvaluationMeetingBackingBean extends
 	 */
 	public void prerenderView() {
 
-		SCEvaluationDataType evaluationDataType = getBpmTaskDetails(SCEvaluationDataType.class);
+		SCEvaluationDataType evaluationDataType = getBpmTaskDetails(SCEvaluationDataType.class, null);
 
 		this.getManagedBean().setPayLoad(evaluationDataType);
 		// FacesScopes facesScopes = new FacesScopes();

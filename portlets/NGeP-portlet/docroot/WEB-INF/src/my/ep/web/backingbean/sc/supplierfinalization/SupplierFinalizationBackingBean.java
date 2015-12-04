@@ -212,7 +212,7 @@ public class SupplierFinalizationBackingBean extends
 		debugLogger("preRenderView");
 
 		try {
-			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class);
+			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class, null);
 			Long qtId = Long.valueOf(dataType.getQtId());
 			getManagedBean().setPayLoad(dataType);
 			getManagedBean().setActiveIndex(0);

@@ -880,7 +880,7 @@ public class PurchaseInDefaultBackingBean extends
 	 * @return void
 	 */
 	public void preRenderView() {
-		SCDirectPurchaseDataType directPurchaseDataType = super.getBpmTaskDetails(SCDirectPurchaseDataType.class);
+		SCDirectPurchaseDataType directPurchaseDataType = super.getBpmTaskDetails(SCDirectPurchaseDataType.class, null);
 		
 		// Purchase In Default
 		IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate

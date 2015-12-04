@@ -1747,7 +1747,7 @@ public class QTDetailBackingBean extends
 	public void preRenderView() {
 		renewSesionObject();
 		Long qtId = null;
-		Object payLoad = getBpmTaskDetails(Object.class);
+		Object payLoad = getBpmTaskDetails(Object.class, null);
 		String taskName = this.getManagedBean().getTaskName();
 		if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE

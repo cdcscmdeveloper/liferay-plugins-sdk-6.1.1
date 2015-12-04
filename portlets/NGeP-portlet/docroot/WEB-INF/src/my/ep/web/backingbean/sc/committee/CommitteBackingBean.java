@@ -2280,7 +2280,7 @@ public class CommitteBackingBean extends
 	 * @see my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean#preRenderView()
 	 */
 	public void preRenderView() {
-		Object payLoad = getBpmTaskDetails(Object.class);
+		Object payLoad = getBpmTaskDetails(Object.class, null);
 		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						ICommitteSO.class);
