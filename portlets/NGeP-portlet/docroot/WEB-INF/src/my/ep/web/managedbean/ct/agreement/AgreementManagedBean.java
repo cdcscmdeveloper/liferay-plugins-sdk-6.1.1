@@ -53,6 +53,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private String buttonAction;
 	private Long departmentProfileId;
 	private int selectedTabIndex;
+	private int varIndex;
 	private double performanceBondRuleAmt;
 	private boolean uploadFinalAgreement;
 	private boolean uploadStampedAndSignedPage;
@@ -677,5 +678,13 @@ public class AgreementManagedBean extends BaseManagedBean {
 	 */
 	public void setAgencySignerDropDown(boolean agencySignerDropDown) {
 		this.agencySignerDropDown = agencySignerDropDown;
+	}
+
+	public int getVarIndex() {
+		return varIndex;
+	}
+
+	public void setVarIndex(int varIndex) {
+		this.varIndex = varIndex;
 	}
 }
