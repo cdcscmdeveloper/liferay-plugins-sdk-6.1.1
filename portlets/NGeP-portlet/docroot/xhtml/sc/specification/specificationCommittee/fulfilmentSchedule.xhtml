@@ -231,7 +231,7 @@
 						</f:facet>
 						<p:inputText value="#{payment.phaseDesc}" maxlength="50"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
-							required="true" id="progressivePhasedesc" style="width:175px;"
+							required="true" id="progressivePhasedesc" style="width:130px;"
 							label="#{lbl['lbl.sc.description']}">
 							<p:ajax process="@this" partialSubmit="true"
 								update="@this,progressivePayment" />
@@ -302,7 +302,7 @@
 						</f:facet>
 						<p:inputText value="#{payment.percentage}" required="true"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
-							id="progressivePercentage" style="width:130px;text-align:right;"
+							id="progressivePercentage" style="width:100px;text-align:right;"
 							label="#{lbl['lbl.sc.percentage']}" maxlength="18">
 							<p:ajax process="@this" partialSubmit="true"
 								update="@this,progressivePayment" />
