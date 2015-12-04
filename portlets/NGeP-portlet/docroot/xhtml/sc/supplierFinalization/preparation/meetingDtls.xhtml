@@ -62,7 +62,7 @@
 					<ac:iconTooltip value="#{lbl['lbl.sc.meeting.location.tooltip']}" />
 				</f:facet>
 				<p:inputTextarea label="#{lbl['lbl.sc.meeting.location']}"
-					required="true" rows="2" cols="50" maxlength="255"
+					required="true" rows="2" cols="30" maxlength="255"
 					value="#{meetingDtl.meetingLocation}" id="meetingLocation"
 					disabled="#{disableMeeting}">
 					<p:ajax partialSubmit="true" process="@this" update="@this,mtgLoc" />
