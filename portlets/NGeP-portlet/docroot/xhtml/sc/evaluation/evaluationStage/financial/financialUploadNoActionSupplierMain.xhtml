@@ -19,27 +19,29 @@
 		<p:messages id="financialEvaluationUploadDtlsId" autoUpdate="true"
 			closable="true" showDetail="true" showSummary="false"
 			severity="error,info"></p:messages>
-		<table width="100%">
+		<table width="100%" class="BtnSpacing">
 			<tr>
-				<td align="right">
-			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-				action="#{evaluationBackingBean.evaluationBackaction}" styleClass="BtnSpacing"
-				immediate="true" />
-
-			<p:commandButton value="#{lbl['lbl.btn.save']}" style="float:right;"
-				update="@all" onstart="blockWidget.show();"
-				oncomplete="blockWidget.hide();" styleClass="BtnSpacing"
-				action="#{evaluationBackingBean.saveEvalutionStageUploadDtls}" />
-		</td>
-		</tr>
+				<td align="right"><p:commandButton
+						value="#{lbl['lbl.btn.back']}" style="float:left;"
+						action="#{evaluationBackingBean.evaluationBackaction}"
+						immediate="true" /> <p:commandButton
+						value="#{lbl['lbl.btn.save']}" style="float:right;"
+						disabled="#{evaluationBackingBean.managedBean.readOnly}"
+						update="@all" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"
+						action="#{evaluationBackingBean.saveEvalutionStageUploadDtls}" />
+				</td>
+			</tr>
 		</table>
-		
+
 		<ui:include src="/xhtml/sc/evaluation/evaluationHeader.xhtml" />
-		
-		<p:panel header="#{lbl['lbl.sc.eva.financial.proposal.evaluation']}">
+
+		<p:panel toggleable="true"
+			id="evaluationFinancialStageUploadPtjUploadDownLoadViewCheckListheaderIds"
+			header="#{lbl['lbl.sc.eva.financial.proposal.evaluation']}">
 			<ui:include src="/xhtml/sc/evaluation/checklistHeader.xhtml" />
 		</p:panel>
-		
+
 		<ui:include
 			src="financialEvaluationStageUploadScoringSupplierList.xhtml" />
 
