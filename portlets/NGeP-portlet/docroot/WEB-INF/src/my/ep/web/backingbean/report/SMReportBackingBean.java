@@ -581,7 +581,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			  rptGenBean.setSmFromDateView(true);
 			break;
 		case ReportConst.SM_OUTSTANDING_RESULTS_RECEIVED_RPT_VAL:
-			  rptGenBean.setSmMandatoryForDateView(true);
+			  rptGenBean.setSmNonMandatoryDateView(true);
 			  rptGenBean.setSmFromDateView(true);
 			  checkAuthorizationByRoleCode(rptGenBean,authoriztionList);
 			break;
