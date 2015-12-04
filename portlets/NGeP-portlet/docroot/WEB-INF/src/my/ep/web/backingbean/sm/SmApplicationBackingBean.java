@@ -4538,22 +4538,25 @@ public class SmApplicationBackingBean extends
 	 */
 	public boolean disableEpRoleDropDown(SmPersonnel smPersonnel) {
 		boolean retVal = false;
+		SmPersonnel prevPersonnel = getPrevApprovedPersonnel(smPersonnel);
 		if (StringUtils.isNotBlank(smPersonnel.getEpRole())
 				&& (smPersonnel.getEpRole().equals(
 						RoleCode.MOF_SUPPLIER_ADMIN.value())
-				|| smPersonnel.getEpRole().equals(
-						RoleCode.SUPPLIER_TEMP.value())
-				|| smPersonnel.getEpRole().equals(
-						RoleCode.BASIC_SUPPLIER_ADMIN.value()))) {
+						|| smPersonnel.getEpRole().equals(
+								RoleCode.SUPPLIER_TEMP.value()) || smPersonnel
+						.getEpRole().equals(
+								RoleCode.BASIC_SUPPLIER_ADMIN.value()))) {
 			retVal = true;
-		} else if (StringUtils.isNotBlank(smPersonnel.getEpRole())
-				&& smPersonnel.getEpRole().equals(
+		} else if (prevPersonnel != null
+				&& StringUtils.isNotBlank(prevPersonnel.getEpRole())
+				&& prevPersonnel.getEpRole().equals(
 						RoleCode.MOF_SUPPLIER_USER.value())
-				&& smPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
-				&& (smPersonnel.getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ || smPersonnel
+				&& prevPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+				&& (prevPersonnel.getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ || smPersonnel
 						.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING)) {
 			retVal = true;
-		} else if (!retVal && !isAllowedDowngradeRole(smPersonnel)) {
+		} else if (!retVal && prevPersonnel != null
+				&& !prevPersonnel.getEpRole().equals(RoleCode.CM_USER.value())) {
 			retVal = true;
 		}
 		return retVal;
@@ -9001,37 +9004,6 @@ public class SmApplicationBackingBean extends
 		if (smPersonnel.isPrevApprovedDirector()
 				|| smPersonnel.isPrevApprovedEquityOwner()) {
 			retVal = true;
-		}
-		return retVal;
-	}
-
-	/**
-	 * Checks if personnel cannot downgrade role.
-	 * 
-	 * @param smPersonnel
-	 *            - SmPersonnel object to check
-	 * @return true, if is personnel view only
-	 */
-	private boolean isAllowedDowngradeRole(SmPersonnel smPersonnel) {
-		boolean retVal = true;
-		if (smPersonnel != null
-				&& smPersonnel.getPersonnelId() != null
-				&& !SmCommonUtil.isCollectionEmpty(getManagedBean()
-						.getPrevApprovedPersonnels())) {
-			for (SmPersonnel per : getManagedBean().getPrevApprovedPersonnels()) {
-				if (StringUtils.isNotBlank(per.getIdentificationNo())
-						&& StringUtils.isNotBlank(per.getEpRole())
-						&& StringUtils.isNotBlank(smPersonnel.getEpRole())
-						&& StringUtils.isNotBlank(smPersonnel
-								.getIdentificationNo())
-						&& per.getIdentificationNo().equals(
-								smPersonnel.getIdentificationNo())
-						&& !smPersonnel.getEpRole().equals(
-								RoleCode.CM_USER.value())) {
-					retVal = false;
-					break;
-				}
-			}
 		}
 		return retVal;
 	}
