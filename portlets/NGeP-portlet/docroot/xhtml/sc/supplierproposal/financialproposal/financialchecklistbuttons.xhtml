@@ -14,41 +14,41 @@
 	<c:if test="#{!supplierProposalDetailBackingBean.managedBean.closed}">
 
 		<c:if test="#{'TS' eq docDefinationKey}">
-			<p:commandButton value="#{lbl['lbl.btn.save']}"
+			<p:commandButton value="#{lbl['lbl.btn.save']}" styleClass="BtnSpacing"
 				action="#{supplierProposalDetailBackingBean.saveFinancialSpecificationAction(false)}"
 				process="@all" partialSubmit="true" update="@all" />
-			<p:commandButton value="#{lbl['lbl.btn.complete']}"
+			<p:commandButton value="#{lbl['lbl.btn.complete']}" styleClass="BtnSpacing"
 				action="#{supplierProposalDetailBackingBean.saveFinancialSpecificationAction(true)}"
 				process="@all" partialSubmit="true" update="@all"/>
 		</c:if>
 
 		<c:if test="#{'WF' eq docDefinationKey}">
 			<c:if test="#{'FN' eq chkDefinationKey}">
-				<p:commandButton value="#{lbl['lbl.btn.save']}"
+				<p:commandButton value="#{lbl['lbl.btn.save']}" styleClass="BtnSpacing"
 					process="@all" partialSubmit="true" update="@all"
 					action="#{supplierProposalDetailBackingBean.saveFinancialNonGovCompanyExpAction(false)}" />
 
-				<p:commandButton value="#{lbl['lbl.btn.complete']}"
+				<p:commandButton value="#{lbl['lbl.btn.complete']}" styleClass="BtnSpacing"
 					process="@all" partialSubmit="true"
 					update="@all"
 					action="#{supplierProposalDetailBackingBean.saveFinancialNonGovCompanyExpAction(true)}" />
 
 			</c:if>
 			<c:if test="#{'CF' eq chkDefinationKey}">
-				<p:commandButton value="#{lbl['lbl.btn.save']}"
+				<p:commandButton value="#{lbl['lbl.btn.save']}" styleClass="BtnSpacing"
 					action="#{supplierProposalDetailBackingBean.saveFinancialCreditFacilityAction(false)}"
 					process="@all" partialSubmit="true" update="@all" />
 
-				<p:commandButton value="#{lbl['lbl.btn.complete']}"
+				<p:commandButton value="#{lbl['lbl.btn.complete']}" styleClass="BtnSpacing"
 					action="#{supplierProposalDetailBackingBean.saveFinancialCreditFacilityAction(true)}"
 					process="@all" partialSubmit="true" update="@all"/>
 			</c:if>
 			<c:if test="#{'CH' eq chkDefinationKey}">
-				<p:commandButton value="#{lbl['lbl.btn.save']}"
+				<p:commandButton value="#{lbl['lbl.btn.save']}" styleClass="BtnSpacing"
 					action="#{supplierProposalDetailBackingBean.saveFinancialCashOnHandAction(false)}"
 					process="@all" partialSubmit="true" update="@all" />
 
-				<p:commandButton value="#{lbl['lbl.btn.complete']}"
+				<p:commandButton value="#{lbl['lbl.btn.complete']}" styleClass="BtnSpacing"
 					action="#{supplierProposalDetailBackingBean.saveFinancialCashOnHandAction(true)}"
 					process="@all" partialSubmit="true" update="@all" />
 			</c:if>
@@ -56,19 +56,19 @@
 			<c:if test="#{'AL' eq chkDefinationKey}">
 
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
-					process="@all" partialSubmit="true" update="@all"
+					process="@all" partialSubmit="true" update="@all" styleClass="BtnSpacing"
 					action="#{supplierProposalDetailBackingBean.saveAssetLiabilityAction(false)}" />
 
 				<p:commandButton value="#{lbl['lbl.btn.complete']}"
 					process="@all" partialSubmit="true"
-					update="@all"
+					update="@all" styleClass="BtnSpacing"
 					action="#{supplierProposalDetailBackingBean.saveAssetLiabilityAction(true)}" />
 			</c:if>
 			<c:if test="#{'BS' eq chkDefinationKey}">
-				<p:commandButton value="#{lbl['lbl.btn.save']}"
+				<p:commandButton value="#{lbl['lbl.btn.save']}" styleClass="BtnSpacing"
 					action="#{supplierProposalDetailBackingBean.saveBankStatementAction(false)}"
 					partialSubmit="true" process="@all" update="@all" />
-				<p:commandButton value="#{lbl['lbl.btn.complete']}"
+				<p:commandButton value="#{lbl['lbl.btn.complete']}" styleClass="BtnSpacing"
 					action="#{supplierProposalDetailBackingBean.saveBankStatementAction(true)}"
 					partialSubmit="true" process="@all" update="@all" />
 			</c:if>

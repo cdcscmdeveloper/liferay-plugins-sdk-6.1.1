@@ -31,19 +31,19 @@
 				value="#{supplierProposalDetailBackingBean.managedBean.qtProposalsList}"
 				rowKey="#{proposalList}" rowIndexVar="rowIndex">
 				<p:column style="width:2%">
-				<f:facet name="header">
+					<f:facet name="header">
+						<p:selectBooleanCheckbox
+							value="#{supplierProposalDetailBackingBean.managedBean.selectedAll}">
+							<p:ajax partialSubmit="true" process="@this"
+								update="@([id$=proposalid])"
+								listener="#{supplierProposalDetailBackingBean.selectAllMultipleProposal}" />
+						</p:selectBooleanCheckbox>
+					</f:facet>
 					<p:selectBooleanCheckbox
-						value="#{supplierProposalDetailBackingBean.managedBean.selectedAll}">
-						<p:ajax partialSubmit="true" process="@this"
-							update="@([id$=proposalid])"
-							listener="#{supplierProposalDetailBackingBean.selectAllMultipleProposal}" />
+						value="#{supplierProposalDetailBackingBean.managedBean.selected}">
+						<p:ajax partialSubmit="true" process="@this" update="@this"
+							listener="#{supplierProposalDetailBackingBean.selectedMultipleProposal(rowIndex)}" />
 					</p:selectBooleanCheckbox>
-				</f:facet>
-				<p:selectBooleanCheckbox
-					value="#{supplierProposalDetailBackingBean.managedBean.selected}">
-					<p:ajax partialSubmit="true" process="@this" update="@this"
-						listener="#{supplierProposalDetailBackingBean.selectedMultipleProposal(rowIndex)}" />
-				</p:selectBooleanCheckbox>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.proposal.no']}">
 					<h:outputText value="#{rowIndex+1}" />
@@ -55,9 +55,10 @@
 				</p:column>
 			</p:dataTable>
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.delete']}" rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}"
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}"
 					action="#{supplierProposalDetailBackingBean.deleteMultipleProposal}"
-					update="@([id$=proposalid])"
+					update="@([id$=proposalid])" styleClass="BtnSpacing"
 					process="@this" partialSubmit="true" />
 
 			</div>

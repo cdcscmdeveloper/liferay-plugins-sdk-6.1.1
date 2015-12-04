@@ -47,7 +47,7 @@
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.delete']}" rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}"
 					action="#{supplierProposalDetailBackingBean.deleteMultipleProposal}"
-					update="proposalid"
+					update="proposalid" styleClass="BtnSpacing"
 					process="@this,proposalid" partialSubmit="true" />
 
 			</div>
