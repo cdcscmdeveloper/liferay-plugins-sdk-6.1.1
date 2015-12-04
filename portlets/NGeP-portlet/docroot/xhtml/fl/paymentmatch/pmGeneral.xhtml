@@ -31,19 +31,19 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
-				<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:423px;" 
+				<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:490px;" 
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.preparedOrgProfile.pmOrgValidity.orgCode} #{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.preparedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
-				<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:423px;" 
+				<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:490px;" 
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.issuedOrgProfile.pmOrgValidity.orgCode} #{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.issuedOrgProfile.orgName}"/>
 				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/></td>
 			</tr>			
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
-				<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:423px;" 
+				<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:490px;" 
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.chargeOrgProfile.pmOrgValidity.orgCode} #{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.chargeOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/></td>
 			</tr>
@@ -272,7 +272,7 @@
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
 				<td><p:inputTextarea cols="55" rows="8" disabled="true"
-						style=" margin-bottom:5px;"
+						style=" margin-bottom:5px;" autoResize="false"
 						value="#{paymentMatchBackingBean.getFullAddress(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.smAddress)}" /></td>
 			</tr>
 			<tr>
@@ -327,7 +327,7 @@
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
 				<td><p:inputTextarea cols="55" rows="8" disabled="true"
-						style=" margin-bottom:5px;"
+						style=" margin-bottom:5px;" autoResize="false"
 						value="#{paymentMatchBackingBean.managedBean.supplierAddress}" /></td>
 			</tr>
 			<tr>

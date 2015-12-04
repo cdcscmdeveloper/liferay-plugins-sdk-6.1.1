@@ -16,7 +16,7 @@
 				</td>
 				<td rowspan="3" valign="top" style="width: 138px;"><p:outputLabel value="#{lbl['lbl.fl.do.title']}" /></td>
 				<td rowspan="3">
-					<p:inputTextarea cols="50" rows="4" id="title" disabled="true" style=" margin-bottom:5px;"
+					<p:inputTextarea cols="50" rows="4" id="title" disabled="true" style=" margin-bottom:5px;" autoResize="false"
 						value="#{stopInstrBB.managedBean.stopInstr.flRequest.title}" /> 
 					<h:outputText value="" />
 				</td>						
@@ -37,7 +37,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
-				<td width="390px"><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:351px;"
+				<td width="390px"><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:379px;"
 						value="#{stopInstrBB.managedBean.stopInstr.flRequest.preparedOrgProfile.orgCode} #{stopInstrBB.managedBean.stopInstr.flRequest.preparedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/>
 				</td>
@@ -47,7 +47,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
-				<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:351px;"
+				<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:379px;"
 						value="#{stopInstrBB.managedBean.stopInstr.flRequest.issuedOrgProfile.pmOrgValidity.orgCode} #{stopInstrBB.managedBean.stopInstr.flRequest.issuedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/>
 				</td>
@@ -120,7 +120,7 @@
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel	value="#{lbl['lbl.fl.supp.address']}" /></td>
-				<td><p:inputTextarea cols="50" rows="8" disabled="true"
+				<td><p:inputTextarea cols="50" rows="8" disabled="true" autoResize="false"
 						style=" margin-bottom:5px;"
 						value="#{stopInstrBB.getFullAddress(stopInstrBB.managedBean.stopInstr.flRequest.flSupplierDtl.smAddress)}" />
 				</td>

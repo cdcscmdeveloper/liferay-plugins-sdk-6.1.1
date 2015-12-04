@@ -36,7 +36,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
-				<td width="460px"><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:380px;" 
+				<td width="460px"><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:418px;" 
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.pmOrgValidity.orgCode} #{receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.procur.type.category']}" /></td>
@@ -45,14 +45,14 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
-				<td width="460px"><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:380px;" 
+				<td width="460px"><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:418px;" 
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.pmOrgValidity.orgCode} #{receivedNoteBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/></td>
 
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
-				<td width="460px"><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:380px;" 
+				<td width="460px"><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:418px;" 
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.pmOrgValidity.orgCode} #{receivedNoteBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/></td>
 			</tr>
@@ -81,6 +81,7 @@
 				<td style="width: 350px;" rowspan="4"><p:inputTextarea
 						id="delAddrText1" cols="55" rows="7" maxlength="500"
 						style=" margin-bottom:5px;" disabled="true"
+						autoResize="false"
 						value="#{receivedNoteBackingBean.getFullAddress(receivedNoteBackingBean.managedBean.fulfilmentNote.flDeliveryOrder.flDeliveryAddress.pmAddress)}" />
 				</td>
 				<td style="width: 180px;"><p:outputLabel
@@ -206,6 +207,7 @@
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
 				<td><p:inputTextarea cols="55" rows="8" disabled="true"
 						style=" margin-bottom:5px;"
+						autoResize="false"
 						value="#{receivedNoteBackingBean.getFullAddress(receivedNoteBackingBean.managedBean.fulfilmentNote.flRequest.flSupplierDtl.smAddress)}" /></td>
 			</tr>
 			<tr>
