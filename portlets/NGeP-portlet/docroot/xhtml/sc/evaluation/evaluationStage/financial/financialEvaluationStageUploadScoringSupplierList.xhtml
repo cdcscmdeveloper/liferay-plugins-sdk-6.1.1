@@ -6,7 +6,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.supplier.list']}"
+		id="evaluationStageFinancialChecklIstBySpecCommitteeUploadEvaluationDownloadFinancialSupplierList"
+		toggleable="true">
 		<h:outputText styleClass="instruction"
 			value="1. #{lbl['lbl.sc.eva.evaluation.stage.document.instruction']}"
 			escape="false" />
@@ -34,7 +36,7 @@
 			<p:column headerText="#{lbl['lbl.sc.document']}" style="width:10%">
 				<ui:fragment rendered="#{evaFinSupplier.submitted eq 'true'}">
 					<h:commandLink immediate="true"
-						action="#{evaluationBackingBean.downloadEncryptedFile(evaFinSupplier.scQtProposalChecklistAttachment)}" >
+						action="#{evaluationBackingBean.downloadEncryptedFile(evaFinSupplier.scQtProposalChecklistAttachment)}">
 						<h:graphicImage value="/css/images/design/icon_txt.png" />
 					</h:commandLink>
 				</ui:fragment>
