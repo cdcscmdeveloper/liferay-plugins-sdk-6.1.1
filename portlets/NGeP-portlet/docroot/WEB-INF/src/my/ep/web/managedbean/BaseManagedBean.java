@@ -14,59 +14,58 @@ public abstract class BaseManagedBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Object token;
+	
+	// For BPM task details
 	private String taskId;
 	private String[] outComes;
-	private String title;
 	private Long currentStatusId;
 	private String taskName;
 	private boolean isAssignedState;
 	private Object payLoad;
+	
+	// For sub title displayed in screen.
+	private String title;
 
-	public String getTaskName() {
-		return taskName;
-	}
-
-	public void setTaskName(String taskName) {
-		this.taskName = taskName;
-	}
-
-	public String[] getOutComes() {
-		return outComes;
-	}
-
-	public void setOutComes(String[] outComes) {
-		this.outComes = outComes;
-	}
-
-	public String getTaskId() {
-		return taskId;
-	}
-
-	public void setTaskId(String taskId) {
-		this.taskId = taskId;
-	}
-
+	/**
+	 * @return the token
+	 */
 	public Object getToken() {
 		return token;
 	}
 
+	/**
+	 * @param token the token to set
+	 */
 	public void setToken(Object token) {
 		this.token = token;
 	}
 
 	/**
-	 * @return the title
+	 * @return the taskId
 	 */
-	public String getTitle() {
-		return title;
+	public String getTaskId() {
+		return taskId;
 	}
 
 	/**
-	 * @param title
-	 *            the title to set
+	 * @param taskId the taskId to set
 	 */
-	public void setTitle(String title) {
-		this.title = title;
+	public void setTaskId(String taskId) {
+		this.taskId = taskId;
+	}
+
+	/**
+	 * @return the outComes
+	 */
+	public String[] getOutComes() {
+		return outComes;
+	}
+
+	/**
+	 * @param outComes the outComes to set
+	 */
+	public void setOutComes(String[] outComes) {
+		this.outComes = outComes;
 	}
 
 	/**
@@ -77,11 +76,24 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 
 	/**
-	 * @param currentStatusId
-	 *            the currentStatusId to set
+	 * @param currentStatusId the currentStatusId to set
 	 */
 	public void setCurrentStatusId(Long currentStatusId) {
 		this.currentStatusId = currentStatusId;
+	}
+
+	/**
+	 * @return the taskName
+	 */
+	public String getTaskName() {
+		return taskName;
+	}
+
+	/**
+	 * @param taskName the taskName to set
+	 */
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
 	}
 
 	/**
@@ -110,6 +122,20 @@ public abstract class BaseManagedBean implements Serializable {
 	 */
 	public void setPayLoad(Object payLoad) {
 		this.payLoad = payLoad;
+	}
+
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 }
