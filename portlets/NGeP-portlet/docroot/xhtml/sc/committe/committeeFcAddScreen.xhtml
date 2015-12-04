@@ -11,13 +11,14 @@
 		width="1060" height="600" widgetVar="screen3" modal="true"
 		styleClass="addQCMember">
 		<p:messages id="committeemessagesid" showDetail="true"
-			autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
+			autoUpdate="true" closable="true" showSummary="false"
+			severity="error, info" />
 		<h:panelGroup id="newProfile" style="width:100%;margin-top:10px;">
 			<c:if
 				test="#{committeBackingBean.managedBean.committeMember.userSelection eq 'E' }">
 				<p:panel id="userTblid" header="#{lbl['lbl.btn.search']}"
-					toggleable="true" style="width:100%;">
-					<table>
+					toggleable="true">
+					<table style="width: 100%;">
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sc.name']}" /></td>
 							<td colspan="3"><p:inputText
@@ -25,8 +26,7 @@
 									size="64" /></td>
 						</tr>
 						<tr>
-							<td style="width: 110px;"><p:outputLabel
-									value="#{lbl['lbl.sc.id.type']}" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sc.id.type']}" /></td>
 							<td colspan="3"><p:selectOneMenu
 									value="#{committeBackingBean.managedBean.userQCSearchBean.identificationType}"
 									style="width: 178px;margin-bottom: 5px;">
@@ -44,15 +44,16 @@
 					</table>
 					<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.search']}"
+							styleClass="BtnSpacing"
 							action="#{committeBackingBean.searchUserAction}"
 							update="userexistid" process="@parent, userTblid" />
 						<p:commandButton value="#{lbl['lbl.btn.reset']}"
-							action="#{committeBackingBean.reset}" update="userTblid"
-							resetValues="true" partialSubmit="true" process="@this" />
+							styleClass="BtnSpacing" action="#{committeBackingBean.reset}"
+							update="userTblid" resetValues="true" partialSubmit="true"
+							process="@this" />
 					</div>
 				</p:panel>
-				<p:panel header="#{lbl['lbl.sc.search.result']}" toggleable="true"
-					style="width:100%;">
+				<p:panel header="#{lbl['lbl.sc.search.result']}" toggleable="true">
 					<p:dataTable id="userexistid"
 						value="#{committeBackingBean.managedBean.userSearchQCDataModel}"
 						selection="#{committeBackingBean.managedBean.selectedPmUser}"
@@ -62,9 +63,9 @@
 
 						<ac:paginator for="userexistid" />
 
-						<p:column selectionMode="multiple" style="width:2%" 
+						<p:column selectionMode="multiple" style="width:2%"
 							disabledSelection="#{committeeMember.memberRole.parameterCode eq 
-														ParameterConst.committeeRoleSecretary}"/>
+														ParameterConst.committeeRoleSecretary}" />
 
 						<p:column headerText="#{lbl['lbl.sc.name']}">
 							<h:outputText value="#{existcommitteeuser.userName}"
@@ -198,12 +199,11 @@
 			</c:if>
 		</h:panelGroup>
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.ok']}"
+			<p:commandButton value="#{lbl['lbl.btn.ok']}" styleClass="BtnSpacing"
 				process="@this, newProfile" update="@(.committeMemberDtls)"
 				actionListener="#{committeBackingBean.okQCCommitteeAction}" />
-
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
-				oncomplete="screen3.hide();" />
+				oncomplete="screen3.hide();" styleClass="BtnSpacing"/>
 		</div>
 	</p:dialog>
 </ui:composition>
