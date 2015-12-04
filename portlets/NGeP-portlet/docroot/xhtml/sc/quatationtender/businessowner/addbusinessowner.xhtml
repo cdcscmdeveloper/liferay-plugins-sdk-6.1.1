@@ -9,7 +9,7 @@
 	<p:dialog id="newbusinessownerid"
 		header="#{lbl['lbl.sc.qt.new.bussiness.owner']}" width="950"
 		height="600" widgetVar="newbusinessowner" modal="true" position="top">
-		<h:panelGroup id="bopanel" styleClass="qtAddMember" >
+		<h:panelGroup id="bopanel" styleClass="qtAddMember">
 			<p:messages id="bomessages" showDetail="true" autoUpdate="true"
 				closable="true" showSummary="false" severity="error, info" />
 			<p:panel id="usersearchpnlids" header="#{lbl['lbl.sc.search']}"
@@ -23,22 +23,18 @@
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.id.type']}" /></td>
-						<td><p:selectOneMenu id="appaction"
+						<td colspan="3"><p:selectOneMenu id="appaction"
 								value="#{qTBusinessOwnerBackingBean.managedBean.userBusineeOwnerSearchBean.identificationType}"
 								style="width: 178px;margin-bottom: 5px;">
 								<f:selectItems
 									value="#{qTBusinessOwnerBackingBean.getDropdownCodeValues(ParameterTypeConst.identificationTypes)}" />
 							</p:selectOneMenu></td>
-						<td />
-						<td />
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.identification.no']}" /></td>
-						<td><p:inputText id="Idno"
+						<td colspan="3"><p:inputText id="Idno"
 								value="#{qTBusinessOwnerBackingBean.managedBean.userBusineeOwnerSearchBean.identificationNo}"
 								size="30" /></td>
-						<td />
-						<td />
 					</tr>
 				</table>
 				<div class="ppRightBtn">
@@ -47,11 +43,12 @@
 						update="existingsearch" process="@this, usersearchpnlids" />
 					<p:commandButton value="#{lbl['lbl.btn.reset']}"
 						action="#{qTBusinessOwnerBackingBean.reset}"
-						update="@([id$=usersearchpnlids])" resetValues="true" 
+						update="@([id$=usersearchpnlids])" resetValues="true"
 						partialSubmit="true" process="@this" />
 				</div>
 			</p:panel>
-			<p:panel id="resultId" header="#{lbl['lbl.sc.search.result']}" toggleable="true">
+			<p:panel id="resultId" header="#{lbl['lbl.sc.search.result']}"
+				toggleable="true">
 				<p:dataTable id="existingsearch"
 					value="#{qTBusinessOwnerBackingBean.managedBean.userSearchBusinessOwnerDataModel}"
 					selection="#{qTBusinessOwnerBackingBean.managedBean.selectedPmUser}"
@@ -98,8 +95,9 @@
 
 				</p:dataTable>
 				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.ok']}" styleClass="BtnSpacing"
-						partialSubmit="true" process="@this, bopanel"
+					<p:commandButton value="#{lbl['lbl.btn.ok']}"
+						styleClass="BtnSpacing" partialSubmit="true"
+						process="@this, bopanel"
 						action="#{qTBusinessOwnerBackingBean.okBusinessOwnerAction}"
 						update="businessownerId, bopanel" />
 
