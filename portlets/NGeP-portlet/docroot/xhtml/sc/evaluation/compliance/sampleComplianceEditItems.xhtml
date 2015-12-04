@@ -17,24 +17,22 @@
 		</p:blockUI>
 		<p:messages id="sampleCompliance" showDetail="true" autoUpdate="true"
 			closable="true" severity="error,info" showSummary="false" />
-		<table width="100%">
+		<table width="100%" class="BtnSpacing">
 			<tr>
-				<td align="right">
-			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-				immediate="true" styleClass="BtnSpacing"
-				action="#{evaluationBackingBean.evaluationBackaction}" />
-
-			<p:commandButton value="#{lbl['lbl.btn.save']}"
-				disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
-				style="float:right;" update="@all" onstart="blockWidget.show();"
-				oncomplete="blockWidget.hide();" styleClass="BtnSpacing"
-				action="#{evaluationBackingBean.saveComplianceSample}" />
-		</td>
-		</tr>
+				<td align="right"><p:commandButton
+						value="#{lbl['lbl.btn.back']}" style="float:left;"
+						immediate="true"
+						action="#{evaluationBackingBean.evaluationBackaction}" /> <p:commandButton
+						value="#{lbl['lbl.btn.save']}"
+						disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
+						style="float:right;" update="@all" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"
+						action="#{evaluationBackingBean.saveComplianceSample}" /></td>
+			</tr>
 		</table>
 		<ui:include src="/xhtml/sc/evaluation/evaluationHeader.xhtml" />
-		
 
+		<p:spacer height="10px;"></p:spacer>
 		<table>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.supplier.code']}"></h:outputLabel></td>
