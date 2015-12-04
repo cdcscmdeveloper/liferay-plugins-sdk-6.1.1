@@ -204,7 +204,7 @@ public class LOIDetailBackingBean extends
 		IStatusSO statusSO;
 		try {
 
-			SCAwardSupplierDataType awardDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
+			SCAwardSupplierDataType awardDataType = getBpmTaskDetails(SCAwardSupplierDataType.class, null);
 
 			Long sourceId = Long.valueOf(awardDataType.getSourceId());
 			
@@ -263,7 +263,7 @@ public class LOIDetailBackingBean extends
 		debugLogger("preRenderView");
 		IStatusSO statusSO;
 		try {
-			SCAwardSupplierDataType awardDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
+			SCAwardSupplierDataType awardDataType = getBpmTaskDetails(SCAwardSupplierDataType.class, null);
 
 			Long sourceId = Long.valueOf(awardDataType.getSourceId());
 
@@ -317,7 +317,7 @@ public class LOIDetailBackingBean extends
 	public void preRenderSupplierView() {
 		debugLogger("preRenderSupplierView");
 		try {
-			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
+			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class, null);
 
 			Long sourceId = Long.valueOf(dpDataType.getSourceId());
 			Long loiId = Long.valueOf(dpDataType.getAwardId());
@@ -428,7 +428,7 @@ public class LOIDetailBackingBean extends
 		debugLogger("preRenderMultipleLoiView");
 
 		try {
-			SCEvaluationDataType evaluationDataType = getBpmTaskDetails(SCEvaluationDataType.class);
+			SCEvaluationDataType evaluationDataType = getBpmTaskDetails(SCEvaluationDataType.class, null);
 
 			Long sourceId = Long.valueOf(evaluationDataType.getQtId());
 			

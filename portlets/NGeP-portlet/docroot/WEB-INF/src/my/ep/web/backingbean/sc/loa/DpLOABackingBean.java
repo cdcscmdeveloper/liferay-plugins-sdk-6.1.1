@@ -70,7 +70,7 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 		debugLogger("preRenderView");
 
 		try {
-			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
+			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class, null);
 
 			Long sourceId = Long.valueOf(dpDataType.getSourceId());
 			getManagedBean().setSourceId(sourceId);

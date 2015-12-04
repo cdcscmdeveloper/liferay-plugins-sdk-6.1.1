@@ -133,7 +133,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 		debugLogger("preRenderView");
 
 		try {
-			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class);
+			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class, null);
 			this.getManagedBean().setPayLoad(dataType);
 			Long qtId = Long.valueOf(dataType.getQtId());
 			String committeeType = null;
