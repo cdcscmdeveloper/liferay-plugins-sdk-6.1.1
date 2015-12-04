@@ -73,7 +73,7 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 	public void preRenderView() {
 		debugLogger("preRenderView");
 		try {
-			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
+			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class, null);
 
 			Long sourceId = Long.valueOf(dpDataType.getSourceId());
 

@@ -602,7 +602,7 @@ public class DirectLOABackingBean extends
 
 		try {
 
-			SCAwardSupplierDataType awardDateType = getBpmTaskDetails(SCAwardSupplierDataType.class);
+			SCAwardSupplierDataType awardDateType = getBpmTaskDetails(SCAwardSupplierDataType.class, null);
 			Long sourceId = Long.valueOf(awardDateType.getSourceId());
 			Long loaId = Long.valueOf(awardDateType.getAwardId());
 
@@ -3771,7 +3771,7 @@ public class DirectLOABackingBean extends
 
 	public void preRenderDirectLoa() {
 
-		SCAwardSupplierDataType awardSupplierDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
+		SCAwardSupplierDataType awardSupplierDataType = getBpmTaskDetails(SCAwardSupplierDataType.class, null);
 		retriveLoaDetails(awardSupplierDataType.getAwardId());
 
 		contractTypeChanged();

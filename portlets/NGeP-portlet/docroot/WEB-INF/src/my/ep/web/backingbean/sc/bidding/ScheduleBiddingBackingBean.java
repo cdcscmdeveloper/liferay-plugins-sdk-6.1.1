@@ -79,7 +79,7 @@ public class ScheduleBiddingBackingBean extends
 
 	public void preRenderView() {
 		try {
-			SCEvaluationDataType dpDataType = getBpmTaskDetails(SCEvaluationDataType.class);
+			SCEvaluationDataType dpDataType = getBpmTaskDetails(SCEvaluationDataType.class, null);
 			this.getManagedBean().setPayLoad(dpDataType);
 			Long qtId = Long.valueOf(dpDataType.getQtId());
 			List<String> recommandIds = dpDataType.getGroupkeyBa();

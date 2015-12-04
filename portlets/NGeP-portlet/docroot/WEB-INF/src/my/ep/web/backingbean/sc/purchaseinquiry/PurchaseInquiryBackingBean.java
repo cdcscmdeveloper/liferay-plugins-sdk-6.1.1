@@ -1093,7 +1093,7 @@ public class PurchaseInquiryBackingBean extends
 	public void preRenderView() {
 		log.info("preRenderView");
 		ScRequestNoteDtl requestNoteDtl = null;
-		SCDirectPurchaseDataType directPurchaseDataType = super.getBpmTaskDetails(SCDirectPurchaseDataType.class);
+		SCDirectPurchaseDataType directPurchaseDataType = super.getBpmTaskDetails(SCDirectPurchaseDataType.class, null);
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		// Purchase Inquiry
 		PrInquiryReqDTO prInquiryReqDTO = new PrInquiryReqDTO();

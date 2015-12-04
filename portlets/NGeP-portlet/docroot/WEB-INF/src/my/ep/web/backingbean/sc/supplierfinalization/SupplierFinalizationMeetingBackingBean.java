@@ -138,7 +138,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 		debugLogger("preRenderView");
 
 		try {
-			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class);
+			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class, null);
 			Long qtId = Long.valueOf(dataType.getQtId());
 			String committeeType = String.valueOf(dataType.getCommitteeType());
 			if (StringUtils.isBlank(committeeType) && 

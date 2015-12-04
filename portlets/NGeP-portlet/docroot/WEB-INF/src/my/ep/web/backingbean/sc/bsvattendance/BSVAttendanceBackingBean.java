@@ -481,7 +481,7 @@ public class BSVAttendanceBackingBean extends
 	 */
 	public void preRenderView() {
 
-		SCQuotationTenderDataType siteVisitDatatype = getBpmTaskDetails(SCQuotationTenderDataType.class);
+		SCQuotationTenderDataType siteVisitDatatype = getBpmTaskDetails(SCQuotationTenderDataType.class, null);
 
 		retrieveBriefingSiteVisitList(siteVisitDatatype.getQtId().longValue());
 

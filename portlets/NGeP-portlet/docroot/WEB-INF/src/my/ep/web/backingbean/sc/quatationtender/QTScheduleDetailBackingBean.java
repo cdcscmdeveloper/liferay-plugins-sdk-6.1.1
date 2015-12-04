@@ -608,7 +608,7 @@ public class QTScheduleDetailBackingBean extends
 	 */
 	public void preRenderView() {
 
-		SCSiteVisitProposalDataType payLoad = getBpmTaskDetails(SCSiteVisitProposalDataType.class);
+		SCSiteVisitProposalDataType payLoad = getBpmTaskDetails(SCSiteVisitProposalDataType.class, null);
 
 		if (SCProcessNameConst.APPROVE_SUPPLIER_ADD.equalsIgnoreCase(this
 				.getManagedBean().getTaskName())) {

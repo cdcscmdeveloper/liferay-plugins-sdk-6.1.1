@@ -717,7 +717,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	public void preRenderView() {
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
-		SCDirectPurchaseDataType directPurchaseDataType = super.getBpmTaskDetails(SCDirectPurchaseDataType.class);
+		SCDirectPurchaseDataType directPurchaseDataType = super.getBpmTaskDetails(SCDirectPurchaseDataType.class, null);
 		Long dpId = null;
 		boolean zoneFlag = Boolean.FALSE;
 		ScRequestNote	requestNote = null;

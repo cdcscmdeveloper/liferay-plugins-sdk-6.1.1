@@ -7709,7 +7709,7 @@ public class EvaluationBackingBean extends
 	 */
 	public void preRenderView() {
 
-		SCEvaluationDataType evaluationDataType = getBpmTaskDetails(SCEvaluationDataType.class);
+		SCEvaluationDataType evaluationDataType = getBpmTaskDetails(SCEvaluationDataType.class, null);
 		FacesScopes facesScopes = new FacesScopes();
 
 		// FacesScopes facesScopes = new FacesScopes();

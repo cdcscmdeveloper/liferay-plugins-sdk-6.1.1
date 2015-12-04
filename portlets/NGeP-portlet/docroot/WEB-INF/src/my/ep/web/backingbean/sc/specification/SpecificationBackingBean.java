@@ -11329,7 +11329,7 @@ public class SpecificationBackingBean extends
 	 */
 	public void preRenderView() {
 
-		SCQuotationTenderDataType quotationTenderDataType = getBpmTaskDetails(SCQuotationTenderDataType.class);
+		SCQuotationTenderDataType quotationTenderDataType = getBpmTaskDetails(SCQuotationTenderDataType.class, null);
 		FacesScopes facesScopes = new FacesScopes();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		if (SCProcessNameConst.PREPARE_SPECIFICATION.equalsIgnoreCase(this
