@@ -20,11 +20,11 @@
 				closable="true" showDetail="true" showSummary="false"
 				severity="error, info"></p:messages>
 			<h:panelGroup>
-				<table width="100%">
+				<table width="100%" class="BtnSpacing">
 					<tr>
 						<td align="right"><p:commandButton
 								value="#{lbl['lbl.btn.back']}" style="float:left;"
-								update="@form" immediate="true" styleClass="BtnSpacing"
+								update="@form" immediate="true"
 								action="#{evaluationBackingBean.technicalBackaction}" /> <ui:param
 								name="checklistScoreType"
 								value="#{evaluationBackingBean.managedBean.checklistScoreType}"></ui:param>
@@ -40,15 +40,20 @@
 			</h:panelGroup>
 
 			<ui:include src="/xhtml/sc/evaluation/evaluationHeader.xhtml" />
-			<br />
-			<p:panel id="technicalOtherChecklistSupplierScoringOtherProposalheader" header="#{lbl['lbl.sc.eva.technical.proposal.evaluation']}">
+
+			<p:panel
+				id="technicalOtherChecklistSupplierScoringOtherAllChecklistProposalheaderIds"
+				toggleable="true"
+				header="#{lbl['lbl.sc.eva.technical.proposal.evaluation']}">
 				<ui:include
 					src="/xhtml/sc/evaluation/evaluationStage/supplierChecklistHeader.xhtml" />
 			</p:panel>
-			<br />
 
 
-			<p:panel header="#{lbl['lbl.sc.compliance.list']}" toggleable="true"
+
+			<p:panel
+				id="technicalOtherChecklistSupplierScoringOtherAllChecklistEvaluationStageTechnicalComplinaceListProposalheaderIds"
+				header="#{lbl['lbl.sc.compliance.list']}" toggleable="true"
 				collapsed="true">
 				<h:outputText styleClass="instruction"
 					value="#{lbl['lbl.sc.eva.evaluation.stage.document.instruction']}"
@@ -75,7 +80,7 @@
 				</p:dataTable>
 
 			</p:panel>
-			
+
 			<h:panelGroup>
 				<ui:param name="statusHide"
 					value="#{evaluationBackingBean.managedBean.statusHide}"></ui:param>
