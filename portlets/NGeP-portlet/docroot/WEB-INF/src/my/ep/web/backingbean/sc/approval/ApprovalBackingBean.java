@@ -326,7 +326,7 @@ public class ApprovalBackingBean extends
 	 * for(Committee/BPK/Finalization/Publication).
 	 */
 	public void preRenderView() {
-		Object obj = getBpmTaskDetails(SCAwardSupplierDataType.class, null);
+		Object obj = getBpmTaskDetails(Object.class, null);
 		String taskName = getManagedBean().getTaskName();
 
 		Long qtId = null;
