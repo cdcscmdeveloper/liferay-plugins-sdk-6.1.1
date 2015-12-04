@@ -55,7 +55,7 @@
 				</f:facet>
 				<ui:fragment
 					rendered="#{finance.definationType.parameterCode eq 'TS' or finance.definationType.parameterCode eq 'SD' or finance.definationType.parameterCode eq 'WF'}">
-					<h:outputLabel value="#{finance.qtScoreWeightage.score}"
+					<h:outputText value="#{finance.qtScoreWeightage.score}"
 						style="text-align:right" />
 				</ui:fragment>
 				<ui:fragment
@@ -282,7 +282,7 @@
 
 					</p:inputText>
 				</p:column>
-				<p:column colspan="1" style="font-weight: bold;">
+				<p:column colspan="1" style="text-align:right">
 					<h:outputText id="financialScoringItemScore"
 						value="#{specificationBackingBean.managedBean.financialItemScore}" />
 				</p:column>
