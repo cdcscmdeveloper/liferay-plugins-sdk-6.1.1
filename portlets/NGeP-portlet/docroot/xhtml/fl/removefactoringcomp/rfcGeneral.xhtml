@@ -52,6 +52,7 @@
 						value="* #{lbl['lbl.fl.title']}" /></td>
 				<td rowspan="3"><p:inputTextarea cols="50" rows="4"
 						style=" margin-bottom:5px;"
+						autoResize="false"
 						value="#{flOrderBB.managedBean.flRequest.title}" disabled="true" /></td>
 				<td style="width: 134px;"><p:outputLabel
 						value="#{lbl['lbl.fl.procurement.type']}" /></td>
@@ -141,6 +142,7 @@
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
 				<td><p:inputTextarea cols="50" rows="8" disabled="true"
 						style=" margin-bottom:5px;"
+						autoResize="false"
 						value="#{flOrderBB.getFullAddress(flOrderBB.managedBean.flRequest.flSupplierDtl.smAddress)}" /></td>
 			</tr>
 			<tr>
@@ -192,6 +194,7 @@
 							value="#{lbl['lbl.fl.supp.address']}" /></td>
 					<td><p:inputTextarea cols="50" rows="8" disabled="true"
 							style=" margin-bottom:5px;"
+							autoResize="false"
 							value="#{flOrderBB.managedBean.rfcAddress}" /></td>
 				</tr>
 				<tr>

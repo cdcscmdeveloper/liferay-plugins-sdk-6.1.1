@@ -8,10 +8,10 @@
 
 	<p:panel header="#{lbl['lbl.fl.menu.charge.line.summary']}" toggleable="true" styleClass="pmChargeLinePnlClass">
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.charge.line.summary']}" escape="false"/>
+		<div id="flDataTableScroll">
 		<p:treeTable id="chargeLineTbl" var="chargeLineNode"
 			selection="#{paymentMatchBackingBean.managedBean.selectedNode}"
 			selectionMode="single"
-			style="width:1000px;" 
 			value="#{paymentMatchBackingBean.managedBean.chargeLineItemRoot}">
 			<p:ajax event="expand" 
                 onstart="blockTreeTable.show();" oncomplete="blockTreeTable.hide();" />  			
@@ -177,7 +177,7 @@
 			</p:column>
 			
 		</p:treeTable>
-		
+		</div>
 		<p:blockUI widgetVar="blockTreeTable" block="chargeLineTbl">  
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>  
 		</p:blockUI> 			
