@@ -5495,7 +5495,7 @@ public class DirectLOABackingBean extends
 
 		if (scLoaSuppDocs == null) {
 			scLoaSuppDocs = new ArrayList<ScLoaSupportingDoc>();
-			scLoa.setScLoiSupportingDocs(scLoaSuppDocs);
+			scLoa.setScLoaSupportingDocs(scLoaSuppDocs);
 		}
 
 		ScLoaSupportingDoc scLoaSuppDoc = new ScLoaSupportingDoc();
@@ -5908,7 +5908,7 @@ public class DirectLOABackingBean extends
 		if (flag) {
 			throw new EpException(MessageConst.ERROR_760158);
 		}
-		scLoa.setScLoiSupportingDocs(result);
+		scLoa.setScLoaSupportingDocs(result);
 	}
 
 	/**
