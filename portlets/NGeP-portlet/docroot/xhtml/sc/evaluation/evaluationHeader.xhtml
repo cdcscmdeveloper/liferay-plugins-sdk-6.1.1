@@ -7,10 +7,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<div align="left" class="header-info">
+	<div align="left" class="header-info header-spacing">
 		<ui:param name="validatevalue"
 			value="#{evaluationBackingBean.handleProposalValidityDays(evaluationBackingBean.managedBean.scQt)}"></ui:param>
-		<table style="width: 100%">
+		<table border="0" cellspacing="0" cellpadding="0" style="width: 100%">
 			<tr>
 				<td style="width: 13%"><h:outputLabel
 						value="#{lbl['lbl.sc.qtn.no']}" /></td>
@@ -45,5 +45,5 @@
 			</tr>
 		</table>
 	</div>
-	<p:spacer height="10px" />
+
 </ui:composition>
