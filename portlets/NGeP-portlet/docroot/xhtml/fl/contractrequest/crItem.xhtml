@@ -730,6 +730,10 @@
 				oncomplete="addItems.hide();" update="itemDataTable"
 				process="@this,itemListResultDt">
 			</p:commandButton>
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
+				action="#{contractRequestBackingBean.itemCloseListener}"
+				partialSubmit="true">
+			</p:commandButton>
 		</div>
 	</p:dialog>
 	
