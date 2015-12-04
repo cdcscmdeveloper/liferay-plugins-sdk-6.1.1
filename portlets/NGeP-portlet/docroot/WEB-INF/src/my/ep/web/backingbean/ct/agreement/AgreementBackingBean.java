@@ -212,7 +212,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 					ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 				reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
 			} else { // Central Contract
-				reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
+				reqDTO.setRoleCode(RoleCode.BPK_CC_APPROVER.value());
 			}
 			resDTO = userSO.retrieveUserListByRole(reqDTO);
 			
@@ -881,16 +881,44 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 * @return the role of login user
 	 */
 	private String getUserRole() {
-		if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
-			return RoleCode.MIN_CONTRACT_ADMIN.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
-			return RoleCode.CT_APPROVER.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
-			return RoleCode.BPK_CCA.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value())) {
-			return RoleCode.BPK_APPROVER.value();
+		String userRole = null;		
+		if (getManagedBean().getTaskName() == null
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_DRAFT_AGREEMENT_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_AC_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_AC_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_DRAFT_AGREEMENT_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_DRAFT_AGREEMENT_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FINALIST_AGREEMENT_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FINALIST_AGREEMENT_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_FINALIST_AGREEMENT_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPLOAD_SIGNED_STAMPED_FINAL_AGREEMENT)) {
+			if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_MINISTRY)
+					&& getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
+				userRole = RoleCode.MIN_CONTRACT_ADMIN.value();
+			} else if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_CENTRAL)
+					&& getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
+				userRole = RoleCode.BPK_CCA.value();
+			}
+		} else if (getManagedBean().getTaskName() != null
+				&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_DRAFT_AGREEMENT_HT_NAME)
+						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FINALIST_AGREEMENT_HT_NAME))) {
+			if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_MINISTRY)
+					&& getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
+				userRole = RoleCode.CT_APPROVER.value();
+			} else if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_CENTRAL)
+					&& getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
+				userRole = RoleCode.BPK_CC_APPROVER.value();
+			}
+		}
+		
+		if (userRole == null) {
+			throw new EpException(MessageConst.ERROR_750040);
 		} else {
-			return null;
+			return userRole;
 		}
 	}
 	

@@ -13,7 +13,7 @@
           <h:panelGrid columns="4">
 	          <p:selectOneMenu id="menuSelectionId" required="true"  style="width:180px;" label="#{lbl['lbl.ct.termination.decision']}"
 	          	 disabled="#{terminationBackingBean.managedBean.contractVer.status.statusId==CtStatusConst.ftPendingLetterPrintAndUpdate
-	          	 or terminationBackingBean.isApprover() or terminationBackingBean.managedBean.viewContract}"
+	          	 or ctBackingBean.isApprover() or terminationBackingBean.managedBean.viewContract}"
 				 value="#{terminationBackingBean.managedBean.contractVer.ctTermination.decisionType.parameterId}">
 				 <f:selectItems value="#{terminationBackingBean.decisionTypeList}" />
 				 <p:ajax event="change" update=":form:terminateContract" process="@this"

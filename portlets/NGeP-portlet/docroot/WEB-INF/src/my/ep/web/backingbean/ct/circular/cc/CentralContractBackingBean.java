@@ -62,6 +62,7 @@ import my.ep.constant.ct.ContractConst;
 import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
@@ -458,22 +459,29 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 	
 	/**
-	 * The method used to set role of central contract approver
-	 */
-	public boolean isBPKApprover() {
-		return getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value());
-	}
-	
-	/**
 	 * The method used to retrieve of login user role
 	 */
-	private String getUserRole() {		
-		if(getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) 
-			return RoleCode.BPK_CCA.value();
-		else if(getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value())) 
-			return RoleCode.BPK_APPROVER.value();
-		else 
-			return null;
+	private String getUserRole() {
+		String userRole = null;
+		if (getManagedBean().getTaskName() == null
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_CIRCULAR_CONTRACT)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_CIRCULAR_CONTRACT)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_CIRCULAR_CONTRACT)) {
+			if (getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
+				userRole = RoleCode.BPK_CCA.value();
+			}
+		} else if (getManagedBean().getTaskName() != null
+				&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_CIRCULAR_CONTRACT))) {
+			if (getFacesScopes().hasRoleUser(RoleCode.BPK_CQ_APPROVER.value())) {
+				userRole = RoleCode.BPK_CQ_APPROVER.value();
+			}
+		}
+
+		if (userRole == null) {
+			throw new EpException(MessageConst.ERROR_750040);
+		} else {
+			return userRole;
+		}
 	}
 	
 	 /**
@@ -521,7 +529,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			reqDTO.setUserRole(getUserRole());
 			reqDTO.setTaskName(getManagedBean().getTaskName());
 			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
-			if(isBPKApprover()) {
+			if(getFacesScopes().hasRoleUser(RoleCode.BPK_CQ_APPROVER.value())) {
 				circularVer.setApprover(getFacesScopes().getUserSessionBean());
 				circularVer.setApprovedDate(new Date());
 			}
@@ -740,9 +748,17 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		try {
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO reqDTO = new UserReqDTO();
-			reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
+			UserResDTO resDTO = new UserResDTO();
+			
+			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());				
+			resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+			
+			if (resDTO.getUserOrgList().size() > 0) {
+				reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
+			}
+			reqDTO.setRoleCode(RoleCode.BPK_CQ_APPROVER.value());
 
-			UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
+			resDTO = userSO.retrieveUserListByRole(reqDTO);
 			List<PmUser> list = resDTO.getUserList();
 			
 			for (PmUser user : list) {
