@@ -2111,17 +2111,42 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * 
 	 * @return the role of login user
 	 */
-	private String getUserRole() {		
-		if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
-			return RoleCode.MIN_CONTRACT_ADMIN.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
-			return RoleCode.CT_APPROVER.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
-			return RoleCode.BPK_CCA.value();
-		} else if(getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value())) {
-			return RoleCode.BPK_APPROVER.value();
+	private String getUserRole() {
+		String userRole = null;		
+		if (getManagedBean().getTaskName() == null
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FD_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FD_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FD_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FA_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FA_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FA_HT_NAME)) {
+			if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_MINISTRY)
+					&& getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
+				userRole = RoleCode.MIN_CONTRACT_ADMIN.value();
+			} else if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_CENTRAL)
+					&& getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
+				userRole = RoleCode.BPK_CCA.value();			
+			}
+		} else if (getManagedBean().getTaskName() != null
+				&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FD_HT_NAME)
+						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FA_HT_NAME))) {
+			if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_MINISTRY)
+					&& getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
+				userRole = RoleCode.CT_APPROVER.value();
+			} else if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_CENTRAL)
+					&& getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
+				userRole = RoleCode.BPK_CC_APPROVER.value();
+			}
+		}
+
+		if (userRole == null) {
+			throw new EpException(MessageConst.ERROR_750040);
 		} else {
-			return null;
+			return userRole;
 		}
 	}
 	
@@ -2144,18 +2169,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			return false;
 		}
 	}
-	
-	/**
-     * The method used to verify the login user is BPK approver 
-     * or contract approver.
-	 * 
-	 * @return true, if login user is BPK approver or contract approver
-	 *         false, if login user is not BPK approver or contract approver
-     */
-    public boolean isApprover() {
-		return (getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()) 
-				|| getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()));
-	}    
 
     /**
      * The method used to verify the login user is central contract administrator.

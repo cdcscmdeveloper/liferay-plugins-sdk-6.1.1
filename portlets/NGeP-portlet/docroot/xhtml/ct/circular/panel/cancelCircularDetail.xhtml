@@ -13,7 +13,7 @@
 			disabled="#{fn:length(panelBackingBean.managedBean.cancelCircularReq.ctCancelCircularList) > 0}" 
 			rendered="#{!panelBackingBean.isBPKApprover()}" >
 			<f:selectItems value="#{panelBackingBean.getCircularDocTypeValues()}" />
-			<p:ajax event="change" update="@([id$=cancelCircularList])"/>
+			<p:ajax event="change" update="@([id$=cancelCircularList],[id$=approverpickList])"  listener="#{panelBackingBean.retrieveApproverList}" />
 		</p:selectOneMenu>
 		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.cancel.circular']}" rendered="#{!panelBackingBean.isBPKApprover()}"/>
 		<br/>

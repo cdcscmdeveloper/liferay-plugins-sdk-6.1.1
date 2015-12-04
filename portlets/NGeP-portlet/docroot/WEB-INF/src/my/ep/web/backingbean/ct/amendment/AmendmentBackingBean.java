@@ -4932,55 +4932,95 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * 
 	 * @return the role of login user
 	 */
-	private String getUserRole() {	     
-	    if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
-			return RoleCode.MIN_CONTRACT_ADMIN.value();
-	    } else if (getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
-			return RoleCode.BPK_CCA.value();		
-	    } else if (getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
-			return RoleCode.CT_APPROVER.value();
-	    } else if (getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value())) {
-			return RoleCode.BPK_APPROVER.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.PBA_CHAIRPERSON.value())) {
-			return RoleCode.PBA_CHAIRPERSON.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.PBA_MEMBER.value())) {
-			return RoleCode.PBA_MEMBER.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.PBA_SECRETARY.value())) {
-			return RoleCode.PBA_SECRETARY.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.PBB_CHAIRPERSON.value())) {
-			return RoleCode.PBB_CHAIRPERSON.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.PBB_MEMBER.value())) {
-			return RoleCode.PBB_MEMBER.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.PBB_SECRETARY.value())) {
-			return RoleCode.PBB_SECRETARY.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.FPB_CHAIRPERSON.value())) {
-			return RoleCode.FPB_CHAIRPERSON.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.FPB_MEMBER.value())) {
-			return RoleCode.FPB_MEMBER.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.FPB_SECRETARY.value())) {
-			return RoleCode.FPB_SECRETARY.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.QCA_CHAIRPERSON.value())) {
-			return RoleCode.QCA_CHAIRPERSON.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.QCA_MEMBER.value())) {
-			return RoleCode.QCA_MEMBER.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.QCA_SECRETARY.value())) {
-			return RoleCode.QCA_SECRETARY.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.QCB_CHAIRPERSON.value())) {
-			return RoleCode.QCB_CHAIRPERSON.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.QCB_SECRETARY.value())) {
-			return RoleCode.QCB_SECRETARY.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.QC_MEMBER.value())) {
-			return RoleCode.QC_MEMBER.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
-			return RoleCode.MOF_SUPPLIER_ADMIN.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
-			return RoleCode.MOF_SUPPLIER_USER.value();		
-		} else if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
-			return RoleCode.BASIC_SUPPLIER_ADMIN.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
-			return RoleCode.BASIC_SUPPLIER_USER.value();				
+	private String getUserRole() {
+		String userRole = null;	
+		if (getManagedBean().getTaskName() == null
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FA_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FA_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FA_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) {
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_MINISTRY)
+					&& getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
+				userRole = RoleCode.MIN_CONTRACT_ADMIN.value();
+			} else if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_CENTRAL)
+					&& getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
+				userRole = RoleCode.BPK_CCA.value();			
+			}
 		} else {
-			return null;
+			if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FA_HT_NAME)
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)) {
+				if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+						ParameterConst.CONTRACT_TYPE_MINISTRY)
+						&& getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
+					userRole = RoleCode.CT_APPROVER.value();
+				} else if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+						ParameterConst.CONTRACT_TYPE_CENTRAL)
+						&& getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
+					userRole = RoleCode.BPK_CC_APPROVER.value();
+				}
+			} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME)) {
+				if (getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value())) {
+					userRole = RoleCode.BPK_APPROVER.value();
+				}
+			} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
+				if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+					userRole = RoleCode.MOF_SUPPLIER_USER.value();
+				} else if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+					userRole = RoleCode.MOF_SUPPLIER_ADMIN.value();
+				} else if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
+					userRole = RoleCode.BASIC_SUPPLIER_USER.value();
+				} else if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+					userRole = RoleCode.BASIC_SUPPLIER_ADMIN.value();
+				} else if (getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())) {
+					userRole = RoleCode.GOVT_SELLER.value();
+				}
+			} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
+				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
+			   			|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+					if (getFacesScopes().hasRoleUser(RoleCode.FPB_SECRETARY.value())) {
+						userRole = RoleCode.FPB_SECRETARY.value();
+					}
+				} else {
+					String roleCode = getManagedBean().getCommitteeType() + "_SECRETARY";
+					if (getFacesScopes().hasRoleUser(roleCode)) {
+						userRole = roleCode;
+					}
+				}
+			} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CHAIR_PERSON_SIGN_OFF_HT_NAME)) {
+				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
+			   			|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+					if (getFacesScopes().hasRoleUser(RoleCode.FPB_CHAIRPERSON.value())) {
+						userRole = RoleCode.FPB_CHAIRPERSON.value();
+					}
+				} else {
+					String roleCode = getManagedBean().getCommitteeType() + "_CHAIRPERSON";
+					if (getFacesScopes().hasRoleUser(roleCode)) {
+						userRole = roleCode;
+					}
+				}
+			} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)) {
+				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
+			   			|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+					if (getFacesScopes().hasRoleUser(RoleCode.FPB_MEMBER.value())) {
+						userRole = RoleCode.FPB_MEMBER.value();
+					}
+				} else {
+					String roleCode = getManagedBean().getCommitteeType() + "_MEMBER";
+					if (getFacesScopes().hasRoleUser(roleCode)) {
+						userRole = roleCode;
+					}
+				}
+			}
+		}
+		
+		if (userRole == null) {
+			throw new EpException(MessageConst.ERROR_750040);
+		} else {
+			return userRole;
 		}
 	}
 		
@@ -4999,18 +5039,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		} else {
 			return false;
 		}
-	}
-	
-	/**
-     * The method used to verify the login user is BPK approver 
-     * or contract approver.
-	 * 
-	 * @return true, if login user is BPK approver or contract approver
-	 *         false, if login user is not BPK approver or contract approver
-     */
-    public boolean isApprover() {
-		return (getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()) 
-				|| getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()));
 	}
     
 	/**

@@ -1096,17 +1096,40 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	 * Method to set user role as per user login
 	 * User role used in BPM to identify the task
 	 */
-	private String getUserRole() {		
-		if(getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) 
-			return RoleCode.MIN_CONTRACT_ADMIN.value();
-		else if(getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) 
-			return RoleCode.BPK_CCA.value();
-		else if(getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()))
-			return RoleCode.CT_APPROVER.value();
-		else if(getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()))
-			return RoleCode.BPK_APPROVER.value();		
-		else 
-			 return null;
+	private String getUserRole() {
+		String userRole = null;		
+		if (getManagedBean().getTaskName() == null
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FT_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FT_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FT_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_UPDATE_HT_NAME)) {
+			if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_MINISTRY)
+					&& getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
+				userRole = RoleCode.MIN_CONTRACT_ADMIN.value();
+			} else if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_CENTRAL)
+					&& getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
+				userRole = RoleCode.BPK_CCA.value();
+			}
+		} else if (getManagedBean().getTaskName() != null
+				&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FT_HT_NAME)) {
+			if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_MINISTRY)
+					&& getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
+				userRole = RoleCode.CT_APPROVER.value();
+			} else if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_CENTRAL)
+					&& getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
+				userRole = RoleCode.BPK_CC_APPROVER.value();
+			}
+		}
+
+		if (userRole == null) {
+			throw new EpException(MessageConst.ERROR_750040);
+		} else {
+			return userRole;
+		}
 	}
 	
 	/**
@@ -1209,14 +1232,6 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 
 		getManagedBean().getContractVer().getCtTermination().setFileName(item.getFileName());
 		getManagedBean().getContractVer().getCtTermination().setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-	}
-    
-    /**
-	 * Method used to check login user as approver
-    */
-    public boolean isApprover() {
-    	return (getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()) 
-				|| getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()));
 	}
     
     /**
