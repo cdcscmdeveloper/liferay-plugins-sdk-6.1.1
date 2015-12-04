@@ -45,7 +45,7 @@
 								style="margin-left:-62px;" />
 							<p:selectManyCheckbox id="softCertificateCDCFee" required="true"
 								value="#{reportBackingBean.smSoftCertificateFeeList}"
-								label="#{lbl['lbl.rpt.smPaymentTypereq']}">
+								label="#{lbl['lbl.rpt.smPaymentType']}">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.smSoftCertificateFee']}"
 									itemValue="S" />
 							</p:selectManyCheckbox>
@@ -1023,9 +1023,8 @@
 							<p:column>
 								<table style="width: 266px;">
 									<tr style="width: 100%;">
-										<td><p:outputLabel
-												value="#{lbl['lbl.rpt.reportType']}" /> <p:outputLabel
-												value="*" styleClass="mandatory" /></td>
+										<td><p:outputLabel value="#{lbl['lbl.rpt.reportType']}" />
+											<p:outputLabel value="*" styleClass="mandatory" /></td>
 
 									</tr>
 								</table>
@@ -1103,6 +1102,23 @@
 									itemValue="#{lbl['lbl.rpt.regBasic']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.regMOF']}"
 									itemValue="#{lbl['lbl.rpt.regMOF']}"></f:selectItem>
+								<p:ajax event="change" partialSubmit="true"
+									update="@([id$=Msg])" />
+							</p:selectOneMenu>
+						</c:if>
+
+						<c:if
+							test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryForCodeView}">
+							<p:outputLabel value="*" styleClass="mandatory"
+								style="margin-right: -152px; margin-top: 10px;" />
+							<p:outputLabel value="#{lbl['lbl.rpt.code']}"
+								style="margin-top:5px;width:58px;" />
+							<p:selectOneMenu value="#{reportBackingBean.smCode}"								
+								style="margin-top:5px;width:300px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.codeOne']}"
+									itemValue="#{lbl['lbl.rpt.codeOne']}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.codeTwo']}"
+									itemValue="#{lbl['lbl.rpt.codeTwo']}"></f:selectItem>
 								<p:ajax event="change" partialSubmit="true"
 									update="@([id$=Msg])" />
 							</p:selectOneMenu>
@@ -2411,6 +2427,11 @@
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.smGSTEffectiveDateView}">
 						<TD><p:outputLabel value="#{lbl['lbl.rpt.gsteffectivedate']}"
+								style="width:158px;" /></TD>
+					</c:if>
+					<c:if
+						test="#{reportBackingBean.managedBean.rptGenBean.smFromDateView}">
+						<TD><p:outputLabel value="#{lbl['lbl.rpt.dateFrom']}"
 								style="width:158px;" /></TD>
 					</c:if>
 					<c:if

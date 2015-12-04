@@ -452,6 +452,7 @@ public class ReportConst {
 	public static final String AMP_SM_MOF_ACC_END_FROM_DATE_EQ = "&PEXFROMDATE=";
 	public static final String AMP_SM_REP_TYPE_EQ = "&PTYPE=";	
 	public static final String AMP_SM_PAYMENT_TYPE_METHOD_EQ = "&PCHANNELNAME=";	
+	public static final String AMP_SM_OCDE_TYPE = "&PKOD=";	
 	public static final String AMP_SM_SUP_NAME_EQ = "&PCOMPANYNAME=";
 	public static final String AMP_SM_MOF_REG_FEE_TYPE_EQ = "&PPAYTYPE1=";
 	public static final String AMP_SM_PROCESSING_FEE_TYPE_EQ = "&PPAYTYPE2=";
