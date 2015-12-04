@@ -13,22 +13,22 @@
 		 </p:blockUI> 	
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info, warning" />
 		<p:panel id="searchPanel" header="#{lbl['lbl.btn.search']}" toggleable="true">
-			<h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth30, columnWidth20, columnWidth20,columnWidth30">
+			<h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth30, columnWidth20, columnWidth30,columnWidth20">
 				<h:outputLabel value="#{lbl['lbl.ct.circular.type']}" styleClass="required" />
 				<p:selectOneMenu value="#{circularBackingBean.managedBean.searchCircularDocType}" style="width:240px;" >
 					<p:ajax event="change" process="@this" update="searchPanel" />
 					<f:selectItems value="#{circularBackingBean.getCircularDocTypeValues()}" />
 				</p:selectOneMenu>			
 				<h:outputLabel value="#{lbl['lbl.ct.circular.name']}" />
-				<p:inputText value="#{circularBackingBean.managedBean.searchCircularName}" style="width:200px;" maxlength="500" />				
+				<p:inputText value="#{circularBackingBean.managedBean.searchCircularName}" style="width:170px;" maxlength="500" />				
 				<h:outputLabel value="#{lbl['lbl.ct.circular.no']}" />
-				<p:inputText value="#{circularBackingBean.managedBean.searchCircularNo}" style="width:200px;" maxlength="17" />
+				<p:inputText value="#{circularBackingBean.managedBean.searchCircularNo}" style="width:170px;" maxlength="17" />
 				<h:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" />
-				<p:inputText value="#{circularBackingBean.managedBean.searchPhysicalCircularNo}" style="width:200px;" maxlength="60" />
+				<p:inputText value="#{circularBackingBean.managedBean.searchPhysicalCircularNo}" style="width:170px;" maxlength="60" />
 				<h:outputLabel value="#{lbl['lbl.ct.supplier.name']}" />
-				<p:inputText value="#{circularBackingBean.managedBean.searchSupplierName}" style="width:200px;" maxlength="100" />
+				<p:inputText value="#{circularBackingBean.managedBean.searchSupplierName}" style="width:170px;" maxlength="100" />
 				<h:outputLabel value="#{lbl['lbl.ct.item.name']}" />
-				<p:inputText value="#{circularBackingBean.managedBean.searchItemName}" style="width:200px;margin-top:3px;" maxlength="100" />
+				<p:inputText value="#{circularBackingBean.managedBean.searchItemName}" style="width:170px;margin-top:3px;" maxlength="100" />
 				<h:outputLabel value="#{lbl['lbl.ct.circular.start.date']}" />								
 				<p:calendar style="width:150px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" readonlyInput="true"
 					navigator="true" value="#{circularBackingBean.managedBean.searchStartDate}" id="popupButtonCal" showOn="button" />
@@ -51,7 +51,7 @@
 				var="data" lazy="true" rows="10" rowIndexVar="index" >
 				<ac:paginator for="circularVerDt" />
 				<p:column headerText="#{lbl['lbl.ct.circular.no']}"  style="width:15%;white-space:normal;" styleClass="column-align-center" >
-					<h:outputText value="#{data.ctCircular.circularNo}" style="float:left;"/>
+					<h:outputText value="#{data.ctCircular.circularNo}" style="text-align:left;float:left;"/>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}"  style="width:15%;white-space:normal;" styleClass="column-align-center" >
 					 <div align="left">
