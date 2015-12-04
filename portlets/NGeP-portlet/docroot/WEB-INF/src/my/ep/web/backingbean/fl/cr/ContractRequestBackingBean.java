@@ -629,6 +629,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	}
 	
 	/**
+	 * Close listener for item dialog.
+	 */
+	public void itemCloseListener() {
+		RequestContext.getCurrentInstance().execute("addItems.hide()");
+	}
+	
+	/**
 	 * @param addrType selected delivery address.
 	 * @param flDeliveryAddresses list of delivery addresses.
 	 * @return returns true if selected delivery address is already added,otherwise false.
