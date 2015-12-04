@@ -553,9 +553,9 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	public String saveAgreement(String action) throws Exception {
 		IAgreementSO agreementSO = null;
 		try {
-			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
-				validateAgreement(action);
-			}
+			
+		    validateAgreement(action);
+		
 			ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
@@ -651,6 +651,17 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 * 				    invoke base on the action
 	 */
 	private void validateAgreement(String outcome) {	
+		
+		for(CtAgreementContent agContent : getManagedBean().getCtAgreement().getAgreementContents()){
+			if(agContent.getContentType().getParameterCode().equalsIgnoreCase(ParameterConst.AGREEMENT_USER_UPLOAD_DOC)){
+				if(agContent.getTitle() == null ||  agContent.getTitle().isEmpty()){
+					throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.contents", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
+			}
+		}
+		
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 			if (getManagedBean().getRemarkList().get(0).getRemark().length() == 0) {
 				throw new EpException(MessageConst.ERROR_100022, 
@@ -658,6 +669,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
 		}
+		if (!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 		if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_FINALIST_AGREEMENT_HT_NAME)) {
 			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_PRINT)
 					&& getManagedBean().getCtAgreement().getFileName() == null) {
@@ -752,7 +764,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				}
 				checkDuplicateSupplierWitness(supplierWitness.getOfficerIc());
 			}
-		}		
+		  }		
+		}
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
 				&& getManagedBean().getApproverModel().getTarget().size() == 0) {
 			//Approver is mandatory for document submission. Please select at least one approver.
@@ -2571,4 +2584,19 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		} 
 		return portletTitle;
 	} 
+	
+	/**
+	 * The method used to delete the uploaded agency file.
+	 */    
+    public void deleteContentAttachement(){
+    	CtAgreementContent agContect =  getManagedBean().getCtAgreement().getAgreementContents().get(getManagedBean().getVarIndex());
+    	getManagedBean().getCtAgreement().getAgreementContents().remove(getManagedBean().getVarIndex());
+    	agContect.setFileName(null);
+ 	    agContect.setFilePath(null);
+    	getManagedBean().getCtAgreement().getAgreementContents().add(getManagedBean().getVarIndex(), agContect);
+    }
+    
+    public void setIndexProperty(int index){
+    	getManagedBean().setVarIndex(index);
+    }
 }
