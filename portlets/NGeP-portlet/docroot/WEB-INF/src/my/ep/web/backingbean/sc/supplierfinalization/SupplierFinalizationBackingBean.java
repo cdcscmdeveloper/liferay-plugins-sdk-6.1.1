@@ -919,8 +919,10 @@ public class SupplierFinalizationBackingBean extends
 				.getScQtCommittee() : getManagedBean().getScQtCommittee();
 		SCEvaluationDataType dataType = (SCEvaluationDataType) getManagedBean()
 				.getPayLoad();
+		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		TplSpecZoneDtl selectedZone = getManagedBean().getCurrentZone();
 		boolean isSecretaryUser = this.getManagedBean().isSecretaryUser();
+		
 
 		renewSesionObject();
 
@@ -928,6 +930,7 @@ public class SupplierFinalizationBackingBean extends
 		getManagedBean().setScQtCommittee(scQtCommittee);
 		getManagedBean().setCurrentZone(selectedZone);
 		getManagedBean().setPayLoad(dataType);
+		getManagedBean().setCurrentStatusId(currentStatusId);
 		getManagedBean().setZoneActiveIndex(
 				selectedZone != null ? selectedZone.getZoneTabIndex() : 0);
 		getManagedBean().setSecretaryUser(isSecretaryUser);
@@ -3720,7 +3723,11 @@ public class SupplierFinalizationBackingBean extends
 						!(scQtRecommend.getCreatedBy().equals(loggedInUserId))) {
 					this.getManagedBean().setItemFwdToHighAuthority(true);
 				}
-				if ( scQtRecommend.isHigherAuthReq() && 
+				
+				if (getManagedBean().isInitialDecisionFwdToBPK() && 
+						isQTRefinalized()) {
+					scQtRecommend.setDisabled(false);
+				} else if ( scQtRecommend.isHigherAuthReq() && 
 						(getManagedBean().isInitialDecisionFwdToBPK() || 
 							(scQtFinalization.getHigherSecretary() != null &&
 								scQtFinalization.getHigherSecretary().getUserId()
