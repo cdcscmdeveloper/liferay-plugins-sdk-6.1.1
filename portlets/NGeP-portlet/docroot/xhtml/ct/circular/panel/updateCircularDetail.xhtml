@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 	
-	<h:panelGrid  columns="4" columnClasses="columnWidth200,columnWidth300,columnWidth180,columnWidth300">
+	<h:panelGrid  columns="4" columnClasses="columnWidth200,columnWidth200,columnWidth180,columnWidth200">
 				
 					    <p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" styleClass="required"/>
 				   <h:panelGrid columns="5">
@@ -21,7 +21,7 @@
 				   
 				      	<h:outputLabel value="#{lbl['lbl.ct.circular.panel.name']}" styleClass="required"/>
 					<h:panelGrid columns="5">
-					    <p:inputTextarea id="circularNameTxt1" rows="5"  style="width:200px;" maxlength="500"
+					    <p:inputTextarea id="circularNameTxt1" rows="5"  style="width:170px;" maxlength="500"
 					        disabled="#{panelBackingBean.managedBean.viewContract}" autoResize="false"
 					        required="true" label="#{lbl['lbl.ct.circular.name']}" value="#{panelBackingBean.managedBean.circularVer.name}" />
 					      <p:spacer width="5"/>

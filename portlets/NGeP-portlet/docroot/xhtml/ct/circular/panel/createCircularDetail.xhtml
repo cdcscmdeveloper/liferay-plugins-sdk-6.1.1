@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 	
 	<h:panelGrid id="panelCircularId" columns="4" 
-	   columnClasses="columnWidth200,columnWidth300,columnWidth180,columnWidth300">
+	   columnClasses="columnWidth200,columnWidth200,columnWidth180,columnWidth200">
 				
 				     <p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" styleClass="required" />
 				   <h:panelGrid columns="5">
@@ -23,7 +23,7 @@
 				
 				    <p:outputLabel value="#{lbl['lbl.ct.circular.panel.name']}"  styleClass="required"/>
 				    <h:panelGrid columns="5">
-				       <p:inputTextarea id="circularNameTxt" rows="5" style="width:200px;" maxlength="500" required="true" 
+				       <p:inputTextarea id="circularNameTxt" rows="5" style="width:170px;" maxlength="500" required="true" 
 						   disabled="#{panelBackingBean.managedBean.viewContract}" autoResize="false"
 						   label="#{lbl['lbl.ct.circular.name']}" value="#{panelBackingBean.managedBean.circularVer.name}" 
 						   onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" />
