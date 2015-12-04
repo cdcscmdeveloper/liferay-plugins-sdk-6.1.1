@@ -14,8 +14,12 @@
 
 
 	<h:panelGroup>
-		<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
-			<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.eva.evaluation.supplier.list.instruction']}" escape="false" />
+		<p:panel header="#{lbl['lbl.sc.supplier.list']}"
+			id="evaluationStageFinancialSpecsFinancialSupplierListsDatatableIds"
+			toggleable="true">
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.eva.evaluation.supplier.list.instruction']}"
+				escape="false" />
 
 			<p:dataTable var="finSpec" editable="true" lazy="true"
 				id="financialSpecEvaluationStage" rows="10"
@@ -40,59 +44,56 @@
 
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.eva.package.offered.price']}"
-					style="width:15%">
-					<h:outputLabel
-						value="#{finSpec.scQtProposal.proposalAmount.proposalAmt}"
-						style="text-align:right">
+					style="width:15%;text-align:right;">
+					<h:outputText
+						value="#{finSpec.scQtProposal.proposalAmount.proposalAmt}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputLabel>
+					</h:outputText>
 
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.eva.package.score']}"
-					style="width:10%">
-					<h:outputLabel
-						value="#{finSpec.scQtProposal.proposalAmount.totalScore}"
-						style="text-align:right"></h:outputLabel>
+					style="width:10%;text-align:right;">
+					<h:outputText
+						value="#{finSpec.scQtProposal.proposalAmount.totalScore}"></h:outputText>
 				</p:column>
 
-				<p:column style="width:15%">
+				<p:column style="width:15%;text-align:right;">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.difference.rm']}" />
-						<ac:iconTooltip id="priceDiff#{index}FECSS" value="#{lbl['lbl.sc.difference.rm.tooltip']}" />
+						<ac:iconTooltip id="priceDiff#{index}FECSS"
+							value="#{lbl['lbl.sc.difference.rm.tooltip']}" />
 					</f:facet>
-					<h:outputLabel
-						value="#{finSpec.scQtProposal.proposalAmount.priceDifference}"
-						style="text-align:right">
+					<h:outputText
+						value="#{finSpec.scQtProposal.proposalAmount.priceDifference}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputLabel>
+					</h:outputText>
 
 				</p:column>
 
-				<p:column style="width:15%">
+				<p:column style="width:15%;text-align:right;">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.difference.perc']}" />
-						<ac:iconTooltip id="prefMargin#{index}FEC" value="#{lbl['lbl.sc.difference.perc.tooltip']}" />
+						<ac:iconTooltip id="prefMargin#{index}FEC"
+							value="#{lbl['lbl.sc.difference.perc.tooltip']}" />
 					</f:facet>
-					<h:outputLabel
-						value="#{finSpec.scQtProposal.proposalAmount.percentageDifference}"
-						style="text-align:right">
+					<h:outputText
+						value="#{finSpec.scQtProposal.proposalAmount.percentageDifference}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
-					</h:outputLabel>
+					</h:outputText>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.pref.margin']}"
-					style="width:10%">
+					style="width:10%;text-align:right;">
 
-					<h:outputLabel
-						value="#{finSpec.scQtProposal.proposalAmount.preferenceMargin}"
-						style="text-align:right">
+					<h:outputText
+						value="#{finSpec.scQtProposal.proposalAmount.preferenceMargin}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
-					</h:outputLabel>
+					</h:outputText>
 
 
 				</p:column>
@@ -102,7 +103,8 @@
 				<p:column style="width:15%;text-align: center;">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.action']}" />
-						<ac:iconTooltip id="action#{index}FECSSL" value="#{lbl['lbl.sc.action.evaluation.tooltip']}" />
+						<ac:iconTooltip id="action#{index}FECSSL"
+							value="#{lbl['lbl.sc.action.evaluation.tooltip']}" />
 					</f:facet>
 
 					<p:commandButton value="#{lbl['lbl.btn.evaluate']}"

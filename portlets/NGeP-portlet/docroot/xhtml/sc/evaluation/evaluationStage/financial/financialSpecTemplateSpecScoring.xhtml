@@ -32,6 +32,7 @@
 
 			<h:panelGroup>
 				<p:panel header="#{lbl['lbl.sc.spec.scoring.offered.price']}"
+					id="evaluationsStageFinancialSpecSupplierSeletedItemsSpecCommitteeOfferPrice"
 					toggleable="true">
 					<h:outputText styleClass="instruction"
 						value="#{lbl['lbl.sc.spec.scoring.offered.price.instruction']}"
@@ -52,54 +53,47 @@
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.tpl.spec.content.scoring.scoring.from.variance']}"
-							style="width:10%">
-							<h:outputLabel value="#{itemofferPricelist.rangeFrom}"
-								style="text-align:right"></h:outputLabel>
+							style="width:10%;text-align:right;">
+							<h:outputText value="#{itemofferPricelist.rangeFrom}"></h:outputText>
 						</p:column>
 
 						<p:column
 							headerText="#{lbl['lbl.tpl.spec.content.scoring.scoring.to.variance']}"
-							style="width:10%">
-							<h:outputLabel value="#{itemofferPricelist.rangeTo}"
-								style="text-align:right"></h:outputLabel>
+							style="width:10%;text-align:right;">
+							<h:outputText value="#{itemofferPricelist.rangeTo}"></h:outputText>
 						</p:column>
 
 						<p:column headerText="#{lbl['lbl.sc.eva.from.varience.ringgit']}"
-							style="width:10%">
-							<h:outputLabel value="#{itemofferPricelist.fromVariance}"
-								style="text-align:right">
+							style="width:10%;text-align:right;">
+							<h:outputText value="#{itemofferPricelist.fromVariance}">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-							</h:outputLabel>
+							</h:outputText>
 						</p:column>
 
 						<p:column headerText="#{lbl['lbl.sc.eva.to.varience.ringgit']}"
-							style="width:10%">
-							<h:outputLabel value="#{itemofferPricelist.toVariance}"
-								style="text-align:right">
+							style="width:10%;text-align:right;">
+							<h:outputText value="#{itemofferPricelist.toVariance}">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-							</h:outputLabel>
+							</h:outputText>
 						</p:column>
 
 						<p:column
 							headerText="#{lbl['lbl.tpl.spec.content.scoring.scoring.below.score']}"
-							style="width:10%">
-							<h:outputLabel value="#{itemofferPricelist.belowScore}"
-								style="text-align:right"></h:outputLabel>
+							style="width:10%;text-align:right;">
+							<h:outputText value="#{itemofferPricelist.belowScore}"></h:outputText>
 						</p:column>
 
 						<p:column
 							headerText="#{lbl['lbl.tpl.spec.content.scoring.scoring.within.score']}"
-							style="width:10%">
-							<h:outputLabel value="#{itemofferPricelist.score}"
-								style="text-align:right"></h:outputLabel>
+							style="width:10%;text-align:right;">
+							<h:outputText value="#{itemofferPricelist.score}"></h:outputText>
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.tpl.spec.content.scoring.scoring.above.score']}"
-							style="width:10%">
-							<h:outputLabel value="#{itemofferPricelist.aboveScore}"
-								style="text-align:right"></h:outputLabel>
+							style="width:10%;text-align:right">
+							<h:outputText value="#{itemofferPricelist.aboveScore}"></h:outputText>
 						</p:column>
 
 

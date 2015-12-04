@@ -14,11 +14,11 @@
 	<ui:define name="contentSection">
 
 
-		<table width="100%">
+		<table width="100%" class="BtnSpacing">
 			<tr>
 				<td align="right"><p:commandButton
 						value="#{lbl['lbl.btn.back']}" style="float:left;"
-						immediate="true" styleClass="BtnSpacing"
+						immediate="true"
 						action="#{evaluationBackingBean.evaluationBackaction}" /></td>
 			</tr>
 		</table>
@@ -26,7 +26,9 @@
 
 		<ui:include src="/xhtml/sc/evaluation/evaluationHeader.xhtml" />
 
-		<p:panel header="#{lbl['lbl.sc.eva.financial.proposal.evaluation']}">
+		<p:panel header="#{lbl['lbl.sc.eva.financial.proposal.evaluation']}"
+			toggleable="true"
+			id="evaluationStageFinancialSpecsWithOutzoneItemsSuppliersIds1">
 			<ui:include src="/xhtml/sc/evaluation/checklistHeader.xhtml" />
 		</p:panel>
 
