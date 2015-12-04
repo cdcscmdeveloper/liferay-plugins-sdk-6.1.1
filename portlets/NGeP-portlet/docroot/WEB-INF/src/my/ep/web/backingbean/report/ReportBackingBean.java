@@ -11607,6 +11607,8 @@ public class ReportBackingBean extends
 						.getSmRTReportType().toString() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmSupplierName() != null) && (this
 						.getSmSupplierName().toString() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmReceiptNo() != null) && (this.getSmReceiptNo()
+						.toString() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmPaymentMethod() != null) && (this
 						.getSmPaymentMethod().toString() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmCode() != null) && (this.getSmCode().toString() != ReportConst.EMPTY_VAL))
@@ -12074,7 +12076,7 @@ public class ReportBackingBean extends
 						+ rptGenBean.getEpNumberTotVar()
 						+ rptGenBean.getBusinessRegNoTotVar()
 						+ rptGenBean.getIcNumberTotVar()
-						+ rptGenBean.getSmRTReportTypeVar()						
+						+ rptGenBean.getSmRTReportTypeVar()
 						+ rptGenBean.getSmCodeVar()
 						+ rptGenBean.getSmSupplierNameVar()
 						+ rptGenBean.getSmMofRegistrationFeeVar()

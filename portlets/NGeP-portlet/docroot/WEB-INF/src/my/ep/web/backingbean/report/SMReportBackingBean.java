@@ -587,7 +587,9 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			break;
 		case ReportConst.SM_LIST_RECIPT_TIMES_RPT_VAL:
 			  rptGenBean.setSmMandatoryForDateView(true);
-			  rptGenBean.setSmFromDateView(true);			 
+			  rptGenBean.setSmFromDateView(true);
+			  rptGenBean.setSmReceiptNoView(true);
+			  rptGenBean.setSmApplicationNoView(true);
          break;
 	        default: 
 	        	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));
