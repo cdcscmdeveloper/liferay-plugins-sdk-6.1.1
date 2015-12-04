@@ -6,7 +6,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.supplier.list']}"
+		id="technicalOtherCheckListNofoEmployessTechnicalStaffGovNonGovSampleSupplierList"
+		toggleable="true">
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.eva.evaluation.supplier.list.instruction']}"
 			escape="false" />
@@ -20,7 +22,7 @@
 
 
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
-				style="width:40%">
+				style="width:25%">
 
 				<h:outputText value="#{othersList.scQtProposal.supplierNo}"></h:outputText>
 
@@ -28,12 +30,13 @@
 			</p:column>
 
 
-			<p:column headerText="#{lbl['lbl.sc.total.score']}" style="width:40%">
+			<p:column headerText="#{lbl['lbl.sc.total.score']}"
+				style="width:20%;text-align:right;">
 				<h:outputText value="#{othersList.totalScore}"></h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.evalvation.status']}"
-				style="width:15%">
+				style="width:25%">
 
 
 				<h:outputText
@@ -41,7 +44,7 @@
 
 			</p:column>
 
-			<p:column style="width:20%;text-align: center;">
+			<p:column style="width:30%;text-align: center;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.action']}" />
 					<ac:iconTooltip id="action#{row}TECOTH"
