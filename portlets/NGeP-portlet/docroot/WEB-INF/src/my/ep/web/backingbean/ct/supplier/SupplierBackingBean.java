@@ -1111,19 +1111,20 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		
 		try {			
 			context = new VelocityContext();	
-			if (getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())
-					|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())
-					|| getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value()) 
-					|| getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+			if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) 
+					|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) 
+					|| getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())) {
 				vmFile = "/ct/factoring/factoring-clause-supplier.vm";
 				templateName = ContractConst.TEMPLATE_FACTORING_CLAUSE_SUPPLIER;
-			} else if (getUserRole().equalsIgnoreCase(RoleCode.MIN_CONTRACT_ADMIN.value())
-					|| getUserRole().equalsIgnoreCase(RoleCode.BPK_CCA.value())
-					|| getUserRole().equalsIgnoreCase(RoleCode.CT_APPROVER.value())
-					|| getUserRole().equalsIgnoreCase(RoleCode.BPK_APPROVER.value())) {
+			} else if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
 				vmFile = "/ct/factoring/factoring-clause-ca.vm";
 				templateName = ContractConst.TEMPLATE_FACTORING_CLAUSE_CA;	
-			}			
+			}
 	
 			setEditorValue("");
 			if (vmFile !=null && templateName != null) {
@@ -1299,24 +1300,50 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 * @return the role of login user
 	 */
 	private String getUserRole() {
-		if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
-			return RoleCode.MIN_CONTRACT_ADMIN.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
-			return RoleCode.BPK_CCA.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
-			return RoleCode.CT_APPROVER.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value())) {
-			return RoleCode.BPK_APPROVER.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
-			return RoleCode.MOF_SUPPLIER_USER.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
-			return RoleCode.MOF_SUPPLIER_ADMIN.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
-			return RoleCode.BASIC_SUPPLIER_USER.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
-			return RoleCode.BASIC_SUPPLIER_ADMIN.value();
+		String userRole = null;		
+		if (getManagedBean().getTaskName() == null
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_CB_REQUEST_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.FACTORING_REQUEST_HT_NAME)) {
+			if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+				userRole = RoleCode.MOF_SUPPLIER_USER.value();
+			} else if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+				userRole = RoleCode.MOF_SUPPLIER_ADMIN.value();
+			} else if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
+				userRole = RoleCode.BASIC_SUPPLIER_USER.value();
+			} else if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+				userRole = RoleCode.BASIC_SUPPLIER_ADMIN.value();
+			} else if (getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())) {
+				userRole = RoleCode.GOVT_SELLER.value();
+			}
+		} else if (getManagedBean().getTaskName() != null
+				&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_CB_REQUEST_HT_NAME)
+						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FACTORING_REQUEST_HT_NAME))) {
+			if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_MINISTRY)
+					&& getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
+				userRole = RoleCode.MIN_CONTRACT_ADMIN.value();
+			} else if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_CENTRAL)
+					&& getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
+				userRole = RoleCode.BPK_CCA.value();			
+			}
+		} else if (getManagedBean().getTaskName() != null
+				&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_FACTORING_REQUEST_HT_NAME)) {			
+			if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_MINISTRY)
+					&& getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
+				userRole = RoleCode.CT_APPROVER.value();
+			} else if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_CENTRAL)
+					&& getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
+				userRole = RoleCode.BPK_CC_APPROVER.value();
+			}
+		}
+		
+		if (userRole == null) {
+			throw new EpException(MessageConst.ERROR_750040);
 		} else {
-			return null;
+			return userRole;
 		}
 	}
     
@@ -1343,7 +1370,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
      */
     public boolean isApproverRole() {
 		return (getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()));
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value()));
 	}
     
     /**

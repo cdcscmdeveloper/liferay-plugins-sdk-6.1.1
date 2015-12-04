@@ -63,6 +63,7 @@ import my.ep.constant.ct.ContractConst;
 import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
@@ -167,7 +168,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		/*Setting list of approver during initialization*/
 		if(getManagedBean().getUserMap().size()==0) {
 			   initializeApproverList();
-			   this.getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+			   this.getManagedBean().getApproverModel().setSource(getAvailableApproverList(RoleCode.BPK_PQ_APPROVER.value()));
 			  
 	      /*Setting types of document such panel circular*/
 	     } if(getManagedBean().getCircularDocType()==null) {
@@ -281,7 +282,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		
 		     getManagedBean().setRemarkList(resDTO.getRemarkList());
 		     getManagedBean().setAttachmentList(resDTO.getAttachmentList());
-		     getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+		     getManagedBean().getApproverModel().setSource(getAvailableApproverList(RoleCode.BPK_PQ_APPROVER.value()));
 		   
 		     if(resDTO.getApproverList()!=null && resDTO.getApproverList().size()>0) {
 			       getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
@@ -350,6 +351,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			
 			        getManagedBean().setCircularAdmin(dataType.getCircularAdmin().getUserName());
 			        getManagedBean().setTaskId(taskId);
+					getManagedBean().setTaskName(res.getTaskName());
 			        String[] outcome = new String[res.getAction().length];
 			        int i = 0;
 			        for(String action : res.getAction()) 
@@ -368,7 +370,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		            else 
 			        	     getManagedBean().setCircularDocType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
 			
-			        getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+			        getManagedBean().getApproverModel().setSource(getAvailableApproverList(getApproverRoleCodeByDocType()));
 			        if(resDTO.getApproverList()!=null && resDTO.getApproverList().size()>0) {
 				          getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 				          getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
@@ -481,7 +483,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			reqDTO.setCircularAdmin(pmUSer);
 			reqDTO.setUserRole(getUserRole());
 			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
-			if(isBPKApprover()) {
+			if(getFacesScopes().hasRoleUser(RoleCode.BPK_PQ_APPROVER.value())) {
 				circularVer.setApprover(getFacesScopes().getUserSessionBean());
 				circularVer.setApprovedDate(new Date());
 			}
@@ -811,15 +813,23 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * Method used retrieve list of approver from system
 	 * Approver info fetch from system as per rule define rule
 	 */
-	private List<PmUser> getAvailableApproverList() {
+	private List<PmUser> getAvailableApproverList(String roleCode) {
 		IUserSO userSO = null;
 		List<PmUser> sourceList = new ArrayList<PmUser>();
 		try {
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO reqDTO = new UserReqDTO();
-			reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
+			UserResDTO resDTO = new UserResDTO();
 			
-			UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
+			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());				
+			resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+			
+			if (resDTO.getUserOrgList().size() > 0) {
+				reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
+			}
+			reqDTO.setRoleCode(roleCode);
+			
+			resDTO = userSO.retrieveUserListByRole(reqDTO);
 			List<PmUser> list = resDTO.getUserList();
 			
 			for (PmUser user : list) {
@@ -892,33 +902,67 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 	
 	/**
-	 * Method used to set role of BPK approver
+	 * Method used to set role of BPK 1PPCC/1PPPC approver
 	 */
 	public boolean isBPKApprover() {
-		return getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value());
+		return (getFacesScopes().hasRoleUser(RoleCode.BPK_CQ_APPROVER.value()) 
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_PQ_APPROVER.value()));
 	}
 	
 	/**
 	 * Method used to retrieve the user role on the basis of user login
 	 */
 	private String getUserRole() {
-		if(getManagedBean().getCircularDocType()!=null) { // Cancellation Request
-			if(getManagedBean().getCircularDocType()!=null && getManagedBean().getCircularDocType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)) {
-				if(getFacesScopes().hasRoleUser(RoleCode.BPK_PCA.value())) 
-					return RoleCode.BPK_PCA.value();
-			} else if(getManagedBean().getCircularDocType()!=null && getManagedBean().getCircularDocType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT)) {
-				if(getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) 
-					return RoleCode.BPK_CCA.value();
+		String userRole = null;
+		// Panel Circular Creation
+		if (getManagedBean().getCancelCircularReq() == null 
+				|| getManagedBean().getCancelCircularReq().getCtCancelCircularList() == null
+				|| getManagedBean().getCancelCircularReq().getCtCancelCircularList().size() == 0) {
+			if (getManagedBean().getTaskName() == null
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_CIRCULAR_CONTRACT)
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_CIRCULAR_CONTRACT)
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_CIRCULAR_CONTRACT)) {
+				if (getFacesScopes().hasRoleUser(RoleCode.BPK_PCA.value())) {
+					userRole = RoleCode.BPK_PCA.value();
+				}
+			} else if (getManagedBean().getTaskName() != null
+					&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_CIRCULAR_CONTRACT))) {
+				if (getFacesScopes().hasRoleUser(RoleCode.BPK_PQ_APPROVER.value())) {
+					userRole = RoleCode.BPK_PQ_APPROVER.value();
+				}
 			}
-		} else { // Panel Circular Creation
-			if(getFacesScopes().hasRoleUser(RoleCode.BPK_PCA.value())) 
-				return RoleCode.BPK_PCA.value();
+		} else { // Cancellation Request
+			if (getManagedBean().getTaskName() == null
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_CIRCULAR_CANCELLATION_RQUEST_HT_NAME)
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_CIRCULAR_CANCELLATION_RQUEST_HT_NAME)) {
+				if (getManagedBean().getCircularDocType() != null 
+						&& getManagedBean().getCircularDocType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)
+						&& getFacesScopes().hasRoleUser(RoleCode.BPK_PCA.value())) {
+					return RoleCode.BPK_PCA.value();
+				} else if (getManagedBean().getCircularDocType() != null 
+						&& getManagedBean().getCircularDocType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT)
+						&& getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
+					return RoleCode.BPK_CCA.value();
+				}
+			} else if (getManagedBean().getTaskName() != null
+					&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_CIRCULAR_CANCELLATION_RQUEST_HT_NAME))) {
+				if (getManagedBean().getCircularDocType() != null 
+						&& getManagedBean().getCircularDocType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)
+						&& getFacesScopes().hasRoleUser(RoleCode.BPK_PQ_APPROVER.value())) {
+					return RoleCode.BPK_PQ_APPROVER.value();
+				} else if (getManagedBean().getCircularDocType() != null 
+						&& getManagedBean().getCircularDocType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT)
+						&& getFacesScopes().hasRoleUser(RoleCode.BPK_CQ_APPROVER.value())) {
+						return RoleCode.BPK_CQ_APPROVER.value();
+				}
+			}
 		}
-		
-		if(getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value())) 
-			return RoleCode.BPK_APPROVER.value();
-		else 
-			return null;
+
+		if (userRole == null) {
+			throw new EpException(MessageConst.ERROR_750040);
+		} else {
+			return userRole;
+		}
 	}
 	
 	/**
@@ -2205,5 +2249,29 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().getCircularVer().setExtendStartDate(null);
 			getManagedBean().getCircularVer().setExtendEndDate(null);
 		}
+	}
+	
+	/**
+     * The method used to retrieve the approver role code base on doc type.
+     * 
+     * @return the roleCode
+     */
+	private String getApproverRoleCodeByDocType() {
+		String roleCode = null;
+		if(getManagedBean().getCircularDocType() != null && getManagedBean().getCircularDocType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT)) {
+			roleCode = RoleCode.BPK_CQ_APPROVER.value();
+		} else {
+			roleCode = RoleCode.BPK_PQ_APPROVER.value();
+		}
+		return roleCode;
+	}
+	
+	/**
+	 * Method used to retrieve the available approverList base on doc type 
+	 * during Cancel Circular Request 
+	 */
+	public void retrieveApproverList() {		
+		getManagedBean().getApproverModel().setSource(getAvailableApproverList(getApproverRoleCodeByDocType()));
+		getManagedBean().getApproverModel().setTarget(new ArrayList<PmUser>());
 	}
 }

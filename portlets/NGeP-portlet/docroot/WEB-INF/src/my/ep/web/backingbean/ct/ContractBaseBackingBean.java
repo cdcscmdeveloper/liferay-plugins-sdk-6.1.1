@@ -74,18 +74,18 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean>
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			
+			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());				
+			resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+			
+			if (resDTO.getUserOrgList().size() > 0) {
+				reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
+			}
+			
 			if (contractType.equalsIgnoreCase(
-					ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-				
-				reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());				
-				resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-				
-				if (resDTO.getUserOrgList().size() > 0) {
-					reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
-				}			
+					ParameterConst.CONTRACT_TYPE_MINISTRY)) {							
 				reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
 			} else { // Central Contract	
-				reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
+				reqDTO.setRoleCode(RoleCode.BPK_CC_APPROVER.value());
 			}			
 			resDTO = userSO.retrieveUserListByRole(reqDTO);
 			

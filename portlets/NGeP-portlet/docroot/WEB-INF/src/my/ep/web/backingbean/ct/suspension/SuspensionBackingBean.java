@@ -537,16 +537,38 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		 * User role used in BPM to identify the task
 		 */
 	private String getUserRole() {
-		if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()))
-			   return RoleCode.MIN_CONTRACT_ADMIN.value();
-		else if (getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()))
-			  return RoleCode.BPK_CCA.value();
-		else if (getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()))
-		     return RoleCode.CT_APPROVER.value();
-		else if (getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()))
-		     return RoleCode.BPK_APPROVER.value();
-		else
-			return null;
+		String userRole = null;		
+		if (getManagedBean().getTaskName() == null
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FS_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FS_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FS_HT_NAME)) {
+			if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_MINISTRY)
+					&& getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
+				userRole = RoleCode.MIN_CONTRACT_ADMIN.value();
+			} else if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_CENTRAL)
+					&& getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
+				userRole = RoleCode.BPK_CCA.value();
+			}
+		} else if (getManagedBean().getTaskName() != null
+				&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FS_HT_NAME)) {
+			if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_MINISTRY)
+					&& getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
+				userRole = RoleCode.CT_APPROVER.value();
+			} else if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_CENTRAL)
+					&& getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
+				userRole = RoleCode.BPK_CC_APPROVER.value();
+			}
+		}
+		
+		if (userRole == null) {
+			throw new EpException(MessageConst.ERROR_750040);
+		} else {
+			return userRole;
+		}
 	}
 	
 	public void downloadFile(String filePath, String fileName) throws IOException {
@@ -612,14 +634,6 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
     */
 	public void disableUpdate(){
 		getManagedBean().setAutoUpdate(false);
-	}
-	
-	 /**
-		 * Method used to check login user as approver
-	    */
-	public boolean isApprover() {
-		return (getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()) 
-				|| getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()));
 	}
 	
 	 /**

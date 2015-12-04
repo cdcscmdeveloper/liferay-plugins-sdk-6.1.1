@@ -442,16 +442,16 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 	
 	/**
-     * The method used to verify the login user is BPK approver 
+     * The method used to verify the login user is BPK CC approver 
      * or contract approver.
 	 * 
-	 * @return true, if login user is BPK approver or contract approver
-	 *         false, if login user is not BPK approver or contract approver
+	 * @return true, if login user is BPK CC approver or contract approver
+	 *         false, if login user is not BPK CC approver or contract approver
      */
     public boolean isApprover() {
     	FacesScopes facesScopes = new FacesScopes();
 		return (facesScopes.hasRoleUser(RoleCode.CT_APPROVER.value()) 
-				|| facesScopes.hasRoleUser(RoleCode.BPK_APPROVER.value()));
+				|| facesScopes.hasRoleUser(RoleCode.BPK_CC_APPROVER.value()));
 	}
     
     /**
