@@ -29,8 +29,7 @@
 			<ac:gpkiPopup
 				textBeforeSign="#{requestNoteBackingBean.textBeforeSign}"
 				postSignAction="#{requestNoteBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}"
-				postCancelAction="#{requestNoteBackingBean.gpkiCancelAction}"
-                enableAutoUpdate="#{requestNoteBackingBean.enableAutoUpdate()}" />
+				postCancelAction="#{requestNoteBackingBean.gpkiCancelAction}" />
 			<ui:include
 				src="/xhtml/sc/directpurchase/requestnote/requestNoteButtons.xhtml" />
 			<ui:include
