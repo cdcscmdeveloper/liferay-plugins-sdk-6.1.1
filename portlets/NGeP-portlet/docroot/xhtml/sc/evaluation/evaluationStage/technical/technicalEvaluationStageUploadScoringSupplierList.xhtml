@@ -7,7 +7,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.supplier.list']}"
+		id="technicalEvaluationCommitteeEvaluationStageUploadNoActionsScoringSuppliersIds"
+		toggleable="true">
 		<h:outputText styleClass="instruction"
 			value="1. #{lbl['lbl.sc.eva.evaluation.stage.document.instruction']}"
 			escape="false" />
@@ -37,7 +39,7 @@
 				<ui:fragment
 					rendered="#{complianceTechnicalSupplier.submitted eq 'true'}">
 					<h:commandLink immediate="true"
-						action="#{evaluationBackingBean.downloadEncryptedFile(complianceTechnicalSupplier.scQtProposalChecklistAttachment)}" >
+						action="#{evaluationBackingBean.downloadEncryptedFile(complianceTechnicalSupplier.scQtProposalChecklistAttachment)}">
 						<h:graphicImage value="/css/images/design/icon_txt.png" />
 					</h:commandLink>
 				</ui:fragment>
