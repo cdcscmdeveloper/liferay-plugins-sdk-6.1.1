@@ -5,123 +5,129 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
 
-	<table style="border: 0px;width:100%; align:center">
-		<tr>
-			<td width="100%" align="left" valign="top"> 
-				<p:panel header="#{lbl['lbl.sc.meeting.details']}" toggleable="true">
-					<p:dataTable id="meetingDtlTbl" var="meetingDtl" 
-						value="#{suppFinalBiddingBackingBean.managedBean.meetingList}" 
-						rows="10" rowKey="#{meetingDtl}" rowIndexVar="rowIndex" 
-						editable="true">
-						
-						<ac:paginator for="meetingDtlTbl" />
-						
-						<ui:param name="disableMeeting" value="#{!suppFinalBiddingBackingBean.managedBean.secretaryUser or 
-																	meetingDtl.recordStatusFlg ne DbValueConst.recordStatusActive}" />
-						<p:column style="width:20px;">
-							<f:facet name="header">
-								<p:selectBooleanCheckbox id="selAllChk"
-									value="#{suppFinalBiddingBackingBean.managedBean.selectAllMeetings}">
+	<p:panel header="#{lbl['lbl.sc.meeting.details']}" toggleable="true">
+		<p:dataTable id="meetingDtlTbl" var="meetingDtl"
+			value="#{suppFinalBiddingBackingBean.managedBean.meetingList}"
+			rows="10" rowKey="#{meetingDtl}" rowIndexVar="rowIndex"
+			editable="true">
+
+			<ac:paginator for="meetingDtlTbl" />
+
+			<ui:param name="disableMeeting"
+					  value="#{!suppFinalBiddingBackingBean.managedBean.secretaryUser or 
+									meetingDtl.recordStatusFlg ne DbValueConst.recordStatusActive}" />
 									
-									<p:ajax partialSubmit="true" process="@this" update="meetingDtlTbl" 
-											listener="#{suppFinalBiddingBackingBean.selectAll(
+			<p:column style="width:20px;">
+				<f:facet name="header">
+					<p:selectBooleanCheckbox id="selAllChk"
+						value="#{suppFinalBiddingBackingBean.managedBean.selectAllMeetings}">
+
+						<p:ajax partialSubmit="true" process="@this"
+							update="meetingDtlTbl"
+							listener="#{suppFinalBiddingBackingBean.selectAll(
 															suppFinalBiddingBackingBean.managedBean.selectAllMeetings, 
 															suppFinalBiddingBackingBean.managedBean.meetingList)}" />
-								</p:selectBooleanCheckbox>
-							</f:facet>
-							<p:selectBooleanCheckbox id="selectMeeting" value="#{meetingDtl.selected}" 
-										disabled="#{disableMeeting}">
-								<p:ajax partialSubmit="true" process="@this" update="@this" />
-							</p:selectBooleanCheckbox>
-						</p:column>
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox id="selectMeeting"
+					value="#{meetingDtl.selected}" disabled="#{disableMeeting}">
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				</p:selectBooleanCheckbox>
+			</p:column>
 
-						<p:column style="width:18%;">
-							<f:facet name="header">
-								<h:outputText value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
-								<h:outputText value="#{lbl['lbl.sc.meeting.date']}" />
-							</f:facet>
-							<p:calendar label="#{lbl['lbl.sc.meeting.date']}" required="true" showOn="button" 
-								mindate="#{CommonConstants.CURRENT_DATE}"
-								value="#{meetingDtl.meetingDate}" readonlyInput="true"
-								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
-								disabled="#{disableMeeting}" id="meetingDate">
-								<p:ajax event="dateSelect" partialSubmit="true" process="@this" update="@this,mtgDate"/>
-							</p:calendar>
-							<p:message id="mtgDate" for="meetingDate" display="icon" showDetail="false"></p:message>
-						</p:column>
+			<p:column style="width:18%;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.txt.mandatory']}"
+						styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.meeting.date']}" />
+				</f:facet>
+				<p:calendar label="#{lbl['lbl.sc.meeting.date']}" required="true"
+					showOn="button" mindate="#{CommonConstants.CURRENT_DATE}"
+					value="#{meetingDtl.meetingDate}" readonlyInput="true"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
+					disabled="#{disableMeeting}" id="meetingDate">
+					<p:ajax event="dateSelect" partialSubmit="true" process="@this"
+						update="@this,mtgDate" />
+				</p:calendar>
+				<p:message id="mtgDate" for="meetingDate" display="icon"
+					showDetail="false"></p:message>
+			</p:column>
 
-						<p:column style="width:30%;">
-							<f:facet name="header">
-								<h:outputText value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
-								<h:outputText value="#{lbl['lbl.sc.meeting.location']}" />
-								<ac:iconTooltip value="#{lbl['lbl.sc.meeting.location.tooltip']}" />
-							</f:facet>
-							<p:inputTextarea label="#{lbl['lbl.sc.meeting.location']}" required="true" rows="2" cols="50" maxlength="255"
-								value="#{meetingDtl.meetingLocation}" id="meetingLocation" 
-								disabled="#{disableMeeting}">
-								<p:ajax partialSubmit="true" process="@this" update="@this,mtgLoc"/>
-							</p:inputTextarea>
-							<p:message id="mtgLoc" for="meetingLocation" display="icon" showDetail="false"></p:message>
-						</p:column>
-						
-						<p:column style="width:20%;">
-							<f:facet name="header">
-								<h:outputText value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
-								<h:outputText value="#{lbl['lbl.sc.status']}" />
-							</f:facet>
-							<p:selectOneMenu label="#{lbl['lbl.sc.status']}" required="false" value="#{meetingDtl.meetingStatusStr}" 
-								disabled="#{disableMeeting}">
-								<f:selectItems value="#{suppFinalBiddingBackingBean.getMeetingStatusDropDown()}"/>
-								<p:ajax partialSubmit="true" process="@this" update="@this" 
-										listener="#{suppFinalBiddingBackingBean.changeMeetingStatus(meetingDtl)}"/>
-							</p:selectOneMenu>
-						</p:column>
-						
-						<p:column headerText="#{lbl['lbl.sc.remark']}" style="width:30%;">
-							<p:inputTextarea value="#{meetingDtl.remark}" rows="2" cols="30" 
-								disabled="#{disableMeeting}">
-								<p:ajax partialSubmit="true" process="@this" update="@this"/>
-							</p:inputTextarea>
-						</p:column>
-					</p:dataTable> 
-					
-					<p:spacer height="10px"></p:spacer>
-					<div align="right">
-						<p:commandButton value="#{lbl['lbl.btn.add']}"
-							process="@this,meetingDtlTbl" 
-							partialSubmit="true"
-							action="#{suppFinalBiddingBackingBean.addMeetingDtls}"
-							update="meetingDtlTbl" 
-							rendered="#{suppFinalBiddingBackingBean.managedBean.secretaryUser}"/>
-							
-						<p:commandButton value="#{lbl['lbl.btn.delete']}"
-							onsuccess="dlgPerformDel.show();"
-							update="meetingDtlTbl" rendered="#{suppFinalBiddingBackingBean.managedBean.secretaryUser}"/>
-	
-					</div>
-					
-					<!-- Dialog to prompt the user before deleting attendance records -->
-					<p:dialog id="dlgPerformDel" widgetVar="dlgPerformDel" styleClass="screen-title" 
-							  resizable="false" modal="true" width="330">
-						<h:panelGrid columns="3">
-							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/exclamation.png"
-								styleClass="ui-icon-complain"></p:graphicImage>
-							<p:spacer width="10" />
-							<div class="confirmation-message-box" style="font-size:11px;">#{lbl['lbl.sc.dialog.confirm.message']}</div>
-						</h:panelGrid>
-						<div class="ppRightBtn">
-							<p:commandButton value="#{lbl['lbl.btn.yes']}"  update="@this, meetingDtlTbl" 
-						         process="@this, meetingDtlTbl" 
-						         actionListener="#{suppFinalBiddingBackingBean.deleteMeetingDetails()}" 
-						         onclick="dlgPerformDel.hide();">
-						    </p:commandButton>
-							<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgPerformDel.hide();" type="button" />
-						</div>
-					</p:dialog>						
-				</p:panel> 
-			</td>
-		</tr>
-	</table>
+			<p:column style="width:30%;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.txt.mandatory']}"
+						styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.meeting.location']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.meeting.location.tooltip']}" />
+				</f:facet>
+				<p:inputTextarea label="#{lbl['lbl.sc.meeting.location']}"
+					required="true" rows="2" cols="30" maxlength="255"
+					value="#{meetingDtl.meetingLocation}" id="meetingLocation"
+					disabled="#{disableMeeting}">
+					<p:ajax partialSubmit="true" process="@this" update="@this,mtgLoc" />
+				</p:inputTextarea>
+				<p:message id="mtgLoc" for="meetingLocation" display="icon"
+					showDetail="false"></p:message>
+			</p:column>
+
+			<p:column style="width:20%;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.txt.mandatory']}"
+						styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.status']}" />
+				</f:facet>
+				<p:selectOneMenu label="#{lbl['lbl.sc.status']}" required="false"
+					value="#{meetingDtl.meetingStatusStr}" disabled="#{disableMeeting}">
+					<f:selectItems
+						value="#{suppFinalBiddingBackingBean.getMeetingStatusDropDown()}" />
+					<p:ajax partialSubmit="true" process="@this" update="@this"
+						listener="#{suppFinalBiddingBackingBean.changeMeetingStatus(meetingDtl)}" />
+				</p:selectOneMenu>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.remark']}" style="width:30%;">
+				<p:inputTextarea value="#{meetingDtl.remark}" rows="2" cols="30"
+					disabled="#{disableMeeting}">
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				</p:inputTextarea>
+			</p:column>
+		</p:dataTable>
+
+		<p:spacer height="10px"></p:spacer>
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
+				process="@this,meetingDtlTbl" partialSubmit="true"
+				action="#{suppFinalBiddingBackingBean.addMeetingDtls}"
+				update="meetingDtlTbl"
+				rendered="#{suppFinalBiddingBackingBean.managedBean.secretaryUser}" />
+
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				onsuccess="dlgPerformDel.show();" update="meetingDtlTbl"
+				rendered="#{suppFinalBiddingBackingBean.managedBean.secretaryUser}" />
+
+		</div>
+
+		<!-- Dialog to prompt the user before deleting attendance records -->
+		<p:dialog id="dlgPerformDel" widgetVar="dlgPerformDel"
+			styleClass="screen-title" resizable="false" modal="true" width="330">
+			<h:panelGrid columns="3">
+				<p:graphicImage
+					value="#{CommonUIConstant.imagePathUptoDesign}/exclamation.png"
+					styleClass="ui-icon-complain"></p:graphicImage>
+				<p:spacer width="10" />
+				<div class="confirmation-message-box" style="font-size: 11px;">#{lbl['lbl.sc.dialog.confirm.message']}</div>
+			</h:panelGrid>
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					update="@this, meetingDtlTbl" process="@this, meetingDtlTbl"
+					actionListener="#{suppFinalBiddingBackingBean.deleteMeetingDetails()}"
+					onclick="dlgPerformDel.hide();">
+				</p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="dlgPerformDel.hide();" type="button" />
+			</div>
+		</p:dialog>
+	</p:panel>
+
 </ui:composition>
