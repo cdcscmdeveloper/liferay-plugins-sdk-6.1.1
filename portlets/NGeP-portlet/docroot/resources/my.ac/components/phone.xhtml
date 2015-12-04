@@ -48,7 +48,7 @@
 		</p:tooltip>
 		&#160;
 		<p:selectOneMenu value="#{cc.attrs.telcoId}" rendered="#{cc.attrs.isMobile}" label="#{cc.attrs.label} - #{lbl['lbl.sm.telco']}"
-			required="#{cc.attrs.required or not empty cc.attrs.areaCode or not empty cc.attrs.number}">
+			style="width: 100px">
 			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 			<f:selectItems value="#{applicationBean.telcoItems}" />
 		</p:selectOneMenu>
