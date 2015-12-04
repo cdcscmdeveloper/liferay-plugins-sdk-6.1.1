@@ -1318,22 +1318,22 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		} else if (getManagedBean().getTaskName() != null
 				&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_CB_REQUEST_HT_NAME)
 						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FACTORING_REQUEST_HT_NAME))) {
-			if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+			if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 					ParameterConst.CONTRACT_TYPE_MINISTRY)
 					&& getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
 				userRole = RoleCode.MIN_CONTRACT_ADMIN.value();
-			} else if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+			} else if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 					ParameterConst.CONTRACT_TYPE_CENTRAL)
 					&& getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
 				userRole = RoleCode.BPK_CCA.value();			
 			}
 		} else if (getManagedBean().getTaskName() != null
 				&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_FACTORING_REQUEST_HT_NAME)) {			
-			if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+			if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 					ParameterConst.CONTRACT_TYPE_MINISTRY)
 					&& getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
 				userRole = RoleCode.CT_APPROVER.value();
-			} else if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+			} else if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 					ParameterConst.CONTRACT_TYPE_CENTRAL)
 					&& getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
 				userRole = RoleCode.BPK_CC_APPROVER.value();
