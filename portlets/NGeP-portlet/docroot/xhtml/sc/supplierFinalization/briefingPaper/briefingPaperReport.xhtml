@@ -38,8 +38,7 @@
 			</p:column>
 		</p:dataTable>
 		
-		<p:spacer height="20px" />
-		<div class="ppRightBtn">
+		<div class="ppRightBtn BtnSpacing">
 			<p:commandButton 
 				value="#{lbl['lbl.btn.download.all']}"
 				ajax="false"	
@@ -87,7 +86,7 @@
 							<h:commandLink value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment.fileName}"
 								styleClass="blue_font"
 								action="#{suppFinalizationBackingBean.downloadFile(suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment)}" />
-							<p:spacer width="5" />
+							<p:spacer width="5px" />
 							<p:commandLink
 								immediate="true"
 								rendered="#{!empty suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment and 

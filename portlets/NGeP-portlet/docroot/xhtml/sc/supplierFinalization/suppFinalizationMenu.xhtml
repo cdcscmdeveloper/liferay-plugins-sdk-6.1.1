@@ -44,7 +44,7 @@
 		
 		<ui:include src="/xhtml/sc/supplierFinalization/suppFinalizationHeader.xhtml"></ui:include>
 		
-		<p:tabMenu id="tab" activeIndex="#{suppFinalizationBackingBean.managedBean.activeIndex}" styleClass="header-spacing">
+		<p:tabMenu id="tab" activeIndex="#{suppFinalizationBackingBean.managedBean.activeIndex}">
 			<p:menuitem value="#{lbl['lbl.sc.preparation']}" actionListener="#{suppFinalizationBackingBean.onTabMenuChangeAction(0)}" 
 						process="@form" update="@form" partialSubmit="true" style="width:150px;" 
 						rendered="#{!suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK}">
@@ -80,14 +80,13 @@
 			</c:if>
 		</p:panel>
 		
-		<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/supplierDetailsPopUp.xhtml" />
+		<ui:include src="/xhtml/sc/common/supplierDetailsPopup.xhtml" />
 		<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/boardofDirectorsDetails.xhtml" />
 		<ui:include src="/xhtml/sc/supplierFinalization/committeeEndorsement/signOff.xhtml" />
 		
 		<p:dialog id="attachmentPopup" widgetVar="attachmentPopupDlg" 
 			modal="true" resizable="false" width="700px" height="200" styleClass="pop_up_top" 
 			header="#{lbl['lbl.txt.choose.files']}">
-			<p:ajax event="close" />
 			
 			<p:fileUpload style="display:inline;"
 				fileUploadListener="#{suppFinalizationBackingBean.handleFileUpload}"
