@@ -11,7 +11,7 @@
 
 	<p:dialog id="deliveryTermConform" widgetVar="deliveryTermConform"
 		header="#{lbl['lbl.sc.submit.confirmation']}" resizable="false"
-		width="500" height="100" closable="false" modal="true">
+		width="500" closable="false" modal="true">
 
 		<table>
 			<tr>
@@ -28,7 +28,7 @@
 					rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}"
 					onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();deliveryTermConform.hide();"
-					actionListener="#{requestNoteBackingBean.submitAction(requestNoteBackingBean.managedBean.action)}" />
+					actionListener="#{requestNoteBackingBean.requestNoteSubmit(requestNoteBackingBean.managedBean.action)}" />
 
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
 					rendered="#{isPendingApprovalStatus}" onstart="blockWidget.show();"
