@@ -11,7 +11,9 @@
 
 	<h:panelGroup>
 		<h:panelGroup id="sampleItemList">
-			<p:panel header="#{lbl['lbl.sc.item.list']}" toggleable="true">
+			<p:panel header="#{lbl['lbl.sc.item.list']}"
+				id="evaluationStageTechnicalSampleItemsListForDatatable"
+				toggleable="true">
 				<p:dataTable var="sampleItem" id="techSampleEvaluateId" rows="10"
 					value="#{evaluationBackingBean.managedBean.sampleItemList}"
 					selectionMode="single"
@@ -75,8 +77,9 @@
 
 
 		<h:panelGroup id="samplespecLists">
-			<p:panel header="#{lbl['lbl.sc.eva.item.specification']}"
-				toggleable="true">
+			<p:panel
+				id="evaluationStageTechnicalsampleSpecificationsDataTableItemsListIds"
+				header="#{lbl['lbl.sc.eva.item.specification']}" toggleable="true">
 				<p:dataTable var="itemspec" id="techSampleSpecId" editable="true"
 					rows="10"
 					value="#{evaluationBackingBean.managedBean.sampleItemSpecifications}"
