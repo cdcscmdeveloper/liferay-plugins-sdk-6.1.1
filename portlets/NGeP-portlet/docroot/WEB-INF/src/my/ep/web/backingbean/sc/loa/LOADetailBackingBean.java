@@ -628,9 +628,9 @@ public class LOADetailBackingBean extends
 		}
 		
         //Supplier overall contract amount
-		getManagedBean().setOverallContractAmt(
-				overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt()));
-		
+		BigDecimal overallCtAmout = overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt());
+		getManagedBean().setOverallContractAmt(overallCtAmout);
+		scLoa.setOverallContractAmt(overallCtAmout);
 		
 		// Procurement Type Category Id
 		 if(null == scLoa.getProcurementTypeCatId()){
@@ -645,9 +645,9 @@ public class LOADetailBackingBean extends
 		}
 		
 		getManagedBean().setBranchsList(resDTO.getSmSupplierBranchs());
-		if (scLoa.isBrandNew()) {
-			handleBranchDetailsChanged();
-		}
+		//if (scLoa.isBrandNew()) {
+		handleBranchDetailsChanged();
+		//}
 		
 		// Agency & Supplier Witness
 		ScLoaWitness loaAgencyWitness = null;
@@ -4128,7 +4128,7 @@ public class LOADetailBackingBean extends
 	public void checkPerformanceBondMandatory() {
 		boolean isPerformanceBondMandatory = false;
 		ScLoa loa = getManagedBean().getScLoa();
-		BigDecimal loaAmt = loa.getLoaAmt();
+		BigDecimal overallContractAmtOrLoaAmt = overallCtAmtOrLoaAmt(loa);
 		
 		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
@@ -4138,11 +4138,11 @@ public class LOADetailBackingBean extends
 
 		if (ruleValueList != null && ruleValueList.size() > 0) {
 			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
-			if(loaAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) > 0 && !isbondExceptionCategory(loa)) {
+			if(overallContractAmtOrLoaAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) > 0 && !isbondExceptionCategory(loa)) {
 				isPerformanceBondMandatory = true;
 				loa.setBondReq(true);
 			}
-			else if(loaAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) <= 0) {
+			else if(overallContractAmtOrLoaAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) <= 0) {
 				isPerformanceBondMandatory = true;
 				loa.setBondReq(false);
 			}
@@ -4157,13 +4157,14 @@ public class LOADetailBackingBean extends
 	public void checkAgreementMandatory() {
 		boolean isAgreementMandatory = false;
 		ScLoa loa = getManagedBean().getScLoa();
-		BigDecimal loaAmt = loa.getLoaAmt();
-		String fulfilmentType = loa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode();
+		BigDecimal overallContractAmtOrLoaAmt = overallCtAmtOrLoaAmt(loa);
 		
+		String fulfilmentType = loa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode();
+
 		boolean isOneOffFulfilment = ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentType);
 		if(!isOneOffFulfilment) {
 			isAgreementMandatory = true;
-		} else if (isOneOffFulfilment && !isQuotationThresHold(loaAmt)){
+		} else if (isOneOffFulfilment && !isQuotationThresHold(overallContractAmtOrLoaAmt)){
 			isAgreementMandatory = true;
 		}
 		
@@ -4172,7 +4173,19 @@ public class LOADetailBackingBean extends
 			getManagedBean().getScLoa().setAgreementReq(true);
 		}
 	}
-	
+
+	private BigDecimal overallCtAmtOrLoaAmt(ScLoa loa){
+		BigDecimal overallContractAmtOrLoaAmt = BigDecimal.valueOf(0d);
+		// if supplier Gst Registered  
+		if(isGSTRegActive()){
+			overallContractAmtOrLoaAmt = loa.getOverallContractAmt(); 
+
+		} else{
+			overallContractAmtOrLoaAmt = loa.getLoaAmt();
+		}
+		return overallContractAmtOrLoaAmt;
+	}
+
 	private boolean isbondExceptionCategory(ScLoa loa) {
 		ScQt scQt = null;
 		if(ParameterConst.DOCTYPE_QUOTATION.equals(loa.getScLoiLoa().getDocType())) {
@@ -4634,7 +4647,7 @@ public class LOADetailBackingBean extends
 	public void calculateOverallAmount(BigDecimal gstAmount) {
 		
 		getManagedBean().setOverallContractAmt(
-				overallCtAmount(getManagedBean().getScLoa().getLoaAmt(),gstAmount));
+				overallCtAmount(getManagedBean().getScLoa().getLoaAmt(), gstAmount));
 						
 		if (null != getManagedBean().getContractSignerUser()
 				&& getManagedBean().getContractSignerUser().getUserId() != null) {
@@ -4651,8 +4664,7 @@ public class LOADetailBackingBean extends
 	}
 	
 	public boolean isGSTRegActive() {
-
-		boolean isActive = true;
+		boolean isActive = Boolean.TRUE;
 		ScLoa scLoa = getManagedBean().getScLoa();
 		SmSupplier supplier = scLoa.getScLoiLoa().getSmSupplier();
 		getManagedBean().setRenderRemainder(false);
@@ -4660,7 +4672,7 @@ public class LOADetailBackingBean extends
 												DbValueConst.RECORD_STATUS_ACTIVE)) {
 			if (null != scLoa.getGstEffDate()){
 				if(scLoa.getGstEffDate().compareTo(new Date()) <= 0){
-					isActive = false;
+					isActive = Boolean.FALSE;
 				}else {
 					getManagedBean().setRenderRemainder(isActive);
 				}
@@ -4883,7 +4895,6 @@ public class LOADetailBackingBean extends
 	}
 	
 	private PmDocument getDocumentDtls(String docCategoryCode){
-		
 		IDocumentSO documentSO = null;
 		PmDocument document = null;
 		try{
