@@ -40,9 +40,7 @@
 			</h:column>
 		</h:panelGrid>
 			
-		<p:spacer height="10px"/>	
-					
-		<p:outputPanel id="supplierListTblPanel">
+		<p:outputPanel id="supplierListTblPanel" styleClass="header-spacing">
 			<ui:param name="showSelectionColumn" value="#{empty suppFinalizationBackingBean.managedBean.finalizationMethod or 
 		               			  			 				!suppFinalizationBackingBean.managedBean.itemCancelled}" />
 			<p:dataTable id="supplierListTblSingle"
@@ -66,7 +64,6 @@
 				<p:columnGroup type="header">
 		        	<p:row>
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal;"/>
-		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.name']}" style="width:9%; white-space:normal; text-align:center;"/>
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:10%; text-align:right;"/>
@@ -84,14 +81,13 @@
 		       	</p:columnGroup>
 				
 				<p:column>
-					<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
-				</p:column>
-				
-				<p:column style="white-space:normal;">
-					<p:commandLink update=":form:suppDtlPopUp" action="#{suppFinalizationBackingBean.showSupplierDetails(null, null)}"
-						oncomplete="suppDtlWidgetVar.show();">
-						<f:setPropertyActionListener value="#{shortlistedSupp}" target="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier}" />
-						<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.companyName}"/>
+					<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
+								   process="@this" update="@([id$=suppDetailsPopup])">
+						<p:graphicImage library="/css/images/design/evaluate.png"
+										title="#{lbl['lbl.sc.view.companyinfo']}" style="vertical-align:middle" />
+						<f:setPropertyActionListener value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
+												   	 target="#{supplierDetailBackingBean.smSupplier}" />
+						<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
 					</p:commandLink>
 				</p:column>
 	
@@ -148,7 +144,7 @@
 					<h:outputText value="" />
 				</p:column>
 				
-				<p:column>
+				<p:column style="text-align:center;">
 					<p:commandLink action="#{suppFinalizationBackingBean.showBoardofDirectors(
 											 shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
 		         		update="@([id$=bodDetails])" oncomplete="bodDetailsDialog.show();">
@@ -178,7 +174,6 @@
 				<p:columnGroup type="header">
 		        	<p:row>
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal;"/>
-		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.name']}" style="width:9%; white-space:normal; text-align:center;"/>
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:10%; text-align:right;"/>
@@ -196,16 +191,13 @@
 		       	</p:columnGroup>
 				
 				<p:column>
-					<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
-				</p:column>
-				
-				<p:column style="white-space:normal;">
-					<p:commandLink update=":form:suppDtlPopUp"
-						action="#{suppFinalizationBackingBean.showSupplierDetails(null,null)}"
-						oncomplete="suppDtlWidgetVar.show();">
-						<f:setPropertyActionListener value="#{shortlistedSupp}" 
-									  target="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier}" />
-						<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.companyName}"/>
+					<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
+								   process="@this" update="@([id$=suppDetailsPopup])">
+						<p:graphicImage library="/css/images/design/evaluate.png"
+										title="#{lbl['lbl.sc.view.companyinfo']}" style="vertical-align:middle" />
+						<f:setPropertyActionListener value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
+												   	 target="#{supplierDetailBackingBean.smSupplier}" />
+						<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
 					</p:commandLink>
 				</p:column>
 	
@@ -267,7 +259,7 @@
 					<h:outputText value="" />
 				</p:column>
 				
-				<p:column>
+				<p:column style="text-align:center;">
 					<p:commandLink action="#{suppFinalizationBackingBean.showBoardofDirectors(
 											 shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
 		         		update="@([id$=bodDetails])" oncomplete="bodDetailsDialog.show();">
@@ -323,7 +315,6 @@
 				<p:columnGroup type="header">
 		        	<p:row>
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal;"/>
-		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.name']}" style="width:9%; white-space:normal; text-align:center;"/>
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:10%; text-align:right;"/>
@@ -341,15 +332,13 @@
 		       	</p:columnGroup>
 				
 				<p:column>
-					<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
-				</p:column>
-				
-				<p:column style="white-space:normal;">
-					<p:commandLink update=":form:suppDtlPopUp"
-						action="#{suppFinalizationBackingBean.showSupplierDetails(null,null)}"
-						oncomplete="suppDtlWidgetVar.show();">
-						<f:setPropertyActionListener value="#{shortlistedSupp}" target="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier}" />
-						<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.companyName}"/>
+					<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
+								   process="@this" update="@([id$=suppDetailsPopup])">
+						<p:graphicImage library="/css/images/design/evaluate.png"
+										title="#{lbl['lbl.sc.view.companyinfo']}" style="vertical-align:middle" />
+						<f:setPropertyActionListener value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
+												   	 target="#{supplierDetailBackingBean.smSupplier}" />
+						<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
 					</p:commandLink>
 				</p:column>
 	
@@ -411,7 +400,7 @@
 					<h:outputText value="" />
 				</p:column>
 				
-				<p:column>
+				<p:column style="text-align:center;">
 					<p:commandLink action="#{suppFinalizationBackingBean.showBoardofDirectors(
 											 shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
 		         		update="@([id$=bodDetails])" oncomplete="bodDetailsDialog.show();">
@@ -428,7 +417,6 @@
 																
 			</p:dataTable>				
 		</p:outputPanel>
-		<p:spacer height="20px" />
 	</p:panel>
 
 </ui:composition>
