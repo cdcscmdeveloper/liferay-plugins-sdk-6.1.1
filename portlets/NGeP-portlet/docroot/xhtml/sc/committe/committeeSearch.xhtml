@@ -13,13 +13,13 @@
 		<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true"
 			id="qtsearchid">
 			<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.committee.search.instruction']}" escape="false" />
-			<table>
+			<table style="width: 100%;">
 				<tr>
 					<td style="width: 220px" valign="top"><p:outputLabel
 							value="#{lbl['lbl.sc.title']}" /></td>
 					<td colspan="3"><p:inputTextarea
 							value="#{committeBackingBean.managedBean.qtnTenderSearchBean.qtTitle}"
-							cols="115" rows="2" style=" margin-bottom:5px;width: 100%;"
+							cols="115" rows="3" style=" margin-bottom:5px;width: 98%;"
 							maxlength="100" /></td>
 				</tr>
 				<tr>
@@ -62,10 +62,10 @@
 				</tr>
 			</table>
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.search']}"
+				<p:commandButton value="#{lbl['lbl.btn.search']}" styleClass="BtnSpacing"
 					action="#{committeBackingBean.searchQTAction}" update="searchQTs"
 					process="@this, qtsearchid" />
-				<p:commandButton value="#{lbl['lbl.btn.reset']}"
+				<p:commandButton value="#{lbl['lbl.btn.reset']}" styleClass="BtnSpacing"
 					action="#{committeBackingBean.resetSearchDetails}"
 					update="qtsearchid" resetValues="true" partialSubmit="true"
 					process="@this" />
