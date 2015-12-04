@@ -107,14 +107,14 @@
 			<table>
 
 				<tr>
-					<td width="150px"><h:outputText
+					<td width="150px"><p:outputLabel
 							value="#{lbl['lbl.sc.spec.total.no.contracts']}" /></td>
 					<td><p:inputText readonly="true" disabled="true"></p:inputText>
 					</td>
 				</tr>
 
 				<tr>
-					<td width="150px"><h:outputText
+					<td width="150px"><p:outputLabel
 							value="#{lbl['lbl.sc.spec.total.no.years']}" /></td>
 					<td><p:inputText readonly="true" disabled="true"></p:inputText>
 					</td>
@@ -146,7 +146,7 @@
 								style="float : left"></p:outputLabel>
 						</ui:fragment> <p:outputLabel style="float : left"
 							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
-					<td><p:selectOneMenu style="width:160px;margin-bottom: 5px;"
+					<td><p:selectOneMenu style="width:180px;margin-bottom: 5px;"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							id="techPrivateNoOfAutoscore"
 							label="#{lbl['lbl.sc.spec.asset.score.type']}"
@@ -246,7 +246,7 @@
 				<tr>
 					<td width="150px"><p:outputLabel style="float : left"
 							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
-					<td><p:selectOneMenu style="width:160px;margin-bottom: 5px;"
+					<td><p:selectOneMenu style="width:180px;margin-bottom: 5px;"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							label="#{lbl['lbl.sc.spec.asset.score.type']}"
 							id="techPrivateNoOfYearsAutoScore"

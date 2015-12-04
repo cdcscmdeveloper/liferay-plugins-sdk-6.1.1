@@ -35,7 +35,8 @@
 					<tr>
 						<td><h:outputText value="*" styleClass="mandatory" /> <h:outputLabel
 								value="#{lbl['lbl.sc.spec.financial']}"></h:outputLabel></td>
-						<td><p:inputText style="text-align:right" maxlength="5" readonly="true"
+						<td><p:inputText style="text-align:right" maxlength="5"
+								readonly="true"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationPackageScore.overallFin}">
 
@@ -45,8 +46,7 @@
 							</p:inputText></td>
 					</tr>
 					<tr>
-						<td> <h:outputLabel
-								value="#{lbl['lbl.sc.total.percentage']}"></h:outputLabel></td>
+						<td><h:outputLabel value="#{lbl['lbl.sc.total.percentage']}"></h:outputLabel></td>
 						<td><p:inputText id="totalrecommendation"
 								style="text-align:right"
 								value="#{specificationBackingBean.managedBean.recommendationPackageTotal}"
@@ -105,7 +105,7 @@
 					</f:facet>
 					<p:row>
 						<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.technical']}</p:column>
-						<p:column style="font-weight: bold;">
+						<p:column>
 							<p:inputText style="text-align:right" maxlength="5"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallTechnical}">
@@ -116,7 +116,7 @@
 							</p:inputText>
 						</p:column>
 
-						<p:column colspan="1" style="font-weight: bold;">
+						<p:column colspan="1">
 							<p:inputText style="text-align:right" maxlength="5"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallOtherTechnical}">
@@ -126,14 +126,14 @@
 									listener="#{specificationBackingBean.calculateRecommendtechnicalScore(specificationBackingBean.managedBean.recommendationScore)}"></p:ajax>
 							</p:inputText>
 						</p:column>
-						<p:column colspan="1" style="font-weight: bold; text-align:right;">
+						<p:column colspan="1" style="text-align:right">
 							<h:outputText id="technicalrecommendation"
 								value="#{specificationBackingBean.managedBean.recommendTechnicalScore}" />
 						</p:column>
 					</p:row>
 					<p:row>
 						<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.financial']}</p:column>
-						<p:column style="font-weight: bold;">
+						<p:column>
 							<p:inputText style="text-align:right" maxlength="5"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallFin}">
@@ -144,7 +144,7 @@
 							</p:inputText>
 						</p:column>
 
-						<p:column colspan="1" style="font-weight: bold;">
+						<p:column colspan="1">
 							<p:inputText style="text-align:right" maxlength="5"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallOtherFin}">
@@ -154,17 +154,17 @@
 									listener="#{specificationBackingBean.calculateRecommendFinancialScore(specificationBackingBean.managedBean.recommendationScore)}"></p:ajax>
 							</p:inputText>
 						</p:column>
-						<p:column colspan="1" style="font-weight: bold;text-align:right">
+						<p:column colspan="1" style="text-align:right">
 							<h:outputText id="financialrecommendation"
 								value="#{specificationBackingBean.managedBean.recommendfinancialScore}" />
 						</p:column>
 					</p:row>
 
 					<p:row>
-						<p:column colspan="3" style="font-weight: bold; text-align:right;">
+						<p:column colspan="3" style="text-align:right;font-weight: bold;">
 							#{lbl['lbl.sc.total.score']}
 						</p:column>
-						<p:column colspan="1" style="font-weight: bold; text-align:right;">
+						<p:column colspan="1" style="text-align:right">
 							<h:outputText
 								value="#{specificationBackingBean.managedBean.totalScore}" />
 						</p:column>
@@ -239,7 +239,7 @@
 
 					<p:row>
 						<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.financial']}</p:column>
-						<p:column style="font-weight: bold;">
+						<p:column>
 							<p:inputText style="text-align:right" maxlength="5"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallFin}">
@@ -250,7 +250,7 @@
 							</p:inputText>
 						</p:column>
 
-						<p:column colspan="1" style="font-weight: bold;">
+						<p:column colspan="1">
 							<p:inputText style="text-align:right" maxlength="5"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallOtherFin}">
@@ -260,7 +260,7 @@
 									listener="#{specificationBackingBean.calculateRecommendFinancialScore(specificationBackingBean.managedBean.recommendationScore)}"></p:ajax>
 							</p:inputText>
 						</p:column>
-						<p:column colspan="1" style="font-weight: bold;">
+						<p:column colspan="1" style="text-align:right">
 							<h:outputText id="financial"
 								value="#{specificationBackingBean.managedBean.recommendfinancialScore}" />
 						</p:column>
