@@ -1054,9 +1054,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			
 			this.getManagedBean().setTaskId(taskId);
 			this.getManagedBean().setAssignedState(isAssignedState);
-			//if (isAssignedState) {
+			if (isAssignedState) {
 				this.getManagedBean().setOutComes(resDTO.getAction());	
-			//}
+			}
 			this.getManagedBean().setCurrentStatusId(
 					Long.valueOf(resDTO.getDocStatus()));
 			this.getManagedBean().setTaskName(resDTO.getTaskName());
