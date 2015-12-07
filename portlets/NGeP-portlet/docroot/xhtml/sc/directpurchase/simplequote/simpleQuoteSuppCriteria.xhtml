@@ -128,7 +128,8 @@
 						selection="#{simpleQuoteBackingBean.managedBean.selectedBusinessNature}"
 						value="#{simpleQuoteBackingBean.managedBean.businessNatureCriterias}">
 						<ac:paginator for="byBusNatureDtl" />
-						<p:column selectionMode="multiple" styleClass="td-check-box-spacing" />
+						<p:column selectionMode="multiple" styleClass="td-check-box-spacing" 
+						   disabledSelection="#{!isEditable}"/>
 						<p:column headerText="#{lbl['lbl.sc.code']}" style="width:15%">
 							<h:outputText
 								value="#{busiNatureCriteria.pmBusinessNature.levelCode}" />
@@ -173,7 +174,8 @@
 						selection="#{simpleQuoteBackingBean.managedBean.selectedSupplierList}"
 						value="#{simpleQuoteBackingBean.managedBean.supplierList}">
 						<ac:paginator for="supplierItemDt" />
-						<p:column selectionMode="multiple" styleClass="td-check-box-spacing" />
+						<p:column selectionMode="multiple" styleClass="td-check-box-spacing" 
+						 disabledSelection="#{!isEditable}"/>
 						<p:column headerText="#{lbl['lbl.sc.supplier.ep.no']}"
 							style="width:10%">
 							<h:outputText value="#{quoteSupplier.smSupplier.epNo}" />
@@ -217,7 +219,8 @@
 						selection="#{simpleQuoteBackingBean.managedBean.selectedGovtSellers}"
 						value="#{simpleQuoteBackingBean.managedBean.govtSellers}">
 						<ac:paginator for="govtSellerId" />
-						<p:column selectionMode="multiple" styleClass="td-check-box-spacing" />
+						<p:column selectionMode="multiple" styleClass="td-check-box-spacing"  
+						  disabledSelection="#{!isEditable}"/>
 						<p:column headerText="#{lbl['lbl.sc.supplier.ep.no']}"
 							style="width:10%">
 							<h:outputText value="#{data.smSupplier.epNo}" />
@@ -265,7 +268,8 @@
 						value="#{simpleQuoteBackingBean.managedBean.panelSuppliers}">
 
 						<ac:paginator for="bypanelItemId" />
-						<p:column selectionMode="multiple" styleClass="td-check-box-spacing" />
+						<p:column selectionMode="multiple" styleClass="td-check-box-spacing" 
+						  disabledSelection="#{!isEditable}"/>
 
 						<p:column headerText="#{lbl['lbl.sc.supplier.ep.no']}"
 							style="width:10%">
