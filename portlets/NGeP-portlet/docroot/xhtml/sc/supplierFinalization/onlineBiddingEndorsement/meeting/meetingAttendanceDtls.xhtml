@@ -14,10 +14,10 @@
 			selection="#{suppFinalBiddingBackingBean.managedBean.selectedMeetingAttList}">
 			<ac:paginator for="meetingAttDtlTbl" />
 
-			<p:column selectionMode="multiple" style="width:2%"
-				rendered="#{suppFinalBiddingBackingBean.managedBean.secretaryUser}"></p:column>
+			<p:column selectionMode="multiple" styleClass="td-check-box-spacing" 
+					  rendered="#{suppFinalBiddingBackingBean.managedBean.secretaryUser}" />
 
-			<p:ajax event="toggleSelect"
+			<p:ajax event="toggleSelect" 
 				update="@([id$=meetingAttDtlTbl],[id$=attdDelBtn])" process="@this"
 				partialSubmit="true" />
 			<p:ajax event="rowSelect"
@@ -47,8 +47,7 @@
 			</p:column>
 		</p:dataTable>
 
-		<p:spacer height="10px"></p:spacer>
-		<div align="right">
+		<div align="right" class="BtnSpacing">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				process="@this,meetingAttDtlTbl" partialSubmit="true"
 				action="#{suppFinalBiddingBackingBean.addMeetingAttendance}"
