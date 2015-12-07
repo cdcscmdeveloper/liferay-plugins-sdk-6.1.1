@@ -76,6 +76,7 @@ import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmEduLevel;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
+import my.ep.persistence.entity.pm.common.PmMachine;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRace;
@@ -117,6 +118,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
+import my.ep.persistence.entity.sm.SmSupplierSystem;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.ReasonCategory;
@@ -906,6 +908,10 @@ public class SmApplicationBackingBean extends
 			// set whether allowed to change business type from office to
 			// business
 			setBusinessAndHadApprovedSpecialCatcode();
+
+			// set travelling software select items
+			getManagedBean().setTravellingSoftwareItems(
+					SmCommonUtil.getInstance().getTravellingSoftwareItems());
 
 			getManagedBean()
 					.setRegStatusDescList(
@@ -4339,6 +4345,92 @@ public class SmApplicationBackingBean extends
 	}
 
 	// manufacturer end
+
+	// START:Supplier System
+
+	/**
+	 * Add or create a new SmSupplierSystem object
+	 */
+	public void assignNewSystemBean() {
+		SmSupplierSystem newSystem = new SmSupplierSystem();
+		newSystem.setSystem(new PmMachine());
+		getManagedBean().setSelectedSystem(newSystem);
+		getManagedBean().getSelectedSystem().setRevNo(1);
+		getManagedBean().getSelectedSystem().setSmAppl(
+				getManagedBean().getSmAppl());
+		assignValReqdToTrue();
+		RequestContext.getCurrentInstance().execute("systemDialog.show()");
+	}
+
+	/**
+	 * Assign selected system object to managed bean for editing the
+	 * information.
+	 * 
+	 * @param systemBean
+	 *            - SmSupplierSystem object
+	 */
+	public void assignSelSystem(SmSupplierSystem systemBean) {
+		getManagedBean().setSelectedSystem(
+				(SmSupplierSystem) SerializationUtils.clone(systemBean));
+		assignValReqdToTrue();
+		RequestContext.getCurrentInstance().execute("systemDialog.show()");
+	}
+
+	/**
+	 * Cancel add or update functionality and close the system information
+	 * dialog
+	 */
+	public void cancelSystemSaveorUpdate() {
+		assignValReqdToFalse();
+		RequestContext.getCurrentInstance().reset(":form:tt:systemDialog");
+		RequestContext.getCurrentInstance().execute("systemDialog.hide()");
+	}
+
+	/**
+	 * Add or update selected travelling system info to SmSupplierSystem list of
+	 * the application.
+	 */
+	public void addOrUpdateSystemToSmAppl() {
+
+		if (getManagedBean().getSmAppl().getSmSupplierSystems()
+				.contains(getManagedBean().getSelectedSystem())) {
+			getManagedBean()
+					.getSmAppl()
+					.getSmSupplierSystems()
+					.set(getManagedBean().getSmAppl().getSmSupplierSystems()
+							.indexOf(getManagedBean().getSelectedSystem()),
+							getManagedBean().getSelectedSystem());
+		} else {
+			getManagedBean().getSmAppl().getSmSupplierSystems()
+					.add(getManagedBean().getSelectedSystem());
+			RequestContext.getCurrentInstance().execute(
+					"systemDtWidVar.paginator.endLink.click()");
+		}
+		assignValReqdToFalse();
+		RequestContext.getCurrentInstance().execute("systemDialog.hide()");
+	}
+
+	/**
+	 * Delete or remove selected travelling system from the SmSupplierSystem
+	 * list of the application.
+	 */
+	public void deleteSelectedSystem() {
+
+		if (getManagedBean().getSelectedSupplierSystemList().size() > 0) {
+			for (SmSupplierSystem system : getManagedBean()
+					.getSelectedSupplierSystemList()) {
+				getManagedBean().getSmAppl().getSmSupplierSystems()
+						.remove(system);
+			}
+			getManagedBean().getSelectedSupplierSystemList().clear();
+		} else {
+			throw new EpException(MessageConst.ERROR_722534,
+					new String[] { SmCommonUtil.getMessage(
+							"lbl.sm.travelling.system", null) });
+		}
+	}
+
+	// END:Supplier Sysem
 
 	// -- Process Share Holder Personnel Start
 	/**

@@ -4582,6 +4582,7 @@ public class SmApplicationUtil {
 		managedBean.setShowStorePanel(false);
 		managedBean.setShowFactoryPanel(false);
 		managedBean.setShowWorkShopPanel(false);
+		managedBean.setShowTravelSoftwarePanel(false);
 		for (SmSupplierCategory cat : managedBean.getSmAppl()
 				.getSmSupplierCategories()) {
 			if (cat.isSpecialCategory()
@@ -4608,6 +4609,10 @@ public class SmApplicationUtil {
 				} else if (facType
 						.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD)) {
 					managedBean.setShowDockyardPanel(true);
+				} else if (StringUtils.isNotBlank(facType)
+						&& facType
+								.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
+					managedBean.setShowTravelSoftwarePanel(true);
 				}
 			}
 		}

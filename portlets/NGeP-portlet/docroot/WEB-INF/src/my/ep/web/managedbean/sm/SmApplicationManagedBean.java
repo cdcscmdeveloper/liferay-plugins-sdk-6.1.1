@@ -57,6 +57,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
+import my.ep.persistence.entity.sm.SmSupplierSystem;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -144,7 +145,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmManufacturingDtl> selectedManufacturingList;
 	private SmManufacturingDtl selectedManufacturer;
 	private List<SmMachineDtl> selectedMachineList;
+	private List<SmSupplierSystem> selectedSupplierSystemList;
 	private SmMachineDtl selectedMachine;
+	private SmSupplierSystem selectedSystem;
 	private SmEquityCompany selectedEquityCompany;
 	private List<SmEquityCompany> selectedEquityCompanies;
 	private List<SmPersonnel> smapplShareHolders;
@@ -358,6 +361,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean showDockyardPanel;
 	private boolean showWorkShopPanel;
 	private boolean showPersonnelViewOnly;
+	private boolean showTravelSoftwarePanel;
 	private boolean disabledShareholderPersonnelNameAndNationality;
 	private boolean alreadyBusinessSpecialCatcode;
 	private String businessOfficeCatCodeMsg;
@@ -374,6 +378,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private PmEduLevel certEduLevel;
 	private PmEduLevel diplomaEduLevel;
 	private List<SelectItem> acadQualifications;
+	private List<SelectItem> travellingSoftwareItems;
 	private Long prevBasicStateId;
 	private SmApplStatusInfoVO applStatusInfo;
 	private PmDigiSign pmDigiSign;
@@ -3039,5 +3044,38 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setBusinessOfficeCatCodeMsg(String businessOfficeCatCodeMsg) {
 		this.businessOfficeCatCodeMsg = businessOfficeCatCodeMsg;
+	}
+
+	public List<SmSupplierSystem> getSelectedSupplierSystemList() {
+		return selectedSupplierSystemList;
+	}
+
+	public void setSelectedSupplierSystemList(
+			List<SmSupplierSystem> selectedSupplierSystemList) {
+		this.selectedSupplierSystemList = selectedSupplierSystemList;
+	}
+
+	public SmSupplierSystem getSelectedSystem() {
+		return selectedSystem;
+	}
+
+	public void setSelectedSystem(SmSupplierSystem selectedSystem) {
+		this.selectedSystem = selectedSystem;
+	}
+
+	public List<SelectItem> getTravellingSoftwareItems() {
+		return travellingSoftwareItems;
+	}
+
+	public void setTravellingSoftwareItems(List<SelectItem> travellingSoftwareItems) {
+		this.travellingSoftwareItems = travellingSoftwareItems;
+	}
+
+	public boolean isShowTravelSoftwarePanel() {
+		return showTravelSoftwarePanel;
+	}
+
+	public void setShowTravelSoftwarePanel(boolean showTravelSoftwarePanel) {
+		this.showTravelSoftwarePanel = showTravelSoftwarePanel;
 	}
 }

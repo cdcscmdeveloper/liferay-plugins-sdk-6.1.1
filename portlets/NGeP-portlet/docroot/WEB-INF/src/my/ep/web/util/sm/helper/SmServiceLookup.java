@@ -418,7 +418,7 @@ public class SmServiceLookup {
 	 */
 	public static ICategoryCodeSO getCategoryCodeSO() {
 		return (ICategoryCodeSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						ICategoryCodeSO.class);
 	}
 	
