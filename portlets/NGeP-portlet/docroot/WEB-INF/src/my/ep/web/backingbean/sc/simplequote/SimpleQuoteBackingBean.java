@@ -2715,6 +2715,8 @@ public class SimpleQuoteBackingBean extends
 		// update zone when add or edit zone
 		updateSpecMasterZone(scQuote);
 
+		// zone required validation
+		getManagedBean().setRequired(Boolean.FALSE);
 		// hide zone location popup
 		RequestContext.getCurrentInstance().execute("ZoneLocation.hide();");
 	}
