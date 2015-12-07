@@ -2184,6 +2184,10 @@ public class QTDocumentsBackingBean extends
 		SimpleDateFormat dateSDF = new SimpleDateFormat(
 				commonUtils
 						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
+		
+		DecimalFormat amountDF = new DecimalFormat(
+				commonUtils
+						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		VelocityContext context = new VelocityContext();
 
 		FacesScopes fs = new FacesScopes();
@@ -2357,7 +2361,8 @@ public class QTDocumentsBackingBean extends
 						.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
 			context.put("fulfilmentType", isOneOff);
 		}
-
+		context.put("estimatedAmt", amountDF.format(qt.getEstimatedAmount()));
+		
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.DOCPATH_QT_SUPP_OFFER_STATEMENT, context,
 				new FileOutputStream(getActualFilePath(attachment)));
