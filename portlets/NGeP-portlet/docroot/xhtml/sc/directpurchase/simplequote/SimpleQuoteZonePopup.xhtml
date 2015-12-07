@@ -53,7 +53,7 @@
 				update="@this, zoneLocationDataTable, zonePopupPanel" partialSubmit="true"
 				actionListener="#{simpleQuoteBackingBean.updateZone}" />
 
-			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this" update="@this"
 				action="#{simpleQuoteBackingBean.cancelZonePopUp}" />
 
 		</div>

@@ -28,64 +28,36 @@
 				</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel
+				<td style="vertical-align: top;"><p:outputLabel
 						value="#{lbl['lbl.sc.direct.purchase.title']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td colspan="3">
+				<td colspan="4">
 					<table>
 						<tr>
-							<td><p:inputText size="84" id="title" required="true"
-									maxlength="100" label="#{lbl['lbl.sc.direct.purchase.title']}"
-									disabled="#{!isEditable}"
+							<td><p:inputTextarea
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.title}"
-									style="margin-bottom: 5px;" /></td>
-							<td><p:message id="titleMsg" for="title" display="icon" /></td>
+									label="#{lbl['lbl.sc.direct.purchase.title']}" maxlength="100"
+									disabled="#{!isEditable}" required="true" id="title" rows="3"
+									autoResize="false"
+									style="margin-bottom: 5px; width: 610px;" /> <p:message
+									id="titleMsg" for="title" display="icon" /></td>
 						</tr>
 					</table>
 				</td>
 			</tr>
-				<tr>
-					<td style="padding-right: 0px; text-align: right; width: 7%"><p:outputLabel
-							value="#{lbl['lbl.sc.quote.scope.of.work.and.services']}" /></td>
-					<td class="TableFieldRight"><p:commandButton
-							oncomplete="uploadDlg.show();return false;" icon="iconAttachment"
-							update="sqinfoId" disabled="#{!isEditable}"
-							value="#{lbl['lbl.txt.choose.files']}" /></td>
-				</tr>
 			<tr>
-				<td />
-				<td style="width: 23%"><ui:param name="attachFile"
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.quote.scope.of.work.and.services']}" /></td>
+					<td colspan="3"><p:commandButton process="@this"
+						oncomplete="uploadDlg.show();return false;" icon="iconAttachment"
+						update="attachmentId" disabled="#{!isEditable}"
+						value="#{lbl['lbl.txt.attachment']}" /> <ui:param
+						name="attachFile"
 						value="#{simpleQuoteBackingBean.managedBean.scQuote.scQuoteAttachment}" />
 
-					<c:if test="#{!empty attachFile}">
-						<table style="width: 100%">
-							<tr>
-								<td rowspan="2" style="vertical-align: top;" align="left">
-									<ui:param name="icon"
-										value="#{simpleQuoteBackingBean.determineIcon(attachFile)}"></ui:param>
-									<p:graphicImage value="/css/images/design/#{icon}" height="30"
-										width="30">
-									</p:graphicImage>
-								</td>
-								<td><h:outputText
-										value="#{attachFile.createdUser.userName}" />, <h:outputText
-										value="#{attachFile.createdDate}">
-										<f:convertDateTime
-											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-									</h:outputText></td>
-							</tr>
-							<tr>
-								<td><h:commandLink value="#{attachFile.fileName}"
-										styleClass="blue_font" immediate="true"
-										action="#{simpleQuoteBackingBean.downloadFile(attachFile)}" />
-									<p:commandLink
-										action="#{simpleQuoteBackingBean.deleteUploadFile}"
-										immediate="true" update="sqinfoId" disabled="#{!isEditable}">
-										<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
-									</p:commandLink></td>
-							</tr>
-						</table>
-					</c:if></td>
+					<h:commandLink value="#{attachFile.fileName}" id="attachmentId"
+						styleClass="blue_font" immediate="true"
+						action="#{simpleQuoteBackingBean.downloadFile(attachFile)}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
