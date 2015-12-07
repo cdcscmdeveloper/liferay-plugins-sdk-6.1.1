@@ -42,7 +42,7 @@
 						</div>
 						<ui:include src="/xhtml/sc/supplierFinalization/confirmMeeting/suppFinalizationHeader.xhtml"></ui:include>
 
-						<p:panel header="#{lbl['lbl.sc.meeting.details']}" id="meetingDetailPanel" toggleable="true" st>
+						<p:panel header="#{lbl['lbl.sc.meeting.details']}" id="meetingDetailPanel" toggleable="true">
 							<p:dataTable id="meetingTbl" style="width:100%"  
 								value="#{suppFinalMeetingBackingBean.managedBean.scQtMeetings}"
 								var="meeting" widgetVar="meetingDtls" rowKey="#{meeting}" 
