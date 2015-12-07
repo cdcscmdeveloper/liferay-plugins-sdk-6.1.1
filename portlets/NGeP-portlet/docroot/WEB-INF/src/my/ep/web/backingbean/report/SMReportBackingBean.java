@@ -600,11 +600,11 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	private void checkAuthorizationByRoleCode(ReportsGenerateBean rptGenBean,
 			List<String> authoriztionList) {		
 		if (authoriztionList != null) {
-			if (authoriztionList.contains(ReportConst.ROLE_CODE_COLLECTOR_GOV)) {
-				rptGenBean.setCollectorGovRegistrationChkView(true);
-			} else if (authoriztionList.contains(ReportConst.ROLE_CODE_COLLECTOR_CDC)) {
+			if (authoriztionList.contains(ReportConst.ROLE_CODE_COLLECTOR_CDC)) {
 				rptGenBean.setCollectorCDCRegistrationChkView(true);
 
+			} else {
+				rptGenBean.setCollectorGovRegistrationChkView(true);
 			}
 		}
 	}
