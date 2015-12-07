@@ -24,13 +24,13 @@
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.smMofRegistrationFee']}"
 									itemValue="M" />
 							</p:selectManyCheckbox>
-							<p:selectManyCheckbox id="processingFeeChk" 
+							<p:selectManyCheckbox id="processingFeeChk"
 								value="#{reportBackingBean.smProcessingFeeList}">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.smProcessingFee']}"
 									itemValue="P" />
 							</p:selectManyCheckbox>
 
-							<p:selectManyCheckbox id="softCertificateFee" 
+							<p:selectManyCheckbox id="softCertificateFee"
 								value="#{reportBackingBean.smSoftCertificateFeeList}">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.smSoftCertificateFee']}"
 									itemValue="S" />
@@ -155,7 +155,8 @@
 									<tr style="width: 100%;">
 										<td style="width: 160px;"><p:outputLabel
 												value="#{lbl['lbl.rpt.paymentmethod']}" /> <p:outputLabel
-												value="*" styleClass="mandatory" /></td>
+												value="*" style="margin-right: 5px;margin-top: 3px;"
+												styleClass="mandatory" /></td>
 									</tr>
 								</table>
 							</p:column>
@@ -1058,7 +1059,7 @@
 							<p:column>
 								<table style="width: 182px;">
 									<tr style="width: 100%;">
-										<td style="width: 160px;"><p:outputLabel
+										<td style="width: 160px;"><p:outputLabel style="margin-right: -91px;"
 												value="#{lbl['lbl.rpt.reportType']}" /></td>
 
 									</tr>
@@ -1109,10 +1110,10 @@
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryForCodeView}">
 							<p:outputLabel value="*" styleClass="mandatory"
-								style="margin-right: -152px; margin-top: 10px;" />
+								style="margin-right: -243px; margin-top: 10px;" />
 							<p:outputLabel value="#{lbl['lbl.rpt.code']}"
 								style="margin-top:5px;width:58px;" />
-							<p:selectOneMenu value="#{reportBackingBean.smCode}"								
+							<p:selectOneMenu value="#{reportBackingBean.smCode}"
 								style="margin-top:5px;width:300px;">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.codeOne']}"
 									itemValue="#{lbl['lbl.rpt.codeOne']}"></f:selectItem>
@@ -2613,8 +2614,8 @@
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.smFromDateView}">
 						<TD><p:outputLabel value="#{lbl['lbl.rpt.dateFrom']}"
-								style="width:172px;" /> <p:outputLabel value="*"
-								style="margin-right:-117px" styleClass="mandatory" /></TD>
+								style="width:151px;" /> <p:outputLabel value="*"
+								style="margin-right:-79px" styleClass="mandatory" /></TD>
 					</c:if>
 
 					<TD><p:calendar showOn="button" navigator="true"
