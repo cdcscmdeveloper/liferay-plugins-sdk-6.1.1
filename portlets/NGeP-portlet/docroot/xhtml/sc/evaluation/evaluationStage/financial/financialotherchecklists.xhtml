@@ -25,7 +25,7 @@
 					<tr>
 						<td align="right"><p:commandButton
 								value="#{lbl['lbl.btn.back']}" style="float:left;"
-								immediate="true" 
+								immediate="true"
 								action="#{evaluationBackingBean.financialBackaction}" /> <ui:param
 								name="checklistScoreType"
 								value="#{evaluationBackingBean.managedBean.checklistScoreType}"></ui:param>
@@ -41,7 +41,10 @@
 
 			<ui:include src="/xhtml/sc/evaluation/evaluationHeader.xhtml" />
 
-			<p:panel id="financialOtherChecklistSupplierScoringProposalheader" header="#{lbl['lbl.sc.eva.financial.proposal.evaluation']}">
+			<p:panel
+				id="financialOtherChecklistSupplierScoringProposalheaderChecklistOther"
+				toggleable="true"
+				header="#{lbl['lbl.sc.eva.financial.proposal.evaluation']}">
 				<ui:include
 					src="/xhtml/sc/evaluation/evaluationStage/supplierChecklistHeader.xhtml" />
 			</p:panel>
@@ -49,6 +52,7 @@
 
 
 			<p:panel header="#{lbl['lbl.sc.compliance.list']}" toggleable="true"
+				id="financialOtherChecklistSupplierUploadPjtDownloadUploadComplianceStageComplianceListChecklistFinancial"
 				collapsed="true">
 				<h:outputText styleClass="instruction"
 					value="#{lbl['lbl.sc.eva.evaluation.stage.document.instruction']}"
@@ -75,7 +79,7 @@
 				</p:dataTable>
 
 			</p:panel>
-			
+
 			<h:panelGroup>
 				<ui:param name="statusHide"
 					value="#{evaluationBackingBean.managedBean.statusHide}"></ui:param>
