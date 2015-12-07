@@ -25,6 +25,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmEduLevel;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
+import my.ep.persistence.entity.pm.common.PmMachine;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmRace;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
@@ -560,6 +561,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedManufacturer.setPmUom(new PmUom());
 		selectedMachine = new SmMachineDtl();
 		selectedMachineList = new ArrayList<SmMachineDtl>();
+		selectedSystem = new SmSupplierSystem();
+		selectedSystem.setSystem(new PmMachine());
 
 		//
 		selectedSignatoryBankAcct = new SmSupplierBank();
