@@ -60,15 +60,14 @@
 										<ac:iconTooltip
 											value="#{lbl['lbl.sc.recommended.supplier.tooltip']}" />
 									</f:facet>
-									<p:commandLink update="@([id$=suppDtlPopUp])" 
-										action="#{lOIDetailBackingBean.showSupplierDetails(supplierDtl)}" 
-										oncomplete="suppDtlWidgetVar.show();">
+									<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
+												   process="@this" update="@([id$=suppDetailsPopup])">
+										<p:graphicImage library="/css/images/design/evaluate.png"
+														title="#{lbl['lbl.sc.view.companyinfo']}" style="vertical-align:middle" />
 										<f:setPropertyActionListener value="#{supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
-											target="#{lOIDetailBackingBean.managedBean.smSupplier}" />
-										<h:outputText
-											value="#{supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.companyName}" 
-											style="white-space:normal;"/>
-									</p:commandLink>
+																   	 target="#{supplierDetailBackingBean.smSupplier}" />
+										<h:outputText value="#{supplierDtl.qtEvaluationResult.scQtProposal.supplierNo}" />
+									</p:commandLink>									
 								</p:column>
 					
 								<p:column headerText="#{lbl['lbl.sc.supplier.code']}">
@@ -114,7 +113,7 @@
 												supplierDtl.smMofAccount.recordStatusFlg eq DbValueConst.recordStatusActive}" />
 								</p:column>
 					
-								<p:column selectionMode="single" style="width:2%;" 
+								<p:column selectionMode="single" styleClass="td-check-box-spacing" 
 										  disabledSelection="#{!isPendingNegotiationStatus or 
 															  !(supplierDtl.scQtRecommendDtl.get(0).loiAwarded)}" />
 							</p:dataTable>
@@ -160,14 +159,14 @@
 													listener="#{lOIDetailBackingBean.recommendSupplierSelectedAction(
 																				item,recommendedSuppl.scQtRecommendDtl.get(0))}" />
 											</p:selectBooleanCheckbox>
-											<p:commandLink update="@([id$=suppDtlPopUp])"
-												action="#{lOIDetailBackingBean.showSupplierDetails(recommendedSuppl)}" 
-												oncomplete="suppDtlWidgetVar.show();">
-												<f:setPropertyActionListener value="#{recommendedSuppl.scQtRecommendDtl.get(0).supplier}"
-													target="#{lOIDetailBackingBean.managedBean.smSupplier}" />
-												<h:outputText value="#{recommendedSuppl.scQtRecommendDtl.get(0).supplier.companyName}" 
-													style="white-space:normal;"/>
-											</p:commandLink>
+											<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
+														   process="@this" update="@([id$=suppDetailsPopup])">
+												<p:graphicImage library="/css/images/design/evaluate.png"
+																title="#{lbl['lbl.sc.view.companyinfo']}" style="vertical-align:middle" />
+												<f:setPropertyActionListener value="#{recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
+																		   	 target="#{supplierDetailBackingBean.smSupplier}" />
+												<h:outputText value="#{recommendedSuppl.qtEvaluationResult.scQtProposal.supplierNo}" />
+											</p:commandLink>											
 											<br />
 										</p:column>
 									</p:dataList>
@@ -175,13 +174,13 @@
 									<p:dataList var="recommendedSuppl" value="#{item.awardSupplierList}"
 										type="none" rendered="#{!isPendingNegotiationStatus}">
 										<p:column rendered="#{recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}">
-											<p:commandLink update="@([id$=suppDtlPopUp])"
-												action="#{lOIDetailBackingBean.showSupplierDetails(recommendedSuppl)}"
-												oncomplete="suppDtlWidgetVar.show();">
-												<f:setPropertyActionListener value="#{recommendedSuppl.scQtRecommendDtl.get(0).supplier}"
-													target="#{lOIDetailBackingBean.managedBean.smSupplier}" />
-												<h:outputText value="#{recommendedSuppl.scQtRecommendDtl.get(0).supplier.companyName}" 
-													style="white-space:normal;"/>
+											<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
+														   process="@this" update="@([id$=suppDetailsPopup])">
+												<p:graphicImage library="/css/images/design/evaluate.png"
+																title="#{lbl['lbl.sc.view.companyinfo']}" style="vertical-align:middle" />
+												<f:setPropertyActionListener value="#{recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
+																		   	 target="#{supplierDetailBackingBean.smSupplier}" />
+												<h:outputText value="#{recommendedSuppl.qtEvaluationResult.scQtProposal.supplierNo}" />
 											</p:commandLink>
 											<br />
 										</p:column>
@@ -312,7 +311,7 @@
 									</h:panelGroup>
 								</p:column>
 								
-								<p:column selectionMode="multiple" style="width:2%" rendered="#{isPendingNegotiationStatus}" />			
+								<p:column selectionMode="multiple" styleClass="td-check-box-spacing" rendered="#{isPendingNegotiationStatus}" />			
 							</p:dataTable>
 									
 							<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
