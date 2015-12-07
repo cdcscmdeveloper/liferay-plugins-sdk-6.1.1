@@ -12142,7 +12142,7 @@ public class ReportBackingBean extends
 	 * PURCHASE) module reports.
 	 */
 	public void generateSCReport() {
-		if ((getManagedBean().getReportValue() != null)
+		/*if ((getManagedBean().getReportValue() != null)
 				&& (getManagedBean().getReportValue().trim()
 						.equalsIgnoreCase(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL))
 				|| (getManagedBean().getReportValue() != null)
@@ -12158,7 +12158,10 @@ public class ReportBackingBean extends
 			} else {
 				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
-		} else if (((getScQuotationNo() != null) && (getScQuotationNo() != ReportConst.EMPTY_VAL))
+		} else*/ 
+		
+		
+		if (((getScQuotationNo() != null) && (getScQuotationNo() != ReportConst.EMPTY_VAL))
 				|| ((getFromDate() != null) && (getFromDate().toString() != ReportConst.EMPTY_VAL))
 				|| ((getToDate() != null) && (getToDate().toString() != ReportConst.EMPTY_VAL))
 				|| ((getScSoneCrtdFromDate() != null) && (getScSoneCrtdFromDate()
