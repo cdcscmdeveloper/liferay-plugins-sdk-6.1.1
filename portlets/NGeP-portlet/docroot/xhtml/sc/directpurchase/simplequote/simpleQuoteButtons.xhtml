@@ -49,10 +49,11 @@
 		<p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}"
 			partialSubmit="true" process="@this" style="float:left;"
 			rendered="#{!isEditable}"
+			styleClass="BtnSpacing"
 			action="#{simpleQuoteBackingBean.backToPrevious}" />
 	</div>
 
-	<div class="ppRightBtn">
+	<div class="ppRightBtn BtnSpacing">
 		<c:if test="#{simpleQuoteBackingBean.managedBean.taskId eq null}">
 			<p:commandButton immediate="true" id="backButton"
 				value="#{lbl['lbl.btn.item.search']}" partialSubmit="true"
@@ -82,7 +83,7 @@
 		</c:if>
 	</div>
 
-	<div class="ppRightBtn">
+	<div class="ppRightBtn BtnSpacing">
 		<c:if
 			test="#{simpleQuoteBackingBean.managedBean.taskId ne null and isEditable}">
 			<!-- to view simple Quote from the request note header  Icon    -->

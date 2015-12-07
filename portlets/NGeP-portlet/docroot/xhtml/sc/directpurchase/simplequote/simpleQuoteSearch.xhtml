@@ -8,31 +8,32 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-		<p:panel header="Search" id="sqSearchId">
+		<p:panel header="Search" id="sqSearchId" toggleable="true">
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
+				
 				<tr>
-					<td style="width: 20%;"><p:outputLabel
-							value="#{lbl['lbl.sc.sq.simple.quote.no']}" /></td>
-					<td><p:inputText
-							value="#{simpleQuoteBackingBean.managedBean.searchQuoteNo}"
-							size="35" style="margin-bottom: 5px;" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.document.title']}" /></td>
-					<td><p:inputText size="35"
+					<td style="width: 20%;"><p:outputLabel value="#{lbl['lbl.sc.document.title']}" /></td>
+					<td colspan="3"><p:inputText size="96"
 							value="#{simpleQuoteBackingBean.managedBean.searchTitle}"
 							style="margin-bottom: 5px;" /></td>
 				</tr>
 				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.sq.simple.quote.no']}" /></td>
+					<td colspan="3"><p:inputText
+							value="#{simpleQuoteBackingBean.managedBean.searchQuoteNo}"
+							size="16" style="margin-bottom: 5px;" /></td>
+				</tr>
+				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" /></td>
-					<td><p:selectOneMenu style="margin-bottom: 5px; width: 286px;"
+					<td><p:selectOneMenu style="margin-bottom: 5px; width: 154px;"
 							value="#{simpleQuoteBackingBean.managedBean.searchProcType}">
 							<f:selectItems
 								value="#{simpleQuoteBackingBean.getDropdownCodeValues(ParameterTypeConst.procurementType)}" />
 						</p:selectOneMenu></td>
 						
 					<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
-					<td><p:selectOneMenu style="width: 286px;"
+					<td><p:selectOneMenu style="width: 154px;"
 							value="#{simpleQuoteBackingBean.managedBean.searchStatus}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
@@ -58,14 +59,12 @@
 						</p:calendar></td>
 				</tr>
 			</table>
-			<div class="ppRightBtn">
+			<div class="ppRightBtn BtnSpacing">
 				<p:commandButton value="#{lbl['lbl.btn.search']}" 
 					action="#{simpleQuoteMB.searchSimpleQuote}"
-					styleClass="BtnSpacing"
 					update="scQuoteDataModel" process="@this sqSearchId" />
 
 				<p:commandButton value="#{lbl['lbl.btn.reset']}"
-				    styleClass="BtnSpacing"
 					action="#{simpleQuoteBackingBean.reset}"
 					update="@([id$=sqSearchId])" resetValues="true"
 					partialSubmit="true" process="@this" />
