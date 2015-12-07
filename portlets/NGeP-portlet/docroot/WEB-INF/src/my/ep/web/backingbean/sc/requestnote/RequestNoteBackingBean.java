@@ -226,7 +226,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		FacesContext fc = FacesContext.getCurrentInstance();
 		getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 		getManagedBean().setViewOnly(Boolean.TRUE);
-		return "commonRequestNote";
+		return REQUEST_NOTE_PAGE;
 	}
 
 	/**
