@@ -27,8 +27,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -80,6 +78,7 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureResDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
 import my.ep.dto.pm.common.city.CityResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
@@ -107,6 +106,7 @@ import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmMachine;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -154,7 +154,6 @@ import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -3048,6 +3047,27 @@ public class SmCommonUtil {
 		}
 
 		return items;
+	}
+	
+	public List<SelectItem> getTravellingSoftwareItems() {
+		List<SelectItem> machineItems = new ArrayList<SelectItem>();
+		PmParameter categoryType = new PmParameter();
+		categoryType.setParameterCode(ParameterConst.CATEGORY_TYPE_TRAVEL);
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		reqDTO.setCategoryTypeCode(categoryType);
+		List<PmMachine> machineList = SmServiceLookup.getCategoryCodeSO()
+				.retrievePmMachineByParameterCategoryType(reqDTO)
+				.getMachineList();
+		if(!SmCommonUtil.isCollectionEmpty(machineList)){
+			SelectItem machineItem = null;
+			for(PmMachine machine:machineList){
+				machineItem = new SelectItem();
+				machineItem.setValue(machine.getMachineId());
+				machineItem.setLabel(machine.getMachineDesc());
+				machineItems.add(machineItem);
+			}
+		}
+		return machineItems;
 	}
 
 	public static boolean isSmObjectPropsDifference(Object latest,
