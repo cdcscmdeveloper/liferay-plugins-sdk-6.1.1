@@ -73,7 +73,6 @@ public class PanelManagedBean extends BaseManagedBean {
 	private boolean circularExtension;
 	private int index = -1;
 	
-	
 	private TreeNode[] selectedGeneralTreeNodes;
 	private List<TreeNode> zoneGeneralTrees = new ArrayList<TreeNode>();
 	private TreeNode rootLocationTree;
@@ -468,10 +467,16 @@ public class PanelManagedBean extends BaseManagedBean {
 		this.selectedPanelSuppliers = selectedPanelSuppliers;
 	}
 	
+	/**
+	 * @return the selectedPanelItemSpecs
+	 */
 	public List<CtPanelItemSpec> getSelectedPanelItemSpecs() {
 		return selectedPanelItemSpecs;
 	}
 
+	/**
+	 * @param selectedPanelItemSpecs the selectedPanelItemSpecs to set
+	 */
 	public void setSelectedPanelItemSpecs(List<CtPanelItemSpec> selectedPanelItemSpecs) {
 		this.selectedPanelItemSpecs = selectedPanelItemSpecs;
 	}
@@ -912,5 +917,4 @@ public class PanelManagedBean extends BaseManagedBean {
 	public void setSmMofAccount(SmMofAccount smMofAccount) {
 		this.smMofAccount = smMofAccount;
 	}
-
 }

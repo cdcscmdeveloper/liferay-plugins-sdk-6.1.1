@@ -30,6 +30,9 @@ public  class CtTabSideMenus {
 	List<String> menuPaymentTracking = null;
 	List<String> menuSetting = null;
 	
+	/**
+	 * The constructor used for initializing the string list
+	 */
 	public CtTabSideMenus() {
 		face = new FacesScopes();
 		   

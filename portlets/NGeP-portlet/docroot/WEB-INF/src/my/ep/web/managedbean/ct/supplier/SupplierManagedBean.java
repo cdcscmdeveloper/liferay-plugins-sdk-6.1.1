@@ -420,6 +420,7 @@ public class SupplierManagedBean extends BaseManagedBean {
 	}
 	
 	/**
+	 * @param attachmentList the attachmentList to set
 	 */
 	public void setAttachmentList(List<CtAttachment> attachmentList) {
 		this.attachmentList = attachmentList;

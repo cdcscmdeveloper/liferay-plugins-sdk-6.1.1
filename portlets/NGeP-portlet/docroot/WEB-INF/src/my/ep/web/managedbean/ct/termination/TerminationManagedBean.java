@@ -131,7 +131,7 @@ public class TerminationManagedBean extends BaseManagedBean {
 		return contractVer;
 	}
 
-	/**
+  /**
 	 * @param contractVer the contractVer to set
 	 */
 	public void setContractVer(CtContractVer contractVer) {

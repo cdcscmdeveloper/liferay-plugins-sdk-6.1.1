@@ -800,8 +800,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 
 	public void selectCcrContractEvent() {
-		//getManagedBean().setSelectedCircularItem(null);
-		this.getManagedBean().getSelectedCircularContract();
+			this.getManagedBean().getSelectedCircularContract();
 	}
 
 	/**
@@ -1117,7 +1116,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	
 	/**
 	 * Method used to set extension start date 
-	 * and extension end date for central circluar
+	 * and extension end date for central circular
     */
 	public void extendStartEndDate(){
 		/*if(this.getManagedBean().getCircularVer().getExtPeriod() > 0){

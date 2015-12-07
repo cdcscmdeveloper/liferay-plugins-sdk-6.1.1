@@ -1085,8 +1085,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
-	
-	public void addBulkPanelSupplier(List<SmSupplier> supplierList){ //101
+	/**
+	 * Method used to add bulk of of supplier details
+	 * into panel item supplier details and 
+	 * zone supplier details
+	 */
+	public void addBulkPanelSupplier(List<SmSupplier> supplierList){ 
 		log.info("PanelBackingBean.addPanelSupplier()");
 		 String panelCoverageICode;
 		try {
