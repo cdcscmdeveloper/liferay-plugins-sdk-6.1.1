@@ -24,10 +24,10 @@
 			<ac:paginator for="qualifiedListId" />
 
 
-			<p:column headerText="#{lbl['lbl.sc.ranking']}">
+			<p:column headerText="#{lbl['lbl.sc.ranking']}"
+				style="text-align:right">
 
-				<h:outputLabel value="#{finEvaluationqualifiedSupplier.evalRank}"
-					style="text-align:right"></h:outputLabel>
+				<h:outputText value="#{finEvaluationqualifiedSupplier.evalRank}"></h:outputText>
 			</p:column>
 
 
@@ -40,36 +40,36 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.total.score']}">
-				<h:outputLabel value="#{finEvaluationqualifiedSupplier.totalScore}"
-					style="text-align:right"></h:outputLabel>
+			<p:column headerText="#{lbl['lbl.sc.total.score']}"
+				style="text-align:right">
+				<h:outputText value="#{finEvaluationqualifiedSupplier.totalScore}"></h:outputText>
 			</p:column>
 
 
 		</p:dataTable>
+		<p:spacer height="10px" />
+		<table>
 
+			<tr>
+				<td style="width: 230px;"><h:outputLabel
+						value="#{lbl['lbl.sc.passing.score']}" /></td>
+				<td><p:inputText readonly="true" disabled="true"
+						style="text-align:right"
+						value="#{evaluationBackingBean.managedBean.demoPassingScore}"></p:inputText></td>
+			</tr>
+
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.sc.total']}" /></td>
+				<td><p:inputText readonly="true" disabled="true"
+						style="text-align:right"
+						value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM.rowCount}"></p:inputText></td>
+			</tr>
+
+		</table>
 
 	</p:panel>
 
-	<p:spacer height="10px" />
-	<table>
 
-		<tr>
-			<td style="width: 220px;"><h:outputLabel
-					value="#{lbl['lbl.sc.passing.score']}" /></td>
-			<td><p:inputText readonly="true" disabled="true"
-					style="text-align:right"
-					value="#{evaluationBackingBean.managedBean.demoPassingScore}"></p:inputText></td>
-		</tr>
-
-		<tr>
-			<td><h:outputLabel value="#{lbl['lbl.sc.total']}" /></td>
-			<td><p:inputText readonly="true" disabled="true"
-					style="text-align:right"
-					value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM.rowCount}"></p:inputText></td>
-		</tr>
-
-	</table>
 
 
 
@@ -98,29 +98,29 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.total.score']}">
-				<h:outputLabel value="#{disQualifiedSupplier.totalScore}"
-					style="text-align:right"></h:outputLabel>
+			<p:column headerText="#{lbl['lbl.sc.total.score']}"
+				style="text-align:right">
+				<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
 			</p:column>
 
 
 		</p:dataTable>
+		<p:spacer height="10px" />
+		<table>
 
+			<tr>
+				<td style="width: 230px;"><h:outputLabel
+						value="#{lbl['lbl.sc.total']}" /></td>
+				<td><p:inputText readonly="true" disabled="true"
+						style="text-align:right"
+						value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM.rowCount}"></p:inputText></td>
+			</tr>
+
+		</table>
 
 	</p:panel>
 
-	<p:spacer height="10px" />
-	<table>
 
-		<tr>
-			<td style="width: 220px;"><h:outputLabel
-					value="#{lbl['lbl.sc.total']}" /></td>
-			<td><p:inputText readonly="true" disabled="true"
-					style="text-align:right"
-					value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM.rowCount}"></p:inputText></td>
-		</tr>
-
-	</table>
 
 
 
