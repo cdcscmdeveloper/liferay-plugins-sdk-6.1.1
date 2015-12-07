@@ -56,22 +56,22 @@
 					value="#{suppFinalBiddingBackingBean.getParameterDesc(committeeDtl.scCommitteeMember.representativeType)}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.attendance']}">
+			<p:column headerText="#{lbl['lbl.sc.attendance']}" styleClass="td-check-box-spacing">
 				<p:selectBooleanCheckbox value="#{committeeDtl.attended}"
 					disabled="#{!suppFinalBiddingBackingBean.managedBean.secretaryUser}" />
 			</p:column>
 		</p:dataTable>
-
-		<p:spacer height="10px"></p:spacer>
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true">
 		<table style="width: 100%" id="remarkslist">
 			<tr>
-				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
-						value="#{lbl['lbl.sc.remark']}" /></td>
+				<td class="TableFieldLeft" style="width: 96px;">
+					<p:outputLabel value="#{lbl['lbl.sc.remark']}" />
+				</td>
 
-				<td class="TableFieldRight"><p:dataGrid var="remarkVar"
+				<td class="TableFieldRight">
+					<p:dataGrid var="remarkVar"
 						value="#{suppFinalBiddingBackingBean.managedBean.committeeRemarkList}"
 						rowIndexVar="remarkIndex" columns="1">
 						<table>
@@ -97,7 +97,8 @@
 								</td>
 							</tr>
 						</table>
-					</p:dataGrid></td>
+					</p:dataGrid>
+				</td>
 			</tr>
 		</table>
 	</p:panel>
