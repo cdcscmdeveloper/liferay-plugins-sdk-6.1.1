@@ -147,7 +147,8 @@
 										<p:selectBooleanCheckbox
 											value="#{recommendedSuppl.scQtRecommendDtl.get(0).recordStatus}"
 											disabled="#{!isPendingNegotiationStatus or 
-															!(recommendedSuppl.scQtRecommendDtl.get(0).loiAwarded)}">
+															!(recommendedSuppl.scQtRecommendDtl.get(0).loiAwarded)}"
+											style="margin-right:1px !important;">
 											<p:ajax event="change" partialSubmit="true" process="@this"
 													update="@this, @([id$=recommendTbl])"
 													listener="#{lOIDetailBackingBean.recommendSupplierSelectedAction(
