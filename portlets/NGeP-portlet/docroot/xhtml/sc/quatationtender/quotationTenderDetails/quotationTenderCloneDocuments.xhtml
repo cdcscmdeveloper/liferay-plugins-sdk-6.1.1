@@ -135,17 +135,17 @@
 						listener="#{qTDocumentsBackingBean.onRowCloneAction}" />
 
 					<p:column headerText="#{lbl['lbl.sc.qtn.no']}">
-						<h:outputText value="#{scQt.qtNo}" />
+						<h:outputText value="#{scQt.qtNo}" style="white-space: normal;" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.title']}">
-						<h:outputText value="#{scQt.qtTitle}"
-							style="white-space: normal;word-wrap: break-word;" />
+						<h:outputText value="#{scQt.qtTitle}" style="white-space: normal;" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.procurement.mode']}">
 						<h:outputText
-							value="#{qTDocumentsBackingBean.getParameterDesc(scQt.procurementMode)}" />
+							value="#{qTDocumentsBackingBean.getParameterDesc(scQt.procurementMode)}"
+							style="white-space: normal;" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.created.date']}">
@@ -171,7 +171,8 @@
 
 					<p:column headerText="#{lbl['lbl.sc.status']}">
 						<h:outputText
-							value="#{qTDocumentsBackingBean.getStatusDescById(scQt.qtStatus.statusId)}" />
+							value="#{qTDocumentsBackingBean.getStatusDescById(scQt.qtStatus.statusId)}"
+							style="white-space: normal;" />
 					</p:column>
 				</p:dataTable>
 				<br />
