@@ -135,7 +135,7 @@
 						listener="#{qTBusinessOwnerBackingBean.onRowCloneAction}" />
 
 					<p:column headerText="#{lbl['lbl.sc.qtn.no']}">
-						<h:outputText value="#{scQt.qtNo}" />
+						<h:outputText value="#{scQt.qtNo}" style="white-space: normal;" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.title']}">
@@ -144,7 +144,7 @@
 
 					<p:column headerText="#{lbl['lbl.sc.procurement.mode']}">
 						<h:outputText
-							value="#{qTBusinessOwnerBackingBean.getParameterDesc(scQt.procurementMode)}" />
+							value="#{qTBusinessOwnerBackingBean.getParameterDesc(scQt.procurementMode)}" style="white-space: normal;" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.created.date']}">
@@ -170,7 +170,7 @@
 
 					<p:column headerText="#{lbl['lbl.sc.status']}">
 						<h:outputText
-							value="#{qTBusinessOwnerBackingBean.getStatusDescById(scQt.qtStatus.statusId)}" />
+							value="#{qTBusinessOwnerBackingBean.getStatusDescById(scQt.qtStatus.statusId)}" style="white-space: normal;" />
 					</p:column>
 				</p:dataTable>
 				
