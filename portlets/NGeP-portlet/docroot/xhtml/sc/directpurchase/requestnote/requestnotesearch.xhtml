@@ -11,7 +11,7 @@
 	<ui:define name="contentSection">
 		<p:messages id="rnSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		
-		<p:panel header="#{lbl['lbl.sc.search']}">
+		<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true">
 	     	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 	     	<tr>
 				<td class="TableFieldLeft" width="20%">
@@ -72,21 +72,19 @@
 			</tr>
 		    </table>
 		    
-		    <div class="ppRightBtn">
+		    <div class="ppRightBtn BtnSpacing">
 				<p:commandButton value="#{lbl['lbl.btn.search']}" 
-				    styleClass="BtnSpacing"
 					action="#{requestNoteBackingBean.searchAction}"
 					update="reqNoteTbl" />
 					
 				<p:commandButton value="#{lbl['lbl.btn.reset']}" 
-				    styleClass="BtnSpacing"
 					action="#{requestNoteBackingBean.resetAction}" update="@form"
 				    resetValues="true" partialSubmit="true"
 					process="@this" />					
 			</div>
     	</p:panel>
         
-		<p:panel header="#{lbl['lbl.sc.search.result']}">
+		<p:panel header="#{lbl['lbl.sc.search.result']}" toggleable="true">
 			<p:dataTable id="reqNoteTbl" var="scRequestNote" rowIndexVar="index" 
 				value="#{requestNoteBackingBean.managedBean.reqNoteDataModel}" 
 				lazy="true" rows="10">
