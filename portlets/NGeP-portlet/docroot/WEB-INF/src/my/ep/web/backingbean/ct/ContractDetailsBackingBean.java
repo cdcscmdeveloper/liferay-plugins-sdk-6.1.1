@@ -1460,6 +1460,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		reqDTO.setViewOnly(true);
 	    ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 	    ctBB.getManagedBean().setViewContract(true);
+	    getManagedBean().setAsAtDate(null);
 	    setValidateContractField(resDTO);
 	    getManagedBean().setSelectedTabIndex(0);
 	    getManagedBean().setExternalPageUrl(null);
