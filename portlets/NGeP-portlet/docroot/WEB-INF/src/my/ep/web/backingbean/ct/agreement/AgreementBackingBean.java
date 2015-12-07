@@ -2596,6 +2596,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
     	getManagedBean().getCtAgreement().getAgreementContents().add(getManagedBean().getVarIndex(), agContect);
     }
     
+    /**
+	 * The method used to set 
+	 * number of index of list in datatable 
+	 */   
     public void setIndexProperty(int index){
     	getManagedBean().setVarIndex(index);
     }

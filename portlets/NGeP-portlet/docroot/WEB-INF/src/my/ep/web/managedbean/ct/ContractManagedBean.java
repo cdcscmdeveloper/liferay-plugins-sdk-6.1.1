@@ -190,102 +190,149 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.attachmentList = attachmentList;
 	}
 
-	/*public CtContractVer getCtContractVer() {
-		return ctContractVer;
-	}
-
-	public void setCtContractVer(CtContractVer ctContractVer) {
-		this.ctContractVer = ctContractVer;
-	}
-
-	public CtContractVer getAgreementContractVer() {
-		return agreementContractVer;
-	}
-
-	public void setAgreementContractVer(CtContractVer agreementContractVer) {
-		this.agreementContractVer = agreementContractVer;
-	}*/
-
+	/**
+	 * @return the performanceBondRuleAmt
+	 */
 	public double getPerformanceBondRuleAmt() {
 		return performanceBondRuleAmt;
 	}
 
+	/**
+	 * @param performanceBondRuleAmt the performanceBondRuleAmt to set
+	 */
 	public void setPerformanceBondRuleAmt(double performanceBondRuleAmt) {
 		this.performanceBondRuleAmt = performanceBondRuleAmt;
 	}
 
+	/**
+	 * @return the supplierCompanyName
+	 */
 	public String getSupplierCompanyName() {
 		return supplierCompanyName;
 	}
 
+	/**
+	 * @param supplierCompanyName the supplierCompanyName to set
+	 */
 	public void setSupplierCompanyName(String supplierCompanyName) {
 		this.supplierCompanyName = supplierCompanyName;
 	}
 
+	/**
+	 * @return the updateCompanyName
+	 */
 	public boolean isUpdateCompanyName() {
 		return updateCompanyName;
 	}
 
+	/**
+	 * @param updateCompanyName the updateCompanyName to set
+	 */
 	public void setUpdateCompanyName(boolean updateCompanyName) {
 		this.updateCompanyName = updateCompanyName;
 	}
 
+	/**
+	 * @return the supplierBranchName
+	 */
 	public String getSupplierBranchName() {
 		return supplierBranchName;
 	}
 
+	/**
+	 * @param supplierBranchName the supplierBranchName to set
+	 */
 	public void setSupplierBranchName(String supplierBranchName) {
 		this.supplierBranchName = supplierBranchName;
 	}
 
+	/**
+	 * @return the supplierAddress
+	 */
 	public String getSupplierAddress() {
 		return supplierAddress;
 	}
 
+	/**
+	 * @param supplierAddress the supplierAddress to set
+	 */
 	public void setSupplierAddress(String supplierAddress) {
 		this.supplierAddress = supplierAddress;
 	}
 
+	/**
+	 * @return the updateSupplierAddress
+	 */
 	public boolean isUpdateSupplierAddress() {
 		return updateSupplierAddress;
 	}
 
+	/**
+	 * @param updateSupplierAddress the updateSupplierAddress to set
+	 */
 	public void setUpdateSupplierAddress(boolean updateSupplierAddress) {
 		this.updateSupplierAddress = updateSupplierAddress;
 	}
 
+	/**
+	 * @return the smAddress
+	 */
 	public SmAddress getSmAddress() {
 		return smAddress;
 	}
 
+	/**
+	 * @param smAddress the smAddress to set
+	 */
 	public void setSmAddress(SmAddress smAddress) {
 		this.smAddress = smAddress;
 	}
 
+	/**
+	 * @return the directPurchase
+	 */
 	public boolean isDirectPurchase() {
 		return directPurchase;
 	}
 
+	/**
+	 * @param directPurchase the directPurchase to set
+	 */
 	public void setDirectPurchase(boolean directPurchase) {
 		this.directPurchase = directPurchase;
 	}
 
+	/**
+	 * @return the gstCheckingGUI
+	 */
 	public boolean isGstCheckingGUI() {
 		return gstCheckingGUI;
 	}
 
+	/**
+	 * @param gstCheckingGUI the gstCheckingGUI to set
+	 */
 	public void setGstCheckingGUI(boolean gstCheckingGUI) {
 		this.gstCheckingGUI = gstCheckingGUI;
 	}
 
+	/**
+	 * @return the branchInfoFilePath
+	 */
 	public String getBranchInfoFilePath() {
 		return branchInfoFilePath;
 	}
 
+	/**
+	 * @param branchInfoFilePath the branchInfoFilePath to set
+	 */
 	public void setBranchInfoFilePath(String branchInfoFilePath) {
 		this.branchInfoFilePath = branchInfoFilePath;
 	}	
 	
+	/**
+	 * @return the radioButtonSchedule
+	 */
 	public Map<String, Object> getRadioButtonSchedule() {
 		if (radioButtonSchedule == null) {
 			radioButtonSchedule = new LinkedHashMap<String,Object>();
@@ -359,18 +406,30 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.chkSchedule = chkSchedule;
 	}
 
+	/**
+	 * @return the progSchedButtonDeactive
+	 */
 	public boolean isProgSchedButtonDeactive() {
 		return progSchedButtonDeactive;
 	}
 
+	/**
+	 * @param progSchedButtonDeactive the progSchedButtonDeactive to set
+	 */
 	public void setProgSchedButtonDeactive(boolean progSchedButtonDeactive) {
 		this.progSchedButtonDeactive = progSchedButtonDeactive;
 	}
 
+	/**
+	 * @return the contractVer
+	 */
 	public CtContractVer getContractVer() {
 		return contractVer;
 	}
 
+	/**
+	 * @param contractVer the contractVer to set
+	 */
 	public void setContractVer(CtContractVer contractVer) {
 		this.contractVer = contractVer;
 	}
@@ -403,18 +462,30 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.selectedDeduction = selectedDeduction;
 	}
 
+	/**
+	 * @return the flgPaymentTracking
+	 */
 	public boolean isFlgPaymentTracking() {
 		return flgPaymentTracking;
 	}
 
+	/**
+	 * @param flgPaymentTracking the flgPaymentTracking to set
+	 */
 	public void setFlgPaymentTracking(boolean flgPaymentTracking) {
 		this.flgPaymentTracking = flgPaymentTracking;
 	}
 
+	/**
+	 * @return the gstTotalAmount
+	 */
 	public boolean isButtonHideActive() {
 		return ButtonHideActive;
 	}
 
+	/**
+	 * @param buttonHideActive the buttonHideActive to set
+	 */
 	public void setButtonHideActive(boolean buttonHideActive) {
 		ButtonHideActive = buttonHideActive;
 	}
@@ -803,18 +874,30 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.selectedServiceItem = selectedServiceItem;
 	}
 
+	/**
+	 * @return the ctCircularVer
+	 */
 	public CtContractVer getCtContractVer() {
 		return ctContractVer;
 	}
 
+	/**
+	 * @param ctContractVer the ctContractVer to set
+	 */
 	public void setCtContractVer(CtContractVer ctContractVer) {
 		this.ctContractVer = ctContractVer;
 	}
 
+	/**
+	 * @return the disableAmendDetails
+	 */
 	public boolean isDisableAmendDetails() {
 		return disableAmendDetails;
 	}
 
+	/**
+	 * @param disableAmendDetails the disableAmendDetails to set
+	 */
 	public void setDisableAmendDetails(boolean disableAmendDetails) {
 		this.disableAmendDetails = disableAmendDetails;
 	}
@@ -833,10 +916,16 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.ctCircularVer = ctCircularVer;
 	}
 
+	/**
+	 * @return the updateContract
+	 */
 	public boolean isUpdateContract() {
 		return updateContract;
 	}
 
+	/**
+	 * @param updateContract the updateContract to set
+	 */
 	public void setUpdateContract(boolean updateContract) {
 		this.updateContract = updateContract;
 	}

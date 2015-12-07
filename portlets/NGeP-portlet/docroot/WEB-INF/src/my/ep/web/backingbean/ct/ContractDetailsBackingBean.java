@@ -14,7 +14,6 @@ import java.net.URLConnection;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -28,9 +27,6 @@ import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import my.ep.biz.bean.search.ISearchBean;
-import my.ep.biz.bean.search.SearchBean;
-import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.bank.IChangeBankAccSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
@@ -84,10 +80,8 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
-import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -108,7 +102,6 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -348,7 +341,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    if (ctBB.getManagedBean().getContractVer().getCtAgencies() != null 
 	    		&& ctBB.getManagedBean().getContractVer().getCtAgencies().size() > 0 ) {
 	    	ctBB.getManagedBean().setSelectedAgency(null);
-	    	//Collections.sort(this.getManagedBean().getContractVer().getCtAgencies(), new CtAgency());		           
 	    	sortAgencyList(ctBB.getManagedBean().getContractVer().getCtAgencies());
 	    	for (CtAgency ctAgency : ctBB.getManagedBean().getContractVer().getCtAgencies()) {
 	    		ctBB.checkAgencyStatus(ctAgency);		        	   
@@ -659,7 +651,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * 					will invoke base on the action
 	 */
     public void validateCtContractVer(String action) throws EpException {
-    	//CtContractVer contractVer = ctBB.getManagedBean().getContractVer();
     	getManagedBean().setAutoUpdate(true);
 		// Validation for remark
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)
@@ -1371,9 +1362,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @return the navigate URL 
 	 */
 	public String gotoSuspendPage(Long contractId) {
-		
-		 long startTime1 = System.currentTimeMillis();
-		  log.info("Start Time >>>>>>>>>>>>>>>>>>>>" +startTime1);
 		  
 		IContractSO contractSO = null;
 		IContractSuspensionSO contractSuspensionSO = null;
@@ -1382,7 +1370,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		SuspensionBackingBean suspBB = null;
 		
 		try {
-			//Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractId"));
 			
 			reqDTO = new ContractReqDTO();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
@@ -1400,9 +1387,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			suspBB = new SuspensionBackingBean();
 			suspBB.getManagedBean().setViewOnly(false);
 			suspBB.setSuspensionContractVer(resDTO);
-			long endTime1 = System.currentTimeMillis();
-			log.info("End Time1 >>>>>>>>>>>>>>>>>>>>" +endTime1);
-		    log.info("Total Time1 >>>>>>>>>>>>>>>>>>>>" +(endTime1 - startTime1));
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -1425,8 +1409,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		IContractAmendmentSO contractAmendmentSO = null;
 		IContractSO contractSO;
 		AmendmentBackingBean amendBB = null;
-		long startTime = System.currentTimeMillis();
-		log.info("Start Time >>>>>>>>>>>>>>>>>>>>" +startTime);
 		
 		try {
 			
@@ -1448,9 +1430,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			amendBB.getManagedBean().setSelectedServiceItem(null);
 			amendBB.getManagedBean().setDisableGstRadio(true);
 			amendBB.setAmendmentContractVer(resDTO);
-			long endTime1 = System.currentTimeMillis();
-			log.info("End Time >>>>>>>>>>>>>>>>>>>>" +endTime1);
-			log.info("Total Time >>>>>>>>>>>>>>>>>>>>" +(endTime1 - startTime));
 
 		} finally {
 			contractSO = null;
@@ -1485,7 +1464,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    getManagedBean().setSelectedTabIndex(0);
 	    getManagedBean().setExternalPageUrl(null);
 	    getManagedBean().setLoaContractVerId(resDTO.getCtContractVer().getContractVerId());
-	    //reqDTO.setCtContractVer(resDTO.getCtContractVer());
 	    String percentage = contractSO.checkAdvancedPaymentProgress(reqDTO).getPercentage();
 	    getManagedBean().setWarningPercentage(percentage);
 		return CONTRACT_PAGE;
@@ -1596,7 +1574,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		trBB.getCtBB().getManagedBean().setContractVer(resDTO.getCtContractVer());
 		trBB.getManagedBean().setExternalPageUrl(null);
 		
-	//	trBB.getCtBB().getManagedBean().setCtContractVer(resDTO.getCtContractVer());
 		if (isContractWithGst(trBB.getCtBB().getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
 			if (trBB.getCtBB().getManagedBean().getContractVer().getCtContractAmount().getGstAmount() == null) {
 				trBB.getCtBB().getManagedBean().getContractVer().getCtContractAmount().setContractAmount(BigDecimal.ZERO);
@@ -1619,8 +1596,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @return the navigate URL 
 	 */
 	public String gotoChangeBankPage(Long contractId) {
-		long starttime = Calendar.getInstance().getTimeInMillis();
-		log.info(" Start time>>>>>" +starttime);
 		
 		IContractSO contractSO = null;
 		IChangeBankAccSO changeBankAccSO = null;
@@ -1662,10 +1637,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					supplierBB.getPopulateBankAccountList();
 				}
            }
-			long endttime = Calendar.getInstance().getTimeInMillis();
-			 
-			 log.info(" End time>>>>>" +endttime);
-			 log.info(" Diff time>>>>>" +(starttime - endttime));
 				
 		} finally {
 			reqDTO  = null;
@@ -2205,7 +2176,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
     	return (isContractAdmin() || (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()) 
 				&& !getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())));
     }
-      
+     
+    /**
+   	 * The method used to set the ministry 
+   	 * profile id and PTJ profile id
+   	 */
     private void defaultMinistryPtjSearchValue() {
     	if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
     			|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
@@ -2255,51 +2230,25 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		getManagedBean().setSearchPtjProfile(null);
 	}
 	
-	public SelectItem[] retrieveParameterDescListByType() {
-		
-		SelectItem[] items = null;
-		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>(); ;
-		
-		
-		try {
-			SearchFilterBean filterBean = new SearchFilterBean("pmParameter.parameterCode",SearchOperator.OPERATOR_NOT_EQUALS.value(), "AP");
-	        filterBean.setCaseInsensitive(true);	
-	        searchBean.getDataFilterBeans().add(filterBean);
-			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(
-					ParameterTypeConst.DEDUCTION_TYPE, searchBean);
-			
-		    items = new SelectItem[parameterDescs.size()];
-		    int i = 0;
-		    for (PmParameterDesc parameterDesc : parameterDescs) {
-		    	items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(), parameterDesc.getCodeName());
-		    }
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-		}
-	    return items;
-	}
-	
-	/**
-	 * The method used for generating a list of available history of
-	 * loa contract version as selection.
-	 * 
-	 * @return loaContractVerList  the selection list
-	 */
-	public SelectItem[] getLoaContractVerList() {
-		if (getManagedBean().getLoaContractVerList() == null ) {
-			SelectItem[] items = null;
-			IContractSO contractSO = null;
-	        ContractReqDTO reqDTO = null;
-	        ContractResDTO resDTO = null;
-	        
-	        try {
-	        	int i = 0;
-	        	if (ctBB.getManagedBean().getContractVer().getCtContract().getLatestContractVer() != null) {	        		
-	        		contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
-	    		    		ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);	
-		            reqDTO = new ContractReqDTO();
-		            resDTO = new ContractResDTO();
+		/**
+		 * The method used for generating a list of available history of
+		 * loa contract version as selection.
+		 * @return loaContractVerList  the selection list
+		 */
+	     public SelectItem[] getLoaContractVerList() {
+		       if(getManagedBean().getLoaContractVerList() == null ) 
+		           {
+					  SelectItem[] items = null;
+					  IContractSO contractSO = null;
+			          ContractReqDTO reqDTO = null;
+			          ContractResDTO resDTO = null;
+                      try {
+	        	              int i = 0;
+	        	              if(ctBB.getManagedBean().getContractVer().getCtContract().getLatestContractVer() != null) 
+	        	                 {	        		
+	        		                contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);	
+		                            reqDTO = new ContractReqDTO();
+		                            resDTO = new ContractResDTO();
 		            
 		            reqDTO.setContractId(ctBB.getManagedBean().getContractVer().getCtContract().getContractId());
 		           	resDTO = contractSO.retrieveLoaContractVerByContractId(reqDTO);
@@ -2324,69 +2273,64 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		return getManagedBean().getLoaContractVerList();
 	}
 	
-	/**
-	 * The method used for generating a list of fulfilment status 
-	 * for searching contract as selection.
-	 * 
-	 * @return the selection list of fulfilment status
-	 */
-	public SelectItem[] getSearchFulfilmentStatusDropdown() {
-		IStatusSO statusSO = null;
-		SelectItem[] items = null;
-		
-		try {
-			statusSO = (IStatusSO)BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-			String languageCode = getFacesScopes().getUserLocale().getLanguage();
+	    /**
+	      * The method used for generating a list of fulfilment status 
+	      * for searching contract as selection.
+	      *  @return the selection list of fulfilment status
+	    */
+	    public SelectItem[] getSearchFulfilmentStatusDropdown() {
+	     	IStatusSO statusSO = null;
+		    SelectItem[] items = null;
+		    try {
+			        statusSO = (IStatusSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+			        String languageCode = getFacesScopes().getUserLocale().getLanguage();
+			        
+			        int i = 1;
+		 	        StatusReqDTO reqDTO = new StatusReqDTO();
+			        reqDTO.setModuleCode("CT");
+			        List <String> docTypeList = new ArrayList<String>();
+			        docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_CREATION);
+			        docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
+			        docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+			        docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
+			        docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
+			        docTypeList.add(ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT);
 			
-			int i = 1;
-		 	StatusReqDTO reqDTO = new StatusReqDTO();
-			reqDTO.setModuleCode("CT");
-			List <String> docTypeList = new ArrayList<String>();
-			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_CREATION);
-			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
-			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
-			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
-			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
-			docTypeList.add(ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT);
+			        reqDTO.setDocTypeList(docTypeList);
+			        reqDTO.setLanguageCode(languageCode);
+			        StatusResDTO resDTO = statusSO.retrieveStatusDescList(reqDTO);
 			
-			reqDTO.setDocTypeList(docTypeList);
-			reqDTO.setLanguageCode(languageCode);
-			StatusResDTO resDTO = statusSO.retrieveStatusDescList(reqDTO);
-			
-		    List<PmStatusDesc> list =  resDTO.getStatusDescList();
-		    items = new SelectItem[list.size()+1];
-		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+		            List<PmStatusDesc> list =  resDTO.getStatusDescList();
+		            items = new SelectItem[list.size()+1];
+		            items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
 		    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-		      
-			for (PmStatusDesc statusDesc : list) {
-				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc.getStatusName());
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		} finally {
-			statusSO = null;
-		}
-	    return items;
-	}
+		            for (PmStatusDesc statusDesc : list) {
+				       items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc.getStatusName());
+			        }
+			  } catch (Exception e) {
+			      e.printStackTrace();
+			      FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		      } finally {
+			     statusSO = null;
+		      }
+	       return items;
+       	}
 	
-	/**
-   	 * The method used to reflect the contract details base on selected loa
-   	 */
-	public void changeLoaContractVer() {
-		if (getManagedBean().getLoaContractVerId() != null) {
-			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-			ContractReqDTO reqDTO = new ContractReqDTO();
-			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
-			reqDTO.setViewOnly(true);
-			reqDTO.setContractVerId(getManagedBean().getLoaContractVerId());
-		    ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
-		    ctBB.getManagedBean().setViewContract(true);
-		    getManagedBean().setAsAtDate(null);
-		    setValidateContractField(resDTO);
-		}
-	}
+	    /**
+   	       * The method used to reflect the contract details base on selected loa
+   	    */
+    	public void changeLoaContractVer() {
+		    if (getManagedBean().getLoaContractVerId() != null)
+		          {
+				     IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+				     ContractReqDTO reqDTO = new ContractReqDTO();
+				     reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+				     reqDTO.setViewOnly(true);
+				     reqDTO.setContractVerId(getManagedBean().getLoaContractVerId());
+			         ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
+			         ctBB.getManagedBean().setViewContract(true);
+			         getManagedBean().setAsAtDate(null);
+			         setValidateContractField(resDTO);
+		         }
+	      }
 }

@@ -138,85 +138,192 @@ public class CircularManagedBean extends BaseManagedBean {
 		}
 	}
 	
+	/**
+	 * @return the searchCircularNo
+	 */
 	public String getSearchCircularNo() {
 		return searchCircularNo;
 	}
+	
+	/**
+	 * @param searchCircularNo the searchCircularNo to set
+	 */
 	public void setSearchCircularNo(String searchCircularNo) {
 		this.searchCircularNo = searchCircularNo;
 	}
+	
+	/**
+	 * @return the searchCircularName
+	 */
 	public String getSearchCircularName() {
 		return searchCircularName;
 	}
+	
+	/**
+	 * @param searchCircularName the searchCircularName to set
+	 */
 	public void setSearchCircularName(String searchCircularName) {
 		this.searchCircularName = searchCircularName;
 	}
+	
+	/**
+	 * @return the searchPhysicalCircularNo
+	 */
 	public String getSearchPhysicalCircularNo() {
 		return searchPhysicalCircularNo;
 	}
+	
+	/**
+	 * @param searchPhysicalCircularNo the searchPhysicalCircularNo to set
+	 */
 	public void setSearchPhysicalCircularNo(String searchPhysicalCircularNo) {
 		this.searchPhysicalCircularNo = searchPhysicalCircularNo;
 	}
+	
+	/**
+	 * @return the searchCircularDocType
+	 */
 	public String getSearchCircularDocType() {
 		return searchCircularDocType;
 	}
+	
+	/**
+	 * @param searchCircularDocType the searchCircularDocType to set
+	 */
 	public void setSearchCircularDocType(String searchCircularDocType) {
 		this.searchCircularDocType = searchCircularDocType;
 	}
+	
+	/**
+	 * @return the searchStatus
+	 */
 	public String getSearchStatus() {
 		return searchStatus;
 	}
+	
+	/**
+	 * @param searchStatus the searchStatus to set
+	 */
 	public void setSearchStatus(String searchStatus) {
 		this.searchStatus = searchStatus;
 	}
+	
+	/**
+	 * @return the circularListingPagingDataModel
+	 */
 	public IPagingDataModel<CtCircularVer> getCircularListingPagingDataModel() {
 		return circularListingPagingDataModel;
 	}
+	
+	/**
+	 * @param circularListingPagingDataModel the circularListingPagingDataModel to set
+	 */
 	public void setCircularListingPagingDataModel(
 			IPagingDataModel<CtCircularVer> circularListingPagingDataModel) {
 		this.circularListingPagingDataModel = circularListingPagingDataModel;
 	}
+	
+	/**
+	 * @param circularListingPagingDataModel the circularListingPagingDataModel to reset
+	 */
 	public void resetCircularListingPagingDataModel() {
 		this.circularListingPagingDataModel = new CircularListingPagingDataModel();
 	}
+	
+	/**
+	 * @return the searchSupplierName
+	 */
 	public String getSearchSupplierName() {
 		return searchSupplierName;
 	}
+	
+	/**
+	 * @param searchSupplierName the searchSupplierName to set
+	 */
 	public void setSearchSupplierName(String searchSupplierName) {
 		this.searchSupplierName = searchSupplierName;
 	}
+	
+	/**
+	 * @return the searchItemName
+	 */
 	public String getSearchItemName() {
 		return searchItemName;
 	}
+	
+	/**
+	 * @param searchItemName the searchItemName to set
+	 */
 	public void setSearchItemName(String searchItemName) {
 		this.searchItemName = searchItemName;
 	}
+	
+	/**
+	 * @return the searchStartDate
+	 */
 	public Date getSearchStartDate() {
 		return searchStartDate;
 	}
+	
+	/**
+	 * @param searchStartDate the searchStartDate to set
+	 */
 	public void setSearchStartDate(Date searchStartDate) {
 		this.searchStartDate = searchStartDate;
 	}
+	
+	/**
+	 * @return the searchEndDate
+	 */
 	public Date getSearchEndDate() {
 		return searchEndDate;
 	}
+	
+	/**
+	 * @param searchEndDate the searchEndDate to set
+	 */
 	public void setSearchEndDate(Date searchEndDate) {
 		this.searchEndDate = searchEndDate;
 	}
+	
+	/**
+	 * @return the searchStatusId
+	 */
 	public Long getSearchStatusId() {
 		return searchStatusId;
 	}
+	
+	/**
+	 * @param searchStatusId the searchStatusId to set
+	 */
 	public void setSearchStatusId(Long searchStatusId) {
 		this.searchStatusId = searchStatusId;
 	}
+	
+	/**
+	 * @return the readOnly
+	 */
 	public boolean isReadOnly() {
 		return readOnly;
 	}
+	
+	/**
+	 * @param readOnly the readOnly to set
+	 */
 	public void setReadOnly(boolean readOnly) {
 		this.readOnly = readOnly;
 	}
+	
+	/**
+	 * @return the trackingDiarySearch
+	 */
 	public boolean isTrackingDiarySearch() {
 		return trackingDiarySearch;
 	}
+	
+	/**
+	 * @param trackingDiarySearch the trackingDiarySearch to set
+	 */
 	public void setTrackingDiarySearch(boolean trackingDiarySearch) {
 		this.trackingDiarySearch = trackingDiarySearch;
 	}

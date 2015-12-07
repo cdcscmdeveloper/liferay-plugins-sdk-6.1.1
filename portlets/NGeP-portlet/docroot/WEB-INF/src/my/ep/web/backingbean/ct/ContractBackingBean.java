@@ -933,11 +933,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void setSelectedProgressive(CtProgressivePayment[] selectedProgressive) {
 		this.selectedProgressive = selectedProgressive;
-	}
-	
-	/* Implementation of contract schedule end*/
+	}/* Implementation of contract schedule end*/
 	
 	/* Implementation of contract deduction start*/
+	/**
+	 * This method used 
+	 * to get parameter code using parameter id
+	 * @param parameterObj
+	 * @return String, parameter code
+	 */
 	public String getParameterCode(PmParameter parameterObj){
 		if(parameterObj == null || parameterObj.getParameterId() == null) {
 			  return "Str";
@@ -945,6 +949,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return ParameterHelper.getInstance().getPmParameterById(parameterObj.getParameterId()).getParameterCode();
 	}
 	
+	/**
+	 * This method used to retrieve 
+	 * deduction type from database 
+	 * @return menu item, List of deduction types
+	 */
 	public SelectItem[] retrieveParameterDescListByType() {
 		
 		SelectItem[] items = null;
@@ -955,11 +964,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			SearchFilterBean filterBean = new SearchFilterBean("pmParameter.parameterCode",SearchOperator.OPERATOR_NOT_EQUALS.value(), ParameterConst.DEDUCTION_TYPE_ADVANCE_PAYMENT);
 	        filterBean.setCaseInsensitive(true);	
 	        searchBean.getDataFilterBeans().add(filterBean);
-			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(
-					ParameterTypeConst.DEDUCTION_TYPE, searchBean);
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterTypeConst.DEDUCTION_TYPE, searchBean);
 			items = new SelectItem[parameterDescs.size() + 1];
-		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
-			    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 		     
 		    for (PmParameterDesc parameterDesc : parameterDescs) {
 		    	items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(), parameterDesc.getCodeName());
@@ -971,6 +978,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    return items;
 	}
 	
+	/**
+	 * The method used to validate deduction type
+	 * User can not selected same type of deduction again
+	 */	
 	public void validateDeductionType(Long parameteId)  {
 		
 		   getManagedBean().setSelectedDeduction(null);
@@ -1720,6 +1731,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    	}
 	    }
 		
+	    /**
+		 * The method used to 
+		 * calculate over all amount with GST
+	     */
 		 public void calculateOrverAllAmt(){
 		    	if(getManagedBean().getCtContractAmount()!= null && getManagedBean().getCtContractAmount().getGstAmount() !=  null){
 		    		 getManagedBean().setGstTotalAmount(getManagedBean().getCtContractAmount().getGstAmount().add(getManagedBean().getCtContractAmount().getContractAmount()));    
@@ -2154,6 +2169,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					}
 				}
 			}
+			
+			/**
+			 * The method used to validation 
+			 * for amendment if used selected other change
+		     */
 			public boolean getValueFromAmendment(){
 				if(getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT)){
 					if(getManagedBean().getContractVer().getCtAmendment().isOtherChange()) {
@@ -2212,6 +2232,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}	
 			}
 			
+			 /**
+			 * The method used to find active circular 
+			 * record return boolean value in case record true
+		     */
 			 public boolean chkCircularActiveRecord(){
 			    	if(getManagedBean().getContractVer().getCtContract().getCtCircularContracts().size() > 0) {
 			    			  for(CtCircularContract circularContract : getManagedBean().getContractVer().getCtContract().getCtCircularContracts()) {
@@ -2251,7 +2275,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 				
 				/**
-				 * The method used to delete the uploaded agency file.
+				 * The method used to delete 
+				 * the uploaded bond attached file
 				 */    
 			    public void deleteBondAttachement(){
 			    	CtPerformanceBond ctBondAttch =  getManagedBean().getCtContractAmount().getCtPerformanceBonds().get(getManagedBean().getIndex());

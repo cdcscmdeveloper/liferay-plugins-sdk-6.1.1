@@ -801,20 +801,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the fulfilmentMenuModel
-	 *//*
-	public MenuModel getFulfilmentMenuModel() {
-		return fulfilmentMenuModel;
-	}
-
-	*//**
-	 * @param fulfilmentMenuModel the fulfilmentMenuModel to set
-	 *//*
-	public void setFulfilmentMenuModel(MenuModel fulfilmentMenuModel) {
-		this.fulfilmentMenuModel = fulfilmentMenuModel;
-	}*/
-
-	/**
 	 * @return the index
 	 */
 	public int getIndex() {
@@ -870,10 +856,16 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 		this.searchPtjProfile = searchPtjProfile;
 	}
 
+	/**
+	 * @return the viewContract
+	 */
 	public boolean isViewContract() {
 		return viewContract;
 	}
-
+	
+	/**
+	 * @param viewContract the viewContract to set
+	 */
 	public void setViewContract(boolean viewContract) {
 		this.viewContract = viewContract;
 	}
@@ -892,10 +884,16 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 		this.contractDataModel = contractDataModel;
 	}
 
+	/**
+	 * @return the trackingDiarySearch
+	 */
 	public boolean isTrackingDiarySearch() {
 		return trackingDiarySearch;
 	}
 
+	/**
+	 * @param trackingDiarySearch the trackingDiarySearch to set
+	 */
 	public void setTrackingDiarySearch(boolean trackingDiarySearch) {
 		this.trackingDiarySearch = trackingDiarySearch;
 	}
