@@ -5022,18 +5022,19 @@ public class SupplierFinalizationBackingBean extends
 						// set the checkbox or radio button of supplier selected
 						if (CollectionUtils.isNotEmpty(scQtRecommend
 								.getRecommendDtls())) {
+							
 							// Multiple LOI or Online Bidding
 							List<Long> supplierIdList = new ArrayList<Long>();
-							for (ScQtRecommendDtl scQtRecommendDtl : scQtRecommend
-									.getRecommendDtls()) {
+							for (ScQtRecommendDtl scQtRecommendDtl 
+										: scQtRecommend.getRecommendDtls()) {
 								if (scQtRecommendDtl.getRecordStatusFlg()
 										.equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
 									supplierIdList.add(scQtRecommendDtl
 											.getSupplier().getSupplierId());
 								}
 							}
-							scQtRecommend
-									.setAwardSupplierList(new ArrayList<ScQtEvaluationResultDtl>());
+							scQtRecommend.setAwardSupplierList(
+									new ArrayList<ScQtEvaluationResultDtl>());
 							getManagedBean().setRecommendedSupplierList(
 									new ArrayList<ScQtEvaluationResultDtl>());
 							
@@ -5047,6 +5048,7 @@ public class SupplierFinalizationBackingBean extends
 											.getSmSupplier().getSupplierId();
 									if (supplierIdList.contains(supplierId)) {
 										scQtEvaluationResultDtl.setSelected(true);
+										
 										for (ScQtRecommendDtl dtl : scQtRecommend
 												.getRecommendDtls()) {
 											if (supplierId == dtl.getSupplier()
@@ -5057,11 +5059,10 @@ public class SupplierFinalizationBackingBean extends
 											}
 										}
 	
-										scQtRecommend.getAwardSupplierList().add(
-												scQtEvaluationResultDtl);
-										getManagedBean()
-												.getRecommendedSupplierList().add(
-														scQtEvaluationResultDtl);
+										scQtRecommend.getAwardSupplierList()
+												.add(scQtEvaluationResultDtl);
+										getManagedBean().getRecommendedSupplierList()
+												.add(scQtEvaluationResultDtl);
 									}
 								}
 							}
@@ -6091,9 +6092,12 @@ public class SupplierFinalizationBackingBean extends
 							shortlistedItemSupplierList);
 			getManagedBean().getSelectedItemList().add(scQtRecommend);
 
-			List<ScQtEvaluationResultDtl> recommendedSupplierList = new ArrayList<ScQtEvaluationResultDtl>();
-			List<ScQtRecommendDtl> recommendDtls = scQtRecommend
-					.getRecommendDtls();
+			String finalizationMethodStr = finalizationMethod.getParameterCode();
+			List<ScQtEvaluationResultDtl> recommendedSupplierList 
+							= new ArrayList<ScQtEvaluationResultDtl>();
+			List<ScQtRecommendDtl> recommendDtls 
+					= scQtRecommend.getRecommendDtls();
+			
 			if (CollectionUtils.isNotEmpty(shortlistedItemSupplierList)
 					&& CollectionUtils.isNotEmpty(recommendDtls)) {
 				for (ScQtRecommendDtl recommendDtl : recommendDtls) {
@@ -6105,27 +6109,22 @@ public class SupplierFinalizationBackingBean extends
 								.getScQtSupplier().getSmSupplier()
 								.getSupplierId();
 						if (shortlistedSupplierId.equals(recommendedSupplierId)) {
-							scQtRecommend.getAwardSupplierList().add(
-									evalResultDtl);
+							scQtRecommend.getAwardSupplierList()
+										 .add(evalResultDtl);
 							recommendedSupplierList.add(evalResultDtl);
-							if (recommendDtl.getRecordStatusFlg().equals(
-												DbValueConst.RECORD_STATUS_ACTIVE)) {
-								String finalizationMethodStr = finalizationMethod.getParameterCode();
+							
+							if (recommendDtl.getRecordStatusFlg()
+									.equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
 								if (isQTRefinalized() || 
-										!(ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
-										.equals(finalizationMethodStr) || 
-											ParameterConst.RECOMMEND_BY_MULTIPLE_LOI
-														.equals(finalizationMethodStr))) {
+										ParameterConst.RECOMMEND_BY_AWARD
+											.equals(finalizationMethodStr)) {
 									evalResultDtl.setAwareded(true);
 									evalResultDtl.setShortListed(false);
-									if (isQTRefinalized() || 
-											ParameterConst.RECOMMEND_BY_AWARD
-												.equals(finalizationMethodStr)) {
-										this.getManagedBean().setRecommendedSupplierByItem(
+
+									this.getManagedBean().setRecommendedSupplierByItem(
 												evalResultDtl);
-										this.getManagedBean().setPrevRecommendedSupplierByItem(
+									this.getManagedBean().setPrevRecommendedSupplierByItem(
 												evalResultDtl);										
-									}
 								} else {
 									evalResultDtl.setAwareded(false);
 									evalResultDtl.setShortListed(true);
