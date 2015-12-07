@@ -3605,6 +3605,7 @@ public class QTDetailBackingBean extends
 		String taskId = this.getManagedBean().getTaskId();
 		String[] outComes = this.getManagedBean().getOutComes();
 		String processName = this.getManagedBean().getProcessName();
+		Object payLoad = this.getManagedBean().getPayLoad();
 		Long currentStatus = this.getManagedBean().getQt().getQtStatus()
 				.getStatusId();
 		List<TplSpecZoneDtl> specZoneDtls = this.getManagedBean()
@@ -3746,6 +3747,7 @@ public class QTDetailBackingBean extends
 		this.getManagedBean().setTemplateSpecZoneDtls(specZoneDtls);
 		this.getManagedBean().setTaskName(taskName);
 		this.getManagedBean().setPendingRevision(pendingRevision);
+		this.getManagedBean().setPayLoad(payLoad);
 	}
 
 	/**
