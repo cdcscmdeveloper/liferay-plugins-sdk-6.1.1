@@ -8,12 +8,12 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 xmlns:ac="http://ac.my/jsf/composite/cc">
 <p:panel id="itemId" header="#{lbl['lbl.ct.panel.item']}" toggleable="true" toggleSpeed="500">
 	 <h:panelGrid style="width:100%">
-		  <p:dataTable id="panelItemDt" var="panelItemsVar"  value="#{panelBackingBean.managedBean.circularVer.ctPanelItems}" 
-		       rowKey="#{panelItemsVar}" selectionMode="single"
+		  <p:dataTable id="panelItemDt" var="panelItemsVar" rowKey="#{panelItemsVar}"
+		      value="#{panelBackingBean.managedBean.circularVer.ctPanelItems}"   selectionMode="single"
 		        selection="#{panelBackingBean.managedBean.selectedPanelItems}"  rowIndexVar="index" widgetVar="panelItemObj">
 		      <ac:paginator for="panelItemDt" />
-              <p:ajax event="rowSelect"   update=":form:itemId"  process="@this"
-                   onstart="blockWidget.show();" oncomplete="blockWidget.hide();"   />	
+              <p:ajax event="rowSelect"   
+                   update=":form:itemId"  process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"   />	
 		  
 			  <p:column headerText="#{lbl['lbl.ct.panel.coverage']}" style="white-space:pre-line;width:6%;" styleClass="column-align-center" >
 			        <h:outputText value="#{panelBackingBean.getParameterDesc(panelItemsVar.panelCoverageId)}" style="float:left;" />
