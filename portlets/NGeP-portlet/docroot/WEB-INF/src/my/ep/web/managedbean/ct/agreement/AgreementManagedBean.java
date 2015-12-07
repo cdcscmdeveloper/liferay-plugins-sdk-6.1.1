@@ -680,10 +680,16 @@ public class AgreementManagedBean extends BaseManagedBean {
 		this.agencySignerDropDown = agencySignerDropDown;
 	}
 
+	/**
+	 * @return the varIndex
+	 */
 	public int getVarIndex() {
 		return varIndex;
 	}
 
+	/**
+	 * @param varIndex the varIndex to set
+	 */
 	public void setVarIndex(int varIndex) {
 		this.varIndex = varIndex;
 	}

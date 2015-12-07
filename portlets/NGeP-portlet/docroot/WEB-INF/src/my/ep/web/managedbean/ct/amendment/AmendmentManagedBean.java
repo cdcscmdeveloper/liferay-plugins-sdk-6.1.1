@@ -88,7 +88,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean showPrintButton;
 	private boolean bpmActionFlag = true;
 	private boolean autoUpdate = true;	
-	//private boolean disableAmendDetails;
 	private boolean disableEndorseAmendDetails;
 	private boolean disableFinalAmendDetails;
 	private boolean disableMeetingDetails;
@@ -104,8 +103,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private DualListModel<PmUser> approverModel;
 	private Map<Long, PmUser> userMap;
     private CtContractItem selectedServiceItem;
-	//private CtContract ctContract;
-	//private CtContractVer contractVer;
 	private CtContractVer agreementContractVer;
 	private CtPerformanceBond ctPerformanceBond;
 	private CtItemMaxQty ctItemMaxQty;
@@ -114,7 +111,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private CtContractItem selectedItem;
 	private CtItemPrice ctServiceItemPrices;
 	private CtCommitteeMember newCommitteMembers;
-	//private TreeNode ctZoneTrees;
 	private MenuModel amendMenuModel;
 	private ScLoaWitness scLoaWitness;
 	private ScLoaReport selectedScLoaReports;
@@ -895,34 +891,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public void setSelectedServiceItem(CtContractItem selectedServiceItem) {
 		this.selectedServiceItem = selectedServiceItem;
 	}
-	
-	/**
-	 * @return the ctContract
-	 *//*
-	public CtContract getCtContract() {
-		return ctContract;
-	}
-	
-	*//**
-	 * @param ctContract the ctContract to set
-	 *//*
-	public void setCtContract(CtContract ctContract) {
-		this.ctContract = ctContract;
-	}*/
-	
-	/**
-	 * @return the contractVer
-	 *//*
-	public CtContractVer getContractVer() {
-		return contractVer;
-	}
-	
-	*//**
-	 * @param contractVer the contractVer to set
-	 *//*
-	public void setContractVer(CtContractVer contractVer) {
-		this.contractVer = contractVer;
-	}*/
 	
 	/**
 	 * @return the agreementContractVer
