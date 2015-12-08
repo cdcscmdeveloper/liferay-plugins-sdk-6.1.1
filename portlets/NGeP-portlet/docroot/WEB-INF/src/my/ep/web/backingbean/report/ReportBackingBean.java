@@ -10690,13 +10690,21 @@ public class ReportBackingBean extends
 		Calendar fromDate = Calendar.getInstance();
 		fromDate.set(fromDate.get(Calendar.YEAR), 00, 01, 0, 00, 0);
 
-		List<String> smReportNameList = new ArrayList<String>();
-		smReportNameList.add(ReportConst.SM_LIST_OF_APPLICATION_RPT_VAL);
-		smReportNameList.add(ReportConst.SM_LIST_OFFLINE_SUPP_DOC_RPT_VAL);
-		smReportNameList.add(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL);
-		smReportNameList.add(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL);
+		List<String> reportNameList = new ArrayList<String>();
+		
+		// for SM Defaul Dates
+		reportNameList.add(ReportConst.SM_LIST_OF_APPLICATION_RPT_VAL);
+		reportNameList.add(ReportConst.SM_LIST_OFFLINE_SUPP_DOC_RPT_VAL);
+		reportNameList.add(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL);
+		reportNameList.add(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL);
+		
+		//For PM Dafault Dates
+		reportNameList.add(ReportConst.PM_LIST_OF_EXEMPTED_CONTRACTED_ITEMS_RPT_VAL);
+		reportNameList.add(ReportConst.PM_LIST_OF_EXEMPTED_ITEMS_RPT_VAL);
+		reportNameList.add(ReportConst.PM_LIST_OF_EXEMPTED_ITEMS_BY_SUPPLIER_RPT_VAL);
+		
 
-		for (String code : smReportNameList)
+		for (String code : reportNameList)
 			if (code.equalsIgnoreCase(reportCode)) {
 				this.setFromDate(fromDate.getTime());
 				this.setToDate(currentDate);
