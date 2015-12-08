@@ -209,6 +209,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmApplSectionReview poSecReview;
 	private SmApplSectionReview apprvrSecReview;
 	private boolean termsAccepted;
+	private boolean othersSystem;
 	private String newSupplierType;
 	private String catTypeConfirm;
 	private SmFacility basicCompanyFacility;
@@ -3080,5 +3081,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setShowTravelSoftwarePanel(boolean showTravelSoftwarePanel) {
 		this.showTravelSoftwarePanel = showTravelSoftwarePanel;
+	}
+
+	public boolean isOthersSystem() {
+		return othersSystem;
+	}
+
+	public void setOthersSystem(boolean othersSystem) {
+		this.othersSystem = othersSystem;
 	}
 }
