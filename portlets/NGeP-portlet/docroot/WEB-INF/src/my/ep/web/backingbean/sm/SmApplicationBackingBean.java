@@ -1742,6 +1742,10 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil
 							.handleShowOrHideFacilityPanels(getManagedBean());
 					break;
+				case SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP:
+					SmApplicationUtil
+							.showOrHideTravelSoftwarePanel(getManagedBean());
+					break;
 				default:
 					break;
 				}
@@ -4352,9 +4356,9 @@ public class SmApplicationBackingBean extends
 	 * Add or create a new SmSupplierSystem object
 	 */
 	public void assignNewSystemBean() {
-		SmSupplierSystem newSystem = new SmSupplierSystem();
-		newSystem.setSystem(new PmMachine());
-		getManagedBean().setSelectedSystem(newSystem);
+		getManagedBean().setOthersSystem(false);
+		getManagedBean().setSelectedSystem(new SmSupplierSystem());
+		getManagedBean().getSelectedSystem().setSystem(new PmMachine());
 		getManagedBean().getSelectedSystem().setRevNo(1);
 		getManagedBean().getSelectedSystem().setSmAppl(
 				getManagedBean().getSmAppl());
@@ -4370,6 +4374,11 @@ public class SmApplicationBackingBean extends
 	 *            - SmSupplierSystem object
 	 */
 	public void assignSelSystem(SmSupplierSystem systemBean) {
+		if (StringUtils.isBlank(systemBean.getSystemName())) {
+			getManagedBean().setOthersSystem(false);
+		} else {
+			getManagedBean().setOthersSystem(true);
+		}
 		getManagedBean().setSelectedSystem(
 				(SmSupplierSystem) SerializationUtils.clone(systemBean));
 		assignValReqdToTrue();
@@ -4406,6 +4415,7 @@ public class SmApplicationBackingBean extends
 			RequestContext.getCurrentInstance().execute(
 					"systemDtWidVar.paginator.endLink.click()");
 		}
+		saveOrUpdateAppl();
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().execute("systemDialog.hide()");
 	}
@@ -4427,6 +4437,56 @@ public class SmApplicationBackingBean extends
 			throw new EpException(MessageConst.ERROR_722534,
 					new String[] { SmCommonUtil.getMessage(
 							"lbl.sm.travelling.system", null) });
+		}
+	}
+
+	/**
+	 * Get Machine description by id
+	 * 
+	 * @param Long
+	 *            machineId
+	 * @return String
+	 */
+	public String getMachineDescById(Long machineId) {
+		PmMachine machine = SmCommonUtil.getInstance()
+				.getMachineById(machineId);
+		if (machine != null) {
+			return machine.getMachineDesc();
+		} else {
+			return "";
+		}
+	}
+
+	/**
+	 * Reset selected software name when click other software checkbox
+	 */
+	public void onTickOtherSystem() {
+		SmSupplierSystem system = (SmSupplierSystem) SmCommonUtil.getInstance()
+				.getObjectByPropertiesFromList(
+						getManagedBean().getSelectedSystem()
+								.getSupplierSystemId(),
+						getManagedBean().getSmAppl().getSmSupplierSystems(),
+						"supplierSystemId");
+		if (system != null) {
+			if (getManagedBean().isOthersSystem()) {
+				getManagedBean().getSelectedSystem().setSystem(null);
+			} else {
+				getManagedBean().getSelectedSystem().setSystemName("");
+				if (system.getSystem() != null) {
+					getManagedBean().getSelectedSystem().setSystem(
+							system.getSystem());
+				} else {
+					getManagedBean().getSelectedSystem().setSystem(
+							new PmMachine());
+				}
+			}
+		} else {
+			if (getManagedBean().isOthersSystem()) {
+				getManagedBean().getSelectedSystem().setSystem(null);
+			} else {
+				getManagedBean().getSelectedSystem().setSystemName("");
+				getManagedBean().getSelectedSystem().setSystem(new PmMachine());
+			}
 		}
 	}
 
@@ -4576,6 +4636,9 @@ public class SmApplicationBackingBean extends
 									.getFacilityType());
 			SmApplicationUtil.getInstance()
 					.removeFacilitiesNotInTheSameCategoryFacType(
+							getManagedBean().getSmAppl());
+			SmApplicationUtil.getInstance()
+					.removeTravellingSoftwareIfNotApplicable(
 							getManagedBean().getSmAppl());
 		}
 		try {
@@ -6601,6 +6664,9 @@ public class SmApplicationBackingBean extends
 										.getFacilityType());
 				SmApplicationUtil.getInstance()
 						.removeFacilitiesNotInTheSameCategoryFacType(
+								getManagedBean().getSmAppl());
+				SmApplicationUtil.getInstance()
+						.removeTravellingSoftwareIfNotApplicable(
 								getManagedBean().getSmAppl());
 			}
 			reqDTO.setCompanyBasicGst(getManagedBean().getCompanyBasicGst());

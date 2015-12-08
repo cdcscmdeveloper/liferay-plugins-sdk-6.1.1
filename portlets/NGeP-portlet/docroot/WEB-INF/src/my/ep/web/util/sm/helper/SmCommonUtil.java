@@ -1550,6 +1550,20 @@ public class SmCommonUtil {
 	}
 
 	/**
+	 * Get PmMachine by machineId
+	 * 
+	 * @param Long
+	 *            machineId
+	 * @return PmMachine
+	 */
+	public PmMachine getMachineById(Long machineId) {
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		reqDTO.setPmMachineId(machineId);
+		return SmServiceLookup.getCategoryCodeSO().retrievePmMachine(reqDTO)
+				.getPmMachine();
+	}
+
+	/**
 	 * Set personnel role name for display purposes based on properties.
 	 * 
 	 * @param supplierType
@@ -3048,7 +3062,7 @@ public class SmCommonUtil {
 
 		return items;
 	}
-	
+
 	public List<SelectItem> getTravellingSoftwareItems() {
 		List<SelectItem> machineItems = new ArrayList<SelectItem>();
 		PmParameter categoryType = new PmParameter();
@@ -3058,9 +3072,9 @@ public class SmCommonUtil {
 		List<PmMachine> machineList = SmServiceLookup.getCategoryCodeSO()
 				.retrievePmMachineByParameterCategoryType(reqDTO)
 				.getMachineList();
-		if(!SmCommonUtil.isCollectionEmpty(machineList)){
+		if (!SmCommonUtil.isCollectionEmpty(machineList)) {
 			SelectItem machineItem = null;
-			for(PmMachine machine:machineList){
+			for (PmMachine machine : machineList) {
 				machineItem = new SelectItem();
 				machineItem.setValue(machine.getMachineId());
 				machineItem.setLabel(machine.getMachineDesc());

@@ -52,9 +52,9 @@
 					<ac:paginator for="systemDt" />
 					<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smSupplierSystems}"/>
 	
-					<p:column headerText="#{lbl['lbl.sm.travelling.system.type']}">
-						<h:outputText value="#{systemBean.system.machineDesc}" rendered="#{not empty systemBean.system and empty systemBean.systemName}"/>
-						<h:outputText value="#{systemBean.systemName}" rendered="#{empty systemBean.system and not empty systemBean.systemName}"/>
+					<p:column headerText="#{lbl['lbl.sm.travelling.system.name']}">
+						<h:outputText value="#{systemBean.system.machineDesc}" rendered="#{empty systemBean.systemName}"/>
+						<h:outputText value="#{systemBean.systemName}" rendered="#{not empty systemBean.systemName}"/>
 					</p:column>
 					
 					<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
@@ -129,51 +129,67 @@
 		</p:outputPanel>
 	</p:panel>
 	
-	<p:dialog width="400px" height="150px"
+	<p:dialog width="600px" height="150px"
 		header="#{lbl['lbl.sm.travelling.system.diaHdr']}" widgetVar="systemDialog"
 		resizable="false" showEffect="fade" closable="false" hideEffect="fade"
 		modal="true" id="systemDialog">
 
 		<p:messages id="systemDialogMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" />
-
-		<table style="width: 100%">
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.travelling.system.type']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu
-						required="false"
-						label="#{lbl['lbl.sm.travelling.system.type']}" id="systemTypeId"
-						value="#{backingBean.managedBean.selectedSystem.system.machineId}"
-						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItems var="sytemVar"
-							value="#{backingBean.managedBean.travellingSoftwareItems}" />
-						<f:selectItem itemLabel="#{lbl['lbl.sm.others']}" itemValue="" />
-						<p:ajax event="change" process="@this" update="othersSystemTypeId"/>
-					</p:selectOneMenu>
-					<p:message id="systemTypeIdMsg" for="systemTypeId"
-						showSummary="true" showDetail="false" display="icon" /></td>
-			</tr>
-			<p:outputPanel rendered="#{empty backingBean.managedBean.selectedSystem.system or empty backingBean.managedBean.selectedSystem.system.machineId}">
+		
+		<p:outputPanel id="systemOutPanelId">
+			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.travelling.system.type']}" />
-						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:inputText maxlength="50"
-							required="#{backingBean.managedBean.valueReqd}"
-							label="#{lbl['lbl.sm.travelling.system.type']}" id="othersSystemTypeId"
-							value="#{backingBean.managedBean.selectedSystem.systemName}"
-							size="35" /> 
-						<p:message id="othersSystemTypeIdMsg"
-							for="othersSystemTypeId" showSummary="true" showDetail="false"
-							display="icon" />
+					<td style="border-style: none !important;float: right !important;">
+						<p:selectBooleanCheckbox value="#{backingBean.managedBean.othersSystem}">
+							<p:ajax event="change" partialSubmit="true" process="@this"
+								update="systemOutPanelId" listener="#{backingBean.onTickOtherSystem()}"/>
+						</p:selectBooleanCheckbox>
+					</td>
+					<td valign="top" style="border-style: none !important;">
+						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.travelling.system.others']}" />
 					</td>
 				</tr>
-			</p:outputPanel>
-		</table>
+				<p:outputPanel rendered="#{!backingBean.managedBean.othersSystem}">
+					<tr>
+						<td>
+							<p:outputLabel value="#{lbl['lbl.sm.travelling.system.name']}" /> 
+							<p:outputLabel value="*" styleClass="mandatory"/>
+						</td>
+						<td><p:selectOneMenu
+								required="#{backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.travelling.system.name']}" id="systemTypeId"
+								value="#{backingBean.managedBean.selectedSystem.system.machineId}"
+								style="width: 207px;margin-bottom: 5px;">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								<f:selectItems var="sytemVar"
+									value="#{backingBean.managedBean.travellingSoftwareItems}" />
+							</p:selectOneMenu>
+							<p:message id="systemTypeIdMsg" for="systemTypeId"
+								showSummary="true" showDetail="false" display="icon" /></td>
+					</tr>
+				</p:outputPanel>
+				<p:outputPanel rendered="#{backingBean.managedBean.othersSystem}">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.travelling.system.name']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<td><p:inputText maxlength="50"
+								required="#{backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.travelling.system.name']}" id="othersSystemTypeId"
+								value="#{backingBean.managedBean.selectedSystem.systemName}"
+								size="35" /> 
+							<p:message id="othersSystemTypeIdMsg"
+								for="othersSystemTypeId" showSummary="true" showDetail="false"
+								display="icon" />
+						</td>
+					</tr>
+				</p:outputPanel>
+			</table>
+		</p:outputPanel>
 		<br />
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 				action="#{backingBean.addOrUpdateSystemToSmAppl}"
-				partialSubmit="true" process="systemDialogMsg"
+				partialSubmit="true" process="systemDialog"
 				update=":form:tt:systemDt, @([Id$=Msg])" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 				partialSubmit="true" process="@this"
