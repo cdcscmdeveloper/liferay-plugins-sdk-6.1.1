@@ -117,7 +117,7 @@
 						saveObject="profileManagementBackingBean.managedBean.selectedPmRoleDesc"
 						value="#{profileManagementBackingBean.managedBean.selectedPmRoleDesc.roleName}" 
 						postUpdateListener="profileManagementBackingBean.updateSearchCriteriaForRole"
-						conditionField="recordStatus^1|pmRole.pmOrgRoles.orgType.parameterId^#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId}|#{profileManagementBackingBean.roleDecriptionFilter}" 
+						conditionField="recordStatus^1|pmRole.assignees.orgType.parameterId^#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId}|#{profileManagementBackingBean.roleDecriptionFilter}" 
 						/>
 				</td>
 				<th>&#160;</th>
