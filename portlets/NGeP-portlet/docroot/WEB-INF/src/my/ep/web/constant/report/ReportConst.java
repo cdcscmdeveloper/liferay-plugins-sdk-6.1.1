@@ -282,6 +282,13 @@ public class ReportConst {
 	public static final String PP_EXPENDITURE_UNPLANNED_LEVEL_RPT_VAL = "PP_009";
 	//PM
 	public static final String PM_LIST_OF_FINACIAL_INSTITUTIONS_RPT_VAL = "PM_001";
+	public static final String PM_LIST_OF_ORGANIZATION_RPT_VAL = "PM_002";
+	public static final String PM_LIST_OF_PROFILES_RPT_VAL = "PM_003";
+	public static final String PM_LIST_OF_GOVERNMENT_SELLERS_RPT_VAL = "PM_004";
+	public static final String PM_LIST_OF_EXEMPTED_ITEMS_BY_SUPPLIER_RPT_VAL = "PM_005";
+	public static final String PM_LIST_OF_EXEMPTED_ITEMS_RPT_VAL = "PM_006";
+	public static final String PM_LIST_OF_EXEMPTED_CONTRACTED_ITEMS_RPT_VAL = "PM_007";
+	
 	//JSP
 	public static final String FL_NGEP_PURCHASE_ORDER = "FL_NGEP_PURCHASE_ORDER.jsp";
 	public static final String FL_NGEP_DELIVERY = "FL_NGEP_DELIVERY.jsp";

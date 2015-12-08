@@ -3766,6 +3766,57 @@ public class ReportsGenerateBean {
 		/** The pm business reg no var. */
 		private String pmBusinessRegNoVar=ReportConst.EMPTY_VAL;
 		
+		
+		/** The Pm mandatory org category type view. */
+		private boolean pmMandatoryOrgCategoryTypeView = false;
+		
+		/** The Pm mandatory org type view. */
+		private boolean pmMandatoryOrgTypeView = false;
+		
+		/** The Pm org name view. */
+		private boolean pmOrgNameView = false;
+		
+		/** The Pm org code view. */
+		private boolean pmOrgCodeView = false;
+		
+		/** The Pm mandatory org name view. */
+		private boolean pmMandatoryOrgNameView = false;
+		
+		/** The Pm identification no view. */
+		private boolean pmIdentificationNoView = false;
+		
+		/** The Pm user name view. */
+		private boolean pmUserNameView = false;
+		
+		/** The Pm role code view. */
+		private boolean pmRoleCodeView = false;
+		
+		/** The Pm non mandatory org name view. */
+		private boolean pmNonMandatoryOrgNameView = false;
+		
+		/** The Pm non mandatroy org code view. */
+		private boolean pmNonMandatroyOrgCodeView = false;
+		
+		/** The Pm company name view. */
+		private boolean pmCompanyNameView = false;
+		
+		/** The Pm ep no view. */
+		private boolean pmEpNoView = false;
+		
+		/** The Pm itme name view. */
+		private boolean pmItemNameView = false;
+		
+		/** The Pm itme code view. */
+		private boolean pmItemCodeView = false;
+		
+		/** The Pm from date view. */
+		private boolean pmFromDateView = false;
+		
+		private boolean pmNonMandatoryDateView=false;
+		
+		/** The Pm contract no view. */
+		private boolean pmContractNoView = false;
+		
 		/** The ct termination type var. */
 		private String ctTerminationTypeVar=ReportConst.EMPTY_VAL;
 		
@@ -13717,5 +13768,244 @@ public class ReportsGenerateBean {
 	public void setCollectorCDCRegistrationChkView(
 			boolean collectorCDCRegistrationChkView) {
 		this.collectorCDCRegistrationChkView = collectorCDCRegistrationChkView;
+	}
+
+	/**
+	 * @return the pmMandatoryOrgCategoryTypeView
+	 */
+	public boolean isPmMandatoryOrgCategoryTypeView() {
+		return pmMandatoryOrgCategoryTypeView;
+	}
+
+	/**
+	 * @param pmMandatoryOrgCategoryTypeView the pmMandatoryOrgCategoryTypeView to set
+	 */
+	public void setPmMandatoryOrgCategoryTypeView(
+			boolean pmMandatoryOrgCategoryTypeView) {
+		this.pmMandatoryOrgCategoryTypeView = pmMandatoryOrgCategoryTypeView;
+	}
+
+	/**
+	 * @return the pmMandatoryOrgTypeView
+	 */
+	public boolean isPmMandatoryOrgTypeView() {
+		return pmMandatoryOrgTypeView;
+	}
+
+	/**
+	 * @param pmMandatoryOrgTypeView the pmMandatoryOrgTypeView to set
+	 */
+	public void setPmMandatoryOrgTypeView(boolean pmMandatoryOrgTypeView) {
+		this.pmMandatoryOrgTypeView = pmMandatoryOrgTypeView;
+	}
+
+	/**
+	 * @return the pmOrgNameView
+	 */
+	public boolean isPmOrgNameView() {
+		return pmOrgNameView;
+	}
+
+	/**
+	 * @param pmOrgNameView the pmOrgNameView to set
+	 */
+	public void setPmOrgNameView(boolean pmOrgNameView) {
+		this.pmOrgNameView = pmOrgNameView;
+	}
+
+	/**
+	 * @return the pmOrgCodeView
+	 */
+	public boolean isPmOrgCodeView() {
+		return pmOrgCodeView;
+	}
+
+	/**
+	 * @param pmOrgCodeView the pmOrgCodeView to set
+	 */
+	public void setPmOrgCodeView(boolean pmOrgCodeView) {
+		this.pmOrgCodeView = pmOrgCodeView;
+	}
+
+	/**
+	 * @return the pmMandatoryOrgNameView
+	 */
+	public boolean isPmMandatoryOrgNameView() {
+		return pmMandatoryOrgNameView;
+	}
+
+	/**
+	 * @param pmMandatoryOrgNameView the pmMandatoryOrgNameView to set
+	 */
+	public void setPmMandatoryOrgNameView(boolean pmMandatoryOrgNameView) {
+		this.pmMandatoryOrgNameView = pmMandatoryOrgNameView;
+	}
+
+	/**
+	 * @return the pmIdentificationNoView
+	 */
+	public boolean isPmIdentificationNoView() {
+		return pmIdentificationNoView;
+	}
+
+	/**
+	 * @param pmIdentificationNoView the pmIdentificationNoView to set
+	 */
+	public void setPmIdentificationNoView(boolean pmIdentificationNoView) {
+		this.pmIdentificationNoView = pmIdentificationNoView;
+	}
+
+	/**
+	 * @return the pmUserNameView
+	 */
+	public boolean isPmUserNameView() {
+		return pmUserNameView;
+	}
+
+	/**
+	 * @param pmUserNameView the pmUserNameView to set
+	 */
+	public void setPmUserNameView(boolean pmUserNameView) {
+		this.pmUserNameView = pmUserNameView;
+	}
+
+	/**
+	 * @return the pmRoleCodeView
+	 */
+	public boolean isPmRoleCodeView() {
+		return pmRoleCodeView;
+	}
+
+	/**
+	 * @param pmRoleCodeView the pmRoleCodeView to set
+	 */
+	public void setPmRoleCodeView(boolean pmRoleCodeView) {
+		this.pmRoleCodeView = pmRoleCodeView;
+	}
+
+	/**
+	 * @return the pmNonMandatoryOrgNameView
+	 */
+	public boolean isPmNonMandatoryOrgNameView() {
+		return pmNonMandatoryOrgNameView;
+	}
+
+	/**
+	 * @param pmNonMandatoryOrgNameView the pmNonMandatoryOrgNameView to set
+	 */
+	public void setPmNonMandatoryOrgNameView(boolean pmNonMandatoryOrgNameView) {
+		this.pmNonMandatoryOrgNameView = pmNonMandatoryOrgNameView;
+	}
+
+	/**
+	 * @return the pmNonMandatroyOrgCodeView
+	 */
+	public boolean isPmNonMandatroyOrgCodeView() {
+		return pmNonMandatroyOrgCodeView;
+	}
+
+	/**
+	 * @param pmNonMandatroyOrgCodeView the pmNonMandatroyOrgCodeView to set
+	 */
+	public void setPmNonMandatroyOrgCodeView(boolean pmNonMandatroyOrgCodeView) {
+		this.pmNonMandatroyOrgCodeView = pmNonMandatroyOrgCodeView;
+	}
+
+	/**
+	 * @return the pmCompanyNameView
+	 */
+	public boolean isPmCompanyNameView() {
+		return pmCompanyNameView;
+	}
+
+	/**
+	 * @param pmCompanyNameView the pmCompanyNameView to set
+	 */
+	public void setPmCompanyNameView(boolean pmCompanyNameView) {
+		this.pmCompanyNameView = pmCompanyNameView;
+	}
+
+	/**
+	 * @return the pmEpNoView
+	 */
+	public boolean isPmEpNoView() {
+		return pmEpNoView;
+	}
+
+	/**
+	 * @param pmEpNoView the pmEpNoView to set
+	 */
+	public void setPmEpNoView(boolean pmEpNoView) {
+		this.pmEpNoView = pmEpNoView;
+	}
+
+	/**
+	 * @return the pmItmeNameView
+	 */
+	public boolean isPmItemNameView() {
+		return pmItemNameView;
+	}
+
+	/**
+	 * @param pmItmeNameView the pmItmeNameView to set
+	 */
+	public void setPmItemNameView(boolean pmItemNameView) {
+		this.pmItemNameView = pmItemNameView;
+	}
+
+	/**
+	 * @return the pmItmeCodeView
+	 */
+	public boolean isPmItemCodeView() {
+		return pmItemCodeView;
+	}
+
+	/**
+	 * @param pmItmeCodeView the pmItmeCodeView to set
+	 */
+	public void setPmItmeCodeView(boolean pmItemCodeView) {
+		this.pmItemCodeView = pmItemCodeView;
+	}
+
+	/**
+	 * @return the pmFromDateView
+	 */
+	public boolean isPmFromDateView() {
+		return pmFromDateView;
+	}
+
+	/**
+	 * @param pmFromDateView the pmFromDateView to set
+	 */
+	public void setPmFromDateView(boolean pmFromDateView) {
+		this.pmFromDateView = pmFromDateView;
+	}
+
+	/**
+	 * @return the pmNonMandatoryDateView
+	 */
+	public boolean isPmNonMandatoryDateView() {
+		return pmNonMandatoryDateView;
+	}
+
+	/**
+	 * @param pmNonMandatoryDateView the pmNonMandatoryDateView to set
+	 */
+	public void setPmNonMandatoryDateView(boolean pmNonMandatoryDateView) {
+		this.pmNonMandatoryDateView = pmNonMandatoryDateView;
+	}
+
+	/**
+	 * @return the pmContractNoView
+	 */
+	public boolean isPmContractNoView() {
+		return pmContractNoView;
+	}
+
+	/**
+	 * @param pmContractNoView the pmContractNoView to set
+	 */
+	public void setPmContractNoView(boolean pmContractNoView) {
+		this.pmContractNoView = pmContractNoView;
 	}
 }
