@@ -84,14 +84,9 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private String buttonAction;	
 	private String gotoPreviewPage;	
 	private String fileDirectory;
-	private Long ctContractStatus;
-	private Long terminationTypeId;
 	private Long loaContractVerId;
-    private Date ctDateStart;
-	private Date ctDateEnd;
 	private Date asAtDate = null;
 	private int selectedTabIndex = 0;
-	private int ctStatus;	
 	private int attachFileIndex;
    private boolean updateContract = false;
 	private boolean viewContract = false;
@@ -437,34 +432,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public void setFileDirectory(String fileDirectory) {
 		this.fileDirectory = fileDirectory;
 	}
-
-	/**
-	 * @return the ctContractStatus
-	 */
-	public Long getCtContractStatus() {
-		return ctContractStatus;
-	}
-
-	/**
-	 * @param ctContractStatus the ctContractStatus to set
-	 */
-	public void setCtContractStatus(Long ctContractStatus) {
-		this.ctContractStatus = ctContractStatus;
-	}
-
-	/**
-	 * @return the terminationTypeId
-	 */
-	public Long getTerminationTypeId() {
-		return terminationTypeId;
-	}
-
-	/**
-	 * @param terminationTypeId the terminationTypeId to set
-	 */
-	public void setTerminationTypeId(Long terminationTypeId) {
-		this.terminationTypeId = terminationTypeId;
-	}
 	
 	/**
 	 * @return the loaContractVerId
@@ -479,34 +446,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public void setLoaContractVerId(Long loaContractVerId) {
 		this.loaContractVerId = loaContractVerId;
 	}
-	
-	/**
-	 * @return the ctDateStart
-	 */
-	public Date getCtDateStart() {
-		return ctDateStart;
-	}
-
-	/**
-	 * @param ctDateStart the ctDateStart to set
-	 */
-	public void setCtDateStart(Date ctDateStart) {
-		this.ctDateStart = ctDateStart;
-	}
-
-	/**
-	 * @return the ctDateEnd
-	 */
-	public Date getCtDateEnd() {
-		return ctDateEnd;
-	}
-
-	/**
-	 * @param ctDateEnd the ctDateEnd to set
-	 */
-	public void setCtDateEnd(Date ctDateEnd) {
-		this.ctDateEnd = ctDateEnd;
-	}	
 
 	/**
 	 * @return the asAtDate
@@ -534,20 +473,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
-	}
-
-	/**
-	 * @return the ctStatus
-	 */
-	public int getCtStatus() {
-		return ctStatus;
-	}
-
-	/**
-	 * @param ctStatus the ctStatus to set
-	 */
-	public void setCtStatus(int ctStatus) {
-		this.ctStatus = ctStatus;
 	}
 
 	/**

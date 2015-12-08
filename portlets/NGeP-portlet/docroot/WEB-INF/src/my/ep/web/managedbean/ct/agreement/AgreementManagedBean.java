@@ -51,7 +51,6 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private String fileDirectory;
 	private String textBeforeSign;
 	private String buttonAction;
-	private Long departmentProfileId;
 	private int selectedTabIndex;
 	private int varIndex;
 	private double performanceBondRuleAmt;
@@ -178,20 +177,6 @@ public class AgreementManagedBean extends BaseManagedBean {
 	 */
 	public void setButtonAction(String buttonAction) {
 		this.buttonAction = buttonAction;
-	}
-
-	/**
-	 * @return the departmentProfileId
-	 */
-	public Long getDepartmentProfileId() {
-		return departmentProfileId;
-	}
-	
-	/**
-	 * @param departmentProfileId the departmentProfileId to set
-	 */
-	public void setDepartmentProfileId(Long departmentProfileId) {
-		this.departmentProfileId = departmentProfileId;
 	}
 	
 	/**

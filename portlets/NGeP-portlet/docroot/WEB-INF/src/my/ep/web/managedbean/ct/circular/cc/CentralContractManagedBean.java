@@ -60,7 +60,6 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	
 	private boolean updateAction = false;
 	private boolean viewContract = false;
-	private boolean updateTypeDisable;
 	private boolean chkItemZone;
 	private boolean chkItemPrice;
 	private boolean chkCancelPage;
@@ -322,20 +321,6 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	 */
 	public void setCancelledCircularList(List<CtCancelCircular> cancelledCircularList) {
 		this.cancelledCircularList = cancelledCircularList;
-	}
-	
-	/**
-	 * @return the updateTypeDisable
-	 */
-	public boolean isUpdateTypeDisable() {
-		return updateTypeDisable;
-	}
-	
-	/**
-	 * @param updateTypeDisable the updateTypeDisable to set
-	 */
-	public void setUpdateTypeDisable(boolean updateTypeDisable) {
-		this.updateTypeDisable = updateTypeDisable;
 	}
 	
 	/**
