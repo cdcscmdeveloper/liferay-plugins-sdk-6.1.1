@@ -16,7 +16,6 @@ import javax.faces.model.SelectItem;
 
 import org.primefaces.model.DualListModel;
 
-import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
@@ -45,13 +44,10 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private String contractName;
 	private String originalAccountNo;
 	private String curentAccNoBankName;
-	private String factoringBankName;
 	private String accBankName;
 	private String factoringBankAddress;
 	private String textBeforeSign;
 	private String buttonAction;
-	private String contractLoa;
-	private String contractLoaSearchValues;
 	private String fileDirectory;
 	private String accountNoAndName;
 	private Date effDate;
@@ -64,16 +60,13 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private boolean autoUpdate;
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
-	private List<CtContract> contractList = new ArrayList<CtContract>();
 	private List<PmUser> contractAdminlist;
 	private DualListModel<PmUser> approverModel;
 	private Map<Long, PmUser> userMap;
 	private Map<Long, String> factoringCompMap;
 	private Map<String, SmSupplierBank> supplierBankAccountMap;
 	private SelectItem[] listOfFinancialOrg;
-	private SelectItem[] populateContractList;
 	private SelectItem[] populateBankAccountList;
-	private SearchFilterBean searchFilterBean = new SearchFilterBean();	
 	private CtContract selectedContract;
 	private CtContract ctContract;
 	private CtContractVer contractVer;
@@ -155,20 +148,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * @return the factoringBankName
-	 */
-	public String getFactoringBankName() {
-		return factoringBankName;
-	}
-	
-	/**
-	 * @param factoringBankName the factoringBankName to set
-	 */
-	public void setFactoringBankName(String factoringBankName) {
-		this.factoringBankName = factoringBankName;
-	}
-	
-	/**
 	 * @return the accBankName
 	 */
 	public String getAccBankName() {
@@ -222,34 +201,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 	 */
 	public void setButtonAction(String buttonAction) {
 		this.buttonAction = buttonAction;
-	}
-	
-	/**
-	 * @return the contractLoa
-	 */
-	public String getContractLoa() {
-		return contractLoa;
-	}
-	
-	/**
-	 * @param contractLoa the contractLoa to set
-	 */
-	public void setContractLoa(String contractLoa) {
-		this.contractLoa = contractLoa;
-	}
-	
-	/**
-	 * @return the contractLoaSearchValues
-	 */
-	public String getContractLoaSearchValues() {
-		return contractLoaSearchValues;
-	}
-	
-	/**
-	 * @param contractLoaSearchValues the contractLoaSearchValues to set
-	 */
-	public void setContractLoaSearchValues(String contractLoaSearchValues) {
-		this.contractLoaSearchValues = contractLoaSearchValues;
 	}
 	
 	/**
@@ -427,20 +378,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * @return the contractList
-	 */
-	public List<CtContract> getContractList() {
-		return contractList;
-	}
-	
-	/**
-	 * @param contractList the contractList to set
-	 */
-	public void setContractList(List<CtContract> contractList) {
-		this.contractList = contractList;
-	}
-	
-	/**
 	 * @return the contractAdminlist
 	 */
 	public List<PmUser> getContractAdminlist() {
@@ -534,20 +471,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * @return the populateContractList
-	 */
-	public SelectItem[] getPopulateContractList() {
-		return populateContractList;
-	}
-	
-	/**
-	 * @param populateContractList the populateContractList to set
-	 */
-	public void setPopulateContractList(SelectItem[] populateContractList) {
-		this.populateContractList = populateContractList;
-	}	
-	
-	/**
 	 * @return the populateBankAccountList
 	 */
 	public SelectItem[] getPopulateBankAccountList() {
@@ -559,20 +482,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 	 */
 	public void setPopulateBankAccountList(SelectItem[] populateBankAccountList) {
 		this.populateBankAccountList = populateBankAccountList;
-	}
-
-	/**
-	 * @return the searchFilterBean
-	 */
-	public SearchFilterBean getSearchFilterBean() {
-		return searchFilterBean;
-	}
-	
-	/**
-	 * @param searchFilterBean the searchFilterBean to set
-	 */
-	public void setSearchFilterBean(SearchFilterBean searchFilterBean) {
-		this.searchFilterBean = searchFilterBean;
 	}
 	
 	/**
