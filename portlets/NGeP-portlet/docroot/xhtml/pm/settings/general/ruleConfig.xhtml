@@ -117,7 +117,7 @@
 					display="icon" />
 			</p:column>
 			<p:column
-				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'P' and ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType != 2}}">
+				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'P' and (ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType != 2)}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
 					                 #{lbl['lbl.pm.value']}
