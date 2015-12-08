@@ -1784,9 +1784,18 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @return the big decimal
 	 */
 	public ScLoa calcBondAmount(ScLoa scLoa,boolean isDirectLoa) {
+	/*	The formula for bond should be as follow
+		LOA Amount/duration (in year) = x
+		x is being checked against the rate either 2.5% or 5%, if X >=RM 500,000, the rate being used is 5%
+
+		In the sample below - the calculation should be
+		2,482,400/0.25 yr ( since the duration is 3 month) - 9933600
+		Bond amount - 9933600 * 0.05 = 496680*/
+
 		if(isDirectLoa){
-		scLoa.setBondReq(checkPerformanceBondMandatory(scLoa.getLoaAmt()));
+			scLoa.setBondReq(checkPerformanceBondMandatory(scLoa.getLoaAmt()));
 		}
+		
 		if (scLoa.isBondReq()) {
 			BigDecimal bondAmt = BigDecimal.ZERO;
 			BigDecimal totalDuration = BigDecimal.ZERO;
@@ -1796,11 +1805,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				BigDecimal overallCtAmount = overallCtAmount(scLoa.getLoaAmt(),
 						scLoa.getGstAmt());
 
+				// Duration in years
 				if (scLoa.getContractDuration() != null) {
 					BigDecimal duration = scLoa.getContractDuration();
 					duration = duration.setScale(4, BigDecimal.ROUND_HALF_UP);
 					totalDuration = duration.divide(new BigDecimal(12), 4,
 							BigDecimal.ROUND_HALF_UP);
+
+					// Total amount to get bond percentage
 					bondPercentageLoaAmt = overallCtAmount.divide(
 							totalDuration, 4, BigDecimal.ROUND_HALF_UP);
 				}
