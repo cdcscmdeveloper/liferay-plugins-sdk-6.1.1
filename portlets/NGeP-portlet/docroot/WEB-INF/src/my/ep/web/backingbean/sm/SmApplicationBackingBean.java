@@ -2509,20 +2509,12 @@ public class SmApplicationBackingBean extends
 	public void addOrUpdateBranchToSmAppl() {
 		if (getManagedBean().getSmAppl().getSmSupplierBranches()
 				.contains(getManagedBean().getSelectedBranch())) {
-			retriveLatestApplAfterUpdate("", "");
-			for (int i = 0; i < getManagedBean().getSmAppl()
-					.getSmSupplierBranches().size(); i++) {
-				if (getManagedBean()
-						.getSmAppl()
-						.getSmSupplierBranches()
-						.get(i)
-						.getSupplierBranchId()
-						.equals(getManagedBean().getSelectedBranch()
-								.getSupplierBranchId())) {
-					getManagedBean().getSmAppl().getSmSupplierBranches()
-							.set(i, getManagedBean().getSelectedBranch());
-				}
-			}
+			getManagedBean()
+					.getSmAppl()
+					.getSmSupplierBranches()
+					.set(getManagedBean().getSmAppl().getSmSupplierBranches()
+							.indexOf(getManagedBean().getSelectedBranch()),
+							getManagedBean().getSelectedBranch());
 		} else {
 			getManagedBean().getSmAppl().getSmSupplierBranches()
 					.add(getManagedBean().getSelectedBranch());
@@ -2552,18 +2544,14 @@ public class SmApplicationBackingBean extends
 		if (branchBean.getSmPersonnel() == null) {
 			branchBean.setSmPersonnel(new SmPersonnel());
 		}
-		getManagedBean()
-				.setSelectedBranchPrev(
-						getManagedBean().getSmAppl().getSmSupplierBranches()
-								.get(index));
-		getManagedBean().setSelectedBranchIndex(index);
 		if (branchBean.getGst() == null) {
 			branchBean.setGst(new SmGstSupplier());
 			branchBean.getGst().setSmGstSupplierDocs(
 					new ArrayList<SmGstSupplierDoc>());
 		}
 		SmApplicationUtil.initGstSuppDocs(branchBean.getGst());
-		getManagedBean().setSelectedBranch(branchBean);
+		getManagedBean().setSelectedBranch(
+				(SmSupplierBranch) SerializationUtils.clone(branchBean));
 		if (getManagedBean().getLatestAppl() != null) {
 			getManagedBean().setLatestBranch(
 					(SmSupplierBranch) SmCommonUtil
@@ -2604,15 +2592,6 @@ public class SmApplicationBackingBean extends
 	 * information dialog
 	 */
 	public void assignCancelBranchBean() {
-		if (getManagedBean().getSelectedBranch() != null
-				&& getManagedBean().getSelectedBranch().getSmAddress() != null
-				&& getManagedBean().getSelectedBranch().getSmAddress()
-						.getAddressId() != null) {
-			getManagedBean().getSelectedBranch().setSmAddress(
-					SmCommonUtil.getInstance().getSmAddressById(
-							getManagedBean().getSelectedBranch().getSmAddress()
-									.getAddressId()));
-		}
 		if (getManagedBean().getSelectedBranch() != null
 				&& getManagedBean().getSelectedBranch().getGst() != null) {
 			getManagedBean().getSelectedBranch().setGst(null);
