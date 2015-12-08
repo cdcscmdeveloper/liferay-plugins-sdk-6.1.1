@@ -69,6 +69,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
+import my.ep.persistence.entity.pm.authorization.PmRoleMatrix;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserAttachment;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
@@ -107,6 +108,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.util.pm.helper.RoleHelper;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -329,9 +331,9 @@ public class ProfileManagementBackingBean extends
 		logger.info("...............updateSearchCriteriaForRole...............");
 		getManagedBean().getUserProfileSearchBean().setUserRoleStatus(null);
 		if (entity != null) {
-			PmRoleDesc pmRoleDesc = (PmRoleDesc) entity;
-			if (pmRoleDesc != null) {
-				String userRole = pmRoleDesc.getRoleName();
+			PmRoleMatrix pmRoleMatrix = (PmRoleMatrix) entity;
+			if (pmRoleMatrix != null) {
+				String userRole = pmRoleMatrix.getAssigneeRole().getRoleCode();
 				this.getManagedBean().getUserProfileSearchBean()
 						.setUserRole(userRole);
 			}
@@ -359,7 +361,7 @@ public class ProfileManagementBackingBean extends
 
 	public void clearRoleLOV() {
 		logger.info("clearRoleLOV");
-		this.getManagedBean().setSelectedPmRoleDesc(null);
+		this.getManagedBean().setSelectedPmRoleMatrix(null);
 		if(getManagedBean().getUserProfileSearchBean() !=null){
 			getManagedBean().getUserProfileSearchBean().setUserRoleStatus(null);
 		}
@@ -471,7 +473,7 @@ public class ProfileManagementBackingBean extends
 				new UserProfilesSearchBean());
 		this.getManagedBean().setSelectedOrgProfile(null);
 		this.getManagedBean().setSelectedOrgType(null);
-		this.getManagedBean().setSelectedPmRoleDesc(null);
+		this.getManagedBean().setSelectedPmRoleMatrix(null);
 		getManagedBean().setLazy(false);
 		userOrgDataModel = new UserProfilePagingDataModel();
 	}
@@ -852,7 +854,11 @@ public class ProfileManagementBackingBean extends
 	}
 
 	public String getRoleDecriptionFilter() {
-		return "languageCode^" + getFacesScopes().getUserLocale().getLanguage();
+		String assignorRole = getRoleCode();
+		StringBuilder sb = new StringBuilder();
+		sb.append("assignorRole.roleCode^");
+		sb.append(assignorRole);
+		return sb.toString();
 	}
 
 	public void setRoleDecriptionFilter(String roleDecriptionFilter) {
@@ -1465,7 +1471,7 @@ public class ProfileManagementBackingBean extends
 		// // .setPmUserRoles(new ArrayList<PmUserRole>());
 		// }
 		getManagedBean().setSelectedOrgProfile(null);
-		getManagedBean().setSelectedPmRoleDesc(null);
+		getManagedBean().setSelectedPmRoleMatrix(null);
 		getManagedBean().getUserProfileSearchBean().setSelectedOrgProfileId(null);
 		getManagedBean().getUserProfileSearchBean().setUserRoleStatus(null);
 		if (this.getManagedBean().getSelectedOrgType().getParameterId() != null) {
@@ -2808,7 +2814,7 @@ public class ProfileManagementBackingBean extends
 					SearchOperator.OPERATOR_LIKE.value());
 			userSearchBean.setCaseInsensitive(true);
 			userSearchBean
-					.setSearchField("pmUserRoles.pmRole.pmRoleDescs.roleName");
+					.setSearchField("pmUserRoles.pmRole.roleCode");
 			userSearchBean.setSearchValue(upSearchBean.getUserRole());
 			searchBean.getDataFilterBeans().add(userSearchBean);
 			
@@ -5141,4 +5147,15 @@ public class ProfileManagementBackingBean extends
 			getManagedBean().setDisabledOrgFields(false);
 		}
 	}
+	
+	
+	public String getRoleDesc(String roleCode){
+		if(StringUtils.isNotBlank(roleCode)){
+			return RoleHelper.getInstance().getRoleDescByCode(roleCode).getRoleName();
+		}else{
+			return null;
+		}
+		
+	}
+
 }

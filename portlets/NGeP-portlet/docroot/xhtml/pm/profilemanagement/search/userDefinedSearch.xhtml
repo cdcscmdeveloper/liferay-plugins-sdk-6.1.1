@@ -109,15 +109,15 @@
 					<p:outputLabel value="#{lbl['lbl.pm.profiles.search.role']}"/>
 				</th>
 				<td>
-				<ac:lov id="lovRoleDesc" lovId="PM_ROLE_DESC" size="27" 
+				<ac:lov id="lovRoleDesc" lovId="PM_ROLE_MATRIX" size="27" 
 		            	update=":form:opDefinedSearch" readonly="true" 
 		            	disabled="#{profileManagementBackingBean.managedBean.selectedOrgType eq null or 
 		            	profileManagementBackingBean.managedBean.selectedOrgType.parameterId eq null }"
 						headerText="#{lbl['lbl.pm.profiles.authorisation.role.opt']}"
-						saveObject="profileManagementBackingBean.managedBean.selectedPmRoleDesc"
-						value="#{profileManagementBackingBean.managedBean.selectedPmRoleDesc.roleName}" 
+						saveObject="profileManagementBackingBean.managedBean.selectedPmRoleMatrix"
+						value="#{profileManagementBackingBean.getRoleDesc(profileManagementBackingBean.managedBean.selectedPmRoleMatrix.assigneeRole.roleCode)}" 
 						postUpdateListener="profileManagementBackingBean.updateSearchCriteriaForRole"
-						conditionField="recordStatus^1|pmRole.assignees.orgType.parameterId^#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId}|#{profileManagementBackingBean.roleDecriptionFilter}" 
+						conditionField="recordStatus^1|assigneeRole.recordStatus^1|orgType.parameterId^#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId}|#{profileManagementBackingBean.roleDecriptionFilter}" 
 						/>
 				</td>
 				<th>&#160;</th>
@@ -148,8 +148,7 @@
 				</th>
 				<td>
 					<p:selectOneMenu styleClass="ppDropDownWidthM" value="#{profileManagementBackingBean.managedBean.userProfileSearchBean.userRoleStatus}"
-						disabled="#{profileManagementBackingBean.managedBean.selectedPmRoleDesc eq null or 
-							profileManagementBackingBean.managedBean.selectedPmRoleDesc.roleName eq null}">
+						disabled="#{profileManagementBackingBean.managedBean.selectedPmRoleMatrix eq null}">
 		                        <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
 		                        <f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />		   
 								<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}"
