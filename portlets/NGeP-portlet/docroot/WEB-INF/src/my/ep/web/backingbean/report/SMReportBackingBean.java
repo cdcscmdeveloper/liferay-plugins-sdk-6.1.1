@@ -570,24 +570,24 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 		case ReportConst.SM_RECEIPT_PAYMENT_METHODS_RPT_VAL:
 			  rptGenBean.setSmMandatoryPaymentMethodView(true); 
 			  rptGenBean.setSmNonMandatoryReciptTransactionReportTypeView(true) ;
-			  rptGenBean.setSmMandatoryForDateView(true);
-			  rptGenBean.setSmFromDateView(true);			  
+			  rptGenBean.setSmNonMandatoryDateView(true);
+			  rptGenBean.setSmNonMandatoryTransactionDateView(true);		  
 			  rptGenBean.setSmSupplierNameView(true);
 			  checkAuthorizationByRoleCode(rptGenBean,authoriztionList);
 			break;
 		case ReportConst.SM_RECEIPT_CLASSIFICATION_CODE_RPT_VAL:
 			  rptGenBean.setSmMandatoryForCodeView(true);
 			  rptGenBean.setSmNonMandatoryDateView(true);
-			  rptGenBean.setSmFromDateView(true);
+			  rptGenBean.setSmNonMandatoryTransactionDateView(true);
 			break;
 		case ReportConst.SM_OUTSTANDING_RESULTS_RECEIVED_RPT_VAL:
 			  rptGenBean.setSmNonMandatoryDateView(true);
-			  rptGenBean.setSmFromDateView(true);
+			  rptGenBean.setSmNonMandatoryTransactionDateView(true);
 			  checkAuthorizationByRoleCode(rptGenBean,authoriztionList);
 			break;
-		case ReportConst.SM_LIST_RECIPT_TIMES_RPT_VAL:
-			  rptGenBean.setSmMandatoryForDateView(true);
-			  rptGenBean.setSmFromDateView(true);
+		case ReportConst.SM_LIST_RECIPT_TIMES_RPT_VAL:			
+			  rptGenBean.setSmMandatoryRTDateView(true);	
+			  rptGenBean.setSmMandatoryTransactionDateView(true);
 			  rptGenBean.setSmReceiptNoView(true);
 			  rptGenBean.setSmApplicationNoView(true);
          break;
