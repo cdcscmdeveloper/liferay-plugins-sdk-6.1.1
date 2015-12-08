@@ -34,7 +34,7 @@
 						</c:if>
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmEpNoView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.epNo']}"
+							<p:outputLabel value="#{lbl['lbl.rpt.ePNo']}"
 								style="margin-top:5px;width:160px;" />
 							<p:inputText maxlength="100" value="#{reportBackingBean.pmEpNo}"
 								style="margin-top:5px;width:290px;">
@@ -65,7 +65,7 @@
 									<tr>
 										<td style="width: 84%"><p:selectOneMenu
 												label="#{lbl['lbl.rpt.org.category']}" id="orgCatg"
-												value="#{reportBackingBean.pmOrgCateogry}"
+												value="#{reportBackingBean.pmOrgCategory}"
 												style="margin-top:5px;width:300px;">
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.federal']}"
 													itemValue="F"></f:selectItem>
