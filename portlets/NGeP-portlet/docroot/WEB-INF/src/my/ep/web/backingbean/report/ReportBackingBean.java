@@ -1075,6 +1075,15 @@ public class ReportBackingBean extends
 
 	/** The pm contract no. */
 	private String pmContractNo;
+	
+	/** The pm physical contract no. */
+	private String pmPhysicalContractNo;
+	
+	/** The pm loa no. */
+	private String pmLOANo;
+	
+	/** The pm physical loa no. */
+	private String pmPhysicalLOANo;
 
 	/** The selected all. */
 	private boolean selectedAll;
@@ -7074,8 +7083,8 @@ public class ReportBackingBean extends
 	/**
 	 * Sets the pm org cateogry.
 	 * 
-	 * @param pmOrgCateogry
-	 *            the pmOrgCateogry to set
+	 * @param pmOrgCategory
+	 *            the new pm org category
 	 */
 	public void setPmOrgCategory(String pmOrgCategory) {
 		this.pmOrgCategory = pmOrgCategory;
@@ -7221,6 +7230,63 @@ public class ReportBackingBean extends
 	 */
 	public String getPmUserName() {
 		return pmUserName;
+	}
+
+	/**
+	 * Gets the pm physical contract no.
+	 * 
+	 * @return the pmPhysicalContractNo
+	 */
+	public String getPmPhysicalContractNo() {
+		return pmPhysicalContractNo;
+	}
+
+	/**
+	 * Sets the pm physical contract no.
+	 * 
+	 * @param pmPhysicalContractNo
+	 *            the pmPhysicalContractNo to set
+	 */
+	public void setPmPhysicalContractNo(String pmPhysicalContractNo) {
+		this.pmPhysicalContractNo = pmPhysicalContractNo;
+	}
+
+	/**
+	 * Gets the pm loa no.
+	 * 
+	 * @return the pmLOANo
+	 */
+	public String getPmLOANo() {
+		return pmLOANo;
+	}
+
+	/**
+	 * Sets the pm loa no.
+	 * 
+	 * @param pmLOANo
+	 *            the pmLOANo to set
+	 */
+	public void setPmLOANo(String pmLOANo) {
+		this.pmLOANo = pmLOANo;
+	}
+
+	/**
+	 * Gets the pm physical loa no.
+	 * 
+	 * @return the pmPhysicalLOANo
+	 */
+	public String getPmPhysicalLOANo() {
+		return pmPhysicalLOANo;
+	}
+
+	/**
+	 * Sets the pm physical loa no.
+	 * 
+	 * @param pmPhysicalLOANo
+	 *            the pmPhysicalLOANo to set
+	 */
+	public void setPmPhysicalLOANo(String pmPhysicalLOANo) {
+		this.pmPhysicalLOANo = pmPhysicalLOANo;
 	}
 
 	/**
@@ -9184,6 +9250,9 @@ public class ReportBackingBean extends
 	 * @see my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean#
 	 * preRenderView()
 	 */
+	/**
+	 * Pre render view.
+	 */
 	public void preRenderView() {
 		rptGenBean = new ReportsGenerateBean();
 		getManagedBean().setRptGenBean(rptGenBean);
@@ -10707,6 +10776,13 @@ public class ReportBackingBean extends
 			}
 	}
 
+	/**
+	 * Gets the default datesfor pm.
+	 * 
+	 * @param reportNameList
+	 *            the report name list
+	 * @return the default datesfor pm
+	 */
 	private void getDefaultDatesforPM(List<String> reportNameList) {
 		reportNameList
 				.add(ReportConst.PM_LIST_OF_EXEMPTED_CONTRACTED_ITEMS_RPT_VAL);
@@ -10715,6 +10791,13 @@ public class ReportBackingBean extends
 				.add(ReportConst.PM_LIST_OF_EXEMPTED_ITEMS_BY_SUPPLIER_RPT_VAL);
 	}
 
+	/**
+	 * Gets the default datesfor sm.
+	 * 
+	 * @param reportNameList
+	 *            the report name list
+	 * @return the default datesfor sm
+	 */
 	private void getDefaultDatesforSM(List<String> reportNameList) {
 		reportNameList.add(ReportConst.SM_LIST_OF_APPLICATION_RPT_VAL);
 		reportNameList.add(ReportConst.SM_LIST_OFFLINE_SUPP_DOC_RPT_VAL);
@@ -10722,6 +10805,13 @@ public class ReportBackingBean extends
 		reportNameList.add(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL);
 	}
 
+	/**
+	 * Gets the default datesfor fl.
+	 * 
+	 * @param reportNameList
+	 *            the report name list
+	 * @return the default datesfor fl
+	 */
 	private void getDefaultDatesforFL(List<String> reportNameList) {
 		
 		reportNameList.add(ReportConst.CON_REQ_RPT_MIN_VAL);
@@ -13681,6 +13771,12 @@ public class ReportBackingBean extends
 				|| ((this.getPmOrgType() != null) && (this.getPmOrgType() != ReportConst.EMPTY_VAL))
 
 				|| ((this.getPmContractNo() != null) && (this.getPmContractNo() != ReportConst.EMPTY_VAL))
+				
+				|| ((this.getPmPhysicalContractNo() != null) && (this.getPmPhysicalContractNo() != ReportConst.EMPTY_VAL))
+				
+				|| ((this.getPmLOANo() != null) && (this.getPmLOANo() != ReportConst.EMPTY_VAL))
+				
+				|| ((this.getPmPhysicalLOANo() != null) && (this.getPmPhysicalLOANo() != ReportConst.EMPTY_VAL))
 
 				|| ((this.getPmRoleCode() != null) && (this.getPmRoleCode() != ReportConst.EMPTY_VAL))
 
@@ -13805,6 +13901,28 @@ public class ReportBackingBean extends
 				rptGenBean.setPmContractNoVar(ReportConst.AMP_PM_CONTRACT_NO_EQ
 						+ this.getPmContractNo());
 			}
+			
+			
+			if ((this.getPmPhysicalContractNo() != null)
+					&& (this.getPmPhysicalContractNo() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setPmPhysicalContractNoVar(ReportConst.AMP_PM_CONTRACT_NO_EQ
+						+ this.getPmPhysicalContractNo());
+			}
+			
+			
+			if ((this.getPmLOANo() != null)
+					&& (this.getPmLOANo() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setPmLOANoVar(ReportConst.AMP_PM_CONTRACT_NO_EQ
+						+ this.getPmLOANo());
+			}
+			
+			
+			if ((this.getPmPhysicalLOANo() != null)
+					&& (this.getPmPhysicalLOANo() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setPmPhysicalLOANoVar(ReportConst.AMP_PM_CONTRACT_NO_EQ
+						+ this.getPmPhysicalLOANo());
+			}
+			
 
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if ((rptGenBean.getUrlReportJSPName() != null)
@@ -13828,6 +13946,9 @@ public class ReportBackingBean extends
 						+ rptGenBean.getPmUserNameVar()
 						+ rptGenBean.getPmRoleCodeVar()
 						+ rptGenBean.getPmContractNoVar()
+						+ rptGenBean.getPmPhysicalContractNoVar()
+						+ rptGenBean.getPmLOANoVar()
+						+ rptGenBean.getPmPhysicalLOANoVar()
 						+ rptGenBean.getReportValueIdVar()
 						+ rptGenBean.getUserIdVar());
 			} else {
@@ -14262,6 +14383,9 @@ public class ReportBackingBean extends
 		this.setPmUserName(null);
 		this.setPmRoleCode(null);
 		this.setPmContractNo(null);
+		this.setPmPhysicalContractNo(null);
+		this.setPmLOANo(null);
+		this.setPmPhysicalLOANo(null);
 		// changeReportType();
 		retrieveDates();
 		applicationStatusDateChange();
