@@ -13,6 +13,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmDocumentRestr;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.web.bean.pm.SupportDocumentSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -49,7 +50,17 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	private PmCategoryL3 selectedCategoryL3;
 	private List <PmCertBody> selectedCertBodies;
 	private int selectedTabIndex;
+	private PmParameter supplierDocParameter;
 	
+	
+	public PmParameter getSupplierDocParameter() {
+		return supplierDocParameter;
+	}
+
+	public void setSupplierDocParameter(PmParameter supplierDocParameter) {
+		this.supplierDocParameter = supplierDocParameter;
+	}
+
 	/**
 	 * @return the selectedTabIndex
 	 */

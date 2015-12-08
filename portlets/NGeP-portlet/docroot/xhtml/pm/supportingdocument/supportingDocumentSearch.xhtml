@@ -18,7 +18,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<td>
 					<p:selectOneMenu id="somDocCate" label="#{lbl['lbl.pm.document.category']}" styleClass="ppDropDownWidthM"  
 						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.docCategoryParamCode}">
-						<f:selectItems  value="#{supportDocBackingBean.documentCategoryOptions(false)}"/>
+						<f:selectItems  value="#{supportDocBackingBean.documentCategoryWithoutSupplierDoc(false)}"/>
 						<p:ajax event="change" update="pSupportDocSearch" listener="#{supportDocBackingBean.docCategorySearchChange()}"/>
 					</p:selectOneMenu>
 				</td>
@@ -45,8 +45,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					
 				</td>
 			</tr>
-			<c:if test="#{ParameterConst.documentCategoryTechnicalChecklist eq supportDocBackingBean.managedBean.supportDocSearchBean.docCategoryParamCode
-							or ParameterConst.documentCategoryFinancialChecklist eq supportDocBackingBean.managedBean.supportDocSearchBean.docCategoryParamCode}">
 			<tr>
 				<th>
 					<p:outputLabel value="#{lbl['lbl.pm.procurement.category']}"/>
@@ -81,85 +79,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					
 				</td>
 			</tr>
-			
-			</c:if>
-			<c:if test="#{ParameterConst.documentCategorySupplierDocument eq supportDocBackingBean.managedBean.supportDocSearchBean.docCategoryParamCode}">
-			<tr>
-				<th>
-					<p:outputLabel value="#{lbl['lbl.pm.supplier.zone']}"/>
-				</th>
-				<td>
-					<p:selectOneMenu id="somSuppZone" styleClass="ppDropDownWidthM" label="#{lbl['lbl.pm.supplier.zone']}"
-						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.pmZone}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
-						<f:selectItems  value="#{supportDocBackingBean.supplierZoneOptions()}"  
-							var="zone" itemValue="#{zone.zoneId}" itemLabel="#{zone.zoneName}" />
-					</p:selectOneMenu>
-				</td>
-				<th>
-					
-				</th>
-				<td>
-					
-				</td>
-			</tr>
-			<tr>
-				<th>
-					<p:outputLabel value="#{lbl['lbl.pm.supplier.type']}"/>
-				</th>
-				<td>
-					<p:selectOneMenu id="somSuppType" styleClass="ppDropDownWidthM"
-						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.suppTypeParam}">
-						<f:selectItems  value="#{supportDocBackingBean.supplierTypeOptions()}"/>
-					</p:selectOneMenu>
-				</td>
-				<th>
-					<p:outputLabel value="#{lbl['lbl.pm.application.type']}"/>
-				</th>
-				<td>
-					<p:selectOneMenu id="somAppType" styleClass="ppDropDownWidthM" 
-						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.appTypeParam}">
-						<f:selectItems  value="#{supportDocBackingBean.applicationTypeOptions()}"/>
-					</p:selectOneMenu>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					<p:outputLabel value="#{lbl['lbl.pm.company.type']}"/>
-				</th>
-				<td>
-					<p:selectOneMenu id="somComType" styleClass="ppDropDownWidthM"
-						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.comTypeParam}">
-						<f:selectItems  value="#{supportDocBackingBean.companyTypeOptions()}"/>
-					</p:selectOneMenu>
-				</td>
-				<th>
-					<p:outputLabel value="#{lbl['lbl.pm.business.category']}"/>
-				</th>
-				<td>
-					<p:inputText styleClass="ppDisplayTextM" maxlength="10" label="#{lbl['lbl.pm.business.category']}"
-						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.businessCategory}" />
-				</td>
-			</tr>
-			<tr>
-				<th width="20%"><p:outputLabel
-						value="#{lbl['lbl.pm.suppdoc.status']}" /></th>
-				<td><p:selectOneMenu styleClass="ppDropDownWidthM"
-						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.docStatus}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-							itemValue="#{null}" />
-						<f:selectItems
-							value="#{supportDocBackingBean.getActiveAndInactiveStatusOptions()}" />
-					</p:selectOneMenu></td>
-				<th>
-					<p:outputLabel value="#{lbl['lbl.pm.suppdoc.certified.body']}"/>
-				</th>
-				<td>
-					<p:inputText styleClass="ppDisplayTextM" maxlength="10" label="#{lbl['lbl.pm.suppdoc.certified.body']}"
-						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.certBodyName}" />
-				</td>
-			</tr>
-			</c:if>
 			<tr>
 				<td colspan="4">
 					<div class="ppRightBtn">
