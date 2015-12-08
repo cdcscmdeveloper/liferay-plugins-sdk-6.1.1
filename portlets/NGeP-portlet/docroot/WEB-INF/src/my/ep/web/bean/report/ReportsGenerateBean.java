@@ -3766,29 +3766,50 @@ public class ReportsGenerateBean {
 		/** The pm business reg no var. */
 		private String pmBusinessRegNoVar=ReportConst.EMPTY_VAL;		
 		
+		/** The pm ep no var. */
 		private String pmEpNoVar=ReportConst.EMPTY_VAL;		
 		
+		/** The pm org category var. */
 		private String pmOrgCategoryVar=ReportConst.EMPTY_VAL;
 		
+		/** The pm org type var. */
 		private String pmOrgTypeVar=ReportConst.EMPTY_VAL;
 		
+		/** The pm org name var. */
 		private String pmOrgNameVar=ReportConst.EMPTY_VAL;
 		
+		/** The pm org code var. */
 		private String pmOrgCodeVar=ReportConst.EMPTY_VAL;
 		
+		/** The pm item name var. */
 		private String pmItemNameVar=ReportConst.EMPTY_VAL;
 		
+        /** The pm item code var. */
         private String pmItemCodeVar=ReportConst.EMPTY_VAL;
 		
+		/** The pm company name var. */
 		private String pmCompanyNameVar=ReportConst.EMPTY_VAL;
 		
+		/** The pm identification no var. */
 		private String pmIdentificationNoVar=ReportConst.EMPTY_VAL;
 		
+		/** The pm user name var. */
 		private String pmUserNameVar=ReportConst.EMPTY_VAL;
 		
+		/** The pm role code var. */
 		private String pmRoleCodeVar=ReportConst.EMPTY_VAL;
 		
-        private String pmContractNoVar=ReportConst.EMPTY_VAL;		
+        /** The pm contract no var. */
+        private String pmContractNoVar=ReportConst.EMPTY_VAL;
+        
+        /** The pm physical contract no var. */
+        private String pmPhysicalContractNoVar=ReportConst.EMPTY_VAL;
+        
+        /** The pm loa no var. */
+        private String pmLOANoVar=ReportConst.EMPTY_VAL;	
+        
+        /** The pm physical loa no var. */
+        private String pmPhysicalLOANoVar=ReportConst.EMPTY_VAL;	
 		
 		/** The Pm mandatory org category type view. */
 		private boolean pmMandatoryOrgCategoryTypeView = false;
@@ -3835,10 +3856,21 @@ public class ReportsGenerateBean {
 		/** The Pm from date view. */
 		private boolean pmFromDateView = false;
 		
+		/** The pm non mandatory date view. */
 		private boolean pmNonMandatoryDateView=false;
 		
 		/** The Pm contract no view. */
-		private boolean pmContractNoView = false;
+		private boolean pmContractNoView = false;		
+		
+		/** The pm physical contract no view. */
+		private boolean pmPhysicalContractNoView = false;
+		
+		/** The pm loa no view. */
+		private boolean pmLOANoView = false;
+		
+		/** The pm physical loa no view. */
+		private boolean pmPhysicalLOANoView = false;	
+		
 		
 		/** The ct termination type var. */
 		private String ctTerminationTypeVar=ReportConst.EMPTY_VAL;
@@ -13794,6 +13826,8 @@ public class ReportsGenerateBean {
 	}
 
 	/**
+	 * Checks if is pm mandatory org category type view.
+	 * 
 	 * @return the pmMandatoryOrgCategoryTypeView
 	 */
 	public boolean isPmMandatoryOrgCategoryTypeView() {
@@ -13801,7 +13835,10 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param pmMandatoryOrgCategoryTypeView the pmMandatoryOrgCategoryTypeView to set
+	 * Sets the pm mandatory org category type view.
+	 * 
+	 * @param pmMandatoryOrgCategoryTypeView
+	 *            the pmMandatoryOrgCategoryTypeView to set
 	 */
 	public void setPmMandatoryOrgCategoryTypeView(
 			boolean pmMandatoryOrgCategoryTypeView) {
@@ -13809,6 +13846,8 @@ public class ReportsGenerateBean {
 	}
 
 	/**
+	 * Checks if is pm mandatory org type view.
+	 * 
 	 * @return the pmMandatoryOrgTypeView
 	 */
 	public boolean isPmMandatoryOrgTypeView() {
@@ -13816,13 +13855,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param pmMandatoryOrgTypeView the pmMandatoryOrgTypeView to set
+	 * Sets the pm mandatory org type view.
+	 * 
+	 * @param pmMandatoryOrgTypeView
+	 *            the pmMandatoryOrgTypeView to set
 	 */
 	public void setPmMandatoryOrgTypeView(boolean pmMandatoryOrgTypeView) {
 		this.pmMandatoryOrgTypeView = pmMandatoryOrgTypeView;
 	}
 
 	/**
+	 * Checks if is pm org name view.
+	 * 
 	 * @return the pmOrgNameView
 	 */
 	public boolean isPmOrgNameView() {
@@ -13830,13 +13874,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param pmOrgNameView the pmOrgNameView to set
+	 * Sets the pm org name view.
+	 * 
+	 * @param pmOrgNameView
+	 *            the pmOrgNameView to set
 	 */
 	public void setPmOrgNameView(boolean pmOrgNameView) {
 		this.pmOrgNameView = pmOrgNameView;
 	}
 
 	/**
+	 * Checks if is pm org code view.
+	 * 
 	 * @return the pmOrgCodeView
 	 */
 	public boolean isPmOrgCodeView() {
@@ -13844,13 +13893,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param pmOrgCodeView the pmOrgCodeView to set
+	 * Sets the pm org code view.
+	 * 
+	 * @param pmOrgCodeView
+	 *            the pmOrgCodeView to set
 	 */
 	public void setPmOrgCodeView(boolean pmOrgCodeView) {
 		this.pmOrgCodeView = pmOrgCodeView;
 	}
 
 	/**
+	 * Checks if is pm mandatory org name view.
+	 * 
 	 * @return the pmMandatoryOrgNameView
 	 */
 	public boolean isPmMandatoryOrgNameView() {
@@ -13858,13 +13912,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param pmMandatoryOrgNameView the pmMandatoryOrgNameView to set
+	 * Sets the pm mandatory org name view.
+	 * 
+	 * @param pmMandatoryOrgNameView
+	 *            the pmMandatoryOrgNameView to set
 	 */
 	public void setPmMandatoryOrgNameView(boolean pmMandatoryOrgNameView) {
 		this.pmMandatoryOrgNameView = pmMandatoryOrgNameView;
 	}
 
 	/**
+	 * Checks if is pm identification no view.
+	 * 
 	 * @return the pmIdentificationNoView
 	 */
 	public boolean isPmIdentificationNoView() {
@@ -13872,13 +13931,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param pmIdentificationNoView the pmIdentificationNoView to set
+	 * Sets the pm identification no view.
+	 * 
+	 * @param pmIdentificationNoView
+	 *            the pmIdentificationNoView to set
 	 */
 	public void setPmIdentificationNoView(boolean pmIdentificationNoView) {
 		this.pmIdentificationNoView = pmIdentificationNoView;
 	}
 
 	/**
+	 * Checks if is pm user name view.
+	 * 
 	 * @return the pmUserNameView
 	 */
 	public boolean isPmUserNameView() {
@@ -13886,13 +13950,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param pmUserNameView the pmUserNameView to set
+	 * Sets the pm user name view.
+	 * 
+	 * @param pmUserNameView
+	 *            the pmUserNameView to set
 	 */
 	public void setPmUserNameView(boolean pmUserNameView) {
 		this.pmUserNameView = pmUserNameView;
 	}
 
 	/**
+	 * Checks if is pm role code view.
+	 * 
 	 * @return the pmRoleCodeView
 	 */
 	public boolean isPmRoleCodeView() {
@@ -13900,13 +13969,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param pmRoleCodeView the pmRoleCodeView to set
+	 * Sets the pm role code view.
+	 * 
+	 * @param pmRoleCodeView
+	 *            the pmRoleCodeView to set
 	 */
 	public void setPmRoleCodeView(boolean pmRoleCodeView) {
 		this.pmRoleCodeView = pmRoleCodeView;
 	}
 
 	/**
+	 * Checks if is pm non mandatory org name view.
+	 * 
 	 * @return the pmNonMandatoryOrgNameView
 	 */
 	public boolean isPmNonMandatoryOrgNameView() {
@@ -13914,13 +13988,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param pmNonMandatoryOrgNameView the pmNonMandatoryOrgNameView to set
+	 * Sets the pm non mandatory org name view.
+	 * 
+	 * @param pmNonMandatoryOrgNameView
+	 *            the pmNonMandatoryOrgNameView to set
 	 */
 	public void setPmNonMandatoryOrgNameView(boolean pmNonMandatoryOrgNameView) {
 		this.pmNonMandatoryOrgNameView = pmNonMandatoryOrgNameView;
 	}
 
 	/**
+	 * Checks if is pm non mandatroy org code view.
+	 * 
 	 * @return the pmNonMandatroyOrgCodeView
 	 */
 	public boolean isPmNonMandatroyOrgCodeView() {
@@ -13928,13 +14007,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param pmNonMandatroyOrgCodeView the pmNonMandatroyOrgCodeView to set
+	 * Sets the pm non mandatroy org code view.
+	 * 
+	 * @param pmNonMandatroyOrgCodeView
+	 *            the pmNonMandatroyOrgCodeView to set
 	 */
 	public void setPmNonMandatroyOrgCodeView(boolean pmNonMandatroyOrgCodeView) {
 		this.pmNonMandatroyOrgCodeView = pmNonMandatroyOrgCodeView;
 	}
 
 	/**
+	 * Checks if is pm company name view.
+	 * 
 	 * @return the pmCompanyNameView
 	 */
 	public boolean isPmCompanyNameView() {
@@ -13942,13 +14026,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param pmCompanyNameView the pmCompanyNameView to set
+	 * Sets the pm company name view.
+	 * 
+	 * @param pmCompanyNameView
+	 *            the pmCompanyNameView to set
 	 */
 	public void setPmCompanyNameView(boolean pmCompanyNameView) {
 		this.pmCompanyNameView = pmCompanyNameView;
 	}
 
 	/**
+	 * Checks if is pm ep no view.
+	 * 
 	 * @return the pmEpNoView
 	 */
 	public boolean isPmEpNoView() {
@@ -13956,13 +14045,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param pmEpNoView the pmEpNoView to set
+	 * Sets the pm ep no view.
+	 * 
+	 * @param pmEpNoView
+	 *            the pmEpNoView to set
 	 */
 	public void setPmEpNoView(boolean pmEpNoView) {
 		this.pmEpNoView = pmEpNoView;
 	}
 
 	/**
+	 * Checks if is pm item name view.
+	 * 
 	 * @return the pmItmeNameView
 	 */
 	public boolean isPmItemNameView() {
@@ -13970,13 +14064,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param pmItmeNameView the pmItmeNameView to set
+	 * Sets the pm item name view.
+	 * 
+	 * @param pmItemNameView
+	 *            the new pm item name view
 	 */
 	public void setPmItemNameView(boolean pmItemNameView) {
 		this.pmItemNameView = pmItemNameView;
 	}
 
 	/**
+	 * Checks if is pm item code view.
+	 * 
 	 * @return the pmItmeCodeView
 	 */
 	public boolean isPmItemCodeView() {
@@ -13984,13 +14083,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param pmItmeCodeView the pmItmeCodeView to set
+	 * Sets the pm itme code view.
+	 * 
+	 * @param pmItemCodeView
+	 *            the new pm itme code view
 	 */
 	public void setPmItmeCodeView(boolean pmItemCodeView) {
 		this.pmItemCodeView = pmItemCodeView;
 	}
 
 	/**
+	 * Checks if is pm from date view.
+	 * 
 	 * @return the pmFromDateView
 	 */
 	public boolean isPmFromDateView() {
@@ -13998,13 +14102,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param pmFromDateView the pmFromDateView to set
+	 * Sets the pm from date view.
+	 * 
+	 * @param pmFromDateView
+	 *            the pmFromDateView to set
 	 */
 	public void setPmFromDateView(boolean pmFromDateView) {
 		this.pmFromDateView = pmFromDateView;
 	}
 
 	/**
+	 * Checks if is pm non mandatory date view.
+	 * 
 	 * @return the pmNonMandatoryDateView
 	 */
 	public boolean isPmNonMandatoryDateView() {
@@ -14012,13 +14121,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param pmNonMandatoryDateView the pmNonMandatoryDateView to set
+	 * Sets the pm non mandatory date view.
+	 * 
+	 * @param pmNonMandatoryDateView
+	 *            the pmNonMandatoryDateView to set
 	 */
 	public void setPmNonMandatoryDateView(boolean pmNonMandatoryDateView) {
 		this.pmNonMandatoryDateView = pmNonMandatoryDateView;
 	}
 
 	/**
+	 * Checks if is pm contract no view.
+	 * 
 	 * @return the pmContractNoView
 	 */
 	public boolean isPmContractNoView() {
@@ -14026,13 +14140,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param pmContractNoView the pmContractNoView to set
+	 * Sets the pm contract no view.
+	 * 
+	 * @param pmContractNoView
+	 *            the pmContractNoView to set
 	 */
 	public void setPmContractNoView(boolean pmContractNoView) {
 		this.pmContractNoView = pmContractNoView;
 	}
 
 	/**
+	 * Gets the pm ep no var.
+	 * 
 	 * @return the pmEpNoVarr
 	 */
 	public String getPmEpNoVar() {
@@ -14040,13 +14159,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param pmEpNoVarr the pmEpNoVarr to set
+	 * Sets the pm ep no var.
+	 * 
+	 * @param pmEpNoVar
+	 *            the new pm ep no var
 	 */
 	public void setPmEpNoVar(String pmEpNoVar) {
 		this.pmEpNoVar = pmEpNoVar;
 	}
 
 	/**
+	 * Gets the pm org category var.
+	 * 
 	 * @return the pmOrgCategoryVar
 	 */
 	public String getPmOrgCategoryVar() {
@@ -14054,13 +14178,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param pmOrgCategoryVar the pmOrgCategoryVar to set
+	 * Sets the pm org category var.
+	 * 
+	 * @param pmOrgCategoryVar
+	 *            the pmOrgCategoryVar to set
 	 */
 	public void setPmOrgCategoryVar(String pmOrgCategoryVar) {
 		this.pmOrgCategoryVar = pmOrgCategoryVar;
 	}
 
 	/**
+	 * Gets the pm org type var.
+	 * 
 	 * @return the pmOrgTypeVar
 	 */
 	public String getPmOrgTypeVar() {
@@ -14068,13 +14197,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param pmOrgTypeVar the pmOrgTypeVar to set
+	 * Sets the pm org type var.
+	 * 
+	 * @param pmOrgTypeVar
+	 *            the pmOrgTypeVar to set
 	 */
 	public void setPmOrgTypeVar(String pmOrgTypeVar) {
 		this.pmOrgTypeVar = pmOrgTypeVar;
 	}
 
 	/**
+	 * Gets the pm org name var.
+	 * 
 	 * @return the pmOrgNameVar
 	 */
 	public String getPmOrgNameVar() {
@@ -14082,13 +14216,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param pmOrgNameVar the pmOrgNameVar to set
+	 * Sets the pm org name var.
+	 * 
+	 * @param pmOrgNameVar
+	 *            the pmOrgNameVar to set
 	 */
 	public void setPmOrgNameVar(String pmOrgNameVar) {
 		this.pmOrgNameVar = pmOrgNameVar;
 	}
 
 	/**
+	 * Gets the pm org code var.
+	 * 
 	 * @return the pmOrgCodeVar
 	 */
 	public String getPmOrgCodeVar() {
@@ -14096,13 +14235,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param pmOrgCodeVar the pmOrgCodeVar to set
+	 * Sets the pm org code var.
+	 * 
+	 * @param pmOrgCodeVar
+	 *            the pmOrgCodeVar to set
 	 */
 	public void setPmOrgCodeVar(String pmOrgCodeVar) {
 		this.pmOrgCodeVar = pmOrgCodeVar;
 	}
 
 	/**
+	 * Gets the pm item name var.
+	 * 
 	 * @return the pmItemNameVar
 	 */
 	public String getPmItemNameVar() {
@@ -14110,13 +14254,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param pmItemNameVar the pmItemNameVar to set
+	 * Sets the pm item name var.
+	 * 
+	 * @param pmItemNameVar
+	 *            the pmItemNameVar to set
 	 */
 	public void setPmItemNameVar(String pmItemNameVar) {
 		this.pmItemNameVar = pmItemNameVar;
 	}
 
 	/**
+	 * Gets the pm item code var.
+	 * 
 	 * @return the pmItemCodeVar
 	 */
 	public String getPmItemCodeVar() {
@@ -14124,13 +14273,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param pmItemCodeVar the pmItemCodeVar to set
+	 * Sets the pm item code var.
+	 * 
+	 * @param pmItemCodeVar
+	 *            the pmItemCodeVar to set
 	 */
 	public void setPmItemCodeVar(String pmItemCodeVar) {
 		this.pmItemCodeVar = pmItemCodeVar;
 	}
 
 	/**
+	 * Gets the pm company name var.
+	 * 
 	 * @return the pmCompanyNameVar
 	 */
 	public String getPmCompanyNameVar() {
@@ -14138,13 +14292,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param pmCompanyNameVar the pmCompanyNameVar to set
+	 * Sets the pm company name var.
+	 * 
+	 * @param pmCompanyNameVar
+	 *            the pmCompanyNameVar to set
 	 */
 	public void setPmCompanyNameVar(String pmCompanyNameVar) {
 		this.pmCompanyNameVar = pmCompanyNameVar;
 	}
 
 	/**
+	 * Gets the pm identification no var.
+	 * 
 	 * @return the pmIdentificationNoVar
 	 */
 	public String getPmIdentificationNoVar() {
@@ -14152,13 +14311,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param pmIdentificationNoVar the pmIdentificationNoVar to set
+	 * Sets the pm identification no var.
+	 * 
+	 * @param pmIdentificationNoVar
+	 *            the pmIdentificationNoVar to set
 	 */
 	public void setPmIdentificationNoVar(String pmIdentificationNoVar) {
 		this.pmIdentificationNoVar = pmIdentificationNoVar;
 	}
 
 	/**
+	 * Gets the pm user name var.
+	 * 
 	 * @return the pmUserName
 	 */
 	public String getPmUserNameVar() {
@@ -14166,13 +14330,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param pmUserName the pmUserName to set
+	 * Sets the pm user name var.
+	 * 
+	 * @param pmUserNameVar
+	 *            the new pm user name var
 	 */
 	public void setPmUserNameVar(String pmUserNameVar) {
 		this.pmUserNameVar = pmUserNameVar;
 	}
 
 	/**
+	 * Gets the pm role code var.
+	 * 
 	 * @return the pmRoleCodeVar
 	 */
 	public String getPmRoleCodeVar() {
@@ -14180,13 +14349,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param pmRoleCodeVar the pmRoleCodeVar to set
+	 * Sets the pm role code var.
+	 * 
+	 * @param pmRoleCodeVar
+	 *            the pmRoleCodeVar to set
 	 */
 	public void setPmRoleCodeVar(String pmRoleCodeVar) {
 		this.pmRoleCodeVar = pmRoleCodeVar;
 	}
 
 	/**
+	 * Gets the pm contract no var.
+	 * 
 	 * @return the pmContractNoVar
 	 */
 	public String getPmContractNoVar() {
@@ -14194,16 +14368,121 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param pmContractNoVar the pmContractNoVar to set
+	 * Sets the pm contract no var.
+	 * 
+	 * @param pmContractNoVar
+	 *            the pmContractNoVar to set
 	 */
 	public void setPmContractNoVar(String pmContractNoVar) {
 		this.pmContractNoVar = pmContractNoVar;
 	}
 
 	/**
-	 * @param pmItemCodeView the pmItemCodeView to set
+	 * Sets the pm item code view.
+	 * 
+	 * @param pmItemCodeView
+	 *            the pmItemCodeView to set
 	 */
 	public void setPmItemCodeView(boolean pmItemCodeView) {
 		this.pmItemCodeView = pmItemCodeView;
+	}
+
+	/**
+	 * Checks if is pm physical contract no view.
+	 * 
+	 * @return the pmPhysicalContractNoView
+	 */
+	public boolean isPmPhysicalContractNoView() {
+		return pmPhysicalContractNoView;
+	}
+
+	/**
+	 * Sets the pm physical contract no view.
+	 * 
+	 * @param pmPhysicalContractNoView
+	 *            the pmPhysicalContractNoView to set
+	 */
+	public void setPmPhysicalContractNoView(boolean pmPhysicalContractNoView) {
+		this.pmPhysicalContractNoView = pmPhysicalContractNoView;
+	}
+
+	/**
+	 * Checks if is pm loa no view.
+	 * 
+	 * @return the pmLOANoView
+	 */
+	public boolean isPmLOANoView() {
+		return pmLOANoView;
+	}
+
+	/**
+	 * Sets the pm loa no view.
+	 * 
+	 * @param pmLOANoView
+	 *            the pmLOANoView to set
+	 */
+	public void setPmLOANoView(boolean pmLOANoView) {
+		this.pmLOANoView = pmLOANoView;
+	}
+
+	/**
+	 * Checks if is pm physical loa no view.
+	 * 
+	 * @return the pmPhysicalLOANoView
+	 */
+	public boolean isPmPhysicalLOANoView() {
+		return pmPhysicalLOANoView;
+	}
+
+	/**
+	 * Sets the pm physical loa no view.
+	 * 
+	 * @param pmPhysicalLOANoView
+	 *            the pmPhysicalLOANoView to set
+	 */
+	public void setPmPhysicalLOANoView(boolean pmPhysicalLOANoView) {
+		this.pmPhysicalLOANoView = pmPhysicalLOANoView;
+	}
+
+	/**
+	 * @return the pmPhysicalContractNoVar
+	 */
+	public String getPmPhysicalContractNoVar() {
+		return pmPhysicalContractNoVar;
+	}
+
+	/**
+	 * @param pmPhysicalContractNoVar the pmPhysicalContractNoVar to set
+	 */
+	public void setPmPhysicalContractNoVar(String pmPhysicalContractNoVar) {
+		this.pmPhysicalContractNoVar = pmPhysicalContractNoVar;
+	}
+
+	/**
+	 * @return the pmLOANoVar
+	 */
+	public String getPmLOANoVar() {
+		return pmLOANoVar;
+	}
+
+	/**
+	 * @param pmLOANoVar the pmLOANoVar to set
+	 */
+	public void setPmLOANoVar(String pmLOANoVar) {
+		this.pmLOANoVar = pmLOANoVar;
+	}
+
+	/**
+	 * @return the pmPhysicalLOANoVar
+	 */
+	public String getPmPhysicalLOANoVar() {
+		return pmPhysicalLOANoVar;
+	}
+
+	/**
+	 * @param pmPhysicalLOANoVar the pmPhysicalLOANoVar to set
+	 */
+	public void setPmPhysicalLOANoVar(String pmPhysicalLOANoVar) {
+		this.pmPhysicalLOANoVar = pmPhysicalLOANoVar;
 	}
 }
