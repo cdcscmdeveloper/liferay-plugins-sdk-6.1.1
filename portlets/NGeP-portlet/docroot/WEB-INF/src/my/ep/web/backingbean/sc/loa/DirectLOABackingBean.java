@@ -3871,8 +3871,15 @@ public class DirectLOABackingBean extends
 		}
 		scLoa.setScLoaRemarks(initializeRemarks(scLoa, null,
 				scLoa.getScLoaRemarks(), ScLoaRemark.class));
+		
 		// bond calculation
 		scLoa = calcBondAmount(scLoa, true);
+
+		// bond amount in words
+		if (scLoa.getBondAmt() != null) {
+			getManagedBean().setBondAmountWord(
+					NumberWordUtil.convert(scLoa.getBondAmt().toString()));
+		}
 
 		// procurement type category
 		if (scLoa.getProcurementTypeCatId() == null) {
@@ -5451,6 +5458,12 @@ public class DirectLOABackingBean extends
 
 			calcBondAmount(scLoa, true);
 
+			// bond amount in words
+			if (scLoa.getBondAmt() != null) {
+				getManagedBean().setBondAmountWord(
+						NumberWordUtil.convert(scLoa.getBondAmt().toString()));
+			}
+			
 			if (null != scLoa.getContractSigner()
 					&& scLoa.getContractSigner().getUserId() != null) {
 
@@ -5813,10 +5826,18 @@ public class DirectLOABackingBean extends
 	public void setOverallCtAmount(BigDecimal loaAmount) {
 		this.getManagedBean().getScLoa().setContractSigner(new PmUser());
 		this.getManagedBean().getScLoa().setLoaSignerDesig(null);
-
 		this.getManagedBean().setOverallContractAmt(loaAmount);
 		prepareSignerInfo();
-		calcBondAmount(this.getManagedBean().getScLoa(), true);
+		
+		ScLoa scLoa = this.getManagedBean().getScLoa();
+		
+		// calc bond amt
+		calcBondAmount(scLoa, true);
+		// bond amount in words
+		if (scLoa.getBondAmt() != null) {
+			getManagedBean().setBondAmountWord(
+					NumberWordUtil.convert(scLoa.getBondAmt().toString()));
+		}
 	}
 
 	private void updateToBeDeleteSpecAnswersTOReq(DirectAwardReqDTO awardReqDTO) {
