@@ -15,7 +15,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			
 			<!-- Header -->
 			<ui:include src="headerSection.xhtml"/>
-			
+				<p:outputPanel rendered="#{!supportDocBackingBean.managedBean.selectedDocument.brandNew and supportDocBackingBean.managedBean.selectedDocument.docCategoryCode.parameterCode != ParameterConst.documentCategorySupplierDocument}">
 			<table class="ppOneTable">
 				<tr>
 					<th>
@@ -27,13 +27,34 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 							value="#{supportDocBackingBean.managedBean.selectedDocument.docCategoryCode.parameterId}"
 							label="#{lbl['lbl.pm.document.category']}" styleClass="ppDropDownWidthM"  
 							required="true">
-							<f:selectItems  value="#{supportDocBackingBean.documentCategoryOptions(true)}"/>
+							<f:selectItems  value="#{supportDocBackingBean.documentCategoryWithoutSupplierDoc(true)}"/>
 							<p:ajax event="change" update="opDocDetails" listener="#{supportDocBackingBean.docCategoryChange}"/>
 						</p:selectOneMenu>
 						<p:message id="somDocCategoryMsg" for="somDocCategory" display="icon" />
 					</td>
 				</tr>
 			</table>
+			</p:outputPanel>
+			<p:outputPanel rendered="#{supportDocBackingBean.managedBean.selectedDocument.brandNew and (supportDocBackingBean.managedBean.selectedDocument.docCategoryCode == null or (supportDocBackingBean.managedBean.selectedDocument.docCategoryCode != null and supportDocBackingBean.managedBean.selectedDocument.docCategoryCode.parameterCode != ParameterConst.documentCategorySupplierDocument))}">
+			<table class="ppOneTable">
+				<tr>
+					<th>
+						<p:outputLabel value="#{lbl['lbl.pm.document.category']}"/>
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</th>
+					<td>
+						<p:selectOneMenu id="somDocCategory1" 
+							value="#{supportDocBackingBean.managedBean.selectedDocument.docCategoryCode.parameterId}"
+							label="#{lbl['lbl.pm.document.category']}" styleClass="ppDropDownWidthM"  
+							required="true">
+							<f:selectItems  value="#{supportDocBackingBean.documentCategoryWithoutSupplierDoc(true)}"/>
+							<p:ajax event="change" update="opDocDetails" listener="#{supportDocBackingBean.docCategoryChange}"/>
+						</p:selectOneMenu>
+						<p:message id="somDocCategory1Msg" for="somDocCategory1" display="icon" />
+					</td>
+				</tr>
+			</table>
+			</p:outputPanel>
 			
 			<p:outputPanel id="opDocDetails">
 				<c:choose>
