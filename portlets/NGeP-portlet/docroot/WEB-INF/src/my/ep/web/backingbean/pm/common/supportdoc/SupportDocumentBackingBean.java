@@ -88,8 +88,10 @@ public class SupportDocumentBackingBean extends
 	private static Logger log = Logger
 			.getLogger(SupportDocumentBackingBean.class);
 	// Navigation Details
-	public static final String NAV_TO_MAINTAIN = "supportingDocumentMaintain";
+	public static final String NAV_TO_MAINTAIN = "/xhtml/pm/supportingdocument/supportingDocumentMaintain.xhtml";
 	public static final String NAV_TO_SEARCH = "supportingDocument";
+	public static final String NAV_TO_MAINTAIN_SUP = "supportingDocumentMaintain";
+	public static final String NAV_TO_SEARCH_SUP = "/xhtml/pm/supplierDocument/supplierDocument.xhtml";
 
 	// Document Restriction Type
 	public static final int RESTR_APP = 1;
@@ -127,6 +129,15 @@ public class SupportDocumentBackingBean extends
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_SEARCH);
 	}
+	
+	public void preLoadingSupplierDoc() {
+		log.info("preLoading");
+		this.resetSupportDocSearchBean();
+		this.getManagedBean().setSelectedTabIndex(0);		
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, NAV_TO_SEARCH_SUP);
+	}
 
 	/**
 	 * reset search bean fields
@@ -152,6 +163,65 @@ public class SupportDocumentBackingBean extends
 				loadSupportDoc(id);
 			} else {
 				initialSupportDoc();
+			}
+			docDefinitionOptions();
+			initialSupplierActionItems();
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}
+		log.info("redirectToMaintainDoc - End");
+		return NAV_TO_MAINTAIN;
+	}
+
+	public void fillSupplierDocDependencies(){
+		log.info("fillSupplierDocDependencies - start");
+		this.getManagedBean().setCheckList(true);
+		// load default value for checklist
+		
+		if (this.getManagedBean().getSelectedDocument().isBrandNew()) {
+
+			if (this.getManagedBean().getSelectedDocument()
+					.getDocDefinitionTypeCode()!=null && this.getManagedBean().getSelectedDocument()
+					.getDocDefinitionTypeCode().getParameterId() != null) {
+				this.getManagedBean().setSupplierActionItems(
+						initialSupplierActionItems());
+			}else{
+				this.getManagedBean().getSelectedDocument()
+				.setChecklistActionCode(new PmParameter());
+			}
+			
+			this.getManagedBean().getSelectedDocument()
+					.setDocDefinitionTypeCode(new PmParameter());			
+			
+		}			
+		if (this.getManagedBean().getSelectedDocument().isBrandNew()) {
+			this.getManagedBean().getSelectedDocument().setPmZone(null);
+		}  
+		
+		
+	
+	}
+	
+	
+	
+	
+	/**
+	 * redirect to Support Doc Details
+	 * 
+	 * @param id
+	 * @return xhtml
+	 */
+	public String redirectToMaintainDocForSupp(Long id) {
+		log.info("redirectToMaintainDocForSupp - Start");
+		try {
+			this.retrieveDocCategoryMap();
+			if (id != null && id > 0) {
+				loadSupportDoc(id);
+			} else {
+				initialSupportDoc();
+				this.getManagedBean().getSelectedDocument().setDocCategoryCode(this.getManagedBean().getSupplierDocParameter());
+				docCategoryChange();
 			}
 			docDefinitionOptions();
 			initialSupplierActionItems();
@@ -191,12 +261,18 @@ public class SupportDocumentBackingBean extends
 	 */
 	private void retrieveDocCategoryMap() {
 		log.info("retrieveDocCategoryMap");
-		List<PmParameterDesc> parameterDescs = getDocumentCategoryFilteredOptions();
+//		List<PmParameterDesc> parameterDescs = getDocumentCategoryFilteredOptions();
+		List<PmParameterDesc> parameterDescs =getDocumentCategoryFilteredOptions();
 		docCategoryMapper = new HashMap<Long, Object>();
 		for (PmParameterDesc pmDesc : parameterDescs) {
 			docCategoryMapper.put(pmDesc.getPmParameter().getParameterId(),
 					pmDesc.getPmParameter());
+			
+			if(pmDesc.getPmParameter().getParameterCode().equals(ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT) && pmDesc.getPmParameter().getParameterType().equals(ParameterTypeConst.DOCUMENT_CATEGORY)){
+				this.getManagedBean().setSupplierDocParameter(pmDesc.getPmParameter());
+			}
 		}
+		
 	}
 
 	/**
@@ -235,11 +311,13 @@ public class SupportDocumentBackingBean extends
 	 */
 	public void docCategoryChange() {
 		log.info("docCategoryChange");
+		log.info(".........this.getManagedBean().getSelectedDocument().getDocCategoryCode()="+this.getManagedBean().getSelectedDocument().getDocCategoryCode());
 		if (this.getManagedBean().getSelectedDocument().getDocCategoryCode()
 				.getParameterId() != null) {
 			PmParameter pmParameter = (PmParameter) docCategoryMapper.get(this
 					.getManagedBean().getSelectedDocument()
 					.getDocCategoryCode().getParameterId());
+			log.info("......pmParameter="+pmParameter);
 			this.getManagedBean().getSelectedDocument().getDocCategoryCode()
 					.setParameterCode(pmParameter.getParameterCode());
 			getManagedBean().getSelectedDocument().getDocCategoryCode()
@@ -370,6 +448,7 @@ public class SupportDocumentBackingBean extends
 		try {
 			initialSupportDoc();
 			PmDocument pmDocument = retrieveDocumentById(id);
+			log.info("......pmDocument.getDocCategoryCode().getParameterCode()="+pmDocument.getDocCategoryCode().getParameterCode());
 			if (pmDocument.getDocCategoryCode() == null) {
 				pmDocument.setDocCategoryCode(new PmParameter());
 			}
@@ -510,7 +589,22 @@ public class SupportDocumentBackingBean extends
 
 		}
 		log.info("redirectToSearchSupportDoc - End");
-		return NAV_TO_SEARCH;
+		
+//	if(!this.getManagedBean().getSelectedDocument().isBrandNew()){
+//		log.info("...........this.getManagedBean().getSelectedDocument().getDocCategoryCode().getParameterCode()="+this.getManagedBean().getSelectedDocument().getDocCategoryCode().getParameterCode());
+//		if(this.getManagedBean().getSelectedDocument().getDocCategoryCode().getParameterCode().equals(ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT)){
+//			return NAV_TO_SEARCH_SUP;
+//		}else{
+//		    return NAV_TO_SEARCH;
+//		}
+//	}else{//brandNew, create
+		if(this.getManagedBean().getSelectedDocument().getDocCategoryCode() != null && this.getManagedBean().getSelectedDocument().getDocCategoryCode().getParameterCode() != null && this.getManagedBean().getSelectedDocument().getDocCategoryCode().getParameterCode().equals(ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT)){
+			return NAV_TO_SEARCH_SUP;
+		}else{
+			 return NAV_TO_SEARCH;
+		}
+		
+//	}
 
 	}
 
@@ -1100,6 +1194,25 @@ public class SupportDocumentBackingBean extends
 		return ParameterHelper.getInstance().getParameterDescListBySearchBean(
 				ParameterTypeConst.DOCUMENT_CATEGORY, searchBean);
 	}
+	/**
+	 * Get only applicable doc category except supplier Doc(Technical Check List, Financial Check
+	 * List)
+	 * 
+	 * @return
+	 */
+	private List<PmParameterDesc> getDocCategoryFilteredOptionsExceptSupp() {
+		log.info("getDocCategoryFilteredOptionsExceptSupp");
+		ISearchBean<PmParameterDesc> searchBean = super.createSearchBean(
+				PmParameterDesc.class, "somDocCate");
+		SearchFilterBean bean = new SearchFilterBean();
+		bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
+		bean.setSearchField("pmParameter.parameterCode");
+		bean.setSearchValue(new ArrayList(Arrays
+				.asList(ProfileManagementConst.SUPPORT_DOC_CATEGORY_NEW)));
+		searchBean.getDataFilterBeans().add(bean);
+		return ParameterHelper.getInstance().getParameterDescListBySearchBean(
+				ParameterTypeConst.DOCUMENT_CATEGORY, searchBean);
+	}
 
 	/**
 	 * retrieve document category (parameterId)
@@ -1139,7 +1252,44 @@ public class SupportDocumentBackingBean extends
 
 		return items;
 	}
+	/**
+	 * retrieve document category without supplier doc(parameterId)
+	 * 
+	 * @return SelectItem[]
+	 */
+	public SelectItem[] documentCategoryWithoutSupplierDoc(boolean byId) {
+		log.info("documentCategoryWithoutSupplierDoc");
+		SelectItem[] items = null;
+		try {
+			List<PmParameterDesc> parameterDescs = getDocCategoryFilteredOptionsExceptSupp();
 
+			items = new SelectItem[parameterDescs.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					getFacesScopes().getUserLocale()));
+			int i = 1;
+			if (byId) {
+				for (PmParameterDesc parameterDesc : parameterDescs) {
+					items[i++] = new SelectItem(parameterDesc.getPmParameter()
+							.getParameterId(), parameterDesc.getCodeName());
+				}
+			} else {
+				for (PmParameterDesc parameterDesc : parameterDescs) {
+					items[i++] = new SelectItem(parameterDesc.getPmParameter()
+							.getParameterCode(), parameterDesc.getCodeName());
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
+	}
 	/**
 	 * retrieve categoryL3 details
 	 * 
@@ -2090,6 +2240,14 @@ public class SupportDocumentBackingBean extends
 		}
 		pmDocumentDataModel.reloadData();
 		log.info("searchDocument - End");
+
+	}
+	public void searchDocumentForSup() {
+		log.info("searchDocumentForSup - Start");
+		this.getManagedBean().getSupportDocSearchBean()
+				.setDocCategoryParamCode(ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT);
+		pmDocumentDataModel.reloadData();
+		log.info("searchDocumentForSup - End");
 
 	}
 
