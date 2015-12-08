@@ -1250,7 +1250,6 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			reqDTO.setOutcome(outcome);
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());				
 			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
-			getManagedBean().setAutoUpdate(Boolean.TRUE);
 			validateDuplicateDeduction(outcome);
 			validateDeductionAmt();
 			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH)){
