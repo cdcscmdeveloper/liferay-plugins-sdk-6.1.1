@@ -2793,14 +2793,21 @@ public class SmApplicationBackingBean extends
 		}
 		if (getManagedBean().getSmAppl().getSmSupplierCerts()
 				.contains(getManagedBean().getSelectedCert())) {
-			// TODO if any validations for edit reqd
+			getManagedBean()
+					.getSmAppl()
+					.getSmSupplierCerts()
+					.set(getManagedBean().getSmAppl().getSmSupplierCerts()
+							.indexOf(getManagedBean().getSelectedCert()),
+							getManagedBean().getSelectedCert());
 		} else {
 			getManagedBean().getSmAppl().getSmSupplierCerts()
 					.add(getManagedBean().getSelectedCert());
 			RequestContext.getCurrentInstance().execute(
 					"suppCertDtWidVar.paginator.endLink.click()");
 		}
-		saveOrUpdateAppl();
+		if (getHq() != null) {
+			saveOrUpdateAppl();
+		}
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().execute("certDialog.hide()");
 	}
@@ -2813,7 +2820,8 @@ public class SmApplicationBackingBean extends
 	 *            - SmSupplierCert object
 	 */
 	public void assignSelCert(SmSupplierCert certBean) {
-		getManagedBean().setSelectedCert(certBean);
+		getManagedBean().setSelectedCert(
+				(SmSupplierCert) SerializationUtils.clone(certBean));
 		assignCertBodyList();
 		assignValReqdToTrue();
 		if (getManagedBean().getLatestAppl() != null) {
@@ -7621,7 +7629,8 @@ public class SmApplicationBackingBean extends
 				.getSmFacilities())) {
 			for (SmFacility fac : getManagedBean().getSmAppl()
 					.getSmFacilities()) {
-				if (fac.getFacilityType().equals("H")
+				if (StringUtils.isNotBlank(fac.getFacilityType())
+						&& fac.getFacilityType().equals("H")
 						|| fac.getFacilityType().equals("B")) {
 					hq = fac;
 					break;
