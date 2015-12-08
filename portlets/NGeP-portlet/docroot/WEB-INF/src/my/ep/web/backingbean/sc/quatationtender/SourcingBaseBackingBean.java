@@ -1938,7 +1938,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	public boolean checkProposalValidityDateReach(Date proposalValidityEndDate){
 		
-		return DateUtils.isDateGreater(new Date(), proposalValidityEndDate);
+		return DateUtils.isDateGreater(proposalValidityEndDate, new Date());
 		
 	}
 }
