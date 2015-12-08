@@ -143,6 +143,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
+import my.ep.persistence.entity.sm.SmSupplierSystem;
 import my.ep.persistence.entity.sm.SmSvAddress;
 import my.ep.persistence.entity.sm.SmSvCategory;
 import my.ep.persistence.entity.sm.SmSvOffice;
@@ -4582,7 +4583,6 @@ public class SmApplicationUtil {
 		managedBean.setShowStorePanel(false);
 		managedBean.setShowFactoryPanel(false);
 		managedBean.setShowWorkShopPanel(false);
-		managedBean.setShowTravelSoftwarePanel(false);
 		for (SmSupplierCategory cat : managedBean.getSmAppl()
 				.getSmSupplierCategories()) {
 			if (cat.isSpecialCategory()
@@ -4609,12 +4609,75 @@ public class SmApplicationUtil {
 				} else if (facType
 						.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD)) {
 					managedBean.setShowDockyardPanel(true);
-				} else if (StringUtils.isNotBlank(facType)
+				}
+			}
+		}
+	}
+
+	/**
+	 * Show or hide travelling software section panel
+	 * 
+	 * @param SmApplicationManagedBean
+	 *            managedBean
+	 */
+	public static void showOrHideTravelSoftwarePanel(
+			SmApplicationManagedBean managedBean) {
+		managedBean.setShowTravelSoftwarePanel(false);
+		for (SmSupplierCategory cat : managedBean.getSmAppl()
+				.getSmSupplierCategories()) {
+			if (cat.isSpecialCategory()
+					&& cat.getPmCategoryL3() != null
+					&& cat.getPmCategoryL3().getCategoryTypeCode() != null
+					&& cat.getPmCategoryL3().getCategoryTypeCode()
+							.getParameterId() != null
+					&& cat.getRecordStatusFlg() != null
+					&& cat.getRecordStatusFlg().compareTo(
+							SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+				String facType = "";
+				if (cat.getPmCategoryL3().getFacilityType() != null) {
+					facType = cat.getPmCategoryL3().getFacilityType();
+				}
+				if (StringUtils.isNotBlank(facType)
 						&& facType
 								.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
 					managedBean.setShowTravelSoftwarePanel(true);
 				}
 			}
+		}
+	}
+
+	/**
+	 * Remove travelling software if related category code is not picked
+	 * 
+	 * @param SmAppl
+	 *            appl
+	 */
+	public void removeTravellingSoftwareIfNotApplicable(SmAppl appl) {
+		boolean isTravelSoftwareApplicable = false;
+		for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
+			if (cat.isSpecialCategory()
+					&& cat.getPmCategoryL3() != null
+					&& cat.getPmCategoryL3().getCategoryTypeCode() != null
+					&& cat.getPmCategoryL3().getCategoryTypeCode()
+							.getParameterId() != null
+					&& cat.getRecordStatusFlg() != null
+					&& cat.getRecordStatusFlg().compareTo(
+							SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+				String facType = "";
+				if (cat.getPmCategoryL3().getFacilityType() != null) {
+					facType = cat.getPmCategoryL3().getFacilityType();
+				}
+				if (StringUtils.isNotBlank(facType)
+						&& facType
+								.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
+					isTravelSoftwareApplicable = true;
+				}
+			}
+		}
+
+		if (!isTravelSoftwareApplicable
+				&& !SmCommonUtil.isCollectionEmpty(appl.getSmSupplierSystems())) {
+			appl.setSmSupplierSystems(new ArrayList<SmSupplierSystem>());
 		}
 	}
 
