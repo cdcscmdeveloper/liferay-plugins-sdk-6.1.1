@@ -7,8 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<h:panelGroup id="totalSupplierid">
-		<p:panel id="panlesupplierlist"
-			header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
+		<h:panelGroup>
 			<p:dataTable id="panelsuppliersTbl" var="qtSupplier"
 				value="#{qTSupplierQulCriteriaBackingBean.managedBean.ctZoneSupplierList}"
 				rowIndexVar="index" editable="true" rowKey="#{qtSupplier}">
@@ -38,10 +37,14 @@
 					<h:outputText rendered="#{qTSupplierQulCriteriaBackingBean.supplierStatusDateComparision(mof.expDate) eq 'false'}" value="#{lbl['lbl.txt.expired']}" style="font-weight: bold;color:red;" />
 				</p:column>
 			</p:dataTable>
-		</p:panel>
-		<h:outputText value="#{lbl['lbl.sc.totalsup']}" />
-		<p:spacer width="5" />
-		<p:inputText value="#{qTSupplierQulCriteriaBackingBean.managedBean.totalSuppliers}" disabled="true" />
+
+			<br />
+			<h:outputText value="#{lbl['lbl.sc.totalsup']}" />
+			<p:spacer width="5" />
+			<p:inputText
+				value="#{qTSupplierQulCriteriaBackingBean.managedBean.totalSuppliers}"
+				disabled="true" />
+		</h:panelGroup>
 	</h:panelGroup>
 	<ui:include
 		src="supplierQualificationCriteriaPanelSupplierDetailsPopup.xhtml" />
