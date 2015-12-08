@@ -92,8 +92,6 @@
 							<p:column rendered="#{recommendDetail.recordStatusFlg == DbValueConst.recordStatusActive}">
 								<p:commandLink oncomplete="suppDetailsPopup.show(); return false;" process="@this" 
 							     			   update="@([id$=suppDetailsPopup])">
-								     <p:graphicImage library="/css/images/design/evaluate.png" title="#{lbl['lbl.sc.view.companyinfo']}" 
-								     				 style="vertical-align:middle" />
 								     <f:setPropertyActionListener value="#{recommendDetail.supplier}" 
 								      							  target="#{supplierDetailBackingBean.smSupplier}" />
 								     <h:outputText value="#{recommendDetail.supplier.companyName}" />

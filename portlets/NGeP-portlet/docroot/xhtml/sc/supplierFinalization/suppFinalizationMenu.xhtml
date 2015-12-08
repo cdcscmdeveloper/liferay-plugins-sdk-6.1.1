@@ -16,6 +16,9 @@
 		<ui:param name="isQTStatusReFinalized" value="#{suppFinalizationBackingBean.managedBean.qtRefinalized}" />
 		<ui:param name="isSupplierFinalization" value="#{suppFinalizationBackingBean.managedBean.currentStatusId 
 															== QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION}" />
+		<ui:param name="validityDaysExpiredQt"
+		     	  value="#{suppFinalizationBackingBean.checkProposalValidityDateReach(
+		     				suppFinalizationBackingBean.managedBean.scQt.proposalValidityEndDate)}" />															
 																
 		<p:messages id="supplierFinalization" showDetail="true" showSummary="false" 
 					autoUpdate="true" closable="true" severity="error, info" />
@@ -38,7 +41,8 @@
 					styleClass="ui-button"
 					action="#{suppFinalizationBackingBean.submitSuppFinalization(bpmAction)}"
 					partialSubmit="true" process="@form" update="@form" 
-					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+					rendered="#{validityDaysExpiredQt}" />
 			</ui:repeat>
 		</div>	
 		
@@ -80,7 +84,6 @@
 			</c:if>
 		</p:panel>
 		
-		<ui:include src="/xhtml/sc/common/supplierDetailsPopup.xhtml" />
 		<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/boardofDirectorsDetails.xhtml" />
 		<ui:include src="/xhtml/sc/supplierFinalization/committeeEndorsement/signOff.xhtml" />
 		
