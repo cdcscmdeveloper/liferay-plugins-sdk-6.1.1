@@ -10,13 +10,11 @@
 		header="#{lbl['lbl.sc.loiloa.loi.letter']}">
 		<p:media value="#{lOIDetailBackingBean.managedBean.streamedContent}"
 			width="100%" height="450px" player="pdf" />
-		<p:panelGrid styleClass="noBorders tr,noBorders td">
-			<p:row>
-				<p:column width="100%" style="text-align:right">
-					<p:commandButton value="#{lbl['lbl.sc.close']}" process="@this"
-						onclick="loiLetterDlg.hide()" />
-				</p:column>
-			</p:row>
-		</p:panelGrid>
+
+		<div class="ppRightBtn" style="width: 100%">
+			<p:commandButton value="#{lbl['lbl.sc.close']}" process="@this"
+				styleClass="BtnSpacing" onclick="loiLetterDlg.hide()" />
+		</div>
+
 	</p:dialog>
 </ui:composition>

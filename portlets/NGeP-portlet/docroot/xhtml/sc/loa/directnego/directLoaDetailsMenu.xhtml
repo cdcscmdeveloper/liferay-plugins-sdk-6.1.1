@@ -173,7 +173,7 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.procurment.type.category']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu id="procTypeBoCategory" required="true"
+				<td colspan="3"><p:selectOneMenu id="procTypeBoCategory" required="true"
 						disabled="#{isPendingApprovalStatus}"
 						value="#{directLOABackingBean.managedBean.scLoa.procurementTypeCatId.parameterId}"
 						style="margin-bottom:5px;width:284px;"
@@ -247,7 +247,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.fullfillent.type']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu id="fulfilId"
+				<td colspan="3"><p:selectOneMenu id="fulfilId"
 						disabled="#{!isEditableStatus}" required="true"
 						label="#{lbl['lbl.sc.fullfillent.type']}"
 						value="#{directLOABackingBean.managedBean.scLoa.scQt.fulfilmentType.parameterId}"
@@ -339,7 +339,7 @@
 				<td width="21%"><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.cont.type']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu id="contractType"
+				<td colspan="3"><p:selectOneMenu id="contractType"
 						required="true" disabled="#{!isEditableStatus}"
 						value="#{directLOABackingBean.managedBean.scLoa.contractType.parameterId}"
 						style="width: 284px;margin-bottom: 5px;"
@@ -397,10 +397,10 @@
 						<p:message id="contractAgencyMsg" for="contractAgency"
 							display="icon" />
 					</h:panelGroup></td>
-				<td width="19%"><p:outputLabel
+				<td style="width: 10%;"><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.cont.admin']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu id="contractAdmin"
+				<td style="width: 30%;"><p:selectOneMenu id="contractAdmin"
 						required="true" disabled="#{!isEditableStatus}"
 						value="#{directLOABackingBean.managedBean.scLoa.contractAdmin.userId}"
 						style="width: 214px;margin-bottom: 5px;"
@@ -448,7 +448,7 @@
 							listener="#{directLOABackingBean.contractEffDateChanged()}"
 							update="expdate" />
 					</p:calendar> <p:message id="effdateMsg" for="effdate" display="icon" /></td>
-				<td width="18%"><p:outputLabel value="#{lbl[lblexpDate]}" /></td>
+				<td><p:outputLabel value="#{lbl[lblexpDate]}" /></td>
 				<td><p:calendar id="expdate" disabled="true"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						showOn="button" required="true"
@@ -483,7 +483,7 @@
 	<p:panel header="#{lbl['lbl.sc.loiloa.agency.witness.detail']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td  width="21%">
+			<td style="width: 21%;">
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.witness.full.name']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
@@ -528,7 +528,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td rowspan="3" valign="top" width="21%">
+			<td rowspan="3" valign="top">
 				<p:outputLabel value="#{lbl['lbl.sc.address']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
@@ -543,7 +543,7 @@
 					disabled="#{!isEditableStatus}" />
 				<p:message id="addressMsg" for="address" display="icon" />
 			</td>
-			<td style="width: 19%;">
+			<td style="width: 10%;">
 				<p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
@@ -592,7 +592,7 @@
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.email']}" />
 			</td>
-			<td colspan="3">
+			<td>
 				<p:inputText id="email" size="35" style=" margin-bottom:5px;"
 					value="#{directLOABackingBean.managedBean.loaAgencyWitness.email}"
 					maxlength="80"

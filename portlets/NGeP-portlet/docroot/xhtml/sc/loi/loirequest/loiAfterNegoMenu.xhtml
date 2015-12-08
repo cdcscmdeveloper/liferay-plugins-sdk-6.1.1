@@ -9,7 +9,7 @@
 	<ui:include src="loiNegotiationDetailsMenu.xhtml" />
 
 	<p:panel header="#{lbl['lbl.sc.supporting.document']}"
-		toggleable="false">
+		toggleable="true">
 		<p:dataTable id="suppDocTbl" var="scLoiSuppDoc"
 			widgetVar="suppDocTblWidget"
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiSupportingDocs}"
