@@ -821,8 +821,10 @@ public class ReportBackingBean extends
 	/** The sm application status. */
 	private String smApplicationStatus;
 
+	/** The sm code. */
 	private String smCode;
 
+	/** The payment method. */
 	private String paymentMethod;
 
 	/** The sm payment type. */
@@ -879,10 +881,13 @@ public class ReportBackingBean extends
 	/** The sm supplier name. */
 	private String smSupplierName;
 
+	/** The sm mof registration fee list. */
 	private List<SelectItem> smMofRegistrationFeeList = new ArrayList<SelectItem>();
 
+	/** The sm soft certificate fee list. */
 	private List<SelectItem> smSoftCertificateFeeList = new ArrayList<SelectItem>();
 
+	/** The sm processing fee list. */
 	private List<SelectItem> smProcessingFeeList = new ArrayList<SelectItem>();
 
 	/** The sm processing officer name. */
@@ -1035,6 +1040,42 @@ public class ReportBackingBean extends
 	/** The pm business reg no. */
 	private String pmBusinessRegNo;
 
+	/** The pm ep no. */
+	private String pmEpNo;
+
+	/** The pm org cateogry. */
+	private String pmOrgCateogry;
+
+	/** The pm org type. */
+	private String pmOrgType;
+
+	/** The pm org name. */
+	private String pmOrgName;
+
+	/** The pm org code. */
+	private String pmOrgCode;
+
+	/** The pm item name. */
+	private String pmItemName;
+
+	/** The pm item code. */
+	private String pmItemCode;
+
+	/** The pm company name. */
+	private String pmCompanyName;
+
+	/** The pm identification no. */
+	private String pmIdentificationNo;
+
+	/** The pm user name. */
+	private String pmUserName;
+
+	/** The pm role code. */
+	private String pmRoleCode;
+
+	/** The pm contract no. */
+	private String pmContractNo;
+
 	/** The selected all. */
 	private boolean selectedAll;
 
@@ -1185,6 +1226,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
+	 * Gets the sm mof registration fee list.
+	 * 
 	 * @return the smMofRegistrationFeeList
 	 */
 	public List<SelectItem> getSmMofRegistrationFeeList() {
@@ -1192,6 +1235,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
+	 * Sets the sm mof registration fee list.
+	 * 
 	 * @param smMofRegistrationFeeList
 	 *            the smMofRegistrationFeeList to set
 	 */
@@ -1201,6 +1246,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
+	 * Gets the sm soft certificate fee list.
+	 * 
 	 * @return the smSoftCertificateFeeList
 	 */
 	public List<SelectItem> getSmSoftCertificateFeeList() {
@@ -1208,6 +1255,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
+	 * Sets the sm soft certificate fee list.
+	 * 
 	 * @param smSoftCertificateFeeList
 	 *            the smSoftCertificateFeeList to set
 	 */
@@ -1217,6 +1266,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
+	 * Gets the sm processing fee list.
+	 * 
 	 * @return the smProcessingFeeList
 	 */
 	public List<SelectItem> getSmProcessingFeeList() {
@@ -1224,6 +1275,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
+	 * Sets the sm processing fee list.
+	 * 
 	 * @param smProcessingFeeList
 	 *            the smProcessingFeeList to set
 	 */
@@ -1453,6 +1506,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
+	 * Gets the sm supplier name.
+	 * 
 	 * @return the smSupplierName
 	 */
 	public String getSmSupplierName() {
@@ -1460,6 +1515,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
+	 * Sets the sm supplier name.
+	 * 
 	 * @param smSupplierName
 	 *            the smSupplierName to set
 	 */
@@ -3190,6 +3247,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
+	 * Gets the sm code.
+	 * 
 	 * @return the smCode
 	 */
 	public String getSmCode() {
@@ -3197,6 +3256,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
+	 * Sets the sm code.
+	 * 
 	 * @param smCode
 	 *            the smCode to set
 	 */
@@ -3205,6 +3266,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
+	 * Gets the payment method.
+	 * 
 	 * @return the paymentMethod
 	 */
 	public String getPaymentMethod() {
@@ -3212,6 +3275,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
+	 * Sets the payment method.
+	 * 
 	 * @param paymentMethod
 	 *            the paymentMethod to set
 	 */
@@ -6979,6 +7044,234 @@ public class ReportBackingBean extends
 	}
 
 	/**
+	 * Gets the pm ep no.
+	 * 
+	 * @return the pmEpNo
+	 */
+	public String getPmEpNo() {
+		return pmEpNo;
+	}
+
+	/**
+	 * Sets the pm ep no.
+	 * 
+	 * @param pmEpNo
+	 *            the pmEpNo to set
+	 */
+	public void setPmEpNo(String pmEpNo) {
+		this.pmEpNo = pmEpNo;
+	}
+
+	/**
+	 * Gets the pm org cateogry.
+	 * 
+	 * @return the pmOrgCateogry
+	 */
+	public String getPmOrgCateogry() {
+		return pmOrgCateogry;
+	}
+
+	/**
+	 * Sets the pm org cateogry.
+	 * 
+	 * @param pmOrgCateogry
+	 *            the pmOrgCateogry to set
+	 */
+	public void setPmOrgCateogry(String pmOrgCateogry) {
+		this.pmOrgCateogry = pmOrgCateogry;
+	}
+
+	/**
+	 * Gets the pm org type.
+	 * 
+	 * @return the pmOrgType
+	 */
+	public String getPmOrgType() {
+		return pmOrgType;
+	}
+
+	/**
+	 * Sets the pm org type.
+	 * 
+	 * @param pmOrgType
+	 *            the pmOrgType to set
+	 */
+	public void setPmOrgType(String pmOrgType) {
+		this.pmOrgType = pmOrgType;
+	}
+
+	/**
+	 * Gets the pm org name.
+	 * 
+	 * @return the pmOrgName
+	 */
+	public String getPmOrgName() {
+		return pmOrgName;
+	}
+
+	/**
+	 * Sets the pm org name.
+	 * 
+	 * @param pmOrgName
+	 *            the pmOrgName to set
+	 */
+	public void setPmOrgName(String pmOrgName) {
+		this.pmOrgName = pmOrgName;
+	}
+
+	/**
+	 * Gets the pm org code.
+	 * 
+	 * @return the pmOrgCode
+	 */
+	public String getPmOrgCode() {
+		return pmOrgCode;
+	}
+
+	/**
+	 * Sets the pm org code.
+	 * 
+	 * @param pmOrgCode
+	 *            the pmOrgCode to set
+	 */
+	public void setPmOrgCode(String pmOrgCode) {
+		this.pmOrgCode = pmOrgCode;
+	}
+
+	/**
+	 * Gets the pm item name.
+	 * 
+	 * @return the pmItemName
+	 */
+	public String getPmItemName() {
+		return pmItemName;
+	}
+
+	/**
+	 * Sets the pm item name.
+	 * 
+	 * @param pmItemName
+	 *            the pmItemName to set
+	 */
+	public void setPmItemName(String pmItemName) {
+		this.pmItemName = pmItemName;
+	}
+
+	/**
+	 * Gets the pm item code.
+	 * 
+	 * @return the pmItemCode
+	 */
+	public String getPmItemCode() {
+		return pmItemCode;
+	}
+
+	/**
+	 * Sets the pm item code.
+	 * 
+	 * @param pmItemCode
+	 *            the pmItemCode to set
+	 */
+	public void setPmItemCode(String pmItemCode) {
+		this.pmItemCode = pmItemCode;
+	}
+
+	/**
+	 * Gets the pm company name.
+	 * 
+	 * @return the pmCompanyName
+	 */
+	public String getPmCompanyName() {
+		return pmCompanyName;
+	}
+
+	/**
+	 * Sets the pm company name.
+	 * 
+	 * @param pmCompanyName
+	 *            the pmCompanyName to set
+	 */
+	public void setPmCompanyName(String pmCompanyName) {
+		this.pmCompanyName = pmCompanyName;
+	}
+
+	/**
+	 * Gets the pm identification no.
+	 * 
+	 * @return the pmIdentificationNo
+	 */
+	public String getPmIdentificationNo() {
+		return pmIdentificationNo;
+	}
+
+	/**
+	 * Sets the pm identification no.
+	 * 
+	 * @param pmIdentificationNo
+	 *            the pmIdentificationNo to set
+	 */
+	public void setPmIdentificationNo(String pmIdentificationNo) {
+		this.pmIdentificationNo = pmIdentificationNo;
+	}
+
+	/**
+	 * Gets the pm user name.
+	 * 
+	 * @return the pmUserName
+	 */
+	public String getPmUserName() {
+		return pmUserName;
+	}
+
+	/**
+	 * Sets the pm user name.
+	 * 
+	 * @param pmUserName
+	 *            the pmUserName to set
+	 */
+	public void setPmUserName(String pmUserName) {
+		this.pmUserName = pmUserName;
+	}
+
+	/**
+	 * Gets the pm role code.
+	 * 
+	 * @return the pmRoleCode
+	 */
+	public String getPmRoleCode() {
+		return pmRoleCode;
+	}
+
+	/**
+	 * Sets the pm role code.
+	 * 
+	 * @param pmRoleCode
+	 *            the pmRoleCode to set
+	 */
+	public void setPmRoleCode(String pmRoleCode) {
+		this.pmRoleCode = pmRoleCode;
+	}
+
+	/**
+	 * Gets the pm contract no.
+	 * 
+	 * @return the pmContractNo
+	 */
+	public String getPmContractNo() {
+		return pmContractNo;
+	}
+
+	/**
+	 * Sets the pm contract no.
+	 * 
+	 * @param pmContractNo
+	 *            the pmContractNo to set
+	 */
+	public void setPmContractNo(String pmContractNo) {
+		this.pmContractNo = pmContractNo;
+	}
+
+	/**
 	 * retrieveLOAStatusList- will retrieve LOA status(SOA Status) list.
 	 * 
 	 * @return the SOAStatusList
@@ -8659,6 +8952,8 @@ public class ReportBackingBean extends
 	/**
 	 * getReportIdlist - Gets the report id list based on paramModule type =
 	 * "REP" .
+	 * 
+	 * @return the report idlist
 	 */
 	public void getReportIdlist() {
 		rptGenBean = new ReportsGenerateBean();
@@ -12142,25 +12437,22 @@ public class ReportBackingBean extends
 	 * PURCHASE) module reports.
 	 */
 	public void generateSCReport() {
-		/*if ((getManagedBean().getReportValue() != null)
-				&& (getManagedBean().getReportValue().trim()
-						.equalsIgnoreCase(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL))
-				|| (getManagedBean().getReportValue() != null)
-				&& (getManagedBean().getReportValue().trim()
-						.equalsIgnoreCase(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL))) {
-			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
-			if ((rptGenBean.getUrlReportJSPName() != null)
-					&& (rptGenBean.getUrlReportJSPName() != ReportConst.EMPTY_VAL)) {
-				setConstructedParamString(ReportConst.AMP_REPORT_NAME
-						+ rptGenBean.getUrlReportJSPName()
-						+ rptGenBean.getReportValueIdVar()
-						+ rptGenBean.getUserIdVar());
-			} else {
-				throw new EpException(MessageConst.ERROR_REPORT_780007);
-			}
-		} else*/ 
-		
-		
+		/*
+		 * if ((getManagedBean().getReportValue() != null) &&
+		 * (getManagedBean().getReportValue().trim()
+		 * .equalsIgnoreCase(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL)) ||
+		 * (getManagedBean().getReportValue() != null) &&
+		 * (getManagedBean().getReportValue().trim()
+		 * .equalsIgnoreCase(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL))) {
+		 * rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp()); if
+		 * ((rptGenBean.getUrlReportJSPName() != null) &&
+		 * (rptGenBean.getUrlReportJSPName() != ReportConst.EMPTY_VAL)) {
+		 * setConstructedParamString(ReportConst.AMP_REPORT_NAME +
+		 * rptGenBean.getUrlReportJSPName() + rptGenBean.getReportValueIdVar() +
+		 * rptGenBean.getUserIdVar()); } else { throw new
+		 * EpException(MessageConst.ERROR_REPORT_780007); } } else
+		 */
+
 		if (((getScQuotationNo() != null) && (getScQuotationNo() != ReportConst.EMPTY_VAL))
 				|| ((getFromDate() != null) && (getFromDate().toString() != ReportConst.EMPTY_VAL))
 				|| ((getToDate() != null) && (getToDate().toString() != ReportConst.EMPTY_VAL))
@@ -14279,22 +14571,37 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * Change rt report type for payment.
+	 */
 	public void changeRTReportTypeForPayment() {
 
-		this.getRptGenBean().setSmMandatoryReceiptDateView(false);
+		this.getRptGenBean().setSmNonMandatoryReceiptDateView(false);
+		this.getRptGenBean().setSmNonMandatoryTransactionDateView(false);
+	
 
 		if (this.getSmRTReportType() != null) {
 			if (this.getSmRTReportType().equalsIgnoreCase(
-					ReportConst.SM_REPORT_RESIT)
-					|| this.getSmRTReportType().equalsIgnoreCase(
-							ReportConst.SM_REPORT_TRANSACTION)) {
-				this.getRptGenBean().setSmMandatoryForDateView(true);
-				this.getRptGenBean().setSmFromDateView(true);
+					ReportConst.SM_REPORT_RESIT)) {
+				/*this.getRptGenBean().setSmMandatoryForDateView(true);
+				this.getRptGenBean().setSmFromDateView(true);*/
 
+				this.getRptGenBean().setSmNonMandatoryReceiptDateView(true);
+
+			} else if (this.getSmRTReportType().equalsIgnoreCase(
+					ReportConst.SM_REPORT_TRANSACTION)) {
+				this.getRptGenBean().setSmNonMandatoryTransactionDateView(true);
 			}
+		} else {
+			this.getRptGenBean().setSmNonMandatoryTransactionDateView(true);
 		}
 	}
 
+	/**
+	 * Gets the payment type method list.
+	 * 
+	 * @return the payment type method list
+	 */
 	public List<SelectItem> getPaymentTypeMethodList() {
 
 		List<SelectItem> paymentTypeMethodList = new ArrayList<SelectItem>();
@@ -14316,6 +14623,34 @@ public class ReportBackingBean extends
 		}
 
 		return paymentTypeMethodList;
+	}
+
+	/**
+	 * Gets the payment type method list.
+	 * 
+	 * @return the payment type method list
+	 */
+	public List<SelectItem> getOrgTypeList() {
+
+		List<SelectItem> orgTypeList = new ArrayList<SelectItem>();
+
+		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+						IPMReportSO.class);
+
+		List<Object[]> pmOrgTypeList = reportSO
+				.retrieveOrgTypeList(strLanguage);
+
+		for (Object[] object : pmOrgTypeList) {
+
+			SelectItem selectItem1 = new SelectItem();
+			selectItem1.setValue(object[0].toString());
+			selectItem1.setLabel(object[1].toString());
+			orgTypeList.add(selectItem1);
+
+		}
+
+		return orgTypeList;
 	}
 
 }
