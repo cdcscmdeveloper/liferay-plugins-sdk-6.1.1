@@ -34,7 +34,7 @@
 						value="#{lbl['lbl.sc.gst.register.num']}" /></td>
 				<td><p:inputText disabled="true" size="30"
 						value="#{supplierDetailBackingBean.managedBean.smGstSupplier.gstRegNo}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.gst.register.num.tooltip']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.gst.register.num.tooltip']}" id="_supplierGstRegNo"/>
 				</td>
 			</tr>
 			<tr>
@@ -49,7 +49,7 @@
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText> <ac:iconTooltip
-						value="#{lbl['lbl.sc.gst.effective.date.tooltip']}" /></td>
+						value="#{lbl['lbl.sc.gst.effective.date.tooltip']}" id="_supplierGstEffDate"/></td>
 			</tr>
 			<tr>
 				<td rowspan="4" valign="top"><p:outputLabel
@@ -63,7 +63,7 @@
 						value="#{supplierDetailBackingBean.managedBean.smGstSupplier.gstDeclaredDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText> <ac:iconTooltip value="#{lbl['lbl.sc.gst.declared.date.tooltip']}" />
+					</p:inputText> <ac:iconTooltip value="#{lbl['lbl.sc.gst.declared.date.tooltip']}" id="_supplierGstDecDate" />
 				</td>
 			</tr>
 			<tr>
