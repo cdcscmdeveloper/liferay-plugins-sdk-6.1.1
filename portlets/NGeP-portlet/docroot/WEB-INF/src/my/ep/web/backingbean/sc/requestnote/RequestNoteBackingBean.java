@@ -515,6 +515,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				outcome.isEmpty() || 
 				outcome.equals(BpmOutcomeConst.BPM_APPROVE)){
 
+			parseRequestNote(scRequestNote, outcome);
+			
 			// validate RN
 			validateRequestNote(scRequestNote);
 
