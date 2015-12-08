@@ -113,7 +113,7 @@
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sc.supporting.document']}"
-		rendered="#{!isSupplierAckStatus}" toggleable="false">
+		rendered="#{!isSupplierAckStatus}" toggleable="true">
 		<p:dataTable id="suppDocTbl" var="scLoaSuppDoc"
 			widgetVar="suppDocTblWidget"
 			value="#{directLOABackingBean.managedBean.scLoa.scLoaSupportingDocs}"

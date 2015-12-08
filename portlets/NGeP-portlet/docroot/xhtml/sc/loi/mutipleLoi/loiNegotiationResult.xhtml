@@ -30,7 +30,6 @@
 			</p:column>
 		</p:dataTable>
 	</p:panel>
-	<br />
 	<h:panelGroup id="ItemDetAndNegoTerm">
 	 <ui:param name="isBiddingAward" value="#{lOIDetailBackingBean.managedBean.scLoi.recommendBy.parameterCode eq ParameterConst.recommendByOnlineBidding}" />
 		
@@ -266,7 +265,7 @@
 		</p:panel>
 
 		<p:panel header="#{lbl['lbl.sc.supporting.document']}"
-			toggleable="false">
+			toggleable="true">
 			<p:dataTable id="suppDocTbl" var="scLoiSuppDoc"
 				widgetVar="suppDocTblWidget"
 				value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiSupportingDocs}"
