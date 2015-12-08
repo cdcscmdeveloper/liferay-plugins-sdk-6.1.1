@@ -142,7 +142,7 @@
 													action="#{approvalBackingBean.downloadFile(attachFile)}"
 													disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}" />
 												<p:commandLink
-													action="#{approvalBackingBean.deleteFile}"
+													action="#{approvalBackingBean.deleteFile(attachFile)}"
 													immediate="true" update="@([id$=fcAttachId])"
 													disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}">
 													<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/icon_trash.png" styleClass="tasklist_title1" />
