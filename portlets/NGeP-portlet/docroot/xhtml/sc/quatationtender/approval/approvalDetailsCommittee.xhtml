@@ -100,7 +100,7 @@
 													styleClass="blue_font" immediate="true"
 													action="#{approvalBackingBean.downloadFile(attachFile)}"
 													disabled="#{qTDetailBB.approvalDtlsEditable(commiteApproverCategory)}" />
-												<p:commandLink action="#{approvalBackingBean.deleteFile}"
+												<p:commandLink action="#{approvalBackingBean.deleteFile(attachFile)}"
 													disabled="#{qTDetailBB.approvalDtlsEditable(commiteApproverCategory)}"
 													immediate="true" update="@([id$=attachFileIds])">
 													<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/trash.png" styleClass="tasklist_title1" />
