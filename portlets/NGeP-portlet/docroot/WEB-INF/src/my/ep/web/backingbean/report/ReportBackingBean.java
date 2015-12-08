@@ -10691,18 +10691,13 @@ public class ReportBackingBean extends
 		fromDate.set(fromDate.get(Calendar.YEAR), 00, 01, 0, 00, 0);
 
 		List<String> reportNameList = new ArrayList<String>();
-		
+
 		// for SM Defaul Dates
-		reportNameList.add(ReportConst.SM_LIST_OF_APPLICATION_RPT_VAL);
-		reportNameList.add(ReportConst.SM_LIST_OFFLINE_SUPP_DOC_RPT_VAL);
-		reportNameList.add(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL);
-		reportNameList.add(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL);
-		
-		//For PM Dafault Dates
-		reportNameList.add(ReportConst.PM_LIST_OF_EXEMPTED_CONTRACTED_ITEMS_RPT_VAL);
-		reportNameList.add(ReportConst.PM_LIST_OF_EXEMPTED_ITEMS_RPT_VAL);
-		reportNameList.add(ReportConst.PM_LIST_OF_EXEMPTED_ITEMS_BY_SUPPLIER_RPT_VAL);
-		
+		getDefaultDatesforSM(reportNameList);
+		// For PM Dafault Dates
+		getDefaultDatesforPM(reportNameList);
+		// For FL Default Dates
+		getDefaultDatesforFL(reportNameList);
 
 		for (String code : reportNameList)
 			if (code.equalsIgnoreCase(reportCode)) {
@@ -10710,6 +10705,83 @@ public class ReportBackingBean extends
 				this.setToDate(currentDate);
 
 			}
+	}
+
+	private void getDefaultDatesforPM(List<String> reportNameList) {
+		reportNameList
+				.add(ReportConst.PM_LIST_OF_EXEMPTED_CONTRACTED_ITEMS_RPT_VAL);
+		reportNameList.add(ReportConst.PM_LIST_OF_EXEMPTED_ITEMS_RPT_VAL);
+		reportNameList
+				.add(ReportConst.PM_LIST_OF_EXEMPTED_ITEMS_BY_SUPPLIER_RPT_VAL);
+	}
+
+	private void getDefaultDatesforSM(List<String> reportNameList) {
+		reportNameList.add(ReportConst.SM_LIST_OF_APPLICATION_RPT_VAL);
+		reportNameList.add(ReportConst.SM_LIST_OFFLINE_SUPP_DOC_RPT_VAL);
+		reportNameList.add(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL);
+		reportNameList.add(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL);
+	}
+
+	private void getDefaultDatesforFL(List<String> reportNameList) {
+		
+		reportNameList.add(ReportConst.CON_REQ_RPT_MIN_VAL);
+		reportNameList.add(ReportConst.CON_ORD_RPT_MIN_VAL);
+		reportNameList.add(ReportConst.DEL_ORD_RPT_MIN_VAL);
+		reportNameList.add(ReportConst.FL_REC_NOTE_RPT_MIN_VAL);
+		reportNameList.add(ReportConst.LATE_DEL_RPT_MIN_VAL);
+		reportNameList.add(ReportConst.SHP_INSTR_RPT_MIN_VAL);
+		reportNameList.add(ReportConst.STP_INSTR_DEL_RPT_MIN_VAL);
+		reportNameList.add(ReportConst.INV_RPT_VIEW_SUPL_MIN_VAL);
+		reportNameList.add(ReportConst.INV_RPT_VIEW_PTJ_MIN_VAL);
+		reportNameList.add(ReportConst.PYMT_MATCH_RPT_MIN_VAL);
+		reportNameList.add(ReportConst.DED_RPT_MIN_VAL);
+		reportNameList.add(ReportConst.CON_REQ_CANC_RPT_MIN_VAL);
+		reportNameList.add(ReportConst.CON_ORD_CANC_RPT_MIN_VAL);
+		reportNameList.add(ReportConst.DEL_ORD_CANC_RPT_MIN_VAL);
+		reportNameList.add(ReportConst.FL_REC_NOTE_CANC_RPT_MIN_VAL);
+		reportNameList.add(ReportConst.INV_CANC_RPT_MIN_VAL);
+		reportNameList.add(ReportConst.SUP_PERF_RPT_MIN_VAL);
+		reportNameList.add(ReportConst.CON_REQ_RPT_CEN_PEN_VAL);
+		reportNameList.add(ReportConst.CON_ORD_RPT_CEN_PEN_VAL);
+		reportNameList.add(ReportConst.DEL_ORD_RPT_CEN_PEN_VAL);
+		reportNameList.add(ReportConst.FL_REC_NOTE_RPT_CEN_PEN_VAL);
+		reportNameList.add(ReportConst.LATE_DEL_RPT_CEN_PEN_VAL);
+		reportNameList.add(ReportConst.SHP_INSTR_RPT_CEN_PEN_VAL);
+		reportNameList.add(ReportConst.STP_INSTR_DEL_RPT_CEN_PEN_VAL);
+		reportNameList.add(ReportConst.INV_RPT_VIEW_SUPL_CEN_PEN_VAL);
+		reportNameList.add(ReportConst.INV_RPT_VIEW_PTJ_CEN_PEN_VAL);
+		reportNameList.add(ReportConst.PYMT_MATCH_RPT_CEN_PEN_VAL);
+		reportNameList.add(ReportConst.CON_REQ_CANC_RPT_CEN_PEN_VAL);
+		reportNameList.add(ReportConst.CON_ORD_CANC_RPT_CEN_PEN_VAL);
+		reportNameList.add(ReportConst.DEL_ORD_CANC_RPT_CEN_PEN_VAL);
+		reportNameList.add(ReportConst.FL_REC_NOTE_CANC_RPT_CEN_PEN_VAL);
+		reportNameList.add(ReportConst.INV_CANC_RPT_CEN_PEN_VAL);
+		reportNameList.add(ReportConst.SUP_PERF_RPT_CEN_PEN_VAL);
+		reportNameList.add(ReportConst.SUMM_RPT_PAN_ITM_VAL);
+		reportNameList.add(ReportConst.PUR_REQ_RPT_PO_VAL);
+		reportNameList.add(ReportConst.PUR_ORD_RPT_PO_VAL);
+		reportNameList.add(ReportConst.EMR_PROCUR_RPT_PO_VAL);
+		reportNameList.add(ReportConst.PUR_ORD_REJ_RPT_PO_VAL);
+		reportNameList.add(ReportConst.DEL_ORD_RPT_PO_VAL);
+		reportNameList.add(ReportConst.FL_REC_NOTE_RPT_PO_VAL);
+		reportNameList.add(ReportConst.LATE_DEL_RPT_PO_VAL);
+		reportNameList.add(ReportConst.STP_INSTR_DEL_RPT_PO_VAL);
+		reportNameList.add(ReportConst.INV_RPT_VIEW_SUPL_PO_VAL);
+		reportNameList.add(ReportConst.INV_RPT_VIEW_PTJ_PO_VAL);
+		reportNameList.add(ReportConst.PYMT_MATCH_RPT_PO_VAL);
+		reportNameList.add(ReportConst.PUR_REQ_CANC_RPT_PO_VAL);
+		reportNameList.add(ReportConst.PUR_ORD_CANC_RPT_PO_VAL);
+		reportNameList.add(ReportConst.DEL_ORD_CANC_RPT_PO_VAL);
+		reportNameList.add(ReportConst.FL_REC_NOTE_CANC_RPT_PO_VAL);
+		reportNameList.add(ReportConst.INV_CANC_RPT_PO_VAL);
+		reportNameList.add(ReportConst.FL_STP_INSTR_INIT_PTJ_RPT_FL_MIN_VAL);
+		reportNameList
+				.add(ReportConst.FL_STP_INSTR_INIT_PTJ_RPT_FL_CEN_PEN_VAL);
+		reportNameList.add(ReportConst.FL_STP_INSTR_INIT_PTJ_RPT_FL_PO_VAL);
+		reportNameList.add(ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_MIN_VAL);
+		reportNameList
+				.add(ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_CEN_PEN_VAL);
+		reportNameList.add(ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_PO_VAL);
 	}
 
 	/**
