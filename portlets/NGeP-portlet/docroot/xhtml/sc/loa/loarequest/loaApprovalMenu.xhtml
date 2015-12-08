@@ -16,7 +16,7 @@
 		
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td width="21%">
+			<td width="23%">
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.contract.signer']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
@@ -67,7 +67,7 @@
 		toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
-				<td width="21%"><p:outputLabel value="#{lbl['lbl.sc.approver']}" />
+				<td width="23%"><p:outputLabel value="#{lbl['lbl.sc.approver']}" />
 				<p:outputLabel value="*" styleClass="mandatory"/>
 				</td>
 				<td><p:selectOneMenu id="loaApprover"
@@ -94,7 +94,7 @@
      <p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td class="TableFieldLeft" width="16%"></td>
+				<td class="TableFieldLeft" width="18%"></td>
 
 				<td class="TableFieldRight"><p:dataGrid id="catatan"
 						value="#{lOADetailBackingBean.managedBean.scLoa.scLoaRemarks}"

@@ -45,7 +45,7 @@
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.gst.register.num']}" />
 			</td>
-			<td>
+			<td colspan="3">
 				<p:inputText size="35"
 					value="#{lOADetailBackingBean.managedBean.scLoa.gstRegNo eq null ? lbl['lbl.txt.na']:lOADetailBackingBean.managedBean.scLoa.gstRegNo}"
 					disabled="true" id="gstRegNoId"/> <ac:iconTooltip value="#{lbl['lbl.sc.gst.registartion.number.tooltip']}"/>
@@ -55,7 +55,7 @@
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.gst.effective.date']}" />
 			</td>
-			<td>
+		<td colspan="3">
 				<p:inputText size="35"
 					value="#{lOADetailBackingBean.managedBean.scLoa.gstEffDate eq null ? lbl['lbl.txt.na']:lOADetailBackingBean.managedBean.scLoa.gstEffDate}"
 					disabled="true" id="gstEffDateId">
@@ -67,7 +67,7 @@
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.gst.declared.date']}" />
 			</td>
-			<td>
+		<td colspan="3">
 				<p:inputText size="35"
 					value="#{lOADetailBackingBean.managedBean.scLoa.gstDeclaredDate eq null ? lbl['lbl.txt.na'] : lOADetailBackingBean.managedBean.scLoa.gstDeclaredDate}"
 					disabled="true" id="gstDeclaredDateId">
@@ -435,11 +435,11 @@
 						disabled="true" size="35" />
 				</c:if>
 			</td>
-			<td style="width: 21%">
+			<td style="width: 10%">
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.cont.admin']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
-			<td>
+			<td style="width: 30%">
 				<c:if test="#{isEditableStatus}">
 					<p:selectOneMenu id="contractAdmin"
 						value="#{lOADetailBackingBean.managedBean.scLoa.contractAdmin.userId}"
@@ -605,7 +605,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td rowspan="3" valign="top" width="21%">
+			<td rowspan="3" valign="top">
 				<p:outputLabel value="#{lbl['lbl.sc.address']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
@@ -652,10 +652,10 @@
 			</td>
 		</tr>
 		<tr>
-			<td>
+			<td style="width: 10%">
 				<p:outputLabel value="#{lbl['lbl.sc.mobile.no']}" />
 			</td>
-			<td>
+			<td style="width: 30%">
 				<p:inputText id="mobileNo" size="25"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.mobileNo}"			
 					maxlength="20"
@@ -669,7 +669,7 @@
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.email']}" />
 			</td>
-			<td colspan="3">
+			<td>
 				<p:inputText id="email" size="35" style=" margin-bottom:5px;"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.email}"
 					maxlength="80"

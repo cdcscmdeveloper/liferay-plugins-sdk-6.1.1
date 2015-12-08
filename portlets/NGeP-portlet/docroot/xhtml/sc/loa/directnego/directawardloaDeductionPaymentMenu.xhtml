@@ -84,14 +84,12 @@
 				title="#{lbl['lbl.msg.confirm.delete.header']}"
 				content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
 		</c:if>
-
-		<br />
+		
 		<h:panelGroup id="clausePnl">
 			<h:outputText value="#{lbl['lbl.sc.deduction.payment']} (" />
 			<h:outputText
 				value="#{directLOABackingBean.getParameterDesc(directLOABackingBean.managedBean.selectedScQtDeduction.deductionType)} )>" />
 			<h:outputText value="#{lbl['lbl.sc.deduction.clauses']} " />
-
 
 			<p:dataTable id="deductClauseTbl" widgetVar="deductClauseTblWidget"
 				var="scQtDeductionClause"
