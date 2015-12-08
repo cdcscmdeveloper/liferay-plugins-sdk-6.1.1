@@ -1023,6 +1023,11 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	    }
     }
     
+    public void deleteFactoringAttachement(){
+    	getManagedBean().getFactoring().setFileName(null);
+  	    getManagedBean().getFactoring().setFilePath(null);
+    }
+    
     /**
 	 * The method used to download the attached file.
 	 * 
