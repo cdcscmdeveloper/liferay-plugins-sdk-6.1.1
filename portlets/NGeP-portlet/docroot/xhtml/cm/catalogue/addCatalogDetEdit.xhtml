@@ -61,7 +61,7 @@
 
 		<div style="text-align: right; min-height: 40px;">
 			<div style="float: left; clear: both;">
-				<p:commandButton value="#{lbl['lbl.cm.back']}"
+				<p:commandButton value="#{lbl['lbl.cm.back']}" rendered="#{!unspscCodeBackingBean.supplierTemp}"
 					action="#{catalogueBackingBean.navigate}">
 				</p:commandButton>
 			</div>
