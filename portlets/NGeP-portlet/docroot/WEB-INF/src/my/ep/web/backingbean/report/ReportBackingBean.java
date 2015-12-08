@@ -1044,7 +1044,7 @@ public class ReportBackingBean extends
 	private String pmEpNo;
 
 	/** The pm org cateogry. */
-	private String pmOrgCateogry;
+	private String pmOrgCategory;
 
 	/** The pm org type. */
 	private String pmOrgType;
@@ -7067,8 +7067,8 @@ public class ReportBackingBean extends
 	 * 
 	 * @return the pmOrgCateogry
 	 */
-	public String getPmOrgCateogry() {
-		return pmOrgCateogry;
+	public String getPmOrgCategory() {
+		return pmOrgCategory;
 	}
 
 	/**
@@ -7077,8 +7077,8 @@ public class ReportBackingBean extends
 	 * @param pmOrgCateogry
 	 *            the pmOrgCateogry to set
 	 */
-	public void setPmOrgCateogry(String pmOrgCateogry) {
-		this.pmOrgCateogry = pmOrgCateogry;
+	public void setPmOrgCategory(String pmOrgCategory) {
+		this.pmOrgCategory = pmOrgCategory;
 	}
 
 	/**
@@ -13586,7 +13586,34 @@ public class ReportBackingBean extends
 						.getPmBusinessRegNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getPmStatus() != null) && (this.getPmStatus() != ReportConst.EMPTY_VAL))
 				|| ((this.getPmFinancialOrgName() != null) && (this
-						.getPmFinancialOrgName() != ReportConst.EMPTY_VAL))) {
+						.getPmFinancialOrgName() != ReportConst.EMPTY_VAL))
+				|| ((this.getPmEpNo() != null) && (this.getPmEpNo() != ReportConst.EMPTY_VAL))
+
+				|| ((this.getPmOrgCategory() != null) && (this
+						.getPmOrgCategory() != ReportConst.EMPTY_VAL))
+
+				|| ((this.getPmIdentificationNo() != null) && (this
+						.getPmIdentificationNo() != ReportConst.EMPTY_VAL))
+
+				|| ((this.getPmCompanyName() != null) && (this
+						.getPmCompanyName() != ReportConst.EMPTY_VAL))
+
+				|| ((this.getPmOrgType() != null) && (this.getPmOrgType() != ReportConst.EMPTY_VAL))
+
+				|| ((this.getPmContractNo() != null) && (this.getPmContractNo() != ReportConst.EMPTY_VAL))
+
+				|| ((this.getPmRoleCode() != null) && (this.getPmRoleCode() != ReportConst.EMPTY_VAL))
+
+				|| ((this.getPmUserName() != null) && (this.getPmUserName() != ReportConst.EMPTY_VAL))
+
+				|| ((this.getPmItemCode() != null) && (this.getPmItemCode() != ReportConst.EMPTY_VAL))
+
+				|| ((this.getPmItemName() != null) && (this.getPmItemName() != ReportConst.EMPTY_VAL))
+
+				|| ((this.getPmOrgCode() != null) && (this.getPmOrgCode() != ReportConst.EMPTY_VAL))
+
+				|| ((this.getPmOrgName() != null) && (this.getPmOrgName() != ReportConst.EMPTY_VAL))) {
+
 			if ((this.getPmServiceType() != null)
 					&& (this.getPmServiceType() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
@@ -13610,6 +13637,95 @@ public class ReportBackingBean extends
 						.setPmFinancialOrgNameVar(ReportConst.PM_AMP_FINORG_NAME_EQ
 								+ this.getPmFinancialOrgName());
 			}
+
+			SimpleDateFormat outputDateFormat = new SimpleDateFormat(
+					CommonConstants.DEFAULT_DATE_FORMAT);
+			if ((this.getFromDate() != null)
+					&& (this.getFromDate().toString() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setFromDateVar(ReportConst.AMP_PM_FROM_DATE_EQ
+						+ outputDateFormat.format(this.getFromDate()));
+			}
+			if ((this.getToDate() != null)
+					&& (this.getToDate().toString() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setToDateVar(ReportConst.AMP_PM_TO_DATE_EQ
+						+ outputDateFormat.format(this.getToDate()));
+			}
+
+			if ((this.getPmEpNo() != null)
+					&& (this.getPmEpNo() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setPmEpNoVar(ReportConst.AMP_PM_EP_NO_EQ
+						+ this.getPmEpNo());
+			}
+
+			if ((this.getPmOrgCategory() != null)
+					&& (this.getPmOrgCategory() != ReportConst.EMPTY_VAL)) {
+				rptGenBean
+						.setPmOrgCategoryVar(ReportConst.AMP_PM_ORG_CATEGORY_EQ
+								+ this.getPmOrgCategory());
+			}
+
+			if ((this.getPmOrgType() != null)
+					&& (this.getPmOrgType() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setPmOrgTypeVar(ReportConst.AMP_PM_ORG_TYPE_EQ
+						+ this.getPmOrgType());
+			}
+
+			if ((this.getPmOrgName() != null)
+					&& (this.getPmOrgName() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setPmOrgNameVar(ReportConst.AMP_PM_ORG_NAME_EQ
+						+ this.getPmOrgName());
+			}
+
+			if ((this.getPmOrgCode() != null)
+					&& (this.getPmOrgCode() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setPmOrgCodeVar(ReportConst.AMP_PM_ORG_CODE_EQ
+						+ this.getPmOrgCode());
+			}
+
+			if ((this.getPmItemName() != null)
+					&& (this.getPmItemName() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setPmItemNameVar(ReportConst.AMP_PM_ITEM_NAME_EQ
+						+ this.getPmItemName());
+			}
+
+			if ((this.getPmItemCode() != null)
+					&& (this.getPmItemCode() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setPmItemCodeVar(ReportConst.AMP_PM_ITEM_CODE_EQ
+						+ this.getPmItemCode());
+			}
+
+			if ((this.getPmCompanyName() != null)
+					&& (this.getPmCompanyName() != ReportConst.EMPTY_VAL)) {
+				rptGenBean
+						.setPmCompanyNameVar(ReportConst.AMP_PM_COMPANY_NAME_EQ
+								+ this.getPmCompanyName());
+			}
+
+			if ((this.getPmIdentificationNo() != null)
+					&& (this.getPmIdentificationNo() != ReportConst.EMPTY_VAL)) {
+				rptGenBean
+						.setPmIdentificationNoVar(ReportConst.AMP_PM_IDENTIFICATION_NO_EQ
+								+ this.getPmIdentificationNo());
+			}
+
+			if ((this.getPmUserName() != null)
+					&& (this.getPmUserName() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setPmUserNameVar(ReportConst.AMP_PM_USERNAME_EQ
+						+ this.getPmUserName());
+			}
+
+			if ((this.getPmRoleCode() != null)
+					&& (this.getPmRoleCode() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setPmRoleCodeVar(ReportConst.AMP_PM_ROLE_CODE_EQ
+						+ this.getPmRoleCode());
+			}
+
+			if ((this.getPmContractNo() != null)
+					&& (this.getPmContractNo() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setPmContractNoVar(ReportConst.AMP_PM_CONTRACT_NO_EQ
+						+ this.getPmContractNo());
+			}
+
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if ((rptGenBean.getUrlReportJSPName() != null)
 					&& (rptGenBean.getUrlReportJSPName() != ReportConst.EMPTY_VAL)) {
@@ -13619,6 +13735,19 @@ public class ReportBackingBean extends
 						+ rptGenBean.getPmBusinessRegNoVar()
 						+ rptGenBean.getPmStatusVar()
 						+ rptGenBean.getPmFinancialOrgNameVar()
+						+ rptGenBean.getFromDateVar()
+						+ rptGenBean.getToDateVar() + rptGenBean.getPmEpNoVar()
+						+ rptGenBean.getPmOrgCategoryVar()
+						+ rptGenBean.getPmOrgTypeVar()
+						+ rptGenBean.getPmOrgNameVar()
+						+ rptGenBean.getPmOrgCodeVar()
+						+ rptGenBean.getPmItemNameVar()
+						+ rptGenBean.getPmItemCodeVar()
+						+ rptGenBean.getPmCompanyNameVar()
+						+ rptGenBean.getPmIdentificationNoVar()
+						+ rptGenBean.getPmUserNameVar()
+						+ rptGenBean.getPmRoleCodeVar()
+						+ rptGenBean.getPmContractNoVar()
 						+ rptGenBean.getReportValueIdVar()
 						+ rptGenBean.getUserIdVar());
 			} else {
@@ -14041,6 +14170,18 @@ public class ReportBackingBean extends
 		this.setPmBusinessRegNo(null);
 		this.setPmStatus(null);
 		this.setPmFinancialOrgName(null);
+		this.setPmEpNo(null);
+		this.setPmOrgCategory(null);
+		this.setPmOrgType(null);
+		this.setPmOrgName(null);
+		this.setPmOrgCode(null);
+		this.setPmItemName(null);
+		this.setPmItemCode(null);
+		this.setPmCompanyName(null);
+		this.setPmIdentificationNo(null);
+		this.setPmUserName(null);
+		this.setPmRoleCode(null);
+		this.setPmContractNo(null);
 		// changeReportType();
 		retrieveDates();
 		applicationStatusDateChange();
@@ -14578,13 +14719,14 @@ public class ReportBackingBean extends
 
 		this.getRptGenBean().setSmNonMandatoryReceiptDateView(false);
 		this.getRptGenBean().setSmNonMandatoryTransactionDateView(false);
-	
 
 		if (this.getSmRTReportType() != null) {
 			if (this.getSmRTReportType().equalsIgnoreCase(
 					ReportConst.SM_REPORT_RESIT)) {
-				/*this.getRptGenBean().setSmMandatoryForDateView(true);
-				this.getRptGenBean().setSmFromDateView(true);*/
+				/*
+				 * this.getRptGenBean().setSmMandatoryForDateView(true);
+				 * this.getRptGenBean().setSmFromDateView(true);
+				 */
 
 				this.getRptGenBean().setSmNonMandatoryReceiptDateView(true);
 

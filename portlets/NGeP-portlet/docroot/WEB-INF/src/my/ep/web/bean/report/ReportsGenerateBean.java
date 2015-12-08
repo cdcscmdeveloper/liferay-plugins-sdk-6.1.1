@@ -3146,7 +3146,7 @@ public class ReportsGenerateBean {
 		
 	   //URL variables start
 		/** The quotation id tot var. */
-   	private String quotationIdTotVar=ReportConst.EMPTY_VAL;
+     	private String quotationIdTotVar=ReportConst.EMPTY_VAL;
 		
 		/** The item type tot var. */
 		private String itemTypeTotVar=ReportConst.EMPTY_VAL;
@@ -3764,8 +3764,31 @@ public class ReportsGenerateBean {
 		private String pmFinancialOrgNameVar=ReportConst.EMPTY_VAL;
 		
 		/** The pm business reg no var. */
-		private String pmBusinessRegNoVar=ReportConst.EMPTY_VAL;
+		private String pmBusinessRegNoVar=ReportConst.EMPTY_VAL;		
 		
+		private String pmEpNoVar=ReportConst.EMPTY_VAL;		
+		
+		private String pmOrgCategoryVar=ReportConst.EMPTY_VAL;
+		
+		private String pmOrgTypeVar=ReportConst.EMPTY_VAL;
+		
+		private String pmOrgNameVar=ReportConst.EMPTY_VAL;
+		
+		private String pmOrgCodeVar=ReportConst.EMPTY_VAL;
+		
+		private String pmItemNameVar=ReportConst.EMPTY_VAL;
+		
+        private String pmItemCodeVar=ReportConst.EMPTY_VAL;
+		
+		private String pmCompanyNameVar=ReportConst.EMPTY_VAL;
+		
+		private String pmIdentificationNoVar=ReportConst.EMPTY_VAL;
+		
+		private String pmUserNameVar=ReportConst.EMPTY_VAL;
+		
+		private String pmRoleCodeVar=ReportConst.EMPTY_VAL;
+		
+        private String pmContractNoVar=ReportConst.EMPTY_VAL;		
 		
 		/** The Pm mandatory org category type view. */
 		private boolean pmMandatoryOrgCategoryTypeView = false;
@@ -14007,5 +14030,180 @@ public class ReportsGenerateBean {
 	 */
 	public void setPmContractNoView(boolean pmContractNoView) {
 		this.pmContractNoView = pmContractNoView;
+	}
+
+	/**
+	 * @return the pmEpNoVarr
+	 */
+	public String getPmEpNoVar() {
+		return pmEpNoVar;
+	}
+
+	/**
+	 * @param pmEpNoVarr the pmEpNoVarr to set
+	 */
+	public void setPmEpNoVar(String pmEpNoVar) {
+		this.pmEpNoVar = pmEpNoVar;
+	}
+
+	/**
+	 * @return the pmOrgCategoryVar
+	 */
+	public String getPmOrgCategoryVar() {
+		return pmOrgCategoryVar;
+	}
+
+	/**
+	 * @param pmOrgCategoryVar the pmOrgCategoryVar to set
+	 */
+	public void setPmOrgCategoryVar(String pmOrgCategoryVar) {
+		this.pmOrgCategoryVar = pmOrgCategoryVar;
+	}
+
+	/**
+	 * @return the pmOrgTypeVar
+	 */
+	public String getPmOrgTypeVar() {
+		return pmOrgTypeVar;
+	}
+
+	/**
+	 * @param pmOrgTypeVar the pmOrgTypeVar to set
+	 */
+	public void setPmOrgTypeVar(String pmOrgTypeVar) {
+		this.pmOrgTypeVar = pmOrgTypeVar;
+	}
+
+	/**
+	 * @return the pmOrgNameVar
+	 */
+	public String getPmOrgNameVar() {
+		return pmOrgNameVar;
+	}
+
+	/**
+	 * @param pmOrgNameVar the pmOrgNameVar to set
+	 */
+	public void setPmOrgNameVar(String pmOrgNameVar) {
+		this.pmOrgNameVar = pmOrgNameVar;
+	}
+
+	/**
+	 * @return the pmOrgCodeVar
+	 */
+	public String getPmOrgCodeVar() {
+		return pmOrgCodeVar;
+	}
+
+	/**
+	 * @param pmOrgCodeVar the pmOrgCodeVar to set
+	 */
+	public void setPmOrgCodeVar(String pmOrgCodeVar) {
+		this.pmOrgCodeVar = pmOrgCodeVar;
+	}
+
+	/**
+	 * @return the pmItemNameVar
+	 */
+	public String getPmItemNameVar() {
+		return pmItemNameVar;
+	}
+
+	/**
+	 * @param pmItemNameVar the pmItemNameVar to set
+	 */
+	public void setPmItemNameVar(String pmItemNameVar) {
+		this.pmItemNameVar = pmItemNameVar;
+	}
+
+	/**
+	 * @return the pmItemCodeVar
+	 */
+	public String getPmItemCodeVar() {
+		return pmItemCodeVar;
+	}
+
+	/**
+	 * @param pmItemCodeVar the pmItemCodeVar to set
+	 */
+	public void setPmItemCodeVar(String pmItemCodeVar) {
+		this.pmItemCodeVar = pmItemCodeVar;
+	}
+
+	/**
+	 * @return the pmCompanyNameVar
+	 */
+	public String getPmCompanyNameVar() {
+		return pmCompanyNameVar;
+	}
+
+	/**
+	 * @param pmCompanyNameVar the pmCompanyNameVar to set
+	 */
+	public void setPmCompanyNameVar(String pmCompanyNameVar) {
+		this.pmCompanyNameVar = pmCompanyNameVar;
+	}
+
+	/**
+	 * @return the pmIdentificationNoVar
+	 */
+	public String getPmIdentificationNoVar() {
+		return pmIdentificationNoVar;
+	}
+
+	/**
+	 * @param pmIdentificationNoVar the pmIdentificationNoVar to set
+	 */
+	public void setPmIdentificationNoVar(String pmIdentificationNoVar) {
+		this.pmIdentificationNoVar = pmIdentificationNoVar;
+	}
+
+	/**
+	 * @return the pmUserName
+	 */
+	public String getPmUserNameVar() {
+		return pmUserNameVar;
+	}
+
+	/**
+	 * @param pmUserName the pmUserName to set
+	 */
+	public void setPmUserNameVar(String pmUserNameVar) {
+		this.pmUserNameVar = pmUserNameVar;
+	}
+
+	/**
+	 * @return the pmRoleCodeVar
+	 */
+	public String getPmRoleCodeVar() {
+		return pmRoleCodeVar;
+	}
+
+	/**
+	 * @param pmRoleCodeVar the pmRoleCodeVar to set
+	 */
+	public void setPmRoleCodeVar(String pmRoleCodeVar) {
+		this.pmRoleCodeVar = pmRoleCodeVar;
+	}
+
+	/**
+	 * @return the pmContractNoVar
+	 */
+	public String getPmContractNoVar() {
+		return pmContractNoVar;
+	}
+
+	/**
+	 * @param pmContractNoVar the pmContractNoVar to set
+	 */
+	public void setPmContractNoVar(String pmContractNoVar) {
+		this.pmContractNoVar = pmContractNoVar;
+	}
+
+	/**
+	 * @param pmItemCodeView the pmItemCodeView to set
+	 */
+	public void setPmItemCodeView(boolean pmItemCodeView) {
+		this.pmItemCodeView = pmItemCodeView;
 	}
 }

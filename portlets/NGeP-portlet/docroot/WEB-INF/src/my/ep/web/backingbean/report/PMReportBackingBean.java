@@ -53,7 +53,6 @@ public class PMReportBackingBean extends
 			rptGenBean.setPmNonMandatoryOrgNameView(true);
 			rptGenBean.setPmOrgCodeView(true);
 			rptGenBean.setPmStatusView(true);
-
 			break;
 
 		case ReportConst.PM_LIST_OF_PROFILES_RPT_VAL:
@@ -69,7 +68,6 @@ public class PMReportBackingBean extends
 			rptGenBean.setPmNonMandatoryOrgNameView(true);
 			rptGenBean.setPmOrgCodeView(true);
 			rptGenBean.setPmStatusView(true);
-
 			break;
 
 		case ReportConst.PM_LIST_OF_EXEMPTED_ITEMS_BY_SUPPLIER_RPT_VAL:
@@ -81,8 +79,6 @@ public class PMReportBackingBean extends
 			rptGenBean.setPmItmeCodeView(true);
 			rptGenBean.setPmNonMandatoryDateView(true);
 			rptGenBean.setPmFromDateView(true);
-			
-
 			break;
 
 		case ReportConst.PM_LIST_OF_EXEMPTED_ITEMS_RPT_VAL:
@@ -91,7 +87,6 @@ public class PMReportBackingBean extends
 			rptGenBean.setPmItmeCodeView(true);
 			rptGenBean.setPmNonMandatoryDateView(true);
 			rptGenBean.setPmFromDateView(true);
-			
 			break;
 
 		case ReportConst.PM_LIST_OF_EXEMPTED_CONTRACTED_ITEMS_RPT_VAL:
@@ -99,7 +94,7 @@ public class PMReportBackingBean extends
 			rptGenBean.setPmItemNameView(true);
 			rptGenBean.setPmItmeCodeView(true);
 			rptGenBean.setPmNonMandatoryDateView(true);
-			rptGenBean.setPmFromDateView(true);			
+			rptGenBean.setPmFromDateView(true);
 			rptGenBean.setPmContractNoView(true);
 			break;
 
