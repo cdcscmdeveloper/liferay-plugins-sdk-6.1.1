@@ -1428,7 +1428,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			amendBB.getManagedBean().setShowItem(null);
 			amendBB.getManagedBean().setSelectedItem(null);
 			amendBB.getManagedBean().setSelectedServiceItem(null);
-			amendBB.getManagedBean().setDisableGstRadio(true);
+			//amendBB.getManagedBean().setDisableGstRadio(true);
 			amendBB.setAmendmentContractVer(resDTO);
 
 		} finally {

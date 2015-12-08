@@ -10,7 +10,6 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.model.SelectItem;
 
 import org.primefaces.model.DualListModel;
 
@@ -38,7 +37,6 @@ public class TerminationManagedBean extends BaseManagedBean {
 
 	private String taskName;
 	private String editorValue;
-	private String complaintCategory = "Breach The Obligation Of Tender / Contract";
 	private String userLoginId;
 	private String externalPageUrl;
 	private String fileDirectory;
@@ -47,7 +45,6 @@ public class TerminationManagedBean extends BaseManagedBean {
 	private String ptjCodeName;
 	private String ptjCodeNameSearchValue;
 
-	private boolean disciplinaryValue;
 	private boolean termination;
 	private boolean mutualTermination;
 	private boolean remedy;
@@ -55,7 +52,6 @@ public class TerminationManagedBean extends BaseManagedBean {
 	private boolean viewContract = false;
 
 	private String[] action;
-	private SelectItem[] terminationReasonDesc;
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	private List<CtTermination> terminationList;
@@ -199,34 +195,6 @@ public class TerminationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the disciplinaryValue
-	 */
-	public boolean isDisciplinaryValue() {
-		return disciplinaryValue;
-	}
-
-	/**
-	 * @param disciplinaryValue the disciplinaryValue to set
-	 */
-	public void setDisciplinaryValue(boolean disciplinaryValue) {
-		this.disciplinaryValue = disciplinaryValue;
-	}
-
-	/**
-	 * @return the complaintCategory
-	 */
-	public String getComplaintCategory() {
-		return complaintCategory;
-	}
-
-	/**
-	 * @param complaintCategory the complaintCategory to set
-	 */
-	public void setComplaintCategory(String complaintCategory) {
-		this.complaintCategory = complaintCategory;
-	}
-
-	/**
 	 * @return the termination
 	 */
 	public boolean isTermination() {
@@ -336,20 +304,6 @@ public class TerminationManagedBean extends BaseManagedBean {
 	 */
 	public void setPerformanceBondRuleAmt(double performanceBondRuleAmt) {
 		this.performanceBondRuleAmt = performanceBondRuleAmt;
-	}
-
-	/**
-	 * @return the terminationReasonDesc
-	 */
-	public SelectItem[] getTerminationReasonDesc() {
-		return terminationReasonDesc;
-	}
-
-	/**
-	 * @param terminationReasonDesc the terminationReasonDesc to set
-	 */
-	public void setTerminationReasonDesc(SelectItem[] terminationReasonDesc) {
-		this.terminationReasonDesc = terminationReasonDesc;
 	}
 
 	/**

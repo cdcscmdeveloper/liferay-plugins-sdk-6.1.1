@@ -47,7 +47,6 @@ public class ContractManagedBean extends BaseManagedBean {
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	private CtContractVer contractVer;
-	private CtContractVer ctContractVer;
 	private CtContractVer agreementContractVer;
 	private double performanceBondRuleAmt;
 	private String supplierCompanyName;
@@ -100,14 +99,13 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean chkConceValue;
 	private boolean chkJustification;
 	
-	 private int firstRowSelected;
 	 private boolean selectAll;
 	 private CtPerformanceBond ctPerformanceBond;
 	 
 	 private CtContractItem selectedItem;
 	 private String showItem;
 	 private List<CtContractItem> ctItemServiceList;
-	 private CtContractItem selectedServiceItem;
+	private CtContractItem selectedServiceItem;
 	 
 	 private boolean disableAmendDetails;
 	 private CtCircularVer ctCircularVer;
@@ -774,20 +772,6 @@ public class ContractManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * @return the firstRowSelected
-	 */
-	public int getFirstRowSelected() {
-		return firstRowSelected;
-	}
-
-	/**
-	 * @param firstRowSelected the firstRowSelected to set
-	 */
-	public void setFirstRowSelected(int firstRowSelected) {
-		this.firstRowSelected = firstRowSelected;
-	}
-	
-	/**
 	 * @return the selectAll
 	 */
 	public boolean isSelectAll() {
@@ -872,20 +856,6 @@ public class ContractManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedServiceItem(CtContractItem selectedServiceItem) {
 		this.selectedServiceItem = selectedServiceItem;
-	}
-
-	/**
-	 * @return the ctCircularVer
-	 */
-	public CtContractVer getCtContractVer() {
-		return ctContractVer;
-	}
-
-	/**
-	 * @param ctContractVer the ctContractVer to set
-	 */
-	public void setCtContractVer(CtContractVer ctContractVer) {
-		this.ctContractVer = ctContractVer;
 	}
 
 	/**

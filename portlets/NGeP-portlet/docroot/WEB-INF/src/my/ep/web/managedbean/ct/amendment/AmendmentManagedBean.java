@@ -14,7 +14,6 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
 import org.primefaces.model.DualListModel;
-import org.primefaces.model.MenuModel;
 
 import my.ep.constant.ct.ContractConst;
 import my.ep.constants.CTProcessNameConst;
@@ -22,7 +21,6 @@ import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.amend.CtCommitteeMember;
-import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemCeilingQty;
 import my.ep.persistence.entity.ct.dtl.item.CtItemMaxQty;
@@ -50,7 +48,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String taskName;
 	private String ackFA;
 	private String showItem;
-	private String selectedRadioButton = "1";
 	private String committeeName = null;
 	private String identificationNo = null;
 	private String identificationType;
@@ -72,9 +69,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean itemProductExist;
 	private boolean itemServiceExist;
 	private boolean termAndConditionFlg;
-	private boolean existingUsers = true;
-	private boolean newUsers;
-	private boolean chkConceValue;
 	private boolean pbConfirmMeeting;
 	private boolean memberSignOff;
 	private boolean letterOfAcceptance;
@@ -91,7 +85,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean disableEndorseAmendDetails;
 	private boolean disableFinalAmendDetails;
 	private boolean disableMeetingDetails;
-	private boolean disableGstRadio;
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	private List<CtContractVer> amendHistoryList;
@@ -104,14 +97,12 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private Map<Long, PmUser> userMap;
     private CtContractItem selectedServiceItem;
 	private CtContractVer agreementContractVer;
-	private CtPerformanceBond ctPerformanceBond;
 	private CtItemMaxQty ctItemMaxQty;
 	private CtItemPrice ctItemPrices;
 	private CtItemCeilingQty ctItemCeilingQtys;
 	private CtContractItem selectedItem;
 	private CtItemPrice ctServiceItemPrices;
 	private CtCommitteeMember newCommitteMembers;
-	private MenuModel amendMenuModel;
 	private ScLoaWitness scLoaWitness;
 	private ScLoaReport selectedScLoaReports;
 	private PmDigiSign pmDigiSign;
@@ -173,20 +164,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	 */
 	public void setShowItem(String showItem) {
 		this.showItem = showItem;
-	}
-	
-	/**
-	 * @return the selectedRadioButton
-	 */
-	public String getSelectedRadioButton() {
-		return selectedRadioButton;
-	}
-	
-	/**
-	 * @param selectedRadioButton the selectedRadioButton to set
-	 */
-	public void setSelectedRadioButton(String selectedRadioButton) {
-		this.selectedRadioButton = selectedRadioButton;
 	}
 	
 	/**
@@ -466,48 +443,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	 */
 	public void setTermAndConditionFlg(boolean termAndConditionFlg) {
 		this.termAndConditionFlg = termAndConditionFlg;
-	}
-	
-	/**
-	 * @return the existingUsers
-	 */
-	public boolean isExistingUsers() {
-		return existingUsers;
-	}
-	
-	/**
-	 * @param existingUsers the existingUsers to set
-	 */
-	public void setExistingUsers(boolean existingUsers) {
-		this.existingUsers = existingUsers;
-	}
-	
-	/**
-	 * @return the newUsers
-	 */
-	public boolean isNewUsers() {
-		return newUsers;
-	}
-	
-	/**
-	 * @param newUsers the newUsers to set
-	 */
-	public void setNewUsers(boolean newUsers) {
-		this.newUsers = newUsers;
-	}
-	
-	/**
-	 * @return the chkConceValue
-	 */
-	public boolean isChkConceValue() {
-		return chkConceValue;
-	}
-	
-	/**
-	 * @param chkConceValue the chkConceValue to set
-	 */
-	public void setChkConceValue(boolean chkConceValue) {
-		this.chkConceValue = chkConceValue;
 	}
 	
 	/**
@@ -905,20 +840,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public void setAgreementContractVer(CtContractVer agreementContractVer) {
 		this.agreementContractVer = agreementContractVer;
 	}
-
-	/**
-	 * @return the ctPerformanceBond
-	 */
-	public CtPerformanceBond getCtPerformanceBond() {
-		return ctPerformanceBond;
-	}
-	
-	/**
-	 * @param ctPerformanceBond the ctPerformanceBond to set
-	 */
-	public void setCtPerformanceBond(CtPerformanceBond ctPerformanceBond) {
-		this.ctPerformanceBond = ctPerformanceBond;
-	}
 	
 	/**
 	 * @return the ctItemMaxQty
@@ -1005,20 +926,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * @return the amendMenuModel
-	 */
-	public MenuModel getAmendMenuModel() {
-		return amendMenuModel;
-	}
-	
-	/**
-	 * @param amendMenuModel the amendMenuModel to set
-	 */
-	public void setAmendMenuModel(MenuModel amendMenuModel) {
-		this.amendMenuModel = amendMenuModel;
-	}
-	
-	/**
 	 * @return the scLoaWitness
 	 */
 	public ScLoaWitness getScLoaWitness() {
@@ -1082,20 +989,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	 */
 	public void setSpkiBackingBean(SpkiBackingBean spkiBackingBean) {
 		this.spkiBackingBean = spkiBackingBean;
-	}
-
-	/**
-	 * @return the disableGstRadio
-	 */
-	public boolean isDisableGstRadio() {
-		return disableGstRadio;
-	}
-
-	/**
-	 * @param disableGstRadio the disableGstRadio to set
-	 */
-	public void setDisableGstRadio(boolean disableGstRadio) {
-		this.disableGstRadio = disableGstRadio;
 	}
 
 	/**

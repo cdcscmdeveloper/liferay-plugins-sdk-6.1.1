@@ -74,10 +74,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	private int index = -1;
 	
 	private TreeNode[] selectedGeneralTreeNodes;
-	private List<TreeNode> zoneGeneralTrees = new ArrayList<TreeNode>();
-	private TreeNode rootLocationTree;
 	private TreeNode rootZoanlTree;
-	private TreeNode selectedZoneTree;
 	
 	private CtCircular circular;
 	private CtCircularVer circularVer;
@@ -536,34 +533,6 @@ public class PanelManagedBean extends BaseManagedBean {
 	public void setIndex(int index) {
 		this.index = index;
 	}
-
-	/**
-	 * @return the zoneGeneralTrees
-	 */
-	public List<TreeNode> getZoneGeneralTrees() {
-		return zoneGeneralTrees;
-	}
-
-	/**
-	 * @param zoneGeneralTrees the zoneGeneralTrees to set
-	 */
-	public void setZoneGeneralTrees(List<TreeNode> zoneGeneralTrees) {
-		this.zoneGeneralTrees = zoneGeneralTrees;
-	}
-
-	/**
-	 * @return the rootLocationTree
-	 */
-	public TreeNode getRootLocationTree() {
-		return rootLocationTree;
-	}
-
-	/**
-	 * @param rootLocationTree the rootLocationTree to set
-	 */
-	public void setRootLocationTree(TreeNode rootLocationTree) {
-		this.rootLocationTree = rootLocationTree;
-	}
 	
 	/**
 	 * @return the userMap
@@ -581,21 +550,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	public void setUserMap(Map<Long, PmUser> userMap) {
 		this.userMap = userMap;
 	}
-
-	/**
-	 * @return the selectedZoneTree
-	 */
-	public TreeNode getSelectedZoneTree() {
-		return selectedZoneTree;
-	}
-
-	/**
-	 * @param selectedZoneTree the selectedZoneTree to set
-	 */
-	public void setSelectedZoneTree(TreeNode selectedZoneTree) {
-		this.selectedZoneTree = selectedZoneTree;
-	}
-
+	
 	/**
 	 * @return the editZone
 	 */
