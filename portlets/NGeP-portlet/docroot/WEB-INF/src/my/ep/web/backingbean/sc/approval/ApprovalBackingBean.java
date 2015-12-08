@@ -46,7 +46,6 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.jaxb.sc.committeedata.SCCommitteeDataType;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
@@ -269,22 +268,26 @@ public class ApprovalBackingBean extends
 	/**
 	 * Delete Attachment.
 	 */
-	public void deleteFile() {
+	public void deleteFile(ScQtApprovalAttachment approvalAttachment) {
+		logger.info("deleteFile - START");
 		TabBean bean = this.getManagedBean().getSelectedApprovalTabBean();
+		bean.getScQtApproval().getScQtApprovalAttachments().remove(approvalAttachment);
 		this.getManagedBean().setScQtApproval(bean.getScQtApproval());
-		getManagedBean().getScQtApproval().setScQtApprovalAttachments(null);
+		logger.info("deleteFile - END");
 	}
 
 	/**
 	 * Delete Attachment for other approvals.
 	 */
 	public void deleteOthersApprovalFile() {
+		logger.info("deleteOthersApprovalFile - START");
 		List<ScQtApprovalRequest> list = this.getManagedBean()
 				.getSelectedApprovalTabBean().getScQtApproval()
 				.getScQtApprovalDtls();
 		for (int i = 0; i < list.size(); i++) {
 			list.get(i).setApprovalRequestAttachement(null);
 		}
+		logger.info("deleteOthersApprovalFile - END");
 	}
 
 	/**

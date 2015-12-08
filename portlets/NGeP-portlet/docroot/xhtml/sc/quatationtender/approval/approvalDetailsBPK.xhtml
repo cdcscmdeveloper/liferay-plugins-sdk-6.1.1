@@ -114,7 +114,7 @@
 											<td><h:commandLink value="#{attachFile.fileName}"
 													styleClass="blue_font" immediate="true"
 													action="#{approvalBackingBean.downloadFile(attachFile)}" disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}"  />
-												<p:commandLink action="#{approvalBackingBean.deleteFile}"
+												<p:commandLink action="#{approvalBackingBean.deleteFile(attachFile)}"
 													immediate="true" update="attachId" disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}" >
 													<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/trash.png" styleClass="tasklist_title1" />
 												</p:commandLink></td>
