@@ -70,8 +70,7 @@ public class PMReportBackingBean extends
 			rptGenBean.setPmStatusView(true);
 			break;
 
-		case ReportConst.PM_LIST_OF_EXEMPTED_ITEMS_BY_SUPPLIER_RPT_VAL:
-			rptGenBean.setPmStatusView(true);
+		case ReportConst.PM_LIST_OF_EXEMPTED_ITEMS_BY_SUPPLIER_RPT_VAL:			
 			rptGenBean.setPmCompanyNameView(true);
 			rptGenBean.setPmBusinessRegNoView(true);
 			rptGenBean.setPmEpNoView(true);
@@ -81,21 +80,23 @@ public class PMReportBackingBean extends
 			rptGenBean.setPmFromDateView(true);
 			break;
 
-		case ReportConst.PM_LIST_OF_EXEMPTED_ITEMS_RPT_VAL:
-			rptGenBean.setPmStatusView(true);
+		case ReportConst.PM_LIST_OF_EXEMPTED_ITEMS_RPT_VAL:			
 			rptGenBean.setPmItemNameView(true);
 			rptGenBean.setPmItmeCodeView(true);
 			rptGenBean.setPmNonMandatoryDateView(true);
 			rptGenBean.setPmFromDateView(true);
 			break;
 
-		case ReportConst.PM_LIST_OF_EXEMPTED_CONTRACTED_ITEMS_RPT_VAL:
-			rptGenBean.setPmStatusView(true);
+		case ReportConst.PM_LIST_OF_EXEMPTED_CONTRACTED_ITEMS_RPT_VAL:			
 			rptGenBean.setPmItemNameView(true);
 			rptGenBean.setPmItmeCodeView(true);
 			rptGenBean.setPmNonMandatoryDateView(true);
 			rptGenBean.setPmFromDateView(true);
-			rptGenBean.setPmContractNoView(true);
+			rptGenBean.setPmContractNoView(true);			
+			rptGenBean.setPmPhysicalContractNoView(true);
+			rptGenBean.setPmLOANoView(true);
+			rptGenBean.setPmPhysicalLOANoView(true);
+			
 			break;
 
 		default:

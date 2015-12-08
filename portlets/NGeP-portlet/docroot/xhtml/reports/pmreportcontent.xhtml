@@ -130,16 +130,46 @@
 						</c:if>
 
 						<c:if
-							test="#{pmReportBackingBean.managedBean.rptGenBean.pmItemNameView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.itemName']}"
+							test="#{pmReportBackingBean.managedBean.rptGenBean.pmContractNoView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.contractNo']}"
 								style="margin-top:5px;width:160px;" />
 							<p:inputText maxlength="100"
-								value="#{reportBackingBean.pmItemName}"
+								value="#{reportBackingBean.pmContractNo}"
+								style="margin-top:5px;width:290px;">
+								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+							</p:inputText>
+						</c:if>
+						<c:if
+							test="#{pmReportBackingBean.managedBean.rptGenBean.pmPhysicalContractNoView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.physicalContractNo']}"
+								style="margin-top:5px;width:160px;" />
+							<p:inputText maxlength="100"
+								value="#{reportBackingBean.pmPhysicalContractNo}"
 								style="margin-top:5px;width:290px;">
 								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 							</p:inputText>
 						</c:if>
 
+						<c:if
+							test="#{pmReportBackingBean.managedBean.rptGenBean.pmLOANoView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.loaNo']}"
+								style="margin-top:5px;width:160px;" />
+							<p:inputText maxlength="100"
+								value="#{reportBackingBean.pmLOANo}"
+								style="margin-top:5px;width:290px;">
+								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+							</p:inputText>
+						</c:if>
+						<c:if
+							test="#{pmReportBackingBean.managedBean.rptGenBean.pmPhysicalLOANoView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.physicalLOANo']}"
+								style="margin-top:5px;width:160px;" />
+							<p:inputText maxlength="100"
+								value="#{reportBackingBean.pmPhysicalLOANo}"
+								style="margin-top:5px;width:290px;">
+								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+							</p:inputText>
+						</c:if>
 
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmItemCodeView}">
@@ -151,6 +181,18 @@
 								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 							</p:inputText>
 						</c:if>
+
+						<c:if
+							test="#{pmReportBackingBean.managedBean.rptGenBean.pmItemNameView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.itemName']}"
+								style="margin-top:5px;width:160px;" />
+							<p:inputText maxlength="100"
+								value="#{reportBackingBean.pmItemName}"
+								style="margin-top:5px;width:290px;">
+								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+							</p:inputText>
+						</c:if>
+
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmCompanyNameView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.companyName']}"
@@ -219,17 +261,6 @@
 								style="margin-top:5px;width:160px;" />
 							<p:inputText maxlength="100"
 								value="#{reportBackingBean.pmRoleCode}"
-								style="margin-top:5px;width:290px;">
-								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
-							</p:inputText>
-						</c:if>
-
-						<c:if
-							test="#{pmReportBackingBean.managedBean.rptGenBean.pmContractNoView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.contractNo']}"
-								style="margin-top:5px;width:160px;" />
-							<p:inputText maxlength="100"
-								value="#{reportBackingBean.pmContractNo}"
 								style="margin-top:5px;width:290px;">
 								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 							</p:inputText>
