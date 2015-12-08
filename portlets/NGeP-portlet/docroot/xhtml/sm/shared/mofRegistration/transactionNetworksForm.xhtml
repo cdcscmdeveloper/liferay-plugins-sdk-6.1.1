@@ -12,8 +12,13 @@
 			<p:graphicImage id="trxNtwTipImg" value="/css/images/design/tooltips.png"
 				 style="padding-left : 10px;" />
 			<p:tooltip id="trxNtwTipImgtt" for="trxNtwTipImg">
-				<p:inputTextarea escape="false" readonly="true" disabled="true"
-					rows="5" cols="50" value="#{lbl['lbl.sm.busNtw.panHdrToolTip']}" />
+				<table>
+					<tr>
+						<td width="300px">
+							<h:outputText value="#{lbl['lbl.sm.busNtw.panHdrToolTip']}" escape="false" />
+						</td>
+					</tr>
+				</table>
 			</p:tooltip>
 		</f:facet>
 		<table style="width: 350px">
