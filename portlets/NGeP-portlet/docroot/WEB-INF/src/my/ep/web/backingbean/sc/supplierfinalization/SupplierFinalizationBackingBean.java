@@ -3727,8 +3727,8 @@ public class SupplierFinalizationBackingBean extends
 				if (getManagedBean().isInitialDecisionFwdToBPK() && 
 						isQTRefinalized()) {
 					scQtRecommend.setDisabled(false);
-				} else if ( scQtRecommend.isHigherAuthReq() && 
-						(getManagedBean().isInitialDecisionFwdToBPK() || 
+				} else if (scQtRecommend.isHigherAuthReq() && 
+						(getManagedBean().isInitialDecisionFwdHighAuth() || 
 							(scQtFinalization.getHigherSecretary() != null &&
 								scQtFinalization.getHigherSecretary().getUserId()
 									.equals(loggedInUserId))) ) {
