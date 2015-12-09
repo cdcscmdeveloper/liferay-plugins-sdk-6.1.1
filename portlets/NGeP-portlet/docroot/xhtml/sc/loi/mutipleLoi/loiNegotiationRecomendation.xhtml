@@ -61,7 +61,8 @@
 
 							<p:column headerText="#{lbl['lbl.sc.supplier.code']}">
 								<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
-											   process="@this" update="@([id$=suppDetailsPopup])">
+											   process="@this" update="@([id$=suppDetailsPopup])" 
+											   style="float:right;">
 									<p:graphicImage library="/css/images/design/evaluate.png"
 										title="#{lbl['lbl.sc.view.companyinfo']}"
 										style="vertical-align:middle" />
