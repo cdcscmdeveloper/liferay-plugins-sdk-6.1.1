@@ -65,17 +65,9 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.phone']}" styleClass="outputLabel-view-label" /></td>
-					<td>
-						<ac:labelPhone countryCode="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.phoneCountry}" 
-							areaCode="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.phoneArea}"
-							number="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.phoneNo}" />
-					</td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.phoneFull}" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.mobile']}" styleClass="outputLabel-view-label" /></td>
-					<td>
-						<ac:labelPhone countryCode="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileCountry}" 
-							areaCode="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileArea}"
-							number="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileNo}" />
-					</td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileFull}" /></td>
 				</tr>	
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}" styleClass="outputLabel-view-label" /></td>
