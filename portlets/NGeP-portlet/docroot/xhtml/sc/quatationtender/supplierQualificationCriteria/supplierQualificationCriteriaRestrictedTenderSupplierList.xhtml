@@ -25,9 +25,10 @@
 			<p:column selectionMode="multiple" style="width:2%" />
 
 			<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
-				<p:commandLink update=":form:popupSuppDtl"
-					action="#{qTSupplierQulCriteriaBackingBean.showSupplierDetails(qtSupplier)}"
-					oncomplete="suppDetails.show();">
+				<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
+					process="@this" update="@([id$=suppDetailsPopup])">
+					<f:setPropertyActionListener value="#{qtSupplier.smSupplier}"
+						target="#{supplierDetailBackingBean.smSupplier}" />
 					<h:outputText value="#{qtSupplier.smSupplier.companyName}" />
 				</p:commandLink>
 			</p:column>
