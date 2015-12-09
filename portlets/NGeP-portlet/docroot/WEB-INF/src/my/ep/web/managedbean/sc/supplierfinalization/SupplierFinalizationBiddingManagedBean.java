@@ -10,8 +10,6 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import org.primefaces.model.MenuModel;
-
 import my.ep.biz.bean.sc.BidItemBean;
 import my.ep.biz.bean.sc.BidPackageBean;
 import my.ep.persistence.entity.sc.bidding.ScBid;
@@ -23,6 +21,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
+import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
@@ -35,6 +34,8 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.managedbean.BaseManagedBean;
+
+import org.primefaces.model.MenuModel;
 
 /**
  * Class to handle user session data corresponding to SupplierFinalizationBiddingBackingBean
@@ -122,6 +123,7 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	private List<ScQtMeetingAttendance> selectedMeetingAttList;
 	private List<ScQtMeetingAttendance> deletedMeetingAttendanceList;
 	private List<ScQtCommitteRemarks> committeeRemarkList;
+	private List<ScQtEvaluationResultDtl> shortlistedSuppliers;
 	
 	
 	/**
@@ -936,6 +938,21 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 					List<ScQtCommitteRemarks> committeeRemarkList) {
 		this.committeeRemarkList = committeeRemarkList;
 	}
-	 
+
+	/**
+	 * @return the shortlistedSuppliers
+	 */
+	public List<ScQtEvaluationResultDtl> getShortlistedSuppliers() {
+		return shortlistedSuppliers;
+	}
+
+	/**
+	 * @param shortlistedSuppliers 
+	 * 				the shortlistedSuppliers to set
+	 */
+	public void setShortlistedSuppliers(
+			List<ScQtEvaluationResultDtl> shortlistedSuppliers) {
+		this.shortlistedSuppliers = shortlistedSuppliers;
+	}
 	
 }
