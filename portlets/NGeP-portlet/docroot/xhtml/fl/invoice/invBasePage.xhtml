@@ -64,7 +64,7 @@
 						</p:commandButton></td>
 				</h:panelGroup>
 				<c:if
-					test='#{invoiceBackingBean.managedBean.buttonVal eq "View"}'>
+					test='#{invoiceBackingBean.managedBean.buttonVal eq "View" and !invoiceBackingBean.managedBean.isHyperLinkPage()}'>
 					<td colspan="4" style="text-align: right">	
 					<p:commandLink 
 						value="#{lbl['lbl.td.doc.trackingDiary']}"
