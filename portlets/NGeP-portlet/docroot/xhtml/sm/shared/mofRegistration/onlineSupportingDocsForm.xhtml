@@ -86,11 +86,11 @@
 							</td>
 							<td style="border-style: none !important;">
 								<p:calendar id="licenseEffDateId"
-									navigator="true" required="true" 
+									navigator="true" required="#{table.pmDocument.mandatory}" 
 									label="#{lbl['lbl.sm.suppdoc.license.effdate']}"
 									value="#{table.licenseEffDate}"
 									pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
-									readonlyInput="#{table.pmDocument.mandatory}" size="20" showOn="button" yearRange="-99:+0" >
+									readonlyInput="true" size="20" showOn="button" yearRange="-99:+0" >
 									<p:ajax event="dateSelect" update="licenseExpDateId" process="@this"/>
 								</p:calendar>
 								<p:message id="licenseEffDateIdMsg"
