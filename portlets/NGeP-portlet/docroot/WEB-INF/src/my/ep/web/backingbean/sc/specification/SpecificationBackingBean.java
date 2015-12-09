@@ -11330,7 +11330,8 @@ public class SpecificationBackingBean extends
 	 */
 	public void preRenderView() {
 
-		SCQuotationTenderDataType quotationTenderDataType = getBpmTaskDetails(SCQuotationTenderDataType.class, null);
+		SCQuotationTenderDataType quotationTenderDataType = getBpmTaskDetails(
+				SCQuotationTenderDataType.class, null);
 		FacesScopes facesScopes = new FacesScopes();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		if (SCProcessNameConst.PREPARE_SPECIFICATION.equalsIgnoreCase(this
@@ -12617,13 +12618,16 @@ public class SpecificationBackingBean extends
 	 * information.
 	 */
 	public void deleteTreeNode() {
-
+		getManagedBean().setSelectedFlag(true);
 		List<TreeNode> rootTrees = this.getManagedBean().getZoneGeneralTrees();
 
 		// LocationSingleton.getInstance().deleteTreeNodes(rootTrees);
 		deleteZonesTreeNodes(rootTrees);
 		TplSpecZoneDtl zoneDtl = null;
 		// zone details
+		if (getManagedBean().isSelectedFlag()) {
+			throw new EpException(MessageConst.ERROR_760146);
+		}
 		if (!rootTrees.isEmpty()) {
 			getManagedBean()
 					.getScQt()
@@ -12665,6 +12669,7 @@ public class SpecificationBackingBean extends
 
 				for (TreeNode zoneTree : rootTree.getChildren()) {
 					if (zoneTree.isSelected()) {
+						getManagedBean().setSelectedFlag(false);
 						tplSpecZoneDtl = (TplSpecZoneDtl) zoneTree.getData();
 						if (tplSpecZoneDtl.getPanelZone() != null) {
 							// deletePanelItemSuppliers(tplSpecZoneDtl);
@@ -12712,6 +12717,7 @@ public class SpecificationBackingBean extends
 
 			for (TreeNode treeNode : treeNodes) {
 				if (treeNode.isSelected()) {
+					getManagedBean().setSelectedFlag(false);
 					nodesToRemoved.add(treeNode);
 				} else {
 					if (treeNode.getChildren() != null
