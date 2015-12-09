@@ -8,6 +8,11 @@
 
 	<h:panelGroup id="requestExtPopUpId">
 		<p:messages id="messageId" showDetail="true" autoUpdate="true" closable="true" showSummary="false"></p:messages>
+		
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.cm.request.extension.help.msg']}"></h:outputText>
+		<div class="clear"></div>
+		
+		
 		<table style="width: 100%;">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}" /></td>
@@ -116,7 +121,7 @@
 
 		<div class="clear"></div>
 
-		<h:outputText value="#{lbl['lbl.cm.request.extension.help.msg']}"></h:outputText>
+		
 
 	</h:panelGroup>
 
