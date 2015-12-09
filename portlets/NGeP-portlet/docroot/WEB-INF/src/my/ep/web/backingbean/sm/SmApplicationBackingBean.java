@@ -4185,6 +4185,7 @@ public class SmApplicationBackingBean extends
 					"smManuDtWidVar.paginator.endLink.click()");
 		}
 		assignValReqdToFalse();
+		saveOrUpdateAppl();
 		RequestContext.getCurrentInstance().execute("manufactorDialog.hide()");
 	}
 
@@ -4271,6 +4272,7 @@ public class SmApplicationBackingBean extends
 			RequestContext.getCurrentInstance().execute(
 					"smMachDtWidVar.paginator.endLink.click()");
 		}
+		saveOrUpdateAppl();
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().execute("equipmentDialog.hide()");
 	}
