@@ -48,7 +48,6 @@ public class ContractManagedBean extends BaseManagedBean {
 	private List<CtAttachment> attachmentList;
 	private CtContractVer contractVer;
 	private CtContractVer agreementContractVer;
-	private double performanceBondRuleAmt;
 	private String supplierCompanyName;
 	private boolean updateCompanyName;
 	private String supplierBranchName;
@@ -186,20 +185,6 @@ public class ContractManagedBean extends BaseManagedBean {
 	 */
 	public void setAttachmentList(List<CtAttachment> attachmentList) {
 		this.attachmentList = attachmentList;
-	}
-
-	/**
-	 * @return the performanceBondRuleAmt
-	 */
-	public double getPerformanceBondRuleAmt() {
-		return performanceBondRuleAmt;
-	}
-
-	/**
-	 * @param performanceBondRuleAmt the performanceBondRuleAmt to set
-	 */
-	public void setPerformanceBondRuleAmt(double performanceBondRuleAmt) {
-		this.performanceBondRuleAmt = performanceBondRuleAmt;
 	}
 
 	/**

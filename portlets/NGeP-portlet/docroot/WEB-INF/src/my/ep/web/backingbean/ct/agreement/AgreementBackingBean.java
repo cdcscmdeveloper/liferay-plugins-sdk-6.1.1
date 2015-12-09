@@ -48,7 +48,6 @@ import my.ep.biz.service.ct.agreement.IAgreementSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
-import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -59,7 +58,6 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
@@ -72,8 +70,6 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
-import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
-import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
@@ -510,17 +506,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		String docType = ParameterConst.DOCTYPE_AGREEMENT;
 		if (getManagedBean().getAgreementType().equalsIgnoreCase(ContractConst.SUPPLEMENTAL_AGREEMENT)) {
 			docType = ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT;
-		}
-		
-		// Get performance bond rule amount
-		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
-		RuleReqDTO ruleReqDTO = new RuleReqDTO();
-		ruleReqDTO.setRuleType(RuleTypeConst.BOND);
-		RuleResDTO ruleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
-		if (ruleResDTO.isSuccessful() && ruleResDTO.getRuleValueList()!= null
-				&& ruleResDTO.getRuleValueList().size() > 0) {
-			getManagedBean().setPerformanceBondRuleAmt(Double.parseDouble(ruleResDTO.getRuleValueList().get(0).getRuleValue()));
 		}
 		
 		getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
@@ -2135,8 +2120,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 						ptjTelNo = pmAddress.getPhoneNo();
 					if (pmAddress.getFaxNo() != null)
 						ptjFaksNo = pmAddress.getFaxNo();
-					if (pmAddress.getEmail() != null)
-						ptjEmel = pmAddress.getEmail();
+					if (pmAddressType.getPmContacts().size() > 0) {
+						if (pmAddressType.getPmContacts().get(0).getEmail() != null)
+							ptjEmel = pmAddressType.getPmContacts().get(0).getEmail();
+					}
+					
 				}
 			}
 			if (getManagedBean().getContractVer().getCtContractValue().getSupplierName() != null)
