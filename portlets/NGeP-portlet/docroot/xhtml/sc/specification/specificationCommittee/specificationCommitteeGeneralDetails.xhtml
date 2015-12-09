@@ -63,7 +63,7 @@
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						required="true"
 						value="#{specificationBackingBean.managedBean.scQt.procurementTypeCatId.parameterId}"
-						style="width: 213px;margin-bottom: 5px;">
+						style="width: 216px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.procurementTypeCategory)}" />
 						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
@@ -80,7 +80,7 @@
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.procurement.category']}" /></td>
 				<td><p:selectOneMenu disabled="true"
-						style="width: 213px;margin-bottom: 5px;"
+						style="width: 216px;margin-bottom: 5px;"
 						label="#{lbl['lbl.sc.procurement.category']}"
 						value="#{specificationBackingBean.managedBean.scQt.pmProcurementCategory.parameterId}">
 						<f:selectItems
@@ -126,7 +126,7 @@
 									id="fulfilId" label="#{lbl['lbl.sc.fullfillent.type']}"
 									disabled="#{specificationBackingBean.managedBean.readOnly}"
 									value="#{specificationBackingBean.managedBean.scQt.fulfilmentType.parameterId}"
-									style="width: 213px;margin-bottom: 5px;">
+									style="width: 216px;margin-bottom: 5px;">
 
 									<f:selectItems
 										value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
