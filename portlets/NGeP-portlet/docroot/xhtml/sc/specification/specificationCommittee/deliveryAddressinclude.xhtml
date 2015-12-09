@@ -19,7 +19,7 @@
 			selection="#{selectDeliveryList}" rowKey="#{delivery}">
 			<ac:paginator for="pjtDelivered" />
 
-			<p:column style="width:2px;">
+			<p:column style="width:3px;text-align:center;">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
@@ -45,7 +45,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.delivery.service.address']}"
-				style="width:73%;white-space: normal;">
+				style="width:72%;white-space: normal;">
 				<h:outputText value="#{delivery.deliveryAddress}" />
 			</p:column>
 		</p:dataTable>

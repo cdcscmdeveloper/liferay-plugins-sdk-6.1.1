@@ -22,16 +22,17 @@
 				rowKey="#{compilance.documentId}" rowIndexVar="index">
 				<ac:paginator for="stageTwoFinPopup"></ac:paginator>
 				<p:column selectionMode="multiple"
-					style="width:2%;text-align:center;" />
+					styleClass=".td-check-box-spacing" />
 				<p:column headerText="#{lbl['lbl.sc.spec.checklist.title']}">
 					<h:outputText value="#{compilance.docName}"></h:outputText>
 				</p:column>
 			</p:dataTable>
 
 		</h:panelGroup>
-		
+
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.cancel']}" styleClass="BtnSpacing"
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+				styleClass="BtnSpacing"
 				actionListener="#{specificationBackingBean.cancelPopup}"
 				style="float:right;" onclick="stageTwoFinance.hide();"></p:commandButton>
 			<p:commandButton value="#{lbl['lbl.btn.ok']}" style="float:right;"
