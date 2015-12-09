@@ -17,7 +17,7 @@
 			selection="#{specificationBackingBean.managedBean.suppCriteriaopenSelectList}"
 			rowIndexVar="index" rowKey="#{cateGory}">
 
-			<p:column selectionMode="multiple" style="width:2%"></p:column>
+			<p:column selectionMode="multiple" styleClass="td-check-box-spacing"></p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.category.code']}">
 				#{cateGory.pmCategoryL1.categoryL1Code}#{cateGory.pmCategoryL2.categoryL2Code}#{cateGory.pmCategoryL3.categoryL3Code}
