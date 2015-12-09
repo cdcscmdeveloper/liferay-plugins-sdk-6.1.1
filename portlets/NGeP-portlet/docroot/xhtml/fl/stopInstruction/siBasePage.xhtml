@@ -61,7 +61,7 @@
 						</p:commandButton>
 					</c:if>
 					<c:if
-					test='#{stopInstrBB.managedBean.buttonVal eq "View"}'>
+					test='#{stopInstrBB.managedBean.buttonVal eq "View" and !stopInstrBB.managedBean.isHyperLinkPage()}'>
 					<td colspan="4" style="text-align: right">	
 					<p:commandLink 
 						value="#{lbl['lbl.td.doc.trackingDiary']}"
