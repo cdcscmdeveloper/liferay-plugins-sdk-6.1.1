@@ -64,7 +64,7 @@
 		<c:if test="#{newable}">
 			<h:panelGroup layout="block" style="width:120px;">
 				<ac:lov id="#{templateSpecId}uomLovId" lovId="PM_UOM" 
-					headerText="UOM Lov"
+					headerText="#{lbl['lbl.sc.uom']}"
 					saveObject="templateSpecBackingBean.managedBean.tplSpecQuestions[#{row}].clUom"
 					value="#{question.clUom.uomName}"
 					conditionField="recordStatus^1"
