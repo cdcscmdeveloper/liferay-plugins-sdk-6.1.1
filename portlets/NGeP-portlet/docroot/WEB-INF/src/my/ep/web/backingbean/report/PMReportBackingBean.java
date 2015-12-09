@@ -71,11 +71,11 @@ public class PMReportBackingBean extends
 			break;
 
 		case ReportConst.PM_LIST_OF_EXEMPTED_ITEMS_BY_SUPPLIER_RPT_VAL:			
-			rptGenBean.setPmCompanyNameView(true);
-			rptGenBean.setPmBusinessRegNoView(true);
-			rptGenBean.setPmEpNoView(true);
-			rptGenBean.setPmItemNameView(true);
-			rptGenBean.setPmItmeCodeView(true);
+			rptGenBean.setPmExemptedCompanyNameView(true);
+			rptGenBean.setPmExemptedBusinessRegNoView(true);
+			rptGenBean.setPmExemptedEpNoView(true);
+			rptGenBean.setPmExemptedItemNameView(true);
+			rptGenBean.setPmExemptedItemCodeView(true);
 			rptGenBean.setPmNonMandatoryDateView(true);
 			rptGenBean.setPmFromDateView(true);
 			break;

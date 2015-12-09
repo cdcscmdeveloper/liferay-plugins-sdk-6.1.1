@@ -25,28 +25,10 @@
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
-							test="#{pmReportBackingBean.managedBean.rptGenBean.pmCompanyNameView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.companyName']}"
-								style="margin-top:5px;width:160px;" />
-							<p:inputText maxlength="100"
-								value="#{reportBackingBean.pmCompanyName}"
-								style="margin-top:5px;width:290px;">
-								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
-							</p:inputText>
-						</c:if>
-						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmBusinessRegNoView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.businessregnoscreen']}"
 								style="margin-top:5px;width:160px;" />
 							<p:inputText value="#{reportBackingBean.pmBusinessRegNo}"
-								style="margin-top:5px;width:290px;">
-							</p:inputText>
-						</c:if>
-						<c:if
-							test="#{pmReportBackingBean.managedBean.rptGenBean.pmEpNoView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.epNo']}"
-								style="margin-top:5px;width:160px;" />
-							<p:inputText maxlength="100" value="#{reportBackingBean.pmEpNo}"
 								style="margin-top:5px;width:290px;">
 							</p:inputText>
 						</c:if>
@@ -293,6 +275,67 @@
 	</div>
 
 	<div>
+		<TABLE style="margin-top: 10px; width: 50%;">
+			<TR>
+				<c:if
+					test="#{pmReportBackingBean.managedBean.rptGenBean.pmExemptedCompanyNameView}">
+					<TD><p:outputLabel value="#{lbl['lbl.rpt.companyName']}"
+							style="margin-top:5px;width:160px;" /></TD>
+					<TD><p:inputText maxlength="100"
+							value="#{reportBackingBean.pmCompanyName}"
+							style="margin-top:5px;width:290px;">
+							<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+						</p:inputText></TD>
+				</c:if>
+			</TR>
+
+			<TR>
+				<c:if
+					test="#{pmReportBackingBean.managedBean.rptGenBean.pmExemptedBusinessRegNoView}">
+					<TD><p:outputLabel
+							value="#{lbl['lbl.rpt.businessregnoscreen']}"
+							style="margin-top:5px;width:160px;" /></TD>
+					<TD><p:inputText value="#{reportBackingBean.pmBusinessRegNo}"
+							style="margin-top:5px;width:290px;">
+						</p:inputText></TD>
+				</c:if>
+				<c:if
+					test="#{pmReportBackingBean.managedBean.rptGenBean.pmExemptedEpNoView}">
+					<TD><p:outputLabel value="#{lbl['lbl.rpt.epNo']}"
+							style="margin-top:5px;width:160px;" /></TD>
+					<TD><p:inputText maxlength="100"
+							value="#{reportBackingBean.pmEpNo}"
+							style="margin-top:5px;width:290px;">
+						</p:inputText></TD>
+				</c:if>
+			</TR>
+
+			<TR>
+				<c:if
+					test="#{pmReportBackingBean.managedBean.rptGenBean.pmExemptedItemCodeView}">
+					<TD><p:outputLabel value="#{lbl['lbl.rpt.itemCode']}"
+							style="margin-top:5px;width:160px;" /></TD>
+					<TD><p:inputText maxlength="100"
+							value="#{reportBackingBean.pmItemCode}"
+							style="margin-top:5px;width:290px;">
+							<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+						</p:inputText></TD>
+				</c:if>
+				<c:if
+					test="#{pmReportBackingBean.managedBean.rptGenBean.pmExemptedItemNameView}">
+					<TD><p:outputLabel value="#{lbl['lbl.rpt.itemName']}"
+							style="margin-top:5px;width:160px;" /></TD>
+					<TD><p:inputText maxlength="100"
+							value="#{reportBackingBean.pmItemName}"
+							style="margin-top:5px;width:290px;">
+							<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+						</p:inputText></TD>
+				</c:if>
+			</TR>
+		</TABLE>
+	</div>
+
+	<div>
 		<c:if
 			test="#{reportBackingBean.managedBean.rptGenBean.pmNonMandatoryDateView}">
 			<TABLE style="margin-top: 10px; width: 50%;">
@@ -321,6 +364,4 @@
 			</TABLE>
 		</c:if>
 	</div>
-
-
 </ui:composition>
