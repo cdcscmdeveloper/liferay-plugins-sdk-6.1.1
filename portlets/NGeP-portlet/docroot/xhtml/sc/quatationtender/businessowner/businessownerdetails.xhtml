@@ -120,13 +120,13 @@
 				border="0" cellpadding="0" cellspacing="0">
 				<table style="width: 100%;">
 					<tr>
-						<td><p:outputLabel
+						<td style="width: 365px;"><p:outputLabel
 								value="#{lbl['lbl.sc.ministry.spec.secretary']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" valign="top" /></td>
 						<td colspan="4">
 							<table>
 								<tr>
-									<td style="width: 365px;"><p:selectOneMenu id="ministryspec"
+									<td><p:selectOneMenu id="ministryspec"
 											disabled="#{readOnly}" required="true"
 											label="#{lbl['lbl.sc.ministry.spec.secretary']}"
 											value="#{qTDetailBB.managedBean.qt.ministrySpecSecrataryId.userId}"
