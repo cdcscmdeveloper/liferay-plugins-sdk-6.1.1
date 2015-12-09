@@ -47,7 +47,7 @@
 			<ac:paginator for="evaluationmeetingDetails" />
 
 			<!-- <p:column selectionMode="multiple" style="width:2%"></p:column> -->
-			<p:column style="width:2px;">
+			<p:column style="width:3px;text-align:center;">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox
 						value="#{evaluationMeetingBackingBean.managedBean.templateSpecBean.selectAll}">
@@ -74,7 +74,7 @@
 				<p:message id="confirmMeetingId" for="meetingDate" display="icon"></p:message>
 
 			</p:column>
-			<p:column style="width:73%">
+			<p:column style="width:72%">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.meeting.location']}" />
@@ -135,7 +135,7 @@
 
 
 
-			<p:column style="width:2px;">
+			<p:column style="width:3px;text-align:center;">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox
 						value="#{evaluationMeetingBackingBean.managedBean.templateSpecBean.selectAll}">
@@ -155,7 +155,7 @@
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:selectBooleanCheckbox>
 			</p:column>
-			<p:column style="width:30%;white-space: normal;"
+			<p:column style="width:29%;white-space: normal;"
 				headerText="#{lbl['lbl.sc.name']}">
 				<h:outputText value="#{committeeMember.memberName}"></h:outputText>
 			</p:column>
