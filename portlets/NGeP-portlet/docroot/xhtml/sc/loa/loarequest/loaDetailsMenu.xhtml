@@ -81,7 +81,7 @@
 				<p:outputLabel value="#{lbl['lbl.sc.branch']}"/>
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
-			<td>
+		<td colspan="3">
 				<c:if test="#{isEditableStatus}">
 					<table>
 						<tr>
@@ -206,7 +206,7 @@
 						rendered="#{isDocTypeQuotation}" /> <p:outputLabel value="*"
 						styleClass="mandatory"
 						rendered="#{isDocTypeQuotation and isEditableStatus}" /></td>
-				<td><p:selectOneMenu id="procTypeBoCategory" required="true"
+				<td colspan="3"><p:selectOneMenu id="procTypeBoCategory" required="true"
 						value="#{lOADetailBackingBean.managedBean.scLoa.procurementTypeCatId.parameterId}"
 						style="margin-bottom:5px;width:282px;"
 						label="#{lbl['lbl.sc.procurment.type.category']}"
@@ -216,13 +216,12 @@
 						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 					</p:selectOneMenu> <p:message id="procuremnttitleMsg" for="procTypeBoCategory"
 						display="icon" /></td>
-
 			</tr>
 			<tr>
-			<td>
+			 <td>
 				<p:outputLabel value="#{lbl['lbl.sc.qt.fileno']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
-			</td>
+			 </td>
 			<td colspan="3">
 				<p:inputText disabled="#{isDocTypeQuotation || !isEditableStatus}"
 					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fileNo}" size="29" maxlength="50"/>
