@@ -25,6 +25,16 @@
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
+							test="#{pmReportBackingBean.managedBean.rptGenBean.pmCompanyNameView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.companyName']}"
+								style="margin-top:5px;width:160px;" />
+							<p:inputText maxlength="100"
+								value="#{reportBackingBean.pmCompanyName}"
+								style="margin-top:5px;width:290px;">
+								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+							</p:inputText>
+						</c:if>
+						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmBusinessRegNoView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.businessregnoscreen']}"
 								style="margin-top:5px;width:160px;" />
@@ -68,9 +78,9 @@
 												value="#{reportBackingBean.pmOrgCategory}"
 												style="margin-top:5px;width:300px;">
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.federal']}"
-													itemValue="F"></f:selectItem>
+													itemValue="1"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.others']}"
-													itemValue="O"></f:selectItem>
+													itemValue="2"></f:selectItem>
 												<p:ajax event="change" partialSubmit="true" update="@form" />
 											</p:selectOneMenu></td>
 										<td><p:message id="rptOrgCatgMsg" for="orgCatg"
@@ -79,17 +89,35 @@
 								</table>
 							</p:column>
 						</c:if>
-
 						<c:if
-							test="#{pmReportBackingBean.managedBean.rptGenBean.pmOrgCodeView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.orgCode']}"
-								style="margin-top:5px;width:160px;" />
-							<p:inputText maxlength="30"
-								value="#{reportBackingBean.pmOrgCode}"
-								style="margin-top:5px;width:290px;">
-								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
-							</p:inputText>
+							test="#{pmReportBackingBean.managedBean.rptGenBean.pmMandatoryOrgTypeView}">
+							<p:column>
+								<table style="width: 182px;">
+									<tr style="width: 100%;">
+										<td style="width: 160px;"><p:outputLabel
+												value="#{lbl['lbl.rpt.org.type']}" /> <p:outputLabel
+												value="*" styleClass="mandatory" /></td>
+									</tr>
+								</table>
+							</p:column>
+							<p:column>
+								<table style="width: 100%">
+									<tr>
+										<td style="width: 84%"><p:selectOneMenu
+												label="#{lbl['lbl.rpt.org.type']}" id="orgType"
+												value="#{reportBackingBean.pmOrgType}"
+												style="margin-top:5px;width:300px;">
+												<f:selectItems
+													value="#{reportBackingBean.getOrgTypeDropdownValues()}"></f:selectItems>
+												<p:ajax event="change" partialSubmit="true" update="@form" />
+											</p:selectOneMenu></td>
+										<td><p:message id="rptOrgTypeMsg" for="orgType"
+												display="icon" showDetail="false" /></td>
+									</tr>
+								</table>
+							</p:column>
 						</c:if>
+
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmMandatoryOrgNameView}">
 							<p:column>
@@ -118,6 +146,18 @@
 							</p:column>
 						</c:if>
 
+
+
+						<c:if
+							test="#{pmReportBackingBean.managedBean.rptGenBean.pmOrgCodeView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.orgCode']}"
+								style="margin-top:5px;width:160px;" />
+							<p:inputText maxlength="30"
+								value="#{reportBackingBean.pmOrgCode}"
+								style="margin-top:5px;width:290px;">
+								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+							</p:inputText>
+						</c:if>
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmNonMandatoryOrgNameView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.orgName']}"
@@ -154,8 +194,7 @@
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmLOANoView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.loaNo']}"
 								style="margin-top:5px;width:160px;" />
-							<p:inputText maxlength="100"
-								value="#{reportBackingBean.pmLOANo}"
+							<p:inputText maxlength="100" value="#{reportBackingBean.pmLOANo}"
 								style="margin-top:5px;width:290px;">
 								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 							</p:inputText>
@@ -192,19 +231,6 @@
 								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 							</p:inputText>
 						</c:if>
-
-						<c:if
-							test="#{pmReportBackingBean.managedBean.rptGenBean.pmCompanyNameView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.companyName']}"
-								style="margin-top:5px;width:160px;" />
-							<p:inputText maxlength="100"
-								value="#{reportBackingBean.pmCompanyName}"
-								style="margin-top:5px;width:290px;">
-								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
-							</p:inputText>
-						</c:if>
-
-
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmIdentificationNoView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.identificationNo']}"
@@ -214,34 +240,6 @@
 								style="margin-top:5px;width:290px;">
 								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 							</p:inputText>
-						</c:if>
-
-						<c:if
-							test="#{pmReportBackingBean.managedBean.rptGenBean.pmMandatoryOrgTypeView}">
-							<p:column>
-								<table style="width: 182px;">
-									<tr style="width: 100%;">
-										<td style="width: 160px;"><p:outputLabel
-												value="#{lbl['lbl.rpt.org.type']}" /> <p:outputLabel
-												value="*" styleClass="mandatory" /></td>
-									</tr>
-								</table>
-							</p:column>
-							<p:column>
-								<table style="width: 100%">
-									<tr>
-										<td style="width: 84%"><p:selectOneMenu
-												label="#{lbl['lbl.rpt.org.type']}" id="orgtype"
-												value="#{reportBackingBean.pmOrgType}"
-												style="margin-top:5px;width:300px;">
-												<f:selectItems value="#{reportBackingBean.getOrgTypeList()}"></f:selectItems>
-												<p:ajax event="change" partialSubmit="true" update="@form" />
-											</p:selectOneMenu></td>
-										<td><p:message id="rptOrgTypeMsg" for="orgtype"
-												display="icon" showDetail="false" /></td>
-									</tr>
-								</table>
-							</p:column>
 						</c:if>
 
 						<c:if

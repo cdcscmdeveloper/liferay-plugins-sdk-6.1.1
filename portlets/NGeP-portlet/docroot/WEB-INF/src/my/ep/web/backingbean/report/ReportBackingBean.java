@@ -61,6 +61,7 @@ import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
@@ -1075,13 +1076,13 @@ public class ReportBackingBean extends
 
 	/** The pm contract no. */
 	private String pmContractNo;
-	
+
 	/** The pm physical contract no. */
 	private String pmPhysicalContractNo;
-	
+
 	/** The pm loa no. */
 	private String pmLOANo;
-	
+
 	/** The pm physical loa no. */
 	private String pmPhysicalLOANo;
 
@@ -10813,7 +10814,7 @@ public class ReportBackingBean extends
 	 * @return the default datesfor fl
 	 */
 	private void getDefaultDatesforFL(List<String> reportNameList) {
-		
+
 		reportNameList.add(ReportConst.CON_REQ_RPT_MIN_VAL);
 		reportNameList.add(ReportConst.CON_ORD_RPT_MIN_VAL);
 		reportNameList.add(ReportConst.DEL_ORD_RPT_MIN_VAL);
@@ -13771,12 +13772,14 @@ public class ReportBackingBean extends
 				|| ((this.getPmOrgType() != null) && (this.getPmOrgType() != ReportConst.EMPTY_VAL))
 
 				|| ((this.getPmContractNo() != null) && (this.getPmContractNo() != ReportConst.EMPTY_VAL))
-				
-				|| ((this.getPmPhysicalContractNo() != null) && (this.getPmPhysicalContractNo() != ReportConst.EMPTY_VAL))
-				
+
+				|| ((this.getPmPhysicalContractNo() != null) && (this
+						.getPmPhysicalContractNo() != ReportConst.EMPTY_VAL))
+
 				|| ((this.getPmLOANo() != null) && (this.getPmLOANo() != ReportConst.EMPTY_VAL))
-				
-				|| ((this.getPmPhysicalLOANo() != null) && (this.getPmPhysicalLOANo() != ReportConst.EMPTY_VAL))
+
+				|| ((this.getPmPhysicalLOANo() != null) && (this
+						.getPmPhysicalLOANo() != ReportConst.EMPTY_VAL))
 
 				|| ((this.getPmRoleCode() != null) && (this.getPmRoleCode() != ReportConst.EMPTY_VAL))
 
@@ -13901,28 +13904,26 @@ public class ReportBackingBean extends
 				rptGenBean.setPmContractNoVar(ReportConst.AMP_PM_CONTRACT_NO_EQ
 						+ this.getPmContractNo());
 			}
-			
-			
+
 			if ((this.getPmPhysicalContractNo() != null)
 					&& (this.getPmPhysicalContractNo() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setPmPhysicalContractNoVar(ReportConst.AMP_PM_CONTRACT_NO_EQ
-						+ this.getPmPhysicalContractNo());
+				rptGenBean
+						.setPmPhysicalContractNoVar(ReportConst.AMP_PM_CONTRACT_NO_EQ
+								+ this.getPmPhysicalContractNo());
 			}
-			
-			
+
 			if ((this.getPmLOANo() != null)
 					&& (this.getPmLOANo() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setPmLOANoVar(ReportConst.AMP_PM_CONTRACT_NO_EQ
 						+ this.getPmLOANo());
 			}
-			
-			
+
 			if ((this.getPmPhysicalLOANo() != null)
 					&& (this.getPmPhysicalLOANo() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setPmPhysicalLOANoVar(ReportConst.AMP_PM_CONTRACT_NO_EQ
-						+ this.getPmPhysicalLOANo());
+				rptGenBean
+						.setPmPhysicalLOANoVar(ReportConst.AMP_PM_CONTRACT_NO_EQ
+								+ this.getPmPhysicalLOANo());
 			}
-			
 
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if ((rptGenBean.getUrlReportJSPName() != null)
@@ -14997,6 +14998,42 @@ public class ReportBackingBean extends
 		}
 
 		return orgTypeList;
+	}
+
+	/**
+	 * The method used for generating a list of available display type of org
+	 * type as selection.
+	 * 
+	 */
+	public SelectItem[] getOrgTypeDropdownValues() {
+
+		ISearchBean<PmParameterDesc> searchBean = null;
+
+		if (this.getPmOrgCategory() != null
+				&& this.getPmOrgCategory().equals(ReportConst.FEDERAL_GOVT)) {
+			searchBean = getOrgTypeSearchBean("orgTypeFederalList");
+		} else if (this.getPmOrgCategory() != null
+				&& this.getPmOrgCategory().equals(ReportConst.OTHERS)) {
+			searchBean = getOrgTypeSearchBean("orgTypeOthersList");
+		} else {
+			searchBean = getOrgTypeSearchBean("orgTypeFederalList");
+			searchBean = getOrgTypeSearchBean("orgTypeOthersList");
+		}
+
+		SelectItem[] items = null;
+		if (searchBean != null) {
+			searchBean.getSortColumns();
+			items = getDropdownValuesBySearchBean(
+					ParameterTypeConst.ORGANISATION_TYPES, searchBean);
+		}
+
+		return items;
+	}
+
+	private ISearchBean<PmParameterDesc> getOrgTypeSearchBean(String componentId) {
+		ISearchBean<PmParameterDesc> orgTypeSearchBean = super
+				.createSearchBean(PmParameterDesc.class, componentId);
+		return orgTypeSearchBean;
 	}
 
 }

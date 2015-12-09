@@ -776,6 +776,9 @@ public class ReportConst {
 	public static final String AMP_PM_PHYSICAL_CONTRACT_NO_EQ = "&PPHYSICALCON=";
 	public static final String AMP_PM_LOA_NO_EQ = "&PLOA =";
 	public static final String AMP_PM_PHYSICAL_LOA_NO_EQ = "&PPHYSICALLOA=";
+	public static final String FEDERAL_GOVT="1";
+	public static final String OTHERS="2";
+	
 
 	public static final String EXC_PREV_URL = "http://ngepdevrps01.ngep.com:8891/reports/rwservlet?server=rptsvr_ngepdevrps01_asinst_2";
 	public static final String EXC_NEXT_URL = "&destype=cache&desformat=pdf&userid=ngep_dev/ngep_dev@ngepdb";
