@@ -100,6 +100,8 @@
 						value="#{lbl['lbl.td.doc.trackingDiary']}"
 						action="#{trackingDiarySearchBackingBean.goToTrackingDiarySearch(ModuleCodeConstant.ORDER_FULFILLMENT,ParameterConst.doctypeDeliveryOrder,createDOBackingBean.managedBean.flDeliveryOrder.deliveryOrderNo,createDOBackingBean.managedBean.flDeliveryOrder.deliveryOrderId,createDOBackingBean.managedBean.flDeliveryOrder.status.statusId)}"
 						immediate="true" />
+					<p:commandButton value="#{lbl['lbl.btn.print']}" ajax="false"
+								action="#{flDocumentBackingBean.generateReport(ParameterConst.doctypeDeliveryOrder,createDOBackingBean.managedBean.flDeliveryOrder.deliveryOrderNo)}" />
 					</td>		
 				</c:if>
 			</tr>
