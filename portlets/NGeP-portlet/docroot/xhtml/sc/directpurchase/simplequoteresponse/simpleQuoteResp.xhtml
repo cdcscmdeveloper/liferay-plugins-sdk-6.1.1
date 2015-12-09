@@ -11,7 +11,7 @@
 		toggleable="true">
 		<table style="width: 100%;">
 			<tr>
-				<td style="width: 20%;"><p:outputLabel
+				<td style="width: 22%;"><p:outputLabel
 						value="#{lbl['lbl.sc.supplier.ep.no']}" /></td>
 				<td><p:inputText disabled="true" size="30"
 						value="#{simpleQuoteBackingBean.managedBean.scQuoteSupplier.smSupplier.epNo}" /></td>
@@ -62,10 +62,9 @@
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.submit.instruction']}" />
 
-		<br /><br />
 		<table style="width: 100%;">
 			<tr>
-				<td style="width: 20%;"><p:outputLabel
+				<td style="width: 22%;"><p:outputLabel
 						value="#{lbl['lbl.sc.panel']}" /></td>
 				<td><p:selectOneRadio styleClass="commonLabel"
 						value="#{simpleQuoteBackingBean.managedBean.scQuote.panel}"
@@ -75,54 +74,30 @@
 					</p:selectOneRadio></td>
 			</tr>
 			<tr>
-				<td style="width: 20%;"><p:outputLabel
-						value="#{lbl['lbl.sc.direct.purchase.title']}" /></td>
-				<td><p:inputText disabled="true" size="30"
-						value="#{simpleQuoteBackingBean.managedBean.scQuote.title}" /></td>
+				<td style="vertical-align: top;"><p:outputLabel
+						value="#{lbl['lbl.sc.direct.purchase.title']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td colspan="4"><p:inputTextarea
+						value="#{simpleQuoteBackingBean.managedBean.scQuote.title}"
+						disabled="true" rows="3" autoResize="false" style="width: 820px;" />
+				</td>
 			</tr>
 			<tr>
-				<td style="padding-right: 0px; text-align: right; width: 7%"><p:outputLabel
+				<td><p:outputLabel
 						value="#{lbl['lbl.sc.quote.scope.of.work.and.services']}" /></td>
-				<td class="TableFieldRight"><p:commandButton
-						oncomplete="uploadDlg.show();return false;" icon="iconAttachment"
-						disabled="true"
-						value="#{lbl['lbl.txt.choose.files']}" /></td>
-			</tr>
-			<tr>
-				<td />
-				<td><ui:param name="attachFile"
+				<td colspan="3">
+				   <p:commandButton process="@this"
+						icon="iconAttachment" disabled="true"
+						value="#{lbl['lbl.txt.attachment']}" /> 
+				   <ui:param
+						name="attachFile"
 						value="#{simpleQuoteBackingBean.managedBean.scQuote.scQuoteAttachment}" />
 
-					<c:if test="#{!empty attachFile}">
-						<table>
-							<tr>
-								<td rowspan="2" style="vertical-align: top;" align="left">
-									<ui:param name="icon"
-										value="#{simpleQuoteBackingBean.determineIcon(attachFile)}"></ui:param>
-									<p:graphicImage value="/css/images/design/#{icon}" height="30"
-										width="30">
-									</p:graphicImage>
-								</td>
-								<td><h:outputText
-										value="#{attachFile.createdUser.userName}" />, <h:outputText
-										value="#{attachFile.createdDate}">
-										<f:convertDateTime
-											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-									</h:outputText></td>
-							</tr>
-							<tr>
-								<td><h:commandLink value="#{attachFile.fileName}"
-										styleClass="blue_font" immediate="true"
-										action="#{simpleQuoteBackingBean.downloadFile(attachFile)}" />
-									<p:commandLink
-										action="#{simpleQuoteBackingBean.deleteUploadFile}"
-										immediate="true" update="tplSpecId" disabled="true">
-										<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
-									</p:commandLink></td>
-							</tr>
-						</table>
-					</c:if></td>
+					<h:commandLink value="#{attachFile.fileName}" id="attachmentId"
+						styleClass="blue_font" immediate="true"
+						action="#{simpleQuoteBackingBean.downloadFile(attachFile)}" /></td>
 			</tr>
+			
 			<tr>
 				<td style="width: 20%;"><p:outputLabel
 						value="#{lbl['lbl.sc.sq.zonal']}" /></td>
@@ -187,7 +162,7 @@
 				</td>
 			</tr>
 		</table>
-		<p:spacer height="5px" />
+		<p:spacer height="2px" />
 		<p:outputPanel autoUpdate="true" id="supplierview">
 			<h:panelGroup style="width: 100%;"
 				rendered="#{fn:length(simpleQuoteBackingBean.managedBean.productTemplateSpecBean.specAnswerList) ne '0'}">
