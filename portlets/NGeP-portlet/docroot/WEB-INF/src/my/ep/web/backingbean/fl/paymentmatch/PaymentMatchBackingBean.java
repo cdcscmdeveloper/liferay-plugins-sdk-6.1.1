@@ -1421,6 +1421,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			FacesContext fc = FacesContext.getCurrentInstance();
 			siBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
 			siBB.getManagedBean().setButtonVal("View");
+			siBB.getManagedBean().setHyperLinkPage(true);
 			flBB.getManagedBean().setHideRemarks(true);
 			return NAV_SI;
 		}else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_INVOICE)){
