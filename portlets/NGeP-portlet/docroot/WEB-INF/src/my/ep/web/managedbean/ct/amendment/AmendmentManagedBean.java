@@ -64,8 +64,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private Long secretaryId;
 	private Date newAmendmentEffDate;
 	private int selectedTabIndex;
-	private int attachFileIndex;	
-	private double performanceBondRuleAmt;	
+	private int attachFileIndex;
 	private boolean itemProductExist;
 	private boolean itemServiceExist;
 	private boolean termAndConditionFlg;
@@ -387,20 +386,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	 */
 	public void setAttachFileIndex(int attachFileIndex) {
 		this.attachFileIndex = attachFileIndex;
-	}
-	
-	/**
-	 * @return the performanceBondRuleAmt
-	 */
-	public double getPerformanceBondRuleAmt() {
-		return performanceBondRuleAmt;
-	}
-	
-	/**
-	 * @param performanceBondRuleAmt the performanceBondRuleAmt to set
-	 */
-	public void setPerformanceBondRuleAmt(double performanceBondRuleAmt) {
-		this.performanceBondRuleAmt = performanceBondRuleAmt;
 	}
 	
 	/**

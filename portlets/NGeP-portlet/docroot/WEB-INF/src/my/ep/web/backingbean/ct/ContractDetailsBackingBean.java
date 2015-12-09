@@ -34,7 +34,6 @@ import my.ep.biz.service.ct.suspension.IContractSuspensionSO;
 import my.ep.biz.service.ct.termination.IContractTerminationSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
-import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -45,7 +44,6 @@ import my.ep.constant.ct.ContractConst;
 import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
@@ -56,15 +54,12 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
-import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
-import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.CTContractDataType;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
-import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtContractAmount;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
@@ -470,18 +465,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 	 	getManagedBean().setRemarkList(resDTO.getCtRemarks());
 		getManagedBean().setAttachmentList(resDTO.getCtAttachments());
-		
-		// Get performance bond rule amount
-				IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
-				RuleReqDTO ruleReqDTO = new RuleReqDTO();
-				ruleReqDTO.setRuleType(RuleTypeConst.BOND);
-				RuleResDTO roleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
-				if (roleResDTO.isSuccessful() && roleResDTO.getRuleValueList() != null && roleResDTO.getRuleValueList().size() > 0) {
-					ctBB.getManagedBean().setPerformanceBondRuleAmt(Double.parseDouble(roleResDTO.getRuleValueList().get(0).getRuleValue()));
-				}
-				initializeRemarks();
-				getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
-						ModuleCodeConst.CONTRACT_MANAGEMENT, ctBB.getManagedBean().getContractVer().getDocType(), ctBB.getManagedBean().getContractVer().getCtContract().getContractNo()));
+		initializeRemarks();
+		getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
+				ModuleCodeConst.CONTRACT_MANAGEMENT, ctBB.getManagedBean().getContractVer().getDocType(), ctBB.getManagedBean().getContractVer().getCtContract().getContractNo()));
 			
 			
 		 ctBB.getManagedBean().setContractVer(resDTO.getCtContractVer());
@@ -537,7 +523,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    						&& !ctBB.getManagedBean().getCtContractAmount().getCtAgreement().getStatus().getStatusId().equals(ContractStatusConst.AC_COMPLETE)
 	    						&& !ctBB.getManagedBean().getCtContractAmount().getCtAgreement().getStatus().getStatusId().equals(ContractStatusConst.SA_COMPLETE))) {
 		    		ctBB.getManagedBean().setDisableGstAmount(false);
-		    		ctBB.getManagedBean().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
 	    		}
 			}	    	
 	    } else {
@@ -752,50 +737,26 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						} 
 					}				 
 					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-						double bondAmendAmount = 0.0;
-						DecimalFormat df = new DecimalFormat("#.00");
-						
-						// Retrieve amendment list
-						if (ctBB.getManagedBean().getContractVer().getCtContract().getLatestContractVer() != null) {
-							IContractAmendmentSO amendSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(
-									ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
-							ContractAmendmentResDTO resAmendDto = amendSO.getCtAmendmentByContractId(ctBB.getManagedBean().getContractVer().getCtContract().getContractId());
-
-							if (resAmendDto.getAmendmentList() != null && !resAmendDto.getAmendmentList().isEmpty()) {
-								for (CtAmendment ctAmendment : resAmendDto.getAmendmentList()){
-									if (getManagedBean().getAsAtDate().getTime() >= ctAmendment.getAmendmentEffDate().getTime() 
-						    				&& getManagedBean().getAsAtDate().getTime() <= ctAmendment.getCtContractVer().getCtContractValue().getExpDate().getTime()){
-						    			if (ctAmendment.getAmendmentLoa() != null && ctAmendment.getAmendmentLoa().isBondReq()) {
-											bondAmendAmount = bondAmendAmount + ctAmendment.getAmendmentLoa().getBondAmt().doubleValue();
-										}				
-						    			break;
-						    		}						    		
-						    	}
-							}
-						}						
-						
-						if (ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() == null 
-							&& ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+						DecimalFormat df = new DecimalFormat("#.00");			
+						// Validation on ministry contract only
+						if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 									ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-							throw new EpException(MessageConst.ERROR_750021);
-				
-						} else if (ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() != null 
-							&& ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-									ParameterConst.CONTRACT_TYPE_MINISTRY)) {						
-							bondAmount = Double.valueOf(df.format(bondAmount));
-							double oriBondAmount = Double.valueOf(df.format(ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt().doubleValue()));
-							bondAmendAmount = Double.valueOf(df.format(bondAmendAmount));
-						
-							int retval = Double.compare(bondAmount , oriBondAmount);
-							if (bondAmendAmount != 0) {
-								retval = Double.compare(bondAmount , bondAmendAmount);
+							if (ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt() == null) {
+								throw new EpException(MessageConst.ERROR_750021);
+					
+							} else {						
+								bondAmount = Double.valueOf(df.format(bondAmount));
+								double oriBondAmount = Double.valueOf(df.format(
+										ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt().doubleValue()));
+							
+								int retval = Double.compare(bondAmount , oriBondAmount);
+								if (retval >0) {
+									throw new EpException(MessageConst.ERROR_750015);
+								}
+								if (retval < 0) {
+									throw new EpException(MessageConst.ERROR_750017);  
+								}	
 							}
-							if (retval >0) {
-								throw new EpException(MessageConst.ERROR_750015);
-							}
-							if (retval < 0) {
-								throw new EpException(MessageConst.ERROR_750017);  
-							}	
 						}
 					}
 				}	
