@@ -560,14 +560,14 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	         rptGenBean.setSmGSTEffectiveDateView(true);
 	         rptGenBean.setSmExtraTwoColumnView(true);
 	         break;
-		case ReportConst.SM_RECEIPT_AND_TRANSACTION_DATE_RPT_VAL:
+		case ReportConst.SM_COLLECTION_AND_TRANSACTION_DATE_RPT_VAL:
 			  rptGenBean.setSmMandatoryReciptTransactionReportTypeView(true) ;
 			  rptGenBean.setSmMandatoryRTDateView(true);	
 			  rptGenBean.setSmMandatoryReceiptDateView(true);
 			  rptGenBean.setSmSupplierNameView(true);
 			  checkAuthorizationByRoleCode(rptGenBean,authoriztionList);			
 			break;
-		case ReportConst.SM_RECEIPT_PAYMENT_METHODS_RPT_VAL:
+		case ReportConst.SM_COLLECTION_PAYMENT_METHODS_RPT_VAL:
 			  rptGenBean.setSmMandatoryPaymentMethodView(true); 
 			  rptGenBean.setSmNonMandatoryReciptTransactionReportTypeView(true) ;
 			  rptGenBean.setSmNonMandatoryDateView(true);
@@ -575,17 +575,17 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			  rptGenBean.setSmSupplierNameView(true);
 			  checkAuthorizationByRoleCode(rptGenBean,authoriztionList);
 			break;
-		case ReportConst.SM_RECEIPT_CLASSIFICATION_CODE_RPT_VAL:
+		case ReportConst.SM_COLLECTION_CLASSIFICATION_CODE_RPT_VAL:
 			  rptGenBean.setSmMandatoryForCodeView(true);
 			  rptGenBean.setSmNonMandatoryDateView(true);
 			  rptGenBean.setSmNonMandatoryTransactionDateView(true);
 			break;
-		case ReportConst.SM_OUTSTANDING_RESULTS_RECEIVED_RPT_VAL:
+		case ReportConst.SM_REVENUE_COLLECTION_RPT_VAL:
 			  rptGenBean.setSmNonMandatoryDateView(true);
 			  rptGenBean.setSmNonMandatoryTransactionDateView(true);
 			  checkAuthorizationByRoleCode(rptGenBean,authoriztionList);
 			break;
-		case ReportConst.SM_LIST_RECIPT_TIMES_RPT_VAL:			
+		case ReportConst.SM_LIST_DAILY_RECIPT_RPT_VAL:			
 			  rptGenBean.setSmMandatoryRTDateView(true);	
 			  rptGenBean.setSmMandatoryTransactionDateView(true);
 			  rptGenBean.setSmReceiptNoView(true);
@@ -598,7 +598,8 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	}		
 	
 	private void checkAuthorizationByRoleCode(ReportsGenerateBean rptGenBean,
-			List<String> authoriztionList) {		
+			List<String> authoriztionList) {	
+		
 		if (authoriztionList != null) {
 			if (authoriztionList.contains(ReportConst.ROLE_CODE_COLLECTOR_CDC)) {
 				rptGenBean.setCollectorCDCRegistrationChkView(true);
