@@ -61,8 +61,6 @@ public class TerminationManagedBean extends BaseManagedBean {
 	private PmDigiSign pmDigiSign;
 	private CtContract ctContract;
 	private CtContractVer contractVer;
-	private CtContractVer agreementContractVer;
-	private double performanceBondRuleAmt;
 
 	/**
 	 * @return the taskName
@@ -132,20 +130,6 @@ public class TerminationManagedBean extends BaseManagedBean {
 	 */
 	public void setContractVer(CtContractVer contractVer) {
 		this.contractVer = contractVer;
-	}
-	
-	/**
-	 * @return the agreementContractVer
-	 */
-	public CtContractVer getAgreementContractVer() {
-		return agreementContractVer;
-	}
-
-	/**
-	 * @param agreementContractVer the agreementContractVer to set
-	 */
-	public void setAgreementContractVer(CtContractVer agreementContractVer) {
-		this.agreementContractVer = agreementContractVer;
 	}
 
 	/**
@@ -290,20 +274,6 @@ public class TerminationManagedBean extends BaseManagedBean {
 	 */
 	public void setFileDirectory(String fileDirectory) {
 		this.fileDirectory = fileDirectory;
-	}
-
-	/**
-	 * @return the performanceBondRuleAmt
-	 */
-	public double getPerformanceBondRuleAmt() {
-		return performanceBondRuleAmt;
-	}
-
-	/**
-	 * @param performanceBondRuleAmt the performanceBondRuleAmt to set
-	 */
-	public void setPerformanceBondRuleAmt(double performanceBondRuleAmt) {
-		this.performanceBondRuleAmt = performanceBondRuleAmt;
 	}
 
 	/**

@@ -41,6 +41,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.dtl.IContractZoneSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
@@ -55,6 +56,8 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.ct.ContractReqDTO;
+import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.dtl.ContractZoneReqDTO;
 import my.ep.dto.ct.dtl.ContractZoneResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
@@ -1739,7 +1742,31 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		    	if(getManagedBean().getCtContractAmount()!= null && getManagedBean().getCtContractAmount().getGstAmount() !=  null){
 		    		 getManagedBean().setGstTotalAmount(getManagedBean().getCtContractAmount().getGstAmount().add(getManagedBean().getCtContractAmount().getContractAmount()));    
 		    	}
+		    	// Recalculate the performance bond amount
+		    	if (!getManagedBean().isDirectPurchase()) {
+		    		calculateNewBondAmount();
+		    	}		    	
 		    }
+		 
+		 /**
+		 * The method used to calculate the new performance bond amount.
+	     */
+		 private void calculateNewBondAmount() {
+			 IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+					 ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+
+			 ContractReqDTO reqDTO = new ContractReqDTO();
+			 reqDTO.setOverallContractAmt(getManagedBean().getGstTotalAmount());
+			 reqDTO.setContractPeriod(new BigDecimal(getManagedBean().getContractVer().getCtContractValue().getContractPeriod()));
+	    	
+			 ContractResDTO resDTO = contractSO.retrievePerformanceBondAmt(reqDTO);			 
+			 getManagedBean().getCtContractAmount().setBondReq(resDTO.isBondReq());
+			 if (resDTO.isBondReq()) {				 
+				 getManagedBean().getCtContractAmount().setTotalBondAmt(resDTO.getBondAmount());
+			 } else {
+				 getManagedBean().getCtContractAmount().setTotalBondAmt(null);
+			 }
+		 }
 		 
 		 /**
 			 * The method used to set the justification value.

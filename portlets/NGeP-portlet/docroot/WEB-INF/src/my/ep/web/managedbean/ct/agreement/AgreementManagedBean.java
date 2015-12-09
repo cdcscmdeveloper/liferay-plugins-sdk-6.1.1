@@ -53,7 +53,6 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private String buttonAction;
 	private int selectedTabIndex;
 	private int varIndex;
-	private double performanceBondRuleAmt;
 	private boolean uploadFinalAgreement;
 	private boolean uploadStampedAndSignedPage;
 	private boolean validateWitness;
@@ -191,20 +190,6 @@ public class AgreementManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
-	}
-	
-	/**
-	 * @return the performanceBondRuleAmt
-	 */
-	public double getPerformanceBondRuleAmt() {
-		return performanceBondRuleAmt;
-	}
-	
-	/**
-	 * @param performanceBondRuleAmt the performanceBondRuleAmt to set
-	 */
-	public void setPerformanceBondRuleAmt(double performanceBondRuleAmt) {
-		this.performanceBondRuleAmt = performanceBondRuleAmt;
 	}
 	
 	/**
