@@ -2772,12 +2772,14 @@ public class SmApplicationBackingBean extends
 		}
 		if (getManagedBean().getSmAppl().getSmSupplierCerts()
 				.contains(getManagedBean().getSelectedCert())) {
-			getManagedBean()
-					.getSmAppl()
-					.getSmSupplierCerts()
-					.set(getManagedBean().getSmAppl().getSmSupplierCerts()
-							.indexOf(getManagedBean().getSelectedCert()),
-							getManagedBean().getSelectedCert());
+			if (getHq() != null) {
+				getManagedBean()
+						.getSmAppl()
+						.getSmSupplierCerts()
+						.set(getManagedBean().getSmAppl().getSmSupplierCerts()
+								.indexOf(getManagedBean().getSelectedCert()),
+								getManagedBean().getSelectedCert());
+			}
 		} else {
 			getManagedBean().getSmAppl().getSmSupplierCerts()
 					.add(getManagedBean().getSelectedCert());
@@ -2799,8 +2801,12 @@ public class SmApplicationBackingBean extends
 	 *            - SmSupplierCert object
 	 */
 	public void assignSelCert(SmSupplierCert certBean) {
-		getManagedBean().setSelectedCert(
-				(SmSupplierCert) SerializationUtils.clone(certBean));
+		if (getHq() != null) {
+			getManagedBean().setSelectedCert(
+					(SmSupplierCert) SerializationUtils.clone(certBean));
+		} else {
+			getManagedBean().setSelectedCert(certBean);
+		}
 		assignCertBodyList();
 		assignValReqdToTrue();
 		if (getManagedBean().getLatestAppl() != null) {
@@ -4711,50 +4717,6 @@ public class SmApplicationBackingBean extends
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
 			calculateCapital();
 		}
-		if (getManagedBean().getSmAppl().getSmPersonnels()
-				.contains(getManagedBean().getSelectedShareHolder())) {
-
-			SmPersonnel per = getManagedBean().getSelectedPersonnel();
-			getManagedBean().getSelectedShareHolder().setIdentificationTypeId(
-					per.getIdentificationTypeId());
-			getManagedBean().getSelectedShareHolder().setIdentificationType(
-					per.getIdentificationType());
-			getManagedBean().getSelectedShareHolder().setIdentificationNo(
-					per.getIdentificationNo());
-			getManagedBean().getSelectedShareHolder().setSmPersonnelAddresses(
-					per.getSmPersonnelAddresses());
-			if (per.getEpRole() != null) {
-				getManagedBean().getSelectedShareHolder().setEpRole(
-						per.getEpRole());
-			}
-			if (per.getPmRace() != null && per.getPmRace().getRaceId() != null) {
-				log.info(" *** Not null race ******");
-				getManagedBean().getSelectedShareHolder().setPmRace(
-						per.getPmRace());
-			} else {
-				log.info(" ***Empty race value  ******");
-				getManagedBean().getSelectedShareHolder().setPmRace(null);
-
-			}
-			getManagedBean().getSelectedShareHolder().setAuthorizedFlg(
-					per.getAuthorizedFlg());
-			getManagedBean().getSelectedShareHolder().setContractSignerFlg(
-					per.getContractSignerFlg());
-			getManagedBean().getSelectedShareHolder().setSoftcertFlg(
-					per.getSoftcertFlg());
-			getManagedBean().getSelectedShareHolder().setDirector(
-					per.isDirector());
-			getManagedBean().getSelectedShareHolder().setManagement(
-					per.isManagement());
-			getManagedBean().getSelectedShareHolder().setHigherManagement(
-					per.isHigherManagement());
-			getManagedBean().getSelectedShareHolder().setProf(per.isProf());
-			getManagedBean().getSelectedShareHolder().setSemiProf(
-					per.isSemiProf());
-			getManagedBean().getSelectedShareHolder().setClerical(
-					per.isClerical());
-
-		}
 		getManagedBean().setRedirectToPersonPage(false);
 		RequestContext.getCurrentInstance().reset(":form:tt:shareHolderDialog");
 	}
@@ -4808,8 +4770,9 @@ public class SmApplicationBackingBean extends
 		if (shareHolderBean.getEpRole() == null) {
 			shareHolderBean.setEpRole("");
 		}
-		assignSelShareHolderAddress(shareHolderBean);
-		getManagedBean().setSelectedShareHolder(shareHolderBean);
+		getManagedBean().setSelectedShareHolder(
+				(SmPersonnel) SerializationUtils.clone(shareHolderBean));
+		assignSelShareHolderAddress(getManagedBean().getSelectedShareHolder());
 		managePersonnelRoles("Y");
 		manageEquityLimit(getManagedBean().getSelectedShareHolder());
 		if (getManagedBean().getSelectedShareHolder().getIdentificationTypeId() != null) {
@@ -4824,30 +4787,8 @@ public class SmApplicationBackingBean extends
 					new PmParameter());
 		}
 		getManagedBean().setRedirectToPersonPage(true);
-		// use this object to reset some values on back button click
-		SmPersonnel per = new SmPersonnel();
-		per.setIdentificationTypeId(shareHolderBean.getIdentificationTypeId());
-		per.setIdentificationType(shareHolderBean.getIdentificationType());
-		per.setIdentificationNo(shareHolderBean.getIdentificationNo());
-		per.setSmPersonnelAddresses(shareHolderBean.getSmPersonnelAddresses());
-		if (shareHolderBean.getEpRole() != null) {
-			per.setEpRole(shareHolderBean.getEpRole());
-		}
-		if (shareHolderBean.getPmRace() != null) {
-			per.setPmRace(shareHolderBean.getPmRace());
-		}
-		per.setAuthorizedFlg(shareHolderBean.getAuthorizedFlg());
-		per.setContractSignerFlg(shareHolderBean.getContractSignerFlg());
-		per.setSoftcertFlg(shareHolderBean.getSoftcertFlg());
-		per.setDirector(shareHolderBean.isDirector());
-		per.setManagement(shareHolderBean.isManagement());
-		per.setHigherManagement(shareHolderBean.isHigherManagement());
-		per.setProf(shareHolderBean.isProf());
-		per.setSemiProf(shareHolderBean.isSemiProf());
-		per.setClerical(shareHolderBean.isClerical());
-		getManagedBean().setSelectedPersonnel(per);
 		getManagedBean().setRemoveEpRole(false);
-		buildRoleList(getManagedBean().getSelectedPersonnel());
+		buildRoleList(getManagedBean().getSelectedShareHolder());
 		if (getManagedBean().getSelectedShareHolder().getEpRole() != null
 				&& (getManagedBean().getSelectedShareHolder().getEpRole()
 						.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value()) || getManagedBean()
@@ -5195,7 +5136,6 @@ public class SmApplicationBackingBean extends
 	 *            - SmStaffExperience object
 	 */
 	public void assignSelShrHldrJobFunc(SmStaffExperience exp) {
-		log.info("*********** Selected value *********" + exp.getDesignation());
 		getManagedBean().setSelectedJobFunction(exp);
 		if (getManagedBean().getLatestPersonnel() != null) {
 			getManagedBean().setLatestJobFunction(
