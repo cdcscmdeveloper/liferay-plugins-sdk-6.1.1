@@ -22,9 +22,10 @@
 				<p:outputLabel value="#{price.ranking}" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.supplier.code']}" style="white-space:normal;" >
+			<p:column headerText="#{lbl['lbl.sc.supplier.code']}" style="width:10%;" >
 				<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
-							   process="@this" update="@([id$=suppDetailsPopup])">
+							   process="@this" update="@([id$=suppDetailsPopup])" 
+							   style="float:right;">
 					<f:setPropertyActionListener value="#{price.scBidSupplier.smSupplier}"
 							target="#{supplierDetailBackingBean.smSupplier}" />
 					<h:outputText value="#{price.supplierCode}" />
