@@ -3248,7 +3248,15 @@ public class SmApplicationBackingBean extends
 
 		if (getManagedBean().getSmAppl().getSmEquityCompanies()
 				.contains(getManagedBean().getSelectedEquityCompany())) {
-			// TODO if any validation reqd for edit
+			getManagedBean()
+					.getSmAppl()
+					.getSmEquityCompanies()
+					.set(getManagedBean()
+							.getSmAppl()
+							.getSmEquityCompanies()
+							.indexOf(
+									getManagedBean().getSelectedEquityCompany()),
+							getManagedBean().getSelectedEquityCompany());
 		} else {
 			getManagedBean().getSmAppl().getSmEquityCompanies()
 					.add(getManagedBean().getSelectedEquityCompany());
@@ -3276,7 +3284,8 @@ public class SmApplicationBackingBean extends
 		SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
 				getManagedBean(), equiCompBean.getSmAddress(),
 				SupplierManagementConst.SM_EQUI_COMPANY_PANEL);
-		getManagedBean().setSelectedEquityCompany(equiCompBean);
+		getManagedBean().setSelectedEquityCompany(
+				(SmEquityCompany) SerializationUtils.clone(equiCompBean));
 		if (getManagedBean().getLatestAppl() != null) {
 			getManagedBean().setLatestEquityCompany(
 					(SmEquityCompany) SmCommonUtil
