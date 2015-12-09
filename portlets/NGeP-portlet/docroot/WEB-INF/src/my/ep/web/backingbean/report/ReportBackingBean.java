@@ -10614,6 +10614,10 @@ public class ReportBackingBean extends
 		levOneCatLst = new ArrayList<SelectItem>();
 		levTwoCatLst = new ArrayList<SelectItem>();
 		levThreeCatLst = new ArrayList<SelectItem>();
+		smMofRegistrationFeeList=new ArrayList<SelectItem>();
+		smProcessingFeeList=new ArrayList<SelectItem>();		
+		smSoftCertificateFeeList=new ArrayList<SelectItem>();
+		
 		getManagedBean().setReportValue(this.getReportValue());
 		if ((this.getModuleValue()) != null
 				&& (getManagedBean().getReportValue()) != null) {
@@ -10711,6 +10715,7 @@ public class ReportBackingBean extends
 				retrieveRegStatusList();
 				retrievePaymentTypeList();
 				retrievePaymentMethod();
+				
 				smReportBackingBean.enableCriteriaVariablesByReportBySM(
 						rptGenBean, authoriztionList);
 
@@ -12127,17 +12132,17 @@ public class ReportBackingBean extends
 						.getReportValue()
 						.trim()
 						.equalsIgnoreCase(
-								ReportConst.SM_RECEIPT_AND_TRANSACTION_DATE_RPT_VAL)
+								ReportConst.SM_COLLECTION_AND_TRANSACTION_DATE_RPT_VAL)
 						|| getManagedBean()
 								.getReportValue()
 								.trim()
 								.equalsIgnoreCase(
-										ReportConst.SM_RECEIPT_PAYMENT_METHODS_RPT_VAL)
+										ReportConst.SM_COLLECTION_PAYMENT_METHODS_RPT_VAL)
 						|| getManagedBean()
 								.getReportValue()
 								.trim()
 								.equalsIgnoreCase(
-										ReportConst.SM_RECEIPT_CLASSIFICATION_CODE_RPT_VAL)) {
+										ReportConst.SM_COLLECTION_CLASSIFICATION_CODE_RPT_VAL)) {
 
 					if ((this.getSmCode() != null)
 							&& (this.getSmCode() != ReportConst.EMPTY_VAL)) {
