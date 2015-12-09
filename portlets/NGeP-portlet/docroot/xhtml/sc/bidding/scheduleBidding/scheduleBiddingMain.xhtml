@@ -22,17 +22,17 @@
 			value="#{!scheduleBiddingBB.managedBean.scQt.zonal and scheduleBiddingBB.managedBean.scQtFinalization.recommendedTypeId.parameterCode eq 'I' }" />
 		<ui:param name="isQtZonalAndRecommendTypeAny"
 			value="#{scheduleBiddingBB.managedBean.scQt.zonal}" />
+		<ui:param name="qtValidityDaysExpired"
+     value="#{scheduleBiddingBB.checkProposalValidityDateReach(scheduleBiddingBB.managedBean.scQt.proposalValidityEndDate)}" />
 
 
 		<div align="right" style="width: 100%">
-
-
 			<ui:repeat var="bpmAction"
 				value="#{scheduleBiddingBB.managedBean.outComes}">
 				<ui:param name="buttonLabel"
 					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 				<p:commandButton id="submitBtn" value="#{lbl[buttonLabel]}"
-					update="@form" styleClass="ui-button"
+					update="@form" styleClass="ui-button" rendered="#{qtValidityDaysExpired}"
 					action="#{scheduleBiddingBB.submitBiddingDetails(bpmAction)}" />
 			</ui:repeat>
 		</div>
