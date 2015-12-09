@@ -80,6 +80,9 @@
 								</p:inputText>
 								<p:message id="licenseNoIdMsg" for="licenseNoId" showSummary="true" showDetail="false" display="icon" />
 							</td>
+							<td colspan="2" style="border-style: none !important;"></td>
+						</tr>
+						<tr>
 							<td style="border-style: none !important;">
 								<p:outputLabel value="#{lbl['lbl.sm.suppdoc.license.effdate']}" />
 								<p:outputLabel value="*" styleClass="mandatory" rendered="#{table.pmDocument.mandatory}"/>
@@ -97,9 +100,6 @@
 									for="licenseEffDateId" showSummary="true" showDetail="false"
 									display="icon" />
 							</td>
-						</tr>
-						<tr>
-							<td colspan="2" style="border-style: none !important;"></td>
 							<td style="border-style: none !important;">
 								<p:outputLabel value="#{lbl['lbl.sm.suppdoc.license.expdate']}" />
 								<p:outputLabel value="*" styleClass="mandatory" rendered="#{table.pmDocument.mandatory}"/>
