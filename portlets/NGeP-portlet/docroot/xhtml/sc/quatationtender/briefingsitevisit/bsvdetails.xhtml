@@ -84,9 +84,9 @@
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
-		<div class="ppRightBtn">
+		<div class="ppRightBtn BtnSpacing">
 			<h:panelGroup id="addtositebutton">
-				<p:commandButton id="addtositevisitid" styleClass="BtnSpacing"
+				<p:commandButton id="addtositevisitid"
 					update="@([id$=sameasbsvrequired])"
 					value="#{lbl['lbl.sc.qt.addtositevisit']}"
 					process="@this,briefingdtlid" partialSubmit="true"
@@ -94,19 +94,29 @@
 					rendered="#{bsvdtlbean.scQtBsv.sameBsv eq 'false' and !qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}" />
 			</h:panelGroup>
 			<p:commandButton id="briefingaddid" value="#{lbl['lbl.btn.add']}"
-				process="@this" styleClass="BtnSpacing"
+				process="@this"
 				disabled="#{bsvdtlbean.briefingList.size() eq 1}"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
 				action="#{qTBriefingSiteVisitBackingBean.addBsvDetails('B')}"
 				oncomplete="addbsvdtls.show();" update="@(.qtBriefDetails)" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				styleClass="BtnSpacing" process="@this,briefingdtlid"
+				process="@this, briefingdtlid"
 				partialSubmit="true"
+				oncomplete="briefingDtlsDeletePopUp.show();"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
-				action="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('B')}"
 				update="@form" />
+			
 		</div>
+		<ui:param name="briefingDtlsDeleteId" value="briefingDtlsDeleteId" />
+		<ac:confirmationPopup id="#{briefingDtlsDeleteId}"
+			widget="briefingDtlsDeletePopUp"
+			okAction="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('B')}"
+			width="35%" height="100"
+			title="#{lbl['lbl.sc.briefing.dtls']}"
+			content="#{lbl['lbl.sc.dialog.confirm.briefing.details.dtls']}"
+			update="@([id$=briefingdtlid])" >
+		</ac:confirmationPopup>
 	</p:panel>
 
 	<h:panelGroup id="sameasbsvrequired">
@@ -181,28 +191,36 @@
 						</p:commandLink>
 					</p:column>
 				</p:dataTable>
-				<div class="ppRightBtn">
-					<p:commandButton id="addsitevisitid" styleClass="BtnSpacing"
+				<div class="ppRightBtn BtnSpacing">
+					<p:commandButton id="addsitevisitid" 
 						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
 						value="#{lbl['lbl.btn.add']}" process="@this"
 						action="#{qTBriefingSiteVisitBackingBean.addBsvDetails('S')}"
 						oncomplete="addbsvdtls.show();" update="@(.qtBriefDetails)" />
 
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"
-						styleClass="BtnSpacing"
-						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
 						process="@this, sitevisitdtlid" partialSubmit="true"
-						action="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('S')}"
-						update="@([id$=sameasbsvrequired])" />
+						oncomplete="sitevisitDtlsDeletePopUp.show();"
+						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
+						update="@form" />
 				</div>
-				<h:panelGroup rendered="#{bsvdtlbean.sitevisitList.size() ge 2}">
+				<ui:param name="sitevisitDtlsDeleteId" value="sitevisitDtlsDeleteId" />
+				<ac:confirmationPopup id="#{sitevisitDtlsDeleteId}"
+					widget="sitevisitDtlsDeletePopUp"
+					okAction="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('S')}"
+					width="35%" height="100"
+					title="#{lbl['lbl.sc.site.visit.dtls']}"
+					content="#{lbl['lbl.sc.dialog.confirm.sitevisit.details.dtls']}"
+					update="@([id$=sitevisitdtlid]), @([id$=panelGrpId])" >
+				</ac:confirmationPopup>
+				<h:panelGroup id="panelGrpId" rendered="#{bsvdtlbean.sitevisitList.size() ge 2}">
 					<table style="width: 100%" border="0">
 						<tr>
 							<td style="width: 27px;"><ac:iconTooltip
 									value="#{lbl['lbl.sc.qt.attendance.tooltip']}" /></td>
 							<td style="width: 145px;"><p:outputLabel
 									value="#{lbl['lbl.sc.qt.attendance.site']}" /></td>
-							<td style="width: 130px;"><p:selectOneRadio
+							<td style="width: 145px;"><p:selectOneRadio
 									disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
 									value="#{bsvdtlbean.scQtBsv.allSiteVisitReq}">
 									<f:selectItem itemLabel="#{lbl['lbl.sc.qt.all']}"
@@ -222,7 +240,6 @@
 										</p:inputText>
 									</ui:fragment>
 								</h:panelGroup></td>
-
 						</tr>
 					</table>
 				</h:panelGroup>
