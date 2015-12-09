@@ -18,7 +18,7 @@
 			selection="#{specificationBackingBean.managedBean.suppCriteriaopenSelectList}"
 			rowKey="#{cateGory}">
 
-			<p:column selectionMode="multiple" style="width:2%"></p:column>
+			<p:column selectionMode="multiple" styleClass="td-check-box-spacing"></p:column>
 			<p:column headerText="#{lbl['lbl.sc.category.code']}">
 				#{cateGory.pmCategoryL1.categoryL1Code}#{cateGory.pmCategoryL2.categoryL2Code}#{cateGory.pmCategoryL3.categoryL3Code}
 			</p:column>
@@ -200,7 +200,8 @@
 							</p:tree>
 						</p:column>
 
-						<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%;text-align: center;">
+						<p:column headerText="#{lbl['lbl.sc.action']}"
+							style="width:10%;text-align: center;">
 							<p:commandLink
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								actionListener="#{specificationBackingBean.editSupplierLocations(zoneTree,index)}"
@@ -324,7 +325,8 @@
 
 							</p:tree>
 						</p:column>
-						<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%;text-align: center;">
+						<p:column headerText="#{lbl['lbl.sc.action']}"
+							style="width:10%;text-align: center;">
 							<p:commandLink
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								actionListener="#{specificationBackingBean.editSupplierLocations(zoneTree,index)}"
