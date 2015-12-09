@@ -35,7 +35,7 @@
 				disabledSelection="true"
 				rendered="#{stageTwofunctional.manditory !=true and stageTwofunctional.definationType.parameterCode eq 'TS'}" /> -->
 
-			<p:column style="width:2px;">
+			<p:column style="width:3px;text-align:center;">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox disabled="true"
 						value="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}">
@@ -68,7 +68,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.checklist.title']}"
-				style="width:42%;white-space: normal;">
+				style="width:41%;white-space: normal;">
 
 
 				<ui:fragment rendered="#{stageTwofunctional.title !=null}">

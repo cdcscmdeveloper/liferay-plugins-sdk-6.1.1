@@ -13,7 +13,7 @@
 			selection="#{selectionList}" var="checkListScoring"
 			rowKey="#{checkListScoring}">
 			<ac:paginator for="#{scoringPnlId}"></ac:paginator>
-			<p:column style="width:2px;">
+			<p:column style="width:3px;text-align:center;">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox
 						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
@@ -29,7 +29,7 @@
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:selectBooleanCheckbox>
 			</p:column>
-			<p:column style="width:40%">
+			<p:column style="width:37%">
 				<f:facet name="header">
 					<ui:fragment
 						rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
