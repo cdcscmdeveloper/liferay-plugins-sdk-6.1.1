@@ -3667,9 +3667,15 @@ public class SmApplicationBackingBean extends
 	public void addOrUpdateFactoryToSmAppl() {
 		SmFacility smFac = getManagedBean().getSelectedFactoryFacility();
 		if (getManagedBean().getSmAppl().getSmFacilities().contains(smFac)) {
-
+			getManagedBean()
+					.getSmAppl()
+					.getSmFacilities()
+					.set(getManagedBean().getSmAppl().getSmFacilities()
+							.indexOf(smFac), smFac);
 			if (getManagedBean().getApplFactoryFacilities().contains(smFac)) {
-				log.info(" ******* THIS IS EDIT FOR EXISITING FACTORY **********");
+				getManagedBean().getApplFactoryFacilities().set(
+						getManagedBean().getApplFactoryFacilities().indexOf(
+								smFac), smFac);
 			}
 
 		} else {
@@ -3689,17 +3695,7 @@ public class SmApplicationBackingBean extends
 	 * dialog
 	 */
 	public void cancelFactorySaveorUpdate() {
-		if (getManagedBean().getSelectedFactoryFacility() != null
-				&& getManagedBean().getSelectedFactoryFacility().getSmAddress() != null
-				&& getManagedBean().getSelectedFactoryFacility().getSmAddress()
-						.getAddressId() != null) {
-			getManagedBean().getSelectedFactoryFacility().setSmAddress(
-					SmCommonUtil.getInstance().getSmAddressById(
-							getManagedBean().getSelectedFactoryFacility()
-									.getSmAddress().getAddressId()));
-		}
 		assignValReqdToFalse();
-		resetFacilityValues(getManagedBean().getSelectedFactoryFacility());
 		RequestContext.getCurrentInstance().reset(":form:tt:factoryDialog");
 		RequestContext.getCurrentInstance().execute("factoryDialog.hide()");
 	}
@@ -3718,8 +3714,8 @@ public class SmApplicationBackingBean extends
 				getManagedBean(), facilityBean.getSmAddress(),
 				SupplierManagementConst.SM_FACTORY_FACILITY_PANEL);
 		setFacilityDefaultPrices(facilityBean);
-		setPreviousFacilityValues(facilityBean);
-		getManagedBean().setSelectedFactoryFacility(facilityBean);
+		getManagedBean().setSelectedFactoryFacility(
+				(SmFacility) SerializationUtils.clone(facilityBean));
 		getManagedBean().setFacilityType(
 				StringUtils.upperCase(SmCommonUtil.getMessage(
 						"lbl.sm.facility.type.factory", null)));
@@ -3793,9 +3789,15 @@ public class SmApplicationBackingBean extends
 	public void addOrUpdateDockYardToSmAppl() {
 		SmFacility smFac = getManagedBean().getSelectedDockyardFacility();
 		if (getManagedBean().getSmAppl().getSmFacilities().contains(smFac)) {
-
+			getManagedBean()
+					.getSmAppl()
+					.getSmFacilities()
+					.set(getManagedBean().getSmAppl().getSmFacilities()
+							.indexOf(smFac), smFac);
 			if (getManagedBean().getApplDockyardFacilities().contains(smFac)) {
-				// TODO any validation for edit
+				getManagedBean().getApplDockyardFacilities().set(
+						getManagedBean().getApplDockyardFacilities().indexOf(
+								smFac), smFac);
 			}
 
 		} else {
@@ -3815,18 +3817,7 @@ public class SmApplicationBackingBean extends
 	 * dialog
 	 */
 	public void cancelDockyardSaveorUpdate() {
-		if (getManagedBean().getSelectedDockyardFacility() != null
-				&& getManagedBean().getSelectedDockyardFacility()
-						.getSmAddress() != null
-				&& getManagedBean().getSelectedDockyardFacility()
-						.getSmAddress().getAddressId() != null) {
-			getManagedBean().getSelectedDockyardFacility().setSmAddress(
-					SmCommonUtil.getInstance().getSmAddressById(
-							getManagedBean().getSelectedDockyardFacility()
-									.getSmAddress().getAddressId()));
-		}
 		assignValReqdToFalse();
-		resetFacilityValues(getManagedBean().getSelectedDockyardFacility());
 		RequestContext.getCurrentInstance().reset(":form:tt:dockYardDialog");
 		RequestContext.getCurrentInstance().execute("dockYardDialog.hide()");
 	}
@@ -3843,8 +3834,8 @@ public class SmApplicationBackingBean extends
 				getManagedBean(), facilityBean.getSmAddress(),
 				SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL);
 		setFacilityDefaultPrices(facilityBean);
-		setPreviousFacilityValues(facilityBean);
-		getManagedBean().setSelectedDockyardFacility(facilityBean);
+		getManagedBean().setSelectedDockyardFacility(
+				(SmFacility) SerializationUtils.clone(facilityBean));
 		getManagedBean().setFacilityType(
 				StringUtils.upperCase(SmCommonUtil.getMessage(
 						"lbl.sm.facility.type.dockyard", null)));
@@ -3917,10 +3908,19 @@ public class SmApplicationBackingBean extends
 	 */
 	public void addOrUpdateWorkshopToSmAppl() {
 		SmFacility smFac = getManagedBean().getSelectedWorkShopFacility();
+
 		if (getManagedBean().getSmAppl().getSmFacilities().contains(smFac)) {
 
+			getManagedBean()
+					.getSmAppl()
+					.getSmFacilities()
+					.set(getManagedBean().getSmAppl().getSmFacilities()
+							.indexOf(smFac), smFac);
+
 			if (getManagedBean().getApplWorkShopFacilities().contains(smFac)) {
-				log.info(" ******* THIS IS EDIT FOR EXISITING workshop **********");
+				getManagedBean().getApplWorkShopFacilities().set(
+						getManagedBean().getApplWorkShopFacilities().indexOf(
+								smFac), smFac);
 			}
 
 		} else {
@@ -3939,18 +3939,7 @@ public class SmApplicationBackingBean extends
 	 * dialog
 	 */
 	public void cancelWorkShopSaveorUpdate() {
-		if (getManagedBean().getSelectedWorkShopFacility() != null
-				&& getManagedBean().getSelectedWorkShopFacility()
-						.getSmAddress() != null
-				&& getManagedBean().getSelectedWorkShopFacility()
-						.getSmAddress().getAddressId() != null) {
-			getManagedBean().getSelectedWorkShopFacility().setSmAddress(
-					SmCommonUtil.getInstance().getSmAddressById(
-							getManagedBean().getSelectedWorkShopFacility()
-									.getSmAddress().getAddressId()));
-		}
 		assignValReqdToFalse();
-		resetFacilityValues(getManagedBean().getSelectedWorkShopFacility());
 		RequestContext.getCurrentInstance().reset(":form:tt:workShopDialog");
 		RequestContext.getCurrentInstance().execute("workShopDialog.hide()");
 	}
@@ -3967,8 +3956,8 @@ public class SmApplicationBackingBean extends
 				getManagedBean(), facilityBean.getSmAddress(),
 				SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL);
 		setFacilityDefaultPrices(facilityBean);
-		setPreviousFacilityValues(facilityBean);
-		getManagedBean().setSelectedWorkShopFacility(facilityBean);
+		getManagedBean().setSelectedWorkShopFacility(
+				(SmFacility) SerializationUtils.clone(facilityBean));
 		getManagedBean().setFacilityType(
 				StringUtils.upperCase(SmCommonUtil.getMessage(
 						"lbl.sm.facility.type.workshop", null)));
@@ -4039,10 +4028,19 @@ public class SmApplicationBackingBean extends
 	 */
 	public void addOrUpdateStoreToSmAppl() {
 		SmFacility smFac = getManagedBean().getSelectedStoreFacility();
+
 		if (getManagedBean().getSmAppl().getSmFacilities().contains(smFac)) {
 
+			getManagedBean()
+					.getSmAppl()
+					.getSmFacilities()
+					.set(getManagedBean().getSmAppl().getSmFacilities()
+							.indexOf(smFac), smFac);
+
 			if (getManagedBean().getApplStoreFacilities().contains(smFac)) {
-				log.info(" ******* THIS IS EDIT FOR EXISITING workshop **********");
+				getManagedBean().getApplStoreFacilities().set(
+						getManagedBean().getApplStoreFacilities()
+								.indexOf(smFac), smFac);
 			}
 
 		} else {
@@ -4060,17 +4058,7 @@ public class SmApplicationBackingBean extends
 	 * Cancel add or update functionality and close the store information dialog
 	 */
 	public void cancelStoreSaveorUpdate() {
-		if (getManagedBean().getSelectedStoreFacility() != null
-				&& getManagedBean().getSelectedStoreFacility().getSmAddress() != null
-				&& getManagedBean().getSelectedStoreFacility().getSmAddress()
-						.getAddressId() != null) {
-			getManagedBean().getSelectedStoreFacility().setSmAddress(
-					SmCommonUtil.getInstance().getSmAddressById(
-							getManagedBean().getSelectedStoreFacility()
-									.getSmAddress().getAddressId()));
-		}
 		assignValReqdToFalse();
-		resetFacilityValues(getManagedBean().getSelectedStoreFacility());
 		RequestContext.getCurrentInstance().reset(":form:tt:storeDialog");
 		RequestContext.getCurrentInstance().execute("storeDialog.hide()");
 	}
@@ -4087,8 +4075,8 @@ public class SmApplicationBackingBean extends
 				getManagedBean(), facilityBean.getSmAddress(),
 				SupplierManagementConst.SM_STORE_FACILITY_PANEL);
 		setFacilityDefaultPrices(facilityBean);
-		setPreviousFacilityValues(facilityBean);
-		getManagedBean().setSelectedStoreFacility(facilityBean);
+		getManagedBean().setSelectedStoreFacility(
+				(SmFacility) SerializationUtils.clone(facilityBean));
 		getManagedBean().setFacilityType(
 				StringUtils.upperCase(SmCommonUtil.getMessage(
 						"lbl.sm.facility.type.store", null)));
