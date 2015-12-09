@@ -94,14 +94,14 @@
 		<ac:confirmationPopup id="#{businessOwnerDeleteId}"
 			widget="businessOwnerDeletePopUp"
 			okAction="qTBusinessOwnerBackingBean.deleteBusinessOwner" width="40%"
-			height="200" title="#{lbl['lbl.sc.qt.business.owner']}"
+			height="100" title="#{lbl['lbl.sc.qt.business.owner']}"
 			content="#{lbl['lbl.sc.dialog.confirm.business.owner.dtls']}"
 			update="@([id$=businessownerId])" />
 	</p:panel>
 	<p:panel toggleable="true">
 		<table style="width: 100%;">
 			<tr>
-				<td style="width: 355px;"><p:outputLabel
+				<td style="width: 365px;"><p:outputLabel
 						value="#{lbl['lbl.sc.qt.req.approval.specification']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneRadio required="true"
