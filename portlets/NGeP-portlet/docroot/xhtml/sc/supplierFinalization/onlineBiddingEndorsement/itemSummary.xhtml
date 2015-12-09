@@ -47,13 +47,13 @@
 				<h:outputText value="#{itemSupplier.ranking}" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
-				<p:commandLink update="@([id$=suppDtlPopUp])"
-					action="#{suppFinalBiddingBackingBean.showSupplierDetails(
-								itemSupplier.supplier.supplierId)}"
-					oncomplete="suppDtlWidgetVar.show();">
-					<h:outputText value="#{itemSupplier.supplierName}" />
-				</p:commandLink>
+			<p:column headerText="#{lbl['lbl.sc.supplier.code']}">
+				<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
+							   process="@this" update="@([id$=suppDetailsPopup])">
+					<f:setPropertyActionListener value="#{itemSupplier.supplier}"
+							target="#{supplierDetailBackingBean.smSupplier}" />
+					<h:outputText value="#{itemSupplier.supplierCode}" />
+				</p:commandLink>				
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}">
