@@ -277,6 +277,8 @@ public class ScheduleBiddingBackingBean extends
 				getManagedBean().setBidScheduleList(resDTO.getBidSchedules());
 				getManagedBean().setScBid(resDTO.getScBid());
 				getManagedBean().setBidItemList(resDTO.getBidItemsList());
+				getManagedBean().setBidMinDuration(resDTO.getMinDuration());
+				getManagedBean().setBidMaxDuration(resDTO.getMaxDuration());
 				if (resDTO.getScQT().isZonal()) {
 					getManagedBean().setRowSelectedBid(
 							resDTO.getBidSchedules().get(0));
@@ -300,7 +302,6 @@ public class ScheduleBiddingBackingBean extends
 							resDTO.getBidSchedules().get(0).getScBidItems()
 									.get(0));
 				}
-
 			}
 		}
 
@@ -317,10 +318,14 @@ public class ScheduleBiddingBackingBean extends
 
 	public void bidStartDateSelectListener(ScBidSchedule scBidSchedule) {
 		Date date = scBidSchedule.getStartDate();
-		getManagedBean().setMinEndDate(date);
+		Calendar minEndDate = Calendar.getInstance();
+		minEndDate.setTime(date);
+		minEndDate.add(Calendar.HOUR_OF_DAY, getManagedBean().getBidMinDuration().intValue());
+		getManagedBean().setMinEndDate(minEndDate.getTime());
+		
 		Calendar maxEndDate = Calendar.getInstance();
 		maxEndDate.setTime(date);
-		maxEndDate.add(Calendar.HOUR_OF_DAY, 2);
+		maxEndDate.add(Calendar.HOUR_OF_DAY, getManagedBean().getBidMaxDuration().intValue());
 		getManagedBean().setMaxEndDate(maxEndDate.getTime());
 		if (scBidSchedule.getEndDate() != null) {
 			scBidSchedule.setEndDate(null);
@@ -368,10 +373,15 @@ public class ScheduleBiddingBackingBean extends
 	 */
 	public void itemStartDateSelectListener(ScBidItem bidItem) {
 		Date date = bidItem.getScBidSchedule().getStartDate();
-		getManagedBean().setMinEndDate(date);
+		
+		Calendar minEndDate = Calendar.getInstance();
+		minEndDate.setTime(date);
+		minEndDate.add(Calendar.HOUR_OF_DAY, getManagedBean().getBidMinDuration().intValue());
+		getManagedBean().setMinEndDate(minEndDate.getTime());
+		
 		Calendar maxEndDate = Calendar.getInstance();
 		maxEndDate.setTime(date);
-		maxEndDate.add(Calendar.HOUR_OF_DAY, 2);
+		maxEndDate.add(Calendar.HOUR_OF_DAY, getManagedBean().getBidMaxDuration().intValue());
 		getManagedBean().setMaxEndDate(maxEndDate.getTime());
 		if (bidItem.getScBidSchedule().getEndDate() != null) {
 			bidItem.getScBidSchedule().setEndDate(null);
@@ -421,10 +431,13 @@ public class ScheduleBiddingBackingBean extends
 
 	public void multiSelectStartDateListener(ScBidSchedule scBidSchedule) {
 		Date date = scBidSchedule.getStartDate();
-		getManagedBean().setMinEndDate(date);
+		Calendar minEndDate = Calendar.getInstance();
+		minEndDate.setTime(date);
+		minEndDate.add(Calendar.HOUR_OF_DAY, getManagedBean().getBidMinDuration().intValue());
+		getManagedBean().setMinEndDate(minEndDate.getTime());
 		Calendar maxEndDate = Calendar.getInstance();
 		maxEndDate.setTime(date);
-		maxEndDate.add(Calendar.HOUR_OF_DAY, 2);
+		maxEndDate.add(Calendar.HOUR_OF_DAY, getManagedBean().getBidMaxDuration().intValue());
 		getManagedBean().setMaxEndDate(maxEndDate.getTime());
 		if (getManagedBean().getRowSelectedBid().getEndDate() != null) {
 			getManagedBean().getRowSelectedBid().setEndDate(null);
@@ -611,6 +624,11 @@ public class ScheduleBiddingBackingBean extends
 		}
 		getManagedBean().setMultiSelectContact(multiSelectContact);
 	}
+	
+	
+	/**
+	 * Listener method to get  bid participant list
+	 */
 
 	public void getParticipantsListAction(ScBidSchedule bidSchedule) {
 

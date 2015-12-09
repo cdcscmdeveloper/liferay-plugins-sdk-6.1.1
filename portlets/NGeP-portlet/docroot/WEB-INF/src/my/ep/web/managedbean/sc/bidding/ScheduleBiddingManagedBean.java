@@ -24,6 +24,7 @@ import my.ep.web.util.DateUtils;
 
 /**
  * Schedule Bidding Managed Bean
+ * 
  * @author Venkat Chanumolu
  * 
  */
@@ -61,6 +62,9 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	private Date minEndDate;
 	private Date maxEndDate;
 
+	private Long bidMinDuration;
+	private Long bidMaxDuration;
+
 	/**
 	 * Default COnstructor
 	 */
@@ -71,7 +75,6 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 		minStartDate = c.getTime();
 		minEndDate = c.getTime();
 	}
-	
 
 	/**
 	 * @return the scheduleForParticipant
@@ -80,16 +83,13 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 		return scheduleForParticipant;
 	}
 
-
 	/**
-	 * @param scheduleForParticipant the scheduleForParticipant to set
+	 * @param scheduleForParticipant
+	 *            the scheduleForParticipant to set
 	 */
 	public void setScheduleForParticipant(ScBidSchedule scheduleForParticipant) {
 		this.scheduleForParticipant = scheduleForParticipant;
 	}
-
-
-
 
 	/**
 	 * @return the rowSelectedBid
@@ -395,13 +395,42 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 		return selectedBidItem;
 	}
 
-
 	/**
-	 * @param selectedBidItem the selectedBidItem to set
+	 * @param selectedBidItem
+	 *            the selectedBidItem to set
 	 */
 	public void setSelectedBidItem(ScBidItem selectedBidItem) {
 		this.selectedBidItem = selectedBidItem;
 	}
 
-	
+	/**
+	 * @return the bidMinDuration
+	 */
+	public Long getBidMinDuration() {
+		return bidMinDuration;
+	}
+
+	/**
+	 * @param bidMinDuration
+	 *            the bidMinDuration to set
+	 */
+	public void setBidMinDuration(Long bidMinDuration) {
+		this.bidMinDuration = bidMinDuration;
+	}
+
+	/**
+	 * @return the bidMaxDuration
+	 */
+	public Long getBidMaxDuration() {
+		return bidMaxDuration;
+	}
+
+	/**
+	 * @param bidMaxDuration
+	 *            the bidMaxDuration to set
+	 */
+	public void setBidMaxDuration(Long bidMaxDuration) {
+		this.bidMaxDuration = bidMaxDuration;
+	}
+
 }
