@@ -858,6 +858,10 @@ public class ProfileManagementBackingBean extends
 		StringBuilder sb = new StringBuilder();
 		sb.append("assignorRole.roleCode^");
 		sb.append(assignorRole);
+		sb.append("|");
+		sb.append("assigneeRole.pmRoleDescs.languageCode^");
+		sb.append(getFacesScopes().getUserLocale()
+		.getLanguage());
 		return sb.toString();
 	}
 
