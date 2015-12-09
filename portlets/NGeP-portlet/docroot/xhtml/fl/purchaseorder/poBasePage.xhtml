@@ -57,12 +57,14 @@
 					</td></c:if>
 					<c:if
 					test='#{flOrderBB.managedBean.buttonVal eq "View" and !flOrderBB.managedBean.isHyperLinkPage()}'>
-					<td colspan="4" style="text-align: right">	
-					<p:commandLink
-						value="#{lbl['lbl.td.doc.trackingDiary']}"
-						action="#{trackingDiarySearchBackingBean.goToTrackingDiarySearch(ModuleCodeConstant.ORDER_FULFILLMENT,flOrderBB.managedBean.fulfilmentOrder.docType,flOrderBB.managedBean.fulfilmentOrder.docNo,flOrderBB.managedBean.fulfilmentOrder.fulfilmentOrderId,flOrderBB.managedBean.fulfilmentOrder.status.statusId)}"
-						immediate="true" />
-					</td>		
+						<td colspan="4" style="text-align: right">	
+							<p:commandLink
+								value="#{lbl['lbl.td.doc.trackingDiary']}"
+								action="#{trackingDiarySearchBackingBean.goToTrackingDiarySearch(ModuleCodeConstant.ORDER_FULFILLMENT,flOrderBB.managedBean.fulfilmentOrder.docType,flOrderBB.managedBean.fulfilmentOrder.docNo,flOrderBB.managedBean.fulfilmentOrder.fulfilmentOrderId,flOrderBB.managedBean.fulfilmentOrder.status.statusId)}"
+								immediate="true" />
+							<p:commandButton value="#{lbl['lbl.btn.print']}" ajax="false"
+								action="#{flDocumentBackingBean.generateReport(flOrderBB.managedBean.fulfilmentOrder.docType,flOrderBB.managedBean.fulfilmentOrder.docNo)}" />
+						</td>		
 				</c:if>
 			</tr>
 		</table>
