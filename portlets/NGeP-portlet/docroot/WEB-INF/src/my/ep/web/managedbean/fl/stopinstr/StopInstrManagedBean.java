@@ -71,6 +71,8 @@ public class StopInstrManagedBean extends BaseManagedBean {
     private boolean gfmasError=false;
     private String gfmasErrorContent;
     private List<PmUser> approverList;
+    
+    private boolean hyperLinkPage = false;
 	
 	/**
 	 * Gets the reason descs.
@@ -312,6 +314,20 @@ public class StopInstrManagedBean extends BaseManagedBean {
 	 */
 	public void setApproverList(List<PmUser> approverList) {
 		this.approverList = approverList;
+	}
+
+	/**
+	 * @return the hyperLinkPage
+	 */
+	public boolean isHyperLinkPage() {
+		return hyperLinkPage;
+	}
+
+	/**
+	 * @param hyperLinkPage the hyperLinkPage to set
+	 */
+	public void setHyperLinkPage(boolean hyperLinkPage) {
+		this.hyperLinkPage = hyperLinkPage;
 	}
 
 }
