@@ -111,6 +111,7 @@ import my.ep.persistence.entity.cm.catalog.CmMeasurement;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmPromotionPricing;
 import my.ep.persistence.entity.cm.catalog.CmPromotionTierPricing;
+import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.cm.catalog.CmStandardPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierZone;
@@ -468,23 +469,25 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
 
-
-		codeReqDTO.setItemId(bb.getManagedBean().getRequestCode().getItemId());
-
-		CodificationResDTO codeResDTO = codificationSO
-				.searchItemByItemId(codeReqDTO);
-
-
-		CmSupplierItem supplierItem = new CmSupplierItem();
-
-		supplierItem.setCmItem(codeResDTO.getCmItem());
-		supplierItem.setItemStatus("D");
-		supplierItem.setSmSupplier(smResDTO.getResultBean()
-				.getResultList().get(0));
-		supplierItem.setRecordStatus(true);
-		reqDTO.getSupplierItem().add(supplierItem);
+		for(CmRequestCode code : bb.getManagedBean().getReviewExtCodeList()){
+			codeReqDTO.setItemId(code.getItemId());
+	
+			CodificationResDTO codeResDTO = codificationSO
+					.searchItemByItemId(codeReqDTO);
+	
+	
+			CmSupplierItem supplierItem = new CmSupplierItem();
+	
+			supplierItem.setCmItem(codeResDTO.getCmItem());
+			supplierItem.setItemStatus("D");
+			supplierItem.setSmSupplier(smResDTO.getResultBean()
+					.getResultList().get(0));
+			supplierItem.setRecordStatus(true);
+			reqDTO.getSupplierItem().add(supplierItem);
+		
+		
+		}
 		CatalogueResDTO resDTO = catalogueSO.saveSupplierItem(reqDTO);
-
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 
 		facesContext.addMessage(
