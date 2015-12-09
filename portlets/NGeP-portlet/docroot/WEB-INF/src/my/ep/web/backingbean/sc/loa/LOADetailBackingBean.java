@@ -339,7 +339,7 @@ public class LOADetailBackingBean extends
 
 			ScLoa scLoa = resDTO.getScLoa();
 			getManagedBean().setScLoa(scLoa);
-
+			
 			// Supplier Bank Account
 			getManagedBean().setBankList(resDTO.getSmSupplierBanks());
 			if (!scLoa.isBrandNew()) {
@@ -391,10 +391,12 @@ public class LOADetailBackingBean extends
 			}
 			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
 			
-			scLoa = calcBondAmount(scLoa,false);
-			if (scLoa.getBondAmt() != null) {
-				getManagedBean().setBondAmountWord(
-						NumberWordUtil.convert(scLoa.getBondAmt().toString()));
+			if(scLoa.isBondReq()){
+				scLoa = calcBondAmount(scLoa, Boolean.FALSE);
+				if (scLoa.getBondAmt() != null) {
+					getManagedBean().setBondAmountWord(
+							NumberWordUtil.convert(scLoa.getBondAmt().toString()));
+				}	
 			}
 			
 			// show default clause
@@ -669,7 +671,8 @@ public class LOADetailBackingBean extends
 		getManagedBean().setLoaSupplierWitness(loaSupplierWitness);
 
 		// Acknowledge Date
-		scLoa.setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), 14));
+		Integer loaRespPeriod = getDaysByRules(RuleTypeConst.LOA_RESPONSE_PERIOD);
+		scLoa.setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), loaRespPeriod));
 
 		// check whether loa from s1 or s2.
 		if(scLoa.getScLoiLoa() != null){
@@ -2709,7 +2712,8 @@ public class LOADetailBackingBean extends
 		
 		// Acknowledge Date
 		if(BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_SUBMIT.equals(outcome)){
-			scLoa.setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), 14));
+			Integer loaRespPeriod = getDaysByRules(RuleTypeConst.LOA_RESPONSE_PERIOD);
+			scLoa.setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), loaRespPeriod));
 		}
 
 		Long statusId = scLoa.getPmStatus().getStatusId().longValue();
@@ -4948,6 +4952,26 @@ public class LOADetailBackingBean extends
 		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 		getManagedBean().setContractSignerList(userResDTO.getUserList());
 		getManagedBean().setContractSignerUser(contractSignerUser);
+	}
+	
+	/**
+	 * Gets the days by rules.
+	 *
+	 * @param RuleType the rule type
+	 * @return the days by rules
+	 */
+	private Integer getDaysByRules(String RuleType){
+		Integer days = 0;
+		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		ruleReqDTO.setRuleType(RuleType);
+		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
+		if (ruleValueList != null && ruleValueList.size() > 0) {
+			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+			days  = Integer.valueOf(configRuleValue.getRuleValue());
+		}
+		return days;
 	}
 
 	public boolean isFlag() {
