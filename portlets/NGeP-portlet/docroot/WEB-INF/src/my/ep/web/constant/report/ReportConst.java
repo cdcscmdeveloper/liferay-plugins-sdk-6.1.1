@@ -442,11 +442,11 @@ public class ReportConst {
 	public static final String SM_LIST_OF_APPL_STATUS = "SM_063";
 	public static final String SM_AGENCY_STATISTICAL = "SM_064";
 	public static final String SM_LIST_OF_GST_RGSTRD_SUPPLIER = "SM_065";
-	public static final String SM_RECEIPT_AND_TRANSACTION_DATE_RPT_VAL = "SM_071";
-	public static final String SM_RECEIPT_PAYMENT_METHODS_RPT_VAL = "SM_072";
-	public static final String SM_RECEIPT_CLASSIFICATION_CODE_RPT_VAL = "SM_073";
-	public static final String SM_OUTSTANDING_RESULTS_RECEIVED_RPT_VAL = "SM_074";
-	public static final String SM_LIST_RECIPT_TIMES_RPT_VAL = "SM_075";
+	public static final String SM_COLLECTION_AND_TRANSACTION_DATE_RPT_VAL = "SM_071";
+	public static final String SM_COLLECTION_PAYMENT_METHODS_RPT_VAL = "SM_072";
+	public static final String SM_COLLECTION_CLASSIFICATION_CODE_RPT_VAL = "SM_073";
+	public static final String SM_REVENUE_COLLECTION_RPT_VAL = "SM_074";
+	public static final String SM_LIST_DAILY_RECIPT_RPT_VAL = "SM_075";
 
 	// SM - virtual certificate
 	public static final String SM_VIRTUAL_VERIFICATION_jsp = "SM_VIRTUAL_VERIFICATION.jsp";
