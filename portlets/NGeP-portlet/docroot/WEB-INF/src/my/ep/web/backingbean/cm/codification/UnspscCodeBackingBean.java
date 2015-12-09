@@ -157,6 +157,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				|| fs.hasRoleUser("SUPPLIER_TEMP")
 				|| fs.hasRoleUser("GOVT_SELLER");
 	}
+	
 
 	public String submitForRequest(String action) throws Exception {
 
@@ -1732,6 +1733,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		FacesScopes face = new FacesScopes();
 		Object token = face.getBPMAuthenticationCtxToken();
+		
+	
+		
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 
 		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
@@ -1755,6 +1759,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		reqDTO.setRequestExtList(this.getManagedBean().getRequestExtCodeList());
 		reqDTO.setToken(token);		
+		
 		log.info("Tracking diary for Extension Code---submitToBPM()");	
 
 
@@ -1996,6 +2001,17 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		Object token = face.getBPMAuthenticationCtxToken();
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		CodificationResDTO resDTO = null;
+		
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
+
+		BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+
+		bpmReqDTO.setCtxToken(token);
+		bpmReqDTO.setTaskId(this.getManagedBean().getTaskId());
+		BpmResponseDTO res = bpmSO.getTaskDetails(bpmReqDTO);
+		Object obj = res.getPojo();
+
 
 		// try {
 
@@ -2114,6 +2130,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
 		reqDTO.setOutCome(action);
 		reqDTO.setToken(token);
+		reqDTO.setPojo(obj);
 
 		System.out.println("getCodeCommittees" + reqDTO.getCodeCommittees());
 		System.out.println("consensus" + reqDTO.isConsensus());
@@ -2390,6 +2407,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
 
+		
+		this.getManagedBean().setTaskId(taskId);
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 
 		reqDTO.setCtxToken(token);
@@ -2398,6 +2417,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		Object obj = res.getPojo();
 
 		CDRequestDataType unspsc = (CDRequestDataType) obj;
+		
+		System.out.println("********isPublished******"+unspsc.isPublished());
 
 		IRequestCodeSO requestSO = (IRequestCodeSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", IRequestCodeSO.class);

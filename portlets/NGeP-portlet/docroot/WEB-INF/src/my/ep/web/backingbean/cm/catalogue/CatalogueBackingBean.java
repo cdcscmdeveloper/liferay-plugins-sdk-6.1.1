@@ -494,7 +494,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
 						.getMessage(MessageConst.INFO_710007, new String[] { ""
-								+ 1 },
+								+ bb.getManagedBean().getReviewExtCodeList().size() },
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
 
