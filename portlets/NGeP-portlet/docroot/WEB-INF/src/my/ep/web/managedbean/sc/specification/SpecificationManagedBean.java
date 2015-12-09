@@ -771,6 +771,10 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private boolean isSpecItemWeightageRequired;
 	private int ministryRemarksSize;
 	
+	/** The selected flag. */
+	private boolean selectedFlag;
+
+	
 
 	/**
 	 * Checks if is spec complete.
@@ -5195,6 +5199,20 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setMinistryRemarksSize(int ministryRemarksSize) {
 		this.ministryRemarksSize = ministryRemarksSize;
+	}
+
+	/**
+	 * @return the selectedFlag
+	 */
+	public boolean isSelectedFlag() {
+		return selectedFlag;
+	}
+
+	/**
+	 * @param selectedFlag the selectedFlag to set
+	 */
+	public void setSelectedFlag(boolean selectedFlag) {
+		this.selectedFlag = selectedFlag;
 	}
 
 }
