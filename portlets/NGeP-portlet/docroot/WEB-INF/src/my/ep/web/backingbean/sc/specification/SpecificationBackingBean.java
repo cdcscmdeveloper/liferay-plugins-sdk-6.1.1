@@ -8153,6 +8153,7 @@ public class SpecificationBackingBean extends
 			getManagedBean().setMinistryId(null);
 			getManagedBean().setDepartmentId(null);
 			getManagedBean().setPtjId(null);
+			getManagedBean().setPtjGroupId(null);
 			this.getManagedBean().setStateCode(null);
 			this.getManagedBean().setDistrictCode(null);
 			this.getManagedBean().setDivisionCode(null);
