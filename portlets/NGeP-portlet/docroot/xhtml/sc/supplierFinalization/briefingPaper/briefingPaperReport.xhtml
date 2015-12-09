@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition
 	xmlns:f="http://java.sun.com/jsf/core"
@@ -74,7 +75,10 @@
 						</td>
 						<td width="5"></td>
 						<td>
-							<h:outputText value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment.createdUser.userName}" />,
+							<h:outputText value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment.createdUser.userName}" />
+							<c:if test="#{suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment ne null}">
+								, 
+							</c:if>
 							<h:outputText value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment.createdDate}">
 								<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 							</h:outputText>
