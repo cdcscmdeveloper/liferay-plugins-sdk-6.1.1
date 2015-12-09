@@ -2254,36 +2254,6 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Sets the previous facility values.
-	 * 
-	 * @param facilityBean
-	 *            - SmFacility object
-	 */
-	private void setPreviousFacilityValues(SmFacility facilityBean) {
-		getManagedBean().setRentPrevVal(facilityBean.getRentalRate());
-		getManagedBean().setPurPricePrevVal(facilityBean.getPurchasePrice());
-		getManagedBean().setOwnerTypePrevVal(facilityBean.getOwnershipType());
-	}
-
-	/**
-	 * Reset facility values.
-	 * 
-	 * @param fac
-	 *            - SmFacility object
-	 */
-	private void resetFacilityValues(SmFacility fac) {
-		if (fac.getFacilityId() == null) {
-			fac.getSmAddress().setPostcode("");
-			fac.setOwnershipType("");
-		} else {
-			fac.setRentalRate(getManagedBean().getRentPrevVal());
-			fac.setPurchasePrice(getManagedBean().getPurPricePrevVal());
-			fac.setOwnershipType(getManagedBean().getOwnerTypePrevVal());
-		}
-
-	}
-
-	/**
 	 * Ajax call to assign selected personnel privilege
 	 * 
 	 * @param e
