@@ -46,7 +46,7 @@
 							<p:column>
 								<table style="width: 182px;">
 									<tr style="width: 100%;">
-										<td style="width: 160px;"><p:outputLabel
+										<td style="width: 160px;"><p:outputLabel style="margin-right:-58px;"
 												value="#{lbl['lbl.rpt.org.category']}" /> <p:outputLabel
 												value="*" styleClass="mandatory" /></td>
 									</tr>
@@ -56,7 +56,7 @@
 								<table style="width: 100%">
 									<tr>
 										<td style="width: 84%"><p:selectOneMenu
-												label="#{lbl['lbl.rpt.org.category']}" id="orgCatg"
+												label="#{lbl['lbl.rpt.org.category']}" id="orgCatg" 
 												value="#{reportBackingBean.pmOrgCategory}"
 												style="margin-top:5px;width:300px;">
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.federal']}"
@@ -76,7 +76,7 @@
 							<p:column>
 								<table style="width: 182px;">
 									<tr style="width: 100%;">
-										<td style="width: 160px;"><p:outputLabel
+										<td style="width: 160px;"><p:outputLabel style="margin-right:-56px;"
 												value="#{lbl['lbl.rpt.org.type']}" /> <p:outputLabel
 												value="*" styleClass="mandatory" /></td>
 									</tr>
@@ -105,7 +105,7 @@
 							<p:column>
 								<table style="width: 182px;">
 									<tr style="width: 100%;">
-										<td style="width: 160px;"><p:outputLabel
+										<td style="width: 160px;"><p:outputLabel style="margin-right:-59px;"
 												value="#{lbl['lbl.rpt.orgName']}" /> <p:outputLabel
 												value="*" styleClass="mandatory" /></td>
 									</tr>
@@ -283,7 +283,7 @@
 							style="margin-top:5px;width:160px;" /></TD>
 					<TD><p:inputText maxlength="100"
 							value="#{reportBackingBean.pmCompanyName}"
-							style="margin-top:5px;width:290px;">
+							style="margin-top:5px;width:245px;">
 							<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 						</p:inputText></TD>
 				</c:if>
@@ -302,7 +302,7 @@
 				<c:if
 					test="#{pmReportBackingBean.managedBean.rptGenBean.pmExemptedEpNoView}">
 					<TD><p:outputLabel value="#{lbl['lbl.rpt.epNo']}"
-							style="margin-top:5px;width:160px;" /></TD>
+							style="margin-top:5px;width:494px;" /></TD>
 					<TD><p:inputText maxlength="100"
 							value="#{reportBackingBean.pmEpNo}"
 							style="margin-top:5px;width:290px;">
@@ -343,7 +343,7 @@
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.pmFromDateView}">
 						<TD><p:outputLabel value="#{lbl['lbl.rpt.effDateFrom']}"
-								style="width:207px;" /></TD>
+								style="width:202px;" /></TD>
 					</c:if>
 					<TD><p:calendar showOn="button" navigator="true"
 							display="inline" readonlyInput="true"
