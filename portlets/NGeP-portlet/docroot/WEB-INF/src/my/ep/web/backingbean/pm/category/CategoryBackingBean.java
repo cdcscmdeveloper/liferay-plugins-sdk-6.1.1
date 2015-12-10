@@ -82,6 +82,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -4013,9 +4014,14 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						new FacesScopes()
 								.getUserLocale()));
 		sb.append(" : ");
+		
+		int count = 0;
 		for(PmCategoryRestr restr : categoryL3.getPmCategoryRestrs()){
-			sb.append(getParameterDesc(restr.getCompanyTypeId()));
-			sb.append(",");
+			if(count !=0){
+				sb.append(",");	
+			}			
+			sb.append(getParameterDesc(restr.getCompanyTypeId()));			
+			count++;
 		}
 		sb.append("<br/>");
 		sb.append(ResourceBundleUtils
@@ -4108,6 +4114,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			}
 			getManagedBean().getMachineList().addAll(machineSet);
 		}
+		
+		RequestContext.getCurrentInstance().execute("dialogMachine.show();");
+		RequestContext.getCurrentInstance().execute("dataTableMachine.getPaginator().setPage(0);");
 	}
 	
 
