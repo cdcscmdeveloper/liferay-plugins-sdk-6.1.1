@@ -2320,7 +2320,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 
-				ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
+				/*ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
 						.getInstance().getServiceObject("sm",
 								ISupplierSearchSO.class);
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
@@ -2331,9 +2331,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				SupplierSearchResDTO smResDTO = supplierSearchSO
 						.retriveSupplierProfiles(supplierReqDTO);
 				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList()
-						.get(0).getSupplierId());
-				reqDTO.setItemStatus("D");
-				resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+						.get(0).getSupplierId());*/
+				//reqDTO.setItemStatus("D");
+				//resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 
 
 
