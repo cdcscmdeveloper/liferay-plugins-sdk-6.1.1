@@ -24,25 +24,21 @@
 								label="#{lbl['lbl.rpt.smPaymentType']}">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.smMofRegistrationFee']}"
 									itemValue="M" />
-							</p:selectManyCheckbox>
-							<p:message id="mofRegistrationChkMsg" for="mofRegistrationChk"
-								display="icon" showDetail="false" />
+							</p:selectManyCheckbox>							
 							<p:selectManyCheckbox id="processingFeeChk"
 								style="margin-top: 6px"
 								value="#{reportBackingBean.smProcessingFeeList}">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.smProcessingFee']}"
 									itemValue="P" />
 							</p:selectManyCheckbox>
-							<p:message id="processingFeeChkMsg" for="processingFeeChk"
-								display="icon" showDetail="false" />
+							
 							<p:selectManyCheckbox id="softCertificateFee"
 								style="margin-top: 6px"
 								value="#{reportBackingBean.smSoftCertificateFeeList}">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.smSoftCertificateFee']}"
 									itemValue="S" />
 							</p:selectManyCheckbox>
-							<p:message id="softCertificateFeeMsg" for="softCertificateFee"
-								display="icon" showDetail="false" />
+							
 						</c:if>
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.collectorCDCRegistrationChkView}">
@@ -56,8 +52,7 @@
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.smSoftCertificateFee']}"
 									itemValue="S" />
 							</p:selectManyCheckbox>
-							<p:message id="softCertificateCDCFeeMsg" for="softCertificateCDCFee"
-								display="icon" showDetail="false" />
+							
 						</c:if>
 					</h:panelGrid></td>
 			</tr>
