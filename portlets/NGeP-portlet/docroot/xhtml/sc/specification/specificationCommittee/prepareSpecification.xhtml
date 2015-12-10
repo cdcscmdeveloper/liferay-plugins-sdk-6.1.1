@@ -51,22 +51,24 @@
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
-		<p:spacer height="20"></p:spacer>
+
 
 		<div align="right">
-			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sc.spec.create.specification']}"
-					actionListener="#{specificationBackingBean.technicalSpecBoValidate}"
-					disabled="#{((specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or (specificationBackingBean.managedBean.panelItemCategory eq 'S' and specificationBackingBean.managedBean.scQt.panel))}"
-					process="@this" partialSubmit="true"
-					oncomplete="createOwnerSpec.show();" />
+
+			<p:commandButton value="#{lbl['lbl.sc.spec.create.specification']}"
+				styleClass="BtnSpacing"
+				actionListener="#{specificationBackingBean.technicalSpecBoValidate}"
+				disabled="#{((specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or (specificationBackingBean.managedBean.panelItemCategory eq 'S' and specificationBackingBean.managedBean.scQt.panel))}"
+				process="@this" partialSubmit="true"
+				oncomplete="createOwnerSpec.show();" />
 
 
-			</div>
+
 
 		</div>
 
-		<ui:include src="/xhtml/sc/boSctemplatespec/createCommitteeTemplate.xhtml"></ui:include>
+		<ui:include
+			src="/xhtml/sc/boSctemplatespec/createCommitteeTemplate.xhtml"></ui:include>
 	</p:panel>
 
 </ui:composition>
