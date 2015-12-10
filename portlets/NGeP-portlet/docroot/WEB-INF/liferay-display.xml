@@ -41,7 +41,9 @@
 			<portlet id="quickLinks"></portlet>	
 			<portlet id="pmUserProfilePersonalization"></portlet>
 			<portlet id="pmRejectionReason"></portlet>
-			<portlet id="pmSupportingDocument"></portlet>			
+			<portlet id="pmSupportingDocument"></portlet>		
+			<portlet id="pmSupplierDocument"></portlet>	
+			<portlet id="pmCalendar"></portlet>	
 			<portlet id="pmTaskAssignment"></portlet>			
 			<portlet id="pmDigiSign"></portlet>	
 			<portlet id="pmProfessionalCertifiedBody"></portlet>
