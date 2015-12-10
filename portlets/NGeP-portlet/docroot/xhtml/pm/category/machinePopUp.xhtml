@@ -11,7 +11,7 @@
 		widgetVar="dialogMachine" modal="true" width="600" >		
 		<p:outputPanel id="opMachines" >
 			<p:dataTable id="dtMachines" rowIndexVar="index" 
-				var="machine" rows="10"
+				var="machine" rows="10" widgetVar="dataTableMachine"
 				emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 				value="#{categoryBackingBean.managedBean.machineList}">	
 				<ac:paginator for="dtMachines"></ac:paginator>

@@ -9,6 +9,9 @@
 	<ui:define name="contentSection">
 		<p:messages id="catSrchMsg" showDetail="true" closable="true" autoUpdate="true"
 			severity="error,info" showSummary="false"></p:messages>	
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 		<p:panel header="#{lbl['lbl.pm.header.general.org.search']}"
 			toggleable="true" id="catPublicSearch">
 			<table style="width: 100%;">
@@ -91,11 +94,13 @@
 				
 				<div style="text-align: right;">
 				<p:commandButton value="#{lbl['lbl.pm.organisation.search']}"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 					action="#{categoryBackingBean.publicSearchCategory}"					
 					update="catPublicSearch,publicSearchCategoryTable" />
 
 				<p:commandButton value="#{lbl['lbl.pm.organisation.reset']}"
 					action="#{categoryBackingBean.resetPublicSearchBean}"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 					update="catPublicSearch,publicSearchCategoryTable" resetValues="true"
 					partialSubmit="true" process="@this" />
 
@@ -150,7 +155,8 @@
 					<h:outputText escape="false" value="#{categoryBackingBean.constructCategoryDetails(category)}"/>
 					<h:outputText value="#{lbl['lbl.pm.category.machines']}"/>
 					<h:outputText value=" - " rendered="#{!category.hasMachine}"/>
-					<p:commandLink style="color:blue" rendered="#{category.hasMachine}" oncomplete="dialogMachine.show();"
+					<p:commandLink style="color:blue" rendered="#{category.hasMachine}" 
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						action="#{categoryBackingBean.constructMachineDlg(category)}"
 						update=":form:opMachines" value="#{lbl['lbl.pm.machine.desc.click']}">						
 					</p:commandLink>
