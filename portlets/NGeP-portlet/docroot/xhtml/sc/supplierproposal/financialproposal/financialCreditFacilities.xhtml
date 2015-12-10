@@ -99,12 +99,14 @@
 				</p:selectOneMenu>
 				<br></br>
 				<p:inputText style="width : 90%" id="otherCreditType"
-					value="#{creditfacilities.otherCreditType}"
+					required="true" value="#{creditfacilities.otherCreditType}"
+					label="#{supplierProposalDetailBackingBean.getParameterDesc(creditfacilities.creditType)}"
 					rendered="#{creditfacilities.creditType.parameterCode eq 'KKL'}">
 					<p:ajax event="change" process="@this" partialSubmit="true"
-						update="@this" />
+						update="@this,otherCreditTypeMsg,creditfaciitiesid" />
 				</p:inputText>
-
+				<p:message id="otherCreditTypeMsg" for="otherCreditType"
+					display="icon" />
 				<p:message id="creditTypeMsg" for="creditType" display="icon" />
 			</p:column>
 
