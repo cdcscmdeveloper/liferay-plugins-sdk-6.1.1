@@ -30,10 +30,13 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -57,15 +60,18 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCategoryRestr;
 import my.ep.persistence.entity.pm.common.PmMachine;
 import my.ep.persistence.entity.pm.common.PmMachineCategory;
+import my.ep.persistence.entity.pm.common.PmMachineSection;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.bean.pm.CategoryCodePublicSearchBean;
 import my.ep.web.managedbean.pm.category.CategoryManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -73,9 +79,9 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import org.apache.log4j.Logger;
-import org.hsqldb.lib.tar.DbBackup;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -99,6 +105,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 	/** The search lov machine paging data model. */
 	private IPagingDataModel<PmMachine> searchLOVMachinePagingDataModel = new SearchLOVMachinePagingDataModel();
+	
+	/** The public search category. */
+	private IPagingDataModel<PmCategoryL3> publicSearchCategoryPagingDataModel = new PublicSearchCategoryPagingDataModel();
 
 	/** The flag. */
 	private boolean flag;
@@ -127,10 +136,11 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 	//Authorization 
 	private ISearchBean<PmParameterDesc> facilityTypeSearchBean;
-		
-	public ISearchBean<PmParameterDesc> getFacilityTypeSearchBean() {
-		return facilityTypeSearchBean;
-	}
+	
+	//Param Type as key
+	private Map<String, List<PmParameterDesc>> parameterDescMap = 
+			new HashMap<String, List<PmParameterDesc>>();
+
 
 	public void setFacilityTypeSearchBean(
 			ISearchBean<PmParameterDesc> facilityTypeSearchBean) {
@@ -3760,5 +3770,345 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			}
 		}
 	}
+	
+	
+	/**
+	 * Pre render for public search.
+	 */
+	public void preRenderPublicSearch() {
+		log.info("preRenderPublicSearch");
+		resetPublicSearchBean();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "/xhtml/pm/category/publicSearch.xhtml");
+	}
+	
+	public void resetPublicSearchBean(){
+		log.info("resetPublicSearchBean");
+		getManagedBean().setCategoryCodePublicSearchBean(null);
+		retrieveSupplierType();
+		publicSearchCategoryPagingDataModel.reloadData();
+	}
+	
+	public void publicSearchCategory(){
+		log.info("publicSearchCategory");
+		publicSearchCategoryPagingDataModel.reloadData();
+	}
+	
+	
+	/**
+	 * The Class PublicSearchCategoryPagingDataModel.
+	 */
+	private class PublicSearchCategoryPagingDataModel extends
+			PagingDataModel<PmCategoryL3> {
+
+		/** The Constant serialVersionUID. */
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Instantiates a new search category paging data model.
+		 */
+		public PublicSearchCategoryPagingDataModel() {
+			super("publicSearchCategoryTable",false);
+
+		}
+		
+		public ISearchResultBean<PmCategoryL3> pageChangeListener(
+				ISearchBean<PmCategoryL3> searchBean) {
+			log.info("PublicSearchCategoryPagingDataModel - pageChangeListener");
+			ICategoryCodeSO categoryCodeSO;
+			try {
+				ISearchBean<PmCategoryL3> searchBeanData = getSearchBeanData(searchBean);
+				categoryCodeSO = (ICategoryCodeSO) BusinessDelegate
+						.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT,
+								ICategoryCodeSO.class);
+				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+				reqDTO.setFetchEntities(true);
+				reqDTO.setSearchBean(searchBeanData);
+				CategoryCodeResDTO resDTO = categoryCodeSO
+						.searchAllCategoryL3(reqDTO);
+				if(resDTO.isSuccessful() && resDTO.getCategoryL3ResultBean() !=null){				
+					return resDTO.getCategoryL3ResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				categoryCodeSO = null;
+			}
+
+			return null;
+
+		}
+	}
+			
+	private ISearchBean<PmCategoryL3> getSearchBeanData(
+			ISearchBean<PmCategoryL3> searchBean) {
+		boolean atLeastOneCriteria = false;
+		CategoryCodePublicSearchBean ccPulicSearchBean = getManagedBean().getCategoryCodePublicSearchBean();
+		if(StringUtils.isNotBlank(ccPulicSearchBean.getCatDesc())){
+			BaseSearchFilterBean l1SearchFilterBean = new SearchFilterBean("pmCategoryL2.pmCategoryL1.categoryName",
+					SearchOperator.OPERATOR_LIKE.value(),
+					ccPulicSearchBean.getCatDesc(),
+					true);
+			l1SearchFilterBean.setAndOr(SearchCondition.CONDITION_OR.value());
+			BaseSearchFilterBean l2SearchFilterBean = new SearchFilterBean("pmCategoryL2.categoryName",
+					SearchOperator.OPERATOR_LIKE.value(),
+					ccPulicSearchBean.getCatDesc(),
+					true);
+			l2SearchFilterBean.setAndOr(SearchCondition.CONDITION_OR.value());
+			BaseSearchFilterBean l3SearchFilterBean = new SearchFilterBean("categoryName",
+					SearchOperator.OPERATOR_LIKE.value(),
+					ccPulicSearchBean.getCatDesc(),
+					true);
+			l3SearchFilterBean.setAndOr(SearchCondition.CONDITION_OR.value());
+			
+			searchBean.getDataFilterBeans().add(
+					new SearchMultiFilterBean(
+							new SearchMultiFilterBean(
+									l1SearchFilterBean,
+									SearchCondition.CONDITION_OR.value(),
+									l2SearchFilterBean),
+							SearchCondition.CONDITION_OR.value(),
+							l3SearchFilterBean));
+			atLeastOneCriteria = true;
+		}
+		
+		if(ccPulicSearchBean.getPaidUpCapital() !=null){
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("paidUpCapital",
+							SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+							ccPulicSearchBean.getPaidUpCapital()));
+			atLeastOneCriteria = true;
+		}
+		
+		if(ccPulicSearchBean.getSelectedSupplierType() !=null){
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("supplierTypeCode.parameterId",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							ccPulicSearchBean.getSelectedSupplierType()));
+			atLeastOneCriteria = true;
+		}
+		
+		if(ccPulicSearchBean.getSelectedCompanyType() !=null){
+			searchBean.getDataFilterBeans().add(
+							new SearchMultiFilterBean(
+									new SearchFilterBean("byCompType",
+											SearchOperator.OPERATOR_EQUALS.value(),
+											true),
+									SearchCondition.CONDITION_AND.value(),
+									new SearchFilterBean("pmCategoryRestrs.companyTypeId.parameterId",
+											SearchOperator.OPERATOR_EQUALS.value(),
+											ccPulicSearchBean.getSelectedCompanyType())));	
+			atLeastOneCriteria = true;
+		}
+		
+		if(ccPulicSearchBean.getSelectedBumiPercentage() !=null){
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("bumiPercentage",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							ccPulicSearchBean.getSelectedBumiPercentage()));
+			atLeastOneCriteria = true;
+		}
+		
+		if(ccPulicSearchBean.getHomeOperated()!=null){
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("homeOperated",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							ccPulicSearchBean.getHomeOperated()));
+			atLeastOneCriteria = true;
+		}
+		
+		if(!atLeastOneCriteria){
+			throw new EpException("Please key in at least one criteria.");
+		}
+		
+		searchBean.getSortColumns().add(new SearchOrderBean("pmCategoryL2.pmCategoryL1.categoryName",true));
+		searchBean.getSortColumns().add(new SearchOrderBean("pmCategoryL2.categoryName",true));
+		searchBean.getSortColumns().add(new SearchOrderBean("categoryName",true));
+
+		return searchBean;
+	}
+			
+	public SelectItem[] getOperateFromHomeStatus() {
+		return PmCommonUtil.getYesNoOptions();
+	}		
+	
+	public void retrieveSupplierType() {
+		String supplierParamType = "ST";
+		String languageCode = new FacesScopes().getUserLocale()
+				.getLanguage();
+		StringBuilder sb = new StringBuilder();
+		sb.append(supplierParamType);
+		//not equal O
+		sb.append("_NE_O_");
+		sb.append(languageCode);
+		if(parameterDescMap.get(sb.toString()) !=null){
+			this.getManagedBean().setSupplierType(parameterDescMap.get(sb.toString()));
+		}else{
+			IParameterSO parameterSO;
+			try {
+
+				ParameterReqDTO reqDTO = new ParameterReqDTO();
+				parameterSO = (IParameterSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IParameterSO.class);
+				reqDTO.setLanguageCode(languageCode);
+
+				ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmParameter.parameterCode",
+								SearchOperator.OPERATOR_NOT_EQUALS.value(), "O"));
+				reqDTO.setParameterDescSearchBean(searchBean);
+				reqDTO.setParameterType(supplierParamType);
+				ParameterResDTO resDTO = parameterSO
+						.retrieveParameterDescListByType(reqDTO);
+				parameterDescMap.put(sb.toString(), resDTO.getParameterDescList());
+				this.getManagedBean()
+						.setSupplierType(resDTO.getParameterDescList());				
+
+			} catch (Exception e) {
+				throw new EpException(e.getMessage());
+			} finally {
+				parameterSO = null;
+			}
+		} 
+	}
+	
+	public ISearchBean<PmParameterDesc> getFacilityTypeSearchBean() {
+		return facilityTypeSearchBean;
+	}
+
+	/**
+	 * @return the publicSearchCategoryPagingDataModel
+	 */
+	public IPagingDataModel<PmCategoryL3> getPublicSearchCategoryPagingDataModel() {
+		return publicSearchCategoryPagingDataModel;
+	}
+
+	/**
+	 * @param publicSearchCategoryPagingDataModel the publicSearchCategoryPagingDataModel to set
+	 */
+	public void setPublicSearchCategoryPagingDataModel(
+			IPagingDataModel<PmCategoryL3> publicSearchCategoryPagingDataModel) {
+		this.publicSearchCategoryPagingDataModel = publicSearchCategoryPagingDataModel;
+	}
+	
+	public String constructCategoryDetails(PmCategoryL3 categoryL3){
+		StringBuilder sb = new StringBuilder();
+		sb.append(ResourceBundleUtils
+				.getMessage(
+						"lbl.pm.supplier.type",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes()
+								.getUserLocale()));
+		sb.append(" : ");
+		sb.append(getParameterDesc(categoryL3.getSupplierTypeCode()));
+		sb.append("<br/>");
+		sb.append(ResourceBundleUtils
+				.getMessage(
+						"lbl.pm.by.company.type",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes()
+								.getUserLocale()));
+		sb.append(" : ");
+		for(PmCategoryRestr restr : categoryL3.getPmCategoryRestrs()){
+			sb.append(getParameterDesc(restr.getCompanyTypeId()));
+			sb.append(",");
+		}
+		sb.append("<br/>");
+		sb.append(ResourceBundleUtils
+				.getMessage(
+						"lbl.pm.bumi.percentage",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes()
+								.getUserLocale()));
+		sb.append(" : ");
+		sb.append(categoryL3.getBumiPercentage());
+		sb.append("%");
+		sb.append("<br/>");
+		sb.append(ResourceBundleUtils
+				.getMessage(
+						"lbl.pm.operate.from.home",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes()
+								.getUserLocale()));
+		sb.append(" : ");
+		sb.append(categoryL3.getHomeOperated() == 1 ? "Yes" : "No");
+		sb.append("<br/>");
+		sb.append(ResourceBundleUtils
+				.getMessage(
+						"lbl.pm.paid.capital",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes()
+								.getUserLocale()));
+		sb.append(" : ");
+		sb.append(categoryL3.getPaidUpCapital());
+		sb.append("<br/>");
+		return sb.toString();
+	}
+	
+	public String getBoldWithSearchDesc(String desc){
+		StringBuilder sb = new StringBuilder();
+		if(getManagedBean().getCategoryCodePublicSearchBean() != null 
+				&& StringUtils.isNotBlank(getManagedBean().getCategoryCodePublicSearchBean().getCatDesc())){
+			String searchDesc = getManagedBean().getCategoryCodePublicSearchBean().getCatDesc();
+			int startIndex = 0;
+			int endIndex = 0;
+			if(StringUtils.containsIgnoreCase(desc,searchDesc)){
+				if(desc.toLowerCase().startsWith(searchDesc.toLowerCase())){
+					startIndex = desc.toLowerCase().indexOf(searchDesc.toLowerCase());
+					endIndex = startIndex + searchDesc.length();					
+					sb.append("<b>");
+					sb.append(desc.substring(0, endIndex));
+					sb.append("</b>");
+					sb.append(desc.substring(endIndex, desc.length()));
+				}else if(desc.toLowerCase().endsWith(searchDesc.toLowerCase())){
+					startIndex = desc.toLowerCase().indexOf(searchDesc.toLowerCase());				
+					sb.append(desc.substring(0, startIndex));
+					sb.append("<b>");
+					sb.append(desc.substring(startIndex, desc.length()));
+					sb.append("</b>");
+				}else {
+					startIndex = desc.toLowerCase().indexOf(searchDesc.toLowerCase());
+					endIndex = startIndex + searchDesc.length();	
+					sb.append(desc.substring(0, startIndex));
+					sb.append("<b>");
+					sb.append(desc.substring(startIndex,endIndex));
+					sb.append("</b>");
+					sb.append(desc.substring(endIndex, desc.length()));
+				}
+			}else{
+				sb.append(desc);
+			}
+		}else{
+			sb.append(desc);
+		}
+		
+		return sb.toString();
+	}
+	
+	public void constructMachineDlg(PmCategoryL3 categoryL3){
+		getManagedBean().setPmCategoryL3(categoryL3);
+		Set<PmMachine> machineSet = null;
+		if(ParameterTypeConst.CATEGORY_TYPE.equals(categoryL3.getCategoryTypeCode().getParameterType()) 
+				&& !ParameterConst.CATEGORY_TYPE_PRINTING.equals(categoryL3.getCategoryTypeCode().getParameterCode())){
+			machineSet = new HashSet<PmMachine>();
+			for(PmMachineSection section:categoryL3.getMachineSectionList()){
+				machineSet.add(section.getPmMachine());
+			}
+			getManagedBean().getMachineList().addAll(machineSet);
+			  
+		}else if(ParameterTypeConst.CATEGORY_TYPE.equals(categoryL3.getCategoryTypeCode().getParameterType()) 
+				&& ParameterConst.CATEGORY_TYPE_PRINTING.equals(categoryL3.getCategoryTypeCode().getParameterCode())){
+			machineSet = new HashSet<PmMachine>();
+			for(PmMachineCategory category:categoryL3.getPmMachineCategory()){
+				machineSet.add(category.getPmMachine());
+			}
+			getManagedBean().getMachineList().addAll(machineSet);
+		}
+	}
+	
 
 }

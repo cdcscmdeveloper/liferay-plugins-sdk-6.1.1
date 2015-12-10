@@ -26,6 +26,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryRestr;
 import my.ep.persistence.entity.pm.common.PmMachine;
 import my.ep.persistence.entity.pm.common.PmMachineCategory;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.web.bean.pm.CategoryCodePublicSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 
@@ -199,6 +200,10 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	
 	/** The company type list. */
 	private List<PmParameterDesc> companyTypeList;
+	
+	private List<PmMachine> machineList;
+	
+	private CategoryCodePublicSearchBean categoryCodePublicSearchBean;
 	
 	/**
 	 * Gets the cat level.
@@ -1215,6 +1220,41 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	 */
 	public void setBasicCategoryRequired(boolean basicCategoryRequired) {
 		this.basicCategoryRequired = basicCategoryRequired;
+	}
+
+	/**
+	 * @return the categoryCodePublicSearchBean
+	 */
+	public CategoryCodePublicSearchBean getCategoryCodePublicSearchBean() {
+		if(categoryCodePublicSearchBean == null){
+			categoryCodePublicSearchBean = new CategoryCodePublicSearchBean();
+		}
+		return categoryCodePublicSearchBean;
+	}
+
+	/**
+	 * @param categoryCodePublicSearchBean the categoryCodePublicSearchBean to set
+	 */
+	public void setCategoryCodePublicSearchBean(
+			CategoryCodePublicSearchBean categoryCodePublicSearchBean) {
+		this.categoryCodePublicSearchBean = categoryCodePublicSearchBean;
+	}
+
+	/**
+	 * @return the machineList
+	 */
+	public List<PmMachine> getMachineList() {
+		if(machineList == null){
+			machineList = new ArrayList<PmMachine>();
+		}
+		return machineList;
+	}
+
+	/**
+	 * @param machineList the machineList to set
+	 */
+	public void setMachineList(List<PmMachine> machineList) {
+		this.machineList = machineList;
 	}
 
 }

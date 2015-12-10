@@ -65,6 +65,7 @@
             <portlet id="listfund"></portlet>
             <portlet id="listprogramactivity"></portlet>
             <portlet id="listproject"></portlet>
+            <portlet id="categoryPublicSeach"></portlet>	
            			
 			
 		</category>
