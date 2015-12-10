@@ -1048,9 +1048,9 @@
 												<f:selectItem
 													itemLabel="#{lbl['lbl.rpt.rpttypetarikhtransaksi']}"
 													itemValue="#{lbl['lbl.rpt.rpttypetarikhtransaksi']}"></f:selectItem>
-												<p:ajax event="change"
-													listener="#{reportBackingBean.changeRTReportType}"
-													process="@form" partialSubmit="true" update="@form" />
+												<p:ajax event="change" 
+													listener="#{reportBackingBean.changeRTReportType}" 
+													process="@form" partialSubmit="true" update="@all" />
 											</p:selectOneMenu></td>
 										<td><p:message id="smReportTypeMsg" for="ReportType"
 												display="icon" showDetail="false" /></td>
@@ -1160,7 +1160,7 @@
 													itemValue="#{lbl['lbl.rpt.regMOF']}"></f:selectItem>
 												<p:ajax event="change"
 													listener="#{reportBackingBean.changeDateBasedOnRegType}"
-													process="@this" partialSubmit="true" update="@all" />
+													process="@this" partialSubmit="true" update="@([id$=Msg])" />
 											</p:selectOneMenu></td>
 										<td><p:message id="RegistrationTypeMsg"
 												for="RegistrationType" display="icon" showDetail="false" /></td>
