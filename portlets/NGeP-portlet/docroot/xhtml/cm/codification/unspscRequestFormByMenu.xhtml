@@ -34,13 +34,13 @@
 			</div>
 
 
-			<p:panel header="#{lbl['lbl.cm.item.code.request.form']}"
+<p:panel header="#{lbl['lbl.cm.item.code.request.form']}"
 				toggleable="true">
 
 				<table style="width: 100%;" id="unspscFormId">
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.cm.item.table.type']}"></p:outputLabel></td>
-						<td><p:selectOneMenu
+						<td width="15%"><p:outputLabel value="#{lbl['lbl.cm.item.table.type']}"></p:outputLabel></td>
+						<td width="35%"><p:selectOneMenu
 								value="#{unspscCodeBackingBean.managedBean.requestCode.itemType}"
 								style="width:228px;">
 								<f:selectItem itemValue="P"
@@ -60,16 +60,41 @@
 						<td><p:inputText
 								requiredMessage="#{lbl['lbl.cm.error.error14']}"
 								value="#{unspscCodeBackingBean.managedBean.requestCode.itemName}"
-								required="true" size="40"></p:inputText> <p:graphicImage
+								maxlength="255" required="true" size="40"></p:inputText> <p:graphicImage
 								id="uid1" value="/css/images/design/tooltips.png" /> <p:tooltip
 								id="uidt1" for="uid1">
 								<p:outputLabel escape="false"
 									value="#{lbl['lbl.cm.tooltip.info1']}" />
 							</p:tooltip></td>
-						<td><p:outputLabel
+
+						<h:panelGroup id="hideTypeId"
+							rendered="#{unspscCodeBackingBean.managedBean.requestCode.itemType != 'S'}">
+							<td><p:outputLabel value="#{lbl['lbl.cm.type']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td><p:inputText
+									requiredMessage="#{lbl['lbl.cm.error.error16']}"
+									maxlength="100"
+									value="#{unspscCodeBackingBean.managedBean.requestCode.typeName}"
+									required="true" size="40"></p:inputText> <p:graphicImage
+									id="uid3" value="/css/images/design/tooltips.png" /> <p:tooltip
+									id="uidt3" for="uid3">
+									<p:outputLabel escape="false"
+										value="#{lbl['lbl.cm.tooltip.info3']}" />
+								</p:tooltip></td>
+						</h:panelGroup>
+					</tr>
+
+
+
+
+
+					<tr>
+
+						<td rowspan="3"><p:outputLabel
 								value="#{lbl['lbl.cm.request.description']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
-							<td><p:inputTextarea style="width: 283px;height:50px;" maxlength="1000"
+						<td rowspan="3"><p:inputTextarea
+								style="width: 283px;height:60px;" maxlength="1000"
 								requiredMessage="#{lbl['lbl.cm.error.error15']}"
 								value="#{unspscCodeBackingBean.managedBean.requestCode.itemDetail}"
 								required="true" size="40"></p:inputTextarea> <p:graphicImage
@@ -78,26 +103,14 @@
 								<p:outputLabel escape="false"
 									value="#{lbl['lbl.cm.tooltip.info2']}" />
 							</p:tooltip></td>
-					</tr>
 
-					<h:panelGroup id="extensionFiledsId"
-						rendered="#{unspscCodeBackingBean.managedBean.requestCode.itemType != 'S'}">
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.cm.type']}" /> <p:outputLabel
-									value="*" styleClass="mandatory" /></td>
-							<td><p:inputText
-									requiredMessage="#{lbl['lbl.cm.error.error16']}"
-									value="#{unspscCodeBackingBean.managedBean.requestCode.typeName}"
-									required="true" size="40"></p:inputText> <p:graphicImage
-									id="uid3" value="/css/images/design/tooltips.png" /> <p:tooltip
-									id="uidt3" for="uid3">
-									<p:outputLabel escape="false"
-										value="#{lbl['lbl.cm.tooltip.info3']}" />
-								</p:tooltip></td>
+						<h:panelGroup id="hideBrandId"
+							rendered="#{unspscCodeBackingBean.managedBean.requestCode.itemType != 'S'}">
 							<td><p:outputLabel value="#{lbl['lbl.cm.brand']}" /> <p:outputLabel
 									value="*" styleClass="mandatory" /></td>
 							<td><p:inputText
 									requiredMessage="#{lbl['lbl.cm.error.error17']}"
+									maxlength="100"
 									value="#{unspscCodeBackingBean.managedBean.requestCode.brandName}"
 									required="true" size="40"></p:inputText> <p:graphicImage
 									id="uid4" value="/css/images/design/tooltips.png" /> <p:tooltip
@@ -105,33 +118,49 @@
 									<p:outputLabel escape="false"
 										value="#{lbl['lbl.cm.tooltip.info4']}" />
 								</p:tooltip></td>
-						</tr>
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.cm.measurement']}" />
-								<p:outputLabel value="*" styleClass="mandatory" /></td>
-							<td><p:inputText
-									requiredMessage="#{lbl['lbl.cm.error.error18']}"
-									value="#{unspscCodeBackingBean.managedBean.requestCode.measurementName}"
-									required="true" size="40"></p:inputText> <p:graphicImage
-									id="uid5" value="/css/images/design/tooltips.png" /> <p:tooltip
-									id="uidt5" for="uid5">
-									<p:outputLabel escape="false"
-										value="#{lbl['lbl.cm.tooltip.info5']}" />
-								</p:tooltip></td>
-							<td><p:outputLabel value="#{lbl['lbl.cm.color']}" /> <p:outputLabel
-									value="*" styleClass="mandatory" /></td>
-							<td><p:inputText
-									requiredMessage="#{lbl['lbl.cm.error.error19']}"
-									value="#{unspscCodeBackingBean.managedBean.requestCode.colorName}"
-									required="true" size="40"></p:inputText> <p:graphicImage
-									id="uid6" value="/css/images/design/tooltips.png" /> <p:tooltip
-									id="uidt6" for="uid6">
-									<p:outputLabel escape="false"
-										value="#{lbl['lbl.cm.tooltip.info6']}" />
-								</p:tooltip></td>
-						</tr>
+
+						</h:panelGroup>
+
+
+					</tr>
+
+					<h:panelGroup id="hideMeaColorId"
+							rendered="#{unspscCodeBackingBean.managedBean.requestCode.itemType != 'S'}">
+
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.cm.measurement']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:inputText
+								requiredMessage="#{lbl['lbl.cm.error.error18']}" maxlength="100"
+								value="#{unspscCodeBackingBean.managedBean.requestCode.measurementName}"
+								required="true" size="40"></p:inputText> <p:graphicImage
+								id="uid5" value="/css/images/design/tooltips.png" /> <p:tooltip
+								id="uidt5" for="uid5">
+								<p:outputLabel escape="false"
+									value="#{lbl['lbl.cm.tooltip.info5']}" />
+							</p:tooltip></td>
+				
+					</tr>
+					
+					
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.cm.color']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:inputText
+								requiredMessage="#{lbl['lbl.cm.error.error19']}"
+								value="#{unspscCodeBackingBean.managedBean.requestCode.colorName}"
+								maxlength="100" required="true" size="40"></p:inputText> <p:graphicImage
+								id="uid6" value="/css/images/design/tooltips.png" /> <p:tooltip
+								id="uidt6" for="uid6">
+								<p:outputLabel escape="false"
+									value="#{lbl['lbl.cm.tooltip.info6']}" />
+							</p:tooltip></td>
+					</tr>
+					
 					</h:panelGroup>
+
 				</table>
+
 			</p:panel>
 		</h:panelGroup>
 		<p:spacer height="30px;" />

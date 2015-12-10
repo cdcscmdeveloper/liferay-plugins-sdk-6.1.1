@@ -70,7 +70,7 @@
 				actionListener="#{zoneMaintenanceBackingBean.addNewZone}" />
 		</div>
 
-		<p:dialog id="ZL" widgetVar="ZL"
+		<p:dialog id="ZL" widgetVar="ZL" width="450px"
 			header="#{zoneMaintenanceBackingBean.managedBean.editMode}"
 			modal="true" height="70%" style="position: absolute !important;">
 			<f:facet name="header">
@@ -125,19 +125,17 @@
 					style="float:right;" immediate="true" oncomplete="ZL.hide();"></p:commandButton>
 				&#160;&#160;
 
-				<p:commandButton id="zoneAddButton" onstart="blockWidget.show();"
+				<p:commandButton id="zoneAddButton"
 					value="#{lbl['lbl.cm.zm.btn.ok']}"
 					disabled="#{zoneMaintenanceBackingBean.managedBean.selectedSupplierZone.suppZoneName eq null or zoneMaintenanceBackingBean.managedBean.selectedSupplierZone.suppZoneName.length() eq 0 or fn:length(zoneMaintenanceBackingBean.managedBean.selectedNodes)&lt;1}"
-					style="float:right;" oncomplete="ZL.hide(); blockWidget.hide();"
+					style="float:right;" oncomplete="ZL.hide();"
 					process="@all ,zoneNameId" update="@this, zonePopupPanel"
 					partialSubmit="true"
 					actionListener="#{zoneMaintenanceBackingBean.updateZoneListOnPopUpClose}">
 				</p:commandButton>
 			</div>
 
-			<p:blockUI block="ZL" widgetVar="blockWidget">
-				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-			</p:blockUI>
+		
 		</p:dialog>
 	</ui:define>
 </ui:composition>
