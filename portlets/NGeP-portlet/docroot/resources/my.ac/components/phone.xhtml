@@ -52,6 +52,12 @@
 			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 			<f:selectItems value="#{applicationBean.telcoItems}" />
 		</p:selectOneMenu>
+		<p:graphicImage id="#{phoneNoId}telco"	value="/css/images/design/tooltips.png" rendered="#{cc.attrs.isMobile}" /> 
+		<p:tooltip	id="#{phoneNoId}tftelco" for="#{phoneNoId}telco">
+			<table><tr><td width="300px">
+			<p:outputLabel escape="false" value="#{lbl['tt.sm.registration.company.telco']}" />
+			</td></tr></table>
+		</p:tooltip>
 		<p:message id="#{phoneNoId}phMsg" for="#{phoneNoId}ph" showSummary="true" showDetail="false" display="icon" />	
 	</h:panelGroup>
 </cc:implementation>
