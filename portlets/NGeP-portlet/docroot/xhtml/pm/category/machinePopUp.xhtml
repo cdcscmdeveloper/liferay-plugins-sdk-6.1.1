@@ -1,0 +1,29 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"	
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<p:dialog id="dlMachine" header="#{lbl['lbl.pm.machine.list']}" 
+		widgetVar="dialogMachine" modal="true" width="600" >		
+		<p:outputPanel id="opMachines" >
+			<p:dataTable id="dtMachines" rowIndexVar="index" 
+				var="machine" rows="10"
+				emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+				value="#{categoryBackingBean.managedBean.machineList}">	
+				<ac:paginator for="dtMachines"></ac:paginator>
+			    <p:column style="white-space:normal;" headerText="#{lbl['lbl.pm.machine.desc']}"> 
+		         	#{machine.machineDesc}
+		        </p:column>
+			</p:dataTable>
+			<div class="ppRightBtn">
+			  <p:commandButton value="#{lbl['lbl.btn.cancel']}" immediate="true" oncomplete="dialogMachine.hide();" />		
+			</div> 
+		</p:outputPanel>
+		
+			
+	</p:dialog>
+</ui:composition>

@@ -1853,6 +1853,16 @@
 			</footer-portlet-javascript>
 		<css-class-wrapper>pm-category</css-class-wrapper>
 	</portlet>
+		<portlet>
+		<portlet-name>categoryPublicSeach</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+			<footer-portlet-javascript>
+				/js/main.js
+			</footer-portlet-javascript>
+		<css-class-wrapper>pm-category</css-class-wrapper>
+	</portlet>
 	<portlet>
 		<portlet-name>pmEducationField</portlet-name>
 		<icon>/icon.png</icon>
