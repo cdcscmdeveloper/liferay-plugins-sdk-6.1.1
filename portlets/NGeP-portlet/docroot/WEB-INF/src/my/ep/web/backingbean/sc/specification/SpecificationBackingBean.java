@@ -8925,7 +8925,7 @@ public class SpecificationBackingBean extends
 					|| (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
 							.getManagedBean().getScQt().getEvaluationType()) && this
 							.getManagedBean().getScQt().isTechEvaluationReq())) {
-				if (technical.getOverallTechnical().intValue() < 50) {
+				if (technical.getOverallTechnical().intValue() < 50 && !this.getManagedBean().isReadOnly()) {
 					throw new EpException(MessageConst.ERROR_760365);
 				}
 			}
@@ -8967,7 +8967,7 @@ public class SpecificationBackingBean extends
 					|| (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
 							.getManagedBean().getScQt().getEvaluationType()) && this
 							.getManagedBean().getScQt().isTechEvaluationReq())) {
-				if (local < 50) {
+				if (local < 50 && !this.getManagedBean().isReadOnly()) {
 					throw new EpException(MessageConst.ERROR_760366);
 				}
 			}
