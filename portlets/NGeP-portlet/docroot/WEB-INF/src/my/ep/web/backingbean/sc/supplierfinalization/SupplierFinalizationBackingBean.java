@@ -1246,8 +1246,8 @@ public class SupplierFinalizationBackingBean extends
 		if (CollectionUtils.isNotEmpty(tplSpecZoneDtls)) {
 			for (TplSpecZoneDtl zoneDtl : tplSpecZoneDtls) {
 				List<ScQtRecommend> recommendedItemListByZone = null;
-				if (CollectionUtils.isNotEmpty(
-						scQtFinalization.getScQtRecommendsByZone().keySet())) {
+				if (MapUtils.isNotEmpty(
+						scQtFinalization.getScQtRecommendsByZone())) {
 					recommendedItemListByZone = 
 							scQtFinalization.getScQtRecommendsByZone()
 								.get(zoneDtl.getSpecZoneId());
@@ -1272,7 +1272,7 @@ public class SupplierFinalizationBackingBean extends
 					}					
 
 					if (MapUtils.isNotEmpty(recommendedSuppliersByZone)) {
-						if (recommendedSuppliersByZone.keySet().contains(
+						if (recommendedSuppliersByZone.containsKey(
 								zoneDtl.getSpecZoneId())) {
 							Set<ScQtRecommendDtl> toBeAddedSet = new HashSet<ScQtRecommendDtl>();
 							List<ScQtEvaluationResultDtl> recommendedSuppList = 
@@ -1864,13 +1864,16 @@ public class SupplierFinalizationBackingBean extends
 								.getScQt().getQtNo());
 				signOff();
 			}	
-			
+
+			Long currentStatusId = getManagedBean().getCurrentStatusId();
 			String decisionTypeCode = getManagedBean().getScQtFinalization()
 										   .getDecision().getParameterCode();
-			if (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
-					.equals(getManagedBean().getCurrentStatusId()) && 
-						ParameterConst.DECISION_RECOMMEND_SUPPLIER
-								.equals(decisionTypeCode)) {
+			if ( (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
+						.equals(currentStatusId) || 
+					QTStatusConst.SF_ESCALATION_TO_BPK
+						.equals(currentStatusId)) && 
+							ParameterConst.DECISION_RECOMMEND_SUPPLIER
+								.equals(decisionTypeCode) ) {
 				try {
 					debugLogger("Generating all reports...");
 					downloadAllReports();	
@@ -2106,7 +2109,9 @@ public class SupplierFinalizationBackingBean extends
 		
 		if ((QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
 				.equals(getManagedBean().getCurrentStatusId()) || 
-					reportAttachment == null) && !isEvaluationReport) {
+					QTStatusConst.SF_ESCALATION_TO_BPK
+						.equals(getManagedBean().getCurrentStatusId()) || 
+							reportAttachment == null) && !isEvaluationReport) {
 			reportAttachment = generateDocumentAttachment(scQtFinalizationReport);
 			scQtFinalizationReport
 					.setScQtFinalizationReportAttachment(reportAttachment);
@@ -2164,8 +2169,10 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 			if ((QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
-					.equals(getManagedBean().getCurrentStatusId()) ||  
-						attachment == null) && !isEvaluationReport) {
+					.equals(getManagedBean().getCurrentStatusId()) ||
+						QTStatusConst.SF_ESCALATION_TO_BPK
+							.equals(getManagedBean().getCurrentStatusId()) ||
+								attachment == null) && !isEvaluationReport) {
 				attachment = generateDocumentAttachment(report);
 				report.setScQtFinalizationReportAttachment(attachment);
 			}
@@ -3413,7 +3420,8 @@ public class SupplierFinalizationBackingBean extends
 				
 				// If QT is refinalized and finalization method is bidding award 
 				// then calculate the total bid price
-				if (getManagedBean().isRefinalizedAndBiddingAward()) {
+				if (getManagedBean().isRefinalizedAndBiddingAward() 
+						&& evalResDtl.getBidRank() != null) {
 					calculateBidPrice(recommendedItems, evalResDtl);
 				}
 			}
@@ -5451,8 +5459,8 @@ public class SupplierFinalizationBackingBean extends
 	}
 	
 	private void setRecommendedSupppliersByZone(TplSpecZoneDtl zoneDtl) {
-		Map<Long, List<ScQtEvaluationResultDtl>> recommendedSuppliersByZone = this
-				.getManagedBean().getRecommendedSupppliersByZone();
+		Map<Long, List<ScQtEvaluationResultDtl>> recommendedSuppliersByZone 
+						= this.getManagedBean().getRecommendedSupppliersByZone();
 		if (MapUtils.isNotEmpty(recommendedSuppliersByZone)) {
 			Long specZoneId = null;
 			if (zoneDtl == null) {
@@ -6454,7 +6462,7 @@ public class SupplierFinalizationBackingBean extends
 								proposalItem.getFinalPrice(),
 								proposalItem.getOfferQuantity());
 				
-				evalResultDtl.getQtEvaluationResult().setBidPrice(bidPrice);
+				evalResultDtl.setBidPrice(bidPrice);
 			} else {
 				BigDecimal offeredPrice = TemplateSpecHelper.getInstance()
 						.calculateTotalAmount(requestItem.getTplSpecQuestion(),
@@ -6478,8 +6486,9 @@ public class SupplierFinalizationBackingBean extends
 					.calculateTotalAmount(requestItem.getTplSpecQuestion(),
 							proposalItem.getFinalPrice(),
 							proposalItem.getOfferQuantity()));
+			totalBidPrice = totalBidPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		}
-		scQtEvalResDtl.getQtEvaluationResult().setBidPrice(totalBidPrice);
+		scQtEvalResDtl.setBidPrice(totalBidPrice);
 	}
 
 	private void isOnlineBiddingEndorsementRequired() {

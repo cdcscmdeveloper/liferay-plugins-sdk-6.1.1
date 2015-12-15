@@ -100,7 +100,7 @@
 								  rendered="#{shortlistedSupp.proposalAmount ne null and !isRefinalizedAndBiddingAward}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
-					<h:outputText value="#{shortlistedSupp.qtEvaluationResult.bidPrice}" 
+					<h:outputText value="#{shortlistedSupp.bidPrice}" 
 								  rendered="#{isRefinalizedAndBiddingAward}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>					
@@ -214,7 +214,7 @@
 						rendered="#{suppFinalizationBackingBean.managedBean.itemize and !isRefinalizedAndBiddingAward}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText> 
-					<h:outputText value="#{shortlistedSupp.qtEvaluationResult.bidPrice}"
+					<h:outputText value="#{shortlistedSupp.bidPrice}"
 						rendered="#{isRefinalizedAndBiddingAward}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText> 					
@@ -354,7 +354,7 @@
 						rendered="#{suppFinalizationBackingBean.managedBean.itemize and !isRefinalizedAndBiddingAward}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText> 
-					<h:outputText value="#{shortlistedSupp.qtEvaluationResult.bidPrice}"
+					<h:outputText value="#{shortlistedSupp.bidPrice}"
 						rendered="#{isRefinalizedAndBiddingAward}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText> 					
