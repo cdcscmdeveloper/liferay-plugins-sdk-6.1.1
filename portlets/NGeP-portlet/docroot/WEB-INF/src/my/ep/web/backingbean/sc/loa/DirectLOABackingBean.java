@@ -36,6 +36,7 @@ import my.ep.biz.service.pm.common.clause.IClauseSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDirectAwardSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
@@ -44,6 +45,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
@@ -62,6 +64,7 @@ import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.DirectAwardReqDTO;
@@ -85,6 +88,7 @@ import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
@@ -442,10 +446,11 @@ public class DirectLOABackingBean extends
 
 			this.getManagedBean().setSelectedBankId(
 					getBankByAccountNo(scLoa.getBankAccNo()));
-
-			// Supplier ct amount
-			getManagedBean().setOverallContractAmt(
-					overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt()));
+			
+			// overall ct amount or loa amt
+			BigDecimal overallCtAmout = overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt());
+			getManagedBean().setOverallContractAmt(overallCtAmout);
+			scLoa.setOverallContractAmt(overallCtAmout);
 
 			// Setting BI Report
 			List<ScLoaReport> scLoaReports = scLoa.getScLoaReports();
@@ -3818,9 +3823,11 @@ public class DirectLOABackingBean extends
 
 		this.getManagedBean().setProdscQtDoc(awardResDTO.getProductDoc());
 		setUserDetails(awardResDTO.getProductDoc());
-		// overall ct amount
-		this.getManagedBean().setOverallContractAmt(
-				overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt()));
+		
+		// overall ct amount or loa amt
+		BigDecimal overallCtAmout = overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt());
+		getManagedBean().setOverallContractAmt(overallCtAmout);
+		scLoa.setOverallContractAmt(overallCtAmout);
 
 		TemplateSpecBean bean = new TemplateSpecBean(
 				TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER);
@@ -5597,13 +5604,20 @@ public class DirectLOABackingBean extends
 	public boolean getPerformanceBondEnableOrNot() {
 		boolean isPerformanceBondMandatory = false;
 		ScLoa loa = getManagedBean().getScLoa();
-		BigDecimal loaAmt = loa.getLoaAmt();
+		BigDecimal overallContractAmtOrLoaAmt = loa.getOverallContractAmt();
+		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		ruleReqDTO.setRuleType(RuleTypeConst.BOND);
+		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByRuleType(ruleReqDTO).getRuleValueList();
 
-		if (null != loaAmt) {
-			if (loaAmt.compareTo(new BigDecimal(200000)) > 0) {
+		if (ruleValueList != null && ruleValueList.size() > 0) {
+			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+
+			if (overallContractAmtOrLoaAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) > 0) {
 				isPerformanceBondMandatory = true;
 				getManagedBean().getScLoa().setBondReq(true);
-			} else if (loaAmt.compareTo(new BigDecimal(200000)) <= 0) {
+			} else if (overallContractAmtOrLoaAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) <= 0) {
 				isPerformanceBondMandatory = true;
 				getManagedBean().getScLoa().setBondReq(false);
 			}
@@ -6029,9 +6043,10 @@ public class DirectLOABackingBean extends
 	 * @return boolean isRequirementRequired
 	 */
 	public boolean checkAgreementMandatory() {
-		boolean isAgreementMandatory = false;
+		boolean isAgreementMandatory = Boolean.FALSE;
 		ScLoa loa = getManagedBean().getScLoa();
-		BigDecimal loaAmt = loa.getLoaAmt();
+		BigDecimal overallContractAmtOrLoaAmt = loa.getOverallContractAmt();
+		
 		if (null != loa.getScLoiLoa().getFulfilmentTypeCode()) {
 			String fulfilmentType = loa.getScLoiLoa().getFulfilmentTypeCode()
 					.getParameterCode();
@@ -6040,7 +6055,7 @@ public class DirectLOABackingBean extends
 					.equals(fulfilmentType);
 			if (!isOneOffFulfilment) {
 				isAgreementMandatory = true;
-			} else if (isOneOffFulfilment && !isQuotationThresHold(loaAmt)) {
+			} else if (isOneOffFulfilment && !isQuotationThresHold(overallContractAmtOrLoaAmt)) {
 				isAgreementMandatory = true;
 			}
 		}
