@@ -3793,7 +3793,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		log.info("resetPublicSearchBean");
 		getManagedBean().setCategoryCodePublicSearchBean(null);
 		retrieveSupplierType();
-		publicSearchCategoryPagingDataModel.reloadData();
+		publicSearchCategoryPagingDataModel.resetData();
 	}
 	
 	public void publicSearchCategory(){
