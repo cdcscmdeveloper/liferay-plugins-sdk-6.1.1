@@ -109,6 +109,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmMachine;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmRace;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAddress;
@@ -2847,6 +2848,19 @@ public class SmCommonUtil {
 		return retVal;
 	}
 
+	public static PmRace getPmRaceById(Long raceId) {
+		PmRace retVal = null;
+		if (raceId != null) {
+			for (PmRace race : SmApplicationUtil.retrievePmRaceList()) {
+				if (race.getRaceId().equals(raceId)) {
+					retVal = race;
+					break;
+				}
+			}
+		}
+		return retVal;
+	}
+
 	public static boolean isCollectionEmpty(Collection<?> value) {
 		if (value == null || value.isEmpty()) {
 			return true;
@@ -3082,6 +3096,22 @@ public class SmCommonUtil {
 			}
 		}
 		return machineItems;
+	}
+
+	public static <T> void addOrUpdateGenericCollection(T obj, List<T> objList) {
+		Object idVal = getObjectIdVal(obj);
+		if (idVal != null) {
+			int i = 0;
+			for (Object objTmp : objList) {
+				if (idVal.equals(getObjectIdVal(objTmp))) {
+					break;
+				}
+				i++;
+			}
+			objList.set(i, obj);
+		} else {
+			objList.add(obj);
+		}
 	}
 
 	public static boolean isSmObjectPropsDifference(Object latest,
