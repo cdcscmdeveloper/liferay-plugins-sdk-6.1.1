@@ -5865,12 +5865,11 @@ public class SmApplicationUtil {
 			}
 			// Branch already reached maximum bank accounts
 			// allowed
-			if (paymntBankCount > SmRuleHelper.getInstance()
-					.getMaxPaymentBankForEachBranch()) {
+			int maxPaymentBankForBranch = SmRuleHelper.getInstance()
+					.getMaxPaymentBankForEachBranch();
+			if (paymntBankCount > maxPaymentBankForBranch) {
 				throw new EpException(MessageConst.ERROR_722620, new String[] {
-						br.getBranchName(),
-						SmRuleHelper.getInstance()
-								.getMaxPaymentBankForEachBranch() + "" });
+						br.getBranchName(), maxPaymentBankForBranch + "" });
 			}
 		}
 	}
