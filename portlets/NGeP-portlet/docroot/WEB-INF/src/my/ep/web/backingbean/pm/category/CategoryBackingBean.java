@@ -11,8 +11,10 @@
 package my.ep.web.backingbean.pm.category;
 
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -44,6 +46,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.PmTrackingDairyVO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
@@ -73,6 +76,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.CategoryCodePublicSearchBean;
 import my.ep.web.managedbean.pm.category.CategoryManagedBean;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -117,6 +121,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	boolean result = false;
     private String originalCategoryName;
     private boolean categoryNameChanged = false;
+	private DecimalFormat amountDF = null;
     
     
 	public boolean isCategoryNameChanged() {
@@ -3793,6 +3798,16 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	
 	public void publicSearchCategory(){
 		log.info("publicSearchCategory");
+		CategoryCodePublicSearchBean ccPulicSearchBean = getManagedBean().getCategoryCodePublicSearchBean();
+		if(StringUtils.isBlank(ccPulicSearchBean.getCatDesc()) 
+				&& ccPulicSearchBean.getPaidUpCapital() == null 
+				&& ccPulicSearchBean.getSelectedSupplierType() == null 
+				&& ccPulicSearchBean.getSelectedCompanyType() == null
+				&& ccPulicSearchBean.getSelectedBumiPercentage() == null
+				&& ccPulicSearchBean.getHomeOperated()== null){
+			throw new EpException(MessageConst.ERROR_775017);
+		}
+		
 		publicSearchCategoryPagingDataModel.reloadData();
 	}
 	
@@ -3845,7 +3860,6 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			
 	private ISearchBean<PmCategoryL3> getSearchBeanData(
 			ISearchBean<PmCategoryL3> searchBean) {
-		boolean atLeastOneCriteria = false;
 		CategoryCodePublicSearchBean ccPulicSearchBean = getManagedBean().getCategoryCodePublicSearchBean();
 		if(StringUtils.isNotBlank(ccPulicSearchBean.getCatDesc())){
 			BaseSearchFilterBean l1SearchFilterBean = new SearchFilterBean("pmCategoryL2.pmCategoryL1.categoryName",
@@ -3872,7 +3886,6 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 									l2SearchFilterBean),
 							SearchCondition.CONDITION_OR.value(),
 							l3SearchFilterBean));
-			atLeastOneCriteria = true;
 		}
 		
 		if(ccPulicSearchBean.getPaidUpCapital() !=null){
@@ -3880,7 +3893,6 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 					new SearchFilterBean("paidUpCapital",
 							SearchOperator.OPERATOR_GREATER_EQUAL.value(),
 							ccPulicSearchBean.getPaidUpCapital()));
-			atLeastOneCriteria = true;
 		}
 		
 		if(ccPulicSearchBean.getSelectedSupplierType() !=null){
@@ -3888,7 +3900,6 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 					new SearchFilterBean("supplierTypeCode.parameterId",
 							SearchOperator.OPERATOR_EQUALS.value(),
 							ccPulicSearchBean.getSelectedSupplierType()));
-			atLeastOneCriteria = true;
 		}
 		
 		if(ccPulicSearchBean.getSelectedCompanyType() !=null){
@@ -3900,33 +3911,26 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 									SearchCondition.CONDITION_AND.value(),
 									new SearchFilterBean("pmCategoryRestrs.companyTypeId.parameterId",
 											SearchOperator.OPERATOR_EQUALS.value(),
-											ccPulicSearchBean.getSelectedCompanyType())));	
-			atLeastOneCriteria = true;
+											ccPulicSearchBean.getSelectedCompanyType())));
 		}
 		
 		if(ccPulicSearchBean.getSelectedBumiPercentage() !=null){
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("bumiPercentage",
 							SearchOperator.OPERATOR_EQUALS.value(),
-							ccPulicSearchBean.getSelectedBumiPercentage()));
-			atLeastOneCriteria = true;
+							ccPulicSearchBean.getSelectedBumiPercentage()));			
 		}
 		
 		if(ccPulicSearchBean.getHomeOperated()!=null){
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("homeOperated",
 							SearchOperator.OPERATOR_EQUALS.value(),
-							ccPulicSearchBean.getHomeOperated()));
-			atLeastOneCriteria = true;
+							ccPulicSearchBean.getHomeOperated()));			
 		}
 		
-		if(!atLeastOneCriteria){
-			throw new EpException("Please key in at least one criteria.");
-		}
-		
-		searchBean.getSortColumns().add(new SearchOrderBean("pmCategoryL2.pmCategoryL1.categoryName",true));
-		searchBean.getSortColumns().add(new SearchOrderBean("pmCategoryL2.categoryName",true));
-		searchBean.getSortColumns().add(new SearchOrderBean("categoryName",true));
+		searchBean.getSortColumns().add(new SearchOrderBean("pmCategoryL2.pmCategoryL1.categoryL1Code",true));
+		searchBean.getSortColumns().add(new SearchOrderBean("pmCategoryL2.categoryL2Code",true));
+		searchBean.getSortColumns().add(new SearchOrderBean("categoryL3Code",true));
 
 		return searchBean;
 	}
@@ -4023,6 +4027,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			sb.append(getParameterDesc(restr.getCompanyTypeId()));			
 			count++;
 		}
+		
+		// no Business/Company Type
+		if(count == 0){
+			sb.append("-");
+		}
+		
 		sb.append("<br/>");
 		sb.append(ResourceBundleUtils
 				.getMessage(
@@ -4041,7 +4051,17 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						new FacesScopes()
 								.getUserLocale()));
 		sb.append(" : ");
-		sb.append(categoryL3.getHomeOperated() == 1 ? "Yes" : "No");
+		sb.append(categoryL3.getHomeOperated() == 1 ? ResourceBundleUtils
+				.getMessage(
+						"lbl.btn.yes",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes()
+								.getUserLocale()) : ResourceBundleUtils
+								.getMessage(
+										"lbl.btn.no",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										new FacesScopes()
+												.getUserLocale()));
 		sb.append("<br/>");
 		sb.append(ResourceBundleUtils
 				.getMessage(
@@ -4049,8 +4069,8 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes()
 								.getUserLocale()));
-		sb.append(" : ");
-		sb.append(categoryL3.getPaidUpCapital());
+		sb.append(" : ");		
+		sb.append(getAmountDecimalFormat().format(categoryL3.getPaidUpCapital()));
 		sb.append("<br/>");
 		return sb.toString();
 	}
@@ -4096,27 +4116,39 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	}
 	
 	public void constructMachineDlg(PmCategoryL3 categoryL3){
+		getManagedBean().getMachineList().clear();
 		getManagedBean().setPmCategoryL3(categoryL3);
-		Set<PmMachine> machineSet = null;
+		Set<String> machineSet = null;
 		if(ParameterTypeConst.CATEGORY_TYPE.equals(categoryL3.getCategoryTypeCode().getParameterType()) 
 				&& !ParameterConst.CATEGORY_TYPE_PRINTING.equals(categoryL3.getCategoryTypeCode().getParameterCode())){
-			machineSet = new HashSet<PmMachine>();
+			machineSet = new HashSet<String>();
 			for(PmMachineSection section:categoryL3.getMachineSectionList()){
-				machineSet.add(section.getPmMachine());
+				machineSet.add(section.getPmMachine().getMachineDesc());
 			}
 			getManagedBean().getMachineList().addAll(machineSet);
 			  
 		}else if(ParameterTypeConst.CATEGORY_TYPE.equals(categoryL3.getCategoryTypeCode().getParameterType()) 
 				&& ParameterConst.CATEGORY_TYPE_PRINTING.equals(categoryL3.getCategoryTypeCode().getParameterCode())){
-			machineSet = new HashSet<PmMachine>();
+			machineSet = new HashSet<String>();
 			for(PmMachineCategory category:categoryL3.getPmMachineCategory()){
-				machineSet.add(category.getPmMachine());
+				machineSet.add(category.getPmMachine().getMachineDesc());
 			}
 			getManagedBean().getMachineList().addAll(machineSet);
 		}
+		Collections.sort(getManagedBean().getMachineList());
 		
 		RequestContext.getCurrentInstance().execute("dialogMachine.show();");
 		RequestContext.getCurrentInstance().execute("dataTableMachine.getPaginator().setPage(0);");
+	}
+	
+	private DecimalFormat getAmountDecimalFormat(){		
+		if(amountDF == null){
+		   CommonUtils commonUtils = new CommonUtils();
+		   amountDF = new DecimalFormat(
+				commonUtils
+						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+		}
+		return amountDF;
 	}
 	
 

@@ -201,7 +201,7 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	/** The company type list. */
 	private List<PmParameterDesc> companyTypeList;
 	
-	private List<PmMachine> machineList;
+	private List<String> machineList;
 	
 	private CategoryCodePublicSearchBean categoryCodePublicSearchBean;
 	
@@ -1243,9 +1243,9 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	/**
 	 * @return the machineList
 	 */
-	public List<PmMachine> getMachineList() {
+	public List<String> getMachineList() {
 		if(machineList == null){
-			machineList = new ArrayList<PmMachine>();
+			machineList = new ArrayList<String>();
 		}
 		return machineList;
 	}
@@ -1253,7 +1253,7 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	/**
 	 * @param machineList the machineList to set
 	 */
-	public void setMachineList(List<PmMachine> machineList) {
+	public void setMachineList(List<String> machineList) {
 		this.machineList = machineList;
 	}
 
