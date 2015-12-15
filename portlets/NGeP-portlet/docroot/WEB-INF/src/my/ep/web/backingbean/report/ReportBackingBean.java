@@ -19,10 +19,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -111,6 +113,7 @@ import my.ep.web.managedbean.report.ReportMangedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
@@ -10614,10 +10617,10 @@ public class ReportBackingBean extends
 		levOneCatLst = new ArrayList<SelectItem>();
 		levTwoCatLst = new ArrayList<SelectItem>();
 		levThreeCatLst = new ArrayList<SelectItem>();
-		smMofRegistrationFeeList=new ArrayList<SelectItem>();
-		smProcessingFeeList=new ArrayList<SelectItem>();		
-		smSoftCertificateFeeList=new ArrayList<SelectItem>();
-		
+		smMofRegistrationFeeList = new ArrayList<SelectItem>();
+		smProcessingFeeList = new ArrayList<SelectItem>();
+		smSoftCertificateFeeList = new ArrayList<SelectItem>();
+
 		getManagedBean().setReportValue(this.getReportValue());
 		if ((this.getModuleValue()) != null
 				&& (getManagedBean().getReportValue()) != null) {
@@ -10715,7 +10718,7 @@ public class ReportBackingBean extends
 				retrieveRegStatusList();
 				retrievePaymentTypeList();
 				retrievePaymentMethod();
-				
+
 				smReportBackingBean.enableCriteriaVariablesByReportBySM(
 						rptGenBean, authoriztionList);
 
@@ -10729,6 +10732,7 @@ public class ReportBackingBean extends
 						rptGenBean, authoriztionList);
 			} else if ((this.getModuleValue()
 					.equalsIgnoreCase(ModuleCodeConst.PROFILE_MANAGEMENT))) {
+
 				pmReportBackingBean.enableCriteriaVariablesByReportByPM(
 						rptGenBean, authoriztionList);
 			}
@@ -15012,26 +15016,58 @@ public class ReportBackingBean extends
 	 */
 	public SelectItem[] getOrgTypeDropdownValues() {
 
-		ISearchBean<PmParameterDesc> searchBean = null;
-
-		if (this.getPmOrgCategory() != null
-				&& this.getPmOrgCategory().equals(ReportConst.FEDERAL_GOVT)) {
-			searchBean = getOrgTypeSearchBean("orgTypeFederalList");
-		} else if (this.getPmOrgCategory() != null
-				&& this.getPmOrgCategory().equals(ReportConst.OTHERS)) {
-			searchBean = getOrgTypeSearchBean("orgTypeOthersList");
-		} else {
-			searchBean = getOrgTypeSearchBean("orgTypeFederalList");
-			searchBean = getOrgTypeSearchBean("orgTypeOthersList");
-		}
-
+		ISearchBean<PmParameterDesc> searchBean1 = null;
+		ISearchBean<PmParameterDesc> searchBean2 = null;
 		SelectItem[] items = null;
-		if (searchBean != null) {
-			searchBean.getSortColumns();
-			items = getDropdownValuesBySearchBean(
-					ParameterTypeConst.ORGANISATION_TYPES, searchBean);
-		}
+		SelectItem[] federalItems = null;
+		SelectItem[] otherItems = null;
 
+		if (this.reportValue
+				.equals(ReportConst.PM_LIST_OF_ORGANIZATION_RPT_VAL)) {
+
+			if (this.getPmOrgCategory() != null
+					&& this.getPmOrgCategory().equals(ReportConst.FEDERAL_GOVT)) {
+				searchBean1 = getOrgTypeSearchBean("orgTypeFederalList");
+
+			} else if (this.getPmOrgCategory() != null
+					&& this.getPmOrgCategory().equals(ReportConst.OTHERS)) {
+				searchBean1 = getOrgTypeSearchBean("orgTypeOthersList");
+			} else {
+				searchBean1 = getOrgTypeSearchBean("orgTypeFederalList");
+				if (searchBean1 != null) {
+					searchBean1.getSortColumns();
+					items = getDropdownValuesBySearchBean(
+							ParameterTypeConst.ORGANISATION_TYPES, searchBean1);
+				}
+			}
+			if (this.getPmOrgCategory() != null) {
+				if (searchBean1 != null) {
+					//items = null;
+					searchBean1.getSortColumns();
+					items = getDropdownValuesBySearchBean(
+							ParameterTypeConst.ORGANISATION_TYPES, searchBean1);
+				}
+			}
+
+		} else if (this.reportValue
+				.equals(ReportConst.PM_LIST_OF_PROFILES_RPT_VAL)) {
+
+			searchBean1 = getOrgTypeSearchBean("orgTypeFederalList");
+			if (searchBean1 != null) {
+				searchBean1.getSortColumns();
+				federalItems = getDropdownValuesBySearchBean(
+						ParameterTypeConst.ORGANISATION_TYPES, searchBean1);
+			}
+			searchBean2 = getOrgTypeSearchBean("orgTypeOthersList");
+			if (searchBean2 != null) {
+				searchBean2.getSortColumns();
+				otherItems = getDropdownValuesBySearchBean(
+						ParameterTypeConst.ORGANISATION_TYPES, searchBean2);
+				otherItems = (SelectItem[]) ArrayUtils.remove(otherItems, 0);
+			}
+			items = ArrayUtils.addAll(federalItems, otherItems);
+
+		}
 		return items;
 	}
 
@@ -15039,6 +15075,19 @@ public class ReportBackingBean extends
 		ISearchBean<PmParameterDesc> orgTypeSearchBean = super
 				.createSearchBean(PmParameterDesc.class, componentId);
 		return orgTypeSearchBean;
+	}
+
+	public boolean getRequiredStatus() {
+		boolean status = true;
+		if (CollectionUtils.isEmpty(smMofRegistrationFeeList)
+				&& CollectionUtils.isEmpty(smProcessingFeeList)
+				&& CollectionUtils.isEmpty(smSoftCertificateFeeList)) {
+			return status;
+		} else {
+			status = false;
+			return status;
+		}
+
 	}
 
 }

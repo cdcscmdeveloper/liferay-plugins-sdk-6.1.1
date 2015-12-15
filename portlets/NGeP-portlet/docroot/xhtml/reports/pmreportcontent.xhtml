@@ -63,7 +63,7 @@
 													itemValue="1"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.others']}"
 													itemValue="2"></f:selectItem>
-												<p:ajax event="change" partialSubmit="true" update="@form" />
+												<p:ajax event="change" partialSubmit="true"  update="@form" process="@form" />
 											</p:selectOneMenu></td>
 										<td><p:message id="rptOrgCatgMsg" for="orgCatg"
 												display="icon" showDetail="false" /></td>
@@ -283,7 +283,7 @@
 							style="margin-top:5px;width:247px;" /></TD>
 					<TD><p:inputText maxlength="100"
 							value="#{reportBackingBean.pmCompanyName}"
-							style="margin-top:5px;width:245px;">
+							style="margin-top:5px;width:289px;">
 							<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 						</p:inputText></TD>
 				</c:if>
@@ -343,7 +343,7 @@
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.pmFromDateView}">
 						<TD><p:outputLabel value="#{lbl['lbl.rpt.effDateFrom']}"
-								style="width:202px;" /></TD>
+								style="width:205px;" /></TD>
 					</c:if>
 					<TD><p:calendar showOn="button" navigator="true"
 							display="inline" readonlyInput="true"

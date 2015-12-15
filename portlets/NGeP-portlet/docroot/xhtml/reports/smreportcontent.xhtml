@@ -18,7 +18,7 @@
 								style="margin-right:-160px;" />
 							<p:outputLabel value="#{lbl['lbl.rpt.smPaymentType']}"
 								style="width:173px;" />
-							<p:selectManyCheckbox id="mofRegistrationChk" required="true"
+							<p:selectManyCheckbox id="mofRegistrationChk" required="#{reportBackingBean.getRequiredStatus()}"
 								style="margin-top: 6px"
 								value="#{reportBackingBean.smMofRegistrationFeeList}"
 								label="#{lbl['lbl.rpt.smPaymentType']}">
@@ -26,14 +26,14 @@
 									itemValue="M" />
 							</p:selectManyCheckbox>							
 							<p:selectManyCheckbox id="processingFeeChk"
-								style="margin-top: 6px"
+								style="margin-top: 6px" 
 								value="#{reportBackingBean.smProcessingFeeList}">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.smProcessingFee']}"
 									itemValue="P" />
 							</p:selectManyCheckbox>
 							
 							<p:selectManyCheckbox id="softCertificateFee"
-								style="margin-top: 6px"
+								style="margin-top: 6px" 
 								value="#{reportBackingBean.smSoftCertificateFeeList}">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.smSoftCertificateFee']}"
 									itemValue="S" />
@@ -46,7 +46,7 @@
 								style="margin-right:35px;" />
 							<p:outputLabel value="#{lbl['lbl.rpt.smPaymentType']}"
 								style="margin-left:-81px;" />
-							<p:selectManyCheckbox id="softCertificateCDCFee" required="true"
+							<p:selectManyCheckbox id="softCertificateCDCFee" required="#{reportBackingBean.getRequiredStatus()}"
 								value="#{reportBackingBean.smSoftCertificateFeeList}"
 								label="#{lbl['lbl.rpt.smPaymentType']}">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.smSoftCertificateFee']}"
@@ -607,7 +607,7 @@
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smApplicationNoView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.applicationNo']}"
-								style="margin-top:5px;width:160px;" />
+								style="margin-top:5px;width:162px;" />
 							<p:inputText maxlength="16"
 								value="#{reportBackingBean.smApplicationNo}"
 								style="margin-top:5px;width:290px;">
