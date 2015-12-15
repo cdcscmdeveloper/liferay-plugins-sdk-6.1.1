@@ -758,7 +758,7 @@ public class ReportConst {
 	public static final String PM_AMP_SERVICE_TYPE_EQ = "&SERVICETYPEID=";
 	public static final String PM_AMP_FINORG_NAME_EQ = "&FINORGNAME=";
 	public static final String PM_AMP_BIZREG_NO_EQ = "&BIZREGNO=";
-	public static final String PM_AMP_STATUS_EQ = "&STATUS=";
+	public static final String PM_AMP_STATUS_EQ = "&PSTATUS=";
 	public static final String AMP_PM_FROM_DATE_EQ = "&PFROMDATE=";
 	public static final String AMP_PM_TO_DATE_EQ = "&PTOMDATE=";
 	public static final String AMP_PM_ORG_CATEGORY_EQ = "&PCATTYPE=";
