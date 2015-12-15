@@ -117,12 +117,12 @@
 					</table>
 					<div align="right">
 						<p:commandButton value="#{lbl['lbl.btn.reset']}"
-							style="float:right;"
+							styleClass="BtnSpacing" style="float:right;"
 							action="#{evaluationMeetingBackingBean.resetClone}"
 							update="clonesearchpnlid" resetValues="true" partialSubmit="true"
 							process="@this" />
 						<p:commandButton value="#{lbl['lbl.btn.search']}"
-							style="float:right;"
+							styleClass="BtnSpacing" style="float:right;"
 							action="#{evaluationMeetingBackingBean.cloneSearchCommitteAction}"
 							update="clonesearchpnlid" partialSubmit="true" process="@parent" />
 					</div>
@@ -199,7 +199,8 @@
 						<ac:paginator for="cloneCommittee" />
 
 
-						<p:column selectionMode="multiple" styleClass="td-check-box-spacing"></p:column>
+						<p:column selectionMode="multiple"
+							styleClass="td-check-box-spacing"></p:column>
 						<p:column style="width:25%;white-space: normal;"
 							headerText="#{lbl['lbl.sc.name']}">
 							<h:outputText value="#{committeeMember.memberName}"></h:outputText>
