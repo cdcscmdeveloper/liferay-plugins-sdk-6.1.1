@@ -15,7 +15,7 @@
 
 			<table>
 				<tr>
-					<td style="width: 145px;"><p:outputLabel
+					<td style="width: 175px;"><p:outputLabel
 							value="#{lbl['lbl.sc.standard.template']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneRadio required="true"
@@ -37,7 +37,7 @@
 					rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'ST'}">
 					<table>
 						<tr>
-							<td style="width: 150px;"><p:outputLabel
+							<td style="width: 175px;"><p:outputLabel
 									value="#{lbl['lbl.sc.item.type']}"></p:outputLabel>
 							</td>
 							<td><p:selectOneMenu style="width:120px; margin-bottom:5px;"
@@ -58,11 +58,11 @@
 					rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'SC'}">
 					<table width="100%">
 						<tr>
-							<td><p:outputLabel
+							<td style="width: 175px;"><p:outputLabel
 									value="#{lbl['lbl.sc.item.type']}"></p:outputLabel>
 							</td>
 							<td><p:selectOneMenu id="sourcingSpecItemType"
-									value="#{specificationBackingBean.managedBean.searchItemTypeId}" style="width:120px; margin-bottom:5px;">
+									value="#{specificationBackingBean.managedBean.searchItemTypeId}" style="width:210px;margin-bottom: 5px;">
 									<f:selectItems
 										value="#{specificationBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.scItemType)}" />
 
@@ -189,11 +189,11 @@
 				</ui:fragment>
 			</h:panelGroup>
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.search']}"
+				<p:commandButton value="#{lbl['lbl.btn.search']}" styleClass="BtnSpacing"
 					action="#{specificationBackingBean.searchTemplateSpecAction}"
 					partialSubmit="true" process="@this,searchBospec"
 					update="createList" />
-				<p:commandButton value="#{lbl['lbl.btn.reset']}"
+				<p:commandButton value="#{lbl['lbl.btn.reset']}" styleClass="BtnSpacing"
 					partialSubmit="true" update="searchBospec" process="@this"
 					action="#{specificationBackingBean.resetTemplate}" />
 			</div>
