@@ -487,6 +487,12 @@ public class SupplierManagementConst {
 	public static final String GST_FILE_PATH = "/SM/GST/";
 	public static final String SITE_VISIT_REPORT_PATH = "/SM/SITE_VISIT/";
 
+	// SME STATUS
+	public static final String SME_STATUS_SERVICES = "S";
+	public static final String SME_STATUS_MANUFACTURING = "M";
+	public static final String SME_STATUS_NONE_SME = "N";
+	public static final String SME_STATUS_BOTH = "B";
+
 	// Getters for panel info
 	public String getSM_BASIC_INFO_PANEL() {
 		return SM_BASIC_INFO_PANEL;
