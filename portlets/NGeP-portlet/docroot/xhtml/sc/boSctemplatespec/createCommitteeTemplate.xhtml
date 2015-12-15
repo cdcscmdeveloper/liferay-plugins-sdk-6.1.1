@@ -12,13 +12,15 @@
 		header="#{lbl['lbl.sc.spec.create.specification']}">
 		<!-- <ac:title value="#{lbl['lbl.sc.spec.specification.committee']}"></ac:title> -->
 		<p:messages id="specCommitteecreateTemplate" showDetail="true"
-			autoUpdate="true" closable="true" showSummary="false" severity="error, info"/>
+			autoUpdate="true" closable="true" showSummary="false"
+			severity="error, info" />
 
-		<p:panel id="commiteeCreationSpec" header="#{lbl['lbl.sc.search']}" toggleable="true">
+		<p:panel id="commiteeCreationSpec" header="#{lbl['lbl.sc.search']}"
+			toggleable="true">
 
 			<table>
 				<tr>
-					<td style="width: 145px;"><p:outputLabel
+					<td style="width: 175px;"><p:outputLabel
 							value="#{lbl['lbl.sc.standard.template']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneRadio
@@ -42,7 +44,7 @@
 					rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'ST'}">
 					<table>
 						<tr>
-							<td style="width: 150px;"><p:outputLabel
+							<td style="width: 175px;"><p:outputLabel
 									value="#{lbl['lbl.sc.item.type']}"></p:outputLabel></td>
 							<td><p:selectOneMenu style="width:120px; margin-bottom:5px;"
 									id="standardCommitteeItemType"
@@ -62,10 +64,11 @@
 					rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'SC'}">
 					<table width="100%">
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sc.item.type']}"></p:outputLabel></td>
+							<td style="width: 175px;"><p:outputLabel
+									value="#{lbl['lbl.sc.item.type']}"></p:outputLabel></td>
 							<td><p:selectOneMenu id="sourcingSpecItemType"
 									value="#{specificationBackingBean.managedBean.searchItemTypeId}"
-									style=" width:120px; margin-bottom:5px;">
+									style=" width:210px; margin-bottom:5px;">
 									<f:selectItems
 										value="#{specificationBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.scItemType)}" />
 
@@ -195,11 +198,13 @@
 			</h:panelGroup>
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
+					styleClass="BtnSpacing"
 					action="#{specificationBackingBean.searchTemplateSpecAction}"
 					process="@this commiteeCreationSpec"
 					update="commiteeCreationSpec,createList" />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}" resetValues="true"
-					partialSubmit="true" update="commiteeCreationSpec" process="@this"
+					styleClass="BtnSpacing" partialSubmit="true"
+					update="commiteeCreationSpec" process="@this"
 					action="#{specificationBackingBean.resetTemplate}" />
 			</div>
 
@@ -250,7 +255,8 @@
 							value="#{specificationBackingBean.getParameterDesc(tplSpecMaster.procurementCategory)}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%;text-align: center;">
+					<p:column headerText="#{lbl['lbl.sc.action']}"
+						style="width:10%;text-align: center;">
 						<ui:fragment
 							rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'ST'}">
 							<p:commandButton value="#{lbl['lbl.btn.create']}" process="@all"
