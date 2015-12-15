@@ -58,11 +58,13 @@
 
 
 								<p:commandButton value="#{lbl['lbl.btn.search']}"
+								styleClass="BtnSpacing"
 									action="#{evaluationMeetingBackingBean.existingCommitteeSearchAction}"
 									update="@(.existingCommitteeResults)" partialSubmit="true"
 									process="@parent" />
 
 								<p:commandButton value="#{lbl['lbl.btn.reset']}"
+								styleClass="BtnSpacing"
 									action="#{evaluationMeetingBackingBean.reset}"
 									update="newCommitteeProfile" resetValues="true"
 									partialSubmit="true" process="@this" />
