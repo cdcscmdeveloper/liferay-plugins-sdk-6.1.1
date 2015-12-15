@@ -13,21 +13,21 @@
 				<ac:paginator for="companyBranch"></ac:paginator>
 				
 				<p:column headerText="#{lbl['lbl.sc.spec.branch.name']}" style="width : 25%; white-space : normal;">
-					<p:outputLabel style="float : left;" value="#{companyBranch.branchName}"></p:outputLabel>
+					<h:outputText style="float : left;" value="#{companyBranch.branchName}"></h:outputText>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.address']}" style="white-space : normal; width : 25%;" >
-					<p:outputLabel style="float : left;" value="#{supplierProposalDetailBackingBean.getFullAddress(companyBranch.smAddress)}"></p:outputLabel>
+					<h:outputText style="float : left;" value="#{supplierProposalDetailBackingBean.getFullAddress(companyBranch.smAddress)}"></h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.contact.person']}" style="width : 20%;">
-					<p:outputLabel style="float : left;" value="#{companyBranch.smPersonnel.name}"></p:outputLabel>
+					<h:outputText style="float : left;" value="#{companyBranch.smPersonnel.name}"></h:outputText>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.tel.no']}" style="width : 15%;">
-					<p:outputLabel  value="#{companyBranch.phoneNo}"></p:outputLabel>
+					<h:outputText style="float : right;"  value="#{companyBranch.phoneNo}"></h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.fax.no']}" style="width : 15%;">
-					<p:outputLabel  value="#{companyBranch.faxNo}"></p:outputLabel>
+					<h:outputText style="float : right;"  value="#{companyBranch.faxNo}"></h:outputText>
 				</p:column>
 
 			</p:dataTable>
