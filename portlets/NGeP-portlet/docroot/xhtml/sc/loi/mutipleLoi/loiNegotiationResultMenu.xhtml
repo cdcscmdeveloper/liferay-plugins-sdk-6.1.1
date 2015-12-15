@@ -20,10 +20,14 @@
 			value="#{lOIDetailBackingBean.managedBean.currentStatusId == QTStatusConst.MLI_PENDING_ENDORSEMENT}" />	
 					
 	    <ui:param name="isEditableStatus"
-			value="#{isPendingNegotiationStatus  and !empty lOIDetailBackingBean.managedBean.taskId}" />
+			value="#{isPendingNegotiationStatus and !empty lOIDetailBackingBean.managedBean.taskId}" />
 						
 		<ui:param name="isFulfilmentTypeScheduled"
 			value="#{lOIDetailBackingBean.managedBean.scQt.fulfilmentType.parameterCode eq ParameterConst.fulfilmentTypeScheduled}" />
+			
+		<ui:param name="validityDaysExpiredQt"
+		     	  value="#{lOIDetailBackingBean.checkProposalValidityDateReach(
+		     				lOIDetailBackingBean.managedBean.scQt.proposalValidityEndDate)}" />				
 			
 	    <p:messages id="suppFinalMsg" showDetail="true" autoUpdate="true" 
 					closable="true" showSummary="false" severity="error, info" />
@@ -50,8 +54,8 @@
 					partialSubmit="true"
 					onstart="blockWidget.show();"
 			        oncomplete="blockWidget.hide();"
-					process="@form"
-					update="@form" />
+					process="@form" update="@form" 
+					rendered="#{validityDaysExpiredQt}" />
 			</ui:repeat>
 		</div>	
 		
