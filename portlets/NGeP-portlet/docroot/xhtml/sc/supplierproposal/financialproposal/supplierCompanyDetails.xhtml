@@ -71,7 +71,7 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.address']}" /></td>
 				<td><p:inputTextarea disabled="true" readonly="true" rows="5"
-						cols="30" autoResize="flase"
+						cols="30" autoResize="flase" 
 						value="#{supplierProposalDetailBackingBean.getFullAddress(smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress)}"
 						style="width: 171px;margin-bottom: 5px;" /></td>
 			</tr>
@@ -139,11 +139,11 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.area.feat']}" style="width : 15%;">
-				<p:outputLabel value="#{facility.areaSquareFeet}"></p:outputLabel>
+				<h:outputText style="align : right" value="#{facility.areaSquareFeet}"></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.address']}" style="white-space : normal; width : 30%;">
-				<p:outputLabel style="float : left;"
-					value="#{supplierProposalDetailBackingBean.getFullAddress(facility.smAddress)}"></p:outputLabel>
+				<h:outputText style="float : left;"
+					value="#{supplierProposalDetailBackingBean.getFullAddress(facility.smAddress)}"></h:outputText>
 			</p:column>
 
 		</p:dataTable>
