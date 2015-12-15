@@ -3811,7 +3811,7 @@ public class DirectLOABackingBean extends
 		this.getManagedBean().setScQt(scLoa.getScQt());
 		this.getManagedBean().setApproverUser(new PmUser());
 		getManagedBean().setLoaAgencyWitness(scLoa.getScLoaWitnesses().get(0));
-
+		this.getManagedBean().setScLoa(scLoa);
 		if (scQt.isZonal()) {
 			List<TplSpecZoneDtl> zoneDetails = awardResDTO.getSpecZoneDetails();
 			constructTreeNodeForzones(zoneDetails);
@@ -3897,8 +3897,6 @@ public class DirectLOABackingBean extends
 		if (scLoa.getContractSigner() == null) {
 			scLoa.setContractSigner(new PmUser());
 		}
-
-		this.getManagedBean().setScLoa(scLoa);
 
 		this.getManagedBean().setContractSignerList(
 				awardResDTO.getContractSignerList());
