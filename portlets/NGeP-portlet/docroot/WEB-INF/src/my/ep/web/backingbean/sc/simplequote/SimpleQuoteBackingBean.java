@@ -427,6 +427,7 @@ public class SimpleQuoteBackingBean extends
 	public String simpleQuoteAction(Long docId, boolean panelItemFlag,
 			List<CmSupplierItem> compareSupplierItems) {
 		debugLogger("simpleQuoteAction");
+		boolean isGovtSeller = Boolean.FALSE;
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 				.getInstance().getServiceObject(
 						ModuleCodeConst.CATALOGUE_MANAGEMENT,
@@ -435,20 +436,24 @@ public class SimpleQuoteBackingBean extends
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IOrgProfileSO.class);
 		ScQuote scQuote = getManagedBean().getScQuote();
-		boolean isPanelItemAdded = false;
+		boolean isPanelItemAdded = Boolean.FALSE;
+		
 		if (scQuote == null) {
 			scQuote = new ScQuote();
+			
 		} else {
+			
 			if (docId != null && docId > 0) {
 				boolean isPanelOrGenItem = scQuote.isPanel();
 				if (isPanelOrGenItem) {
-					isPanelItemAdded = true;
+					isPanelItemAdded = Boolean.TRUE;
 					CtPanelItem panelItem = getTopPanelItem();
 					if(panelItem.getItemCategoryId()
 							.getParameterCode()
 							.equals(ParameterConst.SQ_PANEL_ITEM_GENERAL)) {
 						throw new EpException(MessageConst.ERROR_760160);
 					} 
+					
 				} else if (isPanelOrGenItem || panelItemFlag) {
 					throw new EpException(MessageConst.ERROR_760161);
 				}
@@ -456,34 +461,36 @@ public class SimpleQuoteBackingBean extends
 		}
 
 		if (docId != null && docId > 0) {
+			getManagedBean().setScQuote(scQuote);
 			// panel item
 			if (panelItemFlag) {
 				// check non contract item list
 				scQuote.setPanel(Boolean.TRUE);
-//				scQuote.setZonal(Boolean.FALSE);
-				boolean isGeneralOrSpecific = false;
-
+				boolean isGeneralOrSpecific = Boolean.FALSE;
+				
 				QuoteReqDTO reqDTO = new QuoteReqDTO();
 				reqDTO.setPanelItemId(docId);
 				QuoteResDTO resDTO = getQuoteSO().getPanelSupplierByPanelItem(
 						reqDTO);
 				CtPanelItem selectedPanelItem = resDTO.getCtPanelItem();
-				if (selectedPanelItem != null) {
+				
+				if (selectedPanelItem != null && selectedPanelItem.getItemCategoryId() != null) {
 					if (!isPanelItemAddable(selectedPanelItem)) {
 						throw new EpException(MessageConst.ERROR_760160);
 					}
+					
 					if (selectedPanelItem.getItemCategoryId()
 							.getParameterCode()
 							.equals(ParameterConst.SQ_PANEL_ITEM_GENERAL)) {
 						// panel item general
-						isGeneralOrSpecific = false;
+						isGeneralOrSpecific = Boolean.FALSE;
 					} else if (selectedPanelItem.getItemCategoryId()
 							.getParameterCode()
 							.equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {
 						// panel item specific
-						isGeneralOrSpecific = true;
+						isGeneralOrSpecific = Boolean.TRUE;
 					}
-					
+
 					boolean alreadyExists = checkItemExists(null, selectedPanelItem);
 					if (alreadyExists) {
 						String itemName = "";
@@ -491,26 +498,27 @@ public class SimpleQuoteBackingBean extends
 						if(requestItem != null) {
 							if (requestItem.getCmItem() != null) {
 								itemName = requestItem.getCmItem().getItemName();
-
 							} 
+							
 							if (selectedPanelItem.getItemCategoryId().getParameterCode()
 									.equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {
 								itemName = selectedPanelItem.getItemName();
 							}
 						}
+						throw new EpException(MessageConst.ERROR_700027, new String[] {itemName});
 						
-						throw new EpException(MessageConst.ERROR_700027,
-								new String[] {itemName, "" });
 					} else {
-						prepareQuestions(selectedPanelItem, null,
-								isGeneralOrSpecific);
+						prepareQuestions(selectedPanelItem, null, isGeneralOrSpecific);
 					}
+					
 					if(!isPanelItemAdded) {
+						
 						if (!isGeneralOrSpecific) {
 							// panel item general
 							scQuote.setTitle(selectedPanelItem
 									.getScRequestItem().getItemName());
 							getManagedBean().setPanelItemFlag(Boolean.TRUE);
+							
 						} else if (selectedPanelItem.getItemCategoryId()
 								.getParameterCode()
 								.equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {
@@ -519,52 +527,31 @@ public class SimpleQuoteBackingBean extends
 							getManagedBean().setNewableFlag(Boolean.FALSE);
 						}
 
-						if (selectedPanelItem.getPanelCoverageId() != null) {
-							// for panel zone
-							if (selectedPanelItem.getPanelCoverageId()
-									.getParameterCode()
-									.equals(ParameterConst.SQ_PANEL_ITEM_ZONE)) {
-								preparePanelZones(selectedPanelItem, scQuote);
-								zoneEvent();
+						// for panel zone
+						if (selectedPanelItem.getPanelCoverageId()
+								.getParameterCode()
+								.equals(ParameterConst.SQ_PANEL_ITEM_ZONE)) {
+							preparePanelZones(selectedPanelItem, scQuote);
+							zoneEvent();
 
-							} else {
-								// copy suppliers from compare screen to the panel
-								// item supplier list
-								if (selectedPanelItem.getCtPanelSuppliers() != null
-										&& selectedPanelItem.getCtPanelSuppliers()
-										.size() > 0) {
-									panelItemListener(
-											selectedPanelItem.getCtPanelSuppliers(),
-											scQuote);
-								}
-								// for checking govt.seller
-								if (selectedPanelItem != null
-										&& selectedPanelItem.getCtPanelSuppliers() != null
-										&& resDTO.getCtPanelItem()
-										.getCtPanelSuppliers().size() > 0) {
-									OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
-									profileReqDTO.setOrgProfileId(selectedPanelItem
-											.getCtPanelSuppliers().get(0)
-											.getSupplier().getSupplierId());
-									OrgProfileResDTO orgProfileResDTO = orgProfileSO
-											.retrieveOrgProfileByProfileId(profileReqDTO);
-									scQuote = checkGovtSeller(
-											orgProfileResDTO.getPmOrgProfile(),
-											scQuote);
-								}
+						} else {
+							// copy suppliers from compare screen to the panel
+							// item supplier list
+							if (selectedPanelItem.getCtPanelSuppliers() != null
+									&& selectedPanelItem.getCtPanelSuppliers().size() > 0) {
+								panelItemListener(selectedPanelItem.getCtPanelSuppliers(), scQuote);
 							}
 						}
 					}
-					// adding selected item to item List
 					
+					// adding selected item to item List
 					scQuote.setPanelItem(selectedPanelItem);
 					getManagedBean().getPanelItems().add(selectedPanelItem);
-
-					/*if (scQuote.isZonal()) {
-						zoneEvent();
-					}*/
 				}
-			} else { // non contract item and non panel item
+				
+			} else {
+				// non contract item and non panel item
+				PmOrgProfile pmOrgProfile = null;
 				CatalogueReqDTO catalogueReqDTO = new CatalogueReqDTO();
 				catalogueReqDTO.setSupplierItemId(docId);
 				CatalogueResDTO catalogueResDTO = catalogueSO
@@ -573,72 +560,78 @@ public class SimpleQuoteBackingBean extends
 						.getSupplierItem();
 
 				if (selectedSupplierItem != null) {
-
-					// for checking govt.seller
+					// For checking govt.seller
 					if (selectedSupplierItem.getSmSupplier() != null) {
 						OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
 						profileReqDTO.setOrgProfileId(selectedSupplierItem
 								.getSmSupplier().getSupplierId());
 						OrgProfileResDTO orgProfileResDTO = orgProfileSO
 								.retrieveOrgProfileByProfileId(profileReqDTO);
-						scQuote = checkGovtSeller(
-								orgProfileResDTO.getPmOrgProfile(), scQuote);
+						 pmOrgProfile = orgProfileResDTO.getPmOrgProfile();
+						 isGovtSeller = checkGovtSeller(pmOrgProfile, scQuote);
 					}
-					// copy all selected suppliers from the catalogue search
-					if (compareSupplierItems == null) {
-						catalogueReqDTO = new CatalogueReqDTO();
-						catalogueReqDTO
-								.setViewSearchBean(new CatalogueBackingBean()
-										.getManagedBean().getSearchDataModel()
-										.getSearchBean());
-						catalogueReqDTO.setSupplierItemId(selectedSupplierItem
-								.getSupplierItemId());
-						catalogueReqDTO.setExtensionCode(selectedSupplierItem
-								.getCmItem().getExtensionCode());
-						catalogueReqDTO.setUomId(selectedSupplierItem
-								.getPmUom().getUomId());
-						catalogueResDTO = catalogueSO
-								.getSuppliersItemsByExtensionCode(catalogueReqDTO);
-						List<SmSupplier> selectedSuppliers = getManagedBean()
-								.getCompareSuppliers();
-						for (CmSupplierItem supplierItem : catalogueResDTO
-								.getSupplierItemList()) {
-							if (supplierItem.getSmSupplier() != null) {
-								selectedSuppliers.add(supplierItem
-										.getSmSupplier());
-							}
-						}
-						selectedSuppliers.add(selectedSupplierItem
-								.getSmSupplier());
-						supplierListListener(selectedSuppliers, scQuote);
-					} else {
-						// copy suppliers from the compare screen
-						supplierListListener(
-								addSelectedSuppliers(compareSupplierItems,
-										selectedSupplierItem), scQuote);
-					}
+					
+					// govt seller
+					if(isGovtSeller){
+						List<PmOrgProfile> orgProfiles = new ArrayList<PmOrgProfile>();
+						orgProfiles.add(pmOrgProfile);
+						govtSellerListener(orgProfiles);
+						
+					} else{
+						// copy all selected suppliers from the catalogue search
+						if (compareSupplierItems == null) {
+							catalogueReqDTO = new CatalogueReqDTO();
+							catalogueReqDTO
+							.setViewSearchBean(new CatalogueBackingBean()
+							.getManagedBean().getSearchDataModel()
+							.getSearchBean());
+							catalogueReqDTO.setSupplierItemId(selectedSupplierItem
+									.getSupplierItemId());
+							catalogueReqDTO.setExtensionCode(selectedSupplierItem
+									.getCmItem().getExtensionCode());
+							catalogueReqDTO.setUomId(selectedSupplierItem
+									.getPmUom().getUomId());
+							catalogueResDTO = catalogueSO
+									.getSuppliersItemsByExtensionCode(catalogueReqDTO);
 
+							List<SmSupplier> selectedSuppliers = getManagedBean()
+									.getCompareSuppliers();
+							for (CmSupplierItem supplierItem : catalogueResDTO
+									.getSupplierItemList()) {
+								if (supplierItem.getSmSupplier() != null) {
+									selectedSuppliers.add(supplierItem
+											.getSmSupplier());
+								}
+							}
+							selectedSuppliers.add(selectedSupplierItem
+									.getSmSupplier());
+							supplierListListener(selectedSuppliers, scQuote);
+
+						} else {
+							// copy suppliers from the compare screen
+							supplierListListener(
+									addSelectedSuppliers(compareSupplierItems,
+											selectedSupplierItem), scQuote);
+						}
+					}
+					
 					List<CmSupplierItem> supplierItems = getManagedBean()
 							.getSupplierItems();
 					if (supplierItems == null) {
 						supplierItems = new ArrayList<CmSupplierItem>();
 					}
 
-					if (selectedSupplierItem != null) {
-
-						boolean alreadyExists = checkItemExists(selectedSupplierItem, null);
-						if (alreadyExists) {
-							throw new EpException(MessageConst.ERROR_700027,
-									new String[] {
-											selectedSupplierItem.getCmItem()
-													.getItemName(), "" });
-						} else {
-							supplierItems.add(selectedSupplierItem);
-							prepareQuestions(null, selectedSupplierItem,
-									Boolean.TRUE);
-						}
-						getManagedBean().setSupplierItems(supplierItems);
+					boolean alreadyExists = checkItemExists(selectedSupplierItem, null);
+					if (alreadyExists) {
+						throw new EpException(MessageConst.ERROR_700027,
+								new String[] {selectedSupplierItem.getCmItem().getItemName()});
+						
+					} else {
+						supplierItems.add(selectedSupplierItem);
+						prepareQuestions(null, selectedSupplierItem, Boolean.TRUE);
 					}
+					
+					getManagedBean().setSupplierItems(supplierItems);
 				}
 			}
 		} else {
@@ -649,9 +642,13 @@ public class SimpleQuoteBackingBean extends
 				prepareQuestions(null, null, Boolean.FALSE);
 			}
 		}
+		
 		// for procurement type drop down
-		scQuote = checkGovtSeller(null, scQuote);
-
+		if(null == getManagedBean().getProcurementTypes()){
+			getManagedBean().setProcurementTypes(
+					getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE));
+		}
+		
 		// proc type category
 		if (null == scQuote.getProcurementTypeCategory()) {
 			scQuote.setProcurementTypeCategory(new PmParameter());
@@ -676,13 +673,13 @@ public class SimpleQuoteBackingBean extends
 			workFlowStatuses.add(scWorkFlowStatus);
 			scQuote.setWorkflowStatuses(workFlowStatuses);
 		}
+		
 		// Initializing Remarks
 		scQuote.setRemarks(initializeRemarks(scQuote, null,
 				scQuote.getRemarks(), ScSQRemark.class));
 
 		scQuote.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
-		this.getManagedBean().setScQuote(scQuote);
-
+		
 		getManagedBean().setLocLevelDropdown(getLocationLevelDropdown());
 		// zone location level by default - district
 		if (getManagedBean().getLocationLevel() == null) {
@@ -694,6 +691,7 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setSupplierLocLevel(
 					ParameterConst.LOCATION_LEVEL_DISTRICT);
 		}
+		
 		// to get ptj
 		PmUser user = new FacesScopes().getUserSessionBean();
 		if (user != null) {
@@ -708,6 +706,7 @@ public class SimpleQuoteBackingBean extends
 						orgProfileResDTO.getOrgProfileList().get(0));
 			}
 		}
+		
 		// to get country id
 		CountryReqDTO reqDTO = new CountryReqDTO();
 		reqDTO.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
@@ -722,10 +721,11 @@ public class SimpleQuoteBackingBean extends
 		ptjLocality(ParameterConst.LOCATION_LEVEL_DISTRICT);
 		getManagedBean().setEditableFlag(Boolean.TRUE);
 		CatalogueBackingBean catalogueBackingBean = new CatalogueBackingBean();
-		catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(false);
+		catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(Boolean.FALSE);
+
 		return "simpleQuoteMain";
 	}
-	
+
 	/**
 	 * Get 
 	 * 
@@ -913,7 +913,6 @@ public class SimpleQuoteBackingBean extends
 							ctPanelZone.getCtPanelSuppliers(), scQuote,
 							tplSpecZoneDtl);
 				}
-
 			}
 
 			// for zonal
@@ -1139,9 +1138,7 @@ public class SimpleQuoteBackingBean extends
 	}
 
 	/**
-	 * Get parameter code select items by parameter type for radio buttons. if
-	 * govt. seller , enable G2G radio button only. if not govt. seller enable
-	 * Normal, ad Hoc and Emergency.
+	 * if govt. seller , enable G2G radio button only. if not govt. seller enable Normal
 	 * 
 	 * @param parameterType
 	 *            the parameter type
@@ -1149,24 +1146,36 @@ public class SimpleQuoteBackingBean extends
 	 *            the g2g seller
 	 * @return array of SelectItem
 	 */
-	private ScQuote checkGovtSeller(PmOrgProfile pmOrgProfile, ScQuote scQuote) {
+	private boolean checkGovtSeller(PmOrgProfile pmOrgProfile, ScQuote scQuote) {
+		boolean isGovtSeller = Boolean.FALSE;
 		PmParameter pmParameter = new PmParameter();
+		if (pmOrgProfile != null && pmOrgProfile.isGovtSeller()) {
+			isGovtSeller = Boolean.TRUE;
+		} 
 		// check supplier is government seller or not
 		if(null == scQuote.getProcurementType()){
-			if (pmOrgProfile != null && pmOrgProfile.isGovtSeller()) {
+			if(isGovtSeller){
 				pmParameter.setParameterCode(ParameterConst.PROC_TYPE_G2G);
 				scQuote.setProcurementType(pmParameter);
-
-			} else {
+			} else{
 				pmParameter.setParameterCode(ParameterConst.PROC_TYPE_NORMAL);
 				scQuote.setProcurementType(pmParameter);
 			}
+
+		} else{
+
+			if(isGovtSeller){
+				if(!scQuote.getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_G2G)){
+					throw new EpException("Already added Normal or Adhoc supplier,  can't add G2G Supplier");
+				} 
+
+			} else{
+				if(scQuote.getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_G2G)){
+					throw new EpException("Already added G2G supplier , can't add normal Supplier");
+				}
+			}
 		}
-
-		getManagedBean().setProcurementTypes(
-				getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE));
-
-		return scQuote;
+		return isGovtSeller;
 	}
 
 	/**
@@ -4053,7 +4062,6 @@ public class SimpleQuoteBackingBean extends
 
 				if (getManagedBean().getSupplierList().isEmpty()) {
 					supplierList.add(quoteSupplier);
-					getManagedBean().setSupplierList(supplierList);
 
 				} else {
 					List<Long> supplierIds = new ArrayList<Long>();
@@ -4065,7 +4073,6 @@ public class SimpleQuoteBackingBean extends
 					if (supplierIds.size() > 0) {
 						if (!supplierIds.contains(supplier.getSupplierId())) {
 							supplierList.add(quoteSupplier);
-							getManagedBean().setSupplierList(supplierList);
 
 						} else {
 							// throw new EpException(MessageConst.ERROR_700027,
@@ -4074,6 +4081,7 @@ public class SimpleQuoteBackingBean extends
 					}
 				}
 			}
+			getManagedBean().setSupplierList(supplierList);
 		}
 	}
 
@@ -4096,12 +4104,11 @@ public class SimpleQuoteBackingBean extends
 				ScBusinessNatureQuoteCriteria natureQuoteCriteria = new ScBusinessNatureQuoteCriteria();
 				natureQuoteCriteria.setPmBusinessNature(busiNature);
 				natureQuoteCriteria.setQuote(getManagedBean().getScQuote());
+				
 				if (getManagedBean().getBusinessNatureCriterias() == null
 						|| getManagedBean().getBusinessNatureCriterias()
 								.isEmpty()) {
 					natureQuoteCriterias.add(natureQuoteCriteria);
-					getManagedBean().setBusinessNatureCriterias(
-							natureQuoteCriterias);
 
 				} else {
 					List<Long> busNatureIds = new ArrayList<Long>();
@@ -4114,8 +4121,6 @@ public class SimpleQuoteBackingBean extends
 						if (!busNatureIds.contains(busiNature
 								.getBusinessNatureId())) {
 							natureQuoteCriterias.add(natureQuoteCriteria);
-							getManagedBean().setBusinessNatureCriterias(
-									natureQuoteCriterias);
 						} else {
 							throw new EpException(
 									MessageConst.ERROR_700027,
@@ -4131,6 +4136,8 @@ public class SimpleQuoteBackingBean extends
 					}
 				}
 			}
+			getManagedBean().setBusinessNatureCriterias(
+					natureQuoteCriterias);
 		}
 	}
 
@@ -4152,17 +4159,38 @@ public class SimpleQuoteBackingBean extends
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTSupplierSO.class);
 			QTSupplierReqDTO reqDTO = new QTSupplierReqDTO();
-
+			getManagedBean().setGovtSellers(govtSuppliers);
 			for (PmOrgProfile orgProfile : orgProfiles) {
-				reqDTO.setSupplierId(orgProfile.getOrgProfileId());
-
 				ScQuoteSupplier scQuoteSupplier = new ScQuoteSupplier();
+				reqDTO.setSupplierId(orgProfile.getOrgProfileId());
 				scQuoteSupplier.setSmSupplier(qtSupplierSO
 						.retrieveGovSellerById(reqDTO).getSmSupplier());
 				scQuoteSupplier.setQuote(getManagedBean().getScQuote());
-				govtSuppliers.add(scQuoteSupplier);
+				
+				if(getManagedBean().getGovtSellers() == null || getManagedBean().getGovtSellers().isEmpty()){
+					govtSuppliers.add(scQuoteSupplier);
+					
+				} else{
+					List<Long> govtSellerIds = new ArrayList<Long>();
+					for (ScQuoteSupplier govtSeller : getManagedBean().getGovtSellers() ) {
+						govtSellerIds.add(govtSeller.getSmSupplier().getSupplierId());
+					}
+					
+					if(!govtSellerIds.contains(scQuoteSupplier.getSmSupplier().getSupplierId())){
+						govtSuppliers.add(scQuoteSupplier);
+						
+					} else {
+						throw new EpException(
+								MessageConst.ERROR_700027,
+								new String[] { ResourceBundleUtils
+										.getMessage(
+												scQuoteSupplier.getSmSupplier().getCompanyName(),
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												new FacesScopes()
+														.getUserLocale()) });
+					}
+				}
 			}
-			getManagedBean().setGovtSellers(govtSuppliers);
 		}
 	}
 
@@ -4190,7 +4218,6 @@ public class SimpleQuoteBackingBean extends
 
 				if (panelSuppliers.isEmpty()) {
 					panelSuppliers.add(scQuoteSupplier);
-					getManagedBean().setPanelSuppliers(panelSuppliers);
 
 				} else {
 					List<Long> supplierIds = new ArrayList<Long>();
@@ -4203,7 +4230,6 @@ public class SimpleQuoteBackingBean extends
 						if (!supplierIds.contains(scQuoteSupplier
 								.getSmSupplier().getSupplierId())) {
 							panelSuppliers.add(scQuoteSupplier);
-							getManagedBean().setPanelSuppliers(panelSuppliers);
 
 						} else {
 							// throw new EpException(MessageConst.ERROR_700027,
@@ -4212,6 +4238,7 @@ public class SimpleQuoteBackingBean extends
 					}
 				}
 			}
+			getManagedBean().setPanelSuppliers(panelSuppliers);
 		}
 	}
 
