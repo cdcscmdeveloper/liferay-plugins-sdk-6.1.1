@@ -15,14 +15,18 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
+import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.dto.fl.FulfilmentReqDTO;
+import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.role.RoleReqDTO;
@@ -31,6 +35,8 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
+import my.ep.dto.sc.SourcingIntegrationReqDTO;
+import my.ep.dto.sc.SourcingIntegrationResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
@@ -1000,5 +1006,71 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	
 	public void resetGroupUsers(){
 		getManagedBean().setUserGroups(new ArrayList<PmUserGroupUser>());
+	}
+	
+	public void userGroupStatusChange() {
+		logger.info("userGroupStatusChange");
+		if (this.getManagedBean().getUserGroup()!= null) {
+			int status = this.getManagedBean().getUserGroup()
+					.getRecordStatusFlg();
+			if (DbValueConst.RECORD_STATUS_SUSPENDED  == status
+					&& isAnyPendingTaskForGroup(getManagedBean().getUserGroup().getUserGroupId())){
+				getManagedBean().getUserGroup().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				throw new EpException("this usergroup has active task");
+			}
+		}
+	}
+	
+	private boolean isAnyPendingTaskForGroup(Long groupId) {
+		logger.info("isAnyPendingTaskForGroup");
+		boolean anyPendingTask = false;
+
+		IFulfilmentSO fulfilmentSO = null;
+		FulfilmentReqDTO reqDTO = null;
+		FulfilmentResDTO resDTO = null;
+		ISourcingIntegrationSO sourcingIntegrationSO = null;
+		SourcingIntegrationReqDTO sourcingReqDTO = null;
+		SourcingIntegrationResDTO sourcingResDTO = null;
+
+		try {
+			if (groupId != null) {
+				if(RoleCode.FL_APPROVER.value().equals(getManagedBean().getUserGroup().getRoleCode())){
+					fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+									IFulfilmentSO.class);
+
+					reqDTO = new FulfilmentReqDTO();
+					reqDTO.setGroupId(groupId);
+					// check user group active in fl
+					resDTO = fulfilmentSO.isUserGroupActiveInFulfilment(reqDTO);
+					if(resDTO.isHasActiveTransaction()){
+						anyPendingTask = true;
+					}else{
+						// check user group user active in fl
+						resDTO = fulfilmentSO.isUserGroupUserActiveInFulfilment(reqDTO);
+						if(resDTO.isHasActiveTransaction()){
+								anyPendingTask = true;
+						}
+					}						
+					
+				}else if(RoleCode.RN_APPROVER.value().equals(getManagedBean().getUserGroup().getRoleCode())){
+					sourcingIntegrationSO = (ISourcingIntegrationSO) BusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+									ISourcingIntegrationSO.class);
+					sourcingReqDTO = new SourcingIntegrationReqDTO();
+					sourcingReqDTO.setUserGroupId(groupId);					
+					sourcingResDTO = sourcingIntegrationSO.isUserGroupActiveInDP(sourcingReqDTO);
+					if(sourcingResDTO.isUserGroupActive()){
+						anyPendingTask = true;
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			fulfilmentSO = null;
+		}
+		return anyPendingTask;
 	}
 }
