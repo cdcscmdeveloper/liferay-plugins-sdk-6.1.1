@@ -9,6 +9,10 @@
 	<h:panelGroup id="shrHolderPanGroup">
 		<p:panel header="#{lbl['lbl.sm.shrHldrInfo.panHdr']}"
 			toggleable="true">
+			
+			<ui:param name="lblShareholderInstruction" value="lbl.sm.shareholder.composistion.#{backingBean.managedBean.smSupplier.businessType}" />
+			<h:outputText styleClass="instruction" value="#{lbl[lblShareholderInstruction]}" escape="false" />
+			
 			<table style="width: 350px">
 				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 					<tr>
