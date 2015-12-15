@@ -635,7 +635,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 * @param  outcome  the user action on this agreement. The validation will
 	 * 				    invoke base on the action
 	 */
-	private void validateAgreement(String outcome) {	
+	private void validateAgreement(String outcome) {
 		
 		for(CtAgreementContent agContent : getManagedBean().getCtAgreement().getAgreementContents()){
 			if(agContent.getContentType().getParameterCode().equalsIgnoreCase(ParameterConst.AGREEMENT_USER_UPLOAD_DOC)){
@@ -755,6 +755,40 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				&& getManagedBean().getApproverModel().getTarget().size() == 0) {
 			//Approver is mandatory for document submission. Please select at least one approver.
 			throw new EpException(MessageConst.ERROR_750010);
+		}
+		
+		// CT Approver cannot approve the finalist agreement if:-
+		// -Performance bond not complete
+		// -FD Update/FD Creation/Change Bank process still in process. 
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) 
+				&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FINALIST_AGREEMENT_HT_NAME)) {
+			
+			IAgreementSO agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
+			ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
+			reqDTO.setContractId(getManagedBean().getCtContract().getContractId());
+			
+			ContractAgreementResDTO resDTO = agreementSO.validatePendingFinalistApproval(reqDTO);
+			
+			String agreementTypeStr = "lbl.ct.agreement";
+			if (getManagedBean().getAgreementType().equalsIgnoreCase(ContractConst.SUPPLEMENTAL_AGREEMENT)) {
+				agreementTypeStr = "lbl.ct.supplemental.agreement";
+			}
+			
+			// Validation for pending process
+			if (resDTO.getPendingProcessType() != null) {
+				throw new EpException(MessageConst.ERROR_750042, 
+						new String[]{ResourceBundleUtils.getMessage(agreementTypeStr,
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()),
+										getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, resDTO.getPendingProcessType())});
+			}
+			
+			// Validation for completion of performance bond
+			if (!resDTO.isBondComplete()) {
+				throw new EpException(MessageConst.ERROR_750041, 
+						new String[]{ResourceBundleUtils.getMessage(agreementTypeStr, 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}			
 		}
 	}
 	
@@ -1071,7 +1105,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 
 		ContractReqDTO ctReqDTO = new ContractReqDTO();
 		ctReqDTO.setContractVerId(contractVerId);
-    	ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+    	ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
     	ctReqDTO.setViewOnly(true);
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
