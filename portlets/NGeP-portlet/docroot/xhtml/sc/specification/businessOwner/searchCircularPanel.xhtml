@@ -34,9 +34,11 @@
 		</table>
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.search']}"
+				styleClass="BtnSpacing"
 				action="#{specificationBackingBean.searchCircularList}"
 				update="circularList,panelItemGroupList" />
 			<p:commandButton value="#{lbl['lbl.btn.reset']}"
+				styleClass="BtnSpacing"
 				action="#{specificationBackingBean.resetCircular}"
 				update="circular,panelItemGroupList,circularList" resetValues="true"
 				partialSubmit="true" process="@this" />
