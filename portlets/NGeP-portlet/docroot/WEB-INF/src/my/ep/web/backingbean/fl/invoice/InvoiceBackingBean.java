@@ -1616,10 +1616,40 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 				return null;
 			}
-
-			
-		}
-		else{
+		}else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+			if(hasGovtSellerRole()){
+				reqDTO.setOutcome(outcome);
+				reqDTO.setInvoice(getManagedBean().getInvoice());
+				FulfilmentReqDTO reqDTO2 = invoiceSO.validationCheck(reqDTO);
+				getManagedBean().setInvoice(reqDTO2.getInvoice());
+				// set action
+				getManagedBean().setButtonAction(outcome);
+				getManagedBean().setAutoUpdate(Boolean.FALSE);	
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+				return null;
+			}else{
+				reqDTO.setOutcome(outcome);
+				reqDTO.setInvoice(getManagedBean().getInvoice());
+				FulfilmentReqDTO reqDTO2 = invoiceSO.validationCheck(reqDTO);
+				getManagedBean().setInvoice(reqDTO2.getInvoice());
+				getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+				// set action
+				getManagedBean().setButtonAction(outcome);
+				getManagedBean().setAutoUpdate(Boolean.FALSE);	
+				RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+				return null;
+			}
+		}else if((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) && isFlFulfilmentApprover()){
+			reqDTO.setOutcome(outcome);
+			reqDTO.setInvoice(getManagedBean().getInvoice());
+			FulfilmentReqDTO reqDTO2 = invoiceSO.validationCheck(reqDTO);
+			getManagedBean().setInvoice(reqDTO2.getInvoice());
+			// set action
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);	
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			return null;
+		}else{
 			return submitAction(outcome);
 		}
 	}
@@ -1644,11 +1674,10 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				sb.append(getFacesScopes().getUserSessionBean().getUserId());//USERID
 				sb.append(getInvoiceAmt());//Inv AMT
 				getManagedBean().setTextBeforeSign(sb.toString());
-				
-				updateSpkiDigiSignData(getManagedBean().getPmDigiSign(), ParameterConst.DOCTYPE_DELIVERY_ORDER, 
-						getManagedBean().getInvoice().getFlFulfilmentOrder().getFulfilmentOrderId(), getManagedBean().getInvoice().getFlFulfilmentOrder().getDocNo(), 
-						getManagedBean().getTextBeforeSign());
 			}
+			updateSpkiDigiSignData(getManagedBean().getPmDigiSign(), ParameterConst.DOCTYPE_DELIVERY_ORDER, 
+					getManagedBean().getInvoice().getFlFulfilmentOrder().getFulfilmentOrderId(), getManagedBean().getInvoice().getFlFulfilmentOrder().getDocNo(), 
+					getManagedBean().getTextBeforeSign());
 		}
 		log.info("######## INVOICE SLA start : "+System.currentTimeMillis()+" : "+new Date());
 		return submitAction(getManagedBean().getButtonAction());
@@ -1698,6 +1727,16 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 //			return Boolean.TRUE;
 //		}
 		return Boolean.FALSE;
+	}
+	
+	/**
+	 * Checks if is fl fulfilment approver.
+	 *
+	 * @return true, if is fl fulfilment approver
+	 */
+	public boolean isFlFulfilmentApprover() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.FL_APPROVER.value());
 	}
 	
 	/**

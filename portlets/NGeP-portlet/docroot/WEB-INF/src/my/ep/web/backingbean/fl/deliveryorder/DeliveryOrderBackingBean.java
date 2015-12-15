@@ -858,8 +858,26 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 				return null;
 			}
-			
-		}else{
+		}else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+			if(hasGovtSellerRole()){
+				getManagedBean().setButtonAction(outcome);
+				getManagedBean().setAutoUpdate(Boolean.FALSE);
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+				return null;
+			}else{
+				getManagedBean().setButtonAction(outcome);
+				getManagedBean().setAutoUpdate(Boolean.FALSE);
+				getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+				RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+				return null;
+			}
+		}else if((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) && isFlFulfilmentApprover()){
+				getManagedBean().setButtonAction(outcome);
+				getManagedBean().setAutoUpdate(Boolean.FALSE);
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+				return null;
+		}
+		else{
 			return createDeliveryOrder(outcome);
 		}
 	}
@@ -992,6 +1010,17 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 //		}
 		return Boolean.FALSE;
 	}
+	
+	/**
+	 * Checks if is fl fulfilment approver.
+	 *
+	 * @return true, if is fl fulfilment approver
+	 */
+	public boolean isFlFulfilmentApprover() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.FL_APPROVER.value());
+	}
+	
 	
 	/**
 	 * The Class UnitOfMeasurementPagingDataModel.
