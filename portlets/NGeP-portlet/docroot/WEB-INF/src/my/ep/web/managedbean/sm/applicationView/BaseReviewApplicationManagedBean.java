@@ -117,6 +117,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private String facilityType;
 	private String selBankBranchName;
 	private String chequeSignPersonnelName;
+	private String bankBranchName;
 	private String applicationNoParam;
 	private String supplierBusinessTypeVal;
 	private String selectedMachineryPurchaseMethod;
@@ -1170,6 +1171,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setHqGst(SmGstSupplier hqGst) {
 		this.hqGst = hqGst;
+	}
+
+	public String getBankBranchName() {
+		return bankBranchName;
+	}
+
+	public void setBankBranchName(String bankBranchName) {
+		this.bankBranchName = bankBranchName;
 	}
 
 }

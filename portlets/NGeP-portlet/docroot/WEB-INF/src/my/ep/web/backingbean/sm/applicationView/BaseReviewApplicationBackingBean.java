@@ -67,6 +67,7 @@ import my.ep.persistence.entity.sm.SmStaffTotal;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.sm.SmSupplierBranchBank;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.logging.LogKey;
@@ -182,7 +183,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			} else {
 				SmCommonUtil.redirectToPage(
 						SmApplicationUtil.getApplicationErrorPage(),
-						MessageConst.INFO_721212,null);
+						MessageConst.INFO_721212, null);
 			}
 		}
 
@@ -863,8 +864,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		StringBuffer sb = new StringBuffer();
 		int i = 0;
 
-		if (shareBankBean.getSmChequeSignatories() != null
-				&& !shareBankBean.getSmChequeSignatories().isEmpty()) {
+		if (!SmCommonUtil.isCollectionEmpty(shareBankBean
+				.getSmChequeSignatories())) {
 			if (shareBankBean.getSmChequeSignatories().size() == 1) {
 				sb.append(shareBankBean.getSmChequeSignatories().get(0)
 						.getSmPersonnel().getName());
@@ -872,16 +873,34 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				for (SmChequeSignatory smChequeSignatoryTmp : shareBankBean
 						.getSmChequeSignatories()) {
 					i++;
-					sb.append(
-							i
-									+ ") "
-									+ smChequeSignatoryTmp.getSmPersonnel()
-											.getName()).append("<br />");
+					sb.append(i + ") ");
+					sb.append(smChequeSignatoryTmp.getSmPersonnel().getName());
+					sb.append("<br />");
 				}
 			}
 		}
 
 		getManagedBean().setChequeSignPersonnelName(sb.toString());
+
+		sb = new StringBuffer();
+		i = 0;
+		if (!SmCommonUtil.isCollectionEmpty(shareBankBean
+				.getSmSupplierBranchBanks())) {
+			if (shareBankBean.getSmSupplierBranchBanks().size() == 1) {
+				sb.append(shareBankBean.getSmSupplierBranchBanks().get(0)
+						.getSmSupplierBranch().getBranchName());
+			} else {
+				for (SmSupplierBranchBank brTmp : shareBankBean
+						.getSmSupplierBranchBanks()) {
+					i++;
+					sb.append(i + ") ");
+					sb.append(brTmp.getSmSupplierBranch().getBranchName());
+					sb.append("<br />");
+				}
+			}
+		}
+
+		getManagedBean().setBankBranchName(sb.toString());
 
 		if (shareBankBean.getSmSupplierBranch() != null
 				&& shareBankBean.getSmSupplierBranch().getSupplierBranchId() != null) {
@@ -1879,7 +1898,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 		setSupplierProfileOrHistoryUrl(baseUrl, baseUrlLabel, smAppl
 				.getSmSupplier().getSupplierId().toString());
-		SmCommonUtil.redirectToPage(basePage, "",null);
+		SmCommonUtil.redirectToPage(basePage, "", null);
 	}
 
 	/**

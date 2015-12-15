@@ -141,6 +141,7 @@ import my.ep.persistence.entity.sm.SmStaffTotal;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.sm.SmSupplierBranchBank;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierSystem;
@@ -4251,6 +4252,58 @@ public class SmApplicationUtil {
 	}
 
 	/**
+	 * Get branch bank from list by branch ID and bank ID
+	 * 
+	 * @param Long
+	 *            branchId
+	 * @param Long
+	 *            bankId
+	 * @param List
+	 *            <SmSupplierBranchBank> list
+	 * @return SmSupplierBranchBank
+	 */
+	public static SmSupplierBranchBank getBranchBankFromListByBranchIdAndBankId(
+			Long branchId, Long bankId, List<SmSupplierBranchBank> list) {
+		SmSupplierBranchBank retVal = null;
+		if (!SmCommonUtil.isCollectionEmpty(list)) {
+			for (SmSupplierBranchBank tmp : list) {
+				if (tmp.getSmSupplierBank() != null
+						&& tmp.getSmSupplierBank().getSupplierBankId()
+								.equals(bankId)
+						&& tmp.getSmSupplierBranch() != null
+						&& tmp.getSmSupplierBranch().getSupplierBranchId()
+								.equals(branchId)) {
+					retVal = tmp;
+					break;
+				}
+			}
+		}
+		return retVal;
+	}
+
+	/**
+	 * Check if branch id exist branch id list
+	 * 
+	 * @param Long
+	 *            branchId
+	 * @param Long
+	 *            [] branchIds
+	 * @return boolean
+	 */
+	public static boolean isBranchIdExistInList(Long branchId, Long[] branchIds) {
+		boolean retVal = false;
+		if (branchIds != null && branchIds.length > 0 && branchId != null) {
+			for (Long brId : branchIds) {
+				if (branchId.equals(brId)) {
+					retVal = true;
+					break;
+				}
+			}
+		}
+		return retVal;
+	}
+
+	/**
 	 * Gets the active mof account for supplier based on the supplier type.
 	 * 
 	 * @param smMofAccounts
@@ -4660,9 +4713,11 @@ public class SmApplicationUtil {
 					&& cat.getPmCategoryL3().getCategoryTypeCode() != null
 					&& cat.getPmCategoryL3().getCategoryTypeCode()
 							.getParameterId() != null
-					&& cat.getRecordStatusFlg() != null
-					&& cat.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+					&& (cat.getRecordStatusFlg().compareTo(
+							SupplierManagementConst.PENDING_ACT_STATUS) == 0 || cat
+							.getRecordStatusFlg()
+							.compareTo(
+									SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0)) {
 				String facType = "";
 				if (cat.getPmCategoryL3().getFacilityType() != null) {
 					facType = cat.getPmCategoryL3().getFacilityType();
@@ -4693,20 +4748,27 @@ public class SmApplicationUtil {
 			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
 				if (StringUtils.isNotBlank(cat.getPmCategoryL3()
 						.getFacilityType())) {
-					catTypeList.add(cat.getPmCategoryL3().getFacilityType());
+					if (cat.getRecordStatusFlg().compareTo(
+							SupplierManagementConst.PENDING_ACT_STATUS) == 0
+							|| cat.getRecordStatusFlg()
+									.compareTo(
+											SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
+						catTypeList
+								.add(cat.getPmCategoryL3().getFacilityType());
+					}
 				}
 			}
 		}
-		if (!SmCommonUtil.isCollectionEmpty(catTypeList)) {
-			for (Iterator<SmFacility> facIt = appl.getSmFacilities().iterator(); facIt
-					.hasNext();) {
-				SmFacility fac = facIt.next();
-				if (StringUtils.isNotBlank(fac.getFacilityType())
-						&& !fac.getFacilityType()
-								.equals(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE)
-						&& !fac.getFacilityType()
-								.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)
-						&& !catTypeList.contains(fac.getFacilityType())) {
+		for (Iterator<SmFacility> facIt = appl.getSmFacilities().iterator(); facIt
+				.hasNext();) {
+			SmFacility fac = facIt.next();
+			if (StringUtils.isNotBlank(fac.getFacilityType())
+					&& !fac.getFacilityType()
+							.equals(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE)
+					&& !fac.getFacilityType()
+							.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
+				if (SmCommonUtil.isCollectionEmpty(catTypeList)
+						|| !catTypeList.contains(fac.getFacilityType())) {
 					facIt.remove();
 				}
 			}
@@ -5780,6 +5842,37 @@ public class SmApplicationUtil {
 			br.getGst().setSmGstSupplierDocs(new ArrayList<SmGstSupplierDoc>());
 		}
 		SmApplicationUtil.initGstSuppDocs(br.getGst());
+	}
+
+	/**
+	 * Validate if added associate branch already reach maximum bank account for
+	 * payment purpose
+	 * 
+	 * @param SmSupplierBranch
+	 *            br
+	 */
+	public static void validateBankBranchLimit(SmSupplierBranch br) {
+		int paymntBankCount = 0;
+		if (!SmCommonUtil.isCollectionEmpty(br.getSmSupplierBranchBanks())) {
+			for (SmSupplierBranchBank bankBranch : br
+					.getSmSupplierBranchBanks()) {
+				if (bankBranch.getSmSupplierBank().getAccountPurpose() != null
+						&& (bankBranch.getSmSupplierBank().getAccountPurpose()
+								.equals("B") || bankBranch.getSmSupplierBank()
+								.getAccountPurpose().equals("P"))) {
+					paymntBankCount++;
+				}
+			}
+			// Branch already reached maximum bank accounts
+			// allowed
+			if (paymntBankCount > SmRuleHelper.getInstance()
+					.getMaxPaymentBankForEachBranch()) {
+				throw new EpException(MessageConst.ERROR_722620, new String[] {
+						br.getBranchName(),
+						SmRuleHelper.getInstance()
+								.getMaxPaymentBankForEachBranch() + "" });
+			}
+		}
 	}
 
 	/**
