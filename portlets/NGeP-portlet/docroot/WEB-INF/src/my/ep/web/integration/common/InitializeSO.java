@@ -106,7 +106,7 @@ public class InitializeSO {
 			.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 					IRegistrationSO.class);
 	protected IRemoteClientSO remoteClientSO = BusinessDelegate.getInstance()
-			.getServiceObject("mdb", IRemoteClientSO.class);
+			.getServiceObject(ModuleCodeConst.MDB, IRemoteClientSO.class);
 
 	public InitializeSO() {
 		super();
