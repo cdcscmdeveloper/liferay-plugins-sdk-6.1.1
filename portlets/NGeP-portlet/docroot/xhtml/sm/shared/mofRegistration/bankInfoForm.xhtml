@@ -468,22 +468,36 @@
 						</p:outputPanel></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.assocBran']}"
-							id="banBranchLbl"
-							rendered="#{backingBean.managedBean.selectedBank.accountPurpose eq 'P' or backingBean.managedBean.selectedBank.accountPurpose eq 'B'}" />
+					<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.is.associate.to.hq']}" /></td>
+					<td><p:selectOneRadio disabled="#{backingBean.managedBean.selectedBank.accountPurpose eq 'R'}"
+							value="#{backingBean.managedBean.selectedBank.forHqFlg}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
+							<p:ajax event="change" partialSubmit="true" process="@this" />
+						</p:selectOneRadio>
 					</td>
-					<td><p:selectOneMenu showCheckbox="true" label="#{lbl['lbl.sm.bankDtls.assocBran']}"
-							style="width: 207px;margin-bottom: 5px;" id="banBranchVal"
-							rendered="#{backingBean.managedBean.selectedBank.accountPurpose eq 'P' or backingBean.managedBean.selectedBank.accountPurpose eq 'B'}"
-							value="#{backingBean.managedBean.selBankBranchId}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems
-								value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
-								var="supBean" itemLabel="#{supBean.branchName}"
-								itemValue="#{supBean.supplierBranchId}" />
-						</p:selectOneMenu> <p:message id="banBranchValMsg" for="banBranchVal"
-							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
+				<p:outputPanel rendered="#{backingBean.managedBean.selectedBank.accountPurpose eq 'P' 
+					or backingBean.managedBean.selectedBank.accountPurpose eq 'B'}" >
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.assocBran']}"
+								id="banBranchLbl" />
+						</td>
+						<td>
+							<p:selectManyMenu showCheckbox="true"
+								required="false"
+								label="#{lbl['lbl.sm.bankDtls.assocBran']}" id="banBranchVal"
+								value="#{backingBean.managedBean.selectedBankBranchIds}"
+								style="height:100px;width: 200px;">
+								<f:selectItems
+									value="#{backingBean.managedBean.smAppl.smSupplierBranches}" var="br"
+									itemLabel="#{br.branchName}" itemValue="#{br.supplierBranchId}" />
+							</p:selectManyMenu>
+							<p:message id="banBranchValMsg" for="banBranchVal"
+								showSummary="true" showDetail="false" display="icon" />
+						</td>
+					</tr>
+				</p:outputPanel>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.bankDtls.chequesign.tnc']}" /> <p:outputLabel

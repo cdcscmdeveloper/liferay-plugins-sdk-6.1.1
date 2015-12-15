@@ -501,11 +501,11 @@
 					<div align="right">
 						<p:commandButton value="#{lbl['lbl.sm.button.add']}"
 							process="@this" partialSubmit="true" onstart="blockWidget.show()"
-							oncomplete="blockWidget.hide()"
+							oncomplete="blockWidget.hide()" disabled="#{backingBean.managedBean.disAllowOwnerEdit}"
 							action="#{backingBean.assignNewShareHolder(SupplierManagementConst.PERSONNEL_TYPE_STAFF)}"
 							update=":form" />
 						<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
-							process="persInfoDtPanel" partialSubmit="true"
+							process="persInfoDtPanel" partialSubmit="true" disabled="#{backingBean.managedBean.disAllowOwnerEdit}"
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 							action="#{backingBean.deleteSelectedShareHolders(SupplierManagementConst.PERSONNEL_TYPE_STAFF)}"
 							update=":form:tt:personDt , :form:tt:stfSummaryPan " />

@@ -185,6 +185,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String personnelInfoHeader;
 	// Bank Info
 	private Long[] chequeSingPerId;
+	private Long[] selectedBankBranchIds;
 	private Long selBankBranchId;
 	private SmSupplierBank selectedBank;
 	private SmSupplierBank selectedSignatoryBankAcct;
@@ -3089,5 +3090,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setOthersSystem(boolean othersSystem) {
 		this.othersSystem = othersSystem;
+	}
+
+	public Long[] getSelectedBankBranchIds() {
+		return selectedBankBranchIds;
+	}
+
+	public void setSelectedBankBranchIds(Long[] selectedBankBranchIds) {
+		this.selectedBankBranchIds = selectedBankBranchIds;
 	}
 }

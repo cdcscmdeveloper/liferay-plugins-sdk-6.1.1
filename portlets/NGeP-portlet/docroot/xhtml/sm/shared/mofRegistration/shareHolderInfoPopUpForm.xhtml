@@ -338,6 +338,7 @@
 						<f:selectItems var="select"
 							value="#{backingBean.managedBean.raceSelectItems}"
 							itemLabel="select.label" itemValue="select.value" />
+						<p:ajax event="change" process="@this"/>
 					</p:selectOneMenu> 
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges

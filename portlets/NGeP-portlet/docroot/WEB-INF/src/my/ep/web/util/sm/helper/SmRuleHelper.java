@@ -93,6 +93,10 @@ public class SmRuleHelper {
 		return 1;
 	}
 
+	public int getMaxPaymentBankForEachBranch() {
+		return 35;
+	}
+
 	public BigDecimal getProcessingFee() {
 		return SmServiceLookup.getSmRuleSO().retrieveProcessingFeeRate()
 				.getProcessingFeeRate();

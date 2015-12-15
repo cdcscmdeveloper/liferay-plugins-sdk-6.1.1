@@ -122,11 +122,11 @@
 					<p:commandButton value="#{lbl['lbl.sm.button.add']}"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						action="#{backingBean.assignNewShareHolder(SupplierManagementConst.PERSONNEL_TYPE_EQUITY)}"
-						update=":form" />
+						update=":form" disabled="#{backingBean.managedBean.disAllowOwnerEdit}"/>
 					<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						action="#{backingBean.deleteSelectedShareHolders(SupplierManagementConst.PERSONNEL_TYPE_EQUITY)}"
-						update=":form:tt:shrPerDt" />
+						update=":form:tt:shrPerDt" disabled="#{backingBean.managedBean.disAllowOwnerEdit}"/>
 				</div>
 				<br />
 				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
