@@ -17,10 +17,13 @@
 	</style>	
 	
 	 <p:messages id="supplierFinalization" showDetail="true" autoUpdate="true" closable="true" severity="error,info" />
-	 
 		
 	 <ui:param name="isOnlineBiddingEndorseMeeting" 
 			   value="#{'M' eq suppFinalBiddingBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse}"/>
+	 
+	 <ui:param name="validityDaysExpiredQt"
+		     	  value="#{suppFinalBiddingBackingBean.checkProposalValidityDateReach(
+		     				suppFinalBiddingBackingBean.managedBean.scQt.proposalValidityEndDate)}" />			   
 				  	 
 	 <ac:gpkiPopup textBeforeSign="#{suppFinalBiddingBackingBean.textBeforeSign}"
 		   postSignAction="#{suppFinalBiddingBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
@@ -42,15 +45,14 @@
 				value="#{suppFinalBiddingBackingBean.managedBean.outComes}">
 				<ui:param name="buttonLabel"
 					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-				<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
-					styleClass="ui-button"
-					action="#{suppFinalBiddingBackingBean.submitBiddingEndorsement(bpmAction)}" />
+				<p:commandButton value="#{lbl[buttonLabel]}" update="@form" styleClass="ui-button"
+					action="#{suppFinalBiddingBackingBean.submitBiddingEndorsement(bpmAction)}" 
+					rendered="#{validityDaysExpiredQt}"/>
 			</ui:repeat>
 
 		</div>
 
-		<ui:include
-			src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/suppFinalizationHeader.xhtml"></ui:include>
+		<ui:include src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/suppFinalizationHeader.xhtml"></ui:include>
 
 		<p:tabMenu activeIndex="#{suppFinalBiddingBackingBean.managedBean.onlineBiddingActiveIndex}">
 			<p:menuitem value="#{lbl['lbl.sc.preparation']}"
