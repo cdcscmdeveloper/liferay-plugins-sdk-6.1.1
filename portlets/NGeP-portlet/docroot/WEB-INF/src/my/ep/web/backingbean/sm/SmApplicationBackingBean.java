@@ -4463,19 +4463,17 @@ public class SmApplicationBackingBean extends
 				.getCompanyBasicGst());
 		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
 				.getSelectedBranch().getGst());
-		if (getManagedBean().isSupplierUser()) {
-			SmApplicationUtil.getInstance()
-					.removePendingApprovedCategoryIfNotValid(
-							getManagedBean().getSmAppl(),
-							getManagedBean().getBasicCompanyFacility()
-									.getFacilityType());
-			SmApplicationUtil.getInstance()
-					.removeFacilitiesNotInTheSameCategoryFacType(
-							getManagedBean().getSmAppl());
-			SmApplicationUtil.getInstance()
-					.removeTravellingSoftwareIfNotApplicable(
-							getManagedBean().getSmAppl());
-		}
+		SmApplicationUtil.getInstance()
+				.removePendingApprovedCategoryIfNotValid(
+						getManagedBean().getSmAppl(),
+						getManagedBean().getBasicCompanyFacility()
+								.getFacilityType());
+		SmApplicationUtil.getInstance()
+				.removeFacilitiesNotInTheSameCategoryFacType(
+						getManagedBean().getSmAppl());
+		SmApplicationUtil.getInstance()
+				.removeTravellingSoftwareIfNotApplicable(
+						getManagedBean().getSmAppl());
 		try {
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 			reqDto.setSmAppl(this.getManagedBean().getSmAppl());
@@ -6485,19 +6483,18 @@ public class SmApplicationBackingBean extends
 					.getCompanyBasicGst());
 			SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
 					.getSelectedBranch().getGst());
-			if (getManagedBean().isSupplierUser()) {
-				SmApplicationUtil.getInstance()
-						.removePendingApprovedCategoryIfNotValid(
-								getManagedBean().getSmAppl(),
-								getManagedBean().getBasicCompanyFacility()
-										.getFacilityType());
-				SmApplicationUtil.getInstance()
-						.removeFacilitiesNotInTheSameCategoryFacType(
-								getManagedBean().getSmAppl());
-				SmApplicationUtil.getInstance()
-						.removeTravellingSoftwareIfNotApplicable(
-								getManagedBean().getSmAppl());
-			}
+			SmApplicationUtil.getInstance()
+					.removePendingApprovedCategoryIfNotValid(
+							getManagedBean().getSmAppl(),
+							getManagedBean().getBasicCompanyFacility()
+									.getFacilityType());
+			SmApplicationUtil.getInstance()
+					.removeFacilitiesNotInTheSameCategoryFacType(
+							getManagedBean().getSmAppl());
+			SmApplicationUtil.getInstance()
+					.removeTravellingSoftwareIfNotApplicable(
+							getManagedBean().getSmAppl());
+
 			reqDTO.setCompanyBasicGst(getManagedBean().getCompanyBasicGst());
 			reqDTO.setBranchGst(getManagedBean().getSelectedBranch().getGst());
 			reqDTO.setSameAsHq(getManagedBean().getSelectedBranch()
@@ -7041,6 +7038,10 @@ public class SmApplicationBackingBean extends
 								ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 					setApplPmStatus(SupplierManagementConst.PM_STATUS_APPROVED_BY_APPROVER);
 				} else {
+					// set SME Status
+					SmApplicationUtil
+							.setSmeStatus(getManagedBean().getSmAppl());
+
 					if (pmStatId != null) {
 						for (PmStatusDesc desc : getManagedBean()
 								.getRegStatusDescList()) {

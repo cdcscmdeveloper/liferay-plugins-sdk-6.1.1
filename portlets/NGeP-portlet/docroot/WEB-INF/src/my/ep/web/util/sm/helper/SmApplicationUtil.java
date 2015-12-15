@@ -4805,6 +4805,85 @@ public class SmApplicationUtil {
 	}
 
 	/**
+	 * Set SME status for supplier application
+	 * 
+	 * @param SmAppl
+	 *            appl
+	 */
+	public static void setSmeStatus(SmAppl appl) {
+		BigDecimal total = BigDecimal.ZERO;
+		String smeStatus = SupplierManagementConst.SME_STATUS_NONE_SME;
+		List<SmSupplierCategory> catList = appl.getSmSupplierCategories();
+
+		// categoryCodeL3 = 99
+		boolean isCatCode99 = false;
+		if (!SmCommonUtil.isCollectionEmpty(catList)) {
+			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
+				if (StringUtils.isNotBlank(cat.getPmCategoryL3()
+						.getCategoryL3Code())
+						&& cat.getPmCategoryL3().getCategoryL3Code()
+								.equals("99")) {
+					if (cat.getRecordStatusFlg().compareTo(
+							SupplierManagementConst.PENDING_ACT_STATUS) == 0
+							|| cat.getRecordStatusFlg()
+									.compareTo(
+											SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
+						isCatCode99 = true;
+						break;
+					}
+				}
+			}
+		}
+
+		if (isCatCode99) {
+
+			PmParameter annualRev = retrievePmParameterById(appl
+					.getSmCompanyBasic().getAnnualRevenue());
+
+			// 1)SME Manufacturing
+			// revenue <=50M
+			if (annualRev != null && annualRev.getParameterCode() != null
+					&& !annualRev.getParameterCode().equals("100000000")
+					&& !annualRev.getParameterCode().equals("100000001")) {
+				smeStatus = SupplierManagementConst.SME_STATUS_MANUFACTURING;
+			}
+			// staff total <=200
+			if (!SmCommonUtil.isCollectionEmpty(appl.getSmStaffTotals())) {
+				for (SmStaffTotal staffTotal : appl.getSmStaffTotals()) {
+					total = total.add(staffTotal.getTotalBumi());
+					total = total.add(staffTotal.getTotalForeigner());
+					total = total.add(staffTotal.getTotalNonBumi());
+				}
+				if (total.compareTo(new BigDecimal(200)) != 1) {
+					smeStatus = SupplierManagementConst.SME_STATUS_MANUFACTURING;
+				}
+			}
+
+			// 2)SME Service (on hold because not in the parameter list)
+			// revenue<=20M
+		}
+
+		else {
+			// 2)SME Service
+			// staff total <=75
+			if (!SmCommonUtil.isCollectionEmpty(appl.getSmStaffTotals())) {
+				for (SmStaffTotal staffTotal : appl.getSmStaffTotals()) {
+					total = total.add(staffTotal.getTotalBumi());
+					total = total.add(staffTotal.getTotalForeigner());
+					total = total.add(staffTotal.getTotalNonBumi());
+				}
+				if (total.compareTo(new BigDecimal(75)) != 1) {
+					smeStatus = smeStatus
+							.equals(SupplierManagementConst.SME_STATUS_MANUFACTURING) ? SupplierManagementConst.SME_STATUS_BOTH
+							: SupplierManagementConst.SME_STATUS_SERVICES;
+				}
+			}
+		}
+
+		appl.setSmeStatus(smeStatus);
+	}
+
+	/**
 	 * Checks if personnel is created in basic.
 	 * 
 	 * @param smPersonnel
