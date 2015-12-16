@@ -24,19 +24,19 @@
 									value="#{lbl['lbl.sc.title']}" /></td>
 							<td colspan="3"><p:inputText
 									value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.qtTitle}"
-									style="width:650px;" maxlength="100" /></td>
+									style="width:680px;" maxlength="100" /></td>
 						</tr>
 						<tr>
 							<td style="width: 165px;"><p:outputLabel
 									value="#{lbl['lbl.sc.qtn.no']}" /></td>
 							<td style="width: 285px;"><p:inputText
 									value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.qtNo}"
-									style="width:210px;" maxlength="21" /></td>
+									style="width:232px;" maxlength="21" /></td>
 							<td style="width: 165px;"><p:outputLabel
 									value="#{lbl['lbl.sc.procurement.mode']}" /></td>
 							<td style="width: 285px;"><p:selectOneMenu
 									value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.procurementMode}"
-									style="width: 210px;margin-bottom: 5px;">
+									style="width: 240px;margin-bottom: 5px;">
 									<f:selectItems
 										value="#{evaluationMeetingBackingBean.procurementModeDropdownValues}" />
 								</p:selectOneMenu></td>
@@ -106,7 +106,7 @@
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
 							<td><p:selectOneMenu
-									style="width: 210px;margin-bottom: 5px;"
+									style="width: 240px;margin-bottom: 5px;"
 									value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.qtStatus}">
 									<f:selectItems
 										value="#{evaluationMeetingBackingBean.getStatusDropdownValues('SC', 'QT')}"></f:selectItems>
