@@ -32,6 +32,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.ReactivateSupplierVO;
 
@@ -60,7 +61,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		initIdentificationTypes();
 		initCountries();
 		initStatest();
-		SmCommonUtil.redirectToPage("forceReplaceAdmin.xhtml", "",null);
+		SmCommonUtil.redirectToPage("forceReplaceAdmin.xhtml", "", null);
 	}
 
 	/**
@@ -186,13 +187,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 			for (SmPersonnel smPersonnel : latestActivePersonnels) {
 				if (smPersonnel.getIdentificationNo() != null
 						&& StringUtils.isNotBlank(smPersonnel
-								.getIdentificationNo())
-						&& smPersonnel.getEpRole() != null
-						&& StringUtils.isNotBlank(smPersonnel.getEpRole())) {
-
-					if (smPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) {
-						throw new EpException(MessageConst.ERROR_722610);
-					}
+								.getIdentificationNo())) {
 
 					if (smPersonnel.getSmAppl() != null) {
 						// already mof
@@ -212,11 +207,14 @@ public class ForceReplaceSuppAdminBackingBean extends
 							}
 						}
 					}
+					// set old admin
 					if (smPersonnel.getIdentificationNo().equalsIgnoreCase(
 							getManagedBean().getReactivateBasic()
 									.getIdentificationNo())) {
 						getManagedBean().setOldAdmin(smPersonnel);
-					} else if (smPersonnel.getIdentificationNo()
+					}
+					// set new admin
+					else if (smPersonnel.getIdentificationNo()
 							.equalsIgnoreCase(
 									getManagedBean().getReactivateBasic()
 											.getNewIdentificationNo())) {
@@ -236,12 +234,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 		if (getManagedBean().isExistingUser()
 				&& getManagedBean().getNewAdmin() != null) {
 
-			// check if new admin is not activated is not allowed
-			if (getManagedBean().getNewAdmin().getEpRole() == null
-					|| StringUtils.isBlank(getManagedBean().getNewAdmin()
-							.getEpRole())
-					|| getManagedBean().getNewAdmin().getPmUser() == null
-					|| getManagedBean().getNewAdmin().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
+			// check if new admin had email
+			if (StringUtils.isBlank(getManagedBean().getNewAdmin().getEmail())) {
 				throw new EpException(MessageConst.ERROR_722596);
 			}
 
@@ -265,7 +259,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 		if (!getManagedBean().isExistingUser()) {
 			initDefaultNewAdmin();
 			SmCommonUtil.redirectToPage(
-					"/xhtml/sm/forcereplaceadmin/addNewAdminInfo.xhtml", "",null);
+					"/xhtml/sm/forcereplaceadmin/addNewAdminInfo.xhtml", "",
+					null);
 		}
 		// replace with existing personnel
 		else {
@@ -450,9 +445,18 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 */
 	private void redirectToSuccessPage(PersonnelResDTO resDto) {
 		if (resDto.isSuccessful()) {
-			SmCommonUtil.redirectToPage(
-					SmApplicationUtil.getApplicationErrorPage(),
-					MessageConst.INFO_721027,null);
+			if (getManagedBean().getNewAdmin().getPmUser() == null) {
+				SmCommonUtil.redirectToPage(
+						SmApplicationUtil.getApplicationErrorPage(),
+						MessageConst.INFO_721037, new String[] {
+								getManagedBean().getNewAdmin().getEmail(),
+								SmRuleHelper.getInstance()
+										.getEmailActivationDays() + "" });
+			} else {
+				SmCommonUtil.redirectToPage(
+						SmApplicationUtil.getApplicationErrorPage(),
+						MessageConst.INFO_721036, null);
+			}
 		} else {
 			throw new EpException(MessageConst.ERROR_721113);
 		}
@@ -477,7 +481,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 */
 	public void viewTnc() {
 		SmCommonUtil.redirectToPage(
-				"/xhtml/sm/forcereplaceadmin/tncDetails.xhtml", "",null);
+				"/xhtml/sm/forcereplaceadmin/tncDetails.xhtml", "", null);
 	}
 
 }
