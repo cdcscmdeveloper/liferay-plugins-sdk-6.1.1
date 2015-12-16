@@ -134,6 +134,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean itemCancelled;
 	private Boolean qtRefinalized;
 	private boolean refinalizedAndBiddingAward;
+	private Boolean hasAtleastTwoQualifiedSuppliersByPackage;
+	private Boolean hasAtleastTwoQualifiedSuppliersByItem;
 	
 	private ScQtEvaluationResultDtl shortlistedSupplier;
 	private ScQtFinalization scQtFinalization;
@@ -818,6 +820,38 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setRefinalizedAndBiddingAward(
 						boolean refinalizedAndBiddingAward) {
 		this.refinalizedAndBiddingAward = refinalizedAndBiddingAward;
+	}
+
+	/**
+	 * @return the hasAtleastTwoQualifiedSuppliersByPackage
+	 */
+	public Boolean getHasAtleastTwoQualifiedSuppliersByPackage() {
+		return hasAtleastTwoQualifiedSuppliersByPackage;
+	}
+
+	/**
+	 * @param hasAtleastTwoQualifiedSuppliersByPackage 
+	 * 				the hasAtleastTwoQualifiedSuppliersByPackage to set
+	 */
+	public void setHasAtleastTwoQualifiedSuppliersByPackage(
+			Boolean hasAtleastTwoQualifiedSuppliersByPackage) {
+		this.hasAtleastTwoQualifiedSuppliersByPackage = hasAtleastTwoQualifiedSuppliersByPackage;
+	}
+
+	/**
+	 * @return the hasAtleastTwoQualifiedSuppliersByItem
+	 */
+	public Boolean getHasAtleastTwoQualifiedSuppliersByItem() {
+		return hasAtleastTwoQualifiedSuppliersByItem;
+	}
+
+	/**
+	 * @param hasAtleastTwoQualifiedSuppliersByItem 
+	 * 				the hasAtleastTwoQualifiedSuppliersByItem to set
+	 */
+	public void setHasAtleastTwoQualifiedSuppliersByItem(
+			Boolean hasAtleastTwoQualifiedSuppliersByItem) {
+		this.hasAtleastTwoQualifiedSuppliersByItem = hasAtleastTwoQualifiedSuppliersByItem;
 	}
 
 	/**
