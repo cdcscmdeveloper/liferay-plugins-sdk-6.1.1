@@ -103,8 +103,7 @@
 							value="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.newIdentificationNo}"
 							size="35" maxlength="12">
 							<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-							<p:ajax event="blur" process="@this" partialSubmit="true" update="verificationPanel" 
-								listener="#{forceReplaceSuppAdminBackingBean.onBlurNewAdminIdentificationNo}"/>
+							<p:ajax event="blur" process="@this" partialSubmit="true"/>
 						</p:inputText>
 						<p:message id="newAdminIcNoMsg" for="newAdminIcNo"
 								showSummary="true" showDetail="false" display="icon" />
@@ -115,6 +114,7 @@
 							rendered="#{forceReplaceSuppAdminBackingBean.managedBean.identificationType.parameterCode ne 'I'}"
 							value="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.newIdentificationNo}"
 							size="35" maxlength="15">
+							<p:ajax event="blur" process="@this" partialSubmit="true"/>
 						</p:inputText>
 						<p:message id="newAdminPasptNoMsg" for="newAdminPasptNo"
 							showSummary="true" showDetail="false" display="icon" />
@@ -122,6 +122,9 @@
 				</td>
 			</tr>
 			<p:outputPanel rendered="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.showEmailInput}">
+				<tr>
+					<td colspan="2"><h:outputText value="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.email.msg']}" styleClass="instruction" /></td>
+				</tr>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.email']}" /> <p:outputLabel

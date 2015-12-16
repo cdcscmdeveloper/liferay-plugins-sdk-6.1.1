@@ -69,23 +69,29 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * redirect to new personnel record page
 	 */
 	public void submit() {
-		getManagedBean().setExistingUser(false);
-		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
-		reqDTO.setRegNo(getManagedBean().getReactivateBasic().getRegNo());
-		reqDTO.setEstDate(getManagedBean().getReactivateBasic()
-				.getEstablishDate());
-		getManagedBean().setSmSupplier(
-				SmServiceLookup
-						.getSupplierSearchSO()
-						.retrieveSuppProfileAndPersonnelsByBussRegNoAndEstDate(
-								reqDTO).getSmSupplier());
+		if (getManagedBean().getOldAdmin() == null
+				|| getManagedBean().getOldAdmin().getPersonnelId() == null) {
+			getManagedBean().setExistingUser(false);
+			SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+			reqDTO.setRegNo(getManagedBean().getReactivateBasic().getRegNo());
+			reqDTO.setEstDate(getManagedBean().getReactivateBasic()
+					.getEstablishDate());
+			getManagedBean()
+					.setSmSupplier(
+							SmServiceLookup
+									.getSupplierSearchSO()
+									.retrieveSuppProfileAndPersonnelsByBussRegNoAndEstDate(
+											reqDTO).getSmSupplier());
 
-		// Company not exist
-		if (getManagedBean().getSmSupplier() == null
-				|| getManagedBean().getSmSupplier().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
-			throw new EpException(MessageConst.ERROR_722593);
+			// Company not exist
+			if (getManagedBean().getSmSupplier() == null
+					|| getManagedBean().getSmSupplier().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
+				throw new EpException(MessageConst.ERROR_722593);
+			} else {
+				validate();
+				executeDecision();
+			}
 		} else {
-			validate();
 			executeDecision();
 		}
 	}
@@ -150,21 +156,14 @@ public class ForceReplaceSuppAdminBackingBean extends
 	}
 
 	/**
-	 * Show or hide email input when on blur identification no
+	 * Show or hide email input after click submit
 	 */
-	public void onBlurNewAdminIdentificationNo() {
+	private void setShowOrHideEmail() {
 		getManagedBean().getReactivateBasic().setShowEmailInput(false);
-		SmPersonnel newAdmin = new SmPersonnel();
-		newAdmin.setIdentificationNo(getManagedBean().getReactivateBasic()
-				.getNewIdentificationNo());
-		newAdmin = (SmPersonnel) SmCommonUtil.getInstance()
-				.getObjectByPropertiesFromList(
-						newAdmin,
-						getManagedBean().getSmSupplier().getSmAppl()
-								.getSmPersonnels(), "identificationNo");
-		if (newAdmin != null
-				&& newAdmin.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
-				&& StringUtils.isBlank(newAdmin.getEmail())) {
+		if (getManagedBean().getNewAdmin() != null
+				&& getManagedBean().getNewAdmin().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
+				&& StringUtils.isBlank(getManagedBean().getNewAdmin()
+						.getEmail())) {
 			getManagedBean().getReactivateBasic().setShowEmailInput(true);
 		}
 	}
@@ -283,7 +282,10 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
 		// replace with existing personnel
 		else {
-			RequestContext.getCurrentInstance().execute("tncDialog.show()");
+			setShowOrHideEmail();
+			if (!getManagedBean().getReactivateBasic().isShowEmailInput()) {
+				RequestContext.getCurrentInstance().execute("tncDialog.show()");
+			}
 		}
 	}
 
