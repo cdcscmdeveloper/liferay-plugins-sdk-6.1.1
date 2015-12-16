@@ -1,3 +1,6 @@
+/**
+ * Copyright © 2013 Archisoft. All rights reserved.
+ */
 package my.ep.web.managedbean.ct.circular.panel.group.item;
 
 import javax.faces.bean.ManagedBean;

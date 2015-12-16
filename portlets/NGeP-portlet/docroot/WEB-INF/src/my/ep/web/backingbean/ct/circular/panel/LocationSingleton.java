@@ -1,5 +1,13 @@
+/**
+ * Copyright © 2013 Archisoft. All rights reserved.
+ */
 package my.ep.web.backingbean.ct.circular.panel;
-
+/**
+ * Singleton For Location Zone
+ * 
+ * @author Alam
+ * @since 2/6/2014
+ */
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
