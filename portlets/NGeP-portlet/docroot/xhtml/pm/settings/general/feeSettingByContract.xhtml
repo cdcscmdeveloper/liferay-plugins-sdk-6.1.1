@@ -60,10 +60,11 @@
 		</p:column>
 		<p:column width="10%">
 			<f:facet name="header">
+			<h:outputText value="*" styleClass="mandatory" />
 								#{lbl['lbl.pm.as.effdate']}
 		                		</f:facet>
 <!--  disabled ="#{feeObj.recordStatusFlg == 0 or (feeObj.effDate le DateUtils.getCurrentDateWithoutTime())}" -->
-			<p:calendar showOn="button" id="contractFeeeffDateId" 
+			<p:calendar showOn="button" id="contractFeeeffDateId" required="true" 
 				mindate="#{feeObj.defaultEffDate}" style="width :45px;"
 				label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"

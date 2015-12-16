@@ -61,12 +61,12 @@
 		</p:column>
 		<p:column width="10%">
 			<f:facet name="header">
+			<h:outputText value="*" styleClass="mandatory" />
 								#{lbl['lbl.pm.as.effdate']}
 		                		</f:facet>
    <!-- disabled="#{feeObj.isG2G == 1 or feeObj.recordStatusFlg == 0 or (!feeObj.brandNew and (feeObj.effDate le DateUtils.getCurrentDateWithoutTime()))}" -->
 			<p:calendar showOn="button" id="FeeOrgeffDateId"
-				style="width :40px;"
-				mindate="#{ruleCatalogueBackingBean.managedBean.tomorrow}"
+				style="width :40px;" required="true"
 				label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 				value="#{feeObj.effDate}">
