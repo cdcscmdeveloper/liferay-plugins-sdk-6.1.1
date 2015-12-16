@@ -29,9 +29,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<tr>
 				<th>
 					<p:outputLabel value="#{lbl['lbl.pm.supplier.zone']}"/>
+						<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
-					<p:selectOneMenu id="somSuppZone" styleClass="ppDropDownWidthM" label="#{lbl['lbl.pm.supplier.zone']}"
+					<p:selectOneMenu id="somSuppZone" styleClass="ppDropDownWidthM" label="#{lbl['lbl.pm.supplier.zone']}" required="true"
 						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.pmZone}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
 						<f:selectItems  value="#{supportDocBackingBean.supplierZoneOptions()}"  
