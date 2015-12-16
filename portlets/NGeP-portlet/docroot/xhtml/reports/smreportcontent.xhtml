@@ -16,23 +16,22 @@
 							test="#{smReportBackingBean.managedBean.rptGenBean.collectorGovRegistrationChkView}">
 							<p:outputLabel value="*" styleClass="mandatory"
 								style="margin-right:-160px;" />
-							<p:outputLabel value="#{lbl['lbl.rpt.smPaymentType']}"
+							<p:outputLabel value="#{lbl['lbl.rpt.smPaymentType']}" 
 								style="width:173px;" />
-							<p:selectManyCheckbox id="mofRegistrationChk" required="#{reportBackingBean.getRequiredStatus()}"
+							<p:selectManyCheckbox id="mofRegistrationChk" 
 								style="margin-top: 6px"
-								value="#{reportBackingBean.smMofRegistrationFeeList}"
-								label="#{lbl['lbl.rpt.smPaymentType']}">
+								value="#{reportBackingBean.smMofRegistrationFeeList}" >								
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.smMofRegistrationFee']}"
 									itemValue="M" />
 							</p:selectManyCheckbox>							
-							<p:selectManyCheckbox id="processingFeeChk"
+							<p:selectManyCheckbox id="processingFeeChk" 
 								style="margin-top: 6px" 
 								value="#{reportBackingBean.smProcessingFeeList}">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.smProcessingFee']}"
 									itemValue="P" />
 							</p:selectManyCheckbox>
 							
-							<p:selectManyCheckbox id="softCertificateFee"
+							<p:selectManyCheckbox id="softCertificateFee" 
 								style="margin-top: 6px" 
 								value="#{reportBackingBean.smSoftCertificateFeeList}">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.smSoftCertificateFee']}"
@@ -46,9 +45,8 @@
 								style="margin-right:35px;" />
 							<p:outputLabel value="#{lbl['lbl.rpt.smPaymentType']}"
 								style="margin-left:-81px;" />
-							<p:selectManyCheckbox id="softCertificateCDCFee" required="#{reportBackingBean.getRequiredStatus()}"
-								value="#{reportBackingBean.smSoftCertificateFeeList}"
-								label="#{lbl['lbl.rpt.smPaymentType']}">
+							<p:selectManyCheckbox id="softCertificateCDCFee" 
+								value="#{reportBackingBean.smSoftCertificateFeeList}" >								
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.smSoftCertificateFee']}"
 									itemValue="S" />
 							</p:selectManyCheckbox>
@@ -1041,7 +1039,7 @@
 										<td style="width: 84%"><p:selectOneMenu
 												label="#{lbl['lbl.rpt.reportType']}" id="ReportType"
 												value="#{reportBackingBean.smRTReportType}"
-												style="margin-top:5px;width:300px;">
+												style="margin-top:5px;width:300px;">											
 												<f:selectItem
 													itemLabel="#{lbl['lbl.rpt.rpttypetarikhresit']}"
 													itemValue="#{lbl['lbl.rpt.rpttypetarikhresit']}"></f:selectItem>
@@ -1049,10 +1047,10 @@
 													itemLabel="#{lbl['lbl.rpt.rpttypetarikhtransaksi']}"
 													itemValue="#{lbl['lbl.rpt.rpttypetarikhtransaksi']}"></f:selectItem>
 												<p:ajax event="change" 
-													listener="#{reportBackingBean.changeRTReportType}" 
-													process="@form" partialSubmit="true" update="@all" />
+													listener="#{reportBackingBean.changeRTReportType}"  
+													process="@this" partialSubmit="true" update="@form" />
 											</p:selectOneMenu></td>
-										<td><p:message id="smReportTypeMsg" for="ReportType"
+										<td><p:message id="smReportTypeMsg" for="ReportType" 
 												display="icon" showDetail="false" /></td>
 									</tr>
 								</table>
@@ -2578,11 +2576,11 @@
 				<TR>
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryReceiptDateView}">
-						<TD><p:outputLabel value="#{lbl['lbl.rpt.receiptdatefrom']}"
-								style="width:205px;" /> <p:outputLabel value="*"
+						<TD><p:outputLabel value="#{lbl['lbl.rpt.receiptdatefrom']}" 
+								style="width:203px;" /> <p:outputLabel value="*"
 								style="margin-right:-87px" styleClass="mandatory" /></TD>
 
-						<TD><p:calendar showOn="button" navigator="true"
+						<TD><p:calendar showOn="button" navigator="true" 
 								required="true" label="#{lbl['lbl.rpt.receiptdatefrom']}"
 								display="inline" readonlyInput="true"
 								value="#{reportBackingBean.fromDate}"
