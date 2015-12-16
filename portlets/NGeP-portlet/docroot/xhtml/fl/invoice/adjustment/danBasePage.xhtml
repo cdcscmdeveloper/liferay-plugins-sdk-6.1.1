@@ -6,7 +6,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="resourceSection">
 	</ui:define>
@@ -28,8 +29,13 @@
 				</td>
 			</tr>
 		</table>
-		<p:messages id="messages" showDetail="true" autoUpdate="#{danBackingBean.managedBean.autoUpdate}"
-			closable="true" severity="error, info" />
+		<ac:gpkiPopup 
+			textBeforeSign="#{danBackingBean.managedBean.textBeforeSign}"
+			postSignAction="#{danBackingBean.preSubmitAction(gpkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{danBackingBean.enableAutoUpdate()}" />
+		<f:event listener="#{danBackingBean.preRenderView}" type="preRenderView" />
+		<p:messages id="messages" showDetail="true" autoUpdate="#{danBackingBean.managedBean.autoUpdate}" showSummary="false" closable="true" severity="error, info" />
+			
 
 		<table style="width: 100%;">
 			<tr>
@@ -42,9 +48,9 @@
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction" value="#{danBackingBean.managedBean.outComes}">
 						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-						<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
-							styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							action="#{danBackingBean.submitAction(bpmAction)}" />
+						<p:commandButton value="#{lbl[buttonLabel]}" update="@form" styleClass="ui-button" 
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							action="#{danBackingBean.gpkiSignAction(bpmAction)}"/>
 					</ui:repeat></td>
 				<c:if
 					test='#{danBackingBean.managedBean.buttonVal eq "View" and !danBackingBean.managedBean.isHyperLinkPage()}'>
