@@ -1,3 +1,6 @@
+/**
+ * Copyright © 2013 Archisoft. All rights reserved.
+ */
 package my.ep.web.backingbean.ct.amendment;
 
 import java.io.ByteArrayInputStream;
@@ -85,10 +88,16 @@ public class AmendmentStreamContent {
 		}
 	}
 
+	/**
+	 * @return the loaStreamContent
+	 */
 	public StreamedContent getLoaStreamContent() {
 		return loaStreamContent;
 	}
 
+	/**
+	 * @param loaStreamContent the loaStreamContent to set
+	 */
 	public void setLoaStreamContent(StreamedContent loaStreamContent) {
 		this.loaStreamContent = loaStreamContent;
 	}
