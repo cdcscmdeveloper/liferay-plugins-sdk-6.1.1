@@ -2013,6 +2013,10 @@ public class SmApplicationBackingBean extends
 			validSave = SmApplicationUtil.validateCategoriesBeforeSave(
 					validSave, getManagedBean(), currentTab);
 			break;
+		case SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY:
+			validSave = SmApplicationUtil.validateFacilityPanel(
+					getManagedBean(), currentTab, validSave);
+			break;
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS:
 			if ((getManagedBean().isPoUser() || getManagedBean()
 					.isApproverUser()) && currentTab < outputTab) {
@@ -4464,16 +4468,7 @@ public class SmApplicationBackingBean extends
 		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
 				.getSelectedBranch().getGst());
 		SmApplicationUtil.getInstance()
-				.removePendingApprovedCategoryIfNotValid(
-						getManagedBean().getSmAppl(),
-						getManagedBean().getBasicCompanyFacility()
-								.getFacilityType());
-		SmApplicationUtil.getInstance()
-				.removeFacilitiesNotInTheSameCategoryFacType(
-						getManagedBean().getSmAppl());
-		SmApplicationUtil.getInstance()
-				.removeTravellingSoftwareIfNotApplicable(
-						getManagedBean().getSmAppl());
+				.removeNotApplicableInformationBeforeSave(getManagedBean());
 		try {
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 			reqDto.setSmAppl(this.getManagedBean().getSmAppl());
@@ -6484,16 +6479,7 @@ public class SmApplicationBackingBean extends
 			SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
 					.getSelectedBranch().getGst());
 			SmApplicationUtil.getInstance()
-					.removePendingApprovedCategoryIfNotValid(
-							getManagedBean().getSmAppl(),
-							getManagedBean().getBasicCompanyFacility()
-									.getFacilityType());
-			SmApplicationUtil.getInstance()
-					.removeFacilitiesNotInTheSameCategoryFacType(
-							getManagedBean().getSmAppl());
-			SmApplicationUtil.getInstance()
-					.removeTravellingSoftwareIfNotApplicable(
-							getManagedBean().getSmAppl());
+					.removeNotApplicableInformationBeforeSave(getManagedBean());
 
 			reqDTO.setCompanyBasicGst(getManagedBean().getCompanyBasicGst());
 			reqDTO.setBranchGst(getManagedBean().getSelectedBranch().getGst());

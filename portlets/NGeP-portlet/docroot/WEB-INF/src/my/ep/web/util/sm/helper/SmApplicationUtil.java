@@ -1538,6 +1538,62 @@ public class SmApplicationUtil {
 	}
 
 	/**
+	 * Validate at least one facility is required if the facility panel is
+	 * available
+	 * 
+	 * @param SmApplicationManagedBean
+	 *            bean
+	 */
+	public static boolean validateFacilityPanel(SmApplicationManagedBean bean,
+			int currentTab, boolean validSave) {
+		if (bean.isShowFactoryPanel()) {
+			validSave = validFacility(validSave, currentTab, bean,
+					SupplierManagementConst.SM_FACILITY_TYPE_FACTORY,
+					"lbl.sm.facility.type.factory");
+
+		}
+		if (bean.isShowDockyardPanel()) {
+			validSave = validFacility(validSave, currentTab, bean,
+					SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD,
+					"lbl.sm.facility.type.dockyard");
+		}
+		if (bean.isShowWorkShopPanel()) {
+			validSave = validFacility(validSave, currentTab, bean,
+					SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP,
+					"lbl.sm.facility.type.workshop");
+		}
+		if (bean.isShowStorePanel()) {
+			validSave = validFacility(validSave, currentTab, bean,
+					SupplierManagementConst.SM_FACILITY_TYPE_STORE,
+					"lbl.sm.facility.type.store");
+		}
+		return validSave;
+	}
+
+	private static boolean validFacility(boolean valid, int currentTab,
+			SmApplicationManagedBean bean, String facType, String facTypeLabel) {
+		List<SmFacility> facList = bean.getSmAppl().getSmFacilities();
+		boolean facilityExist = false;
+		if (!SmCommonUtil.isCollectionEmpty(facList)) {
+			for (SmFacility fac : facList) {
+				if (fac.getFacilityType() != null
+						&& fac.getFacilityType().equals(facType)) {
+					facilityExist = true;
+					break;
+				}
+			}
+			if (!facilityExist) {
+				valid = false;
+				setNavigationBackToCurrentPage(currentTab, bean);
+				throw new EpException(MessageConst.ERROR_722621,
+						new String[] { SmCommonUtil.getMessage(facTypeLabel,
+								null) });
+			}
+		}
+		return valid;
+	}
+
+	/**
 	 * Validate equity owners or share holding personnel's amount total
 	 * calculation and percentage summary.
 	 * 
@@ -4700,6 +4756,22 @@ public class SmApplicationUtil {
 	}
 
 	/**
+	 * Remove application information that already not valid after changes been
+	 * made before save
+	 * 
+	 * @param SmApplicationManagedBean
+	 *            bean
+	 */
+	public void removeNotApplicableInformationBeforeSave(
+			SmApplicationManagedBean bean) {
+		removePendingApprovedCategoryIfNotValid(bean.getSmAppl(), bean
+				.getBasicCompanyFacility().getFacilityType());
+		removeFacilitiesNotInTheSameCategoryFacType(bean.getSmAppl());
+		removeTravellingSoftwareIfNotApplicable(bean.getSmAppl());
+		removeEquipmentIfNotApplicable(bean.getSmAppl());
+	}
+
+	/**
 	 * Remove travelling software if related category code is not picked
 	 * 
 	 * @param SmAppl
@@ -4737,6 +4809,20 @@ public class SmApplicationUtil {
 	}
 
 	/**
+	 * Remove equipment information from application if category type is normal
+	 * 
+	 * @param SmAppl
+	 *            appl
+	 */
+	public void removeEquipmentIfNotApplicable(SmAppl appl) {
+		if (appl.getApplCategoryType() != null
+				&& appl.getApplCategoryType().equals("N")) {
+			appl.setSmManufacturingDtls(new ArrayList<SmManufacturingDtl>());
+			appl.setSmMachineDtls(new ArrayList<SmMachineDtl>());
+		}
+	}
+
+	/**
 	 * Remove facility that dont have selected supplier category facility type
 	 * 
 	 * @param SmAppl
@@ -4759,20 +4845,24 @@ public class SmApplicationUtil {
 				}
 			}
 		}
-		for (Iterator<SmFacility> facIt = appl.getSmFacilities().iterator(); facIt
-				.hasNext();) {
-			SmFacility fac = facIt.next();
-			if (StringUtils.isNotBlank(fac.getFacilityType())
-					&& !fac.getFacilityType()
-							.equals(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE)
-					&& !fac.getFacilityType()
-							.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
-				if (SmCommonUtil.isCollectionEmpty(catTypeList)
-						|| !catTypeList.contains(fac.getFacilityType())) {
-					facIt.remove();
+
+		if (!SmCommonUtil.isCollectionEmpty(appl.getSmFacilities())) {
+			for (Iterator<SmFacility> facIt = appl.getSmFacilities().iterator(); facIt
+					.hasNext();) {
+				SmFacility fac = facIt.next();
+				if (StringUtils.isNotBlank(fac.getFacilityType())
+						&& !fac.getFacilityType()
+								.equals(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE)
+						&& !fac.getFacilityType()
+								.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
+					if (SmCommonUtil.isCollectionEmpty(catTypeList)
+							|| !catTypeList.contains(fac.getFacilityType())) {
+						facIt.remove();
+					}
 				}
 			}
 		}
+
 	}
 
 	/**
@@ -4840,13 +4930,14 @@ public class SmApplicationUtil {
 			PmParameter annualRev = retrievePmParameterById(appl
 					.getSmCompanyBasic().getAnnualRevenue());
 
-			// 1)SME Manufacturing
+			// SME Manufacturing
 			// revenue <=50M
 			if (annualRev != null && annualRev.getParameterCode() != null
 					&& !annualRev.getParameterCode().equals("100000000")
 					&& !annualRev.getParameterCode().equals("100000001")) {
 				smeStatus = SupplierManagementConst.SME_STATUS_MANUFACTURING;
 			}
+			// SME Manufacturing
 			// staff total <=200
 			if (!SmCommonUtil.isCollectionEmpty(appl.getSmStaffTotals())) {
 				for (SmStaffTotal staffTotal : appl.getSmStaffTotals()) {
@@ -4859,12 +4950,12 @@ public class SmApplicationUtil {
 				}
 			}
 
-			// 2)SME Service (on hold because not in the parameter list)
+			// SME Service (on hold because not in the parameter list)
 			// revenue<=20M
 		}
 
 		else {
-			// 2)SME Service
+			// SME Service
 			// staff total <=75
 			if (!SmCommonUtil.isCollectionEmpty(appl.getSmStaffTotals())) {
 				for (SmStaffTotal staffTotal : appl.getSmStaffTotals()) {
