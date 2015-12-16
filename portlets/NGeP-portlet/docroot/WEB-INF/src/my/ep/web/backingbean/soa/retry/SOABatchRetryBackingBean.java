@@ -1,4 +1,4 @@
-package my.ep.web.backingbean.soa.batchretry;
+package my.ep.web.backingbean.soa.retry;
 
 import java.util.List;
 
@@ -10,12 +10,12 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.service.soa.batchretry.ISOABatchRetrySO;
-import my.ep.biz.service.soa.serviceretry.ISOAServiceRetrySO;
+import my.ep.biz.service.soa.retry.ISOABatchRetrySO;
+import my.ep.biz.service.soa.retry.ISOAServiceRetrySO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.dto.soa.batchretry.SOABatchRetryReqDTO;
-import my.ep.dto.soa.batchretry.SOABatchRetryResDTO;
+import my.ep.dto.soa.retry.SOABatchRetryReqDTO;
+import my.ep.dto.soa.retry.SOABatchRetryResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.osb.OsbBatchRetryDtl;
 import my.ep.util.MessageUtils;
@@ -23,7 +23,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
-import my.ep.web.managedbean.soa.batchretry.SOABatchRetryManagedBean;
+import my.ep.web.managedbean.soa.retry.SOABatchRetryManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -65,7 +65,7 @@ public class SOABatchRetryBackingBean extends
 		
 			try {
 				logSO = (ISOABatchRetrySO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SOABATCH,
+						.getServiceObject(ModuleCodeConst.getSOABATCH(),
 								ISOABatchRetrySO.class);
 				
 				SOABatchRetryReqDTO reqDTO = new SOABatchRetryReqDTO();
