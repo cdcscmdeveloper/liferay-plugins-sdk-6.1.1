@@ -1,4 +1,4 @@
-package my.ep.web.managedbean.soa.serviceretry;
+package my.ep.web.managedbean.soa.retry;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
