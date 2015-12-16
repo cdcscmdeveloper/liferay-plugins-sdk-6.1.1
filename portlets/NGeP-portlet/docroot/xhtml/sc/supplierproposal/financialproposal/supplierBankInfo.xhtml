@@ -17,13 +17,13 @@
 				update="@([id$=cheque])" />
 
 			<p:column headerText="#{lbl['lbl.sc.account.no']}" style="width : 30%;">
-				<p:outputLabel value="#{bankDtls.accountNo}" />
+				<h:outputText style="float : right;"  value="#{bankDtls.accountNo}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.bank.name']}" style="width : 35%;">
 				<h:outputText value="#{bankDtls.pmFinancialOrg.finOrgName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.address']}" style="white-space : normal; width : 35%;">
-				<p:outputLabel style="float : left;" value="#{supplierProposalDetailBackingBean.getFullAddress(bankDtls.smAddress)}" />
+				<h:outputText style="float : left;" value="#{supplierProposalDetailBackingBean.getFullAddress(bankDtls.smAddress)}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
