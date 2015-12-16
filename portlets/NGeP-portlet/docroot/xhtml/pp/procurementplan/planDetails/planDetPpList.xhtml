@@ -121,7 +121,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        <p:column>
        			<p:selectOneMenu id="somProcurementMethod" style="width:99%"
        				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable) or ppItem.procurementCat.parameterId==null}"
-					label="#{lbl['lbl.pp.procurement.type']}" value="#{ppItem.procurementType.parameterId}" required="#{!empty param['disableValidation']}">
+					label="#{lbl['lbl.pp.procurement.method']}" value="#{ppItem.procurementType.parameterId}" required="#{!empty param['disableValidation']}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					<f:selectItems value="#{pPlanBackingBean.getProcurementTypeOptions(ppItem.procurementCat.parameterId)}"
 						var="obj" itemValue="#{obj.procurementType.parameterId}" itemLabel="#{obj.procurementType.pmParameterDescs[0].codeName}"/>
