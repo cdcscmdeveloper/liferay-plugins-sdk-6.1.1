@@ -469,10 +469,11 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 									MessageUtils.getMessage(MessageConst.INFO_780099,
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())));
-
 					
 					return "templateDocMaint.xhtml";
 				}
+				
+				
 			}
 			
 			
@@ -567,7 +568,7 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 		}
 	}
 
-	public String createNewTemplate(String docNo) {
+	public String createNewTemplate() {
 		if(getManagedBean().getProcessType()!=null && getManagedBean().getProcessType().equalsIgnoreCase(ParameterConst.TPL_DOC_PROCESS_TYPE_CONTRACT)) {
 			ITemplateDocSO templateSO = (ITemplateDocSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT, ITemplateDocSO.class);
 			TemplateDocReqDTO reqDTO = new TemplateDocReqDTO();
@@ -602,7 +603,6 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 		    resDTO.getTplDocMaster().setProcessType(parameterSO.retrieveParameterByTypeAndCode(paramReqDTO).getPmParameter());
 			
 			getManagedBean().setSelectedTemplate(resDTO.getTplDocMaster());
-			getManagedBean().getSelectedTemplate().setDocTitle(ContractConst.AGREEMENT_STANDARD_CLAUSE + " - " + docNo);
 			getManagedBean().setDeletedList(new ArrayList<TplDocSection>());
 			getManagedBean().setProcessType(resDTO.getTplDocMaster().getProcessType().getParameterCode());
 		} else {
