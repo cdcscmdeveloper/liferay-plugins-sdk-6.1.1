@@ -6,10 +6,14 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-
+	<p:blockUI block=":form" widgetVar="blockWidget">
+		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+	</p:blockUI>
 	<div class="ppRightBtn">
-		<p:commandButton value="#{lbl['lbl.btn.submit']}" process="@all" styleClass="BtnSpacing" rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}"
-			action="#{supplierProposalDetailBackingBean.submitSupplierProposal}"/>
+		<p:commandButton value="#{lbl['lbl.btn.submit']}" process="@all"
+			styleClass="BtnSpacing" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}"
+			action="#{supplierProposalDetailBackingBean.submitSupplierProposal}" />
 	</div>
-	
+
 </ui:composition>
