@@ -37,7 +37,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	</p:panel>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.create']}" 
-				action="#{supportDocBackingBean.redirectToMaintainDocForSupp(null)}">
+				action="#{supportDocBackingBean.redirectToMaintainDocForSupp(null)}" partialSubmit="true" process="@this">
 				<f:attribute name="isSupplierDoc" value="#{true}" />
 				</p:commandButton>
 		</div>
