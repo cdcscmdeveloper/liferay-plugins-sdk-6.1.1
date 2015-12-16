@@ -111,6 +111,10 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * Replace admin with existing personnel and redirect to success page
 	 */
 	public void replaceWithExistingUser() {
+		if (getManagedBean().getReactivateBasic().isShowEmailInput()) {
+			getManagedBean().getNewAdmin().setEmail(
+					getManagedBean().getReactivateBasic().getEmail());
+		}
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
 				.reassignSupplierAdmin(getReqDTO());
 		redirectToSuccessPage(resDto);
@@ -143,6 +147,26 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 */
 	public Date getCurrDate() {
 		return new Date();
+	}
+
+	/**
+	 * Show or hide email input when on blur identification no
+	 */
+	public void onBlurNewAdminIdentificationNo() {
+		getManagedBean().getReactivateBasic().setShowEmailInput(false);
+		SmPersonnel newAdmin = new SmPersonnel();
+		newAdmin.setIdentificationNo(getManagedBean().getReactivateBasic()
+				.getNewIdentificationNo());
+		newAdmin = (SmPersonnel) SmCommonUtil.getInstance()
+				.getObjectByPropertiesFromList(
+						newAdmin,
+						getManagedBean().getSmSupplier().getSmAppl()
+								.getSmPersonnels(), "identificationNo");
+		if (newAdmin != null
+				&& newAdmin.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
+				&& StringUtils.isBlank(newAdmin.getEmail())) {
+			getManagedBean().getReactivateBasic().setShowEmailInput(true);
+		}
 	}
 
 	/**
@@ -233,11 +257,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 		// existing new admin
 		if (getManagedBean().isExistingUser()
 				&& getManagedBean().getNewAdmin() != null) {
-
-			// check if new admin had email
-			if (StringUtils.isBlank(getManagedBean().getNewAdmin().getEmail())) {
-				throw new EpException(MessageConst.ERROR_722596);
-			}
 
 			// check if replace with catalogue user not allowed if have supplier
 			// user
