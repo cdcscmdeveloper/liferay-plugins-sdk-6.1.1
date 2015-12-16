@@ -24,6 +24,9 @@
 		<f:event listener="#{flOrderBB.preRenderViewPR}" type="preRenderView" />
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
 			showSummary="false" closable="true" severity="error, info" />
+		<ac:gpkiPopup 
+			textBeforeSign="#{flOrderBB.managedBean.textBeforeSign}"
+			postSignAction="#{flOrderBB.preSubmitFulfillmentOrder(gpkiBackingBean.pmDigiSign)}"/>
 		<ac:spkiPopup id="spkiPopUp"
 			password="#{flOrderBB.managedBean.spkiBackingBean.password}"
    		 	challengeAns1="#{flOrderBB.managedBean.spkiBackingBean.challengeAns1}"

@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +46,7 @@ import my.ep.persistence.entity.fl.adjust.FlAdjustmentItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.persistence.entity.pm.common.PmContact;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -541,4 +543,51 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 		}
 	}
 	
+	/**
+	 * Enable auto update.
+	 */
+	public void enableAutoUpdate(){
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		RequestContext.getCurrentInstance().update("@form");
+	}
+	
+	/**
+	 * Pre submit action.
+	 *
+	 * @param pmDigiSign the pm digi sign
+	 * @return the string
+	 * @throws Exception the exception
+	 */
+	public String preSubmitAction(
+			PmDigiSign pmDigiSign) throws Exception {
+		if (pmDigiSign != null) {
+			this.getManagedBean().setPmDigiSign(pmDigiSign);
+		}
+		getManagedBean().setValidated(Boolean.TRUE);
+		log.info("######## FRN SLA start : "+System.currentTimeMillis()+" : "+new Date());
+		return submitAction(getManagedBean().getButtonAction());
+	}
+	
+	/**
+	 * Gpki sign action.
+	 *
+	 * @param outcome the outcome
+	 */
+	public String gpkiSignAction(String outcome){
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+			// Temp setTextBeforeSign : DocNo+Type
+			StringBuilder sb = new StringBuilder();
+			sb.append(getManagedBean().getAdjustment().getDocNo());
+			sb.append(outcome);
+			getManagedBean().setTextBeforeSign(sb.toString());			
+			//validateFulfilmentNote(outcome);
+			// set action
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			getManagedBean().setButtonAction(outcome);
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			return null;
+		}
+		return null; 
+		
+	}
 }

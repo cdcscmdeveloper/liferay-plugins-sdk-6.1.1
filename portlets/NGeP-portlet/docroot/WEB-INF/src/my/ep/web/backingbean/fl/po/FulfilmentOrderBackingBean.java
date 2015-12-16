@@ -527,6 +527,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			getManagedBean().setSelectedTabIndex(0);
 		}else{
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			flBB.getManagedBean().getRemarkList().get(0).getRemark();
 			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase("View")){
 				flBB.getManagedBean().setHideRemarks(false);
 			}
@@ -941,7 +942,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				getManagedBean().setAutoUpdate(Boolean.FALSE);
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 				return null;
-			}else if((!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) && (getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value()) 
+			}else if((!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) && (!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REMOVE_FACTORING)) && (getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value()) 
 					|| getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value())
 							|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())
 									|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()))){
@@ -953,7 +954,16 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				getManagedBean().setAutoUpdate(Boolean.FALSE);
 				RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 				return null;
-			}else{
+			}else if((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) && getUserRole().equalsIgnoreCase(RoleCode.FACTORING_USER.value())){
+				validateFulfillmentOrder(outcome);
+				getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+				// set action
+				getManagedBean().setButtonAction(outcome);
+				getManagedBean().setAutoUpdate(Boolean.FALSE);
+				RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+				return null;
+			}
+			else{
 				return fulfillmentOrderAction(outcome);
 			}
 		}

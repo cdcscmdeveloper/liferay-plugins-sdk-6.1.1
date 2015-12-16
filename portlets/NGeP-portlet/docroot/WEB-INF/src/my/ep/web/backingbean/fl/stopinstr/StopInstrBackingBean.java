@@ -429,7 +429,7 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 			return null;
-		}else if ((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || 
+		}else if ((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) ||
 				outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)) 
 				||  hasGovtSellerRole()) {
 			// Temp setTextBeforeSign : DocNo+SAP

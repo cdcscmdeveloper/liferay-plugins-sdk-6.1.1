@@ -11,6 +11,7 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.fl.adjust.FlAdjustment;
 import my.ep.persistence.entity.fl.adjust.FlAdjustmentItem;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.TreeNode;
@@ -120,6 +121,19 @@ public class DebitAdjustmentNoteManagedBean extends BaseManagedBean{
 	private String buttonVal;
 	
 	private String backToPrevious;
+	
+	/** The text before sign. */
+	private String textBeforeSign;
+	
+	//gpki signing
+		/** The pm digi sign. */
+	private PmDigiSign pmDigiSign;
+	
+	/** The button action. */
+	private String buttonAction;
+	
+	/** The validated. */
+	private boolean validated = false;
 	
 	
 	/**
@@ -681,6 +695,62 @@ public class DebitAdjustmentNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setBackToPrevious(String backToPrevious) {
 		this.backToPrevious = backToPrevious;
+	}
+
+	/**
+	 * @return the textBeforeSign
+	 */
+	public String getTextBeforeSign() {
+		return textBeforeSign;
+	}
+
+	/**
+	 * @param textBeforeSign the textBeforeSign to set
+	 */
+	public void setTextBeforeSign(String textBeforeSign) {
+		this.textBeforeSign = textBeforeSign;
+	}
+
+	/**
+	 * @return the pmDigiSign
+	 */
+	public PmDigiSign getPmDigiSign() {
+		return pmDigiSign;
+	}
+
+	/**
+	 * @param pmDigiSign the pmDigiSign to set
+	 */
+	public void setPmDigiSign(PmDigiSign pmDigiSign) {
+		this.pmDigiSign = pmDigiSign;
+	}
+
+	/**
+	 * @return the buttonAction
+	 */
+	public String getButtonAction() {
+		return buttonAction;
+	}
+
+	/**
+	 * @param buttonAction the buttonAction to set
+	 */
+	public void setButtonAction(String buttonAction) {
+		this.buttonAction = buttonAction;
+	}
+
+	/**
+	 * @return the validated
+	 */
+	public boolean isValidated() {
+		return validated;
+	}
+
+	/**
+	 * @param validated the validated to set
+	 */
+	public void setValidated(boolean validated) {
+		this.validated = validated;
 	}
 	
 }

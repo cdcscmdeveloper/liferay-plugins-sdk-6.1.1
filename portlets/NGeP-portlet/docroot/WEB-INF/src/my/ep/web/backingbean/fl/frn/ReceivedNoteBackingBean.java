@@ -154,7 +154,6 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				validateFulfilmentNote(action);
 			}
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) 
-					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
 					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
 				// UnitEP request can reject service
 //				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
@@ -726,7 +725,22 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			getManagedBean().setButtonAction(outcome);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
-		} else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+		} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)){
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
+				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+			}
+			StringBuilder sb = new StringBuilder();
+			sb.append(getManagedBean().getFulfilmentRequest().getDocNo());
+			sb.append(outcome);
+			getManagedBean().setTextBeforeSign(sb.toString());			
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			getManagedBean().setButtonAction(outcome);
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			return null;
+
+		}
+		else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 			getManagedBean().setValidated(Boolean.FALSE);
 			return submitAction(outcome);
 		} else{
