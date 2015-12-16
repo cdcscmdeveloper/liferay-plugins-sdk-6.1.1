@@ -1136,7 +1136,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		tplDocBB.getManagedBean().setCtAgreementContent(agreementContent);
 		// Create new template doc
 		if (agreementContent.getTplDocMaster() == null) {
-			templateDocUrl = tplDocBB.createNewTemplate(getManagedBean().getCtContract().getContractNo());
+			templateDocUrl = tplDocBB.createNewTemplate();
 		} else {
 			templateDocUrl = tplDocBB.goToMaint(agreementContent.getTplDocMaster());
 		}
