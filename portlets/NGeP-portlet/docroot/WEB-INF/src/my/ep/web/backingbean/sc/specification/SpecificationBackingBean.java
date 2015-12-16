@@ -9752,7 +9752,34 @@ public class SpecificationBackingBean extends
 
 		} else if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
 			this.getManagedBean().setLocalOutCome(action);
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			//RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			//ministrySpecgpkiSignAction(null);
+			//return CommonUIConst.ACKNOWLEDGE_PAGE;
+			SpecificationResDTO resDTO = prepareSpecChairPersonRequest(this
+					.getManagedBean().getLocalOutCome(), null);
+			if (resDTO.isSuccessful()) {
+				ScQt qt = resDTO.getScQt();
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										null,
+										MessageUtils
+												.getMessage(
+														getMessgeConstant(this
+																.getManagedBean()
+																.getLocalOutCome()),
+														new String[] {
+																getMessageCommon("lbl.sc.specification.for"),
+																qt.getQtNo() },
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
+
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
+			}
 		} else if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
 			if (this.getManagedBean().getScQt().isPanel()) {
 				this.getManagedBean().setSpecComplete(false);
@@ -12932,42 +12959,7 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	/**
-	 * Ministry specgpki sign action.click on submit in ministry spec committee
-	 * approval.
-	 * 
-	 * @param digiSign
-	 *            ((PmDigiSign digiSign)
-	 * @return navigate to acknowledgement page.
-	 */
-	public String ministrySpecgpkiSignAction(PmDigiSign digiSign) {
-		SpecificationResDTO resDTO = prepareSpecChairPersonRequest(this
-				.getManagedBean().getLocalOutCome(), digiSign);
-		if (resDTO.isSuccessful()) {
-			ScQt qt = resDTO.getScQt();
-			FacesContext
-					.getCurrentInstance()
-					.addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
-									null,
-									MessageUtils
-											.getMessage(
-													getMessgeConstant(this
-															.getManagedBean()
-															.getLocalOutCome()),
-													new String[] {
-															getMessageCommon("lbl.sc.specification.for"),
-															qt.getQtNo() },
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes()
-															.getUserLocale())));
-
-			return CommonUIConst.ACKNOWLEDGE_PAGE;
-		}
-		return null;
-	}
+	
 
 	/**
 	 * Prepare spec chir person request.
