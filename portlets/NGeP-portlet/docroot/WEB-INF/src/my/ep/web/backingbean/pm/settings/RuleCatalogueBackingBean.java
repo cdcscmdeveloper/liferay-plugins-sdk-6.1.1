@@ -1133,7 +1133,7 @@ public class RuleCatalogueBackingBean extends
 		log.info(".................addMoreOrgAndItemFee...................");
 		PmFeeExemption newFeeExemption = new PmFeeExemption();
 		newFeeExemption.setFeeExemptionType("1");
-		newFeeExemption.setEffDate(this.getManagedBean().getTomorrow());// future
+		newFeeExemption.setEffDate(this.getManagedBean().getToday());// future
 																		// date
 		newFeeExemption.setItemId(new CmItem());// make sure to delete the new
 												// objs before update if doesn't
@@ -1182,7 +1182,7 @@ public class RuleCatalogueBackingBean extends
 		log.info(".................addMoreComodityFee...................");
 		PmFeeExemption newFeeExemption = new PmFeeExemption();
 		newFeeExemption.setFeeExemptionType("6");
-		newFeeExemption.setEffDate(this.getManagedBean().getTomorrow());// make
+		newFeeExemption.setEffDate(this.getManagedBean().getToday());// make
 																		// sure
 																		// to
 																		// delete
@@ -1219,7 +1219,7 @@ public class RuleCatalogueBackingBean extends
 		log.info(".................addMoreContractFee...................");
 		PmFeeExemption newFeeExemption = new PmFeeExemption();
 		newFeeExemption.setFeeExemptionType("2");
-		newFeeExemption.setEffDate(this.getManagedBean().getTomorrow());
+		newFeeExemption.setEffDate(this.getManagedBean().getToday());
 		newFeeExemption.setRequestItemId(new ScRequestItem());
 		newFeeExemption.setContractId(new CtContract());
 
@@ -3355,7 +3355,9 @@ public class RuleCatalogueBackingBean extends
 			PmDesignatedArea newDesignatedArea = new PmDesignatedArea();
 			newDesignatedArea
 					.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+			
 			PmDaValidity daValidity = new PmDaValidity();
+			daValidity.setEffDate(this.getManagedBean().getTomorrow());
 			daValidity.setDesignatedArea(newDesignatedArea);
 			getManagedBean().getDaValidityList().add(daValidity);
 			RequestContext.getCurrentInstance().execute(
