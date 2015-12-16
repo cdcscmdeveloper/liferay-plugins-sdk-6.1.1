@@ -21,6 +21,8 @@ import my.ep.util.lookupservice.EpNtfBusinessDelegate;
 	         System.out.println("initiateTask******");
 	         INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance()
 	                 .getOSBServiceObject(INtfSO.class);
+	         //TODO NTF
+	         //INtfClientSO ntfClientSO = (INtfClientSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.MDB, INtfClientSO.class);
 
 	         NtfRequestDTO reqDTO = new NtfRequestDTO();
 	         reqDTO.setTemplateId("399999");
@@ -49,6 +51,8 @@ import my.ep.util.lookupservice.EpNtfBusinessDelegate;
 
 	         try {
 	             NtfResponseDTO resDTO = ntfSO.processAndPublish(reqDTO);
+   	             //TODO NTF
+	             //NtfResponseDTO resDTO = ntfClientSO.processAndPublish(reqDTO);
 	             System.out.println(resDTO.getStatusCode());
 	             System.out.println(resDTO.getSeverity());
 	             System.out.println(resDTO.getStatusDesc());
