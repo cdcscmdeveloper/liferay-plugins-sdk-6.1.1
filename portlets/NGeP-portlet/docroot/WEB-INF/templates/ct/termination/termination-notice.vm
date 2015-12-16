@@ -28,10 +28,10 @@
                                        <td>$ptjAddress</td>
                                     </tr>
                                     <tr>
-                                       <td>Phone No. $telNo</td>
+                                       <td>Tel No: $telNo</td>
                                     </tr>
                                     <tr>
-                                       <td>Fax No. $faxNo</td>
+                                       <td>Fax No: $faxNo</td>
                                     </tr>
                                  </tbody>
                               </table>
