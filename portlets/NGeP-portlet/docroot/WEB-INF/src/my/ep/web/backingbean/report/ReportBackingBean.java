@@ -11369,6 +11369,13 @@ public class ReportBackingBean extends
 						+ new FacesScopes().getUserSessionBean().getUserId()
 								.toString());
 			}
+			
+			if ((CollectionUtils.isEmpty(this.getSmMofRegistrationFeeList())
+					&& CollectionUtils.isEmpty(this.getSmProcessingFeeList()) && CollectionUtils
+						.isEmpty(this.getSmSoftCertificateFeeList()))) {
+				throw new EpException(MessageConst.ERROR_REPORT_780027);
+			}
+			
 			if (((this.getSmThresholdFromYear() != null) && (this
 					.getSmThresholdToYear() == null))
 					|| ((this.getSmThresholdFromYear() == null) && (this
@@ -12108,6 +12115,7 @@ public class ReportBackingBean extends
 					throw new EpException(MessageConst.ERROR_REPORT_780003);
 				}
 			}
+			
 			if ((getManagedBean().getReportValue() != null)
 					&& (getManagedBean().getReportValue().trim()
 							.equalsIgnoreCase(ReportConst.SM_SUPPLIER_PERFORMANCE))
@@ -14165,12 +14173,12 @@ public class ReportBackingBean extends
 		getManagedBean().getRptGenBean().setCmExtentionBrandView(false);
 		getManagedBean().getRptGenBean().setCmExtentionTypeView(false);
 		getManagedBean().getRptGenBean().setCmExtentionMeasurmentView(false);
-		getManagedBean().getRptGenBean().setCmExtentionColourView(false);		
+		getManagedBean().getRptGenBean().setCmExtentionColourView(false);
 		if (!this.getModuleValue().equalsIgnoreCase(
 				ModuleCodeConst.PROFILE_MANAGEMENT)) {
 			this.setFromDate(null);
 			this.setToDate(null);
-		}		
+		}       
 		this.setScQuotationId(null);
 		this.setScQuotationNo(null);
 		this.setScPaymentId(null);
@@ -14921,16 +14929,21 @@ public class ReportBackingBean extends
 
 		this.getRptGenBean().setSmMandatoryReceiptDateView(false);
 		this.getRptGenBean().setSmMandatoryTransactionDateView(false);
+		//this.getRptGenBean().setSmMandatoryRTDateView(false);
 
 		if (this.getSmRTReportType() != null) {
 			if (this.getSmRTReportType().equalsIgnoreCase(
 					ReportConst.SM_REPORT_RESIT)) {
+				//this.getRptGenBean().setSmMandatoryRTDateView(true);
 				this.getRptGenBean().setSmMandatoryReceiptDateView(true);
 
 			} else if (this.getSmRTReportType().equalsIgnoreCase(
 					ReportConst.SM_REPORT_TRANSACTION)) {
+				//this.getRptGenBean().setSmMandatoryRTDateView(true);
 				this.getRptGenBean().setSmMandatoryTransactionDateView(true);
 			}
+		} else {
+			this.getRptGenBean().setSmMandatoryRTDateView(false);
 		}
 	}
 
@@ -15045,7 +15058,7 @@ public class ReportBackingBean extends
 				}
 			}
 			if (this.getPmOrgCategory() != null) {
-				if (searchBean1 != null) {				
+				if (searchBean1 != null) {
 					searchBean1.getSortColumns();
 					items = getDropdownValuesBySearchBean(
 							ParameterTypeConst.ORGANISATION_TYPES, searchBean1);
@@ -15080,17 +15093,19 @@ public class ReportBackingBean extends
 		return orgTypeSearchBean;
 	}
 
-	public boolean getRequiredStatus() {
-		boolean status = true;
-		if (CollectionUtils.isEmpty(smMofRegistrationFeeList)
-				&& CollectionUtils.isEmpty(smProcessingFeeList)
-				&& CollectionUtils.isEmpty(smSoftCertificateFeeList)) {
+	/*public boolean getRequiredStatus() {
+		boolean status = false;
+		if ((this.getSmMofRegistrationFeeList() != null && this.getSmMofRegistrationFeeList()
+				.size() > 0)
+				|| (this.getSmProcessingFeeList() != null && this.getSmProcessingFeeList().size() > 0)
+				|| (this.getSmSoftCertificateFeeList() != null && this.getSmSoftCertificateFeeList()
+						.size() > 0)) {
 			return status;
 		} else {
-			status = false;
+			status = true;
 			return status;
 		}
 
-	}
+	}*/
 
 }
