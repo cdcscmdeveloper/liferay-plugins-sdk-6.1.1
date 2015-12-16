@@ -13778,6 +13778,11 @@ public class ReportBackingBean extends
 				|| ((this.getPmCompanyName() != null) && (this
 						.getPmCompanyName() != ReportConst.EMPTY_VAL))
 
+				|| ((this.getFromDate() != null) && (this.getFromDate()
+						.toString() != ReportConst.EMPTY_VAL))
+
+				|| ((this.getToDate() != null) && (this.getToDate().toString() != ReportConst.EMPTY_VAL))
+
 				|| ((this.getPmOrgType() != null) && (this.getPmOrgType() != ReportConst.EMPTY_VAL))
 
 				|| ((this.getPmContractNo() != null) && (this.getPmContractNo() != ReportConst.EMPTY_VAL))
@@ -14160,9 +14165,12 @@ public class ReportBackingBean extends
 		getManagedBean().getRptGenBean().setCmExtentionBrandView(false);
 		getManagedBean().getRptGenBean().setCmExtentionTypeView(false);
 		getManagedBean().getRptGenBean().setCmExtentionMeasurmentView(false);
-		getManagedBean().getRptGenBean().setCmExtentionColourView(false);
-		this.setFromDate(null);
-		this.setToDate(null);
+		getManagedBean().getRptGenBean().setCmExtentionColourView(false);		
+		if (!this.getModuleValue().equalsIgnoreCase(
+				ModuleCodeConst.PROFILE_MANAGEMENT)) {
+			this.setFromDate(null);
+			this.setToDate(null);
+		}		
 		this.setScQuotationId(null);
 		this.setScQuotationNo(null);
 		this.setScPaymentId(null);
@@ -14937,10 +14945,6 @@ public class ReportBackingBean extends
 		if (this.getSmRTReportType() != null) {
 			if (this.getSmRTReportType().equalsIgnoreCase(
 					ReportConst.SM_REPORT_RESIT)) {
-				/*
-				 * this.getRptGenBean().setSmMandatoryForDateView(true);
-				 * this.getRptGenBean().setSmFromDateView(true);
-				 */
 
 				this.getRptGenBean().setSmNonMandatoryReceiptDateView(true);
 
@@ -15041,8 +15045,7 @@ public class ReportBackingBean extends
 				}
 			}
 			if (this.getPmOrgCategory() != null) {
-				if (searchBean1 != null) {
-					//items = null;
+				if (searchBean1 != null) {				
 					searchBean1.getSortColumns();
 					items = getDropdownValuesBySearchBean(
 							ParameterTypeConst.ORGANISATION_TYPES, searchBean1);
