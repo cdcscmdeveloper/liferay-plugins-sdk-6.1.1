@@ -89,37 +89,54 @@
 				</td>
 			</tr>
 			
-				<tr>
-					<td>
-						<p:outputLabel value="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.idno']}" />
-						<p:outputLabel value="*" styleClass="mandatory" />
-					</td>
-					<td>
-						<p:outputPanel id="newAdminIdNoPanelId">
-							<p:inputText
-								label="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.idno']}"
-								required="true" id="newAdminIcNo"
-								rendered="#{forceReplaceSuppAdminBackingBean.managedBean.identificationType.parameterCode eq 'I'}"
-								value="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.newIdentificationNo}"
-								size="35" maxlength="12">
-								<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-							</p:inputText>
-							<p:message id="newAdminIcNoMsg" for="newAdminIcNo"
-									showSummary="true" showDetail="false" display="icon" />
-							
-							<p:inputText
-								label="#{lbl['lbl.sm.userprofile.idno']}"
-								required="true" id="newAdminPasptNo"
-								rendered="#{forceReplaceSuppAdminBackingBean.managedBean.identificationType.parameterCode ne 'I'}"
-								value="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.newIdentificationNo}"
-								size="35" maxlength="15">
-							</p:inputText>
-							<p:message id="newAdminPasptNoMsg" for="newAdminPasptNo"
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.idno']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<p:outputPanel id="newAdminIdNoPanelId">
+						<p:inputText
+							label="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.idno']}"
+							required="true" id="newAdminIcNo"
+							rendered="#{forceReplaceSuppAdminBackingBean.managedBean.identificationType.parameterCode eq 'I'}"
+							value="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.newIdentificationNo}"
+							size="35" maxlength="12">
+							<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+							<p:ajax event="blur" process="@this" partialSubmit="true" update="verificationPanel" 
+								listener="#{forceReplaceSuppAdminBackingBean.onBlurNewAdminIdentificationNo}"/>
+						</p:inputText>
+						<p:message id="newAdminIcNoMsg" for="newAdminIcNo"
 								showSummary="true" showDetail="false" display="icon" />
-						</p:outputPanel>
-					</td>
+						
+						<p:inputText
+							label="#{lbl['lbl.sm.userprofile.idno']}"
+							required="true" id="newAdminPasptNo"
+							rendered="#{forceReplaceSuppAdminBackingBean.managedBean.identificationType.parameterCode ne 'I'}"
+							value="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.newIdentificationNo}"
+							size="35" maxlength="15">
+						</p:inputText>
+						<p:message id="newAdminPasptNoMsg" for="newAdminPasptNo"
+							showSummary="true" showDetail="false" display="icon" />
+					</p:outputPanel>
+				</td>
+			</tr>
+			<p:outputPanel rendered="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.showEmailInput}">
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.email']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:inputText id="newAdminEmail"
+							label="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.email']}"
+							value="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.email}"
+							size="40" required="true">
+							<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+							<p:ajax event="blur" process="@this" partialSubmit="true"/>
+							</p:inputText>
+						<p:message id="newAdminEmailMsg" for="newAdminEmail"
+							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
-	
+			</p:outputPanel>
 		</table>
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.submit']}"  process="verificationPanel" update="@form"
