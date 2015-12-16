@@ -28,10 +28,10 @@
                                        <td>$ptjAddress</td>
                                     </tr>
                                     <tr>
-                                       <td>Phone No. $telNo</td>
+                                       <td>Tel No: $telNo</td>
                                     </tr>
                                     <tr>
-                                        <td> Fax No. $faxNo</td>
+                                        <td>Fax No: $faxNo</td>
                                     </tr>
                                  </tbody>
                               </table>
@@ -54,7 +54,7 @@
       <div style="text-align: left;"><strong>$supplierAddress</strong></div>
       <div style="font-weight: normal; text-align: left;"><br/></div>
       <div style="font-weight: normal; text-align: left;"><br/></div>
-      <div style="font-weight: normal; text-align: left;">Tuan/Puan,</div>
+      <div style="font-weight: normal; text-align: left;">Tuan,</div>
       <div style="font-weight: normal; text-align: left;"><br/></div>
        <div style="text-align: left;"><strong>Notis Peringatan Bagi Kontrak</strong></div>
        <div style="font-weight: normal; text-align: left;"><br/></div>
@@ -67,9 +67,9 @@
       <div style="font-weight: normal; text-align: left;"><br/></div>
        <div style="text-align: left;"><span style="font-weight: normal;"></span>Dengan hormatnya perkara di atas adalah dirujuk.</div>
       <div style="font-weight: normal; text-align: left;"><br/></div>
-      <div style="text-align: left;"><span style="font-weight: normal;">2.<span class="Apple-tab-span" style="white-space:pre">	</span>Dimaklumkan bahawa sehingga kini&nbsp;pihak tuan/puan&nbsp;</span><strong>gagal</strong> untuk melaksanakan obligasi tersebut seperti yang dikemukakan di dalam kontrak $contractTitle $contractNo.</div>
+      <div style="text-align: left;"><span style="font-weight: normal;">2.<span class="Apple-tab-span" style="white-space:pre">	</span>Dimaklumkan bahawa sehingga kini&nbsp;pihak tuan&nbsp;</span><strong>gagal</strong> untuk melaksanakan obligasi tersebut seperti yang dikemukakan di dalam kontrak $contractTitle $contractNo.</div>
       <div style="font-weight: normal; text-align: left;"><br/></div>
-      <div style="font-weight: normal; text-align: left;">3.<span class="Apple-tab-span" style="white-space:pre">	</span>Pihak kami telah mendapati&nbsp;bahawa pihak tuan/puan telah melanggar klausa di dalam Kontrak seperti yang berikut:</div>
+      <div style="font-weight: normal; text-align: left;">3.<span class="Apple-tab-span" style="white-space:pre">	</span>Pihak kami telah mendapati&nbsp;bahawa pihak tuan telah melanggar klausa di dalam Kontrak seperti yang berikut:</div>
       <div style="font-weight: normal; text-align: left;"><br/></div>
       <div style="font-weight: normal; text-align: left;">
          #foreach( $reason in $reasonList ) 
@@ -87,7 +87,7 @@
        <div style="font-weight: normal; text-align: left;"><br/></div>
       <div style="font-weight: normal; text-align: left;">Sekian, terima kasih.</div>
       <div style="font-weight: normal; text-align: left;"><br/></div>
-      <div style="text-align: left; font-weight: normal;"><strong>"BERKHIDMAT UNTUK NEGARA"</strong></div>
+      <div style="text-align: center; font-weight: normal;"><strong>"BERKHIDMAT UNTUK NEGARA"</strong></div>
      <div style="font-weight: normal; text-align: left;"><br/></div>
       <div style="font-weight: normal; text-align: left;">Saya yang menurut perintah,&nbsp;</div>
       <div style="font-weight: normal; text-align: left;"><br/></div>
