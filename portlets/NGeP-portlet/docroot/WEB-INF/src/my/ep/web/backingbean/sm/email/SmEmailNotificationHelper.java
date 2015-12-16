@@ -20,6 +20,8 @@ public class SmEmailNotificationHelper {
 		System.out.println("initiateTask******");
 		INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance()
 				.getOSBServiceObject(INtfSO.class);
+		//TODO NTF
+		//INtfClientSO ntfClientSO = (INtfClientSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.MDB, INtfClientSO.class);
 
 		NtfRequestDTO reqDTO = new NtfRequestDTO();
 
@@ -46,6 +48,8 @@ public class SmEmailNotificationHelper {
 		System.out.println("initiateTask******");
 		INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance()
 				.getOSBServiceObject(INtfSO.class);
+		//TODO NTF
+		//INtfClientSO ntfClientSO = (INtfClientSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.MDB, INtfClientSO.class);
 
 		NtfRequestDTO reqDTO = new NtfRequestDTO();
 
@@ -61,6 +65,8 @@ public class SmEmailNotificationHelper {
 
 		try {
 			NtfResponseDTO resDTO = ntfSO.processAndPublish(reqDTO);
+			//TODO NTF
+			//NtfResponseDTO resDTO = ntfClientSO.processAndPublish(reqDTO);
 			System.out.println(resDTO.getStatusCode());
 			System.out.println(resDTO.getSeverity());
 			System.out.println(resDTO.getStatusDesc());
