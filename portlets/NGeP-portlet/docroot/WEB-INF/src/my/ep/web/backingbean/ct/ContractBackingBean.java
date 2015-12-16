@@ -2281,7 +2281,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				 * management module.
 			     */
 				public void renderUpdateCheckbox(CtContractVer ctContractVer) {
-					if (ctContractVer.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+					if ((ctContractVer.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+							|| ctContractVer.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT))
 							&& this.getManagedBean().isUpdateContract()) {
 						if (!ctContractVer.getCtContractValue().getSupplierName().equalsIgnoreCase(
 								getManagedBean().getContractVer().getCtContract().getSmSupplier().getCompanyName())) {

@@ -128,11 +128,15 @@ public class BPMTaskListBackingBean extends
 				"contract-amendment");
 		temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME
 				+ ParameterConst.DOCTYPE_CONTRACT_UPDATE, "fulfilment-details");
+		temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME
+				+ ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT, "fulfilment-details");
 		temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME
 				+ ParameterConst.DOCTYPE_CONTRACT_AMENDMENT,
 				"contract-amendment");
 		temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME
 				+ ParameterConst.DOCTYPE_CONTRACT_UPDATE, "fulfilment-details");
+		temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME
+				+ ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT, "fulfilment-details");
 		temp.put(CTProcessNameConst.CONTRACT_TERMINATION_INIT_PROCESS_NAME,
 				"contract-termination");
 		temp.put(CTProcessNameConst.CONTRACT_TERMINATION_PROCESS_NAME,
