@@ -179,7 +179,7 @@
 					 		      rendered="#{contractDetailsBackingBean.isContractAdmin() and data.fdStatus == 1
 					 		      			  and data.ctContract.recordStatusFlg==1 and !data.pendingFinalistAgreement
 					 		      			  and !contractDetailsBackingBean.managedBean.trackingDiarySearch }"  
-                             	  action="#{contractDetailsBackingBean.gotoUpdatePage(data.ctContract.contractId)}"
+                             	  action="#{contractDetailsBackingBean.gotoUpdatePage(data.ctContract.contractId, data.agStatus)}"
 								  onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
 					        </p:menuitem>
 				

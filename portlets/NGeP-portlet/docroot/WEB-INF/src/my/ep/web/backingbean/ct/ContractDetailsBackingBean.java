@@ -295,7 +295,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			ctReqDTO.setTaskName(res.getTaskName());
 			if ((res.getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME) 
 					|| res.getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME)) 
-					&& res.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)) {
+					&& (res.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+							|| res.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT))) {
 				CTContractAmendmentDataType dataType = (CTContractAmendmentDataType)obj;
 				ctReqDTO.setContractId(new Long(dataType.getContractId()));
 				ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
@@ -1417,7 +1418,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		} else {
 			reqDTO.setContractVerId(contractVerId);
 		}
-		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
 		reqDTO.setViewOnly(true);
 	    ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 	    ctBB.getManagedBean().setViewContract(true);
@@ -1445,8 +1446,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		reqDTO.setContractId(contractId);
 		CtContractVer  latestContractVer = contractSO.getLatestContractVer(reqDTO).getCtContractVer();
 		reqDTO.setContractVerId(latestContractVer.getContractVerId());
-		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
-		reqDTO.setViewOnly(true);
+		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
+		reqDTO.setViewOnly(true); 
 		reqDTO.setCommonView(true);
 		 ctBB.getManagedBean().setViewContract(true);
 	    ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
@@ -1485,7 +1486,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * 
 	 * @return the navigate URL 
 	 */
-	public String gotoUpdatePage(Long contractId) {
+	public String gotoUpdatePage(Long contractId, int agStatus) {
 		IContractSO contractSO = null;
 		
 		try {
@@ -1497,7 +1498,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			Long contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
 				
 			reqDTO.setContractVerId(contractVerId);
-			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+			if (agStatus == 1) {
+				reqDTO.setDocType(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT);
+			} else {
+				reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+			}
 			reqDTO.setUpdateAction(true);
 			getManagedBean().setUpdateContract(true);
 			
@@ -2252,8 +2257,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			        reqDTO.setModuleCode("CT");
 			        List <String> docTypeList = new ArrayList<String>();
 			        docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_CREATION);
-			        docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
 			        docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+			        docTypeList.add(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT);
+			        docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
 			        docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
 			        docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
 			        docTypeList.add(ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT);
@@ -2286,7 +2292,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		          {
 				     IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 				     ContractReqDTO reqDTO = new ContractReqDTO();
-				     reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+				     reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
 				     reqDTO.setViewOnly(true);
 				     reqDTO.setContractVerId(getManagedBean().getLoaContractVerId());
 			         ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
