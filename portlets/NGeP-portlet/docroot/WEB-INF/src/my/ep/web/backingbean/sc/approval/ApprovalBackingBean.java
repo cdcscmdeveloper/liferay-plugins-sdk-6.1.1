@@ -64,7 +64,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.backingbean.pm.profilemanagement.ProfileManagementBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDocumentsBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -96,8 +95,7 @@ public class ApprovalBackingBean extends
 		SourcingBaseBackingBean<QTDetailManagedBean> {
 
 	/** The Constant logger. */
-	private static final Logger logger = EpLogger
-			.getLogger(ProfileManagementBackingBean.class);
+	private static final Logger logger = EpLogger.getLogger(ApprovalBackingBean.class);
 
 	/** The text before sign. */
 	private String textBeforeSign;
