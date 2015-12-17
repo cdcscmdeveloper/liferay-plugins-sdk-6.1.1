@@ -121,34 +121,16 @@
 					</p:outputPanel>
 				</td>
 			</tr>
-			<p:outputPanel rendered="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.showEmailInput}">
-				<tr>
-					<td colspan="2"><h:outputText value="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.email.msg']}" styleClass="instruction" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.email']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="newAdminEmail"
-							label="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.email']}"
-							value="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.email}"
-							size="40" required="true">
-							<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
-							<p:ajax event="blur" process="@this" partialSubmit="true"/>
-							</p:inputText>
-						<p:message id="newAdminEmailMsg" for="newAdminEmail"
-							showSummary="true" showDetail="false" display="icon" /></td>
-				</tr>
-			</p:outputPanel>
 		</table>
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.submit']}"  process="verificationPanel" update="@form"
+			<p:commandButton value="#{lbl['lbl.btn.proceed']}"  process="verificationPanel" update="@form"
 						action="#{forceReplaceSuppAdminBackingBean.submit}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 		</div>
 	</p:outputPanel>
 	
-	
-	<ui:include src="/xhtml/sm/shared/forcereplaceadmin/tncPopup.xhtml" />
+	<ui:remove>
+		<ui:include src="/xhtml/sm/shared/forcereplaceadmin/tncPopup.xhtml" />
+	</ui:remove>
 	
 	</ui:define>
 
