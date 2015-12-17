@@ -43,7 +43,6 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.dtl.IContractZoneSO;
-import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -1877,15 +1876,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				CtPerformanceBond newBond = new CtPerformanceBond();
 				newBond.setFinancialOrg(new PmFinancialOrg());
 				newBond.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
-				
-				IContractAmendmentSO amendSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);		
-				ContractAmendmentReqDTO amendReqDTO = new ContractAmendmentReqDTO();
-				amendReqDTO.setContractId(getManagedBean().getContractVer().getCtContract().getContractId());
-				amendReqDTO.setAmendmentEffectiveDate(getManagedBean().getCtContractAmount().getEffDate());		
-				ContractAmendmentResDTO resAmendDto = amendSO.retrieveContractEndDateByAmendmentEffectiveDate(amendReqDTO);
-				
-		        newBond.setExpDate(resAmendDto.getPerformanceBondExpDate());
+				Calendar cal = Calendar.getInstance();
+		        cal.setTime(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+		        cal.add(Calendar.YEAR, 1); 
+		        newBond.setExpDate(cal.getTime());
+		        
 		     	getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
 			}
 		    

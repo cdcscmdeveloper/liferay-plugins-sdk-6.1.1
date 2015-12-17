@@ -1817,23 +1817,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 	}
 	
-	/**
-	 * The method used to add a new performance bond record.
-	 * This method will generate a new record in performance bond
-	 * list, user allow to enter the bond details and attachment. 
-	 */
-    public void addBondDetails() {
-		CtPerformanceBond newBond = new CtPerformanceBond();
-		newBond.setFinancialOrg(new PmFinancialOrg());
-		newBond.setEffDate(ctBB.getManagedBean().getContractVer().getCtContractValue().getEffDate());
-		Calendar cal = Calendar.getInstance();
-        cal.setTime(ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate());
-        cal.add(Calendar.YEAR, 1); 
-        newBond.setExpDate(cal.getTime());
-     	
-        ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
-	}
-	
     /**
 	 * The method used for initializing the remarks of contract.
 	 */
