@@ -128,6 +128,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		getManagedBean().setAgreeTnc(false);
 		getManagedBean().setExistingUser(false);
 		getManagedBean().getReactivateBasic().setShowEmailInput(false);
+		getManagedBean().getReactivateBasic().setEmail(null);
 		getManagedBean().setNewAdmin(null);
 		getManagedBean().setOldAdmin(null);
 		return "forceReplaceAdmin.xhtml";
