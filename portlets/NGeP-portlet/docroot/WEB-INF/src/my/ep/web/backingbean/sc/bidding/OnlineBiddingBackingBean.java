@@ -15,6 +15,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -22,10 +23,13 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.BidStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.bidding.ScBidAction;
 import my.ep.persistence.entity.sc.bidding.ScBidContactPerson;
 import my.ep.persistence.entity.sc.bidding.ScBidPrice;
@@ -89,6 +93,8 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	private String remainingSeconds;
 	private int index;
 
+	private BigDecimal tolerancePrice;
+
 	private Long servicetype = Long.parseLong(ParameterConst.ITEM_TYPE_SERVICE);
 
 	private TemplateSpecHelper tplSpecHelper = TemplateSpecHelper.getInstance();
@@ -108,6 +114,28 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	 */
 	public OnlineBiddingBackingBean() {
 
+	}
+
+	private void fetchTolerancePrice() {
+		IRuleSO ruleSO = null;
+
+		try {
+			ruleSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+			RuleReqDTO ruleReqDTO = new RuleReqDTO();
+			ruleReqDTO.setRuleType("QTTOL");
+			RuleResDTO ruleResDTO = ruleSO
+					.getRuleValuesByTypeInCurrentDate(ruleReqDTO);
+			
+			if(ruleResDTO.getRuleValueList() != null && ruleResDTO.getRuleValueList().size() != 0){
+				PmConfigRuleValue configRulevalue = ruleResDTO.getRuleValueList().get(0);
+				BigDecimal tolerancePercentage = new BigDecimal(configRulevalue.getRuleValue());
+				 this.setTolerancePrice(tolerancePercentage);
+			}
+			
+		} finally {
+			ruleSO = null;
+		}
 	}
 
 	private void debugLogger(Object message) {
@@ -134,6 +162,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		}
 		PmUser supplierUser = (PmUser) (new FacesScopes().getUserSessionBean());
 		retrieveOnlineBiddingDtls(bidScheduleId, supplierUser.getUserId());
+		fetchTolerancePrice();
 	}
 
 	private void retrieveOnlineBiddingDtls(Long bidScheduleId, Long userId) {
@@ -377,43 +406,42 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		int index = getBidPrices().indexOf(scBidPrice);
 		getBidPrices().set(index, scBidPrice);
 	}
-	
+
 	/**
 	 * Listener method for spinner component change events
 	 * 
 	 * @param component
 	 * @param newValue
 	 */
-	public void decrementAmountValueChangeListener(UIComponent component, Object newValue) {
+	public void decrementAmountValueChangeListener(UIComponent component,
+			Object newValue) {
 
 		log.info("decrementAmountValueChangeListener");
-		
-		Object scBidPriceObj = component.getNamingContainer().getAttributes().get("scBidPrice");
-		
+
+		Object scBidPriceObj = component.getNamingContainer().getAttributes()
+				.get("scBidPrice");
+
 		if (scBidPriceObj != null) {
 			ScBidPrice newBidPrice = new ScBidPrice();
 			BigDecimal newPrice = null;
-			ScBidPrice scBidPrice = (ScBidPrice)scBidPriceObj;
-			
+			ScBidPrice scBidPrice = (ScBidPrice) scBidPriceObj;
+
 			if (newValue != null && newValue instanceof BigDecimal) {
-				BigDecimal value = (BigDecimal)newValue;
-				
-				if (scBidPrice.getBidPrice() == null
-						&& value != null) {
-					newPrice = scBidPrice.getScBidSupplierItem().getItemStartPrice()
-							.subtract(value);
+				BigDecimal value = (BigDecimal) newValue;
+
+				if (scBidPrice.getBidPrice() == null && value != null) {
+					newPrice = scBidPrice.getScBidSupplierItem()
+							.getItemStartPrice().subtract(value);
 				}
 
-				else if (scBidPrice.getBidPrice() != null
-						&& value != null) {
-					newPrice = scBidPrice.getBidPrice().subtract(
-							value);
+				else if (scBidPrice.getBidPrice() != null && value != null) {
+					newPrice = scBidPrice.getBidPrice().subtract(value);
 				}
 			}
-			
+
 			newBidPrice.setBidPrice(newPrice);
 			newBidPrice.setScBidSupplierItem(scBidPrice.getScBidSupplierItem());
-			scBidPrice.setNewBidPrice(newBidPrice);	
+			scBidPrice.setNewBidPrice(newBidPrice);
 		}
 	}
 
@@ -459,6 +487,17 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 					scBidPrice.getBidPrice());
 			newBidpriceTotal = getBidPriceTotals(scBidPrice, newPrice);
 
+		}
+
+		if (this.getScBidSchedule().getScBid().getRecommendedTypeId()
+				.getParameterCode().equals("P")) {
+			BigDecimal tolerancePrice = (this.getScBidSchedule().getScBid()
+					.getEstimatedCost().multiply(this.tolerancePrice))
+					.divide(new BigDecimal(100));
+			if (getItemNewBidPriceTotal().doubleValue() < tolerancePrice
+					.doubleValue()) {
+				throw new EpException(MessageConst.ERROR_760369);
+			}
 		}
 
 		if (lastBidpriceTotal != null && newBidpriceTotal != null) {
@@ -521,7 +560,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 						.getParameterCode())) {
 					setPackageRanking(resDTO.getPackageRanking());
 				}
-				 RequestContext.getCurrentInstance().execute("rc()");
+				RequestContext.getCurrentInstance().execute("rc()");
 			}
 
 		} finally {
@@ -592,7 +631,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 									.getQty());
 
 					newBidPriceTotal = newBidPriceTotal.add(temptotal);
-					
+
 				} else if (bidPrice.getBidPrice() != null) {
 
 					BigDecimal temptotal = tplSpecHelper.calcTotalAmount(
@@ -602,7 +641,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 									.getScBidSupplierItem().getScBidItem()
 									.getQty());
 					newBidPriceTotal = newBidPriceTotal.add(temptotal);
-					
+
 				} else {
 
 					BigDecimal temptotal = tplSpecHelper
@@ -614,7 +653,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 											.getScBidSupplierItem()
 											.getScBidItem().getQty());
 					newBidPriceTotal = newBidPriceTotal.add(temptotal);
-					
+
 				}
 			}
 		}
@@ -676,7 +715,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 											.getScBidSupplierItem()
 											.getScBidItem().getQty());
 					lastBidPriceTotal = lastBidPriceTotal.add(tempTotal);
-					
+
 				} else {
 					BigDecimal tempTotal = tplSpecHelper.calcTotalAmount(
 							bidPrice.getScBidSupplierItem().getScBidItem()
@@ -685,7 +724,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 									.getScBidSupplierItem().getScBidItem()
 									.getQty());
 					lastBidPriceTotal = lastBidPriceTotal.add(tempTotal);
-					
+
 				}
 			}
 		}
@@ -770,6 +809,79 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		}
 
 		return remainingHours;
+	}
+
+	/**
+	 * method to return item new price total
+	 * 
+	 * @return the itemNewPriceTotal
+	 */
+	public String itemNewPriceTotal(ScBidPrice bidPriceItem) {
+		BigDecimal newPriceTotal = null;
+		if (bidPriceItem.getNewBidPrice() != null
+				&& bidPriceItem.getNewBidPrice().getBidPrice() != null) {
+			newPriceTotal = this.tplSpecHelper.calcTotalAmount(bidPriceItem
+					.getScBidSupplierItem().getScBidItem().getScRequestItem()
+					.getTplSpecQuestion(), bidPriceItem.getNewBidPrice()
+					.getBidPrice(), bidPriceItem.getScBidSupplierItem()
+					.getScBidItem().getQty());
+		}
+		if (newPriceTotal != null
+				&& (newPriceTotal.compareTo(new BigDecimal(0.0d)) == 1)) {
+			return nf.format(newPriceTotal);
+		} else {
+			return null;
+
+		}
+	}
+
+	/**
+	 * method to return last bid price total
+	 * 
+	 * @return the lastBidPriceTotal
+	 */
+	public String lastBidPriceTotal(ScBidPrice bidPriceItem) {
+
+		BigDecimal lastBidPriceTotal = null;
+		if (bidPriceItem.getBidPrice() != null) {
+			lastBidPriceTotal = this.tplSpecHelper
+					.calcTotalAmount(bidPriceItem.getScBidSupplierItem()
+							.getScBidItem().getScRequestItem()
+							.getTplSpecQuestion(), bidPriceItem.getBidPrice(),
+							bidPriceItem.getScBidSupplierItem().getScBidItem()
+									.getQty());
+		}
+		if (lastBidPriceTotal != null
+				&& (lastBidPriceTotal.compareTo(new BigDecimal(0.0d)) == 1)) {
+			return nf.format(lastBidPriceTotal);
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * method to return item start price total
+	 * 
+	 * @return the startPriceTotal
+	 */
+	public String startPriceTotal(ScBidPrice bidPriceItem) {
+
+		BigDecimal lastStartPriceTotal = null;
+		if (bidPriceItem.getScBidSupplierItem().getItemStartPrice() != null) {
+			lastStartPriceTotal = this.tplSpecHelper
+					.calcTotalAmount(bidPriceItem.getScBidSupplierItem()
+							.getScBidItem().getScRequestItem()
+							.getTplSpecQuestion(), bidPriceItem
+							.getScBidSupplierItem().getItemStartPrice(),
+							bidPriceItem.getScBidSupplierItem().getScBidItem()
+									.getQty());
+		}
+		if (lastStartPriceTotal != null
+				&& (lastStartPriceTotal.compareTo(new BigDecimal(0.0d)) == 1)) {
+			return nf.format(lastStartPriceTotal);
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -1129,62 +1241,19 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		this.index = index;
 	}
 
-	public String itemNewPriceTotal(ScBidPrice bidPriceItem) {
-		BigDecimal newPriceTotal = null;
-		if (bidPriceItem.getNewBidPrice() != null
-				&& bidPriceItem.getNewBidPrice().getBidPrice() != null) {
-			newPriceTotal = this.tplSpecHelper.calcTotalAmount(bidPriceItem
-					.getScBidSupplierItem().getScBidItem().getScRequestItem()
-					.getTplSpecQuestion(), bidPriceItem.getNewBidPrice()
-					.getBidPrice(), bidPriceItem.getScBidSupplierItem()
-					.getScBidItem().getQty());
-		}
-		if (newPriceTotal != null
-				&& (newPriceTotal.compareTo(new BigDecimal(0.0d)) == 1)) {
-			return nf.format(newPriceTotal);
-		} else {
-			return null;
-
-		}
+	/**
+	 * @return the tolerancePrice
+	 */
+	public BigDecimal getTolerancePrice() {
+		return tolerancePrice;
 	}
 
-	public String lastBidPriceTotal(ScBidPrice bidPriceItem) {
-
-		BigDecimal lastBidPriceTotal = null;
-		if (bidPriceItem.getBidPrice() != null) {
-			lastBidPriceTotal = this.tplSpecHelper
-					.calcTotalAmount(bidPriceItem.getScBidSupplierItem()
-							.getScBidItem().getScRequestItem()
-							.getTplSpecQuestion(), bidPriceItem.getBidPrice(),
-							bidPriceItem.getScBidSupplierItem().getScBidItem()
-									.getQty());
-		}
-		if (lastBidPriceTotal != null
-				&& (lastBidPriceTotal.compareTo(new BigDecimal(0.0d)) == 1)) {
-			return nf.format(lastBidPriceTotal);
-		} else {
-			return null;
-		}
-	}
-
-	public String startPriceTotal(ScBidPrice bidPriceItem) {
-
-		BigDecimal lastStartPriceTotal = null;
-		if (bidPriceItem.getScBidSupplierItem().getItemStartPrice() != null) {
-			lastStartPriceTotal = this.tplSpecHelper
-					.calcTotalAmount(bidPriceItem.getScBidSupplierItem()
-							.getScBidItem().getScRequestItem()
-							.getTplSpecQuestion(), bidPriceItem
-							.getScBidSupplierItem().getItemStartPrice(),
-							bidPriceItem.getScBidSupplierItem().getScBidItem()
-									.getQty());
-		}
-		if (lastStartPriceTotal != null
-				&& (lastStartPriceTotal.compareTo(new BigDecimal(0.0d)) == 1)) {
-			return nf.format(lastStartPriceTotal);
-		} else {
-			return null;
-		}
+	/**
+	 * @param tolerancePrice
+	 *            the tolerancePrice to set
+	 */
+	public void setTolerancePrice(BigDecimal tolerancePrice) {
+		this.tolerancePrice = tolerancePrice;
 	}
 
 }
