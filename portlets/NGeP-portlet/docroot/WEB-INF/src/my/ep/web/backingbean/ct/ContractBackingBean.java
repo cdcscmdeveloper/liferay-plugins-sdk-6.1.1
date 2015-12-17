@@ -59,8 +59,6 @@ import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.dtl.ContractZoneReqDTO;
 import my.ep.dto.ct.dtl.ContractZoneResDTO;
-import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
-import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
