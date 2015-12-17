@@ -81,15 +81,33 @@
 						     </span></td>	
 							<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scLoiLoaItem.scRequestItem.uom.uomName</span></td>
 							<td align="right"><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">
-							#if($!scLoiLoaItem.scQtProposalItem.offerPrice) 
-	                            $String.format("%.2f", $!scLoiLoaItem.scQtProposalItem.offerPrice) 
-                             #end </span></td>
+							  
+							  #if($isBiddingAward || $isReFinalizationBidding) 
+							       #if($!scLoiLoaItem.scQtProposalItem.finalPrice) 
+	                                  $String.format("%.2f", $!scLoiLoaItem.scQtProposalItem.finalPrice) 
+                                     #end 
+							  #else
+							        #if($!scLoiLoaItem.scQtProposalItem.offerPrice) 
+	                                  $String.format("%.2f", $!scLoiLoaItem.scQtProposalItem.offerPrice) 
+                                   #end 
+							   #end 
+							 
+                             </span></td>
 							
 							<td align="right"><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">
-								#if ($!scLoiLoaItem.tplSpecTierQty )
-								#else
-									$!scLoiLoaItem.offeredPriceSubTotal
-								#end
+							
+							 #if($isBiddingAward || $isReFinalizationBidding) 
+							      #if ($!scLoiLoaItem.tplSpecTierQty )
+								  #else
+									  $!scLoiLoaItem.bidFinalPriceSubTotal
+								  #end
+							  #else
+							        #if ($!scLoiLoaItem.tplSpecTierQty )
+								    #else
+									   $!scLoiLoaItem.offeredPriceSubTotal
+								    #end
+							   #end 
+								
 							</span></td>
 						</tr>
 					#end
@@ -104,8 +122,15 @@
 							<td></td>
 							<td></td>
 							<td></td>
-							<td>Total</td>
-							<td align="right">$scLoi.offeredPriceTotal</td>
+							<td align="right">Total</td>
+							<td align="right">
+							
+							 #if($isBiddingAward || $isReFinalizationBidding) 
+							       $!scLoi.bidFinalPriceTotal
+							  #else
+							        $!scLoi.offeredPriceTotal
+							   #end 
+							</td>
 						</tr>
 				</table>
 			</span>

@@ -63,9 +63,6 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
-	/** The qt. */
-	private ScQt qt;
-
 	/** The comittee users. */
 	private List<SelectItem> comitteeUsers;
 	
@@ -384,6 +381,9 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	
 	/** The selected supp loi loa bean. */
 	private LoiLoaBean selectedLoiLoaBean;
+	
+	/** The is refinalized bidding. */
+	private boolean  refinalizedBidding = Boolean.FALSE;
 	
     /**
      * Gets the spki backing bean.
@@ -914,24 +914,6 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setApprovalDate(String approvalDate) {
 		this.approvalDate = approvalDate;
-	}
-
-	/**
-	 * Gets the qt.
-	 *
-	 * @return the qt
-	 */
-	public ScQt getQt() {
-		return qt;
-	}
-
-	/**
-	 * Sets the qt.
-	 *
-	 * @param qt            the qt to set
-	 */
-	public void setQt(ScQt qt) {
-		this.qt = qt;
 	}
 
 	/**
@@ -2256,5 +2238,21 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	public void setSelectedLoiLoaBean(LoiLoaBean selectedLoiLoaBean) {
 		this.selectedLoiLoaBean = selectedLoiLoaBean;
 	}
+
+	/**
+	 * @return the refinalizedBidding
+	 */
+	public boolean isRefinalizedBidding() {
+		return refinalizedBidding;
+	}
+
+	/**
+	 * @param refinalizedBidding the refinalizedBidding to set
+	 */
+	public void setRefinalizedBidding(boolean refinalizedBidding) {
+		this.refinalizedBidding = refinalizedBidding;
+	}
+	
+	
 	
 }
