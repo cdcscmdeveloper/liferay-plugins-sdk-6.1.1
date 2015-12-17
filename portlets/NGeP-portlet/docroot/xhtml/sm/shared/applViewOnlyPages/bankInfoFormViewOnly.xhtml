@@ -155,8 +155,8 @@
 					<tr>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bankDtls.is.associate.to.hq']}" /></td>
 						<td>
-							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.selectedBank.forHqFlg}"/>
-							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.no']}" rendered="#{!viewSmApplBackingBean.managedBean.selectedBank.forHqFlg}"/>
+							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.selectedBank.forHqFlg eq 1}"/>
+							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.no']}" rendered="#{viewSmApplBackingBean.managedBean.selectedBank.forHqFlg ne 1}"/>
 						</td>
 					</tr>
 					
