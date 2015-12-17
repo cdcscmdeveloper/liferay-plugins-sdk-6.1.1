@@ -459,9 +459,9 @@ public class SimpleQuoteBackingBean extends
 				}
 			}
 		}
-
+		getManagedBean().setScQuote(scQuote);
+		
 		if (docId != null && docId > 0) {
-			getManagedBean().setScQuote(scQuote);
 			// panel item
 			if (panelItemFlag) {
 				// check non contract item list
@@ -5015,19 +5015,14 @@ public class SimpleQuoteBackingBean extends
 	 */
 	public void supplierSubmit() {
 		debugLogger("supplierSubmit");
-		// ScQuote quote = getManagedBean().getScQuote();
 
-		/*
-		 * if(quote.getProcurementType() != null &&
-		 * quote.getProcurementType().getParameterCode
-		 * ().equals(ParameterConst.PROC_TYPE_G2G)){ //gpki
-		 * RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-		 * 
-		 * } else {
-		 */
-		// spki
-		RequestContext.getCurrentInstance().execute("spki_dlg.show();");
-		// }
+		if(isG2GSeller()){ //gpki
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+
+		}  else {
+			// spki
+			RequestContext.getCurrentInstance().execute("spki_dlg.show();");
+		}
 	}
 
 	/**
@@ -5054,31 +5049,28 @@ public class SimpleQuoteBackingBean extends
 			}
 
 			// gpki
-			/*
-			 * if(quote.getProcurementType() != null &&
-			 * quote.getProcurementType(
-			 * ).getParameterCode().equals(ParameterConst.PROC_TYPE_G2G)){
-			 * 
-			 * if (null != pmDigiSign) { updateSpkiDigiSignData(pmDigiSign,
-			 * ParameterConst.DOCTYPE_SIMPLE_QUOTE, quote.getQuoteId(),
-			 * quote.getQuoteNo(), prepareOriginalText(Boolean.TRUE)); }
-			 * RequestContext.getCurrentInstance().execute("gpki_dlg.hide();");
-			 * } else {
-			 */
+			if(isG2GSeller()){
+				if (null != pmDigiSign) { 
+					updateSpkiDigiSignData(pmDigiSign,
+							ParameterConst.DOCTYPE_SIMPLE_QUOTE, quote.getQuoteId(),
+							quote.getQuoteNo(), prepareOriginalText(Boolean.TRUE)); }
+				RequestContext.getCurrentInstance().execute("gpki_dlg.hide();");
+			} else {
+				// spki
+				if (null != pmDigiSign) {
+					updateSpkiDigiSignData(pmDigiSign,
+							ParameterConst.DOCTYPE_SIMPLE_QUOTE,
+							quote.getQuoteId(), quote.getQuoteNo(),
+							prepareOriginalText(Boolean.FALSE));
+				}
 
-			// spki
-			if (null != pmDigiSign) {
-				updateSpkiDigiSignData(pmDigiSign,
-						ParameterConst.DOCTYPE_SIMPLE_QUOTE,
-						quote.getQuoteId(), quote.getQuoteNo(),
-						prepareOriginalText(Boolean.FALSE));
+				RequestContext.getCurrentInstance().execute("spki_dlg.hide();");
+				byte[] signedData = getManagedBean().getSpkiBackingBean()
+						.spkiSignTransaction(prepareOriginalText(Boolean.FALSE));
+				pmDigiSign.setSpkiSignedData(signedData);
 			}
-			RequestContext.getCurrentInstance().execute("spki_dlg.hide();");
-			byte[] signedData = getManagedBean().getSpkiBackingBean()
-					.spkiSignTransaction(prepareOriginalText(Boolean.FALSE));
-			pmDigiSign.setSpkiSignedData(signedData);
-			// }
 
+			
 			// hide blcok ui
 			RequestContext.getCurrentInstance().execute("blockWidget.hide();");
 
@@ -6004,17 +5996,6 @@ public class SimpleQuoteBackingBean extends
 
 		}
 		return root;
-	}
-
-	public boolean isSupplierUser() {
-		FacesScopes fs = new FacesScopes();
-		return fs.hasRoleUser("SUPPLIER_ADMIN")
-				|| fs.hasRoleUser("SUPPLIER_USER")
-				|| fs.hasRoleUser("MOF_SUPPLIER_USER")
-				|| fs.hasRoleUser("MOF_SUPPLIER_ADMIN")
-				|| fs.hasRoleUser("BASIC_SUPPLIER_USER")
-				|| fs.hasRoleUser("BASIC_SUPPLIER_ADMIN")
-				|| fs.hasRoleUser("SUPPLIER_TEMP");
 	}
 
 	public boolean isG2GSeller() {
