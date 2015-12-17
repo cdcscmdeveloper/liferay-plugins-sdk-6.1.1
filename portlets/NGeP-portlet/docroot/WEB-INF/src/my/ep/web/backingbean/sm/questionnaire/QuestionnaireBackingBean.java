@@ -166,7 +166,10 @@ public class QuestionnaireBackingBean extends BaseBackingBean<QuestionnaireManag
 							.getPmStatus()
 							.getStatusId()
 							.compareTo(
-									SupplierManagementConst.PM_STATUS_MOF_ACCT_MAINTAIN_APPROVED) == 0)) {
+									SupplierManagementConst.PM_STATUS_MOF_ACCT_MAINTAIN_APPROVED) == 0 || sts.getPmStatus()
+									.getStatusId()
+									.compareTo(
+											SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER_APPROVED) == 0)) {
 				answerStatus = "Diluluskan";
 			}
 			for (SmAnswer smAnswerTmp : smQues.getSmAnswerCategory()
