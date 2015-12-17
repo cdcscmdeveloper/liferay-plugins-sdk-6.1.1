@@ -89,7 +89,6 @@ import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.logging.LogKey;
-import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -473,7 +472,7 @@ public class ProfileManagementBackingBean extends
 				new UserProfilesSearchBean());
 		this.getManagedBean().setSelectedOrgProfile(null);
 		this.getManagedBean().setSelectedOrgType(null);
-		this.getManagedBean().setSelectedPmRoleMatrix(null);
+		this.getManagedBean().setSelectedRoleDesc(null);
 		getManagedBean().setLazy(false);
 		userOrgDataModel = new UserProfilePagingDataModel();
 	}
@@ -2815,8 +2814,7 @@ public class ProfileManagementBackingBean extends
 				&& !"".equalsIgnoreCase(upSearchBean.getUserRole())) {
 			logger.info("+ userRole " + upSearchBean.getUserRole());
 			SearchFilterBean userSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_LIKE.value());
-			userSearchBean.setCaseInsensitive(true);
+					SearchOperator.OPERATOR_EQUALS.value());
 			userSearchBean
 					.setSearchField("pmUserRoles.pmRole.roleCode");
 			userSearchBean.setSearchValue(upSearchBean.getUserRole());
@@ -5160,6 +5158,65 @@ public class ProfileManagementBackingBean extends
 			return null;
 		}
 		
+	}
+	
+	public void searchRoleMatrix(){
+		IRoleSO roleSO = null;		
+		UserProfilesSearchBean searchBean = getManagedBean().getUserProfileSearchBean();
+		if(searchBean.getSelectedRoleOptionSearch() == null && StringUtils.isNotBlank(searchBean.getUserRoleNameSearch())){
+			throw new EpException("Please select the role options");
+		}
+		
+		try {
+			ISearchBean<PmRoleDesc> searchBeanData =  new SearchBean<PmRoleDesc>();
+			
+			if(StringUtils.isNotBlank(searchBean.getUserRoleNameSearch())){
+				searchBeanData.getDataFilterBeans().add(
+					new SearchFilterBean("roleName",
+							SearchOperator.OPERATOR_LIKE.value(),
+							searchBean.getUserRoleNameSearch(),true));
+			}
+			
+			
+			RoleReqDTO roleReqDTO = new RoleReqDTO();
+			roleReqDTO.setLanguage(getFacesScopes().getUserLocale()
+					.getLanguage());
+
+			roleReqDTO.setSearchRoleBean(searchBeanData);
+			
+			roleReqDTO.setLanguage(getFacesScopes().getUserLocale()
+					.getLanguage());
+			roleReqDTO.setRoleCode(getRoleCode());
+			roleReqDTO.setOrgTypeId(getManagedBean().getSelectedOrgType().getParameterId());
+			roleReqDTO.setBpk(true);
+			roleSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IRoleSO.class);
+			RoleResDTO resDto = roleSO
+					.retrieveRoleDecsFromRoleMatrix(roleReqDTO);
+
+			if (resDto != null && resDto.isSuccessful()) {
+				getManagedBean().setRoleDescResults(resDto.getSearchRoleResultBean().getResultList());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			roleSO = null;
+		}
+	}
+	
+	public void resetRoleSearchAction(){
+		getManagedBean().getUserProfileSearchBean().setSelectedRoleOptionSearch(null);
+		getManagedBean().getUserProfileSearchBean().setUserRoleNameSearch(null);
+		getManagedBean().getRoleDescResults().clear();
+		searchRoleMatrix();
+	}
+	
+	public void populateToRoleSaveObject(){
+		if(getManagedBean().getSelectedRoleDesc() != null){
+			getManagedBean()
+			.getUserProfileSearchBean().setUserRole(getManagedBean().getSelectedRoleDesc().getPmRole().getRoleCode());
+		}
 	}
 
 }
