@@ -197,7 +197,6 @@ public class EvaluationBackingBean extends
 	/** The pm digi sign. */
 	private PmDigiSign pmDigiSign;
 
-
 	/**
 	 * Instantiates a new evaluation backing bean.
 	 * 
@@ -2428,7 +2427,7 @@ public class EvaluationBackingBean extends
 												.getQtId(), reqDTO
 												.getEvalStage()));
 				return "/xhtml/sc/evaluation/evaluationStage/technical/technicalOtherCheckListSuppliesMain.xhtml";
-				
+
 			}
 		} finally {
 
@@ -2459,7 +2458,7 @@ public class EvaluationBackingBean extends
 					checklistType);
 			this.getManagedBean().setUserScores(null);
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
-			
+
 			reqDTO.setCheckListId(this.getManagedBean().getScQtChecklist()
 					.getQtChecklistId());
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
@@ -3288,7 +3287,8 @@ public class EvaluationBackingBean extends
 		String proposalPage = null;
 		String evaluationPage = null;
 		SPDetailBackingBean detailBackingBean = new SPDetailBackingBean();
-		detailBackingBean.getManagedBean().setQt(this.getManagedBean().getScQt());
+		detailBackingBean.getManagedBean().setQt(
+				this.getManagedBean().getScQt());
 		try {
 			// this.getManagedBean().setTechindex(index);
 			this.getManagedBean().setUserScores(null);
@@ -3698,7 +3698,7 @@ public class EvaluationBackingBean extends
 							this.getManagedBean().getScQt());
 					proposalPage = detailBackingBean
 							.retrieveTecNonGovCompanyExpDtls(proposalCheckList);
-					
+
 					evaluationPage = "/xhtml/sc/evaluation/evaluationStage/technical/techPrivateCompanyExperience.xhtml";
 				}
 
@@ -3893,7 +3893,7 @@ public class EvaluationBackingBean extends
 					proposalPage = detailBackingBean
 							.retrieveEmployeeDtls(proposalCheckList);
 					evaluationPage = "/xhtml/sc/evaluation/evaluationStage/technical/technicalNoOfEmployees.xhtml";
-					
+
 				}
 
 			}
@@ -3930,7 +3930,8 @@ public class EvaluationBackingBean extends
 		String proposalPage = null;
 		String evaluationPage = null;
 		SPDetailBackingBean detailBackingBean = new SPDetailBackingBean();
-		detailBackingBean.getManagedBean().setQt(this.getManagedBean().getScQt());
+		detailBackingBean.getManagedBean().setQt(
+				this.getManagedBean().getScQt());
 		ITemplateSpecSO templateSpecSO = null;
 		try {
 			// this.getManagedBean().setTechindex(index);
@@ -4331,7 +4332,7 @@ public class EvaluationBackingBean extends
 									this.getManagedBean()
 											.getTechGovProposalScore());
 					this.getManagedBean().setStatusHide(true);
-					
+
 					proposalPage = detailBackingBean
 							.retrieveBankStmtDtls(proposalCheckList);
 					evaluationPage = "/xhtml/sc/evaluation/evaluationStage/financial/bankStatement.xhtml";
@@ -4502,7 +4503,7 @@ public class EvaluationBackingBean extends
 					this.getManagedBean().setStatusHide(true);
 					proposalPage = detailBackingBean
 							.retrieveCashOnHandDtls(proposalCheckList);
-					
+
 					evaluationPage = "/xhtml/sc/evaluation/evaluationStage/financial/cashOnHand.xhtml";
 
 				}
@@ -4588,7 +4589,7 @@ public class EvaluationBackingBean extends
 					this.getManagedBean().setStatusHide(true);
 					proposalPage = detailBackingBean
 							.retrieveAssetLiabilityDtls(proposalCheckList);
-					
+
 					evaluationPage = "/xhtml/sc/evaluation/evaluationStage/financial/assetsLiabilities.xhtml";
 				} else if (QTConstants.FINANCIAL_PAID_UP_CAPITAL_CODE
 						.equalsIgnoreCase(docDefinationKey)) {
@@ -7038,7 +7039,8 @@ public class EvaluationBackingBean extends
 			EvaluationReqDTO reqDtO = new EvaluationReqDTO();
 			reqDtO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDtO.setProposalChecklist(qtProposalChecklist);
-			reqDtO.setPrpExperienceList(this.getManagedBean().getPrpCompanyExperienceList());
+			reqDtO.setPrpExperienceList(this.getManagedBean()
+					.getPrpCompanyExperienceList());
 			List<ScQtCheckList> qtCheckLists = null;
 			if ("T".equalsIgnoreCase(getManagedBean().getCheckListType())) {
 				reqDtO.setEvalStage(getEvaluationStageForTechnicalChecklist());
@@ -7709,7 +7711,8 @@ public class EvaluationBackingBean extends
 	 */
 	public void preRenderView() {
 
-		SCEvaluationDataType evaluationDataType = getBpmTaskDetails(SCEvaluationDataType.class, null);
+		SCEvaluationDataType evaluationDataType = getBpmTaskDetails(
+				SCEvaluationDataType.class, null);
 		FacesScopes facesScopes = new FacesScopes();
 
 		// FacesScopes facesScopes = new FacesScopes();
@@ -9146,7 +9149,8 @@ public class EvaluationBackingBean extends
 		String templateDocUrl = null;
 		try {
 			TemplateDocBackingBean tplDocBB = new TemplateDocBackingBean();
-			tplDocBB.getManagedBean().setExternalPageUrl("/xhtml/sc/evaluation/evaluationMain.xhtml");
+			tplDocBB.getManagedBean().setExternalPageUrl(
+					"/xhtml/sc/evaluation/evaluationMain.xhtml");
 
 			this.getManagedBean().setScQtEvaluationReport(scQtEvaluationReport);
 
@@ -9920,8 +9924,6 @@ public class EvaluationBackingBean extends
 	public void setOutputTab(int outputTab) {
 		this.outputTab = outputTab;
 	}
-
-	
 
 	/**
 	 * Gets the text before sign.
