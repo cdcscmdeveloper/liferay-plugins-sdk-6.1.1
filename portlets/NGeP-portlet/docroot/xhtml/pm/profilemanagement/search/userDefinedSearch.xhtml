@@ -109,16 +109,21 @@
 					<p:outputLabel value="#{lbl['lbl.pm.profiles.search.role']}"/>
 				</th>
 				<td>
-				<ac:lov id="lovRoleDesc" lovId="PM_ROLE_MATRIX" size="27" 
-		            	update=":form:opDefinedSearch" readonly="true" 
-		            	disabled="#{profileManagementBackingBean.managedBean.selectedOrgType eq null or 
-		            	profileManagementBackingBean.managedBean.selectedOrgType.parameterId eq null }"
-						headerText="#{lbl['lbl.pm.profiles.authorisation.role.opt']}"
-						saveObject="profileManagementBackingBean.managedBean.selectedPmRoleMatrix"
-						value="#{profileManagementBackingBean.getRoleDesc(profileManagementBackingBean.managedBean.selectedPmRoleMatrix.assigneeRole.roleCode)}" 
-						postUpdateListener="profileManagementBackingBean.updateSearchCriteriaForRole"
-						conditionField="recordStatus^1|assigneeRole.recordStatus^1|orgType.parameterId^#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId}|#{profileManagementBackingBean.roleDecriptionFilter}" 
+					<p:inputText 
+						size="27"
+						id="itSelectedRoleDesc" 
+						value="#{not empty(profileManagementBackingBean.managedBean.selectedRoleDesc) ? profileManagementBackingBean.managedBean.selectedRoleDesc.roleName :''}" 
+						disabled="true"
 						/>
+					&#160;	
+					<p:commandLink id="roleSearchCL" partialSubmit="true"
+						process="@this" update="roleSearchPanel,roleResultPanel"
+						action="#{profileManagementBackingBean.resetRoleSearchAction}"
+						disabled="#{profileManagementBackingBean.managedBean.selectedOrgType eq null or 
+		            	profileManagementBackingBean.managedBean.selectedOrgType.parameterId eq null }"
+						oncomplete="roleSearchPopUp.show();" >
+						<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
+					</p:commandLink>
 				</td>
 				<th>&#160;</th>
 				<td>&#160;</td>
@@ -148,7 +153,7 @@
 				</th>
 				<td>
 					<p:selectOneMenu styleClass="ppDropDownWidthM" value="#{profileManagementBackingBean.managedBean.userProfileSearchBean.userRoleStatus}"
-						disabled="#{profileManagementBackingBean.managedBean.selectedPmRoleMatrix eq null}">
+						disabled="#{profileManagementBackingBean.managedBean.selectedRoleDesc eq null}">
 		                        <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
 		                        <f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />		   
 								<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}"
@@ -164,13 +169,14 @@
 				<td colspan="4">
 					<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.search']}" action="#{profileManagementBackingBean.searchUserProfile}"
-							update=":form:dtUserResult" />
+							update=":form:dtUserResult" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				        <p:commandButton value="#{lbl['lbl.btn.reset']}"  update=":form:opDefinedSearch, :form:dtUserResult" 
-				           	action="#{profileManagementBackingBean.resetUserProfileSearchBean}"/>
+				           	action="#{profileManagementBackingBean.resetUserProfileSearchBean}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 				  	</div>
 				</td>
 			</tr>
 		</table>
 		  <ac:lovPopup />
+		  	<ui:include src="/xhtml/pm/profilemanagement/common/roleSearchPopUp.xhtml" />
  	</p:outputPanel>
 </ui:composition>
