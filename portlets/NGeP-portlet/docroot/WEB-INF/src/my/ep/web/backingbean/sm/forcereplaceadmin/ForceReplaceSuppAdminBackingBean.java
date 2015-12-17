@@ -24,6 +24,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -58,6 +59,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		getManagedBean().setMailCities(new ArrayList<SelectItem>());
 		getManagedBean().setHasSupplierUser(false);
 		getManagedBean().setReactivateBasic(new ReactivateSupplierVO());
+		getManagedBean().setSmSupplier(new SmSupplier());
 		initIdentificationTypes();
 		initCountries();
 		initStatest();
@@ -69,29 +71,23 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * redirect to new personnel record page
 	 */
 	public void submit() {
-		if (getManagedBean().getOldAdmin() == null
-				|| getManagedBean().getOldAdmin().getPersonnelId() == null) {
-			getManagedBean().setExistingUser(false);
-			SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
-			reqDTO.setRegNo(getManagedBean().getReactivateBasic().getRegNo());
-			reqDTO.setEstDate(getManagedBean().getReactivateBasic()
-					.getEstablishDate());
-			getManagedBean()
-					.setSmSupplier(
-							SmServiceLookup
-									.getSupplierSearchSO()
-									.retrieveSuppProfileAndPersonnelsByBussRegNoAndEstDate(
-											reqDTO).getSmSupplier());
+		getManagedBean().setExistingUser(false);
+		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+		reqDTO.setRegNo(getManagedBean().getReactivateBasic().getRegNo());
+		reqDTO.setEstDate(getManagedBean().getReactivateBasic()
+				.getEstablishDate());
+		getManagedBean().setSmSupplier(
+				SmServiceLookup
+						.getSupplierSearchSO()
+						.retrieveSuppProfileAndPersonnelsByBussRegNoAndEstDate(
+								reqDTO).getSmSupplier());
 
-			// Company not exist
-			if (getManagedBean().getSmSupplier() == null
-					|| getManagedBean().getSmSupplier().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
-				throw new EpException(MessageConst.ERROR_722593);
-			} else {
-				validate();
-				executeDecision();
-			}
+		// Company not exist
+		if (getManagedBean().getSmSupplier() == null
+				|| getManagedBean().getSmSupplier().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
+			throw new EpException(MessageConst.ERROR_722593);
 		} else {
+			validate();
 			executeDecision();
 		}
 	}
@@ -117,10 +113,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * Replace admin with existing personnel and redirect to success page
 	 */
 	public void replaceWithExistingUser() {
-		if (getManagedBean().getReactivateBasic().isShowEmailInput()) {
-			getManagedBean().getNewAdmin().setEmail(
-					getManagedBean().getReactivateBasic().getEmail());
-		}
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
 				.reassignSupplierAdmin(getReqDTO());
 		redirectToSuccessPage(resDto);
@@ -132,8 +124,12 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * 
 	 * @return String
 	 */
-	public String cancelAddInFo() {
+	public String back() {
+		getManagedBean().setAgreeTnc(false);
 		getManagedBean().setExistingUser(false);
+		getManagedBean().getReactivateBasic().setShowEmailInput(false);
+		getManagedBean().setNewAdmin(null);
+		getManagedBean().setOldAdmin(null);
 		return "forceReplaceAdmin.xhtml";
 	}
 
@@ -186,6 +182,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 		reqDTO.setServerPort(fs.getRequest().getServerPort());
 		reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 		reqDTO.setOldAdminRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+		reqDTO.setEmail(getManagedBean().getReactivateBasic()
+				.isShowEmailInput() ? getManagedBean().getReactivateBasic()
+				.getEmail() : null);
 		return reqDTO;
 	}
 
@@ -259,8 +258,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 
 			// check if replace with catalogue user not allowed if have supplier
 			// user
-			if (getManagedBean().getNewAdmin().getEpRole()
-					.equals(RoleCode.CM_USER.value())
+			if (getManagedBean().getNewAdmin().getEpRole() != null
+					&& getManagedBean().getNewAdmin().getEpRole()
+							.equals(RoleCode.CM_USER.value())
 					&& getManagedBean().isHasSupplierUser()) {
 				throw new EpException(MessageConst.ERROR_722595);
 			}
@@ -283,9 +283,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 		// replace with existing personnel
 		else {
 			setShowOrHideEmail();
-			if (!getManagedBean().getReactivateBasic().isShowEmailInput()) {
-				RequestContext.getCurrentInstance().execute("tncDialog.show()");
-			}
+			SmCommonUtil.redirectToPage(
+					"/xhtml/sm/forcereplaceadmin/addExistingAdminInfo.xhtml",
+					"", null);
 		}
 	}
 
