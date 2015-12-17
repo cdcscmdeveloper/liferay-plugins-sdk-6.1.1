@@ -757,11 +757,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			throw new EpException(MessageConst.ERROR_750010);
 		}
 		
-		// CT Approver cannot approve the finalist agreement if:-
+		// CT Approver cannot submit the finalist agreement if:-
 		// -Performance bond not complete
 		// -FD Update/FD Creation/Change Bank process still in process. 
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) 
-				&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FINALIST_AGREEMENT_HT_NAME)) {
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
+				&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FINALIST_AGREEMENT_HT_NAME)) {
 			
 			IAgreementSO agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
