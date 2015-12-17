@@ -8,7 +8,8 @@
 
     <ui:param name="isZonal" value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.zonal}" />
 	<ui:param name="isBiddingAward" value="#{lOIDetailBackingBean.managedBean.scLoi.recommendBy.parameterCode eq ParameterConst.recommendByOnlineBidding}" />
-
+    <ui:param name="isRefinalizedBidding" value="#{lOIDetailBackingBean.managedBean.refinalizedBidding}" />
+     
 	<p:panel header="#{lbl['lbl.sc.loiloa.award.details']}"
 		id="afterNegoAwardDetails" toggleable="true">
 		<table>
@@ -123,11 +124,11 @@
             </p:column>
             
             <p:column  style="width:10%;text-align:right;">
-				<h:outputText value="#{loiLoaItem.scQtProposalItem.finalPrice}" rendered="#{isBiddingAward}">
+				<h:outputText value="#{loiLoaItem.scQtProposalItem.finalPrice}" rendered="#{isBiddingAward or isRefinalizedBidding}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 				
-				<h:outputText value="#{loiLoaItem.scQtProposalItem.offerPrice}" rendered="#{!isBiddingAward}">
+				<h:outputText value="#{loiLoaItem.scQtProposalItem.offerPrice}" rendered="#{!isBiddingAward and !isRefinalizedBidding}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 				<f:facet name="footer">
@@ -136,23 +137,23 @@
 			</p:column>
 
 			<p:column style="width:7%;text-align:right;">
-			   <h:panelGroup rendered="#{isBiddingAward}">  
-			       <h:outputText value="#{loiLoaItem.afterNegoSubTotal}" rendered="#{loiLoaItem.tplSpecTierQty eq null}">
+			   <h:panelGroup rendered="#{isBiddingAward or isRefinalizedBidding}">  
+			       <h:outputText value="#{loiLoaItem.bidFinalPriceSubTotal}" rendered="#{loiLoaItem.tplSpecTierQty eq null}">
 					   <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				  </h:outputText>
 		       </h:panelGroup>
 			  
-			  <h:panelGroup rendered="#{!isBiddingAward}">  		
+			  <h:panelGroup rendered="#{!isBiddingAward and !isRefinalizedBidding}">  		
 				<h:outputText value="#{loiLoaItem.offeredPriceSubTotal}" rendered="#{loiLoaItem.tplSpecTierQty eq null}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 				</h:panelGroup>
 				<f:facet name="footer">
 				      <h:outputText
-						value="#{lOIDetailBackingBean.managedBean.scLoi.afterNegoTotal}" rendered="#{isBiddingAward}">
+						value="#{lOIDetailBackingBean.managedBean.scLoi.bidFinalPriceTotal}" rendered="#{isBiddingAward or isRefinalizedBidding}">
 						 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
-					<h:outputText value="#{lOIDetailBackingBean.managedBean.scLoi.offeredPriceTotal}" rendered="#{!isBiddingAward}">
+					<h:outputText value="#{lOIDetailBackingBean.managedBean.scLoi.offeredPriceTotal}" rendered="#{!isBiddingAward and !isRefinalizedBidding}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 				</f:facet>
