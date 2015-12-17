@@ -14935,20 +14935,20 @@ public class ReportBackingBean extends
 	 */
 	public void changeRTReportType() {
 
-		this.getRptGenBean().setSmMandatoryReceiptDateView(false);
-		this.getRptGenBean().setSmMandatoryTransactionDateView(false);
-		this.getRptGenBean().setSmMandatoryRTDateView(false);
+		this.getManagedBean().getRptGenBean().setSmMandatoryReceiptDateView(false);
+		this.getManagedBean().getRptGenBean().setSmMandatoryTransactionDateView(false);
+		this.getManagedBean().getRptGenBean().setSmMandatoryRTDateView(false);
 
 		if (this.getSmRTReportType() != null) {
 			if (this.getSmRTReportType().equalsIgnoreCase(
 					ReportConst.SM_REPORT_RESIT)) {
-				this.getRptGenBean().setSmMandatoryRTDateView(true);
-				this.getRptGenBean().setSmMandatoryReceiptDateView(true);
+				this.getManagedBean().getRptGenBean().setSmMandatoryRTDateView(true);
+				this.getManagedBean().getRptGenBean().setSmMandatoryReceiptDateView(true);
 
 			} else if (this.getSmRTReportType().equalsIgnoreCase(
 					ReportConst.SM_REPORT_TRANSACTION)) {
-				this.getRptGenBean().setSmMandatoryRTDateView(true);
-				this.getRptGenBean().setSmMandatoryTransactionDateView(true);
+				this.getManagedBean().getRptGenBean().setSmMandatoryRTDateView(true);
+				this.getManagedBean().getRptGenBean().setSmMandatoryTransactionDateView(true);
 			}
 		}
 	}
@@ -14958,21 +14958,21 @@ public class ReportBackingBean extends
 	 */
 	public void changeRTReportTypeForPayment() {
 
-		this.getRptGenBean().setSmNonMandatoryReceiptDateView(false);
-		this.getRptGenBean().setSmNonMandatoryTransactionDateView(false);
+		this.getManagedBean().getRptGenBean().setSmNonMandatoryReceiptDateView(false);
+		this.getManagedBean().getRptGenBean().setSmNonMandatoryTransactionDateView(false);
 
 		if (this.getSmRTReportType() != null) {
 			if (this.getSmRTReportType().equalsIgnoreCase(
 					ReportConst.SM_REPORT_RESIT)) {
 
-				this.getRptGenBean().setSmNonMandatoryReceiptDateView(true);
+				this.getManagedBean().getRptGenBean().setSmNonMandatoryReceiptDateView(true);
 
 			} else if (this.getSmRTReportType().equalsIgnoreCase(
 					ReportConst.SM_REPORT_TRANSACTION)) {
-				this.getRptGenBean().setSmNonMandatoryTransactionDateView(true);
+				this.getManagedBean().getRptGenBean().setSmNonMandatoryTransactionDateView(true);
 			}
 		} else {
-			this.getRptGenBean().setSmNonMandatoryTransactionDateView(true);
+			this.getManagedBean().getRptGenBean().setSmNonMandatoryTransactionDateView(true);
 		}
 	}
 
