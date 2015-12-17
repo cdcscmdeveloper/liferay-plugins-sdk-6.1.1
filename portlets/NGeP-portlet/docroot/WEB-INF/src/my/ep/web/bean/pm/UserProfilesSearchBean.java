@@ -17,6 +17,8 @@ public class UserProfilesSearchBean {
 	private Long selectedOrgProfileId;
 	private Long userStatus;
 	private Long userRoleStatus;
+	private Long selectedRoleOptionSearch;
+	private String userRoleNameSearch;
 	/**
 	 * @return the userName
 	 */
@@ -118,6 +120,30 @@ public class UserProfilesSearchBean {
 	 */
 	public void setUserRoleStatus(Long userRoleStatus) {
 		this.userRoleStatus = userRoleStatus;
+	}
+	/**
+	 * @return the userRoleNameSearch
+	 */
+	public String getUserRoleNameSearch() {
+		return userRoleNameSearch;
+	}
+	/**
+	 * @param userRoleNameSearch the userRoleNameSearch to set
+	 */
+	public void setUserRoleNameSearch(String userRoleNameSearch) {
+		this.userRoleNameSearch = userRoleNameSearch;
+	}
+	/**
+	 * @return the selectedRoleOptionSearch
+	 */
+	public Long getSelectedRoleOptionSearch() {
+		return selectedRoleOptionSearch;
+	}
+	/**
+	 * @param selectedRoleOptionSearch the selectedRoleOptionSearch to set
+	 */
+	public void setSelectedRoleOptionSearch(Long selectedRoleOptionSearch) {
+		this.selectedRoleOptionSearch = selectedRoleOptionSearch;
 	}
 	
 	

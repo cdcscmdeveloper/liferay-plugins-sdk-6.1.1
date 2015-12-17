@@ -24,11 +24,8 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.web.bean.pm.UserProfilesSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
-
-import sun.util.logging.resources.logging;
 
 
 /**
@@ -79,6 +76,8 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private Integer roleTabActiveIndex = 0;
 	private boolean isDisabledOrgFields = false;
 	private PmRoleMatrix selectedPmRoleMatrix;
+	private List<PmRoleDesc> roleDescResults;
+	private PmRoleDesc selectedRoleDesc;
 	
 	public PmUser getPmUserOriginal() {
 		return pmUserOriginal;
@@ -525,6 +524,33 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedPmRoleMatrix(PmRoleMatrix selectedPmRoleMatrix) {
 		this.selectedPmRoleMatrix = selectedPmRoleMatrix;
+	}
+	/**
+	 * @return the roleDescResults
+	 */
+	public List<PmRoleDesc> getRoleDescResults() {
+		if(roleDescResults == null){
+			roleDescResults = new ArrayList<PmRoleDesc>();
+		}
+		return roleDescResults;
+	}
+	/**
+	 * @param roleDescResults the roleDescResults to set
+	 */
+	public void setRoleDescResults(List<PmRoleDesc> roleDescResults) {
+		this.roleDescResults = roleDescResults;
+	}
+	/**
+	 * @return the selectedRoleDesc
+	 */
+	public PmRoleDesc getSelectedRoleDesc() {
+		return selectedRoleDesc;
+	}
+	/**
+	 * @param selectedRoleDesc the selectedRoleDesc to set
+	 */
+	public void setSelectedRoleDesc(PmRoleDesc selectedRoleDesc) {
+		this.selectedRoleDesc = selectedRoleDesc;
 	}
 	
 

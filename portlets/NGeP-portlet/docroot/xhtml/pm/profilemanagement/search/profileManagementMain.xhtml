@@ -12,7 +12,9 @@ xmlns:tp="http://java.sun.com/jsf/composite/ep"
 	<ui:define name="contentSection">
 		<!-- Validation Message -->
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
-		
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 		<!-- Search User -->
 		<ui:include src="/xhtml/pm/profilemanagement/search/userProfileSearch.xhtml" />
 	</ui:define>
