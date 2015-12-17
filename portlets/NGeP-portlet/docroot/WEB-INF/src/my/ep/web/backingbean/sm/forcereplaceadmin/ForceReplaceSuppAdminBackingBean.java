@@ -62,7 +62,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		getManagedBean().setSmSupplier(new SmSupplier());
 		initIdentificationTypes();
 		initCountries();
-		initStatest();
+		initStates();
 		SmCommonUtil.redirectToPage("forceReplaceAdmin.xhtml", "", null);
 	}
 
@@ -348,7 +348,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 	/**
 	 * Initialize list of state
 	 */
-	private void initStatest() {
+	private void initStates() {
 		getManagedBean().setPermStates(
 				SmCommonUtil.getStateList(getManagedBean().getMyCountryId()));
 		getManagedBean().setMailStates(
