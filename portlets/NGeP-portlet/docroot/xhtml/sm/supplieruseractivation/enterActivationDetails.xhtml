@@ -12,13 +12,31 @@
 	<ui:define name="contentSection">
 	
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
-	<table>
+	<table border="1">
 		<tr>
 			<td colspan="2">
-				#{lbl['lbl.sm.activation.msg']}
+				<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.activation.msg']}"></h:outputText>
 			</td>
 		</tr>
 		
+		<tr>
+			<td>
+				<h:outputLabel value="Name" />
+			</td>
+			<td>
+				<h:outputText value="#{supplierUserActivationBackingBean.managedBean.smPersonnel.name}" disabled="true" />
+			</td>
+		</tr>
+		
+		<tr>
+			<td>
+				<h:outputLabel value="Identification Number" />
+			</td>
+			<td>
+				<h:outputText value="#{supplierUserActivationBackingBean.managedBean.smPersonnel.identificationNo}" disabled="true" />
+			</td>
+		</tr>
+
 		<tr>
 			<td>
 				<h:outputLabel value="#{lbl['lbl.sm.activation.key']}" />
