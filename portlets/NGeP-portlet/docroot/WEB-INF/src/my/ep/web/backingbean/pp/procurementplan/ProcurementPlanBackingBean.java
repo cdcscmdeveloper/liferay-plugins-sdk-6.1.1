@@ -92,6 +92,7 @@ import my.ep.web.util.pp.common.PpCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 import org.primefaces.model.DualListModel;
 
 import com.liferay.portal.util.PortalUtil;
@@ -1510,7 +1511,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			if(ppPlan.getStatus()==null || ppPlan.getStatus().getStatusId()==null
 					|| (ProcurementPlanConst.PPE_PENDING_REVISION.equals(ppPlan.getStatus().getStatusId())
 					|| ProcurementPlanConst.PPE_APPROVED.equals(ppPlan.getStatus().getStatusId())
-					|| ProcurementPlanConst.PPE_PENDING_SUBMISSION.equals(ppPlan.getStatus().getStatusId()))){
+					|| ProcurementPlanConst.PPE_PENDING_SUBMISSION.equals(ppPlan.getStatus().getStatusId())
+					|| ProcurementPlanConst.PPE_PENDING_APPROVAL.equals(ppPlan.getStatus().getStatusId()))){
 				log.info("getting justification");
 				justifications = new ArrayList<PpRemark>();
 				int itemIndex = 0;
@@ -2112,6 +2114,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public void confirmRemarkCloseDialog(){
 		log.info("confirmRemarkCloseDialog");
 		this.getManagedBean().setConfirmRemark(true);
+		RequestContext.getCurrentInstance().execute("dlItemRemarkWv.hide()");
 	}
 	
 
@@ -2658,7 +2661,21 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	public void confirmJustificationCloseDialog(){
 		log.info("confirmJustificationCloseDialog");
+//		PpRemark ppRemark = getManagedBean().getSelectedJustifications().get(0);
+//		if(getManagedBean().getSelectedPlan() != null 
+//				&& getManagedBean().getSelectedPlan().getPpExpenditureItems() != null
+//				&& ParameterConst.DOCTYPE_PLAN_EXPENDITURE.equals(ppRemark.getDocType()) 
+//				&& StringUtils.isBlank(ppRemark.getRemark())){
+//			for(PpExpenditureItem epItem:getManagedBean().getSelectedPlan().getPpExpenditureItems()){
+//				if(epItem.getExpenditureItemId().equals(ppRemark.getDocId())){
+//					epItem.getJustifications().clear();
+//				
+//			}
+//			
+//			}
+//		}
 		this.getManagedBean().setConfirmJustification(true);
+		RequestContext.getCurrentInstance().execute("dlItemJustificationWv.hide()");
 	}
 	
 	public void retrieveEpRejectReasons(PpExpenditureItem epItem){
