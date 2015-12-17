@@ -10,12 +10,16 @@
 	<p:blockUI block=":form" widgetVar="blockWidget">
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
-		
-	<ui:param name="isMultipleLOI" value="#{lOADetailBackingBean.managedBean.scLoa.finalizationMethod eq ParameterConst.recommendByMultipleLoi}" />
+
+	<ui:param name="isMultipleLOI"
+		value="#{lOADetailBackingBean.managedBean.scLoa.finalizationMethod eq ParameterConst.recommendByMultipleLoi}" />
+	<ui:param name="validityDaysExpiredQt"
+		value="#{lOADetailBackingBean.checkProposalValidityDateReach(lOADetailBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
 
 	<div class="ppRightBtn">
-		<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all" partialSubmit="true" update="@form"
-			onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+		<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
+			partialSubmit="true" update="@form" onstart="blockWidget.show();"
+			oncomplete="blockWidget.hide();"
 			action="#{lOADetailBackingBean.saveAction}" />
 
 		<c:choose>
@@ -34,12 +38,13 @@
 								postSignAction="#{lOADetailBackingBean.spkiSignAction(spkiBackingBean.pmDigiSign)}" />
 						</p:outputPanel>
 						<p:commandButton value="#{lbl[buttonLabel]}"
-						    disabled="#{!lOADetailBackingBean.managedBean.agreeWithTermsConditions}"
+							rendered="#{validityDaysExpiredQt}"
+							disabled="#{!lOADetailBackingBean.managedBean.agreeWithTermsConditions}"
 							styleClass="ui-button" update="spkiOutputPanel"
-							partialSubmit="true" process="@form" 
+							partialSubmit="true" process="@form"
 							action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
 							actionListener="#{lOADetailBackingBean.managedBean.spkiBackingBean.getChallengeQuestions}"
-							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" >
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
 							<f:setPropertyActionListener value="#{bpmAction}"
 								target="#{lOADetailBackingBean.managedBean.action}" />
 						</p:commandButton>
@@ -47,7 +52,7 @@
 
 					<h:panelGroup rendered="#{bpmAction == 'REJECT'}">
 						<p:commandButton value="#{lbl[buttonLabel]}"
-						    rendered="#{!isMultipleLOI}"
+							rendered="#{!isMultipleLOI and validityDaysExpiredQt}"
 							styleClass="ui-button" onstart="blockWidget.show();"
 							oncomplete="blockWidget.hide();"
 							disabled="#{!lOADetailBackingBean.managedBean.scLoa.loaAllowReject}"
