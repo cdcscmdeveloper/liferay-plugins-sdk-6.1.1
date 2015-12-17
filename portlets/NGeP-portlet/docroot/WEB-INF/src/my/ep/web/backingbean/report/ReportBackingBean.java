@@ -11369,11 +11369,22 @@ public class ReportBackingBean extends
 						+ new FacesScopes().getUserSessionBean().getUserId()
 								.toString());
 			}
-			
-			if ((CollectionUtils.isEmpty(this.getSmMofRegistrationFeeList())
-					&& CollectionUtils.isEmpty(this.getSmProcessingFeeList()) && CollectionUtils
-						.isEmpty(this.getSmSoftCertificateFeeList()))) {
-				throw new EpException(MessageConst.ERROR_REPORT_780027);
+			if ((this.getReportValue() != null && (getManagedBean()
+					.getReportValue().trim()
+					.equalsIgnoreCase(ReportConst.SM_COLLECTION_AND_TRANSACTION_DATE_RPT_VAL)))
+					|| (this.getReportValue() != null && (getManagedBean()
+							.getReportValue().trim()
+							.equalsIgnoreCase(ReportConst.SM_COLLECTION_PAYMENT_METHODS_RPT_VAL)))
+					|| (this.getReportValue() != null && (getManagedBean()
+							.getReportValue().trim()
+							.equalsIgnoreCase(ReportConst.SM_REVENUE_COLLECTION_RPT_VAL)))) {
+				if ((CollectionUtils
+						.isEmpty(this.getSmMofRegistrationFeeList())
+						&& CollectionUtils.isEmpty(this
+								.getSmProcessingFeeList()) && CollectionUtils
+							.isEmpty(this.getSmSoftCertificateFeeList()))) {
+					throw new EpException(MessageConst.ERROR_REPORT_780027);
+				}
 			}
 			
 			if (((this.getSmThresholdFromYear() != null) && (this
@@ -14929,22 +14940,20 @@ public class ReportBackingBean extends
 
 		this.getRptGenBean().setSmMandatoryReceiptDateView(false);
 		this.getRptGenBean().setSmMandatoryTransactionDateView(false);
-		//this.getRptGenBean().setSmMandatoryRTDateView(false);
+		this.getRptGenBean().setSmMandatoryRTDateView(false);
 
 		if (this.getSmRTReportType() != null) {
 			if (this.getSmRTReportType().equalsIgnoreCase(
 					ReportConst.SM_REPORT_RESIT)) {
-				//this.getRptGenBean().setSmMandatoryRTDateView(true);
+				this.getRptGenBean().setSmMandatoryRTDateView(true);
 				this.getRptGenBean().setSmMandatoryReceiptDateView(true);
 
 			} else if (this.getSmRTReportType().equalsIgnoreCase(
 					ReportConst.SM_REPORT_TRANSACTION)) {
-				//this.getRptGenBean().setSmMandatoryRTDateView(true);
+				this.getRptGenBean().setSmMandatoryRTDateView(true);
 				this.getRptGenBean().setSmMandatoryTransactionDateView(true);
 			}
-		} else {
-			this.getRptGenBean().setSmMandatoryRTDateView(false);
-		}
+		} 
 	}
 
 	/**
