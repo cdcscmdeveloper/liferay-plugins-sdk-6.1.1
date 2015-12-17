@@ -166,7 +166,7 @@
 								<p:commandButton
 									action="#{catalogueBackingBean.navigateContractRequest()}"
 									rendered="#{unspscCodeBackingBean.requisitioner}"
-									value="CR ( #{fn:length(catalogueBackingBean.managedBean.ctRequestList)} )"
+									value="#{lbl['lbl.sc.contract.request']} ( #{fn:length(catalogueBackingBean.managedBean.ctRequestList)} )"
 									disabled="#{fn:length(catalogueBackingBean.managedBean.ctRequestList)&lt;1}"></p:commandButton>
 
 								<p:commandButton id="requestNoteId"
