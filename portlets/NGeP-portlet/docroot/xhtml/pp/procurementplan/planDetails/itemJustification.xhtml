@@ -15,9 +15,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	<p:dialog id="dlItemJustification" header="#{lbl['lbl.pp.justification']}" modal="true" 
 		widgetVar="dlItemJustificationWv" dynamic="true" width="700" height="200" closable="false">
 		<p:ajax event="close" listener="#{pPlanBackingBean.closeJustification}" update="dgJustication"/>
-		<p:remoteCommand name="confirmCmd" action="#{pPlanBackingBean.confirmJustificationCloseDialog}" oncomplete="dlItemJustificationWv.hide()" />
-		<p:remoteCommand name="cancelCmd" oncomplete="dlItemJustificationWv.hide()" />
-		
 		<p:outputPanel id="opItemJustification">
 			<p:dataGrid id="dgJustication" value="#{pPlanBackingBean.managedBean.selectedJustifications}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 				<table class="ppRmkTable">
@@ -36,7 +33,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						<td>
 						<!-- for phase 1 -->
 						<p:inputTextarea cols="40" maxlength="1000" value="#{remarkVar.remark}"
-							disabled="#{!pPlanBackingBean.managedBean.modeEditable}"/> 
+							disabled="#{!pPlanBackingBean.managedBean.modeEditable}">
+							<p:ajax event="blur" process="@this" update="@this" partialSubmit="true"/>
+							</p:inputTextarea> 
 							
 						<!-- enable this for phase 2 and disable phase 1 section to test	 
 						<p:inputTextarea cols="40" maxlength="1000" value="#{remarkVar.remark}" 
@@ -54,8 +53,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<br/>
 			<br/>  
 	 		<div class="ppRightBtn">
-			  <p:commandButton id="cmdJustificationOk" value="#{lbl['lbl.btn.ok']}" immediate="true" oncomplete="confirmCmd();" />
-			  <p:commandButton id="cmdJustificationCancel" value="#{lbl['lbl.btn.cancel']}" immediate="true"  oncomplete="cancelCmd();" />		
+			  <p:commandButton id="cmdJustificationOk" value="#{lbl['lbl.btn.ok']}" immediate="true"  action="#{pPlanBackingBean.confirmJustificationCloseDialog}"  />
+			  <p:commandButton id="cmdJustificationCancel" value="#{lbl['lbl.btn.cancel']}" process="@this" immediate="true"  oncomplete="dlItemJustificationWv.hide();" />		
 			</div>      
 		</p:outputPanel>
 	</p:dialog>

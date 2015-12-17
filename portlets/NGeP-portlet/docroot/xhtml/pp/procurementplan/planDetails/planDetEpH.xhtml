@@ -167,7 +167,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        	</p:column>
 	        </ui:remove>
 	        <p:column style="white-space:nowrap;" rendered="#{pPlanBackingBean.managedBean.modeReview}">
-			    <p:selectBooleanCheckbox id="chkRejected" value="#{epItem.rejected}" disabled="#{!pPlanBackingBean.managedBean.modeReviewEditable}">
+			    <p:selectBooleanCheckbox id="chkRejected" value="#{epItem.rejected}" disabled="#{!pPlanBackingBean.managedBean.modeReviewEditable or epItem.brandNew}">
 			    	<p:ajax event="change" update="clEpReason"/>
 			    </p:selectBooleanCheckbox>
 			    &#160;
