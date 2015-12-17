@@ -5611,6 +5611,33 @@ public class SupplierFinalizationBackingBean extends
 		
 		return selectionMode;
 	}
+	
+	/**
+	 * Event for Re-evaluate by Document compliance, Technical, Financial
+	 */
+	public void reEvaluateByOptionEvent(String reEvaluateOption, boolean isSelected) {
+		ScQt scQt = getManagedBean().getScQt();
+		String evaluationType = scQt.getEvaluationType();
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+		
+		if ("1".equals(reEvaluateOption)) {
+			scQtFinalization.setReEvaluateCompReq(isSelected);
+			
+			if ( ParameterConst.EVALUATION_TYPES_TWO_TIER
+					.equals(evaluationType) || 
+						(ParameterConst.EVALUATION_TYPES_ONE_TIER
+							.equals(evaluationType) && 
+								scQt.isTechEvaluationReq()) ) {
+				scQtFinalization.setReEvaluateTechReq(isSelected);
+			}
+			scQtFinalization.setReEvaluateFinReq(isSelected);
+		} else if ("2".equals(reEvaluateOption)) {
+			scQtFinalization.setReEvaluateTechReq(isSelected);
+			scQtFinalization.setReEvaluateFinReq(isSelected);
+		} else if ("3".equals(reEvaluateOption)) {
+			scQtFinalization.setReEvaluateFinReq(isSelected);
+		} 
+	}
 
 	/**
 	 * Event for Recommend By Award, Online Bidding or Multiple LOI 
@@ -5672,14 +5699,6 @@ public class SupplierFinalizationBackingBean extends
 			} finally {
 				qtSuppFinalizationSO = null;
 			}
-		}
-		
-		if (isItemize && BooleanUtils.isFalse(
-				getManagedBean().getHasAtleastTwoQualifiedSuppliersByItem())) {
-			// throw new EpException
-		} else if (!isItemize && BooleanUtils.isFalse(
-						getManagedBean().getHasAtleastTwoQualifiedSuppliersByItem())) {
-			// throw new EpException
 		}
 		
 		if (StringUtils.isNotBlank(finalizationMethodStr)) {
@@ -5749,7 +5768,7 @@ public class SupplierFinalizationBackingBean extends
 			if (ajaxEvent != null) { 
 				this.getManagedBean().setDisableSupplierSelection(false);
 				
-				if (getManagedBean().isItemize()) {	
+				if (isItemize) {	
 					recommendSuppliersByItem();
 				} else {
 					if (getManagedBean().getRecommendedSupppliersByZone() != null) {
@@ -5770,6 +5789,15 @@ public class SupplierFinalizationBackingBean extends
 						}
 					}					
 				}
+				
+				
+				if (isItemize && BooleanUtils.isFalse(
+						getManagedBean().getHasAtleastTwoQualifiedSuppliersByItem())) {
+					// throw new EpException
+				} else if (!isItemize && BooleanUtils.isFalse(
+								getManagedBean().getHasAtleastTwoQualifiedSuppliersByItem())) {
+					// throw new EpException
+				}				
 			}
 		} else {
 			getManagedBean().setFinalizationMethod(StringUtils.EMPTY);

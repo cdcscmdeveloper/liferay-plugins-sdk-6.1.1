@@ -24,9 +24,17 @@
 		</c:if>		
 	</style>
 
+	<ui:param name="isOneTier"
+			  value="#{suppFinalizationBackingBean.managedBean.scQt.evaluationType eq ParameterConst.evaluationTypesOneTier}" />
+	<ui:param name="isOneTierWithTechnical"
+			  value="#{suppFinalizationBackingBean.managedBean.scQt.evaluationType eq ParameterConst.evaluationTypesOneTier  
+			  			and suppFinalizationBackingBean.managedBean.scQt.techEvaluationReq}" />
+	<ui:param name="isTwoTier"
+			  value="#{suppFinalizationBackingBean.managedBean.scQt.evaluationType eq ParameterConst.evaluationTypesTwoTier}" />														
 	<ui:param name="decisionSupplFinalOrFwdHighAuth"
 			  value="#{suppFinalizationBackingBean.managedBean.recommendSupplier or 
-							suppFinalizationBackingBean.managedBean.forwardToHigherAuthority}" />
+							suppFinalizationBackingBean.managedBean.forwardToHigherAuthority}" />							
+			
 	<ui:include src="/xhtml/sc/common/supplierDetailsPopup.xhtml" />
 	
 	<p:panel header="#{lbl['lbl.sc.sf.committee.decision']}" toggleable="true">
@@ -250,56 +258,81 @@
 				
 		<p:outputPanel id="reEvaluatePanel">
 			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
-				columnClasses="columnWidth20"
-				rendered="#{suppFinalizationBackingBean.managedBean.reEvaluate}">
-				<c:if test="#{suppFinalizationBackingBean.managedBean.scQt.evaluationType eq '2'}">
-					<h:column>
-						<p:outputLabel value="#{lbl['lbl.sc.reevaluation.required.for']}" />
-					</h:column>
-					<h:column>
-						<div style="float:left; display:inline-block;">
-							<p:selectBooleanCheckbox id="reEvaluateReqForTech" 
-									value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateTechReq}" 
-									disabled="#{!(suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK or 
-													suppFinalizationBackingBean.managedBean.secretaryUser)}"/>		
-							<p:outputLabel value="#{lbl['lbl.sc.technical']}" />
-						</div>
-					</h:column>
-					
-					<h:column>
-					</h:column>
-					<h:column>
-						<div style="float:left; display:inline-block;">
-							<p:selectBooleanCheckbox id="reEvaluateReqForFin" 
-								value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateFinReq}" 
-								disabled="#{!(suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK or 
-													suppFinalizationBackingBean.managedBean.secretaryUser)}"/>	
-							<p:outputLabel value="#{lbl['lbl.sc.financial']}" />
-						</div>									
-					</h:column>
-				</c:if>
+				columnClasses="columnWidth20" rendered="#{suppFinalizationBackingBean.managedBean.reEvaluate}">
+
+				<h:column>
+					<p:outputLabel value="#{lbl['lbl.sc.reevaluation.required.for']}" />
+				</h:column>
+				<h:column>
+					<div style="float: left; display: inline-block;">
+						<p:selectBooleanCheckbox id="reEvaluateReqForComp"
+							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateCompReq}"
+							disabled="#{!(suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK or 
+													suppFinalizationBackingBean.managedBean.secretaryUser)}">
+							<p:ajax process="@this" update="@([id$=reEvaluatePanel])" 
+									listener="#{suppFinalizationBackingBean.reEvaluateByOptionEvent('1', 
+													suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateCompReq)}"/>
+						</p:selectBooleanCheckbox>
+						<p:outputLabel value="#{lbl['lbl.sc.doc.compliance']}" />
+					</div>
+				</h:column>
+
+				<h:column rendered="#{isTwoTier or isOneTierWithTechnical}">
+				</h:column>
+				<h:column rendered="#{isTwoTier or isOneTierWithTechnical}">
+					<div style="float: left; display: inline-block;">
+						<p:selectBooleanCheckbox id="reEvaluateReqForTech"
+							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateTechReq}"
+							disabled="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateCompReq or 
+										 	!(suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK or 
+													suppFinalizationBackingBean.managedBean.secretaryUser)}" >
+							<p:ajax process="@this" update="@([id$=reEvaluatePanel])" 
+									listener="#{suppFinalizationBackingBean.reEvaluateByOptionEvent('2', 
+													suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateTechReq)}"/>
+						</p:selectBooleanCheckbox>
+						<p:outputLabel value="#{lbl['lbl.sc.technical']}" />
+					</div>
+				</h:column>
+
+				<h:column>
+				</h:column>
+				<h:column>
+					<div style="float: left; display: inline-block;">
+						<p:selectBooleanCheckbox id="reEvaluateReqForFin"
+							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateFinReq}"
+							disabled="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateTechReq or 
+											!(suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK or 
+												suppFinalizationBackingBean.managedBean.secretaryUser)}">
+							<p:ajax process="@this" update="@([id$=reEvaluatePanel])" 
+									listener="#{suppFinalizationBackingBean.reEvaluateByOptionEvent('3', 
+													suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateFinReq)}"/>
+						</p:selectBooleanCheckbox>
+						<p:outputLabel value="#{lbl['lbl.sc.financial']}" />
+					</div>
+				</h:column>
+
 				<h:column>
 					<p:outputLabel value="#{lbl['lbl.sc.reevaluate.by']}" />
-					<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory"/>
+					<p:outputLabel value="#{lbl['lbl.txt.mandatory']}"
+						styleClass="mandatory" />
 				</h:column>
 				<h:column>
 					<table>
-					<tr>
-						<td>
-							<p:selectOneRadio id="reEvaluateBy" required="true" label="#{lbl['lbl.sc.reevaluate.by']}"
-								value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateCommitte}" 
-								disabled="#{!(suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK or 
+						<tr>
+							<td><p:selectOneRadio id="reEvaluateBy" required="true"
+									label="#{lbl['lbl.sc.reevaluate.by']}"
+									value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateCommitte}"
+									disabled="#{!(suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK or 
 													suppFinalizationBackingBean.managedBean.secretaryUser)}">
-								<f:selectItems value="#{suppFinalizationBackingBean.getReEvaluateByRadioBtn()}" />
-				   			</p:selectOneRadio>
-						</td>
-						<td style="margin-top: -3px">
-							<ac:iconTooltip value="#{lbl['lbl.sc.reevaluate.by.tooltip']}" />
-						</td>
-					</tr>
+									<f:selectItems
+										value="#{suppFinalizationBackingBean.getReEvaluateByRadioBtn()}" />
+								</p:selectOneRadio></td>
+							<td style="margin-top: -3px"><ac:iconTooltip
+									value="#{lbl['lbl.sc.reevaluate.by.tooltip']}" /></td>
+						</tr>
 					</table>
 				</h:column>
-				
+
 			</h:panelGrid>
 		</p:outputPanel>
 		
