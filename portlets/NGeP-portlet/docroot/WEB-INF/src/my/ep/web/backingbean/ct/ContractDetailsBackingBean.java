@@ -14,6 +14,7 @@ import java.net.URLConnection;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -1825,16 +1826,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		CtPerformanceBond newBond = new CtPerformanceBond();
 		newBond.setFinancialOrg(new PmFinancialOrg());
 		newBond.setEffDate(ctBB.getManagedBean().getContractVer().getCtContractValue().getEffDate());
-		
-		IContractAmendmentSO amendSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);		
-		ContractAmendmentReqDTO amendReqDTO = new ContractAmendmentReqDTO();
-		amendReqDTO.setContractId(ctBB.getManagedBean().getContractVer().getCtContract().getContractId());
-		amendReqDTO.setAmendmentEffectiveDate(ctBB.getManagedBean().getCtContractAmount().getEffDate());		
-		ContractAmendmentResDTO resAmendDto = amendSO.retrieveContractEndDateByAmendmentEffectiveDate(amendReqDTO);
-		
-        newBond.setExpDate(resAmendDto.getPerformanceBondExpDate());
-     	ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
+		Calendar cal = Calendar.getInstance();
+        cal.setTime(ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+        cal.add(Calendar.YEAR, 1); 
+        newBond.setExpDate(cal.getTime());
+     	
+        ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
 	}
 	
     /**
