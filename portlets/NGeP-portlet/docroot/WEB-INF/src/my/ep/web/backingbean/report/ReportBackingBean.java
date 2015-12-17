@@ -11386,7 +11386,7 @@ public class ReportBackingBean extends
 					throw new EpException(MessageConst.ERROR_REPORT_780027);
 				}
 			}
-			
+
 			if (((this.getSmThresholdFromYear() != null) && (this
 					.getSmThresholdToYear() == null))
 					|| ((this.getSmThresholdFromYear() == null) && (this
@@ -12126,7 +12126,7 @@ public class ReportBackingBean extends
 					throw new EpException(MessageConst.ERROR_REPORT_780003);
 				}
 			}
-			
+
 			if ((getManagedBean().getReportValue() != null)
 					&& (getManagedBean().getReportValue().trim()
 							.equalsIgnoreCase(ReportConst.SM_SUPPLIER_PERFORMANCE))
@@ -14185,11 +14185,8 @@ public class ReportBackingBean extends
 		getManagedBean().getRptGenBean().setCmExtentionTypeView(false);
 		getManagedBean().getRptGenBean().setCmExtentionMeasurmentView(false);
 		getManagedBean().getRptGenBean().setCmExtentionColourView(false);
-		if (!this.getModuleValue().equalsIgnoreCase(
-				ModuleCodeConst.PROFILE_MANAGEMENT)) {
-			this.setFromDate(null);
-			this.setToDate(null);
-		}       
+		this.setFromDate(null);
+		this.setToDate(null);
 		this.setScQuotationId(null);
 		this.setScQuotationNo(null);
 		this.setScPaymentId(null);
@@ -14953,7 +14950,7 @@ public class ReportBackingBean extends
 				this.getRptGenBean().setSmMandatoryRTDateView(true);
 				this.getRptGenBean().setSmMandatoryTransactionDateView(true);
 			}
-		} 
+		}
 	}
 
 	/**
@@ -15102,19 +15099,17 @@ public class ReportBackingBean extends
 		return orgTypeSearchBean;
 	}
 
-	/*public boolean getRequiredStatus() {
-		boolean status = false;
-		if ((this.getSmMofRegistrationFeeList() != null && this.getSmMofRegistrationFeeList()
-				.size() > 0)
-				|| (this.getSmProcessingFeeList() != null && this.getSmProcessingFeeList().size() > 0)
-				|| (this.getSmSoftCertificateFeeList() != null && this.getSmSoftCertificateFeeList()
-						.size() > 0)) {
-			return status;
-		} else {
-			status = true;
-			return status;
-		}
-
-	}*/
+	/*
+	 * public boolean getRequiredStatus() { boolean status = false; if
+	 * ((this.getSmMofRegistrationFeeList() != null &&
+	 * this.getSmMofRegistrationFeeList() .size() > 0) ||
+	 * (this.getSmProcessingFeeList() != null &&
+	 * this.getSmProcessingFeeList().size() > 0) ||
+	 * (this.getSmSoftCertificateFeeList() != null &&
+	 * this.getSmSoftCertificateFeeList() .size() > 0)) { return status; } else
+	 * { status = true; return status; }
+	 * 
+	 * }
+	 */
 
 }
