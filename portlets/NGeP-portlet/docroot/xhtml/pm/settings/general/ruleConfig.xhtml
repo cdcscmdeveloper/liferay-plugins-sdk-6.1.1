@@ -42,7 +42,7 @@
 			                    #{ruleTypeObj.ruleTypeDesc}
 				
 			</p:column>
-			<p:column>
+			<p:column width="40%">
 				<f:facet name="header">
 				                	#{lbl['lbl.pm.rule.data.type']}
 				                </f:facet>
@@ -123,7 +123,7 @@
 					                 #{lbl['lbl.pm.value']}
 				           </f:facet>
 
-				<p:inputText value="#{typeValueObj.ruleValue}" size="20"
+				<p:inputText value="#{typeValueObj.ruleValue}" size="30"
 					maxlength="30" id="percentageValueId" style="text-align:right"
 					disabled="#{!(typeValueObj.brandNew)}" required="true"
 					requiredMessage="#{lbl['lbl.pm.settings.value.required']}"
@@ -188,7 +188,7 @@
 		      	#{typeValueObj.categoryL3Id.categoryName}
 		</p:column>
 
-			<p:column width="18%" id="effDateColumnId">
+			<p:column width="16%" id="effDateColumnId">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
 					<h:outputText value=" #{lbl['lbl.pm.as.effdate']}" />
@@ -215,7 +215,7 @@
 				</p:calendar>
 			</p:column>
 
-			<p:column width="18%">
+			<p:column width="16%">
 				<f:facet name="header">
 						#{lbl['lbl.pm.as.expdate']}
 			                	</f:facet>
