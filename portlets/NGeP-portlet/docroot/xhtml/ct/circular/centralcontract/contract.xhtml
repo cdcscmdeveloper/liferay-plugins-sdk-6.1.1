@@ -10,45 +10,44 @@
 	      <h:panelGrid style="width:100%">
 		   <p:dataTable id="centralContractDt" var="circularContractsVar" rowIndexVar="index"
 			   value="#{centralContractBackingBean.managedBean.circularVer.ctCircularContracts}" selectionMode="single" 
-			   selection="#{centralContractBackingBean.managedBean.selectedCircularContract}" rowKey="#{circularContractsVar}"
-			   style="width:970px;">
+			   selection="#{centralContractBackingBean.managedBean.selectedCircularContract}" rowKey="#{circularContractsVar}">
 			        <ac:paginator for="centralContractDt" />
 			        <p:ajax event="rowSelect" update=":form:contractListPnl" process="@this" 
 			          onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{centralContractBackingBean.setContractListner()}" />
 		   
-		             <p:column  style="width:250px; white-space:pre-line;" styleClass="column-align-center">
+		             <p:column  style="width:25%; white-space:pre-line;" styleClass="column-align-center">
 				        <f:facet name="header">
 				            <h:outputText value="#{lbl['lbl.ct.contract.title']}" styleClass="required" />
 				         </f:facet>
-				        <h:outputText value="#{circularContractsVar.ctContract.contractName}" style="width:230px;float:left;text-align:left;" />
+				        <h:outputText value="#{circularContractsVar.ctContract.contractName}" style="width:23%;float:left;text-align:left;" />
 			         </p:column>
 		
-		          	<p:column headerText="#{lbl['lbl.ct.loa.physical.no']}" style="width:200px;white-space:pre-line;" styleClass="column-align-center">
-				        <h:outputText value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.loaPhysicalNo}" style="width:180px;float:left;text-align:left;"/>
+		          	<p:column headerText="#{lbl['lbl.ct.loa.physical.no']}" style="width:15%;white-space:pre-line;" styleClass="column-align-center">
+				        <h:outputText value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.loaPhysicalNo}" style="width:14%;float:left;text-align:left;"/>
 			        </p:column>
 			
-			        <p:column headerText="#{lbl['lbl.ct.physical.no']}" style="width:200px;white-space:pre-line;" styleClass="column-align-center">
-				        <h:outputText value="#{circularContractsVar.ctContract.latestContractVer.contractPhysicalNo}" style="width:180px;float:left;text-align:left;"/>
+			        <p:column headerText="#{lbl['lbl.ct.physical.no']}" style="width:15%;white-space:pre-line;" styleClass="column-align-center">
+				        <h:outputText value="#{circularContractsVar.ctContract.latestContractVer.contractPhysicalNo}" style="width:14%;float:left;text-align:left;"/>
 			        </p:column>
 			
-			        <p:column headerText="#{lbl['lbl.ct.contract.start']}" style="width:100px;" styleClass="column-align-center">
-			 	        <h:outputText value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.effDate}" style="width:90px;float:left;text-align:left;">
+			        <p:column headerText="#{lbl['lbl.ct.contract.start']}" style="width:10%;" styleClass="column-align-center">
+			 	        <h:outputText value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.effDate}" style="width:9%;float:left;text-align:left;">
 					       <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				        </h:outputText>
 			         </p:column>
 			         
-			         <p:column headerText="#{lbl['lbl.ct.contract.end']}" style="width:100px;" styleClass="column-align-center">
-			 	        <h:outputText value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.expDate}" style="width:90px;float:left;text-align:left;">
+			         <p:column headerText="#{lbl['lbl.ct.contract.end']}" style="width:10%;" styleClass="column-align-center">
+			 	        <h:outputText value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.expDate}" style="width:9%;float:left;text-align:left;">
 					        <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				        </h:outputText>
 			          </p:column>
 			
-			          <p:column headerText="#{lbl['lbl.ct.supplier.name']}" style="width:200px;white-space:pre-line;" styleClass="column-align-center">
-				          <h:outputText value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.supplierName}" style="width:190px;float:left;text-align:left;"/>
+			          <p:column headerText="#{lbl['lbl.ct.supplier.name']}" style="width:15%;white-space:pre-line;" styleClass="column-align-center">
+				          <h:outputText value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.supplierName}" style="width:14%;float:left;text-align:left;"/>
 			          </p:column>
 		
-			          <p:column headerText="#{lbl['lbl.ct.status']}" style="width:100px;" styleClass="column-align-center">
-				           <p:selectOneMenu value="#{circularContractsVar.recordStatusFlg}" style="width:90px;"
+			          <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;" styleClass="column-align-center">
+				           <p:selectOneMenu value="#{circularContractsVar.recordStatusFlg}" style="width:9%;"
 					            disabled="#{!centralContractBackingBean.managedBean.updateAction or centralContractBackingBean.managedBean.viewContract}">
 					            <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
 					            <f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
