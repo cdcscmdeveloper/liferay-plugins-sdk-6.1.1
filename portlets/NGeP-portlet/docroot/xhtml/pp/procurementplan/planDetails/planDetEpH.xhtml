@@ -177,7 +177,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</p:commandLink>
 	        </p:column>
 	        <p:column>
-	        	<p:commandLink oncomplete="dlItemJustificationWv.show();" update=":form:dgJustication" action="#{pPlanBackingBean.retrieveJustification(epItem)}"
+	        	<p:commandLink oncomplete="dlItemJustificationWv.show();"  update="@form" action="#{pPlanBackingBean.retrieveJustification(epItem)}"
 			    	 id="clEpJustification">
 					<p:graphicImage value="#{!pPlanBackingBean.managedBean.modeEditable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"/>
 					<f:param name="disableValidation" value="" />

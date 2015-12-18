@@ -53,7 +53,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<br/>
 			<br/>  
 	 		<div class="ppRightBtn">
-			  <p:commandButton id="cmdJustificationOk" value="#{lbl['lbl.btn.ok']}" immediate="true"  action="#{pPlanBackingBean.confirmJustificationCloseDialog}"  />
+			  <p:commandButton id="cmdJustificationOk" value="#{lbl['lbl.btn.ok']}" immediate="true"  action="#{pPlanBackingBean.confirmJustificationCloseDialog}"  update="@form"/>
 			  <p:commandButton id="cmdJustificationCancel" value="#{lbl['lbl.btn.cancel']}" process="@this" immediate="true"  oncomplete="dlItemJustificationWv.hide();" />		
 			</div>      
 		</p:outputPanel>
