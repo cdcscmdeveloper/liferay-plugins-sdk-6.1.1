@@ -642,6 +642,9 @@ public class SimpleQuoteBackingBean extends
 				prepareQuestions(null, null, Boolean.FALSE);
 			}
 		}
+
+		// for procurement type drop down
+		 checkGovtSeller(null, scQuote);
 		
 		// for procurement type drop down
 		if(null == getManagedBean().getProcurementTypes()){
@@ -654,12 +657,12 @@ public class SimpleQuoteBackingBean extends
 			scQuote.setProcurementTypeCategory(new PmParameter());
 		}
 		
-		if(scQuote.getMultipleQuote() == null){
+		if(null == scQuote.getMultipleQuote()){
 			scQuote.setMultipleQuote(Boolean.FALSE);	
 		}
 
 		// WorkFlow Status should be set In the save
-		if (scQuote.getCurrentStatus() == null) {
+		if (null == scQuote.getCurrentStatus()) {
 			List<ScSQWorkFlowStatus> workFlowStatuses = new ArrayList<ScSQWorkFlowStatus>();
 			ScSQWorkFlowStatus scWorkFlowStatus = new ScSQWorkFlowStatus();
 			StatusReqDTO statusReqDTO = new StatusReqDTO();
@@ -677,17 +680,17 @@ public class SimpleQuoteBackingBean extends
 		// Initializing Remarks
 		scQuote.setRemarks(initializeRemarks(scQuote, null,
 				scQuote.getRemarks(), ScSQRemark.class));
-
 		scQuote.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
 		
 		getManagedBean().setLocLevelDropdown(getLocationLevelDropdown());
+		
 		// zone location level by default - district
-		if (getManagedBean().getLocationLevel() == null) {
+		if (null == getManagedBean().getLocationLevel()) {
 			getManagedBean().setLocationLevel(
 					ParameterConst.LOCATION_LEVEL_DISTRICT);
 		}
 		// supplier location level by default - district
-		if (getManagedBean().getSupplierLocLevel() == null) {
+		if (null == getManagedBean().getSupplierLocLevel()) {
 			getManagedBean().setSupplierLocLevel(
 					ParameterConst.LOCATION_LEVEL_DISTRICT);
 		}
