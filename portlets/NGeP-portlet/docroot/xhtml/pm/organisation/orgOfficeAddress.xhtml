@@ -188,20 +188,21 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.tel']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText id="telNo" required="true"
-						label="#{lbl['lbl.pm.address.tel']}" maxlength="12" styleClass="ppDisplayTextL"
-						value="#{organisationBackingBean.managedBean.officeAddress.phoneNo}"
-						  validatorMessage="#{lbl['lbl.pm.address.tel']} - #{lbl['lbl.pm.profiles.invalidNo']}">
-						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-						</p:inputText></td>
+				<td><ac:phone id="telNo" isMobile="false" label="#{lbl['lbl.pm.address.tel']}" required="true"
+						countryCode="#{organisationBackingBean.managedBean.officeAddress.phoneCountry}" 
+						areaCode="#{organisationBackingBean.managedBean.officeAddress.phoneArea}" 
+						number="#{organisationBackingBean.managedBean.officeAddress.phoneNo}"  
+						 validatorMessage="#{lbl['lbl.pm.address.tel']} - #{lbl['lbl.pm.profiles.invalidNo']}" />
+					</td>
 				<td><p:message for="telNo" id="telNoMsg" display="icon" /></td>
 
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.fax']}" /></td>
-				<td><p:inputText id="faxNo" maxlength="12" styleClass="ppDisplayTextL"
-						value="#{organisationBackingBean.managedBean.officeAddress.faxNo}"
-						  validatorMessage="#{lbl['lbl.pm.address.fax']} - #{lbl['lbl.pm.profiles.invalidNo']}" >
-						  <f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-						  </p:inputText></td>
+				<td><ac:phone id="faxNo" isMobile="false" label="#{lbl['lbl.pm.address.fax']}"
+						countryCode="#{organisationBackingBean.managedBean.officeAddress.faxCountry}" 
+						areaCode="#{organisationBackingBean.managedBean.officeAddress.faxArea}" 
+						number="#{organisationBackingBean.managedBean.officeAddress.faxNo}"  
+						 validatorMessage="#{lbl['lbl.pm.address.fax']} - #{lbl['lbl.pm.profiles.invalidNo']}" />
+						</td>
 						  	<td><p:message for="faxNo" id="faxNoMsg" display="icon" /></td>
 			</tr>
 			<tr>
@@ -252,29 +253,36 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.contact.phone']}" /></td>
-					<td><p:inputText id="contactPhone" styleClass="ppDisplayTextL"
-							value="#{organisationBackingBean.managedBean.officeContactPerson.phoneNo}"
-							 validatorMessage="#{lbl['lbl.pm.contact.phone']} - #{lbl['lbl.pm.profiles.invalidNo']}" >
-						  <f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-							</p:inputText></td>
+					<td><ac:phone id="contactPhone" isMobile="false" label="#{lbl['lbl.pm.contact.phone']}"
+						countryCode="#{organisationBackingBean.managedBean.officeContactPerson.phoneCountry}" 
+						areaCode="#{organisationBackingBean.managedBean.officeContactPerson.phoneArea}" 
+						number="#{organisationBackingBean.managedBean.officeContactPerson.phoneNo}"  
+						 validatorMessage="#{lbl['lbl.pm.contact.phone']} - #{lbl['lbl.pm.profiles.invalidNo']}" />
+					</td>
 							<td><p:message id="contactPhoneMsg" for="contactPhone"
 							display="icon" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.contact.fax']}" /></td>
-					<td><p:inputText id="contactFax" styleClass="ppDisplayTextL"
-							value="#{organisationBackingBean.managedBean.officeContactPerson.faxNo}"
-							 validatorMessage="#{lbl['lbl.pm.contact.fax']} - #{lbl['lbl.pm.profiles.invalidNo']}" >
-						  <f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
+					<td><ac:phone id="contactFax" isMobile="false" label="#{lbl['lbl.pm.contact.fax']}"
+						countryCode="#{organisationBackingBean.managedBean.officeContactPerson.faxCountry}" 
+						areaCode="#{organisationBackingBean.managedBean.officeContactPerson.faxArea}" 
+						number="#{organisationBackingBean.managedBean.officeContactPerson.faxNo}"  
+						 validatorMessage="#{lbl['lbl.pm.contact.fax']} - #{lbl['lbl.pm.profiles.invalidNo']}" />
+						 </td>
 							<td><p:message id="contactFaxMsg" for="contactFax"
 							display="icon" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.contact.mobile']}" /></td>
-					<td><p:inputText id="contactMobile" styleClass="ppDisplayTextL"
-							value="#{organisationBackingBean.managedBean.officeContactPerson.mobileNo}"
-							 validatorMessage="#{lbl['lbl.pm.contact.mobile']} - #{lbl['lbl.pm.profiles.invalidNo']}" >
-						  <f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
+					<td><ac:phone id="contactMobile" label="#{lbl['lbl.pm.contact.mobile']}"
+							countryCode="#{organisationBackingBean.managedBean.officeContactPerson.mobileCountry}" 
+							areaCode="#{organisationBackingBean.managedBean.officeContactPerson.mobileArea}" 
+							number="#{organisationBackingBean.managedBean.officeContactPerson.mobileNo}" 
+							isMobile="false"
+							 validatorMessage="#{lbl['lbl.pm.contact.mobile']} - #{lbl['lbl.pm.profiles.invalidNo']}"
+							/>
+							</td>
 							<td><p:message id="contactMobileMsg" for="contactMobile"
 							display="icon" /></td>
 				</tr>

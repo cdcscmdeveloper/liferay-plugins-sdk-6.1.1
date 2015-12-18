@@ -45,7 +45,7 @@
 					/>
 				
 			</p:column> 
-			<p:column style="width: 11% !important">
+			<p:column style="width: 16% !important">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.pm.financialorg.acnumber']}" />
@@ -53,12 +53,12 @@
 
 				<p:inputText id="accountNo" value="#{financialacc.accountNo}"
 					 label="#{lbl['lbl.pm.financialorg.acnumber']}" required="true"
-					size="10" styleClass="ppDisplayTextS" maxlength="16" 
+					size="18" styleClass="ppDisplayTextS" maxlength="16" 
 					disabled="#{!financialacc.brandNew}"/>
 				<p:message for="accountNo" id="accountNoMsg" display="icon" />
 			</p:column>
 
-			<p:column style="width: 16% !important">
+			<p:column style="width: 14% !important">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.pm.financialorg.effdate']}" />
@@ -80,7 +80,7 @@
 				<p:message for="effDte" id="effDteMsg" display="icon" />
 			</p:column>
 
-			<p:column style="width: 16% !important" headerText="#{lbl['lbl.pm.financialorg.expdate']}" >
+			<p:column style="width: 14% !important" headerText="#{lbl['lbl.pm.financialorg.expdate']}" >
 				<h:outputText value="#{financialacc.expDate}"
 					rendered="#{!financialacc.brandNew and !financialOrgBackingBean.editableBankDet(financialacc.expDate)}">
 					<f:convertDateTime
@@ -105,7 +105,7 @@
 				</p:selectOneMenu>
 			</p:column>
 			
-			<p:column width="7%" headerText="#{lbl['lbl.pm.financialorg.action']}">
+			<p:column width="6%" headerText="#{lbl['lbl.pm.financialorg.action']}">
 	             <p:commandLink partialSubmit="true" disabled="#{!financialacc.brandNew}"
 					process="@this" action="#{financialOrgBackingBean.deleteFinancialAcc(rowIndex)}"
 					update="financialaccid" >

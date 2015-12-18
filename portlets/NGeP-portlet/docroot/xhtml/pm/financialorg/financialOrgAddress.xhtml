@@ -33,7 +33,7 @@
 					<p:outputLabel
 						value="*" styleClass="mandatory" />
 				</td>
-				<td width="220">
+				<td>
 					<p:selectOneMenu id="facState" required="true" styleClass="ppDropDownWidthL" tabindex="1"
 						label="#{lbl['lbl.pm.address.state']}"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.pmState.stateId}"
@@ -64,7 +64,7 @@
 				<td width="150">
 					<p:outputLabel value="#{lbl['lbl.pm.address.division']}" /> 
 				</td>
-				<td width="220">
+				<td>
 					<p:selectOneMenu id="facDivision" tabindex="8"
 						disabled="#{financialOrgBackingBean.managedBean.pmAddress.pmState.stateCode ne ParameterConst.sarakSkCode}"
 						required="#{financialOrgBackingBean.managedBean.pmAddress.pmState.stateCode eq ParameterConst.sarakSkCode}" 
@@ -228,7 +228,7 @@
 						areaCode="#{financialOrgBackingBean.managedBean.contactPerson.faxArea}" 
 						number="#{financialOrgBackingBean.managedBean.contactPerson.faxNo}"  
 						validatorMessage="#{lbl['lbl.pm.address.fax']} - #{lbl['lbl.pm.profiles.invalidNo']}" /></td>
-							<td><p:message id="contactFaxMsg" for="contactFax"
+				    <td><p:message id="contactFaxMsg" for="contactFax"
 							display="icon" /></td>
 				</tr>
 				<tr>
@@ -237,9 +237,9 @@
 							countryCode="#{financialOrgBackingBean.managedBean.contactPerson.mobileCountry}" 
 							areaCode="#{financialOrgBackingBean.managedBean.contactPerson.mobileArea}" 
 							number="#{financialOrgBackingBean.managedBean.contactPerson.mobileNo}" 
-							isMobile="true"
+							isMobile="false"
 							validatorMessage="#{lbl['lbl.pm.contact.mobile']} - #{lbl['lbl.pm.profiles.invalidNo']}"
-							telcoId="#{financialOrgBackingBean.managedBean.contactPerson.mobileTelcoId}" />
+							/>
 					</td>
 							<td><p:message id="contactMobileMsg" for="contactMobile"
 							display="icon" />
