@@ -117,6 +117,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinancialCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
@@ -863,7 +864,20 @@ public class EvaluationBackingBean extends
 	 */
 	public String complianceUploadCheckList(ScQtCheckList checklist, int index,
 			String checkListType) {
-
+		ScQtFinalization finalization = retriveScQtFinalizationForReEvaluate();
+		if (null != finalization) {
+			System.out.println("====finaliazation not null====");
+			if (finalization.isReEvaluateCompReq()) {
+				System.out.println("====finaliazation not null true condition====");
+				this.getManagedBean().setComplianceReEvaluateRequired(false);
+			} else {
+				System.out.println("====finaliazation not null false condition====");
+				this.getManagedBean().setComplianceReEvaluateRequired(true);
+			}
+		} else {
+			System.out.println("====finaliazation  null====");
+			this.getManagedBean().setComplianceReEvaluateRequired(false);
+		}
 		EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 		try {
 			this.getManagedBean().setScQtChecklist(checklist);
@@ -911,6 +925,20 @@ public class EvaluationBackingBean extends
 	public String complianceSampleItems(ScQtSampleLable label) {
 
 		try {
+			ScQtFinalization finalization = retriveScQtFinalizationForReEvaluate();
+			if (null != finalization) {
+				System.out.println("====finaliazation not null====");
+				if (finalization.isReEvaluateCompReq()) {
+					System.out.println("====finaliazation not null true condition====");
+					this.getManagedBean().setComplianceReEvaluateRequired(false);
+				} else {
+					System.out.println("====finaliazation not null false condition====");
+					this.getManagedBean().setComplianceReEvaluateRequired(true);
+				}
+			} else {
+				System.out.println("====finaliazation  null====");
+				this.getManagedBean().setComplianceReEvaluateRequired(false);
+			}
 			this.getManagedBean().setItemName(null);
 			this.getManagedBean().setSampleItemSpecifications(null);
 			this.getManagedBean().setScQtSampleLbl(label);
@@ -963,11 +991,13 @@ public class EvaluationBackingBean extends
 
 			getManagedBean().setComplianceSummaryGenerated(false);
 			updateSummaryGeneratedStatus();
-			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
-					.getManagedBean().getScQt().getEvaluationType())
-					&& ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+			if ((QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
+					.getManagedBean().getScQt().getEvaluationType()) && ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+					.equalsIgnoreCase(this.getManagedBean().getCommitteeType()))
+					|| (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
+							.getManagedBean().getScQt().getEvaluationType()) && ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
 							.equalsIgnoreCase(this.getManagedBean()
-									.getCommitteeType())) {
+									.getCommitteeType()))) {
 				complianceChangeScQtStatusUpdate();
 			}
 
@@ -1101,11 +1131,13 @@ public class EvaluationBackingBean extends
 
 			getManagedBean().setComplianceSummaryGenerated(false);
 			updateSummaryGeneratedStatus();
-			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
-					.getManagedBean().getScQt().getEvaluationType())
-					&& ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+			if ((QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
+					.getManagedBean().getScQt().getEvaluationType()) && ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+					.equalsIgnoreCase(this.getManagedBean().getCommitteeType()))
+					|| (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
+							.getManagedBean().getScQt().getEvaluationType()) && ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
 							.equalsIgnoreCase(this.getManagedBean()
-									.getCommitteeType())) {
+									.getCommitteeType()))) {
 				complianceChangeScQtStatusUpdate();
 			}
 
@@ -5629,7 +5661,7 @@ public class EvaluationBackingBean extends
 	 *            (Mandatory)
 	 * @throws Exception
 	 */
-	public void setTabValue(int currentTab, int outputTab) throws Exception {
+	public void evaluationMaintainPreviousNextTabIndex(int currentTab, int outputTab) throws Exception {
 		IQTEvaluationSO evaluationSo = null;
 		EvaluationResDTO evalResDTO = new EvaluationResDTO();
 		try {
@@ -6794,7 +6826,7 @@ public class EvaluationBackingBean extends
 						IQTEvaluationSO.class);
 		try {
 			EvaluationReqDTO reqDtO = evaluationPreparation();
-
+			boolean evaluationStatus = this.getManagedBean().isStatusOnly();
 			String taskId = this.getManagedBean().getTaskId();
 			String[] outComes = this.getManagedBean().getOutComes();
 			Long qtId = this.getManagedBean().getScQt().getQtId();
@@ -6846,7 +6878,7 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setCountDays(countDays);
 			this.getManagedBean().setPayLoad(evaluationDataType);
 			this.getManagedBean().setCurrentTime(currentTime);
-
+			this.getManagedBean().setStatusOnly(evaluationStatus);
 			retriveMeetingDtls(qtId, committeeType, index);
 			// getStatusDropdownValues("SC", "MS");
 			if (save == true) {
@@ -10822,6 +10854,34 @@ public class EvaluationBackingBean extends
 				}
 
 			}
+			if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
+					.getManagedBean().getScQt().getEvaluationType())
+					&& ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
+							.equalsIgnoreCase(this.getManagedBean()
+									.getCommitteeType())) {
+				if (null != this.getManagedBean().getScQt()
+						.getTecEvaluationCheck()
+						|| null != this.getManagedBean().getScQt()
+								.getFecEvaluationCheck()) {
+					evaluationSo = BusinessDelegate.getInstance()
+							.getServiceObject(
+									ModuleCodeConst.SUPPLIER_SELECTION,
+									IQTEvaluationSO.class);
+					EvaluationReqDTO checkListreqDTO = new EvaluationReqDTO();
+					checkListreqDTO.setQtId(this.getManagedBean().getScQt()
+							.getQtId());
+					checkListreqDTO.setStatusUpdateChecklistType(null);
+					evaluationSo.retriveAllChecklist(checkListreqDTO);
+					EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+					this.getManagedBean().getScQt().setTecEvaluationCheck(null);
+					this.getManagedBean().getScQt().setFecEvaluationCheck(null);
+					reqDTO.setScQt(this.getManagedBean().getScQt());
+					evalResDTO = evaluationSo.saveReportDtls(reqDTO);
+					this.getManagedBean().setScQt(evalResDTO.getScQt());
+
+				}
+
+			}
 		} finally {
 
 		}
@@ -10928,6 +10988,19 @@ public class EvaluationBackingBean extends
 
 		}
 		return this.getManagedBean().getCountDays();
+	}
+
+	private ScQtFinalization retriveScQtFinalizationForReEvaluate() {
+		IQTEvaluationSO evaluationSo = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTEvaluationSO.class);
+		EvaluationReqDTO supplierFinalizationReqDTO = new EvaluationReqDTO();
+		EvaluationResDTO supplierFinalizationResDTO = new EvaluationResDTO();
+		supplierFinalizationReqDTO.setQtId(this.getManagedBean().getScQt()
+				.getQtId());
+		supplierFinalizationResDTO = evaluationSo
+				.retrieveSupplierFinalizationForReEvaluation(supplierFinalizationReqDTO);
+		return supplierFinalizationResDTO.getScQtFinalization();
 	}
 
 }
