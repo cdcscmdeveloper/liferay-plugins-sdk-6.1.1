@@ -494,13 +494,14 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 				rptGenBean.setSmActSubmisAllDateView(true);*/
 			 break;
 		 case ReportConst.SM_PERSON_BRANCH_BANK:
-			    /*rptGenBean.setSmCommonZoneView(true);
-			    rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);*/
-	        	//rptGenBean.setSmZoneView(true);
+			    rptGenBean.setSmCommonZoneView(true);
+			    rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+	        	//rptGenBean.setSmZoneView(true);			    
 			    //rptGenBean.setSmMandatorySupplierTypeView(true);
-			    rptGenBean.setSmSupplierView(true);
-			    /*rptGenBean.setSmRegistrationNoView(true);
-			    rptGenBean.setSmMofRegNoView(true);	*/	
+			    rptGenBean.setSmSupplierTypeView(true);
+			    //rptGenBean.setSmSupplierView(true);
+			    rptGenBean.setSmRegistrationNoView(true);
+			    //rptGenBean.setSmMofRegNoView(true);
 			    rptGenBean.setSmRegistrationTypeView(true);
 			    rptGenBean.setSmNonMandatoryDateView(true);
 			    rptGenBean.setSmMOFRegisteredDateView(true);
