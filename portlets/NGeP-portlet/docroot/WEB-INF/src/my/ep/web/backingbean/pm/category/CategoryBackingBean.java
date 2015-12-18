@@ -3920,25 +3920,33 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		
 		if(ccPulicSearchBean.getSelectedSupplierType() !=null){
 			searchBean.getDataFilterBeans().add(
+					new SearchMultiFilterBean(
 					new SearchFilterBean("supplierTypeCode.parameterId",
 							SearchOperator.OPERATOR_EQUALS.value(),
-							ccPulicSearchBean.getSelectedSupplierType()));
+							ccPulicSearchBean.getSelectedSupplierType()),
+							new SearchFilterBean("supplierTypeCode.recordStatusFlg",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									DbValueConst.RECORD_STATUS_ACTIVE)));
 		}
 		
 		if(ccPulicSearchBean.getSelectedCompanyType() !=null){
 			searchBean.getDataFilterBeans().add(
 					new SearchMultiFilterBean(
 							new SearchMultiFilterBean(
-								new SearchFilterBean("byCompType",
-										SearchOperator.OPERATOR_EQUALS.value(),
-										true),
-								SearchCondition.CONDITION_AND.value(),
-								new SearchFilterBean("pmCategoryRestrs.companyTypeId.parameterId",
-										SearchOperator.OPERATOR_EQUALS.value(),
-										ccPulicSearchBean.getSelectedCompanyType())),
-										new SearchFilterBean("pmCategoryRestrs.recordStatusFlg",
+									new SearchMultiFilterBean(
+										new SearchFilterBean("byCompType",
 												SearchOperator.OPERATOR_EQUALS.value(),
-												DbValueConst.RECORD_STATUS_ACTIVE)));
+												true),
+										SearchCondition.CONDITION_AND.value(),
+										new SearchFilterBean("pmCategoryRestrs.companyTypeId.parameterId",
+												SearchOperator.OPERATOR_EQUALS.value(),
+												ccPulicSearchBean.getSelectedCompanyType())),
+												new SearchFilterBean("pmCategoryRestrs.recordStatusFlg",
+														SearchOperator.OPERATOR_EQUALS.value(),
+														DbValueConst.RECORD_STATUS_ACTIVE)),
+														new SearchFilterBean("pmCategoryRestrs.companyTypeId.recordStatusFlg",
+																SearchOperator.OPERATOR_EQUALS.value(),
+																DbValueConst.RECORD_STATUS_ACTIVE)));
 		}
 		
 		if(ccPulicSearchBean.getSelectedBumiPercentage() !=null){
@@ -4047,15 +4055,18 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		sb.append(" : ");
 		
 		int count = 0;
+		String paramDesc = null;
 		for(PmCategoryRestr restr : categoryL3.getPmCategoryRestrs()){
-			if(count !=0 && DbValueConst.RECORD_STATUS_ACTIVE == restr.getRecordStatusFlg()){
-				sb.append(",");	
-			}
 			if(DbValueConst.RECORD_STATUS_ACTIVE == restr.getRecordStatusFlg()){
-				sb.append(getParameterDesc(restr.getCompanyTypeId()));			
-				count++;
-			}
-			
+				paramDesc = getParameterDesc(restr.getCompanyTypeId());
+				if(StringUtils.isNotBlank(paramDesc)){
+					if(count != 0){
+						sb.append(",");
+					}
+					sb.append(paramDesc);
+					count++;
+				}
+			}			
 		}
 		
 		// no Business/Company Type
