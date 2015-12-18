@@ -1555,7 +1555,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	/**
 	 * Initialized and construct bumi recommendation message
 	 */
-	private void initBumiRecommendNote() {
+	public void initBumiRecommendNote() {
 		getManagedBean().setBumiRecommendationNote("");
 		if (getManagedBean().getSmAppl() != null) {
 			String applType = getManagedBean().getSmAppl().getApplType() == null ? ""
