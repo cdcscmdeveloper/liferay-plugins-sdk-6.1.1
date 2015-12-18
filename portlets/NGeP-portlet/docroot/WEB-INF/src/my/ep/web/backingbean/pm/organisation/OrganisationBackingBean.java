@@ -252,6 +252,7 @@ public class OrganisationBackingBean extends
 		this.getManagedBean().setSupplierUsers(null);
 		this.getManagedBean().setSelectedSupplierUsers(null);
 		this.getManagedBean().setOfficeAddress(null);
+		this.getManagedBean().setOfficeContactPerson(new PmContact());
 		this.getManagedBean().setSelectedTabIndex(PROFILE_DETAIL);
 		this.getManagedBean().setOrgTypeId(null);
 		getManagedBean().setAddressTypesList(new ArrayList<PmAddressType>());
