@@ -31,10 +31,11 @@
 		<p:menuitem value="#{lbl['lbl.sm.equipmentStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			actionListener="#{viewSmApplBackingBean.setTabValue('7',SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
 			update=":form" />
-		<!-- <p:menuitem value="#{lbl['lbl.sm.supDocStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			actionListener="#{viewSmApplBackingBean.setTabValue('8',SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
-			update=":form" /> -->
-		
+		<c:if test="#{viewSmApplBackingBean.managedBean.viewApplicationHistory}">
+			<p:menuitem value="#{lbl['lbl.sm.supDocStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				actionListener="#{viewSmApplBackingBean.setTabValue('8',SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+				update=":form" />
+		</c:if>
 	</p:tabMenu>
 
 </ui:composition>

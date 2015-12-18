@@ -97,6 +97,7 @@ public class ViewApplHistoryBackingBean extends
 		SmAppl smAppl = SmServiceLookup.getMofRegistrationSO()
 				.retrieveSmApplWithChildByApplNo(reqDTO).getSmAppl();
 		viewApplication(smAppl);
+		initBumiRecommendNote();
 	}
 
 }

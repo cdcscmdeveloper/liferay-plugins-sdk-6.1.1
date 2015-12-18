@@ -12,15 +12,16 @@
 			<tr>
 				<td style="width: 20%; vertical-align: top;" class="sidemenutd"><ui:include
 						src="smViewProfileApplnSideMenuItem.xhtml" /></td>
-				<td><p:dialog /> <h:panelGroup
-						rendered="#{viewSmApplBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_OFFLINE}">
+				<td><p:dialog /> 
+					<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_OFFLINE}">
 						<ui:include
 							src="/xhtml/sm/shared/applViewOnlyPages/offlineSupportingDocsFormViewOnly.xhtml" />
-					</h:panelGroup> <h:panelGroup id="onSupGroup"
-						rendered="#{viewSmApplBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
+					</p:outputPanel> 
+					<p:outputPanel id="onSupGroup" rendered="#{viewSmApplBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
 						<ui:include
 							src="/xhtml/sm/shared/applViewOnlyPages/onlineSupportingDocsFormViewOnly.xhtml" />
-					</h:panelGroup></td>
+					</p:outputPanel>
+				</td>
 			</tr>
 		</table>
 	</p:outputPanel>
