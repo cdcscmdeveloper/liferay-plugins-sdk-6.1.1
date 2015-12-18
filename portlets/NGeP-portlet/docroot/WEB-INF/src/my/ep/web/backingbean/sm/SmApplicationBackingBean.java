@@ -5470,10 +5470,8 @@ public class SmApplicationBackingBean extends
 	 *            - SmPersonnel object
 	 */
 	public void assignSelShareHolderAddress(SmPersonnel shareHolderBean) {
-
 		if (isPersonnelViewOnly(shareHolderBean)
-				&& getManagedBean().getSmAppl().getSmPersonnels()
-						.contains(shareHolderBean)) {
+				&& shareHolderBean.getPersonnelId()!=null) {
 			if (shareHolderBean.getSmPersonnelAddresses() != null
 					&& shareHolderBean.getSmPersonnelAddresses().size() > 0) {
 				for (SmPersonnelAddress personnelAddress : shareHolderBean
