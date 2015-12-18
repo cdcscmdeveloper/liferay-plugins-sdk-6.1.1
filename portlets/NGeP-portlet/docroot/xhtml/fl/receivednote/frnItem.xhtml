@@ -67,8 +67,9 @@
 					<td><p:outputLabel value="#{lbl['lbl.fl.ordered.qty']}" /></td>
 					<td><p:inputText style="text-align:right;" styleClass="colFloatRight"
 							value="#{receivedNoteBackingBean.managedBean.orderedQty}"
-							size="15" disabled="true" /></td>
-					<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.order.qty']}"/></td>		
+							size="15" disabled="true" />
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.order.qty']}"/></td>
+					<td></td>		
 					<td><p:outputLabel value="#{lbl['lbl.fl.ordered.amount']}" /></td>
 					<td><p:inputText style="text-align:right;" styleClass="colFloatRight"
 							value="#{receivedNoteBackingBean.managedBean.orderedAmt}"
@@ -81,8 +82,9 @@
 					<td><p:outputLabel value="#{lbl['lbl.fl.do.delivery.qty']}" /></td>
 					<td><p:inputText styleClass="colFloatRight" style="text-align:right;"
 							value="#{receivedNoteBackingBean.managedBean.deliveredQty}"
-							size="15" disabled="true" /></td>
-					<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.del.qty']}" /></td>
+							size="15" disabled="true" />
+							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.del.qty']}" /></td>
+					<td></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.delivery.amount']}" /></td>
 					<td><p:inputText styleClass="colFloatRight" style="text-align:right;"
 							value="#{receivedNoteBackingBean.managedBean.deliveredAmt}"
@@ -95,13 +97,16 @@
 					<td><p:outputLabel value="#{lbl['lbl.fl.frn.remaining.qty']}" /></td>
 					<td><p:inputText id="remaingQtyTxt" style="text-align:right;"
 							value="#{receivedNoteBackingBean.managedBean.remainingQty}"
-							size="15" disabled="true" styleClass="colFloatRight" /></td>
-					<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.remain.qty']}"/></td>
+							size="15" disabled="true" styleClass="colFloatRight" />
+							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.remain.qty']}"/>
+					</td>
+					<td></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.total.received.qty']}" /></td>
 					<td><p:inputText style="text-align:right;"
 							value="#{receivedNoteBackingBean.managedBean.totalReceivedQty}"
-							size="15" disabled="true" styleClass="colFloatRight" /></td>
-					<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.total.received.qty']}"/></td>
+							size="15" disabled="true" styleClass="colFloatRight" />
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.total.received.qty']}"/></td>
+					<td></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.total.received.amt']}" /></td>
 					<td><p:inputText styleClass="colFloatRight" style="text-align:right;"
 							value="#{receivedNoteBackingBean.managedBean.totalReceivedAmt}"
@@ -134,8 +139,9 @@
 							<f:converter converterId="dynamicNumberConverter" />
 							<f:attribute name="pattern"
 								value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
-						</p:inputText></td>
-					<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.received.qty']}"/></td>	
+						</p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.received.qty']}"/></td>
+					<td></td>	
 					<td><p:outputLabel value="#{lbl['lbl.fl.received.amount']}" /></td>
 					<td><p:inputText size="15" style="text-align:right;"
 							styleClass="colFloatRight" id="receivedAmtVal"
