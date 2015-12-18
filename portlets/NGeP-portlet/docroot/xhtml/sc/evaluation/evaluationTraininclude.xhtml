@@ -19,7 +19,7 @@
 							<!-- <h:outputText value="Preparation"
 								rendered="#{evaluationBackingBean.managedBean.tempTab eq 0}" /> -->
 							<p:commandLink value="#{lbl['lbl.sc.preparation']}"
-								actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'0')}"
+								actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'0')}"
 								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 								rendered="#{evaluationBackingBean.managedBean.tempTab ge 0}"
 								styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 0 ? 'currentStep' : ''}" />
@@ -31,7 +31,7 @@
 									value="#{lbl['lbl.sc.eva.compliance.stg']}"
 									rendered="#{evaluationBackingBean.managedBean.tempTab lt 1}" />
 								<p:commandLink value="#{lbl['lbl.sc.eva.compliance.stg']}"
-									actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'1')}"
+									actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'1')}"
 									action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 									rendered="#{evaluationBackingBean.managedBean.tempTab ge 1}"
 									styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 1 ? 'currentStep' : ''}" /></li>
@@ -43,7 +43,7 @@
 									value="#{lbl['lbl.sc.eva.stage']} "
 									rendered="#{evaluationBackingBean.managedBean.tempTab lt 2}" />
 								<p:commandLink value="#{lbl['lbl.sc.eva.stage']}"
-									actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'2')}"
+									actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'2')}"
 									action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 									rendered="#{evaluationBackingBean.managedBean.tempTab ge 2}"
 									styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 2 ? 'currentStep' : ''}" /></li>
@@ -56,7 +56,7 @@
 									rendered="#{evaluationBackingBean.managedBean.tempTab lt 2}" />
 								<p:commandLink
 									value="#{lbl['lbl.sc.technical.evaluation']}"
-									actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'2')}"
+									actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'2')}"
 									action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 									rendered="#{evaluationBackingBean.managedBean.tempTab ge 2}"
 									styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 2 ? 'currentStep' : ''}" /></li>
@@ -68,7 +68,7 @@
 									value="#{lbl['lbl.sc.present.demo']} "
 									rendered="#{evaluationBackingBean.managedBean.tempTab lt 3}" />
 								<p:commandLink value="#{lbl['lbl.sc.present.demo']}"
-									actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'3')}"
+									actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'3')}"
 									action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 									rendered="#{evaluationBackingBean.managedBean.tempTab ge 3}"
 									styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 3 ? 'currentStep' : ''}" /></li>
@@ -83,7 +83,7 @@
 									rendered="#{evaluationBackingBean.managedBean.tempTab lt 3}" />
 								<p:commandLink
 									value="#{lbl['lbl.sc.financial.evaluation']}"
-									actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'3')}"
+									actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'3')}"
 									action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 									rendered="#{evaluationBackingBean.managedBean.tempTab ge 3}"
 									styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 3 ? 'currentStep' : ''}" /></li>
@@ -95,7 +95,7 @@
 								value="#{lbl['lbl.sc.report']}"
 								rendered="#{evaluationBackingBean.managedBean.tempTab lt 4}" />
 							<p:commandLink value="#{lbl['lbl.sc.report']}"
-								actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'4')}"
+								actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'4')}"
 								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 								rendered="#{evaluationBackingBean.managedBean.tempTab ge 4}"
 								styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 4 ? 'currentStep' : ''}" /></li>
@@ -106,7 +106,7 @@
 								value="#{lbl['lbl.sc.committee.endorsement.evaluation']}"
 								rendered="#{evaluationBackingBean.managedBean.tempTab lt 5}" />
 							<p:commandLink value="#{lbl['lbl.sc.committee.endorsement.evaluation']}"
-								actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'5')}"
+								actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'5')}"
 								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 								rendered="#{evaluationBackingBean.managedBean.tempTab ge 5}"
 								styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 5 ? 'currentStep' : ''}" />
