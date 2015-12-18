@@ -476,6 +476,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private int demoPassingScore;
 	private boolean isProfileHide = false;
 	private int currentTime=0;
+	private boolean isComplianceReEvaluateRequired;
+	private boolean isTechnicalOrFinancialReEvaluateRequired;
 	
 	
 
@@ -3251,6 +3253,36 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setCurrentTime(int currentTime) {
 		this.currentTime = currentTime;
+	}
+
+	/**
+	 * @return the isComplianceReEvaluateRequired
+	 */
+	public boolean isComplianceReEvaluateRequired() {
+		return isComplianceReEvaluateRequired;
+	}
+
+	/**
+	 * @param isComplianceReEvaluateRequired the isComplianceReEvaluateRequired to set
+	 */
+	public void setComplianceReEvaluateRequired(
+			boolean isComplianceReEvaluateRequired) {
+		this.isComplianceReEvaluateRequired = isComplianceReEvaluateRequired;
+	}
+
+	/**
+	 * @return the isTechnicalOrFinancialReEvaluateRequired
+	 */
+	public boolean isTechnicalOrFinancialReEvaluateRequired() {
+		return isTechnicalOrFinancialReEvaluateRequired;
+	}
+
+	/**
+	 * @param isTechnicalOrFinancialReEvaluateRequired the isTechnicalOrFinancialReEvaluateRequired to set
+	 */
+	public void setTechnicalOrFinancialReEvaluateRequired(
+			boolean isTechnicalOrFinancialReEvaluateRequired) {
+		this.isTechnicalOrFinancialReEvaluateRequired = isTechnicalOrFinancialReEvaluateRequired;
 	}
 
 	
