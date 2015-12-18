@@ -10771,8 +10771,12 @@ public class ReportBackingBean extends
 
 		List<String> reportNameList = new ArrayList<String>();
 
+		// for CM Default Dates
+		getDefaultDatesforCM(reportNameList);
 		// for SM Defaul Dates
 		getDefaultDatesforSM(reportNameList);
+        // for CT Default Dates
+		getDefaultDatesforCT(reportNameList);
 		// For PM Dafault Dates
 		getDefaultDatesforPM(reportNameList);
 		// For FL Default Dates
@@ -10799,6 +10803,51 @@ public class ReportBackingBean extends
 		reportNameList.add(ReportConst.PM_LIST_OF_EXEMPTED_ITEMS_RPT_VAL);
 		reportNameList
 				.add(ReportConst.PM_LIST_OF_EXEMPTED_ITEMS_BY_SUPPLIER_RPT_VAL);
+	}
+
+	private void getDefaultDatesforCT(List<String> reportNameList) {
+
+		reportNameList.add(ReportConst.CT_CONTRACT_MONITORING_RPT_VAL);
+		reportNameList
+				.add(ReportConst.CT_CONTRACT_TRANSACTION_MONITORING_CC_RPT_VAL);
+		reportNameList
+				.add(ReportConst.CT_CONTRACT_UTILIZATION_MONITORING_CC_RPT_VAL);
+
+		reportNameList.add(ReportConst.CT_FULFILMENT_STATUS_RPT_VAL);
+		reportNameList.add(ReportConst.CT_LIST_OF_CONTRACT_CC_RPT_VAL);
+		reportNameList.add(ReportConst.CT_LST_OF_CIRCULAR_RPT_VAL);
+
+		reportNameList.add(ReportConst.CT_LST_OF_CONTRACT_ALL_RPT_VAL);
+		reportNameList
+				.add(ReportConst.CT_STATEMENT_OF_ORDER_REPORT_CC_PANEL_RPT_VAL);
+
+	}
+
+	private void getDefaultDatesforCM(List<String> reportNameList) {
+
+		reportNameList.add(ReportConst.LST_PUB_CAT_ITM_RPT_VAL);
+		reportNameList.add(ReportConst.LST_APPR_CAT_ITM_RPT_VAL);
+		reportNameList.add(ReportConst.LST_REJ_CAT_ITM_RPT_VAL);
+
+		reportNameList.add(ReportConst.LST_PEND_APPR_CAT_ITM_RPT_VAL);
+		reportNameList.add(ReportConst.LST_EXP_CAT_ITM_RPT_VAL);
+		reportNameList.add(ReportConst.TOT_CAT_ITM_STS_RPT_VAL);
+
+		reportNameList.add(ReportConst.TOT_CAT_ITM_UNSPSC_CODE_RPT_VAL);
+		reportNameList.add(ReportConst.LST_CAT_ITM_STD_PRC_RPT_VAL);
+		reportNameList.add(ReportConst.LST_CAT_ITM_TIER_PRC_RPT_VAL);
+
+		reportNameList.add(ReportConst.LST_CAT_ITM_ZON_PRC_RPT_VAL);
+		reportNameList.add(ReportConst.LST_CAT_ITM_ZON_TIER_PRC_RPT_VAL);
+		reportNameList.add(ReportConst.LST_PEND_CODE_ASGN_AGNCY_RPT_VAL);
+
+		reportNameList.add(ReportConst.SUM_REJ_CAT_ITM_RPT_VAL);
+		reportNameList.add(ReportConst.TOT_CAT_ITM_APPR_REJ_RPT_VAL);
+		reportNameList.add(ReportConst.LST_UNSPSC_CODE_REQ_RPT_VAL);
+
+		reportNameList.add(ReportConst.LST_NEW_EXT_CODE_CREA_RPT_VAL);
+		reportNameList.add(ReportConst.LST_ITM_CODE_RPT_VAL);
+
 	}
 
 	/**
