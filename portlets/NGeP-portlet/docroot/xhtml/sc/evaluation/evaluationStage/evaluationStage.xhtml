@@ -93,13 +93,13 @@
 					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC'}">
 					<p:commandButton value="#{lbl['lbl.btn.prev']}" style="float:left;"
 						styleClass="BtnSpacing"
-						actionListener="#{evaluationBackingBean.setTabValue('2','1')}"
+						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','1')}"
 						action="#{evaluationBackingBean.updateSmAppl}" update=":form" />
 				</ui:fragment> <ui:fragment
 					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' or evaluationBackingBean.managedBean.committeeType eq 'FEC'}">
 					<p:commandButton value="#{lbl['lbl.btn.prev']}" style="float:left;"
 						styleClass="BtnSpacing"
-						actionListener="#{evaluationBackingBean.setTabValue('2','0')}"
+						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','0')}"
 						action="#{evaluationBackingBean.updateSmAppl}" update=":form" />
 				</ui:fragment></td>
 			<td><ui:fragment
@@ -110,7 +110,7 @@
 					<p:commandButton value="#{lbl['lbl.btn.next']}"
 						style="float:right;" styleClass="BtnSpacing"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						actionListener="#{evaluationBackingBean.setTabValue('2','3')}"
+						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','3')}"
 						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
 						update=":form" />
 
@@ -123,7 +123,7 @@
 					<p:commandButton value="#{lbl['lbl.btn.next']}"
 						style="float:right;" styleClass="BtnSpacing"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						actionListener="#{evaluationBackingBean.setTabValue('2','4')}"
+						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','4')}"
 						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
 						update=":form" />
 
@@ -136,7 +136,7 @@
 					<p:commandButton value="#{lbl['lbl.btn.next']}"
 						style="float:right;" styleClass="BtnSpacing"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						actionListener="#{evaluationBackingBean.setTabValue('2','3')}"
+						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','3')}"
 						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
 						update=":form" />
 
@@ -149,7 +149,7 @@
 					<p:commandButton value="#{lbl['lbl.btn.next']}"
 						style="float:right;" styleClass="BtnSpacing"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						actionListener="#{evaluationBackingBean.setTabValue('2','4')}"
+						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','4')}"
 						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
 						update=":form" />
 
@@ -162,7 +162,7 @@
 					<p:commandButton value="#{lbl['lbl.btn.next']}"
 						style="float:right;" styleClass="BtnSpacing"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						actionListener="#{evaluationBackingBean.setTabValue('2','4')}"
+						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','4')}"
 						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
 						update=":form" />
 

@@ -59,13 +59,13 @@
 			<td><p:commandButton value="#{lbl['lbl.btn.prev']}"
 					style="float:left;" styleClass="BtnSpacing"
 					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq}"
-					actionListener="#{evaluationBackingBean.setTabValue('3','2')}"
+					actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('3','2')}"
 					action="#{evaluationBackingBean.updateSmAppl}" update=":form" /></td>
 			<td><p:commandButton value="#{lbl['lbl.btn.next']}"
 					style="float:right;" styleClass="BtnSpacing"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq}"
-					actionListener="#{evaluationBackingBean.setTabValue('3','4')}"
+					actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('3','4')}"
 					action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
 					update=":form" /></td>
 
