@@ -462,6 +462,9 @@ public class ReportsGenerateBean {
 
 	/** The sm mandatory from date view. */
 	private boolean smMandatoryFromDateView = false;
+	
+	/** The sm virtual cert date view. */
+	private boolean smVirtualCertDateView = false;	
 
 	/** The sm mandatory state view. */
 	private boolean smMandatoryStateView = false;
@@ -15244,5 +15247,19 @@ public class ReportsGenerateBean {
 	 */
 	public void setPmExemptedItemCodeView(boolean pmExemptedItemCodeView) {
 		this.pmExemptedItemCodeView = pmExemptedItemCodeView;
+	}
+
+	/**
+	 * @return the smVirtualCertDateView
+	 */
+	public boolean isSmVirtualCertDateView() {
+		return smVirtualCertDateView;
+	}
+
+	/**
+	 * @param smVirtualCertDateView the smVirtualCertDateView to set
+	 */
+	public void setSmVirtualCertDateView(boolean smVirtualCertDateView) {
+		this.smVirtualCertDateView = smVirtualCertDateView;
 	}
 }
