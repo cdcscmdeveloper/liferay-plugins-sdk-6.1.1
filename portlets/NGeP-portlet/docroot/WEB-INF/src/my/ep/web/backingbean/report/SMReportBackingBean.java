@@ -178,6 +178,8 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	           	rptGenBean.setSmExtraTwoColumnView(true);	        	
 	           	rptGenBean.setSmCommonZoneView(true);
 			    rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			    rptGenBean.setSmNonMandatoryDateView(true);
+			    rptGenBean.setSmMOFRegisteredDateView(true);
 	        	//rptGenBean.setSmMandatoryZoneView(true);							
 	            break;
 		 case ReportConst.SM_TOT_NUM_DAILY_APPL_RPT_VAL:
