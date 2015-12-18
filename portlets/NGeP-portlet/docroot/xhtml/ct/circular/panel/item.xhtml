@@ -7,28 +7,28 @@ xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core"
 xmlns:ac="http://ac.my/jsf/composite/cc">
 <p:panel id="itemId" header="#{lbl['lbl.ct.panel.item']}" toggleable="true" toggleSpeed="500">
-	 <div>
-	      <h:panelGrid style="width:100%">
+		<div>
+		  <h:panelGrid width="100%">
 		  <p:dataTable id="panelItemDt" var="panelItemsVar"  value="#{panelBackingBean.managedBean.circularVer.ctPanelItems}" 
 		      selectionMode="single" rowKey="#{panelItemsVar}" selection="#{panelBackingBean.managedBean.selectedPanelItems}"
-		      rowIndexVar="index" widgetVar="panelItemObj" style="width:970px;">
+		      rowIndexVar="index" widgetVar="panelItemObj">
 		      <ac:paginator for="panelItemDt" />
               <p:ajax event="rowSelect"  listener="#{panelBackingBean.setPanelListner()}" process="@this" 
                   onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  update="@([id$=itemZone],[id$=itemSupplier],[id$=deleteItemBtn])"  />	
 		      
-		      <p:column style="width:25px;">
+		      <p:column style="width:3%;">
 		           <p:selectBooleanCheckbox value="#{panelItemsVar.selectedCheckBox}" styleClass="myCustomChekBox"
 		           		rendered="#{!panelBackingBean.managedBean.viewContract}">
 				       <p:ajax event="change" update=":form:deleteItemBtn" listener="#{panelBackingBean.selectOneCheckboxSelect}"></p:ajax>
 			       </p:selectBooleanCheckbox>
 		      </p:column>
 			 
-			  <p:column style="white-space:pre-line;width:125px;" styleClass="column-align-center" >
+			  <p:column style="white-space:pre-line;width:11%;" styleClass="column-align-center" >
 			       <f:facet name="header">
 						<h:outputText id="coverageId" value="#{lbl['lbl.ct.panel.coverage']}" styleClass="required"/>
 	               		<ac:iconTooltip for="coverageId"  value="#{lbl['lbl.ct.tooltip.panel.coverage']}"/>
 	               </f:facet>
-			       <p:selectOneMenu id="panelCoverage" value="#{panelItemsVar.zoneAllParamterId}" style="width:100px;" 
+			       <p:selectOneMenu id="panelCoverage" value="#{panelItemsVar.zoneAllParamterId}" style="width:100%;" 
 			       		disabled="#{panelBackingBean.managedBean.viewContract}">
 			             <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.panelCoverageType)}"/>
 			             <p:ajax event="change"   listener="#{panelBackingBean.setCtPanelZoneListner(panelItemsVar)}" 
@@ -36,23 +36,23 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			       </p:selectOneMenu>
 	  	      </p:column>
 			 
-			  <p:column  style="white-space:pre-line;width:125px;" styleClass="column-align-center" >
+			  <p:column  style="white-space:pre-line;width:11%;" styleClass="column-align-center" >
 			      <f:facet name="header">
 			         <h:outputText value="#{lbl['lbl.ct.item.category']}" styleClass="required"/>
 			      </f:facet>
-			      <p:selectOneMenu value="#{panelItemsVar.categoryParameterId}" style="width:100px"
+			      <p:selectOneMenu value="#{panelItemsVar.categoryParameterId}" style="width:100%;"
 			      		disabled="#{panelBackingBean.managedBean.viewContract}">
 			           <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.itemCategoryType)}"/>
 			           <p:ajax event="change" update="spec" process="@this" listener="#{panelBackingBean.changeItemCategoryListner(panelItemsVar)}" /> 
 			      </p:selectOneMenu>
 			  </p:column>
 			  
-			  <p:column  style="width:150px;" styleClass="column-align-center" >
+			  <p:column  style="width:15%;" styleClass="column-align-center" >
 			     <f:facet name="header">
 			        <h:outputText value="#{lbl['lbl.ct.item.group']}" styleClass="required"/>
 			     </f:facet>
 			     <div  align="left">
-			       <ac:lov id="itemGroupLovId" lovId="CT_PANEL_ITEM_GROUP" size="10" headerText="#{lbl['lbl.ct.item.group']}" readonly="true" 
+			       <ac:lov id="itemGroupLovId" lovId="CT_PANEL_ITEM_GROUP" size="5" headerText="#{lbl['lbl.ct.item.group']}" readonly="true" 
 						value="#{panelItemsVar.ctPanelItemGroup.groupName}" conditionField="recordStatus^1" 
 						saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].ctPanelItemGroup"
 						disabled="#{panelBackingBean.managedBean.viewContract}">
@@ -60,39 +60,39 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			       </div>
 			   </p:column>
 		 	
-              <p:column style="width:175px;" styleClass="column-align-center">
+              <p:column style="width:16%;" styleClass="column-align-center">
                   <f:facet name="header">
 			        <h:outputText value="#{lbl['lbl.ct.item.name']}" styleClass="required"/>
 			     </f:facet>
-                  <p:inputTextarea value="#{panelItemsVar.itemName}" maxlength="100" rows="2" style="width:100px;" autoResize="false"
+                  <p:inputTextarea value="#{panelItemsVar.itemName}" maxlength="100" rows="2" style="width:75px;" autoResize="false"
                   	disabled="#{panelBackingBean.managedBean.viewContract}"/>
                   	<p:spacer width="3" />
-                  	<p:commandLink id="spec" update=":form:itemSpecDlg" action="#{panelBackingBean.panelItemSpecDlg(panelItemsVar)}" style="width:50px;"
+                  	<p:commandLink id="spec" update=":form:itemSpecDlg" action="#{panelBackingBean.panelItemSpecDlg(panelItemsVar)}" style="width:35px;"
                   		disabled="#{panelItemsVar.categoryParameterId == null or panelBackingBean.getItemGeneralCode(panelItemsVar.categoryParameterId) == ParameterConst.itemCategoryTypeGeneral}">
 						<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}"  />
 					</p:commandLink>
               </p:column>
-              <p:column  style="width:125px;;white-space:pre-line" styleClass="column-align-center" >
+              <p:column  style="width:11%;white-space:pre-line" styleClass="column-align-center" >
                    <f:facet name="header">
 			        <h:outputText value="#{lbl['lbl.ct.item.type']}" styleClass="required"/>
 			     </f:facet>
-                    <p:selectOneMenu value="#{panelItemsVar.itemType.parameterId}" style="width:100px;"
+                    <p:selectOneMenu value="#{panelItemsVar.itemType.parameterId}" style="width:100%;"
 			      		disabled="#{panelBackingBean.managedBean.viewContract}">
 			           <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.scItemType)}"/>
 			    </p:selectOneMenu>
               </p:column>
-			  <p:column styleClass="column-align-center" style="width:75px;">
+			  <p:column styleClass="column-align-center" style="width:12%;">
 				  	<f:facet name="header" >
 						<h:outputText value="#{lbl['lbl.ct.uom']}" style="float:left;white-space:pre-line" styleClass="required"  />
 	               	</f:facet>
-			       <ac:lov id="uomLovId" lovId="PM_UOM" size="10" headerText="#{lbl['lbl.ct.uom']}" readonly="true" 
+			       <ac:lov id="uomLovId" lovId="PM_UOM" size="5" headerText="#{lbl['lbl.ct.uom']}" readonly="true" 
 				         value="#{panelItemsVar.pmUom.uomName}" conditionField="recordStatus^1" 
 				       saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].pmUom"
 				       disabled="#{panelBackingBean.managedBean.viewContract}">
 			       </ac:lov>
 			   </p:column>
 			  
-			  <p:column headerText="#{lbl['lbl.ct.min.order.qty']}" style="white-space:pre-line;width:75px;" styleClass="column-align-center" >
+			  <p:column headerText="#{lbl['lbl.ct.min.order.qty']}" style="white-space:pre-line;width:7%;" styleClass="column-align-center" >
 			       <p:inputText value="#{panelItemsVar.minimumOrderQty}" style="width:85%;text-align:right;" label="#{lbl['lbl.ct.min.order.qty']}"
 			       		maxlength="#{panelItemsVar.pmUom.decimalScale == 0 ? 13 : 14}"
 			       		disabled="#{panelBackingBean.managedBean.viewContract}">
@@ -102,48 +102,22 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			       </p:inputText>
 			  </p:column>
 			 
-			  <p:column headerText="#{lbl['lbl.ct.purchase.limit']}" style="white-space:pre-line;width:75px;" styleClass="column-align-center" >
+			  <p:column headerText="#{lbl['lbl.ct.purchase.limit']}" style="white-space:pre-line;width:7%;" styleClass="column-align-center" >
 			       <p:inputText value="#{panelItemsVar.maxProcureAmt}" style="width:85%;text-align:right;" label="#{lbl['lbl.ct.purchase.limit']}"
 			       		disabled="#{panelBackingBean.managedBean.viewContract}">
 			          <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			       </p:inputText>
 			  </p:column>
-			  
-			  <p:column styleClass="column-align-center"  style="white-space:normal;width:25px;">
-			  	<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.ct.dn']}"/>
-               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.direct.nego']}"/>
-               	</f:facet>
-			    <p:selectBooleanCheckbox value="#{panelItemsVar.directNego}" disabled="#{panelBackingBean.managedBean.viewContract}"/>
-			  </p:column>		
-			  	
-			  <p:column styleClass="column-align-center"  style="white-space:normal;width:25px;">
-			  	<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.ct.dp']}"/>
-               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.direct.purchase']}"/>
-               	</f:facet>
-			  	<p:selectBooleanCheckbox value="#{panelItemsVar.directPurchase}" disabled="#{panelBackingBean.managedBean.viewContract}"/>
-			  </p:column>	
-			  
-			  <p:column styleClass="column-align-center"  style="white-space:normal;width:25px;">
-			    <f:facet name="header">
-					<h:outputText value="#{lbl['lbl.ct.qt']}"/>
-               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.quotation.tender']}"/>
-               	</f:facet>   
-			  	<p:selectBooleanCheckbox value="#{panelItemsVar.qt}" disabled="#{panelBackingBean.managedBean.viewContract}"/>
-			  </p:column>
-			  
-			  <p:column headerText="#{lbl['lbl.ct.status']}" style="width:75px;">
+			  <p:column headerText="#{lbl['lbl.ct.status']}" style="width:7%;" styleClass="column-align-center" >
 		           <p:selectOneMenu  value="#{panelItemsVar.recordStatusFlg}" 
 		           		disabled="#{!panelBackingBean.managedBean.updateAction or panelBackingBean.managedBean.viewContract}" style="width:95%;">
 				       <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
 			           <f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
 			       </p:selectOneMenu>
-			  </p:column>	
-			  												
+			  </p:column>													
 		    </p:dataTable>
-	 </h:panelGrid>	 
-	 </div>
+		    </h:panelGrid>
+		 </div>
 	 <div class="ppRightBtn">
 	 	 <ac:lov id="loaBulkSupId" lovId="SM_SUPPLIER"
 						postUpdateListener="panelBackingBean.addBulkPanelSupplier"
