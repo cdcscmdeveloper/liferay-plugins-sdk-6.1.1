@@ -81,14 +81,14 @@
 		<tr>
 			<td><p:commandButton value="#{lbl['lbl.btn.prev']}"
 					styleClass="BtnSpacing" style="float:left;"
-					actionListener="#{evaluationBackingBean.setTabValue('1','0')}"
+					actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('1','0')}"
 					action="#{evaluationBackingBean.updateSmAppl}" update=":form" /></td>
 			<td><ui:fragment
 					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.evaluationStageStatusHide}">
 					<p:commandButton value="#{lbl['lbl.btn.next']}"
 						styleClass="BtnSpacing" style="float:right;"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						actionListener="#{evaluationBackingBean.setTabValue('1','2')}"
+						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('1','2')}"
 						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
 						update=":form" />
 				</ui:fragment> <ui:fragment
@@ -96,7 +96,7 @@
 					<p:commandButton value="#{lbl['lbl.btn.next']}"
 						styleClass="BtnSpacing" style="float:right;"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						actionListener="#{evaluationBackingBean.setTabValue('1','4')}"
+						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('1','4')}"
 						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
 						update=":form" />
 				</ui:fragment> <ui:fragment
@@ -104,7 +104,7 @@
 					<p:commandButton value="#{lbl['lbl.btn.next']}"
 						styleClass="BtnSpacing" style="float:right;"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						actionListener="#{evaluationBackingBean.setTabValue('1','4')}"
+						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('1','4')}"
 						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
 						update=":form" />
 				</ui:fragment></td>
