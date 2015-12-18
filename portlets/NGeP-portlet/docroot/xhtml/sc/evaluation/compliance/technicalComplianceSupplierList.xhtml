@@ -50,7 +50,7 @@
 			<p:column headerText="#{lbl['lbl.sc.compliance.status']}"
 				style="width:15%">
 				<p:selectOneMenu
-					disabled="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'false' or evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
+					disabled="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'false' or  evaluationBackingBean.managedBean.statusOnly or  evaluationBackingBean.managedBean.complianceReEvaluateRequired}"
 					value="#{complianceTechnicalSupplier.compliance}">
 
 					<f:selectItems
@@ -64,7 +64,7 @@
 				<ui:fragment
 					rendered="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'true'}">
 					<p:inputTextarea rows="2" cols="40" maxlength="200"
-						disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
+						disabled="#{evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired}"
 						id="complianceRemarksid"
 						value="#{complianceTechnicalSupplier.remark}">
 						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
