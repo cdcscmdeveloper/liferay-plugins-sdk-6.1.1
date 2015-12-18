@@ -24,7 +24,7 @@
 						immediate="true"
 						action="#{evaluationBackingBean.evaluationBackaction}" /> <p:commandButton
 						value="#{lbl['lbl.btn.save']}"
-						disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
+						disabled="#{evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired}"
 						style="float:right;" update="@all" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
 						action="#{evaluationBackingBean.saveComplianceSample}" /></td>
@@ -92,7 +92,7 @@
 						<h:outputText value="#{lbl['lbl.sc.submission.status']}"></h:outputText>
 					</f:facet>
 					<p:selectOneMenu id="sampleSubmissionId"
-						disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
+						disabled="#{evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired}"
 						label="#{lbl['lbl.sc.submission.status']}"
 						value="#{sampleItem. submissionStatus.parameterId}">
 
@@ -108,7 +108,7 @@
 
 				<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:35%">
 					<p:inputTextarea rows="2" cols="40" maxlength="100"
-						disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
+						disabled="#{evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired}"
 						value="#{sampleItem.remark}">
 						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 					</p:inputTextarea>

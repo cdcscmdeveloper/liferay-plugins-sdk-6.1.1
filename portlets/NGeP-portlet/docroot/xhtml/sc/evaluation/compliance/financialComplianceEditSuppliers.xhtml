@@ -27,7 +27,7 @@
 							immediate="true"
 							action="#{evaluationBackingBean.evaluationBackaction}" /> <p:commandButton
 							value="#{lbl['lbl.btn.save']}"
-							disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
+							disabled="#{evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired}"
 							style="float:right;" update="@all" onstart="blockWidget.show();"
 							oncomplete="blockWidget.hide();"
 							action="#{evaluationBackingBean.saveComplianceUploadCheckList}" />
