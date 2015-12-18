@@ -61,7 +61,7 @@ public class SOANotifyRetryBackingBean extends
 
 			ISOANotifyRetrySO logSO;			try {
 				logSO = (ISOANotifyRetrySO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SOA,
+						.getServiceObject(ModuleCodeConst.SOANTF,
 								ISOANotifyRetrySO.class);
 
 				SOANotifyRetryReqDTO reqDTO = new SOANotifyRetryReqDTO();
@@ -136,7 +136,7 @@ public class SOANotifyRetryBackingBean extends
 		}
 		
 		ISOANotifyRetrySO logSO = (ISOANotifyRetrySO) BusinessDelegate
-				.getInstance().getServiceObject(ModuleCodeConst.SOA,
+				.getInstance().getServiceObject(ModuleCodeConst.SOANTF,
 						ISOANotifyRetrySO.class);
 
 		SOANotifyRetryResDTO resDTO = null;
@@ -228,7 +228,7 @@ public class SOANotifyRetryBackingBean extends
 		SelectItem[] items = null;
 		
 		try {
-			notifyRetrySO = (ISOANotifyRetrySO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.NTF,ISOANotifyRetrySO.class);
+			notifyRetrySO = (ISOANotifyRetrySO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SOANTF,ISOANotifyRetrySO.class);
 			List<String> targetSystemList =  notifyRetrySO.getAllTargetSystems();
 		    
 		    items = new SelectItem[targetSystemList.size()];
