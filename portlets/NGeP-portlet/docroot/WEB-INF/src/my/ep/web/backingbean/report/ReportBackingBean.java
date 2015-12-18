@@ -8586,9 +8586,11 @@ public class ReportBackingBean extends
 							|| this.getReportValue()
 									.equals(ReportConst.SM_APPLICATION_APPROVED_RPT_VAL)
 							|| this.getReportValue()
-									.equals(ReportConst.SM_APPLICATION_REJECTED_RPT_VAL) || this
+									.equals(ReportConst.SM_APPLICATION_REJECTED_RPT_VAL)
+							|| this.getReportValue().equals(
+									ReportConst.SM_LIST_OF_GST_RGSTRD_SUPPLIER) || this
 							.getReportValue().equals(
-									ReportConst.SM_LIST_OF_GST_RGSTRD_SUPPLIER))) {
+									ReportConst.SM_VIRTUAL_DAY_REPORT_RPT_VAL))) {
 
 				if ((allRoleCodesList != null)
 						&& (allRoleCodesList
@@ -10775,7 +10777,7 @@ public class ReportBackingBean extends
 		getDefaultDatesforCM(reportNameList);
 		// for SM Defaul Dates
 		getDefaultDatesforSM(reportNameList);
-        // for CT Default Dates
+		// for CT Default Dates
 		getDefaultDatesforCT(reportNameList);
 		// For PM Dafault Dates
 		getDefaultDatesforPM(reportNameList);
