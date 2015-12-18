@@ -23,10 +23,11 @@
 							value="#{lbl['lbl.pm.tooltip.display.priority']}" /> <p:message
 							id="itaDisplayPirorMsg" for="itaDisplayPiror" display="icon" />
 					</td>
+					<th colspan="2"><p:outputLabel style="float : left;"
+							value="#{lbl['lbl.pm.document.restriction']}" /></th>
 					<th></th>
 					<td></td>
-					<th><p:outputLabel
-							value="#{lbl['lbl.pm.document.restriction']}" /></th>
+					<th></th>
 					<td></td>
 				</tr>
 				<tr>
@@ -38,52 +39,43 @@
 							cols="50" rows="5" maxlength="1000"
 							required="#{!empty param['disableValidation']}" /> <p:message
 							id="itaDocNameMsg" for="itaDocName" display="icon" /></td>
-			   	<td><p:selectBooleanCheckbox id="chkMandatory"
-							value="#{supportDocBackingBean.managedBean.selectedDocument.mandatory}" />
-							<h:outputText value="#{lbl['lbl.pm.mandatory']}" />
-							<br/>
-							<p:selectBooleanCheckbox id="chkLicense"
-							value="#{supportDocBackingBean.managedBean.selectedDocument.licenseReq}" />
-							 <h:outputText value="#{lbl['lbl.pm.license.required']}" />
-							<br/>
-							<p:selectBooleanCheckbox id="chkHardCopy"
-							value="#{supportDocBackingBean.managedBean.selectedDocument.hardCopyReq}" />
-							<h:outputText value="#{lbl['lbl.pm.hard.copy']}" />
-					</td>
-				    <td></td>
-					<th></th>
-					<td><p:selectBooleanCheckbox id="chkAppType"
+			     	<th></th>
+				    <td><p:selectBooleanCheckbox id="chkAppType"
 							value="#{supportDocBackingBean.managedBean.selectedDocument.byAppType}">
 							<p:ajax event="change" process="@this" update="pDocRestriction"
 								listener="#{supportDocBackingBean.checkDocumentRestrictions(supportDocBackingBean.restrApp)}" />
-						</p:selectBooleanCheckbox> <h:outputText value="#{lbl['lbl.pm.by.application.type']}" /> <br />
-
-						<p:selectBooleanCheckbox id="chkComType"
-							value="#{supportDocBackingBean.managedBean.selectedDocument.byCompType}">
-							<p:ajax event="change" process="@this" update="pDocRestriction"
-								listener="#{supportDocBackingBean.checkDocumentRestrictions(supportDocBackingBean.restrComp)}" />
-						</p:selectBooleanCheckbox> <h:outputText value="#{lbl['lbl.pm.by.company.type']}" /> <br />
-
-						<p:selectBooleanCheckbox id="chkSuppType"
-							value="#{supportDocBackingBean.managedBean.selectedDocument.bySupplierType}">
-							<p:ajax event="change" process="@this" update="pDocRestriction"
-								listener="#{supportDocBackingBean.checkDocumentRestrictions(supportDocBackingBean.restrSupp)}" />
-						</p:selectBooleanCheckbox> <h:outputText value="#{lbl['lbl.pm.by.supplier.type']}" /> <br />
-
+						</p:selectBooleanCheckbox> <h:outputText value="#{lbl['lbl.pm.by.application.type']}" /> 
+						<br />
 						<p:selectBooleanCheckbox id="chkCat"
 							value="#{supportDocBackingBean.managedBean.selectedDocument.byCategory}">
 							<p:ajax event="change" process="@this" update="pDocRestriction"
 								listener="#{supportDocBackingBean.checkDocumentRestrictions(supportDocBackingBean.restrCategory)}" />
-						</p:selectBooleanCheckbox> <h:outputText value="#{lbl['lbl.pm.by.category']}" /> <br /> <p:selectBooleanCheckbox
+						</p:selectBooleanCheckbox> <h:outputText value="#{lbl['lbl.pm.by.category']}" /> 
+						</td>
+					<th></th>
+					<td>
+						<p:selectBooleanCheckbox id="chkComType"
+							value="#{supportDocBackingBean.managedBean.selectedDocument.byCompType}">
+							<p:ajax event="change" process="@this" update="pDocRestriction"
+								listener="#{supportDocBackingBean.checkDocumentRestrictions(supportDocBackingBean.restrComp)}" />
+						</p:selectBooleanCheckbox> <h:outputText value="#{lbl['lbl.pm.by.company.type']}" /> 
+						<br />
+                       <p:selectBooleanCheckbox
 							id="chkCertBody"
 							value="#{supportDocBackingBean.managedBean.selectedDocument.byCertBody}">
 							<p:ajax event="change" process="@this" update="pDocRestriction"
 								listener="#{supportDocBackingBean.checkDocumentRestrictions(supportDocBackingBean.restrCertbody)}" />
 						</p:selectBooleanCheckbox> <h:outputText value="#{lbl['lbl.pm.suppdoc.certified.body']}" />
+						</td>
+						<th></th>
+						<td>
+						<p:selectBooleanCheckbox id="chkSuppType"
+							value="#{supportDocBackingBean.managedBean.selectedDocument.bySupplierType}">
+							<p:ajax event="change" process="@this" update="pDocRestriction"
+								listener="#{supportDocBackingBean.checkDocumentRestrictions(supportDocBackingBean.restrSupp)}" />
+						</p:selectBooleanCheckbox> <h:outputText value="#{lbl['lbl.pm.by.supplier.type']}" /> <br />						
 						<br /></td>
 				</tr>
-				
-			
 				<tr>
 					<th><p:outputLabel value="#{lbl['lbl.pm.supplier.zone']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></th>
@@ -104,6 +96,11 @@
 								itemValue="#{zone.zoneId}" />
 						</p:selectOneMenu> <p:message id="somSuppZoneMsg" for="somSuppZone" display="icon" />
 					</td>
+					<th colspan="2"><p:outputLabel style="float : left;"
+							value="#{lbl['lbl.pm.document.type']}" /></th>
+					
+					<th></th>
+					<td></td>
 					<th></th>
 					<td></td>
 				</tr>
@@ -118,7 +115,18 @@
 						</p:selectOneMenu> <p:message id="somDocStatusMsg" for="somDocStatus" display="icon" />
 					</td>
 					<th></th>
-					<td></td>
+					<td><p:selectBooleanCheckbox id="chkMandatory"
+							value="#{supportDocBackingBean.managedBean.selectedDocument.mandatory}" />
+							<h:outputText value="#{lbl['lbl.pm.mandatory']}" /></td>
+					<th></th>
+					<td><p:selectBooleanCheckbox id="chkLicense"
+							value="#{supportDocBackingBean.managedBean.selectedDocument.licenseReq}" />
+							 <h:outputText value="#{lbl['lbl.pm.license.required']}" /></td>
+					<th></th>
+					<td><p:selectBooleanCheckbox id="chkHardCopy"
+							value="#{supportDocBackingBean.managedBean.selectedDocument.hardCopyReq}" />
+							<h:outputText value="#{lbl['lbl.pm.hard.copy']}" /></td>
+							
 				</tr>
 			</table>
 		</p:outputPanel>
