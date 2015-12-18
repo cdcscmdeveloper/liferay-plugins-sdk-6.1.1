@@ -514,7 +514,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			    rptGenBean.setSmSupplierView(true);
 			    rptGenBean.setSmRegistrationTypeView(true);
 			    rptGenBean.setSmRegistrationNoView(true);
-			    rptGenBean.setSmMofRegNoView(true);	
+			    rptGenBean.setSmEpMofRegNoView(true);			   
 			    rptGenBean.setSmFromAndToYearView(true);
 			    rptGenBean.setSmThresholdYearFromView(true);
 	            break;

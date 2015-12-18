@@ -564,6 +564,16 @@
 							</p:inputText>
 						</c:if>
 						<c:if
+							test="#{smReportBackingBean.managedBean.rptGenBean.smEpMofRegNoView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.mofNo.epNo']}"
+								style="margin-top:5px;width:160px;" />
+							<p:inputText maxlength="20"
+								value="#{reportBackingBean.smMofRegNo}"
+								style="margin-top:5px;width:290px;">
+								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+							</p:inputText>
+						</c:if>
+						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smMofRegNoTwoView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.businessRegNo']}"
 								style="margin-top:5px;width:160px;" />
