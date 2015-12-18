@@ -14935,20 +14935,26 @@ public class ReportBackingBean extends
 	 */
 	public void changeRTReportType() {
 
-		this.getManagedBean().getRptGenBean().setSmMandatoryReceiptDateView(false);
-		this.getManagedBean().getRptGenBean().setSmMandatoryTransactionDateView(false);
+		this.getManagedBean().getRptGenBean()
+				.setSmMandatoryReceiptDateView(false);
+		this.getManagedBean().getRptGenBean()
+				.setSmMandatoryTransactionDateView(false);
 		this.getManagedBean().getRptGenBean().setSmMandatoryRTDateView(false);
 
 		if (this.getSmRTReportType() != null) {
 			if (this.getSmRTReportType().equalsIgnoreCase(
 					ReportConst.SM_REPORT_RESIT)) {
-				this.getManagedBean().getRptGenBean().setSmMandatoryRTDateView(true);
-				this.getManagedBean().getRptGenBean().setSmMandatoryReceiptDateView(true);
+				this.getManagedBean().getRptGenBean()
+						.setSmMandatoryRTDateView(true);
+				this.getManagedBean().getRptGenBean()
+						.setSmMandatoryReceiptDateView(true);
 
 			} else if (this.getSmRTReportType().equalsIgnoreCase(
 					ReportConst.SM_REPORT_TRANSACTION)) {
-				this.getManagedBean().getRptGenBean().setSmMandatoryRTDateView(true);
-				this.getManagedBean().getRptGenBean().setSmMandatoryTransactionDateView(true);
+				this.getManagedBean().getRptGenBean()
+						.setSmMandatoryRTDateView(true);
+				this.getManagedBean().getRptGenBean()
+						.setSmMandatoryTransactionDateView(true);
 			}
 		}
 	}
@@ -14958,21 +14964,26 @@ public class ReportBackingBean extends
 	 */
 	public void changeRTReportTypeForPayment() {
 
-		this.getManagedBean().getRptGenBean().setSmNonMandatoryReceiptDateView(false);
-		this.getManagedBean().getRptGenBean().setSmNonMandatoryTransactionDateView(false);
+		this.getManagedBean().getRptGenBean()
+				.setSmNonMandatoryReceiptDateView(false);
+		this.getManagedBean().getRptGenBean()
+				.setSmNonMandatoryTransactionDateView(false);
 
 		if (this.getSmRTReportType() != null) {
 			if (this.getSmRTReportType().equalsIgnoreCase(
 					ReportConst.SM_REPORT_RESIT)) {
 
-				this.getManagedBean().getRptGenBean().setSmNonMandatoryReceiptDateView(true);
+				this.getManagedBean().getRptGenBean()
+						.setSmNonMandatoryReceiptDateView(true);
 
 			} else if (this.getSmRTReportType().equalsIgnoreCase(
 					ReportConst.SM_REPORT_TRANSACTION)) {
-				this.getManagedBean().getRptGenBean().setSmNonMandatoryTransactionDateView(true);
+				this.getManagedBean().getRptGenBean()
+						.setSmNonMandatoryTransactionDateView(true);
 			}
 		} else {
-			this.getManagedBean().getRptGenBean().setSmNonMandatoryTransactionDateView(true);
+			this.getManagedBean().getRptGenBean()
+					.setSmNonMandatoryTransactionDateView(true);
 		}
 	}
 
@@ -15036,6 +15047,7 @@ public class ReportBackingBean extends
 	 * The method used for generating a list of available display type of org
 	 * type as selection.
 	 * 
+	 * @return the org type dropdown values
 	 */
 	public SelectItem[] getOrgTypeDropdownValues() {
 
@@ -15093,23 +15105,17 @@ public class ReportBackingBean extends
 		return items;
 	}
 
+	/**
+	 * Gets the org type search bean.
+	 * 
+	 * @param componentId
+	 *            the component id
+	 * @return the org type search bean
+	 */
 	private ISearchBean<PmParameterDesc> getOrgTypeSearchBean(String componentId) {
 		ISearchBean<PmParameterDesc> orgTypeSearchBean = super
 				.createSearchBean(PmParameterDesc.class, componentId);
 		return orgTypeSearchBean;
 	}
-
-	/*
-	 * public boolean getRequiredStatus() { boolean status = false; if
-	 * ((this.getSmMofRegistrationFeeList() != null &&
-	 * this.getSmMofRegistrationFeeList() .size() > 0) ||
-	 * (this.getSmProcessingFeeList() != null &&
-	 * this.getSmProcessingFeeList().size() > 0) ||
-	 * (this.getSmSoftCertificateFeeList() != null &&
-	 * this.getSmSoftCertificateFeeList() .size() > 0)) { return status; } else
-	 * { status = true; return status; }
-	 * 
-	 * }
-	 */
 
 }
