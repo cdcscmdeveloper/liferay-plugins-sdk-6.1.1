@@ -1509,10 +1509,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())){
 	
 			if(ppPlan.getStatus()==null || ppPlan.getStatus().getStatusId()==null
+					|| (ProcurementPlanConst.PPE_PENDING_REVISION_APPROVAL.equals(ppPlan.getStatus().getStatusId())
 					|| (ProcurementPlanConst.PPE_PENDING_REVISION.equals(ppPlan.getStatus().getStatusId())
 					|| ProcurementPlanConst.PPE_APPROVED.equals(ppPlan.getStatus().getStatusId())
 					|| ProcurementPlanConst.PPE_PENDING_SUBMISSION.equals(ppPlan.getStatus().getStatusId())
-					|| ProcurementPlanConst.PPE_PENDING_APPROVAL.equals(ppPlan.getStatus().getStatusId()))){
+					|| ProcurementPlanConst.PPE_PENDING_APPROVAL.equals(ppPlan.getStatus().getStatusId())))){
 				log.info("getting justification");
 				justifications = new ArrayList<PpRemark>();
 				int itemIndex = 0;
@@ -1524,18 +1525,23 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 //						if(justification!=null && (justification.isBrandNew() && !StringUtils.isBlank(justification.getRemark())) 
 //								|| !justification.isBrandNew() && justification.isEditable()){
 //							
-						if(justification!=null && !StringUtils.isBlank(justification.getRemark())){
-							justification.setItemSeq(itemIndex);
-							justification.setDocId(ppExpenditureItem.getExpenditureItemId());
-							justification.setDocType(ParameterConst.DOCTYPE_PLAN_EXPENDITURE);
-							if(justification.getRoleCode() ==null || StringUtils.isBlank(justification.getRoleCode().getRoleCode())){
-								log.info("set setRemarkRole");
-								PmRole roleCode = new PmRole();
-								roleCode.setRoleCode(RoleCode.PLAN_OFFICER.value());
-							//	roleCode.setRoleCode(RoleCode.PLAN_EXPEN_OFFICER.value());
-								justification.setRoleCode(roleCode);
-								justification.setPpWorkflowStatus(this.getManagedBean().getSelectedPlan().getCurrentStatus());
+						if(justification!=null ){
+							if(!StringUtils.isBlank(justification.getRemark())){
+								justification.setItemSeq(itemIndex);
+								justification.setDocId(ppExpenditureItem.getExpenditureItemId());
+								justification.setDocType(ParameterConst.DOCTYPE_PLAN_EXPENDITURE);
+								if(justification.getRoleCode() ==null || StringUtils.isBlank(justification.getRoleCode().getRoleCode())){
+									log.info("set setRemarkRole");
+									PmRole roleCode = new PmRole();
+									roleCode.setRoleCode(RoleCode.PLAN_OFFICER.value());
+								//	roleCode.setRoleCode(RoleCode.PLAN_EXPEN_OFFICER.value());
+									justification.setRoleCode(roleCode);
+									justification.setPpWorkflowStatus(this.getManagedBean().getSelectedPlan().getCurrentStatus());
+								}
+							}else{
+								justification.setRemark(" ");
 							}
+							
 							justifications.add(justification);
 						}
 					}
@@ -2242,10 +2248,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 								|| (epItem.getJustifications()!=null 
 									&& epItem.getJustifications().isEmpty() 
 									&& epItem.getJustifications().get(0)==null)  
-								|| (epItem.getJustifications()!=null 
-									&& epItem.getJustifications().isEmpty() 
-									&& epItem.getJustifications().get(0)==null
-									&& StringUtils.isBlank(epItem.getJustifications().get(0).getRemark()))){
+								|| (epItem.getJustifications()!=null &&(
+									 epItem.getJustifications().isEmpty() 
+									|| epItem.getJustifications().get(0)==null
+									|| StringUtils.isBlank(epItem.getJustifications().get(0).getRemark())))){
 							throw new EpException(MessageConst.ERROR_730007);
 						}
 					}
