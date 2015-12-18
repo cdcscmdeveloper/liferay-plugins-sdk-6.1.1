@@ -980,8 +980,6 @@ public class LOIDetailBackingBean extends
 	 * multiple LOI.
 	 */
 	public void onSupplierSelectEvent() {
-		getManagedBean().setTotalFrequency(0);
-		
 		ScLoi scLoi = getManagedBean().getScLoi();
 		if (!QTStatusConst.LOI_REJECTED.equals(
 				scLoi.getScWorkFlowStatus().getPmStatus().getStatusId())) {
@@ -995,24 +993,8 @@ public class LOIDetailBackingBean extends
 			}  else {
 				getManagedBean().setHideColumnFlag(Boolean.FALSE);
 			}
-			
-			if (CollectionUtils.isNotEmpty(
-						scLoi.getScQtSchedules())) {
-				getManagedBean().setTotalFrequency(
-						scLoi.getScQtSchedules().size());
-			} 
 			calculateOfferedAndFinalPriceByItem(scLoi);
 			
-			/*if (getManagedBean().getScQt() != null) {
-				if (("P").equals(getManagedBean().getScQt().getScheduleType())) {
-					// progressive payment.
-					formProgressivePayment(scLoi);
-				} else if (("F").equals(getManagedBean().getScQt()
-						.getScheduleType())) {
-					// Fulfilment Schedule
-					formFulfilmentSchedule(scLoi);
-				}
-			}*/
 		} else {
 			scLoi.setScNegoTerms(null);
 			scLoi.setScLoiSupportingDocs(null);
@@ -2026,21 +2008,44 @@ public class LOIDetailBackingBean extends
 	 */
 	public void loiRequiredListener(ScLoiLoa scLoiLoa) {
 		debugLogger("loiRequiredListener");
-		boolean isLoiRequired = Boolean.FALSE;
+		boolean isLoiRequired = Boolean.TRUE;
 
 		int index = getManagedBean().getRecSupplierList().indexOf(scLoiLoa);
 		getManagedBean().getRecSupplierList().set(index, scLoiLoa);
+		List<ScLoiLoa> pendingLois  = getManagedBean().getRecSupplierList();
+		boolean isRefinalized = isRefinalizedOrNot(pendingLois);
 
-		for (ScLoiLoa loiLoa : getManagedBean().getRecSupplierList()) {
-			if (null != loiLoa.getLoiRequired() && loiLoa.getLoiRequired()) {
-				isLoiRequired = Boolean.TRUE;
+		for (ScLoiLoa loiLoa : pendingLois) {
+			// refinalization 
+			if(isRefinalized) {
+
+				if (null != loiLoa.getLoiRequired() && loiLoa.getLoiRequired() && loiLoa.isLoiLoaActive()) {
+					isLoiRequired = Boolean.FALSE;
+				}
+
+			} else{
+				if (null != loiLoa.getLoiRequired() && loiLoa.getLoiRequired()) {
+					isLoiRequired = Boolean.FALSE;
+				}
 			}
 		}
+
 		if (isLoiRequired) {
-			getManagedBean().setLoiRequired(Boolean.FALSE);
-		} else {
 			getManagedBean().setLoiRequired(Boolean.TRUE);
+		} else {
+			getManagedBean().setLoiRequired(Boolean.FALSE);
 		}
+	}
+	
+	private boolean isRefinalizedOrNot(List<ScLoiLoa> pendinglois){
+		boolean isLoiActive = Boolean.FALSE;
+		for (ScLoiLoa scLoiLoa : pendinglois) {
+			if(scLoiLoa.isLoiLoaActive()){
+				isLoiActive = Boolean.TRUE;
+				break;
+			}
+		}
+		return isLoiActive;
 	}
 
 	/**
