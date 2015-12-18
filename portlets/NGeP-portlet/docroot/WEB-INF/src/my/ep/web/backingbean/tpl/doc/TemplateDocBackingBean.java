@@ -605,6 +605,7 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 			getManagedBean().setSelectedTemplate(resDTO.getTplDocMaster());
 			getManagedBean().setDeletedList(new ArrayList<TplDocSection>());
 			getManagedBean().setProcessType(resDTO.getTplDocMaster().getProcessType().getParameterCode());
+			this.getManagedBean().setCreateNew(false);
 		} else {
 			TplDocMaster docMaster = new TplDocMaster();
 			docMaster.setProcurementCategory(new PmParameter());
@@ -637,9 +638,9 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 				TreeNode node = new DefaultTreeNode(docSection, selectedNode);
 				getManagedBean().getDocSectionMap().put((TplDocSection) node.getData(), node);
 			}
+			this.getManagedBean().setCreateNew(true);
 		}
 		
-		this.getManagedBean().setCreateNew(true);
 		return NAV_TO_MAINT;
 	}
 
