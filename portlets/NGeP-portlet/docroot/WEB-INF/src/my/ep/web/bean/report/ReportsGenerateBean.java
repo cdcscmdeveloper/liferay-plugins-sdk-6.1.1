@@ -353,7 +353,10 @@ public class ReportsGenerateBean {
 	private boolean smMandatoryForCodeView = false;
 
 	/** The sm mof reg no view. */
-	private boolean smMofRegNoView = false;
+	private boolean smMofRegNoView = false;	
+	
+	/** The sm ep mof reg no view. */
+	private boolean smEpMofRegNoView = false;
 
 	/** The sm category view. */
 	private boolean smCategoryView = false;
@@ -15261,5 +15264,19 @@ public class ReportsGenerateBean {
 	 */
 	public void setSmVirtualCertDateView(boolean smVirtualCertDateView) {
 		this.smVirtualCertDateView = smVirtualCertDateView;
+	}
+
+	/**
+	 * @return the smEpMofRegNoView
+	 */
+	public boolean isSmEpMofRegNoView() {
+		return smEpMofRegNoView;
+	}
+
+	/**
+	 * @param smEpMofRegNoView the smEpMofRegNoView to set
+	 */
+	public void setSmEpMofRegNoView(boolean smEpMofRegNoView) {
+		this.smEpMofRegNoView = smEpMofRegNoView;
 	}
 }
