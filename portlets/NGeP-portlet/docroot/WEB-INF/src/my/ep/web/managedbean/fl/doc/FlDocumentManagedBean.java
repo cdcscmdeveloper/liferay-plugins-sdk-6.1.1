@@ -487,8 +487,8 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 										orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
 										if(isFlFulfilmentRecevingOfficer()) {
 											orderInfo.setRole(RoleCode.RECEIVING_OFFICER.value());
-										} else if(isFlFulfilmentApprover()) {
-											orderInfo.setRole(RoleCode.FL_APPROVER.value());
+										} else if(isAcknowledgeOfficer()) {
+											orderInfo.setRole(RoleCode.ACKNOWLEDGE_OFFICER.value());
 										}
 									}
 								}
@@ -605,6 +605,16 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	public boolean isFlFulfilmentApprover() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.FL_APPROVER.value());
+	}
+	
+	/**
+	 * Checks if is acknowledge officer
+	 *
+	 * @return true, if is acknowledge officer
+	 */
+	public boolean isAcknowledgeOfficer() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value());
 	}
 	
 	/**

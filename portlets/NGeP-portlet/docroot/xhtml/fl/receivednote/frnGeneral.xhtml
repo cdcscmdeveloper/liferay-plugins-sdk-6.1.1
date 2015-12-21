@@ -143,6 +143,17 @@
 				</td>
 				<td><p:message for="receivedDate" display="icon" /></td>
 			</tr>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.fl.approverUser']}" rendered="#{receivedNoteBackingBean.isReceivingOfficer()}"
+						style="text-align: top" /></td>
+				<td><p:selectOneMenu style="width:350px; margin-bottom:5px;" rendered="#{receivedNoteBackingBean.isReceivingOfficer()}"
+						disabled="#{receivedNoteBackingBean.managedBean.buttonVal=='View'}"
+						value="#{receivedNoteBackingBean.managedBean.userLoginId}">
+						<f:selectItems
+							value="#{receivedNoteBackingBean.getAcknowledgeOfficerDropdown()}" />
+							<p:ajax process="@this" event="change" listener="#{receivedNoteBackingBean.setSelectedAckOfficer}"></p:ajax>
+					</p:selectOneMenu></td>
+			</tr>
 		</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.fl.supp.details']}" toggleable="true">

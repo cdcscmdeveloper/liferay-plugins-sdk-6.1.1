@@ -145,6 +145,12 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	
 	private boolean hyperLinkPage = false;
 	
+	private Long userLoginId;
+	
+	private List<PmUser> pmUserList;
+	
+	private PmUser selectedAckOfficer;
+	
 	
 	/**
 	 * Gets the fl remark.
@@ -843,6 +849,51 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	 */
 	public void setApproverList(List<PmUser> approverList) {
 		this.approverList = approverList;
+	}
+
+	/**
+	 * @return the pmUserList
+	 */
+	public List<PmUser> getPmUserList() {
+		if(pmUserList == null){
+			setPmUserList(new ArrayList<PmUser>());
+		}
+		return pmUserList;
+	}
+
+	/**
+	 * @param pmUserList the pmUserList to set
+	 */
+	public void setPmUserList(List<PmUser> pmUserList) {
+		this.pmUserList = pmUserList;
+	}
+
+	/**
+	 * @param userLoginId the userLoginId to set
+	 */
+	public void setUserLoginId(Long userLoginId) {
+		this.userLoginId = userLoginId;
+	}
+
+	/**
+	 * @return the userLoginId
+	 */
+	public Long getUserLoginId() {
+		return userLoginId;
+	}
+
+	/**
+	 * @return the selectedAckOfficer
+	 */
+	public PmUser getSelectedAckOfficer() {
+		return selectedAckOfficer;
+	}
+
+	/**
+	 * @param selectedAckOfficer the selectedAckOfficer to set
+	 */
+	public void setSelectedAckOfficer(PmUser selectedAckOfficer) {
+		this.selectedAckOfficer = selectedAckOfficer;
 	}
 
 }
