@@ -18,15 +18,15 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.ct.IContractSO;
-import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
-import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.criteria.ICriteriaSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
@@ -44,8 +44,8 @@ import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
-import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
-import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.criteria.CriteriaReqDTO;
 import my.ep.dto.pm.common.criteria.CriteriaResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -65,7 +65,6 @@ import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmCriteria;
 import my.ep.persistence.entity.pm.common.PmCriteriaDesc;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -178,6 +177,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			reqDTO.setOutcome(action);
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+			reqDTO.setSelectedAckOfficer(getManagedBean().getSelectedAckOfficer());
 			if(flBB.getManagedBean().getRemarkList().size()>1) {
 				reqDTO.setFlRemarkList(flBB.getManagedBean().getRemarkList());
 			}
@@ -372,6 +372,12 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 					getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
 					getManagedBean().getFulfilmentNote().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
 					getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFlDeliveryOrder().getFlRequest());
+					
+					if(getManagedBean().getFulfilmentNote().getApprover() == null){
+						reqDTO.setFlRequestId(resDTO.getFlDeliveryOrder().getFlRequest().getFulfilmentReqId());
+						getManagedBean().getFulfilmentNote().setApprover(receivedNoteSO.retrieveLatestAcknowledgeOfficerByApprovedDate(reqDTO)) ;
+					}
+					
 					getManagedBean().setDocType(resDTO.getFlDeliveryOrder().getFlRequest().getDocType());
 					// Default status
 					StatusReqDTO statusReqDTO = new StatusReqDTO();
@@ -431,7 +437,9 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				}
 				getSupplierGst(getManagedBean().getFulfilmentNote());
 			}
-			
+			if(getManagedBean().getFulfilmentNote().getApprover() != null){
+				getManagedBean().setUserLoginId(getManagedBean().getFulfilmentNote().getApprover().getUserId()); 
+			}
 			getManagedBean().setSelectedTabIndex(0);
 			
 			// Set evaluation
@@ -597,26 +605,38 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		}
 		
 		if(outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SUBMIT)) {
-			IFulfilmentSO fulfilmentSO = (IFulfilmentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
-			IUserGroupSO userGroupSO = (IUserGroupSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserGroupSO.class);
-			BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(fulfilmentNote.getFlRequest().getFulfilmentReqId());
-			UserGroupReqDTO userGroupReqDTO = new UserGroupReqDTO();
-			userGroupReqDTO.setGroupId(fulfilmentNote.getFlRequest().getPmUserGroup().getUserGroupId());
-			userGroupReqDTO.setApprovalLimit(sumItemAmt);
-			UserGroupResDTO userGroupResDTO = userGroupSO.retrieveUserGroupUserListByGroupId(userGroupReqDTO);
-			String lastApproverLoginId = fulfilmentNote.getFlRequest().getApprover().getLoginId();
+//			IFulfilmentSO fulfilmentSO = (IFulfilmentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+//			IUserGroupSO userGroupSO = (IUserGroupSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserGroupSO.class);
+//			BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(fulfilmentNote.getFlRequest().getFulfilmentReqId());
+//			UserGroupReqDTO userGroupReqDTO = new UserGroupReqDTO();
+//			userGroupReqDTO.setGroupId(fulfilmentNote.getFlRequest().getPmUserGroup().getUserGroupId());
+//			userGroupReqDTO.setApprovalLimit(sumItemAmt);
+//			UserGroupResDTO userGroupResDTO = userGroupSO.retrieveUserGroupUserListByGroupId(userGroupReqDTO);
+//			String lastApproverLoginId = fulfilmentNote.getFlRequest().getApprover().getLoginId();
 			List<PmUser> orderApproverList = new ArrayList<PmUser>();
 			List<PmUser> pendingApproverList = new ArrayList<PmUser>();
-			if(userGroupResDTO.getUserGroupUserList().isEmpty()){
-				throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.approverUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+			if(getManagedBean().getPmUserList().isEmpty()){
+				throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.fl.approverUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			}
-			for(PmUserGroupUser groupUser : userGroupResDTO.getUserGroupUserList()) {
-				if (lastApproverLoginId.equalsIgnoreCase(groupUser.getPmUser().getLoginId())) {
-					orderApproverList.add(groupUser.getPmUser());
+//			for(PmUserGroupUser groupUser : userGroupResDTO.getUserGroupUserList()) {
+//				if (lastApproverLoginId.equalsIgnoreCase(groupUser.getPmUser().getLoginId())) {
+//					orderApproverList.add(groupUser.getPmUser());
+//				} else if (orderApproverList.size() > 0) {
+//					orderApproverList.add(groupUser.getPmUser());
+//				} else if (orderApproverList.size() == 0) {
+//					pendingApproverList.add(groupUser.getPmUser());
+//				}
+//			}
+//			orderApproverList.addAll(pendingApproverList);
+//			getManagedBean().getApproverList().addAll(orderApproverList);
+			
+			for(PmUser user : getManagedBean().getPmUserList()){
+				if(getManagedBean().getUserLoginId().equals(user.getUserId())){
+					orderApproverList.add(user);
 				} else if (orderApproverList.size() > 0) {
-					orderApproverList.add(groupUser.getPmUser());
+					orderApproverList.add(user);
 				} else if (orderApproverList.size() == 0) {
-					pendingApproverList.add(groupUser.getPmUser());
+					pendingApproverList.add(user);
 				}
 			}
 			orderApproverList.addAll(pendingApproverList);
@@ -777,6 +797,8 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			return RoleCode.FL_APPROVER.value();		
 		}else if(getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())){
 			return RoleCode.RECEIVING_OFFICER.value();		
+		}else if(getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value())){
+			return RoleCode.ACKNOWLEDGE_OFFICER.value();		
 		}
 		else 
 			return null;
@@ -987,6 +1009,18 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		
 	}
 	
+	/**
+	 * Check user login is receiving officer role true or false
+	 *
+	 */
+	public boolean isReceivingOfficer() {
+		if(getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())){
+			return true;
+		}else
+			return false;
+		
+	}
+	
 	private void getSupplierGst(FlFulfilmentNote fulfilmentNote) {
 		ISupplierGstSO supplierGstSO = (ISupplierGstSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);
 		
@@ -1099,6 +1133,39 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 //			return Boolean.TRUE;
 //		}
 		return Boolean.FALSE;
+	}
+	
+	/**
+	 * Retrieve a list of acknowledge officers 
+	 *
+	 */
+	public SelectItem[] getAcknowledgeOfficerDropdown() {
+		SelectItem[] items = null;
+		getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId();
+		
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setRoleCode(RoleCode.ACKNOWLEDGE_OFFICER.value());
+		UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
+		getManagedBean().setPmUserList(resDTO.getUserList());
+		items = new SelectItem[resDTO.getUserList().size() + 1];
+		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+				"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				getFacesScopes().getUserLocale()));
+		
+		int i = 1;
+		for(PmUser user : resDTO.getUserList()) {
+			items[i++] = new SelectItem(user.getUserId(), user.getUserName());
+		}
+	    return items;
+	}
+	
+	public void setSelectedAckOfficer(){
+		for(PmUser user : getManagedBean().getPmUserList()){
+			if(user.getUserId().equals(getManagedBean().getUserLoginId())){
+				getManagedBean().setSelectedAckOfficer(user);
+			}
+		}
 	}
 	
 }
