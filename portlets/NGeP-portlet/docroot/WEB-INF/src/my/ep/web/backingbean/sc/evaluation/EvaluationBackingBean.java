@@ -2025,24 +2025,6 @@ public class EvaluationBackingBean extends
 					if (this.getManagedBean()
 							.getCurrentStatusId()
 							.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
-							&& !this.getManagedBean().isReadOnly()) {
-						ScQtFinalization finalization = retriveScQtFinalizationForReEvaluate();
-						if (null != finalization) {
-							if (finalization.isReEvaluateTechReq()) {
-								if (!getManagedBean()
-										.isFinancialSummaryGenerated()) {
-									getManagedBean()
-											.setFinancialSummaryGenerated(false);
-								}
-							} else {
-								getManagedBean().setFinancialSummaryGenerated(
-										true);
-							}
-						}
-					}
-					if (this.getManagedBean()
-							.getCurrentStatusId()
-							.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
 							&& !this.getManagedBean().isReadOnly()
 							&& !getManagedBean().isFinancialSummaryGenerated()) {
 						evaluationStageStatusCheck();
