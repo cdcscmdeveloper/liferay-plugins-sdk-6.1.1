@@ -1348,6 +1348,31 @@ public class EvaluationBackingBean extends
 
 						}
 
+					} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
+							.equalsIgnoreCase(checkList.getDefinationType()
+									.getParameterCode())) {
+						if (QTConstants.EVALUATION_TWO_TIER
+								.equalsIgnoreCase(this.getManagedBean()
+										.getScQt().getEvaluationType())
+								&& !this.getManagedBean()
+										.getCurrentStatusId()
+										.equals(QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL)) {
+							if (null != checkList.getPmEvalStatus()
+									&& QTStatusConst.TS_PENDING_SUBMISSION
+											.equals(checkList.getPmEvalStatus()
+													.getStatusId())) {
+								StatusReqDTO statusreq = new StatusReqDTO();
+								statusreq
+										.setStatusId(QTStatusConst.TS_COMPLETED);
+								StatusResDTO statusres = statussO
+										.retrieveStatusByStatusId(statusreq);
+								checkList.setPmEvalStatus(statusres
+										.getPmStatus());
+
+							}
+
+						}
+
 					}
 
 				}
