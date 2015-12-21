@@ -641,10 +641,10 @@ public class SimpleQuoteBackingBean extends
 							.getSpecMaster() == null) {
 				prepareQuestions(null, null, Boolean.FALSE);
 			}
+			
+			// for procurement type drop down
+			 checkGovtSeller(null, scQuote);
 		}
-
-		// for procurement type drop down
-		 checkGovtSeller(null, scQuote);
 		
 		// for procurement type drop down
 		if(null == getManagedBean().getProcurementTypes()){
@@ -1155,6 +1155,7 @@ public class SimpleQuoteBackingBean extends
 		if (pmOrgProfile != null && pmOrgProfile.isGovtSeller()) {
 			isGovtSeller = Boolean.TRUE;
 		} 
+		
 		// check supplier is government seller or not
 		if(null == scQuote.getProcurementType()){
 			if(isGovtSeller){
@@ -1166,15 +1167,16 @@ public class SimpleQuoteBackingBean extends
 			}
 
 		} else{
+			if(pmOrgProfile != null){
+				if(isGovtSeller){
+					if(!scQuote.getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_G2G)){
+						throw new EpException("Already added Normal or Adhoc supplier,  can't add G2G Supplier");
+					} 
 
-			if(isGovtSeller){
-				if(!scQuote.getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_G2G)){
-					throw new EpException("Already added Normal or Adhoc supplier,  can't add G2G Supplier");
-				} 
-
-			} else{
-				if(scQuote.getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_G2G)){
-					throw new EpException("Already added G2G supplier , can't add normal Supplier");
+				} else{
+					if(scQuote.getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_G2G)){
+						throw new EpException("Already added G2G supplier , can't add normal Supplier");
+					}
 				}
 			}
 		}
@@ -4179,18 +4181,20 @@ public class SimpleQuoteBackingBean extends
 						govtSellerIds.add(govtSeller.getSmSupplier().getSupplierId());
 					}
 					
-					if(!govtSellerIds.contains(scQuoteSupplier.getSmSupplier().getSupplierId())){
-						govtSuppliers.add(scQuoteSupplier);
-						
-					} else {
-						throw new EpException(
-								MessageConst.ERROR_700027,
-								new String[] { ResourceBundleUtils
-										.getMessage(
-												scQuoteSupplier.getSmSupplier().getCompanyName(),
-												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-												new FacesScopes()
-														.getUserLocale()) });
+					if (govtSellerIds.size() > 0) {
+						if(!govtSellerIds.contains(scQuoteSupplier.getSmSupplier().getSupplierId())){
+							govtSuppliers.add(scQuoteSupplier);
+
+						} else {
+							throw new EpException(
+									MessageConst.ERROR_700027,
+									new String[] { ResourceBundleUtils
+											.getMessage(
+													scQuoteSupplier.getSmSupplier().getCompanyName(),
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+													new FacesScopes()
+													.getUserLocale()) });
+						}
 					}
 				}
 			}
