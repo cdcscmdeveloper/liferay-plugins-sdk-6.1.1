@@ -1965,6 +1965,12 @@
 								value="*" styleClass="mandatory" /></TD>
 					</c:if>
 					<c:if
+						test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryExpectedSiteVisiRpttDateView}">
+						<TD style="width: 185px;"><p:outputLabel
+								value="#{lbl['lbl.rpt.expectedsitevisitrptdatefrom']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></TD>
+					</c:if>
+					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryActualSiteVisitDateView}">
 						<TD style="width: 175px;"><p:outputLabel
 								value="#{lbl['lbl.rpt.actualsitevisitdatefrom']}" /> <p:outputLabel
@@ -2094,6 +2100,17 @@
 						test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryExpectedSiteVisitDateView}">
 						<TD><p:calendar
 								label="#{lbl['lbl.rpt.expectedsitevisitdatefrom']}"
+								id="MandatoryFromDate" showOn="button" navigator="true"
+								display="inline" readonlyInput="true"
+								value="#{reportBackingBean.fromDate}" required="true"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								partialSubmit="true" process="@form">
+							</p:calendar></TD>
+					</c:if>
+					<c:if
+						test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryExpectedSiteVisiRpttDateView}">
+						<TD><p:calendar
+								label="#{lbl['lbl.rpt.expectedsitevisitrptdatefrom']}"
 								id="MandatoryFromDate" showOn="button" navigator="true"
 								display="inline" readonlyInput="true"
 								value="#{reportBackingBean.fromDate}" required="true"

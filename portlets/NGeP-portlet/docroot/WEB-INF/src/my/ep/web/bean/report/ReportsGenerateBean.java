@@ -750,6 +750,9 @@ public class ReportsGenerateBean {
 
 	/** The sm mandatory expected site visit date view. */
 	private boolean smMandatoryExpectedSiteVisitDateView = false;
+	
+	/** The sm mandatory expected site visi rptt date view. */
+	private boolean smMandatoryExpectedSiteVisiRpttDateView = false;
 
 	/** The sm mandatory actual site visit date view. */
 	private boolean smMandatoryActualSiteVisitDateView = false;
@@ -15278,5 +15281,20 @@ public class ReportsGenerateBean {
 	 */
 	public void setSmEpMofRegNoView(boolean smEpMofRegNoView) {
 		this.smEpMofRegNoView = smEpMofRegNoView;
+	}
+
+	/**
+	 * @return the smMandatoryExpectedSiteVisiRpttDateView
+	 */
+	public boolean isSmMandatoryExpectedSiteVisiRpttDateView() {
+		return smMandatoryExpectedSiteVisiRpttDateView;
+	}
+
+	/**
+	 * @param smMandatoryExpectedSiteVisiRpttDateView the smMandatoryExpectedSiteVisiRpttDateView to set
+	 */
+	public void setSmMandatoryExpectedSiteVisiRpttDateView(
+			boolean smMandatoryExpectedSiteVisiRpttDateView) {
+		this.smMandatoryExpectedSiteVisiRpttDateView = smMandatoryExpectedSiteVisiRpttDateView;
 	}
 }
