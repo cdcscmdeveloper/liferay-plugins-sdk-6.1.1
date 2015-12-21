@@ -866,16 +866,16 @@ public class EvaluationBackingBean extends
 			String checkListType) {
 		ScQtFinalization finalization = retriveScQtFinalizationForReEvaluate();
 		if (null != finalization) {
-			System.out.println("====finaliazation not null====");
+
 			if (finalization.isReEvaluateCompReq()) {
-				System.out.println("====finaliazation not null true condition====");
+
 				this.getManagedBean().setComplianceReEvaluateRequired(false);
 			} else {
-				System.out.println("====finaliazation not null false condition====");
+
 				this.getManagedBean().setComplianceReEvaluateRequired(true);
 			}
 		} else {
-			System.out.println("====finaliazation  null====");
+
 			this.getManagedBean().setComplianceReEvaluateRequired(false);
 		}
 		EvaluationReqDTO reqDTO = new EvaluationReqDTO();
@@ -927,16 +927,17 @@ public class EvaluationBackingBean extends
 		try {
 			ScQtFinalization finalization = retriveScQtFinalizationForReEvaluate();
 			if (null != finalization) {
-				System.out.println("====finaliazation not null====");
+
 				if (finalization.isReEvaluateCompReq()) {
-					System.out.println("====finaliazation not null true condition====");
-					this.getManagedBean().setComplianceReEvaluateRequired(false);
+
+					this.getManagedBean()
+							.setComplianceReEvaluateRequired(false);
 				} else {
-					System.out.println("====finaliazation not null false condition====");
+
 					this.getManagedBean().setComplianceReEvaluateRequired(true);
 				}
 			} else {
-				System.out.println("====finaliazation  null====");
+
 				this.getManagedBean().setComplianceReEvaluateRequired(false);
 			}
 			this.getManagedBean().setItemName(null);
@@ -1490,6 +1491,17 @@ public class EvaluationBackingBean extends
 					|| this.getManagedBean()
 							.getCurrentStatusId()
 							.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)) {
+				ScQtFinalization finalization = retriveScQtFinalizationForReEvaluate();
+				if (null != finalization) {
+					if (finalization.isReEvaluateCompReq()) {
+						if (!getManagedBean().isComplianceSummaryGenerated()) {
+							getManagedBean().setComplianceSummaryGenerated(
+									false);
+						}
+					} else {
+						getManagedBean().setComplianceSummaryGenerated(true);
+					}
+				}
 				if (!getManagedBean().isComplianceSummaryGenerated()) {
 					evaluationSO.prepareComplianceSummaryResults(reqDTO);
 
@@ -2512,6 +2524,16 @@ public class EvaluationBackingBean extends
 							.equalsIgnoreCase(this.getManagedBean()
 									.getScQtChecklist().getDefinationType()
 									.getParameterCode())) {
+				ScQtFinalization finalization = retriveScQtFinalizationForReEvaluate();
+				if (null != finalization) {
+					if (finalization.isReEvaluateTechReq()) {
+						this.getManagedBean().setTechnicalOrFinancialReEvaluateRequired(false);
+					} else {
+						this.getManagedBean().setTechnicalOrFinancialReEvaluateRequired(true);
+					}
+				}else{
+					this.getManagedBean().setTechnicalOrFinancialReEvaluateRequired(false);
+				}
 				this.getManagedBean().setUserScores(
 						checklist.getQtScoreWeightage().getScore().toString());
 				this.getManagedBean()
@@ -3064,6 +3086,16 @@ public class EvaluationBackingBean extends
 							.equalsIgnoreCase(this.getManagedBean()
 									.getScQtChecklist().getDefinationType()
 									.getParameterCode())) {
+				ScQtFinalization finalization = retriveScQtFinalizationForReEvaluate();
+				if (null != finalization) {
+					if (finalization.isReEvaluateFinReq()) {
+						this.getManagedBean().setTechnicalOrFinancialReEvaluateRequired(false);
+					} else {
+						this.getManagedBean().setTechnicalOrFinancialReEvaluateRequired(true);
+					}
+				}else{
+					this.getManagedBean().setTechnicalOrFinancialReEvaluateRequired(false);
+				}
 				this.getManagedBean().setUserScores(
 						this.getManagedBean().getScQtChecklist()
 								.getQtScoreWeightage().getScore().toString());
@@ -3339,7 +3371,16 @@ public class EvaluationBackingBean extends
 					.retrieveComplainceCheckListsForSupplier(reqDTO);
 			this.getManagedBean().setTechnicalComplinaceList(
 					evalResDTO.getComplainceList());
-
+			ScQtFinalization finalization = retriveScQtFinalizationForReEvaluate();
+			if (null != finalization) {
+				if (finalization.isReEvaluateTechReq()) {
+					this.getManagedBean().setTechnicalOrFinancialReEvaluateRequired(false);
+				} else {
+					this.getManagedBean().setTechnicalOrFinancialReEvaluateRequired(true);
+				}
+			}else{
+				this.getManagedBean().setTechnicalOrFinancialReEvaluateRequired(false);
+			}
 			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 					.equalsIgnoreCase(proposalCheckList.getScQtCheckList()
 							.getDefinationType().getParameterCode())) {
@@ -3964,6 +4005,16 @@ public class EvaluationBackingBean extends
 		SPDetailBackingBean detailBackingBean = new SPDetailBackingBean();
 		detailBackingBean.getManagedBean().setQt(
 				this.getManagedBean().getScQt());
+		ScQtFinalization finalization = retriveScQtFinalizationForReEvaluate();
+		if (null != finalization) {
+			if (finalization.isReEvaluateFinReq()) {
+				this.getManagedBean().setTechnicalOrFinancialReEvaluateRequired(false);
+			} else {
+				this.getManagedBean().setTechnicalOrFinancialReEvaluateRequired(true);
+			}
+		}else{
+			this.getManagedBean().setTechnicalOrFinancialReEvaluateRequired(false);
+		}
 		ITemplateSpecSO templateSpecSO = null;
 		try {
 			// this.getManagedBean().setTechindex(index);
@@ -5661,7 +5712,8 @@ public class EvaluationBackingBean extends
 	 *            (Mandatory)
 	 * @throws Exception
 	 */
-	public void evaluationMaintainPreviousNextTabIndex(int currentTab, int outputTab) throws Exception {
+	public void evaluationMaintainPreviousNextTabIndex(int currentTab,
+			int outputTab) throws Exception {
 		IQTEvaluationSO evaluationSo = null;
 		EvaluationResDTO evalResDTO = new EvaluationResDTO();
 		try {
@@ -11003,5 +11055,6 @@ public class EvaluationBackingBean extends
 				.retrieveSupplierFinalizationForReEvaluation(supplierFinalizationReqDTO);
 		return supplierFinalizationResDTO.getScQtFinalization();
 	}
-
+	
+	
 }
