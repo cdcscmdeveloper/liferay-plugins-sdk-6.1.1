@@ -462,7 +462,10 @@ public class ReportsGenerateBean {
 
 	/** The sm mandatory category view. */
 	private boolean smMandatoryCategoryView = false;
-
+	
+	/** The sm non mandatory category view. */
+	private boolean smNonMandatoryCategoryView = false;
+	
 	/** The sm mandatory from date view. */
 	private boolean smMandatoryFromDateView = false;
 	
@@ -15296,5 +15299,19 @@ public class ReportsGenerateBean {
 	public void setSmMandatoryExpectedSiteVisiRpttDateView(
 			boolean smMandatoryExpectedSiteVisiRpttDateView) {
 		this.smMandatoryExpectedSiteVisiRpttDateView = smMandatoryExpectedSiteVisiRpttDateView;
+	}
+
+	/**
+	 * @return the smNonMandatoryCategoryView
+	 */
+	public boolean isSmNonMandatoryCategoryView() {
+		return smNonMandatoryCategoryView;
+	}
+
+	/**
+	 * @param smNonMandatoryCategoryView the smNonMandatoryCategoryView to set
+	 */
+	public void setSmNonMandatoryCategoryView(boolean smNonMandatoryCategoryView) {
+		this.smNonMandatoryCategoryView = smNonMandatoryCategoryView;
 	}
 }

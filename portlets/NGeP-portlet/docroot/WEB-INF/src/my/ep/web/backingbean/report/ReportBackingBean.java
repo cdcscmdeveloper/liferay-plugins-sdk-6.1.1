@@ -12592,12 +12592,38 @@ public class ReportBackingBean extends
 				subcategorydivision
 						.append(ReportConst.AMP_SM_SUB_DIV_CATEGORY_EQ);
 				for (SmSupplierCategory smSupplier : this.getSelectedCatList()) {
-					maincategory.append(ReportConst.KAMA
-							+ smSupplier.getPmCategoryL1().getCategoryL1Id());
-					subcategory.append(ReportConst.KAMA
-							+ smSupplier.getPmCategoryL2().getCategoryL2Id());
-					subcategorydivision.append(ReportConst.KAMA
-							+ smSupplier.getPmCategoryL3().getCategoryL3Id());
+
+					if (smSupplier.getPmCategoryL1().getCategoryL1Id() != null
+							&& smSupplier.getPmCategoryL2().getCategoryL2Id() != null
+							&& smSupplier.getPmCategoryL3().getCategoryL3Id() != null) {
+						maincategory.append(ReportConst.KAMA
+								+ smSupplier.getPmCategoryL1()
+										.getCategoryL1Id());
+						subcategory.append(ReportConst.KAMA
+								+ smSupplier.getPmCategoryL2()
+										.getCategoryL2Id());
+						subcategorydivision.append(ReportConst.KAMA
+								+ smSupplier.getPmCategoryL3()
+										.getCategoryL3Id());
+					} else if (smSupplier.getPmCategoryL1().getCategoryL1Id() == null
+							&& smSupplier.getPmCategoryL2().getCategoryL2Id() == null
+							&& smSupplier.getPmCategoryL3().getCategoryL3Id() == null) {
+						maincategory.append(ReportConst.KAMA + "");
+						subcategory.append(ReportConst.KAMA + "");
+						subcategorydivision.append(ReportConst.KAMA + "");
+					} else if ((smSupplier.getPmCategoryL1().getCategoryL1Id() != null
+							|| smSupplier.getPmCategoryL2().getCategoryL2Id() == null || smSupplier
+							.getPmCategoryL3().getCategoryL3Id() == null)
+							|| (smSupplier.getPmCategoryL2().getCategoryL2Id() != null
+									|| smSupplier.getPmCategoryL1()
+											.getCategoryL1Id() == null || smSupplier
+									.getPmCategoryL3().getCategoryL3Id() == null)
+							|| (smSupplier.getPmCategoryL3().getCategoryL3Id() != null
+									|| smSupplier.getPmCategoryL1()
+											.getCategoryL1Id() == null || smSupplier
+									.getPmCategoryL2().getCategoryL2Id() == null)) {
+						throw new EpException(MessageConst.ERROR_REPORT_780028);
+					}
 				}
 			}
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
