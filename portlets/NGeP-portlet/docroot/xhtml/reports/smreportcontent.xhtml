@@ -1814,6 +1814,108 @@
 						</p:panel>
 					</c:if></td>
 			</tr>
+
+			<tr>
+				<td width="100%"><c:if
+						test="#{smReportBackingBean.managedBean.rptGenBean.smNonMandatoryCategoryView}">
+						<p:panel id="compExpCatPanHdr" style="border:1px solid #808080;">
+							<p:dataTable var="expCategoryBean"
+								widgetVar="suppExpCatCodesDtWidVar"
+								selection="#{reportBackingBean.selectCatDeletionList}"
+								value="#{reportBackingBean.selectedCatList}" rows="10"
+								rowKey="#{expCategoryBean}" rowIndexVar="index"
+								id="suppExpCatCodesDtWidVar">
+								<ac:paginator for="suppExpCatCodesDtWidVar" />
+								<p:column style="width:2%" selectionMode="multiple" />
+
+								<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
+									<h:outputText 
+										style="font-size: 12px;font-family: Arial;color: #FF0000;font-weight: bold;" />
+									<p:selectOneMenu 
+										label="#{lbl['lbl.sm.projDtls.mainCat']}"
+										id="consultProjParCatCode"
+										value="#{expCategoryBean.pmCategoryL1.categoryL1Id}"
+										style="width: 207px;margin-bottom: 5px;">
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+											itemValue="" />
+										<f:selectItems
+											value="#{reportBackingBean.supplierParentCatList}"
+											var="parent"
+											itemLabel="#{parent.categoryL1Code} - #{parent.categoryName}"
+											itemValue="#{parent.categoryL1Id}" />
+										<p:ajax event="change"
+											listener="#{reportBackingBean.populateExperienceChildCategoryByParent(expCategoryBean.pmCategoryL1.categoryL1Id,
+								expCategoryBean.pmCategoryL2,
+								expCategoryBean.pmCategoryL3)}"
+											update="conslChild,conslSubChild,@([id$=Msg])" />
+									</p:selectOneMenu>
+									<p:message id="consultProjParCatCodeMsg"
+										for="consultProjParCatCode" showDetail="false" display="icon" />
+								</p:column>
+
+
+								<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
+									<h:outputText 
+										style="font-size: 12px;font-family: Arial;color: #FF0000;font-weight: bold;" />
+									<p:selectOneMenu 
+										label="#{lbl['lbl.sm.projDtls.subCat']}"
+										value="#{expCategoryBean.pmCategoryL2.categoryL2Id}"
+										id="conslChild" style="width: 207px;margin-bottom: 5px;">
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+											itemValue="" />
+										<f:selectItems
+											value="#{expCategoryBean.pmCategoryL2.pmCategoryL2s}"
+											var="conslChild"
+											itemLabel="#{conslChild.categoryL2Code} - #{conslChild.categoryName}"
+											itemValue="#{conslChild.categoryL2Id}" />
+										<p:ajax event="change"
+											listener="#{reportBackingBean.populateExperienceSubChildCategoryByChild(expCategoryBean.pmCategoryL2.categoryL2Id,expCategoryBean.pmCategoryL3)}"
+											update="conslSubChild,@([id$=Msg])" />
+									</p:selectOneMenu>
+									<p:message id="conslChildMsg" for="conslChild"
+										showDetail="false" display="icon" />
+								</p:column>
+
+								<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
+									<h:outputText 
+										style="font-size: 12px;font-family: Arial;color: #FF0000;font-weight: bold;" />
+									<p:selectOneMenu 
+										label="#{lbl['lbl.sm.projDtls.subCatDiv']}"
+										value="#{expCategoryBean.pmCategoryL3.categoryL3Id}"
+										id="conslSubChild" style="width: 207px;margin-bottom: 5px;">
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+											itemValue="" />
+										<f:selectItems
+											value="#{expCategoryBean.pmCategoryL3.pmCategoryL3s}"
+											var="conslSubChild"
+											itemLabel="#{conslSubChild.categoryL3Code} - #{conslSubChild.categoryName}"
+											itemValue="#{conslSubChild.categoryL3Id}" />
+										<p:ajax event="change"
+											listener="#{reportBackingBean.checkDuplicateCategoryForProject(expCategoryBean)}"
+											update="conslSubChild,@([id$=Msg])" />
+									</p:selectOneMenu>
+									<p:message id="conslSubChildMsg" for="conslSubChild"
+										showDetail="false" display="icon" />
+								</p:column>
+							</p:dataTable>
+							<p:spacer height="2px;" />
+							<div align="right">
+								<p:commandButton id="cmdAdd" value="#{lbl['lbl.sm.button.add']}"
+									disabled="#{reportBackingBean.enableValue}"
+									action="#{reportBackingBean.assignCategoryForCompExperience}"
+									update="suppExpCatCodesDtWidVar,cmdAdd" partialSubmit="true"
+									process=":form:compExpCatPanHdr" />
+
+								<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+									action="#{reportBackingBean.deleteSelectedCodes}"
+									update="suppExpCatCodesDtWidVar,cmdAdd" partialSubmit="true"
+									process=":form:compExpCatPanHdr" />
+
+							</div>
+						</p:panel>
+					</c:if></td>
+			</tr>
+
 		</table>
 	</div>
 
@@ -2012,8 +2114,8 @@
 								partialSubmit="true" process="@form">
 							</p:calendar></TD>
 					</c:if>
-					
-					
+
+
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.smGSTEffectiveDateView}">
 						<TD><p:calendar label="#{lbl['lbl.rpt.gsteffectivedate']}"
