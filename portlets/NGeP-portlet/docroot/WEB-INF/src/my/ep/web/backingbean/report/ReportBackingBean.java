@@ -10860,10 +10860,12 @@ public class ReportBackingBean extends
 	 * @return the default datesfor sm
 	 */
 	private void getDefaultDatesforSM(List<String> reportNameList) {
+		reportNameList.add(ReportConst.SM_APPL_PEND_SITE_VISIT_RPT_VAL);
 		reportNameList.add(ReportConst.SM_LIST_OF_APPLICATION_RPT_VAL);
 		reportNameList.add(ReportConst.SM_LIST_OFFLINE_SUPP_DOC_RPT_VAL);
 		reportNameList.add(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL);
 		reportNameList.add(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL);
+		
 	}
 
 	/**
