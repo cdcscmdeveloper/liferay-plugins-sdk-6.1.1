@@ -7,22 +7,25 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:dialog widgetVar="createOwnerSpec" modal="true" width="950"
-		id="bocreateSpec" height="600" position="top" header="#{lbl['lbl.sc.spec.create.specification']}">
+		id="bocreateSpec" height="600" position="top"
+		header="#{lbl['lbl.sc.spec.create.specification']}">
 		<!-- <ac:title value="#{lbl['lbl.sc.spec.business.owner']}"></ac:title> -->
 		<p:messages id="bocreateTemplate" showDetail="true" autoUpdate="true"
-			closable="true" showSummary="false" severity="error, info"/>
-		<p:panel header="#{lbl['lbl.sc.search']}" id="searchBospec" toggleable="true">
+			closable="true" showSummary="false" severity="error, info" />
+		<p:panel header="#{lbl['lbl.sc.search']}" id="searchBospec"
+			toggleable="true">
 
 			<table>
 				<tr>
 					<td style="width: 180px;"><p:outputLabel
-							value="#{lbl['lbl.sc.standard.template']}" />
-						<p:outputLabel value="*" styleClass="mandatory" /></td>
+							value="#{lbl['lbl.sc.standard.template']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneRadio required="true"
 							label="#{lbl['lbl.sc.standard.template']}"
 							id="tempSpecStandardTemplate"
 							value="#{specificationBackingBean.managedBean.standardTemplate}">
-							<f:selectItems value="#{specificationBackingBean.getCloneTemplateRadioBtn()}" />
+							<f:selectItems
+								value="#{specificationBackingBean.getCloneTemplateRadioBtn()}" />
 							<p:ajax event="change"
 								listener="#{specificationBackingBean.templateChange}"
 								update="cretaeupdate,createList"></p:ajax>
@@ -38,8 +41,7 @@
 					<table>
 						<tr>
 							<td style="width: 180px;"><p:outputLabel
-									value="#{lbl['lbl.sc.item.type']}"></p:outputLabel>
-							</td>
+									value="#{lbl['lbl.sc.item.type']}"></p:outputLabel></td>
 							<td><p:selectOneMenu style="width:120px; margin-bottom:5px;"
 									id="templateSpecItemType"
 									value="#{specificationBackingBean.managedBean.searchItemTypeId}">
@@ -59,10 +61,10 @@
 					<table width="100%">
 						<tr>
 							<td style="width: 180px;"><p:outputLabel
-									value="#{lbl['lbl.sc.item.type']}"></p:outputLabel>
-							</td>
+									value="#{lbl['lbl.sc.item.type']}"></p:outputLabel></td>
 							<td><p:selectOneMenu id="sourcingSpecItemType"
-									value="#{specificationBackingBean.managedBean.searchItemTypeId}" style="width:210px;margin-bottom: 5px;">
+									value="#{specificationBackingBean.managedBean.searchItemTypeId}"
+									style="width:210px;margin-bottom: 5px;">
 									<f:selectItems
 										value="#{specificationBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.scItemType)}" />
 
@@ -72,28 +74,29 @@
 								</p:selectOneMenu> <p:message id="sourcingBoItemType" for="sourcingSpecItemType"
 									display="icon"></p:message></td>
 						</tr>
-						
+
 						<tr>
 							<td valign="top"><h:outputLabel
 									value="#{lbl['lbl.tpl.spec.title']}"></h:outputLabel></td>
-							<td colspan="3"><p:inputText style="width:671px; margin-bottom:5px;"
-									maxlength="100"
+							<td colspan="3"><p:inputText
+									style="width:671px; margin-bottom:5px;" maxlength="100"
 									value="#{specificationBackingBean.managedBean.specName}" /></td>
 						</tr>
-						
+
 						<tr>
-							<td valign="top"><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
+							<td valign="top"><p:outputLabel
+									value="#{lbl['lbl.sc.title']}" /></td>
 							<td colspan="3"><p:inputText
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.qtTitle}"
 									style="width:671px;" maxlength="100" /></td>
 						</tr>
-						
+
 						<tr>
-							<td><h:outputLabel
-									value="#{lbl['lbl.sc.qtn.no']}"></h:outputLabel></td>
-							<td><p:inputText style="width:210px; margin-bottom:5px;" maxlength="21" 
-									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.qtNo}"/></td>
-									
+							<td><h:outputLabel value="#{lbl['lbl.sc.qtn.no']}"></h:outputLabel></td>
+							<td><p:inputText style="width:210px; margin-bottom:5px;"
+									maxlength="21"
+									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.qtNo}" /></td>
+
 							<td><h:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
 							<td><p:selectOneMenu id="procurementid"
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.procurementMode}"
@@ -103,9 +106,10 @@
 								</p:selectOneMenu></td>
 
 						</tr>
-						
+
 						<tr>
-							<td><h:outputLabel value="#{lbl['lbl.sc.created.date.from']}" /></td>
+							<td><h:outputLabel
+									value="#{lbl['lbl.sc.created.date.from']}" /></td>
 							<td><p:calendar
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromCreatedDate}"
 									id="crdateFrom" showOn="button" readonlyInput="true"
@@ -124,12 +128,12 @@
 										value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromCreatedDate}" />
 								</p:calendar></td>
 						</tr>
-						
+
 						<tr>
 							<td><h:outputLabel value="#{lbl['lbl.sc.pbldtfrom']}" /></td>
 							<td><p:calendar
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromPublishDate}"
-									id="pbdateFrom" showOn="button"  readonlyInput="true"
+									id="pbdateFrom" showOn="button" readonlyInput="true"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 									<p:ajax event="dateSelect" update="pbdateTo" />
 								</p:calendar></td>
@@ -144,7 +148,7 @@
 									<f:validator validatorId="dateRangeValidator" />
 								</p:calendar></td>
 						</tr>
-						
+
 						<tr>
 							<td><h:outputLabel value="#{lbl['lbl.sc.clsdtfrom']}" /></td>
 							<td><p:calendar
@@ -164,7 +168,7 @@
 									<f:validator validatorId="dateRangeValidator" />
 								</p:calendar></td>
 						</tr>
-						
+
 						<tr>
 							<td><h:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
 							<td><p:selectOneMenu
@@ -174,12 +178,13 @@
 										value="#{specificationBackingBean.getStatusDropdownValues('SC', 'QT')}" />
 								</p:selectOneMenu></td>
 						</tr>
-						
+
 						<tr>
 							<td><h:outputLabel
 									value="#{lbl['lbl.sc.procurement.category']}"></h:outputLabel></td>
-							<td><p:selectOneMenu
-									value="#{specificationBackingBean.managedBean.searchProcurementId}" style="width:210px;margin-bottom: 5px;">
+							<td><p:selectOneMenu disabled="true"
+									value="#{specificationBackingBean.managedBean.searchProcurementId}"
+									style="width:210px;margin-bottom: 5px;">
 									<f:selectItems
 										value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
 								</p:selectOneMenu></td>
@@ -189,22 +194,29 @@
 				</ui:fragment>
 			</h:panelGroup>
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.search']}" styleClass="BtnSpacing"
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
+					styleClass="BtnSpacing"
 					action="#{specificationBackingBean.searchTemplateSpecAction}"
 					partialSubmit="true" process="@this,searchBospec"
 					update="createList" />
-				<p:commandButton value="#{lbl['lbl.btn.reset']}" styleClass="BtnSpacing"
-					partialSubmit="true" update="searchBospec" process="@this"
-					action="#{specificationBackingBean.resetTemplate}" />
+				<p:commandButton value="#{lbl['lbl.btn.reset']}"
+					styleClass="BtnSpacing" partialSubmit="true" update="searchBospec"
+					process="@this" action="#{specificationBackingBean.resetTemplate}" />
 			</div>
 
 		</p:panel>
 
 		<p:panel id="listUpdate" header="#{lbl['lbl.sc.tpl.list']}"
 			toggleable="true">
-			
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.tpl.list.standard.template.instruction']}" escape="false" rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'ST'}" />
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.tpl.list.existing.qt.template.instruction']}" escape="false" rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'SC'}" />
+
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.tpl.list.standard.template.instruction']}"
+				escape="false"
+				rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'ST'}" />
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.tpl.list.existing.qt.template.instruction']}"
+				escape="false"
+				rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'SC'}" />
 
 			<h:panelGrid style="width:100%;">
 				<p:dataTable id="createList" var="tplSpecMaster" rows="10"
@@ -258,16 +270,14 @@
 							<p:commandButton value="#{lbl['lbl.btn.prepare']}" process="@all"
 								update=":form:searchBospec"
 								action="#{specificationBackingBean.createTemplateSpec(tplSpecMaster,'BO')}"
-								title="#{lbl['lbl.sc.spec.prepare.btn.tooltip']}"
-								 />
+								title="#{lbl['lbl.sc.spec.prepare.btn.tooltip']}" />
 						</ui:fragment>
 						<ui:fragment
 							rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'SC'}">
-							<p:commandButton value="#{lbl['lbl.btn.clone']}"
-								process="@all" update=":form:searchBospec"
+							<p:commandButton value="#{lbl['lbl.btn.clone']}" process="@all"
+								update=":form:searchBospec"
 								action="#{specificationBackingBean.createTemplateSpec(tplSpecMaster,'BO')}"
-								title="#{lbl['lbl.sc.spec.clone.btn.tooltip']}" 
-								/>
+								title="#{lbl['lbl.sc.spec.clone.btn.tooltip']}" />
 						</ui:fragment>
 					</p:column>
 
