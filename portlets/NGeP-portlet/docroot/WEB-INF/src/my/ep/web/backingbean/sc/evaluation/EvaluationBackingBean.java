@@ -1906,6 +1906,22 @@ public class EvaluationBackingBean extends
 				evalReqDTO.setResultStages(resultStg);
 				if (this.getManagedBean().getCurrentStatusId()
 						.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL)
+						&& !this.getManagedBean().isReadOnly()) {
+					ScQtFinalization finalization = retriveScQtFinalizationForReEvaluate();
+					if (null != finalization) {
+						if (finalization.isReEvaluateTechReq()) {
+							if (!getManagedBean().isTechnicalSummaryGenerated()) {
+								getManagedBean().setTechnicalSummaryGenerated(
+										false);
+							}
+						} else {
+							this.getManagedBean().setTechnicalSummaryGenerated(
+									true);
+						}
+					}
+				}
+				if (this.getManagedBean().getCurrentStatusId()
+						.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL)
 						&& !this.getManagedBean().isReadOnly()
 						&& !getManagedBean().isTechnicalSummaryGenerated()) {
 					evaluationStageStatusCheck();
@@ -2009,6 +2025,24 @@ public class EvaluationBackingBean extends
 					if (this.getManagedBean()
 							.getCurrentStatusId()
 							.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
+							&& !this.getManagedBean().isReadOnly()) {
+						ScQtFinalization finalization = retriveScQtFinalizationForReEvaluate();
+						if (null != finalization) {
+							if (finalization.isReEvaluateTechReq()) {
+								if (!getManagedBean()
+										.isFinancialSummaryGenerated()) {
+									getManagedBean()
+											.setFinancialSummaryGenerated(false);
+								}
+							} else {
+								getManagedBean().setFinancialSummaryGenerated(
+										true);
+							}
+						}
+					}
+					if (this.getManagedBean()
+							.getCurrentStatusId()
+							.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
 							&& !this.getManagedBean().isReadOnly()
 							&& !getManagedBean().isFinancialSummaryGenerated()) {
 						evaluationStageStatusCheck();
@@ -2042,6 +2076,24 @@ public class EvaluationBackingBean extends
 					List<String> resultStg = new ArrayList<String>();
 					resultStg.add(QTConstants.TECHNICAL_EVALUATION);
 					evalReqDTO.setResultStages(resultStg);
+					if (this.getManagedBean()
+							.getCurrentStatusId()
+							.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
+							&& !this.getManagedBean().isReadOnly()) {
+						ScQtFinalization finalization = retriveScQtFinalizationForReEvaluate();
+						if (null != finalization) {
+							if (finalization.isReEvaluateTechReq()) {
+								if (!getManagedBean()
+										.isTechnicalSummaryGenerated()) {
+									getManagedBean()
+											.setTechnicalSummaryGenerated(false);
+								}
+							} else {
+								getManagedBean().setTechnicalSummaryGenerated(
+										true);
+							}
+						}
+					}
 					if (this.getManagedBean()
 							.getCurrentStatusId()
 							.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
@@ -2527,12 +2579,16 @@ public class EvaluationBackingBean extends
 				ScQtFinalization finalization = retriveScQtFinalizationForReEvaluate();
 				if (null != finalization) {
 					if (finalization.isReEvaluateTechReq()) {
-						this.getManagedBean().setTechnicalOrFinancialReEvaluateRequired(false);
+						this.getManagedBean()
+								.setTechnicalOrFinancialReEvaluateRequired(
+										false);
 					} else {
-						this.getManagedBean().setTechnicalOrFinancialReEvaluateRequired(true);
+						this.getManagedBean()
+								.setTechnicalOrFinancialReEvaluateRequired(true);
 					}
-				}else{
-					this.getManagedBean().setTechnicalOrFinancialReEvaluateRequired(false);
+				} else {
+					this.getManagedBean()
+							.setTechnicalOrFinancialReEvaluateRequired(false);
 				}
 				this.getManagedBean().setUserScores(
 						checklist.getQtScoreWeightage().getScore().toString());
@@ -3089,12 +3145,16 @@ public class EvaluationBackingBean extends
 				ScQtFinalization finalization = retriveScQtFinalizationForReEvaluate();
 				if (null != finalization) {
 					if (finalization.isReEvaluateFinReq()) {
-						this.getManagedBean().setTechnicalOrFinancialReEvaluateRequired(false);
+						this.getManagedBean()
+								.setTechnicalOrFinancialReEvaluateRequired(
+										false);
 					} else {
-						this.getManagedBean().setTechnicalOrFinancialReEvaluateRequired(true);
+						this.getManagedBean()
+								.setTechnicalOrFinancialReEvaluateRequired(true);
 					}
-				}else{
-					this.getManagedBean().setTechnicalOrFinancialReEvaluateRequired(false);
+				} else {
+					this.getManagedBean()
+							.setTechnicalOrFinancialReEvaluateRequired(false);
 				}
 				this.getManagedBean().setUserScores(
 						this.getManagedBean().getScQtChecklist()
@@ -3374,12 +3434,15 @@ public class EvaluationBackingBean extends
 			ScQtFinalization finalization = retriveScQtFinalizationForReEvaluate();
 			if (null != finalization) {
 				if (finalization.isReEvaluateTechReq()) {
-					this.getManagedBean().setTechnicalOrFinancialReEvaluateRequired(false);
+					this.getManagedBean()
+							.setTechnicalOrFinancialReEvaluateRequired(false);
 				} else {
-					this.getManagedBean().setTechnicalOrFinancialReEvaluateRequired(true);
+					this.getManagedBean()
+							.setTechnicalOrFinancialReEvaluateRequired(true);
 				}
-			}else{
-				this.getManagedBean().setTechnicalOrFinancialReEvaluateRequired(false);
+			} else {
+				this.getManagedBean()
+						.setTechnicalOrFinancialReEvaluateRequired(false);
 			}
 			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 					.equalsIgnoreCase(proposalCheckList.getScQtCheckList()
@@ -4008,12 +4071,15 @@ public class EvaluationBackingBean extends
 		ScQtFinalization finalization = retriveScQtFinalizationForReEvaluate();
 		if (null != finalization) {
 			if (finalization.isReEvaluateFinReq()) {
-				this.getManagedBean().setTechnicalOrFinancialReEvaluateRequired(false);
+				this.getManagedBean()
+						.setTechnicalOrFinancialReEvaluateRequired(false);
 			} else {
-				this.getManagedBean().setTechnicalOrFinancialReEvaluateRequired(true);
+				this.getManagedBean()
+						.setTechnicalOrFinancialReEvaluateRequired(true);
 			}
-		}else{
-			this.getManagedBean().setTechnicalOrFinancialReEvaluateRequired(false);
+		} else {
+			this.getManagedBean().setTechnicalOrFinancialReEvaluateRequired(
+					false);
 		}
 		ITemplateSpecSO templateSpecSO = null;
 		try {
@@ -9254,8 +9320,9 @@ public class EvaluationBackingBean extends
 				// save clone to db
 				docMaster = saveClonedTplDocMaster(scQtEvaluationReport);
 			}
-			templateDocUrl = tplDocBB.goToMaint(docMaster,this.getManagedBean().isReadOnly());
-			
+			templateDocUrl = tplDocBB.goToMaint(docMaster, this
+					.getManagedBean().isReadOnly());
+
 		} finally {
 		}
 		return templateDocUrl;
@@ -11055,6 +11122,5 @@ public class EvaluationBackingBean extends
 				.retrieveSupplierFinalizationForReEvaluation(supplierFinalizationReqDTO);
 		return supplierFinalizationResDTO.getScQtFinalization();
 	}
-	
-	
+
 }
