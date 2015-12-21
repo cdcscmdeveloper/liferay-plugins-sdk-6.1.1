@@ -139,7 +139,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 				rptGenBean.setSmNonMandatoryDateView(true);
 				rptGenBean.setSmScheduleSiteVisitDateView(true);
 				rptGenBean.retrieveCategoryLevOne1();
-				rptGenBean.setSmMandatoryCategoryView(true);
+				rptGenBean.setSmNonMandatoryCategoryView(true);
 				rptGenBean.setSmCompanyNameView(true);
 				rptGenBean.setSmExtraTwoColumnView(true);
 	            break;
