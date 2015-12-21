@@ -9202,7 +9202,8 @@ public class EvaluationBackingBean extends
 				// save clone to db
 				docMaster = saveClonedTplDocMaster(scQtEvaluationReport);
 			}
-			templateDocUrl = tplDocBB.goToMaint(docMaster);
+			templateDocUrl = tplDocBB.goToMaint(docMaster,this.getManagedBean().isReadOnly());
+			
 		} finally {
 		}
 		return templateDocUrl;

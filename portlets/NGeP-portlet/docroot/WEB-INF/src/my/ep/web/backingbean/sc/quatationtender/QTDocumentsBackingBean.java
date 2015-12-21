@@ -159,6 +159,8 @@ public class QTDocumentsBackingBean extends
 	/** The select all. */
 	private boolean selectAll;
 
+	private boolean readOnly;
+	
 	/**
 	 * Instantiates a new QT documents backing bean.
 	 */
@@ -628,7 +630,8 @@ public class QTDocumentsBackingBean extends
 			this.getManagedBean().getScQtDocReportList().remove(index);
 			this.getManagedBean().getScQtDocReportList()
 					.add(index, this.getManagedBean().getScQtDocReport());
-			templateDocUrl = tplDocBB.goToMaint(docMaster);
+			
+			templateDocUrl = tplDocBB.goToMaint(docMaster,this.isReadOnly());
 
 		} finally {
 		}
@@ -2395,6 +2398,20 @@ public class QTDocumentsBackingBean extends
 	 */
 	public void setSelectAll(boolean selectAll) {
 		this.selectAll = selectAll;
+	}
+
+	/**
+	 * @return the readOnly
+	 */
+	public boolean isReadOnly() {
+		return readOnly;
+	}
+
+	/**
+	 * @param readOnly the readOnly to set
+	 */
+	public void setReadOnly(boolean readOnly) {
+		this.readOnly = readOnly;
 	}
 
 	/**
