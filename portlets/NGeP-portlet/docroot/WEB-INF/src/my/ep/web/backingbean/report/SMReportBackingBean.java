@@ -292,7 +292,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	        	//rptGenBean.setSmMandatoryZoneView(true);	        	
 	        	rptGenBean.setSmMandatoryCompanyNameView(true);
 	        	rptGenBean.setSmMandatoryFromDateView(true);
-	        	rptGenBean.setSmMandatoryDateView(true);
+	        	rptGenBean.setSmMandatoryExpectedSiteVisiRpttDateView(true);
 	        	rptGenBean.setSmMandatoryStateView(true);
 	        	rptGenBean.setSmMandatoryDistrictView(true);
 	        	rptGenBean.setSmSVOUserView(true);
