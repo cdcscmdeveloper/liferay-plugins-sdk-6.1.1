@@ -13,7 +13,7 @@
 
 	<p:commandButton value="#{lbl['lbl.btn.save']}"
 		rendered="#{checklistScoreType eq '2' or companyScoreType eq '2'}"
-		disabled="#{evaluationBackingBean.managedBean.readOnly}"
+		disabled="#{evaluationBackingBean.managedBean.readOnly or technicalorFinancialReEvaluateRequired}"
 		style="float:right;" update="@all" onstart="blockWidget.show();"
 		oncomplete="blockWidget.hide();"
 		action="#{evaluationBackingBean.saveProposalScoreDtls}" />

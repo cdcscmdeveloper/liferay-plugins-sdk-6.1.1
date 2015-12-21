@@ -64,7 +64,7 @@
 					id="technicaluploadNoActionUserScoreId"
 					label="#{lbl['lbl.tpl.spec.content.user.score']}"
 					style="text-align:right;" size="40" maxlength="18" required="true"
-					disabled="#{evaluationBackingBean.managedBean.readOnly}">
+					disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}">
 					<ac:validateNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 						maxIntegerDigits="14" integerOnly="true" />
@@ -84,7 +84,7 @@
 				<ui:fragment
 					rendered="#{complianceTechnicalSupplier.submitted eq 'true'}">
 					<p:inputTextarea rows="2" cols="40" maxlength="200"
-						disabled="#{evaluationBackingBean.managedBean.readOnly}"
+						disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
 						value="#{complianceTechnicalSupplier.remark}">
 						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 					</p:inputTextarea>

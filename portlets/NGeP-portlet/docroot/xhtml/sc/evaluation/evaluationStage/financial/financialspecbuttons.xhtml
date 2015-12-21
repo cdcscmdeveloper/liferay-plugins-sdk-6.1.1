@@ -18,7 +18,7 @@
 							immediate="true"
 							action="#{evaluationBackingBean.financialSpecBackaction}" /> <p:commandButton
 							value="#{lbl['lbl.btn.save']}"
-							disabled="#{evaluationBackingBean.managedBean.readOnly}"
+							disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
 							style="float:right;" update="@all" onstart="blockWidget.show();"
 							oncomplete="blockWidget.hide();"
 							action="#{evaluationBackingBean.saveTempleateSpecDtls}" /></td>
