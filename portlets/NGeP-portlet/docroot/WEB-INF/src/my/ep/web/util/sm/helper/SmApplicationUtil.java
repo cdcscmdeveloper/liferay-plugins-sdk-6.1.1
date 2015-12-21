@@ -4742,13 +4742,14 @@ public class SmApplicationUtil {
 					&& cat.getRecordStatusFlg() != null
 					&& cat.getRecordStatusFlg().compareTo(
 							SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
-				String facType = "";
-				if (cat.getPmCategoryL3().getFacilityType() != null) {
-					facType = cat.getPmCategoryL3().getFacilityType();
+				String catType = "";
+				if (cat.getPmCategoryL3().getCategoryTypeCode() != null) {
+					catType = cat.getPmCategoryL3().getCategoryTypeCode()
+							.getParameterCode();
 				}
-				if (StringUtils.isNotBlank(facType)
-						&& facType
-								.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
+				if (StringUtils.isNotBlank(catType)
+						&& catType
+								.equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_TRAVEL)) {
 					managedBean.setShowTravelSoftwarePanel(true);
 				}
 			}
@@ -4790,13 +4791,14 @@ public class SmApplicationUtil {
 							.getRecordStatusFlg()
 							.compareTo(
 									SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0)) {
-				String facType = "";
-				if (cat.getPmCategoryL3().getFacilityType() != null) {
-					facType = cat.getPmCategoryL3().getFacilityType();
+				String catType = "";
+				if (cat.getPmCategoryL3().getCategoryTypeCode() != null) {
+					catType = cat.getPmCategoryL3().getCategoryTypeCode()
+							.getParameterCode();
 				}
-				if (StringUtils.isNotBlank(facType)
-						&& facType
-								.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
+				if (StringUtils.isNotBlank(catType)
+						&& catType
+								.equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_TRAVEL)) {
 					isTravelSoftwareApplicable = true;
 				}
 			}
