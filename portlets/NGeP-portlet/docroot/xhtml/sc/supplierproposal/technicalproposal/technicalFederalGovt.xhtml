@@ -88,9 +88,9 @@
 						rendered="#{checklistScoreType eq '1'}"></p:inputText> <p:inputText
 						id="technicalGovernmentNoofContractsUserScoreId"
 						label="#{lbl['lbl.tpl.spec.content.user.score']}"
-						disabled="#{pageDisable}" value="#{noOfContracts.userScore}"
-						required="true" maxlength="18" style="text-align:right"
-						rendered="#{ checklistScoreType eq '2'}">
+						disabled="#{pageDisable or technicalorFinancialReEvaluateRequired}"
+						value="#{noOfContracts.userScore}" required="true" maxlength="18"
+						style="text-align:right" rendered="#{ checklistScoreType eq '2'}">
 						<ac:validateNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 							maxIntegerDigits="14" integerOnly="true" />
@@ -126,7 +126,8 @@
 						rendered="#{companyScoreType eq '1'}"></p:inputText> <p:inputText
 						id="technicalGovernmentNoofYearsUserScoreId" maxlength="18"
 						label="#{lbl['lbl.tpl.spec.content.user.score']}"
-						style="text-align:right" disabled="#{pageDisable}"
+						style="text-align:right"
+						disabled="#{pageDisable or technicalorFinancialReEvaluateRequired}"
 						value="#{noOfYears.userScore}" required="true"
 						rendered="#{companyScoreType eq '2'}">
 						<ac:validateNumber

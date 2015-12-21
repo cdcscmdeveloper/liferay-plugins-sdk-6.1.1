@@ -14,7 +14,8 @@
 				value="#{evaluationBackingBean.managedBean.technicalGovNoOfContracts}"></ui:param>
 			<ui:param name="scoringPnlName"
 				value="#{lbl['lbl.sc.spec.score.total.no.contracts']}"></ui:param>
-			<p:panel header="#{scoringPnlName}" toggleable="true" id="technicalSupplierNoofContractsPrivateEvaluationAutoScoringId"
+			<p:panel header="#{scoringPnlName}" toggleable="true"
+				id="technicalSupplierNoofContractsPrivateEvaluationAutoScoringId"
 				rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}">
 
 				<p:dataTable id="#{scoringPnlId}" rowIndexVar="index" rows="10"
@@ -22,19 +23,19 @@
 					rowKey="#{checkListScoring}">
 					<ac:paginator for="#{scoringPnlId}"></ac:paginator>
 					<!-- 	<p:column selectionMode="multiple" style="width:2px;"></p:column> -->
-					<p:column headerText="#{lbl['lbl.sc.from']}" style="width:40%"
+					<p:column headerText="#{lbl['lbl.sc.from']}"
+						style="width:40%;text-align:right;"
 						rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}">
-						<h:outputLabel value="#{checkListScoring.rangeFrom}"
-							style="text-align:right"></h:outputLabel>
+						<h:outputText value="#{checkListScoring.rangeFrom}"></h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.to']}" style="width:30%"
+					<p:column headerText="#{lbl['lbl.sc.to']}"
+						style="width:30%;text-align:right;"
 						rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}">
-						<h:outputLabel value="#{checkListScoring.rangeTo}"
-							style="text-align:right"></h:outputLabel>
+						<h:outputText value="#{checkListScoring.rangeTo}"></h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.score']}" style="width:30%">
-						<h:outputLabel value="#{checkListScoring.score}"
-							style="text-align:right"></h:outputLabel>
+					<p:column headerText="#{lbl['lbl.sc.score']}"
+						style="width:30%;text-align:right;">
+						<h:outputText value="#{checkListScoring.score}"></h:outputText>
 					</p:column>
 
 				</p:dataTable>
@@ -48,26 +49,27 @@
 				value="#{evaluationBackingBean.managedBean.technicalGovNoOfYears}"></ui:param>
 			<ui:param name="scoringPnlName"
 				value="#{lbl['lbl.sc.spec.score.total.no.years']}"></ui:param>
-			<p:panel header="#{scoringPnlName}" toggleable="true" id="technicalSupplierNoofYearsPrivateEvaluationAutoScoringId"
+			<p:panel header="#{scoringPnlName}" toggleable="true"
+				id="technicalSupplierNoofYearsPrivateEvaluationAutoScoringId"
 				rendered="#{evaluationBackingBean.managedBean.companyScoreType eq '1'}">
 				<p:dataTable id="#{scoringPnlId}" rowIndexVar="index" rows="10"
 					value="#{scoringList}" var="checkListScoring"
 					rowKey="#{checkListScoring}">
 					<ac:paginator for="#{scoringPnlId}"></ac:paginator>
 					<!-- 	<p:column selectionMode="multiple" style="width:2px;"></p:column> -->
-					<p:column headerText="#{lbl['lbl.sc.from']}" style="width:40%"
+					<p:column headerText="#{lbl['lbl.sc.from']}"
+						style="width:40%;text-align:right;"
 						rendered="#{evaluationBackingBean.managedBean.companyScoreType eq '1'}">
-						<h:outputLabel value="#{checkListScoring.rangeFrom}"
-							style="text-align:right"></h:outputLabel>
+						<h:outputText value="#{checkListScoring.rangeFrom}"></h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.to']}" style="width:30%"
+					<p:column headerText="#{lbl['lbl.sc.to']}"
+						style="width:30%;text-align:right;"
 						rendered="#{evaluationBackingBean.managedBean.companyScoreType eq '1'}">
-						<h:outputLabel value="#{checkListScoring.rangeTo}"
-							style="text-align:right"></h:outputLabel>
+						<h:outputText value="#{checkListScoring.rangeTo}"></h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.score']}" style="width:30%">
-						<h:outputLabel value="#{checkListScoring.score}"
-							style="text-align:right"></h:outputLabel>
+					<p:column headerText="#{lbl['lbl.sc.score']}"
+						style="width:30%;text-align:right;">
+						<h:outputText value="#{checkListScoring.score}"></h:outputText>
 					</p:column>
 
 				</p:dataTable>

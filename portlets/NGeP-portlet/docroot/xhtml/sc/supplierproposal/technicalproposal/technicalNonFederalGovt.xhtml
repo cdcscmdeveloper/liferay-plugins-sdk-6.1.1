@@ -232,7 +232,7 @@
 							id="technicalNonGovernmentContractsUserScoreId"
 							label="#{lbl['lbl.tpl.spec.content.user.score']}"
 							value="#{noOfContracts.userScore}" required="true" maxlength="18"
-							disabled="#{pageDisable}" style="text-align:right"
+							disabled="#{pageDisable or technicalorFinancialReEvaluateRequired}" style="text-align:right"
 							rendered="#{checklistScoreType eq '2'}">
 							<ac:validateNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
@@ -271,7 +271,7 @@
 							id="technicalNonGovernmentNoofYearsUserScoreId" maxlength="18"
 							style="text-align:right" required="true"
 							label="#{lbl['lbl.tpl.spec.content.user.score']}"
-							value="#{noOfYears.userScore}" disabled="#{pageDisable}"
+							value="#{noOfYears.userScore}" disabled="#{pageDisable or technicalorFinancialReEvaluateRequired}"
 							rendered="#{companyScoreType eq '2'}">
 							<ac:validateNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
