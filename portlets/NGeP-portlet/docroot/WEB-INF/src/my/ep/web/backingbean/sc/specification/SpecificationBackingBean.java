@@ -4175,6 +4175,13 @@ public class SpecificationBackingBean extends
 	public void technicalSpecBoValidate() {
 		getManagedBean().setRequired(Boolean.TRUE);
 		this.getManagedBean().setAutoUpdate(false);
+		if (null != getManagedBean().getScQt().getPmProcurementCategory()
+				&& null != getManagedBean().getScQt()
+						.getPmProcurementCategory().getParameterId()) {
+			getManagedBean().setSearchProcurementId(
+					getManagedBean().getScQt().getPmProcurementCategory()
+							.getParameterId());
+		}
 	}
 
 	/**
@@ -6156,6 +6163,13 @@ public class SpecificationBackingBean extends
 				.get("value");
 		templateSpecCreate.resetData();
 		this.getManagedBean().setStandardTemplate(template);
+		if (null != getManagedBean().getScQt().getPmProcurementCategory()
+				&& null != getManagedBean().getScQt()
+						.getPmProcurementCategory().getParameterId()) {
+			getManagedBean().setSearchProcurementId(
+					getManagedBean().getScQt().getPmProcurementCategory()
+							.getParameterId());
+		}
 	}
 
 	/**
@@ -8925,7 +8939,8 @@ public class SpecificationBackingBean extends
 					|| (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
 							.getManagedBean().getScQt().getEvaluationType()) && this
 							.getManagedBean().getScQt().isTechEvaluationReq())) {
-				if (technical.getOverallTechnical().intValue() < 50 && !this.getManagedBean().isReadOnly()) {
+				if (technical.getOverallTechnical().intValue() < 50
+						&& !this.getManagedBean().isReadOnly()) {
 					throw new EpException(MessageConst.ERROR_760365);
 				}
 			}
@@ -9752,9 +9767,9 @@ public class SpecificationBackingBean extends
 
 		} else if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
 			this.getManagedBean().setLocalOutCome(action);
-			//RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-			//ministrySpecgpkiSignAction(null);
-			//return CommonUIConst.ACKNOWLEDGE_PAGE;
+			// RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			// ministrySpecgpkiSignAction(null);
+			// return CommonUIConst.ACKNOWLEDGE_PAGE;
 			SpecificationResDTO resDTO = prepareSpecChairPersonRequest(this
 					.getManagedBean().getLocalOutCome(), null);
 			if (resDTO.isSuccessful()) {
@@ -10970,7 +10985,7 @@ public class SpecificationBackingBean extends
 	public void resetTemplate() {
 		getManagedBean().setSpecName(null);
 		// getManagedBean().setStandardTemplate(null);
-		getManagedBean().setSearchProcurementId(null);
+		// getManagedBean().setSearchProcurementId(null);
 		getManagedBean().setSearchItemTypeId(null);
 		this.getManagedBean().getQtnTendertemplateSearchBean().setQtTitle(null);
 		this.getManagedBean().getQtnTendertemplateSearchBean().setQtNo(null);
@@ -11039,10 +11054,16 @@ public class SpecificationBackingBean extends
 				if (TemplateSpecConst.PROCESS_TYPE_STANDARD
 						.equalsIgnoreCase(getManagedBean()
 								.getStandardTemplate())) {
-					getManagedBean().setSearchProcurementId(
-							getManagedBean().getScQt()
+					if (null != getManagedBean().getScQt()
+							.getPmProcurementCategory()
+							&& null != getManagedBean().getScQt()
 									.getPmProcurementCategory()
-									.getParameterId());
+									.getParameterId()) {
+						getManagedBean().setSearchProcurementId(
+								getManagedBean().getScQt()
+										.getPmProcurementCategory()
+										.getParameterId());
+					}
 
 					// Filter By - ministry orgProfileId
 					IOrgProfileSO orgProfileSO = null;
@@ -11092,6 +11113,16 @@ public class SpecificationBackingBean extends
 									.getQtNo())) {
 						getManagedBean().getQtnTendertemplateSearchBean()
 								.setQtNo("QT");
+					}
+					if (null != getManagedBean().getScQt()
+							.getPmProcurementCategory()
+							&& null != getManagedBean().getScQt()
+									.getPmProcurementCategory()
+									.getParameterId()) {
+						getManagedBean().setSearchProcurementId(
+								getManagedBean().getScQt()
+										.getPmProcurementCategory()
+										.getParameterId());
 					}
 					populateQTSearchCriteria(templateQtnTenderSearchBean,
 							searchBean);
@@ -12958,8 +12989,6 @@ public class SpecificationBackingBean extends
 			}
 		}
 	}
-
-	
 
 	/**
 	 * Prepare spec chir person request.
