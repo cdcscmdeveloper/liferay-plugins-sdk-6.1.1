@@ -33,8 +33,9 @@
 			<p:columnGroup type="header">
 				<p:row>
 					<p:column style="width:2%"
-						rendered="#{!backingBean.managedBean.poUser and !backingBean.managedBean.approverUser}"
-						disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS or not empty catBean.approvedDate}" />
+						rendered="#{!backingBean.managedBean.approverUser}"
+						disabledSelection="#{catBean.recordStatusFlg ne SupplierManagementConst.PENDING_ACT_STATUS 
+					and catBean.recordStatusFlg ne SupplierManagementConst.PENDING_RE_APPROVAL_STATUS}" />
 					<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
 						style="width : 2%;"
 						disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
@@ -66,8 +67,9 @@
 				</p:row>
 			</p:columnGroup>
 			<p:column selectionMode="multiple" style="width:2%"
-				rendered="#{!backingBean.managedBean.poUser and !backingBean.managedBean.approverUser}"
-				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS or not empty catBean.approvedDate}" />
+				rendered="#{!backingBean.managedBean.approverUser}"
+				disabledSelection="#{catBean.recordStatusFlg ne SupplierManagementConst.PENDING_ACT_STATUS 
+					and catBean.recordStatusFlg ne SupplierManagementConst.PENDING_RE_APPROVAL_STATUS}" />
 			<p:column style="width : 2%;">
 				<p:outputLabel value="#{index + 1}"
 					style="float: left;white-space: normal;" />
@@ -126,19 +128,16 @@
 
 				<p:selectOneRadio layout="pageDirection" id="catPoAppr"
 					value="#{catBean.poDecFlg}"
-					required="#{empty param['disableValidation']}"
 					label="#{lbl['lbl.sm.catCodes.poAct']} #{lbl['lbl.sm.catCodes.forCatCode']} #{catBean.pmCategoryL1.categoryL1Code} #{catBean.pmCategoryL2.categoryL2Code} #{catBean.pmCategoryL3.categoryL3Code} "
 					rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and backingBean.managedBean.poUser}">
 					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.apprv']}"
 						itemValue="1" />
 					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}"
 						itemValue="0" />
-					<p:ajax event="change" process="@this" update="poCatDecisionRmrk"
-						partialSubmit="true"
+					<p:ajax update=":form:tt:catCodeInfPan"
+						partialSubmit="true" process="@this"
 						listener="#{backingBean.assignCategoryApproveOrRejectDate(catBean)}" />
 				</p:selectOneRadio>
-				<p:message id="catPoApprMsg" for="catPoAppr" showSummary="true"
-					showDetail="false" display="icon" />
 				<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
 					rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS and backingBean.managedBean.poUser}" />
 
@@ -180,31 +179,25 @@
 					style="width : auto;" rows="5" cols="20"
 					rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and backingBean.managedBean.poUser}"
 					label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{catBean.pmCategoryL1.categoryL1Code} #{catBean.pmCategoryL2.categoryL2Code} #{catBean.pmCategoryL3.categoryL3Code} "
-					id="poCatDecisionRmrk"
-					required="#{catBean.poDecFlg == 0 and empty param['disableValidation']}">
+					id="poCatDecisionRmrk">
 					<f:validateLength maximum="200" />
+					<p:ajax process="@this" update=":form:tt:catCodeInfPan" />
 				</p:inputTextarea>
-				<p:message id="poCatDecisionRmrkMsg" for="poCatDecisionRmrk"
-					rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and backingBean.managedBean.poUser}"
-					showSummary="true" showDetail="false" display="icon" />
 			</p:column>
 			<p:column rendered="#{backingBean.managedBean.approverUser}"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
 				<p:selectOneRadio layout="pageDirection" id="catApprvrAppr"
 					value="#{catBean.apprvrDecFlg}"
-					required="#{empty param['disableValidation']}"
 					label="#{lbl['lbl.sm.catCodes.appAct']} #{lbl['lbl.sm.catCodes.forCatCode']} #{catBean.pmCategoryL1.categoryL1Code} #{catBean.pmCategoryL2.categoryL2Code} #{catBean.pmCategoryL3.categoryL3Code} "
 					rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}">
 					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.apprv']}"
 						itemValue="1" />
 					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}"
 						itemValue="0" />
-					<p:ajax event="change" process="@this"
-						update="apprvrCatDecisionRmrk" partialSubmit="true"
+					<p:ajax process="@this"
+						update=":form:tt:catCodeInfPan" partialSubmit="true"
 						listener="#{backingBean.assignCategoryApproveOrRejectDate(catBean)}" />
 				</p:selectOneRadio>
-				<p:message id="catApprvrApprMsg" for="catApprvrAppr"
-					showSummary="true" showDetail="false" display="icon" />
 				<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
 					rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 			</p:column>
@@ -214,12 +207,10 @@
 					style="width : auto;" rows="5" cols="20"
 					rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}"
 					label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{catBean.pmCategoryL1.categoryL1Code} #{catBean.pmCategoryL2.categoryL2Code} #{catBean.pmCategoryL3.categoryL3Code} "
-					id="apprvrCatDecisionRmrk"
-					required="#{catBean.apprvrDecFlg == 0 and empty param['disableValidation']}">
+					id="apprvrCatDecisionRmrk">
+					<p:ajax process="@this" update=":form:tt:catCodeInfPan" />
 					<f:validateLength maximum="200" />
 				</p:inputTextarea>
-				<p:message id="apprvCatDecisionRmrkMsg" for="apprvrCatDecisionRmrk"
-					showSummary="true" showDetail="false" display="icon" />
 			</p:column>
 			<p:column rendered="#{backingBean.managedBean.smAppl.resubmit}"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
@@ -363,7 +354,7 @@
 			</p:column>
 		</p:dataTable>
 		<c:if
-			test="#{!backingBean.managedBean.poUser and !backingBean.managedBean.approverUser}">
+			test="#{!backingBean.managedBean.approverUser}">
 			<div align="right">
 				#{lbl['lbl.sm.payment.click']}
 				<p:commandLink value="#{lbl['lbl.sm.payment.here']}" ajax="false"

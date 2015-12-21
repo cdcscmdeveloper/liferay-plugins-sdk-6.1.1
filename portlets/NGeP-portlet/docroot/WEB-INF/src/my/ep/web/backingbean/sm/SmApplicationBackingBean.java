@@ -1655,9 +1655,6 @@ public class SmApplicationBackingBean extends
 				SmApplicationUtil.setPersonnelSoftcertRenewalStatus(this
 						.getManagedBean().getSmSupplier(), this
 						.getManagedBean().getSmAppl().getSmPersonnels());
-			} else {
-				valid = retriveLatestApplAfterUpdate(currentPageType,
-						outputPageType);
 			}
 			if (getManagedBean().getCurrentPageType() != null) {
 				switch (getManagedBean().getCurrentPageType()) {
@@ -1688,8 +1685,10 @@ public class SmApplicationBackingBean extends
 							.getManagedBean().getSmAppl().getSmPersonnels());
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY:
-					SmApplicationUtil
-							.assignActiveAndApprovedCategoryList(getManagedBean());
+					if (valid) {
+						SmApplicationUtil
+								.assignActiveAndApprovedCategoryList(getManagedBean());
+					}
 					if (getManagedBean().getSmAppl().getApplCategoryType()
 							.equalsIgnoreCase("N")) {
 						getManagedBean()
@@ -5471,7 +5470,7 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignSelShareHolderAddress(SmPersonnel shareHolderBean) {
 		if (isPersonnelViewOnly(shareHolderBean)
-				&& shareHolderBean.getPersonnelId()!=null) {
+				&& shareHolderBean.getPersonnelId() != null) {
 			if (shareHolderBean.getSmPersonnelAddresses() != null
 					&& shareHolderBean.getSmPersonnelAddresses().size() > 0) {
 				for (SmPersonnelAddress personnelAddress : shareHolderBean
@@ -8738,10 +8737,9 @@ public class SmApplicationBackingBean extends
 					.getDeleteNewApplCategoryList().iterator();
 			while (iterator.hasNext()) {
 				SmSupplierCategory cat = iterator.next();
-				if ((cat.getRecordStatusFlg() != null && cat
-						.getRecordStatusFlg().compareTo(
-								SupplierManagementConst.APPROVED_RECORD_STATUS) == 0)
-						|| (cat.getApprovedDate() != null)) {
+				if (cat.getRecordStatusFlg() != null
+						&& cat.getRecordStatusFlg() != SupplierManagementConst.PENDING_ACT_STATUS
+						&& cat.getRecordStatusFlg() != SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) {
 					iterator.remove();
 				}
 			}
