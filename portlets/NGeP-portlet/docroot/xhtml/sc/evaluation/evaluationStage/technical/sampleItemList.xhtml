@@ -50,7 +50,7 @@
 						<td><p:inputText id="sampleaddressUserScoreId"
 								rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}"
 								label="#{lbl['lbl.tpl.spec.content.user.score']}"
-								disabled="#{evaluationBackingBean.managedBean.readOnly}"
+								disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
 								required="true"
 								value="#{evaluationBackingBean.managedBean.noOfContractsProposalScore.userScore}"
 								maxlength="18" style="text-align:right">
