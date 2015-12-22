@@ -136,6 +136,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -219,8 +220,53 @@ public class QTDetailBackingBean extends
 					new QTPagingDataModel("searchQTs", getManagedBean()
 							.getQtnTenderSearchBean()));
 		}
+		
+		if (null == this.getManagedBean().getMinistryProfile() && null == this.getManagedBean().getPtjProfile()) {
+			getDefaultPtjAndMinistryValues();
+		}
 	}
 
+	/**
+	 * Gets the default ptj and ministry search values based on user role.
+	 */
+	private void getDefaultPtjAndMinistryValues() {
+		
+		debugLogger("getDefaultPtjAndMinistryValues");
+		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())) {
+			getManagedBean().setMinistryProfile(null);
+			getManagedBean().setPtjProfile(null);
+		} else {
+			IUserSO userSO = (IUserSO ) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO .class);
+			UserReqDTO uReqDTO = new UserReqDTO();
+			uReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+			UserResDTO uResDTO = userSO.retrieveUserOrgListByUserId(uReqDTO);
+			PmOrgProfile orgProfile = null;
+			if (null != uResDTO.getUserOrgList() && uResDTO.getUserOrgList().size() > 0) {
+					orgProfile = uResDTO.getUserOrgList().get(0).getPmOrgProfile();
+			}
+			if (getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())) {
+				this.getManagedBean().setPtjProfile(orgProfile);
+				this.getManagedBean().setMinistryProfile(orgProfile);
+				/*getManagedBean().setPtjProfile(null);
+				getManagedBean().setMinistryProfile(null);*/
+				getManagedBean().setDeskOfficer(true);
+			} else if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+				getManagedBean().setPtjProfile(null);
+				getManagedBean().setMinistryProfile(orgProfile);
+			}
+		}
+	}
+	
+	/**
+	 * Gets the faces scopes.
+	 *
+	 * @return the faces scopes
+	 */
+	private FacesScopes getFacesScopes() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
+	
 	/**
 	 * To add empty row to gosodo table.
 	 */
@@ -637,8 +683,9 @@ public class QTDetailBackingBean extends
 	 *            the sc qt
 	 * @return maintanacepage
 	 */
-	public String editQuationTenderDetails(ScQt scQt) {
+	public String editQuationTenderDetails(ScQt scQt, boolean viewQT) {
 		renewQTDetails();
+		this.getManagedBean().setDeskOfficer(viewQT);
 		this.getManagedBean().setMaintanceFlow(true);
 		IQTDetailSO detailSO;
 		String REDIRECT_PAGE = QTConstants.MAINTANANCE_PAGE;
@@ -717,6 +764,15 @@ public class QTDetailBackingBean extends
 							.getProcurementTypeCatId()) {
 				getManagedBean().getQt().setProcurementTypeCatId(
 						new PmParameter());
+			}
+			if (!viewQT) {
+				this.getManagedBean().setAuditorRoleView(true);
+				this.getManagedBean().setEditable(true);
+				if (getManagedBean().getCurrentStatusId() >= 60002) {
+					
+				} else {
+					this.getManagedBean().getQt().getQtStatus().setStatusId(60015L);
+				}
 			}
 		} finally {
 			detailSO = null;
@@ -1277,6 +1333,21 @@ public class QTDetailBackingBean extends
 				qtSearchBean.getDataFilterBeans().add(
 						new SearchFilterBean("scQtStatus.current",
 								SearchOperator.OPERATOR_EQUALS.value(), true));
+			}
+			PmOrgProfile ministryProfile = getManagedBean().getMinistryProfile();
+			if (ministryProfile != null && ministryProfile.getOrgProfileId() != null) {// Filter By - Ministry
+				SearchFilterBean ministryProfiles = new SearchFilterBean("pmOrgProfile." + "orgProfileId", SearchOperator.OPERATOR_EQUALS.value(), ministryProfile.getOrgProfileId());
+				searchFilterBean.add(ministryProfiles);
+				/*SearchFilterBean ptjOrgProfile = new SearchFilterBean(
+						"pmOrgProfile."
+								+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
+						SearchOperator.OPERATOR_EQUALS.value(), ministryId, JoinType.LEFT);
+				searchFilterBean.add(ptjOrgProfile); */
+			}
+			PmOrgProfile ptjProfiles = getManagedBean().getPtjProfile();
+			if (ptjProfiles != null && ptjProfiles.getOrgProfileId() != null) {// Filter By - PTJ
+				SearchFilterBean ptjProfile = new SearchFilterBean("pmOrgProfile." + "orgProfileId", SearchOperator.OPERATOR_EQUALS.value(), ptjProfiles.getOrgProfileId());
+				searchFilterBean.add(ptjProfile);
 			}
 			// Adding search filterbeans to searchbean.
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
@@ -2967,6 +3038,14 @@ public class QTDetailBackingBean extends
 		this.getManagedBean().getQtnTenderSearchBean().setFromClosingDate(null);
 		this.getManagedBean().getQtnTenderSearchBean().setToClosingDate(null);
 		this.getManagedBean().getQtnTenderSearchBean().setQtStatus(null);
+		FacesScopes facesScopes = new FacesScopes();
+		if (facesScopes.hasRoleUser(RoleCode.AUDITOR_GENERAL.value())) {
+			this.getManagedBean().setMinistryProfile(new PmOrgProfile());
+			this.getManagedBean().setPtjProfile(new PmOrgProfile());
+		} else if (facesScopes.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+			this.getManagedBean().setPtjProfile(new PmOrgProfile());
+		}
+		
 	}
 
 	/**
@@ -3764,7 +3843,9 @@ public class QTDetailBackingBean extends
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTDetailSO.class);
 		QuationTenderReqDTO reqDTO = prepareQTInfo();
+		boolean isAuditor = this.isAuditor();
 		if (priviousIndex != activeIndex) {
+		 if(!isAuditor){
 			switch (priviousIndex) {
 			case 0:
 				detailSO.validateateQTDetails(reqDTO);
@@ -3824,7 +3905,7 @@ public class QTDetailBackingBean extends
 				}
 				break;
 			}
-
+		 }
 			switch (activeIndex) {
 			case 0:
 				// detailSO.validateateQTDetails(reqDTO);
@@ -4388,7 +4469,7 @@ public class QTDetailBackingBean extends
 		Long statusId = this.getManagedBean().getCurrentStatusId();
 
 		return enableFieldByStatusNFiledName(fieldName, statusId, this
-				.getManagedBean().isMaintanceFlow());
+				.getManagedBean().isMaintanceFlow(), isSourcingDeskOfficer());
 
 	}
 
@@ -4605,8 +4686,7 @@ public class QTDetailBackingBean extends
 								.getParameterCode()) || (ParameterConst.APPROVAL_CATEGORY_PTJ
 						.equalsIgnoreCase(approval.getApprovalCategory()
 								.getParameterCode())))) {
-			return false;
-
+				return (!this.getManagedBean().isDeskOfficer());
 		}
 		List<ScQtApprovalRequest> approvalRequests = approval
 				.getScQtApprovalDtls();
@@ -4617,13 +4697,68 @@ public class QTDetailBackingBean extends
 						|| (null != approvalRequest.getApproverAction() && "V"
 								.equalsIgnoreCase(approvalRequest
 										.getApproverAction().getParameterCode()))) {
-					return false;
+						return (!this.getManagedBean().isDeskOfficer());
 				}
 			}
 		}
 		return true;
 	}
 
+	 /**
+	 * Get PTJ condition for construct the LOV listing
+	 * @return String
+	 */
+	public String getPTJCondition() {
+		debugLogger("getPTJCondition");
+		String condition = null;
+		if (null != this.getManagedBean().getMinistryProfile()) {
+			condition = OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value())+"^"+
+					this.getManagedBean().getMinistryProfile().getOrgProfileId();
+		} else {
+			condition = "";
+		}
+		return condition;
+	}
+	
+	/**
+	* The method used reset PTJ profile value once select the Ministry
+	*/
+	public void resetPtjProfile() {
+		debugLogger("resetPtjProfile");
+		getManagedBean().setPtjProfile(null);
+	}
+	
+	public boolean disableMinistryLov() {
+		debugLogger("disableMinistryLov");
+		return (isSourcingDeskOfficer() || getFacesScopes()
+				.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()));
+	}
+
+	public boolean disablePtjLov() {
+		debugLogger("disablePtjLov");
+		return (isSourcingDeskOfficer() || getManagedBean().getMinistryProfile()==null);
+	}
+	
+	/**
+	 * 
+	 *
+	 * @return true
+	 */
+	public boolean isSourcingDeskOfficer() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value());
+	}
+	
+	/**
+	 * Checks if is Auditor General/Internal user.
+	 *
+	 * @return true, if is Auditor General/Internal user
+	 */
+	public boolean isAuditor() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.AUDITOR_GENERAL.value()) || facesScopes.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value());
+	}
+	
 	private void updateApprovalRequestDtls(List<ScQtApproval> approval,
 			String approvalCategory) {
 

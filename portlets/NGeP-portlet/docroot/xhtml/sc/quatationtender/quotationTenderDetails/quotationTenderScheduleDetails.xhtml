@@ -6,6 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<ui:param name="isRequire" value="#{!qTDetailBB.isAuditor()}"></ui:param>
 	<p:panel header="#{lbl['lbl.sc.qt.schedule']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
@@ -18,7 +19,7 @@
 								<td><p:calendar label="#{lbl['lbl.sc.publish.date']}"
 										mindate="#{qTScheduleDetailBackingBean.managedBean.today}"
 										value="#{qTScheduleDetailBackingBean.managedBean.qt.publishDate}"
-										id="noticePublish" required="true" readonlyInput="true"
+										id="noticePublish" required="#{isRequire}" readonlyInput="true"
 										pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 										showOn="button"
 										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PUBLISH_DATE)}"
@@ -80,7 +81,7 @@
 								<td><p:calendar label="#{lbl['lbl.sc.sample.closingdate']}"
 										mindate="#{qTScheduleDetailBackingBean.managedBean.qt.closingDate}"
 										value="#{qTScheduleDetailBackingBean.managedBean.qt.sampleClosingDate}"
-										id="sampleclsdate" required="true"
+										id="sampleclsdate" required="#{isRequire}"
 										pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 										showOn="button" /> <p:inputText value="12:00 PM"
@@ -182,7 +183,7 @@
 					<td>
 						<table>
 							<tr>
-								<td><p:inputText id="sampleaddress1" required="true"
+								<td><p:inputText id="sampleaddress1" required="#{isRequire}"
 										label="#{lbl['lbl.sc.qt.address.one']}"
 										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.address1}"
@@ -200,7 +201,7 @@
 							<tr>
 								<td><p:selectOneMenu id="samplestate1"
 										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
-										label="#{lbl['lbl.sc.state']}" required="true"
+										label="#{lbl['lbl.sc.state']}" required="#{isRequire}"
 										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmState.stateId}"
 										style="width: 249px;margin-bottom: 5px;">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -253,7 +254,7 @@
 								<td><p:selectOneMenu styleClass="samplestate"
 										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 										style="width: 249px;margin-bottom: 5px;" id="sampledistrict1"
-										required="true" label="#{lbl['lbl.sc.district']}"
+										required="#{isRequire}" label="#{lbl['lbl.sc.district']}"
 										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmDistrict.districtId}">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="" />
@@ -285,7 +286,7 @@
 								<td><p:selectOneMenu styleClass="sampledistrictCity"
 										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 										style="width: 249px;margin-bottom: 5px;" id="samplecity1"
-										required="true" label="#{lbl['lbl.sc.town']}"
+										required="#{isRequire}" label="#{lbl['lbl.sc.town']}"
 										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmCity.cityId}">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="" />
@@ -307,7 +308,7 @@
 					<td>
 						<table>
 							<tr>
-								<td><p:inputText id="samplepost1" required="true"
+								<td><p:inputText id="samplepost1" required="#{isRequire}"
 										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 										label="#{lbl['lbl.sc.post.code']}"
 										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.postcode}"

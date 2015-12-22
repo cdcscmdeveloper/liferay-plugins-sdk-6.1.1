@@ -6,6 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+    <ui:param name="isRequire" value="#{!qTDetailBB.isAuditor()}"></ui:param> 
+    
 	<p:panel header="#{lbl['lbl.sc.general.info']}" toggleable="true">
 		<table style="width: 100%;">
 			<tr>
@@ -27,7 +29,7 @@
 				<td><table>
 						<tr>
 							<td><p:inputText id="fileno"
-									label="#{lbl['lbl.sc.qt.fileno']}" required="true"
+									label="#{lbl['lbl.sc.qt.fileno']}" required="#{isRequire}"
 									value="#{qTDetailBB.managedBean.qt.fileNo}" size="25"
 									maxlength="50"
 									disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_FILE_NO)}" /></td>
@@ -183,7 +185,7 @@
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="qtmaintainprocTypeBoCategory"
 						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PROCUREMENT_TYPE_CAT_ID)}"
-						required="true" label="#{lbl['lbl.sc.procurment.type.category']}"
+						required="#{isRequire}" label="#{lbl['lbl.sc.procurment.type.category']}"
 						value="#{qTDetailBB.managedBean.qt.procurementTypeCatId.parameterId}"
 						style="width: 215px;margin-bottom: 5px;">
 						<f:selectItems
@@ -237,7 +239,7 @@
 						<tr>
 							<td><p:inputMask id="publishperiod" mask="9?99"
 									maxlength="3" placeHolder=""
-									label="#{lbl['lbl.sc.qt.publishing.period']}" required="true"
+									label="#{lbl['lbl.sc.qt.publishing.period']}" required="#{isRequire}"
 									value="#{qTDetailBB.managedBean.qt.publishPeriod}"
 									disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_PUBLISH_PERIOD)}"
 									valueChangeListener="#{qTDetailBB.publishPeriodDaysChanged}"
@@ -258,7 +260,7 @@
 						<tr>
 							<td><p:inputMask id="proposalvalidity" mask="9?9999"
 									maxlength="5" placeHolder=""
-									label="#{lbl['lbl.sc.qt.publishing.period']}" required="true"
+									label="#{lbl['lbl.sc.qt.publishing.period']}" required="#{isRequire}"
 									value="#{qTDetailBB.managedBean.qt.qtValidityPeriod}" size="25"
 									disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_VALIDITY_PERIOD)}"
 									valueChangeListener="#{qTDetailBB.proposalValidityChanged}"

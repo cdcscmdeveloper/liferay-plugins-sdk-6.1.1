@@ -1135,7 +1135,7 @@ public class QTBusinessOwnerBackingBean extends
 				renewSesionObject();
 				getMinistrySpecificationSecretaryList();
 				QTDetailBackingBean detailBackingBean = new QTDetailBackingBean();
-				detailBackingBean.editQuationTenderDetails(qt);
+				detailBackingBean.editQuationTenderDetails(qt, true);
 				this.getManagedBean().setQt(qt);
 				FacesContext.getCurrentInstance().addMessage(
 						null,
@@ -1396,7 +1396,7 @@ public class QTBusinessOwnerBackingBean extends
 		}
 		QTDetailBackingBean detailBackingBean = new QTDetailBackingBean();
 
-		return detailBackingBean.editQuationTenderDetails(resDTO.getQtDetail());
+		return detailBackingBean.editQuationTenderDetails(resDTO.getQtDetail(), true);
 	}
 
 	/**
