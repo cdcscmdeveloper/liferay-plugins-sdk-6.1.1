@@ -1,0 +1,28 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+		
+	</ui:define>
+	
+	<ui:define name="contentSection">
+		<p:messages id="messages" showDetail="true" closable="true" showSummary="false" escape="false"/>
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
+		<p:outputPanel id="govtSellerTncOutPanelId" rendered="#{govtSellerBackingBean.managedBean.targetPage eq SupplierManagementConst.GOVT_SELLER_TNC_PAGE}">
+			<ui:include src="/xhtml/sm/govtSellerRegistration/govtSellerTncPage.xhtml" />
+		</p:outputPanel>
+		<p:outputPanel id="govtSellerAccInfoOutPanelId" rendered="#{govtSellerBackingBean.managedBean.targetPage eq SupplierManagementConst.GOVT_SELLER_ACCOUNT_INFO_PAGE}">
+			<ui:include src="/xhtml/sm/govtSellerRegistration/govtSellerAccInfoPage.xhtml" />
+		</p:outputPanel>
+	</ui:define>
+		
+</ui:composition>

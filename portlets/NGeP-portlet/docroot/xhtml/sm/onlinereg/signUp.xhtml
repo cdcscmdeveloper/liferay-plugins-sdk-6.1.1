@@ -35,6 +35,9 @@
 							value="#{registrationBackingBean.managedBean.applType}">
 							<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.basic']}" itemValue="#{SupplierManagementConst.ACC_BASIC}" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.mof']}" itemValue="#{SupplierManagementConst.ACC_MOF}" />
+							<ui:remove>
+							<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.govt']}" itemValue="#{SupplierManagementConst.ACC_GOVT_SELLER}" />
+							</ui:remove>
 							<p:ajax event="change" update="agreementId,btnProceed" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 						</p:selectOneRadio></td>
 						<td>&#160;
