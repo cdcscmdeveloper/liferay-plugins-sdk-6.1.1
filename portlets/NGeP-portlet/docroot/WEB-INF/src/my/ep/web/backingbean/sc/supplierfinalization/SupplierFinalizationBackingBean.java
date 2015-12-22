@@ -260,7 +260,6 @@ public class SupplierFinalizationBackingBean extends
 		}
 		loadSupplierFinalizationTabDetails();
 		retrieveBriefingPaper();
-//		retrieveCommitteeEndorsement();
 		
 		if (getManagedBean().isInitialDecisionFwdToBPK()) {
 			getManagedBean().getScQtFinalization()
@@ -320,20 +319,20 @@ public class SupplierFinalizationBackingBean extends
 	 */
 	public void onTabMenuChangeAction(int tabIndex) {
 		switch (tabIndex) {
-		case 0:
-			navigateToPreparationTab();
-			break;
-		case 1:
-			navigateToBriefingPaperTab();
-			break;
-		case 2:
-			navigateToSupplierFinalizationTab();
-			break;
-		case 3:
-			navigateToCommitteeEndorsementTab();
-			break;
-		case 4:
-			navigateToResultsTab();			
+			case 0:
+				navigateToPreparationTab();
+				break;
+			case 1:
+				navigateToBriefingPaperTab();
+				break;
+			case 2:
+				navigateToSupplierFinalizationTab();
+				break;
+			case 3:
+				navigateToCommitteeEndorsementTab();
+				break;
+			case 4:
+				navigateToResultsTab();			
 		}
 	}
 
@@ -595,28 +594,7 @@ public class SupplierFinalizationBackingBean extends
 	 *            the selected list of ScQtMeeting entities
 	 */
 	public void deleteMeetingDetails() {
-//		List<ScQtMeeting> selectedMeetingList = getManagedBean()
-//				.getSelectedMeetingList();
-//		List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();
-//		List<ScQtMeeting> deletedMeetingList = getManagedBean()
-//				.getDeletedMeetingList();
-//		if (deletedMeetingList == null) {
-//			getManagedBean()
-//					.setDeletedMeetingList(new ArrayList<ScQtMeeting>());
-//		}
-//
-//		List<ScQtMeeting> tempDeletedList = new ArrayList<ScQtMeeting>();
-//		for (ScQtMeeting meeting : selectedMeetingList) {
-//			if (DbValueConst.RECORD_STATUS_ACTIVE == meeting
-//					.getRecordStatusFlg()) {
-//				meeting.setDeleted(true);
-//				tempDeletedList.add(meeting);
-//			}
-//		}
-//
-//		getManagedBean().setSelectedMeetingList(null);
-//		getManagedBean().setDeletedMeetingList(tempDeletedList);
-//		deleteRowsAction(meetingList, tempDeletedList);
+
 		try {
 			List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();
 			List<ScQtMeeting> deletedMeetingList = getManagedBean().getDeletedMeetingList();
@@ -3824,54 +3802,6 @@ public class SupplierFinalizationBackingBean extends
 		return recommendedSupplierList;
 	}
 
-	/*
-	 * private void retrieveItemSupplierList(boolean itemize) {
-	 * IQTSuppFinalizationSO qtSuppFinalizationSO = null; try {
-	 * qtSuppFinalizationSO =
-	 * BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst
-	 * .SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
-	 * 
-	 * SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-	 * reqDTO.setQtId(qtId);//FIXME if(getManagedBean().isItemize()){//itemize
-	 * reqDTO.setItemize(itemize); }
-	 * 
-	 * SuppFinalizationResDTO resDTO =
-	 * qtSuppFinalizationSO.retrieveItemSupplierDtl(reqDTO);
-	 * 
-	 * List<ScQtEvaluationResult> shortlistedSupplierList =
-	 * resDTO.getQualifiedSuppResultBean().getResultList();
-	 * this.getManagedBean()
-	 * .setShortlistedSupplierList(shortlistedSupplierList);
-	 * 
-	 * if(getManagedBean().isItemize()){//itemize List<ScRequestItem> itemlist =
-	 * resDTO.getItemResultBean().getResultList();
-	 * this.getManagedBean().setItemList(itemlist); } } finally {
-	 * qtSuppFinalizationSO = null; } }
-	 * 
-	 * private void retrieveItemSupplierListByZone(Long qtZoneCriteriaId) {
-	 * IQTSuppFinalizationSO qtSuppFinalizationSO = null; try {
-	 * qtSuppFinalizationSO =
-	 * BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst
-	 * .SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
-	 * 
-	 * SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-	 * reqDTO.setQtId(qtId);//FIXME
-	 * reqDTO.setQtZoneCriteriaId(qtZoneCriteriaId);
-	 * if(getManagedBean().isItemize()){//itemize reqDTO.setItemize(true); }
-	 * 
-	 * SuppFinalizationResDTO resDTO =
-	 * qtSuppFinalizationSO.retrieveItemSupplierDtl(reqDTO);
-	 * if(getManagedBean().isItemize()){//itemize List<ScRequestItem> itemlist =
-	 * resDTO.getItemResultBean().getResultList();
-	 * this.getManagedBean().setItemList(itemlist); }
-	 * 
-	 * List<ScQtEvaluationResult> shortlistedSupplierList =
-	 * resDTO.getQualifiedSuppResultBean().getResultList();
-	 * this.getManagedBean()
-	 * .setShortlistedSupplierList(shortlistedSupplierList); } finally {
-	 * qtSuppFinalizationSO = null; } }
-	 */
-
 	/**
 	 * Set the selected supplier details in managed bean associated with the
 	 * current user session
@@ -3986,63 +3916,6 @@ public class SupplierFinalizationBackingBean extends
 		}
 		log.info("Supplier Name :: " + selectedSupplier.getCompanyName());
 
-		// The data has been hardcoded. Once the SM API to get the list of board
-		// of directors is implemented,
-		// remove the data below and call the API to fetch board of directors
-		// corresponding to the company selected.
-//		List<SmPersonnel> boardofDirectors = new ArrayList<SmPersonnel>();
-//		List<SmSupplier> smSuppliers = new ArrayList<SmSupplier>();
-//		SmSupplier smSupplier = new SmSupplier();
-//		smSupplier.setCompanyName("Company Name 1");
-//		SmMofAccount mofAccount = new SmMofAccount();
-//		mofAccount.setMofNo("MOF1");
-//		smSupplier.setSmMofAccount(mofAccount);
-//		smSuppliers.add(smSupplier);
-//		SmPersonnel smPersonnel = new SmPersonnel();
-//		smPersonnel.setSmAppl(new SmAppl());
-//		smPersonnel.getSmAppl().setSmSuppliers(smSuppliers);
-//		smPersonnel.setName("BOD1");
-//		boardofDirectors.add(smPersonnel);
-//
-//		smSuppliers = new ArrayList<SmSupplier>();
-//		smSupplier = new SmSupplier();
-//		smSupplier.setCompanyName("Company Name 2");
-//		mofAccount = new SmMofAccount();
-//		mofAccount.setMofNo("MOF2");
-//		smSupplier.setSmMofAccount(mofAccount);
-//		smSuppliers.add(smSupplier);
-//		smPersonnel = new SmPersonnel();
-//		smPersonnel.setSmAppl(new SmAppl());
-//		smPersonnel.getSmAppl().setSmSuppliers(smSuppliers);
-//		smPersonnel.setName("BOD2");
-//		boardofDirectors.add(smPersonnel);
-//
-//		smSuppliers = new ArrayList<SmSupplier>();
-//		smSupplier = new SmSupplier();
-//		smSupplier.setCompanyName("Company Name 3");
-//		mofAccount = new SmMofAccount();
-//		mofAccount.setMofNo("MOF3");
-//		smSupplier.setSmMofAccount(mofAccount);
-//		smSuppliers.add(smSupplier);
-//		smPersonnel = new SmPersonnel();
-//		smPersonnel.setSmAppl(new SmAppl());
-//		smPersonnel.getSmAppl().setSmSuppliers(smSuppliers);
-//		smPersonnel.setName("BOD3");
-//		boardofDirectors.add(smPersonnel);
-//
-//		smSuppliers = new ArrayList<SmSupplier>();
-//		smSupplier = new SmSupplier();
-//		smSupplier.setCompanyName("Company Name 4");
-//		mofAccount = new SmMofAccount();
-//		mofAccount.setMofNo("MOF4");
-//		smSupplier.setSmMofAccount(mofAccount);
-//		smSuppliers.add(smSupplier);
-//		smPersonnel = new SmPersonnel();
-//		smPersonnel.setSmAppl(new SmAppl());
-//		smPersonnel.getSmAppl().setSmSuppliers(smSuppliers);
-//		smPersonnel.setName("BOD3");
-//		boardofDirectors.add(smPersonnel);
-		
 		List<SmPersonnel> boardofDirectors = null;
 		IPersonnelSO personnelSO = null;
 		try {
@@ -4080,34 +3953,6 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setSupplierBranch(null);
 		this.getManagedBean().setSupplierAddress(null);
 	}
-
-	/*
-	 * To retrieve the list of Committee for Endorsement
-	 */
-//	private void retrieveCommitteeEndorsement() {
-//		IQTMeetingSO meetingSO;
-//		try {
-//			meetingSO = BusinessDelegate.getInstance().getServiceObject(
-//					ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
-//
-//			Long qtId = getManagedBean().getScQt().getQtId();
-//			String committeeType = getManagedBean().getCommitteeType();
-//
-//			MeetingReqDTO reqDTO = new MeetingReqDTO();
-//			reqDTO.setQtId(qtId);
-//			reqDTO.setCommitteType(committeeType);
-//			reqDTO.setIsAttended(null);
-//
-//			MeetingResDTO resDTO = meetingSO
-//					.retrieveSignOffCommitteeListByCommType(reqDTO);
-//			if (resDTO.getCommitteMembers() != null) {
-//				this.getManagedBean().setCommitteeList(
-//						resDTO.getCommitteMembers());
-//			}
-//		} finally {
-//			meetingSO = null;
-//		}
-//	}
 
 	/**
 	 * To show reminder to the committee members corresponding to the selected
