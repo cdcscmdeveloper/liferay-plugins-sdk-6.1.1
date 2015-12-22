@@ -99,6 +99,7 @@ import org.apache.log4j.Logger;
 /*
 * @ author Ganga prasad
 */
+@SuppressWarnings("unused")
 public class FileUtility extends InitializeSO{
 	
 	private static Logger log = EpLogger.getLogger(FileUtility.class);
@@ -1354,6 +1355,15 @@ public class FileUtility extends InitializeSO{
 			//once upload is done cal web service osb integration to transfer file.
 //			 osbUtility.osbServiceCallOutBound(ServiceCode.EPE04.value(),fileName);
 			
+			// Thread will sleep for 3 seconds before putting message into JMS Queue
+			
+			Thread currentThread = Thread.currentThread();
+			try {
+				Thread.sleep(3000L);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
 			jmsReqDTO.setTextMessage(true);
@@ -1473,6 +1483,15 @@ public class FileUtility extends InitializeSO{
 			//once upload is done cal web service osb integration to transfer file.
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE01.value(),fileName);
 			
+			// Thread will sleep for 3 seconds before putting message into JMS Queue
+
+			Thread currentThread = Thread.currentThread();
+			try {
+				Thread.sleep(3000L);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
 			jmsReqDTO.setTextMessage(true);
@@ -1541,6 +1560,15 @@ public class FileUtility extends InitializeSO{
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE07.value(),fileName);
+			
+			// Thread will sleep for 3 seconds before putting message into JMS Queue
+			
+			Thread currentThread = Thread.currentThread();
+			try {
+				Thread.sleep(3000L);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			
 			// Call JMS send method to send to the Queue.
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
@@ -1640,6 +1668,15 @@ public class FileUtility extends InitializeSO{
 			//once upload is done cal web service osb integration to transfer file.
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE06.value(),fileName);
 			
+			// Thread will sleep for 3 seconds before putting message into JMS Queue
+			
+			Thread currentThread = Thread.currentThread();
+			try {
+				Thread.sleep(3000L);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
 			// Call JMS send method to send to the Queue.
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
@@ -1731,6 +1768,15 @@ public class FileUtility extends InitializeSO{
 			//once upload is done cal web service osb integration to transfer file.
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE05.value(),fileName);
 			
+			// Thread will sleep for 3 seconds before putting message into JMS Queue
+			
+			Thread currentThread = Thread.currentThread();
+			try {
+				Thread.sleep(3000L);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
 			// Call JMS send method to send to the Queue.
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
@@ -1807,6 +1853,15 @@ public class FileUtility extends InitializeSO{
 			//once upload is done cal web service osb integration to transfer file.
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE08.value(),fileName);
 			
+			// Thread will sleep for 3 seconds before putting message into JMS Queue
+			
+			Thread currentThread = Thread.currentThread();
+			try {
+				Thread.sleep(3000L);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
 			// Call JMS send method to send to the Queue.
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
@@ -1876,6 +1931,15 @@ public class FileUtility extends InitializeSO{
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE09.value(),fileName);
+			
+			// Thread will sleep for 3 seconds before putting message into JMS Queue
+			
+			Thread currentThread = Thread.currentThread();
+			try {
+				Thread.sleep(3000L);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			
 			// Call JMS send method to send to the Queue.
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
@@ -1956,6 +2020,15 @@ public class FileUtility extends InitializeSO{
 			//once upload is done cal web service osb integration to transfer file.
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE10.value(),fileName);
 			
+			// Thread will sleep for 3 seconds before putting message into JMS Queue
+			
+			Thread currentThread = Thread.currentThread();
+			try {
+				Thread.sleep(3000L);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
 			// Call JMS send method to send to the Queue.
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
@@ -2021,6 +2094,15 @@ public class FileUtility extends InitializeSO{
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE11.value(),fileName);
+			
+			// Thread will sleep for 3 seconds before putting message into JMS Queue
+			
+			Thread currentThread = Thread.currentThread();
+			try {
+				Thread.sleep(3000L);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			
 			// Call JMS send method to send to the Queue.
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
@@ -2108,6 +2190,15 @@ public class FileUtility extends InitializeSO{
 			//once upload is done cal web service osb integration to transfer file.
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE03.value(),fileName);
 			
+			// Thread will sleep for 3 seconds before putting message into JMS Queue
+			
+			Thread currentThread = Thread.currentThread();
+			try {
+				Thread.sleep(3000L);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
 			// Call JMS send method to send to the Queue.
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
@@ -2155,7 +2246,7 @@ public class FileUtility extends InitializeSO{
 				line.append(formatString(associatedCompany.getmOFNo(),20));
 			
 				line.append(formatString(associatedCompany.getCompanyName(),100));
-				line.append(formatString(associatedCompany.getsSMNO(),20));
+				line.append(formatString(associatedCompany.getAssociatedCompanySSMNO(),20));
 				line.append(formatString(associatedCompany.getAssociatedCompanyMOFNO(),20));
 				line.append(formatString(associatedCompany.getShareholding(),1));
 				line.append(formatString(associatedCompany.getAddress1(),100));
@@ -2192,6 +2283,15 @@ public class FileUtility extends InitializeSO{
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE02.value(),fileName);
+			
+			// Thread will sleep for 3 seconds before putting message into JMS Queue
+			
+			Thread currentThread = Thread.currentThread();
+			try {
+				Thread.sleep(3000L);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			
 			// Call JMS send method to send to the Queue.
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
