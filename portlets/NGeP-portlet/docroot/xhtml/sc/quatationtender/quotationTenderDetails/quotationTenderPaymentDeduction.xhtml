@@ -27,7 +27,7 @@
 					<ac:iconTooltip value="#{lbl['lbl.sc.deduction.type.tooltip']}" />
 				</f:facet>
 				<h:selectOneMenu id="deductionType"
-					value="#{scQtDeduction.deductionType.parameterId}">
+					value="#{scQtDeduction.deductionType.parameterId}" disabled="#{qTDetailBB.isAuditor()}">
 					<f:selectItems
 						value="#{qTDeductionPaymentBackingBean.getDeductionTypes()}" />
 					<p:ajax event="change" partialSubmit="true" process="@this"
@@ -43,7 +43,7 @@
 						label="#{lbl['lbl.sc.deduction.amount']}"
 						value="#{scQtDeduction.deductionAmount}"
 						style="margin-right:5px;text-align:right;"
-						rendered="#{scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeFixed}" >
+						rendered="#{scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeFixed}" disabled="#{qTDetailBB.isAuditor()}">
 						<ac:validateNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
 							maxIntegerDigits="14"></ac:validateNumber>
