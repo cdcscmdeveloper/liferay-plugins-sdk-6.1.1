@@ -119,6 +119,7 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
@@ -5023,7 +5024,8 @@ public class SimpleQuoteBackingBean extends
 	public void supplierSubmit() {
 		debugLogger("supplierSubmit");
 
-		if(isG2GSeller()){ //gpki
+		//gpki
+		if(isDigiSigningRequired(RoleCode.GOVT_SELLER.value())) {
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 
 		}  else {
@@ -5056,12 +5058,14 @@ public class SimpleQuoteBackingBean extends
 			}
 
 			// gpki
-			if(isG2GSeller()){
+			if(isDigiSigningRequired(RoleCode.GOVT_SELLER.value())) {
 				if (null != pmDigiSign) { 
 					updateSpkiDigiSignData(pmDigiSign,
 							ParameterConst.DOCTYPE_SIMPLE_QUOTE, quote.getQuoteId(),
-							quote.getQuoteNo(), prepareOriginalText(Boolean.TRUE)); }
+							quote.getQuoteNo(), prepareOriginalText(Boolean.TRUE)); 
+				}
 				RequestContext.getCurrentInstance().execute("gpki_dlg.hide();");
+
 			} else {
 				// spki
 				if (null != pmDigiSign) {
@@ -5208,7 +5212,15 @@ public class SimpleQuoteBackingBean extends
 				.append("|");
 
 		if (isG2GSupplier) {
-			sb.append(facesScopes.getUserSessionBean().getOrgTypeCode());
+			UserReqDTO userReqDTO  = new UserReqDTO();
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			userReqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+			PmUser pmUser = userSO.retrieveUserProfileByUserId(userReqDTO).getPmUser();
+			if(pmUser.getOrgTypeCode() != null){
+				sb.append(pmUser.getOrgTypeCode().getParameterCode());
+			}
+
 		} else {
 			sb.append(smSupplier.getRegNo());
 		}
@@ -6003,11 +6015,6 @@ public class SimpleQuoteBackingBean extends
 
 		}
 		return root;
-	}
-
-	public boolean isG2GSeller() {
-		FacesScopes fs = new FacesScopes();
-		return fs.hasRoleUser("GOVT_SELLER");
 	}
 
 	/**
