@@ -42,9 +42,6 @@ import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -79,6 +76,8 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.invoice.FLInvoiceDataType;
+import my.ep.jaxb.fl.maintenace.cancel.invoice.FLInvoiceCancelReqType;
+import my.ep.jaxb.fl.maintenace.modification.invoice.FLInvoiceModificationReqType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.fl.FlAttachment;
@@ -102,7 +101,6 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
@@ -358,22 +356,20 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		if(taskId != null){
 			renewSesionObject();
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-			Object ctx = getFacesScopes().getBPMAuthenticationCtxToken();
-			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
-			bpmReqDTO.setCtxToken(ctx);
-			bpmReqDTO.setTaskId(taskId);
-			BpmResponseDTO res = bpmSO.getTaskDetails(bpmReqDTO);
+			Object obj = super.getBpmTaskDetails(Object.class, null);
 			getManagedBean().setModificationCancel(false);
 			
 			FinancialOrgReqDTO finOrgReqDTO = new FinancialOrgReqDTO();
 			FinancialOrgResDTO finOrgResDTO = null;
 			IFinancialOrgSO financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
 			
-			if(FLProcessNameConst.ACK_MODIFIED_INVOICE_HT.equals(res.getTaskName()) || FLProcessNameConst.REVIEW_CANCEL_INVOICE_HT.equals(res.getTaskName())){
-				reqDTO.setInvoiceId(Long.valueOf(res.getDocId()));
+			
+			if(FLProcessNameConst.ACK_MODIFIED_INVOICE_HT.equals(this.getManagedBean().getTaskName())){
+				FLInvoiceModificationReqType invModObj = (FLInvoiceModificationReqType) obj;
+				reqDTO.setInvoiceId(Long.valueOf(invModObj.getInvoiceId()));
+				
 				resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
-				getManagedBean().setDocProcess(res.getDocType());
+//				getManagedBean().setDocProcess(res.getDocType());
 				getManagedBean().setInvoice(resDTO.getInvoice());
 				//invBB.getManagedBean().getInvoice().getFlFulfilmentOrder().setFlFulfilmentRequest(resDTO.getInvoice().getFlRequest());
 				getManagedBean().getInvoice().setFlRequest(resDTO.getInvoice().getFlRequest());
@@ -381,18 +377,32 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				getManagedBean().setPmUser(reqDTO.getPmUser());
 				getManagedBean().setButtonVal("ACK");
 				getManagedBean().setModificationCancel(true);
-				getManagedBean().setTaskId(taskId);
-				getManagedBean().setOutComes(res.getAction());
+				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+				flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
+			}
+			else if(FLProcessNameConst.REVIEW_CANCEL_INVOICE_HT.equals(this.getManagedBean().getTaskName())){
+				FLInvoiceCancelReqType invCanObj = (FLInvoiceCancelReqType) obj;
+				reqDTO.setInvoiceId(Long.valueOf(invCanObj.getInvoiceId()));
+				
+				resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
+//				getManagedBean().setDocProcess(res.getDocType());
+				getManagedBean().setInvoice(resDTO.getInvoice());
+				//invBB.getManagedBean().getInvoice().getFlFulfilmentOrder().setFlFulfilmentRequest(resDTO.getInvoice().getFlRequest());
+				getManagedBean().getInvoice().setFlRequest(resDTO.getInvoice().getFlRequest());
+				getManagedBean().setFulfilmentRequest(resDTO.getInvoice().getFlRequest());
+				getManagedBean().setPmUser(reqDTO.getPmUser());
+				getManagedBean().setButtonVal("ACK");
+				getManagedBean().setModificationCancel(true);
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 			}else{
-				Object obj = res.getPojo();
-				String[] outcome = new String[res.getAction().length + 1];
+				String[] outcome = new String[this.getManagedBean().getOutComes().length + 1];
 				outcome[0] = BpmOutcomeConst.BPM_SAVE;
 				int i = 1;
-				for (String action : res.getAction()) {
+				for (String action : this.getManagedBean().getOutComes()) {
 					outcome[i++] = action;
 				}
+				this.getManagedBean().setOutComes(outcome);
 				FLInvoiceDataType paymentObj = (FLInvoiceDataType)obj;
 				IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 				reqDTO.setDocType(ParameterConst.DOCTYPE_INVOICE);
@@ -418,10 +428,9 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				
 				getManagedBean().setChargeLineItemRoot(null);
 				getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
-				getManagedBean().setTaskId(taskId);
-				if(getManagedBean().getInvoice().getAp59Status()==null || getManagedBean().getInvoice().getAp59Status().getStatusId().longValue()!=FulfilmentStatusConst.AP59_PENDING_AP59_DECISION.longValue()) { 
-					getManagedBean().setOutComes(outcome);
-				}
+//				if(getManagedBean().getInvoice().getAp59Status()==null || getManagedBean().getInvoice().getAp59Status().getStatusId().longValue()!=FulfilmentStatusConst.AP59_PENDING_AP59_DECISION.longValue()) { 
+//					getManagedBean().setOutComes(outcome);
+//				}
 				
 				if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
 					getFactoringDtl(); 

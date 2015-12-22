@@ -39,9 +39,6 @@ import my.ep.biz.service.pm.common.confgeneral.IConfigGeneralSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentConst;
@@ -92,7 +89,6 @@ import my.ep.type.pm.AddressType;
 import my.ep.type.pm.GSFType;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
@@ -279,21 +275,21 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		if(taskId != null){
 			renewSesionObject();
 			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-					.getServiceObject(IBpmSO.class);
-			Object ctx = getFacesScopes().getBPMAuthenticationCtxToken();
-			BpmRequestDTO reqDTO = new BpmRequestDTO();
-			reqDTO.setCtxToken(ctx);
-			reqDTO.setTaskId(taskId);
-			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-			Object obj = res.getPojo();
-			String[] outcome = new String[res.getAction().length + 1];
-			outcome[0] = BpmOutcomeConst.BPM_SAVE;
-			int i = 1;
-			for (String action : res.getAction()) {
-				outcome[i++] = action;
-			}
-
+//			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+//					.getServiceObject(IBpmSO.class);
+//			Object ctx = getFacesScopes().getBPMAuthenticationCtxToken();
+//			BpmRequestDTO reqDTO = new BpmRequestDTO();
+//			reqDTO.setCtxToken(ctx);
+//			reqDTO.setTaskId(taskId);
+//			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+//			Object obj = res.getPojo();
+//			String[] outcome = new String[res.getAction().length + 1];
+//			outcome[0] = BpmOutcomeConst.BPM_SAVE;
+//			int i = 1;
+//			for (String action : res.getAction()) {
+//				outcome[i++] = action;
+//			}
+			Object obj = super.getBpmTaskDetails(Object.class, new String[]{BpmOutcomeConst.BPM_SAVE});
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
 			FLPaymentInstructionDataType paymentObj = (FLPaymentInstructionDataType)obj;
@@ -324,8 +320,6 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 					getManagedBean().getDelOrderList().add(flDeliveryOrder);
 				}
 			}			
-			getManagedBean().setTaskId(taskId);
-			getManagedBean().setOutComes(outcome);
 			// For PO No Deduction Panel 
 			getManagedBean().setDocType(paymentAdvice.getFlRequest().getDocType());
 			getManagedBean().setFulfilmentRequest(paymentAdvice.getFlRequest());
