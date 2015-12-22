@@ -104,7 +104,7 @@
 					itemValue="1" />
 				<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}"
 					itemValue="0" />
-				<p:ajax process="@this" update=":form:tt:catCodeInfPan"
+				<p:ajax event="change" process="@this" update="poCatRDecisionRmrk"
 					partialSubmit="true"
 					listener="#{backingBean.assignCategoryApproveOrRejectDate(catBeanR)}" />
 			</p:selectOneRadio>
@@ -156,8 +156,8 @@
 					itemValue="1" />
 				<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}"
 					itemValue="0" />
-				<p:ajax process="@this"
-					update=":form:tt:catCodeInfPan" partialSubmit="true"
+				<p:ajax event="change" process="@this"
+					update="apprvrCatRDecisionRmrk" partialSubmit="true"
 					listener="#{backingBean.assignCategoryApproveOrRejectDate(catBeanR)}" />
 			</p:selectOneRadio>
 			<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"

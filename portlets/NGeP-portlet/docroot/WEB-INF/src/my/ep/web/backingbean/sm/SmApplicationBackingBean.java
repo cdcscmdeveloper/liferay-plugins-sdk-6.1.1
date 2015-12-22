@@ -8732,14 +8732,16 @@ public class SmApplicationBackingBean extends
 	 *            -AjaxBehaviorEvent
 	 */
 	public void unSelectApporvedCategories(AjaxBehaviorEvent e) {
-		if (getManagedBean().getDeleteNewApplCategoryList() != null) {
+		if (getManagedBean().getDeleteNewApplCategoryList() != null
+				&& getManagedBean().isSupplierUser()) {
 			Iterator<SmSupplierCategory> iterator = getManagedBean()
 					.getDeleteNewApplCategoryList().iterator();
 			while (iterator.hasNext()) {
 				SmSupplierCategory cat = iterator.next();
-				if (cat.getRecordStatusFlg() != null
-						&& cat.getRecordStatusFlg() != SupplierManagementConst.PENDING_ACT_STATUS
-						&& cat.getRecordStatusFlg() != SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) {
+				if ((cat.getRecordStatusFlg() != null && cat
+						.getRecordStatusFlg().compareTo(
+								SupplierManagementConst.APPROVED_RECORD_STATUS) == 0)
+						|| (cat.getApprovedDate() != null)) {
 					iterator.remove();
 				}
 			}
