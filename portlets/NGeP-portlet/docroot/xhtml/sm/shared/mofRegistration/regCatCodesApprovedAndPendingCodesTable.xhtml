@@ -34,8 +34,8 @@
 				<p:row>
 					<p:column style="width:2%"
 						rendered="#{!backingBean.managedBean.approverUser}"
-						disabledSelection="#{catBean.recordStatusFlg ne SupplierManagementConst.PENDING_ACT_STATUS 
-					and catBean.recordStatusFlg ne SupplierManagementConst.PENDING_RE_APPROVAL_STATUS}" />
+						disabledSelection="#{backingBean.managedBean.supplierUser and 
+							(catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS or not empty catBean.approvedDate)}" />
 					<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
 						style="width : 2%;"
 						disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
@@ -68,8 +68,8 @@
 			</p:columnGroup>
 			<p:column selectionMode="multiple" style="width:2%"
 				rendered="#{!backingBean.managedBean.approverUser}"
-				disabledSelection="#{catBean.recordStatusFlg ne SupplierManagementConst.PENDING_ACT_STATUS 
-					and catBean.recordStatusFlg ne SupplierManagementConst.PENDING_RE_APPROVAL_STATUS}" />
+				disabledSelection="#{backingBean.managedBean.supplierUser and 
+					(catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS or not empty catBean.approvedDate)}" />
 			<p:column style="width : 2%;">
 				<p:outputLabel value="#{index + 1}"
 					style="float: left;white-space: normal;" />
@@ -134,8 +134,8 @@
 						itemValue="1" />
 					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}"
 						itemValue="0" />
-					<p:ajax update=":form:tt:catCodeInfPan"
-						partialSubmit="true" process="@this"
+					<p:ajax event="change" process="@this" update="poCatDecisionRmrk"
+						partialSubmit="true"
 						listener="#{backingBean.assignCategoryApproveOrRejectDate(catBean)}" />
 				</p:selectOneRadio>
 				<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
@@ -194,8 +194,8 @@
 						itemValue="1" />
 					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}"
 						itemValue="0" />
-					<p:ajax process="@this"
-						update=":form:tt:catCodeInfPan" partialSubmit="true"
+					<p:ajax event="change" process="@this"
+						update="apprvrCatDecisionRmrk" partialSubmit="true"
 						listener="#{backingBean.assignCategoryApproveOrRejectDate(catBean)}" />
 				</p:selectOneRadio>
 				<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
