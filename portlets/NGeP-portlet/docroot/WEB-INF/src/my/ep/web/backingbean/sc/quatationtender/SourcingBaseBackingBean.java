@@ -1237,10 +1237,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @return boolean flag
 	 */
 	public boolean enableFieldByStatusNFiledName(String fieldName,
-			Long statusId, boolean isMaintance) {
+			Long statusId, boolean isMaintance, boolean isDeskOfficer) {
 
 		List<String> values = QTFiledMapper.getEnableFieldsByStatus(statusId,
-				isMaintance);
+				isMaintance, isDeskOfficer);
 		if (CollectionUtils.isNotEmpty(values)) {
 			if (values.contains(fieldName)) {
 				return false;

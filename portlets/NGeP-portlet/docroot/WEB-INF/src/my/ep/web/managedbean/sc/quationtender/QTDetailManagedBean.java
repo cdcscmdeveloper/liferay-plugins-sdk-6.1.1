@@ -1019,6 +1019,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean isPcbProcess;
 	
 	private boolean pendingRevision;
+	
+	private boolean deskOfficer;
+	
+	private boolean auditorRoleView;
+	
+	private PmOrgProfile ptjProfile;
+	
+	private PmOrgProfile ministryProfile;
+	
     
 	/**
 	 * Sets the panel suppliers.
@@ -6488,6 +6497,62 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setCloneDocumentSelectQt(ScQt cloneDocumentSelectQt) {
 		this.cloneDocumentSelectQt = cloneDocumentSelectQt;
+	}
+
+	/**
+	 * @return the deskOfficer
+	 */
+	public boolean isDeskOfficer() {
+		return deskOfficer;
+	}
+
+	/**
+	 * @param deskOfficer the deskOfficer to set
+	 */
+	public void setDeskOfficer(boolean deskOfficer) {
+		this.deskOfficer = deskOfficer;
+	}
+
+	/**
+	 * @return the auditorRoleView
+	 */
+	public boolean isAuditorRoleView() {
+		return auditorRoleView;
+	}
+
+	/**
+	 * @param auditorRoleView the auditorRoleView to set
+	 */
+	public void setAuditorRoleView(boolean auditorRoleView) {
+		this.auditorRoleView = auditorRoleView;
+	}
+
+	/**
+	 * @return the ptjProfile
+	 */
+	public PmOrgProfile getPtjProfile() {
+		return ptjProfile;
+	}
+
+	/**
+	 * @param ptjProfile the ptjProfile to set
+	 */
+	public void setPtjProfile(PmOrgProfile ptjProfile) {
+		this.ptjProfile = ptjProfile;
+	}
+
+	/**
+	 * @return the ministryProfile
+	 */
+	public PmOrgProfile getMinistryProfile() {
+		return ministryProfile;
+	}
+
+	/**
+	 * @param ministryProfile the ministryProfile to set
+	 */
+	public void setMinistryProfile(PmOrgProfile ministryProfile) {
+		this.ministryProfile = ministryProfile;
 	}
 
 }
