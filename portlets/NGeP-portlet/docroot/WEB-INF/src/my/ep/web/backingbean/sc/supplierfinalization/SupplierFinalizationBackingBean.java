@@ -119,6 +119,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalAmount;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalItem;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleItem;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleLable;
@@ -1453,8 +1454,12 @@ public class SupplierFinalizationBackingBean extends
 			recommendDtl.setSupplier(supplier);
 			recommendDtl.setShortlistedSupplier(recommendedSupplier);
 			recommendDtl.setScQtRecommend(scQtRecommend);
-			recommendDtl.setScQtProposalAmount(
-					recommendedSupplier.getProposalAmount());
+			
+			ScQtProposalAmount scQtProposalAmount 
+						= recommendedSupplier.getProposalAmount();
+			scQtProposalAmount.setScQtProposal(
+					recommendedSupplier.getQtEvaluationResult().getScQtProposal());
+			recommendDtl.setScQtProposalAmount(scQtProposalAmount);
 		}
 		if (!this.getManagedBean().isItemize()) {
 			ScQtProposalItem qtProposalItem = 
@@ -4596,6 +4601,7 @@ public class SupplierFinalizationBackingBean extends
 		}
 		Set<Long> commonSupplierIdSet = new HashSet<Long>();		
 		List<SmSupplier> supplierList = new ArrayList<SmSupplier>();
+		Map<Long,Integer> supplierNos = new HashMap<Long, Integer>();
 		Map<Long, Long> commonSupplierMap = new HashMap<Long, Long>();
 		Set<Long> rejectedSupplierIds = new HashSet<Long>();
 
@@ -4606,8 +4612,12 @@ public class SupplierFinalizationBackingBean extends
 						!selectedItemList.get(0).isAwardedItem()) {
 			for (ScQtEvaluationResultDtl resultDtl 
 							: selectedItemList.get(0).getShortListedSupplierList()) {
-				supplierList.add(resultDtl.getQtEvaluationResult()
-						.getScQtProposal().getScQtSupplier().getSmSupplier());
+				SmSupplier smSupplier = resultDtl.getQtEvaluationResult()
+						.getScQtProposal().getScQtSupplier().getSmSupplier();
+				supplierList.add(smSupplier);
+				supplierNos.put(smSupplier.getSupplierId(), 
+								resultDtl.getQtEvaluationResult()
+									.getScQtProposal().getSupplierNo());
 			}
 			if (CollectionUtils.isNotEmpty(
 					selectedItemList.get(0).getRecommendDtls())) {
@@ -4676,6 +4686,9 @@ public class SupplierFinalizationBackingBean extends
 														.add(supplier
 																.getSupplierId());
 												supplierList.add(supplier);
+												supplierNos.put(supplier.getSupplierId(), 
+														otherResultDtl.getQtEvaluationResult()
+															.getScQtProposal().getSupplierNo());
 											} else {
 												commonSupplierMap.put(supplier
 														.getSupplierId(),
@@ -4708,16 +4721,15 @@ public class SupplierFinalizationBackingBean extends
 		commonSupplierIdSet = null;
 		commonSupplierMap = null;
 
-		this.getManagedBean().setAwardSupplierList(supplierList);
-
 		List<SmSupplier> commonSupplierList = new ArrayList<SmSupplier>();
-		for (SmSupplier supplier : this.getManagedBean().getAwardSupplierList()) {
+		for (SmSupplier supplier : supplierList) {
 			if (rejectedSupplierIds.contains(
 						supplier.getSupplierId())) {
 				continue;
 			}
 			commonSupplierList.add(supplier);
 		}
+		this.getManagedBean().setAwardSupplierList(supplierList);
 		
 		int i = 0;
 		SelectItem[] items = null;
@@ -4729,7 +4741,7 @@ public class SupplierFinalizationBackingBean extends
 					continue;
 				}
 				items[i++] = new SelectItem(supplier.getSupplierId().toString(),
-						supplier.getCompanyName());
+								 	supplierNos.get(supplier.getSupplierId()).toString());
 			}			
 		}
 		
