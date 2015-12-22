@@ -85,8 +85,7 @@
 								<table width="100%" border="0" cellpadding="0" cellspacing="0">
 									<tbody>
 										<tr>
-											<td width="18%" bgcolor="#6d839b" class="title left">Recommended Supplier</td>
-											<td width="11%" bgcolor="#6d839b" class="title left">Proposal ID</td>
+											<td width="11%" bgcolor="#6d839b" class="title left">Supplier Code</td>
 											<td width="12%" bgcolor="#6d839b" class="title left">Bumiputra Status</td>
 											<td width="13%" bgcolor="#6d839b" class="title left">Total Score</td>
 											<td width="11%" bgcolor="#6d839b" class="title left">Ranking</td>
@@ -109,7 +108,6 @@
 												<tbody>
 													<tr>
 														#if ($evalResultDtl.awareded)
-															<td width="18%" class="standard left">$evalResultDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.companyName</td>
 															<td width="11%" class="standard left">$evalResultDtl.qtEvaluationResult.scQtProposal.supplierNo</td>
 															<td width="12%" class="standard left">
 																#if ($evalResultDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi == "true")
@@ -146,7 +144,6 @@
 					<table width="100%" border="0" cellpadding="0" cellspacing="0">
 						<tbody>
 							<tr>
-								<td width="15%" bgcolor="#6d839b" class="title border left">Supplier Name</td>
 								<td width="15%" bgcolor="#6d839b" class="title border left">Supplier Code</td>
 								<td width="15%" bgcolor="#6d839b" class="title border left">Bumiputra Status</td>
 								<td width="23%" bgcolor="#6d839b" class="title border left">Offered Price (RM)</td>
@@ -157,8 +154,6 @@
 								#set($String = "formatter")
 								#if($supplierDtl.awareded)
 								<tr class="ui-content">
-									<td width="15%" class="standard border-bottom left">$supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.companyName</td>
-									
 									<td width="15%" class="standard border-bottom left">$supplierDtl.qtEvaluationResult.scQtProposal.supplierNo</td>
 									<td width="12%" class="standard border-bottom left">
 										#if ($supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi == "true")
@@ -233,8 +228,7 @@
 						<table width="100%" border="0" cellpadding="0" cellspacing="0">
 							<tbody>
 								<tr>
-									<td width="18%" bgcolor="#6d839b" class="title left">Recommended Supplier</td>
-									<td width="11%" bgcolor="#6d839b" class="title left">Proposal ID</td>
+									<td width="11%" bgcolor="#6d839b" class="title left">Supplier Code</td>
 									<td width="12%" bgcolor="#6d839b" class="title left">Bumiputra Status</td>
 									<td width="13%" bgcolor="#6d839b" class="title left">Total Score</td>
 									<td width="11%" bgcolor="#6d839b" class="title left">Ranking</td>
@@ -257,7 +251,6 @@
 										<tbody>
 											<tr>
 												#if ($evalResultDtl.awareded)
-													<td width="18%" class="standard left">$evalResultDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.companyName</td>
 													<td width="11%" class="standard left">$evalResultDtl.qtEvaluationResult.scQtProposal.supplierNo</td>
 													<td width="12%" class="standard left">
 														#if ($evalResultDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi == "true")
@@ -297,7 +290,6 @@
 			<table width="100%" border="0" cellpadding="0" cellspacing="0">
 				<tbody>
 					<tr>
-						<td width="15%" bgcolor="#6d839b" class="title border left">Supplier Name</td>
 						<td width="15%" bgcolor="#6d839b" class="title border left">Supplier Code</td>
 						<td width="15%" bgcolor="#6d839b" class="title border left">Bumiputra Status</td>
 						<td width="23%" bgcolor="#6d839b" class="title border left">Offered Price (RM)</td>
@@ -308,8 +300,6 @@
 						#set($String = "formatter")
 						#if($supplierDtl.awareded)
 						<tr class="ui-content">
-							<td width="15%" class="standard border-bottom left">$supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.companyName</td>
-							
 							<td width="15%" class="standard border-bottom left">$supplierDtl.qtEvaluationResult.scQtProposal.supplierNo</td>
 							<td width="12%" class="standard border-bottom left">
 								#if ($supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi == "true")
