@@ -7,7 +7,7 @@ public class AssociatedCompany {
 
 	private String mOFNo;
 	private String companyName;
-	private String sSMNO;
+	private String associatedCompanySSMNO;
 	private String associatedCompanyMOFNO;
 	private String shareholding;
 	private String address1;
@@ -41,16 +41,26 @@ public class AssociatedCompany {
 		this.companyName = companyName;
 	}
 
-	public String getsSMNO() {
-		return sSMNO;
+/*	public String getsSMNO() {
+		return associatedCompanySSMNO;
 	}
 
 	public void setsSMNO(String sSMNO) {
-		this.sSMNO = sSMNO;
-	}
+		this.associatedCompanySSMNO = sSMNO;
+	}*/
+	
+	
 
 	public String getAssociatedCompanyMOFNO() {
 		return associatedCompanyMOFNO;
+	}
+
+	public String getAssociatedCompanySSMNO() {
+		return associatedCompanySSMNO;
+	}
+
+	public void setAssociatedCompanySSMNO(String associatedCompanySSMNO) {
+		this.associatedCompanySSMNO = associatedCompanySSMNO;
 	}
 
 	public void setAssociatedCompanyMOFNO(String associatedCompanyMOFNO) {
@@ -183,7 +193,7 @@ public class AssociatedCompany {
 			AssociatedCompany temp = (AssociatedCompany) obj;
 			if (this.mOFNo.equalsIgnoreCase(temp.mOFNo)
 					&& this.companyName.equalsIgnoreCase(temp.companyName)
-					&& this.sSMNO.equalsIgnoreCase(temp.sSMNO))
+					&& this.associatedCompanySSMNO.equalsIgnoreCase(temp.associatedCompanySSMNO))
 				return true;
 		}
 		return false;
@@ -193,7 +203,7 @@ public class AssociatedCompany {
 	@Override
 	public int hashCode() {
 
-		return (this.mOFNo.hashCode() + this.companyName.hashCode() + this.sSMNO
+		return (this.mOFNo.hashCode() + this.companyName.hashCode() + this.associatedCompanySSMNO
 				.hashCode());
 	}
 
