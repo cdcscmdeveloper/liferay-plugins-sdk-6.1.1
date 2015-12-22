@@ -24,9 +24,6 @@ import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -55,7 +52,6 @@ import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
@@ -161,23 +157,12 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		String taskId = originalServletRequest.getParameter("taskId");
 		if(taskId != null) {
 			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-			Object ctx = getFacesScopes().getBPMAuthenticationCtxToken();
-			BpmRequestDTO reqDTO = new BpmRequestDTO();
-
-			reqDTO.setCtxToken(ctx);
-			reqDTO.setTaskId(taskId);
-			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-			Object obj = res.getPojo();
-
-			FLStopFullfillmentDataType stopFlData = (FLStopFullfillmentDataType)obj;
+			FLStopFullfillmentDataType stopFlData = super.getBpmTaskDetails(FLStopFullfillmentDataType.class, null);
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			flReqDTO.setFlOrderId(stopFlData.getOrderId());
 			flReqDTO.setStopRequestId(stopFlData.getStopRequestId().longValue());
 			
 			FulfilmentResDTO resDTO = getFulfilmentOrderSO().retrieveStopInstruction(flReqDTO);
-			getManagedBean().setTaskId(taskId);
-			getManagedBean().setOutComes(res.getAction());
 			getManagedBean().setSelectedTabIndex(0);
 			getManagedBean().setStopInstr(resDTO.getFlStopInstr());
 			populateChargeLineData();

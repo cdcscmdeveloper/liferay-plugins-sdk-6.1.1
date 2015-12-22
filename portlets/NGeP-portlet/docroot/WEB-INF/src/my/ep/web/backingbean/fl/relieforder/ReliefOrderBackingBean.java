@@ -17,14 +17,10 @@ import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.order.IReliefOrderSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
@@ -42,7 +38,6 @@ import my.ep.type.pm.GSFType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
@@ -101,36 +96,19 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 		FulfilmentReqDTO fulfilmentReqDTO = new FulfilmentReqDTO();
 		if(taskId != null){
 
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-			Object ctx = getFacesScopes().getBPMAuthenticationCtxToken();
-			BpmRequestDTO reqDTO = new BpmRequestDTO();
-
-			reqDTO.setCtxToken(ctx);
-			reqDTO.setTaskId(taskId);
-			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-			Object obj = res.getPojo();
-			
-			FLOrderDataType flOrd = (FLOrderDataType)obj;
+			FLOrderDataType flOrderObj = super.getBpmTaskDetails(FLOrderDataType.class, new String[]{BpmOutcomeConst.BPM_SAVE});
 			
 			fulfilmentReqDTO.setDocType(ParameterConst.DOCTYPE_RELIEF_ORDER);
-			fulfilmentReqDTO.setFlOrderId(flOrd.getOrderId());
+			fulfilmentReqDTO.setFlOrderId(flOrderObj.getOrderId());
 			
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 			reliwfOrderSo = (IReliefOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReliefOrderSO.class);
-			Long fulfilmentOrderId=flOrd.getOrderId();
+			Long fulfilmentOrderId=flOrderObj.getOrderId();
 			fulfilmentReqDTO.setFulfilmentOrderId(fulfilmentOrderId);
-			fulfilmentReqDTO.setFlOrderId(flOrd.getOrderId());
+			fulfilmentReqDTO.setFlOrderId(flOrderObj.getOrderId());
 			FulfilmentResDTO rsResDto = reliwfOrderSo.retrieveReliefOrderByOrderId(fulfilmentReqDTO);
 			getManagedBean().setFlReliefOrder(rsResDto.getReliefOrder());
 			FulfilmentResDTO orderResDTO=fulfilmentOrderSO.retrieveFulfilmentOrderById(fulfilmentReqDTO);
-			String[] outcome = new String[res.getAction().length + 1];
-			outcome[0] = BpmOutcomeConst.BPM_SAVE;
-			int i = 1;
-			for (String action : res.getAction()) {
-				outcome[i++] = action;
-			}
-			getManagedBean().setTaskId(taskId);
-			getManagedBean().setOutComes(outcome);
 			getManagedBean().setSelectedTabIndex(0);
 			getManagedBean().setFlRequest(orderResDTO.getFlOrder().getFlFulfilmentRequest());
 			getManagedBean().setFulfilmentOrder(orderResDTO.getFlOrder());

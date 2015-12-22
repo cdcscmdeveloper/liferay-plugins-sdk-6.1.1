@@ -25,9 +25,6 @@ import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
@@ -51,7 +48,6 @@ import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
@@ -178,36 +174,20 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 
 		if(taskId != null){
 			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-			Object ctx = getFacesScopes().getBPMAuthenticationCtxToken();
-			BpmRequestDTO reqDTO = new BpmRequestDTO();
-			reqDTO.setCtxToken(ctx);
-			reqDTO.setTaskId(taskId);
-			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-			Object obj = res.getPojo();
-			FLDanDataType danDataType = (FLDanDataType)obj;
-			String[] outcome = new String[res.getAction().length + 1];
-			outcome[0] = BpmOutcomeConst.BPM_SAVE;
-			int i = 1;
-			for (String action : res.getAction()) {
-				outcome[i++] = action;
-			}
-			getManagedBean().setTaskId(taskId);
-			getManagedBean().setOutComes(outcome);
+			FLDanDataType danObj = super.getBpmTaskDetails(FLDanDataType.class, new String[]{BpmOutcomeConst.BPM_SAVE});
 
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
-			FLDanDataType danObj = (FLDanDataType)obj;
 			flReqDTO.setDanId(danObj.getDanId());
 			IAdjustmentSO adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IAdjustmentSO.class);
 			resDTO = adjustmentSO.retrieveAdjustmentById(flReqDTO);
 			setAdjustmentNote(resDTO);
 			getManagedBean().setSelectedTabIndex(0);
-			if(danDataType.getErrorId() != null && danDataType.getErrorId() > 0){
+			if(danObj.getErrorId() != null && danObj.getErrorId() > 0){
 				getManagedBean().setAutoUpdate(Boolean.FALSE);
 				getManagedBean().setGfmasError(true);
 				FulfilmentReqDTO errReq = new FulfilmentReqDTO();
-				errReq.setErrorId(danDataType.getErrorId());
+				errReq.setErrorId(danObj.getErrorId());
 				FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
 				getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
 			}
