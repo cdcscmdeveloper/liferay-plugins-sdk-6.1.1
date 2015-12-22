@@ -2025,23 +2025,6 @@ public class SmApplicationBackingBean extends
 
 		default:
 			log.info("****** Not a defined page ***********");
-			// check if each registered branch already assigned to bank account
-			// for
-			// payment
-			if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getSmAppl()
-					.getSmSupplierBranches())) {
-				for (SmSupplierBranch applBr : getManagedBean().getSmAppl()
-						.getSmSupplierBranches()) {
-					if (SmCommonUtil.isCollectionEmpty(applBr
-							.getSmSupplierBranchBanks())) {
-						validSave = false;
-						SmApplicationUtil.setNavigationBackToCurrentPage(
-								currentTab, getManagedBean());
-						throw new EpException(MessageConst.ERROR_722622,
-								new String[] { applBr.getBranchName() });
-					}
-				}
-			}
 
 		}
 		return validSave;
