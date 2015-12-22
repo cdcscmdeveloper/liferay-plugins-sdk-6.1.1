@@ -35,6 +35,31 @@
 								value="#{qTDetailBB.getProcurementModeDropdownValues()}" />
 						</p:selectOneMenu></td>
 				</tr>
+				<h:panelGroup id="orgSearch">
+				<tr>
+					<td><p:outputLabel
+						value="#{lbl['lbl.sc.ministry']}" /></td>
+					<td>
+						<ac:lov id="searchMinistry" lovId="PM_ORG_PROFILE_MINSTRY" size="25" readonly="true"
+							disabled="#{qTDetailBB.disableMinistryLov()}"
+							headerText="#{lbl['lbl.sc.ministry']}" 
+							value="#{qTDetailBB.managedBean.ministryProfile.orgName}"
+							postUpdateListener="qTDetailBB.resetPtjProfile()"
+							update="@form"
+							saveObject="qTDetailBB.managedBean.ministryProfile">
+						</ac:lov>
+					</td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
+					<td>
+						<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" size="25" readonly="true"
+							disabled="#{qTDetailBB.isSourcingDeskOfficer()}"
+							headerText="#{lbl['lbl.sc.ptj']}"
+							value="#{qTDetailBB.managedBean.ptjProfile.orgName}"
+							saveObject="qTDetailBB.managedBean.ptjProfile"
+							conditionField="#{qTDetailBB.getPTJCondition()}" >
+						</ac:lov></td>
+				</tr>
+				</h:panelGroup>
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.created.date.from']}" /></td>
 					<td><p:calendar
@@ -161,16 +186,20 @@
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:6%;text-align: center;">
-						<p:commandLink id="editIcon" action="#{qTDetailBB.editQuationTenderDetails(scQt)}"
-							partialSubmit="true" process="@this">
+						<p:commandLink id="editQTIcon" action="#{qTDetailBB.editQuationTenderDetails(scQt, qTDetailBB.managedBean.deskOfficer)}"
+							style="margin-right:20px;" partialSubmit="true" process="@this">
 							<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/edit.png" styleClass="tasklist_title1"
 								title="#{lbl['lbl.sc.qt.search.edit.tooltip']}" />
 						</p:commandLink>
+						<p:commandLink id="viewQTIcon" action="#{qTDetailBB.editQuationTenderDetails(scQt, qTDetailBB.managedBean.deskOfficer)}"
+							style="margin-right:20px;" partialSubmit="true" process="@this">
+							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" styleClass="tasklist_title1"
+								title="click view icon" />
+						</p:commandLink>
 					</p:column>
-
 				</p:dataTable>
 			</h:panelGroup>
-			<br />
 		</p:panel>
+		<ac:lovPopup />
 	</ui:define>
 </ui:composition>

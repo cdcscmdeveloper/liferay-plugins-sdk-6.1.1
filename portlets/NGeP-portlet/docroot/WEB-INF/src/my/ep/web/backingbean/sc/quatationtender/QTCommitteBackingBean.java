@@ -1952,7 +1952,9 @@ public class QTCommitteBackingBean extends
 						.equalsIgnoreCase(commType)) {
 			return true;
 		}
-
+		if (!getManagedBean().isDeskOfficer()){
+			return true;
+		}
 		return false;
 
 	}
@@ -1992,6 +1994,9 @@ public class QTCommitteBackingBean extends
 									.getTaskName())) {
 				return true;
 			}
+		}
+		if (!getManagedBean().isDeskOfficer()){
+			return true;
 		}
 		return false;
 	}

@@ -20,7 +20,7 @@
 					update="@this" />
 			</c:if>
 				
-			<c:if test="#{qTDetailBB.managedBean.qt.qtStatus.statusId ne QTStatusConst.QT_CANCELLED}">
+			<c:if test="#{!qTDetailBB.managedBean.auditorRoleView}">
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
 					action="#{qTDetailBB.saveQtDetailsAction}" process="@form" partialSubmit="true"
 					onstart="blockWidget.show();"
