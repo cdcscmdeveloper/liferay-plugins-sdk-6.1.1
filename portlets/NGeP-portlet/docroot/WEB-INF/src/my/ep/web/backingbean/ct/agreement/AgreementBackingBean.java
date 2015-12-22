@@ -757,7 +757,15 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			throw new EpException(MessageConst.ERROR_750010);
 		}
 		
-		// CT Approver cannot submit the finalist agreement if:-
+		// Contract Approver cannot approve the draft agreement if:-
+		// -FD Creation still in process.
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) 
+				&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_DRAFT_AGREEMENT_HT_NAME)) {			
+			if (getManagedBean().getCtContract().getLatestContractVer() == null) { // FD creation in progress
+				throw new EpException(MessageConst.ERROR_750043);
+			}		
+		}
+		// Contract Admin cannot submit the finalist agreement if:-
 		// -Performance bond not complete
 		// -FD Update/FD Creation/Change Bank process still in process. 
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
