@@ -35,7 +35,9 @@
 				style="width:10%;text-align: center;">
 				<p:commandLink
 					action="#{qTDetailBB.financialSpecEditAction(financialSpec)}">
-					<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/edit.png" styleClass="tasklist_title1" />
+					<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/edit.png" styleClass="tasklist_title1" rendered="#{!qTDetailBB.isAuditor()}"/>
+					<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" styleClass="tasklist_title1" rendered="#{qTDetailBB.isAuditor()}"
+					title="click view icon"/>
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
