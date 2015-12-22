@@ -11,7 +11,8 @@
 	<ui:define name="contentSection">
 		<p:messages id="qtSearchMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" severity="error, info" />
-
+		<ui:param name="isDeskOfficer" value="#{qTDetailBB.isSourcingDeskOfficer()}"></ui:param>
+		
 		<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true"
 			id="qtsearchid">
 			<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.qt.search.instruction']}" escape="false" />
@@ -35,7 +36,7 @@
 								value="#{qTDetailBB.getProcurementModeDropdownValues()}" />
 						</p:selectOneMenu></td>
 				</tr>
-				<h:panelGroup id="orgSearch">
+				<h:panelGroup id="orgSearch" rendered="#{!isDeskOfficer}">
 				<tr>
 					<td><p:outputLabel
 						value="#{lbl['lbl.sc.ministry']}" /></td>
@@ -52,13 +53,29 @@
 					<td><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
 					<td>
 						<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" size="25" readonly="true"
-							disabled="#{qTDetailBB.isSourcingDeskOfficer()}"
+							disabled="#{isDeskOfficer}"
 							headerText="#{lbl['lbl.sc.ptj']}"
 							value="#{qTDetailBB.managedBean.ptjProfile.orgName}"
 							saveObject="qTDetailBB.managedBean.ptjProfile"
 							conditionField="#{qTDetailBB.getPTJCondition()}" >
 						</ac:lov></td>
 				</tr>
+				</h:panelGroup>
+				<h:panelGroup id="orgSearchInfo" rendered="#{isDeskOfficer}">
+				<tr>
+					<td><p:outputLabel
+						value="#{lbl['lbl.sc.ministry']}" /></td>
+						<td>
+						<p:inputText
+								value="#{qTDetailBB.managedBean.ministryProfile.orgName}"
+								disabled="true" size="25" readonly="true" style="width:210px;"></p:inputText>
+						</td>
+						<td><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
+						<td><p:inputText
+								value="#{qTDetailBB.managedBean.ptjProfile.orgName}"
+								disabled="true" size="25" readonly="true" style="width:200px;"></p:inputText>
+						</td>
+					</tr>
 				</h:panelGroup>
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.created.date.from']}" /></td>
