@@ -1045,6 +1045,7 @@ public class SmApplicationUtil {
 		int regAccCnt = 0;
 		StringBuffer sb = new StringBuffer();
 		int noSignatoryCount = 0;
+		List<SmSupplierBranch> paymentAccBranch = new ArrayList<SmSupplierBranch>();
 
 		for (SmSupplierBank bank : appl.getSmSupplierBanks()) {
 			if (bank.getAccountPurpose().equalsIgnoreCase("P")) {
@@ -1064,6 +1065,21 @@ public class SmApplicationUtil {
 				sb.append(++noSignatoryCount + ".) ");
 				sb.append(bank.getAccountNo());
 			}
+
+			if (!SmCommonUtil
+					.isCollectionEmpty(bank.getSmSupplierBranchBanks())) {
+				if (bank.getAccountPurpose().equals("P")
+						|| bank.getAccountPurpose().equals("B")) {
+					for (SmSupplierBranchBank brBank : bank
+							.getSmSupplierBranchBanks()) {
+						if (brBank.getSmSupplierBranch() != null
+								&& brBank.getSmSupplierBranch()
+										.getSupplierBranchId() != null) {
+							paymentAccBranch.add(brBank.getSmSupplierBranch());
+						}
+					}
+				}
+			}
 		}
 		if (payAccCnt == 0) {
 			validSave = false;
@@ -1081,7 +1097,24 @@ public class SmApplicationUtil {
 			throw new EpException(MessageConst.ERROR_722556,
 					new String[] { sb.toString() });
 		}
-		validateBranchWithoutBankAcc(managedBean, currentTab, validSave);
+		if (!SmCommonUtil.isCollectionEmpty(managedBean.getSmAppl()
+				.getSmSupplierBranches())) {
+			SmSupplierBranch brBank = null;
+			for (SmSupplierBranch brAppl : managedBean.getSmAppl()
+					.getSmSupplierBranches()) {
+				brBank = (SmSupplierBranch) SmCommonUtil
+						.getObjectByPropertiesFromList(brAppl,
+								paymentAccBranch,
+								new String[] { "supplierBranchId" }, null);
+				if (brBank == null) {
+					validSave = false;
+					setNavigationBackToCurrentPage(currentTab, managedBean);
+					throw new EpException(MessageConst.ERROR_722622,
+							new String[] { brAppl.getBranchName() });
+				}
+			}
+		}
+
 		managedBean.setSelectedSignatoryBankAcct(new SmSupplierBank());
 		appl = null;
 		return validSave;
