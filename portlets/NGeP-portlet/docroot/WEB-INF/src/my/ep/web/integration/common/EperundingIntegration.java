@@ -1,13 +1,13 @@
 package my.ep.web.integration.common;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.sm.registration.RegistrationReqDTO;
+import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
@@ -69,7 +69,7 @@ public class EperundingIntegration extends EperundingTemplate{
 		SupplierIdList = getConsultantIds();
 	}
 
-	@Override
+/*	@Override
 	public void createFilesMgtEqtBODforEperunding() {
 		
 		if(null!=SupplierIdList){
@@ -91,123 +91,129 @@ public class EperundingIntegration extends EperundingTemplate{
 			createManagementPersonnel(resDTO);
 			
 		}
-	}
+	}*/
 
 	/* (non-Javadoc)
 	 * @see my.ep.web.integration.common.EperundingInterface#createEquiytyOwner(my.ep.dto.sm.search.SupplierSearchResDTO)
 	 */
-	public void createEquiytyOwner(SupplierSearchResDTO resDTO) {
+	@Override
+	public void createEquiytyOwner() {
 		
 		log.info("createEquiytyOwner start");
 
 		List<EquityOwner> equityOwnerList = new ArrayList<EquityOwner>();
-		EquityOwner equityOwner = null;
-		ProfBodyDetail profBodyDetail = null;
-		Qualification qualification = null;
-		List<ProfBodyDetail> bodyDetails = null;
-		List<Qualification> qualifications = null;
+		if(null!=SupplierIdList){
+			reqDTO = new SupplierSearchReqDTO();
+			reqDTO.setSupplierIdList(SupplierIdList);
+			SupplierSearchResDTO resDTO = supplierSearchSO.getEquityBodMgtEperunding(reqDTO);
+			EquityOwner equityOwner = null;
+			ProfBodyDetail profBodyDetail = null;
+			Qualification qualification = null;
+			List<ProfBodyDetail> bodyDetails = null;
+			List<Qualification> qualifications = null;
 
-		Expertise expertise = null;
-		Owner owner = null;
-		if (resDTO.isSuccessful()) {
-			for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
+			Expertise expertise = null;
+			Owner owner = null;
+			if (resDTO.isSuccessful()) {
+				for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
 
-				for (SmPersonnel personnel : smSupplier.getSmAppl().getSmPersonnels()) {
-					if (personnel.isEquityOwner()) {
+					for (SmPersonnel personnel : smSupplier.getSmAppl().getSmPersonnels()) {
+						if (personnel.isEquityOwner()) {
 
-						equityOwner = new EquityOwner();
-						owner = new Owner();
-						expertise = new Expertise();
-						equityOwner.setMOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
+							equityOwner = new EquityOwner();
+							owner = new Owner();
+							expertise = new Expertise();
+							equityOwner.setMOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
 
-						qualifications = new ArrayList<Qualification>();
-						bodyDetails = new ArrayList<ProfBodyDetail>();
-						owner.setIsEquityOwner(IntegrationConstants.VAVLUE_YES);
-						owner.setName(personnel.getName());
-						// need toconfirm
-						owner.setNewICNo(personnel.getIdentificationNo());
-						// not known
-						owner.setPassport(IntegrationConstants.VAVLUE_NA);
-						if (personnel.isBumi())owner.setIsBumi(IntegrationConstants.VAVLUE_YES);
-						else
-							owner.setIsBumi(IntegrationConstants.VAVLUE_NO);
-						owner.setCitizenOf(131);
-						// owner.setCitizenOf(personnel.getPmCountry().getCountryId().intValue());
-						owner.setEquityValue(personnel.getShareAmt().toString());
-						owner.setEquityPercentage(personnel.getSharePercentage().toString());
-						owner.setRace(personnel.getPmRace().getRaceName());
-						owner.setDesignation(personnel.getDesignation());
+							qualifications = new ArrayList<Qualification>();
+							bodyDetails = new ArrayList<ProfBodyDetail>();
+							owner.setIsEquityOwner(IntegrationConstants.VAVLUE_YES);
+							owner.setName(personnel.getName());
+							// need toconfirm
+							owner.setNewICNo(personnel.getIdentificationNo());
+							// not known
+							owner.setPassport(IntegrationConstants.VAVLUE_NA);
+							if (personnel.isBumi())owner.setIsBumi(IntegrationConstants.VAVLUE_YES);
+							else
+								owner.setIsBumi(IntegrationConstants.VAVLUE_NO);
+							owner.setCitizenOf(131);
+							// owner.setCitizenOf(personnel.getPmCountry().getCountryId().intValue());
+							owner.setEquityValue(personnel.getShareAmt().toString());
+							owner.setEquityPercentage(personnel.getSharePercentage().toString());
+							owner.setRace(personnel.getPmRace().getRaceName());
+							owner.setDesignation(personnel.getDesignation());
 
-						if (personnel.getSmStaffAcademics() != null) {
-							for (SmStaffAcademic smStaffAcademic : personnel.getSmStaffAcademics()) {
-								qualification = new Qualification();
-								qualification.setMajorIn(smStaffAcademic.getFieldMajor());
-								qualification.setQualification(smStaffAcademic.getPmEduField().getFieldName());
+							if (personnel.getSmStaffAcademics() != null) {
+								for (SmStaffAcademic smStaffAcademic : personnel.getSmStaffAcademics()) {
+									qualification = new Qualification();
+									qualification.setMajorIn(smStaffAcademic.getFieldMajor());
+									qualification.setQualification(smStaffAcademic.getPmEduField().getFieldName());
 
-								if (null != smStaffAcademic.getQualificationLevelId()) {
-									ParameterReqDTO reqDTO = new ParameterReqDTO();
-									reqDTO.setParameterId(new Integer(smStaffAcademic.getQualificationLevelId()).longValue());
-									ParameterResDTO paraResDTO = parameterSO.retrieveParameterById(reqDTO);
-									PmParameter pmParameter = paraResDTO.getPmParameter();
+									if (null != smStaffAcademic.getQualificationLevelId()) {
+										ParameterReqDTO reqDTO = new ParameterReqDTO();
+										reqDTO.setParameterId(new Integer(smStaffAcademic.getQualificationLevelId()).longValue());
+										ParameterResDTO paraResDTO = parameterSO.retrieveParameterById(reqDTO);
+										PmParameter pmParameter = paraResDTO.getPmParameter();
 
-									qualification.setQualificationLevel(new Integer(pmParameter.getParameterCode()).intValue());
-								} else {
-									qualification.setQualificationLevel(0);
+										qualification.setQualificationLevel(new Integer(pmParameter.getParameterCode()).intValue());
+									} else {
+										qualification.setQualificationLevel(0);
+									}
+
+									qualification.setInstitute(smStaffAcademic.getInstituteName());
+									qualification.setYear(smStaffAcademic.getYear().toString());
+									qualification.setEducationField(smStaffAcademic.getPmEduField().getEduFieldId());
+									if (!qualifications.contains(qualifications))
+										qualifications.add(qualification);
 								}
+							} else {
+								qualification = new Qualification();
+								qualification.setMajorIn(IntegrationConstants.EMPTY_TRING);
+								qualification.setQualification(IntegrationConstants.EMPTY_TRING);
+								qualification.setQualificationLevel(IntegrationConstants.DEFAULT_INT);
+								qualification.setInstitute(IntegrationConstants.EMPTY_TRING);
+								qualification.setYear(IntegrationConstants.EMPTY_TRING);
+								qualification.setEducationField(null);
+								qualifications.add(qualification);
 
-								qualification.setInstitute(smStaffAcademic.getInstituteName());
-								qualification.setYear(smStaffAcademic.getYear().toString());
-								qualification.setEducationField(smStaffAcademic.getPmEduField().getEduFieldId());
-								if (!qualifications.contains(qualifications))
-									qualifications.add(qualification);
 							}
-						} else {
-							qualification = new Qualification();
-							qualification.setMajorIn(IntegrationConstants.EMPTY_TRING);
-							qualification.setQualification(IntegrationConstants.EMPTY_TRING);
-							qualification.setQualificationLevel(IntegrationConstants.DEFAULT_INT);
-							qualification.setInstitute(IntegrationConstants.EMPTY_TRING);
-							qualification.setYear(IntegrationConstants.EMPTY_TRING);
-							qualification.setEducationField(null);
-							qualifications.add(qualification);
 
-						}
+							owner.setQualificationList(qualifications);
+							equityOwner.setOwner(owner);
 
-						owner.setQualificationList(qualifications);
-						equityOwner.setOwner(owner);
+							if (smSupplier.getSmAppl().getSmAssociationBodies() != null) {
+								for (SmAssociationBody associationBody : smSupplier.getSmAppl().getSmAssociationBodies()) {
+									profBodyDetail = new ProfBodyDetail();
+									profBodyDetail.setProfBody(associationBody.getPmCertBody().getCertBodyId().toString());
+									profBodyDetail.setProfBodyNo(associationBody.getRegNo());
+									profBodyDetail.setProfBodyExpiry(associationBody.getExpDate());
+									if (!bodyDetails.contains(bodyDetails))
+										bodyDetails.add(profBodyDetail);
+								}
+							} else {
 
-						if (smSupplier.getSmAppl().getSmAssociationBodies() != null) {
-							for (SmAssociationBody associationBody : smSupplier.getSmAppl().getSmAssociationBodies()) {
 								profBodyDetail = new ProfBodyDetail();
-								profBodyDetail.setProfBody(associationBody.getPmCertBody().getCertBodyId().toString());
-								profBodyDetail.setProfBodyNo(associationBody.getRegNo());
-								profBodyDetail.setProfBodyExpiry(associationBody.getExpDate());
-								if (!bodyDetails.contains(bodyDetails))
-									bodyDetails.add(profBodyDetail);
+								profBodyDetail.setProfBody(IntegrationConstants.EMPTY_TRING);
+								profBodyDetail.setProfBodyNo(IntegrationConstants.EMPTY_TRING);
+								profBodyDetail.setProfBodyExpiry(IntegrationConstants.DEFAULT_DATE);
+								bodyDetails.add(profBodyDetail);
+
 							}
-						} else {
+							equityOwner.setProfBodyDetailList(bodyDetails);
 
-							profBodyDetail = new ProfBodyDetail();
-							profBodyDetail.setProfBody(IntegrationConstants.EMPTY_TRING);
-							profBodyDetail.setProfBodyNo(IntegrationConstants.EMPTY_TRING);
-							profBodyDetail.setProfBodyExpiry(IntegrationConstants.DEFAULT_DATE);
-							bodyDetails.add(profBodyDetail);
+							expertise.setCategoryClassification(IntegrationConstants.VAVLUE_NA);
+							equityOwner.setExpertise(expertise);
 
+							equityOwner.setProfBodyDetailList(bodyDetails);
+
+							if (!equityOwnerList.contains(equityOwner))
+								equityOwnerList.add(equityOwner);
 						}
-						equityOwner.setProfBodyDetailList(bodyDetails);
-
-						expertise.setCategoryClassification(IntegrationConstants.VAVLUE_NA);
-						equityOwner.setExpertise(expertise);
-
-						equityOwner.setProfBodyDetailList(bodyDetails);
-
-						if (!equityOwnerList.contains(equityOwner))
-							equityOwnerList.add(equityOwner);
-
 					}
 				}
 			}
 		}
+		
 		BatchReqDTO<EquityOwner> batchReqDTO = new BatchReqDTO<EquityOwner>();
 		batchReqDTO.setFilePath(path);
 		batchReqDTO.setDataStartTime(dataStartTime);
@@ -219,114 +225,122 @@ public class EperundingIntegration extends EperundingTemplate{
 	/* (non-Javadoc)
 	 * @see my.ep.web.integration.common.EperundingInterface#createBoardOfDirector(my.ep.dto.sm.search.SupplierSearchResDTO)
 	 */
-	public void createBoardOfDirector(SupplierSearchResDTO resDTO) {
+	@Override
+	public void createBoardOfDirector() {
 		
 		log.info("createBoardOfDirector start");
 
 		List<BoardOfDirector> boardOfDirectorsList = new ArrayList<BoardOfDirector>();
-		BoardOfDirector boardOfDirector = null;
-		Director director = null;
-		ProfBodyDetail profBodyDetail = null;
-		Qualification qualification = null;
-		Expertise expertise = null;
-		List<ProfBodyDetail> bodyDetails = null;
-		List<Qualification> qualifications = null;
+		if(null!=SupplierIdList){
+			reqDTO = new SupplierSearchReqDTO();
+			reqDTO.setSupplierIdList(SupplierIdList);
+			SupplierSearchResDTO resDTO = supplierSearchSO.getEquityBodMgtEperunding(reqDTO);
+			
+			BoardOfDirector boardOfDirector = null;
+			Director director = null;
+			ProfBodyDetail profBodyDetail = null;
+			Qualification qualification = null;
+			Expertise expertise = null;
+			List<ProfBodyDetail> bodyDetails = null;
+			List<Qualification> qualifications = null;
 
-		if (resDTO.isSuccessful()) {
-			for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
+			if (resDTO.isSuccessful()) {
+				for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
 
-				for (SmPersonnel personnel : smSupplier.getSmAppl().getSmPersonnels()) {
+					for (SmPersonnel personnel : smSupplier.getSmAppl().getSmPersonnels()) {
 
-					if (personnel.isDirector()) {
+						if (personnel.isDirector()) {
 
-						boardOfDirector = new BoardOfDirector();
-						director = new Director();
-						expertise = new Expertise();
+							boardOfDirector = new BoardOfDirector();
+							director = new Director();
+							expertise = new Expertise();
 
-						bodyDetails = new ArrayList<ProfBodyDetail>();
-						qualifications = new ArrayList<Qualification>();
+							bodyDetails = new ArrayList<ProfBodyDetail>();
+							qualifications = new ArrayList<Qualification>();
 
-						boardOfDirector.setMOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
+							boardOfDirector.setMOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
 
-						director.setIsBOD(IntegrationConstants.VAVLUE_YES);
-						director.setIsCEO(IntegrationConstants.VAVLUE_NO);
-						director.setName(personnel.getName());
-						director.setNewICNo(personnel.getIdentificationNo());
-						director.setPassport(IntegrationConstants.VAVLUE_NA);
-						if (personnel.isBumi())
-							director.setIsBumi(IntegrationConstants.VAVLUE_YES);
-						else
-							director.setIsBumi(IntegrationConstants.VAVLUE_NO);
-						director.setCitizenOf(131);
-						director.setRace(personnel.getPmRace().getRaceName());
-						director.setDesignation(personnel.getDesignation());
-						director.setWorkExperience(personnel.getWorkExperienceYear());
+							director.setIsBOD(IntegrationConstants.VAVLUE_YES);
+							director.setIsCEO(IntegrationConstants.VAVLUE_NO);
+							director.setName(personnel.getName());
+							director.setNewICNo(personnel.getIdentificationNo());
+							director.setPassport(IntegrationConstants.VAVLUE_NA);
+							if (personnel.isBumi())
+								director.setIsBumi(IntegrationConstants.VAVLUE_YES);
+							else
+								director.setIsBumi(IntegrationConstants.VAVLUE_NO);
+							director.setCitizenOf(131);
+							director.setRace(personnel.getPmRace().getRaceName());
+							director.setDesignation(personnel.getDesignation());
+							director.setWorkExperience(personnel.getWorkExperienceYear());
 
-						if (personnel.getSmStaffAcademics() != null) {
-							for (SmStaffAcademic smStaffAcademic : personnel.getSmStaffAcademics()) {
-								qualification = new Qualification();
-								qualification.setMajorIn(smStaffAcademic.getFieldMajor());
-								qualification.setQualification(smStaffAcademic.getPmEduField().getFieldName());
+							if (personnel.getSmStaffAcademics() != null) {
+								for (SmStaffAcademic smStaffAcademic : personnel.getSmStaffAcademics()) {
+									qualification = new Qualification();
+									qualification.setMajorIn(smStaffAcademic.getFieldMajor());
+									qualification.setQualification(smStaffAcademic.getPmEduField().getFieldName());
 
-								if (null != smStaffAcademic.getQualificationLevelId()) {
-									ParameterReqDTO reqDTO = new ParameterReqDTO();
-									reqDTO.setParameterId(new Integer(smStaffAcademic.getQualificationLevelId()).longValue());
-									ParameterResDTO paraResDTO = parameterSO.retrieveParameterById(reqDTO);
-									PmParameter pmParameter = paraResDTO.getPmParameter();
+									if (null != smStaffAcademic.getQualificationLevelId()) {
+										ParameterReqDTO reqDTO = new ParameterReqDTO();
+										reqDTO.setParameterId(new Integer(smStaffAcademic.getQualificationLevelId()).longValue());
+										ParameterResDTO paraResDTO = parameterSO.retrieveParameterById(reqDTO);
+										PmParameter pmParameter = paraResDTO.getPmParameter();
 
-									qualification.setQualificationLevel(new Integer(pmParameter.getParameterCode()).intValue());
-								} else {
-									qualification.setQualificationLevel(0);
+										qualification.setQualificationLevel(new Integer(pmParameter.getParameterCode()).intValue());
+									} else {
+										qualification.setQualificationLevel(0);
+									}
+
+									qualification.setInstitute(smStaffAcademic.getInstituteName());
+									qualification.setYear(smStaffAcademic.getYear().toString());
+									qualification.setEducationField(smStaffAcademic.getPmEduField().getEduFieldId());
+									if (!qualifications.contains(qualifications))
+										qualifications.add(qualification);
 								}
+							} else {
+								qualification = new Qualification();
+								qualification.setMajorIn(IntegrationConstants.EMPTY_TRING);
+								qualification.setQualification(IntegrationConstants.EMPTY_TRING);
+								qualification.setQualificationLevel(IntegrationConstants.DEFAULT_INT);
+								qualification.setInstitute(IntegrationConstants.EMPTY_TRING);
+								qualification.setYear(IntegrationConstants.EMPTY_TRING);
+								qualification.setEducationField(null);
+								qualifications.add(qualification);
 
-								qualification.setInstitute(smStaffAcademic.getInstituteName());
-								qualification.setYear(smStaffAcademic.getYear().toString());
-								qualification.setEducationField(smStaffAcademic.getPmEduField().getEduFieldId());
-								if (!qualifications.contains(qualifications))
-									qualifications.add(qualification);
 							}
-						} else {
-							qualification = new Qualification();
-							qualification.setMajorIn(IntegrationConstants.EMPTY_TRING);
-							qualification.setQualification(IntegrationConstants.EMPTY_TRING);
-							qualification.setQualificationLevel(IntegrationConstants.DEFAULT_INT);
-							qualification.setInstitute(IntegrationConstants.EMPTY_TRING);
-							qualification.setYear(IntegrationConstants.EMPTY_TRING);
-							qualification.setEducationField(null);
-							qualifications.add(qualification);
 
-						}
+							director.setQualificationList(qualifications);
+							boardOfDirector.setDirector(director);
 
-						director.setQualificationList(qualifications);
-						boardOfDirector.setDirector(director);
+							if (smSupplier.getSmAppl().getSmAssociationBodies() != null) {
+								for (SmAssociationBody associationBody : smSupplier.getSmAppl().getSmAssociationBodies()) {
+									profBodyDetail = new ProfBodyDetail();
+									profBodyDetail.setProfBody(associationBody.getPmCertBody().getCertBodyId().toString());
+									profBodyDetail.setProfBodyNo(associationBody.getRegNo());
+									profBodyDetail.setProfBodyExpiry(associationBody.getExpDate());
+									if (!bodyDetails.contains(bodyDetails))
+										bodyDetails.add(profBodyDetail);
+								}
+							} else {
 
-						if (smSupplier.getSmAppl().getSmAssociationBodies() != null) {
-							for (SmAssociationBody associationBody : smSupplier.getSmAppl().getSmAssociationBodies()) {
 								profBodyDetail = new ProfBodyDetail();
-								profBodyDetail.setProfBody(associationBody.getPmCertBody().getCertBodyId().toString());
-								profBodyDetail.setProfBodyNo(associationBody.getRegNo());
-								profBodyDetail.setProfBodyExpiry(associationBody.getExpDate());
-								if (!bodyDetails.contains(bodyDetails))
-									bodyDetails.add(profBodyDetail);
+								profBodyDetail.setProfBody(IntegrationConstants.EMPTY_TRING);
+								profBodyDetail.setProfBodyNo(IntegrationConstants.EMPTY_TRING);
+								profBodyDetail.setProfBodyExpiry(IntegrationConstants.DEFAULT_DATE);
+								bodyDetails.add(profBodyDetail);
+
 							}
-						} else {
+							boardOfDirector.setProfBodyDetailList(bodyDetails);
+							expertise.setCategoryClassification(IntegrationConstants.VAVLUE_NA);
+							boardOfDirector.setExpertise(expertise);
 
-							profBodyDetail = new ProfBodyDetail();
-							profBodyDetail.setProfBody(IntegrationConstants.EMPTY_TRING);
-							profBodyDetail.setProfBodyNo(IntegrationConstants.EMPTY_TRING);
-							profBodyDetail.setProfBodyExpiry(IntegrationConstants.DEFAULT_DATE);
-							bodyDetails.add(profBodyDetail);
-
+							if (!boardOfDirectorsList.contains(boardOfDirector))
+								boardOfDirectorsList.add(boardOfDirector);
 						}
-						boardOfDirector.setProfBodyDetailList(bodyDetails);
-						expertise.setCategoryClassification(IntegrationConstants.VAVLUE_NA);
-						boardOfDirector.setExpertise(expertise);
-
-						if (!boardOfDirectorsList.contains(boardOfDirector))
-							boardOfDirectorsList.add(boardOfDirector);
 					}
 				}
 			}
+			
 		}
 		BatchReqDTO<BoardOfDirector> batchReqDTO = new BatchReqDTO<BoardOfDirector>();
 		batchReqDTO.setFilePath(path);
@@ -339,125 +353,133 @@ public class EperundingIntegration extends EperundingTemplate{
 	/* (non-Javadoc)
 	 * @see my.ep.web.integration.common.EperundingInterface#createManagementPersonnel(my.ep.dto.sm.search.SupplierSearchResDTO)
 	 */
-	public void createManagementPersonnel(SupplierSearchResDTO resDTO) {
+	@Override
+	public void createManagementPersonnel() {
 		
 		log.info("createManagementPersonnel start");
 
 		List<ManagementPersonnel> managementPersonnelsList = new ArrayList<ManagementPersonnel>();
-		ManagementPersonnel managementPersonnel = null;
-		Personnel personnel = null;
-		Qualification qualification = null;
-		ProfBodyDetail profBodyDetail = null;
-		Expertise expertise = null;
-		List<ProfBodyDetail> bodyDetails = null;
-		List<Qualification> qualifications = null;
 		
+		if(null!=SupplierIdList){
+			reqDTO = new SupplierSearchReqDTO();
+			reqDTO.setSupplierIdList(SupplierIdList);
+			SupplierSearchResDTO resDTO = supplierSearchSO.getEquityBodMgtEperunding(reqDTO);
+			
+			ManagementPersonnel managementPersonnel = null;
+			Personnel personnel = null;
+			Qualification qualification = null;
+			ProfBodyDetail profBodyDetail = null;
+			Expertise expertise = null;
+			List<ProfBodyDetail> bodyDetails = null;
+			List<Qualification> qualifications = null;
+			
 
-		if (resDTO.isSuccessful()) {
-			for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
+			if (resDTO.isSuccessful()) {
+				for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
 
-				for (SmPersonnel smPersonnel : smSupplier.getSmAppl()
-						.getSmPersonnels()) {
+					for (SmPersonnel smPersonnel : smSupplier.getSmAppl()
+							.getSmPersonnels()) {
 
-					if (smPersonnel.isManagement()) {
+						if (smPersonnel.isManagement()) {
 
-						managementPersonnel = new ManagementPersonnel();
-						personnel = new Personnel();
-						expertise = new Expertise();
-						bodyDetails = new ArrayList<ProfBodyDetail>();
-						qualifications = new ArrayList<Qualification>();
+							managementPersonnel = new ManagementPersonnel();
+							personnel = new Personnel();
+							expertise = new Expertise();
+							bodyDetails = new ArrayList<ProfBodyDetail>();
+							qualifications = new ArrayList<Qualification>();
 
-						managementPersonnel.setMOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
-						if (smPersonnel.isManagement())
-							personnel.setIsManagement(IntegrationConstants.VAVLUE_YES);
-						else
-							personnel.setIsManagement(IntegrationConstants.VAVLUE_NO);
-						if (smPersonnel.isProf())
-							personnel.setIsProfessional(IntegrationConstants.VAVLUE_YES);
-						else
-							personnel.setIsProfessional(IntegrationConstants.VAVLUE_NO);
-						if (smPersonnel.isSemiProf())
-							personnel.setIsSemiProf(IntegrationConstants.VAVLUE_YES);
-						else
-							personnel.setIsSemiProf(IntegrationConstants.VAVLUE_NO);
-						if (smPersonnel.isClerical())
-							personnel.setIsClerical(IntegrationConstants.VAVLUE_YES);
-						else
-							personnel.setIsClerical(IntegrationConstants.VAVLUE_NO);
-						personnel.setName(smPersonnel.getName());
-						personnel.setNewICNo(smPersonnel.getIdentificationNo());
-						personnel.setPassport(IntegrationConstants.VAVLUE_NA);
-						if (smPersonnel.isBumi())
-							personnel.setIsBumi(IntegrationConstants.VAVLUE_YES);
-						else
-							personnel.setIsBumi(IntegrationConstants.VAVLUE_NO);
-						personnel.setCitizenOf(131);
-						personnel.setRace(smPersonnel.getPmRace().getRaceName());
-						personnel.setDesignation(smPersonnel.getDesignation());
-						personnel.setWorkExperience(smPersonnel.getWorkExperienceYear());
+							managementPersonnel.setMOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
+							if (smPersonnel.isManagement())
+								personnel.setIsManagement(IntegrationConstants.VAVLUE_YES);
+							else
+								personnel.setIsManagement(IntegrationConstants.VAVLUE_NO);
+							if (smPersonnel.isProf())
+								personnel.setIsProfessional(IntegrationConstants.VAVLUE_YES);
+							else
+								personnel.setIsProfessional(IntegrationConstants.VAVLUE_NO);
+							if (smPersonnel.isSemiProf())
+								personnel.setIsSemiProf(IntegrationConstants.VAVLUE_YES);
+							else
+								personnel.setIsSemiProf(IntegrationConstants.VAVLUE_NO);
+							if (smPersonnel.isClerical())
+								personnel.setIsClerical(IntegrationConstants.VAVLUE_YES);
+							else
+								personnel.setIsClerical(IntegrationConstants.VAVLUE_NO);
+							personnel.setName(smPersonnel.getName());
+							personnel.setNewICNo(smPersonnel.getIdentificationNo());
+							personnel.setPassport(IntegrationConstants.VAVLUE_NA);
+							if (smPersonnel.isBumi())
+								personnel.setIsBumi(IntegrationConstants.VAVLUE_YES);
+							else
+								personnel.setIsBumi(IntegrationConstants.VAVLUE_NO);
+							personnel.setCitizenOf(131);
+							personnel.setRace(smPersonnel.getPmRace().getRaceName());
+							personnel.setDesignation(smPersonnel.getDesignation());
+							personnel.setWorkExperience(smPersonnel.getWorkExperienceYear());
 
-						if (smPersonnel.getSmStaffAcademics() != null) {
-							for (SmStaffAcademic smStaffAcademic : smPersonnel.getSmStaffAcademics()) {
+							if (smPersonnel.getSmStaffAcademics() != null) {
+								for (SmStaffAcademic smStaffAcademic : smPersonnel.getSmStaffAcademics()) {
+									qualification = new Qualification();
+									qualification.setMajorIn(smStaffAcademic.getFieldMajor());
+									qualification.setQualification(smStaffAcademic.getPmEduField().getFieldName());
+
+									if (null != smStaffAcademic.getQualificationLevelId()) {
+										ParameterReqDTO reqDTO = new ParameterReqDTO();
+										reqDTO.setParameterId(new Integer(smStaffAcademic.getQualificationLevelId()).longValue());
+										ParameterResDTO paraResDTO = parameterSO.retrieveParameterById(reqDTO);
+										PmParameter pmParameter = paraResDTO.getPmParameter();
+
+										qualification.setQualificationLevel(new Integer(pmParameter.getParameterCode()).intValue());
+									} else {
+										qualification.setQualificationLevel(0);
+									}
+
+									qualification.setInstitute(smStaffAcademic.getInstituteName());
+									qualification.setYear(smStaffAcademic.getYear().toString());
+									qualification.setEducationField(smStaffAcademic.getPmEduField().getEduFieldId());
+									if (!qualifications.contains(qualifications))
+										qualifications.add(qualification);
+								}
+							} else {
 								qualification = new Qualification();
-								qualification.setMajorIn(smStaffAcademic.getFieldMajor());
-								qualification.setQualification(smStaffAcademic.getPmEduField().getFieldName());
+								qualification.setMajorIn(IntegrationConstants.EMPTY_TRING);
+								qualification.setQualification(IntegrationConstants.EMPTY_TRING);
+								qualification.setQualificationLevel(IntegrationConstants.DEFAULT_INT);
+								qualification.setInstitute(IntegrationConstants.EMPTY_TRING);
+								qualification.setYear(IntegrationConstants.EMPTY_TRING);
+								qualification.setEducationField(null);
+								qualifications.add(qualification);
 
-								if (null != smStaffAcademic.getQualificationLevelId()) {
-									ParameterReqDTO reqDTO = new ParameterReqDTO();
-									reqDTO.setParameterId(new Integer(smStaffAcademic.getQualificationLevelId()).longValue());
-									ParameterResDTO paraResDTO = parameterSO.retrieveParameterById(reqDTO);
-									PmParameter pmParameter = paraResDTO.getPmParameter();
+							}
+							personnel.setQualificationList(qualifications);
+							managementPersonnel.setPersonnel(personnel);
 
-									qualification.setQualificationLevel(new Integer(pmParameter.getParameterCode()).intValue());
-								} else {
-									qualification.setQualificationLevel(0);
+							if (smSupplier.getSmAppl().getSmAssociationBodies() != null) {
+								for (SmAssociationBody associationBody : smSupplier.getSmAppl().getSmAssociationBodies()) {
+									profBodyDetail = new ProfBodyDetail();
+									profBodyDetail.setProfBody(associationBody.getPmCertBody().getCertBodyId().toString());
+									profBodyDetail.setProfBodyNo(associationBody.getRegNo());
+									profBodyDetail.setProfBodyExpiry(associationBody.getExpDate());
+									if (!bodyDetails.contains(bodyDetails))
+										bodyDetails.add(profBodyDetail);
 								}
 
-								qualification.setInstitute(smStaffAcademic.getInstituteName());
-								qualification.setYear(smStaffAcademic.getYear().toString());
-								qualification.setEducationField(smStaffAcademic.getPmEduField().getEduFieldId());
-								if (!qualifications.contains(qualifications))
-									qualifications.add(qualification);
-							}
-						} else {
-							qualification = new Qualification();
-							qualification.setMajorIn(IntegrationConstants.EMPTY_TRING);
-							qualification.setQualification(IntegrationConstants.EMPTY_TRING);
-							qualification.setQualificationLevel(IntegrationConstants.DEFAULT_INT);
-							qualification.setInstitute(IntegrationConstants.EMPTY_TRING);
-							qualification.setYear(IntegrationConstants.EMPTY_TRING);
-							qualification.setEducationField(null);
-							qualifications.add(qualification);
-
-						}
-						personnel.setQualificationList(qualifications);
-						managementPersonnel.setPersonnel(personnel);
-
-						if (smSupplier.getSmAppl().getSmAssociationBodies() != null) {
-							for (SmAssociationBody associationBody : smSupplier.getSmAppl().getSmAssociationBodies()) {
+							} else {
 								profBodyDetail = new ProfBodyDetail();
-								profBodyDetail.setProfBody(associationBody.getPmCertBody().getCertBodyId().toString());
-								profBodyDetail.setProfBodyNo(associationBody.getRegNo());
-								profBodyDetail.setProfBodyExpiry(associationBody.getExpDate());
-								if (!bodyDetails.contains(bodyDetails))
-									bodyDetails.add(profBodyDetail);
-							}
+								profBodyDetail.setProfBody(IntegrationConstants.EMPTY_TRING);
+								profBodyDetail.setProfBodyNo(IntegrationConstants.EMPTY_TRING);
+								profBodyDetail.setProfBodyExpiry(IntegrationConstants.DEFAULT_DATE);
+								bodyDetails.add(profBodyDetail);
 
-						} else {
-							profBodyDetail = new ProfBodyDetail();
-							profBodyDetail.setProfBody(IntegrationConstants.EMPTY_TRING);
-							profBodyDetail.setProfBodyNo(IntegrationConstants.EMPTY_TRING);
-							profBodyDetail.setProfBodyExpiry(IntegrationConstants.DEFAULT_DATE);
-							bodyDetails.add(profBodyDetail);
+							}
+							managementPersonnel.setProfBodyDetailList(bodyDetails);
+
+							expertise.setCategoryClassification(IntegrationConstants.VAVLUE_NA);
+							managementPersonnel.setExpertise(expertise);
+							if (!managementPersonnelsList.contains(managementPersonnel))
+								managementPersonnelsList.add(managementPersonnel);
 
 						}
-						managementPersonnel.setProfBodyDetailList(bodyDetails);
-
-						expertise.setCategoryClassification(IntegrationConstants.VAVLUE_NA);
-						managementPersonnel.setExpertise(expertise);
-						if (!managementPersonnelsList.contains(managementPersonnel))
-							managementPersonnelsList.add(managementPersonnel);
-
 					}
 				}
 			}
@@ -1031,8 +1053,17 @@ public class EperundingIntegration extends EperundingTemplate{
 							associatedCompany = new AssociatedCompany();
 							associatedCompany.setmOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
 							associatedCompany.setCompanyName(associateCompany.getCompanyName());
-							associatedCompany.setsSMNO(associateCompany.getRegNo());
-							associatedCompany.setAssociatedCompanyMOFNO(IntegrationConstants.EMPTY_TRING);
+							//version 1.27
+							associatedCompany.setAssociatedCompanySSMNO(associateCompany.getRegNo());
+							RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+							reqDTO.setRegNo(associateCompany.getRegNo());
+							RegistrationResDTO  regResDTO = registrationSO.retrieveActiveSupplierByRegNo(reqDTO);
+							if(null!=regResDTO.getSmSuppliers()){
+								associatedCompany.setAssociatedCompanyMOFNO(regResDTO.getSmSuppliers().get(0).getSmMofAccounts().get(0).getMofNo());
+							}else{
+								associatedCompany.setAssociatedCompanyMOFNO(IntegrationConstants.EMPTY_TRING);
+							}
+								
 							if (associateCompany.getIsShareholding().intValue() == 1)
 								associatedCompany.setShareholding(IntegrationConstants.VAVLUE_YES);
 							else
@@ -1104,7 +1135,7 @@ public class EperundingIntegration extends EperundingTemplate{
 			fileUtility.AssociatedCompanyOutPutStream(batchReqDTO);
 	}
 
-	public String createDirectory(Date date, String path) {
+	/*public String createDirectory(Date date, String path) {
 
 		SimpleDateFormat dt1 = new SimpleDateFormat("ddMMyyyy");
 
@@ -1121,7 +1152,7 @@ public class EperundingIntegration extends EperundingTemplate{
 
 		return file.getAbsolutePath() + "/";
 
-	}
+	}*/
 
 	public String getCategoryStatus(int statusFlg) {
 

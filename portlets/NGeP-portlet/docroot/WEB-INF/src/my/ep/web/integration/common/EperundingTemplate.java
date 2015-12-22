@@ -30,7 +30,13 @@ public abstract class EperundingTemplate extends InitializeSO {
 
 	public abstract void createAssociatedCompany();
 	
-	public abstract void createFilesMgtEqtBODforEperunding();
+	public abstract void createManagementPersonnel();
+	
+	public abstract void createBoardOfDirector();
+	
+	public abstract void createEquiytyOwner();
+	
+//	public abstract void createFilesMgtEqtBODforEperunding();
 
 	public abstract void createAuthorizedSignatory(); 
 
