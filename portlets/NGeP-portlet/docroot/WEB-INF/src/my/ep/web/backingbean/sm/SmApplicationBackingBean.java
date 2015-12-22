@@ -6098,6 +6098,14 @@ public class SmApplicationBackingBean extends
 				.checkPersonnelsEmailDomainWithExceptionMsg(getManagedBean()
 						.getSmAppl().getSmPersonnels());
 
+		// validate branch
+		SmApplicationUtil.validateBranchWithoutBankAcc(getManagedBean(),
+				currentTab, true);
+
+		// validate facility
+		SmApplicationUtil.validateFacilityPanel(getManagedBean(), currentTab,
+				true);
+
 		if (getManagedBean().getSmAppl().getApplType()
 				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
 				|| getManagedBean().getSmAppl().getApplType()

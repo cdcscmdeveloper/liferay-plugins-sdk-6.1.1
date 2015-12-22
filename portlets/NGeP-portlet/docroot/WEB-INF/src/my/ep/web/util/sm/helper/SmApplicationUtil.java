@@ -1081,26 +1081,36 @@ public class SmApplicationUtil {
 			throw new EpException(MessageConst.ERROR_722556,
 					new String[] { sb.toString() });
 		}
-		// check if each registered branch already assigned to bank account
-		// for
-		// payment
-		if (!SmCommonUtil.isCollectionEmpty(managedBean.getSmAppl()
+		validateBranchWithoutBankAcc(managedBean, currentTab, validSave);
+		managedBean.setSelectedSignatoryBankAcct(new SmSupplierBank());
+		appl = null;
+		return validSave;
+	}
+
+	/**
+	 * Check if each registered branch already assigned to bank account type
+	 * payment
+	 * 
+	 * @param SmApplicationManagedBean
+	 *            bean
+	 * @param int currentTab
+	 * @param boolean validSave
+	 */
+	public static void validateBranchWithoutBankAcc(
+			SmApplicationManagedBean bean, int currentTab, boolean validSave) {
+		if (!SmCommonUtil.isCollectionEmpty(bean.getSmAppl()
 				.getSmSupplierBranches())) {
-			for (SmSupplierBranch applBr : managedBean.getSmAppl()
+			for (SmSupplierBranch applBr : bean.getSmAppl()
 					.getSmSupplierBranches()) {
 				if (SmCommonUtil.isCollectionEmpty(applBr
 						.getSmSupplierBranchBanks())) {
 					validSave = false;
-					setNavigationBackToCurrentPage(
-							currentTab, managedBean);
+					setNavigationBackToCurrentPage(currentTab, bean);
 					throw new EpException(MessageConst.ERROR_722622,
 							new String[] { applBr.getBranchName() });
 				}
 			}
 		}
-		managedBean.setSelectedSignatoryBankAcct(new SmSupplierBank());
-		appl = null;
-		return validSave;
 	}
 
 	/**
