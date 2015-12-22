@@ -112,6 +112,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	private static String termAndCondition = "/xhtml/sm/onlinereg/signUpTermCondition.xhtml?faces-redirect=true";
 	private static String basicAccDeactivation = "/xhtml/sm/basicaccountdeactivation/basicAccountDeactivationDet.xhtml";
 	private static String acknowledgement = "/xhtml/sm/onlinereg/outputMsg.xhtml";
+	private static String g2gRegistration = "/xhtml/sm/govtSellerRegistration/preRenderGovtSeller.xhtml?faces-redirect=true";
 	
 	private static String defaultAccPurpose = "P";
 	private static Map<Long, Object> bizNatureL5Map;
@@ -2146,7 +2147,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 */
 	public String proceedToTermAndCondition(){
 		if(getManagedBean().getApplType() != null){
-			return termAndCondition;
+			if(getManagedBean().getApplType().equals(SupplierManagementConst.ACC_GOVT_SELLER)){
+				return g2gRegistration;
+			}else{
+				return termAndCondition;
+			}
 		}else{
 			return signUp;
 		}

@@ -118,6 +118,10 @@ public class SupplierManagementConst {
 	public static final String PERSONNEL_TYPE_DIRECTOR = "DIR";
 	public static final String PERSONNEL_TYPE_STAFF = "STF";
 	public static final String PERSONNEL_TYPE_EQUITY = "EQUI";
+	
+	//GOVT SELLER REGISTRATION
+	public static final String GOVT_SELLER_TNC_PAGE = "1";
+	public static final String GOVT_SELLER_ACCOUNT_INFO_PAGE = "2";
 
 	// Basic Registration && Account Maintenance
 	public static final String INDIVIDUAL_FLAG = "A";
@@ -126,6 +130,7 @@ public class SupplierManagementConst {
 	public static final String STYPE_BASIC = "B";
 	public static final String ACC_BASIC = "O";
 	public static final String ACC_MOF = "N";
+	public static final String ACC_GOVT_SELLER = "G";
 	public static final String ACC_BASIC_REACTIVATE = "R";
 	public static final String PERM_ADD = "I";
 	public static final String BUS_ADD = "C";
@@ -746,6 +751,18 @@ public class SupplierManagementConst {
 
 	public String getACC_MOF() {
 		return ACC_MOF;
+	}
+	
+	public String getACC_GOVT_SELLER() {
+		return ACC_GOVT_SELLER;
+	}
+	
+	public String getGOVT_SELLER_TNC_PAGE(){
+		return GOVT_SELLER_TNC_PAGE;
+	}
+	
+	public String getGOVT_SELLER_ACCOUNT_INFO_PAGE(){
+		return GOVT_SELLER_ACCOUNT_INFO_PAGE;
 	}
 
 	public String getSM_APPL_PAGE_TYPE_BASIC() {
