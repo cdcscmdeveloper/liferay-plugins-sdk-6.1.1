@@ -31,9 +31,6 @@ import my.ep.biz.service.pm.common.criteria.ICriteriaSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
@@ -72,7 +69,6 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
@@ -294,19 +290,13 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		if(taskId != null){
 			renewSesionObject();
 			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-			Object ctx = getFacesScopes().getBPMAuthenticationCtxToken();
-			BpmRequestDTO bpmRequestDTO = new BpmRequestDTO();
-			bpmRequestDTO.setCtxToken(ctx);
-			bpmRequestDTO.setTaskId(taskId);
-			BpmResponseDTO res = bpmSO.getTaskDetails(bpmRequestDTO);
-			Object obj = res.getPojo();
-			
 			IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
 			IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
 			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
-			getManagedBean().setBpmTaskName(res.getTaskName());
-			if(res.getProcessName().equalsIgnoreCase(FLProcessNameConst.FRN_CANCELLATION_PROCESS_NAME)){
+			
+			Object obj = super.getBpmTaskDetails(Object.class, new String[]{BpmOutcomeConst.BPM_SAVE});
+			getManagedBean().setBpmTaskName(this.getManagedBean().getTaskName());
+			if(this.getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.FRN_CANCELLATION_PROCESS_NAME)){
 				FLDOFulfillmentCancelReqType fulfillmentCancelReqType = (FLDOFulfillmentCancelReqType)obj;
 				reqDTO.setDeliveryOrderId(fulfillmentCancelReqType.getDoId());
 				reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
@@ -319,8 +309,6 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 					}
 				}
 				getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
-				getManagedBean().setTaskId(taskId);
-				getManagedBean().setOutComes(res.getAction());
 				getManagedBean().setDocType(resDTO.getFlDeliveryOrder().getFlRequest().getDocType());
 				
 				getManagedBean().getFulfilmentNote().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
@@ -416,14 +404,6 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 					flBB.initializeRemarkAndAttachement(resDTO.getFlDeliveryOrder().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 				}
 				
-				String[] outcome = new String[res.getAction().length + 1];
-				outcome[0] = BpmOutcomeConst.BPM_SAVE;
-				int x = 1;
-				for (String action : res.getAction()) {
-					outcome[x++] = action;
-				}
-				getManagedBean().setTaskId(taskId);
-				getManagedBean().setOutComes(outcome);
 				if(fulFillmentRecievedNoteDataType.getErrorId() != null && fulFillmentRecievedNoteDataType.getErrorId() > 0){
 					getManagedBean().setAutoUpdate(Boolean.FALSE);
 					getManagedBean().setGfmasError(true);
@@ -443,7 +423,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			getManagedBean().setSelectedTabIndex(0);
 			
 			// Set evaluation
-			if(res.getTaskName().equalsIgnoreCase(FLProcessNameConst.APPROVE_FRN_HT)){
+			if(this.getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.APPROVE_FRN_HT)){
 				getManagedBean().setDisableEvaluation(Boolean.TRUE);
 			}
 			if(getManagedBean().getFulfilmentNote().getFlSupplierEvaluation().size()==0) {
@@ -629,7 +609,10 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 //			}
 //			orderApproverList.addAll(pendingApproverList);
 //			getManagedBean().getApproverList().addAll(orderApproverList);
-			
+			if(getManagedBean().getUserLoginId() == null) {
+				throw new EpException(MessageConst.ERROR_100022, new String[]{
+						ResourceBundleUtils.getMessage("lbl.fl.approverUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+			}
 			for(PmUser user : getManagedBean().getPmUserList()){
 				if(getManagedBean().getUserLoginId().equals(user.getUserId())){
 					orderApproverList.add(user);
@@ -1145,6 +1128,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		
 		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
 		reqDTO.setRoleCode(RoleCode.ACKNOWLEDGE_OFFICER.value());
 		UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
 		getManagedBean().setPmUserList(resDTO.getUserList());
