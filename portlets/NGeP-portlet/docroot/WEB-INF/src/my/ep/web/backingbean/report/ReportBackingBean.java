@@ -19,12 +19,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -10741,6 +10739,9 @@ public class ReportBackingBean extends
 			rptGenBean.isReportCategoryView();
 			getManagedBean().setRptGenBean(rptGenBean);
 			resetReportForm();
+			if (this.getReportValue().equals(ReportConst.SM_LIST_OF_USERS)) {
+				changeSoftCertSelection();
+			}
 			if (pmReport != null) {
 				getDefaultValuesFromAndToDate(pmReport.getReportCode());
 			}
@@ -10865,7 +10866,7 @@ public class ReportBackingBean extends
 		reportNameList.add(ReportConst.SM_LIST_OFFLINE_SUPP_DOC_RPT_VAL);
 		reportNameList.add(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL);
 		reportNameList.add(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL);
-		
+
 	}
 
 	/**
@@ -15195,6 +15196,35 @@ public class ReportBackingBean extends
 		ISearchBean<PmParameterDesc> orgTypeSearchBean = super
 				.createSearchBean(PmParameterDesc.class, componentId);
 		return orgTypeSearchBean;
+	}
+
+	public void changeSoftCertSelection() {
+
+		this.getManagedBean().setRptGenBean(rptGenBean);
+		this.getManagedBean().getRptGenBean().setSmNonMandatoryDateView(false);
+		this.getManagedBean().getRptGenBean().setSmSoftCertExpDateView(false);
+		this.getManagedBean().getRptGenBean().setSmSoftCertReqDateView(false);
+
+		if (this.getSmRequestExpiryDate() != null) {
+			if (this.getSmRequestExpiryDate().equals("R")) {
+				this.getManagedBean().getRptGenBean()
+						.setSmNonMandatoryDateView(true);
+				this.getManagedBean().getRptGenBean()
+						.setSmSoftCertReqDateView(true);
+			} else if (this.getSmRequestExpiryDate().equals("E")) {
+				this.getManagedBean().getRptGenBean()
+						.setSmNonMandatoryDateView(true);
+				this.getManagedBean().getRptGenBean()
+						.setSmSoftCertExpDateView(true);
+			}
+		} else {
+			this.setSmRequestExpiryDate("R");
+			this.getManagedBean().getRptGenBean()
+					.setSmNonMandatoryDateView(true);
+			this.getManagedBean().getRptGenBean()
+					.setSmSoftCertReqDateView(true);
+
+		}
 	}
 
 }
