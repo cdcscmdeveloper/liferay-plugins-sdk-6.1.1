@@ -1081,21 +1081,6 @@ public class SmApplicationUtil {
 			throw new EpException(MessageConst.ERROR_722556,
 					new String[] { sb.toString() });
 		}
-
-		// check if each registered branch already assigned to bank account for
-		// payment
-		if (!SmCommonUtil.isCollectionEmpty(managedBean.getSmAppl()
-				.getSmSupplierBranches())) {
-			for (SmSupplierBranch applBr : managedBean.getSmAppl()
-					.getSmSupplierBranches()) {
-				if(SmCommonUtil.isCollectionEmpty(applBr.getSmSupplierBranchBanks())){
-					validSave = false;
-					setNavigationBackToCurrentPage(currentTab, managedBean);
-					throw new EpException(MessageConst.ERROR_722622,
-							new String[] { applBr.getBranchName() });
-				}
-			}
-		}
 		managedBean.setSelectedSignatoryBankAcct(new SmSupplierBank());
 		appl = null;
 		return validSave;
@@ -1627,7 +1612,7 @@ public class SmApplicationUtil {
 	 * @param managedBean
 	 *            - SmApplicationManagedBean object
 	 */
-	private static void setNavigationBackToCurrentPage(int currentTab,
+	public static void setNavigationBackToCurrentPage(int currentTab,
 			SmApplicationManagedBean managedBean) {
 		managedBean.setTabActiveIndex(currentTab);
 		managedBean.getSmAppl().setCurrentActiveTab(
