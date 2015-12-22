@@ -69,6 +69,9 @@
 								value="#{reportBackingBean.smRequestExpiryDate}">
 								<f:selectItem itemLabel="Soft Cert Request Date" itemValue="R" />
 								<f:selectItem itemLabel="Soft Cert Expiry Date" itemValue="E" />
+								<p:ajax event="change"
+									listener="#{reportBackingBean.changeSoftCertSelection}"
+									partialSubmit="true" update="@form" />
 							</p:selectOneRadio>
 
 						</c:if>
@@ -1829,10 +1832,9 @@
 								<p:column style="width:2%" selectionMode="multiple" />
 
 								<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
-									<h:outputText 
+									<h:outputText
 										style="font-size: 12px;font-family: Arial;color: #FF0000;font-weight: bold;" />
-									<p:selectOneMenu 
-										label="#{lbl['lbl.sm.projDtls.mainCat']}"
+									<p:selectOneMenu label="#{lbl['lbl.sm.projDtls.mainCat']}"
 										id="consultProjParCatCode"
 										value="#{expCategoryBean.pmCategoryL1.categoryL1Id}"
 										style="width: 207px;margin-bottom: 5px;">
@@ -1855,10 +1857,9 @@
 
 
 								<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
-									<h:outputText 
+									<h:outputText
 										style="font-size: 12px;font-family: Arial;color: #FF0000;font-weight: bold;" />
-									<p:selectOneMenu 
-										label="#{lbl['lbl.sm.projDtls.subCat']}"
+									<p:selectOneMenu label="#{lbl['lbl.sm.projDtls.subCat']}"
 										value="#{expCategoryBean.pmCategoryL2.categoryL2Id}"
 										id="conslChild" style="width: 207px;margin-bottom: 5px;">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -1877,10 +1878,9 @@
 								</p:column>
 
 								<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
-									<h:outputText 
+									<h:outputText
 										style="font-size: 12px;font-family: Arial;color: #FF0000;font-weight: bold;" />
-									<p:selectOneMenu 
-										label="#{lbl['lbl.sm.projDtls.subCatDiv']}"
+									<p:selectOneMenu label="#{lbl['lbl.sm.projDtls.subCatDiv']}"
 										value="#{expCategoryBean.pmCategoryL3.categoryL3Id}"
 										id="conslSubChild" style="width: 207px;margin-bottom: 5px;">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -2644,6 +2644,18 @@
 						test="#{reportBackingBean.managedBean.rptGenBean.smScheduleSiteVisitDateView}">
 						<TD><p:outputLabel
 								value="#{lbl['lbl.rpt.schedulesitevisitdatefrom']}"
+								style="width:170px;" /></TD>
+					</c:if>
+					<c:if
+						test="#{reportBackingBean.managedBean.rptGenBean.smSoftCertReqDateView}">
+						<TD><p:outputLabel
+								value="#{lbl['lbl.rpt.softcertreqdatefrom']}"
+								style="width:170px;" /></TD>
+					</c:if>
+					<c:if
+						test="#{reportBackingBean.managedBean.rptGenBean.smSoftCertExpDateView}">
+						<TD><p:outputLabel
+								value="#{lbl['lbl.rpt.softcertexpdatefrom']}"
 								style="width:170px;" /></TD>
 					</c:if>
 					<TD><p:calendar showOn="button" navigator="true"

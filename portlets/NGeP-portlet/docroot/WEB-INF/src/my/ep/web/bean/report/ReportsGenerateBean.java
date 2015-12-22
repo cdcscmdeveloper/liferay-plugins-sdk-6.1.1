@@ -353,8 +353,8 @@ public class ReportsGenerateBean {
 	private boolean smMandatoryForCodeView = false;
 
 	/** The sm mof reg no view. */
-	private boolean smMofRegNoView = false;	
-	
+	private boolean smMofRegNoView = false;
+
 	/** The sm ep mof reg no view. */
 	private boolean smEpMofRegNoView = false;
 
@@ -462,15 +462,15 @@ public class ReportsGenerateBean {
 
 	/** The sm mandatory category view. */
 	private boolean smMandatoryCategoryView = false;
-	
+
 	/** The sm non mandatory category view. */
 	private boolean smNonMandatoryCategoryView = false;
-	
+
 	/** The sm mandatory from date view. */
 	private boolean smMandatoryFromDateView = false;
-	
+
 	/** The sm virtual cert date view. */
-	private boolean smVirtualCertDateView = false;	
+	private boolean smVirtualCertDateView = false;
 
 	/** The sm mandatory state view. */
 	private boolean smMandatoryStateView = false;
@@ -561,6 +561,12 @@ public class ReportsGenerateBean {
 
 	/** The sm schedule site visit date view. */
 	private boolean smScheduleSiteVisitDateView = false;
+
+	/** The sm soft cert req date view. */
+	private boolean smSoftCertReqDateView = false;
+
+	/** The sm soft cert exp date view. */
+	private boolean smSoftCertExpDateView = false;
 
 	/** The sm activation date view. */
 	private boolean smActivationDateView = false;
@@ -753,7 +759,7 @@ public class ReportsGenerateBean {
 
 	/** The sm mandatory expected site visit date view. */
 	private boolean smMandatoryExpectedSiteVisitDateView = false;
-	
+
 	/** The sm mandatory expected site visi rptt date view. */
 	private boolean smMandatoryExpectedSiteVisiRpttDateView = false;
 
@@ -3264,16 +3270,16 @@ public class ReportsGenerateBean {
 
 	/** The pm exempted company name view. */
 	private boolean pmExemptedCompanyNameView = false;
-	
+
 	/** The pm exempted business reg no view. */
 	private boolean pmExemptedBusinessRegNoView = false;
-	
+
 	/** The pm exempted ep no view. */
 	private boolean pmExemptedEpNoView = false;
-	
+
 	/** The pm exempted item name view. */
 	private boolean pmExemptedItemNameView = false;
-	
+
 	/** The pm exempted itme code view. */
 	private boolean pmExemptedItemCodeView = false;
 
@@ -15197,7 +15203,8 @@ public class ReportsGenerateBean {
 	 * @param pmExemptedBusinessRegNoView
 	 *            the pmExemptedBusinessRegNoView to set
 	 */
-	public void setPmExemptedBusinessRegNoView(boolean pmExemptedBusinessRegNoView) {
+	public void setPmExemptedBusinessRegNoView(
+			boolean pmExemptedBusinessRegNoView) {
 		this.pmExemptedBusinessRegNoView = pmExemptedBusinessRegNoView;
 	}
 
@@ -15251,14 +15258,16 @@ public class ReportsGenerateBean {
 	/**
 	 * Sets the pm exempted itme code view.
 	 * 
-	 * @param pmExemptedItmeCodeView
-	 *            the pmExemptedItmeCodeView to set
+	 * @param pmExemptedItemCodeView
+	 *            the new pm exempted item code view
 	 */
 	public void setPmExemptedItemCodeView(boolean pmExemptedItemCodeView) {
 		this.pmExemptedItemCodeView = pmExemptedItemCodeView;
 	}
 
 	/**
+	 * Checks if is sm virtual cert date view.
+	 * 
 	 * @return the smVirtualCertDateView
 	 */
 	public boolean isSmVirtualCertDateView() {
@@ -15266,13 +15275,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param smVirtualCertDateView the smVirtualCertDateView to set
+	 * Sets the sm virtual cert date view.
+	 * 
+	 * @param smVirtualCertDateView
+	 *            the smVirtualCertDateView to set
 	 */
 	public void setSmVirtualCertDateView(boolean smVirtualCertDateView) {
 		this.smVirtualCertDateView = smVirtualCertDateView;
 	}
 
 	/**
+	 * Checks if is sm ep mof reg no view.
+	 * 
 	 * @return the smEpMofRegNoView
 	 */
 	public boolean isSmEpMofRegNoView() {
@@ -15280,13 +15294,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param smEpMofRegNoView the smEpMofRegNoView to set
+	 * Sets the sm ep mof reg no view.
+	 * 
+	 * @param smEpMofRegNoView
+	 *            the smEpMofRegNoView to set
 	 */
 	public void setSmEpMofRegNoView(boolean smEpMofRegNoView) {
 		this.smEpMofRegNoView = smEpMofRegNoView;
 	}
 
 	/**
+	 * Checks if is sm mandatory expected site visi rptt date view.
+	 * 
 	 * @return the smMandatoryExpectedSiteVisiRpttDateView
 	 */
 	public boolean isSmMandatoryExpectedSiteVisiRpttDateView() {
@@ -15294,7 +15313,10 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param smMandatoryExpectedSiteVisiRpttDateView the smMandatoryExpectedSiteVisiRpttDateView to set
+	 * Sets the sm mandatory expected site visi rptt date view.
+	 * 
+	 * @param smMandatoryExpectedSiteVisiRpttDateView
+	 *            the smMandatoryExpectedSiteVisiRpttDateView to set
 	 */
 	public void setSmMandatoryExpectedSiteVisiRpttDateView(
 			boolean smMandatoryExpectedSiteVisiRpttDateView) {
@@ -15302,6 +15324,8 @@ public class ReportsGenerateBean {
 	}
 
 	/**
+	 * Checks if is sm non mandatory category view.
+	 * 
 	 * @return the smNonMandatoryCategoryView
 	 */
 	public boolean isSmNonMandatoryCategoryView() {
@@ -15309,9 +15333,50 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param smNonMandatoryCategoryView the smNonMandatoryCategoryView to set
+	 * Sets the sm non mandatory category view.
+	 * 
+	 * @param smNonMandatoryCategoryView
+	 *            the smNonMandatoryCategoryView to set
 	 */
 	public void setSmNonMandatoryCategoryView(boolean smNonMandatoryCategoryView) {
 		this.smNonMandatoryCategoryView = smNonMandatoryCategoryView;
+	}
+
+	/**
+	 * Checks if is sm soft cert req date view.
+	 * 
+	 * @return the smSoftCertReqDateView
+	 */
+	public boolean isSmSoftCertReqDateView() {
+		return smSoftCertReqDateView;
+	}
+
+	/**
+	 * Sets the sm soft cert req date view.
+	 * 
+	 * @param smSoftCertReqDateView
+	 *            the smSoftCertReqDateView to set
+	 */
+	public void setSmSoftCertReqDateView(boolean smSoftCertReqDateView) {
+		this.smSoftCertReqDateView = smSoftCertReqDateView;
+	}
+
+	/**
+	 * Checks if is sm soft cert exp date view.
+	 * 
+	 * @return the smSoftCertExpDateView
+	 */
+	public boolean isSmSoftCertExpDateView() {
+		return smSoftCertExpDateView;
+	}
+
+	/**
+	 * Sets the sm soft cert exp date view.
+	 * 
+	 * @param smSoftCertExpDateView
+	 *            the smSoftCertExpDateView to set
+	 */
+	public void setSmSoftCertExpDateView(boolean smSoftCertExpDateView) {
+		this.smSoftCertExpDateView = smSoftCertExpDateView;
 	}
 }
