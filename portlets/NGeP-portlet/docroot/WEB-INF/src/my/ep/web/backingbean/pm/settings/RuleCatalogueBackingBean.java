@@ -3357,7 +3357,7 @@ public class RuleCatalogueBackingBean extends
 					.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 			
 			PmDaValidity daValidity = new PmDaValidity();
-			daValidity.setEffDate(this.getManagedBean().getTomorrow());
+			daValidity.setEffDate(this.getManagedBean().getToday());
 			daValidity.setDesignatedArea(newDesignatedArea);
 			getManagedBean().getDaValidityList().add(daValidity);
 			RequestContext.getCurrentInstance().execute(
@@ -3496,7 +3496,7 @@ public class RuleCatalogueBackingBean extends
 					// .getLocationName() };
 					// }
 				}
-				if (!da.isBrandNew() && da.isDeleted()) {
+				if (!da.isBrandNew() && daValidity.isDeleted()) {
 					log.info("Tracking diary for Designated-Area: deleted designatedArea:saveDesignatedArea");
 					messageId = MessageConst.TD_80033;
 					msgParam = new String[] { da.getvPmLocation()
