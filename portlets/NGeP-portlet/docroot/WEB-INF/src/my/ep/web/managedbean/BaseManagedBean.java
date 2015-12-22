@@ -22,6 +22,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private String taskName;
 	private boolean isAssignedState;
 	private Object payLoad;
+	private String processName;
 	
 	// For sub title displayed in screen.
 	private String title;
@@ -136,6 +137,20 @@ public abstract class BaseManagedBean implements Serializable {
 	 */
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	/**
+	 * @return the processName
+	 */
+	public String getProcessName() {
+		return processName;
+	}
+
+	/**
+	 * @param processName the processName to set
+	 */
+	public void setProcessName(String processName) {
+		this.processName = processName;
 	}
 
 }

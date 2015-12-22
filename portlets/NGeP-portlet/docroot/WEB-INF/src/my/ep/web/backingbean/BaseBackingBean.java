@@ -1076,6 +1076,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 					Long.valueOf(resDTO.getDocStatus()));
 			this.getManagedBean().setTaskName(resDTO.getTaskName());
 			this.getManagedBean().setPayLoad(payLoad);
+			this.getManagedBean().setProcessName(resDTO.getProcessName());
 
 			return (BPM_DATA_TYPE) payLoad;
 
