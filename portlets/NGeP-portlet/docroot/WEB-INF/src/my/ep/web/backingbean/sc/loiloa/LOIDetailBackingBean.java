@@ -4407,8 +4407,8 @@ public class LOIDetailBackingBean extends
 						Long supplierId = smSupplier.getSupplierId();
 	
 						if (!supplierIds.contains(supplierId)) {
-							selectItems.add(new SelectItem(
-									supplierId, smSupplier.getCompanyName()));
+							selectItems.add(new SelectItem(supplierId, scQtRecommendDtl
+									.getScQtProposalAmount().getScQtProposal().getSupplierNo().toString()));
 							supplierIds.add(supplierId);
 						}
 					}
