@@ -139,18 +139,11 @@
 			<h:panelGrid columns="1" style="float:right;">
 				<p:outputLabel value="#{lbl['lbl.ct.secretary']}" />
 			</h:panelGrid>
-			<h:panelGrid columns="1" rendered="#{amendmentBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeQuotationCommitteeB or 
-				  		        amendmentBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeQuotationCommitteeA}">
+			<h:panelGrid columns="1">
 				<p:selectOneMenu id="secretaryId" value="#{amendmentBackingBean.managedBean.secretaryId}" 
 					label="#{lbl['lbl.ct.secretary']}" style="width:300px;">
 		           	<f:selectItems value="#{amendmentBackingBean.getSecretaryDropdownList()}" />
 		       	</p:selectOneMenu>
-			</h:panelGrid>
-			<h:panelGrid columns="1" rendered="#{amendmentBackingBean.managedBean.committeeType != ParameterConst.committeeTypeQuotationCommitteeB and 
-				  		        amendmentBackingBean.managedBean.committeeType != ParameterConst.committeeTypeQuotationCommitteeA}">
-				<p:inputText id="secretaryMinistry" style="width:300px;" disabled="true"
-					value="#{amendmentBackingBean.managedBean.secretaryName}">
-				</p:inputText>
 			</h:panelGrid>
 		  </h:panelGrid>
 		</h:panelGroup>

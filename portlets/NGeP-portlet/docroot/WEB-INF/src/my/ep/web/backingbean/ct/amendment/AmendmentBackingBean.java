@@ -626,7 +626,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		  	getManagedBean().setSecretaryId(null);
 		  	if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary() != null) {
 		  		getManagedBean().setSecretaryId(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary().getUserId());
-		  		getManagedBean().setSecretaryName(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary().getUserName());
 		  	}
 		  	
 		 
@@ -832,38 +831,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		    	getManagedBean().setDisableMeetingDetails(true);
 		    	ctBackingBean.getManagedBean().setViewContract(true);
 		    }
-		    //Default the secretary
+		    //Initiate the secretary
 		    if (getManagedBean().getSecretaryId() == null && getManagedBean().getCommitteeType() != null
 		    		&& !ctBackingBean.getManagedBean().isDisableAmendDetails()) {
-		    	// QCA or QCB, return secretary list
-		    	if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)
-			    		|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
-			    	SelectItem[] secretaryList = getSecretaryDropdownList(); 
-			    	if (secretaryList != null && secretaryList.length == 2) {
+		    	
+		    	SelectItem[] secretaryList = getSecretaryDropdownList(); 
+		    	// Default the secretary if selection list only have one secretary
+		    	if (secretaryList != null && secretaryList.length == 2) {
+		    		if (secretaryList != null && secretaryList.length == 2) {
 			    		getManagedBean().setSecretaryId((Long)secretaryList[1].getValue());
 			    	}
-		    	} else {
-		    		// PBA or PBB or FSB or FSW, return from org profile
-		    		UserReqDTO userReqDTO = new UserReqDTO();
-					IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-					if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
-				   			|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
-						userReqDTO.setRoleCode(RoleCode.FPB_SECRETARY.value());
-					} else {
-						userReqDTO.setRoleCode(getManagedBean().getCommitteeType() + "_SECRETARY");
-					}
-			   	  	PmOrgProfile ministryOrgProfile = retrieveMinistryOrgProfile(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-			   	  	if (ministryOrgProfile != null) {
-			   	  		userReqDTO.setOrgProfileId(ministryOrgProfile.getOrgProfileId());
-			   	  	} else {
-			   	  		userReqDTO.setOrgProfileId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-			   	  	}
-			   	  	List<PmUser> list = userSO.retrieveUserListByRole(userReqDTO).getUserList();
-			   	  	if (list.size() > 0) {
-			   	  		getManagedBean().setSecretaryId(list.get(0).getUserId());
-			   	  		getManagedBean().setSecretaryName(list.get(0).getUserName());
-			   	  	}
 		    	}
 		    }
 	  	} finally {
@@ -1937,23 +1914,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * The method used to set the secretary for different committee type.
      */
 	private void setSecretary() {
-		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary() == null) {
+		//if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary() == null) {
+			PmUser pmUser = null;
 			if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()
 					|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isComplyAP201()
-					|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()) {
-				
-				PmUser pmUser = null;
+					|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()) {				
 				UserReqDTO userReqDTO = new UserReqDTO();
 				IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 				if (getManagedBean().getSecretaryId() != null) {
 					userReqDTO.setUserId(getManagedBean().getSecretaryId());
 					pmUser = userSO.retrieveUserProfileByUserId(userReqDTO).getPmUser();
-				}
-				
-				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setSecretary(pmUser);
+				}				
 			}
-		}
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setSecretary(pmUser);
+		//}
 	}
 	
 	/**
@@ -3612,6 +3587,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				reqDTO.setRoleCode(getManagedBean().getCommitteeType()+"_SECRETARY");
 			}
 			orgProfileIds.add(ownerOrgProfileId);
+			// TODO: Removed after all procurement level set in PTJ??? TBC
+			PmOrgProfile ministryOrgProfile = retrieveMinistryOrgProfile(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+	   	  	if (ministryOrgProfile != null) {
+	   	  		orgProfileIds.add(ministryOrgProfile.getOrgProfileId());
+	   	  	}
 		   	reqDTO.setOrgProfileIds(orgProfileIds);		   	
 		   	UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
 		   	
