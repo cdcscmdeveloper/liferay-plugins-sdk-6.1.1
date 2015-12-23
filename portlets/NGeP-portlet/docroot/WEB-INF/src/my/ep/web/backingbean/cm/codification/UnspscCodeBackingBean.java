@@ -2399,7 +2399,12 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		HttpServletRequest originalServletRequest = PortalUtil
 				.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
+		String claim = originalServletRequest.getParameter("claim");
 		System.out.println("taskId:" + taskId);
+		System.out.println("claim:" + claim);
+		
+		Boolean b = Boolean.valueOf(claim);
+		this.getManagedBean().setClaim(b);
 
 		FacesScopes face = new FacesScopes();
 		Object token = face.getBPMAuthenticationCtxToken();
@@ -2595,6 +2600,34 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		//
 
 	}
+	
+	
+	public void claimTask()  {
+		System.out.println("**********claimTask");
+		
+		BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
+
+		
+		
+		FacesScopes face = new FacesScopes();
+		Object token = face.getBPMAuthenticationCtxToken();
+		
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		reqDTO.setCtxToken(token);
+		bpmSO.claimTask(reqDTO);
+		
+		
+		bb.getManagedBean().getTaskListGroupDataModel().reloadData();
+		bb.getManagedBean().getTaskListMyTaskDataModel().reloadData();
+		this.getManagedBean().setClaim(true);
+		
+		//return "/xhtml/bpmtasklist/taskListView.xhtml?faces-redirect=true";
+		
+		
+	}
 
 	public void preRenderView() {
 		log.debug("**********preRenderView**************");
@@ -2610,7 +2643,13 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		HttpServletRequest originalServletRequest = PortalUtil
 				.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
-		log.info("taskId:" + taskId);
+		String claim = originalServletRequest.getParameter("claim");
+		System.out.println("taskId:" + taskId);
+		System.out.println("claim:" + claim);
+		
+		Boolean b = Boolean.valueOf(claim);
+		this.getManagedBean().setClaim(b);
+
 
 		FacesScopes face = new FacesScopes();
 		Object token = face.getBPMAuthenticationCtxToken();
