@@ -59,7 +59,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String textBeforeSign;
 	private String buttonAction;
 	private String committeeType;
-	private String secretaryName;
 	private Long meetingStatusId;
 	private Long secretaryId;
 	private Date newAmendmentEffDate;
@@ -303,20 +302,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	 */
 	public void setCommitteeType(String committeeType) {
 		this.committeeType = committeeType;
-	}
-		
-	/**
-	 * @return the secretaryName
-	 */
-	public String getSecretaryName() {
-		return secretaryName;
-	}
-
-	/**
-	 * @param secretaryName the secretaryName to set
-	 */
-	public void setSecretaryName(String secretaryName) {
-		this.secretaryName = secretaryName;
 	}
 
 	/**
