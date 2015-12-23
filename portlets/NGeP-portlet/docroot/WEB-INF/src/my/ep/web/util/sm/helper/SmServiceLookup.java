@@ -18,6 +18,7 @@ import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.bulkApplication.ISmBulkApplicationSO;
 import my.ep.biz.service.sm.businessnature.ISupplierBusinessNatureSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
+import my.ep.biz.service.sm.complaint.IComplaintSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
@@ -443,4 +444,13 @@ public class SmServiceLookup {
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmRuleSO.class);
 	}
 
+	/**
+	 * Get IComplaintSO
+	 * 
+	 * @return IComplaintSO
+	 */
+	public static IComplaintSO getComplaintSO() {
+		return (IComplaintSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, IComplaintSO.class);
+	}
 }
