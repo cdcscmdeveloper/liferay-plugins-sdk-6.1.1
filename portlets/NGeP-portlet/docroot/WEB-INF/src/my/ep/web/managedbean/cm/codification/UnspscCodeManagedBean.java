@@ -108,6 +108,8 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	private boolean measurementDisable = true;
 	
 	private String extensionConfirmationMsg;
+	
+	private Boolean claim;
 
 	public CmBrand getSelectedBrand() {
 		return selectedBrand;
@@ -691,6 +693,14 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 
 	public void setExtensionConfirmationMsg(String extensionConfirmationMsg) {
 		this.extensionConfirmationMsg = extensionConfirmationMsg;
+	}
+
+	public Boolean getClaim() {
+		return claim;
+	}
+
+	public void setClaim(Boolean claim) {
+		this.claim = claim;
 	}
 	
 	
