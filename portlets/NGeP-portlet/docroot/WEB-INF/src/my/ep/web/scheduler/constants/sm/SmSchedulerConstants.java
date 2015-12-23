@@ -27,9 +27,9 @@ public class SmSchedulerConstants {
 	public static final int SOFTCERT_RENEWAL_DAY = 7;
 	
 	//Timer Setting
-	public static final String SM_DAILY_SOFTCERT_RENEWAL_TIMER = "O0 30 2 * * ?";
+	public static final String SM_DAILY_SOFTCERT_RENEWAL_TIMER = "0 30 02 * * ?";
 	public static final String SM_DAILY_DEL_PEND_ACTV_TIMER = "0 55 23 * * ?";
-	public static final String SM_DAILY_PAYMENT_REMINDER_TIMER = "0 00 3 * * ?";
-	public static final String SM_DAILY_SUPPORTING_DOC_REMINDER_TIMER = "0 30 3 * * ?";
+	public static final String SM_DAILY_PAYMENT_REMINDER_TIMER = "0 00 03 * * ?";
+	public static final String SM_DAILY_SUPPORTING_DOC_REMINDER_TIMER = "0 30 03 * * ?";
 	
 }
