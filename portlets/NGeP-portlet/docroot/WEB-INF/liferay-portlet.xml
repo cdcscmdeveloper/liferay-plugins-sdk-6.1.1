@@ -2260,7 +2260,13 @@
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 		<css-class-wrapper>basicDataMaintenance-portlet</css-class-wrapper>
 	</portlet>
-
+	 <portlet>
+		  <portlet-name>disciplinaryAction</portlet-name>
+		  <icon>/icon.png</icon>
+		  <instanceable>false</instanceable>
+		  <header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		  <css-class-wrapper>disciplinaryAction-portlet</css-class-wrapper>
+	 </portlet>
 	<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>
