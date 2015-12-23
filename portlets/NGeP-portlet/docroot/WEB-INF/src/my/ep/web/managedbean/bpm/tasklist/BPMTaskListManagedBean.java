@@ -77,6 +77,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	
 	private String taskDescGroup;
 	
+	private Boolean claim;
+	
 	public List<WorklistItemVO> getTaskList() {
 		return taskList;
 	}
@@ -638,6 +640,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 	public void setDocNoGroup(String docNoGroup) {
 		this.docNoGroup = docNoGroup;
+	}
+
+	public Boolean getClaim() {
+		return claim;
+	}
+
+	public void setClaim(Boolean claim) {
+		this.claim = claim;
 	}
 	
 	

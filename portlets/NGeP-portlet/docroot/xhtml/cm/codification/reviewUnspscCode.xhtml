@@ -22,12 +22,12 @@
 						value="lbl.bpm.action.#{action}" />
 					<p:commandButton value="#{lbl[lblBpmBtn]}"
 					    disabled="#{(action == 'SUBMIT' and (unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1)) or (action == 'RECOMMEND_TO_SUPPLIER' and !(unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1))}"
-						rendered="#{action != 'REQUEST_EXTENSION' and unspscCodeBackingBean.managedBean.claim}"
+						rendered="#{action != 'REQUEST_EXTENSION' and bpmTasklistBackingBean.managedBean.claim}"
 						action="#{unspscCodeBackingBean.bpmTesting(action)}"
 						update="@form"></p:commandButton>
 						</ui:repeat>
 						
-					<p:commandButton value="Claim" action="#{unspscCodeBackingBean.claimTask}" rendered="#{!unspscCodeBackingBean.managedBean.claim}" update="@form"></p:commandButton>
+					<p:commandButton value="Claim" action="#{bpmTasklistBackingBean.claimTaskInDetailPage}" rendered="#{!bpmTasklistBackingBean.managedBean.claim}" update="@form"></p:commandButton>
 
 			</div>
 			
