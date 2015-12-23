@@ -6,15 +6,31 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import org.apache.commons.lang3.StringUtils;
+
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.sm.complaint.IComplaintSO;
+import my.ep.constant.sm.DisciplinaryActionStatusConst;
+import my.ep.dto.sm.complaint.ComplaintReqDTO;
+import my.ep.dto.sm.complaint.ComplaintResDTO;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmComplainant;
 import my.ep.persistence.entity.sm.SmComplaint;
+import my.ep.persistence.entity.sm.SmComplaintResponse;
 import my.ep.persistence.entity.sm.SmComplaintReview;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.type.aut.SearchOperator;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.bean.sm.ComplaintSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 @ManagedBean(name = "complaintMB")
 @SessionScoped
@@ -25,23 +41,30 @@ public class ComplaintManagedBean extends BaseManagedBean {
 	private List<SmSupplier> smSupplierLs;
 	private SmSupplier selectedSupplier;
 	private SmComplaintReview smComplReview;
-	private long complaintId;
+	private Long complaintId;
 	private String taskId;
 	private String[] bpmAction;
 	private String taskName;
 	private List<SmComplaint> smComplLs;
 	private SmComplaint[] selectedComplaint;
 	
+	private ComplaintSearchBean complaintSearchBean;
+
+	private List<String> selectedOffenses;
+	private IPagingDataModel<SmComplaint> complaintDataModel = new ComplaintPagingDataModel();
+	
 	private SmComplainant smComplainant;
-	private List<PmCountry> countryLs;
+	//private SmComplaintResponse smComplResponse;
+/*	private List<PmCountry> countryLs;
 	private List<PmState> stateLs;
 	private List<PmCity> cityLs;
-	private List<PmDistrict> districtLs;
+	private List<PmDistrict> districtLs;*/
 	
 	private boolean sameAddress;
 	
-	/*********Dummy Complaint type**********/
-	private Map<String, String> complType;
+	private List<PmParameter> complaintTypes;
+	
+	private boolean isLazy;
 
 
 	public SmComplaint getSmComplaint() {
@@ -77,11 +100,11 @@ public class ComplaintManagedBean extends BaseManagedBean {
 	}
 
 
-	public long getComplaintId() {
+	public Long getComplaintId() {
 		return complaintId;
 	}
 
-	public void setComplaintId(long complaintId) {
+	public void setComplaintId(Long complaintId) {
 		this.complaintId = complaintId;
 	}
 
@@ -133,46 +156,6 @@ public class ComplaintManagedBean extends BaseManagedBean {
 		this.smComplainant = smComplainant;
 	}
 
-	public List<PmCountry> getCountryLs() {
-		return countryLs;
-	}
-
-	public void setCountryLs(List<PmCountry> countryLs) {
-		this.countryLs = countryLs;
-	}
-
-	public List<PmState> getStateLs() {
-		return stateLs;
-	}
-
-	public void setStateLs(List<PmState> stateLs) {
-		this.stateLs = stateLs;
-	}
-
-	public List<PmCity> getCityLs() {
-		return cityLs;
-	}
-
-	public void setCityLs(List<PmCity> cityLs) {
-		this.cityLs = cityLs;
-	}
-
-	public Map<String, String> getComplType() {
-		return complType;
-	}
-
-	public void setComplType(Map<String, String> complType) {
-
-		this.complType = complType;
-	}
-
-	public List<PmDistrict> getDistrictLs() {
-		return districtLs;
-	}
-
-	public void setDistrictLs(List<PmDistrict> districtLs) {
-		this.districtLs = districtLs;
-	}
 
 	public boolean isSameAddress() {
 		return sameAddress;
@@ -181,5 +164,127 @@ public class ComplaintManagedBean extends BaseManagedBean {
 	public void setSameAddress(boolean sameAddress) {
 		this.sameAddress = sameAddress;
 	}
+
+	public List<PmParameter> getComplaintTypes() {
+		return complaintTypes;
+	}
+
+	public void setComplaintTypes(List<PmParameter> complaintTypes) {
+		this.complaintTypes = complaintTypes;
+	}
+
+	public List<String> getSelectedOffenses() {
+		return selectedOffenses;
+	}
+
+	public void setSelectedOffenses(List<String> selectedOffenses) {
+		this.selectedOffenses = selectedOffenses;
+	}
+
+	public ComplaintSearchBean getComplaintSearchBean() {
+		return complaintSearchBean;
+	}
+
+	public void setComplaintSearchBean(ComplaintSearchBean complaintSearchBean) {
+		this.complaintSearchBean = complaintSearchBean;
+	}
+
+	public boolean isLazy() {
+		return isLazy;
+	}
+
+	public void setLazy(boolean isLazy) {
+		this.isLazy = isLazy;
+	}
+	
+	private class ComplaintPagingDataModel extends PagingDataModel<SmComplaint> {
+		/**
+		 * Instantiates a new search office paging data model.
+		 */
+		public ComplaintPagingDataModel() {
+			super("complaintSR");
+		}
+		
+		@Override
+		public ISearchResultBean<SmComplaint> pageChangeListener(ISearchBean<SmComplaint> searchBean) {
+
+			try {	
+				ISearchBean<SmComplaint> searchBeanData = getComplaintSearchBeanData(searchBean);
+				ComplaintReqDTO reqDTO = new ComplaintReqDTO();
+				reqDTO.setComplaintSearchBean(getComplaintSearchBeanData(searchBeanData));
+				
+				IComplaintSO reqSO = SmServiceLookup.getComplaintSO();
+				ComplaintResDTO resDTO = reqSO.retrieveComplaintBySearch(reqDTO);
+
+				if (resDTO.isSuccessful()) {
+					return resDTO.getComplaintSearchResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return null;
+		}
+	}
+	
+	/**
+	 * search business nature info based on codes and names search
+	 */
+	private ISearchBean<SmComplaint> getComplaintSearchBeanData(ISearchBean<SmComplaint> searchBean) {
+		
+		ComplaintSearchBean complaintSearchBean = getComplaintSearchBean();
+		if (StringUtils.isNotBlank(complaintSearchBean.getSearchBy())){	
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(getComplaintSearchType(complaintSearchBean.getSearchBy()),
+							SearchOperator.OPERATOR_EQUALS.value(), complaintSearchBean.getKeyword() , true));
+			
+		}
+		
+		if(complaintSearchBean.getStatus() != null){
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmStatus.statusId",
+							SearchOperator.OPERATOR_EQUALS.value(), complaintSearchBean.getStatus().toString(), true));
+		}
+		
+		return searchBean;
+		
+	}
+	
+	private String getComplaintSearchType(String type){
+		String searchType = null;
+		
+		switch(type){
+			case DisciplinaryActionStatusConst.SEARCHTYPE_EP_NO :
+				searchType = "smSupplier.epNo";
+				break;
+	
+			case DisciplinaryActionStatusConst.SEARCHTYPE_SUPPLIER_NAME :
+				searchType = "smSupplier.companyName";
+				break;
+			
+			case DisciplinaryActionStatusConst.SEARCHTYPE_COMPL_NO :
+				searchType = "complaintNo";	
+				break;
+			
+			case DisciplinaryActionStatusConst.SEARCHTYPE_MOF_NO :
+				searchType = "complaintNo";	
+			case DisciplinaryActionStatusConst.SEARCHTYPE_REG_NO :
+				searchType = "smSupplier.regNo";
+				break;
+				
+		}
+		
+		return searchType;
+	}
+
+	public IPagingDataModel<SmComplaint> getComplaintDataModel() {
+		return complaintDataModel;
+	}
+
+	public void setComplaintDataModel(
+			IPagingDataModel<SmComplaint> complaintDataModel) {
+		this.complaintDataModel = complaintDataModel;
+	}
+	
 	
 }
