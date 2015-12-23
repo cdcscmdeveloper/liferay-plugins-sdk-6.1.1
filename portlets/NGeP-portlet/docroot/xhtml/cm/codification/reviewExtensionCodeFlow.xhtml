@@ -17,7 +17,9 @@
 			<div style="text-align: right;">
 				<ui:repeat var="action"
 					value="#{unspscCodeBackingBean.managedBean.action}">
-					<p:commandButton value="#{action}" oncomplete="extensionConfirmation.show()" update=":form:extensionConfirmationId"
+					<p:commandButton value="#{action}"
+						oncomplete="extensionConfirmation.show()"
+						update=":form:extensionConfirmationId"
 						action="#{unspscCodeBackingBean.checkRecomendOrSubmit()}"></p:commandButton>
 				</ui:repeat>
 			</div>
@@ -61,20 +63,20 @@
 							#{lbl['lbl.cm.supplier.input']}
 						</f:facet>
 
-						<div style="width: 100%;">
+						<div style="width: 100%; padding-bottom: 5px; height: 20px;">
 							<p:inputText value="#{review.typeName}"
 								disabled="#{!review.requestType}"></p:inputText>
 						</div>
-						<div style="width: 100%;">
+						<div style="width: 100%; padding-bottom: 5px; height: 20px;">
 							<p:inputText value="#{review.brandName}"
 								disabled="#{!review.requestBrand}"></p:inputText>
 						</div>
-						<div style="width: 100%;">
+						<div style="width: 100%; padding-bottom: 5px; height: 20px;">
 							<p:inputText value="#{review.measurementName}"
 								disabled="#{!review.requestMeasurement}"></p:inputText>
 
 						</div>
-						<div style="width: 100%;">
+						<div style="width: 100%; padding-bottom: 5px; height: 20px;">
 							<p:inputText value="#{review.colorName}"
 								disabled="#{!review.requestColor}"></p:inputText>
 
@@ -88,7 +90,7 @@
 							#{lbl['lbl.cm.existing.extension']}
 						</f:facet>
 
-						<div style="width: 100%; padding-bottom: 5px;height: 20px;">
+						<div style="width: 100%; padding-bottom: 5px; height: 20px;">
 
 							<p:selectOneMenu rendered="#{review.requestType}"
 								style="width: 128px;" value="#{review.typeNameDD}">
@@ -99,7 +101,7 @@
 									itemValue="#{type.typeId}"></f:selectItems>
 							</p:selectOneMenu>
 						</div>
-						<div style="width: 100%; padding-bottom: 5px;height: 20px;">
+						<div style="width: 100%; padding-bottom: 5px; height: 20px;">
 
 							<p:selectOneMenu rendered="#{review.requestBrand}"
 								style="width: 128px;" value="#{review.brandNameDD}">
@@ -110,7 +112,7 @@
 									itemValue="#{brand.brandId}"></f:selectItems>
 							</p:selectOneMenu>
 						</div>
-						<div style="width: 100%; padding-bottom: 5px;height: 20px;">
+						<div style="width: 100%; padding-bottom: 5px; height: 20px;">
 
 							<p:selectOneMenu rendered="#{review.requestMeasurement}"
 								style="width: 128px;" value="#{review.measurementNameDD}">
@@ -121,7 +123,7 @@
 									itemValue="#{measurement.measurementId}"></f:selectItems>
 							</p:selectOneMenu>
 						</div>
-						<div style="width: 100%; padding-bottom: 5px;height: 20px;">
+						<div style="width: 100%; padding-bottom: 5px; height: 20px;">
 
 							<p:selectOneMenu rendered="#{review.requestColor}"
 								style="width: 128px;" value="#{review.colorNameDD}">
@@ -148,8 +150,8 @@
 
 				<p:commandButton id="confirmID"
 					value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
-					action="#{unspscCodeBackingBean.submitToReviewExt('SUBMIT')}"  />
-				<p:commandButton id="declineID" 
+					action="#{unspscCodeBackingBean.submitToReviewExt('SUBMIT')}" />
+				<p:commandButton id="declineID"
 					value="#{lbl['lbl.cm.dialog.cofirm.no']}"
 					onclick="extensionConfirmation.hide()" />
 
