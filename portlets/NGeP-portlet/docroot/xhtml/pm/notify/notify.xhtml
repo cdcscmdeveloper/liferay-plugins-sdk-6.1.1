@@ -9,19 +9,8 @@
 
 	<ui:define name="resourceSection">
 	</ui:define>
-	
 	<ui:define name="contentSection">
 		<p:messages id="messages" autoUpdate="true" closable="true" />
-		
-		<style type="text/css">
-			.ui-datatable .ui-selection-column .ui-chkbox-all {
-			    display: inline;
-			    margin: 0px;
-			    width: 0px;
-			    height: 0px;
-			}
-		</style>
-		
 		<table width="100%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td width="40%" valign="top">
@@ -55,10 +44,11 @@
 
 									<ac:paginator for="notifyTable" />
 
-									<p:column  selectionMode="multiple" style="width:7%;text-align:center"/>
+									<p:column selectionMode="multiple" style="width:7%" />
 
 									<p:column style="text-align:center; width:7%">
-										<h:graphicImage title="#{lbl['lbl.portal.notify.unreadnotice']}" value="#{CommonUIConstant.imagePathUptoDesign}/mail.png" rendered="#{notify.read eq '0'}" />
+										<h:graphicImage title="#{lbl['lbl.portal.notify.unreadnotice']}" value="#{CommonUIConstant.imagePathUptoDesign}/mail.png"
+											rendered="#{notify.read eq '0'}" />
 									</p:column>
 									<p:column
 										headerText="#{lbl['lbl.portal.notify.sender']}/#{lbl['lbl.portal.notify.subject']}">
@@ -88,7 +78,7 @@
 				</td>
 				<td width="3%"><p:spacer width="3" /></td>
 				<td width="57%" valign="top"><p:panel id="pnldetail"
-						style="border-width:1px 1px; border:1px solid #cecece;padding:10px!important; background:#e8f1f6!important; "
+						style="border-width:1px 1px; border:1px solid #cecece;"
 						toggleable="true">
 						<table border="0" width="100%" cellpadding="0" cellspacing="0">
 							<c:if
@@ -124,15 +114,13 @@
 									</td>
 								</tr>
 								<tr>
-									<td style="height: 30px;" colspan="3">
-									
-										<p:scrollPanel style="padding:10px !important; margin-top: 15px !important; height:240px;border:0;" mode="native">
+									<td style="height: 30px;" colspan="3"><hr /> <p:scrollPanel
+											layout="block"
+											style="text-align:left;width:100%;height:240px;border:0">
 											<h:outputText escape="false"
 												style="text-align:left;width:98%;height:220px;overflow: auto;"
 												value="#{notifyBackingBean.managedBean.selectedNotify.pmNotifyDashboard.content}"></h:outputText>
-										</p:scrollPanel>
-										
-										</td>
+										</p:scrollPanel></td>
 								</tr>
 							</c:if>
 						</table>
