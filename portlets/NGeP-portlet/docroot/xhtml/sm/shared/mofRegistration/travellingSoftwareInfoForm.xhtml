@@ -40,7 +40,7 @@
 		</table>
 		<p:outputPanel id="systemInfPan" layout="block">
 			<p:blockUI block=":form:tt:systemInfPan" widgetVar="buiPoSystem"
-				id="poSystemBlc" rendered="#{backingBean.managedBean.showTravelSoftwarePanel}"
+				id="poSystemBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.supplierSystemVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.supplierSystemVerified : false)}" />
 			
 			<p:outputPanel rendered="#{backingBean.managedBean.showTravelSoftwarePanel}">
