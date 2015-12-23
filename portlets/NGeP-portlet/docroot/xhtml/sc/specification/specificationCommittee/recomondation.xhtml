@@ -74,19 +74,7 @@
 					<ac:iconTooltip
 						value="#{lbl['lbl.sc.by.item.recommendation.tooltip']}" />
 				</f:facet>
-				<table>
-					<tr>
-						<td><h:outputText value="*" styleClass="mandatory" /> <h:outputLabel
-								value="#{lbl['lbl.sc.spec.passing.score.percentage']}"></h:outputLabel></td>
-						<td><p:inputText style="text-align:right" maxlength="5"
-								disabled="#{specificationBackingBean.managedBean.readOnly}"
-								value="#{specificationBackingBean.managedBean.recommendationScore.passingScore}">
 
-							</p:inputText> <ac:iconTooltip
-								value="#{lbl['lbl.sc.spec.passing.score.percentage.tooltip']}" />
-						</td>
-					</tr>
-				</table>
 				<p:panelGrid id="itemPanel" style="margin-top:5px;width:100%;"
 					styleClass="panelGridBorders tr, panelGridBorders td">
 					<f:facet name="header">
@@ -171,6 +159,20 @@
 					</p:row>
 
 				</p:panelGrid>
+				<p:spacer height="3px;"></p:spacer>
+				<table>
+					<tr>
+						<td><h:outputText value="*" styleClass="mandatory" /> <h:outputLabel
+								value="#{lbl['lbl.sc.spec.passing.score.percentage']}"></h:outputLabel></td>
+						<td><p:inputText style="text-align:right" maxlength="5"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
+								value="#{specificationBackingBean.managedBean.recommendationScore.passingScore}">
+
+							</p:inputText> <ac:iconTooltip
+								value="#{lbl['lbl.sc.spec.passing.score.percentage.tooltip']}" />
+						</td>
+					</tr>
+				</table>
 
 
 			</p:panel>
@@ -207,19 +209,7 @@
 					<ac:iconTooltip
 						value="#{lbl['lbl.sc.by.item.recommendation.tooltip']}" />
 				</f:facet>
-				<table>
-					<tr>
-						<td><h:outputText value="*" styleClass="mandatory" /> <h:outputLabel
-								value="#{lbl['lbl.sc.spec.passing.score.percentage']}"></h:outputLabel></td>
-						<td><p:inputText style="text-align:right" maxlength="5"
-								disabled="#{specificationBackingBean.managedBean.readOnly}"
-								value="#{specificationBackingBean.managedBean.recommendationScore.passingScore}">
 
-							</p:inputText> <ac:iconTooltip
-								value="#{lbl['lbl.sc.spec.passing.score.percentage.tooltip']}" />
-						</td>
-					</tr>
-				</table>
 				<p:panelGrid style="margin-top:5px;width:100%;">
 					<f:facet name="header">
 
@@ -267,7 +257,20 @@
 					</p:row>
 
 				</p:panelGrid>
+				<p:spacer height="3px;"></p:spacer>
+				<table>
+					<tr>
+						<td><h:outputText value="*" styleClass="mandatory" /> <h:outputLabel
+								value="#{lbl['lbl.sc.spec.passing.score.percentage']}"></h:outputLabel></td>
+						<td><p:inputText style="text-align:right" maxlength="5"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
+								value="#{specificationBackingBean.managedBean.recommendationScore.passingScore}">
 
+							</p:inputText> <ac:iconTooltip
+								value="#{lbl['lbl.sc.spec.passing.score.percentage.tooltip']}" />
+						</td>
+					</tr>
+				</table>
 
 			</p:panel>
 		</h:panelGroup>
