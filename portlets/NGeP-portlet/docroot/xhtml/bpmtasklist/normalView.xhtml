@@ -1,0 +1,198 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+
+	<p:panel header="My Task" collapsed="true" toggleable="true" >
+	
+	
+	
+	
+	<table style="width: 100%">
+
+			<tr>
+				<td width="10%"><p:outputLabel
+						value="#{lbl['lbl.bpm.doc.no']} : " /></td>
+				<td width="40%"><p:inputText size="60"
+						value="#{bpmTasklistBackingBean.managedBean.docNo}"></p:inputText></td>
+
+
+				<td width="10%"><p:outputLabel
+						value="#{lbl['lbl.bpm.description']} : " /></td>
+				<td width="40%"><p:inputText size="60"
+						value="#{bpmTasklistBackingBean.managedBean.taskDesc}"></p:inputText></td>
+
+			</tr>
+			<tr>
+				<td width="10%"><p:outputLabel value="PTJ :" /></td>
+				<td width="40%"><ac:lov id="lovMinistry"
+						lovId="PM_ORG_PROFILE" size="60" readonly="true"
+						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
+						value="#{bpmTasklistBackingBean.managedBean.selectedOrgProfile.pmOrgValidity.orgName}"
+						saveObject="bpmTasklistBackingBean.managedBean.selectedOrgProfile"
+						conditionField="recordStatus^1|orgTypeCode.parameterId^73" /></td>
+
+				<td width="10%"></td>
+				<td width="40%"></td>
+			</tr>
+
+
+
+		</table>
+
+		<div class="clear"></div>
+
+
+		<div
+			style="text-align: left; margin-right: 2px; margin-top: 5px; float: left;margin-left: 55px;">
+			<p:outputLabel value="#{lbl['lbl.bpm.doc.type']} : " />
+		</div>
+		<div
+			style="text-align: left; margin-right: 5px; margin-top: 3px; float: left;">
+			<p:selectOneMenu id="docTypeNormalId" style="width: 150px;"
+				value="#{bpmTasklistBackingBean.managedBean.docType}">
+				<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue=""></f:selectItem>
+				<f:selectItems
+					value="#{bpmTasklistBackingBean.getRadioButtonCodeValuesBySearchBean(ParameterTypeConst.documentTypes, bpmTasklistBackingBean.docTypeSearchBean)}" />
+
+			</p:selectOneMenu>
+
+		</div>
+
+
+
+		<div
+			style="text-align: left; margin-right: 2px; margin-top: 5px; float: left;">
+			<p:outputLabel value="#{lbl['lbl.bpm.date']} : " />
+		</div>
+		<div
+			style="text-align: left; margin-right: 5px; margin-top: 3px; float: left;">
+			<p:selectOneMenu style="width: 150px;"
+				value="#{bpmTasklistBackingBean.managedBean.viewBy}">
+				<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue=""></f:selectItem>
+				<f:selectItem itemLabel="#{lbl['lbl.bpm.past.day']}" itemValue="DAY"></f:selectItem>
+				<f:selectItem itemLabel="#{lbl['lbl.bpm.past.week']}"
+					itemValue="WEEK"></f:selectItem>
+				<f:selectItem itemLabel="#{lbl['lbl.bpm.past.month']}"
+					itemValue="MONTH"></f:selectItem>
+			</p:selectOneMenu>
+
+		</div>
+
+
+		<div class="clear"></div>
+		<div style="text-align: left; margin-right: 2px; float: right;">
+			<p:commandButton
+				action="#{bpmTasklistBackingBean.refreshNormalTaskList}"
+				update="taskListMyTaskId" value="#{lbl['lbl.btn.search']}"></p:commandButton>
+		</div>
+
+
+
+		<ac:lovPopup />
+	
+
+
+	</p:panel>
+	
+	<div class="clear"></div>
+
+
+	<!-- <p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true"> -->
+		<p:dataTable
+			value="#{bpmTasklistBackingBean.managedBean.taskListMyTaskDataModel}"
+			emptyMessage="#{lbl['lbl.pp.no.record.found']}" lazy="true"
+			rowIndexVar="rowIndex" rows="10" id="taskListMyTaskId"
+			style="width:100%;" var="tasks" widgetVar="taskListTableWidget">
+			<ac:paginator for="taskListMyTaskId"></ac:paginator>
+
+			<p:column width="5%;">
+				<f:facet name="header">
+					#{lbl['lbl.bpm.doc.no']}
+				</f:facet>
+				#{tasks.docNumber}
+			</p:column>
+			<p:column width="5%;">
+				<f:facet name="header">
+					#{lbl['lbl.bpm.doc.type']}
+				</f:facet>
+				#{bpmTasklistBackingBean.getParameterDesc(ParameterTypeConst.documentTypes,tasks.docType)}
+				
+			</p:column>
+
+			<p:column style="white-space:normal;">
+				<f:facet name="header">
+					#{lbl['lbl.bpm.description']}
+				</f:facet>
+				<p:commandLink value="#{tasks.title}"
+					action="#{bpmTasklistBackingBean.navigateToURL}">
+					<f:param name="taskId" value="#{tasks.taskId}" />
+					<f:param name="process" value="#{tasks.process}" />
+					<f:param name="taskName" value="#{tasks.taskName}" />
+					<f:param name="docType" value="#{tasks.docType}" />
+					<f:param name="isClaim" value="#{tasks.claimed}" />
+				</p:commandLink>
+
+			</p:column>
+			<p:column width="12%;">
+				<f:facet name="header">
+					#{lbl['lbl.bpm.created.date']}
+				</f:facet>
+				<h:outputText value="#{tasks.createDate.time}">
+					<f:convertDateTime
+						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+				</h:outputText>
+
+			</p:column>
+			<p:column width="12%;">
+				<f:facet name="header">
+					#{lbl['lbl.bpm.due.date']}
+				</f:facet>
+				<h:outputText value="#{tasks.expirationDate.time}">
+					<f:convertDateTime
+						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+				</h:outputText>
+
+			</p:column>
+			<p:column width="18%;">
+				<f:facet name="header">
+					#{lbl['lbl.bpm.status']}
+				</f:facet>
+				
+				#{bpmTasklistBackingBean.applicationStatus(tasks.docStatus)}
+				
+				
+
+			</p:column>
+
+
+			<p:column width="2%">
+				<f:facet name="header">
+				#{lbl['lbl.cm.action']}
+			</f:facet>
+
+				<p:commandButton value="Release"
+					action="#{bpmTasklistBackingBean.releaseTask}" update="@form"
+					rendered="#{tasks.claimed}">
+
+					<f:param name="taskId" value="#{tasks.taskId}" />
+				</p:commandButton>
+
+			</p:column>
+
+
+
+
+
+		</p:dataTable>
+
+<!-- 	</p:panel> -->
+
+
+</ui:composition>
