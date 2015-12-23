@@ -1357,12 +1357,12 @@ public class FileUtility extends InitializeSO{
 			
 			// Thread will sleep for 3 seconds before putting message into JMS Queue
 			
-			Thread currentThread = Thread.currentThread();
+		/*	Thread currentThread = Thread.currentThread();
 			try {
 				Thread.sleep(3000L);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			}
+			}*/
 			
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
@@ -1485,12 +1485,12 @@ public class FileUtility extends InitializeSO{
 			
 			// Thread will sleep for 3 seconds before putting message into JMS Queue
 
-			Thread currentThread = Thread.currentThread();
+			/*Thread currentThread = Thread.currentThread();
 			try {
 				Thread.sleep(3000L);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			}
+			}*/
 			
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
@@ -1563,12 +1563,12 @@ public class FileUtility extends InitializeSO{
 			
 			// Thread will sleep for 3 seconds before putting message into JMS Queue
 			
-			Thread currentThread = Thread.currentThread();
+		/*	Thread currentThread = Thread.currentThread();
 			try {
 				Thread.sleep(3000L);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			}
+			}*/
 			
 			// Call JMS send method to send to the Queue.
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
@@ -1670,12 +1670,12 @@ public class FileUtility extends InitializeSO{
 			
 			// Thread will sleep for 3 seconds before putting message into JMS Queue
 			
-			Thread currentThread = Thread.currentThread();
+		/*	Thread currentThread = Thread.currentThread();
 			try {
 				Thread.sleep(3000L);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			}
+			}*/
 			
 			// Call JMS send method to send to the Queue.
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
@@ -1770,12 +1770,12 @@ public class FileUtility extends InitializeSO{
 			
 			// Thread will sleep for 3 seconds before putting message into JMS Queue
 			
-			Thread currentThread = Thread.currentThread();
+			/*Thread currentThread = Thread.currentThread();
 			try {
 				Thread.sleep(3000L);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			}
+			}*/
 			
 			// Call JMS send method to send to the Queue.
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
@@ -1855,12 +1855,12 @@ public class FileUtility extends InitializeSO{
 			
 			// Thread will sleep for 3 seconds before putting message into JMS Queue
 			
-			Thread currentThread = Thread.currentThread();
+			/*Thread currentThread = Thread.currentThread();
 			try {
 				Thread.sleep(3000L);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			}
+			}*/
 			
 			// Call JMS send method to send to the Queue.
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
@@ -1934,12 +1934,12 @@ public class FileUtility extends InitializeSO{
 			
 			// Thread will sleep for 3 seconds before putting message into JMS Queue
 			
-			Thread currentThread = Thread.currentThread();
+			/*Thread currentThread = Thread.currentThread();
 			try {
 				Thread.sleep(3000L);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			}
+			}*/
 			
 			// Call JMS send method to send to the Queue.
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
@@ -2022,12 +2022,12 @@ public class FileUtility extends InitializeSO{
 			
 			// Thread will sleep for 3 seconds before putting message into JMS Queue
 			
-			Thread currentThread = Thread.currentThread();
+			/*Thread currentThread = Thread.currentThread();
 			try {
 				Thread.sleep(3000L);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			}
+			}*/
 			
 			// Call JMS send method to send to the Queue.
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
@@ -2097,12 +2097,12 @@ public class FileUtility extends InitializeSO{
 			
 			// Thread will sleep for 3 seconds before putting message into JMS Queue
 			
-			Thread currentThread = Thread.currentThread();
+			/*Thread currentThread = Thread.currentThread();
 			try {
 				Thread.sleep(3000L);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			}
+			}*/
 			
 			// Call JMS send method to send to the Queue.
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
@@ -2192,12 +2192,12 @@ public class FileUtility extends InitializeSO{
 			
 			// Thread will sleep for 3 seconds before putting message into JMS Queue
 			
-			Thread currentThread = Thread.currentThread();
+			/*Thread currentThread = Thread.currentThread();
 			try {
 				Thread.sleep(3000L);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			}
+			}*/
 			
 			// Call JMS send method to send to the Queue.
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
@@ -2286,12 +2286,12 @@ public class FileUtility extends InitializeSO{
 			
 			// Thread will sleep for 3 seconds before putting message into JMS Queue
 			
-			Thread currentThread = Thread.currentThread();
+			/*Thread currentThread = Thread.currentThread();
 			try {
 				Thread.sleep(3000L);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			}
+			}*/
 			
 			// Call JMS send method to send to the Queue.
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
