@@ -9,11 +9,10 @@
 		<table class="customTbl">
 			<tr>
 				<td class="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.complaint.response.received']}" /></td>
-				<td class="tdContent"><p:calendar showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
-			</tr>
-			<tr>
-<!-- 				<td id="tdTitle"><p:outputLabel value="* Expected Convene Date" /></td> -->
-<!-- 				<td id="tdContent"><p:calendar showOn="button" /></td> -->
+				<td class="tdContent">
+					<p:calendar showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" 
+					value="#{complaintBackingBean.managedBean.smComplReview.smComplaintResponse.supplierResponseDate}" />
+				</td>
 				<td class="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.complaint.upload.response']}" /></td>
 				<td class="tdContent"><p:fileUpload mode="simple" /></td>
 			</tr>

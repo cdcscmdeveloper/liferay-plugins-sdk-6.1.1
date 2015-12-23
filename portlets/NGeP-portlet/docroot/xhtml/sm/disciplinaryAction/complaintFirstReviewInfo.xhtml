@@ -6,12 +6,6 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<div align="right">
-		<p:commandButton value="#{lbl['lbl.sm.button.save']}" />
-		<p:commandButton value="#{lbl['lbl.btn.submit']}"
-			action="#{complaintBackingBean.updateComplaint}" />
-	</div>
-
 	<ac:smPanel id="p1">
 		<ui:include
 			src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" />
