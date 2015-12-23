@@ -2,6 +2,7 @@ package my.ep.web.backingbean.bpm.tasklist;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -11,20 +12,33 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.service.cm.catalogue.ICatalogueSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.constants.PPProcessNameConst;
 import my.ep.constants.SCProcessNameConst;
+import my.ep.dto.cm.catalogue.CatalogueReqDTO;
+import my.ep.dto.cm.catalogue.CatalogueResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.exception.EpException;
+import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.bpm.tasklist.BPMTaskListManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.log4j.Logger;
@@ -605,10 +619,16 @@ public class BPMTaskListBackingBean extends
 				.getExternalContext().getRequestParameterMap().get("taskName");
 		String docType = FacesContext.getCurrentInstance().getExternalContext()
 				.getRequestParameterMap().get("docType");
+		
+		String claim = FacesContext.getCurrentInstance().getExternalContext()
+				.getRequestParameterMap().get("isClaim");
+		
+		System.out.println("****claim****"+claim);
+		
 		FacesScopes face = new FacesScopes();
 		Object token = face.getBPMAuthenticationCtxToken();
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
-
+		
 		try {
 			log.info("taskId:" + taskId);
 
@@ -655,7 +675,7 @@ public class BPMTaskListBackingBean extends
 
 			// externalContext.redirect("/web/guest/" +url +"?taskId="+taskId);
 			externalContext.redirect(commonUrl + "/" + url + "?taskId="
-					+ taskId);
+					+ taskId + "&claim=" + claim);
 			// externalContext.redirect("http://localhost:8080/web/guest/" +url
 			// +"?taskId="+taskId);
 		} catch (IOException e) {
@@ -721,6 +741,20 @@ public class BPMTaskListBackingBean extends
 		// retrieveWorklistItems("ASSIGNED",this.getManagedBean().getViewBy(),
 		// this.getManagedBean().getAssignment());
 	}
+	
+	public void refreshAdvanceTaskList() {
+	
+		this.getManagedBean().getTaskListGroupDataModel().reloadData();
+	
+	}
+	
+	
+	
+	
+	public void refreshNormalTaskList(){
+		
+		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
+	}
 
 	public String goToMyTasks() {
 		System.out.println(">>>>>>>>>>goToMyTasks<<<<<<<<<<");
@@ -730,7 +764,7 @@ public class BPMTaskListBackingBean extends
 		// if(showIndex == 0){
 		// set filters to default for MyTasks
 		this.getManagedBean().setViewBy("ALL");
-		this.getManagedBean().setAssignment("ALL");
+		//this.getManagedBean().setAssignment("ALL");
 		// }
 		// if(showIndex == 2){
 		//
@@ -778,7 +812,8 @@ public class BPMTaskListBackingBean extends
 		log.info("......................preRenderTaskView");
 
 		this.getManagedBean().setViewBy("");
-		this.getManagedBean().setAssignment("ALL");
+		this.getManagedBean().setViewByGroup("");
+		//this.getManagedBean().setAssignment("ALL");
 
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
@@ -792,11 +827,82 @@ public class BPMTaskListBackingBean extends
 		} else {
 			this.getManagedBean().setDocType("");
 		}
-		this.getManagedBean().getTaskListDataModel().reloadData();
+		//this.getManagedBean().getTaskListDataModel().reloadData();
+		this.getManagedBean().getTaskListGroupDataModel().reloadData();
+		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "taskListView");
 
 	}
+	
+	
+
+	
+	
+	public String claimTask()  {
+		
+		System.out.println("**********claimTask");
+		try{
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+					.getServiceObject(IBpmSO.class);
+	
+			String taskId = FacesContext.getCurrentInstance().getExternalContext()
+					.getRequestParameterMap().get("taskId");
+			
+			FacesScopes face = new FacesScopes();
+			Object token = face.getBPMAuthenticationCtxToken();
+			
+			BpmRequestDTO reqDTO = new BpmRequestDTO();
+			reqDTO.setTaskId(taskId);
+			reqDTO.setCtxToken(token);
+			bpmSO.claimTask(reqDTO);
+			
+			
+			this.getManagedBean().getTaskListGroupDataModel().reloadData();
+			this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
+		}catch(Exception e){
+			throw new EpException(e.getMessage());
+		}
+		
+		return "taskListView?faces-redirect=true";
+		
+		
+	}
+	
+	
+	
+	public String releaseTask()  {
+		System.out.println("**********releaseTask");
+		try{
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+					.getServiceObject(IBpmSO.class);
+	
+			String taskId = FacesContext.getCurrentInstance().getExternalContext()
+					.getRequestParameterMap().get("taskId");
+			
+			FacesScopes face = new FacesScopes();
+			Object token = face.getBPMAuthenticationCtxToken();
+			
+			BpmRequestDTO reqDTO = new BpmRequestDTO();
+			reqDTO.setTaskId(taskId);
+			reqDTO.setCtxToken(token);
+			bpmSO.releaseTask(reqDTO);
+			
+			
+			this.getManagedBean().getTaskListGroupDataModel().reloadData();
+			this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
+		}catch(Exception e){
+			throw new EpException(e.getMessage());
+		}
+		
+		return "taskListView?faces-redirect=true";
+		
+		
+	}
+	
+	
+	
 
 }
