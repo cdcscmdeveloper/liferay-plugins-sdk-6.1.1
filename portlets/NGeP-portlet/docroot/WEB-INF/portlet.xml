@@ -3320,7 +3320,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/sm/disciplinaryAction/complaintView.xhtml</value>
+			<value>/xhtml/sm/disciplinaryAction/prerenderComplaintView.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
