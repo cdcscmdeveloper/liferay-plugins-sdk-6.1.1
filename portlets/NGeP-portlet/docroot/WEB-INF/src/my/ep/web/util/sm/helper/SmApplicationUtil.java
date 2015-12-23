@@ -2319,6 +2319,7 @@ public class SmApplicationUtil {
 		sec.setMachineryVerified(isVerifiedAll);
 		sec.setLicenseVerified(isVerifiedAll);
 		sec.setAssocBodyVerified(isVerifiedAll);
+		sec.setSupplierSystemVerified(isVerifiedAll);
 
 		return sec;
 	}
