@@ -2019,13 +2019,21 @@ public class LOIDetailBackingBean extends
 			// refinalization 
 			if(isRefinalized) {
 
-				if (null != loiLoa.getLoiRequired() && loiLoa.getLoiRequired() && loiLoa.isLoiLoaActive()) {
+				if (null != loiLoa.getLoiRequired()) {
+					if(loiLoa.getLoiRequired() && loiLoa.isLoiLoaActive()){
+						isLoiRequired = Boolean.FALSE;
+						break;
+					}
+					
+				} else{
 					isLoiRequired = Boolean.FALSE;
+					break;
 				}
 
 			} else{
 				if (null != loiLoa.getLoiRequired() && loiLoa.getLoiRequired()) {
 					isLoiRequired = Boolean.FALSE;
+					break;
 				}
 			}
 		}
