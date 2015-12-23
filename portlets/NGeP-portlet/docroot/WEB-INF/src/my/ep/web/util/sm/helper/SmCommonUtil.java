@@ -111,6 +111,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRace;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
@@ -3435,6 +3436,19 @@ public class SmCommonUtil {
 		}
 		return instance;
 
+	}
+	
+	/**
+	 * Retrieve PmStatus By Id
+	 */
+	public PmStatus retrievePmStatusById(Long statusId){
+		StatusReqDTO reqDTO = new StatusReqDTO();
+		IStatusSO reqSO = (IStatusSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+		reqDTO.setStatusId(statusId);
+		StatusResDTO resDTO = reqSO.retrieveStatusByStatusId(reqDTO);
+		
+		return resDTO.getPmStatus();
 	}
 
 }
