@@ -9,48 +9,40 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-		<f:event listener="#{complaintBackingBean.retrieveAllActiveComplaint}"
-			type="preRenderView" />
-		<div align="right">
-			<p:commandLink value="#{lbl['lbl.sm.complaint.pending.shwcause.accstnresp']}"
-				style="color:blue;"
-				action="#{complaintBackingBean.pendingResponseLetterView}"></p:commandLink>
-		</div>
 		<p:panel header="#{lbl['lbl.sm.complaint.search']}" toggleable="true" id="pnlSearch">
 			<div align="center">
 				<table style="width: 80%;">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.complaint.search.by']}" /></td>
-						<td><p:selectOneMenu>
+						<td><p:selectOneMenu value="#{complaintBackingBean.managedBean.complaintSearchBean.searchBy}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItem itemLabel="#{lbl['lbl.sm.complaint.ep.no']}" itemValue="E" />
-								<f:selectItem itemLabel="#{lbl['lbl.sm.companyname']}" itemValue="CA" />
-								<f:selectItem itemLabel="#{lbl['lbl.sm.complaint.no']}" itemValue="CO" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.companyname']}" itemValue="S" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.complaint.no']}" itemValue="C" />
 								<f:selectItem itemLabel="#{lbl['lbl.sm.mofno']}" itemValue="M" />
 								<f:selectItem itemLabel="#{lbl['lbl.sm.regno']}" itemValue="R" />
 							</p:selectOneMenu></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.complaint.keyword']}" /></td>
-						<td><p:inputText /></td>
+						<td><p:inputText value="#{complaintBackingBean.managedBean.complaintSearchBean.keyword}" /></td>
 
 						<td><p:outputLabel value="#{lbl['lbl.sm.status']}" /></td>
-						<td><p:selectOneMenu>
-								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-								<f:selectItem itemLabel="#{lbl['lbl.sm.status.open']}" itemValue="O" />
-								<f:selectItem itemLabel="#{lbl['lbl.sm.status.in.progress']}" itemValue="P" />
-								<f:selectItem itemLabel="#{lbl['lbl.sm.status.closed']}" itemValue="C" />
+						<td><p:selectOneMenu value="#{complaintBackingBean.managedBean.complaintSearchBean.status}">
+								<f:selectItems value="#{complaintBackingBean.getDAStatusDropDown()}" />
 							</p:selectOneMenu></td>
-						<td><p:commandButton value="#{lbl['lbl.sm.button.search']}" /></td>
+						<td><p:commandButton value="#{lbl['lbl.sm.button.search']}" action="#{complaintBackingBean.retrieveComplaint()}" 
+						update="complaintSR" /></td>
 					</tr>
 				</table>
 			</div>
 		</p:panel>
+		
+
 
 		<p:panel header="#{lbl['lbl.sm.complaint.header']}" toggleable="true" id="pnlCompList">
-			<p:dataTable value="#{complaintBackingBean.managedBean.smComplLs}"
-				var="compl" id="complaintDt"
-				selection="#{complaintBackingBean.managedBean.selectedComplaint}" rowKey="#{compl}">
-
-				<ac:paginator for="complaintDt" />
+			<p:dataTable id="complaintSR"
+					value="#{complaintBackingBean.managedBean.complaintDataModel}"
+					rows="10" var="compl" rowIndexVar="index" lazy="true">
+				<ac:paginator for="complaintSR" />
 				<p:column headerText="#{lbl['lbl.sm.complaint.no']}">
 					#{compl.complaintNo}
 				</p:column>
@@ -62,15 +54,12 @@
 					</h:outputText>
 				</p:column>
 
-				<!-- 				<p:column headerText="Complaint Type"> -->
-				<!-- 					#{compl.complaintCategory} -->
-				<!-- 				</p:column> -->
-
-				<!-- 				<p:column headerText="MOF No"> -->
-				<!-- 					#{compl.supplierMofNo} -->
-				<!-- 				</p:column> -->
 				<p:column headerText="#{lbl['lbl.sm.suppname']}">
 					#{compl.smSupplier.companyName}
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.epNo']}">
+					#{compl.smSupplier.epNo}
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.regno']}">
@@ -78,21 +67,18 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.status']}">
+					#{complaintBackingBean.getStatusDescById(compl.pmStatus.statusId)}
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.action']}">
-					<p:commandLink
+					<p:commandLink id="complEditBtn" 
 						action="#{complaintBackingBean.onComplaintRowSelect(compl.complaintId)}">
-						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" ></p:graphicImage>
+						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" >
+						</p:graphicImage>
 					</p:commandLink>
 				</p:column>
-				
-				<p:column selectionMode="multiple" style="width:2%" />
 			</p:dataTable>
 		</p:panel>
 
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.generate.excel']}"></p:commandButton>
-		</div>
 	</ui:define>
 </ui:composition>

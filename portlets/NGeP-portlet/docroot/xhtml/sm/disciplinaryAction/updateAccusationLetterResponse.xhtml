@@ -10,13 +10,9 @@
 			<tr>
 				<td class="tdTitle"><h:outputText
 						value="* #{lbl['lbl.sm.complaint.response.received']}" /></td>
-				<td class="tdContent"><p:calendar showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
-			</tr>
-			<tr>
-				<td class="tdTitle"><h:outputText value="* #{lbl['lbl.sm.complaint.expect.nxt.convene']}" /></td>
-				<td class="tdContent"><p:calendar showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
-			</tr>
-			<tr>
+				<td class="tdContent"><p:calendar showOn="button" 
+				value="#{complaintBackingBean.managedBean.smComplReview.smComplaintResponse.supplierResponseDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
+
 				<td class="tdTitle"><h:outputText
 						value="* #{lbl['lbl.sm.complaint.accusation.letter.resp.upload']}" /></td>
 				<td class="tdContent"><p:fileUpload mode="simple" /></td>

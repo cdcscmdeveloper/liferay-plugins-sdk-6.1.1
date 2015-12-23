@@ -8,60 +8,64 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
+	
+	<ui:include src="/xhtml/sm/shared/complaintRegistration/complaintHeader.xhtml" />
+	<div align="right">
+		<p:commandButton value="#{lbl['lbl.btn.submit']}"
+			action="#{complaintBackingBean.updateComplaint}"></p:commandButton>
+	</div>
+	
+	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />	
+		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionStatusConst.newComplaint}">
+			<ui:include src="initialReview.xhtml"  />
+		</c:if>
+		
+		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionStatusConst.reviewByPtpk}">
+			<ui:include src="complaintFirstReviewInfo.xhtml" />
+			<ui:include src="updateComplaintFirstReview.xhtml" />
+		</c:if>
+		
+		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionStatusConst.prepareSlLetter}">
+			<ui:include src="issueShowCauseLetter.xhtml" />
+<!-- 			<ui:include src="updateShowCauseLetterResponse.xhtml" /> -->
+		</c:if>
+		
+		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionStatusConst.updateSlReceiveDate}">
+			<ui:include src="issueShowCauseLetter.xhtml" />
+		</c:if>
+		
+		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionStatusConst.waitingSuppSlResp}">
+			<ui:include src="issueShowCauseLetter.xhtml" />
+			<ui:include src="updateShowCauseLetterResponse.xhtml" />
+		</c:if>
+		
+		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionStatusConst.reviewSuppResp}">
+				<ui:include src="complaintSecondReviewInfo.xhtml" />
+				<ui:include src="updateComplaintSecondReview.xhtml" />
+		</c:if>
 
-
-		<!--  <p:commandButton value="Download Investigation Report"></p:commandButton>-->
-		<p:tabView id="tabComplaint" dynamic="true" orientation="left">
-			<c:if
-				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 0 }">
-				<p:tab title="#{lbl['lbl.sm.complaint.initial.review']}">
-					<ui:include src="initialReview.xhtml" />
-				</p:tab>
-			</c:if>
-
-			<c:if
-				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 1 }">
-				<p:tab title="#{lbl['lbl.sm.complaint.first.ptk.decision']}">
-					<ui:include src="complaintFirstReviewInfo.xhtml" />
-					<ui:include src="updateComplaintFirstReview.xhtml" />
-				</p:tab>
-			</c:if>
-
-			<c:if
-				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 2 }">
-				<p:tab title="#{lbl['lbl.sm.complaint.show.cause.letter']}">
-					<ui:include src="updateShowCauseLetterInfo.xhtml" />
-					<ui:include src="updateShowCauseLetterResponse.xhtml" />
-				</p:tab>
-			</c:if>
-
-			<c:if
-				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 3 }">
-
-				<p:tab title="#{lbl['lbl.sm.complaint.second.ptk.decision']}">
-					<ui:include src="complaintSecondReviewInfo.xhtml" />
-					<ui:include src="updateComplaintSecondReview.xhtml" />
-				</p:tab>
-			</c:if>
-
-			<c:if
-				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 4 }">
-				<p:tab title="#{lbl['lbl.sm.complaint.accusation.letter.info']}">
-					<ui:include src="updateAccusationLetterInfo.xhtml" />
-					<ui:include src="updateAccusationLetterResponse.xhtml" />
-				</p:tab>
-			</c:if>
-
-			<c:if
-				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 5 }">
-				<p:tab title="#{lbl['lbl.sm.complaint.jktt.decision']}">
-					<ui:include src="JKTTDecision.xhtml" />
-				</p:tab>
-			</c:if>
-			<p:tab title="#{lbl['lbl.sm.complaint.tracking']}">
-				<ui:include
-					src="/xhtml/sm/shared/complaintRegistration/complaintTracking.xhtml" />
-			</p:tab>
-		</p:tabView>
+		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionStatusConst.prepareAcLetter}">
+				<ui:include src="updateAccusationLetterInfo.xhtml" />
+<!-- 					<ui:include src="updateAccusationLetterResponse.xhtml" /> -->
+		</c:if>
+		
+		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionStatusConst.updateAcReceiveDate}">
+				<ui:include src="updateAccusationLetterInfo.xhtml" />
+		</c:if>
+		
+		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionStatusConst.waitingSuppAcResp}">
+				<ui:include src="updateAccusationLetterInfo.xhtml" />
+				<ui:include src="updateAccusationLetterResponse.xhtml" />
+		</c:if>
+		
+		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionStatusConst.pendingReviewRespFromJktt}">
+			<ui:include src="JKTTDecision.xhtml" />
+		</c:if>
+		
+		
+<!-- 		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionStatusConst.reviewSuppResp}">
+				<ui:include src="JKTTDecision.xhtml" />
+		</c:if> -->
+		
 	</ui:define>
 </ui:composition>
