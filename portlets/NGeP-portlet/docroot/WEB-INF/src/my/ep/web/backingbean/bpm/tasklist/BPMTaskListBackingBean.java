@@ -908,5 +908,37 @@ public class BPMTaskListBackingBean extends
 	
 	
 	
+	public void claimTaskInDetailPage()  {
+		System.out.println("**********claimTask");
+		
+		
+		
+		
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
+		
+		
+		FacesScopes face = new FacesScopes();
+		Object token = face.getBPMAuthenticationCtxToken();
+		
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		System.out.println("taskId:"+this.getManagedBean().getTaskId());
+		System.out.println("token:"+token);
+		reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		reqDTO.setCtxToken(token);
+		bpmSO.claimTask(reqDTO);
+		
+		
+		this.getManagedBean().getTaskListGroupDataModel().reloadData();
+		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
+		this.getManagedBean().setClaim(true);
+		
+		//return "/xhtml/bpmtasklist/taskListView.xhtml?faces-redirect=true";
+		
+		
+	}
+	
+	
+	
 
 }

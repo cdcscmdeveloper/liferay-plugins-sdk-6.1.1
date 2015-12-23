@@ -2404,7 +2404,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		System.out.println("claim:" + claim);
 		
 		Boolean b = Boolean.valueOf(claim);
-		this.getManagedBean().setClaim(b);
+		bb.getManagedBean().setClaim(b);
+		bb.getManagedBean().setTaskId(taskId);
 
 		FacesScopes face = new FacesScopes();
 		Object token = face.getBPMAuthenticationCtxToken();
@@ -2648,7 +2649,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		System.out.println("claim:" + claim);
 		
 		Boolean b = Boolean.valueOf(claim);
-		this.getManagedBean().setClaim(b);
+		bb.getManagedBean().setClaim(b);
+		bb.getManagedBean().setTaskId(taskId);
 
 
 		FacesScopes face = new FacesScopes();
