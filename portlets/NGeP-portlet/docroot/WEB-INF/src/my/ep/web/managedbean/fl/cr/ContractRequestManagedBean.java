@@ -85,15 +85,15 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<CtContractItem> selectedContractedItemList;
 	private List<VCtActiveContract> activeContractList; 
 	private FlFulfilmentItem selectedItemRow;
-	private HashMap<String, PmUserGroupUser> approverMap;
+	private HashMap<Long, PmUserGroupUser> approverMap;
 	private BigDecimal subTotal;
 	private FlFulfilmentItemAddr selectedItemAddr;
 	private FlDeliveryAddress flManualAddress;
 	private List<SelectItem> supplierBranchesList;
 	private List<PmUserGroup> userGroupList;
 	private List<Long> agentOrgProfileList;
-	private String selectedApprover;
-	private List<String> approverList;
+	private Long selectedApprover;
+	private List<Long> approverList;
 
 	private List <FlFulfilmentItemAddr>  selectedItemsRows;
 	private PmOrgProfile pmOrgProfile;
@@ -638,9 +638,9 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	/**
 	 * @return the approverMap
 	 */
-	public HashMap<String, PmUserGroupUser> getApproverMap() {
+	public HashMap<Long, PmUserGroupUser> getApproverMap() {
 		if(approverMap == null){
-			setApproverMap(new HashMap<String,PmUserGroupUser>());
+			setApproverMap(new HashMap<Long,PmUserGroupUser>());
 		}
 		return approverMap;
 	}
@@ -649,7 +649,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	/**
 	 * @param approverMap the approverMap to set
 	 */
-	public void setApproverMap(HashMap<String, PmUserGroupUser> approverMap) {
+	public void setApproverMap(HashMap<Long, PmUserGroupUser> approverMap) {
 		this.approverMap = approverMap;
 	}
 
@@ -2560,25 +2560,11 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the selectedApprover
-	 */
-	public String getSelectedApprover() {
-		return selectedApprover;
-	}
-
-	/**
-	 * @param selectedApprover the selectedApprover to set
-	 */
-	public void setSelectedApprover(String selectedApprover) {
-		this.selectedApprover = selectedApprover;
-	}
-
-	/**
 	 * @return the approverList
 	 */
-	public List<String> getApproverList() {
+	public List<Long> getApproverList() {
 		if(approverList == null){
-			setApproverList(new ArrayList<String>());
+			setApproverList(new ArrayList<Long>());
 		}
 		return approverList;
 	}
@@ -2586,7 +2572,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	/**
 	 * @param approverList the approverList to set
 	 */
-	public void setApproverList(List<String> approverList) {
+	public void setApproverList(List<Long> approverList) {
 		this.approverList = approverList;
 	}
 
@@ -2688,6 +2674,20 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setItemAutoUpdate(boolean itemAutoUpdate) {
 		this.itemAutoUpdate = itemAutoUpdate;
+	}
+
+	/**
+	 * @return the selectedApprover
+	 */
+	public Long getSelectedApprover() {
+		return selectedApprover;
+	}
+
+	/**
+	 * @param selectedApprover the selectedApprover to set
+	 */
+	public void setSelectedApprover(Long selectedApprover) {
+		this.selectedApprover = selectedApprover;
 	}
 
 }
