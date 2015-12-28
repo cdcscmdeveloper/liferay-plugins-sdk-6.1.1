@@ -1,8 +1,5 @@
 package my.ep.web.backingbean.pm.notify;
 
-import java.sql.Timestamp;
-import java.util.Date;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -38,6 +35,7 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 	private IPagingDataModel<PmNotifyUser> notifyDataModel = new NotifyDataModel();
 
 	public NotifyBackingBean() {
+		this.getManagedBean().setDeleteButtonHide(true);
 	}
 
 	public void retrieveNotifyList() {
@@ -142,6 +140,21 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 			if (resDTO.isSuccessful()) {
 				selectedNotify.setRead(true);
 			}
+		}
+	}
+	
+	public void rowSelectUnselectCheckbox(){
+		
+		if (this.getManagedBean().getSelectedNotifys() != null) {
+			
+			PmNotifyUser[] pmNotifyUserArr = this.getManagedBean().getSelectedNotifys();
+			
+			if(pmNotifyUserArr != null && pmNotifyUserArr.length > 0){
+				this.getManagedBean().setDeleteButtonHide(false);
+			} else {
+				this.getManagedBean().setDeleteButtonHide(true);
+			}
+			
 		}
 	}
 

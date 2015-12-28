@@ -36,7 +36,7 @@ public class NotifyManagedBean extends BaseManagedBean {
 	private PmNotifyUser notify;
 	private boolean isInit = true;
 	private boolean isUnRead = false;
-
+	private boolean deleteButtonHide;
 	
 	public boolean isUnRead() {
 		return isUnRead;
@@ -107,6 +107,14 @@ public class NotifyManagedBean extends BaseManagedBean {
 
 	public void setNotify(PmNotifyUser notify) {
 		this.notify = notify;
+	}
+
+	public boolean isDeleteButtonHide() {
+		return deleteButtonHide;
+	}
+
+	public void setDeleteButtonHide(boolean deleteButtonHide) {
+		this.deleteButtonHide = deleteButtonHide;
 	}
 	
 }
