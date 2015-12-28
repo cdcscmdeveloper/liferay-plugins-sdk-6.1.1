@@ -261,7 +261,7 @@
 								itemValue="#{specialCategory.pmParameter.parameterId}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								listener="#{categoryBackingBean.updateSpecialCategory}"
-								update="outpnlCatRes" />
+								update="outpnlCatRes , facilityTypeId" />
 						</p:selectOneMenu> <p:message id="specialCatCreateIdMsg" for="specialCatCreateId"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
@@ -276,7 +276,8 @@
 							display="icon" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.pm.facility.type']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu required="true" label="#{lbl['lbl.pm.facility.type']}"
+					<td><p:selectOneMenu id="facilityTypeId" required="true" label="#{lbl['lbl.pm.facility.type']}"
+					       disabled="#{!categoryBackingBean.managedBean.facilityTypeChoosable}"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.facilityType}"
 							style="width:100px;">
 							<f:selectItems

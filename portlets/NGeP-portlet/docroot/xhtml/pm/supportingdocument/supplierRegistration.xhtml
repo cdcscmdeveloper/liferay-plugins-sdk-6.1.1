@@ -40,7 +40,7 @@
 							required="#{!empty param['disableValidation']}" /> <p:message
 							id="itaDocNameMsg" for="itaDocName" display="icon" /></td>
 			     	<th></th>
-				    <td><p:selectBooleanCheckbox id="chkAppType"
+				    <td style="vertical-align: top;"><p:selectBooleanCheckbox id="chkAppType"
 							value="#{supportDocBackingBean.managedBean.selectedDocument.byAppType}">
 							<p:ajax event="change" process="@this" update="pDocRestriction"
 								listener="#{supportDocBackingBean.checkDocumentRestrictions(supportDocBackingBean.restrApp)}" />
@@ -53,7 +53,7 @@
 						</p:selectBooleanCheckbox> <h:outputText value="#{lbl['lbl.pm.by.category']}" /> 
 						</td>
 					<th></th>
-					<td>
+					<td style="vertical-align: top;">
 						<p:selectBooleanCheckbox id="chkComType"
 							value="#{supportDocBackingBean.managedBean.selectedDocument.byCompType}">
 							<p:ajax event="change" process="@this" update="pDocRestriction"
@@ -68,7 +68,7 @@
 						</p:selectBooleanCheckbox> <h:outputText value="#{lbl['lbl.pm.suppdoc.certified.body']}" />
 						</td>
 						<th></th>
-						<td>
+						<td style="vertical-align: top;">
 						<p:selectBooleanCheckbox id="chkSuppType"
 							value="#{supportDocBackingBean.managedBean.selectedDocument.bySupplierType}">
 							<p:ajax event="change" process="@this" update="pDocRestriction"
