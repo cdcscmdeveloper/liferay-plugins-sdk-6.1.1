@@ -321,6 +321,12 @@ public class ReportBackingBean extends
 	/** The registration status list. */
 	private List<SelectItem> registrationStatusList = new ArrayList<SelectItem>();
 
+	/** The registration status list of bus comp type. */
+	private List<SelectItem> registrationStatusListOfBusCompType = new ArrayList<SelectItem>();
+
+	/** The sm bus company list. */
+	private List<SelectItem> smBusCompanyTypeList = new ArrayList<SelectItem>();
+
 	/** The simple quote no list. */
 	private List<String> simpleQuoteNoList = new ArrayList<String>();
 
@@ -808,6 +814,9 @@ public class ReportBackingBean extends
 	/** The sm registration status. */
 	private String smRegistrationStatus;
 
+	/** The sm bus comp type registration status. */
+	private String smBusCompTypeRegistrationStatus;
+
 	/** The smcategory. */
 	private String smcategory;
 
@@ -861,6 +870,12 @@ public class ReportBackingBean extends
 
 	/** The sm paid up capital to. */
 	private String smPaidUpCapitalTo;
+
+	/** The sm bus paid up capital frm. */
+	private String smBusPaidUpCapitalFrm;
+
+	/** The sm bus paid up capital to. */
+	private String smBusPaidUpCapitalTo;
 
 	/** The sm paid up capital naccum. */
 	private String smPaidUpCapitalNaccum;
@@ -921,6 +936,9 @@ public class ReportBackingBean extends
 
 	/** The sm cancellation by. */
 	private String smCancellationBy;
+
+	/** The sm bus company type. */
+	private String smBusCompanyType;
 
 	/** The sm from month. */
 	private String smFromMonth;
@@ -3331,6 +3349,44 @@ public class ReportBackingBean extends
 	 */
 	public String getSmPaidUpCapitalFrm() {
 		return smPaidUpCapitalFrm;
+	}
+
+	/**
+	 * Gets the sm bus paid up capital frm.
+	 * 
+	 * @return the smBusPaidUpCapitalFrm
+	 */
+	public String getSmBusPaidUpCapitalFrm() {
+		return smBusPaidUpCapitalFrm;
+	}
+
+	/**
+	 * Sets the sm bus paid up capital frm.
+	 * 
+	 * @param smBusPaidUpCapitalFrm
+	 *            the smBusPaidUpCapitalFrm to set
+	 */
+	public void setSmBusPaidUpCapitalFrm(String smBusPaidUpCapitalFrm) {
+		this.smBusPaidUpCapitalFrm = smBusPaidUpCapitalFrm;
+	}
+
+	/**
+	 * Gets the sm bus paid up capital to.
+	 * 
+	 * @return the smBusPaidUpCapitalTo
+	 */
+	public String getSmBusPaidUpCapitalTo() {
+		return smBusPaidUpCapitalTo;
+	}
+
+	/**
+	 * Sets the sm bus paid up capital to.
+	 * 
+	 * @param smBusPaidUpCapitalTo
+	 *            the smBusPaidUpCapitalTo to set
+	 */
+	public void setSmBusPaidUpCapitalTo(String smBusPaidUpCapitalTo) {
+		this.smBusPaidUpCapitalTo = smBusPaidUpCapitalTo;
 	}
 
 	/**
@@ -7340,6 +7396,84 @@ public class ReportBackingBean extends
 	}
 
 	/**
+	 * Gets the sm bus company type.
+	 * 
+	 * @return the smBusCompanyType
+	 */
+	public String getSmBusCompanyType() {
+		return smBusCompanyType;
+	}
+
+	/**
+	 * Sets the sm bus company type.
+	 * 
+	 * @param smBusCompanyType
+	 *            the smBusCompanyType to set
+	 */
+	public void setSmBusCompanyType(String smBusCompanyType) {
+		this.smBusCompanyType = smBusCompanyType;
+	}
+
+	/**
+	 * Gets the sm bus company type list.
+	 * 
+	 * @return the smBusCompanyList
+	 */
+	public List<SelectItem> getSmBusCompanyTypeList() {
+		return smBusCompanyTypeList;
+	}
+
+	/**
+	 * Sets the sm bus company type list.
+	 * 
+	 * @param smBusCompanyTypeList
+	 *            the new sm bus company type list
+	 */
+	public void setSmBusCompanyTypeList(List<SelectItem> smBusCompanyTypeList) {
+		this.smBusCompanyTypeList = smBusCompanyTypeList;
+	}
+
+	/**
+	 * Gets the registration status list of bus comp type.
+	 * 
+	 * @return the registrationStatusListOfBusCompType
+	 */
+	public List<SelectItem> getRegistrationStatusListOfBusCompType() {
+		return registrationStatusListOfBusCompType;
+	}
+
+	/**
+	 * Sets the registration status list of bus comp type.
+	 * 
+	 * @param registrationStatusListOfBusCompType
+	 *            the registrationStatusListOfBusCompType to set
+	 */
+	public void setRegistrationStatusListOfBusCompType(
+			List<SelectItem> registrationStatusListOfBusCompType) {
+		this.registrationStatusListOfBusCompType = registrationStatusListOfBusCompType;
+	}
+
+	/**
+	 * Gets the sm bus comp type registration status.
+	 * 
+	 * @return the smBusCompTypeRegistrationStatus
+	 */
+	public String getSmBusCompTypeRegistrationStatus() {
+		return smBusCompTypeRegistrationStatus;
+	}
+
+	/**
+	 * Sets the sm bus comp type registration status.
+	 * 
+	 * @param smBusCompTypeRegistrationStatus
+	 *            the smBusCompTypeRegistrationStatus to set
+	 */
+	public void setSmBusCompTypeRegistrationStatus(
+			String smBusCompTypeRegistrationStatus) {
+		this.smBusCompTypeRegistrationStatus = smBusCompTypeRegistrationStatus;
+	}
+
+	/**
 	 * retrieveLOAStatusList- will retrieve LOA status(SOA Status) list.
 	 * 
 	 * @return the SOAStatusList
@@ -7718,34 +7852,178 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * supplierTypeConsultant - Supplier type consultant comparison for eanbling
-	 * and disabling for ConsultantRegistrationStatus .
+	 * Retrieve reg status list for contract.
+	 * 
+	 * @return the list
+	 */
+	public List<SelectItem> retrieveRegStatusListForContract() {
+		registrationStatusListOfBusCompType = new ArrayList<SelectItem>();
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+
+			List<Object[]> regStatusList = reportSO
+					.retrieveRegStatusListForContract(strLanguage);
+			for (Object[] object : regStatusList) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setValue(object[0].toString());
+				selectItem.setLabel(object[1].toString());
+				registrationStatusListOfBusCompType.add(selectItem);
+			}
+		}
+		return registrationStatusListOfBusCompType;
+	}
+
+	/**
+	 * Retrieve reg status list for consultant.
+	 * 
+	 * @return the list
+	 */
+	public List<SelectItem> retrieveRegStatusListForConsultant() {
+		registrationStatusListOfBusCompType = new ArrayList<SelectItem>();
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+
+			List<Object[]> regStatusList = reportSO
+					.retrieveRegStatusListForConsultant(strLanguage);
+			for (Object[] object : regStatusList) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setValue(object[0].toString());
+				selectItem.setLabel(object[1].toString());
+				registrationStatusListOfBusCompType.add(selectItem);
+			}
+		}
+		return registrationStatusListOfBusCompType;
+	}
+
+	/**
+	 * Retrieve reg status list for all.
+	 * 
+	 * @return the list
+	 */
+	public List<SelectItem> retrieveRegStatusListForAll() {
+		this.registrationStatusListOfBusCompType = new ArrayList<SelectItem>();
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+
+			List<Object[]> regStatusList = reportSO
+					.retrieveRegStatusListForAll(strLanguage);
+			for (Object[] object : regStatusList) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setValue(object[0].toString());
+				selectItem.setLabel(object[1].toString());
+				this.registrationStatusListOfBusCompType.add(selectItem);
+			}
+		}
+		return this.registrationStatusListOfBusCompType;
+	}
+
+	/**
+	 * Retrieve consultant bus company data.
+	 * 
+	 * @return the list
+	 */
+	public List<SelectItem> retrieveConsultantBusCompanyData() {
+		this.smBusCompanyTypeList = new ArrayList<SelectItem>();
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+
+			List<Object[]> retrieveConsultantList = reportSO
+					.getConsultantBusCompanyData(strLanguage);
+			for (Object[] object : retrieveConsultantList) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setValue(object[1].toString());
+				selectItem.setLabel(object[0].toString());
+				this.smBusCompanyTypeList.add(selectItem);
+			}
+		}
+		return this.smBusCompanyTypeList;
+	}
+
+	/**
+	 * Retrieve contract bus company data.
+	 * 
+	 * @return the list
+	 */
+	public List<SelectItem> retrieveContractBusCompanyData() {
+		this.smBusCompanyTypeList = new ArrayList<SelectItem>();
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+
+			List<Object[]> retrieveContractList = reportSO
+					.getContractBusCompanyData(strLanguage);
+			for (Object[] object : retrieveContractList) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setValue(object[1].toString());
+				selectItem.setLabel(object[0].toString());
+				this.smBusCompanyTypeList.add(selectItem);
+			}
+		}
+		return this.smBusCompanyTypeList;
+	}
+
+	/**
+	 * Retrieve all bus company data.
+	 * 
+	 * @return the list
+	 */
+	public List<SelectItem> retrieveAllBusCompanyData() {
+		this.smBusCompanyTypeList = new ArrayList<SelectItem>();
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+
+			List<Object[]>  retrieveAllList = reportSO
+					.getAllBusCompanyData(strLanguage);
+			for (Object[] object : retrieveAllList) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setValue(object[1].toString());
+				selectItem.setLabel(object[0].toString());
+				this.smBusCompanyTypeList.add(selectItem);
+			}
+		}
+		return this.smBusCompanyTypeList;
+	}
+
+	
+	/**
+	 * Supplier type consultant.
 	 */
 	public void supplierTypeConsultant() {
-		getManagedBean().getRptGenBean().setSmConsultantRegistrationStatusView(
-				false);
+
 		if ((null != this.getReportValue())
 				&& (this.getReportValue()
 						.equalsIgnoreCase(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL))) {
-			if ((null != this.getSmSupplierType())
-					&& (this.getSmSupplierType()
-							.equalsIgnoreCase(ReportConst.SUPPL_CONSLT_TYPE))) {
-				getManagedBean().getRptGenBean()
-						.setSmConsultantRegistrationStatusView(true);
-				getManagedBean().getRptGenBean().setSmRegistrationStatusView(
-						false);
+			if (null != this.getSmSupplierType()) {
+				if (this.getSmSupplierType().equalsIgnoreCase(
+						ReportConst.SUPPL_CONSULT_TYPE)) {
+					retrieveConsultantBusCompanyData();
+					retrieveRegStatusListForConsultant();
+				} else if (this.getSmSupplierType().equalsIgnoreCase(
+						ReportConst.SUPPL_CONTRACT_TYPE)) {
+					retrieveContractBusCompanyData();
+					retrieveRegStatusListForContract();
+				}
 			} else {
-				getManagedBean().getRptGenBean()
-						.setSmConsultantRegistrationStatusView(false);
-				getManagedBean().getRptGenBean().setSmRegistrationStatusView(
-						true);
+				retrieveAllBusCompanyData();
+				retrieveRegStatusListForAll();
 			}
 		} else if (null != this.getReportValue()) {
 			if (this.getReportValue().equalsIgnoreCase(
 					ReportConst.SM_REG_COMPANY_IN_MOF_RPT_VAL)) {
 				if (this.getSmSupplierType() != null) {
 					if (this.getSmSupplierType().equalsIgnoreCase(
-							ReportConst.SUPPL_CONSLT_TYPE)) {
+							ReportConst.SUPPL_CONSULT_TYPE)) {
 						this.setSmMofRegNo(ReportConst.SUPPL_CONSULT_MOF_NO);
 					} else if (this.getSmSupplierType().equalsIgnoreCase(
 							ReportConst.SUPPL_CONTRACT_TYPE)) {
@@ -7758,7 +8036,7 @@ public class ReportBackingBean extends
 					ReportConst.SM_LIST_OF_DIR_OWN_CEO_COMPANY_RPT_VAL)) {
 				if (this.getSmSupplierType() != null) {
 					if (this.getSmSupplierType().equalsIgnoreCase(
-							ReportConst.SUPPL_CONSLT_TYPE)) {
+							ReportConst.SUPPL_CONSULT_TYPE)) {
 						this.setSmMofRegNoFrom(ReportConst.SUPPL_CONSULT_MOF_NO);
 						this.setSmMofRegNoTo(ReportConst.SUPPL_CONSULT_MOF_NO);
 					} else if (this.getSmSupplierType().equalsIgnoreCase(
@@ -10742,6 +11020,11 @@ public class ReportBackingBean extends
 			if (this.getReportValue().equals(ReportConst.SM_LIST_OF_USERS)) {
 				changeSoftCertSelection();
 			}
+			if (this.getReportValue().equals(
+					ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL)) {
+				retrieveAllBusCompanyData();
+				retrieveRegStatusListForAll();
+			}
 			if (pmReport != null) {
 				getDefaultValuesFromAndToDate(pmReport.getReportCode());
 			}
@@ -10808,6 +11091,13 @@ public class ReportBackingBean extends
 				.add(ReportConst.PM_LIST_OF_EXEMPTED_ITEMS_BY_SUPPLIER_RPT_VAL);
 	}
 
+	/**
+	 * Gets the default datesfor ct.
+	 * 
+	 * @param reportNameList
+	 *            the report name list
+	 * @return the default datesfor ct
+	 */
 	private void getDefaultDatesforCT(List<String> reportNameList) {
 
 		reportNameList.add(ReportConst.CT_CONTRACT_MONITORING_RPT_VAL);
@@ -10826,6 +11116,13 @@ public class ReportBackingBean extends
 
 	}
 
+	/**
+	 * Gets the default datesfor cm.
+	 * 
+	 * @param reportNameList
+	 *            the report name list
+	 * @return the default datesfor cm
+	 */
 	private void getDefaultDatesforCM(List<String> reportNameList) {
 
 		reportNameList.add(ReportConst.LST_PUB_CAT_ITM_RPT_VAL);
@@ -12118,6 +12415,14 @@ public class ReportBackingBean extends
 						.getSmPaidUpCapitalNaccum() != ReportConst.EMPTY_VAL))
 				// || ((this.getSmRole() != null) && (this.getSmRole() !=
 				// ReportConst.EMPTY_VAL))
+				|| ((this.getSmBusCompTypeRegistrationStatus() != null) && (this
+						.getSmBusCompTypeRegistrationStatus() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmBusCompanyType() != null) && (this
+						.getSmBusCompanyType() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmBusPaidUpCapitalFrm() != null) && (this
+						.getSmBusPaidUpCapitalFrm() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmBusPaidUpCapitalTo() != null) && (this
+						.getSmBusPaidUpCapitalTo() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmEpNo() != null) && (this.getSmEpNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmRegistrationNo() != null) && (this
 						.getSmRegistrationNo() != ReportConst.EMPTY_VAL))
@@ -12572,6 +12877,32 @@ public class ReportBackingBean extends
 						.setSmCancellationByVar(ReportConst.AMP_SM_CANCEL_BY_EQ
 								+ this.getSmCancellationBy());
 			}
+			if ((this.getSmBusCompTypeRegistrationStatus() != null)
+					&& (this.getSmBusCompTypeRegistrationStatus() != ReportConst.EMPTY_VAL)) {
+				rptGenBean
+						.setSmBusCompTypeRegistrationStatusByVar(ReportConst.AMP_SM_BUS_REG_TYPE_BY_EQ
+								+ this.getSmBusCompTypeRegistrationStatus());
+			}
+
+			if ((this.getSmBusCompanyType() != null)
+					&& (this.getSmBusCompanyType() != ReportConst.EMPTY_VAL)) {
+				rptGenBean
+						.setSmBusCompanyTypeByVar(ReportConst.AMP_SM_BUS_TYPE_BY_EQ
+								+ this.getSmBusCompanyType());
+			}
+			if ((this.getSmBusPaidUpCapitalFrm() != null)
+					&& (this.getSmBusPaidUpCapitalFrm() != ReportConst.EMPTY_VAL)) {
+				rptGenBean
+						.setSmBusPaidUpCapitalFrmByVar(ReportConst.AMP_SM_BUS_TYPE_BY_EQ
+								+ this.getSmBusPaidUpCapitalFrm());
+			}
+			if ((this.getSmBusPaidUpCapitalTo() != null)
+					&& (this.getSmBusPaidUpCapitalTo() != ReportConst.EMPTY_VAL)) {
+				rptGenBean
+						.setSmBusPaidUpCapitalToByVar(ReportConst.AMP_SM_BUS_TYPE_BY_EQ
+								+ this.getSmBusPaidUpCapitalTo());
+			}
+
 			StringBuffer maincategory = new StringBuffer();
 			StringBuffer subcategory = new StringBuffer();
 			StringBuffer subcategorydivision = new StringBuffer();
@@ -12646,6 +12977,10 @@ public class ReportBackingBean extends
 						+ rptGenBean.getCompanyNameTotVar()
 						+ rptGenBean.getSmPaymentToVar()
 						+ rptGenBean.getRegistrationTypeTotVar()
+						+ rptGenBean.getSmBusCompTypeRegistrationStatusByVar()
+						+ rptGenBean.getSmBusCompanyTypeByVar()
+						+ rptGenBean.getSmBusPaidUpCapitalFrmByVar()
+						+ rptGenBean.getSmBusPaidUpCapitalToByVar()
 						+ rptGenBean.getItemCategoryTotVar()
 						+ rptGenBean.getEpNumberTotVar()
 						+ rptGenBean.getBusinessRegNoTotVar()
@@ -14351,8 +14686,14 @@ public class ReportBackingBean extends
 		smSoftCertificateFeeList = new ArrayList<SelectItem>();
 		this.setSmMofRegNo(null);
 		this.setSmRegistrationStatus(null);
+		this.setSmBusCompTypeRegistrationStatus(null);
+		this.registrationStatusListOfBusCompType=new ArrayList<SelectItem>();
+		this.smBusCompanyTypeList=new ArrayList<SelectItem>();
+		this.setSmBusPaidUpCapitalFrm(null);
+		this.setSmBusPaidUpCapitalTo(null);
 		this.setSmcategory(null);
 		this.setSmCode(null);
+		this.setSmBusCompanyType(null);
 		this.setSmMainCategory(null);
 		this.setSmSubCategory(null);
 		this.setSmSubCategoryDivision(null);
@@ -15198,6 +15539,9 @@ public class ReportBackingBean extends
 		return orgTypeSearchBean;
 	}
 
+	/**
+	 * Change soft cert selection.
+	 */
 	public void changeSoftCertSelection() {
 
 		this.getManagedBean().setRptGenBean(rptGenBean);
@@ -15225,6 +15569,54 @@ public class ReportBackingBean extends
 					.setSmSoftCertReqDateView(true);
 
 		}
+	}
+
+	/**
+	 * Change bus company type.
+	 */
+	public void changeBusCompanyType() {
+
+		this.getManagedBean().getRptGenBean()
+				.setSmBusCompanyPaidUpAccumlatedShareView(false);
+		this.getManagedBean().getRptGenBean().setSmAccmltdCptlSelView(false);
+		this.getManagedBean().getRptGenBean().setSmPaidUpCptlSelView(false);
+		this.getManagedBean().getRptGenBean().setSmAccmltdShareSelView(false);
+		this.getManagedBean().getRptGenBean()
+				.setSmPaidAccmltdShareCptlSelView(false);
+
+		if (this.smBusCompanyType != null) {
+			if (this.smBusCompanyType.equals("C")
+					|| this.smBusCompanyType.equals("D")
+					|| this.smBusCompanyType.equals("E")
+					|| this.smBusCompanyType.equals("F")
+					|| this.smBusCompanyType.equals("G")
+					|| this.smBusCompanyType.equals("H")) {
+
+				this.getManagedBean().getRptGenBean()
+						.setSmBusCompanyPaidUpAccumlatedShareView(true);
+				this.getManagedBean().getRptGenBean()
+						.setSmAccmltdCptlSelView(true);
+
+			} else if (this.smBusCompanyType.equals("I")
+					|| this.smBusCompanyType.equals("J")
+					|| this.smBusCompanyType.equals("B")) {
+				this.getManagedBean().getRptGenBean()
+						.setSmBusCompanyPaidUpAccumlatedShareView(true);
+				this.getManagedBean().getRptGenBean()
+						.setSmPaidUpCptlSelView(true);
+			} else if (this.smBusCompanyType.equals("K")) {
+				this.getManagedBean().getRptGenBean()
+						.setSmBusCompanyPaidUpAccumlatedShareView(true);
+				this.getManagedBean().getRptGenBean()
+						.setSmAccmltdShareSelView(true);
+			}
+		} else {
+			this.getManagedBean().getRptGenBean()
+					.setSmBusCompanyPaidUpAccumlatedShareView(true);
+			this.getManagedBean().getRptGenBean()
+					.setSmPaidAccmltdShareCptlSelView(true);
+		}
+
 	}
 
 }

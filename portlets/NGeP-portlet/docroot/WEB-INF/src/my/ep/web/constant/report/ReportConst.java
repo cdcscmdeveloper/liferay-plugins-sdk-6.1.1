@@ -534,6 +534,8 @@ public class ReportConst {
 	public static final String AMP_SM_IDENT_TYPE_EQ = "&PIDENTYPE=";
 	public static final String AMP_SM_IDENT_NO_EQ = "&PIDENNO=";
 	public static final String AMP_SM_CANCEL_BY_EQ = "&PCANCELBY=";
+	public static final String AMP_SM_BUS_TYPE_BY_EQ = "&PBUSTYPE=";
+	public static final String AMP_SM_BUS_REG_TYPE_BY_EQ = "&PREGSTATUS=";
 	public static final String AMP_SM_FROM_YEAR_EQ = "&PFROMYEAR=";
 	public static final String AMP_SM_TO_YEAR_EQ = "&PTOYEAR=";
 	public static final String AMP_SM_USER_NAME_EQ = "&PUSERNAME=";
@@ -545,8 +547,9 @@ public class ReportConst {
 	public static final String PEND_PRPR_SITE_VISIT = "Pending Prepare Site Visit Report";
 	public static final String SITE_VISIT_COMPLTD = "Site Visit Report Completed";
 	public static final String KAMA = ",";
-	public static final String SUPPL_CONSLT_TYPE = "J";
+	public static final String SUPPL_CONSULT_TYPE = "J";
 	public static final String SUPPL_CONTRACT_TYPE = "K";
+	public static final String SUPPL_ALL_TYPE = "All";	
 	public static final String SUPPL_CONSULT_MOF_NO = "465-";
 	public static final String SUPPL_CONTRACT_MOF_NO = "357-";
 
