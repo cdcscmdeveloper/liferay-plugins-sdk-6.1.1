@@ -86,7 +86,7 @@
 			value="#{usergroupBackingBean.managedBean.userGroups}"
 			var="groupuser" rowIndexVar="rowIndex" 
 			rowKey="#{groupuser}">
-			<ac:paginator />			
+			<ac:paginator for="groupUser" />		
 
 			<p:column style="width:65%"
 				headerText="#{lbl['lbl.pm.ug.info.uname']}">
