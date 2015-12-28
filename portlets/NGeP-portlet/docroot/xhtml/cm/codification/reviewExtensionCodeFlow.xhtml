@@ -17,11 +17,13 @@
 			<div style="text-align: right;">
 				<ui:repeat var="action"
 					value="#{unspscCodeBackingBean.managedBean.action}">
-					<p:commandButton value="#{action}"
+					<p:commandButton value="#{action}" rendered="#{bpmTasklistBackingBean.managedBean.claim}"
 						oncomplete="extensionConfirmation.show()"
 						update=":form:extensionConfirmationId"
 						action="#{unspscCodeBackingBean.checkRecomendOrSubmit()}"></p:commandButton>
 				</ui:repeat>
+				<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}" action="#{bpmTasklistBackingBean.claimTaskInDetailPage}" rendered="#{!bpmTasklistBackingBean.managedBean.claim}" update="@form"></p:commandButton>
+		
 			</div>
 
 			<ui:include src="DocumentHeader.xhtml"></ui:include>
