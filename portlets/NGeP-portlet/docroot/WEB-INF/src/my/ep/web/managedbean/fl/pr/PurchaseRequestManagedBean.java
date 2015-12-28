@@ -165,7 +165,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private PmUserOrg pmUserOrg = new PmUserOrg();
 	
 	/** The approver map. */
-	private HashMap<String, PmUserGroupUser> approverMap;
+	private HashMap<Long, PmUserGroupUser> approverMap;
 	
 	/** The sc request supplier item id map. */
 	private HashMap<Long, Long> scRequestSupplierItemIdMap;
@@ -500,8 +500,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private boolean gfmasError=false;
 	private String gfmasErrorContent;
 	private PmOrgProfile currentChargePtjGroup;
-	private String selectedApprover;
-	private List<String> approverList;
+	private Long selectedApprover;
+	private List<Long> approverList;
 	
 	private boolean selectChargeLineRow=false;
 	private boolean gstRateChange;
@@ -964,9 +964,9 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 *
 	 * @return the approverMap
 	 */
-	public HashMap<String, PmUserGroupUser> getApproverMap() {
+	public HashMap<Long, PmUserGroupUser> getApproverMap() {
 		if(approverMap == null){
-			setApproverMap(new HashMap<String,PmUserGroupUser>());
+			setApproverMap(new HashMap<Long,PmUserGroupUser>());
 		}
 		return approverMap;
 	}
@@ -976,7 +976,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 *
 	 * @param approverMap the approverMap to set
 	 */
-	public void setApproverMap(HashMap<String, PmUserGroupUser> approverMap) {
+	public void setApproverMap(HashMap<Long, PmUserGroupUser> approverMap) {
 		this.approverMap = approverMap;
 	}
 
@@ -3155,25 +3155,11 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the selectedApprover
-	 */
-	public String getSelectedApprover() {
-		return selectedApprover;
-	}
-
-	/**
-	 * @param selectedApprover the selectedApprover to set
-	 */
-	public void setSelectedApprover(String selectedApprover) {
-		this.selectedApprover = selectedApprover;
-	}
-
-	/**
 	 * @return the approverList
 	 */
-	public List<String> getApproverList() {
+	public List<Long> getApproverList() {
 		if(approverList == null){
-			setApproverList(new ArrayList<String>());
+			setApproverList(new ArrayList<Long>());
 		}
 		return approverList;
 	}
@@ -3181,7 +3167,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	/**
 	 * @param approverList the approverList to set
 	 */
-	public void setApproverList(List<String> approverList) {
+	public void setApproverList(List<Long> approverList) {
 		this.approverList = approverList;
 	}
 
@@ -3233,6 +3219,20 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setHyperLinkPage(boolean hyperLinkPage) {
 		this.hyperLinkPage = hyperLinkPage;
+	}
+
+	/**
+	 * @return the selectedApprover
+	 */
+	public Long getSelectedApprover() {
+		return selectedApprover;
+	}
+
+	/**
+	 * @param selectedApprover the selectedApprover to set
+	 */
+	public void setSelectedApprover(Long selectedApprover) {
+		this.selectedApprover = selectedApprover;
 	}
 
 }
