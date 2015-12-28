@@ -8,10 +8,14 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
+
+import org.apache.log4j.Logger;
+
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.exception.EpException;
+import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.report.ReportsGenerateBean;
@@ -31,6 +35,11 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 @ViewScoped
 public class SMReportBackingBean extends
 		SourcingBaseBackingBean<ReportMangedBean> {
+	
+	
+	/** The Constant log. */
+	private static final Logger log = EpLogger
+			.getLogger(SMReportBackingBean.class);
 
 	/** The state lst. */
 	private List<SelectItem> stateLst = new ArrayList<SelectItem>();
@@ -87,6 +96,7 @@ public class SMReportBackingBean extends
 	 */
 	public void enableCriteriaVariablesByReportBySM(
 			ReportsGenerateBean rptGenBean, List<String> authoriztionList) {
+		log.info("SMReportBackingBean-enableCriteriaVariablesByReportBySM");
 		switch (getManagedBean().getReportValue().trim()) {
 
 		case ReportConst.SM_REG_COMPANY_IN_MOF_RPT_VAL:
@@ -635,11 +645,12 @@ public class SMReportBackingBean extends
 					CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));
 			// break;
 		}
+		log.info("End Of SMReportBackingBean-enableCriteriaVariablesByReportBySM");
 	}
 
 	private void checkAuthorizationByRoleCode(ReportsGenerateBean rptGenBean,
 			List<String> authoriztionList) {
-
+		log.info("SMReportBackingBean-checkAuthorizationByRoleCode");
 		if (authoriztionList != null) {
 			if (authoriztionList.contains(ReportConst.ROLE_CODE_COLLECTOR_CDC)) {
 				rptGenBean.setCollectorCDCRegistrationChkView(true);
@@ -652,7 +663,7 @@ public class SMReportBackingBean extends
 
 	private void checkAuthorizationForSuppliers(ReportsGenerateBean rptGenBean,
 			List<String> authoriztionList) {
-
+		log.info("SMReportBackingBean-checkAuthorizationForSuppliers");
 		if (authoriztionList != null) {
 			if (authoriztionList
 					.contains(ReportConst.ROLE_CODE_MOF_SUPPLIER_ADMIN)
@@ -673,6 +684,7 @@ public class SMReportBackingBean extends
 	 * Retrieve state.
 	 */
 	public void retrieveState() {
+		log.info("SMReportBackingBean-retrieveState");
 		stateLst = new ArrayList<SelectItem>();
 		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", IStateSO.class);
