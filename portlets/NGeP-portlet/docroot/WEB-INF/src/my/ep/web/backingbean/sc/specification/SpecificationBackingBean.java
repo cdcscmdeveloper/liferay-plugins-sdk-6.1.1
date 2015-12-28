@@ -16438,6 +16438,10 @@ public class SpecificationBackingBean extends
 						}
 					}
 				} else {
+					if (null == criteriaType) {
+						criteriaType = String.valueOf(prevScore
+								.getCriteriaType());
+					}
 					if (null != lastObject && null != prevScore.getRangeTo()
 							&& null != lastObject.getRangeFrom()) {
 						if ("50".equalsIgnoreCase(criteriaType)
