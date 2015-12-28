@@ -7479,6 +7479,7 @@ public class ReportBackingBean extends
 	 * @return the SOAStatusList
 	 */
 	public List<SelectItem> retrieveLOAStatusList() {
+		log.info("ReportBackingBean-retrieveLOAStatusList");
 		scSOAStatusList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -7501,6 +7502,7 @@ public class ReportBackingBean extends
 	 * should have minimum 3 characters length.
 	 */
 	public void supplierNameValidate() {
+		log.info("ReportBackingBean-supplierNameValidate");
 		if ((this.getScSupplier() != null)
 				&& (this.getScSupplier() != ReportConst.EMPTY_VAL)) {
 			if (this.getScSupplier().trim().length() < 3) {
@@ -7515,6 +7517,7 @@ public class ReportBackingBean extends
 	 * the termination type field.
 	 */
 	public void changeTerminate() {
+		log.info("ReportBackingBean-changeTerminate");
 		this.setCtTerminationType(null);
 		getManagedBean().getRptGenBean().setCtTerminationTypeView(false);
 		if ((null != this.getCtStatusTwo())
@@ -7535,6 +7538,7 @@ public class ReportBackingBean extends
 	 * selecting payment type like Government, CDC or simple payment type list.
 	 */
 	public void changePaymentType() {
+		log.info("ReportBackingBean-changePaymentType");
 		this.setSmPaymentType(null);
 		paymentTypeList = new ArrayList<SelectItem>();
 		if ((null != this.getSmPaymentTo())
@@ -7557,6 +7561,7 @@ public class ReportBackingBean extends
 	 * @return the paymentTypeList
 	 */
 	public List<SelectItem> retrievePaymentTypeList() {
+		log.info("ReportBackingBean-retrievePaymentTypeList");
 		paymentTypeList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -7580,6 +7585,7 @@ public class ReportBackingBean extends
 	 * @return the paymentTypeList
 	 */
 	public List<SelectItem> retrieveGovtPaymentTypeList() {
+		log.info("ReportBackingBean-retrieveGovtPaymentTypeList");
 		paymentTypeList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -7603,6 +7609,7 @@ public class ReportBackingBean extends
 	 * @return the paymentTypeList
 	 */
 	public List<SelectItem> retrieveCDCPaymentTypeList() {
+		log.info("ReportBackingBean-retrieveCDCPaymentTypeList");
 		paymentTypeList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -7626,6 +7633,7 @@ public class ReportBackingBean extends
 	 * @return the paymentMethodList
 	 */
 	public List<String> retrievePaymentMethod() {
+		log.info("ReportBackingBean-retrievePaymentMethod");
 		paymentMethodList = new ArrayList<String>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -7645,6 +7653,7 @@ public class ReportBackingBean extends
 	 * @return the serviceTypeList
 	 */
 	public List<SelectItem> retrievePMServiceType() {
+		log.info("ReportBackingBean-retrievePMServiceType");
 		serviceTypeList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -7669,6 +7678,7 @@ public class ReportBackingBean extends
 	 * date.
 	 */
 	public void showCapitalNaccumShare() {
+		log.info("ReportBackingBean-showCapitalNaccumShare");
 		getManagedBean().getRptGenBean().setSmPaidUpCapitalFrmView(false);
 		if ((null != this.getReportValue())
 				&& (this.getReportValue()
@@ -7698,7 +7708,7 @@ public class ReportBackingBean extends
 	 * @return the processingOfficerList
 	 */
 	public List<SelectItem> retrieveProcessingOfficerList() {
-
+		log.info("ReportBackingBean-retrieveProcessingOfficerList");
 		this.setSmState(null);
 		rptGenBean.retrieveStatesByZoneName(this.smZone);
 		districtLst = new ArrayList<SelectItem>();
@@ -7727,7 +7737,7 @@ public class ReportBackingBean extends
 	 * applicationStatusDateChange - will change application status date.
 	 */
 	public void applicationStatusDateChange() {
-
+		log.info("ReportBackingBean-applicationStatusDateChange");
 		getManagedBean().getRptGenBean()
 				.setSmMandatoryExpectedSiteVisitDateView(false);
 		getManagedBean().getRptGenBean().setSmMandatoryActualSiteVisitDateView(
@@ -7763,7 +7773,7 @@ public class ReportBackingBean extends
 	 * changeReportType - will change report type.
 	 */
 	public void changeReportType() {
-
+		log.info("ReportBackingBean-changeReportType");
 		if ((null != this.getReportValue())
 				&& (this.getReportValue()
 						.equals(ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL))) {
@@ -7813,6 +7823,7 @@ public class ReportBackingBean extends
 	 * @return the string ministryName
 	 */
 	public String retrieveMinistryName(Long orgprofileid) {
+		log.info("ReportBackingBean-retrieveMinistryName");
 		ministryName = null;
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -7834,6 +7845,7 @@ public class ReportBackingBean extends
 	 * @return the registrationStatusList
 	 */
 	public List<SelectItem> retrieveRegStatusList() {
+		log.info("ReportBackingBean-retrieveRegStatusList");
 		registrationStatusList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -7857,6 +7869,7 @@ public class ReportBackingBean extends
 	 * @return the list
 	 */
 	public List<SelectItem> retrieveRegStatusListForContract() {
+		log.info("ReportBackingBean-retrieveRegStatusListForContract");
 		registrationStatusListOfBusCompType = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -7881,6 +7894,7 @@ public class ReportBackingBean extends
 	 * @return the list
 	 */
 	public List<SelectItem> retrieveRegStatusListForConsultant() {
+		log.info("ReportBackingBean-retrieveRegStatusListForConsultant");
 		registrationStatusListOfBusCompType = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -7905,6 +7919,7 @@ public class ReportBackingBean extends
 	 * @return the list
 	 */
 	public List<SelectItem> retrieveRegStatusListForAll() {
+		log.info("ReportBackingBean-retrieveRegStatusListForAll");
 		this.registrationStatusListOfBusCompType = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -7929,6 +7944,7 @@ public class ReportBackingBean extends
 	 * @return the list
 	 */
 	public List<SelectItem> retrieveConsultantBusCompanyData() {
+		log.info("ReportBackingBean-retrieveConsultantBusCompanyData");
 		this.smBusCompanyTypeList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -7953,6 +7969,7 @@ public class ReportBackingBean extends
 	 * @return the list
 	 */
 	public List<SelectItem> retrieveContractBusCompanyData() {
+		log.info("ReportBackingBean-retrieveContractBusCompanyData");
 		this.smBusCompanyTypeList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -7977,6 +7994,7 @@ public class ReportBackingBean extends
 	 * @return the list
 	 */
 	public List<SelectItem> retrieveAllBusCompanyData() {
+		log.info("ReportBackingBean-retrieveAllBusCompanyData");
 		this.smBusCompanyTypeList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -8000,7 +8018,7 @@ public class ReportBackingBean extends
 	 * Supplier type consultant.
 	 */
 	public void supplierTypeConsultant() {
-
+		log.info("ReportBackingBean-supplierTypeConsultant");
 		if ((null != this.getReportValue())
 				&& (this.getReportValue()
 						.equalsIgnoreCase(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL))) {
@@ -8059,6 +8077,7 @@ public class ReportBackingBean extends
 	 * @return the moduleList
 	 */
 	public List<SelectItem> getAllModuleList() {
+		log.info("ReportBackingBean-getAllModuleList");
 		moduleList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -8086,6 +8105,7 @@ public class ReportBackingBean extends
 	 * retrieveIdentificationType - will retrieve identification type List.
 	 */
 	public void retrieveIdentificationType() {
+		log.info("ReportBackingBean-retrieveIdentificationType");
 		identificationTypeList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -8108,6 +8128,7 @@ public class ReportBackingBean extends
 	 * capital.
 	 */
 	public void retrieveAccumulatedPaidUpCptl() {
+		log.info("ReportBackingBean-retrieveAccumulatedPaidUpCptl");
 		accumulatedPaidUpCptlList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -8132,6 +8153,7 @@ public class ReportBackingBean extends
 	 * @return the ministryList selectItem
 	 */
 	public SelectItem[] getLtstMinistryList() {
+		log.info("ReportBackingBean-getLtstMinistryList");
 		SelectItem[] items = null;
 
 		IOrgProfileSO orgProfileSO = null;
@@ -8176,6 +8198,7 @@ public class ReportBackingBean extends
 	 * @return the lministryList selectItem by userid
 	 */
 	public SelectItem[] getLtstMinistryListByUserid() {
+		log.info("ReportBackingBean-getLtstMinistryListByUserid");
 		SelectItem[] items = null;
 
 		IOrgProfileSO orgProfileSO = null;
@@ -8218,6 +8241,7 @@ public class ReportBackingBean extends
 	 * retrievePtjListByMinistryId - Retrieve PTJ list by ministry id.
 	 */
 	public void retrievePtjListByMinistryId() {
+		log.info("ReportBackingBean-retrievePtjListByMinistryId");
 		pmPtjList = new ArrayList<String>();
 		if (ministryId != null) {
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
@@ -8249,6 +8273,7 @@ public class ReportBackingBean extends
 	 * @return the docTypeStatusItems
 	 */
 	public SelectItem[] getDocTypeStatusDropDown() {
+		log.info("ReportBackingBean-getDocTypeStatusDropDown");
 		docTypeStatusItems = null;
 		String doctype = null;
 		SelectItem[] tempOneStatusItems = null;
@@ -8362,6 +8387,7 @@ public class ReportBackingBean extends
 	 * @return the subTypeList
 	 */
 	public List<SelectItem> retrieveSubTypeList() {
+		log.info("ReportBackingBean-retrieveSubTypeList");
 		ctSubTypeList = new ArrayList<SelectItem>();
 		getManagedBean().getRptGenBean().setCtSubTypeView(false);
 		getManagedBean().getRptGenBean().setCtSubTypeApproverView(false);
@@ -8408,6 +8434,7 @@ public class ReportBackingBean extends
 	 * @return the zoneList
 	 */
 	public List<SelectItem> retrieveZoneByUser() {
+		log.info("ReportBackingBean-retrieveZoneByUser");
 		zoneList = new ArrayList<SelectItem>();
 		this.setStringZone(null);
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -8433,6 +8460,7 @@ public class ReportBackingBean extends
 	 * @return the highRoleCodeList
 	 */
 	public List<String> retrieveHighRoleCodeByUser() {
+		log.info("ReportBackingBean-retrieveHighRoleCodeByUser");
 		highRoleCodeList = new ArrayList<String>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -8450,6 +8478,7 @@ public class ReportBackingBean extends
 	 * directPurchaseWithRequisitioner - Direct purchase with requisitioner.
 	 */
 	public void directPurchaseWithRequisitioner() {
+		log.info("ReportBackingBean-directPurchaseWithRequisitioner");
 		if ((this.getReportValue() != null)
 				&& (this.getReportValue()
 						.equals(ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_SUPPL_S1_RPT_VAL))) {
@@ -8476,6 +8505,7 @@ public class ReportBackingBean extends
 	 *            the lng ptj id
 	 */
 	public void roleCodeUsersSetupOnload(Long lngPtjId) {
+		log.info("ReportBackingBean-roleCodeUsersSetupOnload");
 		rolecodeRquisitionerList = new ArrayList<SelectItem>();
 		rolecodeApproverList = new ArrayList<SelectItem>();
 		rolecodeRecievingOfficerList = new ArrayList<SelectItem>();
@@ -8599,6 +8629,7 @@ public class ReportBackingBean extends
 	 * roleCodeUsersSetup - Role code users setup will be done by user id.
 	 */
 	public void roleCodeUsersSetup() {
+		log.info("ReportBackingBean-roleCodeUsersSetup");
 		rolecodeRquisitionerList = new ArrayList<SelectItem>();
 		rolecodeApproverList = new ArrayList<SelectItem>();
 		rolecodeRecievingOfficerList = new ArrayList<SelectItem>();
@@ -8783,6 +8814,7 @@ public class ReportBackingBean extends
 	 * @return the allRoleCodesList
 	 */
 	public List<String> retrieveAllRoleCodesByUser() {
+		log.info("ReportBackingBean-retrieveAllRoleCodesByUser");
 		allRoleCodesList = new ArrayList<String>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -8801,6 +8833,7 @@ public class ReportBackingBean extends
 	 * zoneByRolecode - will retrieve Zone by rolecode.
 	 */
 	public void zoneByRolecode() {
+		log.info("ReportBackingBean-zoneByRolecode");
 		if ((this.getModuleValue()
 				.equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT))) {
 			getManagedBean().getRptGenBean().setSmZoneLabelView(false);
@@ -8926,6 +8959,7 @@ public class ReportBackingBean extends
 	 * @return the paramList
 	 */
 	public List<String> retrieveParamCodeByUser() {
+		log.info("ReportBackingBean-retrieveParamCodeByUser");
 		paramList = new ArrayList<String>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -8947,6 +8981,7 @@ public class ReportBackingBean extends
 	 *            the cat list
 	 */
 	public void assignNewCompanyExperience(List<SmSupplierCategory> catList) {
+		log.info("ReportBackingBean-assignNewCompanyExperience");
 		if (catList == null) {
 			catList = new ArrayList<SmSupplierCategory>();
 		}
@@ -8970,6 +9005,7 @@ public class ReportBackingBean extends
 	 * assignValReqdToTrue - will assign value required to true.
 	 */
 	private void assignValReqdToTrue() {
+		log.info("ReportBackingBean-assignValReqdToTrue");
 		this.setShowParentMsg(false);
 		this.setValueReqd(true);
 	}
@@ -8978,6 +9014,7 @@ public class ReportBackingBean extends
 	 * resetChildCatList - Reset child category list.
 	 */
 	private void resetChildCatList() {
+		log.info("ReportBackingBean-resetChildCatList");
 		this.setSupplierChildCatList(new ArrayList<PmCategoryL2>());
 		this.setSupplierSubChildCatList(new ArrayList<PmCategoryL3>());
 	}
@@ -8989,6 +9026,7 @@ public class ReportBackingBean extends
 	 * @return the CategoryL1List
 	 */
 	public static List<PmCategoryL1> retrieveParentCategoryListForExperiencePage() {
+		log.info("ReportBackingBean-retrieveParentCategoryListForExperiencePage");
 		// CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
 				.getInstance().getServiceObject(ReportConst.PM_MODULE_SER_OBJ,
@@ -9005,6 +9043,7 @@ public class ReportBackingBean extends
 	 * Select all categories.
 	 */
 	public void selectAll() {
+		log.info("ReportBackingBean-selectAll");
 		if (this.isSelectedAll()) {
 			this.setSelected(true);
 			this.getSelectedCatList();
@@ -9021,6 +9060,7 @@ public class ReportBackingBean extends
 	 *            the index
 	 */
 	public void selected(int index) {
+		log.info("ReportBackingBean-selected");
 		List<SmSupplierCategory> selectedCatsList = this.getSelectedCatList();
 		if (this.isSelected()) {
 			if (selectedCatsList == null) {
@@ -9041,6 +9081,7 @@ public class ReportBackingBean extends
 	 * experince categories.
 	 */
 	public void selectAllCompanyExperinceCategories() {
+		log.info("ReportBackingBean-selectAllCompanyExperinceCategories");
 		if (this.isSelectedAll()) {
 			this.setSelected(true);
 			this.setSelectedCatList(this.getSelectedCatList());
@@ -9058,6 +9099,7 @@ public class ReportBackingBean extends
 	 *            the index
 	 */
 	public void selectedCompanyExperinceCategory(int index) {
+		log.info("ReportBackingBean-selectedCompanyExperinceCategory");
 		List<SmSupplierCategory> selectedCatsList = this.getSelectedCatList();
 		if (this.isSelected()) {
 			if (selectedCatsList == null) {
@@ -9085,6 +9127,7 @@ public class ReportBackingBean extends
 	 */
 	public void populateExperienceChildCategoryByParent(long parentId,
 			PmCategoryL2 catL2, PmCategoryL3 catL3) {
+		log.info("ReportBackingBean-populateExperienceChildCategoryByParent");
 		try {
 			List<PmCategoryL2> categoryL2s = retrieveExperienceChildCategoryList(parentId);
 			catL2.setPmCategoryL2s(categoryL2s);
@@ -9104,6 +9147,7 @@ public class ReportBackingBean extends
 	 */
 	public static List<PmCategoryL2> retrieveExperienceChildCategoryList(
 			long categoryL1Id) {
+		log.info("ReportBackingBean-retrieveExperienceChildCategoryList");
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
 				.getInstance().getServiceObject(ReportConst.PM_MODULE_SER_OBJ,
 						ICategoryCodeSO.class);
@@ -9120,6 +9164,7 @@ public class ReportBackingBean extends
 	 * @return the reportList
 	 */
 	public List<SelectItem> retrieveReportListByAuthorization() {
+		log.info("ReportBackingBean-retrieveReportListByAuthorization");
 		reportList = new ArrayList<SelectItem>();
 		rptGenBean = new ReportsGenerateBean();
 		this.setReportValue(null);
@@ -9181,6 +9226,7 @@ public class ReportBackingBean extends
 	 * @return the reportCategoryList
 	 */
 	public List<SelectItem> retrieveSubModuleReportCategoryList(String language) {
+		log.info("ReportBackingBean-retrieveSubModuleReportCategoryList");
 		reportList = new ArrayList<SelectItem>();
 		reportCategoryList = new ArrayList<SelectItem>();
 		this.setReportName(null);
@@ -9215,6 +9261,7 @@ public class ReportBackingBean extends
 	 * @return the simpleQuoteNoList
 	 */
 	public List<String> retrieveSimpleQuoteNo() {
+		log.info("ReportBackingBean-retrieveSimpleQuoteNo");
 		simpleQuoteNoList = new ArrayList<String>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -9241,6 +9288,7 @@ public class ReportBackingBean extends
 	 * @return the reportList
 	 */
 	public List<SelectItem> retrieveReportListBySubModule() {
+		log.info("ReportBackingBean-retrieveReportListBySubModule");
 		reportList = new ArrayList<SelectItem>();
 		this.setReportName(null);
 		setRoleCode(null);
@@ -9304,6 +9352,7 @@ public class ReportBackingBean extends
 	 * @return the report idlist
 	 */
 	public void getReportIdlist() {
+		log.info("ReportBackingBean-getReportIdlist");
 		rptGenBean = new ReportsGenerateBean();
 		this.setReportValue(null);
 		String paramModule = null;
@@ -9334,6 +9383,7 @@ public class ReportBackingBean extends
 	 *            the items
 	 */
 	private void processItemsByModule(SelectItem[] items) {
+		log.info("ReportBackingBean-processItemsByModule");
 		Map<String, List<SelectItem>> localModuleItemMap = new HashMap<String, List<SelectItem>>();
 		if (null != items) {
 			for (SelectItem item : items) {
@@ -9374,6 +9424,7 @@ public class ReportBackingBean extends
 	 */
 	public void populateExperienceSubChildCategoryByChild(long childId,
 			PmCategoryL3 catL3) {
+		log.info("ReportBackingBean-populateExperienceSubChildCategoryByChild");
 		try {
 			List<PmCategoryL3> categoryL3s = retrieveExperienceSubChildCategoryList(childId);
 			catL3.setPmCategoryL3s(categoryL3s);
@@ -9393,6 +9444,7 @@ public class ReportBackingBean extends
 	 */
 	public static List<PmCategoryL3> retrieveExperienceSubChildCategoryList(
 			long categoryL2Id) {
+		log.info("ReportBackingBean-retrieveExperienceSubChildCategoryList");
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
 				.getInstance().getServiceObject(ReportConst.PM_MODULE_SER_OBJ,
 						ICategoryCodeSO.class);
@@ -9410,6 +9462,7 @@ public class ReportBackingBean extends
 	 */
 	public void checkDuplicateCategoryForProject(SmSupplierCategory newCat) {
 		for (SmSupplierCategory cat : this.getSelectedCatList()) {
+			log.info("ReportBackingBean-checkDuplicateCategoryForProject");
 			if ((cat.getPmCategoryL1().getCategoryL1Id() != null)
 					&& (newCat.getPmCategoryL1().getCategoryL1Id() != null)
 					&& (cat.getPmCategoryL2().getCategoryL2Id() != null)
@@ -9443,6 +9496,7 @@ public class ReportBackingBean extends
 	 * deleteSelectedCodes - Delete selected codes.
 	 */
 	public void deleteSelectedCodes() {
+		log.info("ReportBackingBean-deleteSelectedCodes");
 		for (SmSupplierCategory cat : this.getSelectCatDeletionList()) {
 			this.getSelectedCatList().remove(cat);
 		}
@@ -9458,6 +9512,7 @@ public class ReportBackingBean extends
 	 * assignCategoryForCompExperience - Assign category for comp experience.
 	 */
 	public void assignCategoryForCompExperience() {
+		log.info("ReportBackingBean-assignCategoryForCompExperience");
 		SmSupplierCategory cat = new SmSupplierCategory();
 		if ((this.getSelectedCatList().size() > 8)) {
 			this.setEnableValue(true);
@@ -9485,6 +9540,7 @@ public class ReportBackingBean extends
 	 * @return the moduleList
 	 */
 	public List<SelectItem> retriveModuleList() {
+		log.info("ReportBackingBean-retriveModuleList");
 		moduleList = new ArrayList<SelectItem>();
 		SelectItem selectItem = new SelectItem();
 		selectItem.setLabel(CommonMethod
@@ -9536,6 +9592,7 @@ public class ReportBackingBean extends
 	 * Pre render view.
 	 */
 	public void preRenderView() {
+		log.info("ReportBackingBean-preRenderView");
 		rptGenBean = new ReportsGenerateBean();
 		getManagedBean().setRptGenBean(rptGenBean);
 		getManagedBean().setReportList(new ArrayList<SelectItem>());
@@ -9549,6 +9606,7 @@ public class ReportBackingBean extends
 	 * retriveReportListBymoduleName - Retrieve report list by module name.
 	 */
 	public void retriveReportListBymoduleName() {
+		log.info("ReportBackingBean-retriveReportListBymoduleName");
 		reportList = new ArrayList<SelectItem>();
 		rptGenBean = new ReportsGenerateBean();
 		this.setReportValue(null);
@@ -9570,6 +9628,7 @@ public class ReportBackingBean extends
 	 * madatoryIndicator - Indicator for Mandatory .
 	 */
 	public void madatoryIndicator() {
+		log.info("ReportBackingBean-madatoryIndicator");
 		if ((null != this.getReportValue())
 				&& (this.getModuleValue()
 						.equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT))) {
@@ -9594,6 +9653,7 @@ public class ReportBackingBean extends
 	 * @return the reportList
 	 */
 	public List<SelectItem> retriveReportListByModule(String module) {
+		log.info("ReportBackingBean-retriveReportListByModule");
 		reportList = new ArrayList<SelectItem>();
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -9636,6 +9696,7 @@ public class ReportBackingBean extends
 	 * @return the smUPSSVOUserList
 	 */
 	public List<SelectItem> retrieveUPSSVOUser() {
+		log.info("ReportBackingBean-retrieveUPSSVOUser");
 		smUPSSVOUserList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -9658,6 +9719,7 @@ public class ReportBackingBean extends
 	 * @return the ptjList
 	 */
 	public List<SelectItem> retrievePTJS1() {
+		log.info("ReportBackingBean-retrievePTJS1");
 		scPtjList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -9680,6 +9742,7 @@ public class ReportBackingBean extends
 	 * @return the ptjList
 	 */
 	public List<SelectItem> retrievePTJS2() {
+		log.info("ReportBackingBean-retrievePTJS2");
 		scPtjList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -9703,6 +9766,7 @@ public class ReportBackingBean extends
 	 * @return the requisitionerList
 	 */
 	public List<SelectItem> retrieveRequisitioner() {
+		log.info("ReportBackingBean-retrieveRequisitioner");
 		scRequisitionerList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -9732,6 +9796,7 @@ public class ReportBackingBean extends
 	 * @return the descOfficerList
 	 */
 	public List<SelectItem> retrieveDescOfficer() {
+		log.info("ReportBackingBean-retrieveDescOfficer");
 		scDescOfficerList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -9761,6 +9826,7 @@ public class ReportBackingBean extends
 	 * @return the approverNayakTarafList
 	 */
 	public List<SelectItem> retrieveApprovarNaikTarafDPS1() {
+		log.info("ReportBackingBean-retrieveApprovarNaikTarafDPS1");
 		approverNayakTarafList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -9785,6 +9851,7 @@ public class ReportBackingBean extends
 	 * @return the approverNayakTarafList
 	 */
 	public List<SelectItem> retrieveApprovarNaikTarafSCS2() {
+		log.info("ReportBackingBean-retrieveApprovarNaikTarafSCS2");
 		approverNayakTarafList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -9811,6 +9878,7 @@ public class ReportBackingBean extends
 	 * @return the authoriztionList
 	 */
 	public List<String> retriveUserrloeByUserId(String moduleName) {
+		log.info("ReportBackingBean-retriveUserrloeByUserId");
 		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
@@ -9839,6 +9907,7 @@ public class ReportBackingBean extends
 	 * retrieveAllMinistry - Retrieve all ministry, based on rolecode.
 	 */
 	public void retrieveAllMinistry() {
+		log.info("ReportBackingBean-retrieveAllMinistry");
 		ptjList = new ArrayList<SelectItem>();
 		ministryList = new ArrayList<SelectItem>();
 		retrieveRoleCodeFromParamTable();
@@ -9928,6 +9997,7 @@ public class ReportBackingBean extends
 	 * @return the paramTableRoleCodeList
 	 */
 	public List<String> retrieveRoleCodeFromParamTable() {
+		log.info("ReportBackingBean-retrieveRoleCodeFromParamTable");
 		paramTableRoleCodeList = new ArrayList<String>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -9948,6 +10018,7 @@ public class ReportBackingBean extends
 	 * @return the parameterCodeType string
 	 */
 	public String getParameterCodeTypeString() {
+		log.info("ReportBackingBean-getParameterCodeTypeString");
 		parameterCodeType = new String();
 		/*
 		 * ptjList = new ArrayList<String>(); ministryList = new
@@ -9971,6 +10042,7 @@ public class ReportBackingBean extends
 	 * retrieveParameterCodeType - Retrieve parameter code type.
 	 */
 	public void retrieveParameterCodeType() {
+		log.info("ReportBackingBean-retrieveParameterCodeType");
 		ptjList = new ArrayList<SelectItem>();
 		ministryList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -10025,6 +10097,7 @@ public class ReportBackingBean extends
 	 *            the parameter code type
 	 */
 	public void paramCodeSupplierGroupDropdown(String parameterCodeType) {
+		log.info("ReportBackingBean-paramCodeSupplierGroupDropdown");
 		if ((parameterCodeType != null)
 				&& (parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))) {
 			if ((getManagedBean().getRptGenBean().isFlGroupOneView())) {
@@ -10224,6 +10297,7 @@ public class ReportBackingBean extends
 	 * or dropdown.
 	 */
 	public void enableSupplierCompNameTextOrDropdown() {
+		log.info("ReportBackingBean-enableSupplierCompNameTextOrDropdown");
 		if ((this.getModuleValue() != null)
 				&& (this.getModuleValue()
 						.equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT))) {
@@ -10274,6 +10348,7 @@ public class ReportBackingBean extends
 	 * @return the ptjList
 	 */
 	public List<SelectItem> retrieveFPJPTJList() {
+		log.info("ReportBackingBean-retrieveFPJPTJList");
 		ptjList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -10307,6 +10382,7 @@ public class ReportBackingBean extends
 	 * @return the ptjList
 	 */
 	public List<SelectItem> retrieveFMIPTJList() {
+		log.info("ReportBackingBean-retrieveFMIPTJList");
 		ptjList = new ArrayList<SelectItem>();
 		// if ((null
 		// !=this.getCommonMinistry())&&(((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FMI)))||((highRoleCodeList!=null)&&((highRoleCodeList.contains(RoleCode.BPK_PCA.value())||highRoleCodeList.contains(RoleCode.BPK_CCA.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_USER.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_USER.value()))))))
@@ -10353,6 +10429,7 @@ public class ReportBackingBean extends
 	 * @return the ptjList
 	 */
 	public List<SelectItem> retrieveFMIPTJListWithArg(Long lngMinistry) {
+		log.info("ReportBackingBean-retrieveFMIPTJListWithArg");
 		ptjList = new ArrayList<SelectItem>();
 		Long firstPTJValue = null;
 		// if ((null
@@ -10386,6 +10463,7 @@ public class ReportBackingBean extends
 	 * @return the ministryList
 	 */
 	public List<SelectItem> retrieveOnlyFPJMinistryList() {
+		log.info("ReportBackingBean-retrieveOnlyFPJMinistryList");
 		ministryList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -10409,6 +10487,7 @@ public class ReportBackingBean extends
 	 * @return the ministryList
 	 */
 	public List<SelectItem> retrieveFPJMinistryList() {
+		log.info("ReportBackingBean-retrieveFPJMinistryList");
 		ministryList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -10455,6 +10534,7 @@ public class ReportBackingBean extends
 	 * retrieveCMUnspc - Retrieve cm unspc.
 	 */
 	public void retrieveCMUnspc() {
+		log.info("ReportBackingBean-retrieveCMUnspc");
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 						IPMReportSO.class);
@@ -10472,6 +10552,7 @@ public class ReportBackingBean extends
 	 * type,measurement and color extentions.
 	 */
 	public void enableExtension() {
+		log.info("ReportBackingBean-enableExtension");
 		this.setCmExtentionCode(null);
 		this.setCmExtentionBrand(null);
 		this.setCmExtentionType(null);
@@ -10515,6 +10596,7 @@ public class ReportBackingBean extends
 	 * extension type,measurement and color extentions.
 	 */
 	public void enableExtensionTypes() {
+		log.info("ReportBackingBean-enableExtensionTypes");
 		this.setCmExtentionBrand(null);
 		this.setCmExtentionType(null);
 		this.setCmExtentionMeasurment(null);
@@ -10611,6 +10693,7 @@ public class ReportBackingBean extends
 	 * @return the long unspcid
 	 */
 	public Long retrieveCMUnspcIdbyCode(String unspcCode) {
+		log.info("ReportBackingBean-retrieveCMUnspcIdbyCode");
 		Long unspcid = null;
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -10627,6 +10710,7 @@ public class ReportBackingBean extends
 	 * retrieveExtention - Retrieve extention bsed on extention type.
 	 */
 	public void retrieveExtention() {
+		log.info("ReportBackingBean-retrieveExtention");
 		this.setCmExtentionBrand(null);
 		this.setCmExtentionType(null);
 		this.setCmExtentionMeasurment(null);
@@ -10665,6 +10749,7 @@ public class ReportBackingBean extends
 	 * retrieveBrand - Retrieve brand extention type.
 	 */
 	public void retrieveBrand() {
+		log.info("ReportBackingBean-retrieveBrand");
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 						IPMReportSO.class);
@@ -10681,6 +10766,7 @@ public class ReportBackingBean extends
 	 * retrieveExtType - Retrieve extention type.
 	 */
 	public void retrieveExtType() {
+		log.info("ReportBackingBean-retrieveExtType");
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 						IPMReportSO.class);
@@ -10697,6 +10783,7 @@ public class ReportBackingBean extends
 	 * retrieveMeasurement - Retrieve measurement extention type.
 	 */
 	public void retrieveMeasurement() {
+		log.info("ReportBackingBean-retrieveMeasurement");
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 						IPMReportSO.class);
@@ -10713,6 +10800,7 @@ public class ReportBackingBean extends
 	 * retrieveColor - Retrieve color extention type.
 	 */
 	public void retrieveColor() {
+		log.info("ReportBackingBean-retrieveColor");
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 						IPMReportSO.class);
@@ -10729,6 +10817,7 @@ public class ReportBackingBean extends
 	 * retrieveRolecode - Retrieve rolecode.
 	 */
 	public void retrieveRolecode() {
+		log.info("ReportBackingBean-retrieveRolecode");
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 						IPMReportSO.class);
@@ -10742,6 +10831,7 @@ public class ReportBackingBean extends
 	 * retrieveSupplierCompName - Retrieve supplier company name.
 	 */
 	public void retrieveSupplierCompName() {
+		log.info("ReportBackingBean-retrieveSupplierCompName");
 		supplCompanyList = new ArrayList<String>();
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -10770,6 +10860,7 @@ public class ReportBackingBean extends
 	 * changeDateBasedOnRegType - Change date based on registration type.
 	 */
 	public void changeDateBasedOnRegType() {
+		log.info("ReportBackingBean-changeDateBasedOnRegType");
 		getManagedBean().getRptGenBean().setSmActiveSubmissiveFromDateView(
 				false);
 		getManagedBean().getRptGenBean().setSmActivationDateView(false);
@@ -10857,6 +10948,7 @@ public class ReportBackingBean extends
 	 * enableCriteriaMenu - Enable criteria menu.
 	 */
 	public void enableCriteriaMenu() {
+		log.info("ReportBackingBean-enableCriteriaMenu");
 		getManagedBean().getRptGenBean().setEnableCriteriaMenuView(false);
 		if ((this.getReportValue() != null)
 				&& (!this.getReportValue().equals(ReportConst.EMPTY_VAL))) {
@@ -10868,6 +10960,7 @@ public class ReportBackingBean extends
 	 * criteriaVariablesByReport - Enable criteria variables by report name.
 	 */
 	public void criteriaVariablesByReport() {
+		log.info("ReportBackingBean-criteriaVariablesByReport");
 		parameterCodeType = new String();
 		scReportBackingBean = new SCReportBackingBean();
 		cmReportBackingBean = new CMReportBackingBean();
@@ -11050,7 +11143,7 @@ public class ReportBackingBean extends
 	 * @return the default values from and to date
 	 */
 	private void getDefaultValuesFromAndToDate(String reportCode) {
-
+		log.info("ReportBackingBean-getDefaultValuesFromAndToDate");
 		Date currentDate = new Date();
 		Calendar fromDate = Calendar.getInstance();
 		fromDate.set(fromDate.get(Calendar.YEAR), 00, 01, 0, 00, 0);
@@ -11084,6 +11177,7 @@ public class ReportBackingBean extends
 	 * @return the default datesfor pm
 	 */
 	private void getDefaultDatesforPM(List<String> reportNameList) {
+		log.info("ReportBackingBean-getDefaultDatesforPM");
 		reportNameList
 				.add(ReportConst.PM_LIST_OF_EXEMPTED_CONTRACTED_ITEMS_RPT_VAL);
 		reportNameList.add(ReportConst.PM_LIST_OF_EXEMPTED_ITEMS_RPT_VAL);
@@ -11099,7 +11193,7 @@ public class ReportBackingBean extends
 	 * @return the default datesfor ct
 	 */
 	private void getDefaultDatesforCT(List<String> reportNameList) {
-
+		log.info("ReportBackingBean-getDefaultDatesforCT");
 		reportNameList.add(ReportConst.CT_CONTRACT_MONITORING_RPT_VAL);
 		reportNameList
 				.add(ReportConst.CT_CONTRACT_TRANSACTION_MONITORING_CC_RPT_VAL);
@@ -11124,7 +11218,7 @@ public class ReportBackingBean extends
 	 * @return the default datesfor cm
 	 */
 	private void getDefaultDatesforCM(List<String> reportNameList) {
-
+		log.info("ReportBackingBean-getDefaultDatesforCM");
 		reportNameList.add(ReportConst.LST_PUB_CAT_ITM_RPT_VAL);
 		reportNameList.add(ReportConst.LST_APPR_CAT_ITM_RPT_VAL);
 		reportNameList.add(ReportConst.LST_REJ_CAT_ITM_RPT_VAL);
@@ -11158,6 +11252,7 @@ public class ReportBackingBean extends
 	 * @return the default datesfor sm
 	 */
 	private void getDefaultDatesforSM(List<String> reportNameList) {
+		log.info("ReportBackingBean-getDefaultDatesforSM");
 		reportNameList.add(ReportConst.SM_APPL_PEND_SITE_VISIT_RPT_VAL);
 		reportNameList.add(ReportConst.SM_LIST_OF_APPLICATION_RPT_VAL);
 		reportNameList.add(ReportConst.SM_LIST_OFFLINE_SUPP_DOC_RPT_VAL);
@@ -11174,7 +11269,7 @@ public class ReportBackingBean extends
 	 * @return the default datesfor fl
 	 */
 	private void getDefaultDatesforFL(List<String> reportNameList) {
-
+		log.info("ReportBackingBean-getDefaultDatesforFL");
 		reportNameList.add(ReportConst.CON_REQ_RPT_MIN_VAL);
 		reportNameList.add(ReportConst.CON_ORD_RPT_MIN_VAL);
 		reportNameList.add(ReportConst.DEL_ORD_RPT_MIN_VAL);
@@ -11239,6 +11334,7 @@ public class ReportBackingBean extends
 	 * retrieveDates - Retrieve dates.
 	 */
 	public void retrieveDates() {
+		log.info("ReportBackingBean-retrieveDates");
 		if ((this.getReportValue() != null)
 				&& (this.getReportValue() != ReportConst.EMPTY_VAL)) {
 			SimpleDateFormat outputDateFormat = new SimpleDateFormat(
@@ -11295,6 +11391,7 @@ public class ReportBackingBean extends
 	 *            the to date
 	 */
 	public void checkOneYearDefference(Date fromDate, Date toDate) {
+		log.info("ReportBackingBean-checkOneYearDefference");
 		SimpleDateFormat outputDateFormat = new SimpleDateFormat(
 				CommonConstants.DEFAULT_DATE_FORMAT);
 		String yearFrom = outputDateFormat.format(fromDate).substring(6, 10);
@@ -11331,6 +11428,7 @@ public class ReportBackingBean extends
 	 *            the year to
 	 */
 	public void checkOnlyYearFieldDefference(String yearFrom, String yearTo) {
+		log.info("ReportBackingBean-checkOnlyYearFieldDefference");
 		int yearFromInt = Integer.parseInt(yearFrom);
 		int yearToInt = Integer.parseInt(yearTo);
 		if (yearFromInt > yearToInt) {
@@ -11347,6 +11445,7 @@ public class ReportBackingBean extends
 	 *            the year to
 	 */
 	public void checkTwoYearsFieldDefference(String yearFrom, String yearTo) {
+		log.info("ReportBackingBean-checkTwoYearsFieldDefference");
 		int yearFromInt = Integer.parseInt(yearFrom);
 		int yearToInt = Integer.parseInt(yearTo);
 		if (yearToInt > yearFromInt + 1) {
@@ -11358,6 +11457,7 @@ public class ReportBackingBean extends
 	 * retrieveState - Retrieve state.
 	 */
 	public void retrieveState() {
+		log.info("ReportBackingBean-retrieveState");
 		stateLst = new ArrayList<SelectItem>();
 		districtLst = new ArrayList<SelectItem>();
 		addingStateList = new ArrayList<String>();
@@ -11381,6 +11481,7 @@ public class ReportBackingBean extends
 	 * retrieveDistrict - Retrieve district.
 	 */
 	public void retrieveDistrict() {
+		log.info("ReportBackingBean-retrieveDistrict");
 		districtLst = new ArrayList<SelectItem>();
 		addingStateList = new ArrayList<String>();
 		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance()
@@ -11407,6 +11508,7 @@ public class ReportBackingBean extends
 	 * @return the levOneCatLst
 	 */
 	public List<SelectItem> retrieveCategoryLevOne() {
+		log.info("ReportBackingBean-retrieveCategoryLevOne");
 		levOneCatLst = new ArrayList<SelectItem>();
 		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate
 				.getInstance().getServiceObject(ReportConst.PM_MODULE_SER_OBJ,
@@ -11431,6 +11533,7 @@ public class ReportBackingBean extends
 	 * @return the levTwoCatLst
 	 */
 	public List<SelectItem> retrieveCategoryLevTwo(String mainCategory) {
+		log.info("ReportBackingBean-retrieveCategoryLevTwo");
 		levTwoCatLst = new ArrayList<SelectItem>();
 		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate
 				.getInstance().getServiceObject(ReportConst.PM_MODULE_SER_OBJ,
@@ -11459,6 +11562,7 @@ public class ReportBackingBean extends
 	 * @return the levThreeCatLst
 	 */
 	public List<SelectItem> retrieveCategoryLevThree(String subCategory) {
+		log.info("ReportBackingBean-retrieveCategoryLevThree");
 		levThreeCatLst = new ArrayList<SelectItem>();
 		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate
 				.getInstance().getServiceObject(ReportConst.PM_MODULE_SER_OBJ,
@@ -11483,6 +11587,7 @@ public class ReportBackingBean extends
 	 * enableRegistrationType - Enable registration type.
 	 */
 	public void enableRegistrationType() {
+		log.info("ReportBackingBean-enableRegistrationType");
 		this.setCmEpNumber(null);
 		this.setCmIcNumber(null);
 		this.setCmBusinessRegNo(null);
@@ -11563,6 +11668,7 @@ public class ReportBackingBean extends
 	 * onSelectEffectedValues - On select effected values.S
 	 */
 	public void onSelectEffectedValues() {
+		log.info("ReportBackingBean-onSelectEffectedValues");
 		if (this.getScProcureAllList().size() > 0) {
 			rptGenBean.setScProcureQuoteEditView(true);
 			rptGenBean.setScProcureTenderEditView(true);
@@ -11594,6 +11700,7 @@ public class ReportBackingBean extends
 	 * checkSMYearNMonthDefference - Check sm year n month defference.
 	 */
 	public void checkSMYearNMonthDefference() {
+		log.info("ReportBackingBean-checkSMYearNMonthDefference");
 		int fromyear = 0;
 		int toyear = 0;
 		int fromMonth = 0;
@@ -11630,6 +11737,7 @@ public class ReportBackingBean extends
 	 * generateReport - Generate all modules reports.
 	 */
 	public void generateReport() {
+		log.info("ReportBackingBean-generateReport");
 		if (((this.getReportValue() != null) && this.getReportValue()
 				.toString()
 				.equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL))
@@ -11857,6 +11965,7 @@ public class ReportBackingBean extends
 	 * generateReportIntime - Generate report intime.
 	 */
 	public void generateReportIntime() {
+		log.info("ReportBackingBean-generateReportIntime");
 		ExecutorService service = Executors.newSingleThreadExecutor();
 
 		try {
@@ -11887,6 +11996,7 @@ public class ReportBackingBean extends
 	 * generateReportTimer - Generate report timer.
 	 */
 	public void generateReportTimer() {
+		log.info("ReportBackingBean-generateReportTimer");
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -11917,6 +12027,7 @@ public class ReportBackingBean extends
 	 *            the param lst
 	 */
 	public void loadReportWithParams(List<String> paramLst) {
+		log.info("ReportBackingBean-loadReportWithParams");
 		StringBuilder gnrtdURL = new StringBuilder();
 		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.EXC_PREV_URL));
@@ -11951,6 +12062,7 @@ public class ReportBackingBean extends
 	 *            the gnrtd url
 	 */
 	public void loadReport(String gnrtdURL) {
+		log.info("ReportBackingBean-loadReport");
 		try {
 			PortletRequest portalRequest = (PortletRequest) FacesContext
 					.getCurrentInstance().getExternalContext().getRequest();
@@ -11976,6 +12088,7 @@ public class ReportBackingBean extends
 	 *            the param constr string
 	 */
 	public void loadReportWithParamsString(String paramConstrString) {
+		log.info("ReportBackingBean-loadReportWithParamsString");
 		StringBuilder gnrtdURL = new StringBuilder();
 		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.EXC_PREV_URL));
@@ -12008,6 +12121,7 @@ public class ReportBackingBean extends
 	 * generateCTReport - Generate CONTRACT MANAGEMENT module reports.
 	 */
 	public void generateCTReport() {
+		log.info("ReportBackingBean-generateCTReport");
 		if (((this.getCtContrMontrStatus() != null) && (this
 				.getCtContrMontrStatus() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtUserType() != null) && (this.getCtUserType() != ReportConst.EMPTY_VAL))
@@ -12270,6 +12384,7 @@ public class ReportBackingBean extends
 	 * generateSMReport - Generate SUPPLIER MANAGEMENT module reports.
 	 */
 	public void generateSMReport() {
+		log.info("ReportBackingBean-generateSMReport");
 		if ((getManagedBean().getReportValue() != null)
 				&& (getManagedBean().getReportValue().trim()
 						.equalsIgnoreCase(ReportConst.SM_CAT_STATIC_BY_YEAR_RPT_VAL))
@@ -13051,6 +13166,7 @@ public class ReportBackingBean extends
 	 * PURCHASE) module reports.
 	 */
 	public void generateSCReport() {
+		log.info("ReportBackingBean-generateSCReport");
 		/*
 		 * if ((getManagedBean().getReportValue() != null) &&
 		 * (getManagedBean().getReportValue().trim()
@@ -13465,6 +13581,7 @@ public class ReportBackingBean extends
 	 * generateCMReport - Generate CATALOGUE MANAGEMENT module reports.
 	 */
 	public void generateCMReport() {
+		log.info("ReportBackingBean-generateCMReport");
 		if (((this.getCmExtention() != null) && (this.getCmExtention() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmExtentionCode() != null) && (this
 						.getCmExtentionCode() != ReportConst.EMPTY_VAL))
@@ -13724,6 +13841,7 @@ public class ReportBackingBean extends
 	 * generateFLReport - Generate ORDER FULFILLMENT module reports.
 	 */
 	public void generateFLReport() {
+		log.info("ReportBackingBean-generateFLReport");
 		if (((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlContractNo() != null) && (this.getFlContractNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlSst() != null) && (this.getFlSst() != ReportConst.EMPTY_VAL))
@@ -14147,6 +14265,7 @@ public class ReportBackingBean extends
 	 * generatePPReport - Generate PROCUREMENT PLAN module reports.
 	 */
 	public void generatePPReport() {
+		log.info("ReportBackingBean-generatePPReport");
 		if (((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
 				|| ((this.getCommonMinistry() != null) && (this
 						.getCommonMinistry() != ReportConst.EMPTY_VAL))
@@ -14195,6 +14314,7 @@ public class ReportBackingBean extends
 	 * generatePMReport - Generate PROFILE MANAGEMENT module reports.
 	 */
 	public void generatePMReport() {
+		log.info("ReportBackingBean-generatePMReport");
 		if (((this.getPmServiceType() != null) && (this.getPmServiceType() != ReportConst.EMPTY_VAL))
 				|| ((this.getPmBusinessRegNo() != null) && (this
 						.getPmBusinessRegNo() != ReportConst.EMPTY_VAL))
@@ -14412,6 +14532,7 @@ public class ReportBackingBean extends
 	 * quotationNumberValidation - Quotation number validation.
 	 */
 	public void quotationNumberValidation() {
+		log.info("ReportBackingBean-quotationNumberValidation");
 		if ((this.getScQuotationNo() != null)
 				&& (this.getScQuotationNo() != ReportConst.EMPTY_VAL)) {
 			specialCharValidation();
@@ -14422,6 +14543,7 @@ public class ReportBackingBean extends
 	 * simpleQuoteNoValidation - Simple quote no validation.
 	 */
 	public void simpleQuoteNoValidation() {
+		log.info("ReportBackingBean-simpleQuoteNoValidation");
 		if ((this.getScProcessRptQuotationNo() != null)
 				&& (this.getScProcessRptQuotationNo() != ReportConst.EMPTY_VAL)) {
 			specialCharValidation();
@@ -14432,6 +14554,7 @@ public class ReportBackingBean extends
 	 * specialCharValidation - Special char validation.
 	 */
 	public void specialCharValidation() {
+		log.info("ReportBackingBean-specialCharValidation");
 		String ptString = ReportConst.NUMERIC_CHAR_PATTERN_ONLY;
 		Pattern pattern = Pattern.compile(ptString);
 		Matcher match;
@@ -14488,6 +14611,7 @@ public class ReportBackingBean extends
 	 * mofRegNoNumericValidation - Mof reg no numeric validation.
 	 */
 	public void mofRegNoNumericValidation() {
+		log.info("ReportBackingBean-mofRegNoNumericValidation");
 		String ptString1 = ReportConst.NUMERIC_PATTERN_ONLY;
 		Pattern pattern1 = Pattern.compile(ptString1);
 		if ((this.getSmMofRegNoFrom() != null)
@@ -14549,6 +14673,7 @@ public class ReportBackingBean extends
 	 *            the to mof no
 	 */
 	public void ValidateMofRegNo(String fromMofNo, String toMofNo) {
+		log.info("ReportBackingBean-ValidateMofRegNo");
 		Long fromMofNoLng = Long.parseLong(fromMofNo);
 		Long toMofNoLng = Long.parseLong(toMofNo);
 		if (fromMofNoLng > toMofNoLng) {
@@ -14562,6 +14687,7 @@ public class ReportBackingBean extends
 	 * @return the quotationNumber
 	 */
 	public void getQuotationNumber() {
+		log.info("ReportBackingBean-getQuotationNumber");
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 		// log.info("QtNo="+this.getScQuotationNo());
 		if (this.getScQuotationNo() != null) {
@@ -14591,6 +14717,7 @@ public class ReportBackingBean extends
 	 * resetReportForm - Reset the criteria and clears the criteria.
 	 */
 	public void resetReportForm() {
+		log.info("ReportBackingBean-resetReportForm");
 		assignNewCompanyExperience(new ArrayList<SmSupplierCategory>());
 		getManagedBean().getRptGenBean().setCmMofRegView(false);
 		getManagedBean().getRptGenBean().setCmBasicRegView(false);
@@ -14856,6 +14983,7 @@ public class ReportBackingBean extends
 	 */
 	protected void fileGenerateReport(String reportFile,
 			String paramConstrString) {
+		log.info("ReportBackingBean-fileGenerateReport");
 		StringBuilder gnrtdURL = new StringBuilder();
 		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.EXC_PREV_URL));
@@ -14957,7 +15085,7 @@ public class ReportBackingBean extends
 	 * @return the applicationStatusList
 	 */
 	public List<SelectItem> getApplicationStatusData() {
-
+		log.info("ReportBackingBean-getApplicationStatusData");
 		List<SelectItem> smApplStatusList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 
@@ -14984,7 +15112,7 @@ public class ReportBackingBean extends
 	 */
 	public void getScLOAReports() {
 
-		log.info("getLOAReports");
+		log.info("ReportBackingBean-getLOAReports");
 		if (this.getScLOAIdNo() != null && !(this.getScLOAIdNo() == "")
 				&& this.getScLOAIdNo().startsWith("LA")) {
 
@@ -15024,7 +15152,7 @@ public class ReportBackingBean extends
 	 * @return the qtAwardSO
 	 */
 	private IQTAwardSO getQtAwardSO() {
-		log.info("getQtAwardSO");
+		log.info("ReportBackingBean-getQtAwardSO");
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 	}
@@ -15040,7 +15168,7 @@ public class ReportBackingBean extends
 	 */
 	public void downloadReport(ScLoaReport scLoaReport) throws IOException {
 
-		log.info("downloadReport");
+		log.info("ReportBackingBean-downloadReport");
 
 		LOADetailBackingBean loaDetail = new LOADetailBackingBean();
 
@@ -15071,7 +15199,7 @@ public class ReportBackingBean extends
 	 * @return the suppLoiLoaMap
 	 */
 	private void getSuppLoiLoaMapData(LOADetailBackingBean loaDetail) {
-		log.info("getSuppLoiLoaMapData");
+		log.info("ReportBackingBean-getSuppLoiLoaMapData");
 		if (this.getManagedBean().getScQt() != null) {
 			retrieveSuppLoiLoaMapForReport(this.getManagedBean().getScQt()
 					.getQtId());
@@ -15089,7 +15217,7 @@ public class ReportBackingBean extends
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void downloadAllReports() throws IOException {
-		log.info("downloadAllReports");
+		log.info("ReportBackingBean-downloadAllReports");
 
 		if (CollectionUtils.isNotEmpty(this.getManagedBean()
 				.getLoaReportDocumentList())) {
@@ -15141,7 +15269,7 @@ public class ReportBackingBean extends
 	 *            the event
 	 */
 	public void selectAllDocuments(AjaxBehaviorEvent event) {
-		log.info("Inside of getQtAwardSO()");
+		log.info("Inside of ReportBackingBean-getQtAwardSO()");
 		LOADetailBackingBean loaDetailDocs = new LOADetailBackingBean();
 		loaDetailDocs.selectAllDocuments(event);
 	}
@@ -15154,8 +15282,8 @@ public class ReportBackingBean extends
 	 *            the qt id
 	 */
 	private void retrieveSuppLoiLoaMapForReport(Long qtId) {
-		log.info("retrieveSuppLoiLoaMapForReport");
-
+		log.info("ReportBackingBean-retrieveSuppLoiLoaMapForReport");
+		
 		IQTAwardSO qtAwardSO = null;
 		try {
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
@@ -15205,7 +15333,7 @@ public class ReportBackingBean extends
 		 */
 		public ISearchResultBean<CmUnspsc> pageChangeListener(
 				ISearchBean<CmUnspsc> searchBean) {
-
+			log.info("ReportBackingBean-pageChangeListener");
 			ICodificationSO iCodificationSO = null;
 
 			try {
@@ -15268,7 +15396,7 @@ public class ReportBackingBean extends
 	 * addUnspscCode - Adds the unspsc code.
 	 */
 	public void addUnspscCode() {
-
+		log.info("ReportBackingBean-addUnspscCode");
 		List<SelectItem> searchField = new ArrayList<SelectItem>();
 
 		searchField.add(new SelectItem(1, ResourceBundleUtils.getMessage(
@@ -15297,6 +15425,7 @@ public class ReportBackingBean extends
 	 * searchLOV - Searching for lov object.
 	 */
 	public void searchLOV() {
+		log.info("ReportBackingBean-searchLOV");
 		searchUnspscPagingDataModel.reloadData();
 	}
 
@@ -15304,6 +15433,7 @@ public class ReportBackingBean extends
 	 * populateToSaveLOV - Populate to save lov.
 	 */
 	public void populateToSaveLOV() {
+		log.info("ReportBackingBean-populateToSaveLOV");
 		this.setCmUnspscCode(this.getManagedBean().getSelectedLOV()
 				.getUnspscCode());
 		this.setCmUnspscTitle(this.getManagedBean().getSelectedLOV()
@@ -15318,6 +15448,7 @@ public class ReportBackingBean extends
 	 */
 
 	public void resetLOV() {
+		log.info("ReportBackingBean-resetLOV");
 		getManagedBean().setSearchValue(new String[3]);
 		getManagedBean().setSearchFieldValue(new String[3]);
 		getManagedBean().setSearchOperatorValue(new String[3]);
@@ -15328,7 +15459,7 @@ public class ReportBackingBean extends
 	 * Application status change.
 	 */
 	public void applicationStatusChange() {
-
+		log.info("ReportBackingBean-applicationStatusChange");
 		this.getManagedBean().getRptGenBean().setSmNonMandatoryDateView(false);
 		this.getManagedBean().getRptGenBean().setSmApprovalDateView(false);
 		this.getManagedBean().getRptGenBean().setSmRejectedDateView(false);
@@ -15355,7 +15486,7 @@ public class ReportBackingBean extends
 	 * Change receipt and transaction report type.
 	 */
 	public void changeRTReportType() {
-
+		log.info("ReportBackingBean-changeRTReportType");
 		this.getManagedBean().getRptGenBean()
 				.setSmMandatoryReceiptDateView(false);
 		this.getManagedBean().getRptGenBean()
@@ -15384,7 +15515,7 @@ public class ReportBackingBean extends
 	 * Change rt report type for payment.
 	 */
 	public void changeRTReportTypeForPayment() {
-
+		log.info("ReportBackingBean-changeRTReportTypeForPayment");
 		this.getManagedBean().getRptGenBean()
 				.setSmNonMandatoryReceiptDateView(false);
 		this.getManagedBean().getRptGenBean()
@@ -15414,7 +15545,7 @@ public class ReportBackingBean extends
 	 * @return the payment type method list
 	 */
 	public List<SelectItem> getPaymentTypeMethodList() {
-
+		log.info("ReportBackingBean-getPaymentTypeMethodList");
 		List<SelectItem> paymentTypeMethodList = new ArrayList<SelectItem>();
 
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -15442,7 +15573,7 @@ public class ReportBackingBean extends
 	 * @return the payment type method list
 	 */
 	public List<SelectItem> getOrgTypeList() {
-
+		log.info("ReportBackingBean-getOrgTypeList");
 		List<SelectItem> orgTypeList = new ArrayList<SelectItem>();
 
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -15471,7 +15602,7 @@ public class ReportBackingBean extends
 	 * @return the org type dropdown values
 	 */
 	public SelectItem[] getOrgTypeDropdownValues() {
-
+		log.info("ReportBackingBean-getOrgTypeDropdownValues");
 		ISearchBean<PmParameterDesc> searchBean1 = null;
 		ISearchBean<PmParameterDesc> searchBean2 = null;
 		SelectItem[] items = null;
@@ -15534,6 +15665,7 @@ public class ReportBackingBean extends
 	 * @return the org type search bean
 	 */
 	private ISearchBean<PmParameterDesc> getOrgTypeSearchBean(String componentId) {
+		log.info("ReportBackingBean-getOrgTypeSearchBean");
 		ISearchBean<PmParameterDesc> orgTypeSearchBean = super
 				.createSearchBean(PmParameterDesc.class, componentId);
 		return orgTypeSearchBean;
@@ -15543,7 +15675,7 @@ public class ReportBackingBean extends
 	 * Change soft cert selection.
 	 */
 	public void changeSoftCertSelection() {
-
+		log.info("ReportBackingBean-changeSoftCertSelection");
 		this.getManagedBean().setRptGenBean(rptGenBean);
 		this.getManagedBean().getRptGenBean().setSmNonMandatoryDateView(false);
 		this.getManagedBean().getRptGenBean().setSmSoftCertExpDateView(false);
@@ -15575,7 +15707,7 @@ public class ReportBackingBean extends
 	 * Change bus company type.
 	 */
 	public void changeBusCompanyType() {
-
+		log.info("ReportBackingBean-changeBusCompanyType");
 		this.getManagedBean().getRptGenBean()
 				.setSmBusCompanyPaidUpAccumlatedShareView(false);
 		this.getManagedBean().getRptGenBean().setSmAccmltdCptlSelView(false);
