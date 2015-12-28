@@ -137,9 +137,8 @@
 										disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
 										value="#{purchaseRequestBackingBean.managedBean.selectedApprover}"
 										style="width:350px;">
-										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 										<f:selectItems
-											value="#{purchaseRequestBackingBean.managedBean.approverList}" />
+											value="#{purchaseRequestBackingBean.getApproverListDropDown()}" />
 									</p:selectOneMenu>
 								</h:panelGrid>
 							</h:panelGrid>
