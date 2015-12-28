@@ -161,7 +161,7 @@ public class QTCommitteBackingBean extends
 		 */
 		public UserCommitteePagingDataModel(String componentId,
 				UserCommitteeSearchBean userCommitteeSearchBean) {
-			super(componentId);
+			super(componentId, false);
 			this.userCommitteeSearchBean = userCommitteeSearchBean;
 		}
 
@@ -240,7 +240,8 @@ public class QTCommitteBackingBean extends
 								SearchOperator.OPERATOR_EQUALS.value(), idtype,
 								true));
 			}
-			if (null != this.getManagedBean().getQt().getPmOrgProfile()) {
+			/*Removed based on Ministry search for Add Users
+			 * if (null != this.getManagedBean().getQt().getPmOrgProfile()) {
 				userSearchBean
 						.getDataFilterBeans()
 						.add(new SearchMultiFilterBean(
@@ -261,7 +262,7 @@ public class QTCommitteBackingBean extends
 										SearchOperator.OPERATOR_EQUALS.value(),
 										ParameterConst.ORG_TYPE_OTHERS,
 										SearchCondition.CONDITION_OR.value())));
-			}
+			}*/
 			// Adding search filterbeans to searchbean.
 			// userSearchBean.getDataFilterBeans().addAll(searchFilterBean);
 		}
