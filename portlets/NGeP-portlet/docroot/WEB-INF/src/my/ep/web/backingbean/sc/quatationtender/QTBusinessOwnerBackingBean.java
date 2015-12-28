@@ -181,7 +181,7 @@ public class QTBusinessOwnerBackingBean extends
 		 */
 		public UserBOPagingDataModel(String componentId,
 				UserCommitteeSearchBean userBusinessOwnerSearchBean) {
-			super(componentId);
+			super(componentId,false);
 			this.userBusinessOwnerSearchBean = userBusinessOwnerSearchBean;
 		}
 
@@ -262,7 +262,8 @@ public class QTBusinessOwnerBackingBean extends
 								SearchOperator.OPERATOR_EQUALS.value(), idtype));
 			}
 
-			PmOrgProfile orgProfile = this.getManagedBean().getQt()
+			/*Removed Ministry profile search for Add Users
+			 * PmOrgProfile orgProfile = this.getManagedBean().getQt()
 					.getPmOrgProfile();
 			if (null != orgProfile && null != orgProfile.getOrgProfileId()) {
 				userSearchBean
@@ -285,7 +286,7 @@ public class QTBusinessOwnerBackingBean extends
 										SearchOperator.OPERATOR_EQUALS.value(),
 										ParameterConst.ORG_TYPE_OTHERS,
 										SearchCondition.CONDITION_OR.value())));
-			}
+			}*/
 			// Adding search filterbeans to searchbean.
 			// userSearchBean.getDataFilterBeans().addAll(searchFilterBean);
 		}
