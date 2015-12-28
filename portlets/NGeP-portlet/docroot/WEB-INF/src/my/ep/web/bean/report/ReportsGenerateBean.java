@@ -432,6 +432,9 @@ public class ReportsGenerateBean {
 
 	/** The sm mandatory supplier type view. */
 	private boolean smMandatorySupplierTypeView = false;
+	
+	/** The sm bus company registration status view. */
+	private boolean smBusCompanyRegistrationStatusView=false;
 
 	/** The sm mandatory all supplier type view. */
 	private boolean smMandatoryAllSupplierTypeView = false;
@@ -453,6 +456,9 @@ public class ReportsGenerateBean {
 
 	/** The sm mandatory mof reg no view. */
 	private boolean smMandatoryMofRegNoView = false;
+	
+	/** The sm bus company type view. */
+	private boolean smBusCompanyTypeView=false;
 
 	/** The sm mandatory expiry date view. */
 	private boolean smMandatoryExpiryDateView = false;
@@ -647,7 +653,22 @@ public class ReportsGenerateBean {
 	private boolean smMofRegNoFromView = false;
 
 	/** The sm mof reg no to view. */
-	private boolean smMofRegNoToView = false;
+	private boolean smMofRegNoToView = false;	
+	
+	/** The sm bus company paid up accumlated share view. */
+	private boolean smBusCompanyPaidUpAccumlatedShareView=false;
+	
+	/** The sm paid up cptl sel view. */
+	private boolean smPaidUpCptlSelView=false;
+	
+	/** The sm accmltd cptl sel view. */
+	private boolean smAccmltdCptlSelView=false;	
+	
+	/** The sm accmltd share sel view. */
+	private boolean smAccmltdShareSelView=false;	
+	
+	/** The sm paid accmltd share cptl sel view. */
+	private boolean smPaidAccmltdShareCptlSelView=false;
 
 	/** The sm paid up capital frm view. */
 	private boolean smPaidUpCapitalFrmView = false;
@@ -3580,6 +3601,18 @@ public class ReportsGenerateBean {
 
 	/** The sm cancellation by var. */
 	private String smCancellationByVar = ReportConst.EMPTY_VAL;
+	
+	/** The sm bus comp type registration status by var. */
+	private String smBusCompTypeRegistrationStatusByVar=ReportConst.EMPTY_VAL;
+	
+	/** The sm bus company type by var. */
+	private String smBusCompanyTypeByVar=ReportConst.EMPTY_VAL;
+	
+	/** The sm bus paid up capital frm by var. */
+	private String smBusPaidUpCapitalFrmByVar=ReportConst.EMPTY_VAL;
+	
+	/** The sm bus paid up capital to by var. */
+	private String smBusPaidUpCapitalToByVar=ReportConst.EMPTY_VAL;	
 
 	/** The sm processing officer name var. */
 	private String smProcessingOfficerNameVar = ReportConst.EMPTY_VAL;
@@ -15378,5 +15411,218 @@ public class ReportsGenerateBean {
 	 */
 	public void setSmSoftCertExpDateView(boolean smSoftCertExpDateView) {
 		this.smSoftCertExpDateView = smSoftCertExpDateView;
+	}
+
+	/**
+	 * Checks if is sm bus company type view.
+	 * 
+	 * @return the smBusCompanyTypeView
+	 */
+	public boolean isSmBusCompanyTypeView() {
+		return smBusCompanyTypeView;
+	}
+
+	/**
+	 * Sets the sm bus company type view.
+	 * 
+	 * @param smBusCompanyTypeView
+	 *            the smBusCompanyTypeView to set
+	 */
+	public void setSmBusCompanyTypeView(boolean smBusCompanyTypeView) {
+		this.smBusCompanyTypeView = smBusCompanyTypeView;
+	}
+
+	/**
+	 * Checks if is sm bus company paid up accumlated share view.
+	 * 
+	 * @return the smBusCompanyPaidUpAccumlatedShareView
+	 */
+	public boolean isSmBusCompanyPaidUpAccumlatedShareView() {
+		return smBusCompanyPaidUpAccumlatedShareView;
+	}
+
+	/**
+	 * Sets the sm bus company paid up accumlated share view.
+	 * 
+	 * @param smBusCompanyPaidUpAccumlatedShareView
+	 *            the smBusCompanyPaidUpAccumlatedShareView to set
+	 */
+	public void setSmBusCompanyPaidUpAccumlatedShareView(
+			boolean smBusCompanyPaidUpAccumlatedShareView) {
+		this.smBusCompanyPaidUpAccumlatedShareView = smBusCompanyPaidUpAccumlatedShareView;
+	}
+
+	/**
+	 * Checks if is sm paid up cptl sel view.
+	 * 
+	 * @return the smPaidUpCptlSelView
+	 */
+	public boolean isSmPaidUpCptlSelView() {
+		return smPaidUpCptlSelView;
+	}
+
+	/**
+	 * Sets the sm paid up cptl sel view.
+	 * 
+	 * @param smPaidUpCptlSelView
+	 *            the smPaidUpCptlSelView to set
+	 */
+	public void setSmPaidUpCptlSelView(boolean smPaidUpCptlSelView) {
+		this.smPaidUpCptlSelView = smPaidUpCptlSelView;
+	}
+
+	/**
+	 * Checks if is sm accmltd cptl sel view.
+	 * 
+	 * @return the smAccmltdCptlSelView
+	 */
+	public boolean isSmAccmltdCptlSelView() {
+		return smAccmltdCptlSelView;
+	}
+
+	/**
+	 * Sets the sm accmltd cptl sel view.
+	 * 
+	 * @param smAccmltdCptlSelView
+	 *            the smAccmltdCptlSelView to set
+	 */
+	public void setSmAccmltdCptlSelView(boolean smAccmltdCptlSelView) {
+		this.smAccmltdCptlSelView = smAccmltdCptlSelView;
+	}
+
+	/**
+	 * Checks if is sm accmltd share sel view.
+	 * 
+	 * @return the smAccmltdShareSelView
+	 */
+	public boolean isSmAccmltdShareSelView() {
+		return smAccmltdShareSelView;
+	}
+
+	/**
+	 * Sets the sm accmltd share sel view.
+	 * 
+	 * @param smAccmltdShareSelView
+	 *            the smAccmltdShareSelView to set
+	 */
+	public void setSmAccmltdShareSelView(boolean smAccmltdShareSelView) {
+		this.smAccmltdShareSelView = smAccmltdShareSelView;
+	}
+
+	/**
+	 * Checks if is sm paid accmltd share cptl sel view.
+	 * 
+	 * @return the smPaidAccmltdShareCptlSelView
+	 */
+	public boolean isSmPaidAccmltdShareCptlSelView() {
+		return smPaidAccmltdShareCptlSelView;
+	}
+
+	/**
+	 * Sets the sm paid accmltd share cptl sel view.
+	 * 
+	 * @param smPaidAccmltdShareCptlSelView
+	 *            the smPaidAccmltdShareCptlSelView to set
+	 */
+	public void setSmPaidAccmltdShareCptlSelView(
+			boolean smPaidAccmltdShareCptlSelView) {
+		this.smPaidAccmltdShareCptlSelView = smPaidAccmltdShareCptlSelView;
+	}
+
+	/**
+	 * Checks if is sm bus company registration status view.
+	 * 
+	 * @return the smBusCompanyRegistrationStatusView
+	 */
+	public boolean isSmBusCompanyRegistrationStatusView() {
+		return smBusCompanyRegistrationStatusView;
+	}
+
+	/**
+	 * Sets the sm bus company registration status view.
+	 * 
+	 * @param smBusCompanyRegistrationStatusView
+	 *            the smBusCompanyRegistrationStatusView to set
+	 */
+	public void setSmBusCompanyRegistrationStatusView(
+			boolean smBusCompanyRegistrationStatusView) {
+		this.smBusCompanyRegistrationStatusView = smBusCompanyRegistrationStatusView;
+	}
+
+	/**
+	 * Gets the sm bus comp type registration status by var.
+	 * 
+	 * @return the smBusCompTypeRegistrationStatusByVar
+	 */
+	public String getSmBusCompTypeRegistrationStatusByVar() {
+		return smBusCompTypeRegistrationStatusByVar;
+	}
+
+	/**
+	 * Sets the sm bus comp type registration status by var.
+	 * 
+	 * @param smBusCompTypeRegistrationStatusByVar
+	 *            the smBusCompTypeRegistrationStatusByVar to set
+	 */
+	public void setSmBusCompTypeRegistrationStatusByVar(
+			String smBusCompTypeRegistrationStatusByVar) {
+		this.smBusCompTypeRegistrationStatusByVar = smBusCompTypeRegistrationStatusByVar;
+	}
+
+	/**
+	 * Gets the sm bus company type by var.
+	 * 
+	 * @return the smBusCompanyTypeByVar
+	 */
+	public String getSmBusCompanyTypeByVar() {
+		return smBusCompanyTypeByVar;
+	}
+
+	/**
+	 * Sets the sm bus company type by var.
+	 * 
+	 * @param smBusCompanyTypeByVar
+	 *            the smBusCompanyTypeByVar to set
+	 */
+	public void setSmBusCompanyTypeByVar(String smBusCompanyTypeByVar) {
+		this.smBusCompanyTypeByVar = smBusCompanyTypeByVar;
+	}
+
+	/**
+	 * Gets the sm bus paid up capital frm by var.
+	 * 
+	 * @return the smBusPaidUpCapitalFrmByVar
+	 */
+	public String getSmBusPaidUpCapitalFrmByVar() {
+		return smBusPaidUpCapitalFrmByVar;
+	}
+
+	/**
+	 * Sets the sm bus paid up capital frm by var.
+	 * 
+	 * @param smBusPaidUpCapitalFrmByVar
+	 *            the smBusPaidUpCapitalFrmByVar to set
+	 */
+	public void setSmBusPaidUpCapitalFrmByVar(String smBusPaidUpCapitalFrmByVar) {
+		this.smBusPaidUpCapitalFrmByVar = smBusPaidUpCapitalFrmByVar;
+	}
+
+	/**
+	 * Gets the sm bus paid up capital to by var.
+	 * 
+	 * @return the smBusPaidUpCapitalToByVar
+	 */
+	public String getSmBusPaidUpCapitalToByVar() {
+		return smBusPaidUpCapitalToByVar;
+	}
+
+	/**
+	 * Sets the sm bus paid up capital to by var.
+	 * 
+	 * @param smBusPaidUpCapitalToByVar
+	 *            the smBusPaidUpCapitalToByVar to set
+	 */
+	public void setSmBusPaidUpCapitalToByVar(String smBusPaidUpCapitalToByVar) {
+		this.smBusPaidUpCapitalToByVar = smBusPaidUpCapitalToByVar;
 	}
 }
