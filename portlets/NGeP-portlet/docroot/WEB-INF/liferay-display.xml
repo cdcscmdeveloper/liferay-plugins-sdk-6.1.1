@@ -288,6 +288,7 @@
 		<category name="category.ep.soa">
 			<portlet id="soaServiceRetry"></portlet>
 			<portlet id="soaBatchRetry"></portlet>
+			<portlet id="soaNotifyRetry"></portlet>
 		</category>
 		<!-- SOA - END -->		
 	</category>
