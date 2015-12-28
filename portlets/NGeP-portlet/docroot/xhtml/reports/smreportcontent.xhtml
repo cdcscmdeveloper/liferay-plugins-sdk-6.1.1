@@ -305,7 +305,7 @@
 													itemValue="J"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.contractor']}"
 													itemValue="K"></f:selectItem>
-												<p:ajax event="change"
+												<p:ajax event="change" process="@form"
 													listener="#{reportBackingBean.supplierTypeConsultant}"
 													partialSubmit="true" update="@form" />
 											</p:selectOneMenu></td>
@@ -423,6 +423,20 @@
 							</p:column>
 						</c:if>
 						<c:if
+							test="#{smReportBackingBean.managedBean.rptGenBean.smBusCompanyTypeView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.busComptype']}"
+								style="margin-top:5px;width:160px;" />
+							<p:selectOneMenu value="#{reportBackingBean.smBusCompanyType}"
+								style="margin-top:5px;width:300px;">								
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItems value="#{reportBackingBean.smBusCompanyTypeList}"></f:selectItems>
+								<p:ajax event="change" process="@this"
+									listener="#{reportBackingBean.changeBusCompanyType}"
+									partialSubmit="true" update="@form" />
+							</p:selectOneMenu>
+						</c:if>
+						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smRegistrationStatusView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}"
 								style="margin-top:5px;width:160px;" />
@@ -434,6 +448,22 @@
 									itemValue="#{null}"></f:selectItem>
 								<f:selectItems
 									value="#{reportBackingBean.registrationStatusList}"></f:selectItems>
+								<p:ajax event="change" partialSubmit="true"
+									update="@([id$=Msg])" />
+							</p:selectOneMenu>
+						</c:if>
+						<c:if
+							test="#{smReportBackingBean.managedBean.rptGenBean.smBusCompanyRegistrationStatusView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}"
+								style="margin-top:5px;width:160px;" />
+
+							<p:selectOneMenu
+								value="#{reportBackingBean.smBusCompTypeRegistrationStatus}"
+								style="margin-top:5px;width:300px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItems
+									value="#{reportBackingBean.registrationStatusListOfBusCompType}"></f:selectItems>
 								<p:ajax event="change" partialSubmit="true"
 									update="@([id$=Msg])" />
 							</p:selectOneMenu>
@@ -1981,11 +2011,6 @@
 	</div>
 
 
-
-
-
-
-
 	<div>
 		<c:if
 			test="#{smReportBackingBean.managedBean.rptGenBean.smPaidUpCapitalFrmView}">
@@ -2010,6 +2035,50 @@
 							style="width:62px;" /></TD>
 					<TD><p:inputText maxlength="40"
 							value="#{reportBackingBean.smPaidUpCapitalTo}"
+							style="margin-top:5px;width:150px;">
+							<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+						</p:inputText></TD>
+				</TR>
+			</TABLE>
+		</c:if>
+	</div>
+
+	<div>
+		<c:if
+			test="#{smReportBackingBean.managedBean.rptGenBean.smBusCompanyPaidUpAccumlatedShareView}">
+			<TABLE style="margin-top: 10px; width: 50%;">
+				<TR>
+					<c:if
+						test="#{smReportBackingBean.managedBean.rptGenBean.smPaidUpCptlSelView}">
+						<TD><p:outputLabel value="#{lbl['lbl.rpt.paidupcap']}"
+								style="margin-top:5px;width:170px;" /></TD>
+					</c:if>
+					<c:if
+						test="#{smReportBackingBean.managedBean.rptGenBean.smAccmltdCptlSelView}">
+						<TD><p:outputLabel
+								value="#{lbl['lbl.rpt.accumulatedcapital']}"
+								style="margin-top:5px;width:170px;" /></TD>
+					</c:if>
+					<c:if
+						test="#{smReportBackingBean.managedBean.rptGenBean.smAccmltdShareSelView}">
+						<TD><p:outputLabel value="#{lbl['lbl.rpt.accumulatedshare']}"
+								style="margin-top:5px;width:170px;" /></TD>
+					</c:if>
+					<c:if
+						test="#{smReportBackingBean.managedBean.rptGenBean.smPaidAccmltdShareCptlSelView}">
+						<TD><p:outputLabel
+								value="#{lbl['lbl.rpt.paidaccumulatedshare']}"
+								style="margin-top:5px;width:170px;" /></TD>
+					</c:if>
+					<TD><p:inputText maxlength="40"
+							value="#{reportBackingBean.smBusPaidUpCapitalFrm}"
+							style="margin-top:5px;width:150px;">
+							<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+						</p:inputText></TD>
+					<TD><p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}"
+							style="width:62px;" /></TD>
+					<TD><p:inputText maxlength="40"
+							value="#{reportBackingBean.smBusPaidUpCapitalTo}"
 							style="margin-top:5px;width:150px;">
 							<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 						</p:inputText></TD>

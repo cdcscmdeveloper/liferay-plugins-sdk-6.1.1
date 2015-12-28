@@ -355,21 +355,24 @@ public class SMReportBackingBean extends
 			break;
 		case ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL:
 			rptGenBean.retrieveCategoryLevOne1();
-			rptGenBean.setSmMandatoryCategoryView(true);
+			rptGenBean.setSmNonMandatoryCategoryView(true);
 			rptGenBean.setSmCompanyNameView(true);
-			rptGenBean.setSmRegistrationStatusView(true);
-			rptGenBean.setSmRegistrationTypeView(true);
+			rptGenBean.setSmBusCompanyRegistrationStatusView(true);
+			//rptGenBean.setSmRegistrationTypeView(true);
 			rptGenBean.setSmMandatorySupplierTypeView(true);
+			rptGenBean.setSmBusCompanyTypeView(true);			
 			rptGenBean.setSmCommonZoneView(true);
 			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
 			// rptGenBean.setSmMandatoryZoneView(true);
 			rptGenBean.setSmMandatoryMofRegNoFromView(true);
-			rptGenBean.setSmMandatoryMofRegNoToView(true);
+			rptGenBean.setSmMandatoryMofRegNoToView(true);			
+			rptGenBean.setSmBusCompanyPaidUpAccumlatedShareView(true);
+			rptGenBean.setSmPaidAccmltdShareCptlSelView(true);
 			/*
 			 * rptGenBean.setSmPaidUpCapitalFrmView(true);
 			 * rptGenBean.setSmPaidUpCapitalToView(true);
 			 */
-			rptGenBean.setSmPaidUpCapitalNaccumView(true);
+			//rptGenBean.setSmPaidUpCapitalNaccumView(true);
 
 			break;
 		case ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL:
