@@ -2834,6 +2834,24 @@ public class ProfileManagementBackingBean extends
 
 		}
 		
+		//EP_ADMIN cannot be listed/search in user
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean(
+						"pmUserRoles.pmRole.roleCode",
+						SearchOperator.OPERATOR_NOT_EQUALS.value(), RoleCode.EP_ADMIN.value()));
+		
+		// EP_ADMIN_1 cannot see EP_ADMIN_1 or EP_ADMIN_2 
+		// EP_ADMIN_2 cannot see EP_ADMIN_1 or EP_ADMIN_2
+		if(getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN_1.value()) || getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN_2.value())){
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"pmUserRoles.pmRole.roleCode",
+							SearchOperator.OPERATOR_NOT_IN.value(), 
+							new ArrayList<String>(Arrays
+									.asList(RoleCode.EP_ADMIN_1.value(),
+											RoleCode.EP_ADMIN_2.value()))));
+		}
+		
 		
 		// Status if non provided then select default (active)
 		if (upSearchBean.getUserOrgStatus() != null) {
@@ -5109,6 +5127,8 @@ public class ProfileManagementBackingBean extends
 		String roleCode = null;
 		if(getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())){
 			roleCode = RoleCode.EP_ADMIN.value();
+		}else if(getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN_1.value())){
+			roleCode = RoleCode.EP_ADMIN_1.value();
 		}else if(getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN_2.value())){
 			roleCode = RoleCode.EP_ADMIN_2.value();
 		}else if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
