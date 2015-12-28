@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">	
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">	
 	
 	<style>
 		div[id$="somSalutationMsg"], div[id$="itEmailMsg"],div[id$="itTelNoMsg"],div[id$="itMobileNoMsg"],div[id$="itFaxNoMsg"] {
@@ -186,19 +187,12 @@
 					<tr>
 						<th width="20%"><p:outputLabel
 								value="#{lbl['lbl.pm.profiles.userdetails.telno']}" /></th>
-						<td><p:inputText id="itTelNo"
-								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.phoneNo}"
-								styleClass="ppDisplayTextL" maxlength="12"
-								validatorMessage="#{lbl['lbl.pm.profiles.userdetails.telno']} - #{lbl['lbl.pm.profiles.invalidNo']}">
-								<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-							</p:inputText>
-								&#160;&#160; <p:graphicImage id="teleno"
-							value="/css/images/design/tooltips.png" /> 
-							<p:tooltip
-							id="tfno" for="teleno">
-							<h:outputText escape="false"
-								value="#{lbl['tt.sm.registration.user.telephoneno']}" />
-						</p:tooltip>&#160; <p:message id="itTelNoMsg" for="itTelNo" display="icon" />
+						<td><ac:phone id="itTelNo" isMobile="false" label="#{lbl['lbl.pm.profiles.userdetails.telno']}"
+						countryCode="#{profilePersonalizationBackingBean.managedBean.selectedUser.phoneCountry}" 
+						areaCode="#{profilePersonalizationBackingBean.managedBean.selectedUser.phoneArea}" 
+						number="#{profilePersonalizationBackingBean.managedBean.selectedUser.phoneNo}"  
+						validatorMessage="#{lbl['lbl.pm.profiles.userdetails.telno']} - #{lbl['lbl.pm.profiles.invalidNo']}" />
+								<p:message id="itTelNoMsg" for="itTelNo" display="icon" />
 						</td>
 						<td> </td>
 						<td></td>
@@ -206,18 +200,12 @@
 					<tr>
 						<th width="20%"><p:outputLabel
 								value="#{lbl['lbl.pm.profiles.userdetails.faxno']}" /></th>
-						<td><p:inputText id="itFaxNo"
-								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.faxNo}"
-								styleClass="ppDisplayTextL" maxlength="12"
-								validatorMessage="#{lbl['lbl.pm.profiles.userdetails.faxno']} - #{lbl['lbl.pm.profiles.invalidNo']}">
-								<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-							</p:inputText>
-							&#160;&#160; <p:graphicImage id="faxno"
-							value="/css/images/design/tooltips.png" /> <p:tooltip
-							id="tfaxno" for="faxno">
-							<h:outputText escape="false"
-								value="#{lbl['tt.sm.registration.user.telephoneno']}" />
-						</p:tooltip>&#160; <p:message id="itFaxNoMsg" for="itFaxNo" display="icon" />
+						<td><ac:phone id="itFaxNo" isMobile="false" label="#{lbl['lbl.pm.profiles.userdetails.faxno']}"
+						countryCode="#{profilePersonalizationBackingBean.managedBean.selectedUser.faxCountry}" 
+						areaCode="#{profilePersonalizationBackingBean.managedBean.selectedUser.faxArea}" 
+						number="#{profilePersonalizationBackingBean.managedBean.selectedUser.faxNo}"  
+						validatorMessage="#{lbl['lbl.pm.profiles.userdetails.faxno']} - #{lbl['lbl.pm.profiles.invalidNo']}" />
+							<p:message id="itFaxNoMsg" for="itFaxNo" display="icon" />
 						</td>
 						<td></td>
 						<td></td>
@@ -225,17 +213,14 @@
 					<tr>
 						<th width="20%"><p:outputLabel
 								value="#{lbl['lbl.pm.profiles.userdetails.mobileno']}" /></th>
-						<td><p:inputText id="itMobileNo"
-								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileNo}"
-								maxlength="12" styleClass="ppDisplayTextL"
-								validatorMessage="#{lbl['lbl.pm.profiles.userdetails.mobileno']} - #{lbl['lbl.pm.profiles.invalidNo']}">
-								<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-							</p:inputText> &#160;&#160; <p:graphicImage id="mobileno"
-						value="/css/images/design/tooltips.png" /> <p:tooltip
-						id="mbno" for="mobileno">
-						<h:outputText escape="false"
-							value="#{lbl['tt.sm.registration.user.mobileno']}" />
-					</p:tooltip>&#160;  <p:message id="itMobileNoMsg" for="itMobileNo" display="icon" />
+						<td><ac:phone id="itMobileNo" label="#{lbl['lbl.pm.profiles.userdetails.mobileno']}"
+							countryCode="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileCountry}" 
+							areaCode="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileArea}" 
+							number="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileNo}" 
+							isMobile="true"
+							validatorMessage="#{lbl['lbl.pm.profiles.userdetails.mobileno']} - #{lbl['lbl.pm.profiles.invalidNo']}"
+							telcoId="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileTelcoId}" />
+							<p:message id="itMobileNoMsg" for="itMobileNo" display="icon" />
 						</td>
 						<td>
 						</td>
