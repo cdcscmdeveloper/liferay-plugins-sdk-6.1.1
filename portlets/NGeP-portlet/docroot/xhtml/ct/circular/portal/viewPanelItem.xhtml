@@ -57,30 +57,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			       </h:outputText>
 			  </p:column>
 			  
-			  <p:column styleClass="column-align-center"  style="white-space:normal;width:2%;">
-			  	<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.ct.dn']}"/>
-               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.direct.nego']}"/>
-               	</f:facet>
-			    <p:selectBooleanCheckbox value="#{panelItemsVar.directNego}" disabled="true"/>
-			  </p:column>		
-			  	
-			  <p:column styleClass="column-align-center"  style="white-space:normal;width:2%;">
-			  	<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.ct.dp']}"/>
-               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.direct.purchase']}"/>
-               	</f:facet>
-			  	<p:selectBooleanCheckbox value="#{panelItemsVar.directPurchase}" disabled="true"/>
-			  </p:column>	
-			  
-			  <p:column styleClass="column-align-center"  style="white-space:normal;width:2%;">
-			    <f:facet name="header">
-					<h:outputText value="#{lbl['lbl.ct.qt']}"/>
-               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.quotation.tender']}"/>
-               	</f:facet>   
-			  	<p:selectBooleanCheckbox value="#{panelItemsVar.qt}" disabled="true"/>
-			  </p:column>
-			  
 			  <p:column headerText="#{lbl['lbl.ct.status']}" style="width:6%;" styleClass="column-align-center" >
 		           <h:outputText  value="#{panelItemsVar.recordStatusFlg == 1 ? 'active' : 'inactive'}" style="float:left;"   />
 			  </p:column>												

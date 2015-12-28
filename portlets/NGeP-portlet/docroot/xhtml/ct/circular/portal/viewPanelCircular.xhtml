@@ -23,21 +23,48 @@
 				    <p:inputText  style="width:170px;" disabled="true"
 						value="#{panelBackingBean.managedBean.circularVer.circularFileRefNo}" />
 					
-				     <h:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
-	                 <h:commandLink 	 action="#{panelBackingBean.downloadFile()}" 
-	                      value="#{panelBackingBean.managedBean.circularVer.circularFileName}" styleClass="blue_font"/>				
-		
+					    <f:verbatim/>
+			            <h:panelGrid columns="3">
+			               <p:selectBooleanCheckbox  disabled="true" style="text-align:top;"  
+			                    value="#{panelBackingBean.managedBean.circularVer.directNego}"> 
+			                 </p:selectBooleanCheckbox>
+			                <p:spacer width="2" />	
+			  	            <h:outputText value="#{lbl['lbl.ct.panel.dn']}"  />
+			  	        </h:panelGrid>    
+					
 					  <p:outputLabel value="#{lbl['lbl.ct.start.date']}" />
-			   	      <p:calendar id="popupButtonCal" navigator="true" size="17" showOn="button" 
+			   	      <p:calendar id="popupButtonCal" navigator="true" size="9" showOn="button" 
 			   	           value="#{panelBackingBean.managedBean.circularVer.startDate}"  disabled="true" 
 			       		   pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
 			       	   </p:calendar> 
+			       	   
+			       	   <f:verbatim/>
+			              <h:panelGrid columns="3">
+			                  <p:selectBooleanCheckbox disabled="true" style="text-align:top;"
+			                       value="#{panelBackingBean.managedBean.circularVer.directPurchase}" >
+			                   </p:selectBooleanCheckbox>
+			                   <p:spacer width="2" />	
+			  	               <h:outputText value="#{lbl['lbl.ct.panel.dp']}"  />
+			  	           </h:panelGrid>
 			              
 			           <h:outputLabel value="#{lbl['lbl.ct.end.date']}" />
 		               <p:calendar value="#{panelBackingBean.managedBean.circularVer.endDate}"
-		                    size="17" navigator="true" showOn="button"   disabled="true" id="popupButtonCal1" 
+		                    size="9" navigator="true" showOn="button"   disabled="true" id="popupButtonCal1" 
 			   		        pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
 			   	       </p:calendar>
+			   	       
+			   	       <f:verbatim/>
+			          <h:panelGrid columns="3">
+		         	       <p:selectBooleanCheckbox disabled="true" style="text-align:top;"
+		         	           value="#{panelBackingBean.managedBean.circularVer.qt}">
+				           </p:selectBooleanCheckbox>
+			               <p:spacer width="2" />	
+			  	          <h:outputText value="#{lbl['lbl.ct.panel.qt']}"  />   
+			  	      </h:panelGrid>   
+			   	       
+			   	         <h:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
+	                 <h:commandLink 	 action="#{panelBackingBean.downloadFile()}" 
+	                      value="#{panelBackingBean.managedBean.circularVer.circularFileName}" styleClass="blue_font"/>				
       	        </h:panelGrid>
 	       </p:panel>
 	

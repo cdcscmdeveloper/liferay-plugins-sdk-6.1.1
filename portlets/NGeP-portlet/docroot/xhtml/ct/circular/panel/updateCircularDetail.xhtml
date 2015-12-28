@@ -43,26 +43,51 @@
 				</p:inputText>
 				<p:spacer width="5" />
 				<h:outputText value="#{lbl['lbl.ct.days']}" />
-			</h:panelGroup>	
-					     
+			</h:panelGroup>
+			    
 					<p:outputLabel value="#{lbl['lbl.ct.start.date']}" />
 					<p:inputText value="#{panelBackingBean.managedBean.circularVer.startDate}" disabled="true" style="width:85px;">
 			   			<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-			   		</p:inputText>		
+			   		</p:inputText>
+			   		
+			   		<f:verbatim/>
+			            <h:panelGrid columns="3">
+			               <p:selectBooleanCheckbox  disabled="true" style="text-align:top;"  
+			                    value="#{panelBackingBean.managedBean.circularVer.directNego}"> 
+			                 </p:selectBooleanCheckbox>
+			                <p:spacer width="2" />	
+			  	            <h:outputText value="#{lbl['lbl.ct.panel.dn']}"  />
+			  	        </h:panelGrid>      		
 			   		
 			   		<p:outputLabel value="#{lbl['lbl.ct.end.date']}" />
 			   		<p:inputText value="#{panelBackingBean.managedBean.circularVer.endDate}" disabled="true" style="width:85px; margin-top:3px;" >
 			   			<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			   		</p:inputText>	 
 			   		
-			   		<p:outputLabel value="#{lbl['lbl.ct.circular.extension']}" />
+			   		<f:verbatim/>
+			              <h:panelGrid columns="3">
+			                  <p:selectBooleanCheckbox disabled="true" style="text-align:top;"
+			                       value="#{panelBackingBean.managedBean.circularVer.directPurchase}" >
+			                   </p:selectBooleanCheckbox>
+			                   <p:spacer width="2" />	
+			  	               <h:outputText value="#{lbl['lbl.ct.panel.dp']}"  />
+			  	           </h:panelGrid>
+			   		
+			   		    <p:outputLabel value="#{lbl['lbl.ct.circular.extension']}" />
 			   	        <p:selectBooleanCheckbox id="extensionId" value="#{panelBackingBean.managedBean.circularExtension}"
 			   	        	disabled="#{panelBackingBean.managedBean.viewContract}">
 			                 <p:ajax event="change" update=":form:pc" listener="#{panelBackingBean.chkCircularExtension}" process="@this"/> 
 			           </p:selectBooleanCheckbox>
-			           
-			           <f:verbatim/> <f:verbatim/>
-			   		
+			         
+			           <f:verbatim/>
+			          <h:panelGrid columns="3">
+		         	       <p:selectBooleanCheckbox disabled="true" style="text-align:top;"
+		         	           value="#{panelBackingBean.managedBean.circularVer.qt}">
+				           </p:selectBooleanCheckbox>
+			               <p:spacer width="2" />	
+			  	          <h:outputText value="#{lbl['lbl.ct.panel.qt']}"  />   
+			  	      </h:panelGrid>    
+			  	     
 			    <p:outputLabel value="#{lbl['lbl.ct.extension.start.date']}"  styleClass="required"  rendered="#{panelBackingBean.managedBean.circularExtension}" />
 			    <p:calendar  value="#{panelBackingBean.managedBean.circularVer.extendStartDate}" readonly="true"
 			         maxdate="#{panelBackingBean.managedBean.circularVer.extendStartDate}" 

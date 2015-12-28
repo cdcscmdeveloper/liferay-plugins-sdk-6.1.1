@@ -25,8 +25,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			 
 			  <p:column style="white-space:pre-line;width:11%;" styleClass="column-align-center" >
 			       <f:facet name="header">
-						<h:outputText id="coverageId" value="#{lbl['lbl.ct.panel.coverage']}" styleClass="required"/>
-	               		<ac:iconTooltip for="coverageId"  value="#{lbl['lbl.ct.tooltip.panel.coverage']}"/>
+						<h:outputText id="coverageId" value="#{lbl['lbl.ct.panel.coverage']}" styleClass="required" escape="true"/>
+	               		<ac:iconTooltip for="coverageId"   value="#{lbl['lbl.ct.tooltip.panel.coverage']}" />
 	               </f:facet>
 			       <p:selectOneMenu id="panelCoverage" value="#{panelItemsVar.zoneAllParamterId}" style="width:100%;" 
 			       		disabled="#{panelBackingBean.managedBean.viewContract}">
