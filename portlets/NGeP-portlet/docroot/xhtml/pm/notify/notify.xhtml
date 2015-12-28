@@ -30,10 +30,13 @@
 							<td style="text-align: right;"><p:commandButton
 									value="#{lbl['lbl.portal.notify.btn.refresh']}"
 									action="#{notifyBackingBean.retrieveNotifyList}"
-									update=":form:pnldetail,:form:notifyTable" /> <p:commandButton
+									update=":form:pnldetail,:form:notifyTable" /> 
+									
+									<p:commandButton id="deleteBtn"
 									value="#{lbl['lbl.portal.notify.btn.delete']}"
 									oncomplete="confirmation.show();"
-									update=":form:notifyTable,:form:pnldetail" /></td>
+									update=":form:notifyTable,:form:pnldetail" 
+									disabled="#{notifyBackingBean.managedBean.deleteButtonHide}"/></td>
 						</tr>
 						<tr>
 							<td colspan="2" width="100%" valign="top"><p:dataTable
@@ -72,6 +75,9 @@
 											<f:convertDateTime pattern="hh:mm:ss a" />
 										</h:outputText>
 									</p:column>
+									<p:ajax event="toggleSelect"  listener="#{notifyBackingBean.rowSelectUnselectCheckbox}" update=":form:deleteBtn"/>
+									<p:ajax event="rowSelectCheckbox"  listener="#{notifyBackingBean.rowSelectUnselectCheckbox}" update=":form:deleteBtn"/>
+        							<p:ajax event="rowUnselectCheckbox"  listener="#{notifyBackingBean.rowSelectUnselectCheckbox}" update=":form:deleteBtn"/>
 								</p:dataTable></td>
 						</tr>
 					</table>
