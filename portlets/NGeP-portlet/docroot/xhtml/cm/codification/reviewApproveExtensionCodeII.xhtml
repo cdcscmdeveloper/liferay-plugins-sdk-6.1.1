@@ -27,7 +27,6 @@
 						update="@form"></p:commandButton>
 				</ui:repeat>
 					<p:commandButton value="Claim" action="#{bpmTasklistBackingBean.claimTaskInDetailPage}" rendered="#{!bpmTasklistBackingBean.managedBean.claim}" update="@form"></p:commandButton>
-				<!-- <p:commandButton value="Claim" action="#{unspscCodeBackingBean.claimTask}" rendered="#{!unspscCodeBackingBean.managedBean.claim}" update="@form"></p:commandButton> -->
 			</div>
 
 			<ui:include src="DocumentHeader.xhtml"></ui:include>
