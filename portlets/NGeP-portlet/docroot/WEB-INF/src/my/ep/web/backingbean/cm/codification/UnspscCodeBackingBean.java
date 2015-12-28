@@ -904,10 +904,12 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		// clear search fileds and result
 		CodificationBackingBean bb = new CodificationBackingBean();
 		bb.getManagedBean().setAutoCompleteUnspscCode(new CmUnspsc());
-		bb.getTitleFilterBean().setSearchValue(null);
-		bb.setSearchDataModel(null);
+		bb.getManagedBean().getTitleFilterBean().setSearchValue(null);
+		bb.getManagedBean().getSearchDataModel().resetData();
+		
 
-		return "verifyUnspscSearch";
+
+		return "verifyUnspscSearch?faces-redirect=true";
 	}
 
 	public String navigateCodeAdminToSearch() {
