@@ -5507,55 +5507,9 @@ public class SupplierFinalizationBackingBean extends
 		String finalizationMethodStr = getManagedBean().getFinalizationMethod();
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		
-		if ((isItemize && getManagedBean().getHasAtleastTwoQualifiedSuppliersByItem() == null) || 
-				(!isItemize && getManagedBean().getHasAtleastTwoQualifiedSuppliersByItem() == null)) {
-			
-			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
-			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-			ScQt scQt = getManagedBean().getScQt();
-			
-			try {
-				qtSuppFinalizationSO = BusinessDelegate.getInstance()
-							.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-									IQTSuppFinalizationSO.class);	
-				reqDTO.setQtId(scQt.getQtId());
-				reqDTO.setZonal(scQt.isZonal());
-				reqDTO.setItemize(getManagedBean().isItemize());
-				SuppFinalizationResDTO resDTO 
-						= qtSuppFinalizationSO.hasAtleastTwoQualifiedSuppliers(reqDTO);
-				
-				if (resDTO.isSuccessful()) {
-					List<Object[]> qualifiedSupplierCountList 
-										= resDTO.getQualifiedSupplierCountList();
-					if (isItemize) {
-						if (scQtFinalization.getScQtRecommends().size()
-								!= qualifiedSupplierCountList.size()) {
-							getManagedBean().setHasAtleastTwoQualifiedSuppliersByItem(false);
-						} else {
-							getManagedBean().setHasAtleastTwoQualifiedSuppliersByItem(true);
-						}
-					} else {
-						if (scQt.isZonal()) {
-							if (getManagedBean().getZoneDetails().size() 
-									!= qualifiedSupplierCountList.size()) {
-								getManagedBean().setHasAtleastTwoQualifiedSuppliersByPackage(false);
-							} else {
-								getManagedBean().setHasAtleastTwoQualifiedSuppliersByPackage(true);
-							}
-						} else {
-							getManagedBean().setHasAtleastTwoQualifiedSuppliersByPackage(true);
-						}
-					}
-				} else {
-					if (isItemize) {
-						getManagedBean().setHasAtleastTwoQualifiedSuppliersByItem(false);
-					} else {
-						getManagedBean().setHasAtleastTwoQualifiedSuppliersByPackage(false);
-					}
-				}
-			} finally {
-				qtSuppFinalizationSO = null;
-			}
+		// Checking for Bidding process to have atleast 2 qualified suppliers
+		if (ajaxEvent != null) {
+			checkIfAtleastTwoSuppliersExist();
 		}
 		
 		if (StringUtils.isNotBlank(finalizationMethodStr)) {
@@ -5646,20 +5600,81 @@ public class SupplierFinalizationBackingBean extends
 						}
 					}					
 				}
-				
-				
-				if (isItemize && BooleanUtils.isFalse(
-						getManagedBean().getHasAtleastTwoQualifiedSuppliersByItem())) {
-					// throw new EpException
-				} else if (!isItemize && BooleanUtils.isFalse(
-								getManagedBean().getHasAtleastTwoQualifiedSuppliersByItem())) {
-					// throw new EpException
-				}				
 			}
 		} else {
 			getManagedBean().setFinalizationMethod(StringUtils.EMPTY);
 		}
+	}
+	
+	private void checkIfAtleastTwoSuppliersExist() {
+		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		
+		boolean isItemize = getManagedBean().isItemize();
+		ScQt scQt = getManagedBean().getScQt();
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+		List<TplSpecZoneDtl> specZones = getManagedBean().getZoneDetails();
+		Map<Long, TplSpecZoneDtl> zoneMap = getManagedBean().getZoneMap();
+		SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+		
+		try {
+			qtSuppFinalizationSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTSuppFinalizationSO.class);	
+			reqDTO.setQtId(scQt.getQtId());
+			reqDTO.setZonal(scQt.isZonal());
+			reqDTO.setItemize(isItemize);
+			
+			if (isItemize) {
+				List<Long> requestItemIds = new ArrayList<Long>();
+				for (ScQtRecommend scQtRecommend 
+							: scQtFinalization.getScQtRecommends()) {
+					if (!(scQtRecommend.isCancelled() || 
+							scQtRecommend.isAwardedItem())) {
+						requestItemIds.add(scQtRecommend
+								.getRequestItem().getRequestNoteItemId());
+					}
+				}
+				reqDTO.setRequestItemIds(requestItemIds);
+			} else if (scQt.isZonal()) {
+				List<Long> specZoneDtlIds = new ArrayList<Long>();	
+				for (TplSpecZoneDtl specZoneDtl : specZones) {
+					specZoneDtlIds.add(specZoneDtl.getSpecZoneId());
+				}
+				reqDTO.setSpecZoneDtlIds(specZoneDtlIds);
+			}
+			
+			SuppFinalizationResDTO resDTO 
+					= qtSuppFinalizationSO.hasAtleastTwoQualifiedSuppliers(reqDTO);
+			
+			if (!resDTO.isSuccessful()) {
+				getManagedBean().setFinalizationMethod(
+						scQtFinalization.getFinalizationMethod().getParameterCode());
+				
+				List<Object[]> qualifiedSupplierCountList 
+									= resDTO.getQualifiedSupplierCountList();
+				Object[] paramsObj = qualifiedSupplierCountList.get(0);
+				
+				if (isItemize) {
+					if (scQt.isZonal()) {
+						String zoneName = zoneMap.get(((BigDecimal) paramsObj[2]).longValue()).getZoneName();
+						throw new EpException(MessageConst.ERROR_760370, new String[] { (String) paramsObj[0], zoneName});
+					} else {
+						throw new EpException(MessageConst.ERROR_760371, new String[] { (String) paramsObj[0]});
+					}
+				} else {
+					if (scQt.isZonal()) {
+						String zoneName = zoneMap.get(((BigDecimal) paramsObj[0]).longValue()).getZoneName();
+						getManagedBean().setFinalizationMethod(
+								scQtFinalization.getFinalizationMethod().getParameterCode());
+						throw new EpException(MessageConst.ERROR_760372, new String[] { zoneName });
+					} else {
+						throw new EpException(MessageConst.ERROR_760373);
+					}
+				}
+			}
+		} finally {
+			qtSuppFinalizationSO = null;
+		}		
 	}
 
 	private void recommendSuppliersByItem() {
