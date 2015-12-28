@@ -3420,6 +3420,16 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 										true);
 							}
 						}
+						
+						if (parameterCode
+								.equals(ParameterTypeConst.SPECIAL_CATEGORY_TYPE_NORMAL)) {
+							
+								this.getManagedBean().setFacilityTypeChoosable(false);
+							
+						}else{
+							
+							this.getManagedBean().setFacilityTypeChoosable(true);
+						}
 					}
 				}
 			}
