@@ -85,7 +85,7 @@
 				<h:outputText value=" #{lbl['lbl.pm.as.effdate']}" />
 			                	</f:facet>
 		<p:calendar showOn="button" id="daEffDateId" 
-	         	disabled="#{daObj.effDate le DateUtils.getCurrentDateWithoutTime()}"
+	         	disabled="#{!daObj.brandNew and (daObj.effDate le DateUtils.getCurrentDateWithoutTime())}"
 				mindate="#{ruleCatalogueBackingBean.managedBean.today}" style="width :45px;"
 				required="true" label="#{lbl['lbl.pm.as.effdate']}"
 				readonlyInput="true"
@@ -132,7 +132,7 @@
 				<h:outputText value="#{lbl['lbl.pm.action']}" />
 			</f:facet>
 			<p:commandLink id="deldaItemCl" partialSubmit="true"
-				process="@this" disabled="#{daObj.effDate le ruleCatalogueBackingBean.managedBean.today}"
+				process="@this" disabled="#{!daObj.brandNew and (daObj.effDate le ruleCatalogueBackingBean.managedBean.today)}"
 				action="#{ruleCatalogueBackingBean.deleteDesignatedArea(rowIndex)}"
 				update=":form:settingTabId:gstId">
 				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>

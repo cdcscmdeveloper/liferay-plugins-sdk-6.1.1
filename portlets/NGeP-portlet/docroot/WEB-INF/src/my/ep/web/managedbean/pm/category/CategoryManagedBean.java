@@ -118,6 +118,9 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	/** The check special category. */
 	private boolean checkSpecialCategory = false;
 	
+	/** The facility Type. */
+	private boolean facilityTypeChoosable = false;
+	
 	/** The check special category. */
 	private boolean basicCategoryRequired = false;
 	
@@ -1256,5 +1259,15 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	public void setMachineList(List<String> machineList) {
 		this.machineList = machineList;
 	}
+
+	public boolean isFacilityTypeChoosable() {
+		return facilityTypeChoosable;
+	}
+
+	public void setFacilityTypeChoosable(boolean facilityTypeChoosable) {
+		this.facilityTypeChoosable = facilityTypeChoosable;
+	}
+	
+	
 
 }
