@@ -633,16 +633,22 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 */
 	public void validateCircular(String outcome) {
 			getManagedBean().setAutoUpdate(true);
-			if(getManagedBean().getCircularVer().getCtContactPersons().size()==0) {
-				throw new EpException(MessageConst.ERROR_100023, new String[]{"Contact Person Details"});
+			if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+				 if(!getManagedBean().getCircularVer().isDirectPurchase() 
+					  && getManagedBean().getCircularVer().isDirectNego() && getManagedBean().getCircularVer().isQt()){
+					 throw new EpException(MessageConst.ERROR_100022,  new String[]{"CheckBox"});
+				 }
 			}
 			
-			for(CtContactPerson CtPerson : getManagedBean().getCircularVer().getCtContactPersons()){
-				if(CtPerson.getName() == null  || CtPerson.getName().isEmpty()){
-					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.contact.person.name", 
+			if (getManagedBean().getCircularVer().getCtContactPersons() != null 
+					&& getManagedBean().getCircularVer().getCtContactPersons().size() >= 1) {				
+			        for(CtContactPerson CtPerson : getManagedBean().getCircularVer().getCtContactPersons()){
+				        if(CtPerson.getName() == null  || CtPerson.getName().isEmpty()){
+					       throw new EpException(MessageConst.ERROR_100022, 
+							 new String[]{ResourceBundleUtils.getMessage("lbl.ct.contact.person.name", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
+				        }
+			       }
 			}
 			
 			if((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))
@@ -2277,5 +2283,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public void retrieveApproverList() {		
 		getManagedBean().getApproverModel().setSource(getAvailableApproverList(getApproverRoleCodeByDocType()));
 		getManagedBean().getApproverModel().setTarget(new ArrayList<PmUser>());
+	}
+	
+	public void deleteAttachFile(){
+		getManagedBean().getCircularVer().setCircularFileName(null);
+		getManagedBean().getCircularVer().setCircularFilePath(null);
 	}
 }
