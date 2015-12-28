@@ -11258,6 +11258,8 @@ public class ReportBackingBean extends
 		reportNameList.add(ReportConst.SM_LIST_OFFLINE_SUPP_DOC_RPT_VAL);
 		reportNameList.add(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL);
 		reportNameList.add(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL);
+		reportNameList.add(ReportConst.SM_STATISTICS_COMPANYTYPE_CAP_RPT_VAL);
+		
 
 	}
 
