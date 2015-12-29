@@ -8007,7 +8007,7 @@ public class ReportBackingBean extends
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
 
-			List<Object[]>  retrieveAllList = reportSO
+			List<Object[]> retrieveAllList = reportSO
 					.getAllBusCompanyData(strLanguage);
 			for (Object[] object : retrieveAllList) {
 				SelectItem selectItem = new SelectItem();
@@ -11118,13 +11118,7 @@ public class ReportBackingBean extends
 			if (this.getReportValue().equals(ReportConst.SM_LIST_OF_USERS)) {
 				changeSoftCertSelection();
 			}
-			if (this.getReportValue().equals(
-					ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL)) {
-				if (this.smSupplierType == null) {
-					retrieveAllBusCompanyData();
-					retrieveRegStatusListForAll();
-				}
-			}
+			getGenBusCompanyData();
 			if (pmReport != null) {
 				getDefaultValuesFromAndToDate(pmReport.getReportCode());
 			}
@@ -11139,6 +11133,27 @@ public class ReportBackingBean extends
 			retrieveProcessingOfficerList();
 			retrievePMServiceType();
 			directPurchaseWithRequisitioner();
+		}
+	}
+
+	private void getGenBusCompanyData() {
+		
+		if (this.getReportValue() != null) {			
+			if (this.getReportValue().equals(
+					ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL)
+					|| this.getReportValue().equals(
+							ReportConst.SM_STATISTICS_COMPANYTYPE_CAP_RPT_VAL)) {
+				if (this.smSupplierType == null) {
+					if (this.getReportValue().equals(
+							ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL)) {
+						retrieveAllBusCompanyData();
+						retrieveRegStatusListForAll();
+					} else if (this.getReportValue().equals(
+							ReportConst.SM_STATISTICS_COMPANYTYPE_CAP_RPT_VAL)) {
+						retrieveAllBusCompanyData();
+					}
+				}
+			}
 		}
 	}
 
@@ -15709,6 +15724,29 @@ public class ReportBackingBean extends
 					.setSmSoftCertReqDateView(true);
 
 		}
+	}
+
+	public void changeSupplierTypeSelection() {
+		log.info("ReportBackingBean-changeSupplierTypeSelection");
+		if (this.getReportValue() != null) {
+			if (this.getReportValue().equalsIgnoreCase(
+					ReportConst.SM_STATISTICS_COMPANYTYPE_CAP_RPT_VAL)) {
+				if (null != this.getSmSupplierType()) {
+					if (this.getSmSupplierType().equalsIgnoreCase(
+							ReportConst.SUPPL_CONSULT_TYPE)) {
+						retrieveConsultantBusCompanyData();
+					} else if (this.getSmSupplierType().equalsIgnoreCase(
+							ReportConst.SUPPL_CONTRACT_TYPE)) {
+						retrieveContractBusCompanyData();
+					}
+				} else {
+					retrieveAllBusCompanyData();
+
+				}
+
+			}
+		}
+
 	}
 
 	/**

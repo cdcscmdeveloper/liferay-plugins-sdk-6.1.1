@@ -205,8 +205,8 @@
 									itemValue="J"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.contractor']}"
 									itemValue="K"></f:selectItem>
-								<p:ajax event="change" partialSubmit="true"
-									update="@([id$=Msg])" />
+								<p:ajax event="change" partialSubmit="true" listener="#{reportBackingBean.changeSupplierTypeSelection}"
+									update="@form" />
 							</p:selectOneMenu>
 						</c:if>
 
@@ -456,7 +456,6 @@
 							test="#{smReportBackingBean.managedBean.rptGenBean.smBusCompanyRegistrationStatusView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}"
 								style="margin-top:5px;width:160px;" />
-
 							<p:selectOneMenu
 								value="#{reportBackingBean.smBusCompTypeRegistrationStatus}"
 								style="margin-top:5px;width:300px;">
