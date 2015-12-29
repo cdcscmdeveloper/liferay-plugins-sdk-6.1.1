@@ -35,7 +35,7 @@
 			</c:if>
 			
 			<f:convertNumber pattern="#{cc.attrs.pattern}" />
-			<p:ajax event="blur" process="@this" update="@this #{cc.attrs.update}" listener="#{spinnerBackingBean.valueChangedAction(cc, cc.attrs.value, cc.attrs.stepFactor, cc.attrs.min, cc.attrs.max, cc.attrs.postUpdateListener)}" />
+			<p:ajax event="keyup" process="@this" update="@this #{cc.attrs.update}" listener="#{spinnerBackingBean.valueChangedAction(cc, cc.attrs.value, cc.attrs.stepFactor, cc.attrs.min, cc.attrs.max, cc.attrs.postUpdateListener)}" />
 		</p:inputText>
 		<h:panelGroup layout="block" 
 			style="display:inline-block; vertical-align:top;">
