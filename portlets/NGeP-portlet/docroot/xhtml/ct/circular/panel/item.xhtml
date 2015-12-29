@@ -23,9 +23,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			       </p:selectBooleanCheckbox>
 		      </p:column>
 			 
-			  <p:column style="white-space:pre-line;width:11%;" styleClass="column-align-center" >
+			  <p:column style="white-space:normal;width:11%;" styleClass="column-align-center" >
 			       <f:facet name="header">
-						<h:outputText id="coverageId" value="#{lbl['lbl.ct.panel.coverage']}" styleClass="required" escape="true"/>
+						<h:outputText id="coverageId" value="#{lbl['lbl.ct.panel.coverage']}" styleClass="required"/>
 	               		<ac:iconTooltip for="coverageId"   value="#{lbl['lbl.ct.tooltip.panel.coverage']}" />
 	               </f:facet>
 			       <p:selectOneMenu id="panelCoverage" value="#{panelItemsVar.zoneAllParamterId}" style="width:100%;" 
@@ -52,7 +52,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			        <h:outputText value="#{lbl['lbl.ct.item.group']}" styleClass="required"/>
 			     </f:facet>
 			     <div  align="left">
-			       <ac:lov id="itemGroupLovId" lovId="CT_PANEL_ITEM_GROUP" size="5" headerText="#{lbl['lbl.ct.item.group']}" readonly="true" 
+			       <ac:lov id="itemGroupLovId" lovId="CT_PANEL_ITEM_GROUP" size="8" headerText="#{lbl['lbl.ct.item.group']}" readonly="true" 
 						value="#{panelItemsVar.ctPanelItemGroup.groupName}" conditionField="recordStatus^1" 
 						saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].ctPanelItemGroup"
 						disabled="#{panelBackingBean.managedBean.viewContract}">
