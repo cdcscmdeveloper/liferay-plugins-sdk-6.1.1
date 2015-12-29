@@ -154,7 +154,8 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		
 		Long currentStatus = getManagedBean().getSmComplaint().getPmStatus().getStatusId();
 		log.info("*****currentStatus*****" + currentStatus);
-		if(currentStatus.longValue() == DisciplinaryActionStatusConst.NEW_COMPLAINT.longValue()){
+		if(currentStatus.longValue() == DisciplinaryActionStatusConst.NEW_COMPLAINT.longValue() || 
+				currentStatus.longValue() == DisciplinaryActionStatusConst.REVIEW_BY_PTPK.longValue()){
 			log.info("****NEW_COMPLAINT*****");
 			getManagedBean().setSmComplReview(new SmComplaintReview());
 			getManagedBean().getSmComplReview().setSmComplaint(getManagedBean().getSmComplaint());
