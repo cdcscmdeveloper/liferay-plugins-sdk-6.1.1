@@ -781,7 +781,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	public String getStatusDescById(Long id){
 		log.info("getStatusDescById");
-		PmStatusDesc statusDesc = StatusHelper.getInstance().getStatusDescById(id);
+		
+		PmStatusDesc statusDesc = id == 0 ? null:StatusHelper.getInstance().getStatusDescById(id);
 		return statusDesc!=null ? statusDesc.getStatusName() : "";
 	}
 	
