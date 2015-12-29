@@ -418,7 +418,7 @@
 					<tr>
 						<th width="20%"><p:outputLabel
 								value="#{lbl['lbl.pm.profiles.userdetails.telno']}" /></th>
-						<td><ac:phone id="itTelNo" isMobile="false" label="#{lbl['lbl.pm.profiles.userdetails.telno']}"
+						<td colspan="3"><ac:phone id="itTelNo" isMobile="false" label="#{lbl['lbl.pm.profiles.userdetails.telno']}"
 						countryCode="#{profileManagementBackingBean.managedBean.selectedUserOrg.phoneCountry}" 
 						areaCode="#{profileManagementBackingBean.managedBean.selectedUserOrg.phoneArea}" 
 						number="#{profileManagementBackingBean.managedBean.selectedUserOrg.phoneNo}"  
@@ -427,21 +427,17 @@
 						<td><p:message id="itTelNoMsg" for="itTelNo" display="icon" /></td>
 						<td></td>
 						<td></td>
-						<td></td>
-						<td></td>
 					</tr>
 					<tr>
 						<th width="20%"><p:outputLabel
 								value="#{lbl['lbl.pm.profiles.userdetails.faxno']}" /></th>
-						<td><ac:phone id="itFaxNo" isMobile="false" label="#{lbl['lbl.pm.profiles.userdetails.faxno']}"
+						<td colspan="3"><ac:phone id="itFaxNo" isMobile="false" label="#{lbl['lbl.pm.profiles.userdetails.faxno']}"
 						countryCode="#{profileManagementBackingBean.managedBean.selectedUserOrg.faxCountry}" 
 						areaCode="#{profileManagementBackingBean.managedBean.selectedUserOrg.faxArea}" 
 						number="#{profileManagementBackingBean.managedBean.selectedUserOrg.faxNo}"  
 						validatorMessage="#{lbl['lbl.pm.profiles.userdetails.faxno']} - #{lbl['lbl.pm.profiles.invalidNo']}" />
 						</td>
 						<td> <p:message id="itFaxNoMsg" for="itFaxNo" display="icon" /></td>
-						<td></td>
-						<td></td>
 						<td></td>
 						<td></td>
 					</tr>
