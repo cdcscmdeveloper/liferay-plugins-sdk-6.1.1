@@ -1063,7 +1063,7 @@ public class SupplierFinalizationBackingBean extends
 		
 		if (scQtEvaluationResultDtl != null) {
 
-			// award
+			// Award
 			for (ScQtRecommend scQtRecommend : scQtRecommendList) {
 				scQtRecommend.setShortListedSupplierList(
 						this.getManagedBean().getShortlistedSupplierList());
@@ -1071,7 +1071,7 @@ public class SupplierFinalizationBackingBean extends
 					scQtRecommend.setRecommendDtls(
 							new ArrayList<ScQtRecommendDtl>());
 				}
-				setForwardToHigherAuthorityStatus(scQtRecommend);
+				setItemHigherAuthorityReqStatus(scQtRecommend);
 				
 				Set<ScQtRecommendDtl> toBeAddedSet = new HashSet<ScQtRecommendDtl>();
 				filterRecommendSuppliersList(toBeAddedSet, scQtEvaluationResultDtl, scQtRecommend);
@@ -1088,7 +1088,7 @@ public class SupplierFinalizationBackingBean extends
 					scQtRecommend.setRecommendDtls(
 							new ArrayList<ScQtRecommendDtl>());
 				}
-				setForwardToHigherAuthorityStatus(scQtRecommend);		
+				setItemHigherAuthorityReqStatus(scQtRecommend);		
 				List<ScQtEvaluationResultDtl> recommendedSupplierList = this
 						.getManagedBean().getRecommendedSupplierList();
 				if (CollectionUtils.isNotEmpty(recommendedSupplierList)) {
@@ -1126,7 +1126,7 @@ public class SupplierFinalizationBackingBean extends
 		scQtFinalization.setScQtRecommends(scQtRecommendList);
 	}
 	
-	private void setForwardToHigherAuthorityStatus(ScQtRecommend scQtRecommend) {
+	private void setItemHigherAuthorityReqStatus(ScQtRecommend scQtRecommend) {
 		Long loggedInUserId = getFacesScopes().getUserSessionBean()
 									  		  .getUserId();
 		if (scQtRecommend.getCreatedBy().equals(loggedInUserId)) {
@@ -1244,7 +1244,7 @@ public class SupplierFinalizationBackingBean extends
 					if (toBeValidated) {
 						toBeValidatedRecommendList.add(scQtRecommend);
 					}
-					setForwardToHigherAuthorityStatus(scQtRecommend);
+					setItemHigherAuthorityReqStatus(scQtRecommend);
 					if (scQtRecommend.getRecommendDtls() == null) {
 						scQtRecommend.setRecommendDtls(
 								new ArrayList<ScQtRecommendDtl>());
@@ -1518,7 +1518,7 @@ public class SupplierFinalizationBackingBean extends
 							.equals(selectedZone.getSpecZoneId())) && !isSubmit) {
 				continue;
 			}
-			setForwardToHigherAuthorityStatus(scQtRecommend);
+			setItemHigherAuthorityReqStatus(scQtRecommend);
 			if (((isFwdToHighAuth 
 					&& !scQtRecommend.isHigherAuthReq()) || 
 						ParameterConst.DECISION_RECOMMEND_SUPPLIER
@@ -3715,14 +3715,16 @@ public class SupplierFinalizationBackingBean extends
 					this.getManagedBean().setItemFwdToHighAuthority(true);
 				}
 				
-				if (getManagedBean().isInitialDecisionFwdToBPK() && 
-						isQTRefinalized()) {
+				if (!scQtRecommend.isHigherAuthReq() && 
+						getManagedBean().isInitialDecisionFwdToBPK() && 
+							isQTRefinalized()) {
 					scQtRecommend.setDisabled(false);
 				} else if (scQtRecommend.isHigherAuthReq() && 
-						(getManagedBean().isInitialDecisionFwdHighAuth() || 
-							(scQtFinalization.getHigherSecretary() != null &&
-								scQtFinalization.getHigherSecretary().getUserId()
-									.equals(loggedInUserId))) ) {
+							(getManagedBean().isInitialDecisionFwdToBPK() || 
+								(getManagedBean().isInitialDecisionFwdHighAuth() &&
+									(scQtFinalization.getHigherSecretary() != null &&
+										scQtFinalization.getHigherSecretary().getUserId()
+											.equals(loggedInUserId))))) {
 					scQtRecommend.setDisabled(false);
 				} else if (scQtRecommend.getCreatedBy()
 										.equals(loggedInUserId)) {
