@@ -183,7 +183,7 @@ public class CommitteBackingBean extends
 		 */
 		public UserQCPagingDataModel(String componentId,
 				UserCommitteeSearchBean userQCSearchBean) {
-			super(componentId);
+			super(componentId,false);
 			this.userQCSearchBean = userQCSearchBean;
 		}
 
@@ -256,7 +256,9 @@ public class CommitteBackingBean extends
 								SearchOperator.OPERATOR_EQUALS.value(), idtype,
 								true));
 			}
-			if (null != this.getManagedBean().getQt().getPmOrgProfile()) {
+			/* Commented as part of CR change to fetch irrespective of Ministry.
+			 *   
+			 * if (null != this.getManagedBean().getQt().getPmOrgProfile()) {
 				Long ministryOrgProfile = retrieveMinistryOrgProfile(
 						getManagedBean().getQt().getPmOrgProfile().getOrgProfileId()).getOrgProfileId();
 				String committeeType = getManagedBean().getScCommittee().getCommitteeType().getParameterCode();
@@ -303,7 +305,7 @@ public class CommitteBackingBean extends
 								new SearchMultiFilterBean(ptjOrgProfileFB, otherOrgFB));
 					}
 				} 
-			}
+			}*/
 		}
 	}
 
