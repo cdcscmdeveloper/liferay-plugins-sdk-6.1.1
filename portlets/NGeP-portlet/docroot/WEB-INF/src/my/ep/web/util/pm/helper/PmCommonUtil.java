@@ -159,6 +159,7 @@ public class PmCommonUtil {
 			RoleReqDTO roleReqDTO = new RoleReqDTO();
 			roleReqDTO.setRoleCode(roleCode);
 			roleReqDTO.setRestrictedRoles(checkRoles);
+			roleReqDTO.setModuleCode(ModuleCodeConst.PROFILE_MANAGEMENT);
 			roleSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IRoleSO.class);
 			RoleResDTO resDto = roleSO.checkRoleRestriction(roleReqDTO);

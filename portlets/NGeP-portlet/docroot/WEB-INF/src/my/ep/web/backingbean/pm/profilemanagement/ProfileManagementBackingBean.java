@@ -131,7 +131,7 @@ public class ProfileManagementBackingBean extends
 			.getLogger(ProfileManagementBackingBean.class);
 
 	// Navigation Details
-	public static final String NAV_TO_SEARCH = "/xhtml/pm/profilemanagement/search/profileManagementMain.xhtml"; // main
+	public static final String NAV_TO_SEARCH = "/xhtml/pm/profilemanagement/search/profileManagementMain.xhtml?faces-redirect=true"; // main
 																													// page
 																													// for
 																													// portlet
