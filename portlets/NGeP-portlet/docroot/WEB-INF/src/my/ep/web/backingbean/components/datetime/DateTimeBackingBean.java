@@ -1,16 +1,20 @@
 package my.ep.web.backingbean.components.datetime;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.el.MethodExpression;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.util.FacesScopes;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.component.selectonemenu.SelectOneMenu;
 
@@ -83,5 +87,18 @@ public class DateTimeBackingBean {
 		}
 		
 		return dateValue;
+	}
+	
+	public void postUpdateListener(String postUpdateListener) {
+		if (StringUtils.isNotBlank(postUpdateListener)) {
+			MethodExpression methodExp = FacesScopes
+	                .createMethodExpression(FacesContext.getCurrentInstance(),
+	                		postUpdateListener, null,
+	                		new Class[] {});
+			
+			methodExp.invoke(
+					FacesContext.getCurrentInstance().getELContext(), 
+					new Object[]{});
+		}
 	}
 }
