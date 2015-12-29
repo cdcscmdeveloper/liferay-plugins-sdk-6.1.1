@@ -104,8 +104,9 @@ public class SpinnerBackingBean {
 		BigDecimal currentValue = convertObjectToBigDecimal(value);
 		
 		if (currentValue != null && stepFactor != null) {
-			BigDecimal stepFactorValue = convertObjectToBigDecimal(stepFactor);
-			BigDecimal minValue = convertObjectToBigDecimal(min);
+			//BigDecimal stepFactorValue = convertObjectToBigDecimal(stepFactor);
+			BigDecimal minValue = new BigDecimal(0);
+					//convertObjectToBigDecimal(min);
 			BigDecimal maxValue = convertObjectToBigDecimal(max);
 			
 			// check must be greater or equal to min value.
@@ -122,11 +123,11 @@ public class SpinnerBackingBean {
 				}
 			}
 			
-			// check value must be multiple by step factor.
+			/*// check value must be multiple by step factor.
 			if (currentValue.remainder(stepFactorValue)
 					.compareTo(BigDecimal.valueOf(0)) != 0) {
 				throwExcepion(MessageConst.ERROR_760301, spinnerInput);
-			}
+			}*/
 		}
 		
 		invokeMethodAction(postUpdateListener, spinnerInput, currentValue);
