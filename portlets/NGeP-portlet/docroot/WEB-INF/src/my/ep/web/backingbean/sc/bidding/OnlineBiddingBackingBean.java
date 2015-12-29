@@ -126,13 +126,16 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 			ruleReqDTO.setRuleType("QTTOL");
 			RuleResDTO ruleResDTO = ruleSO
 					.getRuleValuesByTypeInCurrentDate(ruleReqDTO);
-			
-			if(ruleResDTO.getRuleValueList() != null && ruleResDTO.getRuleValueList().size() != 0){
-				PmConfigRuleValue configRulevalue = ruleResDTO.getRuleValueList().get(0);
-				BigDecimal tolerancePercentage = new BigDecimal(configRulevalue.getRuleValue());
-				 this.setTolerancePrice(tolerancePercentage);
+
+			if (ruleResDTO.getRuleValueList() != null
+					&& ruleResDTO.getRuleValueList().size() != 0) {
+				PmConfigRuleValue configRulevalue = ruleResDTO
+						.getRuleValueList().get(0);
+				BigDecimal tolerancePercentage = new BigDecimal(
+						configRulevalue.getRuleValue());
+				this.setTolerancePrice(tolerancePercentage);
 			}
-			
+
 		} finally {
 			ruleSO = null;
 		}
@@ -468,6 +471,11 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		BigDecimal newPrice = null;
 		Double lastBidpriceTotal = null;
 		Double newBidpriceTotal = null;
+		if (scBidPrice.getNewPrice().remainder(
+				scBidPrice.getScBidSupplierItem().getScBidItem()
+						.getDecrementAmt()).compareTo(BigDecimal.valueOf(0)) != 0) {
+			throw new EpException(MessageConst.ERROR_760301);
+		}
 		if (scBidPrice.getBidPrice() == null
 				&& scBidPrice.getNewPrice() != null) {
 			newPrice = BigDecimal.valueOf(scBidPrice.getScBidSupplierItem()
