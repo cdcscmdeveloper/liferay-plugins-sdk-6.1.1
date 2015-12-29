@@ -7871,6 +7871,7 @@ public class ReportBackingBean extends
 	public List<SelectItem> retrieveRegStatusListForContract() {
 		log.info("ReportBackingBean-retrieveRegStatusListForContract");
 		registrationStatusListOfBusCompType = new ArrayList<SelectItem>();
+		this.setSmBusCompTypeRegistrationStatus(null);
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -7896,6 +7897,7 @@ public class ReportBackingBean extends
 	public List<SelectItem> retrieveRegStatusListForConsultant() {
 		log.info("ReportBackingBean-retrieveRegStatusListForConsultant");
 		registrationStatusListOfBusCompType = new ArrayList<SelectItem>();
+		this.setSmBusCompTypeRegistrationStatus(null);
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -7921,6 +7923,7 @@ public class ReportBackingBean extends
 	public List<SelectItem> retrieveRegStatusListForAll() {
 		log.info("ReportBackingBean-retrieveRegStatusListForAll");
 		this.registrationStatusListOfBusCompType = new ArrayList<SelectItem>();
+		this.setSmBusCompTypeRegistrationStatus(null);
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -7946,6 +7949,7 @@ public class ReportBackingBean extends
 	public List<SelectItem> retrieveConsultantBusCompanyData() {
 		log.info("ReportBackingBean-retrieveConsultantBusCompanyData");
 		this.smBusCompanyTypeList = new ArrayList<SelectItem>();
+		this.setSmBusCompanyType(null);
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -7971,6 +7975,7 @@ public class ReportBackingBean extends
 	public List<SelectItem> retrieveContractBusCompanyData() {
 		log.info("ReportBackingBean-retrieveContractBusCompanyData");
 		this.smBusCompanyTypeList = new ArrayList<SelectItem>();
+		this.setSmBusCompanyType(null);
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -7996,6 +8001,7 @@ public class ReportBackingBean extends
 	public List<SelectItem> retrieveAllBusCompanyData() {
 		log.info("ReportBackingBean-retrieveAllBusCompanyData");
 		this.smBusCompanyTypeList = new ArrayList<SelectItem>();
+		this.setSmBusCompanyType(null);
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -8013,7 +8019,6 @@ public class ReportBackingBean extends
 		return this.smBusCompanyTypeList;
 	}
 
-	
 	/**
 	 * Supplier type consultant.
 	 */
@@ -11115,8 +11120,10 @@ public class ReportBackingBean extends
 			}
 			if (this.getReportValue().equals(
 					ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL)) {
-				retrieveAllBusCompanyData();
-				retrieveRegStatusListForAll();
+				if (this.smSupplierType == null) {
+					retrieveAllBusCompanyData();
+					retrieveRegStatusListForAll();
+				}
 			}
 			if (pmReport != null) {
 				getDefaultValuesFromAndToDate(pmReport.getReportCode());
@@ -11259,7 +11266,6 @@ public class ReportBackingBean extends
 		reportNameList.add(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL);
 		reportNameList.add(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL);
 		reportNameList.add(ReportConst.SM_STATISTICS_COMPANYTYPE_CAP_RPT_VAL);
-		
 
 	}
 
@@ -14816,8 +14822,8 @@ public class ReportBackingBean extends
 		this.setSmMofRegNo(null);
 		this.setSmRegistrationStatus(null);
 		this.setSmBusCompTypeRegistrationStatus(null);
-		this.registrationStatusListOfBusCompType=new ArrayList<SelectItem>();
-		this.smBusCompanyTypeList=new ArrayList<SelectItem>();
+		this.registrationStatusListOfBusCompType = new ArrayList<SelectItem>();
+		this.smBusCompanyTypeList = new ArrayList<SelectItem>();
 		this.setSmBusPaidUpCapitalFrm(null);
 		this.setSmBusPaidUpCapitalTo(null);
 		this.setSmcategory(null);
@@ -15285,7 +15291,7 @@ public class ReportBackingBean extends
 	 */
 	private void retrieveSuppLoiLoaMapForReport(Long qtId) {
 		log.info("ReportBackingBean-retrieveSuppLoiLoaMapForReport");
-		
+
 		IQTAwardSO qtAwardSO = null;
 		try {
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
