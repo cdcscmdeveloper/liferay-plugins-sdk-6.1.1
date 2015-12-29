@@ -12,12 +12,23 @@
 		    <tr>
 				<th width="20%"><p:outputLabel
 						value="#{lbl['lbl.pm.org.category']}" /></th>
-				<td><p:selectOneRadio value="#{profileManagementBackingBean.managedBean.searchOrgCategory}"
-						disabled="#{!profileManagementBackingBean.isNotEpAdmin()}">
+				<td><p:selectOneRadio id="sorOrgCategory" layout="custom" 
+						value="#{profileManagementBackingBean.managedBean.searchOrgCategory}"
+						label="#{lbl['lbl.pm.org.category']}">
 						<f:selectItem itemLabel="#{lbl['lbl.pm.org.federal.government']}" itemValue="#{profileManagementBackingBean.federalGovt}"/>
 						<f:selectItem itemLabel="#{lbl['lbl.pm.org.others']}" itemValue="#{profileManagementBackingBean.others}"/>
-						<p:ajax process="@this" event="change" partialSubmit="true" update=":form:opDefinedSearch, :form:dtUserResult" listener ="#{profileManagementBackingBean.resetUserProfileSearchBean}"/>
-					</p:selectOneRadio></td>			
+						<p:ajax process="@this,orgCategoryPanelGrid" event="change" update=":form:opDefinedSearch, :form:dtUserResult" 
+							listener ="#{profileManagementBackingBean.resetUserProfileSearchBean}"/>
+					</p:selectOneRadio>
+					<h:panelGrid id="orgCategoryPanelGrid" columns="4">
+			            <p:radioButton id="sorFederalGovn" for="sorOrgCategory" itemIndex="0" />
+			            <h:outputLabel for="sorFederalGovn" value="#{lbl['lbl.pm.org.federal.government']}" />			       
+			 
+			            <p:radioButton id="sorOthers" for="sorOrgCategory" itemIndex="1" />
+			            <h:outputLabel for="sorOthers" value="#{lbl['lbl.pm.org.others']}" />			          
+			            
+		       	 	</h:panelGrid>
+					</td>			
 			</tr>
 			<tr>
 				<th width="20%"><p:outputLabel
