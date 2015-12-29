@@ -192,38 +192,38 @@
 						areaCode="#{profilePersonalizationBackingBean.managedBean.selectedUser.phoneArea}" 
 						number="#{profilePersonalizationBackingBean.managedBean.selectedUser.phoneNo}"  
 						validatorMessage="#{lbl['lbl.pm.profiles.userdetails.telno']} - #{lbl['lbl.pm.profiles.invalidNo']}" />
-								<p:message id="itTelNoMsg" for="itTelNo" display="icon" />
+								
 						</td>
-						<td> </td>
+						<td><p:message id="itTelNoMsg" for="itTelNo" display="icon" /></td>
 						<td></td>
 					</tr>
 					<tr>
 						<th width="20%"><p:outputLabel
 								value="#{lbl['lbl.pm.profiles.userdetails.faxno']}" /></th>
-						<td><ac:phone id="itFaxNo" isMobile="false" label="#{lbl['lbl.pm.profiles.userdetails.faxno']}"
+						<td colspan="3"><ac:phone id="itFaxNo" isMobile="false" label="#{lbl['lbl.pm.profiles.userdetails.faxno']}"
 						countryCode="#{profilePersonalizationBackingBean.managedBean.selectedUser.faxCountry}" 
 						areaCode="#{profilePersonalizationBackingBean.managedBean.selectedUser.faxArea}" 
 						number="#{profilePersonalizationBackingBean.managedBean.selectedUser.faxNo}"  
 						validatorMessage="#{lbl['lbl.pm.profiles.userdetails.faxno']} - #{lbl['lbl.pm.profiles.invalidNo']}" />
-							<p:message id="itFaxNoMsg" for="itFaxNo" display="icon" />
+							
 						</td>
+						<td><p:message id="itFaxNoMsg" for="itFaxNo" display="icon" /></td>
 						<td></td>
-						<td></td>
+					
 					</tr>
 					<tr>
 						<th width="20%"><p:outputLabel
 								value="#{lbl['lbl.pm.profiles.userdetails.mobileno']}" /></th>
-						<td><ac:phone id="itMobileNo" label="#{lbl['lbl.pm.profiles.userdetails.mobileno']}"
+						<td colspan="3"><ac:phone id="itMobileNo" label="#{lbl['lbl.pm.profiles.userdetails.mobileno']}"
 							countryCode="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileCountry}" 
 							areaCode="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileArea}" 
 							number="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileNo}" 
 							isMobile="true"
 							validatorMessage="#{lbl['lbl.pm.profiles.userdetails.mobileno']} - #{lbl['lbl.pm.profiles.invalidNo']}"
 							telcoId="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileTelcoId}" />
-							<p:message id="itMobileNoMsg" for="itMobileNo" display="icon" />
+							
 						</td>
-						<td>
-						</td>
+						<td><p:message id="itMobileNoMsg" for="itMobileNo" display="icon" /></td>
 						<td></td>
 					</tr>
 					<tr>
