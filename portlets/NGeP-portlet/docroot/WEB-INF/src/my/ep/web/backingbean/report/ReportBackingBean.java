@@ -8001,7 +8001,14 @@ public class ReportBackingBean extends
 	public List<SelectItem> retrieveAllBusCompanyData() {
 		log.info("ReportBackingBean-retrieveAllBusCompanyData");
 		this.smBusCompanyTypeList = new ArrayList<SelectItem>();
+		
 		this.setSmBusCompanyType(null);
+		this.getManagedBean().getRptGenBean().setSmBusCompanyPaidUpAccumlatedShareView(true);
+		this.getManagedBean().getRptGenBean().setSmPaidAccmltdShareCptlSelView(true);
+		this.getManagedBean().getRptGenBean().setSmAccmltdCptlSelView(false);
+		this.getManagedBean().getRptGenBean().setSmPaidUpCptlSelView(false);
+		this.getManagedBean().getRptGenBean().setSmAccmltdShareSelView(false);
+		
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
