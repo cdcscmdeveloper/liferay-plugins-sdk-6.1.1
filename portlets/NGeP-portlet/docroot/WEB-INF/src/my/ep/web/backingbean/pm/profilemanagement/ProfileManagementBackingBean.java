@@ -2852,7 +2852,6 @@ public class ProfileManagementBackingBean extends
 											RoleCode.EP_ADMIN_2.value()))));
 		}
 		
-		
 		// Status if non provided then select default (active)
 		if (upSearchBean.getUserOrgStatus() != null) {
 			logger.info("+ status " + upSearchBean.getUserOrgStatus());
@@ -3645,9 +3644,15 @@ public class ProfileManagementBackingBean extends
 		user.setGrade(userOrg.getGrade());
 		user.setEmail(userOrg.getEmail());
 		user.setPhoneNo(userOrg.getPhoneNo());
+		user.setPhoneArea(userOrg.getPhoneArea());
+		user.setPhoneCountry(userOrg.getPhoneCountry());
 		user.setFaxNo(userOrg.getFaxNo());
+		user.setFaxArea(userOrg.getFaxArea());
+		user.setFaxCountry(userOrg.getFaxCountry());
 		user.setMobileNo(userOrg.getMobileNo());
-
+		user.setMobileArea(userOrg.getMobileArea());
+		user.setMobileCountry(userOrg.getMobileCountry());
+		user.setMobileTelcoId(userOrg.getMobileTelcoId());
 	}
 
 	private void checkChangesAndFillTrackingDiary(PmUser user,
