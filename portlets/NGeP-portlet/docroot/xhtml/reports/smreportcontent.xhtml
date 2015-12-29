@@ -15,9 +15,9 @@
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.collectorGovRegistrationChkView}">
 							<p:outputLabel value="*" styleClass="mandatory"
-								style="margin-right:-160px;" />
+								style="margin-right:-200px;" />
 							<p:outputLabel value="#{lbl['lbl.rpt.smPaymentType']}"
-								style="width:173px;" />
+								style="width:170px;" />
 							<p:selectManyCheckbox id="mofRegistrationChk"
 								style="margin-top: 6px"
 								value="#{reportBackingBean.smMofRegistrationFeeList}">
@@ -42,9 +42,9 @@
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.collectorCDCRegistrationChkView}">
 							<p:outputLabel value="*" styleClass="mandatory"
-								style="margin-right:35px;" />
+								style="margin-right:37px;" />
 							<p:outputLabel value="#{lbl['lbl.rpt.smPaymentType']}"
-								style="margin-left:-81px;" />
+								style="margin-left:-87px;" />
 							<p:selectManyCheckbox id="softCertificateCDCFee"
 								value="#{reportBackingBean.smSoftCertificateFeeList}">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.smSoftCertificateFee']}"
@@ -160,7 +160,7 @@
 								<table style="width: 182px;">
 									<tr style="width: 100%;">
 										<td style="width: 160px;"><p:outputLabel
-												style="margin-right:-70px;"
+												style="margin-right:-108px;"
 												value="#{lbl['lbl.rpt.paymentmethod']}" /> <p:outputLabel
 												value="*" styleClass="mandatory" /></td>
 									</tr>
@@ -1105,7 +1105,7 @@
 								<table style="width: 182px;">
 									<tr style="width: 100%;">
 										<td style="width: 160px;"><p:outputLabel
-												style="margin-right: -68px;"
+												style="margin-right: -104px;"
 												value="#{lbl['lbl.rpt.reportType']}" /></td>
 
 									</tr>
@@ -1158,7 +1158,7 @@
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryForCodeView}">
 							<p:outputLabel value="*" styleClass="mandatory"
-								style="margin-right: -211px; margin-top: 10px;" />
+								style="margin-right: -253px; margin-top: 10px;" />
 							<p:outputLabel value="#{lbl['lbl.rpt.code']}"
 								style="margin-top:5px;width:57px;" />
 							<p:selectOneMenu value="#{reportBackingBean.smCode}"
@@ -2654,7 +2654,7 @@
 						test="#{reportBackingBean.managedBean.rptGenBean.smNonMandatoryReceiptDateView 
 						and (!reportBackingBean.managedBean.rptGenBean.smNonMandatoryTransactionDateView)}">
 						<TD><p:outputLabel value="#{lbl['lbl.rpt.receiptdatefrom']}"
-								style="width:207px;" /></TD>
+								style="width:196px;" /></TD>
 					</c:if>
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.smNonMandatoryTransactionDateView}">
@@ -2805,8 +2805,8 @@
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryReceiptDateView}">
 						<TD><p:outputLabel value="#{lbl['lbl.rpt.receiptdatefrom']}"
-								style="width:203px;" /> <p:outputLabel value="*"
-								style="margin-right:-87px" styleClass="mandatory" /></TD>
+								style="width:201px;" /> <p:outputLabel value="*"
+								style="margin-right:-86px" styleClass="mandatory" /></TD>
 
 						<TD><p:calendar showOn="button" navigator="true"
 								required="true" label="#{lbl['lbl.rpt.receiptdatefrom']}"
@@ -2820,7 +2820,7 @@
 						test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryTransactionDateView}">
 						<TD><p:outputLabel
 								value="#{lbl['lbl.rpt.transactiondatefrom']}" /> <p:outputLabel
-								value="*" styleClass="mandatory" style="width:62px" /></TD>
+								value="*" styleClass="mandatory" style="width:55px" /></TD>
 
 						<TD><p:calendar showOn="button" navigator="true"
 								required="true" label="#{lbl['lbl.rpt.transactiondatefrom']}"
