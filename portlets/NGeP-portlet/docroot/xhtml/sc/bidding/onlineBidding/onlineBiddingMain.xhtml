@@ -28,13 +28,10 @@
 			<p:spacer height="5" />
 			<ui:include src="/xhtml/sc/bidding/onlineBidding/onlineBiddingTimers.xhtml" />
 			<h:panelGrid rendered="#{onlineBiddingBB.scBidSchedule eq null}">
-				<p:spacer height="5" />
 				<h:outputText style="font-size : 25px;" styleClass="lastUpdated"
 					value="#{lbl['lbl.sc.bid.bidding.notification']}" />
-				<p:spacer height="5" />
+				
 			</h:panelGrid>
-			<p:spacer height="5" />
-
 			<p:dataTable id="itemWiseBidListOB"
 				style="word-wrap: break-word ; table-layout: fixed "
 				value="#{onlineBiddingBB.bidPrices}" var="bidPriceItem">
