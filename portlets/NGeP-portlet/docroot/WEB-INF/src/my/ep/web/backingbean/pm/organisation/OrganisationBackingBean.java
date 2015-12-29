@@ -17,6 +17,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
@@ -33,6 +34,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -77,6 +79,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.logging.LogKey;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
@@ -390,6 +393,25 @@ public class OrganisationBackingBean extends
 							SearchOperator.OPERATOR_IN.value(),
 							activeAndInActiveStatus));
 		}
+		
+		Date currentDate = new Date();
+		// Filter By -  effDate
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmOrgValidity.effDate",
+						SearchOperator.OPERATOR_LESS_EQUAL.value(),
+						currentDate));
+
+		// Filter By -  expDate
+		searchBean.getDataFilterBeans().add(
+				new SearchMultiFilterBean(new SearchFilterBean(
+						"pmOrgValidity.expDate",
+						SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+						currentDate), new SearchFilterBean(
+						"pmOrgValidity.expDate",
+						SearchOperator.OPERATOR_IS_NULL.value(), null,
+						SearchCondition.CONDITION_OR.value())));
+		
+		
 		log.info("getSearchBeanData - End");
 		return searchBean;
 	}
@@ -2148,9 +2170,9 @@ public class OrganisationBackingBean extends
 			}		
 			
 			//validate unique gst registration number
-//			if(!validateGstRegNo(gstSupplier)){
-//				throw new EpException(MessageConst.ERROR_775117);
-//			}
+			if(!validateGstRegNo(gstSupplier)){
+				throw new EpException(MessageConst.ERROR_775117);
+			}
 		}
 	}
 	
@@ -2236,7 +2258,18 @@ public class OrganisationBackingBean extends
 			reqDTO.setSupplierId(supplierId);
 			SupplierGstResDTO suppGstResDTO = supplierGstSO.retrieveGstInfoByGstRegNo(reqDTO);
 			if(suppGstResDTO.getGstList() != null && !suppGstResDTO.getGstList().isEmpty()){
-				valid = false;
+				for(SmGstSupplier gst : suppGstResDTO.getGstList()){
+					if(SupplierManagementConst.BUSINESS_TYPE_PTJ.equals(gst.getSmSupplier().getBusinessType())){
+						PmOrgProfile ministry1 = retrieveMinistryOrgProfile(getManagedBean().getOrgProfile().getOrgProfileId());
+						PmOrgProfile ministry2 = retrieveMinistryOrgProfile(gst.getSmSupplier().getSupplierId());
+						if(ministry1 != null && ministry2 !=null ){
+							if(!ministry1.getOrgProfileId().equals(ministry2.getOrgProfileId())){
+								valid = false;
+								break;
+							}							
+						}						
+					}
+				}
 			}
 		}finally{
 			supplierGstSO = null;
