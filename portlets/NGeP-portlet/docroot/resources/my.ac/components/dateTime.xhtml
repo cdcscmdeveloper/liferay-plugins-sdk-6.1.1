@@ -13,7 +13,7 @@
 		<cc:attribute name="maxdate" />
 		<cc:attribute name="label" />
 		<cc:attribute name="size" />
-		<cc:attribute name="action" method-signature="java.lang.String action()" />
+		<cc:attribute name="postUpdateListener" />
 		<cc:valueHolder name="calDate" />
 		<cc:valueHolder name="calHour" />
 		<cc:valueHolder name="calMin" />
@@ -53,7 +53,7 @@
 		<p:remoteCommand name="#{cc.id}SetValue"
 			partialSubmit="true" process="@this" 
 			update="#{cc.id} #{cc.attrs.update}"
-			action="#{cc.attrs.action}">
+			action="#{dateTimeBackingBean.postUpdateListener(cc.attrs.postUpdateListener)}">
 			<f:setPropertyActionListener target="#{cc.attrs.value}" value="#{dateTimeBackingBean.timeChangedAction(cc)}" />
 		</p:remoteCommand>
 	</h:panelGroup>
