@@ -1,0 +1,68 @@
+package my.ep.web.component.datetime;
+
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
+
+import javax.faces.component.FacesComponent;
+import javax.faces.component.UINamingContainer;
+import javax.faces.component.UIOutput;
+import javax.faces.component.behavior.ClientBehaviorHolder;
+import javax.faces.context.FacesContext;
+
+import my.ep.web.util.FacesScopes;
+
+import org.apache.log4j.Logger;
+import org.primefaces.component.selectonemenu.SelectOneMenu;
+
+/**
+ * Date Time UI Component
+ * 
+ * @author Kenny
+ * @since 18.12.2015
+ */
+@FacesComponent("ac.DateTimeInput")
+public class DateTimeInput extends UIOutput implements ClientBehaviorHolder {
+
+	private static Logger log = Logger.getLogger(DateTimeInput.class);
+	
+	public final static String COMPONENT_TYPE = "ac.DateTimeInput";
+
+	private void debugLogger(Object message) {
+		if (log.isDebugEnabled()) {
+			log.debug(message);
+		}log.info(message);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.faces.component.UIInput#getFamily()
+	 */
+	@Override
+	public String getFamily() {
+		return UINamingContainer.COMPONENT_FAMILY;
+	}
+	
+	@Override
+	public void encodeBegin(FacesContext context) throws IOException {
+		Object dateObj = this.getValue();
+		if (dateObj != null) {
+			debugLogger("set date time: " + dateObj);
+			Date dateValue = (Date)dateObj;
+			FacesScopes facesScopes = new FacesScopes();
+			org.primefaces.component.calendar.Calendar dateComponent = ((org.primefaces.component.calendar.Calendar)facesScopes.findComponentById(this, "calDate"));
+			SelectOneMenu hourComponent = ((SelectOneMenu)facesScopes.findComponentById(this, "calHour"));
+			SelectOneMenu minuteComponent = ((SelectOneMenu)facesScopes.findComponentById(this, "calMin"));	
+			
+			Calendar c1 = Calendar.getInstance();
+			c1.setTime(dateValue);
+			
+			dateComponent.setValue(c1.getTime());
+			hourComponent.setValue(String.valueOf(c1.get(Calendar.HOUR_OF_DAY)));
+			minuteComponent.setValue(String.valueOf(c1.get(Calendar.MINUTE)));
+		}
+		
+		super.encodeBegin(context);
+	}
+}
