@@ -37,18 +37,20 @@
 			<cc:insertChildren />
 		</p:calendar>
 		<p:selectOneMenu id="calHour" 
+			required="#{cc.attrs.required}"
+			disabled="#{cc.attrs.disabled}"
 			label="#{cc.attrs.label}">
 			<f:selectItems value="#{dateTimeBackingBean.hoursDropdownValues}" />
 			<p:ajax event="change" partialSubmit="true" process="@this" update="@this" oncomplete="#{cc.id}SetValue();" />
 		</p:selectOneMenu>
 		<p:selectOneMenu id="calMin" 
+			required="#{cc.attrs.required}"
+			disabled="#{cc.attrs.disabled}"
 			label="#{cc.attrs.label}">
 			<f:selectItems value="#{dateTimeBackingBean.minutesDropdownValues}" />
 			<p:ajax event="change" partialSubmit="true" process="@this" update="@this" oncomplete="#{cc.id}SetValue();" />
 		</p:selectOneMenu>
 		<p:message id="calDateMsg" for="calDate" display="icon" />
-		<p:message id="calHourMsg" for="calHour" display="icon" />
-		<p:message id="calMinMsg" for="calMin" display="icon" />
 		
 		<p:remoteCommand name="#{cc.id}SetValue"
 			partialSubmit="true" process="@this" 
