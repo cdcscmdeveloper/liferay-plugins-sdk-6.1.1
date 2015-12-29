@@ -429,6 +429,7 @@ public class SMReportBackingBean extends
 			/*
 			 * rptGenBean.setFromDateView(true); rptGenBean.setToDateView(true);
 			 */
+			rptGenBean.setSmBusCompanyTypeView(true);	
 			rptGenBean.setSmNonMandatoryDateView(true);
 			rptGenBean.setSmMOFRegisteredDateView(true);
 			break;
