@@ -63,7 +63,7 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private PmParameter selectedOrgType;
 	private PmUserOrg activeUserOrg;
 	private List<PmUserRole> activeUserRoleFor = new ArrayList<PmUserRole>();
-	private int searchOrgCategory = 0;
+	private Integer searchOrgCategory;
 	private int orgCategory = 0;
 	private boolean isLazy = false;
 	private PmOrgProfile selectedCurrentOrgProfile;
@@ -423,10 +423,10 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	public void setSelectedOrgType(PmParameter selectedOrgType) {
 		this.selectedOrgType = selectedOrgType;
 	}
-	public int getSearchOrgCategory() {
+	public Integer getSearchOrgCategory() {
 		return searchOrgCategory;
 	}
-	public void setSearchOrgCategory(int searchOrgCategory) {
+	public void setSearchOrgCategory(Integer searchOrgCategory) {
 		this.searchOrgCategory = searchOrgCategory;
 	}
 	/**
