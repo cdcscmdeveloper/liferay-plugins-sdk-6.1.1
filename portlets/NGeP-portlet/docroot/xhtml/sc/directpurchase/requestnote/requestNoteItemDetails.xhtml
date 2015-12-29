@@ -166,7 +166,7 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.request.note.price.offered']}"
-					style="width:7%;white-space: normal;">
+					style="width: 45px;white-space: normal;">
 					<h:panelGroup id="offerPriceId">
 						<h:panelGroup
 							rendered="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType.parameterCode eq ParameterConst.priceTypeStandard or
@@ -248,7 +248,7 @@
 					</f:facet>
 					<h:selectOneMenu id="procTypeCategory"
 						value="#{requestNoteDtl.procTypeCategoryId}"
-						style="width:120px;margin-top: 8px;" required="true"
+						style="width:130px;margin-top: 8px;" required="true"
 						disabled="#{requestNoteBackingBean.managedBean.viewOnly}"
 						label="#{lbl['lbl.sc.procurment.type.category']}">
 
