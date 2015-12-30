@@ -127,6 +127,8 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	/** The search phys contract no. */
 	private String searchPhysContractNo;
 	
+	private String searchCentralContractName;
+	
 	/** The doc status list. */
 	private List<PmStatusDesc> docStatusList;
 	
@@ -200,6 +202,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	
 	private PmOrgProfile ptj;
 	private PmOrgProfile ministry;
+	private PmOrgProfile ptjGroup;
 	
 	private boolean trackingDiarySearch;
 	
@@ -268,6 +271,9 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				if(getSearchPhysContractNo()!=null && getSearchPhysContractNo()!="") {
 					reqDTO.setPhysicalContractNo(getSearchPhysContractNo());
 				}
+				if(getSearchCentralContractName()!=null && getSearchCentralContractName()!="") {
+					reqDTO.setSearchCentralContractName(getSearchCentralContractName());
+				}
 				if(getSearchCircularNo()!=null && getSearchCircularNo()!="")  {
 					reqDTO.setCircularNo(getSearchCircularNo());
 				}
@@ -309,6 +315,9 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				}
 				if(getMinistry() != null){
 					reqDTO.setMinistry(getMinistry());
+				}
+				if(getPtjGroup() != null){
+					reqDTO.setPtjGroup(getPtjGroup());
 				}
 				
 				if(isFlFulfilmentSupplier()){
@@ -1584,6 +1593,34 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 
 	public void setTrackingDiarySearch(boolean trackingDiarySearch) {
 		this.trackingDiarySearch = trackingDiarySearch;
+	}
+
+	/**
+	 * @return the ptjGroup
+	 */
+	public PmOrgProfile getPtjGroup() {
+		return ptjGroup;
+	}
+
+	/**
+	 * @param ptjGroup the ptjGroup to set
+	 */
+	public void setPtjGroup(PmOrgProfile ptjGroup) {
+		this.ptjGroup = ptjGroup;
+	}
+
+	/**
+	 * @return the searchCentralContractName
+	 */
+	public String getSearchCentralContractName() {
+		return searchCentralContractName;
+	}
+
+	/**
+	 * @param searchCentralContractName the searchCentralContractName to set
+	 */
+	public void setSearchCentralContractName(String searchCentralContractName) {
+		this.searchCentralContractName = searchCentralContractName;
 	}
 
 }
