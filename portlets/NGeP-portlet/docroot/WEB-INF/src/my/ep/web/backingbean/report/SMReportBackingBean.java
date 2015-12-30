@@ -111,7 +111,7 @@ public class SMReportBackingBean extends
 			rptGenBean.setSmSupplierTypeView(true);
 			rptGenBean.setSmBusCompanyRegistrationStatusView(true);
 			rptGenBean.retrieveCategoryLevOne1();
-			rptGenBean.setSmMandatoryCategoryView(true);				
+			rptGenBean.setSmNonMandatoryCategoryView(true);				
 			/*rptGenBean.setSmNonMandatoryDateView(true);
 			rptGenBean.setSmRegisteredDateView(true);*/
 			rptGenBean.setSmExtraTwoColumnView(true);
