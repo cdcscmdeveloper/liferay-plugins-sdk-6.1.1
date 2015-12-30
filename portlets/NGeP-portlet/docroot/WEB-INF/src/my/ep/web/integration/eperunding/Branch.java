@@ -1,7 +1,15 @@
 package my.ep.web.integration.eperunding;
 
+import java.util.Date;
+
+/*
+ *@author P Ganga prasad
+ */
 public class Branch {
 	private String branchName;
+	private String GSTNo;
+	private Date GSTEffectiveDate;
+	private Date GSTEndDate;
 	private String address1;
 	private String address2;
 	private String address3;
@@ -17,6 +25,30 @@ public class Branch {
 
 	public void setBranchName(String branchName) {
 		this.branchName = branchName;
+	}
+
+	public String getGSTNo() {
+		return GSTNo;
+	}
+
+	public void setGSTNo(String gSTNo) {
+		GSTNo = gSTNo;
+	}
+
+	public Date getGSTEffectiveDate() {
+		return GSTEffectiveDate;
+	}
+
+	public void setGSTEffectiveDate(Date gSTEffectiveDate) {
+		GSTEffectiveDate = gSTEffectiveDate;
+	}
+
+	public Date getGSTEndDate() {
+		return GSTEndDate;
+	}
+
+	public void setGSTEndDate(Date gSTEndDate) {
+		GSTEndDate = gSTEndDate;
 	}
 
 	public String getAddress1() {
