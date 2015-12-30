@@ -1861,10 +1861,10 @@
 								<p:column style="width:2%" selectionMode="multiple" />
 
 								<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
-									<h:outputText
+									<h:outputText value="*"
 										style="font-size: 12px;font-family: Arial;color: #FF0000;font-weight: bold;" />
 									<p:selectOneMenu label="#{lbl['lbl.sm.projDtls.mainCat']}"
-										id="consultProjParCatCode"
+										id="consultProjParCatCode" required="#{reportBackingBean.valueReqd}"
 										value="#{expCategoryBean.pmCategoryL1.categoryL1Id}"
 										style="width: 207px;margin-bottom: 5px;">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
