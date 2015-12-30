@@ -106,11 +106,12 @@ public class SMReportBackingBean extends
 			rptGenBean.setSmMandatorySupplierTypeView(true);
 			rptGenBean.setSmMandatoryMofRegNoView(true);
 			break;
-		case ReportConst.SM_CATEGORY_STATISTIC_RPT_VAL:
-			rptGenBean.retrieveCategoryLevOne1();
+		case ReportConst.SM_CATEGORY_STATISTIC_RPT_VAL:			
 			// rptGenBean.retrieveState();
-			rptGenBean.setSmMandatoryCategoryView(true);			
-			rptGenBean.setSmRegistrationStatusView(true);
+			rptGenBean.setSmSupplierTypeView(true);
+			rptGenBean.setSmBusCompanyRegistrationStatusView(true);
+			rptGenBean.retrieveCategoryLevOne1();
+			rptGenBean.setSmMandatoryCategoryView(true);				
 			/*rptGenBean.setSmNonMandatoryDateView(true);
 			rptGenBean.setSmRegisteredDateView(true);*/
 			rptGenBean.setSmExtraTwoColumnView(true);

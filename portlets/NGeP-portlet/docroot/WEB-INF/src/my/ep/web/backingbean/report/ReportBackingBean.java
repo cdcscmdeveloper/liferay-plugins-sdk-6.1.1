@@ -8001,14 +8001,16 @@ public class ReportBackingBean extends
 	public List<SelectItem> retrieveAllBusCompanyData() {
 		log.info("ReportBackingBean-retrieveAllBusCompanyData");
 		this.smBusCompanyTypeList = new ArrayList<SelectItem>();
-		
+
 		this.setSmBusCompanyType(null);
-		this.getManagedBean().getRptGenBean().setSmBusCompanyPaidUpAccumlatedShareView(true);
-		this.getManagedBean().getRptGenBean().setSmPaidAccmltdShareCptlSelView(true);
+		this.getManagedBean().getRptGenBean()
+				.setSmBusCompanyPaidUpAccumlatedShareView(true);
+		this.getManagedBean().getRptGenBean()
+				.setSmPaidAccmltdShareCptlSelView(true);
 		this.getManagedBean().getRptGenBean().setSmAccmltdCptlSelView(false);
 		this.getManagedBean().getRptGenBean().setSmPaidUpCptlSelView(false);
 		this.getManagedBean().getRptGenBean().setSmAccmltdShareSelView(false);
-		
+
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -11144,12 +11146,14 @@ public class ReportBackingBean extends
 	}
 
 	private void getGenBusCompanyData() {
-		
-		if (this.getReportValue() != null) {			
+
+		if (this.getReportValue() != null) {
 			if (this.getReportValue().equals(
 					ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL)
 					|| this.getReportValue().equals(
-							ReportConst.SM_STATISTICS_COMPANYTYPE_CAP_RPT_VAL)) {
+							ReportConst.SM_STATISTICS_COMPANYTYPE_CAP_RPT_VAL)
+					|| this.getReportValue().equals(
+							ReportConst.SM_CATEGORY_STATISTIC_RPT_VAL)) {
 				if (this.smSupplierType == null) {
 					if (this.getReportValue().equals(
 							ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL)) {
@@ -11158,6 +11162,9 @@ public class ReportBackingBean extends
 					} else if (this.getReportValue().equals(
 							ReportConst.SM_STATISTICS_COMPANYTYPE_CAP_RPT_VAL)) {
 						retrieveAllBusCompanyData();
+					} else if (this.getReportValue().equals(
+							ReportConst.SM_CATEGORY_STATISTIC_RPT_VAL)) {
+						retrieveRegStatusListForAll();
 					}
 				}
 			}
@@ -13086,27 +13093,31 @@ public class ReportBackingBean extends
 										.getCategoryL3Id());
 					} else if (smSupplier.getPmCategoryL1().getCategoryL1Id() != null
 							&& (smSupplier.getPmCategoryL2().getCategoryL2Id() == null
-							|| smSupplier.getPmCategoryL2().getCategoryL2Id() != null
-							|| smSupplier.getPmCategoryL3().getCategoryL3Id() == null
-							|| smSupplier.getPmCategoryL3().getCategoryL3Id() != null)) {
+									|| smSupplier.getPmCategoryL2()
+											.getCategoryL2Id() != null
+									|| smSupplier.getPmCategoryL3()
+											.getCategoryL3Id() == null || smSupplier
+									.getPmCategoryL3().getCategoryL3Id() != null)) {
 						maincategory.append(ReportConst.KAMA + "");
 						subcategory.append(ReportConst.KAMA + "");
 						subcategorydivision.append(ReportConst.KAMA + "");
 					}
-					
-					/*else if ((smSupplier.getPmCategoryL1().getCategoryL1Id() != null
-							|| smSupplier.getPmCategoryL2().getCategoryL2Id() == null || smSupplier
-							.getPmCategoryL3().getCategoryL3Id() == null)
-							|| (smSupplier.getPmCategoryL2().getCategoryL2Id() != null
-									|| smSupplier.getPmCategoryL1()
-											.getCategoryL1Id() == null || smSupplier
-									.getPmCategoryL3().getCategoryL3Id() == null)
-							|| (smSupplier.getPmCategoryL3().getCategoryL3Id() != null
-									|| smSupplier.getPmCategoryL1()
-											.getCategoryL1Id() == null || smSupplier
-									.getPmCategoryL2().getCategoryL2Id() == null)) {
-						throw new EpException(MessageConst.ERROR_REPORT_780028);
-					}*/
+
+					/*
+					 * else if ((smSupplier.getPmCategoryL1().getCategoryL1Id()
+					 * != null || smSupplier.getPmCategoryL2().getCategoryL2Id()
+					 * == null || smSupplier
+					 * .getPmCategoryL3().getCategoryL3Id() == null) ||
+					 * (smSupplier.getPmCategoryL2().getCategoryL2Id() != null
+					 * || smSupplier.getPmCategoryL1() .getCategoryL1Id() ==
+					 * null || smSupplier .getPmCategoryL3().getCategoryL3Id()
+					 * == null) ||
+					 * (smSupplier.getPmCategoryL3().getCategoryL3Id() != null
+					 * || smSupplier.getPmCategoryL1() .getCategoryL1Id() ==
+					 * null || smSupplier .getPmCategoryL2().getCategoryL2Id()
+					 * == null)) { throw new
+					 * EpException(MessageConst.ERROR_REPORT_780028); }
+					 */
 				}
 			}
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
@@ -15808,4 +15819,20 @@ public class ReportBackingBean extends
 
 	}
 
+	public void changeSupplierTypeAndGetRegStatus() {
+		if (this.getReportValue().equalsIgnoreCase(
+				ReportConst.SM_CATEGORY_STATISTIC_RPT_VAL)) {
+			if (this.getSmSupplierType() != null) {
+				if (this.getSmSupplierType().equalsIgnoreCase(
+						ReportConst.SUPPL_CONSULT_TYPE)) {
+					retrieveRegStatusListForConsultant();
+				} else if (this.getSmSupplierType().equalsIgnoreCase(
+						ReportConst.SUPPL_CONTRACT_TYPE)) {
+					retrieveRegStatusListForContract();
+				}
+			} else {
+				retrieveRegStatusListForAll();
+			}
+		}
+	}
 }
