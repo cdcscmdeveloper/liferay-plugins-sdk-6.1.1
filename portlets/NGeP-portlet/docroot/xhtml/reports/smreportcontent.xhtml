@@ -222,8 +222,9 @@
 									itemValue="J"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.contractor']}"
 									itemValue="K"></f:selectItem>
-								<p:ajax event="change" partialSubmit="true"
-									update="@([id$=Msg])" />
+								<p:ajax event="change" process="@form"
+													listener="#{reportBackingBean.changeSupplierTypeAndGetRegStatus}"
+													partialSubmit="true" update="@form" />
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
