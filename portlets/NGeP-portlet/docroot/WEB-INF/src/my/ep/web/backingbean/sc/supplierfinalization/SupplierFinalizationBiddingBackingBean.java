@@ -987,9 +987,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 * 				the packageItem corresponding to which price is shown in popup
 	 */
 	public void supplierItemPricePopupAction(BidPackageBean packageItem) {
-
-		getManagedBean().setSupplierCode(
-				packageItem.getScBidSupplier().getSmSupplier().getSupplierId());
+		getManagedBean().setSupplierCode(packageItem.getSupplierCode());
 
 		IBiddingSO biddingSO = null;
 

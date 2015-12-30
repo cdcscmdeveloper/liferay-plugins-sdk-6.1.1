@@ -81,7 +81,7 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	private String action;
 	
 	// Item price pop up
-	private Long supplierCode;
+	private Integer supplierCode;
 	private ScBidSchedule scheduledBid;
 	private List<ScBidPrice> ScBidPriceList;
 	private List<BidItemBean> bidItemSuppliers;
@@ -90,7 +90,7 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	private BigDecimal bumiSuppLowestOfferedPrice;
 	
 	private ScQtEvaluationResult shortlistedSupplier;
-	private ScQtEvaluationResultDtl awardedSuppplier;
+	private ScQtEvaluationResultDtl awardedSupplier;
 	private SmSupplier smSupplier;
 	private SmMofAccount smMofAccount;
 	private SmCompanyBasic smCompanyBasic;
@@ -428,7 +428,7 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	/**
 	 * @return  the supplierCode
 	 */
-	public Long getSupplierCode() {
+	public Integer getSupplierCode() {
 		return supplierCode;
 	}
 	
@@ -436,7 +436,7 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	 * @param supplierCode
 	 * 				the supplierCode to set
 	 */
-	public void setSupplierCode(Long supplierCode) {
+	public void setSupplierCode(Integer supplierCode) {
 		this.supplierCode = supplierCode;
 	}
 	
@@ -531,18 +531,18 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * @return the awardedSuppplier
+	 * @return the awardedSupplier
 	 */
-	public ScQtEvaluationResultDtl getAwardedSuppplier() {
-		return awardedSuppplier;
+	public ScQtEvaluationResultDtl getAwardedSupplier() {
+		return awardedSupplier;
 	}
 
 	/**
-	 * @param awardedSuppplier 
-	 * 				the awardedSuppplier to set
+	 * @param awardedSupplier 
+	 * 				the awardedSupplier to set
 	 */
-	public void setAwardedSuppplier(ScQtEvaluationResultDtl awardedSuppplier) {
-		this.awardedSuppplier = awardedSuppplier;
+	public void setAwardedSupplier(ScQtEvaluationResultDtl awardedSupplier) {
+		this.awardedSupplier = awardedSupplier;
 	}
 
 	/**
