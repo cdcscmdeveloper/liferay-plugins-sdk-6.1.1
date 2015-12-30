@@ -110,8 +110,7 @@ public class SMReportBackingBean extends
 			rptGenBean.retrieveCategoryLevOne1();
 			// rptGenBean.retrieveState();
 			rptGenBean.setSmMandatoryCategoryView(true);
-			rptGenBean.setSmStateView(true);
-			rptGenBean.setSmDistrictView(true);
+			
 			rptGenBean.setSmRegistrationStatusView(true);
 			rptGenBean.setSmNonMandatoryDateView(true);
 			rptGenBean.setSmRegisteredDateView(true);
@@ -124,10 +123,10 @@ public class SMReportBackingBean extends
 			rptGenBean.setSmMandatoryRegisteredReportTypeDateView(true);
 			break;
 		case ReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL:
-			rptGenBean.retrieveCategoryLevOne1();
-			// rptGenBean.retrieveState();
-			rptGenBean.setSmMandatoryCategoryView(true);
-			rptGenBean.setSmStaticStateView(true);
+			rptGenBean.retrieveCategoryLevOne1();			
+			rptGenBean.setSmNonMandatoryCategoryView(true);			
+			rptGenBean.setSmStateView(true);
+			rptGenBean.setSmDistrictView(true);
 			rptGenBean.setSmExtraTwoColumnView(true);
 			break;
 		case ReportConst.SM_APPLICATION_VERIFICATION_RPT_VAL:
