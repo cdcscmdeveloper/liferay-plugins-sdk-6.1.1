@@ -2490,21 +2490,23 @@ public class ProfileManagementBackingBean extends
 //			selectedRolesToExclude.add(RoleCode.MINISTRY_ADMIN.value());
 //		} else if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())) {
 //			selectedRolesToExclude.add(RoleCode.PTJ_ADMIN.value());
-//		} else if (getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())) {
-//			selectedRolesToExclude.add(RoleCode.UPS_ADMIN.value());
+//		} else if (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())) {
+//			selectedRolesToExclude.add(RoleCode.JABATAN_ADMIN.value());
 //		} else if (getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value())) {
 //			selectedRolesToExclude.add(RoleCode.BPK_ADMIN.value());
 //		} else if (getFacesScopes().hasRoleUser(RoleCode.SUPPORT_ADMIN.value())) {
 //			selectedRolesToExclude.add(RoleCode.SUPPORT_ADMIN.value());
 //		}
-//		if (!selectedRolesToExclude.isEmpty()) {
-//			logger.info("remove selected roles");
-//			SearchFilterBean selectedRole = new SearchFilterBean(
-//					SearchOperator.OPERATOR_NOT_IN.value());
-//			selectedRole.setSearchField("pmRole.roleCode");
-//			selectedRole.setSearchValue(selectedRolesToExclude);
-//			searchBean.getDataFilterBeans().add(selectedRole);
-//		}
+		if (!selectedRolesToExclude.isEmpty()) {
+			logger.info("remove selected roles");
+			SearchFilterBean selectedRole = new SearchFilterBean(
+					SearchOperator.OPERATOR_NOT_IN.value());
+			selectedRole.setSearchField("pmRole.roleCode");
+			selectedRole.setSearchValue(selectedRolesToExclude);
+			searchBean.getDataFilterBeans().add(selectedRole);
+		}
+		
+		
 		return searchBean;
 	}
 
