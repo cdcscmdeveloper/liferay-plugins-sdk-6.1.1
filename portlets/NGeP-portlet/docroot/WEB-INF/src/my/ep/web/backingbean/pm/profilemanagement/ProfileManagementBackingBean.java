@@ -777,8 +777,7 @@ public class ProfileManagementBackingBean extends
 		pmUserOrg.setPmUser(pmUser);
 		
 		if(getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value()) || 
-				getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value()) ||
-				getFacesScopes().hasRoleUser(RoleCode.PROCUREMENT_ADMIN.value()) ||
+				getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value()) ||
 				getFacesScopes().hasRoleUser(RoleCode.SUPPORT_ADMIN.value()) ){
 			if(getManagedBean().getCurrentActiveOrg() != null){
 				pmUserOrg.setPmOrgProfile(getManagedBean().getCurrentActiveOrg());

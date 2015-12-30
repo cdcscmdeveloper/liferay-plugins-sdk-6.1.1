@@ -24,29 +24,37 @@
 								value="#{lbl['lbl.pm.org.category']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></th>
 								
-						<td ><p:selectOneRadio id="sorOrgTypeId"
+						<td ><p:selectOneRadio id="sorOrgTypeId" layout="custom"
 								value="#{profileManagementBackingBean.managedBean.orgCategory}"
-								disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or !profileManagementBackingBean.isNotEpAdmin()}">
+								disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew}">
 								<f:selectItem
 									itemLabel="#{lbl['lbl.pm.org.federal.government']}"
 									itemValue="#{profileManagementBackingBean.federalGovt}" />
 								<f:selectItem itemLabel="#{lbl['lbl.pm.org.others']}"
 									itemValue="#{profileManagementBackingBean.others}" />
-								<p:ajax process="@this" event="change" partialSubmit="true"
+								<p:ajax process="@this,orgCategoryMaintainPanelGrid" event="change" partialSubmit="true"
 									listener="#{profileManagementBackingBean.resetOrgTypeAndCode()}"
 									update=":form:orgProfileDet,:form:opUserProfileDet" />
-							</p:selectOneRadio></td>
-						<th></th>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
+							</p:selectOneRadio>
+							<h:panelGrid id="orgCategoryMaintainPanelGrid" columns="4">
+					            <p:radioButton id="sorMaintainFederalGovn" for="sorOrgTypeId" itemIndex="0" />
+					            <h:outputLabel for="sorMaintainFederalGovn" value="#{lbl['lbl.pm.org.federal.government']}" />			       
+					 
+					            <p:radioButton id="sorMaintainOthers" for="sorOrgTypeId" itemIndex="1" />
+					            <h:outputLabel for="sorMaintainOthers" value="#{lbl['lbl.pm.org.others']}" />			          
+					            
+			       	 		</h:panelGrid>
+							
+							</td>
+						<td colspan="4"></td>
 					</tr>
 					<tr>
 						<th width="20%"><p:outputLabel
 								value="#{lbl['lbl.pm.organisation.orgType']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></th>
-						<td width="20%"><p:selectOneMenu id="orgTypeFederalList"
+						<td width="20%">
+						<ui:fragment rendered="#{profileManagementBackingBean.managedBean.selectedUserOrg.brandNew}">
+							<p:selectOneMenu id="orgTypeFederalList"
 								rendered="#{profileManagementBackingBean.managedBean.orgCategory eq profileManagementBackingBean.federalGovt}"
 								disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.disabledOrgFields}"
 								styleClass="ppDropDownWidthL" required="true"
@@ -58,9 +66,9 @@
 								<p:ajax event="change"
 									listener="#{profileManagementBackingBean.changeResOrgType()}"
 									update=":form:lovResOrg:lovResOrg,:form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
-			     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr
-			     			" />
-							</p:selectOneMenu>  <p:selectOneMenu id="orgTypeOthersList"
+			     					:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr" />
+							</p:selectOneMenu>  
+							<p:selectOneMenu id="orgTypeOthersList"
 								rendered="#{profileManagementBackingBean.managedBean.orgCategory eq profileManagementBackingBean.others}"
 								disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.disabledOrgFields}"
 								styleClass="ppDropDownWidthL" required="true"
@@ -72,9 +80,18 @@
 								<p:ajax event="change"
 									listener="#{profileManagementBackingBean.changeResOrgType()}"
 									update=":form:lovResOrg:lovResOrg,:form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
-			     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr
-			     			" />
-							</p:selectOneMenu> </td><td width="5%">
+			     					:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr" />
+							</p:selectOneMenu> 
+							</ui:fragment>
+							<ui:fragment rendered="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew}">
+								<p:inputText id="itOrgTypeName" 
+										disabled="true"
+										value="#{profileManagementBackingBean.getParameterDesc(profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode)}"
+										size="30">
+								</p:inputText>
+							</ui:fragment>
+							</td><td width="5%">
+							<ui:fragment rendered="#{profileManagementBackingBean.managedBean.selectedUserOrg.brandNew}">
 							<p:message id="orgTypeFederalListMsg" 
 								for="orgTypeFederalList"
 								display="icon" 
@@ -82,7 +99,8 @@
 							<p:message id="orgTypeOthersListMsg" 
 								for="orgTypeOthersList"
 								display="icon" 
-								rendered="#{profileManagementBackingBean.managedBean.orgCategory eq profileManagementBackingBean.others}"/></td>
+								rendered="#{profileManagementBackingBean.managedBean.orgCategory eq profileManagementBackingBean.others}"/>
+								</ui:fragment></td>
 						<td colspan="2" align="left"><div style="float: left">
 							<c:if test="#{isFFCOrgType}">
 							    <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE_FFC" size="40" 
