@@ -205,7 +205,7 @@ public class ProfileManagementBackingBean extends
 			SearchFilterBean bean = new SearchFilterBean();
 			bean.setSearchOperator(SearchOperator.OPERATOR_NOT_IN.value());
 			bean.setSearchField("pmParameter.parameterCode");
-			bean.setSearchValue(new ArrayList(Arrays
+			bean.setSearchValue(new ArrayList<String>(Arrays
 					.asList(ProfileManagementConst.ORG_TYPE_EXCLUDE)));
 			orgTypeSearchBean.getDataFilterBeans().add(bean);
 
@@ -356,15 +356,6 @@ public class ProfileManagementBackingBean extends
 		// .getParameterId();
 		// }
 
-	}
-
-	public void clearRoleLOV() {
-		logger.info("clearRoleLOV");
-		this.getManagedBean().setSelectedPmRoleMatrix(null);
-		if(getManagedBean().getUserProfileSearchBean() !=null){
-			getManagedBean().getUserProfileSearchBean().setUserRoleStatus(null);
-		}
-		
 	}
 
 	public void getListOfAssignedRoles(PmUserOrg org) {
@@ -1473,7 +1464,8 @@ public class ProfileManagementBackingBean extends
 		// // .setPmUserRoles(new ArrayList<PmUserRole>());
 		// }
 		getManagedBean().setSelectedOrgProfile(null);
-		getManagedBean().setSelectedPmRoleMatrix(null);
+		getManagedBean().setSelectedRoleDesc(null);
+		getManagedBean().getUserProfileSearchBean().setUserRole(null);
 		getManagedBean().getUserProfileSearchBean().setSelectedOrgProfileId(null);
 		getManagedBean().getUserProfileSearchBean().setUserRoleStatus(null);
 		if (this.getManagedBean().getSelectedOrgType().getParameterId() != null) {

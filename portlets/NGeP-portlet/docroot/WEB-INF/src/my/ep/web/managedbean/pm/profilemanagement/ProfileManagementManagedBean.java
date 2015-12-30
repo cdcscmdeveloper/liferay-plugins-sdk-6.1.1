@@ -13,7 +13,6 @@ import javax.faces.bean.SessionScoped;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
-import my.ep.persistence.entity.pm.authorization.PmRoleMatrix;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserAttachment;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
@@ -75,7 +74,6 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private boolean isActiveUser;
 	private Integer roleTabActiveIndex = 0;
 	private boolean isDisabledOrgFields = false;
-	private PmRoleMatrix selectedPmRoleMatrix;
 	private List<PmRoleDesc> roleDescResults;
 	private PmRoleDesc selectedRoleDesc;
 	
@@ -513,18 +511,7 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	public void setDisabledOrgFields(boolean isDisabledOrgFields) {
 		this.isDisabledOrgFields = isDisabledOrgFields;
 	}
-	/**
-	 * @return the selectedPmRoleMatrix
-	 */
-	public PmRoleMatrix getSelectedPmRoleMatrix() {
-		return selectedPmRoleMatrix;
-	}
-	/**
-	 * @param selectedPmRoleMatrix the selectedPmRoleMatrix to set
-	 */
-	public void setSelectedPmRoleMatrix(PmRoleMatrix selectedPmRoleMatrix) {
-		this.selectedPmRoleMatrix = selectedPmRoleMatrix;
-	}
+	
 	/**
 	 * @return the roleDescResults
 	 */
