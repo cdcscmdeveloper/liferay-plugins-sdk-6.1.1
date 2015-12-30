@@ -90,6 +90,7 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	private BigDecimal bumiSuppLowestOfferedPrice;
 	
 	private ScQtEvaluationResult shortlistedSupplier;
+	private ScQtEvaluationResultDtl awardedSuppplier;
 	private SmSupplier smSupplier;
 	private SmMofAccount smMofAccount;
 	private SmCompanyBasic smCompanyBasic;
@@ -529,6 +530,21 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 		this.shortlistedSupplier = shortlistedSupplier;
 	}
 	
+	/**
+	 * @return the awardedSuppplier
+	 */
+	public ScQtEvaluationResultDtl getAwardedSuppplier() {
+		return awardedSuppplier;
+	}
+
+	/**
+	 * @param awardedSuppplier 
+	 * 				the awardedSuppplier to set
+	 */
+	public void setAwardedSuppplier(ScQtEvaluationResultDtl awardedSuppplier) {
+		this.awardedSuppplier = awardedSuppplier;
+	}
+
 	/**
 	 * @return the smSupplier
 	 */
