@@ -15,7 +15,7 @@ public class ConsultantProfile {
 	private String GSTNo;
 	private String virtualCertNo;
 	private Date GSTEffectiveDate;
-	private Date firstTaxablePeriod; // Start Date
+	private Date GSTEndDate;
 	private String companyType;
 	private String address1;
 	private String address2;
@@ -97,12 +97,12 @@ public class ConsultantProfile {
 		GSTEffectiveDate = gSTEffectiveDate;
 	}
 
-	public Date getFirstTaxablePeriod() {
-		return firstTaxablePeriod;
+	public Date getGSTEndDate() {
+		return GSTEndDate;
 	}
 
-	public void setFirstTaxablePeriod(Date firstTaxablePeriod) {
-		this.firstTaxablePeriod = firstTaxablePeriod;
+	public void setGSTEndDate(Date gSTEndDate) {
+		GSTEndDate = gSTEndDate;
 	}
 
 	public String getCompanyType() {

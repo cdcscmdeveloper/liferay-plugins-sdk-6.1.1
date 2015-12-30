@@ -1,6 +1,8 @@
 package my.ep.web.integration.eperunding;
 
-
+/*
+ *@author P Ganga prasad
+ */
 public class BranchCompany {
 
 	private String mOFNo;
@@ -22,22 +24,24 @@ public class BranchCompany {
 	public void setBranch(Branch branch) {
 		this.branch = branch;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-	    if(obj instanceof BranchCompany)
-	    {
-	    	BranchCompany temp = (BranchCompany) obj;
-	        if(this.mOFNo.equalsIgnoreCase(temp.mOFNo) && this.branch.getBranchName().equalsIgnoreCase(temp.branch.getBranchName()))
-	            return true;
-	    }
-	    return false;
+		if (obj instanceof BranchCompany) {
+			BranchCompany temp = (BranchCompany) obj;
+			if (this.mOFNo.equalsIgnoreCase(temp.mOFNo)
+					&& this.branch.getBranchName().equalsIgnoreCase(
+							temp.branch.getBranchName()))
+				return true;
+		}
+		return false;
 
 	}
+
 	@Override
 	public int hashCode() {
 
-	    return (this.mOFNo.hashCode()+this.branch.getBranchName().hashCode());        
+		return (this.mOFNo.hashCode() + this.branch.getBranchName().hashCode());
 	}
 
 }

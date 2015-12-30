@@ -2,11 +2,19 @@ package my.ep.web.integration.eperunding;
 
 import java.math.BigDecimal;
 
+/*
+* author @Ganga prasad
+*/
 public class CompanyOwner {
 
 	private String mOFNo;
 	private String companyName;
-	private String sSMNo;
+	// version 2.7
+	// SSM Business / Company Registration No
+	// Other Business / Company Registration No
+	// Registration Authority for Other Business / Company Registration No
+
+	private String companyOwnerSSMNO;
 	private String companyOwnerMOFNo;
 	private BigDecimal shareholdingAmount;
 	private BigDecimal shareholdingPercentage;
@@ -41,12 +49,12 @@ public class CompanyOwner {
 		this.companyName = companyName;
 	}
 
-	public String getsSMNo() {
-		return sSMNo;
+	public String getCompanyOwnerSSMNO() {
+		return companyOwnerSSMNO;
 	}
 
-	public void setsSMNo(String sSMNo) {
-		this.sSMNo = sSMNo;
+	public void setCompanyOwnerSSMNO(String companyOwnerSSMNO) {
+		this.companyOwnerSSMNO = companyOwnerSSMNO;
 	}
 
 	public String getCompanyOwnerMOFNo() {
@@ -184,22 +192,26 @@ public class CompanyOwner {
 	public void setFaxNo(String faxNo) {
 		this.faxNo = faxNo;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-	    if(obj instanceof CompanyOwner)
-	    {
-	    	CompanyOwner temp = (CompanyOwner) obj;
-	        if(this.mOFNo.equalsIgnoreCase(temp.mOFNo)&& this.companyName.equalsIgnoreCase(temp.companyName)&& this.sSMNo.equalsIgnoreCase(temp.sSMNo))
-	            return true;
-	    }
-	    return false;
+		if (obj instanceof CompanyOwner) {
+			CompanyOwner temp = (CompanyOwner) obj;
+			if (this.mOFNo.equalsIgnoreCase(temp.mOFNo)
+					&& this.companyName.equalsIgnoreCase(temp.companyName)
+					&& this.companyOwnerSSMNO
+							.equalsIgnoreCase(temp.companyOwnerSSMNO))
+				return true;
+		}
+		return false;
 
 	}
+
 	@Override
 	public int hashCode() {
 
-	    return (this.mOFNo.hashCode()+this.companyName.hashCode()+this.sSMNo.hashCode());        
+		return (this.mOFNo.hashCode() + this.companyName.hashCode() + this.companyOwnerSSMNO
+				.hashCode());
 	}
 
 }
