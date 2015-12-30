@@ -66,6 +66,7 @@
 					<p:selectOneMenu id="statusId"
 						value="#{flDocumentBackingBean.managedBean.statusDescId}"
 						style="width: 314px;">
+						<f:selectItem itemLabel="All" itemValue=""></f:selectItem>
 						<f:selectItems value="#{flDocumentBackingBean.getStatusDropdownValues('FL',flDocumentBackingBean.managedBean.searchDocType)}" />
 					</p:selectOneMenu>
 				</h:panelGrid>
@@ -107,6 +108,7 @@
 					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.circular.no']}" />
 					<p:inputText size="28"
 						value="#{flDocumentBackingBean.managedBean.searchCircularNo}"></p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.treasury.circular']}" />
 				</h:panelGrid>
 				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
 					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
@@ -138,6 +140,13 @@
 				</h:panelGrid>
 				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
 					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
+					<p:outputLabel value="#{lbl['lbl.fl.sistem.panel.name']}" />
+					<p:inputText size="28"
+						value="#{flDocumentBackingBean.managedBean.searchCentralContractName}"></p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.central.contract.name']}"/>
+				</h:panelGrid>
+				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
+					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
 					<p:outputLabel
 						value="#{lbl['lbl.fl.doc.maintain.circular.contract.duration']}" />
 					<p:calendar mode="popup" showOn="button" id="calendarStart"
@@ -165,8 +174,24 @@
 							headerText="#{lbl['lbl.fl.ministry']}" 
 							value="#{flDocumentBackingBean.managedBean.ministry.orgName}"
 							postUpdateListener="flDocumentBackingBean.resetPtjProfile()"
-							update=":form:searchPtj,:form:orgSearch"
+							update=":form:searchPtj,:form:orgSearch,:form:searchPtjGroup"
 							saveObject="flDocumentBackingBean.managedBean.ministry">
+						</ac:lov>
+					</td>
+				</tr>
+				<tr>
+					<td style="width: 190px;">
+						<p:outputLabel value="#{lbl['lbl.fl.jabatan']}"	/>
+					</td>
+					<td>
+						<ac:lov id="searchJabatan" lovId="PM_ORG_PROFILE_PTJ_GROUP" size="46" readonly="true" style="width:314px"
+							disabled="#{flDocumentBackingBean.disablePtjGroupLov()}"
+							headerText="#{lbl['lbl.fl.jabatan']}" 
+							value="#{flDocumentBackingBean.managedBean.ptjGroup.orgName}"
+							postUpdateListener="flDocumentBackingBean.resetPtjProfile()"
+							update=":form:searchPtj,:form:orgSearch"
+							saveObject="flDocumentBackingBean.managedBean.ptjGroup"
+							conditionField="#{flDocumentBackingBean.constuctConditionFieldsForPTJGroup()}">
 						</ac:lov>
 					</td>
 				</tr>
@@ -221,7 +246,9 @@
 				<p:column headerText="#{lbl['lbl.fl.doc.maintain.doc.title']}" style="white-space:normal;" >
 					<h:outputText value="#{flDocument.title}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.fl.doc.maintain.contract.no']}">
+				<p:column headerText="#{lbl['lbl.fl.doc.maintain.contract.no']}" style="white-space:normal;">
+					<h:outputText value="#{flDocument.loaPhysicalNo}" rendered="#{flDocument.physicalNo != null}"/>
+					<h:outputText value="&lt;br/&gt;" escape="false" rendered="#{flDocument.physicalNo != null}"/>
 					<h:outputText value="#{flDocument.contractNo}" />
 				</p:column>
 				<p:column
