@@ -109,11 +109,10 @@ public class SMReportBackingBean extends
 		case ReportConst.SM_CATEGORY_STATISTIC_RPT_VAL:
 			rptGenBean.retrieveCategoryLevOne1();
 			// rptGenBean.retrieveState();
-			rptGenBean.setSmMandatoryCategoryView(true);
-			
+			rptGenBean.setSmMandatoryCategoryView(true);			
 			rptGenBean.setSmRegistrationStatusView(true);
-			rptGenBean.setSmNonMandatoryDateView(true);
-			rptGenBean.setSmRegisteredDateView(true);
+			/*rptGenBean.setSmNonMandatoryDateView(true);
+			rptGenBean.setSmRegisteredDateView(true);*/
 			rptGenBean.setSmExtraTwoColumnView(true);
 
 			break;
