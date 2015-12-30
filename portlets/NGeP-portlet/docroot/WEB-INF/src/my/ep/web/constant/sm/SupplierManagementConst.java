@@ -118,10 +118,12 @@ public class SupplierManagementConst {
 	public static final String PERSONNEL_TYPE_DIRECTOR = "DIR";
 	public static final String PERSONNEL_TYPE_STAFF = "STF";
 	public static final String PERSONNEL_TYPE_EQUITY = "EQUI";
-	
-	//GOVT SELLER REGISTRATION
+
+	// GOVT SELLER REGISTRATION
 	public static final String GOVT_SELLER_TNC_PAGE = "1";
-	public static final String GOVT_SELLER_ACCOUNT_INFO_PAGE = "2";
+	public static final String GOVT_SELLER_SEARCH_PAGE = "2";
+	public static final String GOVT_SELLER_ACCOUNT_INFO_PAGE = "3";
+	public static final String GOVT_SELLER_USER_INFO_PAGE = "4";
 
 	// Basic Registration && Account Maintenance
 	public static final String INDIVIDUAL_FLAG = "A";
@@ -313,6 +315,7 @@ public class SupplierManagementConst {
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_NGO = "N";
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2 = "O";
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI_LAIN2 = "P";
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER = "Q";
 
 	public static List<String> LIST_OF_BUSINESS_TYPE_ALLOWED_TO_BE_EDITED = Arrays
 			.asList(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH,
@@ -499,7 +502,29 @@ public class SupplierManagementConst {
 	public static final String SME_STATUS_NONE_SME = "N";
 	public static final String SME_STATUS_BOTH = "B";
 
+	// SUPPLIER TYPE
+	public static final String SUPP_TYPE_CONTRACTOR = "K";
+	public static final String SUPP_TYPE_CONSULTANT = "J";
+	public static final String SUPP_TYPE_BASIC = "B";
+	public static final String SUPP_TYPE_GOVT_TO_GOVT = "G";
+
 	// Getters for panel info
+	public String getSUPP_TYPE_CONTRACTOR() {
+		return SUPP_TYPE_CONTRACTOR;
+	}
+
+	public String getSUPP_TYPE_CONSULTANT() {
+		return SUPP_TYPE_CONSULTANT;
+	}
+
+	public String getSUPP_TYPE_BASIC() {
+		return SUPP_TYPE_BASIC;
+	}
+
+	public String getSUPP_TYPE_GOVT_TO_GOVT() {
+		return SUPP_TYPE_GOVT_TO_GOVT;
+	}
+
 	public String getSM_BASIC_INFO_PANEL() {
 		return SM_BASIC_INFO_PANEL;
 	}
@@ -693,6 +718,10 @@ public class SupplierManagementConst {
 		return SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT;
 	}
 
+	public String getSM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER() {
+		return SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER;
+	}
+
 	public String getSM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT() {
 		return SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT;
 	}
@@ -752,17 +781,25 @@ public class SupplierManagementConst {
 	public String getACC_MOF() {
 		return ACC_MOF;
 	}
-	
+
 	public String getACC_GOVT_SELLER() {
 		return ACC_GOVT_SELLER;
 	}
-	
-	public String getGOVT_SELLER_TNC_PAGE(){
+
+	public String getGOVT_SELLER_TNC_PAGE() {
 		return GOVT_SELLER_TNC_PAGE;
 	}
-	
-	public String getGOVT_SELLER_ACCOUNT_INFO_PAGE(){
+
+	public String getGOVT_SELLER_ACCOUNT_INFO_PAGE() {
 		return GOVT_SELLER_ACCOUNT_INFO_PAGE;
+	}
+
+	public String getGOVT_SELLER_SEARCH_PAGE() {
+		return GOVT_SELLER_SEARCH_PAGE;
+	}
+
+	public String getGOVT_SELLER_USER_INFO_PAGE() {
+		return GOVT_SELLER_USER_INFO_PAGE;
 	}
 
 	public String getSM_APPL_PAGE_TYPE_BASIC() {
