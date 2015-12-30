@@ -33,6 +33,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
@@ -67,6 +68,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -799,6 +801,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		getManagedBean().setSearchContractToDuration(null);
 		getManagedBean().setSearchOrderNo(null);
 		getManagedBean().setSearchPhysContractNo(null);
+		getManagedBean().setSearchCentralContractName(null);
 		getManagedBean().setSearchPhysLoaNo(null);
 		defaultPtjAndMinistryValues();
 	}
@@ -880,6 +883,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		this.getManagedBean().setSearchDocType(null);
 		this.getManagedBean().setSearchPhysContractNo(null);
 		this.getManagedBean().setSearchPhysLoaNo(null);
+		getManagedBean().setSearchCentralContractName(null);
 		
 		// reset everything to false
 		this.getManagedBean().setCheckDocType(false);
@@ -1100,6 +1104,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
 			this.getManagedBean().setMinistry(null);
 			this.getManagedBean().setPtj(null);
+			this.getManagedBean().setPtjGroup(null);
 
 		} else {
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
@@ -1115,18 +1120,20 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 					|| getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())
 					|| getFacesScopes().hasRoleUser(RoleCode.PAY_OFFICER.value())) {
 				this.getManagedBean().setPtj(orgProfile);
-				this.getManagedBean().setMinistry(orgProfile);
+				this.getManagedBean().setMinistry(retrieveMinistryOrgProfile(orgProfile.getOrgProfileId()));
+				this.getManagedBean().setPtjGroup(retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()));
 			} else if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
 				this.getManagedBean().setPtj(null);
-				this.getManagedBean().setMinistry(orgProfile);
+				this.getManagedBean().setMinistry(retrieveMinistryOrgProfile(orgProfile.getOrgProfileId()));
+				this.getManagedBean().setPtjGroup(retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()));
 			}
 
 		}
 	}
-	 /**
-		 * Get PTJ condition for construct the LOV listing
-		 * @return String
-		 */
+	/**
+	 * Get PTJ condition for construct the LOV listing
+	 * @return String
+	 */
 	public String getPTJCondition() {
 		String condition = OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value())+"^"+
 				this.getManagedBean().getMinistry().getOrgProfileId();
@@ -1139,6 +1146,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	*/
 	public void resetPtjProfile() {
 		getManagedBean().setPtj(null);
+		getManagedBean().setPtjGroup(null);
 	}
 		
 	/**
@@ -1170,5 +1178,57 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				|| isFlFulfilmentRecevingOfficer()
 				|| isFlFulfilmentPaymentOfficer() || getManagedBean().getMinistry()==null);
 	}
+	
+	/**
+	  * The method used to disable the ptj Lov
+	  * if login user is FL User
+	  * or ministry is null.
+	  * 
+	  * @return true, if login user is FL User/ministry is null
+	  *         false, if login user is not User/ministry is null
+	*/	
+	
+	public boolean disablePtjGroupLov() {
+		return (isFlFulfilmentRequisitioner() || isFlFulfilmentApprover()
+				|| isFlFulfilmentRecevingOfficer()
+				|| isFlFulfilmentPaymentOfficer() || getManagedBean().getMinistry()==null);
+	}
+	
+
+	/**
+	 * Get PTJ group condition for construct the LOV listing
+	 * @return String
+	 */
+	//TODO need to test for this method.
+	public String constuctConditionFieldsForPTJGroup() {
+
+		StringBuffer parentOrgProfile = new StringBuffer();
+		Long MinistryOrgProfileId = this.getManagedBean().getMinistry()
+				.getOrgProfileId();
+		if (null != MinistryOrgProfileId) {
+			String minLevel = EpPropertiesUtils.getInstance().getProperty(
+					EpPropertiesConst.LVL_ORG_PROFILE_MINISTRY);
+			String ptjGrpLevel = EpPropertiesUtils.getInstance().getProperty(
+					EpPropertiesConst.LVL_ORG_PROFILE_PTJGROUP);
+			if (minLevel != null && ptjGrpLevel != null) {
+				int ministryLevel = Integer.valueOf(minLevel);
+				int ptjGroupLevel = Integer.valueOf(ptjGrpLevel);
+				int orgLevel = ministryLevel - ptjGroupLevel;
+
+				for (int i = 0; i < orgLevel; i++) {
+					parentOrgProfile.append("parentOrgProfile.");
+				}
+				parentOrgProfile.append("orgProfileId");
+				parentOrgProfile.append("^");
+				parentOrgProfile.append(MinistryOrgProfileId);
+
+			}
+
+		} else {
+			parentOrgProfile.append("  ");
+		}
+		return parentOrgProfile.toString();
+	}
+	
 	
 }
