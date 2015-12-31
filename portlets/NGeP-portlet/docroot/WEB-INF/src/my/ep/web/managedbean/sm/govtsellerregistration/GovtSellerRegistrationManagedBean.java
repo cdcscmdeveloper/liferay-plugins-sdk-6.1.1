@@ -41,6 +41,7 @@ public class GovtSellerRegistrationManagedBean extends RegistrationManagedBean {
 	private boolean showParentMsg;
 	private boolean valueReqd;
 	private boolean showGst;
+	private boolean showBranchPointOfContact;
 
 	private class OrgProfilePagingDataModel extends PagingDataModel<Object[]> {
 		/**
@@ -185,6 +186,14 @@ public class GovtSellerRegistrationManagedBean extends RegistrationManagedBean {
 
 	public void setShowGst(boolean showGst) {
 		this.showGst = showGst;
+	}
+
+	public boolean isShowBranchPointOfContact() {
+		return showBranchPointOfContact;
+	}
+
+	public void setShowBranchPointOfContact(boolean showBranchPointOfContact) {
+		this.showBranchPointOfContact = showBranchPointOfContact;
 	}
 
 }
