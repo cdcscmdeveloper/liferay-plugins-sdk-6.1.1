@@ -15,7 +15,7 @@
 			<p><h:outputText escape="false" value="#{lbl['lbl.sm.basic.account.govt.tnc']}" /></p>
 		</p:scrollPanel>
 		<br />
-		<p:selectBooleanCheckbox id="chkTcId" value="#{govtSellerBackingBean.managedBean.agreeTC}" >
+		<p:selectBooleanCheckbox id="chkTcId" value="#{bb.managedBean.agreeTC}" >
 			<p:ajax update="btnProceed" partialSubmit="true" process="@this" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 		</p:selectBooleanCheckbox>
 		#{lbl['lbl.sm.have.agreed']} #{lbl['lbl.sm.term.and.condition']}
@@ -23,10 +23,10 @@
 		<div class="nav-wrapper" align="justify">
 			<p:commandButton id="btnProceed" value="#{lbl['lbl.sm.next']}"  style="float:right;"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"
-			disabled="#{!govtSellerBackingBean.managedBean.agreeTC}" action="#{govtSellerBackingBean.navigateToAccInfoPage}" />
+			disabled="#{!bb.managedBean.agreeTC}" action="#{bb.navigateToPage(SupplierManagementConst.GOVT_SELLER_SEARCH_PAGE)}" />
 			
 			<p:commandButton value="#{lbl['lbl.sm.prev']}" style="left;"
-				action="#{govtSellerBackingBean.returnToSignUp}">
+				action="#{bb.returnToSignUp}">
 			</p:commandButton>
 		</div>
 		<div style="clear: both;"></div>

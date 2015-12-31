@@ -197,7 +197,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.populateStateByAddType("permenant", false);
 			this.populateStateByAddType("residential", false);
 			this.populateStateByAddType("business", false);
-			this.retrieveFinancialOrgList();
+			this.getManagedBean().setFinancialOrgLs(retrieveFinancialOrgList());
 			
 			//this.getManagedBean().setSuppBusinessNature(new SmSupplierBusiness());
 			//this.getManagedBean().setBusinessNatureL1(this.retrieveBusinessNatureByLevelParent("10",0));
@@ -247,7 +247,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 //
 //		}
 		checkExistingBusinessRegNo();
-		validateBankInfo();
+		validateBankInfo(this.getManagedBean().getSmAppl().getSmSupplierBanks());
 
 		//check the professional body if supplier type is consultant
 		if(this.getManagedBean().getSmAppl().getSupplierType() != null){
@@ -382,7 +382,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			throw new EpException(MessageConst.ERROR_721002);
 		}
 		
-		validateBankInfo();
+		validateBankInfo(this.getManagedBean().getSmAppl().getSmSupplierBanks());
 
 		if (smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)) {
 			PmParameter identificationType = new PmParameter();
@@ -980,14 +980,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	/**
 	 * retrieve PM FinancialOrg List 
 	 */
-	private void retrieveFinancialOrgList() {
+	public List<PmFinancialOrg> retrieveFinancialOrgList() {
 		FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
 		reqDTO.setServiceType("PB");
 		IFinancialOrgSO reqSO = (IFinancialOrgSO) BusinessDelegate
 				.getInstance().getServiceObject("pm", IFinancialOrgSO.class);
 		FinancialOrgResDTO resDTO = reqSO
 				.retrieveFinancialOrgListByServiceType(reqDTO);
-		this.getManagedBean().setFinancialOrgLs(resDTO.getFinancialOrgList());
+		return resDTO.getFinancialOrgList();
 	}
 	
 	/**
@@ -1265,7 +1265,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				this.populateCityByAddType("business", false);
 			}
 			this.retrievePmCountryList();
-			this.retrieveFinancialOrgList();
+			this.getManagedBean().setFinancialOrgLs(retrieveFinancialOrgList());
 			
 			if(this.getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT)){
 				this.retrieveProfBody();
@@ -1474,9 +1474,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	/**
 	 * Supplier Bank Validation
 	 */
-	public void validateBankInfo(){
+	public void validateBankInfo(List<SmSupplierBank> banks){
 		List<String> bankList = new ArrayList<String>();
-		for(SmSupplierBank suppBank : this.getManagedBean().getSmAppl().getSmSupplierBanks()){
+		for(SmSupplierBank suppBank : banks){
 			log.info("*********suppBank.getPmFinancialOrg().getFinancialOrgId()****" + suppBank.getPmFinancialOrg().getFinancialOrgId());
 			if(suppBank.getPmFinancialOrg().getFinancialOrgId() == null){
 				throw new EpException(MessageConst.ERROR_721008);
@@ -1863,7 +1863,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			throw new EpException(MessageConst.ERROR_721002);
 		}
 
-		validateBankInfo();
+		validateBankInfo(this.getManagedBean().getSmAppl().getSmSupplierBanks());
 
 		if(this.getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT)){
 			if(this.getManagedBean().getSmAppl().getSmAssociationBodies().size() < 1){
@@ -2169,7 +2169,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	/**
 	 * Retrieve Gst Supporting Doc From PmDocument
 	 */
-	private List<PmDocument> retrieveGstDocFromPmDocument(){
+	public List<PmDocument> retrieveGstDocFromPmDocument(){
 		IDocumentSO reqSO = SmServiceLookup.getDocumentSO();
 		DocumentReqDTO reqDTO = new DocumentReqDTO();
 		DocumentResDTO resDTO = reqSO.retrieveGstSuppDocuments(reqDTO);
