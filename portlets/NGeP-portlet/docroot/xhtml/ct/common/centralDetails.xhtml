@@ -238,6 +238,17 @@
 		       		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.fctvalue']}" />
 			   </h:panelGrid>
 		     </h:panelGrid> 
+		     <h:panelGrid columns="3">
+			       <p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.viewContract}" 
+			             value="#{ctBackingBean.managedBean.contractVer.ctContractValue.pid}"  style="text-align:top;">
+			              <p:ajax event="change"  update=":form:purchaseInDefaultPanel" process="@this"></p:ajax>
+			         </p:selectBooleanCheckbox>
+			         <p:spacer width="2" />	
+			          <h:panelGrid columns="2">
+			  	            <h:outputText value="#{lbl['lbl.ct.pid']}"  />
+			  	           <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.pid']}" />
+			  	      </h:panelGrid>
+		 </h:panelGrid>	
 	 	</h:panelGrid>
 	 </h:panelGrid>
 	 <p:outputPanel id="justificationCentralPanel" rendered="false">
