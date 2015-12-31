@@ -1,0 +1,171 @@
+package my.ep.web.scheduler.constants.common;
+
+/**
+ * @author Venkat Chanumolu
+ */
+public class SchedulerConstants {
+
+	// status constants for Scheduler Manager
+	public static final String JOB_RUN = "RUN";
+	public static final String JOB_WAIT = "WAIT";
+	public static final String JOB_RESUME = "RESUME";
+	public static final String JOB_PAUSE = "PAUSE";
+
+	// Sourcing Module Constants
+	// Sourcing Job Group ID
+	public static final String SC_JOB_GROUP = "SOURCING JOB GROUP";
+
+	// Sourcing Job Key Id
+	public static final String SC_CONTINOUS_JOB = "CONTINUOUS STATUS CHECK";
+	public static final String SC_DAILY_JOB = "BIDS FETCH ";
+	public static final String SC_UPDATE_SUPPLIERS_JOB = "UPDATE SUPPLIERS ";
+	public static final String SC_QT_CLOSED_JOB = "QT_CLOSED";
+	public static final String SC_QT_PROPOSAL_VALIDITY_EXPIARY = "QT_PROPOSAL_VALIDITY_EXPIARY";
+
+	// Contracts Module Constants
+	public static final String TRIGGER_TIME = "0 01 00 * * ?";
+	// CT Job Group ID
+	public static final String CT_JOB_GROUP = "CONTRACT JOB GROUP";
+	// CT Job Key Id
+	public static final String UPDATE_EXPIRED_CONTRACT = "UPDATE EXPIRED CONTRACT";
+	public static final String UPDATE_EXPIRED_FACTORING = "UPDATE EXPIRED FACTORING";
+	public static final String UPDATE_EXPIRED_CIRCULAR = "UPDATE EXPIRED CIRCULAR";
+	public static final String UPDATE_SUSPENDED_AGENCY_ITEM = "UPDATE SUSPENDED AGENCY AND ITEM";
+	public static final String CONTRACT_EXPIRATION_REMINDER = "CONTRACT EXPIRATION REMINDER";
+	public static final String AGREEMENT_EXPIRATION_REMINDER = "AGREEMENT COMPLETION EXPIRATION REMINDER";
+	public static final String PERFORMANCE_BOND_EXPIRATION_REMINDER = "PERFORMANCE BOND EXPIRATION REMINDER";
+	public static final String REMEDY_EXPIRATION_REMINDER = "REMEDY EXPIRATION REMINDER";
+	// CT Job Description
+	public static final String UPDATE_EXPIRED_CONTRACT_JOB_DESC = "Job run every day at 00:01 AM to expire the contract that no more effective.";
+	public static final String UPDATE_EXPIRED_FACTORING_JOB_DESC = "Job run every day at 00:01 AM to expire the factoring that no more effective.";
+	public static final String UPDATE_EXPIRED_CIRCULAR_JOB_DESC = "Job run every day at 00:01 AM to expire the circular that no more effective.";
+	public static final String UPDATE_SUSPENDED_AGENCY_ITEM_JOB_DESC = "Job run every day at 00:01 AM to activate the suspended agency and item.";
+	public static final String CONTRACT_EXPIRATION_REMINDER_JOB_DESC = "Job run every day at 00:01 AM to send Contract Notification to contract admin and selected approvers.";
+	public static final String AGREEMENT_EXPIRATION_REMINDER_JOB_DESC = "Job run every day at 00:01 AM to send Agreement Completion Notification to contract admin and selected approvers.";
+	public static final String PERFORMANCE_BOND_EXPIRATION_REMINDER_JOB_DESC = "Job run every day at 00:01 AM to send Performance Bond Notification to contract admin and selected approvers.";
+	public static final String REMEDY_EXPIRATION_REMINDER_JOB_DESC = "Job run every day at 00:01 AM to expire the send Remedy Notification to contract admin and selected approvers.";
+
+	// PM Module Constants
+	// PM Job Group ID
+	public static final String PM_INTEGRATION_JOB_GROUP = "PM INTEGRATION JOB GROUP";
+	// PM Job Key Id
+	public static final String PM_INTEGRATION_DAILY_JOB = "PM INTEGRATION JOB";
+	// PM Integration Job Description
+	public static final String PM_INTEGRATION_DAILY_JOB_DESC = "";
+
+	// SM Module Scheduler COnstants
+
+	// Sm Job Group ID
+	public static final String SM_JOB_GROUP = "SM JOB GROUP";
+
+	// Sm Job Key ID
+	public static final String SM_DAILY_DEL_PEND_ACTV_PERSONEL_JOB = "Delete or deactivate pending activation personnel";
+	public static final String SM_APP_SOFTCERT_RENEW_REMINDER_JOB = "Soft Cert Renewal Reminder";
+	public static final String SM_APP_PAYMENT_REMINDER = "Payment Reminder";
+
+	// Sm Job Description
+	public static final String SM_DAILY_DEL_PEND_ACTV_PERSONEL_JOB_DESC = "Job run every day at 00:05 AM to delete pending activation personnel";
+	public static final String SM_APP_SOFTCERT_RENEW_REMINDER_JOB_DESC = "Job run every day at 02:30 AM to send the soft cert renew reminder.";
+	public static final String SM_PAYMENT_REMINDER_JOB_DESC = "Job run every day at 03:00 AM to send the payment reminder.";
+	public static final String SM_APP_OFFLINE_SUPPORTING_DOC_REMINDER_DESC = "Job run every day at 03:30 AM to send the payment reminder.";
+
+	// Payment Reminder
+	public static final int PAYMENT_REMINDER_DAY = 3;
+	public static final Long STATUS_PROCESSING_PAYMENT = 20114L;
+	public static final Long STATUS_APPLICATION_PAYMENT = 20251L;
+
+	// Soft Cert Renewal Reminder
+	public static final String CERT_MODE_NEW = "N";
+	public static final String CERT_MODE_RENEW = "R";
+	public static final int SOFTCERT_RENEWAL_DAY = 7;
+
+	// Timer Setting
+	public static final String SM_DAILY_SOFTCERT_RENEWAL_TIMER = "0 30 02 * * ?";
+	public static final String SM_DAILY_DEL_PEND_ACTV_TIMER = "0 55 23 * * ?";
+	public static final String SM_DAILY_PAYMENT_REMINDER_TIMER = "0 00 03 * * ?";
+	public static final String SM_DAILY_SUPPORTING_DOC_REMINDER_TIMER = "0 30 03 * * ?";
+
+	// CM Module Scheduler Constants
+
+	// EPERUNDING OUT BOUND
+	public static final String EPERUNDING_INTEGRATION_JOB_GROUP = "EPERUNDING JOB GROUP";
+	public static final String EPERUNDING_INTEGRATION_CONTINUOUS_JOB = "EPERUNDING INTEGRATION JOB";
+	public static final String EPERUNDING_INTEGRATION_CONTINUOUS_JOB_DESC = "Job run once daily 1 AM";
+
+	public static final String EPERUNDING_CONSULTANT_PROFILE_JOB = "CONSULTANT PROFILE JOB";
+
+	public static final String EPERUNDING_ASSOCIATED_COMPANY_JOB = "ASSOCIATED COMPANY JOB";
+
+	public static final String EPERUNDING_COMPANY_OWNER_JOB = "COMPANY OWNER JOB";
+
+	public static final String EPERUNDING_EQUITY_OWNER_JOB = "EQUITY OWNER JOB";
+
+	public static final String EPERUNDING_BOARD_DIRECTOR_JOB = "BOARD OF DIRECTOR JOB";
+
+	public static final String EPERUNDING_MANAGEMENT_PERSONNEL_JOB = "MANAGEMENT PERSONNEL JOB";
+
+	public static final String EPERUNDING_AUTHORIZED_SIGNATORY_JOB = "AUTHORIZED SIGNATORY JOB";
+
+	public static final String EPERUNDING_BRANCH_COMPANY_JOB = "BRANCH_COMPANY JOB";
+
+	public static final String EPERUNDING_REGISTERED_CATEGORY_JOB = "REGISTERED CATEGORY JOB";
+
+	public static final String EPERUNDING_GOVERNMENT_PROJECT_JOB = "GOVERNMENT PROJECT JOB";
+
+	public static final String EPERUNDING_DELETED_COMAPNY_JOB = "DELETED COMAPNY JOB";
+
+	// PHIS OUT BOUND
+	// PM
+	public static final String PHIS_PM_OUTBOUND_JOB_GROUP = "PHIS JOB GROUP";
+	public static final String PHIS_PM_OUTBOUND_CONTINUOUS_JOB = "PHIS OUTBOUND PM JOB";
+	public static final String PHIS_PM_CONTINUOUS_JOB_DESC = "Job run every 5 minutes";
+	// SM
+	public static final String PHIS_SM_OUTBOUND_JOB_GROUP = "PHIS JOB GROUP";
+	public static final String PHIS_SM_OUTBOUND_CONTINUOUS_JOB = "PHIS OUTBOUND SM JOB";
+	public static final String PHIS_SM_CONTINUOUS_JOB_DESC = "Job run twice daily 9 AM and 9 PM";
+	// CM
+	public static final String PHIS_CM_OUTBOUND_JOB_GROUP = "PHIS JOB GROUP";
+	public static final String PHIS_CM_OUTBOUND_CONTINUOUS_JOB = "PHIS OUTBOUND CM JOB";
+	public static final String PHIS_CM_CONTINUOUS_JOB_DESC = "Job run twice daily 9 AM and 9 PM";
+	// FL
+	public static final String PHIS_FL_OUTBOUND_JOB_GROUP = "PHIS JOB GROUP";
+	public static final String PHIS_FL_OUTBOUND_CONTINUOUS_JOB = "PHIS OUTBOUND FL JOB";
+	public static final String PHIS_FL_CONTINUOUS_JOB_DESC = "Job runs every 1 hour";
+
+	// GFMS IN BOUND
+	// PM
+	public static final String GFMAS_PM_IN_JOB_GROUP = "GFMAS JOB GROUP";
+	public static final String GFMAS_PM_IN_CONTINUOUS_JOB = "GFMAS IN PM JOB";
+	public static final String GFMAS_PM_CONTINUOUS_JOB_DESC = "Job run every 5 minutes";
+	// SM
+	public static final String GFMAS_SM_IN_JOB_GROUP = "GFMAS JOB GROUP";
+	public static final String GFMAS_SM_IN_CONTINUOUS_JOB = "GFMAS IN SM JOB";
+	public static final String GFMAS_SM_CONTINUOUS_JOB_DESC = "Job run every 5 minute";
+	// SC
+	public static final String GFMAS_SC_OUT_JOB_GROUP = "GFMAS JOB GROUP";
+	public static final String GFMAS_SC_OUT_CONTINUOUS_JOB = "GFMAS OUT SC JOB";
+	public static final String GFMAS_SC_CONTINUOUS_JOB_DESC = "Job run once daily 8 AM";
+	// FL
+	public static final String GFMAS_FL_IN_JOB_GROUP = "GFMAS JOB GROUP";
+	public static final String GFMAS_FL_IN_CONTINUOUS_JOB = "GFMAS IN FL JOB";
+	public static final String GFMAS_FL_CONTINUOUS_JOB_DESC = "Job runs every 1 hour";
+
+	// GFMS OUT BOUND
+	// SM
+	public static final String GFMAS_SM_OUT_JOB_GROUP = "GFMAS JOB GROUP";
+	public static final String GFMAS_SM_OUT_CONTINUOUS_JOB = "GFMAS OUT SM JOB";
+	public static final String GFMAS_SM_OUT_CONTINUOUS_JOB_DESC = "Job run every 5 minute";
+
+	// NOTIFICATIONS
+	public static final String NOTIFICATION_INTEGRATION_CONTINUOUS_JOB = "NOTIFICATION JOB GROUP";
+	public static final String NOTIFICATION_INTEGRATION_JOB_GROUP = "NOTIFICATION INTEGRATION JOB";
+	public static final String NOTIFICATION_INTEGRATION_CONTINUOUS_JOB_DESC = "Job run 10 AM and 10 PM";
+
+	public static final String CM_EXPIRED_ITEM_TIMER_JOB = "CM JOB GROUP";
+	public static final String CM_EXPIRED_ITEM_TIMER_JOB_GROUP = "ITEM EXPIRED JOB";
+	public static final String CM_EXPIRED_ITEM_TIMER_CONTINUOUS_JOB_DESC = "Job run 12 AM";
+	public static final String CM_EXPIRED_ITEM_TIMER = "0 01 00 * * ?";
+
+	public static final String CM_DROP_DOC_SEQ_JOB_GROUP = "DROP DOC SEQUENCE JOB";
+
+}
