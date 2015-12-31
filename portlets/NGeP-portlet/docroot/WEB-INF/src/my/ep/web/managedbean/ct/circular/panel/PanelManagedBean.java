@@ -22,6 +22,7 @@ import my.ep.persistence.entity.ct.circular.CtCancelCircularReq;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.dtl.CtCancelCircular;
+import my.ep.persistence.entity.ct.circular.dtl.CtCircularPidReason;
 import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
@@ -110,6 +111,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	private SmPersonnel smPersonnel;
 	private SmAddress supplierAddress;
 	private SmMofAccount smMofAccount;
+	private List<CtCircularPidReason> ctCircularPidReasons;
 	
 	/**
 	 * @return the circular
@@ -871,5 +873,20 @@ public class PanelManagedBean extends BaseManagedBean {
 	 */
 	public void setSmMofAccount(SmMofAccount smMofAccount) {
 		this.smMofAccount = smMofAccount;
+	}
+	
+	/**
+	 * @return the ctCircularPidReasons
+	 */
+	public List<CtCircularPidReason> getCtCircularPidReasons() {
+		return ctCircularPidReasons;
+	}
+
+	/**
+	 * @param ctCircularPidReasons the ctCircularPidReasons to set
+	 */
+	public void setCtCircularPidReasons(
+			List<CtCircularPidReason> ctCircularPidReasons) {
+		this.ctCircularPidReasons = ctCircularPidReasons;
 	}
 }
