@@ -10,7 +10,7 @@
 					 <table style="width:100%;" >
 						  <tr>
 						    <td width="100%">
-							    <h:panelGrid  id="ctReportCriteria" columns="4" style="width:85%;">
+							    <h:panelGrid  id="ctReportCriteria" columns="4" style="width:77%;">
 							    	 <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctMinistryView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.ministry']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu id="flMinistry" value="#{reportBackingBean.commonMinistry}" style="margin-top:5px;width:300px;">										
@@ -46,7 +46,7 @@
 									</p:inputText>																					
 									</c:if>
 									<c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctPhysicalContractNoView}" >			
-									<p:outputLabel value="#{lbl['lbl.rpt.physicalcontractno']}"   style="margin-top:5px;width:160px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.physicalcontractno']}"   style="margin-top:5px;width:279px;"/>
 									<p:inputText maxlength="30" value="#{reportBackingBean.ctPhysicalContractNo}" style="margin-top:5px;width:290px;">
 									<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />										
 									</p:inputText>																					
@@ -245,7 +245,7 @@
 									</p:selectOneMenu>
 								  </c:if>
 								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctLoanNoView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.loanno']}" style="margin-top:5px;width:160px;" />									
+									<p:outputLabel value="#{lbl['lbl.rpt.loanno']}" style="margin-top:5px;width:213px;" />									
 									<p:inputText maxlength="40" value="#{reportBackingBean.ctLoanNo}" style="margin-top:5px;width:290px;">
 									<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />	
 									</p:inputText>	
