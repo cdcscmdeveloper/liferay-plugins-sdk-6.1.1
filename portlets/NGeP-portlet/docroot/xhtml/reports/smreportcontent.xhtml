@@ -15,9 +15,9 @@
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.collectorGovRegistrationChkView}">
 							<p:outputLabel value="*" styleClass="mandatory"
-								style="margin-right:-200px;" />
+								style="margin-right:-197px;" />
 							<p:outputLabel value="#{lbl['lbl.rpt.smPaymentType']}"
-								style="width:167px;" />
+								style="width:168px;" />
 							<p:selectManyCheckbox id="mofRegistrationChk"
 								style="margin-top: 6px"
 								value="#{reportBackingBean.smMofRegistrationFeeList}">
@@ -157,10 +157,10 @@
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryPaymentMethodView}">
 							<p:column>
-								<table style="width: 182px;">
+								<table style="width: 191px;">
 									<tr style="width: 100%;">
 										<td style="width: 160px;"><p:outputLabel
-												style="margin-right:-108px;"
+												style="margin-right:-97px;"
 												value="#{lbl['lbl.rpt.paymentmethod']}" /> <p:outputLabel
 												value="*" styleClass="mandatory" /></td>
 									</tr>
@@ -541,7 +541,7 @@
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smSupplierNameView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.supName']}"
-								style="margin-top:5px;width:193px;" />
+								style="margin-top:5px;width:202px;" />
 							<p:inputText maxlength="100"
 								value="#{reportBackingBean.smSupplierName}"
 								style="margin-top:5px;width:290px;">
@@ -648,7 +648,7 @@
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smApplicationNoView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.applicationNo']}"
-								style="margin-top:5px;width:162px;" />
+								style="margin-top:5px;width:176px;" />
 							<p:inputText maxlength="16"
 								value="#{reportBackingBean.smApplicationNo}"
 								style="margin-top:5px;width:290px;">
@@ -1159,9 +1159,9 @@
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryForCodeView}">
 							<p:outputLabel value="*" styleClass="mandatory"
-								style="margin-right: -253px; margin-top: 10px;" />
+								style="margin-right: -250px; margin-top: 10px;" />
 							<p:outputLabel value="#{lbl['lbl.rpt.code']}"
-								style="margin-top:5px;width:57px;" />
+								style="margin-top:5px;width:59px;" />
 							<p:selectOneMenu value="#{reportBackingBean.smCode}"
 								style="margin-top:5px;width:300px;">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.codeOne']}"
@@ -1671,7 +1671,7 @@
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smReceiptNoView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.receiptno']}"
-								style="margin-top:5px;width:160px;" />
+								style="margin-top:5px;width:218px;" />
 							<p:inputText maxlength="100"
 								value="#{reportBackingBean.smReceiptNo}"
 								style="margin-top:5px;width:290px;">
@@ -2661,7 +2661,7 @@
 						test="#{reportBackingBean.managedBean.rptGenBean.smNonMandatoryTransactionDateView}">
 						<TD><p:outputLabel
 								value="#{lbl['lbl.rpt.transactiondatefrom']}"
-								style="width:196px;" /></TD>
+								style="width:198px;" /></TD>
 					</c:if>
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.smPaymentDateView}">
@@ -2801,7 +2801,7 @@
 		<c:if
 			test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryRTDateView}">
 			<TABLE id="receiptTransactionId"
-				style="margin-top: 10px; width: 50%;">
+				style="margin-top: 10px; width: 48%;">
 				<TR>
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryReceiptDateView}">
@@ -2821,7 +2821,7 @@
 						test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryTransactionDateView}">
 						<TD><p:outputLabel
 								value="#{lbl['lbl.rpt.transactiondatefrom']}" /> <p:outputLabel
-								value="*" styleClass="mandatory" style="width:55px" /></TD>
+								value="*" styleClass="mandatory" style="width:45px" /></TD>
 
 						<TD><p:calendar showOn="button" navigator="true"
 								required="true" label="#{lbl['lbl.rpt.transactiondatefrom']}"
