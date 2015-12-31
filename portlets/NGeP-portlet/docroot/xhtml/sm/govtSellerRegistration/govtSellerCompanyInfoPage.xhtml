@@ -76,7 +76,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td class="tdContent"><p:inputText required="#{!empty param['disableValidation']}"
-						label="#{lbl['lbl.sm.companyname']}" maxlength="100"
+						label="#{lbl['lbl.sm.agency.name']}" maxlength="100"
 						value="#{bb.managedBean.smAppl.smCompanyBasic.companyName}"
 						size="40" id="companyNameId"  
 						disabled="#{bb.managedBean.disabledCompanyNameInMaintenance}" /> 
@@ -94,7 +94,7 @@
 				<td class="tdContent" >
 					<p:inputText size="40"
 						id="compAdd1" required="#{!empty param['disableValidation']}" maxlength="35"
-						label="#{lbl['lbl.sm.companyaddress']}"
+						label="#{lbl['lbl.sm.agency.address']}"
 						value="#{bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}">
 						<p:ajax event="blur" update=":form:acgmap:gmapInput:gmapInput"></p:ajax>
 					</p:inputText>
