@@ -1,0 +1,38 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+		
+	</ui:define>
+	
+	<ui:define name="contentSection">
+		<p:messages id="messages" showDetail="true" escape="false"
+			autoUpdate="#{govtSellerBackingBean.managedBean.showParentMsg}"
+			closable="true" showSummary="false" />
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
+		<ui:param name="bb" value="#{govtSellerBackingBean}" />
+		<ui:param name="registrationBackingBean" value="#{govtSellerBackingBean}" />
+		
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sm.button.save']}" action="#{bb.submitMaintenance}" update="@([id$=Msg])" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
+				<f:param name="disableValidation" value="true" />
+			</p:commandButton>
+		</div>
+		
+		<ui:include src="/xhtml/sm/govtSellerRegistration/govtSellerCompanyInfoPage.xhtml" />
+		<ui:include src="/xhtml/sm/govtSellerRegistration/govtSellerBranchInfoPage.xhtml" />
+		<ui:include src="/xhtml/sm/shared/onlinereg/bankInfo.xhtml" />
+		
+	</ui:define>
+		
+</ui:composition>
