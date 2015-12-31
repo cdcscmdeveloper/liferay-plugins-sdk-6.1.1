@@ -1,0 +1,322 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<script type="text/javascript">
+		function hideBranchDialog() {
+			banchDialog.hide();
+			gstBrUploadDialog.show();
+		}
+		function hideUploadDialog() {
+			banchDialog.show();
+			gstBrUploadDialog.hide();
+		}
+	</script>
+	
+	<p:panel header="#{lbl['lbl.sm.branch.branchDiaHdr']}" toggleable="true" id="pnlBranchInfo">
+	
+		<p:dataTable var="branchBean" id="dt" widgetVar="suppBrnachDtWidVar"
+			value="#{bb.managedBean.smAppl.smSupplierBranches}"
+			selection="#{bb.managedBean.selectedBranches}"
+			rowKey="#{branchBean}" rowIndexVar="index"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+			<ac:paginator for="dt" />
+		
+			<p:column selectionMode="multiple" width="1%" rendered="#{not empty bb.managedBean.smAppl.smSupplierBranches}"/>
+		
+			<p:column headerText="#{lbl['lbl.sm.branch.branchName']}">
+				<table style="width: 100%">
+					<tr>
+						<td colspan="2" style="border-style: none !important;">
+							<h:outputText value="#{branchBean.branchName}" />
+						</td>
+					</tr>
+					<tr>
+						<td style="border-style: none !important; width: 40%;"><h:outputText
+								value="#{lbl['lbl.sm.gstNo']}" /></td>
+						<td style="border-style: none !important; width: 5%;">:</td>
+						<td style="border-style: none !important;; width: 55%;">
+							<h:outputText value="#{branchBean.gst.gstRegNo}" rendered="#{not empty branchBean.gst.gstRegNo}"/>
+							<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty branchBean.gst.gstRegNo}"/>
+						</td>
+					</tr>
+					<tr>
+						<td style="border-style: none !important;"><h:outputText
+								value="#{lbl['lbl.sm.gst.effdate']}" /></td>
+						<td style="border-style: none !important;">:</td>
+						<td style="border-style: none !important;">
+							<h:outputText value="#{branchBean.gst.gstEffDate}" rendered="#{not empty branchBean.gst.gstEffDate}">
+								<f:convertDateTime
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							</h:outputText>
+							<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty branchBean.gst.gstEffDate}"/>
+						</td>
+					</tr>
+					<tr>
+						<td style="border-style: none !important;"><h:outputText
+								value="#{lbl['lbl.sm.gst.eff.end.date']}" /></td>
+						<td style="border-style: none !important;">:</td>
+						<td style="border-style: none !important;">
+							<h:outputText value="#{branchBean.gst.gstEndDate}" rendered="#{not empty branchBean.gst.gstEndDate}">
+								<f:convertDateTime
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							</h:outputText>
+							<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty branchBean.gst.gstEndDate}"/>
+						</td>
+					</tr>
+				</table>
+		
+			</p:column>
+		
+			<p:column headerText="#{lbl['lbl.sm.companyaddress']}"
+				style="width :50%;white-space : normal">
+				<h:outputText
+					value="#{bb.getFullAddress(branchBean.smAddress)}"
+					style="float : left" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
+				<p:commandLink id="selectButton" update=":form:banchDialog"
+					partialSubmit="true" process="@this"
+					action="#{bb.assignSelBranch(branchBean)}" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" >
+					<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"
+						style="margin-right:2px;" />
+				</p:commandLink>
+			</p:column>
+		</p:dataTable>
+		
+		<p:spacer height="2px;" />
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+				action="#{bb.assignNewBranchBean}" partialSubmit="true"
+				process="@this" update=":form:banchDialog" 
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+			<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+				partialSubmit="true" process="pnlBranchInfo"
+				action="#{bb.deleteSelectedBranches}" update=":form:dt" 
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+
+		</div>
+		
+	</p:panel>
+	
+	<p:dialog width="550px" height="500px" style="z-index:-1;"
+		header="#{lbl['lbl.sm.branch.branchDiaHdr']}" widgetVar="banchDialog"
+		id="banchDialog" resizable="false" modal="true" closable="false">
+		<p:messages id="suppBranchMsg" showSummary="false" showDetail="true"
+			autoUpdate="true" closable="true" />
+		
+		
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.branch.branchName']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:inputText label=" #{lbl['lbl.sm.branch.branchName']}" id="supBranchName"
+						maxlength="100" required="#{bb.managedBean.valueReqd}"
+						value="#{bb.managedBean.selectedBranch.branchName}"
+						size="35" >
+							<p:ajax process="@this" partialSubmit="true"/>
+						</p:inputText> 
+						<p:message id="supBranchNameMsg" for="supBranchName"
+						showSummary="true" showDetail="false" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText required="#{bb.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.companyaddress']}" id="supBrnAddr"
+						maxlength="35"
+						value="#{bb.managedBean.selectedBranch.smAddress.address1}"
+						size="35" >
+						<p:ajax process="@this" partialSubmit="true"/>
+						</p:inputText> 
+						<p:message id="supBrnAddrMsg" for="supBrnAddr"
+						showSummary="true" showDetail="false" display="icon" /></td>
+			</tr>
+	
+			<tr>
+				<td></td>
+				<td><p:inputText maxlength="35"
+						value="#{bb.managedBean.selectedBranch.smAddress.address2}"
+						size="35" >
+						<p:ajax process="@this" partialSubmit="true"/>
+						</p:inputText>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><p:inputText maxlength="35"
+						value="#{bb.managedBean.selectedBranch.smAddress.address3}"
+						size="35" >
+						<p:ajax process="@this" partialSubmit="true"/>
+						</p:inputText>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><p:inputText maxlength="35"
+						value="#{bb.managedBean.selectedBranch.smAddress.address4}"
+						size="35">
+						<p:ajax process="@this" partialSubmit="true"/>
+						</p:inputText>
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu
+						required="#{bb.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.country']}" id="supBrnCntry"
+						value="#{bb.managedBean.selectedBranch.smAddress.pmCountry.countryId}"
+						style="width: 207px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems var="branchCountry"
+							value="#{bb.managedBean.countryLs}" />
+						<p:ajax event="change" process="@this"
+							listener="#{bb.onChangeCountry(bb.managedBean.selectedBranch.smAddress.pmCountry,'BRANCH_ADDRESS')}"
+							update="supBrnCntry,branchState,branchDist,branchCity,postCodeBranchPanelId" />
+					</p:selectOneMenu> 
+					<p:message id="supBrnCntryMsg" for="supBrnCntry" showSummary="true"
+						showDetail="false" display="icon" /></td>
+			</tr>
+	
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+						required="#{bb.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.state']}"
+						value="#{bb.managedBean.selectedBranch.smAddress.pmState.stateId}"
+						id="branchState">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems var="brnState"
+							value="#{bb.managedBean.branchCompanyStates}" />
+						<p:ajax event="change" process="@this"
+							listener="#{bb.onChangeState(bb.managedBean.selectedBranch.smAddress.pmState,'BRANCH_ADDRESS')}"
+							update="branchState,branchDist,branchCity" />
+					</p:selectOneMenu>
+					<p:message id="branchStateMsg" for="branchState" showSummary="true"
+						showDetail="false" display="icon" /></td>
+			</tr>
+	
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+						id="branchDist" required="#{bb.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.district']}"
+						value="#{bb.managedBean.selectedBranch.smAddress.pmDistrict.districtId}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems var="brnDist" 
+							value="#{bb.managedBean.branchCompanyDistricts}" />
+						<p:ajax event="change" process="@this"
+							listener="#{bb.onChangeDistrict(bb.managedBean.selectedBranch.smAddress.pmDistrict,'BRANCH_ADDRESS')}"
+							update="branchDist,branchCity" />
+					</p:selectOneMenu>
+					<p:message id="branchDistMsg" for="branchDist" showSummary="true"
+						showDetail="false" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+						id="branchCity" required="#{bb.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.towncity']}"
+						value="#{bb.managedBean.selectedBranch.smAddress.pmCity.cityId}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems var="branchCity"
+							value="#{bb.managedBean.branchCompanyCities}" />
+						<p:ajax event="change" process="@this" update="branchCity" />
+					</p:selectOneMenu>
+					<p:message id="branchCityMsg" for="branchCity" showSummary="true"
+						showDetail="false" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:outputPanel id="postCodeBranchPanelId">
+						<p:outputPanel
+							rendered="#{bb.managedBean.selectedBranch.smAddress.pmCountry.countryId==bb.managedBean.myCountryId}">
+							<p:inputText maxlength="5"
+								required="#{bb.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.postcode']}" id="branchPostCodeMy"
+								value="#{bb.managedBean.selectedBranch.smAddress.postcode}"
+								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+								size="35">
+								<f:validator validatorId="postcodeValidator" />
+								<p:ajax process="@this" partialSubmit="true"/>
+							</p:inputText>
+							<p:message id="branchPostCodeMyMsg" for="branchPostCodeMy"
+								showSummary="true" showDetail="false" display="icon" />
+						</p:outputPanel>
+						<p:outputPanel
+							rendered="#{bb.managedBean.selectedBranch.smAddress.pmCountry.countryId!=bb.managedBean.myCountryId}">
+							<p:inputText maxlength="10"
+								required="#{bb.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.postcode']}" id="branchPostCodeForeign"
+								value="#{bb.managedBean.selectedBranch.smAddress.postcode}"
+								size="35">
+								<p:ajax process="@this" partialSubmit="true"/>
+							</p:inputText>
+							<p:message id="branchPostCodeForeignMsg"
+								for="branchPostCodeForeign" showSummary="true" showDetail="false"
+								display="icon" />
+						</p:outputPanel>
+					</p:outputPanel></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
+				<td>
+					<ac:phone id="branchPhoneNo" isMobile="false" label="#{lbl['lbl.sm.phoneno']}"
+					countryCode="#{bb.managedBean.selectedBranch.phoneCountry}" 
+					areaCode="#{bb.managedBean.selectedBranch.phoneArea}" 
+					number="#{bb.managedBean.selectedBranch.phoneNo}"  
+					validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}" />
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
+				<td>
+					<ac:phone id="branchFaxNo" isMobile="false" label="#{lbl['lbl.sm.faxno']}"
+					countryCode="#{bb.managedBean.selectedBranch.faxCountry}" 
+					areaCode="#{bb.managedBean.selectedBranch.faxArea}" 
+					number="#{bb.managedBean.selectedBranch.faxNo}"  
+					validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}" />
+				</td>
+			</tr>
+	
+		</table>
+		
+		<p:outputPanel rendered="#{bb.managedBean.showGst}">
+			<ui:include src="govtSellerBranchGstInfoPage.xhtml" />
+		</p:outputPanel>
+
+		<br />
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
+				id="branchPopUpSaveBtn"
+				action="#{bb.addOrUpdateBranchToSmAppl}"
+				partialSubmit="true" process="banchDialog"
+				update=":form:dt,@([id$=Msg])" />
+			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+				partialSubmit="true" process="@this"
+				action="#{bb.assignCancelBranchBean}" />
+		</div>
+	</p:dialog>
+	
+	<p:dialog id="gstBrUploadDialog" widgetVar="gstBrUploadDialog" modal="true"
+		dynamic="true" resizable="false" width="700px" height="200"
+		position="top" style="z-index:-1;" header="#{lbl['lbl.bpm.choose.file']}">
+		<p:fileUpload allowTypes="/(\.|\/)(pdf|doc|docx)$/"
+			sizeLimit="1000000" process="@this"
+			invalidFileMessage="#{lbl['lbl.sm.upload.format.errmsg']}"
+			invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed1Mb']}"
+			fileUploadListener="#{bb.handleGstSupDocFileAttachment}"
+			update="banchDialog" oncomplete="hideUploadDialog();" />
+	</p:dialog>
+	
+</ui:composition>

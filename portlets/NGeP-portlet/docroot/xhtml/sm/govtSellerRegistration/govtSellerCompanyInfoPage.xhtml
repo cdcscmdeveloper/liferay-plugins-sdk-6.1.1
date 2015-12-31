@@ -1,0 +1,303 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<h:outputScript library="js" name="smGstCalendar.js" />
+	<script type="application/javascript">
+		$(document).ready(function(e){
+			  $("input[id$=compAdd1]").keydown(function(e){
+				if(e.which==9 || e.keycode==9){
+					$("input[id$=compAdd2]").focus();
+					e.preventDefault();
+				}
+			  });
+			  $("input[id$=compAdd2]").keydown(function(e){
+				 if(e.which==9 || e.keycode==9){
+					$("input[id$=compAdd3]").focus();
+					e.preventDefault();
+				} 
+			  });
+			  $("input[id$=compAdd3]").keydown(function(e){
+				 if(e.which==9 || e.keycode==9){
+					$("input[id$=compAdd4]").focus();
+					e.preventDefault();
+				} 
+			  });
+			  $("input[id$=compAdd4]").keydown(function(e){
+				 if(e.which==9 || e.keycode==9){
+					$("input[id$=compPostCodeMy]").focus();
+					e.preventDefault();
+				} 
+			  });
+			  $("input[id$=compPostCode]").keydown(function(e){
+				 if(e.which==9 || e.keycode==9){
+					$("input[id$=compCountryId_focus]").focus();
+					e.preventDefault();
+				} 
+			  });
+			  $("input[id$=compCountryId_focus]").keydown(function(e){
+				 if(e.which==9 || e.keycode==9){
+					$("input[id$=busState_focus]").focus();
+					e.preventDefault();
+				} 
+			  });
+			  $("input[id$=busState_focus]").keydown(function(e){
+				 if(e.which==9 || e.keycode==9){
+					$("input[id$=busDistrict_focus]").focus();
+					e.preventDefault();
+				} 
+			  });
+			  $("input[id$=busDistrict_focus]").keydown(function(e){
+				 if(e.which==9 || e.keycode==9){
+					$("input[id$=busCity_focus]").focus();
+					e.preventDefault();
+				} 
+			  });
+			  $("input[id$=busCity_focus]").keydown(function(e){
+				 if(e.which==9 || e.keycode==9){
+					$("input[id$=telNoId]").focus();
+					e.preventDefault();
+				} 
+			  });
+		});
+			
+	</script>
+		
+	<p:panel header="#{lbl['lbl.sm.agency.information']}" toggleable="true" id="pnlCompInfo">
+		<table class="customTbl">
+			
+			<tr>
+				<td class="tdTitle">
+					<p:outputLabel value="#{lbl['lbl.sm.companyname']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td class="tdContent"><p:inputText required="#{!empty param['disableValidation']}"
+						label="#{lbl['lbl.sm.companyname']}" maxlength="100"
+						value="#{bb.managedBean.smAppl.smCompanyBasic.companyName}"
+						size="40" id="companyNameId"  
+						disabled="#{bb.managedBean.disabledCompanyNameInMaintenance}" /> 
+						<p:message id="companyNameIdMsg" for="companyNameId" display="icon" /></td>
+
+				<td class="tdTitle">&#160;</td>
+				<td class="tdContent">&#160;</td>
+			</tr>
+
+			<tr>
+				<td class="tdTitle">
+					<p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td class="tdContent" >
+					<p:inputText size="40"
+						id="compAdd1" required="#{!empty param['disableValidation']}" maxlength="35"
+						label="#{lbl['lbl.sm.companyaddress']}"
+						value="#{bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}">
+						<p:ajax event="blur" update=":form:acgmap:gmapInput:gmapInput"></p:ajax>
+					</p:inputText>
+					<p:message id="compAdd1Msg" for="compAdd1" display="icon" /></td>
+
+				<td class="tdTitle">
+					<p:outputLabel value="#{lbl['lbl.sm.country']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td class="tdContent"><p:selectOneMenu id="compCountryId"
+						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.country']}"  style="width:80%"
+						value="#{bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry.countryId}">
+						<f:selectItems var="counLs"
+							value="#{bb.managedBean.countryLs}" />
+						<p:ajax event="change"
+							listener="#{bb.onChangeCountry(registrationBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry,'COMPANY_ADDRESS')}"
+							update="busState,busDistrict,busCity,compPostCodePanelId,:form:acgmap:gmapInput:gmapInput" />
+					</p:selectOneMenu> <p:message id="compCountryIdMsg" for="compCountryId"
+						display="icon" /></td>
+			</tr>
+
+			<tr>
+				<td></td>
+				<td class="tdContent"><p:inputText size="40"
+						id="compAdd2" maxlength="35"
+						value="#{bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}" /></td>
+
+				<td class="tdTitle">
+					<p:outputLabel value="#{lbl['lbl.sm.state']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td class="tdContent">
+					<p:selectOneMenu id="busState"
+						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.state']}"
+						value="#{bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateId}"
+						style="width:80%">
+						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
+						<f:selectItems var="state"
+							value="#{bb.managedBean.businessStateLs}" />
+						<p:ajax event="change" process="@this"
+							listener="#{bb.onChangeState(bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState,'COMPANY_ADDRESS')}"
+							update="busDistrict,busCity,:form:acgmap:gmapInput:gmapInput" />
+					</p:selectOneMenu> <p:message id="busStateMsg" for="busState" display="icon" /></td>
+			</tr>
+
+			<tr>
+				<td></td>
+				<td class="tdContent"><p:inputText size="40"
+						id="compAdd3" maxlength="35"
+						value="#{bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}" /></td>
+
+				<td class="tdTitle">
+					<p:outputLabel value="#{lbl['lbl.sm.district']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td class="tdContent"><p:selectOneMenu id="busDistrict"
+						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.district']}"
+						value="#{bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict.districtId}"
+						style="width:80%">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems var="dist"
+							value="#{bb.managedBean.businessDistrictLs}" />
+						<p:ajax event="change"
+							listener="#{bb.onChangeDistrict(bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict,'COMPANY_ADDRESS')}"
+							update="busCity,:form:acgmap:gmapInput:gmapInput" />
+					</p:selectOneMenu> <p:message id="busDistrictMsg" for="busDistrict" display="icon" /></td>
+			</tr>
+
+			<tr>
+				<td></td>
+				<td class="tdContent" ><p:inputText size="40"
+						id="compAdd4" maxlength="35"
+						value="#{bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address4}" /></td>
+
+				<td class="tdTitle">
+					<p:outputLabel value="#{lbl['lbl.sm.towncity']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td class="tdContent"><p:selectOneMenu id="busCity"
+						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.towncity']}"
+						value="#{bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity.cityId}"
+						style="width:80%">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems var="pcity"
+							value="#{bb.managedBean.businessCityLs}" />
+						<p:ajax event="change" update=":form:acgmap:gmapInput:gmapInput" process="@this"/>
+					</p:selectOneMenu> <p:message id="busCityMsg" for="busCity" display="icon" /></td>
+			</tr>
+
+			<tr>
+				<td class="tdTitle">
+					<p:outputLabel value="#{lbl['lbl.sm.postcode']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td class="tdContent">
+					<p:outputPanel id="compPostCodePanelId">
+						<p:outputPanel
+							rendered="#{bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry.countryId==bb.managedBean.myCountryId}">
+							<p:inputText maxlength="5" required="#{!empty param['disableValidation']}"
+								label="#{lbl['lbl.sm.postcode']}" id="compPostCodeMy"
+								value="#{bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}"
+								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+								size="40">
+								<f:validator validatorId="postcodeValidator" />
+							</p:inputText>
+							<p:message id="compPostCodeMyMsg" for="compPostCodeMy"
+								showSummary="true" showDetail="false" display="icon" />
+						</p:outputPanel>
+						<p:outputPanel
+							rendered="#{bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry.countryId!=bb.managedBean.myCountryId}">
+							<p:inputText maxlength="10" required="#{!empty param['disableValidation']}"
+								label="#{lbl['lbl.sm.postcode']}" id="compPostCodeForeign"
+								value="#{bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}"
+								size="35">
+							</p:inputText>
+							<p:message id="compPostCodeForeignMsg"
+								for="compPostCodeForeign" showSummary="true"
+								showDetail="false" display="icon" />
+						</p:outputPanel>
+					</p:outputPanel>
+				</td>
+			</tr>
+			
+			<p:outputPanel rendered="#{bb.isShowNewChanges()}">
+			<tr>
+				<td></td>
+				<td colspan="3">
+					<SCRIPT type="text/javascript">
+				      function getAddress() {
+				    	  
+				    	  var addr1 = document.getElementById('#{p:component(&quot;compAdd1&quot;)}').value + ',';
+				    	  var addr2 = document.getElementById('#{p:component(&quot;compAdd2&quot;)}').value + ',';
+				    	  var addr3 = document.getElementById('#{p:component(&quot;compAdd3&quot;)}').value + ',';
+				    	  var addr4 = document.getElementById('#{p:component(&quot;compAdd4&quot;)}').value + ',';
+
+				    	  var cityName = document.getElementById('#{p:component(&quot;busCity&quot;)}_input').options[document.getElementById('#{p:component(&quot;busCity&quot;)}_input').selectedIndex].text;
+				    	  var districtName = document.getElementById('#{p:component(&quot;busDistrict&quot;)}_input').options[document.getElementById('#{p:component(&quot;busDistrict&quot;)}_input').selectedIndex].text;
+				    	  var stateName = document.getElementById('#{p:component(&quot;busState&quot;)}_input').options[document.getElementById('#{p:component(&quot;busState&quot;)}_input').selectedIndex].text;
+				    	  var countryName = document.getElementById('#{p:component(&quot;compCountryId&quot;)}_input').options[document.getElementById('#{p:component(&quot;compCountryId&quot;)}_input').selectedIndex].text;
+				    	  
+				    	  /*var cityName = '';
+				    	  var districtName = '';
+				    	  var stateName = '';
+				    	  var countryName = '';
+				    	  */
+				    	  var address = addr1 + addr2 + addr3 + addr4 + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
+
+				      	return address;
+				      }
+				      </SCRIPT>
+						
+					<ac:gmap id="acgmap" 
+						address="getAddress()"
+						locationName="#{bb.managedBean.smAppl.smCompanyBasic.companyName}"
+						latitude="#{bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLatitude}"
+						longitude="#{bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLongitude}"
+						disabled="#{bb.gmapDisabled}" />			
+				</td>
+			</tr>
+			</p:outputPanel>
+			
+			<tr>
+				<td class="tdTitle">
+					<p:outputLabel value="#{lbl['lbl.sm.telno']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td class="tdContent">
+					<ac:phone id="telNoId" isMobile="false" label="#{lbl['lbl.sm.telno']}" required="#{!empty param['disableValidation']}"
+						countryCode="#{bb.managedBean.smAppl.smCompanyBasic.phoneCountry}" 
+						areaCode="#{bb.managedBean.smAppl.smCompanyBasic.phoneArea}" 
+						number="#{bb.managedBean.smAppl.smCompanyBasic.phoneNo}"  
+						validatorMessage="#{lbl['lbl.sm.telno']} - #{lbl['lbl.sm.invalidNo']}" /></td>
+				<td class="tdTitle">
+					<p:outputLabel value="#{lbl['lbl.sm.faxno']}" />
+				</td>
+				<td class="tdContent">
+					<ac:phone id="faxNoId" isMobile="false" label="#{lbl['lbl.sm.faxno']}"
+						countryCode="#{bb.managedBean.smAppl.smCompanyBasic.faxCountry}" 
+						areaCode="#{bb.managedBean.smAppl.smCompanyBasic.faxArea}" 
+						number="#{bb.managedBean.smAppl.smCompanyBasic.faxNo}"  
+						validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}" />
+				</td>
+			</tr>
+			
+			<c:if test="#{!bb.managedBean.smSupp.brandNew}">
+				<ui:param name="gstSupplier" value="#{bb.managedBean.smGstSupplier}" />
+				<tr>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.gst.regno']}" /></td>
+					<td class="tdContent"><p:inputText
+							value="#{gstSupplier.gstRegNo}" disabled="true" size="40" /></td>
+				</tr>
+				
+				<tr>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.gst.effdate']}" /></td>
+					<td class="tdContent">
+						<p:inputText value="#{gstSupplier.gstEffDate}" disabled="true" size="40">
+							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</p:inputText>
+					</td>
+				</tr>
+			</c:if>
+		</table>
+	</p:panel>
+
+
+</ui:composition>

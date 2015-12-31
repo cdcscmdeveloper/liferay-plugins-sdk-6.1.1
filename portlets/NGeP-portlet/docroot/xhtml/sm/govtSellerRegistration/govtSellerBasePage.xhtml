@@ -12,17 +12,32 @@
 	</ui:define>
 	
 	<ui:define name="contentSection">
-		<p:messages id="messages" showDetail="true" closable="true" showSummary="false" escape="false"/>
+		<p:messages id="messages" showDetail="true" escape="false"
+			autoUpdate="#{govtSellerBackingBean.managedBean.showParentMsg}"
+			closable="true" showSummary="false" />
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 		
+		<ui:param name="bb" value="#{govtSellerBackingBean}" />
+		<ui:param name="registrationBackingBean" value="#{govtSellerBackingBean}" />
+		
 		<p:outputPanel id="govtSellerTncOutPanelId" rendered="#{govtSellerBackingBean.managedBean.targetPage eq SupplierManagementConst.GOVT_SELLER_TNC_PAGE}">
 			<ui:include src="/xhtml/sm/govtSellerRegistration/govtSellerTncPage.xhtml" />
 		</p:outputPanel>
+		
+		<p:outputPanel id="govtSellerSeachOutPanelId" rendered="#{govtSellerBackingBean.managedBean.targetPage eq SupplierManagementConst.GOVT_SELLER_SEARCH_PAGE}">
+			<ui:include src="/xhtml/sm/govtSellerRegistration/govtSellerSearchPage.xhtml" />
+		</p:outputPanel>
+		
 		<p:outputPanel id="govtSellerAccInfoOutPanelId" rendered="#{govtSellerBackingBean.managedBean.targetPage eq SupplierManagementConst.GOVT_SELLER_ACCOUNT_INFO_PAGE}">
 			<ui:include src="/xhtml/sm/govtSellerRegistration/govtSellerAccInfoPage.xhtml" />
 		</p:outputPanel>
+		
+		<p:outputPanel id="govtSellerUserInfoOutPanelId" rendered="#{govtSellerBackingBean.managedBean.targetPage eq SupplierManagementConst.GOVT_SELLER_USER_INFO_PAGE}">
+			<ui:include src="/xhtml/sm/govtSellerRegistration/govtSellerUserInfoPage.xhtml" />
+		</p:outputPanel>
+		
 	</ui:define>
 		
 </ui:composition>
