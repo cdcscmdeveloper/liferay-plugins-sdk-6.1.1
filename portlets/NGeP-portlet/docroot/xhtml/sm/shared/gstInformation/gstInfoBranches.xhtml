@@ -60,7 +60,7 @@
 									value="#{br.gst.gstRegNo}" required="true"
 									size="35" label="#{lbl['lbl.sm.gst.regno']}" 
 									validatorMessage="#{lbl['lbl.sm.gstNo']} - #{lbl['lbl.sm.invalidNo']}">
-									<p:ajax event="blur" process="@this"/>
+									<p:ajax event="blur" process="@this" update="@form"/>
 									<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 									</p:inputText>
 									<p:message id="branchGstRegNoMsg"
@@ -95,7 +95,7 @@
 										label="#{lbl['lbl.sm.gst.eff.end.date']}"
 										value="#{br.gst.gstEndDate}" mindate="#{CommonConstants.GST_LAUNCH_DATE}"
 										pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
-										readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" >
+										readonlyInput="true" size="30" showOn="button" yearRange="-99:+10" >
 										<p:ajax event="dateSelect"  update="branchGstNotEmptyPanelId" process="@this"/>
 									</p:calendar>
 									<p:message id="branchGstEffEndDateCalIdMsg"
