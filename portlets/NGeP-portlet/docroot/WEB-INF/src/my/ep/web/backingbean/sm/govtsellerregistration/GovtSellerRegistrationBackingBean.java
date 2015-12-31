@@ -6,14 +6,18 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
+import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -37,11 +41,13 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.govtsellerregistration.GovtSellerRegistrationManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
@@ -78,6 +84,22 @@ public class GovtSellerRegistrationBackingBean extends
 				"/xhtml/sm/govtSellerRegistration/govtSellerBasePage.xhtml",
 				"", null);
 
+	}
+
+	public void preRenderGovtSellerMaintenance() {
+		getManagedBean().setSmSupp(SmApplicationUtil.getCurrentSupplier());
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSupplierId(getManagedBean().getSmSupp().getSupplierId());
+		getManagedBean().setSmAppl(
+				SmServiceLookup.getMofRegistrationSO()
+						.retrieveLatestSmApplWithChildBySupplierId(reqDTO)
+						.getSmAppl());
+		assignValReqdToFalse();
+		getManagedBean().setShowGst(false);
+		SmCommonUtil
+				.redirectToPage(
+						"/xhtml/sm/govtSellerRegistration/govtSellerMaintenanceBasePage.xhtml",
+						"", null);
 	}
 
 	public String returnToSignUp() {
@@ -621,6 +643,33 @@ public class GovtSellerRegistrationBackingBean extends
 		}
 	}
 
+	public void submitMaintenance() {
+		// validate bank
+		if (getManagedBean().getSmAppl().getSmSupplierBanks().size() < 1) {
+			throw new EpException(MessageConst.ERROR_721002);
+		}
+		getInstance().validateBankInfo(
+				getManagedBean().getSmAppl().getSmSupplierBanks());
+
+		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+		reqDTO.setSmSupp(getManagedBean().getSmAppl().getSmSupplier());
+		try {
+			RegistrationResDTO resDTO = SmServiceLookup.getRegistrationSO()
+					.updateOnlineAcc(reqDTO);
+			if (resDTO.isSuccessful()) {
+				SmCommonUtil.redirectToPage(
+						"/xhtml/sm/onlinereg/outputMsg.xhtml",
+						MessageConst.INFO_721013, null);
+			} else {
+				throw new EpException(MessageConst.ERROR_721006);
+			}
+		} catch (Exception ex) {
+			throw new EpException(ex.getMessage());
+		} finally {
+			reqDTO = null;
+		}
+	}
+
 	public void initIdentificationTypes() {
 		if (SmCommonUtil.isCollectionEmpty(getManagedBean()
 				.getIdentificationTypeItems())) {
@@ -731,10 +780,8 @@ public class GovtSellerRegistrationBackingBean extends
 		SmAddress addr = (SmAddress) SerializationUtils.clone(SmApplicationUtil
 				.setDefaultAddr(null));
 		SmCompanyAddress compAddr = new SmCompanyAddress();
-		if (!SmCommonUtil.isCollectionEmpty(orgProfile
-				.getPmAddressTypes())) {
-			PmAddressType addrType = orgProfile
-					.getPmAddressTypes().get(0);
+		if (!SmCommonUtil.isCollectionEmpty(orgProfile.getPmAddressTypes())) {
+			PmAddressType addrType = orgProfile.getPmAddressTypes().get(0);
 			if (addrType.getPmAddress() != null) {
 				addr.setAddress1(addrType.getPmAddress().getAddress1());
 				addr.setAddress2(addrType.getPmAddress().getAddress2());
@@ -908,8 +955,8 @@ public class GovtSellerRegistrationBackingBean extends
 		getManagedBean().getSmPermenantAdd().getSmPersonnelAddresses()
 				.add(personnelAddPerm);
 		smPersonnel.getSmPersonnelAddresses().add(personnelAddPerm);
-		 smPersonnel.setSmAppl(getManagedBean().getSmAppl());
-		 getManagedBean().getSmAppl().getSmPersonnels().add(smPersonnel);
+		smPersonnel.setSmAppl(getManagedBean().getSmAppl());
+		getManagedBean().getSmAppl().getSmPersonnels().add(smPersonnel);
 	}
 
 	private void setSmSupplierBankBeforeSubmit() {
