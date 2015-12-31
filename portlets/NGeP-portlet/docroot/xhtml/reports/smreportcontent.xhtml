@@ -322,7 +322,7 @@
 							<p:column>
 								<table style="width: 180px;">
 									<tr style="width: 100%;">
-										<td style="width: 160px;"><p:outputLabel
+										<td style="width: 160px;"><p:outputLabel style="margin-right:-67px;"
 												value="#{lbl['lbl.rpt.supplierType']}" /> <p:outputLabel
 												value="*" styleClass="mandatory" /></td>
 
@@ -532,7 +532,16 @@
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smCompanyNameView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.cmpName']}"
-								style="margin-top:5px;width:160px;" />
+								style="margin-top:5px;width:174px;" />
+							<p:inputText maxlength="100"
+								value="#{reportBackingBean.smCompanyName}"
+								style="width:290px;">
+							</p:inputText>
+						</c:if>
+						<c:if
+							test="#{smReportBackingBean.managedBean.rptGenBean.smGenCompanyNameView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.cmpName']}"
+								style="margin-top:5px;width:209px;" />
 							<p:inputText maxlength="100"
 								value="#{reportBackingBean.smCompanyName}"
 								style="width:290px;">
@@ -890,7 +899,7 @@
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryPaymentTypeView}">
 							<p:column>
-								<table style="width: 182px;">
+								<table style="width: 197px;">
 									<tr style="width: 100%;">
 										<td style="width: 160px;"><p:outputLabel style="margin-right: -98px;"
 												value="#{lbl['lbl.rpt.paymentType']}" /> <p:outputLabel
@@ -1513,7 +1522,7 @@
 								<f:selectItems
 									value="#{smReportBackingBean.managedBean.rptGenBean.stateLst}"></f:selectItems>
 								<p:ajax event="change" partialSubmit="true"
-									update="smDistrict" />
+									update="@([id$=Msg])" />
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
@@ -1981,7 +1990,7 @@
 			test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryMofRegNoFromView}">
 			<TABLE style="margin-top: 10px; width: 50%;">
 				<TR>
-					<TD style="width: 185px;"><p:outputLabel
+					<TD style="width: 280px;"><p:outputLabel
 							value="#{lbl['lbl.rpt.mofRegNoFrom']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></TD>
 
