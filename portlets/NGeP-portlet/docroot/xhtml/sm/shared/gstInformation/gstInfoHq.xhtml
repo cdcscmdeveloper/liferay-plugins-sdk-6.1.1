@@ -38,7 +38,7 @@
 						value="#{smUpdateGstInfoBackingBean.managedBean.hqGstSupplier.gstRegNo}" required="true"
 						size="35" label="#{lbl['lbl.sm.gst.regno']}" 
 						validatorMessage="#{lbl['lbl.sm.gstNo']} - #{lbl['lbl.sm.invalidNo']}">
-						<p:ajax event="blur" process="@this"/>
+						<p:ajax event="blur" process="@this" update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 						</p:inputText>
 						<p:message id="hqGstRegNoMsg"
@@ -73,7 +73,7 @@
 							label="#{lbl['lbl.sm.gst.eff.end.date']}"
 							value="#{smUpdateGstInfoBackingBean.managedBean.hqGstSupplier.gstEndDate}"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
-							readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" 
+							readonlyInput="true" size="30" showOn="button" yearRange="-99:+10" 
 							mindate="#{CommonConstants.GST_LAUNCH_DATE}">
 							<p:ajax event="dateSelect"  update="hqGstNotEmptyPanelId" process="@this"/>
 						</p:calendar>
