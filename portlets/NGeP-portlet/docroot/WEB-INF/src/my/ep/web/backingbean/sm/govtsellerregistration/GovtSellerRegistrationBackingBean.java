@@ -6,13 +6,10 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
-import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -41,13 +38,11 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.govtsellerregistration.GovtSellerRegistrationManagedBean;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
@@ -87,19 +82,50 @@ public class GovtSellerRegistrationBackingBean extends
 	}
 
 	public void preRenderGovtSellerMaintenance() {
-		getManagedBean().setSmSupp(SmApplicationUtil.getCurrentSupplier());
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-		reqDTO.setSupplierId(getManagedBean().getSmSupp().getSupplierId());
+		reqDTO.setSupplierId(SmApplicationUtil.getCurrentSupplier()
+				.getSupplierId());
 		getManagedBean().setSmAppl(
 				SmServiceLookup.getMofRegistrationSO()
 						.retrieveLatestSmApplWithChildBySupplierId(reqDTO)
 						.getSmAppl());
+		getManagedBean()
+				.setSmSupp(getManagedBean().getSmAppl().getSmSupplier());
 		assignValReqdToFalse();
 		getManagedBean().setShowGst(false);
+		getManagedBean().setFinancialOrgLs(
+				getInstance().retrieveFinancialOrgList());
+		getManagedBean().setCountryLs(SmCommonUtil.getCountryList());
+		getManagedBean().setSelectedBranch(new SmSupplierBranch());
+		getManagedBean().getSelectedBranch().setSmAddress(
+				(SmAddress) SerializationUtils.clone(SmApplicationUtil
+						.setDefaultAddr(null)));
+		initCompanyAddressSelectItems(getManagedBean().getSmAppl()
+				.getSmCompanyBasic().getSmCompanyAddresses().get(0)
+				.getSmAddress());
+		setHqGst(getManagedBean().getSmSupp());
+		if (getManagedBean().getSmGstSupplier() != null) {
+			SmApplicationUtil.initBranchGstInformation(getManagedBean()
+					.getSmGstSupplier(), getManagedBean().getSmAppl());
+		}
+		getManagedBean().setSelectedBranches(new ArrayList<SmSupplierBranch>());
 		SmCommonUtil
 				.redirectToPage(
 						"/xhtml/sm/govtSellerRegistration/govtSellerMaintenanceBasePage.xhtml",
 						"", null);
+	}
+
+	private void setHqGst(SmSupplier supplier) {
+		getManagedBean().setSmGstSupplier(null);
+		if (!SmCommonUtil.isCollectionEmpty(supplier.getSmGstSuppliers())) {
+			for (SmGstSupplier gst : supplier.getSmGstSuppliers()) {
+				if (gst.getIsCurrent()
+						&& StringUtils.isNotBlank(gst.getGstRegNo())
+						&& gst.getBranchCode() == null) {
+					getManagedBean().setSmGstSupplier(gst);
+				}
+			}
+		}
 	}
 
 	public String returnToSignUp() {
