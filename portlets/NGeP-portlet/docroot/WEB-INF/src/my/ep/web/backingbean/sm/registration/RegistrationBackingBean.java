@@ -80,6 +80,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sm.govtsellerregistration.GovtSellerRegistrationBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.registration.RegistrationManagedBean;
@@ -113,7 +114,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	private static String basicAccDeactivation = "/xhtml/sm/basicaccountdeactivation/basicAccountDeactivationDet.xhtml";
 	private static String acknowledgement = "/xhtml/sm/onlinereg/outputMsg.xhtml";
 	private static String g2gRegistration = "/xhtml/sm/govtSellerRegistration/preRenderGovtSeller.xhtml?faces-redirect=true";
-	private static String g2gMaintenance = "/xhtml/sm/govtSellerRegistration/preRenderGovtSellerMaintenance.xhtml";
 	
 	private static String defaultAccPurpose = "P";
 	private static Map<Long, Object> bizNatureL5Map;
@@ -1207,6 +1207,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 */
 	public void viewOnlineAccount() {
 		log.info("--------------------viewOnlineAccount----------------" + MDC.get(LogKey.USER_ID));
+		FacesContext fc = FacesContext.getCurrentInstance();
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 
 		if(pmUser.getUserId().longValue() != 1 || pmUser == null){
@@ -1221,7 +1222,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			
 			//for govt seller basic account maintenance
 			if(smSupp.getBusinessType().equals("Q")){
-				SmCommonUtil.redirectToPage(g2gMaintenance, null, null);
+				GovtSellerRegistrationBackingBean govtSellerRegistrationBackingBean = new GovtSellerRegistrationBackingBean();
+				govtSellerRegistrationBackingBean.preRenderGovtSellerMaintenance();
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/govtSellerRegistration/govtSellerMaintenanceBasePage.xhtml");
 			}else{
 				log.info("-------smResDTO-------" + smSupp.getSupplierId()); 
 
@@ -1286,17 +1289,15 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				SmGstSupplier gstSupp = SmCommonUtil.getSmGstSupplierBySupplierIdAndBranchCode(resDTO.getSmSupp().getSupplierId(), null, null,true);
 				getManagedBean().setSmGstSupplier(gstSupp);
 
-				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceDet.xhtml");
 			}
 			
 		}else{
-			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+			fc.addMessage(null,new FacesMessage(
 					FacesMessage.SEVERITY_ERROR,
 					null,
 					MessageUtils.getMessage(MessageConst.ERROR_721017, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			
-			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlinereg/outputMsg.xhtml");
 
 		}
