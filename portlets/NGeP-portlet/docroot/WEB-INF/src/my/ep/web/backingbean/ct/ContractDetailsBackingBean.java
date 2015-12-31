@@ -63,6 +63,7 @@ import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtContractAmount;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
+import my.ep.persistence.entity.ct.dtl.CtPidReason;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
 import my.ep.persistence.entity.ct.dtl.CtSchedule;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
@@ -561,6 +562,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
          	if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
          		ctBB.scheduleProgressiveDate();
          	}
+         	
+         	if(!ctBB.getManagedBean().getContractVer().getCtContractValue().isPid()){
+         		ctBB.getManagedBean().getContractVer().setCtPidReasons(null);
+         	}
+         	
          	reqDTO.setCtContract(ctBB.getManagedBean().getContractVer().getCtContract());
          	CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
          	
@@ -660,6 +666,23 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
  			}
  		}
 		
+		if(ctBB.getManagedBean().getContractVer().getCtPidReasons() != null && ctBB.getManagedBean().getContractVer().getCtPidReasons().size() > 0 ){
+			for(CtPidReason reason : ctBB.getManagedBean().getContractVer().getCtPidReasons()){
+				   if(reason.getPmReason() == null || reason.getPmReason().getReasonId() == null){
+					   throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				   }
+				   if(ctBB.typeOfPidPurchase(reason.getPmReason().getReasonId())){
+					   if(reason.getReasonDesc().isEmpty()){
+						   throw new EpException(MessageConst.ERROR_100022, 
+									new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason.desc", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					   }
+				   }
+			}
+		}
+	
 		if(ctBB.getManagedBean().getContractVer().getCtDeductions() != null && ctBB.getManagedBean().getContractVer().getCtDeductions().size() > 0){
 			  for(CtDeduction deduction : ctBB.getManagedBean().getContractVer().getCtDeductions()){
 				   if(deduction.getDeductionType() == null ||deduction.getDeductionType().getParameterId() == null ){
