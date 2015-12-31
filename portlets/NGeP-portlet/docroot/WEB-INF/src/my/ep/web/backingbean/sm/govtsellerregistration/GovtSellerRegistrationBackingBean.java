@@ -99,6 +99,7 @@ public class GovtSellerRegistrationBackingBean extends
 				getInstance().retrieveFinancialOrgList());
 		getManagedBean().setCountryLs(SmCommonUtil.getCountryList());
 		getManagedBean().setSelectedBranch(new SmSupplierBranch());
+		getManagedBean().getSelectedBranch().setSmPersonnel(new SmPersonnel());
 		getManagedBean().getSelectedBranch().setSmAddress(
 				(SmAddress) SerializationUtils.clone(SmApplicationUtil
 						.setDefaultAddr(null)));
@@ -282,8 +283,8 @@ public class GovtSellerRegistrationBackingBean extends
 	 */
 	public void assignSelBranch(SmSupplierBranch branchBean) {
 		initBranchAddressSelectItems(branchBean.getSmAddress());
-		if (getManagedBean().isShowBranchPointOfContact()
-				&& branchBean.getSmPersonnel() == null) {
+		if (branchBean.getSmPersonnel() == null
+				&& getManagedBean().isShowBranchPointOfContact()) {
 			branchBean.setSmPersonnel(new SmPersonnel());
 		}
 		if (branchBean.getGst() == null) {
@@ -308,6 +309,9 @@ public class GovtSellerRegistrationBackingBean extends
 		br.setSmAddress((SmAddress) SerializationUtils.clone(SmApplicationUtil
 				.setDefaultAddr(null)));
 		br.setSmAppl(getManagedBean().getSmAppl());
+		if (getManagedBean().isShowBranchPointOfContact()) {
+			br.setSmPersonnel(new SmPersonnel());
+		}
 		getManagedBean().setBranchCompanyStates(
 				SmCommonUtil.getStateList(getManagedBean().getSelectedBranch()
 						.getSmAddress().getPmCountry().getCountryId()));
