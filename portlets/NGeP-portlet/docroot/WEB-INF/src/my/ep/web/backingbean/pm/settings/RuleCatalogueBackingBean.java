@@ -1293,7 +1293,7 @@ public class RuleCatalogueBackingBean extends
 					// next
 					// record\
 					continue;
-				} else if (ruleType.getRangeType() == 1
+				} else if ((ruleType.getRangeType() == 1 || ruleType.getRangeType() == 2)
 						&& baseValueToCompare.isError()) {// to value can not be
 															// less than from
 															// value
@@ -1308,7 +1308,7 @@ public class RuleCatalogueBackingBean extends
 					if (value.getRecordStatusFlg() == 0) {// if is inActive one
 						// go to next record
 						continue;
-					} else if (ruleType.getRangeType() == 1 && value.isError()) { // to
+					} else if ((ruleType.getRangeType() == 1 || ruleType.getRangeType() == 2)&& value.isError()) { // to
 																					// value
 																					// can
 																					// not
@@ -1485,9 +1485,9 @@ public class RuleCatalogueBackingBean extends
 		boolean validationResult = false;
 		boolean isValuesEqual = false;
 		if (ruleType.getValidationType() == '1'
-				&& !(ruleType.getRangeType() == 1 && firstRuleValue
+				&& (ruleType.getRangeType() == 2 || !(ruleType.getRangeType() == 1 && firstRuleValue
 						.getGroupValueId().equals(
-								secondRuleValue.getGroupValueId()))) {// EffectiveDate
+								secondRuleValue.getGroupValueId())))) {// EffectiveDate
 																		// validation
 																		// //
 																		// don't
@@ -1501,11 +1501,12 @@ public class RuleCatalogueBackingBean extends
 			validationResult = !isDateOverlaped(firstRuleValue.getEffDate(),
 					firstRuleValue.getExpDate(), secondRuleValue.getEffDate(),
 					secondRuleValue.getExpDate());
-		} else if (ruleType.getValidationType() == '2'
-				|| ruleType.getValidationType() == '3'
-				&& !(ruleType.getRangeType() == 1 && firstRuleValue
+		
+		} else if ((ruleType.getValidationType() == '2'
+				|| ruleType.getValidationType() == '3')
+				&& (ruleType.getRangeType() != 2 && !(ruleType.getRangeType() == 1 && firstRuleValue
 						.getGroupValueId().equals(
-								secondRuleValue.getGroupValueId()))) {// EffectiveDate
+								secondRuleValue.getGroupValueId())))) {// EffectiveDate
 			// +value
 			// validation
 
@@ -1743,15 +1744,17 @@ public class RuleCatalogueBackingBean extends
 
 	public void isDateOverlappedForDesignatedArea(
 			List<PmDaValidity> daValidities) {
-		// log.info("..............isDateOverlappedForDesignatedArea................");
+		 log.info("..............isDateOverlappedForDesignatedArea................");
 		boolean result = false;
 
 		for (int i = 0; i < daValidities.size(); i++) {
 			PmDaValidity baseDa = daValidities.get(i);
-
+			log.info(".............baseDa.getDesignatedArea().getLocationType()"+baseDa.getDesignatedArea().getLocationType());
+			log.info(".............baseDa.getDesignatedArea().getLocationId()"+baseDa.getDesignatedArea().getLocationId());
 			for (int j = i + 1; j <= (daValidities.size() - 1); j++) {
 				PmDaValidity da = daValidities.get(j);
-
+				log.info(".............da.getDesignatedArea().getLocationType()"+da.getDesignatedArea().getLocationType());
+				log.info(".............da.getDesignatedArea().getLocationId()"+da.getDesignatedArea().getLocationId());
 				if (da.getDesignatedArea().getLocationType() == baseDa
 						.getDesignatedArea().getLocationType()
 						&& da.getDesignatedArea().getLocationId() == baseDa
@@ -1761,6 +1764,7 @@ public class RuleCatalogueBackingBean extends
 							baseDa.getEffDate(), baseDa.getExpDate());
 
 				}
+				log.info("....result="+result);
 
 				if (result == true) {
 					// hit error and return
@@ -2709,6 +2713,7 @@ public class RuleCatalogueBackingBean extends
 	public void addNewRuleTypeValue() {
 		log.info("*****addNewRuleTypeValue*****");
 		log.debug("*****addNewRuleTypeValue*****");
+		if(this.getManagedBean().getSelectedRuleType() != null){
 		PmConfigRuleValue newRuleValue = new PmConfigRuleValue();
 		newRuleValue.setRuleType(this.getManagedBean().getSelectedRuleType());
 		newRuleValue.setEffDate(this.getManagedBean().getTomorrow());
@@ -2743,6 +2748,7 @@ public class RuleCatalogueBackingBean extends
 				.add(index, newRuleValue);
 		RequestContext.getCurrentInstance().execute(
 				"ruleValueTblWidget.paginator.endLink.click()");
+		}
 
 	}
 

@@ -275,8 +275,8 @@
 							for="catCodeDescId" showSummary="true" showDetail="false"
 							display="icon" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.pm.facility.type']}" />
-						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu id="facilityTypeId" required="true" label="#{lbl['lbl.pm.facility.type']}"
+						</td>
+					<td><p:selectOneMenu id="facilityTypeId" required="#{categoryBackingBean.managedBean.facilityTypeChoosable}" label="#{lbl['lbl.pm.facility.type']}"
 					       disabled="#{!categoryBackingBean.managedBean.facilityTypeChoosable}"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.facilityType}"
 							style="width:100px;">
