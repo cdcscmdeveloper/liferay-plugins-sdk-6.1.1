@@ -1755,11 +1755,9 @@ public class RuleCatalogueBackingBean extends
 				PmDaValidity da = daValidities.get(j);
 				log.info(".............da.getDesignatedArea().getLocationType()"+da.getDesignatedArea().getLocationType());
 				log.info(".............da.getDesignatedArea().getLocationId()"+da.getDesignatedArea().getLocationId());
-				if (da.getDesignatedArea().getLocationType() == baseDa
-						.getDesignatedArea().getLocationType()
-						&& da.getDesignatedArea().getLocationId() == baseDa
-								.getDesignatedArea().getLocationId()) {
-
+				if (da.getDesignatedArea().getLocationType().equals(baseDa.getDesignatedArea().getLocationType())
+						&& (da.getDesignatedArea().getLocationId().equals(baseDa.getDesignatedArea().getLocationId()))) {
+          
 					result = isDateOverlaped(da.getEffDate(), da.getExpDate(),
 							baseDa.getEffDate(), baseDa.getExpDate());
 
@@ -2654,7 +2652,7 @@ public class RuleCatalogueBackingBean extends
 		//
 		// }
 
-		if (index < this.getManagedBean().getSelectedRuleType()
+		if (this.getManagedBean().getSelectedRuleType().getRangeType() == 1 &&  index < this.getManagedBean().getSelectedRuleType()
 				.getConfigRuleValues().size() - 1) {
 			PmConfigRuleValue rulevalue = this.getManagedBean()
 					.getSelectedRuleType().getConfigRuleValues().get(index + 1);
@@ -2667,6 +2665,7 @@ public class RuleCatalogueBackingBean extends
 						.getToValue().add(new BigDecimal(1)));
 			}
 		}
+		
 		PmConfigRuleValue selectedValue = this.getManagedBean()
 				.getSelectedRuleType().getConfigRuleValues().get(index);
 		if (selectedValue.getFromValue() != null
