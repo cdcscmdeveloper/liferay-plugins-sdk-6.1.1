@@ -89,7 +89,30 @@
 			  	               <h:outputText value="#{lbl['lbl.ct.panel.dp']}"  />
 			  	           </h:panelGrid>
 			          		 
-			               <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" styleClass="required" />
+			               <f:verbatim/>
+			              <h:panelGrid columns="3">
+			                  <p:selectBooleanCheckbox disabled="#{panelBackingBean.managedBean.viewContract}" 
+			                       value="#{panelBackingBean.managedBean.circularVer.pid}"  style="text-align:top;">
+			                       <p:ajax event="change"  update=":form:groupPaneId" process="@this"></p:ajax>
+			                   </p:selectBooleanCheckbox>
+			                   <p:spacer width="2" />	
+			                    <h:panelGrid columns="2">
+			  	                    <h:outputText value="#{lbl['lbl.ct.pid']}"  />
+			  	                    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.pid']}" />
+			  	                </h:panelGrid>
+			  	           </h:panelGrid>
+			  	            
+			  	             <f:verbatim/>
+			                <h:panelGrid columns="3">
+		         	       <p:selectBooleanCheckbox disabled="#{panelBackingBean.managedBean.viewContract}"
+		         	           value="#{panelBackingBean.managedBean.circularVer.qt}" style="text-align:top;">
+				           </p:selectBooleanCheckbox>
+			               <p:spacer width="2" />	
+			  	          <h:outputText value="#{lbl['lbl.ct.panel.qt']}"  />   
+			  	      </h:panelGrid>    
+			        </h:panelGrid>
+			         <h:panelGrid columns="2" columnClasses="columnWidth200">    
+				          <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" styleClass="required" />
 		                   <h:panelGroup id="uploadCircularPg">
 				   	            <p:commandButton rendered="#{panelBackingBean.managedBean.circularVer.circularFileName == null}"
 						            update="uploadCircularPg, uploadCircularDlg" action="#{panelBackingBean.setPanelDetailsValue()}" 
@@ -102,16 +125,8 @@
 			   				          <h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 			 	                 </p:commandLink>				
 			  	            </h:panelGroup>
-			  	            
-			  	             <f:verbatim/>
-			                <h:panelGrid columns="3">
-		         	       <p:selectBooleanCheckbox disabled="#{panelBackingBean.managedBean.viewContract}"
-		         	           value="#{panelBackingBean.managedBean.circularVer.qt}" style="text-align:top;">
-				           </p:selectBooleanCheckbox>
-			               <p:spacer width="2" />	
-			  	          <h:outputText value="#{lbl['lbl.ct.panel.qt']}"  />   
-			  	      </h:panelGrid>    
-			        </h:panelGrid>
+			  	          </h:panelGrid>
+			  	         
 			   
 			      <p:dialog id="uploadCircularDlg" widgetVar="uploadCircularDlg" 
 	                       modal="true" width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
