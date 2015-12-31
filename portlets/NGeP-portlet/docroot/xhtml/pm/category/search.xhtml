@@ -129,7 +129,7 @@
 					<td><p:outputLabel style="float: right:width: 15%"
 							value="#{lbl['lbl.pm.sub.category.desc']}"
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2 || categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
-					<td><p:inputText style="width: 361px;"
+					<td><p:inputText style="width : auto !important"
 							value="#{categoryBackingBean.managedBean.subCatDesc}" size="50"
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2 || categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
 						
@@ -149,7 +149,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.sub.div.code']}"
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
-					<td><p:inputText 
+					<td><p:inputText style="width : auto !important"
 							value="#{categoryBackingBean.managedBean.subDivCode}" size="27"
 							maxlength="2"
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
