@@ -516,7 +516,7 @@
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smRegistrationTypeTwoView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.rgstType']}"
-								style="margin-top:5px;width:160px;" />
+								style="margin-top:5px;width:175px;" />
 							<p:selectOneMenu value="#{reportBackingBean.smRegistrationType}"
 								style="margin-top:5px;width:300px;">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.regBasic']}"
@@ -532,7 +532,7 @@
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smCompanyNameView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.cmpName']}"
-								style="margin-top:5px;width:174px;" />
+								style="margin-top:5px;width:174px;margin-left: -83px;" />
 							<p:inputText maxlength="100"
 								value="#{reportBackingBean.smCompanyName}"
 								style="width:290px;">
@@ -657,7 +657,7 @@
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smApplicationNoView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.applicationNo']}"
-								style="margin-top:5px;width:176px;" />
+								style="margin-top:5px;width:218px;" />
 							<p:inputText maxlength="16"
 								value="#{reportBackingBean.smApplicationNo}"
 								style="margin-top:5px;width:290px;">
@@ -1038,9 +1038,9 @@
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryReportTypeView}">
 							<p:column>
-								<table style="width: 182px;">
+								<table style="width: 196px;">
 									<tr style="width: 100%;">
-										<td style="width: 160px;"><p:outputLabel
+										<td style="width: 160px;"><p:outputLabel style="margin-right: -83px;"
 												value="#{lbl['lbl.rpt.reportType']}" /> <p:outputLabel
 												value="*" styleClass="mandatory" /></td>
 
@@ -1170,7 +1170,7 @@
 							<p:outputLabel value="*" styleClass="mandatory"
 								style="margin-right: -250px; margin-top: 10px;" />
 							<p:outputLabel value="#{lbl['lbl.rpt.code']}"
-								style="margin-top:5px;width:59px;" />
+								style="margin-top:5px;width:65px;" />
 							<p:selectOneMenu value="#{reportBackingBean.smCode}"
 								style="margin-top:5px;width:300px;">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.codeOne']}"
@@ -1680,7 +1680,7 @@
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smReceiptNoView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.receiptno']}"
-								style="margin-top:5px;width:218px;" />
+								style="margin-top:5px;width:331px;" />
 							<p:inputText maxlength="100"
 								value="#{reportBackingBean.smReceiptNo}"
 								style="margin-top:5px;width:290px;">
@@ -2077,7 +2077,7 @@
 						test="#{smReportBackingBean.managedBean.rptGenBean.smPaidAccmltdShareCptlSelView}">
 						<TD><p:outputLabel
 								value="#{lbl['lbl.rpt.paidaccumulatedshare']}"
-								style="margin-right:2px;width:151px;" /></TD>
+								style="margin-right:2px;width:158px;" /></TD>
 					</c:if>
 					<TD><p:inputText maxlength="40"
 							value="#{reportBackingBean.smBusPaidUpCapitalFrm}"
@@ -2359,12 +2359,12 @@
 						test="#{reportBackingBean.managedBean.rptGenBean.smPendingSubmissionDateView}">
 						<TD><p:outputLabel
 								value="#{lbl['lbl.rpt.appl.submissiondatefrom']}"
-								style="width:150px;" /></TD>
+								style="width:219px;margin-left: -70px;" /></TD>
 					</c:if>
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.smActSubmisAllDateView}">
 						<TD><p:outputLabel value="#{lbl['lbl.rpt.subactdatefrom']}"
-								style="width:148px;" /></TD>
+								style="width:224px;margin-left:-75px" /></TD>
 					</c:if>
 					<TD><p:calendar showOn="button" navigator="true"
 							display="inline" readonlyInput="true"
