@@ -48,6 +48,7 @@ import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
@@ -73,6 +74,7 @@ import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
@@ -90,6 +92,7 @@ import my.ep.persistence.entity.ct.circular.CtCancelCircularReq;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.dtl.CtCancelCircular;
+import my.ep.persistence.entity.ct.circular.dtl.CtCircularPidReason;
 import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
@@ -101,6 +104,8 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmReason;
+import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmUom;
@@ -112,6 +117,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
+import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
@@ -454,6 +460,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				new LogKey(getFacesScopes().getUserSessionBean().getUserId());
 			  }
 			
+			  if(!getManagedBean().getCircularVer().isPid()){
+				  getManagedBean().getCircularVer().setCtCircularPidReason(null);
+			  }
+			  
 			CtCircular circular = getManagedBean().getCircular();
 			if(circular==null){
 				circular = new CtCircular();
@@ -638,6 +648,24 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					  && getManagedBean().getCircularVer().isDirectNego() && getManagedBean().getCircularVer().isQt()){
 					 throw new EpException(MessageConst.ERROR_100022,  new String[]{"CheckBox"});
 				 }
+			}
+			
+			if(getManagedBean().getCircularVer().getCtCircularPidReason() != null 
+					 && getManagedBean().getCircularVer().getCtCircularPidReason().size() > 0 ){
+				for(CtCircularPidReason reason : getManagedBean().getCircularVer().getCtCircularPidReason()){
+					   if(reason.getPmReason() == null || reason.getPmReason().getReasonId() == null){
+						   throw new EpException(MessageConst.ERROR_100022, 
+									new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					   }
+					   if(typeOfPidPurchase(reason.getPmReason().getReasonId())){
+						   if(reason.getReasonDesc().isEmpty()){
+							   throw new EpException(MessageConst.ERROR_100022, 
+										new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason.desc", 
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						   }
+					   }
+				}
 			}
 			
 			if (getManagedBean().getCircularVer().getCtContactPersons() != null 
@@ -2288,5 +2316,83 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public void deleteAttachFile(){
 		getManagedBean().getCircularVer().setCircularFileName(null);
 		getManagedBean().getCircularVer().setCircularFilePath(null);
+	}
+	
+	/**
+	 * This method used to retrieve 
+	 * deduction type from database 
+	 * @return menu item, List of deduction types
+	 */
+	public SelectItem[] getDropdownPidCodeValues() {
+		
+		    SelectItem[] items = null;
+		    ReasonReqDTO reqDTO = null;
+		    IReasonSO reasonSO = null;
+		    List<PmReasonDesc> list = null;
+		    int i = 1;
+		    try {
+			        reqDTO = new ReasonReqDTO();
+			        reqDTO.setReasonCategory(ReasonCategory.PID_JUSTIFICATION.value());
+			        reqDTO.setLanguage(getFacesScopes().getUserLocale().getLanguage());
+			        reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IReasonSO.class);
+			        list = reasonSO.retrieveReasonDescListByCategory(reqDTO).getReasonDescList();
+			        items = new SelectItem[list.size() + 1];
+			        items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+				     	"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
+		         	for (PmReasonDesc reasonDesc : list) {
+				          items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc());
+			        }
+		     } catch (Exception e) {
+			        e.printStackTrace();
+			        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		     } finally {
+		    	    reqDTO = null;
+				    reasonSO = null;
+				    list = null;
+		     }
+	    return items;
+	}
+	
+	public void addPurchaseInDefault(){
+		CtCircularPidReason ctCircularPidReasons = new CtCircularPidReason();
+		ctCircularPidReasons.setPmReason(new PmReason());
+		getManagedBean().getCircularVer().getCtCircularPidReason().add(ctCircularPidReasons);
+	}
+	
+	public void deletePidPurchase(){
+		try {
+			getManagedBean().getCircularVer().getCtCircularPidReason().removeAll(getManagedBean().getCtCircularPidReasons());
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	}
+	
+	public boolean typeOfPidPurchase(Long reasonId){
+		
+		if(reasonId == null || reasonId.intValue() == 0)
+		return false;
+		
+		ReasonReqDTO reqDTO = null;
+		IReasonSO reasonSO = null;
+		PmReason pmReason = null;
+		try {
+				 reqDTO = new ReasonReqDTO();
+				 reqDTO.setReasonId(reasonId);
+				 reqDTO.setLanguage(getFacesScopes().getUserLocale().getLanguage());
+		         reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IReasonSO.class);
+		         pmReason = reasonSO.retrieveReasonById(reqDTO).getPmReason();
+		         if(pmReason.getReasonCode().equalsIgnoreCase("O")){
+			          return true;
+		         }
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		} finally{
+			 reqDTO = null;
+			reasonSO = null;
+			pmReason = null;
+		}
+		return false;
 	}
 }

@@ -45,6 +45,7 @@ import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.dtl.IContractZoneSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
+import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
@@ -63,6 +64,7 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
+import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -77,6 +79,7 @@ import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.ct.dtl.CtContractAmount;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
+import my.ep.persistence.entity.ct.dtl.CtPidReason;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
 import my.ep.persistence.entity.ct.dtl.CtSchedule;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
@@ -93,6 +96,8 @@ import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmReason;
+import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
@@ -102,6 +107,7 @@ import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -2306,4 +2312,83 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			    	ctBondAttch.setFilePath(null);
 			    	getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(getManagedBean().getIndex(), ctBondAttch);
 			    }
+			    
+			    /**
+				 * This method used to retrieve 
+				 * deduction type from database 
+				 * @return menu item, List of deduction types
+				 */
+				public SelectItem[] getDropdownPidCodeValues() {
+					
+					    SelectItem[] items = null;
+					    ReasonReqDTO reqDTO = null;
+					    IReasonSO reasonSO = null;
+					    List<PmReasonDesc> list = null;
+					    int i = 1;
+					    try {
+						        reqDTO = new ReasonReqDTO();
+						        reqDTO.setReasonCategory(ReasonCategory.PID_JUSTIFICATION.value());
+						        FacesScopes facesScopes = new FacesScopes();
+						        reqDTO.setLanguage(facesScopes.getUserLocale().getLanguage());
+						        reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IReasonSO.class);
+						        list = reasonSO.retrieveReasonDescListByCategory(reqDTO).getReasonDescList();
+						        items = new SelectItem[list.size() + 1];
+						        items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+							     	"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()));
+					         	for (PmReasonDesc reasonDesc : list) {
+							          items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc());
+						        }
+					     } catch (Exception e) {
+						        e.printStackTrace();
+						        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+					     } finally {
+					    	    reqDTO = null;
+							    reasonSO = null;
+							    list = null;
+					     }
+				    return items;
+				}
+				
+				public void addPurchaseInDefault(){
+					CtPidReason ctPidReasons = new CtPidReason();
+					ctPidReasons.setPmReason(new PmReason());
+					getManagedBean().getContractVer().getCtPidReasons().add(ctPidReasons);
+				}
+				
+				public void deletePidPurchase(){
+					try {
+						getManagedBean().getContractVer().getCtPidReasons().removeAll(getManagedBean().getSelectedPidReason());
+					} catch (Exception e) {
+						e.printStackTrace();
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+					}
+				}
+				
+				public boolean typeOfPidPurchase(Long reasonId){
+					
+					if(reasonId == null || reasonId.intValue() == 0)
+					return false;
+					
+					ReasonReqDTO reqDTO = null;
+					IReasonSO reasonSO = null;
+					PmReason pmReason = null;
+					try {
+							 reqDTO = new ReasonReqDTO();
+							 reqDTO.setReasonId(reasonId);
+							 reqDTO.setLanguage("en");
+					         reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IReasonSO.class);
+					         pmReason = reasonSO.retrieveReasonById(reqDTO).getPmReason();
+					         if(pmReason != null && pmReason.getReasonCode().equalsIgnoreCase("O")){
+						          return true;
+					         }
+					} catch (Exception e) {
+						e.printStackTrace();
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+					} finally{
+						 reqDTO = null;
+						reasonSO = null;
+						pmReason = null;
+					}
+					return false;
+				}
 }
