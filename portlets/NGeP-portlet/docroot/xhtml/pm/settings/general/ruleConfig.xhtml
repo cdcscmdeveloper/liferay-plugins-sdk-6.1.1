@@ -286,7 +286,7 @@
 						actionListener="#{ruleCatalogueBackingBean.updateErrorDialog(index)}"
 						update=":form:settingTabId:ruleTypeValueTableID :form:settingTabId:errorDialog"
 						oncomplete="errorDialog.show();"
-						rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType == 1 and (typeValueObj.fromValue >= typeValueObj.toValue)}">
+						rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType == 1 or ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType == 2) and typeValueObj.fromValue >= typeValueObj.toValue}">
 						<f:param name="index" value="#{index}"></f:param>
 						<p:graphicImage value="/css/images/design/icon_error.png"></p:graphicImage>
 					</p:commandLink>
