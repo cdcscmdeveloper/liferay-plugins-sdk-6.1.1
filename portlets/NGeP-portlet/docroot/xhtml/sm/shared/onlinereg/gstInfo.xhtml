@@ -15,7 +15,8 @@
 						<p:inputText id="gstRegNo"  maxlength="12"
 							value="#{registrationBackingBean.managedBean.smGstSupplier.gstRegNo}"
 							size="30" label="#{lbl['lbl.sm.gst.regno']}">
-							<p:ajax event="blur" update="pnlGstInfo" listener="#{registrationBackingBean.validateGstRegNo}" />
+							<p:ajax event="blur" update="pnlGstInfo" listener="#{registrationBackingBean.validateGstRegNo}" 
+								partialSubmit="true" process="@this"/>
 						</p:inputText>
 					</td>
 				</tr>
@@ -32,6 +33,7 @@
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline" beforeShowDay="beforeShowDate" 
 							disabled="#{!registrationBackingBean.managedBean.gstFlag}"
 							readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" maxdate="#{CommonConstants.CURRENT_DATE}">
+							<p:ajax event="dateSelect" process="@this" partialSubmit="true"/>
 						</p:calendar>
 					</td>
 					<td>&#160;</td>
@@ -50,6 +52,7 @@
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"  
 							disabled="#{!registrationBackingBean.managedBean.gstFlag}"
 							readonlyInput="true" size="30" showOn="button">
+							<p:ajax event="dateSelect" process="@this" partialSubmit="true"/>
 						</p:calendar>
 					</td>
 					<td>&#160;</td>

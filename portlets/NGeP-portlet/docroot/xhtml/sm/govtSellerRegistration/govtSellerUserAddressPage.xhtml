@@ -1,0 +1,119 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<script type="application/javascript">
+			$(document).ready(function(e){
+				  $("input[id$=txtPermAdd1]").keydown(function(e){
+					if(e.which==9 || e.keycode==9){
+						$("input[id$=txtPermAdd2]").focus();
+						e.preventDefault();
+					}
+				  });
+				  $("input[id$=txtPermAdd2]").keydown(function(e){
+					 if(e.which==9 || e.keycode==9){
+						$("input[id$=txtPermAdd3]").focus();
+						e.preventDefault();
+					} 
+				  });
+				  $("input[id$=txtPermAdd3]").keydown(function(e){
+					 if(e.which==9 || e.keycode==9){
+						$("input[id$=txtPermAdd4]").focus();
+						e.preventDefault();
+					} 
+				  });
+				  $("input[id$=txtPermAdd4]").keydown(function(e){
+					 if(e.which==9 || e.keycode==9){
+						$("input[id$=cmbPermCounrty_focus]").focus();
+						e.preventDefault();
+					} 
+				  });
+				  $("input[id$=cmbPermCounrty_focus]").keydown(function(e){
+					 if(e.which==9 || e.keycode==9){
+						$("input[id$=cmbPermState_focus]").focus();
+						e.preventDefault();
+					} 
+				  });
+				  $("input[id$=cmbPermState_focus]").keydown(function(e){
+					 if(e.which==9 || e.keycode==9){
+						$("input[id$=cmbPermDistrict_focus]").focus();
+						e.preventDefault();
+					} 
+				  });
+				  $("input[id$=cmbPermDistrict_focus]").keydown(function(e){
+					 if(e.which==9 || e.keycode==9){
+						$("input[id$=cmbPermCity_focus]").focus();
+						e.preventDefault();
+					} 
+				  });
+				  $("input[id$=cmbPermCity_focus]").keydown(function(e){
+					 if(e.which==9 || e.keycode==9){
+						$("input[id$=txtPermPostcodeMy]").focus();
+						e.preventDefault();
+					} 
+				  });
+				  
+				  $("input[id$=usrEmail]").bind("cut copy paste",function(e) {
+			          e.preventDefault();
+			      });
+				  
+				  $("input[id$=conEmail]").bind("cut copy paste",function(e) {
+			          e.preventDefault();
+			      });
+				  
+				  $("input[id$=conAddress1]").keydown(function(e){
+						if(e.which==9 || e.keycode==9){
+							$("input[id$=conAddress2]").focus();
+							e.preventDefault();
+					}
+				  });
+				  $("input[id$=conAddress2]").keydown(function(e){
+					 if(e.which==9 || e.keycode==9){
+						$("input[id$=conAddress3]").focus();
+						e.preventDefault();
+					} 
+				  });
+				  $("input[id$=conAddress3]").keydown(function(e){
+					 if(e.which==9 || e.keycode==9){
+						$("input[id$=conAddress4]").focus();
+						e.preventDefault();
+					} 
+				  });
+				  $("input[id$=conAddress4]").keydown(function(e){
+					 if(e.which==9 || e.keycode==9){
+						$("input[id$=cmbResState_focus]").focus();
+						e.preventDefault();
+					} 
+				  });
+				  $("input[id$=cmbResState_focus]").keydown(function(e){
+					 if(e.which==9 || e.keycode==9){
+						$("input[id$=cmbResDistrict_focus]").focus();
+						e.preventDefault();
+					} 
+				  });
+				  $("input[id$=cmbResDistrict_focus]").keydown(function(e){
+					 if(e.which==9 || e.keycode==9){
+						$("input[id$=cmbResCity_focus]").focus();
+						e.preventDefault();
+					} 
+				  });
+				  $("input[id$=cmbResCity_focus]").keydown(function(e){
+					 if(e.which==9 || e.keycode==9){
+						$("input[id$=conPostCode]").focus();
+						e.preventDefault();
+					} 
+				  });
+				  $("input[id$=conPostCode]").keydown(function(e){
+					 if(e.which==9 || e.keycode==9){
+						$("input[id$=txtPhoneNoId]").focus();
+						e.preventDefault();
+					} 
+				  });
+			});
+	</script>
+
+</ui:composition>
