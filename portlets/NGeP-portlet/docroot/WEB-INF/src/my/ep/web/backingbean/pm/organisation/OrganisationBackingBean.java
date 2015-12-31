@@ -34,7 +34,6 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
-import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -90,6 +89,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.OrganisationSearchBean;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.pm.organisation.OrganisationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -2259,7 +2259,8 @@ public class OrganisationBackingBean extends
 			SupplierGstResDTO suppGstResDTO = supplierGstSO.retrieveGstInfoByGstRegNo(reqDTO);
 			if(suppGstResDTO.getGstList() != null && !suppGstResDTO.getGstList().isEmpty()){
 				for(SmGstSupplier gst : suppGstResDTO.getGstList()){
-					if(SupplierManagementConst.BUSINESS_TYPE_PTJ.equals(gst.getSmSupplier().getBusinessType())){
+					// validate against PTJ supplier
+					if(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI_LAIN2.equals(gst.getSmSupplier().getBusinessType())){
 						PmOrgProfile ministry1 = retrieveMinistryOrgProfile(getManagedBean().getOrgProfile().getOrgProfileId());
 						PmOrgProfile ministry2 = retrieveMinistryOrgProfile(gst.getSmSupplier().getSupplierId());
 						if(ministry1 != null && ministry2 !=null ){
@@ -2268,6 +2269,10 @@ public class OrganisationBackingBean extends
 								break;
 							}							
 						}						
+					}else{
+						// validate unique gst number against supplier other than PTJ (Govt seller)
+						valid = false;
+						break;
 					}
 				}
 			}
