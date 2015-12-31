@@ -365,7 +365,10 @@ public class ReportsGenerateBean {
 	private boolean smNoOfCategoryView = false;
 
 	/** The sm main category view. */
-	private boolean smMainCategoryView = false;
+	private boolean smMainCategoryView = false;	
+	
+	/** The sm gen company name view. */
+	private boolean smGenCompanyNameView=false;
 
 	/** The sm sub category view. */
 	private boolean smSubCategoryView = false;
@@ -15624,5 +15627,24 @@ public class ReportsGenerateBean {
 	 */
 	public void setSmBusPaidUpCapitalToByVar(String smBusPaidUpCapitalToByVar) {
 		this.smBusPaidUpCapitalToByVar = smBusPaidUpCapitalToByVar;
+	}
+
+	/**
+	 * Checks if is sm gen company name view.
+	 * 
+	 * @return the smGenCompanyNameView
+	 */
+	public boolean isSmGenCompanyNameView() {
+		return smGenCompanyNameView;
+	}
+
+	/**
+	 * Sets the sm gen company name view.
+	 * 
+	 * @param smGenCompanyNameView
+	 *            the smGenCompanyNameView to set
+	 */
+	public void setSmGenCompanyNameView(boolean smGenCompanyNameView) {
+		this.smGenCompanyNameView = smGenCompanyNameView;
 	}
 }

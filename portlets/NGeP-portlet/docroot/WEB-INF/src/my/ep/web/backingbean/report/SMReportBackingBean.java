@@ -385,7 +385,7 @@ public class SMReportBackingBean extends
 
 			break;
 		case ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL:
-			rptGenBean.setSmCompanyNameView(true);
+			rptGenBean.setSmGenCompanyNameView(true);
 			rptGenBean.setSmMandatoryDOCSupplierTypeView(true);
 			rptGenBean.setSmCommonZoneView(true);
 			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
