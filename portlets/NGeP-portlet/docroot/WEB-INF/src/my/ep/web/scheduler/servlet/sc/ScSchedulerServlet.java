@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServlet;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.factory.EpLogger;
 import my.ep.util.EpPropertiesUtils;
-import my.ep.web.scheduler.constants.sc.ScSchedulerConstants;
+import my.ep.web.scheduler.constants.common.SchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.scheduler.job.sc.BidSchedulesPoolingJob;
 import my.ep.web.scheduler.job.sc.CloseQTSchedulerJob;
@@ -28,35 +28,35 @@ public class ScSchedulerServlet extends HttpServlet {
 
 		// Sc Daily job
 		EpSchedulerHelper.scheduleJob(new JobKey(
-				ScSchedulerConstants.EP_DAILY_JOB,
-				ScSchedulerConstants.EP_JOB_GROUP),
+				SchedulerConstants.SC_DAILY_JOB,
+				SchedulerConstants.SC_JOB_GROUP),
 				BidSchedulesPoolingJob.class, "Job run every day at 11:55 PM",
 				"0 55 23 * * ?");
 
 		// daily Job to be run at server startup
 
 		EpSchedulerHelper.runBuildJobNow(new JobKey(
-				ScSchedulerConstants.EP_DAILY_JOB,
-				ScSchedulerConstants.EP_JOB_GROUP));
+				SchedulerConstants.SC_DAILY_JOB,
+				SchedulerConstants.SC_JOB_GROUP));
 
 		// Sc Continous job
 		EpSchedulerHelper.scheduleJob(new JobKey(
-				ScSchedulerConstants.EP_CONTINOUS_JOB,
-				ScSchedulerConstants.EP_JOB_GROUP),
+				SchedulerConstants.SC_CONTINOUS_JOB,
+				SchedulerConstants.SC_JOB_GROUP),
 				ContinuousBidSchedulerJob.class, "Job to run every 60 Seconds",
 				"0/60 * * * * ?");
 
 		// Sc Daily job for published Quatation Tenders.
 		EpSchedulerHelper.scheduleJob(new JobKey(
-				ScSchedulerConstants.EP_UPDATE_SUPPLIERS_JOB,
-				ScSchedulerConstants.EP_JOB_GROUP), InviteSuppliersJob.class,
+				SchedulerConstants.SC_UPDATE_SUPPLIERS_JOB,
+				SchedulerConstants.SC_JOB_GROUP), InviteSuppliersJob.class,
 				"Job run every day at 11:55 PM", "0 55 23 * * ?");
 
 		// Sc Daily job for Close Quatation Tenders.
 		EpSchedulerHelper
 				.scheduleJob(
-						new JobKey(ScSchedulerConstants.EP_QT_CLOSED_JOB,
-								ScSchedulerConstants.EP_JOB_GROUP),
+						new JobKey(SchedulerConstants.SC_QT_CLOSED_JOB,
+								SchedulerConstants.SC_JOB_GROUP),
 						CloseQTSchedulerJob.class,
 						"Job run every day by batch",
 						EpPropertiesUtils
@@ -66,8 +66,8 @@ public class ScSchedulerServlet extends HttpServlet {
 
 		// Sc Daily job for Proposal Validity Expiary Quatation Tenders.
 		EpSchedulerHelper.scheduleJob(new JobKey(
-				ScSchedulerConstants.EP_QT_PROPOSAL_VALIDITY_EXPIARY,
-				ScSchedulerConstants.EP_JOB_GROUP),
+				SchedulerConstants.SC_QT_PROPOSAL_VALIDITY_EXPIARY,
+				SchedulerConstants.SC_JOB_GROUP),
 				ProposalValidityExpiaryJob.class,
 				"Job run every day at 12:05 AM", "0 05 0 * * ?");
 	}

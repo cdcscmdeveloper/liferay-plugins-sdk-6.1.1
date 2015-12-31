@@ -19,17 +19,13 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.BidItemBean;
 import my.ep.biz.bean.sc.BidPackageBean;
-import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.BiddingConst;
 import my.ep.constants.CommonConstants;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
-import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.bidding.ScBidAction;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidPrice;
@@ -39,7 +35,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sc.schedulermanager.SchedulerManagerBackingBean;
 import my.ep.web.managedbean.sc.bidding.BiddingManagedBean;
-import my.ep.web.scheduler.constants.sc.ScSchedulerConstants;
+import my.ep.web.scheduler.constants.common.SchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
@@ -398,8 +394,8 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 					SchedulerManagerBackingBean smBackingBean = new SchedulerManagerBackingBean();
 					EpSchedulerHelper.runBuildJobNow(smBackingBean.getJobKey(
-							ScSchedulerConstants.EP_DAILY_JOB,
-							ScSchedulerConstants.EP_JOB_GROUP));
+							SchedulerConstants.SC_DAILY_JOB,
+							SchedulerConstants.SC_JOB_GROUP));
 
 				}
 			}
