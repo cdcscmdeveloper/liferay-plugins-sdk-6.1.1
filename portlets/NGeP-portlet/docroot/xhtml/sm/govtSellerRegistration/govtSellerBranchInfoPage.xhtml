@@ -288,7 +288,26 @@
 					validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}" />
 				</td>
 			</tr>
-	
+			<p:outputPanel rendered="#{bb.managedBean.showBranchPointOfContact}">
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sm.person.composition.poc']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+							required="#{bb.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.person.composition.poc']}" id="brnPerVal"
+							value="#{bb.managedBean.selectedBranch.smPersonnel.personnelId}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems
+								value="#{bb.managedBean.smAppl.smPersonnels}"
+								var="brPerBean" itemLabel="#{brPerBean.name}"
+								itemValue="#{brPerBean.personnelId}" />
+							<p:ajax process="@this" partialSubmit="true"/>
+						</p:selectOneMenu>
+						<p:message id="brnPerValMsg" for="brnPerVal" showSummary="true"
+							showDetail="false" display="icon" /></td>
+				</tr>
+			</p:outputPanel>
 		</table>
 		
 		<p:outputPanel rendered="#{bb.managedBean.showGst}">

@@ -75,6 +75,7 @@ public class GovtSellerRegistrationBackingBean extends
 		getManagedBean().setSelectedBranches(new ArrayList<SmSupplierBranch>());
 		assignValReqdToFalse();
 		getManagedBean().setShowGst(true);
+		getManagedBean().setShowBranchPointOfContact(false);
 		SmCommonUtil.redirectToPage(
 				"/xhtml/sm/govtSellerRegistration/govtSellerBasePage.xhtml",
 				"", null);
@@ -82,6 +83,7 @@ public class GovtSellerRegistrationBackingBean extends
 	}
 
 	public void preRenderGovtSellerMaintenance() {
+		renewSesionObject();
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setSupplierId(SmApplicationUtil.getCurrentSupplier()
 				.getSupplierId());
@@ -109,6 +111,7 @@ public class GovtSellerRegistrationBackingBean extends
 					.getSmGstSupplier(), getManagedBean().getSmAppl());
 		}
 		getManagedBean().setSelectedBranches(new ArrayList<SmSupplierBranch>());
+		getManagedBean().setShowBranchPointOfContact(true);
 		SmCommonUtil
 				.redirectToPage(
 						"/xhtml/sm/govtSellerRegistration/govtSellerMaintenanceBasePage.xhtml",
@@ -279,7 +282,8 @@ public class GovtSellerRegistrationBackingBean extends
 	 */
 	public void assignSelBranch(SmSupplierBranch branchBean) {
 		initBranchAddressSelectItems(branchBean.getSmAddress());
-		if (branchBean.getSmPersonnel() == null) {
+		if (getManagedBean().isShowBranchPointOfContact()
+				&& branchBean.getSmPersonnel() == null) {
 			branchBean.setSmPersonnel(new SmPersonnel());
 		}
 		if (branchBean.getGst() == null) {
