@@ -218,9 +218,11 @@
 							countryCode="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileCountry}" 
 							areaCode="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileArea}" 
 							number="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileNo}" 
-							isMobile="true"
+							isMobile="true" required = "false"
 							validatorMessage="#{lbl['lbl.pm.profiles.userdetails.mobileno']} - #{lbl['lbl.pm.profiles.invalidNo']}"
-							telcoId="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileTelcoId}" />
+							telcoId="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileTelcoId}">
+							
+							</ac:phone>
 							
 						</td>
 						<td><p:message id="itMobileNoMsg" for="itMobileNo" display="icon" /></td>

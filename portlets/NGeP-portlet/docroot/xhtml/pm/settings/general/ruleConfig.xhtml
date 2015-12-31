@@ -157,7 +157,7 @@
 					onchange="#{ruleCatalogueBackingBean.updateErrorDialog(index)}"
 					requiredMessage="#{lbl['lbl.pm.settings.fromvalue.required']}"
 					disabled="#{!(typeValueObj.brandNew) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType == 1 and !typeValueObj.showFlag)}">
-					<p:ajax partialSubmit="true" process="@this"
+					<p:ajax partialSubmit="true" process="@this" 
 						update="@this, @([id$=cloneLink]), fromValueMsg, :form:settingTabId:errorDialog" />
 				</p:inputText>
 				<p:message id="fromValueMsg" for="fromValueId" display="icon" />
@@ -173,9 +173,9 @@
 					disabled="#{!(typeValueObj.brandNew)}">
 					<p:ajax partialSubmit="true" process="@this"
 						update="@this, @([id$=cloneLink])" />
-					<p:ajax event="change"
+					<p:ajax event="change" partialSubmit="true" process="@this"
 						listener="#{ruleCatalogueBackingBean.updateToValue(index)}"
-						update=":form:settingTabId:ruleTypeValueTableID :form:settingTabId:errorDialog" />
+						update=":form:settingTabId:ruleTypeValueTableID, :form:settingTabId:errorDialog" />
 				</p:inputText>
 				<p:message id="toValueMsg" for="toValueId" display="icon" />
 			</p:column>
