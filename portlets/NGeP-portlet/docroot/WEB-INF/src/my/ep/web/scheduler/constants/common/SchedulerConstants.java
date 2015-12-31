@@ -87,6 +87,8 @@ public class SchedulerConstants {
 
 	// CM Module Scheduler Constants
 
+	// CM Job Group ID
+	public static final String CM_INTEGRATION_JOB_GROUP = "CM INTEGRATION JOB GROUP";
 	// EPERUNDING OUT BOUND
 	public static final String EPERUNDING_INTEGRATION_JOB_GROUP = "EPERUNDING JOB GROUP";
 	public static final String EPERUNDING_INTEGRATION_CONTINUOUS_JOB = "EPERUNDING INTEGRATION JOB";

@@ -7,7 +7,7 @@ import java.util.List;
 
 import my.ep.dto.sm.scheduler.SmSchedulerReqDTO;
 import my.ep.factory.EpLogger;
-import my.ep.web.scheduler.constants.sm.SmSchedulerConstants;
+import my.ep.web.scheduler.constants.common.SchedulerConstants;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.log4j.Logger;
@@ -21,13 +21,13 @@ public class SoftCertRenewalReminderJob implements Job {
 	@Override
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		List<String> statusCodeLs = new ArrayList<String>();
-		statusCodeLs.add(SmSchedulerConstants.CERT_MODE_NEW);
-		statusCodeLs.add(SmSchedulerConstants.CERT_MODE_RENEW);
+		statusCodeLs.add(SchedulerConstants.CERT_MODE_NEW);
+		statusCodeLs.add(SchedulerConstants.CERT_MODE_RENEW);
 		
 		Date d1 = new Date();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(d1);
-		cal.add(Calendar.DATE, SmSchedulerConstants.SOFTCERT_RENEWAL_DAY);
+		cal.add(Calendar.DATE, SchedulerConstants.SOFTCERT_RENEWAL_DAY);
 		d1 = cal.getTime();
 		List<Date> dateLs = new ArrayList<Date>();
 		dateLs.add(d1);

@@ -5,7 +5,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
 import my.ep.factory.EpLogger;
-import my.ep.web.scheduler.constants.ct.CtSchedulerConstants;
+import my.ep.web.scheduler.constants.common.SchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.scheduler.job.ct.CtActivateAgencyItemJob;
 import my.ep.web.scheduler.job.ct.CtAgreementNotificationJob;
@@ -15,7 +15,6 @@ import my.ep.web.scheduler.job.ct.CtExpireContractJob;
 import my.ep.web.scheduler.job.ct.CtExpireFactoringJob;
 import my.ep.web.scheduler.job.ct.CtPBNotificationJob;
 import my.ep.web.scheduler.job.ct.CtRemedyNotificationJob;
-
 
 import org.apache.log4j.Logger;
 import org.quartz.JobKey;
@@ -35,66 +34,66 @@ public class CtSchedulerServlet extends HttpServlet {
 		
 		// Expire the contract that no more effective. 
 		EpSchedulerHelper.scheduleJob(new JobKey(
-				CtSchedulerConstants.UPDATE_EXPIRED_CONTRACT,
-				CtSchedulerConstants.CT_JOB_GROUP),
+				SchedulerConstants.UPDATE_EXPIRED_CONTRACT,
+				SchedulerConstants.CT_JOB_GROUP),
 				CtExpireContractJob.class,
-				CtSchedulerConstants.UPDATE_EXPIRED_CONTRACT_JOB_DESC,
-				CtSchedulerConstants.TRIGGER_TIME);
+				SchedulerConstants.UPDATE_EXPIRED_CONTRACT_JOB_DESC,
+				SchedulerConstants.TRIGGER_TIME);
 		
 		// Expire the factoring that no more effective. 
 		EpSchedulerHelper.scheduleJob(new JobKey(
-				CtSchedulerConstants.UPDATE_EXPIRED_FACTORING,
-				CtSchedulerConstants.CT_JOB_GROUP),
+				SchedulerConstants.UPDATE_EXPIRED_FACTORING,
+				SchedulerConstants.CT_JOB_GROUP),
 				CtExpireFactoringJob.class,
-				CtSchedulerConstants.UPDATE_EXPIRED_FACTORING_JOB_DESC,
-				CtSchedulerConstants.TRIGGER_TIME);
+				SchedulerConstants.UPDATE_EXPIRED_FACTORING_JOB_DESC,
+				SchedulerConstants.TRIGGER_TIME);
 		
 		// Expire the circular that no more effective. 
 		EpSchedulerHelper.scheduleJob(new JobKey(
-				CtSchedulerConstants.UPDATE_EXPIRED_CIRCULAR,
-				CtSchedulerConstants.CT_JOB_GROUP),
+				SchedulerConstants.UPDATE_EXPIRED_CIRCULAR,
+				SchedulerConstants.CT_JOB_GROUP),
 				CtExpireCircularJob.class,
-				CtSchedulerConstants.UPDATE_EXPIRED_CIRCULAR_JOB_DESC,
-				CtSchedulerConstants.TRIGGER_TIME);
+				SchedulerConstants.UPDATE_EXPIRED_CIRCULAR_JOB_DESC,
+				SchedulerConstants.TRIGGER_TIME);
 		
 		// Activate the suspended agency and item.
 		EpSchedulerHelper.scheduleJob(new JobKey(
-				CtSchedulerConstants.UPDATE_SUSPENDED_AGENCY_ITEM,
-				CtSchedulerConstants.CT_JOB_GROUP),
+				SchedulerConstants.UPDATE_SUSPENDED_AGENCY_ITEM,
+				SchedulerConstants.CT_JOB_GROUP),
 				CtActivateAgencyItemJob.class,
-				CtSchedulerConstants.UPDATE_SUSPENDED_AGENCY_ITEM_JOB_DESC,
-				CtSchedulerConstants.TRIGGER_TIME);
+				SchedulerConstants.UPDATE_SUSPENDED_AGENCY_ITEM_JOB_DESC,
+				SchedulerConstants.TRIGGER_TIME);
 		
 		// Send Contract Notification to contract admin and selected approvers. 
 		EpSchedulerHelper.scheduleJob(new JobKey(
-				CtSchedulerConstants.CONTRACT_EXPIRATION_REMINDER,
-				CtSchedulerConstants.CT_JOB_GROUP),
+				SchedulerConstants.CONTRACT_EXPIRATION_REMINDER,
+				SchedulerConstants.CT_JOB_GROUP),
 				CtContractNotificationJob.class,
-				CtSchedulerConstants.CONTRACT_EXPIRATION_REMINDER_JOB_DESC,
-				CtSchedulerConstants.TRIGGER_TIME);
+				SchedulerConstants.CONTRACT_EXPIRATION_REMINDER_JOB_DESC,
+				SchedulerConstants.TRIGGER_TIME);
 		
 		// Send Agreement Completion Notification to contract admin and selected approvers. 
 		EpSchedulerHelper.scheduleJob(new JobKey(
-				CtSchedulerConstants.AGREEMENT_EXPIRATION_REMINDER,
-				CtSchedulerConstants.CT_JOB_GROUP),
+				SchedulerConstants.AGREEMENT_EXPIRATION_REMINDER,
+				SchedulerConstants.CT_JOB_GROUP),
 				CtAgreementNotificationJob.class,
-				CtSchedulerConstants.AGREEMENT_EXPIRATION_REMINDER_JOB_DESC,
-				CtSchedulerConstants.TRIGGER_TIME);
+				SchedulerConstants.AGREEMENT_EXPIRATION_REMINDER_JOB_DESC,
+				SchedulerConstants.TRIGGER_TIME);
 		
 		// Send Performance Bond Notification to contract admin and selected approvers. 
 		EpSchedulerHelper.scheduleJob(new JobKey(
-				CtSchedulerConstants.PERFORMANCE_BOND_EXPIRATION_REMINDER,
-				CtSchedulerConstants.CT_JOB_GROUP),
+				SchedulerConstants.PERFORMANCE_BOND_EXPIRATION_REMINDER,
+				SchedulerConstants.CT_JOB_GROUP),
 				CtPBNotificationJob.class,
-				CtSchedulerConstants.PERFORMANCE_BOND_EXPIRATION_REMINDER_JOB_DESC,
-				CtSchedulerConstants.TRIGGER_TIME);
+				SchedulerConstants.PERFORMANCE_BOND_EXPIRATION_REMINDER_JOB_DESC,
+				SchedulerConstants.TRIGGER_TIME);
 		
 		// Send Remedy Notification to contract admin and selected approvers. 
 		EpSchedulerHelper.scheduleJob(new JobKey(
-				CtSchedulerConstants.REMEDY_EXPIRATION_REMINDER,
-				CtSchedulerConstants.CT_JOB_GROUP),
+				SchedulerConstants.REMEDY_EXPIRATION_REMINDER,
+				SchedulerConstants.CT_JOB_GROUP),
 				CtRemedyNotificationJob.class,
-				CtSchedulerConstants.REMEDY_EXPIRATION_REMINDER_JOB_DESC,
-						CtSchedulerConstants.TRIGGER_TIME);			
+				SchedulerConstants.REMEDY_EXPIRATION_REMINDER_JOB_DESC,
+				SchedulerConstants.TRIGGER_TIME);			
 	}
 }
