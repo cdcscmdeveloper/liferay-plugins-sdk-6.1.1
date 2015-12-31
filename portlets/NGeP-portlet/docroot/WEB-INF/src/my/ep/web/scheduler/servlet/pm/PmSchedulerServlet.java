@@ -5,7 +5,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
 import my.ep.factory.EpLogger;
-import my.ep.web.scheduler.constants.sc.ScSchedulerConstants;
+import my.ep.web.scheduler.constants.common.SchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.scheduler.job.sc.BidSchedulesPoolingJob;
 
@@ -22,8 +22,8 @@ public class PmSchedulerServlet extends HttpServlet {
 		
 		// Sc Daily job
 				EpSchedulerHelper.scheduleJob(new JobKey(
-						ScSchedulerConstants.EP_DAILY_JOB,
-						ScSchedulerConstants.EP_JOB_GROUP),
+						SchedulerConstants.SC_DAILY_JOB,
+						SchedulerConstants.SC_JOB_GROUP),
 						BidSchedulesPoolingJob.class,
 						"Job run every day at 11:55 PM", "0 55 23 * * ?");
 	

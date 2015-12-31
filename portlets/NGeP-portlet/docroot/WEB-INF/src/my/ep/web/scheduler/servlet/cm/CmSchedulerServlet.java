@@ -6,19 +6,11 @@ import javax.servlet.http.HttpServlet;
 
 import my.ep.factory.EpLogger;
 import my.ep.util.EpPropertiesUtils;
-import my.ep.web.scheduler.constants.cm.CmSchedulerConstants;
+import my.ep.web.scheduler.constants.common.SchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.scheduler.job.cm.CmDropSequenceJob;
 import my.ep.web.scheduler.job.cm.CmUpdateExpiredItemJob;
 import my.ep.web.scheduler.job.eperunding.EperundingBatchIntegrationJob;
-import my.ep.web.scheduler.job.gfmas.GfmasBatchFlInboundJob;
-import my.ep.web.scheduler.job.gfmas.GfmasBatchPmInboundJob;
-import my.ep.web.scheduler.job.gfmas.GfmasBatchScOutboundJob;
-import my.ep.web.scheduler.job.gfmas.GfmasBatchSmInboundJob;
-import my.ep.web.scheduler.job.gfmas.GfmasBatchSmOutboundJob;
-import my.ep.web.scheduler.job.phis.PhisBatchCmOutboundJob;
-import my.ep.web.scheduler.job.phis.PhisBatchPmOutboundJob;
-import my.ep.web.scheduler.job.phis.PhisBatchSmOutboundJob;
 
 import org.apache.log4j.Logger;
 import org.quartz.JobKey;
@@ -80,9 +72,9 @@ public class CmSchedulerServlet extends HttpServlet {
 				EpPropertiesUtils.getInstance().getProperty("1gfmas.sm.outbound"));*/
 		//Eperunding SM Integration Continuous job
 		EpSchedulerHelper.scheduleJob(new JobKey(
-				CmSchedulerConstants.EPERUNDING_INTEGRATION_CONTINUOUS_JOB,
-				CmSchedulerConstants.EPERUNDING_INTEGRATION_JOB_GROUP),
-				EperundingBatchIntegrationJob.class, CmSchedulerConstants.EPERUNDING_INTEGRATION_CONTINUOUS_JOB_DESC,
+				SchedulerConstants.EPERUNDING_INTEGRATION_CONTINUOUS_JOB,
+				SchedulerConstants.EPERUNDING_INTEGRATION_JOB_GROUP),
+				EperundingBatchIntegrationJob.class, SchedulerConstants.EPERUNDING_INTEGRATION_CONTINUOUS_JOB_DESC,
 				EpPropertiesUtils.getInstance().getProperty("eperunding.sm.outbound"));
 		//Notification Integration Continuous job
 	/*	EpSchedulerHelper.scheduleJob(new JobKey(
@@ -93,18 +85,18 @@ public class CmSchedulerServlet extends HttpServlet {
 
 		///CM Expired Item
 		EpSchedulerHelper.scheduleJob(new JobKey(
-				CmSchedulerConstants.CM_EXPIRED_ITEM_TIMER_JOB,
-				CmSchedulerConstants.CM_EXPIRED_ITEM_TIMER_JOB_GROUP),
-				CmUpdateExpiredItemJob.class, CmSchedulerConstants.CM_EXPIRED_ITEM_TIMER_CONTINUOUS_JOB_DESC,
-				CmSchedulerConstants.CM_EXPIRED_ITEM_TIMER);
+				SchedulerConstants.CM_EXPIRED_ITEM_TIMER_JOB,
+				SchedulerConstants.CM_EXPIRED_ITEM_TIMER_JOB_GROUP),
+				CmUpdateExpiredItemJob.class, SchedulerConstants.CM_EXPIRED_ITEM_TIMER_CONTINUOUS_JOB_DESC,
+				SchedulerConstants.CM_EXPIRED_ITEM_TIMER);
 
 
 		///CM Drop Doc Sequence
 		EpSchedulerHelper.scheduleJob(new JobKey(
-				CmSchedulerConstants.CM_EXPIRED_ITEM_TIMER_JOB,
-				CmSchedulerConstants.CM_DROP_DOC_SEQ_JOB_GROUP),
-				CmDropSequenceJob.class, CmSchedulerConstants.CM_EXPIRED_ITEM_TIMER_CONTINUOUS_JOB_DESC,
-				CmSchedulerConstants.CM_EXPIRED_ITEM_TIMER);
+				SchedulerConstants.CM_EXPIRED_ITEM_TIMER_JOB,
+				SchedulerConstants.CM_DROP_DOC_SEQ_JOB_GROUP),
+				CmDropSequenceJob.class, SchedulerConstants.CM_EXPIRED_ITEM_TIMER_CONTINUOUS_JOB_DESC,
+				SchedulerConstants.CM_EXPIRED_ITEM_TIMER);
 
 
 

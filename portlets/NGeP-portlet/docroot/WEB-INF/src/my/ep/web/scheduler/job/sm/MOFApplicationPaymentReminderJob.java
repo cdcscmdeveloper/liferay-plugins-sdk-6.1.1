@@ -7,7 +7,7 @@ import java.util.List;
 
 import my.ep.dto.sm.scheduler.SmSchedulerReqDTO;
 import my.ep.factory.EpLogger;
-import my.ep.web.scheduler.constants.sm.SmSchedulerConstants;
+import my.ep.web.scheduler.constants.common.SchedulerConstants;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.log4j.Logger;
@@ -23,13 +23,13 @@ public class MOFApplicationPaymentReminderJob implements Job{
 		Date d1 = new Date();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(d1);
-		cal.add(Calendar.DATE, SmSchedulerConstants.PAYMENT_REMINDER_DAY);
+		cal.add(Calendar.DATE, SchedulerConstants.PAYMENT_REMINDER_DAY);
 		d1 = cal.getTime();
 		
 		SmSchedulerReqDTO reqDTO = new SmSchedulerReqDTO();
 		List<Long> statusCodeLs = new ArrayList<Long>();
-		statusCodeLs.add(SmSchedulerConstants.STATUS_PROCESSING_PAYMENT); //Processing Fee
-		statusCodeLs.add(SmSchedulerConstants.STATUS_APPLICATION_PAYMENT); //Application Payment
+		statusCodeLs.add(SchedulerConstants.STATUS_PROCESSING_PAYMENT); //Processing Fee
+		statusCodeLs.add(SchedulerConstants.STATUS_APPLICATION_PAYMENT); //Application Payment
 		reqDTO.setStatusCodeLs(statusCodeLs);
 		reqDTO.setParamDate(d1);
 		

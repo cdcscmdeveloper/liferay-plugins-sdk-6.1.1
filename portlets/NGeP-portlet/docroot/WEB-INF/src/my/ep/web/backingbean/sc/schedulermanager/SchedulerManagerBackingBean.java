@@ -9,20 +9,17 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.logging.LogKey;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sc.schedulermanager.SchedulerManagerManagedBean;
-import my.ep.web.scheduler.constants.sc.ScSchedulerConstants;
+import my.ep.web.scheduler.constants.common.SchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
-import my.ep.web.scheduler.util.SchedulerFactoryUtil;
 import my.ep.web.util.sc.helper.SchedulerHelper;
 import my.ep.web.vo.EpJobVO;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
-import org.quartz.JobExecutionContext;
 import org.quartz.JobKey;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.Trigger.TriggerState;
-import org.quartz.TriggerBuilder;
 import org.quartz.impl.matchers.GroupMatcher;
 
 @ManagedBean(name = "schedulerManagerBB")
@@ -67,9 +64,9 @@ public class SchedulerManagerBackingBean extends
 					jobState = EpSchedulerHelper.getTriggerState(trigger);
 
 					if (jobState.equals(TriggerState.PAUSED.toString())) {
-						jobAction = ScSchedulerConstants.JOB_RESUME;
+						jobAction = SchedulerConstants.JOB_RESUME;
 					} else {
-						jobAction = ScSchedulerConstants.JOB_PAUSE;
+						jobAction = SchedulerConstants.JOB_PAUSE;
 					}
 
 					getManagedBean().getEpSchedulerJobList().add(
@@ -120,7 +117,7 @@ public class SchedulerManagerBackingBean extends
 
 	public void pauseOrResumeJob(EpJobVO epJobVO) {
 		try {
-			if (epJobVO.getAction().equals(ScSchedulerConstants.JOB_PAUSE)) {
+			if (epJobVO.getAction().equals(SchedulerConstants.JOB_PAUSE)) {
 				getManagedBean().getScheduler().pauseJob(epJobVO.getJobKey());
 			} else {
 				getManagedBean().getScheduler().resumeJob(epJobVO.getJobKey());
@@ -132,7 +129,7 @@ public class SchedulerManagerBackingBean extends
 
 	public void runNowJob(EpJobVO epJobVO) {
 
-		if (epJobVO.getStatus().equals(ScSchedulerConstants.JOB_WAIT)) {
+		if (epJobVO.getStatus().equals(SchedulerConstants.JOB_WAIT)) {
 			// schedule the job
 			EpSchedulerHelper.runBuildJobNow(epJobVO.getJobKey());
 			initAllJobs();
@@ -141,9 +138,9 @@ public class SchedulerManagerBackingBean extends
 	}
 
 	private String getJobStatus(JobKey jobKey) {
-		String retVal = ScSchedulerConstants.JOB_WAIT;
+		String retVal = SchedulerConstants.JOB_WAIT;
 		if (EpSchedulerHelper.isJobRunningNow(jobKey)) {
-			retVal = ScSchedulerConstants.JOB_RUN;
+			retVal = SchedulerConstants.JOB_RUN;
 		}
 		return retVal;
 	}
