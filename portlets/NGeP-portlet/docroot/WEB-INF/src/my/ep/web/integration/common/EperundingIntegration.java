@@ -6,8 +6,8 @@ import java.util.List;
 
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.sm.registration.RegistrationReqDTO;
-import my.ep.dto.sm.registration.RegistrationResDTO;
+import my.ep.dto.sm.gst.SupplierGstReqDTO;
+import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
@@ -20,7 +20,9 @@ import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmEquityCompany;
+import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
@@ -581,20 +583,26 @@ public class EperundingIntegration extends EperundingTemplate{
 					profile.setSSMNo(smSupplier.getRegNo());
 					profile.setMOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
 					
-					if(!smSupplier.getSmMofAccounts().get(0).getSmMofCerts().isEmpty()){
-						profile.setVirtualCertNo(smSupplier.getSmMofAccounts().get(0).getSmMofCerts().get(0).getCertSerialNo());
-					}else{
-						profile.setVirtualCertNo(IntegrationConstants.EMPTY_TRING);
+					for(SmMofAccount mofAccount:smSupplier.getSmMofAccounts()){
+						for(SmMofCert smMofCert:mofAccount.getSmMofCerts()){
+							if(smMofCert.getRecordStatusFlg()==1){
+								profile.setVirtualCertNo(smMofCert.getCertSerialNo());
+							}
+						}
 					}
-
-					if(!smSupplier.getSmGstSuppliers().isEmpty()){
-						profile.setGSTNo(smSupplier.getSmGstSuppliers().get(0).getGstRegNo());
-						profile.setGSTEffectiveDate(smSupplier.getSmGstSuppliers().get(0).getGstEffDate());
-						profile.setFirstTaxablePeriod(smSupplier.getSmGstSuppliers().get(0).getGstDeclaredDate());
+					
+					if(!smSupplier.getSmGstSuppliers().isEmpty()&& (1==smSupplier.getGstRegisteredFlag())){
+						for(SmGstSupplier smGstSupplier : smSupplier.getSmGstSuppliers()){
+							if(smGstSupplier.getIsCurrent()){
+								profile.setGSTNo(smGstSupplier.getGstRegNo());
+								profile.setGSTEffectiveDate(smGstSupplier.getGstEffDate());
+								profile.setGSTEndDate(smGstSupplier.getGstEndDate());
+							}
+						}
 					}else{
 						profile.setGSTNo(IntegrationConstants.EMPTY_TRING);
 						profile.setGSTEffectiveDate(IntegrationConstants.DEFAULT_DATE);
-						profile.setFirstTaxablePeriod(IntegrationConstants.DEFAULT_DATE);
+						profile.setGSTEndDate(IntegrationConstants.DEFAULT_DATE);
 					}
 					
 					profile.setCompanyType(getCompanyType(smSupplier.getBusinessType()));
@@ -663,7 +671,7 @@ public class EperundingIntegration extends EperundingTemplate{
 					profile.setEffectDateFrom(smSupplier.getSmMofAccounts().get(0).getEffDate());
 					profile.setDisciplinary(IntegrationConstants.VAVLUE_NO); 
 					profile.setIsAssociatedCompany(IntegrationConstants.VAVLUE_NO);
-					profile.setProfileUpdateDate(smSupplier.getSmAppl().getApplSubmitDate()); //
+					profile.setProfileUpdateDate(smSupplier.getSmAppl().getApplSubmitDate()); //Need to discuss on this
 
 					if (!smSupplier.getSmAppl().getSmAssociationBodies().isEmpty()) {
 						for (SmAssociationBody associationBody : smSupplier.getSmAppl().getSmAssociationBodies()) {
@@ -895,6 +903,24 @@ public class EperundingIntegration extends EperundingTemplate{
 							branchCompany.setMOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
 
 							branch.setBranchName(smSupplierBranch.getBranchName());
+							
+							SupplierGstReqDTO gstReqDTO = new SupplierGstReqDTO();
+							gstReqDTO.setSupplierId(smSupplier.getSupplierId());
+							gstReqDTO.setBranchCode(smSupplierBranch.getBranchCode());
+							gstReqDTO.setCurrent(true);
+							
+							SupplierGstResDTO gstResDTO = supplierGstSO.retrieveGstInfoBySupplierIdAndBranchCodeAndIsCurrent(gstReqDTO);
+							
+							if(null!=gstResDTO.getSmGstSupplier()){
+								branch.setGSTNo(gstResDTO.getSmGstSupplier().getGstRegNo());
+								branch.setGSTEffectiveDate(gstResDTO.getSmGstSupplier().getGstEffDate());
+								branch.setGSTEndDate(gstResDTO.getSmGstSupplier().getGstEndDate());
+							}else{
+								branch.setGSTNo(IntegrationConstants.EMPTY_TRING);
+								branch.setGSTEffectiveDate(IntegrationConstants.DEFAULT_DATE);
+								branch.setGSTEndDate(IntegrationConstants.DEFAULT_DATE);
+							}
+							
 							branch.setAddress1(smSupplierBranch.getSmAddress().getAddress1());
 							branch.setAddress2(smSupplierBranch.getSmAddress().getAddress2());
 							branch.setAddress3(smSupplierBranch.getSmAddress().getAddress3());
@@ -962,8 +988,8 @@ public class EperundingIntegration extends EperundingTemplate{
 							companyOwner = new CompanyOwner();
 							companyOwner.setmOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
 							companyOwner.setCompanyName(equityCompany.getCompanyName());
-							companyOwner.setsSMNo(equityCompany.getRegNo());
-							companyOwner.setCompanyOwnerMOFNo(IntegrationConstants.EMPTY_TRING);
+							companyOwner.setCompanyOwnerMOFNo(equityCompany.getRegNo());
+							companyOwner.setCompanyOwnerMOFNo(equityCompany.getMofNo());
 							companyOwner.setShareholdingAmount(equityCompany.getShareAmt());
 							companyOwner.setShareholdingPercentage(equityCompany.getSharePercentage());
 							companyOwner.setAddress1(equityCompany.getSmAddress().getAddress1());
@@ -1053,16 +1079,17 @@ public class EperundingIntegration extends EperundingTemplate{
 							associatedCompany = new AssociatedCompany();
 							associatedCompany.setmOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
 							associatedCompany.setCompanyName(associateCompany.getCompanyName());
-							//version 1.27
 							associatedCompany.setAssociatedCompanySSMNO(associateCompany.getRegNo());
-							RegistrationReqDTO reqDTO = new RegistrationReqDTO();
-							reqDTO.setRegNo(associateCompany.getRegNo());
-							RegistrationResDTO  regResDTO = registrationSO.retrieveActiveSupplierByRegNo(reqDTO);
-							if(null!=regResDTO.getSmSuppliers()){
-								associatedCompany.setAssociatedCompanyMOFNO(regResDTO.getSmSuppliers().get(0).getSmMofAccounts().get(0).getMofNo());
-							}else{
-								associatedCompany.setAssociatedCompanyMOFNO(IntegrationConstants.EMPTY_TRING);
-							}
+//							RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+//							reqDTO.setRegNo(associateCompany.getRegNo());
+//							RegistrationResDTO  regResDTO = registrationSO.retrieveActiveSupplierByRegNo(reqDTO);
+//							if(null!=regResDTO.getSmSuppliers()){
+//								for(SmSupplier supplier:regResDTO.getSmSuppliers()){
+//										associatedCompany.setAssociatedCompanyMOFNO(supplier.getSmMofAccounts().get(0).getMofNo());
+//									}
+//							}else{
+								associatedCompany.setAssociatedCompanyMOFNO(associateCompany.getMofNo());
+//							}
 								
 							if (associateCompany.getIsShareholding().intValue() == 1)
 								associatedCompany.setShareholding(IntegrationConstants.VAVLUE_YES);
