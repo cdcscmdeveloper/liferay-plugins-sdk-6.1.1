@@ -22,6 +22,7 @@ import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.ct.dtl.CtContractAmount;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
+import my.ep.persistence.entity.ct.dtl.CtPidReason;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.common.PmAddressType;
@@ -108,6 +109,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	 
 	 private boolean disableAmendDetails;
 	 private CtCircularVer ctCircularVer;
+	 private List<CtPidReason> selectedPidReason;
 	 
 	  private boolean updateContract = false;
 	
@@ -883,6 +885,20 @@ public class ContractManagedBean extends BaseManagedBean {
 	 */
 	public void setUpdateContract(boolean updateContract) {
 		this.updateContract = updateContract;
+	}
+
+	/**
+	 * @return the selectedPidReason
+	 */
+	public List<CtPidReason> getSelectedPidReason() {
+		return selectedPidReason;
+	}
+
+	/**
+	 * @param selectedPidReason the selectedPidReason to set
+	 */
+	public void setSelectedPidReason(List<CtPidReason> selectedPidReason) {
+		this.selectedPidReason = selectedPidReason;
 	}
 
 }
