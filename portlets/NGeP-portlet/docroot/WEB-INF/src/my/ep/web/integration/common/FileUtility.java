@@ -99,7 +99,6 @@ import org.apache.log4j.Logger;
 /*
 * @ author Ganga prasad
 */
-@SuppressWarnings("unused")
 public class FileUtility extends InitializeSO{
 	
 	private static Logger log = EpLogger.getLogger(FileUtility.class);
@@ -1411,10 +1410,10 @@ public class FileUtility extends InitializeSO{
 				line.append(formatString(cProfile.getSSMNo(),20));
 				line.append(formatString(cProfile.getMOFNo(),20));
 				
-				line.append(formatString(cProfile.getGSTNo(),12));
 				line.append(formatString(cProfile.getVirtualCertNo(),30));
+				line.append(formatString(cProfile.getGSTNo(),12));
 				line.append(formatDateEperunding(cProfile.getGSTEffectiveDate(),false));
-				line.append(formatDateEperunding(cProfile.getFirstTaxablePeriod(),false));
+				line.append(formatDateEperunding(cProfile.getGSTEndDate(),false));
 				
 				line.append(formatString(cProfile.getCompanyType(),5));
 				line.append(formatString(cProfile.getAddress1(),100));
@@ -1825,6 +1824,9 @@ public class FileUtility extends InitializeSO{
 				line.append(formatString(branchCompany.getMOFNo(),20));
 
 				line.append(formatString(branchCompany.getBranch().getBranchName(),100));
+				line.append(formatString(branchCompany.getBranch().getGSTNo(),12));
+				line.append(formatDateEperunding(branchCompany.getBranch().getGSTEffectiveDate(),false));
+				line.append(formatDateEperunding(branchCompany.getBranch().getGSTEndDate(),false));
 				line.append(formatString(branchCompany.getBranch().getAddress1(),100));
 				line.append(formatString(branchCompany.getBranch().getAddress2(),100));
 				line.append(formatString(branchCompany.getBranch().getAddress3(),100));
@@ -2151,7 +2153,7 @@ public class FileUtility extends InitializeSO{
 				line.append(formatString(companyOwner.getmOFNo(),20));
 				
 				line.append(formatString(companyOwner.getCompanyName(),100));
-				line.append(formatString(companyOwner.getsSMNo(),20));
+				line.append(formatString(companyOwner.getCompanyOwnerSSMNO(),20));
 				line.append(formatString(companyOwner.getCompanyOwnerMOFNo(),20));
 				line.append(formatBigDecimal(companyOwner.getShareholdingAmount()));
 				line.append(formatBigDecimal(companyOwner.getShareholdingPercentage()));
