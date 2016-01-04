@@ -167,6 +167,11 @@ public class ProfilePersonalizationBackingBean extends
 			 getManagedBean().getSelectedUser().setNotifyBySms(false); 
 			 throw new EpException(MessageConst.ERROR_770090);
 		 }
+		 if(getManagedBean().getSelectedUser().isNotifyBySms() 
+				 && getManagedBean().getSelectedUser().getMobileTelcoId() == null){
+			 getManagedBean().getSelectedUser().setNotifyBySms(false); 
+			 throw new EpException(MessageConst.ERROR_770250);
+		 }
 		this.getManagedBean().getSelectedUser().setModified(true);	
 	}
 	
