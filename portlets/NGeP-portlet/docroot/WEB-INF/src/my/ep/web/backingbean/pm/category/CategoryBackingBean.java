@@ -10,6 +10,7 @@
  */
 package my.ep.web.backingbean.pm.category;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -2628,33 +2629,32 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			return false;
 		}
 
-		if (this.getManagedBean().getPmCategoryL3().getPaidUpCapital() != null) {
-			try {
-				Integer.valueOf(this.getManagedBean().getPmCategoryL3()
-						.getPaidUpCapital());
-			} catch (NumberFormatException e) {
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_ERROR,
-										null,
-										MessageUtils
-												.getMessage(
-														MessageConst.ERROR_100003,
-														new String[] { ResourceBundleUtils
-																.getMessage(
-																		"lbl.pm.paid.capital",
-																		ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-																		new FacesScopes()
-																				.getUserLocale()) },
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
-				return false;
-			}
-		}
+//		if (this.getManagedBean().getPmCategoryL3().getPaidUpCapital() != null) {
+//			try {
+////				Integer.valueOf(this.getManagedBean().getPmCategoryL3().getPaidUpCapital());
+//			} catch (NumberFormatException e) {
+//				FacesContext
+//						.getCurrentInstance()
+//						.addMessage(
+//								null,
+//								new FacesMessage(
+//										FacesMessage.SEVERITY_ERROR,
+//										null,
+//										MessageUtils
+//												.getMessage(
+//														MessageConst.ERROR_100003,
+//														new String[] { ResourceBundleUtils
+//																.getMessage(
+//																		"lbl.pm.paid.capital",
+//																		ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+//																		new FacesScopes()
+//																				.getUserLocale()) },
+//														MessageUtils.BUNDLE_COMMON_MESSAGES,
+//														new FacesScopes()
+//																.getUserLocale())));
+//				return false;
+//			}
+//		}
 
 		if (this.getManagedBean().getPmCategoryL3().getCategoryL3Code() == null
 				|| this.getManagedBean().getPmCategoryL3().getCategoryL3Code()
