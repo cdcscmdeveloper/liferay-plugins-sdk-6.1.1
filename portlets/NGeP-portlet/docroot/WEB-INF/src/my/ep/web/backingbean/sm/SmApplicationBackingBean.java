@@ -6103,7 +6103,7 @@ public class SmApplicationBackingBean extends
 				currentTab, true);
 
 		// validate facility
-		SmApplicationUtil.validateFacilityPanel(getManagedBean(), currentTab,
+		SmApplicationUtil.validateFacilityPanel(getManagedBean(), -1,
 				true);
 
 		if (getManagedBean().getSmAppl().getApplType()
