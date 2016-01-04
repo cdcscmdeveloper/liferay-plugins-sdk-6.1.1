@@ -1133,14 +1133,13 @@ public class SmApplicationUtil {
 			SmApplicationManagedBean bean, int currentTab, boolean validSave) {
 		if (!SmCommonUtil.isCollectionEmpty(bean.getSmAppl()
 				.getSmSupplierBranches())) {
-			for (SmSupplierBranch applBr : bean.getSmAppl()
+			for (SmSupplierBranch brAppl : bean.getSmAppl()
 					.getSmSupplierBranches()) {
-				if (SmCommonUtil.isCollectionEmpty(applBr
+				if (SmCommonUtil.isCollectionEmpty(brAppl
 						.getSmSupplierBranchBanks())) {
 					validSave = false;
-					setNavigationBackToCurrentPage(currentTab, bean);
 					throw new EpException(MessageConst.ERROR_722622,
-							new String[] { applBr.getBranchName() });
+							new String[] { brAppl.getBranchName() });
 				}
 			}
 		}
@@ -1843,7 +1842,9 @@ public class SmApplicationUtil {
 			}
 			if (!facilityExist) {
 				valid = false;
-				setNavigationBackToCurrentPage(currentTab, bean);
+				if(currentTab!=-1){
+					setNavigationBackToCurrentPage(currentTab, bean);
+				}
 				throw new EpException(MessageConst.ERROR_722621,
 						new String[] { SmCommonUtil.getMessage(facTypeLabel,
 								null) });
