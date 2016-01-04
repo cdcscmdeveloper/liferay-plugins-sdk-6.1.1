@@ -646,7 +646,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
 				 if(!getManagedBean().getCircularVer().isDirectPurchase() 
 					  && getManagedBean().getCircularVer().isDirectNego() && getManagedBean().getCircularVer().isQt()){
-					 throw new EpException(MessageConst.ERROR_100022,  new String[]{"CheckBox"});
+					 throw new EpException(MessageConst.ERROR_100022,  
+							 new String[]{"Direct Nego, Direct Purchase or Quotation Tender checkbox"});
 				 }
 			}
 			
@@ -658,7 +659,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 									new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
 											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					   }
-					   if(typeOfPidPurchase(reason.getPmReason().getReasonId())){
+					   if(PidPurchaseTypeOther(reason.getPmReason().getReasonId())){
 						   if(reason.getReasonDesc().isEmpty()){
 							   throw new EpException(MessageConst.ERROR_100022, 
 										new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason.desc", 
@@ -1222,7 +1223,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}	
 	
 	public List<SelectItem> populateBankAccountList(SmSupplier smSupplier) {		
-		List<SelectItem> populateBankAccountList = new ArrayList<SelectItem>();
+		 List<SelectItem> populateBankAccountList = new ArrayList<SelectItem>();
 		 ISupplierSearchSO supplierSearchSO = null;
 	     SupplierSearchReqDTO supplierReqDTO = null;
 	     SupplierSearchResDTO supplierResDTO = null;
@@ -1230,16 +1231,21 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	     supplierReqDTO.setSupplierId(smSupplier.getSupplierId());
 		 supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,ISupplierSearchSO.class);
 	     supplierResDTO = supplierSearchSO.retrieveSmSupplierBankBySupplier(supplierReqDTO);
-	     
+	     int counter = 0;
 	     if (supplierResDTO.getSmSupplierBankList() != null) {
 	    	 
-	    	 if(supplierResDTO.getSmSupplierBankList().size() > 1){
-	    		 populateBankAccountList.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));	
+	    	 for (SmSupplierBank smSupplierBank : supplierResDTO.getSmSupplierBankList()) {
+	    		 if (smSupplierBank.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
+	    		      counter++;
+	    		      if(counter == 2 ){
+	    		          populateBankAccountList.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));		    
+	    		       }
+	    	      }
 	    	 }
-				for (SmSupplierBank smSupplierBank : supplierResDTO.getSmSupplierBankList()) {
-					if (smSupplierBank.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
-					
-						String account = smSupplierBank.getAccountNo();
+	         
+	    	 for (SmSupplierBank smSupplierBank : supplierResDTO.getSmSupplierBankList()) {
+				   if (smSupplierBank.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					    String account = smSupplierBank.getAccountNo();
 						if (smSupplierBank.getPmFinancialOrg() != null 
 								&& smSupplierBank.getPmFinancialOrg().getFinOrgName() != null) {
 							       account = account + ContractConst.SPACE_SLASH + smSupplierBank.getPmFinancialOrg().getFinOrgName();
@@ -2368,7 +2374,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
-	public boolean typeOfPidPurchase(Long reasonId){
+	public boolean PidPurchaseTypeOther(Long reasonId){
 		
 		if(reasonId == null || reasonId.intValue() == 0)
 		return false;
