@@ -21,6 +21,16 @@
 				</td>
 			</tr>
 			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.agency.name']}" />
+				</td>
+				<td>
+					<p:inputText label="#{lbl['lbl.sm.agency.name']}"
+						value="#{bb.managedBean.agencyName}"
+						size="40" maxlength="100"/>
+				</td>
+			</tr>
+			<tr>
 				<td colspan="2">
 					<div class="nav-wrapper" align="justify">
 						<p:commandButton value="#{lbl['lbl.btn.search']}" 
