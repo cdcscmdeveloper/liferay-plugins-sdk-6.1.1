@@ -129,11 +129,18 @@
 						<h:panelGroup style="float: right">
 							<h:outputText value="* " styleClass="mandatory" />
 							<h:outputText value="#{lbl['lbl.pm.paid.capital']}" />
+							yyyry
 						</h:panelGroup>
 						<p:inputText
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.paidUpCapital}"
-							size="15"
-							converterMessage="#{lbl['lbl.pm.paid.capital.invalid']}" />
+							size="15" maxlength="17"
+							converterMessage="#{lbl['lbl.pm.paid.capital.invalid']}">
+							<f:validateDoubleRange minimum="1" />
+							<f:validateDoubleRange maximum="99999999999999" />
+							<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							<p:ajax event="blur" process="@this" update="@this" />
+							</p:inputText>
 
 						<h:panelGroup style="float: right">
 							<h:outputText value="* " styleClass="mandatory" />
@@ -214,8 +221,12 @@
 					<td><p:inputText style="width:44%" required="true"
 							label="#{lbl['lbl.pm.paid.capital']}"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.paidUpCapital}"
-							size="33" id="paidUpCapId"
-							converterMessage="#{lbl['lbl.pm.paid.capital.invalid']}">
+							size="33" id="paidUpCapId" maxlength="17">
+							<f:validateDoubleRange minimum="1" />
+							<f:validateDoubleRange maximum="99999999999999" />
+							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							<p:ajax event="blur" process="@this" update="@this" />
+							
 						</p:inputText> <p:message id="paidUpCapIdMsg" for="paidUpCapId"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
