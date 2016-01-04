@@ -1135,14 +1135,42 @@ public class SmApplicationUtil {
 				.getSmSupplierBranches())) {
 			for (SmSupplierBranch brAppl : bean.getSmAppl()
 					.getSmSupplierBranches()) {
-				if (SmCommonUtil.isCollectionEmpty(brAppl
-						.getSmSupplierBranchBanks())) {
+				if (!isBranchAssignToBank(bean.getSmAppl(), brAppl)) {
 					validSave = false;
 					throw new EpException(MessageConst.ERROR_722622,
 							new String[] { brAppl.getBranchName() });
 				}
 			}
 		}
+	}
+
+	private static boolean isBranchAssignToBank(SmAppl appl,
+			SmSupplierBranch paramBranch) {
+		boolean retVal = false;
+		if (paramBranch != null && paramBranch.getSupplierBranchId() != null
+				&& !SmCommonUtil.isCollectionEmpty(appl.getSmSupplierBanks())) {
+			for (SmSupplierBank bnk : appl.getSmSupplierBanks()) {
+				if (!SmCommonUtil.isCollectionEmpty(bnk
+						.getSmSupplierBranchBanks())) {
+					for (SmSupplierBranchBank brBank : bnk
+							.getSmSupplierBranchBanks()) {
+						if (brBank.getSmSupplierBranch() != null
+								&& brBank.getSmSupplierBranch()
+										.getSupplierBranchId() != null
+								&& brBank
+										.getSmSupplierBranch()
+										.getSupplierBranchId()
+										.compareTo(
+												paramBranch
+														.getSupplierBranchId()) == 0) {
+							retVal = true;
+							break;
+						}
+					}
+				}
+			}
+		}
+		return retVal;
 	}
 
 	/**
@@ -1842,7 +1870,7 @@ public class SmApplicationUtil {
 			}
 			if (!facilityExist) {
 				valid = false;
-				if(currentTab!=-1){
+				if (currentTab != -1) {
 					setNavigationBackToCurrentPage(currentTab, bean);
 				}
 				throw new EpException(MessageConst.ERROR_722621,
