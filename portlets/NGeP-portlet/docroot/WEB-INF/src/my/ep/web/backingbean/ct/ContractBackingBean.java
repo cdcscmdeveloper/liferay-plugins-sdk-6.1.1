@@ -2382,7 +2382,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	   * @param Long reasonId
 	   * @return boolean
 	  */		
-	  public boolean typeOfPidPurchase(Long reasonId) {
+	  public boolean PidPurchaseTypeOther(Long reasonId) {
 			if(reasonId == null || reasonId.intValue() == 0)
 			return false;
 					
