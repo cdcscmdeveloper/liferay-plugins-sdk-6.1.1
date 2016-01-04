@@ -17,6 +17,7 @@ import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
 import my.ep.biz.service.pm.common.votfund.IVotFundSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
+import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.payment.IPaymentSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
@@ -107,6 +108,8 @@ public class InitializeSO {
 					IRegistrationSO.class);
 	protected IRemoteClientSO remoteClientSO = BusinessDelegate.getInstance()
 			.getServiceObject(ModuleCodeConst.MDB, IRemoteClientSO.class);
+	protected ISupplierGstSO supplierGstSO = BusinessDelegate.getInstance()
+			.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class); 
 
 	public InitializeSO() {
 		super();
