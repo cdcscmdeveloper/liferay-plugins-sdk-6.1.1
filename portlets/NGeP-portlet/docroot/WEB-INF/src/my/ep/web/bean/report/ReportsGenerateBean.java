@@ -369,6 +369,13 @@ public class ReportsGenerateBean {
 	
 	/** The sm gen company name view. */
 	private boolean smGenCompanyNameView=false;
+	
+	/** The sm supp company name view. */
+	private boolean smSuppCompanyNameView=false;
+	
+	
+	/** The sm mandatory gen supplier type view. */
+	private boolean smMandatoryGenSupplierTypeView;
 
 	/** The sm sub category view. */
 	private boolean smSubCategoryView = false;
@@ -420,6 +427,20 @@ public class ReportsGenerateBean {
 
 	/** The sm application status view. */
 	private boolean smApplicationStatusView = false;
+	
+	/** The Sm gen application status view. */
+	private boolean SmGenApplicationStatusView=false;
+	
+	/** The sm mandatory doh supplier type view. */
+	private boolean smMandatoryDOHSupplierTypeView=false;	
+	
+	/** The sm gen identification number view. */
+	private boolean smGenIdentificationNumberView=false;
+	
+	/** The sm ps identification number view. */
+	private boolean smPSIdentificationNumberView=false;	
+	
+	private boolean smGenDistrictView=false;
 
 	/** The sm extra two column view. */
 	private boolean smExtraTwoColumnView = false;
@@ -15646,5 +15667,131 @@ public class ReportsGenerateBean {
 	 */
 	public void setSmGenCompanyNameView(boolean smGenCompanyNameView) {
 		this.smGenCompanyNameView = smGenCompanyNameView;
+	}
+
+	/**
+	 * Checks if is sm supp company name view.
+	 * 
+	 * @return the smSuppCompanyNameView
+	 */
+	public boolean isSmSuppCompanyNameView() {
+		return smSuppCompanyNameView;
+	}
+
+	/**
+	 * Sets the sm supp company name view.
+	 * 
+	 * @param smSuppCompanyNameView
+	 *            the smSuppCompanyNameView to set
+	 */
+	public void setSmSuppCompanyNameView(boolean smSuppCompanyNameView) {
+		this.smSuppCompanyNameView = smSuppCompanyNameView;
+	}
+
+	/**
+	 * Checks if is sm mandatory gen supplier type view.
+	 * 
+	 * @return the smMandatoryGenSupplierTypeView
+	 */
+	public boolean isSmMandatoryGenSupplierTypeView() {
+		return smMandatoryGenSupplierTypeView;
+	}
+
+	/**
+	 * Sets the sm mandatory gen supplier type view.
+	 * 
+	 * @param smMandatoryGenSupplierTypeView
+	 *            the smMandatoryGenSupplierTypeView to set
+	 */
+	public void setSmMandatoryGenSupplierTypeView(
+			boolean smMandatoryGenSupplierTypeView) {
+		this.smMandatoryGenSupplierTypeView = smMandatoryGenSupplierTypeView;
+	}
+
+	/**
+	 * Checks if is sm gen application status view.
+	 * 
+	 * @return the smGenApplicationStatusView
+	 */
+	public boolean isSmGenApplicationStatusView() {
+		return SmGenApplicationStatusView;
+	}
+
+	/**
+	 * Sets the sm gen application status view.
+	 * 
+	 * @param smGenApplicationStatusView
+	 *            the smGenApplicationStatusView to set
+	 */
+	public void setSmGenApplicationStatusView(boolean smGenApplicationStatusView) {
+		SmGenApplicationStatusView = smGenApplicationStatusView;
+	}
+
+	/**
+	 * Checks if is sm mandatory doh supplier type view.
+	 * 
+	 * @return the smMandatoryDOHSupplierTypeView
+	 */
+	public boolean isSmMandatoryDOHSupplierTypeView() {
+		return smMandatoryDOHSupplierTypeView;
+	}
+
+	/**
+	 * Sets the sm mandatory doh supplier type view.
+	 * 
+	 * @param smMandatoryDOHSupplierTypeView
+	 *            the smMandatoryDOHSupplierTypeView to set
+	 */
+	public void setSmMandatoryDOHSupplierTypeView(
+			boolean smMandatoryDOHSupplierTypeView) {
+		this.smMandatoryDOHSupplierTypeView = smMandatoryDOHSupplierTypeView;
+	}
+
+	/**
+	 * Checks if is sm gen identification number view.
+	 * 
+	 * @return the smGenIdentificationNumberView
+	 */
+	public boolean isSmGenIdentificationNumberView() {
+		return smGenIdentificationNumberView;
+	}
+
+	/**
+	 * Sets the sm gen identification number view.
+	 * 
+	 * @param smGenIdentificationNumberView
+	 *            the smGenIdentificationNumberView to set
+	 */
+	public void setSmGenIdentificationNumberView(
+			boolean smGenIdentificationNumberView) {
+		this.smGenIdentificationNumberView = smGenIdentificationNumberView;
+	}
+
+	/**
+	 * @return the smPSIdentificationNumberView
+	 */
+	public boolean isSmPSIdentificationNumberView() {
+		return smPSIdentificationNumberView;
+	}
+
+	/**
+	 * @param smPSIdentificationNumberView the smPSIdentificationNumberView to set
+	 */
+	public void setSmPSIdentificationNumberView(boolean smPSIdentificationNumberView) {
+		this.smPSIdentificationNumberView = smPSIdentificationNumberView;
+	}
+
+	/**
+	 * @return the smGenDistrictView
+	 */
+	public boolean isSmGenDistrictView() {
+		return smGenDistrictView;
+	}
+
+	/**
+	 * @param smGenDistrictView the smGenDistrictView to set
+	 */
+	public void setSmGenDistrictView(boolean smGenDistrictView) {
+		this.smGenDistrictView = smGenDistrictView;
 	}
 }
