@@ -38,7 +38,8 @@ public class ContinuousBidSchedulerJob implements Job {
 
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
-
+		debugLogger("***** continuous Bid Scheduler job triggered from dev server*******");
+		System.out.println("***** continuous Bid Scheduler job triggered from dev server*******");
 		// SchedulerHelper schedulerHelper = SchedulerHelper.getInstance();
 
 		List<Long> localBidScheduleIdList = SchedulerHelper
