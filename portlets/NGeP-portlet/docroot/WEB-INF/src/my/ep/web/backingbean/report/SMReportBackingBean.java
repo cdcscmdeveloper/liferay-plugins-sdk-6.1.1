@@ -301,7 +301,7 @@ public class SMReportBackingBean extends
 			rptGenBean.setSmCompanyNameView(true);
 			rptGenBean.setFromDateView(true);
 			rptGenBean.setSmStateView(true);
-			rptGenBean.setSmDistrictView(true);
+			rptGenBean.setSmGenDistrictView(true);
 			rptGenBean.setSmApplicationNoView(true);
 			break;
 		case ReportConst.SM_SITE_VISIT_APPL_OFFICER_RPT_VAL:
@@ -365,7 +365,7 @@ public class SMReportBackingBean extends
 		case ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL:
 			rptGenBean.retrieveCategoryLevOne1();
 			rptGenBean.setSmNonMandatoryCategoryView(true);
-			rptGenBean.setSmCompanyNameView(true);
+			rptGenBean.setSmSuppCompanyNameView(true);
 			rptGenBean.setSmBusCompanyRegistrationStatusView(true);
 			//rptGenBean.setSmRegistrationTypeView(true);
 			rptGenBean.setSmMandatorySupplierTypeView(true);
@@ -401,10 +401,10 @@ public class SMReportBackingBean extends
 			rptGenBean.setSmMandatorySupplierTypeView(true);
 			rptGenBean.setSmMofRegNoFromView(true);
 			rptGenBean.setSmMofRegNoToView(true);
-			rptGenBean.setSmIdentificationNumberView(true);
+			rptGenBean.setSmGenIdentificationNumberView(true);
 			break;
 		case ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL:
-			rptGenBean.setSmCompanyNameView(true);
+			rptGenBean.setSmGenCompanyNameView(true);
 			rptGenBean.setSmSupplierTypeView(true);
 			rptGenBean.setSmMofRegNoFromView(true);
 			rptGenBean.setSmMofRegNoToView(true);
@@ -439,7 +439,7 @@ public class SMReportBackingBean extends
 			rptGenBean.setSmCompanyNameView(true);
 			rptGenBean.setSmMofRegNoFromView(true);
 			rptGenBean.setSmMofRegNoToView(true);
-			rptGenBean.setSmIdentificationNumberView(true);
+			rptGenBean.setSmPSIdentificationNumberView(true);
 			rptGenBean.setSmPersonnelStaffRoleView(true);
 
 			/*
