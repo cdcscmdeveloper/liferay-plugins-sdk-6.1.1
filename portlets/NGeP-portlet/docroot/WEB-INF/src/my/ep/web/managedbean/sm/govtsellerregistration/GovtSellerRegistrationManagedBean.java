@@ -31,6 +31,7 @@ public class GovtSellerRegistrationManagedBean extends RegistrationManagedBean {
 
 	public String targetPage;
 	public String orgTypeCode;
+	public String agencyName;
 	public List<SelectItem> agencyTypeItems;
 	public List<SelectItem> identificationTypeItems;
 	public List<SelectItem> branchCompanyStates;
@@ -71,6 +72,7 @@ public class GovtSellerRegistrationManagedBean extends RegistrationManagedBean {
 		private ISearchResultBean<Object[]> getOrgProfileResultBean(
 				RegistrationReqDTO reqDTO) {
 			reqDTO.setOrgTypeCode(orgTypeCode);
+			reqDTO.setOrgName(agencyName);
 			reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
 			return SmServiceLookup.getRegistrationSO()
 					.retrieveOrgProfileUsingNativeQuery(reqDTO)
@@ -168,7 +170,8 @@ public class GovtSellerRegistrationManagedBean extends RegistrationManagedBean {
 		return branchCompanyDistricts;
 	}
 
-	public void setBranchCompanyDistricts(List<SelectItem> branchCompanyDistricts) {
+	public void setBranchCompanyDistricts(
+			List<SelectItem> branchCompanyDistricts) {
 		this.branchCompanyDistricts = branchCompanyDistricts;
 	}
 
@@ -194,6 +197,14 @@ public class GovtSellerRegistrationManagedBean extends RegistrationManagedBean {
 
 	public void setShowBranchPointOfContact(boolean showBranchPointOfContact) {
 		this.showBranchPointOfContact = showBranchPointOfContact;
+	}
+
+	public String getAgencyName() {
+		return agencyName;
+	}
+
+	public void setAgencyName(String agencyName) {
+		this.agencyName = agencyName;
 	}
 
 }
