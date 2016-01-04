@@ -28,9 +28,9 @@
 			               <p:selectBooleanCheckbox  disabled="true" style="text-align:top;"  
 			                    value="#{panelBackingBean.managedBean.circularVer.directNego}"> 
 			                 </p:selectBooleanCheckbox>
-			                <p:spacer width="2" />	
-			  	            <h:outputText value="#{lbl['lbl.ct.panel.dn']}"  />
-			  	        </h:panelGrid>    
+			                <p:spacer width="2" />
+			                    <h:outputText value="#{lbl['lbl.ct.panel.dn']}"  />
+			  	            </h:panelGrid>    
 					
 					  <p:outputLabel value="#{lbl['lbl.ct.start.date']}" />
 			   	      <p:calendar id="popupButtonCal" navigator="true" size="9" showOn="button" 
@@ -44,8 +44,8 @@
 			                       value="#{panelBackingBean.managedBean.circularVer.directPurchase}" >
 			                   </p:selectBooleanCheckbox>
 			                   <p:spacer width="2" />	
-			  	               <h:outputText value="#{lbl['lbl.ct.panel.dp']}"  />
-			  	           </h:panelGrid>
+			  	                    <h:outputText value="#{lbl['lbl.ct.panel.dp']}"  />
+			  	             </h:panelGrid>
 			              
 			           <h:outputLabel value="#{lbl['lbl.ct.end.date']}" />
 		               <p:calendar value="#{panelBackingBean.managedBean.circularVer.endDate}"
@@ -59,15 +59,44 @@
 		         	           value="#{panelBackingBean.managedBean.circularVer.qt}">
 				           </p:selectBooleanCheckbox>
 			               <p:spacer width="2" />	
-			  	          <h:outputText value="#{lbl['lbl.ct.panel.qt']}"  />   
-			  	      </h:panelGrid>   
-			   	       
+			                       <h:outputText value="#{lbl['lbl.ct.panel.qt']}"  />   
+			  	   	      </h:panelGrid>   
+			  	      
+			  	          <f:verbatim/>
+			              <h:panelGrid columns="3">
+			                  <p:selectBooleanCheckbox disabled="true" 
+			                       value="#{panelBackingBean.managedBean.circularVer.pid}"  style="text-align:top;">
+			                   </p:selectBooleanCheckbox>
+			                   <p:spacer width="2" />	
+			                         <h:outputText value="#{lbl['lbl.ct.pid']}"  />
+			  	               </h:panelGrid>
+			   	          
+			   	          <f:verbatim/><f:verbatim/>
 			   	         <h:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
 	                 <h:commandLink 	 action="#{panelBackingBean.downloadFile()}" 
 	                      value="#{panelBackingBean.managedBean.circularVer.circularFileName}" styleClass="blue_font"/>				
       	        </h:panelGrid>
 	       </p:panel>
 	
+	       <p:panel rendered="#{panelBackingBean.managedBean.circularVer.pid}"
+	            id="purchaseInDefault"  header="#{lbl['lbl.ct.pid.panel.name']}" toggleable="true" toggleSpeed="500" >
+	             <p:dataTable id="pidTableId" var="pidObj" widgetVar="PidReasonObj"
+	                   value="#{panelBackingBean.managedBean.circularVer.ctCircularPidReason}">
+				       <ac:paginator for="pidTableId" />
+				        <p:column style="width:50%;" 
+				            headerText="#{lbl['lbl.ct.pid.reason']}" id="updateColumn"  styleClass="column-align-center">
+		                        <p:selectOneMenu value="#{pidObj.pmReason.reasonId}" style="width:360px;float:left;text-align:left;">
+			                          <f:selectItems value="#{panelBackingBean.getDropdownPidCodeValues(pidObj.pmReason.reasonId)}" />
+			                    </p:selectOneMenu>
+			          </p:column> 
+		              <p:column  headerText="#{lbl['lbl.ct.pid.reason.desc']}" id="updatePidPurchase"  styleClass="column-align-center" style="width:50%;">
+		                      <p:inputText  value="#{pidObj.reasonDesc}" maxlength="255"
+		                           style="width:350px;float:left;text-align:left;" 
+		                           rendered="#{panelBackingBean.PidPurchaseTypeOther(pidObj.pmReason.reasonId)}">
+		                           </p:inputText>  
+		               </p:column>  
+				 </p:dataTable>
+			</p:panel>
 	       <p:panel id="contactPerson"
 	            header="#{lbl['lbl.ct.panel.contact.person']}" toggleable="true" toggleSpeed="500" >
 		        <p:dataTable id="contactPersonDt" 
