@@ -38,11 +38,15 @@
 					rowKey="#{fac}" rowIndexVar="index" id="svcFacDt">
 					
 					<ac:paginator for="svcFacDt" />
+					
+					<p:column headerText="" style="width: 5%;">
+						<p:selectBooleanCheckbox value="#{fac.selected}" >
+						    <p:ajax event="change" update=":#{p:component('siteVisitCatPanelId')}" 
+						    	listener="#{backingBean.onCheckedSiteVisitFacilityAddress()}" process="@this" partialSubmit="true"/>
+						</p:selectBooleanCheckbox>
+					</p:column>
 		
 					<p:column headerText="#{lbl['lbl.sm.facility.name']}">
-						<p:selectBooleanCheckbox value="#{fac.selected}" >
-						    <p:ajax event="change" update=":#{p:component('siteVisitCatPanelId')}" listener="#{backingBean.onCheckedSiteVisitFacilityAddress()}"/>
-						</p:selectBooleanCheckbox>
 						<h:outputText value="#{fac.facilityName}" />
 					</p:column>
 		
