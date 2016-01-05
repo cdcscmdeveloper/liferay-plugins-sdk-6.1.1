@@ -5,7 +5,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:acp="http://ac.my/jsf/primefaces/cc">
 	
 	<ui:define name="resourceSection" />
 	
@@ -67,9 +68,11 @@
 		
 		<tr>
 			<td>
+				<acp:captcha id="accaptcha" label="Captcha" language="tr" theme="white"/> 
 				<p:commandButton 
 					value="#{lbl['lbl.btn.submit']}" onclick="submissionDialog.show();"  oncomplete="submissionDialog.hide();"
-					action="#{supplierUserActivationBackingBean.activateSupplierUser}" />
+					action="#{supplierUserActivationBackingBean.activateSupplierUser}"
+					ajax="false" />
 			</td>
 			<td />
 		</tr>
