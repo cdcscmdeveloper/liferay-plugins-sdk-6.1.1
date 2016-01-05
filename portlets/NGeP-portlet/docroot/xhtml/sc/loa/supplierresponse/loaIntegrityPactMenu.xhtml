@@ -10,6 +10,7 @@
 		<table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
 			<tr>
 				<td style="vertical-align: top; padding-top: 84px;"><p:selectBooleanCheckbox
+						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 						value="#{lOADetailBackingBean.managedBean.agreeWithTermsConditions}">
 						<p:ajax update="@form" />
 					</p:selectBooleanCheckbox></td>

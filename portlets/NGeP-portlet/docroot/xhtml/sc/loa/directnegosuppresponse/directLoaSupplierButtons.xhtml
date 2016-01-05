@@ -12,46 +12,52 @@
 	</p:blockUI>
 
 	<div class="ppRightBtn">
-		<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all" partialSubmit="true" 
-		    update="@form"
-			onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-			action="#{directLOABackingBean.saveAction}" />
+		<ui:decorate
+			template="/WEB-INF/facelets/templates/claim_template.xhtml">
+			<ui:define name="outComeSection">
+				<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
+					partialSubmit="true" update="@form" onstart="blockWidget.show();"
+					oncomplete="blockWidget.hide();"
+					action="#{directLOABackingBean.saveAction}" />
 
-		<c:choose>
-			<c:when test="#{!empty directLOABackingBean.managedBean.taskId}">
-				<ui:repeat var="bpmAction"
-					value="#{directLOABackingBean.managedBean.outComes}">
-					<ui:param name="buttonLabel"
-						value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+				<c:choose>
+					<c:when test="#{!empty directLOABackingBean.managedBean.taskId}">
+						<ui:repeat var="bpmAction"
+							value="#{directLOABackingBean.managedBean.outComes}">
+							<ui:param name="buttonLabel"
+								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 
-					<h:panelGroup rendered="#{bpmAction == 'ACCEPT'}">
-						<p:outputPanel id="spkiOutputPanel">
-							<ac:spkiPopup id="spkiPopup"
-								password="#{directLOABackingBean.managedBean.spkiBackingBean.password}"
-								challengeAns1="#{directLOABackingBean.managedBean.spkiBackingBean.challengeAns1}"
-								challengeQues1="#{directLOABackingBean.managedBean.spkiBackingBean.challengeQues1}"
-								postSignAction="#{directLOABackingBean.spkiSignAction(spkiBackingBean.pmDigiSign)}" />
-						</p:outputPanel>
-						<p:commandButton value="#{lbl[buttonLabel]}"
-							styleClass="ui-button" update="spkiOutputPanel"
-							partialSubmit="true" process="@form"
-							action="#{directLOABackingBean.updateBpmTaskAction(bpmAction)}"
-							actionListener="#{directLOABackingBean.managedBean.spkiBackingBean.getChallengeQuestions}"
-							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
-							<f:setPropertyActionListener value="#{bpmAction}"
-								target="#{directLOABackingBean.managedBean.action}" />
-						</p:commandButton>
-					</h:panelGroup>
+							<h:panelGroup rendered="#{bpmAction == 'ACCEPT'}">
+								<p:outputPanel id="spkiOutputPanel">
+									<ac:spkiPopup id="spkiPopup"
+										password="#{directLOABackingBean.managedBean.spkiBackingBean.password}"
+										challengeAns1="#{directLOABackingBean.managedBean.spkiBackingBean.challengeAns1}"
+										challengeQues1="#{directLOABackingBean.managedBean.spkiBackingBean.challengeQues1}"
+										postSignAction="#{directLOABackingBean.spkiSignAction(spkiBackingBean.pmDigiSign)}" />
+								</p:outputPanel>
+								<p:commandButton value="#{lbl[buttonLabel]}"
+									styleClass="ui-button" update="spkiOutputPanel"
+									partialSubmit="true" process="@form"
+									action="#{directLOABackingBean.updateBpmTaskAction(bpmAction)}"
+									actionListener="#{directLOABackingBean.managedBean.spkiBackingBean.getChallengeQuestions}"
+									onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+									<f:setPropertyActionListener value="#{bpmAction}"
+										target="#{directLOABackingBean.managedBean.action}" />
+								</p:commandButton>
+							</h:panelGroup>
 
-					<h:panelGroup rendered="#{bpmAction == 'REJECT'}">
-						<p:commandButton value="#{lbl[buttonLabel]}"
-							styleClass="ui-button" onstart="blockWidget.show();"
-							oncomplete="blockWidget.hide();"
-							action="#{directLOABackingBean.updateBpmTaskAction(bpmAction)}"
-							partialSubmit="true" process="@this" update="@this" />
-					</h:panelGroup>
-				</ui:repeat>
-			</c:when>
-		</c:choose>
+							<h:panelGroup rendered="#{bpmAction == 'REJECT'}">
+								<p:commandButton value="#{lbl[buttonLabel]}"
+									styleClass="ui-button" onstart="blockWidget.show();"
+									oncomplete="blockWidget.hide();"
+									action="#{directLOABackingBean.updateBpmTaskAction(bpmAction)}"
+									partialSubmit="true" process="@this" update="@this" />
+							</h:panelGroup>
+						</ui:repeat>
+					</c:when>
+				</c:choose>
+			</ui:define>
+		</ui:decorate>
+
 	</div>
 </ui:composition>

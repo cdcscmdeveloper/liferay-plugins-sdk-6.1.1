@@ -17,13 +17,14 @@
 			<p:column style="width:2%" >
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selectAllNegoLoc"
+					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 						value="#{lOIDetailBackingBean.flag}"
 						rendered="#{isEditableStatus}">
 						<p:ajax partialSubmit="true" process="@this" update="contentsTbl"
 							listener="#{lOADetailBackingBean.selectAllDocuments}"></p:ajax>
 					</p:selectBooleanCheckbox>
 				</f:facet>
-				<p:selectBooleanCheckbox value="#{scLoaReport.selected}" disabled="#{!empty scLoaReport.pmDocument}">
+				<p:selectBooleanCheckbox value="#{scLoaReport.selected}" disabled="#{!empty scLoaReport.pmDocument or lOADetailBackingBean.managedBean.readOnly}">
 					<p:ajax partialSubmit="true" process="@this" update="contentsTbl" />
 				</p:selectBooleanCheckbox>
 			</p:column>
@@ -31,6 +32,7 @@
 
 			<p:column headerText="#{lbl['lbl.sc.content']}">
 				<h:inputText style="width:96%" value="#{scLoaReport.title}"
+				disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 					rendered="#{empty scLoaReport.pmDocument}" >
 					 <p:ajax event="keyup" />
 					</h:inputText>
@@ -44,6 +46,7 @@
 					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload}">
 					<h:outputText value="#{scLoaReport.scLoaReportAttachment.fileName}" />
 					<p:commandButton oncomplete="attachmentPopupDlg.show();"
+					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 						value="#{lbl['lbl.txt.attachment']}"
 						partialSubmit="true" process="@this"
 						update="@([id$=attachmentPopup])">
@@ -59,6 +62,7 @@
 
 			<p:column style="width:10%;text-align: center;" headerText="#{lbl['lbl.sc.action']}">
 				<p:commandButton id="download" icon="ui-icon-download"
+				disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 					style="background-color:transparent !important; border:0px none;"
 					ajax="false"
 					action="#{lOADetailBackingBean.downloadReport(scLoaReport)}"
@@ -68,12 +72,14 @@
 
 		<div class="ppRightBtn BtnSpacing">
 			<p:commandButton rendered="#{!isPendingVerification}"
+			disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 				value="#{lbl['lbl.btn.download.all']}" ajax="false"
 				styleClass="ui-button"
 				action="#{lOADetailBackingBean.downloadAllReports}" />
 
 			<p:commandButton
 				value="#{lbl['lbl.sc.loiloa.download.all.and.print']}"
+				disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 				styleClass="ui-button" update="@([id$=loaButtonsId])"
 				onclick="printBtn.jq.click();"
 				actionListener="#{lOADetailBackingBean.showVeriryButton()}"
@@ -81,18 +87,21 @@
 
 			<p:commandButton
 				value="#{lbl['lbl.sc.loiloa.download.all.and.print']}" ajax="false"
+				disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 				partialSubmit="true" process="@form" styleClass="ui-button"
 				widgetVar="printBtn" style="display:none;"
 				actionListener="#{lOADetailBackingBean.downloadAllReports}" />
 
 			<c:if test="#{isEditableStatus}">
 				<p:commandButton value="#{lbl['lbl.btn.add']}"
+				disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 					process="@this, contentsTbl" partialSubmit="true"
 					action="#{lOADetailBackingBean.addLoaContentAction}"
 					oncomplete="contentsTblWidget.paginator.endLink.click();"
 					update="contentsTbl" />
 
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 					process="@this, contentsTbl" partialSubmit="true"
 					oncomplete="loaReportDeletePopUp.show();"
 					update="@([id$=#{loaReportDeleteId}])" />

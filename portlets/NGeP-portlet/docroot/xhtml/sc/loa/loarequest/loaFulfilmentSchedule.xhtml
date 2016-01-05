@@ -22,7 +22,7 @@
 						<h:outputLabel value="#{lbl['lbl.sc.spec.total.frequency']}"></h:outputLabel>
 					</h:column>
 					<h:column>
-						<p:inputText disabled="#{!isEditableStatus}" 
+						<p:inputText disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}" 
 							label ="#{lbl['lbl.sc.spec.total.frequency']}"
 							maxlength="3"
 							value="#{lOADetailBackingBean.managedBean.totalFrequency}"
@@ -45,7 +45,7 @@
 					<p:column headerText="#{lbl['lbl.sc.start.month']}"
 						style="width:15%">
 						<p:selectOneMenu id="startMonth" style="width:100px;" 
-						    required="true" disabled="#{!isEditableStatus}"
+						    required="true" disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}"
 							value="#{frequency.startMonth}" label="#{lbl['lbl.sc.start.month']}">
 							<f:selectItems value="#{lOADetailBackingBean.yearDetails}"></f:selectItems>
 							<p:ajax process="@this" event="change" partialSubmit="true" update="frequencySchedule" 
@@ -55,7 +55,7 @@
 					<p:column
 						headerText="#{lbl['lbl.sc.start.year']}"
 						style="width:15%">
-						<p:selectOneMenu value="#{frequency.startYear}" disabled="#{!isEditableStatus}"
+						<p:selectOneMenu value="#{frequency.startYear}" disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}"
 						    required="true"
 							style="width:100px;" label="#{lbl['lbl.sc.start.year']}">
 							<f:selectItems value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
@@ -66,7 +66,7 @@
 
 					<p:column headerText="#{lbl['lbl.sc.end.month']}"
 						style="width:15%">
-						<p:selectOneMenu style="width:100px;" required="true" disabled="#{!isEditableStatus}"
+						<p:selectOneMenu style="width:100px;" required="true" disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}"
 							value="#{frequency.endMonth}" label="#{lbl['lbl.sc.end.month']}">
 
 							<f:selectItems value="#{lOADetailBackingBean.yearDetails}"></f:selectItems>
@@ -79,7 +79,7 @@
 					<p:column headerText="#{lbl['lbl.sc.end.year']}" 
 						style="width:15%">
 						<p:selectOneMenu value="#{frequency.endYear}" 
-						     required="true" style="width:100px;" disabled="#{!isEditableStatus}"
+						     required="true" style="width:100px;" disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}"
 							 label="#{lbl['lbl.sc.end.year']}">
 							<f:selectItems value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
 							<p:ajax event="change" update="scheduleDetails"
@@ -121,7 +121,7 @@
 					<h:column>
 						<p:inputText 
 							value="#{lOADetailBackingBean.managedBean.totalProgressivePayment}"
-							disabled="#{!isEditableStatus}" style="text-align:right;">
+							disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}" style="text-align:right;">
 							<p:ajax event="blur" update="progressivePayment"
 								partialSubmit="true" process="@this"
 								listener="#{lOADetailBackingBean.addProgressiveDetails}" />
@@ -143,6 +143,7 @@
 							<h:outputText value="#{lbl['lbl.sc.description']}" />
 						</f:facet>
 						<p:inputText value="#{payment.phaseDesc}" maxlength="50" 
+						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 						    label="#{lbl['lbl.sc.description']}"
 							required="true" id="progressivePhasedesc" style="width:160px;"> 
 							<p:ajax event="blur" partialSubmit="true" process="@this" />
@@ -154,6 +155,7 @@
 					<p:column headerText="#{lbl['lbl.sc.from']}"
 						style="width:12%">
 						<p:selectOneMenu style="width:100px;"
+						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 						    required="true" label="#{lbl['lbl.sc.from']}"
 							value="#{payment.startMonth}">
 							<f:selectItems value="#{lOADetailBackingBean.yearDetails}"></f:selectItems>
@@ -166,6 +168,7 @@
 						style="width:12%">
 
 						<p:selectOneMenu value="#{payment.startYear}" 
+						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 						    required="true" label="#{lbl['lbl.sc.start.year']}"
 						    style="width:100px;">
 							<f:selectItems
@@ -178,6 +181,7 @@
 					<p:column headerText="#{lbl['lbl.sc.to']}"
 						style="width:12%">
 						<p:selectOneMenu style="width:100px;"  required="true" 
+						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 						  label="#{lbl['lbl.sc.to']}" value="#{payment.endMonth}">
 							<f:selectItems value="#{lOADetailBackingBean.yearDetails}">
 							</f:selectItems>
@@ -188,6 +192,7 @@
 					<p:column headerText="#{lbl['lbl.sc.end.year']}"
 						style="width:12%">
 						<p:selectOneMenu value="#{payment.endYear}" required="true" 
+						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 						  label="#{lbl['lbl.sc.end.year']}" style="width:100px;">
 							<f:selectItems
 								value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
@@ -202,6 +207,7 @@
 							<ac:iconTooltip value="#{lbl['lbl.sc.spec.percentage.tooltip']}" />
 						</f:facet>
 						<p:inputText value="#{payment.percentage}" required="true" style="width:80px; text-align:right;"
+						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 							id="progressivePercentage" 
 							label="#{lbl['lbl.sc.percentage']}" maxlength="18" >
 							<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>

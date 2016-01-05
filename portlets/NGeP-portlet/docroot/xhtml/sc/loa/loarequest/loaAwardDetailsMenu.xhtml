@@ -33,6 +33,7 @@
 			
 			<p:column headerText="#{lbl['lbl.sc.zone']}" rendered="#{isZonal}">
 				<p:commandLink id="zoneName"
+				disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 					oncomplete="zoneLocPopup.show();"
 					partialSubmit="true" process="@this" update="@([id$=zoneLocPopup])">
 					

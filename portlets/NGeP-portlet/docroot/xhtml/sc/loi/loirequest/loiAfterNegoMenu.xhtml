@@ -22,7 +22,7 @@
 				rendered="#{isEditableStatus}" />
 
 			<p:column headerText="#{lbl['lbl.sc.document.title']}" style="width:50%">
-				<p:inputText style="width:85%" value="#{scLoiSuppDoc.title}">
+				<p:inputText style="width:85%" value="#{scLoiSuppDoc.title}" readonly="#{lOIDetailBackingBean.managedBean.readOnly}">
 					<p:ajax event="keyup" />
 				</p:inputText>
 			</p:column>
@@ -33,6 +33,7 @@
 					immediate="true" action="#{lOIDetailBackingBean.downloadFile(scLoiSuppDoc.scLoiSupportingDocAttachment)}"/>
 						
 					<p:commandButton oncomplete="loiSuppAttmPopupDlg.show();"
+					disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
 						value="#{lbl['lbl.txt.attachment']}" partialSubmit="true"
 						process="@this" update="@([id$=loiSuppAttmPopup])">
 						<f:setPropertyActionListener
@@ -46,12 +47,14 @@
 
 		<div class="ppRightBtn BtnSpacing">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
+			disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
 				process="@this, suppDocTbl" partialSubmit="true"
 				action="#{lOIDetailBackingBean.addLoiSuppDocAction}"
 				oncomplete="suppDocTblWidget.paginator.endLink.click();"
 				update="suppDocTbl" rendered="#{lOIDetailBackingBean.managedBean.buttonFlag}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+			disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
 				process="@this, suppDocTbl" partialSubmit="true"
 				rendered="#{lOIDetailBackingBean.managedBean.buttonFlag}"
 				oncomplete="supporingDocDeletePopUp.show();"

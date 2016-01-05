@@ -87,6 +87,7 @@
 						<tr>
 							<td>
 								<p:selectOneMenu id="branch"
+								disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 									value="#{lOADetailBackingBean.managedBean.scLoa.supplierBranch}"
 									style="width: 282px;margin-bottom: 5px;"
 									label="#{lbl['lbl.sc.branch']}">
@@ -184,7 +185,7 @@
 				<p:inputText id="title" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.title}" size="35"
 					required="true"
 					label="#{lbl['lbl.sc.title']}"
-					disabled="#{!isEditableStatus}"
+					disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}"
 					maxlength="100" />
 				<p:message id="titleMsg" for="title" display="icon" />
 			</td>
@@ -210,7 +211,7 @@
 						value="#{lOADetailBackingBean.managedBean.scLoa.procurementTypeCatId.parameterId}"
 						style="margin-bottom:5px;width:282px;"
 						label="#{lbl['lbl.sc.procurment.type.category']}"
-						rendered="#{isDocTypeQuotation}" disabled="#{!isEditableStatus}">
+						rendered="#{isDocTypeQuotation}" disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}">
 						<f:selectItems
 							value="#{lOADetailBackingBean.getDropdownValues(ParameterTypeConst.procurementTypeCategory)}" />
 						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
@@ -223,14 +224,14 @@
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			 </td>
 			<td colspan="3">
-				<p:inputText disabled="#{isDocTypeQuotation || !isEditableStatus}"
+				<p:inputText disabled="#{isDocTypeQuotation || !isEditableStatus || lOADetailBackingBean.managedBean.readOnly}"
 					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fileNo}" size="29" maxlength="50"/>
 				<p:inputText id="fileExtNo"  style="margin-left: 2px;width: 28px; text-align:right;"
 					value="#{lOADetailBackingBean.managedBean.scLoa.fileExtNo}" size="6"
 					required="true"
 					label="#{lbl['lbl.sc.qt.fileno']}"
 					maxlength="3"
-					disabled="#{!isEditableStatus}" />
+					disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}" />
 				<p:message id="fileExtNoMsg" for="fileExtNo" display="icon" />
 			</td>
 		</tr>
@@ -268,7 +269,7 @@
 			<td>
 				<p:inputText 
 						value="#{lOADetailBackingBean.managedBean.scLoa.gstAmt}"
-						disabled="#{lOADetailBackingBean.isGSTRegActive() or !isPendingSubmissionStatus}" size="35" id="gstAmtId" style="text-align:right;">
+						disabled="#{lOADetailBackingBean.isGSTRegActive() or !isPendingSubmissionStatus or lOADetailBackingBean.managedBean.readOnly}" size="35" id="gstAmtId" style="text-align:right;">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						<p:ajax event="blur"
@@ -300,7 +301,7 @@
 					value="#{lOADetailBackingBean.managedBean.scLoa.insWarrantyReq}"
 					required="true"
 					label="#{lbl['lbl.sc.loiloa.loa.req.ins.war']}"
-					disabled="#{!isEditableStatus}">
+					disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}">
 					<f:selectItems value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 				</p:selectOneRadio>
 				<p:message id="insWarrantyMsg" for="insWarranty" display="icon" />
@@ -317,7 +318,7 @@
 								value="#{lOADetailBackingBean.managedBean.scLoa.bondReq}"
 								required="true"
 								label="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}"
-								disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.performanceBondMandatory}">
+								disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.performanceBondMandatory or lOADetailBackingBean.managedBean.readOnly}">
 								<f:selectItems value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 								<p:ajax partialSubmit="true" process="@this" update="menuTab" />
 							</p:selectOneRadio>
@@ -338,7 +339,7 @@
 			<td><p:selectOneRadio id="approvalReq" styleClass="commonLabel"
 						value="#{lOADetailBackingBean.managedBean.scLoa.approvalReq}"
 						required="true" label="#{lbl['lbl.sc.loiloa.loa.appr.req']}"
-						disabled="#{!isEditableStatus}">
+						disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}">
 						<f:selectItems
 							value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 					</p:selectOneRadio> <p:message id="approvalReqMsg" for="approvalReq" display="icon" />
@@ -360,6 +361,7 @@
 					<p:selectOneMenu id="contractType"
 						value="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterId}"
 						style="width: 282px;margin-bottom: 5px;"
+						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 						required="true"
 						label="#{lbl['lbl.sc.loiloa.loa.cont.type']}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
@@ -392,6 +394,7 @@
 					<p:selectOneMenu id="contractAgencyProf"
 						value="#{lOADetailBackingBean.managedBean.scLoa.agencyId}"
 						style="width: 282px;margin-bottom: 5px;"
+						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 						required="true"
 						label="#{lbl['lbl.sc.loiloa.loa.agency']}"
 						rendered="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
@@ -411,6 +414,7 @@
 					<p:selectOneMenu id="contractAgency"
 						value="#{lOADetailBackingBean.managedBean.selectedContractAgency}"
 						style="width: 282px;margin-bottom: 5px;"
+						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 						required="true"
 						label="#{lbl['lbl.sc.loiloa.loa.agency']}"
 						rendered="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterCode != ParameterConst.contractTypeMinistry}">
@@ -443,6 +447,7 @@
 					<p:selectOneMenu id="contractAdmin"
 						value="#{lOADetailBackingBean.managedBean.scLoa.contractAdmin.userId}"
 						style="width: 215px;"
+						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 						required="true"
 						label="#{lbl['lbl.sc.loiloa.loa.cont.admin']}">
 						
@@ -492,7 +497,7 @@
 					readonlyInput="true"
 					label="#{lbl[lbleffDate]}"
 					style="width: 234px;"
-					disabled="#{!isEditableStatus}">
+					disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}">
 					<p:ajax event="dateSelect" listener="#{lOADetailBackingBean.contractEffDateChanged()}" update="expdate" />
 				</p:calendar>
 				<p:message id="effdateMsg" for="effdate" display="icon" />
@@ -526,7 +531,7 @@
 								<p:selectOneRadio id="agreementReq" styleClass="commonLabel"
 									value="#{lOADetailBackingBean.managedBean.scLoa.agreementReq}"
 									required="true" label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
-									disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.agreementMandatory}">
+									disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.agreementMandatory or lOADetailBackingBean.managedBean.readOnly}">
 									<f:selectItems
 										value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 								</p:selectOneRadio>
@@ -545,7 +550,7 @@
 					<td><p:selectOneRadio id="isFollowLOAAmt" styleClass="commonLabel"
 							value="#{lOADetailBackingBean.managedBean.scLoa.followLoaAmt}"
 							required="true"
-							disabled="#{!isEditableStatus}">
+							disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}">
 							<f:selectItems
 								value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 						</p:selectOneRadio> <p:message id="isFollowLOAAmtMsg" for="isFollowLOAAmt"
@@ -568,7 +573,7 @@
 					required="true"
 					label="#{lbl['lbl.sc.loiloa.witness.full.name']}"
 					maxlength="80"
-					disabled="#{!isEditableStatus}" />
+					disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}" />
 				<p:message id="witnessNameMsg" for="witnessName" display="icon" />
 			</td>
 		</tr>
@@ -583,7 +588,7 @@
 					required="true"
 					label="#{lbl['lbl.sc.identification.no']}"
 					maxlength="15"
-					disabled="#{!isEditableStatus}" />
+					disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}" />
 				<p:message id="identificationNoMsg" for="identificationNo" display="icon" />
 			</td>
 		</tr>
@@ -598,7 +603,7 @@
 					required="true"
 					maxlength="50"
 					label="#{lbl['lbl.sc.designation']}"
-					disabled="#{!isEditableStatus}" />
+					disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}" />
 				<p:message id="designationMsg" for="designation" display="icon" />
 			</td>
 		</tr>
@@ -615,7 +620,7 @@
 					required="true"
 					maxlength="200"
 					label="#{lbl['lbl.sc.address']}"
-					disabled="#{!isEditableStatus}" />
+					disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}" />
 				<p:message id="addressMsg" for="address" display="icon" />
 			</td>
 			<td>
@@ -629,7 +634,7 @@
 					maxlength="20"
 					validator="#{webappBean.checkPhoneNumber}"
 					label="#{lbl['lbl.sc.tel.no']}"
-					disabled="#{!isEditableStatus}" />
+					disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}" />
 				<p:message id="phoneNoMsg" for="phoneNo" display="icon" />
 			</td>
 		</tr>
@@ -645,7 +650,7 @@
 					maxlength="20"
 					validator="#{webappBean.checkFaxNumber}"
 					label="#{lbl['lbl.sc.fax.no']}"
-					disabled="#{!isEditableStatus}" />
+					disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}" />
 				<p:message id="faxNoMsg" for="faxNo" display="icon" />
 			</td>
 		</tr>
@@ -659,7 +664,7 @@
 					maxlength="20"
 					validator="#{webappBean.checkPhoneNumber}"
 					label="#{lbl['lbl.sc.mobile.no']}"
-					disabled="#{!isEditableStatus}" />
+					disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}" />
 				<p:message id="mobileNoMsg" for="mobileNo" display="icon" />
 			</td>
 		</tr>
@@ -673,7 +678,7 @@
 					maxlength="80"
 					validator="#{webappBean.checkEmail}"
 					label="#{lbl['lbl.sc.email']}"
-					disabled="#{!isEditableStatus}" />
+					disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}" />
 				<p:message id="emailMsg" for="email" display="icon" />
 			</td>
 		</tr>

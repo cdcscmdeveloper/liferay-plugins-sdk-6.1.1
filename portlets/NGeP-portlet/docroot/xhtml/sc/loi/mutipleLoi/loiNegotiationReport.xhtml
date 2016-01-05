@@ -37,9 +37,10 @@
 				<ui:fragment
 					rendered="#{scLoiReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload}">
 					<h:commandLink value="#{scLoiReport.scLoiReportAttachment.fileName}" styleClass="blue_font"
+					disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
 								action="#{lOIDetailBackingBean.downloadFile(
 											scLoiReport.scLoiReportAttachment)}" />
-					<p:commandLink immediate="true"
+					<p:commandLink immediate="true" disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
 						rendered="#{(!empty scLoiReport.scLoiReportAttachment.fileName) and 
 											isPendingNegotiationStatus}" update="reportContentsTbl">
 						<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/icon_trash.png"
@@ -49,6 +50,7 @@
 					</p:commandLink>
 
 					<p:commandButton oncomplete="loiAttachmentPopupDlg.show();"
+					disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
 						value="#{lbl['lbl.txt.attachment']}"
 						partialSubmit="true" process="@this"
 						rendered="#{isPendingNegotiationStatus and empty scLoiReport.scLoiReportAttachment.fileName}"
@@ -65,6 +67,7 @@
 
 			<p:column style="width:10%;text-align: center;" headerText="#{lbl['lbl.sc.action']}">
 				<p:commandButton id="download" icon="ui-icon-download"
+				disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
 					style="background-color:transparent !important; border:0px none;"
 					ajax="false"
 					action="#{lOIDetailBackingBean.downloadReport(scLoiReport)}"
@@ -74,16 +77,19 @@
 		</p:dataTable>
 		<div class="ppRightBtn BtnSpacing">
 			<p:commandButton value="#{lbl['lbl.btn.download.all']}" ajax="false"
+			disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
 				rendered="#{isPendingNegotiationStatus}"
 				action="#{lOIDetailBackingBean.downloadAllReports}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
+			disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
 				process="@this, reportContentsTbl" partialSubmit="true"
 				action="#{lOIDetailBackingBean.addLoiReportAction}"
 				oncomplete="reportContentsTblWidget.paginator.endLink.click();"
 				rendered="#{isPendingNegotiationStatus}" update="reportContentsTbl" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+			disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
 				rendered="#{isPendingNegotiationStatus}"
 				process="@this, reportContentsTbl" partialSubmit="true"
 				oncomplete="loiReportDeletePopUp.show();"
