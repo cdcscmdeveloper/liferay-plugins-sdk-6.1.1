@@ -68,9 +68,13 @@
 		
 		<tr>
 			<td>
-				<acp:captcha id="accaptcha" label="Captcha" language="tr" theme="white"/> 
+				<acp:captcha id="accaptcha" 
+					label="Captcha" 
+					language="#{facesContext.externalContext.requestMap['THEME_DISPLAY'].locale}" 
+					theme="white"/> 
 				<p:commandButton 
-					value="#{lbl['lbl.btn.submit']}" onclick="submissionDialog.show();"  oncomplete="submissionDialog.hide();"
+					value="#{lbl['lbl.btn.submit']}" onclick="submissionDialog.show();"  
+					oncomplete="submissionDialog.hide();"
 					action="#{supplierUserActivationBackingBean.activateSupplierUser}"
 					ajax="false" />
 			</td>
