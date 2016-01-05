@@ -18,6 +18,7 @@
 					<p:selectOneMenu id="accountNoId"
 						value="#{directLOABackingBean.managedBean.selectedBankId}"
 						style="width:319px;margin-bottom: 5px;"
+						disabled="#{directLOABackingBean.managedBean.readOnly}"
 						required="true"
 						label="#{lbl['lbl.sc.account.no']}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />

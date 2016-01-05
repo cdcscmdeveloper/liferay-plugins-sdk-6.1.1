@@ -31,6 +31,7 @@
 
 				<c:if test="#{isEditableStatus}">
 					<p:selectOneMenu id="deductionType"
+					disabled="#{directLOABackingBean.managedBean.readOnly}"
 					    style="width: 250px;"
 						label="#{lbl['lbl.sc.deduction.type']}"
 						value="#{scQtDeduction.deductionType.parameterId}">
@@ -53,7 +54,7 @@
 					<p:inputText id="amtid" size="30" maxlength="18" required="true"
 						label="#{lbl['lbl.sc.deduction.amount']}"
 						value="#{scQtDeduction.deductionAmount}"
-						disabled="#{!(isPendingSubmissionStatus or isPendingRevisionStatus)}"
+						disabled="#{!isPendingSubmissionStatus or !isPendingRevisionStatus or directLOABackingBean.managedBean.readOnly}"
 						style="margin-right:5px;text-align:right;"
 						rendered="#{scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeFixed}">
 						<ac:validateNumber
@@ -68,11 +69,13 @@
 		<c:if test="#{isEditableStatus}">
 			<div class="ppRightBtn BtnSpacing">
 				<p:commandButton value="#{lbl['lbl.btn.add']}"
+				disabled="#{directLOABackingBean.managedBean.readOnly}"
 					process="@this, deductTbl"
 					action="#{directLOABackingBean.addDeductionPaymentAction}"
 					oncomplete="deductTblWidget.paginator.endLink.click();"
 					update="deductTbl" />
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				disabled="#{directLOABackingBean.managedBean.readOnly}"
 					process="@this, deductTbl"
 					oncomplete="deductionPayDeletePopUp.show();"
 					update="@([id$=#{deductionPayDeleteId}])" />
@@ -111,6 +114,7 @@
 
 					<h:panelGroup rendered="#{empty scQtDeductionClause.pmClause}">
 						<p:inputTextarea value="#{scQtDeductionClause.clauseDesc}"
+						disabled="#{directLOABackingBean.managedBean.readOnly}"
 							id="clauseId" label="#{lbl['lbl.sc.deduction.clause']}" rows="2"
 							maxlength="500" style=" margin-bottom:5px; width:790px"
 							rendered="#{isEditableStatus}">
@@ -133,11 +137,13 @@
 				<h:panelGroup
 					rendered="#{!empty directLOABackingBean.managedBean.selectedScQtDeduction and directLOABackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers and isEditableStatus}">
 					<p:commandButton value="#{lbl['lbl.btn.add']}"
+					disabled="#{directLOABackingBean.managedBean.readOnly}"
 						process="@this, deductClauseTbl" partialSubmit="true"
 						action="#{directLOABackingBean.addDeductionClauseAction}"
 						oncomplete="deductClauseTblWidget.paginator.endLink.click();"
 						update="deductClauseTbl" />
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					disabled="#{directLOABackingBean.managedBean.readOnly}"
 						process="@this, deductClauseTbl" partialSubmit="true"
 						oncomplete="deductionClauseDeletePopUp.show();"
 						update="@([id$=#{deductionClauseDeleteId}])" />

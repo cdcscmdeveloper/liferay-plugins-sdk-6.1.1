@@ -13,7 +13,7 @@
 				<td width="21%"><p:outputLabel value="#{lbl['lbl.sc.mof.no']}" />
 				</td>
 				<td colspan="3"><ac:lov id="supplierMofNo"
-						disabled="#{!isEditableStatus}" lovId="SM_SUPPLIER_MOFNO"
+						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" lovId="SM_SUPPLIER_MOFNO"
 						postUpdateListener="directLOABackingBean.mofNoListener(directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier.smMofAccount)"
 						headerText="Supplier MOF No Lov" selectionMode="single"
 						readonly="true" size="35"
@@ -24,7 +24,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" /></td>
 				<td colspan="3"><ac:lov id="supplierId" lovId="SM_SUPPLIER"
-						disabled="#{!isEditableStatus}"
+						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						postUpdateListener="directLOABackingBean.supplierListener(directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier)"
 						headerText="Supplier Lov" selectionMode="single"
 						saveObject="directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier"
@@ -69,6 +69,7 @@
 						<table>
 							<tr>
 								<td><p:selectOneMenu id="branch"
+								disabled="#{directLOABackingBean.managedBean.readOnly}"
 										value="#{directLOABackingBean.managedBean.selectedSupplierBranchName}"
 										style="width: 284px;margin-bottom: 5px;"
 										label="#{lbl['lbl.sc.branch']}">
@@ -152,7 +153,7 @@
 
 				<td><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
 				<td colspan="3"><ac:lov id="ptjProfile" lovId="PM_ORG_PROFILE"
-						disabled="#{!isEditableStatus}" headerText="Supplier Lov"
+						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" headerText="Supplier Lov"
 						selectionMode="single"
 						saveObject="directLOABackingBean.managedBean.scQt.pmOrgProfile"
 						readonly="true" size="35"
@@ -164,7 +165,7 @@
 				<td width="18%"><p:outputLabel value="#{lbl['lbl.sc.title']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td colspan="3"><p:inputText id="title" required="true"
-						disabled="#{!isEditableStatus}"
+						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						value="#{directLOABackingBean.managedBean.scLoa.scQt.qtTitle}"
 						size="35" label="#{lbl['lbl.sc.title']}" maxlength="100" /> <p:message
 						id="titleMsg" for="title" display="icon" /></td>
@@ -174,7 +175,7 @@
 						value="#{lbl['lbl.sc.procurment.type.category']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td colspan="3"><p:selectOneMenu id="procTypeBoCategory" required="true"
-						disabled="#{isPendingApprovalStatus}"
+						disabled="#{isPendingApprovalStatus or directLOABackingBean.managedBean.readOnly}"
 						value="#{directLOABackingBean.managedBean.scLoa.procurementTypeCatId.parameterId}"
 						style="margin-bottom:5px;width:284px;"
 						label="#{lbl['lbl.sc.procurment.type.category']}">
@@ -188,7 +189,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.qt.fileno']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td colspan="3"><p:inputText disabled="#{!isEditableStatus}"
+				<td colspan="3"><p:inputText disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						required="true"
 						value="#{directLOABackingBean.managedBean.scLoa.scQt.fileNo}"
 						label="#{lbl['lbl.sc.qt.fileno']}" size="28" /> <p:spacer
@@ -196,7 +197,7 @@
 						id="fileExtNo" styleClass="ppNumericAlign"
 						value="#{directLOABackingBean.managedBean.scLoa.fileExtNo}"
 						size="1" label="#{lbl['lbl.sc.loiloa.file.extension.no']}"
-						maxlength="3" disabled="#{!isEditableStatus}" /> <p:message
+						maxlength="3" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" /> <p:message
 						id="fileExtNoMsg" for="fileExtNo" display="icon" /></td>
 			</tr>
 
@@ -236,7 +237,7 @@
 				<td><p:inputText style="text-align: right;" required="true"
 						value="#{directLOABackingBean.managedBean.scLoa.loaAmt}" size="35"
 						label="#{lbl['lbl.sc.loiloa.loa.off.price']}"
-						disabled="#{isPendingApprovalStatus}">
+						disabled="#{isPendingApprovalStatus or directLOABackingBean.managedBean.readOnly}">
 						<p:ajax event="blur"
 							listener="#{directLOABackingBean.setOverallCtAmount(directLOABackingBean.managedBean.scLoa.loaAmt)}"
 							update="@this,ContractAmtId,bondReq"></p:ajax>
@@ -248,7 +249,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.fullfillent.type']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td colspan="3"><p:selectOneMenu id="fulfilId"
-						disabled="#{!isEditableStatus}" required="true"
+						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" required="true"
 						label="#{lbl['lbl.sc.fullfillent.type']}"
 						value="#{directLOABackingBean.managedBean.scLoa.scQt.fulfilmentType.parameterId}"
 						style="width: 284px;margin-bottom: 5px;">
@@ -266,7 +267,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.gst.amount']}" /></td>
 				<td><p:inputText style="text-align: right;"
 						value="#{directLOABackingBean.managedBean.scLoa.gstAmt}"
-						disabled="#{directLOABackingBean.isGSTRegActive() or isPendingApprovalStatus}"
+						disabled="#{directLOABackingBean.isGSTRegActive() or isPendingApprovalStatus or directLOABackingBean.managedBean.readOnly}"
 						size="35">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -306,7 +307,7 @@
 						value="#{directLOABackingBean.managedBean.scLoa.bondReq}"
 						required="true"
 						label="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}"
-						disabled="#{directLOABackingBean.checkPerformanceBondMandatory(directLOABackingBean.managedBean.scLoa.loaAmt)}">
+						disabled="#{directLOABackingBean.checkPerformanceBondMandatory(directLOABackingBean.managedBean.scLoa.loaAmt) or directLOABackingBean.managedBean.readOnly}">
 
 						<f:selectItems
 							value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
@@ -321,7 +322,7 @@
 					<p:outputLabel value="*" styleClass="mandatory"
 						rendered="#{isEditableStatus}" /></td>
 				<td><p:selectOneRadio id="approvalReq" styleClass="commonLabel"
-						disabled="#{!(isPendingSubmissionStatus or isPendingRevisionStatus)}"
+						disabled="#{!isPendingSubmissionStatus or !isPendingRevisionStatus or directLOABackingBean.managedBean.readOnly}"
 						value="#{directLOABackingBean.managedBean.scLoa.approvalReq}"
 						required="true" label="#{lbl['lbl.sc.loiloa.loa.appr.req']}">
 						<f:selectItems
@@ -340,7 +341,7 @@
 						value="#{lbl['lbl.sc.loiloa.loa.cont.type']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td colspan="3"><p:selectOneMenu id="contractType"
-						required="true" disabled="#{!isEditableStatus}"
+						required="true" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						value="#{directLOABackingBean.managedBean.scLoa.contractType.parameterId}"
 						style="width: 284px;margin-bottom: 5px;"
 						label="#{lbl['lbl.sc.loiloa.loa.cont.type']}">
@@ -358,7 +359,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><h:panelGroup id="contractAgencyPG">
 						<p:selectOneMenu id="contractAgencyProf" required="true"
-							disabled="#{!isEditableStatus}"
+							disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 							value="#{directLOABackingBean.managedBean.scLoa.contractAgency.orgProfileId}"
 							style="width: 284px;margin-bottom: 5px;"
 							label="#{lbl['lbl.sc.loiloa.loa.agency']}"
@@ -378,7 +379,7 @@
 							display="icon" />
 
 						<p:selectOneMenu id="contractAgency" required="true"
-							disabled="#{!isEditableStatus}"
+							disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 							value="#{directLOABackingBean.managedBean.scLoa.contractAgency.orgTypeCode.parameterCode}"
 							style="width: 284px;margin-bottom: 5px;"
 							label="#{lbl['lbl.sc.loiloa.loa.agency']}"
@@ -401,7 +402,7 @@
 						value="#{lbl['lbl.sc.loiloa.loa.cont.admin']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td style="width: 30%;"><p:selectOneMenu id="contractAdmin"
-						required="true" disabled="#{!isEditableStatus}"
+						required="true" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						value="#{directLOABackingBean.managedBean.scLoa.contractAdmin.userId}"
 						style="width: 214px;margin-bottom: 5px;"
 						label="#{lbl['lbl.sc.loiloa.loa.cont.admin']}">
@@ -423,7 +424,7 @@
 						value="#{lbl[directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.period' : 'lbl.sc.loiloa.loa.cont.period']}" />
 				</td>
 				<td><p:inputText style="text-align: right;"
-						id="contractDuration" disabled="#{!isEditableStatus}"
+						id="contractDuration" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						value="#{directLOABackingBean.managedBean.scLoa.contractDuration}"
 						size="35">
 						<p:ajax event="blur" update="effdate,expdate"
@@ -437,7 +438,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl[lbleffDate]}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:calendar id="effdate" disabled="#{!isEditableStatus}"
+				<td><p:calendar id="effdate" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						showOn="button" required="true"
 						value="#{directLOABackingBean.managedBean.scLoa.contractEffDate}"
@@ -464,7 +465,7 @@
 					<table>
 						<tr>
 							<td><p:selectOneRadio id="agreementReq" styleClass="commonLabel"
-									disabled="#{directLOABackingBean.checkAgreementMandatory()}"
+									disabled="#{directLOABackingBean.checkAgreementMandatory() or directLOABackingBean.managedBean.readOnly}"
 									value="#{directLOABackingBean.managedBean.scLoa.agreementReq}"
 									label="#{lbl['lbl.sc.loiloa.loa.req.agree']}">
 									<f:selectItems
@@ -493,7 +494,7 @@
 					required="true"
 					label="#{lbl['lbl.sc.loiloa.witness.full.name']}"
 					maxlength="80"
-					disabled="#{!isEditableStatus}" />
+					disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" />
 				<p:message id="witnessNameMsg" for="witnessName" display="icon" />
 			</td>
 		</tr>
@@ -508,7 +509,7 @@
 					required="true"
 					label="#{lbl['lbl.sc.identification.no']}"
 					maxlength="15"
-					disabled="#{!isEditableStatus}" />
+					disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" />
 				<p:message id="identificationNoMsg" for="identificationNo" display="icon" />
 			</td>
 		</tr>
@@ -523,7 +524,7 @@
 					required="true"
 					maxlength="50"
 					label="#{lbl['lbl.sc.designation']}"
-					disabled="#{!isEditableStatus}" />
+					disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" />
 				<p:message id="designationMsg" for="designation" display="icon" />
 			</td>
 		</tr>
@@ -540,7 +541,7 @@
 					required="true"
 					maxlength="200"
 					label="#{lbl['lbl.sc.address']}"
-					disabled="#{!isEditableStatus}" />
+					disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" />
 				<p:message id="addressMsg" for="address" display="icon" />
 			</td>
 			<td style="width: 10%;">
@@ -554,7 +555,7 @@
 					maxlength="20"
 					validator="#{webappBean.checkPhoneNumber}"
 					label="#{lbl['lbl.sc.tel.no']}"
-					disabled="#{!isEditableStatus}" />
+					disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" />
 				<p:message id="phoneNoMsg" for="phoneNo" display="icon" />
 			</td>
 		</tr>
@@ -570,7 +571,7 @@
 					maxlength="20"
 					validator="#{webappBean.checkFaxNumber}"
 					label="#{lbl['lbl.sc.fax.no']}"
-					disabled="#{!isEditableStatus}" />
+					disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" />
 				<p:message id="faxNoMsg" for="faxNo" display="icon" />
 			</td>
 		</tr>
@@ -584,7 +585,7 @@
 					maxlength="20"
 					validator="#{webappBean.checkPhoneNumber}"
 					label="#{lbl['lbl.sc.mobile.no']}"
-					disabled="#{!isEditableStatus}" />
+					disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" />
 				<p:message id="mobileNoMsg" for="mobileNo" display="icon" />
 			</td>
 		</tr>
@@ -598,7 +599,7 @@
 					maxlength="80"
 					validator="#{webappBean.checkEmail}"
 					label="#{lbl['lbl.sc.email']}"
-					disabled="#{!isEditableStatus}" />
+					disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" />
 				<p:message id="emailMsg" for="email" display="icon" />
 			</td>
 		</tr>
