@@ -2279,7 +2279,17 @@
 		  <header-portlet-css>/css/ep/ep.css</header-portlet-css>
 		  <css-class-wrapper>disciplinaryAction-portlet</css-class-wrapper>
 	 </portlet>
-	<role-mapper>
+	 <portlet>
+	 	<portlet-name>DirectPurchaseSearch</portlet-name>
+	 	<icon>/icon.png</icon>
+	 	<instanceable>false</instanceable>
+	 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+
+	 	<css-class-wrapper>
+	 		directpurchasesearch-portlet
+	 	</css-class-wrapper>
+	 </portlet>
+	 <role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>
 	</role-mapper>
