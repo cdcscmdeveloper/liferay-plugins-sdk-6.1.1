@@ -76,7 +76,7 @@ public class IntegrationConstants {
 
 	public static final int DEFAULT_INT = 0;
 
-	public static final Date DEFAULT_DATE = new Date();
+	public static final Date DEFAULT_DATE = null;
 
 	public static final String VAVLUE_YES = "Y";
 
