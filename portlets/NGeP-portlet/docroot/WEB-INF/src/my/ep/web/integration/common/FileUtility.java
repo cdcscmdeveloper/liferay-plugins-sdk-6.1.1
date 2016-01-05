@@ -1360,7 +1360,7 @@ public class FileUtility extends InitializeSO{
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
 			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE04.value(),fileName, null));
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE04.value(),fileName, transId));
 			
 			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
 			
@@ -1493,7 +1493,7 @@ public class FileUtility extends InitializeSO{
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
 			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE01.value(),fileName, null));
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE01.value(),fileName, transId));
 			
 			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
 			
@@ -1687,7 +1687,7 @@ public class FileUtility extends InitializeSO{
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
 			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE06.value(),fileName, null));
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE06.value(),fileName, transId));
 			
 			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
 			
@@ -1791,7 +1791,7 @@ public class FileUtility extends InitializeSO{
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
 			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE05.value(),fileName, null));
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE05.value(),fileName, transId));
 			
 			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
 			
@@ -1883,7 +1883,7 @@ public class FileUtility extends InitializeSO{
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
 			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE08.value(),fileName, null));
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE08.value(),fileName, transId));
 			
 			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
 			
@@ -1966,7 +1966,7 @@ public class FileUtility extends InitializeSO{
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
 			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE09.value(),fileName, null));
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE09.value(),fileName, transId));
 			
 			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
 			
@@ -2058,7 +2058,7 @@ public class FileUtility extends InitializeSO{
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
 			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE10.value(),fileName, null));
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE10.value(),fileName, transId));
 			
 			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
 			
@@ -2138,7 +2138,7 @@ public class FileUtility extends InitializeSO{
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
 			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE11.value(),fileName, null));
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE11.value(),fileName, transId));
 			
 			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
 			
@@ -2237,7 +2237,7 @@ public class FileUtility extends InitializeSO{
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
 			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE03.value(),fileName, null));
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE03.value(),fileName, transId));
 			
 			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
 			
@@ -2335,7 +2335,7 @@ public class FileUtility extends InitializeSO{
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
 			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE02.value(),fileName, null));
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE02.value(),fileName, transId));
 			
 			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
 			
