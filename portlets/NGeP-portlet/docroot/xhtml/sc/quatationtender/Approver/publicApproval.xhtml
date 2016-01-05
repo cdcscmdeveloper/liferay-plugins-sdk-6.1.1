@@ -23,6 +23,7 @@
 						value="#{lbl['lbl.sc.publish.date']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
 				<td><p:calendar label="#{lbl['lbl.sc.publish.date']}"
+				disabled="#{approvalBackingBean.managedBean.readOnly}" 
 						mindate="#{approvalBackingBean.managedBean.today}"
 						value="#{approvalBackingBean.managedBean.qt.publishDate}"
 						id="noticePublish" required="true"
@@ -74,6 +75,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.sc.sample.closingdate']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:calendar label="#{lbl['lbl.sc.sample.closingdate']}"
+					disabled="#{approvalBackingBean.managedBean.readOnly}"
 							value="#{approvalBackingBean.managedBean.qt.sampleClosingDate}"
 							id="proposalPreparation" required="true"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button" />
@@ -140,6 +142,7 @@
 							<tr>
 								<td></td>
 								<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
+								readonly="#{approvalBackingBean.managedBean.readOnly}"
 										maxlength="1000" rendered="#{remarkVar.remarkId eq null}" />
 									<h:outputText value="#{remarkVar.remark}"
 										rendered="#{remarkVar.remarkId ne null}"

@@ -12,85 +12,117 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="#{CommonUIConstant.imagePath}/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
-			
-		<ui:param name="isQTStatusReFinalized" value="#{suppFinalizationBackingBean.managedBean.qtRefinalized}" />
-		<ui:param name="isSupplierFinalization" value="#{suppFinalizationBackingBean.managedBean.currentStatusId 
+
+		<ui:param name="isQTStatusReFinalized"
+			value="#{suppFinalizationBackingBean.managedBean.qtRefinalized}" />
+		<ui:param name="isSupplierFinalization"
+			value="#{suppFinalizationBackingBean.managedBean.currentStatusId 
 															== QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION}" />
 		<ui:param name="validityDaysExpiredQt"
-		     	  value="#{suppFinalizationBackingBean.checkProposalValidityDateReach(
-		     				suppFinalizationBackingBean.managedBean.scQt.proposalValidityEndDate)}" />															
-																
-		<p:messages id="supplierFinalization" showDetail="true" showSummary="false" 
-					autoUpdate="true" closable="true" severity="error, info" />
-		
-		<ac:gpkiPopup textBeforeSign="#{suppFinalizationBackingBean.textBeforeSign}"
-		   postSignAction="#{suppFinalizationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
-		
+			value="#{suppFinalizationBackingBean.checkProposalValidityDateReach(
+		     				suppFinalizationBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
+
+		<p:messages id="supplierFinalization" showDetail="true"
+			showSummary="false" autoUpdate="true" closable="true"
+			severity="error, info" />
+
+		<ac:gpkiPopup
+			textBeforeSign="#{suppFinalizationBackingBean.textBeforeSign}"
+			postSignAction="#{suppFinalizationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
+
 		<div align="right" class="BtnSpacing">
-			<p:commandButton value="#{lbl['lbl.btn.save']}" 
-				process="@all" partialSubmit="true" update="@form" 
-				action="#{suppFinalizationBackingBean.saveSupplierFinalization}" 
-				rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser or 
+			<ui:decorate
+				template="/WEB-INF/facelets/templates/claim_template.xhtml">
+				<ui:define name="outComeSection">
+					<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
+						partialSubmit="true" update="@form"
+						action="#{suppFinalizationBackingBean.saveSupplierFinalization}"
+						rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser or 
 								suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK}"
-				onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
-					
-			<ui:repeat var="bpmAction" value="#{suppFinalizationBackingBean.managedBean.outComes}">
-				<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-								
-				<p:commandButton value="#{lbl[buttonLabel]}"  
-					styleClass="ui-button"
-					action="#{suppFinalizationBackingBean.submitSuppFinalization(bpmAction)}"
-					partialSubmit="true" process="@form" update="@form" 
-					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-					rendered="#{validityDaysExpiredQt}" />
-			</ui:repeat>
-		</div>	
-		
-		<ui:include src="/xhtml/sc/supplierFinalization/suppFinalizationHeader.xhtml"></ui:include>
-		
-		<p:tabMenu id="tab" activeIndex="#{suppFinalizationBackingBean.managedBean.activeIndex}">
-			<p:menuitem value="#{lbl['lbl.sc.preparation']}" actionListener="#{suppFinalizationBackingBean.onTabMenuChangeAction(0)}" 
-						process="@form" update="@form" partialSubmit="true" style="width:150px;" 
-						rendered="#{!suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK}">
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+
+					<ui:repeat var="bpmAction"
+						value="#{suppFinalizationBackingBean.managedBean.outComes}">
+						<ui:param name="buttonLabel"
+							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+
+						<p:commandButton value="#{lbl[buttonLabel]}"
+							styleClass="ui-button"
+							action="#{suppFinalizationBackingBean.submitSuppFinalization(bpmAction)}"
+							partialSubmit="true" process="@form" update="@form"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							rendered="#{validityDaysExpiredQt}" />
+					</ui:repeat>
+				</ui:define>
+			</ui:decorate>
+		</div>
+
+		<ui:include
+			src="/xhtml/sc/supplierFinalization/suppFinalizationHeader.xhtml"></ui:include>
+
+		<p:tabMenu id="tab"
+			activeIndex="#{suppFinalizationBackingBean.managedBean.activeIndex}">
+			<p:menuitem value="#{lbl['lbl.sc.preparation']}"
+				actionListener="#{suppFinalizationBackingBean.onTabMenuChangeAction(0)}"
+				process="@form" update="@form" partialSubmit="true"
+				style="width:150px;"
+				rendered="#{!suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK}">
 			</p:menuitem>
-			<p:menuitem value="#{lbl['lbl.sc.briefing.paper']}" actionListener="#{suppFinalizationBackingBean.onTabMenuChangeAction(1)}" 
-						process="@form" update="@form" partialSubmit="true" style="width:150px;">
+			<p:menuitem value="#{lbl['lbl.sc.briefing.paper']}"
+				actionListener="#{suppFinalizationBackingBean.onTabMenuChangeAction(1)}"
+				process="@form" update="@form" partialSubmit="true"
+				style="width:150px;">
 			</p:menuitem>
-			<p:menuitem value="#{lbl['lbl.sc.supplier.finalization']}" actionListener="#{suppFinalizationBackingBean.onTabMenuChangeAction(2)}" 
-						process="@form" update="@form" partialSubmit="true" style="width:225px;">
+			<p:menuitem value="#{lbl['lbl.sc.supplier.finalization']}"
+				actionListener="#{suppFinalizationBackingBean.onTabMenuChangeAction(2)}"
+				process="@form" update="@form" partialSubmit="true"
+				style="width:225px;">
 			</p:menuitem>
-			<p:menuitem value="#{lbl['lbl.sc.committee.endorsement.finalization']}" actionListener="#{suppFinalizationBackingBean.onTabMenuChangeAction(3)}" 
-						process="@form" update="@form" partialSubmit="true" style="width:330px;" 
-						rendered="#{!suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK}">
+			<p:menuitem
+				value="#{lbl['lbl.sc.committee.endorsement.finalization']}"
+				actionListener="#{suppFinalizationBackingBean.onTabMenuChangeAction(3)}"
+				process="@form" update="@form" partialSubmit="true"
+				style="width:330px;"
+				rendered="#{!suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK}">
 			</p:menuitem>
 		</p:tabMenu>
 
 		<p:panel id="contentPanel">
-			<c:if test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
+			<c:if
+				test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
 							suppFinalizationBackingBean.managedBean.preparationTabIndex}">
-				<ui:include src="/xhtml/sc/supplierFinalization/preparation/preparation.xhtml" />
+				<ui:include
+					src="/xhtml/sc/supplierFinalization/preparation/preparation.xhtml" />
 			</c:if>
-			<c:if test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
+			<c:if
+				test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
 							suppFinalizationBackingBean.managedBean.reportTabIndex}">
-				<ui:include src="/xhtml/sc/supplierFinalization/briefingPaper/briefingPaperReport.xhtml" />
+				<ui:include
+					src="/xhtml/sc/supplierFinalization/briefingPaper/briefingPaperReport.xhtml" />
 			</c:if>
-			<c:if test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
+			<c:if
+				test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
 							suppFinalizationBackingBean.managedBean.finalizationTabIndex}">
-				<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/suppplierFinalization.xhtml" />
+				<ui:include
+					src="/xhtml/sc/supplierFinalization/supplierFinalization/suppplierFinalization.xhtml" />
 			</c:if>
-			<c:if test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
+			<c:if
+				test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
 							suppFinalizationBackingBean.managedBean.commEndorsementTabIndex}">
-				<ui:include src="/xhtml/sc/supplierFinalization/committeeEndorsement/committeeEndorsement.xhtml" />
+				<ui:include
+					src="/xhtml/sc/supplierFinalization/committeeEndorsement/committeeEndorsement.xhtml" />
 			</c:if>
 		</p:panel>
-		
-		<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/boardofDirectorsDetails.xhtml" />
-		<ui:include src="/xhtml/sc/supplierFinalization/committeeEndorsement/signOff.xhtml" />
-		
-		<p:dialog id="attachmentPopup" widgetVar="attachmentPopupDlg" 
-			modal="true" resizable="false" width="700px" height="200" styleClass="pop_up_top" 
-			header="#{lbl['lbl.txt.choose.files']}">
-			
+
+		<ui:include
+			src="/xhtml/sc/supplierFinalization/supplierFinalization/boardofDirectorsDetails.xhtml" />
+		<ui:include
+			src="/xhtml/sc/supplierFinalization/committeeEndorsement/signOff.xhtml" />
+
+		<p:dialog id="attachmentPopup" widgetVar="attachmentPopupDlg"
+			modal="true" resizable="false" width="700px" height="200"
+			styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
+
 			<p:fileUpload style="display:inline;"
 				fileUploadListener="#{suppFinalizationBackingBean.handleFileUpload}"
 				mode="advanced" id="uploadattachment"
@@ -99,8 +131,8 @@
 				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
 				update="contentPanel" oncomplete="attachmentPopupDlg.hide()">
 			</p:fileUpload>
-		</p:dialog>	
-			
+		</p:dialog>
+
 	</ui:define>
-	
+
 </ui:composition>

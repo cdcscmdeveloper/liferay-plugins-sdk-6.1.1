@@ -88,6 +88,7 @@
 
             <p:column style="width:15%;white-space:normal;" rendered="#{isZonal}">
                 <p:commandLink id="zoneName"
+                disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
 					oncomplete="zoneLocPopup.show();"
 					partialSubmit="true" process="@this" update="@([id$=zoneLocPopup])">
 					
@@ -211,7 +212,7 @@
 				   <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 				
-				<p:inputText size="10" value="#{loiLoaItem.unitPrice}" style="text-align:right;" rendered="#{!isBiddingAward}">
+				<p:inputText size="10" value="#{loiLoaItem.unitPrice}" style="text-align:right;" disabled="#{lOIDetailBackingBean.managedBean.readOnly}" rendered="#{!isBiddingAward}">
 				    <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				   <p:ajax event="blur" partialSubmit="true" process="@form" update="@all" listener="#{lOIDetailBackingBean.priceKeyInEvent()}"/>
 				</p:inputText>

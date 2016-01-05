@@ -23,6 +23,7 @@
 			<td>
 				<c:if test="#{isEditableStatus}">
 					<p:selectOneMenu id="contractSigner" 
+					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 						value="#{lOADetailBackingBean.managedBean.contractSignerUser.userId}"
 						style="width: 276px;margin-bottom: 5px;"
 						required="true"
@@ -50,7 +51,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 				</td>
 				<td><p:inputText id="loaSignerDesigId"
-						disabled="#{!isEditableStatus}"
+						disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}"
 						maxlength="100"
 						value="#{lOADetailBackingBean.managedBean.scLoa.loaSignerDesig}"
 						label="#{lbl['lbl.sc.loiloa.loa.signer.desig']}" required="true"
@@ -72,7 +73,7 @@
 				</td>
 				<td><p:selectOneMenu id="loaApprover"
 						value="#{lOADetailBackingBean.managedBean.approverUser.userId}"
-						disabled="#{!isPendingSubmissionStatus}"
+						disabled="#{!isPendingSubmissionStatus or lOADetailBackingBean.managedBean.readOnly}"
 						required="#{lOADetailBackingBean.managedBean.scLoa.approvalReq}"
 						label="#{lbl['lbl.sc.approver']}"
 						style="width: 276px;margin-bottom: 5px;">
@@ -116,6 +117,7 @@
 							<tr>
 								<td></td>
 								<td><p:inputTextarea style="width:350px;" maxlength="1000"
+								disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 										value="#{remarkVar.remark}" rendered="#{remarkIndex==0}"
 										id="remark" /> <h:outputText value="#{remarkVar.remark}"
 										rendered="#{remarkIndex>0}"

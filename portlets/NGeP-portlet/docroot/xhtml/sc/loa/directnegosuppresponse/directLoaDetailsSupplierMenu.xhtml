@@ -29,6 +29,7 @@
 				<td><p:inputText size="40"
 						value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.supplierName}"
 						disabled="true" /> <p:spacer width="5" /> <p:commandLink
+						disabled="#{directLOABackingBean.managedBean.readOnly}"
 						oncomplete="suppDetailsPopup.show();return false;" process="@this"
 						update="@([id$=suppDetailsPopup])">
 
@@ -89,11 +90,13 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.branch.information']}" />
 				</td>
 				<td><p:commandButton oncomplete="attachmentPopupDlg.show();"
+				disabled="#{directLOABackingBean.managedBean.readOnly}"
 						value="#{lbl['lbl.txt.attachment']}" partialSubmit="true"
 						process="@this" update="@([id$=attachmentPopup])">
 					</p:commandButton> <ui:param name="branchInfoReport"
 						value="#{directLOABackingBean.managedBean.branchInfoReport}"></ui:param>
 					<h:commandLink
+					disabled="#{directLOABackingBean.managedBean.readOnly}"
 						value="#{branchInfoReport.scLoaReportAttachment.fileName}"
 						styleClass="blue_font" immediate="true"
 						action="#{directLOABackingBean.downloadReport(branchInfoReport)}"
@@ -114,6 +117,7 @@
 						value="#{lbl['lbl.sc.loiloa.witness.full.name']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td colspan="3"><p:inputText id="witnessName" size="40"
+				disabled="#{directLOABackingBean.managedBean.readOnly}"
 						required="true"
 						value="#{directLOABackingBean.managedBean.loaSupplierWitness.witnessName}"
 						label="#{lbl['lbl.sc.loiloa.witness.full.name']}" maxlength="50" />
@@ -124,6 +128,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.identification.no']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td colspan="3"><p:inputText id="identificationNo" size="40"
+				disabled="#{directLOABackingBean.managedBean.readOnly}"
 						required="true"
 						value="#{directLOABackingBean.managedBean.loaSupplierWitness.identificationNo}"
 						label="#{lbl['lbl.sc.identification.no']}" maxlength="15" /> <p:message
@@ -134,6 +139,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.designation']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td colspan="3"><p:inputText id="designation" size="40"
+				disabled="#{directLOABackingBean.managedBean.readOnly}"
 						required="true"
 						value="#{directLOABackingBean.managedBean.loaSupplierWitness.designation}"
 						maxlength="40" label="#{lbl['lbl.sc.designation']}" /> <p:message
@@ -144,6 +150,7 @@
 						value="#{lbl['lbl.sc.address']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
 				<td rowspan="3" width="32%"><p:inputTextarea id="address"
+				disabled="#{directLOABackingBean.managedBean.readOnly}"
 						required="true" rows="5"
 						value="#{directLOABackingBean.managedBean.loaSupplierWitness.address}"
 						style=" margin-bottom:5px; width: 309px;" maxlength="200"
@@ -152,6 +159,7 @@
 				<td width="18%"><p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td width="32%"><p:inputText id="phoneNo" size="25"
+				disabled="#{directLOABackingBean.managedBean.readOnly}"
 						required="true"
 						value="#{directLOABackingBean.managedBean.loaSupplierWitness.phoneNo}"
 						maxlength="20" validator="#{webappBean.checkPhoneNumber}"
@@ -162,6 +170,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.fax.no']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText id="faxNo" size="25" required="true"
+				disabled="#{directLOABackingBean.managedBean.readOnly}"
 						value="#{directLOABackingBean.managedBean.loaSupplierWitness.faxNo}"
 						maxlength="20" validator="#{webappBean.checkFaxNumber}"
 						label="#{lbl['lbl.sc.fax.no']}" /> <p:message id="faxNoMsg"
@@ -170,6 +179,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.mobile.no']}" /></td>
 				<td><p:inputText id="mobileNo" size="25"
+				disabled="#{directLOABackingBean.managedBean.readOnly}"
 						value="#{directLOABackingBean.managedBean.loaSupplierWitness.mobileNo}"
 						maxlength="20" validator="#{webappBean.checkPhoneNumber}"
 						label="#{lbl['lbl.sc.mobile.no']}" /> <p:message id="mobileNoMsg"
@@ -178,6 +188,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.email']}" /></td>
 				<td colspan="3"><p:inputText id="email" size="40"
+				disabled="#{directLOABackingBean.managedBean.readOnly}"
 						style=" margin-bottom:5px;"
 						value="#{directLOABackingBean.managedBean.loaSupplierWitness.email}"
 						maxlength="80" validator="#{webappBean.checkEmail}"
