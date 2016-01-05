@@ -19,7 +19,7 @@
 				<td width="23%"><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.contract.signer']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu id="contractSigner" disabled="#{isPendingApprovalStatus}"
+				<td><p:selectOneMenu id="contractSigner" disabled="#{isPendingApprovalStatus or directLOABackingBean.managedBean.readOnly}"
 						value="#{directLOABackingBean.managedBean.scLoa.contractSigner.userId}"
 						style="width: 276px;margin-bottom: 5px; " required="true"
 						label="#{lbl['lbl.sc.loiloa.loa.contract.signer']}">
@@ -41,7 +41,7 @@
 						value="#{lbl['lbl.sc.loiloa.loa.signer.desig']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 				</td>
-				<td><p:inputText id="loaSignerDesigId"
+				<td><p:inputText id="loaSignerDesigId" disabled="#{directLOABackingBean.managedBean.readOnly}"
 						value="#{directLOABackingBean.managedBean.scLoa.loaSignerDesig}"
 						label="#{lbl['lbl.sc.loiloa.loa.signer.desig']}" required="true"
 						size="34">
@@ -61,7 +61,7 @@
 						value="#{lbl['lbl.sc.approver']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="loaApprover"
-						disabled="#{!isEditableStatus}"
+						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						value="#{directLOABackingBean.managedBean.approverUser.userId}"
 						required="#{directLOABackingBean.managedBean.scLoa.approvalReq}"
 						label="#{lbl['lbl.sc.approver']}"
@@ -106,6 +106,7 @@
 							<tr>
 								<td></td>
 								<td><p:inputTextarea style="width:350px;" maxlength="1000"
+								disabled="#{directLOABackingBean.managedBean.readOnly}"
 										value="#{remarkVar.remark}" rendered="#{remarkIndex==0}"
 										id="remark" /> <h:outputText value="#{remarkVar.remark}"
 										rendered="#{remarkIndex>0}"
