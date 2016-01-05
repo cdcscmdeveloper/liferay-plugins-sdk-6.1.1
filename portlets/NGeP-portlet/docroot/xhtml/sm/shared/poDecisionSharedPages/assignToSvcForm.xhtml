@@ -82,85 +82,94 @@
 		</p:dataTable>
 	</p:panel>
 	<br />
-	<p:panel header="#{lbl['lbl.sm.facilities']}" toggleable="true">
-		<p:dataTable var="fac"
-			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{backingBean.managedBean.smAppl.smFacilities}"
-			selection="#{backingBean.managedBean.selectedFactoryFacilities}"
-			rowKey="#{fac}" rowIndexVar="index" id="svcFacDt">
-			<p:ajax event="rowSelect" listener="#{backingBean.autoTickedHq}"
-				update="@([id$=svcFacDt])"></p:ajax>
-			<p:ajax event="rowUnselect"
-				listener="#{backingBean.autoTickedHq}"
-				update="@([id$=svcFacDt])"></p:ajax>
-			<p:ajax event="rowSelectCheckbox"
-				listener="#{backingBean.autoTickedHq}"
-				update="@([id$=svcFacDt])"></p:ajax>
-			<p:ajax event="rowUnselectCheckbox"
-				listener="#{backingBean.autoTickedHq}"
-				update="@([id$=svcFacDt])"></p:ajax>
-			<p:ajax event="rowDblselect"
-				listener="#{backingBean.autoTickedHq}"
-				update="@([id$=svcFacDt])"></p:ajax>
-			<ac:paginator for="svcFacDt" />
-			<p:column selectionMode="multiple" width="5%" disabledSelection="#{fac.booleanValue}"/>
-
-			<p:column headerText="#{lbl['lbl.sm.facility.name']}" disabledSelection="#{fac.booleanValue}">
-				<h:outputText value="#{fac.facilityName}" />
-			</p:column>
-
-			<p:column style="width: 60%;white-space: normal;" disabledSelection="#{fac.booleanValue}"
-				headerText="#{lbl['lbl.sm.facility.workshop.dockyard.factory.address']}">
-				<h:outputText value="#{backingBean.getFullAddress(fac.smAddress)}" />
-			</p:column>
-
-		</p:dataTable>
-	</p:panel>
+	
+	<ui:include src="/xhtml/sm/shared/mofRegistration/siteVisitFacilityInfo.xhtml" />
+	
+	<ui:remove>
+		<p:panel header="#{lbl['lbl.sm.facilities']}" toggleable="true">
+			<p:dataTable var="fac"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{backingBean.managedBean.smAppl.smFacilities}"
+				selection="#{backingBean.managedBean.selectedFactoryFacilities}"
+				rowKey="#{fac}" rowIndexVar="index" id="svcFacDt">
+				<p:ajax event="rowSelect" listener="#{backingBean.autoTickedHq}"
+					update="@([id$=svcFacDt])"></p:ajax>
+				<p:ajax event="rowUnselect"
+					listener="#{backingBean.autoTickedHq}"
+					update="@([id$=svcFacDt])"></p:ajax>
+				<p:ajax event="rowSelectCheckbox"
+					listener="#{backingBean.autoTickedHq}"
+					update="@([id$=svcFacDt])"></p:ajax>
+				<p:ajax event="rowUnselectCheckbox"
+					listener="#{backingBean.autoTickedHq}"
+					update="@([id$=svcFacDt])"></p:ajax>
+				<p:ajax event="rowDblselect"
+					listener="#{backingBean.autoTickedHq}"
+					update="@([id$=svcFacDt])"></p:ajax>
+				<ac:paginator for="svcFacDt" />
+				<p:column selectionMode="multiple" width="5%" disabledSelection="#{fac.booleanValue}"/>
+	
+				<p:column headerText="#{lbl['lbl.sm.facility.name']}" disabledSelection="#{fac.booleanValue}">
+					<h:outputText value="#{fac.facilityName}" />
+				</p:column>
+	
+				<p:column style="width: 60%;white-space: normal;" disabledSelection="#{fac.booleanValue}"
+					headerText="#{lbl['lbl.sm.facility.workshop.dockyard.factory.address']}">
+					<h:outputText value="#{backingBean.getFullAddress(fac.smAddress)}" />
+				</p:column>
+	
+			</p:dataTable>
+		</p:panel>
+	</ui:remove>
 	<br />
-	<p:panel header="#{lbl['lbl.sm.category.categories']}"
-		toggleable="true">
-		<p:dataTable var="catBean"
-			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{backingBean.managedBean.splCategoryList}"
-			selection="#{backingBean.managedBean.selectedCategories}"
-			rowKey="#{catBean}" rowIndexVar="index" id="svcCatDt">
-			<ac:paginator for="svcCatDt" />
-			<p:columnGroup type="header">
-
-
-				<p:row>
-					<p:column selectionMode="multiple" width="5%" />
-					<p:column headerText="#{lbl['lbl.sm.category']}" />
-					<p:column headerText="#{lbl['lbl.sm.category.type']}" />
-					<p:column headerText="#{lbl['lbl.sm.category.firstRecomm']}" />
-				</p:row>
-			</p:columnGroup>
-			<p:column selectionMode="multiple" width="5%" />
-			<p:column>
-				<h:outputText
-					value="#{catBean.pmCategoryL1.categoryL1Code} -  #{catBean.pmCategoryL1.categoryName}" />
-				<br />
-				<h:outputText
-					value="#{catBean.pmCategoryL2.categoryL2Code} -  #{catBean.pmCategoryL2.categoryName}" />
-				<br />
-				<h:outputText
-					value="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
-			</p:column>
-			<p:column>
-				<h:outputText value="#{lbl['lbl.sm.category.type.normal']}"
-					rendered="#{!catBean.specialCategory}" />
-				<h:outputText value="#{lbl['lbl.sm.category.type.special']}"
-					rendered="#{catBean.specialCategory}" />
-			</p:column>
-			<p:column>
-				<h:outputText value="#{lbl['lbl.sm.catCodes.apprv']}"
-					rendered="#{catBean.poDecFlg eq 1}" />
-				<h:outputText value="#{lbl['lbl.sm.catCodes.reject']}"
-					rendered="#{catBean.poDecFlg eq 0}" />
-			</p:column>
-		</p:dataTable>
-	</p:panel>
-	<br />
+	
+	<ui:remove>
+		<p:panel header="#{lbl['lbl.sm.category.categories']}"
+			toggleable="true">
+			<p:dataTable var="catBean"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{backingBean.managedBean.splCategoryList}"
+				selection="#{backingBean.managedBean.selectedCategories}"
+				rowKey="#{catBean}" rowIndexVar="index" id="svcCatDt">
+				<ac:paginator for="svcCatDt" />
+				<p:columnGroup type="header">
+	
+	
+					<p:row>
+						<p:column selectionMode="multiple" width="5%" />
+						<p:column headerText="#{lbl['lbl.sm.category']}" />
+						<p:column headerText="#{lbl['lbl.sm.category.type']}" />
+						<p:column headerText="#{lbl['lbl.sm.category.firstRecomm']}" />
+					</p:row>
+				</p:columnGroup>
+				<p:column selectionMode="multiple" width="5%" />
+				<p:column>
+					<h:outputText
+						value="#{catBean.pmCategoryL1.categoryL1Code} -  #{catBean.pmCategoryL1.categoryName}" />
+					<br />
+					<h:outputText
+						value="#{catBean.pmCategoryL2.categoryL2Code} -  #{catBean.pmCategoryL2.categoryName}" />
+					<br />
+					<h:outputText
+						value="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{lbl['lbl.sm.category.type.normal']}"
+						rendered="#{!catBean.specialCategory}" />
+					<h:outputText value="#{lbl['lbl.sm.category.type.special']}"
+						rendered="#{catBean.specialCategory}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{lbl['lbl.sm.catCodes.apprv']}"
+						rendered="#{catBean.poDecFlg eq 1}" />
+					<h:outputText value="#{lbl['lbl.sm.catCodes.reject']}"
+						rendered="#{catBean.poDecFlg eq 0}" />
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+		<br />
+	</ui:remove>
+	
 	<table style="width: 100%">
 
 		<tr>

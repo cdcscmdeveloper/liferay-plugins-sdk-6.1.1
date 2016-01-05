@@ -4,9 +4,12 @@
 package my.ep.web.constant.sm;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import my.ep.constants.SMProcessNameConst;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
 public class SupplierManagementConst {
 
@@ -110,6 +113,24 @@ public class SupplierManagementConst {
 	public static final String SM_FACILITY_TYPE_STORE = "S";
 	public static final String SM_FACILITY_TYPE_HOMEOFFICE = "H";
 	public static final String SM_FACILITY_TYPE_BUSSINESSOFFICE = "B";
+
+	// Facility Type Map
+	public static final Map<String, String> FACILITY_TYPE_MAP;
+	static {
+		FACILITY_TYPE_MAP = new HashMap<String, String>();
+		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_FACTORY,
+				SmCommonUtil.getMessage("lbl.sm.facility.type.factory", null));
+		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_DOCKYARD,
+				SmCommonUtil.getMessage("lbl.sm.facility.type.dockyard", null));
+		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_WORKSHOP,
+				SmCommonUtil.getMessage("lbl.sm.facility.type.workshop", null));
+		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_STORE,
+				SmCommonUtil.getMessage("lbl.sm.facility.type.store", null));
+		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_HOMEOFFICE, SmCommonUtil
+				.getMessage("lbl.sm.facility.type.home.office", null));
+		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_BUSSINESSOFFICE, SmCommonUtil
+				.getMessage("lbl.sm.facility.type.business.office", null));
+	}
 
 	// Application Category Type
 	public static final String SM_APPL_CATEGORY_TYPE_NORMAL = "N";
