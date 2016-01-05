@@ -21,6 +21,8 @@ public class BatchReqDTO<T> implements Serializable {
 	private String encryptFilePath;
 	private String targetSystem;
 	private String remoteFilePath;
+	private String transId;
+	private int queueMsgStatus;
 	private String locatFilePath;
 	private int fileCreationStatus;
 	private int fileFTPStatus;
@@ -105,6 +107,22 @@ public class BatchReqDTO<T> implements Serializable {
 
 	public void setRemoteFilePath(String remoteFilePath) {
 		this.remoteFilePath = remoteFilePath;
+	}
+
+	public String getTransId() {
+		return transId;
+	}
+
+	public void setTransId(String transId) {
+		this.transId = transId;
+	}
+
+	public int getQueueMsgStatus() {
+		return queueMsgStatus;
+	}
+
+	public void setQueueMsgStatus(int queueMsgStatus) {
+		this.queueMsgStatus = queueMsgStatus;
 	}
 
 	public String getLocatFilePath() {
