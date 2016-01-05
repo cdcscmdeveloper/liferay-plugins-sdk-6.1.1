@@ -9,9 +9,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -162,6 +164,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.SmApplStatusInfoVO;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
+import my.ep.web.vo.SmSiteVisitFacilityVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
 
 import org.apache.commons.lang.StringUtils;
@@ -4781,18 +4784,32 @@ public class SmApplicationUtil {
 		boolean valid = true;
 		if (!managedBean.getSmAppl().getApplType()
 				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
-				&& (managedBean.getSelectedCategories() == null || (managedBean
-						.getSelectedCategories() != null && managedBean
-						.getSelectedCategories().size() == 0))) {
+				&& (SmCommonUtil.isCollectionEmpty(managedBean
+						.getSelectedCategories()))) {
 			valid = false;
 			throw new EpException(MessageConst.ERROR_722571);
 		}
-		if (managedBean.getSelectedFactoryFacilities() == null
-				|| (managedBean.getSelectedFactoryFacilities() != null && managedBean
-						.getSelectedFactoryFacilities().size() == 0)) {
+		if (SmCommonUtil.isCollectionEmpty(managedBean
+				.getSelectedFactoryFacilities())) {
 			valid = false;
 			throw new EpException(MessageConst.ERROR_722572);
 		}
+		for (SmSiteVisitFacilityVO facVO : managedBean.getSiteVisitFacVOList()) {
+			if (!facVO.getFacType().equals(
+					SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE)
+					&& !facVO
+							.getFacType()
+							.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
+				if (SmCommonUtil
+						.isCollectionEmpty(getFacilityByFacTypeFromList(
+								facVO.getFacType(),
+								managedBean.getSelectedFactoryFacilities()))) {
+					throw new EpException(MessageConst.ERROR_722627,
+							new String[] { facVO.getFacTypeLabel() });
+				}
+			}
+		}
+
 		return valid;
 
 	}
@@ -5263,6 +5280,89 @@ public class SmApplicationUtil {
 		}
 
 		appl.setSmeStatus(smeStatus);
+	}
+
+	/**
+	 * Set facilities to be display for site visit assignment
+	 * 
+	 * @param SmApplicationManagedBean
+	 *            bean
+	 */
+	public static void setSiteVisitFacilitiesVO(SmApplicationManagedBean bean) {
+		SmSiteVisitFacilityVO facVO = null;
+		bean.setSiteVisitFacVOList(new ArrayList<SmSiteVisitFacilityVO>());
+		List<SmSupplierCategory> catList = null;
+		List<SmFacility> facList = null;
+
+		if (!SmCommonUtil.isCollectionEmpty(bean.getSplCategoryList())) {
+			Iterator it = SupplierManagementConst.FACILITY_TYPE_MAP.entrySet()
+					.iterator();
+			while (it.hasNext()) {
+				Map.Entry pair = (Map.Entry) it.next();
+				catList = getCategoryByFacType(pair.getKey().toString(),
+						bean.getSplCategoryList());
+				facList = getFacilityByFacTypeFromList(
+						pair.getKey().toString(), bean.getSmAppl()
+								.getSmFacilities());
+				if (!SmCommonUtil.isCollectionEmpty(facList)) {
+					facVO = new SmSiteVisitFacilityVO();
+					facVO.setFacType(pair.getKey().toString());
+					facVO.setFacTypeLabel(pair.getValue().toString());
+					facVO.setFacilities(facList);
+					facVO.setSuppCategories(catList);
+					bean.getSiteVisitFacVOList().add(facVO);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Get supplier category by facility type
+	 * 
+	 * @param String
+	 *            facType
+	 * @param List
+	 *            <SmSupplierCategory> catList
+	 * @return List<SmSupplierCategory>
+	 */
+	public static List<SmSupplierCategory> getCategoryByFacType(String facType,
+			List<SmSupplierCategory> catList) {
+		List<SmSupplierCategory> retVal = new ArrayList<SmSupplierCategory>();
+		if (!SmCommonUtil.isCollectionEmpty(catList)) {
+			for (SmSupplierCategory cat : catList) {
+				if (cat.getPmCategoryL3() != null
+						&& StringUtils.isNotBlank(cat.getPmCategoryL3()
+								.getFacilityType())
+						&& facType.equals(cat.getPmCategoryL3()
+								.getFacilityType())) {
+					retVal.add(cat);
+				}
+			}
+		}
+		return retVal;
+	}
+
+	/**
+	 * Get facility by facility type
+	 * 
+	 * @param String
+	 *            facType
+	 * @param List
+	 *            <SmFacility> facList
+	 * @return List<SmFacility>
+	 */
+	public static List<SmFacility> getFacilityByFacTypeFromList(String facType,
+			List<SmFacility> facList) {
+		List<SmFacility> retVal = new ArrayList<SmFacility>();
+		if (!SmCommonUtil.isCollectionEmpty(facList)) {
+			for (SmFacility fac : facList) {
+				if (fac.getFacilityType() != null
+						&& fac.getFacilityType().equals(facType)) {
+					retVal.add(fac);
+				}
+			}
+		}
+		return retVal;
 	}
 
 	/**

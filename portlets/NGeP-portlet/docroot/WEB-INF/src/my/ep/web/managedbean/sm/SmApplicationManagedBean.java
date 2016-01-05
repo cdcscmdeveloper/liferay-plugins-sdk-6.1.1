@@ -71,6 +71,7 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.vo.SmApplStatusInfoVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
+import my.ep.web.vo.SmSiteVisitFacilityVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
 
 import com.liferay.portal.model.Role;
@@ -396,8 +397,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmGstSupplier companyBasicGst;
 	private SmGstSupplier selectedGst;
 	private SmGstSupplierDoc selectedGstSuppDoc;
+	private List<SmSiteVisitFacilityVO> siteVisitFacVOList;
 	private boolean branchSameAsHq;
-	
+
 	private boolean showNewChanges;
 
 	/** The spki backing bean. */
@@ -1468,7 +1470,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return workShopFacilityStates;
 	}
 
-	public void setWorkShopFacilityStates(List<SelectItem> workShopFacilityStates) {
+	public void setWorkShopFacilityStates(
+			List<SelectItem> workShopFacilityStates) {
 		this.workShopFacilityStates = workShopFacilityStates;
 	}
 
@@ -1485,7 +1488,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return workShopFacilityCities;
 	}
 
-	public void setWorkShopFacilityCities(List<SelectItem> workShopFacilityCities) {
+	public void setWorkShopFacilityCities(
+			List<SelectItem> workShopFacilityCities) {
 		this.workShopFacilityCities = workShopFacilityCities;
 	}
 
@@ -3023,6 +3027,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setLatestCert(SmSupplierCert latestCert) {
 		this.latestCert = latestCert;
 	}
+
 	public boolean isShowNewChanges() {
 		String newChanges = EpPropertiesUtils.getInstance().getProperty(
 				"sm.show.new.changes");
@@ -3072,7 +3077,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return travellingSoftwareItems;
 	}
 
-	public void setTravellingSoftwareItems(List<SelectItem> travellingSoftwareItems) {
+	public void setTravellingSoftwareItems(
+			List<SelectItem> travellingSoftwareItems) {
 		this.travellingSoftwareItems = travellingSoftwareItems;
 	}
 
@@ -3098,5 +3104,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setSelectedBankBranchIds(Long[] selectedBankBranchIds) {
 		this.selectedBankBranchIds = selectedBankBranchIds;
+	}
+
+	public List<SmSiteVisitFacilityVO> getSiteVisitFacVOList() {
+		return siteVisitFacVOList;
+	}
+
+	public void setSiteVisitFacVOList(
+			List<SmSiteVisitFacilityVO> siteVisitFacVOList) {
+		this.siteVisitFacVOList = siteVisitFacVOList;
 	}
 }
