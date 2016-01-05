@@ -111,7 +111,7 @@
 			<p:column headerText="#{lbl['lbl.sc.action']}"
 					style="text-align: center;">
 				<p:commandLink
-					action="#{simpleQuoteBackingBean.viewQuote(scQuote)}"
+					action="#{simpleQuoteBackingBean.viewQuote(scQuote.quoteId)}"
 					partialSubmit="true" process="@this">
 					<p:graphicImage value="/css/images/design/document.png" />
 				</p:commandLink>
