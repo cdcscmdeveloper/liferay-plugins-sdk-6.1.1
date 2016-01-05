@@ -145,6 +145,7 @@ import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
+import my.ep.web.vo.SmSiteVisitFacilityVO;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -6103,8 +6104,7 @@ public class SmApplicationBackingBean extends
 				currentTab, true);
 
 		// validate facility
-		SmApplicationUtil.validateFacilityPanel(getManagedBean(), -1,
-				true);
+		SmApplicationUtil.validateFacilityPanel(getManagedBean(), -1, true);
 
 		if (getManagedBean().getSmAppl().getApplType()
 				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
@@ -6701,7 +6701,7 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		getManagedBean().setShowParentMsg(false);
-		setHqFacilityInSelectedFacility();
+		SmApplicationUtil.setSiteVisitFacilitiesVO(getManagedBean());
 		RequestContext.getCurrentInstance().execute(dialog + ".show()");
 	}
 
@@ -8734,6 +8734,26 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
+	 * On click check or uncheck check box for site visit assignment
+	 */
+	public void onCheckedSiteVisitFacilityAddress() {
+		getManagedBean().setSelectedFactoryFacilities(
+				new ArrayList<SmFacility>());
+		for (SmSiteVisitFacilityVO siteVisit : getManagedBean()
+				.getSiteVisitFacVOList()) {
+			if (!SmCommonUtil.isCollectionEmpty(siteVisit.getFacilities())) {
+				for (SmFacility fac : siteVisit.getFacilities()) {
+					if (fac.isSelected()) {
+						getManagedBean().getSelectedFactoryFacilities()
+								.add(fac);
+					}
+				}
+			}
+		}
+		setSelectedSpecialCategoriesForSiteVisit();
+	}
+
+	/**
 	 * Removed un select apporved categories from the list.
 	 * 
 	 * @param e
@@ -9623,6 +9643,24 @@ public class SmApplicationBackingBean extends
 
 			}
 			getManagedBean().getSelectedFactoryFacilities().add(hq);
+		}
+	}
+
+	/**
+	 * Set selected categories for site visit based on selected facility
+	 */
+	private void setSelectedSpecialCategoriesForSiteVisit() {
+		getManagedBean().setSelectedCategories(
+				new ArrayList<SmSupplierCategory>());
+		for (SmFacility fac : getManagedBean().getSelectedFactoryFacilities()) {
+			if (SmCommonUtil.isCollectionEmpty(SmApplicationUtil
+					.getCategoryByFacType(fac.getFacilityType(),
+							getManagedBean().getSelectedCategories()))) {
+				getManagedBean().getSelectedCategories().addAll(
+						SmApplicationUtil.getCategoryByFacType(fac
+								.getFacilityType(), getManagedBean()
+								.getSplCategoryList()));
+			}
 		}
 	}
 
