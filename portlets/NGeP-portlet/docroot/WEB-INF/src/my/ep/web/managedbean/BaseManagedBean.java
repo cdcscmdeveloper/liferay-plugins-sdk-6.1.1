@@ -23,6 +23,8 @@ public abstract class BaseManagedBean implements Serializable {
 	private boolean isAssignedState;
 	private Object payLoad;
 	private String processName;
+	private Boolean groupTask;
+	private boolean isReadOnly;
 	
 	// For sub title displayed in screen.
 	private String title;
@@ -152,5 +154,38 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setProcessName(String processName) {
 		this.processName = processName;
 	}
+
+	/**
+	 * @return the groupTask
+	 */
+	public Boolean getGroupTask() {
+		return groupTask;
+	}
+
+	/**
+	 * @param groupTask the groupTask to set
+	 */
+	public void setGroupTask(Boolean groupTask) {
+		this.groupTask = groupTask;
+	}
+
+	/**
+	 * @return the isReadOnly
+	 */
+	public boolean isReadOnly() {
+		return isReadOnly;
+	}
+
+	/**
+	 * @param isReadOnly the isReadOnly to set
+	 */
+	public void setReadOnly(boolean isReadOnly) {
+		this.isReadOnly = isReadOnly;
+	}
+
+	
+	
+
+	
 
 }
