@@ -2994,14 +2994,21 @@ public class SmApplicationUtil {
 	public static boolean validateBeforeProceed(Long supplierId,
 			String applicationType) {
 		boolean result = false;
-		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
-				.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
 		MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 		MofRegistrationResDTO resDto = new MofRegistrationResDTO();
 		reqDto.setSupplierId(supplierId);
-		resDto = mofRegistrationSO.retrieveSupplierProfile(reqDto);
+		resDto = SmServiceLookup.getMofRegistrationSO()
+				.retrieveSupplierProfile(reqDto);
 		if (resDto.getSmSupplier() != null) {
 			SmSupplier smSupplier = resDto.getSmSupplier();
+			if (smSupplier.getBusinessType() != null
+					&& smSupplier
+							.getBusinessType()
+							.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER)) {
+				result = true;
+				// Supplier G2G is not allowed to perform this action
+				throw new EpException(MessageConst.ERROR_722576);
+			}
 			if (smSupplier.getSmAppl() != null
 					&& !smSupplier.getSmAppl().isQuestionnaire()) {
 				result = true;
