@@ -32,16 +32,27 @@
 			test="#{purchaseInDefaultBackingBean.managedBean.taskId eq null}">
 			<table style="width: 100%">
 				<tr>
-					<td align="right"><p:commandButton immediate="true"
+					<td align="right">
+					  <p:commandButton immediate="true"
 							partialSubmit="true" process="@this"
 							value="#{lbl['lbl.btn.item.search']}"
 							rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"
 							style="float:left;"
-							action="#{purchaseInDefaultBackingBean.backToPrevious}" /> <p:commandButton
+							action="#{purchaseInDefaultBackingBean.backToPrevious}" />
+							
+						 <p:commandLink
+							value="#{lbl['lbl.td.doc.trackingDiary']}" style="float:right;"
+							rendered="#{purchaseInDefaultBackingBean.managedBean.trackingDairyView}"
+							action="#{dpTrackingDiaryBackingBean.goToTrackingDiarySearch(purchaseInDefaultBackingBean.managedBean.dpObj)}"
+							immediate="true" /> 
+							
+						<p:commandButton
 							immediate="true" value="#{lbl['lbl.btn.back']}"
 							partialSubmit="true" process="@this" style="float:left;"
 							rendered="#{!purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"
-							action="#{purchaseInDefaultBackingBean.backToPrevious}" /> <p:commandButton
+							action="#{purchaseInDefaultBackingBean.backToPrevious}" /> 
+							
+						<p:commandButton
 							value="#{lbl['lbl.btn.submit']}"
 							action="#{purchaseInDefaultBackingBean.submitPurchaseInDefault()}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"

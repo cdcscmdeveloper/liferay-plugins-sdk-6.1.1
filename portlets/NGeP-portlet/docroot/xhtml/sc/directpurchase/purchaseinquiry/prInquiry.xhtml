@@ -9,6 +9,7 @@
 
 	<ui:param name="uomCode"
 		value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.uom.uomCode}" />
+		<ui:param name="isStockAvailable" value="#{purchaseInquiryBackingBean.managedBean.stockAvailabilityFlag}" />
 
 	<p:panel header="#{lbl['lbl.sc.price.inquiry.header.inquiry.detail']}"
 		toggleable="true" id="addToCartId">
@@ -20,7 +21,7 @@
 				<td colspan="3"><p:inputText size="46" id="title"
 						required="true" maxlength="100"
 						label="#{lbl['lbl.sc.direct.purchase.title']}"
-						disabled="#{!isPendingSubmissionStatus}"
+						disabled="#{isViewOnly}"
 						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.title}"
 						style="margin-bottom: 5px;" /> <p:message id="titleMsg"
 						for="title" display="icon" /></td>
@@ -73,7 +74,7 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.price.inquiry.order.qty']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText disabled="#{!isPendingSubmissionStatus}"
+				<td><p:inputText disabled="#{isViewOnly}"
 						style="text-align: right;"
 						label="#{lbl['lbl.sc.price.inquiry.order.qty']}" maxlength="14"
 						id="oderQtyId" required="true"
@@ -97,7 +98,7 @@
 							<td><p:selectOneMenu required="true" id="priceType"
 									style="margin-bottom: 5px; width: 235px;"
 									label="#{lbl['lbl.sc.price.inquiry.price.type']}"
-									disabled="#{!isPendingSubmissionStatus}"
+									disabled="#{isViewOnly}"
 									value="#{purchaseInquiryBackingBean.managedBean.priceType}">
 									<f:selectItems
 										value="#{purchaseInquiryBackingBean.managedBean.priceTypes}" />
@@ -108,7 +109,7 @@
 							<td><p:spacer width="2px"></p:spacer> <h:commandLink
 									immediate="true"
 									action="#{requestNoteBackingBean.viewMarketResearch(purchaseInquiryBackingBean.managedBean.requestNoteDtl)}"
-									rendered="#{isPendingSubmissionStatus}">
+									rendered="#{isPendingSubmissionStatus and !isTrackingDairyView}">
 									<p:graphicImage value="/css/images/design/ico-view.png"
 										title="#{lbl['lbl.sc.summary.searchresult.tooltip']}"></p:graphicImage>
 								</h:commandLink></td>
@@ -144,7 +145,7 @@
 
 				<td><p:inputText id="dayToResponse" size="3" maxlength="2"
 						required="true" label="#{lbl['lbl.sc.price.inquiry.day.to.resp']}"
-						disabled="#{!isPendingSubmissionStatus}" style="text-align:right;"
+						disabled="#{isViewOnly}" style="text-align:right;"
 						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.dayToResponse}">
 						<p:ajax event="keyup" update="dayToRespId"
 							listener="#{purchaseInquiryBackingBean.calcDayToResponse(purchaseInquiryBackingBean.managedBean.scPrInquiry)}" />
@@ -160,7 +161,7 @@
 			</tr>
 			<tr>
 				<td colspan="4"><h:panelGroup
-						rendered="#{isPendingSubmissionStatus}" id="justiId">
+						rendered="#{isPendingSubmissionStatus and !isTrackingDairyView}" id="justiId">
 
 						<table style="width: 100%">
 							<tr>
@@ -198,7 +199,7 @@
 											style="width: 235px; margin-bottom: 5px;"
 											id="justificationId" label="#{lbl['lbl.sc.reason']}"
 											required="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'A'}"
-											value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.justificationType.parameterCode}">
+											value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.justificationType.reasonCode}">
 											<f:selectItems
 												value="#{purchaseInquiryBackingBean.managedBean.justDropdown}" />
 											<p:ajax event="change" update="justiId" process="@this" />
@@ -240,7 +241,7 @@
 				<td><p:selectOneRadio styleClass="commonLabel"
 						id="stockAvailable" style="margin-bottom: 2px;"
 						label="#{lbl['lbl.sc.price.inquiry.stock.avail']}"
-						disabled="#{!isPendingSupplierRespStatus}"
+						disabled="#{!isPendingSupplierRespStatus or isTrackingDairyView}"
 						value="#{purchaseInquiryBackingBean.managedBean.stockAvailable}"
 						required="#{!purchaseInquiryBackingBean.isRequisitioner()}">
 						<f:selectItem itemLabel="#{lbl['lbl.sc.price.inquiry.yes']}"
@@ -285,7 +286,7 @@
 			<p:column style="width:15%">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory"
-						rendered="#{purchaseInquiryBackingBean.managedBean.stockAvailabilityFlag and isPendingSupplierRespStatus}" />
+						rendered="#{isStockAvailable and isPendingSupplierRespStatus}" />
 					<h:outputText value="#{lbl['lbl.sc.price.inquiry.price.offered']}" />
 				</f:facet>
 				<ui:fragment rendered="#{!supplierItemPrice.brandNew}">
@@ -293,8 +294,8 @@
 						style="text-align:right;"
 						label="#{lbl['lbl.sc.price.inquiry.price.offered']}"
 						maxlength="23" size="30" id="itemPrice"
-						disabled="#{!purchaseInquiryBackingBean.managedBean.stockAvailabilityFlag or !isPendingSupplierRespStatus}"
-						required="#{purchaseInquiryBackingBean.managedBean.stockAvailabilityFlag}">
+						disabled="#{!isStockAvailable or !isPendingSupplierRespStatus}"
+						required="#{isStockAvailable}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText>

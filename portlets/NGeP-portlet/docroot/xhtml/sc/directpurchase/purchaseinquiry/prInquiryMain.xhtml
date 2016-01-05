@@ -17,85 +17,17 @@
 		</p:blockUI>
 		<p:messages showDetail="true" autoUpdate="true" closable="true"
 			showSummary="false" severity="error, info" id="mainMsg" />
+			
+		<ui:param name="isTrackingDairyView" value="#{purchaseInquiryBackingBean.managedBean.trackingDairyView}" />
+		<ui:param name="isViewOnly" value="#{purchaseInquiryBackingBean.managedBean.viewOnly}" />
 		<ui:param name="isPendingSubmissionStatus"
 			value="#{purchaseInquiryBackingBean.managedBean.priStatus.statusId eq DPStatusConstants.priPendingSubmission}" />
 		<ui:param name="isPendingSupplierRespStatus"
 			value="#{purchaseInquiryBackingBean.managedBean.priStatus.statusId eq DPStatusConstants.priPendingSupplierResponse}" />
 		<ui:param name="isPendingRnCreationStatus"
 			value="#{purchaseInquiryBackingBean.managedBean.priStatus.statusId eq  DPStatusConstants.priPendingRnCreation}" />
-
-		<div class="ppRightBtn">
-			<c:if test="#{isPendingSubmissionStatus}">
-				<p:commandButton immediate="true"
-					value="#{lbl['lbl.btn.item.search']}" partialSubmit="true"
-					process="@this" style="float:left;"
-					action="#{purchaseInquiryBackingBean.backToPrevious}" />
-
-				<p:commandButton value="#{lbl['lbl.btn.submit']}"
-					partialSubmit="true" process="@form"
-					action="#{purchaseInquiryBackingBean.submitPrInquiryDtl}"
-					style="float:right;" onstart="blockWidget.show();"
-					oncomplete="blockWidget.hide();" update="@form" />
-			</c:if>
-
-			<table style="width: 100%">
-				<tr>
-					<td align="right">
-						<!-- view back button --> <p:commandButton immediate="true"
-							process="@this" partialSubmit="true"
-							rendered="#{purchaseInquiryBackingBean.managedBean.rnToPIFlag}"
-							value="#{lbl['lbl.btn.back']}" style="float:left;"
-							action="#{purchaseInquiryBackingBean.backToPrevious}" /> <c:choose>
-							<c:when
-								test="#{!empty purchaseInquiryBackingBean.managedBean.taskId}">
-								<c:if test="#{isPendingRnCreationStatus}">
-									<c:if
-										test="#{!purchaseInquiryBackingBean.managedBean.rnToPIFlag}">
-										<p:commandButton value="#{lbl['lbl.btn.proceed']}"
-											partialSubmit="true" process="@form"
-											onstart="blockWidget.show();"
-											oncomplete="blockWidget.hide();"
-											action="#{purchaseInquiryBackingBean.requisitionerAction('PROCESSED')}" />
-
-										<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-											style="float:right;" partialSubmit="true" process="@form"
-											onstart="blockWidget.show();"
-											oncomplete="blockWidget.hide();"
-											action="#{purchaseInquiryBackingBean.requisitionerAction('CANCEL')}" />
-
-									</c:if>
-								</c:if>
-								<ui:repeat var="bpmAction"
-									value="#{purchaseInquiryBackingBean.managedBean.outComes}">
-									<ui:param name="buttonLabel"
-										value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-
-									<c:if test="#{isPendingSupplierRespStatus}">
-										<p:outputPanel id="spkiPopup">
-											<ac:spkiPopup
-												password="#{purchaseInquiryBackingBean.managedBean.spkiBackingBean.password}"
-												challengeAns1="#{purchaseInquiryBackingBean.managedBean.spkiBackingBean.challengeAns1}"
-												challengeQues1="#{purchaseInquiryBackingBean.managedBean.spkiBackingBean.challengeQues1}"
-												postSignAction="#{purchaseInquiryBackingBean.submitPrInquiryPrice(spkiBackingBean.pmDigiSign)}" />
-										</p:outputPanel>
-										<p:commandButton value="#{lbl[buttonLabel]}"
-											styleClass="ui-button" update="spkiPopup"
-											action="#{purchaseInquiryBackingBean.spkiSignAction}"
-											actionListener="#{purchaseInquiryBackingBean.managedBean.spkiBackingBean.getChallengeQuestions}"
-											onstart="blockWidget.show();"
-											oncomplete="blockWidget.hide();">
-											<f:setPropertyActionListener value="#{bpmAction}"
-												target="#{purchaseInquiryBackingBean.managedBean.action}" />
-										</p:commandButton>
-
-									</c:if>
-								</ui:repeat>
-							</c:when>
-						</c:choose>
-					</td>
-				</tr>
-			</table>
-		</div>
+		
+		<ui:include src="/xhtml/sc/directpurchase/purchaseinquiry/prInquiryButtons.xhtml" />
 		<ui:include src="/xhtml/sc/directpurchase/purchaseinquiry/prInquiryHeader.xhtml" />
 		<ui:include src="/xhtml/sc/directpurchase/purchaseinquiry/prInquiry.xhtml" />
 
