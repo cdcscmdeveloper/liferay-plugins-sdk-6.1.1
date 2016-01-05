@@ -1381,7 +1381,7 @@ public class QTCommitteBackingBean extends
 				.getCommitteeType()
 				.getParameterCode()
 				.equalsIgnoreCase(
-						ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE)) {
+						ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE)) {/*
 			List<TabBean> committeTabs = this.getManagedBean()
 					.getScCommitteeMemberTabList();
 			for (int i = 0; i < committeTabs.size(); i++) {
@@ -1435,12 +1435,12 @@ public class QTCommitteBackingBean extends
 					}
 				}
 			}
-		}
+		*/}
 		if (scCommittee
 				.getCommitteeType()
 				.getParameterCode()
 				.equalsIgnoreCase(
-						ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE)) {
+						ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE)) {/*
 			List<TabBean> committeTabs = this.getManagedBean()
 					.getScCommitteeMemberTabList();
 			for (int i = 0; i < committeTabs.size(); i++) {
@@ -1492,12 +1492,12 @@ public class QTCommitteBackingBean extends
 					}
 				}
 			}
-		}
+		*/}
 		if (scCommittee
 				.getCommitteeType()
 				.getParameterCode()
 				.equalsIgnoreCase(
-						ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE)) {
+						ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE)) {/*
 			List<TabBean> committeTabs = this.getManagedBean()
 					.getScCommitteeMemberTabList();
 			for (int i = 0; i < committeTabs.size(); i++) {
@@ -1549,7 +1549,7 @@ public class QTCommitteBackingBean extends
 					}
 				}
 			}
-		}
+		*/}
 
 		scCommittee.getScCommitteeMembers().addAll(toBeAddedList);
 		java.util.Collections.sort(scCommittee.getScCommitteeMembers());
