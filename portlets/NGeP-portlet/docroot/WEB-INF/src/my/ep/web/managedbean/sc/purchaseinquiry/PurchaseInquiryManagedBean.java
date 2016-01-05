@@ -99,17 +99,14 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	/** The stock availability flag. */
 	private boolean stockAvailabilityFlag;
 	
-	/** The page nav to request note. */
-	private String pageNavToRequestNote;
-	
 	/** The procurement types. */
 	private SelectItem[] procurementTypes; // for procurement type dropdown
 	
 	/** The title checker. */
 	private boolean titleChecker = Boolean.TRUE;
 	
-	/** The rn to pi flag. */
-	private boolean rnToPIFlag;
+	/** The view only. */
+	private boolean viewOnly;
 	
 	/** The sc pi zone. */
 	private ScPIZone scPIZone = new ScPIZone(); 
@@ -120,8 +117,18 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
     /** The zone dtl map. */
     private	Map<String, TplSpecZoneDtl>	zoneDtlMap;
     
+	/** The nav to previous page. */
+	private String navToPreviousPage;
+    
     /** The action. */
     private String action;
+    
+	/** The dp obj. */
+	private Object[] dpObj = new Object[6];
+	
+	/** The tracking dairy view. */
+	private boolean trackingDairyView;
+	
     
     /** The spki backing bean. */
     @ManagedProperty(value="#{spkiBackingBean}")
@@ -533,24 +540,6 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
-	 * Gets the page nav to request note.
-	 *
-	 * @return the pageNavToRequestNote
-	 */
-	public String getPageNavToRequestNote() {
-		return pageNavToRequestNote;
-	}
-
-	/**
-	 * Sets the page nav to request note.
-	 *
-	 * @param pageNavToRequestNote the pageNavToRequestNote to set
-	 */
-	public void setPageNavToRequestNote(String pageNavToRequestNote) {
-		this.pageNavToRequestNote = pageNavToRequestNote;
-	}
-
-	/**
 	 * Gets the procurement types.
 	 *
 	 * @return the procurementTypes
@@ -568,22 +557,19 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 		this.procurementTypes = procurementTypes;
 	}
 
+
 	/**
-	 * Checks if is rn to pi flag.
-	 *
-	 * @return the rnToPIFlag
+	 * @return the viewOnly
 	 */
-	public boolean isRnToPIFlag() {
-		return rnToPIFlag;
+	public boolean isViewOnly() {
+		return viewOnly;
 	}
 
 	/**
-	 * Sets the rn to pi flag.
-	 *
-	 * @param rnToPIFlag the rnToPIFlag to set
+	 * @param viewOnly the viewOnly to set
 	 */
-	public void setRnToPIFlag(boolean rnToPIFlag) {
-		this.rnToPIFlag = rnToPIFlag;
+	public void setViewOnly(boolean viewOnly) {
+		this.viewOnly = viewOnly;
 	}
 
 	/**
@@ -639,4 +625,48 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	public void setAction(String action) {
 		this.action = action;
 	}
+
+	/**
+	 * @return the navToPreviousPage
+	 */
+	public String getNavToPreviousPage() {
+		return navToPreviousPage;
+	}
+
+	/**
+	 * @param navToPreviousPage the navToPreviousPage to set
+	 */
+	public void setNavToPreviousPage(String navToPreviousPage) {
+		this.navToPreviousPage = navToPreviousPage;
+	}
+
+	/**
+	 * @return the dpObj
+	 */
+	public Object[] getDpObj() {
+		return dpObj;
+	}
+
+	/**
+	 * @param dpObj the dpObj to set
+	 */
+	public void setDpObj(Object[] dpObj) {
+		this.dpObj = dpObj;
+	}
+
+	/**
+	 * @return the trackingDairyView
+	 */
+	public boolean isTrackingDairyView() {
+		return trackingDairyView;
+	}
+
+	/**
+	 * @param trackingDairyView the trackingDairyView to set
+	 */
+	public void setTrackingDairyView(boolean trackingDairyView) {
+		this.trackingDairyView = trackingDairyView;
+	}
+	
+	
 }

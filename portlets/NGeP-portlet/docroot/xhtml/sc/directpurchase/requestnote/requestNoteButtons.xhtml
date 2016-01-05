@@ -42,12 +42,17 @@
 		</h:panelGroup>
 	</p:dialog>
 
-	<div class="ppLeftBtn">
+	<div>
 		<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 			id="backPrevious" partialSubmit="true" process="@this"
 			immediate="true" action="#{requestNoteBackingBean.backToPrevious}"
-			rendered="#{requestNoteBackingBean.managedBean.viewOnly}">
-		</p:commandButton>
+			rendered="#{requestNoteBackingBean.managedBean.viewOnly}" />
+
+		<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
+			style="float:right;"
+			rendered="#{requestNoteBackingBean.managedBean.trackingDairyView}"
+			action="#{dpTrackingDiaryBackingBean.goToTrackingDiarySearch(requestNoteBackingBean.managedBean.dpObj)}"
+			immediate="true" />
 	</div>
 	<h:panelGroup
 		rendered="#{!requestNoteBackingBean.managedBean.viewOnly}">
@@ -69,11 +74,9 @@
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					update="@([id$=requestNoteId])" onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
-					action="#{requestNoteBackingBean.submitAction('')}"
-					process="@all">
+					action="#{requestNoteBackingBean.submitAction('')}" process="@all">
 					<f:setPropertyActionListener
-						target="#{requestNoteBackingBean.managedBean.action}"
-						value="" />
+						target="#{requestNoteBackingBean.managedBean.action}" value="" />
 				</p:commandButton>
 
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
@@ -103,13 +106,12 @@
 						<ui:param name="buttonLabel"
 							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<ui:param name="isCancel" value="${bpmAction == 'CANCEL'}" />
-						
+
 						<p:commandButton value="#{lbl[buttonLabel]}" partialSubmit="true"
-							onstart="blockWidget.show();"
-							oncomplete="blockWidget.hide();"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							process="#{isCancel ? '@this,  @([id$= remark])' : '@form'}"
 							update="#{isCancel ? '@this,  @([id$= remark])' : '@form'}"
-							actionListener="#{requestNoteBackingBean.submitAction(bpmAction)}"/>
+							actionListener="#{requestNoteBackingBean.submitAction(bpmAction)}" />
 					</ui:repeat>
 				</div>
 			</c:if>

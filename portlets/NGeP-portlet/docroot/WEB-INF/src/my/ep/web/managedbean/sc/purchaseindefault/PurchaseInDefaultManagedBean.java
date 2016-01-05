@@ -105,7 +105,15 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 
 	/** The v cm supplier item. */
 	private VCmSupplierItem vCmSupplierItem;
+	
+	/** The sm gst supplier. */
 	private SmGstSupplier smGstSupplier;
+	
+	/** The dp obj. */
+	private Object[] dpObj = new Object[6];
+	
+	/** The tracking dairy view. */
+	private boolean trackingDairyView;
 
 	/**
 	 * Instantiates a new purchase in default managed bean.
@@ -545,4 +553,33 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 	public void setSmGstSupplier(SmGstSupplier smGstSupplier) {
 		this.smGstSupplier = smGstSupplier;
 	}
+
+	/**
+	 * @return the dpObj
+	 */
+	public Object[] getDpObj() {
+		return dpObj;
+	}
+
+	/**
+	 * @param dpObj the dpObj to set
+	 */
+	public void setDpObj(Object[] dpObj) {
+		this.dpObj = dpObj;
+	}
+
+	/**
+	 * @return the trackingDairyView
+	 */
+	public boolean isTrackingDairyView() {
+		return trackingDairyView;
+	}
+
+	/**
+	 * @param trackingDairyView the trackingDairyView to set
+	 */
+	public void setTrackingDairyView(boolean trackingDairyView) {
+		this.trackingDairyView = trackingDairyView;
+	}
+	
 }
