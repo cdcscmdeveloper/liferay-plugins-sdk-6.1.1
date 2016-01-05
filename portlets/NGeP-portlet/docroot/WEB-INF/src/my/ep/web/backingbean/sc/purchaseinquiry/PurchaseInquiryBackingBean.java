@@ -26,6 +26,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
@@ -39,6 +40,7 @@ import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
@@ -56,6 +58,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
@@ -74,6 +77,8 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.ReasonCategory;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -114,6 +119,13 @@ public class PurchaseInquiryBackingBean extends
 
 	/** The Constant ZONE_SEPARATOR. */
 	public static final String ZONE_SEPARATOR = "_";
+	
+	/** The text before sign. */
+	private String textBeforeSign;
+
+
+	/** The purchase inquiry page. */
+	private String PURCHASE_INQUIRY_PAGE = "prInquiryMain";
 
 	/**
 	 * Instantiates a new purchase inquiry backing bean.
@@ -177,7 +189,7 @@ public class PurchaseInquiryBackingBean extends
 				// price type
 				supplierItemPrice.setPriceType(getParameterByTypeAndCode(
 						ParameterTypeConst.PRICE_TYPE, cmSupplierItem
-								.getCmPricings().get(0).getPricingType()));
+						.getCmPricings().get(0).getPricingType()));
 
 			} else {
 				throw new EpException(MessageConst.ERROR_760159);
@@ -207,7 +219,7 @@ public class PurchaseInquiryBackingBean extends
 		// check supplier is government seller or not
 		ScRequestNoteDtl requestNoteDtl = getManagedBean().getRequestNoteDtl();
 		PmParameter pmParameter = new PmParameter();
-		requestNoteDtl.setJustificationType(pmParameter);
+		requestNoteDtl.setJustificationType(new PmReason());
 
 		// check supplier is government seller or not
 		if (isGovtSellerOrNot(cmSupplierItem)) {
@@ -392,7 +404,7 @@ public class PurchaseInquiryBackingBean extends
 						orgProfileResDTO.getOrgProfileList().get(0));
 			}
 		}
-		return "prInquiryMain";
+		return PURCHASE_INQUIRY_PAGE;
 	}
 
 	/**
@@ -416,9 +428,7 @@ public class PurchaseInquiryBackingBean extends
 		if (resDTO.getPmOrgProfile() != null) {
 			if (resDTO.getPmOrgProfile().isGovtSeller()) {
 				isg2g = Boolean.TRUE;
-			} else {
-				isg2g = Boolean.FALSE;
-			}
+			} 
 		}
 		return isg2g;
 	}
@@ -617,22 +627,14 @@ public class PurchaseInquiryBackingBean extends
 			// justification type
 			if (requestNoteDtl.getProcurementType().getParameterCode()
 					.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
-				if (requestNoteDtl.getJustificationType().getParameterCode() != null) {
+				if (requestNoteDtl.getJustificationType().getReasonCode() != null) {
 					requestNoteDtl
-							.setJustificationType(getParameterByTypeAndCode(
-									ParameterTypeConst.JUSTIFICATION_TYPE_ADHOC,
+							.setJustificationType(getReasonByCategoryAndCode(
+									ReasonCategory.JUSTIFICATION_AD_HOC.value(),
 									requestNoteDtl.getJustificationType()
-											.getParameterCode()));
+											.getReasonCode()));
 				}
-			} else if (requestNoteDtl.getProcurementType().getParameterCode()
-					.equalsIgnoreCase(ParameterConst.PROC_TYPE_EMERGENCY)) {
-				if (requestNoteDtl.getJustificationType().getParameterCode() != null) {
-					requestNoteDtl
-							.setJustificationType(getParameterByTypeAndCode(
-									ParameterTypeConst.JUSTIFICATION_TYPE_EMERGENCY,
-									requestNoteDtl.getJustificationType()
-											.getParameterCode()));
-				}
+				
 			} else {
 				requestNoteDtl.setJustificationType(null);
 			}
@@ -700,37 +702,48 @@ public class PurchaseInquiryBackingBean extends
 	}
 
 	/**
-	 * submit purchase inquiry price details. submit - save data into database
+	 * update supplier response - save data into database
 	 * and BPM process will route to the next respective user. and also
 	 * authenticating spki before submit price details
 	 * 
 	 * @param pmDigiSign
 	 *            the pm digi sign page navigate to acknowledge page.
 	 */
-	public String submitPrInquiryPrice(PmDigiSign pmDigiSign) {
-		log.info("submitPrInquiryPrice");
+	public String updateSupplierResponse(PmDigiSign pmDigiSign) {
+		log.info("updateSupplierResponse");
 		PrInquiryReqDTO reqDTO = new PrInquiryReqDTO();
 		ScPrInquiry prInquiry = getManagedBean().getScPrInquiry();
 		ScRequestSupplierItem scRequestSupplierItem = getManagedBean()
 				.getScRequestSupplierItem();
 		finalizeRemarks(prInquiry.getRemarks());
 
-		// spki
-		String originalText = prepareOriginalText(scRequestSupplierItem
-				.getSmSupplier());
-		if (null != pmDigiSign) {
-			updateSpkiDigiSignData(pmDigiSign,
-					ParameterConst.DOCTYPE_PURCHASE_INQUIRY,
-					prInquiry.getPrInquiryId(), prInquiry.getPrInquiryNo(),
-					originalText);
+		// gpki only for govt seller 
+		if(isDigiSigningRequired(RoleCode.GOVT_SELLER.value())) {
+			if (null != pmDigiSign) { 
+				updateSpkiDigiSignData(pmDigiSign,
+						ParameterConst.DOCTYPE_PURCHASE_INQUIRY, prInquiry.getPrInquiryId(),
+						prInquiry.getPrInquiryNo(), 
+						prepareOriginalText(Boolean.TRUE)); 
+			}
+			RequestContext.getCurrentInstance().execute("gpki_dlg.hide();");
+
+		} else {
+			// spki
+			String originalText = prepareOriginalText(Boolean.FALSE); 
+			if (null != pmDigiSign) {
+				updateSpkiDigiSignData(pmDigiSign,
+						ParameterConst.DOCTYPE_PURCHASE_INQUIRY,
+						prInquiry.getPrInquiryId(), prInquiry.getPrInquiryNo(),
+						originalText);
+			}
+			
+			byte[] signedData = getManagedBean().getSpkiBackingBean()
+					.spkiSignTransaction(originalText);
+			pmDigiSign.setSpkiSignedData(signedData);
+			RequestContext.getCurrentInstance().execute("spki_dlg.hide();");
 		}
 
-		// spki
 		RequestContext.getCurrentInstance().execute("blockWidget.hide();");
-		RequestContext.getCurrentInstance().execute("spki_dlg.hide();");
-		byte[] signedData = getManagedBean().getSpkiBackingBean()
-				.spkiSignTransaction(originalText);
-		pmDigiSign.setSpkiSignedData(signedData);
 
 		// updating price
 		List<ScRequestSupplierItem> scRequestSupplierItems = new ArrayList<ScRequestSupplierItem>();
@@ -768,7 +781,7 @@ public class PurchaseInquiryBackingBean extends
 	 * @param smSupplier
 	 *            the sm supplier
 	 * @return the string
-	 */
+	 *//*
 	private String prepareOriginalText(SmSupplier smSupplier) {
 		FacesScopes facesScopes = new FacesScopes();
 		StringBuilder sb = new StringBuilder();
@@ -797,6 +810,105 @@ public class PurchaseInquiryBackingBean extends
 				.append(countryCode);
 		orginalText = sb.toString();
 		return orginalText;
+	}*/
+	
+	/**
+	 * Prepare original text to pass spki authentication
+	 * 
+	 * @return the string
+	 */
+	private String prepareOriginalText(boolean isG2GSupplier) {
+		/*
+		 * The first one is the Government user, it is the combination of IC.No,
+		 * > Organization Code and Country Code. >
+		 * 0000000081102813580400000000000211602001MY > IC No. , Organization
+		 * code, Country code > > The second one is for Supplier, it is the
+		 * combination of IC. No, Reg No and > Country Code. >
+		 * 00000000680427115037000000000KT0143162-VMY > IC No. , Registration
+		 * No., Country code
+		 */
+		FacesScopes facesScopes = new FacesScopes();
+		StringBuilder sb = new StringBuilder();
+		SmSupplier smSupplier = null;
+		String countryCode = "";
+		String orginalText = "";
+
+		if (getManagedBean().getScRequestSupplierItem() != null) {
+			ScRequestSupplierItem scRequestSupplierItem = getManagedBean()
+					.getScRequestSupplierItem();
+			smSupplier = scRequestSupplierItem.getSmSupplier();
+
+			if (smSupplier.getSmAppl().getSmCompanyBasic()
+					.getSmCompanyAddresses() != null
+					&& smSupplier.getSmAppl().getSmCompanyBasic()
+							.getSmCompanyAddresses().size() > 0) {
+				List<SmCompanyAddress> companyAddress = smSupplier.getSmAppl()
+						.getSmCompanyBasic().getSmCompanyAddresses();
+
+				for (SmCompanyAddress compaAddress : companyAddress) {
+					if (compaAddress.getAddressType().equalsIgnoreCase(
+							AddressType.CONTACT_ADDRESS.value())) {
+						countryCode = compaAddress.getSmAddress()
+								.getPmCountry().getCountryCode();
+						break;
+					}
+				}
+			}
+		}
+		
+		sb.append(getManagedBean().getScPrInquiry().getPrInquiryNo()).append("|")
+				.append(facesScopes.getUserSessionBean().getIdentificationNo())
+				.append("|");
+
+		if (isG2GSupplier) {
+			UserReqDTO userReqDTO  = new UserReqDTO();
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			userReqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+			PmUser pmUser = userSO.retrieveUserProfileByUserId(userReqDTO).getPmUser();
+			if(pmUser.getOrgTypeCode() != null){
+				sb.append(pmUser.getOrgTypeCode().getParameterCode());
+			}
+
+		} else {
+			sb.append(smSupplier.getRegNo());
+		}
+		sb.append("|").append(countryCode);
+		orginalText = sb.toString();
+		return orginalText;
+	}
+	
+	
+	/**
+	 * submit supplier response details. submit - save data into database and
+	 * BPM process will route to the next respective user. and also
+	 * authenticating spki or gpki before submit price details
+	 * 
+	 * @param pmDigiSign
+	 *            the pm digi sign if quote is single, page navigate to
+	 *            acknowledge page otherwise remains.
+	 */
+	public void supplierSubmit() {
+		debugLogger("supplierSubmit");
+
+		//gpki for only govt seller
+		if(isDigiSigningRequired(RoleCode.GOVT_SELLER.value())) {
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+
+		}  else {
+			// spki
+			RequestContext.getCurrentInstance().execute("spki_dlg.show();");
+		}
+	}
+
+	/**
+	 * Gpki sign action. Authenticating gpki before update bpm.
+	 * 
+	 * @param digiSign
+	 *            the digi sign
+	 */
+	public void gpkiSignAction(PmDigiSign digiSign) {
+		updateSupplierResponse(digiSign);
 	}
 
 	/**
@@ -820,18 +932,11 @@ public class PurchaseInquiryBackingBean extends
 			getManagedBean().setProcTypeOption(Boolean.TRUE);
 			getManagedBean()
 					.setJustDropdown(
-							getDropdownCodeValues(ParameterTypeConst.JUSTIFICATION_TYPE_ADHOC));
+							getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_AD_HOC.value()));
 
-		} else if (getManagedBean().getRequestNoteDtl().getProcurementType()
-				.getParameterCode()
-				.equalsIgnoreCase(ParameterConst.PROC_TYPE_EMERGENCY)) {
-			getManagedBean().setProcTypeOption(Boolean.TRUE);
-			getManagedBean()
-					.setJustDropdown(
-							getDropdownCodeValues(ParameterTypeConst.JUSTIFICATION_TYPE_EMERGENCY));
-		}
+		} 
 		getManagedBean().getRequestNoteDtl().setJustificationType(
-				new PmParameter());
+				new PmReason());
 	}
 
 	/**
@@ -1203,7 +1308,7 @@ public class PurchaseInquiryBackingBean extends
 
 		// title checker
 		getManagedBean().setTitleChecker(Boolean.FALSE);
-		getManagedBean().setRnToPIFlag(Boolean.FALSE);
+		getManagedBean().setViewOnly(Boolean.FALSE);
 
 		// price change lister
 		priceTypeChangeListener();
@@ -1221,7 +1326,7 @@ public class PurchaseInquiryBackingBean extends
 			
 			fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
-			.handleNavigation(fc, null, "prInquiryMain");
+			.handleNavigation(fc, null, PURCHASE_INQUIRY_PAGE);
 
 		} else { // page nav.to request note
 			String commonRequestNote = requisitionerAction("PROCESSED");
@@ -1254,11 +1359,11 @@ public class PurchaseInquiryBackingBean extends
 	public void backToPrevious() {
 		log.info("backToPrevious");
 		FacesContext fc = FacesContext.getCurrentInstance();
-		if (getManagedBean().getPageNavToRequestNote() != null) {
+		if (getManagedBean().getNavToPreviousPage() != null) {
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
-							getManagedBean().getPageNavToRequestNote());
+							getManagedBean().getNavToPreviousPage());
 		} else {
 			// clear data
 			super.renewSesionObject();
@@ -1388,7 +1493,76 @@ public class PurchaseInquiryBackingBean extends
 
 		}
 	}
+	
 
+	/**
+	 * View purchase inquiry.
+	 *
+	 * @param purchaseInqId the purchase inq id
+	 */
+	public void viewPurchaseInquiry(long purchaseInqId) {
+		debugLogger("viewPurchaseInquiry");
+		IPrInquirySO prInquirySO = (IPrInquirySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
+		ScPrInquiry  prInquiry = null;
+		//Purchase Inquiry
+		PrInquiryReqDTO prInquiryReqDTO = new PrInquiryReqDTO();
+		prInquiryReqDTO.setPrInquiryId(purchaseInqId);
+		prInquiryReqDTO.setFetchSubEntity(true);
+		PrInquiryResDTO prInquiryResDTO = prInquirySO.getPrInquiry(prInquiryReqDTO);
+		prInquiry  = prInquiryResDTO.getPrInquiryDetail();
+		// status
+		if(prInquiry.getCurrentStatus() != null){
+			getCurrentStatus(prInquiry.getCurrentStatus().getPmStatus());
+		}
+
+		// get selected supplier 
+		ScRequestSupplierItem requestSupplierItem = prInquiry.getScRequestSupplierItems().get(0);
+		ScRequestNoteDtl scRequestNoteDtl = requestSupplierItem.getScRequestNoteDtl().get(0);
+		prInquiry.setRequestSupplierItem(requestSupplierItem);
+
+		// lead time 
+		if(requestSupplierItem.getSupplierItemPrices() != null && requestSupplierItem.getSupplierItemPrices().size() >0){
+			requestSupplierItem.getRequestNoteItem().setLeadTime(requestSupplierItem.getSupplierItemPrices().get(0).getPricing().getCmSupplierItem().getLeadTime());
+		}
+
+		// price type drop down
+		List<String> priceTypes= new ArrayList<String>();
+		priceTypes.add(scRequestNoteDtl.getPriceType().getParameterCode());
+		getManagedBean().setPriceType(scRequestNoteDtl.getPriceType().getParameterCode());
+		getManagedBean().setPriceTypes(getPriceTypeDropdownValues(ParameterTypeConst.PRICE_TYPE, priceTypes));
+
+		getManagedBean().setPmOrgProfile(scRequestNoteDtl.getScRequestNote().getPmOrgProfile());
+		getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
+		getManagedBean().setScRequestSupplierItem(requestSupplierItem);
+
+		// no of response days
+		prInquiry.setDayToResponse((int)DateUtils.getDaysDifference(prInquiry.getCreatedDate(), prInquiry.getDateToResponse()));
+
+		getManagedBean().setStockAvailable(prInquiry.getIsStockAvailable());
+		getManagedBean().setScPrInquiry(prInquiry);
+		// price change lister 
+		priceTypeChangeListener();
+
+		// remarks
+		prInquiry.setRemarks(initializeRemarks(
+				prInquiry,
+				prInquiry.getCurrentStatus(),
+				prInquiry.getRemarks(),
+				ScPRIRemark.class));
+
+		// title checker
+		getManagedBean().setTitleChecker(Boolean.FALSE);
+		getManagedBean().setViewOnly(Boolean.TRUE);
+		
+		// current page url for page navigation from pid to request note
+		FacesContext fc = FacesContext.getCurrentInstance();
+		getManagedBean().setNavToPreviousPage(fc.getViewRoot().getViewId());
+
+		fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, PURCHASE_INQUIRY_PAGE);
+	}
+
+	
 	/**
 	 * Gets the direct purchase so.
 	 * 
@@ -1577,13 +1751,7 @@ public class PurchaseInquiryBackingBean extends
 								face.getUserLocale())));
 	}
 
-	/**
-	 * Spki sign action.
-	 */
-	public void spkiSignAction() {
-		RequestContext.getCurrentInstance().execute("spki_dlg.show();");
-	}
-
+	
 	/**
 	 * Checks if is supplier user.
 	 * 
@@ -1602,5 +1770,19 @@ public class PurchaseInquiryBackingBean extends
 	public boolean isRequisitioner() {
 		FacesScopes fs = new FacesScopes();
 		return fs.hasRoleUser("REQUISITIONER");
+	}
+
+	/**
+	 * @return the textBeforeSign
+	 */
+	public String getTextBeforeSign() {
+		return textBeforeSign;
+	}
+
+	/**
+	 * @param textBeforeSign the textBeforeSign to set
+	 */
+	public void setTextBeforeSign(String textBeforeSign) {
+		this.textBeforeSign = textBeforeSign;
 	}
 }
