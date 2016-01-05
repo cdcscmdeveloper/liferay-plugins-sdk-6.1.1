@@ -22,6 +22,21 @@
   		/WEB-INF/config/faces-config/sm/faces-config-sm.xml
 		</param-value>
 	</context-param>
+	 <context-param>
+	    <param-name>facelets.LIBRARIES</param-name>
+	    <param-value>/WEB-INF/ac-primefaces.taglib.xml</param-value>
+	 </context-param>
+	
+	<!-- param to test recaptcha -->
+	<context-param>
+	  <param-name>primefaces.PUBLIC_CAPTCHA_KEY</param-name>
+	  <param-value>6LcXDhETAAAAADzvzFzkhUTe3zSBQEK0ZFiq7AGh</param-value>
+	 </context-param>
+	 <context-param>
+	  <param-name>primefaces.PRIVATE_CAPTCHA_KEY</param-name>
+	  <param-value>6LcXDhETAAAAACgGdU1IE6RLXg6hYwWk581fYfkQ</param-value>
+	 </context-param>
+	<!-- end param to test recaptcha -->
 <context-param>
     <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
     <param-value>server</param-value>
