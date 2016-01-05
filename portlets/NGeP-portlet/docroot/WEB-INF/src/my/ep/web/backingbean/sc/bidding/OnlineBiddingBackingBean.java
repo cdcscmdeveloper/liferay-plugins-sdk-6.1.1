@@ -269,8 +269,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		getOnlineBidScheduleDetails(getScBidSchedule().getBidScheduleId(),
 				getSmSupplier().getSupplierId());
 		if (getScBidSchedule().getPmStatus().getStatusId()
-				.equals(BidStatusConst.BID_CANCELLED)
-				|| getScBidSchedule().getPmStatus().getStatusId()
 						.equals(BidStatusConst.BID_PAUSED)) {
 			RequestContext.getCurrentInstance().execute(
 					"onlineBiddingNotification.show()");
@@ -578,7 +576,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	/**
-	 * Listener method to notify bid status change
+	 * Listener method to redirect if bid status changed to pause
 	 * 
 	 * @throws PortalException
 	 * @throws SystemException
