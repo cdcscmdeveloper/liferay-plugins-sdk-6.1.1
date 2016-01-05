@@ -7,6 +7,8 @@
 */
 package my.ep.web.bean.pm;
 
+import java.math.BigDecimal;
+
 /**
  * Category Code Search Bean for public search
  * 
@@ -20,7 +22,7 @@ public class CategoryCodePublicSearchBean {
 	private Long selectedSupplierType;
 	private Long selectedCompanyType;
 	private Integer selectedBumiPercentage;
-	private Integer paidUpCapital;
+	private BigDecimal paidUpCapital;
 	private Integer homeOperated;
 	
 	public CategoryCodePublicSearchBean(){}
@@ -84,14 +86,14 @@ public class CategoryCodePublicSearchBean {
 	/**
 	 * @return the paidUpCapital
 	 */
-	public Integer getPaidUpCapital() {
+	public BigDecimal getPaidUpCapital() {
 		return paidUpCapital;
 	}
 
 	/**
 	 * @param paidUpCapital the paidUpCapital to set
 	 */
-	public void setPaidUpCapital(Integer paidUpCapital) {
+	public void setPaidUpCapital(BigDecimal paidUpCapital) {
 		this.paidUpCapital = paidUpCapital;
 	}
 
