@@ -14,7 +14,7 @@
 					rendered="#{directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode eq ParameterConst.fulfilmentTypeScheduled}">
 					<td width="150px"><h:outputLabel
 							value="#{lbl['lbl.sc.periodic.fullfillent.type']}" /></td>
-					<td><p:selectOneRadio disabled="#{!isEditableStatus}"
+					<td><p:selectOneRadio disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 							value="#{directLOABackingBean.managedBean.scQt.scheduleType}" >
 							<f:selectItems value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.periodicScheduleType)}" />
 							<p:ajax event="change" update="progressive,schedule"
@@ -41,7 +41,7 @@
 						<h:panelGroup>
 							<td><h:outputLabel
 									value="#{lbl['lbl.sc.spec.total.frequency']}"></h:outputLabel></td>
-							<td><p:inputText style="text-align:right;" disabled="#{!isEditableStatus}"
+							<td><p:inputText style="text-align:right;" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 									value="#{directLOABackingBean.managedBean.totalFrequency}">
 									<p:ajax event="blur" update="frequencySchedule"
 										partialSubmit="true" process="@this"
@@ -65,7 +65,7 @@
 						</f:facet>
 						<p:inputText value="#{frequency.scheduleNo}" required="true" styleClass="ppRightBtn"
 							maxlength="3" label="#{lbl['lbl.sc.spec.schedule.no']}" size="5"
-							id="scheduleNum" disabled="#{!isEditableStatus}">
+							id="scheduleNum" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}">
 							<p:ajax process="@this" partialSubmit="true"
 								update="@this,frequencySchedule" />
 							<ac:validateNumber integerOnly="true" maxIntegerDigits="3"></ac:validateNumber>
@@ -74,7 +74,7 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.start.month']}"
 						style="width:15%">
-						<p:selectOneMenu style="width:100px;" disabled="#{!isEditableStatus}"
+						<p:selectOneMenu style="width:100px;" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 							value="#{frequency.startMonth}">
 
 							<f:selectItems value="#{directLOABackingBean.yearDetails}"></f:selectItems>
@@ -87,7 +87,7 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.start.year']}"
 						style="width:15%">
-						<p:selectOneMenu value="#{frequency.startYear}" disabled="#{!isEditableStatus}"
+						<p:selectOneMenu value="#{frequency.startYear}" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 							style="width:100px;">
 							<f:selectItems value="#{directLOABackingBean.yearsDisplayDtls}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
@@ -99,7 +99,7 @@
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.end.month']}" style="width:15%">
-						<p:selectOneMenu style="width:100px;" id="scheduleendMonth" disabled="#{!isEditableStatus}"
+						<p:selectOneMenu style="width:100px;" id="scheduleendMonth" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 							value="#{frequency.endMonth}">
 
 							<f:selectItems value="#{directLOABackingBean.yearDetails}"></f:selectItems>
@@ -110,7 +110,7 @@
 
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.end.year']}" style="width:10%">
-						<p:selectOneMenu value="#{frequency.endYear}"  disabled="#{!isEditableStatus}" style="width:100px;">
+						<p:selectOneMenu value="#{frequency.endYear}"  disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" style="width:100px;">
 							<f:selectItems value="#{directLOABackingBean.yearsDisplayDtls}"></f:selectItems>
 							<p:ajax event="change" update="scheduleDetails" process="@this"
 								partialSubmit="true"
@@ -136,7 +136,7 @@
 
 						<p:selectOneMenu style="width:180px;" required="true"
 							id="scheduledTypeId" label="#{lbl['lbl.sc.schedule.type']}"
-							value="#{frequency.scheduleType.parameterId}" disabled="#{!isEditableStatus}">
+							value="#{frequency.scheduleType.parameterId}" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}">
 
 							<f:selectItems
 								value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.scheduleType)}" />
@@ -171,7 +171,7 @@
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.spec.total.phase']}"></h:outputLabel>
 					</td>
-					<td><p:inputText style="text-align:right;" disabled="#{!isEditableStatus}"
+					<td><p:inputText style="text-align:right;" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 							value="#{directLOABackingBean.managedBean.totalProgressivePayment}">
 							<p:ajax event="blur" update="progressivePayment"
 								partialSubmit="true" process="@this"
@@ -194,7 +194,7 @@
 					</f:facet>
 					<p:inputText value="#{payment.phaseNo}" required="true"
 						label="#{lbl['lbl.sc.spec.phase']}" id="progressivePhase"
-						maxlength="3" size="5" disabled="#{!isEditableStatus}">
+						maxlength="3" size="5" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}">
 
 						<p:ajax process="@this" partialSubmit="true"
 							update="@this,progressivePayment" />
@@ -210,7 +210,7 @@
 					</f:facet>
 					<p:inputText value="#{payment.phaseDesc}" maxlength="50"
 						required="true" id="progressivePhasedesc" style="width:100px;"
-						label="#{lbl['lbl.sc.description']}" disabled="#{!isEditableStatus}">
+						label="#{lbl['lbl.sc.description']}" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}">
 						<p:ajax process="@this" partialSubmit="true"
 							update="@this,progressivePayment" />
 					</p:inputText>
@@ -220,7 +220,7 @@
 
 				<p:column headerText="#{lbl['lbl.sc.start.month']}"
 					style="width:15%">
-					<p:selectOneMenu style="width:100px;" value="#{payment.startMonth}" disabled="#{!isEditableStatus}">
+					<p:selectOneMenu style="width:100px;" value="#{payment.startMonth}" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}">
 
 						<f:selectItems value="#{directLOABackingBean.yearDetails}"></f:selectItems>
 						<p:ajax event="change" process="@this" partialSubmit="true"
@@ -231,7 +231,7 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.start.year']}" style="width:15%">
 
-					<p:selectOneMenu value="#{payment.startYear}" style="width:100px;" disabled="#{!isEditableStatus}">
+					<p:selectOneMenu value="#{payment.startYear}" style="width:100px;" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}">
 						<f:selectItems value="#{directLOABackingBean.yearsDisplayDtls}"></f:selectItems>
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							listener="#{directLOABackingBean.calculateProgressiveStartMonth(payment)}"></p:ajax>
@@ -242,7 +242,7 @@
 				<p:column headerText="
 								#{lbl['lbl.sc.end.month']}"
 					style="width:15%">
-					<p:selectOneMenu style="width:100px;" id="paymentEndMonth" disabled="#{!isEditableStatus}"
+					<p:selectOneMenu style="width:100px;" id="paymentEndMonth" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						value="#{payment.endMonth}">
 
 						<f:selectItems value="#{directLOABackingBean.yearDetails}">
@@ -252,7 +252,7 @@
 					</p:selectOneMenu>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.end.year']}" style="width:15%">
-					<p:selectOneMenu value="#{payment.endYear}" style="width:100px;" disabled="#{!isEditableStatus}">
+					<p:selectOneMenu value="#{payment.endYear}" style="width:100px;" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}">
 						<f:selectItems value="#{directLOABackingBean.yearsDisplayDtls}"></f:selectItems>
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							listener="#{directLOABackingBean.calculateProgressivepayment(payment)}"></p:ajax>
@@ -265,7 +265,7 @@
 						<h:outputText value="#{lbl['lbl.sc.percentage']}" />
 						<ac:iconTooltip value="#{lbl['lbl.sc.spec.percentage.tooltip']}" />
 					</f:facet>
-					<p:inputText value="#{payment.percentage}" required="true" disabled="#{!isEditableStatus}"
+					<p:inputText value="#{payment.percentage}" required="true" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						id="progressivePercentage" style="width:100px;"
 						label="#{lbl['lbl.sc.percentage']}" maxlength="18">
 						<p:ajax process="@this" partialSubmit="true"
