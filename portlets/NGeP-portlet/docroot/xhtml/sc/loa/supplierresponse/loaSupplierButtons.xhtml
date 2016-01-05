@@ -14,7 +14,7 @@
 	<ui:param name="isMultipleLOI"
 		value="#{lOADetailBackingBean.managedBean.scLoa.finalizationMethod eq ParameterConst.recommendByMultipleLoi}" />
 	<ui:param name="validityDaysExpiredQt"
-		value="#{lOADetailBackingBean.checkProposalValidityDateReach(lOADetailBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
+		value="#{lOADetailBackingBean.checkProposalValidityDateReachByQt(lOADetailBackingBean.managedBean.scQt)}" />
 
 	<div class="ppRightBtn">
 		<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
