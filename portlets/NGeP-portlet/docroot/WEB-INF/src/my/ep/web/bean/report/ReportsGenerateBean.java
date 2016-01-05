@@ -498,6 +498,8 @@ public class ReportsGenerateBean {
 	
 	/** The sm category by supplier type view. */
 	private boolean smCategoryBySupplierTypeView=false;
+	
+	private boolean smDailyReceiptNoView=false;	
 
 	/** The sm mandatory from date view. */
 	private boolean smMandatoryFromDateView = false;
@@ -15809,5 +15811,19 @@ public class ReportsGenerateBean {
 	 */
 	public void setSmCategoryBySupplierTypeView(boolean smCategoryBySupplierTypeView) {
 		this.smCategoryBySupplierTypeView = smCategoryBySupplierTypeView;
+	}
+
+	/**
+	 * @return the smDailyReceiptNoView
+	 */
+	public boolean isSmDailyReceiptNoView() {
+		return smDailyReceiptNoView;
+	}
+
+	/**
+	 * @param smDailyReceiptNoView the smDailyReceiptNoView to set
+	 */
+	public void setSmDailyReceiptNoView(boolean smDailyReceiptNoView) {
+		this.smDailyReceiptNoView = smDailyReceiptNoView;
 	}
 }

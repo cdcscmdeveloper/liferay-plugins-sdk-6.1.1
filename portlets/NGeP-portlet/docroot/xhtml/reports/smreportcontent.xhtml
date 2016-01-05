@@ -159,10 +159,10 @@
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryPaymentMethodView}">
 							<p:column>
-								<table style="width: 191px;">
+								<table style="width: 224px;">
 									<tr style="width: 100%;">
 										<td style="width: 160px;"><p:outputLabel
-												style="margin-right:-97px;"
+												style="margin-right:-62px;"
 												value="#{lbl['lbl.rpt.paymentmethod']}" /> <p:outputLabel
 												value="*" styleClass="mandatory" /></td>
 									</tr>
@@ -635,7 +635,7 @@
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smSupplierNameView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.supName']}"
-								style="margin-top:5px;width:202px;" />
+								style="margin-top:5px;width:263px;" />
 							<p:inputText maxlength="100"
 								value="#{reportBackingBean.smSupplierName}"
 								style="margin-top:5px;width:290px;">
@@ -1179,9 +1179,9 @@
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryReciptTransactionReportTypeView}">
 							<p:column>
-								<table style="width: 266px;">
+								<table style="width: 472px;">
 									<tr style="width: 100%;">
-										<td><p:outputLabel value="#{lbl['lbl.rpt.reportType']}" />
+										<td><p:outputLabel value="#{lbl['lbl.rpt.reportType']}" style="margin-right:-33px" />
 											<p:outputLabel value="*" styleClass="mandatory" /></td>
 
 									</tr>
@@ -1817,9 +1817,19 @@
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
+							test="#{smReportBackingBean.managedBean.rptGenBean.smDailyReceiptNoView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.receiptno']}"
+								style="margin-top:5px;width:354px;" />
+							<p:inputText maxlength="100"
+								value="#{reportBackingBean.smReceiptNo}"
+								style="margin-top:5px;width:290px;">
+								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+							</p:inputText>
+						</c:if>
+						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smReceiptNoView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.receiptno']}"
-								style="margin-top:5px;width:331px;" />
+								style="margin-top:5px;width:216px;" />
 							<p:inputText maxlength="100"
 								value="#{reportBackingBean.smReceiptNo}"
 								style="margin-top:5px;width:290px;">
@@ -3055,8 +3065,8 @@
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryReceiptDateView}">
 						<TD><p:outputLabel value="#{lbl['lbl.rpt.receiptdatefrom']}"
-								style="width:201px;" /> <p:outputLabel value="*"
-								style="margin-right:-86px" styleClass="mandatory" /></TD>
+								style="width:208px;" /> <p:outputLabel value="*"
+								style="margin-right:-92px" styleClass="mandatory" /></TD>
 
 						<TD><p:calendar showOn="button" navigator="true"
 								required="true" label="#{lbl['lbl.rpt.receiptdatefrom']}"

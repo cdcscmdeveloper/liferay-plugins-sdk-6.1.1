@@ -7915,11 +7915,19 @@ public class ReportBackingBean extends
 		return registrationStatusListOfBusCompType;
 	}
 
+	/**
+	 * Retriev category list by supplier type.
+	 * 
+	 * @param supplierType
+	 *            the supplier type
+	 * @return the list
+	 */
 	public List<PmCategoryL1> retrievCategoryListBySupplierType(
 			String supplierType) {
 		log.info("ReportBackingBean-retrievCategoryListBySupplierType");
+		
+		// to clear the category drop down values
 		this.setSupplierParentCatList(new ArrayList<PmCategoryL1>());
-
 		for (SmSupplierCategory cat : this.getSelectedCatList()) {
 			cat.setPmCategoryL1(new PmCategoryL1());
 			cat.setPmCategoryL2(new PmCategoryL2());
@@ -11182,6 +11190,11 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * Gets the gen bus company data.
+	 * 
+	 * @return the gen bus company data
+	 */
 	private void getGenBusCompanyData() {
 
 		if (this.getReportValue() != null) {
@@ -15785,6 +15798,9 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * Change supplier type selection.
+	 */
 	public void changeSupplierTypeSelection() {
 		log.info("ReportBackingBean-changeSupplierTypeSelection");
 		if (this.getReportValue() != null) {
@@ -15856,6 +15872,9 @@ public class ReportBackingBean extends
 
 	}
 
+	/**
+	 * Change supplier type and get reg status.
+	 */
 	public void changeSupplierTypeAndGetRegStatus() {
 		if (this.getReportValue().equalsIgnoreCase(
 				ReportConst.SM_CATEGORY_STATISTIC_RPT_VAL)) {
