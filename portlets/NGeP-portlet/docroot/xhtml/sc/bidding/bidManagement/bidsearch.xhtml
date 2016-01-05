@@ -186,7 +186,7 @@
 				</p:commandLink>
 
 				<p:commandLink id="cancelButton" onmouseover="Cancel"
-					rendered="#{bid.pmStatus.statusId eq biddingBB.managedBean.bidInProgress or bid.pmStatus.statusId eq biddingBB.managedBean.pendingBidding or bid.pmStatus.statusId eq biddingBB.managedBean.bidPaused}"
+					rendered="#{bid.pmStatus.statusId eq biddingBB.managedBean.pendingBidding}"
 					process="@this" partialSubmit="true"
 					actionListener="#{biddingBB.bidCancelPopUpAction(bid)}"
 					update="@([id$=pauseCancelPopUp])"
