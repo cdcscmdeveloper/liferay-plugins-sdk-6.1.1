@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -1341,36 +1342,40 @@ public class FileUtility extends InitializeSO{
 			writer.close();
 			//upload the txt file to sftp server
 			
+			String transId =  UUID.randomUUID().toString();
 			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
 			reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPERUNDING);
 			reqDTO.setFileName(fileName);
 			reqDTO.setProcessId(ProcessCode.EPE04.value());
 			reqDTO.setServiceCode(ServiceCode.EPE04.value());
-			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
-			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+//			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+			reqDTO.setTransId(transId);
 			
 //			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			 osbUtility.osbServiceCallOutBound(ServiceCode.EPE04.value(),fileName);
 			
-			// Thread will sleep for 3 seconds before putting message into JMS Queue
-			
-		/*	Thread currentThread = Thread.currentThread();
-			try {
-				Thread.sleep(3000L);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}*/
-			
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
 			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE04.value(),fileName));
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE04.value(),fileName, null));
 			
 			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
 			
 			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
+			
+			if(jmsResDTO.isSuccessful()){
+				//Insert Record into pm_interface_log for success to put message into Queue
+				reqDTO.setQueueMsgStatus(1);
+
+			}else{
+				//Insert record into pm_interface_log for fail to put message into Queue
+				reqDTO.setQueueMsgStatus(0);
+			}
+				
+			setValuesToPmInterface(reqDTO);
 			 
 			 log.info("createEquiytyOwner end");
 
@@ -1469,36 +1474,41 @@ public class FileUtility extends InitializeSO{
 			writer.close();
 			//upload the txt file to sftp server
 			
+			
+			String transId =  UUID.randomUUID().toString();
 			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
 			reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPERUNDING);
 			reqDTO.setFileName(fileName);
 			reqDTO.setProcessId(ProcessCode.EPE01.value());
 			reqDTO.setServiceCode(ServiceCode.EPE01.value());
-			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
-			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+//			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+			reqDTO.setTransId(transId);
 			
 //			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE01.value(),fileName);
 			
-			// Thread will sleep for 3 seconds before putting message into JMS Queue
-
-			/*Thread currentThread = Thread.currentThread();
-			try {
-				Thread.sleep(3000L);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}*/
-			
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
 			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE01.value(),fileName));
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE01.value(),fileName, null));
 			
 			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
 			
 			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
+			
+			if(jmsResDTO.isSuccessful()){
+				//Insert Record into pm_interface_log for success to put message into Queue
+				reqDTO.setQueueMsgStatus(1);
+
+			}else{
+				//Insert record into pm_interface_log for fail to put message into Queue
+				reqDTO.setQueueMsgStatus(0);
+			}
+				
+			setValuesToPmInterface(reqDTO);
 			
 			log.info("createConsultantProfile end");
 
@@ -1546,40 +1556,41 @@ public class FileUtility extends InitializeSO{
 			writer.close();
 			
 			//upload the txt file to sftp server
-			
+			String transId =  UUID.randomUUID().toString();
 			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
 			reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPERUNDING);
 			reqDTO.setFileName(fileName);
 			reqDTO.setProcessId(ProcessCode.EPE07.value());
 			reqDTO.setServiceCode(ServiceCode.EPE07.value());
-			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
-			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+			reqDTO.setFileCreationStatus(IntegrationConstants.FILE_CREATION_SUCCESS);
+//			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+			reqDTO.setTransId(transId);
 			
 //			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE07.value(),fileName);
 			
-			// Thread will sleep for 3 seconds before putting message into JMS Queue
-			
-		/*	Thread currentThread = Thread.currentThread();
-			try {
-				Thread.sleep(3000L);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}*/
-			
 			// Call JMS send method to send to the Queue.
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
 			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE07.value(),fileName));
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE07.value(),fileName, transId));
 			
 			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
-			
 			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
 			
-			
+			if(jmsResDTO.isSuccessful()){
+				//Insert Record into pm_interface_log for success to put message into Queue
+				reqDTO.setQueueMsgStatus(1);
+
+			}else{
+				//Insert record into pm_interface_log for fail to put message into Queue
+				reqDTO.setQueueMsgStatus(0);
+			}
+				
+			setValuesToPmInterface(reqDTO);
 			log.info("createAuthorizedSignatory end");
 
 		} catch (IOException e) {
@@ -1654,13 +1665,16 @@ public class FileUtility extends InitializeSO{
 			writer.close();
 			//upload the txt file to sftp server
 			
+			
+			String transId =  UUID.randomUUID().toString();
 			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
 			reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPERUNDING);
 			reqDTO.setFileName(fileName);
 			reqDTO.setProcessId(ProcessCode.EPE06.value());
 			reqDTO.setServiceCode(ServiceCode.EPE06.value());
-			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
-			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+//			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+			reqDTO.setTransId(transId);
 			
 //			sftpUtility.upload(reqDTO);
 			
@@ -1669,22 +1683,26 @@ public class FileUtility extends InitializeSO{
 			
 			// Thread will sleep for 3 seconds before putting message into JMS Queue
 			
-		/*	Thread currentThread = Thread.currentThread();
-			try {
-				Thread.sleep(3000L);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}*/
-			
 			// Call JMS send method to send to the Queue.
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
 			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE06.value(),fileName));
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE06.value(),fileName, null));
 			
 			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
 			
 			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
+			
+			if(jmsResDTO.isSuccessful()){
+				//Insert Record into pm_interface_log for success to put message into Queue
+				reqDTO.setQueueMsgStatus(1);
+
+			}else{
+				//Insert record into pm_interface_log for fail to put message into Queue
+				reqDTO.setQueueMsgStatus(0);
+			}
+				
+			setValuesToPmInterface(reqDTO);
 			
 			log.info("createManagementPersonnel end");
 
@@ -1754,37 +1772,41 @@ public class FileUtility extends InitializeSO{
 			writer.close();
 			//upload the txt file to sftp server
 			
+			String transId =  UUID.randomUUID().toString();
 			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
 			reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPERUNDING);
 			reqDTO.setFileName(fileName);
 			reqDTO.setProcessId(ProcessCode.EPE05.value());
 			reqDTO.setServiceCode(ServiceCode.EPE05.value());
-			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
-			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+//			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+			reqDTO.setTransId(transId);
 			
 //			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE05.value(),fileName);
 			
-			// Thread will sleep for 3 seconds before putting message into JMS Queue
-			
-			/*Thread currentThread = Thread.currentThread();
-			try {
-				Thread.sleep(3000L);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}*/
-			
 			// Call JMS send method to send to the Queue.
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
 			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE05.value(),fileName));
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE05.value(),fileName, null));
 			
 			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
 			
 			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
+			
+			if(jmsResDTO.isSuccessful()){
+				//Insert Record into pm_interface_log for success to put message into Queue
+				reqDTO.setQueueMsgStatus(1);
+
+			}else{
+				//Insert record into pm_interface_log for fail to put message into Queue
+				reqDTO.setQueueMsgStatus(0);
+			}
+				
+			setValuesToPmInterface(reqDTO);
 			
 			log.info("createBoardOfDirector end");
 
@@ -1842,37 +1864,41 @@ public class FileUtility extends InitializeSO{
 			writer.close();
 			//upload the txt file to sftp server
 			
+			String transId =  UUID.randomUUID().toString();
 			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
 			reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPERUNDING);
 			reqDTO.setFileName(fileName);
 			reqDTO.setProcessId(ProcessCode.EPE08.value());
 			reqDTO.setServiceCode(ServiceCode.EPE08.value());
-			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
-			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+//			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+			reqDTO.setTransId(transId);
 			
 //			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE08.value(),fileName);
 			
-			// Thread will sleep for 3 seconds before putting message into JMS Queue
-			
-			/*Thread currentThread = Thread.currentThread();
-			try {
-				Thread.sleep(3000L);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}*/
-			
 			// Call JMS send method to send to the Queue.
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
 			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE08.value(),fileName));
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE08.value(),fileName, null));
 			
 			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
 			
 			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
+			
+			if(jmsResDTO.isSuccessful()){
+				//Insert Record into pm_interface_log for success to put message into Queue
+				reqDTO.setQueueMsgStatus(1);
+
+			}else{
+				//Insert record into pm_interface_log for fail to put message into Queue
+				reqDTO.setQueueMsgStatus(0);
+			}
+				
+			setValuesToPmInterface(reqDTO);
 			
 			log.info("createBranchCompany end");
 
@@ -1921,37 +1947,41 @@ public class FileUtility extends InitializeSO{
 			writer.close();
 			//upload the txt file to sftp server
 			
+			String transId =  UUID.randomUUID().toString();
 			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
 			reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPERUNDING);
 			reqDTO.setFileName(fileName);
 			reqDTO.setProcessId(ProcessCode.EPE09.value());
 			reqDTO.setServiceCode(ServiceCode.EPE09.value());
-			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
-			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+//			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+			reqDTO.setTransId(transId);
 			
 //			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE09.value(),fileName);
 			
-			// Thread will sleep for 3 seconds before putting message into JMS Queue
-			
-			/*Thread currentThread = Thread.currentThread();
-			try {
-				Thread.sleep(3000L);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}*/
-			
 			// Call JMS send method to send to the Queue.
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
 			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE09.value(),fileName));
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE09.value(),fileName, null));
 			
 			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
 			
 			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
+			
+			if(jmsResDTO.isSuccessful()){
+				//Insert Record into pm_interface_log for success to put message into Queue
+				reqDTO.setQueueMsgStatus(1);
+
+			}else{
+				//Insert record into pm_interface_log for fail to put message into Queue
+				reqDTO.setQueueMsgStatus(0);
+			}
+				
+			setValuesToPmInterface(reqDTO);
 			
 			log.info("createRegisteredCategory end");
 
@@ -2009,37 +2039,42 @@ public class FileUtility extends InitializeSO{
 			
 			//upload the txt file to sftp server
 			
+			String transId =  UUID.randomUUID().toString();
 			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
 			reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPERUNDING);
 			reqDTO.setFileName(fileName);
 			reqDTO.setProcessId(ProcessCode.EPE10.value());
 			reqDTO.setServiceCode(ServiceCode.EPE10.value());
-			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
-			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+//			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+			reqDTO.setTransId(transId);
 			
 //			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE10.value(),fileName);
 			
-			// Thread will sleep for 3 seconds before putting message into JMS Queue
-			
-			/*Thread currentThread = Thread.currentThread();
-			try {
-				Thread.sleep(3000L);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}*/
-			
 			// Call JMS send method to send to the Queue.
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
 			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE10.value(),fileName));
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE10.value(),fileName, null));
 			
 			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
 			
 			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
+			
+			if(jmsResDTO.isSuccessful()){
+				//Insert Record into pm_interface_log for success to put message into Queue
+				reqDTO.setQueueMsgStatus(1);
+
+			}else{
+				//Insert record into pm_interface_log for fail to put message into Queue
+				reqDTO.setQueueMsgStatus(0);
+			}
+				
+			setValuesToPmInterface(reqDTO);
+			
 			log.info("createGovernmentProject end");
 			
 
@@ -2084,37 +2119,41 @@ public class FileUtility extends InitializeSO{
 			
 			writer.close();
 			
+			String transId =  UUID.randomUUID().toString();
 			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
 			reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPERUNDING);
 			reqDTO.setFileName(fileName);
 			reqDTO.setProcessId(ProcessCode.EPE11.value());
 			reqDTO.setServiceCode(ServiceCode.EPE11.value());
-			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
-			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+//			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+			reqDTO.setTransId(transId);
 			
 //			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE11.value(),fileName);
 			
-			// Thread will sleep for 3 seconds before putting message into JMS Queue
-			
-			/*Thread currentThread = Thread.currentThread();
-			try {
-				Thread.sleep(3000L);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}*/
-			
 			// Call JMS send method to send to the Queue.
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
 			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE11.value(),fileName));
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE11.value(),fileName, null));
 			
 			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
 			
 			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
+			
+			if(jmsResDTO.isSuccessful()){
+				//Insert Record into pm_interface_log for success to put message into Queue
+				reqDTO.setQueueMsgStatus(1);
+
+			}else{
+				//Insert record into pm_interface_log for fail to put message into Queue
+				reqDTO.setQueueMsgStatus(0);
+			}
+				
+			setValuesToPmInterface(reqDTO);
 			
 			log.info("createDeletedCompany end");
 
@@ -2179,37 +2218,41 @@ public class FileUtility extends InitializeSO{
 			
 			//upload the txt file to sftp server
 			
+			String transId =  UUID.randomUUID().toString();
 			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
 			reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPERUNDING);
 			reqDTO.setFileName(fileName);
 			reqDTO.setProcessId(ProcessCode.EPE03.value());
 			reqDTO.setServiceCode(ServiceCode.EPE03.value());
-			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
-			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+//			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+			reqDTO.setTransId(transId);
 			
 //			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE03.value(),fileName);
 			
-			// Thread will sleep for 3 seconds before putting message into JMS Queue
-			
-			/*Thread currentThread = Thread.currentThread();
-			try {
-				Thread.sleep(3000L);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}*/
-			
 			// Call JMS send method to send to the Queue.
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
 			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE03.value(),fileName));
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE03.value(),fileName, null));
 			
 			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
 			
 			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
+			
+			if(jmsResDTO.isSuccessful()){
+				//Insert Record into pm_interface_log for success to put message into Queue
+				reqDTO.setQueueMsgStatus(1);
+
+			}else{
+				//Insert record into pm_interface_log for fail to put message into Queue
+				reqDTO.setQueueMsgStatus(0);
+			}
+				
+			setValuesToPmInterface(reqDTO);
 			
 			log.info("createCompanyOwner end");
 
@@ -2273,37 +2316,41 @@ public class FileUtility extends InitializeSO{
 			
 			//upload the txt file to sftp server
 			
+			String transId =  UUID.randomUUID().toString();
 			reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
 			reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPERUNDING);
 			reqDTO.setFileName(fileName);
 			reqDTO.setProcessId(ProcessCode.EPE02.value());
 			reqDTO.setServiceCode(ServiceCode.EPE02.value());
-			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
-			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+//			reqDTO.setRemoteFilePath(IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			reqDTO.setLocatFilePath(reqDTO.getFilePath()+fileName);
+			reqDTO.setTransId(transId);
 			
 //			sftpUtility.upload(reqDTO);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE02.value(),fileName);
 			
-			// Thread will sleep for 3 seconds before putting message into JMS Queue
-			
-			/*Thread currentThread = Thread.currentThread();
-			try {
-				Thread.sleep(3000L);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}*/
-			
 			// Call JMS send method to send to the Queue.
 			JMSReqDTO jmsReqDTO = new JMSReqDTO();
 			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
 			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE02.value(),fileName));
+			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE02.value(),fileName, null));
 			
 			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
 			
 			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
+			
+			if(jmsResDTO.isSuccessful()){
+				//Insert Record into pm_interface_log for success to put message into Queue
+				reqDTO.setQueueMsgStatus(1);
+
+			}else{
+				//Insert record into pm_interface_log for fail to put message into Queue
+				reqDTO.setQueueMsgStatus(0);
+			}
+				
+			setValuesToPmInterface(reqDTO);
 			
 			log.info("createAssociatedCompany end");
 
@@ -2787,15 +2834,18 @@ public class FileUtility extends InitializeSO{
 		pmInterfaceLog.setServiceCode(reqDTO.getServiceCode());
 		pmInterfaceLog.setProcessId(reqDTO.getProcessId());
 		pmInterfaceLog.setFileName(reqDTO.getFileName());
+		pmInterfaceLog.setTransId(reqDTO.getTransId());
+		pmInterfaceLog.setQueueMsgStatus(reqDTO.getQueueMsgStatus());
 		
 		pmInterfaceLog.setRecordStatusFlg(IntegrationConstants.RECORD_STATUS_ACTIVE);
 		pmInterfaceLog.setCreatedBy(IntegrationConstants.BATCH_USER);
 		pmInterfaceLog.setChangedBy(IntegrationConstants.BATCH_USER);
-		pmInterfaceLog.setCreatedDate(new Timestamp(IntegrationConstants.DEFAULT_DATE.getTime()));
-		pmInterfaceLog.setCreatedDate(new Timestamp(IntegrationConstants.DEFAULT_DATE.getTime()));
+		pmInterfaceLog.setCreatedDate(new Timestamp(new Date().getTime()));
+		pmInterfaceLog.setCreatedDate(new Timestamp(new Date().getTime()));
 		
 		interfaceSO.saveInterfaceLOg(pmInterfaceLog);
 	}
+	
 	
 	
 	// Changed method for BatchReqDTO changed method signatures
