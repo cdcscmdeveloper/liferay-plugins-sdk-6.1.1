@@ -673,7 +673,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 								new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				   }
-				   if(ctBB.typeOfPidPurchase(reason.getPmReason().getReasonId())){
+				   if(ctBB.PidPurchaseTypeOther(reason.getPmReason().getReasonId())){
 					   if(reason.getReasonDesc().isEmpty()){
 						   throw new EpException(MessageConst.ERROR_100022, 
 									new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason.desc", 
