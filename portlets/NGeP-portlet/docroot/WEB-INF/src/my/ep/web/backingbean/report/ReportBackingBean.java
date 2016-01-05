@@ -7915,6 +7915,32 @@ public class ReportBackingBean extends
 		return registrationStatusListOfBusCompType;
 	}
 
+	public List<PmCategoryL1> retrievCategoryListBySupplierType(
+			String supplierType) {
+		log.info("ReportBackingBean-retrievCategoryListBySupplierType");
+		this.setSupplierParentCatList(new ArrayList<PmCategoryL1>());
+
+		for (SmSupplierCategory cat : this.getSelectedCatList()) {
+			cat.setPmCategoryL1(new PmCategoryL1());
+			cat.setPmCategoryL2(new PmCategoryL2());
+			cat.setPmCategoryL3(new PmCategoryL3());
+		}
+
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		reqDTO.setSupplierTypeCode(supplierType);
+
+		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
+				.getInstance().getServiceObject(ReportConst.PM_MODULE_SER_OBJ,
+						ICategoryCodeSO.class);
+		CategoryCodeResDTO catCodeResDTO = reqSO
+				.retrieveCategoryL1ListBySupplierType(reqDTO);
+		if (catCodeResDTO != null) {
+			return catCodeResDTO.getCategoryL1List();
+		} else {
+			return null;
+		}
+	}
+
 	/**
 	 * Retrieve reg status list for all.
 	 * 
@@ -8035,20 +8061,30 @@ public class ReportBackingBean extends
 		log.info("ReportBackingBean-supplierTypeConsultant");
 		if ((null != this.getReportValue())
 				&& (this.getReportValue()
-						.equalsIgnoreCase(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL))) {
+						.equalsIgnoreCase(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL))) {			
 			if (null != this.getSmSupplierType()) {
 				if (this.getSmSupplierType().equalsIgnoreCase(
 						ReportConst.SUPPL_CONSULT_TYPE)) {
 					retrieveConsultantBusCompanyData();
 					retrieveRegStatusListForConsultant();
+					this.setSupplierParentCatList(retrievCategoryListBySupplierType(this
+							.getSmSupplierType()));
 				} else if (this.getSmSupplierType().equalsIgnoreCase(
 						ReportConst.SUPPL_CONTRACT_TYPE)) {
 					retrieveContractBusCompanyData();
 					retrieveRegStatusListForContract();
+					this.setSupplierParentCatList(retrievCategoryListBySupplierType(this
+							.getSmSupplierType()));
 				}
 			} else {
 				retrieveAllBusCompanyData();
 				retrieveRegStatusListForAll();
+				for (SmSupplierCategory cat : this.getSelectedCatList()) {
+					cat.setPmCategoryL1(new PmCategoryL1());
+					cat.setPmCategoryL2(new PmCategoryL2());
+					cat.setPmCategoryL3(new PmCategoryL3());
+				}
+				this.setSupplierParentCatList(retrieveParentCategoryListForExperiencePage());
 			}
 		} else if (null != this.getReportValue()) {
 			if (this.getReportValue().equalsIgnoreCase(
@@ -9052,6 +9088,7 @@ public class ReportBackingBean extends
 			return null;
 		}
 	}
+
 
 	/**
 	 * Select all categories.
@@ -15822,16 +15859,27 @@ public class ReportBackingBean extends
 	public void changeSupplierTypeAndGetRegStatus() {
 		if (this.getReportValue().equalsIgnoreCase(
 				ReportConst.SM_CATEGORY_STATISTIC_RPT_VAL)) {
+		
 			if (this.getSmSupplierType() != null) {
 				if (this.getSmSupplierType().equalsIgnoreCase(
 						ReportConst.SUPPL_CONSULT_TYPE)) {
 					retrieveRegStatusListForConsultant();
+					this.setSupplierParentCatList(retrievCategoryListBySupplierType(this
+							.getSmSupplierType()));
 				} else if (this.getSmSupplierType().equalsIgnoreCase(
 						ReportConst.SUPPL_CONTRACT_TYPE)) {
 					retrieveRegStatusListForContract();
+					this.setSupplierParentCatList(retrievCategoryListBySupplierType(this
+							.getSmSupplierType()));
 				}
 			} else {
 				retrieveRegStatusListForAll();
+				for (SmSupplierCategory cat : this.getSelectedCatList()) {
+					cat.setPmCategoryL1(new PmCategoryL1());
+					cat.setPmCategoryL2(new PmCategoryL2());
+					cat.setPmCategoryL3(new PmCategoryL3());
+				}
+				this.setSupplierParentCatList(retrieveParentCategoryListForExperiencePage());
 			}
 		}
 	}

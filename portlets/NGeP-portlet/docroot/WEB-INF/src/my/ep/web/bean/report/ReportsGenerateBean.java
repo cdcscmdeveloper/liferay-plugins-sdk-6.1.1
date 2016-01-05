@@ -495,6 +495,9 @@ public class ReportsGenerateBean {
 
 	/** The sm non mandatory category view. */
 	private boolean smNonMandatoryCategoryView = false;
+	
+	/** The sm category by supplier type view. */
+	private boolean smCategoryBySupplierTypeView=false;
 
 	/** The sm mandatory from date view. */
 	private boolean smMandatoryFromDateView = false;
@@ -14085,7 +14088,6 @@ public class ReportsGenerateBean {
 			selectItem.setLabel(catOne.getCategoryL1Code() + " - "
 					+ catOne.getCategoryName());
 			selectItem.setValue(catOne.getCategoryL1Id());
-			levOneCatLst.add(selectItem);
 		}
 		return levOneCatLst;
 	}
@@ -15793,5 +15795,19 @@ public class ReportsGenerateBean {
 	 */
 	public void setSmGenDistrictView(boolean smGenDistrictView) {
 		this.smGenDistrictView = smGenDistrictView;
+	}
+
+	/**
+	 * @return the smCategoryBySupplierTypeView
+	 */
+	public boolean isSmCategoryBySupplierTypeView() {
+		return smCategoryBySupplierTypeView;
+	}
+
+	/**
+	 * @param smCategoryBySupplierTypeView the smCategoryBySupplierTypeView to set
+	 */
+	public void setSmCategoryBySupplierTypeView(boolean smCategoryBySupplierTypeView) {
+		this.smCategoryBySupplierTypeView = smCategoryBySupplierTypeView;
 	}
 }
