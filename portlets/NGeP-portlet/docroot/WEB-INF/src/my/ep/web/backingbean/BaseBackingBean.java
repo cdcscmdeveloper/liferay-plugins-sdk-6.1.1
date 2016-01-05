@@ -41,6 +41,7 @@ import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.BpmConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -50,8 +51,11 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmReason;
+import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.type.pm.ReasonCategory;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -66,6 +70,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.SecurityFilterUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.ReasonHelper;
 import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.commons.lang.StringUtils;
@@ -446,6 +451,56 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 
 		return items;
 	}
+	
+	/**
+	 * Populate values for Reason Drop down base on reason category code
+	 * @param categoryCode
+	 *            the reason category code
+	 *            
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getReasonCodeDropdownValues(String categoryCode) {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+		try {
+			List<PmReasonDesc> reasonDescs = ReasonHelper
+					.getInstance().getReasonDescList(categoryCode);
+
+			items = new SelectItem[reasonDescs.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			int i = 1;
+			for (PmReasonDesc reasonDesc : reasonDescs) {
+				items[i++] = new SelectItem(reasonDesc.getPmReason()
+						.getReasonCode(), reasonDesc.getReasonDesc());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+		return items;
+	}
+	
+	/**
+	 * Get reason by reason category code and reason code
+	 * 
+	 * @param parameterType
+	 *            the parameter type
+	 * @param parameterCode
+	 *            the parameter code
+	 * @return the PmParameter instance
+	 */
+	public PmReason getReasonByCategoryAndCode(String categoryCode,
+			String reasonCode) {
+		PmParameter reasonCategory = getParameterByTypeAndCode( 
+				ParameterTypeConst.REASON_CATEGORY, categoryCode);
+		return ReasonHelper.getInstance().getReasonByCategoryAndCode(
+				reasonCategory.getParameterId(), reasonCode);
+	}
 
 	/**
 	 * Get parameter code select items by parameter type for dropdown.
@@ -510,6 +565,22 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 				&& StringUtils.isNotBlank(parameter.getParameterType())) {
 			return ParameterHelper.getInstance().getParameterDesc(
 					parameter.getParameterType(), parameter.getParameterCode());
+		} else {
+			return null;
+		}
+	}
+	
+	/**
+	 * Get reason description by reason.
+	 * 
+	 * @param reason
+	 *            the PmReason instance.
+	 * @return reason description
+	 */
+	public String getReasonDesc(PmReason pmReason) {
+		if (pmReason != null) {
+			return ReasonHelper.getInstance().getReasonDescStringById(
+					pmReason.getReasonId());
 		} else {
 			return null;
 		}
