@@ -17,6 +17,7 @@
 				<td>
 					<c:if test="#{isEditableStatus and (isPendingSubmissionStatus or isPendingApprovalStatus or isPendingRevisionStatus)}">
 						<p:selectOneMenu id="contractSigner" 
+						disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
 							value="#{lOIDetailBackingBean.managedBean.contractSignerUser.userId}"
 							style="width: 276px;margin-bottom: 5px;"
 							required="true"
@@ -41,7 +42,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loi.signer.desig']}" />
 					<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 				</td>
-				<td><p:inputText id="loiSignerDesigId" disabled="#{!isEditableStatus}"
+				<td><p:inputText id="loiSignerDesigId" disabled="#{!isEditableStatus or lOIDetailBackingBean.managedBean.readOnly}"
 						value="#{lOIDetailBackingBean.managedBean.scLoi.loiSignerDesig}"
 						size="34" maxlength="100" required="true" label="#{lbl['lbl.sc.loiloa.loi.signer.desig']}">
 					</p:inputText><p:message id="loiSignerDesigIdMsg" for="loiSignerDesigId"
@@ -58,7 +59,7 @@
 				  <p:outputLabel value="*" styleClass="mandatory"/></td>
 				<td><p:selectOneMenu id="loiApprover"
 						value="#{lOIDetailBackingBean.managedBean.approverUser.userId}"
-						disabled="#{!isPendingSubmissionStatus}"
+						disabled="#{!isPendingSubmissionStatus or lOIDetailBackingBean.managedBean.readOnly}"
 						required="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}"
 						label="#{lbl['lbl.sc.approver']}"
 						style="width: 276px;margin-bottom: 5px;">
@@ -99,6 +100,7 @@
 							<tr>
 								<td></td>
 								<td><p:inputTextarea style="width:350px;" maxlength="1000"
+								readonly="#{lOIDetailBackingBean.managedBean.readOnly}"
 										value="#{remarkVar.remark}" rendered="#{remarkIndex==0}"
 										id="remark" /> <h:outputText value="#{remarkVar.remark}"
 										rendered="#{remarkIndex>0}"

@@ -40,6 +40,7 @@
 					disabled="true" />
 				<p:spacer width="5" />
 				<p:commandLink oncomplete="suppDetailsPopup.show();return false;" process="@this" 
+				disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 					update="@([id$=suppDetailsPopup])">
 					
 					<p:graphicImage value="/css/images/design/evaluate.png"  title="#{lbl['lbl.sc.view.companyinfo']}" style="vertical-align:middle" />
@@ -102,12 +103,14 @@
 				</td>
 				<td>
 					<p:commandButton oncomplete="attachmentPopupDlg.show();"
+					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 						value="#{lbl['lbl.txt.attachment']}" partialSubmit="true"
 						process="@this" update="@([id$=attachmentPopup])">
 					</p:commandButton>
 					<ui:param name="branchInfoReport"
 						value="#{lOADetailBackingBean.managedBean.branchInfoReport}"></ui:param>
 					<h:commandLink
+					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 						value="#{branchInfoReport.scLoaReportAttachment.fileName}"
 						styleClass="blue_font" immediate="true"
 						action="#{lOADetailBackingBean.downloadReport(branchInfoReport)}"
@@ -130,6 +133,7 @@
 			</td>
 			<td colspan="3">
 				<p:inputText id="witnessName" size="40"
+				disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 					value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.witnessName}"
 					required="true"
 					label="#{lbl['lbl.sc.loiloa.witness.full.name']}"
@@ -144,6 +148,7 @@
 			</td>
 			<td colspan="3">
 				<p:inputText id="identificationNo" size="40"
+				disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 					value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.identificationNo}"
 					required="true"
 					label="#{lbl['lbl.sc.identification.no']}"
@@ -158,6 +163,7 @@
 			</td>
 			<td colspan="3">
 				<p:inputText id="designation" size="40"
+				disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 					value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.designation}"
 					required="true"
 					maxlength="30"
@@ -172,6 +178,7 @@
 			</td>
 			<td rowspan="3">
 				<p:inputTextarea id="address"
+				readonly="#{lOADetailBackingBean.managedBean.readOnly}"
 					rows="5"
 					value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.address}"
 					style=" margin-bottom:5px; width: 309px;"
@@ -186,6 +193,7 @@
 			</td>
 			<td>
 				<p:inputText id="phoneNo" size="20"
+				disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 					value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.phoneNo}"
 					required="true"
 					maxlength="20"
@@ -201,6 +209,7 @@
 			</td>
 			<td>
 				<p:inputText id="faxNo" size="20"
+				disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 					value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.faxNo}"
 					required="true"
 					maxlength="20"
@@ -215,6 +224,7 @@
 			</td>
 			<td>
 				<p:inputText id="mobileNo" size="20"
+				disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 					value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.mobileNo}"
 					maxlength="20"
 					validator="#{webappBean.checkPhoneNumber}"
@@ -228,6 +238,7 @@
 			</td>
 			<td colspan="3">
 				<p:inputText id="email" size="40" style=" margin-bottom:5px;"
+				disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 					value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.email}"				
 					maxlength="80"
 					validator="#{webappBean.checkEmail}"

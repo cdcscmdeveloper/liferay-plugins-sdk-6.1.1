@@ -16,6 +16,7 @@
 			<td width="82%">
 				<c:if test="#{isSupplierAckStatus}">
 					<p:selectOneMenu id="accountNoId"
+					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 						value="#{lOADetailBackingBean.managedBean.selectedBankId}"
 						style="width: 320px;margin-bottom: 5px;"
 						required="true"

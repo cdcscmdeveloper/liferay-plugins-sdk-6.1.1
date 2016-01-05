@@ -8,44 +8,48 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<div class="ppRightBtn">
-	 <p:blockUI block=":form"  widgetVar="blockWidget">
-				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-     </p:blockUI>
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 		<c:choose>
 			<c:when test="#{!empty lOIDetailBackingBean.managedBean.taskId}">
-				<ui:repeat var="bpmAction"
-					value="#{lOIDetailBackingBean.managedBean.outComes}">
-					<ui:param name="buttonLabel"
-						value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+				<ui:decorate
+					template="/WEB-INF/facelets/templates/claim_template.xhtml">
+					<ui:define name="outComeSection">
+						<ui:repeat var="bpmAction"
+							value="#{lOIDetailBackingBean.managedBean.outComes}">
+							<ui:param name="buttonLabel"
+								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 
-					<h:panelGroup rendered="#{bpmAction == 'ACCEPT'}">
-						<p:outputPanel id="spkiOutputPanel">
-							<ac:spkiPopup id="spkiPopup"
-								password="#{lOIDetailBackingBean.managedBean.spkiBackingBean.password}"
-								challengeAns1="#{lOIDetailBackingBean.managedBean.spkiBackingBean.challengeAns1}"
-								challengeQues1="#{lOIDetailBackingBean.managedBean.spkiBackingBean.challengeQues1}"
-								postSignAction="#{lOIDetailBackingBean.spkiSignAction(spkiBackingBean.pmDigiSign)}" />
-						</p:outputPanel>
-						<p:commandButton value="#{lbl[buttonLabel]}"
-							styleClass="ui-button" update="spkiOutputPanel"
-							action="#{lOIDetailBackingBean.updateBpmTaskAction(bpmAction)}"
-							actionListener="#{lOIDetailBackingBean.managedBean.spkiBackingBean.getChallengeQuestions}"
-							onstart="blockWidget.show();">
-							<f:setPropertyActionListener value="#{bpmAction}"
-								target="#{lOIDetailBackingBean.managedBean.action}" />
-						</p:commandButton>
-					</h:panelGroup>
+							<h:panelGroup rendered="#{bpmAction == 'ACCEPT'}">
+								<p:outputPanel id="spkiOutputPanel">
+									<ac:spkiPopup id="spkiPopup"
+										password="#{lOIDetailBackingBean.managedBean.spkiBackingBean.password}"
+										challengeAns1="#{lOIDetailBackingBean.managedBean.spkiBackingBean.challengeAns1}"
+										challengeQues1="#{lOIDetailBackingBean.managedBean.spkiBackingBean.challengeQues1}"
+										postSignAction="#{lOIDetailBackingBean.spkiSignAction(spkiBackingBean.pmDigiSign)}" />
+								</p:outputPanel>
+								<p:commandButton value="#{lbl[buttonLabel]}"
+									styleClass="ui-button" update="spkiOutputPanel"
+									action="#{lOIDetailBackingBean.updateBpmTaskAction(bpmAction)}"
+									actionListener="#{lOIDetailBackingBean.managedBean.spkiBackingBean.getChallengeQuestions}"
+									onstart="blockWidget.show();">
+									<f:setPropertyActionListener value="#{bpmAction}"
+										target="#{lOIDetailBackingBean.managedBean.action}" />
+								</p:commandButton>
+							</h:panelGroup>
 
-					<h:panelGroup rendered="#{bpmAction == 'REJECT'}">
-						<p:commandButton value="#{lbl[buttonLabel]}"
-							styleClass="ui-button" 
-							onstart="blockWidget.show();"
-					        oncomplete="blockWidget.hide();"
-							action="#{lOIDetailBackingBean.updateBpmTaskAction(bpmAction)}"
-							partialSubmit="true" process="@this" update="@this" />
-					</h:panelGroup>
+							<h:panelGroup rendered="#{bpmAction == 'REJECT'}">
+								<p:commandButton value="#{lbl[buttonLabel]}"
+									styleClass="ui-button" onstart="blockWidget.show();"
+									oncomplete="blockWidget.hide();"
+									action="#{lOIDetailBackingBean.updateBpmTaskAction(bpmAction)}"
+									partialSubmit="true" process="@this" update="@this" />
+							</h:panelGroup>
 
-				</ui:repeat>
+						</ui:repeat>
+					</ui:define>
+				</ui:decorate>
 			</c:when>
 		</c:choose>
 	</div>

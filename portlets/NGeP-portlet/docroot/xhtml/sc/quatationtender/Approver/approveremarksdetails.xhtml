@@ -21,11 +21,9 @@
 						var="remarkVar" rowIndexVar="remarkIndex" columns="1">
 						<table>
 							<tr>
-								<td rowspan="2" valign="top">
-									<h:graphicImage
+								<td rowspan="2" valign="top"><h:graphicImage
 										value="#{approvalBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
-										height="30" width="30" />
-								</td>
+										height="30" width="30" /></td>
 								<td width="5"></td>
 								<td><h:outputText value="#{remarkVar.createdUser.userName}" />,
 									<h:outputText id="remarkDates" value="#{remarkVar.changedDate}">
@@ -35,6 +33,7 @@
 							<tr>
 								<td></td>
 								<td><h:inputTextarea cols="40" value="#{remarkVar.remark}"
+										readonly="#{approvalBackingBean.managedBean.readOnly}"
 										rendered="#{remarkVar.remarkId eq null}" /> <h:outputText
 										value="#{remarkVar.remark}"
 										rendered="#{remarkVar.remarkId ne null}"
@@ -47,7 +46,8 @@
 				<td class="TableFieldRight">
 					<table style="width: 100%;">
 						<tr>
-							<td colspan="2"><p:commandButton
+							<td colspan="2"><p:commandButton 
+									disabled="#{approvalBackingBean.managedBean.readOnly}"
 									oncomplete="supportAttachDlg.show();return false;"
 									update="bpkremarksupDtls"
 									value="#{lbl['lbl.btn.attach.files']}">
@@ -75,6 +75,7 @@
 										</tr>
 										<tr>
 											<td><h:commandLink value="#{attachFile.fileName}"
+													readonly="#{approvalBackingBean.managedBean.readOnly}"
 													styleClass="blue_font" immediate="true"
 													action="#{approvalBackingBean.downloadFile(attachFile)}" />
 											</td>
@@ -88,8 +89,8 @@
 		</table>
 	</p:panel>
 	<p:dialog id="supportAttachDlgids" widgetVar="supportAttachDlg"
-		modal="true" dynamic="true" resizable="false"
-		width="700px" height="200" styleClass="pop_up_top"
+		modal="true" dynamic="true" resizable="false" width="700px"
+		height="200" styleClass="pop_up_top"
 		header="#{lbl['lbl.txt.choose.files']}">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;"

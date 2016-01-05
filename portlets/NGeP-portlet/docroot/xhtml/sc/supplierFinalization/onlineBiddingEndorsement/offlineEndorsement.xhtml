@@ -38,6 +38,7 @@
 									<td></td>
 									<td>
 										<p:inputTextarea cols="40" value="#{remarkVar.remark}"
+										readonly="#{suppFinalBiddingBackingBean.managedBean.readOnly}"
 											rendered="#{remarkVar.remarkId eq null}" /> 
 										<h:outputText value="#{remarkVar.remark}"
 											rendered="#{remarkVar.remarkId ne null}"
@@ -63,6 +64,7 @@
 									<p:commandButton oncomplete="uploadDlg.show();return false;" style="margin-top: 12% !important;"
 										icon="iconAttachment" update="@([id$=suppDoc])"
 										partialSubmit="true" process="@this"  
+										disabled="#{suppFinalBiddingBackingBean.managedBean.readOnly}"
 										value="#{lbl['lbl.txt.attach.file']}">
 										<f:setPropertyActionListener target="#{suppFinalBiddingBackingBean.managedBean.attachmentDocType}" value="#{ParameterConst.doctypeQuotation}" />
 									</p:commandButton>
@@ -92,6 +94,7 @@
 												<td>
 													<h:commandLink value="#{suppFinalBiddingBackingBean.managedBean.scQtFinalization.scQtFinalizationEndorsementAttachment.fileName}"
 														styleClass="blue_font"
+														disabled="#{suppFinalBiddingBackingBean.managedBean.readOnly}"
 														action="#{suppFinalBiddingBackingBean.downloadFile(suppFinalBiddingBackingBean.managedBean.scQtFinalization.scQtFinalizationEndorsementAttachment)}" />
 													<p:spacer width="5" />
 													<p:commandLink

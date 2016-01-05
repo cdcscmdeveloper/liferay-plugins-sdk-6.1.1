@@ -281,6 +281,7 @@
 					<ui:fragment>
 						<h:commandLink
 							value="#{scLoiSuppDoc.scLoiSupportingDocAttachment.fileName}"
+							disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
 							styleClass="blue_font" immediate="true"
 							action="#{lOIDetailBackingBean.downloadFile(scLoiSuppDoc.scLoiSupportingDocAttachment)}" />
 

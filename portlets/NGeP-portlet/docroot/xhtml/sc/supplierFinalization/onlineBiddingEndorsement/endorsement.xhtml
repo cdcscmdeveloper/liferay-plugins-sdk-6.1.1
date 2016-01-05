@@ -7,57 +7,67 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
+
 	<ui:define name="contentSection">
-	<style type="text/css">
-		.sidemenu > .ui-tabmenu-nav {		
-			padding-bottom: 100px !important;
-			margin-bottom: -100px !important;
-		}	
-	</style>	
-	
-	 <p:messages id="supplierFinalization" showDetail="true" autoUpdate="true" closable="true" severity="error,info" />
-		
-	 <ui:param name="isOnlineBiddingEndorseMeeting" 
-			   value="#{'M' eq suppFinalBiddingBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse}"/>
-	 
-	 <ui:param name="validityDaysExpiredQt"
-		     	  value="#{suppFinalBiddingBackingBean.checkProposalValidityDateReach(
-		     				suppFinalBiddingBackingBean.managedBean.scQt.proposalValidityEndDate)}" />			   
-				  	 
-	 <ac:gpkiPopup textBeforeSign="#{suppFinalBiddingBackingBean.textBeforeSign}"
-		   postSignAction="#{suppFinalBiddingBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
+		<style type="text/css">
+.sidemenu>.ui-tabmenu-nav {
+	padding-bottom: 100px !important;
+	margin-bottom: -100px !important;
+}
+</style>
+
+		<p:messages id="supplierFinalization" showDetail="true"
+			autoUpdate="true" closable="true" severity="error,info" />
+
+		<ui:param name="isOnlineBiddingEndorseMeeting"
+			value="#{'M' eq suppFinalBiddingBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse}" />
+
+		<ui:param name="validityDaysExpiredQt"
+			value="#{suppFinalBiddingBackingBean.checkProposalValidityDateReach(
+		     				suppFinalBiddingBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
+
+		<ac:gpkiPopup
+			textBeforeSign="#{suppFinalBiddingBackingBean.textBeforeSign}"
+			postSignAction="#{suppFinalBiddingBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
 
 		<div align="right" class="BtnSpacing">
-			<p:commandButton value="#{lbl['lbl.btn.save']}"
-				rendered="#{isOnlineBiddingEndorseMeeting}"
-				process="@all" partialSubmit="true"
-				action="#{suppFinalBiddingBackingBean.saveOnlineEndorsement}"
-				update="@form" />
-						
-			<p:commandButton value="#{lbl['lbl.btn.save']}"
-				rendered="#{!isOnlineBiddingEndorseMeeting}"
-				process="@all" partialSubmit="true"
-				action="#{suppFinalBiddingBackingBean.saveOfflineEndorsement}"
-				update="@form" />
+			<ui:decorate
+				template="/WEB-INF/facelets/templates/claim_template.xhtml">
+				<ui:define name="outComeSection">
+					<p:commandButton value="#{lbl['lbl.btn.save']}"
+						rendered="#{isOnlineBiddingEndorseMeeting}" process="@all"
+						partialSubmit="true"
+						action="#{suppFinalBiddingBackingBean.saveOnlineEndorsement}"
+						update="@form" />
 
-			<ui:repeat var="bpmAction"
-				value="#{suppFinalBiddingBackingBean.managedBean.outComes}">
-				<ui:param name="buttonLabel"
-					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-				<p:commandButton value="#{lbl[buttonLabel]}" update="@form" styleClass="ui-button"
-					action="#{suppFinalBiddingBackingBean.submitBiddingEndorsement(bpmAction)}" 
-					rendered="#{validityDaysExpiredQt}"/>
-			</ui:repeat>
+					<p:commandButton value="#{lbl['lbl.btn.save']}"
+						rendered="#{!isOnlineBiddingEndorseMeeting}" process="@all"
+						partialSubmit="true"
+						action="#{suppFinalBiddingBackingBean.saveOfflineEndorsement}"
+						update="@form" />
+
+					<ui:repeat var="bpmAction"
+						value="#{suppFinalBiddingBackingBean.managedBean.outComes}">
+						<ui:param name="buttonLabel"
+							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+						<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
+							styleClass="ui-button"
+							action="#{suppFinalBiddingBackingBean.submitBiddingEndorsement(bpmAction)}"
+							rendered="#{validityDaysExpiredQt}" />
+					</ui:repeat>
+				</ui:define>
+			</ui:decorate>
 
 		</div>
 
-		<ui:include src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/suppFinalizationHeader.xhtml"></ui:include>
+		<ui:include
+			src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/suppFinalizationHeader.xhtml"></ui:include>
 
-		<p:tabMenu activeIndex="#{suppFinalBiddingBackingBean.managedBean.onlineBiddingActiveIndex}">
+		<p:tabMenu
+			activeIndex="#{suppFinalBiddingBackingBean.managedBean.onlineBiddingActiveIndex}">
 			<p:menuitem value="#{lbl['lbl.sc.preparation']}"
 				action="#{suppFinalBiddingBackingBean.navigateToBiddingFinalizationMeetingTab}"
-				update="@form" rendered="#{isOnlineBiddingEndorseMeeting}"/>			
+				update="@form" rendered="#{isOnlineBiddingEndorseMeeting}" />
 			<p:menuitem value="#{lbl['lbl.sc.bidding.summary']}"
 				action="#{suppFinalBiddingBackingBean.navigateToBiddingSummaryTab}"
 				update="@form" />
@@ -70,34 +80,42 @@
 				action="#{suppFinalBiddingBackingBean.retrieveOfflineEndorsement}"
 				update="@form" />
 		</p:tabMenu>
-		
+
 		<p:panel id="contentPanel">
-			<c:if test="#{suppFinalBiddingBackingBean.managedBean.onlineBiddingActiveIndex eq 
+			<c:if
+				test="#{suppFinalBiddingBackingBean.managedBean.onlineBiddingActiveIndex eq 
 							suppFinalBiddingBackingBean.getOnlineBiddingFinalizationMeetingActiveIndex()}">
-				<ui:include src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/meeting/biddingFinalizationMeeting.xhtml"/>
-			</c:if>		
-			<c:if test="#{suppFinalBiddingBackingBean.managedBean.onlineBiddingActiveIndex eq 
-							suppFinalBiddingBackingBean.getOnlineBiddingActiveIndexSummary()}">
-				<ui:include src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/biddingSummary.xhtml"/>
+				<ui:include
+					src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/meeting/biddingFinalizationMeeting.xhtml" />
 			</c:if>
-			<c:if test="#{isOnlineBiddingEndorseMeeting and
+			<c:if
+				test="#{suppFinalBiddingBackingBean.managedBean.onlineBiddingActiveIndex eq 
+							suppFinalBiddingBackingBean.getOnlineBiddingActiveIndexSummary()}">
+				<ui:include
+					src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/biddingSummary.xhtml" />
+			</c:if>
+			<c:if
+				test="#{isOnlineBiddingEndorseMeeting and
 								suppFinalBiddingBackingBean.managedBean.onlineBiddingActiveIndex eq 
 									suppFinalBiddingBackingBean.getOnlineBiddingActiveIndexOnlineEndorsement()}">
-				<ui:include src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/onlineEndorsement.xhtml"/>
+				<ui:include
+					src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/onlineEndorsement.xhtml" />
 			</c:if>
-			<c:if test="#{!isOnlineBiddingEndorseMeeting and
+			<c:if
+				test="#{!isOnlineBiddingEndorseMeeting and
 								suppFinalBiddingBackingBean.managedBean.onlineBiddingActiveIndex eq 
 									suppFinalBiddingBackingBean.getOnlineBiddingActiveIndexOfflineEndorsement()}">
-				<ui:include src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/offlineEndorsement.xhtml"/>
+				<ui:include
+					src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/offlineEndorsement.xhtml" />
 			</c:if>
 		</p:panel>
-				
+
 		<ui:include
 			src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/uploads.xhtml" />
 
 		<ui:include
 			src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/signOff.xhtml" />
-			
+
 	</ui:define>
 
 </ui:composition>

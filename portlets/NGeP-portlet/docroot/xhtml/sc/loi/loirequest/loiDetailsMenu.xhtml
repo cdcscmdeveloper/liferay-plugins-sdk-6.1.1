@@ -38,7 +38,7 @@
 					<table>
 						<tr>
 							<td>
-								<p:selectOneMenu id="branch"
+								<p:selectOneMenu id="branch" disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
 									value="#{lOIDetailBackingBean.managedBean.branchName}"
 									style="width: 319px;margin-bottom: 5px;"
 									label="#{lbl['lbl.sc.branch']}">
@@ -133,7 +133,7 @@
 						value="#{lbl['lbl.sc.title']}" /></td>
 				<td><c:if
 						test="#{lOIDetailBackingBean.managedBean.scLoi.brandNew}">
-						<p:inputText
+						<p:inputText readonly="#{lOIDetailBackingBean.managedBean.readOnly}"
 							value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.title}"
 							size="40" maxlength="100" />
 					</c:if> <c:if test="#{!lOIDetailBackingBean.managedBean.scLoi.brandNew}">
@@ -177,7 +177,7 @@
 						value="#{lbl['lbl.sc.loiloa.appr.req']}" />
 						<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" /></td>
 				<td><p:selectOneRadio  styleClass="commonLabel"
-						disabled="#{!(isPendingSubmissionStatus or isPendingRevisionStatus)}"
+						disabled="#{!isPendingSubmissionStatus or !isPendingRevisionStatus or lOIDetailBackingBean.managedBean.readOnly}"
 						value="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}">
 						<f:selectItems
 							value="#{lOIDetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
