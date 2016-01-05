@@ -111,7 +111,7 @@ public class SMReportBackingBean extends
 			rptGenBean.setSmSupplierTypeView(true);
 			rptGenBean.setSmBusCompanyRegistrationStatusView(true);
 			rptGenBean.retrieveCategoryLevOne1();
-			rptGenBean.setSmNonMandatoryCategoryView(true);				
+			rptGenBean.setSmCategoryBySupplierTypeView(true);		
 			/*rptGenBean.setSmNonMandatoryDateView(true);
 			rptGenBean.setSmRegisteredDateView(true);*/
 			rptGenBean.setSmExtraTwoColumnView(true);
@@ -364,7 +364,7 @@ public class SMReportBackingBean extends
 			break;
 		case ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL:
 			rptGenBean.retrieveCategoryLevOne1();
-			rptGenBean.setSmNonMandatoryCategoryView(true);
+			rptGenBean.setSmCategoryBySupplierTypeView(true);
 			rptGenBean.setSmSuppCompanyNameView(true);
 			rptGenBean.setSmBusCompanyRegistrationStatusView(true);
 			//rptGenBean.setSmRegistrationTypeView(true);
