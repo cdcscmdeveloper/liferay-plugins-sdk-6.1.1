@@ -55,11 +55,11 @@ import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAddress;
-import my.ep.type.pm.ReasonCategory;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
+import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.exceptionhandler.EpExceptionHandler;
@@ -70,7 +70,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.SecurityFilterUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
-import my.ep.web.util.pm.helper.ReasonHelper;
 import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.commons.lang.StringUtils;
@@ -1122,6 +1121,25 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			
 			boolean isAssignedState = BpmConstants.STATE_ASSIGNED.equals(resDTO.getStatus());
 			Object payLoad = resDTO.getPojo();
+			 if(null!=resDTO.isGroupTask() && resDTO.isGroupTask()==true){
+		            System.out.println("====groupTask not null==="+resDTO.isGroupTask());
+					BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
+					String claim = originalServletRequest.getParameter("claim");
+					System.out.println("claim:" + claim);
+					Boolean b = Boolean.valueOf(claim);
+					if(null!=b && b==false){
+						this.getManagedBean().setReadOnly(true);
+					}else{
+						this.getManagedBean().setReadOnly(false);
+					}
+					bb.getManagedBean().setClaim(b);
+					bb.getManagedBean().setTaskId(taskId);
+					bb.getManagedBean().setGroupTask(true);
+		            }else{
+		            	System.out.println("====groupTask null==="+resDTO.isGroupTask());
+		            	this.getManagedBean().setReadOnly(false);
+		            	this.getManagedBean().setGroupTask(false);
+		            }
 			
 			this.getManagedBean().setTaskId(taskId);
 			this.getManagedBean().setAssignedState(isAssignedState);
