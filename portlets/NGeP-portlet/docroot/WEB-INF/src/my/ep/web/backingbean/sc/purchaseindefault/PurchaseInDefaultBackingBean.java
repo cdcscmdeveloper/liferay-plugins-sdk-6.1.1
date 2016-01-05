@@ -111,6 +111,9 @@ public class PurchaseInDefaultBackingBean extends
 	/** The text before sign. */
 	private String textBeforeSign;
 
+	/** The purchase in default page. */
+	private String PURCHASE_IN_DEFAULT_PAGE = "purchaseInDefaultMain";
+
 	/**
 	 * Instantiates a new purchase in default backing bean.
 	 */
@@ -278,7 +281,7 @@ public class PurchaseInDefaultBackingBean extends
 			scPurchaseInDefault.setPidValidDays(Integer.valueOf(configRuleValue.getRuleValue()));
 		}
 		
-		return "purchaseInDefaultMain";
+		return PURCHASE_IN_DEFAULT_PAGE;
 	}
 
 	/**
@@ -951,7 +954,7 @@ public class PurchaseInDefaultBackingBean extends
 		getManagedBean().setTitleChecker(Boolean.FALSE);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "purchaseInDefaultMain");
+				.handleNavigation(fc, null, PURCHASE_IN_DEFAULT_PAGE);
 	}
 
 	/**
@@ -980,7 +983,75 @@ public class PurchaseInDefaultBackingBean extends
 					.handleNavigation(fc, null, "catalogueSearch");
 		}
 	}
+	
 
+	/**
+	 * Show purchase in default.
+	 *
+	 * @param purchaseInDefaultId the purchase in default id
+	 */
+	public void viewPurchaseInDefault(long purchaseInDefaultId){
+		debugLogger("viewPurchaseInDefault");
+		IPurchaseInDefaultSO purchaseInDefaultSO  = null;
+		FacesContext fc = FacesContext.getCurrentInstance();
+		try{
+			// Purchase In Default	
+			purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
+			PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
+			purchaseInDefaultReqDTO.setPurchaseInDefaultId(purchaseInDefaultId);
+			purchaseInDefaultReqDTO.setFetchSubEntity(true);
+			PurchaseInDefaultResDTO purchaseInDefaultResDTO = purchaseInDefaultSO.getPurchaseInDefault(purchaseInDefaultReqDTO);
+			ScPurchaseInDefault purchaseInDefault = purchaseInDefaultResDTO.getPurchaseInDefaultDtl();
+
+			if(purchaseInDefault != null){
+				// contract item 
+				if(purchaseInDefault.getContractedItem() != null){
+					getManagedBean().setCheckContractItem(Boolean.TRUE);
+
+				} else{ //panel item
+					getManagedBean().setCheckContractItem(Boolean.FALSE);
+				}
+
+				getManagedBean().setPurchaseInDefault(purchaseInDefault);
+				initialInformation(purchaseInDefault);
+				retrieveReasonDescListByCategory(true);
+				justificationTypeEvent();
+
+				try {
+					StatusReqDTO statusReqDTO = new StatusReqDTO();
+					statusReqDTO.setStatusId(DPStatusConstants.PID_COMPLETED);
+
+					StatusResDTO statusResDTO = getStatusSO().retrieveStatusByStatusId(statusReqDTO);
+
+					getCurrentStatus(statusResDTO.getPmStatus());
+
+				} finally {
+					//statusSO = null;
+				}
+				
+				// disable all for pid view
+				getManagedBean().setPidBtnFlag(Boolean.FALSE);
+
+				// current page url for page navigation from pid to request note
+				getManagedBean().setPageNavToRequestNote(fc.getViewRoot().getViewId());
+			}
+
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, PURCHASE_IN_DEFAULT_PAGE);
+		} finally {
+			purchaseInDefaultSO = null;
+		}
+	}
+
+	
+	/**
+	 * Gets the status so.
+	 *
+	 * @return the status so
+	 */
+	private IStatusSO getStatusSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+	}
+	
 	/**
 	 * Debug logger.
 	 * 
