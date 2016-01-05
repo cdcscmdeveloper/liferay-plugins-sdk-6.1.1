@@ -1,0 +1,135 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="contentSection">
+
+		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="true"></p:messages>
+
+		<p:panel id="searchPanel" header="#{lbl['lbl.sc.search']}"
+			toggleable="true">
+			<table style="width: 100%;">
+				<tr>
+					<td width="22%"><p:outputLabel
+							value="#{lbl['lbl.sc.document.type']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu style="width: 250px;"
+							value="#{directPurchaseBackingBean.managedBean.searchDocumentType}">
+							<f:selectItems
+								value="#{directPurchaseBackingBean.getDocumentType()}" />
+							<p:ajax event="change" update="searchPanel"
+								listener="#{directPurchaseBackingBean.searchStatusDesc}" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.document.title']}" /></td>
+					<td colspan="3"><p:inputText size="96"
+							value="#{directPurchaseBackingBean.managedBean.searchDocumentTitle}"></p:inputText></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.document.no']}" /></td>
+					<td><p:inputText size="30"
+							value="#{directPurchaseBackingBean.managedBean.searchDocumentNo}"></p:inputText></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.created.date.from']}" /></td>
+					<td><p:calendar showOn="button" size="27"
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+							value="#{directPurchaseBackingBean.managedBean.searchDocumentFromDuration}">
+							<p:ajax event="dateSelect" update="toDate" />
+						</p:calendar></td>
+
+					<td><p:outputLabel value="#{lbl['lbl.sc.created.date.to']}" /></td>
+					<td><p:calendar showOn="button" size="27"
+							mindate="#{simpleQuoteBackingBean.managedBean.searchFromCreatedDate}"
+							id="toDate" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+							value="#{directPurchaseBackingBean.managedBean.searchDocumentToDuration}">
+						</p:calendar></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
+					<td><p:selectOneMenu style="width: 250px;"
+							value="#{directPurchaseBackingBean.managedBean.searchStatusId}">
+							<f:selectItems
+								value="#{directPurchaseBackingBean.searchStatusDesc()}" />
+						</p:selectOneMenu></td>
+				</tr>
+			</table>
+
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
+					action="#{directPurchaseBackingBean.search}"
+					update="resultPanel" />
+				<p:commandButton value="#{lbl['lbl.btn.reset']}"
+					action="#{directPurchaseBackingBean.reset}" update=":form" />
+			</div>
+		</p:panel>
+		<p:panel id="resultPanel" header="#{lbl['lbl.cm.search.result']}"
+			toggleable="true">
+
+			<p:dataTable id="scDocumentTableID" lazy="true"
+				value="#{directPurchaseBackingBean.managedBean.dpDocumentDataModel}"
+				var="Obj" width="100%" rows="10">
+
+				<ac:paginator for="scDocumentTableID"></ac:paginator>
+
+				<p:column width="15%">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.document.no']}" />
+					</f:facet>
+					#{Obj[1]}
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.document.title']}" />
+					</f:facet>
+					#{Obj[5]}
+				</p:column>
+
+				<p:column width="15%">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.created.by']}" />
+					</f:facet>
+						#{directPurchaseBackingBean.getUserName(Obj[6])}
+				</p:column>
+
+				<p:column width="15%">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.created.date']}" />
+					</f:facet>
+					<ac:labelDateTime value="#{Obj[2]}" />
+				</p:column>
+
+				<p:column width="20%">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.status']}" />
+					</f:facet>
+					#{directPurchaseBackingBean.getStatusDescById(Obj[4])}
+				</p:column>
+
+				<p:column width="5%" style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.action']}" />
+					</f:facet>
+					<p:commandLink
+						action="#{directPurchaseBackingBean.viewDoc(directPurchaseBackingBean.managedBean.searchDocumentType, Obj[0], Obj)}">
+						<p:graphicImage value="/css/images/design/ico-view.png" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+
+		</p:panel>
+
+	</ui:define>
+
+</ui:composition>

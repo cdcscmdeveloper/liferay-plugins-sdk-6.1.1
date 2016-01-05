@@ -374,6 +374,13 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 
 	/** The sm gst supplier. */
 	private SmGstSupplier smGstSupplier;
+	
+	/** The dp obj. */
+	private Object[] dpObj = new Object[6];
+	
+	/** The tracking dairy view. */
+	private boolean trackingDairyView;
+	
 
 	/**
 	 * Gets the spki backing bean.
@@ -2426,4 +2433,33 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	public void setSearchStatus(Long searchStatus) {
 		this.searchStatus = searchStatus;
 	}
+
+	/**
+	 * @return the dpObj
+	 */
+	public Object[] getDpObj() {
+		return dpObj;
+	}
+
+	/**
+	 * @param dpObj the dpObj to set
+	 */
+	public void setDpObj(Object[] dpObj) {
+		this.dpObj = dpObj;
+	}
+
+	/**
+	 * @return the trackingDairyView
+	 */
+	public boolean isTrackingDairyView() {
+		return trackingDairyView;
+	}
+
+	/**
+	 * @param trackingDairyView the trackingDairyView to set
+	 */
+	public void setTrackingDairyView(boolean trackingDairyView) {
+		this.trackingDairyView = trackingDairyView;
+	}
+	
 }

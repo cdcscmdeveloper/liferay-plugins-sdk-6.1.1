@@ -242,13 +242,23 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	/** The zonal. */
 	private boolean zonal;
 	
+	/** The overall contract amt. */
 	private BigDecimal overallContractAmt;
 	
+	/** The branch info report. */
 	private ScLoaReport branchInfoReport;
 	
+	/** The render remainder. */
 	private boolean renderRemainder;
 	
+	/** The display alert. */
 	private boolean displayAlert;
+	
+	/** The dp obj. */
+	private Object[] dpObj = new Object[6];
+	
+	/** The tracking dairy view. */
+	private boolean trackingDairyView;
 	
 	/** The spki backing bean. */
     @ManagedProperty(value="#{spkiBackingBean}")
@@ -1453,4 +1463,31 @@ public class LOADetailManagedBean extends BaseManagedBean {
 		this.displayAlert = displayAlert;
 	}
 
+	/**
+	 * @return the dpObj
+	 */
+	public Object[] getDpObj() {
+		return dpObj;
+	}
+
+	/**
+	 * @param dpObj the dpObj to set
+	 */
+	public void setDpObj(Object[] dpObj) {
+		this.dpObj = dpObj;
+	}
+
+	/**
+	 * @return the trackingDairyView
+	 */
+	public boolean isTrackingDairyView() {
+		return trackingDairyView;
+	}
+
+	/**
+	 * @param trackingDairyView the trackingDairyView to set
+	 */
+	public void setTrackingDairyView(boolean trackingDairyView) {
+		this.trackingDairyView = trackingDairyView;
+	}
 }

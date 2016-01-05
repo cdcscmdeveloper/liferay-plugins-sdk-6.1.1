@@ -338,7 +338,7 @@
 			<td><p:selectOneRadio id="approvalReq" styleClass="commonLabel"
 						value="#{lOADetailBackingBean.managedBean.scLoa.approvalReq}"
 						required="true" label="#{lbl['lbl.sc.loiloa.loa.appr.req']}"
-						disabled="#{!(isPendingSubmissionStatus or isPendingRevisionStatus)}">
+						disabled="#{!isEditableStatus}">
 						<f:selectItems
 							value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 					</p:selectOneRadio> <p:message id="approvalReqMsg" for="approvalReq" display="icon" />

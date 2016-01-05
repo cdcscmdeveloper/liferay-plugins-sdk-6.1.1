@@ -14,10 +14,18 @@
 		value="#{lOADetailBackingBean.checkProposalValidityDateReach(lOADetailBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
 
 	<div class="ppRightBtn">
-		<h:panelGroup id="loaButtonsId">
-			<p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}"
-				rendered="#{lOADetailBackingBean.managedBean.editFlag}"
-				style="float:left;" action="#{lOADetailBackingBean.backToPrevious}" />
+		<p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}"
+			rendered="#{lOADetailBackingBean.managedBean.editFlag or isTrackingDairyView}"
+			style="float:left;" action="#{lOADetailBackingBean.backToPrevious}" />
+
+		<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
+			style="float:right;"
+			rendered="#{isTrackingDairyView}"
+			action="#{dpTrackingDiaryBackingBean.goToTrackingDiarySearch(lOADetailBackingBean.managedBean.dpObj)}"
+			immediate="true" />
+
+		<h:panelGroup id="loaButtonsId"
+			rendered="#{!isTrackingDairyView}">
 
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				action="#{lOADetailBackingBean.saveAction}"
