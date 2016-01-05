@@ -138,6 +138,7 @@
 		    <portlet id="scManualSourcingSupplierResponse"/>
 		    <portlet id="scBriefingSiteVisitRegistration"/>
 			<portlet id="scQuoteSearch"></portlet>
+			<portlet id="DirectPurchaseSearch"></portlet>
 		    
 		</category>
 
