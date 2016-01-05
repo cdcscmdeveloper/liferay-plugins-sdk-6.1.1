@@ -88,6 +88,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -119,6 +120,7 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -190,12 +192,13 @@ public class SimpleQuoteBackingBean extends
 		}
 	}
 
+	
 	/**
 	 * View quote.
 	 *
-	 * @param scQuote the sc quote
+	 * @param scQuoteId the sc quote id
 	 */
-	public void viewQuote(ScQuote scQuote){
+	public void viewQuote(long scQuoteId){
 		debugLogger("viewQuote");
 		TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
 		TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
@@ -203,8 +206,8 @@ public class SimpleQuoteBackingBean extends
 		ScRequestNote scRequestNote =  null;
 		try{
 			QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
-			quoteReqDTO.setQuoteId(scQuote.getQuoteId());
-			scQuote = getQuoteSO().getQuoteDtl(quoteReqDTO).getQuoteBidDtl();
+			quoteReqDTO.setQuoteId(scQuoteId);
+			ScQuote scQuote = getQuoteSO().getQuoteDtl(quoteReqDTO).getQuoteBidDtl();
 			getManagedBean().setScQuote(scQuote);
 
 			if(scQuote != null){
@@ -216,7 +219,7 @@ public class SimpleQuoteBackingBean extends
 				}
 
 				if(scQuote.getJustificationType() == null){
-					scQuote.setJustificationType(new PmParameter());
+					scQuote.setJustificationType(new PmReason());
 				}
 				// service and product
 				if (scQuote.getQuoteDocs() != null) {
@@ -1171,7 +1174,7 @@ public class SimpleQuoteBackingBean extends
 			if(pmOrgProfile != null){
 				if(isGovtSeller){
 					if(!scQuote.getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_G2G)){
-						throw new EpException("Already added Normal or Adhoc supplier,  can't add G2G Supplier");
+						throw new EpException("Already added Normal supplier,  can't add G2G Supplier");
 					} 
 
 				} else{
@@ -1261,19 +1264,13 @@ public class SimpleQuoteBackingBean extends
 			// justification type
 			if (quote.getProcurementType().getParameterCode()
 					.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
-				if (quote.getJustificationType().getParameterCode() != null) {
-					quote.setJustificationType(getParameterByTypeAndCode(
-							ParameterTypeConst.JUSTIFICATION_TYPE_ADHOC, quote
-									.getJustificationType().getParameterCode()));
+				if (quote.getJustificationType().getReasonCode() != null) {
+					quote.setJustificationType(getReasonByCategoryAndCode(
+							ReasonCategory.JUSTIFICATION_AD_HOC.value(), quote
+							.getJustificationType().getReasonCode()));
+
 				}
-			} else if (quote.getProcurementType().getParameterCode()
-					.equalsIgnoreCase(ParameterConst.PROC_TYPE_EMERGENCY)) {
-				if (quote.getJustificationType().getParameterCode() != null) {
-					quote.setJustificationType(getParameterByTypeAndCode(
-							ParameterTypeConst.JUSTIFICATION_TYPE_EMERGENCY,
-							quote.getJustificationType().getParameterCode()));
-				}
-			} else {
+			}  else {
 				quote.setJustificationType(null);
 			}
 
@@ -2034,7 +2031,7 @@ public class SimpleQuoteBackingBean extends
 			if (quote.getProcurementType().getParameterCode()
 					.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
 
-				if (quote.getJustificationType().getParameterCode() == null) {
+				if (quote.getJustificationType().getReasonCode() == null) {
 					throw new EpException(MessageConst.ERROR_100022,
 							new String[] { ResourceBundleUtils.getMessage(
 									"lbl.sc.reason",
@@ -2042,13 +2039,13 @@ public class SimpleQuoteBackingBean extends
 									new FacesScopes().getUserLocale()) });
 				}
 
-				quote.setJustificationType(getParameterByTypeAndCode(
-						ParameterTypeConst.JUSTIFICATION_TYPE_ADHOC, quote
-								.getJustificationType().getParameterCode()));
+				quote.setJustificationType(getReasonByCategoryAndCode(
+						ReasonCategory.JUSTIFICATION_AD_HOC.value(), quote
+								.getJustificationType().getReasonCode()));
 			} else if (quote.getProcurementType().getParameterCode()
 					.equalsIgnoreCase(ParameterConst.PROC_TYPE_EMERGENCY)) {
 
-				if (quote.getJustificationType().getParameterCode() == null) {
+				if (quote.getJustificationType().getReasonCode() == null) {
 					throw new EpException(MessageConst.ERROR_100022,
 							new String[] { ResourceBundleUtils.getMessage(
 									"lbl.sc.reason",
@@ -2056,9 +2053,9 @@ public class SimpleQuoteBackingBean extends
 									new FacesScopes().getUserLocale()) });
 				}
 
-				quote.setJustificationType(getParameterByTypeAndCode(
+				/*quote.setJustificationType(getReasonByCategoryAndCode(
 						ParameterTypeConst.JUSTIFICATION_TYPE_EMERGENCY, quote
-								.getJustificationType().getParameterCode()));
+								.getJustificationType().getReasonCode()));*/
 
 			} else {
 				quote.setJustificationType(null);
@@ -2399,19 +2396,8 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setProcTypeOption(Boolean.TRUE);
 			getManagedBean().setG2GFlag(Boolean.FALSE);
 			getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
-			getManagedBean()
-					.setJustDropdown(
-							getDropdownCodeValues(ParameterTypeConst.JUSTIFICATION_TYPE_ADHOC));
-		} else if (getManagedBean().getScQuote().getProcurementType()
-				.getParameterCode()
-				.equalsIgnoreCase(ParameterConst.PROC_TYPE_EMERGENCY)) {
-			getManagedBean().setProcTypeOption(Boolean.TRUE);
-			getManagedBean().setG2GFlag(Boolean.FALSE);
-			getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
-			getManagedBean()
-					.setJustDropdown(
-							getDropdownCodeValues(ParameterTypeConst.JUSTIFICATION_TYPE_EMERGENCY));
-		}
+		    getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_AD_HOC.value()));
+		} 
 
 		if (getManagedBean().getScQuote().isPanel()) {
 			getManagedBean().setLocAndBusinessFlag(Boolean.FALSE);
@@ -2422,7 +2408,7 @@ public class SimpleQuoteBackingBean extends
 
 		if (getManagedBean().getScQuote().getJustificationType() == null) {
 			getManagedBean().getScQuote().setJustificationType(
-					new PmParameter());
+					new PmReason());
 		}
 
 	}
@@ -4427,7 +4413,7 @@ public class SimpleQuoteBackingBean extends
 		getManagedBean().setScQuote(scQuote);
 
 		if (scQuote.getJustificationType() == null) {
-			scQuote.setJustificationType(new PmParameter());
+			scQuote.setJustificationType(new PmReason());
 		}
 
 		// service and product
@@ -5023,8 +5009,7 @@ public class SimpleQuoteBackingBean extends
 	 */
 	public void supplierSubmit() {
 		debugLogger("supplierSubmit");
-
-		//gpki
+		//gpki for only govt seller
 		if(isDigiSigningRequired(RoleCode.GOVT_SELLER.value())) {
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 
@@ -5068,17 +5053,19 @@ public class SimpleQuoteBackingBean extends
 
 			} else {
 				// spki
+				String originalText = prepareOriginalText(Boolean.FALSE); 
 				if (null != pmDigiSign) {
 					updateSpkiDigiSignData(pmDigiSign,
 							ParameterConst.DOCTYPE_SIMPLE_QUOTE,
 							quote.getQuoteId(), quote.getQuoteNo(),
-							prepareOriginalText(Boolean.FALSE));
+							originalText);
 				}
-
-				RequestContext.getCurrentInstance().execute("spki_dlg.hide();");
+				
 				byte[] signedData = getManagedBean().getSpkiBackingBean()
-						.spkiSignTransaction(prepareOriginalText(Boolean.FALSE));
+						.spkiSignTransaction(originalText);
 				pmDigiSign.setSpkiSignedData(signedData);
+				
+				RequestContext.getCurrentInstance().execute("spki_dlg.hide();");
 			}
 
 			
