@@ -41,8 +41,9 @@
 					
 					<p:column headerText="" style="width: 5%;">
 						<p:selectBooleanCheckbox value="#{fac.selected}" >
-						    <p:ajax event="change" update=":#{p:component('siteVisitCatPanelId')}" 
-						    	listener="#{backingBean.onCheckedSiteVisitFacilityAddress()}" process="@this" partialSubmit="true"/>
+						    <p:ajax event="change" update="@this" 
+						    	listener="#{backingBean.onCheckedSiteVisitFacilityAddress()}" 
+						    	process="@this" partialSubmit="true"/>
 						</p:selectBooleanCheckbox>
 					</p:column>
 		
