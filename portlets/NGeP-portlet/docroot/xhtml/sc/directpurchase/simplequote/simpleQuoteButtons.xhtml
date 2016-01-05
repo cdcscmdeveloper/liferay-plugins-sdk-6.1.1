@@ -51,6 +51,12 @@
 			rendered="#{!isEditable}"
 			styleClass="BtnSpacing"
 			action="#{simpleQuoteBackingBean.backToPrevious}" />
+			
+			<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
+				style="float:right;"
+				rendered="#{simpleQuoteBackingBean.managedBean.trackingDairyView}"
+				action="#{dpTrackingDiaryBackingBean.goToTrackingDiarySearch(simpleQuoteBackingBean.managedBean.dpObj)}"
+				immediate="true" />
 	</div>
 
 	<div class="ppRightBtn BtnSpacing">

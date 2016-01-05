@@ -123,7 +123,7 @@
 						 <td style="width: 85%"> <p:selectOneMenu style="width: 220px;margin-bottom: 5px;" id="justificationId" label="#{lbl['lbl.sc.reason']}"
 						       required="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A'}"
 						         disabled="#{!isEditable}" 
-								value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationType.parameterCode}">
+								value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationType.reasonCode}">
 							   <f:selectItems
 									value="#{simpleQuoteBackingBean.managedBean.justDropdown}" />
 								<p:ajax event="change" update="justId" process="@this" />
