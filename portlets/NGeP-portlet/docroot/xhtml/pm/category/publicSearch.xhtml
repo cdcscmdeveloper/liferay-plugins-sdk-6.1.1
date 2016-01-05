@@ -77,8 +77,14 @@
 				<td><p:outputLabel value="#{lbl['lbl.pm.paid.capital']}" /></td>
 				<td><p:inputText 
 					size="15" 
+					label="#{lbl['lbl.pm.paid.capital']}"
+					maxlength="16"
 					converterMessage="#{lbl['lbl.pm.paid.capital.invalid']}" 
-					value="#{categoryBackingBean.managedBean.categoryCodePublicSearchBean.paidUpCapital}"/>
+					value="#{categoryBackingBean.managedBean.categoryCodePublicSearchBean.paidUpCapital}">
+						<f:validateDoubleRange minimum="1" />
+						<f:validateDoubleRange maximum="9999999999999" />						
+						<p:ajax event="blur" process="@this" update="@this" />
+					</p:inputText>
 				</td>
 				<td><p:outputLabel value="#{lbl['lbl.pm.operate.from.home']}" /></td>
 				<td><p:selectOneMenu
