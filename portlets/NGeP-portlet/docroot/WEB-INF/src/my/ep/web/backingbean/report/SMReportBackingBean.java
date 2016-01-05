@@ -637,7 +637,7 @@ public class SMReportBackingBean extends
 		case ReportConst.SM_LIST_DAILY_RECIPT_RPT_VAL:
 			rptGenBean.setSmMandatoryRTDateView(true);
 			rptGenBean.setSmMandatoryTransactionDateView(true);
-			rptGenBean.setSmReceiptNoView(true);
+			rptGenBean.setSmDailyReceiptNoView(true);
 			rptGenBean.setSmApplicationNoView(true);
 			break;
 		default:
