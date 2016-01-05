@@ -308,7 +308,7 @@ public class LOADetailBackingBean extends
 			}
 			
 			populateLOADetails(resDTO);
-			getManagedBean().setEditFlag(true);
+			getManagedBean().setEditFlag(Boolean.TRUE);
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			if(getManagedBean().getBackToPreviousPage() == null || getManagedBean().getBackToPreviousPage().isEmpty()){
@@ -473,7 +473,7 @@ public class LOADetailBackingBean extends
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setLoaId(loaId);
-			AwardSupplierResDTO resDTO =getQtAwardSO()
+			AwardSupplierResDTO resDTO = getQtAwardSO()
 					.retrieveLOADtlByLoaId(reqDTO);
 			if (resDTO.getScLoa() != null) {
 				ScLoa scLoa = resDTO.getScLoa();
@@ -501,6 +501,36 @@ public class LOADetailBackingBean extends
 			handleException(e);
 		}
 	}
+	
+	
+	
+
+	
+	/**
+	 * View loa.
+	 *
+	 * @param loaId the loa id
+	 */
+	public void viewLOA(long loaId) {
+		debugLogger("viewLOA");
+		try {
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setLoaId(loaId);
+			AwardSupplierResDTO resDTO = getQtAwardSO()
+					.retrieveLOADtlByLoaId(reqDTO);
+			if (resDTO.getScLoa() != null) {
+				ScLoa scLoa = resDTO.getScLoa();
+				editLOAAction(scLoa);
+			}
+			getManagedBean().setEditFlag(Boolean.FALSE);
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+			.handleNavigation(fc, null, QTConstants.LOA_PAGE);
+		} catch (Exception e) {
+			handleException(e);
+		}
+	}
+	
 	
 	/**
 	 * Pre render page navigation to loa supplier page based on task id
@@ -4093,11 +4123,13 @@ public class LOADetailBackingBean extends
 			retrieveLOILOAList(getManagedBean().getSourceId());	
 		} else{
 			// back to dp loa list
-			DpLOABackingBean dpLOABackingBean = new DpLOABackingBean();
-			dpLOABackingBean.retrieveLOAList(getManagedBean().getSourceId());
+			if(getManagedBean().getSourceId() != null){
+				DpLOABackingBean dpLOABackingBean = new DpLOABackingBean();
+				dpLOABackingBean.retrieveLOAList(getManagedBean().getSourceId());
+			}
 		}
 		
-		getManagedBean().setEditFlag(false);
+		getManagedBean().setEditFlag(Boolean.FALSE);
 		getManagedBean().setSelectedTabIndex(0);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getBackToPreviousPage());
@@ -4729,6 +4761,26 @@ public class LOADetailBackingBean extends
 		overallContractAmt = overallContractAmt.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		getManagedBean().setOverallContractAmt(overallContractAmt);
 	}
+	
+	/**
+	 * Check proposal validity date reach by qt.
+	 *
+	 * @param qt the qt
+	 */
+	public boolean checkProposalValidityDateReachByQt(ScQt qt){
+		Boolean isProposalValidDateReach = Boolean.FALSE;
+		
+		// s2
+		if(qt != null){
+			isProposalValidDateReach =  checkProposalValidityDateReach(qt.getProposalValidityEndDate());
+			
+		} else{
+			// s1 - no proposal validity
+			isProposalValidDateReach = Boolean.TRUE;
+		}
+		return isProposalValidDateReach;
+	}
+	
 	
 	/**
 	 * @param event
