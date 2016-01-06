@@ -86,21 +86,11 @@
 		<managed-bean-scope>application</managed-bean-scope>
 	</managed-bean>
 	
-	<component>
-		<component-type>org.primefaces.component.LiferayCaptcha</component-type>
-		<component-class>org.primefaces.component.captcha.LiferayCaptcha</component-class>
-	</component>
-	
 	<render-kit>
 		<renderer>
 			<component-family>org.primefaces.component</component-family>
 			<renderer-type>my.ep.web.util.taglib.DirectPurchaseDataTableRender</renderer-type>
 			<renderer-class>my.ep.web.util.taglib.DirectPurchaseDataTableRender</renderer-class>
-		</renderer>
-		<renderer>
-			<component-family>org.primefaces.component</component-family>
-			<renderer-type>org.primefaces.component.LiferayCaptchaRenderer</renderer-type>
-			<renderer-class>org.primefaces.component.captcha.LiferayCaptchaRenderer</renderer-class>
 		</renderer>
 	</render-kit>
 </faces-config>
