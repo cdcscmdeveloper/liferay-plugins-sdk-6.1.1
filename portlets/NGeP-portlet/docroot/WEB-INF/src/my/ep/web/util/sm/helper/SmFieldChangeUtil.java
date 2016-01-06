@@ -118,9 +118,14 @@ public class SmFieldChangeUtil {
 							.getSelectedCompanyExperience(), bean
 							.getLatestAppl().getSmCompanyExperiences(),
 							new String[] { "clientName", "title" }, null));
-			// smCompanyExperienceCat
-			setCurrSmCompanyExpCat(bean.getSelectedCompanyExperience(),
-					bean.getLatestCompanyExperience());
+
+			if (bean.getLatestCompanyExperience() != null
+					&& bean.getLatestCompanyExperience()
+							.getCompanyExperienceId() != null) {
+				// smCompanyExperienceCat
+				setCurrSmCompanyExpCat(bean.getSelectedCompanyExperience(),
+						bean.getLatestCompanyExperience());
+			}
 		}
 	}
 
