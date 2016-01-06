@@ -66,7 +66,8 @@
 				actionListener="#{suppFinalizationBackingBean.onTabMenuChangeAction(0)}"
 				process="@form" update="@form" partialSubmit="true"
 				style="width:150px;"
-				rendered="#{!suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK}">
+				rendered="#{!suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK and 
+								!suppFinalizationBackingBean.managedBean.readOnly}">
 			</p:menuitem>
 			<p:menuitem value="#{lbl['lbl.sc.briefing.paper']}"
 				actionListener="#{suppFinalizationBackingBean.onTabMenuChangeAction(1)}"
@@ -83,7 +84,8 @@
 				actionListener="#{suppFinalizationBackingBean.onTabMenuChangeAction(3)}"
 				process="@form" update="@form" partialSubmit="true"
 				style="width:330px;"
-				rendered="#{!suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK}">
+				rendered="#{!suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK and
+								!suppFinalizationBackingBean.managedBean.readOnly}">
 			</p:menuitem>
 		</p:tabMenu>
 
