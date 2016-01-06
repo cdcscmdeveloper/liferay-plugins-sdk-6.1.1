@@ -22,10 +22,6 @@
   		/WEB-INF/config/faces-config/sm/faces-config-sm.xml
 		</param-value>
 	</context-param>
-	 <context-param>
-	    <param-name>facelets.LIBRARIES</param-name>
-	    <param-value>/WEB-INF/ac-primefaces.taglib.xml</param-value>
-	 </context-param>
 	
 	<!-- param to test recaptcha -->
 	<context-param>
