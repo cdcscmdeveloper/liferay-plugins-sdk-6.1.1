@@ -139,7 +139,7 @@ public class WebappBean {
 				"lbl.ct.validation.phone.number",
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale());
-		String pattern = "^\\+[0-9]*$";
+		String pattern = "\\d+";
 		if (!inputValue.matches(pattern)) {
 			throw new ValidatorException(new FacesMessage(
 					FacesMessage.SEVERITY_ERROR, "", errMsg));
@@ -173,7 +173,7 @@ public class WebappBean {
 				"lbl.ct.validation.fax.number",
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale());
-		String pattern = "^\\+[0-9]*$";
+		String pattern = "\\d+";
 		if (!inputValue.matches(pattern)) {
 			throw new ValidatorException(new FacesMessage(
 					FacesMessage.SEVERITY_ERROR, "", errMsg));
