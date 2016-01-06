@@ -5,12 +5,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
 import my.ep.factory.EpLogger;
-import my.ep.util.EpPropertiesUtils;
 import my.ep.web.scheduler.constants.common.SchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.scheduler.job.cm.CmDropSequenceJob;
 import my.ep.web.scheduler.job.cm.CmUpdateExpiredItemJob;
-import my.ep.web.scheduler.job.eperunding.EperundingBatchIntegrationJob;
 
 import org.apache.log4j.Logger;
 import org.quartz.JobKey;
@@ -69,7 +67,7 @@ public class CmSchedulerServlet extends HttpServlet {
 				CmSchedulerConstants.GFMAS_SM_OUT_CONTINUOUS_JOB,
 				CmSchedulerConstants.GFMAS_SM_OUT_JOB_GROUP),
 				GfmasBatchSmOutboundJob.class, CmSchedulerConstants.GFMAS_SM_OUT_CONTINUOUS_JOB_DESC,
-				EpPropertiesUtils.getInstance().getProperty("1gfmas.sm.outbound"));*/
+				EpPropertiesUtils.getInstance().getProperty("1gfmas.sm.outbound"));
 		//Eperunding SM Integration Continuous job
 		EpSchedulerHelper.scheduleJob(new JobKey(
 				SchedulerConstants.EPERUNDING_INTEGRATION_CONTINUOUS_JOB,
@@ -77,7 +75,7 @@ public class CmSchedulerServlet extends HttpServlet {
 				EperundingBatchIntegrationJob.class, SchedulerConstants.EPERUNDING_INTEGRATION_CONTINUOUS_JOB_DESC,
 				EpPropertiesUtils.getInstance().getProperty("eperunding.sm.outbound"));
 		//Notification Integration Continuous job
-	/*	EpSchedulerHelper.scheduleJob(new JobKey(
+		EpSchedulerHelper.scheduleJob(new JobKey(
 						CmSchedulerConstants.NOTIFICATION_INTEGRATION_CONTINUOUS_JOB,
 						CmSchedulerConstants.NOTIFICATION_INTEGRATION_JOB_GROUP),
 						SmNotificationJob.class, CmSchedulerConstants.NOTIFICATION_INTEGRATION_CONTINUOUS_JOB_DESC,
