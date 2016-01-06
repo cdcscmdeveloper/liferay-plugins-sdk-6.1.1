@@ -608,6 +608,11 @@ public class OrganisationBackingBean extends
 					}
 				}
 			}
+			
+			retrievePmZoneList();
+			getManagedBean().getOrgProfile().setPmZone(
+					orgProfile.getPmZone() == null ? new PmZone() : orgProfile
+							.getPmZone());
 		}
 		// PTJ, GLC, LAT, STG and STB
 
@@ -1261,7 +1266,7 @@ public class OrganisationBackingBean extends
 		IZoneSO zoneSO = (IZoneSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IZoneSO.class);
-		ZoneResDTO resDTO = zoneSO.retrieveZoneList();
+		ZoneResDTO resDTO = zoneSO.retrieveActiveZoneList();
 		this.getManagedBean().setZoneList(resDTO.getZoneList());
 	}
 
