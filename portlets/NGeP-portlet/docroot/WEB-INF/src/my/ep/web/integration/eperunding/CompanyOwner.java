@@ -3,16 +3,15 @@ package my.ep.web.integration.eperunding;
 import java.math.BigDecimal;
 
 /*
-* author @Ganga prasad
-*/
+ * author @Ganga prasad
+ */
 public class CompanyOwner {
 
 	private String mOFNo;
 	private String companyName;
-	// version 2.7
-	// SSM Business / Company Registration No
-	// Other Business / Company Registration No
-	// Registration Authority for Other Business / Company Registration No
+	private String companyRegistrationNo;
+	private String otherRegistrationNo;
+	private String registrationAuthority;
 
 	private String companyOwnerSSMNO;
 	private String companyOwnerMOFNo;
@@ -47,6 +46,30 @@ public class CompanyOwner {
 
 	public void setCompanyName(String companyName) {
 		this.companyName = companyName;
+	}
+
+	public String getCompanyRegistrationNo() {
+		return companyRegistrationNo;
+	}
+
+	public void setCompanyRegistrationNo(String companyRegistrationNo) {
+		this.companyRegistrationNo = companyRegistrationNo;
+	}
+
+	public String getOtherRegistrationNo() {
+		return otherRegistrationNo;
+	}
+
+	public void setOtherRegistrationNo(String otherRegistrationNo) {
+		this.otherRegistrationNo = otherRegistrationNo;
+	}
+
+	public String getRegistrationAuthority() {
+		return registrationAuthority;
+	}
+
+	public void setRegistrationAuthority(String registrationAuthority) {
+		this.registrationAuthority = registrationAuthority;
 	}
 
 	public String getCompanyOwnerSSMNO() {
