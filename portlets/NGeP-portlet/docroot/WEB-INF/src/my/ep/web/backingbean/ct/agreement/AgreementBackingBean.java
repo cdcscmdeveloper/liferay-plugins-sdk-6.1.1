@@ -637,168 +637,178 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 */
 	private void validateAgreement(String outcome) {
 		
-		for(CtAgreementContent agContent : getManagedBean().getCtAgreement().getAgreementContents()){
-			if(agContent.getContentType().getParameterCode().equalsIgnoreCase(ParameterConst.AGREEMENT_USER_UPLOAD_DOC)){
-				if(agContent.getTitle() == null ||  agContent.getTitle().isEmpty()){
+			for(CtAgreementContent agContent : getManagedBean().getCtAgreement().getAgreementContents()){
+				if(agContent.getContentType().getParameterCode().equalsIgnoreCase(ParameterConst.AGREEMENT_USER_UPLOAD_DOC)){
+					if(agContent.getTitle() == null ||  agContent.getTitle().isEmpty()){
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.contents", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
+					if(agContent.getFilePath() == null ||  agContent.getFilePath().isEmpty()){
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.contents.attach", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
+				}
+			}
+			
+			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+				if (getManagedBean().getRemarkList().get(0).getRemark().length() == 0) {
 					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.contents", 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 			}
-		}
 		
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-			if (getManagedBean().getRemarkList().get(0).getRemark().length() == 0) {
-				throw new EpException(MessageConst.ERROR_100022, 
-						new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			}
-		}
-		if (!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
-		if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_FINALIST_AGREEMENT_HT_NAME)) {
-			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_PRINT)
-					&& getManagedBean().getCtAgreement().getFileName() == null) {
-				throw new EpException(MessageConst.ERROR_100022, 
-						new String[]{ResourceBundleUtils.getMessage("lbl.ct.attachment.finalist.agreement", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			}		
-		} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPLOAD_SIGNED_STAMPED_FINAL_AGREEMENT)) {
-			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_COMPLETE)
-					&& getManagedBean().getCtAgreement().getSignedPageName() == null) {
-				throw new EpException(MessageConst.ERROR_100022, 
-						new String[]{ResourceBundleUtils.getMessage("lbl.ct.attachment.signed.page", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			}			
-			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_COMPLETE) 
-					&& getManagedBean().getCtAgreement().getStampedPageName() == null) {
-				throw new EpException(MessageConst.ERROR_100022, 
-						new String[]{ResourceBundleUtils.getMessage("lbl.ct.attachment.stamped.page", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			}
-		}
-		if (getManagedBean().getCtAgencySigner().size() == 0) {
-			throw new EpException(MessageConst.ERROR_100023, 
-					new String[]{ResourceBundleUtils.getMessage("lbl.ct.agency.signer", 
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-		} else {
-			for (CtAgreementParty agencySigner : getManagedBean().getCtAgencySigner()) {
-				if (agencySigner.getOfficer().getUserId() == null) {
-					throw new EpException(MessageConst.ERROR_100022, 
+			if(getManagedBean().getCtAgencySigner() != null && getManagedBean().getCtAgencySigner().size() > 0) {
+			      for (CtAgreementParty agencySigner : getManagedBean().getCtAgencySigner()) {
+				      if (agencySigner.getOfficer().getUserId() == null) {
+					       throw new EpException(MessageConst.ERROR_100022, 
 							new String[]{ResourceBundleUtils.getMessage("lbl.ct.contract.signer.agency", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
-			}
-		}
-		if (getManagedBean().getCtSignAgencyWitness().size() == 0) {
-			throw new EpException(MessageConst.ERROR_100023, 
-					new String[]{ResourceBundleUtils.getMessage("lbl.ct.agency.witness", 
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-		} else {	
-			for (CtAgreementParty agencyWitness : getManagedBean().getCtSignAgencyWitness()) {
-				if (agencyWitness.getOfficerName() == null || agencyWitness.getOfficerName().isEmpty()) {
-					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.name.agency.witness", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
-				if (agencyWitness.getOfficerIc() == null || agencyWitness.getOfficerIc().isEmpty()) {
-					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.ic.agency.witness", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
-				if (agencyWitness.getOfficerPosition() == null || agencyWitness.getOfficerPosition().isEmpty()) {
-					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.position.agency.witness", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
-	           checkDuplicateAgencyWitness(agencyWitness.getOfficerIc());
-			}
-		}
-		if (getManagedBean().getCtSupplierSigner().size() == 0) {
-			throw new EpException(MessageConst.ERROR_100023, 
-					new String[]{ResourceBundleUtils.getMessage("lbl.ct.supplier.signer", 
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-		} else {
-			for (CtAgreementParty supplierSigner : getManagedBean().getCtSupplierSigner()) {
-				if (supplierSigner.getOfficerName() == null) {
-					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.contract.signer.supplier", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
-			}
-		}
-		if (getManagedBean().getCtSupplierWitness().size() == 0) {
-			throw new EpException(MessageConst.ERROR_100023,
-					new String[]{ResourceBundleUtils.getMessage("lbl.ct.supplier.witness", 
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-		} else {
-	    	for (CtAgreementParty supplierWitness : getManagedBean().getCtSupplierWitness()) {
-				if (supplierWitness.getOfficerName() == null || supplierWitness.getOfficerName().isEmpty()) {
-					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.name.supplier.witness", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
-				if (supplierWitness.getOfficerIc() == null || supplierWitness.getOfficerIc().isEmpty()) {
-					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.ic.supplier.witness", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
-				if (supplierWitness.getOfficerPosition() == null || supplierWitness.getOfficerPosition().isEmpty()) {
-					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.position.supplier.witness", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
-				checkDuplicateSupplierWitness(supplierWitness.getOfficerIc());
-			}
-		  }		
-		}
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
-				&& getManagedBean().getApproverModel().getTarget().size() == 0) {
-			//Approver is mandatory for document submission. Please select at least one approver.
-			throw new EpException(MessageConst.ERROR_750010);
-		}
+				       }
+			      }
+		    }
 		
-		// Contract Approver cannot approve the draft agreement if:-
-		// -FD Creation still in process.
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) 
-				&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_DRAFT_AGREEMENT_HT_NAME)) {			
-			if (getManagedBean().getCtContract().getLatestContractVer() == null) { // FD creation in progress
-				throw new EpException(MessageConst.ERROR_750043);
-			}		
-		}
-		// Contract Admin cannot submit the finalist agreement if:-
-		// -Performance bond not complete
-		// -FD Update/FD Creation/Change Bank process still in process. 
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
-				&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FINALIST_AGREEMENT_HT_NAME)) {
+			if (!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+		       if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_FINALIST_AGREEMENT_HT_NAME)) {
+			       if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_PRINT)
+					    && getManagedBean().getCtAgreement().getFileName() == null) {
+				           throw new EpException(MessageConst.ERROR_100022, 
+						       new String[]{ResourceBundleUtils.getMessage("lbl.ct.attachment.finalist.agreement", 
+								  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			      }		
+		     
+		        } else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPLOAD_SIGNED_STAMPED_FINAL_AGREEMENT)) {
+			        if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_COMPLETE)
+					      && getManagedBean().getCtAgreement().getSignedPageName() == null) {
+				             throw new EpException(MessageConst.ERROR_100022, 
+						        new String[]{ResourceBundleUtils.getMessage("lbl.ct.attachment.signed.page", 
+								     ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			         }			
 			
-			IAgreementSO agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
-			ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
-			reqDTO.setContractId(getManagedBean().getCtContract().getContractId());
-			
-			ContractAgreementResDTO resDTO = agreementSO.validatePendingFinalistApproval(reqDTO);
-			
-			String agreementTypeStr = "lbl.ct.agreement";
-			if (getManagedBean().getAgreementType().equalsIgnoreCase(ContractConst.SUPPLEMENTAL_AGREEMENT)) {
-				agreementTypeStr = "lbl.ct.supplemental.agreement";
-			}
-			
-			// Validation for pending process
-			if (resDTO.getPendingProcessType() != null) {
-				throw new EpException(MessageConst.ERROR_750042, 
-						new String[]{ResourceBundleUtils.getMessage(agreementTypeStr,
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()),
-										getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, resDTO.getPendingProcessType())});
-			}
-			
-			// Validation for completion of performance bond
-			if (!resDTO.isBondComplete()) {
-				throw new EpException(MessageConst.ERROR_750041, 
-						new String[]{ResourceBundleUtils.getMessage(agreementTypeStr, 
+			        if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_COMPLETE) 
+					     && getManagedBean().getCtAgreement().getStampedPageName() == null) {
+				         throw new EpException(MessageConst.ERROR_100022, 
+						     new String[]{ResourceBundleUtils.getMessage("lbl.ct.attachment.stamped.page", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			}			
-		}
-	}
+			         }
+		      }
+		
+		     if (getManagedBean().getCtAgencySigner().size() == 0) {
+			      throw new EpException(MessageConst.ERROR_100023, 
+					  new String[]{ResourceBundleUtils.getMessage("lbl.ct.agency.signer", 
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		      } 
+		
+		      if (getManagedBean().getCtSignAgencyWitness().size() == 0) {
+			       throw new EpException(MessageConst.ERROR_100023, 
+					  new String[]{ResourceBundleUtils.getMessage("lbl.ct.agency.witness", 
+					    ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+	       	 } else {	
+			     for (CtAgreementParty agencyWitness : getManagedBean().getCtSignAgencyWitness()) {
+				       if (agencyWitness.getOfficerName() == null || agencyWitness.getOfficerName().isEmpty()) {
+					         throw new EpException(MessageConst.ERROR_100022, 
+							    new String[]{ResourceBundleUtils.getMessage("lbl.ct.name.agency.witness", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				      
+				       } if (agencyWitness.getOfficerIc() == null || agencyWitness.getOfficerIc().isEmpty()) {
+					          throw new EpException(MessageConst.ERROR_100022, 
+							    new String[]{ResourceBundleUtils.getMessage("lbl.ct.ic.agency.witness", 
+								  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				    
+				       } if (agencyWitness.getOfficerPosition() == null || agencyWitness.getOfficerPosition().isEmpty()) {
+					          throw new EpException(MessageConst.ERROR_100022, 
+							      new String[]{ResourceBundleUtils.getMessage("lbl.ct.position.agency.witness", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				      }
+	                checkDuplicateAgencyWitness(agencyWitness.getOfficerIc());
+			     }
+		 
+	       	 } if (getManagedBean().getCtSupplierSigner().size() == 0) {
+		        	throw new EpException(MessageConst.ERROR_100023, 
+					   new String[]{ResourceBundleUtils.getMessage("lbl.ct.supplier.signer", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		     } else {
+			      for (CtAgreementParty supplierSigner : getManagedBean().getCtSupplierSigner()) {
+				      if(supplierSigner.getOfficerName() == null) {
+					      throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.contract.signer.supplier", 
+							  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				      }
+			     }
+		
+		     } if(getManagedBean().getCtSupplierWitness().size() == 0) {
+		    	   throw new EpException(MessageConst.ERROR_100023,
+					   new String[]{ResourceBundleUtils.getMessage("lbl.ct.supplier.witness", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		     } else {
+	    	     for(CtAgreementParty supplierWitness : getManagedBean().getCtSupplierWitness()) {
+				      if(supplierWitness.getOfficerName() == null || supplierWitness.getOfficerName().isEmpty()) {
+					       throw new EpException(MessageConst.ERROR_100022, 
+							   new String[]{ResourceBundleUtils.getMessage("lbl.ct.name.supplier.witness", 
+								  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				   
+				      } if(supplierWitness.getOfficerIc() == null || supplierWitness.getOfficerIc().isEmpty()) {
+					        throw new EpException(MessageConst.ERROR_100022, 
+							   new String[]{ResourceBundleUtils.getMessage("lbl.ct.ic.supplier.witness", 
+								  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				   
+				      } if (supplierWitness.getOfficerPosition() == null || supplierWitness.getOfficerPosition().isEmpty()) {
+					      throw new EpException(MessageConst.ERROR_100022, 
+							 new String[]{ResourceBundleUtils.getMessage("lbl.ct.position.supplier.witness", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				      }
+				   checkDuplicateSupplierWitness(supplierWitness.getOfficerIc());
+			      }
+		       }		
+	       }
+		     if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
+				    && getManagedBean().getApproverModel().getTarget().size() == 0) {
+			        //Approver is mandatory for document submission. Please select at least one approver.
+			        throw new EpException(MessageConst.ERROR_750010);
+		      }
+		
+		      // Contract Approver cannot approve the draft agreement if:-
+		      // -FD Creation still in process.
+		      if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) 
+				     && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_DRAFT_AGREEMENT_HT_NAME)) {			
+			         if (getManagedBean().getCtContract().getLatestContractVer() == null) { // FD creation in progress
+				         throw new EpException(MessageConst.ERROR_750043);
+			         }		
+		       }
+		  
+		      // Contract Admin cannot submit the finalist agreement if:-
+		      // -Performance bond not complete
+		      // -FD Update/FD Creation/Change Bank process still in process. 
+		      if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
+				    && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FINALIST_AGREEMENT_HT_NAME)) {
+			        
+		    	    IAgreementSO agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
+			        ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
+			        reqDTO.setContractId(getManagedBean().getCtContract().getContractId());
+			        ContractAgreementResDTO resDTO = agreementSO.validatePendingFinalistApproval(reqDTO);
+			        String agreementTypeStr = "lbl.ct.agreement";
+			        if (getManagedBean().getAgreementType().equalsIgnoreCase(ContractConst.SUPPLEMENTAL_AGREEMENT)) {
+			           	agreementTypeStr = "lbl.ct.supplemental.agreement";
+			        }
+			
+			       // Validation for pending process
+			       if (resDTO.getPendingProcessType() != null) {
+				        throw new EpException(MessageConst.ERROR_750042, 
+						    new String[]{ResourceBundleUtils.getMessage(agreementTypeStr,
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()),
+								  getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, resDTO.getPendingProcessType())});
+			        }
+			
+			        // Validation for completion of performance bond
+			        if(!resDTO.isBondComplete()) {
+				         throw new EpException(MessageConst.ERROR_750041, 
+						    new String[]{ResourceBundleUtils.getMessage(agreementTypeStr, 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			        }			
+		     }
+	   }
 	
 	/**
 	 * The method used to validate the identification no 
