@@ -62,7 +62,9 @@
 								value="#{organisationBackingBean.governmentSeller}" />
 						</p:menuitem>
 						<p:menuitem partialSubmit="true"
-							value="#{lbl['lbl.pm.sidemenu.general.org.resProfile']}" rendered="#{organisationBackingBean.managedBean.orgProfile.groupOrg}"
+							value="#{lbl['lbl.pm.sidemenu.general.org.resProfile']}" 
+							rendered="#{not empty organisationBackingBean.managedBean.orgProfile.groupOrgType and
+									ParameterConst.orgAuthTypeOrgGroup eq organisationBackingBean.managedBean.orgProfile.groupOrgType}"
 							update="@form">
 							<f:param name="disableValidation" value="" />
 							<f:setPropertyActionListener
