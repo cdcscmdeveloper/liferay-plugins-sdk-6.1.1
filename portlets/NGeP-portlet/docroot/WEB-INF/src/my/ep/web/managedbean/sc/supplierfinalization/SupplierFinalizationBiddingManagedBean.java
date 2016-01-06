@@ -91,6 +91,10 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	
 	private ScQtEvaluationResult shortlistedSupplier;
 	private ScQtEvaluationResultDtl awardedSupplier;
+	private BidPackageBean selectedPackageBean;
+	private Map<Long,BidPackageBean> selectedPackageBeans;
+	private BidItemBean selectedBidItemBean;
+	private Map<Long,BidItemBean> selectedItemBeans;
 	private SmSupplier smSupplier;
 	private SmMofAccount smMofAccount;
 	private SmCompanyBasic smCompanyBasic;
@@ -107,15 +111,22 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	private TplSpecZoneDtl selectedZone;
 	
 	private List<TplSpecZoneDtl> biddingZoneDetails;
+	private Map<Long,TplSpecZoneDtl> zoneMap;
 	private Map<Long,List<ScQtRecommend>> scQtRecommendsByZone;
 	private Map<Long,List<ScBidSchedule>> bidSchedulesByZone;
 	private Map<Long,List<BidPackageBean>> bidPackageBeansByZone;
 	private Map<Long,List<ScBidItem>> bidItemsByZone;
+	private Map<Long,List<ScQtEvaluationResultDtl>> itemShortlistedSuppliers;
+	private Map<Long,List<ScQtEvaluationResultDtl>> pkgShortlistedSuppliersByZone;
+	private Map<Long,Map<Long,List<ScQtEvaluationResultDtl>>> itemShortlistedSuppliersByZone;
 	
 	// Bidding Finalization Meeting
 	private boolean secretaryUser;
 	private boolean selectAll;
 	private boolean selectAllMeetings;
+	private boolean zonal;
+	private boolean isItemized;
+	private boolean onlineBiddingEscalation;
 	private int meetingActiveIndex;
 	private String committeeTabLabel;
 	private List<ScQtMeetingAttendance> meetingAttendanceList;
@@ -125,6 +136,7 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	private List<ScQtMeetingAttendance> deletedMeetingAttendanceList;
 	private List<ScQtCommitteRemarks> committeeRemarkList;
 	private List<ScQtEvaluationResultDtl> shortlistedSuppliers;
+	private List<String> awardedRecommendDtlIds;
 	
 	
 	/**
@@ -546,6 +558,65 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the selectedPackageBean
+	 */
+	public BidPackageBean getSelectedPackageBean() {
+		return selectedPackageBean;
+	}
+
+	/**
+	 * @param selectedPackageBean 
+	 * 				the selectedPackageBean to set
+	 */
+	public void setSelectedPackageBean(BidPackageBean selectedPackageBean) {
+		this.selectedPackageBean = selectedPackageBean;
+	}
+
+	/**
+	 * @return the selectedBidItemBean
+	 */
+	public BidItemBean getSelectedBidItemBean() {
+		return selectedBidItemBean;
+	}
+
+	/**
+	 * @param selectedBidItemBean 
+	 * 				the selectedBidItemBean to set
+	 */
+	public void setSelectedBidItemBean(BidItemBean selectedBidItemBean) {
+		this.selectedBidItemBean = selectedBidItemBean;
+	}
+
+	/**
+	 * @return the selectedPackageBeans
+	 */
+	public Map<Long, BidPackageBean> getSelectedPackageBeans() {
+		return selectedPackageBeans;
+	}
+
+	/**
+	 * @param selectedPackageBeans the selectedPackageBeans to set
+	 */
+	public void setSelectedPackageBeans(
+			Map<Long, BidPackageBean> selectedPackageBeans) {
+		this.selectedPackageBeans = selectedPackageBeans;
+	}
+
+	/**
+	 * @return the selectedItemBeans
+	 */
+	public Map<Long, BidItemBean> getSelectedItemBeans() {
+		return selectedItemBeans;
+	}
+
+	/**
+	 * @param selectedItemBeans the selectedItemBeans to set
+	 */
+	public void setSelectedItemBeans(Map<Long, BidItemBean> selectedItemBeans) {
+		this.selectedItemBeans = selectedItemBeans;
+	}
+
+	/**
 	 * @return the smSupplier
 	 */
 	public SmSupplier getSmSupplier() {
@@ -787,6 +858,68 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	}
 	
 	/**
+	 * @return the zoneMap
+	 */
+	public Map<Long, TplSpecZoneDtl> getZoneMap() {
+		return zoneMap;
+	}
+
+	/**
+	 * @param zoneMap the zoneMap to set
+	 */
+	public void setZoneMap(Map<Long, TplSpecZoneDtl> zoneMap) {
+		this.zoneMap = zoneMap;
+	}
+
+	/**
+	 * @return the itemShortlistedSuppliers
+	 */
+	public Map<Long, List<ScQtEvaluationResultDtl>> getItemShortlistedSuppliers() {
+		return itemShortlistedSuppliers;
+	}
+
+	/**
+	 * @param itemShortlistedSuppliers 
+	 * 				the itemShortlistedSuppliers to set
+	 */
+	public void setItemShortlistedSuppliers(
+			Map<Long, List<ScQtEvaluationResultDtl>> itemShortlistedSuppliers) {
+		this.itemShortlistedSuppliers = itemShortlistedSuppliers;
+	}
+
+	/**
+	 * @return the pkgShortlistedSuppliersByZone
+	 */
+	public Map<Long, List<ScQtEvaluationResultDtl>> getPkgShortlistedSuppliersByZone() {
+		return pkgShortlistedSuppliersByZone;
+	}
+
+	/**
+	 * @param pkgShortlistedSuppliersByZone 
+	 * 				the pkgShortlistedSuppliersByZone to set
+	 */
+	public void setPkgShortlistedSuppliersByZone(
+			Map<Long, List<ScQtEvaluationResultDtl>> pkgShortlistedSuppliersByZone) {
+		this.pkgShortlistedSuppliersByZone = pkgShortlistedSuppliersByZone;
+	}
+
+	/**
+	 * @return the itemShortlistedSuppliersByZone
+	 */
+	public Map<Long, Map<Long, List<ScQtEvaluationResultDtl>>> getItemShortlistedSuppliersByZone() {
+		return itemShortlistedSuppliersByZone;
+	}
+
+	/**
+	 * @param itemShortlistedSuppliersByZone 
+	 * 				the itemShortlistedSuppliersByZone to set
+	 */
+	public void setItemShortlistedSuppliersByZone(
+			Map<Long, Map<Long, List<ScQtEvaluationResultDtl>>> itemShortlistedSuppliersByZone) {
+		this.itemShortlistedSuppliersByZone = itemShortlistedSuppliersByZone;
+	}
+
+	/**
 	 * @return the secretaryUser
 	 */
 	public boolean isSecretaryUser() {
@@ -893,6 +1026,49 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the zonal
+	 */
+	public boolean isZonal() {
+		return zonal;
+	}
+
+	/**
+	 * @param zonal the zonal to set
+	 */
+	public void setZonal(boolean zonal) {
+		this.zonal = zonal;
+	}
+
+	/**
+	 * @return the isItemized
+	 */
+	public boolean isItemized() {
+		return isItemized;
+	}
+
+	/**
+	 * @param isItemized the isItemized to set
+	 */
+	public void setItemized(boolean isItemized) {
+		this.isItemized = isItemized;
+	}
+
+	/**
+	 * @return the onlineBiddingEscalation
+	 */
+	public boolean isOnlineBiddingEscalation() {
+		return onlineBiddingEscalation;
+	}
+
+	/**
+	 * @param onlineBiddingEscalation 
+	 * 				the onlineBiddingEscalation to set
+	 */
+	public void setOnlineBiddingEscalation(boolean onlineBiddingEscalation) {
+		this.onlineBiddingEscalation = onlineBiddingEscalation;
+	}
+
+	/**
 	 * @return the deletedMeetingList
 	 */
 	public List<ScQtMeeting> getDeletedMeetingList() {
@@ -969,6 +1145,22 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setShortlistedSuppliers(
 			List<ScQtEvaluationResultDtl> shortlistedSuppliers) {
 		this.shortlistedSuppliers = shortlistedSuppliers;
+	}
+
+	/**
+	 * @return the awardedRecommendDtlIds
+	 */
+	public List<String> getAwardedRecommendDtlIds() {
+		return awardedRecommendDtlIds;
+	}
+
+	/**
+	 * @param awardedRecommendDtlIds 
+	 * 				the awardedRecommendDtlIds to set
+	 */
+	public void setAwardedRecommendDtlIds(
+					List<String> awardedRecommendDtlIds) {
+		this.awardedRecommendDtlIds = awardedRecommendDtlIds;
 	}
 	
 }

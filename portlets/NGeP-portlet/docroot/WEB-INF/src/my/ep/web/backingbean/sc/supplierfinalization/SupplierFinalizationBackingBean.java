@@ -274,6 +274,11 @@ public class SupplierFinalizationBackingBean extends
 			getManagedBean().setFinalizationTabIndex(2);
 			getManagedBean().setCommEndorsementTabIndex(3);			
 		}
+		
+		// Disable selection if group task and is not yet claimed by any user
+		if (getManagedBean().isReadOnly()) {
+			getManagedBean().setInitialDecisionFwdToBPK(false);
+		}
 	}
 
 	/**
@@ -380,7 +385,6 @@ public class SupplierFinalizationBackingBean extends
 		finalizationMethodEvent(null);
 		
 		if (this.getManagedBean().isItemize()) {
-			isOnlineBiddingEndorsementRequired();
 			this.getManagedBean().setShortlistedSupplierList(null);
 		}
 
@@ -1162,16 +1166,16 @@ public class SupplierFinalizationBackingBean extends
 			if (!ParameterConst.RECOMMEND_BY_AWARD.equals(
 					finalizationMethodStr) && !isQTRefinalized()) {
 				isAward = false;
-				if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
-						.equals(finalizationMethodStr) && 
-								StringUtils.isBlank(
-									scQtFinalization.getOnlineBiddingEndorse())) {
-					setZoneAndTabIndexOnException(currentZone);
-					throw new EpException(MessageConst.ERROR_100022, new String[]{
-							ResourceBundleUtils.getMessage("lbl.sc.online.bidding.endorsement", 
-						 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
-					});
-				}							
+//				if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
+//						.equals(finalizationMethodStr) && 
+//								StringUtils.isBlank(
+//									scQtFinalization.getOnlineBiddingEndorse())) {
+//					setZoneAndTabIndexOnException(currentZone);
+//					throw new EpException(MessageConst.ERROR_100022, new String[]{
+//							ResourceBundleUtils.getMessage("lbl.sc.online.bidding.endorsement", 
+//						 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
+//					});
+//				}							
 			}
 		} else {
 			setZoneAndTabIndexOnException(currentZone);
@@ -4658,7 +4662,6 @@ public class SupplierFinalizationBackingBean extends
 			
 			// To populate items specific to the selected zone
 			populateScQtRecommendsByZone();
-			isOnlineBiddingEndorsementRequired();
 		}
 		
 		this.getManagedBean().setZoneTabChange(true);
@@ -4741,14 +4744,6 @@ public class SupplierFinalizationBackingBean extends
 						ParameterConst.DECISION_RECOMMEND_SUPPLIER);
 				decision = recommendSupplier.getParameterCode();
 				scQtFinalization.setDecision(recommendSupplier);
-			}
-			
-			// If the QT is forwarded to BPK, set the default
-			// endorsement type as ESCALATION
-			if (ParameterConst.ONLINE_BIDDING_MEETING.equals(
-					scQtFinalization.getOnlineBiddingEndorse())) {
-				scQtFinalization.setOnlineBiddingEndorse(
-						ParameterConst.ONLINE_BIDDING_ESCALATION);
 			}
 		}
 		
@@ -5356,7 +5351,6 @@ public class SupplierFinalizationBackingBean extends
 							scQtFinalization.getScQtRecommends());
 				}
 				this.getManagedBean().setShortlistedSupplierList(null);
-				isOnlineBiddingEndorsementRequired();
 			} 
 		} else {
 			TplSpecZoneDtl currentZone = this.getManagedBean().getCurrentZone();
@@ -5510,7 +5504,9 @@ public class SupplierFinalizationBackingBean extends
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		
 		// Checking for Bidding process to have atleast 2 qualified suppliers
-		if (ajaxEvent != null) {
+		if (ajaxEvent != null && 
+				ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
+					.equals(finalizationMethodStr)) {
 			checkIfAtleastTwoSuppliersExist();
 		}
 		
@@ -5544,6 +5540,7 @@ public class SupplierFinalizationBackingBean extends
 				this.getManagedBean().setRecommendedSupplierList(null);
 			} else {
 				this.getManagedBean().setSelectionMode(QTConstants.SF_MULTIPLE);
+				scQtFinalization.setOnlineBiddingEndorse(null);
 				
 				ScQtEvaluationResultDtl recommendedSupplier 
 							= this.getManagedBean().getRecommendedSupplier();
@@ -5559,7 +5556,6 @@ public class SupplierFinalizationBackingBean extends
 				} else if (ParameterConst.RECOMMEND_BY_MULTIPLE_LOI
 							.equals(finalizationMethodStr)) {
 					this.getManagedBean().setMultipleLoi(true);
-					scQtFinalization.setOnlineBiddingEndorse(null);
 				} else if (ParameterConst.RECOMMEND_BY_CANCEL
 									.equals(finalizationMethodStr)) {
 					if (CollectionUtils.isNotEmpty(
@@ -5571,7 +5567,6 @@ public class SupplierFinalizationBackingBean extends
 					}
 					resetShortlistedSupplierData(
 							this.getManagedBean().getShortlistedSupplierList());
-					scQtFinalization.setOnlineBiddingEndorse(null);
 				}
 			}
 			PmParameter finalizationMethod = getParameterByTypeAndCode(
@@ -5707,22 +5702,7 @@ public class SupplierFinalizationBackingBean extends
 				resetShortlistedSupplierData(
 						scQtRecommend.getShortListedSupplierList());			
 			}
-	
-//			if (ParameterConst.RECOMMEND_BY_BIDDING_NEXT_RANK
-//					.equals(finalizationMethod.getParameterCode())) {
-//				if (CollectionUtils.isEmpty(
-//						scQtRecommend.getShortListedSupplierList())) {
-//					
-//					// Retrieve the suppliers short listed for the selected item
-//					SuppFinalizationResDTO resDTO 
-//									= this.retrieveShortListedSuppliersByItem(scQtRecommend);
-//					scQtRecommend.setShortListedSupplierList(
-//								resDTO.getQualifiedByItemSuppliers());
-//				}
-//				awardToNextRankSupplier(scQtRecommend);
-//			}
 		}
-		isOnlineBiddingEndorsementRequired();
 	}
 	
 	/**
@@ -6218,13 +6198,19 @@ public class SupplierFinalizationBackingBean extends
 	}
 	
 	private void setOnlineBiddingFlag() {
-		this.getManagedBean().setOnlineBidding(true);
+		this.getManagedBean().setOnlineBidding(true); 
 		
+		// If the QT is forwarded to BPK, set the default
+		// endorsement type as ESCALATION
 		if (getManagedBean().isInitialDecisionFwdToBPK()) {
 			getManagedBean().getScQtFinalization()
 				.setOnlineBiddingEndorse(
 					ParameterConst.ONLINE_BIDDING_ESCALATION);
-		}		
+		} else {
+			getManagedBean().getScQtFinalization()
+				.setOnlineBiddingEndorse(
+						ParameterConst.ONLINE_BIDDING_MEETING);
+		}
 	}
 
 	private void addSelectedSupplier() {
@@ -6397,16 +6383,6 @@ public class SupplierFinalizationBackingBean extends
 			totalBidPrice = totalBidPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		}
 		scQtEvalResDtl.setBidPrice(totalBidPrice);
-	}
-
-	private void isOnlineBiddingEndorsementRequired() {
-		this.getManagedBean().setOnlineBidding(false);
-		String finalizationMethod = getManagedBean().getFinalizationMethod();
-		
-		if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
-				.equals(finalizationMethod)) {
-			setOnlineBiddingFlag();
-		}
 	}
 
 	private SuppFinalizationResDTO retrieveShortListedSuppliersByItem(
