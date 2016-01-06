@@ -14,9 +14,14 @@
 	
 	<p:panel header="#{lbl['lbl.sc.supplier.details']}" toggleable="true">
 		
-		<p:dataTable id="supplierPackageTbl" 
-					 value="#{suppFinalBiddingBackingBean.managedBean.biddingPackagePriceList}" var="price">
-			<ac:paginator for="supplierItemTbl"></ac:paginator>
+		<p:dataTable id="supplierPackageTbl" value="#{suppFinalBiddingBackingBean.managedBean.biddingPackagePriceList}" 
+					 var="price" rowKey="#{price.supplierCode}" rowIndexVar="rowIndex" 
+					 selection="#{suppFinalBiddingBackingBean.managedBean.selectedPackageBean}">
+			<ac:paginator for="supplierPackageTbl"/>
+			
+			<p:ajax event="rowSelectRadio" process="@this" partialSubmit="true" 
+					update="@([id$=supplierPackageTbl])" 
+					listener="#{suppFinalBiddingBackingBean.awardSupplierEvent}"/>				
 			
 			<p:column headerText="#{lbl['lbl.sc.ranking']}" style="width:5%;">
 				<p:outputLabel value="#{price.ranking}" />
@@ -88,11 +93,16 @@
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.selection']}" style="width:10%;" 
+					  styleClass="td-check-box-spacing" selectionMode="single" 
+					  disabledSelection="#{(suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
+					  							suppFinalBiddingBackingBean.managedBean.readOnly) or 
+					  						 		(!suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
+					  									!suppFinalBiddingBackingBean.managedBean.secretaryUser)}" />		
 		</p:dataTable>
 	</p:panel>
 	<p:dialog closeOnEscape="true" header="#{lbl['lbl.sc.item.price']}"
-		 widgetVar="pricePop" showEffect="fade"
-		hideEffect="fade" modal="true" id="itemPricePop">
+			  widgetVar="pricePop" showEffect="fade" hideEffect="fade" modal="true" id="itemPricePop">
 		<ui:include src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/itemPricePopup.xhtml"></ui:include>
 	</p:dialog>
 </ui:composition>
