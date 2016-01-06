@@ -3,10 +3,11 @@ package my.ep.web.backingbean.sc.directpurchase;
 	import java.util.ArrayList;
 import java.util.List;
 
+import my.ep.biz.service.integration.jms.INtfClientSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.ntf.dto.NtfRequestDTO;
 import my.ep.ntf.dto.NtfResponseDTO;
-import my.ep.ntf.service.INtfSO;
-import my.ep.util.lookupservice.EpNtfBusinessDelegate;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 
 	/**
 	  *
@@ -19,10 +20,10 @@ import my.ep.util.lookupservice.EpNtfBusinessDelegate;
 	public class TestNtfOSBRs {
 	     public static void main(String args[]) {
 	         System.out.println("initiateTask******");
-	         INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance()
-	                 .getOSBServiceObject(INtfSO.class);
-	         //TODO NTF
-	         //INtfClientSO ntfClientSO = (INtfClientSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.MDB, INtfClientSO.class);
+	         /*INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance()
+	                 .getOSBServiceObject(INtfSO.class);*/
+	         
+	         INtfClientSO ntfClientSO = (INtfClientSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.MDB, INtfClientSO.class);
 
 	         NtfRequestDTO reqDTO = new NtfRequestDTO();
 	         reqDTO.setTemplateId("399999");
@@ -50,9 +51,8 @@ import my.ep.util.lookupservice.EpNtfBusinessDelegate;
 	          String[cntParaLst.size()]));
 
 	         try {
-	             NtfResponseDTO resDTO = ntfSO.processAndPublish(reqDTO);
-   	             //TODO NTF
-	             //NtfResponseDTO resDTO = ntfClientSO.processAndPublish(reqDTO);
+	             //NtfResponseDTO resDTO = ntfSO.processAndPublish(reqDTO);
+	             NtfResponseDTO resDTO = ntfClientSO.processAndPublish(reqDTO);
 	             System.out.println(resDTO.getStatusCode());
 	             System.out.println(resDTO.getSeverity());
 	             System.out.println(resDTO.getStatusDesc());
