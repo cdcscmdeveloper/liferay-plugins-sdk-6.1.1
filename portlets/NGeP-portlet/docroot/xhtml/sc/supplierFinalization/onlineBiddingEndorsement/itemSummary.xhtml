@@ -40,8 +40,13 @@
 		<p:dataTable id="supplierItemTbl" var="itemSupplier"
 			value="#{suppFinalBiddingBackingBean.managedBean.bidItemSuppliers}"
 			rows="10"
-			rowKey="#{itemSupplier.bidPriceId}" rowIndexVar="rowIndex">
+			rowKey="#{itemSupplier.supplierId}" rowIndexVar="rowIndex" 
+			selection="#{suppFinalBiddingBackingBean.managedBean.selectedBidItemBean}">
 			<ac:paginator for="supplierItemTbl" />
+			
+			<p:ajax event="rowSelectRadio" process="@this" partialSubmit="true" 
+					update="@([id$=supplierItemTbl])" 
+					listener="#{suppFinalBiddingBackingBean.awardSupplierEvent}"/>				
 			
 			<p:column headerText="#{lbl['lbl.sc.ranking']}">
 				<h:outputText value="#{itemSupplier.ranking}" />
@@ -92,6 +97,12 @@
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.selection']}" style="width:10%;" 
+					  styleClass="td-check-box-spacing" selectionMode="single" 
+					  disabledSelection="#{(suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
+					  							suppFinalBiddingBackingBean.managedBean.readOnly) or 
+					  						 		(!suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
+					  									!suppFinalBiddingBackingBean.managedBean.secretaryUser)}" />				
 		</p:dataTable>
 	</p:panel>
 
