@@ -1,3 +1,4 @@
+
 <ui:composition
 	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
@@ -16,7 +17,7 @@
 		<ui:param name="isPendingSubmissionStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUBMISSION}" />
 		<ui:param name="isPendingApprovalStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_APPROVAL}" />
 		<ui:param name="isPendingRevisionStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_REVISION}" />
-		<ui:param name="isEditableStatus" value="#{((isPendingSubmissionStatus || isPendingApprovalStatus|| isPendingRevisionStatus) and !empty lOADetailBackingBean.managedBean.taskId)}" />
+		<ui:param name="isEditableStatus" value="#{(isPendingSubmissionStatus || ((isPendingApprovalStatus|| isPendingRevisionStatus) and !empty lOADetailBackingBean.managedBean.taskId)) and !isTrackingDairyView}" />
 		<ui:param name="isSupplierAckStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
 		<ui:param name="isAfterSupplierResponseStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId > QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
 		<ui:param name="isPendingVerification" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_VERIFICATION}" />
@@ -44,7 +45,7 @@
 					<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}" update="@form" disabled="#{isPendingVerification and !isTrackingDairyView}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="2" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.payment.details']}" update="@form"   disabled="#{(!isFulfilmentTypeScheduled or isPendingVerification) and !isTrackingDairyView}">	
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.payment.details']}" update="@form"   disabled="#{!isFulfilmentTypeScheduled or isPendingVerification}">	
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="3" />
 					</p:menuitem>
 					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form" 
