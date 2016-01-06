@@ -6,7 +6,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:acp="http://ac.my/jsf/primefaces/cc">
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<ui:define name="resourceSection" />
 	
@@ -65,13 +65,18 @@
 				<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.activation.loginid.instruction']}"></h:outputText>
 			</td>
 		</tr>
-		
 		<tr>
 			<td>
-				<acp:captcha id="accaptcha" 
+			</td>
+			<td>
+				<ac:captcha id="accaptcha" 
 					label="Captcha" 
-					language="#{facesContext.externalContext.requestMap['THEME_DISPLAY'].locale}" 
+					language="en" 
 					theme="white"/> 
+			</td>
+		</tr>
+		<tr>
+			<td>
 				<p:commandButton 
 					value="#{lbl['lbl.btn.submit']}" onclick="submissionDialog.show();"  
 					oncomplete="submissionDialog.hide();"
