@@ -3,6 +3,8 @@ package my.ep.web.backingbean.sm.email;
 import java.util.ArrayList;
 import java.util.List;
 
+import my.ep.constant.NotificationTextConst;
+import my.ep.exception.EpException;
 import my.ep.ntf.dto.NtfRequestDTO;
 import my.ep.ntf.dto.NtfResponseDTO;
 import my.ep.ntf.service.INtfSO;
@@ -32,10 +34,12 @@ public class SmEmailNotificationHelper {
 				.size()]));
 
 		try {
-			NtfResponseDTO resDTO = ntfSO.processAndPublishViaEmail(reqDTO);
-			System.out.println(resDTO.getStatusCode());
-			System.out.println(resDTO.getSeverity());
-			System.out.println(resDTO.getStatusDesc());
+			NtfResponseDTO resDTO = ntfSO
+					.processAndPublishViaEmail(reqDTO);
+			if (!NotificationTextConst.STATUS_CODE_SUCCESS
+					.equals(resDTO.getStatusCode())) {
+				throw new EpException(resDTO.getStatusDesc());
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -64,12 +68,12 @@ public class SmEmailNotificationHelper {
 				.size()]));
 
 		try {
-			NtfResponseDTO resDTO = ntfSO.processAndPublish(reqDTO);
-			//TODO NTF
-			//NtfResponseDTO resDTO = ntfClientSO.processAndPublish(reqDTO);
-			System.out.println(resDTO.getStatusCode());
-			System.out.println(resDTO.getSeverity());
-			System.out.println(resDTO.getStatusDesc());
+			NtfResponseDTO resDTO = ntfSO
+					.processAndPublishViaEmail(reqDTO);
+			if (!NotificationTextConst.STATUS_CODE_SUCCESS
+					.equals(resDTO.getStatusCode())) {
+				throw new EpException(resDTO.getStatusDesc());
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
