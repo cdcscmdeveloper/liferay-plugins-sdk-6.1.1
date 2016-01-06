@@ -988,6 +988,9 @@ public class EperundingIntegration extends EperundingTemplate{
 							companyOwner = new CompanyOwner();
 							companyOwner.setmOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
 							companyOwner.setCompanyName(equityCompany.getCompanyName());
+							companyOwner.setCompanyRegistrationNo(IntegrationConstants.EMPTY_TRING);
+							companyOwner.setOtherRegistrationNo(IntegrationConstants.EMPTY_TRING);
+							companyOwner.setRegistrationAuthority(IntegrationConstants.EMPTY_TRING);
 							companyOwner.setCompanyOwnerMOFNo(equityCompany.getRegNo());
 							companyOwner.setCompanyOwnerMOFNo(equityCompany.getMofNo());
 							companyOwner.setShareholdingAmount(equityCompany.getShareAmt());
@@ -1297,7 +1300,6 @@ public class EperundingIntegration extends EperundingTemplate{
 			dataStartTime = resDTO.getDataStartTime();
 			dataEndTime = resDTO.getDataEndTime();
 		}
-		
 		return SupplierIdList;
 	}
 	
