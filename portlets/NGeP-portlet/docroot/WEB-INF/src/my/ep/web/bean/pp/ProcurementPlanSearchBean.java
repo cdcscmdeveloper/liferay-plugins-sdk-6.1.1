@@ -25,6 +25,8 @@ public class ProcurementPlanSearchBean {
 	private PmParameter planType;
 	
 	private PmParameter votType;
+	
+	private String planTitle;
 
 	/**
 	 * @return the status
@@ -133,12 +135,19 @@ public class ProcurementPlanSearchBean {
 	public void setPlanNumber(String planNumber) {
 		this.planNumber = planNumber;
 	}
-	
-	
-	
 
+	/**
+	 * @return the planTitle
+	 */
+	public String getPlanTitle() {
+		return planTitle;
+	}
 
-
-	
+	/**
+	 * @param planTitle the planTitle to set
+	 */
+	public void setPlanTitle(String planTitle) {
+		this.planTitle = planTitle;
+	}
 	
 }
