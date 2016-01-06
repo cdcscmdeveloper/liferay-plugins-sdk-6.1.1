@@ -339,7 +339,7 @@ public class OrganisationBackingBean extends
 							
 					}else if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())) {						
 						// Naik Taraf / Group Org.
-						if(orgProfile.isGroupOrg()){
+						if(ParameterConst.ORG_AUTH_TYPE_ORG_GROUP.equals(orgProfile.getGroupOrgType())){
 							orgProfileSet = new HashSet<Long>(); 							
 							//add current org profile
 							orgProfileSet.add(orgProfile.getOrgProfileId());
@@ -797,7 +797,7 @@ public class OrganisationBackingBean extends
 			}
 			
 			// check group org
-			if (this.getManagedBean().getOrgProfile().isGroupOrg()) {
+			if (ParameterConst.ORG_AUTH_TYPE_ORG_GROUP.equals(getManagedBean().getOrgProfile().getGroupOrgType())) {
 				validateGroupOrg();				
 			}
 
@@ -929,7 +929,7 @@ public class OrganisationBackingBean extends
 				orgProfile.setPmAddressTypes(getManagedBean()
 						.getAddressTypesList());
 				// New OR Update Profile Groups
-				if (getManagedBean().getOrgProfile().isGroupOrg()) {
+				if (ParameterConst.ORG_AUTH_TYPE_ORG_GROUP.equals(getManagedBean().getOrgProfile().getGroupOrgType())) {
 					List<PmProfileGroup> profileGrp = getManagedBean()
 							.getProfileGroup();
 
@@ -955,6 +955,13 @@ public class OrganisationBackingBean extends
 						}
 					}
 				}
+				
+				// remove pm zone if bpk = false;
+				if(getManagedBean().getOrgProfile().getBpk() !=null && 
+						getManagedBean().getOrgProfile().getBpk() == false){
+					getManagedBean().getOrgProfile().setPmZone(null);
+				}
+				
 			}
 			//For Statutory Body, GLC, State Govt and Local Authority
 			if (getManagedBean().getOrgType().equalsIgnoreCase(
@@ -2028,7 +2035,9 @@ public class OrganisationBackingBean extends
 		sb.append(ministryProfile
 				.getOrgProfileId());
 		sb.append("|recordStatus^1");
-		sb.append("|groupOrg^0");
+		sb.append("|groupOrgType^");
+		sb.append(ParameterConst.ORG_AUTH_TYPE_ORG_GROUP);
+		sb.append("^2*groupOrgType^null^11");
 		sb.append("|orgProfileId^");
 		sb.append(getManagedBean().getOrgProfile().getOrgProfileId());
 		sb.append("^2");
@@ -2450,5 +2459,41 @@ public class OrganisationBackingBean extends
 		}
 
 		return gmapDisabled;
+	}
+	
+	public SelectItem[] getAuthTypeList() {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+		try {
+			List<PmParameterDesc> parameterDescs = ParameterHelper
+					.getInstance().getParameterDescListBySearchBean(
+							ParameterTypeConst.ORG_AUTH_TYPE, null);
+
+			items = new SelectItem[parameterDescs.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			int i = 1;
+			for (PmParameterDesc parameterDesc : parameterDescs) {
+				items[i++] = new SelectItem(parameterDesc.getPmParameter()
+						.getParameterCode(), parameterDesc.getCodeName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
+	}
+	
+	public void bpkChangeListener(){
+		if(getManagedBean().getOrgProfile().getBpk() !=null && 
+				getManagedBean().getOrgProfile().getBpk() == false){
+			getManagedBean().getOrgProfile().setPmZone(new PmZone());
+		}
+		
 	}
 }
