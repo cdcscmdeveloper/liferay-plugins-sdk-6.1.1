@@ -7,8 +7,15 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.util.UUID;
 
+import my.ep.biz.service.integration.common.JAXBUtility;
+import my.ep.biz.service.integration.jms.IRemoteClientSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.dto.jms.common.JMSReqDTO;
+import my.ep.dto.jms.common.JMSResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 
@@ -19,6 +26,10 @@ public class Encryption {
 
 	SFTPUtility sftpUtility = null;//new SFTPUtility();
 	OsbUtility osbUtility = new OsbUtility();
+	JAXBUtility jaxbUtility = new JAXBUtility();
+	
+	IRemoteClientSO remoteClientSO = BusinessDelegate.getInstance()
+			.getServiceObject(ModuleCodeConst.MDB, IRemoteClientSO.class);
 
 	public void encryptGmas(BatchReqDTO reqDTO) {
 		log.info("inside encryptGmas....");
@@ -52,16 +63,20 @@ public class Encryption {
 		}
 		// upload the encripted file to sftp server
 		
+		String transId =  UUID.randomUUID().toString();
 		reqDTO.setRemoteFilePath(IntegrationConstants.GMAS_UPLOAD + reqDTO.getFileName());
-		
 		reqDTO.setLocatFilePath(reqDTO.getEncryptFilePath() + reqDTO.getFileName());
 		reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_1GFMAS);
 		reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
-	
-		sftpUtility.upload(reqDTO);
+		reqDTO.setTransId(transId);
+//		sftpUtility.upload(reqDTO);
 		
 		// call osb service for transfering from host to 1GFMAS
-		osbUtility.osbServiceCallOutBound(reqDTO.getServiceCode(),reqDTO.getFileName());
+//		osbUtility.osbServiceCallOutBound(reqDTO.getServiceCode(),reqDTO.getFileName());
+		
+//		reqDTO.setQueueMsgStatus(fileUtility.constructQueueMessage(reqDTO.getServiceCode(), reqDTO.getFileName(), transId));
+		
+//		fileUtility.setValuesToPmInterface(reqDTO);
 	
 	}
 
@@ -93,7 +108,7 @@ public class Encryption {
 
 	}
 	
-	public void encryptPhis(BatchReqDTO reqDTO) {
+	public BatchReqDTO encryptPhis(BatchReqDTO reqDTO) {
 
 		log.info("inside encryptPhis");
 		File inFile = new File(reqDTO.getFilePath() + reqDTO.getFileName());
@@ -121,19 +136,36 @@ public class Encryption {
 
 		// upload the encripted file to sftp server
 
+		String transId =  UUID.randomUUID().toString();
 		reqDTO.setLocatFilePath(reqDTO.getEncryptFilePath() + reqDTO.getFileName());
 		reqDTO.setRemoteFilePath(IntegrationConstants.PHIS_UPLOAD_DIR + reqDTO.getFileName());
 		reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_PHIS);
 		reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
-		sftpUtility.upload(reqDTO);
+		reqDTO.setTransId(transId);
+	
+//		sftpUtility.upload(reqDTO);
 
 		// once upload is done cal web service osb integration to transfer file.
-		osbUtility.osbServiceCallOutBound(reqDTO.getServiceCode(), reqDTO.getFileName());
+//		osbUtility.osbServiceCallOutBound(reqDTO.getServiceCode(), reqDTO.getFileName());
 		
-		//Create Payload and insert into the queue
+//		reqDTO.setQueueMsgStatus(fileUtility.constructQueueMessage(reqDTO.getServiceCode(), reqDTO.getFileName(), transId));
 		
-		//upload and osb utility is of no use
+//		fileUtility.setValuesToPmInterface(reqDTO);
+		
+		JMSReqDTO jmsReqDTO = new JMSReqDTO();
+		jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
+		jmsReqDTO.setTextMessage(true);
+		jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(reqDTO.getServiceCode(),reqDTO.getFileName(), transId));
+		
+		JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
+		
+		if(jmsResDTO.isSuccessful()){
+			reqDTO.setQueueMsgStatus(1);
+		}else{
+			reqDTO.setQueueMsgStatus(0);
+		}
 
+		return reqDTO;
 	}
 
 	private void createFile(File outFilePath, String decrypted)
