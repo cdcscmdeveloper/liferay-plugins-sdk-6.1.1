@@ -54,7 +54,7 @@
                                  <h:outputText value="#{agSignerVar.ptjName}" /> </div>
 					     </p:column>
 					     
-					     <p:column style="width:15%;" headerText="#{lbl['lbl.ct.contract.signer']}" styleClass="column-align-center">
+					     <p:column style="width:15%;" headerText="#{lbl['lbl.ct.contract.signer']}" styleClass="column-align-center required">
                              <p:selectOneMenu id="contractSigner" 
                                  style="width:180px;" value="#{agSignerVar.officer.userId}"   label="#{lbl['lbl.ct.contract.signer']}">
                                  <f:selectItems value="#{agreementBackingBean.getContractSignerDropdown(agSignerVar)}"/>
