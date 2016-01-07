@@ -770,6 +770,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<ScQtCategory> tobeRemoveCategoryCodes;
 	private boolean isSpecItemWeightageRequired;
 	private int ministryRemarksSize;
+	private boolean isTechnicalUserScoringSchema;
+	private boolean isFinancialUserScoringSchema;
 	
 	/** The selected flag. */
 	private boolean selectedFlag;
@@ -5213,6 +5215,34 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedFlag(boolean selectedFlag) {
 		this.selectedFlag = selectedFlag;
+	}
+
+	/**
+	 * @return the isTechnicalUserScoringSchema
+	 */
+	public boolean isTechnicalUserScoringSchema() {
+		return isTechnicalUserScoringSchema;
+	}
+
+	/**
+	 * @param isTechnicalUserScoringSchema the isTechnicalUserScoringSchema to set
+	 */
+	public void setTechnicalUserScoringSchema(boolean isTechnicalUserScoringSchema) {
+		this.isTechnicalUserScoringSchema = isTechnicalUserScoringSchema;
+	}
+
+	/**
+	 * @return the isFinancialUserScoringSchema
+	 */
+	public boolean isFinancialUserScoringSchema() {
+		return isFinancialUserScoringSchema;
+	}
+
+	/**
+	 * @param isFinancialUserScoringSchema the isFinancialUserScoringSchema to set
+	 */
+	public void setFinancialUserScoringSchema(boolean isFinancialUserScoringSchema) {
+		this.isFinancialUserScoringSchema = isFinancialUserScoringSchema;
 	}
 
 }
