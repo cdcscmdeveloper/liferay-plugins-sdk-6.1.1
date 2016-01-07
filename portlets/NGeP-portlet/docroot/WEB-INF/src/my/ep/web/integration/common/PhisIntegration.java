@@ -68,7 +68,7 @@ import org.apache.log4j.Logger;
 * @author P Ganga prasad
 */
 @SuppressWarnings("rawtypes")
-public class PhisIntegration extends InitializeSO {
+public class PhisIntegration extends PhisTemplate {
 	
 	private static Logger log = EpLogger.getLogger(PhisIntegration.class);
 	
@@ -93,6 +93,7 @@ public class PhisIntegration extends InitializeSO {
 	
 	// method to create file for pharmaniaga for Class,Brand,Measrement,ItemType,Color
 	
+	@Override
 	public void createFilesforPHIS() {
 
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
@@ -307,6 +308,7 @@ public class PhisIntegration extends InitializeSO {
 		insertRecordforEmptyData(typeBatchReqDTO);
 	}
 	
+	@Override
 	public void deliveryAddress() {
 		{
 			System.out.println("inside deliveryAddress");
@@ -317,6 +319,8 @@ public class PhisIntegration extends InitializeSO {
 			// add org profile ids
 			
 			AddressResDTO resDTO = addressSO.retrieveDeliverAddressTypeList(reqDTO);
+			
+			// process result and send delivery address object
 			
 			if(resDTO.isSuccessful()){
 				
@@ -390,6 +394,7 @@ public class PhisIntegration extends InitializeSO {
 		}
 	}
 
+	@Override
 	public void votFund() {
 
 		VotFundReqDTO reqDTO = new VotFundReqDTO();		
@@ -508,6 +513,7 @@ public class PhisIntegration extends InitializeSO {
 		return listId;
 	}
 
+	@Override
 	public void votFundDana() {
 
 		VotFundReqDTO reqDTO = new VotFundReqDTO();
@@ -554,6 +560,7 @@ public class PhisIntegration extends InitializeSO {
 		}
 	}
 
+	@Override
 	public void programActivity() {
 
 		ProgramActivityReqDTO reqDTO = new ProgramActivityReqDTO();
@@ -612,6 +619,7 @@ public class PhisIntegration extends InitializeSO {
 		}
 	}
 
+	@Override
 	public void project() {		
 	
 		ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
@@ -677,6 +685,7 @@ public class PhisIntegration extends InitializeSO {
 		
 	}
 
+	@Override
 	public void glAccount() {
 
 		GlAccountReqDTO reqDTO = new GlAccountReqDTO();
@@ -734,7 +743,7 @@ public class PhisIntegration extends InitializeSO {
 	}
 	
 	//changed from Catalogue to Contract items
-	
+	@Override
 	public void masterDataMaterialInfoPHIS(){
 
 		RequestItemReqDTO reqDTO = new RequestItemReqDTO();
@@ -810,7 +819,7 @@ public class PhisIntegration extends InitializeSO {
 	}
 	
 	//Payment effect Notification
-	
+	@Override
 	public void paymentEffectNotification(){
 		
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
