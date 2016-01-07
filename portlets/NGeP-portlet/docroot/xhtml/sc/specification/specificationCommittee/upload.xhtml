@@ -36,4 +36,39 @@
 			update="@form" oncomplete="uploadS1Fin.hide()">
 		</p:fileUpload>
 	</p:dialog>
+	
+	
+	
+	<p:dialog id="uploadSctechnicalUserScoringSchemaId" widgetVar="technicalUserScoringSchema" modal="true"
+		dynamic="true" resizable="false" width="700px" height="200"
+		styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
+
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{specificationBackingBean.technicalUserScoringSchemaFileUpload}"
+			mode="advanced" id="uploadScscoringTechnicalUserSchemaId"
+			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+			update="@form" oncomplete="technicalUserScoringSchema.hide()">
+		</p:fileUpload>
+	</p:dialog>
+	
+	
+	<p:dialog id="uploadScFinancialUserScoringSchemaId" widgetVar="financialUserScoringSchema" modal="true"
+		dynamic="true" resizable="false" width="700px" height="200"
+		styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
+
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{specificationBackingBean.financialUserScoringSchemaFileUpload}"
+			mode="advanced" id="uploadScscoringFinanciallUserSchemaId"
+			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+			update="@form" oncomplete="financialUserScoringSchema.hide()">
+		</p:fileUpload>
+	</p:dialog>
+
+	
 </ui:composition>

@@ -294,5 +294,65 @@
 	</p:panel>
 
 
+	<p:panel
+		header="#{lbl['lbl.sc.spec.technical.financial.user.scoring.schema']}"
+		rendered="#{specificationBackingBean.managedBean.financialUserScoringSchema}"
+		toggleable="true" id="financialAllUserScoringCheckistScUploadIds">
+		<table>
+			<tr>
+
+
+				<td class="TableFieldLeft" style="width: 250px;"><p:outputLabel
+						value="#{lbl['lbl.sc.supporting.document']}" /></td>
+				<td class="TableFieldRight" >
+					<table style="width: 150px;">
+						<tr>
+							<td colspan="2"><p:commandButton
+							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+									oncomplete="financialUserScoringSchema.show();return false;"
+									value="#{lbl['lbl.txt.attach.files']}" partialSubmit="true"
+									process="@this">
+								</p:commandButton></td>
+						</tr>
+						<tr>
+							<td />
+							<td><p:dataGrid id="financialattachedIdsDemo" var="attachFile"
+									value="#{specificationBackingBean.managedBean.scQt.financialUserScoringSchemaAttachment}"
+									rowIndexVar="attachFileIndex" columns="1" style="width:100%">
+									<table>
+										<tr>
+											<!-- <td rowspan="2" style="vertical-align: top;" align="left">
+												<h:graphicImage
+													name="/css/images/design/#{specificationBackingBean.determineIcon(attachFile)}"
+													height="30" width="30" />
+											</td> -->
+											<td><h:outputText
+													value="#{attachFile.createdUser.userName}" />, <h:outputText
+													value="#{attachFile.createdDate}">
+													<f:convertDateTime
+														pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+												</h:outputText></td>
+										</tr>
+										<tr>
+											<td><h:commandLink value="#{attachFile.fileName}"
+													styleClass="blue_font" immediate="true"
+													action="#{specificationBackingBean.downloadFile(attachFile)}" />
+												<p:commandLink
+												disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+													action="#{specificationBackingBean.deleteTechnicalFinacialUserScoringSchema('F')}"
+													immediate="true" update="@form">
+													<h:graphicImage styleClass="tasklist_title1"
+														value="/css/images/design/trash.png" />
+												</p:commandLink></td>
+										</tr>
+									</table>
+								</p:dataGrid></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</p:panel>
+
 
 </ui:composition>
