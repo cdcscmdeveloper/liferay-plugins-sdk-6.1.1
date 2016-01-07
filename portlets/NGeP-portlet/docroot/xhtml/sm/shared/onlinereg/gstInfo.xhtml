@@ -30,7 +30,7 @@
 						<p:calendar id="gstEffDateCalId"
 							navigator="true" required="#{registrationBackingBean.managedBean.gstFlag and !empty param['disableValidation']}" label="#{lbl['lbl.sm.gst.regdate']}"
 							value="#{registrationBackingBean.managedBean.smGstSupplier.gstEffDate}"
-							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline" beforeShowDay="beforeShowDate" 
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 							disabled="#{!registrationBackingBean.managedBean.gstFlag}"
 							readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" maxdate="#{CommonConstants.CURRENT_DATE}">
 							<p:ajax event="dateSelect" process="@this" partialSubmit="true"/>
