@@ -86,7 +86,7 @@
 										display="inline" label="#{lbl['lbl.sm.gst.effdate']}"
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 										yearRange="-99:+0" readonlyInput="true"
-										mindate="#{CommonConstants.GST_LAUNCH_DATE}" beforeShowDay="beforeShowDate" 
+										mindate="#{CommonConstants.GST_LAUNCH_DATE}" 
 										value="#{backingBean.managedBean.selectedBranch.gst.gstEffDate}" 
 										required="#{not empty backingBean.managedBean.selectedBranch.gst.gstRegNo 
 										or not empty backingBean.managedBean.selectedBranch.gst.gstEndDate}">
