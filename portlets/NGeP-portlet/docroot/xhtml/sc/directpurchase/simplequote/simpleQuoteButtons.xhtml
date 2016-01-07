@@ -45,19 +45,22 @@
 			</div>
 		</p:panel>
 	</p:dialog>
-	<div class="ppLeftBtn">
-		<p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}"
-			partialSubmit="true" process="@this" style="float:left;"
-			rendered="#{!isEditable}"
-			styleClass="BtnSpacing"
-			action="#{simpleQuoteBackingBean.backToPrevious}" />
-			
-			<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
-				style="float:right;"
-				rendered="#{simpleQuoteBackingBean.managedBean.trackingDairyView}"
-				action="#{dpTrackingDiaryBackingBean.goToTrackingDiarySearch(simpleQuoteBackingBean.managedBean.dpObj)}"
-				immediate="true" />
-	</div>
+
+	<table style="width: 100%">
+		<tr>
+			<td><p:commandButton immediate="true"
+					value="#{lbl['lbl.btn.back']}" partialSubmit="true" process="@this"
+					style="float:left;" rendered="#{!isEditable}"
+					action="#{simpleQuoteBackingBean.backToPrevious}" /></td>
+
+			<td style="vertical-align: bottom;"><p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
+					style="float:right;"
+					rendered="#{simpleQuoteBackingBean.managedBean.trackingDairyView}"
+					action="#{dpTrackingDiaryBackingBean.goToTrackingDiarySearch(simpleQuoteBackingBean.managedBean.dpObj)}"
+					immediate="true" /></td>
+
+		</tr>
+	</table>
 
 	<div class="ppRightBtn BtnSpacing">
 		<c:if test="#{simpleQuoteBackingBean.managedBean.taskId eq null}">
@@ -67,12 +70,12 @@
 				action="#{simpleQuoteBackingBean.backToPrevious}"
 				title="#{lbl['lbl.sc.itemsearch.tooltip']}">
 			</p:commandButton>
-			
+
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 				action="#{simpleQuoteBackingBean.saveSimpleQuote('')}"
 				process="@all" update="@form" rendered="#{isEditable}" />
-				
+
 			<p:commandButton value="#{lbl['lbl.btn.submit']}"
 				actionListener="#{simpleQuoteBackingBean.submitPromptAction}"
 				update="@form" process="@all" rendered="#{isEditable}">
@@ -81,7 +84,7 @@
 					target="#{simpleQuoteBackingBean.managedBean.selectedAction}"
 					value="#{action}" />
 			</p:commandButton>
-			
+
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 				action="#{simpleQuoteBackingBean.cancel}" style="float:right;"
