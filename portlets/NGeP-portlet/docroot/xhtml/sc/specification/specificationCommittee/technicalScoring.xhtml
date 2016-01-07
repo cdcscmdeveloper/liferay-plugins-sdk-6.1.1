@@ -132,7 +132,8 @@
 
 		</h:panelGroup>
 	</p:panel>
-	<p:panel id="passingScoreForTechnicalAndDemoSpecCommittee" toggleable="true">
+	<p:panel id="passingScoreForTechnicalAndDemoSpecCommittee"
+		toggleable="true">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.sc.passing.score']}" />
 			<ac:iconTooltip
@@ -165,7 +166,8 @@
 				<td><p:inputText style="text-align:right" maxlength="5"
 						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 						value="#{specificationBackingBean.managedBean.technicalScoreSetting.passingScore}">
-						<p:ajax event="blur" process="@all" partialSubmit="true" update="@([id$=passingScoreForTechnicalAndDemoSpecCommittee])"
+						<p:ajax event="blur" process="@all" partialSubmit="true"
+							update="@([id$=passingScoreForTechnicalAndDemoSpecCommittee])"
 							listener="#{specificationBackingBean.checkTechnicalPassingScore(specificationBackingBean.managedBean.technicalScoreSetting)}" />
 					</p:inputText> <ac:iconTooltip value="#{lbl['lbl.sc.spec.technical.tooltip']}" />
 				</td>
@@ -176,6 +178,66 @@
 
 
 
+	</p:panel>
+
+	<p:panel
+		header="#{lbl['lbl.sc.spec.technical.financial.user.scoring.schema']}"
+		rendered="#{specificationBackingBean.managedBean.technicalUserScoringSchema}"
+		toggleable="true" id="technicalAllUserScoringCheckistScUploadIds">
+		<table>
+			<tr>
+
+
+				<td style="width: 200px;" class="TableFieldLeft"><p:outputLabel
+						value="#{lbl['lbl.sc.supporting.document']}" /></td>
+				<td class="TableFieldRight">
+					<table style="width: 150px;">
+						<tr>
+							<td colspan="2"><p:commandButton
+									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+									oncomplete="technicalUserScoringSchema.show();return false;"
+									value="#{lbl['lbl.txt.attach.files']}" partialSubmit="true"
+									process="@this">
+								</p:commandButton></td>
+						</tr>
+						<tr>
+							<td />
+							<td><p:dataGrid id="attachedIdsDemo" var="attachFile"
+									value="#{specificationBackingBean.managedBean.scQt.technicalUserScoringSchemaAttachment}"
+									rowIndexVar="attachFileIndex" columns="1" style="width:100%">
+									<table>
+										<tr>
+											<!-- <td rowspan="2" style="vertical-align: top;" align="left">
+												<h:graphicImage
+													name="/css/images/design/#{specificationBackingBean.determineIcon(attachFile)}"
+													height="30" width="30" />
+											</td> -->
+											<td><h:outputText
+													value="#{attachFile.createdUser.userName}" />, <h:outputText
+													value="#{attachFile.createdDate}">
+													<f:convertDateTime
+														pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+												</h:outputText></td>
+										</tr>
+										<tr>
+											<td><h:commandLink value="#{attachFile.fileName}"
+													styleClass="blue_font" immediate="true"
+													action="#{specificationBackingBean.downloadFile(attachFile)}" />
+												<p:commandLink
+													disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+													action="#{specificationBackingBean.deleteTechnicalFinacialUserScoringSchema('T')}"
+													immediate="true" update="@form">
+													<h:graphicImage styleClass="tasklist_title1"
+														value="/css/images/design/trash.png" />
+												</p:commandLink></td>
+										</tr>
+									</table>
+								</p:dataGrid></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
 	</p:panel>
 
 </ui:composition>
