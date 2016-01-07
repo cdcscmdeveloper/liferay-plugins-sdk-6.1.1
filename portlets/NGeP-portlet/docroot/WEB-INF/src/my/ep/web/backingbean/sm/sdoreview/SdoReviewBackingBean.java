@@ -401,5 +401,19 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		
 		return resDTO.getPmZone().getZoneCode();
 	}
+	
+	/**
+	 * Action to Receive all supporting document.
+	 */
+	public void receiveAllSuppDoc() {
+		if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getSmAppl()
+				.getSmApplSupportDocs())) {
+			for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
+					.getSmApplSupportDocs()) {
+				doc.setReceived(true);
+				this.receiveStatusChange(doc);
+			}
+		}
+	}
 
 }
