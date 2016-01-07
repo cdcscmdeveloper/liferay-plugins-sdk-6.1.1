@@ -1,5 +1,6 @@
 package my.ep.web.util.sm.helper;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
@@ -9,11 +10,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -109,6 +108,7 @@ import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmEduLevel;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRace;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -167,6 +167,7 @@ import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import my.ep.web.vo.SmSiteVisitFacilityVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -4789,31 +4790,14 @@ public class SmApplicationUtil {
 	public static boolean validateSiteVisitSelections(
 			SmApplicationManagedBean managedBean) {
 		boolean valid = true;
-		if (!managedBean.getSmAppl().getApplType()
-				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
-				&& (SmCommonUtil.isCollectionEmpty(managedBean
-						.getSelectedCategories()))) {
-			valid = false;
-			throw new EpException(MessageConst.ERROR_722571);
-		}
-		if (SmCommonUtil.isCollectionEmpty(managedBean
-				.getSelectedFactoryFacilities())) {
-			valid = false;
-			throw new EpException(MessageConst.ERROR_722572);
-		}
+
 		for (SmSiteVisitFacilityVO facVO : managedBean.getSiteVisitFacVOList()) {
-			if (!facVO.getFacType().equals(
-					SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE)
-					&& !facVO
-							.getFacType()
-							.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
-				if (SmCommonUtil
-						.isCollectionEmpty(getFacilityByFacTypeFromList(
-								facVO.getFacType(),
-								managedBean.getSelectedFactoryFacilities()))) {
-					throw new EpException(MessageConst.ERROR_722627,
-							new String[] { facVO.getFacTypeLabel() });
-				}
+			if (!SmCommonUtil.isListSelected(facVO.getAssocCompanies())
+					&& !SmCommonUtil.isListSelected(facVO.getSuppBranches())
+					&& !SmCommonUtil.isListSelected(facVO.getFacilities())) {
+				valid = false;
+				throw new EpException(MessageConst.ERROR_722627,
+						new String[] { facVO.getCatTypeLabel() });
 			}
 		}
 
@@ -4833,12 +4817,6 @@ public class SmApplicationUtil {
 		List<SmSvAddress> addrList = new ArrayList<SmSvAddress>();
 		List<SmSvCategory> smSvCategories = new ArrayList<SmSvCategory>();
 		svTask.setSmAppl(managedBean.getSmAppl());
-		if (managedBean.getBasicCompanyFacility().getSmAddress() != null) {
-			log.info("** Basic Office ***"
-					+ managedBean.getBasicCompanyFacility().getSmAddress()
-							.getAddress1() + " -- Id -- "
-					+ managedBean.getBasicCompanyFacility().getFacilityId());
-		}
 		SmSvOffice svOff = new SmSvOffice();
 		svOff.setSmSvTask(svTask);
 		svOff.setSmFacility(managedBean.getBasicCompanyFacility());
@@ -4916,9 +4894,129 @@ public class SmApplicationUtil {
 			templates.add(temp);
 		}
 		svTask.setSmSvTemplates(templates);
-		managedBean.setSvTask(svTask);
+		managedBean.setSvTaskList(new ArrayList<SmSvTask>());
+		managedBean.getSvTaskList().add(svTask);
 		// return updateSiteVisitTask(svTask);
 
+	}
+
+	/**
+	 * Construct Site visit data based on facilities and categories selected for
+	 * site visit.
+	 * 
+	 * @param SmApplicationManagedBean
+	 *            bean
+	 */
+	public static void setSiteVisitData(SmApplicationManagedBean bean) {
+		if (!SmCommonUtil.isCollectionEmpty(bean.getSiteVisitFacVOList())) {
+			bean.setSvTaskList(new ArrayList<SmSvTask>());
+			SmSvTask svTask = null;
+			PmParameter bumiType = SmCommonUtil.retrieveParameterByTypeAndCode(
+					ParameterTypeConst.CATEGORY_TYPE,
+					SupplierManagementConst.CAT_TYPE_BUMIPUTERA,
+					new FacesScopes().getUserLocale().getLanguage());
+			for (SmSiteVisitFacilityVO facVO : bean.getSiteVisitFacVOList()) {
+
+				// add assocCompany address to site visit
+				if (!SmCommonUtil.isCollectionEmpty(facVO.getAssocCompanies())) {
+					for (SmAssociateCompany assoc : facVO.getAssocCompanies()) {
+						if (assoc.isSelected()) {
+
+							// set smSvTask related table
+							setSmSvTask(bean, bumiType, facVO, svTask,
+									assoc.getSmAddress());
+						}
+					}
+				}
+
+				// add supplierBranch address to site visit
+				if (!SmCommonUtil.isCollectionEmpty(facVO.getSuppBranches())) {
+					for (SmSupplierBranch br : facVO.getSuppBranches()) {
+						if (br.isSelected()) {
+
+							// set smSvTask related table
+							setSmSvTask(bean, bumiType, facVO, svTask,
+									br.getSmAddress());
+						}
+					}
+				}
+
+				// add smFacility address to site visit
+				if (!SmCommonUtil.isCollectionEmpty(facVO.getFacilities())) {
+					for (SmFacility fac : facVO.getFacilities()) {
+						if (fac.isSelected()) {
+
+							// set smSvTask related table
+							setSmSvTask(bean, bumiType, facVO, svTask,
+									fac.getSmAddress());
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private static void setSmSvTask(SmApplicationManagedBean bean,
+			PmParameter bumiType, SmSiteVisitFacilityVO facVO, SmSvTask svTask,
+			SmAddress addr) {
+		// SmSvTask
+		svTask = new SmSvTask();
+		svTask.setSmAppl(bean.getSmAppl());
+
+		// SmSvOffice
+		setSmSvOffice(bean, svTask);
+
+		// SmSvTemplate
+		setSmSvTemplate(bumiType, facVO.getL3(), svTask);
+
+		// SmSvAddress
+		setSmSvAddress(addr, svTask);
+
+		// SmSvCategories
+		setSmSvCategories(svTask, facVO.getSuppCategories());
+
+		bean.getSvTaskList().add(svTask);
+	}
+
+	private static void setSmSvTemplate(PmParameter bumiType, PmCategoryL3 l3,
+			SmSvTask svTask) {
+		SmSvTemplate template = new SmSvTemplate();
+		template.setSmSvTask(svTask);
+		if (l3 != null && l3.getCategoryTypeCode() != null) {
+			template.setPmParameter(l3.getCategoryTypeCode());
+		} else {
+			template.setPmParameter(bumiType);
+		}
+		// svTask.setSmSvTemplate(template);
+	}
+
+	private static void setSmSvAddress(SmAddress addr, SmSvTask svTask) {
+		SmSvAddress smSvAddress = new SmSvAddress();
+		smSvAddress.setSmSvTask(svTask);
+		smSvAddress.setSmAddress(addr);
+		// svTask.setSmSvAddress(smSvAddress);
+	}
+
+	private static void setSmSvOffice(SmApplicationManagedBean bean, SmSvTask svTask) {
+		SmSvOffice svOff = new SmSvOffice();
+		svOff.setSmSvTask(svTask);
+		svOff.setSmFacility(bean.getBasicCompanyFacility());
+		svTask.setSmSvOffice(svOff);
+	}
+
+	private static void setSmSvCategories(SmSvTask svTask,
+			List<SmSupplierCategory> catList) {
+		if (!SmCommonUtil.isCollectionEmpty(catList)) {
+			svTask.setSmSvCategories(new ArrayList<SmSvCategory>());
+			for (SmSupplierCategory cat : catList) {
+				SmSvCategory svCat = new SmSvCategory();
+				svCat.setSmSvTask(svTask);
+				svCat.setPmCategoryL1(cat.getPmCategoryL1());
+				svCat.setPmCategoryL2(cat.getPmCategoryL2());
+				svCat.setPmCategoryL3(cat.getPmCategoryL3());
+				svTask.getSmSvCategories().add(svCat);
+			}
+		}
 	}
 
 	/**
@@ -5295,31 +5393,57 @@ public class SmApplicationUtil {
 	 * @param SmApplicationManagedBean
 	 *            bean
 	 */
-	public static void setSiteVisitFacilitiesVO(SmApplicationManagedBean bean) {
+	public static void setAssignSiteVisitVO(SmApplicationManagedBean bean) {
+		FacesScopes fs = new FacesScopes();
 		SmSiteVisitFacilityVO facVO = null;
 		bean.setSiteVisitFacVOList(new ArrayList<SmSiteVisitFacilityVO>());
 		List<SmSupplierCategory> catList = null;
 		List<SmFacility> facList = null;
-
-		if (!SmCommonUtil.isCollectionEmpty(bean.getSplCategoryList())) {
-			Iterator it = SupplierManagementConst.FACILITY_TYPE_MAP.entrySet()
-					.iterator();
-			while (it.hasNext()) {
-				Map.Entry pair = (Map.Entry) it.next();
-				catList = getCategoryByFacType(pair.getKey().toString(),
-						bean.getSplCategoryList());
-				facList = getFacilityByFacTypeFromList(
-						pair.getKey().toString(), bean.getSmAppl()
-								.getSmFacilities());
-				if (!SmCommonUtil.isCollectionEmpty(facList)) {
+		PmCategoryL3 l3 = null;
+		SmFacility hq = getHqFacilityByAppl(bean.getSmAppl());
+		for (String catType : SupplierManagementConst.CAT_TYPE_CODES) {
+			catList = getCategoryByCatType(catType, bean.getSplCategoryList());
+			if (!SmCommonUtil.isCollectionEmpty(catList)) {
+				l3 = getCatL3ByCatTypeFromList(catType, catList);
+				if (l3 != null) {
+					facList = getFacilityByFacTypeFromList(
+							l3.getFacilityType(), bean.getSmAppl()
+									.getSmFacilities());
 					facVO = new SmSiteVisitFacilityVO();
-					facVO.setFacType(pair.getKey().toString());
-					facVO.setFacTypeLabel(pair.getValue().toString());
+					facVO.setL3(l3);
+					for (PmParameterDesc codeDesc : l3.getCategoryTypeCode()
+							.getPmParameterDescs()) {
+						if (StringUtils.isNotBlank(codeDesc.getLanguageCode())
+								&& codeDesc.getLanguageCode().equals(
+										fs.getUserLocale().getLanguage())) {
+							facVO.setCatTypeLabel(codeDesc.getCodeName());
+							break;
+						}
+					}
 					facVO.setFacilities(facList);
+					if (facVO.getFacilities() == null) {
+						facVO.setFacilities(new ArrayList<SmFacility>());
+					}
+					facVO.getFacilities().add(hq);
+					facVO.setAssocCompanies(bean.getSmAppl()
+							.getSmAssociateCompanies());
+					facVO.setSuppBranches(bean.getSmAppl()
+							.getSmSupplierBranches());
 					facVO.setSuppCategories(catList);
 					bean.getSiteVisitFacVOList().add(facVO);
 				}
 			}
+		}
+
+		if (SmCommonUtil.isCollectionEmpty(bean.getSiteVisitFacVOList())) {
+			facVO = new SmSiteVisitFacilityVO();
+			facVO.setFacilities(new ArrayList<SmFacility>());
+			facVO.setCatTypeLabel(SupplierManagementConst.FACILITY_TYPE_MAP
+					.get(hq.getFacilityType()));
+			facVO.getFacilities().add(hq);
+			facVO.setAssocCompanies(bean.getSmAppl().getSmAssociateCompanies());
+			facVO.setSuppBranches(bean.getSmAppl().getSmSupplierBranches());
+			bean.getSiteVisitFacVOList().add(facVO);
 		}
 	}
 
@@ -5350,6 +5474,33 @@ public class SmApplicationUtil {
 	}
 
 	/**
+	 * Get supplier category by level3 category type
+	 * 
+	 * @param String
+	 *            facType
+	 * @param List
+	 *            <SmSupplierCategory> catList
+	 * @return List<SmSupplierCategory>
+	 */
+	public static List<SmSupplierCategory> getCategoryByCatType(String catType,
+			List<SmSupplierCategory> catList) {
+		List<SmSupplierCategory> retVal = new ArrayList<SmSupplierCategory>();
+		if (!SmCommonUtil.isCollectionEmpty(catList)) {
+			for (SmSupplierCategory cat : catList) {
+				if (cat.getPmCategoryL3() != null
+						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
+						&& StringUtils.isNotBlank(cat.getPmCategoryL3()
+								.getCategoryTypeCode().getParameterCode())
+						&& catType.equals(cat.getPmCategoryL3()
+								.getCategoryTypeCode().getParameterCode())) {
+					retVal.add(cat);
+				}
+			}
+		}
+		return retVal;
+	}
+
+	/**
 	 * Get facility by facility type
 	 * 
 	 * @param String
@@ -5370,6 +5521,23 @@ public class SmApplicationUtil {
 			}
 		}
 		return retVal;
+	}
+
+	private static PmCategoryL3 getCatL3ByCatTypeFromList(String catType,
+			List<SmSupplierCategory> catList) {
+		PmCategoryL3 l3 = null;
+		if (!SmCommonUtil.isCollectionEmpty(catList)) {
+			for (SmSupplierCategory cat : catList) {
+				if (cat.getPmCategoryL3() != null
+						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
+						&& cat.getPmCategoryL3().getCategoryTypeCode()
+								.getParameterCode().equals(catType)) {
+					l3 = cat.getPmCategoryL3();
+					break;
+				}
+			}
+		}
+		return l3;
 	}
 
 	/**

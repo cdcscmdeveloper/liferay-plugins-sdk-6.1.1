@@ -33,55 +33,60 @@
 	</table>
 
 	<br />
-	<p:panel header="#{lbl['lbl.sm.assocCmpny.panHdr']}" toggleable="true">
-		<p:dataTable var="assocBean"
-			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{backingBean.managedBean.smAppl.smAssociateCompanies}"
-			selection="#{backingBean.managedBean.selectedAssocCompanies}"
-			rowKey="#{assocBean}" rowIndexVar="index" id="svdHeadOff">
-			<ac:paginator for="svdHeadOff" />
-			<p:column selectionMode="multiple" width="5%" />
-
-			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}">
-				<h:outputText value="#{index+1}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.assocCmpny.head.office.name']}">
-				<h:outputText value="#{assocBean.companyName}" />
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sm.address']}"
-				style="width: 60%;white-space: normal;">
-				<h:outputText
-					value="#{backingBean.getFullAddress(assocBean.smAddress)}" />
-			</p:column>
-
-		</p:dataTable>
-	</p:panel>
-	<br />
-	<p:panel header="#{lbl['lbl.sm.branch.panHdr']}" toggleable="true">
-		<p:dataTable var="branchBean" id="svcBrDt"
-			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
-			selection="#{backingBean.managedBean.selectedBranches}"
-			rowKey="#{branchBean}" rowIndexVar="index">
-			<ac:paginator for="svcBrDt" />
-			<p:column selectionMode="multiple" width="5%" />
-			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}">
-				<h:outputText value="#{index+1}" />
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sm.branch.branchName']}">
-				<h:outputText value="#{branchBean.branchName}" />
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sm.address']}"
-				style="width: 60%;white-space: normal;">
-				<h:outputText
-					value="#{backingBean.getFullAddress(branchBean.smAddress)}" />
-			</p:column>
-		</p:dataTable>
-	</p:panel>
-	<br />
+	<ui:remove>
+		<p:panel header="#{lbl['lbl.sm.assocCmpny.panHdr']}" toggleable="true">
+			<p:dataTable var="assocBean"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{backingBean.managedBean.smAppl.smAssociateCompanies}"
+				selection="#{backingBean.managedBean.selectedAssocCompanies}"
+				rowKey="#{assocBean}" rowIndexVar="index" id="svdHeadOff">
+				<ac:paginator for="svdHeadOff" />
+				<p:column selectionMode="multiple" width="5%" />
+	
+				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}">
+					<h:outputText value="#{index+1}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.assocCmpny.head.office.name']}">
+					<h:outputText value="#{assocBean.companyName}" />
+				</p:column>
+	
+				<p:column headerText="#{lbl['lbl.sm.address']}"
+					style="width: 60%;white-space: normal;">
+					<h:outputText
+						value="#{backingBean.getFullAddress(assocBean.smAddress)}" />
+				</p:column>
+	
+			</p:dataTable>
+		</p:panel>
+		<br />
+	</ui:remove>
+	
+	<ui:remove>
+		<p:panel header="#{lbl['lbl.sm.branch.panHdr']}" toggleable="true">
+			<p:dataTable var="branchBean" id="svcBrDt"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
+				selection="#{backingBean.managedBean.selectedBranches}"
+				rowKey="#{branchBean}" rowIndexVar="index">
+				<ac:paginator for="svcBrDt" />
+				<p:column selectionMode="multiple" width="5%" />
+				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}">
+					<h:outputText value="#{index+1}" />
+				</p:column>
+	
+				<p:column headerText="#{lbl['lbl.sm.branch.branchName']}">
+					<h:outputText value="#{branchBean.branchName}" />
+				</p:column>
+	
+				<p:column headerText="#{lbl['lbl.sm.address']}"
+					style="width: 60%;white-space: normal;">
+					<h:outputText
+						value="#{backingBean.getFullAddress(branchBean.smAddress)}" />
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+		<br />
+	</ui:remove>
 	
 	<ui:include src="/xhtml/sm/shared/mofRegistration/siteVisitFacilityInfo.xhtml" />
 	

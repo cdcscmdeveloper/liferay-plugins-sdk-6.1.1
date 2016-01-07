@@ -6701,7 +6701,7 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		getManagedBean().setShowParentMsg(false);
-		SmApplicationUtil.setSiteVisitFacilitiesVO(getManagedBean());
+		SmApplicationUtil.setAssignSiteVisitVO(getManagedBean());
 		RequestContext.getCurrentInstance().execute(dialog + ".show()");
 	}
 
@@ -6966,6 +6966,7 @@ public class SmApplicationBackingBean extends
 				SmApplicationUtil.siteVisitDataUpdate(getManagedBean());
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_ASSIGNMENT);
 				reqDTO.setSvTask(getManagedBean().getSvTask());
+				reqDTO.setSvTaskList(getManagedBean().getSvTaskList());
 				actionDesc = SupplierManagementConst.PO_RECOM_SITE_VISIT;
 
 			}
@@ -8734,7 +8735,27 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * On click check or uncheck check box for site visit assignment
+	 * On click check or uncheck check box for site visit associate company
+	 * assignment
+	 */
+	public void onCheckedSiteVisitAssocCompanyAddress() {
+		getManagedBean().setSelectedAssocCompanies(
+				new ArrayList<SmAssociateCompany>());
+		for (SmSiteVisitFacilityVO siteVisit : getManagedBean()
+				.getSiteVisitFacVOList()) {
+			if (!SmCommonUtil.isCollectionEmpty(siteVisit.getAssocCompanies())) {
+				for (SmAssociateCompany assoc : siteVisit.getAssocCompanies()) {
+					if (assoc.isSelected()) {
+						getManagedBean().getSelectedAssocCompanies().add(assoc);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * On click check or uncheck check box for site visit facility address
+	 * assignment
 	 */
 	public void onCheckedSiteVisitFacilityAddress() {
 		getManagedBean().setSelectedFactoryFacilities(
@@ -8751,6 +8772,23 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		setSelectedSpecialCategoriesForSiteVisit();
+	}
+
+	/**
+	 * On click check or uncheck check box for site visit branches assignment
+	 */
+	public void onCheckedSiteVisitBranchAddress() {
+		getManagedBean().setSelectedBranches(new ArrayList<SmSupplierBranch>());
+		for (SmSiteVisitFacilityVO siteVisit : getManagedBean()
+				.getSiteVisitFacVOList()) {
+			if (!SmCommonUtil.isCollectionEmpty(siteVisit.getSuppBranches())) {
+				for (SmSupplierBranch br : siteVisit.getSuppBranches()) {
+					if (br.isSelected()) {
+						getManagedBean().getSelectedBranches().add(br);
+					}
+				}
+			}
+		}
 	}
 
 	/**
