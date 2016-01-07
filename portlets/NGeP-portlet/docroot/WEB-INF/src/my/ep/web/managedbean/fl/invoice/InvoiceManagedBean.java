@@ -96,6 +96,8 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	// Inv Items
 	/** The charge line item root. */
 	private TreeNode chargeLineItemRoot ;
+	private TreeNode outOfScopeSectionItemRoot ;
+	private TreeNode taxSectionItemRoot ;
 	
 	/** The charge line selected item address. */
 	private FlFulfilmentItemAddr chargeLineSelectedItemAddress;
@@ -118,6 +120,10 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	
 	/** The inv amt grand total. */
 	private BigDecimal invAmtGrandTotal ;
+	
+	private BigDecimal oosReceivedAmtGrandTotal ;
+	
+	private BigDecimal oosInvAmtGrandTotal ;
 	
 	/** The service charge. */
 	private String serviceCharge ;
@@ -187,7 +193,8 @@ public class InvoiceManagedBean extends BaseManagedBean {
     
     private FlInvoiceItemSummary invItemSummary;
     
-    private boolean itemTableClause = false;
+    private boolean taxItemTableClause = false;
+    private boolean oosItemTableClause = false;
 	
 	private BigDecimal gstAmount;
 	private BigDecimal invoiceAmountWithoutGST;
@@ -200,6 +207,7 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private boolean docMaintain = false;
 	
 	private String backToPrevious;
+	private boolean isTaxInvoice = false;
 	
 	private boolean isTaxable=false;
 	
@@ -1074,20 +1082,6 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the itemTableClause
-	 */
-	public boolean isItemTableClause() {
-		return itemTableClause;
-	}
-
-	/**
-	 * @param itemTableClause the itemTableClause to set
-	 */
-	public void setItemTableClause(boolean itemTableClause) {
-		this.itemTableClause = itemTableClause;
-	}
-
-	/**
 	 * @return the delOrderList
 	 */
 	public List<FlDeliveryOrder> getDelOrderList() {
@@ -1155,5 +1149,103 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	 */
 	public void setTaxable(boolean isTaxable) {
 		this.isTaxable = isTaxable;
+	}
+
+	/**
+	 * @return the outOfScopeSectionItemRoot
+	 */
+	public TreeNode getOutOfScopeSectionItemRoot() {
+		return outOfScopeSectionItemRoot;
+	}
+
+	/**
+	 * @param outOfScopeSectionItemRoot the outOfScopeSectionItemRoot to set
+	 */
+	public void setOutOfScopeSectionItemRoot(TreeNode outOfScopeSectionItemRoot) {
+		this.outOfScopeSectionItemRoot = outOfScopeSectionItemRoot;
+	}
+
+	/**
+	 * @return the taxSectionItemRoot
+	 */
+	public TreeNode getTaxSectionItemRoot() {
+		return taxSectionItemRoot;
+	}
+
+	/**
+	 * @param taxSectionItemRoot the taxSectionItemRoot to set
+	 */
+	public void setTaxSectionItemRoot(TreeNode taxSectionItemRoot) {
+		this.taxSectionItemRoot = taxSectionItemRoot;
+	}
+
+	/**
+	 * @return the oosReceivedAmtGrandTotal
+	 */
+	public BigDecimal getOosReceivedAmtGrandTotal() {
+		return oosReceivedAmtGrandTotal;
+	}
+
+	/**
+	 * @param oosReceivedAmtGrandTotal the oosReceivedAmtGrandTotal to set
+	 */
+	public void setOosReceivedAmtGrandTotal(BigDecimal oosReceivedAmtGrandTotal) {
+		this.oosReceivedAmtGrandTotal = oosReceivedAmtGrandTotal;
+	}
+
+	/**
+	 * @return the oosInvAmtGrandTotal
+	 */
+	public BigDecimal getOosInvAmtGrandTotal() {
+		return oosInvAmtGrandTotal;
+	}
+
+	/**
+	 * @param oosInvAmtGrandTotal the oosInvAmtGrandTotal to set
+	 */
+	public void setOosInvAmtGrandTotal(BigDecimal oosInvAmtGrandTotal) {
+		this.oosInvAmtGrandTotal = oosInvAmtGrandTotal;
+	}
+
+	/**
+	 * @return the taxItemTableClause
+	 */
+	public boolean isTaxItemTableClause() {
+		return taxItemTableClause;
+	}
+
+	/**
+	 * @param taxItemTableClause the taxItemTableClause to set
+	 */
+	public void setTaxItemTableClause(boolean taxItemTableClause) {
+		this.taxItemTableClause = taxItemTableClause;
+	}
+
+	/**
+	 * @return the oosItemTableClause
+	 */
+	public boolean isOosItemTableClause() {
+		return oosItemTableClause;
+	}
+
+	/**
+	 * @param oosItemTableClause the oosItemTableClause to set
+	 */
+	public void setOosItemTableClause(boolean oosItemTableClause) {
+		this.oosItemTableClause = oosItemTableClause;
+	}
+
+	/**
+	 * @return the isTaxInvoice
+	 */
+	public boolean isTaxInvoice() {
+		return isTaxInvoice;
+	}
+
+	/**
+	 * @param isTaxInvoice the isTaxInvoice to set
+	 */
+	public void setTaxInvoice(boolean isTaxInvoice) {
+		this.isTaxInvoice = isTaxInvoice;
 	}
 }
