@@ -148,7 +148,7 @@
 						style="text-align: top" /><p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu style="width:350px; margin-bottom:5px;" rendered="#{receivedNoteBackingBean.isReceivingOfficer()}"
-						required="true" disabled="#{receivedNoteBackingBean.managedBean.buttonVal=='View'}"
+						required="true" disabled="#{receivedNoteBackingBean.managedBean.buttonVal=='View'}" label="#{lbl['lbl.fl.approverUser']}"
 						value="#{receivedNoteBackingBean.managedBean.userLoginId}">
 						<f:selectItems
 							value="#{receivedNoteBackingBean.getAcknowledgeOfficerDropdown()}" />
