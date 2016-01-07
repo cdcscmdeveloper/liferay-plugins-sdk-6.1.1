@@ -46,7 +46,13 @@
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
-
+			
+			<p:column headerText="#{lbl['lbl.sc.supplier.status.bumiputra']}"
+				style="width: 10%;">
+				<h:outputText
+					value="#{qtSupplier.smSupplier.bumi ? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
+			</p:column>
+			
 			<p:column headerText="#{lbl['lbl.sc.status']}" style="width : 10%;">
 				<h:outputText
 					value="#{qTSupplierQulCriteriaBackingBean.getParameterDesc(ParameterTypeConst.recordStatus, qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(qtSupplier, null).recordStatusFlg)}" />
@@ -88,17 +94,9 @@
 	<p:dialog id="suppPopup" header="#{lbl['lbl.sc.qt.search.supplier']}"
 		widgetVar="suppdlg" modal="true" width="800" height="450"
 		position="top">
-		<p:messages id="supplierSearchMessages" showDetail="true"
-			autoUpdate="true" closable="true" showSummary="false"
-			severity="error, info" />
+		
 		<ui:include
 			src="supplierQualificationCriteriaRestrictedTenderSupplierSearch.xhtml" />
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.ok']}" styleClass="BtnSpacing"
-				action="#{qTSupplierQulCriteriaBackingBean.addRestrictedToSupplierListAction}"
-				update="supplierlist" />
-			<p:commandButton value="#{lbl['lbl.btn.cancel']}" styleClass="BtnSpacing"
-				oncomplete="suppdlg.hide()" />
-		</div>
+		
 	</p:dialog>
 </ui:composition>
