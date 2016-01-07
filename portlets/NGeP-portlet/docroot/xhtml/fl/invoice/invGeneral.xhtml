@@ -74,9 +74,9 @@
 					rendered="#{delOrder.flDeliveryAddress.addressType != null}"
 					value="#{invoiceBackingBean.getFullAddress(delOrder.flDeliveryAddress.pmAddress)}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.frn.do.no']}"
+			<p:column headerText="#{lbl['lbl.fl.supplierDeliveryOrderNo']}"
 				style="white-space:normal;text-align:center;">
-				<p:commandLink value="#{delOrder.deliveryOrderNo}"  style="float:left;"
+				<p:commandLink value="#{delOrder.supplierDoRef}"  style="float:left;"
 					rendered="#{delOrder.recordStatusFlg==1}" immediate="true"
 					action="#{invoiceBackingBean.navigateDelOrder(delOrder)}" />
 			</p:column>

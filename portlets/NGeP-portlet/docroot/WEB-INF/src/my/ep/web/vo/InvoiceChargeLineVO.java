@@ -3,9 +3,6 @@
  */
 package my.ep.web.vo;
 
-import java.math.BigDecimal;
-
-import my.ep.persistence.entity.fl.itemsummary.FlItemSummary;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItemSummary;
 
