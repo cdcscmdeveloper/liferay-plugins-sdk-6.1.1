@@ -135,6 +135,7 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
+import my.ep.persistence.entity.sc.quationtender.ScFinancialUserScoringSchemaAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
@@ -155,6 +156,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSpecificationRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
+import my.ep.persistence.entity.sc.quationtender.ScTechnicalUserScoringSchemaAttachment;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -2921,6 +2923,30 @@ public class SpecificationBackingBean extends
 				techWeightageSum();
 				techScoreSum();
 			}
+			
+			if (null != this.getManagedBean().getTechnicalScoring()
+					&& !this.getManagedBean().getTechnicalScoring().isEmpty()) {
+				this.getManagedBean().setTechnicalUserScoringSchema(
+						false);
+				for (ScQtCheckList technicalScoringChecklist : this
+						.getManagedBean().getTechnicalScoring()) {
+					if (null != technicalScoringChecklist.getPmStatus()
+							&& QTStatusConst.TS_COMPLETED
+									.equals(technicalScoringChecklist
+											.getPmStatus().getStatusId())
+							&& null != technicalScoringChecklist
+									.getPmEvalStatus()
+							&& QTStatusConst.TS_PENDING_SUBMISSION
+									.equals(technicalScoringChecklist
+											.getPmEvalStatus().getStatusId())) {
+						this.getManagedBean().setTechnicalUserScoringSchema(
+								true);
+						break;
+
+					}
+
+				}
+			}
 
 		} finally {
 			specSo = null;
@@ -3185,6 +3211,32 @@ public class SpecificationBackingBean extends
 				finWeightageSum();
 				finScoreSum();
 
+			}
+			if (null != this.getManagedBean()
+					.getScQtCheckSt2financeProposalList()
+					&& !this.getManagedBean()
+							.getScQtCheckSt2financeProposalList().isEmpty()) {
+				this.getManagedBean().setFinancialUserScoringSchema(
+						false);
+				for (ScQtCheckList financialScoringChecklist : this
+						.getManagedBean().getScQtCheckSt2financeProposalList()) {
+					if (financialScoringChecklist.isScoringReq()
+							&& null != financialScoringChecklist.getPmStatus()
+							&& QTStatusConst.TS_COMPLETED
+									.equals(financialScoringChecklist
+											.getPmStatus().getStatusId())
+							&& null != financialScoringChecklist
+									.getPmEvalStatus()
+							&& QTStatusConst.TS_PENDING_SUBMISSION
+									.equals(financialScoringChecklist
+											.getPmEvalStatus().getStatusId())) {
+						this.getManagedBean().setFinancialUserScoringSchema(
+								true);
+						break;
+
+					}
+
+				}
 			}
 		} finally {
 			specSo = null;
@@ -16625,16 +16677,66 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	/*
-	 * private void setEstimatedPrice(ScQt scQt) {
+	/**
+	 * Upload Tehnical or Financial Upload UserScoring Schema Files.
 	 * 
-	 * IQTDetailSO qtDetailsSO; try { qtDetailsSO =
-	 * BusinessDelegate.getInstance().getServiceObject(
-	 * ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-	 * 
-	 * BigDecimal estimatedAmount = qtDetailsSO.getdecryptedEstAmount(scQt
-	 * .getQtId()); scQt.setEstimatedAmount(estimatedAmount);
-	 * scQt.setDecryptedEstAmt(estimatedAmount); } finally { qtDetailsSO = null;
-	 * } }
 	 */
+	public void technicalUserScoringSchemaFileUpload(FileUploadEvent event)
+			throws FileNotFoundException, IOException {
+		System.out.println("====upload Scoring Schema Type===="
+				+ event.getFile().getFileName());
+		ScTechnicalUserScoringSchemaAttachment attachment = this
+				.getManagedBean().getScQt()
+				.getTechnicalUserScoringSchemaAttachment();
+
+		if (null == attachment) {
+			attachment = new ScTechnicalUserScoringSchemaAttachment();
+			attachment.setScQt(this.getManagedBean().getScQt());
+		}
+		attachment.setDocNo(this.getManagedBean().getScQt().getQtNo());
+
+		uploadAttachment(event.getFile(), attachment);
+		this.getManagedBean().getScQt()
+				.setTechnicalUserScoringSchemaAttachment(attachment);
+
+	}
+
+	/**
+	 * Upload Tehnical or Financial Upload UserScoring Schema Files.
+	 * 
+	 */
+	public void financialUserScoringSchemaFileUpload(FileUploadEvent event)
+			throws FileNotFoundException, IOException {
+		System.out.println("====upload Scoring Schema Type===="
+				+ event.getFile().getFileName());
+		ScFinancialUserScoringSchemaAttachment attachment = this
+				.getManagedBean().getScQt()
+				.getFinancialUserScoringSchemaAttachment();
+
+		if (null == attachment) {
+			attachment = new ScFinancialUserScoringSchemaAttachment();
+			attachment.setScQt(this.getManagedBean().getScQt());
+		}
+		attachment.setDocNo(this.getManagedBean().getScQt().getQtNo());
+
+		uploadAttachment(event.getFile(), attachment);
+		this.getManagedBean().getScQt()
+				.setFinancialUserScoringSchemaAttachment(attachment);
+
+	}
+
+	/**
+	 * delete Tehnical or Financial Upload UserScoring Schema Files.
+	 * 
+	 */
+	public void deleteTechnicalFinacialUserScoringSchema(String type) {
+		System.out.println("====delete Scoring Schema Type====" + type);
+		if ("T".equals(type)) {
+			this.getManagedBean().getScQt()
+					.setTechnicalUserScoringSchemaAttachment(null);
+		} else if ("F".equals(type)) {
+			this.getManagedBean().getScQt()
+					.setFinancialUserScoringSchemaAttachment(null);
+		}
+	}
 }
