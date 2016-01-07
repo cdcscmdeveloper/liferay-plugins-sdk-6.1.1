@@ -669,6 +669,16 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				       }
 			      }
 		    }
+			
+			if(getManagedBean().getCtSupplierSigner() != null && getManagedBean().getCtSupplierSigner().size() > 0) {
+			      for (CtAgreementParty supplierSigner : getManagedBean().getCtSupplierSigner()) {
+				      if(supplierSigner.getOfficer().getUserId() == null) {
+					      throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.contract.signer.supplier", 
+							  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				      }
+			     }
+		     }
 		
 			if (!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 		       if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_FINALIST_AGREEMENT_HT_NAME)) {
@@ -729,16 +739,9 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		        	throw new EpException(MessageConst.ERROR_100023, 
 					   new String[]{ResourceBundleUtils.getMessage("lbl.ct.supplier.signer", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-		     } else {
-			      for (CtAgreementParty supplierSigner : getManagedBean().getCtSupplierSigner()) {
-				      if(supplierSigner.getOfficerName() == null) {
-					      throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.contract.signer.supplier", 
-							  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				      }
-			     }
-		
-		     } if(getManagedBean().getCtSupplierWitness().size() == 0) {
+		     } 
+	       	 
+	       	 if(getManagedBean().getCtSupplierWitness().size() == 0) {
 		    	   throw new EpException(MessageConst.ERROR_100023,
 					   new String[]{ResourceBundleUtils.getMessage("lbl.ct.supplier.witness", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
