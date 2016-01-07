@@ -57,7 +57,7 @@
 						action="#{trackingDiarySearchBackingBean.goToTrackingDiarySearch(ModuleCodeConstant.ORDER_FULFILLMENT,ParameterConst.doctypePaymentAdvice,paymentMatchBackingBean.managedBean.paymentAdvice.paymentAdviceNo,paymentMatchBackingBean.managedBean.paymentAdvice.paymentAdviceId,paymentMatchBackingBean.managedBean.paymentAdvice.status.statusId)}"
 						immediate="true" />
 					<p:commandButton value="#{lbl['lbl.btn.print']}" ajax="false"
-								action="#{flDocumentBackingBean.generateReport(ParameterConst.doctypePaymentAdvice,paymentMatchBackingBean.managedBean.paymentAdvice.paymentAdviceNo)}" />	
+								action="#{flDocumentBackingBean.generateReport(ParameterConst.doctypePaymentAdvice,paymentMatchBackingBean.managedBean.paymentAdvice.paymentAdviceNo,flDocumentManagedBean.taxable)}" />	
 					</td>		
 				</c:if>	
 			</tr>

@@ -206,6 +206,8 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	
 	private boolean trackingDiarySearch;
 	
+	private boolean isTaxable=false;
+	
 	/**
 	 * Gets the temp login id.
 	 *
@@ -458,6 +460,9 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 							if(orderInfo.isCoGSTR()){
 								docsearchResult.setCoGSTR(orderInfo.isCoGSTR);
 							}
+							if(orderInfo.isTaxable()){
+								docsearchResult.setTaxable(orderInfo.isTaxable);
+							}
 					  }
 			     }
 		 }		
@@ -548,6 +553,10 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 								}
 							}
 					}
+				}
+				resDTO = invoiceSO.isInvoiceTaxable(reqDTO);
+				if(resDTO.isTaxable()){
+					orderInfo.setTaxable(true);
 				}
 			}else if(ParameterConst.DOCTYPE_PURCHASE_ORDER.equalsIgnoreCase(docType) || ParameterConst.DOCTYPE_CONTRACT_ORDER.equalsIgnoreCase(docType)){
 				fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
@@ -736,6 +745,8 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		private boolean factored = false;
 		
 		private boolean isCoGSTR=false;
+		
+		private boolean isTaxable=false;
 
 		/**
 		 * Gets the role.
@@ -822,6 +833,22 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		public void setCoGSTR(boolean isCoGSTR) {
 			this.isCoGSTR = isCoGSTR;
 		}
+
+		/**
+		 * @return the isTaxable
+		 */
+		public boolean isTaxable() {
+			return isTaxable;
+		}
+
+		/**
+		 * @param isTaxable the isTaxable to set
+		 */
+		public void setTaxable(boolean isTaxable) {
+			this.isTaxable = isTaxable;
+		}
+
+		
 		
 	}
 
@@ -1621,6 +1648,20 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	 */
 	public void setSearchCentralContractName(String searchCentralContractName) {
 		this.searchCentralContractName = searchCentralContractName;
+	}
+
+	/**
+	 * @return the isTaxable
+	 */
+	public boolean isTaxable() {
+		return isTaxable;
+	}
+
+	/**
+	 * @param isTaxable the isTaxable to set
+	 */
+	public void setTaxable(boolean isTaxable) {
+		this.isTaxable = isTaxable;
 	}
 
 }

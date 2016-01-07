@@ -53,9 +53,11 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.stopinstr.StopInstrManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -126,6 +128,12 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		if(getManagedBean().getPmDigiSign() != null){
 			reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 		}
+		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
+			Map<String, String> paramMap = new HashMap<String, String>();
+			paramMap.put(ReportConst.PARAM_DOC_NO, getManagedBean().getStopInstr().getFlFulfilmentOrder().getDocNo());
+			paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+			reqDTO.setReportUrl("<a href='"+generateReportURL(ReportConst.FL_NGEP_STOP_DELIVERY,paramMap)+ "'>"+getManagedBean().getStopInstr().getFlFulfilmentOrder().getDocNo()+"</a>");
+		}
 		resDTO = getFulfilmentOrderSO().stopFulfilment(reqDTO);
 		
 		if(resDTO.isSuccessful()) {
@@ -145,6 +153,16 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
 		renewSesionObject();
+		if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
+			Map<String, String> paramMap = new HashMap<String, String>();
+			paramMap.put(ReportConst.PARAM_DOC_NO, resDTO.getFlStopInstr().getStopInstrNo());
+			paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+			CommonBackingBean commonBackingBean = new CommonBackingBean();
+			commonBackingBean.getManagedBean().setReportName(ReportConst.FL_NGEP_STOP_DELIVERY);
+			commonBackingBean.getManagedBean().setReportDisplayName(ResourceBundleUtils.getMessage("lbl.rpt.StopInstructionNo",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
+			commonBackingBean.getManagedBean().setParamMap(paramMap);
+			return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
+		}
 		return CommonUIConst.ACKNOWLEDGE_PAGE;
 	}
 
