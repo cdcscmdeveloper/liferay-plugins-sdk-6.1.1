@@ -60,6 +60,9 @@ public class GovtSellerRegistrationBackingBean extends
 
 	public static RegistrationBackingBean instance;
 
+	/**
+	 * Pre-render G2G page
+	 */
 	public void preRenderGovtSeller() {
 		renewSesionObject();
 		initAgencyTypes();
@@ -82,6 +85,9 @@ public class GovtSellerRegistrationBackingBean extends
 
 	}
 
+	/**
+	 * Pre-render G2G maintenance page
+	 */
 	public void preRenderGovtSellerMaintenance() {
 		renewSesionObject();
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
@@ -119,6 +125,12 @@ public class GovtSellerRegistrationBackingBean extends
 						"", null);
 	}
 
+	/**
+	 * Set HQ GST
+	 * 
+	 * @param SmSupplier
+	 *            supplier
+	 */
 	private void setHqGst(SmSupplier supplier) {
 		getManagedBean().setSmGstSupplier(null);
 		if (!SmCommonUtil.isCollectionEmpty(supplier.getSmGstSuppliers())) {
@@ -132,14 +144,31 @@ public class GovtSellerRegistrationBackingBean extends
 		}
 	}
 
+	/**
+	 * Return to Sign Up page
+	 * 
+	 * @return String
+	 */
 	public String returnToSignUp() {
 		return getInstance().returnToSignUp();
 	}
 
+	/**
+	 * Navigate to page
+	 * 
+	 * @param String
+	 *            page
+	 */
 	public void navigateToPage(String page) {
 		getManagedBean().setTargetPage(page);
 	}
 
+	/**
+	 * Validate and initialized org profile
+	 * 
+	 * @param String
+	 *            orgProfileId
+	 */
 	public void initOrgProfile(String orgProfileId) {
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 		reqDTO.setOrgProfileId(Long.parseLong(orgProfileId));
@@ -189,6 +218,9 @@ public class GovtSellerRegistrationBackingBean extends
 
 	}
 
+	/**
+	 * Validate GST registration NO.
+	 */
 	public void validateGstRegNo() {
 		String gstNo = this.getManagedBean().getSmGstSupplier().getGstRegNo();
 		this.getManagedBean().getSmGstSupplier().setIsCurrent(true);
@@ -469,10 +501,25 @@ public class GovtSellerRegistrationBackingBean extends
 
 	}
 
+	/**
+	 * Assign selected GST documents
+	 * 
+	 * @param SmGstSupplierDoc
+	 *            doc
+	 */
 	public void assignSelectedGstDoc(SmGstSupplierDoc doc) {
 		getManagedBean().setSelectedGstSupplierDoc(doc);
 	}
 
+	/**
+	 * Set state drop down list when on change country drop down based on
+	 * address type
+	 * 
+	 * @param PmCountry
+	 *            country
+	 * @param String
+	 *            addrType
+	 */
 	public void onChangeCountry(PmCountry country, String addrType) {
 		if (addrType != null && addrType.equals("COMPANY_ADDRESS")) {
 			if (country != null) {
@@ -541,6 +588,15 @@ public class GovtSellerRegistrationBackingBean extends
 		}
 	}
 
+	/**
+	 * Set district drop down list when on change state drop down based on
+	 * address type
+	 * 
+	 * @param PmState
+	 *            state
+	 * @param String
+	 *            addrType
+	 */
 	public void onChangeState(PmState state, String addrType) {
 		if (addrType != null && addrType.equals("COMPANY_ADDRESS")) {
 			if (state != null) {
@@ -593,6 +649,15 @@ public class GovtSellerRegistrationBackingBean extends
 		}
 	}
 
+	/**
+	 * Set city drop down list when on change district drop down based on
+	 * address type
+	 * 
+	 * @param PmDistrict
+	 *            district
+	 * @param String
+	 *            addrType
+	 */
 	public void onChangeDistrict(PmDistrict district, String addrType) {
 		if (addrType != null && addrType.equals("COMPANY_ADDRESS")) {
 			if (district != null) {
@@ -630,6 +695,9 @@ public class GovtSellerRegistrationBackingBean extends
 		}
 	}
 
+	/**
+	 * Proceed to user registration
+	 */
 	public void proceedToFirstUserRegistration() {
 		PmParameter icNoType = getParameterByTypeAndCode(
 				ParameterTypeConst.IDENTIFICATION_TYPES, "I");
@@ -658,6 +726,9 @@ public class GovtSellerRegistrationBackingBean extends
 		navigateToPage(SupplierManagementConst.GOVT_SELLER_USER_INFO_PAGE);
 	}
 
+	/**
+	 * Submit registration
+	 */
 	public void submitRegistration() {
 		validateBeforeSubmit();
 		setSmPersonnelBeforeSubmit();
@@ -677,6 +748,9 @@ public class GovtSellerRegistrationBackingBean extends
 		}
 	}
 
+	/**
+	 * Submit maintenance
+	 */
 	public void submitMaintenance() {
 		// validate bank
 		if (getManagedBean().getSmAppl().getSmSupplierBanks().size() < 1) {
@@ -704,6 +778,9 @@ public class GovtSellerRegistrationBackingBean extends
 		}
 	}
 
+	/**
+	 * Initialized identification types
+	 */
 	public void initIdentificationTypes() {
 		if (SmCommonUtil.isCollectionEmpty(getManagedBean()
 				.getIdentificationTypeItems())) {
@@ -736,6 +813,12 @@ public class GovtSellerRegistrationBackingBean extends
 		getManagedBean().setValueReqd(false);
 	}
 
+	/**
+	 * Set GST document attachment to VO
+	 * 
+	 * @param SmGstSupplierDoc
+	 *            doc
+	 */
 	private void setSuppDocFileAttachment(SmGstSupplierDoc doc) {
 		List<SmGstSupplierDoc> gstSuppDocList = getManagedBean()
 				.getSelectedBranch().getGst().getSmGstSupplierDocs();
@@ -752,6 +835,11 @@ public class GovtSellerRegistrationBackingBean extends
 		}
 	}
 
+	/**
+	 * Get maximum temporary branch code
+	 * 
+	 * @return int
+	 */
 	private int getMaxTmpBrCode() {
 		int tmpNo = 0;
 		if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getSmAppl()
@@ -768,12 +856,21 @@ public class GovtSellerRegistrationBackingBean extends
 		return tmpNo;
 	}
 
+	/**
+	 * Initialized branch address drop down values
+	 * 
+	 * @param SmAddress
+	 *            address
+	 */
 	private void initBranchAddressSelectItems(SmAddress address) {
 		onChangeCountry(address.getPmCountry(), "BRANCH_ADDRESS");
 		onChangeState(address.getPmState(), "BRANCH_ADDRESS");
 		onChangeDistrict(address.getPmDistrict(), "BRANCH_ADDRESS");
 	}
 
+	/**
+	 * Initialized agency type
+	 */
 	private void initAgencyTypes() {
 		getManagedBean().setAgencyTypeItems(new ArrayList<SelectItem>());
 		SelectItem[] items = getDropdownCodeValues("OT");
@@ -792,6 +889,12 @@ public class GovtSellerRegistrationBackingBean extends
 		}
 	}
 
+	/**
+	 * Initialized SmSupplier based on PmOrgProfile
+	 * 
+	 * @param PmOrgProfile
+	 *            orgProfile
+	 */
 	private void initSupplier(PmOrgProfile orgProfile) {
 		SmSupplier sup = new SmSupplier();
 		sup.setRegNo(orgProfile.getOrgCode());
@@ -858,6 +961,13 @@ public class GovtSellerRegistrationBackingBean extends
 		getManagedBean().setSmAppl(appl);
 	}
 
+	/**
+	 * Check whether personnel already activated
+	 * 
+	 * @param List
+	 *            <SmPersonnel> personnels
+	 * @return boolean
+	 */
 	private boolean isPersonnelAlreadyActivated(List<SmPersonnel> personnels) {
 		boolean retVal = false;
 		for (SmPersonnel personnel : personnels) {
@@ -870,6 +980,9 @@ public class GovtSellerRegistrationBackingBean extends
 		return retVal;
 	}
 
+	/**
+	 * Initialized GST
+	 */
 	private void initGst() {
 		SmGstSupplier gstSupplier = new SmGstSupplier();
 		List<PmDocument> docLs = getInstance().retrieveGstDocFromPmDocument();
@@ -886,6 +999,12 @@ public class GovtSellerRegistrationBackingBean extends
 		getManagedBean().setSmGstSupplier(gstSupplier);
 	}
 
+	/**
+	 * Initialized company address drop down values
+	 * 
+	 * @param SmAddress
+	 *            addr
+	 */
 	private void initCompanyAddressSelectItems(SmAddress addr) {
 		getManagedBean().setCountryLs(SmCommonUtil.getCountryList());
 		onChangeCountry(addr.getPmCountry(), "COMPANY_ADDRESS");
@@ -893,18 +1012,33 @@ public class GovtSellerRegistrationBackingBean extends
 		onChangeDistrict(addr.getPmDistrict(), "COMPANY_ADDRESS");
 	}
 
+	/**
+	 * Initialized user permanent address drop down values
+	 * 
+	 * @param SmAddress
+	 *            addr
+	 */
 	private void initUserPermanentAddressSelectItems(SmAddress addr) {
 		onChangeCountry(addr.getPmCountry(), "USER_PERMANENT_ADDRESS");
 		onChangeState(addr.getPmState(), "USER_PERMANENT_ADDRESS");
 		onChangeDistrict(addr.getPmDistrict(), "USER_PERMANENT_ADDRESS");
 	}
 
+	/**
+	 * Initialized user residential address drop down values
+	 * 
+	 * @param SmAddress
+	 *            addr
+	 */
 	private void initUserResidentialAddressSelectItems(SmAddress addr) {
 		onChangeCountry(addr.getPmCountry(), "USER_RESIDENTIAL_ADDRESS");
 		onChangeState(addr.getPmState(), "USER_RESIDENTIAL_ADDRESS");
 		onChangeDistrict(addr.getPmDistrict(), "USER_RESIDENTIAL_ADDRESS");
 	}
 
+	/**
+	 * Validate before submit registration
+	 */
 	private void validateBeforeSubmit() {
 		SmPersonnel personnel = getManagedBean().getSmPersonnel();
 
@@ -943,6 +1077,9 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean().getSmAppl().getSmSupplierBanks());
 	}
 
+	/**
+	 * Set personnel related values before submit
+	 */
 	private void setSmPersonnelBeforeSubmit() {
 		SmPersonnel smPersonnel = getManagedBean().getSmPersonnel();
 		smPersonnel.setRevNo(SupplierManagementConst.DEFAULT_REV_NO);
@@ -993,6 +1130,9 @@ public class GovtSellerRegistrationBackingBean extends
 		getManagedBean().getSmAppl().getSmPersonnels().add(smPersonnel);
 	}
 
+	/**
+	 * Set bank related values before submit
+	 */
 	private void setSmSupplierBankBeforeSubmit() {
 		for (SmSupplierBank suppBank : getManagedBean().getSmAppl()
 				.getSmSupplierBanks()) {
@@ -1002,6 +1142,9 @@ public class GovtSellerRegistrationBackingBean extends
 		}
 	}
 
+	/**
+	 * Set branch related values before submit
+	 */
 	private void setSmSupplierBranchBeforeSubmit() {
 		if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getSmAppl()
 				.getSmSupplierBranches())) {
@@ -1048,6 +1191,9 @@ public class GovtSellerRegistrationBackingBean extends
 		}
 	}
 
+	/**
+	 * Set application and supplier values before submit
+	 */
 	private void setSmApplBeforeSubmit() {
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setAppType(getManagedBean().getSmAppl().getApplType());
@@ -1065,6 +1211,11 @@ public class GovtSellerRegistrationBackingBean extends
 				.add(getManagedBean().getSmAppl());
 	}
 
+	/**
+	 * Set RegistrationReqDTO values
+	 * 
+	 * @return RegistrationReqDTO
+	 */
 	private RegistrationReqDTO getRegistrationReqDTO() {
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 		FacesScopes fs = new FacesScopes();
