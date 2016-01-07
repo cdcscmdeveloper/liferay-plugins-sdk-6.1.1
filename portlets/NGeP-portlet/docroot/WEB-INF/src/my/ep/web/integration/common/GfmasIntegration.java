@@ -508,7 +508,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 
 		String fileName = null;   
 		if (osbUtility.osbServiceCallInBound(ServiceCode.APOVE.value(),"")) {
-			Thread sleepThread =  sleepThread("APOVE");
+			Thread sleepThread =  sleepThread("APOVE",5000L);
 			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, ProcessCode.APOVE.value());
 				if(null!=fileName){
 					if(interfaceSO.retrieveInterfaceLogByServiceCodeAndFileName(ServiceCode.APOVE.value(), fileName)){
@@ -575,7 +575,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 		log.info("inside pejabatPerakaunanGfmasInbound :GLBAC");
 		String fileName = null;
 		if (osbUtility.osbServiceCallInBound(ServiceCode.GLBAC.value(),"")) {
-			Thread sleepThread =  sleepThread("GLBAC");
+			Thread sleepThread =  sleepThread("GLBAC",5000L);
 			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, ProcessCode.GLBAC.value());
 			if(null!=fileName){
 				if(interfaceSO.retrieveInterfaceLogByServiceCodeAndFileName(ServiceCode.GLBAC.value(), fileName)){
@@ -634,7 +634,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 
 		String fileName = null;
 		if (osbUtility.osbServiceCallInBound(ServiceCode.GLSEG.value(),"")) {
-			Thread sleepThread = sleepThread("GLSEG");
+			Thread sleepThread = sleepThread("GLSEG",5000L);
 			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, ProcessCode.GLSEG.value());
 			if(null!=fileName){
 				if(interfaceSO.retrieveInterfaceLogByServiceCodeAndFileName(ServiceCode.GLSEG.value(), fileName)){
@@ -711,13 +711,13 @@ public class GfmasIntegration extends InitializeUtilityClz{
 	/**
 	 * @return
 	 */
-	public Thread sleepThread(String threadName) {
+	public Thread sleepThread(String threadName,long millis) {
 		Thread sleepThread = Thread.currentThread();
 		sleepThread.setName(threadName);
 		if(sleepThread.isAlive()){
 			try {
 				System.out.println("sleepThread :"+sleepThread +" is sleeping ");
-				Thread.sleep(5000L);
+				Thread.sleep(millis);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -727,16 +727,19 @@ public class GfmasIntegration extends InitializeUtilityClz{
 
 	@Override
 	public void votGfmasInbound() {
+		
+	}
+	public void votGfmasInbound(String fileName1) {
 		log.info("inside votGfmasInbound :GLVOT");
-		String fileName = null;
+		String fileName = fileName1;
 		if (osbUtility.osbServiceCallInBound(ServiceCode.GLVOT.value(),"")) {
-			Thread sleepThread =  sleepThread("GLVOT");
-			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, ProcessCode.GLVOT.value());
+			Thread sleepThread =  sleepThread("GLVOT",5000L);
+			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_UPLOAD, ProcessCode.GLVOT.value());
 			if(null!=fileName){
 				if(interfaceSO.retrieveInterfaceLogByServiceCodeAndFileName(ServiceCode.GLVOT.value(), fileName)){
 					sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,	IntegrationConstants.GMAS_ARCHIVE + fileName);
 				}else{
-					if (sftpUtility.download(IntegrationConstants.FILE_PATH_LOCAL + fileName, IntegrationConstants.GMAS_DOWNLOAD + fileName)) {
+					if (sftpUtility.download(IntegrationConstants.FILE_PATH_LOCAL + fileName, IntegrationConstants.GMAS_UPLOAD + fileName)) {
 						sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,IntegrationConstants.GMAS_ARCHIVE + fileName);
 						encryption.decryptGmas(IntegrationConstants.FILE_PATH_LOCAL	+ fileName, IntegrationConstants.GMAS_DOWNLOAD_LOCAL + fileName);
 					
@@ -807,7 +810,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 		log.info("inside votDanaGfmasInbound :GLDNA");
 		String fileName = null;
 		if (osbUtility.osbServiceCallInBound(ServiceCode.GLDNA.value(),"")) {
-			Thread sleepThread =  sleepThread("GLDNA");
+			Thread sleepThread =  sleepThread("GLDNA",5000L);
 			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, ProcessCode.GLDNA.value());
 			if(null!=fileName){
 				if(interfaceSO.retrieveInterfaceLogByServiceCodeAndFileName(ServiceCode.GLDNA.value(), fileName)){
@@ -874,7 +877,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 		log.info("inside programAktivitiGfmasInbound :GLPRG");
 		String fileName = null;
 		if (osbUtility.osbServiceCallInBound(ServiceCode.GLPRG.value(),"")) {
-			Thread sleepThread =  sleepThread("GLPRG");
+			Thread sleepThread =  sleepThread("GLPRG",5000L);
 			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, ProcessCode.GLPRG.value());
 			if(null!=fileName){
 				if(interfaceSO.retrieveInterfaceLogByServiceCodeAndFileName(ServiceCode.GLPRG.value(), fileName)){
@@ -942,7 +945,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 		log.info("inside projectGfmasInbound :GLPRJ");
 		String fileName = null;;
 		if (osbUtility.osbServiceCallInBound("GFM-240","")) {
-			Thread sleepThread =  sleepThread("GLPRJ");
+			Thread sleepThread =  sleepThread("GLPRJ",5000L);
 			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "GLPRJ");
 			if(null!=fileName){
 				if(interfaceSO.retrieveInterfaceLogByServiceCodeAndFileName(ServiceCode.GLPRJ.value(), fileName)){
@@ -1022,7 +1025,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 		log.info("inside kodAkaunGfmasInbound :GLGLC");
 		String fileName = null;
 		if (osbUtility.osbServiceCallInBound("GFM-260","")) {
-			Thread sleepThread =  sleepThread("GLGLC");
+			Thread sleepThread =  sleepThread("GLGLC",5000L);
 			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "GLGLC");
 			if(null!=fileName){
 				if(interfaceSO.retrieveInterfaceLogByServiceCodeAndFileName(ServiceCode.GLGLC.value(), fileName)){
@@ -1097,7 +1100,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 
 		String fileName = null;
 		if (osbUtility.osbServiceCallInBound(ServiceCode.GLPCG.value(),"")) {
-			Thread sleepThread =  sleepThread("GLPCG");
+			Thread sleepThread =  sleepThread("GLPCG",5000L);
 			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "GLPCG");
 			if(fileName!=null){
 				if(interfaceSO.retrieveInterfaceLogByServiceCodeAndFileName(ServiceCode.GLPCG.value(), fileName)){
@@ -1184,7 +1187,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 
 		String fileName =  null;
 		if (osbUtility.osbServiceCallInBound("GFM-280","")) {
-			Thread sleepThread =  sleepThread("GLPTJ");
+			Thread sleepThread =  sleepThread("GLPTJ",5000L);
 			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "GLPTJ");
 			if(fileName!=null){
 				if(interfaceSO.retrieveInterfaceLogByServiceCodeAndFileName(ServiceCode.GLPTJ.value(), fileName)){
@@ -1241,7 +1244,8 @@ public class GfmasIntegration extends InitializeUtilityClz{
 								AgOfficeReqDTO reqDTO = new AgOfficeReqDTO();
 								reqDTO.setAgOfficeCode(orgProfile.getAgOfficeCode());
 								AgOfficeResDTO agOfficeDTO = agOfficeSO.retrieveValidAgOfficeByOfficeCode(reqDTO);
-								pmOrgProfile.setPmAgOffice(agOfficeDTO.getAgOffice());
+//								pmOrgProfile.setPmAgOffice(agOfficeDTO.getAgOffice());
+								orgValidity.setPmAgOffice(agOfficeDTO.getAgOffice());
 
 								ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 								parameterReqDTO.setParameterType(ParameterTypeConst.ORGANISATION_TYPES);
@@ -1282,7 +1286,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 
 		String fileName = null;
 		if (osbUtility.osbServiceCallInBound("GFM-360","")) {
-			Thread sleepThread =  sleepThread("CMBNK");
+			Thread sleepThread =  sleepThread("CMBNK",5000L);
 			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "CMBNK");
 			if(fileName!=null){
 				if(interfaceSO.retrieveInterfaceLogByServiceCodeAndFileName(ServiceCode.CMBNK.value(), fileName)){
@@ -1364,7 +1368,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 
 		String fileName = null;
 		if (osbUtility.osbServiceCallInBound("GFM-140","")) {
-			Thread sleepThread =  sleepThread("AP511");
+			Thread sleepThread =  sleepThread("AP511",5000L);
 			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "AP511");
 			if(fileName!=null){
 				if(interfaceSO.retrieveInterfaceLogByServiceCodeAndFileName(ServiceCode.AP511.value(), fileName)){
@@ -1483,7 +1487,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 	
 
 	
-/*	public void billingInformationGfmasOutbound() {
+	/*public void billingInformationGfmasOutbound() {
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 		String dateInString = "15-06-2015";
@@ -1493,7 +1497,6 @@ public class GfmasIntegration extends InitializeUtilityClz{
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		
 		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
 		
 //		SupplierSearchResDTO resDTO = supplierSearchSO.findSupplierforMasterDataVendor(supplierSearchReqDTO);
@@ -1521,7 +1524,6 @@ public class GfmasIntegration extends InitializeUtilityClz{
 				billingInformation.setAgencyId(IntegrationConstants.AGENSI_ID_ePerolehan);  
 				billingInformation.setTotalBillCount(smBill.getSmPayments().size());
 				
-				
 				// Bill Header Information
 				
 				for(SmPayment smPayment:smBill.getSmPayments()){
@@ -1547,9 +1549,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 						
 					if(!billHeaders.contains(billHeader))
 						billHeaders.add(billHeader);
-					
 				}
-				
 				// Customer Information
 				if(null!=smBill.getSmSupplier().getSmAppl().getSmCompanyBasic()){
 					
@@ -1599,18 +1599,12 @@ public class GfmasIntegration extends InitializeUtilityClz{
 						if(!customerInformations.contains(customerInformation))
 							customerInformations.add(customerInformation);
 				}
-				
 				// ChargeLine Information
 				
 				smBill.getsm
-				
 			}
-			
 			if (null != smSupplier.getSmAppl()) {
 				
-				
-			
-						
 					log.info("ChargeLine Information...");
 					chargeLine = new ChargeLine();
 					chargeLine.setRecordType(IntegrationConstants.RECORD_TYPE_TWO);
@@ -1678,7 +1672,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 	}
 	
 	// Receipt Information
-	
+	@Override
 	public void receiptInformationGfmasOutbound() {
 		
 	List<SmBill> smBillList =iPaymentSO.retrieveLatestBillByCreateDate();

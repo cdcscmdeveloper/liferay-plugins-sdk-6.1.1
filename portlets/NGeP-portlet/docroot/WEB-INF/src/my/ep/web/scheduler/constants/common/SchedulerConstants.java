@@ -115,6 +115,25 @@ public class SchedulerConstants {
 	public static final String EPERUNDING_GOVERNMENT_PROJECT_JOB = "GOVERNMENT PROJECT JOB";
 
 	public static final String EPERUNDING_DELETED_COMAPNY_JOB = "DELETED COMAPNY JOB";
+	
+//	PHIS OUT BOUND
+	public static final String PHIS_VOT_FUND_JOB = "MASTER DATA VOT JOB";
+	
+	public static final String PHIS_VOT_FUND_DANA_JOB = "MASTER DATA VOT DANA JOB";
+	
+	public static final String PHIS_PROGRAM_JOB = "MASTER DATA PROGRAM JOB";
+	
+	public static final String PHIS_PROJECT_JOB = "MASTER DATA PROJECT JOB";
+	
+	public static final String PHIS_KOD_JOB = "MASTER DATA KOD AKAUN JOB";
+	
+	public static final String PHIS_DELIVERY_ADDRESS_JOB = "MASTER DATA DELIVERY ADDRESS JOB";
+	
+	public static final String PHIS_PAY_EFF_NOTIFY_JOB = "PAYMENT EFFECT NOTIFICATION JOB";
+	
+	public static final String PHIS_MASTER_DATA_MATERIAL = "MATERIAL MASTER DATA JOB";
+	
+	public static final String PHIS_MASTER_DATA = "PHIS MATERIAL MASTER DATA JOB";
 
 	// PHIS OUT BOUND
 	// PM
