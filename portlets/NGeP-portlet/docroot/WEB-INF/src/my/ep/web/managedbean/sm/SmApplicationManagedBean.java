@@ -161,6 +161,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmAssociationBody> selectedShrHldrProfBodies;
 	private SmAssociationBody selectedStfPrfBdy;
 	private SmSvTask svTask;
+	private List<SmSvTask> svTaskList;
 	private List<SmRelatedCompany> selectedShrHldrRelatedCompanies;
 	private SmRelatedCompany selectedRelatedCompany;
 	private List<SmStaffAcademic> selectedShrHldrAcademics;
@@ -3113,5 +3114,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setSiteVisitFacVOList(
 			List<SmSiteVisitFacilityVO> siteVisitFacVOList) {
 		this.siteVisitFacVOList = siteVisitFacVOList;
+	}
+
+	public List<SmSvTask> getSvTaskList() {
+		return svTaskList;
+	}
+
+	public void setSvTaskList(List<SmSvTask> svTaskList) {
+		this.svTaskList = svTaskList;
 	}
 }

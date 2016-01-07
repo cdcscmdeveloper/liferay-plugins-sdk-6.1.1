@@ -6,15 +6,18 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
-	<p:panel header="#{lbl['lbl.sm.category.categories']}" toggleable="true" id="siteVisitCatPanelId">
+	<p:panel header="#{lbl['lbl.sm.address.list.site.visit']}" toggleable="true" id="siteVisitCatPanelId">
+	
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.site.visit.select.address.instruction']}"/>
+		
 		<p:dataTable var="facVO"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{backingBean.managedBean.siteVisitFacVOList}"
 			rowKey="#{facVO}" rowIndexVar="indexVO" id="svcFacVODt">
 			<ac:paginator for="svcFacVODt" />
 
-			<p:column headerText="#{lbl['lbl.sm.facility.type']}">
-				<h:outputText value="#{facVO.facTypeLabel}" />
+			<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}">
+				<h:outputText value="#{facVO.catTypeLabel}" />
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}">
@@ -31,7 +34,7 @@
 				</table>
 			</p:column>
 
-			<p:column style="width: 70%;white-space: normal;" headerText="#{lbl['lbl.sm.facilities']}">
+			<p:column style="width: 70%;white-space: normal;" headerText="#{lbl['lbl.sm.address.information']}">
 				<p:dataTable var="fac"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{facVO.facilities}"
@@ -53,6 +56,58 @@
 		
 					<p:column style="width: 70%;white-space: normal;" headerText="#{lbl['lbl.sm.facility.address']}">
 						<h:outputText value="#{backingBean.getFullAddress(fac.smAddress)}" />
+					</p:column>
+		
+				</p:dataTable>
+				
+				<br />
+				<p:dataTable var="assoc"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					value="#{facVO.assocCompanies}"
+					rowKey="#{assoc}" rowIndexVar="index" id="svcAssocDt">
+					
+					<ac:paginator for="svcAssocDt" />
+					
+					<p:column headerText="" style="width: 5%;">
+						<p:selectBooleanCheckbox value="#{assoc.selected}" >
+						    <p:ajax event="change" update="@this" 
+						    	listener="#{backingBean.onCheckedSiteVisitAssocCompanyAddress()}" 
+						    	process="@this" partialSubmit="true"/>
+						</p:selectBooleanCheckbox>
+					</p:column>
+		
+					<p:column headerText="#{lbl['lbl.sm.assocCmpny.head.office.name']}">
+						<h:outputText value="#{assoc.companyName}" />
+					</p:column>
+		
+					<p:column style="width: 70%;white-space: normal;" headerText="#{lbl['lbl.sm.facility.address']}">
+						<h:outputText value="#{backingBean.getFullAddress(assoc.smAddress)}" />
+					</p:column>
+		
+				</p:dataTable>
+				
+				<br />
+				<p:dataTable var="br"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					value="#{facVO.suppBranches}"
+					rowKey="#{br}" rowIndexVar="index" id="svcBrDt">
+					
+					<ac:paginator for="svcBrDt" />
+					
+					<p:column headerText="" style="width: 5%;">
+						<p:selectBooleanCheckbox value="#{br.selected}" >
+						    <p:ajax event="change" update="@this" 
+						    	listener="#{backingBean.onCheckedSiteVisitBranchAddress()}" 
+						    	process="@this" partialSubmit="true"/>
+						</p:selectBooleanCheckbox>
+					</p:column>
+		
+					<p:column headerText="#{lbl['lbl.sm.branch.branchName']}">
+						<h:outputText value="#{br.branchName}" />
+					</p:column>
+		
+					<p:column style="width: 70%;white-space: normal;" headerText="#{lbl['lbl.sm.address']}">
+						<h:outputText value="#{backingBean.getFullAddress(br.smAddress)}" />
 					</p:column>
 		
 				</p:dataTable>

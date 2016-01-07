@@ -101,6 +101,7 @@ import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -3366,6 +3367,20 @@ public class SmCommonUtil {
 		}
 	}
 
+	public static <ENTITY_CLASS extends BaseEntity> boolean isListSelected(
+			List<ENTITY_CLASS> list) {
+		boolean retVal = false;
+		if (!isCollectionEmpty(list)) {
+			for (ENTITY_CLASS entity : list) {
+				if (entity.isSelected()) {
+					retVal = true;
+					break;
+				}
+			}
+		}
+		return retVal;
+	}
+
 	private static Field[] getFields(Object target, boolean findInSuperClasses,
 			boolean setFieldsAsAccessible) {
 		if (!(target instanceof Object))
@@ -3437,17 +3452,18 @@ public class SmCommonUtil {
 		return instance;
 
 	}
-	
+
 	/**
 	 * Retrieve PmStatus By Id
 	 */
-	public PmStatus retrievePmStatusById(Long statusId){
+	public PmStatus retrievePmStatusById(Long statusId) {
 		StatusReqDTO reqDTO = new StatusReqDTO();
 		IStatusSO reqSO = (IStatusSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IStatusSO.class);
 		reqDTO.setStatusId(statusId);
 		StatusResDTO resDTO = reqSO.retrieveStatusByStatusId(reqDTO);
-		
+
 		return resDTO.getPmStatus();
 	}
 

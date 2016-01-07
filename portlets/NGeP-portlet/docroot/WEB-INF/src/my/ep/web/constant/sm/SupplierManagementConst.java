@@ -132,6 +132,15 @@ public class SupplierManagementConst {
 				.getMessage("lbl.sm.facility.type.business.office", null));
 	}
 
+	public static String[] CAT_TYPE_CODES = new String[] {
+			SupplierManagementConst.CAT_TYPE_TRANSPORTATION,
+			SupplierManagementConst.CAT_TYPE_WORKSHOP,
+			SupplierManagementConst.CAT_TYPE_INSURANCE,
+			SupplierManagementConst.CAT_TYPE_DOCKYARD,
+			SupplierManagementConst.CAT_TYPE_MANUFACTURING,
+			SupplierManagementConst.CAT_TYPE_PRINTING,
+			SupplierManagementConst.CAT_TYPE_TRAVEL };
+
 	// Application Category Type
 	public static final String SM_APPL_CATEGORY_TYPE_NORMAL = "N";
 	public static final String SM_APPL_CATEGORY_TYPE_SPECIAL = "S";
