@@ -998,7 +998,7 @@ public class OrganisationBackingBean extends
 												.getOrgName() },
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 								new FacesScopes().getUserLocale());
-				redirectUrl = NAV_TO_SEARCH;
+				redirectUrl = "organisationMain.xhtml";
 			} else if (BpmOutcomeConst.BPM_UPDATE.equalsIgnoreCase(outcome)) {
 				message = ResourceBundleUtils
 						.getMessage("lbl.pm.org.updated.successfully",
