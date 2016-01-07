@@ -3,7 +3,10 @@ package my.ep.web.vo;
 import java.io.Serializable;
 import java.util.List;
 
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmFacility;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 
 public class SmSiteVisitFacilityVO implements Serializable {
@@ -11,18 +14,12 @@ public class SmSiteVisitFacilityVO implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -8541133926840139549L;
-	private String facTypeLabel;
-	private String facType;
+	private PmCategoryL3 l3;
+	private String catTypeLabel;
 	private List<SmSupplierCategory> suppCategories;
 	private List<SmFacility> facilities;
-
-	public String getFacType() {
-		return facType;
-	}
-
-	public void setFacType(String facType) {
-		this.facType = facType;
-	}
+	private List<SmAssociateCompany> assocCompanies;
+	private List<SmSupplierBranch> suppBranches;
 
 	public List<SmSupplierCategory> getSuppCategories() {
 		return suppCategories;
@@ -40,11 +37,35 @@ public class SmSiteVisitFacilityVO implements Serializable {
 		this.facilities = facilities;
 	}
 
-	public String getFacTypeLabel() {
-		return facTypeLabel;
+	public String getCatTypeLabel() {
+		return catTypeLabel;
 	}
 
-	public void setFacTypeLabel(String facTypeLabel) {
-		this.facTypeLabel = facTypeLabel;
+	public void setCatTypeLabel(String catTypeLabel) {
+		this.catTypeLabel = catTypeLabel;
+	}
+
+	public List<SmAssociateCompany> getAssocCompanies() {
+		return assocCompanies;
+	}
+
+	public void setAssocCompanies(List<SmAssociateCompany> assocCompanies) {
+		this.assocCompanies = assocCompanies;
+	}
+
+	public List<SmSupplierBranch> getSuppBranches() {
+		return suppBranches;
+	}
+
+	public void setSuppBranches(List<SmSupplierBranch> suppBranches) {
+		this.suppBranches = suppBranches;
+	}
+
+	public PmCategoryL3 getL3() {
+		return l3;
+	}
+
+	public void setL3(PmCategoryL3 l3) {
+		this.l3 = l3;
 	}
 }
