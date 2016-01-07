@@ -201,6 +201,8 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	
 	private String backToPrevious;
 	
+	private boolean isTaxable=false;
+	
 	/**
 	 * Gets the doc type.
 	 *
@@ -1139,5 +1141,19 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	 */
 	public void setDocMaintain(boolean docMaintain) {
 		this.docMaintain = docMaintain;
+	}
+
+	/**
+	 * @return the isTaxable
+	 */
+	public boolean isTaxable() {
+		return isTaxable;
+	}
+
+	/**
+	 * @param isTaxable the isTaxable to set
+	 */
+	public void setTaxable(boolean isTaxable) {
+		this.isTaxable = isTaxable;
 	}
 }

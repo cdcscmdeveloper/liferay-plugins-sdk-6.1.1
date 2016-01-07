@@ -295,11 +295,19 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 						paramMap.put(ReportConst.PARAM_DOC_NO, resDTO.getInvoiceNo());
 						paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
 						CommonBackingBean commonBackingBean = new CommonBackingBean();
-						commonBackingBean.getManagedBean().setReportName(ReportConst.FL_NGEP_INVOICE);
+						reqDTO.setInvoiceId(resDTO.getInvId());
+						resDTO = invoiceSO.isInvoiceTaxable(reqDTO);
+						if(resDTO.isTaxable()){
+							commonBackingBean.getManagedBean().setReportName(ReportConst.FL_NGEP_TAX_INVOICE);
+						}else{
+							commonBackingBean.getManagedBean().setReportName(ReportConst.FL_NGEP_INVOICE);
+						}
+						
 						commonBackingBean.getManagedBean().setReportDisplayName(ResourceBundleUtils.getMessage("lbl.fl.invoice.supp.invoice",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
 						commonBackingBean.getManagedBean().setParamMap(paramMap);
 						return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
 					}
+					
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				} else {
 					reqDTO.setDocType(ParameterConst.DOCTYPE_INVOICE);

@@ -294,10 +294,12 @@ public class ReportConst {
 	public static final String FL_NGEP_DELIVERY = "FL_NGEP_DELIVERY.jsp";
 	public static final String FL_NGEP_FRN = "FL_NGEP_FRN.jsp";
 	public static final String FL_NGEP_INVOICE = "FL_NGEP_INVOICE.jsp";
+	public static final String FL_NGEP_TAX_INVOICE = "FL_NGEP_TAX_INVOICE.jsp";
 	public static final String FL_NGEP_PAYMENT_MATCH = "FL_NGEP_PAYMENT_MATCH.jsp";
 	public static final String FL_NGEP_CREDIT_NOTE = "FL_NGEP_CREDIT_NOTE.jsp";
 	public static final String FL_NGEP_DEBIT_NOTE = "FL_NGEP_DEBIT_NOTE.jsp";
 	public static final String FL_NGEP_COGSTR = "FL_NGEP_COGSTR.jsp";
+	public static final String FL_NGEP_STOP_DELIVERY = "FL_NGEP_SDI.jsp";
 
 	// FL Module reports end
 	// SM Module report start
