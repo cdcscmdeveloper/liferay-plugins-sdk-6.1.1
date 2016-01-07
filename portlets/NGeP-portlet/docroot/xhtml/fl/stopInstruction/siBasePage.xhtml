@@ -68,7 +68,7 @@
 						action="#{trackingDiarySearchBackingBean.goToTrackingDiarySearch(ModuleCodeConstant.ORDER_FULFILLMENT,ParameterConst.doctypeStopDelivery,stopInstrBB.managedBean.stopInstr.stopInstrNo,stopInstrBB.managedBean.stopInstr.stopInstrId,stopInstrBB.managedBean.stopInstr.pmStatus.statusId)}"
 						immediate="true" />
 					<p:commandButton value="#{lbl['lbl.btn.print']}" ajax="false"
-								action="#{flDocumentBackingBean.generateReport(stopInstrBB.managedBean.stopInstr.flFulfilmentOrder.docType,stopInstrBB.managedBean.stopInstr.flFulfilmentOrder.docNo,flDocumentManagedBean.taxable)}" />	
+								action="#{flDocumentBackingBean.generateReport(ParameterConst.doctypeStopDelivery,stopInstrBB.managedBean.stopInstr.stopInstrNo,flDocumentManagedBean.taxable)}" />	
 					</td>		
 				</c:if>
 				</td>
