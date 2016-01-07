@@ -33,13 +33,17 @@
 				<td><c:choose>
 						<c:when
 							test="#{!organisationBackingBean.managedBean.orgProfile.brandNew}">
-							<p:selectOneMenu id="orgtypeId" styleClass="ppDropDownWidthM"
-								disabled="true" label="#{lbl['lbl.pm.organisation.orgType']}"
-								value="#{organisationBackingBean.managedBean.orgTypeId}"
-								style="width: 275px;margin-bottom: 5px;">
-								<f:selectItems
-									value="#{organisationBackingBean.getAllOrgTypeDropdownValues(ParameterTypeConst.organisationTypes)}" />
-							</p:selectOneMenu>
+							<ui:remove>
+								<p:selectOneMenu id="orgtypeId" styleClass="ppDropDownWidthM"
+									disabled="true" label="#{lbl['lbl.pm.organisation.orgType']}"
+									value="#{organisationBackingBean.managedBean.orgTypeId}"
+									style="width: 275px;margin-bottom: 5px;">
+									<f:selectItems
+										value="#{organisationBackingBean.getAllOrgTypeDropdownValues(ParameterTypeConst.organisationTypes)}" />
+								</p:selectOneMenu>
+							</ui:remove>
+							<p:inputText id="orgtypeId" disabled="true" size="50" value="#{organisationBackingBean.getParameterDesc(ParameterTypeConst.organisationTypes,organisationBackingBean.managedBean.orgType)}">
+							</p:inputText>
 						</c:when>
 						<c:otherwise>
 							<p:outputPanel id="orgtypeId">
