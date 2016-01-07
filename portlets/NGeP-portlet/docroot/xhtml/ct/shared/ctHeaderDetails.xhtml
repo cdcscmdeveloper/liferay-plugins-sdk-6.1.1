@@ -66,7 +66,7 @@
 			   				 value="#{ctBackingBean.managedBean.contractVer.ctContractAmount.gstAmount}" >
 			   				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
-						<p:inputText styleClass="ppRightBtn" style="width:160px;" disabled="true" 
+						<p:inputText styleClass="ppRightBtn" style="width:120px;" disabled="true" 
 			   				  rendered="#{!ctBackingBean.managedBean.gstCheckingGUI}" value="#{lbl['lbl.txt.na']}">
 						</p:inputText>
 					</td>
@@ -188,6 +188,16 @@
 				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap201.exemption']}" />
 			  </h:panelGrid>
 		   </h:panelGrid>
+		    <h:panelGrid columns="3">
+			       <p:selectBooleanCheckbox disabled="true" 
+			             value="#{ctBackingBean.managedBean.contractVer.ctContractValue.pid}"  style="text-align:top;">
+			         </p:selectBooleanCheckbox>
+			         <p:spacer width="2" />	
+			          <h:panelGrid columns="2">
+			  	            <h:outputText value="#{lbl['lbl.ct.pid']}"  />
+			  	           <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.pid']}" />
+			  	      </h:panelGrid>
+		 </h:panelGrid>	
 		   <h:panelGrid columns="3">
 		     <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.contractVer.ctContractValue.feeExampted}" disabled="true"/>
 		     <p:spacer width="2" />	
