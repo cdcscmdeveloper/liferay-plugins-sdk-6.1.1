@@ -1102,7 +1102,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	 *
 	 * @return true, if is supplier role
 	 */
-	private boolean isSupplierRole(){
+	public boolean isSupplierRole(){
 		if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
 			return Boolean.TRUE;
 		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
@@ -1111,12 +1111,12 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			return Boolean.TRUE;
 		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
 			return Boolean.TRUE;
+		}else if(getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())) {
+			return Boolean.TRUE;
 		}
-//		else if(getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())) {
-//			return Boolean.TRUE;
-//		}
 		return Boolean.FALSE;
 	}
+	
 	
 	/**
 	 * Retrieve a list of acknowledge officers 
