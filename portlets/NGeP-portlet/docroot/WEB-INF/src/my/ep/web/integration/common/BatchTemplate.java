@@ -63,5 +63,7 @@ public abstract class BatchTemplate extends InitializeSO {
 	public abstract void sstInformationGfmas();
 
 	public abstract void paymentGfmasInbound();
+	
+	public abstract void receiptInformationGfmasOutbound();
 
 }
