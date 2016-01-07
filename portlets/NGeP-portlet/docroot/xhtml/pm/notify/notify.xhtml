@@ -120,13 +120,26 @@
 									</td>
 								</tr>
 								<tr>
-									<td style="height: 30px;" colspan="3"><hr /> <p:scrollPanel
+									<td style="height: 30px;" colspan="3"><hr /> 
+										<p:scrollPanel
 											layout="block"
-											style="text-align:left;width:100%;height:240px;border:0">
-											<h:outputText escape="false"
-												style="text-align:left;width:98%;height:220px;overflow: auto;"
-												value="#{notifyBackingBean.managedBean.selectedNotify.pmNotifyDashboard.content}"></h:outputText>
-										</p:scrollPanel></td>
+											style="text-align:left;height:240px;border:0" mode="native">
+											<table style="width: 100%">
+												<tr>
+													<td>
+														<p:outputPanel>
+															<p>
+															<h:outputText escape="false"
+																style="text-align:left;width:98%;height:220px;overflow: auto;"
+																value="#{notifyBackingBean.managedBean.selectedNotify.pmNotifyDashboard.content}"></h:outputText>
+															</p>
+														</p:outputPanel>
+													</td>
+												</tr>
+											</table>
+											
+										</p:scrollPanel>
+										</td>
 								</tr>
 							</c:if>
 						</table>
