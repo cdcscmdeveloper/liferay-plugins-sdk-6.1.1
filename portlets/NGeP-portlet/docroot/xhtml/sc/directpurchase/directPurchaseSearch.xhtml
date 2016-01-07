@@ -31,7 +31,7 @@
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.document.title']}" /></td>
-					<td colspan="3"><p:inputText size="96"
+					<td colspan="3"><p:inputText size="99"
 							value="#{directPurchaseBackingBean.managedBean.searchDocumentTitle}"></p:inputText></td>
 				</tr>
 				<tr>
@@ -42,14 +42,14 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.created.date.from']}" /></td>
-					<td><p:calendar showOn="button" size="27"
+					<td><p:calendar showOn="button" size="30"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 							value="#{directPurchaseBackingBean.managedBean.searchDocumentFromDuration}">
 							<p:ajax event="dateSelect" update="toDate" />
 						</p:calendar></td>
 
 					<td><p:outputLabel value="#{lbl['lbl.sc.created.date.to']}" /></td>
-					<td><p:calendar showOn="button" size="27"
+					<td><p:calendar showOn="button" size="20"
 							mindate="#{simpleQuoteBackingBean.managedBean.searchFromCreatedDate}"
 							id="toDate" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 							value="#{directPurchaseBackingBean.managedBean.searchDocumentToDuration}">
