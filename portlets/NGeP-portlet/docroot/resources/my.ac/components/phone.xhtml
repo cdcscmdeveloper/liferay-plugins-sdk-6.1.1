@@ -25,7 +25,7 @@
 
 		+
 		<p:inputText value="#{cc.attrs.countryCode}" size="4" maxlength="4" label="#{cc.attrs.label} - #{lbl['lbl.sm.country.code']}" 
-			required="#{cc.attrs.required or not empty cc.attrs.areaCode or not empty cc.attrs.number or (cc.attrs.isMobile and not empty cc.attrs.telcoId)}" 
+			required="#{cc.attrs.required or not empty cc.attrs.number or (cc.attrs.isMobile and not empty cc.attrs.telcoId)}" 
 			validatorMessage="#{cc.attrs.validatorMessage}">
 			<p:ajax process="@this" update="#{cc.attrs.id}" partialSubmit="true" event="blur" />
 			<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
@@ -37,7 +37,7 @@
 			<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 		</p:inputText>
 		<p:inputText value="#{cc.attrs.number}" size="10" maxlength="10" id="#{phoneNoId}ph"
-			required="#{cc.attrs.required or not empty cc.attrs.areaCode or (cc.attrs.isMobile and not empty cc.attrs.telcoId)}" 
+			required="#{cc.attrs.required}" 
 			validatorMessage="#{cc.attrs.validatorMessage}" label="#{cc.attrs.label}">
 			<p:ajax process="@this" update="#{cc.attrs.id}" partialSubmit="true" event="blur" />
 			<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
