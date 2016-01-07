@@ -52,6 +52,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private List<PmFeeExemption> feeExemptionsForOrgAndItem;
 	private List<PmFeeExemption> feeExemptionsForComodity;
 	private List<PmFeeExemption> feeExemptionsForContract;
+	private List<PmFeeExemption> feeExemptionsForOrgType;
 	private PmFeeExemption selectedFeeExemption;
 	private SmSupplier selectedSmSupplier;
 	private CtContractItem selectedCtContractItem;
@@ -62,6 +63,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private List<PmFeeExemption> deletedOrgAndItemFeeExemptions;
 	private List<PmFeeExemption> deletedComodityFeeExemptions;
 	private List<PmFeeExemption> deletedContractFeeExemptions;
+	private List<PmFeeExemption> deletedOrgTypeFeeExemptions;
 	private List<PmThreshold> thresholds;
 	private List<PmThreshold> deletedThresholds;
 	private PmOrgProfile selectedOrgProfile;
@@ -351,6 +353,18 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setDeletedContractFeeExemptions(
 			List<PmFeeExemption> deletedContractFeeExemptions) {
 		this.deletedContractFeeExemptions = deletedContractFeeExemptions;
+	}
+
+	public List<PmFeeExemption> getDeletedOrgTypeFeeExemptions() {
+		if(deletedOrgTypeFeeExemptions == null){
+			deletedOrgTypeFeeExemptions = new ArrayList<PmFeeExemption>();
+		}
+		return deletedOrgTypeFeeExemptions;
+	}
+
+	public void setDeletedOrgTypeFeeExemptions(
+			List<PmFeeExemption> deletedOrgTypeFeeExemptions) {
+		this.deletedOrgTypeFeeExemptions = deletedOrgTypeFeeExemptions;
 	}
 
 	public List<PmThreshold> getThresholds() {
@@ -868,6 +882,18 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	 */
 	public void setCurrentActiveOrg(PmOrgProfile currentActiveOrg) {
 		this.currentActiveOrg = currentActiveOrg;
+	}
+
+	public List<PmFeeExemption> getFeeExemptionsForOrgType() {
+		if(this.feeExemptionsForOrgType == null){
+			this.feeExemptionsForOrgType = new ArrayList<PmFeeExemption>();
+		}
+		return feeExemptionsForOrgType;
+	}
+
+	public void setFeeExemptionsForOrgType(
+			List<PmFeeExemption> feeExemptionsForOrgType) {
+		this.feeExemptionsForOrgType = feeExemptionsForOrgType;
 	} 
 
 }
