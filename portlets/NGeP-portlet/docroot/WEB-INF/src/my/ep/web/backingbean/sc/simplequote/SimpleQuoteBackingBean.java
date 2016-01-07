@@ -463,6 +463,7 @@ public class SimpleQuoteBackingBean extends
 				}
 			}
 		}
+		
 		getManagedBean().setScQuote(scQuote);
 		
 		if (docId != null && docId > 0) {
@@ -471,6 +472,13 @@ public class SimpleQuoteBackingBean extends
 				// check non contract item list
 				scQuote.setPanel(Boolean.TRUE);
 				boolean isGeneralOrSpecific = Boolean.FALSE;
+				
+				// set procurement type as normal for panel
+				if(null == scQuote.getProcurementType()){
+					PmParameter pmParameter = new PmParameter();
+					pmParameter.setParameterCode(ParameterConst.PROC_TYPE_NORMAL);
+					scQuote.setProcurementType(pmParameter);
+				}
 				
 				QuoteReqDTO reqDTO = new QuoteReqDTO();
 				reqDTO.setPanelItemId(docId);
@@ -2254,56 +2262,6 @@ public class SimpleQuoteBackingBean extends
 	}
 
 	/**
-	 * Approver action.
-	 * 
-	 * @param outcome
-	 *            the outcome
-	 */
-	public void approverAction(String outcome) {
-		try {
-			QuoteReqDTO reqDTO = new QuoteReqDTO();
-			reqDTO.setQuoteBidDtl(getManagedBean().getScQuote());
-			FacesScopes facesScopes = new FacesScopes();
-			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
-			reqDTO.setOutcome(outcome);
-			reqDTO.setTaskId(getManagedBean().getTaskId());
-			QuoteResDTO resDTO = getQuoteSO().updateSimpleQuote(reqDTO);
-
-			if (resDTO.isSuccessful()) {
-				if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
-					successMessage(MessageConst.INFO_700009,
-							ParameterTypeConst.DOCUMENT_TYPES,
-							ParameterConst.DOCTYPE_SIMPLE_QUOTE,
-							getManagedBean().getScQuote().getQuoteNo(), Boolean.TRUE);
-
-				} else if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
-					successMessage(MessageConst.INFO_700011,
-							ParameterTypeConst.DOCUMENT_TYPES,
-							ParameterConst.DOCTYPE_SIMPLE_QUOTE,
-							getManagedBean().getScQuote().getQuoteNo(), Boolean.TRUE);
-
-				} else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
-					successMessage(MessageConst.INFO_700008,
-							ParameterTypeConst.DOCUMENT_TYPES,
-							ParameterConst.DOCTYPE_SIMPLE_QUOTE,
-							getManagedBean().getScQuote().getQuoteNo(), Boolean.TRUE);
-
-				} else if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)) {
-					successMessage(MessageConst.INFO_700010,
-							ParameterTypeConst.DOCUMENT_TYPES,
-							ParameterConst.DOCTYPE_SIMPLE_QUOTE,
-							getManagedBean().getScQuote().getQuoteNo(), Boolean.TRUE);
-				}
-			} else {
-				throw new EpException(MessageConst.ERROR_700020);
-			}
-
-		} finally {
-			// quoteSO = null;
-		}
-	}
-
-	/**
 	 * By loc and business event. gets the supplier location tab if selects by
 	 * location gets the business nature tab if selects by business nature in
 	 * supplier criteria
@@ -4051,10 +4009,10 @@ public class SimpleQuoteBackingBean extends
 				quoteSupplier.setSmSupplier(supplier);
 				quoteSupplier.setMofNumber(getMofNor(supplier.getSupplierId()));
 				quoteSupplier.setQuote(quote);
-
+				
+				getManagedBean().setSupplierList(supplierList);
 				if (getManagedBean().getSupplierList().isEmpty()) {
 					supplierList.add(quoteSupplier);
-
 				} else {
 					List<Long> supplierIds = new ArrayList<Long>();
 					for (ScQuoteSupplier scQuoteSupplier : getManagedBean()
@@ -4073,7 +4031,6 @@ public class SimpleQuoteBackingBean extends
 					}
 				}
 			}
-			getManagedBean().setSupplierList(supplierList);
 		}
 	}
 
@@ -4097,6 +4054,7 @@ public class SimpleQuoteBackingBean extends
 				natureQuoteCriteria.setPmBusinessNature(busiNature);
 				natureQuoteCriteria.setQuote(getManagedBean().getScQuote());
 				
+				getManagedBean().setBusinessNatureCriterias(natureQuoteCriterias);
 				if (getManagedBean().getBusinessNatureCriterias() == null
 						|| getManagedBean().getBusinessNatureCriterias()
 								.isEmpty()) {
@@ -4128,8 +4086,6 @@ public class SimpleQuoteBackingBean extends
 					}
 				}
 			}
-			getManagedBean().setBusinessNatureCriterias(
-					natureQuoteCriterias);
 		}
 	}
 
@@ -4151,7 +4107,7 @@ public class SimpleQuoteBackingBean extends
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTSupplierSO.class);
 			QTSupplierReqDTO reqDTO = new QTSupplierReqDTO();
-			getManagedBean().setGovtSellers(govtSuppliers);
+			
 			for (PmOrgProfile orgProfile : orgProfiles) {
 				ScQuoteSupplier scQuoteSupplier = new ScQuoteSupplier();
 				reqDTO.setSupplierId(orgProfile.getOrgProfileId());
@@ -4159,9 +4115,9 @@ public class SimpleQuoteBackingBean extends
 						.retrieveGovSellerById(reqDTO).getSmSupplier());
 				scQuoteSupplier.setQuote(getManagedBean().getScQuote());
 				
+				getManagedBean().setGovtSellers(govtSuppliers);
 				if(getManagedBean().getGovtSellers() == null || getManagedBean().getGovtSellers().isEmpty()){
 					govtSuppliers.add(scQuoteSupplier);
-					
 				} else{
 					List<Long> govtSellerIds = new ArrayList<Long>();
 					for (ScQuoteSupplier govtSeller : getManagedBean().getGovtSellers() ) {
@@ -4171,7 +4127,7 @@ public class SimpleQuoteBackingBean extends
 					if (govtSellerIds.size() > 0) {
 						if(!govtSellerIds.contains(scQuoteSupplier.getSmSupplier().getSupplierId())){
 							govtSuppliers.add(scQuoteSupplier);
-
+							
 						} else {
 							throw new EpException(
 									MessageConst.ERROR_700027,
@@ -4209,10 +4165,10 @@ public class SimpleQuoteBackingBean extends
 				ScQuoteSupplier scQuoteSupplier = new ScQuoteSupplier();
 				scQuoteSupplier.setSmSupplier(panelSupplier.getSupplier());
 				scQuoteSupplier.setQuote(quote);
-
+				
+				getManagedBean().setPanelSuppliers(panelSuppliers);
 				if (panelSuppliers.isEmpty()) {
 					panelSuppliers.add(scQuoteSupplier);
-
 				} else {
 					List<Long> supplierIds = new ArrayList<Long>();
 					for (ScQuoteSupplier quoteSupplier : getManagedBean()
@@ -4224,7 +4180,7 @@ public class SimpleQuoteBackingBean extends
 						if (!supplierIds.contains(scQuoteSupplier
 								.getSmSupplier().getSupplierId())) {
 							panelSuppliers.add(scQuoteSupplier);
-
+							
 						} else {
 							// throw new EpException(MessageConst.ERROR_700027,
 							// new String[]{"Supplier","in panel Supplier"});
@@ -4232,7 +4188,6 @@ public class SimpleQuoteBackingBean extends
 					}
 				}
 			}
-			getManagedBean().setPanelSuppliers(panelSuppliers);
 		}
 	}
 
@@ -4266,7 +4221,7 @@ public class SimpleQuoteBackingBean extends
 		// business nature criteria
 		if (getManagedBean().isByBusinessNature()) {
 			// Business Nature Criteria
-			if (getManagedBean().getBusinessNatureCriterias() != null) {
+			if (null != getManagedBean().getBusinessNatureCriterias()) {
 				for (ScBusinessNatureQuoteCriteria natureQuoteCriteria : getManagedBean()
 						.getBusinessNatureCriterias()) {
 					if (natureQuoteCriteria.getPmBusinessNature() != null) {
