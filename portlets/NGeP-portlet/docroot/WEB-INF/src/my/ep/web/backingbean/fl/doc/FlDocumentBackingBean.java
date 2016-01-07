@@ -601,6 +601,10 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			} else {
 				flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
 			}
+			resDTO = invoiceSO.isInvoiceTaxable(reqDTO);
+			if(resDTO.isTaxable()){
+				invBB.getManagedBean().setTaxable(true);
+			}
 			navgPage=NAV_TO_MAINTAIN_INV;
 		}
 		else if(docType.equals(ParameterConst.DOCTYPE_FULFILMENT_NOTE)){
@@ -1003,7 +1007,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	 * @param docType the doc type
 	 * @param docNo the doc no
 	 */
-	public void generateReport(String docType, String docNo) {
+	public void generateReport(String docType, String docNo , boolean taxable) {
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put(ReportConst.PARAM_DOC_NO, docNo);
 		paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
@@ -1015,7 +1019,12 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_FULFILMENT_NOTE)) {
 			reportName = ReportConst.FL_NGEP_FRN;
 		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_INVOICE)) {
-			reportName = ReportConst.FL_NGEP_INVOICE;
+			if(taxable){
+				reportName = ReportConst.FL_NGEP_TAX_INVOICE;
+			}else{
+				reportName = ReportConst.FL_NGEP_INVOICE;
+			}
+			
 		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE)) {
 			reportName = ReportConst.FL_NGEP_CREDIT_NOTE;
 		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE)) {
@@ -1025,6 +1034,8 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_RELIEF_ORDER)) {
 			paramMap.put(ReportConst.PARAM_RELIEF_ORDER_DOC_NO, docNo);
 			reportName = ReportConst.FL_NGEP_COGSTR;
+		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_STOP_DELIVERY)) {
+			reportName = ReportConst.FL_NGEP_STOP_DELIVERY;
 		}
 		
 		if(reportName!=null) {

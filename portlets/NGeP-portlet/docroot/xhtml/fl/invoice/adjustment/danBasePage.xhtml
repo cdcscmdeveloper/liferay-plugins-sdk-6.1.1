@@ -60,7 +60,7 @@
 						action="#{trackingDiarySearchBackingBean.goToTrackingDiarySearch(ModuleCodeConstant.ORDER_FULFILLMENT,danBackingBean.managedBean.adjustment.docType,danBackingBean.managedBean.adjustment.docNo,danBackingBean.managedBean.adjustment.adjustmentId,danBackingBean.managedBean.adjustment.status.statusId)}"
 						immediate="true" />
 					<p:commandButton value="#{lbl['lbl.btn.print']}" ajax="false"
-								action="#{flDocumentBackingBean.generateReport(danBackingBean.managedBean.adjustment.docType,danBackingBean.managedBean.adjustment.docNo)}" />
+								action="#{flDocumentBackingBean.generateReport(danBackingBean.managedBean.adjustment.docType,danBackingBean.managedBean.adjustment.docNo,flDocumentManagedBean.taxable)}" />
 					</td>		
 				</c:if>	
 			</tr>

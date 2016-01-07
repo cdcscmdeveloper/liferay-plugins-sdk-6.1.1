@@ -268,13 +268,13 @@
 							        	icon="ui-icon-view"
 							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'View'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
 									<p:menuitem value="#{lbl['lbl.btn.print']}" ajax="false"
-										rendered="#{!(flDocument.docType==ParameterConst.doctypePurchaseRequest || flDocument.docType==ParameterConst.doctypeContractRequest || flDocument.docType==ParameterConst.doctypeShippingInstruction || flDocument.docType==ParameterConst.doctypeStopDelivery || (flDocument.docType==ParameterConst.doctypeFulfilmentNote and flDocument.statusId!=FulfilmentStatusCont.fnAcknowledged) )}"
+										rendered="#{!(flDocument.docType==ParameterConst.doctypePurchaseRequest || flDocument.docType==ParameterConst.doctypeContractRequest || flDocument.docType==ParameterConst.doctypeShippingInstruction || (flDocument.docType==ParameterConst.doctypeFulfilmentNote and flDocument.statusId!=FulfilmentStatusCont.fnAcknowledged) )}"
 										icon="ui-icon-print" 
-										action="#{flDocumentBackingBean.generateReport(flDocument.docType, flDocument.docNo)}" />							        
+										action="#{flDocumentBackingBean.generateReport(flDocument.docType, flDocument.docNo, flDocument.taxable)}" />							        
 									<p:menuitem value="#{lbl['lbl.btn.print.cogstr']}" ajax="false"
 										rendered="#{flDocument.coGSTR}"
 										icon="ui-icon-print" 
-										action="#{flDocumentBackingBean.generateReport(flDocument.docType, flDocument.docNo)}" />	
+										action="#{flDocumentBackingBean.generateReport(flDocument.docType, flDocument.docNo, flDocument.taxable)}" />
 									<p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.update']}"  
 							        	rendered="#{flDocument.isUpdateAction()}"
 							        	icon="ui-icon-update"
