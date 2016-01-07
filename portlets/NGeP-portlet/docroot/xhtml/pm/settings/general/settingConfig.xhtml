@@ -44,6 +44,7 @@
 		</p:blockUI>
 
 		<p:outputPanel>
+		
 			<p:tabView id="settingTabId"
 				activeIndex="#{ruleCatalogueBackingBean.managedBean.tabActiveIndex}">
 
@@ -56,7 +57,9 @@
 				<p:tab title="#{lbl['lbl.pm.settings.fee.setting']}">
 					<p:tabView id="feeSettingId"
 						activeIndex="#{ruleCatalogueBackingBean.managedBean.feeExemptionIndex}">
-
+                        <p:tab title="#{lbl['lbl.pm.settings.fee.by.org.type']}">
+							<ui:include src="feeSettingByOrgType.xhtml"></ui:include>
+						</p:tab>
 						<p:tab title="#{lbl['lbl.pm.settings.fee.by.org.item']}">
 							<ui:include src="feeSettingByOrg.xhtml"></ui:include>
 						</p:tab>

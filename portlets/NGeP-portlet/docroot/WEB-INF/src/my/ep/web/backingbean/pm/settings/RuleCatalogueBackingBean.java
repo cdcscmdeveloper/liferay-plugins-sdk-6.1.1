@@ -73,6 +73,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmLanguage;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
@@ -92,6 +93,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.settings.RuleCatalogueManageBean;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -114,6 +116,7 @@ public class RuleCatalogueBackingBean extends
 	private ISearchBean<PmParameterDesc> parameterSearchBean;
 	private IPagingDataModel<CmUnspsc> searchDataModel = new SearchPagingDataModel();
 
+
 	private static Map<Long, Object> colorMapper;
 	private static Map<Long, Object> designatedAreaMapper;
 
@@ -127,8 +130,18 @@ public class RuleCatalogueBackingBean extends
 	private String inactiveFeeOrgPopUpMsg = "";
 	private String inactiveFeeComoPopUpMsg = "";
 	private String inactiveFeeContPopUpMsg = "";
+	
+    private String dupplicateOrgTypeName;
 
 	// private List<SortMeta> preSortOrder = new ArrayList<SortMeta>();
+
+	public String getDupplicateOrgTypeName() {
+	return dupplicateOrgTypeName;
+}
+
+public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
+	this.dupplicateOrgTypeName = dupplicateOrgTypeName;
+}
 
 	public ISearchBean<PmParameterDesc> getParameterSearchBean() {
 		if (this.parameterSearchBean == null) {
@@ -224,7 +237,42 @@ public class RuleCatalogueBackingBean extends
 		}
 
 	}
+	public void getParameterObj(PmFeeExemption ex){
+       if(ex.getOrgTypeId() != null){
+	    PmParameter parameter =	ParameterHelper.getInstance().getPmParameterById(ex.getOrgTypeId().getParameterId());
+	    if(parameter != null)
+	       ex.setOrgTypeId(parameter);
 
+       }
+   	}
+	/**
+	 * The method used for generating a list of available display type of org
+	 * type as selection.
+	 * 
+	 */
+	public SelectItem[] getOrgTypeDropdownValuesFOR() {
+		log.info("getOrgTypeDropdownValues for org type");
+		ISearchBean<PmParameterDesc> searchBean = null;
+	
+			searchBean = getOrgTypeSearchBean("orgTypeSysParameter");
+			
+			log.info(".........searchBean.getDataFilterBeans()"+searchBean.getDataFilterBeans());
+		
+		SelectItem[] items = null;
+		if(searchBean != null){
+			searchBean.getSortColumns();
+			items = getDropdownValuesBySearchBean(
+					ParameterTypeConst.ORGANISATION_TYPES, searchBean);
+		}		
+
+		return items;
+	}
+	private ISearchBean<PmParameterDesc> getOrgTypeSearchBean(String componentId) {	
+		log.info(".......componentId="+componentId);
+		ISearchBean<PmParameterDesc> orgTypeSearchBean = super.createSearchBean(
+						PmParameterDesc.class, componentId);
+		return orgTypeSearchBean;
+	}
 	// public List<SortMeta> getPreSortOrder() {
 	// return preSortOrder;
 	// }
@@ -406,6 +454,12 @@ public class RuleCatalogueBackingBean extends
 				this.getManagedBean().getFeeExemptionsForContract()
 						.add(exemption);
 			}
+			this.getManagedBean().getFeeExemptionsForOrgType().clear();
+			this.getManagedBean().getDeletedOrgTypeFeeExemptions().clear();
+			resFDTO = feeSO.getFeeExemptionsForOrgType(reqFDTO);
+
+			this.getManagedBean().setFeeExemptionsForOrgType(resFDTO.getFeeExemptions());
+			
 			initOperationThreshold();
 			initGst();
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -1201,6 +1255,29 @@ public class RuleCatalogueBackingBean extends
 
 	}
 
+	public void addMoreOrgTypeFee() {
+		log.info(".................addMoreOrgTypeFee...................");
+		PmFeeExemption newFeeExemption = new PmFeeExemption();
+		newFeeExemption.setFeeExemptionType("7");
+		newFeeExemption.setEffDate(this.getManagedBean().getToday());// make
+																		// sure
+																		// to
+																		// delete
+																		// the
+																		// new
+		// objs before update if doesn't
+		// selected
+		newFeeExemption.setOrgTypeId(new PmParameter());
+		
+
+		int index = this.getManagedBean().getFeeExemptionsForOrgType().size();
+		this.getManagedBean().getFeeExemptionsForOrgType()
+				.add(index, newFeeExemption);
+		RequestContext.getCurrentInstance().execute(
+				"feeByOrgTypeTableWidVar.paginator.endLink.click()");
+
+	}
+	
 	public void deleteComodityFee(int rowIndex) {
 		log.info(".................deleteComodityFee...................");
 
@@ -1211,6 +1288,20 @@ public class RuleCatalogueBackingBean extends
 				.add(deletedExemption);// should added to original list before
 										// save
 		this.getManagedBean().getFeeExemptionsForComodity()
+				.remove(deletedExemption);
+
+	}
+	
+	public void deleteOrgTypeFee(int rowIndex) {
+		log.info(".................deleteOrgTypeFee...................");
+
+		PmFeeExemption deletedExemption = this.getManagedBean()
+				.getFeeExemptionsForOrgType().get(rowIndex);
+		deletedExemption.setDeleted(true);
+		this.getManagedBean().getDeletedOrgTypeFeeExemptions()
+				.add(deletedExemption);// should added to original list before
+										// save
+		this.getManagedBean().getFeeExemptionsForOrgType()
 				.remove(deletedExemption);
 
 	}
@@ -1595,6 +1686,114 @@ public class RuleCatalogueBackingBean extends
 		return start1.getTime() <= end2.getTime()
 				&& start2.getTime() <= end1.getTime();
 	}
+	
+	public void saveFeeExemptionForOrgType(){
+		log.info("saveFeeExemptionForOrgType");
+		List<PmFeeExemption> exemptionList = new ArrayList<PmFeeExemption>();
+		exemptionList.addAll(this.getManagedBean()
+				.getFeeExemptionsForOrgType());
+
+		for (PmFeeExemption exemption1 : exemptionList) {
+			if (exemption1.getOrgTypeId() != null
+					&& exemption1.getOrgTypeId().getParameterId() == null) {
+				// throw required msg
+				throw new EpException(MessageConst.ERROR_770212,
+						new String[] {});
+			}
+
+			if (exemption1.getFeeExemptionId() == null) {// set ExemptionType
+															
+					exemption1.setFeeExemptionType("7");
+
+			} 
+		}
+		if (isDateOverlappedForExemptionType(exemptionList)) {
+			for (PmFeeExemption ex : exemptionList) {
+				if (ex.getOrgTypeId() == null) {
+					ex.setOrgTypeId(new PmParameter());
+				}
+			}
+			// hit error and return
+			
+			throw new EpException(MessageConst.ERROR_770213, new String[] {ResourceBundleUtils.getMessage("lbl.pm.settings.fee.organisation.type",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()), this.dupplicateOrgTypeName});
+		}
+		// add deleted records before update
+		exemptionList.addAll(this.getManagedBean()
+				.getDeletedOrgTypeFeeExemptions());
+	
+		IFeeExemptionSO exemptionSO = null;
+		FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
+		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", IStatusSO.class);
+		StatusReqDTO statusReqDTO = null;
+		for (PmFeeExemption fee : exemptionList) {
+			String messageId = null;
+			String[] msgParam = null;
+			if (!fee.isBrandNew()
+					&& fee.isModified()
+					&& fee.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+				messageId = MessageConst.TD_80022;
+				
+				msgParam = new String[] {
+							fee.getOrgTypeId().getParameterCode(), "" };
+
+				
+			}
+			statusReqDTO = new StatusReqDTO();
+			statusReqDTO.setStatusId(fee.getRecordStatusFlg().longValue());
+			StatusResDTO statusResDTO = statusSO
+					.retrieveStatusByStatusId(statusReqDTO);
+			if (messageId != null & msgParam != null) {
+				reqDTO.setTrackingStatus(true);
+				reqDTO.getTrackDairyVOs()
+						.add(PmCommonUtil
+								.assignTrackingDairyForFeeExemption(
+										fee,
+										getActionDesc(messageId, msgParam),
+										statusResDTO.getPmStatus() != null ? statusResDTO
+												.getPmStatus() : new PmStatus()));
+			}
+
+		}
+		statusReqDTO = new StatusReqDTO();
+		statusReqDTO.setStatusId(Long
+				.valueOf(DbValueConst.RECORD_STATUS_ACTIVE));// 1
+		StatusResDTO statusResDTO = statusSO
+				.retrieveStatusByStatusId(statusReqDTO);
+		reqDTO.setStatus(statusResDTO.getPmStatus() != null ? statusResDTO
+				.getPmStatus() : new PmStatus());
+		reqDTO.setUser(new FacesScopes().getUserSessionBean());
+		reqDTO.setUserRole(PmCommonUtil.getUserRoleValue());
+		// //////////////////
+		try {
+			exemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
+					.getServiceObject("pm", IFeeExemptionSO.class);
+
+			reqDTO.setFeeExemptionList(exemptionList);
+			FeeExemptionResDTO resDTO = exemptionSO
+					.updateFeeExemptionList(reqDTO);
+			// retrive
+			this.getManagedBean().getFeeExemptionsForOrgType().clear();
+			this.getManagedBean().getDeletedOrgTypeFeeExemptions().clear();
+			reqDTO = new FeeExemptionReqDTO();
+			resDTO = exemptionSO.getFeeExemptionsForOrgType(reqDTO);
+			this.getManagedBean().setFeeExemptionsForOrgType(resDTO.getFeeExemptions());
+			
+			if (resDTO.isSuccessful()) {
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(
+										MessageConst.INFO_770010,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	public void saveFeeExemptionForOrgItem() {
 
@@ -1838,6 +2037,18 @@ public class RuleCatalogueBackingBean extends
 					result = isDateOverlaped(ex.getEffDate(), ex.getExpDate(),
 							baseExemption.getEffDate(),
 							baseExemption.getExpDate());
+				}else if (ex.getFeeExemptionType().equals("7")
+						&& baseExemption.getFeeExemptionType().equals("7") && ex
+						.getOrgTypeId().getParameterId() == baseExemption
+						.getOrgTypeId().getParameterId()) {
+					result = isDateOverlaped(ex.getEffDate(), ex.getExpDate(),
+							baseExemption.getEffDate(),
+							baseExemption.getExpDate());
+					if(result){
+						
+						this.dupplicateOrgTypeName = getParameterDesc(ex.getOrgTypeId().getParameterType(), ex.getOrgTypeId().getParameterCode());
+					}
+
 				}
 
 				if (result == true) {
