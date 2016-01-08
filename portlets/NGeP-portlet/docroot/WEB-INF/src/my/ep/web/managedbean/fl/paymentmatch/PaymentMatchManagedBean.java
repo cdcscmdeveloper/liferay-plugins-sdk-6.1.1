@@ -242,7 +242,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	private List<TaxInvoiceVO> taxInvoiceList;
 	
 	private boolean hyperLinkPage = false;
-
+	private boolean taxInvoice = false;
+	
 	/**
 	 * Gets the doc type.
 	 *
@@ -1474,5 +1475,19 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	 */
 	public void setHyperLinkPage(boolean hyperLinkPage) {
 		this.hyperLinkPage = hyperLinkPage;
+	}
+
+	/**
+	 * @return the taxInvoice
+	 */
+	public boolean isTaxInvoice() {
+		return taxInvoice;
+	}
+
+	/**
+	 * @param taxInvoice the taxInvoice to set
+	 */
+	public void setTaxInvoice(boolean taxInvoice) {
+		this.taxInvoice = taxInvoice;
 	}
 }

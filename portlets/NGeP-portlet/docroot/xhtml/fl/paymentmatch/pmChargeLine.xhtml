@@ -21,31 +21,12 @@
 			<p:ajax event="unselect"
 				listener="#{paymentMatchBackingBean.onNodeUnSelect()}"
 				update="@(.chargeLineSection)" />				
-			<p:column style="white-space:normal;text-align:center">
-				<f:facet name="header" style="width:10%;">
-					<h:outputText value="#{lbl['lbl.fl.item.code']}"/>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.code']}"/>
-				</f:facet>
-				<f:facet name="footer">
-				<h:outputText value=""></h:outputText>			
-			</f:facet>
-				<h:outputText style="float:right;"
-					value="#{chargeLineNode.flInvoiceSummary.flFulfilmentItem.itemCode}"
-					rendered="#{chargeLineNode.level == 1}"/>
-			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center;width:20%;" >
 			<f:facet name="footer">
 				<h:outputText value=""></h:outputText>			
 			</f:facet>
 				<h:outputText value="#{chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.itemName}" id="itemDesc"
 				rendered="#{chargeLineNode.level == 1}" style="text-align:left; float:left;" title="#{chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.itemDesc}"/>
-			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.uom']}" style="white-space:normal;text-align:center">
-			<f:facet name="footer">
-				<h:outputText value=""></h:outputText>			
-			</f:facet>
-				<h:outputText value="#{chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomName}" 
-				rendered="#{chargeLineNode.level == 1}" style="float:left;"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;text-align:center">
 			<f:facet name="footer">
@@ -56,29 +37,12 @@
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.gst.amt']}" style="white-space:normal;text-align:center">
-			<f:facet name="footer">
-				<h:outputText value=""></h:outputText>			
-			</f:facet>
-				<h:outputText value="#{chargeLineNode.flInvoiceItem.gstAmount}"
-				rendered="#{chargeLineNode.level == 3}" style="float:right;">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</h:outputText>
-				
-			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.unit.price.w.gst']}" style="white-space:normal;text-align:center">
 			<f:facet name="footer">
 				<h:outputText value=""></h:outputText>			
 			</f:facet>
-				<h:outputText value="#{chargeLineNode.flInvoiceItem.gstUnitPrice}" rendered="#{chargeLineNode.level == 3}" style="float:right;">
+				<h:outputText value="#{paymentMatchBackingBean.managedBean.taxInvoice=='false' ? lbl['lbl.txt.na'] : chargeLineNode.flInvoiceItem.gstUnitPrice}" rendered="#{chargeLineNode.level == 3}" style="float:right;">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</h:outputText>
-			</p:column>
-			<p:column style="white-space:normal;text-align:center">
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.fl.gst.rate']}"/>
-				</f:facet>
-				<h:outputText value="#{chargeLineNode.flInvoiceItem.gstFlag.parameterCode}" rendered="#{chargeLineNode.level == 3}" >
 				</h:outputText>
 			</p:column>
 			<p:column style="white-space:normal; text-align:center" >
@@ -105,19 +69,6 @@
 				<h:outputText value="#{chargeLineNode.flInvoiceItem.receivedQty}" rendered="#{chargeLineNode.level == 3}" style="float:right;">
 					<f:converter converterId="dynamicNumberConverter" />
 					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomCode)}" />
-				</h:outputText>
-			</p:column>
-			<p:column style="white-space:normal;text-align:center">
-			<f:facet name="header">
-				<h:outputText value="#{lbl['lbl.fl.frn.recalled.qty']}"></h:outputText>
-			<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.recalled.quantity']}"/>
-			</f:facet>
-			<f:facet name="footer">
-				<h:outputText value="#{lbl['lbl.fl.charge.line.grandtotal']}"/>					
-			</f:facet>
-				<h:outputText value="#{chargeLineNode.flInvoiceSummary.recalledQty}" rendered="#{chargeLineNode.level == 2}" style="float:right;">
-					<f:converter converterId="dynamicNumberConverter" />
-					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomCode)}" />		
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.ordered.amount']}" style="white-space:normal;text-align:center">
