@@ -8,7 +8,7 @@
    	xmlns:ac="http://ac.my/jsf/composite/cc" >
     
 <cc:interface>
-	<cc:attribute name="id" />
+	<cc:attribute name="id" default="#{cc.id}"/>
 	<cc:attribute name="countryCode" required="true" default="60"/>
 	<cc:attribute name="areaCode" required="true" />
 	<cc:attribute name="number" required="true" />
@@ -20,45 +20,42 @@
 </cc:interface>
 
 <cc:implementation>
-	<ui:param name="phoneNoId" value="#{cc.id}"></ui:param>
+	<ui:param name="phonePanelId" value="#{cc.id}"></ui:param>
 	<h:panelGroup id="#{cc.attrs.id}">
 
 		+
 		<p:inputText value="#{cc.attrs.countryCode}" size="4" maxlength="4" label="#{cc.attrs.label} - #{lbl['lbl.sm.country.code']}" 
-			required="#{cc.attrs.required or not empty cc.attrs.number or (cc.attrs.isMobile and not empty cc.attrs.telcoId)}" 
-			validatorMessage="#{cc.attrs.validatorMessage}">
+			required="#{cc.attrs.required}" id="countryCodeCompId" >
 			<p:ajax process="@this" update="#{cc.attrs.id}" partialSubmit="true" event="blur" />
-			<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 		</p:inputText>
 		<p:inputText value="#{cc.attrs.areaCode}" size="4" maxlength="4" label="#{cc.attrs.label} - #{lbl['lbl.sm.area.code']}"
-			required="#{cc.attrs.required or not empty cc.attrs.number or (cc.attrs.isMobile and not empty cc.attrs.telcoId)}" 
-			validatorMessage="#{cc.attrs.validatorMessage}">
+			required="#{cc.attrs.required}" id="areaCodeCompId" >
 			<p:ajax process="@this" update="#{cc.attrs.id}" partialSubmit="true" event="blur" />
-			<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 		</p:inputText>
-		<p:inputText value="#{cc.attrs.number}" size="10" maxlength="10" id="#{phoneNoId}ph"
-			required="#{cc.attrs.required}" 
-			validatorMessage="#{cc.attrs.validatorMessage}" label="#{cc.attrs.label}">
+		<p:inputText value="#{cc.attrs.number}" size="10" maxlength="10" 
+			required="#{cc.attrs.required}" id="phoneNoCompId"  label="#{cc.attrs.label}">
 			<p:ajax process="@this" update="#{cc.attrs.id}" partialSubmit="true" event="blur" />
-			<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+			<f:validator validatorId="phoneValidator" />
+			<f:attribute name="isMobileName" value="#{cc.attrs.isMobile ? 'Y' : 'N'}" />
+	        <f:attribute name="labelName" value="#{cc.attrs.label}" />
 		</p:inputText>	
-		<p:graphicImage id="#{phoneNoId}teleno"	value="/css/images/design/tooltips.png" /> 
-		<p:tooltip	id="#{phoneNoId}tfno" for="#{phoneNoId}teleno">
+		<p:graphicImage id="#{phonePanelId}teleno"	value="/css/images/design/tooltips.png" /> 
+		<p:tooltip	id="#{phonePanelId}tfno" for="#{phonePanelId}teleno">
 			<p:outputLabel escape="false" value="#{lbl['tt.sm.registration.company.telephoneno']}" />
 		</p:tooltip>
 		&#160;
 		<p:selectOneMenu value="#{cc.attrs.telcoId}" rendered="#{cc.attrs.isMobile}" label="#{cc.attrs.label} - #{lbl['lbl.sm.telco']}"
-			style="width: 100px">
+			style="width: 100px" id="telcoCompId">
 			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 			<f:selectItems value="#{applicationBean.telcoItems}" />
 		</p:selectOneMenu>
-		<p:graphicImage id="#{phoneNoId}telco"	value="/css/images/design/tooltips.png" rendered="#{cc.attrs.isMobile}" /> 
-		<p:tooltip	id="#{phoneNoId}tftelco" for="#{phoneNoId}telco">
+		<p:graphicImage id="#{phonePanelId}telco"	value="/css/images/design/tooltips.png" rendered="#{cc.attrs.isMobile}" /> 
+		<p:tooltip	id="#{phonePanelId}tftelco" for="telcoCompId">
 			<table><tr><td width="300px">
 			<p:outputLabel escape="false" value="#{lbl['tt.sm.registration.company.telco']}" />
 			</td></tr></table>
 		</p:tooltip>
-		<p:message id="#{phoneNoId}phMsg" for="#{phoneNoId}ph" showSummary="true" showDetail="false" display="icon" />	
+		<p:message id="#{phonePanelId}phMsg" for="phoneNoCompId" showSummary="true" showDetail="false" display="icon" />	
 	</h:panelGroup>
 </cc:implementation>
 </ui:composition>
