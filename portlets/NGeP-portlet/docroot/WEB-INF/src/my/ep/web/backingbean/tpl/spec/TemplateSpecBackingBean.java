@@ -35,7 +35,6 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -60,7 +59,6 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZone;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
-import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -224,6 +222,7 @@ public class TemplateSpecBackingBean extends
 			reqDTO.setSpecMaster(specMaster);
 			reqDTO.setSpecAnswersToDelete(templateSpecBean
 					.getSpecAnswersToDelete());
+			reqDTO.setLocale(new FacesScopes().getUserLocale());
 			TemplateSpecResDTO resDTO = templateSpecSO.saveTemplateSpec(reqDTO);
 
 			if (resDTO.isSuccessful()) {
@@ -341,12 +340,14 @@ public class TemplateSpecBackingBean extends
 	public String newAction() {
 		TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 		TplSpecMaster specMaster = new TplSpecMaster();
+		FacesScopes facesScopes = new FacesScopes();
 
 		specMaster.setProcurementCategory(new PmParameter());
 		specMaster.setItemTypeCode(new PmParameter());
 		specMaster.setTemplateTypeCode(new PmParameter());
 		specMaster.setSpecTypeCode(new PmParameter());
 		specMaster.setOrgProfile(new PmOrgProfile());
+		specMaster.setCreatedUser(facesScopes.getUserSessionBean());
 
 		IUserSO userSO = null;
 		// IOrgProfileSO orgProfileSO = null;
@@ -358,7 +359,7 @@ public class TemplateSpecBackingBean extends
 			// ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 
 			UserReqDTO reqDTO = new UserReqDTO();
-			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+			reqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
 			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
 
 			if (resDTO.getUserOrgList() != null
@@ -506,40 +507,6 @@ public class TemplateSpecBackingBean extends
 		}
 
 		return newQuestion;
-	}
-
-	/**
-	 * Get ministry dropdown list
-	 * 
-	 * @return the list of SelectItem instance
-	 */
-	public SelectItem[] getMinistryList() {
-		SelectItem[] items = null;
-
-		IOrgProfileSO orgProfileSO = null;
-		try {
-			orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IOrgProfileSO.class);
-
-			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			reqDTO.setOrgType(ParameterConst.ORG_TYPE_MINISTRY);
-			OrgProfileResDTO resDTO = orgProfileSO
-					.retrieveOrgProfileListByOrgType(reqDTO);
-
-			items = new SelectItem[resDTO.getOrgProfileList().size() + 1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale()));
-			int i = 1;
-			for (PmOrgProfile orgProfile : resDTO.getOrgProfileList()) {
-				items[i++] = new SelectItem(orgProfile.getOrgProfileId(),
-						orgProfile.getOrgName());
-			}
-		} finally {
-			orgProfileSO = null;
-		}
-		return items;
 	}
 
 	/**
@@ -706,17 +673,26 @@ public class TemplateSpecBackingBean extends
 			parameterSO = null;
 		}
 	}
+	
+	/**
+	 * Search Template Type dropdown change action
+	 */
+	public void searchTemplateTypeChange() {
+		getManagedBean().setSearchOrgProfile(new PmOrgProfile());
+	}
 
 	/**
 	 * Template Type dropdown change action
 	 */
 	public void templateTypeChange() {
 		IParameterSO parameterSO = null;
+		IOrgProfileSO orgProfileSO = null;
 		try {
 			TplSpecMaster specMaster = getManagedBean().getTemplateSpecBean()
 					.getSpecMaster();
 			Long parameterId = specMaster.getTemplateTypeCode()
 					.getParameterId();
+			PmOrgProfile pmOrgProfile = null;
 
 			parameterSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
@@ -724,8 +700,33 @@ public class TemplateSpecBackingBean extends
 			reqDTO.setParameterId(parameterId);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			specMaster.setTemplateTypeCode(resDTO.getPmParameter());
+			
+			if (ParameterConst.TEMPLATE_TYPE_MINISTRY.equals(specMaster.getTemplateTypeCode().getParameterCode())) {
+				if (ParameterConst.ORG_TYPE_MINISTRY.equals(specMaster.getOwnerOrgProfile().getOrgTypeCode().getParameterCode())) {
+					pmOrgProfile = specMaster.getOwnerOrgProfile();
+				} else if (ParameterConst.ORG_TYPE_PTJ.equals(specMaster.getOwnerOrgProfile().getOrgTypeCode().getParameterCode())) {
+					orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+					
+					OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+					orgProfileReqDTO.setOrgProfileId(specMaster.getOwnerOrgProfile().getOrgProfileId());
+					pmOrgProfile = orgProfileSO.retrieveMinistryByOrgProfileId(orgProfileReqDTO)
+							.getPmOrgProfile();
+				}
+			} else if (ParameterConst.TEMPLATE_TYPE_PTJ.equals(specMaster.getTemplateTypeCode().getParameterCode())) {
+				if (ParameterConst.ORG_TYPE_PTJ.equals(specMaster.getOwnerOrgProfile().getOrgTypeCode().getParameterCode())) {
+					pmOrgProfile = specMaster.getOwnerOrgProfile();
+				}
+			}
+			
+			if (pmOrgProfile == null) {
+				pmOrgProfile = new PmOrgProfile();	
+			}
+			
+			specMaster.setOrgProfile(pmOrgProfile);
 		} finally {
 			parameterSO = null;
+			orgProfileSO = null;
 		}
 	}
 
@@ -1306,7 +1307,7 @@ public class TemplateSpecBackingBean extends
 			templateSpecSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 
-			templateSpecSO.validateTierQty(selectedSpecQuestion, specTierQties);
+			templateSpecSO.validateTierQty(selectedSpecQuestion, specTierQties, new FacesScopes().getUserLocale());
 
 			if (TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER
 					.equals(templateSpecBean.getContentType())) {
@@ -1374,7 +1375,7 @@ public class TemplateSpecBackingBean extends
 					ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 
 			BigDecimal maxScore = templateSpecSO.validateScoring(
-					selectedSpecQuestion, specScorings);
+					selectedSpecQuestion, specScorings, new FacesScopes().getUserLocale());
 
 			if (maxScore != null) {
 				selectedSpecQuestion.setMaxScore(maxScore);
@@ -1830,20 +1831,26 @@ public class TemplateSpecBackingBean extends
 											.getSearchProcurementCategoryId()));
 				}
 
-				if (getManagedBean().getSearchTemplateTypeId() != null) {
+				if (StringUtils.isNotBlank(getManagedBean().getSearchTemplateTypeCode())) {
+					String searchTemplateTypeCode = getManagedBean().getSearchTemplateTypeCode();
+					
 					searchBean
 							.getDataFilterBeans()
 							.add(new SearchFilterBean(
-									"templateTypeCode.parameterId",
+									"templateTypeCode.parameterCode",
 									SearchOperator.OPERATOR_EQUALS.value(),
-									getManagedBean().getSearchTemplateTypeId()));
-				}
-
-				if (getManagedBean().getSearchOrgProfileId() != null) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("orgProfile.orgProfileId",
-									SearchOperator.OPERATOR_EQUALS.value(),
-									getManagedBean().getSearchOrgProfileId()));
+									searchTemplateTypeCode));
+					
+					if (ParameterConst.TEMPLATE_TYPE_MINISTRY.equals(searchTemplateTypeCode) ||
+							ParameterConst.TEMPLATE_TYPE_PTJ.equals(searchTemplateTypeCode)) {
+						if (getManagedBean().getSearchOrgProfile() != null && getManagedBean().getSearchOrgProfile().getOrgProfileId() != null) {
+							searchBean.getDataFilterBeans().add(
+									new SearchFilterBean("orgProfile.orgProfileId",
+											SearchOperator.OPERATOR_EQUALS.value(),
+											getManagedBean().getSearchOrgProfile().getOrgProfileId()));	
+						}
+						
+					}
 				}
 
 				if (getManagedBean().getSearchItemTypeId() != null) {
@@ -1860,11 +1867,20 @@ public class TemplateSpecBackingBean extends
 									getManagedBean().getSearchSpecTypeId()));
 				}
 
-				if (getManagedBean().getSearchSpecName() != null) {
+				if (StringUtils.isNotBlank(getManagedBean().getSearchSpecName())) {
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("specName",
 									SearchOperator.OPERATOR_LIKE.value(),
-									getManagedBean().getSearchSpecName()));
+									getManagedBean().getSearchSpecName(),
+									true));
+				}
+				
+				if (StringUtils.isNotBlank(getManagedBean().getSearchTemplateTypeUser())) {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("createdUser.userName",
+									SearchOperator.OPERATOR_LIKE.value(),
+									getManagedBean().getSearchTemplateTypeUser(),
+									true));	
 				}
 
 				searchBean.getDataFilterBeans().add(
@@ -1922,8 +1938,9 @@ public class TemplateSpecBackingBean extends
 	public void reset() {
 
 		this.getManagedBean().setSearchSpecName(null);
-		this.getManagedBean().setSearchOrgProfileId(null);
-		this.getManagedBean().setSearchTemplateTypeId(null);
+		this.getManagedBean().setSearchOrgProfile(new PmOrgProfile());
+		this.getManagedBean().setSearchTemplateTypeCode(null);
+		this.getManagedBean().setSearchTemplateTypeUser(null);
 		this.getManagedBean().setSearchSpecTypeId(null);
 		this.getManagedBean().setSearchItemTypeId(null);
 		this.getManagedBean().setSearchProcurementCategoryId(null);
