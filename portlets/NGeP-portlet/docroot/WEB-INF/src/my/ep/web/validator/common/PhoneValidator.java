@@ -44,13 +44,11 @@ public class PhoneValidator implements Validator {
 			throwErrorMsg(labelNameVal,
 					SmCommonUtil.getMessage("lbl.sm.country.code", null));
 		} else if (StringUtils.isBlank(areaCodeVal)
-				&& (StringUtils.isNotBlank(phoneNoVal) || StringUtils
-						.isNotBlank(countryCodeVal))) {
+				&& StringUtils.isNotBlank(phoneNoVal)) {
 			throwErrorMsg(labelNameVal,
 					SmCommonUtil.getMessage("lbl.sm.area.code", null));
 		} else if (StringUtils.isBlank(phoneNoVal)
-				&& (StringUtils.isNotBlank(areaCodeVal) || StringUtils
-						.isNotBlank(countryCodeVal))) {
+				&& StringUtils.isNotBlank(areaCodeVal)) {
 			throw new ValidatorException(new FacesMessage(
 					FacesMessage.SEVERITY_ERROR, "Phone No Error",
 					SmCommonUtil.getMessage("lbl.sm.is.required",
